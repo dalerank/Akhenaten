@@ -164,7 +164,7 @@ static void advance_tick(void) {
         map_road_network_update();
         break;
     case 8:
-        building_granaries_calculate_stocks();
+        city_granaries_calculate_stocks();
         break;
     case 9:
         // nothing yet

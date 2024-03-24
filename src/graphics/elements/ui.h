@@ -26,6 +26,7 @@ enum UiFlags_ {
     UiFlags_PanelInner = 1 << 3,
     UiFlags_LabelMultiline = 1 << 4,
 };
+using UiFlags = int;
 
 namespace ui {
 
@@ -34,12 +35,12 @@ void begin_widget(vec2i offset, bool relative = false);
 void end_widget();
 bool handle_mouse(const mouse *m);
 
-int label(int group, int number, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_ flags = UiFlags_None, int box_width = 0);
-int label(pcstr, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_ flags = UiFlags_None, int box_width = 0);
+int label(int group, int number, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0);
+int label(pcstr, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0);
 int label_amount(int group, int number, int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, pcstr postfix = "");
 int label_percent(int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
 void eimage(e_image_id img, vec2i pos);
-void panel(vec2i pos, vec2i size, UiFlags_ flags);
+void panel(vec2i pos, vec2i size, UiFlags flags);
 void icon(vec2i pos, e_resource img);
 void icon(vec2i pos, e_advisor advisor);
 int button_hover(const mouse *m);
@@ -92,6 +93,7 @@ struct elabel : public element {
     e_font _font;
     vec2i _body;
     uint32_t _color;
+    UiFlags _flags;
 
     virtual void draw() override;
     virtual void load(archive elem) override;

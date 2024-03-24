@@ -54,6 +54,14 @@ mission_briefing_window = {
 	}
 }
 
+granary_info_window = {
+	ui : {
+		background : { type : "outer_panel",	pos: [0, 0], size : {w:38, h:27} },
+		title 		 : { type : "text", pos : {x:0, y:12}, size : {w:28 * 16}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		warning_text : { type : "text", pos : {x:32, y:40}, size : {w:28 * 16}, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+	}
+}
+
 empire_window = {
 	trade_column_spacing : 106,
 	trade_row_spacing : 20,

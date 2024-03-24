@@ -16,4 +16,7 @@ localization = [
   {key: "#popup_dialog_delete_dynasty", group:5, id:90 },
   {key: "#popup_dialog_no_dynasty", group:5, id:94 },
   {key: "#replay_mission", group:1, id:2 },
+  {key: "#granary_info_title", group:98, id:0 },
+  {key: "#granary_no_road_access", group:69, id:25 },
+  {key: "#granary_kingdom_supplies_grain", group:98, id:4 },
 ]

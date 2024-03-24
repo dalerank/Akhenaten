@@ -74,9 +74,15 @@ pcstr city_resource_id(e_resource resource) {
 const resources_list* city_resource_get_available() {
     return &g_available_data.resource_list;
 }
-const resources_list* city_resource_get_available_foods() {
-    return &g_available_data.food_list;
+
+const resources_list &city_resource_get_available_foods() {
+    return g_available_data.food_list;
 }
+
+e_resource city_resource_get_available_food(int index) {
+    return g_available_data.food_list.items[index];
+}
+
 const resources_list* city_resource_get_available_market_goods() {
     return &g_available_data.market_goods_list;
 }

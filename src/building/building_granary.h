@@ -41,14 +41,17 @@ public:
     bool is_getting(e_resource resource);
     int for_getting(tile2i *dst);
     int add_resource(e_resource resource, int is_produced, int amount);
+    int total_stored() const;
 
     void bless();
     bool is_gettable(e_resource resource);
     granary_task_status determine_worker_task();
     int remove_resource(e_resource resource, int amount);
     static int remove_for_getting_deliveryman(building* src, building* dst, e_resource& resource);
+
+    void draw_orders_foreground(object_info &c);
 };
 
-void building_granaries_calculate_stocks();
+void city_granaries_calculate_stocks();
 int building_granary_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int force_on_stockpile, int* understaffed, tile2i* dst);
 int building_getting_granary_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, tile2i* dst);

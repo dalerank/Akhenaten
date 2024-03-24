@@ -256,7 +256,7 @@ int window_building_handle_mouse_granary_orders(const mouse* m, object_info* c) 
     }
 
     // resources
-    int num_resources = city_resource_get_available_foods()->size;
+    int num_resources = city_resource_get_available_foods().size;
     data.building_id = c->building_id;
     if (generic_buttons_handle_mouse(m, c->offset.x + 205, y_offset + 46, data.orders_resource_buttons.data(), num_resources, &data.resource_focus_button_id)) {
         return 1;
@@ -357,7 +357,7 @@ static void storage_toggle_permissions(int index, int param2) {
 static void toggle_resource_state(int index, int param2) {
     auto &data = g_window_building_distribution;
     building *b = building_get(data.building_id);
-    int resource;
+    e_resource resource;
 
     building_bazaar *bazaar = b->dcast_bazaar();
     if (bazaar) {
@@ -374,7 +374,7 @@ static void toggle_resource_state(int index, int param2) {
     if (b->type == BUILDING_STORAGE_YARD)
         resource = city_resource_get_available()->items[index - 1];
     else
-        resource = city_resource_get_available_foods()->items[index - 1];
+        resource = city_resource_get_available_food(index - 1);
 
     building_storage_cycle_resource_state(b->storage_id, resource, false);
 }
@@ -398,7 +398,7 @@ static void toggle_resource_state_backwards(int index, int param2) {
     if (b->type == BUILDING_STORAGE_YARD)
         resource = city_resource_get_available()->items[index - 1];
     else
-        resource = city_resource_get_available_foods()->items[index - 1];
+        resource = city_resource_get_available_food(index - 1);
 
     building_storage_cycle_resource_state(b->storage_id, resource, true);
 }
@@ -421,7 +421,8 @@ static void order_quantity_increase_decrease(int index, int param2) {
     if (b->type == BUILDING_STORAGE_YARD)
         resource = city_resource_get_available()->items[index - 1];
     else
-        resource = city_resource_get_available_foods()->items[index - 1];
+        resource = city_resource_get_available_food(index - 1);
+
     building_storage_increase_decrease_resource_state(b->storage_id, resource, param2);
 }
 

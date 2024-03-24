@@ -23,7 +23,6 @@ var medium_statue_images = []
 var big_statue_images = []
 var top_menu_bar = {}
 var building_weaponsmith = {}
-var main_menu_window = {}
 var building_granary = {}
 var building_firehouse = {}
 var building_cattle_ranch = {}
@@ -70,8 +69,12 @@ var building_dock = {}
 var empire_window = {}
 var empire_images_remap = []
 var imagepaks = []
+// ui
 var advisor_rating_window = {}
 var mission_briefing_window = {}
+var granary_info_window = {}
+var main_menu_window = {}
+//figures 
 var figure_fireman = {}
 var figure_water_carrier = {}
 var figure_priest = {}

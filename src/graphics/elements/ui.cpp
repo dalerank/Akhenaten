@@ -121,12 +121,12 @@ image_button &ui::img_button(e_image_id img, vec2i pos, vec2i size, int offset) 
     return img_button(desc.pack, desc.id, pos, size, desc.offset + offset);
 }
 
-int ui::label(int group, int number, vec2i pos, e_font font, UiFlags_ flags, int box_width) {
+int ui::label(int group, int number, vec2i pos, e_font font, UiFlags flags, int box_width) {
     pcstr str = (pcstr)lang_get_string(group, number);
     return label(str, pos, font, flags, box_width);
 }
 
-int ui::label(pcstr label, vec2i pos, e_font font, UiFlags_ flags, int box_width) {
+int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width) {
     const vec2i offset = g_state.offset();
     if (!!(flags & UiFlags_LabelCentered)) {
         text_draw_centered((uint8_t*)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
@@ -153,7 +153,7 @@ void ui::eimage(e_image_id img, vec2i pos) {
     ImageDraw::img_generic(ctx, image_group(img), pos);
 }
 
-void ui::panel(vec2i pos, vec2i size, UiFlags_ flags) {
+void ui::panel(vec2i pos, vec2i size, UiFlags flags) {
     const vec2i offset = g_state.offset();
     if (!!(flags & UiFlags_PanelOuter)) {
         outer_panel_draw(offset + pos, size.x, size.y);
@@ -273,7 +273,7 @@ void ui::elabel::draw() {
     if (_body.x > 0) {
         label_draw(pos.x, pos.y, _body.x, _body.y);
     }
-    ui::label(_text.c_str(), pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0}), _font);
+    ui::label(_text.c_str(), pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0}), _font, _flags);
 }
 
 void ui::elabel::load(archive arch) {
@@ -283,10 +283,14 @@ void ui::elabel::load(archive arch) {
     _font = (e_font)arch.r_int("font", FONT_NORMAL_BLACK_ON_LIGHT);
     _body = arch.r_size2i("body");
     _color = arch.r_uint("color");
+    pcstr talign = arch.r_string("align");
+    bool multiline = arch.r_bool("multiline");
+    _flags = (strcmp("center", talign) == 0 ? UiFlags_LabelCentered : UiFlags_None)
+               | (multiline ? UiFlags_LabelMultiline : UiFlags_None);
 }
 
 void ui::elabel::text(pcstr v) {
-    _text = v;
+    _text = lang_text_from_key(v);
     enabled = strlen(v) > 0;
 }
 
@@ -313,7 +317,12 @@ void ui::etext::load(archive arch) {
 }
 
 void ui::etext::draw() {
-    text_draw((uint8_t*)_text.c_str(), pos.x, pos.y, _font, _color);
+    const vec2i offset = g_state.offset();
+    if (!!(_flags & UiFlags_LabelCentered)) {
+        text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, size.x, _font, 0);
+    } else {
+        text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _font, _color);
+    }
 }
 
 void ui::egeneric_button::draw() {

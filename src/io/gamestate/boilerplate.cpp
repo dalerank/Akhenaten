@@ -200,7 +200,7 @@ static void post_load() {
     // building counts / storage
     // TODO: can't find cache in Pharaoh's save file format?
     building_count_update();
-    building_granaries_calculate_stocks();
+    city_granaries_calculate_stocks();
     city_resource_calculate_storageyard_stocks();
     city_resource_determine_available();
     building_storage_reset_building_ids();
