@@ -24,7 +24,8 @@ count_data_t g_count_data;
 static void clear_counters() {
     memset(&g_count_data, 0, sizeof(count_data_t));
 }
-static void increase_count(int type, bool active) {
+
+void building_increase_type_count(int type, bool active) {
     ++g_count_data.buildings[type].total;
     g_count_data.buildings[type].active += (active ? 1 : 0);
 }
@@ -101,46 +102,42 @@ void building_count_update() {
         e_building_type type = b.type;
         switch (type) {
         default:
-            increase_count(type, b.num_workers > 0);
-            break;
-
-        case BUILDING_SMALL_MASTABA:
-            increase_count(type, (b.state != BUILDING_STATE_MOTHBALLED));
+            building_increase_type_count(type, b.num_workers > 0);
             break;
 
         case BUILDING_BOOTH:
-            increase_count(type, b.num_workers > 0);
+            building_increase_type_count(type, b.num_workers > 0);
             break;
 
         case BUILDING_BANDSTAND:
-            increase_count(type, b.num_workers > 0);
-            increase_count(BUILDING_BOOTH, b.num_workers > 0);
+            building_increase_type_count(type, b.num_workers > 0);
+            building_increase_type_count(BUILDING_BOOTH, b.num_workers > 0);
             break;
 
         case BUILDING_PAVILLION:
-            increase_count(type, b.num_workers > 0);
-            increase_count(BUILDING_BANDSTAND, b.num_workers > 0);
-            increase_count(BUILDING_BOOTH, b.num_workers > 0);
+            building_increase_type_count(type, b.num_workers > 0);
+            building_increase_type_count(BUILDING_BANDSTAND, b.num_workers > 0);
+            building_increase_type_count(BUILDING_BOOTH, b.num_workers > 0);
             break;
 
         case BUILDING_SENET_HOUSE:
-            increase_count(type, b.num_workers > 0);
+            building_increase_type_count(type, b.num_workers > 0);
             break;
 
         case BUILDING_RECRUITER:
             city_buildings_set_recruiter(b.id);
-            increase_count(type, b.num_workers > 0);
+            building_increase_type_count(type, b.num_workers > 0);
             break;
 
         case BUILDING_MORTUARY:
-            increase_count(type, b.num_workers > 0);
+            building_increase_type_count(type, b.num_workers > 0);
             city_health_add_mortuary_workers(b.num_workers);
             break;
 
             // water
         case BUILDING_WATER_LIFT:
         case BUILDING_MENU_BEAUTIFICATION:
-            increase_count(type, b.has_water_access);
+            building_increase_type_count(type, b.has_water_access);
             break;
 
             // education
@@ -177,7 +174,7 @@ void building_count_update() {
         case BUILDING_TEMPLE_COMPLEX_SETH:
         case BUILDING_TEMPLE_COMPLEX_BAST:
         case BUILDING_ORACLE:
-            increase_count(type, b.num_workers > 0);
+            building_increase_type_count(type, b.num_workers > 0);
             break;
 
         case BUILDING_SHRINE_OSIRIS:
@@ -185,7 +182,7 @@ void building_count_update() {
         case BUILDING_SHRINE_PTAH:
         case BUILDING_SHRINE_SETH:
         case BUILDING_SHRINE_BAST:
-            increase_count(type, b.has_road_access);
+            building_increase_type_count(type, b.has_road_access);
             break;
 
             // water-side

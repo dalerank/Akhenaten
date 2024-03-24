@@ -10,10 +10,33 @@ struct painter;
 
 class building_small_mastaba : public building_impl {
 public:
+    BUILDING_METAINFO(BUILDING_SMALL_MASTABA, building_small_mastaba)
+
     building_small_mastaba(building & b) : building_impl(b) {}
+
     virtual void on_create(int orientation) override;
     virtual void update_day() override;
+    virtual void update_month() override;
+    virtual void update_count() const override;
     virtual void window_info_background(object_info &ctx) override;
+};
+
+class building_small_mastaba_part_side : public building_small_mastaba {
+public:
+    BUILDING_METAINFO(BUILDING_SMALL_MASTABA_SIDE, building_small_mastaba_part_side)
+    building_small_mastaba_part_side(building &b) : building_small_mastaba(b) {}
+};
+
+class building_small_mastaba_part_wall : public building_small_mastaba {
+public:
+    BUILDING_METAINFO(BUILDING_SMALL_MASTABA_WALL, building_small_mastaba_part_wall)
+    building_small_mastaba_part_wall(building &b) : building_small_mastaba(b) {}
+};
+
+class building_small_mastaba_part_entrance : public building_small_mastaba {
+public:
+    BUILDING_METAINFO(BUILDING_SMALL_MASTABA_ENTRANCE, building_small_mastaba_part_entrance)
+    building_small_mastaba_part_entrance(building &b) : building_small_mastaba(b) {}
 };
 
 void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain);

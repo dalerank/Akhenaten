@@ -76,18 +76,6 @@ delivery_destination building_get_asker_for_resource(tile2i tile, e_building_typ
     return {0};
 }
 
-building* building_determine_worker_needed() {
-    return building_first([] (building &b) {
-        if (floodplains_is(FLOOD_STATE_FARMABLE) && building_is_floodplain_farm(b)) {
-            return (!b.data.industry.worker_id && b.data.industry.labor_days_left <= 47 && !b.num_workers);
-        } else if (building_is_monument(b.type) && b.data.monuments.phase < 2) {
-            return building_monument_need_workers(&b);
-        }
-
-        return false;
-    });
-}
-
 static const float produce_uptick_per_day = 103.5f * 20.0f / 128.0f / 100.0f; // don't ask
 
 float get_farm_produce_uptick_per_day(building &b) {

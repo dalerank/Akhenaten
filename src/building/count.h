@@ -37,3 +37,4 @@ int building_count_industry_active(e_resource resource);
  * @return Total number of buildings
  */
 int building_count_industry_total(e_resource resource);
+void building_increase_type_count(int type, bool active);

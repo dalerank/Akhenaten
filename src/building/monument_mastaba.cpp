@@ -6,6 +6,8 @@
 #include "graphics/image.h"
 #include "widget/city/tile_draw.h"
 #include "window/building/common.h"
+#include "city/labor.h"
+#include "figure/figure.h"
 #include "building/count.h"
 #include "game/game.h"
 #include "city/resource.h"
@@ -24,6 +26,16 @@
 #include "graphics/elements/lang_text.h"
 
 #include <numeric>
+
+buildings::model_t<building_small_mastaba> small_mastaba_m;
+buildings::model_t<building_small_mastaba_part_side> small_mastaba_side_m;
+buildings::model_t<building_small_mastaba_part_wall> small_mastaba_wall_m;
+buildings::model_t<building_small_mastaba_part_entrance> small_mastaba_entrance_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_small_mastaba);
+void config_load_building_small_mastaba() {
+    small_mastaba_m.load();
+}
 
 void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain) {
     int x_leftmost, y_leftmost;
@@ -142,6 +154,10 @@ void building_small_mastaba::update_day() {
     bool all_tiles_finished = (tile2works == tile2i{-1, -1});
     building *main = base.main();
     building *part = &base;
+    if (!is_main()) {
+        return;
+    }
+
     if (all_tiles_finished) {
         int curr_phase = data.monuments.phase;
         map_grid_area_foreach(tiles, [] (tile2i tile) { map_monuments_set_progress(tile, 0); });
@@ -171,6 +187,23 @@ void building_small_mastaba::update_day() {
             }
         }
     }
+}
+
+void building_small_mastaba::update_month() {
+    if (!is_main()) {
+        return;
+    }
+
+    for (uint16_t &w_id : data.monuments.workers) {
+        figure* f = figure_get(w_id);
+        if (f->state != FIGURE_STATE_ALIVE || !f->dcast_worker() || f->destination() != &base) {
+            w_id = 0;
+        }
+    }
+}
+
+void building_small_mastaba::update_count() const {
+    building_increase_type_count(type(), true);
 }
 
 int building_small_mastabe_get_image(int orientation, tile2i tile, tile2i start, tile2i end) {

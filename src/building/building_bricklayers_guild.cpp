@@ -127,6 +127,8 @@ void building_bricklayers_guild::spawn_figure() {
 }
 
 bool building_bricklayers_guild::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    building_draw_normal_anim(ctx, point, &base, tile, bricklayers_guild_m.anim["work"], color_mask);
+    if (num_workers() > 0) {
+        building_draw_normal_anim(ctx, point, &base, tile, bricklayers_guild_m.anim["work"], color_mask);
+    }
     return true;
 }

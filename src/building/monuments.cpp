@@ -656,14 +656,18 @@ io_buffer *iob_city_building_monuments = new io_buffer([] (io_buffer *iob, size_
 });
 
 bool building_monument_need_workers(building *b) {
-    switch (b->type) {
-    case BUILDING_SMALL_MASTABA:
-        for (auto w_id : b->data.monuments.workers) {
-            if (!w_id) {
-                return true;
-            }
+    if (!b->is_main()) {
+        return false;
+    }
+
+    if (building_type_none_of(*b, BUILDING_SMALL_MASTABA)) {
+        return false;
+    }
+
+    for (auto w_id : b->data.monuments.workers) {
+        if (!w_id) {
+            return true;
         }
-        break;
     }
 
     return false;

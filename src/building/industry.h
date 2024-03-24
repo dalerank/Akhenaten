@@ -10,8 +10,6 @@
 
 constexpr uint32_t MAX_PROGRESS_FARM_PH = 2000;
 
-building* building_determine_worker_needed();
-
 int farm_expected_produce(building* b);
 
 void building_industry_update_production();
