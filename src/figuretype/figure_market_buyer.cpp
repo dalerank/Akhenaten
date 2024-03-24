@@ -282,20 +282,10 @@ figure_sound_t figure_market_buyer::get_sound_reaction(pcstr key) const {
 int figure_market_buyer::take_food_from_granary(building* market, building* b) {
     int resource;
     switch (base.collecting_item_id) {
-    case 0:
-    resource = ALLOWED_FOODS(0);
-    break;
-
-    case 1:
-    resource = ALLOWED_FOODS(1);
-    break;
-    case 2:
-    resource = ALLOWED_FOODS(2);
-    break;
-
-    case 3:
-    resource = ALLOWED_FOODS(3);
-    break;
+    case 0: resource = city_allowed_foods(0); break;
+    case 1: resource = city_allowed_foods(1); break;
+    case 2: resource = city_allowed_foods(2); break;
+    case 3: resource = city_allowed_foods(3); break;
 
     default:
     return 0;

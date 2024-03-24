@@ -136,6 +136,10 @@ int building_granary::total_stored() const {
     return result;
 }
 
+int building_granary::space_for() const {
+    return data.granary.resource_stored[RESOURCE_NONE];
+}
+
 int building_granary::remove_resource(e_resource resource, int amount) {
     if (amount <= 0)
         return 0;
@@ -252,10 +256,6 @@ granary_task_status building_granary::determine_worker_task() {
     }
 
     return {GRANARY_TASK_NONE, RESOURCE_NONE};
-}
-
-int building_granary::total_stored() const {
-    return 0;
 }
 
 void city_granaries_calculate_stocks() {

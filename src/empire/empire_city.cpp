@@ -330,7 +330,7 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
     for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_FOODS_MAX; ++resource) {
         int can_do_food_x = empire_can_produce_resource(resource, true);
         if (can_do_food_x) {
-            set_allowed_food(food_index, resource);
+            city_set_allowed_food(food_index, resource);
             food_index++;
         }
     }

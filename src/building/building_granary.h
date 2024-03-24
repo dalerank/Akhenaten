@@ -42,6 +42,7 @@ public:
     int for_getting(tile2i *dst);
     int add_resource(e_resource resource, int is_produced, int amount);
     int total_stored() const;
+    int space_for() const;
 
     void bless();
     bool is_gettable(e_resource resource);

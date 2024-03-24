@@ -81,7 +81,6 @@ bool model_load_file(const char* filepath,
     }
 
     // parse buildings data
-    int dummy;
     ptr = &haystack[index_of_string(haystack, ALL_BUILDINGS, filesize)];
     const uint8_t* end_ptr = &haystack[filesize];
     for (int i = 0; i < NUM_BUILDINGS; i++) {

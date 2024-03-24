@@ -184,6 +184,8 @@ public:
 
     inline bool operator!=(const_ref other) const { return !equals(other); }
     inline bool operator!=(const char* s) const { assert(s); return ::strncmp(_data, s, _size) != 0; }
+    inline const char &operator[](const size_t i) const { return _data[i]; }
+    inline char &operator[](const size_t i) { return _data[i]; }
 
     inline operator char*() { return _data; }
     inline operator const char*() const { return _data; }

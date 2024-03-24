@@ -148,9 +148,10 @@ int ui::label_percent(int amount, vec2i pos, e_font font) {
     return text_draw_percentage(amount, offset.x + pos.x, offset.y + pos.y, font);
 }
 
-void ui::eimage(e_image_id img, vec2i pos) {
+void ui::eimage(e_image_id group, vec2i pos, int img) {
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_group(img), pos);
+    const vec2i offset = g_state.offset();
+    ImageDraw::img_generic(ctx, image_group(group) + img, pos + offset);
 }
 
 void ui::panel(vec2i pos, vec2i size, UiFlags flags) {
@@ -189,22 +190,22 @@ void ui::element::load(archive arch) {
     enabled = arch.r_bool("enabled", true);
 }
 
-void ui::outer_panel::draw() {
+void ui::eouter_panel::draw() {
     ui::panel(pos, size, UiFlags_PanelOuter);
 }
 
-void ui::outer_panel::load(archive arch) {
+void ui::eouter_panel::load(archive arch) {
     element::load(arch);
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "outer_panel"));
 }
 
-void ui::inner_panel::draw() {
+void ui::einner_panel::draw() {
     ui::panel(pos, size, UiFlags_PanelInner);
 }
 
-void ui::inner_panel::load(archive arch) {
+void ui::einner_panel::load(archive arch) {
     element::load(arch);
 
     pcstr type = arch.r_string("type");
@@ -225,11 +226,11 @@ void ui::widget::load(archive arch) {
         pcstr type = elem.r_string("type");
         element::ptr elm;
         if (!strcmp(type, "outer_panel")) {
-            elm = std::make_shared<outer_panel>();
+            elm = std::make_shared<eouter_panel>();
         } else if (!strcmp(type, "inner_panel")) {
-            elm = std::make_shared<inner_panel>();
+            elm = std::make_shared<einner_panel>();
         } else if (!strcmp(type, "image")) {
-            elm = std::make_shared<image>();
+            elm = std::make_shared<eimg>();
         } else if (!strcmp(type, "label")) {
             elm = std::make_shared<elabel>();
         } else if (!strcmp(type, "text")) {
@@ -238,6 +239,8 @@ void ui::widget::load(archive arch) {
             elm = std::make_shared<egeneric_button>();
         } else if (!strcmp(type, "image_button")) {
             elm = std::make_shared<eimage_button>();
+        } else if (!strcmp(type, "resource_icon")) {
+            elm = std::make_shared<eresource_icon>();
         } else if (!strcmp(type, "large_button")) {
             auto btn = std::make_shared<egeneric_button>();
             btn->mode = 1;
@@ -257,16 +260,32 @@ ui::element& ui::widget::operator[](pcstr id) {
     return (it != elements.end() ? **it : ui::dummy_element);
 }
 
-void ui::image::draw() {
+void ui::eimg::draw() {
     ui::eimage(img, pos);
 }
 
-void ui::image::load(archive arch) {
+void ui::eimg::load(archive arch) {
     element::load(arch);
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "image"));
     img = arch.r_image("image");
+}
+
+void ui::eresource_icon::draw() {
+    ui::eimage(IMG_RESOURCE_ICONS, pos, res);
+}
+
+void ui::eresource_icon::image(int image) {
+    res = (e_resource)image;
+}
+
+void ui::eresource_icon::load(archive arch) {
+    element::load(arch);
+
+    pcstr type = arch.r_string("type");
+    assert(!strcmp(type, "resource_icon"));
+    res = arch.r_type<e_resource>("resource");
 }
 
 void ui::elabel::draw() {
@@ -291,7 +310,7 @@ void ui::elabel::load(archive arch) {
 
 void ui::elabel::text(pcstr v) {
     _text = lang_text_from_key(v);
-    enabled = strlen(v) > 0;
+    enabled = !_text.empty();
 }
 
 void ui::eimage_button::load(archive arch) {

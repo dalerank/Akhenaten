@@ -58,14 +58,14 @@ void city_data_init_campaign_mission(void) {
     city_data.finance.treasury = difficulty_adjust_money(city_data.finance.treasury);
 }
 
-int ALLOWED_FOODS(int i) {
+int city_allowed_foods(int i) {
     return city_data.resource.food_types_allowed[i];
 }
 
-bool is_food_allowed(int resource) {
+bool city_is_food_allowed(int resource) {
     bool result = false;
     for (int i = 0; i < 4; i++) {
-        if (ALLOWED_FOODS(i) == resource) {
+        if (city_allowed_foods(i) == resource) {
             result = true;
         }
     }
@@ -73,7 +73,7 @@ bool is_food_allowed(int resource) {
     return result;
 }
 
-void set_allowed_food(int i, int resource) {
+void city_set_allowed_food(int i, int resource) {
     city_data.resource.food_types_allowed[i] = resource;
 }
 

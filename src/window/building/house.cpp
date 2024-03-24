@@ -111,10 +111,10 @@ void window_building_draw_house(object_info* c) {
     int resource_image = image_id_resource_icon(0);
     // food inventory
     // todo: fetch map available foods?
-    int food1 = ALLOWED_FOODS(0);
-    int food2 = ALLOWED_FOODS(1);
-    int food3 = ALLOWED_FOODS(2);
-    int food4 = ALLOWED_FOODS(3);
+    int food1 = city_allowed_foods(0);
+    int food2 = city_allowed_foods(1);
+    int food3 = city_allowed_foods(2);
+    int food4 = city_allowed_foods(3);
 
     if (food1) { // wheat
         ImageDraw::img_generic(ctx, resource_image + food1, c->offset + vec2i{32, Y_FOODS});

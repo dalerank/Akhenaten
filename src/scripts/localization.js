@@ -19,4 +19,7 @@ localization = [
   {key: "#granary_info_title", group:98, id:0 },
   {key: "#granary_no_road_access", group:69, id:25 },
   {key: "#granary_kingdom_supplies_grain", group:98, id:4 },
+  {key: "#granary_storing", group:98, id:2 },
+  {key: "#granary_space_for", group:98, id:3 },
+  {key: "#granary_units", group:8, id:17 },
 ]

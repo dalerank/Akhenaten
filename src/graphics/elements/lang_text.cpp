@@ -29,6 +29,10 @@ loc_text loc_text_from_key(pcstr key) {
 }
 
 pcstr lang_text_from_key(pcstr key) {
+    if (!key) {
+        return "";
+    }
+
     size_t hash = bstring128(key).hash();
     auto it = g_localization.find(hash);
     pcstr str = (it != g_localization.end())

@@ -995,7 +995,7 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         }
 
         for (int i = 0; i < 4; i++) {
-            int good_n = ALLOWED_FOODS(i);
+            int good_n = city_allowed_foods(i);
             b->data.house.inventory[i] = b->data.house.inventory[good_n];
             iob->bind(BIND_SIGNATURE_INT16, &b->data.house.inventory[i + 4]);
         }

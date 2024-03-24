@@ -118,10 +118,10 @@ building *building_bazaar::get_storage_destination() {
             }
 
             // todo: fetch map available foods?
-            update_food_resource(resources[0], ALLOWED_FOODS(0), b, distance);
-            update_food_resource(resources[1], ALLOWED_FOODS(1), b, distance);
-            update_food_resource(resources[2], ALLOWED_FOODS(2), b, distance);
-            update_food_resource(resources[3], ALLOWED_FOODS(3), b, distance);
+            update_food_resource(resources[0], city_allowed_foods(0), b, distance);
+            update_food_resource(resources[1], city_allowed_foods(1), b, distance);
+            update_food_resource(resources[2], city_allowed_foods(2), b, distance);
+            update_food_resource(resources[3], city_allowed_foods(3), b, distance);
 
         } else if (b.type == BUILDING_STORAGE_YARD) {
             // goods
@@ -376,10 +376,10 @@ void building_bazaar::draw_simple_background(object_info &c) {
 
     // food stocks
     // todo: fetch map available foods?
-    int food1 = ALLOWED_FOODS(0);
-    int food2 = ALLOWED_FOODS(1);
-    int food3 = ALLOWED_FOODS(2);
-    int food4 = ALLOWED_FOODS(3);
+    int food1 = city_allowed_foods(0);
+    int food2 = city_allowed_foods(1);
+    int food3 = city_allowed_foods(2);
+    int food4 = city_allowed_foods(3);
 
     if (food1) {
         font = is_good_accepted(0) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;

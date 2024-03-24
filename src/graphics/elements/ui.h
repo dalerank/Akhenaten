@@ -39,7 +39,7 @@ int label(int group, int number, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_L
 int label(pcstr, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0);
 int label_amount(int group, int number, int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, pcstr postfix = "");
 int label_percent(int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
-void eimage(e_image_id img, vec2i pos);
+void eimage(e_image_id img, vec2i pos, int offset = 0);
 void panel(vec2i pos, vec2i size, UiFlags flags);
 void icon(vec2i pos, e_resource img);
 void icon(vec2i pos, e_advisor advisor);
@@ -63,27 +63,77 @@ struct element {
     virtual void draw() {}
     virtual void load(archive);
     virtual void text(pcstr) {}
+    virtual void image(int) {}
     virtual void onclick(std::function<void(int, int)>) {}
 
+    template<class T>
+    void preformat_text(T& str) {
+        T result;
+        bool inSubstr = false;
+        bstring128 replacement;
+
+        pcstr ptr = str.c_str();
+        for (; *ptr != '\0'; ++ptr) {
+            if (*ptr == '#') {
+                inSubstr = true;
+                replacement.append(*ptr);
+                continue;
+            }
+
+            if (inSubstr) {
+                if (*ptr == ' ') {
+                    inSubstr = false;
+                    result.append(lang_text_from_key(replacement));
+                    replacement.clear();
+                } else {
+                    replacement.append(*ptr);
+                }
+            }
+
+            if (!inSubstr) {
+                result.append(*ptr);
+            }
+        }
+
+        if (inSubstr) {
+            result.append(lang_text_from_key(replacement));
+        }
+
+        str = result;
+    }
+
     template<class ... Args> 
-    inline void text_var(pcstr fmt, const Args&... args) { text(bstring512().printf(fmt, args...)); }
+    inline void text_var(pcstr fmt, const Args&... args) {
+        bstring512 formated_text;
+        formated_text.printf(fmt, args...);
+        preformat_text(formated_text);
+        text(formated_text);
+    }
 
     using ptr = std::shared_ptr<element>;
 };
 
-struct image : public element {
+struct eimg : public element {
     e_image_id img;
 
     virtual void draw() override;
     virtual void load(archive elem) override;
 };
 
-struct outer_panel : public element {
+struct eresource_icon : public element {
+    e_resource res;
+
+    virtual void draw() override;
+    virtual void image(int image) override;
+    virtual void load(archive elem) override;
+};
+
+struct eouter_panel : public element {
     virtual void draw() override;
     virtual void load(archive elem) override;
 };
 
-struct inner_panel : public element {
+struct einner_panel : public element {
     virtual void draw() override;
     virtual void load(archive elem) override;
 };

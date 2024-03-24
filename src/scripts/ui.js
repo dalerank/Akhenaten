@@ -55,10 +55,22 @@ mission_briefing_window = {
 }
 
 granary_info_window = {
+	resource_text_group : 23,
 	ui : {
-		background : { type : "outer_panel",	pos: [0, 0], size : {w:38, h:27} },
-		title 		 : { type : "text", pos : {x:0, y:12}, size : {w:28 * 16}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		warning_text : { type : "text", pos : {x:32, y:40}, size : {w:28 * 16}, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		background : { type : "outer_panel",	pos: [0, 0], size: [29, 17] },
+		title 		 : { type : "text", pos: [0, 12], size: [28 * 16, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		warning_text : { type : "text", pos: [32, 40], size: [28 * 16, 0], font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		storing    : { type : "text", pos: [34, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
+		free_space : { type : "text", pos: [220, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
+		food0_icon : { type : "resource_icon", pos: [34, 68] },
+		food0_text : { type : "text", pos: [68, 75], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		food1_icon : { type : "resource_icon", pos: [240, 68] },
+		food1_text : { type : "text", pos: [274, 75], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		food2_icon : { type : "resource_icon", pos: [34, 92] },
+		food2_text : { type : "text", pos: [68, 99], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		food3_icon : { type : "resource_icon", pos: [240, 92] },
+		food3_text : { type : "text", pos: [274, 99], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		workers_panel : { type : "inner_panel", pos : [16, 142], size: [27, 5] },
 	}
 }
 
