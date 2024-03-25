@@ -192,8 +192,10 @@ void figure::draw_cartpusher(object_info* c) {
     //                                                 c->offset.x + 90, c->offset.y + 160, 16 * (c->width_blocks - 8),
     //                                                 FONT_NORMAL_GREEN);
 
-    if (!has_home())
+    if (!has_home()) {
         return;
+    }
+
     building* source_building = home();
     building* target_building = destination();
     bool is_returning = false;
@@ -209,24 +211,10 @@ void figure::draw_cartpusher(object_info* c) {
         is_returning = true;
         break;
     }
-    //    if (action_state != FIGURE_ACTION_132_DOCKER_IDLING) {
-    //        int x_base = c->offset.x + 40;
-    //        int y_base = c->offset.y + 216;
-    //        if (phrase_height > 60)
-    //            y_base += 8;
-    //
-    //        if (is_returning) {
-    //            width = lang_text_draw(129, 16, x_base, y_base, FONT_NORMAL_GREEN);
-    //            width += lang_text_draw(41, source_building->type, x_base + width, y_base, FONT_NORMAL_GREEN);
-    //            width += lang_text_draw(129, 14, x_base + width, y_base, FONT_NORMAL_GREEN);
-    //            lang_text_draw(41, target_building->type, x_base + width, y_base, FONT_NORMAL_GREEN);
-    //        } else {
-    //            width = lang_text_draw(129, 15, x_base, y_base, FONT_NORMAL_GREEN);
-    //            width += lang_text_draw(41, target_building->type, x_base + width, y_base, FONT_NORMAL_GREEN);
-    //            width += lang_text_draw(129, 14, x_base + width, y_base, FONT_NORMAL_GREEN);
-    //            lang_text_draw(41, source_building->type, x_base + width, y_base, FONT_NORMAL_GREEN);
-    //        }
-    //    }
+
+    if (c->figure.phrase_group > 0 && c->figure.phrase_id >= 0) {
+        lang_text_draw_multiline(c->figure.phrase_group, c->figure.phrase_id, c->offset + vec2i{90, 180}, 16 * (c->bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK);
+    }
 }
 
 void figure::draw_normal_figure(object_info* c) {

@@ -21,6 +21,7 @@ public:
     virtual bool window_info_background(object_info &ctx) override;
     virtual e_figure_sound phrase() const override { return {FIGURE_CART_PUSHER, "cartpusher"}; }
     virtual e_overlay get_overlay() const override { return OVERLAY_NONE; }
+    virtual figure_sound_t get_sound_reaction(pcstr key) const override;
     virtual sound_key phrase_key() const override;
 
     virtual figure_cartpusher *dcast_cartpusher() override { return this; }

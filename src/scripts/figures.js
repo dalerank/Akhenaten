@@ -235,6 +235,14 @@ figure_delivery_boy = {
 figure_cartpusher = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_CARTPUSHER_WALK, max_frames:12 },
+	},
+	sounds  : {
+	  have_no_place_for_goods : { sound:"cartpusher_e01.wav", group:222, text:0},
+    i_have_time_for_rest : { sound:"cartpusher_e02.wav", group:222, text:1},
+    road_too_long : { sound:"cartpusher_e03.wav", group:222, text:2},
+    i_have_no_destination : { sound:"cartpusher_e01.wav", group:223, text:0},
+    back_to_home : { sound:"cartpusher_e02.wav", group:223, text:1},
+    delivering_items : { sound:"cartpusher_e03.wav", group:223, text:2},
 	}
 }
 

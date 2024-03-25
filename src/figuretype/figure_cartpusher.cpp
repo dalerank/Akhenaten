@@ -32,6 +32,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_cartpusher);
 void config_load_figure_cartpusher() {
     g_config_arch.r_section("figure_cartpusher", [] (archive arch) {
         cartpusher_m.anim.load(arch);
+        cartpusher_m.sounds.load(arch);
     });
 }
 
@@ -253,7 +254,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
 
     // before we start... check that resource is not empty.
     if (base.resource_id == RESOURCE_NONE || base.get_carrying_amount() == 0) {
-        return advance_action(ACTION_15_RETURNING2);
+        return advance_action(FIGURE_ACTION_15_RETURNING2);
     }
 
     // first: gold deliverers
@@ -578,9 +579,9 @@ void figure_cartpusher::figure_action() {
     case FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE:
     case FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY:
     case FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP:
-        do_deliver(false, ACTION_15_RETURNING2);
+        do_deliver(false, FIGURE_ACTION_15_RETURNING2);
         break;
-    case ACTION_15_RETURNING2:
+    case FIGURE_ACTION_15_RETURNING2:
     case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
         // the CARTPUSHER figure will never be retrieving goods to carry back.
         // that's job for the WAREHOUSEMAN figure!
@@ -603,19 +604,25 @@ bool figure_cartpusher::window_info_background(object_info &ctx) {
     return true;
 }
 
+figure_sound_t figure_cartpusher::get_sound_reaction(pcstr key) const {
+    return cartpusher_m.sounds[key];
+}
+
 sound_key figure_cartpusher::phrase_key() const {
-    if (action_state() == FIGURE_ACTION_20_CARTPUSHER_INITIAL) {
-        return "cartpusher_i_have_no_destination";
+    if (action_state() == FIGURE_ACTION_20_CARTPUSHER_INITIAL
+        || action_state() == FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE) {
+        return "i_have_no_destination";
     }
 
-    if (action_state() == FIGURE_ACTION_27_CARTPUSHER_RETURNING) {
-        return "cartpusher_back_to_home";
+    if (action_state() == FIGURE_ACTION_27_CARTPUSHER_RETURNING
+        || action_state() == FIGURE_ACTION_15_RETURNING2) {
+        return "back_to_home";
     }
 
     if (action_state() == FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE ||
         action_state() == FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY ||
         action_state() == FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP) {
-        return "cartpusher_delivering_items";
+        return "delivering_items";
     }
 
     return {};

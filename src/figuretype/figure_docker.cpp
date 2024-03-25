@@ -31,6 +31,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_docker);
 void config_load_figure_docker() {
     g_config_arch.r_section("figure_docker", [] (archive arch) {
         docker_m.anim.load(arch);
+        docker_m.anim.load(arch);
     });
 }
 
