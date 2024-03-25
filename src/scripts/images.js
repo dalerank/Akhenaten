@@ -41,6 +41,7 @@ images = [
 	{img: IMG_TEACHER_DEATH, pack:PACK_SPR_MAIN, id:202},
 	{img: ANIM_LABOR_SEEKER_WALK, pack:PACK_SPR_MAIN, id:206},       // 9909
 	{img: ANIM_LABOR_SEEKER_DEATH, pack:PACK_SPR_MAIN, id:207}, // 10005
+	{img: ANIM_DOCKER_WALK, pack:PACK_SPR_MAIN, id:43}, // 10005
 
 	// spr ambient
 	{img: IMG_FLOTSAM, pack:PACK_SPR_AMBIENT, id:0},  // 1 + 15831

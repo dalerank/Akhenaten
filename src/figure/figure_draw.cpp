@@ -156,13 +156,6 @@ void figure::city_draw_figure(painter &ctx, int highlight, vec2i* coord_out) {
 
     if (cart_image_id) {
         switch (type) {
-        case FIGURE_DOCKER:
-            draw_figure_with_cart(ctx, cached_pos, highlight, coord_out);
-            break;
-            //            case FIGURE_HIPPODROME_HORSES:
-            //                hippodrome_horse_adjust(&x, &y, wait_ticks_missile);
-            //                draw_figure_with_cart(pixel, highlight, coord_out);
-            //                break;
         case FIGURE_STANDARD_BEARER:
             draw_fort_standard(cached_pos, highlight, coord_out);
             break;

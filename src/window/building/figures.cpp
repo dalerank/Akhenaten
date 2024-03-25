@@ -262,7 +262,7 @@ static void draw_figure_info(object_info* c, int figure_id) {
         f->draw_enemy(c);
     else if (type == FIGURE_FISHING_BOAT || type == FIGURE_SHIPWRECK || f->is_herd())
         f->draw_animal(c);
-    else if (type == FIGURE_STORAGEYARD_CART || type == FIGURE_DOCKER)
+    else if (type == FIGURE_STORAGEYARD_CART)
         f->draw_cartpusher(c);
     else
         f->draw_normal_figure(c);

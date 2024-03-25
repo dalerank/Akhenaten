@@ -68,7 +68,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_WORKER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0},
   {FIGURE_MAP_FLAG, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_FLOTSAM, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
-  {FIGURE_DOCKER, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
+  {FIGURE_DOCKER, 1, TERRAIN_USAGE_ROADS, 0, 0, 0, ANIM_DOCKER_WALK},
   {FIGURE_MARKET_BUYER, 1, TERRAIN_USAGE_ROADS, 800, 0, 0, ANIM_MARKET_BUYER_WALK},
   {FIGURE_NOBLES, 1, TERRAIN_USAGE_ROADS, 128, GROUP_FIGURE_NOBLE},
   {FIGURE_INDIGENOUS_NATIVE, 1, TERRAIN_USAGE_ANY, 800, 0, 0},
@@ -481,7 +481,6 @@ void figure::action_perform() {
             //            case 32: common_action(12, GROUP_FIGURE_BATHHOUSE_WORKER); break;
         case 36: editor_flag_action(); break;
         case FIGURE_FLOTSAM: flotsam_action(); break;
-        case 38: docker_action(); break;
         case FIGURE_NOBLES: noble_action(); break; 
         case 41: indigenous_native_action(); break;
         case 42: tower_sentry_action(); break;

@@ -103,6 +103,7 @@ var figure_caravan_donkey = {}
 var figure_trade_caravan = {}
 var figure_homeless = {}
 var figure_teacher = {}
+var figure_docker = {}
 var mission0 = {}
 var mission1 = {}
 var mission5 = {}

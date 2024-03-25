@@ -238,6 +238,12 @@ figure_cartpusher = {
 	}
 }
 
+figure_docker = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_DOCKER_WALK, max_frames:12 },
+	}
+}
+
 figure_storageyard_cart = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_CARTPUSHER_WALK, max_frames:12 },

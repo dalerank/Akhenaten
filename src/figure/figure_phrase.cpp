@@ -33,7 +33,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "carpenter"},
     {FIGURE_DENTIST, "dentist"},
     {FIGURE_NONE, "desease"},
-    {FIGURE_DOCKER, "dock_pusher"},
     {FIGURE_EMBALMER, "embalmer"},
     {FIGURE_FISHING_BOAT, "fishing"},
     {FIGURE_NONE, "governor"},
@@ -257,17 +256,6 @@ static int soldier_phrase() {
     return 0;
 }
 
-static int docker_phrase() {
-    //    if (f->action_state == FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE ||
-    //        f->action_state == FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE) {
-    //        if (calc_maximum_distance(
-    //                f->destination_x, f->destination_y, f->source_x, f->source_y) >= 25) {
-    //            return 9; // too far
-    //        }
-    //    }
-    return 0;
-}
-
 static int trade_ship_phrase() {
     //    if (f->action_state == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
     //        if (!trader_has_traded(f->trader_id))
@@ -308,8 +296,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_FORT_MOUNTED:
     //        case FIGURE_FORT_LEGIONARY:
     //            return soldier_phrase();
-    //        case FIGURE_DOCKER:
-    //            return docker_phrase(f);
     //        case FIGURE_TRADE_SHIP:
     //            return trade_ship_phrase(f);
     default:

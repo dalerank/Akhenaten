@@ -398,7 +398,6 @@ public:
     void bricklayer_action();
     void editor_flag_action();
     void flotsam_action();
-    void docker_action();
     void noble_action();
     void indigenous_native_action();
     void tower_sentry_action();
@@ -438,9 +437,6 @@ public:
     void update_direction_and_image();
     int is_nearby(int category, int* distance, int max_distance = 10000, bool gang_on = true);
     bool herd_roost(int step, int bias, int max_dist, int terrain_mask);
-    void get_trade_center_location(int* _x, int* _y);
-    int deliver_import_resource(building* dock);
-    int fetch_export_resource(building* dock);
 
     inline void set_resource(e_resource resource) { resource_id = resource; }
     e_resource get_resource() const { return resource_id; }
@@ -513,6 +509,7 @@ public:
     figure_impl(figure *f) : base(*f), wait_ticks(f->wait_ticks), destination_tile(f->destination_tile) {}
 
     virtual void on_create() {}
+    virtual void on_destroy() {}
     virtual void figure_action() {}
     virtual void figure_before_action() {}
     virtual bool window_info_background(object_info &ctx) { return false; }

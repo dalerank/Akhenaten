@@ -96,6 +96,8 @@ figure* figure_create(e_figure_type type, tile2i tile, int dir) {
     return f;
 }
 void figure::figure_delete_UNSAFE() {
+    dcast()->on_destroy();
+
     if (has_home()) {
         building* b = home();
         if (b->has_figure(0, id))
@@ -108,15 +110,6 @@ void figure::figure_delete_UNSAFE() {
     case FIGURE_BALLISTA:
         if (has_home())
             home()->remove_figure(3);
-        break;
-    case FIGURE_DOCKER:
-        if (has_home()) {
-            building* b = home();
-            for (int i = 0; i < 3; i++) {
-                if (b->data.dock.docker_ids[i] == id)
-                    b->data.dock.docker_ids[i] = 0;
-            }
-        }
         break;
     case FIGURE_ENEMY_CAESAR_LEGIONARY:
         city_emperor_mark_soldier_killed();
