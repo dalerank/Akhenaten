@@ -4,6 +4,7 @@
 #include "building/building.h"
 #include "building/building_granary.h"
 #include "building/storage.h"
+#include "window/building/figures.h"
 #include "core/log.h"
 #include "building/building_storage_yard.h"
 #include "figure/combat.h"
@@ -11,7 +12,10 @@
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "game/resource.h"
+#include "game/game.h"
 #include "graphics/image.h"
+#include "graphics/graphics.h"
+#include "graphics/elements/ui.h"
 #include "graphics/image_groups.h"
 #include "config/config.h"
 #include "city/health.h"
@@ -277,6 +281,30 @@ int figure_market_buyer::provide_service() {
 
 figure_sound_t figure_market_buyer::get_sound_reaction(pcstr key) const {
     return market_buyer_m.sounds[key];
+}
+
+bool figure_market_buyer::window_info_background(object_info &c) {
+    painter ctx = game.painter();
+    ImageDraw::img_generic(ctx, big_people_image(type()), c.offset + vec2i{28, 112});
+
+    lang_text_draw(name_group_id(), base.name, c.offset.x + 90, c.offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
+    int width = lang_text_draw(64, type(), c.offset.x + 92, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
+
+    if (action_state() == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
+        width += lang_text_draw(129, 17, c.offset.x + 90 + width, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
+        int resource = inventory_to_resource_id(base.collecting_item_id);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c.offset + vec2i{90 + width, 135});
+    } else if (action_state() == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
+        width += lang_text_draw(129, 18, c.offset.x + 90 + width, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
+        int resource = inventory_to_resource_id(base.collecting_item_id);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c.offset + vec2i{90 + width, 135});
+    }
+
+    if (c.figure.phrase_group > 0 && c.figure.phrase_id >= 0) {
+        lang_text_draw_multiline(c.figure.phrase_group, c.figure.phrase_id, c.offset + vec2i{90, 160}, 16 * (c.bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK);
+    }
+
+    return true;
 }
 
 int figure_market_buyer::take_food_from_granary(building* market, building* b) {
