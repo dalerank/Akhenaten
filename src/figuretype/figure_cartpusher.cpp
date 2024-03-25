@@ -598,6 +598,11 @@ void figure_cartpusher::figure_draw(painter &ctx, vec2i pixel, int highlight, ve
     base.draw_figure_with_cart(ctx, base.cached_pos, highlight, coord_out);
 }
 
+bool figure_cartpusher::window_info_background(object_info &ctx) {
+    base.draw_cartpusher(&ctx);
+    return true;
+}
+
 sound_key figure_cartpusher::phrase_key() const {
     if (action_state() == FIGURE_ACTION_20_CARTPUSHER_INITIAL) {
         return "cartpusher_i_have_no_destination";

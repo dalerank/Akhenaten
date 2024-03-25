@@ -45,14 +45,14 @@ struct building_figures_data_t {
 
 building_figures_data_t g_building_figures_data;
 
-static int big_people_image(e_figure_type type) {
+int big_people_image(e_figure_type type) {
     int result = 0;
     int index = type;
     result = image_id_from_group(GROUP_PORTRAITS) + type;
     return result;
 }
 
-static int inventory_to_resource_id(int value) {
+int inventory_to_resource_id(int value) {
     switch (value) {
     case 0:
         return RESOURCE_GRAIN;
@@ -75,7 +75,7 @@ static int inventory_to_resource_id(int value) {
     }
 }
 
-static int name_group_id() { // TODO
+int name_group_id() { // TODO
     return 254;
 }
 
@@ -229,28 +229,6 @@ void figure::draw_cartpusher(object_info* c) {
     //    }
 }
 
-void figure::draw_market_buyer(object_info* c) {
-    painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, big_people_image(type), c->offset + vec2i{28, 112});
-
-    lang_text_draw(name_group_id(), name, c->offset.x + 90, c->offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
-    int width = lang_text_draw(64, type, c->offset.x + 92, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
-
-    if (action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
-        width += lang_text_draw(129, 17, c->offset.x + 90 + width, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
-        int resource = inventory_to_resource_id(collecting_item_id);
-        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->offset + vec2i{90 + width, 135});
-    } else if (action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
-        width += lang_text_draw(129, 18, c->offset.x + 90 + width, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
-        int resource = inventory_to_resource_id(collecting_item_id);
-        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c->offset + vec2i{90 + width, 135});
-    }
-
-    if (c->figure.phrase_group > 0 && c->figure.phrase_id >= 0) {
-        lang_text_draw_multiline(c->figure.phrase_group, c->figure.phrase_id, c->offset + vec2i{90, 160}, 16 * (c->bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK);
-    }
-}
-
 void figure::draw_normal_figure(object_info* c) {
     painter ctx = game.painter();
     int image_id = big_people_image(type);
@@ -284,10 +262,8 @@ static void draw_figure_info(object_info* c, int figure_id) {
         f->draw_enemy(c);
     else if (type == FIGURE_FISHING_BOAT || type == FIGURE_SHIPWRECK || f->is_herd())
         f->draw_animal(c);
-    else if (type == FIGURE_CART_PUSHER || type == FIGURE_STORAGEYARD_CART || type == FIGURE_DOCKER)
+    else if (type == FIGURE_STORAGEYARD_CART || type == FIGURE_DOCKER)
         f->draw_cartpusher(c);
-    else if (type == FIGURE_MARKET_BUYER)
-        f->draw_market_buyer(c);
     else
         f->draw_normal_figure(c);
 }

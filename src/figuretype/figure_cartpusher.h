@@ -18,6 +18,7 @@ public:
     virtual void figure_before_action() override;
     virtual void figure_action() override;
     virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) override;
+    virtual bool window_info_background(object_info &ctx) override;
     virtual e_figure_sound phrase() const override { return {FIGURE_CART_PUSHER, "cartpusher"}; }
     virtual e_overlay get_overlay() const override { return OVERLAY_NONE; }
     virtual sound_key phrase_key() const override;

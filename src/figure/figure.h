@@ -502,7 +502,6 @@ public:
     void draw_enemy(object_info* c);
     void draw_animal(object_info* c);
     void draw_cartpusher(object_info* c);
-    void draw_market_buyer(object_info* c);
     void draw_normal_figure(object_info* c);
 
     // grid/marshland.c
