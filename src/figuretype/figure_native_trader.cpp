@@ -107,3 +107,7 @@ void figure_native_trader::figure_action() {
         base.figure_image_set_cart_offset(dir);
     }
 }
+
+void figure_native_trader::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i *coord_out) {
+    base.draw_figure_with_cart(ctx, pixel, highlight, coord_out);
+}
