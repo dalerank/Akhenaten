@@ -500,10 +500,7 @@ endif()
 
 if(UNIX AND NOT APPLE)
     install(FILES "res/akhenaten.desktop" DESTINATION "share/applications" RENAME "com.github.dalerank.akhenaten.desktop")
-    install(FILES "res/akhenaten.metainfo.xml" DESTINATION "share/metainfo" RENAME "com.github.dalerank.akhenaten.metainfo.xml")
-    install(FILES "res/akhenaten_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "com.github.dalerank.akhenaten.png")
     install(FILES "res/akhenaten_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.dalerank.akhenaten.png")
-    install(FILES "res/akhenaten_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.dalerank.akhenaten.png")
 endif()
 
 if (MSVC)
