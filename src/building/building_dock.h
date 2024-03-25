@@ -26,7 +26,10 @@ public:
     bool is_good_accepted(int index);
     void toggle_good_accepted(int index);
     int count_idle_dockers() const;
-
+    void draw_dock_orders(object_info *c);
+    void draw_dock(object_info *c);
+    void draw_dock_orders_foreground(object_info *c);
+    void draw_dock_foreground(object_info *c);
 };
 
 struct building_dest {

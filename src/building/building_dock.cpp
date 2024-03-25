@@ -116,7 +116,7 @@ void building_dock::spawn_figure() {
     }
 }
 
-void window_building_draw_dock_orders(object_info* c) {
+void building_dock::draw_dock_orders(object_info* c) {
     c->help_id = 83;
     int y_offset = window_building_get_vertical_offset(c, 28);
     outer_panel_draw(vec2i{c->offset.x, y_offset}, 29, 28);
@@ -124,7 +124,7 @@ void window_building_draw_dock_orders(object_info* c) {
     inner_panel_draw(c->offset.x + 16, y_offset + 42, c->bgsize.x - 2, 21);
 }
 
-void window_building_draw_dock(object_info* c) {
+void building_dock::draw_dock(object_info* c) {
     c->help_id = 83;
     window_building_play_sound(c, "wavs/dock.wav");
     outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
@@ -160,7 +160,7 @@ void window_building_draw_dock(object_info* c) {
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_dock_orders_foreground(object_info* c) {
+void building_dock::draw_dock_orders_foreground(object_info* c) {
     auto &data = g_window_building_distribution;
     painter ctx = game.painter();
     int y_offset = window_building_get_vertical_offset(c, 28);
@@ -189,29 +189,28 @@ void window_building_draw_dock_orders_foreground(object_info* c) {
     }
 }
 
-void window_building_draw_dock_foreground(object_info* c) {
-    auto &data = g_window_building_distribution;
-    button_border_draw(c->offset.x + 80, c->offset.y + 16 * c->bgsize.y - 34, 16 * (c->bgsize.x - 10), 20, data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(98, 5, c->offset.x + 80, c->offset.y + 16 * c->bgsize.y - 30, 16 * (c->bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
-}
-
 void building_dock::window_info_background(object_info &c) {
-    if (c.storage_show_special_orders)
-        window_building_draw_dock_orders(&c);
-    else
-        window_building_draw_dock(&c);
+    if (c.storage_show_special_orders) {
+        draw_dock_orders(&c);
+    } else {
+        draw_dock(&c);
+    }
 }
 
 void building_dock::window_info_foreground(object_info &c) {
-    if (c.storage_show_special_orders)
-        window_building_draw_dock_orders_foreground(&c);
-    else
-        window_building_draw_dock_foreground(&c);
+    if (c.storage_show_special_orders) {
+        draw_dock_orders_foreground(&c);
+        return;
+    } 
+
+    auto &data = g_window_building_distribution;
+    button_border_draw(c.offset.x + 80, c.offset.y + 16 * c.bgsize.y - 34, 16 * (c.bgsize.x - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    lang_text_draw_centered(98, 5, c.offset.x + 80, c.offset.y + 16 * c.bgsize.y - 30, 16 * (c.bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
 void window_building_dock_orders(int index, int param2) {
     auto &data = g_window_building_distribution;
-    building_dock* bazaar = building_get(data.building_id)->dcast_dock();
+    //building_dock* bazaar = building_get(data.building_id)->dcast_dock();
     //if (index == 0) {
     //    bazaar->unaccept_all_goods();
     //}
@@ -230,6 +229,7 @@ int window_building_handle_mouse_dock_orders(const mouse* m, object_info* c) {
     if (generic_buttons_handle_mouse(m, c->offset.x + 180, y_offset + 46, data.orders_resource_buttons.data(), 15, &data.resource_focus_button_id)) {
         return 1;
     }
+
     return generic_buttons_handle_mouse(m, c->offset.x + 80, y_offset + 404, dock_order_buttons, 1, &data.orders_focus_button_id);
 }
 
