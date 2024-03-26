@@ -252,6 +252,16 @@ figure_docker = {
 	}
 }
 
+figure_bricklayer = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: IMG_BRICKLAYER_WALK, max_frames:12 },
+	},
+	sounds : {
+		time_to_put_bricks : {sound:"brick_e01.wav", group:222, text: 0},
+ 		with_my_bricks_monuments_will_be_fine : {sound:"brick_e02.wav", group:222, text: 1},
+	}
+}
+
 figure_storageyard_cart = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_CARTPUSHER_WALK, max_frames:12 },

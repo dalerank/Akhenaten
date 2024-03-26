@@ -690,22 +690,6 @@ int building::get_figures_number(e_figure_type ftype) {
     return gatherers_this_yard;
 }
 
-bool building::can_spawn_bricklayer_man(e_figure_type ftype, int max_gatherers_per_building) {
-    if (!is_guild()) {
-        return false;
-    }
-
-    bool can_spawn = false;
-    switch (ftype) {
-    case FIGURE_BRICKLAYER:
-        can_spawn = building_count_active(BUILDING_SMALL_MASTABA)
-                        && (get_figures_number(FIGURE_BRICKLAYER) < data.guild.max_workers);
-        break;
-    }
-
-    return can_spawn;
-}
-
 bool building::can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_building, int carry_per_person) {
     bool resource_reachable = false;
     switch (ftype) {

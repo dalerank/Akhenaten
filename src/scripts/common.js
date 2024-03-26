@@ -74,7 +74,7 @@ var advisor_rating_window = {}
 var mission_briefing_window = {}
 var granary_info_window = {}
 var main_menu_window = {}
-//figures 
+//figures
 var figure_fireman = {}
 var figure_water_carrier = {}
 var figure_priest = {}
@@ -104,6 +104,7 @@ var figure_trade_caravan = {}
 var figure_homeless = {}
 var figure_teacher = {}
 var figure_docker = {}
+var figure_bricklayer = {}
 var mission0 = {}
 var mission1 = {}
 var mission5 = {}

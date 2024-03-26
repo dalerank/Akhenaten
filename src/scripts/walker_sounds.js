@@ -10,9 +10,6 @@ walker_sounds = [
  {type: "barge_city_not_trades", 												sound:"barge_e03.wav"},
  {type: "barge_i_like_to_trage", 												sound:"barge_e04.wav"},
  {type: "barge_amazing_trades", 												sound:"barge_e05.wav"},
- // brick
- {type: "brick_time_to_put_bricks", 										sound:"brick_e01.wav"},
- {type: "brick_with_my_bricks_monuments_will_be_fine", 	sound:"brick_e02.wav"},
  // caravan
  {type: "caravan_city_not_trades", 											sound:"caravan_e01.wav"},
  {type: "caravan_buy_for_less_sell_for_more", 					sound:"caravan_e02.wav"},

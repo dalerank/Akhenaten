@@ -1,11 +1,25 @@
-#include "figure/figure.h"
+#include "figure_bricklayer.h"
 
 #include "building/monument_mastaba.h"
 #include "grid/terrain.h"
+#include "grid/grid.h"
 
-void figure::bricklayer_action() {
-    use_cross_country = false;
-    max_roam_length = 384;
+#include "js/js_game.h"
+
+struct bricklayer_model : public figures::model_t<FIGURE_BRICKLAYER, figure_bricklayer> {};
+bricklayer_model bricklayer_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_bricklayer);
+void config_load_figure_bricklayer() {
+    g_config_arch.r_section("figure_bricklayer", [] (archive arch) {
+        bricklayer_m.anim.load(arch);
+        bricklayer_m.sounds.load(arch);
+    });
+}
+
+void figure_bricklayer::figure_action() {
+    base.use_cross_country = false;
+    base.max_roam_length = 384;
     building* bhome = home();
     building* b_dest = destination();
     e_terrain_usage terrain_usage = TERRAIN_USAGE_ROADS;
@@ -20,7 +34,7 @@ void figure::bricklayer_action() {
         terrain_usage = TERRAIN_USAGE_ROADS;
     }
 
-    switch (action_state) {
+    switch (action_state()) {
     case 9:
         break;
 
@@ -59,11 +73,13 @@ void figure::bricklayer_action() {
         break;
 
     case FIGURE_ACTION_12_BRICKLAYER_GOING_TO_PLACE:
-        roam_wander_freely = false;
+        base.roam_wander_freely = false;
         if (do_goto(destination_tile, false, TERRAIN_USAGE_ANY)) {
             wait_ticks = 0;
-            direction = 0;
-            map_grid_area_foreach(tile.shifted(-1, -1), tile, [&] (tile2i t) { map_monuments_set_progress(t, 1); });
+            base.direction = 0;
+            map_grid_area_foreach(tile().shifted(-1, -1), tile(), [&] (tile2i t) { 
+                map_monuments_set_progress(t, 1); 
+            });
             advance_action(FIGURE_ACTION_13_BRICKLAYER_WAITING_RESOURCES);
         }
         break;
@@ -72,12 +88,12 @@ void figure::bricklayer_action() {
         wait_ticks++;
         if (wait_ticks > 30) {
             wait_ticks = 0;
-            local_data.bricklayer.idle_wait_count++;
+            base.local_data.bricklayer.idle_wait_count++;
             bool area_ready = true;
-            map_grid_area_foreach(tile.shifted(-1, -1), tile, [&] (tile2i t) { area_ready &= (map_monuments_get_progress(t) == 2); });
+            map_grid_area_foreach(tile().shifted(-1, -1), tile(), [&] (tile2i t) { area_ready &= (map_monuments_get_progress(t) == 2); });
             if (area_ready) {
                 advance_action(FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS);
-            } else if (local_data.bricklayer.idle_wait_count > 20) {
+            } else if (base.local_data.bricklayer.idle_wait_count > 20) {
                 destination_tile = building_monument_access_point(destination());
                 destination_tile.shift(1, 1);
                 advance_action(FIGURE_ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT);
@@ -86,9 +102,11 @@ void figure::bricklayer_action() {
         break;
 
     case FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS: {
-            int progress = map_monuments_get_progress(tile);
+            int progress = map_monuments_get_progress(tile());
             if (progress < 200) {
-                map_grid_area_foreach(tile.shifted(-1, -1), tile, [&] (tile2i t) { map_monuments_set_progress(t, progress + 1); });
+                map_grid_area_foreach(tile().shifted(-1, -1), tile(), [&] (tile2i t) {
+                    map_monuments_set_progress(t, progress + 1);
+                });
             } else {
                 advance_action(FIGURE_ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
             }
@@ -96,7 +114,7 @@ void figure::bricklayer_action() {
         break;
 
     case FIGURE_ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT:
-        roam_wander_freely = false;
+        base.roam_wander_freely = false;
         if (do_goto(destination_tile, false, TERRAIN_USAGE_ANY)) {
             wait_ticks = 0;
             advance_action(FIGURE_ACTION_16_BRICKLAYER_RETURN_HOME);
@@ -110,7 +128,7 @@ void figure::bricklayer_action() {
         break;
     }
 
-    switch (action_state) {
+    switch (action_state()) {
     case FIGURE_ACTION_13_BRICKLAYER_WAITING_RESOURCES:
         image_set_animation(IMG_BRICKLAYER_IDLE, 0, 8);
         break;

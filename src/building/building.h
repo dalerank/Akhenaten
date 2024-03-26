@@ -384,7 +384,6 @@ public:
 
     int get_figures_number(e_figure_type ftype);
     bool can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_building, int carry_per_person);
-    bool can_spawn_bricklayer_man(e_figure_type ftype, int max_gatherers_per_building);
 
     void update_native_crop_progress();
     tile2i access_tile();

@@ -512,7 +512,6 @@ void figure::action_perform() {
         case FIGURE_LUMBERJACK: lumberjack_action(); break; // wood cutters
         case FIGURE_GOVERNOR: governor_action(); break;
         case FIGURE_HIPPO: hippo_action(); break;
-        case FIGURE_BRICKLAYER: bricklayer_action(); break;
         case FIGURE_CONSTABLE: policeman_action(); break;
         case FIGURE_MAGISTRATE: magistrate_action(); break;
         case FIGURE_FESTIVAL_PRIEST: festival_guy_action(); break;

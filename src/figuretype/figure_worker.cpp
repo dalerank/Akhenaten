@@ -22,6 +22,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_worker);
 void config_load_figure_worker() {
     g_config_arch.r_section("figure_worker", [] (archive arch) {
         worker_m.anim.load(arch);
+        worker_m.sounds.load(arch);
     });
 }
 
@@ -127,52 +128,52 @@ void figure_worker::poof() {
 sound_key figure_worker::phrase_key() const {
     int enemies = city_figures_enemies();
     if (enemies > 10) {
-        return "worker_enemies_in_city";
+        return "enemies_in_city";
     }
 
     svector<sound_key, 10> keys;
     if (base.action_state == ACTION_10_GOING) {
-        keys.push_back("worker_going_to_workplace");
+        keys.push_back("going_to_workplace");
     }
 
     if (!floodplains_is(FLOOD_STATE_FARMABLE)) {
-        keys.push_back("worker_farm_is_flooded");
+        keys.push_back("farm_is_flooded");
     }
 
     if (city_health() < 30) {
-        keys.push_back("worker_desease_can_start_at_any_moment");
+        keys.push_back("desease_can_start_at_any_moment");
     }
 
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("worker_no_food_in_city");
+        keys.push_back("no_food_in_city");
     }
 
     if (city_labor_workers_needed() >= 10) {
-        keys.push_back("worker_need_workers");
+        keys.push_back("need_workers");
     }
 
     if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("worker_gods_are_angry");
+        keys.push_back("gods_are_angry");
     }
 
     if (city_rating_kingdom() < 30) {
-        keys.push_back("worker_city_is_bad");
+        keys.push_back("city_is_bad");
     }
 
     if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
-        keys.push_back("worker_much_unemployments");
+        keys.push_back("much_unemployments");
     }
 
     if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("worker_low_entertainment");
+        keys.push_back("low_entertainment");
     }
 
     if (city_sentiment() > 50) {
-        keys.push_back("worker_city_is_good");
+        keys.push_back("city_is_good");
     }
 
     if (city_sentiment() > 90) {
-        keys.push_back("worker_city_is_amazing");
+        keys.push_back("city_is_amazing");
     }
 
     int index = rand() % keys.size();

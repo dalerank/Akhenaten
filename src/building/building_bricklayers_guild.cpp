@@ -1,6 +1,7 @@
 #include "building_bricklayers_guild.h"
 
 #include "building/building.h"
+#include "building/count.h"
 #include "building/monuments.h"
 #include "city/object_info.h"
 #include "city/resource.h"
@@ -82,6 +83,13 @@ void building_bricklayers_guild::on_create(int orientation) {
     data.guild.max_workers = 1;
 }
 
+bool building_bricklayers_guild::can_spawn_bricklayer_man(int max_gatherers_per_building) {
+    bool can_spawn = building_count_active(BUILDING_SMALL_MASTABA)
+                        && (base.get_figures_number(FIGURE_BRICKLAYER) < data.guild.max_workers);
+
+    return can_spawn;
+}
+
 void building_bricklayers_guild::spawn_figure() {
     base.check_labor_problem();
     if (!base.has_road_access) {
@@ -105,7 +113,7 @@ void building_bricklayers_guild::spawn_figure() {
     }
 
     base.figure_spawn_delay = 0;
-    if (!base.can_spawn_bricklayer_man(FIGURE_BRICKLAYER, data.guild.max_workers)) {
+    if (!can_spawn_bricklayer_man(data.guild.max_workers)) {
         return;
     }
 
