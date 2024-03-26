@@ -156,6 +156,20 @@ figure_immigrant = {
 figure_worker = {
 	animations : {
 		work : { pos : [0, 0], anim_id: IMG_WORKER_AKNH_WORK, max_frames:12 },
+	},
+	sounds : {
+		going_to_workplace : {sound:"worker_e02.wav", group:212, text:0},
+    farm_is_flooded : {sound:"worker_e03.wav", group:212, text:1},
+    desease_can_start_at_any_moment : {sound:"worker_g01.wav", group:212, text:2},
+    no_food_in_city : {sound:"worker_g02.wav", group:212, text:3},
+    enemies_in_city : {sound:"worker_g03.wav", group:212, text:4},
+    need_workers : {sound:"worker_g04.wav", group:212, text:5},
+    gods_are_angry : {sound:"worker_g05.wav", group:212, text:6},
+    city_is_bad : {sound:"worker_g06.wav", group:212, text:7},
+    much_unemployments : {sound:"worker_g07.wav", group:212, text:8},
+    low_entertainment : {sound:"worker_g08.wav", group:212, text:9},
+    city_is_good : {sound:"worker_g09.wav", group:212, text:10},
+    city_is_amazing : {sound:"worker_g10.wav", group:212, text:11},
 	}
 }
 

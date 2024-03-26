@@ -19,19 +19,6 @@ walker_sounds = [
  // carpenter
  {type: "carpenter_work_my_tools_need_for_monument", 		sound:"carpenter_e01.wav"},
  {type: "carpenter_this_monument_will_be_short", 				sound:"carpenter_e02.wav"},
- // worker
- {type: "worker_going_to_workplace", 										sound:"worker_e02.wav"},
- {type: "worker_farm_is_flooded", 											sound:"worker_e03.wav"},
- {type: "worker_desease_can_start_at_any_moment", 			sound:"worker_g01.wav"},
- {type: "worker_no_food_in_city", 											sound:"worker_g02.wav"},
- {type: "worker_enemies_in_city", 											sound:"worker_g03.wav"},
- {type: "worker_need_workers", 													sound:"worker_g04.wav"},
- {type: "worker_gods_are_angry", 												sound:"worker_g05.wav"},
- {type: "worker_city_is_bad", 													sound:"worker_g06.wav"},
- {type: "worker_much_unemployments", 										sound:"worker_g07.wav"},
- {type: "worker_low_entertainment", 										sound:"worker_g08.wav"},
- {type: "worker_city_is_good", 													sound:"worker_g09.wav"},
- {type: "worker_city_is_amazing", 											sound:"worker_g10.wav"},
  // governor
  {type: "governor_city_left_much_nobles", 							sound:"governor_e01.WAV"},
  {type: "governor_festival_was_near", 									sound:"governor_e02.wav"},
