@@ -13,4 +13,6 @@ public:
     virtual e_figure_sound phrase() const override { return {FIGURE_LABORER, "worker"}; }
     virtual sound_key phrase_key() const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_LABOR; }
+
+    tile2i small_mastaba_tile4work(building *b);
 };

@@ -13,12 +13,15 @@ public:
     BUILDING_METAINFO(BUILDING_SMALL_MASTABA, building_small_mastaba)
 
     building_small_mastaba(building & b) : building_impl(b) {}
+    virtual building_small_mastaba *dcast_small_mastaba() override { return this; }
 
     virtual void on_create(int orientation) override;
     virtual void update_day() override;
     virtual void update_month() override;
     virtual void update_count() const override;
     virtual void window_info_background(object_info &ctx) override;
+
+    std::span<uint16_t> active_workers();
 };
 
 class building_small_mastaba_part_side : public building_small_mastaba {
@@ -46,5 +49,4 @@ int building_small_mastabe_get_image(int orientation, tile2i tile, tile2i start,
 void building_small_mastabe_update_images(building *b, int curr_phase);
 int building_small_mastabe_get_image(int orientation, tile2i tile, tile2i start, tile2i end);
 tile2i building_small_mastaba_bricks_waiting_tile(building *b);
-tile2i building_small_mastaba_tile4work(building *b);
 int building_small_mastabe_get_bricks_image(int orientation, e_building_type type, tile2i tile, tile2i start, tile2i end, int layer);

@@ -26,6 +26,43 @@ void config_load_figure_worker() {
     });
 }
 
+tile2i figure_worker::small_mastaba_tile4work(building *b) {
+    building_small_mastaba *mastaba = b->dcast_small_mastaba();
+    if (!mastaba) {
+        return tile2i{-1, -1};
+    }
+
+    if (b->data.monuments.phase >= 2) {
+        return tile2i{-1, -1};
+    }
+
+    grid_tiles tiles = map_grid_get_tiles(b, 0);
+    tile2i tile = map_grid_area_first(tiles, [&mastaba] (tile2i tile) {
+        int progress = map_monuments_get_progress(tile);
+        if (!progress) {
+            return true;
+        }
+
+        if (progress == 200) {
+            return false;
+        }
+
+        auto workers = mastaba->active_workers();
+        for (const auto &id : workers) {
+            if (id) {
+                figure *f = figure_get(id);
+                if (f->destination_tile == tile) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    });
+
+    return tile;
+}
+
 void figure_worker::figure_action() {
     base.use_cross_country = false;
     base.max_roam_length = 384;
@@ -68,7 +105,7 @@ void figure_worker::figure_action() {
             } else if (b_dest->type == BUILDING_PYRAMID) {
                 // todo: MONUMENTSSSS
             } else if (building_type_any_of(b_dest->type, BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE)) {
-                tile2i tile_need_leveling = building_small_mastaba_tile4work(b_dest);
+                tile2i tile_need_leveling = small_mastaba_tile4work(b_dest);
                 if (tile_need_leveling == tile2i{-1, -1}) {
                     poof();
                     return;

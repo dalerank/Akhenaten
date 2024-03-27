@@ -346,6 +346,7 @@ building_reed_gatherer *building::dcast_reed_gatherer() { return dcast()->dcast_
 building_papyrus_maker *building::dcast_papyrus_maker() { return dcast()->dcast_papyrus_maker(); }
 building_dock *building::dcast_dock() { return dcast()->dcast_dock(); }
 building_work_camp *building::dcast_work_camp() { return dcast()->dcast_work_camp(); }
+building_small_mastaba *building::dcast_small_mastaba() { return dcast()->dcast_small_mastaba(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));

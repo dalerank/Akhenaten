@@ -85,19 +85,6 @@ tile2i building_small_mastaba_bricks_waiting_tile(building *b) {
     return tile;
 }
 
-tile2i building_small_mastaba_tile4work(building *b) {
-    if (b->type != BUILDING_SMALL_MASTABA) {
-        return tile2i{-1, -1};
-    }
-
-    if (b->data.monuments.phase >= 2) {
-        return tile2i{-1, -1};
-    }
-
-    grid_tiles tiles = map_grid_get_tiles(b, 0);
-    return map_grid_area_first(tiles, [] (tile2i tile) { return !map_monuments_get_progress(tile); });
-}
-
 void building_small_mastabe_update_images(building *b, int curr_phase) {
     building *main = b->main();
     building *part = b;
@@ -490,4 +477,8 @@ void building_small_mastaba::window_info_background(object_info &ctx) {
     } else {
         lang_text_draw_multiline(178, 41, ctx.offset + vec2i{32, 48}, 16 * (ctx.bgsize.x - 4), FONT_NORMAL_BLACK_ON_DARK);
     }
+}
+
+std::span<uint16_t> building_small_mastaba::active_workers() {
+    return std::span<uint16_t>(data.monuments.workers, 5);
 }
