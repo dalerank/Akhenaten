@@ -273,14 +273,7 @@ e_minimap_figure_color figure::get_figure_color() {
         return FIGURE_COLOR_ENEMY;
     }
 
-    if (type == FIGURE_OSTRICH) {
-        return FIGURE_COLOR_ANIMAL;
-    }
-
-    // if (type == FIGURE_WOLF)
-    //     return FIGURE_COLOR_WOLF;
-
-    return FIGURE_COLOR_NONE;
+    return dcast()->minimap_color();
 }
 
 void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {

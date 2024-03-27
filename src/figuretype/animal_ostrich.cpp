@@ -22,6 +22,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_ostrich);
 void config_load_figure_ostrich() {
     g_config_arch.r_section("figure_ostrich", [] (archive arch) {
         ostrich_m.anim.load(arch);
+        ostrich_m.sounds.load(arch);
     });
 }
 

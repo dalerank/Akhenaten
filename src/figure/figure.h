@@ -526,6 +526,7 @@ public:
     virtual int y_correction(int y) const { return y; }
     virtual void cart_update_image() { base.cart_update_image(); }
     virtual bool is_common_roaming() { return true; }
+    virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
 
     virtual figure_immigrant *dcast_immigrant() { return nullptr; }
     virtual figure_cartpusher *dcast_cartpusher() { return nullptr; }

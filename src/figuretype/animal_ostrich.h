@@ -9,4 +9,6 @@ public:
     virtual void figure_action() override;
     virtual e_figure_sound phrase() const override { return {FIGURE_OSTRICH_HUNTER, "hunt_ant"}; }
     virtual bool play_die_sound() override;
+
+    virtual e_minimap_figure_color minimap_color() const override { return FIGURE_COLOR_ANIMAL; }
 };
