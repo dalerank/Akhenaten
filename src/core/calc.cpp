@@ -40,7 +40,12 @@ int calc_general_direction(tile2i from, tile2i to) {
     return DIR_8_NONE;
 }
 
-int calc_missile_shooter_direction(int x_from, int y_from, int x_to, int y_to) {
+int calc_missile_shooter_direction(tile2i from, tile2i to) {
+    int x_from = from.x();
+    int y_from = from.y();
+    int x_to = to.x();
+    int y_to = to.y();
+
     int dx = x_from > x_to ? x_from - x_to : x_to - x_from;
     int dy = y_from > y_to ? y_from - y_to : y_to - y_from;
     int percentage;

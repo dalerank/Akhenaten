@@ -105,7 +105,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_CHARIOR_RACER, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
 
 
-  {FIGURE_OSTRICH_HUNTER, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HUNTER_OSTRICH_MOVE},
+  {FIGURE_OSTRICH_HUNTER, 1, TERRAIN_USAGE_ANIMAL, 0, 0, 0, ANIM_OSTRICH_HUNTER_WALK},
   {FIGURE_HUNTER_ARROW, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_HUNTER_ARROW},
   {FIGURE_LUMBERJACK, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_PHARAOH, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_PHARAOH_WALK},
@@ -367,12 +367,6 @@ void figure::action_perform() {
             }
             break;
 
-        case FIGURE_OSTRICH_HUNTER:
-            if (b->state != BUILDING_STATE_VALID) {
-                poof();
-            }
-            break;
-
         case FIGURE_LUMBERJACK:
             if (b->state != BUILDING_STATE_VALID) {
                 poof();
@@ -507,7 +501,6 @@ void figure::action_perform() {
         case FIGURE_ANTELOPE: zebra_action(); break; // 70
         case FIGURE_SPEAR: spear_action(); break;
         case FIGURE_CHARIOR_RACER: hippodrome_horse_action(); break;
-        case FIGURE_OSTRICH_HUNTER: ostrich_hunter_action(); break;
         case FIGURE_HUNTER_ARROW: arrow_action(); break;
         case FIGURE_LUMBERJACK: lumberjack_action(); break; // wood cutters
         case FIGURE_GOVERNOR: governor_action(); break;

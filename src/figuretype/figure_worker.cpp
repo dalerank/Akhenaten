@@ -216,3 +216,7 @@ sound_key figure_worker::phrase_key() const {
     int index = rand() % keys.size();
     return keys[index];
 }
+
+figure_sound_t figure_worker::get_sound_reaction(pcstr key) const {
+    return worker_m.sounds[key];
+}

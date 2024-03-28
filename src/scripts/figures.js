@@ -153,6 +153,20 @@ figure_immigrant = {
 	}
 }
 
+figure_ostrich_hunter = {
+	animations : {
+		walk : { pos : [0, 0], anim_id: ANIM_OSTRICH_HUNTER_WALK, max_frames:12 },
+		death : { pos : [0, 0], anim_id: ANIM_OSTRICH_HUNTER_DEATH, max_frames:8 },
+		hunt : { pos : [0, 0], anim_id: ANIM_OSTRICH_HUNTER_HUNT, max_frames:12 },
+		pack : { pos : [0, 0], anim_id: ANIM_OSTRICH_HUNTER_PACK, max_frames:12 },
+		move_pack : { pos : [0, 0], anim_id: ANIM_OSTRICH_HUNTER_MOVE_PACK, max_frames:12 },
+	},
+	sounds : {
+		hunting : {sound:"hunt_ostrich_e01.wav", group:209, text:0 },
+    back : {sound:"hunt_ostrich_e02.wav", group:209, text:1 },
+	}
+}
+
 figure_worker = {
 	animations : {
 		work : { pos : [0, 0], anim_id: IMG_WORKER_AKNH_WORK, max_frames:12 },

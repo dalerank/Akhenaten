@@ -29,7 +29,6 @@
 static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "artisan"},
     {FIGURE_NONE, "barge"},
-    {FIGURE_NONE, "brick"},
     {FIGURE_NONE, "carpenter"},
     {FIGURE_DENTIST, "dentist"},
     {FIGURE_NONE, "desease"},
@@ -37,7 +36,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_FISHING_BOAT, "fishing"},
     {FIGURE_NONE, "governor"},
     {FIGURE_NONE, "guard"},
-    {FIGURE_NONE, "labor"},
     {FIGURE_LIBRARIAN, "library"},
     {FIGURE_MAGISTRATE, "magistrate"},
     {FIGURE_NONE, "pharaoh"},
@@ -50,7 +48,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "vagrant"},
     {FIGURE_NONE, "warship"},
     {FIGURE_NONE, "woodcutter"},
-    {FIGURE_WORKER, "worker"},
     {FIGURE_NONE, "zookeeper"}
 };
 
@@ -62,14 +59,6 @@ static int lion_tamer_phrase() {
     //        return 7 + phrase_sequence_exact;
     //    }
     return 0;
-}
-
-static sound_key hunter_ostric_phrase(figure *f) {
-    if (f->action_state == ACTION_16_HUNTER_INVESTIGATE || f->action_state == ACTION_9_CHASE_PREY || f->action_state == ACTION_15_HUNTER_HUNT) {
-        return "hunterostrich_hunting";
-    } else {
-        return "hunterostrich_back";
-    }
 }
 
 static sound_key magistrate_phrase(figure *f) {
@@ -281,7 +270,6 @@ static int trade_ship_phrase() {
 static sound_key phrase_based_on_figure_state(figure *f) {
     switch (f->type) {
 
-    case FIGURE_OSTRICH_HUNTER: return hunter_ostric_phrase(f);
     case FIGURE_MAGISTRATE: return magistrate_phrase(f);
     case FIGURE_CONSTABLE: return policeman_phrase(f);
     //        case FIGURE_PROTESTER:

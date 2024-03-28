@@ -84,7 +84,7 @@ void figure::javelin_launch_missile() {
         wait_ticks_missile = 0;
         if (figure_combat_get_missile_target_for_soldier(this, 10, &tile)) {
             attack_image_offset = 1;
-            direction = calc_missile_shooter_direction(tile.x(), tile.y(), tile.x(), tile.y());
+            direction = calc_missile_shooter_direction(tile, tile);
         } else
             attack_image_offset = 0;
     }

@@ -6,29 +6,11 @@
 
 #include <stdint.h>
 
-/**
- * @file
- * Calculation functions.
- */
-
-/**
- * Adjusts the value with the percentage
- * @param value Value to adjust
- * @param percentage Percentage, example: 80
- * @return value * percentage / 100
- */
 template<typename T = int>
 inline T calc_adjust_with_percentage(T value, T percentage) {
     return (T)percentage * value / 100;
 }
 
-
-/**
- * Calculates which percentage 'value' of 'total' is
- * @param value Value
- * @param total Total amount
- * @return 100 * value / total
- */
 template<typename T = int>
 inline T calc_percentage(T value, T total) {
     if (total) {
@@ -112,13 +94,9 @@ int calc_general_direction(tile2i from, tile2i to);
 
 /**
  * Gets the direction for a missile shooter
- * @param x_from Source X
- * @param y_from Source Y
- * @param x_to Destination X
- * @param y_to Destination Y
  * @return Direction
  */
-int calc_missile_shooter_direction(int x_from, int y_from, int x_to, int y_to);
+int calc_missile_shooter_direction(tile2i from, tile2i to);
 
 /**
  * Gets the direction for a missile
