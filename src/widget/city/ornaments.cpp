@@ -189,14 +189,7 @@ void draw_ornaments_flat(vec2i point, tile2i tile, painter &ctx) {
         color_mask = COLOR_MASK_RED;
     }
 
-    switch (b->type) {
-    case BUILDING_SMALL_MASTABA:
-    case BUILDING_SMALL_MASTABA_SIDE:
-    case BUILDING_SMALL_MASTABA_WALL:
-    case BUILDING_SMALL_MASTABA_ENTRANCE:
-        draw_small_mastaba_anim_flat(ctx, point, b, color_mask);
-        break;
-    }
+    b->dcast()->draw_ornaments_and_animations_flat(ctx, point, tile, color_mask);
 }
 
 void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx) {
@@ -237,13 +230,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
     case BUILDING_SANDSTONE_QUARRY:
         building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, tile, image_group(ANIM_SANDSTONE_QUARRY_1) - 1, color_mask);
         break; 
-
-    case BUILDING_SMALL_MASTABA:
-    case BUILDING_SMALL_MASTABA_SIDE:
-    case BUILDING_SMALL_MASTABA_WALL:
-    case BUILDING_SMALL_MASTABA_ENTRANCE:
-        draw_small_mastaba_anim(ctx, point, b, color_mask);
-        break;
 
     case BUILDING_FORT_ARCHERS:
     case BUILDING_FORT_INFANTRY:

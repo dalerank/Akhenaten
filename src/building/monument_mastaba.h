@@ -20,6 +20,8 @@ public:
     virtual void update_month() override;
     virtual void update_count() const override;
     virtual void window_info_background(object_info &ctx) override;
+    virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
+    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 
     std::span<uint16_t> active_workers();
 };
@@ -43,7 +45,6 @@ public:
 };
 
 void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain);
-void draw_small_mastaba_anim_flat(painter &ctx, vec2i pixel, building *b, int color_mask);
 void draw_small_mastaba_anim(painter &ctx, vec2i pixel, building *b, int color_mask);
 int building_small_mastabe_get_image(int orientation, tile2i tile, tile2i start, tile2i end);
 void building_small_mastabe_update_images(building *b, int curr_phase);

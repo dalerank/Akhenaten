@@ -23,6 +23,9 @@
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
 #include "game/game.h"
+#include "dev/debug.h"
+
+#include <iostream>
 
 buildings::model_t<building_bricklayers_guild> bricklayers_guild_m;
 
@@ -30,6 +33,8 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bricklayers_guild);
 void config_load_building_bricklayers_guild() {
     bricklayers_guild_m.load();
 }
+
+declare_console_command(addbricks, game_cheat_add_resource<RESOURCE_BRICKS>);
 
 void building_bricklayers_guild::window_info_background(object_info& c) {
     constexpr pcstr btype = "bricklayers_guild";

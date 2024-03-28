@@ -13,6 +13,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_sled);
 void config_load_figure_sled() {
     g_config_arch.r_section("figure_sled", [] (archive arch) {
         sled_m.anim.load(arch);
+        sled_m.sounds.load(arch);
     });
 }
 
