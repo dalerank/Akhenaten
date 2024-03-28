@@ -118,7 +118,7 @@ void building_bricklayers_guild::spawn_figure() {
     }
 
     building* monument = buildings_valid_first([&] (building &b) {
-        if (!b.is_monument() || !building_monument_is_unfinished(&base)) {
+        if (!b.is_monument() || !building_monument_is_unfinished(&b)) {
             return false;
         }
 
