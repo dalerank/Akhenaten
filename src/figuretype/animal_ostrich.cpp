@@ -12,10 +12,7 @@
 
 #include "js/js_game.h"
 
-struct ostrich_model :
-            public figures::model_t<FIGURE_OSTRICH,
-                                    figure_ostrich> {};
-
+struct ostrich_model : public figures::model_t<FIGURE_OSTRICH, figure_ostrich> {};
 ostrich_model ostrich_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_ostrich);
