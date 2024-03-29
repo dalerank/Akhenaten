@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "city/object_info.h"
+#include "building/count.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -41,7 +42,7 @@ void config_load_building_raw_materials() {
     gatherer_m.load();
 }
 
-static void building_raw_material_draw_info(object_info& c, const char* type, e_resource resource) {
+void building_raw_material_draw_info(object_info& c, const char* type, e_resource resource) {
     auto &meta = building::get_info(type);
     painter ctx = game.painter();
     c.help_id = meta.help_id;
@@ -86,10 +87,6 @@ void building_marble_quarry_draw_info(object_info& c) {
 }
 void building_limestone_quarry_draw_info(object_info& c) {
     building_raw_material_draw_info(c, "limestone_quarry", RESOURCE_LIMESTONE);
-}
-
-void building_timber_yard_draw_info(object_info& c) {
-    building_raw_material_draw_info(c, "timber_yard", RESOURCE_TIMBER);
 }
 
 void building_sandstone_quarry_draw_info(object_info& c) {
@@ -194,6 +191,10 @@ bool building_reed_gatherer::draw_ornaments_and_animations_height(painter &ctx, 
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;
+}
+
+void building_reed_gatherer::update_count() const {
+    building_increase_industry_count(RESOURCE_REEDS, num_workers() > 0);
 }
 
 void building_reed_gatherer::spawn_figure() {

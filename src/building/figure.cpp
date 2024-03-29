@@ -798,8 +798,6 @@ bool building::figure_generate() {
     bool noble_generated = false;
     if (type >= BUILDING_HOUSE_COMMON_MANOR && type <= BUILDING_HOUSE_LUXURY_PALACE) {
         noble_generated = spawn_noble(noble_generated);
-    } else if (type == BUILDING_WOOD_CUTTERS) {
-        spawn_figure_wood_cutters();
     } else if (is_workshop() || is_extractor()) {// farms are handled by a separate cycle in Pharaoh!
         spawn_figure_industry();
     } else if (is_tax_collector()) {

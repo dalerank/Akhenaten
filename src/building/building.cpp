@@ -140,11 +140,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
         output_resource_first_id = RESOURCE_LIMESTONE;
         break;
 
-    case BUILDING_WOOD_CUTTERS:
-        output_resource_first_id = RESOURCE_TIMBER;
-        data.industry.max_gatheres = 1;
-        break;
-
     case BUILDING_WEAVER_WORKSHOP:
         data.industry.first_material_id = RESOURCE_FLAX;
         output_resource_first_id = RESOURCE_LINEN;
@@ -347,6 +342,7 @@ building_papyrus_maker *building::dcast_papyrus_maker() { return dcast()->dcast_
 building_dock *building::dcast_dock() { return dcast()->dcast_dock(); }
 building_work_camp *building::dcast_work_camp() { return dcast()->dcast_work_camp(); }
 building_small_mastaba *building::dcast_small_mastaba() { return dcast()->dcast_small_mastaba(); }
+building_wood_cutter *building::dcast_wood_cutter() { return dcast()->dcast_wood_cutter(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));

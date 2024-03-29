@@ -29,7 +29,7 @@ void building_increase_type_count(int type, bool active) {
     ++g_count_data.buildings[type].total;
     g_count_data.buildings[type].active += (active ? 1 : 0);
 }
-static void increase_industry_count(int resource, bool active) {
+void building_increase_industry_count(int resource, bool active) {
     ++g_count_data.industry[resource].total;
     g_count_data.industry[resource].active += (active ? 1 : 0);
 }
@@ -201,94 +201,88 @@ void building_count_update() {
         // industry
         switch (b.type) {
         case BUILDING_GRAIN_FARM:
-            increase_industry_count(RESOURCE_GRAIN, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_GRAIN, b.num_workers > 0);
             break;
         case BUILDING_BARLEY_FARM:
-            increase_industry_count(RESOURCE_BARLEY, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_BARLEY, b.num_workers > 0);
             break;
         case BUILDING_FLAX_FARM:
-            increase_industry_count(RESOURCE_FLAX, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_FLAX, b.num_workers > 0);
             break;
         case BUILDING_LETTUCE_FARM:
-            increase_industry_count(RESOURCE_LETTUCE, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_LETTUCE, b.num_workers > 0);
             break;
         case BUILDING_POMEGRANATES_FARM:
-            increase_industry_count(RESOURCE_POMEGRANATES, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_POMEGRANATES, b.num_workers > 0);
             break;
         case BUILDING_CHICKPEAS_FARM:
-            increase_industry_count(RESOURCE_CHICKPEAS, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_CHICKPEAS, b.num_workers > 0);
             break;
         case BUILDING_FIGS_FARM:
-            increase_industry_count(RESOURCE_FIGS, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_FIGS, b.num_workers > 0);
             break;
         case BUILDING_HENNA_FARM:
-            increase_industry_count(RESOURCE_HENNA, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_HENNA, b.num_workers > 0);
             break;
         case BUILDING_HUNTING_LODGE:
-            increase_industry_count(RESOURCE_GAMEMEAT, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_GAMEMEAT, b.num_workers > 0);
             break;
         case BUILDING_FISHING_WHARF:
-            increase_industry_count(RESOURCE_FISH, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_FISH, b.num_workers > 0);
             break;
         case BUILDING_CLAY_PIT:
-            increase_industry_count(RESOURCE_CLAY, b.num_workers > 0);
-            break;
-        case BUILDING_REED_GATHERER:
-            increase_industry_count(RESOURCE_REEDS, b.num_workers > 0);
-            break;
-        case BUILDING_WOOD_CUTTERS:
-            increase_industry_count(RESOURCE_TIMBER, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_CLAY, b.num_workers > 0);
             break;
         case BUILDING_GEMSTONE_MINE:
-            increase_industry_count(RESOURCE_GEMS, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_GEMS, b.num_workers > 0);
             break;
         case BUILDING_GOLD_MINE:
-            increase_industry_count(RESOURCE_GOLD, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_GOLD, b.num_workers > 0);
             break;
         case BUILDING_COPPER_MINE:
-            increase_industry_count(RESOURCE_COPPER, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_COPPER, b.num_workers > 0);
             break;
         case BUILDING_STONE_QUARRY:
-            increase_industry_count(RESOURCE_STONE, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_STONE, b.num_workers > 0);
             break;
         case BUILDING_LIMESTONE_QUARRY:
-            increase_industry_count(RESOURCE_LIMESTONE, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_LIMESTONE, b.num_workers > 0);
             break;
         case BUILDING_GRANITE_QUARRY:
-            increase_industry_count(RESOURCE_GRANITE, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_GRANITE, b.num_workers > 0);
             break;
         case BUILDING_SANDSTONE_QUARRY:
-            increase_industry_count(RESOURCE_SANDSTONE, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_SANDSTONE, b.num_workers > 0);
             break;
         case BUILDING_POTTERY_WORKSHOP:
-            increase_industry_count(RESOURCE_POTTERY, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_POTTERY, b.num_workers > 0);
             break;
         case BUILDING_BREWERY_WORKSHOP:
-            increase_industry_count(RESOURCE_BEER, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_BEER, b.num_workers > 0);
             break;
         case BUILDING_WEAVER_WORKSHOP:
-            increase_industry_count(RESOURCE_LINEN, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_LINEN, b.num_workers > 0);
             break;
         case BUILDING_JEWELS_WORKSHOP:
-            increase_industry_count(RESOURCE_LUXURY_GOODS, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_LUXURY_GOODS, b.num_workers > 0);
             break;
         case BUILDING_PAPYRUS_WORKSHOP:
-            increase_industry_count(RESOURCE_PAPYRUS, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_PAPYRUS, b.num_workers > 0);
             break;
         case BUILDING_BRICKS_WORKSHOP:
-            increase_industry_count(RESOURCE_BRICKS, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_BRICKS, b.num_workers > 0);
             break;
         case BUILDING_LAMP_WORKSHOP:
-            increase_industry_count(RESOURCE_LAMPS, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_LAMPS, b.num_workers > 0);
             break;
         case BUILDING_PAINT_WORKSHOP:
-            increase_industry_count(RESOURCE_PAINT, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_PAINT, b.num_workers > 0);
             break;
         case BUILDING_WEAPONSMITH:
-            increase_industry_count(RESOURCE_WEAPONS, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_WEAPONS, b.num_workers > 0);
             break;
         case BUILDING_CHARIOTS_WORKSHOP:
-            increase_industry_count(RESOURCE_CHARIOTS, b.num_workers > 0);
+            building_increase_industry_count(RESOURCE_CHARIOTS, b.num_workers > 0);
             break;
 
         default:

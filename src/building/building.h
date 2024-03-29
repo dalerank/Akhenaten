@@ -43,6 +43,7 @@ class building_reed_gatherer;
 class building_papyrus_maker;
 class building_dock;
 class building_small_mastaba;
+class building_wood_cutter;
 struct object_info;
 struct painter;
 struct mouse;
@@ -363,6 +364,7 @@ public:
     building_dock *dcast_dock();
     building_work_camp *dcast_work_camp();
     building_small_mastaba *dcast_small_mastaba();
+    building_wood_cutter *dcast_wood_cutter();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -466,6 +468,7 @@ public:
     virtual building_dock *dcast_dock() { return nullptr; }
     virtual building_work_camp *dcast_work_camp() { return nullptr; }
     virtual building_small_mastaba *dcast_small_mastaba() { return nullptr; }
+    virtual building_wood_cutter *dcast_wood_cutter() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
