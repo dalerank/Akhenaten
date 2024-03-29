@@ -86,8 +86,7 @@ public:
     [[nodiscard]]
     bool equal(const xstring& rhs) const { return (_p == rhs._p); }
 
-    xstring& __cdecl printf(const char* format, ...)
-    {
+    xstring& printf(const char* format, ...) {
         bstring<4096> buf;
         va_list p;
         va_start(p, format);
