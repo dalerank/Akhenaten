@@ -1,7 +1,6 @@
-#ifndef CITY_FESTIVAL_H
-#define CITY_FESTIVAL_H
+#pragma once
 
-bool city_festival_is_planned(void);
+bool city_festival_is_planned();
 int city_festival_months_since_last(void);
 int city_festival_months_till_next(void);
 
@@ -22,5 +21,3 @@ void city_festival_schedule(void);
 
 void city_festival_update(void);
 void city_festival_calculate_costs(void);
-
-#endif // CITY_FESTIVAL_H

@@ -1,5 +1,4 @@
-#ifndef BUILDING_ROADBLOCK_H
-#define BUILDING_ROADBLOCK_H
+#pragma once
 
 #include "building/building.h"
 
@@ -16,5 +15,3 @@ enum {
 
 void building_roadblock_set_permission(int p, building* b);
 int building_roadblock_get_permission(int p, building* b);
-
-#endif // BUILDING_ROADBLOCK_H

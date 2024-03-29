@@ -207,9 +207,9 @@ static void draw_extra_info_panel(void) {
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
         y_current_line += EXTRA_INFO_VERTICAL_PADDING;
 
-        if (GAME_ENV == ENGINE_ENV_C3)
-            lang_text_draw(68, 148, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE_ON_DARK);
-        else
+        //if (GAME_ENV == ENGINE_ENV_C3)
+        //    lang_text_draw(68, 148, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE_ON_DARK);
+        //else
             lang_text_draw(68, 135, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE_ON_DARK);
         y_current_line += EXTRA_INFO_LINE_SPACE;
 

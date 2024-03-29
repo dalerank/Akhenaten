@@ -23,51 +23,13 @@ struct random_data_t {
 
 const random_data_t* random_data_struct();
 
-/**
- * @file
- * Random number generation.
- */
-
-/**
- * Initializes the pseudo-random number generator
- */
 void random_init(void);
-
-/**
- * Generates the next pseudo-random random_byte
- */
 void random_generate_next(void);
-
-/**
- * Generates the pool of random bytes
- */
 void random_generate_pool(void);
-
 void random_TEMP_SET_DEBUG(uint32_t iv1, uint32_t iv2);
-
-/**
- * Gets the current random 7-bit byte
- * @return Random 7-bit byte
- */
 int8_t random_byte(void);
-
-/**
- * Gets the current alternative random 7-bit byte
- * @return Alternative random 7-bits byte
- */
 int8_t random_byte_alt(void);
-
-/**
- * Gets the current random 15-bit short
- * @return Random 15-bits short
- */
 int16_t random_short(void);
-
-/**
- * Gets a random integer from the pool at the specified index
- * @param index Index to use
- * @return Random integer from the pool
- */
 int32_t random_from_pool(int index);
 
 void randomize_event_fields(int16_t field[4], int32_t* seed);

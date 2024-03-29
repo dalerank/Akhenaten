@@ -487,7 +487,7 @@ static void allocate_workers_to_categories(void) {
 }
 
 static void allocate_workers_to_water(void) {
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+    //if (GAME_ENV == ENGINE_ENV_PHARAOH)
         return;
 
     static int start_building_id = 1;
