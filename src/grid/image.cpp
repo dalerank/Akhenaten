@@ -1,6 +1,7 @@
 #include "graphics/image.h"
-#include "io/io_buffer.h"
 
+#include "graphics/animation.h"
+#include "io/io_buffer.h"
 #include "grid/grid.h"
 #include "image.h"
 
@@ -41,6 +42,11 @@ void map_image_set(int grid_offset, e_image_id img, int offset) {
 
 void map_image_set(int grid_offset, int image_id) {
     map_grid_set(&g_images_grid, grid_offset, image_id);
+}
+
+void map_image_set(tile2i tile, const animation_t &anim) {
+    int image_id = image_id_from_group(anim.pack, anim.iid) + anim.offset;
+    map_grid_set(&g_images_grid, tile.grid_offset(), image_id);
 }
 
 void map_image_alt_set(int grid_offset, int image_id, int alpha) {

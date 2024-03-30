@@ -3,6 +3,8 @@
 #include "io/io_buffer.h"
 #include "graphics/image_desc.h"
 
+struct animation_t;
+
 class io_image_grid : public io_buffer {
 public:
     io_image_grid() {
@@ -20,6 +22,7 @@ inline int map_image_at(tile2i tile) { return map_image_at(tile.grid_offset()); 
 int map_image_alt_at(int grid_offset);
 void map_image_set(int grid_offset, int image_id);
 inline void map_image_set(tile2i tile, int image_id) { map_image_set(tile.grid_offset(), image_id); }
+void map_image_set(tile2i teil, const animation_t &anim);
 void map_image_alt_set(int grid_offset, int image_id, int alpha);
 void map_image_set(int grid_offset, e_image_id img);
 inline void map_image_set(tile2i tile, e_image_id img) { map_image_set(tile.grid_offset(), img); }

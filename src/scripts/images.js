@@ -64,8 +64,6 @@ images = [
 	{img: IMG_BUILDING_DOCK, pack:PACK_TERRAIN, id:49},
 
 	// spr general
-	{img: IMG_WELL, pack:PACK_GENERAL, id:23, offset:0},
-	{img: IMG_WELL_FANCY, pack:PACK_GENERAL, id:23, offset:2},
 	{img: IMG_SCRIBAL_SCHOOL, pack:PACK_GENERAL, id:42},
 	{img: IMG_CONSERVATORY, pack:PACK_GENERAL, id:51},
 	{img: IMG_BRICKLAYERS_GUILD, pack:PACK_GENERAL, id:57},

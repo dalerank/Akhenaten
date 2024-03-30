@@ -206,7 +206,11 @@ building_water_supply = {
 
 building_well = {
   animations : {
-    work : { pos : [0, 0], anim_id : IMG_WELL }
+    preview : { pack: PACK_GENERAL, id:23, max_frames:1 },
+    base : { pack: PACK_GENERAL, id:23, max_frames:1 },
+    base_work : { pack: PACK_GENERAL, id:23, max_frames:1 },
+    fancy : { pack: PACK_GENERAL, id:23, offset:2, max_frames:1 },
+    fancy_work : { pack: PACK_GENERAL, id:23, offset:3, max_frames:1 }
   },
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
 }

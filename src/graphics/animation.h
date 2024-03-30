@@ -10,10 +10,14 @@ struct animation_t {
     vec2i pos;
     e_image_id base_id = IMG_NONE;
     e_image_id anim_id = IMG_NONE;
+    int pack;
+    int iid;
+    int offset;
     int max_frames;
     int duration;
 
     void load(archive arch);
+    int first_img() const;
 };
 
 struct animations_t {
