@@ -46,6 +46,7 @@
 #include "city/labor.h"
 
 #include <string.h>
+#include <map>
 
 building g_all_buildings[5000];
 std::span<building> g_city_buildings = make_span(g_all_buildings);
@@ -259,6 +260,19 @@ building_impl *buildings::create(e_building_type e, building &data) {
     }
 
     return new building_impl(data);
+}
+
+static std::map<e_building_type, const building_impl::static_params *> *building_impl_params = nullptr;
+void building_impl::params(e_building_type e, const static_params &p) {
+    if (!building_impl_params) {
+        building_impl_params = new std::map<e_building_type, const building_impl::static_params *>();
+    }
+    building_impl_params->insert(std::make_pair(e, &p));
+}
+
+const building_impl::static_params &building_impl::params(e_building_type e) {
+    auto it = building_impl_params->find(e);
+    return (it == building_impl_params->end()) ? building_impl::static_params::dummy : *it->second;
 }
 
 building_impl *building::dcast() {

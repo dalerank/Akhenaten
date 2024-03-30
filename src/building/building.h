@@ -428,7 +428,7 @@ public:
     virtual void update_graphic() {}
     virtual void update_month() {}
     virtual void update_day();
-    virtual const static_params &params() const { return static_params::dummy; }
+    virtual const static_params &params() const { return params(type()); }
     virtual void window_info_background(object_info &ctx) {}
     virtual void window_info_foreground(object_info &ctx) {}
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) { return 0; }
@@ -509,6 +509,9 @@ public:
 
     using resources_vec = std::array<e_resource, 4>;
     virtual resources_vec required_resource() const { return {}; }
+
+    static void params(e_building_type, const static_params &);
+    static const static_params &params(e_building_type);
 
     building &base;
     building::impl_data_t &data;
@@ -717,6 +720,7 @@ struct model_t : public building_impl::static_params {
     model_t() {
         name = CLSID;
         static BuildingIterator config_handler(&create);
+        building_impl::params(TYPE, *this);
     }
 
     void load() {
