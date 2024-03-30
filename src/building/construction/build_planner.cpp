@@ -657,8 +657,10 @@ static void add_building(building* b, int orientation, int variant) {
         break;
 
     default:
-        auto p = building_properties_for_type(b->type);
-        add_building_tiles_image(b, p->img_id());
+        {
+            auto *p = building_properties_for_type(b->type);
+            add_building_tiles_image(b, p->img_id());
+        }
         break;
     }
 }
@@ -1376,8 +1378,15 @@ void BuildPlanner::setup_build_graphics() {
         init_tiles(5, 5); // TODO
         break;
 
-    default: // regular buildings
-        set_tiles_building(props->img_id(), props->size);
+    default: // regular buildings 
+        {
+            int img_id = props->img_id();
+            if (!img_id) {
+                const auto &params = building_impl::params(build_type);
+                img_id = params.anim["preview"].first_img();
+            }
+            set_tiles_building(img_id, props->size);
+        }
         break;
     }
 }

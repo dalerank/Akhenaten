@@ -241,7 +241,7 @@ const building_properties dummy_property = {0, 0, 0, 0};
 
 void building_properties_init() {
     properties[BUILDING_WATER_SUPPLY] = {2, 1, 0, 0, 0, IMG_WATER_SUPPLY};
-    properties[BUILDING_WELL] = {1, 1, 0, 0, 0, IMG_WELL};
+    properties[BUILDING_WELL] = {1, 1, 0, 0, 0, IMG_NONE};
     properties[BUILDING_CATTLE_RANCH] = {3, 0, 0, 0, 0, IMG_CATTLE_RANCH};
     properties[BUILDING_BRICKS_WORKSHOP] = {2, 0, 0, 0, 0, IMG_BRICKS_WORKSHOP};
     properties[BUILDING_GOLD_MINE] = {2, 0, 0, 0, 0, IMG_GOLD_MINE};
