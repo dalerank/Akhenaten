@@ -101,6 +101,10 @@ int building_statue_get_image(int type, int orientation, int variant) {
     int image_id = 0;
 
     int size = building_statue_get_variant_size(type);
+
+    if (!size) {
+        return 0;
+    }
     //
     while (orientation < 0) { orientation += 4; }
     //
