@@ -381,13 +381,11 @@ public:
     void spawn_figure_industry();
     void spawn_figure_wharf();
     void spawn_figure_shipyard();
-    void spawn_figure_wood_cutters();
     void spawn_figure_native_hut();
     void spawn_figure_native_meeting();
     void spawn_figure_tower();
 
     int get_figures_number(e_figure_type ftype);
-    bool can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_building, int carry_per_person);
 
     void update_native_crop_progress();
     tile2i access_tile();

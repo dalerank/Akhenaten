@@ -366,12 +366,6 @@ void figure::action_perform() {
             }
             break;
 
-        case FIGURE_LUMBERJACK:
-            if (b->state != BUILDING_STATE_VALID) {
-                poof();
-            }
-            break;
-
         case FIGURE_NOBLES:
             if (b->state != BUILDING_STATE_VALID) {
                 poof();
@@ -501,7 +495,6 @@ void figure::action_perform() {
         case FIGURE_SPEAR: spear_action(); break;
         case FIGURE_CHARIOR_RACER: hippodrome_horse_action(); break;
         case FIGURE_HUNTER_ARROW: arrow_action(); break;
-        case FIGURE_LUMBERJACK: lumberjack_action(); break; // wood cutters
         case FIGURE_GOVERNOR: governor_action(); break;
         case FIGURE_HIPPO: hippo_action(); break;
         case FIGURE_CONSTABLE: policeman_action(); break;

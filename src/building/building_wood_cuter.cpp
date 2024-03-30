@@ -7,6 +7,8 @@
 #include "building_raw_material.h"
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
+#include "grid/routing/routing.h"
+#include "grid/terrain.h"
 
 buildings::model_t<building_wood_cutter> bwood_cutter_m;
 
@@ -24,6 +26,25 @@ void building_wood_cutter::update_count() const {
     building_increase_industry_count(RESOURCE_TIMBER, num_workers() > 0);
 }
 
+bool building_wood_cutter::can_spawn_lumberjack(int max_gatherers_per_building, int carry_per_person) {
+    bool resource_reachable = map_routing_citizen_found_terrain(base.road_access, nullptr, TERRAIN_TREE);
+
+    if (!resource_reachable) {
+        return false;
+    }
+
+    int gatherers_this_yard = base.get_figures_number(FIGURE_LUMBERJACK);
+
+    // can only spawn if there's space for more reed in the building
+    int max_loads = 500 / carry_per_person;
+    if (gatherers_this_yard < max_gatherers_per_building
+        && gatherers_this_yard + (base.stored_amount() / carry_per_person) < (max_loads - gatherers_this_yard)) {
+        return true;
+    }
+
+    return false;
+}
+
 void building_wood_cutter::spawn_figure() {
     check_labor_problem();
     if (has_road_access()) {
@@ -38,7 +59,8 @@ void building_wood_cutter::spawn_figure() {
         if (base.figure_spawn_delay > spawn_delay) {
             base.figure_spawn_delay = 0;
 
-            if (base.can_spawn_gatherer(FIGURE_LUMBERJACK, data.industry.max_gatheres, 50)) {
+            const bool can_spawn = can_spawn_lumberjack(data.industry.max_gatheres, 50);
+            if (can_spawn) {
                 auto f = create_figure_generic(FIGURE_LUMBERJACK, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
                 random_generate_next();
                 f->wait_ticks = random_short() % 30; // ok

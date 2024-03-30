@@ -106,6 +106,7 @@ var figure_teacher = {}
 var figure_docker = {}
 var figure_bricklayer = {}
 var figure_ostrich_hunter = {}
+var figure_lumberjack = {}
 var mission0 = {}
 var mission1 = {}
 var mission5 = {}

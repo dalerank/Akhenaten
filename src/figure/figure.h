@@ -428,8 +428,6 @@ public:
     void spear_action();
     void hippodrome_horse_action();
     // pharaoh
-    void ostrich_hunter_action();
-    void lumberjack_action();
     void policeman_action();
     void magistrate_action();
     void festival_guy_action();

@@ -15,4 +15,6 @@ public:
     virtual void window_info_background(object_info &ctx) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_count() const override;
+
+    bool can_spawn_lumberjack(int max_gatherers_per_building, int carry_per_person);
 };

@@ -167,6 +167,19 @@ figure_ostrich_hunter = {
 	}
 }
 
+figure_lumberjack = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:73, max_frames:12 },
+		death: { pack:PACK_SPR_MAIN, id:74, max_frames:8  },
+		work : { pack:PACK_SPR_MAIN, id:75, max_frames:12 },
+		back : { pack:PACK_SPR_MAIN, id:76, max_frames:12 },
+	},
+	sounds : {
+		hunting : {sound:"woodcutter_e01.wav", group:209, text:0 },
+    back : {sound:"woodcutter_e02.wav", group:209, text:1 },
+	}
+}
+
 figure_worker = {
 	animations : {
 		work : { pos : [0, 0], anim_id: IMG_WORKER_AKNH_WORK, max_frames:12 },

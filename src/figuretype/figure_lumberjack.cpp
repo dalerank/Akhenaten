@@ -1,20 +1,36 @@
-#include "figure/figure.h"
+#include "figuretype/figure_lumberjack.h"
 
 #include "graphics/image_groups.h"
 #include "grid/vegetation.h"
 #include "config/config.h"
+#include "figure_lumberjack.h"
+#include "graphics/image.h"
+#include "graphics/graphics.h"
 
-void figure::lumberjack_action() {
-    switch (action_state) {
+#include "js/js_game.h"
+
+struct lumberjack_model : public figures::model_t<FIGURE_LUMBERJACK, figure_lumberjack> {};
+lumberjack_model lumberjack_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_lumberjack);
+void config_load_figure_lumberjack() {
+    g_config_arch.r_section("figure_lumberjack", [] (archive arch) {
+        lumberjack_m.anim.load(arch);
+        lumberjack_m.sounds.load(arch);
+    });
+}
+
+void figure_lumberjack::figure_action() {
+    switch (action_state()) {
     case ACTION_8_RECALCULATE:
     case ACTION_14_GATHERER_CREATED: // spawning
-        anim_frame = 0;
-        if (type == FIGURE_LUMBERJACK && --wait_ticks <= 0) {
+        base.anim_frame = 0;
+        if (--wait_ticks <= 0) {
             tile2i dest(-1, -1);
-            bool found_resource = find_resource_tile(RESOURCE_TIMBER, dest);
+            bool found_resource = base.find_resource_tile(RESOURCE_TIMBER, dest);
 
             if (found_resource) {
-                anim_offset = 0;
+                base.anim_offset = 0;
                 do_goto(dest, TERRAIN_USAGE_PREFER_ROADS);
                 advance_action(9);
             } else {
@@ -35,18 +51,18 @@ void figure::lumberjack_action() {
 
     case 10: // gathering resource
         // someone finished harvesting this spot (for "multiple gatherers" config setting enabled)
-        if (map_get_vegetation_growth(tile.grid_offset()) < 255) {
+        if (map_get_vegetation_growth(tile()) < 255) {
             wait_ticks = 10;
             advance_action(8);
         } else {
             // harvesting.....
             if (wait_ticks >= 300) {
-                map_vegetation_deplete(tile.grid_offset());
+                map_vegetation_deplete(tile());
                 advance_action(11);
             }
             // progress faster with multiple people on one spot
             if (config_get(CONFIG_GP_CH_MULTIPLE_GATHERERS))
-                wait_ticks += gatherers_harvesting_point(tile.grid_offset());
+                wait_ticks += gatherers_harvesting_point(tile());
             else
                 wait_ticks++;
         }
@@ -58,19 +74,26 @@ void figure::lumberjack_action() {
         break;
     }
 
-    switch (action_state) {
+    switch (action_state()) {
     default: // normal walk
     case 8:
     case 9:
-        image_set_animation(GROUP_FIGURE_LUMBERJACK, 0, 12);
+        image_set_animation(lumberjack_m.anim["walk"]);
         break;
 
     case 10: // gathering
-        image_set_animation(GROUP_FIGURE_LUMBERJACK, 104, 12);
+        image_set_animation(lumberjack_m.anim["work"]);
         break;
 
     case 11: // returning
-        image_set_animation(GROUP_FIGURE_LUMBERJACK, 200, 12);
+        base.image_set_animation(lumberjack_m.anim["back"]);
         break;
+    }
+}
+
+void figure_lumberjack::figure_before_action() {
+    building *b = home();
+    if (b->state != BUILDING_STATE_VALID) {
+        poof();
     }
 }

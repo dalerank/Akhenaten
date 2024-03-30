@@ -690,30 +690,6 @@ int building::get_figures_number(e_figure_type ftype) {
     return gatherers_this_yard;
 }
 
-bool building::can_spawn_gatherer(e_figure_type ftype, int max_gatherers_per_building, int carry_per_person) {
-    bool resource_reachable = false;
-    switch (ftype) {
-    case FIGURE_LUMBERJACK:
-        resource_reachable = map_routing_citizen_found_terrain(road_access, nullptr, TERRAIN_TREE);
-        break;
-    }
-
-    if (!resource_reachable) {
-        return false;
-    }
-
-    int gatherers_this_yard = get_figures_number(ftype);
-
-    // can only spawn if there's space for more reed in the building
-    int max_loads = 500 / carry_per_person;
-    if (gatherers_this_yard < max_gatherers_per_building
-        && gatherers_this_yard + (stored_amount() / carry_per_person) < (max_loads - gatherers_this_yard)) {
-        return true;
-    }
-
-    return false;
-}
-
 void building::spawn_figure_native_hut() {
     //    map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_NATIVE) + (map_random_get(grid_offset) & 1));
     //    if (has_figure_of_type(FIGURE_INDIGENOUS_NATIVE))
