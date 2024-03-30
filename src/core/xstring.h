@@ -109,8 +109,8 @@ struct std::hash<xstring>
     }
 };
 
-bool operator==(xstring const& a, xstring const& b) { return a._get() == b._get(); }
-bool operator!=(xstring const& a, xstring const& b) { return a._get() != b._get(); }
-bool operator<(xstring const& a, xstring const& b) { return a._get() < b._get(); }
-bool operator>(xstring const& a, xstring const& b) { return a._get() > b._get(); }
-void swap(xstring& lhs, xstring& rhs) noexcept { lhs.swap(rhs); }
+inline bool operator==(xstring const& a, xstring const& b) { return a._get() == b._get(); }
+inline bool operator!=(xstring const& a, xstring const& b) { return a._get() != b._get(); }
+inline bool operator<(xstring const& a, xstring const& b) { return a._get() < b._get(); }
+inline bool operator>(xstring const& a, xstring const& b) { return a._get() > b._get(); }
+inline void swap(xstring& lhs, xstring& rhs) noexcept { lhs.swap(rhs); }
