@@ -24,8 +24,10 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
+#include "dev/debug.h"
 
 #include <numeric>
+#include <string>
 
 buildings::model_t<building_small_mastaba> small_mastaba_m;
 buildings::model_t<building_small_mastaba_part_side> small_mastaba_side_m;
@@ -36,6 +38,8 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_building_small_mastaba);
 void config_load_building_small_mastaba() {
     small_mastaba_m.load();
 }
+
+declare_console_command_p(finishphase, game_cheat_finish_phase);
 
 void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain) {
     int x_leftmost, y_leftmost;
@@ -488,4 +492,26 @@ bool building_small_mastaba::draw_ornaments_and_animations_height(painter &ctx, 
 
 std::span<uint16_t> building_small_mastaba::active_workers() {
     return std::span<uint16_t>(data.monuments.workers, 5);
+}
+
+static void game_cheat_finish_phase(std::istream &, std::ostream &) {
+    buildings_valid_do([&] (building &b) {
+        if (!b.is_monument()) {
+            return;
+        }
+
+        if (!building_monument_is_unfinished(&b)) {
+            return;
+        }
+
+        building *part = &b;
+        while (part) {
+            grid_area area = map_grid_get_area(part->tile, part->size, 0);
+            map_grid_area_foreach(area.tmin, area.tmax, [] (tile2i tile) {
+                map_monuments_set_progress(tile, 200);
+            });
+
+            part = (part->next_part_building_id > 0) ? building_get(part->next_part_building_id) : nullptr;
+        };
+    });
 }

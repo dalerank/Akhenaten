@@ -47,9 +47,7 @@ static void game_cheat_spawn_nobles(pcstr);
 static void game_cheat_kill_fish_boats(pcstr);
 static void game_cheat_update_fish_points(pcstr);
 static void game_cheat_tutorial_step(pcstr);
-static void game_cheat_finish_phase(pcstr);
 static void game_cheat_clear_progress(pcstr);
-static void game_cheat_add_bricks(pcstr);
 static void game_cheat_add_clay(pcstr);
 
 using cheat_command = void(pcstr);
@@ -60,7 +58,6 @@ struct cheat_command_handle {
 };
 
 static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_start_invasion},
-                                                  {"addbricks", game_cheat_add_bricks},
                                                   {"addclay", game_cheat_add_clay},
                                                   {"nextyear", game_cheat_advance_year},
                                                   {"blessing", game_cheat_cast_blessing},
@@ -75,7 +72,6 @@ static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_s
                                                   {"killfishboats", game_cheat_kill_fish_boats},
                                                   {"upfishpoints", game_cheat_update_fish_points},
                                                   {"tutorialstep", game_cheat_tutorial_step},
-                                                  {"finishphase", game_cheat_finish_phase},
                                                   {"clearprogress", game_cheat_clear_progress}
 };
 
@@ -155,28 +151,6 @@ void game_cheat_console(bool force) {
     }
 }
 
-static void game_cheat_finish_phase(pcstr args) {
-    buildings_valid_do([&] (building &b) {
-        if (!b.is_monument()) {
-            return;
-        }
-
-        if (!building_monument_is_unfinished(&b)) {
-            return;
-        }
-
-        building *part = &b;
-        while (part) {
-            grid_area area = map_grid_get_area(part->tile, part->size, 0);
-            map_grid_area_foreach(area.tmin, area.tmax, [] (tile2i tile) {
-                map_monuments_set_progress(tile, 200);
-            });
-
-            part = (part->next_part_building_id > 0) ? building_get(part->next_part_building_id) : nullptr;
-        };
-    });
-}
-
 static void game_cheat_clear_progress(pcstr args) {
     map_monuments_clear();
 }
@@ -188,15 +162,6 @@ static void game_cheat_add_clay(pcstr args) {
     window_invalidate();
 
     city_warning_show_console("Added clay");
-}
-
-static void game_cheat_add_bricks(pcstr args) {
-    int bricks = 0;
-    parse_integer(args ? args : (pcstr )"100", bricks);
-    city_resource_add_items(RESOURCE_BRICKS, bricks);
-    window_invalidate();
-
-    city_warning_show_console("Added bricks");
 }
 
 static void game_cheat_pop_milestone(pcstr args) {
