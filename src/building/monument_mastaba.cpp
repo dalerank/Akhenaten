@@ -494,7 +494,7 @@ std::span<uint16_t> building_small_mastaba::active_workers() {
     return std::span<uint16_t>(data.monuments.workers, 5);
 }
 
-static void game_cheat_finish_phase(std::istream &, std::ostream &) {
+void game_cheat_finish_phase(std::istream &, std::ostream &) {
     buildings_valid_do([&] (building &b) {
         if (!b.is_monument()) {
             return;
