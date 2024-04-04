@@ -685,13 +685,13 @@ bool building_is_shrine(int type) {
 bool building_is_guild(e_building_type type) {
     return building_type_any_of(type, BUILDING_CARPENTERS_GUILD, BUILDING_STONEMASONS_GUILD, BUILDING_BRICKLAYERS_GUILD);
 }
-bool building_is_statue(int type) {
+bool building_is_statue(e_building_type type) {
     return (type >= BUILDING_SMALL_STATUE && type <= BUILDING_LARGE_STATUE);
 }
-bool building_is_beautification(int type) {
+bool building_is_beautification(e_building_type type) {
     return building_is_statue(type) || type == BUILDING_GARDENS || type == BUILDING_PLAZA;
 }
-bool building_is_water_crossing(int type) {
+bool building_is_water_crossing(e_building_type type) {
     return (type == BUILDING_FERRY) || type == BUILDING_LOW_BRIDGE || type == BUILDING_UNUSED_SHIP_BRIDGE_83;
 }
 bool building_is_industry_type(const building* b) {
@@ -729,7 +729,7 @@ bool building_is_food_category(e_building_type type) {
     return false;
 }
 
-bool building_is_infrastructure(int type) {
+bool building_is_infrastructure(e_building_type type) {
     if (type == BUILDING_ARCHITECT_POST || type == BUILDING_FIREHOUSE || type == BUILDING_POLICE_STATION)
         return true;
 
@@ -751,7 +751,7 @@ bool building_is_administration(e_building_type type) {
     return false;
 }
 
-bool building_is_religion(int type) {
+bool building_is_religion(e_building_type type) {
     if (building_is_temple(type) || building_is_large_temple(type) || building_is_shrine(type))
         return true;
 
@@ -760,7 +760,7 @@ bool building_is_religion(int type) {
     return false;
 }
 
-bool building_is_entertainment(int type) {
+bool building_is_entertainment(e_building_type type) {
     if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_PAVILLION) {
         return true;
     }

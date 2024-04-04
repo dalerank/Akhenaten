@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <cstdarg>
 #include <type_traits>
+#include <functional>
 
 struct xstring_value {
     uint32_t reference;

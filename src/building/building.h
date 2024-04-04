@@ -583,16 +583,16 @@ bool building_is_temple(int type);
 bool building_is_large_temple(int type);
 bool building_is_shrine(int type);
 bool building_is_guild(e_building_type type);
-bool building_is_statue(int type);
-bool building_is_beautification(int type);
-bool building_is_water_crossing(int type);
+bool building_is_statue(e_building_type type);
+bool building_is_beautification(e_building_type type);
+bool building_is_water_crossing(e_building_type type);
 bool building_is_industry_type(const building* b);
 
 bool building_is_industry(e_building_type type);
 bool building_is_food_category(e_building_type type);
-bool building_is_infrastructure(int type);
-bool building_is_religion(int type);
-bool building_is_entertainment(int type);
+bool building_is_infrastructure(e_building_type type);
+bool building_is_religion(e_building_type type);
+bool building_is_entertainment(e_building_type type);
 bool building_is_education(e_building_type type);
 bool building_is_military(int type);
 
