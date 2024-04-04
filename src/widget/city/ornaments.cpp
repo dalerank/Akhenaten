@@ -31,6 +31,12 @@
 /////// ANIMATIONS
 
 void building_draw_normal_anim(painter &ctx, vec2i pixel, building *b, tile2i tile, const animation_t &anim, int color_mask) {
+    if (anim.pack > 0 && anim.iid > 0) {
+        int anim_id = image_id_from_group(anim.pack, anim.iid) + anim.offset;
+        building_draw_normal_anim(ctx, pixel + anim.pos, b, tile, anim_id, color_mask, 0, anim.max_frames);
+        return;
+    }
+
     if (anim.anim_id <= 0) {
         return;
     }

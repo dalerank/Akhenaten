@@ -202,7 +202,6 @@ images = [
 	{img: ANIM_HERBALIST_DEATH, pack:PACK_SPR_MAIN, id:181, offset:0},
 	{img: ANIM_DANCER_WALK, pack:PACK_SPR_MAIN, id:128, offset:0},
 	{img: ANIM_DANCER_DEATH, pack:PACK_SPR_MAIN, id:129, offset:0},
-	{img: IMG_ARCHITECT_POST, pack:PACK_GENERAL, id:81, offset:0},
 	{img: IMG_STORAGE_YARD, pack:PACK_GENERAL, id:82, offset:0},
 	{img: ANIM_STORAGE_YARD_WORK, pack:PACK_SPR_AMBIENT, id:51, offset:0},
 	{img: IMG_WORKCAMP, pack:PACK_GENERAL, id:77, offset:0},

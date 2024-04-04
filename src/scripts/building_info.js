@@ -310,7 +310,9 @@ building_firehouse = {
 
 building_architect_post = {
   animations : {
-    work : { pos : [0, 0], anim_id: IMG_ARCHITECT_POST }
+    preview : { pack:PACK_GENERAL, id:81 },
+    base : { pack:PACK_GENERAL, id:81 },
+    work : { pos : [20, -35], pack:PACK_GENERAL, id:81, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
 }
