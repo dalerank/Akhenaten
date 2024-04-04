@@ -6,6 +6,7 @@
 #include "city/sentiment.h"
 #include "city/labor.h"
 #include "city/ratings.h"
+#include "sound/effect.h"
 
 #include "js/js_game.h"
 
@@ -76,6 +77,11 @@ sound_key figure_dancer::phrase_key() const {
 
     int index = rand() % keys.size();
     return keys[index];
+}
+
+bool figure_dancer::play_die_sound() {
+    sound_effect_play(SOUND_EFFECT_DANCER_DIE);
+    return true;
 }
 
 int figure_dancer::provide_service() {

@@ -25,10 +25,6 @@ void figure::play_die_sound() {
         sound_effect_play(SOUND_EFFECT_ZEBRA_DIE);
         break;
 
-    case FIGURE_DANCER:
-        sound_effect_play(SOUND_EFFECT_DANCER_DIE);
-        break;
-
     case FIGURE_ENEMY48_CHARIOT:
     case FIGURE_ENEMY52_MOUNTED_ARCHER:
         sound_effect_play(SOUND_EFFECT_HORSE2);

@@ -12,6 +12,7 @@ public:
     virtual svector<e_building_type, 4> allow_venue_types() const override { return {BUILDING_PAVILLION}; }
     virtual e_figure_sound phrase() const override { return {FIGURE_DANCER, "dancer"}; }
     virtual sound_key phrase_key() const override;
+    virtual bool play_die_sound() override;
     virtual int provide_service() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_PAVILION; }
     virtual figure_sound_t get_sound_reaction(pcstr key) const override;
