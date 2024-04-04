@@ -159,26 +159,6 @@ int figure::target_is_alive() {
     return 0;
 }
 
-void figure::magistrate_action() {
-    switch (action_state) {
-    case FIGURE_ACTION_70_POLICEMAN_CREATED:
-        advance_action(ACTION_10_GOING);
-        break;
-
-    case FIGURE_ACTION_71_POLICEMAN_ENTERING_EXITING:
-        do_enterbuilding(true, home());
-        break;
-
-    case FIGURE_ACTION_72_POLICEMAN_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
-        break;
-
-    case FIGURE_ACTION_73_POLICEMAN_RETURNING:
-        do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING);
-        break;
-    }
-}
-
 // Same as policeman, but can't fight
 // void figure::magistrate_action() {
 //    building *b = building_get(building_id);

@@ -28,21 +28,6 @@ walker_sounds = [
  {type: "", sound: "library_g08.wav"},
  {type: "", sound: "library_g09.wav"},
  {type: "", sound: "library_g10.wav"},
- // magistrate
- {type: "magistrate_i_hope_we_are_ready", 							sound: "magistrate_e02.wav"},
- {type: "magistrate_no_criminals_in_city", 							sound: "magistrate_e03.wav"},
- {type: "magistrate_all_good_in_city", 									sound: "magistrate_e04.wav"},
- {type: "magistrate_streets_still_arent_safety", 				sound: "magistrate_e05.wav"},
- {type: "magistrate_disease_in_city", 									sound: "magistrate_g01.wav"},
- {type: "magistrate_no_food_in_city", 									sound: "magistrate_g02.wav"},
- {type: "magistrate_city_not_safety", 									sound: "magistrate_g03.wav"},
- {type: "magistrate_need_workers", 											sound: "magistrate_g04.wav"},
- {type: "magistrate_gods_are_angry", 										sound: "magistrate_g05.wav"},
- {type: "magistrate_city_bad_reputation", 							sound: "magistrate_g06.wav"},
- {type: "magistrate_much_unemployments", 								sound: "magistrate_g07.wav"},
- {type: "magistrate_no_entertainment_need", 						sound: "magistrate_g08.wav"},
- {type: "magistrate_city_not_bad", 											sound: "magistrate_g09.wav"},
- {type: "magistrate_city_is_amazing", 									sound: "magistrate_g10.wav"},
  // pharaoh
  {type: "", sound: "pharaoh_e01.wav"},
  // policeman

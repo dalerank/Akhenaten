@@ -105,10 +105,14 @@ vec2i figure::tile_pixel_coords() {
 }
 
 void figure::image_set_die_animation(const animation_t &anim) {
-    sprite_image_id = image_group(ANIM_OSTRICH_DEATH);
+    sprite_image_id = image_group(anim.anim_id);
 }
 
 void figure::image_set_animation(const animation_t &anim) {
+    if (anim.iid > 0) {
+        image_set_animation(anim.pack, anim.iid, 0, anim.max_frames, anim.duration);
+        return;
+    }
     image_desc desc = get_image_desc(anim.anim_id);
     image_set_animation(desc.pack, desc.id, 0, anim.max_frames, anim.duration);
 }

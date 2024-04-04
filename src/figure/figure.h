@@ -429,7 +429,6 @@ public:
     void hippodrome_horse_action();
     // pharaoh
     void policeman_action();
-    void magistrate_action();
     void festival_guy_action();
 
     void update_direction_and_image();

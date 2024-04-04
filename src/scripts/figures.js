@@ -167,6 +167,29 @@ figure_ostrich_hunter = {
 	}
 }
 
+figure_magistrate = {
+	animations : {
+		walk : { pack: PACK_SPR_MAIN, id: 212, max_frames:12 },
+		death : { pack: PACK_SPR_MAIN, id: 213, max_frames:8 },
+	},
+	sound : {
+    i_hope_we_are_ready : {sound: "magistrate_e02.wav", group:210, text:0 },
+    no_criminals_in_city : {sound: "magistrate_e03.wav", group:210, text:0 },
+    all_good_in_city : {sound: "magistrate_e04.wav", group:210, text:0 },
+    streets_still_arent_safety : {sound: "magistrate_e05.wav", group:210, text:0 },
+    disease_in_city : {sound: "magistrate_g01.wav", group:210, text:0 },
+    no_food_in_city : {sound: "magistrate_g02.wav", group:210, text:0 },
+    city_not_safety : {sound: "magistrate_g03.wav", group:210, text:0 },
+    need_workers : {sound: "magistrate_g04.wav", group:210, text:0 },
+    gods_are_angry : {sound: "magistrate_g05.wav", group:210, text:0 },
+    city_bad_reputation : {sound: "magistrate_g06.wav", group:210, text:0 },
+    much_unemployments : {sound: "magistrate_g07.wav", group:210, text:0 },
+    no_entertainment_need : {sound: "magistrate_g08.wav", group:210, text:0 },
+    city_not_bad : {sound: "magistrate_g09.wav", group:210, text:0 },
+    city_is_amazing : {sound: "magistrate_g10.wav", group:210, text:0 },
+	}
+}
+
 figure_lumberjack = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:73, max_frames:12 },

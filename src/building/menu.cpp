@@ -261,10 +261,10 @@ void building_menu_toggle_building(int type, bool enabled) {
         if (building_is_guild((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_CONSTURCTION_GUILDS);
 
-        if (building_is_beautification(type))
+        if (building_is_beautification((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_BEAUTIFICATION);
 
-        if (building_is_water_crossing(type))
+        if (building_is_water_crossing((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_WATER_CROSSINGS);
 
         if (building_is_monument(type))

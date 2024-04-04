@@ -121,7 +121,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_SLED, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_NONE},
   {FIGURE_WATER_CARRIER, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_WATER_CARRIER},
   {FIGURE_CONSTABLE, 1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_POLICEMAN},
-  {FIGURE_MAGISTRATE, 1, TERRAIN_USAGE_ROADS, 800, GROUP_FIGURE_MAGISTRATE},
+  {FIGURE_MAGISTRATE, 1, TERRAIN_USAGE_ROADS, 800, 0, 0, IMG_NONE},
   {FIGURE_REED_GATHERER, 1, TERRAIN_USAGE_ANY, 0, 0, 0, ANIM_REED_GATHERER_WALK},
   {FIGURE_FESTIVAL_PRIEST, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_ENEMY_TRANSPORT, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
@@ -354,8 +354,6 @@ void figure::action_perform() {
         figure* leader = figure_get(leading_figure_id);
         switch (type) {
         case FIGURE_CONSTABLE:
-        case FIGURE_MAGISTRATE:
-        case FIGURE_WORKER:
         case FIGURE_NATIVE_TRADER:
         case FIGURE_TOWER_SENTRY:
         case FIGURE_MISSIONARY:
@@ -498,7 +496,6 @@ void figure::action_perform() {
         case FIGURE_GOVERNOR: governor_action(); break;
         case FIGURE_HIPPO: hippo_action(); break;
         case FIGURE_CONSTABLE: policeman_action(); break;
-        case FIGURE_MAGISTRATE: magistrate_action(); break;
         case FIGURE_FESTIVAL_PRIEST: festival_guy_action(); break;
         case FIGURE_SLED_PULLER: sled_puller_action(); break;
         case FIGURE_HYENA: hyena_action(); break;

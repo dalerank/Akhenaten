@@ -9,6 +9,7 @@ public:
 
     virtual void on_create() override {}
     virtual void figure_action() override;
+    virtual void figure_before_action() override;
     virtual void poof() override;
     virtual e_figure_sound phrase() const override { return {FIGURE_LABORER, "worker"}; }
     virtual sound_key phrase_key() const override;

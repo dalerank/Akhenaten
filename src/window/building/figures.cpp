@@ -325,7 +325,6 @@ static void window_info_select_figure(int index, int param2) {
 static int window_info_show_overlay(figure *f) {
     switch (f->type) {
     case FIGURE_CONSTABLE: return OVERLAY_CRIME;
-    case FIGURE_MAGISTRATE: return OVERLAY_COUTHOUSE;
     default:
         return f->dcast()->get_overlay();
     }

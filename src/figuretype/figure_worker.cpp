@@ -151,6 +151,13 @@ void figure_worker::figure_action() {
     }
 }
 
+void figure_worker::figure_before_action() {
+    building *b = home();
+    if (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id())) {
+        poof();
+    }
+}
+
 void figure_worker::poof() {
     figure_impl::poof();
 

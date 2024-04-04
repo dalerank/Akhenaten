@@ -29,10 +29,6 @@ static void hippodrome_coverage(building* b, figure *f, int&) {
     b->data.house.hippodrome = MAX_COVERAGE;
 }
 
-static void magistrate_coverage(building* b, figure *f, int&) {
-    b->data.house.magistrate = MAX_COVERAGE;
-}
-
 static void academy_coverage(building* b, figure *f, int&) {
     b->data.house.academy = MAX_COVERAGE;
 }
@@ -100,18 +96,6 @@ int figure::figure_service_provide_coverage() {
     case FIGURE_CONSTABLE: {
             int max_criminal_active = 0;
             houses_serviced = figure_provide_service(tile, this, max_criminal_active, policeman_coverage);
-            if (max_criminal_active > min_max_seen)
-                min_max_seen = max_criminal_active;
-            else if (min_max_seen <= 10)
-                min_max_seen = 0;
-            else
-                min_max_seen -= 10;
-        }
-        break;
-
-    case FIGURE_MAGISTRATE: {
-            int max_criminal_active = 0;
-            houses_serviced = figure_provide_service(tile, this, max_criminal_active, magistrate_coverage);
             if (max_criminal_active > min_max_seen)
                 min_max_seen = max_criminal_active;
             else if (min_max_seen <= 10)
