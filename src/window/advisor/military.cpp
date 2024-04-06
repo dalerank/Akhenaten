@@ -91,23 +91,24 @@ static int draw_background() {
     }
     int bullet_x = 60;
     int text_x = 80;
+    image_desc group_bullet{PACK_GENERAL, 158};
     if (num_legions <= 0) {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BULLET), vec2i{bullet_x, 359});
+        ImageDraw::img_generic(ctx, image_group(group_bullet), vec2i{bullet_x, 359});
         lang_text_draw(51, enemy_text_id, text_x, 358, FONT_NORMAL_BLACK_ON_LIGHT);
 
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BULLET), vec2i{bullet_x, 379});
+        ImageDraw::img_generic(ctx, image_group(group_bullet), vec2i{bullet_x, 379});
         lang_text_draw(51, distant_battle_text_id, text_x, 378, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
         // has forts
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BULLET), vec2i{bullet_x, 349});
+        ImageDraw::img_generic(ctx, image_group(group_bullet), vec2i{bullet_x, 349});
         int width = lang_text_draw_amount(8, 46, city_military_total_soldiers(), text_x, 348, FONT_NORMAL_BLACK_ON_LIGHT);
         width += lang_text_draw(51, 7, text_x + width, 348, FONT_NORMAL_BLACK_ON_LIGHT);
         lang_text_draw_amount(8, 48, city_military_total_legions(), text_x + width, 348, FONT_NORMAL_BLACK_ON_LIGHT);
 
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BULLET), vec2i{bullet_x, 369});
+        ImageDraw::img_generic(ctx, image_group(group_bullet), vec2i{bullet_x, 369});
         lang_text_draw(51, enemy_text_id, text_x, 368, FONT_NORMAL_BLACK_ON_LIGHT);
 
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BULLET), vec2i{bullet_x, 389});
+        ImageDraw::img_generic(ctx, image_group(group_bullet), vec2i{bullet_x, 389});
         lang_text_draw(51, distant_battle_text_id, text_x, 388, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
