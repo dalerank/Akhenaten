@@ -209,7 +209,6 @@ images = [
 	{img: ANIM_REED_GATHERER_DEATH, pack:PACK_SPR_MAIN, id:38, offset:0},
 	{img: ANIM_REED_GATHERER_WORK, pack:PACK_SPR_MAIN, id:39, offset:0},
 	{img: ANIM_REED_GATHERER_RETURN, pack:PACK_SPR_MAIN, id:40, offset:0},
-	{img: IMG_PAPYRUS_WORKSHOP, pack:PACK_GENERAL, id:44, offset:0},
 ]
 
 cart_offsets = [

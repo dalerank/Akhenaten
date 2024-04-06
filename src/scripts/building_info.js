@@ -219,7 +219,9 @@ building_well = {
 
 building_papyrus_maker = {
   animations : {
-    work : { pos : [0, 0], anim_id : IMG_PAPYRUS_WORKSHOP }
+    preview : { pos: [0, 0], pack:PACK_GENERAL, id:44 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:44 },
+    work : { pos : [7, -10], pack:PACK_GENERAL, id:44, offset:1, max_frames:9 }
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }

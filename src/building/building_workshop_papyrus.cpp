@@ -1,6 +1,7 @@
 #include "building_workshop_papyrus.h"
 
 #include "building_workshop.h"
+#include "building/count.h"
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
 #include "city/resource.h"
@@ -29,6 +30,10 @@ void building_papyrus_maker::on_create(int orientation) {
 void building_papyrus_maker::window_info_background(object_info &c) {
     e_resource output_resource = RESOURCE_PAPYRUS;
     building_workshop_draw_info(c, 1, "papyrus_workshop", 190, output_resource, RESOURCE_REEDS);
+}
+
+void building_papyrus_maker::update_count() const {
+    building_increase_industry_count(RESOURCE_PAPYRUS, num_workers() > 0);
 }
 
 bool building_papyrus_maker::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

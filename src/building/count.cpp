@@ -266,9 +266,6 @@ void building_count_update() {
         case BUILDING_JEWELS_WORKSHOP:
             building_increase_industry_count(RESOURCE_LUXURY_GOODS, b.num_workers > 0);
             break;
-        case BUILDING_PAPYRUS_WORKSHOP:
-            building_increase_industry_count(RESOURCE_PAPYRUS, b.num_workers > 0);
-            break;
         case BUILDING_BRICKS_WORKSHOP:
             building_increase_industry_count(RESOURCE_BRICKS, b.num_workers > 0);
             break;

@@ -282,7 +282,7 @@ void building_properties_init() {
     properties[BUILDING_STORAGE_YARD] = {1, 0, 0, 0, 0, IMG_STORAGE_YARD};
     properties[BUILDING_WORK_CAMP] = {2, 0, 0, 0, 0, IMG_WORKCAMP};
     properties[BUILDING_REED_GATHERER] = {2, 0, 0, 0, 0, IMG_BUILDING_REED_GATHERER};
-    properties[BUILDING_PAPYRUS_WORKSHOP] = {2, 0, 0, 0, 0, IMG_PAPYRUS_WORKSHOP};
+    properties[BUILDING_PAPYRUS_WORKSHOP] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_WATER_SUPPLY] = {2, 1, 0, 0, 0, IMG_WATER_SUPPLY};
     properties[BUILDING_STONEMASONS_GUILD] = {2, 0, 0, 0, 0, IMG_GUILD_STONEMASONS};
     properties[BUILDING_DOCK] = {3, 1, 0, 0, 0, IMG_BUILDING_DOCK};
