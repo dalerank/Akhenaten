@@ -114,6 +114,22 @@ static int draw_advisor_chief_background() {
         ui["workers_info"].font(workers_status.second);
     }
 
+    {
+        std::pair<int, int> foodstocks_status;
+        if (scenario_property_kingdom_supplies_grain()) {
+            foodstocks_status = {26, FONT_NORMAL_BLACK_ON_DARK};
+            ui["foodstocks_info"].text((pcstr)lang_get_string(61, foodstocks_status.first));
+        } else if (city_resource_food_supply_months() > 0) {
+            foodstocks_status = {98, FONT_NORMAL_BLACK_ON_DARK};
+            ui["foodstocks_info"].text_var("%s %d", (pcstr)lang_get_string(61, foodstocks_status.first));
+        } else {
+            foodstocks_status = {95, FONT_NORMAL_YELLOW};
+            ui["foodstocks_info"].text((pcstr)lang_get_string(61, foodstocks_status.first));
+        }
+
+        ui["foodstocks_info"].font(foodstocks_status.second);
+    }
+
     return ADVISOR_HEIGHT;
 }
 
@@ -123,11 +139,8 @@ static void draw_advisor_chief_foreground() {
     painter ctx = game.painter();
     int width;
 
-    int y_line = 66;
+    int y_line = 126;
     int text_b = 20;
-    y_line += 20;
-    y_line += 20;
-    y_line += 20;
 
     //    // housing capacity
     //    imagedrawnamespace::image_draw_namespace::image_draw(image_id_from_group(GROUP_BULLET), 32, y_line + 1);
@@ -143,16 +156,6 @@ static void draw_advisor_chief_foreground() {
     //    y_line += 20;
 
     // food stocks
-    text_b = 95;
-    draw_title(y_line, 4);
-    if (scenario_property_kingdom_supplies_grain()) {
-        lang_text_draw(61, 26, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    } else if (city_resource_food_supply_months() > 0) {
-        width = lang_text_draw(61, text_b + 3, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw_amount(8, 4, city_resource_food_supply_months(), X_OFFSET + width, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    } else {
-        lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-    }
     y_line += 20;
 
     // food consumption

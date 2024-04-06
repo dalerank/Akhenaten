@@ -55,6 +55,11 @@ advisor_chief_window = {
 		workers_icon : { type : "image", pack:PACK_GENERAL, id:158, pos:[26, 107] },
 		workers_label : { type : "label", pos:[44, 106], font:FONT_NORMAL_WHITE_ON_DARK, text:"#chief_adv_workers"},
 		workers_info : { type : "label", pos:[185, 106], font:FONT_NORMAL_BLACK_ON_LIGHT, wrap:400},
+
+		// food stocks
+		foodstocks_icon : { type : "image", pack:PACK_GENERAL, id:158, pos:[26, 127] },
+		foodstocks_label : { type : "label", pos:[44, 126], font:FONT_NORMAL_WHITE_ON_DARK, text:"#chief_adv_foodstocks"},
+		foodstocks_info : { type : "label", pos:[185, 126], font:FONT_NORMAL_BLACK_ON_LIGHT, wrap:400},
 	}
 }
 
