@@ -27,4 +27,5 @@ localization = [
   {key: "#chief_adv_migration", group:61, id:2 },
   {key: "#chief_adv_workers", group:61, id:3 },
   {key: "#chief_adv_foodstocks", group:61, id:4 },
+  {key: "#chief_adv_foodconsumption", group:61, id:5 },
 ]

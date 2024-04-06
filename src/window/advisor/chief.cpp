@@ -130,6 +130,25 @@ static int draw_advisor_chief_background() {
         ui["foodstocks_info"].font(foodstocks_status.second);
     }
 
+    {
+        std::pair<int, int> foodcomsuption_status;
+        if (scenario_property_kingdom_supplies_grain()) {
+            foodcomsuption_status = {26, FONT_NORMAL_BLACK_ON_DARK};
+        } else {
+            int pct = city_resource_food_percentage_produced();
+            if (pct > 150) { foodcomsuption_status = {13, FONT_NORMAL_BLACK_ON_DARK}; }
+            else if (pct > 105) { foodcomsuption_status = {14, FONT_NORMAL_BLACK_ON_DARK}; }
+            else if (pct > 95) { foodcomsuption_status = {15, FONT_NORMAL_BLACK_ON_DARK}; }
+            else if (pct > 75) { foodcomsuption_status = {16, FONT_NORMAL_YELLOW}; }
+            else if (pct > 30) { foodcomsuption_status = {17, FONT_NORMAL_YELLOW}; }
+            else if (pct > 0) { foodcomsuption_status = {18, FONT_NORMAL_YELLOW}; }
+            else { foodcomsuption_status = {18, FONT_NORMAL_YELLOW}; }
+        }
+
+        ui["foodconsumption_info"].text((pcstr)lang_get_string(61, foodcomsuption_status.first));
+        ui["foodconsumption_info"].font(foodcomsuption_status.second);
+    }
+
     return ADVISOR_HEIGHT;
 }
 
@@ -139,7 +158,7 @@ static void draw_advisor_chief_foreground() {
     painter ctx = game.painter();
     int width;
 
-    int y_line = 126;
+    int y_line = 166;
     int text_b = 20;
 
     //    // housing capacity
@@ -154,34 +173,6 @@ static void draw_advisor_chief_foreground() {
     //        FONT_NORMAL_GREEN);
     //    }
     //    y_line += 20;
-
-    // food stocks
-    y_line += 20;
-
-    // food consumption
-    text_b = 13;
-    draw_title(y_line, 5);
-    if (scenario_property_kingdom_supplies_grain()) {
-        lang_text_draw(61, 26, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    } else {
-        int pct = city_resource_food_percentage_produced();
-        if (pct > 150) {
-            lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-        } else if (pct > 105) {
-            lang_text_draw(61, text_b + 1, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-        } else if (pct > 95) {
-            lang_text_draw(61, text_b + 2, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-        } else if (pct > 75) {
-            lang_text_draw(61, text_b + 3, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        } else if (pct > 30) {
-            lang_text_draw(61, text_b + 4, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        } else if (pct > 0) {
-            lang_text_draw(61, text_b + 5, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        } else {
-            lang_text_draw(61, text_b + 5, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        }
-    }
-    y_line += 20;
 
     // health
     text_b = 103;
