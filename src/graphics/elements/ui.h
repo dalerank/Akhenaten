@@ -40,6 +40,7 @@ int label(pcstr, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags fl
 int label_amount(int group, int number, int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, pcstr postfix = "");
 int label_percent(int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
 void eimage(e_image_id img, vec2i pos, int offset = 0);
+void eimage(image_desc img, vec2i pos);
 void panel(vec2i pos, vec2i size, UiFlags flags);
 void icon(vec2i pos, e_resource img);
 void icon(vec2i pos, e_advisor advisor);
@@ -63,7 +64,9 @@ struct element {
     virtual void draw() {}
     virtual void load(archive);
     virtual void text(pcstr) {}
+    virtual void color(int) {}
     virtual void image(int) {}
+    virtual void font(int) {}
     virtual void onclick(std::function<void(int, int)>) {}
 
     pcstr text_from_key(pcstr key);
@@ -117,6 +120,7 @@ struct element {
 
 struct eimg : public element {
     e_image_id img;
+    image_desc img_desc;
 
     virtual void draw() override;
     virtual void load(archive elem) override;
@@ -146,10 +150,13 @@ struct elabel : public element {
     vec2i _body;
     uint32_t _color;
     UiFlags _flags;
+    int _wrap;
 
     virtual void draw() override;
     virtual void load(archive elem) override;
     virtual void text(pcstr) override;
+    virtual void color(int) override;
+    virtual void font(int) override;
 };
 
 struct etext : public elabel {

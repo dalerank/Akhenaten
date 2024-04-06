@@ -134,7 +134,7 @@ int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width)
     } else if (!!(flags & UiFlags_LabelMultiline)) {
         return text_draw_multiline((uint8_t*)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
     } else {
-        return lang_text_draw(label, offset + pos, font);
+        return lang_text_draw(label, offset + pos, font, box_width);
     }
 }
 
@@ -152,6 +152,12 @@ void ui::eimage(e_image_id group, vec2i pos, int img) {
     painter ctx = game.painter();
     const vec2i offset = g_state.offset();
     ImageDraw::img_generic(ctx, image_group(group) + img, pos + offset);
+}
+
+void ui::eimage(image_desc imgd, vec2i pos) {
+    painter ctx = game.painter();
+    const vec2i offset = g_state.offset();
+    ImageDraw::img_generic(ctx, image_group(imgd), pos + offset);
 }
 
 void ui::panel(vec2i pos, vec2i size, UiFlags flags) {
@@ -265,7 +271,11 @@ ui::element& ui::widget::operator[](pcstr id) {
 }
 
 void ui::eimg::draw() {
-    ui::eimage(img, pos);
+    if (img > 0) {
+        ui::eimage(img, pos);
+    } else {
+        ui::eimage(img_desc, pos);
+    }
 }
 
 void ui::eimg::load(archive arch) {
@@ -274,6 +284,9 @@ void ui::eimg::load(archive arch) {
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "image"));
     img = arch.r_image("image");
+    img_desc.pack = arch.r_int("pack");
+    img_desc.id = arch.r_int("id");
+    img_desc.offset = arch.r_int("offset");
 }
 
 void ui::eresource_icon::draw() {
@@ -296,16 +309,20 @@ void ui::elabel::draw() {
     if (_body.x > 0) {
         label_draw(pos.x, pos.y, _body.x, _body.y);
     }
-    ui::label(_text.c_str(), pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0}), _font, _flags);
+    ui::label(_text.c_str(), pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0}), _font, _flags, _wrap);
 }
 
 void ui::elabel::load(archive arch) {
     element::load(arch);
 
     _text = arch.r_string("text");
+    if (_text[0] == '#') {
+        _text = lang_text_from_key(_text.c_str());
+    }
     _font = (e_font)arch.r_int("font", FONT_NORMAL_BLACK_ON_LIGHT);
     _body = arch.r_size2i("body");
     _color = arch.r_uint("color");
+    _wrap = arch.r_int("wrap");
     pcstr talign = arch.r_string("align");
     bool multiline = arch.r_bool("multiline");
     _flags = (strcmp("center", talign) == 0 ? UiFlags_LabelCentered : UiFlags_None)
@@ -315,6 +332,14 @@ void ui::elabel::load(archive arch) {
 void ui::elabel::text(pcstr v) {
     _text = lang_text_from_key(v);
     enabled = !_text.empty();
+}
+
+void ui::elabel::color(int v) {
+    _color = v;
+}
+
+void ui::elabel::font(int v) {
+    _font = (e_font)v;
 }
 
 void ui::eimage_button::load(archive arch) {

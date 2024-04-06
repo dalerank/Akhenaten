@@ -70,6 +70,7 @@ var empire_window = {}
 var empire_images_remap = []
 var imagepaks = []
 // ui
+var advisor_chief_window = {}
 var advisor_rating_window = {}
 var mission_briefing_window = {}
 var granary_info_window = {}

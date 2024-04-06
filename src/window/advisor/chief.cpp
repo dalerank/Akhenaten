@@ -1,6 +1,7 @@
 #include "chief.h"
-#include <city/floods.h>
-#include <scenario/request.h>
+
+#include "city/floods.h"
+#include "scenario/request.h"
 
 #include "city/figures.h"
 #include "city/finance.h"
@@ -24,113 +25,108 @@
 #include "translation/translation.h"
 #include "window/advisors.h"
 #include "game/game.h"
+#include "io/gamefiles/lang.h"
+
+#include "js/js_game.h"
 
 #define ADVISOR_HEIGHT 24
 #define X_OFFSET 185
 
+ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_chief);
+
+struct advisor_chief_window : public ui::widget {
+};
+
+advisor_chief_window g_advisor_chief_window;
+
+void config_load_advisor_chief() {
+    g_config_arch.r_section("advisor_chief_window", [] (archive arch) {
+        g_advisor_chief_window.load(arch);
+    });
+}
+
 static void draw_title(int y, int text_id) {
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BULLET), 26, y + 1);
+    ImageDraw::img_generic(ctx, image_id_from_group(PACK_GENERAL, 158), 26, y + 1);
     lang_text_draw(61, text_id, 44, y, FONT_NORMAL_WHITE_ON_DARK);
 }
 
-static int draw_background() {
+static int draw_advisor_chief_background() {
+    auto &ui = g_advisor_chief_window;
+
+    // sentiment
+    {
+        int sentiment = city_sentiment();
+        std::pair<int, int> sentiment_status;
+        if (sentiment <= 0) { sentiment_status = {20, FONT_NORMAL_YELLOW}; } 
+        else if (sentiment >= 100) { sentiment_status = {31, FONT_NORMAL_BLACK_ON_DARK}; }
+        else { sentiment_status = {32 + sentiment / 10, FONT_NORMAL_BLACK_ON_DARK}; }
+        ui["sentiment_info"].text((pcstr)lang_get_string(61, sentiment_status.first));
+        ui["sentiment_info"].font(sentiment_status.second);
+    }
+
+    // migration
+    {
+        std::pair<int, int> migration_status;
+        if (city_figures_total_invading_enemies() > 3) { migration_status = {43, FONT_NORMAL_BLACK_ON_DARK}; } 
+        else if (city_migration_newcomers() >= 5) { migration_status = {44, FONT_NORMAL_BLACK_ON_DARK}; }
+        else if (city_migration_no_room_for_immigrants()) { migration_status = {45, FONT_NORMAL_YELLOW}; }
+        else if (city_migration_percentage() >= 80) { migration_status = {44, FONT_NORMAL_BLACK_ON_DARK}; } 
+        else {
+            migration_status = {43, FONT_NORMAL_BLACK_ON_DARK};
+            switch (city_migration_problems_cause()) {
+            case NO_IMMIGRATION_LOW_WAGES: migration_status.first = 46; break;
+            case NO_IMMIGRATION_NO_JOBS: migration_status.first = 47; break;
+            case NO_IMMIGRATION_NO_FOOD: migration_status.first = 48; break;
+            case NO_IMMIGRATION_HIGH_TAXES: migration_status.first = 49; break;
+            case NO_IMMIGRATION_MANY_TENTS: migration_status.first = 50; break;
+            case NO_IMMIGRATION_LOW_MOOD: migration_status.first = 51; break;
+            default: migration_status.first = 59; break;
+            }
+        }
+        ui["migration_info"].text((pcstr)lang_get_string(61, migration_status.first));
+        ui["migration_info"].font(migration_status.second);
+    }
+
+    // workers
+    {
+        int pct_unemployment = city_labor_unemployment_percentage();
+        int needed_workers = city_labor_workers_needed();
+        std::pair<int, int> workers_status;
+        if (pct_unemployment > 0) {
+            if (pct_unemployment > 10) { workers_status = {76, FONT_NORMAL_YELLOW}; }
+            else if (pct_unemployment > 5) { workers_status = {77, FONT_NORMAL_YELLOW}; }
+            else if (pct_unemployment > 2) { workers_status = {78, FONT_NORMAL_YELLOW}; }
+            else { workers_status = {79, FONT_NORMAL_BLACK_ON_DARK}; }
+            int unemployed_num = city_labor_workers_unemployed() - needed_workers;
+            ui["workers_info"].text_var("%s %d(%d)", (pcstr)lang_get_string(61, workers_status.first), pct_unemployment, unemployed_num);
+        } else if (needed_workers > 0) {
+            if (needed_workers > 75) { workers_status = {80, FONT_NORMAL_YELLOW}; }
+            else if (needed_workers > 50) { workers_status = {81, FONT_NORMAL_YELLOW }; }
+            else if (needed_workers > 25) { workers_status = {82, FONT_NORMAL_YELLOW}; }
+            else { workers_status = {83, FONT_NORMAL_BLACK_ON_DARK}; }
+            ui["workers_info"].text_var("%s %d", (pcstr)lang_get_string(61, workers_status.first), needed_workers);
+        } else {
+            workers_status = {84, FONT_NORMAL_BLACK_ON_DARK};
+            ui["workers_info"].text((pcstr)lang_get_string(61, workers_status.first));
+        }
+       
+        ui["workers_info"].font(workers_status.second);
+    }
+
+    return ADVISOR_HEIGHT;
+}
+
+static void draw_advisor_chief_foreground() {
+    g_advisor_chief_window.draw();
+
     painter ctx = game.painter();
     int width;
 
-    outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 11, 10, 10);
-
-    lang_text_draw(61, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(17, 60, 38, 17);
-
     int y_line = 66;
     int text_b = 20;
-
-    // sentiment
-    draw_title(y_line, 1);
-    int sentiment = city_sentiment();
-    if (sentiment <= 0) {
-        lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-    } else if (sentiment >= 100) {
-        lang_text_draw(61, text_b + 11, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    } else {
-        lang_text_draw(61, text_b + 1 + sentiment / 10, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    }
     y_line += 20;
-
-    // migration
-    text_b = 43;
-    draw_title(y_line, 2);
-    if (city_figures_total_invading_enemies() > 3) {
-        lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    } else if (city_migration_newcomers() >= 5) {
-        lang_text_draw(61, text_b + 1, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    } else if (city_migration_no_room_for_immigrants()) {
-        lang_text_draw(61, text_b + 2, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-    } else if (city_migration_percentage() >= 80) {
-        lang_text_draw(61, text_b + 1, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    } else {
-        int text_id;
-        switch (city_migration_problems_cause()) {
-        case NO_IMMIGRATION_LOW_WAGES:
-            text_id = text_b + 3;
-            break;
-        case NO_IMMIGRATION_NO_JOBS:
-            text_id = text_b + 4;
-            break;
-        case NO_IMMIGRATION_NO_FOOD:
-            text_id = text_b + 5;
-            break;
-        case NO_IMMIGRATION_HIGH_TAXES:
-            text_id = text_b + 6;
-            break;
-        case NO_IMMIGRATION_MANY_TENTS:
-            text_id = text_b + 7;
-            break;
-        case NO_IMMIGRATION_LOW_MOOD:
-            text_id = text_b + 8;
-            break;
-        default:
-            text_id = text_b + 16;
-            break;
-        }
-        if (text_id)
-            lang_text_draw(61, text_id, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    }
     y_line += 20;
-
-    // workers
-    text_b = 76;
-    draw_title(y_line, 3);
-    int pct_unemployment = city_labor_unemployment_percentage();
-    int needed_workers = city_labor_workers_needed();
-    if (pct_unemployment > 0) {
-        if (pct_unemployment > 10) {
-            width = lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        } else if (pct_unemployment > 5) {
-            width = lang_text_draw(61, text_b + 1, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        } else if (pct_unemployment > 2) {
-            width = lang_text_draw(61, text_b + 2, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        } else {
-            width = lang_text_draw(61, text_b + 3, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-        }
-        width += text_draw_percentage(pct_unemployment, X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-        text_draw_number(
-          city_labor_workers_unemployed() - needed_workers, '(', ")", X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-    } else if (needed_workers > 0) {
-        if (needed_workers > 75) {
-            width = lang_text_draw(61, text_b + 4, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        } else if (needed_workers > 50) {
-            width = lang_text_draw(61, text_b + 5, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        } else if (needed_workers > 25) {
-            width = lang_text_draw(61, text_b + 6, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        } else {
-            width = lang_text_draw(61, text_b + 7, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-        }
-        lang_text_draw_amount(8, 12, needed_workers, X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-    } else
-        lang_text_draw(61, text_b + 8, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
     y_line += 20;
 
     //    // housing capacity
@@ -332,14 +328,12 @@ static int draw_background() {
         lang_text_draw(61, text_b + flood_month, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
     }
     y_line += 20;
-
-    return ADVISOR_HEIGHT;
 }
 
-const advisor_window* window_advisor_chief(void) {
+const advisor_window* window_advisor_chief() {
     static const advisor_window window = {
-        draw_background,
-        nullptr,
+        draw_advisor_chief_background,
+        draw_advisor_chief_foreground,
         nullptr,
         nullptr
     };

@@ -50,12 +50,18 @@ int lang_text_get_width(const char* str, e_font font) {
     return text_get_width((const uint8_t*)str, font) + font_definition_for(font)->space_width;
 }
 
-int lang_text_draw(int group, int number, int x_offset, int y_offset, e_font font) {
-    const uint8_t* str = lang_get_string(group, number);
-    return text_draw(str, x_offset, y_offset, font, 0);
+int lang_text_draw(int group, int number, int x_offset, int y_offset, e_font font, int box_width) {
+    pcstr str = (pcstr)lang_get_string(group, number);
+    return lang_text_draw(str, vec2i{x_offset, y_offset}, font, box_width);
 }
 
-int lang_text_draw(pcstr str, vec2i pos, e_font font) {
+int lang_text_draw(pcstr str, vec2i pos, e_font font, int box_width) {
+    if (box_width > 0) {
+        uint32_t maxlen = text_get_max_length_for_width((const uint8_t*)str, strlen((pcstr)str), font, box_width, false);
+        bstring1024 temp_str;
+        temp_str.ncat((pcstr)str, maxlen);
+        return text_draw((const uint8_t*)temp_str.c_str(), pos.x, pos.y, font, 0);
+    }
     return text_draw((const uint8_t*)str, pos.x, pos.y, font, 0);
 }
 

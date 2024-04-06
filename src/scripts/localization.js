@@ -22,4 +22,8 @@ localization = [
   {key: "#granary_storing", group:98, id:2 },
   {key: "#granary_space_for", group:98, id:3 },
   {key: "#granary_units", group:8, id:17 },
+  {key: "#chief_overseer", group:61, id:0 },
+  {key: "#chief_adv_sentiment", group:61, id:1 },
+  {key: "#chief_adv_migration", group:61, id:2 },
+  {key: "#chief_adv_workers", group:61, id:3 },
 ]
