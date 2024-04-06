@@ -88,7 +88,9 @@ building_weaponsmith = {
 
 building_courthouse = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_COURTHOUSE }
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:62, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:62, },
+    work : { pos : [80, -80], pack:PACK_GENERAL, id:62, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
 }
