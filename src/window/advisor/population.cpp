@@ -496,7 +496,7 @@ static int draw_background() {
 
     // info panel
     inner_panel_draw(48, 336, 34, 5);
-    int image_id = image_id_from_group(GROUP_BULLET);
+    int image_id = image_id_from_group(PACK_GENERAL, 158);
     ImageDraw::img_generic(ctx, image_id, 56, 344);
     ImageDraw::img_generic(ctx, image_id, 56, 362);
     ImageDraw::img_generic(ctx, image_id, 56, 380);

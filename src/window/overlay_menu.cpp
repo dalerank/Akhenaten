@@ -202,7 +202,7 @@ static void draw_foreground() {
     }
 
     if (data.selected_submenu > 0) {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BULLET), x_offset - 185, 80 + 24 * data.selected_menu);
+        ImageDraw::img_generic(ctx, image_id_from_group(PACK_GENERAL, 158), x_offset - 185, 80 + 24 * data.selected_menu);
         for (int i = 0; i < data.num_submenu_items; i++) {
             label_draw(x_offset - 348, 74 + 24 * (i + data.selected_menu), 10, data.submenu_focus_button_id == i + 1 ? 1 : 2);
 
