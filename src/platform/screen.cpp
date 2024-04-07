@@ -275,7 +275,7 @@ void platform_screen_set_windowed() {
     if (SDL_GetWindowGrab(g_screen.window) == SDL_TRUE) {
         SDL_SetWindowGrab(g_screen.window, SDL_FALSE);
     }
-    g_settings.set_fullscreen(0);
+    g_settings.set_fullscreen(false);
     g_settings.display_size = {pixel_width, pixel_height};
 }
 

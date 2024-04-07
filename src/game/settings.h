@@ -7,11 +7,18 @@
 
 class buffer;
 
-enum { 
-    TOOLTIPS_NONE = 0,
-    TOOLTIPS_SOME = 1,
-    TOOLTIPS_FULL = 2
+enum e_tooltip_show {
+    e_tooltip_show_none = 0,
+    e_tooltip_show_some = 1,
+    e_tooltip_show_full = 2
 };
+using etooltip_flag = uint32_t;
+
+enum e_setting_flag {
+    e_setting_none = 0,
+    e_setting_cli = 1,
+};
+using esetting_flag = uint32_t;
 
 enum e_difficulty {
     DIFFICULTY_VERY_EASY = 0,
@@ -52,7 +59,7 @@ struct game_settings {
     int scroll_speed;
     // misc settings
     e_difficulty difficulty;
-    int tooltips;
+    etooltip_flag tooltips;
     int monthly_autosave;
     bool warnings;
     bool gods_enabled;
@@ -75,10 +82,10 @@ struct game_settings {
     void load_default_settings();
     void load();
     void save();
-    inline bool is_fullscreen() { return fullscreen && cli_fullscreen; }
+    inline bool is_fullscreen(esetting_flag opt = e_setting_cli) { return fullscreen && ((opt == e_setting_cli) ? cli_fullscreen : true); }
 
-    void set_cli_fullscreen(bool fullscreen) { cli_fullscreen = fullscreen; }
-    void set_fullscreen(bool fullscreen) { fullscreen = fullscreen; }
+    void set_cli_fullscreen(bool v) { cli_fullscreen = v; }
+    void set_fullscreen(bool v) { fullscreen = v; }
     bool sound_is_enabled(int type) { return get_sound(type)->enabled; }
     sound_settings *get_sound(int type);
 

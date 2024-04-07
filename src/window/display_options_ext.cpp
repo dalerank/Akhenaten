@@ -81,7 +81,7 @@ static void init(void (*close_callback)(void)) {
 }
 
 static void button_fullscreen(int param1, int param2) {
-    app_fullscreen(!g_settings.is_fullscreen());
+    app_fullscreen(!g_settings.is_fullscreen(e_setting_none));
     g_display_options_ext.close_callback();
 }
 
@@ -97,7 +97,7 @@ static void draw_foreground() {
     data.panel->draw();
 
     label_draw(148, 76, 14, data.focus_button_id == 1 ? 1 : 2);
-    lang_text_draw_centered(42, g_settings.is_fullscreen() ? 2 : 1, 148, 80, 224, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw_centered(42, g_settings.is_fullscreen(e_setting_none) ? 2 : 1, 148, 80, 224, FONT_NORMAL_BLACK_ON_DARK);
 
     image_buttons_draw(0, 0, image_buttons, 2);
 
@@ -134,11 +134,20 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
 void window_display_options_ext_show(void (*close_callback)(void)) {
     if (!g_display_options_ext.panel) {
-        g_display_options_ext.panel = new scroll_list_panel(
-          NUM_FILES_IN_VIEW, button_none, button_none, button_none, button_none, ui_params, false, "", "");
+        g_display_options_ext.panel = new scroll_list_panel(NUM_FILES_IN_VIEW, 
+                                                            button_none, 
+                                                            button_none, 
+                                                            button_none, 
+                                                            button_none, 
+                                                            ui_params, false, "", "");
     }
 
-    window_type window = {WINDOW_FILE_DIALOG, window_draw_underlying_window, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_FILE_DIALOG,
+        window_draw_underlying_window,
+        draw_foreground,
+        handle_input
+    };
 
     init(close_callback);
     window_show(&window);

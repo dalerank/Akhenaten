@@ -203,7 +203,7 @@ static void menu_file_exit_editor(int param) {
 static void menu_options_display(int param) {
     clear_state();
     window_editor_map_show();
-    window_display_options_show(window_editor_map_show);
+    window_display_options_ext_show(window_editor_map_show);
 }
 
 static void menu_options_sound(int param) {
