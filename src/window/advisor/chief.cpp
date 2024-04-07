@@ -210,7 +210,7 @@ static int draw_advisor_chief_background() {
             crime_status = {bstring256().printf((pcstr)lang_get_string(61, 163)), FONT_NORMAL_BLACK_ON_DARK};
         }
 
-        ui["crime_info"].text_var("%s", crime_status.first);
+        ui["crime_info"].text_var("%s", crime_status.first.c_str());
         ui["crime_info"].font(crime_status.second);
     }
 
