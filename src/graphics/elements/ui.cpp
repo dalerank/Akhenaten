@@ -74,7 +74,7 @@ int ui::button_hover(const mouse *m) {
     return 0;
 }
 
-generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font) {
+generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, std::function<void(int, int)> cb) {
     const vec2i offset = g_state.offset();
 
     g_state.buttons.push_back({pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
@@ -83,7 +83,11 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font) {
     button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, focused ? 1 : 0);
     text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + 4, 20, font, 0);
 
-    return g_state.buttons.back();
+    auto &btn = g_state.buttons.back();
+    if (!!cb) {
+        btn.onclick(cb);
+    }
+    return btn;
 }
 
 generic_button &ui::large_button(pcstr label, vec2i pos, vec2i size, e_font font) {
@@ -96,7 +100,8 @@ generic_button &ui::large_button(pcstr label, vec2i pos, vec2i size, e_font font
     int letter_height = get_letter_height((uint8_t *)"A", font);
     text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + 2 + (size.y - letter_height) / 2, size.x, font, 0);
 
-    return g_state.buttons.back();
+    auto &btn = g_state.buttons.back();
+    return btn;
 }
 
 generic_button &ui::button(uint32_t id) {
@@ -114,6 +119,18 @@ image_button &ui::img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size,
     image_buttons_draw(img_offset, button);
 
     return g_state.img_buttons.back();
+}
+
+image_button &ui::imgok_button(vec2i pos, std::function<void(int, int)> cb) {
+    auto &btn = img_button(PACK_GENERAL, 96, pos, {39, 26}, 0);
+    btn.onclick(cb);
+    return btn;
+}
+
+image_button &ui::imgcancel_button(vec2i pos, std::function<void(int, int)> cb) {
+    auto &btn = img_button(PACK_GENERAL, 96, pos, {39, 26}, 4);
+    btn.onclick(cb);
+    return btn;
 }
 
 image_button &ui::img_button(e_image_id img, vec2i pos, vec2i size, int offset) {

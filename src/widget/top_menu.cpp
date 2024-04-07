@@ -493,9 +493,9 @@ static void set_text_for_autosave(void) {
 static void set_text_for_tooltips() {
     int new_text;
     switch (g_settings.tooltips) {
-    case TOOLTIPS_NONE: new_text = 2; break;
-    case TOOLTIPS_SOME: new_text = 3; break;
-    case TOOLTIPS_FULL: new_text = 4; break;
+    case e_tooltip_show_none: new_text = 2; break;
+    case e_tooltip_show_some: new_text = 3; break;
+    case e_tooltip_show_full: new_text = 4; break;
     default:
         return;
     }
@@ -832,7 +832,7 @@ static void menu_file_exit_city(int param) {
 
 static void menu_options_display(int param) {
     widget_top_menu_clear_state();
-    window_display_options_ext_show(window_city_show);
+    ui::window_display_options::window.show(window_city_show);
 }
 static void menu_options_sound(int param) {
     widget_top_menu_clear_state();
