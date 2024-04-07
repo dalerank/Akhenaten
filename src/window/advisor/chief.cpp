@@ -155,6 +155,39 @@ static int draw_advisor_chief_background() {
         ui["health_info"].font(health_rate >= 40 ? FONT_NORMAL_BLACK_ON_DARK : FONT_NORMAL_YELLOW);
     }
 
+    {
+        // todo
+        //    house_demands *demands = city_houses_demands();
+        //    if (demands->religion == 1)
+        //        lang_text_draw(61, 46, X_OFFSET, y_line, FONT_NORMAL_RED);
+        //    else if (demands->religion == 2)
+        //        lang_text_draw(61, 47, X_OFFSET, y_line, FONT_NORMAL_RED);
+        //    else if (demands->religion == 3)
+        //        lang_text_draw(61, 48, X_OFFSET, y_line, FONT_NORMAL_RED);
+        //    else
+        //        lang_text_draw(61, 49, X_OFFSET, y_line, FONT_NORMAL_GREEN);
+        ui["religion_info"].text((pcstr)lang_get_string(61, 125));
+        ui["religion_info"].font(FONT_NORMAL_BLACK_ON_DARK);
+    }
+
+    {
+        int treasury = city_finance_treasury();
+        int balance_last_year = city_finance_overview_last_year()->balance;
+        if (treasury > balance_last_year) { // assets have rison by ...
+            ui["finance_info"].text_var("%s %d", (pcstr)lang_get_string(61, 152), treasury - balance_last_year);
+            ui["finance_info"].font(FONT_NORMAL_BLACK_ON_DARK);
+        } else if (treasury < balance_last_year) { // assets have fallen by ...
+            ui["finance_info"].text_var("%s %d", (pcstr)lang_get_string(61, 154), balance_last_year - treasury);
+            ui["finance_info"].font(FONT_NORMAL_YELLOW);
+        } else if (city_finance_percentage_taxed_people() < 75) { // not collecting many taxes!
+            ui["finance_info"].text((pcstr)lang_get_string(61, 151));
+            ui["finance_info"].font(FONT_NORMAL_BLACK_ON_DARK);
+        } else { // doing about as well as last year
+            ui["finance_info"].text((pcstr)lang_get_string(61, 153));
+            ui["finance_info"].font(FONT_NORMAL_BLACK_ON_DARK);
+        }
+    }
+
     return ADVISOR_HEIGHT;
 }
 
@@ -164,7 +197,7 @@ static void draw_advisor_chief_foreground() {
     painter ctx = game.painter();
     int width;
 
-    int y_line = 186;
+    int y_line = 206;
     int text_b = 20;
 
     //    // housing capacity
@@ -180,8 +213,6 @@ static void draw_advisor_chief_foreground() {
     //    }
     //    y_line += 20;
 
-    // health
-
     //    // education
     //    house_demands *demands = city_houses_demands();
     //    draw_title(y_line, 8);
@@ -195,36 +226,8 @@ static void draw_advisor_chief_foreground() {
     //        lang_text_draw(61, 42, X_OFFSET, y_line, FONT_NORMAL_GREEN);
     //    y_line += 20;
 
-    // religion
-    text_b = 125;
-    draw_title(y_line, 7);
-    // todo
-    //    house_demands *demands = city_houses_demands();
-    //    if (demands->religion == 1)
-    //        lang_text_draw(61, 46, X_OFFSET, y_line, FONT_NORMAL_RED);
-    //    else if (demands->religion == 2)
-    //        lang_text_draw(61, 47, X_OFFSET, y_line, FONT_NORMAL_RED);
-    //    else if (demands->religion == 3)
-    //        lang_text_draw(61, 48, X_OFFSET, y_line, FONT_NORMAL_RED);
-    //    else
-    //        lang_text_draw(61, 49, X_OFFSET, y_line, FONT_NORMAL_GREEN);
-    y_line += 20;
-
     // finance
-    text_b = 151;
-    draw_title(y_line, 8);
-    int treasury = city_finance_treasury();
-    int balance_last_year = city_finance_overview_last_year()->balance;
-    if (treasury > balance_last_year) { // assets have rison by ...
-        width = lang_text_draw(61, text_b + 1, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-        text_draw_money(treasury - balance_last_year, X_OFFSET + width, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    } else if (treasury < balance_last_year) { // assets have fallen by ...
-        width = lang_text_draw(61, text_b + 3, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        text_draw_money(balance_last_year - treasury, X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-    } else if (city_finance_percentage_taxed_people() < 75) // not collecting many taxes!
-        lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    else // doing about as well as last year
-        lang_text_draw(61, text_b + 2, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
+
     y_line += 20;
 
     // crime

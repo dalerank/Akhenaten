@@ -70,6 +70,16 @@ advisor_chief_window = {
 		health_icon : { type : "image", pack:PACK_GENERAL, id:158, pos:[26, 167] },
 		health_label : { type : "label", pos:[44, 166], font:FONT_NORMAL_WHITE_ON_DARK, text:"#chief_adv_health"},
 		health_info : { type : "label", pos:[185, 166], font:FONT_NORMAL_BLACK_ON_LIGHT, wrap:400},
+
+		// religion
+		religion_icon : { type : "image", pack:PACK_GENERAL, id:158, pos:[26, 187] },
+		religion_label : { type : "label", pos:[44, 186], font:FONT_NORMAL_WHITE_ON_DARK, text:"#chief_adv_religion"},
+		religion_info : { type : "label", pos:[185, 186], font:FONT_NORMAL_BLACK_ON_LIGHT, wrap:400},
+
+		// finance
+		finance_icon : { type : "image", pack:PACK_GENERAL, id:158, pos:[26, 207] },
+		finance_label : { type : "label", pos:[44, 206], font:FONT_NORMAL_WHITE_ON_DARK, text:"#chief_adv_finance"},
+		finance_info : { type : "label", pos:[185, 206], font:FONT_NORMAL_BLACK_ON_LIGHT, wrap:400},
 	}
 }
 

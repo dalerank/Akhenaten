@@ -29,4 +29,6 @@ localization = [
   {key: "#chief_adv_foodstocks", group:61, id:4 },
   {key: "#chief_adv_foodconsumption", group:61, id:5 },
   {key: "#chief_adv_health", group:61, id:6 },
+  {key: "#chief_adv_religion", group:61, id:7 },
+  {key: "#chief_adv_finance", group:61, id:8 },
 ]
