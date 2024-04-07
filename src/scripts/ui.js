@@ -95,6 +95,12 @@ advisor_chief_window = {
 		kingdom_icon : { type : "image", pack:PACK_GENERAL, id:158, pos:[26, 267] },
 		kingdom_label : { type : "label", pos:[44, 266], font:FONT_NORMAL_WHITE_ON_DARK, text:"#chief_adv_kingdom"},
 		kingdom_info : { type : "label", pos:[185, 266], font:FONT_NORMAL_BLACK_ON_LIGHT, wrap:400},
+
+		// nilometr
+		nilometr_icon : { type : "image", pack:PACK_GENERAL, id:158, pos:[26, 287] },
+		nilometr_label : { type : "label", pos:[44, 286], font:FONT_NORMAL_WHITE_ON_DARK, text:"#chief_adv_nilometr"},
+		nilometr_info : { type : "label", pos:[185, 286], font:FONT_NORMAL_BLACK_ON_LIGHT, wrap:400},
+		nilometr_info2 : { type : "label", pos:[185, 306], font:FONT_NORMAL_BLACK_ON_LIGHT, wrap:400},
 	}
 }
 

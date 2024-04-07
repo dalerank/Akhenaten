@@ -30,7 +30,6 @@
 #include "js/js_game.h"
 
 #define ADVISOR_HEIGHT 24
-#define X_OFFSET 185
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_chief);
 
@@ -240,6 +239,28 @@ static int draw_advisor_chief_background() {
         ui["kingdom_info"].font(kingdom_status.second);
     }
 
+    {
+        std::pair<int, int> nilometr_status;
+        int flood_quality = floodplains_expected_quality();
+        if (flood_quality == 100) { nilometr_status = {197, FONT_NORMAL_BLACK_ON_DARK}; }
+        else if (flood_quality > 75) { nilometr_status = {196, FONT_NORMAL_BLACK_ON_DARK}; }
+        else if (flood_quality > 50) { nilometr_status = {195, FONT_NORMAL_BLACK_ON_DARK}; }
+        else if (flood_quality > 25) { nilometr_status = {194, FONT_NORMAL_BLACK_ON_DARK}; }
+        else if (flood_quality > 0) { nilometr_status = {193, FONT_NORMAL_YELLOW}; }
+        else { nilometr_status = {192 + flood_quality, FONT_NORMAL_YELLOW}; }
+
+        ui["nilometr_info"].text((pcstr)lang_get_string(61, nilometr_status.first));
+        ui["nilometr_info"].font(nilometr_status.second);
+
+        if (flood_quality > 0) {
+            int flood_month = floodplains_expected_month();
+            ui["nilometr_info2"].text((pcstr)lang_get_string(61, 204 + flood_month));
+            ui["nilometr_info2"].font(FONT_NORMAL_BLACK_ON_DARK);
+        } else {
+            ui["nilometr_info2"].text("");
+        }
+    }
+
     return ADVISOR_HEIGHT;
 }
 
@@ -249,7 +270,7 @@ static void draw_advisor_chief_foreground() {
     painter ctx = game.painter();
     int width;
 
-    int y_line = 286;
+    int y_line = 306;
     int text_b = 20;
 
     //    // housing capacity
@@ -287,32 +308,6 @@ static void draw_advisor_chief_foreground() {
     //    else
     //        lang_text_draw(61, 45, X_OFFSET, y_line, FONT_NORMAL_GREEN);
     //    y_line += 20;
-
-    // nilometer
-    text_b = 192;
-    draw_title(y_line, 12);
-    int flood_quality = floodplains_expected_quality();
-    if (flood_quality == 100)
-        lang_text_draw(61, text_b + 5, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    else if (flood_quality > 75)
-        lang_text_draw(61, text_b + 4, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    else if (flood_quality > 50)
-        lang_text_draw(61, text_b + 3, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    else if (flood_quality > 25)
-        lang_text_draw(61, text_b + 2, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    else if (flood_quality > 0)
-        lang_text_draw(61, text_b + 1, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-    else
-        lang_text_draw(61, text_b + flood_quality, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-    y_line += 20;
-
-    // nilometer #2
-    text_b = 204;
-    if (flood_quality > 0) {
-        int flood_month = floodplains_expected_month();
-        lang_text_draw(61, text_b + flood_month, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    }
-    y_line += 20;
 }
 
 const advisor_window* window_advisor_chief() {
