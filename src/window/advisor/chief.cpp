@@ -188,6 +188,32 @@ static int draw_advisor_chief_background() {
         }
     }
 
+    {
+        std::pair<bstring256, int> crime_status;
+        if (city_sentiment_criminals() > 10) {
+            crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 159),
+                                                         city_finance_overview_this_year()->expenses.stolen,
+                                                         (pcstr)lang_get_string(61, 164)), FONT_NORMAL_YELLOW};
+        } else if (city_sentiment_criminals() > 7) {
+            crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 160),
+                                                         city_finance_overview_this_year()->expenses.stolen,
+                                                         (pcstr)lang_get_string(61, 164)), FONT_NORMAL_YELLOW};
+        } else if (city_sentiment_criminals() > 5) {
+            crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 161),
+                                                         city_finance_overview_this_year()->expenses.stolen,
+                                                         (pcstr)lang_get_string(61, 164)), FONT_NORMAL_YELLOW};
+        } else if (city_sentiment_criminals() > 2) {
+            crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 162),
+                                                         city_finance_overview_this_year()->expenses.stolen,
+                                                         (pcstr)lang_get_string(61, 164)), FONT_NORMAL_BLACK_ON_DARK};
+        } else {
+            crime_status = {bstring256().printf((pcstr)lang_get_string(61, 163)), FONT_NORMAL_BLACK_ON_DARK};
+        }
+
+        ui["crime_info"].text_var("%s", crime_status.first);
+        ui["crime_info"].font(FONT_NORMAL_BLACK_ON_DARK);
+    }
+
     return ADVISOR_HEIGHT;
 }
 
@@ -197,7 +223,7 @@ static void draw_advisor_chief_foreground() {
     painter ctx = game.painter();
     int width;
 
-    int y_line = 206;
+    int y_line = 246;
     int text_b = 20;
 
     //    // housing capacity
@@ -225,34 +251,6 @@ static void draw_advisor_chief_foreground() {
     //    else
     //        lang_text_draw(61, 42, X_OFFSET, y_line, FONT_NORMAL_GREEN);
     //    y_line += 20;
-
-    // finance
-
-    y_line += 20;
-
-    // crime
-    text_b = 159;
-    draw_title(y_line, 9);
-    if (city_sentiment_criminals() > 10) {
-        width = lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        width += text_draw_number(city_finance_overview_this_year()->expenses.stolen, ' ', "", X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-        lang_text_draw(61, text_b + 5, X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-    } else if (city_sentiment_criminals() > 7) {
-        width = lang_text_draw(61, text_b + 1, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        width += text_draw_number(city_finance_overview_this_year()->expenses.stolen, ' ', "", X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-        lang_text_draw(61, text_b + 5, X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-    } else if (city_sentiment_criminals() > 5) {
-        width = lang_text_draw(61, text_b + 2, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-        width += text_draw_number(city_finance_overview_this_year()->expenses.stolen, ' ', "", X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-        lang_text_draw(61, text_b + 5, X_OFFSET + width, y_line, FONT_NORMAL_YELLOW);
-    } else if (city_sentiment_criminals() > 2) {
-        width = lang_text_draw(61, text_b + 3, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-        width += text_draw_number(city_finance_overview_this_year()->expenses.stolen, ' ', "", X_OFFSET + width, y_line, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw(61, text_b + 5, X_OFFSET + width, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    } else {
-        lang_text_draw(61, text_b + 4, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    }
-    y_line += 20;
 
     // military
     text_b = 170;
