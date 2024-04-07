@@ -113,6 +113,7 @@ static int draw_advisor_chief_background() {
         ui["workers_info"].font(workers_status.second);
     }
 
+    // foodstocks
     {
         std::pair<int, int> foodstocks_status;
         if (scenario_property_kingdom_supplies_grain()) {
@@ -129,6 +130,7 @@ static int draw_advisor_chief_background() {
         ui["foodstocks_info"].font(foodstocks_status.second);
     }
 
+    // foodconsumption
     {
         std::pair<int, int> foodcomsuption_status;
         if (scenario_property_kingdom_supplies_grain()) {
@@ -148,12 +150,14 @@ static int draw_advisor_chief_background() {
         ui["foodconsumption_info"].font(foodcomsuption_status.second);
     }
 
+    // health
     {
         int health_rate = city_health();
         ui["health_info"].text((pcstr)lang_get_string(61, 103 + health_rate / 10));
         ui["health_info"].font(health_rate >= 40 ? FONT_NORMAL_BLACK_ON_DARK : FONT_NORMAL_YELLOW);
     }
 
+    // religion
     {
         // todo
         //    house_demands *demands = city_houses_demands();
@@ -169,6 +173,7 @@ static int draw_advisor_chief_background() {
         ui["religion_info"].font(FONT_NORMAL_BLACK_ON_DARK);
     }
 
+    // finance
     {
         int treasury = city_finance_treasury();
         int balance_last_year = city_finance_overview_last_year()->balance;
@@ -187,6 +192,7 @@ static int draw_advisor_chief_background() {
         }
     }
 
+    // crime
     {
         std::pair<bstring256, int> crime_status;
         if (city_sentiment_criminals() > 10) {
@@ -213,6 +219,7 @@ static int draw_advisor_chief_background() {
         ui["crime_info"].font(crime_status.second);
     }
 
+    // military
     {
         std::pair<int, int> military_status;
         if (city_figures_imperial_soldiers()) { military_status = {170, FONT_NORMAL_YELLOW}; }
@@ -227,6 +234,7 @@ static int draw_advisor_chief_background() {
         ui["military_info"].font(military_status.second);
     }
 
+    // kingdom
     {
         std::pair<int, int> kingdom_status;
         int requests = scenario_requests_active_count();
@@ -239,6 +247,7 @@ static int draw_advisor_chief_background() {
         ui["kingdom_info"].font(kingdom_status.second);
     }
 
+    // nilometr
     {
         std::pair<int, int> nilometr_status;
         int flood_quality = floodplains_expected_quality();
