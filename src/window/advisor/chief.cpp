@@ -149,6 +149,12 @@ static int draw_advisor_chief_background() {
         ui["foodconsumption_info"].font(foodcomsuption_status.second);
     }
 
+    {
+        int health_rate = city_health();
+        ui["health_info"].text((pcstr)lang_get_string(61, 103 + health_rate / 10));
+        ui["health_info"].font(health_rate >= 40 ? FONT_NORMAL_BLACK_ON_DARK : FONT_NORMAL_YELLOW);
+    }
+
     return ADVISOR_HEIGHT;
 }
 
@@ -158,7 +164,7 @@ static void draw_advisor_chief_foreground() {
     painter ctx = game.painter();
     int width;
 
-    int y_line = 166;
+    int y_line = 186;
     int text_b = 20;
 
     //    // housing capacity
@@ -175,14 +181,6 @@ static void draw_advisor_chief_foreground() {
     //    y_line += 20;
 
     // health
-    text_b = 103;
-    draw_title(y_line, 6);
-    int health_rate = city_health();
-    if (health_rate >= 40)
-        lang_text_draw(61, text_b + health_rate / 10, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    else
-        lang_text_draw(61, text_b + health_rate / 10, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-    y_line += 20;
 
     //    // education
     //    house_demands *demands = city_houses_demands();
