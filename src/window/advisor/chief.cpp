@@ -211,7 +211,21 @@ static int draw_advisor_chief_background() {
         }
 
         ui["crime_info"].text_var("%s", crime_status.first);
-        ui["crime_info"].font(FONT_NORMAL_BLACK_ON_DARK);
+        ui["crime_info"].font(crime_status.second);
+    }
+
+    {
+        std::pair<int, int> military_status;
+        if (city_figures_imperial_soldiers()) { military_status = {170, FONT_NORMAL_YELLOW}; }
+        else if (city_figures_enemies()) { military_status = {170, FONT_NORMAL_YELLOW}; }
+        else if (scenario_invasion_exists_upcoming()) { military_status = {170, FONT_NORMAL_YELLOW}; }
+        else if (city_military_distant_battle_kingdome_army_is_traveling()) { military_status = {170, FONT_NORMAL_BLACK_ON_DARK}; }
+        else if (city_military_months_until_distant_battle() > 0) { military_status = {170, FONT_NORMAL_YELLOW}; }
+        else if (city_figures_soldiers() > 0) { military_status = {177, FONT_NORMAL_BLACK_ON_DARK}; }
+        else { military_status = {171, FONT_NORMAL_BLACK_ON_DARK}; }
+
+        ui["military_info"].text((pcstr)lang_get_string(61, military_status.first));
+        ui["military_info"].font(military_status.second);
     }
 
     return ADVISOR_HEIGHT;
@@ -223,7 +237,7 @@ static void draw_advisor_chief_foreground() {
     painter ctx = game.painter();
     int width;
 
-    int y_line = 246;
+    int y_line = 266;
     int text_b = 20;
 
     //    // housing capacity
@@ -251,26 +265,6 @@ static void draw_advisor_chief_foreground() {
     //    else
     //        lang_text_draw(61, 42, X_OFFSET, y_line, FONT_NORMAL_GREEN);
     //    y_line += 20;
-
-    // military
-    text_b = 170;
-    // todo
-    draw_title(y_line, 10);
-    if (city_figures_imperial_soldiers())
-        lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-    else if (city_figures_enemies())
-        lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-    else if (scenario_invasion_exists_upcoming())
-        lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-    else if (city_military_distant_battle_kingdome_army_is_traveling())
-        lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    else if (city_military_months_until_distant_battle() > 0)
-        lang_text_draw(61, text_b, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-    else if (city_figures_soldiers() > 0) // FIXED was ">=0" (always true)
-        lang_text_draw(61, text_b + 7, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    else
-        lang_text_draw(61, text_b + 1, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    y_line += 20;
 
     //    // entertainment
     //    draw_title(y_line, 10);

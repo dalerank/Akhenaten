@@ -85,6 +85,11 @@ advisor_chief_window = {
 		crime_icon : { type : "image", pack:PACK_GENERAL, id:158, pos:[26, 227] },
 		crime_label : { type : "label", pos:[44, 226], font:FONT_NORMAL_WHITE_ON_DARK, text:"#chief_adv_crime"},
 		crime_info : { type : "label", pos:[185, 226], font:FONT_NORMAL_BLACK_ON_LIGHT, wrap:400},
+
+		// military
+		military_icon : { type : "image", pack:PACK_GENERAL, id:158, pos:[26, 247] },
+		military_label : { type : "label", pos:[44, 246], font:FONT_NORMAL_WHITE_ON_DARK, text:"#chief_adv_military"},
+		military_info : { type : "label", pos:[185, 246], font:FONT_NORMAL_BLACK_ON_LIGHT, wrap:400},
 	}
 }
 

@@ -32,4 +32,5 @@ localization = [
   {key: "#chief_adv_religion", group:61, id:7 },
   {key: "#chief_adv_finance", group:61, id:8 },
   {key: "#chief_adv_crime", group:61, id:9 },
+  {key: "#chief_adv_military", group:61, id:10 },
 ]
