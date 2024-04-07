@@ -228,6 +228,18 @@ static int draw_advisor_chief_background() {
         ui["military_info"].font(military_status.second);
     }
 
+    {
+        std::pair<int, int> kingdom_status;
+        int requests = scenario_requests_active_count();
+        if (requests == 0) { kingdom_status = {187, FONT_NORMAL_BLACK_ON_DARK}; }
+        else if (requests == 1) { kingdom_status = {186, FONT_NORMAL_WHITE_ON_DARK}; }
+        else if (requests == 2) { kingdom_status = {185, FONT_NORMAL_YELLOW}; }
+        else { kingdom_status = {184, FONT_NORMAL_YELLOW}; }
+
+        ui["kingdom_info"].text((pcstr)lang_get_string(61, kingdom_status.first));
+        ui["kingdom_info"].font(kingdom_status.second);
+    }
+
     return ADVISOR_HEIGHT;
 }
 
@@ -237,7 +249,7 @@ static void draw_advisor_chief_foreground() {
     painter ctx = game.painter();
     int width;
 
-    int y_line = 266;
+    int y_line = 286;
     int text_b = 20;
 
     //    // housing capacity
@@ -275,20 +287,6 @@ static void draw_advisor_chief_foreground() {
     //    else
     //        lang_text_draw(61, 45, X_OFFSET, y_line, FONT_NORMAL_GREEN);
     //    y_line += 20;
-
-    // kingdom
-    text_b = 184;
-    draw_title(y_line, 11);
-    int requests = scenario_requests_active_count();
-    if (requests == 0)
-        lang_text_draw(61, text_b + 3, X_OFFSET, y_line, FONT_NORMAL_BLACK_ON_DARK);
-    else if (requests == 1)
-        lang_text_draw(61, text_b + 2, X_OFFSET, y_line, FONT_NORMAL_WHITE_ON_DARK);
-    else if (requests == 2)
-        lang_text_draw(61, text_b + 1, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-    else
-        lang_text_draw(61, text_b + 0, X_OFFSET, y_line, FONT_NORMAL_YELLOW);
-    y_line += 20;
 
     // nilometer
     text_b = 192;
