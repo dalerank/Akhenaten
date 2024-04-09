@@ -659,7 +659,12 @@ static void add_building(building* b, int orientation, int variant) {
     default:
         {
             auto *p = building_properties_for_type(b->type);
-            add_building_tiles_image(b, p->img_id());
+            int img_id = p->img_id();
+            if (!img_id) {
+                const auto &params = b->dcast()->params();
+                img_id = params.anim["base"].first_img();
+            }
+            add_building_tiles_image(b, img_id);
         }
         break;
     }
