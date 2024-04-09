@@ -411,6 +411,7 @@ public:
     struct static_params {
         pcstr name;
         bstring64 meta_id;
+        building::metainfo meta;
         e_resource output_resource;
         e_labor_category labor_category;
         static static_params dummy;
@@ -507,6 +508,7 @@ public:
 
     using resources_vec = std::array<e_resource, 4>;
     virtual resources_vec required_resource() const { return {}; }
+    building::metainfo get_info() const;
 
     static void params(e_building_type, const static_params &);
     static const static_params &params(e_building_type);

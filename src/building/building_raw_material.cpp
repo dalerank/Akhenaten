@@ -43,7 +43,7 @@ void config_load_building_raw_materials() {
 }
 
 void building_raw_material_draw_info(object_info& c, const char* type, e_resource resource) {
-    auto &meta = building::get_info(type);
+    auto &meta = building_get(c.building_id)->dcast()->get_info();
     painter ctx = game.painter();
     c.help_id = meta.help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));

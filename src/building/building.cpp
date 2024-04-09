@@ -263,6 +263,12 @@ building_impl *buildings::create(e_building_type e, building &data) {
 }
 
 static std::map<e_building_type, const building_impl::static_params *> *building_impl_params = nullptr;
+building::metainfo building_impl::get_info() const {
+    const auto &metainfo = !params().meta_id.empty()
+                                ? base.get_info(params().meta_id)
+                                : params().meta;
+    return metainfo;
+}
 void building_impl::params(e_building_type e, const static_params &p) {
     if (!building_impl_params) {
         building_impl_params = new std::map<e_building_type, const building_impl::static_params *>();
@@ -981,6 +987,8 @@ void building_impl::static_params::load(archive arch) {
     labor_category = arch.r_type<e_labor_category>("labor_category");
     output_resource = arch.r_type<e_resource>("output_resource");
     meta_id = arch.r_string("meta_id");
+    meta.help_id = arch.r_int("info_help_id");
+    meta.text_id = arch.r_int("info_text_id");
     anim.load(arch);
 }
 
