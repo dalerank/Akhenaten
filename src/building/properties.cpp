@@ -268,7 +268,7 @@ void building_properties_init() {
     properties[BUILDING_PERSONAL_MANSION] = {3, 0, 0, 0, 0, IMG_PERSONAL_MANSION};
     properties[BUILDING_VILLAGE_PALACE] = {4, 0, 0, 0, 0, IMG_VILLAGE_PALACE};
     properties[BUILDING_JUGGLER_SCHOOL] = {2, 0, 0, 0, 0, IMG_JUGGLER_SCHOOL};
-    properties[BUILDING_HUNTING_LODGE] = {2, 0, 0, 0, 0, IMG_HUNTING_LODGE};
+    properties[BUILDING_HUNTING_LODGE] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_CLAY_PIT] = {2, 0, 0, 0, 0, IMG_CLAY_PIT};
     properties[BUILDING_GEMSTONE_MINE] = {2, 0, 0, 0, 0, IMG_GEMSTONE_MINE};
     properties[BUILDING_TEMPLE_OSIRIS] = {3, 0, 0, 0, 0, IMG_TEMPLE_OSIRIS};

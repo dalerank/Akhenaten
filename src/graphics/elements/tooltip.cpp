@@ -287,7 +287,7 @@ static bool should_draw_tooltip(tooltip_context* c) {
         reset_timer();
         return false;
     }
-    if (!c->high_priority && g_settings.tooltips != TOOLTIPS_FULL) {
+    if (!c->high_priority && g_settings.tooltips != e_tooltip_show_full) {
         reset_timer();
         return false;
     }

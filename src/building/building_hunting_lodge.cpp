@@ -20,23 +20,12 @@
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
 
-struct hunting_lodge_model_t {
-    static constexpr e_building_type type = BUILDING_HUNTING_LODGE;
-    e_labor_category labor_category;
-    animations_t anim;
-};
-hunting_lodge_model_t hunting_lodge_model;
+buildings::model_t<building_hunting_lodge> hunting_lodge_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_hunting_lodge_model);
 void config_load_hunting_lodge_model() {
-    g_config_arch.r_section("building_hunting_lodge", [] (archive arch) {
-        hunting_lodge_model.labor_category = arch.r_type<e_labor_category>("labor_category");
-        hunting_lodge_model.anim.load(arch);
-    });
-
-    city_labor_set_category(hunting_lodge_model.type, hunting_lodge_model.labor_category);
+    hunting_lodge_m.load();
 }
-
 
 void building_hunting_lodge::window_info_background(object_info &c) {
     painter ctx = game.painter();
@@ -81,7 +70,7 @@ void building_hunting_lodge::window_info_background(object_info &c) {
 
 void building_hunting_lodge::on_create(int orientation) {
     base.output_resource_first_id = RESOURCE_GAMEMEAT;
-    base.labor_category = hunting_lodge_model.labor_category;
+    base.labor_category = hunting_lodge_m.labor_category;
 }
 
 
@@ -145,7 +134,7 @@ void building_hunting_lodge::spawn_figure() {
 
 bool building_hunting_lodge::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     if (worker_percentage() > 50) {
-        const animation_t &anim = hunting_lodge_model.anim["work"];
+        const animation_t &anim = hunting_lodge_m.anim["work"];
         building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
     }
 

@@ -330,7 +330,9 @@ building_conservatory = {
 
 building_hunting_lodge = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_HUNTING_LODGE }
+    preview : { pack:PACK_GENERAL, id:176},
+    base : { pack:PACK_GENERAL, id:176},
+    work : { pos:[20, -35], pack:PACK_GENERAL, id:176, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
