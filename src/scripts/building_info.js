@@ -6,7 +6,6 @@ building_info = [
   { type: "library", help_id: 70, text_id: 87},
   { type: "marble_quarry", help_id:95, text_id:118},
   { help_id:93, type:"limestone_quarry", text_id:119},
-  { help_id:93, type:"gold_mine", text_id:162},
   { help_id:93, type:"copper_mine", text_id:193},
   { help_id:94, type:"timber_yard", text_id:120},
   { help_id:92, type:"clay_pit", text_id:121},
@@ -223,6 +222,7 @@ building_papyrus_maker = {
     base : { pos : [0, 0], pack:PACK_GENERAL, id:44 },
     work : { pos : [7, -10], pack:PACK_GENERAL, id:44, offset:1, max_frames:9 }
   },
+  output_resource : RESOURCE_PAPYRUS,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
@@ -231,6 +231,10 @@ building_reed_gatherer = {
     work : { pos : [0, 0], anim_id : IMG_BUILDING_REED_GATHERER }
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
+
+building_wood_cutter = {
+  // todo
 }
 
 building_bandstand = {
@@ -264,7 +268,7 @@ building_brewery = {
   }
 }
 
-building_copper_mine = {
+building_mine_copper = {
   animations : {
     work : { pos : [54, 15], anim_id: ANIM_GOLD_MINE, max_frames: 16 }
   },
@@ -273,7 +277,7 @@ building_copper_mine = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building_gems_mine = {
+building_mine_gems = {
   animations : {
     work : { pos : [54, 15], anim_id: ANIM_GOLD_MINE, max_frames: 16 }
   },
@@ -282,12 +286,13 @@ building_gems_mine = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building_gold_mine = {
+building_mine_gold = {
   animations : {
     work : { pos : [54, 15], anim_id: ANIM_GOLD_MINE, max_frames: 16 }
   },
   output_resource : RESOURCE_GOLD,
-  meta_id : "gold_mine",
+  info_help_id:93,
+  info_text_id:162,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 

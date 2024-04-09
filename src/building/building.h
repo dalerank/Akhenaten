@@ -722,10 +722,13 @@ struct model_t : public building_impl::static_params {
     }
 
     void load() {
-        g_config_arch.r_section(name, [this] (archive arch) {
+        bool loaded = false;
+        g_config_arch.r_section(name, [&] (archive arch) {
             static_params::load(arch);
             city_labor_set_category(*this);
+            loaded = true;
         });
+        assert(loaded);
     }
 
     static building_impl *create(e_building_type e, building &data) {
