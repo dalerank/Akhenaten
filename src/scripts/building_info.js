@@ -341,7 +341,7 @@ building_hunting_lodge = {
   animations : {
     preview : { pack:PACK_GENERAL, id:176},
     base : { pack:PACK_GENERAL, id:176},
-    work : { pos:[20, -35], pack:PACK_GENERAL, id:176, offset:1, max_frames:11 }
+    work : { pos:[20, -15], pack:PACK_GENERAL, id:176, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
