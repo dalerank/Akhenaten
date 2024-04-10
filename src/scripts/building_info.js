@@ -237,6 +237,10 @@ building_wood_cutter = {
   // todo
 }
 
+building_small_mastaba = {
+  // todo
+}
+
 building_bandstand = {
   animations : {
     juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW },

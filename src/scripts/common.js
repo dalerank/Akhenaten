@@ -67,6 +67,7 @@ var building_papyrus_maker = {}
 var building_guild_stonemasons = {}
 var building_bricklayers_guild = {}
 var building_dock = {}
+var building_small_mastaba = {}
 var empire_window = {}
 var empire_images_remap = []
 var imagepaks = []

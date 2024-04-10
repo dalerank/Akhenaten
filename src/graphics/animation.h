@@ -27,6 +27,9 @@ struct animations_t {
 
     const animation_t &operator[](pcstr key) const {
         static animation_t dummy;
+        if (data.empty()) {
+            return dummy;
+        }
         auto it = std::find_if(data.begin(), data.end(), [key] (auto &it) { return it.id.equals(key); });
         return (it == data.end()) ? dummy : *it;
     }
