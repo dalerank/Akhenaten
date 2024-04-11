@@ -6,7 +6,6 @@ building_info = [
   { type: "library", help_id: 70, text_id: 87},
   { type: "marble_quarry", help_id:95, text_id:118},
   { help_id:93, type:"limestone_quarry", text_id:119},
-  { help_id:93, type:"copper_mine", text_id:193},
   { help_id:94, type:"timber_yard", text_id:120},
   { help_id:92, type:"clay_pit", text_id:121},
   { help_id:92, type:"reed_farm", text_id:116},
@@ -277,7 +276,7 @@ building_mine_copper = {
     work : { pos : [54, 15], anim_id: ANIM_GOLD_MINE, max_frames: 16 }
   },
   output_resource : RESOURCE_COPPER,
-  meta_id : "copper_mine",
+  info_help_id:93, info_text_id:193,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 

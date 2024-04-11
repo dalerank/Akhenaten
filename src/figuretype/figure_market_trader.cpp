@@ -23,7 +23,6 @@ void figure_market_trader::figure_action() {
     }
 
     building_bazaar* bazaar = home()->dcast_bazaar();
-    assert(bazaar);
     if (!bazaar) {
         return;
     }
