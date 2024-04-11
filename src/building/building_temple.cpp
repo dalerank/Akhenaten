@@ -18,27 +18,6 @@
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
 
-struct building_temple_osiris : public building_impl {
-    building_temple_osiris(building &b) : building_impl(b) {}
-    BUILDING_METAINFO(BUILDING_TEMPLE_OSIRIS, building_temple_osiris);
-};
-struct building_temple_ra : public building_impl {
-    building_temple_ra(building &b) : building_impl(b) {}
-    BUILDING_METAINFO(BUILDING_TEMPLE_RA, building_temple_ra);
-};
-struct building_temple_ptah : public building_impl {
-    building_temple_ptah(building &b) : building_impl(b) {}
-    BUILDING_METAINFO(BUILDING_TEMPLE_PTAH, building_temple_ptah);
-};
-struct building_temple_seth : public building_impl {
-    building_temple_seth(building &b) : building_impl(b) {}
-    BUILDING_METAINFO(BUILDING_TEMPLE_SETH, building_temple_seth);
-};
-struct building_temple_bast : public building_impl {
-    building_temple_bast(building &b) : building_impl(b) {}
-    BUILDING_METAINFO(BUILDING_TEMPLE_BAST, building_temple_bast);
-};
-
 buildings::model_t<building_temple_osiris> temple_osiris_m;
 buildings::model_t<building_temple_ra> temple_ra_m;
 buildings::model_t<building_temple_ptah> temple_ptah_m;
