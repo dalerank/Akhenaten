@@ -15,7 +15,16 @@
 #include "config/config.h"
 #include "window/building/common.h"
 #include "sound/sound_building.h"
+#include "building/count.h"
 #include "game/game.h"
+#include "city/labor.h"
+
+buildings::model_t<building_tax_collector> tax_collector_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_tax_collector);
+void config_load_building_tax_collector() {
+    tax_collector_m.load();
+}
 
 void building_tax_collector::window_info_background(object_info &c) {
     ui::begin_widget(c.offset);
@@ -86,4 +95,8 @@ void building_tax_collector::update_month() {
         base.deben_storage -= may_send;
         f->sender_building_id = base.id;
     }
+}
+
+void building_tax_collector::update_count() const {
+    building_increase_type_count(type(), num_workers() > 0);
 }

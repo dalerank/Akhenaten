@@ -253,8 +253,8 @@ void building_properties_init() {
     properties[BUILDING_PHYSICIAN] = {2, 0, 0, 0, 0, IMG_PHYSICIAN};
     properties[BUILDING_RECRUITER] = {3, 0, 0, 0, 0, IMG_BARRACKS};
     properties[BUILDING_SCRIBAL_SCHOOL] = {2, 0, 0, 0, 0, IMG_NONE};
-    properties[BUILDING_TAX_COLLECTOR] = {2, 0, 0, 0, 0, IMG_TAX_COLLECTOR_BUILDING};
-    properties[BUILDING_TAX_COLLECTOR_UPGRADED] = {2, 0, 0, 0, 0, IMG_TAX_COLLECTOR_BUILDING_UP};
+    properties[BUILDING_TAX_COLLECTOR] = {2, 0, 0, 0, 0, IMG_NONE};
+    properties[BUILDING_TAX_COLLECTOR_UPGRADED] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_POTTERY_WORKSHOP] = {2, 0, 0, 0, 0, IMG_POTTERY_WORKSHOP};
     properties[BUILDING_BREWERY_WORKSHOP] = {2, 0, 0, 0, 0, ANIM_BREWERY_WORKSHOP};
     properties[BUILDING_SMALL_MASTABA] = {2, 0, 0, 0, 0, IMG_SMALL_MASTABA};

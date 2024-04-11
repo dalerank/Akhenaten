@@ -239,6 +239,24 @@ building_small_mastaba = {
   // todo
 }
 
+building_tax_collector = {
+  animations : {
+    preview : { pos: [0, 0], pack:PACK_GENERAL, id:63 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:63 },
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:63, offset:1, max_frames:11 }
+  },
+  labor_category : LABOR_CATEGORY_GOVERNMENT,
+}
+
+building_tax_collector_up = {
+  animations : {
+    preview : { pos: [0, 0], pack:PACK_GENERAL, id:64 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:64 },
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:64, offset:1, max_frames:11 }
+  },
+  labor_category : LABOR_CATEGORY_GOVERNMENT,
+}
+
 building_bandstand = {
   animations : {
     juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW },

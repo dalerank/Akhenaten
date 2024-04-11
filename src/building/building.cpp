@@ -4,13 +4,11 @@
 #include "building/rotation.h"
 #include "building/building_type.h"
 #include "building/storage.h"
-#include "building/building_temple.h"
 #include "building/building_statue.h"
 #include "building/building_barracks.h"
 #include "building/building_bazaar.h"
 #include "building/building_cattle_ranch.h"
 #include "building/building_weaponsmith.h"
-#include "building/building_tax_collector.h"
 #include "building/building_physician.h"
 #include "building/building_bandstand.h"
 #include "building/building_shrine.h"
@@ -290,23 +288,10 @@ building_impl *building::dcast() {
     case BUILDING_RECRUITER: _ptr = new building_recruiter(*this); break;
     case BUILDING_CATTLE_RANCH: _ptr = new building_cattle_ranch(*this); break;
 
-    case BUILDING_TEMPLE_OSIRIS:
-    case BUILDING_TEMPLE_RA:
-    case BUILDING_TEMPLE_PTAH:
-    case BUILDING_TEMPLE_SETH:
-    case BUILDING_TEMPLE_BAST:
-        _ptr = new building_temple(*this);
-        break;
-
     case BUILDING_VILLAGE_PALACE:
     case BUILDING_TOWN_PALACE:
     case BUILDING_CITY_PALACE:
         _ptr = new building_palace(*this);
-        break;
-
-    case BUILDING_TAX_COLLECTOR:
-    case BUILDING_TAX_COLLECTOR_UPGRADED:
-        _ptr = new building_tax_collector(*this);
         break;
 
     case BUILDING_SMALL_STATUE:

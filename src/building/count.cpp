@@ -148,8 +148,6 @@ void building_count_update() {
         case BUILDING_MENU_MONUMENTS:
         case BUILDING_APOTHECARY:
             // government
-        case BUILDING_TAX_COLLECTOR:
-        case BUILDING_TAX_COLLECTOR_UPGRADED:
         case BUILDING_VILLAGE_PALACE:
         case BUILDING_TOWN_PALACE:
             // entertainment schools
