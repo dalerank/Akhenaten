@@ -732,8 +732,8 @@ struct model_t : public building_impl::static_params {
         assert(loaded);
     }
 
-    template<typename T>
-    void load(T func) {
+    template<typename F>
+    void load(F func) {
         load();
         g_config_arch.r_section(name, func);
     }

@@ -46,6 +46,13 @@ namespace model {
     }
 }
 
+ANK_REGISTER_CONFIG_ITERATOR(config_load_statue_models);
+void config_load_statue_models() {
+    model::config_load_statue(building_small_statue::CLSID, model::small_statue);
+    model::config_load_statue(building_medium_statue::CLSID, model::medium_statue);
+    model::config_load_statue(building_large_statue::CLSID, model::big_statue);
+}
+
 void building_statue::on_create(int o) {
     int orientation = (4 + building_rotation_global_rotation() + city_view_orientation() / 2) % 4;
     data.monuments.variant = building_rotation_get_building_variant();
@@ -58,14 +65,6 @@ void building_statue::window_info_background(object_info &c) {
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(80, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 16 * c.bgsize.y - 158, 80, 1);
-}
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_statue_models);
-
-void config_load_statue_models() {
-    model::config_load_statue("building_small_statue", model::small_statue);
-    model::config_load_statue("building_medium_statue", model::medium_statue);
-    model::config_load_statue("building_big_statue", model::big_statue);
 }
 
 int building_statue_get_variant_size(int type) {

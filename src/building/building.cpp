@@ -4,7 +4,6 @@
 #include "building/rotation.h"
 #include "building/building_type.h"
 #include "building/storage.h"
-#include "building/building_statue.h"
 #include "building/building_barracks.h"
 #include "building/building_bazaar.h"
 #include "building/building_cattle_ranch.h"
@@ -292,12 +291,6 @@ building_impl *building::dcast() {
     case BUILDING_TOWN_PALACE:
     case BUILDING_CITY_PALACE:
         _ptr = new building_palace(*this);
-        break;
-
-    case BUILDING_SMALL_STATUE:
-    case BUILDING_MEDIUM_STATUE:
-    case BUILDING_LARGE_STATUE:
-        _ptr = new building_statue(*this);
         break;
 
     case BUILDING_SHRINE_OSIRIS:

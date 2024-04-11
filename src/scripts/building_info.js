@@ -41,7 +41,7 @@ building_medium_statue = {
   ]
 }
 
-building_big_statue = {
+building_large_statue = {
   variants : [
     {pack: PACK_GENERAL, id: 7, offset:1},
     {pack: PACK_GENERAL, id: 7, offset:5},
