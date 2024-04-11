@@ -20,7 +20,7 @@
 
 void building_education_draw_info(object_info& c, const char* type, e_figure_type ftype, e_resource resource, vec2i icon_res, vec2i text_res) {
     building *b = building_get(c.building_id);
-    auto &meta = b->dcast()->get_info();
+    const auto &meta = b->dcast()->get_info();
 
     c.help_id = meta.help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));

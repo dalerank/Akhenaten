@@ -67,6 +67,7 @@ var building_dock = {}
 var building_small_mastaba = {}
 var building_tax_collector = {}
 var building_tax_collector_up = {}
+var building_recruiter = {}
 var empire_window = {}
 var empire_images_remap = []
 var imagepaks = []

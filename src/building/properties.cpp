@@ -251,7 +251,7 @@ void building_properties_init() {
     properties[BUILDING_COPPER_MINE] = {2, 0, 0, 0, 0, IMG_COPPER_MINE};
     properties[BUILDING_CONSERVATORY] = {3, 0, 0, 0, 0, IMG_CONSERVATORY};
     properties[BUILDING_PHYSICIAN] = {2, 0, 0, 0, 0, IMG_PHYSICIAN};
-    properties[BUILDING_RECRUITER] = {3, 0, 0, 0, 0, IMG_BARRACKS};
+    properties[BUILDING_RECRUITER] = {3, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_SCRIBAL_SCHOOL] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_TAX_COLLECTOR] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_TAX_COLLECTOR_UPGRADED] = {2, 0, 0, 0, 0, IMG_NONE};

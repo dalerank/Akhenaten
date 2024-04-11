@@ -80,7 +80,6 @@ images = [
 	{img: IMG_BOOTH, pack:PACK_GENERAL, id:114},
 	{img: IMG_GRANARY_RESOURCES, pack:PACK_GENERAL, id:99, offset:2},
 	{img: IMG_CATTLE_RANCH, pack:PACK_GENERAL, id:105},
-	{img: IMG_BARRACKS, pack:PACK_GENERAL, id:166},
 	{img: IMG_GOLD_MINE, pack:PACK_GENERAL, id:185},
 	{img: IMG_PLAINSTONE_QUARRY, pack:PACK_GENERAL, id:187},
 	{img: IMG_COPPER_MINE, pack:PACK_GENERAL, id:196},

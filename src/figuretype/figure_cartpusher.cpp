@@ -115,7 +115,8 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
 
             case BUILDING_RECRUITER:
                 for (int i = 0; i < times; i++) { // do one by one...
-                    dest->barracks_add_weapon(amount_single_turn);
+                    building_recruiter *recruiter = dest->dcast_recruiter();
+                    recruiter->add_weapon(amount_single_turn);
                     dump_resource(amount_single_turn); // assume barracks will ALWAYS accept a weapon
                 }
                 break;

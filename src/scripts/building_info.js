@@ -254,7 +254,16 @@ building_tax_collector_up = {
     base : { pos : [0, 0], pack:PACK_GENERAL, id:64 },
     work : { pos : [10, 10], pack:PACK_GENERAL, id:64, offset:1, max_frames:11 }
   },
-  labor_category : LABOR_CATEGORY_GOVERNMENT, 
+  labor_category : LABOR_CATEGORY_GOVERNMENT,
+}
+
+building_recruiter = {
+  animations : {
+    preview : { pos: [0, 0], pack:PACK_GENERAL, id:166 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:166 },
+    work : { pos : [10, 10], pack:PACK_GENERAL, id:166, offset:1, max_frames:11 }
+  },
+  labor_category : LABOR_CATEGORY_MILITARY,
 }
 
 building_bandstand = {

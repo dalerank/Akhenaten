@@ -5,6 +5,7 @@
 #include "city/buildings.h"
 #include "city/military.h"
 #include "city/resource.h"
+#include "city/labor.h"
 #include "core/calc.h"
 #include "figure/action.h"
 #include "figure/formation_legion.h"
@@ -24,6 +25,13 @@
 
 int g_tower_sentry_request = 0;
 
+buildings::model_t<building_recruiter> brecruiter_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_recruiter);
+void config_load_building_recruiter() {
+    brecruiter_m.load();
+}
+
 static void button_priority(int index, int param2);
 
 struct rectuiter_data_t {
@@ -40,12 +48,6 @@ struct rectuiter_data_t {
 };
 
 rectuiter_data_t g_rectuiter_data;
-
-void building::barracks_add_weapon(int amount) {
-    if (id > 0) {
-        stored_full_amount += amount;
-    }
-}
 
 void building::monument_remove_worker(int fid) {
     for (auto &wid : data.monuments.workers) {
@@ -292,6 +294,11 @@ int building_recruiter::window_info_handle_mouse(const mouse* m, object_info &c)
         return 1;
     }
     return 0;
+}
+
+void building_recruiter::add_weapon(int amount) {
+    assert(id() > 0);
+    base.stored_full_amount += amount;
 }
 
 void building_recruiter::window_info_foreground(object_info &c) {

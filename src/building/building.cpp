@@ -4,7 +4,6 @@
 #include "building/rotation.h"
 #include "building/building_type.h"
 #include "building/storage.h"
-#include "building/building_barracks.h"
 #include "building/building_bazaar.h"
 #include "building/building_cattle_ranch.h"
 #include "building/building_weaponsmith.h"
@@ -284,7 +283,6 @@ building_impl *building::dcast() {
     case BUILDING_HUNTING_LODGE: _ptr = new building_hunting_lodge(*this); break;
     case BUILDING_PHYSICIAN: _ptr = new building_physician(*this); break;
     case BUILDING_WEAPONSMITH: _ptr = new building_weaponsmith(*this); break;
-    case BUILDING_RECRUITER: _ptr = new building_recruiter(*this); break;
     case BUILDING_CATTLE_RANCH: _ptr = new building_cattle_ranch(*this); break;
 
     case BUILDING_VILLAGE_PALACE:
@@ -337,6 +335,7 @@ building_dock *building::dcast_dock() { return dcast()->dcast_dock(); }
 building_work_camp *building::dcast_work_camp() { return dcast()->dcast_work_camp(); }
 building_small_mastaba *building::dcast_small_mastaba() { return dcast()->dcast_small_mastaba(); }
 building_wood_cutter *building::dcast_wood_cutter() { return dcast()->dcast_wood_cutter(); }
+building_recruiter *building::dcast_recruiter() { return dcast()->dcast_recruiter(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
