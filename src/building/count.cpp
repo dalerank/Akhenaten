@@ -141,7 +141,6 @@ void building_count_update() {
             break;
 
             // education
-        case BUILDING_SCRIBAL_SCHOOL:
         case BUILDING_LIBRARY:
         case BUILDING_ACADEMY:
             // health

@@ -372,7 +372,6 @@ public:
     void spawn_figure_senet();
     void spawn_figure_pavillion();
     void set_water_supply_graphic();
-    void spawn_figure_school();
     void spawn_figure_library();
     void spawn_figure_dentist();
     void spawn_figure_mortuary();
@@ -731,6 +730,12 @@ struct model_t : public building_impl::static_params {
             loaded = true;
         });
         assert(loaded);
+    }
+
+    template<typename T>
+    void load(T func) {
+        load();
+        g_config_arch.r_section(name, func);
     }
 
     static building_impl *create(e_building_type e, building &data) {

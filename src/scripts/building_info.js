@@ -1,7 +1,6 @@
 log_info("akhenaten: building info started")
 
 building_info = [
-  { type: "school_scribe", help_id: 68, text_id: 85},
   // { type: "academy", help_id: 69, text_id: 86},
   { type: "library", help_id: 70, text_id: 87},
   { type: "marble_quarry", help_id:95, text_id:118},
@@ -346,11 +345,16 @@ building_hunting_lodge = {
 }
 
 building_scribal_school = {
-  papyrus_icon : {x: 61, y: 14},
-
-  info : {
-    icon_res : {x: 32, y: 106},
-    text_res : {x: 60, y: 110},
+  animations : {
+    preview : { pack:PACK_GENERAL, id:42},
+    base : { pack:PACK_GENERAL, id:42},
+    work : { pos:[20, -15], pack:PACK_GENERAL, id:42, offset:1, max_frames:11 }
   },
+
+  info_icon_res :[32, 106],
+  info_text_res :[60, 110],
+  info_help_id: 68, info_text_id: 85,
+
+  papyrus_icon:[61, 14],
   labor_category : LABOR_CATEGORY_EDUCATION,
 }

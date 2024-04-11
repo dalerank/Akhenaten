@@ -546,7 +546,6 @@ static void draw_refresh_background() {
             case BUILDING_SENET_MASTER: building_bullfight_school_draw_info(context); break;
             case BUILDING_MORTUARY: building_mortuary_draw_info(context); break;
             case BUILDING_DENTIST: building_dentist_draw_info(context); break;
-            case BUILDING_SCRIBAL_SCHOOL: building_scribal_school_draw_info(context); break;
             case BUILDING_ACADEMY: building_academy_draw_info(context); break;
             case BUILDING_LIBRARY: building_library_draw_info(context); break;
             case BUILDING_ORACLE: window_building_draw_oracle(&context); break;

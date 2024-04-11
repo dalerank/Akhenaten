@@ -268,6 +268,5 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
 
     // specific buildings
     building_workshop_draw_raw_material_storage(ctx, b, point, color_mask);
-    building_education_draw_raw_material_storage(ctx, b, point, color_mask);
     //    draw_hippodrome_ornaments(pixel, point);
 }

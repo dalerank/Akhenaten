@@ -151,10 +151,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
         output_resource_first_id = RESOURCE_LUXURY_GOODS;
         break;
 
-    case BUILDING_SCRIBAL_SCHOOL:
-        data.entertainment.consume_material_id = RESOURCE_PAPYRUS;
-        break;
-
     case BUILDING_BRICKS_WORKSHOP:
         data.industry.first_material_id = RESOURCE_STRAW;
         data.industry.second_material_id = RESOURCE_CLAY;
@@ -507,7 +503,6 @@ void building::clear_related_data() {
 e_overlay building::get_overlay() const {
     switch (type) {
         case BUILDING_POLICE_STATION: return OVERLAY_CRIME;
-        case BUILDING_SCRIBAL_SCHOOL: return OVERLAY_SCRIBAL_SCHOOL;
     }
 
     return const_cast<building*>(this)->dcast()->get_overlay();
