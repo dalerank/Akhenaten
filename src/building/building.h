@@ -578,7 +578,7 @@ bool building_is_harvester(e_building_type type);
 bool building_is_monument(int type);
 bool building_is_administration(e_building_type type);
 bool building_is_palace(e_building_type type);
-bool building_is_tax_collector(int type);
+bool building_is_tax_collector(e_building_type type);
 bool building_is_governor_mansion(int type);
 bool building_is_temple(int type);
 bool building_is_large_temple(int type);

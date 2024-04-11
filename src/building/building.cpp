@@ -642,8 +642,8 @@ bool building_is_palace(e_building_type type) {
     return building_type_any_of(type, BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_CITY_PALACE);
 }
 
-bool building_is_tax_collector(int type) {
-    return (type >= BUILDING_TAX_COLLECTOR && type <= BUILDING_TAX_COLLECTOR_UPGRADED);
+bool building_is_tax_collector(e_building_type type) {
+    return building_type_any_of(type, BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED);
 }
 
 bool building_is_governor_mansion(int type) {

@@ -18,12 +18,15 @@
 #include "building/count.h"
 #include "game/game.h"
 #include "city/labor.h"
+#include "widget/city/ornaments.h"
 
 buildings::model_t<building_tax_collector> tax_collector_m;
+buildings::model_t<building_tax_collector_up> tax_collector_up_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_tax_collector);
 void config_load_building_tax_collector() {
     tax_collector_m.load();
+    tax_collector_up_m.load();
 }
 
 void building_tax_collector::window_info_background(object_info &c) {
@@ -97,6 +100,17 @@ void building_tax_collector::update_month() {
     }
 }
 
+bool building_tax_collector::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    building_draw_normal_anim(ctx, point, &base, tile, params().anim["work"], color_mask);
+    return false;
+}
+
 void building_tax_collector::update_count() const {
     building_increase_type_count(type(), num_workers() > 0);
+}
+
+const building_impl::static_params &building_tax_collector::params() const {
+    return (type() == BUILDING_TAX_COLLECTOR) 
+                ? *(static_params*)&tax_collector_m
+                : *(static_params*)&tax_collector_up_m;
 }
