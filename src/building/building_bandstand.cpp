@@ -1,7 +1,9 @@
 #include "building_bandstand.h"
 
 #include "building/building.h"
+#include "building/count.h"
 #include "city/object_info.h"
+#include "city/labor.h"
 #include "game/resource.h"
 #include "grid/property.h"
 #include "grid/image.h"
@@ -16,6 +18,13 @@
 #include "widget/city/ornaments.h"
 #include "building/building_entertainment.h"
 #include "sound/sound_building.h"
+
+buildings::model_t<building_bandstand> bandstand_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bandstand_config);
+void config_load_building_bandstand_config() {
+    bandstand_m.load();
+}
 
 void building_bandstand::on_create(int orientation) {
     base.fire_proof = 1;
@@ -80,6 +89,33 @@ void building_bandstand::window_info_background(object_info &c) {
     }
 }
 
+void building_bandstand::draw_shows_musicians(painter &ctx, vec2i pixel, int direction, color color_mask) {
+    building* main = base.main();
+    if (main->data.entertainment.days2) {
+        building* next_tile = base.next();
+        switch (direction) {
+        case 0:
+        {
+            const animation_t &anim = bandstand_m.anim["musician_sn"];
+            building_draw_normal_anim(ctx, pixel, &base, tile(), anim, color_mask);
+        }
+        break;
+
+        case 1:
+        {
+            const animation_t &anim = bandstand_m.anim["musician_we"];
+            building_draw_normal_anim(ctx, pixel, &base, tile(), anim, color_mask);
+        }
+        break;
+        }
+    }
+}
+
+void building_bandstand::update_count() const {
+    building_increase_type_count(type(), num_workers() > 0);
+    building_increase_type_count(BUILDING_BOOTH, num_workers() > 0);
+}
+
 bool building_bandstand::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
     int color_mask = 0;
     if (drawing_building_as_deleted(&base) || map_property_is_deleted(tile)) {
@@ -88,13 +124,19 @@ bool building_bandstand::draw_ornaments_and_animations_height(painter &ctx, vec2
 
     int grid_offset = tile.grid_offset();
     if (map_image_at(grid_offset) == image_group(IMG_BANDSTAND_SN_N)) {
-        building_entertainment_draw_shows_musicians(ctx, &base, point, 1, color_mask);
+        draw_shows_musicians(ctx, point, 1, color_mask);
     } else if (map_image_at(grid_offset) == image_group(IMG_BANDSTAND_WE_W)) {
-        building_entertainment_draw_shows_musicians(ctx, &base, point, 0, color_mask);
+        draw_shows_musicians(ctx, point, 0, color_mask);
     }
 
     if (map_image_at(grid_offset) == image_group(IMG_BOOTH)) {
         building_entertainment_draw_show_jugglers(ctx, &base, point, color_mask);
+        const animation_t &anim = bandstand_m.anim["juggler"];
+
+        building* main = base.main();
+        if (main->data.entertainment.days1) {
+            building_draw_normal_anim(ctx, point, &base, tile, anim, mask);
+        }
     }
 
     return false;

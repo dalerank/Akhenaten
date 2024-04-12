@@ -15,5 +15,6 @@ public:
     virtual e_overlay get_overlay() const override { return OVERLAY_BOOTH; }
     virtual int get_fire_risk(int value) const override { return value / 10; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_BOOTH; }
+    virtual void update_count() const;
     
 };

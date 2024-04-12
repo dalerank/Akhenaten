@@ -20,13 +20,13 @@
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
 
-buildings::model_t<building_tax_collector> tax_collector_m;
-buildings::model_t<building_tax_collector_up> tax_collector_up_m;
+buildings::model_t<building_tax_collector> btax_collector_m;
+buildings::model_t<building_tax_collector_up> btax_collector_up_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_tax_collector);
 void config_load_building_tax_collector() {
-    tax_collector_m.load();
-    tax_collector_up_m.load();
+    btax_collector_m.load();
+    btax_collector_up_m.load();
 }
 
 void building_tax_collector::window_info_background(object_info &c) {
@@ -111,6 +111,6 @@ void building_tax_collector::update_count() const {
 
 const building_impl::static_params &building_tax_collector::params() const {
     return (type() == BUILDING_TAX_COLLECTOR) 
-                ? *(static_params*)&tax_collector_m
-                : *(static_params*)&tax_collector_up_m;
+                ? *(static_params*)&btax_collector_m
+                : *(static_params*)&btax_collector_up_m;
 }

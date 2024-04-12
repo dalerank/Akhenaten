@@ -1,6 +1,7 @@
 #include "building_booth.h"
 
 #include "building/building.h"
+#include "building/count.h"
 #include "city/object_info.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
@@ -75,4 +76,8 @@ bool building_booth::draw_ornaments_and_animations_height(painter &ctx, vec2i po
         building_entertainment_draw_show_jugglers(ctx, &base, point, color_mask);
     }
     return true;
+}
+
+void building_booth::update_count() const {
+    building_increase_type_count(type(), num_workers() > 0);
 }

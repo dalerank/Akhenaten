@@ -59,17 +59,6 @@ void config_load_building_booth_config() {
     });
 }
 
-struct building_bandstand_t {
-    animations_t anim;
-} building_bandstand;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bandstand_config);
-void config_load_building_bandstand_config() {
-    g_config_arch.r_section("building_bandstand", [] (archive arch) {
-        building_bandstand.anim.load(arch);
-    });
-}
-
 void building_entertainment_draw_shows_dancers(painter &ctx, building* b, vec2i pixel, color color_mask) {
     building* main = b->main();
     if (main->data.entertainment.days3_or_play) {
@@ -84,9 +73,6 @@ void building_entertainment_draw_show_jugglers(painter &ctx, building* b, vec2i 
     case BUILDING_BOOTH:
         anim = &building_booth.anim["juggler"];
         break;
-    case BUILDING_BANDSTAND:
-        anim = &building_bandstand.anim["juggler"];
-        break;
     case BUILDING_PAVILLION:
         anim = &building_booth.anim["juggler"];
         break;
@@ -99,27 +85,5 @@ void building_entertainment_draw_show_jugglers(painter &ctx, building* b, vec2i 
     building* main = b->main();
     if (main->data.entertainment.days1) {
         building_draw_normal_anim(ctx, pixel, b, b->tile, *anim, color_mask);
-    }
-}
-
-void building_entertainment_draw_shows_musicians(painter &ctx, building* b, vec2i pixel, int direction, color color_mask) {
-    building* main = b->main();
-    if (main->data.entertainment.days2) {
-        building* next_tile = b->next();
-        switch (direction) {
-        case 0:
-            {
-                const animation_t &anim = building_bandstand.anim["musician_sn"];
-                building_draw_normal_anim(ctx, pixel, b, b->tile, anim, color_mask);
-            }
-            break;
-
-        case 1:
-            {
-                const animation_t &anim = building_bandstand.anim["musician_we"];
-                building_draw_normal_anim(ctx, pixel, b, b->tile, anim, color_mask);
-            }
-            break;
-        }
     }
 }

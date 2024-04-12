@@ -105,15 +105,6 @@ void building_count_update() {
             building_increase_type_count(type, b.num_workers > 0);
             break;
 
-        case BUILDING_BOOTH:
-            building_increase_type_count(type, b.num_workers > 0);
-            break;
-
-        case BUILDING_BANDSTAND:
-            building_increase_type_count(type, b.num_workers > 0);
-            building_increase_type_count(BUILDING_BOOTH, b.num_workers > 0);
-            break;
-
         case BUILDING_PAVILLION:
             building_increase_type_count(type, b.num_workers > 0);
             building_increase_type_count(BUILDING_BANDSTAND, b.num_workers > 0);
