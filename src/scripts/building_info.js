@@ -334,7 +334,9 @@ building_pottery = {
 
 building_physician = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_PHYSICIAN }
+    preview : { pack:PACK_GENERAL, id:70 },
+    base : { pack:PACK_GENERAL, id:70 },
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:70, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
 }

@@ -69,7 +69,6 @@ images = [
 	{img: IMG_BANDSTAND_SQUARE, pack:PACK_GENERAL, id:58},
 	{img: IMG_WATER_SUPPLY, pack:PACK_GENERAL, id:69, offset:0},
 	{img: IMG_WATER_SUPPLY_FANCY, pack:PACK_GENERAL, id:69, offset:2},
-	{img: IMG_PHYSICIAN, pack:PACK_GENERAL, id:70},
 	{img: IMG_GUILD_STONEMASONS, pack:PACK_GENERAL, id:88},
 	{img: IMG_BANDSTAND_SN_S, pack:PACK_GENERAL, id:92},
 	{img: IMG_BANDSTAND_SN_N, pack:PACK_GENERAL, id:92, offset:1},
