@@ -1,6 +1,7 @@
 #include "building_hunting_lodge.h"
 
 #include "building/model.h"
+#include "building/count.h"
 #include "core/direction.h"
 #include "city/object_info.h"
 #include "city/resource.h"
@@ -139,4 +140,8 @@ bool building_hunting_lodge::draw_ornaments_and_animations_height(painter &ctx, 
     }
 
     return true;
+}
+
+void building_hunting_lodge::update_count() const {
+    building_increase_industry_count(RESOURCE_GAMEMEAT, num_workers() > 0);
 }

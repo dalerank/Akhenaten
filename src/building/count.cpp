@@ -202,9 +202,6 @@ void building_count_update() {
         case BUILDING_HENNA_FARM:
             building_increase_industry_count(RESOURCE_HENNA, b.num_workers > 0);
             break;
-        case BUILDING_HUNTING_LODGE:
-            building_increase_industry_count(RESOURCE_GAMEMEAT, b.num_workers > 0);
-            break;
         case BUILDING_FISHING_WHARF:
             building_increase_industry_count(RESOURCE_FISH, b.num_workers > 0);
             break;
