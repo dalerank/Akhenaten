@@ -140,7 +140,6 @@ static int get_height_id() {
         case BUILDING_TAX_COLLECTOR_UPGRADED:
         case BUILDING_BREWERY_WORKSHOP:
         case BUILDING_WEAVER_WORKSHOP:
-        case BUILDING_WEAPONSMITH:
         case BUILDING_JEWELS_WORKSHOP:
         case BUILDING_POTTERY_WORKSHOP:
             return 1;

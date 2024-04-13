@@ -1,6 +1,7 @@
 #include "building/building_weaponsmith.h"
 
 #include "building/building_workshop.h"
+#include "building/count.h"
 #include "graphics/animation.h"
 #include "widget/city/ornaments.h"
 
@@ -29,4 +30,8 @@ bool building_weaponsmith::draw_ornaments_and_animations_height(painter &ctx, ve
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;
+}
+
+void building_weaponsmith::update_count() const {
+    building_increase_industry_count(RESOURCE_WEAPONS, num_workers() > 0);
 }

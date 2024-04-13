@@ -80,9 +80,12 @@ building_granary = {
 
 building_weaponsmith = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_WEAPONSMITH }
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:123, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:123, offset:0 },
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:123, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_MILITARY,
+  window_info_height_id : 1,
 }
 
 building_courthouse = {

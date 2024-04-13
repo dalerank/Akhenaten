@@ -160,7 +160,6 @@ images = [
 	{img: IMG_TEMPLE_PTAH, pack:PACK_GENERAL, id:20, offset:0},
 	{img: IMG_TEMPLE_SETH, pack:PACK_GENERAL, id:19, offset:0},
 	{img: IMG_TEMPLE_BAST, pack:PACK_GENERAL, id:76, offset:0},
-	{img: IMG_WEAPONSMITH, pack:PACK_GENERAL, id:123, offset:0},
 	{img: IMG_GRANARY_ANIM, pack:PACK_SPR_AMBIENT, id:47, offset:0},
 	{img: IMG_WATER_CARRIER, pack:PACK_SPR_MAIN, id:59, offset:0},
 	{img: IMG_WATER_CARRIER_DEATH, pack:PACK_SPR_MAIN, id:60, offset:0},
