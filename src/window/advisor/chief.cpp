@@ -212,7 +212,7 @@ static int draw_advisor_chief_background() {
                                                          city_finance_overview_this_year()->expenses.stolen,
                                                          (pcstr)lang_get_string(61, 164)), FONT_NORMAL_BLACK_ON_DARK};
         } else {
-            crime_status = {bstring256().printf((pcstr)lang_get_string(61, 163)), FONT_NORMAL_BLACK_ON_DARK};
+            crime_status = {bstring256().printf("%s", (pcstr)lang_get_string(61, 163)), FONT_NORMAL_BLACK_ON_DARK};
         }
 
         ui["crime_info"].text_var("%s", crime_status.first.c_str());
