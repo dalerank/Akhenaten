@@ -70,6 +70,7 @@ struct element {
     virtual void color(int) {}
     virtual void image(int) {}
     virtual void font(int) {}
+    virtual void width(int) {}
     virtual void onclick(std::function<void(int, int)>) {}
 
     pcstr text_from_key(pcstr key);
@@ -160,6 +161,7 @@ struct elabel : public element {
     virtual void text(pcstr) override;
     virtual void color(int) override;
     virtual void font(int) override;
+    virtual void width(int) override;
 };
 
 struct etext : public elabel {

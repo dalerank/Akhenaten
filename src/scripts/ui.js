@@ -144,6 +144,19 @@ granary_info_window = {
 	}
 }
 
+workshop_info_window = {
+	ui : {
+		background : { type : "outer_panel",	pos: [0, 0], size: [-1, -1] },
+		title 		 : { type : "text", pos: [0, 12], size: [-1, 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		produce_icon : { type : "resource_icon", pos: [10, 10] },
+		ready_prod : { type : "text", pos: [38, 40], size: [-1, 20], font : FONT_NORMAL_BLACK_ON_LIGHT },
+		resource_icon : { type : "resource_icon", pos: [32, 56] },
+		resource_stored : { type : "text", pos: [60, 60], size: [-1, 20], font : FONT_NORMAL_BLACK_ON_LIGHT },
+		warning_text : { type : "text", pos: [32, 86], size: [-1, 60], font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		workers_panel : { type : "inner_panel", pos : [16, 136], size: [-1, 4] },
+	}
+}
+
 empire_window = {
 	trade_column_spacing : 106,
 	trade_row_spacing : 20,

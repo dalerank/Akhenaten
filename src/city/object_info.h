@@ -46,6 +46,8 @@ struct object_info {
     vec2i offset;
     int y_offset_submenu;
     vec2i bgsize;
+    inline vec2i bgsize_px() const { return bgsize * 16; }
+    inline int bgwidth_px() const { return bgsize.x * 16; }
     int height_blocks_submenu;
     int subwnd_wblocks_num;
     int subwnd_hblocks_num;

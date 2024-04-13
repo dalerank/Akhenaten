@@ -359,6 +359,10 @@ void ui::elabel::font(int v) {
     _font = (e_font)v;
 }
 
+void ui::elabel::width(int v) {
+    _wrap = v;
+}
+
 void ui::eimage_button::load(archive arch) {
     element::load(arch);
 
@@ -384,7 +388,9 @@ void ui::etext::load(archive arch) {
 void ui::etext::draw() {
     const vec2i offset = g_state.offset();
     if (!!(_flags & UiFlags_LabelCentered)) {
-        text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, size.x, _font, 0);
+        text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, size.x, _font, _color);
+    } else if (!!(_flags & UiFlags_LabelMultiline)) {
+        text_draw_multiline((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _wrap, _font, _color);
     } else {
         text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _font, _color);
     }

@@ -30,7 +30,11 @@ void building_brewery::window_info_background(object_info& c) {
     e_resource input_resource = RESOURCE_BARLEY;
     e_resource output_resource = RESOURCE_BEER;
 
-    building_workshop_draw_info(c, 96, "brewery", 122, output_resource, input_resource);
+    building_workshop_draw_background(c, 96, "brewery", 122, output_resource, input_resource);
+}
+
+void building_brewery::window_info_foreground(object_info &c) {
+    building_workshop_draw_foreground(c);
 }
 
 bool building_brewery::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

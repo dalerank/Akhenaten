@@ -35,4 +35,5 @@ localization = [
   {key: "#chief_adv_military", group:61, id:10 },
   {key: "#chief_adv_kingdom", group:61, id:11 },
   {key: "#chief_adv_nilometr", group:61, id:12 },
+  {key: "#building_have_no_access", group:69, id:25 },
 ]

@@ -21,7 +21,11 @@ void building_cattle_ranch::on_create(int orientation) {
 
 void building_cattle_ranch::window_info_background(object_info &c) {
     e_resource output_resource = RESOURCE_MEAT;
-    building_workshop_draw_info(c, 1, "cattle_ranch", 117, output_resource, RESOURCE_STRAW);
+    building_workshop_draw_background(c, 1, "cattle_ranch", 117, output_resource, RESOURCE_STRAW);
+}
+
+void building_cattle_ranch::window_info_foreground(object_info &c) {
+    building_workshop_draw_foreground(c);
 }
 
 bool building_cattle_ranch::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

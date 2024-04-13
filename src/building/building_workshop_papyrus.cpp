@@ -29,7 +29,11 @@ void building_papyrus_maker::on_create(int orientation) {
 
 void building_papyrus_maker::window_info_background(object_info &c) {
     e_resource output_resource = RESOURCE_PAPYRUS;
-    building_workshop_draw_info(c, 1, "papyrus_workshop", 190, output_resource, RESOURCE_REEDS);
+    building_workshop_draw_background(c, 1, "papyrus_workshop", 190, output_resource, RESOURCE_REEDS);
+}
+
+void building_papyrus_maker::window_info_foreground(object_info &c) {
+    building_workshop_draw_foreground(c);
 }
 
 void building_papyrus_maker::update_count() const {

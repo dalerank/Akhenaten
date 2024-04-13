@@ -76,6 +76,7 @@ var advisor_chief_window = {}
 var advisor_rating_window = {}
 var mission_briefing_window = {}
 var granary_info_window = {}
+var workshop_info_window = {}
 var main_menu_window = {}
 //figures
 var figure_fireman = {}
