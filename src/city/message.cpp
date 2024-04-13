@@ -440,16 +440,17 @@ void city_message_decrease_delays(void) {
 
 bool city_message_mark_population_shown(int population) {
     auto& data = g_message_data;
+    bool lastv = false;
     switch (population) {
-    case 500: return (data.population_shown.pop500 = true);
-    case 1000: return (data.population_shown.pop1000 = true);
-    case 2000: return (data.population_shown.pop2000 = true);
-    case 3000: return (data.population_shown.pop3000 = true);
-    case 5000: return (data.population_shown.pop5000 = true);
-    case 10000: return (data.population_shown.pop10000 = true); 
-    case 15000: return (data.population_shown.pop15000 = true);
-    case 20000: return (data.population_shown.pop20000 = true); 
-    case 25000: return (data.population_shown.pop25000 = true); 
+    case 500: lastv = data.population_shown.pop500; data.population_shown.pop500 = true; return lastv;
+    case 1000: lastv = data.population_shown.pop1000; data.population_shown.pop1000 = true; return lastv;
+    case 2000: lastv = data.population_shown.pop2000; data.population_shown.pop2000 = true; return lastv;
+    case 3000: lastv = data.population_shown.pop3000; data.population_shown.pop3000 = true; return lastv;
+    case 5000: lastv = data.population_shown.pop5000; data.population_shown.pop5000 = true; return lastv;
+    case 10000: lastv = data.population_shown.pop10000; data.population_shown.pop10000 = true; return lastv; 
+    case 15000: lastv = data.population_shown.pop15000; data.population_shown.pop15000 = true; return lastv;
+    case 20000: lastv = data.population_shown.pop20000; data.population_shown.pop20000 = true; return lastv; 
+    case 25000: lastv = data.population_shown.pop25000; data.population_shown.pop25000 = true; return lastv; 
     default:
         return false;
     }
