@@ -19,6 +19,7 @@
 #include "graphics/graphics.h"
 #include "game/game.h"
 #include "widget/city/ornaments.h"
+#include "building/count.h"
 
 #include <numeric>
 
@@ -272,8 +273,14 @@ void building_bazaar::update_graphic() {
         return;
     }
 
-    base.internal_state = (map_desirability_get(base.tile.grid_offset()) <= 30) ? IMG_BAZAAR : IMG_BAZAAR_FANCY;
-    map_building_tiles_add(base.id, base.tile, base.size, image_group(e_image_id(base.internal_state)), TERRAIN_BUILDING);
+    base.internal_state = (map_desirability_get(base.tile.grid_offset()) <= 30) ? estate_normal : estate_fancy;
+    const animation_t &anim = bazaar_m.anim[(base.internal_state == estate_normal) ? "base" : "fancy"];
+    map_building_tiles_add(base.id, base.tile, base.size, anim.first_img(), TERRAIN_BUILDING);
+}
+
+void building_bazaar::on_create(int orientation) {
+    base.subtype.market_goods = 0;
+    base.internal_state = estate_normal;
 }
 
 void building_bazaar::spawn_figure() {
@@ -488,8 +495,12 @@ void building_bazaar::window_info_foreground(object_info &ctx) {
 }
 
 bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    pcstr anim_name = base.internal_state == IMG_BAZAAR_FANCY ? "work_fancy" : "work";
-    building_draw_normal_anim(ctx, point, &base, tile, bazaar_m.anim[anim_name], color_mask);
+    const animation_t &anim = bazaar_m.anim[(base.internal_state == estate_normal) ? "base_work" : "fancy_work"];
+    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;
+}
+
+void building_bazaar::update_count() const {
+    building_increase_type_count(type(), num_workers() > 0);
 }

@@ -16,6 +16,8 @@ public:
     virtual building_recruiter *dcast_recruiter() { return this; }
 
     void add_weapon(int amount);
+    bool create_tower_sentry();
+    bool create_soldier();
 };
 
 void building_barracks_request_tower_sentry();

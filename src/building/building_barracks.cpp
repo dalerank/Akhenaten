@@ -49,15 +49,6 @@ struct rectuiter_data_t {
 
 rectuiter_data_t g_rectuiter_data;
 
-void building::monument_remove_worker(int fid) {
-    for (auto &wid : data.monuments.workers) {
-        if (wid == fid) {
-            wid = 0;
-            return;
-        }
-    }
-}
-
 static int get_closest_legion_needing_soldiers(building* barracks) {
     int recruit_type = LEGION_RECRUIT_NONE;
     int min_formation_id = 0;
@@ -100,16 +91,16 @@ static int get_closest_military_academy(building* fort) {
     return min_building_id;
 }
 
-int building::barracks_create_soldier() {
-    int formation_id = get_closest_legion_needing_soldiers(this);
+bool building_recruiter::create_soldier() {
+    int formation_id = get_closest_legion_needing_soldiers(&base);
     if (formation_id > 0) {
         const formation* m = formation_get(formation_id);
-        figure* f = figure_create(m->figure_type, road_access, DIR_0_TOP_RIGHT);
+        figure* f = figure_create(m->figure_type, base.road_access, DIR_0_TOP_RIGHT);
         f->formation_id = formation_id;
         f->formation_at_rest = 1;
         if (m->figure_type == FIGURE_STANDARD_BEARER) {
-            if (stored_full_amount > 0)
-                stored_full_amount -= 100;
+            if (base.stored_full_amount > 0)
+                base.stored_full_amount -= 100;
         }
         int academy_id = get_closest_military_academy(building_get(m->building_id));
         if (academy_id) {
@@ -130,37 +121,6 @@ int building::barracks_create_soldier() {
     }
     formation_calculate_figures();
     return formation_id ? 1 : 0;
-}
-
-bool building::barracks_create_tower_sentry() {
-    if (g_tower_sentry_request <= 0)
-        return false;
-
-    building* tower = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MUD_TOWER && b->num_workers > 0 && !b->has_figure(0)
-            && (b->road_network_id == road_network_id || config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))) {
-            tower = b;
-            break;
-        }
-    }
-    if (!tower)
-        return false;
-
-    figure* f = figure_create(FIGURE_TOWER_SENTRY, road_access, DIR_0_TOP_RIGHT);
-    f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
-    tile2i road;
-    if (map_get_road_access_tile(tower->tile, tower->size, road)) {
-        f->destination_tile = road;
-        //        f->destination_x = road.x();
-        //        f->destination_y = road.y();
-    } else {
-        f->poof();
-    }
-    tower->set_figure(0, f->id);
-    f->set_home(tower->id);
-    return true;
 }
 
 void building_barracks_request_tower_sentry() {
@@ -188,6 +148,38 @@ void building::barracks_toggle_priority() {
 }
 int building::barracks_get_priority() {
     return subtype.barracks_priority;
+}
+
+bool building_recruiter::create_tower_sentry() {
+    if (g_tower_sentry_request <= 0)
+        return false;
+
+    building* tower = 0;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building* b = building_get(i);
+        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MUD_TOWER && b->num_workers > 0 && !b->has_figure(0)
+            && (b->road_network_id == base.road_network_id || config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))) {
+            tower = b;
+            break;
+        }
+    }
+
+    if (!tower) {
+        return false;
+    }
+
+    figure* f = figure_create(FIGURE_TOWER_SENTRY, base.road_access, DIR_0_TOP_RIGHT);
+    f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
+    tile2i road;
+    if (map_get_road_access_tile(tower->tile, tower->size, road)) {
+        f->destination_tile = road;
+    } else {
+        f->poof();
+    }
+
+    tower->set_figure(0, f->id);
+    f->set_home(tower->id);
+    return true;
 }
 
 void building_recruiter::on_create(int orientation) {
@@ -218,12 +210,13 @@ void building_recruiter::spawn_figure() {
             base.figure_spawn_delay = 0;
             switch (base.subtype.barracks_priority) {
             case PRIORITY_FORT:
-            if (!base.barracks_create_soldier())
-                base.barracks_create_tower_sentry();
+            if (!create_soldier())
+                create_tower_sentry();
             break;
+
             default:
-            if (!base.barracks_create_tower_sentry())
-                base.barracks_create_soldier();
+            if (!create_tower_sentry())
+                create_soldier();
             }
         }
     }

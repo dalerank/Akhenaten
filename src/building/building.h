@@ -395,13 +395,10 @@ public:
 
     void school_add_papyrus(int amount);
 
-    void barracks_add_weapon(int amount);
     void monument_add_workers(int fid);
     void monument_remove_worker(int fid);
     void industry_add_workers(int fid);
     void industry_remove_worker(int fid);
-    int barracks_create_soldier();
-    bool barracks_create_tower_sentry();
     void barracks_toggle_priority();
     int barracks_get_priority();
 };
