@@ -4,7 +4,6 @@
 #include "building/rotation.h"
 #include "building/building_type.h"
 #include "building/storage.h"
-#include "building/building_cattle_ranch.h"
 #include "building/building_weaponsmith.h"
 #include "building/building_shrine.h"
 #include "building/building_mansion.h"
@@ -283,7 +282,6 @@ building_impl *building::dcast() {
     switch (type) {
     case BUILDING_HUNTING_LODGE: _ptr = new building_hunting_lodge(*this); break;
     case BUILDING_WEAPONSMITH: _ptr = new building_weaponsmith(*this); break;
-    case BUILDING_CATTLE_RANCH: _ptr = new building_cattle_ranch(*this); break;
 
     case BUILDING_VILLAGE_PALACE:
     case BUILDING_TOWN_PALACE:

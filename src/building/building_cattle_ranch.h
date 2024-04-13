@@ -7,6 +7,7 @@ public:
     BUILDING_METAINFO(BUILDING_CATTLE_RANCH, building_cattle_ranch)
 
     building_cattle_ranch(building &b) : building_impl(b) {}
+
     virtual void on_create(int orientation) override;
     virtual void window_info_background(object_info &c) override;
     virtual bool is_workshop() const override { return true; }

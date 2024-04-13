@@ -64,7 +64,9 @@ building_fort = {
 
 building_cattle_ranch = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_CATTLE_RANCH }
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pos : [0, ], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
