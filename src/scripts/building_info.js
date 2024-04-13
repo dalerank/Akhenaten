@@ -170,9 +170,13 @@ building_storage_yard = {
 
 building_bazaar = {
   animations : {
-    work : { pos : [0, 0], anim_id : IMG_BAZAAR },
-    work_fancy : { pos : [0, 0], anim_id : IMG_BAZAAR_FANCY }
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:22, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:22, },
+    base_work : { pos : [0, 0], pack:PACK_GENERAL, id:22, offset:0 },
+    fancy : { pos : [0, 0], pack:PACK_GENERAL, id:22, offset:12 },
+    fancy_work : { pos : [0, 0], pack:PACK_GENERAL, id:22, offset:13 }
   },
+  window_info_height_id : 1,
 }
 
 building_work_camp = {

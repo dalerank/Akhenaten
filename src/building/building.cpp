@@ -4,7 +4,6 @@
 #include "building/rotation.h"
 #include "building/building_type.h"
 #include "building/storage.h"
-#include "building/building_bazaar.h"
 #include "building/building_cattle_ranch.h"
 #include "building/building_weaponsmith.h"
 #include "building/building_shrine.h"
@@ -180,10 +179,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
         output_resource_first_id = RESOURCE_PAINT;
         break;
 
-    case BUILDING_BAZAAR: // Set it as accepting all goods
-        subtype.market_goods = 0x0000;
-        break;
-
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
@@ -214,6 +209,15 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
         output_resource_first_id = RESOURCE_NONE;
         dcast()->on_create(orientation);
         break;
+    }
+}
+
+void building::monument_remove_worker(int fid) {
+    for (auto &wid : data.monuments.workers) {
+        if (wid == fid) {
+            wid = 0;
+            return;
+        }
     }
 }
 
@@ -957,6 +961,7 @@ void building_impl::static_params::load(archive arch) {
     meta_id = arch.r_string("meta_id");
     meta.help_id = arch.r_int("info_help_id");
     meta.text_id = arch.r_int("info_text_id");
+    window_info_height_id = arch.r_int("window_info_height_id");
     anim.load(arch);
 }
 

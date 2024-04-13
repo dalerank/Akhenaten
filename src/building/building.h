@@ -417,6 +417,7 @@ public:
         e_labor_category labor_category;
         static static_params dummy;
         animations_t anim;
+        int window_info_height_id;
 
         void load(archive arch);
     };

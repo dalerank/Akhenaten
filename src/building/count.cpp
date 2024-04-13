@@ -146,8 +146,6 @@ void building_count_update() {
         case BUILDING_CONSERVATORY:
         case BUILDING_DANCE_SCHOOL:
         case BUILDING_SENET_MASTER:
-            // distribution
-        case BUILDING_BAZAAR:
             // military
         case BUILDING_MILITARY_ACADEMY:
             // religion

@@ -83,7 +83,7 @@ static int get_height_id() {
             return 5;
         }
     } else if (context.type == BUILDING_INFO_BUILDING) {
-        const building* b = building_get(context.building_id);
+        building* b = building_get(context.building_id);
         if (building_is_house(b->type) && b->house_population <= 0)
             return 5;
 
@@ -128,7 +128,6 @@ static int get_height_id() {
         case BUILDING_FORT_INFANTRY:
         case BUILDING_FORT_ARCHERS:
         case BUILDING_MILITARY_ACADEMY:
-        case BUILDING_BAZAAR:
         case BUILDING_GRANARY:
         case BUILDING_SHIPWRIGHT:
         case BUILDING_DOCK:
@@ -167,7 +166,7 @@ static int get_height_id() {
             return 4;
 
         default:
-            return 0;
+            return b->dcast()->params().window_info_height_id;
         }
     }
     return 0;

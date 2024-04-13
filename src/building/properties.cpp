@@ -261,7 +261,7 @@ void building_properties_init() {
     properties[BUILDING_SMALL_MASTABA_SIDE] = {2, 0, 0, 0, 0, IMG_SMALL_MASTABA};
     properties[BUILDING_SMALL_MASTABA_WALL] = {2, 0, 0, 0, 0, IMG_SMALL_MASTABA};
     properties[BUILDING_SMALL_MASTABA_ENTRANCE] = {2, 0, 0, 0, 0, IMG_SMALL_MASTABA};
-    properties[BUILDING_BAZAAR] = {2, 0, 0, 0, 0, IMG_BAZAAR};
+    properties[BUILDING_BAZAAR] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_BRICKLAYERS_GUILD] = {2, 0, 0, 0, 0, IMG_BRICKLAYERS_GUILD};
     properties[BUILDING_FIREHOUSE] = {1, 0, 0, 0, 0, IMG_BUILDING_FIREHOUSE};
     properties[BUILDING_APOTHECARY] = {1, 0, 0, 0, 0, IMG_BUILDING_APOTHECARY};
