@@ -383,6 +383,7 @@ building_pottery = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_POTTERY_WORKSHOP }
   },
+  production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 

@@ -11,15 +11,20 @@
 
 #include "js/js_game.h"
 #include "dev/debug.h"
+#include "building/count.h"
 
 #include <iostream>
 
-struct pottery_model : public buildings::model_t<building_pottery> {};
+struct pottery_model : public buildings::model_t<building_pottery> {
+    int production_rate;
+};
 pottery_model pottery_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_pottery);
 void config_load_building_pottery() {
-    pottery_m.load();
+    pottery_m.load([&] (archive arch) {
+        pottery_m.production_rate = arch.r_int("production_rate");
+    });
 }
 
 declare_console_command(addpottery, game_cheat_add_resource<RESOURCE_POTTERY>);
@@ -44,4 +49,12 @@ bool building_pottery::draw_ornaments_and_animations_height(painter &ctx, vec2i 
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;
+}
+
+inline int building_pottery::ready_production() const { 
+    return pottery_m.production_rate;
+}
+
+void building_pottery::update_count() const {
+    building_increase_industry_count(RESOURCE_POTTERY, num_workers() > 0);
 }
