@@ -1,7 +1,9 @@
 #include "building_plaza.h"
 
 #include "building/building.h"
+#include "building/count.h"
 #include "city/object_info.h"
+#include "city/labor.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
@@ -15,6 +17,21 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 #include "building_shrine.h"
+
+buildings::model_t<building_shrine_osiris> shrine_osiris_m;
+buildings::model_t<building_shrine_ra>   shrine_ra_m;
+buildings::model_t<building_shrine_ptah> shrine_ptah_m;
+buildings::model_t<building_shrine_seth> shrine_seth_m;
+buildings::model_t<building_shrine_bast> shrine_bast_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_shrines);
+void config_load_building_shrines() {
+    shrine_osiris_m.load();
+    shrine_ra_m.load();
+    shrine_ptah_m.load();
+    shrine_seth_m.load();
+    shrine_bast_m.load();
+}
 
 static void building_shrine_draw_info(object_info& c, const char* type, int text_id, int image_offset) {
     painter ctx = game.painter();
@@ -60,4 +77,8 @@ void building_shrine::window_info_background(object_info &ctx) {
         building_shrine_draw_info(ctx, "shrine_bast", 8, 25);
         break;
     }
+}
+
+void building_shrine::update_count() const {
+    building_increase_type_count(type(), has_road_access());
 }

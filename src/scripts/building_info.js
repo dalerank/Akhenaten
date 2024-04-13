@@ -78,11 +78,56 @@ building_granary = {
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
 }
 
+building_shrine_osiris = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:75, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:75, offset:0 },
+  },
+  labor_category : LABOR_CATEGORY_RELIGION,
+  window_info_height_id : 4,
+}
+
+building_shrine_ra = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:74, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:74, offset:0 },
+  },
+  labor_category : LABOR_CATEGORY_RELIGION,
+  window_info_height_id : 4,
+}
+
+building_shrine_ptah = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:73, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:73, offset:0 },
+  },
+  labor_category : LABOR_CATEGORY_RELIGION,
+  window_info_height_id : 4,
+}
+
+building_shrine_seth = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:72, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:72, offset:0 },
+  },
+  labor_category : LABOR_CATEGORY_RELIGION,
+  window_info_height_id : 4,
+}
+
+building_shrine_bast = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:71, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:71, offset:0 },
+  },
+  labor_category : LABOR_CATEGORY_RELIGION,
+  window_info_height_id : 4,
+}
+
 building_weaponsmith = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:123, },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:123, offset:0 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:123, offset:1, max_frames:12 }
+    work : { pos : [60, -15], pack:PACK_GENERAL, id:123, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_MILITARY,
   window_info_height_id : 1,

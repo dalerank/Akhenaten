@@ -147,11 +147,11 @@ static building_properties properties[400] = {
     {2, 0, 0, 0},
     {1, 1, GROUP_BUILDING_ROADBLOCK}, // roadblock
     {0, 0, 0, 0},
-    {1, 0, GROUP_BUILDING_SHRINE_OSIRIS},
-    {1, 0, GROUP_BUILDING_SHRINE_RA},
-    {1, 0, GROUP_BUILDING_SHRINE_PTAH},
-    {1, 0, GROUP_BUILDING_SHRINE_SETH},
-    {1, 0, GROUP_BUILDING_SHRINE_BAST}, // shrines ^^^^
+    {1, 0, 0, 0},
+    {1, 0, 0, 0},
+    {1, 0, 0, 0},
+    {1, 0, 0, 0},
+    {1, 0, 0, 0}, // shrines ^^^^
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},

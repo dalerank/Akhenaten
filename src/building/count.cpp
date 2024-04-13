@@ -163,14 +163,6 @@ void building_count_update() {
             building_increase_type_count(type, b.num_workers > 0);
             break;
 
-        case BUILDING_SHRINE_OSIRIS:
-        case BUILDING_SHRINE_RA:
-        case BUILDING_SHRINE_PTAH:
-        case BUILDING_SHRINE_SETH:
-        case BUILDING_SHRINE_BAST:
-            building_increase_type_count(type, b.has_road_access);
-            break;
-
             // water-side
         case BUILDING_FISHING_WHARF:
             if (b.num_workers > 0 && b.has_open_water_access) {
