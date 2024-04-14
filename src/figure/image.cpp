@@ -9,6 +9,7 @@
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_offsets);
 ANK_REGISTER_CONFIG_ITERATOR(config_load_sled_offsets);
+ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_images);
 
 static const int CORPSE_IMAGE_OFFSETS[128] = {
     0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -44,6 +45,17 @@ void config_load_sled_offsets() {
         int y = arch.r_int("y");
         SLED_OFFSETS[i] = vec2i{x, y};
         i++;
+    });
+}
+
+static image_desc g_cart_images[RESOURCES_MAX] = {{}};
+void config_load_cart_images() {
+    g_config_arch.r_array("cart_images", [] (archive arch) {
+        e_resource res = arch.r_type<e_resource>("resource");
+        int pack = arch.r_int("pack");
+        int id = arch.r_int("id");
+        int offset = arch.r_int("offset");
+        g_cart_images[res] = {pack, id, offset};
     });
 }
 
@@ -233,13 +245,13 @@ int cart_image_offset_from_amount(int amount) {
     return 2;
 }
 
-e_image_id resoure2imgid(e_resource resource_id) {
-    switch (resource_id) {
-    case RESOURCE_BARLEY: return IMG_CART_BARLEY;
-    case RESOURCE_COPPER: return IMG_CART_COPPER;
+image_desc resource2cartanim(e_resource resource_id) {
+    image_desc ret = g_cart_images[resource_id];
+    if (ret.pack && ret.id) {
+        return ret;
     }
 
-    return IMG_CARTPUSHER_CART;
+    return g_cart_images[RESOURCE_NONE];
 }
 
 void figure::cart_update_image() {
@@ -260,16 +272,17 @@ void figure::cart_update_image() {
 
     case RESOURCE_BARLEY:
     case RESOURCE_COPPER:
-        cart_image_id = image_group(IMG_CARTPUSHER_CART);
+    case RESOURCE_BEER:
+        cart_image_id = image_group(resource2cartanim(RESOURCE_NONE));
         if (resource_amount_full > 0) {
-            cart_image_id = image_group(resoure2imgid(resource_id));
+            cart_image_id = image_group(resource2cartanim(resource_id));
             int amount_offset = cart_image_offset_from_amount(resource_amount_full);
             cart_image_id += 8 * amount_offset;
         }
         break;
 
     default:
-        cart_image_id = image_group(IMG_CARTPUSHER_CART);
+        cart_image_id = image_group(resource2cartanim(RESOURCE_NONE));
         if (resource_amount_full > 0) {
             int amount_offset = cart_image_offset_from_amount(resource_amount_full);
             cart_image_id += 8 + 24 * (resource_id - 1) + 8 * amount_offset;

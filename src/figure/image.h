@@ -15,4 +15,5 @@
 // int figure_image_direction();
 
 int figure_image_normalize_direction(int direction);
+image_desc resource2cartanim(e_resource resource_id);
 void set_sled_image_offset(int i, vec2i offset);

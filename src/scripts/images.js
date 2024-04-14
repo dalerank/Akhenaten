@@ -17,13 +17,11 @@ images = [
 	{img: ANIM_TAX_COLLECTOR_DEATH, pack:PACK_SPR_MAIN, id:42},
 	{img: ANIM_CARTPUSHER_WALK, pack: PACK_SPR_MAIN, id:43},
 	{img: ANIM_CARTPUSHER_DEATH, pack: PACK_SPR_MAIN, id:44},
-	{img: IMG_CARTPUSHER_CART, pack:PACK_SPR_MAIN, id:77},
 	{img: IMG_SLED_BRICKS, pack:PACK_SPR_MAIN, id:89},
 	{img: IMG_SLED_SANDSTONE_SMALL, pack:PACK_SPR_MAIN, id:101},
 	{img: IMG_SLED_STONE_SMALL, pack:PACK_SPR_MAIN, id:102},
 	{img: IMG_SLED_GRANITE_SMALL, pack:PACK_SPR_MAIN, id:103},
 	{img: IMG_SLED_LIMESTONE_SMALL, pack:PACK_GENERAL, id:104},
-	{img: IMG_CART_COPPER, pack:PACK_SPR_MAIN, id:107},
 	{img: ANIM_JUGGLER_WALK, pack:PACK_SPR_MAIN, id:130},
 	{img: ANIM_JUGGLER_DEATH, pack:PACK_SPR_MAIN, id:131},
 	{img: IMG_FISHING_BOAT, pack:PACK_SPR_MAIN, id:133 }, 	// 7014
@@ -96,7 +94,6 @@ images = [
 	{img: IMG_JUGGLER_SHOW, pack:PACK_SPR_AMBIENT, id:7, offset:-1},
 	{img: IMG_MUSICIAN_SHOW_SN, pack:PACK_SPR_AMBIENT, id:10, offset:-1},
 	{img: IMG_MUSICIAN_SHOW_WE, pack:PACK_SPR_AMBIENT, id:9, offset:-1},
-	{img: IMG_CART_BARLEY, pack:PACK_SPR_MAIN, id:91},
 	{img: IMG_SIDE_PANEL, pack:PACK_GENERAL, id:121, offset:0},
 	{img: IMG_TOP_MENU_BACKGROUND, pack:PACK_GENERAL, id:121, offset:8},
 	{img: IMG_EDITOR_SIDE_PANEL, pack:PACK_GENERAL, id:121, offset:0},
@@ -198,6 +195,13 @@ images = [
 	{img: ANIM_REED_GATHERER_DEATH, pack:PACK_SPR_MAIN, id:38, offset:0},
 	{img: ANIM_REED_GATHERER_WORK, pack:PACK_SPR_MAIN, id:39, offset:0},
 	{img: ANIM_REED_GATHERER_RETURN, pack:PACK_SPR_MAIN, id:40, offset:0},
+]
+
+cart_images = [
+	{resource: RESOURCE_NONE, pack:PACK_SPR_MAIN, id:77 },
+	{resource: RESOURCE_BARLEY, pack:PACK_SPR_MAIN, id:91 },
+	{resource: RESOURCE_COPPER, pack:PACK_SPR_MAIN, id:107 },
+	{resource: RESOURCE_BEER, pack:PACK_SPR_MAIN, id:92 },
 ]
 
 cart_offsets = [
