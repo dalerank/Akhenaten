@@ -6,7 +6,6 @@
 #include "building/building_palace.h"
 #include "building/building_statue.h"
 #include "building/house_evolution.h"
-#include "building/building_bandstand.h"
 #include "building/building_farm.h"
 #include "building/building_raw_material.h"
 #include "building/building_workshop.h"
@@ -87,25 +86,14 @@ static int get_height_id() {
             return 5;
 
         switch (b->type) {
-        case BUILDING_TEMPLE_OSIRIS:
-        case BUILDING_TEMPLE_RA:
-        case BUILDING_TEMPLE_PTAH:
-        case BUILDING_TEMPLE_SETH:
-        case BUILDING_TEMPLE_BAST:
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_RA:
         case BUILDING_TEMPLE_COMPLEX_PTAH:
         case BUILDING_TEMPLE_COMPLEX_SETH:
         case BUILDING_TEMPLE_COMPLEX_BAST:
         case BUILDING_ORACLE:
-        case BUILDING_SMALL_STATUE:
-        case BUILDING_MEDIUM_STATUE:
-        case BUILDING_LARGE_STATUE:
-        case BUILDING_CONSERVATORY:
         case BUILDING_DANCE_SCHOOL:
-        case BUILDING_JUGGLER_SCHOOL:
         case BUILDING_SENET_MASTER:
-        case BUILDING_APOTHECARY:
         case BUILDING_MORTUARY:
         case BUILDING_MENU_MONUMENTS:
         case BUILDING_DENTIST:
@@ -116,9 +104,6 @@ static int get_height_id() {
         case BUILDING_UNUSED_NATIVE_CROPS_93:
         case BUILDING_RESERVER_MISSION_POST_80:
         case BUILDING_POLICE_STATION:
-        case BUILDING_ARCHITECT_POST:
-        case BUILDING_FIREHOUSE:
-        case BUILDING_SCRIBAL_SCHOOL:
         case BUILDING_ACADEMY:
         case BUILDING_LIBRARY:
         case BUILDING_MUD_GATEHOUSE:
@@ -127,41 +112,24 @@ static int get_height_id() {
         case BUILDING_FORT_INFANTRY:
         case BUILDING_FORT_ARCHERS:
         case BUILDING_MILITARY_ACADEMY:
-        case BUILDING_GRANARY:
         case BUILDING_SHIPWRIGHT:
         case BUILDING_DOCK:
         case BUILDING_FISHING_WHARF:
         case BUILDING_PERSONAL_MANSION:
         case BUILDING_FAMILY_MANSION:
         case BUILDING_DYNASTY_MANSION:
-        case BUILDING_TAX_COLLECTOR:
         case BUILDING_ROADBLOCK:
         case BUILDING_TAX_COLLECTOR_UPGRADED:
-        case BUILDING_BREWERY_WORKSHOP:
         case BUILDING_WEAVER_WORKSHOP:
         case BUILDING_JEWELS_WORKSHOP:
-        case BUILDING_POTTERY_WORKSHOP:
             return 1;
 
-        case BUILDING_BOOTH:
         case BUILDING_SENET_HOUSE:
         case BUILDING_PAVILLION:
         case BUILDING_VILLAGE_PALACE:
         case BUILDING_TOWN_PALACE:
         case BUILDING_MENU_BEAUTIFICATION:
             return 2;
-
-        case BUILDING_RECRUITER:
-        case BUILDING_BANDSTAND:
-            return 3;
-
-        case BUILDING_WELL:
-        case BUILDING_SHRINE_OSIRIS:
-        case BUILDING_SHRINE_RA:
-        case BUILDING_SHRINE_PTAH:
-        case BUILDING_SHRINE_SETH:
-        case BUILDING_SHRINE_BAST:
-            return 4;
 
         default:
             return b->dcast()->params().window_info_height_id;

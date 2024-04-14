@@ -29,7 +29,8 @@ building_small_statue = {
     {pack: PACK_EXPANSION, id: 37, offset:1},
     {pack: PACK_EXPANSION, id: 37, offset:5},
     {pack: PACK_TEMPLE_RA, id: 1, offset:27},
-  ]
+  ],
+  window_info_height_id : 1,
 }
 
 building_medium_statue = {
@@ -38,7 +39,8 @@ building_medium_statue = {
     {pack: PACK_GENERAL, id: 8, offset:5},
     {pack: PACK_EXPANSION, id: 36, offset:1},
     {pack: PACK_EXPANSION, id: 36, offset:5},
-  ]
+  ],
+  window_info_height_id : 1,
 }
 
 building_large_statue = {
@@ -47,7 +49,8 @@ building_large_statue = {
     {pack: PACK_GENERAL, id: 7, offset:5},
     {pack: PACK_EXPANSION, id: 35, offset:1},
     {pack: PACK_EXPANSION, id: 35, offset:5},
-  ]
+  ],
+  window_info_height_id : 1,
 }
 
 building_fort = {
@@ -76,6 +79,7 @@ building_granary = {
     work : { pos : [-1, -1], anim_id: IMG_GRANARY_ANIM, max_frames:23 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+  window_info_height_id : 1,
 }
 
 building_shrine_osiris = {
@@ -175,6 +179,7 @@ building_temple_osiris = {
     work : { pos : [-1, -1], anim_id: IMG_TEMPLE_OSIRIS }
   },
   labor_category : LABOR_CATEGORY_RELIGION,
+  window_info_height_id : 1,
 }
 
 building_temple_ra = {
@@ -182,6 +187,7 @@ building_temple_ra = {
     work : { pos : [-1, -1], anim_id: IMG_TEMPLE_RA }
   },
   labor_category : LABOR_CATEGORY_RELIGION,
+  window_info_height_id : 1,
 }
 
 building_temple_ptah = {
@@ -189,6 +195,7 @@ building_temple_ptah = {
     work : { pos : [-1, -1], anim_id: IMG_TEMPLE_PTAH }
   },
   labor_category : LABOR_CATEGORY_RELIGION,
+  window_info_height_id : 1,
 }
 
 building_temple_seth = {
@@ -196,6 +203,7 @@ building_temple_seth = {
     work : { pos : [-1, -1], anim_id: IMG_TEMPLE_SETH }
   },
   labor_category : LABOR_CATEGORY_RELIGION,
+  window_info_height_id : 1,
 }
 
 building_temple_bast = {
@@ -203,12 +211,14 @@ building_temple_bast = {
     work : { pos : [-1, -1], anim_id: IMG_TEMPLE_BAST }
   },
   labor_category : LABOR_CATEGORY_RELIGION,
+  window_info_height_id : 1,
 }
 
 building_juggler_school = {
   animations : {
     work : { pos : [0, 0], anim_id : IMG_JUGGLER_SCHOOL }
   },
+  window_info_height_id : 1,
 }
 
 building_storage_yard = {
@@ -241,6 +251,7 @@ building_booth = {
     juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW }
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
+  window_info_height_id : 2,
 }
 
 building_apothecary = {
@@ -248,6 +259,7 @@ building_apothecary = {
     work : { pos : [0, 0], anim_id : IMG_BUILDING_APOTHECARY }
   },
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
+  window_info_height_id : 1,
 }
 
 building_water_supply = {
@@ -265,6 +277,7 @@ building_well = {
     fancy : { pack: PACK_GENERAL, id:23, offset:2, max_frames:1 },
     fancy_work : { pack: PACK_GENERAL, id:23, offset:3, max_frames:1 }
   },
+  window_info_height_id : 4,
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
 }
 
@@ -300,6 +313,7 @@ building_tax_collector = {
     work : { pos : [60, -45], pack:PACK_GENERAL, id:63, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
+  window_info_height_id : 1,
 }
 
 building_tax_collector_up = {
@@ -309,6 +323,7 @@ building_tax_collector_up = {
     work : { pos : [10, 10], pack:PACK_GENERAL, id:64, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
+  window_info_height_id : 1,
 }
 
 building_recruiter = {
@@ -318,6 +333,7 @@ building_recruiter = {
     work : { pos : [10, 10], pack:PACK_GENERAL, id:166, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_MILITARY,
+  window_info_height_id : 3,
 }
 
 building_bandstand = {
@@ -327,6 +343,7 @@ building_bandstand = {
     musician_we : { pos : [48, 4], base_id : IMG_BANDSTAND_SN_S, anim_id : IMG_MUSICIAN_SHOW_WE, max_frames : 12 }
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
+  window_info_height_id : 3,
 }
 
 building_village_palace = {
@@ -348,7 +365,8 @@ building_clay_pit = {
 building_brewery = {
   animations : {
     work : { pos : [-1, -1], base_id : ANIM_BREWERY_WORKSHOP, anim_id: ANIM_BREWERY_WORKSHOP, max_frames: 12 }
-  }
+  },
+  window_info_height_id : 1,
 }
 
 building_mine_copper = {
@@ -385,6 +403,7 @@ building_pottery = {
   },
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  window_info_height_id : 1,
 }
 
 building_physician = {
@@ -401,6 +420,7 @@ building_firehouse = {
     work : { pos : [0, 0], anim_id: IMG_BUILDING_FIREHOUSE }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+  window_info_height_id : 1,
 }
 
 building_architect_post = {
@@ -410,6 +430,7 @@ building_architect_post = {
     work : { pos : [20, -35], pack:PACK_GENERAL, id:81, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+  window_info_height_id : 1,
 }
 
 building_conservatory = {
@@ -417,6 +438,7 @@ building_conservatory = {
     work : { pos : [82, 18], anim_id: IMG_MUSICIAN_SHOW_SN }
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
+  window_info_height_id : 1,
 }
 
 building_hunting_lodge = {
@@ -438,6 +460,7 @@ building_scribal_school = {
   info_icon_res :[32, 106],
   info_text_res :[60, 110],
   info_help_id: 68, info_text_id: 85,
+  window_info_height_id : 1,
 
   papyrus_icon:[61, 14],
   labor_category : LABOR_CATEGORY_EDUCATION,
