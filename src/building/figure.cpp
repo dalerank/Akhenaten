@@ -384,19 +384,6 @@ void building::spawn_figure_dancer() {
     }
 }
 
-void building::spawn_figure_pavillion() {
-    if (!is_main())
-        return;
-    if (common_spawn_figure_trigger(100)) {
-        if (data.entertainment.days1 > 0)
-            create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
-        if (data.entertainment.days2 > 0)
-            create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
-        if (data.entertainment.days3_or_play > 0)
-            create_roaming_figure(FIGURE_DANCER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
-    }
-}
-
 void building::spawn_figure_senet() {
     // TODO
     //    check_labor_problem();
@@ -800,7 +787,6 @@ bool building::figure_generate() {
         case BUILDING_POLICE_STATION: spawn_figure_police(); break;
         case BUILDING_DANCE_SCHOOL: spawn_figure_dancer(); break;
         case BUILDING_SENET_HOUSE: spawn_figure_senet(); break;
-        case BUILDING_PAVILLION: spawn_figure_pavillion(); break;
         case BUILDING_LIBRARY: spawn_figure_library(); break;
         case BUILDING_WATER_LIFT: common_spawn_figure_trigger(50); break;
         case BUILDING_DENTIST: spawn_figure_dentist(); break;

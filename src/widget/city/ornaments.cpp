@@ -247,12 +247,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
         draw_gatehouse_anim(point.x, point.y, b, ctx);
         break;
 
-    case BUILDING_PAVILLION:
-        if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_PAVILLION)) {
-            building_entertainment_draw_shows_dancers(ctx, b, point, color_mask);
-        }
-        break;
-
     case BUILDING_DANCE_SCHOOL:
         building_draw_normal_anim(ctx, point + vec2i{104, 0}, b, tile, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask);
         break;

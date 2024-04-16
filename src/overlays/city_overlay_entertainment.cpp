@@ -5,9 +5,10 @@
 #include "city_overlay.h"
 
 static int show_building_entertainment(const building* b) {
-    return b->type == BUILDING_JUGGLER_SCHOOL || b->type == BUILDING_BOOTH || b->type == BUILDING_CONSERVATORY
-           || b->type == BUILDING_BANDSTAND || b->type == BUILDING_DANCE_SCHOOL || b->type == BUILDING_PAVILLION
-           || b->type == BUILDING_SENET_MASTER || b->type == BUILDING_SENET_HOUSE;
+    return building_type_any_of(b->type,
+                                BUILDING_JUGGLER_SCHOOL, BUILDING_BOOTH, BUILDING_CONSERVATORY, 
+                                BUILDING_BANDSTAND, BUILDING_DANCE_SCHOOL, BUILDING_PAVILLION,
+                                BUILDING_SENET_MASTER, BUILDING_SENET_HOUSE);
 }
 
 static int show_building_hippodrome(const building* b) {

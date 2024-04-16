@@ -61,7 +61,7 @@ struct city_overlay_pavilion : public city_overlay {
     }
 
     bool show_building(const building *b) const override {
-        return (b->type == BUILDING_CONSERVATORY || b->type == BUILDING_DANCE_SCHOOL || b->type == BUILDING_PAVILLION);
+        return building_type_any_of(b->type, BUILDING_CONSERVATORY, BUILDING_DANCE_SCHOOL, BUILDING_PAVILLION);
     }
 };
 

@@ -77,7 +77,11 @@ bool building_booth::draw_ornaments_and_animations_height(painter &ctx, vec2i po
 
     int grid_offset = tile.grid_offset();
     if (map_image_at(grid_offset) == booth_m.booth) {
-        building_entertainment_draw_show_jugglers(ctx, &base, point, color_mask);
+        const animation_t &anim = booth_m.anim["juggler"];
+        building* main = base.main();
+        if (main->data.entertainment.days1) {
+            building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+        }
     }
     return true;
 }

@@ -214,26 +214,6 @@ static void add_temple_complex(building* b, int orientation) {
 
 static void latch_on_venue(e_building_type type, building *b, int dx, int dy, int orientation, bool main_venue = false) {
     tile2i point = b->tile.shifted(dx, dy);
-    //    int x = main->tile.x() + dx;
-    //    int y = main->tile.y() + dy;
-    //    int grid_offset = MAP_OFFSET(x, y);
-    { // extra venue
-        //this_venue = building_create(type, point.x(), point.y(), 0);
-        //building* parent = main; // link venue to last one in the chain
-        //while (parent->next_part_building_id) {
-        //    parent = building_get(parent->next_part_building_id);
-        //}
-        //parent->next_part_building_id = this_venue->id;
-        //this_venue->prev_part_building_id = parent->id;
-        //
-        //map_building_set(point.grid_offset(), this_venue->id);
-        //if (type == BUILDING_PAVILLION) {
-        //    map_building_set(point.grid_offset() + GRID_OFFSET(1, 0), this_venue->id);
-        //    map_building_set(point.grid_offset() + GRID_OFFSET(1, 1), this_venue->id);
-        //    map_building_set(point.grid_offset() + GRID_OFFSET(0, 1), this_venue->id);
-        //}
-    }
-
     // set map graphics accordingly
     switch (type) {
     case BUILDING_GARDENS:
@@ -261,16 +241,13 @@ static void latch_on_venue(e_building_type type, building *b, int dx, int dy, in
             int offset = map_bandstand_add_img_offset(orientation);
             map_image_set(point, stand_sn_s + offset);
         }
-        //if (orientation == 1) {
-        //    latch_on_venue(BUILDING_BANDSTAND, main, dx, dy + 1, 0, false);
-        //} else if (orientation == 2) {
-        //    latch_on_venue(BUILDING_BANDSTAND, main, dx + 1, dy, 3, false);
-        //}
-        //map_add_bandstand_tiles(this_venue);
         break;
 
-    case BUILDING_PAVILLION:
-        map_building_tiles_add(b->id, point, 2, image_id_from_group(GROUP_BUILDING_PAVILLION), TERRAIN_BUILDING);
+    case BUILDING_PAVILLION: {
+            const auto &params = b->dcast()->params();
+            int base_id = params.anim["base"].first_img();
+            map_building_tiles_add(b->id, point, 2, base_id, TERRAIN_BUILDING);
+        }
         break;
     }
 }
@@ -290,7 +267,7 @@ static void add_entertainment_venue(building* b, int orientation) {
     switch (b->type) {
     case BUILDING_BOOTH: image_id = params.anim["square"].first_img(); break;
     case BUILDING_BANDSTAND: image_id = params.anim["square"].first_img(); break;
-    case BUILDING_PAVILLION: image_id = image_id_from_group(GROUP_PAVILLION_SQUARE); break;
+    case BUILDING_PAVILLION: image_id = params.anim["square"].first_img(); break;
     case BUILDING_FESTIVAL_SQUARE: image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE); break;
     }
 
@@ -809,26 +786,22 @@ static int place_garden(tile2i start, tile2i end) {
 building* last_created_building = nullptr;
 static bool place_building(e_building_type type, int x, int y, int orientation, int variant) {
     // by default, get size from building's properties
-    int size = building_properties_for_type(type)->size;
+    int size = building_impl::params(type).building_size;
+    if (size <= 0) {
+        size = building_properties_for_type(type)->size;
+    }
     int check_figures = 2;
     switch (type) { // special cases
-    case BUILDING_STORAGE_YARD:
-        size = 3;
-        break;
-
     case BUILDING_BOOTH:
         check_figures = 1;
-        size = 2;
         break;
 
     case BUILDING_BANDSTAND:
         check_figures = 1;
-        size = 3;
         break;
 
     case BUILDING_PAVILLION:
         check_figures = 1;
-        size = 4;
         break;
 
     case BUILDING_FESTIVAL_SQUARE:

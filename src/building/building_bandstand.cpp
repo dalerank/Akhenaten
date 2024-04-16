@@ -149,9 +149,7 @@ bool building_bandstand::draw_ornaments_and_animations_height(painter &ctx, vec2
     }
 
     if (map_image_at(grid_offset) == bandstand_m.booth) {
-        building_entertainment_draw_show_jugglers(ctx, &base, point, color_mask);
         const animation_t &anim = bandstand_m.anim["juggler"];
-
         building* main = base.main();
         if (main->data.entertainment.days1) {
             building_draw_normal_anim(ctx, point, &base, tile, anim, mask);

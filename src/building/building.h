@@ -45,6 +45,7 @@ class building_dock;
 class building_small_mastaba;
 class building_wood_cutter;
 class building_recruiter;
+class building_pavilion;
 struct object_info;
 struct painter;
 struct mouse;
@@ -367,12 +368,12 @@ public:
     building_small_mastaba *dcast_small_mastaba();
     building_wood_cutter *dcast_wood_cutter();
     building_recruiter *dcast_recruiter();
+    building_pavilion *dcast_pavilion();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
     void spawn_figure_dancer();
     void spawn_figure_senet();
-    void spawn_figure_pavillion();
     void set_water_supply_graphic();
     void spawn_figure_library();
     void spawn_figure_dentist();
@@ -470,6 +471,7 @@ public:
     virtual building_small_mastaba *dcast_small_mastaba() { return nullptr; }
     virtual building_wood_cutter *dcast_wood_cutter() { return nullptr; }
     virtual building_recruiter *dcast_recruiter() { return nullptr; }
+    virtual building_pavilion *dcast_pavilion() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

@@ -12,6 +12,3 @@ void building_entertainment_school_draw_info(object_info &c, pcstr type, int gro
 
 void building_dancer_school_draw_info(object_info& c);
 void building_bullfight_school_draw_info(object_info& c);
-
-void building_entertainment_draw_shows_dancers(painter &ctx, building *b, vec2i pixel, color color_mask);
-void building_entertainment_draw_show_jugglers(painter &ctx, building *b, vec2i pixel, color color_mask);

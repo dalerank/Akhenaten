@@ -226,6 +226,7 @@ building_storage_yard = {
     work : { pos : [23, 27], anim_id : ANIM_STORAGE_YARD_WORK, max_frames:15 }
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  building_size : 3,
 }
 
 building_bazaar = {
@@ -357,8 +358,12 @@ building_bandstand = {
 }
 
 building_pavilion = {
-
+  animations : {
+    base : { pos:[0, 0], pack:PACK_GENERAL, id:48 },
+    square : { pos:[0, 0], pack:PACK_GENERAL, id:50 },
+  },
   building_size : 4,
+  window_info_height_id : 2,
 }
 
 buildgin_festival_square = {
