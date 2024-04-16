@@ -16,6 +16,7 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "widget/city/ornaments.h"
+#include "widget/city/building_ghost.h"
 #include "building/building_entertainment.h"
 #include "sound/sound_building.h"
 
@@ -36,17 +37,26 @@ void building_bandstand::spawn_figure() {
 
     if (common_spawn_figure_trigger(100)) {
         if (data.entertainment.days1 > 0) {
-            create_roaming_figure(FIGURE_JUGGLER,
-                                  FIGURE_ACTION_94_ENTERTAINER_ROAMING,
-                                  BUILDING_SLOT_SERVICE);
+            create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
         }
 
         if (data.entertainment.days2 > 0) {
-            create_roaming_figure(FIGURE_MUSICIAN,
-                                  FIGURE_ACTION_94_ENTERTAINER_ROAMING,
-                                  BUILDING_SLOT_SERVICE);
+            create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
         }
     }
+}
+
+bool building_bandstand::draw_isometric_flat_building(tile2i point, painter &ctx) {
+    int stand_sn_n = bandstand_m.anim["stand_sn_n"].first_img();
+    int stand_sn_s = bandstand_m.anim["stand_sn_s"].first_img();
+    int imgs[] = {image_group(IMG_BOOTH), stand_sn_n, stand_sn_s, image_group(IMG_BANDSTAND_WE_W), image_group(IMG_BANDSTAND_WE_E)};
+    int tile_id = map_image_at(point.grid_offset());
+    for (const auto &im : imgs) {
+        if (im == tile_id) {
+            return false;
+        }
+    }
+    return true;
 }
 
 void building_bandstand::window_info_background(object_info &c) {
@@ -123,7 +133,8 @@ bool building_bandstand::draw_ornaments_and_animations_height(painter &ctx, vec2
     }
 
     int grid_offset = tile.grid_offset();
-    if (map_image_at(grid_offset) == image_group(IMG_BANDSTAND_SN_N)) {
+    int stand_sn_n = bandstand_m.anim["stand_sn_n"].first_img();
+    if (map_image_at(grid_offset) == stand_sn_n) {
         draw_shows_musicians(ctx, point, 1, color_mask);
     } else if (map_image_at(grid_offset) == image_group(IMG_BANDSTAND_WE_W)) {
         draw_shows_musicians(ctx, point, 0, color_mask);
@@ -140,4 +151,37 @@ bool building_bandstand::draw_ornaments_and_animations_height(painter &ctx, vec2
     }
 
     return false;
+}
+
+void building_bandstand::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
+    int size = bandstand_m.building_size;
+    int square_id = bandstand_m.anim["square"].first_img();
+    for (int i = 0; i < size * size; i++) {
+        ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
+    }
+
+    int stand_sn_n = bandstand_m.anim["stand_sn_n"].first_img();
+    int stand_sn_s = bandstand_m.anim["stand_sn_s"].first_img();
+    switch (orientation / 2) {
+    case 0:
+        draw_building_ghost(ctx, stand_sn_n, pixel, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
+        break;
+    case 1:
+        draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_W), pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_E), pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
+        break;
+    case 2:
+        draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
+        break;
+    case 3:
+        draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_W), pixel, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_E), pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+        break;
+    }
 }

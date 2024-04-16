@@ -247,13 +247,17 @@ static void latch_on_venue(e_building_type type, building *b, int dx, int dy, in
 
     case BUILDING_BANDSTAND:
         if (main_venue) {
+            const auto &params = b->dcast()->params();
+            int stand_sn_s = params.anim["stand_sn_s"].first_img();
             b->data.entertainment.latched_venue_main_grid_offset = point.grid_offset();
             int offset = map_bandstand_main_img_offset(orientation);
-            map_image_set(point, IMG_BANDSTAND_SN_S, offset);
+            map_image_set(point, stand_sn_s + offset);
         } else {
+            const auto &params = b->dcast()->params();
+            int stand_sn_s = params.anim["stand_sn_s"].first_img();
             b->data.entertainment.latched_venue_add_grid_offset = point.grid_offset();
             int offset = map_bandstand_add_img_offset(orientation);
-            map_image_set(point, IMG_BANDSTAND_SN_S, offset);
+            map_image_set(point, stand_sn_s + offset);
         }
         //if (orientation == 1) {
         //    latch_on_venue(BUILDING_BANDSTAND, main, dx, dy + 1, 0, false);
@@ -283,7 +287,7 @@ static void add_entertainment_venue(building* b, int orientation) {
     int image_id = 0;
     switch (b->type) {
     case BUILDING_BOOTH: image_id = params.anim["square"].first_img(); break;
-    case BUILDING_BANDSTAND: image_id = image_group(IMG_BANDSTAND_SQUARE); break;
+    case BUILDING_BANDSTAND: image_id = params.anim["square"].first_img(); break;
     case BUILDING_PAVILLION: image_id = image_id_from_group(GROUP_PAVILLION_SQUARE); break;
     case BUILDING_FESTIVAL_SQUARE: image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE); break;
     }

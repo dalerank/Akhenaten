@@ -104,7 +104,7 @@ void juggler_coverage(building* b, figure *f, int&) {
 
 int figure_juggler::provide_service() {
     int houses_serviced = 0;
-    building* b = current_destination();
+    building* b = home();
     if (b->type == BUILDING_BOOTH) {
         houses_serviced = figure_provide_culture(tile(), &base, juggler_coverage);
     } else if (b->type == BUILDING_BANDSTAND) {

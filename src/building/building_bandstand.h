@@ -14,7 +14,9 @@ public:
     virtual int get_fire_risk(int value) const override { return value / 10; }
     virtual void update_count() const;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_BANDSTAND; }
+    virtual bool draw_isometric_flat_building(tile2i point, painter &ctx) override;
 
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     void draw_shows_musicians(painter &ctx, vec2i pixel, int direction, color color_mask);
+    static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
 };

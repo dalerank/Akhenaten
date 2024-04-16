@@ -83,6 +83,12 @@ void building_booth::update_count() const {
     building_increase_type_count(type(), num_workers() > 0);
 }
 
+bool building_booth::draw_isometric_flat_building(tile2i point, painter &ctx) {
+    int img_id = image_group(IMG_BOOTH);
+    int tile_id = map_image_at(point.grid_offset());
+    return (img_id != tile_id);
+}
+
 void building_booth::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
     int size = booth_m.building_size;
     int square_id = booth_m.anim["square"].first_img();

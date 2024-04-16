@@ -165,11 +165,8 @@ void map_orientation_update_buildings() {
                 const auto &params = b->dcast()->params();
                 switch (b->type) {
                 case BUILDING_BOOTH:
-                    plaza_image_id = params.anim["square"].first_img();
-                    break;
-
                 case BUILDING_BANDSTAND:
-                    plaza_image_id = image_group(IMG_BANDSTAND_SQUARE);
+                    plaza_image_id = params.anim["square"].first_img();
                     break;
 
                 case BUILDING_PAVILLION:

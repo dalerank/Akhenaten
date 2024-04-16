@@ -256,24 +256,6 @@ bool draw_isometric_flat_building(building *b, tile2i point, painter &ctx) {
     int img_id = 0;
     int tile_id = 0;
     switch (b->type) {
-    case BUILDING_BOOTH:
-        img_id = image_group(IMG_BOOTH);
-        tile_id = map_image_at(point.grid_offset());
-        return (img_id != tile_id);
-
-    case BUILDING_BANDSTAND: {
-            tile_id = map_image_at(point.grid_offset());
-            e_image_id imgs[] = {IMG_BOOTH, IMG_BANDSTAND_SN_N, IMG_BANDSTAND_SN_S, IMG_BANDSTAND_WE_W, IMG_BANDSTAND_WE_E};
-            for (const auto &i : imgs) {
-                img_id = image_group(i);
-                if (img_id == tile_id) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        break;
-
     case BUILDING_SMALL_MASTABA_SIDE:
     case BUILDING_SMALL_MASTABA_WALL: 
     case BUILDING_SMALL_MASTABA_ENTRANCE: 
@@ -297,7 +279,7 @@ bool draw_isometric_flat_building(building *b, tile2i point, painter &ctx) {
         return true;
     }
 
-    return false;
+    return b->dcast()->draw_isometric_flat_building(point, ctx);
 }
 
 void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {

@@ -340,9 +340,12 @@ building_recruiter = {
 
 building_bandstand = {
   animations : {
+    square : { pos:[0, 0], pack:PACK_GENERAL, id:58 },
     juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW },
-    musician_sn : { pos : [45, 7], base_id : IMG_BANDSTAND_SN_S, anim_id : IMG_MUSICIAN_SHOW_SN, max_frames : 12 },
-    musician_we : { pos : [48, 4], base_id : IMG_BANDSTAND_SN_S, anim_id : IMG_MUSICIAN_SHOW_WE, max_frames : 12 }
+    stand_sn_n : { pos:[0, 0], pack:PACK_GENERAL, id:92, offset:1},
+    stand_sn_s : { pos:[0, 0], pack:PACK_GENERAL, id:92, offset:0},
+    musician_sn : { pos : [45, 7], anim_id : IMG_MUSICIAN_SHOW_SN, max_frames : 12 },
+    musician_we : { pos : [48, 4], anim_id : IMG_MUSICIAN_SHOW_WE, max_frames : 12 }
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
   window_info_height_id : 3,
