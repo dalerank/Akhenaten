@@ -2,6 +2,7 @@
 
 #include "grid/routing/routing.h"
 #include "building/construction/build_planner.h"
+#include "building/building_booth.h"
 #include "building/industry.h"
 #include "building/monument_mastaba.h"
 #include "building/properties.h"
@@ -376,43 +377,24 @@ static void draw_bridge(map_point tile, vec2i pixel, int type, painter &ctx) {
     }
 }
 
-static void draw_entertainment_venue(map_point tile, int x, int y, int type, painter &ctx) {
+static void draw_entertainment_venue(tile2i tile, vec2i pixel, e_building_type type, painter &ctx) {
     int can_build = 0;
-    //    const building_properties *props = building_properties_for_type(type);
-    int size = 0;
+
+    int size = building_impl::params(type).building_size;
     int orientation = 0;
-    //    map_tile northern_corner = *tile;
-    switch (type) {
-    case BUILDING_BOOTH: size = 2; break;
-    case BUILDING_BANDSTAND: size = 3; break;
-    case BUILDING_PAVILLION: size = 4; break;
-    case BUILDING_FESTIVAL_SQUARE: size = 5; break;
-    }
-    //    int map_orientation = city_view_orientation();
-    //    switch (map_orientation) {
-    //        case 2: // east
-    //            northern_corner.x -= (size - 1);
-    //            break;
-    //        case 4: // south
-    //            northern_corner.x -= (size - 1);
-    //            northern_corner.y -= (size - 1);
-    //            break;
-    //        case 6: // west
-    //            northern_corner.y -= (size - 1);
-    //            break;
-    //    }
+
     switch (type) {
     case BUILDING_BOOTH:
-        can_build = map_orientation_for_venue_with_map_orientation(tile.x(), tile.y(), 0, &orientation);
+        can_build = map_orientation_for_venue_with_map_orientation(tile, e_venue_mode_booth, &orientation);
         break;
     case BUILDING_BANDSTAND:
-        can_build = map_orientation_for_venue_with_map_orientation(tile.x(), tile.y(), 1, &orientation);
+        can_build = map_orientation_for_venue_with_map_orientation(tile, e_venue_mode_bandstand, &orientation);
         break;
     case BUILDING_PAVILLION:
-        can_build = map_orientation_for_venue_with_map_orientation(tile.x(), tile.y(), 2, &orientation);
+        can_build = map_orientation_for_venue_with_map_orientation(tile, e_venue_mode_pavilion, &orientation);
         break;
     case BUILDING_FESTIVAL_SQUARE:
-        can_build = map_orientation_for_venue_with_map_orientation(tile.x(), tile.y(), 3, &orientation);
+        can_build = map_orientation_for_venue_with_map_orientation(tile, e_venue_mode_festival_square, &orientation);
         break;
     }
     // TODO: proper correct for map orientation (for now, just use a different orientation)
@@ -420,124 +402,108 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type, pai
 
     if (can_build != 1) { // no can place
         for (int i = 0; i < size * size; i++) {
-            draw_flat_tile(ctx, vec2i{x, y} + VIEW_OFFSETS[i], COLOR_MASK_RED);
+            draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else { // can place (theoretically)
         if (type == BUILDING_FESTIVAL_SQUARE && city_building_has_festival_square()) {
             for (int i = 0; i < size * size; i++)
-                ImageDraw::isometric(ctx, image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_RED);
+                ImageDraw::isometric(ctx, image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_RED);
             return;
         }
 
         switch (type) {
         case BUILDING_BOOTH:
-            for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(ctx, image_group(IMG_BOOTH_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
-            }
-            switch (orientation / 2) {
-            case 0:
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x, y}, COLOR_MASK_GREEN);
-                break;
-            case 1:
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x + 30, y + 15}, COLOR_MASK_GREEN);
-                break;
-            case 2:
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x, y + 30}, COLOR_MASK_GREEN);
-                break;
-            case 3:
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                break;
-            }
+            building_booth::ghost_preview(ctx, tile, pixel, orientation);
             break;
 
         case BUILDING_BANDSTAND:
             for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(ctx, image_group(IMG_BANDSTAND_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
+                ImageDraw::isometric(ctx, image_group(IMG_BANDSTAND_SQUARE) + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
             }
 
             switch (orientation / 2) {
             case 0:
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x, y}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x + 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), pixel, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
                 break;
             case 1:
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_W), {x + 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_E), {x + 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_W), pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_E), pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
                 break;
             case 2:
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x, y + 60}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
                 break;
             case 3:
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_W), {x, y}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_E), {x + 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_W), pixel, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_E), pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
                 break;
             }
             break;
 
         case BUILDING_PAVILLION:
             for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(ctx, image_id_from_group(GROUP_PAVILLION_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
+                ImageDraw::isometric(ctx, image_id_from_group(GROUP_PAVILLION_SQUARE) + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
             }
             switch (orientation) {
             case 0:
-                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 90, y + 45}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 60, y + 60}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), pixel + vec2i{90, 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), pixel + vec2i{60, 60}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
                 break;
             case 1:
-                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x, y}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x - 60, y + 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), pixel, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
                 break;
             case 2:
-                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 90, y + 45}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 60, y + 60}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x, y + 90}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), pixel + vec2i{90, 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), pixel + vec2i{60, 60}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{0, 90}, COLOR_MASK_GREEN);
                 break;
             case 3:
-                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 30, y + 45}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 30, y + 75}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x, y + 90}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x + 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel + vec2i{-30, 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), pixel + vec2i{30, 75}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), pixel + vec2i{0, 90}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{90, 45}, COLOR_MASK_GREEN);
                 break;
             case 4:
-                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x + 30, y + 45}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel + vec2i{30, 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
                 break;
             case 5:
-                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 30, y + 15}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 60, y + 60}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 30, y + 75}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), pixel + vec2i{60, 60}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), pixel + vec2i{30, 75}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
                 break;
             case 6:
-                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x - 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x, y + 60}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x - 30, y + 75}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x, y}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), pixel + vec2i{-30, 75}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel, COLOR_MASK_GREEN);
                 break;
             case 7:
-                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), {x, y}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), {x + 60, y + 30}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), {x + 30, y + 45}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), {x - 90, y + 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_N), pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BANDSTAND_SN_S), pixel + vec2i{30, 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
                 break;
             }
             break;
 
         case BUILDING_FESTIVAL_SQUARE:
             for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(ctx, image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, vec2i{x + ((i % size) - (i / size)) * 30, y + ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
+                ImageDraw::isometric(ctx, image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
             }
             break;
         }
@@ -610,7 +576,7 @@ void BuildPlanner::draw_graphics(painter &ctx) {
     case BUILDING_BANDSTAND:
     case BUILDING_PAVILLION:
     case BUILDING_FESTIVAL_SQUARE:
-        draw_entertainment_venue(end, pixel.x, pixel.y, build_type, ctx);
+        draw_entertainment_venue(end, pixel, build_type, ctx);
         return;
 
     case BUILDING_SMALL_MASTABA:

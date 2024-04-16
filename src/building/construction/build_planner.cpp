@@ -273,13 +273,8 @@ static void add_entertainment_venue(building* b, int orientation) {
     b->data.entertainment.booth_corner_grid_offset = b->tile.grid_offset();
     b->data.entertainment.orientation = orientation;
 
-    int size = 0;
-    switch (b->type) {
-    case BUILDING_BOOTH: size = 2; break;
-    case BUILDING_BANDSTAND: size = 3; break;
-    case BUILDING_PAVILLION: size = 4; break;
-    case BUILDING_FESTIVAL_SQUARE: size = 5; break;
-    }
+    const auto &params = b->dcast()->params();
+    int size = params.building_size;
 
     if (!map_grid_is_inside(b->tile, size)) {
         return;
@@ -287,7 +282,7 @@ static void add_entertainment_venue(building* b, int orientation) {
 
     int image_id = 0;
     switch (b->type) {
-    case BUILDING_BOOTH: image_id = image_group(IMG_BOOTH_SQUARE); break;
+    case BUILDING_BOOTH: image_id = params.anim["square"].first_img(); break;
     case BUILDING_BANDSTAND: image_id = image_group(IMG_BANDSTAND_SQUARE); break;
     case BUILDING_PAVILLION: image_id = image_id_from_group(GROUP_PAVILLION_SQUARE); break;
     case BUILDING_FESTIVAL_SQUARE: image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE); break;
@@ -1587,7 +1582,7 @@ void BuildPlanner::update_special_case_orientations_check() {
         }
     }
     if (special_flags & PlannerFlags::Intersection) {
-        bool match = map_orientation_for_venue_with_map_orientation(end.x(), end.y(), additional_req_param1, &dir_relative);
+        bool match = map_orientation_for_venue_with_map_orientation(end, (e_venue_mode_orientation)additional_req_param1, &dir_relative);
         int city_direction = dir_relative / 2;
         if (!match) {
             immediate_warning_id = additional_req_param2;

@@ -73,7 +73,6 @@ images = [
 	{img: IMG_BANDSTAND_WE_W, pack:PACK_GENERAL, id:92, offset:2},
 	{img: IMG_BANDSTAND_WE_E, pack:PACK_GENERAL, id:92, offset:3},
 	{img: IMG_GRANARY, pack:PACK_GENERAL, id:99},
-	{img: IMG_BOOTH_SQUARE, pack:PACK_GENERAL, id:112},
 	{img: IMG_BOOTH, pack:PACK_GENERAL, id:114},
 	{img: IMG_GRANARY_RESOURCES, pack:PACK_GENERAL, id:99, offset:2},
 	{img: IMG_GOLD_MINE, pack:PACK_GENERAL, id:185},

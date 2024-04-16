@@ -75,7 +75,7 @@ void map_orientation_change(int counter_clockwise) {
     Planner.update_orientations(false);
 }
 
-void map_orientation_update_buildings(void) {
+void map_orientation_update_buildings() {
     int map_orientation = city_view_orientation();
     int orientation_is_top_bottom = map_orientation == DIR_0_TOP_RIGHT || map_orientation == DIR_4_BOTTOM_LEFT;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -161,30 +161,26 @@ void map_orientation_update_buildings(void) {
         case BUILDING_FESTIVAL_SQUARE:
             // only update the plaza tiles for the main venue
             if (b->is_main()) {
-                int size = -1;
                 int plaza_image_id = 0;
+                const auto &params = b->dcast()->params();
                 switch (b->type) {
                 case BUILDING_BOOTH:
-                    size = 2;
-                    plaza_image_id = image_group(IMG_BOOTH_SQUARE);
+                    plaza_image_id = params.anim["square"].first_img();
                     break;
 
                 case BUILDING_BANDSTAND:
-                    size = 3;
                     plaza_image_id = image_group(IMG_BANDSTAND_SQUARE);
                     break;
 
                 case BUILDING_PAVILLION:
-                    size = 4;
                     plaza_image_id = image_id_from_group(GROUP_PAVILLION_SQUARE);
                     break;
 
                 case BUILDING_FESTIVAL_SQUARE:
-                    size = 5;
                     plaza_image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE);
                     break;
                 }
-                map_add_venue_plaza_tiles(b->id, size, MAP_X(b->data.entertainment.booth_corner_grid_offset), MAP_Y(b->data.entertainment.booth_corner_grid_offset), plaza_image_id, true);
+                map_add_venue_plaza_tiles(b->id, params.building_size, MAP_X(b->data.entertainment.booth_corner_grid_offset), MAP_Y(b->data.entertainment.booth_corner_grid_offset), plaza_image_id, true);
             }
             // additionally, correct bandstand graphics
             if (b->type == BUILDING_BANDSTAND) {
@@ -246,6 +242,7 @@ const uint8_t BOOTH_ROAD_POSITIONS[4][2][2] = {
     {0, 1},
   },
 };
+
 const uint8_t BANDSTAND_ROAD_POSITIONS[4][3][3] = {
   {
     {0, 1, 0},
@@ -268,6 +265,7 @@ const uint8_t BANDSTAND_ROAD_POSITIONS[4][3][3] = {
     {0, 0, 1},
   },
 };
+
 const uint8_t PAVILLION_ROAD_POSITIONS[4][4][4] = {
   {
     {0, 0, 1, 0},
@@ -294,6 +292,7 @@ const uint8_t PAVILLION_ROAD_POSITIONS[4][4][4] = {
     {0, 0, 0, 1},
   },
 };
+
 const uint8_t FESTIVAL_ROAD_POSITIONS[5][5] = {
   {0, 0, 1, 0, 0},
   {0, 0, 1, 0, 0},
@@ -302,12 +301,12 @@ const uint8_t FESTIVAL_ROAD_POSITIONS[5][5] = {
   {0, 0, 1, 0, 0},
 };
 
-bool map_orientation_for_venue(int x, int y, int mode, int* building_orientation) {
+bool map_orientation_for_venue(int x, int y, e_venue_mode_orientation mode, int* building_orientation) {
     *building_orientation = 0;
     int num_correct_road_tiles[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
     int grid_offset = MAP_OFFSET(x, y);
-    for (int y_delta = 0; y_delta < mode + 2; y_delta++)
+    for (int y_delta = 0; y_delta < mode + 2; y_delta++) {
         for (int x_delta = 0; x_delta < mode + 2; x_delta++) {
             int offset_check = grid_offset + GRID_OFFSET(x_delta, y_delta);
             int is_road = map_terrain_is(offset_check, TERRAIN_ROAD);
@@ -319,13 +318,13 @@ bool map_orientation_for_venue(int x, int y, int mode, int* building_orientation
                     int tile_road_checked_against = 0;
                     int half_orientation_check = orientation_check / 2;
                     switch (mode) {
-                    case 0: // only 4 orientations
+                    case e_venue_mode_booth: // only 4 orientations
                         tile_road_checked_against = BOOTH_ROAD_POSITIONS[half_orientation_check][y_delta][x_delta];
                         break;
-                    case 1: // only 4 orientations
+                    case e_venue_mode_bandstand: // only 4 orientations
                         tile_road_checked_against = BANDSTAND_ROAD_POSITIONS[half_orientation_check][y_delta][x_delta];
                         break;
-                    case 2: // ugh...
+                    case e_venue_mode_pavilion: // ugh...
                         switch (orientation_check) {
                         case 0:
                             tile_road_checked_against = PAVILLION_ROAD_POSITIONS[0][y_delta][x_delta];
@@ -353,7 +352,7 @@ bool map_orientation_for_venue(int x, int y, int mode, int* building_orientation
                             break;
                         }
                         break;
-                    case 3: // only one orientation
+                    case e_venue_mode_festival_square: // only one orientation
                         orientation_check = 7;
                         tile_road_checked_against = FESTIVAL_ROAD_POSITIONS[y_delta][x_delta];
                         break;
@@ -364,32 +363,21 @@ bool map_orientation_for_venue(int x, int y, int mode, int* building_orientation
                 }
             }
         }
+    }
 
     // check the final count and return orientation
-    for (int orientation_check = 0; orientation_check < 8; orientation_check++)
+    for (int orientation_check = 0; orientation_check < 8; orientation_check++) {
         if (num_correct_road_tiles[orientation_check] == (mode + 2) * (mode + 2)) { // check if the num of correct tiles is ALL of them (n x n)
             if (mode == 0) {
-                int offset_1 = 0;
-                int offset_2 = 0;
+                std::pair<int, int> offset = {0, 0};
                 switch (orientation_check) {
-                case 0:
-                    offset_1 = grid_offset + GRID_OFFSET(1, 2);
-                    offset_2 = grid_offset + GRID_OFFSET(2, 1);
-                    break;
-                case 2:
-                    offset_1 = grid_offset + GRID_OFFSET(-1, 1);
-                    offset_2 = grid_offset + GRID_OFFSET(0, 2);
-                    break;
-                case 4:
-                    offset_1 = grid_offset + GRID_OFFSET(0, -1);
-                    offset_2 = grid_offset + GRID_OFFSET(-1, 0);
-                    break;
-                case 6:
-                    offset_1 = grid_offset + GRID_OFFSET(1, -1);
-                    offset_2 = grid_offset + GRID_OFFSET(2, 0);
-                    break;
+                case 0: offset = {grid_offset + GRID_OFFSET(1, 2), grid_offset + GRID_OFFSET(2, 1)}; break;
+                case 2: offset = {grid_offset + GRID_OFFSET(-1, 1), grid_offset + GRID_OFFSET(0, 2)}; break;
+                case 4: offset = {grid_offset + GRID_OFFSET(0, -1), grid_offset + GRID_OFFSET(-1, 0)}; break;
+                case 6: offset = {grid_offset + GRID_OFFSET(1, -1), grid_offset + GRID_OFFSET(2, 0)}; break;
                 }
-                if (map_terrain_is(offset_1, TERRAIN_ROAD) || map_terrain_is(offset_2, TERRAIN_ROAD)) {
+
+                if (map_terrain_is(offset.first, TERRAIN_ROAD) || map_terrain_is(offset.second, TERRAIN_ROAD)) {
                     *building_orientation = orientation_check;
                     return true;
                 }
@@ -398,9 +386,13 @@ bool map_orientation_for_venue(int x, int y, int mode, int* building_orientation
                 return true;
             }
         }
+    }
     return false;
 }
-bool map_orientation_for_venue_with_map_orientation(int x, int y, int mode, int* building_orientation) {
+
+bool map_orientation_for_venue_with_map_orientation(tile2i tile, e_venue_mode_orientation mode, int* building_orientation) {
+    int x = tile.x();
+    int y = tile.y();
     int map_orientation = city_view_orientation();
     switch (map_orientation) {
     case 2: // east
@@ -416,6 +408,7 @@ bool map_orientation_for_venue_with_map_orientation(int x, int y, int mode, int*
     }
     return map_orientation_for_venue(x, y, mode, building_orientation);
 }
+
 int map_orientation_for_gatehouse(int x, int y) {
     switch (city_view_orientation()) {
     case DIR_2_BOTTOM_RIGHT:

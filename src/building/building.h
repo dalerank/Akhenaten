@@ -414,6 +414,7 @@ public:
         e_labor_category labor_category;
         static static_params dummy;
         animations_t anim;
+        uint8_t building_size;
         int window_info_height_id;
 
         void load(archive arch);

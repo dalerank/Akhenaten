@@ -16,5 +16,6 @@ public:
     virtual int get_fire_risk(int value) const override { return value / 10; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_BOOTH; }
     virtual void update_count() const;
-    
+
+    static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
 };

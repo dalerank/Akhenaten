@@ -15,6 +15,7 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "widget/city/ornaments.h"
+#include "widget/city/building_ghost.h"
 #include "sound/sound_building.h"
 #include "building/building_entertainment.h"
 #include "city/labor.h"
@@ -80,4 +81,26 @@ bool building_booth::draw_ornaments_and_animations_height(painter &ctx, vec2i po
 
 void building_booth::update_count() const {
     building_increase_type_count(type(), num_workers() > 0);
+}
+
+void building_booth::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
+    int size = booth_m.building_size;
+    int square_id = booth_m.anim["square"].first_img();
+    for (int i = 0; i < size * size; i++) {
+        ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
+    }
+    switch (orientation / 2) {
+    case 0:
+        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel, COLOR_MASK_GREEN);
+        break;
+    case 1:
+        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
+        break;
+    case 2:
+        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{0, 30}, COLOR_MASK_GREEN);
+        break;
+    case 3:
+        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+        break;
+    }
 }

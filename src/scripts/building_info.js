@@ -248,10 +248,12 @@ building_work_camp = {
 
 building_booth = {
   animations : {
+    square : { pack:PACK_GENERAL, id:112 },
     juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW }
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
   window_info_height_id : 2,
+  building_size : 2,
 }
 
 building_apothecary = {
@@ -344,6 +346,16 @@ building_bandstand = {
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
   window_info_height_id : 3,
+  building_size : 3,
+}
+
+building_pavilion = {
+
+  building_size : 4,
+}
+
+buildgin_festival_square = {
+  building_size : 5,
 }
 
 building_village_palace = {
