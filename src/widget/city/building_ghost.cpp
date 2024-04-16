@@ -432,11 +432,11 @@ static void draw_entertainment_venue(tile2i tile, vec2i pixel, e_building_type t
             int stand = building_impl::params(BUILDING_PAVILLION).anim["base"].first_img();
             switch (orientation) {
             case 0:
-            //    draw_building_ghost(ctx, stand, pixel, COLOR_MASK_GREEN);
-            //    draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{90, 45}, COLOR_MASK_GREEN);
-            //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{60, 60}, COLOR_MASK_GREEN);
-            //    draw_building_ghost(ctx, booth, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
-            //    break;
+                draw_building_ghost(ctx, stand, pixel, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{90, 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{60, 60}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, booth, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+                break;
             //case 1:
             //    draw_building_ghost(ctx, stand, pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
             //    draw_building_ghost(ctx, stand_sn_n, pixel, COLOR_MASK_GREEN);
