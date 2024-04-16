@@ -20,11 +20,22 @@
 #include "building/building_entertainment.h"
 #include "sound/sound_building.h"
 
-buildings::model_t<building_bandstand> bandstand_m;
+struct bandstand_model : public buildings::model_t<building_bandstand>{
+    int stand_sn_n = 0;
+    int stand_sn_s = 0;
+    int stand_we_w = 0;
+    int stand_we_e = 0;
+    int booth = 0;
+} bandstand_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bandstand_config);
 void config_load_building_bandstand_config() {
     bandstand_m.load();
+    bandstand_m.stand_sn_n = bandstand_m.anim["stand_sn_n"].first_img();
+    bandstand_m.stand_sn_s = bandstand_m.anim["stand_sn_s"].first_img();
+    bandstand_m.stand_we_w = bandstand_m.anim["stand_we_w"].first_img();
+    bandstand_m.stand_we_e = bandstand_m.anim["stand_we_e"].first_img();
+    bandstand_m.booth = bandstand_m.anim["booth"].first_img();
 }
 
 void building_bandstand::on_create(int orientation) {
@@ -47,9 +58,7 @@ void building_bandstand::spawn_figure() {
 }
 
 bool building_bandstand::draw_isometric_flat_building(tile2i point, painter &ctx) {
-    int stand_sn_n = bandstand_m.anim["stand_sn_n"].first_img();
-    int stand_sn_s = bandstand_m.anim["stand_sn_s"].first_img();
-    int imgs[] = {image_group(IMG_BOOTH), stand_sn_n, stand_sn_s, image_group(IMG_BANDSTAND_WE_W), image_group(IMG_BANDSTAND_WE_E)};
+    int imgs[] = {bandstand_m.booth, bandstand_m.stand_sn_n, bandstand_m.stand_sn_s, bandstand_m.stand_we_e, bandstand_m.stand_we_w};
     int tile_id = map_image_at(point.grid_offset());
     for (const auto &im : imgs) {
         if (im == tile_id) {
@@ -133,14 +142,13 @@ bool building_bandstand::draw_ornaments_and_animations_height(painter &ctx, vec2
     }
 
     int grid_offset = tile.grid_offset();
-    int stand_sn_n = bandstand_m.anim["stand_sn_n"].first_img();
-    if (map_image_at(grid_offset) == stand_sn_n) {
+    if (map_image_at(grid_offset) == bandstand_m.stand_sn_n) {
         draw_shows_musicians(ctx, point, 1, color_mask);
-    } else if (map_image_at(grid_offset) == image_group(IMG_BANDSTAND_WE_W)) {
+    } else if (map_image_at(grid_offset) == bandstand_m.stand_we_w) {
         draw_shows_musicians(ctx, point, 0, color_mask);
     }
 
-    if (map_image_at(grid_offset) == image_group(IMG_BOOTH)) {
+    if (map_image_at(grid_offset) == bandstand_m.booth) {
         building_entertainment_draw_show_jugglers(ctx, &base, point, color_mask);
         const animation_t &anim = bandstand_m.anim["juggler"];
 
@@ -160,28 +168,26 @@ void building_bandstand::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, i
         ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
     }
 
-    int stand_sn_n = bandstand_m.anim["stand_sn_n"].first_img();
-    int stand_sn_s = bandstand_m.anim["stand_sn_s"].first_img();
     switch (orientation / 2) {
     case 0:
-        draw_building_ghost(ctx, stand_sn_n, pixel, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, bandstand_m.stand_sn_n, pixel, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, bandstand_m.stand_sn_s, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
         break;
     case 1:
-        draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_W), pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_E), pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, bandstand_m.stand_we_w, pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, bandstand_m.stand_we_e, pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
         break;
     case 2:
-        draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, bandstand_m.stand_sn_n, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, bandstand_m.stand_sn_s, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
         break;
     case 3:
-        draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_W), pixel, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, image_group(IMG_BANDSTAND_WE_E), pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, bandstand_m.stand_we_w, pixel, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, bandstand_m.stand_we_e, pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
         break;
     }
 }

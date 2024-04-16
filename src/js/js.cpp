@@ -96,10 +96,6 @@ int js_vm_load_file_and_exec(const char *path) {
     return 1;
 }
 
-void js_vm_reload_configs() {
-    config::refresh(vm.J);
-}
-
 js_State *js_vm_state() {
     return vm.J;
 }
@@ -124,7 +120,7 @@ void js_vm_sync() {
         vm.files2load[i].clear();
     }
 
-    js_vm_reload_configs();
+    config::refresh(vm.J);
 
     vm.files2load_num = 0;
     vm.have_error = 0;

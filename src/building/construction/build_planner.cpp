@@ -241,8 +241,10 @@ static void latch_on_venue(e_building_type type, building *b, int dx, int dy, in
         map_tiles_update_all_gardens();
         break;
 
-    case BUILDING_BOOTH:
-        map_image_set(point, IMG_BOOTH);
+    case BUILDING_BOOTH: {
+           int booth = building_impl::params(BUILDING_BOOTH).anim["booth"].first_img();
+           map_image_set(point, booth);
+        }
         break;
 
     case BUILDING_BANDSTAND:

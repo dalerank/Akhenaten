@@ -248,8 +248,9 @@ building_work_camp = {
 
 building_booth = {
   animations : {
+    booth : { pack:PACK_GENERAL, id:114 },
     square : { pack:PACK_GENERAL, id:112 },
-    juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW }
+    juggler : { pos : [35, 17], anim_id : IMG_JUGGLER_SHOW }
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
   window_info_height_id : 2,
@@ -340,10 +341,13 @@ building_recruiter = {
 
 building_bandstand = {
   animations : {
+    booth : { pos:[0, 0], pack:PACK_GENERAL, id:114 },
     square : { pos:[0, 0], pack:PACK_GENERAL, id:58 },
-    juggler : { pos : [35, 17], base_id : IMG_BOOTH, anim_id : IMG_JUGGLER_SHOW },
-    stand_sn_n : { pos:[0, 0], pack:PACK_GENERAL, id:92, offset:1},
-    stand_sn_s : { pos:[0, 0], pack:PACK_GENERAL, id:92, offset:0},
+    juggler : { pos : [35, 17], anim_id : IMG_JUGGLER_SHOW },
+    stand_sn_s : { pack:PACK_GENERAL, id:92, offset:0},
+    stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1},
+    stand_we_w: { pack:PACK_GENERAL, id:92, offset:2},
+    stand_we_e: {pack:PACK_GENERAL, id:92, offset:3},
     musician_sn : { pos : [45, 7], anim_id : IMG_MUSICIAN_SHOW_SN, max_frames : 12 },
     musician_we : { pos : [48, 4], anim_id : IMG_MUSICIAN_SHOW_WE, max_frames : 12 }
   },

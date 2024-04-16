@@ -7,6 +7,7 @@
 #include "core/log.h"
 #include "figure/figure.h"
 #include "js/js.h"
+#include "js/js_game.h"
 #include "core/profiler.h"
 #include "game/game.h"
 #include "game/system.h"
@@ -412,6 +413,7 @@ static void setup(Arguments& args) {
         exit(2);
     }
 
+    config::refresh(g_config_arch);
     figure::check_action_properties_lookup();
 }
 static void teardown(void) {

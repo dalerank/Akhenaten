@@ -20,11 +20,14 @@
 #include "building/building_entertainment.h"
 #include "city/labor.h"
 
-buildings::model_t<building_booth> booth_m;
+struct booth_model : public buildings::model_t<building_booth> {
+    int booth = 0;
+} booth_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_booth);
 void config_load_building_booth() {
     booth_m.load();
+    booth_m.booth = booth_m.anim["booth"].first_img();
 }
 
 void building_booth::window_info_background(object_info &c) {
@@ -73,7 +76,7 @@ bool building_booth::draw_ornaments_and_animations_height(painter &ctx, vec2i po
     }
 
     int grid_offset = tile.grid_offset();
-    if (map_image_at(grid_offset) == image_group(IMG_BOOTH)) {
+    if (map_image_at(grid_offset) == booth_m.booth) {
         building_entertainment_draw_show_jugglers(ctx, &base, point, color_mask);
     }
     return true;
@@ -84,9 +87,8 @@ void building_booth::update_count() const {
 }
 
 bool building_booth::draw_isometric_flat_building(tile2i point, painter &ctx) {
-    int img_id = image_group(IMG_BOOTH);
     int tile_id = map_image_at(point.grid_offset());
-    return (img_id != tile_id);
+    return (booth_m.booth != tile_id);
 }
 
 void building_booth::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
@@ -95,18 +97,11 @@ void building_booth::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int o
     for (int i = 0; i < size * size; i++) {
         ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
     }
+
     switch (orientation / 2) {
-    case 0:
-        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel, COLOR_MASK_GREEN);
-        break;
-    case 1:
-        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
-        break;
-    case 2:
-        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{0, 30}, COLOR_MASK_GREEN);
-        break;
-    case 3:
-        draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
-        break;
+    case 0: draw_building_ghost(ctx, booth_m.booth, pixel, COLOR_MASK_GREEN); break;
+    case 1: draw_building_ghost(ctx, booth_m.booth, pixel + vec2i{30, 15}, COLOR_MASK_GREEN); break;
+    case 2: draw_building_ghost(ctx, booth_m.booth, pixel + vec2i{0, 30}, COLOR_MASK_GREEN); break;
+    case 3: draw_building_ghost(ctx, booth_m.booth, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN); break;
     }
 }

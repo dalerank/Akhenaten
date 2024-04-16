@@ -427,54 +427,55 @@ static void draw_entertainment_venue(tile2i tile, vec2i pixel, e_building_type t
             }
             int stand_sn_n = building_impl::params(BUILDING_BANDSTAND).anim["stand_sn_n"].first_img();
             int stand_sn_s = building_impl::params(BUILDING_BANDSTAND).anim["stand_sn_s"].first_img();
+            int booth = building_impl::params(BUILDING_BOOTH).anim["booth"].first_img();
             switch (orientation) {
             case 0:
                 draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{90, 45}, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{60, 60}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, booth, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
                 break;
             case 1:
                 draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_n, pixel, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, booth, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
                 break;
             case 2:
                 draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{90, 45}, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{60, 60}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{0, 90}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, booth, pixel + vec2i{0, 90}, COLOR_MASK_GREEN);
                 break;
             case 3:
                 draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel + vec2i{-30, 45}, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{30, 75}, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{0, 90}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{90, 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, booth, pixel + vec2i{90, 45}, COLOR_MASK_GREEN);
                 break;
             case 4:
                 draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel + vec2i{30, 45}, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, booth, pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
                 break;
             case 5:
                 draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{60, 60}, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{30, 75}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, booth, pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
                 break;
             case 6:
                 draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{-30, 75}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, booth, pixel, COLOR_MASK_GREEN);
                 break;
             case 7:
                 draw_building_ghost(ctx, image_id_from_group(GROUP_BUILDING_PAVILLION), pixel, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
                 draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{30, 45}, COLOR_MASK_GREEN);
-                draw_building_ghost(ctx, image_group(IMG_BOOTH), pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
+                draw_building_ghost(ctx, booth, pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
                 break;
             }
         } break;
