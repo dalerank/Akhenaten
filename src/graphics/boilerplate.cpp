@@ -766,9 +766,8 @@ void ImageDraw::img_background(painter &ctx, int image_id, float scale) {
     }
 }
 
-void ImageDraw::isometric(painter &ctx, int image_id, vec2i pos, color color_mask, float scale) {
-    const image_t* img = image_get(image_id);
-    ImageDraw::img_generic(ctx, image_id, pos, color_mask, scale);
+void ImageDraw::isometric(painter &ctx, int image_id, vec2i pixel, color color_mask, float scale) {
+    ImageDraw::img_generic(ctx, image_id, pixel, color_mask, scale);
 }
 
 const image_t* ImageDraw::isometric_from_drawtile(painter &ctx, int image_id, vec2i pos, color color_mask, bool alpha) {

@@ -3,21 +3,36 @@
 #include "building/count.h"
 #include "graphics/image.h"
 #include "widget/city/ornaments.h"
+#include "widget/city/building_ghost.h"
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
 #include "graphics/elements/ui.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "city/labor.h"
 #include "grid/image.h"
 #include "js/js_game.h"
 
 struct pavilion_model : public buildings::model_t<building_pavilion> {
     int base = 0;
+    struct preview_offset {
+        vec2i stand, stand_b, stand_e, booth;
+    };
+
+    preview_offset dir_0;
 } pavilion_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_pavilion);
 void config_load_building_pavilion() {
-    pavilion_m.load();
+    pavilion_m.load([] (archive arch) {
+        arch.r_section("preview_dir_0", [] (archive d_arch) {
+            pavilion_m.dir_0.stand = d_arch.r_vec2i("stand");
+            pavilion_m.dir_0.stand_b = d_arch.r_vec2i("stand_b");
+            pavilion_m.dir_0.stand_e = d_arch.r_vec2i("stand_e");
+            pavilion_m.dir_0.booth = d_arch.r_vec2i("booth");
+        });
+    });
     pavilion_m.base = pavilion_m.anim["base"].first_img();
 }
 
@@ -51,6 +66,68 @@ void building_pavilion::spawn_figure() {
             base.create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
         if (data.entertainment.days3_or_play > 0)
             base.create_roaming_figure(FIGURE_DANCER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
+    }
+}
+
+void building_pavilion::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
+    int size = pavilion_m.building_size;
+    int square_id = building_impl::params(BUILDING_PAVILLION).anim["square"].first_img();
+    for (int i = 0; i < size * size; i++) {
+        ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
+    }
+    int stand_sn_n = pavilion_m.anim["stand_sn_n"].first_img();
+    int stand_sn_s = pavilion_m.anim["stand_sn_s"].first_img();
+    int booth = pavilion_m.anim["booth"].first_img();
+    int stand = pavilion_m.anim["base"].first_img();
+    switch (orientation) {
+    case 0:
+        draw_building_ghost(ctx, stand, pixel + pavilion_m.dir_0.stand, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, stand_sn_n, pixel + pavilion_m.dir_0.stand_b, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, stand_sn_s, pixel + pavilion_m.dir_0.stand_e, COLOR_MASK_GREEN);
+        draw_building_ghost(ctx, booth, pixel + pavilion_m.dir_0.booth, COLOR_MASK_GREEN);
+        break;
+    //case 1:
+    //    draw_building_ghost(ctx, stand, pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, stand_sn_n, pixel, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, booth, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+    //    break;
+    //case 2:
+    //    draw_building_ghost(ctx, stand, pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{90, 45}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{60, 60}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, booth, pixel + vec2i{0, 90}, COLOR_MASK_GREEN);
+    //    break;
+    //case 3:
+    //    draw_building_ghost(ctx, stand, pixel + vec2i{-30, 45}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{30, 75}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{0, 90}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, booth, pixel + vec2i{90, 45}, COLOR_MASK_GREEN);
+    //    break;
+    //case 4:
+    //    draw_building_ghost(ctx, stand, pixel + vec2i{30, 45}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, booth, pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
+    //    break;
+    //case 5:
+    //    draw_building_ghost(ctx, stand, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{60, 60}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{30, 75}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, booth, pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
+    //    break;
+    //case 6:
+    //    draw_building_ghost(ctx, stand, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{-30, 75}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, booth, pixel, COLOR_MASK_GREEN);
+    //    break;
+    //case 7:
+    //    draw_building_ghost(ctx, stand, pixel, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{30, 45}, COLOR_MASK_GREEN);
+    //    draw_building_ghost(ctx, booth, pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
+    //    break;
     }
 }
 
