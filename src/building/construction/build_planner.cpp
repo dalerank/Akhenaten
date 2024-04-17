@@ -318,7 +318,6 @@ static void add_entertainment_venue(building* b, int orientation) {
         break;
 
     case BUILDING_PAVILLION:
-        // todo
         switch (orientation) {
         case 0:
             latch_on_venue(BUILDING_GARDENS, b, 1, 2, 0);
@@ -387,43 +386,6 @@ static void add_entertainment_venue(building* b, int orientation) {
         }
         break;
     }
-}
-
-static building* add_storageyard_space(int x, int y, building* prev) {
-    building* b = building_create(BUILDING_STORAGE_ROOM, tile2i(x, y), 0);
-    game_undo_add_building(b);
-    b->prev_part_building_id = prev->id;
-    prev->next_part_building_id = b->id;
-    map_building_tiles_add(b->id, tile2i(x, y), 1, image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY), TERRAIN_BUILDING);
-    return b;
-}
-
-static void add_storageyard(building* b) {
-    tile2i offset[9] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}, {0, 2}, {2, 0}, {1, 2}, {2, 1}, {2, 2}};
-    int global_rotation = building_rotation_global_rotation();
-    int corner = building_rotation_get_corner(2 * global_rotation);
-
-    b->storage_id = building_storage_create(BUILDING_STORAGE_YARD);
-    if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT)) {
-        building_storage_accept_none(b->storage_id);
-    }
-
-    b->prev_part_building_id = 0;
-    tile2i shifted_tile = b->tile.shifted(offset[corner]);
-    map_building_tiles_add(b->id, shifted_tile, 1, image_group(IMG_STORAGE_YARD), TERRAIN_BUILDING);
-
-    building* prev = b;
-    for (int i = 0; i < 9; i++) {
-        if (i == corner) {
-            continue;
-        }
-        prev = add_storageyard_space(b->tile.x() + offset[i].x(), b->tile.y() + offset[i].y(), prev);
-    }
-
-    b->tile.set(b->tile.x() + offset[corner].x(), b->tile.y() + offset[corner].y());
-    game_undo_adjust_building(b);
-
-    prev->next_part_building_id = 0;
 }
 
 static int place_ferry(building *b, int size, int image_id) {
@@ -624,10 +586,6 @@ static void add_building(building* b, int orientation, int variant) {
         Planner.reset();
         break;
 
-    case BUILDING_STORAGE_YARD:
-        add_storageyard(b);
-        break;
-
     case BUILDING_FORT_CHARIOTEERS:
     case BUILDING_FORT_ARCHERS:
     case BUILDING_FORT_INFANTRY:
@@ -635,15 +593,7 @@ static void add_building(building* b, int orientation, int variant) {
         break;
 
     default:
-        {
-            auto *p = building_properties_for_type(b->type);
-            int img_id = p->img_id();
-            if (!img_id) {
-                const auto &params = b->dcast()->params();
-                img_id = params.anim["base"].first_img();
-            }
-            add_building_tiles_image(b, img_id);
-        }
+        b->dcast()->on_place(orientation, variant);
         break;
     }
 }

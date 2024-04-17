@@ -21,6 +21,7 @@
 #include "empire/trade_prices.h"
 #include "game/tutorial.h"
 #include "game/game.h"
+#include "game/undo.h"
 #include "graphics/image.h"
 #include "graphics/text.h"
 #include "graphics/image_groups.h"
@@ -29,6 +30,8 @@
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
 #include "grid/image.h"
+#include "grid/building_tiles.h"
+#include "grid/terrain.h"
 #include "figure/figure.h"
 #include "grid/road_access.h"
 #include "scenario/property.h"
@@ -784,6 +787,43 @@ storage_worker_task building_storageyard_determine_worker_task(building* warehou
 
 void building_storage_yard::on_create(int orientation) {
     base.subtype.orientation = building_rotation_global_rotation();
+}
+
+building* building_storage_yard::add_storageyard_space(int x, int y, building* prev) {
+    building* b = building_create(BUILDING_STORAGE_ROOM, tile2i(x, y), 0);
+    game_undo_add_building(b);
+    b->prev_part_building_id = prev->id;
+    prev->next_part_building_id = b->id;
+    map_building_tiles_add(b->id, tile2i(x, y), 1, image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY), TERRAIN_BUILDING);
+    return b;
+}
+
+void building_storage_yard::on_place(int orientation, int variant) {
+    tile2i offset[9] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}, {0, 2}, {2, 0}, {1, 2}, {2, 1}, {2, 2}};
+    int global_rotation = building_rotation_global_rotation();
+    int corner = building_rotation_get_corner(2 * global_rotation);
+
+    base.storage_id = building_storage_create(BUILDING_STORAGE_YARD);
+    if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT)) {
+        building_storage_accept_none(base.storage_id);
+    }
+
+    base.prev_part_building_id = 0;
+    tile2i shifted_tile = tile().shifted(offset[corner]);
+    map_building_tiles_add(id(), shifted_tile, 1, image_group(IMG_STORAGE_YARD), TERRAIN_BUILDING);
+
+    building* prev = &base;
+    for (int i = 0; i < 9; i++) {
+        if (i == corner) {
+            continue;
+        }
+        prev = add_storageyard_space(tilex() + offset[i].x(), tiley() + offset[i].y(), prev);
+    }
+
+    base.tile = tile().shifted(offset[corner]);
+    game_undo_adjust_building(&base);
+
+    prev->next_part_building_id = 0;
 }
 
 void building_storage_yard::spawn_figure() {

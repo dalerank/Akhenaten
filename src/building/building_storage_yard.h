@@ -14,6 +14,7 @@ public:
 
     building_storage_yard(building &b) : building_impl(b), stored_full_amount(b.stored_full_amount) {}
     virtual void on_create(int orientation) override;
+    virtual void on_place(int orientation, int variant) override;
     virtual void spawn_figure() override;
     virtual void window_info_background(object_info &ctx) override;
     virtual void window_info_foreground(object_info &ctx) override;
@@ -48,6 +49,7 @@ private:
     void draw_warehouse_foreground(object_info *c);
     int get_space_info() const;
     bool is_accepting(e_resource resource);
+    building *add_storageyard_space(int x, int y, building *prev);
 };
 
 building_storage_yard *storage_yard_cast(building *b);

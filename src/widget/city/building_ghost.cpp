@@ -218,7 +218,7 @@ static void draw_storage_yard(vec2i tile, painter &ctx) {
     int index_rotation = building_rotation_get_storage_fort_orientation(global_rotation);
     int corner = building_rotation_get_corner(index_rotation);
     vec2i corner_offset{-5, -45};
-    vec2i place_offset{0, -15};
+    vec2i place_offset{0, 0};
 
     int image_id_hut = image_group(IMG_STORAGE_YARD);
     int image_id_space = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);

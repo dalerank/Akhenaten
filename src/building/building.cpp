@@ -906,6 +906,15 @@ int building_mothball_set(building* b, int mothball) {
     return b->state;
 }
 
+void building_impl::on_place(int orientation, int variant) {
+    auto *p = building_properties_for_type(type());
+    int img_id = p->img_id();
+    if (!img_id) {
+        img_id = params().anim["base"].first_img();
+    }
+    map_building_tiles_add(id(), tile(), base.size, img_id, TERRAIN_BUILDING);
+}
+
 void building_impl::update_day() {
     update_graphic();
 }
