@@ -7,6 +7,8 @@ public:
     BUILDING_METAINFO(BUILDING_PAVILLION, building_pavilion)
 
     building_pavilion(building &b) : building_impl(b) {}
+    
+    virtual void on_create(int orientation) override;
     virtual building_pavilion *dcast_pavilion() override { return this; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_PAVILION; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;

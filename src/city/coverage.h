@@ -8,7 +8,7 @@ void city_culture_update_coverage();
 void city_health_update_coverage();
 
 int city_culture_coverage_booth();
-int city_culture_coverage_amphitheater();
+int city_culture_coverage_bandstand();
 int city_culture_coverage_colosseum();
 int city_culture_coverage_hippodrome();
 int city_culture_coverage_average_entertainment();

@@ -36,6 +36,10 @@ void config_load_building_pavilion() {
     pavilion_m.base = pavilion_m.anim["base"].first_img();
 }
 
+void building_pavilion::on_create(int orientation) {
+
+}
+
 bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     if (map_image_at(tile) == pavilion_m.base) {
         building* main = base.main();

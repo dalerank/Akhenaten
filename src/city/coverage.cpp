@@ -15,7 +15,7 @@
 
 struct coverage_data_t {
     int booth;
-    int amphitheater;
+    int bandstand;
     int colosseum;
     int hippodrome;
     int physician;
@@ -33,8 +33,8 @@ int city_culture_coverage_booth(void) {
     return g_coverage.booth;
 }
 
-int city_culture_coverage_amphitheater(void) {
-    return g_coverage.amphitheater;
+int city_culture_coverage_bandstand(void) {
+    return g_coverage.bandstand;
 }
 
 int city_culture_coverage_colosseum(void) {
@@ -46,7 +46,7 @@ int city_culture_coverage_hippodrome(void) {
 }
 
 int city_culture_coverage_average_entertainment(void) {
-    return (g_coverage.hippodrome + g_coverage.colosseum + g_coverage.amphitheater + g_coverage.booth) / 4;
+    return (g_coverage.hippodrome + g_coverage.colosseum + g_coverage.bandstand + g_coverage.booth) / 4;
 }
 
 int city_culture_coverage_religion(e_god god) {
@@ -111,7 +111,7 @@ void city_culture_update_coverage() {
 
     // entertainment
     coverage.booth = top(calc_percentage(400 * building_count_active(BUILDING_BOOTH), population));
-    coverage.amphitheater = top(calc_percentage(700 * building_count_active(BUILDING_BANDSTAND), population));
+    coverage.bandstand = top(calc_percentage(700 * building_count_active(BUILDING_BANDSTAND), population));
     coverage.colosseum = top(calc_percentage(1200 * building_count_active(BUILDING_PAVILLION), population));
 
     if (building_count_active(BUILDING_SENET_HOUSE) <= 0) {
@@ -186,7 +186,7 @@ void city_coverage_save_state(buffer* buf) {
 
     // Yes, hospital is saved twice
     buf->write_i32(coverage.booth);
-    buf->write_i32(coverage.amphitheater);
+    buf->write_i32(coverage.bandstand);
     buf->write_i32(coverage.colosseum);
     buf->write_i32(coverage.physician);
     buf->write_i32(coverage.hippodrome);
@@ -207,7 +207,7 @@ void city_coverage_load_state(buffer* buf) {
 
     // Yes, hospital is saved twice
     coverage.booth = buf->read_i32();
-    coverage.amphitheater = buf->read_i32();
+    coverage.bandstand = buf->read_i32();
     coverage.colosseum = buf->read_i32();
     coverage.physician = buf->read_i32();
     coverage.hippodrome = buf->read_i32();
