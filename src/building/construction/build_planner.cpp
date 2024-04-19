@@ -263,7 +263,6 @@ static void add_entertainment_venue(building* b, int orientation) {
 
     int image_id = 0;
     switch (b->type) {
-    case BUILDING_BANDSTAND: image_id = params.anim["square"].first_img(); break;
     case BUILDING_PAVILLION: image_id = params.anim["square"].first_img(); break;
     case BUILDING_FESTIVAL_SQUARE: image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE); break;
     }
@@ -273,38 +272,6 @@ static void add_entertainment_venue(building* b, int orientation) {
     int absolute_orientation = (abs(orientation * 2 + (8 - city_view_orientation())) % 8) / 2;
     // add additional building parts, update graphics accordingly
     switch (b->type) {
-    case BUILDING_BANDSTAND:
-        switch (absolute_orientation) {
-        case 0:
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 2, 1, 0);
-            build_planner_latch_on_venue(BUILDING_BOOTH, b, 2, 0, 0);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 0, 0, 0, true);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 0, 1, 0, false);
-            break;
-
-        case 1:
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 1, 2, 0);
-            build_planner_latch_on_venue(BUILDING_BOOTH, b, 2, 2, 0);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 1, 0, 1, true);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 2, 0, 1, false);
-            break;
-
-        case 2:
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 2, 1, 0);
-            build_planner_latch_on_venue(BUILDING_BOOTH, b, 2, 2, 0);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 0, 1, 2, true);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 0, 2, 2, false);
-            break;
-
-        case 3:
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 1, 2, 0);
-            build_planner_latch_on_venue(BUILDING_BOOTH, b, 0, 2, 0);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 1, 0, 3, true);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 0, 0, 3, false);
-            break;
-        }
-        break;
-
     case BUILDING_PAVILLION:
         switch (orientation) {
         case 0:
@@ -465,7 +432,6 @@ static void add_building(building* b, int orientation, int variant) {
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALATIAL) + 1);
         break;
         // entertainment
-    case BUILDING_BANDSTAND:
     case BUILDING_PAVILLION:
     case BUILDING_FESTIVAL_SQUARE:
         add_entertainment_venue(b, orientation);

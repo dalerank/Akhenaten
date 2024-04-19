@@ -3,10 +3,12 @@
 #include "building/building.h"
 #include "building/count.h"
 #include "city/object_info.h"
+#include "construction/build_planner.h"
 #include "city/labor.h"
 #include "game/resource.h"
 #include "grid/property.h"
 #include "grid/image.h"
+#include "grid/building_tiles.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/graphics.h"
@@ -40,6 +42,48 @@ void config_load_building_bandstand_config() {
 
 void building_bandstand::on_create(int orientation) {
     base.fire_proof = 1;
+}
+
+void building_bandstand::on_place(int orientation, int variant) {
+    data.entertainment.booth_corner_grid_offset = tile().grid_offset();
+    data.entertainment.orientation = orientation;
+
+    int size = params().building_size;
+    int image_id = params().anim["square"].first_img();
+
+    // add underlying plaza first
+    map_add_venue_plaza_tiles(id(), size, tile(), image_id, false);
+    int absolute_orientation = (abs(orientation * 2 + (8 - city_view_orientation())) % 8) / 2;
+    // add additional building parts, update graphics accordingly
+    switch (absolute_orientation) {
+    case 0:
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 1, 0);
+        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 2, 0, 0);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 0, 0, 0, true);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 0, 1, 0, false);
+        break;
+
+    case 1:
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 2, 0);
+        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 2, 2, 0);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 1, 0, 1, true);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 2, 0, 1, false);
+        break;
+
+    case 2:
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 1, 0);
+        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 2, 2, 0);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 0, 1, 2, true);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 0, 2, 2, false);
+        break;
+
+    case 3:
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 2, 0);
+        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 2, 0);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 1, 0, 3, true);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 0, 0, 3, false);
+        break;
+    }
 }
 
 void building_bandstand::spawn_figure() {
