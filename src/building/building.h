@@ -46,6 +46,7 @@ class building_small_mastaba;
 class building_wood_cutter;
 class building_recruiter;
 class building_pavilion;
+class building_statue;
 struct object_info;
 struct painter;
 struct mouse;
@@ -369,6 +370,7 @@ public:
     building_wood_cutter *dcast_wood_cutter();
     building_recruiter *dcast_recruiter();
     building_pavilion *dcast_pavilion();
+    building_statue *dcast_statue();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -473,6 +475,7 @@ public:
     virtual building_wood_cutter *dcast_wood_cutter() { return nullptr; }
     virtual building_recruiter *dcast_recruiter() { return nullptr; }
     virtual building_pavilion *dcast_pavilion() { return nullptr; }
+    virtual building_statue *dcast_statue() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

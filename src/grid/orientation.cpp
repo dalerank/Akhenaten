@@ -174,7 +174,8 @@ void map_orientation_update_buildings() {
                     plaza_image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE);
                     break;
                 }
-                map_add_venue_plaza_tiles(b->id, params.building_size, MAP_X(b->data.entertainment.booth_corner_grid_offset), MAP_Y(b->data.entertainment.booth_corner_grid_offset), plaza_image_id, true);
+                tile2i btile(b->data.entertainment.booth_corner_grid_offset, b->data.entertainment.booth_corner_grid_offset);
+                map_add_venue_plaza_tiles(b->id, params.building_size, btile, plaza_image_id, true);
             }
             // additionally, correct bandstand graphics
             if (b->type == BUILDING_BANDSTAND) {
@@ -196,7 +197,7 @@ void map_orientation_update_buildings() {
         case BUILDING_MEDIUM_STATUE:
         case BUILDING_SMALL_STATUE:
             {
-                int image_id = building_statue_get_image_from_value(b->type, 0, b->data.monuments.variant, map_orientation);
+                int image_id = b->dcast_statue()->get_image_from_value(b->type, 0, b->data.monuments.variant, map_orientation);
                 map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_BUILDING);
             }
             break;

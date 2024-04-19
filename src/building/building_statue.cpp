@@ -13,6 +13,8 @@
 #include "window/building/common.h"
 #include "sound/sound_building.h"
 #include "core/svector.h"
+#include "grid/terrain.h"
+#include "grid/building_tiles.h"
 
 #include "js/js_game.h"
 
@@ -59,6 +61,12 @@ void building_statue::on_create(int o) {
     data.monuments.statue_offset = rand() % 4;
 }
 
+void building_statue::on_place(int orientation, int variant) {
+    int orientation_rel = city_view_relative_orientation(orientation);
+    int image_id = get_image(type(), orientation_rel, variant);
+    map_building_tiles_add(id(), tile(), size(), image_id, TERRAIN_BUILDING);
+}
+
 void building_statue::window_info_background(object_info &c) {
     c.help_id = 79;
     window_building_play_sound(&c, snd::get_building_info_sound("statue"));
@@ -96,7 +104,7 @@ int building_statue_next_variant(int type, int variant) {
     return variant;
 }
 
-int building_statue_get_image(int type, int orientation, int variant) {
+int building_statue::get_image(int type, int orientation, int variant) {
     int image_id = 0;
 
     int size = building_statue_get_variant_size(type);
@@ -130,7 +138,7 @@ int building_statue_get_image(int type, int orientation, int variant) {
     return image_id;
 }
 
-int building_statue_get_image_from_value(int type, int combined, int variant, int map_orientation) {
+int building_statue::get_image_from_value(int type, int combined, int variant, int map_orientation) {
     int orientation = combined % 4 - (map_orientation / 2);
-    return building_statue_get_image(type, orientation - 1, variant);
+    return get_image(type, orientation - 1, variant);
 }

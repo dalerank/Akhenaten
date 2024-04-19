@@ -271,7 +271,9 @@ static void set_underlying_venue_plaza_tile(int grid_offset, int building_id, in
         }
     }
 }
-void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int image_id, bool update_only) {
+void map_add_venue_plaza_tiles(int building_id, int size, tile2i tile, int image_id, bool update_only) {
+    int x = tile.x();
+    int y = tile.y();
     switch (city_view_orientation()) {
     case 0: // north
         for (int dy = 0; dy < size; dy++) {

@@ -1,6 +1,7 @@
 #include "building_booth.h"
 
 #include "building/building.h"
+#include "construction/build_planner.h"
 #include "building/count.h"
 #include "city/object_info.h"
 #include "game/resource.h"
@@ -10,6 +11,7 @@
 #include "graphics/image.h"
 #include "io/gamefiles/lang.h"
 #include "config/config.h"
+#include "grid/building_tiles.h"
 #include "grid/property.h"
 #include "grid/image.h"
 #include "window/building/common.h"
@@ -28,6 +30,25 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_building_booth);
 void config_load_building_booth() {
     booth_m.load();
     booth_m.booth = booth_m.anim["booth"].first_img();
+}
+
+void building_booth::on_place(int orientation, int variant) {
+    data.entertainment.booth_corner_grid_offset = tile().grid_offset();
+    data.entertainment.orientation = orientation;
+
+    int image_id = params().anim["square"].first_img();
+
+    // add underlying plaza first
+    map_add_venue_plaza_tiles(id(), params().building_size, tile(), image_id, false);
+    int absolute_orientation = (abs(orientation * 2 + (8 - city_view_orientation())) % 8) / 2;
+
+    // add additional building parts, update graphics accordingly
+    switch (absolute_orientation) {
+    case 0: build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 0, orientation, true); break;
+    case 1: build_planner_latch_on_venue(BUILDING_BOOTH, &base, 1, 0, orientation, true); break;
+    case 2: build_planner_latch_on_venue(BUILDING_BOOTH, &base, 1, 1, orientation, true); break;
+    case 3: build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 1, orientation, true); break;
+    }
 }
 
 void building_booth::window_info_background(object_info &c) {

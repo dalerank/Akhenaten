@@ -1,6 +1,6 @@
 #pragma once
 
-#include "building/building_type.h"
+#include "building/building.h"
 #include "graphics/color.h"
 #include "graphics/view/view.h"
 #include "grid/point.h"
@@ -130,5 +130,7 @@ public:
     void draw(painter &ctx);
     bool place();
 };
+
+void build_planner_latch_on_venue(e_building_type type, building *b, int dx, int dy, int orientation, bool main_venue = false);
 
 extern BuildPlanner Planner;

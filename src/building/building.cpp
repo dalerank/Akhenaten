@@ -321,6 +321,7 @@ building_small_mastaba *building::dcast_small_mastaba() { return dcast()->dcast_
 building_wood_cutter *building::dcast_wood_cutter() { return dcast()->dcast_wood_cutter(); }
 building_recruiter *building::dcast_recruiter() { return dcast()->dcast_recruiter(); }
 building_pavilion *building::dcast_pavilion() { return dcast()->dcast_pavilion(); }
+building_statue *building::dcast_statue() { return dcast()->dcast_statue(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
