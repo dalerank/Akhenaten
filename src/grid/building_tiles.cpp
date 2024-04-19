@@ -147,7 +147,7 @@ void map_building_tiles_add_farm(int building_id, tile2i tile, int crop_image_of
         //        if (map_terrain_is(map_grid_offset(x, y), TERRAIN_FLOODPLAIN))
         //            image_id = image_id_from_group(GROUP_BUILDING_FARMLAND);
     painter ctx = game.painter();
-    map_building_tiles_add(building_id, tile, 3, get_farm_image(tile.grid_offset()), TERRAIN_BUILDING);
+    map_building_tiles_add(building_id, tile, 3, get_farm_image(tile), TERRAIN_BUILDING);
         //        crop_image_offset += image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH);
         return;
     //}

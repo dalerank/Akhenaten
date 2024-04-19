@@ -26,6 +26,8 @@
 #include "game/game.h"
 #include "figure/figure.h"
 
+constexpr int CROPS_OFFSETS = 6;
+
 struct building_farm_grain : public building_farm {
     building_farm_grain(building &b) : building_farm(b) {}
     BUILDING_METAINFO(BUILDING_GRAIN_FARM, building_farm_grain);
@@ -178,18 +180,18 @@ int get_crops_image(e_building_type type, int growth) {
     return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
 }
 
-void draw_farm_crops(painter &ctx, e_building_type type, int progress, int grid_offset, vec2i tile, color color_mask) {
+void draw_farm_crops(painter &ctx, e_building_type type, int progress, tile2i tile, vec2i point, color color_mask) {
     int image_crops = get_crops_image(type, 0);
-    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) { // on floodplains - all
+    if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) { // on floodplains - all
         for (int i = 0; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i * 200) / 100));
-            ImageDraw::img_from_below(ctx, image_crops + growth_offset, tile.x + FARM_TILE_OFFSETS_FLOODPLAIN[i].x, tile.y + FARM_TILE_OFFSETS_FLOODPLAIN[i].y, color_mask);
+            ImageDraw::img_from_below(ctx, image_crops + growth_offset, point.x + FARM_TILE_OFFSETS_FLOODPLAIN[i].x, point.y + FARM_TILE_OFFSETS_FLOODPLAIN[i].y, color_mask);
         }
     } else { // on dry meadows
         for (int i = 0; i < 5; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i * 400) / 100));
 
-            ImageDraw::img_from_below(ctx, image_crops + growth_offset, tile.x + FARM_TILE_OFFSETS_MEADOW[i].x, tile.y + FARM_TILE_OFFSETS_MEADOW[i].y, color_mask);
+            ImageDraw::img_from_below(ctx, image_crops + growth_offset, point.x + FARM_TILE_OFFSETS_MEADOW[i].x, point.y + FARM_TILE_OFFSETS_MEADOW[i].y, color_mask);
         }
     }
 }
@@ -332,9 +334,45 @@ void building_farm::on_create(int orientation) {
     base.fire_proof = 1;
 }
 
+void building_farm::on_place(int orientration, int variant) {
+    switch (type()) {
+    case BUILDING_BARLEY_FARM:
+        map_building_tiles_add_farm(id(), tile(), 0, 0);
+        break;
+
+    case BUILDING_FLAX_FARM:
+        map_building_tiles_add_farm(id(), tile(), CROPS_OFFSETS, 0);
+        break;
+
+    case BUILDING_GRAIN_FARM:
+        map_building_tiles_add_farm(id(), tile(), CROPS_OFFSETS * 2, 0);
+        break;
+
+    case BUILDING_LETTUCE_FARM:
+        map_building_tiles_add_farm(id(), tile(), CROPS_OFFSETS * 3, 0);
+        break;
+
+    case BUILDING_POMEGRANATES_FARM:
+        map_building_tiles_add_farm(id(), tile(), CROPS_OFFSETS * 4, 0);
+        break;
+
+    case BUILDING_CHICKPEAS_FARM:
+        map_building_tiles_add_farm(id(), tile(), CROPS_OFFSETS * 5, 0);
+        break;
+
+    case BUILDING_FIGS_FARM:
+        map_building_tiles_add_farm(id(), tile(), CROPS_OFFSETS * 6, 0);
+        break;
+
+    case BUILDING_HENNA_FARM:
+        map_building_tiles_add_farm(id(), tile(), CROPS_OFFSETS * 7, 0);
+        break;
+    }
+}
+
 bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color mask) {
     if (map_terrain_is(t.grid_offset(), TERRAIN_BUILDING)) {
-        draw_farm_crops(ctx, type(), data.industry.progress, tile().grid_offset(), point, mask);
+        draw_farm_crops(ctx, type(), data.industry.progress, tile(), point, mask);
         building_farm_draw_workers(ctx, &base, t, point);
     }
 

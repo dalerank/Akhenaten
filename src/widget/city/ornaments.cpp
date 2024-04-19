@@ -132,10 +132,10 @@ static void draw_gatehouse_anim(int x, int y, building* b, painter &ctx) {
     }
 }
 
-int get_farm_image(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+int get_farm_image(tile2i tile) {
+    if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
         int base = image_id_from_group(GROUP_BUILDING_FARMLAND);
-        int fert_average = map_get_fertility_for_farm(grid_offset);
+        int fert_average = map_get_fertility_for_farm(tile);
         int fertility_index = 0;
 
         if (fert_average < 13)

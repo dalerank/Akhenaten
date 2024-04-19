@@ -16,10 +16,12 @@ class building_farm : public building_impl {
 public:
     building_farm(building &b) : building_impl(b) {}
     virtual void on_create(int orientation) override;
+    virtual void on_place(int orientration, int variant) override;
     virtual void window_info_background(object_info &ctx) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual building_farm *dcast_farm() override { return this; }
     virtual e_sound_channel_city sound_channel() const override;
+    virtual bool draw_isometric_flat_building(tile2i point, painter &ctx) override { return true; }
     virtual void spawn_figure() override;
 
     void deplete_soil();

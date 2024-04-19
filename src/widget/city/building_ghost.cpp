@@ -232,11 +232,11 @@ static void draw_storage_yard(vec2i tile, painter &ctx) {
     }
 }
 
-static void draw_farm(painter &ctx, e_building_type type, vec2i tile, int grid_offset) {
-    int image_id = get_farm_image(grid_offset);
-    draw_building_ghost(ctx, image_id, tile + vec2i{-60, 0});
+void draw_farm(painter &ctx, e_building_type type, vec2i point, tile2i tile) {
+    int image_id = get_farm_image(tile);
+    draw_building_ghost(ctx, image_id, point + vec2i{-60, 0});
     
-    draw_farm_crops(ctx, type, 0, grid_offset, tile + vec2i{-60, 30}, COLOR_MASK_GREEN);
+    draw_farm_crops(ctx, type, 0, tile, point + vec2i{-60, 30}, COLOR_MASK_GREEN);
 }
 
 static void draw_aqueduct(map_point tile, int x, int y, painter &ctx) {
@@ -517,7 +517,7 @@ void BuildPlanner::draw_graphics(painter &ctx) {
     case BUILDING_CHICKPEAS_FARM:
     case BUILDING_FIGS_FARM:
     case BUILDING_HENNA_FARM:
-        draw_farm(ctx, build_type, pixel, end.grid_offset());
+        draw_farm(ctx, build_type, pixel, end);
         return;
 
     case BUILDING_FORT_ARCHERS:
