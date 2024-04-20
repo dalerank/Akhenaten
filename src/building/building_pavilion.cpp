@@ -11,7 +11,9 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "city/labor.h"
+#include "construction/build_planner.h"
 #include "grid/image.h"
+#include "grid/building_tiles.h"
 #include "js/js_game.h"
 
 struct pavilion_model : public buildings::model_t<building_pavilion> {
@@ -38,6 +40,88 @@ void config_load_building_pavilion() {
 
 void building_pavilion::on_create(int orientation) {
 
+}
+
+void building_pavilion::on_place(int orientation, int variant) {
+    data.entertainment.booth_corner_grid_offset = tile().grid_offset();
+    data.entertainment.orientation = orientation;
+
+    int size = params().building_size;
+
+    int image_id = params().anim["square"].first_img();
+
+    // add underlying plaza first
+    map_add_venue_plaza_tiles(id(), size, tile(), image_id, false);
+    int absolute_orientation = (abs(orientation * 2 + (8 - city_view_orientation())) % 8) / 2;
+    // add additional building parts, update graphics accordingly
+    int orient_id = 0;
+    switch (absolute_orientation) {
+    case 0:
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 2, 0);
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 3, 2, 0);
+        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 0, 0, 0);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 3, 0, orient_id, true);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 3, 1, orient_id, false);
+        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 2, 0, false);
+        break;
+
+    case 1:
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 2, 0);
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 3, 2, 0);
+        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 2, 0, 0, true);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 0, 0, 1);
+        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 2, 0);
+        break;
+
+    case 2:
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 3, 0);
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 3, 0);
+        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 1, 0, 0, true);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 3, 0, 1);
+        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 3, 3, 0);
+        break;
+
+    case 3:
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 0, 0);
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 0, 0);
+        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 1, 2, 0, true);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 3, 2, 1);
+        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 3, 0, 0);
+        break;
+
+    case 4:
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 3, 0);
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 3, 3, 0);
+        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 2, 1, 0, true);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 0, 1, 1);
+        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 3, 0);
+        break;
+
+    case 5:
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 3, 0);
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 3, 3, 0);
+        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 0, 1, 0, true);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 3, 1, 1);
+        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 3, 0);
+        break;
+
+    case 6:
+        // in the original game, this orientation is not allowed for some reason?
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 0, 0);
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 0, 0);
+        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 0, 2, 0, true);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 2, 2, 1);
+        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 0, 0);
+        break;
+
+    case 7:
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 3, 0);
+        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 3, 0);
+        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 0, 0, 0, true);
+        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 2, 0, 1);
+        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 3, 0);
+        break;
+    }
 }
 
 bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

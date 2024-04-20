@@ -263,82 +263,9 @@ static void add_entertainment_venue(building* b, int orientation) {
 
     int image_id = 0;
     switch (b->type) {
-    case BUILDING_PAVILLION: image_id = params.anim["square"].first_img(); break;
-    case BUILDING_FESTIVAL_SQUARE: image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE); break;
-    }
-
-    // add underlying plaza first
-    map_add_venue_plaza_tiles(b->id, size, b->tile, image_id, false);
-    int absolute_orientation = (abs(orientation * 2 + (8 - city_view_orientation())) % 8) / 2;
-    // add additional building parts, update graphics accordingly
-    switch (b->type) {
-    case BUILDING_PAVILLION:
-        switch (orientation) {
-        case 0:
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 1, 2, 0);
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 3, 2, 0);
-            build_planner_latch_on_venue(BUILDING_PAVILLION, b, 0, 0, 0, true);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 3, 0, 1);
-            build_planner_latch_on_venue(BUILDING_BOOTH, b, 0, 2, 0);
-            break;
-
-        case 1:
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 2, 2, 0);
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 3, 2, 0);
-            build_planner_latch_on_venue(BUILDING_PAVILLION, b, 2, 0, 0, true);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 0, 0, 1);
-            build_planner_latch_on_venue(BUILDING_BOOTH, b, 0, 2, 0);
-            break;
-
-        case 2:
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 1, 3, 0);
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 2, 3, 0);
-            build_planner_latch_on_venue(BUILDING_PAVILLION, b, 1, 0, 0, true);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 3, 0, 1);
-            build_planner_latch_on_venue(BUILDING_BOOTH, b, 3, 3, 0);
-            break;
-
-        case 3:
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 1, 0, 0);
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 2, 0, 0);
-            build_planner_latch_on_venue(BUILDING_PAVILLION, b, 1, 2, 0, true);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 3, 2, 1);
-            build_planner_latch_on_venue(BUILDING_BOOTH, b, 3, 0, 0);
-            break;
-
-        case 4:
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 2, 3, 0);
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 3, 3, 0);
-            build_planner_latch_on_venue(BUILDING_PAVILLION, b, 2, 1, 0, true);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 0, 1, 1);
-            build_planner_latch_on_venue(BUILDING_BOOTH, b, 0, 3, 0);
-            break;
-
-        case 5:
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 1, 3, 0);
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 3, 3, 0);
-            build_planner_latch_on_venue(BUILDING_PAVILLION, b, 0, 1, 0, true);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 3, 1, 1);
-            build_planner_latch_on_venue(BUILDING_BOOTH, b, 0, 3, 0);
-            break;
-
-        case 6:
-            // in the original game, this orientation is not allowed for some reason?
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 1, 0, 0);
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 2, 0, 0);
-            build_planner_latch_on_venue(BUILDING_PAVILLION, b, 0, 2, 0, true);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 2, 2, 1);
-            build_planner_latch_on_venue(BUILDING_BOOTH, b, 0, 0, 0);
-            break;
-
-        case 7:
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 1, 3, 0);
-            build_planner_latch_on_venue(BUILDING_GARDENS, b, 2, 3, 0);
-            build_planner_latch_on_venue(BUILDING_PAVILLION, b, 0, 0, 0, true);
-            build_planner_latch_on_venue(BUILDING_BANDSTAND, b, 2, 0, 1);
-            build_planner_latch_on_venue(BUILDING_BOOTH, b, 0, 3, 0);
-            break;
-        }
+    case BUILDING_FESTIVAL_SQUARE:
+        image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE);
+        map_add_venue_plaza_tiles(b->id, size, b->tile, image_id, false);
         break;
     }
 }
@@ -431,8 +358,7 @@ static void add_building(building* b, int orientation, int variant) {
     case BUILDING_HOUSE_LUXURY_PALACE:
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALATIAL) + 1);
         break;
-        // entertainment
-    case BUILDING_PAVILLION:
+
     case BUILDING_FESTIVAL_SQUARE:
         add_entertainment_venue(b, orientation);
         break;
