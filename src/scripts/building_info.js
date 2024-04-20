@@ -365,11 +365,32 @@ building_pavilion = {
     stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1},
     booth : { pos:[0, 0], pack:PACK_GENERAL, id:114 },
   },
-  preview_dir_0 : {
-    stand : [-30, 15],
-    stand_b : [90, 45], stand_e : [60, 60],
-    booth : [-60, 30]
-  },
+  preview_dir_0 : { stand:[-30, 15], stand_b:[90, 45], stand_e:[60, 60], booth:[-60, 30] },
+  preview_dir_1 : { stand:[30, 45], stand_b:[0, 0], stand_e:[-30, 15], booth:[30, 75] },
+  preview_dir_2 : { stand:[0, 30], stand_b:[0, 90], stand_e:[-30, 75], booth:[90, 45], stand_b_img:2, stand_e_img:2 },
+  preview_dir_3 : { stand:[-60, 60], stand_b:[90, 45], stand_e:[60, 30], booth:[0, 90], stand_b_img:2, stand_e_img:2 },
+  preview_dir_4 : { stand:[0, 60], stand_b:[-60, 30], stand_e:[-90, 45], booth:[0, 90] },
+  preview_dir_5 : { stand:[-60, 30], stand_b:[30, 75], stand_e:[0, 90], booth:[-90, 45] },
+  preview_dir_6 : { stand:[-90, 45], stand_b:[30, 15], stand_e:[0, 0], booth:[-30, 75], stand_b_img : 2, stand_e_img : 2 },
+  preview_dir_7 : { stand:[-30, 15], stand_b:[-60, 60], stand_e:[-90, 45], booth:[60, 30], stand_b_img : 2, stand_e_img : 2 },
+
+  place_dir_0 : [
+    {type: BUILDING_GARDENS, offset:[1, 2]},
+    {type: BUILDING_GARDENS, offset:[3, 2]},
+    {type: BUILDING_PAVILLION, offset:[0, 0]},
+    {type: BUILDING_BANDSTAND, offset:[3, 0], main:true},
+    {type: BUILDING_BANDSTAND, offset:[3, 1], main:false},
+    {type: BUILDING_BOOTH, offset:[0, 2], main:false}
+  ],
+
+  place_dir_1 : [
+    {type: BUILDING_GARDENS, offset:[2, 2]},
+    {type: BUILDING_GARDENS, offset:[0, 2]},
+    {type: BUILDING_PAVILLION, offset:[2, 0]},
+    {type: BUILDING_BANDSTAND, offset:[0, 0], main:true},
+    {type: BUILDING_BANDSTAND, offset:[0, 1], main:false},
+    {type: BUILDING_BOOTH, offset:[3, 2], main:false}
+  ],
   building_size : 4,
   window_info_height_id : 2,
 }

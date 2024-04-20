@@ -13,6 +13,7 @@
 #include "city/labor.h"
 #include "construction/build_planner.h"
 #include "grid/image.h"
+#include "grid/orientation.h"
 #include "grid/building_tiles.h"
 #include "js/js_game.h"
 
@@ -20,20 +21,53 @@ struct pavilion_model : public buildings::model_t<building_pavilion> {
     int base = 0;
     struct preview_offset {
         vec2i stand, stand_b, stand_e, booth;
+        int stand_b_img = 0, stand_e_img = 0;
+        void load(archive arch, pcstr section) {
+            arch.r_section(section, [this] (archive d_arch) {
+                stand = d_arch.r_vec2i("stand");
+                stand_b = d_arch.r_vec2i("stand_b");
+                stand_e = d_arch.r_vec2i("stand_e");
+                booth = d_arch.r_vec2i("booth");
+                stand_b_img = d_arch.r_int("stand_b_img");
+                stand_e_img = d_arch.r_int("stand_e_img");
+            });
+        }
+    };
+    struct place_offset {
+        struct item {
+            e_building_type type = BUILDING_NONE;
+            vec2i offset;
+            bool main;
+            void load(archive arch) {
+                main = arch.r_bool("main");
+                offset = arch.r_vec2i("offset");
+                type = arch.r_type<e_building_type>("type");
+            }
+        };
+        svector<item, 8> items;
+        void load(archive arch, pcstr section) {
+            items.clear();
+            arch.r_array(section, [this] (archive d_arch) {
+                items.push_back({});
+                items.back().load(d_arch);
+            });
+        }
     };
 
-    preview_offset dir_0;
+    preview_offset preview_dir[8];
+    place_offset place_dir[8];
 } pavilion_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_pavilion);
 void config_load_building_pavilion() {
     pavilion_m.load([] (archive arch) {
-        arch.r_section("preview_dir_0", [] (archive d_arch) {
-            pavilion_m.dir_0.stand = d_arch.r_vec2i("stand");
-            pavilion_m.dir_0.stand_b = d_arch.r_vec2i("stand_b");
-            pavilion_m.dir_0.stand_e = d_arch.r_vec2i("stand_e");
-            pavilion_m.dir_0.booth = d_arch.r_vec2i("booth");
-        });
+        for (auto &preview_dir: pavilion_m.preview_dir) {
+            preview_dir.load(arch, bstring32().printf("preview_dir_%d", std::distance(pavilion_m.preview_dir, &preview_dir)).c_str());
+        }
+
+        for (auto &place_dir : pavilion_m.place_dir) {
+            place_dir.load(arch, bstring32().printf("place_dir_%d", std::distance(pavilion_m.place_dir, &place_dir)).c_str());
+        }
     });
     pavilion_m.base = pavilion_m.anim["base"].first_img();
 }
@@ -50,27 +84,21 @@ void building_pavilion::on_place(int orientation, int variant) {
 
     int image_id = params().anim["square"].first_img();
 
+    int basic_orientation;
+    map_orientation_for_venue_with_map_orientation(tile(), e_venue_mode_pavilion, &basic_orientation);
+
     // add underlying plaza first
     map_add_venue_plaza_tiles(id(), size, tile(), image_id, false);
-    int absolute_orientation = (abs(orientation * 2 + (8 - city_view_orientation())) % 8) / 2;
+    int absolute_orientation = abs(basic_orientation + (8 - city_view_orientation())) % 8;
+
     // add additional building parts, update graphics accordingly
     int orient_id = 0;
     switch (absolute_orientation) {
     case 0:
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 2, 0);
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 3, 2, 0);
-        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 0, 0, 0);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 3, 0, orient_id, true);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 3, 1, orient_id, false);
-        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 2, 0, false);
-        break;
-
     case 1:
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 2, 0);
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 3, 2, 0);
-        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 2, 0, 0, true);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 0, 0, 1);
-        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 2, 0);
+        for (const auto &item: pavilion_m.place_dir[absolute_orientation].items) {
+            build_planner_latch_on_venue(item.type, &base, item.offset.x, item.offset.y, 0, item.main);
+        }
         break;
 
     case 2:
@@ -167,56 +195,11 @@ void building_pavilion::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, in
     int stand_sn_s = pavilion_m.anim["stand_sn_s"].first_img();
     int booth = pavilion_m.anim["booth"].first_img();
     int stand = pavilion_m.anim["base"].first_img();
-    switch (orientation) {
-    case 0:
-        draw_building_ghost(ctx, stand, pixel + pavilion_m.dir_0.stand, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, stand_sn_n, pixel + pavilion_m.dir_0.stand_b, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, stand_sn_s, pixel + pavilion_m.dir_0.stand_e, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, booth, pixel + pavilion_m.dir_0.booth, COLOR_MASK_GREEN);
-        break;
-    //case 1:
-    //    draw_building_ghost(ctx, stand, pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, stand_sn_n, pixel, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, booth, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
-    //    break;
-    //case 2:
-    //    draw_building_ghost(ctx, stand, pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{90, 45}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{60, 60}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, booth, pixel + vec2i{0, 90}, COLOR_MASK_GREEN);
-    //    break;
-    //case 3:
-    //    draw_building_ghost(ctx, stand, pixel + vec2i{-30, 45}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{30, 75}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{0, 90}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, booth, pixel + vec2i{90, 45}, COLOR_MASK_GREEN);
-    //    break;
-    //case 4:
-    //    draw_building_ghost(ctx, stand, pixel + vec2i{30, 45}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, booth, pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
-    //    break;
-    //case 5:
-    //    draw_building_ghost(ctx, stand, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{60, 60}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{30, 75}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, booth, pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
-    //    break;
-    //case 6:
-    //    draw_building_ghost(ctx, stand, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{-30, 75}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, booth, pixel, COLOR_MASK_GREEN);
-    //    break;
-    //case 7:
-    //    draw_building_ghost(ctx, stand, pixel, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, stand_sn_n, pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, stand_sn_s, pixel + vec2i{30, 45}, COLOR_MASK_GREEN);
-    //    draw_building_ghost(ctx, booth, pixel + vec2i{-90, 45}, COLOR_MASK_GREEN);
-    //    break;
-    }
+    const auto &preview_conf = pavilion_m.preview_dir[orientation];
+    draw_building_ghost(ctx, stand, pixel + preview_conf.stand, COLOR_MASK_GREEN);
+    draw_building_ghost(ctx, stand_sn_n + preview_conf.stand_b_img, pixel + preview_conf.stand_b, COLOR_MASK_GREEN);
+    draw_building_ghost(ctx, stand_sn_s + preview_conf.stand_e_img, pixel + preview_conf.stand_e, COLOR_MASK_GREEN);
+    draw_building_ghost(ctx, booth, pixel + preview_conf.booth, COLOR_MASK_GREEN);
 }
 
 void building_pavilion::window_info_background(object_info &c) {
