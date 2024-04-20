@@ -391,6 +391,60 @@ building_pavilion = {
     {type: BUILDING_BANDSTAND, offset:[0, 1], main:false},
     {type: BUILDING_BOOTH, offset:[3, 2], main:false}
   ],
+
+  place_dir_2 : [
+    {type: BUILDING_GARDENS, offset:[3, 0]},
+    {type: BUILDING_GARDENS, offset:[3, 3]},
+    {type: BUILDING_PAVILLION, offset:[1, 0]},
+    {type: BUILDING_BANDSTAND, offset:[1, 3], main:true},
+    {type: BUILDING_BANDSTAND, offset:[2, 3], main:false},
+    {type: BUILDING_BOOTH, offset:[3, 1], main:false}
+  ],
+
+  place_dir_3 : [
+    {type: BUILDING_GARDENS, offset:[3, 3]},
+    {type: BUILDING_GARDENS, offset:[1, 0]},
+    {type: BUILDING_PAVILLION, offset:[1, 2]},
+    {type: BUILDING_BANDSTAND, offset:[2, 0], main:true},
+    {type: BUILDING_BANDSTAND, offset:[3, 0], main:false},
+    {type: BUILDING_BOOTH, offset:[3, 2], main:false}
+  ],
+
+  place_dir_4 : [
+    {type: BUILDING_GARDENS, offset:[3, 3]},
+    {type: BUILDING_GARDENS, offset:[0, 3]},
+    {type: BUILDING_PAVILLION, offset:[2, 1]},
+    {type: BUILDING_BANDSTAND, offset:[0, 1], main:true},
+    {type: BUILDING_BANDSTAND, offset:[0, 2], main:false},
+    {type: BUILDING_BOOTH, offset:[2, 3], main:false}
+  ],
+
+  place_dir_5 : [
+    {type: BUILDING_GARDENS, offset:[1, 3]},
+    {type: BUILDING_GARDENS, offset:[3, 3]},
+    {type: BUILDING_PAVILLION, offset:[0, 1]},
+    {type: BUILDING_BANDSTAND, offset:[3, 1], main:true},
+    {type: BUILDING_BANDSTAND, offset:[3, 2], main:false},
+    {type: BUILDING_BOOTH, offset:[0, 3], main:false}
+  ],
+
+  place_dir_6 : [
+    {type: BUILDING_GARDENS, offset:[2, 0]},
+    {type: BUILDING_GARDENS, offset:[2, 2]},
+    {type: BUILDING_PAVILLION, offset:[0, 2]},
+    {type: BUILDING_BANDSTAND, offset:[0, 0], main:false},
+    {type: BUILDING_BANDSTAND, offset:[1, 0], main:true},
+    {type: BUILDING_BOOTH, offset:[2, 3], main:false}
+  ],
+
+  place_dir_7 : [
+    {type: BUILDING_GARDENS, offset:[0, 3]},
+    {type: BUILDING_GARDENS, offset:[2, 1]},
+    {type: BUILDING_PAVILLION, offset:[0, 0]},
+    {type: BUILDING_BANDSTAND, offset:[1, 3], main:false},
+    {type: BUILDING_BANDSTAND, offset:[2, 3], main:true},
+    {type: BUILDING_BOOTH, offset:[2, 0], main:false}
+  ],
   building_size : 4,
   window_info_height_id : 2,
 }

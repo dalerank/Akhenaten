@@ -90,65 +90,8 @@ void building_pavilion::on_place(int orientation, int variant) {
     // add underlying plaza first
     map_add_venue_plaza_tiles(id(), size, tile(), image_id, false);
     int absolute_orientation = abs(basic_orientation + (8 - city_view_orientation())) % 8;
-
-    // add additional building parts, update graphics accordingly
-    int orient_id = 0;
-    switch (absolute_orientation) {
-    case 0:
-    case 1:
-        for (const auto &item: pavilion_m.place_dir[absolute_orientation].items) {
-            build_planner_latch_on_venue(item.type, &base, item.offset.x, item.offset.y, 0, item.main);
-        }
-        break;
-
-    case 2:
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 3, 0);
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 3, 0);
-        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 1, 0, 0, true);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 3, 0, 1);
-        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 3, 3, 0);
-        break;
-
-    case 3:
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 0, 0);
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 0, 0);
-        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 1, 2, 0, true);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 3, 2, 1);
-        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 3, 0, 0);
-        break;
-
-    case 4:
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 3, 0);
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 3, 3, 0);
-        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 2, 1, 0, true);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 0, 1, 1);
-        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 3, 0);
-        break;
-
-    case 5:
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 3, 0);
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 3, 3, 0);
-        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 0, 1, 0, true);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 3, 1, 1);
-        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 3, 0);
-        break;
-
-    case 6:
-        // in the original game, this orientation is not allowed for some reason?
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 0, 0);
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 0, 0);
-        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 0, 2, 0, true);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 2, 2, 1);
-        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 0, 0);
-        break;
-
-    case 7:
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 3, 0);
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 3, 0);
-        build_planner_latch_on_venue(BUILDING_PAVILLION, &base, 0, 0, 0, true);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 2, 0, 1);
-        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 3, 0);
-        break;
+    for (const auto &item: pavilion_m.place_dir[absolute_orientation].items) {
+        build_planner_latch_on_venue(item.type, &base, item.offset.x, item.offset.y, orientation, item.main);
     }
 }
 
