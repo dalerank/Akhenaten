@@ -568,25 +568,6 @@ void set_granary_res_offset(int i, vec2i v) {
     granary_offsets_ph[i] = v;
 }
 
-void draw_granary_stores(const building &b, vec2i point, color color_mask, painter &ctx) {
-    int last_spot_filled = 0;
-    for (int r = 1; r < 9; r++) {
-        if (b.data.granary.resource_stored[r] > 0) {
-            int spots_filled = ceil((float)(b.data.granary.resource_stored[r] - 199) / (float)400); // number of "spots" occupied by food
-            if (spots_filled == 0 && b.data.granary.resource_stored[r] > 0)
-                spots_filled = 1;
-
-            for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
-                // draw sprite on each granary "spot"
-                vec2i spot_pos = granary_offsets_ph[spot];
-                ImageDraw::img_generic(ctx, image_group(IMG_GRANARY_RESOURCES) + r, point + spot_pos + vec2i{110, -74}, color_mask);
-            }
-
-            last_spot_filled += spots_filled;
-        }
-    }
-}
-
 void building_granary_draw_anim(building &b, vec2i point, tile2i tile, color mask, painter &ctx) {
 
 }
@@ -623,7 +604,7 @@ void building_granary::spawn_figure() {
 }
 
 bool building_granary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
-    draw_granary_stores(base, point, mask, ctx);
+    draw_stores(point, mask, ctx);
     int max_workers = model_get_building(BUILDING_GRANARY)->laborers;
     building_draw_normal_anim(ctx, point + vec2i{114, 2}, &base, tile, granary_m.anim["work"], mask);
     if (num_workers() > max_workers / 2) {
@@ -635,4 +616,24 @@ bool building_granary::draw_ornaments_and_animations_height(painter &ctx, vec2i 
 
 std::pair<int, int> building_granary::get_tooltip() const {
     return window_building_get_tooltip_granary_orders();
+}
+
+void building_granary::draw_stores(vec2i point, color color_mask, painter &ctx) {
+    int last_spot_filled = 0;
+    int resources_id = granary_m.anim["resources"].first_img();
+    for (int r = 1; r < 9; r++) {
+        if (data.granary.resource_stored[r] > 0) {
+            int spots_filled = ceil((float)(data.granary.resource_stored[r] - 199) / (float)400); // number of "spots" occupied by food
+            if (spots_filled == 0 && data.granary.resource_stored[r] > 0)
+                spots_filled = 1;
+
+            for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
+                // draw sprite on each granary "spot"
+                vec2i spot_pos = granary_offsets_ph[spot];
+                ImageDraw::img_generic(ctx, resources_id + r, point + spot_pos + vec2i{110, -74}, color_mask);
+            }
+
+            last_spot_filled += spots_filled;
+        }
+    }
 }

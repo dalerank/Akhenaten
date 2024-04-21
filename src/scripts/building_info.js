@@ -76,7 +76,10 @@ building_cattle_ranch = {
 
 building_granary = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_GRANARY_ANIM, max_frames:23 }
+    preview : { pack:PACK_GENERAL, id:99 },
+    base : { pack:PACK_GENERAL, id:99 },
+    work : { pack:PACK_SPR_AMBIENT, id:47, max_frames:23 },
+    resources : {pack:PACK_GENERAL, id:99, offset:2}
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
   window_info_height_id : 1,

@@ -48,6 +48,7 @@ public:
     bool is_gettable(e_resource resource);
     granary_task_status determine_worker_task();
     int remove_resource(e_resource resource, int amount);
+    void draw_stores(vec2i point, color color_mask, painter &ctx);
     static int remove_for_getting_deliveryman(building* src, building* dst, e_resource& resource);
 
     void draw_orders_foreground(object_info &c);

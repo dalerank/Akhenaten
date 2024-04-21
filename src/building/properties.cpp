@@ -247,7 +247,7 @@ void building_properties_init() {
     properties[BUILDING_GOLD_MINE] = {2, 0, 0, 0, 0, IMG_GOLD_MINE};
     properties[BUILDING_SANDSTONE_QUARRY] = {2, 0, 0, 0, 0, IMG_SANDSTONE_QUARRY};
     properties[BUILDING_STONE_QUARRY] = {2, 0, 0, 0, 0, IMG_PLAINSTONE_QUARRY};
-    properties[BUILDING_GRANARY] = {4, 0, 0, 0, 0, IMG_GRANARY};
+    properties[BUILDING_GRANARY] = {4, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_COPPER_MINE] = {2, 0, 0, 0, 0, IMG_COPPER_MINE};
     properties[BUILDING_CONSERVATORY] = {3, 0, 0, 0, 0, IMG_CONSERVATORY};
     properties[BUILDING_PHYSICIAN] = {2, 0, 0, 0, 0, IMG_NONE};
