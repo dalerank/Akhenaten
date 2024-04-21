@@ -374,7 +374,6 @@ public:
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
-    void spawn_figure_dancer();
     void spawn_figure_senet();
     void set_water_supply_graphic();
     void spawn_figure_library();

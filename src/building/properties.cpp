@@ -41,7 +41,7 @@ static building_properties properties[400] = {
     {4, 0, GROUP_BUILDING_SENET_HOUSE},    // senet
     {2, 0, 0, 0},                          // pavillion
     {3, 0, 0, 0},   // conservatory
-    {4, 0, GROUP_BUILDING_DANCE_SCHOOL},   // dance school
+    {4, 0, 0, 0},   // dance school
     {2, 0, 0, 0}, // juggler school
     {3, 0, 0, 0},                          // unused (senet master)
     {1, 1, GROUP_TERRAIN_PLAZA},           // plaza
@@ -286,6 +286,7 @@ void building_properties_init() {
     properties[BUILDING_WATER_SUPPLY] = {2, 1, 0, 0, 0, IMG_WATER_SUPPLY};
     properties[BUILDING_STONEMASONS_GUILD] = {2, 0, 0, 0, 0, IMG_GUILD_STONEMASONS};
     properties[BUILDING_DOCK] = {3, 1, 0, 0, 0, IMG_BUILDING_DOCK};
+    properties[BUILDING_DANCE_SCHOOL] = {4, 0, 0, 0, 0, IMG_NONE};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

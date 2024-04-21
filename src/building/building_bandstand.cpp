@@ -19,7 +19,6 @@
 #include "window/building/figures.h"
 #include "widget/city/ornaments.h"
 #include "widget/city/building_ghost.h"
-#include "building/building_entertainment.h"
 #include "sound/sound_building.h"
 
 struct bandstand_model : public buildings::model_t<building_bandstand>{

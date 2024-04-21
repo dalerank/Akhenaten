@@ -1,6 +1,6 @@
 #include "building/building_conservatory.h"
 
-#include "building/building_entertainment.h"
+#include "building/building_dance_school.h"
 #include "figuretype/figure_entertainer.h"
 
 #include "widget/city/ornaments.h"

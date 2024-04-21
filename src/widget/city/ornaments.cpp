@@ -4,7 +4,6 @@
 #include "building/model.h"
 #include "building/building_dock.h"
 #include "building/building_granary.h"
-#include "building/building_entertainment.h"
 #include "building/building_education.h"
 #include "building/building_workshop.h"
 #include "building/building_farm.h"
@@ -27,8 +26,6 @@
 #include "grid/random.h"
 #include "grid/terrain.h"
 #include <cmath>
-
-/////// ANIMATIONS
 
 void building_draw_normal_anim(painter &ctx, vec2i pixel, building *b, tile2i tile, const animation_t &anim, int color_mask) {
     if (anim.pack > 0 && anim.iid > 0) {
@@ -245,10 +242,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
 
     case BUILDING_MUD_GATEHOUSE:
         draw_gatehouse_anim(point.x, point.y, b, ctx);
-        break;
-
-    case BUILDING_DANCE_SCHOOL:
-        building_draw_normal_anim(ctx, point + vec2i{104, 0}, b, tile, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask);
         break;
 
     case BUILDING_FISHING_WHARF:

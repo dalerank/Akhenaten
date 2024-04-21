@@ -221,6 +221,15 @@ building_juggler_school = {
   window_info_height_id : 1,
 }
 
+building_dancer_school = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:52, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:52, },
+    work : { pos : [104, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35 }
+  },
+  window_info_height_id : 1,
+}
+
 building_storage_yard = {
   animations : {
     work : { pos : [23, 27], anim_id : ANIM_STORAGE_YARD_WORK, max_frames:15 }
@@ -449,7 +458,7 @@ building_pavilion = {
   window_info_height_id : 2,
 }
 
-buildgin_festival_square = {
+building_festival_square = {
   building_size : 5,
 }
 

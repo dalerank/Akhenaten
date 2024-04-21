@@ -15,7 +15,7 @@
 #include "building/building_shrine.h"
 #include "building/building_temple.h"
 #include "building/building_booth.h"
-#include "building/building_entertainment.h"
+#include "building/building_dance_school.h"
 #include "building/building_health.h"
 #include "building/building_education.h"
 #include "building/building_bricklayers_guild.h"
@@ -92,7 +92,6 @@ static int get_height_id() {
         case BUILDING_TEMPLE_COMPLEX_SETH:
         case BUILDING_TEMPLE_COMPLEX_BAST:
         case BUILDING_ORACLE:
-        case BUILDING_DANCE_SCHOOL:
         case BUILDING_SENET_MASTER:
         case BUILDING_MORTUARY:
         case BUILDING_MENU_MONUMENTS:
@@ -505,7 +504,6 @@ static void draw_refresh_background() {
             case BUILDING_JEWELS_WORKSHOP: building_luxury_workshop_draw_info(context); break;
             case BUILDING_BRICKS_WORKSHOP: building_brick_maker_workshop_draw_info(context); break;
             case BUILDING_SENET_HOUSE: window_building_draw_senet_house(&context); break;
-            case BUILDING_DANCE_SCHOOL: building_dancer_school_draw_info(context); break;
             case BUILDING_SENET_MASTER: building_bullfight_school_draw_info(context); break;
             case BUILDING_MORTUARY: building_mortuary_draw_info(context); break;
             case BUILDING_DENTIST: building_dentist_draw_info(context); break;

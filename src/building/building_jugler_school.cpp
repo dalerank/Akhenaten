@@ -1,9 +1,12 @@
 #include "building_jugler_school.h"
 
-#include "building/building_entertainment.h"
+#include "building/building_dance_school.h"
 #include "figuretype/figure_entertainer.h"
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
+#include "building/count.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 
 #include "js/js_game.h"
 
@@ -43,7 +46,11 @@ void building_juggler_school::spawn_figure() {
 
 bool building_juggler_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     const auto &anim = juggler_school_m.anim["work"];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+    building_draw_normal_anim(ctx, point + vec2i{104, 0}, &base, tile, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask);
 
     return true;
+}
+
+void building_juggler_school::update_count() const {
+    building_increase_type_count(type(), num_workers() > 0);
 }

@@ -19,7 +19,6 @@
 #include "widget/city/ornaments.h"
 #include "widget/city/building_ghost.h"
 #include "sound/sound_building.h"
-#include "building/building_entertainment.h"
 #include "city/labor.h"
 
 struct booth_model : public buildings::model_t<building_booth> {

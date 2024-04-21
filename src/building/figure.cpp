@@ -372,18 +372,6 @@ void building::spawn_figure_police() {
     common_spawn_roamer(FIGURE_CONSTABLE, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
 }
 
-void building::spawn_figure_dancer() {
-    if (common_spawn_figure_trigger(50)) {
-        int building_id = figure_entertainer::determine_venue_destination(road_access, {BUILDING_PAVILLION});
-        building* dest= building_get(building_id);
-        if (dest->id > 0) {
-            create_figure_with_destination(FIGURE_DANCER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-        } else {
-            common_spawn_roamer(FIGURE_DANCER, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
-        }
-    }
-}
-
 void building::spawn_figure_senet() {
     // TODO
     //    check_labor_problem();
@@ -785,7 +773,6 @@ bool building::figure_generate() {
         switch (type) {
         case BUILDING_MUD_TOWER: spawn_figure_tower(); break;
         case BUILDING_POLICE_STATION: spawn_figure_police(); break;
-        case BUILDING_DANCE_SCHOOL: spawn_figure_dancer(); break;
         case BUILDING_SENET_HOUSE: spawn_figure_senet(); break;
         case BUILDING_LIBRARY: spawn_figure_library(); break;
         case BUILDING_WATER_LIFT: common_spawn_figure_trigger(50); break;
