@@ -219,7 +219,9 @@ building_temple_bast = {
 
 building_juggler_school = {
   animations : {
-    work : { pos : [0, 0], anim_id : IMG_JUGGLER_SCHOOL }
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:46 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:46 },
+    work : { pos : [33, -38], pack:PACK_GENERAL, id:46, offset:2, max_frames:12 }
   },
   window_info_height_id : 1,
 }
@@ -361,8 +363,8 @@ building_bandstand = {
     stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1},
     stand_we_w: { pack:PACK_GENERAL, id:92, offset:2},
     stand_we_e: {pack:PACK_GENERAL, id:92, offset:3},
-    musician_sn : { pos : [45, 7], anim_id : IMG_MUSICIAN_SHOW_SN, max_frames : 12 },
-    musician_we : { pos : [48, 4], anim_id : IMG_MUSICIAN_SHOW_WE, max_frames : 12 }
+    musician_sn : { pos : [45, 7], pack:PACK_SPR_AMBIENT, id:10, max_frames : 11 },
+    musician_we : { pos : [48, 4], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11 }
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
   window_info_height_id : 3,
@@ -554,7 +556,9 @@ building_architect_post = {
 
 building_conservatory = {
   animations : {
-    work : { pos : [82, 18], anim_id: IMG_MUSICIAN_SHOW_SN }
+    preview : { pack:PACK_GENERAL, id:51 },
+    base : { pack:PACK_GENERAL, id:51 },
+    work : { pos : [82, 18], pack:PACK_SPR_AMBIENT, id:10, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
   window_info_height_id : 1,

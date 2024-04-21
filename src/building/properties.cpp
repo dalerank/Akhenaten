@@ -249,7 +249,7 @@ void building_properties_init() {
     properties[BUILDING_STONE_QUARRY] = {2, 0, 0, 0, 0, IMG_PLAINSTONE_QUARRY};
     properties[BUILDING_GRANARY] = {4, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_COPPER_MINE] = {2, 0, 0, 0, 0, IMG_COPPER_MINE};
-    properties[BUILDING_CONSERVATORY] = {3, 0, 0, 0, 0, IMG_CONSERVATORY};
+    properties[BUILDING_CONSERVATORY] = {3, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_PHYSICIAN] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_RECRUITER] = {3, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_SCRIBAL_SCHOOL] = {2, 0, 0, 0, 0, IMG_NONE};
@@ -267,7 +267,7 @@ void building_properties_init() {
     properties[BUILDING_APOTHECARY] = {1, 0, 0, 0, 0, IMG_BUILDING_APOTHECARY};
     properties[BUILDING_PERSONAL_MANSION] = {3, 0, 0, 0, 0, IMG_PERSONAL_MANSION};
     properties[BUILDING_VILLAGE_PALACE] = {4, 0, 0, 0, 0, IMG_VILLAGE_PALACE};
-    properties[BUILDING_JUGGLER_SCHOOL] = {2, 0, 0, 0, 0, IMG_JUGGLER_SCHOOL};
+    properties[BUILDING_JUGGLER_SCHOOL] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_HUNTING_LODGE] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_CLAY_PIT] = {2, 0, 0, 0, 0, IMG_CLAY_PIT};
     properties[BUILDING_GEMSTONE_MINE] = {2, 0, 0, 0, 0, IMG_GEMSTONE_MINE};

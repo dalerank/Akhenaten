@@ -62,7 +62,6 @@ images = [
 	{img: IMG_BUILDING_DOCK, pack:PACK_TERRAIN, id:49},
 
 	// spr general
-	{img: IMG_CONSERVATORY, pack:PACK_GENERAL, id:51},
 	{img: IMG_BRICKLAYERS_GUILD, pack:PACK_GENERAL, id:57},
 	{img: IMG_WATER_SUPPLY, pack:PACK_GENERAL, id:69, offset:0},
 	{img: IMG_WATER_SUPPLY_FANCY, pack:PACK_GENERAL, id:69, offset:2},
@@ -83,8 +82,6 @@ images = [
 	//{img: IMG_FISHING_BOAT ???, pack:PACK_SPR_MAIN, id:133 }, 	// 7014
 	{img: ANIM_MUSICIAN_DEATH, pack:PACK_SPR_MAIN, id:192},
 	{img: IMG_JUGGLER_SHOW, pack:PACK_SPR_AMBIENT, id:7, offset:-1},
-	{img: IMG_MUSICIAN_SHOW_SN, pack:PACK_SPR_AMBIENT, id:10, offset:-1},
-	{img: IMG_MUSICIAN_SHOW_WE, pack:PACK_SPR_AMBIENT, id:9, offset:-1},
 	{img: IMG_SIDE_PANEL, pack:PACK_GENERAL, id:121, offset:0},
 	{img: IMG_TOP_MENU_BACKGROUND, pack:PACK_GENERAL, id:121, offset:8},
 	{img: IMG_EDITOR_SIDE_PANEL, pack:PACK_GENERAL, id:121, offset:0},
@@ -140,7 +137,6 @@ images = [
 	{img: IMG_ADVISOR_ICONS, pack:PACK_GENERAL, id:128, offset:0},
 	{img: IMG_ADVISOR_BACKGROUND, pack:PACK_UNLOADED, id:2, offset:0},
 	{img: IMG_VILLAGE_PALACE, pack:PACK_GENERAL, id:47, offset:0},
-	{img: IMG_JUGGLER_SCHOOL, pack:PACK_GENERAL, id:46, offset:0},
 	{img: IMG_CLAY_PIT, pack:PACK_GENERAL, id:40, offset:0},
 	{img: IMG_GEMSTONE_MINE, pack:PACK_GENERAL, id:188, offset:0},
 	{img: IMG_TEMPLE_OSIRIS, pack:PACK_GENERAL, id:25, offset:0},
