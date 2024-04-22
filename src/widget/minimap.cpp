@@ -117,8 +117,9 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
         return;
     }
 
-    if (draw_figure(screen, point))
+    if (draw_figure(screen, point)) {
         return;
+    }
 
     int terrain = map_terrain_get(grid_offset);
     // exception for fort ground: display as empty land

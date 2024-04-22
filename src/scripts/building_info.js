@@ -467,6 +467,16 @@ building_festival_square = {
   building_size : 5,
 }
 
+building_ferry = {
+  animations : {
+    preview : { pack:PACK_TERRAIN, id:23 },
+    base : { pack:PACK_TERRAIN, id:23 },
+    work : { pack:PACK_TERRAIN, id:23 }
+  },
+  building_size : 2,
+  labor_category : LABOR_CATEGORY_GOVERNMENT,
+}
+
 building_village_palace = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_VILLAGE_PALACE }

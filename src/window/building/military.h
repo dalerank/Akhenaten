@@ -4,7 +4,6 @@ struct object_info;
 struct mouse;
 
 void window_building_draw_wall(object_info* c);
-void window_building_draw_ferry(object_info* c);
 void window_building_draw_gatehouse(object_info* c);
 void window_building_draw_tower(object_info* c);
 void window_building_draw_military_academy(object_info* c);

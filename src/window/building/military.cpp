@@ -75,21 +75,6 @@ void window_building_draw_wall(object_info* c) {
     window_building_draw_description_at(c, 16 * c->bgsize.y - 158, 139, 1);
 }
 
-void window_building_draw_ferry(object_info* c) {
-    c->help_id = 85;
-    window_building_play_sound(c, "wavs/gatehouse.wav");
-    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
-    lang_text_draw_centered(e_text_ferry_landing, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    building *ferry = building_get(c->building_id);
-    if (!map_routing_ferry_has_routes(ferry)) {
-        window_building_draw_description_at(c, 16 * c->bgsize.y - 158, e_text_ferry_landing, e_text_ferry_landing_no_routes);
-    } else if (!ferry->has_road_access) {
-        window_building_draw_description_at(c, 16 * c->bgsize.y - 158, e_text_ferry_landing, e_text_ferry_landing_no_roads);
-    } else if (ferry->num_workers <= 0) {
-        window_building_draw_description_at(c, 16 * c->bgsize.y - 158, e_text_ferry_landing, e_text_ferry_landing_no_workers);
-    }
-}
-
 void window_building_draw_gatehouse(object_info* c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/gatehouse.wav");

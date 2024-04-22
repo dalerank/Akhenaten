@@ -270,11 +270,6 @@ static void add_entertainment_venue(building* b, int orientation) {
     }
 }
 
-static int place_ferry(building *b, int size, int image_id) {
-    map_building_tiles_add(b->id, b->tile, size, image_id, TERRAIN_BUILDING|TERRAIN_ROAD|TERRAIN_FERRY_ROUTE);
-    return 1;
-}
-
 static void add_building_tiles_image(building* b, int image_id) {
     map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
 }
@@ -394,13 +389,6 @@ static void add_building(building* b, int orientation, int variant) {
 
     case BUILDING_SMALL_MASTABA:
         add_mastaba(b, orientation);
-        break;
-
-    case BUILDING_FERRY: {
-            auto props = building_properties_for_type(b->type);
-            map_water_add_building(b->id, b->tile, props->size, props->img_id() + orientation_rel);
-            place_ferry(b, props->size, props->img_id() + orientation_rel);
-        }
         break;
         // defense
     case BUILDING_MUD_TOWER:

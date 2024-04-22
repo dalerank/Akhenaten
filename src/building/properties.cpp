@@ -143,7 +143,7 @@ static building_properties properties[400] = {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {4, 0, 0, 0},
-    {2, 1, GROUP_BUILDING_FERRY}, // ferry
+    {2, 1, 0, 0}, // ferry
     {2, 0, 0, 0},
     {1, 1, GROUP_BUILDING_ROADBLOCK}, // roadblock
     {0, 0, 0, 0},
@@ -287,6 +287,7 @@ void building_properties_init() {
     properties[BUILDING_STONEMASONS_GUILD] = {2, 0, 0, 0, 0, IMG_GUILD_STONEMASONS};
     properties[BUILDING_DOCK] = {3, 1, 0, 0, 0, IMG_BUILDING_DOCK};
     properties[BUILDING_DANCE_SCHOOL] = {4, 0, 0, 0, 0, IMG_NONE};
+    properties[BUILDING_FERRY] = {2, 1, 0, 0, 0, IMG_NONE};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

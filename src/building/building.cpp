@@ -192,7 +192,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
     case BUILDING_TRANSPORT_WHARF:
     case BUILDING_SHIPWRIGHT:
     case BUILDING_WARSHIP_WHARF:
-    case BUILDING_FERRY:
         data.industry.orientation = orientation;
         break;
 
@@ -322,6 +321,7 @@ building_wood_cutter *building::dcast_wood_cutter() { return dcast()->dcast_wood
 building_recruiter *building::dcast_recruiter() { return dcast()->dcast_recruiter(); }
 building_pavilion *building::dcast_pavilion() { return dcast()->dcast_pavilion(); }
 building_statue *building::dcast_statue() { return dcast()->dcast_statue(); }
+building_ferry *building::dcast_ferry() { return dcast()->dcast_ferry(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));

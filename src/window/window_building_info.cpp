@@ -524,7 +524,6 @@ static void draw_refresh_background() {
                     window_building_draw_roadblock(&context);
                 break;
 
-            case BUILDING_FERRY: window_building_draw_ferry(&context); break;
             case BUILDING_MUD_GATEHOUSE: window_building_draw_gatehouse(&context); break;
             case BUILDING_MUD_TOWER: window_building_draw_tower(&context); break;
             case BUILDING_MILITARY_ACADEMY: window_building_draw_military_academy(&context); break;
