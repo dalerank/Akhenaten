@@ -38,3 +38,9 @@ void map_image_clear();
 void map_image_init_edges();
 
 void set_image_grid_correction_shift(int shift);
+
+template<typename T>
+inline bool map_image_at_is(tile2i tile, const T &imgs) {
+    int img = map_image_at(tile); 
+    return (std::find(imgs.begin(), imgs.end(), img) != imgs.end());
+}

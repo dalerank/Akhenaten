@@ -18,7 +18,10 @@
 #include "js/js_game.h"
 
 struct pavilion_model : public buildings::model_t<building_pavilion> {
-    int base = 0;
+    int dancer_tile = 0;
+    int booth_tile = 0;
+    int musician_tile_s = 0;
+    int musician_tile_n = 0;
     struct preview_offset {
         vec2i stand, stand_b, stand_e, booth;
         int stand_b_img = 0, stand_e_img = 0;
@@ -69,7 +72,10 @@ void config_load_building_pavilion() {
             place_dir.load(arch, bstring32().printf("place_dir_%d", std::distance(pavilion_m.place_dir, &place_dir)).c_str());
         }
     });
-    pavilion_m.base = pavilion_m.anim["base"].first_img();
+    pavilion_m.dancer_tile = pavilion_m.anim["base"].first_img();
+    pavilion_m.booth_tile = pavilion_m.anim["booth"].first_img();
+    pavilion_m.musician_tile_s = pavilion_m.anim["stand_sn_s"].first_img();
+    pavilion_m.musician_tile_n= pavilion_m.anim["stand_sn_n"].first_img();
 }
 
 void building_pavilion::on_create(int orientation) {
@@ -96,12 +102,19 @@ void building_pavilion::on_place(int orientation, int variant) {
 }
 
 bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    if (map_image_at(tile) == pavilion_m.base) {
-        building* main = base.main();
-        if (main->data.entertainment.days3_or_play) {
-            int base_id = building_impl::params(BUILDING_PAVILLION).anim["base"].first_img();
-            building_draw_normal_anim(ctx, point + vec2i{64, 0}, &base, tile, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask, base_id);
-        }
+    if (data.entertainment.days3_or_play && map_image_at(tile) == pavilion_m.dancer_tile) {
+        const animation_t &anim = pavilion_m.anim["dancer"];
+        building_draw_normal_anim(ctx, point + vec2i{64, 0}, &base, tile, anim, color_mask);
+    }
+
+    if (data.entertainment.days2 && map_image_at_is(tile, std::array{pavilion_m.musician_tile_n, pavilion_m.musician_tile_s})) {
+        const animation_t &anim = pavilion_m.anim["musician"];
+        building_draw_normal_anim(ctx, point + vec2i{64, 0}, &base, tile, anim, color_mask);
+    }
+
+    if (data.entertainment.days1 && map_image_at(tile) == pavilion_m.booth_tile) {
+        const animation_t &anim = pavilion_m.anim["juggler"];
+        building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
     }
 
     return true;
