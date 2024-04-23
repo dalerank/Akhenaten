@@ -379,7 +379,6 @@ public:
     void spawn_figure_senet();
     void set_water_supply_graphic();
     void spawn_figure_library();
-    void spawn_figure_dentist();
     void spawn_figure_mortuary();
     void set_greate_palace_graphic();
     void spawn_figure_tax_collector();

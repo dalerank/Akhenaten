@@ -21,8 +21,8 @@
 
 buildings::model_t<building_apothecary> apothercary_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_health);
-void config_load_building_health() {
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_apothecary);
+void config_load_building_apothecary() {
     apothercary_m.load();
 }
 
@@ -54,7 +54,7 @@ static void game_cheat_start_plague(std::istream &is, std::ostream &os) {
 declare_console_command(plague_start, game_cheat_start_plague);
 declare_console_command(plague_no, game_cheat_noplague);
 
-static void building_health_draw_info(object_info& c, int help_id, const char* type, int group_id, e_figure_type ftype) {
+void building_health_draw_info(object_info& c, int help_id, const char* type, int group_id, e_figure_type ftype) {
     c.help_id = help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
@@ -78,10 +78,6 @@ static void building_health_draw_info(object_info& c, int help_id, const char* t
 
 void building_apothecary::window_info_background(object_info& c) {
     building_health_draw_info(c, 63, "apothecary", e_text_building_apothecary, FIGURE_HERBALIST);
-}
-
-void building_dentist_draw_info(object_info& c) {
-    building_health_draw_info(c, 65, "dentist", e_text_building_dentist, FIGURE_DENTIST);
 }
 
 void building_mortuary_draw_info(object_info& c) {

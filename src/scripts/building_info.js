@@ -477,6 +477,16 @@ building_ferry = {
   labor_category : LABOR_CATEGORY_GOVERNMENT,
 }
 
+building_dentist = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:67 },
+    base : { pack:PACK_GENERAL, id:67 },
+    work : { pack:PACK_GENERAL, id:67, offset:1, max_frames:12 }
+  },
+  building_size : 1,
+  window_info_height_id : 1,
+}
+
 building_village_palace = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_VILLAGE_PALACE }

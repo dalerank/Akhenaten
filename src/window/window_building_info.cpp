@@ -95,7 +95,6 @@ static int get_height_id() {
         case BUILDING_SENET_MASTER:
         case BUILDING_MORTUARY:
         case BUILDING_MENU_MONUMENTS:
-        case BUILDING_DENTIST:
         case BUILDING_BURNING_RUIN:
         case BUILDING_WATER_LIFT:
         case BUILDING_UNUSED_NATIVE_HUT_88:
@@ -506,7 +505,6 @@ static void draw_refresh_background() {
             case BUILDING_SENET_HOUSE: window_building_draw_senet_house(&context); break;
             case BUILDING_SENET_MASTER: building_bullfight_school_draw_info(context); break;
             case BUILDING_MORTUARY: building_mortuary_draw_info(context); break;
-            case BUILDING_DENTIST: building_dentist_draw_info(context); break;
             case BUILDING_ACADEMY: building_academy_draw_info(context); break;
             case BUILDING_LIBRARY: building_library_draw_info(context); break;
             case BUILDING_ORACLE: window_building_draw_oracle(&context); break;

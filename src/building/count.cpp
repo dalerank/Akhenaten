@@ -129,7 +129,6 @@ void building_count_update() {
         case BUILDING_LIBRARY:
         case BUILDING_ACADEMY:
             // health
-        case BUILDING_DENTIST:
         case BUILDING_MENU_MONUMENTS:
         case BUILDING_APOTHECARY:
             // government

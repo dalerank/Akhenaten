@@ -17,5 +17,5 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };
 
-void building_dentist_draw_info(object_info& c);
 void building_mortuary_draw_info(object_info& c);
+void building_health_draw_info(object_info &c, int help_id, const char *type, int group_id, e_figure_type ftype);

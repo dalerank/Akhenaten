@@ -55,7 +55,7 @@ static building_properties properties[400] = {
     {1, 0, 0, 0}, // apothecary
     {2, 0, GROUP_BUILDING_MORTUARY},   // mortuary
     {2, 0, 0, 0},
-    {1, 0, GROUP_BUILDING_DENTIST},        // dentist
+    {1, 0, 0, 0},        // dentist
     {3, 0, 0, 0},                          // unused (distribution center)
     {2, 0, 0, 0},         // school
     {3, 0, 0, 0},                          // water crossings
@@ -288,6 +288,7 @@ void building_properties_init() {
     properties[BUILDING_DOCK] = {3, 1, 0, 0, 0, IMG_BUILDING_DOCK};
     properties[BUILDING_DANCE_SCHOOL] = {4, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_FERRY] = {2, 1, 0, 0, 0, IMG_NONE};
+    properties[BUILDING_DENTIST] = {1, 0, 0, 0, 0, IMG_NONE};
 }
 
 const building_properties* building_properties_for_type(e_building_type type) {

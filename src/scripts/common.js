@@ -43,6 +43,7 @@ var building_bandstand = {}
 var building_pavilion = {}
 var building_festival_square = {}
 var building_ferry = {}
+var building_dentist = {}
 var building_dancer_school = {}
 var building_conservatory = {}
 var building_pottery = {}
