@@ -98,9 +98,8 @@ bool building_recruiter::create_soldier() {
         figure* f = figure_create(m->figure_type, base.road_access, DIR_0_TOP_RIGHT);
         f->formation_id = formation_id;
         f->formation_at_rest = 1;
-        if (m->figure_type == FIGURE_STANDARD_BEARER) {
-            if (base.stored_full_amount > 0)
-                base.stored_full_amount -= 100;
+        if (base.stored_full_amount > 0) {
+            base.stored_full_amount -= 100;
         }
         int academy_id = get_closest_military_academy(building_get(m->building_id));
         if (academy_id) {
@@ -109,9 +108,6 @@ bool building_recruiter::create_soldier() {
             if (map_get_road_access_tile(academy->tile, academy->size, road)) {
                 f->action_state = FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY;
                 f->destination_tile = road;
-                //                f->destination_x = road.x();
-                //                f->destination_y = road.y();
-                //                f->destination_grid_offset = MAP_OFFSET(f->destination_x, f->destination_y);
             } else {
                 f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
             }
