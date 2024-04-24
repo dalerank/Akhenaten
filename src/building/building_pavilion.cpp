@@ -21,7 +21,7 @@ struct pavilion_model : public buildings::model_t<building_pavilion> {
     int dancer_tile = 0;
     int booth_tile = 0;
     int musician_tile_s = 0;
-    int musician_tile_n = 0;
+    int musician_tile_e = 0;
     struct preview_offset {
         vec2i stand, stand_b, stand_e, booth;
         int stand_b_img = 0, stand_e_img = 0;
@@ -75,7 +75,7 @@ void config_load_building_pavilion() {
     pavilion_m.dancer_tile = pavilion_m.anim["base"].first_img();
     pavilion_m.booth_tile = pavilion_m.anim["booth"].first_img();
     pavilion_m.musician_tile_s = pavilion_m.anim["stand_sn_s"].first_img();
-    pavilion_m.musician_tile_n= pavilion_m.anim["stand_sn_n"].first_img();
+    pavilion_m.musician_tile_e = pavilion_m.anim["stand_sn_e"].first_img();
 }
 
 void building_pavilion::on_create(int orientation) {
@@ -104,12 +104,17 @@ void building_pavilion::on_place(int orientation, int variant) {
 bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     if (data.entertainment.days3_or_play && map_image_at(tile) == pavilion_m.dancer_tile) {
         const animation_t &anim = pavilion_m.anim["dancer"];
-        building_draw_normal_anim(ctx, point + vec2i{64, 0}, &base, tile, anim, color_mask);
+        building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
     }
 
-    if (data.entertainment.days2 && map_image_at_is(tile, std::array{pavilion_m.musician_tile_n, pavilion_m.musician_tile_s})) {
-        const animation_t &anim = pavilion_m.anim["musician"];
-        building_draw_normal_anim(ctx, point + vec2i{64, 0}, &base, tile, anim, color_mask);
+    if (data.entertainment.days2) {
+        if (map_image_at(tile) == pavilion_m.musician_tile_s) {
+            const animation_t &anim = pavilion_m.anim["musician_sn"];
+            building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+        } else if (map_image_at(tile) == pavilion_m.musician_tile_e) {
+            const animation_t &anim = pavilion_m.anim["musician_we"];
+            building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+        }
     }
 
     if (data.entertainment.days1 && map_image_at(tile) == pavilion_m.booth_tile) {

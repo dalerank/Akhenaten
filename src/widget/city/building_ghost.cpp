@@ -461,10 +461,10 @@ void BuildPlanner::draw_flat_tile(vec2i pos, color color_mask, painter &ctx) {
 void BuildPlanner::draw_blueprints(painter &ctx, bool fully_blocked) {
     vec2i pixel = pixel_coords_cache[0][0];
     switch (build_type) {
-        case BUILDING_FORT_ARCHERS:
-        case BUILDING_FORT_CHARIOTEERS:
-        case BUILDING_FORT_INFANTRY:
-        draw_fort_ghost(ctx, build_type, end, pixel);
+    case BUILDING_FORT_ARCHERS:
+    case BUILDING_FORT_CHARIOTEERS:
+    case BUILDING_FORT_INFANTRY:
+        building_fort::ghost_preview(ctx, end, pixel, 0);
         return;
 
     default:
@@ -523,7 +523,7 @@ void BuildPlanner::draw_graphics(painter &ctx) {
     case BUILDING_FORT_ARCHERS:
     case BUILDING_FORT_CHARIOTEERS:
     case BUILDING_FORT_INFANTRY:
-        draw_fort_ghost(ctx, build_type, end, pixel);
+        building_fort::ghost_preview(ctx, end, pixel, 0);
         return;
 
     case BUILDING_WELL:
@@ -546,8 +546,6 @@ void BuildPlanner::draw_graphics(painter &ctx) {
                 vec2i current_coord = pixel_coords_cache[row][column];
                 ImageDraw::isometric_from_drawtile(ctx, image_id, current_coord, COLOR_MASK_GREEN);
                 ImageDraw::isometric_from_drawtile_top(ctx, image_id, current_coord, COLOR_MASK_GREEN);
-                //                ImageDraw::isometric_top_from_drawtile(image_id, current_coord.x, current_coord.y,
-                //                COLOR_MASK_GREEN, city_view_get_scale_float());
             }
         }
     }

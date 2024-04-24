@@ -50,8 +50,8 @@ static building_properties properties[400] = {
     {1, 1, 0, 0},
     {2, 1, 0, 0},
     {3, 1, 0, 0},                      // statues ^^^
-    {3, 1, GROUP_BUILDING_FORT},       // archers
-    {3, 1, GROUP_BUILDING_FORT},       // infantry
+    {3, 1, 0, 0},       // archers
+    {3, 1, 0, 0},       // infantry
     {1, 0, 0, 0}, // apothecary
     {2, 0, GROUP_BUILDING_MORTUARY},   // mortuary
     {2, 0, 0, 0},
@@ -60,10 +60,10 @@ static building_properties properties[400] = {
     {2, 0, 0, 0},         // school
     {3, 0, 0, 0},                          // water crossings
     {3, 0, GROUP_BUILDING_LIBRARY},        // library
-    {4, 1, GROUP_BUILDING_FORT, 1},        // fort yard
+    {4, 1, 0, 0},        // fort yard
     {1, 0, GROUP_BUILDING_POLICE_STATION}, // police
     {3, 1, 0, 0},
-    {3, 1, GROUP_BUILDING_FORT}, // fort (main)
+    {3, 1, 0, 0}, // fort (main)
     {2, 1, 0, 0},
     {2, 1, 0, 0},
     {3, 0, 0, 0},

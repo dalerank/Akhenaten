@@ -126,12 +126,14 @@ void init_draw_context(int selected_figure_id, vec2i* figure_coord, int highligh
 }
 
 bool drawing_building_as_deleted(building* b) {
-    if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
+    if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE)) {
         return false;
+    }
 
     b = b->main();
-    if (b->id && (b->is_deleted || map_property_is_deleted(b->tile)))
+    if (b->id && (b->is_deleted || map_property_is_deleted(b->tile))) {
         return true;
+    }
 
     return false;
 }

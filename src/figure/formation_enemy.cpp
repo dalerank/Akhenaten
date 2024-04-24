@@ -300,6 +300,7 @@ static void set_native_target_building(formation* m) {
         case BUILDING_FORT_INFANTRY:
         case BUILDING_ROADBLOCK:
             break;
+
         default: {
             int distance = calc_maximum_distance(meeting, b->tile);
             if (distance < min_distance) {

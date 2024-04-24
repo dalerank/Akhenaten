@@ -322,6 +322,8 @@ building_recruiter *building::dcast_recruiter() { return dcast()->dcast_recruite
 building_pavilion *building::dcast_pavilion() { return dcast()->dcast_pavilion(); }
 building_statue *building::dcast_statue() { return dcast()->dcast_statue(); }
 building_ferry *building::dcast_ferry() { return dcast()->dcast_ferry(); }
+building_fort *building::dcast_fort() { return dcast()->dcast_fort(); }
+building_fort_ground *building::dcast_fort_ground() { return dcast()->dcast_fort_ground(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));

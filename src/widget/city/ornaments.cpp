@@ -88,25 +88,6 @@ static void draw_water_lift_anim(painter &ctx, building* b, int x, int y, color 
     building_draw_normal_anim(ctx, vec2i{x, y}, b, b->tile, image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
 }
 
-static void draw_fort_anim(int x, int y, building* b, painter &ctx) {
-    if (map_property_is_draw_tile(b->tile.grid_offset())) {
-        int offset = 0;
-        switch (b->subtype.fort_figure_type) {
-        case FIGURE_FCHARIOTEER:
-            offset = 4;
-            break;
-        case FIGURE_INFANTRY:
-            offset = 3;
-            break;
-        case FIGURE_ARCHER:
-            offset = 2;
-            break;
-        }
-        if (offset)
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_BUILDING_FORT) + offset, x + 81, y + 5, drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0);
-    }
-}
-
 static void draw_gatehouse_anim(int x, int y, building* b, painter &ctx) {
     int xy = map_property_multi_tile_xy(b->tile.grid_offset());
     int orientation = city_view_orientation();
@@ -233,12 +214,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
     case BUILDING_SANDSTONE_QUARRY:
         building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, tile, image_group(ANIM_SANDSTONE_QUARRY_1) - 1, color_mask);
         break; 
-
-    case BUILDING_FORT_ARCHERS:
-    case BUILDING_FORT_INFANTRY:
-    case BUILDING_FORT_CHARIOTEERS:
-        draw_fort_anim(point.x, point.y, b, ctx);
-        break;
 
     case BUILDING_MUD_GATEHOUSE:
         draw_gatehouse_anim(point.x, point.y, b, ctx);

@@ -779,12 +779,6 @@ bool building::figure_generate() {
         case BUILDING_UNUSED_NATIVE_MEETING_89: spawn_figure_native_meeting(); break;
         case BUILDING_UNUSED_NATIVE_CROPS_93: update_native_crop_progress(); break;
 
-        case BUILDING_FORT_CHARIOTEERS:
-        case BUILDING_FORT_ARCHERS:
-        case BUILDING_FORT_INFANTRY:
-            formation_legion_update_recruit_status(this);
-            break;
-
         case BUILDING_VILLAGE_PALACE:
         case BUILDING_TOWN_PALACE:
         case BUILDING_CITY_PALACE:

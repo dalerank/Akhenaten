@@ -55,14 +55,49 @@ building_large_statue = {
 
 building_fort = {
   ghost : {
-    main : [[-55, -35], [-55, -35], [-55, -35], [-60, -40]],
-    ground : [[35, 35], [5, -70], [-200, -55], [-180, 46]],
+    main : [[-55, 20], [-55, -35], [-55, -35], [-60, -40]],
+    ground : [[35, 65], [5, -70], [-200, -55], [-180, 46]],
     ground_check : [[3, -1], [4, -1], [4, 0], [3, 0],
                     [-1,-4], [0, -4], [0,-3], [-1,-3],
                     [-4, 0], [-3, 0], [-3,1], [-4, 1],
                     [0,  3], [1,  3], [1, 4], [0,  4]],
   },
   labor_category : LABOR_CATEGORY_MILITARY,
+}
+
+building_fort_charioteers = {
+  animations : {
+    base: {pack: PACK_GENERAL, id: 66},
+    ground: {pack: PACK_GENERAL, id: 66, offset:1},
+    picture: {pack: PACK_GENERAL, id: 66, offset:2, pos:[93, -21]},
+  },
+  labor_category : LABOR_CATEGORY_MILITARY,
+  building_size : 3,
+}
+
+building_fort_infantry = {
+  animations : {
+    base: {pack: PACK_GENERAL, id: 66},
+    ground: {pack: PACK_GENERAL, id: 66, offset:1},
+    picture: {pack: PACK_GENERAL, id: 66, offset:4, pos:[93, -21]},
+  },
+  labor_category : LABOR_CATEGORY_MILITARY,
+  building_size : 3,
+}
+
+building_fort_archers = {
+  animations : {
+    base: {pack: PACK_GENERAL, id: 66},
+    ground: {pack: PACK_GENERAL, id: 66, offset:1},
+    picture: {pack: PACK_GENERAL, id: 66, offset:3, pos:[93, -21]},
+  },
+  labor_category : LABOR_CATEGORY_MILITARY,
+  building_size : 3,
+}
+
+building_fort_ground = {
+  labor_category : LABOR_CATEGORY_MILITARY,
+  building_size : 4,
 }
 
 building_cattle_ranch = {
@@ -377,8 +412,11 @@ building_pavilion = {
     square : { pos:[0, 0], pack:PACK_GENERAL, id:50 },
     stand_sn_s : { pack:PACK_GENERAL, id:92, offset:0},
     stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1},
+    stand_sn_e : { pack:PACK_GENERAL, id:92, offset:2},
     juggler : { pos : [35, 17], anim_id : IMG_JUGGLER_SHOW },
-    dancer : { pos : [104, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35 },
+    dancer : { pos : [65, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35 },
+    musician_sn : { pos : [50, 0], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11 },
+    musician_we : { pos : [48, 4], pack:PACK_SPR_AMBIENT, id:10, max_frames : 11 },
     booth : { pos:[0, 0], pack:PACK_GENERAL, id:114 },
   },
   preview_dir_0 : { stand:[-30, 15], stand_b:[90, 45], stand_e:[60, 60], booth:[-60, 30] },

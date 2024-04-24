@@ -57,34 +57,6 @@ static const vec2i FORT_OFFSET[4][4] = {{{3, -1}, {4, -1}, {4, 0}, {3, 0}},
                                         {{-4, 0}, {-3, 0}, {-3, 1}, {4, 1}}, 
                                         {{0, 3}, {1, 3}, {1, 4}, {0, 4}}};
 
-static void add_fort(int type, building* fort) {
-    fort->prev_part_building_id = 0;
-    map_building_tiles_add(fort->id, fort->tile, fort->size, image_id_from_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
-
-    if (type == BUILDING_FORT_CHARIOTEERS) {
-        fort->subtype.fort_figure_type = FIGURE_FCHARIOTEER;
-    } else if (type == BUILDING_FORT_ARCHERS) {
-        fort->subtype.fort_figure_type = FIGURE_ARCHER;
-    } else if (type == BUILDING_FORT_INFANTRY) {
-        fort->subtype.fort_figure_type = FIGURE_INFANTRY;
-    }
-
-    // create parade ground
-    const int offsets_x[] = {3, -1, -4, 0};
-    const int offsets_y[] = {-1, -4, 0, 3};
-    int global_rotation = building_rotation_global_rotation();
-    building* ground = building_create(BUILDING_FORT_GROUND, fort->tile.shifted(offsets_x[global_rotation], offsets_y[global_rotation]), 0);
-    game_undo_add_building(ground);
-    ground->prev_part_building_id = fort->id;
-    fort->next_part_building_id = ground->id;
-    ground->next_part_building_id = 0;
-    tile2i fort_tile_add = fort->tile.shifted(offsets_x[global_rotation], offsets_y[global_rotation]);
-    map_building_tiles_add(ground->id, fort_tile_add, 4, image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
-
-    fort->formation_id = formation_legion_create_for_fort(fort);
-    ground->formation_id = fort->formation_id;
-}
-
 void BuildPlanner::add_building_tiles_from_list(int building_id, bool graphics_only) {
     for (int row = 0; row < size.y; ++row) {
         for (int column = 0; column < size.x; ++column) {
@@ -411,12 +383,6 @@ static void add_building(building* b, int orientation, int variant) {
         city_buildings_build_triumphal_arch();
         building_menu_update(BUILDSET_NORMAL);
         Planner.reset();
-        break;
-
-    case BUILDING_FORT_CHARIOTEERS:
-    case BUILDING_FORT_ARCHERS:
-    case BUILDING_FORT_INFANTRY:
-        add_fort(b->type, b);
         break;
 
     default:

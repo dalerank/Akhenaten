@@ -122,14 +122,17 @@ static int get_land_type_noncitizen(int grid_offset) {
     switch (building_at(grid_offset)->type) {
     default:
         return NONCITIZEN_1_BUILDING;
+
     case BUILDING_STORAGE_YARD:
     case BUILDING_FORT_GROUND:
         return NONCITIZEN_0_PASSABLE;
+
     case BUILDING_BURNING_RUIN:
     case BUILDING_UNUSED_NATIVE_HUT_88:
     case BUILDING_UNUSED_NATIVE_MEETING_89:
     case BUILDING_UNUSED_NATIVE_CROPS_93:
         return NONCITIZEN_N1_BLOCKED;
+
     case BUILDING_FORT_CHARIOTEERS:
     case BUILDING_FORT_INFANTRY:
     case BUILDING_FORT_ARCHERS:

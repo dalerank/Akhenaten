@@ -21,13 +21,11 @@
 #include "window/popup_dialog.h"
 
 struct clear_confirm_t {
-    tile2i cstart;
-    tile2i cend;
-    int bridge_confirmed;
-    int fort_confirmed;
+    tile2i cstart = tile2i();
+    tile2i cend = tile2i();
+    bool bridge_confirmed = false;
+    bool fort_confirmed = false;
 };
-
-clear_confirm_t g_clear_confirm;
 
 static building* get_deletable_building(int grid_offset) {
     int building_id = map_building_at(grid_offset);
@@ -47,13 +45,12 @@ static building* get_deletable_building(int grid_offset) {
     return b;
 }
 
-static int clear_land_confirmed(bool measure_only, tile2i start, tile2i end) {
-    auto& confirm = g_clear_confirm;
+static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
     int items_placed = 0;
     game_undo_restore_building_state();
     game_undo_restore_map(0);
 
-    grid_area area = map_grid_get_area(start, end);
+    grid_area area = map_grid_get_area(confirm.cstart, confirm.cend);
 
     int visual_feedback_on_delete = config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE);
     for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
@@ -84,13 +81,14 @@ static int clear_land_confirmed(bool measure_only, tile2i start, tile2i end) {
                 }
                 continue;
             }
+
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
                 building* b = get_deletable_building(grid_offset);
                 if (!b) {
                     continue;
                 }
 
-                if (b->type == BUILDING_FORT_GROUND || building_is_fort(b->type)) {
+                if (b->dcast_fort_ground() || b->dcast_fort()) {
                     if (!measure_only && confirm.fort_confirmed != 1) {
                         continue;
                     }
@@ -188,11 +186,13 @@ static int clear_land_confirmed(bool measure_only, tile2i start, tile2i end) {
 }
 
 int building_construction_clear_land(bool measure_only, tile2i start, tile2i end) {
-    auto& confirm = g_clear_confirm;
-    confirm.fort_confirmed = 0;
-    confirm.bridge_confirmed = 0;
+    clear_confirm_t confirm{};
+    confirm.cstart = start;
+    confirm.cend = end;
+    confirm.fort_confirmed = false;
+    confirm.bridge_confirmed = false;
     if (measure_only) {
-        return clear_land_confirmed(measure_only, start, end);
+        return clear_land_confirmed(measure_only, confirm);
     }
 
     grid_area area = map_grid_get_area(start, end);
@@ -200,38 +200,30 @@ int building_construction_clear_land(bool measure_only, tile2i start, tile2i end
     int ask_confirm_bridge = 0;
     int ask_confirm_fort = 0;
     map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
-        int grid_offset = tile.grid_offset();
-        int building_id = map_building_at(grid_offset);
-        if (building_id) {
-            building *b = building_get(building_id);
-            if (building_is_fort(b->type) || b->type == BUILDING_FORT_GROUND) {
-                ask_confirm_fort = 1;
-            }
-        }
-
-        if (map_is_bridge(grid_offset)) {
-            ask_confirm_bridge = 1;
-        }
+        int building_id = map_building_at(tile);
+        building *b = building_get(building_id);
+        ask_confirm_fort |= (building_id && (b->dcast_fort() || b->dcast_fort_ground()));
+        ask_confirm_bridge |= map_is_bridge(tile);
     });
 
     confirm.cstart = start;
     confirm.cend = end;
 
     if (ask_confirm_fort) {
-        window_yesno_dialog_show("#popup_dialog_delete_fort", [] (bool accepted) {
-            g_clear_confirm.fort_confirmed =
-            clear_land_confirmed(0, g_clear_confirm.cstart, g_clear_confirm.cend);
+        window_yes_dialog_show("#popup_dialog_delete_fort", [confirm] () mutable {
+            confirm.fort_confirmed = true;
+            clear_land_confirmed(0, confirm);
         });
         return -1;
     } 
     
     if (ask_confirm_bridge) {
-        window_yesno_dialog_show("#popup_dialog_delete_bridge", [] (bool accepted) {
-            g_clear_confirm.bridge_confirmed = accepted ? 1 : -1;
-            clear_land_confirmed(0, g_clear_confirm.cstart, g_clear_confirm.cend);
+        window_yes_dialog_show("#popup_dialog_delete_bridge", [confirm] () mutable {
+            confirm.bridge_confirmed = true;
+            clear_land_confirmed(0, confirm);
         });
         return -1;
     }
 
-    return clear_land_confirmed(measure_only, start, end);
+    return clear_land_confirmed(measure_only, confirm);
 }
