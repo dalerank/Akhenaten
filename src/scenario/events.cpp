@@ -297,6 +297,7 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
     if (event->event_trigger_type == EVENT_TRIGGER_ONCE)
         event->event_state = EVENT_TRIGGER_ALREADY_FIRED;
 }
+
 void scenario_event_process() {
     auto& data = g_events_data;
     // main event update loop
@@ -480,6 +481,7 @@ static bool is_line_standalone_group(const uint8_t* start_of_line, int size) {
     //
     //    return true;
 }
+
 bool eventmsg_load() {
     auto& data = g_events_data;
     buffer buf(TMP_BUFFER_SIZE);
@@ -554,7 +556,8 @@ bool eventmsg_load() {
     logs::info("Event phrases loaded -- Data size: %u", offset);
     return true;
 }
-bool eventmsg_auto_phrases_load(void) {
+
+bool eventmsg_auto_phrases_load() {
     auto& data = g_events_data;
     buffer buf(TMP_BUFFER_SIZE);
 

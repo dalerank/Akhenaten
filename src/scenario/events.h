@@ -169,5 +169,5 @@ uint8_t* get_eventmsg_text(int group_id, int index);
 
 void scenario_event_process();
 
-bool eventmsg_load(void);
-bool eventmsg_auto_phrases_load(void);
+bool eventmsg_load();
+bool eventmsg_auto_phrases_load();
