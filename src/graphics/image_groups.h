@@ -234,7 +234,7 @@ enum e_pack {
 #define GROUP_EMPIRE_FOREIGN_CITY PACK_GENERAL, 223               // this isn't in Pharaoh
 #define GROUP_GOD_BOLT PACK_GENERAL, 111                          // 225
 #define GROUP_PLAGUE_SKULL PACK_GENERAL, 97                       // 227
-#define GROUP_FIGURE_FORT_MOUNTED PACK_GENERAL, 66                // 232
+//#define GROUP_FIGURE_FORT_MOUNTED PACK_GENERAL, 66                // 232
 #define GROUP_BUILDING_TRADE_CENTER_FLAG PACK_GENERAL, 238        // this isn't in Pharaoh
 #define GROUP_FIGURE_FORT_STANDARD_POLE PACK_GENERAL, 241
 //#define GROUP_TRADE_AMOUNT PACK_GENERAL, 171           // 243

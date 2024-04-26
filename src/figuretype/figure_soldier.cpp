@@ -419,17 +419,18 @@ void figure_soldier_infantry::update_image(const formation *m, int &dir) {
 void figure_soldier_charioteer::update_image(const formation *m, int &dir) {
     figure_soldier::update_image(m, dir);
 
-    int image_id = image_id_from_group(GROUP_FIGURE_FORT_MOUNTED);
     if (action_state() == FIGURE_ACTION_150_ATTACK) {
-        if (base.attack_image_offset < 12)
-            image_id = image_id + 96 + dir;
-        else {
-            image_id = image_id + 96 + dir + 8 * ((base.attack_image_offset - 12) / 2);
-        }
-    } else if (action_state() == FIGURE_ACTION_149_CORPSE)
-        image_id = image_id + 144 + base.figure_image_corpse_offset();
-    else {
-        image_id = image_id + dir + 8 * base.anim_frame;
+        //int image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY);
+        //if (base.attack_image_offset < 12)
+        //    image_id = image_id + 96 + dir;
+        //else {
+        //    image_id = image_id + 96 + dir + 8 * ((base.attack_image_offset - 12) / 2);
+        //}
+        image_set_animation(soldier_charioterr_m.anim["attack"]);
+    } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
+        image_set_animation(soldier_charioterr_m.anim["death"]);
+    } else {
+        image_set_animation(soldier_charioterr_m.anim["walk"]);
     }
 }
 

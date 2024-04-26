@@ -129,6 +129,7 @@ var figure_lumberjack = {}
 var figure_magistrate = {}
 var figure_soldier_infantry = {}
 var figure_soldier_archer = {}
+var figure_soldier_charioteer = {}
 var mission0 = {}
 var mission1 = {}
 var mission5 = {}

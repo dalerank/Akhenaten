@@ -454,6 +454,14 @@ figure_soldier_archer = {
 	},
 }
 
+figure_soldier_charioteer = {
+	animations : {
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:67, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:68, max_frames:8 },
+		attack : { pos : [0, 0], pack:PACK_SPR_MAIN, id:69, max_frames:12 },
+	},
+}
+
 figure_juggler = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_JUGGLER_WALK, max_frames:12 },
