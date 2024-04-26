@@ -10,16 +10,19 @@ static grid_xx strength = {0, {FS_UINT8, FS_UINT8}};
 void map_soldier_strength_clear(void) {
     map_grid_clear(&strength);
 }
-void map_soldier_strength_add(int x, int y, int radius, int amount) {
-    grid_area area = map_grid_get_area(tile2i(x, y), 1, radius);
+void map_soldier_strength_add(tile2i tile, int radius, int amount) {
+    grid_area area = map_grid_get_area(tile, 1, radius);
 
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
-        int grid_offset = tile.grid_offset();
+    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+        int grid_offset = t.grid_offset();
         int v = map_grid_get(&strength, grid_offset);
         map_grid_set(&strength, grid_offset, v + amount);
         if (map_has_figure_at(grid_offset)) {
-            if (figure_get(map_figure_id_get(grid_offset))->is_legion())
+            int fid = map_figure_id_get(grid_offset);
+            figure *f = figure_get(fid);
+            if (f->dcast_soldier()) {
                 map_grid_set(&strength, grid_offset, v + amount + 2);
+            }
         }
     });
 }
@@ -28,8 +31,8 @@ int map_soldier_strength_get(int grid_offset) {
     return map_grid_get(&strength, grid_offset);
 }
 
-int map_soldier_strength_get_max(int x, int y, int radius, tile2i &out) {
-    grid_area area = map_grid_get_area(tile2i(x, y), 1, radius);
+int map_soldier_strength_get_max(tile2i tile, int radius, tile2i &out) {
+    grid_area area = map_grid_get_area(tile, 1, radius);
 
     int max_value = 0;
     tile2i max_tile(0, 0);

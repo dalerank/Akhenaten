@@ -71,8 +71,9 @@ formation* formation_create_legion(int building_id, int x, int y, e_figure_type 
         m->legion_id = 9;
 
     building* fort_ground = building_get(building_get(building_id)->next_part_building_id);
-    m->x = m->standard_x = m->x_home = fort_ground->tile.x();
-    m->y = m->standard_y = m->y_home = fort_ground->tile.y();
+    m->home = fort_ground->tile;
+    m->x = m->standard_x = fort_ground->tile.x();
+    m->y = m->standard_y = fort_ground->tile.y();
 
     data.num_formations++;
     if (formation_id > data.id_last_in_use)
@@ -158,8 +159,8 @@ int formation_grid_offset_for_invasion(int invasion_sequence) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = &g_formations[i];
         if (m->in_use == 1 && !m->is_legion && !m->is_herd && m->invasion_sequence == invasion_sequence) {
-            if (m->x_home > 0 || m->y_home > 0)
-                return MAP_OFFSET(m->x_home, m->y_home);
+            if (m->home.valid() )
+                return m->home.grid_offset();
             else {
                 return 0;
             }
@@ -207,7 +208,7 @@ void formation_calculate_legion_totals(void) {
             if (m->missile_attack_timeout <= 0 && m->figures[0] && !m->is_herd) {
                 figure* f = figure_get(m->figures[0]);
                 if (f->state == FIGURE_STATE_ALIVE)
-                    formation_set_home(m, f->tile.x(), f->tile.y());
+                    formation_set_home(m, f->tile);
             }
         }
     }
@@ -380,9 +381,9 @@ void formation_clear_monthly_counters(formation* m) {
     m->recent_fight = 0;
 }
 
-void formation_set_destination(formation* m, int x, int y) {
-    m->destination_x = x;
-    m->destination_y = y;
+void formation_set_destination(formation* m, tile2i tile) {
+    m->destination_x = tile.x();
+    m->destination_y = tile.y();
 }
 
 void formation_set_destination_building(formation* m, int x, int y, int building_id) {
@@ -391,9 +392,8 @@ void formation_set_destination_building(formation* m, int x, int y, int building
     m->destination_building_id = building_id;
 }
 
-void formation_set_home(formation* m, int x, int y) {
-    m->x_home = x;
-    m->y_home = y;
+void formation_set_home(formation* m, tile2i tile) {
+    m->home = tile;
 }
 
 void formation_clear_figures(void) {
@@ -432,9 +432,9 @@ void formation_move_herds_away(tile2i tile) {
         if (f->in_use != 1 || f->is_legion || !f->is_herd || f->num_figures <= 0)
             continue;
 
-        if (calc_maximum_distance(tile, vec2i(f->x_home, f->y_home)) <= 6) {
+        if (calc_maximum_distance(tile, f->home) <= 6) {
             g_formations[i].wait_ticks = 50;
-            g_formations[i].herd_direction = calc_general_direction(tile, tile2i(f->x_home, f->y_home));
+            g_formations[i].herd_direction = calc_general_direction(tile, f->home);
         }
     }
 }
@@ -446,7 +446,7 @@ void formation_calculate_figures(void) {
         if (f->state != FIGURE_STATE_ALIVE)
             continue;
 
-        if (!f->is_legion() && !f->is_enemy() && !f->is_herd())
+        if (!f->dcast_soldier() && !f->is_enemy() && !f->is_herd())
             continue;
 
         if (f->type == FIGURE_ENEMY54_GLADIATOR)
@@ -501,35 +501,35 @@ static void update_direction(int formation_id, int first_figure_direction) {
     else if (f->missile_fired)
         f->direction = first_figure_direction;
     else if (f->layout == FORMATION_DOUBLE_LINE_1 || f->layout == FORMATION_SINGLE_LINE_1) {
-        if (f->y_home < f->prev.y_home)
+        if (f->home.y() < f->prev.y_home)
             f->direction = DIR_0_TOP_RIGHT;
-        else if (f->y_home > f->prev.y_home)
+        else if (f->home.y() > f->prev.y_home)
             f->direction = DIR_4_BOTTOM_LEFT;
 
     } else if (f->layout == FORMATION_DOUBLE_LINE_2 || f->layout == FORMATION_SINGLE_LINE_2) {
-        if (f->x_home < f->prev.x_home)
+        if (f->home.x() < f->prev.x_home)
             f->direction = DIR_6_TOP_LEFT;
-        else if (f->x_home > f->prev.x_home)
+        else if (f->home.x() > f->prev.x_home)
             f->direction = DIR_2_BOTTOM_RIGHT;
 
     } else if (f->layout == FORMATION_TORTOISE || f->layout == FORMATION_COLUMN) {
-        int dx = (f->x_home < f->prev.x_home) ? (f->prev.x_home - f->x_home) : (f->x_home - f->prev.x_home);
-        int dy = (f->y_home < f->prev.y_home) ? (f->prev.y_home - f->y_home) : (f->y_home - f->prev.y_home);
+        int dx = (f->home.x() < f->prev.x_home) ? (f->prev.x_home - f->home.x()) : (f->home.x() - f->prev.x_home);
+        int dy = (f->home.y() < f->prev.y_home) ? (f->prev.y_home - f->home.y()) : (f->home.y() - f->prev.y_home);
         if (dx > dy) {
-            if (f->x_home < f->prev.x_home)
+            if (f->home.x() < f->prev.x_home)
                 f->direction = DIR_6_TOP_LEFT;
-            else if (f->x_home > f->prev.x_home)
+            else if (f->home.x() > f->prev.x_home)
                 f->direction = DIR_2_BOTTOM_RIGHT;
 
         } else {
-            if (f->y_home < f->prev.y_home)
+            if (f->home.y() < f->prev.y_home)
                 f->direction = DIR_0_TOP_RIGHT;
-            else if (f->y_home > f->prev.y_home)
+            else if (f->home.y() > f->prev.y_home)
                 f->direction = DIR_4_BOTTOM_LEFT;
         }
     }
-    f->prev.x_home = f->x_home;
-    f->prev.y_home = f->y_home;
+    f->prev.x_home = f->home.x();
+    f->prev.y_home = f->home.y();
 }
 
 static void update_directions(void) {
@@ -582,8 +582,8 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &f->layout);      // 9
         iob->bind(BIND_SIGNATURE_INT16, &f->morale);      // 100
 
-        iob->bind(BIND_SIGNATURE_UINT16, &f->x_home);        // 44
-        iob->bind(BIND_SIGNATURE_UINT16, &f->y_home);        // 58
+        iob->bind(BIND_SIGNATURE_UINT16, f->home.private_access(_X));        // 44
+        iob->bind(BIND_SIGNATURE_UINT16, f->home.private_access(_Y));        // 58
         iob->bind(BIND_SIGNATURE_UINT16, &f->standard_x);    //
         iob->bind(BIND_SIGNATURE_UINT16, &f->standard_y);    //
         iob->bind(BIND_SIGNATURE_UINT16, &f->x);             // 44
@@ -642,7 +642,7 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind____skip(17);
         iob->bind(BIND_SIGNATURE_INT16, &f->invasion_sequence);
 
-        if (!f->x_home && !f->y_home && f->is_herd) {
+        if (!f->home.x() && !f->home.y() && f->is_herd) {
             memset(f, 0, sizeof(formation));
         }
     }

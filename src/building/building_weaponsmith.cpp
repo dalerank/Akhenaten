@@ -8,6 +8,12 @@
 #include "js/js_game.h"
 #include "city/labor.h"
 
+#include "dev/debug.h"
+#include "city/resource.h"
+#include <iostream>
+
+declare_console_command(addweapons, game_cheat_add_resource<RESOURCE_WEAPONS>);
+
 buildings::model_t<building_weaponsmith> weaponsmith_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_weaponsmith);

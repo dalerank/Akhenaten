@@ -153,7 +153,7 @@ static void cycle_legion(void) {
         }
         if (current_legion_id > 0) {
             const formation* m = formation_get(current_legion_id);
-            camera_go_to_mappoint(map_point(MAP_OFFSET(m->x_home, m->y_home)));
+            camera_go_to_mappoint(m->home);
             window_invalidate();
         }
     }

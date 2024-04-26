@@ -80,7 +80,6 @@ images = [
 
 	//{img: IMG_EMIGRANT, pack: PACK_SPR_MAIN, id: 13}, // 878
 	//{img: IMG_FISHING_BOAT ???, pack:PACK_SPR_MAIN, id:133 }, 	// 7014
-	{img: ANIM_MUSICIAN_DEATH, pack:PACK_SPR_MAIN, id:192},
 	{img: IMG_JUGGLER_SHOW, pack:PACK_SPR_AMBIENT, id:7, offset:-1},
 	{img: IMG_SIDE_PANEL, pack:PACK_GENERAL, id:121, offset:0},
 	{img: IMG_TOP_MENU_BACKGROUND, pack:PACK_GENERAL, id:121, offset:8},

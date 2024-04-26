@@ -78,8 +78,7 @@ struct formation {
     /* Position */
     int x;
     int y;
-    int x_home;
-    int y_home;
+    tile2i home;
     int building_id;
     int standard_x;
     int standard_y;
@@ -163,9 +162,9 @@ void formation_update_monthly_morale_at_rest(void);
 void formation_decrease_monthly_counters(formation* m);
 void formation_clear_monthly_counters(formation* m);
 
-void formation_set_destination(formation* m, int x, int y);
+void formation_set_destination(formation* m, tile2i tile);
 void formation_set_destination_building(formation* m, int x, int y, int building_id);
-void formation_set_home(formation* m, int x, int y);
+void formation_set_home(formation* m, tile2i tile);
 
 void formation_clear_figures(void);
 int formation_add_figure(int formation_id, int figure_id, int deployed, int damage, int max_damage);

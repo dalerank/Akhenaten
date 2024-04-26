@@ -264,7 +264,6 @@ public:
     bool is_dead(); // figure.c
     bool is_enemy();
     bool is_herd();
-    bool is_legion();
     bool is_formation();        // formation_legion.c
     bool is_attacking_native(); // combat.c
     bool is_citizen();          // missile.c

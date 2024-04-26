@@ -76,9 +76,6 @@ void figure::play_die_sound() {
         if (city_figures_enemies() == 1)
             sound_speech_play_file("wavs/army_war_cry.wav");
 
-    } else if (f->is_legion()) {
-        if (city_figures_soldiers() == 1)
-            sound_speech_play_file("wavs/barbarian_war_cry.wav");
     }
 }
 

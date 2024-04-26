@@ -59,6 +59,7 @@ int figure_combat_get_target_for_soldier(tile2i tile, int max_distance) {
     }
     return 0;
 }
+
 int figure_combat_get_target_for_wolf(tile2i tile, int max_distance) {
     int min_figure_id = 0;
     int min_distance = 10000;
@@ -88,7 +89,7 @@ int figure_combat_get_target_for_wolf(tile2i tile, int max_distance) {
         if (f->is_enemy() || f->is_herd()) {
             continue;
         }
-        if (f->is_legion() && f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST) {
+        if (f->dcast_soldier() && f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST) {
             continue;
         }
         int distance = calc_maximum_distance(tile, f->tile);
@@ -114,7 +115,7 @@ int figure_combat_get_target_for_enemy(tile2i tile) {
         if (f->is_dead())
             continue;
 
-        if (!f->targeted_by_figure_id && f->is_legion()) {
+        if (!f->targeted_by_figure_id && f->dcast_soldier()) {
             int distance = calc_maximum_distance(tile, f->tile);
             if (distance < min_distance) {
                 min_distance = distance;
@@ -131,7 +132,7 @@ int figure_combat_get_target_for_enemy(tile2i tile) {
         if (f->is_dead())
             continue;
 
-        if (f->is_legion())
+        if (f->dcast_soldier())
             return i;
     }
     return 0;
@@ -188,7 +189,7 @@ int figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, 
             continue;
         }
         int distance;
-        if (f->is_legion())
+        if (f->dcast_soldier())
             distance = calc_maximum_distance(enemy->tile, f->tile);
         else if (attack_citizens && f->is_friendly)
             distance = calc_maximum_distance(enemy->tile, f->tile) + 5;

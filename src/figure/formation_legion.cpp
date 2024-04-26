@@ -98,18 +98,18 @@ static int prepare_to_move(formation* m) {
     return 1;
 }
 
-void formation_legion_move_to(formation* m, int x, int y) {
-    map_routing_calculate_distances(tile2i(m->x_home, m->y_home));
-    if (map_routing_distance(MAP_OFFSET(x, y)) <= 0)
+void formation_legion_move_to(formation* m, tile2i tile) {
+    map_routing_calculate_distances(m->home);
+    if (map_routing_distance(tile) <= 0)
         return; // unable to route there
 
-    if (x == m->x_home && y == m->y_home)
+    if (tile == m->home)
         return; // use formation_legion_return_home
 
     if (m->cursed_by_mars)
         return;
-    m->standard_x = x;
-    m->standard_y = y;
+    m->standard_x = tile.x();
+    m->standard_y = tile.y();
     m->is_at_fort = 0;
 
     if (m->morale <= 20)
@@ -129,12 +129,14 @@ void formation_legion_move_to(formation* m, int x, int y) {
 }
 
 void formation_legion_return_home(formation* m) {
-    map_routing_calculate_distances(tile2i(m->x_home, m->y_home));
+    map_routing_calculate_distances(m->home);
     if (map_routing_distance(MAP_OFFSET(m->x, m->y)) <= 0)
         return; // unable to route home
 
-    if (m->cursed_by_mars)
+    if (m->cursed_by_mars) {
         return;
+    }
+
     m->is_at_fort = 1;
     formation_legion_restore_layout(m);
     for (int i = 0; i < MAX_FORMATION_FIGURES && m->figures[i]; i++) {
@@ -272,10 +274,10 @@ int formation_legion_curse(void) {
 }
 
 bool figure::is_formation() {
-    if (is_legion() || type == FIGURE_STANDARD_BEARER)
-        return formation_id;
+    if (dcast_soldier() || type == FIGURE_STANDARD_BEARER)
+        return true;
 
-    return 0;
+    return false;
 }
 
 int formation_legion_at_grid_offset(int grid_offset) {
@@ -337,10 +339,11 @@ void formation_legion_update(void) {
 void formation_legion_decrease_damage(void) {
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure* f = figure_get(i);
-        if (f->state == FIGURE_STATE_ALIVE && f->is_legion()) {
+        if (f->state == FIGURE_STATE_ALIVE && f->dcast_soldier()) {
             if (f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST) {
-                if (f->damage)
+                if (f->damage) {
                     f->damage--;
+                }
             }
         }
     }

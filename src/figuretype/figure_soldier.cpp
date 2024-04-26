@@ -16,6 +16,7 @@
 #include "grid/figure.h"
 #include "grid/grid.h"
 #include "grid/point.h"
+#include "sound/speech.h"
 
 #include "js/js_game.h"
 
@@ -47,8 +48,8 @@ soldier_infantry_model soldier_infantry_m;
 soldier_archer_model soldier_archer_m;
 soldier_charioterr_model soldier_charioterr_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_stadard_bearer);
-void config_load_figure_stadard_bearer() {
+ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_soldiers);
+void config_load_figure_soldiers() {
     g_config_arch.r_section("figure_stadard_bearer", [] (archive arch) {
         standard_bearer_m.anim.load(arch);
         standard_bearer_m.sounds.load(arch);
@@ -182,6 +183,14 @@ void figure_soldier::update_image(const formation* m, int &dir) {
     dir = figure_image_normalize_direction(dir);
 }
 
+bool figure_soldier::play_die_sound() {
+    if (city_figures_soldiers() == 1) {
+        sound_speech_play_file("wavs/barbarian_war_cry.wav");
+    }
+
+    return true;
+}
+
 void figure_soldier::figure_action() {
     formation* m = formation_get(base.formation_id);
     city_figures_add_soldier();
@@ -194,7 +203,7 @@ void figure_soldier::figure_action() {
 
     int speed_factor;
     if (type() == FIGURE_INFANTRY) {
-        speed_factor = 3;
+        speed_factor = 1;
     } else if (type() == FIGURE_ARCHER) {
         speed_factor = 2;
     } else {
@@ -384,23 +393,26 @@ void figure_soldier::figure_action() {
 void figure_soldier_infantry::update_image(const formation *m, int &dir) {
     figure_soldier::update_image(m, dir);
 
-    int image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY);
     if (action_state() == FIGURE_ACTION_150_ATTACK) {
-        if (base.attack_image_offset < 12)
-            image_id = image_id + 96 + dir;
-        else {
-            image_id = image_id + 96 + dir + 8 * ((base.attack_image_offset - 12) / 2);
-        }
-    } else if (action_state() == FIGURE_ACTION_149_CORPSE)
-        image_id = image_id + 152 + base.figure_image_corpse_offset();
-    else if (action_state() == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
-        if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout)
-            image_id = image_id + dir + 144;
-        else {
-            image_id = image_id + dir;
-        }
+        //int image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY);
+        //if (base.attack_image_offset < 12)
+        //    image_id = image_id + 96 + dir;
+        //else {
+        //    image_id = image_id + 96 + dir + 8 * ((base.attack_image_offset - 12) / 2);
+        //}
+        image_set_animation(soldier_infantry_m.anim["attack"]);
+    } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
+        image_set_animation(soldier_infantry_m.anim["death"]);
+    } else if (action_state() == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
+        //if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout)
+        //    image_id = image_id + dir + 144;
+        //else {
+        //    image_id = image_id + dir;
+        //}
+        image_set_animation(soldier_infantry_m.anim["walk"]);
+        base.anim_frame = 0;
     } else {
-        image_id = image_id + dir + 8 * base.anim_frame;
+        image_set_animation(soldier_infantry_m.anim["walk"]);
     }
 }
 

@@ -1,13 +1,12 @@
-#ifndef FIGURE_ENEMY_ARMY_H
-#define FIGURE_ENEMY_ARMY_H
+#pragma once
 
 #include "core/buffer.h"
+#include "grid/point.h"
 
 struct enemy_army {
     int formation_id;
     int layout;
-    int home_x;
-    int home_y;
+    tile2i home;
     int destination_x;
     int destination_y;
     int destination_building_id;
@@ -33,12 +32,10 @@ void enemy_army_totals_add_legion_formation(int strength);
 
 void enemy_army_totals_add_enemy_formation(int strength);
 
-void enemy_army_calculate_roman_influence(void);
+void enemy_army_calculate_kingdome_influence();
 
 int enemy_army_is_stronger_than_legions(void);
 
 void enemy_armies_save_state(buffer* buf, buffer* totals_buf);
 
 void enemy_armies_load_state(buffer* buf, buffer* totals_buf);
-
-#endif // FIGURE_ENEMY_ARMY_H

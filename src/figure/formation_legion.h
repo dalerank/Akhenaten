@@ -1,5 +1,4 @@
-#ifndef FIGURE_FORMATION_LEGION_H
-#define FIGURE_FORMATION_LEGION_H
+#pragma once
 
 #include "building/building.h"
 #include "figure/formation.h"
@@ -16,7 +15,7 @@ void formation_legion_change_layout(formation* m, int new_layout);
 
 void formation_legion_restore_layout(formation* m);
 
-void formation_legion_move_to(formation* m, int x, int y);
+void formation_legion_move_to(formation* m, tile2i tile);
 
 void formation_legion_return_home(formation* m);
 
@@ -35,5 +34,3 @@ int formation_legion_at_building(int grid_offset);
 void formation_legion_update(void);
 
 void formation_legion_decrease_damage(void);
-
-#endif // FIGURE_FORMATION_LEGION_H

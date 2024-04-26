@@ -339,10 +339,6 @@ int figure::figure_image_corpse_offset() {
     case FIGURE_FCHARIOTEER:
         type_offset = 144;
         break;
-    case FIGURE_INFANTRY:
-    case FIGURE_ENEMY_CAESAR_LEGIONARY:
-        type_offset = 152;
-        break;
     case FIGURE_ENEMY44_SWORD:
     case FIGURE_ENEMY45_SWORD:
     case FIGURE_ENEMY50_SWORD:

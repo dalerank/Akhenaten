@@ -434,7 +434,7 @@ static void init(map_point tile) {
             continue;
 
         figure* f = figure_get(figure_id);
-        if (f->type == FIGURE_STANDARD_BEARER || f->is_legion()) {
+        if (f->type == FIGURE_STANDARD_BEARER || f->dcast_soldier()) {
             context.type = BUILDING_INFO_LEGION;
             context.formation_id = f->formation_id;
             const formation* m = formation_get(context.formation_id);

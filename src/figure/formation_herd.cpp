@@ -53,12 +53,14 @@ static int get_free_tile(int x, int y, int allow_negative_desirability, tile2i &
     return tile_found;
 }
 
-static int get_roaming_destination(int formation_id, int allow_negative_desirability, int x, int y, int distance, int direction, tile2i &outtile) {
+static int get_roaming_destination(int formation_id, int allow_negative_desirability, tile2i tile, int distance, int direction, tile2i &outtile) {
     int target_direction = (formation_id + random_byte()) & 6;
     if (direction) {
         target_direction = direction;
         allow_negative_desirability = 1;
     }
+    int x = tile.x();
+    int y = tile.y();
     for (int i = 0; i < 4; i++) {
         int x_target, y_target;
         switch (target_direction) {
@@ -265,7 +267,7 @@ static void update_herd_formation(formation* m) {
     if (m->wait_ticks > roam_delay || attacking_animals) {
         m->wait_ticks = 0;
         if (attacking_animals) {
-            formation_set_destination(m, m->x_home, m->y_home);
+            formation_set_destination(m, m->home);
             move_animals(m, attacking_animals, terrain_mask);
         } else {
             tile2i rtile;
@@ -279,10 +281,10 @@ static void update_herd_formation(formation* m) {
                 }
             }*/
 
-            if (get_roaming_destination(m->id, allow_negative_desirability, m->x_home, m->y_home, roam_distance, m->herd_direction, rtile)) {
+            if (get_roaming_destination(m->id, allow_negative_desirability, m->home, roam_distance, m->herd_direction, rtile)) {
                 m->herd_direction = 0;
                 if (formation_enemy_move_formation_to(m, rtile, rtile)) {
-                    formation_set_destination(m, rtile.x(), rtile.y());
+                    formation_set_destination(m, rtile);
                     move_animals(m, attacking_animals, terrain_mask);
                 }
             }

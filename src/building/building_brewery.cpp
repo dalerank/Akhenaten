@@ -12,14 +12,14 @@
 
 #include <iostream>
 
+declare_console_command(addbeer, game_cheat_add_resource<RESOURCE_BEER>);
+
 buildings::model_t<building_brewery> brewery_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_brewery);
 void config_load_building_brewery() {
     brewery_m.load();
 }
-
-declare_console_command(addbeer, game_cheat_add_resource<RESOURCE_BEER>);
 
 void building_brewery::on_create(int orientation) {
     data.industry.first_material_id = RESOURCE_BARLEY;

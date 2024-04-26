@@ -20,8 +20,7 @@ void enemy_armies_clear(void) {
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
         enemy_armies[i].formation_id = 0;
         enemy_armies[i].layout = 0;
-        enemy_armies[i].home_x = 0;
-        enemy_armies[i].home_y = 0;
+        enemy_armies[i].home.set(0, 0);
         enemy_armies[i].destination_x = 0;
         enemy_armies[i].destination_y = 0;
         enemy_armies[i].destination_building_id = 0;
@@ -76,35 +75,36 @@ int enemy_army_total_enemy_formations(void) {
     return totals.enemy_formations;
 }
 
-void enemy_army_calculate_roman_influence(void) {
+void enemy_army_calculate_kingdome_influence(void) {
     totals.days_since_roman_influence_calculation++;
     if (totals.days_since_roman_influence_calculation > 4)
         totals.days_since_roman_influence_calculation = 0;
     else
         return;
     map_soldier_strength_clear();
+
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         const formation* m = formation_get(i);
         if (m->in_use != 1 || !m->is_legion)
             continue;
 
         if (m->num_figures > 0)
-            map_soldier_strength_add(m->x_home, m->y_home, 7, 1);
+            map_soldier_strength_add(m->home, 7, 1);
 
         if (m->num_figures > 3)
-            map_soldier_strength_add(m->x_home, m->y_home, 6, 1);
+            map_soldier_strength_add(m->home, 6, 1);
 
         if (m->num_figures > 6)
-            map_soldier_strength_add(m->x_home, m->y_home, 5, 1);
+            map_soldier_strength_add(m->home, 5, 1);
 
         if (m->num_figures > 9)
-            map_soldier_strength_add(m->x_home, m->y_home, 4, 1);
+            map_soldier_strength_add(m->home, 4, 1);
 
         if (m->num_figures > 12)
-            map_soldier_strength_add(m->x_home, m->y_home, 3, 1);
+            map_soldier_strength_add(m->home, 3, 1);
 
         if (m->num_figures > 15)
-            map_soldier_strength_add(m->x_home, m->y_home, 2, 1);
+            map_soldier_strength_add(m->home, 2, 1);
     }
 }
 
@@ -117,10 +117,10 @@ void enemy_armies_save_state(buffer* buf, buffer* totals_buf) {
         buf->write_i32(enemy_armies[i].formation_id);
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        buf->write_i32(enemy_armies[i].home_x);
+        buf->write_i32(enemy_armies[i].home.x());
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        buf->write_i32(enemy_armies[i].home_y);
+        buf->write_i32(enemy_armies[i].home.y());
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
         buf->write_i32(enemy_armies[i].layout);
@@ -152,10 +152,10 @@ void enemy_armies_load_state(buffer* buf, buffer* totals_buf) {
         enemy_armies[i].formation_id = buf->read_i32();
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        enemy_armies[i].home_x = buf->read_i32();
+        enemy_armies[i].home.set_x(buf->read_i32());
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        enemy_armies[i].home_y = buf->read_i32();
+        enemy_armies[i].home.set_y(buf->read_i32());
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
         enemy_armies[i].layout = buf->read_i32();

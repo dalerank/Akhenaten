@@ -196,9 +196,6 @@ void figure::poof() {
 bool figure::is_enemy() {
     return type >= FIGURE_ENEMY43_SPEAR && type <= FIGURE_ENEMY_CAESAR_LEGIONARY;
 }
-bool figure::is_legion() {
-    return type >= FIGURE_ARCHER && type <= FIGURE_INFANTRY;
-}
 
 bool figure::is_herd() {
     return type >= FIGURE_BIRDS && type <= FIGURE_ANTELOPE;
@@ -262,10 +259,6 @@ void figure::noble_action() {
 }
 
 e_minimap_figure_color figure::get_figure_color() {
-    if (is_legion()) {
-        return FIGURE_COLOR_SOLDIER;
-    }
-
     if (is_enemy()) {
         return FIGURE_COLOR_ENEMY;
     }

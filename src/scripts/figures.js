@@ -421,7 +421,7 @@ figure_dancer = {
 figure_musician = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_MUSICIAN_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_MUSICIAN_DEATH, max_frames:8 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:192, max_frames:8 },
 	},
 	sounds : {
 		i_like_festivals : { sound:"musician_e01.wav", group:229, text:0 },
@@ -436,6 +436,14 @@ figure_musician = {
  		city_not_bad : { sound:"musician_g09.wav", group:229, text:0 },
  		city_is_good : { sound:"musician_g10.wav", group:229, text:0 },
 	}
+}
+
+figure_soldier_infantry = {
+	animations : {
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:64, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:66, max_frames:8 },
+		attack : { pos : [0, 0], pack:PACK_SPR_MAIN, id:67, max_frames:12 },
+	},
 }
 
 figure_juggler = {
