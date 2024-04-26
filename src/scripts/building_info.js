@@ -69,7 +69,7 @@ building_fort_charioteers = {
   animations : {
     base: {pack: PACK_GENERAL, id: 66},
     ground: {pack: PACK_GENERAL, id: 66, offset:1},
-    picture: {pack: PACK_GENERAL, id: 66, offset:2, pos:[93, -21]},
+    picture: {pack: PACK_GENERAL, id: 66, offset:3, pos:[93, -21]},
   },
   labor_category : LABOR_CATEGORY_MILITARY,
   building_size : 3,
@@ -89,7 +89,7 @@ building_fort_archers = {
   animations : {
     base: {pack: PACK_GENERAL, id: 66},
     ground: {pack: PACK_GENERAL, id: 66, offset:1},
-    picture: {pack: PACK_GENERAL, id: 66, offset:3, pos:[93, -21]},
+    picture: {pack: PACK_GENERAL, id: 66, offset:2, pos:[93, -21]},
   },
   labor_category : LABOR_CATEGORY_MILITARY,
   building_size : 3,

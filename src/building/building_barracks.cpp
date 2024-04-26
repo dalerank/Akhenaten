@@ -92,6 +92,10 @@ static int get_closest_military_academy(building* fort) {
 }
 
 bool building_recruiter::create_soldier() {
+    if (base.stored_full_amount < 100) {
+        return false;
+    }
+
     int formation_id = get_closest_legion_needing_soldiers(&base);
     if (formation_id > 0) {
         const formation* m = formation_get(formation_id);

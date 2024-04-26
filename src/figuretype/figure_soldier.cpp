@@ -205,7 +205,7 @@ void figure_soldier::figure_action() {
     if (type() == FIGURE_INFANTRY) {
         speed_factor = 1;
     } else if (type() == FIGURE_ARCHER) {
-        speed_factor = 2;
+        speed_factor = 1;
     } else {
         speed_factor = 1;
     }
@@ -436,18 +436,25 @@ void figure_soldier_charioteer::update_image(const formation *m, int &dir) {
 void figure_soldier_archer::update_image(const formation *m, int &dir) {
     figure_soldier::update_image(m, dir);
 
-    int image_id = image_id_from_group(GROUP_BUILDING_FORT_JAVELIN);
     if (action_state() == FIGURE_ACTION_150_ATTACK) {
-        if (base.attack_image_offset < 12)
-            image_id = image_id + 96 + dir;
-        else {
-            image_id = image_id + 96 + dir + 8 * ((base.attack_image_offset - 12) / 2);
-        }
-    } else if (action_state() == FIGURE_ACTION_149_CORPSE)
-        image_id = image_id + 144 + base.figure_image_corpse_offset();
-    else if (action_state() == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
-        image_id = image_id + 96 + dir + 8 * base.figure_image_missile_launcher_offset();
+        //int image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY);
+        //if (base.attack_image_offset < 12)
+        //    image_id = image_id + 96 + dir;
+        //else {
+        //    image_id = image_id + 96 + dir + 8 * ((base.attack_image_offset - 12) / 2);
+        //}
+        image_set_animation(soldier_archer_m.anim["attack"]);
+    } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
+        image_set_animation(soldier_archer_m.anim["death"]);
+    } else if (action_state() == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
+        //if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout)
+        //    image_id = image_id + dir + 144;
+        //else {
+        //    image_id = image_id + dir;
+        //}
+        image_set_animation(soldier_archer_m.anim["walk"]);
+        base.anim_frame = 0;
     } else {
-        image_id = image_id + dir + 8 * base.anim_frame;
+        image_set_animation(soldier_archer_m.anim["walk"]);
     }
 }
