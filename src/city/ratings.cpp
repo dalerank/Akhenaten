@@ -145,8 +145,9 @@ static void update_culture_explanation(void) {
 }
 
 static int has_made_money(void) {
-    return city_data.finance.last_year.expenses.construction + city_data.finance.treasury
-           > city_data.ratings.prosperity_treasury_last_year;
+    const int treasury_this_year = city_data.finance.last_year.expenses.construction + city_data.finance.treasury;
+    const int treasury_last_year = city_data.ratings.prosperity_treasury_last_year;
+    return (treasury_this_year > treasury_last_year);
 }
 
 static void update_prosperity_explanation(void) {
@@ -579,20 +580,22 @@ static void update_kingdom_rating(int is_yearly_update) {
         }
         city_data.ratings.kingdom_last_year = city_data.ratings.kingdom;
     }
+
     city_data.ratings.kingdom = calc_bound(city_data.ratings.kingdom, 0, 100);
     city_ratings_update_kingdom_explanation();
 }
 
-void city_ratings_update(int is_yearly_update) {
+void city_ratings_update(bool is_yearly_update) {
     update_culture_rating();
     update_kingdom_rating(is_yearly_update);
     calculate_max_prosperity();
+
     if (is_yearly_update) {
         update_prosperity_rating();
         update_monument_rating();
     }
 }
 
-int city_ratings_prosperity_max(void) {
+int city_ratings_prosperity_max() {
     return city_data.ratings.prosperity_max;
 }

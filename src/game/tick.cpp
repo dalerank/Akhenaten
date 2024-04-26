@@ -103,7 +103,7 @@ static void advance_month() {
     if (game_time_advance_month()) {
         advance_year();
     } else {
-        city_ratings_update(0);
+        city_ratings_update(/*yearly_update*/false);
     }
 
     city_population_record_monthly();

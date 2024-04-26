@@ -20,13 +20,16 @@ void scenario_emperor_change_init(void) {
 }
 
 void scenario_emperor_change_process(void) {
-    if (!g_scenario_data.emperor_change.enabled)
+    if (!g_scenario_data.emperor_change.enabled) {
         return;
+    }
+
     if (data.state == 0) {
         if (game_time_year() == data.game_year && game_time_month() == data.month) {
             data.state = 1; // done
-            if (config_get(CONFIG_GP_FIX_EDITOR_EVENTS))
+            if (config_get(CONFIG_GP_FIX_EDITOR_EVENTS)) {
                 city_ratings_reset_kingdom_emperor_change();
+            }
 
             city_message_post(true, MESSAGE_EMPEROR_CHANGE, 0, 0);
         }

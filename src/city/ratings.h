@@ -39,6 +39,6 @@ void city_ratings_update_kingdom_explanation();
 
 void city_ratings_update_explanations(void);
 
-void city_ratings_update(int is_yearly_update);
+void city_ratings_update(bool is_yearly_update);
 
 int city_ratings_prosperity_max();

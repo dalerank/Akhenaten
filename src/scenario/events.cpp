@@ -1,3 +1,5 @@
+#include "events.h"
+
 #include "city/message.h"
 #include "core/string.h"
 #include "core/log.h"
@@ -5,10 +7,9 @@
 #include "io/gamefiles/lang.h"
 #include "io/io.h"
 #include "io/io_buffer.h"
-#include <core/random.h>
-#include <cstring>
-#include <game/time.h>
-#include <ios>
+#include "core/random.h"
+
+#include "game/time.h"
 
 constexpr int MAX_EVENTS = 150;
 constexpr int NUM_AUTO_PHRASE_VARIANTS = 54;
@@ -96,20 +97,18 @@ static bool is_valid_event_index(int id) {
 static int get_auto_reason_phrase_id(int param_1, int param_2) {
     return g_events_data.auto_phrases[param_1][param_2];
 }
+
 uint8_t* get_eventmsg_text(int group_id, int index) {
     auto& data = g_events_data;
     int eventmsg_id = data.eventmsg_group_offsets[group_id] + index;
     return &data.eventmsg_phrases_data[data.eventmsg_line_offsets[eventmsg_id]];
 }
 
-static void event_process(int id,
-                          bool via_event_trigger,
-                          int chain_action_parent,
-                          int caller_event_id = -1,
-                          int caller_event_var = EVENT_VAR_AUTO) {
+static void event_process(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id = -1, int caller_event_var = EVENT_VAR_AUTO) {
     auto& data = g_events_data;
-    if (!is_valid_event_index(id))
+    if (!is_valid_event_index(id)) {
         return;
+    }
 
     event_ph_t* event = &data.event_list[id];
 
@@ -119,38 +118,45 @@ static void event_process(int id,
     // also, events with 'EVENT_TRIGGER_ALREADY_FIRED' can not fire again.
     if (event->type == EVENT_TYPE_NONE)
         return;
+
     if (event->event_trigger_type == EVENT_TRIGGER_ONLY_VIA_EVENT && !via_event_trigger)
         return;
+
     if (event->event_trigger_type != EVENT_TRIGGER_ONLY_VIA_EVENT && via_event_trigger)
         return;
+
     if (event->event_trigger_type == EVENT_TRIGGER_ALREADY_FIRED)
         return;
 
     // create follow-up "actual" active events when triggered
     // (very convoluted and annoying way in which Pharaoh events work...)
     if (event->event_trigger_type == EVENT_TRIGGER_ONLY_VIA_EVENT) {
-        if (!is_valid_event_index(caller_event_id))
+        if (!is_valid_event_index(caller_event_id)) {
             return;
-        if (event->type == EVENT_TYPE_REQUEST)
+        }
+
+        if (event->type == EVENT_TYPE_REQUEST) {
             create_triggered_active_event(event, get_scenario_event(caller_event_id), EVENT_TRIGGER_ACTIVATED_8);
-        else
+        } else {
             create_triggered_active_event(event, get_scenario_event(caller_event_id), EVENT_TRIGGER_ACTIVATED_12);
+        }
         return;
     }
 
     // check if the trigger time has come, if not return.
     // for ACTIVE EVENTS (requests?): ignore specific time of the year IF quest is active
-    if (!event->is_active
-        && (event->time_fields[0] != game_time_year_since_start() || event->month != game_time_month()))
+    if (!event->is_active && (event->time_fields[0] != game_time_year_since_start() || event->month != game_time_month())) {
         return;
+    }
 
     // ------ MAIN EVENT HANDLER
     int chain_action_next = EVENT_ACTION_COMPLETED; // default action to fire next (determined by handler)
     switch (event->type) {
     case EVENT_TYPE_REQUEST: {
         // advance time
-        if (event->quest_months_left > 0)
+        if (event->quest_months_left > 0) {
             event->quest_months_left--;
+        }
 
         // the event is coming, but hasn't fired yet. this is always a slave / proper event object.
         // the "facade" event is taken care of the VIA_EVENT check from above - it will never fire.
@@ -165,34 +171,23 @@ static void event_process(int id,
             if (event->event_state == EVENT_STATE_INITIAL) {
                 if (event->quest_months_left == event->months_initial) {
                     // initial quest message
-                    city_message_post_full(true,
-                                           MESSAGE_TEMPLATE_REQUEST,
-                                           id,
-                                           caller_event_id,
+                    city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
                                            PHRASE_general_request_title_P + pharaoh_alt_shift,
                                            PHRASE_general_request_initial_announcement_P + pharaoh_alt_shift,
                                            PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
-                                           id,
-                                           0);
+                                           id, 0);
                 } else if (event->quest_months_left == 6) {
                     // reminder of 6 months left
-                    city_message_post_full(true,
-                                           MESSAGE_TEMPLATE_REQUEST,
-                                           id,
-                                           caller_event_id,
+                    city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
                                            PHRASE_general_request_title_P + pharaoh_alt_shift,
                                            PHRASE_general_request_reminder_P + pharaoh_alt_shift,
                                            PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
-                                           id,
-                                           0);
+                                           id, 0);
                 } else if (event->quest_months_left == 0) {
                     event->event_state = EVENT_STATE_OVERDUE;
                     event->quest_months_left = 24; // hardcoded
                     // reprimand message
-                    city_message_post_full(true,
-                                           MESSAGE_TEMPLATE_REQUEST,
-                                           id,
-                                           caller_event_id,
+                    city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
                                            PHRASE_general_request_title_P + pharaoh_alt_shift,
                                            PHRASE_general_request_overdue_P + pharaoh_alt_shift,
                                            PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
@@ -233,67 +228,37 @@ static void event_process(int id,
     case EVENT_TYPE_PRICE_INCREASE:
     case EVENT_TYPE_PRICE_DECREASE:
     case EVENT_TYPE_REPUTATION_INCREASE:
-        city_message_post_full(true,
-                               MESSAGE_TEMPLATE_GENERAL,
-                               id,
-                               caller_event_id,
-                               PHRASE_rating_change_title_I,
-                               PHRASE_rating_change_initial_announcement_I,
-                               PHRASE_rating_change_reason_I_A,
-                               id,
-                               0);
+        city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, id, caller_event_id,
+                               PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
+                               id, 0);
         break;
+
     case EVENT_TYPE_REPUTATION_DECREASE:
     case EVENT_TYPE_CITY_STATUS_CHANGE:
         break;
+
     case EVENT_TYPE_MESSAGE: {
-        //            int title_id = -1;
-        //            int body_id = -1;
         int phrase_id = -1; // TODO
         switch (event->subtype) {
         case EVENT_SUBTYPE_MSG_CITY_SAVED:
-            city_message_post_full(true,
-                                   MESSAGE_TEMPLATE_CITY_SAVED,
-                                   id,
-                                   caller_event_id,
-                                   PHRASE_eg_city_saved_title,
-                                   PHRASE_eg_city_saved_initial_announcement,
-                                   PHRASE_eg_city_saved_reason_A,
-                                   id,
-                                   0);
+            city_message_post_full(true, MESSAGE_TEMPLATE_CITY_SAVED, id, caller_event_id,
+                                   PHRASE_eg_city_saved_title, PHRASE_eg_city_saved_initial_announcement, PHRASE_eg_city_saved_reason_A,
+                                   id, 0);
             break;
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_WON:
-            city_message_post_full(true,
-                                   MESSAGE_TEMPLATE_DISTANT_BATTLE_WON,
-                                   id,
-                                   caller_event_id,
-                                   PHRASE_battle_won_title,
-                                   PHRASE_battle_won_initial_announcement,
-                                   PHRASE_battle_won_reason_A,
-                                   id,
-                                   0);
+            city_message_post_full(true, MESSAGE_TEMPLATE_DISTANT_BATTLE_WON, id, caller_event_id,
+                                   PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement, PHRASE_battle_won_reason_A,
+                                   id, 0);
             break;
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST:
-            city_message_post_full(true,
-                                   MESSAGE_TEMPLATE_DISTANT_BATTLE_WON,
-                                   id,
-                                   caller_event_id,
-                                   PHRASE_battle_lost_title,
-                                   PHRASE_battle_lost_initial_announcement,
-                                   PHRASE_battle_lost_reason_A,
-                                   id,
-                                   0);
+            city_message_post_full(true, MESSAGE_TEMPLATE_DISTANT_BATTLE_WON, id, caller_event_id,
+                                   PHRASE_battle_lost_title, PHRASE_battle_lost_initial_announcement, PHRASE_battle_lost_reason_A,
+                                   id, 0);
             break;
         case EVENT_SUBTYPE_MSG_ACKNOWLEDGEMENT:
-            city_message_post_full(true,
-                                   MESSAGE_TEMPLATE_GENERAL,
-                                   id,
-                                   caller_event_id,
-                                   PHRASE_acknowledgement_title,
-                                   PHRASE_acknowledgement_initial_announcement,
-                                   PHRASE_acknowledgement_no_reason_A,
-                                   id,
-                                   0);
+            city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, id, caller_event_id,
+                                   PHRASE_acknowledgement_title, PHRASE_acknowledgement_initial_announcement, PHRASE_acknowledgement_no_reason_A,
+                                   id, 0);
             break;
         }
         break;
@@ -314,12 +279,15 @@ static void event_process(int id,
     case EVENT_ACTION_COMPLETED:
         event_process(event->on_completed_action, true, EVENT_ACTION_COMPLETED, id);
         break;
+
     case EVENT_ACTION_REFUSED:
         event_process(event->on_refusal_action, true, EVENT_ACTION_REFUSED, id);
         break;
+
     case EVENT_ACTION_TOOLATE:
         event_process(event->on_tooLate_action, true, EVENT_ACTION_TOOLATE, id);
         break;
+
     case EVENT_ACTION_DEFEAT:
         event_process(event->on_defeat_action, true, EVENT_ACTION_DEFEAT, id);
         break;
@@ -332,14 +300,16 @@ static void event_process(int id,
 void scenario_event_process() {
     auto& data = g_events_data;
     // main event update loop
-    for (int i = 0; i < *data.num_of_events; i++)
+    for (int i = 0; i < *data.num_of_events; i++) {
         event_process(i, false, -1);
+    }
 
     // secondly, update random value fields for recurring events
     for (int i = 0; i < *data.num_of_events; i++) {
         auto event = &data.event_list[i];
-        if (event->event_trigger_type == EVENT_TRIGGER_RECURRING)
+        if (event->event_trigger_type == EVENT_TRIGGER_RECURRING) {
             update_randomized_values(event);
+        }
     }
 }
 
@@ -449,6 +419,7 @@ static const uint8_t PHRASE[] = {'P', 'H', 'R', 'A', 'S', 'E', '_', 0};
 //     }
 //     return 0;
 // }
+
 static const uint8_t* skip_non_digits(const uint8_t* str) {
     int safeguard = 0;
     while (1) {
@@ -481,9 +452,9 @@ static bool is_line_standalone_group(const uint8_t* start_of_line, int size) {
     }
     return true;
 
-    //        int i_P = index_of_string(start_of_line, term_1, ptr - start_of_line);
-    //        int i_P_A = index_of_string(start_of_line, term_2, ptr - start_of_line);
-    //        int i_P_xx = index_of_string(start_of_line, term_3, ptr - start_of_line);
+    //    int i_P = index_of_string(start_of_line, term_1, ptr - start_of_line);
+    //    int i_P_A = index_of_string(start_of_line, term_2, ptr - start_of_line);
+    //    int i_P_xx = index_of_string(start_of_line, term_3, ptr - start_of_line);
 
     //    int i_P_B = index_of_string(start_of_line, _P_B, size);
     //    int i_P_C = index_of_string(start_of_line, _P_C, size);

@@ -672,8 +672,8 @@ void GamestateIO::start_loaded_file() {
         figure_create_fishing_points();
         figure_create_herds();
 
-        map_point entry = scenario_map_entry();
-        map_point exit = scenario_map_exit();
+        tile2i entry = scenario_map_entry();
+        tile2i exit = scenario_map_exit();
         city_map_set_entry_point(entry);
         city_map_set_exit_point(exit);
 
