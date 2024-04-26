@@ -445,16 +445,6 @@ void figure::action_perform() {
         }
 
         switch (type) {
-        case 11:   // soldier_action();                  break;
-        case 12:   // soldier_action();                  break;
-        case 13:
-            soldier_action();
-            break;
-
-        case 14:
-            military_standard_action();
-            break;
-
         case FIGURE_PROTESTER: protestor_action(); break;
         case FIGURE_CRIMINAL: mugger_action(); break;
         case FIGURE_TOMB_ROBER: rioter_action(); break;

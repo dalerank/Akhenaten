@@ -238,8 +238,10 @@ void window_building_draw_legion_info(object_info* c) {
 void window_building_draw_legion_info_foreground(object_info* c) {
     auto& data = g_military_data;
     const formation* m = formation_get(c->formation_id);
-    if (!m->num_figures)
+    if (!m->num_figures) {
         return;
+    }
+
     for (int i = 5 - c->formation_types; i < 5; i++) {
         int has_focus = 0;
         if (data.focus_button_id) {

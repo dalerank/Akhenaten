@@ -150,6 +150,7 @@ figure_musician *figure::dcast_musician() { return dcast()->dcast_musician(); }
 figure_dancer *figure::dcast_dancer() { return dcast()->dcast_dancer(); }
 figure_labor_seeker *figure::dcast_labor_seeker() { return dcast()->dcast_labor_seeker(); }
 figure_worker *figure::dcast_worker() { return dcast()->dcast_worker(); }
+figure_soldier *figure::dcast_soldier() { return dcast()->dcast_soldier(); }
 
 bool figure::in_roam_history(int goffset) {
     auto it = std::find_if(std::begin(roam_history), std::end(roam_history), [goffset] (auto &v) { return (v == 0 || v == goffset); });

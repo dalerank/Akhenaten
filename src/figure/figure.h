@@ -32,6 +32,7 @@ class figure_musician;
 class figure_dancer;
 class figure_labor_seeker;
 class figure_worker;
+class figure_soldier;
 
 struct animation_t;
 
@@ -247,6 +248,7 @@ public:
     figure_dancer *dcast_dancer();
     figure_labor_seeker *dcast_labor_seeker();
     figure_worker *dcast_worker();
+    figure_soldier *dcast_soldier();
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -388,14 +390,11 @@ public:
     bool do_enterbuilding(bool invisible, building* b, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
 
     void sled_puller_action();
-    void soldier_action();
-    void military_standard_action();
     void protestor_action();
     void mugger_action();
     void rioter_action();
     void governor_action();
     void fishing_boat_action();
-    void bricklayer_action();
     void editor_flag_action();
     void flotsam_action();
     void noble_action();
@@ -459,10 +458,6 @@ public:
     void javelin_launch_missile();
     void legionary_attack_adjacent_enemy();
     int find_mop_up_target();
-    void update_image_javelin(int dir);
-    void update_image_mounted(int dir);
-    void update_image_legionary(const formation* m, int dir);
-    void soldier_update_image(const formation* m);
 
     void figure_combat_handle_corpse();
     void resume_activity_after_attack();
@@ -534,6 +529,7 @@ public:
     virtual figure_dancer *dcast_dancer() { return nullptr; }
     virtual figure_labor_seeker *dcast_labor_seeker() { return nullptr; }
     virtual figure_worker *dcast_worker() { return nullptr; }
+    virtual figure_soldier *dcast_soldier() { return nullptr; }
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -549,6 +545,8 @@ public:
     inline bool do_roam(int terrainchoice, short next_action) { return base.do_roam(terrainchoice, next_action); }
     inline bool do_goto(tile2i dest, int terrainchoice = TERRAIN_USAGE_ROADS, short next_action = -1, short fail_action = -1) { return base.do_goto(dest, terrainchoice, next_action, fail_action); }
     inline tile2i tile() const { return base.tile; }
+    inline int tilex() const { return base.tile.x(); }
+    inline int tiley() const { return base.tile.y(); }
     inline building *destination() const { return base.destination(); }
     inline void route_remove() { base.route_remove(); }
     inline void image_set_animation(const animation_t &anim) { base.image_set_animation(anim); }
