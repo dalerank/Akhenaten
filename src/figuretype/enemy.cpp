@@ -572,14 +572,12 @@ void figure::enemy_caesar_legionary_action() {
     is_enemy_image = 1;
 
     if (direction == DIR_FIGURE_ATTACK) {
-        sprite_image_id
-          = image_id_from_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir + 8 * ((attack_image_offset - 12) / 2);
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir + 8 * ((attack_image_offset - 12) / 2);
     }
     switch (action_state) {
     case FIGURE_ACTION_150_ATTACK:
         if (attack_image_offset >= 12) {
-            sprite_image_id
-              = image_id_from_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir + 8 * ((attack_image_offset - 12) / 2);
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir + 8 * ((attack_image_offset - 12) / 2);
         } else {
             sprite_image_id = image_id_from_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir;
         }
@@ -588,11 +586,11 @@ void figure::enemy_caesar_legionary_action() {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_CAESAR_LEGIONARY) + figure_image_corpse_offset() + 152;
         break;
     case FIGURE_ACTION_84_SOLDIER_AT_STANDARD:
-        if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout)
-            sprite_image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY) + dir + 144;
-        else {
-            sprite_image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY) + dir;
-        }
+        //if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout)
+        //    sprite_image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY) + dir + 144;
+        //else {
+        //    sprite_image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY) + dir;
+        //}
         break;
     default:
         sprite_image_id = image_id_from_group(GROUP_FIGURE_CAESAR_LEGIONARY) + 48 + dir + 8 * anim_frame;
