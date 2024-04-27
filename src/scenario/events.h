@@ -78,7 +78,7 @@ enum {
     EVENT_INVADER_BEDUINS = 4,
 };
 
-enum {
+enum e_event_attack {
     EVENT_ATTACK_TARGET_FOOD = 0,
     EVENT_ATTACK_TARGET_VAULTS = 1,
     EVENT_ATTACK_TARGET_BEST_BUILDINGS = 2,
@@ -86,7 +86,7 @@ enum {
     EVENT_ATTACK_TARGET_RANDOM = 4,
 };
 
-enum {
+enum e_event_state {
     EVENT_STATE_INITIAL = 0,
     EVENT_STATE_IN_PROGRESS = 1,
     EVENT_STATE_OVERDUE = 1,
@@ -96,7 +96,7 @@ enum {
     EVENT_STATE_RECEIVED = 5,
 };
 
-enum {
+enum e_event_var {
     EVENT_VAR_DIRECT_RESULT = 0, // because
     EVENT_VAR_INCIDENTALLY = 1,  // (no conjunction)
     EVENT_VAR_IN_SPITE_OF = 2,   // even though...
@@ -106,7 +106,7 @@ enum {
     EVENT_VAR_AUTO = 6, // (automatically set)
 };
 
-enum {
+enum e_event_action {
     EVENT_ACTION_NONE = -1,
     EVENT_ACTION_COMPLETED = 0,
     EVENT_ACTION_REFUSED = 1,
@@ -118,7 +118,7 @@ struct event_ph_t {
     int16_t num_total_header;
     int16_t __unk01;
     int16_t event_id;
-    int8_t type;
+    e_event_type type;
     int8_t month;
     int16_t item_fields[4];
     int16_t amount_fields[4];
@@ -161,7 +161,7 @@ struct event_ph_t {
     int16_t __unk22;
 };
 
-const int get_scenario_events_num();
+int16_t scenario_events_num();
 
 const event_ph_t* get_scenario_event(int id);
 event_ph_t* set_scenario_event(int id);

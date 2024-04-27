@@ -663,8 +663,8 @@ void map_tiles_update_all_walls(void) {
     foreach_map_tile(set_wall_image);
 }
 
-void map_tiles_update_area_walls(int x, int y, int size) {
-    foreach_region_tile(tile2i(x - 1, y - 1), tile2i(x + size - 2, y + size - 2), set_wall_image);
+void map_tiles_update_area_walls(tile2i tile, int size) {
+    foreach_region_tile(tile.shifted(-1, -1), tile.shifted(size - 2, size - 2), set_wall_image);
 }
 
 int map_tiles_set_wall(int x, int y) {

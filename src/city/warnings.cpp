@@ -27,8 +27,8 @@ static void show(int warning) {
     g_has_warning = true;
 }
 
-static void check_road_access(int type, tile2i tile, int size, int orientation) {
-    switch (type) {
+static void check_road_access(building *b, tile2i tile, int size, int orientation) {
+    switch (b->type) {
     case BUILDING_NONE:
     case BUILDING_CLEAR_LAND:
     case BUILDING_ROAD:
@@ -53,14 +53,10 @@ static void check_road_access(int type, tile2i tile, int size, int orientation) 
     bool has_road = false;
     if (map_has_road_access(tile, size)) {
         has_road = true;
-    } else if (type == BUILDING_STORAGE_YARD && map_has_road_access(tile, 3)) {
+    } else if (b->type == BUILDING_STORAGE_YARD && map_has_road_access(tile, 3)) {
         has_road = true;
-        //    else if (type == BUILDING_SENET_HOUSE && map_has_road_access_hippodrome(x, y, 0))
-        //        has_road = true;
-    } else if (building_is_large_temple(type) && map_has_road_access_temple_complex(tile, orientation, true, nullptr)) {
+    } else if (building_is_large_temple(b->type) && map_has_road_access_temple_complex(tile, orientation, true, nullptr)) {
         has_road = true;
-        //    else if (type == BUILDING_ORACLE && map_closest_road_within_radius(x, y, size, 2, 0, 0))
-        //        has_road = true;
     }
 
     if (!has_road) {
@@ -254,7 +250,8 @@ static void check_shipyard(int type) {
     }
 }
 
-void building_construction_warning_generic_checks(int type, tile2i tile, int size, int orientation) {
+void building_construction_warning_generic_checks(building *b, tile2i tile, int size, int orientation) {
+    e_building_type type = b->type;
     building_construction_warning_check_food_stocks(type);
     check_workers(type);
     check_market(type);
@@ -277,7 +274,7 @@ void building_construction_warning_generic_checks(int type, tile2i tile, int siz
     check_papyrus_access((e_building_type)type);
     check_shipyard(type);
 
-    check_road_access(type, tile, size, orientation);
+    check_road_access(b, tile, size, orientation);
 }
 
 void building_construction_warning_check_food_stocks(int type) {

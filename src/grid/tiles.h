@@ -14,7 +14,7 @@ void map_tiles_determine_gardens(void);
 void map_tiles_update_all_plazas(void);
 
 void map_tiles_update_all_walls(void);
-void map_tiles_update_area_walls(int x, int y, int size);
+void map_tiles_update_area_walls(tile2i tile, int size);
 int map_tiles_set_wall(int x, int y);
 
 int map_tiles_is_paved_road(int grid_offset);

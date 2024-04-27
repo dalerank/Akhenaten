@@ -121,7 +121,7 @@ void scenario_request_dispatch(int id) {
 
 int scenario_requests_active_count() {
     int count = 0;
-    for (int i = 0; i < get_scenario_events_num(); i++) {
+    for (int i = 0; i < scenario_events_num(); i++) {
         const event_ph_t* event = get_scenario_event(i);
         if (event->type == EVENT_TYPE_REQUEST && event->is_active != 0
             && event->event_state <= EVENT_STATE_IN_PROGRESS) {
@@ -156,7 +156,7 @@ void scenario_request_set_active(const scenario_request &request, bool active) {
 const scenario_request* scenario_request_get_visible(int index) {
     int event_index = 0;
     for (int i = 0; i < MAX_REQUESTS; i++) {
-        if (i >= get_scenario_events_num()) {
+        if (i >= scenario_events_num()) {
             return nullptr;
         }
         

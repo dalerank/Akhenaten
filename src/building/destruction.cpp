@@ -243,7 +243,7 @@ void building_destroy_by_enemy(tile2i tile) {
         map_building_tiles_set_rubble(0, tile, 1);
     }
     figure_tower_sentry_reroute();
-    map_tiles_update_area_walls(x, y, 3);
+    map_tiles_update_area_walls(tile, 3);
     map_tiles_update_region_aqueducts(x - 3, y - 3, x + 3, y + 3);
     map_routing_update_land();
     map_routing_update_walls();

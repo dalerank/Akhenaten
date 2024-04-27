@@ -5,6 +5,8 @@
 class building_shrine : public building_impl {
 public:
     building_shrine(building &b) : building_impl(b) {}
+
+    virtual void on_place(int orientation, int variant) override;
     virtual e_overlay get_overlay() const override;
     virtual void window_info_background(object_info &ctx) override;
     virtual void update_count() const;

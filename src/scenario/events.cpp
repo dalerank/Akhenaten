@@ -18,7 +18,6 @@ constexpr int MAX_EVENTMSG_TEXT_DATA = NUM_PHRASES * 200;
 
 struct events_data_t {
     event_ph_t event_list[MAX_EVENTS];
-    int16_t* num_of_events = nullptr;
     int auto_phrases[NUM_AUTO_PHRASE_VARIANTS][36];
 
     uint8_t eventmsg_phrases_data[MAX_EVENTMSG_TEXT_DATA];
@@ -28,17 +27,21 @@ struct events_data_t {
 
 events_data_t g_events_data;
 
-const int get_scenario_events_num() {
-    return *g_events_data.num_of_events;
+int16_t scenario_events_num() {
+    return g_events_data.event_list[0].num_total_header;
 }
 
-static void update_randomized_values(event_ph_t* event) {
+int16_t &ref_scenario_events_num() {
+    return g_events_data.event_list[0].num_total_header;
+}
+
+static void update_randomized_values(event_ph_t &event) {
     int seed = 1; // not sure what this is used for...
-    randomize_event_fields(event->item_fields, &seed);
-    randomize_event_fields(event->amount_fields, &seed);
-    randomize_event_fields(event->time_fields, &seed);
-    randomize_event_fields(event->location_fields, &seed);
-    randomize_event_fields(event->route_fields, &seed);
+    randomize_event_fields(event.item_fields, &seed);
+    randomize_event_fields(event.amount_fields, &seed);
+    randomize_event_fields(event.time_fields, &seed);
+    randomize_event_fields(event.location_fields, &seed);
+    randomize_event_fields(event.route_fields, &seed);
 
     // some other unknown stuff also happens here.........
     random_generate_next();
@@ -47,9 +50,9 @@ static void update_randomized_values(event_ph_t* event) {
 
 event_ph_t* create_scenario_event(const event_ph_t* donor) {
     auto& data = g_events_data;
-    if (*data.num_of_events < MAX_EVENTS) {
-        (*data.num_of_events)++;
-        int event_id = *data.num_of_events - 1;
+    if (ref_scenario_events_num() < MAX_EVENTS) {
+        ref_scenario_events_num()++;
+        int event_id = ref_scenario_events_num() - 1;
         event_ph_t* new_event = &data.event_list[event_id];
 
         // if parent event is supplied, clone it into the new event
@@ -66,7 +69,7 @@ static bool create_triggered_active_event(const event_ph_t* master, const event_
         child->event_state = EVENT_STATE_INITIAL;
         child->event_trigger_type = trigger_type;
 
-        update_randomized_values(child);
+        update_randomized_values(*child);
 
         // calculate date of activation
         int month_abs_parent = parent->time_fields[0] * 12 + parent->month; // field is YEARS in parent
@@ -89,8 +92,9 @@ event_ph_t* set_scenario_event(int id) {
 }
 
 static bool is_valid_event_index(int id) {
-    if (id >= MAX_EVENTS || id >= *g_events_data.num_of_events)
+    if (id >= MAX_EVENTS || id >= scenario_events_num()) {
         return false;
+    }
     return true;
 }
 
@@ -110,82 +114,86 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
         return;
     }
 
-    event_ph_t* event = &data.event_list[id];
+    event_ph_t &event = data.event_list[id];
 
     // must be a valid event type;
     // also, can not invoke event from an event if trigger is set to global update;
     // also, can not invoke from global update if trigger is set to event only;
     // also, events with 'EVENT_TRIGGER_ALREADY_FIRED' can not fire again.
-    if (event->type == EVENT_TYPE_NONE)
+    if (event.type == EVENT_TYPE_NONE) {
         return;
+    }
 
-    if (event->event_trigger_type == EVENT_TRIGGER_ONLY_VIA_EVENT && !via_event_trigger)
+    if (event.event_trigger_type == EVENT_TRIGGER_ONLY_VIA_EVENT && !via_event_trigger) {
         return;
+    }
 
-    if (event->event_trigger_type != EVENT_TRIGGER_ONLY_VIA_EVENT && via_event_trigger)
+    if (event.event_trigger_type != EVENT_TRIGGER_ONLY_VIA_EVENT && via_event_trigger) {
         return;
+    }
 
-    if (event->event_trigger_type == EVENT_TRIGGER_ALREADY_FIRED)
+    if (event.event_trigger_type == EVENT_TRIGGER_ALREADY_FIRED) {
         return;
+    }
 
     // create follow-up "actual" active events when triggered
     // (very convoluted and annoying way in which Pharaoh events work...)
-    if (event->event_trigger_type == EVENT_TRIGGER_ONLY_VIA_EVENT) {
+    if (event.event_trigger_type == EVENT_TRIGGER_ONLY_VIA_EVENT) {
         if (!is_valid_event_index(caller_event_id)) {
             return;
         }
 
-        if (event->type == EVENT_TYPE_REQUEST) {
-            create_triggered_active_event(event, get_scenario_event(caller_event_id), EVENT_TRIGGER_ACTIVATED_8);
+        if (event.type == EVENT_TYPE_REQUEST) {
+            create_triggered_active_event(&event, get_scenario_event(caller_event_id), EVENT_TRIGGER_ACTIVATED_8);
         } else {
-            create_triggered_active_event(event, get_scenario_event(caller_event_id), EVENT_TRIGGER_ACTIVATED_12);
+            create_triggered_active_event(&event, get_scenario_event(caller_event_id), EVENT_TRIGGER_ACTIVATED_12);
         }
         return;
     }
 
     // check if the trigger time has come, if not return.
     // for ACTIVE EVENTS (requests?): ignore specific time of the year IF quest is active
-    if (!event->is_active && (event->time_fields[0] != game_time_year_since_start() || event->month != game_time_month())) {
+    if (!event.is_active && (event.time_fields[0] != game_time_year_since_start() || event.month != game_time_month())) {
         return;
     }
 
     // ------ MAIN EVENT HANDLER
     int chain_action_next = EVENT_ACTION_COMPLETED; // default action to fire next (determined by handler)
-    switch (event->type) {
+    switch (event.type) {
     case EVENT_TYPE_REQUEST: {
         // advance time
-        if (event->quest_months_left > 0) {
-            event->quest_months_left--;
+        if (event.quest_months_left > 0) {
+            event.quest_months_left--;
         }
 
         // the event is coming, but hasn't fired yet. this is always a slave / proper event object.
         // the "facade" event is taken care of the VIA_EVENT check from above - it will never fire.
-        if (!event->is_active) {
-            event->quest_months_left = event->months_initial;
-            event->is_active = 1;
+        if (!event.is_active) {
+            event.quest_months_left = event.months_initial;
+            event.is_active = 1;
         }
         // handle request event immediately after activation!
-        if (event->is_active) {
+        if (event.is_active) {
             chain_action_next = EVENT_ACTION_NONE;
-            int pharaoh_alt_shift = event->sender_faction == EVENT_FACTION_REQUEST_FROM_CITY ? 1 : 0;
-            if (event->event_state == EVENT_STATE_INITIAL) {
-                if (event->quest_months_left == event->months_initial) {
+            int pharaoh_alt_shift = event.sender_faction == EVENT_FACTION_REQUEST_FROM_CITY ? 1 : 0;
+            if (event.event_state == EVENT_STATE_INITIAL) {
+                if (event.quest_months_left == event.months_initial) {
                     // initial quest message
                     city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
                                            PHRASE_general_request_title_P + pharaoh_alt_shift,
                                            PHRASE_general_request_initial_announcement_P + pharaoh_alt_shift,
                                            PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
                                            id, 0);
-                } else if (event->quest_months_left == 6) {
+                } else if (event.quest_months_left == 6) {
                     // reminder of 6 months left
                     city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
                                            PHRASE_general_request_title_P + pharaoh_alt_shift,
                                            PHRASE_general_request_reminder_P + pharaoh_alt_shift,
                                            PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
                                            id, 0);
-                } else if (event->quest_months_left == 0) {
-                    event->event_state = EVENT_STATE_OVERDUE;
-                    event->quest_months_left = 24; // hardcoded
+                } else if (event.quest_months_left == 0) {
+                    event.event_state = EVENT_STATE_OVERDUE;
+                    event.quest_months_left = 24; // hardcoded
                     // reprimand message
                     city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
                                            PHRASE_general_request_title_P + pharaoh_alt_shift,
@@ -194,8 +202,8 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
                                            id,
                                            0);
                 }
-            } else if (event->event_state == EVENT_STATE_OVERDUE) {
-                if (event->quest_months_left == 6) {
+            } else if (event.event_state == EVENT_STATE_OVERDUE) {
+                if (event.quest_months_left == 6) {
                     // angry reminder of 6 months left?
                     //                        city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id,
                     //                        caller_event_id,
@@ -203,8 +211,8 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
                     //                                               PHRASE_general_request_warning_P + faction_mod,
                     //                                               PHRASE_general_request_no_reason_P_A + faction_mod
                     //                                               * 3, id, 0);
-                } else if (event->quest_months_left == 0) {
-                    event->event_state = EVENT_STATE_FAILED;
+                } else if (event.quest_months_left == 0) {
+                    event.event_state = EVENT_STATE_FAILED;
                     chain_action_next = EVENT_ACTION_REFUSED;
                     // final reprimand is the "kingdom rating" messages???
                     // -- these are handled SEPARATELY by the chained scenario events! --
@@ -216,6 +224,7 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
     case EVENT_TYPE_INVASION:
         // TODO
         break;
+
     case EVENT_TYPE_SEA_TRADE_PROBLEM:
     case EVENT_TYPE_LAND_TRADE_PROBLEM:
     case EVENT_TYPE_WAGE_INCREASE:
@@ -239,22 +248,25 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
 
     case EVENT_TYPE_MESSAGE: {
         int phrase_id = -1; // TODO
-        switch (event->subtype) {
+        switch (event.subtype) {
         case EVENT_SUBTYPE_MSG_CITY_SAVED:
             city_message_post_full(true, MESSAGE_TEMPLATE_CITY_SAVED, id, caller_event_id,
                                    PHRASE_eg_city_saved_title, PHRASE_eg_city_saved_initial_announcement, PHRASE_eg_city_saved_reason_A,
                                    id, 0);
             break;
+
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_WON:
             city_message_post_full(true, MESSAGE_TEMPLATE_DISTANT_BATTLE_WON, id, caller_event_id,
                                    PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement, PHRASE_battle_won_reason_A,
                                    id, 0);
             break;
+
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST:
             city_message_post_full(true, MESSAGE_TEMPLATE_DISTANT_BATTLE_WON, id, caller_event_id,
                                    PHRASE_battle_lost_title, PHRASE_battle_lost_initial_announcement, PHRASE_battle_lost_reason_A,
                                    id, 0);
             break;
+
         case EVENT_SUBTYPE_MSG_ACKNOWLEDGEMENT:
             city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, id, caller_event_id,
                                    PHRASE_acknowledgement_title, PHRASE_acknowledgement_initial_announcement, PHRASE_acknowledgement_no_reason_A,
@@ -277,38 +289,39 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
     // propagate trigger events
     switch (chain_action_next) {
     case EVENT_ACTION_COMPLETED:
-        event_process(event->on_completed_action, true, EVENT_ACTION_COMPLETED, id);
+        event_process(event.on_completed_action, true, EVENT_ACTION_COMPLETED, id);
         break;
 
     case EVENT_ACTION_REFUSED:
-        event_process(event->on_refusal_action, true, EVENT_ACTION_REFUSED, id);
+        event_process(event.on_refusal_action, true, EVENT_ACTION_REFUSED, id);
         break;
 
     case EVENT_ACTION_TOOLATE:
-        event_process(event->on_tooLate_action, true, EVENT_ACTION_TOOLATE, id);
+        event_process(event.on_tooLate_action, true, EVENT_ACTION_TOOLATE, id);
         break;
 
     case EVENT_ACTION_DEFEAT:
-        event_process(event->on_defeat_action, true, EVENT_ACTION_DEFEAT, id);
+        event_process(event.on_defeat_action, true, EVENT_ACTION_DEFEAT, id);
         break;
     }
 
     // disable if already done
-    if (event->event_trigger_type == EVENT_TRIGGER_ONCE)
-        event->event_state = EVENT_TRIGGER_ALREADY_FIRED;
+    if (event.event_trigger_type == EVENT_TRIGGER_ONCE) {
+        event.event_state = EVENT_TRIGGER_ALREADY_FIRED;
+    }
 }
 
 void scenario_event_process() {
     auto& data = g_events_data;
     // main event update loop
-    for (int i = 0; i < *data.num_of_events; i++) {
+    for (int i = 0; i < scenario_events_num(); i++) {
         event_process(i, false, -1);
     }
 
     // secondly, update random value fields for recurring events
-    for (int i = 0; i < *data.num_of_events; i++) {
-        auto event = &data.event_list[i];
-        if (event->event_trigger_type == EVENT_TRIGGER_RECURRING) {
+    for (int i = 0; i < scenario_events_num(); i++) {
+        event_ph_t &event = data.event_list[i];
+        if (event.event_trigger_type == EVENT_TRIGGER_RECURRING) {
             update_randomized_values(event);
         }
     }
@@ -319,72 +332,72 @@ void scenario_event_process() {
 io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_events_data;
     // the first event's header always contains the total number of events
-    data.num_of_events = &(data.event_list[0].num_total_header);
 
     for (int i = 0; i < MAX_EVENTS; i++) {
-        event_ph_t* event = &data.event_list[i];
-        iob->bind(BIND_SIGNATURE_INT16, &event->num_total_header);
-        if (!is_valid_event_index(i))
+        event_ph_t &event = data.event_list[i];
+        iob->bind(BIND_SIGNATURE_INT16, &event.num_total_header);
+        if (!is_valid_event_index(i)) {
             break;
-        iob->bind(BIND_SIGNATURE_INT16, &event->__unk01);
-        iob->bind(BIND_SIGNATURE_INT16, &event->event_id);
-        iob->bind(BIND_SIGNATURE_INT8, &event->type);
-        iob->bind(BIND_SIGNATURE_INT8, &event->month);
-        iob->bind(BIND_SIGNATURE_INT16, &event->item_fields[0]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->item_fields[1]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->item_fields[2]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->item_fields[3]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->amount_fields[0]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->amount_fields[1]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->amount_fields[2]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->amount_fields[3]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->time_fields[0]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->time_fields[1]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->time_fields[2]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->time_fields[3]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->location_fields[0]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->location_fields[1]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->location_fields[2]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->location_fields[3]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->on_completed_action);
-        iob->bind(BIND_SIGNATURE_INT16, &event->on_refusal_action);
-        iob->bind(BIND_SIGNATURE_INT16, &event->event_trigger_type);
-        iob->bind(BIND_SIGNATURE_INT16, &event->__unk07);
-        iob->bind(BIND_SIGNATURE_INT16, &event->months_initial);
-        iob->bind(BIND_SIGNATURE_INT16, &event->quest_months_left);
-        iob->bind(BIND_SIGNATURE_INT16, &event->event_state);
-        iob->bind(BIND_SIGNATURE_INT16, &event->is_active);
-        iob->bind(BIND_SIGNATURE_INT16, &event->__unk11);
-        iob->bind(BIND_SIGNATURE_INT8, &event->festival_deity);
-        iob->bind(BIND_SIGNATURE_INT8, &event->__unk12_i8);
-        iob->bind(BIND_SIGNATURE_INT8, &event->invasion_attack_target);
+        }
+        iob->bind(BIND_SIGNATURE_INT16, &event.__unk01);
+        iob->bind(BIND_SIGNATURE_INT16, &event.event_id);
+        iob->bind(BIND_SIGNATURE_INT8, &event.type);
+        iob->bind(BIND_SIGNATURE_INT8, &event.month);
+        iob->bind(BIND_SIGNATURE_INT16, &event.item_fields[0]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.item_fields[1]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.item_fields[2]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.item_fields[3]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.amount_fields[0]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.amount_fields[1]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.amount_fields[2]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.amount_fields[3]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.time_fields[0]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.time_fields[1]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.time_fields[2]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.time_fields[3]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[0]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[1]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[2]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[3]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.on_completed_action);
+        iob->bind(BIND_SIGNATURE_INT16, &event.on_refusal_action);
+        iob->bind(BIND_SIGNATURE_INT16, &event.event_trigger_type);
+        iob->bind(BIND_SIGNATURE_INT16, &event.__unk07);
+        iob->bind(BIND_SIGNATURE_INT16, &event.months_initial);
+        iob->bind(BIND_SIGNATURE_INT16, &event.quest_months_left);
+        iob->bind(BIND_SIGNATURE_INT16, &event.event_state);
+        iob->bind(BIND_SIGNATURE_INT16, &event.is_active);
+        iob->bind(BIND_SIGNATURE_INT16, &event.__unk11);
+        iob->bind(BIND_SIGNATURE_INT8, &event.festival_deity);
+        iob->bind(BIND_SIGNATURE_INT8, &event.__unk12_i8);
+        iob->bind(BIND_SIGNATURE_INT8, &event.invasion_attack_target);
         // ...
         // ...
         // ...
         iob->bind____skip(25); // ???
-        iob->bind(BIND_SIGNATURE_INT16, &event->on_tooLate_action);
-        iob->bind(BIND_SIGNATURE_INT16, &event->on_defeat_action);
-        iob->bind(BIND_SIGNATURE_INT8, &event->sender_faction);
-        iob->bind(BIND_SIGNATURE_INT8, &event->__unk13_i8);
-        iob->bind(BIND_SIGNATURE_INT16, &event->route_fields[0]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->route_fields[1]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->route_fields[2]);
-        iob->bind(BIND_SIGNATURE_INT16, &event->route_fields[3]);
-        iob->bind(BIND_SIGNATURE_INT8, &event->subtype);
-        iob->bind(BIND_SIGNATURE_INT8, &event->__unk15_i8); // 07 --> 05
-        iob->bind(BIND_SIGNATURE_INT16, &event->__unk16);
-        iob->bind(BIND_SIGNATURE_INT16, &event->__unk17);
-        iob->bind(BIND_SIGNATURE_INT16, &event->__unk18);
-        iob->bind(BIND_SIGNATURE_INT16, &event->__unk19);
-        iob->bind(BIND_SIGNATURE_INT8, &event->on_completed_msgAlt);
-        iob->bind(BIND_SIGNATURE_INT8, &event->on_refusal_msgAlt);
-        iob->bind(BIND_SIGNATURE_INT8, &event->on_tooLate_msgAlt);
-        iob->bind(BIND_SIGNATURE_INT8, &event->on_defeat_msgAlt);
-        iob->bind(BIND_SIGNATURE_INT16, &event->__unk20a);
-        iob->bind(BIND_SIGNATURE_INT16, &event->__unk20b);
-        iob->bind(BIND_SIGNATURE_INT16, &event->__unk20c);
-        iob->bind(BIND_SIGNATURE_INT16, &event->__unk21);
-        iob->bind(BIND_SIGNATURE_INT16, &event->__unk22);
+        iob->bind(BIND_SIGNATURE_INT16, &event.on_tooLate_action);
+        iob->bind(BIND_SIGNATURE_INT16, &event.on_defeat_action);
+        iob->bind(BIND_SIGNATURE_INT8, &event.sender_faction);
+        iob->bind(BIND_SIGNATURE_INT8, &event.__unk13_i8);
+        iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[0]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[1]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[2]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[3]);
+        iob->bind(BIND_SIGNATURE_INT8, &event.subtype);
+        iob->bind(BIND_SIGNATURE_INT8, &event.__unk15_i8); // 07 --> 05
+        iob->bind(BIND_SIGNATURE_INT16, &event.__unk16);
+        iob->bind(BIND_SIGNATURE_INT16, &event.__unk17);
+        iob->bind(BIND_SIGNATURE_INT16, &event.__unk18);
+        iob->bind(BIND_SIGNATURE_INT16, &event.__unk19);
+        iob->bind(BIND_SIGNATURE_INT8, &event.on_completed_msgAlt);
+        iob->bind(BIND_SIGNATURE_INT8, &event.on_refusal_msgAlt);
+        iob->bind(BIND_SIGNATURE_INT8, &event.on_tooLate_msgAlt);
+        iob->bind(BIND_SIGNATURE_INT8, &event.on_defeat_msgAlt);
+        iob->bind(BIND_SIGNATURE_INT16, &event.__unk20a);
+        iob->bind(BIND_SIGNATURE_INT16, &event.__unk20b);
+        iob->bind(BIND_SIGNATURE_INT16, &event.__unk20c);
+        iob->bind(BIND_SIGNATURE_INT16, &event.__unk21);
+        iob->bind(BIND_SIGNATURE_INT16, &event.__unk22);
     }
 });
 

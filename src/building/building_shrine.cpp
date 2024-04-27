@@ -47,6 +47,10 @@ static void building_shrine_draw_info(object_info& c, const char* type, int text
     }
 }
 
+void building_shrine::on_place(int orientation, int variant) {
+    //
+}
+
 e_overlay building_shrine::get_overlay() const {
     switch (type()) {
     case BUILDING_SHRINE_OSIRIS: return OVERLAY_RELIGION_OSIRIS;

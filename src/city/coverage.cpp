@@ -123,11 +123,11 @@ void city_culture_update_coverage() {
     // religion
     //    int oracles = building_count_total(BUILDING_ORACLE);
     //    coverage.oracle = top(calc_percentage(500 * oracles, population));
-    coverage.religion[GOD_OSIRIS] = top(calc_percentage(population,god_coverage_total(GOD_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS)));
-    coverage.religion[GOD_RA] = top(calc_percentage(population,god_coverage_total(GOD_RA, BUILDING_SHRINE_RA, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA)));
-    coverage.religion[GOD_PTAH] = top(calc_percentage(population,god_coverage_total(GOD_PTAH, BUILDING_SHRINE_PTAH, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH)));
-    coverage.religion[GOD_SETH] = top(calc_percentage(population,god_coverage_total(GOD_SETH, BUILDING_SHRINE_SETH, BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH)));
-    coverage.religion[GOD_BAST] = top(calc_percentage(population,god_coverage_total(GOD_BAST, BUILDING_SHRINE_BAST, BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST)));
+    coverage.religion[GOD_OSIRIS] = top(calc_percentage(population, god_coverage_total(GOD_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS)));
+    coverage.religion[GOD_RA] = top(calc_percentage(population, god_coverage_total(GOD_RA, BUILDING_SHRINE_RA, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA)));
+    coverage.religion[GOD_PTAH] = top(calc_percentage(population, god_coverage_total(GOD_PTAH, BUILDING_SHRINE_PTAH, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH)));
+    coverage.religion[GOD_SETH] = top(calc_percentage(population, god_coverage_total(GOD_SETH, BUILDING_SHRINE_SETH, BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH)));
+    coverage.religion[GOD_BAST] = top(calc_percentage(population, god_coverage_total(GOD_BAST, BUILDING_SHRINE_BAST, BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST)));
 
     city_data.culture.religion_coverage = coverage.religion[GOD_OSIRIS] + coverage.religion[GOD_RA]
                                           + coverage.religion[GOD_PTAH] + coverage.religion[GOD_SETH]

@@ -366,13 +366,12 @@ static void add_building(building* b, int orientation, int variant) {
     case BUILDING_MUD_TOWER:
         map_terrain_remove_with_radius(b->tile.x(), b->tile.y(), 2, 0, TERRAIN_WALL);
         map_building_tiles_add(b->id, b->tile, b->size, image_id_from_group(GROUP_BUILDING_TOWER), TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
-        map_tiles_update_area_walls(b->tile.x(), b->tile.y(), 5);
+        map_tiles_update_area_walls(b->tile, 5);
         break;
 
     case BUILDING_BRICK_GATEHOUSE:
     case BUILDING_MUD_GATEHOUSE:
         map_building_tiles_add(b->id, b->tile, b->size, image_id_from_group(GROUP_BUILDING_TOWER) + orientation, TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
-        //            map_orientation_update_buildings();
         map_terrain_add_gatehouse_roads(b->tile.x(), b->tile.y(), orientation);
         break;
 
@@ -526,8 +525,7 @@ static int place_garden(tile2i start, tile2i end) {
     return items_placed;
 }
 
-building* last_created_building = nullptr;
-static bool place_building(e_building_type type, int x, int y, int orientation, int variant) {
+bool BuildPlanner::place_building(e_building_type type, tile2i tile, int orientation, int variant) {
     // by default, get size from building's properties
     int size = building_impl::params(type).building_size;
     if (size <= 0) {
@@ -556,22 +554,21 @@ static bool place_building(e_building_type type, int x, int y, int orientation, 
     // correct building placement for city orientations
     switch (city_view_orientation()) {
     case DIR_2_BOTTOM_RIGHT:
-        x = x - size + 1;
+        tile = tile.shifted(-size + 1, 0);
         break;
 
     case DIR_4_BOTTOM_LEFT:
-        x = x - size + 1;
-        y = y - size + 1;
+        tile = tile.shifted(-size + 1, -size + 1);
         break;
 
     case DIR_6_TOP_LEFT:
-        y = y - size + 1;
+        tile = tile.shifted(0, -size + 1);
         break;
     }
 
     // create building
     last_created_building = nullptr;
-    building* b = building_create(type, tile2i(x, y), orientation);
+    building* b = building_create(type, tile, orientation);
     game_undo_add_building(b);
     if (b->id <= 0) { // building creation failed????
         return false;
@@ -1673,7 +1670,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
     // final generic building warnings - these are in another file
     // TODO: bring these warnings over.
-    building_construction_warning_generic_checks(build_type, end, size.x, relative_orientation);
+    building_construction_warning_generic_checks(last_created_building, end, size.x, relative_orientation);
     bool should_recalc_ferry_routes = false;
 
     // update city building info with newly created
@@ -1730,7 +1727,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     }
 
     if (special_flags & PlannerFlags::Walls) {
-        map_tiles_update_area_walls(end.x(), end.y(), 5);
+        map_tiles_update_area_walls(end, 5);
     }
 
     // consume resources for specific buildings (e.g. marble, granite)
@@ -1792,27 +1789,27 @@ bool BuildPlanner::place() {
             map_property_clear_constructing_and_deleted();
         }
         break;
+
     case BUILDING_MUD_WALL:
         placement_cost *= building_construction_place_wall(false, start.x(), start.y(), end.x(), end.y());
         break;
+
     case BUILDING_ROAD:
         placement_cost *= building_construction_place_road(false, start.x(), start.y(), end.x(), end.y());
         break;
+
     case BUILDING_PLAZA:
         placement_cost *= place_plaza(start, end);
         break;
+
     case BUILDING_GARDENS:
         placement_cost *= place_garden(start, end);
         map_routing_update_land();
         break;
+
     case BUILDING_LOW_BRIDGE:
     case BUILDING_UNUSED_SHIP_BRIDGE_83: {
         placement_cost *= map_bridge_add(x, y, build_type == BUILDING_UNUSED_SHIP_BRIDGE_83);
-        //            if (length <= 1) {
-        //                city_warning_show(WARNING_SHORE_NEEDED);
-        //                return false;
-        //            }
-        //            placement_cost *= length;
         break;
     }
     case BUILDING_IRRIGATION_DITCH: {
@@ -1832,12 +1829,15 @@ bool BuildPlanner::place() {
         break;
     case BUILDING_TEMPLE_COMPLEX_ALTAR:
     case BUILDING_TEMPLE_COMPLEX_ORACLE:
-        if (!attach_temple_upgrade(additional_req_param1, end.grid_offset()))
+        if (!attach_temple_upgrade(additional_req_param1, end.grid_offset())) {
             return false;
+        }
         break;
+
     default:
-        if (!place_building(build_type, end.x(), end.y(), absolute_orientation, variant))
+        if (!place_building(build_type, end, absolute_orientation, variant)) {
             return false;
+        }
         break;
     }
 
@@ -1859,7 +1859,8 @@ bool BuildPlanner::place() {
     //    }
 
     total_cost = placement_cost;
-    if (total_cost == 0)
+    if (total_cost == 0) {
         return false;
+    }
     return true;
 }
