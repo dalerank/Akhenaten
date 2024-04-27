@@ -14,6 +14,7 @@
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/military.h"
+#include "city/warnings.h"
 #include "city/resource.h"
 #include "city/labor.h"
 #include "core/calc.h"
@@ -824,6 +825,12 @@ void building_storage_yard::on_place(int orientation, int variant) {
     game_undo_adjust_building(&base);
 
     prev->next_part_building_id = 0;
+}
+
+void building_storage_yard::on_place_checks() {
+    if (!map_has_road_access(tile(), 3)) {
+        building_construction_warning_show(WARNING_ROAD_ACCESS_NEEDED);
+    }
 }
 
 void building_storage_yard::spawn_figure() {

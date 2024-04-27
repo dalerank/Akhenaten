@@ -1653,8 +1653,9 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     in_progress = false;
 
     dispatch_warnings();
-    if (can_place != CAN_PLACE && !building_is_draggable(build_type)) // this is the FINAL check!
+    if (can_place != CAN_PLACE && !building_is_draggable(build_type)) { // this is the FINAL check!
         return;
+    }
 
     // attempt placing, restore terrain data on failure
     if (!place()) {
@@ -1665,6 +1666,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
             game_undo_restore_map(1);
         else if (build_type == BUILDING_LOW_BRIDGE || build_type == BUILDING_UNUSED_SHIP_BRIDGE_83)
             map_bridge_reset_building_length();
+
         return;
     }
 
@@ -1763,8 +1765,9 @@ void BuildPlanner::update(tile2i cursor_tile) {
 }
 
 bool BuildPlanner::place() {
-    if (end == tile2i(-1, -1))
+    if (end == tile2i(-1, -1)) {
         return false;
+    }
 
     int x = end.x();
     int y = end.y();

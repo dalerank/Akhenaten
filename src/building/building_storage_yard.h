@@ -15,6 +15,7 @@ public:
     building_storage_yard(building &b) : building_impl(b), stored_full_amount(b.stored_full_amount) {}
     virtual void on_create(int orientation) override;
     virtual void on_place(int orientation, int variant) override;
+    virtual void on_place_checks() override;
     virtual void spawn_figure() override;
     virtual void window_info_background(object_info &ctx) override;
     virtual void window_info_foreground(object_info &ctx) override;

@@ -9,6 +9,7 @@
 #include "building/destruction.h"
 #include "city/buildings.h"
 #include "city/population.h"
+#include "city/warnings.h"
 #include "widget/city/ornaments.h"
 #include "city/warning.h"
 #include "core/svector.h"
@@ -916,6 +917,35 @@ void building_impl::on_place(int orientation, int variant) {
         img_id = params().anim["base"].first_img();
     }
     map_building_tiles_add(id(), tile(), base.size, img_id, TERRAIN_BUILDING);
+}
+
+void building_impl::on_place_checks() {
+    // check road access
+    switch (type()) {
+    case BUILDING_NONE:
+    case BUILDING_CLEAR_LAND:
+    case BUILDING_ROAD:
+    case BUILDING_IRRIGATION_DITCH:
+    case BUILDING_HOUSE_VACANT_LOT:
+    case BUILDING_SMALL_STATUE:
+    case BUILDING_MEDIUM_STATUE:
+    case BUILDING_LARGE_STATUE:
+    case BUILDING_GARDENS:
+    case BUILDING_WELL:
+    case BUILDING_WATER_LIFT:
+    case BUILDING_MUD_GATEHOUSE:
+    case BUILDING_ROADBLOCK:
+    case BUILDING_FORT_CHARIOTEERS:
+    case BUILDING_FORT_ARCHERS:
+    case BUILDING_FORT_INFANTRY:
+    case BUILDING_TEMPLE_COMPLEX_ALTAR:
+    case BUILDING_TEMPLE_COMPLEX_ORACLE:
+        return;
+    }
+
+    if (!map_has_road_access(tile(), size())) {
+        building_construction_warning_show(WARNING_ROAD_ACCESS_NEEDED);
+    } 
 }
 
 void building_impl::update_day() {
