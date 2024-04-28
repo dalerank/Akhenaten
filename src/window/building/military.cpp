@@ -17,7 +17,7 @@
 #include "grid/routing/routing.h"
 #include "io/gamefiles/lang.h"
 #include "sound/speech.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "window/building/common.h"
 #include "game/game.h"
 

@@ -5,7 +5,7 @@
 #include "city/resource.h"
 
 #include "io/io_buffer.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "window/popup_dialog.h"
 
 #include <string.h>

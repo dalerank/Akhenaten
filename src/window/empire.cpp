@@ -29,7 +29,7 @@
 #include "scenario/invasion.h"
 #include "scenario/property.h"
 #include "window/advisors.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "window/message_dialog.h"
 #include "window/popup_dialog.h"
 #include "window/resource_settings.h"

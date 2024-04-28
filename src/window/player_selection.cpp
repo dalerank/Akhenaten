@@ -24,7 +24,7 @@
 #include "game/player_data.h"
 #include "main_menu.h"
 #include "popup_dialog.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "window/editor/map.h"
 #include "window/game_menu.h"
 #include "window/new_career.h"

@@ -1,5 +1,5 @@
 #include "game_menu.h"
-#include "city.h"
+#include "window_city.h"
 #include "file_dialog.h"
 #include "message_dialog.h"
 #include "player_selection.h"

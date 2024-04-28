@@ -18,7 +18,7 @@
 #include "scenario/scenario_data.h"
 #include "sound/music.h"
 #include "sound/speech.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "window/intermezzo.h"
 #include "window/mission_next.h"
 #include "game/settings.h"

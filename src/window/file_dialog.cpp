@@ -23,7 +23,7 @@
 #include "io/gamefiles/lang.h"
 #include "io/gamestate/boilerplate.h"
 #include "widget/input_box.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "window/editor/map.h"
 
 #include "graphics/elements/scroll_list_panel.h"

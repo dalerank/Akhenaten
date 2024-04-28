@@ -59,7 +59,7 @@
 #include "window/building/military.h"
 #include "window/building/terrain.h"
 #include "window/building/utility.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "window/message_dialog.h"
 
 #include <functional>

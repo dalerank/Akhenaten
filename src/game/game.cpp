@@ -27,7 +27,7 @@
 #include "sound/sound_city.h"
 #include "sound/system.h"
 #include "translation/translation.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "window/editor/map.h"
 #include "window/logo.h"
 #include "window/main_menu.h"

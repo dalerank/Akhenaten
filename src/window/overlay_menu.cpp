@@ -13,7 +13,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "io/gamefiles/lang.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "game/game.h"
 
 static void button_menu_item(int index, int param2);

@@ -25,7 +25,7 @@
 #include "scenario/events.h"
 #include "scenario/request.h"
 #include "window/advisors.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "game/game.h"
 
 #define MAX_HISTORY 200

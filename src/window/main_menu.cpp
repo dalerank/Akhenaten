@@ -18,7 +18,7 @@
 #include "window/player_selection.h"
 #include "window/file_dialog.h"
 #include "window/config.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "sound/music.h"
 #include "io/gamestate/boilerplate.h"
 #include "resource/icons.h"

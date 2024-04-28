@@ -9,7 +9,7 @@
 #include "graphics/window.h"
 #include "sound/effect.h"
 #include "widget/sidebar/common.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "game/game.h"
 
 #define SLIDE_SPEED 7

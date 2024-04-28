@@ -10,7 +10,7 @@
 #include "graphics/window.h"
 #include "scenario/property.h"
 #include "sound/music.h"
-#include "window/city.h"
+#include "window/window_city.h"
 
 static void button_accept(int param1, int param2);
 static void button_continue_governing(int months, int param2);

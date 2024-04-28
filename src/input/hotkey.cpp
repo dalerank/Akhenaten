@@ -11,7 +11,7 @@
 #include "graphics/window.h"
 #include "input/scroll.h"
 #include "widget/top_menu.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "window/hotkey_editor.h"
 #include "window/main_menu.h"
 #include "window/popup_dialog.h"

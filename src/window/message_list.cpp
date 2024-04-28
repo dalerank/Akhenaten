@@ -17,7 +17,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "io/gamefiles/lang.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "window/message_dialog.h"
 #include "game/game.h"
 

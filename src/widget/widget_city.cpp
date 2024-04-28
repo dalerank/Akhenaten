@@ -34,7 +34,7 @@
 #include "widget/city/tile_draw.h"
 #include "widget/minimap.h"
 #include "window/window_building_info.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "game/game.h"
 #include "building/building.h"
 

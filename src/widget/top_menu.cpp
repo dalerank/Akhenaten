@@ -30,7 +30,7 @@
 #include "scenario/property.h"
 #include "widget/widget_city.h"
 #include "window/advisors.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "window/config.h"
 #include "window/difficulty_options.h"
 #include "window/display_options.h"

@@ -66,7 +66,7 @@
 #include "sound/sound_city.h"
 #include "sound/music.h"
 #include "widget/top_menu.h"
-#include "window/city.h"
+#include "window/window_city.h"
 #include "window/file_dialog.h"
 #include "window/mission_briefing.h"
 
