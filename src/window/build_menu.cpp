@@ -14,7 +14,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "widget/widget_city.h"
-#include "widget/sidebar/city.h"
+#include "widget/sidebar/sidebar.h"
 #include "window/city.h"
 #include "game/game.h"
 

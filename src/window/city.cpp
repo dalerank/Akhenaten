@@ -24,7 +24,7 @@
 #include "grid/grid.h"
 #include "scenario/building.h"
 #include "scenario/criteria.h"
-#include "widget/sidebar/city.h"
+#include "widget/sidebar/sidebar.h"
 #include "widget/top_menu.h"
 #include "widget/widget_city.h"
 #include "window/advisors.h"
