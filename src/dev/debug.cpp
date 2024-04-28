@@ -30,7 +30,7 @@
 #include "city/coverage.h"
 #include "city/floods.h"
 #include "city/gods.h"
-#include "sound/city.h"
+#include "sound/sound_city.h"
 #include "sound/device.h"
 #include "core/random.h"
 #include "figure/route.h"

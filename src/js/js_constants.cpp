@@ -12,7 +12,7 @@
 #include "graphics/font.h"
 #include "city/labor.h"
 
-#include "sound/city.h"
+#include "sound/sound_city.h"
 
 void js_register_game_constants(js_State *J) {
    REGISTER_GLOBAL_CONSTANT(J, FILE_TYPE_SAVED_GAME);

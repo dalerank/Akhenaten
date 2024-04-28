@@ -10,7 +10,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "sound/city.h"
+#include "sound/sound_city.h"
 #include "sound/effect.h"
 #include "sound/music.h"
 #include "sound/speech.h"

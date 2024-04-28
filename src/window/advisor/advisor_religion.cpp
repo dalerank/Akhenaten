@@ -23,11 +23,7 @@
 #include "window/advisors.h"
 #include "window/hold_festival.h"
 
-struct advisor_religion_window : public ui::widget {
-    int focus_button_id;
-};
-
-advisor_religion_window g_advisor_religion_window;
+ui::advisor_religion_window g_advisor_religion_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_religion);
 void config_load_advisor_religion() {
@@ -155,7 +151,7 @@ static void draw_god_row(e_god god, int y_offset, e_building_type temple, e_buil
     }
 }
 
-static int draw_advisor_religion_background() {
+int ui::advisor_religion_window::draw_background() {
     auto &ui = g_advisor_religion_window;
 
     painter ctx = game.painter();
@@ -170,7 +166,7 @@ static int draw_advisor_religion_background() {
     return 27;
 }
 
-static void draw_advisor_religion_foreground() {
+void ui::advisor_religion_window::draw_foreground() {
     auto &ui = g_advisor_religion_window;
 
     ui.draw();
@@ -208,11 +204,11 @@ static void button_hold_festival(int param1, int param2) {
     }
 }
 
-static int advisor_religion_handle_mouse(const mouse* m) {
+int ui::advisor_religion_window::handle_mouse(const mouse* m) {
     return generic_buttons_handle_mouse(m, 0, 0, hold_festival_button, 1, &g_advisor_religion_window.focus_button_id);
 }
 
-static int advisor_religion_get_tooltip_text(void) {
+int  ui::advisor_religion_window::get_tooltip_text() {
     auto &ui = g_advisor_religion_window;
     if (ui.focus_button_id) {
         return 112;
@@ -221,13 +217,6 @@ static int advisor_religion_get_tooltip_text(void) {
     }
 }
 
-const advisor_window* window_advisor_religion(void) {
-    static const advisor_window window = {
-        draw_advisor_religion_background, 
-        draw_advisor_religion_foreground,
-        advisor_religion_handle_mouse,
-        advisor_religion_get_tooltip_text
-    };
-
-    return &window;
+advisor_window* ui::advisor_religion_window::instance() {
+    return &g_advisor_religion_window;
 }

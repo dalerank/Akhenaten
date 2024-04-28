@@ -15,13 +15,7 @@
 #include "js/js_game.h"
 
 static void button_rating(int rating, int param2);
-
-struct advisor_rating_window : public ui::widget {
-    vec2i column_offset;
-    int focus_button_id;
-};
-
-advisor_rating_window g_advisor_rating_window;
+ui::advisor_ratings_window g_advisor_rating_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_rating);
 void config_load_advisor_rating() {
@@ -77,7 +71,7 @@ static void draw_rating(int id, int value, int open_play, int goal) {
     draw_rating_column(rating_buttons[id].x + w.column_offset.x, rating_buttons[id].y + w.column_offset.y, value, has_reached);
 }
 
-static int draw_advisor_rating_background() {
+int ui::advisor_ratings_window::draw_background() {
     bstring128 caption = (pcstr)ui::str(53, 7);
     if (!(!winning_population() || scenario_is_open_play())) {
         caption = (pcstr)ui::str(53, 6);
@@ -87,7 +81,7 @@ static int draw_advisor_rating_background() {
     return 0;// g_advisor_rating_window.outer_panel_size.y;
 }
 
-static void draw_advisor_rating_foreground() {
+void ui::advisor_ratings_window::draw_foreground() {
     auto &ui = g_advisor_rating_window;
 
     ui.draw();
@@ -148,7 +142,7 @@ static void draw_advisor_rating_foreground() {
     button_border_draw(rating_buttons[3].x, rating_buttons[3].y, rating_buttons[3].width, rating_buttons[3].height, ui.focus_button_id == SELECTED_RATING_KINGDOM);
 }
 
-static int advisor_rating_handle_mouse(const mouse* m) {
+int ui::advisor_ratings_window::handle_mouse(const mouse* m) {
     return generic_buttons_handle_mouse(m, 0, 0, rating_buttons, 4, &g_advisor_rating_window.focus_button_id);
 }
 
@@ -157,7 +151,7 @@ static void button_rating(int rating, int param2) {
     window_invalidate();
 }
 
-static int advisor_rating_get_tooltip_text(void) {
+int ui::advisor_ratings_window::get_tooltip_text(void) {
     switch (g_advisor_rating_window.focus_button_id) {
     case SELECTED_RATING_CULTURE:
         return 102;
@@ -172,12 +166,6 @@ static int advisor_rating_get_tooltip_text(void) {
     }
 }
 
-const advisor_window* window_advisor_ratings(void) {
-    static const advisor_window window = {
-        draw_advisor_rating_background,
-        draw_advisor_rating_foreground,
-        advisor_rating_handle_mouse,
-        advisor_rating_get_tooltip_text
-    };
-    return &window;
+advisor_window* ui::advisor_ratings_window::instance() {
+    return &g_advisor_rating_window;
 }

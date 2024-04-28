@@ -19,6 +19,8 @@
 
 #define ADVISOR_HEIGHT 27
 
+ui::advisor_housing_window g_advisor_housing_window;
+
 static void go_back(int param1, int param2);
 
 static generic_button back_button[] = {{545, 260, 60, 51, go_back, button_none, 0, 1}};
@@ -75,7 +77,7 @@ static void draw_housing_table() {
     }
 }
 
-static int draw_background() {
+int ui::advisor_housing_window::draw_background() {
     painter ctx = game.painter();
 
     int val;
@@ -102,14 +104,14 @@ static int draw_background() {
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground(void) {
+void ui::advisor_housing_window::draw_foreground() {
     if (focus_button_id == 0)
         button_border_draw(545, 260, 60, 51, 0);
     else if (focus_button_id == 1)
         button_border_draw(545, 260, 60, 51, 1);
 }
 
-static int handle_mouse(const mouse* m) {
+int ui::advisor_housing_window::handle_mouse(const mouse* m) {
     return generic_buttons_handle_mouse(m, 0, 0, back_button, 1, &focus_button_id);
 }
 
@@ -118,16 +120,10 @@ static void go_back(int param1, int param2) {
     window_invalidate();
 }
 
-static int get_tooltip_text(void) {
+int ui::advisor_housing_window::get_tooltip_text(void) {
     return 0;
 }
 
-const advisor_window* window_advisor_housing(void) {
-    static const advisor_window window = {
-        draw_background,
-        draw_foreground,
-        handle_mouse,
-        get_tooltip_text
-    };
-    return &window;
+advisor_window* ui::advisor_housing_window::instance() {
+    return &g_advisor_housing_window;
 }

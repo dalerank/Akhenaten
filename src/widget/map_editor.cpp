@@ -14,7 +14,7 @@
 #include "grid/property.h"
 #include "input/scroll.h"
 #include "config/config.h"
-#include "sound/city.h"
+#include "sound/sound_city.h"
 #include "sound/effect.h"
 #include "widget/city/tile_draw.h"
 #include "widget/map_editor_tool.h"

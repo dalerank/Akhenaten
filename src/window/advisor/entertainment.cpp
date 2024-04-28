@@ -25,6 +25,8 @@
 #define COVERAGE_OFFSET 470
 #define COVERAGE_WIDTH 130
 
+ui::advisor_entertainment_window g_advisor_entertainment_window;
+
 static void button_hold_festival(int param1, int param2);
 
 static generic_button hold_festival_button[] = {
@@ -109,7 +111,7 @@ static void draw_festival_info() {
     lang_text_draw_multiline(58, 18 + get_festival_advice(), vec2i{56, 305}, 400, FONT_NORMAL_WHITE_ON_DARK);
 }
 
-static int draw_background() {
+int ui::advisor_entertainment_window::draw_background() {
     painter ctx = game.painter();
     city_gods_update(true);
     city_culture_calculate();
@@ -141,12 +143,13 @@ static int draw_background() {
 
     return ADVISOR_HEIGHT;
 }
-static void draw_foreground(void) {
+
+void ui::advisor_entertainment_window::draw_foreground() {
     //    if (!city_festival_is_planned())
     //        button_border_draw(102, 280, 300, 20, focus_button_id == 1);
 }
 
-static bool handle_mouse(const mouse* m) {
+int ui::advisor_entertainment_window::handle_mouse(const mouse* m) {
     return generic_buttons_handle_mouse(m, 0, 0, hold_festival_button, 1, &focus_button_id);
 }
 
@@ -155,7 +158,7 @@ static void button_hold_festival(int param1, int param2) {
     //        window_hold_festival_show();
 }
 
-static int get_tooltip_text(void) {
+int ui::advisor_entertainment_window::get_tooltip_text() {
     if (focus_button_id) {
         return 112;
     }else {
@@ -163,13 +166,10 @@ static int get_tooltip_text(void) {
     }
 }
 
-const advisor_window* window_advisor_entertainment(void) {
-    static const advisor_window window = {
-        draw_background,
-        draw_foreground,
-        nullptr,
-        get_tooltip_text
-    };
+void ui::advisor_entertainment_window::init() {
     focus_button_id = 0;
-    return &window;
+}
+
+advisor_window* ui::advisor_entertainment_window::instance() {
+    return &g_advisor_entertainment_window;
 }

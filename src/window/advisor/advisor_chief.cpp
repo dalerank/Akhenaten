@@ -31,10 +31,7 @@
 
 #define ADVISOR_HEIGHT 24
 
-struct advisor_chief_window : public ui::widget {
-};
-
-advisor_chief_window g_advisor_chief_window;
+ui::advisor_chief_window g_advisor_chief_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_chief);
 void config_load_advisor_chief() {
@@ -49,7 +46,7 @@ static void draw_title(int y, int text_id) {
     lang_text_draw(61, text_id, 44, y, FONT_NORMAL_WHITE_ON_DARK);
 }
 
-static int draw_advisor_chief_background() {
+int ui::advisor_chief_window::draw_background() {
     auto &ui = g_advisor_chief_window;
 
     // sentiment
@@ -272,7 +269,7 @@ static int draw_advisor_chief_background() {
     return ADVISOR_HEIGHT;
 }
 
-static void draw_advisor_chief_foreground() {
+void ui::advisor_chief_window::draw_foreground() {
     g_advisor_chief_window.draw();
 
     painter ctx = game.painter();
@@ -318,12 +315,6 @@ static void draw_advisor_chief_foreground() {
     //    y_line += 20;
 }
 
-const advisor_window* window_advisor_chief() {
-    static const advisor_window window = {
-        draw_advisor_chief_background,
-        draw_advisor_chief_foreground,
-        nullptr,
-        nullptr
-    };
-    return &window;
+advisor_window* ui::advisor_chief_window::instance() {
+    return &g_advisor_chief_window;
 }

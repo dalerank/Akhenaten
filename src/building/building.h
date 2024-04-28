@@ -14,7 +14,7 @@
 #include "figure/figure_type.h"
 #include "game/resource.h"
 #include "grid/point.h"
-#include "sound/city.h"
+#include "sound/sound_city.h"
 #include "model.h"
 
 #include <stdint.h>

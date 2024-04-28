@@ -62,30 +62,6 @@ static image_button advisor_buttons[] = {
   {588, 1, 42, 32, IB_NORMAL, GROUP_MENU_ADVISOR_BUTTONS, 52, button_back_to_city, button_none, 0, 0},
 };
 
-static const advisor_window* (*sub_advisors[])(void) = {
-  0,
-  window_advisor_labor,
-  window_advisor_military,
-  window_advisor_imperial,
-  window_advisor_ratings,
-  window_advisor_trade,
-  window_advisor_population,
-  window_advisor_health,
-  window_advisor_education,
-  window_advisor_entertainment,
-  window_advisor_religion,
-  window_advisor_financial,
-  window_advisor_chief,
-  window_advisor_monuments,
-  // sub-advisors begin here
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  nullptr,
-  window_advisor_housing // population sub-advisor
-};
-
 static const int ADVISOR_TO_MESSAGE_TEXT[] = {
   MESSAGE_DIALOG_ABOUT,
   MESSAGE_DIALOG_ADVISOR_LABOR,
@@ -110,10 +86,34 @@ static const int ADVISOR_TO_MESSAGE_TEXT[] = {
 };
 
 struct window_advisors_t {
-    const advisor_window *current_advisor_window = nullptr;
+    advisor_window *current_advisor_window = nullptr;
     int current_advisor = ADVISOR_NONE;
     int focus_button_id;
     int advisor_height;
+
+    advisor_window* sub_advisors[20] = {
+        nullptr,
+        ui::advisor_labors_window::instance(),
+        ui::advisor_miliary_window::instance(),
+        ui::advisor_imperial_window::instance(),
+        ui::advisor_ratings_window::instance(),
+        ui::advisor_trade_window::instance(),
+        ui::advisor_population_window::instance(),
+        ui::advisor_health_window::instance(),
+        ui::advisor_education_window::instance(),
+        ui::advisor_entertainment_window::instance(),
+        ui::advisor_religion_window::instance(),
+        ui::advisor_financial_window::instance(),
+        ui::advisor_chief_window::instance(),
+        ui::advisor_monuments_window::instance(),
+        // sub-advisors begin here
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        ui::advisor_housing_window::instance()
+    };
 };
 
 window_advisors_t g_window_advisors;
@@ -126,8 +126,9 @@ static void clear_all_advisors_button() {
 
 static void set_advisor_window() {
     auto &data = g_window_advisors;
-    if (sub_advisors[data.current_advisor]) {
-        data.current_advisor_window = sub_advisors[data.current_advisor]();
+    if (data.sub_advisors[data.current_advisor]) {
+        data.current_advisor_window = data.sub_advisors[data.current_advisor];
+        data.current_advisor_window->init();
     } else {
         data.current_advisor_window = nullptr;
     }
@@ -198,6 +199,7 @@ void window_advisors_draw_dialog_background() {
 
 static void draw_background(void) {
     auto &data = g_window_advisors;
+
     window_advisors_draw_dialog_background();
     graphics_set_to_dialog();
     data.advisor_height = data.current_advisor_window->draw_background();
@@ -206,16 +208,15 @@ static void draw_background(void) {
 
 static void draw_foreground(void) {
     auto &data = g_window_advisors;
+
     graphics_set_to_dialog();
     image_buttons_draw(0, 16 * (data.advisor_height - 2), &help_button, 1);
     image_buttons_draw(0, 440, advisor_buttons, 14);
     graphics_reset_dialog();
 
-    if (data.current_advisor_window->draw_foreground) {
-        graphics_set_to_dialog();
-        data.current_advisor_window->draw_foreground();
-        graphics_reset_dialog();
-    }
+    graphics_set_to_dialog();
+    data.current_advisor_window->draw_foreground();
+    graphics_reset_dialog();
 }
 
 static void handle_hotkeys(const hotkeys* h) {
@@ -243,7 +244,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         data.focus_button_id = -1;
     }
 
-    if (data.current_advisor_window->handle_mouse && data.current_advisor_window->handle_mouse(m_dialog)) {
+    if (data.current_advisor_window->handle_mouse(m_dialog)) {
         return;
     }
 
@@ -275,9 +276,9 @@ static void get_tooltip(tooltip_context* c) {
     auto &data = g_window_advisors;
     if (data.focus_button_id) {
         c->type = TOOLTIP_BUTTON;
-        if (data.focus_button_id == -1)
+        if (data.focus_button_id == -1) {
             c->text_id = 1; // help button
-        else {
+        } else {
             c->text_id = 70 + data.focus_button_id;
             if (!advisor_buttons[data.focus_button_id - 1].enabled)
                 c->type = TOOLTIP_NONE;
@@ -285,10 +286,7 @@ static void get_tooltip(tooltip_context* c) {
         return;
     }
 
-    int text_id = 0;
-    if (data.current_advisor_window->get_tooltip_text) {
-        text_id = data.current_advisor_window->get_tooltip_text();
-    }
+    int text_id = data.current_advisor_window->get_tooltip_text();
 
     if (text_id) {
         c->text_id = text_id;

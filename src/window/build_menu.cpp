@@ -13,7 +13,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "widget/city.h"
+#include "widget/widget_city.h"
 #include "widget/sidebar/city.h"
 #include "window/city.h"
 #include "game/game.h"

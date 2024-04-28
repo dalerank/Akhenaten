@@ -26,7 +26,7 @@
 #include "scenario/criteria.h"
 #include "widget/sidebar/city.h"
 #include "widget/top_menu.h"
-#include "widget/city.h"
+#include "widget/widget_city.h"
 #include "window/advisors.h"
 #include "window/file_dialog.h"
 #include "game/game.h"

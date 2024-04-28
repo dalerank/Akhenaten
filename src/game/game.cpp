@@ -24,7 +24,7 @@
 #include "mission.h"
 #include "scenario/events.h"
 #include "scenario/scenario.h"
-#include "sound/city.h"
+#include "sound/sound_city.h"
 #include "sound/system.h"
 #include "translation/translation.h"
 #include "window/city.h"

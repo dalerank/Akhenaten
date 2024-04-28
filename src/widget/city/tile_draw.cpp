@@ -15,7 +15,7 @@
 #include "grid/terrain.h"
 #include "config/config.h"
 #include "ornaments.h"
-#include "sound/city.h"
+#include "sound/sound_city.h"
 #include "game/game.h"
 #include "graphics/view/lookup.h"
 

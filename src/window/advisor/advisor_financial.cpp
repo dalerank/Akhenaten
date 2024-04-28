@@ -13,6 +13,8 @@
 
 #define ADVISOR_HEIGHT 27
 
+ui::advisor_financial_window g_advisor_financial_window;
+
 static void button_change_taxes(int is_down, int param2);
 
 static arrow_button arrow_buttons_taxes[] = {
@@ -28,7 +30,7 @@ static void draw_row(int group, int number, int* y, int value_last_year, int val
     *y += 15;
 }
 
-static int draw_background() {
+int ui::advisor_financial_window::draw_background() {
     painter ctx = game.painter();
     outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 10, vec2i{10, 10});
@@ -107,11 +109,12 @@ static int draw_background() {
 
     return ADVISOR_HEIGHT;
 }
-static void draw_foreground(void) {
+
+void ui::advisor_financial_window::draw_foreground() {
     arrow_buttons_draw(0, 0, arrow_buttons_taxes, 2);
 }
 
-static int handle_mouse(const mouse* m) {
+int ui::advisor_financial_window::handle_mouse(const mouse* m) {
     return arrow_buttons_handle_mouse(m, 0, 0, arrow_buttons_taxes, 2, &arrow_button_focus);
 }
 
@@ -122,7 +125,7 @@ static void button_change_taxes(int is_down, int param2) {
     window_invalidate();
 }
 
-static int get_tooltip_text(void) {
+int ui::advisor_financial_window::get_tooltip_text() {
     if (arrow_button_focus)
         return 120;
     else {
@@ -130,12 +133,6 @@ static int get_tooltip_text(void) {
     }
 }
 
-const advisor_window* window_advisor_financial(void) {
-    static const advisor_window window = {
-        draw_background,
-        draw_foreground,
-        handle_mouse,
-        get_tooltip_text
-    };
-    return &window;
+advisor_window* ui::advisor_financial_window::instance() {
+    return &g_advisor_financial_window;
 }

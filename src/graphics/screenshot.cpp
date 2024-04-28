@@ -19,7 +19,7 @@
 #include "scenario/scenario.h"
 #include "widget/minimap.h"
 #include "widget/sidebar/common.h"
-#include "widget/city.h"
+#include "widget/widget_city.h"
 #include "game/game.h"
 
 #include "png.h"

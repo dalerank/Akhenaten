@@ -43,7 +43,7 @@
 #include "scenario/invasion.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
-#include "sound/city.h"
+#include "sound/sound_city.h"
 #include "sound/music.h"
 #include "game/game.h"
 

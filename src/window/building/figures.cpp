@@ -17,7 +17,7 @@
 #include "graphics/window.h"
 #include "config/config.h"
 #include "scenario/property.h"
-#include "widget/city.h"
+#include "widget/widget_city.h"
 #include "game/game.h"
 
 static void window_info_select_figure(int index, int param2);

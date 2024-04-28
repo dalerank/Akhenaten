@@ -5,7 +5,7 @@
 #include "core/log.h"
 #include "game/settings.h"
 #include "sound/channel.h"
-#include "sound/city.h"
+#include "sound/sound_city.h"
 #include "sound/device.h"
 #include "sound/effect.h"
 #include "sound/music.h"

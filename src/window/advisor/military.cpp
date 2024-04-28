@@ -19,6 +19,8 @@
 
 #define ADVISOR_HEIGHT 26
 
+ui::advisor_miliary_window g_advisor_military_window;
+
 static void button_go_to_legion(int legion_id, int param2);
 static void button_return_to_fort(int legion_id, int param2);
 static void button_empire_service(int legion_id, int param2);
@@ -50,12 +52,12 @@ static generic_button fort_buttons[] = {
 static int focus_button_id;
 static int num_legions;
 
-static void init() {
+void ui::advisor_miliary_window::init() {
     num_legions = formation_get_num_forts();
     scrollbar_init(&scrollbar, 0, num_legions - 6);
 }
 
-static int draw_background() {
+int ui::advisor_miliary_window::draw_background() {
     painter ctx = game.painter();
     outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 1, vec2i{10, 10});
@@ -158,7 +160,7 @@ static int draw_background() {
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground() {
+void ui::advisor_miliary_window::draw_foreground() {
     scrollbar_draw(&scrollbar);
     num_legions = formation_get_num_forts();
     for (int i = 0; i < 6 && i < num_legions; i++) {
@@ -168,7 +170,7 @@ static void draw_foreground() {
     }
 }
 
-static int handle_mouse(const mouse* m) {
+int ui::advisor_miliary_window::handle_mouse(const mouse* m) {
     if (scrollbar_handle_mouse(&scrollbar, m))
         return 1;
 
@@ -200,13 +202,6 @@ static void on_scroll(void) {
     window_invalidate();
 }
 
-const advisor_window* window_advisor_military(void) {
-    static const advisor_window window = {
-        draw_background,
-        draw_foreground,
-        handle_mouse,
-        nullptr
-    };
-    init();
-    return &window;
+advisor_window* ui::advisor_miliary_window::instance() {
+    return &g_advisor_military_window;
 }

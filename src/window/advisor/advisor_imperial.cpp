@@ -33,6 +33,8 @@ enum E_STATUS {
     STATUS_NO_LEGIONS_AVAILABLE = -4,
 };
 
+ui::advisor_imperial_window g_advisor_imperial_window;
+
 static void button_donate_to_city(int param1, int param2);
 static void button_set_salary(int param1, int param2);
 static void button_gift_to_emperor(int param1, int param2);
@@ -125,7 +127,7 @@ static void draw_request(int index, const scenario_request* request) {
     }
 }
 
-static int draw_background(void) {
+int ui::advisor_imperial_window::draw_background() {
     int military_resource = RESOURCE_WEAPONS;
 
     painter ctx = game.painter();
@@ -172,7 +174,7 @@ static int draw_background(void) {
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground(void) {
+void ui::advisor_imperial_window::draw_foreground() {
     inner_panel_draw(64, 324, 32, 6);
 
     lang_text_draw(32, city_emperor_rank(), 72, 338, FONT_LARGE_BLACK_ON_DARK);
@@ -201,7 +203,7 @@ static void draw_foreground(void) {
     }
 }
 
-static int handle_mouse(const mouse* m) {
+int ui::advisor_imperial_window::handle_mouse(const mouse* m) {
     return generic_buttons_handle_mouse(m, 0, 0, imperial_buttons, 8, &focus_button_id);
 }
 
@@ -251,7 +253,7 @@ static void button_request(int index, int param2) {
     }
 }
 
-static int get_tooltip_text(void) {
+int ui::advisor_imperial_window::get_tooltip_text(void) {
     if (focus_button_id && focus_button_id <= 2)
         return 93 + focus_button_id;
     else if (focus_button_id == 3)
@@ -261,12 +263,6 @@ static int get_tooltip_text(void) {
     }
 }
 
-const advisor_window* window_advisor_imperial(void) {
-    static const advisor_window window = {
-        draw_background,
-        draw_foreground,
-        handle_mouse,
-        get_tooltip_text
-    };
-    return &window;
+advisor_window* ui::advisor_imperial_window::instance() {
+    return &g_advisor_imperial_window;
 }

@@ -14,6 +14,8 @@
 
 #define ADVISOR_HEIGHT 18
 
+ui::advisor_health_window g_advisor_health_window;
+
 static int get_health_advice() {
     house_demands* demands = city_houses_demands();
     switch (demands->health) {
@@ -30,7 +32,7 @@ static int get_health_advice() {
     }
 }
 
-static int draw_background() {
+int ui::advisor_health_window::draw_background() {
     outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
@@ -86,12 +88,6 @@ static int draw_background() {
     return ADVISOR_HEIGHT;
 }
 
-const advisor_window* window_advisor_health() {
-    static const advisor_window window = {
-        draw_background,
-        nullptr,
-        nullptr,
-        nullptr
-    };
-    return &window;
+advisor_window* ui::advisor_health_window::instance() {
+    return &g_advisor_health_window;
 }

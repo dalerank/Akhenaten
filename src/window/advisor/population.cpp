@@ -22,6 +22,8 @@
 
 #define ADVISOR_HEIGHT 27
 
+ui::advisor_population_window g_advisor_population_window;
+
 static void button_graph(int param1, int param2);
 
 static generic_button graph_buttons[] = {
@@ -391,7 +393,7 @@ static void draw_housing_button(int full_size, vec2i pos) {
     //    ImageDraw::isometric_top(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE);
 }
 
-static int draw_background() {
+int ui::advisor_population_window::draw_background() {
     painter ctx = game.painter();
     int width;
 
@@ -507,7 +509,7 @@ static int draw_background() {
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground(void) {
+void ui::advisor_population_window::draw_foreground() {
     if (focus_button_id == 0) {
         button_border_draw(501, 60, 106, 57, 0);
         button_border_draw(501, 160, 106, 57, 0);
@@ -527,7 +529,7 @@ static void draw_foreground(void) {
     }
 }
 
-static int handle_mouse(const mouse* m) {
+int ui::advisor_population_window::handle_mouse(const mouse* m) {
     return generic_buttons_handle_mouse(m, 0, 0, graph_buttons, 3, &focus_button_id);
 }
 
@@ -565,7 +567,7 @@ static void button_graph(int param1, int param2) {
     window_invalidate();
 }
 
-static int get_tooltip_text(void) {
+int ui::advisor_population_window::get_tooltip_text(void) {
     if (focus_button_id && focus_button_id < 3)
         return 111;
     else {
@@ -573,12 +575,6 @@ static int get_tooltip_text(void) {
     }
 }
 
-const advisor_window* window_advisor_population(void) {
-    static const advisor_window window = {
-        draw_background,
-        draw_foreground,
-        handle_mouse,
-        get_tooltip_text
-    };
-    return &window;
+advisor_window* ui::advisor_population_window::instance() {
+    return &g_advisor_population_window;
 }

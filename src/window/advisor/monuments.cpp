@@ -27,6 +27,8 @@
 
 #define ADVISOR_HEIGHT 27
 
+ui::advisor_monuments_window g_advisor_monuments_window;
+
 enum E_STATUS_2 {
     STATUS_NOT_ENOUGH_RESOURCES = -1,
     STATUS_CONFIRM_SEND_LEGIONS = -2,
@@ -90,7 +92,7 @@ static void draw_request(int index, const scenario_request* request) {
     }
 }
 
-static int draw_background(void) {
+int ui::advisor_monuments_window::draw_background() {
     painter ctx = game.painter();
     int military_resource = RESOURCE_WEAPONS;
     city_emperor_calculate_gift_costs();
@@ -166,7 +168,7 @@ static int get_request_status(int index) {
     return 0;
 }
 
-static void draw_foreground(void) {
+void ui::advisor_monuments_window::draw_foreground() {
     inner_panel_draw(64, 324, 32, 6);
 
     lang_text_draw(32, city_emperor_rank(), 72, 338, FONT_LARGE_BLACK_ON_DARK);
@@ -202,55 +204,23 @@ static void draw_foreground(void) {
     //    button_border_draw(38, 264, 560, 40, focus_button_id == 8);
 }
 
-static int handle_mouse(const mouse* m) {
+int ui::advisor_monuments_window::handle_mouse(const mouse* m) {
     return generic_buttons_handle_mouse(m, 0, 0, imperial_buttons, 8, &focus_button_id);
 }
 
 static void button_donate_to_city(int param1, int param2) {
-    window_donate_to_city_show();
 }
 
 static void button_set_salary(int param1, int param2) {
-    window_set_salary_show();
 }
 
 static void button_gift_to_emperor(int param1, int param2) {
-    window_gift_to_emperor_show();
 }
 
 static void confirm_nothing(bool accepted) {
 }
 
 static void button_request(int index, int param2) {
-    int status = get_request_status(index);
-    if (status) {
-        city_military_clear_empire_service_legions();
-        switch (status) {
-        case STATUS_NO_LEGIONS_AVAILABLE:
-            window_ok_dialog_show("#popup_dialog_no_legions_available");
-            break;
-
-        case STATUS_NO_LEGIONS_SELECTED:
-            window_ok_dialog_show("#popup_dialog_no_legions_selected");
-            break;
-
-        case STATUS_CONFIRM_SEND_LEGIONS:
-            window_yes_dialog_show("#popup_dialog_send_troops", [] {
-                formation_legions_dispatch_to_distant_battle();
-                window_empire_show();
-            });
-            break;
-
-        case STATUS_NOT_ENOUGH_RESOURCES:
-            window_ok_dialog_show("#popup_dialog_not_enough_goods");
-            break;
-
-        default:
-            selected_request_id = status - 1;
-            window_yes_dialog_show("#popup_dialog_send_goods", [] { scenario_request_dispatch(selected_request_id); });
-            break;
-        }
-    }
 }
 
 static int get_tooltip_text(void) {
@@ -263,12 +233,6 @@ static int get_tooltip_text(void) {
     }
 }
 
-const advisor_window* window_advisor_monuments(void) {
-    static const advisor_window window = {
-        draw_background,
-        draw_foreground,
-        handle_mouse,
-        get_tooltip_text
-    };
-    return &window;
+advisor_window* ui::advisor_monuments_window::instance() {
+    return &g_advisor_monuments_window;
 }

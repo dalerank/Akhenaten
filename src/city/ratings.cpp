@@ -10,6 +10,16 @@
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 
+#include "dev/debug.h"
+#include <iostream>
+
+declare_console_command_p(addprosperity, game_cheat_add_prosperity)
+void game_cheat_add_prosperity(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+    int amount = atoi(args.empty() ? (pcstr)"100" : args.c_str());
+    city_data.ratings.prosperity = calc_bound(city_data.ratings.prosperity + amount, 0, 100);
+};
+
 int city_rating_culture() {
     return city_data.ratings.culture;
 }

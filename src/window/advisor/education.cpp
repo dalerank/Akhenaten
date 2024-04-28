@@ -13,6 +13,8 @@
 
 #define ADVISOR_HEIGHT 16
 
+ui::advisor_education_window g_advisor_education_window;
+
 static int get_education_advice() {
     const house_demands* demands = city_houses_demands();
     if (demands->education == 1)
@@ -53,7 +55,7 @@ static int get_education_advice() {
     return advice_id;
 }
 
-static int draw_background() {
+int ui::advisor_education_window::draw_background() {
     painter ctx = game.painter();
     outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 7, vec2i{10, 10});
@@ -128,12 +130,6 @@ static int draw_background() {
     return ADVISOR_HEIGHT;
 }
 
-const advisor_window* window_advisor_education(void) {
-    static const advisor_window window = {
-        draw_background,
-        nullptr,
-        nullptr,
-        nullptr
-    };
-    return &window;
+advisor_window* ui::advisor_education_window::instance() {
+    return &g_advisor_education_window;
 }

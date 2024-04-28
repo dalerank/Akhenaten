@@ -28,7 +28,7 @@
 #include "io/gamestate/boilerplate.h"
 #include "io/manager.h"
 #include "scenario/property.h"
-#include "widget/city.h"
+#include "widget/widget_city.h"
 #include "window/advisors.h"
 #include "window/city.h"
 #include "window/config.h"

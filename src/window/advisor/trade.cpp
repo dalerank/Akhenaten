@@ -22,6 +22,8 @@
 
 #define ADVISOR_HEIGHT 27
 
+ui::advisor_trade_window g_advisor_trade_window;
+
 static void button_prices(int param1, int param2);
 static void button_empire(int param1, int param2);
 static void button_resource(int resource_index, int param2);
@@ -57,7 +59,7 @@ static scrollbar_type scrollbar = {590, 52, 336, on_scroll};
 
 #define IMPORT_EXPORT_X 310
 
-static int draw_background() {
+int ui::advisor_trade_window::draw_background() {
     painter ctx = game.painter();
     city_resource_determine_available();
 
@@ -70,7 +72,8 @@ static int draw_background() {
 
     return ADVISOR_HEIGHT;
 }
-static void draw_foreground() {
+
+void ui::advisor_trade_window::draw_foreground() {
     painter ctx = game.painter();
     inner_panel_draw(17, 52, 36, 21);
     graphics_set_clip_rectangle(20, 39, 575, 346);
@@ -157,7 +160,7 @@ static void draw_foreground() {
     lang_text_draw_centered(54, 2, 400, 402, 200, FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
-static int handle_mouse(const mouse* m) {
+int ui::advisor_trade_window::handle_mouse(const mouse* m) {
     int num_resources = city_resource_get_available()->size;
     if (num_resources > 15)
         num_resources = 15;
@@ -179,7 +182,7 @@ static void button_resource(int resource_index, int param2) {
     window_resource_settings_show(city_resource_get_available()->items[resource_index]);
 }
 
-static int get_tooltip_text(void) {
+int ui::advisor_trade_window::get_tooltip_text(void) {
     if (focus_button_id == 1)
         return 108;
     else if (focus_button_id == 2)
@@ -190,17 +193,11 @@ static int get_tooltip_text(void) {
         return 0;
 }
 
-const advisor_window* window_advisor_trade(void) {
-    static const advisor_window window = {
-        draw_background,
-        draw_foreground,
-        handle_mouse,
-        get_tooltip_text
-    };
-    return &window;
+advisor_window* ui::advisor_trade_window::instance() {
+    return &g_advisor_trade_window;
 }
 
 void window_advisor_trade_draw_dialog_background(void) {
-    draw_background();
-    draw_foreground();
+    //draw_background();
+    //draw_foreground();
 }

@@ -63,7 +63,7 @@
 #include "scenario/price_change.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
-#include "sound/city.h"
+#include "sound/sound_city.h"
 #include "sound/music.h"
 #include "widget/top_menu.h"
 #include "window/city.h"
