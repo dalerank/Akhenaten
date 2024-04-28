@@ -67,8 +67,10 @@ struct element {
     virtual void draw() {}
     virtual void load(archive);
     virtual void text(pcstr) {}
+    inline void text(int font, pcstr v) { this->font(font);  this->text(v); }
     virtual void color(int) {}
     virtual void image(int) {}
+    virtual image_desc image() const { return {}; }
     virtual void font(int) {}
     virtual void width(int) {}
     virtual void onclick(std::function<void(int, int)>) {}
@@ -128,6 +130,7 @@ struct eimg : public element {
 
     virtual void draw() override;
     virtual void load(archive elem) override;
+    virtual image_desc image() const override { return img_desc; }
 };
 
 struct eresource_icon : public element {
@@ -197,6 +200,10 @@ struct widget {
     virtual void load(archive arch);
 
     element& operator[](pcstr id);
+    inline element &operator[](const bstring32 &id) { return (*this)[id.c_str()]; }
+
+    inline int label(int group, int number, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0) { return ui::label(group, number, pos, font, flags, box_width); }
+    inline void image(image_desc img, vec2i pos) { ui::eimage(img, pos); }
 };
 
 } // ui

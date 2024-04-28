@@ -232,7 +232,7 @@ enum e_pack {
 #define GROUP_BUILDING_PALACE_FANCY PACK_GENERAL, 221             // this isn't in Pharaoh
 #define GROUP_FORT_ICONS PACK_GENERAL, 222                        // TODO?
 #define GROUP_EMPIRE_FOREIGN_CITY PACK_GENERAL, 223               // this isn't in Pharaoh
-#define GROUP_GOD_BOLT PACK_GENERAL, 111                          // 225
+//#define GROUP_GOD_BOLT PACK_GENERAL, 111                          // 225
 #define GROUP_PLAGUE_SKULL PACK_GENERAL, 97                       // 227
 //#define GROUP_FIGURE_FORT_MOUNTED PACK_GENERAL, 66                // 232
 #define GROUP_BUILDING_TRADE_CENTER_FLAG PACK_GENERAL, 238        // this isn't in Pharaoh
@@ -283,7 +283,7 @@ enum e_pack {
 #define GROUP_MENU_ADVISOR_BUTTONS PACK_GENERAL, 159
 #define GROUP_MENU_ADVISOR_LAYOUT PACK_GENERAL, 160
 #define GROUP_TINY_ARROWS PACK_GENERAL, 212
-#define GROUP_GOD_ANGEL PACK_GENERAL, 9
+//#define GROUP_GOD_ANGEL PACK_GENERAL, 9
 #define GROUP_BUILD_MENU_CATEGORIES PACK_GENERAL, 117
 #define GROUP_MINIMAP_REEDS PACK_GENERAL, 144
 #define GROUP_MINIMAP_FLOODPLAIN PACK_GENERAL, 146

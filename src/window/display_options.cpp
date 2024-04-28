@@ -26,6 +26,22 @@ constexpr uint32_t NUM_FILES_IN_VIEW = 13;
 ui::window_display_options ui::window_display_options::window;
 
 void ui::window_display_options::init(close_callback close_cb) {
+    if (!panel) {
+        scrollable_list_ui_params ui_params;
+        ui_params.x = 144;
+        ui_params.y = 100;
+        ui_params.blocks_x = 20;
+        ui_params.blocks_y = NUM_FILES_IN_VIEW + 1;
+        ui_params.draw_scrollbar_always = true;
+
+        panel = new scroll_list_panel(NUM_FILES_IN_VIEW, 
+                                      button_none, 
+                                      button_none, 
+                                      button_none, 
+                                      button_none, 
+                                      ui_params, false, "", "");
+    }
+
     focus_button_id = 0;
     _close_cb = close_cb;
 
@@ -83,23 +99,7 @@ void ui::window_display_options::handle_input(const mouse* m, const hotkeys* h) 
 }
 
 void ui::window_display_options::show(close_callback close_cb) {
-    if (!panel) {
-        scrollable_list_ui_params ui_params;
-        ui_params.x = 144;
-        ui_params.y = 100;
-        ui_params.blocks_x = 20;
-        ui_params.blocks_y = NUM_FILES_IN_VIEW + 1;
-        ui_params.draw_scrollbar_always = true;
-
-        panel = new scroll_list_panel(NUM_FILES_IN_VIEW, 
-                                      button_none, 
-                                      button_none, 
-                                      button_none, 
-                                      button_none, 
-                                      ui_params, false, "", "");
-    }
-
-    window_type instance = {
+    static window_type instance = {
         WINDOW_FILE_DIALOG,
         window_draw_underlying_window,
         [] { window.draw_foreground(); },

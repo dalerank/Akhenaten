@@ -1,4 +1,4 @@
-#include "chief.h"
+#include "advisor_chief.h"
 
 #include "city/floods.h"
 #include "scenario/request.h"
@@ -31,13 +31,12 @@
 
 #define ADVISOR_HEIGHT 24
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_chief);
-
 struct advisor_chief_window : public ui::widget {
 };
 
 advisor_chief_window g_advisor_chief_window;
 
+ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_chief);
 void config_load_advisor_chief() {
     g_config_arch.r_section("advisor_chief_window", [] (archive arch) {
         g_advisor_chief_window.load(arch);

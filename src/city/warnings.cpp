@@ -224,6 +224,10 @@ static void check_shipyard(int type) {
 }
 
 void building_construction_warning_generic_checks(building *b, tile2i tile, int size, int orientation) {
+    if (!b) {
+        return;
+    }
+
     e_building_type type = b->type;
     building_construction_warning_check_food_stocks(type);
     check_workers(type);
