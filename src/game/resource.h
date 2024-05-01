@@ -70,9 +70,7 @@ enum e_resource_unit {
     RESOURCE_UNIT_CHARIOT = 3
 };
 
-int city_allowed_foods(int i);
 bool city_is_food_allowed(int resource);
-void city_set_allowed_food(int i, int resource);
 int stack_units_by_resource(int resource);
 int stack_proper_quantity(int full, int resource);
 

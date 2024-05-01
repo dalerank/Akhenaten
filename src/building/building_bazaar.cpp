@@ -5,7 +5,7 @@
 #include "building/building_type.h"
 #include "building/building_storage_yard.h"
 #include "graphics/elements/ui.h"
-#include "city/resource.h"
+#include "city/city.h"
 #include "city/labor.h"
 #include "core/calc.h"
 #include "game/resource.h"
@@ -119,10 +119,10 @@ building *building_bazaar::get_storage_destination() {
             }
 
             // todo: fetch map available foods?
-            update_food_resource(resources[0], city_allowed_foods(0), b, distance);
-            update_food_resource(resources[1], city_allowed_foods(1), b, distance);
-            update_food_resource(resources[2], city_allowed_foods(2), b, distance);
-            update_food_resource(resources[3], city_allowed_foods(3), b, distance);
+            update_food_resource(resources[0], g_city.allowed_foods(0), b, distance);
+            update_food_resource(resources[1], g_city.allowed_foods(1), b, distance);
+            update_food_resource(resources[2], g_city.allowed_foods(2), b, distance);
+            update_food_resource(resources[3], g_city.allowed_foods(3), b, distance);
 
         } else if (b.type == BUILDING_STORAGE_YARD) {
             // goods
@@ -383,10 +383,10 @@ void building_bazaar::draw_simple_background(object_info &c) {
 
     // food stocks
     // todo: fetch map available foods?
-    int food1 = city_allowed_foods(0);
-    int food2 = city_allowed_foods(1);
-    int food3 = city_allowed_foods(2);
-    int food4 = city_allowed_foods(3);
+    int food1 = g_city.allowed_foods(0);
+    int food2 = g_city.allowed_foods(1);
+    int food3 = g_city.allowed_foods(2);
+    int food4 = g_city.allowed_foods(3);
 
     if (food1) {
         font = is_good_accepted(0) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;

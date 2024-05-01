@@ -4,7 +4,7 @@
 #include "building/model.h"
 #include "building/count.h"
 #include "city/constants.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "core/calc.h"
@@ -19,6 +19,7 @@
 
 static const int SENTIMENT_PER_TAX_RATE[26] = {3, 2, 2, 2, 1, 1, 1, 0, 0, -1, -2, -2, -3, -3, -3, -5, -5, -5, -5, -6, -6, -6, -6, -6, -6, -6};
 
+static auto &city_data = g_city;
 int city_sentiment() {
     return city_data.sentiment.value;
 }

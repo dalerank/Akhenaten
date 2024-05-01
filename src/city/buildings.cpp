@@ -3,8 +3,9 @@
 #include "building/building.h"
 #include "building/menu.h"
 
-#include "city/data_private.h"
+#include "city/city.h"
 
+static auto &city_data = g_city;
 bool city_buildings_has_palace() {
     return city_data.building.palace_placed;
 }

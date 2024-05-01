@@ -4,7 +4,7 @@
 #include "building/industry.h"
 #include "building/model.h"
 #include "building/building_storage_yard.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "city/warning.h"
 #include "graphics/window.h"
 #include "core/calc.h"
@@ -23,6 +23,7 @@ struct available_data_t {
 
 available_data_t g_available_data;
 
+static auto &city_data = g_city;
 int city_resource_count(e_resource resource) {
     return city_data.resource.stored_in_warehouses[resource];
 }

@@ -7,7 +7,7 @@
 #include "config/config.h"
 #include "city/labor.h"
 #include "city/message.h"
-#include "city/migration.h"
+#include "city/city.h"
 #include "city/population.h"
 #include "core/calc.h"
 #include "core/profiler.h"
@@ -188,7 +188,7 @@ static void calculate_working_population(void) {
             }
         }
     }
-    city_labor_calculate_workers(num_peasants, num_nobles);
+    g_city.labor.calculate_workers(num_peasants, num_nobles);
 }
 
 void city_population_reached_milestone(bool force) {
@@ -223,7 +223,7 @@ void city_population_reached_milestone(bool force) {
 
 void house_population_update_migration() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/House Migration Update");
-    city_migration_update();
+    g_city.migration_update();
 
     city_population_yearly_update();
     calculate_working_population();

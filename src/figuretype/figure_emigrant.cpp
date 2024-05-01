@@ -8,6 +8,7 @@
 #include "building/house.h"
 #include "city/migration.h"
 #include "city/sentiment.h"
+#include "city/city.h"
 
 #include "js/js_game.h"
 
@@ -33,7 +34,7 @@ void figure_create_emigrant(building* house, int num_people) {
 
     figure* f = figure_create(FIGURE_EMIGRANT, house->tile, DIR_0_TOP_RIGHT);
     if (house->subtype.house_level >= HOUSE_COMMON_MANOR) {
-        city_migration_nobles_leave_city(num_people);
+        g_city.migration_nobles_leave_city(num_people);
     }
 
     f->action_state = FIGURE_ACTION_4_EMIGRANT_CREATED;
@@ -43,7 +44,7 @@ void figure_create_emigrant(building* house, int num_people) {
 
 void figure_emigrant::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Emigrant");
-    tile2i exit = city_map_exit_point();
+    tile2i exit = g_city.map.exit_point;
     switch (action_state()) {
     case FIGURE_ACTION_4_EMIGRANT_CREATED:
         base.anim_frame = 0;

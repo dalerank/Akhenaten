@@ -1,6 +1,6 @@
 #include "formation_herd.h"
 
-#include "city/figures.h"
+#include "city/city.h"
 #include "city/sound.h"
 #include "core/random.h"
 #include "empire/empire_city.h"

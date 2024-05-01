@@ -5,7 +5,7 @@
 #include "city/labor.h"
 #include "city/gods.h"
 #include "city/ratings.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "figure/service.h"
 #include "grid/building.h"
 #include "graphics/animation.h"
@@ -73,7 +73,7 @@ sound_key figure_water_carrier::phrase_key() const {
         keys.push_back("city_have_no_army");
     }
 
-    if (city_labor_workers_needed() >= 10) {
+    if (g_city.labor.workers_needed >= 10) {
         keys.push_back("need_workers");
     }
 
@@ -89,7 +89,7 @@ sound_key figure_water_carrier::phrase_key() const {
         keys.push_back("much_unemployments");
     }
 
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
+    if (g_city.festival.months_since_festival > 6) {  // low entertainment
         keys.push_back("low_entertainment");
     }
 

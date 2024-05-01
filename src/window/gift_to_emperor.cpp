@@ -1,6 +1,6 @@
 #include "gift_to_emperor.h"
 
-#include "city/emperor.h"
+#include "city/city.h"
 #include "game/resource.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -29,7 +29,7 @@ static generic_button buttons[] = {
 static int focus_button_id;
 
 static void init(void) {
-    city_emperor_init_selected_gift();
+    g_city.kingdome.init_selected_gift();
 }
 
 static void draw_background() {
@@ -43,7 +43,7 @@ static void draw_background() {
     lang_text_draw_centered(52, 69, 144, 160, 416, FONT_LARGE_BLACK_ON_LIGHT);
 
     int width = lang_text_draw(52, 50, 144, 304, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_amount(8, 4, city_emperor_months_since_gift(), 144 + width, 304, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_amount(8, 4, g_city.kingdome.months_since_gift, 144 + width, 304, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw_centered(13, 4, 400, 341, 160, FONT_NORMAL_BLACK_ON_LIGHT);
 
     graphics_reset_dialog();
@@ -54,8 +54,8 @@ static void draw_foreground(void) {
 
     inner_panel_draw(112, 208, 28, 5);
 
-    if (city_emperor_can_send_gift(GIFT_MODEST)) {
-        const emperor_gift* gift = city_emperor_get_gift(GIFT_MODEST);
+    if (g_city.kingdome.can_send_gift(GIFT_MODEST)) {
+        const auto* gift = g_city.kingdome.get_gift(GIFT_MODEST);
         lang_text_draw(52, 63, 128, 218, FONT_NORMAL_WHITE_ON_DARK);
         e_font font = focus_button_id == 1 ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
         int width = lang_text_draw(52, 51 + gift->id, 224, 218, font);
@@ -63,23 +63,23 @@ static void draw_foreground(void) {
     } else {
         lang_text_draw_multiline(52, 70, vec2i{160, 224}, 352, FONT_NORMAL_WHITE_ON_DARK);
     }
-    if (city_emperor_can_send_gift(GIFT_GENEROUS)) {
-        const emperor_gift* gift = city_emperor_get_gift(GIFT_GENEROUS);
+    if (g_city.kingdome.can_send_gift(GIFT_GENEROUS)) {
+        const auto* gift = g_city.kingdome.get_gift(GIFT_GENEROUS);
         lang_text_draw(52, 64, 128, 238, FONT_NORMAL_WHITE_ON_DARK);
         e_font font = focus_button_id == 2 ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
         int width = lang_text_draw(52, 55 + gift->id, 224, 238, font);
         text_draw_money(gift->cost, 224 + width, 238, font);
     }
-    if (city_emperor_can_send_gift(GIFT_LAVISH)) {
-        const emperor_gift* gift = city_emperor_get_gift(GIFT_LAVISH);
+    if (g_city.kingdome.can_send_gift(GIFT_LAVISH)) {
+        const auto* gift = g_city.kingdome.get_gift(GIFT_LAVISH);
         lang_text_draw(52, 65, 128, 258, FONT_NORMAL_WHITE_ON_DARK);
         e_font font = focus_button_id == 3 ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
         int width = lang_text_draw(52, 59 + gift->id, 224, 258, font);
         text_draw_money(gift->cost, 224 + width, 258, font);
     }
     // can give at least one type
-    if (city_emperor_can_send_gift(GIFT_MODEST)) {
-        lang_text_draw_centered(52, 66 + city_emperor_selected_gift_size(), 118, 341, 260, FONT_NORMAL_BLACK_ON_LIGHT);
+    if (g_city.kingdome.can_send_gift(GIFT_MODEST)) {
+        lang_text_draw_centered(52, 66 + g_city.kingdome.selected_gift_size, 118, 341, 260, FONT_NORMAL_BLACK_ON_LIGHT);
         button_border_draw(118, 336, 260, 20, focus_button_id == 4);
     }
     button_border_draw(400, 336, 160, 20, focus_button_id == 5);
@@ -95,13 +95,13 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void button_set_gift(int gift_id, int param2) {
-    if (city_emperor_set_gift_size(gift_id - 1))
+    if (g_city.kingdome.set_gift_size(gift_id - 1))
         window_invalidate();
 }
 
 static void button_send_gift(int param1, int param2) {
-    if (city_emperor_can_send_gift(GIFT_MODEST)) {
-        city_emperor_send_gift();
+    if (g_city.kingdome.can_send_gift(GIFT_MODEST)) {
+        g_city.kingdome.send_gift();
         window_advisors_show();
     }
 }

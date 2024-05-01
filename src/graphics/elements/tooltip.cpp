@@ -1,6 +1,6 @@
 #include "tooltip.h"
 
-#include "city/labor.h"
+#include "city/city.h"
 #include "city/ratings.h"
 #include "core/string.h"
 #include "game/settings.h"
@@ -243,8 +243,8 @@ static void draw_senate_tooltip(tooltip_context* c) {
 
     // unemployment
     lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_unemployed, x + 5, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    width = text_draw_number_colored(city_labor_unemployment_percentage(), '@', "%", x + 140, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    text_draw_number_colored(city_labor_workers_unemployed() - city_labor_workers_needed(), '(', ")", x + 140 + width, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    width = text_draw_number_colored(g_city.labor.unemployment_percentage, '@', "%", x + 140, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    text_draw_number_colored(g_city.labor.workers_unemployed - g_city.labor.workers_needed, '(', ")", x + 140 + width, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
 
     // ratings
     lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_culture, x + 5, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);

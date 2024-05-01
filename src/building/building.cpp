@@ -33,7 +33,7 @@
 #include "menu.h"
 #include "monuments.h"
 #include "overlays/city_overlay.h"
-#include "city/labor.h"
+#include "city/city.h"
 
 #include <string.h>
 #include <map>
@@ -1008,7 +1008,7 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         }
 
         for (int i = 0; i < 4; i++) {
-            int good_n = city_allowed_foods(i);
+            int good_n = g_city.allowed_foods(i);
             b->data.house.inventory[i] = b->data.house.inventory[good_n];
             iob->bind(BIND_SIGNATURE_INT16, &b->data.house.inventory[i + 4]);
         }

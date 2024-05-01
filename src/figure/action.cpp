@@ -4,7 +4,8 @@
 #include "grid/terrain.h"
 
 #include "city/entertainment.h"
-#include "city/figures.h"
+#include "city/city.h"
+#include "city/city.h"
 #include "core/profiler.h"
 #include "figure/figure.h"
 #include "graphics/image_groups.h"
@@ -471,7 +472,7 @@ void figure::action_perform() {
         case 52: enemy52_mounted_archer_action(); break;
         case 53: enemy53_axe_action(); break;
         case 54: enemy_gladiator_action(); break;
-        case 57: enemy_caesar_legionary_action(); break;
+        case 57: enemy_kingdome_soldier_action(); break;
         case 59: arrow_action(); break;
         case FIGURE_JAVELIN: javelin_action(); break; // 60
         case FIGURE_BOLT: bolt_action(); break;
@@ -514,8 +515,8 @@ void figure::action_perform() {
 
 void figure_action_handle() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Action");
-    city_figures_reset();
-    city_entertainment_set_hippodrome_has_race(0);
+    g_city.figures_reset();
+    //g_city.entertainment.hippodrome_has_race = false;
 
     for (auto &figure: map_figures()) {
         figure->action_perform();

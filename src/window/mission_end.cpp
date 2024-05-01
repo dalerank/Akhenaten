@@ -1,7 +1,7 @@
 #include "mission_end.h"
 
 #include "city/city_data.h"
-#include "city/emperor.h"
+#include "city/city.h"
 #include "city/finance.h"
 #include "city/population.h"
 #include "city/ratings.h"
@@ -110,7 +110,7 @@ static void draw_foreground(void) {
 }
 
 static void advance_to_next_mission(void) {
-    g_settings.set_personal_savings_for_mission(scenario_campaign_rank() + 1, city_emperor_personal_savings());
+    g_settings.set_personal_savings_for_mission(scenario_campaign_rank() + 1, g_city.kingdome.personal_savings);
     scenario_set_campaign_rank(scenario_campaign_rank() + 1);
     city_save_campaign_player_name();
 

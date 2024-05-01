@@ -3,7 +3,7 @@
 #include "city/floods.h"
 #include "scenario/request.h"
 
-#include "city/figures.h"
+#include "city/city.h"
 #include "city/finance.h"
 #include "city/health.h"
 #include "city/houses.h"
@@ -63,13 +63,13 @@ int ui::advisor_chief_window::draw_background() {
     // migration
     {
         std::pair<int, int> migration_status;
-        if (city_figures_total_invading_enemies() > 3) { migration_status = {43, FONT_NORMAL_BLACK_ON_DARK}; } 
-        else if (city_migration_newcomers() >= 5) { migration_status = {44, FONT_NORMAL_BLACK_ON_DARK}; }
-        else if (city_migration_no_room_for_immigrants()) { migration_status = {45, FONT_NORMAL_YELLOW}; }
-        else if (city_migration_percentage() >= 80) { migration_status = {44, FONT_NORMAL_BLACK_ON_DARK}; } 
+        if (g_city.figures_total_invading_enemies() > 3) { migration_status = {43, FONT_NORMAL_BLACK_ON_DARK}; } 
+        else if (g_city.migration_newcomers() >= 5) { migration_status = {44, FONT_NORMAL_BLACK_ON_DARK}; }
+        else if (g_city.migration_no_room_for_immigrants()) { migration_status = {45, FONT_NORMAL_YELLOW}; }
+        else if (g_city.migration_percentage() >= 80) { migration_status = {44, FONT_NORMAL_BLACK_ON_DARK}; } 
         else {
             migration_status = {43, FONT_NORMAL_BLACK_ON_DARK};
-            switch (city_migration_problems_cause()) {
+            switch (g_city.migration_problems_cause()) {
             case NO_IMMIGRATION_LOW_WAGES: migration_status.first = 46; break;
             case NO_IMMIGRATION_NO_JOBS: migration_status.first = 47; break;
             case NO_IMMIGRATION_NO_FOOD: migration_status.first = 48; break;
@@ -85,15 +85,15 @@ int ui::advisor_chief_window::draw_background() {
 
     // workers
     {
-        int pct_unemployment = city_labor_unemployment_percentage();
-        int needed_workers = city_labor_workers_needed();
+        int pct_unemployment = g_city.labor.unemployment_percentage;
+        int needed_workers = g_city.labor.workers_needed;
         std::pair<int, int> workers_status;
         if (pct_unemployment > 0) {
             if (pct_unemployment > 10) { workers_status = {76, FONT_NORMAL_YELLOW}; }
             else if (pct_unemployment > 5) { workers_status = {77, FONT_NORMAL_YELLOW}; }
             else if (pct_unemployment > 2) { workers_status = {78, FONT_NORMAL_YELLOW}; }
             else { workers_status = {79, FONT_NORMAL_BLACK_ON_DARK}; }
-            int unemployed_num = city_labor_workers_unemployed() - needed_workers;
+            int unemployed_num = g_city.labor.workers_unemployed - needed_workers;
             ui["workers_info"].text_var("%s %d(%d)", (pcstr)lang_get_string(61, workers_status.first), pct_unemployment, unemployed_num);
         } else if (needed_workers > 0) {
             if (needed_workers > 75) { workers_status = {80, FONT_NORMAL_YELLOW}; }
@@ -218,12 +218,12 @@ int ui::advisor_chief_window::draw_background() {
     // military
     {
         std::pair<int, int> military_status;
-        if (city_figures_imperial_soldiers()) { military_status = {170, FONT_NORMAL_YELLOW}; }
-        else if (city_figures_enemies()) { military_status = {170, FONT_NORMAL_YELLOW}; }
+        if (g_city.figure.kingdome_soldiers) { military_status = {170, FONT_NORMAL_YELLOW}; }
+        else if (g_city.figure.enemies) { military_status = {170, FONT_NORMAL_YELLOW}; }
         else if (scenario_invasion_exists_upcoming()) { military_status = {170, FONT_NORMAL_YELLOW}; }
         else if (city_military_distant_battle_kingdome_army_is_traveling()) { military_status = {170, FONT_NORMAL_BLACK_ON_DARK}; }
         else if (city_military_months_until_distant_battle() > 0) { military_status = {170, FONT_NORMAL_YELLOW}; }
-        else if (city_figures_soldiers() > 0) { military_status = {177, FONT_NORMAL_BLACK_ON_DARK}; }
+        else if (g_city.figure.soldiers > 0) { military_status = {177, FONT_NORMAL_BLACK_ON_DARK}; }
         else { military_status = {171, FONT_NORMAL_BLACK_ON_DARK}; }
 
         ui["military_info"].text((pcstr)lang_get_string(61, military_status.first));

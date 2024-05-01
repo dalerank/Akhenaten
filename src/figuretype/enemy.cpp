@@ -1,6 +1,6 @@
 #include "enemy.h"
 
-#include "city/figures.h"
+#include "city/city.h"
 #include "city/sound.h"
 #include "core/calc.h"
 #include "figure/combat.h"
@@ -52,7 +52,7 @@ void figure::enemy_initial(formation* m) {
         tile2i tile = {0, 0};
         if (wait_ticks_missile > figure_properties_for_type(type)->missile_delay) {
             wait_ticks_missile = 0;
-            if (figure_combat_get_missile_target_for_enemy(this, 10, city_figures_soldiers() < 4, &tile)) {
+            if (figure_combat_get_missile_target_for_enemy(this, 10, g_city.figure.soldiers < 4, &tile)) {
                 attack_image_offset = 1;
                 direction = calc_missile_shooter_direction(tile, tile);
             } else
@@ -157,8 +157,9 @@ void figure::enemy_fighting(const formation* m) {
         wait_ticks = 50;
     }
 }
+
 void figure::enemy_action(formation* m) {
-    city_figures_add_enemy();
+    g_city.figures_add_enemy();
     terrain_usage = TERRAIN_USAGE_ENEMY;
     formation_position_x.enemy = formation_layout_position_x(m->layout, index_in_formation);
     formation_position_y.enemy = formation_layout_position_y(m->layout, index_in_formation);
@@ -531,14 +532,14 @@ void figure::enemy_gladiator_action() {
             }
         }
         break;
-    case FIGURE_ACTION_159_NATIVE_ATTACKING:
-        city_figures_set_gladiator_revolt();
-        terrain_usage = TERRAIN_USAGE_ENEMY;
-        move_ticks(1);
-        if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
-            action_state = FIGURE_ACTION_158_NATIVE_CREATED;
-        }
-        break;
+    //case FIGURE_ACTION_159_NATIVE_ATTACKING:
+    //    city_figures_set_gladiator_revolt();
+    //    terrain_usage = TERRAIN_USAGE_ENEMY;
+    //    move_ticks(1);
+    //    if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
+    //        action_state = FIGURE_ACTION_158_NATIVE_CREATED;
+    //    }
+    //    break;
     }
     int dir;
     if (action_state == FIGURE_ACTION_150_ATTACK || direction == DIR_FIGURE_ATTACK)
@@ -559,11 +560,11 @@ void figure::enemy_gladiator_action() {
         //sprite_image_id = image_id_from_group(GROUP_FIGURE_MUSICIAN) + dir + 8 * anim_frame;
     }
 }
-void figure::enemy_caesar_legionary_action() {
+void figure::enemy_kingdome_soldier_action() {
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
 
-    city_figures_add_imperial_soldier();
+    g_city.figures_add_kingdome_soldier();
 
     speed_multiplier = 1;
     formation* m = formation_get(formation_id);

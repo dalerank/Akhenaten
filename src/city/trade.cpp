@@ -3,11 +3,12 @@
 #include "building/count.h"
 #include "building/building_storage_yard.h"
 #include "city/constants.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "core/profiler.h"
 #include "empire/empire_city.h"
 #include "config/config.h"
 
+static auto &city_data = g_city;
 void city_trade_update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Trade Update");
     city_data.trade.num_sea_routes = 0;

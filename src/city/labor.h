@@ -1,9 +1,7 @@
 #pragma once
 
-#include "building/building_type.h"
+#include "building/building.h"
 #include "labor_category.h"
-
-class building;
 
 struct labor_category_data {
     int workers_needed;
@@ -13,19 +11,33 @@ struct labor_category_data {
     int total_houses_covered;
 } ;
 
-int city_labor_unemployment_percentage(void);
-int city_labor_unemployment_percentage_for_senate(void);
+struct city_labor_t {
+    int32_t wages;
+    int32_t wages_kingdome;
+    int32_t workers_available;
+    int32_t workers_employed;
+    int32_t workers_unemployed;
+    int32_t workers_needed;
+    int32_t unemployment_percentage;
+    int32_t unemployment_percentage_for_goverment;
+    labor_category_data categories[10];
 
-int city_labor_workers_needed(void);
-int city_labor_workers_employed(void);
-int city_labor_workers_unemployed(void);
-
-int city_labor_wages(void);
-void city_labor_change_wages(int amount);
-
-int city_labor_wages_rome(void);
-int city_labor_raise_wages_rome(void);
-int city_labor_lower_wages_rome(void);
+    int raise_wages_kingdome();
+    int lower_wages_kingdome();
+    void change_wages(int amount);
+    void calculate_workers(int num_plebs, int num_patricians);
+    void calculate_workers_needed_per_category();
+    void set_building_worker_weight();
+    void allocate_workers_to_categories();
+    void allocate_workers_to_water();
+    void allocate_workers_to_non_water_buildings();
+    void allocate_workers_to_buildings();
+    void check_employment();
+    void allocate_workers();
+    void update();
+    void set_priority(int category, int new_priority);
+    int max_selectable_priority(int category);
+};
 
 e_labor_category category_for_building(building* b);
 
@@ -36,13 +48,3 @@ template<class T>
 void city_labor_set_category(const T &model) {
     city_labor_set_category(model.TYPE, model.labor_category);
 }
-
-void city_labor_calculate_workers(int num_plebs, int num_patricians);
-
-void city_labor_allocate_workers(void);
-
-void city_labor_update(void);
-
-void city_labor_set_priority(int category, int new_priority);
-
-int city_labor_max_selectable_priority(int category);

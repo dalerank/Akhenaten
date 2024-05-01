@@ -2,10 +2,9 @@
 
 #include "city/labor.h"
 #include "figure/service.h"
-#include "city/figures.h"
+#include "city/city.h"
 #include "city/gods.h"
 #include "city/sentiment.h"
-#include "city/data_private.h"
 #include "figure/service.h"
 
 #include "js/js_game.h"
@@ -38,7 +37,7 @@ svector<e_building_type, 4> figure_juggler::allow_venue_types() const {
 }
 
 sound_key figure_juggler::phrase_key() const {
-    int enemies = city_figures_enemies();
+    int enemies = g_city.figure.enemies;
     if (enemies > 0) {
         return "city_not_safety_workers_leaving";
     }
@@ -82,7 +81,7 @@ sound_key figure_juggler::phrase_key() const {
         keys.push_back("gods_are_pleasures");
     }
 
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
+    if (g_city.festival.months_since_festival > 6) {  // low entertainment
         keys.push_back("low_entertainment");
     }
 

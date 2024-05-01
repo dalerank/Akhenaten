@@ -4,14 +4,13 @@
 #include "figure/image.h"
 #include "graphics/image_groups.h"
 #include "city/sentiment.h"
-#include "city/figures.h"
+#include "city/city.h"
 #include "city/floods.h"
 #include "city/health.h"
 #include "city/labor.h"
 #include "city/sentiment.h"
 #include "city/gods.h"
 #include "city/ratings.h"
-#include "city/data_private.h"
 
 #include "js/js_game.h"
 
@@ -170,7 +169,7 @@ void figure_worker::poof() {
 }
 
 sound_key figure_worker::phrase_key() const {
-    int enemies = city_figures_enemies();
+    int enemies = g_city.figure.enemies;
     if (enemies > 10) {
         return "enemies_in_city";
     }
@@ -192,7 +191,7 @@ sound_key figure_worker::phrase_key() const {
         keys.push_back("no_food_in_city");
     }
 
-    if (city_labor_workers_needed() >= 10) {
+    if (g_city.labor.workers_needed >= 10) {
         keys.push_back("need_workers");
     }
 
@@ -208,7 +207,7 @@ sound_key figure_worker::phrase_key() const {
         keys.push_back("much_unemployments");
     }
 
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
+    if (g_city.festival.months_since_festival > 6) {  // low entertainment
         keys.push_back("low_entertainment");
     }
 

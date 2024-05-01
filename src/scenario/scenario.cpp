@@ -1,7 +1,7 @@
 #include "scenario.h"
 #include "io/io_buffer.h"
-#include <city/data_private.h>
-#include <city/gods.h>
+#include "city/city.h"
+#include "city/gods.h"
 
 #include "city/resource.h"
 #include "empire/trade_route.h"
@@ -41,7 +41,7 @@ io_buffer* iob_scenario_info = new io_buffer([](io_buffer* iob, size_t version) 
     iob->bind(BIND_SIGNATURE_UINT8, &g_scenario_data.meta.start_message_shown);
     iob->bind____skip(3);
     for (int i = 0; i < MAX_GODS; i++) {
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.religion.gods[i].is_known);
+        iob->bind(BIND_SIGNATURE_INT16, &g_city.religion.gods[i].is_known);
     }
     iob->bind____skip(10);
     iob->bind____skip(2); // 2 bytes ???        03 00

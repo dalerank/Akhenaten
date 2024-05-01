@@ -3,6 +3,7 @@
 #include "building/house.h"
 #include "building/model.h"
 #include "city/houses.h"
+#include "city/city.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/profiler.h"
@@ -466,12 +467,12 @@ static bool (*evolve_callback[])(building*, house_demands*) = {
 
 void building_house_process_evolve_and_consume_goods(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Process'n'Consume Goods");
-    city_houses_reset_demands();
-    house_demands* demands = city_houses_demands();
+    g_city.houses_reset_demands();
+    house_demands &demands = g_city.houses;
     bool has_expanded = false;
     buildings_house_do([&] (building &h) {
         building_house_check_for_corruption(&h);
-        has_expanded |= evolve_callback[h.type - BUILDING_HOUSE_VACANT_LOT](&h, demands);
+        has_expanded |= evolve_callback[h.type - BUILDING_HOUSE_VACANT_LOT](&h, &demands);
 
         if (game_time_day() == 0 || game_time_day() == 7) {
             consume_resources(h);

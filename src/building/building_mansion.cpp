@@ -6,7 +6,7 @@
 #include "graphics/text.h"
 #include "graphics/elements/button.h"
 #include "graphics/elements/generic_button.h"
-#include "city/emperor.h"
+#include "city/city.h"
 #include "city/victory.h"
 #include "city/finance.h"
 #include "city/ratings.h"
@@ -30,7 +30,7 @@ void config_load_personal_mansion() {
 
 static void button_set_salary(int rank, int param2) {
     if (!city_victory_has_won()) {
-        city_emperor_set_salary_rank(rank);
+        g_city.kingdome.set_salary_rank(rank);
         city_finance_update_salary();
         city_ratings_update_kingdom_explanation();
         //window_advisors_show();
@@ -50,8 +50,8 @@ void building_mansion::window_info_background(object_info &c) {
     window_building_draw_description_at(c, 16 * c.bgsize.y - 143, 103, 1);
 
     button_border_draw(c.offset.x + 40, c.offset.y + 90, 400, 20, g_config_mansions.focus_button_id == 2);
-    int width = lang_text_draw(52, city_emperor_salary_rank() + 4, c.offset.x + 40, c.offset.y + 94, FONT_NORMAL_WHITE_ON_DARK);
-    width += text_draw_number(city_emperor_salary_amount(), '@', " ", c.offset.x + 40 + width, c.offset.y + 94, FONT_NORMAL_WHITE_ON_DARK);
+    int width = lang_text_draw(52, g_city.kingdome.salary_rank + 4, c.offset.x + 40, c.offset.y + 94, FONT_NORMAL_WHITE_ON_DARK);
+    width += text_draw_number(g_city.kingdome.salary_amount, '@', " ", c.offset.x + 40 + width, c.offset.y + 94, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(52, 3, c.offset.x + 40 + width, c.offset.y + 94, FONT_NORMAL_WHITE_ON_DARK);
 }
 

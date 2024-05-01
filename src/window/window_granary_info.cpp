@@ -3,7 +3,7 @@
 #include "building/building_granary.h"
 #include "building/distribution.h"
 #include "building/storage.h"
-#include "city/object_info.h"
+#include "city/city.h"
 #include "window/building/common.h"
 #include "scenario/property.h"
 
@@ -130,19 +130,19 @@ void building_granary::window_info_background(object_info &ctx) {
     ui["storing"].text_var("#granary_storing %u #granary_units", granary->total_stored());
     ui["free_space"].text_var("#granary_space_for %u #granary_units", granary->space_for());
 
-    int food1 = city_allowed_foods(0);
+    int food1 = g_city.allowed_foods(0);
     ui["food0_icon"].image(food1); // grain
     ui["food0_text"].text_var(food1 ? "%u %s" : "", granary->data.granary.resource_stored[food1], (pcstr)lang_get_string(ui.resource_text_group, food1));
 
-    int food2 = city_allowed_foods(1);
+    int food2 = g_city.allowed_foods(1);
     ui["food1_icon"].image(food2); // vegetables
     ui["food1_text"].text_var(food2 ? "%u %s" : "", granary->data.granary.resource_stored[food2], (pcstr)lang_get_string(ui.resource_text_group, food2));
 
-    int food3 = city_allowed_foods(2);
+    int food3 = g_city.allowed_foods(2);
     ui["food2_icon"].image(food3); // vegetables
     ui["food2_text"].text_var(food3 ? "%u %s" : "", granary->data.granary.resource_stored[food3], (pcstr)lang_get_string(ui.resource_text_group, food3));
 
-    int food4 = city_allowed_foods(3);
+    int food4 = g_city.allowed_foods(3);
     ui["food3_icon"].image(food4); // meat/fish
     ui["food3_text"].text_var(food4 ? "%u %s" : "", granary->data.granary.resource_stored[food4], (pcstr)lang_get_string(ui.resource_text_group, food4));
 

@@ -4,7 +4,7 @@
 #include "city/constants.h"
 #include "city/coverage.h"
 #include "city/finance.h"
-#include "city/houses.h"
+#include "city/city.h"
 #include "city/labor.h"
 #include "city/migration.h"
 #include "city/ratings.h"
@@ -148,7 +148,7 @@ bool is_advisor_available(int btn_id) {
 }
 
 static void init() {
-    city_labor_allocate_workers();
+    g_city.labor.allocate_workers();
 
     city_finance_estimate_taxes();
     city_finance_estimate_wages();
@@ -156,9 +156,9 @@ static void init() {
     city_finance_update_salary();
     city_finance_calculate_totals();
 
-    city_migration_determine_int();
+    g_city.migration_determine_reason();
 
-    city_houses_calculate_culture_demands();
+    g_city.houses_calculate_culture_demands();
     city_culture_update_coverage();
     city_health_update_coverage();
 

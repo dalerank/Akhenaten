@@ -7,7 +7,7 @@
 #include "building/building_storage_room.h"
 #include "city/buildings.h"
 #include "city/finance.h"
-#include "city/map.h"
+#include "city/city.h"
 #include "city/message.h"
 #include "city/resource.h"
 #include "city/trade.h"
@@ -73,7 +73,7 @@ void figure_trade_caravan::go_to_next_storageyard(tile2i src_tile, int distance_
         base.action_state = FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING;
         destination_tile = dst;
     } else {
-        tile2i exit = city_map_exit_point();
+        tile2i exit = g_city.map.exit_point;
         tile2i road_tile;
         base.state = FIGURE_STATE_ALIVE;
         map_closest_road_within_radius(exit, 1, 2, road_tile);

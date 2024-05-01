@@ -1,6 +1,6 @@
 #include "formation.h"
 
-#include "city/military.h"
+#include "city/city.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "figure/enemy_army.h"
@@ -195,7 +195,7 @@ void formation_calculate_legion_totals(void) {
     auto &data = g_formation_data;
     data.id_last_formation = 0;
     data.num_formations = 0;
-    city_military_clear_legionary_legions();
+    g_city.military.clear_infantry_batalions();
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
         if (m->in_use) {
@@ -203,7 +203,7 @@ void formation_calculate_legion_totals(void) {
                 data.id_last_formation = i;
                 data.num_formations++;
                 if (m->figure_type == FIGURE_STANDARD_BEARER)
-                    city_military_add_legionary_legion();
+                    g_city.military.add_infantry_batalion();
             }
             if (m->missile_attack_timeout <= 0 && m->figures[0] && !m->is_herd) {
                 figure* f = figure_get(m->figures[0]);
@@ -491,7 +491,7 @@ void formation_calculate_figures(void) {
         }
     }
 
-    city_military_update_totals();
+    g_city.military.update_totals();
 }
 
 static void update_direction(int formation_id, int first_figure_direction) {

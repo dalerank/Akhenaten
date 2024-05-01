@@ -3,7 +3,7 @@
 #include "building/construction/build_planner.h"
 #include "building/menu.h"
 #include "building/storage.h"
-#include "city/city_data.h"
+#include "city/city.h"
 #include "city/message.h"
 #include "city/victory.h"
 #include "empire/empire.h"
@@ -50,8 +50,8 @@
 void game_file_editor_clear_data(void) {
     city_victory_reset();
     Planner.reset();
-    city_data_init();
-    city_data_init_custom_map();
+    g_city.init();
+    g_city.init_custom_map();
     city_message_init_scenario();
     game_state_init();
     game.animation_timers_init();

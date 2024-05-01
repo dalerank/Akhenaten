@@ -1,6 +1,6 @@
 #include "figure/figure.h"
 
-#include "city/figures.h"
+#include "city/city.h"
 #include "city/sound.h"
 #include "sound/effect.h"
 #include "sound/speech.h"
@@ -73,9 +73,9 @@ void figure::play_die_sound() {
     }
 
     if (f->is_enemy()) {
-        if (city_figures_enemies() == 1)
+        if (g_city.figure.enemies == 1) {
             sound_speech_play_file("wavs/army_war_cry.wav");
-
+        }
     }
 }
 

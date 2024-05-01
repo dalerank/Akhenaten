@@ -7,7 +7,7 @@
 #include "building/building_animation.h"
 #include "building/monuments.h"
 #include "building/monument_mastaba.h"
-#include "city/figures.h"
+#include "city/city.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "figure/combat.h"
@@ -113,7 +113,7 @@ int figure::is_nearby(int category, int* distance, int max_distance, bool gang_o
 //     return min_enemy_id;
 // }
 bool figure::policeman_fight_enemy(int category, int max_distance) {
-    if (!city_figures_has_security_breach() && enemy_army_total_enemy_formations() <= 0)
+    if (!g_city.figures_has_security_breach() && enemy_army_total_enemy_formations() <= 0)
         return false;
 
     switch (action_state) {

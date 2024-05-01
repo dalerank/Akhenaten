@@ -1,6 +1,6 @@
 #include "building/figure.h"
 
-#include "city/data_private.h"
+#include "city/city.h"
 
 #include "building/building_barracks.h"
 #include "building/building_granary.h"
@@ -13,7 +13,6 @@
 #include "building/monument_mastaba.h"
 #include "building/building_work_camp.h"
 #include "city/buildings.h"
-#include "city/data_private.h"
 #include "city/entertainment.h"
 #include "city/floods.h"
 #include "city/message.h"

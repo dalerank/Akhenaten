@@ -13,7 +13,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "empire/empire_city.h"
 #include "window/empire.h"
 #include "window/resource_settings.h"

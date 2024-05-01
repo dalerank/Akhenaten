@@ -2,7 +2,7 @@
 
 #include "building/building.h"
 #include "city/buildings.h"
-#include "city/figures.h"
+#include "city/city.h"
 #include "city/gods.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -547,7 +547,7 @@ static void update_enemy_formation(formation* m, int* roman_distance) {
             army->ignore_roman_soldiers = 1;
     }
     formation_decrease_monthly_counters(m);
-    if (city_figures_soldiers() <= 0)
+    if (g_city.figure.soldiers <= 0)
         formation_clear_monthly_counters(m);
 
     for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {

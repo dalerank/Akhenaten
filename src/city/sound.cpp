@@ -1,7 +1,8 @@
 #include "sound.h"
 
-#include "city/data_private.h"
+#include "city/city.h"
 
+static auto &city_data = g_city;
 static int update_field(int8_t* field, int max_value) {
     (*field)--;
     if (*field <= 0) {

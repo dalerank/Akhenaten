@@ -16,7 +16,7 @@
 #include "building/maintenance.h"
 #include "building/building_storage_yard.h"
 #include "city/coverage.h"
-#include "city/emperor.h"
+#include "city/city.h"
 #include "city/festival.h"
 #include "city/buildings.h"
 #include "city/finance.h"
@@ -73,7 +73,7 @@ static void advance_year(void) {
     game_time_advance_year();
     city_population_request_yearly_update();
     city_finance_handle_year_change();
-    city_migration_advance_year();
+    g_city.migration_advance_year();
     empire_city_reset_yearly_trade_amounts();
     building_maintenance_update_fire_direction();
     city_ratings_update(1);
@@ -81,7 +81,7 @@ static void advance_year(void) {
 }
 
 static void advance_month() {
-    city_migration_reset_newcomers();
+    g_city.migration_reset_newcomers();
     city_health_update();
     scenario_random_event_process();
     city_finance_handle_month_change();
@@ -152,7 +152,7 @@ static void advance_tick(void) {
         widget_minimap_invalidate();
         break;
     case 4:
-        city_emperor_update();
+        g_city.kingdome.update();
         break;
     case 5:
         formation_update_all(false);
@@ -202,7 +202,7 @@ static void advance_tick(void) {
         house_population_evict_overcrowded();
         break;
     case 25:
-        city_labor_update();
+        g_city.labor.update();
         break;
     case 27:
         map_update_wells_range();

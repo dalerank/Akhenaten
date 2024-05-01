@@ -1,6 +1,6 @@
 #include "military.h"
 
-#include "city/figures.h"
+#include "city/city.h"
 #include "city/military.h"
 #include "figure/formation_legion.h"
 #include "graphics/image.h"
@@ -72,9 +72,9 @@ int ui::advisor_miliary_window::draw_background() {
     lang_text_draw(138, 36, 274, 58, FONT_SMALL_PLAIN);
 
     int enemy_text_id;
-    if (city_figures_enemies())
+    if (g_city.figure.enemies)
         enemy_text_id = 10;
-    else if (city_figures_imperial_soldiers())
+    else if (g_city.figure.kingdome_soldiers)
         enemy_text_id = 11;
     else if (scenario_invasion_exists_upcoming())
         enemy_text_id = 9;
@@ -103,9 +103,9 @@ int ui::advisor_miliary_window::draw_background() {
     } else {
         // has forts
         ImageDraw::img_generic(ctx, image_group(group_bullet), vec2i{bullet_x, 349});
-        int width = lang_text_draw_amount(8, 46, city_military_total_soldiers(), text_x, 348, FONT_NORMAL_BLACK_ON_LIGHT);
+        int width = lang_text_draw_amount(8, 46, g_city.military.total_soldiers, text_x, 348, FONT_NORMAL_BLACK_ON_LIGHT);
         width += lang_text_draw(51, 7, text_x + width, 348, FONT_NORMAL_BLACK_ON_LIGHT);
-        lang_text_draw_amount(8, 48, city_military_total_legions(), text_x + width, 348, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_amount(8, 48, g_city.military.total_batalions, text_x + width, 348, FONT_NORMAL_BLACK_ON_LIGHT);
 
         ImageDraw::img_generic(ctx, image_group(group_bullet), vec2i{bullet_x, 369});
         lang_text_draw(51, enemy_text_id, text_x, 368, FONT_NORMAL_BLACK_ON_LIGHT);

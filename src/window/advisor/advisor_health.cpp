@@ -3,7 +3,7 @@
 #include "building/count.h"
 #include "city/coverage.h"
 #include "city/health.h"
-#include "city/houses.h"
+#include "city/city.h"
 #include "city/population.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -17,14 +17,14 @@
 ui::advisor_health_window g_advisor_health_window;
 
 static int get_health_advice() {
-    house_demands* demands = city_houses_demands();
-    switch (demands->health) {
+    house_demands &demands = g_city.houses;
+    switch (demands.health) {
     case 1:
-        return demands->requiring.water_supply ? 1 : 0;
+        return demands.requiring.water_supply ? 1 : 0;
     case 2:
-        return demands->requiring.dentist ? 3 : 2;
+        return demands.requiring.dentist ? 3 : 2;
     case 3:
-        return demands->requiring.physician ? 5 : 4;
+        return demands.requiring.physician ? 5 : 4;
     case 4:
         return 6;
     default:

@@ -5,7 +5,7 @@
 #include "core/calc.h"
 
 #include "figuretype/migrant.h"
-#include "city/map.h"
+#include "city/city.h"
 #include "graphics/animation.h"
 
 #include "js/js_game.h"
@@ -109,7 +109,7 @@ sound_key figure_immigrant::phrase_key() const {
 }
 
 void figure_immigrant::create(building *house, int num_people) {
-    tile2i entry = city_map_entry_point();
+    tile2i entry = g_city.map.entry_point;
     figure* f = figure_create(FIGURE_IMMIGRANT, entry, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_1_IMMIGRANT_CREATED;
     house->set_figure(BUILDING_SLOT_IMMIGRANT, f->id);

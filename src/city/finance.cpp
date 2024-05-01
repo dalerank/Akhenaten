@@ -5,7 +5,7 @@
 #include "building/house.h"
 #include "building/model.h"
 #include "buildings.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "core/calc.h"
 #include "game/difficulty.h"
 #include "game/time.h"
@@ -15,6 +15,7 @@
 
 #include <map>
 
+static auto &city_data = g_city;
 int city_finance_treasury() {
     return city_data.finance.treasury;
 }
@@ -277,9 +278,9 @@ static void pay_monthly_interest() {
 
 static void pay_monthly_salary() {
     if (!city_finance_out_of_money() && city_buildings_has_mansion()) {
-        city_data.finance.salary_so_far += city_data.emperor.salary_amount;
-        city_data.emperor.personal_savings += city_data.emperor.salary_amount;
-        city_data.finance.treasury -= city_data.emperor.salary_amount;
+        city_data.finance.salary_so_far += city_data.kingdome.salary_amount;
+        city_data.kingdome.personal_savings += city_data.kingdome.salary_amount;
+        city_data.finance.treasury -= city_data.kingdome.salary_amount;
     }
 }
 

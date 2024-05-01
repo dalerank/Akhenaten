@@ -5,7 +5,7 @@
 #include "core/string.h"
 #include "core/log.h"
 #include "city/gods.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "game/settings.h"
 #include "game/game.h"
 #include "game/system.h"

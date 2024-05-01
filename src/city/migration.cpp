@@ -1,166 +1,149 @@
 #include "migration.h"
 
 #include "building/house_population.h"
-#include "city/data_private.h"
-#include "city/figures.h"
+#include "city/city.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "game/tutorial.h"
 
-static void update_status(void) {
+void city_t::migration_nobles_leave_city(int num_people) {
+    migration.nobles_leave_city_this_year += num_people;
+}
+
+void city_t::migration_update_status() {
     int percentage_by_sentiment = 0;
-    if (city_data.sentiment.value > 70) {
+    if (sentiment.value > 70) {
         percentage_by_sentiment = 100;
-    } else if (city_data.sentiment.value > 60) {
+    } else if (sentiment.value > 60) {
         percentage_by_sentiment = 75;
-    } else if (city_data.sentiment.value >= 50) {
+    } else if (sentiment.value >= 50) {
         percentage_by_sentiment = 50;
-    } else if (city_data.sentiment.value > 40) {
+    } else if (sentiment.value > 40) {
         percentage_by_sentiment = 0;
-    } else if (city_data.sentiment.value > 30) {
+    } else if (sentiment.value > 30) {
         percentage_by_sentiment = -10;
-    } else if (city_data.sentiment.value > 20) {
+    } else if (sentiment.value > 20) {
         percentage_by_sentiment = -25;
     } else {
         percentage_by_sentiment = -50;
     }
 
-    city_data.migration.percentage_by_sentiment = percentage_by_sentiment;
-    city_data.migration.percentage = city_data.migration.percentage_by_sentiment;
+    migration.percentage_by_sentiment = percentage_by_sentiment;
+    migration.percentage = migration.percentage_by_sentiment;
 
-    city_data.migration.immigration_amount_per_batch = 0;
-    city_data.migration.emigration_amount_per_batch = 0;
+    migration.immigration_amount_per_batch = 0;
+    migration.emigration_amount_per_batch = 0;
 
     int population_cap = tutorial_get_population_cap(200000);
-    if (city_data.population.population >= population_cap) {
-        city_data.migration.percentage = 0;
-        city_data.migration.migration_cap = true;
+    if (population.population >= population_cap) {
+        migration.percentage = 0;
+        migration.migration_cap = true;
         return;
     }
     // war scares immigrants away
-    if (city_figures_total_invading_enemies() > 3 && city_data.migration.percentage > 0) {
-        city_data.migration.percentage = 0;
-        city_data.migration.invading_cap = true;
+    if (g_city.figures_total_invading_enemies() > 3 && migration.percentage > 0) {
+        migration.percentage = 0;
+        migration.invading_cap = true;
         return;
     }
 
-    if (city_data.migration.percentage > 0) {
+    if (migration.percentage > 0) {
         // immigration
-        if (city_data.migration.emigration_duration) {
-            city_data.migration.emigration_duration--;
+        if (migration.emigration_duration) {
+            migration.emigration_duration--;
         } else {
-            city_data.migration.immigration_amount_per_batch = calc_adjust_with_percentage(12, city_data.migration.percentage);
-            city_data.migration.immigration_duration = 2;
+            migration.immigration_amount_per_batch = calc_adjust_with_percentage(12, migration.percentage);
+            migration.immigration_duration = 2;
         }
-    } else if (city_data.migration.percentage < 0) {
+    } else if (migration.percentage < 0) {
         // emigration
-        if (city_data.migration.immigration_duration) {
-            city_data.migration.immigration_duration--;
-        } else if (city_data.population.population > 100) {
-            city_data.migration.emigration_amount_per_batch = calc_adjust_with_percentage(12, -city_data.migration.percentage);
-            city_data.migration.emigration_duration = 2;
+        if (migration.immigration_duration) {
+            migration.immigration_duration--;
+        } else if (population.population > 100) {
+            migration.emigration_amount_per_batch = calc_adjust_with_percentage(12, -migration.percentage);
+            migration.emigration_duration = 2;
         }
     }
 }
 
-static void create_immigrants(int num_people) {
+void city_t::create_immigrants(int num_people) {
     int immigrated = house_population_create_immigrants(num_people);
-    city_data.migration.immigrated_today += immigrated;
-    city_data.migration.newcomers += city_data.migration.immigrated_today;
+    migration.immigrated_today += immigrated;
+    migration.newcomers += migration.immigrated_today;
     if (immigrated == 0) {
-        city_data.migration.refused_immigrants_today += num_people;
+        migration.refused_immigrants_today += num_people;
     }
 }
 
-static void create_emigrants(int num_people) {
-    city_data.migration.emigrated_today += house_population_create_emigrants(num_people);
+void city_t::create_emigrants(int num_people) {
+    migration.emigrated_today += house_population_create_emigrants(num_people);
 }
 
-static void create_migrants(void) {
-    city_data.migration.immigrated_today = 0;
-    city_data.migration.emigrated_today = 0;
-    city_data.migration.refused_immigrants_today = 0;
+void city_t::create_migrants() {
+    migration.immigrated_today = 0;
+    migration.emigrated_today = 0;
+    migration.refused_immigrants_today = 0;
 
-    if (city_data.migration.immigration_amount_per_batch > 0) {
-        if (city_data.migration.immigration_amount_per_batch >= 4) {
-            create_immigrants(city_data.migration.immigration_amount_per_batch);
+    if (migration.immigration_amount_per_batch > 0) {
+        if (migration.immigration_amount_per_batch >= 4) {
+            create_immigrants(migration.immigration_amount_per_batch);
 
-        } else if (city_data.migration.immigration_amount_per_batch + city_data.migration.immigration_queue_size >= 4) {
-            create_immigrants(city_data.migration.immigration_amount_per_batch+ city_data.migration.immigration_queue_size);
-            city_data.migration.immigration_queue_size = 0;
+        } else if (migration.immigration_amount_per_batch + migration.immigration_queue_size >= 4) {
+            create_immigrants(migration.immigration_amount_per_batch + migration.immigration_queue_size);
+            migration.immigration_queue_size = 0;
 
         } else { // queue them for next round
-            city_data.migration.immigration_queue_size += city_data.migration.immigration_amount_per_batch;
+            migration.immigration_queue_size += migration.immigration_amount_per_batch;
         }
     }
     
-    if (city_data.migration.emigration_amount_per_batch > 0) {
-        if (city_data.migration.emigration_amount_per_batch >= 4) {
-            create_emigrants(city_data.migration.emigration_amount_per_batch);
-        } else if (city_data.migration.emigration_amount_per_batch + city_data.migration.emigration_queue_size >= 4) {
-            create_emigrants(city_data.migration.emigration_amount_per_batch + city_data.migration.emigration_queue_size);
-            city_data.migration.emigration_queue_size = 0;
-            if (!city_data.migration.emigration_message_shown) {
-                city_data.migration.emigration_message_shown = 1;
+    if (migration.emigration_amount_per_batch > 0) {
+        if (migration.emigration_amount_per_batch >= 4) {
+            create_emigrants(migration.emigration_amount_per_batch);
+        } else if (migration.emigration_amount_per_batch + migration.emigration_queue_size >= 4) {
+            create_emigrants(migration.emigration_amount_per_batch + migration.emigration_queue_size);
+            migration.emigration_queue_size = 0;
+            if (!migration.emigration_message_shown) {
+                migration.emigration_message_shown = 1;
                 //                city_message_post(true, MESSAGE_EMIGRATION, 0, 0);
             }
         } else { // queue them for next round
-            city_data.migration.emigration_queue_size += city_data.migration.emigration_amount_per_batch;
+            migration.emigration_queue_size += migration.emigration_amount_per_batch;
         }
     }
 
-    city_data.migration.immigration_amount_per_batch = 0;
-    city_data.migration.emigration_amount_per_batch = 0;
+    migration.immigration_amount_per_batch = 0;
+    migration.emigration_amount_per_batch = 0;
 }
 
-void city_migration_update() {
-    update_status();
+void city_t::migration_update() {
+    migration_update_status();
     create_migrants();
 }
 
-void city_migration_determine_int() {
-    switch (city_data.sentiment.low_mood_cause) {
+void city_t::migration_determine_reason() {
+    switch (sentiment.low_mood_cause) {
     case LOW_MOOD_NO_FOOD:
-        city_data.migration.no_immigration_cause = 2;
+        migration.no_immigration_cause = 2;
         break;
     case LOW_MOOD_NO_JOBS:
-        city_data.migration.no_immigration_cause = 1;
+        migration.no_immigration_cause = 1;
         break;
     case LOW_MOOD_HIGH_TAXES:
-        city_data.migration.no_immigration_cause = 3;
+        migration.no_immigration_cause = 3;
         break;
     case LOW_MOOD_LOW_WAGES:
-        city_data.migration.no_immigration_cause = 0;
+        migration.no_immigration_cause = 0;
         break;
     case LOW_MOOD_MANY_TENTS:
-        city_data.migration.no_immigration_cause = 4;
+        migration.no_immigration_cause = 4;
         break;
     default:
-        city_data.migration.no_immigration_cause = 5;
+        migration.no_immigration_cause = 5;
         break;
     }
 }
 
-int city_migration_problems_cause() {
-    return city_data.migration.no_immigration_cause;
-}
-
-void city_migration_advance_year() {
-    city_data.migration.nobles_leave_city_this_year = 0;
-}
-
-int city_migration_no_room_for_immigrants() {
-    return city_data.migration.refused_immigrants_today || city_data.population.room_in_houses <= 0;
-}
-
-int city_migration_percentage() {
-    return city_data.migration.percentage;
-}
-
-int city_migration_newcomers(void) {
-    return city_data.migration.newcomers;
-}
-
-void city_migration_reset_newcomers(void) {
-    city_data.migration.newcomers = 0;
+int city_t::migration_no_room_for_immigrants() {
+    return migration.refused_immigrants_today || population.room_in_houses <= 0;
 }

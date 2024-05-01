@@ -1,19 +1,24 @@
 #pragma once
 
-void city_military_clear_legionary_legions();
-void city_military_add_legionary_legion();
-int city_military_has_legionary_legions();
+#include <cstdint>
 
-int city_military_total_legions();
-int city_military_total_soldiers();
-int city_military_empire_service_legions();
-void city_military_clear_empire_service_legions();
+struct city_military_t {
+    uint8_t total_batalions;
+    uint8_t total_soldiers;
+    uint8_t kingdome_service_batalions;
+    int32_t infantry_batalions;
+    int32_t native_attack_duration;
 
-void city_military_update_totals();
+    void clear_infantry_batalions();
+    void add_infantry_batalion();
+    bool has_infantry_batalions();
+    void clear_kingdome_service_batalions();
+    void update_totals();
+    bool is_native_attack_active();
+    void start_native_attack();
+    void decrease_native_attack_duration();
+};
 
-int city_military_is_native_attack_active();
-void city_military_start_native_attack();
-void city_military_decrease_native_attack_duration();
 
 void city_military_determine_distant_battle_city();
 int city_military_distant_battle_city();

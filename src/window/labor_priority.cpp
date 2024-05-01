@@ -1,6 +1,7 @@
 #include "labor_priority.h"
 
 #include "city/labor.h"
+#include "city/city.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
@@ -33,7 +34,7 @@ static generic_button priority_buttons[] = {
 
 static void init(int category) {
     data.category = category;
-    data.max_items = city_labor_max_selectable_priority(category);
+    data.max_items = g_city.labor.max_selectable_priority(category);
 }
 
 static int get_dialog_width(void) {
@@ -100,7 +101,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void button_set_priority(int new_priority, int param2) {
-    city_labor_set_priority(data.category, new_priority);
+    g_city.labor.set_priority(data.category, new_priority);
     window_go_back();
 }
 

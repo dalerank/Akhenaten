@@ -4,7 +4,7 @@
 #include "building/building_storage_yard.h"
 #include "buildings.h"
 #include "city/constants.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/sentiment.h"
@@ -13,6 +13,7 @@
 #include "config/config.h"
 #include "graphics/image_groups.h"
 
+static auto &city_data = g_city;
 bool city_festival_is_planned(void) {
     return city_data.festival.planned.size != FESTIVAL_NONE;
 }

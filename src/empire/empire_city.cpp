@@ -14,7 +14,7 @@
 #include "figuretype/figure_trader_ship.h"
 #include "scenario/map.h"
 
-#include <city/data_private.h>
+#include "city/city.h"
 #include <string.h>
 #include <functional>
 #include <array>
@@ -165,7 +165,7 @@ void empire_city_expand_empire(void) {
 }
 
 static bool generate_trader(int city_id, empire_city &city) {
-    if (city_data.religion.ra_no_traders_months_left > 0) {
+    if (g_city.religion.ra_no_traders_months_left > 0) {
         return false;
     }
 
@@ -238,7 +238,7 @@ static bool generate_trader(int city_id, empire_city &city) {
         // generate caravan and donkeys
         if (!city_trade_has_land_trade_problems()) {
             // caravan head
-            tile2i& entry = city_map_entry_point();
+            tile2i& entry = g_city.map.entry_point;
             city.trader_figure_ids[index] = figure_create_trade_caravan(entry, city_id);
             return true;
         }
@@ -330,7 +330,7 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
     for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_FOODS_MAX; ++resource) {
         int can_do_food_x = empire_can_produce_resource(resource, true);
         if (can_do_food_x) {
-            city_set_allowed_food(food_index, resource);
+            g_city.set_allowed_food(food_index, resource);
             food_index++;
         }
     }

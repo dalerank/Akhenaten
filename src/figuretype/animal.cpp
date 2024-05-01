@@ -2,7 +2,7 @@
 
 #include "building/building.h"
 #include "city/entertainment.h"
-#include "city/figures.h"
+#include "city/city.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "core/profiler.h"
@@ -188,7 +188,7 @@ void figure::sheep_action() {
     //    terrain_usage = TERRAIN_USAGE_ANIMAL;
     //    use_cross_country = false;
     //    is_ghost = false;
-    city_figures_add_animal();
+    g_city.figures_add_animal();
     //    figure_image_increase_offset(6);
 
     switch (action_state) {
@@ -235,7 +235,7 @@ void figure::sheep_action() {
 
 void figure::hyena_action() {
     const formation* m = formation_get(formation_id);
-    city_figures_add_animal();
+    g_city.figures_add_animal();
 
     switch (action_state) {
     case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
@@ -309,7 +309,7 @@ void figure::hyena_action() {
 void figure::hippo_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Hippo");
     const formation* m = formation_get(formation_id);
-    city_figures_add_animal();
+    g_city.figures_add_animal();
 
     allow_move_type = EMOVE_HIPPO;
     roam_wander_freely = false;
@@ -395,7 +395,7 @@ void figure::zebra_action() {
     //    terrain_usage = TERRAIN_USAGE_ANIMAL;
     //    use_cross_country = false;
     //    is_ghost = false;
-    city_figures_add_animal();
+    g_city.figures_add_animal();
     //    figure_image_increase_offset(12);
 
     switch (action_state) {
@@ -622,9 +622,9 @@ void figure::hippodrome_horse_action() {
 }
 
 void figure_hippodrome_horse_reroute(void) {
-    if (!city_entertainment_hippodrome_has_race()) {
+    //if (!city_entertainment_hippodrome_has_race()) {
         return;
-    }
+    //}
 
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure* f = figure_get(i);

@@ -15,7 +15,7 @@
 #include "graphics/image_groups.h"
 #include "grid/terrain.h"
 #include "config/config.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "city/floods.h"
 #include "game/time.h"
 #include "grid/floodplain.h"
@@ -103,7 +103,7 @@ int farm_expected_produce(building* b) {
     // down to the lowest 20 points. No idea why! But here's as an option.
 
     int modifier = 1;
-    if (city_data.religion.osiris_double_farm_yield && building_is_floodplain_farm(*b)) {
+    if (g_city.religion.osiris_double_farm_yield && building_is_floodplain_farm(*b)) {
         modifier = 2;
     }
 
@@ -208,7 +208,7 @@ void building_industry_update_farms(void) {
             farm->update_tiles_image();
         }
     });
-    city_data.religion.osiris_double_farm_yield = false;
+    g_city.religion.osiris_double_farm_yield = false;
 }
 
 void building_industry_update_wheat_production() {

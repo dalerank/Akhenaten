@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "building/list.h"
 #include "city/buildings.h"
-#include "city/military.h"
+#include "city/city.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "graphics/image.h"
@@ -183,7 +183,7 @@ void map_natives_init_editor(void) {
 void map_natives_check_land(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Map Natives Update");
     map_property_clear_all_native_land();
-    city_military_decrease_native_attack_duration();
+    g_city.military.decrease_native_attack_duration();
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
@@ -203,7 +203,7 @@ void map_natives_check_land(void) {
         if (b->sentiment.native_anger >= 100) {
             mark_native_land(b->tile.x(), b->tile.y(), size, radius);
             if (has_building_on_native_land(b->tile.x(), b->tile.y(), size, radius))
-                city_military_start_native_attack();
+                g_city.military.start_native_attack();
 
         } else {
             b->sentiment.native_anger++;

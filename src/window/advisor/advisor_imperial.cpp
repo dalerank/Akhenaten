@@ -1,7 +1,7 @@
 #include "advisor_imperial.h"
 #include "city/city_data.h"
 
-#include "city/emperor.h"
+#include "city/city.h"
 #include "city/finance.h"
 #include "city/military.h"
 #include "city/ratings.h"
@@ -62,9 +62,9 @@ static int get_request_status(int index) {
             }
         } else if (request->resource == RESOURCE_TROOPS) {
             if (city_military_months_until_distant_battle() > 0 && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
-                if (city_military_total_legions() <= 0) {
+                if (g_city.military.total_batalions <= 0) {
                     return STATUS_NO_LEGIONS_AVAILABLE;
-                } else if (city_military_empire_service_legions() <= 0) {
+                } else if (g_city.military.kingdome_service_batalions <= 0) {
                     return STATUS_NO_LEGIONS_SELECTED;
                 } else {
                     return STATUS_CONFIRM_SEND_LEGIONS;
@@ -131,7 +131,7 @@ int ui::advisor_imperial_window::draw_background() {
     int military_resource = RESOURCE_WEAPONS;
 
     painter ctx = game.painter();
-    city_emperor_calculate_gift_costs();
+    g_city.kingdome.calculate_gift_costs();
 
     outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 2, 10, 10);
@@ -177,10 +177,10 @@ int ui::advisor_imperial_window::draw_background() {
 void ui::advisor_imperial_window::draw_foreground() {
     inner_panel_draw(64, 324, 32, 6);
 
-    lang_text_draw(32, city_emperor_rank(), 72, 338, FONT_LARGE_BLACK_ON_DARK);
+    lang_text_draw(32, g_city.kingdome.player_rank, 72, 338, FONT_LARGE_BLACK_ON_DARK);
 
     int width = lang_text_draw(52, 1, 72, 372, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw_money(city_emperor_personal_savings(), 80 + width, 372, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw_money(g_city.kingdome.personal_savings, 80 + width, 372, FONT_NORMAL_WHITE_ON_DARK);
 
     //
     button_border_draw(320, 367, 250, 20, focus_button_id == 1);
@@ -188,8 +188,8 @@ void ui::advisor_imperial_window::draw_foreground() {
 
     // button set salary
     button_border_draw(70, 393, 500, 20, focus_button_id == 2);
-    width = lang_text_draw(52, city_emperor_salary_rank() + 4, 120, 398, FONT_NORMAL_WHITE_ON_DARK);
-    width += text_draw_number(city_emperor_salary_amount(), '@', " ", 120 + width, 398, FONT_NORMAL_WHITE_ON_DARK);
+    width = lang_text_draw(52, g_city.kingdome.salary_rank + 4, 120, 398, FONT_NORMAL_WHITE_ON_DARK);
+    width += text_draw_number(g_city.kingdome.salary_amount, '@', " ", 120 + width, 398, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(52, 3, 120 + width, 398, FONT_NORMAL_WHITE_ON_DARK);
 
     button_border_draw(320, 341, 250, 20, focus_button_id == 3);
@@ -230,7 +230,7 @@ static void button_request(int index, int param2) {
     int status = get_request_status(index);
     // in C3, the enums are offset by two! (I have not fixed this)
     if (status) {
-        city_military_clear_empire_service_legions();
+        g_city.military.clear_kingdome_service_batalions();
         switch (status) {
         case STATUS_NO_LEGIONS_AVAILABLE:
             window_ok_dialog_show("#popup_dialog_no_legions_available");

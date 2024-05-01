@@ -1,6 +1,6 @@
 #include "figure_soldier.h"
 
-#include "city/figures.h"
+#include "city/city.h"
 #include "city/map.h"
 #include "core/calc.h"
 #include "figure/combat.h"
@@ -184,7 +184,7 @@ void figure_soldier::update_image(const formation* m, int &dir) {
 }
 
 bool figure_soldier::play_die_sound() {
-    if (city_figures_soldiers() == 1) {
+    if (g_city.figure.soldiers == 1) {
         sound_speech_play_file("wavs/barbarian_war_cry.wav");
     }
 
@@ -193,7 +193,7 @@ bool figure_soldier::play_die_sound() {
 
 void figure_soldier::figure_action() {
     formation* m = formation_get(base.formation_id);
-    city_figures_add_soldier();
+    g_city.figures_add_soldier();
     //    terrain_usage = TERRAIN_USAGE_ANY;
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
@@ -346,7 +346,7 @@ void figure_soldier::figure_action() {
         }
         break;
     case FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE: {
-        tile2i exit = city_map_exit_point();
+        tile2i exit = g_city.map.exit_point;
         base.formation_at_rest = 0;
         destination_tile = exit;
         //            destination_tile.x() = exit->x();

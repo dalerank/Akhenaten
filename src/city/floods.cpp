@@ -8,7 +8,7 @@
 #include "grid/floodplain.h"
 #include "grid/tiles.h"
 #include "io/manager.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "message.h"
 
 #include <cmath>
@@ -303,7 +303,7 @@ void floodplains_tick_update(bool calc_only) {
     // update at the end of each day
     if (game_time_tick() == 50) {
         if (floodplains_is(FLOOD_STATE_INUNDATED)) {
-            city_data.religion.osiris_flood_will_destroy_active = 0;
+            g_city.religion.osiris_flood_will_destroy_active = 0;
         }
         // send nilometer message!
         if (cycle_is(floods_end_cycle() + 23)) {

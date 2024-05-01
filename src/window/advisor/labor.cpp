@@ -1,7 +1,7 @@
 #include "labor.h"
 
 #include "city/finance.h"
-#include "city/labor.h"
+#include "city/city.h"
 #include "core/calc.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
@@ -55,19 +55,19 @@ int ui::advisor_labors_window::draw_background() {
     lang_text_draw(50, 24, 500, 56, FONT_SMALL_PLAIN);
 
     // xx employed, yy unemployed
-    int width = text_draw_number(city_labor_workers_employed(), '@', " ", 32, 320, FONT_NORMAL_BLACK_ON_LIGHT);
+    int width = text_draw_number(g_city.labor.workers_employed, '@', " ", 32, 320, FONT_NORMAL_BLACK_ON_LIGHT);
     width += lang_text_draw(50, 12, 32 + width, 320, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += text_draw_number(city_labor_workers_unemployed(), '@', " ", 50 + width, 320, FONT_NORMAL_BLACK_ON_LIGHT);
+    width += text_draw_number(g_city.labor.workers_unemployed, '@', " ", 50 + width, 320, FONT_NORMAL_BLACK_ON_LIGHT);
     width += lang_text_draw(50, 13, 50 + width, 320, FONT_NORMAL_BLACK_ON_LIGHT);
-    text_draw_number(city_labor_unemployment_percentage(), '@', "%)", 50 + width, 320, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number(g_city.labor.unemployment_percentage, '@', "%)", 50 + width, 320, FONT_NORMAL_BLACK_ON_LIGHT);
 
     // wages panel
     inner_panel_draw(64, 350, 32, 2);
     lang_text_draw(50, 14, 70, 359, FONT_NORMAL_WHITE_ON_DARK);
-    width = text_draw_number(city_labor_wages(), '@', " ", 230, 359, FONT_NORMAL_WHITE_ON_DARK);
+    width = text_draw_number(g_city.labor.wages, '@', " ", 230, 359, FONT_NORMAL_WHITE_ON_DARK);
     width += lang_text_draw(50, 15, 230 + width, 359, FONT_NORMAL_WHITE_ON_DARK);
     width += lang_text_draw(50, 18, 230 + width, 359, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw_number(city_labor_wages_rome(), '@', " )", 230 + width, 359, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw_number(g_city.labor.wages_kingdome, '@', " )", 230 + width, 359, FONT_NORMAL_WHITE_ON_DARK);
 
     // estimated wages
     width = lang_text_draw(50, 19, 64, 390, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -110,7 +110,7 @@ int ui::advisor_labors_window::handle_mouse(const mouse* m) {
 }
 
 static void arrow_button_wages(int is_down, int param2) {
-    city_labor_change_wages(is_down ? -1 : 1);
+    g_city.labor.change_wages(is_down ? -1 : 1);
     city_finance_estimate_wages();
     city_finance_calculate_totals();
     window_invalidate();

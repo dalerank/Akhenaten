@@ -1,15 +1,17 @@
 #include "trade_prices.h"
 #include "core/game_environment.h"
 #include "io/io_buffer.h"
-#include <city/data_private.h>
+#include "city/city.h"
 
+static auto &city_data = g_city;
 struct trade_price {
     int32_t buy;
     int32_t sell;
 };
 
 static const struct trade_price DEFAULT_PRICES[RESOURCES_MAX] = {
-  {0, 0},     {28, 21}, // grain
+  {0, 0},
+  {28, 21}, // grain
   {47, 35},             // meat
   {33, 25},             // lettuce
   {33, 25},             // chickpeas

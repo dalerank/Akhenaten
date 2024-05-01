@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "building/roadblock.h"
 #include "building/rotation.h"
-#include "city/map.h"
+#include "city/city.h"
 #include "core/profiler.h"
 #include "grid/building.h"
 #include "grid/grid.h"
@@ -79,7 +79,7 @@ bool map_road_find_minimum_tile_xy_classic(tile2i tile, int sizex, int sizey, in
             continue;
         }
 
-        int road_index = city_map_road_network_index(map_road_network_get(grid_offset));
+        int road_index = g_city.map.road_network_index(map_road_network_get(grid_offset));
         if (road_index < *min_value) {
             *min_value = road_index;
             *min_grid_offset = grid_offset;
@@ -320,7 +320,7 @@ tile2i map_road_to_largest_network_rotation(int rotation, tile2i tile, int size,
         for (const auto &tile_delta: offsets) {
             int grid_offset = base_offset + tile_delta;
             if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_routing_distance(grid_offset) > 0) {
-                int index = city_map_road_network_index(map_road_network_get(grid_offset));
+                int index = g_city.map.road_network_index(map_road_network_get(grid_offset));
                 if (index < min_index) {
                     min_index = index;
                     min_grid_offset = grid_offset;
@@ -364,7 +364,7 @@ static void check_road_to_largest_network_hippodrome(int x, int y, int* min_inde
     for (const int &tile_delta: offsets) {
         int grid_offset = base_offset + tile_delta;
         if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_routing_distance(grid_offset) > 0) {
-            int index = city_map_road_network_index(map_road_network_get(grid_offset));
+            int index = g_city.map.road_network_index(map_road_network_get(grid_offset));
             if (index < *min_index) {
                 *min_index = index;
                 *min_grid_offset = grid_offset;

@@ -411,7 +411,7 @@ public:
     void enemy52_mounted_archer_action();
     void enemy53_axe_action();
     void enemy_gladiator_action();
-    void enemy_caesar_legionary_action();
+    void enemy_kingdome_soldier_action();
     void arrow_action();
     void javelin_action();
     void bolt_action();

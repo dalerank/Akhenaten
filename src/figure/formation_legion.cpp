@@ -1,6 +1,6 @@
 #include "formation_legion.h"
 
-#include "city/figures.h"
+#include "city/city.h"
 #include "city/military.h"
 #include "city/warning.h"
 #include "core/calc.h"
@@ -301,7 +301,7 @@ void formation_legion_update(void) {
             continue;
 
         formation_decrease_monthly_counters(m);
-        if (city_figures_enemies() <= 0)
+        if (g_city.figure.enemies <= 0)
             formation_clear_monthly_counters(m);
 
         for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
@@ -319,7 +319,7 @@ void formation_legion_update(void) {
                 }
             }
         } else if (m->layout == FORMATION_MOP_UP) {
-            if (enemy_army_total_enemy_formations() + city_figures_rioters() + city_figures_attacking_natives() > 0) {
+            if ((enemy_army_total_enemy_formations() + g_city.figure.rioters + g_city.figure.attacking_natives) > 0) {
                 for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
                     if (m->figures[n] != 0) {
                         figure* f = figure_get(m->figures[n]);

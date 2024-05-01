@@ -4,7 +4,7 @@
 #include "building/count.h"
 #include "building/model.h"
 #include "city/constants.h"
-#include "city/labor.h"
+#include "city/city.h"
 #include "city/population.h"
 #include "city/resource.h"
 #include "city/warning.h"
@@ -59,7 +59,7 @@ static void check_water(int type, int x, int y) {
 
 static void check_workers(int type) {
     if (!g_has_warning && type != BUILDING_WELL && !building_is_fort(type)) {
-        if (model_get_building(type)->laborers > 0 && city_labor_workers_needed() >= 10)
+        if (model_get_building(type)->laborers > 0 && g_city.labor.workers_needed >= 10)
             building_construction_warning_show(WARNING_WORKERS_NEEDED);
     }
 }

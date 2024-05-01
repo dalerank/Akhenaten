@@ -4,7 +4,7 @@
 #include "building/house.h"
 #include "building/destruction.h"
 #include "city/buildings.h"
-#include "city/figures.h"
+#include "city/city.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/population.h"
@@ -223,7 +223,7 @@ void figure::mugger_action() {
     case FIGURE_ACTION_123_MUGGER_LEAVING:
     {
         wait_ticks = 0;
-        tile2i exit = city_map_exit_point();
+        tile2i exit = g_city.map.exit_point;
         if (do_goto(exit, TERRAIN_USAGE_ANY)) {
             poof();
         }
@@ -265,8 +265,9 @@ void figure::mugger_action() {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_THIEF_WALK) + CRIMINAL_OFFSETS[anim_frame / 2] + 104;
     }
 }
+
 void figure::rioter_action() {
-    city_figures_add_rioter(!targeted_by_figure_id);
+    g_city.figures_add_rioter(!targeted_by_figure_id);
     //    terrain_usage = TERRAIN_USAGE_ENEMY;
     //    max_roam_length = 480;
     //    cart_image_id = 0;

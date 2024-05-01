@@ -9,7 +9,7 @@
 
 #include "building/industry.h"
 #include "building/monuments.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "graphics/view/lookup.h"
 #include "grid/aqueduct.h"
 #include "grid/building.h"
@@ -921,67 +921,67 @@ void draw_debug_ui(int x, int y) {
         int c8 = 360;
 
         if (city_gods_is_known(GOD_OSIRIS) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 15, c0, c1, "Osiris:", city_data.religion.gods[0].mood, city_data.religion.gods[0].target_mood);
-            debug_text_dual_left(str, x + c2, y + 15, 0, c1, "", city_data.religion.gods[0].wrath_bolts, city_data.religion.gods[0].happy_ankhs);
+            debug_text_dual_left(str, x, y + 15, c0, c1, "Osiris:", g_city.religion.gods[0].mood, g_city.religion.gods[0].target_mood);
+            debug_text_dual_left(str, x + c2, y + 15, 0, c1, "", g_city.religion.gods[0].wrath_bolts, g_city.religion.gods[0].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 15, cl, "", building_count_total(BUILDING_SHRINE_OSIRIS));
             debug_text(ctx, str, x + c4, y + 15, cl, "", building_count_active(BUILDING_TEMPLE_OSIRIS));
             debug_text(ctx, str, x + c5, y + 15, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_OSIRIS));
             debug_text(ctx, str, x + c6, y + 15, c7, "%", city_culture_coverage_religion(GOD_OSIRIS));
-            debug_text(ctx, str, x + c8, y + 15, cl, "", city_data.religion.gods[0].months_since_festival);
+            debug_text(ctx, str, x + c8, y + 15, cl, "", g_city.religion.gods[0].months_since_festival);
         }
 
         if (city_gods_is_known(GOD_RA) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 25, c0, c1, "Ra:", city_data.religion.gods[1].mood, city_data.religion.gods[1].target_mood);
-            debug_text_dual_left(str, x + c2, y + 25, 0, c1, "", city_data.religion.gods[1].wrath_bolts, city_data.religion.gods[1].happy_ankhs);
+            debug_text_dual_left(str, x, y + 25, c0, c1, "Ra:", g_city.religion.gods[1].mood, g_city.religion.gods[1].target_mood);
+            debug_text_dual_left(str, x + c2, y + 25, 0, c1, "", g_city.religion.gods[1].wrath_bolts, g_city.religion.gods[1].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 25, cl, "", building_count_total(BUILDING_SHRINE_RA));
             debug_text(ctx, str, x + c4, y + 25, cl, "", building_count_active(BUILDING_TEMPLE_RA));
             debug_text(ctx, str, x + c5, y + 25, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_RA));
             debug_text(ctx, str, x + c6, y + 25, c7, "%", city_culture_coverage_religion(GOD_RA));
-            debug_text(ctx, str, x + c8, y + 25, cl, "", city_data.religion.gods[1].months_since_festival);
+            debug_text(ctx, str, x + c8, y + 25, cl, "", g_city.religion.gods[1].months_since_festival);
         }
 
         if (city_gods_is_known(GOD_PTAH) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 35, c0, c1, "Ptah:", city_data.religion.gods[2].mood, city_data.religion.gods[2].target_mood);
-            debug_text_dual_left(str, x + c2, y + 35, 0, c1, "", city_data.religion.gods[2].wrath_bolts, city_data.religion.gods[2].happy_ankhs);
+            debug_text_dual_left(str, x, y + 35, c0, c1, "Ptah:", g_city.religion.gods[2].mood, g_city.religion.gods[2].target_mood);
+            debug_text_dual_left(str, x + c2, y + 35, 0, c1, "", g_city.religion.gods[2].wrath_bolts, g_city.religion.gods[2].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 35, cl, "", building_count_total(BUILDING_SHRINE_PTAH));
             debug_text(ctx, str, x + c4, y + 35, cl, "", building_count_active(BUILDING_TEMPLE_PTAH));
             debug_text(ctx, str, x + c5, y + 35, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_PTAH));
             debug_text(ctx, str, x + c6, y + 35, c7, "%", city_culture_coverage_religion(GOD_PTAH));
-            debug_text(ctx, str, x + c8, y + 35, cl, "", city_data.religion.gods[2].months_since_festival);
+            debug_text(ctx, str, x + c8, y + 35, cl, "", g_city.religion.gods[2].months_since_festival);
         }
 
         if (city_gods_is_known(GOD_SETH) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 45, c0, c1, "Seth:", city_data.religion.gods[3].mood, city_data.religion.gods[3].target_mood);
-            debug_text_dual_left(str, x + c2, y + 45, 0, c1, "", city_data.religion.gods[3].wrath_bolts, city_data.religion.gods[3].happy_ankhs);
+            debug_text_dual_left(str, x, y + 45, c0, c1, "Seth:", g_city.religion.gods[3].mood, g_city.religion.gods[3].target_mood);
+            debug_text_dual_left(str, x + c2, y + 45, 0, c1, "", g_city.religion.gods[3].wrath_bolts, g_city.religion.gods[3].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 45, cl, "", building_count_total(BUILDING_SHRINE_SETH));
             debug_text(ctx, str, x + c4, y + 45, cl, "", building_count_active(BUILDING_TEMPLE_SETH));
             debug_text(ctx, str, x + c5, y + 45, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_SETH));
             debug_text(ctx, str, x + c6, y + 45, c7, "%", city_culture_coverage_religion(GOD_SETH));
-            debug_text(ctx, str, x + c8, y + 45, cl, "", city_data.religion.gods[3].months_since_festival);
+            debug_text(ctx, str, x + c8, y + 45, cl, "", g_city.religion.gods[3].months_since_festival);
         }
 
         if (city_gods_is_known(GOD_BAST) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 55, c0, c1, "Bast:", city_data.religion.gods[4].mood, city_data.religion.gods[4].target_mood);
-            debug_text_dual_left(str, x + c2, y + 55, 0, c1, "", city_data.religion.gods[4].wrath_bolts, city_data.religion.gods[4].happy_ankhs);
+            debug_text_dual_left(str, x, y + 55, c0, c1, "Bast:", g_city.religion.gods[4].mood, g_city.religion.gods[4].target_mood);
+            debug_text_dual_left(str, x + c2, y + 55, 0, c1, "", g_city.religion.gods[4].wrath_bolts, g_city.religion.gods[4].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 55, cl, "", building_count_total(BUILDING_SHRINE_BAST));
             debug_text(ctx, str, x + c4, y + 55, cl, "", building_count_active(BUILDING_TEMPLE_BAST));
             debug_text(ctx, str, x + c5, y + 55, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_BAST));
             debug_text(ctx, str, x + c6, y + 55, c7, "%", city_culture_coverage_religion(GOD_BAST));
-            debug_text(ctx, str, x + c8, y + 55, cl, "", city_data.religion.gods[4].months_since_festival);
+            debug_text(ctx, str, x + c8, y + 55, cl, "", g_city.religion.gods[4].months_since_festival);
         }
 
         cl = 180;
-        debug_text(ctx, str, x, y + 75, cl, "150% export profits:", city_data.religion.ra_150_export_profits_months_left);
-        debug_text(ctx, str, x, y + 85, cl, "No traders:", city_data.religion.ra_no_traders_months_left);
-        debug_text(ctx, str, x, y + 95, cl, "Slightly increased trades:", city_data.religion.ra_slightly_increased_trading_months_left);
-        debug_text(ctx, str, x, y + 105, cl, "Slightly reduced trades:", city_data.religion.ra_slightly_reduced_trading_months_left);
-        debug_text(ctx, str, x, y + 115, cl, "Harshly reduced trades:", city_data.religion.ra_harshly_reduced_trading_months_left);
+        debug_text(ctx, str, x, y + 75, cl, "150% export profits:", g_city.religion.ra_150_export_profits_months_left);
+        debug_text(ctx, str, x, y + 85, cl, "No traders:", g_city.religion.ra_no_traders_months_left);
+        debug_text(ctx, str, x, y + 95, cl, "Slightly increased trades:", g_city.religion.ra_slightly_increased_trading_months_left);
+        debug_text(ctx, str, x, y + 105, cl, "Slightly reduced trades:", g_city.religion.ra_slightly_reduced_trading_months_left);
+        debug_text(ctx, str, x, y + 115, cl, "Harshly reduced trades:", g_city.religion.ra_harshly_reduced_trading_months_left);
 
-        debug_text(ctx, str, x, y + 125, cl, "Enemy troops kill:", city_data.religion.seth_crush_enemy_troops);
-        debug_text(ctx, str, x, y + 135, cl, "Player troops protection:", city_data.religion.seth_protect_player_troops);
+        debug_text(ctx, str, x, y + 125, cl, "Enemy troops kill:", g_city.religion.seth_crush_enemy_troops);
+        debug_text(ctx, str, x, y + 135, cl, "Player troops protection:", g_city.religion.seth_protect_player_troops);
 
-        debug_text(ctx, str, x, y + 145, cl, "Double farm yields:", city_data.religion.osiris_double_farm_yield);
-        debug_text(ctx, str, x, y + 155, cl, "Floods will destroy farms:", city_data.religion.osiris_flood_will_destroy_active);
+        debug_text(ctx, str, x, y + 145, cl, "Double farm yields:", g_city.religion.osiris_double_farm_yield);
+        debug_text(ctx, str, x, y + 155, cl, "Floods will destroy farms:", g_city.religion.osiris_flood_will_destroy_active);
         y += 170;
     }
 
@@ -1001,46 +1001,46 @@ void draw_debug_ui(int x, int y) {
         int cl = 180;
         debug_text_a(ctx, str, x, y + 1, cl, "====================== migration ======================");
         y += 12;
-        debug_text(ctx, str, x, y + 1, cl, "invading_cap:", city_data.migration.invading_cap);
-        debug_text(ctx, str, x, y + 13, cl, "migration_cap:", city_data.migration.migration_cap);
-        debug_text(ctx, str, x, y + 25, cl, "percentage_by_sentiment:", city_data.migration.percentage_by_sentiment);
-        debug_text(ctx, str, x, y + 37, cl, "emigration_message_shown:", city_data.migration.emigration_message_shown);
-        debug_text(ctx, str, x, y + 49, cl, "newcomers:", city_data.migration.newcomers);
-        debug_text(ctx, str, x, y + 61, cl, "percentage:", city_data.migration.percentage);
-        debug_text(ctx, str, x, y + 73, cl, "no_immigration_cause:", city_data.migration.no_immigration_cause);
-        debug_text(ctx, str, x, y + 85, cl, "refused_immigrants_today:", city_data.migration.refused_immigrants_today);
-        debug_text(ctx, str, x, y + 97, cl, "emigrated_today:", city_data.migration.emigrated_today);
-        debug_text(ctx, str, x, y + 109, cl, "immigrated_today:", city_data.migration.immigrated_today);
-        debug_text(ctx, str, x, y + 121, cl, "emigration_queue_size:", city_data.migration.emigration_queue_size);
-        debug_text(ctx, str, x, y + 133, cl, "immigration_queue_size:", city_data.migration.immigration_queue_size);
-        debug_text(ctx, str, x, y + 145, cl, "immigration_duration:", city_data.migration.immigration_duration);
-        debug_text(ctx, str, x, y + 157, cl, "emigration_amount_per_batch:", city_data.migration.emigration_amount_per_batch);
-        debug_text(ctx, str, x, y + 169, cl, "emigration_duration:", city_data.migration.emigration_duration);
-        debug_text(ctx, str, x, y + 181, cl, "immigration_amount_per_batch:", city_data.migration.immigration_amount_per_batch);
-        debug_text(ctx, str, x, y + 193, cl, "nobles_leave_city_this_year:", city_data.migration.nobles_leave_city_this_year);
+        debug_text(ctx, str, x, y + 1, cl, "invading_cap:", g_city.migration.invading_cap);
+        debug_text(ctx, str, x, y + 13, cl, "migration_cap:", g_city.migration.migration_cap);
+        debug_text(ctx, str, x, y + 25, cl, "percentage_by_sentiment:", g_city.migration.percentage_by_sentiment);
+        debug_text(ctx, str, x, y + 37, cl, "emigration_message_shown:", g_city.migration.emigration_message_shown);
+        debug_text(ctx, str, x, y + 49, cl, "newcomers:", g_city.migration.newcomers);
+        debug_text(ctx, str, x, y + 61, cl, "percentage:", g_city.migration.percentage);
+        debug_text(ctx, str, x, y + 73, cl, "no_immigration_cause:", g_city.migration.no_immigration_cause);
+        debug_text(ctx, str, x, y + 85, cl, "refused_immigrants_today:", g_city.migration.refused_immigrants_today);
+        debug_text(ctx, str, x, y + 97, cl, "emigrated_today:", g_city.migration.emigrated_today);
+        debug_text(ctx, str, x, y + 109, cl, "immigrated_today:", g_city.migration.immigrated_today);
+        debug_text(ctx, str, x, y + 121, cl, "emigration_queue_size:", g_city.migration.emigration_queue_size);
+        debug_text(ctx, str, x, y + 133, cl, "immigration_queue_size:", g_city.migration.immigration_queue_size);
+        debug_text(ctx, str, x, y + 145, cl, "immigration_duration:", g_city.migration.immigration_duration);
+        debug_text(ctx, str, x, y + 157, cl, "emigration_amount_per_batch:", g_city.migration.emigration_amount_per_batch);
+        debug_text(ctx, str, x, y + 169, cl, "emigration_duration:", g_city.migration.emigration_duration);
+        debug_text(ctx, str, x, y + 181, cl, "immigration_amount_per_batch:", g_city.migration.immigration_amount_per_batch);
+        debug_text(ctx, str, x, y + 193, cl, "nobles_leave_city_this_year:", g_city.migration.nobles_leave_city_this_year);
         y += 212;
     }
 
     if (g_debug_show_opts[e_debug_show_sentiment]) {
         int cl = 180;
-        debug_text(ctx, str, x, y + 1, cl, "value:", city_data.sentiment.value);
-        debug_text(ctx, str, x, y + 13, cl, "previous_value:", city_data.sentiment.previous_value);
-        debug_text(ctx, str, x, y + 25, cl, "message_delay:", city_data.sentiment.message_delay);
-        debug_text(ctx, str, x, y + 37, cl, "include_tents:", city_data.sentiment.include_huts);
-        debug_text(ctx, str, x, y + 49, cl, "unemployment:", city_data.sentiment.unemployment);
-        debug_text(ctx, str, x, y + 61, cl, "wages:", city_data.sentiment.wages);
-        debug_text(ctx, str, x, y + 73, cl, "low_mood_cause:", city_data.sentiment.low_mood_cause);
-        debug_text(ctx, str, x, y + 85, cl, "protesters:", city_data.sentiment.protesters);
-        debug_text(ctx, str, x, y + 97, cl, "criminals:", city_data.sentiment.criminals);
-        debug_text(ctx, str, x, y + 109, cl, "can_create_mugger:", city_data.sentiment.can_create_mugger);
-        debug_text(ctx, str, x, y + 121, cl, "can_create_protestor:", city_data.sentiment.can_create_protestor);
-        debug_text(ctx, str, x, y + 133, cl, "last_mugger_message:", city_data.sentiment.last_mugger_message);
-        debug_text(ctx, str, x, y + 145, cl, "contribution_taxes:", city_data.sentiment.contribution_taxes);
-        debug_text(ctx, str, x, y + 157, cl, "contribution_wages:", city_data.sentiment.contribution_wages);
-        debug_text(ctx, str, x, y + 169, cl, "contribution_employment:", city_data.sentiment.contribution_employment);
-        debug_text(ctx, str, x, y + 181, cl, "penalty_tents:", city_data.sentiment.penalty_tents);
-        debug_text(ctx, str, x, y + 193, cl, "monuments:", city_data.sentiment.monuments);
-        debug_text(ctx, str, x, y + 205, cl, "religion_coverage:", city_data.sentiment.religion_coverage);
+        debug_text(ctx, str, x, y + 1, cl, "value:", g_city.sentiment.value);
+        debug_text(ctx, str, x, y + 13, cl, "previous_value:", g_city.sentiment.previous_value);
+        debug_text(ctx, str, x, y + 25, cl, "message_delay:", g_city.sentiment.message_delay);
+        debug_text(ctx, str, x, y + 37, cl, "include_tents:", g_city.sentiment.include_huts);
+        debug_text(ctx, str, x, y + 49, cl, "unemployment:", g_city.sentiment.unemployment);
+        debug_text(ctx, str, x, y + 61, cl, "wages:", g_city.sentiment.wages);
+        debug_text(ctx, str, x, y + 73, cl, "low_mood_cause:", g_city.sentiment.low_mood_cause);
+        debug_text(ctx, str, x, y + 85, cl, "protesters:", g_city.sentiment.protesters);
+        debug_text(ctx, str, x, y + 97, cl, "criminals:", g_city.sentiment.criminals);
+        debug_text(ctx, str, x, y + 109, cl, "can_create_mugger:", g_city.sentiment.can_create_mugger);
+        debug_text(ctx, str, x, y + 121, cl, "can_create_protestor:", g_city.sentiment.can_create_protestor);
+        debug_text(ctx, str, x, y + 133, cl, "last_mugger_message:", g_city.sentiment.last_mugger_message);
+        debug_text(ctx, str, x, y + 145, cl, "contribution_taxes:", g_city.sentiment.contribution_taxes);
+        debug_text(ctx, str, x, y + 157, cl, "contribution_wages:", g_city.sentiment.contribution_wages);
+        debug_text(ctx, str, x, y + 169, cl, "contribution_employment:", g_city.sentiment.contribution_employment);
+        debug_text(ctx, str, x, y + 181, cl, "penalty_tents:", g_city.sentiment.penalty_tents);
+        debug_text(ctx, str, x, y + 193, cl, "monuments:", g_city.sentiment.monuments);
+        debug_text(ctx, str, x, y + 205, cl, "religion_coverage:", g_city.sentiment.religion_coverage);
         y += 210;
     }
 

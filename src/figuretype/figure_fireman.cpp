@@ -13,7 +13,7 @@
 #include "city/sentiment.h"
 #include "city/labor.h"
 #include "city/gods.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "figure/service.h"
 #include "grid/building.h"
 
@@ -67,11 +67,11 @@ sound_key figure_fireman::phrase_key() const {
         keys.push_back("city_not_safety_workers_leaving");
     }
 
-    if (city_labor_workers_needed() >= 10) {
+    if (g_city.labor.workers_needed >= 10) {
         keys.push_back("need_workers");
     }
 
-    if (city_labor_workers_needed() >= 20) {
+    if (g_city.labor.workers_needed >= 20) {
         keys.push_back("need_more_workers");
     }
 
@@ -90,7 +90,7 @@ sound_key figure_fireman::phrase_key() const {
         keys.push_back("gods_are_pleasures");
     }
 
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
+    if (g_city.festival.months_since_festival > 6) {  // low entertainment
         keys.push_back("low_entertainment");
     }
 

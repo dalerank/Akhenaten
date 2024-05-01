@@ -1,7 +1,7 @@
 #include "trade_route.h"
 #include "core/game_environment.h"
 #include "io/io_buffer.h"
-#include <city/data_private.h>
+#include "city/city.h"
 
 #define MAX_ROUTES 20
 
@@ -19,11 +19,11 @@ void trade_route_init(int route_id, e_resource resource, int limit) {
 
 int trade_route_limit(int route_id, e_resource resource, int bonus_inclusion) {
     int bonus_points = 0;
-    if (city_data.religion.ra_slightly_increased_trading_months_left > 0)
+    if (g_city.religion.ra_slightly_increased_trading_months_left > 0)
         bonus_points = 1;
-    if (city_data.religion.ra_harshly_reduced_trading_months_left > 0)
+    if (g_city.religion.ra_harshly_reduced_trading_months_left > 0)
         bonus_points -= 2;
-    else if (city_data.religion.ra_slightly_reduced_trading_months_left > 0)
+    else if (g_city.religion.ra_slightly_reduced_trading_months_left > 0)
         bonus_points -= 1;
 
     // just to be safe...

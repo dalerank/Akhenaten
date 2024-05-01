@@ -1,6 +1,6 @@
 #include "music.h"
 
-#include "city/figures.h"
+#include "city/city.h"
 #include "city/population.h"
 #include "core/game_environment.h"
 #include "content/vfs.h"
@@ -140,7 +140,7 @@ void sound_music_update(bool force) {
 
     int track;
     int population = city_population();
-    int total_enemies = city_figures_total_invading_enemies();
+    int total_enemies = g_city.figures_total_invading_enemies();
 
     if (total_enemies >= 32) {
         track = TRACK_COMBAT_LONG;

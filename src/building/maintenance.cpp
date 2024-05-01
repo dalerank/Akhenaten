@@ -5,7 +5,7 @@
 #include "building/destruction.h"
 #include "building/list.h"
 #include "city/buildings.h"
-#include "city/map.h"
+#include "city/city.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "city/sentiment.h"
@@ -239,7 +239,7 @@ void building_maintenance_check_fire_collapse(void) {
 
 void building_maintenance_check_kingdome_access() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access");
-    tile2i entry_point = city_map_entry_point();
+    tile2i entry_point = g_city.map.entry_point;
     map_routing_calculate_distances(entry_point);
     int problem_grid_offset = 0;
     buildings_valid_do( [&problem_grid_offset] (building &b) {
@@ -341,8 +341,8 @@ void building_maintenance_check_kingdome_access() {
     });
     
     {
-        OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Exit Check");
-        map_point& exit_point = city_map_exit_point();
+        //OZZY_PROFILER_SECTION("Game/Run/Tick/Check Rome Access/Exit Check");
+        //map_point& exit_point = city_map_exit_point();
         //if (!map_routing_distance(exit_point.grid_offset())) {
         //    // no route through city
         //    if (city_population() <= 0) {

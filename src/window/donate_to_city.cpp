@@ -1,6 +1,6 @@
 #include "donate_to_city.h"
 
-#include "city/emperor.h"
+#include "city/city.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "graphics/graphics.h"
@@ -67,7 +67,7 @@ static void draw_background(void) {
     arrow_buttons[0].x = button_start;
     arrow_buttons[1].x = arrow_buttons[0].x + arrow_buttons[0].size;
 
-    text_draw_number(city_emperor_donate_amount(), '@', " ", button_start + 76, 248, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw_number(g_city.kingdome.donate_amount, '@', " ", button_start + 76, 248, FONT_NORMAL_WHITE_ON_DARK);
 
     lang_text_draw_centered(13, 4, 336, 288, 160, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw_centered(52, 18, 144, 288, 160, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -124,12 +124,12 @@ static void button_set_amount(int amount_id, int param2) {
     default:
         return;
     }
-    city_emperor_set_donation_amount(amount);
+    g_city.kingdome.set_donation_amount(amount);
     window_invalidate();
 }
 
 static void button_donate(int param1, int param2) {
-    city_emperor_donate_savings_to_city();
+    g_city.kingdome.donate_savings_to_city();
     window_advisors_show();
 }
 
@@ -138,7 +138,7 @@ static void button_cancel(int param1, int param2) {
 }
 
 static void arrow_button_amount(int is_down, int param2) {
-    city_emperor_change_donation_amount(is_down ? -10 : 10);
+    g_city.kingdome.change_donation_amount(is_down ? -10 : 10);
     window_invalidate();
 }
 
@@ -158,6 +158,6 @@ static void get_tooltip(tooltip_context* c) {
 
 void window_donate_to_city_show(void) {
     window_type window = {WINDOW_DONATE_TO_CITY, draw_background, draw_foreground, handle_input, get_tooltip};
-    city_emperor_init_donation_amount();
+    g_city.kingdome.init_donation_amount();
     window_show(&window);
 }

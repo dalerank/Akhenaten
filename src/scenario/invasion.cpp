@@ -1,7 +1,7 @@
 #include "invasion.h"
 
 #include "building/destruction.h"
-#include "city/emperor.h"
+#include "city/city.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -435,7 +435,7 @@ void scenario_invasion_start_from_console(int attack_type, int size, int invasio
         break;
     }
     case ATTACK_TYPE_CAESAR: {
-        city_emperor_force_attack(size);
+        g_city.kingdome.force_attack(size);
         break;
     }
     case ATTACK_TYPE_NATIVES: {

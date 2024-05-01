@@ -1,7 +1,7 @@
 #include "figure/figure.h"
 
 #include "building/building.h"
-#include "city/emperor.h"
+#include "city/city.h"
 #include "city/warning.h"
 #include "core/random.h"
 #include "core/calc.h"
@@ -95,6 +95,7 @@ figure* figure_create(e_figure_type type, tile2i tile, int dir) {
 
     return f;
 }
+
 void figure::figure_delete_UNSAFE() {
     dcast()->on_destroy();
 
@@ -111,8 +112,9 @@ void figure::figure_delete_UNSAFE() {
         if (has_home())
             home()->remove_figure(3);
         break;
+
     case FIGURE_ENEMY_CAESAR_LEGIONARY:
-        city_emperor_mark_soldier_killed();
+        g_city.kingdome.mark_soldier_killed();
         break;
     }
     if (empire_city_id)

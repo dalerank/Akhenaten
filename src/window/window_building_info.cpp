@@ -22,7 +22,7 @@
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/building_storage_yard.h"
-#include "city/map.h"
+#include "city/city.h"
 #include "city/resource.h"
 #include "overlays/city_overlay.h"
 #include "core/calc.h"
@@ -275,9 +275,9 @@ static void init(map_point tile) {
         context.terrain_type = TERRAIN_INFO_DUNES;
 
     } else if (map_terrain_is(grid_offset, TERRAIN_ROCK)) {
-        if (grid_offset == city_map_entry_flag().grid_offset()) {
+        if (grid_offset == g_city.map.entry_flag.grid_offset()) {
             context.terrain_type = TERRAIN_INFO_ENTRY_FLAG;
-        } else if (grid_offset == city_map_exit_flag().grid_offset()) {
+        } else if (grid_offset == g_city.map.exit_flag.grid_offset()) {
             context.terrain_type = TERRAIN_INFO_EXIT_FLAG;
         } else {
             if (map_terrain_is(grid_offset, TERRAIN_ORE)) {

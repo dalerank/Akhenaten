@@ -7,9 +7,8 @@
 #include "city/health.h"
 #include "city/ratings.h"
 #include "city/houses.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "city/coverage.h"
-#include "city/figures.h"
 #include "city/gods.h"
 #include "city/labor.h"
 #include "city/population.h"
@@ -78,11 +77,11 @@ static sound_key policeman_phrase(figure *f) {
         keys.push_back("policeman_no_army_2");
     }
 
-    if (city_labor_workers_needed() >= 10) {
+    if (g_city.labor.workers_needed >= 10) {
         keys.push_back("policeman_need_workers");
     }
 
-    if (city_labor_workers_needed() >= 20) {
+    if (g_city.labor.workers_needed >= 20) {
         keys.push_back("policeman_need_more_workers");
     }
 
@@ -98,11 +97,11 @@ static sound_key policeman_phrase(figure *f) {
         keys.push_back("policeman_gods_are_angry");
     }
 
-    if (city_labor_unemployment_percentage() >= 15) {
+    if (g_city.labor.unemployment_percentage >= 15) {
         keys.push_back("policeman_much_unemployments");
     }
 
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
+    if (g_city.festival.months_since_festival > 6) {  // low entertainment
         keys.push_back("policeman_low_entertainment");
     }
 
@@ -136,12 +135,12 @@ static sound_key governor_phrase(figure *f) {
         nobles_in_city += b.house_population;
     });
 
-    int nolbes_leave_city_pct = calc_percentage<int>(city_data_struct()->migration.nobles_leave_city_this_year, nobles_in_city);
+    int nolbes_leave_city_pct = calc_percentage<int>(g_city.migration.nobles_leave_city_this_year, nobles_in_city);
     if (nolbes_leave_city_pct > 10) {
         return "governor_city_left_much_nobles";
     }
 
-    if (city_data_struct()->festival.months_since_festival < 6) {
+    if (g_city.festival.months_since_festival < 6) {
         return "governor_festival_was_near";
     }
 
@@ -166,7 +165,7 @@ static int tower_sentry_phrase() {
 }
 
 static int soldier_phrase() {
-    int enemies = city_figures_enemies();
+    int enemies = g_city.figure.enemies;
     if (enemies >= 40) {
         return 11;
     } else if (enemies > 20) {

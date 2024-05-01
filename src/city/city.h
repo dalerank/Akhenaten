@@ -2,15 +2,18 @@
 
 #include <stdint.h>
 
-#include "city/emperor.h"
+#include "city/kingdome.h"
+#include "city/entertainment.h"
 #include "city/finance.h"
 #include "city/houses.h"
 #include "city/labor.h"
+#include "city/military.h"
 #include "city/resource.h"
+#include "city/map.h"
 #include "city/gods.h"
 #include "grid/point.h"
 
-struct city_data_t {
+struct city_t {
     struct {
         bool palace_placed;
         int32_t palace_building_id;
@@ -56,46 +59,15 @@ struct city_data_t {
         uint8_t animals_number;
         int32_t attacking_natives;
         int32_t enemies;
-        int32_t imperial_soldiers;
+        int32_t kingdome_soldiers;
         int32_t rioters;
         int32_t soldiers;
         int32_t security_breach_duration;
     } figure;
     house_demands houses;
-    struct {
-        emperor_gift gifts[3];
-        int32_t selected_gift_size;
-        int32_t months_since_gift;
-        int32_t gift_overdose_penalty;
 
-        int32_t debt_state;
-        int32_t months_in_debt;
-
-        int32_t player_rank;
-        int32_t salary_rank;
-        int32_t salary_amount;
-        int32_t donate_amount;
-        int32_t personal_savings;
-        uint8_t player_name_adversary[32];
-        uint8_t player_name[32];
-        uint8_t campaign_player_name[32]; /**< Temp storage for carrying over player name to next campaign mission */
-        struct {
-            int32_t count;
-            int32_t size;
-            int32_t soldiers_killed;
-            int32_t warnings_given;
-            int32_t days_until_invasion;
-            int32_t duration_day_countdown;
-            int32_t retreat_message_shown;
-        } invasion;
-    } emperor;
-    struct {
-        uint8_t total_legions;
-        uint8_t total_soldiers;
-        uint8_t empire_service_legions;
-        int32_t legionary_legions;
-        int32_t native_attack_duration;
-    } military;
+    kingdome_relation_t kingdome;
+    city_military_t military;
     struct {
         uint8_t city;
         int8_t city_foreign_months_left;
@@ -187,17 +159,7 @@ struct city_data_t {
         int32_t last_used_house_remove;
         int32_t graph_order;
     } population;
-    struct {
-        int32_t wages;
-        int32_t wages_kingdome;
-        int32_t workers_available;
-        int32_t workers_employed;
-        int32_t workers_unemployed;
-        int32_t workers_needed;
-        int32_t unemployment_percentage;
-        int32_t unemployment_percentage_for_senate;
-        labor_category_data categories[10];
-    } labor;
+    city_labor_t labor;
     struct {
         int32_t immigration_duration;
         int32_t emigration_duration;
@@ -298,20 +260,7 @@ struct city_data_t {
         bool osiris_double_farm_yield;
         int32_t osiris_flood_will_destroy_active;
     } religion;
-    struct {
-        int32_t theater_shows;
-        int32_t theater_no_shows_weighted;
-        int32_t amphitheater_shows;
-        int32_t amphitheater_no_shows_weighted;
-        int32_t colosseum_shows;
-        int32_t colosseum_no_shows_weighted;
-        int32_t hippodrome_shows;
-        int32_t hippodrome_no_shows_weighted;
-        int32_t venue_needing_shows;
-        int32_t hippodrome_has_race;
-        int32_t hippodrome_message_shown;
-        int32_t colosseum_message_shown;
-    } entertainment;
+    city_entertainment_t entertainment;
     struct {
         struct {
             int32_t months_to_go;
@@ -392,16 +341,7 @@ struct city_data_t {
         e_resource docker_import_resource;
         e_resource docker_export_resource;
     } trade;
-    struct {
-        tile2i entry_point;
-        tile2i exit_point;
-        tile2i entry_flag;
-        tile2i exit_flag;
-        struct {
-            int32_t id;
-            int32_t size;
-        } largest_road_networks[10];
-    } map;
+    city_map_t map;
     struct {
         int32_t has_won;
         int32_t continue_months_left;
@@ -458,7 +398,40 @@ struct city_data_t {
         int32_t faction_id;
         int16_t faction_bytes[2];
     } unused;
+
+    void houses_reset_demands();
+    void houses_calculate_culture_demands();
+
+    void migration_nobles_leave_city(int num_people);
+
+    void init();
+    void init_custom_map();
+    void init_campaign_mission();
+    int allowed_foods(int i);
+    void set_allowed_food(int i, int resource);
+
+    void migration_update_status();
+    void create_immigrants(int num_people);
+    void create_emigrants(int num_people);
+    void create_migrants();
+    void migration_update();
+    void migration_determine_reason();
+    int migration_problems_cause() { return migration.no_immigration_cause; }
+    void migration_advance_year() { migration.nobles_leave_city_this_year = 0; }
+    int migration_no_room_for_immigrants();
+    int migration_percentage() { return migration.percentage; }
+    int migration_newcomers() { return migration.newcomers; }
+    void migration_reset_newcomers() { migration.newcomers = 0; }
+
+    void figures_reset();
+    void figures_add_animal();
+    void figures_add_attacking_native();
+    void figures_add_enemy();
+    void figures_add_kingdome_soldier();
+    void figures_add_rioter(int is_attacking);
+    void figures_add_soldier();
+    int figures_total_invading_enemies();
+    bool figures_has_security_breach();
 };
 
-extern city_data_t city_data;
-const city_data_t* city_data_struct();
+extern city_t g_city;

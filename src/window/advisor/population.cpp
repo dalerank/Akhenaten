@@ -1,6 +1,6 @@
 #include "population.h"
 
-#include "city/finance.h"
+#include "city/city.h"
 #include "city/migration.h"
 #include "city/population.h"
 #include "city/ratings.h"
@@ -337,18 +337,18 @@ static void print_history_info(void) {
     text_draw_number(city_resource_food_types_available(), '@', " ", 75 + width, 360, FONT_NORMAL_WHITE_ON_DARK);
 
     // immigration
-    int newcomers = city_migration_newcomers();
+    int newcomers = g_city.migration_newcomers();
     if (newcomers >= 5) {
         lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE_ON_DARK);
         width = text_draw_number(newcomers, '@', " ", 70, 396, FONT_NORMAL_WHITE_ON_DARK);
         lang_text_draw(55, 17, 70 + width, 396, FONT_NORMAL_WHITE_ON_DARK);
-    } else if (city_migration_no_room_for_immigrants()) {
+    } else if (g_city.migration_no_room_for_immigrants()) {
         lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE_ON_DARK);
         lang_text_draw(55, 19, 75, 396, FONT_NORMAL_WHITE_ON_DARK);
-    } else if (city_migration_percentage() < 80) {
+    } else if (g_city.migration_percentage() < 80) {
         lang_text_draw(55, 25, 75, 378, FONT_NORMAL_WHITE_ON_DARK);
         int text_id;
-        switch (city_migration_problems_cause()) {
+        switch (g_city.migration_problems_cause()) {
         case NO_IMMIGRATION_LOW_WAGES:
             text_id = 20;
             break;

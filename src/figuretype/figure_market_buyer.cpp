@@ -23,7 +23,7 @@
 #include "city/gods.h"
 #include "city/ratings.h"
 #include "city/labor.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "city/sentiment.h"
 
 #include "js/js_game.h"
@@ -111,11 +111,11 @@ sound_key figure_market_buyer::phrase_key() const {
         keys.push_back("buyer_city_is_bad_reputation");
     }
 
-    if (city_labor_unemployment_percentage() >= 15) {
+    if (g_city.labor.unemployment_percentage >= 15) {
         keys.push_back("buyer_too_much_unemployments");
     }
 
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
+    if (g_city.festival.months_since_festival > 6) {  // low entertainment
         keys.push_back("buyer_low_entertainment");
     }
 
@@ -310,10 +310,10 @@ bool figure_market_buyer::window_info_background(object_info &c) {
 int figure_market_buyer::take_food_from_granary(building* market, building* b) {
     int resource;
     switch (base.collecting_item_id) {
-    case 0: resource = city_allowed_foods(0); break;
-    case 1: resource = city_allowed_foods(1); break;
-    case 2: resource = city_allowed_foods(2); break;
-    case 3: resource = city_allowed_foods(3); break;
+    case 0: resource = g_city.allowed_foods(0); break;
+    case 1: resource = g_city.allowed_foods(1); break;
+    case 2: resource = g_city.allowed_foods(2); break;
+    case 3: resource = g_city.allowed_foods(3); break;
 
     default:
     return 0;

@@ -9,7 +9,7 @@
 #include "building/storage.h"
 #include "config/config.h"
 #include "city/city_data.h"
-#include "city/emperor.h"
+#include "city/city.h"
 #include "city/map.h"
 #include "city/message.h"
 #include "city/military.h"
@@ -134,7 +134,7 @@ static void pre_load() { // do we NEED this...?
     // clear data
     city_victory_reset();
     Planner.reset();
-    city_data_init();
+    g_city.init();
     city_message_init_scenario();
     game_state_init();
     game.animation_timers_init();
@@ -208,15 +208,15 @@ static void post_load() {
 
     // traders / empire
     trade_prices_reset();
-    city_emperor_init_scenario(scenario_campaign_rank());
+    g_city.kingdome.init_scenario(scenario_campaign_rank());
 
     // city data special cases
     switch (last_loaded) {
     case LOADED_MISSION:
-        city_data_init_campaign_mission();
+        g_city.init_campaign_mission();
         break;
     case LOADED_CUSTOM_MAP:
-        city_data_init_custom_map();
+        g_city.init_custom_map();
         break;
     }
 
@@ -672,10 +672,8 @@ void GamestateIO::start_loaded_file() {
         figure_create_fishing_points();
         figure_create_herds();
 
-        tile2i entry = scenario_map_entry();
-        tile2i exit = scenario_map_exit();
-        city_map_set_entry_point(entry);
-        city_map_set_exit_point(exit);
+        g_city.map.entry_point = scenario_map_entry();
+        g_city.map.exit_point = scenario_map_exit();
 
         // game time
         game_time_init(scenario_property_start_year());

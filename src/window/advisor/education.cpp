@@ -2,7 +2,7 @@
 
 #include "building/count.h"
 #include "city/coverage.h"
-#include "city/houses.h"
+#include "city/city.h"
 #include "city/population.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
@@ -16,21 +16,21 @@
 ui::advisor_education_window g_advisor_education_window;
 
 static int get_education_advice() {
-    const house_demands* demands = city_houses_demands();
-    if (demands->education == 1)
-        return demands->requiring.school ? 1 : 0;
-    else if (demands->education == 2)
-        return demands->requiring.library ? 3 : 2;
-    else if (demands->education == 3)
+    const house_demands &demands = g_city.houses;
+    if (demands.education == 1)
+        return demands.requiring.school ? 1 : 0;
+    else if (demands.education == 2)
+        return demands.requiring.library ? 3 : 2;
+    else if (demands.education == 3)
         return 4;
 
     int advice_id;
     int coverage_school = city_culture_coverage_school();
     int coverage_academy = city_culture_coverage_academy();
     int coverage_library = city_culture_coverage_library();
-    if (!demands->requiring.school)
+    if (!demands.requiring.school)
         advice_id = 5; // no demands yet
-    else if (!demands->requiring.library) {
+    else if (!demands.requiring.library) {
         if (coverage_school >= 100 && coverage_academy >= 100)
             advice_id = 6; // education is perfect
         else if (coverage_school <= coverage_academy)

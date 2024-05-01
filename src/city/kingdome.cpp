@@ -1,0 +1,288 @@
+#include "kingdome.h"
+
+#include "city/city.h"
+#include "city/finance.h"
+#include "city/message.h"
+#include "city/ratings.h"
+#include "core/calc.h"
+#include "core/profiler.h"
+#include "figure/formation.h"
+#include "game/difficulty.h"
+#include "game/time.h"
+#include "scenario/invasion.h"
+#include "scenario/property.h"
+
+const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
+
+static int cheated_invasion = 0;
+
+void kingdome_relation_t::init_scenario(int rank) {
+    g_city.ratings.kingdom = scenario_starting_kingdom();
+    personal_savings = scenario_starting_personal_savings();
+    player_rank = rank;
+    int salary_rank = rank;
+    if (scenario_is_custom()) {
+        personal_savings = 0;
+        player_rank = scenario_property_player_rank();
+        salary_rank = scenario_property_player_rank();
+    }
+
+    if (salary_rank > 10) {
+        salary_rank = 10;
+    }
+
+    set_salary_rank(salary_rank);
+}
+
+void kingdome_relation_t::update_debt_state() {
+    if (g_city.finance.treasury >= 0) {
+        months_in_debt = -1;
+        return;
+    }
+    if (debt_state == 0) {
+        // provide bailout
+        int rescue_loan = difficulty_adjust_money(scenario_rescue_loan());
+        city_finance_process_donation(rescue_loan);
+        city_finance_calculate_totals();
+
+        debt_state = 1;
+        months_in_debt = 0;
+        city_message_post(true, MESSAGE_CITY_IN_DEBT, 0, 0);
+        city_ratings_reduce_prosperity_after_bailout();
+    } else if (debt_state == 1) {
+        debt_state = 2;
+        months_in_debt = 0;
+        city_message_post(true, MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
+        city_ratings_change_kingdom(-5);
+    } else if (debt_state == 2) {
+        if (months_in_debt == -1) {
+            city_message_post(true, MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
+            months_in_debt = 0;
+        }
+        if (game_time_day() == 0)
+            months_in_debt++;
+
+        if (months_in_debt >= 12) {
+            debt_state = 3;
+            months_in_debt = 0;
+            if (!g_city.figure.kingdome_soldiers) {
+                city_message_post(true, MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
+                city_ratings_change_kingdom(-10);
+            }
+        }
+    } else if (debt_state == 3) {
+        if (months_in_debt == -1) {
+            city_message_post(true, MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
+            months_in_debt = 0;
+        }
+        if (game_time_day() == 0)
+            months_in_debt++;
+
+        if (months_in_debt >= 12) {
+            debt_state = 4;
+            months_in_debt = 0;
+            if (!g_city.figure.kingdome_soldiers)
+                city_ratings_limit_kingdom(10);
+        }
+    }
+}
+
+void kingdome_relation_t::process_invasion() {
+    if (g_city.figure.kingdome_soldiers && !cheated_invasion) {
+        // caesar invasion in progress
+        invasion.duration_day_countdown--;
+        if (g_city.ratings.kingdom >= 35 && invasion.duration_day_countdown < 176)
+            formation_caesar_pause();
+        else if (g_city.ratings.kingdom >= 22) {
+            if (invasion.duration_day_countdown > 0) {
+                formation_caesar_retreat();
+                if (!invasion.retreat_message_shown) {
+                    invasion.retreat_message_shown = 1;
+                    city_message_post(true, MESSAGE_CAESAR_ARMY_RETREAT, 0, 0);
+                }
+            } else if (invasion.duration_day_countdown == 0)
+                city_message_post(true, MESSAGE_CAESAR_ARMY_CONTINUE, 0, 0); // a year has passed (11 months), siege goes on
+        }
+    } else if (invasion.soldiers_killed
+               && invasion.soldiers_killed >= invasion.size) {
+        // player defeated caesar army
+        invasion.size = 0;
+        invasion.soldiers_killed = 0;
+        if (g_city.ratings.kingdom < 35) {
+            city_ratings_change_kingdom(10);
+            if (invasion.count < 2)
+                city_message_post(true, MESSAGE_CAESAR_RESPECT_1, 0, 0);
+            else if (invasion.count < 3)
+                city_message_post(true, MESSAGE_CAESAR_RESPECT_2, 0, 0);
+            else {
+                city_message_post(true, MESSAGE_CAESAR_RESPECT_3, 0, 0);
+            }
+        }
+    } else if (invasion.days_until_invasion <= 0) {
+        if (g_city.ratings.kingdom <= 10) {
+            // warn player that caesar is angry and will invade in a year
+            invasion.warnings_given++;
+            invasion.days_until_invasion = 192;
+            if (invasion.warnings_given <= 1)
+                city_message_post(true, MESSAGE_CAESAR_WRATH, 0, 0);
+        }
+    } else {
+        invasion.days_until_invasion--;
+        if (invasion.days_until_invasion == 0) {
+            // invade!
+            int size;
+            if (invasion.count == 0)
+                size = 32;
+            else if (invasion.count == 1)
+                size = 64;
+            else if (invasion.count == 2)
+                size = 96;
+            else {
+                size = 144;
+            }
+            if (scenario_invasion_start_from_caesar(size)) {
+                cheated_invasion = 0;
+                invasion.count++;
+                invasion.duration_day_countdown = 192;
+                invasion.retreat_message_shown = 0;
+                invasion.size = size;
+                invasion.soldiers_killed = 0;
+            }
+        }
+    }
+}
+
+void kingdome_relation_t::update() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Emperor Update");
+    update_debt_state();
+    //if (GAME_ENV == ENGINE_ENV_C3) { // Temporary disable Caesar invasion in Egypt
+    //    process_caesar_invasion();
+    //}
+}
+
+void kingdome_relation_t::init_selected_gift() {
+    if (selected_gift_size == GIFT_LAVISH && !g_city.kingdome.can_send_gift(GIFT_LAVISH))
+        selected_gift_size = GIFT_GENEROUS;
+
+    if (selected_gift_size == GIFT_GENEROUS && !g_city.kingdome.can_send_gift(GIFT_GENEROUS))
+        selected_gift_size = GIFT_MODEST;
+}
+
+bool kingdome_relation_t::set_gift_size(int size) {
+    if (gifts[size].cost <= personal_savings) {
+        selected_gift_size = size;
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+int kingdome_relation_t::can_send_gift(int size) {
+    return gifts[size].cost <= personal_savings;
+}
+
+void kingdome_relation_t::calculate_gift_costs() {
+    int savings = personal_savings;
+    gifts[GIFT_MODEST].cost = savings / 8 + 20;
+    gifts[GIFT_GENEROUS].cost = savings / 4 + 50;
+    gifts[GIFT_LAVISH].cost = savings / 2 + 100;
+}
+
+void kingdome_relation_t::send_gift() {
+    int size = selected_gift_size;
+    if (size < GIFT_MODEST || size > GIFT_LAVISH)
+        return;
+
+    int cost = gifts[size].cost;
+    if (cost > personal_savings)
+        return;
+
+    if (gift_overdose_penalty <= 0) {
+        gift_overdose_penalty = 1;
+        if (size == GIFT_MODEST)
+            city_ratings_change_kingdom(3);
+        else if (size == GIFT_GENEROUS)
+            city_ratings_change_kingdom(5);
+        else if (size == GIFT_LAVISH)
+            city_ratings_change_kingdom(10);
+
+    } else if (gift_overdose_penalty == 1) {
+        gift_overdose_penalty = 2;
+        if (size == GIFT_MODEST)
+            city_ratings_change_kingdom(1);
+        else if (size == GIFT_GENEROUS)
+            city_ratings_change_kingdom(3);
+        else if (size == GIFT_LAVISH)
+            city_ratings_change_kingdom(5);
+
+    } else if (gift_overdose_penalty == 2) {
+        gift_overdose_penalty = 3;
+        if (size == GIFT_MODEST)
+            city_ratings_change_kingdom(0);
+        else if (size == GIFT_GENEROUS)
+            city_ratings_change_kingdom(1);
+        else if (size == GIFT_LAVISH)
+            city_ratings_change_kingdom(3);
+
+    } else if (gift_overdose_penalty == 3) {
+        gift_overdose_penalty = 4;
+        if (size == GIFT_MODEST)
+            city_ratings_change_kingdom(0);
+        else if (size == GIFT_GENEROUS)
+            city_ratings_change_kingdom(0);
+        else if (size == GIFT_LAVISH)
+            city_ratings_change_kingdom(1);
+    }
+
+    months_since_gift = 0;
+    // rotate gift type
+    gifts[size].id++;
+    if (gifts[size].id >= 4)
+        gifts[size].id = 0;
+
+    personal_savings -= cost;
+}
+
+int kingdome_relation_t::salary_for_rank(int rank) { 
+    return SALARY_FOR_RANK[rank];
+}
+
+void kingdome_relation_t::set_salary_rank(int rank) {
+    salary_rank = rank;
+    salary_amount = SALARY_FOR_RANK[rank];
+}
+
+void kingdome_relation_t::init_donation_amount() {
+    if (donate_amount > personal_savings)
+        donate_amount = personal_savings;
+}
+
+void kingdome_relation_t::set_donation_amount(int amount) {
+    donate_amount = calc_bound(amount, 0, personal_savings);
+}
+
+void kingdome_relation_t::change_donation_amount(int change) {
+    g_city.kingdome.set_donation_amount(donate_amount + change);
+}
+
+void kingdome_relation_t::donate_savings_to_city() {
+    city_finance_process_donation(donate_amount);
+    personal_savings -= donate_amount;
+    city_finance_calculate_totals();
+}
+
+void kingdome_relation_t::mark_soldier_killed() {
+    invasion.soldiers_killed++;
+}
+
+void kingdome_relation_t::force_attack(int size) {
+    if (scenario_invasion_start_from_caesar(size)) {
+        cheated_invasion = 1;
+        invasion.count++;
+        invasion.days_until_invasion = 0;
+        invasion.duration_day_countdown = 192;
+        invasion.retreat_message_shown = 0;
+        invasion.size = size;
+        invasion.soldiers_killed = 0;
+    }
+}

@@ -3,8 +3,7 @@
 #include "building/building.h"
 #include "building/house.h"
 #include "building/construction/build_planner.h"
-#include "city/data_private.h"
-#include "city/figures.h"
+#include "city/city.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "game/time.h"
@@ -21,6 +20,7 @@ struct vistory_data_t {
 };
 
 vistory_data_t g_vistory_data;
+static auto &city_data = g_city;
 
 void city_victory_reset(void) {
     g_vistory_data.state = VICTORY_STATE_NONE;
@@ -119,11 +119,11 @@ static e_victory_state determine_victory_state(void) {
         }
     }
 
-    if (city_figures_total_invading_enemies() > 2 + city_data.figure.soldiers) {
+    if (g_city.figures_total_invading_enemies() > 2 + city_data.figure.soldiers) {
         if (city_data.population.population < city_data.population.highest_ever / 4)
             state = VICTORY_STATE_LOST;
     }
-    if (city_figures_total_invading_enemies() > 0) {
+    if (g_city.figures_total_invading_enemies() > 0) {
         if (city_data.population.population <= 0)
             state = VICTORY_STATE_LOST;
     }
@@ -176,8 +176,8 @@ void city_victory_continue_governing(int months) {
     city_data.mission.has_won = 1;
     city_data.mission.continue_months_left += months;
     city_data.mission.continue_months_chosen = months;
-    city_data.emperor.salary_rank = 0;
-    city_data.emperor.salary_amount = 0;
+    city_data.kingdome.salary_rank = 0;
+    city_data.kingdome.salary_amount = 0;
     city_finance_update_salary();
 }
 

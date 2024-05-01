@@ -7,6 +7,7 @@
 #include "city/labor.h"
 #include "city/ratings.h"
 #include "city/houses.h"
+#include "city/city.h"
 
 #include "js/js_game.h"
 
@@ -49,7 +50,7 @@ sound_key figure_musician::phrase_key() const {
         keys.push_back("no_food_in_city");
     }
 
-    if (city_labor_workers_needed() >= 10) {
+    if (g_city.labor.workers_needed >= 10) {
         keys.push_back("need_workers");
     }
 
@@ -67,8 +68,8 @@ sound_key figure_musician::phrase_key() const {
         keys.push_back("much_unemployments");
     }
 
-    const house_demands *demands = city_houses_demands();
-    if (demands->missing.more_entertainment == 0) {
+    const house_demands &demands = g_city.houses;
+    if (demands.missing.more_entertainment == 0) {
         keys.push_back("no_entertainment_need");
     }
 

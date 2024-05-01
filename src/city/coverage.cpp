@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "building/count.h"
 #include "city/constants.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "city/entertainment.h"
 #include "city/festival.h"
 #include "city/constants.h"
@@ -28,6 +28,7 @@ struct coverage_data_t {
 };
 
 coverage_data_t g_coverage;
+static auto &city_data = g_city;
 
 int city_culture_coverage_booth(void) {
     return g_coverage.booth;
@@ -177,7 +178,7 @@ void city_culture_calculate(void) {
         city_data.culture.average_health /= num_houses;
     }
 
-    city_entertainment_calculate_shows();
+    g_city.entertainment.calculate_shows();
     city_festival_calculate_costs();
 }
 

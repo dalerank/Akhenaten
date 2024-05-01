@@ -4,7 +4,7 @@
 #include "building/building_type.h"
 #include "city/finance.h"
 #include "city/health.h"
-#include "city/labor.h"
+#include "city/city.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "city/trade.h"
@@ -31,14 +31,14 @@ static const int RANDOM_EVENT_PROBABILITY[128]
 
 static void raise_wages(void) {
     if (g_scenario_data.random_events.raise_wages) {
-        if (city_labor_raise_wages_rome())
+        if (g_city.labor.raise_wages_kingdome())
             city_message_post(true, MESSAGE_ROME_RAISES_WAGES, 0, 0);
     }
 }
 
 static void lower_wages(void) {
     if (g_scenario_data.random_events.lower_wages) {
-        if (city_labor_lower_wages_rome())
+        if (g_city.labor.lower_wages_kingdome())
             city_message_post(true, MESSAGE_ROME_LOWERS_WAGES, 0, 0);
     }
 }

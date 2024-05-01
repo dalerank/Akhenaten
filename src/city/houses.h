@@ -35,6 +35,3 @@ struct house_demands {
     int entertainment;
 };
 
-void city_houses_reset_demands();
-house_demands* city_houses_demands();
-void city_houses_calculate_culture_demands();

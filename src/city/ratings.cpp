@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "building/model.h"
 #include "city/coverage.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "city/population.h"
 #include "core/calc.h"
 #include "game/time.h"
@@ -12,6 +12,8 @@
 
 #include "dev/debug.h"
 #include <iostream>
+
+static auto &city_data = g_city;
 
 declare_console_command_p(addprosperity, game_cheat_add_prosperity)
 void game_cheat_add_prosperity(std::istream &is, std::ostream &os) {
@@ -233,7 +235,7 @@ static void update_prosperity_explanation(void) {
 
 static void update_monument_explanation(void) {
     int reason;
-    if (city_data.figure.imperial_soldiers)
+    if (city_data.figure.kingdome_soldiers)
         reason = 8; // FIXED: 7+8 interchanged
     else if (city_data.figure.enemies)
         reason = 7;
@@ -259,8 +261,8 @@ static void update_monument_explanation(void) {
 
 void city_ratings_update_kingdom_explanation(void) {
     city_data.ratings.kingdom_salary_penalty = 0;
-    int salary_delta = city_data.emperor.salary_rank - city_data.emperor.player_rank;
-    if (city_data.emperor.player_rank != 0) {
+    int salary_delta = city_data.kingdome.salary_rank - city_data.kingdome.player_rank;
+    if (city_data.kingdome.player_rank != 0) {
         if (salary_delta > 0)
             city_data.ratings.kingdom_salary_penalty = salary_delta + 1;
 
@@ -504,9 +506,9 @@ static void update_kingdom_rating(int is_yearly_update) {
         city_data.ratings.kingdom = 50;
         return;
     }
-    city_data.emperor.months_since_gift++;
-    if (city_data.emperor.months_since_gift >= 12)
-        city_data.emperor.gift_overdose_penalty = 0;
+    city_data.kingdome.months_since_gift++;
+    if (city_data.kingdome.months_since_gift >= 12)
+        city_data.kingdome.gift_overdose_penalty = 0;
 
     if (is_yearly_update) {
         city_data.ratings.kingdom_salary_penalty = 0;
@@ -526,8 +528,8 @@ static void update_kingdom_rating(int is_yearly_update) {
             }
         }
         // salary
-        int salary_delta = city_data.emperor.salary_rank - city_data.emperor.player_rank;
-        if (city_data.emperor.player_rank != 0) {
+        int salary_delta = city_data.kingdome.salary_rank - city_data.kingdome.player_rank;
+        if (city_data.kingdome.player_rank != 0) {
             if (salary_delta > 0) {
                 // salary too high
                 city_data.ratings.kingdom -= salary_delta;

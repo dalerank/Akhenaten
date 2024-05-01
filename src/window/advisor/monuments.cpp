@@ -1,7 +1,7 @@
 #include "monuments.h"
 
 #include "city/city_data.h"
-#include "city/emperor.h"
+#include "city/city.h"
 #include "city/finance.h"
 #include "city/military.h"
 #include "city/ratings.h"
@@ -95,7 +95,7 @@ static void draw_request(int index, const scenario_request* request) {
 int ui::advisor_monuments_window::draw_background() {
     painter ctx = game.painter();
     int military_resource = RESOURCE_WEAPONS;
-    city_emperor_calculate_gift_costs();
+    g_city.kingdome.calculate_gift_costs();
 
     outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 2, vec2i{10, 10});
@@ -171,17 +171,17 @@ static int get_request_status(int index) {
 void ui::advisor_monuments_window::draw_foreground() {
     inner_panel_draw(64, 324, 32, 6);
 
-    lang_text_draw(32, city_emperor_rank(), 72, 338, FONT_LARGE_BLACK_ON_DARK);
+    lang_text_draw(32, g_city.kingdome.player_rank, 72, 338, FONT_LARGE_BLACK_ON_DARK);
 
     int width = lang_text_draw(52, 1, 72, 372, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw_money(city_emperor_personal_savings(), 80 + width, 372, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw_money(g_city.kingdome.personal_savings, 80 + width, 372, FONT_NORMAL_WHITE_ON_DARK);
 
     button_border_draw(320, 367, 250, 20, focus_button_id == 1);
     lang_text_draw_centered(52, 2, 320, 372, 250, FONT_NORMAL_WHITE_ON_DARK);
 
     button_border_draw(70, 393, 500, 20, focus_button_id == 2);
-    width = lang_text_draw(52, city_emperor_salary_rank() + 4, 120, 398, FONT_NORMAL_WHITE_ON_DARK);
-    width += text_draw_number(city_emperor_salary_amount(), '@', " ", 120 + width, 398, FONT_NORMAL_WHITE_ON_DARK);
+    width = lang_text_draw(52, g_city.kingdome.salary_rank + 4, 120, 398, FONT_NORMAL_WHITE_ON_DARK);
+    width += text_draw_number(g_city.kingdome.salary_amount, '@', " ", 120 + width, 398, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(52, 3, 120 + width, 398, FONT_NORMAL_WHITE_ON_DARK);
 
     button_border_draw(320, 341, 250, 20, focus_button_id == 3);

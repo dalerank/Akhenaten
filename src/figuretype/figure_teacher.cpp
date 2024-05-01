@@ -1,7 +1,7 @@
 #include "figure_teacher.h"
 
 #include "city/health.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "city/sentiment.h"
 #include "city/ratings.h"
 
@@ -43,7 +43,7 @@ sound_key figure_teacher::phrase_key() const {
         keys.push_back("teacher_desease_can_start_at_any_moment");
     }
 
-    if (city_data_struct()->festival.months_since_festival > 6) {  // low entertainment
+    if (g_city.festival.months_since_festival > 6) {  // low entertainment
         keys.push_back("teacher_low_entertainment");
     }
 
@@ -59,7 +59,7 @@ sound_key figure_teacher::phrase_key() const {
         keys.push_back("teacher_gods_are_angry");
     }
 
-    if (city_labor_workers_needed() >= 10) {
+    if (g_city.labor.workers_needed >= 10) {
         keys.push_back("teacher_need_workers");
     }
 
@@ -67,7 +67,7 @@ sound_key figure_teacher::phrase_key() const {
         keys.push_back("teacher_low_rating");
     }
 
-    if (city_labor_unemployment_percentage() >= 15) {
+    if (g_city.labor.unemployment_percentage >= 15) {
         keys.push_back("teacher_much_unemployments");
     }
 

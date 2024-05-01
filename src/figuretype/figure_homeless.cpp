@@ -1,6 +1,6 @@
 #include "figure_homeless.h"
 
-#include "city/map.h"
+#include "city/city.h"
 #include "core/profiler.h"
 #include "core/random.h"
 #include "figuretype/migrant.h"
@@ -31,7 +31,7 @@ void figure_create_homeless(tile2i tile, int num_people) {
 
 void figure_homeless::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Homeless");
-    tile2i exit = city_map_exit_point();
+    tile2i exit = g_city.map.exit_point;
     switch (action_state()) {
     case FIGURE_ACTION_7_HOMELESS_CREATED:
         base.anim_frame = 0;

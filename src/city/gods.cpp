@@ -6,7 +6,7 @@
 #include "building/industry.h"
 #include "building/building_storage_yard.h"
 #include "city/coverage.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "city/health.h"
 #include "city/message.h"
 #include "city/sentiment.h"
@@ -30,6 +30,7 @@
 #include <algorithm>
 #include <array>
 
+static auto &city_data = g_city;
 void city_gods_reset() {
     for (auto &god: city_data.religion.gods) {
         god.type = e_god(std::distance(city_data.religion.gods, &god));

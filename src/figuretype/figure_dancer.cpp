@@ -4,7 +4,7 @@
 #include "city/gods.h"
 #include "city/health.h"
 #include "city/sentiment.h"
-#include "city/labor.h"
+#include "city/city.h"
 #include "city/ratings.h"
 #include "sound/effect.h"
 
@@ -45,7 +45,7 @@ sound_key figure_dancer::phrase_key() const {
         keys.push_back("no_food_in_city");
     }
 
-    if (city_labor_workers_needed() >= 10) {
+    if (g_city.labor.workers_needed >= 10) {
         keys.push_back("need_workers");
     }
 

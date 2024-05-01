@@ -13,7 +13,7 @@
 #include "window/building/distribution.h"
 #include "city/buildings.h"
 #include "city/finance.h"
-#include "city/military.h"
+#include "city/city.h"
 #include "city/warnings.h"
 #include "city/resource.h"
 #include "city/labor.h"
@@ -566,7 +566,7 @@ storage_worker_task building_storageyard_deliver_weapons(building *warehouse) {
     building *space = warehouse;
 
     if (building_count_active(BUILDING_RECRUITER) > 0 
-        && (city_military_has_legionary_legions() || config_get(CONFIG_GP_CH_RECRUITER_NOT_NEED_FORTS))
+        && (g_city.military.has_infantry_batalions() || config_get(CONFIG_GP_CH_RECRUITER_NOT_NEED_FORTS))
         && !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
         auto result = building_get_asker_for_resource(warehouse->tile, BUILDING_RECRUITER, RESOURCE_WEAPONS, warehouse->road_network_id, warehouse->distance_from_entry);
         building* barracks = building_get(result.building_id);

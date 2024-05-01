@@ -4,7 +4,7 @@
 #include "city/sentiment.h"
 #include "city/labor.h"
 #include "city/gods.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "figure/service.h"
 
 #include "js/js_game.h"
@@ -65,12 +65,12 @@ sound_key figure_architector::phrase_key() const {
         {"city_not_safety", formation_get_num_forts() < 0},
         {"high_damage_level", hoeses_damage_high > 0},
         {"no_food_in_city", city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD},
-        {"need_more_workers",city_labor_workers_needed() >= 20},
+        {"need_more_workers", g_city.labor.workers_needed >= 20},
         {"gods_are_angry", city_gods_least_mood() <= GOD_MOOD_INDIFIRENT},
         {"city_has_bad_reputation", city_sentiment() < 30},
         {"city_is_good", city_sentiment() > 50},
         {"city_is_bad",city_sentiment() >= 30},
-        {"low_entertainment",city_data_struct()->festival.months_since_festival > 6},
+        {"low_entertainment", g_city.festival.months_since_festival > 6},
         {"city_is_amazing", city_sentiment() > 90},
         {"i_am_works", true}
     };

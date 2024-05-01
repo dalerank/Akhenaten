@@ -3,6 +3,7 @@
 #include "game/tutorial.h"
 #include "city/gods.h"
 #include "city/labor.h"
+#include "city/city.h"
 #include "city/sentiment.h"
 #include "city/houses.h"
 #include "city/health.h"
@@ -84,7 +85,7 @@ sound_key figure_priest::phrase_key() const {
         keys.push_back(create_key("god_love_festival"));
     }
 
-    if (city_labor_workers_needed() >= 10) {
+    if (g_city.labor.workers_needed >= 10) {
         keys.push_back(create_key("need_workers"));
     }
 
@@ -92,8 +93,8 @@ sound_key figure_priest::phrase_key() const {
         keys.push_back(create_key("city_low_mood"));
     }
 
-    const house_demands *demands = city_houses_demands();
-    if (demands->missing.more_entertainment > 1) {  // low entertainment
+    const house_demands &demands = g_city.houses;
+    if (demands.missing.more_entertainment > 1) {  // low entertainment
         keys.push_back(create_key("low_entertainment"));
     } else {
         keys.push_back(create_key("need_entertainment"));

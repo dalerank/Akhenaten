@@ -1,7 +1,8 @@
 #include "mission.h"
 
-#include "city/data_private.h"
+#include "city/city.h"
 
+static auto &city_data = g_city;
 void city_mission_reset_save_start(void) {
     city_data.mission.start_saved_game_written = 0;
 }

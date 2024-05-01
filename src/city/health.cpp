@@ -3,13 +3,14 @@
 #include "building/building.h"
 #include "building/house.h"
 #include "building/destruction.h"
-#include "city/data_private.h"
+#include "city/city.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/tutorial.h"
 #include "scenario/property.h"
 
+static auto &city_data = g_city;
 int city_health() {
     return city_data.health.value;
 }
