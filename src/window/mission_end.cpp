@@ -1,6 +1,5 @@
 #include "mission_end.h"
 
-#include "city/city_data.h"
 #include "city/city.h"
 #include "city/finance.h"
 #include "city/population.h"

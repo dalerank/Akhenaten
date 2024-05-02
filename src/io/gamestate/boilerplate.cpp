@@ -8,7 +8,6 @@
 #include "building/properties.h"
 #include "building/storage.h"
 #include "config/config.h"
-#include "city/city_data.h"
 #include "city/city.h"
 #include "city/map.h"
 #include "city/message.h"

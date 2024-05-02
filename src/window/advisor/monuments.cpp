@@ -1,6 +1,5 @@
 #include "monuments.h"
 
-#include "city/city_data.h"
 #include "city/city.h"
 #include "city/finance.h"
 #include "city/military.h"

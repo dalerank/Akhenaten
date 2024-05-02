@@ -1,6 +1,6 @@
 #include "victory_dialog.h"
 
-#include "city/city_data.h"
+#include "city/city.h"
 #include "city/victory.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"

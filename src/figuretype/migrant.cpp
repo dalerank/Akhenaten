@@ -4,7 +4,7 @@
 #include "building/model.h"
 #include "city/map.h"
 #include "city/population.h"
-#include "city/city_data.h"
+#include "city/city.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "core/profiler.h"
