@@ -36,9 +36,3 @@ void city_ratings_reduce_kingdom_missed_request(int penalty);
 void city_ratings_limit_kingdom(int max_kingdom);
 
 void city_ratings_update_kingdom_explanation();
-
-void city_ratings_update_explanations(void);
-
-void city_ratings_update(bool is_yearly_update);
-
-int city_ratings_prosperity_max();

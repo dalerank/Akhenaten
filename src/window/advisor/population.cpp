@@ -277,7 +277,7 @@ static void print_society_info(void) {
 
     // Housing prosperity cap
     width = text_draw(translation_for(TR_ADVISOR_HOUSING_PROSPERITY_RATING), 75, 342, FONT_NORMAL_WHITE_ON_DARK, 0);
-    text_draw_number(city_ratings_prosperity_max(), '@', " ", 75 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw_number(g_city.ratings.prosperity_max, '@', " ", 75 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
 
     // Percent patricians
     width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_MANORS), 75, 360, FONT_NORMAL_WHITE_ON_DARK, 0);

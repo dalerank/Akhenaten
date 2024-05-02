@@ -112,7 +112,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a2);
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a3);
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a4);
-    iob->bind(BIND_SIGNATURE_INT8, &data.building.unknown_value);
+    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.unknown_value);
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a7);
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a6);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.tax_percentage);
@@ -179,10 +179,10 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, data.map.exit_point.private_access(_X));
     iob->bind(BIND_SIGNATURE_INT16, data.map.exit_point.private_access(_Y));
     iob->bind(BIND_SIGNATURE_INT32, data.map.exit_point.private_access(_GRID_OFFSET));
-    iob->bind(BIND_SIGNATURE_INT16, data.building.palace_point.private_access(_X));
-    iob->bind(BIND_SIGNATURE_INT16, data.building.palace_point.private_access(_Y));
-    iob->bind(BIND_SIGNATURE_INT32, data.building.palace_point.private_access(_GRID_OFFSET));
-    iob->bind(BIND_SIGNATURE_INT32, &data.building.palace_building_id);
+    iob->bind(BIND_SIGNATURE_INT16, data.buildings.palace_point.private_access(_X));
+    iob->bind(BIND_SIGNATURE_INT16, data.buildings.palace_point.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT32, data.buildings.palace_point.private_access(_GRID_OFFSET));
+    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.palace_building_id);
     iob->bind(BIND_SIGNATURE_INT16, &data.unused.unknown_2828);
     iob->bind____skip(2);
     for (int i = 0; i < RESOURCES_MAX; i++)
@@ -338,7 +338,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_4294[i]);
     }
 
-    iob->bind(BIND_SIGNATURE_INT32, &data.building.hippodrome_placed);
+    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.hippodrome_placed);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.mortuary);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.physician);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.dentist);
@@ -419,10 +419,10 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     }
     
     for (int i = 0; i < 10; i++) {
-        iob->bind(BIND_SIGNATURE_INT16, &data.building.working_dock_ids[i]);
+        iob->bind(BIND_SIGNATURE_INT16, &data.buildings.working_dock_ids[i]);
     }
 
-    iob->bind(BIND_SIGNATURE_INT16, &data.building.temple_complex_placed);
+    iob->bind(BIND_SIGNATURE_INT16, &data.buildings.temple_complex_placed);
     iob->bind(BIND_SIGNATURE_UINT8, &data.figure.fish_number);
     iob->bind(BIND_SIGNATURE_UINT8, &data.figure.animals_number);
 
@@ -432,7 +432,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
 
     iob->bind____skip(2);
     iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_INT16, &data.building.palace_placed);
+    iob->bind(BIND_SIGNATURE_INT16, &data.buildings.palace_placed);
     iob->bind____skip(2);
     iob->bind____skip(2);
     iob->bind____skip(2);
@@ -455,11 +455,11 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.debt_state);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.months_in_debt);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.cheated_money);
-    iob->bind(BIND_SIGNATURE_INT8, data.building.recruiter.tile.private_access(_X));
-    iob->bind(BIND_SIGNATURE_INT8, data.building.recruiter.tile.private_access(_Y));
-    iob->bind(BIND_SIGNATURE_INT16, data.building.recruiter.tile.private_access(_GRID_OFFSET));
-    iob->bind(BIND_SIGNATURE_INT32, &data.building.recruiter.building_id);
-    iob->bind(BIND_SIGNATURE_INT32, &data.building.recruiter.placed);
+    iob->bind(BIND_SIGNATURE_INT8, data.buildings.recruiter.tile.private_access(_X));
+    iob->bind(BIND_SIGNATURE_INT8, data.buildings.recruiter.tile.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT16, data.buildings.recruiter.tile.private_access(_GRID_OFFSET));
+    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.recruiter.building_id);
+    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.recruiter.placed);
 
     for (int i = 0; i < 5; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_43d8[i]);
@@ -516,9 +516,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.kingdom_change);
     iob->bind(BIND_SIGNATURE_INT32, &data.military.native_attack_duration);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_native_force_attack);
-    iob->bind(BIND_SIGNATURE_INT32, &data.building.mission_post_operational);
-    iob->bind(BIND_SIGNATURE_INT32, data.building.main_native_meeting.private_access(_X));
-    iob->bind(BIND_SIGNATURE_INT32, data.building.main_native_meeting.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.mission_post_operational);
+    iob->bind(BIND_SIGNATURE_INT32, data.buildings.main_native_meeting.private_access(_X));
+    iob->bind(BIND_SIGNATURE_INT32, data.buildings.main_native_meeting.private_access(_Y));
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.wage_rate_paid_last_year);
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.food_needed_per_month); // 62
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.granaries.understaffed);
@@ -539,14 +539,14 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument_riot_cause);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.estimated_tax_income);
     iob->bind(BIND_SIGNATURE_INT32, &data.mission.tutorial_senate_built); // ok
-    iob->bind(BIND_SIGNATURE_INT8, data.building.distribution_center.private_access(_X));
-    iob->bind(BIND_SIGNATURE_INT8, data.building.distribution_center.private_access(_Y));
-    iob->bind(BIND_SIGNATURE_INT16, data.building.distribution_center.private_access(_GRID_OFFSET));
-    iob->bind(BIND_SIGNATURE_INT32, &data.building.distribution_center_building_id);
-    iob->bind(BIND_SIGNATURE_INT32, &data.building.distribution_center_placed);
+    iob->bind(BIND_SIGNATURE_INT8, data.buildings.distribution_center.private_access(_X));
+    iob->bind(BIND_SIGNATURE_INT8, data.buildings.distribution_center.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT16, data.buildings.distribution_center.private_access(_GRID_OFFSET));
+    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_building_id);
+    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_placed);
     for (int i = 0; i < 11; i++)
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_4524[i]);
-    iob->bind(BIND_SIGNATURE_INT32, &data.building.shipyard_boats_requested);
+    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.shipyard_boats_requested);
     iob->bind(BIND_SIGNATURE_INT32, &data.figure.enemies);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.wages);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.people_in_huts);
@@ -565,7 +565,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT8, &data.distant_battle.roman_months_to_travel_back);
     iob->bind(BIND_SIGNATURE_INT8, &data.distant_battle.roman_months_to_travel_forth);
     iob->bind(BIND_SIGNATURE_INT8, &data.distant_battle.city_foreign_months_left);
-    iob->bind(BIND_SIGNATURE_INT8, &data.building.triumphal_arches_available);
+    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.triumphal_arches_available);
     iob->bind(BIND_SIGNATURE_INT8, &data.distant_battle.total_count);
     iob->bind(BIND_SIGNATURE_INT8, &data.distant_battle.won_count);
     iob->bind(BIND_SIGNATURE_INT8, &data.distant_battle.enemy_months_traveled);
@@ -574,11 +574,11 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.military.kingdome_service_batalions);
     iob->bind(BIND_SIGNATURE_UINT8, &data.unused.unknown_458e);
     iob->bind(BIND_SIGNATURE_UINT8, &data.military.total_soldiers);
-    iob->bind(BIND_SIGNATURE_INT8, &data.building.triumphal_arches_placed);
+    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.triumphal_arches_placed);
     iob->bind(BIND_SIGNATURE_INT8, &data.sound.die_citizen);
     iob->bind(BIND_SIGNATURE_INT8, &data.sound.die_soldier);
     iob->bind(BIND_SIGNATURE_INT8, &data.sound.shoot_arrow);
-    iob->bind(BIND_SIGNATURE_INT32, &data.building.trade_center_building_id);
+    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.trade_center_building_id);
     iob->bind(BIND_SIGNATURE_INT32, &data.figure.soldiers);
     iob->bind(BIND_SIGNATURE_INT8, &data.sound.hit_soldier);
     iob->bind(BIND_SIGNATURE_INT8, &data.sound.hit_spear);
@@ -616,19 +616,19 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.mission.tutorial_disease_message_shown);
     iob->bind(BIND_SIGNATURE_INT32, &data.figure.attacking_natives);
 
-    iob->bind(BIND_SIGNATURE_INT32, &data.building.temple_complex_id);
+    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.temple_complex_id);
     iob->bind____skip(36);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.expenses.requests_and_festivals);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.requests_and_festivals);
     iob->bind____skip(64);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.estimated_tax_uncollected);
-    iob->bind(BIND_SIGNATURE_INT32, data.building.festival_square.private_access(_X));
-    iob->bind(BIND_SIGNATURE_INT32, data.building.festival_square.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT32, data.buildings.festival_square.private_access(_X));
+    iob->bind(BIND_SIGNATURE_INT32, data.buildings.festival_square.private_access(_Y));
     iob->bind____skip(8);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.income.gold_extracted);
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.ra_no_traders_months_left);
     iob->bind____skip(92);
-    iob->bind(BIND_SIGNATURE_INT16, &data.building.festival_square_placed);
+    iob->bind(BIND_SIGNATURE_INT16, &data.buildings.festival_square_placed);
     for (int i = 0; i < MAX_GODS; i++)
         iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].happy_ankhs);
     iob->bind____skip(33);

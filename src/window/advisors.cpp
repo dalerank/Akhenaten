@@ -165,7 +165,7 @@ static void init() {
     city_resource_calculate_food_stocks_and_supply_wheat();
     formation_calculate_figures();
 
-    city_ratings_update_explanations();
+    g_city.ratings_update_explanations();
 
     set_advisor_window();
 

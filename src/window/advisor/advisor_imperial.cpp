@@ -1,5 +1,4 @@
 #include "advisor_imperial.h"
-#include "city/city_data.h"
 
 #include "city/city.h"
 #include "city/finance.h"

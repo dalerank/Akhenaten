@@ -76,7 +76,7 @@ static void advance_year(void) {
     g_city.migration_advance_year();
     empire_city_reset_yearly_trade_amounts();
     building_maintenance_update_fire_direction();
-    city_ratings_update(1);
+    g_city.ratings_update(/*yearly_update*/true);
     //    city_gods_reset_yearly_blessings();
 }
 
@@ -103,7 +103,7 @@ static void advance_month() {
     if (game_time_advance_month()) {
         advance_year();
     } else {
-        city_ratings_update(/*yearly_update*/false);
+        g_city.ratings_update(/*yearly_update*/false);
     }
 
     city_population_record_monthly();

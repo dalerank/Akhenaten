@@ -156,81 +156,10 @@ static void update_culture_explanation(void) {
     city_data.ratings.culture_explanation = reason;
 }
 
-static int has_made_money(void) {
-    const int treasury_this_year = city_data.finance.last_year.expenses.construction + city_data.finance.treasury;
-    const int treasury_last_year = city_data.ratings.prosperity_treasury_last_year;
+bool city_t::has_made_money() {
+    const int treasury_this_year = finance.last_year.expenses.construction + finance.treasury;
+    const int treasury_last_year = ratings.prosperity_treasury_last_year;
     return (treasury_this_year > treasury_last_year);
-}
-
-static void update_prosperity_explanation(void) {
-    int change = 0;
-    int profit = 0;
-    // unemployment: -1 for too high, +1 for low
-    if (city_data.labor.unemployment_percentage < 5) {
-        change += 1;
-    } else if (city_data.labor.unemployment_percentage >= 15) {
-        change -= 1;
-    }
-
-    // losing/earning money: -1 for losing, +5 for profit
-    if (has_made_money()) {
-        change += 5;
-        profit = 1;
-    } else {
-        change -= 1;
-    }
-    // food types: +1 for multiple foods
-    //    if (city_data.resource.food_types_eaten >= 2) todo
-    //        change += 1;
-
-    // wages: +1 for wages 2+ above Rome, -1 for wages below Kingdome
-    int avg_wage = city_data.finance.wage_rate_paid_last_year / 12;
-    if (avg_wage >= city_data.labor.wages_kingdome + 2) {
-        change += 1;
-    } else if (avg_wage < city_data.labor.wages_kingdome) {
-        change -= 1;
-    }
-
-    // high percentage poor: -1, high percentage rich: +1
-    int pct_shanties = calc_percentage(city_data.population.people_in_shanties, city_data.population.population);
-    if (pct_shanties > 30) {
-        change -= 1;
-    }
-
-    if (calc_percentage(city_data.population.people_in_manors, city_data.population.population) > 10) {
-        change += 1;
-    }
-
-    // tribute not paid: -1
-    if (city_data.finance.tribute_not_paid_last_year)
-        change -= 1;
-
-    // working hippodrome: +1
-    if (city_data.entertainment.hippodrome_shows > 0)
-        change += 1;
-
-    int reason;
-    if (city_data.ratings.prosperity <= 0 && game_time_year() == scenario_property_start_year())
-        reason = 0;
-    else if (city_data.ratings.prosperity >= city_data.ratings.prosperity_max)
-        reason = 1;
-    else if (change > 0)
-        reason = 2;
-    else if (!profit)
-        reason = 3;
-    else if (city_data.labor.unemployment_percentage >= 15)
-        reason = 4;
-    else if (avg_wage < city_data.labor.wages_kingdome)
-        reason = 5;
-    else if (pct_shanties > 30)
-        reason = 6;
-    else if (city_data.finance.tribute_not_paid_last_year)
-        reason = 7;
-    else {
-        reason = 9;
-    }
-    // 8 = for bailout
-    city_data.ratings.prosperity_explanation = reason;
 }
 
 static void update_monument_explanation(void) {
@@ -300,7 +229,7 @@ void city_ratings_update_kingdom_explanation(void) {
     }
 }
 
-void city_ratings_update_explanations(void) {
+void city_t::ratings_update_explanations() {
     update_culture_explanation();
     update_prosperity_explanation();
     update_monument_explanation();
@@ -397,75 +326,6 @@ static void update_culture_rating() {
 
     city_data.ratings.culture = calc_bound(city_data.ratings.culture, 0, 100);
     update_culture_explanation();
-}
-
-static void update_prosperity_rating() {
-    int change = 0;
-    // unemployment: -1 for too high, +1 for low
-    if (city_data.labor.unemployment_percentage < 5)
-        change += 1;
-    else if (city_data.labor.unemployment_percentage >= 15)
-        change -= 1;
-
-    // losing/earning money: -1 for losing, +5 for profit
-    if (has_made_money())
-        change += 5;
-    else {
-        change -= 1;
-    }
-    city_data.ratings.prosperity_treasury_last_year = city_data.finance.treasury;
-    // food types: +1 for multiple foods
-    //    if (city_data.resource.food_types_eaten >= 2) todo
-    //        change += 1;
-
-    // wages: +1 for wages 2+ above Rome, -1 for wages below Rome
-    int avg_wage = city_data.finance.wage_rate_paid_last_year / 12;
-    if (avg_wage >= city_data.labor.wages_kingdome + 2)
-        change += 1;
-    else if (avg_wage < city_data.labor.wages_kingdome)
-        change -= 1;
-
-    // high percentage poor: -1, high percentage rich: +1
-    if (calc_percentage(city_data.population.people_in_shanties, city_data.population.population) > 30) {
-        change -= 1;
-    }
-
-    if (calc_percentage(city_data.population.people_in_manors, city_data.population.population) > 10) {
-        change += 1;
-    }
-
-    // tribute not paid: -1
-    if (city_data.finance.tribute_not_paid_last_year)
-        change -= 1;
-
-    // working hippodrome: +1
-    if (city_data.entertainment.hippodrome_shows > 0)
-        change += 1;
-
-    city_data.ratings.prosperity += change;
-    if (city_data.ratings.prosperity > city_data.ratings.prosperity_max)
-        city_data.ratings.prosperity = city_data.ratings.prosperity_max;
-
-    city_data.ratings.prosperity = calc_bound(city_data.ratings.prosperity, 0, 100);
-
-    update_prosperity_explanation();
-}
-
-static void calculate_max_prosperity() {
-    int points = 0;
-    int houses = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state && b->house_size) {
-            points += model_get_house(b->subtype.house_level)->prosperity;
-            houses++;
-        }
-    }
-    if (houses > 0)
-        city_data.ratings.prosperity_max = points / houses;
-    else {
-        city_data.ratings.prosperity_max = 0;
-    }
 }
 
 static void update_monument_rating() {
@@ -597,7 +457,7 @@ static void update_kingdom_rating(int is_yearly_update) {
     city_ratings_update_kingdom_explanation();
 }
 
-void city_ratings_update(bool is_yearly_update) {
+void city_t::ratings_update(bool is_yearly_update) {
     update_culture_rating();
     update_kingdom_rating(is_yearly_update);
     calculate_max_prosperity();
@@ -606,8 +466,4 @@ void city_ratings_update(bool is_yearly_update) {
         update_prosperity_rating();
         update_monument_rating();
     }
-}
-
-int city_ratings_prosperity_max() {
-    return city_data.ratings.prosperity_max;
 }

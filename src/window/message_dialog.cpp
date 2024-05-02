@@ -1,7 +1,7 @@
 #include "message_dialog.h"
 
 #include "city/message.h"
-#include "city/city_data.h"
+#include "city/city.h"
 #include "city/constants.h"
 #include "city/gods.h"
 #include "city/sentiment.h"

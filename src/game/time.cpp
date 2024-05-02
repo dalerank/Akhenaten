@@ -27,9 +27,11 @@ int game_time_day(void) {
 int game_time_month(void) {
     return g_game_time.month;
 }
+
 int game_time_year(void) {
     return g_game_time.year;
 }
+
 int game_time_year_since_start(void) {
     return g_game_time.year - scenario_property_start_year();
 }

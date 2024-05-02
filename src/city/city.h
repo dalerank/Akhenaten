@@ -53,7 +53,7 @@ struct city_t {
 
         bool temple_complex_placed;
         int32_t temple_complex_id;
-    } building;
+    } buildings;
     struct {
         uint8_t fish_number;
         uint8_t animals_number;
@@ -432,6 +432,13 @@ struct city_t {
     void figures_add_soldier();
     int figures_total_invading_enemies();
     bool figures_has_security_breach();
+
+    void update_prosperity_explanation();
+    bool has_made_money();
+    void update_prosperity_rating();
+    void calculate_max_prosperity();
+    void ratings_update_explanations();
+    void ratings_update(bool is_yearly_update);
 };
 
 const uint8_t* city_player_name();
