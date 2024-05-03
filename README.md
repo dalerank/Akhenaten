@@ -9,6 +9,10 @@
 
 ![2023-08-19 21_17_32-Window](https://github.com/dalerank/Akhenaten/assets/918081/dd616847-9f79-4a01-84fb-800f1cfa2c99)
 
+Akhenaten aims to make the original game Pharaoh compatible with modern systems with redesigned original engine.
+Unlike the original game, which was developed by Impressions Games, Akhenaten is a community-driven effort to keep the game alive and accessible.
+Allows you to load original save games from Pharaoh and play the initial campaign missions without major issues.
+
 This is a fork of the **Julius/Augustus** project with the aim of making it work with _Pharaoh_ instead of _Caesar 3_.
 
 The work is still in progress, so any help or support is appreciated. You can more or less load
