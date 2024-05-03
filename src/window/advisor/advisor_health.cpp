@@ -39,7 +39,7 @@ int ui::advisor_health_window::draw_background() {
 
     lang_text_draw(56, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     if (city_population() >= 200) {
-        lang_text_draw_multiline(56, city_health() / 10 + 16, vec2i{60, 46}, 512, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_multiline(56, g_city.health.value / 10 + 16, vec2i{60, 46}, 512, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
         lang_text_draw_multiline(56, 15, vec2i{60, 46}, 512, FONT_NORMAL_BLACK_ON_LIGHT);
     }

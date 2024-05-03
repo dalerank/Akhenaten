@@ -100,7 +100,7 @@ sound_key figure_tax_collector::phrase_key() const {
         {"need_more_tax_collectors", city_finance_percentage_taxed_people() < 80},
         {"high_taxes", city_sentiment_low_mood_cause() == LOW_MOOD_HIGH_TAXES},
         {"much_pooh_houses", poor_taxed > 50},
-        {"desease_can_start_at_any_moment", city_health() < 30},
+        {"desease_can_start_at_any_moment", g_city.health.value < 30},
         {"no_food_in_city", city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD},
         {"buyer_city_have_no_army", formation_get_num_forts() < 1},
         {"need_workers", g_city.labor.workers_needed >= 10},

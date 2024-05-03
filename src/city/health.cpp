@@ -10,28 +10,23 @@
 #include "game/tutorial.h"
 #include "scenario/property.h"
 
-static auto &city_data = g_city;
-int city_health() {
-    return city_data.health.value;
+void city_health_t::change(int amount) {
+    value = calc_bound(value + amount, 0, 100);
 }
 
-void city_health_change(int amount) {
-    city_data.health.value = calc_bound(city_data.health.value + amount, 0, 100);
-}
-
-void city_health_start_disease(int total_people, bool force, int plague_people) {
-    if (!force && city_data.health.value >= 40) {
+void city_health_t::start_disease(int total_people, bool force, int plague_people) {
+    if (!force && value >= 40) {
         return;
     }
 
     int chance_value = random_byte() & 0x3f;
-    if (city_data.religion.bast_curse_active) {
+    if (g_city.religion.bast_curse_active) {
         // force plague
         chance_value = 0;
-        city_data.religion.bast_curse_active = false;
+        g_city.religion.bast_curse_active = false;
     }
 
-    if (!force && (chance_value > 40 - city_data.health.value)) {
+    if (!force && (chance_value > 40 - value)) {
         return;
     }
 
@@ -44,8 +39,8 @@ void city_health_start_disease(int total_people, bool force, int plague_people) 
         return;
     }
 
-    city_health_change(10);
-    int people_to_plague = sick_people - city_data.health.num_mortuary_workers;
+    change(10);
+    int people_to_plague = sick_people - num_mortuary_workers;
     if (people_to_plague <= 0) {
         city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, MESSAGE_HEALTH_MALARIA_PROBLEM, 0, 0);
         return;
@@ -106,17 +101,17 @@ void city_health_start_disease(int total_people, bool force, int plague_people) 
 
     e_building_type btype = (warn_building ? warn_building->type : BUILDING_NONE);
     int grid_offset = (warn_building ? warn_building->tile.grid_offset() : 0);
-    if (city_data.health.num_mortuary_workers > 0) {
+    if (num_mortuary_workers > 0) {
         city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, MESSAGE_HEALTH_DISEASE, btype, grid_offset);
     } else {
         city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, MESSAGE_HEALTH_PLAGUE, btype, grid_offset);
     }
 }
 
-void city_health_update() {
-    if (city_data.population.population < 200 || scenario_is_mission_rank(1) || scenario_is_mission_rank(2)) {
-        city_data.health.value = 50;
-        city_data.health.target_value = 50;
+void city_health_t::update() {
+    if (g_city.population.population < 200 || scenario_is_mission_rank(1) || scenario_is_mission_rank(2)) {
+        value = 50;
+        target_value = 50;
         return;
     }
 
@@ -145,28 +140,28 @@ void city_health_update() {
         }
     });
 
-    city_data.health.target_value = calc_percentage(healthy_population, total_population);
-    if (city_data.health.value < city_data.health.target_value) {
-        city_data.health.value += 2;
-        if (city_data.health.value > city_data.health.target_value) {
-            city_data.health.value = city_data.health.target_value;
+    target_value = calc_percentage(healthy_population, total_population);
+    if (value < target_value) {
+        value += 2;
+        if (value > target_value) {
+            value = target_value;
         }
 
-    } else if (city_data.health.value > city_data.health.target_value) {
-        city_data.health.value -= 2;
-        if (city_data.health.value < city_data.health.target_value) {
-            city_data.health.value = city_data.health.target_value;
+    } else if (value > target_value) {
+        value -= 2;
+        if (value < target_value) {
+            value = target_value;
         }
     }
-    city_data.health.value = calc_bound(city_data.health.value, 0, 100);
+    value = calc_bound(value, 0, 100);
 
-    city_health_start_disease(total_population, false, 0);
+    start_disease(total_population, false, 0);
 }
 
-void city_health_reset_mortuary_workers(void) {
-    city_data.health.num_mortuary_workers = 0;
+void city_health_t::reset_mortuary_workers() {
+    num_mortuary_workers = 0;
 }
 
-void city_health_add_mortuary_workers(int amount) {
-    city_data.health.num_mortuary_workers += amount;
+void city_health_t::add_mortuary_workers(int amount) {
+    num_mortuary_workers += amount;
 }

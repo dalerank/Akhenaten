@@ -87,7 +87,7 @@ sound_key figure_market_buyer::phrase_key() const {
         keys.push_back("buyer_back_to_market");
     } 
 
-    if (city_health() < 30) {
+    if (g_city.health.value < 30) {
         keys.push_back("buyer_city_has_low_health");
     }
 

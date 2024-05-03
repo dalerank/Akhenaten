@@ -148,7 +148,7 @@ int ui::advisor_chief_window::draw_background() {
 
     // health
     {
-        int health_rate = city_health();
+        int health_rate = g_city.health.value;
         ui["health_info"].text((pcstr)lang_get_string(61, 103 + health_rate / 10));
         ui["health_info"].font(health_rate >= 40 ? FONT_NORMAL_BLACK_ON_DARK : FONT_NORMAL_YELLOW);
     }

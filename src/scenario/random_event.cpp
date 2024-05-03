@@ -69,7 +69,7 @@ static void contaminate_water(void) {
     if (g_scenario_data.random_events.contaminated_water) {
         if (city_population() > 200) {
             int change;
-            int health_rate = city_health();
+            int health_rate = g_city.health.value;
             if (health_rate > 80)
                 change = -50;
             else if (health_rate > 60)
@@ -77,7 +77,7 @@ static void contaminate_water(void) {
             else {
                 change = -25;
             }
-            city_health_change(change);
+            g_city.health.change(change);
             city_message_post(true, MESSAGE_CONTAMINATED_WATER, 0, 0);
         }
     }

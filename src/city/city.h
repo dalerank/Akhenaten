@@ -7,6 +7,7 @@
 #include "city/finance.h"
 #include "city/houses.h"
 #include "city/labor.h"
+#include "city/health.h"
 #include "city/military.h"
 #include "city/resource.h"
 #include "city/map.h"
@@ -201,11 +202,7 @@ struct city_t {
         int32_t religion_coverage;
         int32_t monuments;
     } sentiment;
-    struct {
-        int32_t num_mortuary_workers;
-        int32_t target_value;
-        int32_t value;
-    } health;
+    city_health_t health;
     struct {
         int32_t culture;
         int32_t prosperity;

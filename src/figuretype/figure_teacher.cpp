@@ -39,7 +39,7 @@ void figure_teacher::figure_action() {
 sound_key figure_teacher::phrase_key() const {
     svector<sound_key, 10> keys;
 
-    if (city_health() < 20) {
+    if (g_city.health.value < 20) {
         keys.push_back("teacher_desease_can_start_at_any_moment");
     }
 

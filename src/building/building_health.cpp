@@ -13,8 +13,7 @@
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
-#include "city/labor.h"
-#include "city/health.h"
+#include "city/city.h"
 
 #include "dev/debug.h"
 #include <iostream>
@@ -48,7 +47,7 @@ static void game_cheat_start_plague(std::istream &is, std::ostream &os) {
         }
         total_population += b.house_population;
     });
-    city_health_start_disease(total_population, true, plague_people);
+    g_city.health.start_disease(total_population, true, plague_people);
 }
 
 declare_console_command(plague_start, game_cheat_start_plague);

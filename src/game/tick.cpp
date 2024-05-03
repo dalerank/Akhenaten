@@ -82,7 +82,7 @@ static void advance_year(void) {
 
 static void advance_month() {
     g_city.migration_reset_newcomers();
-    city_health_update();
+    g_city.health.update();
     scenario_random_event_process();
     city_finance_handle_month_change();
     city_resource_consume_food();

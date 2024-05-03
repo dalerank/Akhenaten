@@ -2,7 +2,7 @@
 
 #include "building/building.h"
 #include "city/buildings.h"
-#include "city/health.h"
+#include "city/city.h"
 #include "core/profiler.h"
 #include "core/game_environment.h"
 #include "figure/figure.h"
@@ -92,7 +92,7 @@ void building_count_update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Buildin Count Update");
     clear_counters();
     city_buildings_reset_dock_wharf_counters();
-    city_health_reset_mortuary_workers();
+    g_city.health.reset_mortuary_workers();
 
     buildings_valid_do ( [] (building &b) {
         if (b.house_size) {
@@ -116,7 +116,7 @@ void building_count_update() {
 
         case BUILDING_MORTUARY:
             building_increase_type_count(type, b.num_workers > 0);
-            city_health_add_mortuary_workers(b.num_workers);
+            g_city.health.add_mortuary_workers(b.num_workers);
             break;
 
             // water

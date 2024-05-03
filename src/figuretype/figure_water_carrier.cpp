@@ -61,7 +61,7 @@ void figure_water_carrier::figure_action() {
 
 sound_key figure_water_carrier::phrase_key() const {
     svector<sound_key, 10> keys;
-    if (city_health() < 30) {
+    if (g_city.health.value < 30) {
         keys.push_back("desease_can_start_at_any_moment");
     }
 

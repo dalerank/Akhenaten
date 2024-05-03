@@ -85,7 +85,7 @@ static sound_key policeman_phrase(figure *f) {
         keys.push_back("policeman_need_more_workers");
     }
 
-    if (city_health() < 20) {
+    if (g_city.health.value < 20) {
         keys.push_back("policeman_desease_can_start_at_any_moment");
     }
 

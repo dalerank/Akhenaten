@@ -56,11 +56,11 @@ void figure_physician::figure_before_action() {
 
 sound_key figure_physician::phrase_key() const {
     svector<sound_key, 10> keys;
-    if (city_health() < 40) {
-        keys.push_back(city_health() < 20
+    if (g_city.health.value < 40) {
+        keys.push_back(g_city.health.value < 20
                        ? "desease_can_start_at_any_moment"
                        : "city_has_low_health");
-    } else if (city_health() > 80) {
+    } else if (g_city.health.value > 80) {
         keys.push_back("city_very_healthy");
     }
 

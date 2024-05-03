@@ -112,7 +112,7 @@ sound_key figure_priest::phrase_key() const {
         keys.push_back(create_key("disease_in_city"));
     }
 
-    if (city_health() < 30) {
+    if (g_city.health.value < 30) {
         keys.push_back(create_key("city_low_health"));
     }
 

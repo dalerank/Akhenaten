@@ -183,7 +183,7 @@ sound_key figure_worker::phrase_key() const {
         keys.push_back("farm_is_flooded");
     }
 
-    if (city_health() < 30) {
+    if (g_city.health.value < 30) {
         keys.push_back("desease_can_start_at_any_moment");
     }
 

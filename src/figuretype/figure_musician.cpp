@@ -42,7 +42,7 @@ sound_key figure_musician::phrase_key() const {
         keys.push_back("city_not_safety_workers_leaving");
     }
 
-    if (city_health() < 40) {
+    if (g_city.health.value < 40) {
         keys.push_back("city_heath_too_low");
     }
 

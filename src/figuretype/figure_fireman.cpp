@@ -55,7 +55,7 @@ sound_key figure_fireman::phrase_key() const {
         return keys[index];
     }
 
-    if (city_health() < 20) {
+    if (g_city.health.value < 20) {
         keys.push_back("desease_can_start_at_any_moment");
     }
 

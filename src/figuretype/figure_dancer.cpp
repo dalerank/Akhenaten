@@ -33,7 +33,7 @@ sound_key figure_dancer::phrase_key() const {
         keys.push_back("i_like_festivals");
     }
 
-    if (city_health() < 20) {
+    if (g_city.health.value < 20) {
         keys.push_back("desease_can_start_at_any_moment");
     }
 
