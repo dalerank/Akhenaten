@@ -38,6 +38,19 @@
 #include <string.h>
 #include <map>
 
+#include "dev/debug.h"
+#include <iostream>
+
+declare_console_command_p(destroytype, game_cheat_destroy_type)
+void game_cheat_destroy_type(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+    int type = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    
+    buildings_valid_do([] (building &b) {
+        building_destroy_by_collapse(&b);
+    }, (e_building_type)type);
+};
+
 building g_all_buildings[5000];
 std::span<building> g_city_buildings = make_span(g_all_buildings);
 
@@ -719,11 +732,14 @@ bool building_is_administration(e_building_type type) {
 }
 
 bool building_is_religion(e_building_type type) {
-    if (building_is_temple(type) || building_is_large_temple(type) || building_is_shrine(type))
+    if (building_is_temple(type) || building_is_large_temple(type) || building_is_shrine(type)) {
         return true;
+    }
 
-    if (type == BUILDING_FESTIVAL_SQUARE)
+    if (type == BUILDING_FESTIVAL_SQUARE) {
         return true;
+    }
+
     return false;
 }
 
@@ -990,6 +1006,7 @@ void building_impl::static_params::load(archive arch) {
     meta.text_id = arch.r_int("info_text_id");
     window_info_height_id = arch.r_int("window_info_height_id");
     building_size = arch.r_int("building_size");
+    unique_building = arch.r_bool("unique_building");
     anim.load(arch);
 }
 

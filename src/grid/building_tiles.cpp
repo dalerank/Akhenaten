@@ -271,6 +271,7 @@ static void set_underlying_venue_plaza_tile(int grid_offset, int building_id, in
         }
     }
 }
+
 void map_add_venue_plaza_tiles(int building_id, int size, tile2i tile, int image_id, bool update_only) {
     int x = tile.x();
     int y = tile.y();

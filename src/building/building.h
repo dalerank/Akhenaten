@@ -423,6 +423,7 @@ public:
         animations_t anim;
         uint8_t building_size;
         int window_info_height_id;
+        bool unique_building;
 
         void load(archive arch);
     };

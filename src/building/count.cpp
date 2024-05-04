@@ -26,11 +26,11 @@ static void clear_counters() {
 }
 
 void building_increase_type_count(int type, bool active) {
-    ++g_count_data.buildings[type].total;
+    g_count_data.buildings[type].total++;
     g_count_data.buildings[type].active += (active ? 1 : 0);
 }
 void building_increase_industry_count(int resource, bool active) {
-    ++g_count_data.industry[resource].total;
+    g_count_data.industry[resource].total++;
     g_count_data.industry[resource].active += (active ? 1 : 0);
 }
 

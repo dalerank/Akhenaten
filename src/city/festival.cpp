@@ -2,6 +2,7 @@
 
 #include "building/building_type.h"
 #include "building/building_storage_yard.h"
+#include "building/count.h"
 #include "buildings.h"
 #include "city/constants.h"
 #include "city/city.h"
@@ -238,11 +239,13 @@ void figure::festival_guy_action() {
                 terrain_usage = TERRAIN_USAGE_ANY;
         } else {
             //                use_cross_country = true; // todo?
-            if (routing_path_id)
+            if (routing_path_id) {
                 do_goto(destination_tile, TERRAIN_USAGE_ANY, 11);
-            else {
-                if (festival_remaining_dances == 0 || !city_building_has_festival_square())
+            } else {
+                bool has_square = building_count_total(BUILDING_FESTIVAL_SQUARE);
+                if (festival_remaining_dances == 0 || !has_square) {
                     return poof();
+                }
 
                 // choose a random tile on the festival square
                 tile2i festival = city_building_get_festival_square_position();

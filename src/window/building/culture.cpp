@@ -39,13 +39,3 @@ void window_building_draw_senet_house(object_info* c) {
         lang_text_draw(73, 5, c->offset.x + 32, c->offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
-
-// TODO: fix festival square panel
-void window_building_draw_festival_square(object_info* c) {
-    const int32_t group_id = 188;
-    c->help_id = 75;
-    window_building_play_sound(c, "wavs/prefecture.wav"); // TODO: change to festival square
-
-    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
-    lang_text_draw_centered(group_id, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.y, FONT_LARGE_BLACK_ON_LIGHT);
-}

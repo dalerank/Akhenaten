@@ -15,18 +15,18 @@
 #include "config/config.h"
 
 static bool road_tile_valid_access(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_ROAD)
-        && (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || // general case -- no buildings over road!
-                                                              // exceptions: vvv
-            building_at(grid_offset)->type == BUILDING_MUD_GATEHOUSE 
-            || building_at(grid_offset)->type == BUILDING_BOOTH
-            || building_at(grid_offset)->type == BUILDING_BANDSTAND
-            || building_at(grid_offset)->type == BUILDING_PAVILLION
-            || building_at(grid_offset)->type == BUILDING_FESTIVAL_SQUARE)) {
-        return true;
+    if (!map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+        return false;
+    }
+    
+    if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {// general case -- no buildings over road!
+        e_building_type btype = building_at(grid_offset)->type; // exceptions: vvv
+        if (building_type_any_of(btype, BUILDING_MUD_GATEHOUSE, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION, BUILDING_FESTIVAL_SQUARE)) {
+            return true;
+        }
     }
 
-    return false;
+    return true;
 }
 
 bool map_road_find_minimum_tile_xy(tile2i tile, int sizex, int sizey, int *min_value, int *min_grid_offset) {

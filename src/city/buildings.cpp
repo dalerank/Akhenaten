@@ -211,22 +211,16 @@ void city_buildings_set_mission_post_operational(void) {
     city_data.buildings.mission_post_operational = 1;
 }
 
-bool city_building_has_festival_square(void) {
-    return city_data.buildings.festival_square_placed;
-}
-
 tile2i city_building_get_festival_square_position() {
     return city_data.buildings.festival_square;
 }
 
 void city_buildings_add_festival_square(building* square) {
-    city_data.buildings.festival_square_placed = true;
     city_data.buildings.festival_square.set(square->tile.grid_offset());
 }
 
 void city_buildings_remove_festival_square(void) {
     city_data.buildings.festival_square.set(0);
-    city_data.buildings.festival_square_placed = false;
 }
 
 bool city_buildings_has_temple_complex(void) {

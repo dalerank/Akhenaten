@@ -504,7 +504,12 @@ building_pavilion = {
 }
 
 building_festival_square = {
+  animations : {
+    base : { pos:[0, 0], pack:PACK_GENERAL, id:49 },
+    square : { pos:[0, 0], pack:PACK_GENERAL, id:49 },
+  },
   building_size : 5,
+  unique_building : true,
 }
 
 building_ferry = {

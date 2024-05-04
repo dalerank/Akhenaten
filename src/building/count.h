@@ -17,11 +17,6 @@ void building_count_update();
  */
 int building_count_active(e_building_type type);
 
-/**
- * Returns the building count for the type
- * @param type Building type
- * @return Total number of buildings
- */
 int building_count_total(e_building_type type);
 
 /**

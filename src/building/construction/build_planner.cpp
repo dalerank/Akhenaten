@@ -8,6 +8,7 @@
 
 #include "building/building_dock.h"
 #include "building/menu.h"
+#include "building/count.h"
 #include "building/model.h"
 #include "building/monuments.h"
 #include "building/monument_mastaba.h"
@@ -222,26 +223,6 @@ void build_planner_latch_on_venue(e_building_type type, building *b, int dx, int
     }
 }
 
-static void add_entertainment_venue(building* b, int orientation) {
-    b->data.entertainment.booth_corner_grid_offset = b->tile.grid_offset();
-    b->data.entertainment.orientation = orientation;
-
-    const auto &params = b->dcast()->params();
-    int size = params.building_size;
-
-    if (!map_grid_is_inside(b->tile, size)) {
-        return;
-    }
-
-    int image_id = 0;
-    switch (b->type) {
-    case BUILDING_FESTIVAL_SQUARE:
-        image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE);
-        map_add_venue_plaza_tiles(b->id, size, b->tile, image_id, false);
-        break;
-    }
-}
-
 static void add_building_tiles_image(building* b, int image_id) {
     map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
 }
@@ -324,10 +305,6 @@ static void add_building(building* b, int orientation, int variant) {
 
     case BUILDING_HOUSE_LUXURY_PALACE:
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALATIAL) + 1);
-        break;
-
-    case BUILDING_FESTIVAL_SQUARE:
-        add_entertainment_venue(b, orientation);
         break;
         // government
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
@@ -547,7 +524,6 @@ bool BuildPlanner::place_building(e_building_type type, tile2i tile, int orienta
 
     case BUILDING_FESTIVAL_SQUARE:
         check_figures = 1;
-        size = 5;
         break;
     }
 
@@ -1333,6 +1309,11 @@ void BuildPlanner::update_special_case_orientations_check() {
 void BuildPlanner::update_unique_only_one_check() {
     bool unique_already_placed = false;
 
+    bool is_unique_building = building_impl::params(build_type).unique_building;
+    if (is_unique_building) {
+        unique_already_placed = building_count_total(build_type);
+    }
+
     // for unique buildings - only one can be placed inside the mission
     switch (build_type) {
     case BUILDING_VILLAGE_PALACE:
@@ -1349,11 +1330,6 @@ void BuildPlanner::update_unique_only_one_check() {
         break;
     case BUILDING_RECRUITER:
         if (city_buildings_has_recruiter() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {
-            unique_already_placed = true;
-        }
-        break;
-    case BUILDING_FESTIVAL_SQUARE:
-        if (city_building_has_festival_square()) {
             unique_already_placed = true;
         }
         break;
@@ -1680,9 +1656,6 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     switch (build_type) {
     case BUILDING_DOCK:
         city_buildings_add_dock();
-        break;
-    case BUILDING_FESTIVAL_SQUARE:
-        city_buildings_add_festival_square(last_created_building);
         break;
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:

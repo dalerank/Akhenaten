@@ -21,7 +21,6 @@ struct city_t {
         int32_t palace_building_id;
         tile2i palace_point;
 
-        bool festival_square_placed;
         int32_t festival_building_id;
         tile2i festival_square;
 

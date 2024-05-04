@@ -167,11 +167,8 @@ void map_orientation_update_buildings() {
                 case BUILDING_BOOTH:
                 case BUILDING_BANDSTAND:
                 case BUILDING_PAVILLION:
-                    plaza_image_id = params.anim["square"].first_img();
-                    break;
-
                 case BUILDING_FESTIVAL_SQUARE:
-                    plaza_image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE);
+                    plaza_image_id = params.anim["square"].first_img();
                     break;
                 }
                 tile2i btile(b->data.entertainment.booth_corner_grid_offset, b->data.entertainment.booth_corner_grid_offset);

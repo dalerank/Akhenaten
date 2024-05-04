@@ -5,11 +5,13 @@
 #include "building/building_booth.h"
 #include "building/building_bandstand.h"
 #include "building/building_pavilion.h"
+#include "building/building_festival_square.h"
 #include "building/industry.h"
 #include "building/monument_mastaba.h"
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/building_fort.h"
+#include "building/count.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "grid/bridge.h"
@@ -408,12 +410,6 @@ static void draw_entertainment_venue(tile2i tile, vec2i pixel, e_building_type t
             draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else { // can place (theoretically)
-        if (type == BUILDING_FESTIVAL_SQUARE && city_building_has_festival_square()) {
-            for (int i = 0; i < size * size; i++)
-                ImageDraw::isometric(ctx, image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_RED);
-            return;
-        }
-
         switch (type) {
         case BUILDING_BOOTH:
             building_booth::ghost_preview(ctx, tile, pixel, orientation);
@@ -428,9 +424,7 @@ static void draw_entertainment_venue(tile2i tile, vec2i pixel, e_building_type t
             break;
 
         case BUILDING_FESTIVAL_SQUARE:
-            for (int i = 0; i < size * size; i++) {
-                ImageDraw::isometric(ctx, image_id_from_group(GROUP_FESTIVAL_SQUARE) + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
-            }
+            building_festival_square::ghost_preview(ctx, tile, pixel, orientation);            
             break;
         }
     }

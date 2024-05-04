@@ -195,7 +195,8 @@ static void confirm_nothing(bool accepted) {
 }
 
 static void button_hold_festival(int param1, int param2) {
-    if (!city_building_has_festival_square()) {
+    int has_square = building_count_total(BUILDING_FESTIVAL_SQUARE);
+    if (!has_square) {
         return window_ok_dialog_show("#popup_dialog_no_festival_square");
     }
 

@@ -53,7 +53,6 @@ void city_buildings_set_main_native_meeting_center(int x, int y);
 int city_buildings_is_mission_post_operational();
 void city_buildings_set_mission_post_operational();
 
-bool city_building_has_festival_square();
 map_point city_building_get_festival_square_position();
 void city_buildings_add_festival_square(building* square);
 void city_buildings_remove_festival_square();

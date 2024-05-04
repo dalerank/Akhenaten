@@ -652,7 +652,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.income.gold_extracted);
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.ra_no_traders_months_left);
     iob->bind____skip(92);
-    iob->bind(BIND_SIGNATURE_INT16, &data.buildings.festival_square_placed);
+    int reserved;
+    iob->bind(BIND_SIGNATURE_INT16, &reserved);
     for (int i = 0; i < MAX_GODS; i++)
         iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].happy_ankhs);
     iob->bind____skip(33);
