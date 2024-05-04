@@ -14,21 +14,36 @@
 #include <iostream>
 
 declare_console_command_p(addprosperity, game_cheat_add_prosperity)
+declare_console_command_p(updatekingdome, game_cheat_update_kingdome)
+declare_console_command_p(addkingdome, game_cheat_add_kingdome)
+
 void game_cheat_add_prosperity(std::istream &is, std::ostream &os) {
     std::string args; is >> args;
-    int amount = atoi(args.empty() ? (pcstr)"100" : args.c_str());
+    int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
     g_city.ratings.prosperity = calc_bound(g_city.ratings.prosperity + amount, 0, 100);
 };
 
+void game_cheat_add_kingdome(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+    int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
+    g_city.ratings.kingdom = calc_bound(g_city.ratings.kingdom + amount, 0, 100);
+};
+
+void game_cheat_update_kingdome(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+    int value = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    g_city.ratings.update_kingdom_rating(!!value);
+}
+
 int city_ratings_t::selected_explanation() {
     switch (selected) {
-    case SELECTED_RATING_CULTURE:
+    case e_selected_rating_culture:
         return culture_explanation;
-    case SELECTED_RATING_PROSPERITY:
+    case e_selected_rating_prosperity:
         return prosperity_explanation;
-    case SELECTED_RATING_MONUMENT:
+    case e_selected_rating_monument:
         return monument_explanation;
-    case SELECTED_RATING_KINGDOM:
+    case e_selected_rating_kingdom:
         return kingdom_explanation;
     default:
         return 0;
@@ -325,97 +340,100 @@ void city_ratings_t::update_monument_rating() {
     update_monument_explanation();
 }
 
-void city_ratings_t::update_kingdom_rating(int is_yearly_update) {
+void city_ratings_t::update_kingdom_rating_year() {
+    kingdom_salary_penalty = 0;
+    kingdom_milestone_penalty = 0;
+    kingdom_ignored_request_penalty = 0;
+    if (!(scenario_is_mission_rank(1) || scenario_is_mission_rank(2))) {
+        kingdom -= 2;
+    }
+
+    // tribute penalty
+    if (g_city.finance.tribute_not_paid_last_year) {
+        if (g_city.finance.tribute_not_paid_total_years <= 1) {
+            kingdom -= 3;
+        } else if (g_city.finance.tribute_not_paid_total_years <= 2) {
+            kingdom -= 5;
+        } else {
+            kingdom -= 8;
+        }
+    }
+
+    // rank salary
+    int salary_delta = g_city.kingdome.salary_rank - g_city.kingdome.player_rank;
+    if (g_city.kingdome.player_rank != 0) {
+        if (salary_delta > 0) {
+            // salary too high
+            kingdom -= salary_delta;
+            kingdom_salary_penalty = salary_delta + 1;
+        } else if (salary_delta < 0) {
+            // salary lower than rank
+            kingdom += 1;
+        }
+    } else if (salary_delta > 0) {
+        kingdom -= salary_delta;
+        kingdom_salary_penalty = salary_delta;
+    }
+
+    // milestone
+    int milestone_pct = 0;
+    if (scenario_criteria_milestone_year(25) == game_time_year()) {
+        milestone_pct = 25;
+    } else if (scenario_criteria_milestone_year(50) == game_time_year()) {
+        milestone_pct = 50;
+    } else if (scenario_criteria_milestone_year(75) == game_time_year()) {
+        milestone_pct = 75;
+    }
+
+    if (milestone_pct) {
+        int bonus = 1;
+        if (winning_culture() && culture < calc_adjust_with_percentage(winning_culture(), milestone_pct)) {
+            bonus = 0;
+        }
+        if (winning_prosperity() && prosperity < calc_adjust_with_percentage(winning_prosperity(), milestone_pct)) {
+            bonus = 0;
+        }
+        if (winning_monuments() && monument < calc_adjust_with_percentage(winning_monuments(), milestone_pct)) {
+            bonus = 0;
+        }
+        if (winning_kingdom() && kingdom < calc_adjust_with_percentage(winning_kingdom(), milestone_pct)) {
+            bonus = 0;
+        }
+        if (winning_population() && g_city.population.population < calc_adjust_with_percentage(winning_population(), milestone_pct)) {
+            bonus = 0;
+        }
+
+        if (bonus) {
+            kingdom += 5;
+        } else {
+            kingdom -= 2;
+            kingdom_milestone_penalty = 2;
+        }
+    }
+
+    if (kingdom < kingdom_last_year) {
+        kingdom_change = e_rating_dropping;
+    } else if (kingdom == kingdom_last_year) {
+        kingdom_change = e_rating_stalling;
+    } else {
+        kingdom_change = e_rating_rising;
+    }
+
+    kingdom_last_year = kingdom;
+}
+void city_ratings_t::update_kingdom_rating(bool is_yearly_update) {
     if (scenario_is_open_play()) {
         kingdom = 50;
         return;
     }
 
     g_city.kingdome.months_since_gift++;
-    if (g_city.kingdome.months_since_gift >= 12)
+    if (g_city.kingdome.months_since_gift >= 12) {
         g_city.kingdome.gift_overdose_penalty = 0;
+    }
 
     if (is_yearly_update) {
-        kingdom_salary_penalty = 0;
-        kingdom_milestone_penalty = 0;
-        kingdom_ignored_request_penalty = 0;
-        if (!scenario_is_mission_rank(1) && !scenario_is_mission_rank(2))
-            kingdom -= 2;
-
-        // tribute penalty
-        if (g_city.finance.tribute_not_paid_last_year) {
-            if (g_city.finance.tribute_not_paid_total_years <= 1)
-                kingdom -= 3;
-            else if (g_city.finance.tribute_not_paid_total_years <= 2)
-                kingdom -= 5;
-            else {
-                kingdom -= 8;
-            }
-        }
-        // salary
-        int salary_delta = g_city.kingdome.salary_rank - g_city.kingdome.player_rank;
-        if (g_city.kingdome.player_rank != 0) {
-            if (salary_delta > 0) {
-                // salary too high
-                kingdom -= salary_delta;
-                kingdom_salary_penalty = salary_delta + 1;
-            } else if (salary_delta < 0) {
-                // salary lower than rank
-                kingdom += 1;
-            }
-        } else if (salary_delta > 0) {
-            kingdom -= salary_delta;
-            kingdom_salary_penalty = salary_delta;
-        }
-        // milestone
-        int milestone_pct;
-        if (scenario_criteria_milestone_year(25) == game_time_year())
-            milestone_pct = 25;
-        else if (scenario_criteria_milestone_year(50) == game_time_year())
-            milestone_pct = 50;
-        else if (scenario_criteria_milestone_year(75) == game_time_year())
-            milestone_pct = 75;
-        else {
-            milestone_pct = 0;
-        }
-        if (milestone_pct) {
-            int bonus = 1;
-            if (winning_culture()
-                && culture < calc_adjust_with_percentage(winning_culture(), milestone_pct)) {
-                bonus = 0;
-            }
-            if (winning_prosperity()
-                && prosperity < calc_adjust_with_percentage(winning_prosperity(), milestone_pct)) {
-                bonus = 0;
-            }
-            if (winning_monuments()
-                && monument < calc_adjust_with_percentage(winning_monuments(), milestone_pct)) {
-                bonus = 0;
-            }
-            if (winning_kingdom()
-                && kingdom < calc_adjust_with_percentage(winning_kingdom(), milestone_pct)) {
-                bonus = 0;
-            }
-            if (winning_population()
-                && g_city.population.population < calc_adjust_with_percentage(winning_population(), milestone_pct)) {
-                bonus = 0;
-            }
-            if (bonus)
-                kingdom += 5;
-            else {
-                kingdom -= 2;
-                kingdom_milestone_penalty = 2;
-            }
-        }
-
-        if (kingdom < kingdom_last_year)
-            kingdom_change = 0;
-        else if (kingdom == kingdom_last_year)
-            kingdom_change = 1;
-        else {
-            kingdom_change = 2;
-        }
-        kingdom_last_year = kingdom;
+        update_kingdom_rating_year();
     }
 
     kingdom = calc_bound(kingdom, 0, 100);

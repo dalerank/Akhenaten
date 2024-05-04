@@ -3,6 +3,7 @@
 #include "city/city.h"
 #include "city/population.h"
 #include "city/ratings.h"
+#include "core/game_environment.h"
 #include "core/string.h"
 #include "game/settings.h"
 #include "graphics/graphics.h"
@@ -153,14 +154,7 @@ static int update_extra_info(int is_background) {
     return changed;
 }
 
-#include "core/game_environment.h"
-
-static int draw_extra_info_objective(int x_offset,
-                                     int y_offset,
-                                     int text_group,
-                                     int text_id,
-                                     extra_objective_t* obj,
-                                     int cut_off_at_parenthesis) {
+static int draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, extra_objective_t* obj, int cut_off_at_parenthesis) {
     if (cut_off_at_parenthesis) {
         // Exception for Chinese: the string for "population" includes the hotkey " (6)"
         // To fix that: cut the string off at the '('

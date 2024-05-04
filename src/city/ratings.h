@@ -3,11 +3,17 @@
 #include <cstdint>
 
 enum e_selected_rating {
-    SELECTED_RATING_NONE = 0,
-    SELECTED_RATING_CULTURE = 1,
-    SELECTED_RATING_PROSPERITY = 2,
-    SELECTED_RATING_MONUMENT = 3,
-    SELECTED_RATING_KINGDOM = 4
+    e_selected_rating_none = 0,
+    e_selected_rating_culture = 1,
+    e_selected_rating_prosperity = 2,
+    e_selected_rating_monument = 3,
+    e_selected_rating_kingdom = 4
+};
+
+enum e_rating_change {
+    e_rating_dropping = 0,
+    e_rating_stalling,
+    e_rating_rising
 };
 
 struct city_ratings_t {
@@ -33,7 +39,7 @@ struct city_ratings_t {
     int32_t kingdom_milestone_penalty;
     int32_t kingdom_ignored_request_penalty;
     int32_t kingdom_last_year;
-    int32_t kingdom_change; // 0 = dropping, 1 = stalling, 2 = rising
+    e_rating_change kingdom_change;
 
     int32_t selected;
     int32_t culture_explanation;
@@ -56,5 +62,6 @@ struct city_ratings_t {
     void update_kingdom_explanation();
     void update_culture_rating();
     void update_monument_rating();
-    void update_kingdom_rating(int is_yearly_update);
+    void update_kingdom_rating(bool is_yearly_update);
+    void update_kingdom_rating_year();
 };
