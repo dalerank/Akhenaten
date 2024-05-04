@@ -47,6 +47,7 @@ void icon(vec2i pos, e_resource img);
 void icon(vec2i pos, e_advisor advisor);
 int button_hover(const mouse *m);
 generic_button &button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, std::function<void(int, int)> cb = {});
+generic_button &link(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_WHITE_ON_DARK, std::function<void(int, int)> cb = {});
 generic_button &large_button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
 generic_button &button(uint32_t id);
 image_button &img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size, int offset = 0);

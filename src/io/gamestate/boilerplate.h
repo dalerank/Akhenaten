@@ -17,6 +17,13 @@
 //  165 akhenaten: save house health option
 constexpr uint32_t latest_save_version = 165;
 
+enum e_loaded_type {
+    e_loaded_none = -1,
+    e_loaded_mission = 0,
+    e_loaded_save = 1,
+    e_loaded_custom_map = 2
+};
+
 bstring256 fullpath_saves(const char* filename);
 void fullpath_maps(char* full, const char* filename);
 

@@ -123,9 +123,7 @@ const int GamestateIO::read_file_version(const char* filename, int offset) {
     return small_buffer->read_i32();
 }
 
-enum E_LOADED { LOADED_NULL = -1, LOADED_MISSION = 0, LOADED_SAVE = 1, LOADED_CUSTOM_MAP = 2 };
-
-static int last_loaded = LOADED_NULL;
+static e_loaded_type last_loaded = e_loaded_none;
 static void pre_load() { // do we NEED this...?
     scenario_set_campaign_scenario(-1);
     map_bookmarks_clear();
@@ -197,7 +195,6 @@ static void post_load() {
     map_image_fix_icorrect_tiles();
 
     // building counts / storage
-    // TODO: can't find cache in Pharaoh's save file format?
     building_count_update();
     city_granaries_calculate_stocks();
     city_resource_calculate_storageyard_stocks();
@@ -207,15 +204,18 @@ static void post_load() {
 
     // traders / empire
     trade_prices_reset();
-    g_city.kingdome.init_scenario(scenario_campaign_rank());
 
     // city data special cases
     switch (last_loaded) {
-    case LOADED_MISSION:
+    case e_loaded_mission:
         g_city.init_campaign_mission();
+        g_city.kingdome.init_scenario(scenario_campaign_rank(), last_loaded);
         break;
-    case LOADED_CUSTOM_MAP:
+    case e_loaded_save:
+        break;
+    case e_loaded_custom_map:
         g_city.init_custom_map();
+        g_city.kingdome.init_scenario(scenario_campaign_rank(), last_loaded);
         break;
     }
 
@@ -588,7 +588,7 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
         return false;
     }
 
-    last_loaded = LOADED_MISSION;
+    last_loaded = e_loaded_mission;
     scenario_set_campaign_scenario(scenario_id);
     post_load();
 
@@ -616,7 +616,7 @@ bool GamestateIO::load_savegame(const char* filename_short, bool start_immediate
         return false;
     }
 
-    last_loaded = LOADED_SAVE;
+    last_loaded = e_loaded_save;
     post_load();
 
     // finish loading and start
@@ -637,7 +637,7 @@ bool GamestateIO::load_map(const char* filename_short, bool start_immediately) {
         return false;
     }
 
-    last_loaded = LOADED_CUSTOM_MAP;
+    last_loaded = e_loaded_custom_map;
     post_load();
 
     // finish loading and start
@@ -652,7 +652,7 @@ bool GamestateIO::load_map(const char* filename_short, bool start_immediately) {
 
 void GamestateIO::start_loaded_file() {
     // build the map grids when loading MAP files
-    if (last_loaded != LOADED_SAVE) {
+    if (last_loaded != e_loaded_save) {
         // initialize grids
         map_tiles_update_all_elevation();
         map_tiles_river_refresh_entire();
@@ -722,14 +722,14 @@ void GamestateIO::start_loaded_file() {
     map_tiles_update_all_vegetation_tiles();
     map_building_update_all_tiles();
 
-    if (last_loaded == LOADED_MISSION) {
+    if (last_loaded == e_loaded_mission) {
         window_mission_briefing_show();
     } else {
         game.paused = false;
         window_city_show();
     }
     sound_music_update(true);
-    last_loaded = LOADED_NULL;
+    last_loaded = e_loaded_none;
 }
 
 bool GamestateIO::delete_mission(const int scenario_id) {

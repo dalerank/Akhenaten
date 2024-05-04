@@ -12,11 +12,22 @@
 #include "scenario/invasion.h"
 #include "scenario/property.h"
 
+#include "dev/debug.h"
+#include <iostream>
+
 const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 
 static int cheated_invasion = 0;
 
-void kingdome_relation_t::init_scenario(int rank) {
+declare_console_command_p(addsavings, game_cheat_add_savings);
+void game_cheat_add_savings(std::istream &is, std::ostream &) {
+    std::string args;
+    is >> args;
+    int amount = atoi(!args.empty() ? args.c_str() : "100");
+    g_city.kingdome.personal_savings += amount;
+}
+
+void kingdome_relation_t::init_scenario(int rank, int load_type ) {
     g_city.ratings.kingdom = scenario_starting_kingdom();
     personal_savings = scenario_starting_personal_savings();
     player_rank = rank;

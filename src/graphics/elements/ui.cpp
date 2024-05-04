@@ -74,6 +74,21 @@ int ui::button_hover(const mouse *m) {
     return 0;
 }
 
+generic_button &ui::link(pcstr label, vec2i pos, vec2i size, e_font font, std::function<void(int, int)> cb) {
+    const vec2i offset = g_state.offset();
+
+    g_state.buttons.push_back({pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
+    int focused = is_button_hover(g_state.buttons.back(), offset);
+
+    text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y, size.x, focused ? FONT_NORMAL_YELLOW : font, 0);
+
+    auto &btn = g_state.buttons.back();
+    if (!!cb) {
+        btn.onclick(cb);
+    }
+    return btn;
+}
+
 generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, std::function<void(int, int)> cb) {
     const vec2i offset = g_state.offset();
 
@@ -81,7 +96,7 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, std:
     int focused = is_button_hover(g_state.buttons.back(), offset);
 
     button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, focused ? 1 : 0);
-    text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + 4, 20, font, 0);
+    text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + 4, size.x, font, 0);
 
     auto &btn = g_state.buttons.back();
     if (!!cb) {
@@ -189,7 +204,7 @@ void ui::panel(vec2i pos, vec2i size, UiFlags flags) {
 void ui::icon(vec2i pos, e_resource img) {
     const vec2i offset = g_state.offset();
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), offset.x + pos.x, offset.y + pos.y);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(img), offset.x + pos.x, offset.y + pos.y);
 }
 
 void ui::icon(vec2i pos, e_advisor adv) {

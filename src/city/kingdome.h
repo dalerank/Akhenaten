@@ -40,7 +40,7 @@ struct kingdome_relation_t {
         int32_t retreat_message_shown;
     } invasion;
 
-    void init_scenario(int rank);
+    void init_scenario(int rank, int load_type);
     void init_selected_gift();
     void init_donation_amount();
     const kingdome_gift* get_gift(int size) { return &gifts[size]; }
