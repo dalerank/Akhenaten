@@ -144,10 +144,10 @@ static int update_extra_info(int is_background) {
         if (is_background)
             set_extra_info_objectives();
 
-        changed |= update_extra_info_value(city_rating_culture(), &g_extra_data.culture.value);
-        changed |= update_extra_info_value(city_rating_prosperity(), &g_extra_data.prosperity.value);
-        changed |= update_extra_info_value(city_rating_monument(), &g_extra_data.monument.value);
-        changed |= update_extra_info_value(city_rating_kingdom(), &g_extra_data.kingdom.value);
+        changed |= update_extra_info_value(g_city.ratings.culture, &g_extra_data.culture.value);
+        changed |= update_extra_info_value(g_city.ratings.prosperity, &g_extra_data.prosperity.value);
+        changed |= update_extra_info_value(g_city.ratings.monument, &g_extra_data.monument.value);
+        changed |= update_extra_info_value(g_city.ratings.kingdom, &g_extra_data.kingdom.value);
         changed |= update_extra_info_value(city_population(), &g_extra_data.population.value);
     }
     return changed;

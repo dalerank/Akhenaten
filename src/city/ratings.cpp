@@ -13,64 +13,38 @@
 #include "dev/debug.h"
 #include <iostream>
 
-static auto &city_data = g_city;
-
 declare_console_command_p(addprosperity, game_cheat_add_prosperity)
 void game_cheat_add_prosperity(std::istream &is, std::ostream &os) {
     std::string args; is >> args;
     int amount = atoi(args.empty() ? (pcstr)"100" : args.c_str());
-    city_data.ratings.prosperity = calc_bound(city_data.ratings.prosperity + amount, 0, 100);
+    g_city.ratings.prosperity = calc_bound(g_city.ratings.prosperity + amount, 0, 100);
 };
 
-int city_rating_culture() {
-    return city_data.ratings.culture;
-}
-
-int city_rating_prosperity() {
-    return city_data.ratings.prosperity;
-}
-
-int city_rating_monument() {
-    return city_data.ratings.monument;
-}
-
-int city_rating_kingdom() {
-    return city_data.ratings.kingdom;
-}
-
-int city_rating_selected() {
-    return city_data.ratings.selected;
-}
-
-void city_rating_select(int rating) {
-    city_data.ratings.selected = rating;
-}
-
-int city_rating_selected_explanation() {
-    switch (city_data.ratings.selected) {
+int city_ratings_t::selected_explanation() {
+    switch (selected) {
     case SELECTED_RATING_CULTURE:
-        return city_data.ratings.culture_explanation;
+        return culture_explanation;
     case SELECTED_RATING_PROSPERITY:
-        return city_data.ratings.prosperity_explanation;
+        return prosperity_explanation;
     case SELECTED_RATING_MONUMENT:
-        return city_data.ratings.monument_explanation;
+        return monument_explanation;
     case SELECTED_RATING_KINGDOM:
-        return city_data.ratings.kingdom_explanation;
+        return kingdom_explanation;
     default:
         return 0;
     }
 }
 
-void city_ratings_reduce_prosperity_after_bailout() {
-    city_data.ratings.prosperity -= 3;
-    if (city_data.ratings.prosperity < 0) {
-        city_data.ratings.prosperity = 0;
+void city_ratings_t::reduce_prosperity_after_bailout() {
+    prosperity -= 3;
+    if (prosperity < 0) {
+        prosperity = 0;
     }
 
-    city_data.ratings.prosperity_explanation = 8;
+    prosperity_explanation = 8;
 }
 
-void city_ratings_monument_building_destroyed(int type) {
+void city_ratings_t::monument_building_destroyed(int type) {
     switch (type) {
     case BUILDING_HOUSE_CRUDE_HUT:
     case BUILDING_HOUSE_STURDY_HUT:
@@ -86,47 +60,48 @@ void city_ratings_monument_building_destroyed(int type) {
         break;
 
     default:
-        city_data.ratings.monument_destroyed_buildings++;
+        monument_destroyed_buildings++;
         break;
     }
 
-    if (city_data.ratings.monument_destroyed_buildings >= 12) {
-        city_data.ratings.monument_destroyed_buildings = 12;
+    if (monument_destroyed_buildings >= 12) {
+        monument_destroyed_buildings = 12;
     }
 }
 
-void city_ratings_monument_record_criminal(void) {
-    city_data.ratings.monument_num_criminals++;
+void city_ratings_t::monument_record_criminal() {
+    monument_num_criminals++;
 }
 
-void city_ratings_monument_record_rioter(void) {
-    city_data.ratings.monument_num_rioters++;
-    city_data.ratings.monument_riot_cause = city_data.sentiment.low_mood_cause;
+void city_ratings_t::monument_record_rioter() {
+    monument_num_rioters++;
+    monument_riot_cause = g_city.sentiment.low_mood_cause;
 }
 
-void city_ratings_change_kingdom(int amount) {
-    city_data.ratings.kingdom = calc_bound(city_data.ratings.kingdom + amount, 0, 100);
+void city_ratings_t::change_kingdom(int amount) {
+    kingdom = calc_bound(kingdom + amount, 0, 100);
 }
 
-void city_ratings_reset_kingdom_emperor_change(void) {
-    city_data.ratings.kingdom = 50;
+void city_ratings_t::reset_kingdom() {
+    kingdom = 50;
 }
 
-void city_ratings_reduce_kingdom_missed_request(int penalty) {
-    city_ratings_change_kingdom(-penalty);
-    city_data.ratings.kingdom_ignored_request_penalty = penalty;
+void city_ratings_t::reduce_kingdom_missed_request(int penalty) {
+    change_kingdom(-penalty);
+    kingdom_ignored_request_penalty = penalty;
 }
 
-void city_ratings_limit_kingdom(int max_kingdom) {
-    if (city_data.ratings.kingdom > max_kingdom)
-        city_data.ratings.kingdom = max_kingdom;
+void city_ratings_t::limit_kingdom(int max_kingdom) {
+    if (kingdom > max_kingdom) {
+        kingdom = max_kingdom;
+    }
 }
 
-static void update_culture_explanation(void) {
+void city_ratings_t::update_culture_explanation() {
     int min_percentage = 100;
     int reason = 1;
-    if (city_data.culture.religion_coverage < min_percentage) {
-        min_percentage = city_data.culture.religion_coverage;
+    if (g_city.culture.religion_coverage < min_percentage) {
+        min_percentage = g_city.culture.religion_coverage;
         reason = 4;
     }
 
@@ -153,254 +128,244 @@ static void update_culture_explanation(void) {
         reason = 3;
     }
 
-    city_data.ratings.culture_explanation = reason;
+    culture_explanation = reason;
 }
 
-bool city_t::has_made_money() {
-    const int treasury_this_year = finance.last_year.expenses.construction + finance.treasury;
-    const int treasury_last_year = ratings.prosperity_treasury_last_year;
-    return (treasury_this_year > treasury_last_year);
-}
-
-static void update_monument_explanation(void) {
+void city_ratings_t::update_monument_explanation() {
     int reason;
-    if (city_data.figure.kingdome_soldiers)
+    if (g_city.figure.kingdome_soldiers)
         reason = 8; // FIXED: 7+8 interchanged
-    else if (city_data.figure.enemies)
+    else if (g_city.figure.enemies)
         reason = 7;
-    else if (city_data.figure.rioters)
+    else if (g_city.figure.rioters)
         reason = 6;
     else {
-        if (city_data.ratings.monument < 10)
+        if (g_city.ratings.monument < 10)
             reason = 0;
-        else if (city_data.ratings.monument < 30)
+        else if (g_city.ratings.monument < 30)
             reason = 1;
-        else if (city_data.ratings.monument < 60)
+        else if (g_city.ratings.monument < 60)
             reason = 2;
-        else if (city_data.ratings.monument < 90)
+        else if (g_city.ratings.monument < 90)
             reason = 3;
-        else if (city_data.ratings.monument < 100)
+        else if (g_city.ratings.monument < 100)
             reason = 4;
         else { // >= 100
             reason = 5;
         }
     }
-    city_data.ratings.monument_explanation = reason;
+    g_city.ratings.monument_explanation = reason;
 }
 
-void city_ratings_update_kingdom_explanation(void) {
-    city_data.ratings.kingdom_salary_penalty = 0;
-    int salary_delta = city_data.kingdome.salary_rank - city_data.kingdome.player_rank;
-    if (city_data.kingdome.player_rank != 0) {
-        if (salary_delta > 0)
-            city_data.ratings.kingdom_salary_penalty = salary_delta + 1;
+void city_ratings_t::update_kingdom_explanation() {
+    kingdom_salary_penalty = 0;
+    int salary_delta = g_city.kingdome.salary_rank - g_city.kingdome.player_rank;
+    if (g_city.kingdome.player_rank != 0) {
+        if (salary_delta > 0) {
+            kingdom_salary_penalty = salary_delta + 1;
+        }
 
-    } else if (salary_delta > 0)
-        city_data.ratings.kingdom_salary_penalty = salary_delta;
+    } else if (salary_delta > 0) {
+        kingdom_salary_penalty = salary_delta;
+    }
 
-    if (city_data.ratings.kingdom_salary_penalty >= 8)
-        city_data.ratings.kingdom_explanation = 1;
-    else if (city_data.finance.tribute_not_paid_total_years >= 3)
-        city_data.ratings.kingdom_explanation = 2;
-    else if (city_data.ratings.kingdom_ignored_request_penalty >= 5)
-        city_data.ratings.kingdom_explanation = 3;
-    else if (city_data.ratings.kingdom_salary_penalty >= 5)
-        city_data.ratings.kingdom_explanation = 4;
-    else if (city_data.finance.tribute_not_paid_total_years >= 2)
-        city_data.ratings.kingdom_explanation = 5;
-    else if (city_data.ratings.kingdom_ignored_request_penalty >= 3)
-        city_data.ratings.kingdom_explanation = 6;
-    else if (city_data.ratings.kingdom_salary_penalty >= 3)
-        city_data.ratings.kingdom_explanation = 7;
-    else if (city_data.finance.tribute_not_paid_last_year)
-        city_data.ratings.kingdom_explanation = 8;
-    else if (city_data.ratings.kingdom_salary_penalty >= 2)
-        city_data.ratings.kingdom_explanation = 9;
-    else if (city_data.ratings.kingdom_milestone_penalty)
-        city_data.ratings.kingdom_explanation = 10;
-    else if (city_data.ratings.kingdom_salary_penalty)
-        city_data.ratings.kingdom_explanation = 11;
-    else if (city_data.ratings.kingdom_change == 2) { // rising
-        city_data.ratings.kingdom_explanation = 12;
-    } else if (city_data.ratings.kingdom_change == 1) { // the same
-        city_data.ratings.kingdom_explanation = 13;
+    if (kingdom_salary_penalty >= 8)
+        kingdom_explanation = 1;
+    else if (g_city.finance.tribute_not_paid_total_years >= 3)
+        kingdom_explanation = 2;
+    else if (kingdom_ignored_request_penalty >= 5)
+        kingdom_explanation = 3;
+    else if (kingdom_salary_penalty >= 5)
+        kingdom_explanation = 4;
+    else if (g_city.finance.tribute_not_paid_total_years >= 2)
+        kingdom_explanation = 5;
+    else if (kingdom_ignored_request_penalty >= 3)
+        kingdom_explanation = 6;
+    else if (kingdom_salary_penalty >= 3)
+        kingdom_explanation = 7;
+    else if (g_city.finance.tribute_not_paid_last_year)
+        kingdom_explanation = 8;
+    else if (kingdom_salary_penalty >= 2)
+        kingdom_explanation = 9;
+    else if (kingdom_milestone_penalty)
+        kingdom_explanation = 10;
+    else if (kingdom_salary_penalty)
+        kingdom_explanation = 11;
+    else if (kingdom_change == 2) { // rising
+        kingdom_explanation = 12;
+    } else if (kingdom_change == 1) { // the same
+        kingdom_explanation = 13;
     } else {
-        city_data.ratings.kingdom_explanation = 0;
+        kingdom_explanation = 0;
     }
 }
 
-void city_t::ratings_update_explanations() {
-    update_culture_explanation();
-    update_prosperity_explanation();
-    update_monument_explanation();
-    city_ratings_update_kingdom_explanation();
-}
+void city_ratings_t::update_culture_rating() {
+    culture = 0;
+    culture_explanation = 0;
 
-static void update_culture_rating() {
-    city_data.ratings.culture = 0;
-    city_data.ratings.culture_explanation = 0;
-
-    if (city_data.population.population <= 0) {
+    if (g_city.population.population <= 0) {
         return;
     }
 
     int pct_booth = city_culture_coverage_booth();
     if (pct_booth >= 100) {
-        city_data.ratings.culture_points.entertainment = 25;
+        culture_points.entertainment = 25;
     } else if (pct_booth > 85) {
-        city_data.ratings.culture_points.entertainment = 18;
+        culture_points.entertainment = 18;
     } else if (pct_booth > 70) {
-        city_data.ratings.culture_points.entertainment = 12;
+        culture_points.entertainment = 12;
     } else if (pct_booth > 50) {
-        city_data.ratings.culture_points.entertainment = 8;
+        culture_points.entertainment = 8;
     } else if (pct_booth > 30) {
-        city_data.ratings.culture_points.entertainment = 3;
+        culture_points.entertainment = 3;
     } else {
-        city_data.ratings.culture_points.entertainment = 0;
+        culture_points.entertainment = 0;
     }
-    city_data.ratings.culture += city_data.ratings.culture_points.entertainment;
+    culture += culture_points.entertainment;
 
-    int pct_religion = city_data.culture.religion_coverage;
+    int pct_religion = g_city.culture.religion_coverage;
     if (pct_religion >= 100) {
-        city_data.ratings.culture_points.religion = 30;
+        culture_points.religion = 30;
     } else if (pct_religion > 85) {
-        city_data.ratings.culture_points.religion = 22;
+        culture_points.religion = 22;
     } else if (pct_religion > 70) {
-        city_data.ratings.culture_points.religion = 14;
+        culture_points.religion = 14;
     } else if (pct_religion > 50) {
-        city_data.ratings.culture_points.religion = 9;
+        culture_points.religion = 9;
     } else if (pct_religion > 30) {
-        city_data.ratings.culture_points.religion = 3;
+        culture_points.religion = 3;
     } else {
-        city_data.ratings.culture_points.religion = 0;
+        culture_points.religion = 0;
     }
-    city_data.ratings.culture += city_data.ratings.culture_points.religion;
+    culture += culture_points.religion;
 
     int pct_school = city_culture_coverage_school();
     if (pct_school >= 100)
-        city_data.ratings.culture_points.school = 15;
+        culture_points.school = 15;
     else if (pct_school > 85)
-        city_data.ratings.culture_points.school = 10;
+        culture_points.school = 10;
     else if (pct_school > 70)
-        city_data.ratings.culture_points.school = 6;
+        culture_points.school = 6;
     else if (pct_school > 50)
-        city_data.ratings.culture_points.school = 4;
+        culture_points.school = 4;
     else if (pct_school > 30)
-        city_data.ratings.culture_points.school = 1;
+        culture_points.school = 1;
     else {
-        city_data.ratings.culture_points.school = 0;
+        culture_points.school = 0;
     }
-    city_data.ratings.culture += city_data.ratings.culture_points.school;
+    culture += culture_points.school;
 
     int pct_academy = city_culture_coverage_academy();
     if (pct_academy >= 100)
-        city_data.ratings.culture_points.academy = 10;
+        culture_points.academy = 10;
     else if (pct_academy > 85)
-        city_data.ratings.culture_points.academy = 7;
+        culture_points.academy = 7;
     else if (pct_academy > 70)
-        city_data.ratings.culture_points.academy = 4;
+        culture_points.academy = 4;
     else if (pct_academy > 50)
-        city_data.ratings.culture_points.academy = 2;
+        culture_points.academy = 2;
     else if (pct_academy > 30)
-        city_data.ratings.culture_points.academy = 1;
+        culture_points.academy = 1;
     else {
-        city_data.ratings.culture_points.academy = 0;
+        culture_points.academy = 0;
     }
-    city_data.ratings.culture += city_data.ratings.culture_points.academy;
+    culture += culture_points.academy;
 
     int pct_library = city_culture_coverage_library();
     if (pct_library >= 100)
-        city_data.ratings.culture_points.library = 20;
+        culture_points.library = 20;
     else if (pct_library > 85)
-        city_data.ratings.culture_points.library = 14;
+        culture_points.library = 14;
     else if (pct_library > 70)
-        city_data.ratings.culture_points.library = 8;
+        culture_points.library = 8;
     else if (pct_library > 50)
-        city_data.ratings.culture_points.library = 4;
+        culture_points.library = 4;
     else if (pct_library > 30)
-        city_data.ratings.culture_points.library = 2;
+        culture_points.library = 2;
     else {
-        city_data.ratings.culture_points.library = 0;
+        culture_points.library = 0;
     }
-    city_data.ratings.culture += city_data.ratings.culture_points.library;
+    culture += culture_points.library;
 
-    city_data.ratings.culture = calc_bound(city_data.ratings.culture, 0, 100);
+    culture = calc_bound(culture, 0, 100);
     update_culture_explanation();
 }
 
-static void update_monument_rating() {
+void city_ratings_t::update_monument_rating() {
     int change = 0;
-    if (city_data.ratings.monument_years_of_monument < 2)
+    if (monument_years_of_monument < 2)
         change += 2;
     else {
         change += 5;
     }
-    if (city_data.ratings.monument_num_criminals)
+    if (monument_num_criminals)
         change -= 1;
 
-    if (city_data.ratings.monument_num_rioters)
+    if (monument_num_rioters)
         change -= 5;
 
-    if (city_data.ratings.monument_destroyed_buildings)
-        change -= city_data.ratings.monument_destroyed_buildings;
+    if (monument_destroyed_buildings)
+        change -= monument_destroyed_buildings;
 
-    if (city_data.ratings.monument_num_rioters || city_data.ratings.monument_destroyed_buildings)
-        city_data.ratings.monument_years_of_monument = 0;
+    if (monument_num_rioters || monument_destroyed_buildings)
+        monument_years_of_monument = 0;
     else {
-        city_data.ratings.monument_years_of_monument += 1;
+        monument_years_of_monument += 1;
     }
 
-    city_data.ratings.monument_num_criminals = 0;
-    city_data.ratings.monument_num_rioters = 0;
-    city_data.ratings.monument_destroyed_buildings = 0;
+    monument_num_criminals = 0;
+    monument_num_rioters = 0;
+    monument_destroyed_buildings = 0;
 
     int max_population_limit = std::min<int>(city_population(), 4000);
     int monument_ratings_cap = std::max(1, max_population_limit / 1000) * 25;
 
-    city_data.ratings.monument = calc_bound(city_data.ratings.monument + change, 0, monument_ratings_cap);
+    monument = calc_bound(monument + change, 0, monument_ratings_cap);
     update_monument_explanation();
 }
 
-static void update_kingdom_rating(int is_yearly_update) {
+void city_ratings_t::update_kingdom_rating(int is_yearly_update) {
     if (scenario_is_open_play()) {
-        city_data.ratings.kingdom = 50;
+        kingdom = 50;
         return;
     }
-    city_data.kingdome.months_since_gift++;
-    if (city_data.kingdome.months_since_gift >= 12)
-        city_data.kingdome.gift_overdose_penalty = 0;
+
+    g_city.kingdome.months_since_gift++;
+    if (g_city.kingdome.months_since_gift >= 12)
+        g_city.kingdome.gift_overdose_penalty = 0;
 
     if (is_yearly_update) {
-        city_data.ratings.kingdom_salary_penalty = 0;
-        city_data.ratings.kingdom_milestone_penalty = 0;
-        city_data.ratings.kingdom_ignored_request_penalty = 0;
+        kingdom_salary_penalty = 0;
+        kingdom_milestone_penalty = 0;
+        kingdom_ignored_request_penalty = 0;
         if (!scenario_is_mission_rank(1) && !scenario_is_mission_rank(2))
-            city_data.ratings.kingdom -= 2;
+            kingdom -= 2;
 
         // tribute penalty
-        if (city_data.finance.tribute_not_paid_last_year) {
-            if (city_data.finance.tribute_not_paid_total_years <= 1)
-                city_data.ratings.kingdom -= 3;
-            else if (city_data.finance.tribute_not_paid_total_years <= 2)
-                city_data.ratings.kingdom -= 5;
+        if (g_city.finance.tribute_not_paid_last_year) {
+            if (g_city.finance.tribute_not_paid_total_years <= 1)
+                kingdom -= 3;
+            else if (g_city.finance.tribute_not_paid_total_years <= 2)
+                kingdom -= 5;
             else {
-                city_data.ratings.kingdom -= 8;
+                kingdom -= 8;
             }
         }
         // salary
-        int salary_delta = city_data.kingdome.salary_rank - city_data.kingdome.player_rank;
-        if (city_data.kingdome.player_rank != 0) {
+        int salary_delta = g_city.kingdome.salary_rank - g_city.kingdome.player_rank;
+        if (g_city.kingdome.player_rank != 0) {
             if (salary_delta > 0) {
                 // salary too high
-                city_data.ratings.kingdom -= salary_delta;
-                city_data.ratings.kingdom_salary_penalty = salary_delta + 1;
+                kingdom -= salary_delta;
+                kingdom_salary_penalty = salary_delta + 1;
             } else if (salary_delta < 0) {
                 // salary lower than rank
-                city_data.ratings.kingdom += 1;
+                kingdom += 1;
             }
         } else if (salary_delta > 0) {
-            city_data.ratings.kingdom -= salary_delta;
-            city_data.ratings.kingdom_salary_penalty = salary_delta;
+            kingdom -= salary_delta;
+            kingdom_salary_penalty = salary_delta;
         }
         // milestone
         int milestone_pct;
@@ -416,54 +381,43 @@ static void update_kingdom_rating(int is_yearly_update) {
         if (milestone_pct) {
             int bonus = 1;
             if (winning_culture()
-                && city_data.ratings.culture < calc_adjust_with_percentage(winning_culture(), milestone_pct)) {
+                && culture < calc_adjust_with_percentage(winning_culture(), milestone_pct)) {
                 bonus = 0;
             }
             if (winning_prosperity()
-                && city_data.ratings.prosperity < calc_adjust_with_percentage(winning_prosperity(), milestone_pct)) {
+                && prosperity < calc_adjust_with_percentage(winning_prosperity(), milestone_pct)) {
                 bonus = 0;
             }
             if (winning_monuments()
-                && city_data.ratings.monument < calc_adjust_with_percentage(winning_monuments(), milestone_pct)) {
+                && monument < calc_adjust_with_percentage(winning_monuments(), milestone_pct)) {
                 bonus = 0;
             }
             if (winning_kingdom()
-                && city_data.ratings.kingdom < calc_adjust_with_percentage(winning_kingdom(), milestone_pct)) {
+                && kingdom < calc_adjust_with_percentage(winning_kingdom(), milestone_pct)) {
                 bonus = 0;
             }
             if (winning_population()
-                && city_data.population.population < calc_adjust_with_percentage(winning_population(), milestone_pct)) {
+                && g_city.population.population < calc_adjust_with_percentage(winning_population(), milestone_pct)) {
                 bonus = 0;
             }
             if (bonus)
-                city_data.ratings.kingdom += 5;
+                kingdom += 5;
             else {
-                city_data.ratings.kingdom -= 2;
-                city_data.ratings.kingdom_milestone_penalty = 2;
+                kingdom -= 2;
+                kingdom_milestone_penalty = 2;
             }
         }
 
-        if (city_data.ratings.kingdom < city_data.ratings.kingdom_last_year)
-            city_data.ratings.kingdom_change = 0;
-        else if (city_data.ratings.kingdom == city_data.ratings.kingdom_last_year)
-            city_data.ratings.kingdom_change = 1;
+        if (kingdom < kingdom_last_year)
+            kingdom_change = 0;
+        else if (kingdom == kingdom_last_year)
+            kingdom_change = 1;
         else {
-            city_data.ratings.kingdom_change = 2;
+            kingdom_change = 2;
         }
-        city_data.ratings.kingdom_last_year = city_data.ratings.kingdom;
+        kingdom_last_year = kingdom;
     }
 
-    city_data.ratings.kingdom = calc_bound(city_data.ratings.kingdom, 0, 100);
-    city_ratings_update_kingdom_explanation();
-}
-
-void city_t::ratings_update(bool is_yearly_update) {
-    update_culture_rating();
-    update_kingdom_rating(is_yearly_update);
-    calculate_max_prosperity();
-
-    if (is_yearly_update) {
-        update_prosperity_rating();
-        update_monument_rating();
-    }
+    kingdom = calc_bound(kingdom, 0, 100);
+    update_kingdom_explanation();
 }

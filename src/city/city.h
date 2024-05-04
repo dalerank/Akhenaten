@@ -12,6 +12,7 @@
 #include "city/resource.h"
 #include "city/map.h"
 #include "city/gods.h"
+#include "city/ratings.h"
 #include "grid/point.h"
 
 struct city_t {
@@ -203,37 +204,7 @@ struct city_t {
         int32_t monuments;
     } sentiment;
     city_health_t health;
-    struct {
-        int32_t culture;
-        int32_t prosperity;
-        int32_t monument; // peace
-        int32_t kingdom;  // favor
-        struct {
-            int32_t entertainment;
-            int32_t religion;
-            int32_t school;
-            int32_t library;
-            int32_t academy;
-        } culture_points;
-        int32_t prosperity_treasury_last_year;
-        int32_t prosperity_max;
-        int32_t monument_destroyed_buildings;
-        int32_t monument_years_of_monument;
-        int32_t monument_num_criminals;
-        int32_t monument_num_rioters;
-        int32_t monument_riot_cause;
-        int32_t kingdom_salary_penalty;
-        int32_t kingdom_milestone_penalty;
-        int32_t kingdom_ignored_request_penalty;
-        int32_t kingdom_last_year;
-        int32_t kingdom_change; // 0 = dropping, 1 = stalling, 2 = rising
-
-        int32_t selected;
-        int32_t culture_explanation;
-        int32_t prosperity_explanation;
-        int32_t monument_explanation;
-        int32_t kingdom_explanation;
-    } ratings;
+    city_ratings_t ratings;
     struct {
         int32_t average_entertainment;
         int32_t average_religion;

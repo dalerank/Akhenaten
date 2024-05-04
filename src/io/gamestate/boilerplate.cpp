@@ -684,7 +684,7 @@ void GamestateIO::start_loaded_file() {
         // set up events
         scenario_earthquake_init();
         scenario_gladiator_revolt_init();
-        scenario_emperor_change_init();
+        scenario_kingdome_change_init();
         scenario_criteria_init_max_year();
         scenario_invasion_init();
         city_military_determine_distant_battle_city();

@@ -1,6 +1,6 @@
 #include "advisor_ratings.h"
 
-#include "city/ratings.h"
+#include "city/city.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/view/view.h"
@@ -89,44 +89,44 @@ void ui::advisor_ratings_window::draw_foreground() {
     int open_play = scenario_is_open_play();
 
     // culture
-    draw_rating(0, city_rating_culture(), open_play, winning_culture());
-    draw_rating(1, city_rating_prosperity(), open_play, winning_prosperity());
-    draw_rating(2, city_rating_monument(), open_play, winning_monuments());
-    draw_rating(3, city_rating_kingdom(), open_play, winning_kingdom());
+    draw_rating(0, g_city.ratings.culture, open_play, winning_culture());
+    draw_rating(1, g_city.ratings.prosperity, open_play, winning_prosperity());
+    draw_rating(2, g_city.ratings.monument, open_play, winning_monuments());
+    draw_rating(3, g_city.ratings.kingdom, open_play, winning_kingdom());
 
     // bottom info box
     int box_x = 44;
     int box_y = 340;
     int box_w = 520;
     inner_panel_draw(box_x, box_y, 35, 5);
-    switch (city_rating_selected()) {
+    switch (g_city.ratings.selected) {
     case SELECTED_RATING_CULTURE:
         lang_text_draw(53, 1, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
-        if (city_rating_culture() <= 90) {
-            lang_text_draw_multiline(53, 9 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
+        if (g_city.ratings.culture <= 90) {
+            lang_text_draw_multiline(53, 9 + g_city.ratings.selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         } else
             lang_text_draw_multiline(53, 50, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         break;
 
     case SELECTED_RATING_PROSPERITY:
         lang_text_draw(53, 2, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
-        if (city_rating_prosperity() <= 90) {
-            lang_text_draw_multiline(53, 16 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
+        if (g_city.ratings.prosperity <= 90) {
+            lang_text_draw_multiline(53, 16 + g_city.ratings.selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         } else
             lang_text_draw_multiline(53, 51, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         break;
     case SELECTED_RATING_MONUMENT:
         lang_text_draw(53, 3, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
-        if (city_rating_monument() <= 90) {
-            lang_text_draw_multiline(53, 41 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
+        if (g_city.ratings.monument <= 90) {
+            lang_text_draw_multiline(53, 41 + g_city.ratings.selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         } else
             lang_text_draw_multiline(53, 52, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         break;
 
     case SELECTED_RATING_KINGDOM:
         lang_text_draw(53, 4, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
-        if (city_rating_kingdom() <= 90) {
-            lang_text_draw_multiline(53, 27 + city_rating_selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
+        if (g_city.ratings.kingdom <= 90) {
+            lang_text_draw_multiline(53, 27 +g_city.ratings.selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         } else
             lang_text_draw_multiline(53, 53, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
         break;
@@ -147,7 +147,7 @@ int ui::advisor_ratings_window::handle_mouse(const mouse* m) {
 }
 
 static void button_rating(int rating, int param2) {
-    city_rating_select(rating);
+    g_city.ratings.selected = rating;
     window_invalidate();
 }
 

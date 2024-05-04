@@ -471,7 +471,7 @@ static void perform_major_blessing(e_god god) {
             return;
         } else {
             // increased kingdom by 15
-            city_ratings_change_kingdom(15);
+            g_city.ratings.change_kingdom(15);
             city_message_god_post(GOD_RA, true, MESSAGE_BLESSING_RA_KINGDOM, 0, 0);
             return;
         }
@@ -521,7 +521,7 @@ static void perform_minor_blessing(int god) {
         } else {
             // slightly increased reputation
             city_message_post(true, MESSAGE_SMALL_BLESSING_RA_1, 0, 0);
-            city_ratings_change_kingdom(5);
+            g_city.ratings.change_kingdom(5);
             return;
         }
         break;
@@ -580,7 +580,7 @@ static void perform_major_curse(int god) {
 
         if (anti_scum_random_15bit() % 3 == 1) {
             // lowers reputation
-            city_ratings_change_kingdom(-15);
+            g_city.ratings.change_kingdom(-15);
             city_message_post(true, MESSAGE_CURSE_RA_1, 0, 0);
             return;
         }
@@ -657,7 +657,7 @@ static void perform_minor_curse(e_god god) {
             return;
         } else {
             // lowers reputation
-            city_ratings_change_kingdom(-5);
+            g_city.ratings.change_kingdom(-5);
             city_message_god_post(GOD_RA, true, MESSAGE_SMALL_CURSE_RA_1, 0, 0);
             return;
         }

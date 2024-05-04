@@ -48,6 +48,30 @@ void city_t::init_custom_map() {
     finance.last_year.balance = finance.treasury;
 }
 
+bool city_t::has_made_money() {
+    const int treasury_this_year = finance.last_year.expenses.construction + finance.treasury;
+    const int treasury_last_year = ratings.prosperity_treasury_last_year;
+    return (treasury_this_year > treasury_last_year);
+}
+
+void city_t::ratings_update_explanations() {
+    ratings.update_culture_explanation();
+    update_prosperity_explanation();
+    ratings.update_monument_explanation();
+    ratings.update_kingdom_explanation();
+}
+
+void city_t::ratings_update(bool is_yearly_update) {
+    ratings.update_culture_rating();
+    ratings.update_kingdom_rating(is_yearly_update);
+    calculate_max_prosperity();
+
+    if (is_yearly_update) {
+        update_prosperity_rating();
+        ratings.update_monument_rating();
+    }
+}
+
 void city_t::init_campaign_mission() {
     finance.treasury = difficulty_adjust_money(finance.treasury);
 }

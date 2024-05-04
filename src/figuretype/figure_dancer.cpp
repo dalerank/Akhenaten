@@ -55,7 +55,7 @@ sound_key figure_dancer::phrase_key() const {
         keys.push_back("gods_are_pleasures");
     }
 
-    if (city_rating_kingdom() < 30) {
+    if (g_city.ratings.kingdom < 30) {
         keys.push_back("city_is_bad");
     }
 

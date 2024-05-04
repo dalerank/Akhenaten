@@ -19,7 +19,7 @@
 #include "scenario/request.h"
 #include "window/donate_to_city.h"
 #include "window/empire.h"
-#include "window/gift_to_emperor.h"
+#include "window/window_gift_to_kingdome.h"
 #include "window/popup_dialog.h"
 #include "window/set_salary.h"
 #include "game/game.h"
@@ -102,9 +102,9 @@ int ui::advisor_monuments_window::draw_background() {
     text_draw(city_player_name(), 60, 12, FONT_LARGE_BLACK_ON_LIGHT, 0);
 
     int width = lang_text_draw(52, 0, 60, 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    text_draw_number(city_rating_kingdom(), '@', " ", 60 + width, 44, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number(g_city.ratings.kingdom, '@', " ", 60 + width, 44, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    lang_text_draw_multiline(52, city_rating_kingdom() / 5 + 22, vec2i{60, 60}, 544, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(52, g_city.ratings.kingdom / 5 + 22, vec2i{60, 60}, 544, FONT_NORMAL_BLACK_ON_LIGHT);
 
     inner_panel_draw(32, 90, 36, 14);
 

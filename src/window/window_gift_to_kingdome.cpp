@@ -1,4 +1,4 @@
-#include "gift_to_emperor.h"
+#include "window_gift_to_kingdome.h"
 
 #include "city/city.h"
 #include "game/resource.h"
@@ -28,11 +28,11 @@ static generic_button buttons[] = {
 
 static int focus_button_id;
 
-static void init(void) {
+static void window_gift_to_kingdome_init(void) {
     g_city.kingdome.init_selected_gift();
 }
 
-static void draw_background() {
+static void window_gift_to_kingdome_draw_background() {
     window_advisors_draw_dialog_background();
 
     graphics_set_to_dialog();
@@ -49,7 +49,7 @@ static void draw_background() {
     graphics_reset_dialog();
 }
 
-static void draw_foreground(void) {
+static void window_gift_to_kingdome_draw_foreground(void) {
     graphics_set_to_dialog();
 
     inner_panel_draw(112, 208, 28, 5);
@@ -87,7 +87,7 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse* m, const hotkeys* h) {
+static void window_gift_to_kingdome_handle_input(const mouse* m, const hotkeys* h) {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 5, &focus_button_id))
         return;
     if (input_go_back_requested(m, h))
@@ -110,8 +110,13 @@ static void button_cancel(int param1, int param2) {
     window_advisors_show();
 }
 
-void window_gift_to_emperor_show(void) {
-    window_type window = {WINDOW_GIFT_TO_EMPEROR, draw_background, draw_foreground, handle_input};
-    init();
+void window_gift_to_kingdome_show(void) {
+    window_type window = {
+        WINDOW_GIFT_TO_EMPEROR,
+        window_gift_to_kingdome_draw_background,
+        window_gift_to_kingdome_draw_foreground,
+        window_gift_to_kingdome_handle_input
+    };
+    window_gift_to_kingdome_init();
     window_show(&window);
 }

@@ -48,12 +48,12 @@ void kingdome_relation_t::update_debt_state() {
         debt_state = 1;
         months_in_debt = 0;
         city_message_post(true, MESSAGE_CITY_IN_DEBT, 0, 0);
-        city_ratings_reduce_prosperity_after_bailout();
+        g_city.ratings.reduce_prosperity_after_bailout();
     } else if (debt_state == 1) {
         debt_state = 2;
         months_in_debt = 0;
         city_message_post(true, MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
-        city_ratings_change_kingdom(-5);
+        g_city.ratings.change_kingdom(-5);
     } else if (debt_state == 2) {
         if (months_in_debt == -1) {
             city_message_post(true, MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
@@ -67,7 +67,7 @@ void kingdome_relation_t::update_debt_state() {
             months_in_debt = 0;
             if (!g_city.figure.kingdome_soldiers) {
                 city_message_post(true, MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
-                city_ratings_change_kingdom(-10);
+                g_city.ratings.change_kingdom(-10);
             }
         }
     } else if (debt_state == 3) {
@@ -82,7 +82,7 @@ void kingdome_relation_t::update_debt_state() {
             debt_state = 4;
             months_in_debt = 0;
             if (!g_city.figure.kingdome_soldiers)
-                city_ratings_limit_kingdom(10);
+                g_city.ratings.limit_kingdom(10);
         }
     }
 }
@@ -109,7 +109,7 @@ void kingdome_relation_t::process_invasion() {
         invasion.size = 0;
         invasion.soldiers_killed = 0;
         if (g_city.ratings.kingdom < 35) {
-            city_ratings_change_kingdom(10);
+            g_city.ratings.change_kingdom(10);
             if (invasion.count < 2)
                 city_message_post(true, MESSAGE_CAESAR_RESPECT_1, 0, 0);
             else if (invasion.count < 3)
@@ -200,38 +200,38 @@ void kingdome_relation_t::send_gift() {
     if (gift_overdose_penalty <= 0) {
         gift_overdose_penalty = 1;
         if (size == GIFT_MODEST)
-            city_ratings_change_kingdom(3);
+            g_city.ratings.change_kingdom(3);
         else if (size == GIFT_GENEROUS)
-            city_ratings_change_kingdom(5);
+            g_city.ratings.change_kingdom(5);
         else if (size == GIFT_LAVISH)
-            city_ratings_change_kingdom(10);
+            g_city.ratings.change_kingdom(10);
 
     } else if (gift_overdose_penalty == 1) {
         gift_overdose_penalty = 2;
         if (size == GIFT_MODEST)
-            city_ratings_change_kingdom(1);
+            g_city.ratings.change_kingdom(1);
         else if (size == GIFT_GENEROUS)
-            city_ratings_change_kingdom(3);
+            g_city.ratings.change_kingdom(3);
         else if (size == GIFT_LAVISH)
-            city_ratings_change_kingdom(5);
+            g_city.ratings.change_kingdom(5);
 
     } else if (gift_overdose_penalty == 2) {
         gift_overdose_penalty = 3;
         if (size == GIFT_MODEST)
-            city_ratings_change_kingdom(0);
+            g_city.ratings.change_kingdom(0);
         else if (size == GIFT_GENEROUS)
-            city_ratings_change_kingdom(1);
+            g_city.ratings.change_kingdom(1);
         else if (size == GIFT_LAVISH)
-            city_ratings_change_kingdom(3);
+            g_city.ratings.change_kingdom(3);
 
     } else if (gift_overdose_penalty == 3) {
         gift_overdose_penalty = 4;
         if (size == GIFT_MODEST)
-            city_ratings_change_kingdom(0);
+            g_city.ratings.change_kingdom(0);
         else if (size == GIFT_GENEROUS)
-            city_ratings_change_kingdom(0);
+            g_city.ratings.change_kingdom(0);
         else if (size == GIFT_LAVISH)
-            city_ratings_change_kingdom(1);
+            g_city.ratings.change_kingdom(1);
     }
 
     months_since_gift = 0;

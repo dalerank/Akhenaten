@@ -68,7 +68,7 @@ static void generate_rioter(building* b) {
         }
     }
     building_destroy_by_rioter(b);
-    city_ratings_monument_record_rioter();
+    g_city.ratings.monument_record_rioter();
     city_sentiment_change_happiness(20);
     tutorial_on_crime();
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
@@ -85,7 +85,7 @@ static void generate_mugger(building* b) {
             f->advance_action(FIGURE_ACTION_120_MUGGER_CREATED);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
 
-            city_ratings_monument_record_criminal();
+            g_city.ratings.monument_record_criminal();
             int taxes_this_year = city_finance_overview_this_year()->income.taxes;
             if (taxes_this_year > 20) {
                 int money_stolen = taxes_this_year / 4;
@@ -119,7 +119,7 @@ static void generate_protestor(building* b) {
         if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
             figure* f = figure_create(FIGURE_PROTESTER, road_tile, DIR_4_BOTTOM_LEFT);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
-            city_ratings_monument_record_criminal();
+            g_city.ratings.monument_record_criminal();
         }
     }
 }

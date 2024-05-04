@@ -124,7 +124,7 @@ sound_key figure_priest::phrase_key() const {
         keys.push_back(create_key("gods_are_angry"));
     }
 
-    if (city_rating_kingdom() < 30) {
+    if (g_city.ratings.kingdom < 30) {
         keys.push_back(create_key("low_sentiment"));
     }
 

@@ -35,8 +35,6 @@ e_victory_state city_victory_state(void) {
     return g_vistory_data.state;
 }
 
-#include "buildings.h"
-
 static e_victory_state determine_victory_state(void) {
     e_victory_state state = VICTORY_STATE_WON;
     int has_criteria = 0;

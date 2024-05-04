@@ -18,7 +18,7 @@
 #include "scenario/request.h"
 #include "window/donate_to_city.h"
 #include "window/empire.h"
-#include "window/gift_to_emperor.h"
+#include "window/window_gift_to_kingdome.h"
 #include "window/popup_dialog.h"
 #include "window/set_salary.h"
 #include "game/game.h"
@@ -36,13 +36,13 @@ ui::advisor_imperial_window g_advisor_imperial_window;
 
 static void button_donate_to_city(int param1, int param2);
 static void button_set_salary(int param1, int param2);
-static void button_gift_to_emperor(int param1, int param2);
+static void button_gift_to_kingdome(int param1, int param2);
 static void button_request(int index, int param2);
 
 static generic_button imperial_buttons[] = {
   {320, 367, 250, 20, button_donate_to_city, button_none, 0, 0},
   {70, 393, 500, 20, button_set_salary, button_none, 0, 0},
-  {320, 341, 250, 20, button_gift_to_emperor, button_none, 0, 0},
+  {320, 341, 250, 20, button_gift_to_kingdome, button_none, 0, 0},
   {38, 96, 560, 40, button_request, button_none, 0, 0},
   {38, 138, 560, 40, button_request, button_none, 1, 0},
   {38, 180, 560, 40, button_request, button_none, 2, 0},
@@ -138,9 +138,9 @@ int ui::advisor_imperial_window::draw_background() {
     text_draw(city_player_name(), 60, 12, FONT_LARGE_BLACK_ON_LIGHT, 0);
 
     int width = lang_text_draw(52, 0, 60, 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    text_draw_number(city_rating_kingdom(), '@', " ", 60 + width, 44, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number(g_city.ratings.kingdom, '@', " ", 60 + width, 44, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    lang_text_draw_multiline(52, city_rating_kingdom() / 5 + 22, vec2i{60, 60}, 544, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(52, g_city.ratings.kingdom / 5 + 22, vec2i{60, 60}, 544, FONT_NORMAL_BLACK_ON_LIGHT);
 
     inner_panel_draw(32, 90, 36, 14);
 
@@ -212,8 +212,8 @@ static void button_donate_to_city(int param1, int param2) {
 static void button_set_salary(int param1, int param2) {
     window_set_salary_show();
 }
-static void button_gift_to_emperor(int param1, int param2) {
-    window_gift_to_emperor_show();
+static void button_gift_to_kingdome(int param1, int param2) {
+    window_gift_to_kingdome_show();
 }
 
 static void confirm_nothing(bool accepted) {}
