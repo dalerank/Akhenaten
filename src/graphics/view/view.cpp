@@ -12,7 +12,7 @@
 #include "widget/minimap.h"
 #include "widget/sidebar/common.h"
 #include "city/sentiment.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "platform/renderer.h"
 #include "game/game.h"
 

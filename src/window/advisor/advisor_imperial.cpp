@@ -14,7 +14,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "scenario/request.h"
 #include "window/donate_to_city.h"
 #include "window/empire.h"

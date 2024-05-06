@@ -2,7 +2,7 @@
 
 #include "core/calc.h"
 #include "game/time.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "building/building.h"
 
 void city_t::update_prosperity_explanation() {

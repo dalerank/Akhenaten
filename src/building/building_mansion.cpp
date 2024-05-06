@@ -29,7 +29,7 @@ void config_load_personal_mansion() {
 }
 
 static void button_set_salary(int rank, int param2) {
-    if (!city_victory_has_won()) {
+    if (!g_city.victory_state.has_won()) {
         g_city.kingdome.set_salary_rank(rank);
         city_finance_update_salary();
         g_city.ratings.update_kingdom_explanation();

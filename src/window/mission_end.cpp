@@ -16,7 +16,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/music.h"
 #include "sound/speech.h"
@@ -92,7 +91,7 @@ static void draw_won(void) {
 static void draw_background(void) {
     window_draw_underlying_window();
     graphics_set_to_dialog();
-    if (city_victory_state() == VICTORY_STATE_WON)
+    if (g_city.victory_state.state == e_victory_state_won)
         draw_won();
     else {
         draw_lost();
@@ -100,7 +99,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
-    if (city_victory_state() != VICTORY_STATE_WON) {
+    if (g_city.victory_state.state != e_victory_state_won) {
         graphics_set_to_dialog();
         large_label_draw(80, 224, 30, focus_button_id == 1);
         lang_text_draw_centered(62, 6, 80, 230, 480, FONT_NORMAL_BLACK_ON_DARK);
@@ -113,7 +112,7 @@ static void advance_to_next_mission(void) {
     scenario_set_campaign_rank(scenario_campaign_rank() + 1);
     city_save_campaign_player_name();
 
-    city_victory_stop_governing();
+    g_city.victory_state.stop_governing();
 
     game_undo_disable();
     game_state_reset_overlay();
@@ -132,7 +131,7 @@ static void advance_to_next_mission(void) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
-    if (city_victory_state() == VICTORY_STATE_WON) {
+    if (g_city.victory_state.state == e_victory_state_won) {
         if (input_go_back_requested(m, h)) {
             sound_music_stop();
             sound_speech_stop();
@@ -145,7 +144,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 static void button_fired(int param1, int param2) {
     sound_music_stop();
     sound_speech_stop();
-    city_victory_stop_governing();
+    g_city.victory_state.stop_governing();
     game_undo_disable();
     if (scenario_is_custom())
         window_main_menu_show(1);

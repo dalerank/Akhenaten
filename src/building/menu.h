@@ -3,6 +3,7 @@
 #include "building/building_type.h"
 #include "city/constants.h"
 #include "city/gods.h"
+#include "core/bstring.h"
 
 enum e_build_menu {
     BUILD_MENU_VACANT_HOUSE = 0,
@@ -39,49 +40,12 @@ enum e_build_menu {
     BUILD_MENU_MAX
 };
 
-enum e_buildset_tutorial {
-    BUILDSET_NORMAL,
-    //
-    BUILDSET_TUT1_START,
-    BUILDSET_TUT1_FIRE,
-    BUILDSET_TUT1_CRIME,
-    BUILDSET_TUT1_FOOD,
-    BUILDSET_TUT1_WATER,
-    BUILDSET_TUT1_COLLAPSE,
-
-    BUILDSET_TUT2_START,
-    BUILDSET_TUT2_GODS,
-    BUILDSET_TUT2_ENTERTAINMENT,
-
-    BUILDSET_TUT3_START,
-    BUILDSET_TUT3_INDUSTRY,
-    BUILDSET_TUT3_HEALTH,
-    BUILDSET_TUT3_GARDENS,
-
-    BUILDSET_TUT4_START,
-    BUILDSET_TUT4_FINANCE,
-
-    BUILDSET_TUT5_START,
-    BUILDSET_TUT5_EDUCATION,
-    BUILDSET_TUT5_TRADING,
-    BUILDSET_TUT5_MONUMENTS,
-
-    BUILDSET_TUT6_START,
-    BUILDSET_TUT6_IRRIGATION,
-    BUILDSET_TUT6_EDUCATION,
-    BUILDSET_TUT6_GUILDS,
-
-    BUILDSET_TUT7_START,
-
-    BUILDSET_TUT8_START,
-};
-
 int building_menu_is_building_enabled(int type);
 void building_menu_toggle_building(int type, bool enabled = true);
 
 void building_menu_enable_all(void);
 
-void building_menu_update(int build_set);
+void building_menu_update(const bstring64 &stage);
 
 int building_menu_count_items(int submenu);
 

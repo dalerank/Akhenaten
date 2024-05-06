@@ -8,7 +8,7 @@
 #include "core/calc.h"
 #include "game/time.h"
 #include "scenario/criteria.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 
 #include "dev/debug.h"
 #include <iostream>

@@ -10,7 +10,7 @@
 #include "graphics/image.h"
 #include "grid/building_tiles.h"
 #include "grid/road_access.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "window/window_city.h"
 #include "graphics/image_groups.h"
 #include "grid/terrain.h"

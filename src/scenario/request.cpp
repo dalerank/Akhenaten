@@ -12,7 +12,7 @@
 #include "game/resource.h"
 #include "game/time.h"
 #include "game/tutorial.h"
-#include "scenario/scenario_data.h"
+#include "scenario/scenario.h"
 
 void scenario_request_init() {
     //for (int i = 0; i < MAX_REQUESTS; i++) {

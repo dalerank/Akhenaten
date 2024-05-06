@@ -15,7 +15,7 @@
 #include "grid/property.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
-#include "scenario/building.h"
+#include "scenario/scenario.h"
 #include "scenario/map.h"
 
 static void mark_native_land(int x, int y, int size, int radius) {

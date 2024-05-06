@@ -357,7 +357,7 @@ static void add_building(building* b, int orientation, int variant) {
         //            map_orientation_update_buildings();
         map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), orientation);
         city_buildings_build_triumphal_arch();
-        building_menu_update(BUILDSET_NORMAL);
+        //building_menu_update(BUILDSET_NORMAL);
         Planner.reset();
         break;
 

@@ -24,7 +24,7 @@
 #include "config/config.h"
 #include "ratings.h"
 #include "scenario/invasion.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "sound/effect.h"
 
 #include <algorithm>

@@ -14,7 +14,6 @@
 #include "input/input.h"
 #include "io/gamefiles/lang.h"
 #include "player_selection.h"
-#include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "widget/input_box.h"
 #include "window/mission_next.h"

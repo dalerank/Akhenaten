@@ -16,7 +16,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "widget/widget_city.h"
 #include "widget/minimap.h"
 #include "widget/sidebar/common.h"

@@ -37,7 +37,6 @@ static void game_cheat_start_invasion(pcstr);
 static void game_cheat_advance_year(pcstr);
 static void game_cheat_cast_blessing(pcstr);
 static void game_cheat_show_tooltip(pcstr);
-static void game_cheat_victory(pcstr);
 static void game_cheat_cast_upset(pcstr);
 static void game_cheat_pop_milestone(pcstr);
 static void game_cheat_fire(pcstr);
@@ -46,7 +45,6 @@ static void game_cheat_spacious_apartment(pcstr);
 static void game_cheat_spawn_nobles(pcstr);
 static void game_cheat_kill_fish_boats(pcstr);
 static void game_cheat_update_fish_points(pcstr);
-static void game_cheat_tutorial_step(pcstr);
 static void game_cheat_clear_progress(pcstr);
 static void game_cheat_add_clay(pcstr);
 
@@ -63,7 +61,6 @@ static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_s
                                                   {"blessing", game_cheat_cast_blessing},
                                                   {"godupset", game_cheat_cast_upset},
                                                   {"showtooltip", game_cheat_show_tooltip},
-                                                  {"victory", game_cheat_victory},
                                                   {"popmilestone", game_cheat_pop_milestone},
                                                   {"fire", game_cheat_fire},
                                                   {"nodamage", game_cheat_nodamage},
@@ -71,7 +68,6 @@ static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_s
                                                   {"tutspaciousapt", game_cheat_spacious_apartment},
                                                   {"killfishboats", game_cheat_kill_fish_boats},
                                                   {"upfishpoints", game_cheat_update_fish_points},
-                                                  {"tutorialstep", game_cheat_tutorial_step},
                                                   {"clearprogress", game_cheat_clear_progress}
 };
 
@@ -127,12 +123,6 @@ void game_cheat_money(void) {
     if (g_cheats_data.is_cheating) {
         city_finance_process_cheat();
         window_invalidate();
-    }
-}
-
-void game_cheat_victory(pcstr) {
-    if (g_cheats_data.is_cheating) {
-        city_victory_force_win();
     }
 }
 
@@ -210,13 +200,6 @@ static void game_cheat_update_fish_points(pcstr args) {
     parse_integer(args ? args : "10", count);
 
     formation_fish_update(count);
-}
-
-static void game_cheat_tutorial_step(pcstr args) {
-    int step = 0;
-    parse_integer(args ? args : "0", step);
-
-    tutorial_update_step(step);
 }
 
 static void game_cheat_kill_fish_boats(pcstr ) {

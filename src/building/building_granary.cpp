@@ -13,7 +13,7 @@
 #include "graphics/elements/ui.h"
 #include "grid/road_access.h"
 #include "config/config.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "sound/effect.h"
 #include "graphics/image_desc.h"
 #include "graphics/color.h"

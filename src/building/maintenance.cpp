@@ -28,7 +28,6 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/tiles.h"
 #include "model.h"
-#include "scenario/property.h"
 #include "sound/effect.h"
 #include "config/config.h"
 

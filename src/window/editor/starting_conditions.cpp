@@ -11,7 +11,7 @@
 #include "input/input.h"
 #include "scenario/editor.h"
 #include "scenario/map.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "window/editor/attributes.h"
 #include "window/editor/map.h"
 #include "window/editor/start_year.h"

@@ -91,7 +91,7 @@ static void advance_month() {
     random_generate_next();                  // TODO: find out the source / reason for this
     scenario_event_process();
     
-    city_victory_update_months_to_govern();
+    g_city.victory_state.update_months_to_govern();
     formation_update_monthly_morale_at_rest();
     city_message_decrease_delays();
 
@@ -294,7 +294,7 @@ void game_tick_run(void) {
     scenario_earthquake_process();
     //scenario_gladiator_revolt_process();
     scenario_kingdome_change_process();
-    city_victory_check();
+    g_city.victory_check();
 }
 
 void game_tick_cheat_year(void) {

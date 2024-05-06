@@ -10,8 +10,7 @@
 #include "city/trade.h"
 #include "core/random.h"
 #include "config/config.h"
-#include "scenario/property.h"
-#include "scenario/scenario_data.h"
+#include "scenario/scenario.h"
 
 enum E_EVENT_DK {
     EVENT_ROME_RAISES_WAGES = 1,

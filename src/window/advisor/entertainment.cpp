@@ -1,6 +1,7 @@
 #include "entertainment.h"
+
 #include "building/menu.h"
-#include "scenario/building.h"
+#include "scenario/scenario.h"
 
 #include "building/count.h"
 #include "city/coverage.h"

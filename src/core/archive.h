@@ -45,6 +45,22 @@ struct archive {
         return result;
     }
 
+    template<typename T = int>
+    static inline std::vector<T> r_array_num(archive arch) {
+        std::vector<T> result;
+        if (arch.isarray(-1)) {
+            int length = arch.getlength(-1);
+
+            for (int i = 0; i < length; ++i) {
+                arch.getindex(-1, i);
+                float v = arch.isnumber(-1) ? (float)arch.tonumber(-1) : 0.f;
+                result.push_back((T)v);
+                arch.pop(1);
+            }
+        }
+        return result;
+    }
+
     template<typename T>
     inline void r_section(pcstr name, T read_func) {
         getproperty(-1, name);

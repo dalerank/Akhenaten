@@ -7,7 +7,7 @@
 #include "content/vfs.h"
 #include "io/io.h"
 #include "game/player_data.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 
 struct mission_data_t {
     uint8_t map_names[300][300];

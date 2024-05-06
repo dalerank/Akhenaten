@@ -60,7 +60,6 @@
 #include "scenario/gladiator_revolt.h"
 #include "scenario/invasion.h"
 #include "scenario/price_change.h"
-#include "scenario/property.h"
 #include "scenario/request.h"
 #include "sound/sound_city.h"
 #include "sound/music.h"
@@ -129,7 +128,7 @@ static void pre_load() { // do we NEED this...?
     map_bookmarks_clear();
 
     // clear data
-    city_victory_reset();
+    g_city.victory_state.reset();
     Planner.reset();
     g_city.init();
     city_message_init_scenario();
@@ -220,7 +219,7 @@ static void post_load() {
     }
 
     // building menu
-    building_menu_update(BUILDSET_NORMAL);
+    //building_menu_update(BUILDSET_NORMAL);
 
     // city messages
     city_message_clear_scroll();
@@ -651,6 +650,8 @@ bool GamestateIO::load_map(const char* filename_short, bool start_immediately) {
 }
 
 void GamestateIO::start_loaded_file() {
+
+    scenario_load_meta_data(g_scenario_data.settings.campaign_scenario_id);
     // build the map grids when loading MAP files
     if (last_loaded != e_loaded_save) {
         // initialize grids
@@ -691,12 +692,9 @@ void GamestateIO::start_loaded_file() {
         scenario_request_init();
         scenario_demand_change_init();
         scenario_price_change_init();
-
-        // tutorial flags
-        tutorial_init();
     }
 
-    scenario_load_meta_data(g_scenario_data.settings.campaign_scenario_id);
+    tutorial_init();
     building_properties_init();
 
     // city view / orientation

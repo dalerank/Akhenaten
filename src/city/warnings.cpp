@@ -14,7 +14,7 @@
 #include "grid/grid.h"
 #include "grid/road_access.h"
 #include "grid/terrain.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 
 bool g_has_warning = false;
 

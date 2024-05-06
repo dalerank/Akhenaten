@@ -26,7 +26,7 @@
 #include "config/config.h"
 #include "io/gamefiles/lang.h"
 #include "platform/renderer.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "sound/sound_city.h"
 #include "sound/effect.h"
 #include "sound/speech.h"

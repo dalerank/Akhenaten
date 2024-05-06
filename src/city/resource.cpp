@@ -12,8 +12,7 @@
 #include "empire/empire_city.h"
 #include "game/tutorial.h"
 #include "grid/road_access.h"
-#include "scenario/building.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 
 struct available_data_t {
     resources_list resource_list;

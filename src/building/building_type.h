@@ -1,10 +1,5 @@
 #pragma once
 
-/**
- * @file
- * Type definitions for buildings
- */
-
 enum e_building_type {
 #define REGISTER_BLD(a, b) a = b,
 #include "building_type_indexes.h"

@@ -16,7 +16,7 @@
 #include "config/config.h"
 #include "io/gamefiles/lang.h"
 #include "scenario/criteria.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 
 #define EXTRA_INFO_LINE_SPACE 16
 #define EXTRA_INFO_HEIGHT_GAME_SPEED 64

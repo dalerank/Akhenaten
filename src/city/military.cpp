@@ -210,7 +210,7 @@ static void fight_distant_battle() {
         city_message_post(true, MESSAGE_DISTANT_BATTLE_WON, 0, 0);
         g_city.ratings.change_kingdom(25);
         city_buildings_earn_triumphal_arch();
-        building_menu_update(BUILDSET_NORMAL);
+        //building_menu_update(BUILDSET_NORMAL);
         city_data.distant_battle.won_count++;
         city_data.distant_battle.city_foreign_months_left = 0;
         city_data.distant_battle.roman_months_to_travel_back = city_data.distant_battle.roman_months_traveled;

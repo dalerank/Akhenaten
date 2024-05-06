@@ -14,8 +14,7 @@
 #include "grid/grid.h"
 #include "grid/terrain.h"
 #include "scenario/map.h"
-#include "scenario/property.h"
-#include "scenario/scenario_data.h"
+#include "scenario/scenario.h"
 
 #include <string.h>
 

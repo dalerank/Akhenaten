@@ -4,7 +4,7 @@
 #include "core/random.h"
 #include "empire/trade_prices.h"
 #include "game/time.h"
-#include "scenario/scenario_data.h"
+#include "scenario/scenario.h"
 
 void scenario_price_change_init(void) {
     for (int i = 0; i < MAX_PRICE_CHANGES; i++) {

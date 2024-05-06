@@ -1,6 +1,6 @@
 #include "advisors.h"
 
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "city/constants.h"
 #include "city/coverage.h"
 #include "city/finance.h"

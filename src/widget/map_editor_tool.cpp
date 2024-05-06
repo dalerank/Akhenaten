@@ -8,7 +8,7 @@
 #include "graphics/image_groups.h"
 #include "grid/terrain.h"
 #include "input/scroll.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "game/game.h"
 
 #define MAX_TILES 4

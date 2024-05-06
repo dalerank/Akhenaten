@@ -16,7 +16,7 @@
 #include "graphics/view/view.h"
 #include "graphics/window.h"
 #include "config/config.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "widget/widget_city.h"
 #include "game/game.h"
 

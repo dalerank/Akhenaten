@@ -35,7 +35,7 @@
 #include "grid/terrain.h"
 #include "figure/figure.h"
 #include "grid/road_access.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "config/config.h"
 #include "widget/city/ornaments.h"
 

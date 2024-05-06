@@ -12,6 +12,7 @@
 #include "city/resource.h"
 #include "city/map.h"
 #include "city/gods.h"
+#include "city/victory.h"
 #include "city/ratings.h"
 #include "grid/point.h"
 
@@ -69,6 +70,7 @@ struct city_t {
 
     kingdome_relation_t kingdome;
     city_military_t military;
+    vistory_state_t victory_state;
     struct {
         uint8_t city;
         int8_t city_foreign_months_left;
@@ -406,6 +408,9 @@ struct city_t {
     void calculate_max_prosperity();
     void ratings_update_explanations();
     void ratings_update(bool is_yearly_update);
+
+    e_victory_state determine_victory_state();
+    void victory_check();
 };
 
 const uint8_t* city_player_name();

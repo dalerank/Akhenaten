@@ -70,7 +70,7 @@ static void draw_foreground() {
         text_draw_money(g_city.kingdome.salary_for_rank(rank), 176 + width, 90 + 20 * rank, font);
     }
 
-    if (!city_victory_has_won()) {
+    if (!g_city.victory_state.has_won()) {
         if (g_city.kingdome.salary_rank <= g_city.kingdome.player_rank)
             lang_text_draw_multiline(52, 76, vec2i{152, 336}, 336, FONT_NORMAL_BLACK_ON_LIGHT);
         else
@@ -96,7 +96,7 @@ static void button_cancel(int param1, int param2) {
 }
 
 static void button_set_salary(int rank, int param2) {
-    if (!city_victory_has_won()) {
+    if (!g_city.victory_state.has_won()) {
         g_city.kingdome.set_salary_rank(rank);
         city_finance_update_salary();
         g_city.ratings.update_kingdom_explanation();

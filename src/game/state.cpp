@@ -1,6 +1,6 @@
 #include "state.h"
 
-#include "city/victory.h"
+#include "city/city.h"
 #include "city/warning.h"
 #include "core/random.h"
 #include "overlays/city_overlay.h"
@@ -10,7 +10,7 @@
 #include "game/game.h"
 
 void game_state_init(void) {
-    city_victory_reset();
+    g_city.victory_state.reset();
     map_ring_init();
 
     city_view_reset_orientation();

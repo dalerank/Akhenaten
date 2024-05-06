@@ -5,7 +5,7 @@
 #include "core/random.h"
 #include "game/time.h"
 #include "config/config.h"
-#include "scenario/scenario_data.h"
+#include "scenario/scenario.h"
 
 struct scenario_kingdome_change_t {
     int game_year;

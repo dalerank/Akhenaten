@@ -4,7 +4,7 @@
 #include "building/construction/build_planner.h"
 #include "building/rotation.h"
 #include "city/message.h"
-#include "city/victory.h"
+#include "city/city.h"
 #include "city/warning.h"
 #include "core/profiler.h"
 #include "core/game_environment.h"
@@ -22,7 +22,7 @@
 #include "graphics/window.h"
 #include "grid/bookmark.h"
 #include "grid/grid.h"
-#include "scenario/building.h"
+#include "scenario/scenario.h"
 #include "scenario/criteria.h"
 #include "widget/sidebar/sidebar.h"
 #include "widget/top_menu.h"
@@ -48,7 +48,7 @@ static void window_city_draw_background() {
 }
 
 static void draw_paused_and_time_left() {
-    if (scenario_criteria_time_limit_enabled() && !city_victory_has_won()) {
+    if (scenario_criteria_time_limit_enabled() && !g_city.victory_state.has_won()) {
         int years;
         if (scenario_criteria_max_year() <= game_time_year() + 1) {
             years = 0;
@@ -60,7 +60,7 @@ static void draw_paused_and_time_left() {
         int width = lang_text_draw(6, 2, 6, 29, FONT_NORMAL_BLACK_ON_LIGHT);
         text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK_ON_LIGHT);
         //        city_view_dirty = 1;
-    } else if (scenario_criteria_survival_enabled() && !city_victory_has_won()) {
+    } else if (scenario_criteria_survival_enabled() && !g_city.victory_state.has_won()) {
         int years;
         if (scenario_criteria_max_year() <= game_time_year() + 1) {
             years = 0;

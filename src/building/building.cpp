@@ -468,7 +468,7 @@ void building::clear_related_data() {
 
     if (type == BUILDING_RESERVED_TRIUMPHAL_ARCH_56) {
         city_buildings_remove_triumphal_arch();
-        building_menu_update(BUILDSET_NORMAL);
+        //building_menu_update(BUILDSET_NORMAL);
     }
 
     if (type == BUILDING_FESTIVAL_SQUARE) {

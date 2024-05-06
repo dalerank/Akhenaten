@@ -17,7 +17,7 @@
 #include "scenario/criteria.h"
 #include "scenario/invasion.h"
 #include "scenario/map.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "game/game.h"
 
 #include "dev/debug.h"

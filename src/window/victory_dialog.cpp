@@ -8,7 +8,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "sound/music.h"
 #include "window/window_city.h"
 
@@ -42,7 +42,7 @@ static void draw_background(void) {
 static void draw_foreground(void) {
     graphics_set_to_dialog();
 
-    if (city_victory_state() == VICTORY_STATE_WON) {
+    if (g_city.victory_state.state == e_victory_state_won) {
         large_label_draw(80, 240, 30, focus_button_id == 1);
         if (scenario_campaign_rank() < 10 || scenario_is_custom())
             lang_text_draw_centered(62, 3, 80, 246, 480, FONT_NORMAL_BLACK_ON_DARK);
@@ -80,9 +80,9 @@ static void button_accept(int param1, int param2) {
 }
 
 static void button_continue_governing(int months, int param2) {
-    city_victory_continue_governing(months);
+    g_city.victory_state.continue_governing(months);
     window_city_show();
-    city_victory_reset();
+    g_city.victory_state.reset();
     sound_music_update(true);
 }
 

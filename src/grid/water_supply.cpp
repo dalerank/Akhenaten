@@ -20,7 +20,7 @@
 #include "grid/terrain.h"
 #include "scenario/map.h"
 #include "scenario/map.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "tiles.h"
 
 #include <string.h>

@@ -5,7 +5,7 @@
 #include "empire/empire_city.h"
 #include "empire/trade_route.h"
 #include "game/time.h"
-#include "scenario/scenario_data.h"
+#include "scenario/scenario.h"
 
 void scenario_demand_change_init(void) {
     for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {

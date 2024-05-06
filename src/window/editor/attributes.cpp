@@ -15,7 +15,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "scenario/editor.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "widget/input_box.h"
 #include "widget/minimap.h"
 #include "widget/sidebar/editor.h"

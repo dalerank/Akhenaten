@@ -19,7 +19,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "window/window_building_info.h"
 #include "game/game.h"
 

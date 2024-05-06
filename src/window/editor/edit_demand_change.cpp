@@ -14,7 +14,7 @@
 #include "input/input.h"
 #include "io/gamefiles/lang.h"
 #include "scenario/editor.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "window/editor/demand_changes.h"
 #include "window/editor/map.h"
 #include "window/numeric_input.h"

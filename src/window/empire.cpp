@@ -27,7 +27,7 @@
 #include "input/scroll.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "window/advisors.h"
 #include "window/window_city.h"
 #include "window/message_dialog.h"
@@ -876,7 +876,7 @@ static void button_show_resource_window(int resource, int param2) {
 static void button_open_trade(int param1, int param2) {
     window_yes_dialog_show("#popup_dialog_open_trade", [] {
         empire_city_open_trade(g_empire_window.selected_city);
-        building_menu_update(BUILDSET_NORMAL);
+        //building_menu_update(BUILDSET_NORMAL);
         window_trade_opened_show(g_empire_window.selected_city);
     });
 }

@@ -1,6 +1,7 @@
 #include "time.h"
+
 #include "io/io_buffer.h"
-#include <scenario/property.h>
+#include "scenario/scenario.h"
 
 static game_time g_game_time;
 

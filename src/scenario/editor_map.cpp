@@ -2,7 +2,7 @@
 
 #include "figuretype/water.h"
 #include "grid/routing/routing_terrain.h"
-#include "scenario/scenario_data.h"
+#include "scenario/scenario.h"
 
 // TODO !!!!!!
 

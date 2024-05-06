@@ -27,7 +27,7 @@
 #include "translation/translation.h"
 #include "window/hotkey_config.h"
 #include "window/plain_message_dialog.h"
-#include "scenario/scenario_data.h"
+#include "scenario/scenario.h"
 #include "window/select_list.h"
 #include "empire/empire_city.h"
 

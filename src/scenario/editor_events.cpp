@@ -1,6 +1,6 @@
 #include "editor_events.h"
 
-#include "scenario/scenario_data.h"
+#include "scenario/scenario.h"
 
 int scenario_editor_earthquake_severity(void) {
     return g_scenario_data.earthquake.severity;

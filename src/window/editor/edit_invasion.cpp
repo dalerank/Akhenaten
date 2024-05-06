@@ -10,7 +10,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "scenario/editor.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "scenario/types.h"
 #include "window/editor/invasions.h"
 #include "window/editor/map.h"

@@ -13,7 +13,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "translation/translation.h"
 #include "game/game.h"
 

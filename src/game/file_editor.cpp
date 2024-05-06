@@ -42,13 +42,13 @@
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
 #include "scenario/map.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "sound/sound_city.h"
 #include "sound/music.h"
 #include "game/game.h"
 
 void game_file_editor_clear_data(void) {
-    city_victory_reset();
+    g_city.victory_state.reset();
     Planner.reset();
     g_city.init();
     g_city.init_custom_map();

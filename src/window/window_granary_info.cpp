@@ -5,7 +5,7 @@
 #include "building/storage.h"
 #include "city/city.h"
 #include "window/building/common.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 
 #include "graphics/image.h"
 #include "graphics/graphics.h"

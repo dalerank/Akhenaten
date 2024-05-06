@@ -3,8 +3,7 @@
 #include "core/string.h"
 #include "grid/grid.h"
 #include "io/gamefiles/lang.h"
-#include "scenario/property.h"
-#include "scenario/scenario_data.h"
+#include "scenario/scenario.h"
 
 #include <string.h>
 
@@ -24,8 +23,7 @@ void scenario_editor_create(int map_size) {
     g_scenario_data.map.width = MAP_SIZES[map_size].width;
     g_scenario_data.map.height = MAP_SIZES[map_size].height;
     g_scenario_data.map.border_size = GRID_LENGTH - g_scenario_data.map.width;
-    g_scenario_data.map.start_offset
-      = (GRID_LENGTH - g_scenario_data.map.height) / 2 * GRID_LENGTH + (GRID_LENGTH - g_scenario_data.map.width) / 2;
+    g_scenario_data.map.start_offset = (GRID_LENGTH - g_scenario_data.map.height) / 2 * GRID_LENGTH + (GRID_LENGTH - g_scenario_data.map.width) / 2;
 
     string_copy(lang_get_string(44, 37), g_scenario_data.subtitle, MAX_SUBTITLE);
     string_copy(lang_get_string(44, 38), g_scenario_data.brief_description, MAX_BRIEF_DESCRIPTION);
@@ -38,9 +36,11 @@ void scenario_editor_create(int map_size) {
     g_scenario_data.win_criteria.milestone50_year = 20;
     g_scenario_data.win_criteria.milestone75_year = 30;
 
-    for (int i = 0; i < MAX_ALLOWED_BUILDINGS; i++) {
+    // 114
+    for (int i = 0; i < BUILDING_MAX; i++) {
         g_scenario_data.allowed_buildings[i] = 1;
     }
+
     g_scenario_data.kingdom_supplies_grain = 0;
 
     g_scenario_data.win_criteria.culture.goal = 10;

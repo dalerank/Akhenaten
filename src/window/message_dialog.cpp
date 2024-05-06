@@ -21,7 +21,7 @@
 #include "input/input.h"
 #include "input/scroll.h"
 #include "io/gamefiles/lang.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "scenario/events.h"
 #include "scenario/request.h"
 #include "window/advisors.h"

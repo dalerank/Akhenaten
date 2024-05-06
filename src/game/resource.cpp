@@ -1,7 +1,7 @@
 #include "resource.h"
 
 #include "building/building_type.h"
-#include "scenario/building.h"
+#include "scenario/scenario.h"
 #include "core/game_environment.h"
 #include "graphics/image_groups.h"
 

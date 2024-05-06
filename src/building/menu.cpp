@@ -4,13 +4,22 @@
 #include "empire/empire_city.h"
 #include "game/tutorial.h"
 #include "config/config.h"
-#include "scenario/building.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 
 #include "SDL.h"
 #include "core/game_environment.h"
 #include "io/gamefiles/lang.h"
 #include "building/industry.h"
+
+#include "dev/debug.h"
+#include <iostream>
+
+declare_console_command_p(menuupdate, game_cheat_menu_update);
+void game_cheat_menu_update(std::istream &is, std::ostream &) {
+    std::string args;
+    is >> args;
+    building_menu_update(args.c_str());
+}
 
 #define BUILD_MENU_ITEM_MAX 30
 
@@ -489,224 +498,34 @@ void building_menu_update_temple_complexes() {
         // TODO...?
     }
 }
+
 void building_menu_update_monuments() {
 }
 
-void building_menu_update(int build_set) {
+void building_menu_update(const bstring64 &stage_name) {
     // do this if loading normally from a save - tutorial stage will
     // be determined accordingly by the set flags!
-    if (build_set == BUILDSET_NORMAL) {
-        for (int i = 1; i <= 10; i++) {
-            if (scenario_is_mission_rank(i)) {
-                return tutorial_menu_update(i);
+    //if (build_set == BUILDSET_NORMAL) {
+    //    for (int i = 1; i <= 10; i++) {
+    //        if (scenario_is_mission_rank(i)) {
+    //            return tutorial_menu_update(i);
+    //        }
+    //    }
+    //}
+
+    if (stage_name == tutorial_stage.disable_all) {
+        building_menu_disable_all();
+    }
+
+    for (const auto &stage : g_scenario_data.building_stages) {
+        if (stage.key == stage_name) {
+            for (const auto &b : stage.buildings) {
+                building_menu_toggle_building(b);
             }
         }
     }
 
-    switch (build_set) {
-    case BUILDSET_TUT1_START:
-        building_menu_disable_all();
-        break;
-
-    case BUILDSET_TUT1_FIRE:
-        building_menu_toggle_building(BUILDING_FIREHOUSE);
-        break;
-
-    case BUILDSET_TUT1_FOOD:
-        building_menu_toggle_building(BUILDING_HUNTING_LODGE);
-        building_menu_toggle_building(BUILDING_GRANARY);
-        building_menu_toggle_building(BUILDING_BAZAAR);
-        break;
-
-    case BUILDSET_TUT1_WATER:
-        building_menu_toggle_building(BUILDING_WATER_SUPPLY);
-        break;
-
-    case BUILDSET_TUT1_COLLAPSE:
-        building_menu_toggle_building(BUILDING_ARCHITECT_POST);
-        break;
-
-    case BUILDSET_TUT2_START:
-        building_menu_disable_all();
-
-        building_menu_toggle_building(BUILDING_FIREHOUSE);
-        building_menu_toggle_building(BUILDING_ARCHITECT_POST);
-        building_menu_toggle_building(BUILDING_POLICE_STATION);
-        building_menu_toggle_building(BUILDING_BAZAAR);
-        building_menu_toggle_building(BUILDING_GRANARY);
-        building_menu_toggle_building(BUILDING_HUNTING_LODGE);
-        building_menu_toggle_building(BUILDING_WATER_SUPPLY);
-        building_menu_toggle_building(BUILDING_GOLD_MINE);
-        building_menu_toggle_building(BUILDING_VILLAGE_PALACE);
-        break;
-
-    case BUILDSET_TUT2_GODS:
-        enable_gods(GOD_BAST);
-        break;
-
-    case BUILDSET_TUT2_ENTERTAINMENT:
-        building_menu_toggle_building(BUILDING_BOOTH);
-        building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
-        break;
-
-    case BUILDSET_TUT3_START:
-        building_menu_disable_all();
-
-        building_menu_toggle_building(BUILDING_FIREHOUSE);
-        building_menu_toggle_building(BUILDING_ARCHITECT_POST);
-        building_menu_toggle_building(BUILDING_POLICE_STATION);
-        building_menu_toggle_building(BUILDING_VILLAGE_PALACE);
-        building_menu_toggle_building(BUILDING_WATER_SUPPLY);
-        building_menu_toggle_building(BUILDING_FIGS_FARM);
-        building_menu_toggle_building(BUILDING_WORK_CAMP);
-        building_menu_toggle_building(BUILDING_BOOTH);
-        building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
-        building_menu_toggle_building(BUILDING_BAZAAR);
-        building_menu_toggle_building(BUILDING_GRANARY);
-        enable_gods(GOD_OSIRIS);
-        break;
-
-    case BUILDSET_TUT3_INDUSTRY:
-        building_menu_toggle_building(BUILDING_CLAY_PIT);
-        building_menu_toggle_building(BUILDING_POTTERY_WORKSHOP);
-        building_menu_toggle_building(BUILDING_STORAGE_YARD);
-        break;
-
-    case BUILDSET_TUT3_GARDENS:
-        building_menu_toggle_building(BUILDING_ROADBLOCK);
-        building_menu_toggle_building(BUILDING_FERRY);
-        enable_common_beautifications();
-        break;
-
-    case BUILDSET_TUT3_HEALTH:
-        enable_common_health();
-        break;
-
-    case BUILDSET_TUT4_START:
-        building_menu_disable_all();
-        enable_common_municipal(1);
-        enable_common_health();
-        building_menu_toggle_building(BUILDING_GRAIN_FARM);
-        building_menu_toggle_building(BUILDING_BARLEY_FARM);
-        building_menu_toggle_building(BUILDING_WORK_CAMP);
-        enable_entertainment(2);
-        building_menu_toggle_building(BUILDING_BAZAAR);
-        building_menu_toggle_building(BUILDING_GRANARY);
-        building_menu_toggle_building(BUILDING_FERRY);
-        building_menu_update(BUILDSET_TUT3_INDUSTRY);
-        //toggle_building(BUILDING_LOW_BRIDGE);
-        enable_gods(GOD_OSIRIS, GOD_RA, GOD_BAST);
-        building_menu_toggle_building(BUILDING_BREWERY_WORKSHOP);
-        break;
-
-    case BUILDSET_TUT4_FINANCE:
-        building_menu_toggle_building(BUILDING_TAX_COLLECTOR);
-        building_menu_toggle_building(BUILDING_PERSONAL_MANSION);
-        break;
-
-    case BUILDSET_TUT5_START:
-        building_menu_disable_all();
-        enable_common_municipal(1);
-        building_menu_toggle_building(BUILDING_TAX_COLLECTOR);
-        building_menu_toggle_building(BUILDING_COURTHOUSE);
-        building_menu_toggle_building(BUILDING_PERSONAL_MANSION);
-        enable_common_health();
-        enable_entertainment(2);
-        enable_gods(GOD_OSIRIS, GOD_PTAH, GOD_BAST);
-
-        building_menu_toggle_building(BUILDING_CLAY_PIT);
-        building_menu_toggle_building(BUILDING_POTTERY_WORKSHOP);
-        building_menu_toggle_building(BUILDING_BREWERY_WORKSHOP);
-
-        building_menu_toggle_building(BUILDING_BAZAAR);
-        building_menu_toggle_building(BUILDING_GRANARY);
-        building_menu_toggle_building(BUILDING_STORAGE_YARD);
-
-        building_menu_toggle_building(BUILDING_CHICKPEAS_FARM);
-        building_menu_toggle_building(BUILDING_BARLEY_FARM);
-        building_menu_toggle_building(BUILDING_WORK_CAMP);
-        break;
-
-    case BUILDSET_TUT5_EDUCATION:
-        building_menu_toggle_building(BUILDING_REED_GATHERER);
-        building_menu_toggle_building(BUILDING_PAPYRUS_WORKSHOP);
-        building_menu_toggle_building(BUILDING_SCRIBAL_SCHOOL);
-        break;
-
-    case BUILDSET_TUT5_TRADING:
-        building_menu_toggle_building(BUILDING_DOCK);
-        break;
-
-    case BUILDSET_TUT5_MONUMENTS:
-        building_menu_toggle_building(BUILDING_BRICKLAYERS_GUILD);
-        building_menu_toggle_building(BUILDING_SMALL_MASTABA);
-        break;
-
-    case BUILDSET_TUT6_START:
-        building_menu_disable_all();
-        enable_common_municipal(1);
-        enable_common_health();
-        building_menu_toggle_building(BUILDING_TAX_COLLECTOR);
-        building_menu_toggle_building(BUILDING_COURTHOUSE);
-        building_menu_toggle_building(BUILDING_PERSONAL_MANSION);
-
-        building_menu_toggle_building(BUILDING_BAZAAR);
-        building_menu_toggle_building(BUILDING_GRANARY);
-        building_menu_toggle_building(BUILDING_STORAGE_YARD);
-
-        building_menu_toggle_building(BUILDING_RECRUITER);
-        building_menu_toggle_building(BUILDING_FORT_INFANTRY);
-        building_menu_toggle_building(BUILDING_FORT_ARCHERS);
-        building_menu_toggle_building(BUILDING_WEAPONSMITH);
-
-        building_menu_toggle_building(BUILDING_SCRIBAL_SCHOOL);
-
-        building_menu_toggle_building(BUILDING_CLAY_PIT);
-        building_menu_toggle_building(BUILDING_GEMSTONE_MINE);
-        building_menu_toggle_building(BUILDING_GOLD_MINE);
-        building_menu_toggle_building(BUILDING_COPPER_MINE);
-        building_menu_toggle_building(BUILDING_POTTERY_WORKSHOP);
-        building_menu_toggle_building(BUILDING_WEAVER_WORKSHOP);
-        
-        building_menu_toggle_building(BUILDING_HUNTING_LODGE);
-
-        enable_gods(GOD_SETH);
-        enable_entertainment(3);
-        break;
-
-    case BUILDSET_TUT6_IRRIGATION:
-        building_menu_toggle_building(BUILDING_WATER_LIFT);
-        building_menu_toggle_building(BUILDING_IRRIGATION_DITCH);
-        building_menu_toggle_building(BUILDING_MENU_BEAUTIFICATION);
-        break;
-
-    case BUILDSET_TUT6_EDUCATION:
-        break;
-
-    case BUILDSET_TUT6_GUILDS:
-        building_menu_toggle_building(BUILDING_MENU_RAW_MATERIALS);
-        building_menu_toggle_building(BUILDING_MENU_CONSTURCTION_GUILDS);
-        building_menu_toggle_building(BUILDING_STORAGE_YARD);
-        building_menu_toggle_building(BUILDING_TAX_COLLECTOR);
-        building_menu_toggle_building(BUILDING_BOOTH);
-        building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
-        break;
-
-    case BUILDSET_TUT7_START:
-        building_menu_disable_all();
-        for (int i = 0; i < BUILDING_MAX; i++) {
-            enable_if_allowed(i);
-        }
-        break;
-
-    case BUILDSET_TUT8_START:
-        building_menu_disable_all();
-        for (int i = 0; i < BUILDING_MAX; i++) {
-            enable_if_allowed(i);
-        }
-        break;
-
-    default:
+    if (stage_name == "stage_normal") {
         for (int i = 0; i < BUILDING_MAX; i++) {
             enable_if_allowed(i);
         }
@@ -719,7 +538,6 @@ void building_menu_update(int build_set) {
 
         // disable resources that aren't available on map
         disable_resources();
-        break;
     }
 
     // disable government building tiers depending on mission rank

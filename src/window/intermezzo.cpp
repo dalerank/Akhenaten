@@ -8,7 +8,7 @@
 #include "graphics/image.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "sound/music.h"
 #include "sound/speech.h"
 #include "sound/sound_mission.h"

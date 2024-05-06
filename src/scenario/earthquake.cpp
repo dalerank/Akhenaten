@@ -12,7 +12,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
-#include "scenario/scenario_data.h"
+#include "scenario/scenario.h"
 #include "sound/effect.h"
 
 struct eathquake_data_t {

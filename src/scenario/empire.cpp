@@ -3,7 +3,7 @@
 #include "city/message.h"
 #include "empire/empire_city.h"
 #include "game/time.h"
-#include "scenario/scenario_data.h"
+#include "scenario/scenario.h"
 
 int scenario_empire_id(void) {
     return g_scenario_data.empire.id;

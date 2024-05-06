@@ -1,8 +1,7 @@
 #pragma once
 
 #include "grid/point.h"
-#include "scenario_data.h"
-
+#include "scenario.h"
 
 const map_data_t* scenario_map_data();
 

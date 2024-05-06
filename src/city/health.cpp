@@ -8,7 +8,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/tutorial.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 
 void city_health_t::change(int amount) {
     value = calc_bound(value + amount, 0, 100);

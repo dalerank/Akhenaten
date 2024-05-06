@@ -9,7 +9,7 @@
 #include "graphics/window.h"
 #include "config/config.h"
 #include "scenario/criteria.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "game/game.h"
 
 #include "js/js_game.h"

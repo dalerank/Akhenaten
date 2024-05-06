@@ -9,7 +9,7 @@
 #include "city/labor.h"
 #include "core/calc.h"
 #include "game/resource.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "grid/desirability.h"
 #include "grid/building_tiles.h"
 #include "grid/terrain.h"

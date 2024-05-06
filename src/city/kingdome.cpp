@@ -10,7 +10,7 @@
 #include "game/difficulty.h"
 #include "game/time.h"
 #include "scenario/invasion.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 
 #include "dev/debug.h"
 #include <iostream>

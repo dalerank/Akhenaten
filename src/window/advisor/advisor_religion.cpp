@@ -4,7 +4,7 @@
 #include "building/menu.h"
 #include "city/buildings.h"
 #include "game/time.h"
-#include "scenario/building.h"
+#include "scenario/scenario.h"
 #include "window/popup_dialog.h"
 
 #include "building/count.h"

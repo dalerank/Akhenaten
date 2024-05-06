@@ -21,7 +21,7 @@
 #include "graphics/view/view.h"
 #include "graphics/text.h"
 #include "scenario/invasion.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "translation/translation.h"
 #include "window/advisors.h"
 #include "game/game.h"

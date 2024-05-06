@@ -4,7 +4,7 @@
 #include "city/city.h"
 #include "city/gods.h"
 #include "game/difficulty.h"
-#include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "core/game_environment.h"
 #include "empire/empire_city.h"
 #include "io/io_buffer.h"

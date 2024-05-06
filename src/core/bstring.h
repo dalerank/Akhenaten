@@ -177,7 +177,7 @@ public:
     inline void operator=(const_ref other) { ::strncpy(_data, other._data, _size); }
     inline void operator=(pcstr s) { ::snprintf(_data, _size, "%s", s ? s : "null"); }
     inline void operator=(const uint8_t* s) { ::snprintf(_data, _size, "%s",  s ? (const char*)s : "null"); }
-    inline bool operator==(const_ref other) const { return equals(other); }
+    inline bool operator==(const_ref other) const { return ::strncmp(_data, other._data, _size) == 0; }
     inline operator const uint8_t *() const { return (const uint8_t *)_data; }
     inline operator uint8_t *() { return (uint8_t *)_data; }
     inline bool operator==(pcstr s) const { assert(s); return ::strncmp(_data, s, _size) == 0; }

@@ -2,7 +2,7 @@
 
 #include "core/calc.h"
 #include "grid/grid.h"
-#include "scenario/scenario_data.h"
+#include "scenario/scenario.h"
 
 const map_data_t* scenario_map_data() {
     return &g_scenario_data.map;
