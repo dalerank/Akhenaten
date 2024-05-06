@@ -481,7 +481,6 @@ void tutorial_starting_message() {
         g_tutorials_flags.tutorial_2.started = 1;
     }
     if (scenario_is_mission_rank(3) && !g_tutorials_flags.tutorial_3.started) {
-        post_message(MESSAGE_TUTORIAL_FARMING_ALONG_THE_NILE);
         g_tutorials_flags.tutorial_3.started = 1;
     }
     if (scenario_is_mission_rank(4) && !g_tutorials_flags.tutorial_4.started) {

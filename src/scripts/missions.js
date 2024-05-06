@@ -24,7 +24,7 @@ mission1 = {
 }
 
 mission2 = {
-	start_message : 241 - 99,
+	start_message : 242 - 99,
 	city_has_animals : true,
 	buildings : [],
 	stages : {
