@@ -286,8 +286,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
         int dist = 0;
         building* src_building = home();
         building* dst_building = destination();
-        int src_int = src_building->type;
-        if ((src_int >= BUILDING_BARLEY_FARM && src_int <= BUILDING_CHICKPEAS_FARM) || src_int == BUILDING_FISHING_WHARF) {
+        if (src_building->dcast_farm() || src_building->dcast_fishing_wharf()) {
             dist = calc_distance_with_penalty(src_building->tile, dst_building->tile, src_building->distance_from_entry,dst_building->distance_from_entry);
         }
 
@@ -321,8 +320,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
         int dist = 0;
         building* src_building = home();
         building* dst_building = destination();
-        int src_int = src_building->type;
-        if ((src_int >= BUILDING_BARLEY_FARM && src_int <= BUILDING_CHICKPEAS_FARM) || src_int == BUILDING_FISHING_WHARF) {
+        if (src_building->dcast_farm() || src_building->dcast_fishing_wharf()) {
             dist = calc_distance_with_penalty(src_building->tile, dst_building->tile, src_building->distance_from_entry, dst_building->distance_from_entry);
         }
 

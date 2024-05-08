@@ -23,7 +23,7 @@ void figure::determine_deliveryman_destination_food() {
         int dist = 0;
         building* dst_building = building_get(dst_building_id);
 
-        if ((b->type >= BUILDING_BARLEY_FARM && b->type <= BUILDING_CHICKPEAS_FARM) || b->type == BUILDING_FISHING_WHARF) {
+        if (dst_building->dcast_farm() || dst_building->dcast_fishing_wharf()) {
             dist = calc_distance_with_penalty(b->tile, dst_building->tile, b->distance_from_entry, dst_building->distance_from_entry);
         }
 

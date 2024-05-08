@@ -9,7 +9,6 @@
 #include "building/building_farm.h"
 #include "building/building_raw_material.h"
 #include "building/building_workshop.h"
-#include "building/building_wharf.h"
 #include "building/building_shipyard.h"
 #include "building/building_architect_post.h"
 #include "building/building_shrine.h"
@@ -112,7 +111,6 @@ static int get_height_id() {
         case BUILDING_MILITARY_ACADEMY:
         case BUILDING_SHIPWRIGHT:
         case BUILDING_DOCK:
-        case BUILDING_FISHING_WHARF:
         case BUILDING_PERSONAL_MANSION:
         case BUILDING_FAMILY_MANSION:
         case BUILDING_DYNASTY_MANSION:
@@ -509,7 +507,6 @@ static void draw_refresh_background() {
             case BUILDING_LIBRARY: building_library_draw_info(context); break;
             case BUILDING_ORACLE: window_building_draw_oracle(&context); break;
             case BUILDING_SHIPWRIGHT: building_shipyard_draw_info(context); break;
-            case BUILDING_FISHING_WHARF: building_wharf_draw_info(context); break;
             case BUILDING_WATER_LIFT: window_building_draw_water_lift(&context); break;
             case BUILDING_MENU_BEAUTIFICATION: window_building_draw_fountain(&context); break;
             case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: window_building_draw_triumphal_arch(&context); break;

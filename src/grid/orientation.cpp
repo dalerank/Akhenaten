@@ -132,12 +132,6 @@ void map_orientation_update_buildings() {
             map_water_add_building(i, b->tile, 2, image_id);
             break;
 
-        case BUILDING_FISHING_WHARF:
-            image_offset = city_view_relative_orientation(b->data.industry.orientation);
-            image_id = image_id_from_group(GROUP_BUILDING_FISHING_WHARF) + image_offset;
-            map_water_add_building(i, b->tile, 2, image_id);
-            break;
-
         case BUILDING_FERRY:
             image_offset = city_view_relative_orientation(b->data.industry.orientation);
             image_id = building_impl::params(BUILDING_FERRY).anim["base"].first_img() + image_offset;

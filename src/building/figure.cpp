@@ -580,42 +580,6 @@ void building::spawn_figure_industry() {
     }
 }
 
-void building::spawn_figure_wharf() {
-    check_labor_problem();
-    if (has_road_access) {
-        common_spawn_labor_seeker(100);
-        int pct_workers = worker_percentage();
-        int spawn_delay = figure_spawn_timer();
-        if (spawn_delay == -1) {
-            ; // nothing
-        } else {
-            figure_spawn_delay++;
-            if (data.industry.fishing_boat_id == 0 && figure_spawn_delay > spawn_delay) {
-                figure_spawn_delay = 0;
-
-                if (config_get(CONFIG_GP_CH_FISHING_WHARF_SPAWN_BOATS)) {
-                    tile2i dock_tile(data.dock.dock_tiles[0]);
-                    figure* f = figure_create(FIGURE_FISHING_BOAT, dock_tile, DIR_4_BOTTOM_LEFT);
-                    f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
-                    f->set_home(id);
-                    set_figure(BUILDING_SLOT_BOAT, f);
-                    random_generate_next();
-                    f->wait_ticks = random_short() % 30; // ok
-                    f->allow_move_type = EMOVE_BOAT;
-                    data.industry.fishing_boat_id = f->id;
-                }
-            }
-        }
-    }
-    
-    bool cart_spawned = common_spawn_goods_output_cartpusher();
-    if (cart_spawned) {
-        if (data.industry.has_fish) {
-            data.industry.has_fish = (stored_full_amount > 0);
-        }
-    }
-}
-
 void building::spawn_figure_shipyard() {
     //    check_labor_problem();
     //    map_point road;
@@ -772,7 +736,6 @@ bool building::figure_generate() {
         case BUILDING_LIBRARY: spawn_figure_library(); break;
         case BUILDING_WATER_LIFT: common_spawn_figure_trigger(50); break;
         case BUILDING_MORTUARY: spawn_figure_mortuary(); break;
-        case BUILDING_FISHING_WHARF: spawn_figure_wharf(); break;
         case BUILDING_SHIPWRIGHT: spawn_figure_shipyard(); break;
         case BUILDING_UNUSED_NATIVE_HUT_88: spawn_figure_native_hut(); break;
         case BUILDING_UNUSED_NATIVE_MEETING_89: spawn_figure_native_meeting(); break;

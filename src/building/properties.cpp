@@ -82,7 +82,7 @@ static building_properties properties[400] = {
     {1, 1, 0, 0},                         // storageyard (space tile)
     {3, 0, GROUP_BUILDING_SHIPYARD},      // shipwright
     {3, 0, 0, 0},          // dock
-    {2, 0, GROUP_BUILDING_FISHING_WHARF}, // wharf (fish)
+    {2, 0, 0, 0}, // wharf (fish)
     {3, 0, 0, 0},
     {4, 0, GROUP_BUILDING_GOVERNORS_VILLA},
     {5, 0, GROUP_BUILDING_GOVERNORS_PALACE}, // mansions ^^^

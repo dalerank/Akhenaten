@@ -53,21 +53,21 @@ ferry_points map_water_docking_points(building *b) {
     tile2i tile = b->tile;
     switch (b->data.industry.orientation) {
     case 0:
-    result.point_a = {tile.x() + 1, tile.y() - 1};
-    result.point_b = {tile.x(), tile.y() - 1};
-    break;
+        result.point_a = {tile.x() + 1, tile.y() - 1};
+        result.point_b = {tile.x(), tile.y() - 1};
+        break;
     case 1:
-    result.point_a = {tile.x() + 2, tile.y() + 1};
-    result.point_b = {tile.x() + 2, tile.y() + 2};
-    break;
+        result.point_a = {tile.x() + 2, tile.y() + 1};
+        result.point_b = {tile.x() + 2, tile.y() + 2};
+        break;
     case 2:
-    result.point_a = {tile.x(), tile.y() + 2};
-    result.point_b = {tile.x() + 1, tile.y() + 2};
-    break;
+        result.point_a = {tile.x(), tile.y() + 2};
+        result.point_b = {tile.x() + 1, tile.y() + 2};
+        break;
     case 3:
-    result.point_a = {tile.x() - 1, tile.y()};
-    result.point_b = {tile.x() - 1, tile.y() - 1};
-    break;
+        result.point_a = {tile.x() - 1, tile.y()};
+        result.point_b = {tile.x() - 1, tile.y() - 1};
+        break;
     }
 
     return result;

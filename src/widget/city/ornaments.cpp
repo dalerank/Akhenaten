@@ -219,10 +219,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
         draw_gatehouse_anim(point.x, point.y, b, ctx);
         break;
 
-    case BUILDING_FISHING_WHARF:
-        building_draw_normal_anim(ctx, point + vec2i{74, 7}, b, tile, image_group(IMG_FISHIHG_WHARF_ANIM) - 1, color_mask);
-        break;
-
     default:
         b->dcast()->draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
         break;

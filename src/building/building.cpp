@@ -197,11 +197,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
         data.monuments.variant = (10 - (2 * orientation)) % 8; // ugh!
         break;
 
-    case BUILDING_FISHING_WHARF:
-        data.industry.orientation = orientation;
-        output_resource_first_id = RESOURCE_FISH;
-        break;
-
     case BUILDING_WATER_LIFT:
     case BUILDING_TRANSPORT_WHARF:
     case BUILDING_SHIPWRIGHT:
@@ -338,6 +333,7 @@ building_statue *building::dcast_statue() { return dcast()->dcast_statue(); }
 building_ferry *building::dcast_ferry() { return dcast()->dcast_ferry(); }
 building_fort *building::dcast_fort() { return dcast()->dcast_fort(); }
 building_fort_ground *building::dcast_fort_ground() { return dcast()->dcast_fort_ground(); }
+building_fishing_wharf *building::dcast_fishing_wharf() { return dcast()->dcast_fishing_wharf(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));

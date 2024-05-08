@@ -196,14 +196,14 @@ static void add_building_to_terrain(building* b) {
     } else {
         int size = building_properties_for_type(b->type)->size;
         map_building_tiles_add(b->id, b->tile, size, 0, 0);
-        if (b->type == BUILDING_FISHING_WHARF) {
-            b->data.industry.fishing_boat_id = 0;
-        }
+        b->dcast()->on_undo();
     }
     b->state = BUILDING_STATE_VALID;
 
-    while (b->prev_part_building_id)
+    while (b->prev_part_building_id) {
         b = building_get(b->prev_part_building_id);
+    }
+
     switch (b->type) {
     case BUILDING_BOOTH:
         for (int dy = 0; dy < 2; dy++) {

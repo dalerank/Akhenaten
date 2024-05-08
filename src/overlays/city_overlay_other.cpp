@@ -23,7 +23,6 @@ static int show_building_food_stocks(const building* b) {
     return b->type == BUILDING_BAZAAR || b->type == BUILDING_FISHING_WHARF || b->type == BUILDING_GRANARY;
 }
 
-
 static int show_figure_food_stocks(const figure* f) {
     if (f->type == FIGURE_MARKET_BUYER || f->type == FIGURE_MARKET_TRADER || f->type == FIGURE_DELIVERY_BOY
         || f->type == FIGURE_FISHING_BOAT) {

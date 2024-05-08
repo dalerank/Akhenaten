@@ -522,6 +522,17 @@ building_ferry = {
   labor_category : LABOR_CATEGORY_GOVERNMENT,
 }
 
+building_fishing_wharf = {
+  animations : {
+    preview : { pack:PACK_TERRAIN, id:18 },
+    base : { pack:PACK_TERRAIN, id:18 },
+    work : { pack:PACK_TERRAIN, id:18, offset:1 }
+  },
+  building_size : 2,
+  window_info_height_id: 1,
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+}
+
 building_dentist = {
   animations : {
     preview : { pack:PACK_GENERAL, id:67 },

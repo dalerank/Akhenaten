@@ -326,7 +326,6 @@ static void add_building(building* b, int orientation, int variant) {
         }
         break;
 
-    case BUILDING_FISHING_WHARF:
     case BUILDING_TRANSPORT_WHARF:
     case BUILDING_SHIPWRIGHT:
     case BUILDING_WARSHIP_WHARF:
@@ -1022,7 +1021,6 @@ void BuildPlanner::setup_build_graphics() {
         set_tiles_building(props->img_id() + relative_orientation + variant * 4, props->size);
         break;
 
-    case BUILDING_FISHING_WHARF:
     case BUILDING_DOCK:
     case BUILDING_SHIPWRIGHT:
     case BUILDING_WARSHIP_WHARF:

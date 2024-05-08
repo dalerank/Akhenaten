@@ -50,6 +50,7 @@ class building_statue;
 class building_ferry;
 class building_fort_ground;
 class building_fort;
+class building_fishing_wharf;
 struct object_info;
 struct painter;
 struct mouse;
@@ -377,6 +378,7 @@ public:
     building_ferry *dcast_ferry();
     building_fort *dcast_fort();
     building_fort_ground *dcast_fort_ground();
+    building_fishing_wharf *dcast_fishing_wharf();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -387,7 +389,6 @@ public:
     void set_greate_palace_graphic();
     void spawn_figure_tax_collector();
     void spawn_figure_industry();
-    void spawn_figure_wharf();
     void spawn_figure_shipyard();
     void spawn_figure_native_hut();
     void spawn_figure_native_meeting();
@@ -433,6 +434,7 @@ public:
     virtual void on_place(int orientation, int variant);
     virtual void on_place_checks();
     virtual void on_destroy() {}
+    virtual void on_undo() {}
     virtual void spawn_figure() {}
     virtual void update_graphic() {}
     virtual void update_month() {}
@@ -485,6 +487,7 @@ public:
     virtual building_ferry *dcast_ferry() { return nullptr; }
     virtual building_fort *dcast_fort() { return nullptr; }
     virtual building_fort_ground *dcast_fort_ground() { return nullptr; }
+    virtual building_fishing_wharf *dcast_fishing_wharf() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

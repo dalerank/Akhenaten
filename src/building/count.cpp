@@ -29,6 +29,7 @@ void building_increase_type_count(int type, bool active) {
     g_count_data.buildings[type].total++;
     g_count_data.buildings[type].active += (active ? 1 : 0);
 }
+
 void building_increase_industry_count(int resource, bool active) {
     g_count_data.industry[resource].total++;
     g_count_data.industry[resource].active += (active ? 1 : 0);
@@ -154,13 +155,6 @@ void building_count_update() {
             building_increase_type_count(type, b.num_workers > 0);
             break;
 
-            // water-side
-        case BUILDING_FISHING_WHARF:
-            if (b.num_workers > 0 && b.has_open_water_access) {
-                city_buildings_add_working_wharf(!b.data.industry.fishing_boat_id);
-            }
-            break;
-
         case BUILDING_SHIPWRIGHT:
             if (b.num_workers > 0 && b.has_open_water_access) {
                 city_buildings_add_working_shipyard(b.id);
@@ -192,9 +186,6 @@ void building_count_update() {
             break;
         case BUILDING_HENNA_FARM:
             building_increase_industry_count(RESOURCE_HENNA, b.num_workers > 0);
-            break;
-        case BUILDING_FISHING_WHARF:
-            building_increase_industry_count(RESOURCE_FISH, b.num_workers > 0);
             break;
         case BUILDING_CLAY_PIT:
             building_increase_industry_count(RESOURCE_CLAY, b.num_workers > 0);

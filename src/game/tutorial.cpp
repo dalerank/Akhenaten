@@ -244,6 +244,7 @@ void tutorial_menu_update(int tut) {
     } else if (tut == 6) {
         building_menu_update(tutorial_stage.disable_all);
         building_menu_update(tutorial_stage.tutorial_start);
+
     } else if (tut == 7) {
         building_menu_update(tutorial_stage.disable_all);
         building_menu_update(tutorial_stage.tutorial_start);

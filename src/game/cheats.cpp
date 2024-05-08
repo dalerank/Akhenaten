@@ -43,7 +43,6 @@ static void game_cheat_fire(pcstr);
 static void game_cheat_nodamage(pcstr);
 static void game_cheat_spacious_apartment(pcstr);
 static void game_cheat_spawn_nobles(pcstr);
-static void game_cheat_kill_fish_boats(pcstr);
 static void game_cheat_update_fish_points(pcstr);
 static void game_cheat_clear_progress(pcstr);
 static void game_cheat_add_clay(pcstr);
@@ -66,7 +65,6 @@ static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_s
                                                   {"nodamage", game_cheat_nodamage},
                                                   {"spawnnobles", game_cheat_spawn_nobles},
                                                   {"tutspaciousapt", game_cheat_spacious_apartment},
-                                                  {"killfishboats", game_cheat_kill_fish_boats},
                                                   {"upfishpoints", game_cheat_update_fish_points},
                                                   {"clearprogress", game_cheat_clear_progress}
 };
@@ -200,23 +198,6 @@ static void game_cheat_update_fish_points(pcstr args) {
     parse_integer(args ? args : "10", count);
 
     formation_fish_update(count);
-}
-
-static void game_cheat_kill_fish_boats(pcstr ) {
-    buildings_valid_do([&] (building &b) {
-        if (b.type != BUILDING_FISHING_WHARF) {
-            return;
-        }
-
-        b.data.industry.fishing_boat_id = 0;
-    });
-
-    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure* f = figure_get(i);
-        if (f->has_type(FIGURE_FISHING_BOAT)) {
-            f->advance_action(FIGURE_ACTION_149_CORPSE);
-        }
-    }
 }
 
 static void game_cheat_spawn_nobles(pcstr args) {
