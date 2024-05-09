@@ -736,7 +736,7 @@ void window_building_info_show(const tile2i& point) {
     window_show(&window);
 }
 
-int window_building_info_get_int(void) {
+int window_building_info_get_type() {
     auto &context = g_building_info_context;
     if (context.type == BUILDING_INFO_BUILDING) {
         return building_get(context.building_id)->type;

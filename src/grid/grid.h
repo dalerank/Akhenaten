@@ -59,6 +59,7 @@ using grid_tiles = std::vector<tile2i>;
 
 void map_grid_init(grid_xx* grid);
 int32_t map_grid_get(grid_xx* grid, uint32_t at);
+inline int32_t map_grid_get(grid_xx *grid, tile2i at) { return map_grid_get(grid, at.grid_offset()); }
 void map_grid_set(grid_xx* grid, uint32_t at, int64_t value);
 void map_grid_fill(grid_xx* grid, int64_t value);
 void map_grid_clear(grid_xx* grid);
@@ -94,7 +95,7 @@ void map_grid_adjacent_offsets_xy(int sizex, int sizey, offsets_array &arr);
 void map_grid_adjacent_offsets(int size, offsets_array &arr);
 
 template<typename T>
-void map_grid_area_foreach(tile2i tmin, tile2i tmax, T func) {
+inline void map_grid_area_foreach(tile2i tmin, tile2i tmax, T func) {
     for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
         for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
             func(tile2i(xx, yy));
@@ -103,14 +104,23 @@ void map_grid_area_foreach(tile2i tmin, tile2i tmax, T func) {
 }
 
 template<typename T>
-void map_grid_area_foreach(grid_tiles &tiles, T func) {
+inline void map_grid_area_foreach(grid_area area, T func) {
+    for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
+        for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
+            func(tile2i(xx, yy));
+        }
+    }
+}
+
+template<typename T>
+inline void map_grid_area_foreach(grid_tiles &tiles, T func) {
     for (auto &tile: tiles) {
         func(tile);
     }
 }
 
 template<typename T>
-tile2i map_grid_area_first(tile2i tmin, tile2i tmax, T func) {
+inline tile2i map_grid_area_first(tile2i tmin, tile2i tmax, T func) {
     for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
         for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
             if (func(tile2i(xx, yy))) {
@@ -123,7 +133,12 @@ tile2i map_grid_area_first(tile2i tmin, tile2i tmax, T func) {
 }
 
 template<typename T>
-tile2i map_grid_area_first(grid_tiles &tiles, T func) {
+inline tile2i map_grid_area_first(grid_area area, T func) {
+    return map_grid_area_first(area.tmin, area.tmax, func);
+}
+
+template<typename T>
+inline tile2i map_grid_area_first(grid_tiles &tiles, T func) {
     for (auto &tile: tiles) {
         if (func(tile)) {
            return tile;

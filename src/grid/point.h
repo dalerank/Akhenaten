@@ -45,7 +45,7 @@ public:
     inline self mod(int x, int y) { return self(this->x() % x, this->y() % y); }
     inline self add(self o) { return self(this->x() + o.x(), this->y() + o.y()); }
     inline self div(float d) { return self(this->x() / d, this->y() / d); }
-    inline bool valid() const { return (self(-1, -1) != *this); }
+    inline bool valid() const { return (p_X >= 0 && p_Y >= 0); }
 
     // SET BY CONSTRUCTION
     void set(int _x, int _y);

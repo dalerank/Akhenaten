@@ -135,14 +135,14 @@ bool map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain) {
     }
     return false;
 }
-bool map_terrain_exists_tile_in_area_with_type(int x, int y, int size, int terrain) {
-    for (int yy = y; yy < y + size; yy++) {
-        for (int xx = x; xx < x + size; xx++) {
-            if (map_grid_is_inside(tile2i(xx, yy), 1) && map_grid_get(&g_terrain_grid, MAP_OFFSET(xx, yy)) & terrain)
-                return true;
-        }
-    }
-    return false;
+bool map_terrain_exists_tile_in_area_with_type(tile2i tile, int size, int terrain) {
+    grid_area area = map_grid_get_area(tile, size, 0);
+
+    tile2i res = map_grid_area_first(area, [terrain] (tile2i t) {
+        return map_grid_is_inside(t, 1) && map_grid_get(&g_terrain_grid, t) & terrain;
+    });
+   
+    return res.valid();
 }
 bool map_terrain_exists_tile_in_radius_with_type(tile2i tile, int size, int radius, int terrain) {
     grid_area area = map_grid_get_area(tile, size, radius);

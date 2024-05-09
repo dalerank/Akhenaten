@@ -488,10 +488,10 @@ int map_get_fertility(int grid_offset, int tally_type) { // actual percentage in
     return 0;
 }
 
-static uint8_t map_get_fertility_average(int x, int y, int size) {
+static uint8_t map_get_fertility_average(tile2i tile, int size) {
     // returns average of fertility in square starting on the top-left corner
-    tile2i tmin(x, y);
-    tile2i tmax(x + size - 1, y + size - 1);
+    tile2i tmin = tile;
+    tile2i tmax = tile.shifted(size - 1, size - 1);
 
     int fert_total = 0;
     map_grid_bound_area(tmin, tmax);
@@ -520,7 +520,7 @@ uint8_t map_get_fertility_for_farm(int grid_offset) {
 
     bool is_irrigated = false;
     if (config_get(CONFIG_GP_FIX_IRRIGATION_RANGE)) {
-        is_irrigated = map_terrain_exists_tile_in_area_with_type(tile.x(), tile.y(), 3, TERRAIN_IRRIGATION_RANGE);
+        is_irrigated = map_terrain_exists_tile_in_area_with_type(tile, 3, TERRAIN_IRRIGATION_RANGE);
     } else {
         is_irrigated = map_terrain_exists_tile_in_radius_with_type(tile, 1, 2, TERRAIN_IRRIGATION_RANGE);
     }
@@ -530,7 +530,7 @@ uint8_t map_get_fertility_for_farm(int grid_offset) {
         irrigation_bonus = 20;
     }
 
-    return std::min(2 + map_get_fertility_average(tile.x(), tile.y(), 3) + is_irrigated * irrigation_bonus, 99);
+    return std::min(2 + map_get_fertility_average(tile, 3) + is_irrigated * irrigation_bonus, 99);
 }
 
 void map_set_floodplain_growth(int grid_offset, int growth) {

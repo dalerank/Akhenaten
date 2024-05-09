@@ -104,7 +104,7 @@ int parse_integer(pcstr string, int &value) {
 
 void game_cheat_activate() {
     if (window_is(WINDOW_BUILDING_INFO)) {
-        g_cheats_data.is_cheating = window_building_info_get_int() == BUILDING_WELL;
+        g_cheats_data.is_cheating = (window_building_info_get_type() == BUILDING_WELL);
     } else if (g_cheats_data.is_cheating && window_is(WINDOW_MESSAGE_DIALOG)) {
         g_cheats_data.is_cheating = true;
         scenario_invasion_start_from_cheat();

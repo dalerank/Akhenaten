@@ -64,7 +64,7 @@ void map_water_supply_update_houses() {
         } else if (b.house_size) {
             b.has_water_access = false;
             b.has_well_access = 0;
-            if (b.data.house.water_supply|| map_terrain_exists_tile_in_area_with_type(b.tile.x(), b.tile.y(), b.size, TERRAIN_FOUNTAIN_RANGE)) {
+            if (b.data.house.water_supply|| map_terrain_exists_tile_in_area_with_type(b.tile, b.size, TERRAIN_FOUNTAIN_RANGE)) {
                 b.has_water_access = true;
             }
         }

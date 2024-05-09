@@ -1257,12 +1257,12 @@ void BuildPlanner::update_special_case_orientations_check() {
             variant = 0;
             if (!result.match) {
                 result = map_shore_determine_orientation(end, additional_req_param1, true, true, TERRAIN_FLOODPLAIN);
-                if (result.match && !map_terrain_exists_tile_in_area_with_type(end.x(), end.y(), size.x, TERRAIN_WATER)) { // correct for water
+                if (result.match && !map_terrain_exists_tile_in_area_with_type(end, size.x, TERRAIN_WATER)) { // correct for water
                     variant = 1;
                 } else {
                     result.match = false;
                 }
-            } else if (map_terrain_exists_tile_in_area_with_type(end.x(), end.y(), size.x, TERRAIN_FLOODPLAIN)) { // correct the ShoreLine check for floodplains!
+            } else if (map_terrain_exists_tile_in_area_with_type(end, size.x, TERRAIN_FLOODPLAIN)) { // correct the ShoreLine check for floodplains!
                 result.match = false;
             }
         }

@@ -943,7 +943,6 @@ void building_impl::on_place_checks() {
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
     case BUILDING_GARDENS:
-    case BUILDING_WELL:
     case BUILDING_WATER_LIFT:
     case BUILDING_MUD_GATEHOUSE:
     case BUILDING_ROADBLOCK:
@@ -957,7 +956,13 @@ void building_impl::on_place_checks() {
 
     if (!map_has_road_access(tile(), size())) {
         building_construction_warning_show(WARNING_ROAD_ACCESS_NEEDED);
-    } 
+    }
+
+    if (!building_construction_has_warning()) {
+        if (model_get_building(type())->laborers > 0 && g_city.labor.workers_needed >= 10) {
+            building_construction_warning_show(WARNING_WORKERS_NEEDED);
+        }
+    }
 }
 
 void building_impl::update_day() {

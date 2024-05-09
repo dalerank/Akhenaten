@@ -105,7 +105,7 @@ bool map_terrain_has_adjecent_with_type(int grid_offset, int terrain);
 bool map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain);
 bool map_terrain_has_adjacent_x_with_type(int grid_offset, int terrain);
 
-bool map_terrain_exists_tile_in_area_with_type(int x, int y, int size, int terrain);
+bool map_terrain_exists_tile_in_area_with_type(tile2i tile, int size, int terrain);
 
 bool map_terrain_exists_tile_in_radius_with_type(tile2i tile, int size, int radius, int terrain);
 bool map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int radius, int terrain);

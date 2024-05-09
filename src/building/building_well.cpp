@@ -22,6 +22,10 @@ void building_well::update_month() {
     map_image_set(tile(), params().anim[base]);
 }
 
+void building_well::on_place_checks() {
+    // nothing
+}
+
 void building_well::window_info_background(object_info &c) {
     c.help_id = 62;
     window_building_play_sound(&c, "wavs/well.wav");

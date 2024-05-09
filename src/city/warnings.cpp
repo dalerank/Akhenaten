@@ -18,8 +18,12 @@
 
 bool g_has_warning = false;
 
-void building_construction_warning_reset(void) {
+void building_construction_warning_reset() {
     g_has_warning = false;
+}
+
+bool building_construction_has_warning() {
+    return g_has_warning;
 }
 
 void building_construction_warning_show(int warning) {
@@ -54,13 +58,6 @@ static void check_water(int type, int x, int y) {
             if (!has_water)
                 building_construction_warning_show(WARNING_WATER_PIPE_ACCESS_NEEDED);
         }
-    }
-}
-
-static void check_workers(int type) {
-    if (!g_has_warning && type != BUILDING_WELL && !building_is_fort(type)) {
-        if (model_get_building(type)->laborers > 0 && g_city.labor.workers_needed >= 10)
-            building_construction_warning_show(WARNING_WORKERS_NEEDED);
     }
 }
 
@@ -224,7 +221,6 @@ void building_construction_warning_generic_checks(building *b, tile2i tile, int 
 
     e_building_type type = b->type;
     building_construction_warning_check_food_stocks(type);
-    check_workers(type);
     check_market(type);
     check_juggler_access(type);
     check_musician_access(type);
