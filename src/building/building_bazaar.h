@@ -21,11 +21,6 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_count() const;
 
-    enum e_state {
-        estate_normal,
-        estate_fancy
-    };
-
     building *get_storage_destination();
     void draw_simple_background(object_info &c);
     void draw_orders_background(object_info &c);

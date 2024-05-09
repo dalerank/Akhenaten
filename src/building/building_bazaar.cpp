@@ -273,14 +273,14 @@ void building_bazaar::update_graphic() {
         return;
     }
 
-    base.internal_state = (map_desirability_get(base.tile.grid_offset()) <= 30) ? estate_normal : estate_fancy;
-    const animation_t &anim = bazaar_m.anim[(base.internal_state == estate_normal) ? "base" : "fancy"];
+    base.fancy_state = (map_desirability_get(base.tile.grid_offset()) <= 30) ? efancy_normal : efancy_good;
+    const animation_t &anim = bazaar_m.anim[(base.fancy_state == efancy_normal) ? "base" : "fancy"];
     map_building_tiles_add(base.id, base.tile, base.size, anim.first_img(), TERRAIN_BUILDING);
 }
 
 void building_bazaar::on_create(int orientation) {
     base.subtype.market_goods = 0;
-    base.internal_state = estate_normal;
+    base.fancy_state = efancy_normal;
 }
 
 void building_bazaar::spawn_figure() {
@@ -495,7 +495,7 @@ void building_bazaar::window_info_foreground(object_info &ctx) {
 }
 
 bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const animation_t &anim = bazaar_m.anim[(base.internal_state == estate_normal) ? "base_work" : "fancy_work"];
+    const animation_t &anim = bazaar_m.anim[(base.fancy_state == efancy_normal) ? "base_work" : "fancy_work"];
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;

@@ -80,6 +80,11 @@ enum e_building_slot {
     BUILDING_SLOT_CARTPUSHER_2 = 3,
 };
 
+enum e_fancy_state {
+    efancy_normal,
+    efancy_good
+};
+
 class building_work_camp;
 class building_farm;
 
@@ -135,7 +140,7 @@ public:
     short stored_full_amount;
     bool has_well_access;
     short num_workers;
-    short internal_state;
+    e_fancy_state fancy_state;
     e_labor_category labor_category;
     e_resource output_resource_first_id;
     e_resource output_resource_second_id;

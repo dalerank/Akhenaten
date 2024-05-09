@@ -1267,7 +1267,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_second_id); // 1
         iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_second_rate); // 1
 
-        iob->bind(BIND_SIGNATURE_INT16, &b->internal_state); // 2
+        iob->bind(BIND_SIGNATURE_INT16, &b->fancy_state); // 2
         // 63 additional bytes
         iob->bind____skip(61); // temp for debugging
                                //            assert(iob->get_offset() - sind == 264);

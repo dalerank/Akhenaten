@@ -18,8 +18,9 @@ void config_load_building_well() {
 
 void building_well::update_month() {
     int avg_desirability = map_desirabilty_avg(tile(), 4);
-    pcstr base = (avg_desirability > 30 ? "base_fancy" : "base");
-    map_image_set(tile(), params().anim[base]);
+    base.fancy_state = (avg_desirability > 30 ? efancy_good : efancy_normal);
+    pcstr anim = (base.fancy_state == efancy_good) ? "fancy" : "base";
+    map_image_set(tile(), well_m.anim[anim]);
 }
 
 void building_well::on_place_checks() {
@@ -47,8 +48,8 @@ void building_well::window_info_background(object_info &c) {
 }
 
 bool building_well::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const animation_t &anim = well_m.anim["work"];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+    pcstr anim = (base.fancy_state == efancy_normal) ? "base_work" : "fancy_work";
+    building_draw_normal_anim(ctx, point, &base, tile, well_m.anim[anim], color_mask);
 
     return true;
 }
