@@ -1077,6 +1077,7 @@ void BuildPlanner::setup_build_graphics() {
             if (!img_id) {
                 const auto &params = building_impl::params(build_type);
                 img_id = params.anim["preview"].first_img();
+                img_id += params.planer_relative_orientation * relative_orientation;
             }
             set_tiles_building(img_id, props->size);
         }

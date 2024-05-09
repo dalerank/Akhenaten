@@ -530,6 +530,7 @@ building_fishing_wharf = {
   },
   building_size : 2,
   window_info_height_id: 1,
+  planer_relative_orientation: 1,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 

@@ -5,6 +5,7 @@
 #include "building/building_booth.h"
 #include "building/building_bandstand.h"
 #include "building/building_pavilion.h"
+#include "building/building_fishing_wharf.h"
 #include "building/building_festival_square.h"
 #include "building/industry.h"
 #include "building/monument_mastaba.h"

@@ -424,6 +424,7 @@ public:
         animations_t anim;
         uint8_t building_size;
         int window_info_height_id;
+        int planer_relative_orientation;
         bool unique_building;
 
         void load(archive arch);
