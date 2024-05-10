@@ -84,6 +84,7 @@ var building_shrine_ptah = {}
 var building_shrine_seth = {}
 var building_shrine_bast = {}
 var building_fishing_wharf = {}
+var building_shipyard = {}
 var empire_window = {}
 var empire_images_remap = []
 var imagepaks = []

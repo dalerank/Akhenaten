@@ -580,38 +580,6 @@ void building::spawn_figure_industry() {
     }
 }
 
-void building::spawn_figure_shipyard() {
-    //    check_labor_problem();
-    //    map_point road;
-    //    if (map_has_road_access(x, y, size, &road)) {
-    //        spawn_labor_seeker(50);
-    //        if (has_figure_of_type(FIGURE_FISHING_BOAT))
-    //            return;
-    //        int pct_workers = worker_percentage();
-    //        if (pct_workers >= 100)
-    //            data.industry.progress += 10;
-    //        else if (pct_workers >= 75)
-    //            data.industry.progress += 8;
-    //        else if (pct_workers >= 50)
-    //            data.industry.progress += 6;
-    //        else if (pct_workers >= 25)
-    //            data.industry.progress += 4;
-    //        else if (pct_workers >= 1)
-    //            data.industry.progress += 2;
-    //
-    //        if (data.industry.progress >= 160) {
-    //            data.industry.progress = 0;
-    //            map_point boat;
-    //            if (map_water_can_spawn_fishing_boat(x, y, size, &boat)) {
-    //                figure *f = figure_create(FIGURE_FISHING_BOAT, boat.x, boat.y, DIR_0_TOP_RIGHT);
-    //                f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
-    //                f->home() = b;
-    //                figure_id = f->id;
-    //            }
-    //        }
-    //    }
-}
-
 int building::get_figures_number(e_figure_type ftype) {
     int gatherers_this_yard = 0;
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -736,7 +704,6 @@ bool building::figure_generate() {
         case BUILDING_LIBRARY: spawn_figure_library(); break;
         case BUILDING_WATER_LIFT: common_spawn_figure_trigger(50); break;
         case BUILDING_MORTUARY: spawn_figure_mortuary(); break;
-        case BUILDING_SHIPWRIGHT: spawn_figure_shipyard(); break;
         case BUILDING_UNUSED_NATIVE_HUT_88: spawn_figure_native_hut(); break;
         case BUILDING_UNUSED_NATIVE_MEETING_89: spawn_figure_native_meeting(); break;
         case BUILDING_UNUSED_NATIVE_CROPS_93: update_native_crop_progress(); break;

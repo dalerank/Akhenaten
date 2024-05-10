@@ -394,7 +394,6 @@ public:
     void set_greate_palace_graphic();
     void spawn_figure_tax_collector();
     void spawn_figure_industry();
-    void spawn_figure_shipyard();
     void spawn_figure_native_hut();
     void spawn_figure_native_meeting();
     void spawn_figure_tower();

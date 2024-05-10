@@ -526,12 +526,24 @@ building_fishing_wharf = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:18 },
     base : { pack:PACK_TERRAIN, id:18 },
-    work : { pack:PACK_TERRAIN, id:18, offset:1 }
+    // work : { pack:PACK_TERRAIN, id:18, offset:1 }
   },
   building_size : 2,
   window_info_height_id: 1,
   planer_relative_orientation: 1,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+}
+
+building_shipyard = {
+  animations : {
+    preview : { pack: PACK_TERRAIN, id:26, max_frames:1 },
+    base : { pack: PACK_TERRAIN, id:26, max_frames:1 },
+    // work : { pack: PACK_TERRAIN, id:26, max_frames:1 },
+  },
+  building_size : 3,
+  window_info_height_id : 1,
+  planer_relative_orientation: 1,
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
 building_dentist = {

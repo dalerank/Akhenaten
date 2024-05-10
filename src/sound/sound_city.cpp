@@ -95,8 +95,6 @@ int building_type_to_channel(building *b) {
     case BUILDING_TEMPLE_COMPLEX_BAST:
         return 0;
 
-    case BUILDING_SHIPWRIGHT: return SOUND_CHANNEL_CITY_STORAGE_YARD;
-
     case BUILDING_LOW_BRIDGE:
     case BUILDING_UNUSED_SHIP_BRIDGE_83:
         return 0;

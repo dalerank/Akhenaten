@@ -23,7 +23,7 @@ struct ferry_points {
 ferry_points map_water_docking_points(building *b);
 bool map_water_is_point_inside(tile2i tile);
 
-void map_water_add_building(int building_id, map_point tile, int size, int image_id, int ext_terrain_flags = 0);
+void map_water_add_building(int building_id, tile2i tile, int size, int image_id, int ext_terrain_flags = 0);
 
 void map_water_cache_river_tiles();
 
@@ -32,9 +32,9 @@ struct shore_orientation {
     int orientation_absolute;
 };
 
-shore_orientation map_shore_determine_orientation(map_point tile, int size, bool adjust_xy, bool adjacent = false, int shore_terrain = TERRAIN_WATER);
+shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool adjust_xy, bool adjacent = false, int shore_terrain = TERRAIN_WATER);
 
 int map_water_get_wharf_for_new_fishing_boat(figure* boat, map_point* tile);
 bool map_water_find_alternative_fishing_boat_tile(figure* boat, map_point* tile);
-bool map_water_find_shipwreck_tile(figure* wreck, map_point* tile);
-int map_water_can_spawn_fishing_boat(int x, int y, int size, map_point* tile);
+bool map_water_find_shipwreck_tile(figure* wreck, tile2i* tile);
+int map_water_can_spawn_fishing_boat(tile2i tile, int size, tile2i &boat_tile);

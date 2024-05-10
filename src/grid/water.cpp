@@ -312,8 +312,8 @@ static int num_surrounding_water_tiles(int grid_offset) {
     return amount;
 }
 
-int map_water_can_spawn_fishing_boat(int x, int y, int size, map_point* tile) {
-    int base_offset = MAP_OFFSET(x, y);
+int map_water_can_spawn_fishing_boat(tile2i tile, int size, tile2i &boat_tile) {
+    int base_offset = tile.grid_offset();
     offsets_array offsets;
     map_grid_adjacent_offsets(size, offsets);
     for (const int& tile_delta: offsets) {
@@ -321,7 +321,7 @@ int map_water_can_spawn_fishing_boat(int x, int y, int size, map_point* tile) {
         if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
             if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
                 if (num_surrounding_water_tiles(grid_offset) >= 8) {
-                    map_point_store_result(tile2i(grid_offset), *tile);
+                    map_point_store_result(tile2i(grid_offset), boat_tile);
                     return 1;
                 }
             }

@@ -327,7 +327,6 @@ static void add_building(building* b, int orientation, int variant) {
         break;
 
     case BUILDING_TRANSPORT_WHARF:
-    case BUILDING_SHIPWRIGHT:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_DOCK: {
             auto props = building_properties_for_type(b->type);
@@ -1022,7 +1021,6 @@ void BuildPlanner::setup_build_graphics() {
         break;
 
     case BUILDING_DOCK:
-    case BUILDING_SHIPWRIGHT:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_TRANSPORT_WHARF:
     case BUILDING_FERRY:

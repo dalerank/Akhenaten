@@ -154,12 +154,6 @@ void building_count_update() {
         case BUILDING_ORACLE:
             building_increase_type_count(type, b.num_workers > 0);
             break;
-
-        case BUILDING_SHIPWRIGHT:
-            if (b.num_workers > 0 && b.has_open_water_access) {
-                city_buildings_add_working_shipyard(b.id);
-            }
-            break;
         }
         // industry
         switch (b.type) {
