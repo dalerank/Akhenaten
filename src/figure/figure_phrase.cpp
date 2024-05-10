@@ -32,7 +32,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_DENTIST, "dentist"},
     {FIGURE_NONE, "desease"},
     {FIGURE_EMBALMER, "embalmer"},
-    {FIGURE_FISHING_BOAT, "fishing"},
     {FIGURE_NONE, "governor"},
     {FIGURE_NONE, "guard"},
     {FIGURE_LIBRARIAN, "library"},

@@ -133,6 +133,7 @@ var figure_magistrate = {}
 var figure_soldier_infantry = {}
 var figure_soldier_archer = {}
 var figure_soldier_charioteer = {}
+var fishing_boat = {}
 // missions
 var mission0 = {}
 var mission1 = {}

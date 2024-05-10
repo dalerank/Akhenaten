@@ -446,6 +446,14 @@ figure_soldier_infantry = {
 	},
 }
 
+fishing_boat = {
+	animations : {
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:64, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:65, max_frames:8 },
+		attack : { pos : [0, 0], pack:PACK_SPR_MAIN, id:66, max_frames:12 },
+	},
+}
+
 figure_soldier_archer = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:61, max_frames:12 },

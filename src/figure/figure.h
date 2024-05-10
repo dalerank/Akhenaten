@@ -393,7 +393,6 @@ public:
     void mugger_action();
     void rioter_action();
     void governor_action();
-    void fishing_boat_action();
     void editor_flag_action();
     void flotsam_action();
     void noble_action();

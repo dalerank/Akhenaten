@@ -248,7 +248,7 @@ static void draw_figure_info(object_info* c, int figure_id) {
         //f->draw_trader(c); //TODO: need fixes
     } else if (type >= FIGURE_ENEMY43_SPEAR && type <= FIGURE_ENEMY53_AXE)
         f->draw_enemy(c);
-    else if (type == FIGURE_FISHING_BOAT || type == FIGURE_SHIPWRECK || f->is_herd())
+    else if (type == FIGURE_SHIPWRECK || f->is_herd())
         f->draw_animal(c);
     else if (type == FIGURE_STORAGEYARD_CART)
         f->draw_cartpusher(c);

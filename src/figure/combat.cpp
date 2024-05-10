@@ -68,6 +68,7 @@ int figure_combat_get_target_for_wolf(tile2i tile, int max_distance) {
         if (f->is_dead() || !f->type) {
             continue;
         }
+
         switch (f->type) {
         case FIGURE_EXPLOSION:
         case FIGURE_STANDARD_BEARER:

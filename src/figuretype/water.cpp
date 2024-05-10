@@ -22,11 +22,11 @@ void figure_sink_all_ships(void) {
         if (f->state != FIGURE_STATE_ALIVE)
             continue;
 
-        if (f->type == FIGURE_TRADE_SHIP)
+        if (f->type == FIGURE_TRADE_SHIP) {
             f->destination()->data.dock.trade_ship_id = 0;
-        else if (f->type == FIGURE_FISHING_BOAT)
+        } else if (f->type == FIGURE_FISHING_BOAT) {
             f->home()->data.industry.fishing_boat_id = 0;
-        else {
+        } else {
             continue;
         }
         f->set_home(0);

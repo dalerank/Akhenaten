@@ -449,7 +449,6 @@ void figure::action_perform() {
         case FIGURE_PROTESTER: protestor_action(); break;
         case FIGURE_CRIMINAL: mugger_action(); break;
         case FIGURE_TOMB_ROBER: rioter_action(); break;
-        case FIGURE_FISHING_BOAT: fishing_boat_action(); break;
 
             //            case 29: common_action(12, GROUP_FIGURE_TEACHER_LIBRARIAN); break;
             //            case 30: common_action(12, GROUP_FIGURE_TEACHER_LIBRARIAN); break; //30
