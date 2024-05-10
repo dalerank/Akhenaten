@@ -538,7 +538,7 @@ building_shipyard = {
   animations : {
     preview : { pack: PACK_TERRAIN, id:26, max_frames:1 },
     base : { pack: PACK_TERRAIN, id:26, max_frames:1 },
-    // work : { pack: PACK_TERRAIN, id:26, max_frames:1 },
+    work : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11 }
   },
   building_size : 3,
   window_info_height_id : 1,
@@ -581,7 +581,7 @@ building_brewery = {
 
 building_mine_copper = {
   animations : {
-    work : { pos : [54, 15], anim_id: ANIM_GOLD_MINE, max_frames: 16 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16 }
   },
   output_resource : RESOURCE_COPPER,
   info_help_id:93, info_text_id:193,
@@ -590,7 +590,7 @@ building_mine_copper = {
 
 building_mine_gems = {
   animations : {
-    work : { pos : [54, 15], anim_id: ANIM_GOLD_MINE, max_frames: 16 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16 }
   },
   output_resource : RESOURCE_GEMS,
   meta_id : "gems_mine",
@@ -599,7 +599,7 @@ building_mine_gems = {
 
 building_mine_gold = {
   animations : {
-    work : { pos : [54, 15], anim_id: ANIM_GOLD_MINE, max_frames: 16 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16 }
   },
   output_resource : RESOURCE_GOLD,
   info_help_id:93,

@@ -96,6 +96,10 @@ int get_letter_height(const uint8_t* str, e_font font) {
 }
 
 int text_get_width(const uint8_t* str, e_font font) {
+    if (!str) {
+        return 0;
+    }
+
     const font_definition* def = font_definition_for(font);
     int maxlen = 10000;
     int width = 0;

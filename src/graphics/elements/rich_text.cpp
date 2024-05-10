@@ -117,6 +117,10 @@ static void add_link(int message_id, int x_start, int x_end, int y) {
 }
 
 static int get_word_width(const uint8_t* str, int in_link, int* num_chars) {
+    if (!str) {
+        return 0;
+    }
+
     int width = 0;
     int guard = 0;
     int word_char_seen = 0;
@@ -296,8 +300,9 @@ static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, 
                         tmp_line[line_index++] = c;
                     }
                 }
-                if (!*text)
+                if (!text || !*text) {
                     has_more_characters = 0;
+                }
             }
         }
 
