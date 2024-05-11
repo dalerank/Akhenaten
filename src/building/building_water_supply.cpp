@@ -18,11 +18,10 @@ void config_load_building_water_supply() {
 
 void building_water_supply::update_month() {
     int avg_desirability = map_desirabilty_avg(tile(), 4);
-    if (avg_desirability > 30) {
-        map_building_tiles_add(id(), tile(), 2, IMG_WATER_SUPPLY_FANCY, TERRAIN_BUILDING);
-    } else {
-        map_building_tiles_add(id(), tile(), 2, IMG_WATER_SUPPLY, TERRAIN_BUILDING);
-    }
+    base.fancy_state = (avg_desirability > 30) ? efancy_good : efancy_normal;
+    pcstr anim_name = (base.fancy_state == efancy_good) ? "fancy" : "base";
+    const animation_t &anim = water_supply_m.anim[anim_name];
+    map_building_tiles_add(id(), tile(), 2, anim.first_img(), TERRAIN_BUILDING);
 }
 
 void building_water_supply::spawn_figure() {
@@ -65,7 +64,8 @@ void building_water_supply::spawn_figure() {
 }
 
 bool building_water_supply::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const auto &anim = water_supply_m.anim["work"];
+    pcstr anim_name = (base.fancy_state == efancy_good) ? "fancy_work" : "base_work";
+    const auto &anim = water_supply_m.anim[anim_name];
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;

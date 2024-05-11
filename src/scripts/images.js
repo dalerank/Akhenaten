@@ -58,8 +58,6 @@ images = [
 
 	// spr general
 	{img: IMG_BRICKLAYERS_GUILD, pack:PACK_GENERAL, id:57},
-	{img: IMG_WATER_SUPPLY, pack:PACK_GENERAL, id:69, offset:0},
-	{img: IMG_WATER_SUPPLY_FANCY, pack:PACK_GENERAL, id:69, offset:2},
 	{img: IMG_GUILD_STONEMASONS, pack:PACK_GENERAL, id:88},
 	{img: IMG_GOLD_MINE, pack:PACK_GENERAL, id:185},
 	{img: IMG_PLAINSTONE_QUARRY, pack:PACK_GENERAL, id:187},

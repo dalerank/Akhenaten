@@ -317,9 +317,14 @@ building_apothecary = {
 
 building_water_supply = {
   animations : {
-    work : { pos : [0, 0], anim_id : IMG_WATER_SUPPLY }
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:69 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:69, offset:0 },
+    base_work : { pos : [0, 0], pack:PACK_GENERAL, id:69, max_frames:1 },
+    fancy : { pos : [0, 0], pack:PACK_GENERAL, id:69, offset:2 },
+    fancy_work : { pos : [0, 0], pack:PACK_GENERAL, id:69, offset:2, max_frames:1 }
   },
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
+  building_size : 2,
 }
 
 building_well = {
