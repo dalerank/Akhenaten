@@ -3,6 +3,7 @@
 #include "js/js_game.h"
 #include "city/labor.h"
 #include "grid/water.h"
+#include "grid/building.h"
 #include "city/buildings.h"
 #include "city/warnings.h"
 #include "building/count.h"
@@ -160,6 +161,14 @@ void building_fishing_wharf::window_info_background(object_info &c) {
     inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
     window_building_draw_employment(&c, 142);
 }
+
+void building_fishing_wharf::highlight_waypoints() {
+    building_impl::highlight_waypoints();
+
+    map_highlight_set(data.dock.dock_tiles[0], 3);
+    map_highlight_set(data.dock.dock_tiles[1], 3);
+}
+
 
 void game_cheat_kill_fish_boats(std::istream &is, std::ostream &os) {
     buildings_valid_do([&] (building &b) {
