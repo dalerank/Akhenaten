@@ -17,6 +17,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_trade_ship);
 void config_load_figure_trade_ship() {
     g_config_arch.r_section("figure_trade_ship", [] (archive arch) {
         trader_ship_m.anim.load(arch);
+        trader_ship_m.sounds.load(arch);
     });
 }
 
@@ -148,17 +149,11 @@ void figure_trade_ship::figure_action() {
             base.action_state = FIGURE_ACTION_115_TRADE_SHIP_LEAVING;
             base.wait_ticks = 0;
             base.destination_tile = scenario_map_river_entry();
-            //                map_point river_entry = scenario_map_river_entry();
-            //                destination_tile.x() = river_entry.x();
-            //                destination_tile.y() = river_entry.y();
         } else if (done_trading()) {
             base.trade_ship_failed_dock_attempts = 0;
             base.action_state = FIGURE_ACTION_115_TRADE_SHIP_LEAVING;
             base.wait_ticks = 0;
             base.destination_tile = scenario_map_river_entry();
-            //                map_point river_entry = scenario_map_river_entry();
-            //                destination_tile.x() = river_entry.x();
-            //                destination_tile.y() = river_entry.y();
             building* dst = destination();
             dst->data.dock.queued_docker_id = 0;
             dst->data.dock.num_ships = 0;
@@ -208,8 +203,6 @@ void figure_trade_ship::figure_action() {
             if (map_figure_id_get(free_dock.tile) != id() && queue_dock.bid) {
                 base.action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
                 base.destination_tile = free_dock.tile;
-                //                    destination_tile.x() = tile.x();
-                //                    destination_tile.y() = tile.y();
             }
             base.wait_ticks = 0;
         }
@@ -232,5 +225,5 @@ void figure_trade_ship::figure_action() {
     }
 
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
-    base.sprite_image_id = image_group(IMG_FISHING_BOAT) + dir;
+    image_set_animation(trader_ship_m.anim["work"]);
 }

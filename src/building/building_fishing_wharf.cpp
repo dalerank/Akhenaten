@@ -47,6 +47,15 @@ void building_fishing_wharf::update_count() const {
     building_increase_industry_count(RESOURCE_FISH, num_workers() > 0);
 }
 
+void building_fishing_wharf::update_day() {
+    if (data.industry.fishing_boat_id > 0) {
+        figure *f = figure_get(data.industry.fishing_boat_id);
+        if (!f->is_valid() || f->type != FIGURE_FISHING_BOAT) {
+            data.industry.fishing_boat_id = 0;
+        }
+    }
+}
+
 void building_fishing_wharf::spawn_figure() {
     check_labor_problem();
 
@@ -61,9 +70,9 @@ void building_fishing_wharf::spawn_figure() {
             if (data.industry.fishing_boat_id == 0 && base.figure_spawn_delay > spawn_delay) {
                 base.figure_spawn_delay = 0;
 
-                if (config_get(CONFIG_GP_CH_FISHING_WHARF_SPAWN_BOATS)) {
-                    tile2i dock_tile(data.dock.dock_tiles[0]);
-                    figure* f = figure_create(FIGURE_FISHING_BOAT, dock_tile, DIR_4_BOTTOM_LEFT);
+                int dock_tile = data.dock.dock_tiles[0];
+                if (config_get(CONFIG_GP_CH_FISHING_WHARF_SPAWN_BOATS) && dock_tile > 0) {
+                    figure* f = figure_create(FIGURE_FISHING_BOAT, tile2i(dock_tile), DIR_4_BOTTOM_LEFT);
                     f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
                     f->set_home(id());
                     base.set_figure(BUILDING_SLOT_BOAT, f);

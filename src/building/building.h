@@ -51,12 +51,12 @@ class building_ferry;
 class building_fort_ground;
 class building_fort;
 class building_fishing_wharf;
+class building_shipyard;
 struct object_info;
 struct painter;
 struct mouse;
 
 constexpr uint32_t MAX_BUILDINGS = 4000;
-constexpr uint32_t MAX_FIGURES_PER_BUILDING = 8;
 
 enum e_labor_state {
     LABOR_STATE_NONE,
@@ -90,8 +90,10 @@ class building_farm;
 
 class building {
 private:
-    short figure_ids_array[MAX_FIGURES_PER_BUILDING]; // oh boy!
-    class building_impl *_ptr = nullptr;
+    enum { max_figures = 4 };
+    class building_impl *_ptr = nullptr; // dcast
+
+    std::array<uint16_t, max_figures> figure_ids;
 
 public:
     struct metainfo {
@@ -320,13 +322,14 @@ public:
 
     e_overlay get_overlay() const;
 
-    const int get_figureID(int i) const { return figure_ids_array[i]; };
+    const int get_figure_id(int i) const { return figure_ids[i]; };
 
     figure* get_figure(int i);
     void bind_iob_figures(io_buffer* iob);
     void set_figure(int i, int figure_id = -1);
     void set_figure(int i, figure* f);
     void remove_figure(int i);
+    void remove_figure_by_id(int id);
     bool has_figure(int i, int figure_id = -1);
     bool has_figure(int i, figure* f);
     bool has_figure_of_type(int i, e_figure_type _type);
@@ -384,6 +387,7 @@ public:
     building_fort *dcast_fort();
     building_fort_ground *dcast_fort_ground();
     building_fishing_wharf *dcast_fishing_wharf();
+    building_shipyard *dcast_shipyard();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -493,6 +497,7 @@ public:
     virtual building_fort *dcast_fort() { return nullptr; }
     virtual building_fort_ground *dcast_fort_ground() { return nullptr; }
     virtual building_fishing_wharf *dcast_fishing_wharf() { return nullptr; }
+    virtual building_shipyard *dcast_shipyard() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

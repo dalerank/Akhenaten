@@ -333,6 +333,7 @@ building_ferry *building::dcast_ferry() { return dcast()->dcast_ferry(); }
 building_fort *building::dcast_fort() { return dcast()->dcast_fort(); }
 building_fort_ground *building::dcast_fort_ground() { return dcast()->dcast_fort_ground(); }
 building_fishing_wharf *building::dcast_fishing_wharf() { return dcast()->dcast_fishing_wharf(); }
+building_shipyard *building::dcast_shipyard() { return dcast()->dcast_shipyard(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
@@ -1211,10 +1212,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &b->house_unreachable_ticks);
         iob->bind(BIND_SIGNATURE_UINT16, b->road_access.private_access(_X));
         iob->bind(BIND_SIGNATURE_UINT16, b->road_access.private_access(_Y));
-        //        b->set_figure(0, buf->read_u16());
-        //        b->set_figure(1, buf->read_u16());
-        //        b->set_figure(2, buf->read_u16());
-        //        b->set_figure(3, buf->read_u16());
+
         b->bind_iob_figures(iob);
 
         iob->bind(BIND_SIGNATURE_INT16, &b->figure_spawn_delay);

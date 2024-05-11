@@ -126,8 +126,9 @@ void figure::javelin_launch_missile() {
     }
     if (attack_image_offset) {
         if (attack_image_offset == 1) {
-            if (tile.x() == -1 || tile.y() == -1)
-                map_point_get_last_result(&tile);
+            if (tile.x() == -1 || tile.y() == -1) {
+                map_point_get_last_result(tile);
+            }
 
             //            figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_JAVELIN);
             missile_fire_at(target_figure_id, FIGURE_JAVELIN);

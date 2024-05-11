@@ -17,7 +17,7 @@ private:
     int p_ABS_Y = -1;
 
 public:
-    typedef map_point self;
+    using self = map_point;
     // SETTERS / GETTERS
     const int x(int v);
     const int y(int v);
@@ -67,10 +67,10 @@ public:
     // COMPARISON
     inline bool operator==(self rhs) { return p_GRID_OFFSET == rhs.p_GRID_OFFSET; }
     inline bool operator!=(self rhs) { return p_GRID_OFFSET != rhs.p_GRID_OFFSET; }
+    static const self invalid;
 };
 
 using tile2i = map_point;
-extern const map_point map_point_invalid;
 
 /**
  * Stores the X and Y to the passed point.
@@ -83,4 +83,4 @@ extern const map_point map_point_invalid;
  * @param point Point structure to store X and Y in
  */
 void map_point_store_result(tile2i tile, tile2i& point);
-void map_point_get_last_result(tile2i* point);
+void map_point_get_last_result(tile2i &point);

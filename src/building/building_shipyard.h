@@ -9,6 +9,7 @@ public:
     BUILDING_METAINFO(BUILDING_SHIPWRIGHT, building_shipyard)
 
     building_shipyard(building &b) : building_impl(b) {}
+    virtual building_shipyard *dcast_shipyard() override { return this; }
 
     virtual void on_create(int orientation) override;
     virtual void on_place(int orientation, int variant) override;

@@ -101,10 +101,7 @@ void figure::figure_delete_UNSAFE() {
 
     if (has_home()) {
         building* b = home();
-        if (b->has_figure(0, id))
-            b->remove_figure(0);
-        if (b->has_figure(1, id))
-            b->remove_figure(1);
+        b->remove_figure_by_id(id);
     }
 
     switch (type) {
@@ -192,6 +189,7 @@ void figure::set_direction_to(building *b) {
 }
 
 void figure::poof() {
+    dcast()->before_poof();
     set_state(FIGURE_STATE_DEAD);
 }
 

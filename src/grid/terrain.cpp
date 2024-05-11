@@ -263,13 +263,19 @@ bool map_terrain_adjacent_open_water_tiles(tile2i tile, int size, std::vector<ti
     offsets_array offsets;
     map_grid_adjacent_offsets(size, offsets);
     bool found = false;
-    for (const int& tile_delta: offsets) {
-        if (map_terrain_is(base_offset + tile_delta, TERRAIN_WATER)
-            && map_routing_distance(base_offset + tile_delta) > 0) {
-            water_tiles.push_back(tile2i(base_offset + tile_delta));
-            found = true;
+    for (const int &tile_delta : offsets) {
+        if (!map_terrain_is(base_offset + tile_delta, TERRAIN_WATER)) {
+            continue;
         }
+            
+        if (map_routing_distance(base_offset + tile_delta) <= 0) {
+            continue;
+        }
+        
+        water_tiles.push_back(tile2i(base_offset + tile_delta));
+        found = true;
     }
+
     return found;
 }
 
@@ -278,10 +284,15 @@ bool map_terrain_is_adjacent_to_open_water(tile2i tile, int size) {
     offsets_array offsets;
     map_grid_adjacent_offsets(size, offsets);
     for (const int& tile_delta: offsets) {
-        if (map_terrain_is(base_offset + tile_delta, TERRAIN_WATER)
-            && map_routing_distance(base_offset + tile_delta) > 0) {
-            return true;
+        if (!map_terrain_is(base_offset + tile_delta, TERRAIN_WATER)) {
+            continue;
         }
+        
+        if (map_routing_distance(base_offset + tile_delta) <= 0) {
+            continue;
+        }
+
+        return true;
     }
     return false;
 }

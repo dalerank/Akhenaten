@@ -286,6 +286,7 @@ public:
 
     void poof();
     inline bool available() { return state == FIGURE_STATE_NONE; };
+    inline bool is_valid() { return state != FIGURE_STATE_NONE; }
     inline bool has_type(e_figure_type value) { return type == value; }
     inline bool has_state(e_figure_state value) { return state == value; }
 
@@ -504,6 +505,7 @@ public:
     virtual void figure_before_action() {}
     virtual bool window_info_background(object_info &ctx) { return false; }
     virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out);
+    virtual void before_poof() {}
     virtual void poof() { base.poof(); }
     virtual e_figure_sound phrase() const { return {FIGURE_NONE, ""}; }
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }

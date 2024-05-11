@@ -149,17 +149,14 @@ map_point::map_point(int _x, int _y) {
 
 ///////////////
 
-static map_point last; // cached point for some internal logic uses
-const map_point map_point_invalid;
+static tile2i map_tile_last; // cached point for some internal logic uses
+const tile2i tile2i::invalid;
 
 void map_point_store_result(tile2i tile, tile2i& point) {
     point = tile;
-    last = tile;
+    map_tile_last = tile;
 }
 
-void map_point_get_last_result(map_point* point) {
-    //    point->set(last.grid_offset());
-    *point = last;
-    //    point->x = last.x;
-    //    point->y = last.y;
+void map_point_get_last_result(tile2i &point) {
+    point = map_tile_last;
 }

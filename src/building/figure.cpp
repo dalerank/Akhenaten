@@ -48,17 +48,18 @@
 const int generic_delay_table[] = {0, 1, 3, 7, 15, 29, 44};
 
 figure* building::get_figure(int i) {
-    return ::figure_get(get_figureID(i));
+    return ::figure_get(get_figure_id(i));
 }
+
 void building::bind_iob_figures(io_buffer* iob) {
-    iob->bind(BIND_SIGNATURE_UINT16, &figure_ids_array[0]);
-    iob->bind(BIND_SIGNATURE_UINT16, &figure_ids_array[1]);
-    iob->bind(BIND_SIGNATURE_UINT16, &figure_ids_array[2]);
-    iob->bind(BIND_SIGNATURE_UINT16, &figure_ids_array[3]);
+    iob->bind(BIND_SIGNATURE_UINT16, &figure_ids[0]);
+    iob->bind(BIND_SIGNATURE_UINT16, &figure_ids[1]);
+    iob->bind(BIND_SIGNATURE_UINT16, &figure_ids[2]);
+    iob->bind(BIND_SIGNATURE_UINT16, &figure_ids[3]);
 }
 void building::set_figure(int i, int figure_id) {
     //assert(figure_ids_array[i] == 0);
-    figure_ids_array[i] = figure_id;
+    figure_ids[i] = figure_id;
 }
 
 void building::set_figure(int i, figure* f) {
@@ -69,11 +70,19 @@ void building::remove_figure(int i) {
     set_figure(i, 0);
 }
 
+void building::remove_figure_by_id(int id) {
+    for (auto &fid : figure_ids) {
+        if (fid == id) {
+            fid = 0;
+        }
+    }
+}
+
 bool building::has_figure(int i, int figure_id) {
     // seatrch through all the figures if index is -1
     if (i == -1) {
         bool has_any = false;
-        for (int i = 0; i < MAX_FIGURES_PER_BUILDING; i++) {
+        for (int i = 0; i < max_figures; i++) {
             if (has_figure(i, figure_id))
                 has_any = true;
         }
@@ -98,7 +107,7 @@ bool building::has_figure_of_type(int i, e_figure_type _type) {
     // seatrch through all the figures if index is -1
     if (i == -1) {
         bool has_any = false;
-        for (int i = 0; i < MAX_FIGURES_PER_BUILDING; i++) {
+        for (int i = 0; i < max_figures; i++) {
             if (get_figure(i)->type == _type) {
                 has_any = true;
             }
@@ -112,7 +121,7 @@ bool building::has_figure_of_type(int i, e_figure_type _type) {
 
 int building::get_figure_slot(figure* f) {
     // search through all the slots, check if figure matches
-    for (int i = 0; i < MAX_FIGURES_PER_BUILDING; i++) {
+    for (int i = 0; i < max_figures; i++) {
         if (has_figure(i, f)) {
             return i;
         }

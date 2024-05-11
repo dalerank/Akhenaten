@@ -42,12 +42,9 @@ void figure::shipwreck_action() {
     //    figure_image_increase_offset(128);
     if (wait_ticks < 1000) {
         map_figure_remove();
-        tile2i shipwreck_tile;
-        if (map_water_find_shipwreck_tile(this, &shipwreck_tile)) {
-            tile = shipwreck_tile;
-            //            tile.x() = tile.x();
-            //            tile.y() = tile.y();
-            //            tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
+        water_dest result = map_water_find_shipwreck_tile(*this);
+        if (result.found) {
+            tile = result.tile;
             cc_coords.x = 15 * tile.x() + 7;
             cc_coords.y = 15 * tile.y() + 7;
         }

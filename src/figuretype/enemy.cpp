@@ -72,8 +72,9 @@ void figure::enemy_initial(formation* m) {
                 break;
             }
             if (attack_image_offset == 1) {
-                if (tile.x() == -1 || tile.y() == -1)
-                    map_point_get_last_result(&tile);
+                if (tile.x() == -1 || tile.y() == -1) {
+                    map_point_get_last_result(tile);
+                }
 
                 //                figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, missile_type);
                 missile_fire_at(target_figure_id, missile_type);

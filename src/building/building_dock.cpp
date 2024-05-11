@@ -285,11 +285,11 @@ void building_river_update_open_water_access() {
     map_routing_calculate_distances_water_boat(river_entry);
 
     buildings_valid_do([] (building &b) {
-        bool found = map_terrain_is_adjacent_to_open_water(b.tile, 3);
+        bool found = map_terrain_is_adjacent_to_open_water(b.tile, b.size);
         if (found) {
             b.has_water_access = true;
             b.has_open_water_access = true;
-            auto ppoints = map_water_docking_points(&b);
+            ferry_tiles ppoints = map_water_docking_points(b);
             b.data.dock.dock_tiles[0] = ppoints.point_a.grid_offset();
             b.data.dock.dock_tiles[1] = ppoints.point_b.grid_offset();
         } else {
@@ -339,7 +339,7 @@ int building_dock_accepts_ship(int ship_id, int dock_id) {
 
 building_dest map_get_free_destination_dock(int ship_id) {
     if (!city_buildings_has_working_dock())
-        return {0, map_point_invalid};
+        return {0, tile2i::invalid};
 
     int dock_id = 0;
     for (int i = 0; i < 10; i++) {
@@ -357,7 +357,7 @@ building_dest map_get_free_destination_dock(int ship_id) {
     }
     // BUG: when 10 docks in city, always takes last one... regardless of whether it is free
     if (dock_id <= 0)
-        return {0, map_point_invalid};
+        return {0, tile2i::invalid};
 
     building* dock = building_get(dock_id);
     int dx, dy;
@@ -388,7 +388,7 @@ building_dest map_get_free_destination_dock(int ship_id) {
 
 building_dest map_get_queue_destination_dock(int ship_id) {
     if (!city_buildings_has_working_dock())
-        return {0, map_point_invalid};
+        return {0, tile2i::invalid};
 
     // first queue position
     for (int i = 0; i < 10; i++) {
@@ -467,5 +467,5 @@ building_dest map_get_queue_destination_dock(int ship_id) {
             return {dock_id, dest_dock};
         }
     }
-    return {0, map_point_invalid};
+    return {0, tile2i::invalid};
 }

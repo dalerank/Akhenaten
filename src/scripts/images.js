@@ -24,10 +24,6 @@ images = [
 	{img: IMG_SLED_LIMESTONE_SMALL, pack:PACK_GENERAL, id:104},
 	{img: ANIM_JUGGLER_WALK, pack:PACK_SPR_MAIN, id:130},
 	{img: ANIM_JUGGLER_DEATH, pack:PACK_SPR_MAIN, id:131},
-	{img: IMG_FISHING_BOAT, pack:PACK_SPR_MAIN, id:133 }, 	// 7014
-	{img: IMG_FISHING_BOAT_WORK, pack:PACK_SPR_MAIN, id:135 }, // 7046
-	{img: IMG_FISHING_BOAT_DEATH, pack:PACK_SPR_MAIN, id:136 }, // 7118
-	{img: IMG_FISHING_BOAT_IDLE, pack:PACK_SPR_MAIN, id:137 }, // 7129
 	{img: ANIM_OSTRICH_WALK, pack:PACK_SPR_MAIN, id:156}, // 7823 - 0
 	{img: ANIM_OSTRICH_DEATH, pack:PACK_SPR_MAIN, id:158}, // 7823 - 0
 	{img: ANIM_OSTRICH_EATING, pack:PACK_SPR_MAIN, id:159, offset:0},
@@ -77,8 +73,6 @@ images = [
 	{img: IMG_RESOURCE_STRAW, pack:PACK_GENERAL, id:206},
 	{img: IMG_RESOURCE_CLAY, pack:PACK_GENERAL, id:207},
 
-	//{img: IMG_EMIGRANT, pack: PACK_SPR_MAIN, id: 13}, // 878
-	//{img: IMG_FISHING_BOAT ???, pack:PACK_SPR_MAIN, id:133 }, 	// 7014
 	{img: IMG_JUGGLER_SHOW, pack:PACK_SPR_AMBIENT, id:7, offset:-1},
 	{img: IMG_SIDE_PANEL, pack:PACK_GENERAL, id:121, offset:0},
 	{img: IMG_TOP_MENU_BACKGROUND, pack:PACK_GENERAL, id:121, offset:8},
