@@ -567,9 +567,12 @@ building_village_palace = {
 
 building_clay_pit = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_CLAY_PIT }
+    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:40 },
+    base : { pos : [-1, -1], pack:PACK_GENERAL, id:40 },
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:40, offset:1 }
   },
   output_resource : RESOURCE_CLAY,
+  building_size : 2,
   meta_id : "clay_pit",
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }

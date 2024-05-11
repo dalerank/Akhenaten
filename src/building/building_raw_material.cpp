@@ -157,6 +157,10 @@ bool building_clay_pit::draw_ornaments_and_animations_height(painter &ctx, vec2i
     return true;
 }
 
+void building_clay_pit::update_count() const {
+    building_increase_industry_count(RESOURCE_CLAY, num_workers() > 0);
+}
+
 void building_reed_gatherer::on_create(int orientation) {
     base.output_resource_first_id = RESOURCE_REEDS;
     data.industry.max_gatheres = 1;

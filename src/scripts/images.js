@@ -129,7 +129,6 @@ images = [
 	{img: IMG_ADVISOR_ICONS, pack:PACK_GENERAL, id:128, offset:0},
 	{img: IMG_ADVISOR_BACKGROUND, pack:PACK_UNLOADED, id:2, offset:0},
 	{img: IMG_VILLAGE_PALACE, pack:PACK_GENERAL, id:47, offset:0},
-	{img: IMG_CLAY_PIT, pack:PACK_GENERAL, id:40, offset:0},
 	{img: IMG_GEMSTONE_MINE, pack:PACK_GENERAL, id:188, offset:0},
 	{img: IMG_TEMPLE_OSIRIS, pack:PACK_GENERAL, id:25, offset:0},
 	{img: IMG_TEMPLE_RA, pack:PACK_GENERAL, id:21, offset:0},
