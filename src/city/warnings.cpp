@@ -172,18 +172,6 @@ static void check_papyrus_access(e_building_type type) {
                 building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT_PAPYRUS);
         }
     }
-
-    if (type == BUILDING_PAPYRUS_WORKSHOP && building_count_industry_active(RESOURCE_REEDS) <= 0) {
-        if (city_resource_count(RESOURCE_REEDS) <= 0) {
-            building_construction_warning_show(WARNING_NEED_REEDS);
-            if (empire_can_produce_resource(RESOURCE_REEDS, true))
-                building_construction_warning_show(WARNING_BUILD_REEDS_GATHERER);
-            else if (!empire_can_import_resource(RESOURCE_REEDS, true))
-                building_construction_warning_show(WARNING_INSTRUCT_OVERSEER_TO_IMPORT_REED);
-            else if (city_resource_trade_status(RESOURCE_REEDS) != TRADE_STATUS_IMPORT)
-                building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT_REED);
-        }
-    }
 }
 
 static void check_timber_access(int type) {

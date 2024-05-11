@@ -6,7 +6,9 @@
 #include "city/labor.h"
 #include "city/resource.h"
 #include "city/warning.h"
+#include "city/warnings.h"
 #include "graphics/window.h"
+#include "empire/empire_city.h"
 
 #include "js/js_game.h"
 #include "dev/debug.h"
@@ -43,4 +45,23 @@ void building_papyrus_maker::update_count() const {
 bool building_papyrus_maker::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     building_draw_normal_anim(ctx, point, &base, tile, papyrus_maker_m.anim["work"], color_mask);
     return true;
+}
+
+void building_papyrus_maker::on_place_checks() {
+    if (building_count_industry_active(RESOURCE_REEDS) > 0) {
+        return;
+    }
+
+    if (city_resource_count(RESOURCE_REEDS) > 0) {
+        return;
+    }
+
+    building_construction_warning_show(WARNING_NEED_REEDS);
+    if (empire_can_produce_resource(RESOURCE_REEDS, true)) {
+        building_construction_warning_show(WARNING_BUILD_REEDS_GATHERER);
+    } else if (!empire_can_import_resource(RESOURCE_REEDS, true)) {
+        building_construction_warning_show(WARNING_INSTRUCT_OVERSEER_TO_IMPORT_REED);
+    } else if (city_resource_trade_status(RESOURCE_REEDS) != TRADE_STATUS_IMPORT) {
+        building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT_REED);
+    }
 }

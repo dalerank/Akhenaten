@@ -341,6 +341,7 @@ building_papyrus_maker = {
     work : { pos : [7, -10], pack:PACK_GENERAL, id:44, offset:1, max_frames:9 }
   },
   output_resource : RESOURCE_PAPYRUS,
+  building_size : 2,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
