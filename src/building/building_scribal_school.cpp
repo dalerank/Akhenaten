@@ -9,6 +9,9 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "city/labor.h"
+#include "city/resource.h"
+#include "city/warnings.h"
+#include "empire/empire_city.h"
 
 #include "widget/city/ornaments.h"
 
@@ -39,6 +42,25 @@ void building_scribal_school::update_month() {
     short want_spent = calc_adjust_with_percentage<short>(base.num_workers, 50);
     short spent = std::min(base.stored_full_amount, want_spent);
     base.stored_full_amount -= spent;
+}
+
+void building_scribal_school::on_place_checks() {
+    if (building_count_industry_active(RESOURCE_PAPYRUS) > 0) {
+        return;
+    }
+        
+    if (city_resource_count(RESOURCE_PAPYRUS) > 0) {
+        return;
+    }
+
+    building_construction_warning_show(WARNING_PAPYRUS_NEEDED);
+    if (empire_can_produce_resource(RESOURCE_PAPYRUS, true)) {
+        building_construction_warning_show(WARNING_BUILD_PAPYRUS_MAKER);
+    } else if (!empire_can_import_resource(RESOURCE_PAPYRUS, true)) {
+        building_construction_warning_show(WARNING_INSTRUCT_OVERSEER_TO_IMPORT_PAPYRUS);
+    } else if (city_resource_trade_status(RESOURCE_PAPYRUS) != TRADE_STATUS_IMPORT) {
+        building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT_PAPYRUS);
+    }
 }
 
 void building_scribal_school::on_create(int orientation) {

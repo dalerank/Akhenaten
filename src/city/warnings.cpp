@@ -160,20 +160,6 @@ static void check_olives_access(int type) {
     }
 }
 
-static void check_papyrus_access(e_building_type type) {
-    if (type == BUILDING_SCRIBAL_SCHOOL && building_count_industry_active(RESOURCE_PAPYRUS) <= 0) {
-        if (city_resource_count(RESOURCE_PAPYRUS) <= 0) {
-            building_construction_warning_show(WARNING_PAPYRUS_NEEDED);
-            if (empire_can_produce_resource(RESOURCE_PAPYRUS, true))
-                building_construction_warning_show(WARNING_BUILD_PAPYRUS_MAKER);
-            else if (!empire_can_import_resource(RESOURCE_PAPYRUS, true))
-                building_construction_warning_show(WARNING_INSTRUCT_OVERSEER_TO_IMPORT_PAPYRUS);
-            else if (city_resource_trade_status(RESOURCE_PAPYRUS) != TRADE_STATUS_IMPORT)
-                building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT_PAPYRUS);
-        }
-    }
-}
-
 static void check_timber_access(int type) {
     if (type == BUILDING_JEWELS_WORKSHOP && building_count_industry_active(RESOURCE_GEMS) <= 0) {
         if (city_resource_count(RESOURCE_LUXURY_GOODS) <= 0 && city_resource_count(RESOURCE_GEMS) <= 0) {
@@ -226,7 +212,6 @@ void building_construction_warning_generic_checks(building *b, tile2i tile, int 
     check_olives_access(type);
     check_timber_access(type);
     check_clay_access(type);
-    check_papyrus_access((e_building_type)type);
 
     check_road_access(b, tile, size, orientation);
     b->dcast()->on_place_checks();
