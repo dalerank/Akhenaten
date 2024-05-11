@@ -708,11 +708,7 @@ void buildings_valid_farms_do(T func) {
 template<typename ... Args, typename T>
 void buildings_valid_do(T func, Args ... args) {
     for (auto &b: city_buildings()) {
-        if (!building_type_any_of(b, args...)) {
-            continue;
-        }
-
-        if (b.is_valid()) {
+        if (b.is_valid() && building_type_any_of(b, args...)) {
             func(b);
         }
     }

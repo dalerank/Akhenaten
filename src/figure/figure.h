@@ -33,6 +33,7 @@ class figure_dancer;
 class figure_labor_seeker;
 class figure_worker;
 class figure_soldier;
+class figure_fishing_boat;
 
 struct animation_t;
 
@@ -249,6 +250,7 @@ public:
     figure_labor_seeker *dcast_labor_seeker();
     figure_worker *dcast_worker();
     figure_soldier *dcast_soldier();
+    figure_fishing_boat *dcast_fishing_boat();
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -530,6 +532,7 @@ public:
     virtual figure_labor_seeker *dcast_labor_seeker() { return nullptr; }
     virtual figure_worker *dcast_worker() { return nullptr; }
     virtual figure_soldier *dcast_soldier() { return nullptr; }
+    virtual figure_fishing_boat *dcast_fishing_boat() { return nullptr; }
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -578,7 +581,22 @@ bool figure_type_none_of(figure &f, Args ... args) {
     return (std::find(std::begin(types), std::end(types), f.type) == std::end(types));
 }
 
-int figure_movement_can_launch_cross_country_missile(map_point src, map_point dst);
+template<typename ... Args>
+bool figure_type_any_of(figure &f, Args ... args) {
+    int types[] = {args...};
+    return (std::find(std::begin(types), std::end(types), f.type) != std::end(types));
+}
+
+template<typename ... Args, typename T>
+void figure_valid_do(T func, Args ... args) {
+    for (auto *f: map_figures()) {
+        if (f->is_valid() && figure_type_any_of(*f, args...)) {
+            func(*f);
+        }
+    }
+}
+
+int figure_movement_can_launch_cross_country_missile(tile2i src, tile2i dst);
 void figure_create_explosion_cloud(tile2i tile, int size);
 
 namespace figures {

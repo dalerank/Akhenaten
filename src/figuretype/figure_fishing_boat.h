@@ -5,6 +5,7 @@
 class figure_fishing_boat : public figure_impl {
 public:
     figure_fishing_boat(figure *f) : figure_impl(f) {}
+    virtual figure_fishing_boat *dcast_fishing_boat() override { return this; }
 
     virtual void on_create() override {}
     virtual void on_destroy() override;

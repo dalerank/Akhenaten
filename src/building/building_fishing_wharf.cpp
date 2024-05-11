@@ -137,23 +137,23 @@ void building_fishing_wharf::window_info_background(object_info &c) {
         int text_id;
         switch (figure_get(b->data.industry.fishing_boat_id)->action_state) {
         case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH:
-        text_id = 3;
-        break;
+            text_id = 3;
+            break;
         case FIGURE_ACTION_192_FISHING_BOAT_FISHING:
-        text_id = 4;
-        break;
+            text_id = 4;
+            break;
         case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF:
-        text_id = 5;
-        break;
+            text_id = 5;
+            break;
         case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF:
-        text_id = 6;
-        break;
+            text_id = 6;
+            break;
         case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH:
-        text_id = 7;
-        break;
+            text_id = 7;
+            break;
         default:
-        text_id = 8;
-        break;
+            text_id = 8;
+            break;
         }
         window_building_draw_description(c, 102, text_id);
     }
@@ -169,20 +169,6 @@ void building_fishing_wharf::highlight_waypoints() {
     map_highlight_set(data.dock.dock_tiles[1], 3);
 }
 
-
 void game_cheat_kill_fish_boats(std::istream &is, std::ostream &os) {
-    buildings_valid_do([&] (building &b) {
-        if (b.type != BUILDING_FISHING_WHARF) {
-            return;
-        }
-
-        b.data.industry.fishing_boat_id = 0;
-    });
-
-    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure* f = figure_get(i);
-        if (f->has_type(FIGURE_FISHING_BOAT)) {
-            f->advance_action(FIGURE_ACTION_149_CORPSE);
-        }
-    }
+    figure_valid_do([] (figure &f) { f.poof(); }, FIGURE_FISHING_BOAT);
 }
