@@ -535,6 +535,7 @@ public:
     virtual bool is_administration() const { return false; }
     virtual bool is_unique_building() const { return false; }
     virtual void destroy_by_poof(bool clouds);
+    virtual void highlight_waypoints();
 
     using resources_vec = std::array<e_resource, 4>;
     virtual resources_vec required_resource() const { return {}; }

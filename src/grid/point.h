@@ -19,18 +19,18 @@ private:
 public:
     using self = map_point;
     // SETTERS / GETTERS
-    const int x(int v);
-    const int y(int v);
+    int x(int v);
+    int y(int v);
+    int x();
+    int y();
 
     int grid_offset(int v);
     int grid_offset();
-    const int ABS_X(int v);
-    const int ABS_Y(int v);
+    int abs_x(int v);
+    int abs_y(int v);
 
-    int x();
-    int y();
-    const int ABS_X(void);
-    const int ABS_Y(void);
+    const int abs_x(void);
+    const int abs_y(void);
 
     inline float dist(self o) { return ::sqrtf(::powf(x() - o.x(), 2) + ::powf(y() - o.y(), 2)); }
 

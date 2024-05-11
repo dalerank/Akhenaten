@@ -86,12 +86,12 @@ void figure_fishing_boat::figure_action() {
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
             water_dest result = map_water_find_alternative_fishing_boat_tile(base);
-            if (result.bid) {
+            if (result.found) {
                 route_remove();
                 destination_tile = result.tile;
-                base.direction = base.previous_tile_direction;
             } else {
                 advance_action(FIGURE_ACTION_192_FISHING_BOAT_FISHING);
+                base.direction = base.previous_tile_direction;
                 wait_ticks = 0;
             }
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
@@ -164,10 +164,16 @@ void figure_fishing_boat::figure_action() {
         break;
     }
 
-    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
-    if (action_state() == FIGURE_ACTION_192_FISHING_BOAT_FISHING) {
+    switch (action_state()) {
+    case FIGURE_ACTION_192_FISHING_BOAT_FISHING:
         image_set_animation(fishing_boat_m.anim["work"]);
-    } else {
+        break;
+
+    case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF:
+        image_set_animation(fishing_boat_m.anim["idle"]);
+        break;
+
+    default:
         image_set_animation(fishing_boat_m.anim["walk"]);
     }
 }

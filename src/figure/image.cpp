@@ -122,11 +122,11 @@ void figure::image_set_die_animation(const animation_t &anim) {
 
 void figure::image_set_animation(const animation_t &anim) {
     if (anim.iid > 0) {
-        image_set_animation(anim.pack, anim.iid, 0, anim.max_frames, anim.duration);
+        image_set_animation(anim.pack, anim.iid, anim.offset, anim.max_frames, anim.duration);
         return;
     }
     image_desc desc = get_image_desc(anim.anim_id);
-    image_set_animation(desc.pack, desc.id, 0, anim.max_frames, anim.duration);
+    image_set_animation(desc.pack, desc.id, desc.offset, anim.max_frames, anim.duration);
 }
 
 void figure::image_set_animation(e_image_id img, int offset, int max_frames, int duration) {

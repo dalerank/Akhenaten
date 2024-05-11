@@ -15,6 +15,7 @@
 #include "grid/terrain.h"
 #include "grid/property.h"
 #include "grid/building_tiles.h"
+#include "grid/building.h"
 
 #include "graphics/animation.h"
 #include "js/js_game.h"
@@ -94,6 +95,10 @@ bool building_fort::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     }
 
     return true;
+}
+
+void building_fort::highlight_waypoints() {
+    map_clear_highlights();
 }
 
 void building_fort::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {

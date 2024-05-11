@@ -249,6 +249,7 @@ struct scenario_data_t {
     tile2i exit_point;
     tile2i river_entry_point;
     tile2i river_exit_point;
+
     tile2i earthquake_point;
     tile2i herd_points_predator[MAX_PREDATOR_HERD_POINTS];
     tile2i herd_points_prey[MAX_PREY_HERD_POINTS];

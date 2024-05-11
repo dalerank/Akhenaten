@@ -983,6 +983,47 @@ void building_impl::destroy_by_poof(bool clouds) {
     building_destroy_by_poof(&base, clouds);
 }
 
+void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for roams from this building
+    map_clear_highlights();
+    if (has_road_access()) {
+        map_highlight_set(base.road_access, 2);
+    }
+
+    if (base.house_size) { // building doesn't send roamers
+        return;
+    }
+
+    int hx, hy;
+    map_point road_tile;
+    hx = tilex();
+    hy = tiley() - 8;
+    map_grid_bound(&hx, &hy);
+    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
+        map_highlight_set(road_tile, 1);
+    }
+
+    hx = tilex() + 8;
+    hy = tiley();
+    map_grid_bound(&hx, &hy);
+    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
+        map_highlight_set(road_tile, 1);
+    }
+
+    hx = tilex();
+    hy = tiley() + 8;
+    map_grid_bound(&hx, &hy);
+    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
+        map_highlight_set(road_tile, 1);
+    }
+
+    hx = tilex() - 8;
+    hy = tiley();
+    map_grid_bound(&hx, &hy);
+    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
+        map_highlight_set(road_tile, 1);
+    }
+}
+
 bool resource_required_by_workshop(building* b, e_resource resource) {
     switch (resource) {
     case RESOURCE_CLAY: return (b->type == BUILDING_POTTERY_WORKSHOP || b->type == BUILDING_BRICKS_WORKSHOP);

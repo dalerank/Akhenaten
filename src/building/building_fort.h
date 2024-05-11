@@ -10,6 +10,7 @@ public:
     virtual void on_place(int orientation, int variant) override;
     virtual void spawn_figure() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
+    virtual void highlight_waypoints() override;
 
     static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
 };

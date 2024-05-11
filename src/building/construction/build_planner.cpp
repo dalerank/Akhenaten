@@ -1023,7 +1023,6 @@ void BuildPlanner::setup_build_graphics() {
     case BUILDING_DOCK:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_TRANSPORT_WHARF:
-    case BUILDING_FERRY:
         set_tiles_building(props->img_id() + relative_orientation, props->size);
         break;
 

@@ -19,12 +19,13 @@ int* map_point::private_access(int i) {
 }
 
 // SETTERS / GETTERS
-const int map_point::x(int v) {
+int map_point::x(int v) {
     if (v != _INVALID_COORD)
         set(v, p_Y);
     return p_X;
 }
-const int map_point::y(int v) {
+
+int map_point::y(int v) {
     if (v != _INVALID_COORD)
         set(p_X, v);
     return p_Y;
@@ -34,12 +35,12 @@ int map_point::grid_offset(int v) {
         set(v);
     return p_GRID_OFFSET;
 }
-const int map_point::ABS_X(int v) {
+int map_point::abs_x(int v) {
     if (v != _INVALID_COORD)
         set(GRID_OFFSET(v, p_ABS_Y));
     return p_ABS_X;
 }
-const int map_point::ABS_Y(int v) {
+int map_point::abs_y(int v) {
     if (v != _INVALID_COORD)
         set(GRID_OFFSET(p_ABS_X, v));
     return p_ABS_Y;
@@ -49,6 +50,7 @@ int map_point::x() {
     self_correct();
     return p_X;
 }
+
 int map_point::y() {
     self_correct();
     return p_Y;
@@ -57,11 +59,13 @@ int map_point::grid_offset() {
     self_correct();
     return p_GRID_OFFSET;
 }
-const int map_point::ABS_X(void) {
+
+const int map_point::abs_x(void) {
     self_correct();
     return p_ABS_X;
 }
-const int map_point::ABS_Y(void) {
+
+const int map_point::abs_y(void) {
     self_correct();
     return p_ABS_Y;
 }
@@ -86,14 +90,6 @@ map_point map_point::shifted(int _grid_offset) {
 
 // SET BY CONSTRUCTION
 void map_point::set(int _x, int _y) {
-    //    if (_x == _INVALID_COORD || _y == _INVALID_COORD) {
-    //        p_GRID_OFFSET = _INVALID_COORD;
-    //        p_X = _INVALID_COORD;
-    //        p_Y = _INVALID_COORD;
-    //        p_ABS_X = _INVALID_COORD;
-    //        p_ABS_Y = _INVALID_COORD;
-    //        return;
-    //    }
     p_GRID_OFFSET = MAP_OFFSET(_x, _y);
 
     p_X = _x;
@@ -121,11 +117,11 @@ void map_point::set(int _grid_offset) {
 }
 
 bool map_point::self_correct() {
-    if (p_GRID_OFFSET > 0)
+    if (p_GRID_OFFSET > 0) {
         set(p_GRID_OFFSET);
-    else if (p_ABS_X > 0 && p_ABS_Y > 0)
+    } else if (p_ABS_X > 0 && p_ABS_Y > 0) {
         set(GRID_OFFSET(p_ABS_X, p_ABS_Y));
-    else {
+    } else {
         set(p_X, p_Y);
         if (p_GRID_OFFSET < 0) { // well, everything is broken I guess.
             set(_INVALID_COORD);

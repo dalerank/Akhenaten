@@ -175,47 +175,6 @@ static int center_in_city(int element_width_pixels) {
     return view_pos.x + margin;
 }
 
-void highlight_waypoints(building* b) { // highlight the 4 routing tiles for roams from this building
-    map_clear_highlights();
-    if (b->has_road_access) {
-        map_highlight_set(b->road_access.grid_offset(), 2);
-    }
-    if (building_is_fort(b->type) || b->house_size) { // building doesn't send roamers
-        return;
-    }
-    int hx, hy;
-    map_point road_tile;
-    hx = b->tile.x();
-    hy = b->tile.y() - 8;
-    map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
-        map_highlight_set(road_tile.grid_offset(), 1);
-    }
-
-    hx = b->tile.x() + 8;
-    hy = b->tile.y();
-    map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
-        map_highlight_set(road_tile.grid_offset(), 1);
-    }
-
-    hx = b->tile.x();
-    hy = b->tile.y() + 8;
-    map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
-        map_highlight_set(road_tile.grid_offset(), 1);
-    }
-
-    hx = b->tile.x() - 8;
-    hy = b->tile.y();
-    map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
-        map_highlight_set(road_tile.grid_offset(), 1);
-    }
-
-    window_invalidate();
-}
-
 int OFFSET(int x, int y) {
     return GRID_OFFSET(x, y);
 }
@@ -311,7 +270,9 @@ static void init(map_point tile) {
         building* b = building_get(context.building_id);
         context.type = BUILDING_INFO_BUILDING;
         context.worker_percentage = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
-        highlight_waypoints(b);
+
+        b->dcast()->highlight_waypoints();
+        window_invalidate();
 
         switch (b->type) {
         case BUILDING_FORT_GROUND:

@@ -399,8 +399,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].wrath_bolts);
     }
 
-    iob->bind____skip(5);
-    iob->bind____skip(15);
+    iob->bind____skip(20);
     iob->bind____skip(35);
     //    for (int i = 0; i < MAX_GODS; i++)
     //        city_data.religion.gods[i].unused1 = main->read_i8();
@@ -408,8 +407,10 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     //        city_data.religion.gods[i].unused2 = main->read_i8();
     //    for (int i = 0; i < MAX_GODS; i++)
     //        city_data.religion.gods[i].unused3 = main->read_i8();
-    for (int i = 0; i < MAX_GODS; i++)
+    for (int i = 0; i < MAX_GODS; i++) {
         iob->bind(BIND_SIGNATURE_UINT32, &data.religion.gods[i].months_since_festival);
+    }
+
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.least_happy_god);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_4334);
     iob->bind(BIND_SIGNATURE_INT32, &data.migration.no_immigration_cause);
@@ -470,8 +471,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     //        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.senate_placed);
     //        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.working_wharfs);
 
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 2; i++) {
         iob->bind(BIND_SIGNATURE_INT8, &data.unused.padding_43b2[i]);
+    }
     iob->bind(BIND_SIGNATURE_INT16, &data.finance.stolen_this_year);
     iob->bind(BIND_SIGNATURE_INT16, &data.finance.stolen_last_year);
     iob->bind(BIND_SIGNATURE_INT32, &data.trade.docker_import_resource);
@@ -548,8 +550,11 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.granaries.understaffed);
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.granaries.not_operating);
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.granaries.not_operating_with_food);
-    for (int i = 0; i < 2; i++)
+
+    for (int i = 0; i < 2; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_44e0[i]);
+    }
+
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.bast_curse_active);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_44ec);
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.ra_150_export_profits_months_left);
@@ -568,8 +573,11 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, data.buildings.distribution_center.private_access(_GRID_OFFSET));
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_building_id);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_placed);
-    for (int i = 0; i < 11; i++)
+
+    for (int i = 0; i < 11; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_4524[i]);
+    }
+
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.shipyard_boats_requested);
     iob->bind(BIND_SIGNATURE_INT32, &data.figure.enemies);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.wages);
@@ -654,8 +662,11 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(92);
     int reserved;
     iob->bind(BIND_SIGNATURE_INT16, &reserved);
-    for (int i = 0; i < MAX_GODS; i++)
+
+    for (int i = 0; i < MAX_GODS; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].happy_ankhs);
+    }
+
     iob->bind____skip(33);
     iob->bind____skip(2); // 2800 --> 0     granary space?
     iob->bind____skip(30);

@@ -97,6 +97,7 @@ static void callback_calc_distance_water_boat(int next_offset, int dist) {
 }
 
 void map_routing_calculate_distances_water_boat(tile2i tile) {
+    assert(tile.valid());
     int grid_offset = tile.grid_offset();
     if (map_grid_get(&routing_tiles_water, grid_offset) == WATER_N1_BLOCKED) {
         clear_distances();

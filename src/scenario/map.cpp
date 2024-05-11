@@ -31,16 +31,16 @@ tile2i scenario_map_exit(void) {
     return g_scenario_data.exit_point;
 }
 
-int scenario_map_has_river_entry(void) {
-    return g_scenario_data.river_entry_point.x() != -1 && g_scenario_data.river_entry_point.y() != -1;
+bool scenario_map_has_river_entry() {
+    return g_scenario_data.river_entry_point.valid();
 }
 
 tile2i scenario_map_river_entry() {
     return g_scenario_data.river_entry_point;
 }
 
-int scenario_map_has_river_exit() {
-    return g_scenario_data.river_exit_point.x() != -1 && g_scenario_data.river_exit_point.y() != -1;
+bool scenario_map_has_river_exit() {
+    return g_scenario_data.river_exit_point.valid();
 }
 
 tile2i scenario_map_river_exit() {

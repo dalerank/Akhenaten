@@ -17,6 +17,7 @@
 #include "sound/sound_building.h"
 #include "grid/water.h"
 #include "grid/road_access.h"
+#include "grid/building.h"
 #include "city/labor.h"
  
 buildings::model_t<building_shipyard> building_shipyard_m;
@@ -97,6 +98,13 @@ bool building_shipyard::draw_ornaments_and_animations_height(painter &ctx, vec2i
     const animation_t &anim = building_shipyard_m.anim["work"];
     building_draw_normal_anim(ctx, point, &base, tile, anim, mask);
     return true;
+}
+
+void building_shipyard::highlight_waypoints() {
+    building_impl::highlight_waypoints();
+
+    map_highlight_set(data.dock.dock_tiles[0], 3);
+    map_highlight_set(data.dock.dock_tiles[1], 3);
 }
 
 void building_shipyard::on_create(int orientation) {

@@ -523,7 +523,7 @@ void draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
 void draw_isometrics_overlay_flat(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     Planner.construction_record_view_position(pixel, point);
-    constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED};
+    constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED, COLOR_GREEN};
     if (grid_offset < 0) {
         // Outside map: draw black tile
         ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, 0);
