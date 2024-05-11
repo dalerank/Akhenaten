@@ -1,6 +1,7 @@
 #include "building_scribal_school.h"
 
 #include "js/js_game.h"
+#include "core/calc.h"
 #include "building/count.h"
 #include "grid/road_access.h"
 #include "figure/figure.h"
@@ -28,6 +29,16 @@ void config_load_scribal_school() {
 
 void building_scribal_school::update_count() const {
     building_increase_type_count(type(), num_workers() > 0);
+}
+
+void building_scribal_school::update_month() {
+    if (base.stored_full_amount <= 0) {
+        return;
+    }
+
+    short want_spent = calc_adjust_with_percentage<short>(base.num_workers, 50);
+    short spent = std::min(base.stored_full_amount, want_spent);
+    base.stored_full_amount -= spent;
 }
 
 void building_scribal_school::on_create(int orientation) {

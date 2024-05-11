@@ -29,7 +29,6 @@
 #include "city/ratings.h"
 #include "city/resource.h"
 #include "city/sentiment.h"
-#include "city/education.h"
 #include "city/trade.h"
 #include "city/victory.h"
 #include "core/random.h"
@@ -87,7 +86,6 @@ static void advance_month() {
     city_finance_handle_month_change();
     city_resource_consume_food();
     scenario_distant_battle_process();
-    city_education_handle_month_change();
     random_generate_next();                  // TODO: find out the source / reason for this
     scenario_event_process();
     
