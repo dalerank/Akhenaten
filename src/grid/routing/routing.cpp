@@ -245,8 +245,8 @@ bool map_routing_ferry_has_routes(building *b) {
     svector<building *, 64> ferries;
     buildings_get(ferries, BUILDING_FERRY);
 
-    for (auto f1 = ferries.begin(); f1 != ferries.end(); ++f1) {
-        ferry_tiles fpoints_begin = map_water_docking_points(**f1);
+    for (const auto &it : ferries) {
+        ferry_tiles fpoints_begin = map_water_docking_points(*it);
         ferry_tiles fpoints_end = map_water_docking_points(*b);
 
         std::array<uint8_t, 500> path_data;
