@@ -609,6 +609,8 @@ building_mine_gems = {
 
 building_mine_gold = {
   animations : {
+    preview : { pack:PACK_GENERAL, id:185 },
+    base : { pack:PACK_GENERAL, id:185 },
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16 }
   },
   output_resource : RESOURCE_GOLD,
