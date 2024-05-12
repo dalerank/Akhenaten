@@ -4,7 +4,9 @@
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
 #include "city/resource.h"
-#include "city/warning.h"
+#include "city/warnings.h"
+#include "building/count.h"
+#include "empire/empire_city.h"
 
 #include "js/js_game.h"
 #include "graphics/window.h"
@@ -42,4 +44,27 @@ bool building_brewery::draw_ornaments_and_animations_height(painter &ctx, vec2i 
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;
+}
+
+void building_brewery::update_count() const {
+    building_increase_industry_count(RESOURCE_BEER, num_workers() > 0);
+}
+
+void building_brewery::on_place_checks() {
+    if (building_count_industry_active(RESOURCE_BARLEY) > 0) {
+        return;
+    }
+
+    if (city_resource_count(RESOURCE_BEER) > 0 || city_resource_count(RESOURCE_BARLEY) > 0) {
+        return;
+    }
+
+    building_construction_warning_show(WARNING_VINES_NEEDED);
+    if (empire_can_produce_resource(RESOURCE_BARLEY, true)) {
+        building_construction_warning_show(WARNING_BUILD_VINES_FARM);
+    } else if (!empire_can_import_resource(RESOURCE_BARLEY, true)) {
+        building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT);
+    } else if (city_resource_trade_status(RESOURCE_BARLEY) != TRADE_STATUS_IMPORT) {
+        building_construction_warning_show(WARNING_TRADE_IMPORT_RESOURCE);
+    }
 }
