@@ -525,10 +525,10 @@ figure_labor_seeker = {
 
 figure_reed_gatherer = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_REED_GATHERER_WALK, max_frames:12 },
-		work : { pos : [0, 0], anim_id: ANIM_REED_GATHERER_WORK, max_frames:15 },
-		return : { pos : [0, 0], anim_id: ANIM_REED_GATHERER_RETURN, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_REED_GATHERER_DEATH, max_frames:8 },
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:37, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:38, max_frames:8 },
+		work : { pos : [0, 0], pack:PACK_SPR_MAIN, id:39, max_frames:15 },
+		return : { pos : [0, 0], pack:PACK_SPR_MAIN, id:40, max_frames:12 },
 	},
 }
 

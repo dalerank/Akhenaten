@@ -99,7 +99,6 @@ images = [
 	{img: IMG_HOUSE_HOMESTEAD, pack:PACK_GENERAL, id:29, offset:0},
 	{img: IMG_HOUSE_APARTMENT, pack:PACK_GENERAL, id:30, offset:0},
 	{img: IMG_POTTERY_WORKSHOP, pack:PACK_GENERAL, id:125, offset:0},
-	{img: ANIM_BREWERY_WORKSHOP, pack:PACK_GENERAL, id:116, offset:0},
 	{img: IMG_SMALL_MASTABA, pack:PACK_MASTABA, id:2, offset:7},
 	{img: IMG_BRICKLAYER_WALK, pack:PACK_SPR_MAIN, id:109},
 	{img: IMG_BRICKLAYER_DEATH, pack:PACK_SPR_MAIN, id:110},
@@ -165,10 +164,6 @@ images = [
 	{img: ANIM_STORAGE_YARD_WORK, pack:PACK_SPR_AMBIENT, id:51, offset:0},
 	{img: IMG_WORKCAMP, pack:PACK_GENERAL, id:77, offset:0},
 	{img: IMG_BUILDING_REED_GATHERER, pack:PACK_GENERAL, id:24, offset:0},
-	{img: ANIM_REED_GATHERER_WALK, pack:PACK_SPR_MAIN, id:37, offset:0},
-	{img: ANIM_REED_GATHERER_DEATH, pack:PACK_SPR_MAIN, id:38, offset:0},
-	{img: ANIM_REED_GATHERER_WORK, pack:PACK_SPR_MAIN, id:39, offset:0},
-	{img: ANIM_REED_GATHERER_RETURN, pack:PACK_SPR_MAIN, id:40, offset:0},
 ]
 
 cart_images = [
