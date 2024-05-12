@@ -83,6 +83,12 @@ void figure_immigrant::figure_action() {
         OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant/Update Image");
         update_direction_and_image();
     }
+
+    if (!!(base.terrain_type & TERRAIN_WATER)) {
+        image_set_animation(immigrant_m.anim["swim"]);
+    } else {
+        image_set_animation(immigrant_m.anim["walk"]);
+    }
 }
 
 void figure_immigrant::figure_before_action() {
@@ -90,13 +96,10 @@ void figure_immigrant::figure_before_action() {
     if (b_imm->type == BUILDING_BURNING_RUIN) {
         poof();
     }
-    if (base.terrain_type == TERRAIN_WATER) {
-        image_set_animation(immigrant_m.anim["swim"]);
-    }
 }
 
 bool figure_immigrant::can_move_by_water() const {
-    return map_terrain_is(tile(), TERRAIN_FERRY_ROUTE);;
+    return map_terrain_is(tile(), TERRAIN_FERRY_ROUTE);
 }
 
 figure_sound_t figure_immigrant::get_sound_reaction(pcstr key) const {

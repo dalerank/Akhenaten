@@ -144,7 +144,9 @@ figure_ostrich = {
 
 figure_immigrant = {
 	animations : {
-		swim : { pos : [0, 0], anim_id: ANIM_FERRY_BOAT, max_frames:4, duration:4 },
+		walk : { pos : [0, 0], pack: PACK_SPR_MAIN, id: 14, max_frames:12 },
+		death : { pos : [0, 0], pack: PACK_SPR_MAIN, id: 15, max_frames:12 },
+		swim : { pos : [0, 0], pack:PACK_SPR_MAIN, id:138, max_frames:4, duration:4 },
 	},
 	sounds : {
 		i_need_here: {sound:"immigrant_e01.wav", group: 202, text:0},
@@ -298,7 +300,9 @@ figure_delivery_boy = {
 
 figure_cartpusher = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_CARTPUSHER_WALK, max_frames:12 },
+		walk : { pack:PACK_SPR_MAIN, id:43, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:44, max_frames:8 },
+		swim : { pack:PACK_SPR_MAIN, id:138, max_frames:4, duration:4 },
 	},
 	sounds  : {
 	  have_no_place_for_goods : { sound:"cartpusher_e01.wav", group:222, text:0},
@@ -328,7 +332,9 @@ figure_bricklayer = {
 
 figure_storageyard_cart = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_CARTPUSHER_WALK, max_frames:12 },
+		walk : { pack: PACK_SPR_MAIN, id:43, max_frames:12 },
+		death : { pack: PACK_SPR_MAIN, id:44, max_frames:8 },
+		swim : { pack:PACK_SPR_MAIN, id:138, max_frames:4, duration:4 },
 	}
 }
 

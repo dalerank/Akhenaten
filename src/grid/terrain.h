@@ -81,6 +81,7 @@ bool map_terrain_is(int grid_offset, int terrain_mask);
 inline bool map_terrain_is(tile2i tile, int terrain_mask) { return map_terrain_is(tile.grid_offset(), terrain_mask); }
 
 int map_terrain_get(int grid_offset);
+inline int map_terrain_get(tile2i tile) { return map_terrain_get(tile.grid_offset()); }
 
 void map_terrain_set(int grid_offset, int terrain);
 

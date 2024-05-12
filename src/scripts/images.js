@@ -11,12 +11,8 @@ images = [
   {img: IMG_FIREMAN_FIGHT_FIRE, pack:PACK_SPR_MAIN, id:8, offset:0},
 	{img: IMG_HOMELESS, pack: PACK_SPR_MAIN, id: 12}, // 782
 	{img: IMG_HOMELESS_DEATH, pack: PACK_SPR_MAIN, id: 13}, // 782
-	{img: IMG_IMMIGRANT, pack: PACK_SPR_MAIN, id: 14},// 886
-	{img: IMG_IMMIGRANT_DEATH, pack: PACK_SPR_MAIN, id: 15},// 886
 	{img: ANIM_TAX_COLLECTOR_WALK, pack:PACK_SPR_MAIN, id:41},
 	{img: ANIM_TAX_COLLECTOR_DEATH, pack:PACK_SPR_MAIN, id:42},
-	{img: ANIM_CARTPUSHER_WALK, pack: PACK_SPR_MAIN, id:43},
-	{img: ANIM_CARTPUSHER_DEATH, pack: PACK_SPR_MAIN, id:44},
 	{img: IMG_SLED_BRICKS, pack:PACK_SPR_MAIN, id:89},
 	{img: IMG_SLED_SANDSTONE_SMALL, pack:PACK_SPR_MAIN, id:101},
 	{img: IMG_SLED_STONE_SMALL, pack:PACK_SPR_MAIN, id:102},
@@ -144,7 +140,6 @@ images = [
 	{img: IMG_PRIEST_BAST, pack:PACK_SPR_MAIN, id:208, offset:0},
 	{img: IMG_PRIEST_BAST_DEATH, pack:PACK_SPR_MAIN, id:209, offset:0},
 	{img: IMG_TERRAIN_FLOODPLAIN, pack:PACK_TERRAIN, id:31, offset:0},
-	{img: ANIM_FERRY_BOAT, pack:PACK_SPR_MAIN, id:138, offset:0},
 	{img: ANIM_MARKET_BUYER_WALK, pack:PACK_SPR_MAIN, id:16, offset:0},
 	{img: ANIM_MARKET_BUYER_DEATH, pack:PACK_SPR_MAIN, id:17, offset:0},
 	{img: ANIM_MARKET_LADY_WALK, pack:PACK_SPR_MAIN, id:18, offset:0},

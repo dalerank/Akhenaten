@@ -178,11 +178,7 @@ void figure::move_to_next_tile() {
     //    }
     figure_combat_attack_figure_at(tile.grid_offset());
 
-    switch (type) {
-    case FIGURE_IMMIGRANT: 
-        terrain_type = map_terrain_is(tile, TERRAIN_WATER) ? TERRAIN_WATER : TERRAIN_NONE;
-        break;
-    }
+    terrain_type = map_terrain_get(tile);
 
     previous_tile = old;
 }
@@ -207,9 +203,11 @@ void figure::set_next_tile_and_direction() {
         }
     }
 }
+
 void figure::advance_route_tile(int roaming_enabled) {
-    if (direction >= 8)
+    if (direction >= 8) {
         return;
+    }
 
     int target_grid_offset = tile.grid_offset() + map_grid_direction_delta(direction);
 

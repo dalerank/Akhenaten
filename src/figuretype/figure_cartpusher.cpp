@@ -19,6 +19,7 @@
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "grid/road_network.h"
+#include "grid/terrain.h"
 #include "grid/routing/routing_terrain.h"
 #include "config/config.h"
 
@@ -545,6 +546,9 @@ void figure_cartpusher::figure_before_action() {
     }
 }
 
+void figure_cartpusher::before_poof() {
+}
+
 void figure_cartpusher::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Cartpusher");
     building* b = home();
@@ -592,6 +596,12 @@ void figure_cartpusher::figure_action() {
         }
         break;
     }
+
+    if (!!(base.terrain_type & TERRAIN_WATER)) {
+        image_set_animation(cartpusher_m.anim["swim"]);
+    } else {
+        image_set_animation(cartpusher_m.anim["walk"]);
+    }
 }
 
 void figure_cartpusher::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i *coord_out) {
@@ -605,6 +615,10 @@ bool figure_cartpusher::window_info_background(object_info &ctx) {
 
 figure_sound_t figure_cartpusher::get_sound_reaction(pcstr key) const {
     return cartpusher_m.sounds[key];
+}
+
+bool figure_cartpusher::can_move_by_water() const {
+    return map_terrain_is(tile(), TERRAIN_FERRY_ROUTE);
 }
 
 sound_key figure_cartpusher::phrase_key() const {

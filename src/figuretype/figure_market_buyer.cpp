@@ -48,6 +48,7 @@ void figure_market_buyer::figure_before_action() {
 
 void figure_market_buyer::figure_action() {
     image_set_animation(market_buyer_m.anim["walk"]);
+
     switch (action_state()) {
     case 8:
     case FIGURE_ACTION_144_MARKET_BUYER_CREATE:

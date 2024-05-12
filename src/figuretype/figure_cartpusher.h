@@ -16,6 +16,7 @@ public:
 
     virtual void on_create() override {}
     virtual void figure_before_action() override;
+    virtual void before_poof() override;
     virtual void figure_action() override;
     virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) override;
     virtual bool window_info_background(object_info &ctx) override;
@@ -23,6 +24,7 @@ public:
     virtual e_overlay get_overlay() const override { return OVERLAY_NONE; }
     virtual figure_sound_t get_sound_reaction(pcstr key) const override;
     virtual sound_key phrase_key() const override;
+    virtual bool can_move_by_water() const override;
 
     virtual figure_cartpusher *dcast_cartpusher() override { return this; }
 

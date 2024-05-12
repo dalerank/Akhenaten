@@ -95,10 +95,10 @@ void figure_native_trader::figure_action() {
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
 
     if (action_state() == FIGURE_ACTION_149_CORPSE) {
-        base.sprite_image_id = image_group(ANIM_CARTPUSHER_DEATH);
+        base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
         base.cart_image_id = 0;
     } else {
-        base.sprite_image_id = image_group(ANIM_CARTPUSHER_WALK) + dir + 8 * base.anim_frame;
+        base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.anim_frame;
     }
 
     base.cart_image_id = image_id_from_group(GROUP_FIGURE_IMMIGRANT_CART) + 8 + 8 * base.resource_id; // BUGFIX should be within else statement?

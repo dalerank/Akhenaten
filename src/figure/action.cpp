@@ -32,15 +32,15 @@ struct figure_action_property {
 
 static figure_action_property action_properties_lookup[] = {
   {FIGURE_NONE,     0, 0, 0, 0, 0},
-  {FIGURE_IMMIGRANT,1, TERRAIN_USAGE_ANIMAL, 0, 0, 0, IMG_IMMIGRANT},
+  {FIGURE_IMMIGRANT,1, TERRAIN_USAGE_ANIMAL, 0, 0, 0, IMG_NONE},
   {FIGURE_EMIGRANT, 1, TERRAIN_USAGE_ANIMAL, 0, 0, 0, ANIM_EMIGRANT_WALK},
   {FIGURE_HOMELESS, 1, TERRAIN_USAGE_PREFER_ROADS, 0, 0, 0, IMG_HOMELESS},
-  {FIGURE_CART_PUSHER, 1, TERRAIN_USAGE_ROADS, 0, 0, 0,  ANIM_CARTPUSHER_WALK},
+  {FIGURE_CART_PUSHER, 1, TERRAIN_USAGE_ROADS, 0, 0, 0,  IMG_NONE},
   {FIGURE_LABOR_SEEKER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, ANIM_LABOR_SEEKER_WALK},
   {FIGURE_EXPLOSION, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_EXPLOSION},
   {FIGURE_TAX_COLLECTOR, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, ANIM_TAX_COLLECTOR_WALK},
   {FIGURE_ARCHITECT, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, ANIM_ARCHITECT_WALK},
-  {FIGURE_STORAGEYARD_CART, 1, TERRAIN_USAGE_ROADS, 0, 0, 0, ANIM_CARTPUSHER_WALK},
+  {FIGURE_STORAGEYARD_CART, 1, TERRAIN_USAGE_ROADS, 0, 0, 0, IMG_NONE},
   {FIGURE_FIREMAN, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_FIREMAN},
   {FIGURE_ARCHER, 1, TERRAIN_USAGE_ANY, 0, 0, IMG_NONE},
   {FIGURE_FCHARIOTEER, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_CHARIOTEER_PH},
@@ -410,7 +410,7 @@ void figure::action_perform() {
             figure_combat_handle_corpse();
         }
 
-        if (map_terrain_is(tile.grid_offset(), TERRAIN_ROAD)) { // update road flag
+        if (map_terrain_is(tile, TERRAIN_ROAD|TERRAIN_FERRY_ROUTE)) { // update road flag
             outside_road_ticks = 0;
             if (map_terrain_is(tile.grid_offset(), TERRAIN_WATER)) { // bridge
                 set_target_height_bridge();
