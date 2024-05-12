@@ -56,8 +56,8 @@ ferry_tiles map_water_docking_points(building &b) {
         result.point_b = b.tile.shifted(0, -1);
         break;
     case 1:
-        result.point_a = b.tile.shifted(2, 1);
-        result.point_b = b.tile.shifted(2, 2);
+        result.point_a = b.tile.shifted(2, 0);
+        result.point_b = b.tile.shifted(2, 1);
         break;
     case 2:
         result.point_a = b.tile.shifted(0, 2);
@@ -65,7 +65,7 @@ ferry_tiles map_water_docking_points(building &b) {
         break;
     case 3:
         result.point_a = b.tile.shifted(-1, 0);
-        result.point_b = b.tile.shifted(-1, -1);
+        result.point_b = b.tile.shifted(-1, 1);
         break;
     }
 

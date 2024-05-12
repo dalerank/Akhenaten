@@ -199,12 +199,10 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
     int y = MAP_Y(grid_offset);
     switch (routing_type) {
     case ROUTING_TYPE_CITIZEN:
-        //            if (!map_tile_inside_map_area(x, y))
-        //                return CITIZEN_N1_BLOCKED;
         if (!!(terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_WATER)) {
             return CITIZEN_0_ROAD;
         } else if (!!(terrain & TERRAIN_FERRY_ROUTE) && !!(terrain & TERRAIN_WATER)) {
-            return CITIZEN_2_PASSABLE_TERRAIN;
+            return CITIZEN_0_ROAD;
         } else if (terrain & (TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN | TERRAIN_MARSHLAND | TERRAIN_FLOODPLAIN | TERRAIN_TREE)) {// TODO?
             return CITIZEN_2_PASSABLE_TERRAIN;
         } else if (terrain & (TERRAIN_BUILDING | TERRAIN_GATEHOUSE)) {
@@ -340,6 +338,7 @@ static void map_routing_update_land_noncitizen(void) {
         }
     }
 }
+
 void map_routing_update_land() {
     OZZY_PROFILER_SECTION("Game/Run/Routing/Update land");
     map_routing_update_land_citizen();
