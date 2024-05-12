@@ -2,6 +2,7 @@
 
 #include "city/labor.h"
 #include "grid/water.h"
+#include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/routing/routing.h"
 #include "graphics/elements/ui.h"
@@ -40,4 +41,18 @@ void building_ferry::window_info_background(object_info &c) {
     } else if (ferry->num_workers <= 0) {
         window_building_draw_description_at(c, 16 * c.bgsize.y - 158, e_text_ferry_landing, e_text_ferry_landing_no_workers);
     }
+}
+
+void building_ferry::update_map_orientation(int orientation) {
+    int image_offset = city_view_relative_orientation(data.industry.orientation);
+    int image_id = ferry_m.anim["base"].first_img() + image_offset;
+    map_water_add_building(id(), tile(), ferry_m.building_size, image_id);
+}
+
+void building_ferry::highlight_waypoints() {
+    building_impl::highlight_waypoints();
+
+    ferry_tiles fpoints = map_water_docking_points(base);
+    map_highlight_set(fpoints.point_a, 3);
+    map_highlight_set(fpoints.point_b, 3);
 }
