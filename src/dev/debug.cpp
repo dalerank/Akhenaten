@@ -270,7 +270,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
                 draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords, COLOR_MASK_GREEN);
             }
         }
-        if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+        if (map_terrain_is(grid_offset, TERRAIN_ROAD) || map_terrain_is(grid_offset, TERRAIN_FERRY_ROUTE)) {
             d = map_road_network_get(grid_offset);
             debug_text(ctx, str, x, y + 10, 10, "R", d, COLOR_WHITE);
         } else if (map_terrain_is(grid_offset, TERRAIN_SUBMERGED_ROAD)) {

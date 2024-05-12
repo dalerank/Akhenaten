@@ -255,7 +255,7 @@ void building_properties_init() {
     properties[BUILDING_TAX_COLLECTOR] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_TAX_COLLECTOR_UPGRADED] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_POTTERY_WORKSHOP] = {2, 0, 0, 0, 0, IMG_POTTERY_WORKSHOP};
-    properties[BUILDING_BREWERY_WORKSHOP] = {2, 0, 0, 0, 0, ANIM_BREWERY_WORKSHOP};
+    properties[BUILDING_BREWERY_WORKSHOP] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_SMALL_MASTABA] = {2, 0, 0, 0, 0, IMG_SMALL_MASTABA};
     properties[BUILDING_SMALL_MASTABA_SIDE] = {2, 0, 0, 0, 0, IMG_SMALL_MASTABA};
     properties[BUILDING_SMALL_MASTABA_WALL] = {2, 0, 0, 0, 0, IMG_SMALL_MASTABA};
