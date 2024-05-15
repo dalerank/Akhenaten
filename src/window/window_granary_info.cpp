@@ -2,8 +2,10 @@
 
 #include "building/building_granary.h"
 #include "building/distribution.h"
+#include "building/count.h"
 #include "building/storage.h"
 #include "city/city.h"
+#include "city/warnings.h"
 #include "window/building/common.h"
 #include "scenario/scenario.h"
 
@@ -78,6 +80,12 @@ int building_granary::window_info_handle_mouse(const mouse *m, object_info &c) {
         return window_building_handle_mouse_granary_orders(m, &c);
     } else {
         return window_building_handle_mouse_granary(m, &c);
+    }
+}
+
+void building_granary::on_place_checks() {
+    if (building_count_active(BUILDING_BAZAAR) <= 0) {
+        building_construction_warning_show(WARNING_BUILD_MARKET);
     }
 }
 

@@ -61,13 +61,6 @@ static void check_water(int type, int x, int y) {
     }
 }
 
-static void check_market(int type) {
-    if (!g_has_warning && type == BUILDING_GRANARY) {
-        if (building_count_active(BUILDING_BAZAAR) <= 0)
-            building_construction_warning_show(WARNING_BUILD_MARKET);
-    }
-}
-
 static void check_barracks(int type) {
     if (!g_has_warning) {
         if (building_is_fort(type) && building_count_active(BUILDING_RECRUITER) <= 0)
@@ -181,7 +174,6 @@ void building_construction_warning_generic_checks(building *b, tile2i tile, int 
 
     e_building_type type = b->type;
     building_construction_warning_check_food_stocks(type);
-    check_market(type);
     check_juggler_access(type);
     check_musician_access(type);
     check_dancers_access(type);

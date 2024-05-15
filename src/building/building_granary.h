@@ -33,6 +33,7 @@ public:
     virtual void window_info_background(object_info &ctx) override;
     virtual void window_info_foreground(object_info &ctx) override;
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
+    virtual void on_place_checks() override;
 
     const building_storage *storage();
     int amount(e_resource resource);
