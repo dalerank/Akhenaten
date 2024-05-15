@@ -628,9 +628,11 @@ building_mine_gold = {
 
 building_bricks_workshop = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:124 }
-    base : { pack:PACK_GENERAL, id:124 }
-    work : { pack:PACK_GENERAL, id:124 }
+    preview : { pack:PACK_GENERAL, id:124 },
+    base : { pack:PACK_GENERAL, id:124 },
+    work : { pack:PACK_GENERAL, id:124 },
+    straw : { pos:[51, 18], pack:PACK_GENERAL, id:206 },
+    clay : { pos:[46, 25], pack:PACK_GENERAL, id:207 },
   },
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
@@ -639,7 +641,8 @@ building_bricks_workshop = {
 
 building_pottery = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_POTTERY_WORKSHOP }
+    work : { pos : [-1, -1], anim_id: IMG_POTTERY_WORKSHOP },
+    clay : { pos:[65, 3], pack:PACK_GENERAL, id:207 },
   },
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
