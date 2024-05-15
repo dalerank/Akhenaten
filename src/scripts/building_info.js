@@ -591,7 +591,7 @@ building_clay_pit = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:40 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:40 },
-    work : { pos : [-1, -1], pack:PACK_GENERAL, id:40, offset:1 }
+    work : { pos : [18, -20], pack:PACK_GENERAL, id:40, offset:1, max_frames:23 }
   },
   output_resource : RESOURCE_CLAY,
   building_size : 2,
@@ -657,7 +657,7 @@ building_pottery = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
-    work : { pos : [-1, -1], pack:PACK_GENERAL, id:125, offset:1, max_frames:19 },
+    work : { pos : [36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18 },
     clay : { pos:[65, 3], pack:PACK_GENERAL, id:207 },
   },
   production_rate : 20,
