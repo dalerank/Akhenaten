@@ -139,6 +139,11 @@ bool building_hunting_lodge::draw_ornaments_and_animations_height(painter &ctx, 
         building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
     }
 
+    int amount = ceil((float)base.stored_amount() / 100.0) - 1;
+    if (amount >= 0) {
+        const auto &anim = hunting_lodge_m.anim["gamemeat"];
+        ImageDraw::img_generic(ctx, anim.first_img() + amount, point + anim.pos, color_mask);
+    }
     return true;
 }
 

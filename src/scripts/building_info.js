@@ -636,6 +636,7 @@ building_bricks_workshop = {
   },
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  building_size : 2,
   window_info_height_id : 1,
 }
 
@@ -646,6 +647,7 @@ building_pottery = {
   },
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  building_size : 2,
   window_info_height_id : 1,
 }
 
@@ -690,7 +692,8 @@ building_hunting_lodge = {
   animations : {
     preview : { pack:PACK_GENERAL, id:176},
     base : { pack:PACK_GENERAL, id:176},
-    work : { pos:[20, -15], pack:PACK_GENERAL, id:176, offset:1, max_frames:11 }
+    work : { pos:[20, -15], pack:PACK_GENERAL, id:176, offset:1, max_frames:11 },
+    gamemeat : { pos:[61, 14], pack:PACK_GENERAL, id:205 }
   },
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }

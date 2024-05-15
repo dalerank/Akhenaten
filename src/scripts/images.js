@@ -61,7 +61,6 @@ images = [
 
 	// icon resources
 	{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
-	{img: IMG_RESOURCE_GAMEMEAT, pack:PACK_GENERAL, id:205},
 
 	{img: IMG_JUGGLER_SHOW, pack:PACK_SPR_AMBIENT, id:7, offset:-1},
 	{img: IMG_SIDE_PANEL, pack:PACK_GENERAL, id:121, offset:0},
