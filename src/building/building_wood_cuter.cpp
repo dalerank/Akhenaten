@@ -8,6 +8,8 @@
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
 #include "grid/routing/routing.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "grid/terrain.h"
 
 buildings::model_t<building_wood_cutter> bwood_cutter_m;
@@ -77,6 +79,12 @@ void building_wood_cutter::window_info_background(object_info &ctx) {
 bool building_wood_cutter::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     const auto &anim = bwood_cutter_m.anim["work"];
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+
+    int amount = ceil((float)base.stored_amount() / 100.0) - 1;
+    if (amount >= 0) {
+        const auto &anim = bwood_cutter_m.anim["wood"];
+        ImageDraw::img_generic(ctx, anim.first_img() + amount, point + anim.pos, color_mask);
+    }
 
     return true;
 }

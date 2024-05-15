@@ -15,6 +15,7 @@ enum {
 };
 
 int map_property_is_draw_tile(int grid_offset);
+inline int map_property_is_draw_tile(tile2i tile) { return map_property_is_draw_tile(tile.grid_offset()); }
 void map_property_mark_draw_tile(int grid_offset);
 void map_property_clear_draw_tile(int grid_offset);
 

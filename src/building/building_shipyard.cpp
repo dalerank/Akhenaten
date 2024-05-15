@@ -97,6 +97,12 @@ void building_shipyard::update_map_orientation(int orientation) {
 bool building_shipyard::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
     const animation_t &anim = building_shipyard_m.anim["work"];
     building_draw_normal_anim(ctx, point, &base, tile, anim, mask);
+
+    int amount = ceil((float)base.stored_amount() / 100.0) - 1;
+    if (amount >= 0) {
+        const auto &anim = building_shipyard_m.anim["wood"];
+        ImageDraw::img_generic(ctx, anim.first_img() + amount, point + anim.pos, mask);
+    }
     return true;
 }
 

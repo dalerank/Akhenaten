@@ -252,7 +252,7 @@ void building_properties_init() {
     properties[BUILDING_SCRIBAL_SCHOOL] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_TAX_COLLECTOR] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_TAX_COLLECTOR_UPGRADED] = {2, 0, 0, 0, 0, IMG_NONE};
-    properties[BUILDING_POTTERY_WORKSHOP] = {2, 0, 0, 0, 0, IMG_POTTERY_WORKSHOP};
+    properties[BUILDING_POTTERY_WORKSHOP] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_BREWERY_WORKSHOP] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_SMALL_MASTABA] = {2, 0, 0, 0, 0, IMG_SMALL_MASTABA};
     properties[BUILDING_SMALL_MASTABA_SIDE] = {2, 0, 0, 0, 0, IMG_SMALL_MASTABA};
@@ -261,7 +261,7 @@ void building_properties_init() {
     properties[BUILDING_BAZAAR] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_BRICKLAYERS_GUILD] = {2, 0, 0, 0, 0, IMG_BRICKLAYERS_GUILD};
     properties[BUILDING_FIREHOUSE] = {1, 0, 0, 0, 0, IMG_BUILDING_FIREHOUSE};
-    properties[BUILDING_APOTHECARY] = {1, 0, 0, 0, 0, IMG_BUILDING_APOTHECARY};
+    properties[BUILDING_APOTHECARY] = {1, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_PERSONAL_MANSION] = {3, 0, 0, 0, 0, IMG_PERSONAL_MANSION};
     properties[BUILDING_VILLAGE_PALACE] = {4, 0, 0, 0, 0, IMG_VILLAGE_PALACE};
     properties[BUILDING_JUGGLER_SCHOOL] = {2, 0, 0, 0, 0, IMG_NONE};

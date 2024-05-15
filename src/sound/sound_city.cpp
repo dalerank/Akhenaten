@@ -113,7 +113,6 @@ int building_type_to_channel(building *b) {
     case BUILDING_WEAVER_WORKSHOP:
     case BUILDING_WEAPONSMITH:
     case BUILDING_JEWELS_WORKSHOP:
-    case BUILDING_WOOD_CUTTERS:
         return 0;
     }
 

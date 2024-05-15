@@ -34,33 +34,6 @@ void building_workshop_draw_raw_material_storage(painter &ctx, const building* b
     int amount = ceil((float)b->stored_amount() / 100.0) - 1;
     int amount2 = 0;
     switch (b->type) {
-    case BUILDING_WEAPONSMITH:
-        amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
-        if (amount >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_COPPER_2) + amount, pos + vec2i{61, 14}, color_mask);
-        }
-        break;
-
-    case BUILDING_BREWERY_WORKSHOP:
-        amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
-        if (amount >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_BARLEY_2) + amount, pos + vec2i{65, 3}, color_mask);
-        }
-        break;
-
-    case BUILDING_PAPYRUS_WORKSHOP:
-        amount = std::min<int>(2, ceil((float)b->stored_amount() / 100.0) - 1);
-        if (amount >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_REEDS_5) + amount, pos + vec2i{35, 4}, color_mask);
-        }
-        break;
-
-    case BUILDING_WOOD_CUTTERS:
-        if (amount >= 0) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, pos + vec2i{65, 3}, color_mask);
-        }
-        break;
-
     case BUILDING_WEAVER_WORKSHOP:
         //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_FLAX_2) + amount, x + 65, y + 3,
         //            color_mask);
@@ -68,11 +41,6 @@ void building_workshop_draw_raw_material_storage(painter &ctx, const building* b
 
     case BUILDING_JEWELS_WORKSHOP:
         //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GEMS_2) + amount, x + 65, y + 3,
-        //            color_mask);
-        break;
-
-    case BUILDING_SHIPWRIGHT:
-        //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3,
         //            color_mask);
         break;
 

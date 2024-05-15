@@ -8,6 +8,8 @@
 #include "city/warning.h"
 #include "city/warnings.h"
 #include "graphics/window.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "empire/empire_city.h"
 
 #include "js/js_game.h"
@@ -44,6 +46,12 @@ void building_papyrus_maker::update_count() const {
 
 bool building_papyrus_maker::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     building_draw_normal_anim(ctx, point, &base, tile, papyrus_maker_m.anim["work"], color_mask);
+
+    int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
+    if (amount >= 0) {
+        const auto &anim = papyrus_maker_m.anim["reed"];
+        ImageDraw::img_generic(ctx, anim.first_img() + amount, point + anim.pos, color_mask);
+    }
     return true;
 }
 

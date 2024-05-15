@@ -10,6 +10,8 @@
 
 #include "js/js_game.h"
 #include "graphics/window.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "dev/debug.h"
 
 #include <iostream>
@@ -42,6 +44,12 @@ void building_brewery::window_info_foreground(object_info &c) {
 bool building_brewery::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     const auto &anim = brewery_m.anim["work"];
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+
+    int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
+    if (amount >= 0) {
+        const auto &anim = brewery_m.anim["barley"];
+        ImageDraw::img_generic(ctx, anim.first_img() + amount, point + anim.pos, color_mask);
+    }
 
     return true;
 }

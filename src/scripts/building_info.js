@@ -170,7 +170,8 @@ building_weaponsmith = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:123, },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:123, offset:0 },
-    work : { pos : [60, -15], pack:PACK_GENERAL, id:123, offset:1, max_frames:12 }
+    work : { pos : [60, -15], pack:PACK_GENERAL, id:123, offset:1, max_frames:12 },
+    copper : { pos : [61, 14], pack:PACK_GENERAL, id:203 }
   },
   labor_category : LABOR_CATEGORY_MILITARY,
   window_info_height_id : 1,
@@ -310,10 +311,13 @@ building_booth = {
 
 building_apothecary = {
   animations : {
-    work : { pos : [0, 0], anim_id : IMG_BUILDING_APOTHECARY }
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:68 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:68 },
+    work : { pos : [25, -35], pack:PACK_GENERAL, id:68, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   window_info_height_id : 1,
+  building_size : 1,
 }
 
 building_water_supply = {
@@ -346,7 +350,8 @@ building_papyrus_maker = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:44 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:44 },
-    work : { pos : [7, -10], pack:PACK_GENERAL, id:44, offset:1, max_frames:9 }
+    work : { pos : [7, -10], pack:PACK_GENERAL, id:44, offset:1, max_frames:9 },
+    reed : { pos : [35, 4], pack:PACK_GENERAL, id:206 },
   },
   output_resource : RESOURCE_PAPYRUS,
   building_size : 2,
@@ -363,7 +368,13 @@ building_reed_gatherer = {
 }
 
 building_wood_cutter = {
-  // todo
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:23 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:23 },
+    work : { pos : [30, -17], pack:PACK_GENERAL, id:23, offset:1, max_frames:19 },
+    wood : { pos : [65, 3], pack:PACK_GENERAL, id:202 },
+  },
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
 building_small_mastaba = {
@@ -550,7 +561,8 @@ building_shipyard = {
   animations : {
     preview : { pack: PACK_TERRAIN, id:26, max_frames:1 },
     base : { pack: PACK_TERRAIN, id:26, max_frames:1 },
-    work : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11 }
+    work : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11 },
+    wood : { pos : [65, 3], pack:PACK_GENERAL, id:202 }
   },
   building_size : 3,
   window_info_height_id : 1,
@@ -591,7 +603,8 @@ building_brewery = {
   animations : {
     preview : { pack:PACK_GENERAL, id:116 },
     base : { pack:PACK_GENERAL, id:116 },
-    work : { pack:PACK_GENERAL, id:116, max_frames: 12 }
+    work : { pack:PACK_GENERAL, id:116, max_frames: 12 },
+    barley : { pos:[65, 3], pack:PACK_GENERAL, id:208, max_frames: 12 }
   },
   window_info_height_id : 1,
 }
@@ -642,7 +655,9 @@ building_bricks_workshop = {
 
 building_pottery = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_POTTERY_WORKSHOP },
+    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
+    base : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:125, offset:1, max_frames:19 },
     clay : { pos:[65, 3], pack:PACK_GENERAL, id:207 },
   },
   production_rate : 20,

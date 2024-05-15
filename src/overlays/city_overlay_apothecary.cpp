@@ -39,16 +39,13 @@ struct city_overlay_apothecary : public city_overlay {
         return f->type == FIGURE_HERBALIST;
     }
 
-    void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {
-        int grid_offset = point.grid_offset();
-        int x = pixel.x;
-        int y = pixel.y;
-        if (!map_property_is_draw_tile(grid_offset)) {
+    void draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const override {
+        if (!map_property_is_draw_tile(tile)) {
             return;
         }
 
-        if (map_building_at(grid_offset)) {
-            city_with_overlay_draw_building_top(pixel, point, ctx);
+        if (map_building_at(tile)) {
+            city_with_overlay_draw_building_top(pixel, tile, ctx);
         }
     }
 
