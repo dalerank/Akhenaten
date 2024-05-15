@@ -424,6 +424,7 @@ class building_impl {
 public:
     struct static_params {
         pcstr name;
+        bool fire_proof;
         bstring64 meta_id;
         building::metainfo meta;
         e_resource output_resource;

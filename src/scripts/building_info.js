@@ -106,6 +106,7 @@ building_cattle_ranch = {
     base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
     work : { pos : [0, ], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
   },
+  building_size : 3,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -336,6 +337,8 @@ building_well = {
     fancy_work : { pack: PACK_GENERAL, id:23, offset:3, max_frames:1 }
   },
   window_info_height_id : 4,
+  fire_proof : true,
+  building_size : 1,
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
 }
 
@@ -621,6 +624,17 @@ building_mine_gold = {
   info_help_id:93,
   info_text_id:162,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
+
+building_bricks_workshop = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:124 }
+    base : { pack:PACK_GENERAL, id:124 }
+    work : { pack:PACK_GENERAL, id:124 }
+  },
+  production_rate : 20,
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  window_info_height_id : 1,
 }
 
 building_pottery = {

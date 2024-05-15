@@ -240,9 +240,7 @@ building_properties ROADBLOCK_PROPERTIES = {1, 1, 10000, 0};
 const building_properties dummy_property = {0, 0, 0, 0};
 
 void building_properties_init() {
-    properties[BUILDING_WELL] = {1, 1, 0, 0, 0, IMG_NONE};
-    properties[BUILDING_CATTLE_RANCH] = {3, 0, 0, 0, 0, IMG_NONE};
-    properties[BUILDING_BRICKS_WORKSHOP] = {2, 0, 0, 0, 0, IMG_BRICKS_WORKSHOP};
+    properties[BUILDING_BRICKS_WORKSHOP] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_GOLD_MINE] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_SANDSTONE_QUARRY] = {2, 0, 0, 0, 0, IMG_SANDSTONE_QUARRY};
     properties[BUILDING_STONE_QUARRY] = {2, 0, 0, 0, 0, IMG_PLAINSTONE_QUARRY};

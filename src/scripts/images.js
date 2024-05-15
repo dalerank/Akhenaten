@@ -60,7 +60,6 @@ images = [
 	{img: IMG_SANDSTONE_QUARRY, pack:PACK_GENERAL, id:197},
 
 	// icon resources
-	{img: IMG_BRICKS_WORKSHOP, pack:PACK_GENERAL, id:124},
 	{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
 	{img: IMG_RESOURCE_GAMEMEAT, pack:PACK_GENERAL, id:205},
 	{img: IMG_RESOURCE_STRAW, pack:PACK_GENERAL, id:206},

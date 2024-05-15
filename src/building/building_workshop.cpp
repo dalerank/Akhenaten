@@ -30,12 +30,6 @@ void building_luxury_workshop_draw_info(object_info& c) {
     building_workshop_draw_background(c, 99, "luxury_workshop", 125, output_resource, input_resource);
 }
 
-void building_brick_maker_workshop_draw_info(object_info& c) {
-    e_resource output_resource = RESOURCE_BRICKS;
-
-    building_workshop_draw_background(c, 1, "brick_maker", 180, output_resource, RESOURCE_CLAY, RESOURCE_STRAW);
-}
-
 void building_workshop_draw_raw_material_storage(painter &ctx, const building* b, vec2i pos, color color_mask) {
     int amount = ceil((float)b->stored_amount() / 100.0) - 1;
     int amount2 = 0;

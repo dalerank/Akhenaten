@@ -1,0 +1,15 @@
+#pragma once
+
+#include "building/building.h"
+
+class building_bricks_workshop : public building_impl {
+public:
+    BUILDING_METAINFO(BUILDING_BRICKS_WORKSHOP, building_ferry)
+
+    building_bricks_workshop(building &b) : building_impl(b) {}
+
+    virtual void on_create(int orientation) override;
+    virtual void on_place(int orientation, int variant) override;
+    virtual void window_info_background(object_info &c) override;
+    virtual void update_count() const override;
+};

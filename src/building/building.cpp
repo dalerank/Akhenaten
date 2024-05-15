@@ -154,12 +154,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
         output_resource_first_id = RESOURCE_LUXURY_GOODS;
         break;
 
-    case BUILDING_BRICKS_WORKSHOP:
-        data.industry.first_material_id = RESOURCE_STRAW;
-        data.industry.second_material_id = RESOURCE_CLAY;
-        output_resource_first_id = RESOURCE_BRICKS;
-        break;
-
     case BUILDING_CHARIOTS_WORKSHOP:
         data.industry.first_material_id = RESOURCE_TIMBER;
         data.industry.second_material_id = RESOURCE_WEAPONS;
@@ -1042,6 +1036,7 @@ bool resource_required_by_workshop(building* b, e_resource resource) {
 
 void building_impl::static_params::load(archive arch) {
     labor_category = arch.r_type<e_labor_category>("labor_category");
+    fire_proof = arch.r_bool("fire_proof");
     output_resource = arch.r_type<e_resource>("output_resource");
     meta_id = arch.r_string("meta_id");
     meta.help_id = arch.r_int("info_help_id");
