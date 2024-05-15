@@ -352,7 +352,9 @@ building_papyrus_maker = {
 
 building_reed_gatherer = {
   animations : {
-    work : { pos : [0, 0], anim_id : IMG_BUILDING_REED_GATHERER }
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
+    work : { pos : [30, -17], pack:PACK_GENERAL, id:24, offset:1, max_frames:19 }
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
