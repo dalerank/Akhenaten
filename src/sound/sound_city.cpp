@@ -107,7 +107,6 @@ int building_type_to_channel(building *b) {
     case BUILDING_GRAIN_FARM:
     case BUILDING_LETTUCE_FARM:
     case BUILDING_POMEGRANATES_FARM:
-    case BUILDING_STONE_QUARRY:
     case BUILDING_LIMESTONE_QUARRY:
     case BUILDING_WEAVER_WORKSHOP:
     case BUILDING_WEAPONSMITH:

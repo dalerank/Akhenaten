@@ -119,6 +119,7 @@ building_granary = {
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
   window_info_height_id : 1,
+  building_size : 4,
 }
 
 building_shrine_osiris = {
@@ -640,6 +641,18 @@ building_sandstone_quarry = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
+building_stone_quarry = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:187 },
+    base : { pack:PACK_GENERAL, id:187 },
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
+  },
+  output_resource : RESOURCE_STONE,
+  building_size : 2,
+  info_help_id:93,
+  info_text_id:162,
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
 
 building_mine_gold = {
   animations : {

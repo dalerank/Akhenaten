@@ -186,9 +186,6 @@ void building_count_update() {
         case BUILDING_COPPER_MINE:
             building_increase_industry_count(RESOURCE_COPPER, b.num_workers > 0);
             break;
-        case BUILDING_STONE_QUARRY:
-            building_increase_industry_count(RESOURCE_STONE, b.num_workers > 0);
-            break;
         case BUILDING_LIMESTONE_QUARRY:
             building_increase_industry_count(RESOURCE_LIMESTONE, b.num_workers > 0);
             break;

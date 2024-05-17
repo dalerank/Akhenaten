@@ -113,7 +113,6 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
         //            if (b->num_workers <= 0)
         //                return 0;
         //            break;
-    case BUILDING_STONE_QUARRY:
     case BUILDING_CONSERVATORY:
         if (b->num_workers <= 0) {
             return 0;
