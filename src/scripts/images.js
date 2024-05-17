@@ -46,7 +46,6 @@ images = [
 	{img: IMG_EXPLOSION, pack:PACK_SPR_AMBIENT, id:12, offset:0},
 	{img: IMG_FISHING_POINT_BUBLES, pack:PACK_SPR_AMBIENT, id:11},
 	{img: IMG_FISHIHG_WHARF_ANIM, pack: PACK_SPR_AMBIENT, id:47},  // 2551 + 15831
-	{img: ANIM_SANDSTONE_QUARRY_1, pack:PACK_SPR_AMBIENT, id:49},
 	{img: ANIM_SANDSTONE_QUARRY_2, pack:PACK_SPR_AMBIENT, id:49},
 
 	// spr terrain
@@ -57,8 +56,7 @@ images = [
 	{img: IMG_GUILD_STONEMASONS, pack:PACK_GENERAL, id:88},
 	{img: IMG_PLAINSTONE_QUARRY, pack:PACK_GENERAL, id:187},
 	{img: IMG_COPPER_MINE, pack:PACK_GENERAL, id:196},
-	{img: IMG_SANDSTONE_QUARRY, pack:PACK_GENERAL, id:197},
-
+	
 	// icon resources
 	{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
 

@@ -9,9 +9,9 @@
 #include "building/building_festival_square.h"
 #include "building/industry.h"
 #include "building/monument_mastaba.h"
-#include "building/properties.h"
 #include "building/rotation.h"
 #include "building/building_fort.h"
+#include "building/building.h"
 #include "building/count.h"
 #include "city/buildings.h"
 #include "city/finance.h"
@@ -28,6 +28,7 @@
 #include "ornaments.h"
 #include "game/game.h"
 #include "widget/city/bridges.h"
+#include "graphics/image.h"
 
 #include <cmath>
 
@@ -80,8 +81,9 @@ struct reservoir_range_data_t {
 
 reservoir_range_data_t reservoir_range_data;
 
-static int get_building_image_id(int map_x, int map_y, int type, const building_properties* props) {
-    int image_id = props->img_id();
+static int get_building_image_id(int map_x, int map_y, int type) {
+    const auto &props = building_impl::params((e_building_type)type);
+    int image_id = props.anim["base"].first_img();
     if (type == BUILDING_MUD_GATEHOUSE) {
         int orientation = map_orientation_for_gatehouse(map_x, map_y);
         int image_offset;

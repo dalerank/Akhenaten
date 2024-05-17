@@ -8,7 +8,6 @@
 #include "widget/city/building_ghost.h"
 #include "overlays/city_overlay.h"
 #include "building/construction/build_planner.h"
-#include "building/properties.h"
 #include "city/finance.h"
 #include "city/warning.h"
 #include "core/calc.h"
@@ -441,7 +440,7 @@ static void handle_first_touch(map_point tile) {
         return;
     }
 
-    int size = building_properties_for_type(type)->size;
+    int size = building_impl::params(type).building_size;
     if (type == BUILDING_STORAGE_YARD)
         size = 3;
 

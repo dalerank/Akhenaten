@@ -1,11 +1,11 @@
 #include "map_editor_tool.h"
 #include <graphics/view/zoom.h>
 
-#include "building/properties.h"
 #include "editor/tool.h"
+#include "building/building.h"
 #include "editor/tool_restriction.h"
 #include "graphics/graphics.h"
-#include "graphics/image_groups.h"
+#include "graphics/image.h"
 #include "grid/terrain.h"
 #include "input/scroll.h"
 #include "scenario/scenario.h"
@@ -50,10 +50,10 @@ static void draw_building_image(int image_id, int x, int y) {
 }
 
 static void draw_building(tile2i tile, int screen_x, int screen_y, e_building_type type) {
-    const building_properties* props = building_properties_for_type(type);
+    const auto &props = building_impl::params(type);
     painter ctx = game.painter();
 
-    int num_tiles = props->size * props->size;
+    int num_tiles = props.building_size * props.building_size;
     int blocked_tiles[MAX_TILES];
     int blocked = !editor_tool_can_place_building(tile, num_tiles, blocked_tiles);
 
@@ -71,8 +71,7 @@ static void draw_building(tile2i tile, int screen_x, int screen_y, e_building_ty
         if (type == BUILDING_UNUSED_NATIVE_CROPS_93) {
             image_id = image_id_from_group(GROUP_EDITOR_BUILDING_CROPS);
         } else {
-            image_desc desc = props->img();
-            image_id = image_group(desc) + props->image_offset;
+            image_id =  props.anim["base"].first_img();
         }
         draw_building_image(image_id, screen_x, screen_y);
     }
