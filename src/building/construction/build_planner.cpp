@@ -12,7 +12,6 @@
 #include "building/model.h"
 #include "building/monuments.h"
 #include "building/monument_mastaba.h"
-#include "building/properties.h"
 #include "building/rotation.h"
 #include "building/storage.h"
 #include "building/building_statue.h"
@@ -321,16 +320,16 @@ static void add_building(building* b, int orientation, int variant) {
         // ships
 
     case BUILDING_WATER_LIFT: {
-            auto props = building_properties_for_type(b->type);
-            map_water_add_building(b->id, b->tile, props->size, props->img_id() + orientation_rel + 4 * variant);
+            auto props = building_impl::params(b->type);
+            map_water_add_building(b->id, b->tile, props.building_size, props.anim["base"].first_img() + orientation_rel + 4 * variant);
         }
         break;
 
     case BUILDING_TRANSPORT_WHARF:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_DOCK: {
-            auto props = building_properties_for_type(b->type);
-            map_water_add_building(b->id, b->tile, props->size, props->img_id() + orientation_rel);
+            auto props = building_impl::params(b->type);
+            map_water_add_building(b->id, b->tile, props.building_size, props.anim["base"].first_img() + orientation_rel);
         }
         break;
 
@@ -407,6 +406,7 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
     int needs_road_warning = 0;
     int items_placed = 0;
     game_undo_restore_building_state();
+    int vacant_lot_id = building_impl::params(BUILDING_HOUSE_VACANT_LOT).anim["base"].first_img();
     for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
         for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
@@ -429,7 +429,7 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
                     if (b->id > 0) {
                         items_placed++;
                         tile2i otile(x, y);
-                        map_building_tiles_add(b->id, otile, 1, image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT), TERRAIN_BUILDING);
+                        map_building_tiles_add(b->id, otile, 1, vacant_lot_id, TERRAIN_BUILDING);
                         if (!map_terrain_exists_tile_in_radius_with_type(otile, 1, 2, TERRAIN_ROAD)) {
                             needs_road_warning = 1;
                         }
@@ -503,9 +503,8 @@ static int place_garden(tile2i start, tile2i end) {
 bool BuildPlanner::place_building(e_building_type type, tile2i tile, int orientation, int variant) {
     // by default, get size from building's properties
     int size = building_impl::params(type).building_size;
-    if (size <= 0) {
-        size = building_properties_for_type(type)->size;
-    }
+    assert(size > 0);
+
     int check_figures = 2;
     switch (type) { // special cases
     case BUILDING_BOOTH:
@@ -893,7 +892,7 @@ void BuildPlanner::setup_build_flags() {
 }
 
 void BuildPlanner::setup_build_graphics() {
-    const building_properties* props = building_properties_for_type(build_type);
+    const auto &props = building_impl::params(build_type);
     switch (build_type) {
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:
@@ -1017,13 +1016,13 @@ void BuildPlanner::setup_build_graphics() {
         break;
 
     case BUILDING_WATER_LIFT:
-        set_tiles_building(props->img_id() + relative_orientation + variant * 4, props->size);
+        set_tiles_building(props.anim["base"].first_img() + relative_orientation + variant * 4, props.building_size);
         break;
 
     case BUILDING_DOCK:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_TRANSPORT_WHARF:
-        set_tiles_building(props->img_id() + relative_orientation, props->size);
+        set_tiles_building(props.anim["base"].first_img() + relative_orientation, props.building_size);
         break;
 
     case BUILDING_LOW_BRIDGE:
@@ -1035,12 +1034,12 @@ void BuildPlanner::setup_build_graphics() {
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE: {
             int statue_img = building_statue::get_image(build_type, relative_orientation, variant);
-            set_tiles_building(statue_img, props->size);
+            set_tiles_building(statue_img, props.building_size);
         }
         break;
 
     case BUILDING_STORAGE_YARD:
-        set_tiles_building(props->img_id(), 3);
+        set_tiles_building(props.anim["base"].first_img(), 3);
         break;
 
     case BUILDING_SMALL_MASTABA:
@@ -1070,13 +1069,13 @@ void BuildPlanner::setup_build_graphics() {
 
     default: // regular buildings 
         {
-            int img_id = props->img_id();
+            int img_id = props.anim["base"].first_img();
             if (!img_id) {
                 const auto &params = building_impl::params(build_type);
                 img_id = params.anim["preview"].first_img();
                 img_id += params.planer_relative_orientation * relative_orientation;
             }
-            set_tiles_building(img_id, props->size);
+            set_tiles_building(img_id, props.building_size);
         }
         break;
     }

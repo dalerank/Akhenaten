@@ -49,7 +49,7 @@ void city_t::update_prosperity_explanation() {
         change -= 1;
 
     // working hippodrome: +1
-    if (entertainment.hippodrome_shows > 0)
+    if (entertainment.senet_house_plays > 0)
         change += 1;
 
     int reason;
@@ -116,7 +116,7 @@ void city_t::update_prosperity_rating() {
         change -= 1;
 
     // working hippodrome: +1
-    if (entertainment.hippodrome_shows > 0)
+    if (entertainment.senet_house_plays > 0)
         change += 1;
 
     ratings.prosperity += change;

@@ -1,6 +1,5 @@
 #include "building.h"
 
-#include "building/properties.h"
 #include "building/rotation.h"
 #include "building/building_type.h"
 #include "building/storage.h"
@@ -103,20 +102,21 @@ building* building_get(int id) {
 
 void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int orientation) {
     assert(!_ptr);
-    const building_properties* props = building_properties_for_type(_tp);
+    const auto &props = building_impl::params(_tp);
     type = _tp;
     tile = _tl;
     state = BUILDING_STATE_CREATED;
     faction_id = 1;
     reserved_id = false; // city_buildings_unknown_value();
-    size = props->size;
+    size = props.building_size;
     creation_sequence_index = building_extra_data.created_sequence++;
     sentiment.house_happiness = 50;
     distance_from_entry = 0;
 
     map_random_7bit = map_random_get(tile.grid_offset()) & 0x7f;
     figure_roam_direction = map_random_7bit & 6;
-    fire_proof = props->fire_proof;
+    fire_proof = props.fire_proof;
+    damage_proof = props.damage_proof;
     is_adjacent_to_water = map_terrain_is_adjacent_to_water(tile, size);
 
     // house size
@@ -452,10 +452,6 @@ void building::clear_related_data() {
     if (building_is_fort(type)) {
         formation_legion_delete_for_fort(this);
     }
-
-    if (type == BUILDING_SENET_HOUSE)
-        city_buildings_remove_hippodrome();
-
     if (type == BUILDING_RESERVED_TRIUMPHAL_ARCH_56) {
         city_buildings_remove_triumphal_arch();
         //building_menu_update(BUILDSET_NORMAL);

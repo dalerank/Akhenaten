@@ -362,7 +362,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_4294[i]);
     }
 
-    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.hippodrome_placed);
+    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.senet_house_placed);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.mortuary);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.physician);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.dentist);
@@ -372,14 +372,14 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.second_religion);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.third_religion);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.religion);
-    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.theater_shows);
-    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.theater_no_shows_weighted);
-    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.amphitheater_shows);
-    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.amphitheater_no_shows_weighted);
-    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.colosseum_shows);
-    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.colosseum_no_shows_weighted);
-    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.hippodrome_shows);
-    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.hippodrome_no_shows_weighted);
+    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.booth_shows);
+    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.booth_no_shows_weighted);
+    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.bandstand_shows);
+    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.bandstand_no_shows_weighted);
+    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.pavilion_shows);
+    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.pavilion_no_shows_weighted);
+    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.senet_house_plays);
+    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.senet_house_no_shows_weighted);
     iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.venue_needing_shows);
     iob->bind(BIND_SIGNATURE_INT32, &data.culture.average_entertainment);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.entertainment);
@@ -637,9 +637,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     }
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.second_wine);
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.osiris_sank_ships);
-    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.hippodrome_has_race);
-    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.hippodrome_message_shown);
-    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.colosseum_message_shown);
+    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.senet_house_has_plays);
+    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.senet_house_message_shown);
+    iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.pavilion_message_shown);
     iob->bind(BIND_SIGNATURE_INT32, &data.migration.emigration_message_shown);
     iob->bind(BIND_SIGNATURE_INT32, &data.mission.fired_message_shown);
     iob->bind(BIND_SIGNATURE_INT32, &data.mission.victory_message_shown);

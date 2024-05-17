@@ -634,6 +634,7 @@ building_mine_gold = {
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16 }
   },
   output_resource : RESOURCE_GOLD,
+  building_size : 2,
   info_help_id:93,
   info_text_id:162,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,

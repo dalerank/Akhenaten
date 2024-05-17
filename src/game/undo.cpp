@@ -1,7 +1,6 @@
 #include "undo.h"
 
 #include "building/industry.h"
-#include "building/properties.h"
 #include "building/storage.h"
 #include "building/building_storage_yard.h"
 #include "city/finance.h"
@@ -194,7 +193,7 @@ static void add_building_to_terrain(building* b) {
         map_building_tiles_add_farm(b->id, b->tile, image_id_from_group(GROUP_BUILDING_FARMLAND) + image_offset, 0);
     } else if (b->house_size) {
     } else {
-        int size = building_properties_for_type(b->type)->size;
+        int size = building_impl::params(b->type).building_size;
         map_building_tiles_add(b->id, b->tile, size, 0, 0);
         b->dcast()->on_undo();
     }
@@ -319,9 +318,9 @@ void game_undo_perform() {
     map_routing_update_land();
     map_routing_update_walls();
     data.num_buildings = 0;
+    int vacant_lot_image = building_impl::params(BUILDING_HOUSE_VACANT_LOT).anim["base"].first_img();
     for (int i = 0; data.newhouses_offsets[i] != 0; i++) {
         int grid_offset = data.newhouses_offsets[i] - 1;
-        int vacant_lot_image = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
 
         tile2i tile(grid_offset);
 

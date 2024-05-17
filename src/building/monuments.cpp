@@ -1,7 +1,6 @@
 #include "monuments.h"
 
 #include "building/building.h"
-#include "building/properties.h"
 #include "building/model.h"
 #include "building/count.h"
 #include "graphics/image.h"
@@ -370,7 +369,7 @@ bool building_monument_type_is_monument(e_building_type type) {
 }
 
 bool building_monument_type_is_mini_monument(e_building_type type) {
-    return building_monument_type_is_monument(type) && building_properties_for_type(type)->size < 5;
+    return building_monument_type_is_monument(type) && building_impl::params(type).building_size < 5;
 }
 
 bool building_monument_is_temple_complex(e_building_type type) {

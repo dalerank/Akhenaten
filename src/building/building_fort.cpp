@@ -6,7 +6,6 @@
 #include "widget/city/building_ghost.h"
 #include "widget/city/ornaments.h"
 #include "city/finance.h"
-#include "building/properties.h"
 #include "graphics/view/view.h"
 #include "graphics/view/lookup.h"
 #include "graphics/image.h"
@@ -111,8 +110,8 @@ void building_fort::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int or
         blocked = true;
     }
 
-    int fort_size = building_properties_for_type(BUILDING_FORT_ARCHERS)->size;
-    int ground_size = building_properties_for_type(BUILDING_FORT_GROUND)->size;
+    int fort_size = building_impl::params(BUILDING_FORT_ARCHERS).building_size;
+    int ground_size = building_impl::params(BUILDING_FORT_GROUND).building_size;
     int global_rotation = building_rotation_global_rotation();
 
     vec2i tile_ground_offset = fort_ghost_m.ground_check_offset[global_rotation * 4 + (city_view_orientation() / 2)];

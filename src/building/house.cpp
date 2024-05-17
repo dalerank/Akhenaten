@@ -132,18 +132,18 @@ void building_house_change_to(building* house, e_building_type type) {
 void building_house_change_to_vacant_lot(building* house) {
     house->type = BUILDING_HOUSE_VACANT_LOT;
     house->subtype.house_level = (e_house_level)(house->type - BUILDING_HOUSE_VACANT_LOT);
-    int image_id = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
+    int vacant_lot_id = building_impl::params(BUILDING_HOUSE_VACANT_LOT).anim["base"].first_img();
     if (house->house_is_merged) {
         map_building_tiles_remove(house->id, house->tile);
         house->house_is_merged = 0;
         house->size = house->house_size = 1;
-        map_building_tiles_add(house->id, house->tile, 1, image_id, TERRAIN_BUILDING);
+        map_building_tiles_add(house->id, house->tile, 1, vacant_lot_id, TERRAIN_BUILDING);
 
-        create_vacant_lot(house->tile.shifted(1, 0), image_id);
-        create_vacant_lot(house->tile.shifted(0, 1), image_id);
-        create_vacant_lot(house->tile.shifted(1, 1), image_id);
+        create_vacant_lot(house->tile.shifted(1, 0), vacant_lot_id);
+        create_vacant_lot(house->tile.shifted(0, 1), vacant_lot_id);
+        create_vacant_lot(house->tile.shifted(1, 1), vacant_lot_id);
     } else {
-        map_image_set(house->tile.grid_offset(), image_id);
+        map_image_set(house->tile.grid_offset(), vacant_lot_id);
     }
 }
 

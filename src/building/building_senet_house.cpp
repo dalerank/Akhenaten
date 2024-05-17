@@ -6,6 +6,8 @@
 #include "graphics/elements/panel.h"
 #include "io/gamefiles/lang.h"
 #include "window/building/common.h"
+#include "city/labor.h"
+#include "city/buildings.h"
 
 struct senet_house_model : public buildings::model_t<building_senet_house> {} senet_house_m;
 
@@ -30,7 +32,7 @@ void building_senet_house::window_info_background(object_info &c) {
         window_building_draw_description(c, 73, 3);
 
     inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 6);
-    window_building_draw_employment(c, 138);
+    window_building_draw_employment(&c, 138);
     if (b->data.entertainment.days1 > 0) {
         int width = lang_text_draw(73, 6, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1, c.offset.x + width + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
@@ -44,6 +46,10 @@ void building_senet_house::on_place_checks() {
     //    if (building_count_active(BUILDING_SENET_MASTER) <= 0)
     //        building_construction_warning_show(WARNING_BUILD_SENET_MAKER);
     //}
+}
+
+void building_senet_house::on_destroy() {
+    city_buildings_remove_senet_house();
 }
 
 void building_senet_house::spawn_figure() {
