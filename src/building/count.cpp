@@ -35,7 +35,7 @@ void building_increase_industry_count(int resource, bool active) {
     g_count_data.industry[resource].active += (active ? 1 : 0);
 }
 
-static void limit_hippodrome() {
+static void limit_senet_house() {
     if (g_count_data.buildings[BUILDING_SENET_HOUSE].total > 1) {
         g_count_data.buildings[BUILDING_SENET_HOUSE].total = 1;
     }
@@ -103,10 +103,6 @@ void building_count_update() {
         e_building_type type = b.type;
         switch (type) {
         default:
-            building_increase_type_count(type, b.num_workers > 0);
-            break;
-
-        case BUILDING_SENET_HOUSE:
             building_increase_type_count(type, b.num_workers > 0);
             break;
 

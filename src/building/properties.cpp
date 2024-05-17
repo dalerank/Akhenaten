@@ -1,44 +1,50 @@
 #include "properties.h"
+
+#include "building/building.h"
 #include "core/game_environment.h"
 #include "graphics/image_groups.h"
 
 constexpr int BUILD_MAX = 300;
 
+struct building_properties {
+    int size;
+    bool fire_proof;
+};
 static building_properties properties[400] = {
     // PHARAOH
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {1, 0, 0, 0}, // road
-    {1, 0, 0, 0}, // wall (unused)
-    {0, 0, 0, 0},
-    {1, 0, 0, 0},                            // irrigation ditch
-    {0, 0, 0, 0},                            // clear land
-    {1, 0, GROUP_BUILDING_HOUSE_VACANT_LOT}, // houses vvvv
-    {1, 0, 0, 0},
-    {1, 0, 0, 0},
-    {1, 0, 0, 0},
-    {1, 0, 0, 0},
-    {1, 0, 0, 0},
-    {1, 0, 0, 0},
-    {1, 0, 0, 0},
-    {1, 0, 0, 0},
-    {1, 0, 0, 0},
-    {2, 0, 0, 0},
-    {2, 0, 0, 0},
-    {2, 0, 0, 0},
-    {2, 0, 0, 0},
-    {3, 0, 0, 0},
-    {3, 0, 0, 0},
-    {3, 0, 0, 0},
-    {3, 0, 0, 0},
-    {4, 0, 0, 0},
-    {4, 0, 0, 0},                          // houses ^^^^
-    {1, 0, 0, 0},                          // bandstand
-    {1, 0, 0, 0},                          // booth
-    {4, 0, GROUP_BUILDING_SENET_HOUSE},    // senet
+    {0, 0},
+    {0, 0},
+    {0, 0},
+    {0, 0},
+    {0, 0},
+    {1, 0}, // road
+    {1, 0}, // wall (unused)
+    {0, 0},
+    {1, 0},                            // irrigation ditch
+    {0, 0},                            // clear land
+    {1, 0}, // houses vacant lot
+    {1, 0},
+    {1, 0},
+    {1, 0},
+    {1, 0},
+    {1, 0},
+    {1, 0},
+    {1, 0},
+    {1, 0},
+    {1, 0},
+    {2, 0},
+    {2, 0},
+    {2, 0},
+    {2, 0},
+    {3, 0},
+    {3, 0},
+    {3, 0},
+    {3, 0},
+    {4, 0},
+    {4, 0},                          // houses ^^^^
+    {1, 0},                          // bandstand
+    {1, 0},                          // booth
+    {4, 0},    // senet
     {2, 0, 0, 0},                          // pavillion
     {3, 0, 0, 0},   // conservatory
     {4, 0, 0, 0},   // dance school
@@ -235,9 +241,7 @@ static building_properties properties[400] = {
     {-1, 1, 0, 0}, // alexandria library
 };
 
-building_properties ROADBLOCK_PROPERTIES = {1, 1, 10000, 0};
-
-const building_properties dummy_property = {0, 0, 0, 0};
+//building_properties ROADBLOCK_PROPERTIES = {1, 1, 10000, 0};
 
 void building_properties_init() {
     properties[BUILDING_BRICKS_WORKSHOP] = {2, 0, 0, 0, 0, IMG_NONE};
@@ -286,13 +290,4 @@ void building_properties_init() {
     properties[BUILDING_DANCE_SCHOOL] = {4, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_FERRY] = {2, 1, 0, 0, 0, IMG_NONE};
     properties[BUILDING_DENTIST] = {1, 0, 0, 0, 0, IMG_NONE};
-}
-
-const building_properties* building_properties_for_type(e_building_type type) {
-    if (type >= BUILD_MAX) {
-        return &dummy_property;
-    }
-
-    auto p = &properties[type];
-    return p;
 }

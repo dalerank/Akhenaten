@@ -405,24 +405,16 @@ static void enable_common_health() {
 }
 
 static void enable_entertainment(int level) {
-    if (level >= 1) {
-        building_menu_toggle_building(BUILDING_BOOTH);
-        building_menu_toggle_building(BUILDING_JUGGLER_SCHOOL);
-    }
+    building_menu_toggle_building((level >= 1) | BUILDING_BOOTH);
+    building_menu_toggle_building((level >= 1) | BUILDING_JUGGLER_SCHOOL);
 
-    if (level >= 2) {
-        building_menu_toggle_building(BUILDING_BANDSTAND);
-        building_menu_toggle_building(BUILDING_CONSERVATORY);
-    }
+    building_menu_toggle_building((level >= 2) | BUILDING_BANDSTAND);
+    building_menu_toggle_building((level >= 2) | BUILDING_CONSERVATORY);
 
-    if (level >= 3) {
-        building_menu_toggle_building(BUILDING_PAVILLION);
-        building_menu_toggle_building(BUILDING_DANCE_SCHOOL);
-    }
+    building_menu_toggle_building((level >= 3) | BUILDING_PAVILLION);
+    building_menu_toggle_building((level >= 3) | BUILDING_DANCE_SCHOOL);
 
-    if (level >= 4) {
-        building_menu_toggle_building(BUILDING_SENET_HOUSE);
-    }
+    building_menu_toggle_building((level >= 4) | BUILDING_SENET_HOUSE);
 }
 
 struct god_buildings_alias {

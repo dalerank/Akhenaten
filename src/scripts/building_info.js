@@ -639,6 +639,24 @@ building_mine_gold = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
+building_vacant_lot = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:36 },
+    base : { pack:PACK_GENERAL, id:36 },
+  },
+  building_size : 1,
+}
+
+building_senet_house = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:17 },
+    base : { pack:PACK_GENERAL, id:17 },
+  },
+  damage_proof : true,
+  window_info_height_id : 2,
+  building_size : 4,
+}
+
 building_bricks_workshop = {
   animations : {
     preview : { pack:PACK_GENERAL, id:124 },

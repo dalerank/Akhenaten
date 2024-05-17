@@ -86,6 +86,7 @@ var building_shrine_bast = {}
 var building_fishing_wharf = {}
 var building_shipyard = {}
 var building_bricks_workshop = {}
+var building_vacant_lot = {}
 var empire_window = {}
 var empire_images_remap = []
 var imagepaks = []

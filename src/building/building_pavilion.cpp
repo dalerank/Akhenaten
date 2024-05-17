@@ -83,6 +83,8 @@ void building_pavilion::on_create(int orientation) {
 }
 
 void building_pavilion::on_place(int orientation, int variant) {
+    building_impl::on_place(orientation, variant);
+
     data.entertainment.booth_corner_grid_offset = tile().grid_offset();
     data.entertainment.orientation = orientation;
 

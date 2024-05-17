@@ -3,20 +3,20 @@
 #include <cstdint>
 
 struct city_entertainment_t {
-    int32_t theater_shows;
-    int32_t theater_no_shows_weighted;
-    int32_t amphitheater_shows;
-    int32_t amphitheater_no_shows_weighted;
-    int32_t colosseum_shows;
-    int32_t colosseum_no_shows_weighted;
-    int32_t hippodrome_shows;
-    int32_t hippodrome_no_shows_weighted;
+    int32_t booth_shows;
+    int32_t booth_no_shows_weighted;
+    int32_t bandstand_shows;
+    int32_t bandstand_no_shows_weighted;
+    int32_t pavilion_shows;
+    int32_t pavilion_no_shows_weighted;
+    int32_t senet_house_plays;
+    int32_t senet_house_no_shows_weighted;
     int32_t venue_needing_shows;
-    int32_t hippodrome_has_race;
-    int32_t hippodrome_message_shown;
-    int32_t colosseum_message_shown;
+    int32_t senet_house_has_plays;
+    int32_t senet_house_message_shown;
+    int32_t pavilion_message_shown;
 
-    void calculate_shows(void);
-    int show_message_colosseum(void);
-    int show_message_hippodrome(void);
+    void calculate_shows();
+    int show_message_pavilion();
+    int show_message_senet_house();
 };

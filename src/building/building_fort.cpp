@@ -57,6 +57,8 @@ void draw_partially_blocked(painter &ctx, int fully_blocked, const std::vector<b
 }
 
 void building_fort::on_place(int orientation, int variant) {
+    building_impl::on_place(orientation, variant);
+
     base.prev_part_building_id = 0;
     int image_id = params().anim["base"].first_img();
     map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);

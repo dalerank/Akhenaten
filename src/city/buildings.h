@@ -26,9 +26,9 @@ void city_buildings_remove_distribution_center(building* center);
 int city_buildings_get_trade_center();
 void city_buildings_set_trade_center(int building_id);
 
-bool city_buildings_has_hippodrome();
-void city_buildings_add_hippodrome();
-void city_buildings_remove_hippodrome();
+bool city_buildings_has_senet_house();
+void city_buildings_add_senet_house();
+void city_buildings_remove_senet_house();
 
 int city_buildings_triumphal_arch_available();
 void city_buildings_earn_triumphal_arch();

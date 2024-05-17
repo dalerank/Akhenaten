@@ -104,13 +104,6 @@ static void check_dancers_access(int type) {
     }
 }
 
-static void check_charioteer_access(int type) {
-    if (!g_has_warning && type == BUILDING_SENET_HOUSE) {
-        if (building_count_active(BUILDING_SENET_MASTER) <= 0)
-            building_construction_warning_show(WARNING_BUILD_SENET_MAKER);
-    }
-}
-
 static void check_copper_access(int type) {
     if (type == BUILDING_WEAPONSMITH && building_count_industry_active(RESOURCE_COPPER) <= 0) {
         if (city_resource_count(RESOURCE_WEAPONS) <= 0 && city_resource_count(RESOURCE_COPPER) <= 0) {
@@ -177,7 +170,6 @@ void building_construction_warning_generic_checks(building *b, tile2i tile, int 
     check_juggler_access(type);
     check_musician_access(type);
     check_dancers_access(type);
-    check_charioteer_access(type);
 
     check_barracks(type);
     check_weapons_access(type);

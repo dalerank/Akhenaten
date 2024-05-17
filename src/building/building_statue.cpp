@@ -55,6 +55,8 @@ void building_statue::on_create(int o) {
 }
 
 void building_statue::on_place(int orientation, int variant) {
+    building_impl::on_place(orientation, variant);
+
     int orientation_rel = city_view_relative_orientation(orientation);
     int image_id = get_image(type(), orientation_rel, variant);
     map_building_tiles_add(id(), tile(), size(), image_id, TERRAIN_BUILDING);

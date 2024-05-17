@@ -266,13 +266,12 @@ bool figure_fireman::fight_fire() {
 }
 
 void prefect_coverage(building* b, figure *f, int &min_happiness_seen) {
-    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_ROOM)
+    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_ROOM) {
         b = b->main();
+    }
 
     b->fire_risk = 0;
-    if (b->sentiment.house_happiness < min_happiness_seen) {
-        min_happiness_seen = b->sentiment.house_happiness;
-    }
+    min_happiness_seen = std::max<short>(b->sentiment.house_happiness, min_happiness_seen);
 }
 
 int figure_fireman::provide_service() {

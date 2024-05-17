@@ -178,10 +178,6 @@ void building_maintenance_check_fire_collapse(void) {
             return;
         }
 
-        if (b.type == BUILDING_SENET_HOUSE && b.prev_part_building_id) {
-            return;
-        }
-
         const model_building *model = model_get_building(b.type);
 
         /////// COLLAPSE
@@ -190,7 +186,10 @@ void building_maintenance_check_fire_collapse(void) {
             damage_risk_increase += 5;
         }
 
-        b.damage_risk += damage_risk_increase;
+        if (!b.damage_proof) {
+            b.damage_risk += damage_risk_increase;
+        }
+
         if (b.damage_risk > 1000) {
             collapse_building(&b);
             recalculate_terrain = 1;

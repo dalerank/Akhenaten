@@ -157,6 +157,7 @@ public:
     short fire_duration;
     unsigned char health_proof;
     unsigned char fire_proof; // cannot catch fire or collapse
+    unsigned char damage_proof;
     unsigned char map_random_7bit;
     unsigned char house_tax_coverage;
     unsigned short tax_collector_id;
@@ -391,7 +392,6 @@ public:
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
-    void spawn_figure_senet();
     void set_water_supply_graphic();
     void spawn_figure_library();
     void spawn_figure_mortuary();
@@ -425,6 +425,7 @@ public:
     struct static_params {
         pcstr name;
         bool fire_proof;
+        bool damage_proof;
         bstring64 meta_id;
         building::metainfo meta;
         e_resource output_resource;

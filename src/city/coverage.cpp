@@ -16,8 +16,8 @@
 struct coverage_data_t {
     int booth;
     int bandstand;
-    int colosseum;
-    int hippodrome;
+    int pavilion;
+    int senet_house;
     int physician;
     int mortuary;
     int school;
@@ -34,20 +34,20 @@ int city_culture_coverage_booth(void) {
     return g_coverage.booth;
 }
 
-int city_culture_coverage_bandstand(void) {
+int city_culture_coverage_bandstand() {
     return g_coverage.bandstand;
 }
 
-int city_culture_coverage_colosseum(void) {
-    return g_coverage.colosseum;
+int city_culture_coverage_colosseum() {
+    return g_coverage.pavilion;
 }
 
-int city_culture_coverage_hippodrome(void) {
-    return g_coverage.hippodrome;
+int city_culture_coverage_hippodrome() {
+    return g_coverage.senet_house;
 }
 
-int city_culture_coverage_average_entertainment(void) {
-    return (g_coverage.hippodrome + g_coverage.colosseum + g_coverage.bandstand + g_coverage.booth) / 4;
+int city_culture_coverage_average_entertainment() {
+    return (g_coverage.senet_house + g_coverage.pavilion + g_coverage.bandstand + g_coverage.booth) / 4;
 }
 
 int city_culture_coverage_religion(e_god god) {
@@ -113,13 +113,8 @@ void city_culture_update_coverage() {
     // entertainment
     coverage.booth = top(calc_percentage(400 * building_count_active(BUILDING_BOOTH), population));
     coverage.bandstand = top(calc_percentage(700 * building_count_active(BUILDING_BANDSTAND), population));
-    coverage.colosseum = top(calc_percentage(1200 * building_count_active(BUILDING_PAVILLION), population));
-
-    if (building_count_active(BUILDING_SENET_HOUSE) <= 0) {
-        coverage.hippodrome = 0;
-    } else {
-        coverage.hippodrome = 100;
-    }
+    coverage.pavilion = top(calc_percentage(1200 * building_count_active(BUILDING_PAVILLION), population));
+    coverage.senet_house = building_count_active(BUILDING_SENET_HOUSE) <= 0 ? 0 : 100;
 
     // religion
     //    int oracles = building_count_total(BUILDING_ORACLE);
@@ -185,12 +180,11 @@ void city_culture_calculate(void) {
 void city_coverage_save_state(buffer* buf) {
     auto& coverage = g_coverage;
 
-    // Yes, hospital is saved twice
     buf->write_i32(coverage.booth);
     buf->write_i32(coverage.bandstand);
-    buf->write_i32(coverage.colosseum);
+    buf->write_i32(coverage.pavilion);
     buf->write_i32(coverage.physician);
-    buf->write_i32(coverage.hippodrome);
+    buf->write_i32(coverage.senet_house);
 
     for (int i = GOD_OSIRIS; i <= GOD_BAST; i++) {
         buf->write_i32(coverage.religion[i]);
@@ -209,9 +203,9 @@ void city_coverage_load_state(buffer* buf) {
     // Yes, hospital is saved twice
     coverage.booth = buf->read_i32();
     coverage.bandstand = buf->read_i32();
-    coverage.colosseum = buf->read_i32();
+    coverage.pavilion = buf->read_i32();
     coverage.physician = buf->read_i32();
-    coverage.hippodrome = buf->read_i32();
+    coverage.senet_house = buf->read_i32();
 
     for (int i = GOD_OSIRIS; i <= GOD_BAST; i++) {
         coverage.religion[i] = buf->read_i32();

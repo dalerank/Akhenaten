@@ -35,6 +35,8 @@ void building_fishing_wharf::on_create(int orientation) {
 }
 
 void building_fishing_wharf::on_place(int orientation, int variant) {
+    building_impl::on_place(orientation, variant);
+
     int orientation_rel = city_view_relative_orientation(orientation);
     int img_id = fishing_wharf_m.anim["base"].first_img();
     map_water_add_building(id(), tile(), fishing_wharf_m.building_size, img_id + orientation_rel);

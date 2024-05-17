@@ -116,16 +116,16 @@ void city_buildings_set_trade_center(int building_id) {
     city_data.buildings.trade_center_building_id = building_id;
 }
 
-bool city_buildings_has_hippodrome() {
-    return city_data.buildings.hippodrome_placed;
+bool city_buildings_has_senet_house() {
+    return city_data.buildings.senet_house_placed;
 }
 
-void city_buildings_add_hippodrome() {
-    city_data.buildings.hippodrome_placed = 1;
+void city_buildings_add_senet_house() {
+    city_data.buildings.senet_house_placed = 1;
 }
 
-void city_buildings_remove_hippodrome(void) {
-    city_data.buildings.hippodrome_placed = 0;
+void city_buildings_remove_senet_house() {
+    city_data.buildings.senet_house_placed = 0;
 }
 
 int city_buildings_triumphal_arch_available(void) {

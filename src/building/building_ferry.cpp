@@ -23,6 +23,8 @@ void building_ferry::on_create(int orientation) {
 }
 
 void building_ferry::on_place(int orientation, int variant) {
+    building_impl::on_place(orientation, variant);
+
     int img_id = ferry_m.anim["base"].first_img() + orientation;
     map_water_add_building(id(), tile(), ferry_m.building_size, img_id);
     map_building_tiles_add(id(), tile(), ferry_m.building_size, img_id, TERRAIN_BUILDING|TERRAIN_ROAD|TERRAIN_FERRY_ROUTE);

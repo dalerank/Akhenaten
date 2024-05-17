@@ -29,7 +29,7 @@ struct city_t {
         int32_t mansion_building_id;
         tile2i mansion;
 
-        int32_t hippodrome_placed;
+        int32_t senet_house_placed;
 
         struct {
             bool placed;

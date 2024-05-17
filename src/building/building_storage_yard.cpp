@@ -800,6 +800,8 @@ building* building_storage_yard::add_storageyard_space(int x, int y, building* p
 }
 
 void building_storage_yard::on_place(int orientation, int variant) {
+    building_impl::on_place(orientation, variant);
+
     tile2i offset[9] = {{0, 0}, {0, 1}, {1, 0}, {1, 1}, {0, 2}, {2, 0}, {1, 2}, {2, 1}, {2, 2}};
     int global_rotation = building_rotation_global_rotation();
     int corner = building_rotation_get_corner(2 * global_rotation);

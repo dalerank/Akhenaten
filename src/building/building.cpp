@@ -917,11 +917,10 @@ int building_mothball_set(building* b, int mothball) {
 }
 
 void building_impl::on_place(int orientation, int variant) {
-    auto *p = building_properties_for_type(type());
-    int img_id = p->img_id();
-    if (!img_id) {
-        img_id = params().anim["base"].first_img();
-    }
+    auto &p = params();
+    int img_id = p.anim["base"].first_img();
+    base.fire_proof = p.fire_proof;
+    base.damage_proof = p.damage_proof;
     map_building_tiles_add(id(), tile(), base.size, img_id, TERRAIN_BUILDING);
 }
 
@@ -1037,6 +1036,7 @@ bool resource_required_by_workshop(building* b, e_resource resource) {
 void building_impl::static_params::load(archive arch) {
     labor_category = arch.r_type<e_labor_category>("labor_category");
     fire_proof = arch.r_bool("fire_proof");
+    damage_proof = arch.r_bool("damage_proof");
     output_resource = arch.r_type<e_resource>("output_resource");
     meta_id = arch.r_string("meta_id");
     meta.help_id = arch.r_int("info_help_id");

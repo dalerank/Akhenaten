@@ -118,6 +118,8 @@ void building_shipyard::on_create(int orientation) {
 }
 
 void building_shipyard::on_place(int orientation, int variant) {
+    building_impl::on_place(orientation, variant);
+
     int orientation_rel = city_view_relative_orientation(orientation);
     map_water_add_building(id(), tile(), building_shipyard_m.building_size, building_shipyard_m.anim["base"].first_img() + orientation_rel);
 }

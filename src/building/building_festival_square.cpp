@@ -23,6 +23,8 @@ void config_load_building_festival_square() {
 }
 
 void building_festival_square::on_place(int orientation, int variant) {
+    building_impl::on_place(orientation, variant);
+
     data.entertainment.booth_corner_grid_offset = tile().grid_offset();
     data.entertainment.orientation = orientation;
 

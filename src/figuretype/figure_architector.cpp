@@ -86,12 +86,11 @@ figure_sound_t figure_architector::get_sound_reaction(pcstr key) const {
 }
 
 static void engineer_coverage(building* b, figure *f, int &max_damage_seen) {
-    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_ROOM)
+    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_ROOM) {
         b = b->main();
+    }
 
-    if (b->damage_risk > max_damage_seen)
-        max_damage_seen = b->damage_risk;
-
+    max_damage_seen = std::max<short>(b->damage_risk, max_damage_seen);
     b->damage_risk = 0;
 } 
 

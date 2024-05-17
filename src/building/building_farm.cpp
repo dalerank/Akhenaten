@@ -334,7 +334,9 @@ void building_farm::on_create(int orientation) {
     base.fire_proof = 1;
 }
 
-void building_farm::on_place(int orientration, int variant) {
+void building_farm::on_place(int orientation, int variant) {
+    building_impl::on_place(orientation, variant);
+
     switch (type()) {
     case BUILDING_BARLEY_FARM:
         map_building_tiles_add_farm(id(), tile(), 0, 0);
