@@ -190,9 +190,12 @@ building_courthouse = {
 
 building_guild_stonemasons = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_GUILD_STONEMASONS }
+    preview : { pack:PACK_GENERAL, id:88 },
+    base : { pack:PACK_GENERAL, id:88 },
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:88, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+  building_size : 2,
 }
 
 building_bricklayers_guild = {
@@ -371,6 +374,7 @@ building_water_supply = {
     fancy_work : { pos : [0, 0], pack:PACK_GENERAL, id:69, offset:2, max_frames:1 }
   },
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
+  fire_proof : true,
   building_size : 2,
 }
 
