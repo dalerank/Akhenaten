@@ -182,7 +182,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
         building_draw_normal_anim(ctx, point, b, tile, image_id, color_mask);
         break;
 
-    case BUILDING_LIMESTONE_QUARRY:
     case BUILDING_GRANITE_QUARRY:
         building_draw_normal_anim(ctx, point + vec2i{54, 15}, b, tile, image_id_from_group(PACK_SPR_AMBIENT, 49) - 1, color_mask);
         break; 

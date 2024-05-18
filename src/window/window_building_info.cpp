@@ -439,7 +439,6 @@ static void draw_refresh_background() {
             window_building_draw_house(&context);
         } else {
             switch (building_get(context.building_id)->type) {
-            case BUILDING_LIMESTONE_QUARRY: building_limestone_quarry_draw_info(context); break;
             case BUILDING_GRANITE_QUARRY: building_granite_quarry_draw_info(context); break;;
             case BUILDING_WEAVER_WORKSHOP: building_flax_workshop_draw_info(context); break;
             case BUILDING_JEWELS_WORKSHOP: building_luxury_workshop_draw_info(context); break;

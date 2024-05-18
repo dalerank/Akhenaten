@@ -798,6 +798,19 @@ building_stone_quarry = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
+building_limestone_quarry = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:170 },
+    base : { pack:PACK_GENERAL, id:170 },
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
+  },
+  output_resource : RESOURCE_LIMESTONE,
+  building_size : 2,
+  info_help_id:93,
+  info_text_id:162,
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
+
 building_mine_gold = {
   animations : {
     preview : { pack:PACK_GENERAL, id:185 },

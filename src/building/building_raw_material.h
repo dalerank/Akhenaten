@@ -4,7 +4,6 @@
 #include "graphics/animation.h"
 
 void building_marble_quarry_draw_info(object_info& c);
-void building_limestone_quarry_draw_info(object_info& c);
 void building_granite_quarry_draw_info(object_info &c);
 void building_raw_material_draw_info(object_info &c, const char *type, e_resource resource);
 

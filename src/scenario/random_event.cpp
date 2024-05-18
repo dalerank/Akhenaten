@@ -18,7 +18,7 @@ enum E_EVENT_DK {
     EVENT_LAND_TRADE_DISRUPTED = 3,
     EVENT_LAND_SEA_DISRUPTED = 4,
     EVENT_CONTAMINATED_WATER = 5,
-    EVENT_IRON_MINE_COLLAPSED = 6,
+    EVENT_COPPER_MINE_COLLAPSED = 6,
     EVENT_CLAY_PIT_FLOODED = 7
 };
 
@@ -82,7 +82,7 @@ static void contaminate_water(void) {
     }
 }
 
-static void destroy_iron_mine(void) {
+static void destroy_copper_mine() {
     if (g_scenario_data.random_events.iron_mine_collapse) {
         if (config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
             if (building_id_first(BUILDING_LIMESTONE_QUARRY) < MAX_BUILDINGS) {
@@ -130,8 +130,8 @@ void scenario_random_event_process(void) {
     case EVENT_CONTAMINATED_WATER:
         contaminate_water();
         break;
-    case EVENT_IRON_MINE_COLLAPSED:
-        destroy_iron_mine();
+    case EVENT_COPPER_MINE_COLLAPSED:
+        destroy_copper_mine();
         break;
     case EVENT_CLAY_PIT_FLOODED:
         destroy_clay_pit();
