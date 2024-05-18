@@ -452,6 +452,18 @@ building_papyrus_maker = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
+building_weaver = {
+  animations : {
+    preview : { pos: [0, 0], pack:PACK_GENERAL, id:122 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:122 },
+    work : { pos : [7, -10], pack:PACK_GENERAL, id:122, offset:1, max_frames:9 },
+  },
+  output_resource : RESOURCE_PAPYRUS,
+  building_size : 2,
+  window_info_height_id : 1,
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
+
 building_reed_gatherer = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:24 },

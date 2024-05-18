@@ -14,8 +14,8 @@
 
 buildings::model_t<building_wood_cutter> bwood_cutter_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bwood_cutter);
-void config_load_building_bwood_cutter() {
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_wood_cutter);
+void config_load_building_wood_cutter() {
     bwood_cutter_m.load();
 }
 

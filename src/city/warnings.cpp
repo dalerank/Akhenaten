@@ -89,20 +89,6 @@ static void check_musician_access(int type) {
     }
 }
 
-static void check_olives_access(int type) {
-    if (type == BUILDING_WEAVER_WORKSHOP && building_count_industry_active(RESOURCE_STRAW) <= 0) {
-        if (city_resource_count(RESOURCE_MEAT) <= 0 && city_resource_count(RESOURCE_STRAW) <= 0) {
-            building_construction_warning_show(WARNING_OLIVES_NEEDED);
-            if (empire_can_produce_resource(RESOURCE_STRAW, true))
-                building_construction_warning_show(WARNING_BUILD_OLIVE_FARM);
-            else if (!empire_can_import_resource(RESOURCE_STRAW, true))
-                building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT);
-            else if (city_resource_trade_status(RESOURCE_STRAW) != TRADE_STATUS_IMPORT)
-                building_construction_warning_show(WARNING_TRADE_IMPORT_RESOURCE);
-        }
-    }
-}
-
 static void check_timber_access(int type) {
     if (type == BUILDING_JEWELS_WORKSHOP && building_count_industry_active(RESOURCE_GEMS) <= 0) {
         if (city_resource_count(RESOURCE_LUXURY_GOODS) <= 0 && city_resource_count(RESOURCE_GEMS) <= 0) {
@@ -146,7 +132,6 @@ void building_construction_warning_generic_checks(building *b, tile2i tile, int 
     check_wall(type, tile.x(), tile.y(), size);
     check_water(type, tile.x(), tile.y());
 
-    check_olives_access(type);
     check_timber_access(type);
     check_clay_access(type);
 

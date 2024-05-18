@@ -17,12 +17,6 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 
-void building_flax_workshop_draw_info(object_info& c) {
-    e_resource input_resource = RESOURCE_FLAX;
-    e_resource output_resource = RESOURCE_LINEN;
-    building_workshop_draw_background(c, 97, "flax_workshop", 123, output_resource, input_resource);
-}
-
 void building_luxury_workshop_draw_info(object_info& c) {
     e_resource input_resource = RESOURCE_GEMS;
     e_resource output_resource = RESOURCE_LUXURY_GOODS;
@@ -34,11 +28,6 @@ void building_workshop_draw_raw_material_storage(painter &ctx, const building* b
     int amount = ceil((float)b->stored_amount() / 100.0) - 1;
     int amount2 = 0;
     switch (b->type) {
-    case BUILDING_WEAVER_WORKSHOP:
-        //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_FLAX_2) + amount, x + 65, y + 3,
-        //            color_mask);
-        break;
-
     case BUILDING_JEWELS_WORKSHOP:
         //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GEMS_2) + amount, x + 65, y + 3,
         //            color_mask);

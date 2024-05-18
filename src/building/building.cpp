@@ -140,11 +140,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
 
     // unique data
     switch (type) {
-    case BUILDING_WEAVER_WORKSHOP:
-        data.industry.first_material_id = RESOURCE_FLAX;
-        output_resource_first_id = RESOURCE_LINEN;
-        break;
-
     case BUILDING_JEWELS_WORKSHOP:
         data.industry.first_material_id = RESOURCE_GEMS;
         output_resource_first_id = RESOURCE_LUXURY_GOODS;

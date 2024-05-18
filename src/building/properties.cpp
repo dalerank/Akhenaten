@@ -118,11 +118,11 @@ static building_properties properties[400] = {
     {3, 0},                            // farms ^^^
     {2, 0},     // stone
     {2, 0}, // limestone
-    {2, 0, GROUP_BUILDING_TIMBER_YARD},      // wood
-    {2, 0, 0, 0},         // clay
-    {2, 0, 0, 0},    // beer
-    {2, 0, GROUP_BUILDING_LINEN_WORKSHOP},   // linen
-    {2, 0, 0, 0}, // weapons
+    {2, 0},      // wood
+    {2, 0},         // clay
+    {2, 0},    // beer
+    {2, 0},   // linen
+    {2, 0}, // weapons
     {2, 0, GROUP_BUILDING_JEWELS_WORKSHOP},  // jewels
     {2, 0, 0, 0}, // pottery
 

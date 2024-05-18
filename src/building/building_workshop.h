@@ -4,7 +4,6 @@
 #include "game/resource.h"
 #include "building/building.h"
 
-void building_flax_workshop_draw_info(object_info& c);
 void building_luxury_workshop_draw_info(object_info& c);
 void building_workshop_draw_background(object_info &c, int help_id, pcstr type, int group_id, e_resource resource, e_resource input_resource);
 void building_workshop_draw_background(object_info &c, int help_id, pcstr type, int group_id, e_resource resource, e_resource input_resource_a, e_resource input_resource_b);
