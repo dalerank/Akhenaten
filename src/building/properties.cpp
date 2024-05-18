@@ -43,11 +43,11 @@ static building_properties properties[400] = {
     {1, 0},                          // bandstand
     {1, 0},                          // booth
     {4, 0},    // senet
-    {2, 0, 0, 0},                          // pavillion
-    {3, 0, 0, 0},   // conservatory
-    {4, 0, 0, 0},   // dance school
-    {2, 0, 0, 0}, // juggler school
-    {3, 0, 0, 0},                          // unused (senet master)
+    {2, 0},                          // pavillion
+    {3, 0},   // conservatory
+    {4, 0},   // dance school
+    {2, 0}, // juggler school
+    {3, 0},                          // unused (senet master)
     {1, 1, GROUP_TERRAIN_PLAZA},           // plaza
     {1, 1, GROUP_TERRAIN_GARDEN},          // gardens
     {3, 1, 0, 0},                          // charioteers
@@ -241,7 +241,3 @@ static building_properties properties[400] = {
 
 //building_properties ROADBLOCK_PROPERTIES = {1, 1, 10000, 0};
 
-void building_properties_init() {
-    properties[BUILDING_FERRY] = {2, 1, 0, 0, 0, IMG_NONE};
-    properties[BUILDING_DENTIST] = {1, 0, 0, 0, 0, IMG_NONE};
-}

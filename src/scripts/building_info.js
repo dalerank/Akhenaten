@@ -616,6 +616,7 @@ building_ferry = {
     work : { pack:PACK_TERRAIN, id:23 }
   },
   building_size : 2,
+  fire_proof : true,
   planer_relative_orientation: 1,
   labor_category : LABOR_CATEGORY_GOVERNMENT,
 }

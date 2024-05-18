@@ -1,6 +1,6 @@
 #pragma once
 
-enum {
+enum e_figure_category {
     FIGURE_CATEGORY_INACTIVE = 0,
     FIGURE_CATEGORY_CITIZEN = 1,
     FIGURE_CATEGORY_ARMED = 2,
