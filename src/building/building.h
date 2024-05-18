@@ -629,9 +629,9 @@ bool building_is_infrastructure(e_building_type type);
 bool building_is_religion(e_building_type type);
 bool building_is_entertainment(e_building_type type);
 bool building_is_education(e_building_type type);
-bool building_is_military(int type);
+bool building_is_military(e_building_type type);
 
-bool building_is_draggable(int type);
+bool building_is_draggable(e_building_type type);
 
 int building_get_highest_id();
 void building_update_highest_id();

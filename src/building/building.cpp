@@ -745,7 +745,7 @@ bool building_is_education(e_building_type type) {
     return building_type_any_of(type, BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ACADEMY);
 }
 
-bool building_is_military(int type) {
+bool building_is_military(e_building_type type) {
     if (building_is_fort(type)) {
         return true;
     }
@@ -757,7 +757,7 @@ bool building_is_military(int type) {
     return false;
 }
 
-bool building_is_draggable(int type) {
+bool building_is_draggable(e_building_type type) {
     switch (type) {
     case BUILDING_CLEAR_LAND:
     case BUILDING_ROAD:

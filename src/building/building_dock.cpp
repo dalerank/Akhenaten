@@ -59,7 +59,7 @@ void building_dock::update_count() const {
 
 void building_dock::update_map_orientation(int orientation) {
     int image_offset = city_view_relative_orientation(data.dock.orientation);
-    int image_id = image_group(IMG_BUILDING_DOCK) + image_offset;
+    int image_id = dock_m.anim["base"].first_img() + image_offset;
     map_water_add_building(id(), tile(), 3, image_id);
 }
 
@@ -245,11 +245,12 @@ bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     if (num_dockers > 0) {
         int image_dock = map_image_at(t);
         int image_dockers = image_id_from_group(GROUP_BUILDING_DOCK_DOCKERS);
-        if (image_dock == image_group(IMG_BUILDING_DOCK))
+        int image_dock_base = dock_m.anim["base"].first_img();
+        if (image_dock == image_dock_base)
             image_dockers += 0;
-        else if (image_dock == image_group(IMG_BUILDING_DOCK) + 1)
+        else if (image_dock == image_dock_base + 1)
             image_dockers += 3;
-        else if (image_dock == image_group(IMG_BUILDING_DOCK) + 2)
+        else if (image_dock == image_dock_base + 2)
             image_dockers += 6;
         else
             image_dockers += 9;
