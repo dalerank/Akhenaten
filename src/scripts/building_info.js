@@ -743,10 +743,13 @@ building_physician = {
 
 building_firehouse = {
   animations : {
-    work : { pos : [0, 0], anim_id: IMG_BUILDING_FIREHOUSE }
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:78 }
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:78 }
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:78, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
   window_info_height_id : 1,
+  building_size : 1,
 }
 
 building_architect_post = {
