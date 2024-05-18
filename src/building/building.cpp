@@ -324,6 +324,7 @@ building_fort *building::dcast_fort() { return dcast()->dcast_fort(); }
 building_fort_ground *building::dcast_fort_ground() { return dcast()->dcast_fort_ground(); }
 building_fishing_wharf *building::dcast_fishing_wharf() { return dcast()->dcast_fishing_wharf(); }
 building_shipyard *building::dcast_shipyard() { return dcast()->dcast_shipyard(); }
+building_plaza *building::dcast_plaza() { return dcast()->dcast_plaza(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
@@ -763,16 +764,12 @@ bool building_is_draggable(e_building_type type) {
     case BUILDING_ROAD:
     case BUILDING_IRRIGATION_DITCH:
     case BUILDING_MUD_WALL:
-    case BUILDING_PLAZA:
     case BUILDING_GARDENS:
     case BUILDING_HOUSE_VACANT_LOT:
         return true;
 
-    case BUILDING_WATER_LIFT:
-        return false;
-
     default:
-        return false;
+        return building_impl::params(type).is_draggable;
     }
 }
 
@@ -1037,6 +1034,7 @@ void building_impl::static_params::load(archive arch) {
     building_size = arch.r_int("building_size");
     unique_building = arch.r_bool("unique_building");
     planer_relative_orientation = arch.r_int("planer_relative_orientation");
+    is_draggable = arch.r_bool("is_draggable");
     anim.load(arch);
 }
 

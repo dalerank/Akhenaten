@@ -335,6 +335,7 @@ void game_undo_perform() {
         data.newhouses_num--;
     }
 }
+
 void game_undo_reduce_time_available(void) {
     auto &data = g_undo_data;
     if (!game_can_undo())
@@ -356,6 +357,7 @@ void game_undo_reduce_time_available(void) {
     case BUILDING_PLAZA:
     case BUILDING_GARDENS:
         return;
+
     default:
         break;
     }

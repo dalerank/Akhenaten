@@ -656,6 +656,28 @@ building_dentist = {
   window_info_height_id : 1,
 }
 
+building_plaza = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:168 },
+    base : { pack:PACK_GENERAL, id:168 },
+  },
+  is_draggable : true,
+  fire_proof : true,
+  damage_proof : true,
+  building_size : 1,
+}
+
+building_garden = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:59 },
+    base : { pack:PACK_GENERAL, id:59 },
+  },
+  is_draggable : true,
+  fire_proof : true,
+  damage_proof : true,
+  building_size : 1,
+}
+
 building_village_palace = {
   animations : {
     work : { pos : [-1, -1], anim_id: IMG_VILLAGE_PALACE }

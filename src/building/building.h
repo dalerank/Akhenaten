@@ -52,6 +52,7 @@ class building_fort_ground;
 class building_fort;
 class building_fishing_wharf;
 class building_shipyard;
+class building_plaza;
 struct object_info;
 struct painter;
 struct mouse;
@@ -389,6 +390,7 @@ public:
     building_fort_ground *dcast_fort_ground();
     building_fishing_wharf *dcast_fishing_wharf();
     building_shipyard *dcast_shipyard();
+    building_plaza *dcast_plaza();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -426,6 +428,7 @@ public:
         pcstr name;
         bool fire_proof;
         bool damage_proof;
+        bool is_draggable;
         bstring64 meta_id;
         building::metainfo meta;
         e_resource output_resource;
@@ -500,6 +503,7 @@ public:
     virtual building_fort_ground *dcast_fort_ground() { return nullptr; }
     virtual building_fishing_wharf *dcast_fishing_wharf() { return nullptr; }
     virtual building_shipyard *dcast_shipyard() { return nullptr; }
+    virtual building_plaza *dcast_plaza() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

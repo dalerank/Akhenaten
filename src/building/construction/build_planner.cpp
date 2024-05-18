@@ -12,6 +12,7 @@
 #include "building/model.h"
 #include "building/monuments.h"
 #include "building/monument_mastaba.h"
+#include "building/building_plaza.h"
 #include "building/rotation.h"
 #include "building/storage.h"
 #include "building/building_statue.h"
@@ -380,32 +381,6 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
         map_routing_update_land();
         window_invalidate();
     }
-    return items_placed;
-}
-
-static int place_plaza(tile2i start, tile2i end) {
-    grid_area area = map_grid_get_area(start, end);
-    game_undo_restore_map(1);
-
-    int items_placed = 0;
-    for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
-        for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
-            int grid_offset = MAP_OFFSET(x, y);
-            if (map_terrain_is(grid_offset, TERRAIN_ROAD)
-                && !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_CANAL)
-                && map_tiles_is_paved_road(grid_offset)) {
-                if (!map_property_is_plaza_or_earthquake(grid_offset)) {
-                    items_placed++;
-                }
-
-                map_image_set(grid_offset, 0);
-                map_property_mark_plaza_or_earthquake(grid_offset);
-                map_property_set_multi_tile_size(grid_offset, 1);
-                map_property_mark_draw_tile(grid_offset);
-            }
-        }
-    }
-    map_tiles_update_all_plazas();
     return items_placed;
 }
 
@@ -1471,7 +1446,7 @@ void BuildPlanner::construction_update(tile2i tile) {
         items_placed = building_construction_place_road(true, start.x(), start.y(), end.x(), end.y());
         break;
     case BUILDING_PLAZA:
-        items_placed = place_plaza(start, end);
+        items_placed = building_plaza::place(start, end);
         break;
     case BUILDING_GARDENS:
         items_placed = place_garden(start, end);
@@ -1690,7 +1665,7 @@ bool BuildPlanner::place() {
         break;
 
     case BUILDING_PLAZA:
-        placement_cost *= place_plaza(start, end);
+        placement_cost *= building_plaza::place(start, end);
         break;
 
     case BUILDING_GARDENS:

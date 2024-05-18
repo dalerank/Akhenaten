@@ -72,6 +72,7 @@ static void update_buildings(void) {
         }
     }
 }
+
 static void update_terrain(void) {
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {

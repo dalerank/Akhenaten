@@ -48,15 +48,15 @@ static building_properties properties[400] = {
     {4, 0},   // dance school
     {2, 0}, // juggler school
     {3, 0},                          // unused (senet master)
-    {1, 1, GROUP_TERRAIN_PLAZA},           // plaza
+    {1, 1},           // plaza
     {1, 1, GROUP_TERRAIN_GARDEN},          // gardens
-    {3, 1, 0, 0},                          // charioteers
-    {1, 1, 0, 0},
-    {2, 1, 0, 0},
-    {3, 1, 0, 0},                      // statues ^^^
-    {3, 1, 0, 0},       // archers
-    {3, 1, 0, 0},       // infantry
-    {1, 0, 0, 0}, // apothecary
+    {3, 1},                          // charioteers
+    {1, 1},
+    {2, 1},
+    {3, 1},                      // statues ^^^
+    {3, 1},       // archers
+    {3, 1},       // infantry
+    {1, 0}, // apothecary
     {2, 0, GROUP_BUILDING_MORTUARY},   // mortuary
     {2, 0, 0, 0},
     {1, 0, 0, 0},        // dentist
