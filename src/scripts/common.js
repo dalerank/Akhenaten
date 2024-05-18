@@ -24,6 +24,7 @@ var top_menu_bar = {}
 var building_water_lift = {}
 var building_weaponsmith = {}
 var building_granary = {}
+var building_academy = {}
 var building_firehouse = {}
 var building_police_station = {}
 var building_cattle_ranch = {}

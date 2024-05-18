@@ -5,6 +5,16 @@
 #include "empire/empire_city.h"
 #include "city/resource.h"
 #include "city/warnings.h"
+#include "city/labor.h"
+
+#include "js/js_game.h"
+
+buildings::model_t<building_jewels_workshop> jewels_workshop_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_jewels_workshop);
+void config_load_building_jewels_workshop() {
+    jewels_workshop_m.load();
+}
 
 void building_jewels_workshop::on_create(int orientation) {
     data.industry.first_material_id = RESOURCE_GEMS;

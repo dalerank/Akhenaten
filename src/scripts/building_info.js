@@ -893,6 +893,17 @@ building_pottery = {
   window_info_height_id : 1,
 }
 
+building_academy = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:44 },
+    base : { pack:PACK_GENERAL, id:4 },
+    work : { pos : [36, -4], pack:PACK_GENERAL, id:4, offset:1, max_frames:18 },
+  },
+  labor_category : LABOR_CATEGORY_EDUCATION,
+  building_size : 2,
+  window_info_height_id : 1,
+}
+
 building_physician = {
   animations : {
     preview : { pack:PACK_GENERAL, id:70 },

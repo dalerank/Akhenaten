@@ -126,8 +126,8 @@ static building_properties properties[400] = {
     {2, 0},  // jewels
     {2, 0}, // pottery
 
-    {2, 0, 0, 0}, // hunters
-    {0, 0, 0, 0},
+    {2, 0}, // hunters
+    {0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},

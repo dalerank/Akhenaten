@@ -10,3 +10,9 @@ public:
     virtual void window_info_background(object_info &c) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 };
+
+class building_village_palace : public building_impl {
+public:
+    building_village_palace(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_VILLAGE_PALACE, building_village_palace)
+};

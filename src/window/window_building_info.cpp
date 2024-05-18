@@ -97,7 +97,6 @@ static int get_height_id() {
         case BUILDING_UNUSED_NATIVE_MEETING_89:
         case BUILDING_UNUSED_NATIVE_CROPS_93:
         case BUILDING_RESERVER_MISSION_POST_80:
-        case BUILDING_ACADEMY:
         case BUILDING_MUD_GATEHOUSE:
         case BUILDING_MUD_TOWER:
         case BUILDING_ROADBLOCK:
@@ -439,7 +438,6 @@ static void draw_refresh_background() {
             switch (building_get(context.building_id)->type) {
             case BUILDING_GRANITE_QUARRY: building_granite_quarry_draw_info(context); break;;
             case BUILDING_SENET_MASTER: building_bullfight_school_draw_info(context); break;
-            case BUILDING_ACADEMY: building_academy_draw_info(context); break;
             case BUILDING_ORACLE: window_building_draw_oracle(&context); break;
             //case BUILDING_WELL: window_building_draw_fountain(&context); break;
             case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: window_building_draw_triumphal_arch(&context); break;

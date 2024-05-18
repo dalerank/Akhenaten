@@ -48,7 +48,3 @@ void building_education_draw_info(object_info& c, const char* type, e_figure_typ
     inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
     window_building_draw_employment(&c, 142);
 }
-
-void building_academy_draw_info(object_info& c) {
-    building_education_draw_info(c, "academy", FIGURE_SCRIBER, RESOURCE_NONE, vec2i{0, 0}, vec2i{0, 0});
-}

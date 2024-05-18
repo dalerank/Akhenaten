@@ -111,8 +111,6 @@ void building_count_update() {
             building_increase_type_count(type, b.num_workers > 0);
             break;
 
-            // education
-        case BUILDING_ACADEMY:
             // health
         case BUILDING_MENU_MONUMENTS:
         case BUILDING_APOTHECARY:

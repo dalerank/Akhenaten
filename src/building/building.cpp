@@ -264,12 +264,6 @@ building_impl *building::dcast() {
     case BUILDING_CITY_PALACE:
         _ptr = new building_palace(*this);
         break;
-
-    case BUILDING_PERSONAL_MANSION:
-    case BUILDING_FAMILY_MANSION:
-    case BUILDING_DYNASTY_MANSION:
-        _ptr = new building_mansion(*this);
-        break;
     }
 
     if (!_ptr) {
