@@ -100,7 +100,6 @@ int building_type_to_channel(building *b) {
     case BUILDING_GRAIN_FARM:
     case BUILDING_LETTUCE_FARM:
     case BUILDING_POMEGRANATES_FARM:
-    case BUILDING_JEWELS_WORKSHOP:
         return 0;
     }
 

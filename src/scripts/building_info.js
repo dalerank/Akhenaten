@@ -464,6 +464,18 @@ building_weaver = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
+building_jewels_worksjop = {
+  animations : {
+    preview : { pos: [0, 0], pack:PACK_GENERAL, id:119 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:119 },
+    work : { pos : [7, -10], pack:PACK_GENERAL, id:119, offset:1, max_frames:9 },
+  },
+  output_resource : RESOURCE_LUXURY_GOODS,
+  building_size : 2,
+  window_info_height_id : 1,
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
+
 building_reed_gatherer = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:24 },

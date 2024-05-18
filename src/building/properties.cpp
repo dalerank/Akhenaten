@@ -123,8 +123,8 @@ static building_properties properties[400] = {
     {2, 0},    // beer
     {2, 0},   // linen
     {2, 0}, // weapons
-    {2, 0, GROUP_BUILDING_JEWELS_WORKSHOP},  // jewels
-    {2, 0, 0, 0}, // pottery
+    {2, 0},  // jewels
+    {2, 0}, // pottery
 
     {2, 0, 0, 0}, // hunters
     {0, 0, 0, 0},
