@@ -13,6 +13,7 @@
 #include "building/monuments.h"
 #include "building/monument_mastaba.h"
 #include "building/building_plaza.h"
+#include "building/building_garden.h"
 #include "building/rotation.h"
 #include "building/storage.h"
 #include "building/building_statue.h"
@@ -384,28 +385,6 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
     return items_placed;
 }
 
-static int place_garden(tile2i start, tile2i end) {
-    game_undo_restore_map(1);
-
-    grid_area area = map_grid_get_area(start, end);
-
-    int items_placed = 0;
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
-        int grid_offset = tile.grid_offset();
-        if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
-            && !map_terrain_exists_tile_in_radius_with_type(tile, 1, 1, TERRAIN_FLOODPLAIN)) {
-            if (formation_herd_breeding_ground_at(tile.x(), tile.y(), 1)) {
-                map_property_clear_constructing_and_deleted();
-                city_warning_show(WARNING_HERD_BREEDING_GROUNDS);
-            } else {
-                items_placed++;
-                map_terrain_add(grid_offset, TERRAIN_GARDEN);
-            }
-        }
-    });
-    map_tiles_update_all_gardens();
-    return items_placed;
-}
 
 bool BuildPlanner::place_building(e_building_type type, tile2i tile, int orientation, int variant) {
     // by default, get size from building's properties
@@ -1449,7 +1428,7 @@ void BuildPlanner::construction_update(tile2i tile) {
         items_placed = building_plaza::place(start, end);
         break;
     case BUILDING_GARDENS:
-        items_placed = place_garden(start, end);
+        items_placed = building_garden::place(start, end);
         break;
     case BUILDING_IRRIGATION_DITCH:
         items_placed = building_construction_place_aqueduct(true, start.x(), start.y(), end.x(), end.y());
@@ -1669,7 +1648,7 @@ bool BuildPlanner::place() {
         break;
 
     case BUILDING_GARDENS:
-        placement_cost *= place_garden(start, end);
+        placement_cost *= building_garden::place(start, end);
         map_routing_update_land();
         break;
 

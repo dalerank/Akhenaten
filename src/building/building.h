@@ -53,6 +53,7 @@ class building_fort;
 class building_fishing_wharf;
 class building_shipyard;
 class building_plaza;
+class building_garden;
 struct object_info;
 struct painter;
 struct mouse;
@@ -391,6 +392,7 @@ public:
     building_fishing_wharf *dcast_fishing_wharf();
     building_shipyard *dcast_shipyard();
     building_plaza *dcast_plaza();
+    building_garden *dcast_garden();
 
     bool spawn_noble(bool spawned);
     void spawn_figure_police();
@@ -504,6 +506,7 @@ public:
     virtual building_fishing_wharf *dcast_fishing_wharf() { return nullptr; }
     virtual building_shipyard *dcast_shipyard() { return nullptr; }
     virtual building_plaza *dcast_plaza() { return nullptr; }
+    virtual building_garden *dcast_garden() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

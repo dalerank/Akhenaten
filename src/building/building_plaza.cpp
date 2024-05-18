@@ -22,7 +22,7 @@
 buildings::model_t<building_plaza> plaza_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_plaza);
-void config_load_buconfig_load_building_plazailding_dock() {
+void config_load_building_plaza() {
     plaza_m.load();
 }
 

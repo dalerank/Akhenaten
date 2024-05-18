@@ -49,7 +49,7 @@ static building_properties properties[400] = {
     {2, 0}, // juggler school
     {3, 0},                          // unused (senet master)
     {1, 1},           // plaza
-    {1, 1, GROUP_TERRAIN_GARDEN},          // gardens
+    {1, 1},          // gardens
     {3, 1},                          // charioteers
     {1, 1},
     {2, 1},
