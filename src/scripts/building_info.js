@@ -185,6 +185,7 @@ building_courthouse = {
     work : { pos : [80, -80], pack:PACK_GENERAL, id:62, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+  building_size : 3,
 }
 
 building_guild_stonemasons = {
@@ -273,14 +274,18 @@ building_temple_seth = {
     work : { pos : [-1, -1], pack:PACK_GENERAL, id:19, offset:1, max_frames:12 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
+  building_size : 3,
   window_info_height_id : 1,
 }
 
 building_temple_bast = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_TEMPLE_BAST }
+    preview : { pack:PACK_GENERAL, id:76 },
+    base : { pack:PACK_GENERAL, id:76 },
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:76, offset:1, max_frames:12 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
+  building_size : 3,
   window_info_height_id : 1,
 }
 
@@ -788,6 +793,7 @@ building_architect_post = {
     work : { pos : [20, -35], pack:PACK_GENERAL, id:81, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+  building_size : 1,
   window_info_height_id : 1,
 }
 

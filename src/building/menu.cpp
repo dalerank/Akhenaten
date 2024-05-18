@@ -393,9 +393,9 @@ static void enable_common_municipal(int level) {
     building_menu_toggle_building(BUILDING_FIREHOUSE);
     building_menu_toggle_building(BUILDING_ARCHITECT_POST);
     building_menu_toggle_building(BUILDING_POLICE_STATION);
-    if (level >= 3) building_menu_toggle_building(BUILDING_CITY_PALACE);
-    else if (level >= 2) building_menu_toggle_building(BUILDING_TOWN_PALACE);
-    else if (level >= 1) building_menu_toggle_building(BUILDING_VILLAGE_PALACE);
+    building_menu_toggle_building((level >= 3) | BUILDING_CITY_PALACE);
+    building_menu_toggle_building((level >= 2) | BUILDING_TOWN_PALACE);
+    building_menu_toggle_building((level >= 1) | BUILDING_VILLAGE_PALACE);
 }
 
 static void enable_common_health() {

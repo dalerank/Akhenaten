@@ -9,6 +9,8 @@
 
 #include "js/js_game.h"
 #include "city/labor.h"
+#include "city/warnings.h"
+#include "empire/empire_city.h"
 
 #include "dev/debug.h"
 #include "city/resource.h"
@@ -26,6 +28,23 @@ void config_load_building_weaponsmith() {
 void building_weaponsmith::on_create(int orientation) {
     data.industry.first_material_id = RESOURCE_COPPER;
     base.output_resource_first_id = RESOURCE_WEAPONS;
+}
+
+void building_weaponsmith::on_place_checks() {
+    if (building_count_industry_active(RESOURCE_COPPER) > 0) {
+        return;
+    }
+
+    if (city_resource_count(RESOURCE_WEAPONS) <= 0 && city_resource_count(RESOURCE_COPPER) <= 0) {
+        building_construction_warning_show(WARNING_IRON_NEEDED);
+
+        if (empire_can_produce_resource(RESOURCE_COPPER, true))
+            building_construction_warning_show(WARNING_BUILD_IRON_MINE);
+        else if (!empire_can_import_resource(RESOURCE_COPPER, true))
+            building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT);
+        else if (city_resource_trade_status(RESOURCE_COPPER) != TRADE_STATUS_IMPORT)
+            building_construction_warning_show(WARNING_TRADE_IMPORT_RESOURCE);
+    }
 }
 
 void building_weaponsmith::window_info_background(object_info& c) {

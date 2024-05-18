@@ -10,7 +10,6 @@
 #include "building/building_raw_material.h"
 #include "building/building_workshop.h"
 #include "building/building_shipyard.h"
-#include "building/building_architect_post.h"
 #include "building/building_shrine.h"
 #include "building/building_temple.h"
 #include "building/building_booth.h"
