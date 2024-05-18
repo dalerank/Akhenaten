@@ -177,47 +177,6 @@ static void draw_fountain_range(vec2i pixel, tile2i point, painter &ctx) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE, zoom_get_scale());
 }
 
-static void draw_small_mastaba_ghost(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end) {
-    auto get_image = [] (tile2i tile, tile2i start, vec2i size) {
-        int image_id = image_group(IMG_SMALL_MASTABA);
-        if (tile == start) {
-            return image_id;
-        }
-
-        if (tile == start.shifted(size.x - 1, 0)) {
-            return image_id - 2;
-        }
-
-        if (tile == start.shifted(size.x - 1, size.y - 1)) {
-            return image_id - 4;
-        }
-
-        if (tile == start.shifted(0, size.y - 1)) {
-            return image_id - 6;
-        }
-
-        if (tile.y() == start.y()) { return image_id - 1; }
-        if (tile.y() == start.y() + size.y - 1) { return image_id - 5; }
-        if (tile.x() == start.x()) { return image_id - 7; }
-        if (tile.x() == start.x() + size.x - 1) { return image_id - 3; }
-
-        return (image_id + 5 + (tile.x() + tile.y()) % 7);
-    };
-
-    vec2i size{1, 1};
-    switch (city_view_orientation() / 2) {
-    case 0: size = {10, 4}; break;
-    case 1: size = {4, 10}; break;
-    case 2: size = {10, 4}; break;
-    case 3: size = {4, 10}; break;
-    }
-    for (int i = 0; i < size.x; ++i) {
-        for (int j = 0; j < size.y; ++j) {
-            draw_building_ghost(ctx, get_image(end.shifted(i, j), end, size), pixel + vec2i(-30, 15) * i + vec2i(30, 15) * j);
-        }
-    }
-}
-
 static void draw_storage_yard(vec2i tile, painter &ctx) {
     int global_rotation = building_rotation_global_rotation();
     int index_rotation = building_rotation_get_storage_fort_orientation(global_rotation);
@@ -503,7 +462,7 @@ void BuildPlanner::draw_graphics(painter &ctx) {
         return;
 
     case BUILDING_SMALL_MASTABA:
-        draw_small_mastaba_ghost(ctx, build_type, pixel, start, end);
+        building_small_mastaba::ghost_preview(ctx, build_type, pixel, start, end);
         return;
 
     case BUILDING_BARLEY_FARM:

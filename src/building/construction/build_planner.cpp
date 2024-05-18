@@ -96,71 +96,6 @@ static building* add_temple_complex_element(int x, int y, int orientation, build
     return b;
 }
 
-static void add_mastaba(building *b, int orientation) {
-    b->prev_part_building_id = 0;
-    int empty_img = image_group(IMG_SMALL_MASTABA) + 108;
-    map_mastaba_tiles_add(b->id, b->tile, b->size, empty_img, TERRAIN_BUILDING);
-
-    struct mastaba_part {
-        e_building_type type;
-        tile2i offset;
-        building *b;
-    };
-    svector<mastaba_part, 10> parts;
-    switch (orientation) {
-    case 0: parts = {{ BUILDING_SMALL_MASTABA, {2, 0}},  
-                     { BUILDING_SMALL_MASTABA_WALL, {0, 2}}, {BUILDING_SMALL_MASTABA_WALL, {2, 2}},
-                     { BUILDING_SMALL_MASTABA_ENTRANCE, {2, 4}}, { BUILDING_SMALL_MASTABA_WALL, {0, 4}},
-                     { BUILDING_SMALL_MASTABA_WALL, {0, 6}}, { BUILDING_SMALL_MASTABA_WALL, {2, 6}},
-                     { BUILDING_SMALL_MASTABA_SIDE, {0, 8}}, { BUILDING_SMALL_MASTABA_SIDE, {2, 8}} }; 
-          break;
-    case 1: parts = {{ BUILDING_SMALL_MASTABA, {-2, 0}},  
-                     { BUILDING_SMALL_MASTABA_WALL, {0, 2}}, {BUILDING_SMALL_MASTABA_WALL, {-2, 2}},
-                     { BUILDING_SMALL_MASTABA_ENTRANCE, {0, 4}}, { BUILDING_SMALL_MASTABA_WALL, {-2, 4}},
-                     { BUILDING_SMALL_MASTABA_WALL, {0, 6}}, { BUILDING_SMALL_MASTABA_WALL, {-2, 6}},
-                     { BUILDING_SMALL_MASTABA_SIDE, {0, 8}}, { BUILDING_SMALL_MASTABA_SIDE, {-2, 8}} }; 
-          break;
-    case 2: parts = {{ BUILDING_SMALL_MASTABA, {-2, -8}}, { BUILDING_SMALL_MASTABA, {0, -8}},
-                     { BUILDING_SMALL_MASTABA_WALL, {0, -2}}, { BUILDING_SMALL_MASTABA_WALL, {-2, -2}},
-                     { BUILDING_SMALL_MASTABA_ENTRANCE, {0, -4}}, { BUILDING_SMALL_MASTABA_WALL, {-2, -4}},
-                     { BUILDING_SMALL_MASTABA_WALL, {0, -6}}, { BUILDING_SMALL_MASTABA_WALL, {-2, -6}},
-                     { BUILDING_SMALL_MASTABA_SIDE, {-2, 0}}
-                    };
-          b->type = BUILDING_SMALL_MASTABA_SIDE;
-          break;
-    case 3: parts = {{ BUILDING_SMALL_MASTABA, {0, -8}}, { BUILDING_SMALL_MASTABA, {2, -8}},
-                     { BUILDING_SMALL_MASTABA_WALL, {0, -6}}, { BUILDING_SMALL_MASTABA_WALL, {2, -6}},
-                     { BUILDING_SMALL_MASTABA_ENTRANCE, {2, -4}}, { BUILDING_SMALL_MASTABA_WALL, {0, -4}},
-                     { BUILDING_SMALL_MASTABA_WALL, {0, -2}}, {BUILDING_SMALL_MASTABA_WALL, {2, -2}},
-                     { BUILDING_SMALL_MASTABA_SIDE, {2, 0}} };
-          b->type = BUILDING_SMALL_MASTABA_SIDE;
-          break;
-    }
-
-    for (auto &part : parts) {
-        part.b = building_create(part.type, b->tile.shifted(part.offset), 0);
-        game_undo_add_building(part.b);
-        tile2i btile_add = b->tile.shifted(part.offset);
-        map_mastaba_tiles_add(part.b->id, btile_add, part.b->size, empty_img, TERRAIN_BUILDING);
-    }
-
-    switch (orientation) {
-    case 0: { mastaba_part main{BUILDING_SMALL_MASTABA, {-1, -1}, b}; parts.insert(parts.begin(), main); } break;
-    case 1: { mastaba_part main{BUILDING_SMALL_MASTABA, {-1, -1}, b}; parts.insert(parts.begin() + 1, main); } break;
-    case 2: { mastaba_part main{BUILDING_SMALL_MASTABA, {-1, -1}, b}; parts.push_back(main); } break;
-    case 3: { mastaba_part main{BUILDING_SMALL_MASTABA, {-1, -1}, b}; parts.push_back(main); } break;
-    }
-
-    building* prev_part = nullptr;
-    for (auto &part : parts) {
-        part.b->prev_part_building_id = prev_part ? prev_part->id : 0;
-        if (prev_part) {
-            prev_part->next_part_building_id = part.b->id;
-        }
-        prev_part = part.b;
-    }
-}
-
 static void add_temple_complex(building* b, int orientation) {
     Planner.add_building_tiles_from_list(b->id, false);
     tile2i offset = {0, 0};
@@ -333,9 +268,6 @@ static void add_building(building* b, int orientation, int variant) {
         }
         break;
 
-    case BUILDING_SMALL_MASTABA:
-        add_mastaba(b, orientation);
-        break;
         // defense
     case BUILDING_MUD_TOWER:
         map_terrain_remove_with_radius(b->tile.x(), b->tile.y(), 2, 0, TERRAIN_WALL);

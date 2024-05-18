@@ -54,7 +54,6 @@ images = [
 	// spr general
 	{img: IMG_BRICKLAYERS_GUILD, pack:PACK_GENERAL, id:57},
 	{img: IMG_GUILD_STONEMASONS, pack:PACK_GENERAL, id:88},
-	{img: IMG_COPPER_MINE, pack:PACK_GENERAL, id:196},
 
 	// icon resources
 	{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
@@ -87,7 +86,6 @@ images = [
 	{img: IMG_HOUSE_COTTAGE, pack:PACK_GENERAL, id:28, offset:0},
 	{img: IMG_HOUSE_HOMESTEAD, pack:PACK_GENERAL, id:29, offset:0},
 	{img: IMG_HOUSE_APARTMENT, pack:PACK_GENERAL, id:30, offset:0},
-	{img: IMG_SMALL_MASTABA, pack:PACK_MASTABA, id:2, offset:7},
 	{img: IMG_BRICKLAYER_WALK, pack:PACK_SPR_MAIN, id:109},
 	{img: IMG_BRICKLAYER_DEATH, pack:PACK_SPR_MAIN, id:110},
 	{img: IMG_BRICKLAYER_WORK, pack:PACK_SPR_MAIN, id:111},

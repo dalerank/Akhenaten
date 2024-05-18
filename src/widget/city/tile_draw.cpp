@@ -258,18 +258,6 @@ bool draw_isometric_flat_building(building *b, tile2i point, painter &ctx) {
     int img_id = 0;
     int tile_id = 0;
     switch (b->type) {
-    case BUILDING_SMALL_MASTABA_SIDE:
-    case BUILDING_SMALL_MASTABA_WALL: 
-    case BUILDING_SMALL_MASTABA_ENTRANCE: 
-    case BUILDING_SMALL_MASTABA: {
-            if (building_monument_is_finished(b)) {
-                return false;
-            }
-
-            return ( b->data.monuments.phase < 2);
-        }
-        break;
-
     case BUILDING_ROADBLOCK:
     case BUILDING_CHICKPEAS_FARM:
     case BUILDING_BURNING_RUIN:

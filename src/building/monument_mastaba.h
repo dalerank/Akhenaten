@@ -16,14 +16,19 @@ public:
     virtual building_small_mastaba *dcast_small_mastaba() override { return this; }
 
     virtual void on_create(int orientation) override;
+    virtual void on_place(int orientation, int variant) override;
     virtual void update_day() override;
     virtual void update_month() override;
     virtual void update_count() const override;
+    virtual void update_map_orientation(int map_orientation) override;
     virtual void window_info_background(object_info &ctx) override;
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
+    virtual bool draw_isometric_flat_building(tile2i t, painter &ctx) override;
 
     std::span<uint16_t> active_workers();
+
+    static void ghost_preview(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end);
 };
 
 class building_small_mastaba_part_side : public building_small_mastaba {

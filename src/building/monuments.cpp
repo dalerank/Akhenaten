@@ -333,9 +333,9 @@ int building_image_get(building *b) {
     case BUILDING_SMALL_MASTABA:
         switch (b->data.monuments.phase) {
         case MONUMENT_START:
-            return image_group(IMG_SMALL_MASTABA);
+            return building_impl::params(BUILDING_SMALL_MASTABA).anim["base"].first_img();
         default:
-            return image_group(IMG_SMALL_MASTABA) + 1;
+            return building_impl::params(BUILDING_SMALL_MASTABA).anim["base"].first_img() + 1;
         }
     }
 

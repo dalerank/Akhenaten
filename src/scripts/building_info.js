@@ -379,6 +379,11 @@ building_wood_cutter = {
 }
 
 building_small_mastaba = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_MASTABA, id:2, offset:7 },
+    base : { pos : [0, 0], pack:PACK_MASTABA, id:2, offset:7 },
+  },
+  building_size : 2,
   // todo
 }
 
@@ -390,6 +395,7 @@ building_tax_collector = {
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   window_info_height_id : 1,
+  building_size : 2,
 }
 
 building_tax_collector_up = {
@@ -400,6 +406,7 @@ building_tax_collector_up = {
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   window_info_height_id : 1,
+  building_size : 2,
 }
 
 building_recruiter = {
@@ -410,6 +417,7 @@ building_recruiter = {
   },
   labor_category : LABOR_CATEGORY_MILITARY,
   window_info_height_id : 3,
+  building_size : 3,
 }
 
 building_bandstand = {
@@ -608,14 +616,18 @@ building_brewery = {
     barley : { pos:[65, 3], pack:PACK_GENERAL, id:208, max_frames: 12 }
   },
   window_info_height_id : 1,
+  building_size : 2,
 }
 
 building_mine_copper = {
   animations : {
+    preview : { pack:PACK_GENERAL, id:196 },
+    base : { pack:PACK_GENERAL, id:196 },
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16 }
   },
   output_resource : RESOURCE_COPPER,
   info_help_id:93, info_text_id:193,
+  building_size : 2,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
@@ -624,6 +636,7 @@ building_mine_gems = {
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16 }
   },
   output_resource : RESOURCE_GEMS,
+  building_size : 2,
   meta_id : "gems_mine",
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
@@ -719,6 +732,7 @@ building_physician = {
     work : { pos : [-1, -1], pack:PACK_GENERAL, id:70, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
+  building_size : 2,
 }
 
 building_firehouse = {
@@ -747,6 +761,7 @@ building_conservatory = {
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
   window_info_height_id : 1,
+  building_size : 3,
 }
 
 building_hunting_lodge = {
@@ -772,5 +787,6 @@ building_scribal_school = {
   window_info_height_id : 1,
 
   papyrus_icon:[61, 14],
+  building_size : 2,
   labor_category : LABOR_CATEGORY_EDUCATION,
 }
