@@ -48,9 +48,6 @@ images = [
 	{img: IMG_FISHIHG_WHARF_ANIM, pack: PACK_SPR_AMBIENT, id:47},  // 2551 + 15831
 	{img: ANIM_SANDSTONE_QUARRY_2, pack:PACK_SPR_AMBIENT, id:49},
 
-	// spr terrain
-	{img: IMG_BUILDING_DOCK, pack:PACK_TERRAIN, id:49},
-
 	// icon resources
 	{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
 

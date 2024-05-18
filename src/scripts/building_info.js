@@ -73,6 +73,7 @@ building_fort_charioteers = {
   },
   labor_category : LABOR_CATEGORY_MILITARY,
   building_size : 3,
+  window_info_height_id : 1,
 }
 
 building_fort_infantry = {
@@ -83,6 +84,7 @@ building_fort_infantry = {
   },
   labor_category : LABOR_CATEGORY_MILITARY,
   building_size : 3,
+  window_info_height_id : 1,
 }
 
 building_fort_archers = {
@@ -93,6 +95,7 @@ building_fort_archers = {
   },
   labor_category : LABOR_CATEGORY_MILITARY,
   building_size : 3,
+  window_info_height_id : 1,
 }
 
 building_fort_ground = {
@@ -210,9 +213,14 @@ building_bricklayers_guild = {
 
 building_dock = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_BUILDING_DOCK }
+    preview : { pack:PACK_TERRAIN, id:49 },
+    base : { pack:PACK_TERRAIN, id:49 },
+    work : { pos : [-1, -1], pack:PACK_TERRAIN, id:49, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  building_size : 3,
+  fire_proof : true,
+  window_info_height_id : 1,
 }
 
 building_personal_mansion = {
@@ -224,6 +232,7 @@ building_personal_mansion = {
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   building_size : 3,
   unique_building : true,
+  window_info_height_id : 1,
 }
 
 building_village_mansion = {
@@ -235,6 +244,14 @@ building_village_mansion = {
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   building_size : 4,
   unique_building : true,
+  window_info_height_id : 1,
+}
+
+building_dynasty_mansion = {
+  labor_category : LABOR_CATEGORY_GOVERNMENT,
+  building_size : 4,
+    unique_building : true,
+  window_info_height_id : 1,
 }
 
 building_temple_osiris = {

@@ -56,6 +56,7 @@ var building_clay_pit = {}
 var building_hunting_lodge = {}
 var building_village_palace = {}
 var building_personal_mansion = {}
+var building_dynasty_mansion = {}
 var building_scribal_school = {}
 var building_scribal_school_info = {}
 var building_brewery = {}
