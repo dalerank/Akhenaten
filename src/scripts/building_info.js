@@ -797,6 +797,7 @@ building_hunting_lodge = {
     gamemeat : { pos:[61, 14], pack:PACK_GENERAL, id:205 }
   },
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+  building_size : 2,
 }
 
 building_scribal_school = {
