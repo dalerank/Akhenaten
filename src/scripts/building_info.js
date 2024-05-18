@@ -280,6 +280,7 @@ building_juggler_school = {
     work : { pos : [33, -38], pack:PACK_GENERAL, id:46, offset:2, max_frames:12 }
   },
   window_info_height_id : 1,
+  building_size : 2,
 }
 
 building_dancer_school = {

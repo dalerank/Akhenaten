@@ -4,6 +4,7 @@
 #include "construction/build_planner.h"
 #include "building/count.h"
 #include "city/object_info.h"
+#include "city/warnings.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
@@ -49,6 +50,12 @@ void building_booth::on_place(int orientation, int variant) {
     case 1: build_planner_latch_on_venue(BUILDING_BOOTH, &base, 1, 0, orientation, true); break;
     case 2: build_planner_latch_on_venue(BUILDING_BOOTH, &base, 1, 1, orientation, true); break;
     case 3: build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 1, orientation, true); break;
+    }
+}
+
+void building_booth::on_place_checks() {
+    if (building_count_active(BUILDING_JUGGLER_SCHOOL) <= 0) {
+        building_construction_warning_show(WARNING_BUILD_ACTOR_COLONY);
     }
 }
 
