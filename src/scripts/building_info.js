@@ -196,9 +196,12 @@ building_guild_stonemasons = {
 
 building_bricklayers_guild = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_BRICKLAYERS_GUILD }
+    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:57 }
+    base : { pos : [-1, -1], pack:PACK_GENERAL, id:57 }
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:57, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+  building_size : 2,
 }
 
 building_dock = {
@@ -290,6 +293,7 @@ building_bazaar = {
     fancy_work : { pos : [0, 0], pack:PACK_GENERAL, id:22, offset:13 }
   },
   window_info_height_id : 1,
+  building_size : 2,
 }
 
 building_work_camp = {
@@ -386,6 +390,8 @@ building_small_mastaba = {
   building_size : 2,
   // todo
 }
+
+building_small_mastaba_side = building_small_mastaba
 
 building_tax_collector = {
   animations : {

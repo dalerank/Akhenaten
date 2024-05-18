@@ -52,7 +52,6 @@ images = [
 	{img: IMG_BUILDING_DOCK, pack:PACK_TERRAIN, id:49},
 
 	// spr general
-	{img: IMG_BRICKLAYERS_GUILD, pack:PACK_GENERAL, id:57},
 	{img: IMG_GUILD_STONEMASONS, pack:PACK_GENERAL, id:88},
 
 	// icon resources
