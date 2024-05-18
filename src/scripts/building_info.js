@@ -213,8 +213,8 @@ building_dock = {
 
 building_personal_mansion = {
   animations : {
-    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:85 }
-    base : { pos : [-1, -1], pack:PACK_GENERAL, id:85 }
+    preview : { pack:PACK_GENERAL, id:85 }
+    base : { pack:PACK_GENERAL, id:85 }
     work : { pos : [-1, -1], pack:PACK_GENERAL, id:85, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
@@ -224,8 +224,8 @@ building_personal_mansion = {
 
 building_village_mansion = {
   animations : {
-    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:47 }
-    base : { pos : [-1, -1], pack:PACK_GENERAL, id:47 }
+    preview : { pack:PACK_GENERAL, id:47 }
+    base : { pack:PACK_GENERAL, id:47 }
     work : { pos : [-1, -1], pack:PACK_GENERAL, id:47, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
@@ -235,8 +235,8 @@ building_village_mansion = {
 
 building_temple_osiris = {
   animations : {
-    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:25 },
-    base : { pos : [-1, -1], pack:PACK_GENERAL, id:25 },
+    preview : { pack:PACK_GENERAL, id:25 },
+    base : { pack:PACK_GENERAL, id:25 },
     work : { pos : [-1, -1], pack:PACK_GENERAL, id:25, offset:1, max_frames:12 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
@@ -246,8 +246,8 @@ building_temple_osiris = {
 
 building_temple_ra = {
   animations : {
-    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:21 },
-    base : { pos : [-1, -1], pack:PACK_GENERAL, id:21 },
+    preview : { pack:PACK_GENERAL, id:21 },
+    base : { pack:PACK_GENERAL, id:21 },
     work : { pos : [-1, -1], pack:PACK_GENERAL, id:21, offset:1, max_frames:12 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
@@ -257,15 +257,20 @@ building_temple_ra = {
 
 building_temple_ptah = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_TEMPLE_PTAH }
+    preview : { pack:PACK_GENERAL, id:20 },
+    base : { pack:PACK_GENERAL, id:20 },
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:20, offset:1, max_frames:12 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
+  building_size : 3,
   window_info_height_id : 1,
 }
 
 building_temple_seth = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_TEMPLE_SETH }
+    preview : { pack:PACK_GENERAL, id:19 },
+    base : { pack:PACK_GENERAL, id:19 },
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:19, offset:1, max_frames:12 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 1,

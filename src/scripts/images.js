@@ -106,8 +106,6 @@ images = [
 	{img: IMG_SMALL_MASTABA_BRICKS, pack:PACK_MASTABA, id:1, offset:0},
 	{img: IMG_ADVISOR_ICONS, pack:PACK_GENERAL, id:128, offset:0},
 	{img: IMG_ADVISOR_BACKGROUND, pack:PACK_UNLOADED, id:2, offset:0},
-	{img: IMG_TEMPLE_PTAH, pack:PACK_GENERAL, id:20, offset:0},
-	{img: IMG_TEMPLE_SETH, pack:PACK_GENERAL, id:19, offset:0},
 	{img: IMG_TEMPLE_BAST, pack:PACK_GENERAL, id:76, offset:0},
 	{img: IMG_WATER_CARRIER, pack:PACK_SPR_MAIN, id:59, offset:0},
 	{img: IMG_WATER_CARRIER_DEATH, pack:PACK_SPR_MAIN, id:60, offset:0},
