@@ -11,6 +11,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "city/labor.h"
+#include "city/warnings.h"
 #include "construction/build_planner.h"
 #include "grid/image.h"
 #include "grid/orientation.h"
@@ -100,6 +101,12 @@ void building_pavilion::on_place(int orientation, int variant) {
     int absolute_orientation = abs(basic_orientation + (8 - city_view_orientation())) % 8;
     for (const auto &item: pavilion_m.place_dir[absolute_orientation].items) {
         build_planner_latch_on_venue(item.type, &base, item.offset.x, item.offset.y, orientation, item.main);
+    }
+}
+
+void building_pavilion::on_place_checks() {
+    if (building_count_active(BUILDING_DANCE_SCHOOL) <= 0) {
+        building_construction_warning_show(WARNING_BUILD_DANCERS_SCHOOL);
     }
 }
 
