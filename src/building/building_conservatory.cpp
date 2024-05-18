@@ -2,6 +2,7 @@
 
 #include "building/building_dance_school.h"
 #include "figuretype/figure_entertainer.h"
+#include "building/count.h"
 
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
@@ -28,6 +29,10 @@ void building_conservatory::spawn_figure() {
             common_spawn_roamer(FIGURE_MUSICIAN, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
         }
     }
+}
+
+void building_conservatory::update_count() const {
+    building_increase_type_count(type(), num_workers() > 0);
 }
 
 bool building_conservatory::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

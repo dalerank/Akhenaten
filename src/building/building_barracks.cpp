@@ -74,6 +74,7 @@ static int get_closest_legion_needing_soldiers(building* barracks) {
     }
     return min_formation_id;
 }
+
 static int get_closest_military_academy(building* fort) {
     int min_building_id = 0;
     int min_distance = INFINITE;
