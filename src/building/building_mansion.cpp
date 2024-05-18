@@ -8,24 +8,22 @@
 #include "graphics/elements/generic_button.h"
 #include "city/city.h"
 #include "city/victory.h"
+#include "city/buildings.h"
 #include "city/finance.h"
 #include "city/ratings.h"
 #include "widget/city/ornaments.h"
 #include "graphics/image.h"
 #include "graphics/animation.h"
 
-struct config_mansions_t {
-    int focus_button_id;
-    animations_t animations;
-};
-
-config_mansions_t g_config_mansions;
+buildings::model_t<building_personal_mansion> personal_mansion_m;
+buildings::model_t<building_family_mansion> family_mansion_m;
+buildings::model_t<building_dynasty_mansion> dynasty_mansion_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_personal_mansion);
 void config_load_personal_mansion() {
-    g_config_arch.r_section("building_personal_mansion", [] (archive arch) {
-        g_config_mansions.animations.load(arch);
-    });
+    personal_mansion_m.load();
+    family_mansion_m.load();
+    dynasty_mansion_m.load();
 }
 
 static void button_set_salary(int rank, int param2) {
@@ -49,10 +47,15 @@ void building_mansion::window_info_background(object_info &c) {
     lang_text_draw_centered(103, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 16 * c.bgsize.y - 143, 103, 1);
 
-    button_border_draw(c.offset.x + 40, c.offset.y + 90, 400, 20, g_config_mansions.focus_button_id == 2);
+    static int focus_button_id = 0;
+    button_border_draw(c.offset.x + 40, c.offset.y + 90, 400, 20, focus_button_id == 2);
     int width = lang_text_draw(52, g_city.kingdome.salary_rank + 4, c.offset.x + 40, c.offset.y + 94, FONT_NORMAL_WHITE_ON_DARK);
     width += text_draw_number(g_city.kingdome.salary_amount, '@', " ", c.offset.x + 40 + width, c.offset.y + 94, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(52, 3, c.offset.x + 40 + width, c.offset.y + 94, FONT_NORMAL_WHITE_ON_DARK);
+}
+
+void building_mansion::on_place(int orientation, int variant) {
+    city_buildings_add_mansion(&base);
 }
 
 int building_mansion::window_info_handle_mouse(const mouse *m, object_info &c) {
@@ -64,7 +67,7 @@ bool building_mansion::draw_ornaments_and_animations_height(painter &ctx, vec2i 
     switch (type()) {
     case BUILDING_PERSONAL_MANSION: 
         {
-            const animation_t &anim = g_config_mansions.animations["work"];
+            const animation_t &anim = personal_mansion_m.anim["work"];
             building_draw_normal_anim(ctx, point, &base, tile, anim, mask);
         }
         break;

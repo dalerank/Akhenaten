@@ -1249,12 +1249,6 @@ void BuildPlanner::update_unique_only_one_check() {
         if (city_buildings_has_palace())
             unique_already_placed = true;
         break;
-    case BUILDING_PERSONAL_MANSION:
-    case BUILDING_FAMILY_MANSION:
-    case BUILDING_DYNASTY_MANSION:
-        if (city_buildings_has_mansion())
-            unique_already_placed = true;
-        break;
     case BUILDING_RECRUITER:
         if (city_buildings_has_recruiter() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {
             unique_already_placed = true;
@@ -1602,12 +1596,6 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     case BUILDING_CITY_PALACE:
         city_buildings_add_palace(last_created_building);
         break;
-    case BUILDING_PERSONAL_MANSION:
-    case BUILDING_FAMILY_MANSION:
-    case BUILDING_DYNASTY_MANSION:
-        city_buildings_add_mansion(last_created_building);
-        break;
-
     case BUILDING_FERRY:
         should_recalc_ferry_routes = true;
         break;

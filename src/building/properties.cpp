@@ -242,8 +242,6 @@ static building_properties properties[400] = {
 //building_properties ROADBLOCK_PROPERTIES = {1, 1, 10000, 0};
 
 void building_properties_init() {
-    properties[BUILDING_PERSONAL_MANSION] = {3, 0, 0, 0, 0, IMG_PERSONAL_MANSION};
-    properties[BUILDING_VILLAGE_PALACE] = {4, 0, 0, 0, 0, IMG_VILLAGE_PALACE};
     properties[BUILDING_JUGGLER_SCHOOL] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_HUNTING_LODGE] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_CLAY_PIT] = {2, 0, 0, 0, 0, IMG_NONE};

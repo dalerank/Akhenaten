@@ -213,9 +213,24 @@ building_dock = {
 
 building_personal_mansion = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_PERSONAL_MANSION }
+    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:85 }
+    base : { pos : [-1, -1], pack:PACK_GENERAL, id:85 }
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:85, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
+  building_size : 3,
+  unique_building : true,
+}
+
+building_village_mansion = {
+  animations : {
+    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:47 }
+    base : { pos : [-1, -1], pack:PACK_GENERAL, id:47 }
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:47, offset:1, max_frames:12 }
+  },
+  labor_category : LABOR_CATEGORY_GOVERNMENT,
+  building_size : 4,
+  unique_building : true,
 }
 
 building_temple_osiris = {
