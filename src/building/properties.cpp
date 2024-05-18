@@ -242,7 +242,6 @@ static building_properties properties[400] = {
 //building_properties ROADBLOCK_PROPERTIES = {1, 1, 10000, 0};
 
 void building_properties_init() {
-    properties[BUILDING_REED_GATHERER] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_PAPYRUS_WORKSHOP] = {2, 0, 0, 0, 0, IMG_NONE};
     properties[BUILDING_WATER_SUPPLY] = {2, 1, 0, 0, 0, IMG_NONE};
     properties[BUILDING_STONEMASONS_GUILD] = {2, 0, 0, 0, 0, IMG_GUILD_STONEMASONS};

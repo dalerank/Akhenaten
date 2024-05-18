@@ -312,7 +312,7 @@ building_storage_yard = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:82, },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:82, },
-    work : { pos : [23, 27], anim_id : ANIM_STORAGE_YARD_WORK, max_frames:15 }
+    work : { pos : [23, 27], pack:PACK_SPR_AMBIENT, id:51, offset:1, max_frames:15 }
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 3,
@@ -406,6 +406,7 @@ building_reed_gatherer = {
     base : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
     work : { pos : [30, -17], pack:PACK_GENERAL, id:24, offset:1, max_frames:19 }
   },
+  building_size : 2,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
