@@ -441,8 +441,9 @@ static void handle_first_touch(map_point tile) {
     }
 
     int size = building_impl::params(type).building_size;
-    if (type == BUILDING_STORAGE_YARD)
+    if (type == BUILDING_STORAGE_YARD) {
         size = 3;
+    }
 
     if (touch_was_click(first) && first->has_ended && data.capture_input
         && has_confirmed_construction(data.selected_tile, tile, size)) {
@@ -450,8 +451,9 @@ static void handle_first_touch(map_point tile) {
         build_move(data.selected_tile);
         build_end();
         widget_city_clear_current_tile();
-    } else if (first->has_ended)
+    } else if (first->has_ended) {
         data.selected_tile = tile;
+    }
 }
 static void handle_last_touch(void) {
     const touch* last = get_latest_touch();

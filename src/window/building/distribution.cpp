@@ -371,10 +371,11 @@ static void toggle_resource_state(int index, int param2) {
         return;
     }
 
-    if (b->type == BUILDING_STORAGE_YARD)
+    if (b->type == BUILDING_STORAGE_YARD) {
         resource = city_resource_get_available()->items[index - 1];
-    else
+    } else {
         resource = city_resource_get_available_food(index - 1);
+    }
 
     building_storage_cycle_resource_state(b->storage_id, resource, false);
 }
@@ -395,10 +396,11 @@ static void toggle_resource_state_backwards(int index, int param2) {
         return;
     } 
 
-    if (b->type == BUILDING_STORAGE_YARD)
+    if (b->type == BUILDING_STORAGE_YARD) {
         resource = city_resource_get_available()->items[index - 1];
-    else
+    } else {
         resource = city_resource_get_available_food(index - 1);
+    }
 
     building_storage_cycle_resource_state(b->storage_id, resource, true);
 }
@@ -418,10 +420,11 @@ static void order_quantity_increase_decrease(int index, int param2) {
         return;
     }
 
-    if (b->type == BUILDING_STORAGE_YARD)
+    if (b->type == BUILDING_STORAGE_YARD) {
         resource = city_resource_get_available()->items[index - 1];
-    else
+    } else {
         resource = city_resource_get_available_food(index - 1);
+    }
 
     building_storage_increase_decrease_resource_state(b->storage_id, resource, param2);
 }

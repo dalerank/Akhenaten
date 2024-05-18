@@ -7,6 +7,7 @@
 #include "building/building_pavilion.h"
 #include "building/building_fishing_wharf.h"
 #include "building/building_festival_square.h"
+#include "building/building_storage_yard.h"
 #include "building/industry.h"
 #include "building/monument_mastaba.h"
 #include "building/rotation.h"
@@ -175,25 +176,6 @@ void draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_ma
 
 static void draw_fountain_range(vec2i pixel, tile2i point, painter &ctx) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE, zoom_get_scale());
-}
-
-static void draw_storage_yard(vec2i tile, painter &ctx) {
-    int global_rotation = building_rotation_global_rotation();
-    int index_rotation = building_rotation_get_storage_fort_orientation(global_rotation);
-    int corner = building_rotation_get_corner(index_rotation);
-    vec2i corner_offset{-5, -45};
-    vec2i place_offset{0, 0};
-
-    int image_id_hut = image_group(IMG_STORAGE_YARD);
-    int image_id_space = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
-    for (int i = 0; i < 9; i++) {
-        if (i == corner) {
-            draw_building_ghost(ctx, image_id_hut, tile + VIEW_OFFSETS[i]);
-            ImageDraw::img_generic(ctx, image_id_hut + 17, tile.x + VIEW_OFFSETS[i].x + corner_offset.x, tile.y + VIEW_OFFSETS[i].y + corner_offset.y, COLOR_MASK_GREEN);
-        } else {
-            draw_building_ghost(ctx, image_id_space, tile + VIEW_OFFSETS[i] + place_offset);
-        }
-    }
 }
 
 void draw_farm(painter &ctx, e_building_type type, vec2i point, tile2i tile) {
@@ -451,7 +433,7 @@ void BuildPlanner::draw_graphics(painter &ctx) {
         //            return draw_walls((const map_tile*)&end, end_coord.x, end_coord.y);
         //            break;
     case BUILDING_STORAGE_YARD:
-        draw_storage_yard(pixel, ctx);
+        building_storage_yard::ghost_preview(pixel, ctx);
         return;
 
     case BUILDING_BOOTH:

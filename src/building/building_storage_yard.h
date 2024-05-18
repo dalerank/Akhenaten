@@ -43,6 +43,8 @@ public:
     int for_getting(e_resource resource, tile2i *dst);
     short &stored_full_amount;
 
+    static void ghost_preview(vec2i tile, painter &ctx);
+
 private:
     void draw_warehouse_orders(object_info *c);
     void draw_warehouse(object_info *c);
