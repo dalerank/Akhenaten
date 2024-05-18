@@ -242,8 +242,6 @@ static building_properties properties[400] = {
 //building_properties ROADBLOCK_PROPERTIES = {1, 1, 10000, 0};
 
 void building_properties_init() {
-    properties[BUILDING_TEMPLE_OSIRIS] = {3, 0, 0, 0, 0, IMG_TEMPLE_OSIRIS};
-    properties[BUILDING_TEMPLE_RA] = {3, 0, 0, 0, 0, IMG_TEMPLE_RA};
     properties[BUILDING_TEMPLE_PTAH] = {3, 0, 0, 0, 0, IMG_TEMPLE_PTAH};
     properties[BUILDING_TEMPLE_SETH] = {3, 0, 0, 0, 0, IMG_TEMPLE_SETH};
     properties[BUILDING_TEMPLE_BAST] = {3, 0, 0, 0, 0, IMG_TEMPLE_BAST};

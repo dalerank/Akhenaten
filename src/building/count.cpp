@@ -137,11 +137,6 @@ void building_count_update() {
             // military
         case BUILDING_MILITARY_ACADEMY:
             // religion
-        case BUILDING_TEMPLE_OSIRIS:
-        case BUILDING_TEMPLE_RA:
-        case BUILDING_TEMPLE_PTAH:
-        case BUILDING_TEMPLE_SETH:
-        case BUILDING_TEMPLE_BAST:
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_RA:
         case BUILDING_TEMPLE_COMPLEX_PTAH:

@@ -235,17 +235,23 @@ building_village_mansion = {
 
 building_temple_osiris = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_TEMPLE_OSIRIS }
+    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:25 },
+    base : { pos : [-1, -1], pack:PACK_GENERAL, id:25 },
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:25, offset:1, max_frames:12 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
+  building_size : 3,
   window_info_height_id : 1,
 }
 
 building_temple_ra = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_TEMPLE_RA }
+    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:21 },
+    base : { pos : [-1, -1], pack:PACK_GENERAL, id:21 },
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:21, offset:1, max_frames:12 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
+  building_size : 3,
   window_info_height_id : 1,
 }
 

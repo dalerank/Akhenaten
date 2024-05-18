@@ -16,6 +16,7 @@
 #include "graphics/animation.h"
 #include "game/game.h"
 #include "city/labor.h"
+#include "building/count.h"
 #include "widget/city/ornaments.h"
 
 buildings::model_t<building_temple_osiris> temple_osiris_m;
@@ -94,6 +95,10 @@ void building_temple::window_info_background(object_info &c) {
         building_temple_draw_temple(c, "temple_bast", 96, 25);
         break;
     }
+}
+
+void building_temple::update_count() const {
+    building_increase_type_count(type(), num_workers() > 0);
 }
 
 void building_temple::spawn_figure() {
