@@ -52,6 +52,3 @@ void building_education_draw_info(object_info& c, const char* type, e_figure_typ
 void building_academy_draw_info(object_info& c) {
     building_education_draw_info(c, "academy", FIGURE_SCRIBER, RESOURCE_NONE, vec2i{0, 0}, vec2i{0, 0});
 }
-void building_library_draw_info(object_info& c) {
-    building_education_draw_info(c, "library", FIGURE_LIBRARIAN, RESOURCE_NONE, vec2i{0, 0}, vec2i{0, 0});
-}

@@ -58,12 +58,12 @@ static building_properties properties[400] = {
     {3, 1},       // infantry
     {1, 0}, // apothecary
     {2, 0},   // mortuary
-    {2, 0, 0, 0},
-    {1, 0, 0, 0},        // dentist
-    {3, 0, 0, 0},                          // unused (distribution center)
-    {2, 0, 0, 0},         // school
-    {3, 0, 0, 0},                          // water crossings
-    {3, 0, GROUP_BUILDING_LIBRARY},        // library
+    {2, 0},
+    {1, 0},        // dentist
+    {3, 0},                          // unused (distribution center)
+    {2, 0},         // school
+    {3, 0},                          // water crossings
+    {3, 0},        // library
     {4, 1, 0, 0},        // fort yard
     {1, 0, GROUP_BUILDING_POLICE_STATION}, // police
     {3, 1, 0, 0},

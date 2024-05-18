@@ -309,6 +309,16 @@ building_temple_bast = {
   window_info_height_id : 1,
 }
 
+building_library = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:43 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:43 },
+    work : { pos : [33, -38], pack:PACK_GENERAL, id:43, offset:1, max_frames:12 }
+  },
+  window_info_height_id : 1,
+  building_size : 3,
+}
+
 building_juggler_school = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:46 },

@@ -380,25 +380,6 @@ void building::spawn_figure_police() {
     common_spawn_roamer(FIGURE_CONSTABLE, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
 }
 
-void building::spawn_figure_library() {
-    common_spawn_roamer(FIGURE_LIBRARIAN, 50);
-    check_labor_problem();
-    //    if (has_figure_of_type(FIGURE_LIBRARIAN))
-    //        return;
-    //    map_point road;
-    //    if (map_has_road_access(x, y, size, &road)) {
-    //        spawn_labor_seeker(50);
-    //        int spawn_delay = figure_spawn_timer();
-    //        if (spawn_delay == -1)
-    //            return;
-    //        figure_spawn_delay++;
-    //        if (figure_spawn_delay > spawn_delay) {
-    //            figure_spawn_delay = 0;
-    //            create_roaming_figure(road.x, road.y, FIGURE_LIBRARIAN);
-    //        }
-    //    }
-}
-
 //void building::set_water_supply_graphic() {
 //    if (state != BUILDING_STATE_VALID) {
 //        return;

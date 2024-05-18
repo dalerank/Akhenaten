@@ -112,8 +112,7 @@ int ui::advisor_education_window::draw_background() {
     lang_text_draw_amount(8, 22, building_count_total(BUILDING_LIBRARY), 40, 145, FONT_NORMAL_WHITE_ON_DARK);
     text_draw_number_centered(building_count_active(BUILDING_LIBRARY), 150, 145, 100, FONT_NORMAL_WHITE_ON_DARK);
 
-    width
-      = text_draw_number(800 * building_count_active(BUILDING_LIBRARY), '@', " ", 280, 145, FONT_NORMAL_WHITE_ON_DARK);
+    width = text_draw_number(800 * building_count_active(BUILDING_LIBRARY), '@', " ", 280, 145, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(57, 9, 280 + width, 145, FONT_NORMAL_WHITE_ON_DARK);
 
     int pct_library = city_culture_coverage_library();
