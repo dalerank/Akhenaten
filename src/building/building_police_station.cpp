@@ -13,7 +13,6 @@ void config_load_building_police_station() {
     police_station_m.load();
 }
 
-
 void building_police_station::window_info_background(object_info &c) {
     c.help_id = 86;
     window_building_play_sound(&c, "wavs/prefecture.wav");

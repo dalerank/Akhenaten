@@ -498,6 +498,7 @@ const terrain_image* map_image_context_get_paved_road(int grid_offset) {
     set_tiles_road(grid_offset, tiles);
     return get_image(CONTEXT_PAVED_ROAD, tiles);
 }
+
 static void set_terrain_canal_connections(int grid_offset, int direction, int multi_tile_mask, int* tiles) {
     int offset = grid_offset + map_grid_direction_delta(direction);
     if (map_terrain_is(offset, TERRAIN_BUILDING)) {
@@ -510,9 +511,12 @@ static void set_terrain_canal_connections(int grid_offset, int direction, int mu
             return;
         }
     }
-    if (map_terrain_is(offset, TERRAIN_WATER))
+
+    if (map_terrain_is(offset, TERRAIN_WATER)) {
         tiles[direction] = 1;
+    }
 }
+
 const terrain_image* map_image_context_get_aqueduct(int grid_offset) {
     int tiles[MAX_TILES] = {0, 0, 0, 0, 0, 0, 0, 0};
     int has_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;

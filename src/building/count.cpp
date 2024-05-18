@@ -111,12 +111,6 @@ void building_count_update() {
             building_increase_type_count(type, b.num_workers > 0);
             break;
 
-            // water
-        case BUILDING_WATER_LIFT:
-        case BUILDING_MENU_BEAUTIFICATION:
-            building_increase_type_count(type, b.has_water_access);
-            break;
-
             // education
         case BUILDING_ACADEMY:
             // health

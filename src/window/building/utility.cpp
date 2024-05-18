@@ -108,26 +108,6 @@ void window_building_draw_rubble(object_info* c) {
     lang_text_draw_multiline(140, 1, c->offset + vec2i{32, 16 * c->bgsize.y - 143}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
-void window_building_draw_water_lift(object_info* c) {
-    c->help_id = 59;
-    window_building_play_sound(c, "wavs/resevoir.wav");
-    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
-    lang_text_draw_centered(107, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-
-    building* b = building_get(c->building_id);
-    if (!c->has_road_access)
-        window_building_draw_description(c, 69, 25);
-    else {
-        if (!b->num_workers)
-            window_building_draw_description(c, 107, 2);
-        else
-            window_building_draw_description(c, 107, 1);
-    }
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 144, c->bgsize.x - 2, 4);
-    window_building_draw_employment(c, 150);
-    //    int text_id = building_get(c->building_id)->has_water_access ? 1 : 3;
-    //    window_building_draw_description_at(c, 16 * c->height_blocks - 173, 107, text_id);
-}
 void window_building_draw_aqueduct(object_info* c) {
     c->help_id = 60;
     window_building_play_sound(c, "wavs/aquaduct.wav");

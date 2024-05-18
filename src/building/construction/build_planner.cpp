@@ -256,12 +256,6 @@ static void add_building(building* b, int orientation, int variant) {
         //            break;
         // ships
 
-    case BUILDING_WATER_LIFT: {
-            auto props = building_impl::params(b->type);
-            map_water_add_building(b->id, b->tile, props.building_size, props.anim["base"].first_img() + orientation_rel + 4 * variant);
-        }
-        break;
-
     case BUILDING_TRANSPORT_WHARF:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_DOCK: {

@@ -100,16 +100,16 @@ static building_properties properties[400] = {
     {2, 0}, // tax collectors ^^
     {1, 1},
     {2, 1},
-    {2, 1, GROUP_BUILDING_WATER_LIFT}, // ??????? water lift ???????
-    {1, 1, 0, 0},
-    {1, 1, 0, 0}, // well
-    {1, 1, 0, 0},
-    {4, 0, GROUP_BUILDING_MILITARY_ACADEMY}, // academy
-    {3, 0, 0, 0},         // recruiter
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {2, 0, 0, 0},
-    {1, 1, 0, 0}, // burning ruin
+    {2, 1}, // ??????? water lift ???????
+    {1, 1},
+    {1, 1}, // well
+    {1, 1},
+    {4, 0}, // academy
+    {3, 0},         // recruiter
+    {0, 0},
+    {0, 0},
+    {2, 0},
+    {1, 1}, // burning ruin
     {3, 0, 0, 0},
     {3, 0, 0, 0},
     {3, 0, 0, 0},

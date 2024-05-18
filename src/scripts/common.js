@@ -20,6 +20,8 @@ var cart_offsets = []
 var sled_offsets = []
 var localization = []
 var top_menu_bar = {}
+// buildings
+var building_water_lift = {}
 var building_weaponsmith = {}
 var building_granary = {}
 var building_firehouse = {}
@@ -61,6 +63,7 @@ var building_personal_mansion = {}
 var building_dynasty_mansion = {}
 var building_scribal_school = {}
 var building_library = {}
+var building_military_academy = {}
 var building_brewery = {}
 var building_juggler_school = {}
 var building_bazaar = {}

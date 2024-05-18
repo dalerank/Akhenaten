@@ -602,7 +602,6 @@ bool building::figure_generate() {
         // single building type
         switch (type) {
         case BUILDING_MUD_TOWER: spawn_figure_tower(); break;
-        case BUILDING_WATER_LIFT: common_spawn_figure_trigger(50); break;
         case BUILDING_UNUSED_NATIVE_HUT_88: spawn_figure_native_hut(); break;
         case BUILDING_UNUSED_NATIVE_MEETING_89: spawn_figure_native_meeting(); break;
         case BUILDING_UNUSED_NATIVE_CROPS_93: update_native_crop_progress(); break;

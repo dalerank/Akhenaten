@@ -65,28 +65,6 @@ void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile
     }
 }
 
-static void draw_water_lift_anim(painter &ctx, building* b, int x, int y, color color_mask) {
-    int orientation_rel = city_view_relative_orientation(b->data.industry.orientation);
-    int anim_offset = 13 * orientation_rel;
-    x += 53;
-    y += 15;
-
-    switch (orientation_rel) {
-    case 1:
-        y -= 2;
-        break;
-    case 2:
-        x += 10;
-        y += 0;
-        break;
-    case 3:
-        x += 14;
-        y += 6;
-        break;
-    }
-
-    building_draw_normal_anim(ctx, vec2i{x, y}, b, b->tile, image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
-}
 
 static void draw_gatehouse_anim(int x, int y, building* b, painter &ctx) {
     int xy = map_property_multi_tile_xy(b->tile.grid_offset());
@@ -202,10 +180,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
     switch (b->type) {
     case BUILDING_BURNING_RUIN:
         building_draw_normal_anim(ctx, point, b, tile, image_id, color_mask);
-        break;
-
-    case BUILDING_WATER_LIFT:
-        draw_water_lift_anim(ctx, b, point.x, point.y, color_mask);
         break;
 
     case BUILDING_LIMESTONE_QUARRY:

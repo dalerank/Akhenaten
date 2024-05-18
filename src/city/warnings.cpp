@@ -163,11 +163,3 @@ void building_construction_warning_check_food_stocks(int type) {
     }
 }
 
-void building_construction_warning_check_reservoir(int type) {
-    if (!g_has_warning && type == BUILDING_WATER_LIFT) {
-        if (building_count_active(BUILDING_WATER_LIFT))
-            building_construction_warning_show(WARNING_CONNECT_TO_RESERVOIR);
-        else
-            building_construction_warning_show(WARNING_PLACE_RESERVOIR_NEXT_TO_WATER);
-    }
-}

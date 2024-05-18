@@ -329,6 +329,16 @@ building_library = {
   building_size : 3,
 }
 
+building_military_academy = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:173 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:173 },
+    work : { pos : [33, -38], pack:PACK_GENERAL, id:173, offset:1, max_frames:12 }
+  },
+  window_info_height_id : 1,
+  building_size : 4,
+}
+
 building_juggler_school = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:46 },
@@ -855,6 +865,19 @@ building_physician = {
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   building_size : 2,
 }
+
+building_water_lift = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_TERRAIN, id:50 }
+    base : { pos : [0, 0], pack:PACK_TERRAIN, id:50 }
+    work : { pos : [0, 0], pack:PACK_TERRAIN, id:50, offset:1, max_frames:12 }
+  },
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+  window_info_height_id : 1,
+  fire_proof : 1,
+  building_size : 2,
+}
+
 
 building_firehouse = {
   animations : {
