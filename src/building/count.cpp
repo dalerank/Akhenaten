@@ -111,11 +111,6 @@ void building_count_update() {
             building_increase_type_count(type, b.num_workers > 0);
             break;
 
-        case BUILDING_MORTUARY:
-            building_increase_type_count(type, b.num_workers > 0);
-            g_city.health.add_mortuary_workers(b.num_workers);
-            break;
-
             // water
         case BUILDING_WATER_LIFT:
         case BUILDING_MENU_BEAUTIFICATION:

@@ -57,7 +57,7 @@ static building_properties properties[400] = {
     {3, 1},       // archers
     {3, 1},       // infantry
     {1, 0}, // apothecary
-    {2, 0, GROUP_BUILDING_MORTUARY},   // mortuary
+    {2, 0},   // mortuary
     {2, 0, 0, 0},
     {1, 0, 0, 0},        // dentist
     {3, 0, 0, 0},                          // unused (distribution center)

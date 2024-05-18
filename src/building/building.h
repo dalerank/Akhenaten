@@ -398,7 +398,6 @@ public:
     void spawn_figure_police();
     void set_water_supply_graphic();
     void spawn_figure_library();
-    void spawn_figure_mortuary();
     void set_greate_palace_graphic();
     void spawn_figure_tax_collector();
     void spawn_figure_industry();

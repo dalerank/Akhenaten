@@ -656,6 +656,16 @@ building_dentist = {
   window_info_height_id : 1,
 }
 
+building_mortuary = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:175 },
+    base : { pack:PACK_GENERAL, id:175 },
+    work : { pack:PACK_GENERAL, id:175, offset:1, max_frames:12 }
+  },
+  building_size : 2,
+  window_info_height_id : 1,
+}
+
 building_plaza = {
   animations : {
     preview : { pack:PACK_GENERAL, id:168 },

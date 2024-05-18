@@ -398,24 +398,6 @@ void building::spawn_figure_library() {
     //        }
     //    }
 }
-void building::spawn_figure_mortuary() {
-    common_spawn_roamer(FIGURE_EMBALMER, 50);
-    //    check_labor_problem();
-    //    if (has_figure_of_type(FIGURE_BARBER))
-    //        return;
-    //    map_point road;
-    //    if (map_has_road_access(x, y, size, &road)) {
-    //        spawn_labor_seeker(50);
-    //        int spawn_delay = figure_spawn_timer();
-    //        if (spawn_delay == -1)
-    //            return;
-    //        figure_spawn_delay++;
-    //        if (figure_spawn_delay > spawn_delay) {
-    //            figure_spawn_delay = 0;
-    //            create_roaming_figure(road.x, road.y, FIGURE_BARBER);
-    //        }
-    //    }
-}
 
 //void building::set_water_supply_graphic() {
 //    if (state != BUILDING_STATE_VALID) {
@@ -645,7 +627,6 @@ bool building::figure_generate() {
         case BUILDING_POLICE_STATION: spawn_figure_police(); break;
         case BUILDING_LIBRARY: spawn_figure_library(); break;
         case BUILDING_WATER_LIFT: common_spawn_figure_trigger(50); break;
-        case BUILDING_MORTUARY: spawn_figure_mortuary(); break;
         case BUILDING_UNUSED_NATIVE_HUT_88: spawn_figure_native_hut(); break;
         case BUILDING_UNUSED_NATIVE_MEETING_89: spawn_figure_native_meeting(); break;
         case BUILDING_UNUSED_NATIVE_CROPS_93: update_native_crop_progress(); break;
