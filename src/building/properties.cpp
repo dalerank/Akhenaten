@@ -64,42 +64,42 @@ static building_properties properties[400] = {
     {2, 0},         // school
     {3, 0},                          // water crossings
     {3, 0},        // library
-    {4, 1, 0, 0},        // fort yard
-    {1, 0, GROUP_BUILDING_POLICE_STATION}, // police
-    {3, 1, 0, 0},
-    {3, 1, 0, 0}, // fort (main)
-    {2, 1, 0, 0},
-    {2, 1, 0, 0},
-    {3, 0, 0, 0},
-    {3, 0, 0, 0},
-    {3, 0, 0, 0},
-    {3, 0, 0, 0},
-    {3, 0, 0, 0},   // temples ^^^^
-    {3, 0, 0, 0},                         // oz
-    {3, 0, 0, 0},                         // ra
-    {3, 0, 0, 0},                         // ptah
-    {3, 0, 0, 0},                         // seth
-    {3, 0, 0, 0},                         // temple complex ^^^^
-    {2, 0, 0, 0},        // bazaar
-    {4, 0, 0, 0},       // granary
-    {1, 1, 0, 0},  // storageyard (hut)
-    {1, 1, 0, 0},                         // storageyard (space tile)
-    {3, 0, 0, 0},      // shipwright
-    {3, 0, 0, 0},          // dock
-    {2, 0, 0, 0}, // wharf (fish)
-    {3, 0, 0, 0},
-    {4, 0, GROUP_BUILDING_GOVERNORS_VILLA},
-    {5, 0, GROUP_BUILDING_GOVERNORS_PALACE}, // mansions ^^^
-    {2, 1, 0, 0},
-    {1, 1, 0, 0}, // architects
-    {1, 1, 0, 0},                          // bridge
-    {1, 1, 0, 0},
-    {0, 0, 0, 0}, // senate (unused?)
-    {5, 0, 0, 0}, // senate2 (unused?)
-    {2, 0, 0, 0},
-    {2, 0, 0, 0}, // tax collectors ^^
-    {1, 1, 0, 0},
-    {2, 1, 0, 0},
+    {4, 1},        // fort yard
+    {1, 0}, // police
+    {3, 1},
+    {3, 1}, // fort (main)
+    {2, 1},
+    {2, 1},
+    {3, 0},
+    {3, 0},
+    {3, 0},
+    {3, 0},
+    {3, 0},   // temples ^^^^
+    {3, 0},                         // oz
+    {3, 0},                         // ra
+    {3, 0},                         // ptah
+    {3, 0},                         // seth
+    {3, 0},                         // temple complex ^^^^
+    {2, 0},        // bazaar
+    {4, 0},       // granary
+    {1, 1},  // storageyard (hut)
+    {1, 1},                         // storageyard (space tile)
+    {3, 0},      // shipwright
+    {3, 0},          // dock
+    {2, 0}, // wharf (fish)
+    {3, 0},
+    {4, 0},
+    {5, 0}, // mansions ^^^
+    {2, 1},
+    {1, 1}, // architects
+    {1, 1},                          // bridge
+    {1, 1},
+    {0, 0}, // senate (unused?)
+    {5, 0}, // senate2 (unused?)
+    {2, 0},
+    {2, 0}, // tax collectors ^^
+    {1, 1},
+    {2, 1},
     {2, 1, GROUP_BUILDING_WATER_LIFT}, // ??????? water lift ???????
     {1, 1, 0, 0},
     {1, 1, 0, 0}, // well

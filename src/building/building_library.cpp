@@ -5,6 +5,8 @@
 
 #include "building/count.h"
 
+#include "city/labor.h"
+
 struct scribal_school_model : public buildings::model_t<building_library> {
 } library_m;
 
@@ -18,7 +20,7 @@ void building_library::window_info_background(object_info &c) {
 }
 
 void building_library::spawn_figure() {
-    common_spawn_roamer(FIGURE_LIBRARIAN, 50);
+    common_spawn_roamer(FIGURE_LIBRARIAN, 50, FIGURE_ACTION_125_ROAMING);
     check_labor_problem();
     //    if (has_figure_of_type(FIGURE_LIBRARIAN))
     //        return;

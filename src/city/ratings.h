@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include "building/building_type.h"
 
 enum e_selected_rating {
     e_selected_rating_none = 0,
@@ -49,7 +50,7 @@ struct city_ratings_t {
     
     int selected_explanation();
     void reduce_prosperity_after_bailout();
-    void monument_building_destroyed(int type);
+    void monument_building_destroyed(e_building_type type);
     void monument_record_criminal();
     void monument_record_rioter();
     void change_kingdom(int amount);

@@ -464,10 +464,6 @@ void building::clear_related_data() {
 }
 
 e_overlay building::get_overlay() const {
-    switch (type) {
-        case BUILDING_POLICE_STATION: return OVERLAY_CRIME;
-    }
-
     return const_cast<building*>(this)->dcast()->get_overlay();
 }
 

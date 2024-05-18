@@ -98,7 +98,6 @@ static int get_height_id() {
         case BUILDING_UNUSED_NATIVE_MEETING_89:
         case BUILDING_UNUSED_NATIVE_CROPS_93:
         case BUILDING_RESERVER_MISSION_POST_80:
-        case BUILDING_POLICE_STATION:
         case BUILDING_ACADEMY:
         case BUILDING_MUD_GATEHOUSE:
         case BUILDING_MUD_TOWER:
@@ -452,7 +451,6 @@ static void draw_refresh_background() {
             case BUILDING_WATER_LIFT: window_building_draw_water_lift(&context); break;
             case BUILDING_MENU_BEAUTIFICATION: window_building_draw_fountain(&context); break;
             case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: window_building_draw_triumphal_arch(&context); break;
-            case BUILDING_POLICE_STATION: window_building_draw_prefect(&context); break;
             
             case BUILDING_ROADBLOCK:
                 if (context.storage_show_special_orders)

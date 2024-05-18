@@ -118,7 +118,6 @@ void building_count_update() {
             break;
 
             // education
-        case BUILDING_LIBRARY:
         case BUILDING_ACADEMY:
             // health
         case BUILDING_MENU_MONUMENTS:

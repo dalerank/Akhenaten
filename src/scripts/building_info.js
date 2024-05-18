@@ -63,6 +63,8 @@ building_fort = {
                     [0,  3], [1,  3], [1, 4], [0,  4]],
   },
   labor_category : LABOR_CATEGORY_MILITARY,
+  fire_proof : 1,
+  damage_proof : 1,
 }
 
 building_fort_charioteers = {
@@ -74,6 +76,8 @@ building_fort_charioteers = {
   labor_category : LABOR_CATEGORY_MILITARY,
   building_size : 3,
   window_info_height_id : 1,
+  fire_proof : 1,
+  damage_proof : 1,
 }
 
 building_fort_infantry = {
@@ -85,6 +89,8 @@ building_fort_infantry = {
   labor_category : LABOR_CATEGORY_MILITARY,
   building_size : 3,
   window_info_height_id : 1,
+  fire_proof : 1,
+  damage_proof : 1,
 }
 
 building_fort_archers = {
@@ -96,11 +102,15 @@ building_fort_archers = {
   labor_category : LABOR_CATEGORY_MILITARY,
   building_size : 3,
   window_info_height_id : 1,
+  fire_proof : 1,
+  damage_proof : 1,
 }
 
 building_fort_ground = {
   labor_category : LABOR_CATEGORY_MILITARY,
   building_size : 4,
+  fire_proof : 1,
+  damage_proof : 1,
 }
 
 building_cattle_ranch = {
@@ -851,6 +861,17 @@ building_firehouse = {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:78 }
     base : { pos : [0, 0], pack:PACK_GENERAL, id:78 }
     work : { pos : [0, 0], pack:PACK_GENERAL, id:78, offset:1, max_frames:12 }
+  },
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+  window_info_height_id : 1,
+  building_size : 1,
+}
+
+building_police_station = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:64 }
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:64 }
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:64, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
   window_info_height_id : 1,

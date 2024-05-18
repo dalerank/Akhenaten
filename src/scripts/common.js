@@ -23,6 +23,7 @@ var top_menu_bar = {}
 var building_weaponsmith = {}
 var building_granary = {}
 var building_firehouse = {}
+var building_police_station = {}
 var building_cattle_ranch = {}
 var building_fort = {}
 var building_fort_charioteers = {}

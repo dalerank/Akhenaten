@@ -395,7 +395,6 @@ public:
     building_garden *dcast_garden();
 
     bool spawn_noble(bool spawned);
-    void spawn_figure_police();
     void set_water_supply_graphic();
     void set_greate_palace_graphic();
     void spawn_figure_tax_collector();

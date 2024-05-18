@@ -59,29 +59,12 @@ void city_ratings_t::reduce_prosperity_after_bailout() {
     prosperity_explanation = 8;
 }
 
-void city_ratings_t::monument_building_destroyed(int type) {
-    switch (type) {
-    case BUILDING_HOUSE_CRUDE_HUT:
-    case BUILDING_HOUSE_STURDY_HUT:
-    case BUILDING_POLICE_STATION:
-    case BUILDING_ARCHITECT_POST:
-    case BUILDING_WELL:
-    case BUILDING_FORT_INFANTRY:
-    case BUILDING_FORT_CHARIOTEERS:
-    case BUILDING_FORT_ARCHERS:
-    case BUILDING_FORT_GROUND:
-    case BUILDING_MUD_GATEHOUSE:
-    case BUILDING_MUD_TOWER:
-        break;
-
-    default:
+void city_ratings_t::monument_building_destroyed(e_building_type type) {
+    if (building_is_monument(type)) {
         monument_destroyed_buildings++;
-        break;
     }
 
-    if (monument_destroyed_buildings >= 12) {
-        monument_destroyed_buildings = 12;
-    }
+    monument_destroyed_buildings = std::min(monument_destroyed_buildings, 12);
 }
 
 void city_ratings_t::monument_record_criminal() {

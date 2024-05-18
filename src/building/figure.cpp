@@ -376,9 +376,6 @@ bool building::spawn_noble(bool spawned) {
     return common_spawn_roamer(FIGURE_NOBLES, 50);
 }
 
-void building::spawn_figure_police() {
-    common_spawn_roamer(FIGURE_CONSTABLE, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
-}
 
 //void building::set_water_supply_graphic() {
 //    if (state != BUILDING_STATE_VALID) {
@@ -605,8 +602,6 @@ bool building::figure_generate() {
         // single building type
         switch (type) {
         case BUILDING_MUD_TOWER: spawn_figure_tower(); break;
-        case BUILDING_POLICE_STATION: spawn_figure_police(); break;
-        case BUILDING_LIBRARY: spawn_figure_library(); break;
         case BUILDING_WATER_LIFT: common_spawn_figure_trigger(50); break;
         case BUILDING_UNUSED_NATIVE_HUT_88: spawn_figure_native_hut(); break;
         case BUILDING_UNUSED_NATIVE_MEETING_89: spawn_figure_native_meeting(); break;
