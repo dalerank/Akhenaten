@@ -655,6 +655,8 @@ building_mine_copper = {
 
 building_mine_gems = {
   animations : {
+    preview : { pack:PACK_GENERAL, id:188 },
+    base : { pack:PACK_GENERAL, id:188 },
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16 }
   },
   output_resource : RESOURCE_GEMS,

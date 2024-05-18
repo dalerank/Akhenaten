@@ -123,6 +123,10 @@ const animation_t &building_mine_copper::anim(pcstr key) const { return copper_m
 const building_impl::static_params &building_mine_gems::params() const { return gems_mine_m; }
 const animation_t &building_mine_gems::anim(pcstr key) const { return gems_mine_m.anim[key]; }
 
+void building_mine_gems::update_count() const {
+    building_increase_industry_count(RESOURCE_GEMS, num_workers() > 0);
+}
+
 void building_quarry_stone::on_create(int orientation) {
     base.output_resource_first_id = RESOURCE_STONE;
 }
