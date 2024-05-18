@@ -5,11 +5,13 @@
 #include "figure/formation_legion.h"
 #include "widget/city/building_ghost.h"
 #include "widget/city/ornaments.h"
+#include "window/building/common.h"
 #include "city/finance.h"
 #include "graphics/view/view.h"
 #include "graphics/view/lookup.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
+#include "graphics/elements/ui.h"
 #include "grid/grid.h"
 #include "grid/terrain.h"
 #include "grid/property.h"
@@ -53,6 +55,15 @@ void draw_partially_blocked(painter &ctx, int fully_blocked, const std::vector<b
         vec2i pixel = tile_to_pixel(tile.tile);
         draw_flat_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
     }
+}
+
+void building_fort::window_info_background(object_info &c) {
+    c.help_id = 87;
+    window_building_play_sound(&c, "wavs/fort.wav");
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
+    lang_text_draw_centered(89, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    int text_id = formation_get(c.formation_id)->cursed_by_mars ? 1 : 2;
+    window_building_draw_description_at(c, 16 * c.bgsize.y - 158, 89, text_id);
 }
 
 void building_fort::on_place(int orientation, int variant) {
