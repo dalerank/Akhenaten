@@ -1171,12 +1171,6 @@ void BuildPlanner::update_unique_only_one_check() {
 
     // for unique buildings - only one can be placed inside the mission
     switch (build_type) {
-    case BUILDING_VILLAGE_PALACE:
-    case BUILDING_CITY_PALACE:
-    case BUILDING_TOWN_PALACE:
-        if (city_buildings_has_palace())
-            unique_already_placed = true;
-        break;
     case BUILDING_RECRUITER:
         if (city_buildings_has_recruiter() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {
             unique_already_placed = true;
