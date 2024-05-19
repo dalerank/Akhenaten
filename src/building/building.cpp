@@ -171,7 +171,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
         data.monuments.variant = (10 - (2 * orientation)) % 8; // ugh!
         break;
 
-    case BUILDING_TRANSPORT_WHARF:
     case BUILDING_WARSHIP_WHARF:
         data.industry.orientation = orientation;
         break;

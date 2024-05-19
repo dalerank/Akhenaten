@@ -251,7 +251,6 @@ static void add_building(building* b, int orientation, int variant) {
         add_temple_complex(b, orientation);
         break;
 
-    case BUILDING_TRANSPORT_WHARF:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_DOCK: {
             auto props = building_impl::params(b->type);
@@ -264,12 +263,6 @@ static void add_building(building* b, int orientation, int variant) {
         map_terrain_remove_with_radius(b->tile.x(), b->tile.y(), 2, 0, TERRAIN_WALL);
         map_building_tiles_add(b->id, b->tile, b->size, image_id_from_group(GROUP_BUILDING_TOWER), TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
         map_tiles_update_area_walls(b->tile, 5);
-        break;
-
-    case BUILDING_BRICK_GATEHOUSE:
-    case BUILDING_MUD_GATEHOUSE:
-        map_building_tiles_add(b->id, b->tile, b->size, image_id_from_group(GROUP_BUILDING_TOWER) + orientation, TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
-        map_terrain_add_gatehouse_roads(b->tile.x(), b->tile.y(), orientation);
         break;
 
     case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:

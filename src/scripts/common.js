@@ -96,6 +96,7 @@ var building_shrine_ptah = {}
 var building_shrine_seth = {}
 var building_shrine_bast = {}
 var building_fishing_wharf = {}
+var building_transport_wharf = {}
 var building_shipyard = {}
 var building_bricks_workshop = {}
 var building_vacant_lot = {}

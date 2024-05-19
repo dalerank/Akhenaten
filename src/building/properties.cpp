@@ -176,8 +176,8 @@ static building_properties properties[400] = {
     {2, 0}, // gemstone
     {0, 0},
     {0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
+    {0, 0},
+    {0, 0},
     {1, 0, 0, 0}, // firehouse
     {0, 0, 0, 0},
     {1, 1, 0, 0}, // wall
@@ -191,8 +191,8 @@ static building_properties properties[400] = {
     {2, 0, GROUP_BUILDING_GUILD_CARPENTERS},
     {2, 0, 0, 0},
     {2, 0, 0, 0}, // guilds ^^^
-    {2, 1, 0, 0},      // water supply
-    {2, 1, GROUP_BUILDING_TRANSPORT_WHARF},   // wharf (transport)
+    {2, 1},      // water supply
+    {2, 1},   // wharf (transport)
     {3, 1, GROUP_BUILDING_WARSHIP_WHARF},     // wharf (warship)
     {-1, 1, 0, 0},                            // pyramid
     {3, 0, 0, 0},        // courthouse
