@@ -686,6 +686,17 @@ building_brick_tower = {
   labor_category : LABOR_CATEGORY_MILITARY,
 }
 
+building_mud_tower = {
+  animations : {
+    preview : { pack:PACK_TERRAIN, id:98 },
+    base : { pack:PACK_TERRAIN, id:98 },
+  },
+  building_size : 2,
+  fire_proof : true,
+  window_info_height_id : 1,
+  labor_category : LABOR_CATEGORY_MILITARY,
+}
+
 building_ferry = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:23 },
