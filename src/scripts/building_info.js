@@ -694,6 +694,20 @@ building_transport_wharf = {
     // work : { pack:PACK_TERRAIN, id:18, offset:1 }
   },
   building_size : 2,
+  fire_proof : 1,
+  window_info_height_id: 1,
+  planer_relative_orientation: 1,
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+}
+
+building_warship_wharf = {
+  animations : {
+    preview : { pack:PACK_TERRAIN, id:28 },
+    base : { pack:PACK_TERRAIN, id:28 },
+    // work : { pack:PACK_TERRAIN, id:18, offset:1 }
+  },
+  building_size : 3,
+  fire_proof : 1,
   window_info_height_id: 1,
   planer_relative_orientation: 1,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,

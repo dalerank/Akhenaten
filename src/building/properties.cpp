@@ -193,7 +193,7 @@ static building_properties properties[400] = {
     {2, 0, 0, 0}, // guilds ^^^
     {2, 1},      // water supply
     {2, 1},   // wharf (transport)
-    {3, 1, GROUP_BUILDING_WARSHIP_WHARF},     // wharf (warship)
+    {3, 1},     // wharf (warship)
     {-1, 1, 0, 0},                            // pyramid
     {3, 0, 0, 0},        // courthouse
     {0, 0, 0, 0},

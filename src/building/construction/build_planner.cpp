@@ -251,7 +251,6 @@ static void add_building(building* b, int orientation, int variant) {
         add_temple_complex(b, orientation);
         break;
 
-    case BUILDING_WARSHIP_WHARF:
     case BUILDING_DOCK: {
             auto props = building_impl::params(b->type);
             map_water_add_building(b->id, b->tile, props.building_size, props.anim["base"].first_img() + orientation_rel);
