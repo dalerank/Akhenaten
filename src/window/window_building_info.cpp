@@ -99,7 +99,6 @@ static int get_height_id() {
         case BUILDING_RESERVER_MISSION_POST_80:
         case BUILDING_MUD_GATEHOUSE:
         case BUILDING_MUD_TOWER:
-        case BUILDING_ROADBLOCK:
             return 1;
 
         case BUILDING_VILLAGE_PALACE:

@@ -1,7 +1,7 @@
 #include "road_access.h"
 
 #include "building/building.h"
-#include "building/roadblock.h"
+#include "building/building_roadblock.h"
 #include "building/rotation.h"
 #include "city/city.h"
 #include "core/profiler.h"

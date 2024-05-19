@@ -1,6 +1,4 @@
-#include "building/roadblock.h"
-
-#include "building/building.h"
+#include "building_roadblock.h"
 
 void building_roadblock_set_permission(int p, building* b) {
     if (b->type == BUILDING_ROADBLOCK) {
@@ -15,4 +13,13 @@ int building_roadblock_get_permission(int p, building* b) {
 
     int permission_bit = 1 << p;
     return (b->subtype.roadblock_exceptions & permission_bit);
+}
+
+void building_roadblock::on_place_checks() {
+    /*nothing*/
+}
+
+bool building_roadblock::draw_isometric_flat_building(tile2i point, painter &ctx) {
+    /*nothing*/
+    return true;
 }

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "building/roadblock.h"
 #include "grid/point.h"
+class building;
 
 bool map_has_road_access(tile2i tile, int size);
 bool map_get_road_access_tile(tile2i tile, int size, tile2i &road);

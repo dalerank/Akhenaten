@@ -663,6 +663,18 @@ building_festival_square = {
   unique_building : true,
 }
 
+building_roadblock = {
+  animations : {
+    preview : { pack:PACK_TERRAIN, id:98 },
+    base : { pack:PACK_TERRAIN, id:98 },
+  },
+  building_size : 1,
+  fire_proof : true,
+  damage_proof : true,
+  window_info_height_id : 1,
+  labor_category : LABOR_CATEGORY_GOVERNMENT,
+}
+
 building_ferry = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:23 },

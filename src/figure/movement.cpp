@@ -3,7 +3,7 @@
 #include "grid/road_network.h"
 #include "building/building.h"
 #include "building/destruction.h"
-#include "building/roadblock.h"
+#include "building/building_roadblock.h"
 #include "core/calc.h"
 #include "figure/combat.h"
 #include "figure/route.h"

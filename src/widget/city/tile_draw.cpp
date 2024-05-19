@@ -258,7 +258,6 @@ bool draw_isometric_flat_building(building *b, tile2i point, painter &ctx) {
     int img_id = 0;
     int tile_id = 0;
     switch (b->type) {
-    case BUILDING_ROADBLOCK:
     case BUILDING_CHICKPEAS_FARM:
     case BUILDING_BURNING_RUIN:
     case BUILDING_FLAX_FARM:

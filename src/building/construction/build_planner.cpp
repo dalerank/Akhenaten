@@ -250,11 +250,6 @@ static void add_building(building* b, int orientation, int variant) {
     case BUILDING_TEMPLE_COMPLEX_BAST:
         add_temple_complex(b, orientation);
         break;
-        //        case BUILDING_ROADBLOCK:
-        //            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_ROADBLOCK));
-        //            map_terrain_add_roadblock_road(b->tile.x(), b->tile.y(), orientation);
-        //            break;
-        // ships
 
     case BUILDING_TRANSPORT_WHARF:
     case BUILDING_WARSHIP_WHARF:

@@ -886,7 +886,6 @@ void building_impl::on_place_checks() {
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
     case BUILDING_MUD_GATEHOUSE:
-    case BUILDING_ROADBLOCK:
     case BUILDING_FORT_CHARIOTEERS:
     case BUILDING_FORT_ARCHERS:
     case BUILDING_FORT_INFANTRY:

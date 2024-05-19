@@ -153,9 +153,6 @@ bool model_load(void) {
 
 // const model_building MODEL_ROADBLOCK = {40, 0, 0, 0, 0};
 const model_building* model_get_building(int type) {
-    //    if (type == BUILDING_ROADBLOCK) {
-    //        return &MODEL_ROADBLOCK;
-    //    }
     return &g_model_data.buildings[g_settings.difficulty][type];
 }
 
