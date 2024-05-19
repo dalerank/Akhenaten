@@ -199,8 +199,8 @@ static building_properties properties[400] = {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {4, 0, 0, 0},
-    {5, 0, GROUP_BUILDING_TOWN_PALACE},
-    {6, 0, GROUP_BUILDING_CITY_PALACE}, // town palace ^^^
+    {5, 0},
+    {6, 0}, // town palace ^^^
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},

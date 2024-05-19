@@ -3,8 +3,6 @@
 #include "building/rotation.h"
 #include "building/building_type.h"
 #include "building/storage.h"
-#include "building/building_mansion.h"
-#include "building/building_palace.h"
 #include "building/destruction.h"
 #include "city/buildings.h"
 #include "city/population.h"
@@ -254,18 +252,6 @@ const building_impl::static_params &building_impl::params(e_building_type e) {
 }
 
 building_impl *building::dcast() {
-    if (_ptr) {
-        return _ptr;
-    }
-
-    switch (type) {
-    case BUILDING_VILLAGE_PALACE:
-    case BUILDING_TOWN_PALACE:
-    case BUILDING_CITY_PALACE:
-        _ptr = new building_palace(*this);
-        break;
-    }
-
     if (!_ptr) {
         _ptr = buildings::create(type, *this);
     }
