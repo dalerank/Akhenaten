@@ -266,13 +266,10 @@ enum e_pack {
 //#define GROUP_BUILDING_WATER_SUPPLY PACK_GENERAL, 69
 //#define GROUP_BUILDING_COURTHOUSE PACK_GENERAL, 62
 #define GROUP_BUILDING_WALLS PACK_GENERAL, 138
-#define GROUP_BUILDING_GATEHOUSE PACK_GENERAL, 161
-#define GROUP_BUILDING_GATEHOUSE_2 PACK_GENERAL, 220
-// Warning already redefined. Is it maybe a good idea to get rid of the defines complete and use constexpr ?
+//#define GROUP_BUILDING_GATEHOUSE PACK_GENERAL, 161
+//#define GROUP_BUILDING_GATEHOUSE_2 PACK_GENERAL, 220
 #define GROUP_BUILDING_TOWER PACK_GENERAL, 135
-// Warning already redefined. Is it maybe a good idea to get rid of the defines complete and use constexpr ?
 #define GROUP_BUILDING_TRANSPORT_WHARF PACK_GENERAL, 17 // TODO
-// Warning already redefined. Is it maybe a good idea to get rid of the defines complete and use constexpr ?
 #define GROUP_BUILDING_WARSHIP_WHARF PACK_GENERAL, 28 // TODO
 #define GROUP_BUILDING_GUILD_CARPENTERS PACK_GENERAL, 91
 //#define GROUP_BUILDING_GUILD_STONEMASONS PACK_GENERAL, 88

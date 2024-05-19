@@ -56,6 +56,7 @@ public:
     virtual const static_params &params() const override;
     virtual const animation_t &anim(pcstr key) const override;
     virtual int get_produce_uptick_per_day() const override;
+    virtual void update_count() const override;
 };
 
 class building_mine_gems : public building_mine {

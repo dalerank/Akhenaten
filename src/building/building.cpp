@@ -176,11 +176,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
         data.industry.orientation = orientation;
         break;
 
-    case BUILDING_BRICK_GATEHOUSE:
-    case BUILDING_MUD_GATEHOUSE:
-        subtype.orientation = orientation;
-        break;
-
     default:
         output_resource_first_id = RESOURCE_NONE;
         dcast()->on_create(orientation);

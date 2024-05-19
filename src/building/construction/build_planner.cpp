@@ -1432,6 +1432,7 @@ void BuildPlanner::construction_update(tile2i tile) {
         break;
 
     case BUILDING_BRICK_GATEHOUSE:
+    case BUILDING_MUD_GATEHOUSE:
         mark_construction(tile, 1, 3, ~TERRAIN_ROAD, false); // TODO
         break;
 

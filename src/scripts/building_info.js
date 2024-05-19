@@ -883,6 +883,30 @@ building_mine_gold = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
+building_brick_gatehouse = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:161 },
+    base : { pack:PACK_GENERAL, id:161 },
+  },
+  building_size : 2,
+}
+
+building_mud_gatehouse = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:220 },
+    base : { pack:PACK_GENERAL, id:220 },
+  },
+  building_size : 2,
+}
+
+building_mud_gatehouse = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:36 },
+    base : { pack:PACK_GENERAL, id:36 },
+  },
+  building_size : 1,
+}
+
 building_vacant_lot = {
   animations : {
     preview : { pack:PACK_GENERAL, id:36 },
