@@ -111,6 +111,10 @@ int building_mine_gold::get_produce_uptick_per_day() const {
     }
 }
 
+void building_mine_gold::update_count() const {
+    building_increase_industry_count(RESOURCE_GOLD, num_workers() > 0);
+}
+
 const building_impl::static_params &building_mine_gold::params() const { return gold_mine_m; }
 const animation_t &building_mine_gold::anim(pcstr key) const { return gold_mine_m.anim[key]; }
 
