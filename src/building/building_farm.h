@@ -22,6 +22,7 @@ public:
     virtual building_farm *dcast_farm() override { return this; }
     virtual e_sound_channel_city sound_channel() const override;
     virtual bool draw_isometric_flat_building(tile2i point, painter &ctx) override { return true; }
+    virtual void update_count() const override;
     virtual void spawn_figure() override;
 
     void deplete_soil();

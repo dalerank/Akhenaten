@@ -131,30 +131,6 @@ void building_count_update() {
         }
         // industry
         switch (b.type) {
-        case BUILDING_GRAIN_FARM:
-            building_increase_industry_count(RESOURCE_GRAIN, b.num_workers > 0);
-            break;
-        case BUILDING_BARLEY_FARM:
-            building_increase_industry_count(RESOURCE_BARLEY, b.num_workers > 0);
-            break;
-        case BUILDING_FLAX_FARM:
-            building_increase_industry_count(RESOURCE_FLAX, b.num_workers > 0);
-            break;
-        case BUILDING_LETTUCE_FARM:
-            building_increase_industry_count(RESOURCE_LETTUCE, b.num_workers > 0);
-            break;
-        case BUILDING_POMEGRANATES_FARM:
-            building_increase_industry_count(RESOURCE_POMEGRANATES, b.num_workers > 0);
-            break;
-        case BUILDING_CHICKPEAS_FARM:
-            building_increase_industry_count(RESOURCE_CHICKPEAS, b.num_workers > 0);
-            break;
-        case BUILDING_FIGS_FARM:
-            building_increase_industry_count(RESOURCE_FIGS, b.num_workers > 0);
-            break;
-        case BUILDING_HENNA_FARM:
-            building_increase_industry_count(RESOURCE_HENNA, b.num_workers > 0);
-            break;
         case BUILDING_COPPER_MINE:
             building_increase_industry_count(RESOURCE_COPPER, b.num_workers > 0);
             break;

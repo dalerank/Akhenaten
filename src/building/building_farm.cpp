@@ -1,6 +1,6 @@
 #include "building_farm.h"
 
-#include "building/building.h"
+#include "building/count.h"
 #include "building/industry.h"
 #include "building/building_animation.h"
 #include "city/object_info.h"
@@ -387,6 +387,35 @@ e_sound_channel_city building_farm::sound_channel() const {
         return SOUND_CHANNEL_CITY_CHICKFARM;
     }
     return SOUND_CHANNEL_CITY_NONE;
+}
+
+void building_farm::update_count() const {
+    switch(type()) {
+    case BUILDING_GRAIN_FARM:
+        building_increase_industry_count(RESOURCE_GRAIN, num_workers() > 0);
+        break;
+    case BUILDING_BARLEY_FARM:
+        building_increase_industry_count(RESOURCE_BARLEY, num_workers() > 0);
+        break;
+    case BUILDING_FLAX_FARM:
+        building_increase_industry_count(RESOURCE_FLAX, num_workers() > 0);
+        break;
+    case BUILDING_LETTUCE_FARM:
+        building_increase_industry_count(RESOURCE_LETTUCE, num_workers() > 0);
+        break;
+    case BUILDING_POMEGRANATES_FARM:
+        building_increase_industry_count(RESOURCE_POMEGRANATES, num_workers() > 0);
+        break;
+    case BUILDING_CHICKPEAS_FARM:
+        building_increase_industry_count(RESOURCE_CHICKPEAS, num_workers() > 0);
+        break;
+    case BUILDING_FIGS_FARM:
+        building_increase_industry_count(RESOURCE_FIGS, num_workers() > 0);
+        break;
+    case BUILDING_HENNA_FARM:
+        building_increase_industry_count(RESOURCE_HENNA, num_workers() > 0);
+        break;
+    }
 }
 
 void building_farm::spawn_figure() {
