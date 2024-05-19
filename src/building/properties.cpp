@@ -178,27 +178,27 @@ static building_properties properties[400] = {
     {0, 0},
     {0, 0},
     {0, 0},
-    {1, 0, 0, 0}, // firehouse
-    {0, 0, 0, 0},
-    {1, 1, 0, 0}, // wall
-    {0, 0, 0, 0},
-    {1, 1, 0, 0}, // gatehouse
-    {0, 0, 0, 0},
-    {2, 1, GROUP_BUILDING_TOWER}, // tower
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {1, 1, 0, 0},
+    {1, 0}, // firehouse
+    {0, 0},
+    {1, 1}, // wall
+    {0, 0},
+    {1, 1}, // gatehouse
+    {0, 0},
+    {2, 1}, // tower
+    {0, 0},
+    {0, 0},
+    {1, 1},
     {2, 0, GROUP_BUILDING_GUILD_CARPENTERS},
-    {2, 0, 0, 0},
-    {2, 0, 0, 0}, // guilds ^^^
+    {2, 0},
+    {2, 0}, // guilds ^^^
     {2, 1},      // water supply
     {2, 1},   // wharf (transport)
     {3, 1},     // wharf (warship)
-    {-1, 1, 0, 0},                            // pyramid
-    {3, 0, 0, 0},        // courthouse
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {4, 0, 0, 0},
+    {-1, 1},                            // pyramid
+    {3, 0},        // courthouse
+    {0, 0},
+    {0, 0},
+    {4, 0},
     {5, 0},
     {6, 0}, // town palace ^^^
     {0, 0, 0, 0},

@@ -108,6 +108,8 @@ var building_limestone_quarry = {}
 var building_plaza = {}
 var building_garden = {}
 var building_weaver = {}
+var building_brick_tower = {}
+// misc
 var empire_window = {}
 var empire_images_remap = []
 var imagepaks = []
