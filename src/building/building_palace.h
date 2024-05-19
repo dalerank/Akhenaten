@@ -16,3 +16,15 @@ public:
     building_village_palace(building &b) : building_impl(b) {}
     BUILDING_METAINFO(BUILDING_VILLAGE_PALACE, building_village_palace)
 };
+
+class building_town_palace : public building_impl {
+public:
+    building_town_palace(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_TOWN_PALACE, building_town_palace)
+};
+
+class building_city_palace : public building_impl {
+public:
+    building_city_palace(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_TOWN_PALACE, building_city_palace)
+};

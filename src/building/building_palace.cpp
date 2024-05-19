@@ -19,16 +19,16 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 
-struct building_village_palace : public building_impl { 
-    building_village_palace(building &b) : building_impl(b) {}
-    BUILDING_METAINFO(BUILDING_VILLAGE_PALACE, building_village_palace)
-};
 
 buildings::model_t<building_village_palace> village_building_palace_m;
+buildings::model_t<building_town_palace> town_building_palace_m;
+buildings::model_t<building_city_palace> city_building_palace_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_palace_model);
 void config_load_building_palace_model() {
     village_building_palace_m.load();
+    town_building_palace_m.load();
+    city_building_palace_m.load();
 }
 
 void building_palace::on_create(int orientation) {

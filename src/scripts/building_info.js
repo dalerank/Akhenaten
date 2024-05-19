@@ -744,7 +744,27 @@ building_garden = {
 
 building_village_palace = {
   animations : {
-    work : { pos : [-1, -1], anim_id: IMG_VILLAGE_PALACE }
+    preview : { pack:PACK_GENERAL, id:47 },
+    base : { pack:PACK_GENERAL, id:47 },
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:47, offset:1, max_frames:12 }
+  },
+  labor_category : LABOR_CATEGORY_GOVERNMENT,
+}
+
+building_town_palace = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:39 },
+    base : { pack:PACK_GENERAL, id:39 },
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:39, offset:1, max_frames:12 }
+  },
+  labor_category : LABOR_CATEGORY_GOVERNMENT,
+}
+
+building_city_palace = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:18 },
+    base : { pack:PACK_GENERAL, id:18 },
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:18, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
 }
