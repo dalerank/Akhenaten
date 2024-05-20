@@ -1,10 +1,33 @@
 #pragma once
 
-#include "graphics/color.h"
-#include "game/resource.h"
 #include "building/building.h"
 
 void building_workshop_draw_background(object_info &c, int help_id, pcstr type, int group_id, e_resource resource, e_resource input_resource);
 void building_workshop_draw_background(object_info &c, int help_id, pcstr type, int group_id, e_resource resource, e_resource input_resource_a, e_resource input_resource_b);
 void building_workshop_draw_foreground(object_info &c);
-void building_workshop_draw_raw_material_storage(painter &ctx, const building *b, vec2i pos, color color_mask);
+
+class building_lamp_workshop : public building_impl {
+public:
+    BUILDING_METAINFO(BUILDING_LAMP_WORKSHOP, building_lamp_workshop)
+    building_lamp_workshop(building &b) : building_impl(b) {}
+
+    virtual void on_create(int orientation) override;
+    virtual void on_place(int orientation, int variant) override;
+    virtual void window_info_background(object_info &c) override;
+    virtual void spawn_figure() override;
+    virtual void update_count() const override;
+    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
+};
+
+class building_paint_workshop : public building_impl {
+public:
+    BUILDING_METAINFO(BUILDING_PAINT_WORKSHOP, building_paint_workshop)
+    building_paint_workshop(building &b) : building_impl(b) {}
+
+    virtual void on_create(int orientation) override;
+    virtual void on_place(int orientation, int variant) override;
+    virtual void window_info_background(object_info &c) override;
+    virtual void spawn_figure() override;
+    virtual void update_count() const override;
+    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
+};

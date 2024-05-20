@@ -1,6 +1,14 @@
 #include "building_chariots_workshop.h"
 
 #include "building/count.h"
+#include "js/js_game.h"
+
+buildings::model_t<building_chariots_workshop> chariots_workshop_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_chariots_workshop);
+void config_load_building_chariots_workshop() {
+    chariots_workshop_m.load();
+}
 
 void building_chariots_workshop::on_create(int orientation) {
     data.industry.first_material_id = RESOURCE_TIMBER;

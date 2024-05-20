@@ -1043,6 +1043,19 @@ building_pottery = {
   window_info_height_id : 1,
 }
 
+building_lamp_workshop = {
+  animations : {
+    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
+    base : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
+    work : { pos : [36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18 },
+    clay : { pos:[65, 3], pack:PACK_GENERAL, id:207 },
+  },
+  production_rate : 20,
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  building_size : 2,
+  window_info_height_id : 1,
+}
+
 building_academy = {
   animations : {
     preview : { pack:PACK_GENERAL, id:44 },

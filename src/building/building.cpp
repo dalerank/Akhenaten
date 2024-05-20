@@ -138,17 +138,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
 
     // unique data
     switch (type) {
-    case BUILDING_LAMP_WORKSHOP:
-        data.industry.first_material_id = RESOURCE_OIL;
-        data.industry.second_material_id = RESOURCE_TIMBER;
-        output_resource_first_id = RESOURCE_LAMPS;
-        break;
-
-    case BUILDING_PAINT_WORKSHOP:
-        data.industry.first_material_id = RESOURCE_OIL;
-        output_resource_first_id = RESOURCE_PAINT;
-        break;
-
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
