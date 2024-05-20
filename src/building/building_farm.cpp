@@ -344,6 +344,9 @@ bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
 
 void building_farm::on_create(int orientation) {
     switch (type()) {
+    case BUILDING_HENNA_FARM:
+        base.output_resource_first_id = RESOURCE_HENNA;
+        break;
     case BUILDING_BARLEY_FARM:
         base.output_resource_first_id = RESOURCE_BARLEY;
         break;
