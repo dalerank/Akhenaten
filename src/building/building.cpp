@@ -144,10 +144,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
         output_resource_first_id = RESOURCE_CHARIOTS;
         break;
 
-    case BUILDING_GRANITE_QUARRY:
-        output_resource_first_id = RESOURCE_GRANITE;
-        break;
-
     case BUILDING_HENNA_FARM:
         output_resource_first_id = RESOURCE_HENNA;
         break;

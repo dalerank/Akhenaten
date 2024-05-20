@@ -221,7 +221,7 @@ building_bricklayers_guild = {
   building_size : 2,
 }
 
-building_bricklayers_guild = {
+building_carpenters_guild = {
   animations : {
     preview : { pack:PACK_GENERAL, id:91 }
     base : { pack:PACK_GENERAL, id:91 }
@@ -912,6 +912,19 @@ building_stone_quarry = {
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
   },
   output_resource : RESOURCE_STONE,
+  building_size : 2,
+  info_help_id:93,
+  info_text_id:162,
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
+
+building_granite_quarry = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:38 },
+    base : { pack:PACK_GENERAL, id:38 },
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
+  },
+  output_resource : RESOURCE_GRANITE,
   building_size : 2,
   info_help_id:93,
   info_text_id:162,

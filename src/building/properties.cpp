@@ -227,7 +227,7 @@ static building_properties properties[400] = {
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     {0, 0, 0, 0},
-    {2, 0, GROUP_BUILDING_GRANITE_QUARY, 0}, // granite
+    {2, 0}, // granite
     {2, 0, 0, 0},   // copper
     {0, 0, 0, 0},
     {0, 0, 0, 0},

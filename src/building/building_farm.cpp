@@ -147,7 +147,7 @@ void building_farm::window_info_background(object_info& c) {
     }
 }
 
-int get_farm_image(tile2i tile) {
+int building_farm::get_farm_image(tile2i tile) {
     if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
         int base = image_id_from_group(GROUP_BUILDING_FARMLAND);
         int fert_average = map_get_fertility_for_farm(tile);
@@ -176,14 +176,6 @@ int get_farm_image(tile2i tile) {
     }
 }
 
-void building_farm::ghost_preview(painter &ctx, e_building_type type, vec2i point, tile2i tile) {
-    int image_id = get_farm_image(tile);
-    draw_building_ghost(ctx, image_id, point + vec2i{-60, 0});
-
-    draw_farm_crops(ctx, type, 0, tile, point + vec2i{-60, 30}, COLOR_MASK_GREEN);
-}
-
-
 void draw_farm_worker(painter &ctx, int direction, int action, int frame_offset, vec2i coords, color color_mask = COLOR_MASK_NONE) {
     e_image_id action_img;
     switch (action) {
@@ -192,6 +184,13 @@ void draw_farm_worker(painter &ctx, int direction, int action, int frame_offset,
     case FARM_WORKER_HARVESTING: coords.y += 10; action_img = IMG_WORKER_AKNH_HARVESTING; break;
     }
     ImageDraw::img_sprite(ctx, image_group(action_img) + direction + 8 * (frame_offset - 1), coords.x, coords.y, color_mask);
+}
+
+void building_farm::ghost_preview(painter &ctx, e_building_type type, vec2i point, tile2i tile) {
+    int image_id = get_farm_image(tile);
+    draw_building_ghost(ctx, image_id, point + vec2i{-60, 0});
+
+    draw_farm_crops(ctx, type, 0, tile, point + vec2i{-60, 30}, COLOR_MASK_GREEN);
 }
 
 static const vec2i FARM_TILE_OFFSETS_FLOODPLAIN[9] = {{60, 0}, {90, 15}, {120, 30}, {30, 15}, {60, 30}, {90, 45}, {0, 30}, {30, 45}, {60, 60}};
@@ -218,7 +217,7 @@ int get_crops_image(e_building_type type, int growth) {
     return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
 }
 
-void draw_farm_crops(painter &ctx, e_building_type type, int progress, tile2i tile, vec2i point, color color_mask) {
+void building_farm::draw_farm_crops(painter &ctx, e_building_type type, int progress, tile2i tile, vec2i point, color color_mask) {
     int image_crops = get_crops_image(type, 0);
     if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) { // on floodplains - all
         for (int i = 0; i < 9; i++) {

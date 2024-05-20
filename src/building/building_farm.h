@@ -31,7 +31,8 @@ public:
     inline bool is_floodplain_farm() const { return building_is_floodplain_farm(base); }
 
     static void ghost_preview(painter &ctx, e_building_type type, vec2i point, tile2i tile);
+    static int get_farm_image(tile2i tile);
+    static void draw_farm_crops(painter &ctx, e_building_type type, int progress, tile2i tile, vec2i point, color color_mask);
 };
 
-void building_farm_draw_workers(painter &ctx, building *b, int grid_offset, vec2i pos);
 bool building_farm_time_to_deliver(bool floodplains, int resource_id = 0);

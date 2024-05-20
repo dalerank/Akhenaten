@@ -435,7 +435,6 @@ static void draw_refresh_background() {
             window_building_draw_house(&context);
         } else {
             switch (building_get(context.building_id)->type) {
-            case BUILDING_GRANITE_QUARRY: building_granite_quarry_draw_info(context); break;;
             case BUILDING_SENET_MASTER: building_bullfight_school_draw_info(context); break;
             case BUILDING_ORACLE: window_building_draw_oracle(&context); break;
             //case BUILDING_WELL: window_building_draw_fountain(&context); break;

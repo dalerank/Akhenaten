@@ -86,10 +86,6 @@ void building_marble_quarry_draw_info(object_info& c) {
     building_raw_material_draw_info(c, "marble_quarry", RESOURCE_MARBLE);
 }
 
-void building_granite_quarry_draw_info(object_info& c) {
-    building_raw_material_draw_info(c, "granite_quarry", RESOURCE_SANDSTONE);
-}
-
 void building_mine::on_create(int orientation) {
     base.output_resource_first_id = params().output_resource;
 }

@@ -106,6 +106,7 @@ var building_senet_house = {}
 var building_sandstone_quarry = {}
 var building_stone_quarry = {}
 var building_limestone_quarry = {}
+var building_granite_quarry = {}
 var building_plaza = {}
 var building_garden = {}
 var building_weaver = {}
