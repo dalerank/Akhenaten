@@ -129,9 +129,6 @@ void building_count_update() {
         }
         // industry
         switch (b.type) {
-        case BUILDING_COPPER_MINE:
-            building_increase_industry_count(RESOURCE_COPPER, b.num_workers > 0);
-            break;
         case BUILDING_LAMP_WORKSHOP:
             building_increase_industry_count(RESOURCE_LAMPS, b.num_workers > 0);
             break;

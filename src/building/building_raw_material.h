@@ -85,4 +85,5 @@ public:
     virtual const static_params &params() const override;
     virtual const animation_t &anim(pcstr key) const override;
     virtual int get_produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 2) : 0; }
+    virtual void update_count() const override;
 };

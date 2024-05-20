@@ -117,6 +117,10 @@ const animation_t &building_mine_gold::anim(pcstr key) const { return gold_mine_
 const building_impl::static_params &building_mine_copper::params() const { return copper_mine_m; }
 const animation_t &building_mine_copper::anim(pcstr key) const { return copper_mine_m.anim[key]; }
 
+void building_mine_copper::update_count() const {
+    building_increase_industry_count(RESOURCE_COPPER, num_workers() > 0);
+}
+
 const building_impl::static_params &building_mine_gems::params() const { return gems_mine_m; }
 const animation_t &building_mine_gems::anim(pcstr key) const { return gems_mine_m.anim[key]; }
 
