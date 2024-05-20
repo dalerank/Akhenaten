@@ -90,15 +90,12 @@ static int get_height_id() {
         case BUILDING_TEMPLE_COMPLEX_SETH:
         case BUILDING_TEMPLE_COMPLEX_BAST:
         case BUILDING_ORACLE:
-        case BUILDING_SENET_MASTER:
         case BUILDING_MENU_MONUMENTS:
         case BUILDING_BURNING_RUIN:
         case BUILDING_UNUSED_NATIVE_HUT_88:
         case BUILDING_UNUSED_NATIVE_MEETING_89:
         case BUILDING_UNUSED_NATIVE_CROPS_93:
         case BUILDING_RESERVER_MISSION_POST_80:
-        case BUILDING_MUD_GATEHOUSE:
-        case BUILDING_MUD_TOWER:
             return 1;
 
         case BUILDING_VILLAGE_PALACE:
@@ -435,7 +432,6 @@ static void draw_refresh_background() {
             window_building_draw_house(&context);
         } else {
             switch (building_get(context.building_id)->type) {
-            case BUILDING_SENET_MASTER: building_bullfight_school_draw_info(context); break;
             case BUILDING_ORACLE: window_building_draw_oracle(&context); break;
             //case BUILDING_WELL: window_building_draw_fountain(&context); break;
             case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: window_building_draw_triumphal_arch(&context); break;
@@ -447,7 +443,6 @@ static void draw_refresh_background() {
                     window_building_draw_roadblock(&context);
                 break;
 
-            case BUILDING_MUD_GATEHOUSE: window_building_draw_gatehouse(&context); break;
             case BUILDING_MUD_TOWER: window_building_draw_tower(&context); break;
             
             case BUILDING_BURNING_RUIN: window_building_draw_burning_ruin(&context); break;

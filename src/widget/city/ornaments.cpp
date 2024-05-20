@@ -65,29 +65,6 @@ void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile
     }
 }
 
-
-static void draw_gatehouse_anim(int x, int y, building* b, painter &ctx) {
-    int xy = map_property_multi_tile_xy(b->tile.grid_offset());
-    int orientation = city_view_orientation();
-    if ((orientation == DIR_0_TOP_RIGHT && xy == EDGE_X1Y1) || (orientation == DIR_2_BOTTOM_RIGHT && xy == EDGE_X0Y1)
-        || (orientation == DIR_4_BOTTOM_LEFT && xy == EDGE_X0Y0)
-        || (orientation == DIR_6_TOP_LEFT && xy == EDGE_X1Y0)) {
-        int image_id = image_id_from_group(GROUP_BULIDING_GATEHOUSE);
-        int color_mask = drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0;
-        if (b->subtype.orientation == 1) {
-            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT)
-                ImageDraw::img_generic(ctx, image_id, x - 22, y - 80, color_mask);
-            else
-                ImageDraw::img_generic(ctx, image_id + 1, x - 18, y - 81, color_mask);
-        } else if (b->subtype.orientation == 2) {
-            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT)
-                ImageDraw::img_generic(ctx, image_id + 1, x - 18, y - 81, color_mask);
-            else
-                ImageDraw::img_generic(ctx, image_id, x - 22, y - 80, color_mask);
-        }
-    }
-}
-
 /////// ORNAMENTS
 
 static void draw_hippodrome_ornaments(vec2i pixel, map_point point, painter &ctx) {
@@ -151,10 +128,6 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
     switch (b->type) {
     case BUILDING_BURNING_RUIN:
         building_draw_normal_anim(ctx, point, b, tile, image_id, color_mask);
-        break;
-
-    case BUILDING_MUD_GATEHOUSE:
-        draw_gatehouse_anim(point.x, point.y, b, ctx);
         break;
 
     default:

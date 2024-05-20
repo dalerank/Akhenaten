@@ -90,24 +90,6 @@ void map_orientation_update_buildings() {
             b->dcast()->update_map_orientation(map_orientation);
             break;
 
-        case BUILDING_MUD_GATEHOUSE:
-            if (b->subtype.orientation == 1) {
-                if (orientation_is_top_bottom)
-                    image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 1;
-                else {
-                    image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 2;
-                }
-            } else {
-                if (orientation_is_top_bottom)
-                    image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 2;
-                else {
-                    image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 1;
-                }
-            }
-            map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
-            map_terrain_add_gatehouse_roads(b->tile.x(), b->tile.y(), 0);
-            break;
-
         case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
             if (b->subtype.orientation == 1) {
                 if (orientation_is_top_bottom)

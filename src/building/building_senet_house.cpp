@@ -8,8 +8,12 @@
 #include "window/building/common.h"
 #include "city/labor.h"
 #include "city/buildings.h"
+#include "city/warnings.h"
+#include "window/building/common.h"
+#include "sound/sound_building.h"
 
-struct senet_house_model : public buildings::model_t<building_senet_house> {} senet_house_m;
+buildings::model_t<building_senet_house> senet_house_m;
+buildings::model_t<building_bullfight_school> bullfight_school_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_senet_house);
 void config_load_senet_house() {
@@ -42,10 +46,11 @@ void building_senet_house::window_info_background(object_info &c) {
 }
 
 void building_senet_house::on_place_checks() {
-    //if (!g_has_warning && type == BUILDING_SENET_HOUSE) {
-    //    if (building_count_active(BUILDING_SENET_MASTER) <= 0)
-    //        building_construction_warning_show(WARNING_BUILD_SENET_MAKER);
-    //}
+    if (building_count_active(BUILDING_SENET_MASTER) > 0) {
+        return;
+    }
+    
+    building_construction_warning_show(WARNING_BUILD_SENET_MAKER);
 }
 
 void building_senet_house::on_destroy() {
@@ -119,5 +124,41 @@ void building_senet_house::spawn_figure() {
 }
 
 void building_senet_house::update_count() const {
+    building_increase_type_count(type(), num_workers() > 0);
+}
+
+void building_bullfight_school::window_info_background(object_info &c) {
+    c.help_id = 75;
+    window_building_play_sound(&c, snd::get_building_info_sound("bullfight_school"));
+
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
+    int group_id = 78;
+    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    if (!c.has_road_access) {
+        window_building_draw_description(c, 69, 25);
+    } else if (building_get(c.building_id)->num_workers <= 0) {
+        window_building_draw_description(c, group_id, 7);
+    } else if (c.worker_percentage >= 100) {
+        window_building_draw_description(c, group_id, 2);
+    } else if (c.worker_percentage >= 75) {
+        window_building_draw_description(c, group_id, 3);
+    } else if (c.worker_percentage >= 50) {
+        window_building_draw_description(c, group_id, 4);
+    } else if (c.worker_percentage >= 25) {
+        window_building_draw_description(c, group_id, 5);
+    } else {
+        window_building_draw_description(c, group_id, 6);
+    }
+    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
+    window_building_draw_employment(&c, 142);
+}
+
+bool building_bullfight_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_CHARIOTS_2) + amount, x + 65, y +
+    //            3, color_mask);
+    return true;
+}
+
+void building_bullfight_school::update_count() const {
     building_increase_type_count(type(), num_workers() > 0);
 }

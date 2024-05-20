@@ -698,8 +698,8 @@ building_brick_tower = {
 
 building_mud_tower = {
   animations : {
-    preview : { pack:PACK_TERRAIN, id:98 },
-    base : { pack:PACK_TERRAIN, id:98 },
+    preview : { pack:PACK_TERRAIN, id:135 },
+    base : { pack:PACK_TERRAIN, id:135 },
   },
   building_size : 2,
   fire_proof : true,
@@ -971,14 +971,7 @@ building_mud_gatehouse = {
     base : { pack:PACK_GENERAL, id:220 },
   },
   building_size : 2,
-}
-
-building_mud_gatehouse = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:36 },
-    base : { pack:PACK_GENERAL, id:36 },
-  },
-  building_size : 1,
+  window_info_height_id : 1,
 }
 
 building_vacant_lot = {
@@ -996,6 +989,16 @@ building_senet_house = {
   },
   damage_proof : true,
   window_info_height_id : 2,
+  building_size : 4,
+}
+
+building_bullfight_school = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:17 },
+    base : { pack:PACK_GENERAL, id:17 },
+  },
+  damage_proof : true,
+  window_info_height_id : 1,
   building_size : 4,
 }
 

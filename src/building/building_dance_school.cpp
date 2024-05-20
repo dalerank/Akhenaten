@@ -79,6 +79,3 @@ void building_dancer_school::window_info_background(object_info &c) {
     building_entertainment_school_draw_info(c, "dancer_school", 76);
 }
 
-void building_bullfight_school_draw_info(object_info& c) {
-    building_entertainment_school_draw_info(c, "bullfight_school", 78);
-}

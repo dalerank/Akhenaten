@@ -17,5 +17,3 @@ public:
 };
 
 void building_entertainment_school_draw_info(object_info &c, pcstr type, int group_id);
-
-void building_bullfight_school_draw_info(object_info& c);

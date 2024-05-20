@@ -117,8 +117,6 @@ void building_count_update() {
             // government
         case BUILDING_VILLAGE_PALACE:
         case BUILDING_TOWN_PALACE:
-            // entertainment schools
-        case BUILDING_SENET_MASTER:
             // religion
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_RA:

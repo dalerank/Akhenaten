@@ -103,6 +103,7 @@ var building_shipyard = {}
 var building_bricks_workshop = {}
 var building_vacant_lot = {}
 var building_senet_house = {}
+var building_bullfight_school = {}
 var building_sandstone_quarry = {}
 var building_stone_quarry = {}
 var building_limestone_quarry = {}
