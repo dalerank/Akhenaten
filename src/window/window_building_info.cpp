@@ -442,8 +442,6 @@ static void draw_refresh_background() {
                 else
                     window_building_draw_roadblock(&context);
                 break;
-
-            case BUILDING_MUD_TOWER: window_building_draw_tower(&context); break;
             
             case BUILDING_BURNING_RUIN: window_building_draw_burning_ruin(&context); break;
             case BUILDING_UNUSED_NATIVE_HUT_88: window_building_draw_native_hut(&context); break;

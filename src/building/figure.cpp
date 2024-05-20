@@ -530,24 +530,6 @@ void building::spawn_figure_native_meeting() {
     //    }
 }
 
-void building::spawn_figure_tower() {
-    check_labor_problem();
-    map_point road;
-    if (map_get_road_access_tile(tile, size, road)) {
-        common_spawn_labor_seeker(50);
-        if (num_workers <= 0)
-            return;
-
-        if (has_figure(0) && !has_figure(3)) { // has sentry but no ballista -> create
-            create_figure_generic(FIGURE_BALLISTA, FIGURE_ACTION_180_BALLISTA_CREATED, BUILDING_SLOT_BALLISTA, DIR_0_TOP_RIGHT);
-        }
-
-        if (!has_figure(0)) {
-            building_barracks_request_tower_sentry();
-        }
-    }
-}
-
 void building::update_native_crop_progress() {
     data.industry.progress++;
     if (data.industry.progress >= 5) {
@@ -601,7 +583,6 @@ bool building::figure_generate() {
     } else {
         // single building type
         switch (type) {
-        case BUILDING_MUD_TOWER: spawn_figure_tower(); break;
         case BUILDING_UNUSED_NATIVE_HUT_88: spawn_figure_native_hut(); break;
         case BUILDING_UNUSED_NATIVE_MEETING_89: spawn_figure_native_meeting(); break;
         case BUILDING_UNUSED_NATIVE_CROPS_93: update_native_crop_progress(); break;

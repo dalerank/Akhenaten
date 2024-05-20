@@ -401,7 +401,6 @@ public:
     void spawn_figure_industry();
     void spawn_figure_native_hut();
     void spawn_figure_native_meeting();
-    void spawn_figure_tower();
 
     int get_figures_number(e_figure_type ftype);
 
