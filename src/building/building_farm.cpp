@@ -22,6 +22,7 @@
 #include "io/gamefiles/lang.h"
 #include "config/config.h"
 #include "window/building/common.h"
+#include "widget/city/building_ghost.h"
 #include "sound/sound_building.h"
 #include "game/game.h"
 #include "figure/figure.h"
@@ -145,6 +146,43 @@ void building_farm::window_info_background(object_info& c) {
     case BUILDING_HENNA_FARM: building_farm_draw_info(c, "henna_farm", RESOURCE_HENNA); break;
     }
 }
+
+int get_farm_image(tile2i tile) {
+    if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
+        int base = image_id_from_group(GROUP_BUILDING_FARMLAND);
+        int fert_average = map_get_fertility_for_farm(tile);
+        int fertility_index = 0;
+
+        if (fert_average < 13)
+            fertility_index = 0;
+        else if (fert_average < 25)
+            fertility_index = 1;
+        else if (fert_average < 38)
+            fertility_index = 2;
+        else if (fert_average < 50)
+            fertility_index = 3;
+        else if (fert_average < 63)
+            fertility_index = 4;
+        else if (fert_average < 75)
+            fertility_index = 5;
+        else if (fert_average < 87)
+            fertility_index = 6;
+        else
+            fertility_index = 7;
+
+        return base + fertility_index;
+    } else {
+        return image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
+    }
+}
+
+void building_farm::ghost_preview(painter &ctx, e_building_type type, vec2i point, tile2i tile) {
+    int image_id = get_farm_image(tile);
+    draw_building_ghost(ctx, image_id, point + vec2i{-60, 0});
+
+    draw_farm_crops(ctx, type, 0, tile, point + vec2i{-60, 30}, COLOR_MASK_GREEN);
+}
+
 
 void draw_farm_worker(painter &ctx, int direction, int action, int frame_offset, vec2i coords, color color_mask = COLOR_MASK_NONE) {
     e_image_id action_img;

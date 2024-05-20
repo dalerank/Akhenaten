@@ -188,7 +188,7 @@ static building_properties properties[400] = {
     {0, 0},
     {0, 0},
     {1, 1},
-    {2, 0, GROUP_BUILDING_GUILD_CARPENTERS},
+    {2, 0},
     {2, 0},
     {2, 0}, // guilds ^^^
     {2, 1},      // water supply
@@ -201,12 +201,12 @@ static building_properties properties[400] = {
     {4, 0},
     {5, 0},
     {6, 0}, // town palace ^^^
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {3, 0, 0, 0},
-    {2, 0, 0, 0}, // reeds
+    {0, 0},
+    {0, 0},
+    {0, 0},
+    {0, 0},
+    {3, 0},
+    {2, 0}, // reeds
     {3, 1, 0, 0},                           // figs farm
     {0, 0, 0, 0},
     {0, 0, 0, 0},

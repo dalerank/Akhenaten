@@ -221,6 +221,16 @@ building_bricklayers_guild = {
   building_size : 2,
 }
 
+building_bricklayers_guild = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:91 }
+    base : { pack:PACK_GENERAL, id:91 }
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:91, offset:1, max_frames:12 }
+  },
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+  building_size : 2,
+}
+
 building_dock = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:49 },

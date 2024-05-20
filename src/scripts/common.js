@@ -85,6 +85,7 @@ var building_reed_gatherer = {}
 var building_papyrus_maker = {}
 var building_guild_stonemasons = {}
 var building_bricklayers_guild = {}
+var building_carpenters_guild = {}
 var building_dock = {}
 var building_small_mastaba = {}
 var building_tax_collector = {}

@@ -29,6 +29,8 @@ public:
     void update_tiles_image();
     void spawn_figure_harvests();
     inline bool is_floodplain_farm() const { return building_is_floodplain_farm(base); }
+
+    static void ghost_preview(painter &ctx, e_building_type type, vec2i point, tile2i tile);
 };
 
 void building_farm_draw_workers(painter &ctx, building *b, int grid_offset, vec2i pos);

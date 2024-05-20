@@ -5,6 +5,7 @@
 #include "building/building_booth.h"
 #include "building/building_bandstand.h"
 #include "building/building_pavilion.h"
+#include "building/building_farm.h"
 #include "building/building_fishing_wharf.h"
 #include "building/building_festival_square.h"
 #include "building/building_storage_yard.h"
@@ -176,13 +177,6 @@ void draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_ma
 
 static void draw_fountain_range(vec2i pixel, tile2i point, painter &ctx) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE, zoom_get_scale());
-}
-
-void draw_farm(painter &ctx, e_building_type type, vec2i point, tile2i tile) {
-    int image_id = get_farm_image(tile);
-    draw_building_ghost(ctx, image_id, point + vec2i{-60, 0});
-    
-    draw_farm_crops(ctx, type, 0, tile, point + vec2i{-60, 30}, COLOR_MASK_GREEN);
 }
 
 static void draw_aqueduct(map_point tile, int x, int y, painter &ctx) {
@@ -455,7 +449,7 @@ void BuildPlanner::draw_graphics(painter &ctx) {
     case BUILDING_CHICKPEAS_FARM:
     case BUILDING_FIGS_FARM:
     case BUILDING_HENNA_FARM:
-        draw_farm(ctx, build_type, pixel, end);
+        building_farm::ghost_preview(ctx, build_type, pixel, end);
         return;
 
     case BUILDING_FORT_ARCHERS:

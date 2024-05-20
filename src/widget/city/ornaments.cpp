@@ -88,35 +88,6 @@ static void draw_gatehouse_anim(int x, int y, building* b, painter &ctx) {
     }
 }
 
-int get_farm_image(tile2i tile) {
-    if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
-        int base = image_id_from_group(GROUP_BUILDING_FARMLAND);
-        int fert_average = map_get_fertility_for_farm(tile);
-        int fertility_index = 0;
-
-        if (fert_average < 13)
-            fertility_index = 0;
-        else if (fert_average < 25)
-            fertility_index = 1;
-        else if (fert_average < 38)
-            fertility_index = 2;
-        else if (fert_average < 50)
-            fertility_index = 3;
-        else if (fert_average < 63)
-            fertility_index = 4;
-        else if (fert_average < 75)
-            fertility_index = 5;
-        else if (fert_average < 87)
-            fertility_index = 6;
-        else
-            fertility_index = 7;
-
-        return base + fertility_index;
-    } else {
-        return image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
-    }
-}
-
 /////// ORNAMENTS
 
 static void draw_hippodrome_ornaments(vec2i pixel, map_point point, painter &ctx) {
