@@ -1016,6 +1016,20 @@ building_bricks_workshop = {
   window_info_height_id : 1,
 }
 
+building_chariots_workshop = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:124 },
+    base : { pack:PACK_GENERAL, id:124 },
+    work : { pack:PACK_GENERAL, id:124 },
+    timber : { pos:[51, 18], pack:PACK_GENERAL, id:206 },
+    weapon : { pos:[46, 25], pack:PACK_GENERAL, id:207 },
+  },
+  production_rate : 20,
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  building_size : 2,
+  window_info_height_id : 1,
+}
+
 building_pottery = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },

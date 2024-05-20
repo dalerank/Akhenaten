@@ -138,9 +138,6 @@ void building_count_update() {
         case BUILDING_PAINT_WORKSHOP:
             building_increase_industry_count(RESOURCE_PAINT, b.num_workers > 0);
             break;
-        case BUILDING_CHARIOTS_WORKSHOP:
-            building_increase_industry_count(RESOURCE_CHARIOTS, b.num_workers > 0);
-            break;
 
         default:
             b.dcast()->update_count();

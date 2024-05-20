@@ -207,16 +207,16 @@ static building_properties properties[400] = {
     {0, 0},
     {3, 0},
     {2, 0}, // reeds
-    {3, 1, 0, 0},                           // figs farm
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {2, 0, 0, 0}, // work camp
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {1, 1, 0, 0},                              // gatehouse (2)
-    {2, 0, 0, 0},   // papyrus
-    {2, 0, 0, 0, 0}, // bricks
-    {4, 0, 0, 0},                              // chariots
+    {3, 1},                           // figs farm
+    {0, 0},
+    {0, 0},
+    {2, 0}, // work camp
+    {0, 0},
+    {0, 0},
+    {1, 1},                              // gatehouse (2)
+    {2, 0},   // papyrus
+    {2, 0}, // bricks
+    {4, 0},                              // chariots
     {2, 0, 0, 0},       // physician
     {0, 0, 0, 0},
     {0, 0, 0, 0},
