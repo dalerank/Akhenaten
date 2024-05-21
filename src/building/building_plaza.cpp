@@ -14,7 +14,9 @@
 #include "grid/grid.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
+#include "grid/random.h"
 #include "grid/property.h"
+#include "grid/building_tiles.h"
 #include "grid/image.h"
 #include "game/undo.h"
 #include "city/labor.h"
@@ -60,4 +62,45 @@ int building_plaza::place(tile2i start, tile2i end) {
     }
     map_tiles_update_all_plazas();
     return items_placed;
+}
+
+int is_tile_plaza(int grid_offset) {
+    if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(grid_offset)
+        && !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING) && !map_image_at(grid_offset)) {
+        return 1;
+    }
+    return 0;
+}
+
+int is_two_tile_square_plaza(int grid_offset) {
+    return is_tile_plaza(grid_offset + GRID_OFFSET(1, 0)) && is_tile_plaza(grid_offset + GRID_OFFSET(0, 1)) && is_tile_plaza(grid_offset + GRID_OFFSET(1, 1));
+}
+
+void building_plaza::set_image(int grid_offset) {
+    int x = MAP_X(grid_offset);
+    int y = MAP_Y(grid_offset);
+    int base_image_id = plaza_m.anim["base"].first_img();
+    if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(grid_offset)
+        && !map_image_at(grid_offset)) {
+        int image_id = base_image_id;
+        if (is_two_tile_square_plaza(grid_offset)) {
+            if (map_random_get(grid_offset) & 1)
+                image_id += 7;
+            else {
+                image_id += 6;
+            }
+            map_building_tiles_add(0, tile2i(x, y), 2, image_id, TERRAIN_ROAD);
+        } else {
+            // single tile plaza
+            switch ((x & 1) + (y & 1)) {
+            case 2:
+                image_id += 1;
+                break;
+            case 1:
+                image_id += 2;
+                break;
+            }
+            map_image_set(grid_offset, image_id);
+        }
+    }
 }

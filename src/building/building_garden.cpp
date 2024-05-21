@@ -14,6 +14,9 @@
 #include "grid/grid.h"
 #include "grid/terrain.h"
 #include "grid/property.h"
+#include "grid/image.h"
+#include "grid/random.h"
+#include "grid/building_tiles.h"
 #include "figure/formation_herd.h"
 #include "city/warnings.h"
 #include "city/labor.h"
@@ -57,4 +60,61 @@ int building_garden::place(tile2i start, tile2i end) {
     });
     map_tiles_update_all_gardens();
     return items_placed;
+}
+
+void building_garden::set_image(int grid_offset) {
+    tile2i tile(grid_offset);
+    int garden_base = garden_m.anim["base"].first_img();
+    if (map_terrain_is(grid_offset, TERRAIN_GARDEN)
+        && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
+        if (!map_image_at(grid_offset)) {
+            int image_id = garden_base;
+            if (map_terrain_all_tiles_in_area_are(tile, 2, TERRAIN_GARDEN)) {
+                switch (map_random_get(grid_offset) & 3) {
+                case 0:
+                case 1:
+                    image_id += 6;
+                    break;
+                case 2:
+                    image_id += 5;
+                    break;
+                case 3:
+                    image_id += 4;
+                    break;
+                }
+                map_building_tiles_add(0, tile, 2, image_id, TERRAIN_GARDEN);
+            } else {
+                if (tile.y() & 1) {
+                    switch (tile.x() & 3) {
+                    case 0:
+                    case 2:
+                        image_id += 2;
+                        break;
+                    case 1:
+                    case 3:
+                        image_id += 3;
+                        break;
+                    }
+                } else {
+                    switch (tile.x() & 3) {
+                    case 1:
+                    case 3:
+                        image_id += 1;
+                        break;
+                    }
+                }
+                map_image_set(grid_offset, image_id);
+            }
+        }
+    }
+}
+
+void building_garden::determine_tile(int grid_offset) {
+    int base_image = garden_m.anim["base"].first_img();
+    int image_id = map_image_at(grid_offset);
+    if (image_id >= base_image && image_id <= base_image + 6) {
+        map_terrain_add(grid_offset, TERRAIN_GARDEN);
+        map_property_clear_constructing(grid_offset);
+        //map_aqueduct_set(grid_offset, 0);
+    }
 }

@@ -112,8 +112,10 @@ static void draw_TEST(vec2i pixel, tile2i point, painter &ctx) {
     //    if (tx==40 && ty==44)
     //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
     //        COLOR_CHANNEL_RED);
+    const auto &params = building_impl::params(BUILDING_GARDENS);
+    const auto &anim = params.anim["base"].first_img();
     if (map_grid_inside_map_area(grid_offset, 1)) {
-        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_GARDEN), pixel, COLOR_CHANNEL_GREEN);
+        ImageDraw::isometric_from_drawtile(ctx, anim, pixel, COLOR_CHANNEL_GREEN);
         return;
     }
     //    if (!map_grid_is_inside(tx, ty, 1))

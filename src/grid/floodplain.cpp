@@ -167,7 +167,7 @@ static void map_floodplain_update_inundation_row(int grid_offset, int order) {
             }
 
             if (!still_flooded) {
-                map_building_tiles_add_farm(b_id, farm->tile(), 0, 0);
+                map_building_tiles_add_farm(farm->type(), b_id, farm->tile(), 0, 0);
             }
         }
 

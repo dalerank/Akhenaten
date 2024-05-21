@@ -14,9 +14,11 @@ static grid_xx aqueduct_backup = {0, {FS_UINT8, FS_UINT8}};
 int map_aqueduct_at(int grid_offset) {
     return map_grid_get(&aqueduct, grid_offset);
 }
+
 void map_aqueduct_set(int grid_offset, int value) {
     map_grid_set(&aqueduct, grid_offset, value);
 }
+
 void map_aqueduct_remove(int grid_offset) {
     map_grid_set(&aqueduct, grid_offset, 0);
     if (map_grid_get(&aqueduct, grid_offset + GRID_OFFSET(0, -1)) == 5)

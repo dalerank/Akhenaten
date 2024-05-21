@@ -11,4 +11,5 @@ public:
 
     static int place(tile2i start, tile2i end);
     static void draw_info(object_info &c);
+    static void set_image(int grid_offset);
 };

@@ -8,8 +8,8 @@ public:
 
     virtual void on_create(int orientation) override;
     virtual void on_place(int orientation, int variant) override;
-    virtual void window_info_background(object_info &c) override;
-    virtual void spawn_figure() override;
+    //virtual void window_info_background(object_info &c) override;
+    //virtual void spawn_figure() override;
 };
 
 class building_transport_wharf : public building_wharf {

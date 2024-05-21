@@ -21,6 +21,8 @@
 #include "scenario/map.h"
 #include "building/destruction.h"
 #include "building/industry.h"
+#include "building/building_garden.h"
+#include "building/building_plaza.h"
 #include "city/city.h"
 #include "city/floods.h"
 #include "core/calc.h"
@@ -270,68 +272,14 @@ static void clear_garden_image(int grid_offset) {
         map_property_mark_draw_tile(grid_offset);
     }
 }
-static void set_garden_image(int grid_offset) {
-    tile2i tile(grid_offset);
-    if (map_terrain_is(grid_offset, TERRAIN_GARDEN)
-        && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
-        if (!map_image_at(grid_offset)) {
-            int image_id = image_id_from_group(GROUP_TERRAIN_GARDEN);
-            if (map_terrain_all_tiles_in_area_are(tile, 2, TERRAIN_GARDEN)) {
-                switch (map_random_get(grid_offset) & 3) {
-                case 0:
-                case 1:
-                    image_id += 6;
-                    break;
-                case 2:
-                    image_id += 5;
-                    break;
-                case 3:
-                    image_id += 4;
-                    break;
-                }
-                map_building_tiles_add(0, tile, 2, image_id, TERRAIN_GARDEN);
-            } else {
-                if (tile.y() & 1) {
-                    switch (tile.x() & 3) {
-                    case 0:
-                    case 2:
-                        image_id += 2;
-                        break;
-                    case 1:
-                    case 3:
-                        image_id += 3;
-                        break;
-                    }
-                } else {
-                    switch (tile.x() & 3) {
-                    case 1:
-                    case 3:
-                        image_id += 1;
-                        break;
-                    }
-                }
-                map_image_set(grid_offset, image_id);
-            }
-        }
-    }
-}
 
 void map_tiles_update_all_gardens(void) {
     foreach_map_tile(clear_garden_image);
-    foreach_map_tile(set_garden_image);
+    foreach_map_tile(building_garden::set_image);
 }
 
-static void determine_garden_tile(int grid_offset) {
-    int base_image = image_id_from_group(GROUP_TERRAIN_GARDEN);
-    int image_id = map_image_at(grid_offset);
-    if (image_id >= base_image && image_id <= base_image + 6) {
-        map_terrain_add(grid_offset, TERRAIN_GARDEN);
-        map_property_clear_constructing(grid_offset);
-        map_aqueduct_set(grid_offset, 0);
-    }
-}
 void map_tiles_determine_gardens(void) {
-    foreach_map_tile(determine_garden_tile);
+    foreach_map_tile(building_garden::determine_tile);
 }
 
 static void remove_plaza_below_building(int grid_offset) {
@@ -347,48 +295,11 @@ static void clear_plaza_image(int grid_offset) {
         map_property_mark_draw_tile(grid_offset);
     }
 }
-static int is_tile_plaza(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(grid_offset)
-        && !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING) && !map_image_at(grid_offset)) {
-        return 1;
-    }
-    return 0;
-}
-static int is_two_tile_square_plaza(int grid_offset) {
-    return is_tile_plaza(grid_offset + GRID_OFFSET(1, 0)) && is_tile_plaza(grid_offset + GRID_OFFSET(0, 1)) && is_tile_plaza(grid_offset + GRID_OFFSET(1, 1));
-}
 
-static void set_plaza_image(int grid_offset) {
-    int x = MAP_X(grid_offset);
-    int y = MAP_Y(grid_offset);
-    if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(grid_offset)
-        && !map_image_at(grid_offset)) {
-        int image_id = image_id_from_group(GROUP_TERRAIN_PLAZA);
-        if (is_two_tile_square_plaza(grid_offset)) {
-            if (map_random_get(grid_offset) & 1)
-                image_id += 7;
-            else {
-                image_id += 6;
-            }
-            map_building_tiles_add(0, tile2i(x, y), 2, image_id, TERRAIN_ROAD);
-        } else {
-            // single tile plaza
-            switch ((x & 1) + (y & 1)) {
-            case 2:
-                image_id += 1;
-                break;
-            case 1:
-                image_id += 2;
-                break;
-            }
-            map_image_set(grid_offset, image_id);
-        }
-    }
-}
 void map_tiles_update_all_plazas(void) {
     foreach_map_tile(remove_plaza_below_building);
     foreach_map_tile(clear_plaza_image);
-    foreach_map_tile(set_plaza_image);
+    foreach_map_tile(building_plaza::set_image);
 }
 
 static int get_gatehouse_building_id(int grid_offset) {
