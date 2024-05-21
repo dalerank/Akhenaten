@@ -117,7 +117,95 @@ building_cattle_ranch = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pos : [0, ], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
+  },
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+}
+
+building_farm_grain = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 }
+  },
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+}
+
+building_farm_chickpeas = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 }
+  },
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+}
+
+building_farm_lettuce = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 }
+  },
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+}
+
+building_farm_pomegranates = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 }
+  },
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+}
+
+building_farm_barley = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 }
+  },
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+}
+
+building_farm_flax = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 }
+  },
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+}
+
+building_farm_henna = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 }
+  },
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+}
+
+building_farm_figs = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 }
   },
   building_size : 3,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
@@ -1044,6 +1132,19 @@ building_pottery = {
 }
 
 building_lamp_workshop = {
+  animations : {
+    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
+    base : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
+    work : { pos : [36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18 },
+    clay : { pos:[65, 3], pack:PACK_GENERAL, id:207 },
+  },
+  production_rate : 20,
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  building_size : 2,
+  window_info_height_id : 1,
+}
+
+building_paint_workshop = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },

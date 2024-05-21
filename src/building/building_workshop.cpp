@@ -2,6 +2,7 @@
 
 #include "building/count.h"
 #include "js/js_game.h"
+#include "city/labor.h"
 
 buildings::model_t<building_lamp_workshop> lamp_workshop_m;
 buildings::model_t<building_paint_workshop> paint_workshop_m;

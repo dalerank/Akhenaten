@@ -104,7 +104,7 @@ void map_building_tiles_add(int building_id, tile2i tile, int size, int image_id
     map_property_mark_draw_tile(draw_tile.grid_offset());
 }
 
-void map_building_tiles_add_farm(int building_id, tile2i tile, int crop_image_offset, int progress) {
+void map_building_tiles_add_farm(e_building_type type, int building_id, tile2i tile, int crop_image_offset, int progress) {
     //if (GAME_ENV == ENGINE_ENV_C3) {
     //    crop_image_offset += image_id_from_group(GROUP_BUILDING_FARMLAND);
     //    if (!map_grid_is_inside(x, y, 3))
@@ -148,9 +148,8 @@ void map_building_tiles_add_farm(int building_id, tile2i tile, int crop_image_of
         //        if (map_terrain_is(map_grid_offset(x, y), TERRAIN_FLOODPLAIN))
         //            image_id = image_id_from_group(GROUP_BUILDING_FARMLAND);
     painter ctx = game.painter();
-    map_building_tiles_add(building_id, tile, 3, building_farm::get_farm_image(tile), TERRAIN_BUILDING);
-        //        crop_image_offset += image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH);
-        return;
+    map_building_tiles_add(building_id, tile, 3, building_farm::get_farm_image(type, tile), TERRAIN_BUILDING);
+    return;
     //}
     // crop tile 1
     int growth = progress / 10;

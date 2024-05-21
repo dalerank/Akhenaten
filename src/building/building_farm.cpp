@@ -5,6 +5,7 @@
 #include "building/building_animation.h"
 #include "city/object_info.h"
 #include "city/resource.h"
+#include "city/labor.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "game/time.h"
@@ -29,39 +30,6 @@
 
 constexpr int CROPS_OFFSETS = 6;
 
-struct building_farm_grain : public building_farm {
-    building_farm_grain(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_GRAIN_FARM, building_farm_grain);
-};
-struct building_farm_lettuce : public building_farm {
-    building_farm_lettuce(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_LETTUCE_FARM, building_farm_lettuce);
-};
-struct building_farm_chickpeas : public building_farm {
-    building_farm_chickpeas(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_CHICKPEAS_FARM, building_farm_chickpeas);
-};
-struct building_farm_pomegranates : public building_farm {
-    building_farm_pomegranates(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_POMEGRANATES_FARM, building_farm_pomegranates);
-};
-struct building_farm_barley : public building_farm {
-    building_farm_barley(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_BARLEY_FARM, building_farm_barley);
-};
-struct building_farm_flax : public building_farm {
-    building_farm_flax(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_FLAX_FARM, building_farm_flax);
-};
-struct building_farm_henna : public building_farm {
-    building_farm_henna(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_HENNA_FARM, building_farm_henna);
-};
-struct building_farm_figs : public building_farm {
-    building_farm_figs(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_FIGS_FARM, building_farm_figs);
-};
-
 buildings::model_t<building_farm_grain> farm_grain_m;
 buildings::model_t<building_farm_lettuce> farm_lettuce_m;
 buildings::model_t<building_farm_chickpeas> farm_chickpeas_m;
@@ -70,6 +38,18 @@ buildings::model_t<building_farm_barley> farm_barley_m;
 buildings::model_t<building_farm_flax> farm_flax_m;
 buildings::model_t<building_farm_henna> farm_henna_m;
 buildings::model_t<building_farm_figs> farm_figs_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_farm);
+void config_load_building_farm() {
+    farm_grain_m.load();
+    farm_lettuce_m.load();
+    farm_chickpeas_m.load();
+    farm_pomegranates_m.load();
+    farm_barley_m.load();
+    farm_flax_m.load();
+    farm_henna_m.load();
+    farm_figs_m.load();
+}
 
 static void building_farm_draw_info(object_info &c, const char* type, e_resource resource) {
     painter ctx = game.painter();
@@ -147,7 +127,7 @@ void building_farm::window_info_background(object_info& c) {
     }
 }
 
-int building_farm::get_farm_image(tile2i tile) {
+int building_farm::get_farm_image(e_building_type type, tile2i tile) {
     if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
         int base = image_id_from_group(GROUP_BUILDING_FARMLAND);
         int fert_average = map_get_fertility_for_farm(tile);
@@ -172,7 +152,8 @@ int building_farm::get_farm_image(tile2i tile) {
 
         return base + fertility_index;
     } else {
-        return image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
+        const auto &p = params(type);
+        return p.anim["farm_house"].first_img();
     }
 }
 
@@ -187,7 +168,7 @@ void draw_farm_worker(painter &ctx, int direction, int action, int frame_offset,
 }
 
 void building_farm::ghost_preview(painter &ctx, e_building_type type, vec2i point, tile2i tile) {
-    int image_id = get_farm_image(tile);
+    int image_id = get_farm_image(type, tile);
     draw_building_ghost(ctx, image_id, point + vec2i{-60, 0});
 
     draw_farm_crops(ctx, type, 0, tile, point + vec2i{-60, 30}, COLOR_MASK_GREEN);
@@ -379,35 +360,35 @@ void building_farm::on_place(int orientation, int variant) {
 
     switch (type()) {
     case BUILDING_BARLEY_FARM:
-        map_building_tiles_add_farm(id(), tile(), 0, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), 0, 0);
         break;
 
     case BUILDING_FLAX_FARM:
-        map_building_tiles_add_farm(id(), tile(), CROPS_OFFSETS, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS, 0);
         break;
 
     case BUILDING_GRAIN_FARM:
-        map_building_tiles_add_farm(id(), tile(), CROPS_OFFSETS * 2, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 2, 0);
         break;
 
     case BUILDING_LETTUCE_FARM:
-        map_building_tiles_add_farm(id(), tile(), CROPS_OFFSETS * 3, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 3, 0);
         break;
 
     case BUILDING_POMEGRANATES_FARM:
-        map_building_tiles_add_farm(id(), tile(), CROPS_OFFSETS * 4, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 4, 0);
         break;
 
     case BUILDING_CHICKPEAS_FARM:
-        map_building_tiles_add_farm(id(), tile(), CROPS_OFFSETS * 5, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 5, 0);
         break;
 
     case BUILDING_FIGS_FARM:
-        map_building_tiles_add_farm(id(), tile(), CROPS_OFFSETS * 6, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 6, 0);
         break;
 
     case BUILDING_HENNA_FARM:
-        map_building_tiles_add_farm(id(), tile(), CROPS_OFFSETS * 7, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 7, 0);
         break;
     }
 }
@@ -533,7 +514,7 @@ void building_farm::update_tiles_image() {
     }
 
     if (!is_flooded) {
-        map_building_tiles_add_farm(id(), tile(), image_id_from_group(GROUP_BUILDING_FARMLAND) + 5 * (base.output_resource_first_id - 1), data.industry.progress);
+        map_building_tiles_add_farm(type(), id(), tile(), image_id_from_group(GROUP_BUILDING_FARMLAND) + 5 * (base.output_resource_first_id - 1), data.industry.progress);
     }
 }
 

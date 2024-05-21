@@ -47,7 +47,7 @@ void window_building_draw_terrain(object_info* c) {
     else if (c->terrain_type == TERRAIN_INFO_WALL)
         window_building_draw_wall(c);
     else if (c->terrain_type == TERRAIN_INFO_GARDEN)
-        building_garden_draw_info(*c);
+        building_garden::draw_info(*c);
     else if (c->terrain_type == TERRAIN_INFO_PLAZA && c->figure.count <= 0)
         building_plaza::draw_info(*c);
     else {

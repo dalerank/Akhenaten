@@ -2,12 +2,11 @@
 
 #include "grid/point.h"
 #include "graphics/image_desc.h"
-
-class building;
+#include "building/building.h"
 
 void map_building_tiles_add(int building_id, tile2i tile, int size, e_image_id img, int terrain);
 void map_building_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain);
-void map_building_tiles_add_farm(int building_id, tile2i tile, int crop_image_offset, int progress);
+void map_building_tiles_add_farm(e_building_type type, int building_id, tile2i tile, int crop_image_offset, int progress);
 
 void map_add_bandstand_tiles(building* b);
 int map_bandstand_main_img_offset(int orientation);
