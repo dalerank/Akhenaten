@@ -283,6 +283,10 @@ int building_dock::count_idle_dockers() const {
 void building_river_update_open_water_access() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Open Water Access Update");
     tile2i river_entry = scenario_map_river_entry();
+    if (!river_entry.valid()) {
+        return;
+    }
+
     map_routing_calculate_distances_water_boat(river_entry);
 
     buildings_valid_do([] (building &b) {
