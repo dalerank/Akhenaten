@@ -113,6 +113,16 @@ building_fort_ground = {
   damage_proof : 1,
 }
 
+building_house_vacant = {
+  animations : {
+    preview: {pack: PACK_GENERAL, id: 36},
+    base: {pack: PACK_GENERAL, id: 36},
+  },
+  building_size : 1,
+  is_draggable : true,
+  window_info_height_id : 1,
+}
+
 building_cattle_ranch = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
@@ -1197,7 +1207,7 @@ building_firehouse = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:78 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:78 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:78, offset:1, max_frames:12 }
+    work : { pos : [25, -30], pack:PACK_GENERAL, id:78, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
   window_info_height_id : 1,

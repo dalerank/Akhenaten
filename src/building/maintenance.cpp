@@ -1,7 +1,7 @@
 #include "maintenance.h"
 
 #include "building/building.h"
-#include "building/house.h"
+#include "building/building_house.h"
 #include "building/destruction.h"
 #include "building/list.h"
 #include "city/buildings.h"

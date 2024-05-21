@@ -61,6 +61,8 @@ int building_water_lift::animation_speed(int speed) const {
     if (!base.has_water_access) {
         return 0;
     }
+
+    return 0;
 }
 
 void building_water_lift::spawn_figure() {

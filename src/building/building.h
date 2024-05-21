@@ -54,6 +54,7 @@ class building_fishing_wharf;
 class building_shipyard;
 class building_plaza;
 class building_garden;
+class building_house;
 struct object_info;
 struct painter;
 struct mouse;
@@ -393,6 +394,7 @@ public:
     building_shipyard *dcast_shipyard();
     building_plaza *dcast_plaza();
     building_garden *dcast_garden();
+    building_house *dcast_house();
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
@@ -503,6 +505,7 @@ public:
     virtual building_shipyard *dcast_shipyard() { return nullptr; }
     virtual building_plaza *dcast_plaza() { return nullptr; }
     virtual building_garden *dcast_garden() { return nullptr; }
+    virtual building_house *dcast_house() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

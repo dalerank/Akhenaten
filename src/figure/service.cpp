@@ -1,8 +1,7 @@
 #include "service.h"
 
 #include "figuretype/figure_market_buyer.h"
-#include "building/building.h"
-#include "building/house.h"
+#include "building/building_house.h"
 #include "building/model.h"
 #include "figuretype/crime.h"
 #include "game/resource.h"

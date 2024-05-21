@@ -2,7 +2,7 @@
 
 #include "core/svector.h"
 #include "building/building.h"
-#include "building/house.h"
+#include "building/building_house.h"
 #include "building/model.h"
 #include "buildings.h"
 #include "city/city.h"

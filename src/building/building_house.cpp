@@ -1,7 +1,8 @@
-#include "house.h"
+#include "building_house.h"
 
 #include "building/building.h"
 #include "core/game_environment.h"
+#include "city/labor.h"
 #include "game/resource.h"
 #include "game/tutorial.h"
 #include "graphics/image.h"
@@ -13,8 +14,16 @@
 #include "grid/random.h"
 #include "grid/terrain.h"
 #include "config/config.h"
+#include "js/js_game.h"
 
 #define MAX_DIR 4
+
+buildings::model_t<building_house_vacant> house_vacant_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_house_models);
+void config_load_house_models() {
+    house_vacant_m.load();
+}
 
 static const int HOUSE_TILE_OFFSETS_PH[] = {
   GRID_OFFSET(0, 0),
@@ -91,7 +100,7 @@ expand_direction_t expand_delta(int i) {
     return EXPAND_DIRECTION_DELTA_PH[i];
 }
 
-static void create_vacant_lot(tile2i tile, int image_id) {
+void building_house::create_vacant_lot(tile2i tile, int image_id) {
     building* b = building_create(BUILDING_HOUSE_VACANT_LOT, tile, 0);
     b->house_population = 0;
     b->distance_from_entry = 0;
@@ -132,16 +141,16 @@ void building_house_change_to(building* house, e_building_type type) {
 void building_house_change_to_vacant_lot(building* house) {
     house->type = BUILDING_HOUSE_VACANT_LOT;
     house->subtype.house_level = (e_house_level)(house->type - BUILDING_HOUSE_VACANT_LOT);
-    int vacant_lot_id = building_impl::params(BUILDING_HOUSE_VACANT_LOT).anim["base"].first_img();
+    int vacant_lot_id = house_vacant_m.anim["base"].first_img();
     if (house->house_is_merged) {
         map_building_tiles_remove(house->id, house->tile);
         house->house_is_merged = 0;
         house->size = house->house_size = 1;
         map_building_tiles_add(house->id, house->tile, 1, vacant_lot_id, TERRAIN_BUILDING);
 
-        create_vacant_lot(house->tile.shifted(1, 0), vacant_lot_id);
-        create_vacant_lot(house->tile.shifted(0, 1), vacant_lot_id);
-        create_vacant_lot(house->tile.shifted(1, 1), vacant_lot_id);
+        building_house::create_vacant_lot(house->tile.shifted(1, 0), vacant_lot_id);
+        building_house::create_vacant_lot(house->tile.shifted(0, 1), vacant_lot_id);
+        building_house::create_vacant_lot(house->tile.shifted(1, 1), vacant_lot_id);
     } else {
         map_image_set(house->tile.grid_offset(), vacant_lot_id);
     }
@@ -558,4 +567,8 @@ void building_house_check_for_corruption(building* house) {
         //        building_totals_add_corrupted_house(1);
         house->state = BUILDING_STATE_RUBBLE;
     }
+}
+
+void building_house::on_place_checks() {
+    /*nothing*/
 }

@@ -256,6 +256,7 @@ building_fishing_wharf *building::dcast_fishing_wharf() { return dcast()->dcast_
 building_shipyard *building::dcast_shipyard() { return dcast()->dcast_shipyard(); }
 building_plaza *building::dcast_plaza() { return dcast()->dcast_plaza(); }
 building_garden *building::dcast_garden() { return dcast()->dcast_garden(); }
+building_house *building::dcast_house() { return dcast()->dcast_house(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
@@ -691,7 +692,6 @@ bool building_is_draggable(e_building_type type) {
     case BUILDING_ROAD:
     case BUILDING_IRRIGATION_DITCH:
     case BUILDING_MUD_WALL:
-    case BUILDING_HOUSE_VACANT_LOT:
         return true;
 
     default:
@@ -846,11 +846,6 @@ void building_impl::on_place_checks() {
     case BUILDING_CLEAR_LAND:
     case BUILDING_ROAD:
     case BUILDING_IRRIGATION_DITCH:
-    case BUILDING_HOUSE_VACANT_LOT:
-    case BUILDING_MUD_GATEHOUSE:
-    case BUILDING_FORT_CHARIOTEERS:
-    case BUILDING_FORT_ARCHERS:
-    case BUILDING_FORT_INFANTRY:
     case BUILDING_TEMPLE_COMPLEX_ALTAR:
     case BUILDING_TEMPLE_COMPLEX_ORACLE:
         return;

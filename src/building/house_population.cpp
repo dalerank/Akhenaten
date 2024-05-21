@@ -1,7 +1,7 @@
 #include "house_population.h"
 
 #include "building/building.h"
-#include "building/house.h"
+#include "building/building_house.h"
 #include "building/list.h"
 #include "building/model.h"
 #include "config/config.h"
