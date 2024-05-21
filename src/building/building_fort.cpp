@@ -99,6 +99,10 @@ void building_fort::on_place(int orientation, int variant) {
     ground->formation_id = base.formation_id;
 }
 
+void building_fort::on_place_checks() {
+    /*nothing*/
+}
+
 bool building_fort::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     if (map_property_is_draw_tile(tile.grid_offset())) {
         int mask = drawing_building_as_deleted(&base) ? COLOR_MASK_RED : 0;

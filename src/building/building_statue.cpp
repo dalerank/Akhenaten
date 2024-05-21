@@ -62,6 +62,10 @@ void building_statue::on_place(int orientation, int variant) {
     map_building_tiles_add(id(), tile(), size(), image_id, TERRAIN_BUILDING);
 }
 
+void building_statue::on_place_checks() {
+    /*nothing*/
+}
+
 void building_statue::window_info_background(object_info &c) {
     c.help_id = 79;
     window_building_play_sound(&c, snd::get_building_info_sound("statue"));

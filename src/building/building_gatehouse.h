@@ -8,6 +8,7 @@ public:
 
     virtual void on_create(int orientation) override;
     virtual void on_place(int orientation, int variant) override;
+    virtual void on_place_checks() override;
     //virtual void window_info_background(object_info &c) override;
     //virtual void spawn_figure() override;
 };

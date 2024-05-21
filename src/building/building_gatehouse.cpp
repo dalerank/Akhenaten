@@ -31,6 +31,10 @@ void building_gatehouse::on_place(int orientation, int variant) {
     map_terrain_add_gatehouse_roads(tilex(), tiley(), orientation);
 }
 
+void building_gatehouse::on_place_checks() {
+    /*nothing*/
+}
+
 void building_mud_gatehouse::window_info_background(object_info &c) {
     c.help_id = 85;
     window_building_play_sound(&c, "wavs/gatehouse.wav");
