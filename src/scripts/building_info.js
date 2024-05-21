@@ -301,8 +301,8 @@ building_guild_stonemasons = {
 
 building_bricklayers_guild = {
   animations : {
-    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:57 }
-    base : { pos : [-1, -1], pack:PACK_GENERAL, id:57 }
+    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:57 },
+    base : { pos : [-1, -1], pack:PACK_GENERAL, id:57 },
     work : { pos : [-1, -1], pack:PACK_GENERAL, id:57, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
@@ -311,8 +311,8 @@ building_bricklayers_guild = {
 
 building_carpenters_guild = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:91 }
-    base : { pack:PACK_GENERAL, id:91 }
+    preview : { pack:PACK_GENERAL, id:91 },
+    base : { pack:PACK_GENERAL, id:91 },
     work : { pos : [-1, -1], pack:PACK_GENERAL, id:91, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
@@ -333,8 +333,8 @@ building_dock = {
 
 building_personal_mansion = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:85 }
-    base : { pack:PACK_GENERAL, id:85 }
+    preview : { pack:PACK_GENERAL, id:85 },
+    base : { pack:PACK_GENERAL, id:85 },
     work : { pos : [-1, -1], pack:PACK_GENERAL, id:85, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
@@ -345,8 +345,8 @@ building_personal_mansion = {
 
 building_village_mansion = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:47 }
-    base : { pack:PACK_GENERAL, id:47 }
+    preview : { pack:PACK_GENERAL, id:47 },
+    base : { pack:PACK_GENERAL, id:47 },
     work : { pos : [-1, -1], pack:PACK_GENERAL, id:47, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
@@ -562,7 +562,7 @@ building_weaver = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building_jewels_worksjop = {
+building_jewels_workshop = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:119 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:119 },
@@ -603,7 +603,9 @@ building_small_mastaba = {
   // todo
 }
 
-building_small_mastaba_side = building_small_mastaba
+building_small_mastaba_part_side = building_small_mastaba
+building_small_mastaba_part_wall = building_small_mastaba
+building_small_mastaba_part_entrance = building_small_mastaba
 
 building_tax_collector = {
   animations : {
@@ -1180,8 +1182,8 @@ building_physician = {
 
 building_water_lift = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_TERRAIN, id:50 }
-    base : { pos : [0, 0], pack:PACK_TERRAIN, id:50 }
+    preview : { pos : [0, 0], pack:PACK_TERRAIN, id:50 },
+    base : { pos : [0, 0], pack:PACK_TERRAIN, id:50 },
     work : { pos : [0, 0], pack:PACK_TERRAIN, id:50, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
@@ -1193,8 +1195,8 @@ building_water_lift = {
 
 building_firehouse = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:78 }
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:78 }
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:78 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:78 },
     work : { pos : [0, 0], pack:PACK_GENERAL, id:78, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
@@ -1204,8 +1206,8 @@ building_firehouse = {
 
 building_police_station = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:64 }
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:64 }
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:64 },
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:64 },
     work : { pos : [0, 0], pack:PACK_GENERAL, id:64, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
