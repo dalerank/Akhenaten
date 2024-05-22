@@ -187,7 +187,7 @@ void scenario_set_monument(int field, int m) {
     }
 }
 
-io_buffer* iob_scenario_info = new io_buffer([](io_buffer* iob, size_t version) {
+io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario_data.start_year);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario_data.empire.id);
@@ -213,28 +213,26 @@ io_buffer* iob_scenario_info = new io_buffer([](io_buffer* iob, size_t version) 
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario_data.is_open_play);
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario_data.player_rank);
 
-    for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++)
-        iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.herd_points_predator[i].private_access(_X));
-    for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++)
-        iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.herd_points_predator[i].private_access(_Y));
+    for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) { g_scenario_data.herd_points_predator[i].invalidate_offset(); }
+    for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.herd_points_predator[i].private_access(_X)); }
+    for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.herd_points_predator[i].private_access(_Y)); }
 
-    for (int i = 0; i < MAX_FISH_POINTS; i++)
-        iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.fishing_points[i].private_access(_X));
-    for (int i = 0; i < MAX_FISH_POINTS; i++)
-        iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.fishing_points[i].private_access(_Y));
+    for (int i = 0; i < MAX_FISH_POINTS; i++) { g_scenario_data.fishing_points[i].invalidate_offset(); }
+    for (int i = 0; i < MAX_FISH_POINTS; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.fishing_points[i].private_access(_X)); }
+    for (int i = 0; i < MAX_FISH_POINTS; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.fishing_points[i].private_access(_Y)); }
 
     iob->bind(BIND_SIGNATURE_UINT16, &g_scenario_data.alt_predator_type);
 
     iob->bind____skip(42);
 
-    for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++)
-        iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.invasion_points_land[i].private_access(_X));
-    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++)
-        iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.invasion_points_land[i].private_access(_X));
-    for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++)
-        iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.invasion_points_land[i].private_access(_Y));
-    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++)
-        iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.invasion_points_land[i].private_access(_Y));
+    for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) { g_scenario_data.invasion_points_land[i].invalidate_offset(); }
+    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { g_scenario_data.invasion_points_land[i].invalidate_offset(); }
+
+    for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.invasion_points_land[i].private_access(_X)); }
+    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.invasion_points_land[i].private_access(_X)); }
+
+    for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.invasion_points_land[i].private_access(_Y)); }
+    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.invasion_points_land[i].private_access(_Y)); }
 
     iob->bind____skip(36); // 18 * 2
 
@@ -263,28 +261,20 @@ io_buffer* iob_scenario_info = new io_buffer([](io_buffer* iob, size_t version) 
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.win_criteria.population.enabled);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.win_criteria.population.goal);
 
-    iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.earthquake_point.private_access(_X));
-    iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.earthquake_point.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_UINT32, g_scenario_data.earthquake_point);
 
     *g_scenario_data.entry_point.private_access(_GRID_OFFSET) = -1;
-    iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.entry_point.private_access(_X));
-    iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.entry_point.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_UINT32, g_scenario_data.entry_point);
 
     *g_scenario_data.exit_point.private_access(_GRID_OFFSET) = -1;
-    iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.exit_point.private_access(_X));
-    iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.exit_point.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_UINT32, g_scenario_data.exit_point);
 
     // junk 4a
     iob->bind____skip(28); // 14 * 2
     iob->bind____skip(4);  // 2 * 2 (58, 64)
 
-    *g_scenario_data.river_entry_point.private_access(_GRID_OFFSET) = -1;
-    iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.river_entry_point.private_access(_X));
-    iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.river_entry_point.private_access(_Y));
-
-    *g_scenario_data.river_exit_point.private_access(_GRID_OFFSET) = -1;
-    iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.river_exit_point.private_access(_X));
-    iob->bind(BIND_SIGNATURE_INT16, g_scenario_data.river_exit_point.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_UINT32, g_scenario_data.river_entry_point);
+    iob->bind(BIND_SIGNATURE_UINT32, g_scenario_data.river_exit_point);
 
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.rescue_loan);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.win_criteria.milestone25_year);
@@ -310,16 +300,17 @@ io_buffer* iob_scenario_info = new io_buffer([](io_buffer* iob, size_t version) 
     iob->bind____skip(1); // -1 or -31
     iob->bind____skip(1); // -1
 
-    for (int i = 0; i < MAX_PREY_HERD_POINTS; i++)
-        iob->bind(BIND_SIGNATURE_INT32, g_scenario_data.herd_points_prey[i].private_access(_X));
-    for (int i = 0; i < MAX_PREY_HERD_POINTS; i++)
-        iob->bind(BIND_SIGNATURE_INT32, g_scenario_data.herd_points_prey[i].private_access(_Y));
-
+    for (int i = 0; i < MAX_PREY_HERD_POINTS; i++) { g_scenario_data.herd_points_prey[i].invalidate_offset(); }
+    for (int i = 0; i < MAX_PREY_HERD_POINTS; i++) { iob->bind(BIND_SIGNATURE_INT32, g_scenario_data.herd_points_prey[i].private_access(_X)); }
+    for (int i = 0; i < MAX_PREY_HERD_POINTS; i++) { iob->bind(BIND_SIGNATURE_INT32, g_scenario_data.herd_points_prey[i].private_access(_Y)); }
     // 114
     int16_t reserved_data = 0;
     for (int i = 0; i < 114; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &reserved_data);
     }
+
+    for (int i = 0; i < MAX_DISEMBARK_POINTS; ++i)
+        g_scenario_data.disembark_points[i].invalidate_offset();
 
     for (int i = 0; i < MAX_DISEMBARK_POINTS; ++i)
         iob->bind(BIND_SIGNATURE_INT32, g_scenario_data.disembark_points[i].private_access(_X));

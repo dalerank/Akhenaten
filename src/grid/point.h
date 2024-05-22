@@ -58,6 +58,7 @@ public:
 
     // CORRECT BROKEN FIELDS
     bool self_correct();
+    void invalidate_offset() { p_GRID_OFFSET = -1; p_ABS_X = -1; p_ABS_Y = -1; }
 
     // CONSTRUCTORS / DESTRUCTOR
     explicit map_point(); // default constructor

@@ -1135,10 +1135,9 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->size);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_is_merged);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_size);
-        iob->bind(BIND_SIGNATURE_INT16, b->tile.private_access(_X));
-        iob->bind(BIND_SIGNATURE_INT16, b->tile.private_access(_Y));
+        iob->bind(BIND_SIGNATURE_INT32, b->tile);
         iob->bind____skip(2);
-        iob->bind(BIND_SIGNATURE_INT32, b->tile.private_access(_GRID_OFFSET));
+        iob->bind____skip(4);
         iob->bind(BIND_SIGNATURE_INT16, &b->type);
         iob->bind(BIND_SIGNATURE_INT16, &b->subtype.house_level); // which union field we use does not matter
         iob->bind(BIND_SIGNATURE_UINT16, &b->road_network_id);
@@ -1151,8 +1150,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &b->house_highest_population);
 
         iob->bind(BIND_SIGNATURE_INT16, &b->house_unreachable_ticks);
-        iob->bind(BIND_SIGNATURE_UINT16, b->road_access.private_access(_X));
-        iob->bind(BIND_SIGNATURE_UINT16, b->road_access.private_access(_Y));
+        iob->bind(BIND_SIGNATURE_UINT32, b->road_access);
 
         b->bind_iob_figures(iob);
 

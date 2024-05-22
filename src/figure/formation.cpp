@@ -574,16 +574,16 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &f->figure_type); // 69
         iob->bind(BIND_SIGNATURE_INT16, &f->building_id);
 
-        for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++)
+        for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
             iob->bind(BIND_SIGNATURE_INT16, &f->figures[fig]);
+        }
 
         iob->bind(BIND_SIGNATURE_UINT8, &f->num_figures); // --> 3
         iob->bind(BIND_SIGNATURE_UINT8, &f->max_figures); // 7
         iob->bind(BIND_SIGNATURE_INT16, &f->layout);      // 9
         iob->bind(BIND_SIGNATURE_INT16, &f->morale);      // 100
 
-        iob->bind(BIND_SIGNATURE_UINT16, f->home.private_access(_X));        // 44
-        iob->bind(BIND_SIGNATURE_UINT16, f->home.private_access(_Y));        // 58
+        iob->bind(BIND_SIGNATURE_UINT32, f->home);        // 44
         iob->bind(BIND_SIGNATURE_UINT16, &f->standard_x);    //
         iob->bind(BIND_SIGNATURE_UINT16, &f->standard_y);    //
         iob->bind(BIND_SIGNATURE_UINT16, &f->x);             // 44
@@ -642,7 +642,7 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind____skip(17);
         iob->bind(BIND_SIGNATURE_INT16, &f->invasion_sequence);
 
-        if (!f->home.x() && !f->home.y() && f->is_herd) {
+        if (!f->home.valid() && f->is_herd) {
             memset(f, 0, sizeof(formation));
         }
     }

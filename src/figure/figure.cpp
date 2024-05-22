@@ -348,18 +348,14 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT8, &f->direction);
     iob->bind(BIND_SIGNATURE_INT8, &f->previous_tile_direction);
     iob->bind(BIND_SIGNATURE_INT8, &f->attack_direction);
-    iob->bind(BIND_SIGNATURE_UINT16, f->tile.private_access(_X));
-    iob->bind(BIND_SIGNATURE_UINT16, f->tile.private_access(_Y));
-    iob->bind(BIND_SIGNATURE_UINT16, f->previous_tile.private_access(_X));
-    iob->bind(BIND_SIGNATURE_UINT16, f->previous_tile.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_UINT32, f->tile);
+    iob->bind(BIND_SIGNATURE_UINT32, f->previous_tile);
     iob->bind(BIND_SIGNATURE_UINT16, &f->missile_damage);
     iob->bind(BIND_SIGNATURE_UINT16, &f->damage);
-    iob->bind(BIND_SIGNATURE_INT32, f->tile.private_access(_GRID_OFFSET));
-    iob->bind(BIND_SIGNATURE_UINT16, f->destination_tile.private_access(_X));
-    iob->bind(BIND_SIGNATURE_UINT16, f->destination_tile.private_access(_Y));
-    iob->bind(BIND_SIGNATURE_INT32, f->destination_tile.private_access(_GRID_OFFSET));
-    iob->bind(BIND_SIGNATURE_UINT16, f->source_tile.private_access(_X));
-    iob->bind(BIND_SIGNATURE_UINT16, f->source_tile.private_access(_Y));
+    iob->bind____skip(4);
+    iob->bind(BIND_SIGNATURE_UINT32, f->destination_tile);
+    iob->bind____skip(4);
+    iob->bind(BIND_SIGNATURE_UINT32, f->source_tile);
     iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_x.soldier);
     iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_y.soldier);
     iob->bind(BIND_SIGNATURE_INT8, &f->terrain_type);               // 0

@@ -1,7 +1,8 @@
 #pragma once
 
-#include <core/buffer.h>
-#include <grid/grid.h>
+#include "core/buffer.h"
+#include "grid/point.h"
+#include "grid/grid.h"
 
 enum chunk_buffer_access_e {
     CHUNK_ACCESS_REVOKED,
@@ -22,6 +23,8 @@ enum bind_signature_e {
     BIND_SIGNATURE_INT32,
 
     BIND_SIGNATURE_RAW,
+
+    BIND_SIGNATURE_TILE2I,
 
     BIND_SIGNATURE_GRID,
 };
@@ -99,6 +102,11 @@ public:
         if (ext != nullptr && signature == BIND_SIGNATURE_RAW && size > 0) {
             IO_BRANCH(p_buf->read_raw((uint8_t*)ext, size), p_buf->write_raw((uint8_t*)ext, size))
         }
+    }
+    void bind(bind_signature_e signature, tile2i &tile) {
+        tile.invalidate_offset();
+        bind(BIND_SIGNATURE_UINT16, tile.private_access(_X));        // 44
+        bind(BIND_SIGNATURE_UINT16, tile.private_access(_Y));        // 58
     }
     void bind(bind_signature_e signature, grid_xx* ext) {
         if (ext != nullptr && signature == BIND_SIGNATURE_GRID) {

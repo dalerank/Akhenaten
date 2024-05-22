@@ -64,10 +64,20 @@ static int get_non_citizen_on_tile(int grid_offset) {
 
 void figure::missile_hit_target(int target_id, int legionary_type) {
     figure* target = figure_get(target_id);
-    const figure_properties* target_props = figure_properties_for_type(target->type);
+
+    while (target) {
+        if (target->is_dead()) {
+            target = figure_get(target->next_figure);
+            continue;
+        }
+        break;
+    }
+
+    const figure_properties *target_props = figure_properties_for_type(target->type);
     int max_damage = target_props->max_damage;
     int damage_inflicted = figure_properties_for_type(type)->missile_attack_value - target_props->missile_defense_value;
-    formation* m = formation_get(target->formation_id);
+
+    formation *m = formation_get(target->formation_id);
     if (damage_inflicted < 0) {
         damage_inflicted = 0;
     }
@@ -86,6 +96,7 @@ void figure::missile_hit_target(int target_id, int legionary_type) {
         target->play_die_sound();
         formation_update_morale_after_death(m);
     }
+
     poof();
     // for missiles: building_id contains the figure who shot it
     int missile_formation = figure_get(homeID())->formation_id;
