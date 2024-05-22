@@ -117,3 +117,6 @@ void bind_debug_console_var_int(pcstr var, int &ref) {
     debug_console().con.bind_cvar(var, ref);
 }
 
+void bind_debug_console_var_bool(pcstr var, bool &ref) {
+    debug_console().con.bind_cvar(var, ref);
+}
