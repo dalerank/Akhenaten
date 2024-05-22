@@ -163,7 +163,8 @@ void figure::add_roam_history(int goffset) {
 }
 
 bool figure::is_dead() {
-    return state != FIGURE_STATE_ALIVE || action_state == FIGURE_ACTION_149_CORPSE;
+    return (state != FIGURE_STATE_ALIVE) 
+                || (action_state == FIGURE_ACTION_149_CORPSE);
 }
 
 bool figure::is_boat() {

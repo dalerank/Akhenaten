@@ -9,12 +9,15 @@
 
 #include "js/js_game.h"
 
-struct ostrich_hunter_model : public figures::model_t<FIGURE_OSTRICH_HUNTER, figure_ostrich_hunter> {};
+struct ostrich_hunter_model : public figures::model_t<FIGURE_OSTRICH_HUNTER, figure_ostrich_hunter> {
+    int max_hunting_distance;
+};
 ostrich_hunter_model ostrich_hunter_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_ostrich_hunter);
 void config_load_figure_ostrich_hunter() {
     g_config_arch.r_section("figure_ostrich_hunter", [] (archive arch) {
+        ostrich_hunter_m.max_hunting_distance = arch.r_int("max_hunting_distance");
         ostrich_hunter_m.anim.load(arch);
         ostrich_hunter_m.sounds.load(arch);
     });
@@ -59,8 +62,7 @@ void figure_ostrich_hunter::figure_action() {
 
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
-    //case ACTION_14_RETURNING_WITH_FOOD: // spawning
-    base.target_figure_id = base.is_nearby(NEARBY_ANIMAL, &dist, 10000, false);
+        base.target_figure_id = base.is_nearby(NEARBY_ANIMAL, &dist, ostrich_hunter_m.max_hunting_distance, false);
         if (base.target_figure_id) {
             figure_get(base.target_figure_id)->targeted_by_figure_id = id();
             advance_action(ACTION_9_CHASE_PREY);

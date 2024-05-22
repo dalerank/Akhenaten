@@ -31,8 +31,9 @@ int figure::is_nearby(int category, int* distance, int max_distance, bool gang_o
     int lowest_distance = max_distance;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure* f = figure_get(i);
-        if (f->is_dead())
+        if (f->is_dead()) {
             continue;
+        }
 
         if (!gang_on && f->targeted_by_figure_id)
             continue;

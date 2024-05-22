@@ -16,9 +16,12 @@
 #include "grid/terrain.h"
 #include "grid/water.h"
 #include "sound/effect.h"
+#include "dev/debug.h"
 
 #include <vector>
 #include <time.h>
+
+declare_console_var_bool(allow_span_ostrich, true)
 
 static int get_free_tile(int x, int y, int allow_negative_desirability, tile2i &outtile) {
     unsigned int disallowed_terrain = ~(TERRAIN_ACCESS_RAMP | TERRAIN_MEADOW);
@@ -209,7 +212,7 @@ static void update_herd_formation(formation* m) {
             wolf->wait_ticks = wolf->id & 0x1f;
         }
     }
-    if (can_spawn_ostrich(m)) {
+    if (can_spawn_ostrich(m) && allow_span_ostrich.value) {
         // spawn new ostrich
         if (!map_terrain_is(MAP_OFFSET(m->x, m->y), TERRAIN_IMPASSABLE_OSTRICH)) {
             figure* ostrich = figure_create(m->figure_type, tile2i(m->x, m->y), DIR_0_TOP_RIGHT);

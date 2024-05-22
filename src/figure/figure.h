@@ -275,10 +275,12 @@ public:
     e_minimap_figure_color get_figure_color(); // minimap.c
 
     void kill() {
-        if (state != FIGURE_STATE_ALIVE)
+        if (state != FIGURE_STATE_ALIVE) {
             return;
+        }
+
         set_state(FIGURE_STATE_DYING);
-        action_state = FIGURE_ACTION_149_CORPSE;
+        advance_action(FIGURE_ACTION_149_CORPSE);
     };
 
     bool is_boat();

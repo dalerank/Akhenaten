@@ -120,7 +120,7 @@ building_house_vacant = {
   },
   building_size : 1,
   is_draggable : true,
-  window_info_height_id : 1,
+  window_info_height_id : 5,
 }
 
 building_cattle_ranch = {
