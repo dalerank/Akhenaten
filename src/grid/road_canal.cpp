@@ -1,4 +1,4 @@
-#include "road_aqueduct.h"
+#include "road_canal.h"
 
 #include "building/building.h"
 #include "core/direction.h"
@@ -12,7 +12,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 
-bool map_can_place_road_under_aqueduct(int grid_offset) {
+bool map_can_place_road_under_canal(int grid_offset) {
     int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
     if (image_id != 0 && image_id != 1 && image_id != 48 && image_id != 49)
         return false;
@@ -34,7 +34,7 @@ bool map_can_place_road_under_aqueduct(int grid_offset) {
     //    }
     return true;
 }
-bool map_can_place_aqueduct_on_road(int grid_offset) {
+bool map_can_place_canal_on_road(int grid_offset) {
     int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_TERRAIN_ROAD);
     if (image_id != 0 && image_id != 1 && image_id != 49 && image_id != 50)
         return false;
@@ -57,7 +57,7 @@ bool map_can_place_aqueduct_on_road(int grid_offset) {
     return true;
 }
 
-int map_get_aqueduct_with_road_image(int grid_offset) {
+int map_get_canal_with_road_image(int grid_offset) {
     int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
     switch (image_id) {
     case 2:
@@ -84,7 +84,7 @@ int map_get_aqueduct_with_road_image(int grid_offset) {
     }
 }
 
-static int is_road_tile_for_aqueduct(int grid_offset, int gate_orientation) {
+static int is_road_tile_for_canal(int grid_offset, int gate_orientation) {
     int is_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         building* b = building_at(grid_offset);
@@ -100,11 +100,11 @@ static int is_road_tile_for_aqueduct(int grid_offset, int gate_orientation) {
     return is_road;
 }
 
-int map_is_straight_road_for_aqueduct(int grid_offset) {
-    int road_tiles_x = is_road_tile_for_aqueduct(grid_offset + GRID_OFFSET(1, 0), 2)
-                       + is_road_tile_for_aqueduct(grid_offset + GRID_OFFSET(-1, 0), 2);
-    int road_tiles_y = is_road_tile_for_aqueduct(grid_offset + GRID_OFFSET(0, -1), 1)
-                       + is_road_tile_for_aqueduct(grid_offset + GRID_OFFSET(0, 1), 1);
+int map_is_straight_road_for_canal(int grid_offset) {
+    int road_tiles_x = is_road_tile_for_canal(grid_offset + GRID_OFFSET(1, 0), 2)
+                       + is_road_tile_for_canal(grid_offset + GRID_OFFSET(-1, 0), 2);
+    int road_tiles_y = is_road_tile_for_canal(grid_offset + GRID_OFFSET(0, -1), 1)
+                       + is_road_tile_for_canal(grid_offset + GRID_OFFSET(0, 1), 1);
 
     if (road_tiles_x == 2 && road_tiles_y == 0)
         return 1;

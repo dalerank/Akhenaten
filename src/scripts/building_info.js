@@ -934,6 +934,10 @@ building_town_palace = {
   building_size : 5,
 }
 
+building_road = {
+  is_draggable : true,
+}
+
 building_city_palace = {
   animations : {
     preview : { pack:PACK_GENERAL, id:18 },

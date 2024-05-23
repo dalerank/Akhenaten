@@ -665,7 +665,7 @@ void GamestateIO::start_loaded_file() {
         map_tiles_update_all_roads();
         map_tiles_update_all_plazas();
         map_tiles_update_all_walls();
-        map_tiles_update_all_aqueducts(0);
+        map_tiles_update_all_canals(0);
 
         //        map_natives_init();
         figure_create_fishing_points();

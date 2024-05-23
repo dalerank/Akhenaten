@@ -19,7 +19,6 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 
-
 buildings::model_t<building_village_palace> village_building_palace_m;
 buildings::model_t<building_town_palace> town_building_palace_m;
 buildings::model_t<building_city_palace> city_building_palace_m;

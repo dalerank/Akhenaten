@@ -18,6 +18,7 @@
 #include "building/storage.h"
 #include "building/building_statue.h"
 #include "building/building_storage_yard.h"
+#include "building/building_road.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/resource.h"
@@ -1335,14 +1336,14 @@ void BuildPlanner::construction_start(tile2i tile) {
         int can_start = true;
         switch (build_type) {
         case BUILDING_ROAD:
-            can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start.x(), start.y());
+            can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start);
             break;
         case BUILDING_IRRIGATION_DITCH:
             //            case BUILDING_WATER_LIFT:
-            can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, start.x(), start.y());
+            can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, start);
             break;
         case BUILDING_MUD_WALL:
-            can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start.x(), start.y());
+            can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start);
             break;
 
         default:
@@ -1387,10 +1388,10 @@ void BuildPlanner::construction_update(tile2i tile) {
         items_placed = last_items_cleared = building_construction_clear_land(true, start, end);
         break;
     case BUILDING_MUD_WALL:
-        items_placed = building_construction_place_wall(true, start.x(), start.y(), end.x(), end.y());
+        items_placed = building_construction_place_wall(true, start, end);
         break;
     case BUILDING_ROAD:
-        items_placed = building_construction_place_road(true, start.x(), start.y(), end.x(), end.y());
+        items_placed = building_road::place(true, start, end);
         break;
     case BUILDING_PLAZA:
         items_placed = building_plaza::place(start, end);
@@ -1399,8 +1400,8 @@ void BuildPlanner::construction_update(tile2i tile) {
         items_placed = building_garden::place(start, end);
         break;
     case BUILDING_IRRIGATION_DITCH:
-        items_placed = building_construction_place_aqueduct(true, start.x(), start.y(), end.x(), end.y());
-        map_tiles_update_all_aqueducts(0);
+        items_placed = building_construction_place_canal(true, start, end);
+        map_tiles_update_all_canals(0);
         break;
     case BUILDING_LOW_BRIDGE:
     case BUILDING_UNUSED_SHIP_BRIDGE_83:
@@ -1605,11 +1606,11 @@ bool BuildPlanner::place() {
         break;
 
     case BUILDING_MUD_WALL:
-        placement_cost *= building_construction_place_wall(false, start.x(), start.y(), end.x(), end.y());
+        placement_cost *= building_construction_place_wall(false, start, end);
         break;
 
     case BUILDING_ROAD:
-        placement_cost *= building_construction_place_road(false, start.x(), start.y(), end.x(), end.y());
+        placement_cost *= building_road::place(false, start, end);
         break;
 
     case BUILDING_PLAZA:
@@ -1627,9 +1628,9 @@ bool BuildPlanner::place() {
         break;
     }
     case BUILDING_IRRIGATION_DITCH: {
-        placement_cost *= building_construction_place_aqueduct(false, start.x(), start.y(), end.x(), end.y());
+        placement_cost *= building_construction_place_canal(false, start, end);
         if (!placement_cost) {
-            map_tiles_update_all_aqueducts(0);
+            map_tiles_update_all_canals(0);
             map_routing_update_land();
         }
         break;

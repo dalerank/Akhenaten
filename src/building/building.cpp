@@ -707,7 +707,6 @@ bool building_is_military(e_building_type type) {
 bool building_is_draggable(e_building_type type) {
     switch (type) {
     case BUILDING_CLEAR_LAND:
-    case BUILDING_ROAD:
     case BUILDING_IRRIGATION_DITCH:
     case BUILDING_MUD_WALL:
         return true;
@@ -776,7 +775,7 @@ void building_update_state(void) {
     }
 
     if (aqueduct_recalc) {
-        map_tiles_update_all_aqueducts(0);
+        map_tiles_update_all_canals(0);
     }
 
     if (land_recalc) {
@@ -862,7 +861,6 @@ void building_impl::on_place_checks() {
     switch (type()) {
     case BUILDING_NONE:
     case BUILDING_CLEAR_LAND:
-    case BUILDING_ROAD:
     case BUILDING_IRRIGATION_DITCH:
     case BUILDING_TEMPLE_COMPLEX_ALTAR:
     case BUILDING_TEMPLE_COMPLEX_ORACLE:

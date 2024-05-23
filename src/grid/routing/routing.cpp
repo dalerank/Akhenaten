@@ -9,7 +9,7 @@
 #include "grid/building.h"
 #include "grid/figure.h"
 #include "grid/grid.h"
-#include "grid/road_aqueduct.h"
+#include "grid/road_canal.h"
 #include "grid/terrain.h"
 #include "grid/water.h"
 #include "queue.h"
@@ -130,7 +130,7 @@ static void callback_calc_distance_build_road(int next_offset, int dist) {
     int d_y = MAP_Y(next_offset) - MAP_Y(queue_get(0));
     switch (map_grid_get(&routing_land_citizen, next_offset)) {
     case CITIZEN_N3_AQUEDUCT:
-        if (!map_can_place_road_under_aqueduct(next_offset))
+        if (!map_can_place_road_under_canal(next_offset))
             blocked = true;
         if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_CANAL, TERRAIN_ROAD, d_x, d_y, false))
             blocked = true;
@@ -163,7 +163,7 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
     int d_y = MAP_Y(next_offset) - MAP_Y(queue_get(0));
     switch (map_grid_get(&routing_land_citizen, next_offset)) {
     case CITIZEN_0_ROAD: // rubble, garden, access ramp
-        if (!map_can_place_aqueduct_on_road(next_offset))
+        if (!map_can_place_canal_on_road(next_offset))
             blocked = true;
         if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_ROAD, TERRAIN_CANAL, d_x, d_y, false))
             blocked = true;
@@ -203,7 +203,7 @@ bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
 
     case CITIZEN_0_ROAD:
         if (is_aqueduct) {
-            if (!map_can_place_aqueduct_on_road(grid_offset))
+            if (!map_can_place_canal_on_road(grid_offset))
                 return false;
             if (!can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_ROAD, TERRAIN_CANAL, 0, 0, false))
                 return false;
@@ -212,7 +212,7 @@ bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
 
     case CITIZEN_N3_AQUEDUCT:
         if (!is_aqueduct) {
-            if (!map_can_place_road_under_aqueduct(grid_offset))
+            if (!map_can_place_road_under_canal(grid_offset))
                 return false;
             if (!can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_CANAL, TERRAIN_ROAD, 0, 0, false))
                 return false;
@@ -261,27 +261,33 @@ bool map_routing_ferry_has_routes(building *b) {
 }
 
 
-bool map_routing_calculate_distances_for_building(routed_int type, int x, int y) {
+bool map_routing_calculate_distances_for_building(e_routed_mode type, tile2i tile) {
     clear_distances();
-    int source_offset = MAP_OFFSET(x, y);
+    int source_offset = tile.grid_offset();
 
     switch (type) {
     case ROUTED_BUILDING_ROAD:
         if (!map_can_place_initial_road_or_aqueduct(source_offset, false))
             return false;
-        if (map_terrain_is(source_offset, TERRAIN_CANAL) && !map_can_place_road_under_aqueduct(source_offset))
+
+        if (map_terrain_is(source_offset, TERRAIN_CANAL) && !map_can_place_road_under_canal(source_offset))
             return false;
+
         route_queue(source_offset, -1, callback_calc_distance_build_road);
         break;
+
     case ROUTED_BUILDING_AQUEDUCT:
         if (!map_can_place_initial_road_or_aqueduct(source_offset, true))
             return false;
-        if (map_terrain_is(source_offset, TERRAIN_ROAD) && !map_can_place_aqueduct_on_road(source_offset))
+
+        if (map_terrain_is(source_offset, TERRAIN_ROAD) && !map_can_place_canal_on_road(source_offset))
             return false;
+
         route_queue(source_offset, -1, callback_calc_distance_build_aqueduct);
         break;
+
     case ROUTED_BUILDING_WALL:
-        route_queue(MAP_OFFSET(x, y), -1, callback_calc_distance_build_wall);
+        route_queue(tile.grid_offset(), -1, callback_calc_distance_build_wall);
         break;
     }
     ++g_routing_stats.total_routes_calculated;

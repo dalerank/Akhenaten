@@ -9,6 +9,7 @@
 #include "building/building_fishing_wharf.h"
 #include "building/building_festival_square.h"
 #include "building/building_storage_yard.h"
+#include "building/building_road.h"
 #include "building/industry.h"
 #include "building/monument_mastaba.h"
 #include "building/rotation.h"
@@ -23,7 +24,7 @@
 #include "grid/image_context.h"
 #include "grid/orientation.h"
 #include "grid/property.h"
-#include "grid/road_aqueduct.h"
+#include "grid/road_canal.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "config/config.h"
@@ -190,7 +191,7 @@ static void draw_aqueduct(map_point tile, int x, int y, painter &ctx) {
             blocked = true;
     } else {
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {               // starting new aqueduct line
-            blocked = !map_is_straight_road_for_aqueduct(grid_offset); // can't start over a road curve!
+            blocked = !map_is_straight_road_for_canal(grid_offset); // can't start over a road curve!
             if (map_property_is_plaza_or_earthquake(grid_offset))      // todo: plaza not allowing aqueducts? maybe?
                 blocked = true;
         } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
@@ -205,60 +206,8 @@ static void draw_aqueduct(map_point tile, int x, int y, painter &ctx) {
     if (blocked) { // cannot draw!
         draw_flat_tile(ctx, {x, y}, COLOR_MASK_RED);
     } else {
-        const terrain_image* img = map_image_context_get_aqueduct(grid_offset); // get starting tile
-        draw_building_ghost(ctx, get_aqueduct_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), {x, y});
-    }
-}
-
-static void draw_road(tile2i tile, vec2i pixel, painter &ctx) {
-    int grid_offset = tile.grid_offset();
-    bool blocked = false;
-    int image_id = 0;
-    if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
-        image_id = image_id_from_group(GROUP_BUILDING_AQUEDUCT);
-        if (map_can_place_road_under_aqueduct(grid_offset)) {
-            image_id += map_get_aqueduct_with_road_image(grid_offset);
-        } else {
-            blocked = true;
-        }
-    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR - TERRAIN_FLOODPLAIN)) {
-        blocked = true;
-    } else {
-        image_id = image_id_from_group(GROUP_TERRAIN_DIRT_ROAD);
-        if (!map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD) && map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD)) {
-            image_id++;
-        }
-
-        if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
-            if (map_terrain_is(grid_offset, TERRAIN_WATER)) // inundated floodplains
-                blocked = true;
-        } else if (map_terrain_has_adjecent_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
-            if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) != 1)
-                blocked = true;
-            else {
-                if (map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
-                    if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD))
-                        blocked = true;
-                    else
-                        image_id++;
-                }
-
-                if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_FLOODPLAIN)
-                    && map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD)) {
-                    blocked = true;
-                }
-            }
-        }
-    }
-
-    if (city_finance_out_of_money()) {
-        blocked = true;
-    }
-
-    if (blocked) {
-        draw_flat_tile(ctx, pixel, COLOR_MASK_RED);
-    } else {
-        draw_building_ghost(ctx, image_id, pixel);
+        const terrain_image* img = map_image_context_get_canal(grid_offset); // get starting tile
+        draw_building_ghost(ctx, get_canal_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), {x, y});
     }
 }
 
@@ -417,7 +366,7 @@ void BuildPlanner::draw_graphics(painter &ctx) {
     vec2i pixel = pixel_coords_cache[0][0];
     switch (build_type) {
     case BUILDING_ROAD:
-        draw_road(end, pixel, ctx);
+        building_road::ghost_preview(end, pixel, ctx);
         return;
 
     case BUILDING_IRRIGATION_DITCH:

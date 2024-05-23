@@ -24,6 +24,6 @@ const terrain_image* map_image_context_get_wall(int grid_offset);
 const terrain_image* map_image_context_get_wall_gatehouse(int grid_offset);
 const terrain_image* map_image_context_get_dirt_road(int grid_offset);
 const terrain_image* map_image_context_get_paved_road(int grid_offset);
-const terrain_image* map_image_context_get_aqueduct(int grid_offset);
+const terrain_image* map_image_context_get_canal(int grid_offset);
 
 #endif // MAP_IMAGE_CONTEXT_H

@@ -1,6 +1,7 @@
 #include "tool.h"
 
 #include "building/construction/routed.h"
+#include "building/building_road.h"
 #include "city/warning.h"
 #include "core/random.h"
 #include "editor/tool_restriction.h"
@@ -212,7 +213,7 @@ void editor_tool_update_use(tile2i tile) {
     if (!data.build_in_progress)
         return;
     if (data.type == TOOL_ROAD) {
-        building_construction_place_road(1, data.start_tile.x(), data.start_tile.y(), tile.x(), tile.y());
+        building_road::place(1, data.start_tile, tile);
         return;
     }
     if (!editor_tool_is_brush())
@@ -372,8 +373,9 @@ static void place_access_ramp(map_point tile) {
 }
 
 static void place_road(map_point start_tile, map_point end_tile) {
-    if (building_construction_place_road(0, start_tile.x(), start_tile.y(), end_tile.x(), end_tile.y()))
+    if (building_road::place(0, start_tile, end_tile)) {
         scenario_editor_updated_terrain();
+    }
 }
 
 void editor_tool_end_use(map_point tile) {

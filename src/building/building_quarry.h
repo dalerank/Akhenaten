@@ -5,7 +5,6 @@
 class building_sandstone_quarry : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_SANDSTONE_QUARRY, building_sandstone_quarry)
-
     building_sandstone_quarry(building &b) : building_impl(b) {}
 
     virtual void window_info_background(object_info &c) override;

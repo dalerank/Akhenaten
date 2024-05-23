@@ -517,7 +517,7 @@ static void set_terrain_canal_connections(int grid_offset, int direction, int mu
     }
 }
 
-const terrain_image* map_image_context_get_aqueduct(int grid_offset) {
+const terrain_image* map_image_context_get_canal(int grid_offset) {
     int tiles[MAX_TILES] = {0, 0, 0, 0, 0, 0, 0, 0};
     int has_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
     for (int i = 0; i < MAX_TILES; i += 2) {
