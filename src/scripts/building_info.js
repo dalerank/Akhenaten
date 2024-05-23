@@ -935,6 +935,11 @@ building_town_palace = {
 }
 
 building_road = {
+  animations : {
+    preview : { pack:PACK_TERRAIN, id:33 },
+    base : { pack:PACK_TERRAIN, id:33 },
+  },
+  building_size : 1,
   is_draggable : true,
 }
 

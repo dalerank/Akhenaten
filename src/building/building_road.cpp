@@ -7,6 +7,10 @@
 #include "grid/routing/routing_terrain.h"
 #include "building/construction/routed.h"
 #include "grid/terrain.h"
+#include "grid/tiles.h"
+#include "grid/floodplain.h"
+#include "grid/image.h"
+#include "grid/property.h"
 #include "grid/road_canal.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -89,4 +93,37 @@ void building_road::ghost_preview(tile2i tile, vec2i pixel, painter &ctx) {
     } else {
         draw_building_ghost(ctx, image_id, pixel);
     }
+}
+
+void building_road::set_image(tile2i tile) {
+    int grid_offset = tile.grid_offset();
+    if (!map_terrain_is(grid_offset, TERRAIN_ROAD)
+        || map_terrain_is(grid_offset, TERRAIN_WATER)
+        || map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        return;
+    }
+
+    if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
+        map_tiles_set_canal_image(grid_offset);
+        return;
+    }
+
+    if (map_property_is_plaza_or_earthquake(grid_offset)) {
+        return;
+    }
+
+    int base_img = road_m.anim["base"].first_img();
+    if (map_tiles_is_paved_road(grid_offset)) {
+        const terrain_image* img = map_image_context_get_paved_road(grid_offset);
+        map_image_set(grid_offset, base_img + img->group_offset + img->item_offset);
+    } else {
+        if (!map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+            map_image_set_road_floodplain(grid_offset);
+        } else {
+            const terrain_image* img = map_image_context_get_dirt_road(grid_offset);
+            map_image_set(grid_offset, base_img + img->group_offset + img->item_offset + 49 + 344);
+        }
+    }
+    map_property_set_multi_tile_size(grid_offset, 1);
+    map_property_mark_draw_tile(grid_offset);
 }

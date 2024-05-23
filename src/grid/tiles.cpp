@@ -23,6 +23,7 @@
 #include "building/industry.h"
 #include "building/building_garden.h"
 #include "building/building_plaza.h"
+#include "building/building_road.h"
 #include "city/city.h"
 #include "city/floods.h"
 #include "core/calc.h"
@@ -76,18 +77,36 @@ static int is_clear(int grid_offset, int size, int allowed_terrain, bool check_i
 int map_tiles_are_clear(int grid_offset, int size, int disallowed_terrain, int check_figures) {
     return is_clear(grid_offset, size, disallowed_terrain, false, check_figures);
 }
-static void foreach_map_tile(void (*callback)(int grid_offset)) {
+
+static void foreach_map_tile(void (*callback)(int)) {
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++)
             callback(grid_offset);
     }
 }
+
+static void foreach_map_tile(void (*callback)(tile2i)) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++)
+            callback(tile2i(grid_offset));
+    }
+}
+
 static void foreach_region_tile(tile2i tmin, tile2i tmax, void (*callback)(int grid_offset)) {
     map_grid_bound_area(tmin, tmax);
 
     map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
         callback(tile.grid_offset());
+    });
+}
+
+static void foreach_region_tile(tile2i tmin, tile2i tmax, void (*callback)(tile2i)) {
+    map_grid_bound_area(tmin, tmax);
+
+    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+        callback(tile);
     });
 }
 
@@ -641,7 +660,7 @@ int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_im
     return image_id_from_group(GROUP_BUILDING_AQUEDUCT) + water_offset + floodplains_offset + image_offset;
 }
 
-static void set_canal_image(int grid_offset) {
+void map_tiles_set_canal_image(int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_CANAL) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
         const terrain_image* img = map_image_context_get_canal(grid_offset);
         bool is_road = map_terrain_is(grid_offset, TERRAIN_ROAD);
@@ -661,12 +680,12 @@ static void set_canal_image(int grid_offset) {
 
 void map_tiles_update_all_canals(int include_construction) {
     aqueduct_include_construction = include_construction;
-    foreach_map_tile(set_canal_image);
+    foreach_map_tile(map_tiles_set_canal_image);
     aqueduct_include_construction = 0;
 }
 
 void map_tiles_update_region_canals(int x_min, int y_min, int x_max, int y_max) {
-    foreach_region_tile(tile2i(x_min, y_min), tile2i(x_max, y_max), set_canal_image);
+    foreach_region_tile(tile2i(x_min, y_min), tile2i(x_max, y_max), map_tiles_set_canal_image);
 }
 
 int map_tiles_set_canal(tile2i tile) {
@@ -680,7 +699,7 @@ int map_tiles_set_canal(tile2i tile) {
     map_terrain_add(grid_offset, TERRAIN_CANAL);
     map_property_clear_constructing(grid_offset);
 
-    foreach_region_tile(tile.shifted(-1, -1), tile.shifted(1, 1), set_canal_image);
+    foreach_region_tile(tile.shifted(-1, -1), tile.shifted(1, 1), map_tiles_set_canal_image);
     return tile_set;
 }
 
@@ -694,43 +713,13 @@ int map_tiles_is_paved_road(int grid_offset) {
 
     return 0;
 }
-static void set_road_image(int grid_offset) {
-    if (!map_terrain_is(grid_offset, TERRAIN_ROAD)
-        || map_terrain_is(grid_offset, TERRAIN_WATER)
-        || map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-        return;
-    }
-
-    if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
-        set_canal_image(grid_offset);
-        return;
-    }
-
-    if (map_property_is_plaza_or_earthquake(grid_offset)) {
-        return;
-    }
-
-    if (map_tiles_is_paved_road(grid_offset)) {
-        const terrain_image* img = map_image_context_get_paved_road(grid_offset);
-        map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_ROAD) + img->group_offset + img->item_offset);
-    } else {
-        if (!map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
-            map_image_set_road_floodplain(grid_offset);
-        } else {
-            const terrain_image* img = map_image_context_get_dirt_road(grid_offset);
-            map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_ROAD) + img->group_offset + img->item_offset + 49 + 344);
-        }
-    }
-    map_property_set_multi_tile_size(grid_offset, 1);
-    map_property_mark_draw_tile(grid_offset);
-}
 
 void map_tiles_update_all_roads(void) {
-    foreach_map_tile(set_road_image);
+    foreach_map_tile(building_road::set_image);
 }
 
 void map_tiles_update_area_roads(int x, int y, int size) {
-    foreach_region_tile(tile2i(x - 1, y - 1), tile2i(x + size - 2, y + size - 2), set_road_image);
+    foreach_region_tile(tile2i(x - 1, y - 1), tile2i(x + size - 2, y + size - 2), building_road::set_image);
 }
 
 int map_tiles_set_road(tile2i tile) {
@@ -743,7 +732,7 @@ int map_tiles_set_road(tile2i tile) {
     map_terrain_add(grid_offset, TERRAIN_ROAD);
     map_property_clear_constructing(grid_offset);
 
-    foreach_region_tile(tile.shifted(-1, -1), tile.shifted(1, 1), set_road_image);
+    foreach_region_tile(tile.shifted(-1, -1), tile.shifted(1, 1), building_road::set_image);
     return tile_set;
 }
 
@@ -907,8 +896,8 @@ void map_refresh_river_image_at(int grid_offset, bool force) {
     set_river_3x3_tiles(grid_offset);
     set_floodplain_edge_3x3_tiles(grid_offset);
     set_floodplain_land_tiles_image(grid_offset, force);
-    set_road_image(grid_offset);
-    set_canal_image(grid_offset);
+    building_road::set_image(tile2i(grid_offset));
+    map_tiles_set_canal_image(grid_offset);
 }
 
 void map_tiles_river_refresh_entire(void) {

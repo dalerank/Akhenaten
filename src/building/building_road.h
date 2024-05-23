@@ -11,4 +11,5 @@ public:
 
     static int place(bool measure_only, tile2i start, tile2i end);
     static void ghost_preview(tile2i tile, vec2i pixel, painter &ctx);
+    static void set_image(tile2i tile);
 };
