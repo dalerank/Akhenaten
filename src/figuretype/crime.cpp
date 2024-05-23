@@ -184,13 +184,13 @@ void figure::protestor_action() {
     wait_ticks++;
     if (wait_ticks > 200) {
         poof();
-        anim_frame = 0;
+        anim.frame = 0;
     }
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_THIEF_DEATH) + figure_image_corpse_offset();
     } else {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_THIEF_WALK) + CRIMINAL_OFFSETS[anim_frame / 4] + 104;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_THIEF_WALK) + CRIMINAL_OFFSETS[anim.frame / 4] + 104;
     }
 }
 
@@ -239,8 +239,8 @@ void figure::mugger_action() {
             action_state = FIGURE_ACTION_120_RIOTER_CREATED;
             route_remove();
         } else if (direction == DIR_FIGURE_ATTACK) {
-            if (anim_frame > 12) {
-                anim_frame = 0;
+            if (anim.frame > 12) {
+                anim.frame = 0;
             }
         }
     }
@@ -255,13 +255,13 @@ void figure::mugger_action() {
     wait_ticks++;
     if (wait_ticks > 200) {
         poof();
-        anim_frame = 0;
+        anim.frame = 0;
     }
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_THIEF_DEATH) + figure_image_corpse_offset();
     } else {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_THIEF_WALK) + CRIMINAL_OFFSETS[anim_frame / 2] + 104;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_THIEF_WALK) + CRIMINAL_OFFSETS[anim.frame / 2] + 104;
     }
 }
 
@@ -309,8 +309,8 @@ void figure::rioter_action() {
             action_state = FIGURE_ACTION_120_RIOTER_CREATED;
             route_remove();
         } else if (direction == DIR_FIGURE_ATTACK) {
-            if (anim_frame > 12) {
-                anim_frame = 0;
+            if (anim.frame > 12) {
+                anim.frame = 0;
             }
         }
         break;
@@ -328,11 +328,11 @@ void figure::rioter_action() {
     if (action_state == FIGURE_ACTION_149_CORPSE) {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_DEATH) + figure_image_corpse_offset();
     } else if (direction == DIR_FIGURE_ATTACK) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_ATTACK) + CRIMINAL_OFFSETS[anim_frame % 16];
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_ATTACK) + CRIMINAL_OFFSETS[anim.frame % 16];
     } else if (action_state == FIGURE_ACTION_121_RIOTER_MOVING) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_WALK) + dir + 8 * anim_frame;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_WALK) + dir + 8 * anim.frame;
     } else {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_ATTACK) + CRIMINAL_OFFSETS[anim_frame / 2];
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_ATTACK) + CRIMINAL_OFFSETS[anim.frame / 2];
     }
 }
 

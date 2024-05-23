@@ -46,7 +46,7 @@ void figure_caravan_donkey::figure_action() {
         follow_ticks(1);
 
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
-    base.sprite_image_id = image_group(IMG_TRADER_CARAVAN) + dir + 8 * base.anim_frame;
+    base.sprite_image_id = image_group(IMG_TRADER_CARAVAN) + dir + 8 * base.anim.frame;
 }
 
 void figure_caravan_donkey::figure_before_action() {

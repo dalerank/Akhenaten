@@ -34,3 +34,11 @@ void animations_t::load(archive arch, pcstr section) {
         data.back().load(anim_arch);
     });
 }
+
+void animation_context::update(bool refresh_only) {
+    frame += refresh_only ? 0 : 1;
+
+    if (frame >= max_frames * frame_duration) {
+        frame = 0;
+    }
+}

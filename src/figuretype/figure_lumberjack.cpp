@@ -24,13 +24,13 @@ void figure_lumberjack::figure_action() {
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
     case ACTION_14_GATHERER_CREATED: // spawning
-        base.anim_frame = 0;
+        base.anim.frame = 0;
         if (--wait_ticks <= 0) {
             tile2i dest(-1, -1);
             bool found_resource = base.find_resource_tile(RESOURCE_TIMBER, dest);
 
             if (found_resource) {
-                base.anim_offset = 0;
+                base.anim.offset = 0;
                 do_goto(dest, TERRAIN_USAGE_PREFER_ROADS);
                 advance_action(9);
             } else {

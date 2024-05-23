@@ -135,12 +135,13 @@ void figure::image_set_animation(e_image_id img, int offset, int max_frames, int
 }
 
 void figure::image_set_animation(int collection, int group, int offset, int max_frames, int duration) {
-    anim_base = image_id_from_group(collection, group);
-    anim_offset = offset;
-    anim_max_frames = max_frames;
-    if (duration <= 0)
+    anim.base = image_id_from_group(collection, group);
+    anim.offset = offset;
+    anim.max_frames = max_frames;
+    if (duration <= 0) {
         duration = 1;
-    anim_frame_duration = duration;
+    }
+    anim.frame_duration = duration;
 }
 
 void figure::figure_image_update(bool refresh_only) {
@@ -168,15 +169,12 @@ void figure::figure_image_update(bool refresh_only) {
     //        }
     //    }
 
-    // null images
-    if (anim_base <= 0)
-        return;
 
-    // advance animation frame
-    if (!refresh_only)
-        anim_frame++;
-    if (anim_frame >= anim_max_frames * anim_frame_duration)
-        anim_frame = 0;
+    if (!anim.valid()) {
+        return;
+    }
+
+    anim.update(refresh_only);
 
     switch (type) {
     case FIGURE_FISHING_POINT:
@@ -191,7 +189,7 @@ void figure::figure_image_update(bool refresh_only) {
     case FIGURE_ARROW:
     case FIGURE_HUNTER_ARROW: {
         int dir = (16 + direction - 2 * city_view_orientation()) % 16;
-        sprite_image_id = anim_base + 16 + dir;
+        sprite_image_id = anim.base + 16 + dir;
         break;
     }
 
@@ -199,19 +197,15 @@ void figure::figure_image_update(bool refresh_only) {
         break;
 
     case FIGURE_FISHING_POINT: {
-        int effective_frame = anim_frame / anim_frame_duration;
-        sprite_image_id = anim_base + anim_offset + effective_frame;
+        sprite_image_id = anim.start() + anim.current_frame();
         break;
     }
 
     default:
-        // play death animation if it's dying, otherwise always follow the same pattern - offsets are set during action
-        // logic
-        if (state == FIGURE_STATE_DYING)
-            sprite_image_id = anim_base + figure_image_corpse_offset();
-        else {
-            int effective_frame = anim_frame / anim_frame_duration;
-            sprite_image_id = anim_base + anim_offset + figure_image_direction() + 8 * effective_frame;
+        if (state == FIGURE_STATE_DYING) {
+            sprite_image_id = anim.base + figure_image_corpse_offset();
+        } else {
+            sprite_image_id = anim.start() + figure_image_direction() + 8 * anim.current_frame();
         }
         break;
     }
@@ -301,7 +295,7 @@ void figure::cart_update_image() {
     if (action_state == FIGURE_ACTION_149_CORPSE) {
         sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
     } else {
-        sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * anim_frame;
+        sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * anim.frame;
     }
 
     switch (resource_id) {

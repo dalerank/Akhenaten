@@ -73,13 +73,9 @@ void building_palace::window_info_background(object_info &c) {
 }
 
 bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    switch (type()) {
-    case BUILDING_VILLAGE_PALACE:
-        if (worker_percentage() > 50) {
-            const animation_t &anim = params().anim["work"];
-            building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
-        }
-        break;
+    if (worker_percentage() > 50) {
+        const animation_t &anim = params().anim["work"];
+        building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
     }
 
     //int image_id = image_id_from_group(GROUP_BUILDING_PALACE);

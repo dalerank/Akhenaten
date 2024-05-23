@@ -282,6 +282,7 @@ public:
     } sentiment;
     uint8_t show_on_problem_overlay;
     uint16_t deben_storage;
+    animation_context anim;
 
     building();
     building* main();

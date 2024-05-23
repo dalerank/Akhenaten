@@ -62,7 +62,7 @@ int figure::get_carrying_amount() {
 }
 
 void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
-    base.anim_frame = 0;
+    base.anim.frame = 0;
     base.wait_ticks++;
 
     if ((!warehouseman && base.wait_ticks >= 10) || (warehouseman && base.wait_ticks >= 4)) {
@@ -175,7 +175,7 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
 
 void figure_cartpusher::do_retrieve(int action_done) {
     base.wait_ticks++;
-    base.anim_frame = 0;
+    base.anim.frame = 0;
     if (base.wait_ticks > 4) {
         building* dest = destination();
         switch (dest->type) {
@@ -223,7 +223,7 @@ void figure_cartpusher::do_retrieve(int action_done) {
 
 void figure_cartpusher::calculate_destination(bool warehouseman) {
     set_destination(0);
-    base.anim_frame = 0;
+    base.anim.frame = 0;
     base.wait_ticks++;
 
     if (!warehouseman) {

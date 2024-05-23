@@ -192,7 +192,7 @@ void figure::tower_sentry_action() {
     tower_sentry_pick_target();
     switch (action_state) {
     case FIGURE_ACTION_170_TOWER_SENTRY_AT_REST:
-        anim_frame = 0;
+        anim.frame = 0;
         wait_ticks++;
         if (wait_ticks > 40) {
             wait_ticks = 0;
@@ -291,7 +291,7 @@ void figure::tower_sentry_action() {
             image_id = image_id + 96 + dir + 8 * ((attack_image_offset - 16) / 2);
         }
     } else {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY) + dir + 8 * anim_frame;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY) + dir + 8 * anim.frame;
     }
 }
 

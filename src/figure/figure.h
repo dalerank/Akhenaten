@@ -72,11 +72,7 @@ public:
     int id;
     int sprite_image_id;
     int cart_image_id;
-    int anim_base;
-    int anim_offset;
-    unsigned char anim_frame_duration;
-    unsigned char anim_max_frames;
-    unsigned char anim_frame;
+    animation_context anim;
     unsigned char is_enemy_image;
 
     unsigned char alternative_location_index;

@@ -55,7 +55,7 @@ void figure::shipwreck_action() {
     if (wait_ticks > 2000)
         poof();
 
-    sprite_image_id = image_id_from_group(GROUP_FIGURE_SHIPWRECK) + anim_frame / 16;
+    sprite_image_id = image_id_from_group(GROUP_FIGURE_SHIPWRECK) + anim.frame / 16;
 }
 
 

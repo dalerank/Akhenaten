@@ -96,19 +96,19 @@ void figure_stadard_bearer::figure_action() {
         if (m->is_halted)
             base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 8;
         else {
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + base.anim_frame / 2;
+            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + base.anim.frame / 2;
         }
     } else if (m->figure_type == FIGURE_FCHARIOTEER) {
         if (m->is_halted)
             base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 26;
         else {
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 18 + base.anim_frame / 2;
+            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 18 + base.anim.frame / 2;
         }
     } else {
         if (m->is_halted)
             base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 17;
         else {
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 9 + base.anim_frame / 2;
+            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 9 + base.anim.frame / 2;
         }
     }
 }
@@ -161,7 +161,7 @@ int figure::find_mop_up_target() {
             target_figure_created_sequence = target->created_sequence;
         } else {
             action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
-            anim_frame = 0;
+            anim.frame = 0;
         }
         route_remove();
     }
@@ -222,7 +222,7 @@ void figure_soldier::figure_action() {
         base.map_figure_update();
         wait_ticks = 0;
         base.formation_at_rest = 1;
-        base.anim_frame = 0;
+        base.anim.frame = 0;
         if (tilex() != base.formation_position_x.soldier || tiley() != base.formation_position_y.soldier)
             base.action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
 
@@ -274,7 +274,7 @@ void figure_soldier::figure_action() {
         base.move_ticks(speed_factor);
         if (direction() == DIR_FIGURE_NONE) {
             base.action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
-            base.anim_frame = 0;
+            base.anim.frame = 0;
         } else if (direction() == DIR_FIGURE_REROUTE)
             route_remove();
         else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
@@ -283,13 +283,13 @@ void figure_soldier::figure_action() {
                 poof();
             }
 
-            base.anim_frame = 0;
+            base.anim.frame = 0;
         }
         break;
 
     case FIGURE_ACTION_84_SOLDIER_AT_STANDARD:
         base.formation_at_rest = 0;
-        base.anim_frame = 0;
+        base.anim.frame = 0;
         base.map_figure_update();
         destination_tile.set(m->standard_x + formation_layout_position_x(m->layout, base.index_in_formation),
                              m->standard_y + formation_layout_position_y(m->layout, base.index_in_formation));
@@ -342,7 +342,7 @@ void figure_soldier::figure_action() {
             } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
                 base.action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
                 base.target_figure_id = 0;
-                base.anim_frame = 0;
+                base.anim.frame = 0;
             }
         }
         break;
@@ -411,7 +411,7 @@ void figure_soldier_infantry::update_image(const formation *m, int &dir) {
         //    image_id = image_id + dir;
         //}
         image_set_animation(soldier_infantry_m.anim["walk"]);
-        base.anim_frame = 0;
+        base.anim.frame = 0;
     } else {
         image_set_animation(soldier_infantry_m.anim["walk"]);
     }
@@ -455,7 +455,7 @@ void figure_soldier_archer::update_image(const formation *m, int &dir) {
         //    image_id = image_id + dir;
         //}
         image_set_animation(soldier_archer_m.anim["walk"]);
-        base.anim_frame = 0;
+        base.anim.frame = 0;
     } else {
         image_set_animation(soldier_archer_m.anim["walk"]);
     }

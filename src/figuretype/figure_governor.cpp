@@ -42,7 +42,7 @@ void figure::governor_action() {
     wait_ticks++;
     if (wait_ticks > 200) {
         poof();
-        anim_frame = 0;
+        anim.frame = 0;
     }
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {

@@ -43,7 +43,7 @@ void building_draw_normal_anim(painter &ctx, vec2i pixel, building *b, tile2i ti
     building_draw_normal_anim(ctx, pixel + anim.pos, b, tile, anim_id, color_mask, base_id, anim.max_frames);
 }
 
-void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile, int sprite_id, int color_mask, int base_id, int max_frames) {
+void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile, int sprite_id, int color_mask, int base_id, int max_frames, int duration) {
     if (!sprite_id) {
         return;
     }
@@ -53,7 +53,7 @@ void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile
         base_id = map_image_at(grid_offset);
     }
 
-    int animation_offset = building_animation_offset(b, base_id, grid_offset, max_frames);
+    int animation_offset = building_animation_offset(b, base_id, grid_offset, max_frames, duration);
     if (animation_offset == 0) {
         return;
     }

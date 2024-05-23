@@ -47,7 +47,7 @@ void figure_emigrant::figure_action() {
     tile2i exit = g_city.map.exit_point;
     switch (action_state()) {
     case FIGURE_ACTION_4_EMIGRANT_CREATED:
-        base.anim_frame = 0;
+        base.anim.frame = 0;
         wait_ticks++;
         if (wait_ticks >= 5) {
             advance_action(FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE);
@@ -73,7 +73,7 @@ void figure_emigrant::figure_action() {
     case 10:
         wait_ticks--;
         if (wait_ticks > 0) {
-            base.anim_frame = 0;
+            base.anim.frame = 0;
             break;
         }
 

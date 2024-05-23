@@ -916,7 +916,7 @@ building_village_palace = {
   animations : {
     preview : { pack:PACK_GENERAL, id:47 },
     base : { pack:PACK_GENERAL, id:47 },
-    work : { pos : [-1, -1], pack:PACK_GENERAL, id:47, offset:1, max_frames:12 }
+    work : { pos : [24, -20], pack:PACK_GENERAL, id:47, offset:1, max_frames:5, duration:3 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   unique_building : true,

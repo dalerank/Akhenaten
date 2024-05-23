@@ -55,7 +55,7 @@ enum E_HORSE { HORSE_CREATED = 0, HORSE_RACING = 1, HORSE_FINISHED = 2 };
 static void create_fishing_point(tile2i tile) {
     random_generate_next();
     figure* fish = figure_create(FIGURE_FISHING_POINT, tile, DIR_0_TOP_RIGHT);
-    fish->anim_frame = random_byte() & 0x1f;
+    fish->anim.frame = random_byte() & 0x1f;
     fish->progress_on_tile = random_byte() & 7;
     fish->advance_action(FIGURE_ACTION_196_FISHPOINT_BUBLES);
     fish->set_cross_country_direction(fish->cc_coords.x, fish->cc_coords.y, 15 * fish->destination_tile.x(), 15 * fish->destination_tile.y(), 0);
@@ -148,7 +148,7 @@ void figure::fishing_point_action() {
     is_ghost = false;
     use_cross_country = true;
     bool animation_finished = false;
-    if (anim_frame == 0) {
+    if (anim.frame == 0) {
         progress_on_tile++;
         if (progress_on_tile > 14) { // wrap around
             progress_on_tile = 0;
@@ -301,7 +301,7 @@ void figure::hyena_action() {
     } else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_HYENA_IDLE) + 152 + dir;
     } else {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_HYENA_WALK) + dir + 8 * anim_frame;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_HYENA_WALK) + dir + 8 * anim.frame;
     }
 }
 
@@ -373,7 +373,7 @@ void figure::hippo_action() {
     case 15: // terrified
     case 14: // scared
         image_set_animation(GROUP_FIGURE_HIPPO_EATING, 0, 7);
-        anim_frame = 0;
+        anim.frame = 0;
         break;
 
     case FIGURE_ACTION_149_CORPSE:
@@ -432,7 +432,7 @@ void figure::zebra_action() {
     } else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir;
     } else {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir + 8 * anim_frame;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir + 8 * anim.frame;
     }
 }
 

@@ -54,5 +54,5 @@ void figure_explosion::figure_action() {
     } else {
         base.sprite_image_id = image_group(IMG_EXPLOSION) + MAX_CLOUD_IMAGE_OFFSETS;
     }
-    base.anim_base = 0;
+    base.anim.base = 0;
 }

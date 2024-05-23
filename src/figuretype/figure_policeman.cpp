@@ -21,7 +21,7 @@ void figure::policeman_action() {
     building* b = home();
     switch (action_state) {
     case FIGURE_ACTION_70_POLICEMAN_CREATED:
-        anim_frame = 0;
+        anim.frame = 0;
         wait_ticks--;
         if (wait_ticks <= 0) {
             tile2i road_tile;
@@ -114,20 +114,20 @@ void figure::policeman_action() {
 
     dir = figure_image_normalize_direction(dir);
     switch (action_state) {
-    case FIGURE_ACTION_150_ATTACK:
-    if (attack_image_offset >= 12) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + 104 + dir + 8 * ((attack_image_offset - 12) / 2);
-    } else {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + 104 + dir;
-    }
-    break;
+        case FIGURE_ACTION_150_ATTACK:
+        if (attack_image_offset >= 12) {
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + 104 + dir + 8 * ((attack_image_offset - 12) / 2);
+        } else {
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + 104 + dir;
+        }
+        break;
 
     case FIGURE_ACTION_149_CORPSE:
-    sprite_image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + 96 + figure_image_corpse_offset();
-    break;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + 96 + figure_image_corpse_offset();
+        break;
 
     default:
-    sprite_image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + dir + 8 * anim_frame;
-    break;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + dir + 8 * anim.frame;
+        break;
     }
 }

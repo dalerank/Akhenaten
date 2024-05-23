@@ -30,13 +30,13 @@ void figure_reed_gatherer::figure_action() {
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
     case ACTION_14_GATHERER_CREATED: // spawning
-        base.anim_frame = 0;
+        base.anim.frame = 0;
         if (wait_ticks++ >= 10) {
             tile2i dest(-1, -1);
             bool found_resource = map_routing_citizen_found_reeds(tile(), dest);
 
             if (found_resource) {
-                base.anim_offset = 0;
+                base.anim.offset = 0;
                 do_goto(dest, TERRAIN_USAGE_PREFER_ROADS);
                 advance_action(ACTION_9_REED_GATHERER_GOTO_RESOURCE);
             } else {

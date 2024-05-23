@@ -327,7 +327,7 @@ void figure_init_scenario(void) {
 void figure::bind(io_buffer* iob) {
     figure* f = this;
     iob->bind(BIND_SIGNATURE_UINT8, &f->alternative_location_index);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->anim_frame);
+    iob->bind(BIND_SIGNATURE_UINT8, &f->anim.frame);
     iob->bind(BIND_SIGNATURE_UINT8, &f->is_enemy_image);
     iob->bind(BIND_SIGNATURE_UINT8, &f->flotsam_visible);
 

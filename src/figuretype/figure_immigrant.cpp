@@ -29,7 +29,7 @@ void figure_immigrant::figure_action() {
     case FIGURE_ACTION_1_IMMIGRANT_CREATED:
     case ACTION_8_RECALCULATE:
         //            is_ghost = true;
-        base.anim_frame = 0;
+        base.anim.frame = 0;
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
             advance_action(FIGURE_ACTION_2_IMMIGRANT_ARRIVING);

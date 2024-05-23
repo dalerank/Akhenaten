@@ -143,7 +143,7 @@ void figure_entertainer::figure_action() {
         break;
 
     case FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED:
-        base.anim_frame = 0;
+        base.anim.frame = 0;
         base.wait_ticks_missile = 0;
         wait_ticks--;
         if (wait_ticks <= 0) { // todo: summarize
@@ -265,16 +265,16 @@ void figure_entertainer::update_image() {
 
     if (action_state() == FIGURE_ACTION_150_ATTACK) {
         if (type() == FIGURE_MUSICIAN)
-            image_id = image_id + 104 + dir + 8 * (base.anim_frame / 2);
+            image_id = image_id + 104 + dir + 8 * (base.anim.frame / 2);
         else
             image_id = image_id + dir;
     } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
         image_id = image_id + 96 + base.figure_image_corpse_offset();
         base.cart_image_id = 0;
     } else
-        image_id = image_id + dir + 8 * base.anim_frame;
+        image_id = image_id + dir + 8 * base.anim.frame;
     if (base.cart_image_id) {
-        base.cart_image_id += dir + 8 * base.anim_frame;
+        base.cart_image_id += dir + 8 * base.anim.frame;
         base.figure_image_set_cart_offset(dir);
     }
 }

@@ -458,7 +458,7 @@ void figure::follow_ticks(int num_ticks) {
             figure_service_provide_coverage();
             int found_dir = calc_general_direction(tile, leader->previous_tile);
             if (found_dir >= 8) {
-                anim_frame = 0;
+                anim.frame = 0;
                 progress_on_tile--;
                 continue;
             }

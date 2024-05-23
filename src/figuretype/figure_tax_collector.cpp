@@ -32,7 +32,7 @@ void figure_tax_collector::figure_action() {
     building* b = home();
     switch (action_state()) {
     case FIGURE_ACTION_40_TAX_COLLECTOR_CREATED:
-        base.anim_frame = 0;
+        base.anim.frame = 0;
         wait_ticks--;
         if (wait_ticks <= 0) {
             tile2i road_tile;

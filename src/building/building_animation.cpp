@@ -46,7 +46,7 @@ int generic_sprite_offset(int grid_offset, int max_frames, int anim_speed) {
     return new_sprite;
 }
 
-int building_animation_offset(building* b, int image_id, int grid_offset, int max_frames) {
+int building_animation_offset(building* b, int image_id, int grid_offset, int max_frames, int duration) {
     if (building_is_workshop(b->type) && (!b->workshop_has_resources() || b->num_workers <= 0)) {
         return 0;
     }
@@ -105,8 +105,6 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
     case BUILDING_CONSERVATORY:
         if (b->num_workers <= 0) {
             return 0;
-            //map_sprite_animation_set(grid_offset, 1);
-            //return 1;
         }
         break;
 

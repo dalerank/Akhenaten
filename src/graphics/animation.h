@@ -20,6 +20,19 @@ struct animation_t {
     int first_img() const;
 };
 
+struct animation_context {
+    int base;
+    int offset;
+    uint8_t frame_duration;
+    uint8_t max_frames;
+    uint8_t frame;
+
+    void update(bool refresh_only);
+    inline bool valid() const { return base > 0; }
+    inline int current_frame() const { return frame / frame_duration; }
+    inline int start() const { return base + offset; }
+};
+
 struct animations_t {
     std::vector<animation_t> data;
 

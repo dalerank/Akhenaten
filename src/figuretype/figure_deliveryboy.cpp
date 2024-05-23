@@ -62,7 +62,7 @@ void figure_delivery_boy::figure_action() {
     if (action_state() == FIGURE_ACTION_149_CORPSE) {
         base.sprite_image_id = image_group(ANIM_DELIVERY_BOY_DEATH);
     } else {
-        base.sprite_image_id = image_group(ANIM_DELIVERY_BOY_WALK) + dir + 8 * base.anim_frame;
+        base.sprite_image_id = image_group(ANIM_DELIVERY_BOY_WALK) + dir + 8 * base.anim.frame;
     }
 }
 

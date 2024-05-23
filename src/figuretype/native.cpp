@@ -38,7 +38,7 @@ void figure::indigenous_native_action() {
         }
         break;
     case FIGURE_ACTION_158_NATIVE_CREATED:
-        anim_frame = 0;
+        anim.frame = 0;
         wait_ticks++;
         if (wait_ticks > 10 + (id & 3)) {
             wait_ticks = 0;
@@ -92,10 +92,10 @@ void figure::indigenous_native_action() {
     } else if (action_state == FIGURE_ACTION_149_CORPSE)
         sprite_image_id = 441 + figure_image_corpse_offset();
     else if (direction == DIR_FIGURE_ATTACK)
-        sprite_image_id = 393 + dir + 8 * (anim_frame / 2);
+        sprite_image_id = 393 + dir + 8 * (anim.frame / 2);
     else if (action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
-        sprite_image_id = 297 + dir + 8 * anim_frame;
+        sprite_image_id = 297 + dir + 8 * anim.frame;
     else {
-        sprite_image_id = 201 + dir + 8 * anim_frame;
+        sprite_image_id = 201 + dir + 8 * anim.frame;
     }
 }

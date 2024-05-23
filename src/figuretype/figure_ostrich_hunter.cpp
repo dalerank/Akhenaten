@@ -137,7 +137,7 @@ void figure_ostrich_hunter::figure_action() {
         }
 
         if (do_goto(prey->tile, TERRAIN_USAGE_ANIMAL, ACTION_10_PICKUP_ANIMAL, ACTION_11_GOING_TO_PICKUP_POINT)) {
-            base.anim_offset = 0;
+            base.anim.offset = 0;
         }
         break;
 
@@ -147,7 +147,7 @@ void figure_ostrich_hunter::figure_action() {
         }
 
         base.target_figure_id = 0;
-        if (base.anim_frame >= 17) {
+        if (base.anim.frame >= 17) {
             advance_action(ACTION_12_GOING_HOME_AND_UNLOAD);
         }
         break;

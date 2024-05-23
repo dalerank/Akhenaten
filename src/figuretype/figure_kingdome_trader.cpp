@@ -103,7 +103,7 @@ void figure_trade_caravan::figure_action() {
             }
             go_to_next_storageyard(base_tile, 0);
         }
-        base.anim_frame = 0;
+        base.anim.frame = 0;
         break;
 
     case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING:
@@ -151,7 +151,7 @@ void figure_trade_caravan::figure_action() {
                 go_to_next_storageyard(tile(), -1);
             }
         }
-        base.anim_frame = 0;
+        base.anim.frame = 0;
         break;
 
     case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
@@ -163,7 +163,7 @@ void figure_trade_caravan::figure_action() {
     }
 
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
-    base.sprite_image_id = image_group(IMG_TRADER_CARAVAN) + dir + 8 * base.anim_frame;
+    base.sprite_image_id = image_group(IMG_TRADER_CARAVAN) + dir + 8 * base.anim.frame;
 }
 
 sound_key figure_trade_caravan::phrase_key() const {
