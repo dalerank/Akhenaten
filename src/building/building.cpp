@@ -153,6 +153,14 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
     }
 }
 
+void building::update_tick(bool refresh_only) {
+    if (!anim.valid()) {
+        return;
+    }
+
+    anim.update(refresh_only);
+}
+
 void building::monument_remove_worker(int fid) {
     for (auto &wid : data.monuments.workers) {
         if (wid == fid) {
@@ -204,6 +212,16 @@ building::metainfo building_impl::get_info() const {
                                 : params().meta;
     return metainfo;
 }
+
+void building_impl::set_animation(const animation_t &anim) {
+    base.anim.base = image_id_from_group(anim.pack, anim.iid);
+    base.anim.offset = anim.offset;
+    base.anim.max_frames = anim.max_frames;
+    base.anim.frame_duration = std::max(1, anim.duration);
+    base.anim.pos = anim.pos;
+    base.anim.can_reverse = anim.can_reverse;
+}
+
 void building_impl::params(e_building_type e, const static_params &p) {
     if (!building_impl_params) {
         building_impl_params = new std::map<e_building_type, const building_impl::static_params *>();
@@ -874,6 +892,19 @@ bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     }
 
     return false;
+}
+
+void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, color mask) {
+    if (!base.anim.valid()) {
+        return;
+    }
+
+    if (!can_play_animation()) {
+        return;
+    }
+
+    vec2i pos = pixel + base.anim.pos;
+    ImageDraw::img_sprite(ctx, base.anim.start() + base.anim.current_frame(), pos.x, pos.y, mask);
 }
 
 void building_impl::destroy_by_poof(bool clouds) {

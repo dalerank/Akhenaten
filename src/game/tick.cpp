@@ -44,12 +44,14 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
+#include "game/game.h"
 #include "grid/desirability.h"
 #include "grid/natives.h"
 #include "grid/religion_supply.h"
 #include "grid/road_network.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/tiles.h"
+#include "grid/building.h"
 #include "grid/water_supply.h"
 #include "io/gamestate/boilerplate.h"
 #include "scenario/demand_change.h"
@@ -132,12 +134,19 @@ static void advance_day() {
     tutorial_on_day_tick();
 }
 
+static void update_building_tick(bool refresh_only) {
+    for (auto it = building_begin(), end = building_end(); it != end; ++it) {
+        if (it->is_valid() > 0) {
+            it->update_tick(refresh_only);
+        }
+    }
+}
+
 static void advance_tick(void) {
     tutorial_starting_message();
     floodplains_tick_update(false);
 
-    // NB: these ticks are noop:
-    // 0, 9, 11, 13, 14, 15, 26, 41, 42, 47
+    update_building_tick(game.paused);
 
     switch (game_time_tick()) {
     case 1:

@@ -202,6 +202,7 @@ void figure::figure_image_update(bool refresh_only) {
     }
 
     default:
+
         if (state == FIGURE_STATE_DYING) {
             sprite_image_id = anim.base + figure_image_corpse_offset();
         } else {

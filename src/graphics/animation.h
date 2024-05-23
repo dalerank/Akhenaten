@@ -15,6 +15,7 @@ struct animation_t {
     int offset;
     int max_frames;
     int duration;
+    bool can_reverse;
 
     void load(archive arch);
     int first_img() const;
@@ -23,13 +24,16 @@ struct animation_t {
 struct animation_context {
     int base;
     int offset;
+    vec2i pos;
     uint8_t frame_duration;
     uint8_t max_frames;
     uint8_t frame;
+    bool can_reverse;
+    bool is_reverse = false;
 
     void update(bool refresh_only);
     inline bool valid() const { return base > 0; }
-    inline int current_frame() const { return frame / frame_duration; }
+    inline int current_frame() const { return std::clamp<int>(frame / frame_duration, 0, max_frames); }
     inline int start() const { return base + offset; }
 };
 

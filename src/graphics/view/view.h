@@ -65,11 +65,11 @@ void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip);
 void camera_go_to_pixel(painter &ctx, vec2i pixel, bool validate);
 void camera_go_to_corner_tile(screen_tile screen, bool validate);
 void camera_go_to_screen_tile(screen_tile screen, bool validate);
-void camera_go_to_mappoint(map_point point);
+void camera_go_to_mappoint(tile2i point);
 void camera_scroll(int x, int y);
 
 screen_tile camera_get_selected_screen_tile();
-void city_view_set_selected_view_tile(const screen_tile* tile);
+void city_view_set_selected_view_tile(const vec2i* tile);
 
 void city_view_rotate_left(void);
 void city_view_rotate_right(void);

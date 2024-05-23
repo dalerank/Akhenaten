@@ -13,6 +13,7 @@ void animation_t::load(archive arch) {
     offset = arch.r_int("offset");
     max_frames = arch.r_int("max_frames");
     duration = arch.r_int("duration");
+    can_reverse = arch.r_bool("can_reverse");
 }
 
 int animation_t::first_img() const {
@@ -36,9 +37,25 @@ void animations_t::load(archive arch, pcstr section) {
 }
 
 void animation_context::update(bool refresh_only) {
-    frame += refresh_only ? 0 : 1;
-
-    if (frame >= max_frames * frame_duration) {
-        frame = 0;
+    if (!can_reverse) {
+        frame += refresh_only ? 0 : 1;
+        if (frame >= max_frames * frame_duration) {
+            frame = 0;
+        }
+        return;
+    } else {
+        if (is_reverse) {
+            frame -= refresh_only ? 0 : 1;
+            if (frame < 1) {
+                frame = 0;
+                is_reverse = false;
+            }
+        } else {
+            frame += refresh_only ? 0 : 1;
+            if (frame >= (max_frames+1) * frame_duration) {
+                frame = max_frames * frame_duration;
+                is_reverse = true;
+            }
+        }
     }
 }

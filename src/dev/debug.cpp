@@ -521,18 +521,12 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     }
 }
 
-void draw_debug_figures(vec2i pixel, tile2i point, painter &ctx) {
-    int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
-    int figure_id = map_figure_id_get(grid_offset);
+void draw_debug_figures(vec2i pixel, tile2i tile, painter &ctx) {
+    int figure_id = map_figure_id_get(tile);
     while (figure_id) {
         figure* f = figure_get(figure_id);
         f->draw_debug();
-        if (figure_id != f->next_figure)
-            figure_id = f->next_figure;
-        else
-            figure_id = 0;
+        figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;
     }
 }
 

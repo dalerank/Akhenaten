@@ -37,6 +37,7 @@ void building_draw_normal_anim(painter &ctx, vec2i pixel, building *b, tile2i ti
     if (anim.anim_id <= 0) {
         return;
     }
+
     int anim_id = image_group(anim.anim_id);
     int base_id = anim.base_id > 0 ? image_group(anim.base_id) : 0;
 

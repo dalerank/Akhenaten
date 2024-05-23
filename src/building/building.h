@@ -324,9 +324,9 @@ public:
     void clear_related_data();
     void clear_impl();
     void new_fill_in_data_for_type(e_building_type type, tile2i tile, int orientation);
+    void update_tick(bool refresh_only);
 
     e_overlay get_overlay() const;
-
     const int get_figure_id(int i) const { return figure_ids[i]; };
 
     figure* get_figure(int i);
@@ -472,6 +472,7 @@ public:
     virtual int get_fire_risk(int value) const { return value; }
     virtual std::pair<int, int> get_tooltip() const { return {-1, -1}; }
     virtual int ready_production() const { return 100; }
+    virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
 
     virtual building_farm *dcast_farm() { return nullptr; }
     virtual building_brewery *dcast_brewery() { return nullptr; }
@@ -549,6 +550,7 @@ public:
     using resources_vec = std::array<e_resource, 4>;
     virtual resources_vec required_resource() const { return {}; }
     building::metainfo get_info() const;
+    void set_animation(const animation_t &anim);
 
     static void params(e_building_type, const static_params &);
     static const static_params &params(e_building_type);
