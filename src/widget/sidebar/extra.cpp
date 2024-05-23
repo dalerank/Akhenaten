@@ -207,16 +207,8 @@ static void draw_extra_info_panel(void) {
             lang_text_draw(68, 135, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE_ON_DARK);
         y_current_line += EXTRA_INFO_LINE_SPACE;
 
-        int text_width = text_draw_percentage(data.unemployment_percentage,
-                                              data.x_offset + 11,
-                                              y_current_line,
-                                              FONT_NORMAL_BLACK_ON_DARK);
-        text_draw_number(data.unemployment_amount,
-                         '(',
-                         ")",
-                         data.x_offset + 11 + text_width,
-                         y_current_line,
-                         FONT_NORMAL_BLACK_ON_DARK);
+        int text_width = text_draw_percentage(data.unemployment_percentage, data.x_offset + 11, y_current_line, FONT_NORMAL_BLACK_ON_DARK);
+        text_draw_number(data.unemployment_amount, '(', ")", data.x_offset + 11 + text_width, y_current_line, FONT_NORMAL_BLACK_ON_DARK);
 
         y_current_line += EXTRA_INFO_VERTICAL_PADDING * 2;
     }

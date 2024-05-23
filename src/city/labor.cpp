@@ -402,17 +402,17 @@ void city_labor_t::set_building_worker_weight() {
 }
 
 void city_labor_t::allocate_workers_to_categories() {
-    int workers_needed = 0;
+    int workers_needed_l = 0;
     for (int i = 0; i < LABOR_CATEGORY_SIZE; i++) {
         categories[i].workers_allocated = 0;
-        workers_needed += categories[i].workers_needed;
+        workers_needed_l += categories[i].workers_needed;
     }
     workers_needed = 0;
-    if (workers_needed <= workers_available) {
+    if (workers_needed_l <= workers_available) {
         for (int i = 0; i < LABOR_CATEGORY_SIZE; i++) {
             categories[i].workers_allocated = categories[i].workers_needed;
         }
-        workers_employed = workers_needed;
+        workers_employed = workers_needed_l;
     } else {
         // not enough workers
         int available = workers_available;
