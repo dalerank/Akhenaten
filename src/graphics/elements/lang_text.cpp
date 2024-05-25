@@ -3,28 +3,27 @@
 #include "graphics/text.h"
 #include "io/gamefiles/lang.h"
 #include "core/bstring.h"
+#include "core/xstring.h"
 
 #include <map>
 
-std::map<size_t, loc_text> g_localization;
+std::map<xstring, loc_text> g_localization;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_localization);
 void config_load_localization() {
     g_localization.clear();
 
     g_config_arch.r_array("localization", [] (archive arch) {
-        pcstr key = arch.r_string("key");
+        xstring key = arch.r_string("key");
         int group = arch.r_int("group");
         int id = arch.r_int("id");
 
-        size_t hash = bstring128(key).hash();
-        g_localization.insert({hash, {group, id}});
+        g_localization.insert({key, {group, id}});
     });
 }
 
 loc_text loc_text_from_key(pcstr key) {
-    size_t hash = bstring128(key).hash();
-    auto it = g_localization.find(hash);
+    auto it = g_localization.find(key);
     return (it != g_localization.end()) ? it->second : loc_text{0, 0};
 }
 
@@ -33,8 +32,7 @@ pcstr lang_text_from_key(pcstr key) {
         return "";
     }
 
-    size_t hash = bstring128(key).hash();
-    auto it = g_localization.find(hash);
+    auto it = g_localization.find(key);
     pcstr str = (it != g_localization.end())
                     ? (pcstr)lang_get_string(it->second.group, it->second.id)
                     : key;

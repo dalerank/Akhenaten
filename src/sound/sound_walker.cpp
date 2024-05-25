@@ -28,6 +28,7 @@ void figure_sound_t::load(archive arch) {
     fname = arch.r_string("sound");
     group = arch.r_int("group");
     text = arch.r_int("text");
+    phrase = arch.r_string("phrase");
 }
 
 void figure_sounds_t::load(archive arch, pcstr section) {

@@ -36,4 +36,6 @@ localization = [
   {key: "#chief_adv_kingdom", group:61, id:11 },
   {key: "#chief_adv_nilometr", group:61, id:12 },
   {key: "#building_have_no_access", group:69, id:25 },
+
+  {key: "#hunter_ostrich_good_city", lang:"en", text: "I like it here, but there is always room for improvement."},
 ]

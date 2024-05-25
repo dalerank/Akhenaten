@@ -166,6 +166,7 @@ figure_ostrich_hunter = {
 	sounds : {
 		hunting : {sound:"hunt_ostrich_e01.wav", group:209, text:0 },
     back : {sound:"hunt_ostrich_e02.wav", group:209, text:1 },
+    city_is_good : {sound: "hunt_ostrich_e10.wav", phrase: "#hunter_ostrich_good_city"}
 	},
 	max_hunting_distance : 30,
 }

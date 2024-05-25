@@ -8,11 +8,10 @@
 #include <functional>
 
 struct xstring_value {
-    uint32_t reference;
-    uint32_t length;
     uint32_t crc;
-    xstring_value* next;
-    char *value;
+    uint16_t reference;
+    uint16_t length;
+    std::string value;
 };
 
 class xstring {
@@ -63,7 +62,7 @@ public:
     xstring& operator=(xstring const& rhs) { _set(rhs); return (xstring&)*this; }
 
     [[nodiscard]]
-    pcstr operator*() const { return _p ? _p->value : nullptr; }
+    pcstr operator*() const { return _p ? _p->value.data() : nullptr; }
 
     [[nodiscard]]
     bool operator!() const { return _p == nullptr; }
@@ -75,7 +74,7 @@ public:
     char operator[](size_t id) const { return _p->value[id]; }
 
     [[nodiscard]]
-    pcstr c_str() const { return _p ? _p->value : nullptr; }
+    pcstr c_str() const { return _p ? _p->value.c_str() : nullptr; }
 
     [[nodiscard]]
     size_t size() const { return _p ? _p->length : 0; }
@@ -106,8 +105,7 @@ template<>
 struct std::hash<xstring>
 {
     [[nodiscard]] size_t operator()(const xstring& str) const noexcept {
-        const auto str_val = str._get();
-        return std::hash<pcstr>{}(str_val ? str_val->value : nullptr);
+        return str._get() ? (size_t)str._get() : 0;
     }
 };
 

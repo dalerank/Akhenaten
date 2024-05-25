@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/archive.h"
+#include "core/xstring.h"
 #include "content/vfs.h"
 
 struct figure_sound_t {
@@ -8,6 +9,7 @@ struct figure_sound_t {
     bstring64 fname;
     int group;
     int text;
+    xstring phrase;
 
     void load(archive arch);
 };
