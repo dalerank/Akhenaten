@@ -420,7 +420,7 @@ building_temple_bast = {
   animations : {
     preview : { pack:PACK_GENERAL, id:76 },
     base : { pack:PACK_GENERAL, id:76 },
-    work : { pos : [-1, -1], pack:PACK_GENERAL, id:76, offset:1, max_frames:12 },
+    work : { pos : [85, -115], pack:PACK_GENERAL, id:76, offset:1, max_frames:11 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   building_size : 3,
