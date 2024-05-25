@@ -24,7 +24,7 @@ struct xstring_container {
 
     void dump(FILE *f) const {
         for (const auto &it: data) {
-            fprintf(f, "ref[%4u]-len[%3u]-crc[%8X] : %s\n", it.second->reference, it.second->length, it.second->crc, it.second->value);
+            fprintf(f, "ref[%4u]-len[%3u]-crc[%8X] : %s\n", it.second->reference, it.second->length, it.second->crc, it.second->value.c_str());
         }
     }
 

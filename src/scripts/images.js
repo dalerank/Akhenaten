@@ -7,8 +7,6 @@ images = [
 	{img: IMG_FIREMAN, pack:PACK_SPR_MAIN, id:6},  // 273
 	{img: IMG_FIREMAN_DEATH, pack:PACK_SPR_MAIN, id:7},  // 273
   {img: IMG_FIREMAN_FIGHT_FIRE, pack:PACK_SPR_MAIN, id:8, offset:0},
-	{img: IMG_HOMELESS, pack: PACK_SPR_MAIN, id: 12}, // 782
-	{img: IMG_HOMELESS_DEATH, pack: PACK_SPR_MAIN, id: 13}, // 782
 	{img: ANIM_TAX_COLLECTOR_WALK, pack:PACK_SPR_MAIN, id:41},
 	{img: ANIM_TAX_COLLECTOR_DEATH, pack:PACK_SPR_MAIN, id:42},
 	{img: IMG_SLED_BRICKS, pack:PACK_SPR_MAIN, id:89},
