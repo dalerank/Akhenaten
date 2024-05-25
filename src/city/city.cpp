@@ -479,7 +479,6 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.months_in_debt);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.cheated_money);
     iob->bind(BIND_SIGNATURE_UINT32, data.buildings.recruiter.tile);
-    iob->bind(BIND_SIGNATURE_INT16, data.buildings.recruiter.tile.private_access(_GRID_OFFSET));
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.recruiter.building_id);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.recruiter.placed);
 
@@ -651,7 +650,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT32, data.buildings.festival_square);
     iob->bind____skip(4);
     iob->bind____skip(8);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.income.gold_extracted);
+    iob->bind(BIND_SIGNATURE_UINT32, &data.finance.this_year.income.gold_extracted);
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.ra_no_traders_months_left);
     iob->bind____skip(92);
     int reserved;

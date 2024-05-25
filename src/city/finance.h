@@ -40,7 +40,7 @@ struct finance_overview {
     struct {
         int taxes;
         int exports;
-        int gold_extracted;
+        uint32_t gold_extracted;
         int donated;
         int total;
     } income;
