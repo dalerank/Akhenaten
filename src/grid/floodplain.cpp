@@ -408,7 +408,8 @@ void map_image_set_road_floodplain(int grid_offset) {
     } else if (map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_FLOODPLAIN)) {
         map_image_set(grid_offset, image_group(IMG_TERRAIN_FLOODPLAIN) + 87);
     } else {
-        map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_ROAD) + img->group_offset + img->item_offset + 49);
+        int base_img = building_impl::params(BUILDING_ROAD).anim["base"].first_img();
+        map_image_set(grid_offset, base_img + img->group_offset + img->item_offset + 49);
     }
 }
 

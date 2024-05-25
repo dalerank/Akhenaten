@@ -84,7 +84,7 @@ static void draw_road(painter &ctx, tile2i tile, int x, int y) {
     if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR))
         blocked = true;
     else {
-        image_id = image_id_from_group(GROUP_TERRAIN_ROAD);
+        image_id = building_impl::params(BUILDING_ROAD).anim["base"].first_img();
         if (!map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD)
             && map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD)) {
             image_id++;

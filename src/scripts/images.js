@@ -2,8 +2,6 @@ log_info("akhenaten: images started")
 
 images = [
 	// spr main
-	{img: ANIM_EMIGRANT_WALK, pack: PACK_SPR_MAIN, id: 2}, // 65
-	{img: ANIM_EMIGRANT_DEATH, pack: PACK_SPR_MAIN, id: 3}, // 161
 	{img: ANIM_ARCHITECT_WALK, pack:PACK_SPR_MAIN, id:4},  //  169
 	{img: ANIM_ARCHITECT_DEATH, pack:PACK_SPR_MAIN, id:5}, // 265
 	{img: IMG_FIREMAN, pack:PACK_SPR_MAIN, id:6},  // 273

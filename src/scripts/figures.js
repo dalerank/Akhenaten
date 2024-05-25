@@ -349,8 +349,8 @@ figure_trade_ship = {
 
 figure_emigrant = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_EMIGRANT_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_EMIGRANT_DEATH, max_frames:8 },
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:2, max_frames:12 },
+		death : { pos : [0, 0], pack: PACK_SPR_MAIN, id:3, max_frames:8 },
 	},
 	sounds : {
 		no_job_in_city : {sound:"emigrant_e01.wav", group: 203, text:0},
