@@ -240,6 +240,7 @@ building_shrine_osiris = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
+  building_size : 1,
 }
 
 building_shrine_ra = {
@@ -249,6 +250,7 @@ building_shrine_ra = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
+  building_size : 1,
 }
 
 building_shrine_ptah = {
@@ -258,6 +260,7 @@ building_shrine_ptah = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
+  building_size : 1,
 }
 
 building_shrine_seth = {
@@ -267,6 +270,7 @@ building_shrine_seth = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
+  building_size : 1,
 }
 
 building_shrine_bast = {
@@ -276,6 +280,7 @@ building_shrine_bast = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
+  building_size : 1,
 }
 
 building_weaponsmith = {
