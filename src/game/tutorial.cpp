@@ -77,69 +77,31 @@ static void set_all_tut_flags_null() {
     }
 }
 
-void tutorial_init() {
-    set_all_tut_flags_null();
+template<class T>
+void memset_if(bool ok, char v, T &t) {
+    if (ok) {
+        memset(&t, 1, sizeof(t));
+    }
+}
 
-    if (scenario_is_custom()) {
+void tutorial_init(bool clear_all_flags, bool custom) {
+    if (clear_all_flags) {
+        set_all_tut_flags_null();
+    }
+
+    if (custom) {
         return;
     }
 
     int scenario_id = scenario_campaign_scenario_id();
-    bool tut_passed[10];
-
-    for (int i = 0; i < 10; ++i) {
-        tut_passed[i] = (i > scenario_id);
-    }
-
-    // tut1
-    g_tutorials_flags.tutorial_1.started = tut_passed[0];
-    g_tutorials_flags.tutorial_1.fire = tut_passed[0];
-    g_tutorials_flags.tutorial_1.collapse = tut_passed[0];
-    g_tutorials_flags.tutorial_1.population_150_reached = tut_passed[0];
-    g_tutorials_flags.tutorial_1.gamemeat_400_stored = tut_passed[0];
-    // tut2
-    g_tutorials_flags.tutorial_2.started = tut_passed[1];
-    g_tutorials_flags.tutorial_2.gold_mined_500 = tut_passed[1];
-    g_tutorials_flags.tutorial_2.temples_built = tut_passed[1];
-    g_tutorials_flags.tutorial_2.crime = tut_passed[1];
-    // tut3
-    g_tutorials_flags.tutorial_3.started = tut_passed[2];
-    g_tutorials_flags.tutorial_3.pottery_made = tut_passed[2];
-    g_tutorials_flags.tutorial_3.figs_800_stored = tut_passed[2];
-    g_tutorials_flags.tutorial_3.disease = tut_passed[2];
-    // tut4
-    g_tutorials_flags.tutorial_4.started = tut_passed[3];
-    g_tutorials_flags.tutorial_4.beer_made = tut_passed[3];
-    // tut5
-    g_tutorials_flags.tutorial_5.started = tut_passed[4];
-    g_tutorials_flags.tutorial_5.spacious_apartment = tut_passed[4];
-    g_tutorials_flags.tutorial_5.papyrus_made = tut_passed[4];
-    g_tutorials_flags.tutorial_5.bricks_bought = tut_passed[4];
-    // tut6
-    g_tutorials_flags.tutorial_6.started = tut_passed[5];
-
-
-    g_tutorials_flags.pharaoh.flags[8] = tut_passed[4];
-
-    //
-    g_tutorials_flags.pharaoh.tut7_start = tut_passed[6];
-    g_tutorials_flags.pharaoh.tut8_start = tut_passed[7];
-    //
-    g_tutorials_flags.pharaoh.flags[26] = tut_passed[0];
-    g_tutorials_flags.pharaoh.flags[27] = tut_passed[2];
-
-    g_tutorials_flags.pharaoh.flags[30] = tut_passed[3];
-
-    g_tutorials_flags.pharaoh.flags[33] = tut_passed[0];
-    g_tutorials_flags.pharaoh.flags[34] = tut_passed[3];
-
-    g_tutorials_flags.pharaoh.flags[36] = tut_passed[1];
-    g_tutorials_flags.pharaoh.flags[37] = tut_passed[1];
-    g_tutorials_flags.pharaoh.flags[38] = tut_passed[3];
-    g_tutorials_flags.pharaoh.flags[39] = tut_passed[3];
+    memset_if(0 < scenario_id, 1, g_tutorials_flags.tutorial_1);
+    memset_if(1 < scenario_id, 1, g_tutorials_flags.tutorial_2);
+    memset_if(2 < scenario_id, 1, g_tutorials_flags.tutorial_3);
+    memset_if(3 < scenario_id, 1, g_tutorials_flags.tutorial_4);
+    memset_if(4 < scenario_id, 1, g_tutorials_flags.tutorial_5);
+    memset_if(5 < scenario_id, 1, g_tutorials_flags.tutorial_6);
 
     tutorial_map_update(scenario_id + 1);
-
     tutorial_menu_update(scenario_id + 1);
 }
 
@@ -421,7 +383,7 @@ void tutorial_on_gold_extracted() {
 }
 
 void tutorial_on_religion() {
-    if (!g_tutorials_flags.tutorial_2.temples_built) {
+    if (scenario_is_mission_rank(2) && !g_tutorials_flags.tutorial_2.temples_built) {
         g_tutorials_flags.tutorial_2.temples_built = true;
         building_menu_update(tutorial_stage.tutorial_entertainment);
         post_message(MESSAGE_TUTORIAL_ENTERTAINMENT);

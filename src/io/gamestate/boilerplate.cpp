@@ -208,12 +208,15 @@ static void post_load() {
     case e_loaded_mission:
         g_city.init_campaign_mission();
         g_city.kingdome.init_scenario(scenario_campaign_rank(), last_loaded);
+        tutorial_init(/*clear_all*/true, false);
         break;
     case e_loaded_save:
+        tutorial_init(/*clear_all*/false, false);
         break;
     case e_loaded_custom_map:
         g_city.init_custom_map();
         g_city.kingdome.init_scenario(scenario_campaign_rank(), last_loaded);
+        tutorial_init(/*clear_all*/true, true);
         break;
     }
 
@@ -651,6 +654,7 @@ bool GamestateIO::load_map(const char* filename_short, bool start_immediately) {
 void GamestateIO::start_loaded_file() {
 
     scenario_load_meta_data(g_scenario_data.settings.campaign_scenario_id);
+
     // build the map grids when loading MAP files
     if (last_loaded != e_loaded_save) {
         // initialize grids
@@ -692,8 +696,6 @@ void GamestateIO::start_loaded_file() {
         scenario_demand_change_init();
         scenario_price_change_init();
     }
-
-    tutorial_init();
 
     // city view / orientation
     city_view_init();

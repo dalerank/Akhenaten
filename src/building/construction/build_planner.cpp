@@ -366,25 +366,6 @@ bool BuildPlanner::place_building(e_building_type type, tile2i tile, int orienta
     int size = building_impl::params(type).building_size;
     assert(size > 0);
 
-    int check_figures = 2;
-    switch (type) { // special cases
-    case BUILDING_BOOTH:
-        check_figures = 1;
-        break;
-
-    case BUILDING_BANDSTAND:
-        check_figures = 1;
-        break;
-
-    case BUILDING_PAVILLION:
-        check_figures = 1;
-        break;
-
-    case BUILDING_FESTIVAL_SQUARE:
-        check_figures = 1;
-        break;
-    }
-
     // correct building placement for city orientations
     switch (city_view_orientation()) {
     case DIR_2_BOTTOM_RIGHT:

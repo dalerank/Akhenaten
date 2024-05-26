@@ -85,7 +85,7 @@ struct tutorial_flags_t {
 
 const tutorial_flags_t* tutorial_flags_struct();
 
-void tutorial_init();
+void tutorial_init(bool clear_all_flags, bool custom);
 
 e_availability mission_advisor_availability(e_advisor advisor, int mission);
 e_availability mission_empire_availability(int mission);
