@@ -540,8 +540,7 @@ void map_building_tiles_remove(int building_id, tile2i tile) {
                 map_terrain_set(grid_offset, TERRAIN_WATER); // clear other flags
                 map_tiles_set_water(MAP_OFFSET(x + dx, y + dy));
             } else {
-                map_image_set(grid_offset,
-                              image_id_from_group(GROUP_TERRAIN_UGLY_GRASS) + (map_random_get(grid_offset) & 7));
+                map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_UGLY_GRASS) + (map_random_get(grid_offset) & 7));
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE - TERRAIN_ROAD);
             }
         }

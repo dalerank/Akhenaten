@@ -20,7 +20,8 @@ public:
     virtual int get_fire_risk(int value) const override { return value / 10; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_BOOTH; }
     virtual void update_count() const;
-    virtual bool draw_isometric_flat_building(tile2i point, painter &ctx) override;
+    virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
+    virtual bool force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
 
     static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
 };

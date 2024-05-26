@@ -611,7 +611,7 @@ bool building_small_mastaba::draw_ornaments_and_animations_height(painter &ctx, 
     return true;
 }
 
-bool building_small_mastaba::draw_isometric_flat_building(tile2i t, painter &ctx) {
+bool building_small_mastaba::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     if (building_monument_is_finished(&base)) {
         return false;
     }

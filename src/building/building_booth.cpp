@@ -126,9 +126,19 @@ void building_booth::update_count() const {
     building_increase_type_count(type(), num_workers() > 0);
 }
 
-bool building_booth::draw_isometric_flat_building(tile2i point, painter &ctx) {
-    int tile_id = map_image_at(point.grid_offset());
-    return (booth_m.booth != tile_id);
+bool building_booth::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
+    int image_id = map_image_at(tile);
+    return (booth_m.booth != image_id);
+}
+
+bool building_booth::force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
+    int image_id = map_image_at(tile);
+    if (booth_m.booth == image_id) {
+        ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, mask);
+        ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, mask);
+    }
+
+    return false;
 }
 
 void building_booth::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {

@@ -18,7 +18,7 @@ public:
     virtual void window_info_background(object_info &ctx) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual e_sound_channel_city sound_channel() const override;
-    virtual bool draw_isometric_flat_building(tile2i point, painter &ctx) override { return true; }
+    virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override { return true; }
     virtual void update_count() const override;
     virtual void spawn_figure() override;
 

@@ -111,9 +111,9 @@ void building_bandstand::spawn_figure() {
     }
 }
 
-bool building_bandstand::draw_isometric_flat_building(tile2i point, painter &ctx) {
+bool building_bandstand::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     int imgs[] = {bandstand_m.booth, bandstand_m.stand_sn_n, bandstand_m.stand_sn_s, bandstand_m.stand_we_e, bandstand_m.stand_we_w};
-    int tile_id = map_image_at(point.grid_offset());
+    int tile_id = map_image_at(tile);
     for (const auto &im : imgs) {
         if (im == tile_id) {
             return false;

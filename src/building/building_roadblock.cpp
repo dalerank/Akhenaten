@@ -19,7 +19,7 @@ void building_roadblock::on_place_checks() {
     /*nothing*/
 }
 
-bool building_roadblock::draw_isometric_flat_building(tile2i point, painter &ctx) {
+bool building_roadblock::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     /*nothing*/
     return true;
 }

@@ -24,7 +24,7 @@ public:
     virtual void window_info_background(object_info &ctx) override;
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
-    virtual bool draw_isometric_flat_building(tile2i t, painter &ctx) override;
+    virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
 
     std::span<uint16_t> active_workers();
 
