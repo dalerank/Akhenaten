@@ -31,7 +31,7 @@ void config_load_building_health() {
 declare_console_command_p(plague_start, game_cheat_start_plague);
 declare_console_command_p(plague_no, game_cheat_noplague);
 
-static void game_cheat_noplague(std::istream &is, std::ostream &os) {
+void game_cheat_noplague(std::istream &is, std::ostream &os) {
     buildings_valid_do([&] (building &b) {
         if (!b.house_size || !b.house_population) {
             return;

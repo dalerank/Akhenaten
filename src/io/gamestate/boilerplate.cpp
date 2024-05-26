@@ -171,6 +171,7 @@ static void post_load() {
     int scenario_id = scenario_campaign_scenario_id();
     int mission_rank = get_scenario_mission_rank(scenario_id);
     scenario_set_campaign_rank(mission_rank);
+    scenario_load_meta_data(scenario_id);
 
     // camera
     //    city_view_camera_position_refresh();
@@ -652,9 +653,6 @@ bool GamestateIO::load_map(const char* filename_short, bool start_immediately) {
 }
 
 void GamestateIO::start_loaded_file() {
-
-    scenario_load_meta_data(g_scenario_data.settings.campaign_scenario_id);
-
     // build the map grids when loading MAP files
     if (last_loaded != e_loaded_save) {
         // initialize grids
