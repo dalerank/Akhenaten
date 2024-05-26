@@ -110,7 +110,6 @@ void map_orientation_update_buildings() {
             map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), b->subtype.orientation);
             break;
 
-        case BUILDING_BANDSTAND:
         case BUILDING_PAVILLION:
         case BUILDING_FESTIVAL_SQUARE:
             // only update the plaza tiles for the main venue
@@ -126,10 +125,6 @@ void map_orientation_update_buildings() {
                 }
                 tile2i btile(b->data.entertainment.booth_corner_grid_offset);
                 map_add_venue_plaza_tiles(b->id, params.building_size, btile, plaza_image_id, true);
-            }
-            // additionally, correct bandstand graphics
-            if (b->type == BUILDING_BANDSTAND) {
-                map_add_bandstand_tiles(b);
             }
             break;
 
