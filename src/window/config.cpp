@@ -164,6 +164,7 @@ static generic_button checkbox_buttons[] = {
     {20, 288, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_SMALL_MASTABA, TR_CONFIG_BUILDING_SMALL_MASTABA},
     {20, 312, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BRICKLAYERS, TR_CONFIG_BUILDING_BRICKLAYERS},
     {20, 336, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BOOTH, TR_CONFIG_BUILDING_BOOTH},
+    {20, 360, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BANDSTAND, TR_CONFIG_BUILDING_BANDSTAND},
 
     //
     {20, 72, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
@@ -181,7 +182,7 @@ static generic_button checkbox_buttons[] = {
     {20, 360, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CLAY, TR_CONFIG_RESOURCE_CLAY},
 };
 
-static int options_per_page[] = {14, 14, 14, 14, 4, 5, 14, 12, 13};
+static int options_per_page[] = {14, 14, 14, 14, 4, 5, 14, 13, 13};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -446,6 +447,7 @@ static void toggle_building(int id, int param2) {
     case CONFIG_GP_CH_BUILDING_QUARRY_LIMESTONE: type = BUILDING_LIMESTONE_QUARRY; break;
     case CONFIG_GP_CH_BUILDING_CLAY_PIT: type = BUILDING_CLAY_PIT; break;
     case CONFIG_GP_CH_BUILDING_BOOTH: type = BUILDING_BOOTH; break;
+    case CONFIG_GP_CH_BUILDING_BANDSTAND: type = BUILDING_BANDSTAND; break;
     case CONFIG_GP_CH_BUILDING_WEAPONSMITH: type = BUILDING_WEAPONSMITH; break;
     case CONFIG_GP_CH_BUILDING_RECRUTER: type = BUILDING_RECRUITER; break;
     case CONFIG_GP_CH_BUILDING_SMALL_MASTABA: type = BUILDING_SMALL_MASTABA; break;
@@ -583,6 +585,7 @@ static bool is_config_option_enabled(int option) {
     case CONFIG_GP_CH_BUILDING_QUARRY_LIMESTONE: return building_menu_is_building_enabled(BUILDING_LIMESTONE_QUARRY);
     case CONFIG_GP_CH_BUILDING_CLAY_PIT: return building_menu_is_building_enabled(BUILDING_CLAY_PIT);
     case CONFIG_GP_CH_BUILDING_BOOTH: return building_menu_is_building_enabled(BUILDING_BOOTH);
+    case CONFIG_GP_CH_BUILDING_BANDSTAND: return building_menu_is_building_enabled(BUILDING_BANDSTAND);
     case CONFIG_GP_CH_BUILDING_WEAPONSMITH: return building_menu_is_building_enabled(BUILDING_WEAPONSMITH);
     case CONFIG_GP_CH_BUILDING_RECRUTER: return building_menu_is_building_enabled(BUILDING_RECRUITER);
     case CONFIG_GP_CH_BUILDING_SMALL_MASTABA: return building_menu_is_building_enabled(BUILDING_SMALL_MASTABA);

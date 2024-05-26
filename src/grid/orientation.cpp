@@ -80,14 +80,17 @@ void map_orientation_update_buildings() {
     int orientation_is_top_bottom = map_orientation == DIR_0_TOP_RIGHT || map_orientation == DIR_4_BOTTOM_LEFT;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state == BUILDING_STATE_UNUSED)
+        if (b->state == BUILDING_STATE_UNUSED) {
             continue;
+        }
 
         int image_id;
         int image_offset;
         switch (b->type) {
         default:
-            b->dcast()->update_map_orientation(map_orientation);
+            if (b->is_main()) {
+                b->dcast()->update_map_orientation(map_orientation);
+            }
             break;
 
         case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
@@ -130,15 +133,6 @@ void map_orientation_update_buildings() {
             // additionally, correct bandstand graphics
             if (b->type == BUILDING_BANDSTAND) {
                 map_add_bandstand_tiles(b);
-            }
-            break;
-
-        case BUILDING_LARGE_STATUE:
-        case BUILDING_MEDIUM_STATUE:
-        case BUILDING_SMALL_STATUE:
-            {
-                int image_id = b->dcast_statue()->get_image_from_value(b->type, 0, b->data.monuments.variant, map_orientation);
-                map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_BUILDING);
             }
             break;
 

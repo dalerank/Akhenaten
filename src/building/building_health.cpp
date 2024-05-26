@@ -17,6 +17,7 @@
 #include "city/city.h"
 
 #include "dev/debug.h"
+
 #include <iostream>
 
 buildings::model_t<building_apothecary> apothercary_m;
@@ -42,7 +43,7 @@ void game_cheat_noplague(std::istream &is, std::ostream &os) {
     });
 }
 
-static void game_cheat_start_plague(std::istream &is, std::ostream &os) {
+void game_cheat_start_plague(std::istream &is, std::ostream &os) {
     std::string args; is >> args;
     int plague_people = atoi(args.empty() ? "100" : args.c_str());
 

@@ -74,6 +74,11 @@ void building_statue::window_info_background(object_info &c) {
     window_building_draw_description_at(c, 16 * c.bgsize.y - 158, 80, 1);
 }
 
+void building_statue::update_map_orientation(int map_orientation) {
+    int image_id = get_image_from_value(type(), 0, data.monuments.variant, map_orientation);
+    map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);
+}
+
 int building_statue_get_variant_size(int type) {
     switch (type) {
     case BUILDING_SMALL_STATUE: return (int)small_statue_m.var.size(); break;
