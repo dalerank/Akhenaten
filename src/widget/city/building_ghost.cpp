@@ -180,7 +180,7 @@ static void draw_fountain_range(vec2i pixel, tile2i point, painter &ctx) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE, zoom_get_scale());
 }
 
-static void draw_aqueduct(map_point tile, int x, int y, painter &ctx) {
+static void draw_canal(map_point tile, vec2i pixel, painter &ctx) {
     int grid_offset = tile.grid_offset();
     bool blocked = false;
     if (!map_can_place_initial_road_or_aqueduct(grid_offset, true)) {
@@ -204,10 +204,10 @@ static void draw_aqueduct(map_point tile, int x, int y, painter &ctx) {
     }
 
     if (blocked) { // cannot draw!
-        draw_flat_tile(ctx, {x, y}, COLOR_MASK_RED);
+        draw_flat_tile(ctx, pixel, COLOR_MASK_RED);
     } else {
         const terrain_image* img = map_image_context_get_canal(grid_offset); // get starting tile
-        draw_building_ghost(ctx, get_canal_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), {x, y});
+        draw_building_ghost(ctx, get_canal_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), pixel);
     }
 }
 
@@ -370,7 +370,7 @@ void BuildPlanner::draw_graphics(painter &ctx) {
         return;
 
     case BUILDING_IRRIGATION_DITCH:
-        draw_aqueduct(end, pixel.x, pixel.y, ctx);
+        draw_canal(end, pixel, ctx);
         return;
         //        case BUILDING_WALL_PH:
         //            return draw_walls((const map_tile*)&end, end_coord.x, end_coord.y);
