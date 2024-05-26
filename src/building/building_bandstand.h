@@ -8,6 +8,7 @@ public:
     building_bandstand(building &b) : building_impl(b) {}
 
     virtual void on_create(int orientation) override;
+    virtual void update_day() override;
     virtual void on_place(int orientation, int variant) override;
     virtual void spawn_figure() override;
     virtual void window_info_background(object_info &c) override;

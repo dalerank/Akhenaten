@@ -224,7 +224,7 @@ class qconsole
     void printCvar(std::ostream &os, T *var);
 
     ///dumps a list of available commands to the output stream
-    void listCmd(std::ostream &os) const;
+    void list_cmds(std::ostream &os) const;
 
     ///dumps a list of bound cvars to the output stream
     void listCVars(std::ostream &os) const;
@@ -256,7 +256,7 @@ class qconsole
 
     /// helper function to return a default-constructed temp variable of a particular type.  Used in parsing arguments for C++ functions bound to the console
     template <class T>
-    T makeTemp();
+    T make_temp();
 
     /// for parsing arguments to C++ functions bound to the console.  variadic template that recursively parses our function arguments in order
     template <typename FirstType, typename... Args>
@@ -358,7 +358,7 @@ inline dev::qconsole::EndOfLineEscapeStreamScope operator<<(std::ostream &os, co
 // -----------------------------------------------------------------------------
 
 template <class T>
-inline T dev::qconsole::makeTemp()
+inline T dev::qconsole::make_temp()
 {
     T temp{};
     return temp;
@@ -416,7 +416,7 @@ inline void dev::qconsole::parse(std::istream &is, std::ostream &os, std::functi
     //first we have to create a bunch of temp variables and pass them into the populateAndExecute function
     //the temp variables are needed to store the result.  There's no guarantee in c++ for argument evaluation order, so we can't just
     //skip the intermediate step of passing constructed temps into a second function
-    populateAndExecute<Args...>(is, os, f, (makeTemp<typename std::remove_const<typename std::remove_reference<Args>::type>::type>())...);
+    populateAndExecute<Args...>(is, os, f, (make_temp<typename std::remove_const<typename std::remove_reference<Args>::type>::type>())...);
 }
 
 inline void dev::qconsole::bind_command(const std::string &str, void (*fptr)(void), const std::string &help)
@@ -448,26 +448,24 @@ inline void dev::qconsole::bind_command(const std::string &str, std::function<vo
             this->parse<Args...>(is, os, fun);
         };
 
-    if (help.length())
+    if (help.length()) {
         setHelpTopic(str, help);
+    }
 }
 
-inline void dev::qconsole::bind_command(const std::string &str, ConsoleFunc fun, const std::string &help)
-{
+inline void dev::qconsole::bind_command(const std::string &str, ConsoleFunc fun, const std::string &help) {
     if (help.length())
         setHelpTopic(str, help);
 
     commandTable[str] = fun;
 }
 
-inline void dev::qconsole::setHelpTopic(const std::string &str, const std::string &data)
-{
+inline void dev::qconsole::setHelpTopic(const std::string &str, const std::string &data) {
     helpTable[str] = data;
 }
 
 template <class T>
-inline void dev::qconsole::bind_cvar(const std::string &str, T &var, const std::string &help)
-{
+inline void dev::qconsole::bind_cvar(const std::string &str, T &var, const std::string &help) {
     cvarReadFTable[str] =
         [this, &var](std::istream &is, std::ostream &os) {
             this->set_cvar<T>(is, os, &var);
@@ -593,16 +591,12 @@ inline void dev::qconsole::commandHelp(std::istream &is, std::ostream &os)
     }
 }
 
-inline void dev::qconsole::listCmd(std::ostream &os) const
-{
+inline void dev::qconsole::list_cmds(std::ostream &os) const {
     os << "\nAvailable commands:";
-
-    for (CommandTable::const_iterator it = commandTable.begin(); it != commandTable.end(); it++)
-    {
-        os << "\n"
-           << it->first;
-    }
-
+    std::vector<std::string> cmds;
+    for (const auto &it: commandTable) { cmds.push_back(it.first); }
+    std::sort(cmds.begin(), cmds.end());
+    for (const auto &it : cmds) { os << "\n" << it; }
     os << std::endl;
 }
 
@@ -746,7 +740,7 @@ inline void dev::qconsole::bindBasicCommands()
                 "Type var <varname> <value> to declare a dynamic variable with name <varname> and value <value>."
                 "\nVariable names are any space delimited string and variable value is set to the remainder of the line.");
 
-    bind_command("cmds", [this](std::istream &is, std::ostream &os) { this->listCmd(os); }, "lists the available console commands");
+    bind_command("cmds", [this](std::istream &is, std::ostream &os) { this->list_cmds(os); }, "lists the available console commands");
 
     bind_command("set", [this](std::istream &is, std::ostream &os) { this->commandSet(is, os); }, "type set <identifier> <val> to change the value of a cvar");
 

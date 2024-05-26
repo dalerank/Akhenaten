@@ -40,7 +40,6 @@ static void game_cheat_show_tooltip(pcstr);
 static void game_cheat_cast_upset(pcstr);
 static void game_cheat_pop_milestone(pcstr);
 static void game_cheat_fire(pcstr);
-static void game_cheat_nodamage(pcstr);
 static void game_cheat_spacious_apartment(pcstr);
 static void game_cheat_spawn_nobles(pcstr);
 static void game_cheat_update_fish_points(pcstr);
@@ -62,7 +61,6 @@ static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_s
                                                   {"showtooltip", game_cheat_show_tooltip},
                                                   {"popmilestone", game_cheat_pop_milestone},
                                                   {"fire", game_cheat_fire},
-                                                  {"nodamage", game_cheat_nodamage},
                                                   {"spawnnobles", game_cheat_spawn_nobles},
                                                   {"tutspaciousapt", game_cheat_spacious_apartment},
                                                   {"upfishpoints", game_cheat_update_fish_points},
@@ -185,12 +183,6 @@ static void game_cheat_fire(pcstr args) {
 
 static void game_cheat_spacious_apartment(pcstr args) {
     tutorial_on_house_evolve(HOUSE_SPACIOUS_APARTMENT);
-}
-
-static void game_cheat_nodamage(pcstr args) {
-    buildings_valid_do([&] (building &b) {
-        b.damage_risk = 0;
-    });
 }
 
 static void game_cheat_update_fish_points(pcstr args) {

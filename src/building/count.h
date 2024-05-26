@@ -3,7 +3,6 @@
 #include "building/building_type.h"
 #include "game/resource.h"
 
-void building_entertainment_update();
 void building_count_update();
 int building_count_active(e_building_type type);
 int building_count_total(e_building_type type);

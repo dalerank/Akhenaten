@@ -38,6 +38,16 @@ void building_festival_square::on_place(int orientation, int variant) {
     city_buildings_add_festival_square(&base);
 }
 
+void building_festival_square::update_day() {
+    int shows = 0;
+    auto update_shows = [&] (auto &days) { if (days > 0) { --days; ++shows; } };
+    update_shows(data.entertainment.days1);
+    update_shows(data.entertainment.days2);
+    update_shows(data.entertainment.days3_or_play);
+
+    data.entertainment.num_shows = shows;
+}
+
 void building_festival_square::window_info_background(object_info &c) {
     const int32_t group_id = 188;
     c.help_id = 75;

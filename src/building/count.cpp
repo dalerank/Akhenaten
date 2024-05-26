@@ -45,50 +45,6 @@ static void limit_senet_house() {
     }
 }
 
-void building_entertainment_update() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Entertainment Update");
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->house_size) {
-            continue;
-        }
-
-        int is_entertainment_venue = 0;
-        int type = b->type;
-        switch (type) {
-        // SPECIAL TREATMENT
-        // entertainment venues
-        case BUILDING_BOOTH:
-        case BUILDING_BANDSTAND:
-        case BUILDING_PAVILLION:
-        case BUILDING_SENET_HOUSE:
-            is_entertainment_venue = 1;
-            break;
-        }
-
-        if (is_entertainment_venue) {
-            // update number of shows
-            int shows = 0;
-            if (b->data.entertainment.days1 > 0) {
-                --b->data.entertainment.days1;
-                ++shows;
-            }
-
-            if (b->data.entertainment.days2 > 0) {
-                --b->data.entertainment.days2;
-                ++shows;
-            }
-
-            if (type != BUILDING_BOOTH && b->data.entertainment.days3_or_play > 0) {
-                --b->data.entertainment.days3_or_play;
-                ++shows;
-            }
-
-            b->data.entertainment.num_shows = shows;
-        }
-    }
-}
-
 void building_count_update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Buildin Count Update");
     clear_counters();

@@ -32,6 +32,16 @@ void config_load_building_booth() {
     booth_m.booth = booth_m.anim["booth"].first_img();
 }
 
+void building_booth::update_day() {
+    int shows = 0;
+    if (data.entertainment.days1 > 0) {
+        --data.entertainment.days1;
+        ++shows;
+    }
+
+    data.entertainment.num_shows = shows;
+}
+
 void building_booth::on_place(int orientation, int variant) {
     building_impl::on_place(orientation, variant);
 

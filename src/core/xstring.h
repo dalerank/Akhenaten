@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <cstdarg>
+#include <string>
 #include <type_traits>
 #include <functional>
 
