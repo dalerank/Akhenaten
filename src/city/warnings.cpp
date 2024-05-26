@@ -82,13 +82,6 @@ static void check_wall(int type, int x, int y, int size) {
     }
 }
 
-static void check_musician_access(int type) {
-    if (!g_has_warning && type == BUILDING_BANDSTAND) {
-        if (building_count_active(BUILDING_CONSERVATORY) <= 0)
-            building_construction_warning_show(WARNING_BUILD_GLADIATOR_SCHOOL);
-    }
-}
-
 static void check_clay_access(int type) {
     if (type == BUILDING_POTTERY_WORKSHOP && building_count_industry_active(RESOURCE_CLAY) <= 0) {
         if (city_resource_count(RESOURCE_POTTERY) <= 0 && city_resource_count(RESOURCE_CLAY) <= 0) {
@@ -110,7 +103,6 @@ void building_construction_warning_generic_checks(building *b, tile2i tile, int 
 
     e_building_type type = b->type;
     building_construction_warning_check_food_stocks(type);
-    check_musician_access(type);
 
     check_barracks(type);
     check_weapons_access(type);

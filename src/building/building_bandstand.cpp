@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/count.h"
 #include "city/object_info.h"
+#include "city/warnings.h"
 #include "construction/build_planner.h"
 #include "city/labor.h"
 #include "game/resource.h"
@@ -57,6 +58,16 @@ void building_bandstand::on_place(int orientation, int variant) {
     data.entertainment.orientation = orientation;
 
     building_impl::on_place(orientation, variant);
+}
+
+void building_bandstand::on_place_checks() {
+    if (building_construction_has_warning()) {
+        return;
+    }
+
+    if (building_count_active(BUILDING_CONSERVATORY) <= 0) {
+        building_construction_warning_show(WARNING_BUILD_GLADIATOR_SCHOOL);
+    }
 }
 
 void building_bandstand::on_place_update_tiles() {
