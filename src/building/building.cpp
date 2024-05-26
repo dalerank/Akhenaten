@@ -850,9 +850,14 @@ int building_mothball_set(building* b, int mothball) {
 
 void building_impl::on_place(int orientation, int variant) {
     auto &p = params();
-    int img_id = p.anim["base"].first_img();
+    
     base.fire_proof = p.fire_proof;
     base.damage_proof = p.damage_proof;
+    on_place_update_tiles();
+}
+
+void building_impl::on_place_update_tiles() {
+    int img_id = params().anim["base"].first_img();
     map_building_tiles_add(id(), tile(), base.size, img_id, TERRAIN_BUILDING);
 }
 

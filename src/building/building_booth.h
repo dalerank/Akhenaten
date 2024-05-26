@@ -12,6 +12,7 @@ public:
     virtual void on_create(int orientation) override {}
     virtual void update_day() override;
     virtual void on_place(int orientation, int variant) override;
+    virtual void on_place_update_tiles() override;
     virtual void on_place_checks() override;
     virtual void window_info_background(object_info &c) override;
     virtual void spawn_figure() override;
@@ -22,6 +23,7 @@ public:
     virtual void update_count() const;
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual bool force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
+    virtual void update_map_orientation(int map_orientation) override;
 
     static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
 };

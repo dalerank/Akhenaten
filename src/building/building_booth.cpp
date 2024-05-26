@@ -43,14 +43,17 @@ void building_booth::update_day() {
 }
 
 void building_booth::on_place(int orientation, int variant) {
-    building_impl::on_place(orientation, variant);
-
     data.entertainment.booth_corner_grid_offset = tile().grid_offset();
     data.entertainment.orientation = orientation;
 
+    building_impl::on_place(orientation, variant);
+}
+
+void building_booth::on_place_update_tiles() {
     int image_id = params().anim["square"].first_img();
 
     // add underlying plaza first
+    int orientation = data.entertainment.orientation;
     map_add_venue_plaza_tiles(id(), params().building_size, tile(), image_id, false);
     int absolute_orientation = (abs(orientation * 2 + (8 - city_view_orientation())) % 8) / 2;
 
@@ -139,6 +142,12 @@ bool building_booth::force_draw_height_tile(painter &ctx, tile2i tile, vec2i pix
     }
 
     return false;
+}
+
+void building_booth::update_map_orientation(int map_orientation) {
+    int plaza_image_id = params().anim["square"].first_img();
+    tile2i btile(data.entertainment.booth_corner_grid_offset);
+    map_add_venue_plaza_tiles(id(), base.size, btile, plaza_image_id, true);
 }
 
 void building_booth::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {

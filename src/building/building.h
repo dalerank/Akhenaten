@@ -447,6 +447,7 @@ public:
     building_impl(building &b) : base(b), data(b.data) {}
     virtual void on_create(int orientation) {}
     virtual void on_place(int orientation, int variant);
+    virtual void on_place_update_tiles();
     virtual void on_place_checks();
     virtual void on_destroy() {}
     virtual void on_undo() {}
