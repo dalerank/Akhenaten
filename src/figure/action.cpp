@@ -36,12 +36,12 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_EMIGRANT, 1, TERRAIN_USAGE_ANIMAL, 0, 0, 0, IMG_NONE},
   {FIGURE_HOMELESS, 1, TERRAIN_USAGE_PREFER_ROADS, 0, 0, 0, IMG_NONE},
   {FIGURE_CART_PUSHER, 1, TERRAIN_USAGE_ROADS, 0, 0, 0,  IMG_NONE},
-  {FIGURE_LABOR_SEEKER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, ANIM_LABOR_SEEKER_WALK},
+  {FIGURE_LABOR_SEEKER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_NONE},
   {FIGURE_EXPLOSION, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_EXPLOSION},
   {FIGURE_TAX_COLLECTOR, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, ANIM_TAX_COLLECTOR_WALK},
   {FIGURE_ARCHITECT, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, ANIM_ARCHITECT_WALK},
   {FIGURE_STORAGEYARD_CART, 1, TERRAIN_USAGE_ROADS, 0, 0, 0, IMG_NONE},
-  {FIGURE_FIREMAN, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_FIREMAN},
+  {FIGURE_FIREMAN, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_NONE},
   {FIGURE_ARCHER, 1, TERRAIN_USAGE_ANY, 0, 0, IMG_NONE},
   {FIGURE_FCHARIOTEER, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_CHARIOTEER_PH},
   {FIGURE_INFANTRY, 1, TERRAIN_USAGE_ANY, 0, 0, IMG_NONE},
@@ -491,7 +491,11 @@ void figure::action_perform() {
         case FIGURE_HYENA: hyena_action(); break;
 
         default:
-            dcast()->figure_action();
+            {
+                auto *impl = dcast();
+                impl->figure_action();
+                impl->update_animation();
+            }
             break;
         }
 

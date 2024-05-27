@@ -5,6 +5,7 @@
 #include "core/random.h"
 #include "figuretype/migrant.h"
 #include "grid/road_access.h"
+#include "grid/terrain.h"
 #include "building/building.h"
 #include "city/population.h"
 
@@ -149,4 +150,8 @@ void figure_homeless::figure_before_action() {
         // do nothing
         break;
     }
+}
+
+const animations_t &figure_homeless::anim() const {
+    return homeless_m.anim;
 }

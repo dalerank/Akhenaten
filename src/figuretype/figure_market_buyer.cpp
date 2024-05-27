@@ -308,6 +308,10 @@ bool figure_market_buyer::window_info_background(object_info &c) {
     return true;
 }
 
+const animations_t &figure_market_buyer::anim() const {
+    return market_buyer_m.anim;
+}
+
 int figure_market_buyer::take_food_from_granary(building* market, building* b) {
     int resource;
     switch (base.collecting_item_id) {

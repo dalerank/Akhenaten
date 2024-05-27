@@ -2,9 +2,9 @@ log_info("akhenaten: figures info started")
 
 figure_fireman = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: IMG_FIREMAN },
-		death : { pos : [0, 0], anim_id: IMG_FIREMAN_DEATH },
-    fight_fire : { pos : [0, 0], anim_id: IMG_FIREMAN_FIGHT_FIRE, max_frames: 36 }
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:6 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:7 },
+    fight_fire : { pos : [0, 0], pack:PACK_SPR_MAIN, id:8, max_frames:36 }
   },
   sounds : {
   	fighting_fire : {sound:"fireman_e01.wav", group: 242, text:0},
@@ -512,8 +512,8 @@ figure_market_trader = {
 
 figure_labor_seeker = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_LABOR_SEEKER_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_LABOR_SEEKER_DEATH, max_frames:8 },
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:206, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:207, max_frames:8 },
 	},
 	sounds : {
 		no_jobs : { sound:"Labor_e01.wav", group:213, text:0},

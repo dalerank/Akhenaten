@@ -285,6 +285,17 @@ bool figure_impl::can_move_by_water() const {
     return (base.allow_move_type == EMOVE_BOAT || base.allow_move_type == EMOVE_FLOTSAM || base.allow_move_type == EMOVE_HIPPO);
 }
 
+void figure_impl::update_animation() {
+    pcstr anim_key = "walk";
+    if (action_state() == FIGURE_ACTION_149_CORPSE) {
+        anim_key = "death";
+    } else if (!!(base.terrain_type & TERRAIN_WATER)) {
+        anim_key = "swim";
+    }
+
+    image_set_animation(anim_key);
+}
+
 figure_impl *figures::create(e_figure_type e, figure *data) {
     for (FigureIterator *s = FigureIterator::tail; s; s = s->next) {
         auto impl = s->func(e, data);

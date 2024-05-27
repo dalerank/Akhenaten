@@ -34,33 +34,7 @@ void figure_priest::figure_before_action() {
 }
 
 void figure_priest::figure_action() {
-    building* temple = home();
-    switch (temple->type) {
-    case BUILDING_TEMPLE_OSIRIS:
-    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        image_set_animation(priest_m.anim["osiris_walk"]);
-        break;
 
-    case BUILDING_TEMPLE_RA:
-    case BUILDING_TEMPLE_COMPLEX_RA:
-        image_set_animation(priest_m.anim["ra_walk"]);
-        break;
-
-    case BUILDING_TEMPLE_PTAH:
-    case BUILDING_TEMPLE_COMPLEX_PTAH:
-        image_set_animation(priest_m.anim["ptah_walk"]);
-        break;
-
-    case BUILDING_TEMPLE_SETH:
-    case BUILDING_TEMPLE_COMPLEX_SETH:
-        image_set_animation(priest_m.anim["seth_walk"]);
-        break;
-
-    case BUILDING_TEMPLE_BAST:
-    case BUILDING_TEMPLE_COMPLEX_BAST:
-        image_set_animation(priest_m.anim["bast_walk"]);
-        break;
-    }
 }
 
 sound_key figure_priest::phrase_key() const {
@@ -208,6 +182,40 @@ e_overlay figure_priest::get_overlay() const {
     }
 
     return OVERLAY_NONE;
+}
+
+const animations_t &figure_priest::anim() const {
+    return priest_m.anim;
+}
+
+void figure_priest::update_animation() {
+    building* temple = home();
+    switch (temple->type) {
+    case BUILDING_TEMPLE_OSIRIS:
+    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+        image_set_animation(priest_m.anim["osiris_walk"]);
+        break;
+
+    case BUILDING_TEMPLE_RA:
+    case BUILDING_TEMPLE_COMPLEX_RA:
+        image_set_animation(priest_m.anim["ra_walk"]);
+        break;
+
+    case BUILDING_TEMPLE_PTAH:
+    case BUILDING_TEMPLE_COMPLEX_PTAH:
+        image_set_animation(priest_m.anim["ptah_walk"]);
+        break;
+
+    case BUILDING_TEMPLE_SETH:
+    case BUILDING_TEMPLE_COMPLEX_SETH:
+        image_set_animation(priest_m.anim["seth_walk"]);
+        break;
+
+    case BUILDING_TEMPLE_BAST:
+    case BUILDING_TEMPLE_COMPLEX_BAST:
+        image_set_animation(priest_m.anim["bast_walk"]);
+        break;
+    }
 }
 
 figure_sound_t figure_priest::get_sound_reaction(pcstr key) const {

@@ -490,21 +490,6 @@ void figure_docker::figure_action() {
         base.anim.frame = 0;
         break;
     }
-
-    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
-
-    if (action_state() == FIGURE_ACTION_149_CORPSE) {
-        base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
-        base.cart_image_id = 0;
-    } else {
-        base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.anim.frame;
-    }
-    if (base.cart_image_id) {
-        base.cart_image_id += dir;
-        base.figure_image_set_cart_offset(dir);
-    } else {
-        base.sprite_image_id = 0;
-    }
 }
 
 void figure_docker::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
@@ -525,6 +510,23 @@ sound_key figure_docker::phrase_key() const {
         }
     }
     return {};
+}
+
+void figure_docker::update_animation() {
+    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
+
+    if (action_state() == FIGURE_ACTION_149_CORPSE) {
+        base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
+        base.cart_image_id = 0;
+    } else {
+        base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.anim.frame;
+    }
+    if (base.cart_image_id) {
+        base.cart_image_id += dir;
+        base.figure_image_set_cart_offset(dir);
+    } else {
+        base.sprite_image_id = 0;
+    }
 }
 
 void figure_docker::on_destroy() {

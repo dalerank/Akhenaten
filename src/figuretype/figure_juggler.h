@@ -14,4 +14,5 @@ public:
     virtual int provide_service() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_BOOTH; }
     virtual figure_sound_t get_sound_reaction(pcstr key) const override;
+    virtual const animations_t &anim() const override;
 };

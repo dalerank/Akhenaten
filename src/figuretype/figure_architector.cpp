@@ -1,6 +1,7 @@
 #include "figure_architector.h"
 
 #include "core/profiler.h"
+#include "core/log.h"
 #include "city/sentiment.h"
 #include "city/labor.h"
 #include "city/gods.h"
@@ -24,6 +25,13 @@ void figure_architector::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Architector");
     //    building *b = building_get(building_id);
     switch (action_state()) {
+    default:
+        advance_action(ACTION_11_RETURNING_FROM_PATROL);
+        break;
+
+    case FIGURE_ACTION_149_CORPSE:
+        break;
+
     case FIGURE_ACTION_60_ENGINEER_CREATED:
         advance_action(ACTION_10_GOING);
         break;
@@ -79,6 +87,16 @@ sound_key figure_architector::phrase_key() const {
 
     int index = rand() % keys.size();
     return keys[index].prefix;
+}
+
+void figure_architector::on_action_changed(int saved_action) {
+    if (action_state() == ACTION_8_RECALCULATE) {
+        logs::info("test");
+    }
+}
+
+const animations_t &figure_architector::anim() const {
+    return architector_m.anim;
 }
 
 figure_sound_t figure_architector::get_sound_reaction(pcstr key) const {

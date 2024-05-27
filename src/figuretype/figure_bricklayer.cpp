@@ -127,6 +127,14 @@ void figure_bricklayer::figure_action() {
         }
         break;
     }
+}
+
+const animations_t &figure_bricklayer::anim() const {
+    return bricklayer_m.anim;
+}
+
+void figure_bricklayer::update_animation() {
+    figure_impl::update_animation();
 
     switch (action_state()) {
     case FIGURE_ACTION_13_BRICKLAYER_WAITING_RESOURCES:

@@ -115,3 +115,7 @@ int figure_juggler::provide_service() {
 figure_sound_t figure_juggler::get_sound_reaction(pcstr key) const {
     return juggler_m.sounds[key];
 }
+
+const animations_t &figure_juggler::anim() const {
+    return juggler_m.anim;
+}

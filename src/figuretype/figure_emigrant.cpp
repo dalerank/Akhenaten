@@ -4,6 +4,7 @@
 #include "core/random.h"
 #include "city/map.h"
 #include "grid/road_access.h"
+#include "grid/terrain.h"
 #include "city/population.h"
 #include "building/building_house.h"
 #include "city/migration.h"
@@ -123,4 +124,8 @@ sound_key figure_emigrant::phrase_key() const {
     }
 
     return  "all_good_in_city";
+}
+
+const animations_t &figure_emigrant::anim() const {
+    return emigrant_m.anim;
 }

@@ -191,19 +191,6 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
         advance_action(ACTION_11_RETURNING_FROM_PATROL);
         break;
     }
-
-    constexpr int DEATH_FRAMES = 8;
-    switch (base.action_state) {
-        default:
-        break;
-    
-    case FIGURE_ACTION_75_FIREMAN_AT_FIRE:
-    case 13:
-        base.direction = base.attack_direction;
-        //
-        base.image_set_animation(fireman_m.anim["fight_fire"]);
-        break;
-    }
 }
 
 void figure_fireman::extinguish_fire() {
@@ -283,4 +270,20 @@ int figure_fireman::provide_service() {
 
 figure_sound_t figure_fireman::get_sound_reaction(pcstr key) const {
     return fireman_m.sounds[key];
+}
+
+const animations_t &figure_fireman::anim() const {
+    return fireman_m.anim;
+}
+
+void figure_fireman::update_animation() {
+    figure_impl::update_animation();
+
+    switch (action_state()) {  
+    case FIGURE_ACTION_75_FIREMAN_AT_FIRE:
+    case 13:
+        base.direction = base.attack_direction;
+        image_set_animation("fight_fire");
+        break;
+    }
 }

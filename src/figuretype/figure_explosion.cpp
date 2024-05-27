@@ -49,6 +49,9 @@ void figure_explosion::figure_action() {
     }
 
     base.move_ticks_cross_country(base.speed_multiplier);
+}
+
+void figure_explosion::update_animation() {
     if (base.progress_on_tile < 48) {
         base.sprite_image_id = image_group(IMG_EXPLOSION) + std::clamp(base.progress_on_tile / 2, 0, MAX_CLOUD_IMAGE_OFFSETS);
     } else {

@@ -13,6 +13,7 @@ public:
     virtual void on_destroy() override;
     virtual void figure_action() override;
     virtual sound_key phrase_key() const override;
+    virtual void update_animation() override;
 
     int deliver_import_resource(building *dock);
     tile2i get_trade_center_location();

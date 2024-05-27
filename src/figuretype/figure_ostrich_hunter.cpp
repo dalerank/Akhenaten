@@ -160,7 +160,29 @@ void figure_ostrich_hunter::figure_action() {
 
         break;
     }
+}
 
+sound_key figure_ostrich_hunter::phrase_key() const {
+    if (action_state() == ACTION_16_HUNTER_INVESTIGATE || action_state() == ACTION_9_CHASE_PREY || action_state() == ACTION_15_HUNTER_HUNT) {
+        return "hunting";
+    } else if (action_state() == ACTION_8_RECALCULATE ) {
+        if (city_sentiment() > 40) {
+            return "city_is_good";
+        }
+    } else {
+        return "back";
+    }
+}
+
+figure_sound_t figure_ostrich_hunter::get_sound_reaction(pcstr key) const {
+    return ostrich_hunter_m.sounds[key];
+}
+
+const animations_t &figure_ostrich_hunter::anim() const {
+    return ostrich_hunter_m.anim;
+}
+
+void figure_ostrich_hunter::update_animation() {
     switch (action_state()) {
     case ACTION_14_RETURNING_WITH_FOOD:
     case ACTION_9_CHASE_PREY:
@@ -188,22 +210,6 @@ void figure_ostrich_hunter::figure_action() {
         image_set_animation(ANIM_OSTRICH_HUNTER_MOVE_PACK);
         break;
     }
-}
-
-sound_key figure_ostrich_hunter::phrase_key() const {
-    if (action_state() == ACTION_16_HUNTER_INVESTIGATE || action_state() == ACTION_9_CHASE_PREY || action_state() == ACTION_15_HUNTER_HUNT) {
-        return "hunting";
-    } else if (action_state() == ACTION_8_RECALCULATE ) {
-        if (city_sentiment() > 40) {
-            return "city_is_good";
-        }
-    } else {
-        return "back";
-    }
-}
-
-figure_sound_t figure_ostrich_hunter::get_sound_reaction(pcstr key) const {
-    return ostrich_hunter_m.sounds[key];
 }
 
 void figure_ostrich_hunter::figure_before_action() {

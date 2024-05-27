@@ -73,22 +73,31 @@ void figure_lumberjack::figure_action() {
         }
         break;
     }
+}
 
+const animations_t &figure_lumberjack::anim() const {
+    return lumberjack_m.anim;
+}
+
+void figure_lumberjack::update_animation() {
+    figure_impl::update_animation();
+
+    pcstr anim_key = "walk";
     switch (action_state()) {
-    default: // normal walk
-    case 8:
-    case 9:
-        image_set_animation(lumberjack_m.anim["walk"]);
+    case 10: // gathering
+        anim_key = "work";
         break;
 
-    case 10: // gathering
-        image_set_animation(lumberjack_m.anim["work"]);
+    case FIGURE_ACTION_149_CORPSE:
+        anim_key = "death";
         break;
 
     case 11: // returning
-        base.image_set_animation(lumberjack_m.anim["back"]);
+        anim_key = "back";
         break;
     }
+
+    image_set_animation(anim_key);
 }
 
 void figure_lumberjack::figure_before_action() {

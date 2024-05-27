@@ -92,8 +92,19 @@ void figure_native_trader::figure_action() {
         base.anim.frame = 0;
         break;
     }
-    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
 
+}
+
+void figure_native_trader::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i *coord_out) {
+    base.draw_figure_with_cart(ctx, pixel, highlight, coord_out);
+}
+
+const animations_t &figure_native_trader::anim() const {
+    return native_trader_m.anim;
+}
+
+void figure_native_trader::update_animation() {
+    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
     if (action_state() == FIGURE_ACTION_149_CORPSE) {
         base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
         base.cart_image_id = 0;
@@ -106,8 +117,4 @@ void figure_native_trader::figure_action() {
         base.cart_image_id += dir;
         base.figure_image_set_cart_offset(dir);
     }
-}
-
-void figure_native_trader::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i *coord_out) {
-    base.draw_figure_with_cart(ctx, pixel, highlight, coord_out);
 }

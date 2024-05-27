@@ -64,6 +64,10 @@ void figure_caravan_donkey::figure_before_action() {
     }
 }
 
+void figure_caravan_donkey::update_animation() {
+    /*nothing*/
+}
+
 figure* figure_caravan_donkey::get_head_of_caravan() {
     figure* f = &base;
     while (f->type == FIGURE_TRADE_CARAVAN_DONKEY) {

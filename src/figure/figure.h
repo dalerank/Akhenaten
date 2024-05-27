@@ -514,11 +514,14 @@ public:
     virtual int provide_service() { return 0; }
     virtual bool play_die_sound() { return false; }
     virtual void update_direction_and_image() { base.update_direction_and_image(); }
+    virtual void update_animation();
     virtual bool can_move_by_water() const;
     virtual int y_correction(int y) const { return y; }
     virtual void cart_update_image() { base.cart_update_image(); }
     virtual bool is_common_roaming() { return true; }
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
+    virtual const animations_t &anim() const { static animations_t dummy; return dummy; }
+    inline const animation_t &anim(pcstr anim_key) const { return anim()[anim_key]; }
 
     virtual figure_immigrant *dcast_immigrant() { return nullptr; }
     virtual figure_cartpusher *dcast_cartpusher() { return nullptr; }
@@ -538,7 +541,8 @@ public:
     inline short action_state() const { return base.action_state; }
     inline uint8_t direction() const { return base.direction; }
     inline const building *home() const { return base.home(); }
-    inline void advance_action(int action) { base.advance_action(action); }
+    inline void advance_action(int action) { int saved_action = action; base.advance_action(action); on_action_changed(saved_action); }
+    virtual void on_action_changed(int saved_action) {}
     inline bool do_returnhome(e_terrain_usage terrainchoice, short next_action = -1) { return base.do_returnhome(terrainchoice, next_action); }
     inline bool do_gotobuilding(building *dest, bool stop_at_road = true, e_terrain_usage terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1) { return base.do_gotobuilding(dest, stop_at_road, terrainchoice, NEXT_ACTION, FAIL_ACTION); }
     inline bool do_enterbuilding(bool invisible, building *b, short next_action = -1, short fail_action = -1) { return base.do_enterbuilding(invisible, b, next_action, fail_action); }
@@ -550,6 +554,7 @@ public:
     inline int tiley() const { return base.tile.y(); }
     inline building *destination() const { return base.destination(); }
     inline void route_remove() { base.route_remove(); }
+    inline void image_set_animation(pcstr anim_key) { image_set_animation(anim(anim_key)); }
     inline void image_set_animation(const animation_t &anim) { base.image_set_animation(anim); }
     inline void image_set_die_animation(const animation_t &anim) { base.image_set_die_animation(anim); }
     inline void image_set_animation(e_image_id img, int offset = 0, int max_frames = 12, int duration = 1) { base.image_set_animation(img, offset, max_frames, duration);}

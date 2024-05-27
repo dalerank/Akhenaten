@@ -25,6 +25,7 @@ public:
     virtual figure_sound_t get_sound_reaction(pcstr key) const override;
     virtual sound_key phrase_key() const override;
     virtual bool can_move_by_water() const override;
+    virtual const animations_t &anim() const override;
 
     virtual figure_cartpusher *dcast_cartpusher() override { return this; }
 

@@ -57,13 +57,6 @@ void figure_delivery_boy::figure_action() {
     if (leader->is_ghost) {
         base.is_ghost = true;
     }
-
-    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
-    if (action_state() == FIGURE_ACTION_149_CORPSE) {
-        base.sprite_image_id = image_group(ANIM_DELIVERY_BOY_DEATH);
-    } else {
-        base.sprite_image_id = image_group(ANIM_DELIVERY_BOY_WALK) + dir + 8 * base.anim.frame;
-    }
 }
 
 sound_key figure_delivery_boy::phrase_key() const {
@@ -77,4 +70,17 @@ sound_key figure_delivery_boy::phrase_key() const {
 
 figure_sound_t figure_delivery_boy::get_sound_reaction(pcstr key) const {
     return delivery_boy_m.sounds[key];
+}
+
+const animations_t &figure_delivery_boy::anim() const {
+    return delivery_boy_m.anim;
+}
+
+void figure_delivery_boy::update_animation() {
+    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
+    if (action_state() == FIGURE_ACTION_149_CORPSE) {
+        base.sprite_image_id = image_group(ANIM_DELIVERY_BOY_DEATH);
+    } else {
+        base.sprite_image_id = image_group(ANIM_DELIVERY_BOY_WALK) + dir + 8 * base.anim.frame;
+    }
 }

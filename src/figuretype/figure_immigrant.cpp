@@ -83,12 +83,6 @@ void figure_immigrant::figure_action() {
         OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant/Update Image");
         update_direction_and_image();
     }
-
-    if (!!(base.terrain_type & TERRAIN_WATER)) {
-        image_set_animation(immigrant_m.anim["swim"]);
-    } else {
-        image_set_animation(immigrant_m.anim["walk"]);
-    }
 }
 
 void figure_immigrant::figure_before_action() {
@@ -109,6 +103,10 @@ figure_sound_t figure_immigrant::get_sound_reaction(pcstr key) const {
 sound_key figure_immigrant::phrase_key() const {
     svector<sound_key, 10> keys = {"i_need_here", "work_for_all", "cheap_food"};
     return keys[rand() % keys.size()];
+}
+
+const animations_t &figure_immigrant::anim() const {
+    return immigrant_m.anim;
 }
 
 void figure_immigrant::create(building *house, int num_people) {

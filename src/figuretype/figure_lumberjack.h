@@ -10,6 +10,8 @@ public:
     virtual void figure_before_action() override;
     virtual void figure_action() override;
     virtual e_figure_sound phrase() const override { return {FIGURE_LUMBERJACK, "woodcutter"}; }
+    virtual const animations_t &anim() const override;
+    virtual void update_animation() override;
     //virtual sound_key phrase_key() const override;
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 };

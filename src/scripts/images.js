@@ -4,9 +4,6 @@ images = [
 	// spr main
 	{img: ANIM_ARCHITECT_WALK, pack:PACK_SPR_MAIN, id:4},  //  169
 	{img: ANIM_ARCHITECT_DEATH, pack:PACK_SPR_MAIN, id:5}, // 265
-	{img: IMG_FIREMAN, pack:PACK_SPR_MAIN, id:6},  // 273
-	{img: IMG_FIREMAN_DEATH, pack:PACK_SPR_MAIN, id:7},  // 273
-  {img: IMG_FIREMAN_FIGHT_FIRE, pack:PACK_SPR_MAIN, id:8, offset:0},
 	{img: ANIM_TAX_COLLECTOR_WALK, pack:PACK_SPR_MAIN, id:41},
 	{img: ANIM_TAX_COLLECTOR_DEATH, pack:PACK_SPR_MAIN, id:42},
 	{img: IMG_SLED_BRICKS, pack:PACK_SPR_MAIN, id:89},
@@ -25,8 +22,6 @@ images = [
 	{img: IMG_SCRIBER_DEATH, pack:PACK_SPR_MAIN, id:200},
 	{img: IMG_TEACHER_WALK, pack:PACK_SPR_MAIN, id:201},
 	{img: IMG_TEACHER_DEATH, pack:PACK_SPR_MAIN, id:202},
-	{img: ANIM_LABOR_SEEKER_WALK, pack:PACK_SPR_MAIN, id:206},       // 9909
-	{img: ANIM_LABOR_SEEKER_DEATH, pack:PACK_SPR_MAIN, id:207}, // 10005
 	{img: ANIM_DOCKER_WALK, pack:PACK_SPR_MAIN, id:43}, // 10005
 	{img: ANIM_OSTRICH_HUNTER_WALK, pack:PACK_SPR_MAIN, id:45}, // 2657
 	{img: ANIM_OSTRICH_HUNTER_DEATH, pack:PACK_SPR_MAIN, id:46}, // 2657

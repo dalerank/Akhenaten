@@ -163,19 +163,6 @@ void figure_fishing_boat::figure_action() {
         }
         break;
     }
-
-    switch (action_state()) {
-    case FIGURE_ACTION_192_FISHING_BOAT_FISHING:
-        image_set_animation(fishing_boat_m.anim["work"]);
-        break;
-
-    case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF:
-        image_set_animation(fishing_boat_m.anim["idle"]);
-        break;
-
-    default:
-        image_set_animation(fishing_boat_m.anim["walk"]);
-    }
 }
 
 bool figure_fishing_boat::window_info_background(object_info &c) {
@@ -183,4 +170,23 @@ bool figure_fishing_boat::window_info_background(object_info &c) {
     ImageDraw::img_generic(ctx, big_people_image(type()), c.offset + vec2i{28, 112});
     lang_text_draw(64, type(), c.offset.x + 92, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
     return true;
+}
+
+const animations_t &figure_fishing_boat::anim() const {
+    return fishing_boat_m.anim;
+}
+
+void figure_fishing_boat::update_animation() {
+    pcstr anim_key = "walk";
+    switch (action_state()) {
+    case FIGURE_ACTION_192_FISHING_BOAT_FISHING:
+        anim_key = "work";
+        break;
+
+    case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF:
+        anim_key = "idle";
+        break;
+    }
+
+    image_set_animation(anim_key);
 }

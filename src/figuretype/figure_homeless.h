@@ -12,6 +12,7 @@ public:
     virtual e_figure_sound phrase() const override { return {FIGURE_HOMELESS, "homeless"}; }
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
     virtual bool is_common_roaming() override { return false; }
+    virtual const animations_t &anim() const override;
     //virtual sound_key phrase_key() const override;
 };
 

@@ -39,8 +39,6 @@ void figure_magistrate::figure_action() {
         do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING);
         break;
     }
-
-    image_set_animation(magistrate_m.anim["walk"]);
 }
 
 void figure_magistrate::figure_before_action() {
@@ -131,6 +129,10 @@ int figure_magistrate::provide_service() {
         base.min_max_seen -= 10;
 
     return houses_serviced;
+}
+
+const animations_t &figure_magistrate::anim() const {
+    return magistrate_m.anim;
 }
 
 figure_sound_t figure_magistrate::get_sound_reaction(pcstr key) const {

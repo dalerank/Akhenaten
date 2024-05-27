@@ -55,3 +55,7 @@ int figure_market_trader::provide_service() {
     figure_provide_service(tile(), &base, none_service, bazaar_coverage);
     return houses_serviced;
 }
+
+const animations_t &figure_market_trader::anim() const {
+    return market_trader_m.anim;
+}

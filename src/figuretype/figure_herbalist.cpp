@@ -27,6 +27,13 @@ void figure_herbalist::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Herbalist");
     //    building *b = building_get(building_id);
     switch (action_state()) {
+    default:
+        advance_action(ACTION_11_RETURNING_FROM_PATROL);
+        break;
+
+    case FIGURE_ACTION_149_CORPSE:
+        break;
+
     case FIGURE_ACTION_60_HERBALIST_CREATED:
         advance_action(ACTION_10_GOING);
         break;
@@ -50,6 +57,10 @@ void figure_herbalist::figure_action() {
 
 figure_sound_t figure_herbalist::get_sound_reaction(pcstr key) const {
     return herbalist_m.sounds[key];
+}
+
+const animations_t &figure_herbalist::anim() const {
+    return herbalist_m.anim;
 }
 
 sound_key figure_herbalist::phrase_key() const {

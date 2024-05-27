@@ -13,6 +13,7 @@ public:
     virtual e_figure_sound phrase() const override { return {FIGURE_IMMIGRANT, "immigrant"}; }
     virtual figure_sound_t get_sound_reaction(pcstr key) const override;
     virtual sound_key phrase_key() const override;
+    virtual const animations_t &anim() const override;
 
     static void create(building *house, int num_people);
 
