@@ -351,7 +351,7 @@ void building_bazaar::draw_simple_background(object_info &c) {
 
         ui::panel({16, 136}, {c.bgsize.x - 2, 4}, UiFlags_PanelInner);
 
-        int text_id = get_employment_info_text_id(&c, &base, 142, 1);
+        int text_id = get_employment_info_text_id(&c, &base, 1);
         draw_employment_details(&c, &base, 142, text_id);
     }
     painter ctx = game.painter();

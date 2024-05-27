@@ -154,5 +154,6 @@ void building_granary::window_info_background(object_info &ctx) {
     ui["food3_icon"].image(food4); // meat/fish
     ui["food3_text"].text_var(food4 ? "%u %s" : "", granary->data.granary.resource_stored[food4], (pcstr)lang_get_string(ui.resource_text_group, food4));
 
-    window_building_draw_employment(&ctx, 142);
+    int text_id = get_employment_info_text_id(&ctx, &base, 1);
+    draw_employment_details_ui(ui, ctx, &base, text_id);
 }
