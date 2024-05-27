@@ -155,5 +155,9 @@ void building_granary::window_info_background(object_info &ctx) {
     ui["food3_text"].text_var(food4 ? "%u %s" : "", granary->data.granary.resource_stored[food4], (pcstr)lang_get_string(ui.resource_text_group, food4));
 
     int text_id = get_employment_info_text_id(&ctx, &base, 1);
-    draw_employment_details_ui(ui, ctx, &base, text_id);
+    int laborers = model_get_building(BUILDING_GRANARY)->laborers;
+    ui["workers_text"].text_var("%s %d(%d %s", ui::str(8, 12), num_workers(), laborers, ui::str(69, 0));
+    if (text_id) {
+        ui["workers_desc"].text(ui::str(69, text_id));
+    }
 }
