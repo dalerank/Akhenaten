@@ -105,6 +105,10 @@ sound_key figure_water_carrier::phrase_key() const {
     return keys[index];
 }
 
+const animations_t &figure_water_carrier::anim() const {
+    return water_carrier_m.anim;
+}
+
 void water_supply_coverage(building* b, figure *f, int&) {
     b->data.house.water_supply = MAX_COVERAGE;
 }

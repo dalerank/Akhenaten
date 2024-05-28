@@ -25,8 +25,8 @@ figure_fireman = {
 
 figure_water_carrier = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: IMG_WATER_CARRIER },
-		death : { pos : [0, 0], anim_id: IMG_WATER_CARRIER_DEATH },
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:59, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:60, max_frames:8 },
   },
   sounds : {
   	desease_can_start_at_any_moment : {sound: "water_g01.wav", group:237, text:0},
