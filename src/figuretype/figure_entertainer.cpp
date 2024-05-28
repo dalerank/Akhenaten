@@ -231,11 +231,9 @@ void figure_entertainer::figure_action() {
         do_returnhome(TERRAIN_USAGE_ROADS);
         break;
     }
-
-    update_image();
 }
 
-void figure_entertainer::update_image() {
+void figure_entertainer::update_animation() {
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
 
     //if (type() == FIGURE_CHARIOR_RACER) {
@@ -249,7 +247,7 @@ void figure_entertainer::update_image() {
 
     int image_id;
     if (type() == FIGURE_JUGGLER) {
-        image_id = image_group(ANIM_JUGGLER_WALK);
+        image_id = anim("wall").first_img();
     } else if (type() == FIGURE_MUSICIAN) {
         image_id = image_group(ANIM_MUSICIAN_WALK);
     } else if (type() == FIGURE_DANCER) {
