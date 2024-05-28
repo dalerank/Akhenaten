@@ -2,8 +2,8 @@ log_info("akhenaten: figures info started")
 
 figure_fireman = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:6 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:7 },
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:6, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:7, max_frames:8 },
     fight_fire : { pos : [0, 0], pack:PACK_SPR_MAIN, id:8, max_frames:36 }
   },
   sounds : {
