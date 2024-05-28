@@ -35,6 +35,7 @@ bool figure::is_citizen() {
             return id;
         }
     }
+
     return 0;
 }
 

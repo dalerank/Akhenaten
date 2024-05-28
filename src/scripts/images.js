@@ -7,8 +7,6 @@ images = [
 	{img: IMG_SLED_STONE_SMALL, pack:PACK_SPR_MAIN, id:102},
 	{img: IMG_SLED_GRANITE_SMALL, pack:PACK_SPR_MAIN, id:103},
 	{img: IMG_SLED_LIMESTONE_SMALL, pack:PACK_GENERAL, id:104},
-	{img: ANIM_JUGGLER_WALK, pack:PACK_SPR_MAIN, id:130},
-	{img: ANIM_JUGGLER_DEATH, pack:PACK_SPR_MAIN, id:131},
 	{img: ANIM_MUSICIAN_WALK, pack:PACK_SPR_MAIN, id:191},
 	{img: IMG_SCRIBER_WALK, pack:PACK_SPR_MAIN, id:199},
 	{img: IMG_SCRIBER_DEATH, pack:PACK_SPR_MAIN, id:200},
@@ -24,11 +22,9 @@ images = [
 	{img: ANIM_OSTRICH_HUNTER_MOVE_PACK, pack:PACK_SPR_MAIN, id:51}, // 3193
 
 	// spr ambient
-	{img: IMG_FLOTSAM, pack:PACK_SPR_AMBIENT, id:0},  // 1 + 15831
 	{img: IMG_FISHING_POINT, pack:PACK_SPR_AMBIENT, id:8},
 	{img: IMG_EXPLOSION, pack:PACK_SPR_AMBIENT, id:12, offset:0},
 	{img: IMG_FISHING_POINT_BUBLES, pack:PACK_SPR_AMBIENT, id:11},
-	{img: IMG_FISHIHG_WHARF_ANIM, pack: PACK_SPR_AMBIENT, id:47},  // 2551 + 15831
 	{img: ANIM_SANDSTONE_QUARRY_2, pack:PACK_SPR_AMBIENT, id:49},
 
 	// icon resources

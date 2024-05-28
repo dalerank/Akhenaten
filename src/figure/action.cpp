@@ -46,7 +46,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_FCHARIOTEER, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_CHARIOTEER_PH},
   {FIGURE_INFANTRY, 1, TERRAIN_USAGE_ANY, 0, 0, IMG_NONE},
   {FIGURE_STANDARD_BEARER, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
-  {FIGURE_JUGGLER, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, ANIM_JUGGLER_WALK},
+  {FIGURE_JUGGLER, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, IMG_NONE},
   {FIGURE_MUSICIAN, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, ANIM_MUSICIAN_WALK},
   {FIGURE_DANCER, 1, TERRAIN_USAGE_ROADS, 512, 0, 0, ANIM_DANCER_WALK},
   {FIGURE_SENET_PLAYER, 1, TERRAIN_USAGE_ROADS, 512, GROUP_FIGURE_CHARIOTEER},
@@ -455,7 +455,6 @@ void figure::action_perform() {
             //            case 31: common_action(12, GROUP_FIGURE_BARBER); break;
             //            case 32: common_action(12, GROUP_FIGURE_BATHHOUSE_WORKER); break;
         case 36: editor_flag_action(); break;
-        case FIGURE_FLOTSAM: flotsam_action(); break;
         case FIGURE_NOBLES: noble_action(); break; 
         case 41: indigenous_native_action(); break;
         case 42: tower_sentry_action(); break;

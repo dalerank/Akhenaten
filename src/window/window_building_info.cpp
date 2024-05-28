@@ -340,7 +340,6 @@ static void init(map_point tile) {
                 case FIGURE_NONE:
                 case FIGURE_EXPLOSION:
                 case FIGURE_MAP_FLAG:
-                case FIGURE_FLOTSAM:
                 case FIGURE_ARROW:
                 case FIGURE_JAVELIN:
                 case FIGURE_BOLT:

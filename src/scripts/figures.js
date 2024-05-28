@@ -3,7 +3,7 @@ log_info("akhenaten: figures info started")
 figure_fireman = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:6, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:7, max_frames:8 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:7, max_frames:8, loop:false },
     fight_fire : { pos : [0, 0], pack:PACK_SPR_MAIN, id:8, max_frames:36 }
   },
   sounds : {
@@ -26,7 +26,7 @@ figure_fireman = {
 figure_water_carrier = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:59, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:60, max_frames:8 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:60, max_frames:8, loop:false },
   },
   sounds : {
   	desease_can_start_at_any_moment : {sound: "water_g01.wav", group:237, text:0},
@@ -45,15 +45,15 @@ figure_water_carrier = {
 figure_priest = {
 	animations : {
 		osiris_walk : { pos : [0, 0], anim_id: IMG_PRIEST_OSIRIS, max_frames:12},
-		osiris_death : { pos : [0, 0], anim_id: IMG_PRIEST_OSIRIS_DEATH },
+		osiris_death : { pos : [0, 0], anim_id: IMG_PRIEST_OSIRIS_DEATH, loop:false },
 		ra_walk : { pos : [0, 0], anim_id: IMG_PRIEST_RA, max_frames:12 },
-		ra_death : { pos : [0, 0], anim_id: IMG_PRIEST_RA_DEATH },
+		ra_death : { pos : [0, 0], anim_id: IMG_PRIEST_RA_DEATH, loop:false },
 		ptah_walk : { pos : [0, 0], anim_id: IMG_PRIEST_PTAH, max_frames:12 },
-		ptah_death : { pos : [0, 0], anim_id: IMG_PRIEST_PTAH_DEATH },
+		ptah_death : { pos : [0, 0], anim_id: IMG_PRIEST_PTAH_DEATH, loop:false },
 		seth_walk : { pos : [0, 0], anim_id: IMG_PRIEST_SETH, max_frames:12 },
-		seth_death : { pos : [0, 0], anim_id: IMG_PRIEST_SETH_DEATH },
+		seth_death : { pos : [0, 0], anim_id: IMG_PRIEST_SETH_DEATH, loop:false },
 		bast_walk : { pos : [0, 0], anim_id: IMG_PRIEST_BAST, max_frames:12 },
-		bast_death : { pos : [0, 0], anim_id: IMG_PRIEST_BAST_DEATH },
+		bast_death : { pos : [0, 0], anim_id: IMG_PRIEST_BAST_DEATH, loop:false },
   },
   sounds : {
   	osiris_god_love_festival : {sound:"priest_osiris_e01.wav", group:230, text: 0},
@@ -145,7 +145,7 @@ figure_ostrich = {
 figure_immigrant = {
 	animations : {
 		walk : { pos : [0, 0], pack: PACK_SPR_MAIN, id: 14, max_frames:12 },
-		death : { pos : [0, 0], pack: PACK_SPR_MAIN, id: 15, max_frames:12 },
+		death : { pos : [0, 0], pack: PACK_SPR_MAIN, id: 15, max_frames:8, loop:false },
 		swim : { pos : [0, 0], pack:PACK_SPR_MAIN, id:138, max_frames:4, duration:4 },
 	},
 	sounds : {
@@ -158,7 +158,7 @@ figure_immigrant = {
 figure_ostrich_hunter = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_OSTRICH_HUNTER_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_OSTRICH_HUNTER_DEATH, max_frames:8 },
+		death : { pos : [0, 0], anim_id: ANIM_OSTRICH_HUNTER_DEATH, max_frames:8, loop:false },
 		hunt : { pos : [0, 0], anim_id: ANIM_OSTRICH_HUNTER_HUNT, max_frames:12 },
 		pack : { pos : [0, 0], anim_id: ANIM_OSTRICH_HUNTER_PACK, max_frames:12 },
 		move_pack : { pos : [0, 0], anim_id: ANIM_OSTRICH_HUNTER_MOVE_PACK, max_frames:12 },
@@ -174,7 +174,7 @@ figure_ostrich_hunter = {
 figure_magistrate = {
 	animations : {
 		walk : { pack: PACK_SPR_MAIN, id: 212, max_frames:12 },
-		death : { pack: PACK_SPR_MAIN, id: 213, max_frames:8 },
+		death : { pack: PACK_SPR_MAIN, id: 213, max_frames:8, loop:false },
 	},
 	sound : {
     i_hope_we_are_ready : {sound: "magistrate_e02.wav", group:210, text:0 },
@@ -197,7 +197,7 @@ figure_magistrate = {
 figure_lumberjack = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:73, max_frames:12 },
-		death: { pack:PACK_SPR_MAIN, id:74, max_frames:8  },
+		death: { pack:PACK_SPR_MAIN, id:74, max_frames:8, loop:false  },
 		work : { pack:PACK_SPR_MAIN, id:75, max_frames:12 },
 		back : { pack:PACK_SPR_MAIN, id:76, max_frames:12 },
 	},
@@ -205,6 +205,14 @@ figure_lumberjack = {
 		hunting : {sound:"woodcutter_e01.wav", group:209, text:0 },
     back : {sound:"woodcutter_e02.wav", group:209, text:1 },
 	}
+}
+
+figure_flotsam = {
+	animations : {
+		walk : {pack:PACK_SPR_AMBIENT, id:0, max_frames: 12}
+
+	}
+
 }
 
 figure_worker = {
@@ -230,7 +238,7 @@ figure_worker = {
 figure_physician = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_DOCTOR_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_DOCTOR_DEATH, max_frames:8 },
+		death : { pos : [0, 0], anim_id: ANIM_DOCTOR_DEATH, max_frames:8, loop:false },
 	},
 	sounds : {
 		desease_can_start_at_any_moment : {sound:"doctor_e01.wav", group: 239, text:1},
@@ -303,7 +311,7 @@ figure_delivery_boy = {
 figure_cartpusher = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:43, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:44, max_frames:8 },
+		death : { pack:PACK_SPR_MAIN, id:44, max_frames:8, loop:false },
 		swim : { pack:PACK_SPR_MAIN, id:138, max_frames:4, duration:4 },
 	},
 	sounds  : {
@@ -335,7 +343,7 @@ figure_bricklayer = {
 figure_storageyard_cart = {
 	animations : {
 		walk : { pack: PACK_SPR_MAIN, id:43, max_frames:12 },
-		death : { pack: PACK_SPR_MAIN, id:44, max_frames:8 },
+		death : { pack: PACK_SPR_MAIN, id:44, max_frames:8, loop:false },
 		swim : { pack:PACK_SPR_MAIN, id:138, max_frames:4, duration:4 },
 	}
 }
@@ -350,7 +358,7 @@ figure_trade_ship = {
 figure_emigrant = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:2, max_frames:12 },
-		death : { pos : [0, 0], pack: PACK_SPR_MAIN, id:3, max_frames:8 },
+		death : { pos : [0, 0], pack: PACK_SPR_MAIN, id:3, max_frames:8, loop:false },
 	},
 	sounds : {
 		no_job_in_city : {sound:"emigrant_e01.wav", group: 203, text:0},
@@ -370,35 +378,35 @@ figure_sled = {
 figure_trade_caravan = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN },
-		death : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DEATH },
+		death : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DEATH, loop:false },
 	}
 }
 
 figure_caravan_donkey = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DONKEY },
-		death : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DONKEY_DEATH },
+		death : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DONKEY_DEATH, loop:false },
 	}
 }
 
 figure_homeless = {
 	animations : {
 		walk : { pos : [0, 0], pack: PACK_SPR_MAIN, id: 12, max_frames:12 },
-		death : { pos : [0, 0], pack: PACK_SPR_MAIN, id: 13, max_frames:8 },
+		death : { pos : [0, 0], pack: PACK_SPR_MAIN, id: 13, max_frames:8, loop:false },
 	}
 }
 
 figure_teacher = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: IMG_TEACHER_WALK },
-		death : { pos : [0, 0], anim_id: IMG_TEACHER_DEATH },
+		death : { pos : [0, 0], anim_id: IMG_TEACHER_DEATH, loop:false },
 	}
 }
 
 figure_herbalist = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_HERBALIST_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_HERBALIST_DEATH, max_frames:8 },
+		death : { pos : [0, 0], anim_id: ANIM_HERBALIST_DEATH, max_frames:8, loop:false },
 	},
 	sounds : {
 		no_threat_malaria_here : {sound:"apothecary_e02.wav", group: 241, text:1},
@@ -409,7 +417,7 @@ figure_herbalist = {
 figure_dancer = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_DANCER_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_DANCER_DEATH, max_frames:8 },
+		death : { pos : [0, 0], anim_id: ANIM_DANCER_DEATH, max_frames:8, loop:false },
 	},
 	sounds : {
 		i_like_festivals : {sound:"dancer_e01.wav", group:228, text:0},
@@ -429,7 +437,7 @@ figure_dancer = {
 figure_musician = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_MUSICIAN_WALK, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:192, max_frames:8 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:192, max_frames:8, loop:false },
 	},
 	sounds : {
 		i_like_festivals : { sound:"musician_e01.wav", group:229, text:0 },
@@ -449,7 +457,7 @@ figure_musician = {
 figure_soldier_infantry = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:64, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:65, max_frames:8 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:65, max_frames:8, loop:false },
 		attack : { pos : [0, 0], pack:PACK_SPR_MAIN, id:66, max_frames:12 },
 	},
 }
@@ -457,7 +465,7 @@ figure_soldier_infantry = {
 fishing_boat = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:134, max_frames:4, duration:3 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:135, max_frames:8 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:135, max_frames:8, loop:false },
 		work : { pos : [0, 0], pack:PACK_SPR_MAIN, id:135, max_frames:6, duration:5 },
 		idle : { pos : [0, 0], pack:PACK_SPR_MAIN, id:136, offset:3, max_frames:1 },
 	},
@@ -466,7 +474,7 @@ fishing_boat = {
 figure_soldier_archer = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:61, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:62, max_frames:8 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:62, max_frames:8, loop:false },
 		attack : { pos : [0, 0], pack:PACK_SPR_MAIN, id:63, max_frames:12 },
 	},
 }
@@ -474,15 +482,15 @@ figure_soldier_archer = {
 figure_soldier_charioteer = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:67, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:68, max_frames:8 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:68, max_frames:8, loop:false },
 		attack : { pos : [0, 0], pack:PACK_SPR_MAIN, id:69, max_frames:12 },
 	},
 }
 
 figure_juggler = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_JUGGLER_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_JUGGLER_DEATH, max_frames:8 },
+		walk : { pack:PACK_SPR_MAIN, id:130, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:131, max_frames:8, loop:false },
 	},
 	sounds : {
 		i_like_festivals : {sound:"juggler_e01.wav", group: 230, text:0 },
@@ -502,7 +510,7 @@ figure_juggler = {
 figure_market_trader = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_HERBALIST_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_HERBALIST_DEATH, max_frames:8 },
+		death : { pos : [0, 0], anim_id: ANIM_HERBALIST_DEATH, max_frames:8, loop:false },
 	},
 	sounds : {
 		goods_are_finished : {sound:"mkt_seller_e01.wav", group:245, text:0},
@@ -513,7 +521,7 @@ figure_market_trader = {
 figure_labor_seeker = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:206, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:207, max_frames:8 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:207, max_frames:8, loop:false },
 	},
 	sounds : {
 		no_jobs : { sound:"Labor_e01.wav", group:213, text:0},
@@ -534,7 +542,7 @@ figure_labor_seeker = {
 figure_reed_gatherer = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:37, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:38, max_frames:8 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:38, max_frames:8, loop:false },
 		work : { pos : [0, 0], pack:PACK_SPR_MAIN, id:39, max_frames:15 },
 		return : { pos : [0, 0], pack:PACK_SPR_MAIN, id:40, max_frames:12 },
 	},
@@ -549,7 +557,7 @@ figure_explosion = {
 figure_tax_collector = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:41, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:42, max_frames:8 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:42, max_frames:8, loop:false },
 	},
 	sounds : {
 		need_more_tax_collectors: {sound: "taxman_e01.wav", group: 245, text:0},
