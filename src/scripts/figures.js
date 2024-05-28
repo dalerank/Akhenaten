@@ -249,8 +249,8 @@ figure_physician = {
 
 figure_architect = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_ARCHITECT_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_ARCHITECT_DEATH, max_frames:8 },
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:4, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:5, max_frames:8, loop:false },
 	},
 	sounds : {
 		extreme_damage_level: {sound:"engineer_e01.wav", group: 243, text:0},
@@ -291,7 +291,7 @@ figure_market_buyer = {
 figure_delivery_boy = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_DELIVERY_BOY_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_DELIVERY_BOY_DEATH, max_frames:8 },
+		death : { pos : [0, 0], anim_id: ANIM_DELIVERY_BOY_DEATH, max_frames:8, loop:false },
 	},
 	sounds : {
 		those_baskets_too_heavy : {sound: "marketboy_e01.wav", group:221, text: 0},
