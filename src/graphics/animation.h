@@ -16,6 +16,7 @@ struct animation_t {
     int max_frames;
     int duration;
     bool can_reverse;
+    bool loop = true;
 
     void load(archive arch);
     int first_img() const;
@@ -29,6 +30,7 @@ struct animation_context {
     uint8_t max_frames;
     uint8_t frame;
     bool can_reverse;
+    bool loop = true;
     bool is_reverse = false;
 
     void update(bool refresh_only);

@@ -11,10 +11,6 @@ images = [
 	{img: IMG_SLED_LIMESTONE_SMALL, pack:PACK_GENERAL, id:104},
 	{img: ANIM_JUGGLER_WALK, pack:PACK_SPR_MAIN, id:130},
 	{img: ANIM_JUGGLER_DEATH, pack:PACK_SPR_MAIN, id:131},
-	{img: ANIM_OSTRICH_WALK, pack:PACK_SPR_MAIN, id:156}, // 7823 - 0
-	{img: ANIM_OSTRICH_DEATH, pack:PACK_SPR_MAIN, id:158}, // 7823 - 0
-	{img: ANIM_OSTRICH_EATING, pack:PACK_SPR_MAIN, id:159, offset:0},
-	{img: ANIM_OSTRICH_IDLE, pack:PACK_SPR_MAIN, id:160, offset:0},
 	{img: ANIM_MUSICIAN_WALK, pack:PACK_SPR_MAIN, id:191},
 	{img: IMG_SCRIBER_WALK, pack:PACK_SPR_MAIN, id:199},
 	{img: IMG_SCRIBER_DEATH, pack:PACK_SPR_MAIN, id:200},

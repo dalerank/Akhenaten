@@ -25,21 +25,12 @@ void config_load_figure_ostrich_hunter() {
 }
 
 static void scared_animals_in_area(tile2i center, int size) {
-    tile2i start = center.shifted(-size, -size);
-    tile2i stop = center.shifted(size, size);
-    grid_area area = map_grid_get_area(start, stop);
-
-    int needs_road_warning = 0;
-    int items_placed = 0;
-    for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
-        for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
-            int grid_offset = MAP_OFFSET(x, y);
-            figure *f = map_figure_get(grid_offset);
-            if (f && f->type == FIGURE_OSTRICH) {
-                f->advance_action(ACTION_8_RECALCULATE);
-            }
+    map_grid_area_foreach(center, size, [] (tile2i tile) {
+        figure *f = map_figure_get(tile);
+        if (f && f->is_alive() && f->type == FIGURE_OSTRICH) {
+            f->advance_action(ACTION_8_RECALCULATE);
         }
-    }
+    });
 }
 
 void figure_ostrich_hunter::figure_action() {

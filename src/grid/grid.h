@@ -104,6 +104,11 @@ inline void map_grid_area_foreach(tile2i tmin, tile2i tmax, T func) {
 }
 
 template<typename T>
+inline void map_grid_area_foreach(tile2i center, int size, T func) {
+    map_grid_area_foreach(center.shifted(-size, -size), center.shifted(size, size), func);
+}
+
+template<typename T>
 inline void map_grid_area_foreach(grid_area area, T func) {
     for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
         for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {

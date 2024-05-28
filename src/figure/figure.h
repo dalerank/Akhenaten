@@ -270,14 +270,7 @@ public:
     bool is_fighting_enemy();
     e_minimap_figure_color get_figure_color(); // minimap.c
 
-    void kill() {
-        if (state != FIGURE_STATE_ALIVE) {
-            return;
-        }
-
-        set_state(FIGURE_STATE_DYING);
-        advance_action(FIGURE_ACTION_149_CORPSE);
-    };
+    void kill();
 
     bool is_boat();
     bool can_move_by_water();
@@ -287,6 +280,7 @@ public:
     void poof();
     inline bool available() { return state == FIGURE_STATE_NONE; };
     inline bool is_valid() { return state != FIGURE_STATE_NONE; }
+    inline bool is_alive() { return state == FIGURE_STATE_ALIVE; }
     inline bool has_type(e_figure_type value) { return type == value; }
     inline bool has_state(e_figure_state value) { return state == value; }
 
@@ -329,10 +323,9 @@ public:
     void route_remove();
 
     // image.c
-    void image_set_die_animation(const animation_t &anim);
     void image_set_animation(const animation_t &anim);
     void image_set_animation(e_image_id img, int offset = 0, int max_frames = 12, int duration = 1);
-    void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1);
+    void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1, bool loop = true);
     void figure_image_update(bool refresh_only);
     void figure_image_set_sled_offset(int direction);
     void figure_image_set_cart_offset(int direction);
@@ -381,7 +374,7 @@ public:
     // actions.c
     static void check_action_properties_lookup();
     void action_perform();
-    void advance_action(short NEXT_ACTION);
+    void advance_action(short next_action);
     bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = ACTION_2_ROAMERS_RETURNING);
     bool do_goto(tile2i dest, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
     bool do_gotobuilding(building* dest, bool stop_at_road = true, e_terrain_usage terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
@@ -556,7 +549,6 @@ public:
     inline void route_remove() { base.route_remove(); }
     inline void image_set_animation(pcstr anim_key) { image_set_animation(anim(anim_key)); }
     inline void image_set_animation(const animation_t &anim) { base.image_set_animation(anim); }
-    inline void image_set_die_animation(const animation_t &anim) { base.image_set_die_animation(anim); }
     inline void image_set_animation(e_image_id img, int offset = 0, int max_frames = 12, int duration = 1) { base.image_set_animation(img, offset, max_frames, duration);}
     inline void follow_ticks(int num_ticks) { base.follow_ticks(num_ticks); }
     inline bool has_destination(int _id = -1) { return base.has_destination(_id); }

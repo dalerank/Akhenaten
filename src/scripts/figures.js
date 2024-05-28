@@ -135,10 +135,10 @@ figure_priest = {
 
 figure_ostrich = {
 	animations : {
-		idle : { pos : [0, 0], anim_id: ANIM_OSTRICH_IDLE, max_frames:8 },
-		eating : { pos : [0, 0], anim_id: ANIM_OSTRICH_EATING, max_frames:7 },
-		walk : { pos : [0, 0], anim_id: ANIM_OSTRICH_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_OSTRICH_DEATH, max_frames:8 },
+		idle : { pos : [0, 0], pack:PACK_SPR_MAIN, id:160, max_frames:8 },
+		eating : { pos : [0, 0], pack:PACK_SPR_MAIN, id:159, max_frames:7 },
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:156, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false },
 	}
 }
 

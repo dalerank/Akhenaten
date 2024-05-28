@@ -116,17 +116,13 @@ vec2i figure::tile_pixel_coords() {
     return {x, y};
 }
 
-void figure::image_set_die_animation(const animation_t &anim) {
-    sprite_image_id = image_group(anim.anim_id);
-}
-
 void figure::image_set_animation(const animation_t &anim) {
     if (anim.iid > 0) {
-        image_set_animation(anim.pack, anim.iid, anim.offset, anim.max_frames, anim.duration);
+        image_set_animation(anim.pack, anim.iid, anim.offset, anim.max_frames, anim.duration, anim.loop);
         return;
     }
     image_desc desc = get_image_desc(anim.anim_id);
-    image_set_animation(desc.pack, desc.id, desc.offset, anim.max_frames, anim.duration);
+    image_set_animation(desc.pack, desc.id, desc.offset, anim.max_frames, anim.duration, anim.loop);
 }
 
 void figure::image_set_animation(e_image_id img, int offset, int max_frames, int duration) {
@@ -134,14 +130,12 @@ void figure::image_set_animation(e_image_id img, int offset, int max_frames, int
     image_set_animation(desc.pack, desc.id, offset, max_frames, duration);
 }
 
-void figure::image_set_animation(int collection, int group, int offset, int max_frames, int duration) {
+void figure::image_set_animation(int collection, int group, int offset, int max_frames, int duration, bool loop) {
     anim.base = image_id_from_group(collection, group);
     anim.offset = offset;
     anim.max_frames = max_frames;
-    if (duration <= 0) {
-        duration = 1;
-    }
-    anim.frame_duration = duration;
+    anim.frame_duration = std::max(1, duration);
+    anim.loop = loop;
 }
 
 void figure::figure_image_update(bool refresh_only) {
@@ -202,9 +196,8 @@ void figure::figure_image_update(bool refresh_only) {
     }
 
     default:
-
         if (state == FIGURE_STATE_DYING) {
-            sprite_image_id = anim.base + figure_image_corpse_offset();
+            sprite_image_id = anim.start() + anim.current_frame();
         } else {
             sprite_image_id = anim.start() + figure_image_direction() + 8 * anim.current_frame();
         }
@@ -294,9 +287,9 @@ void figure::cart_update_image() {
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {
-        sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
+        //sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
     } else {
-        sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * anim.frame;
+        //sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * anim.frame;
     }
 
     switch (resource_id) {
@@ -361,8 +354,9 @@ int figure::figure_image_corpse_offset() {
             type_offset = 593;
         break;
     }
-    return CORPSE_IMAGE_OFFSETS[wait_ticks / 2] + type_offset;
+    return CORPSE_IMAGE_OFFSETS[wait_ticks / 2];// +type_offset;
 }
+
 void figure::figure_image_set_sled_offset(int direction) {
     cart_offset = SLED_OFFSETS[direction];
 }

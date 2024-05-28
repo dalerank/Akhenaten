@@ -9,6 +9,8 @@ public:
     virtual void on_create() override;
     virtual void figure_action() override;
     virtual e_figure_sound phrase() const override { return {FIGURE_OSTRICH_HUNTER, "hunt_ant"}; }
+    virtual const animations_t &anim() const override;
+    virtual void update_animation() override;
     virtual void before_poof() override;
     virtual bool play_die_sound() override;
 

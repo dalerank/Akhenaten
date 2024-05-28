@@ -70,8 +70,14 @@ void figure_ostrich::figure_action() {
         }
         break;
     }
+}
 
-    switch (base.action_state) {
+const animations_t &figure_ostrich::anim() const {
+    return ostrich_m.anim;
+}
+
+void figure_ostrich::update_animation() {
+    switch (action_state()) {
     case ACTION_8_RECALCULATE:
     case FIGURE_ACTION_19_ANIMAL_IDLE: // idle
         image_set_animation(ostrich_m.anim["idle"]);
@@ -93,7 +99,7 @@ void figure_ostrich::figure_action() {
         break;
 
     case FIGURE_ACTION_149_CORPSE:
-        image_set_die_animation(ostrich_m.anim["death"]);
+        image_set_animation(ostrich_m.anim["death"]);
         break;
 
     case FIGURE_ACTION_150_ATTACK:

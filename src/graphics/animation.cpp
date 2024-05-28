@@ -14,6 +14,7 @@ void animation_t::load(archive arch) {
     max_frames = arch.r_int("max_frames");
     duration = arch.r_int("duration");
     can_reverse = arch.r_bool("can_reverse");
+    loop = arch.r_bool("loop", true);
 }
 
 int animation_t::first_img() const {
@@ -40,9 +41,8 @@ void animation_context::update(bool refresh_only) {
     if (!can_reverse) {
         frame += refresh_only ? 0 : 1;
         if (frame >= max_frames * frame_duration) {
-            frame = 0;
+            frame = loop ? 0 : (max_frames * frame_duration - 1);
         }
-        return;
     } else {
         if (is_reverse) {
             frame -= refresh_only ? 0 : 1;

@@ -100,7 +100,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_DELIVERY_BOY, 1, TERRAIN_USAGE_ROADS, 0, 0, 0, ANIM_DELIVERY_BOY_WALK},
   {FIGURE_SHIPWRECK, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_BIRDS, 2, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_SHEEP},
-  {FIGURE_OSTRICH, 2, TERRAIN_USAGE_ANIMAL, 0, 0, 0, ANIM_OSTRICH_WALK},
+  {FIGURE_OSTRICH, 2, TERRAIN_USAGE_ANIMAL, 0, 0, 0, IMG_NONE},
   {FIGURE_ANTELOPE, 2, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_CROCODILE},
   {FIGURE_SPEAR, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_CHARIOR_RACER, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
@@ -120,7 +120,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_HIPPO, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HIPPO_WALK},
   {FIGURE_LABORER, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_WORKER_AKNH},
   {FIGURE_SLED, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_NONE},
-  {FIGURE_WATER_CARRIER, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_WATER_CARRIER},
+  {FIGURE_WATER_CARRIER, 1, TERRAIN_USAGE_ROADS, 640, 0, 0, IMG_NONE},
   {FIGURE_CONSTABLE, 1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_POLICEMAN},
   {FIGURE_MAGISTRATE, 1, TERRAIN_USAGE_ROADS, 800, 0, 0, IMG_NONE},
   {FIGURE_REED_GATHERER, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_NONE},
@@ -157,11 +157,11 @@ bool is_coords_within_range(int x, int y, int b_x, int b_y, int size, int radius
     return false;
 }
 
-void figure::advance_action(short NEXT_ACTION) {
-    //    if (NEXT_ACTION == 0)
-    //        poof();
-    //    else
-    action_state = NEXT_ACTION;
+void figure::advance_action(short next_action) {
+    if (state == FIGURE_STATE_DYING && next_action != FIGURE_ACTION_149_CORPSE) {
+        return;
+    }
+    action_state = next_action;
 }
 bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
     terrain_usage = terrainchoice;

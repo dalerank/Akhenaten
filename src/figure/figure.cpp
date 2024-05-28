@@ -272,6 +272,15 @@ e_minimap_figure_color figure::get_figure_color() {
     return dcast()->minimap_color();
 }
 
+void figure::kill() {
+    if (state != FIGURE_STATE_ALIVE) {
+        return;
+    }
+
+    advance_action(FIGURE_ACTION_149_CORPSE);
+    set_state(FIGURE_STATE_DYING);
+}
+
 void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
     base.draw_figure_main(ctx, base.cached_pos, highlight, coord_out);
 }
