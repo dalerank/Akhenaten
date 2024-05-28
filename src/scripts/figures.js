@@ -548,7 +548,8 @@ figure_explosion = {
 
 figure_tax_collector = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: IMG_BIGSLED_EMPTY, max_frames:1 },
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:41, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:42, max_frames:8 },
 	},
 	sounds : {
 		need_more_tax_collectors: {sound: "taxman_e01.wav", group: 245, text:0},
