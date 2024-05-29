@@ -398,8 +398,8 @@ figure_homeless = {
 
 figure_teacher = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: IMG_TEACHER_WALK },
-		death : { pos : [0, 0], anim_id: IMG_TEACHER_DEATH, loop:false },
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:201, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:202, max_frames:8, loop:false },
 	}
 }
 
@@ -527,8 +527,8 @@ figure_market_trader = {
 
 figure_labor_seeker = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:206, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:207, max_frames:8, loop:false },
+		walk : { pack:PACK_SPR_MAIN, id:206, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:207, max_frames:8, loop:false },
 	},
 	sounds : {
 		no_jobs : { sound:"Labor_e01.wav", group:213, text:0},
