@@ -127,6 +127,10 @@ void building_farm::window_info_background(object_info& c) {
     }
 }
 
+bool building_farm::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
+    return false;
+}
+
 int building_farm::get_farm_image(e_building_type type, tile2i tile) {
     if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
         int base = image_id_from_group(GROUP_BUILDING_FARMLAND);
@@ -169,7 +173,7 @@ void draw_farm_worker(painter &ctx, int direction, int action, int frame_offset,
 
 void building_farm::ghost_preview(painter &ctx, e_building_type type, vec2i point, tile2i tile) {
     int image_id = get_farm_image(type, tile);
-    draw_building_ghost(ctx, image_id, point + vec2i{-60, 0});
+    draw_building_ghost(ctx, image_id, point + vec2i{-60, 30});
 
     draw_farm_crops(ctx, type, 0, tile, point + vec2i{-60, 30}, COLOR_MASK_GREEN);
 }
