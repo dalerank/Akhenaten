@@ -37,6 +37,15 @@ void animations_t::load(archive arch, pcstr section) {
     });
 }
 
+void animation_context::setup(const animation_t &anim) {
+   base = image_id_from_group(anim.pack, anim.iid);
+   offset = anim.offset;
+   max_frames = anim.max_frames;
+   frame_duration = std::max(1, anim.duration);
+   pos = anim.pos;
+   can_reverse = anim.can_reverse;
+}
+
 void animation_context::update(bool refresh_only) {
     if (!can_reverse) {
         frame += refresh_only ? 0 : 1;

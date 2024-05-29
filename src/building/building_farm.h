@@ -18,6 +18,7 @@ public:
     virtual void window_info_background(object_info &ctx) override;
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
+    virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual e_sound_channel_city sound_channel() const override;
     virtual void update_count() const override;
     virtual void spawn_figure() override;
@@ -30,6 +31,8 @@ public:
     static void ghost_preview(painter &ctx, e_building_type type, vec2i point, tile2i tile);
     static int get_farm_image(e_building_type type, tile2i tile);
     static void draw_farm_crops(painter &ctx, e_building_type type, int progress, tile2i tile, vec2i point, color color_mask);
+    void draw_farm_worker(painter &ctx, int direction, int action, vec2i coords, color color_mask = COLOR_MASK_NONE);
+    void draw_workers(painter &ctx, building *b, tile2i tile, vec2i pos);
 };
 
 struct building_farm_grain : public building_farm {

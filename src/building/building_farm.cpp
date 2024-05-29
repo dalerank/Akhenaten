@@ -161,14 +161,15 @@ int building_farm::get_farm_image(e_building_type type, tile2i tile) {
     }
 }
 
-void draw_farm_worker(painter &ctx, int direction, int action, int frame_offset, vec2i coords, color color_mask = COLOR_MASK_NONE) {
-    e_image_id action_img;
-    switch (action) {
-    case FARM_WORKER_TILING: action_img = IMG_WORKER_AKNH_TILING; break;
-    case FARM_WORKER_SEEDING: action_img = IMG_WORKER_AKNH_SEEDING; break;
-    case FARM_WORKER_HARVESTING: coords.y += 10; action_img = IMG_WORKER_AKNH_HARVESTING; break;
-    }
-    ImageDraw::img_sprite(ctx, image_group(action_img) + direction + 8 * (frame_offset - 1), coords.x, coords.y, color_mask);
+void building_farm::draw_farm_worker(painter &ctx, int direction, int action, vec2i coords, color color_mask) {
+    pcstr anim_key = std::array{"tiling", "seeding", "harvesting"}[action];
+    const animation_t &action_anim = anim(anim_key);
+    animation_context context;
+    context.setup(action_anim);
+    context.frame = data.farm.worker_frame;
+    context.update(false);
+    data.farm.worker_frame = context.frame;
+    ImageDraw::img_sprite(ctx, context.start() + direction + 8 * context.current_frame(), coords + context.pos, color_mask);
 }
 
 void building_farm::ghost_preview(painter &ctx, e_building_type type, vec2i point, tile2i tile) {
@@ -218,13 +219,12 @@ void building_farm::draw_farm_crops(painter &ctx, e_building_type type, int prog
     }
 }
 
-void building_farm_draw_workers(painter &ctx, building* b, tile2i tile, vec2i pos) {
+void building_farm::draw_workers(painter &ctx, building* b, tile2i tile, vec2i pos) {
     if (b->num_workers == 0) {
         return;
     }
 
     pos += {30, -15};
-    int animation_offset = 0;
     int random_seed = 1234.567f * (1 + game_time_day()) * map_random_get(b->tile.grid_offset());
     int d = random_seed % 8;
     if (building_is_floodplain_farm(*b)) {
@@ -234,56 +234,54 @@ void building_farm_draw_workers(painter &ctx, building* b, tile2i tile, vec2i po
             //auto coords = farm_tile_coords(x, y, random_x, random_y);
             //draw_ph_worker(d, 2, animation_offset, coords);
         } else {
-            animation_offset = generic_sprite_offset(tile.grid_offset(), 13, 1);
             if (b->data.industry.progress < 400)
-                draw_farm_worker(ctx, game_time_absolute_tick() % 128 / 16, 1, animation_offset, farm_tile_coords(pos, 1, 1));
+                draw_farm_worker(ctx, game_time_absolute_tick() % 128 / 16, 1, farm_tile_coords(pos, 1, 1));
             else if (b->data.industry.progress < 500)
-                draw_farm_worker(ctx, d, 0, animation_offset, farm_tile_coords(pos, 1, 0));
+                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 1, 0));
             else if (b->data.industry.progress < 600)
-                draw_farm_worker(ctx, d, 0, animation_offset, farm_tile_coords(pos, 2, 0));
+                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 0));
             else if (b->data.industry.progress < 700)
-                draw_farm_worker(ctx, d, 0, animation_offset, farm_tile_coords(pos, 0, 1));
+                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 0, 1));
             else if (b->data.industry.progress < 800)
-                draw_farm_worker(ctx, d, 0, animation_offset, farm_tile_coords(pos, 1, 1));
+                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 1, 1));
             else if (b->data.industry.progress < 900)
-                draw_farm_worker(ctx, d, 0, animation_offset, farm_tile_coords(pos, 2, 1));
+                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 1));
             else if (b->data.industry.progress < 1000)
-                draw_farm_worker(ctx, d, 0, animation_offset, farm_tile_coords(pos, 0, 2));
+                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 0, 2));
             else if (b->data.industry.progress < 1100)
-                draw_farm_worker(ctx, d, 0, animation_offset, farm_tile_coords(pos, 1, 2));
+                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 1, 2));
             else if (b->data.industry.progress < 1200)
-                draw_farm_worker(ctx, d, 0, animation_offset, farm_tile_coords(pos, 2, 2));
+                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 2));
             else if (b->data.industry.progress < 1300)
-                draw_farm_worker(ctx, d, 2, animation_offset, farm_tile_coords(pos, 1, 0));
+                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 1, 0));
             else if (b->data.industry.progress < 1400)
-                draw_farm_worker(ctx, d, 2, animation_offset, farm_tile_coords(pos, 2, 0));
+                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 2, 0));
             else if (b->data.industry.progress < 1500)
-                draw_farm_worker(ctx, d, 2, animation_offset, farm_tile_coords(pos, 0, 1));
+                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 0, 1));
             else if (b->data.industry.progress < 1600)
-                draw_farm_worker(ctx, d, 2, animation_offset, farm_tile_coords(pos, 1, 1));
+                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 1, 1));
             else if (b->data.industry.progress < 1700)
-                draw_farm_worker(ctx, d, 2, animation_offset, farm_tile_coords(pos, 2, 1));
+                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 2, 1));
             else if (b->data.industry.progress < 1800)
-                draw_farm_worker(ctx, d, 2, animation_offset, farm_tile_coords(pos, 0, 2));
+                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 0, 2));
             else if (b->data.industry.progress < 1900)
-                draw_farm_worker(ctx, d, 2, animation_offset, farm_tile_coords(pos, 1, 2));
+                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 1, 2));
             else if (b->data.industry.progress < 2000)
-                draw_farm_worker(ctx, d, 2, animation_offset, farm_tile_coords(pos, 2, 2));
+                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 2, 2));
         }
     } else {
-        animation_offset = generic_sprite_offset(tile.grid_offset(), 13, 1);
         if (b->data.industry.progress < 100)
-            draw_farm_worker(ctx, game_time_absolute_tick() % 128 / 16, 1, animation_offset, farm_tile_coords(pos, 1, 1));
+            draw_farm_worker(ctx, game_time_absolute_tick() % 128 / 16, 1, farm_tile_coords(pos, 1, 1));
         else if (b->data.industry.progress < 400)
-            draw_farm_worker(ctx, d, 0, animation_offset, farm_tile_coords(pos, 0, 2));
+            draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 0, 2));
         else if (b->data.industry.progress < 800)
-            draw_farm_worker(ctx, d, 0, animation_offset, farm_tile_coords(pos, 1, 2));
+            draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 1, 2));
         else if (b->data.industry.progress < 1200)
-            draw_farm_worker(ctx, d, 0, animation_offset, farm_tile_coords(pos, 2, 2));
+            draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 2));
         else if (b->data.industry.progress < 1600)
-            draw_farm_worker(ctx, d, 0, animation_offset, farm_tile_coords(pos, 2, 1));
+            draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 1));
         else if (b->data.industry.progress < 2000)
-            draw_farm_worker(ctx, d, 0, animation_offset, farm_tile_coords(pos, 2, 0));
+            draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 0));
     }
 }
 
@@ -400,10 +398,23 @@ void building_farm::on_place(int orientation, int variant) {
 bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color mask) {
     if (map_terrain_is(t.grid_offset(), TERRAIN_BUILDING)) {
         draw_farm_crops(ctx, type(), data.industry.progress, tile(), point, mask);
-        building_farm_draw_workers(ctx, &base, t, point);
+        draw_workers(ctx, &base, t, point);
     }
 
     return true;
+}
+
+void building_farm::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, color mask) {
+    if (!base.anim.valid()) {
+        return;
+    }
+
+    if (!can_play_animation()) {
+        return;
+    }
+
+    vec2i pos = pixel + base.anim.pos;
+    ImageDraw::img_sprite(ctx, base.anim.start() + base.anim.current_frame(), pos.x, pos.y, mask);
 }
 
 e_sound_channel_city building_farm::sound_channel() const {

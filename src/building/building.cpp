@@ -214,12 +214,7 @@ building::metainfo building_impl::get_info() const {
 }
 
 void building_impl::set_animation(const animation_t &anim) {
-    base.anim.base = image_id_from_group(anim.pack, anim.iid);
-    base.anim.offset = anim.offset;
-    base.anim.max_frames = anim.max_frames;
-    base.anim.frame_duration = std::max(1, anim.duration);
-    base.anim.pos = anim.pos;
-    base.anim.can_reverse = anim.can_reverse;
+    base.anim.setup(anim);
 }
 
 void building_impl::params(e_building_type e, const static_params &p) {
@@ -1135,6 +1130,8 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
 
     } else if (building_is_guild(b->type)) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.guild.max_workers);
+    } else if (building_is_farm(b->type)) {
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.farm.worker_frame);
     } else {
         iob->bind____skip(26);
         iob->bind____skip(58);

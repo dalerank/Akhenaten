@@ -188,6 +188,9 @@ public:
         struct guild_t {
             uint8_t max_workers;
         } guild;
+        struct farm_t {
+            uint8_t worker_frame;
+        } farm;
         struct industry_t {
             short ready_production;
             short progress;
@@ -207,7 +210,7 @@ public:
             short fishing_boat_id;
             int unk_40[40];
             e_labor_state labor_state;
-            unsigned char labor_days_left;
+            uint8_t labor_days_left;
             int unk_12[10];
             unsigned short work_camp_id;
             unsigned char worker_id;
@@ -235,28 +238,28 @@ public:
             uint8_t magistrate;
             uint8_t hippodrome;
             uint8_t school;
-            unsigned char library;
-            unsigned char academy;
-            unsigned char apothecary;
-            unsigned char dentist;
-            unsigned char mortuary;
-            unsigned char physician;
-            unsigned char temple_osiris;
-            unsigned char temple_ra;
-            unsigned char temple_ptah;
-            unsigned char temple_seth;
-            unsigned char temple_bast;
-            unsigned char no_space_to_expand;
-            unsigned char num_foods;
-            unsigned char entertainment;
-            unsigned char education;
-            unsigned char health;
-            unsigned char num_gods;
-            unsigned char shrine_access;
-            unsigned char devolve_delay;
-            unsigned char evolve_text_id;
-            unsigned char bazaar_access;
-            unsigned char water_supply;
+            uint8_t library;
+            uint8_t academy;
+            uint8_t apothecary;
+            uint8_t dentist;
+            uint8_t mortuary;
+            uint8_t physician;
+            uint8_t temple_osiris;
+            uint8_t temple_ra;
+            uint8_t temple_ptah;
+            uint8_t temple_seth;
+            uint8_t temple_bast;
+            uint8_t no_space_to_expand;
+            uint8_t num_foods;
+            uint8_t entertainment;
+            uint8_t education;
+            uint8_t health;
+            uint8_t num_gods;
+            uint8_t shrine_access;
+            uint8_t devolve_delay;
+            uint8_t evolve_text_id;
+            uint8_t bazaar_access;
+            uint8_t water_supply;
         } house;
         struct {
             uint8_t variant;
@@ -542,6 +545,7 @@ public:
     inline bool has_road_access() const { return base.has_road_access; }
     inline short distance_from_entry() const { return base.distance_from_entry; }
     inline int road_network() const { return base.road_network_id; }
+    inline const animation_t &anim(pcstr key) const { return params().anim[key]; }
 
     virtual bool is_workshop() const { return false; }
     virtual bool is_administration() const { return false; }

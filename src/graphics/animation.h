@@ -33,6 +33,7 @@ struct animation_context {
     bool loop = true;
     bool is_reverse = false;
 
+    void setup(const animation_t &anim);
     void update(bool refresh_only);
     inline bool valid() const { return base > 0; }
     inline int current_frame() const { return std::clamp<int>(frame / frame_duration, 0, max_frames); }

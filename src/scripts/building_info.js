@@ -135,10 +135,13 @@ building_cattle_ranch = {
 
 building_farm_grain = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 }
+    preview : { pack:PACK_GENERAL, id:105, },
+    base : { pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 },
+    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
+    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
+    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
   },
   building_size : 3,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
@@ -146,10 +149,13 @@ building_farm_grain = {
 
 building_farm_chickpeas = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 }
+    preview : { pack:PACK_GENERAL, id:105, },
+    base : { pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 },
+    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
+    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
+    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
   },
   building_size : 3,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
@@ -157,10 +163,13 @@ building_farm_chickpeas = {
 
 building_farm_lettuce = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 }
+    preview : { pack:PACK_GENERAL, id:105, },
+    base : { pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 },
+    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
+    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
+    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
   },
   building_size : 3,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
@@ -168,10 +177,13 @@ building_farm_lettuce = {
 
 building_farm_pomegranates = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 }
+    preview : { pack:PACK_GENERAL, id:105, },
+    base : { pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 },
+    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
+    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
+    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
   },
   building_size : 3,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
@@ -179,10 +191,13 @@ building_farm_pomegranates = {
 
 building_farm_barley = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 }
+    preview : { pack:PACK_GENERAL, id:105, },
+    base : { pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 },
+    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
+    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
+    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
   },
   building_size : 3,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
@@ -190,10 +205,13 @@ building_farm_barley = {
 
 building_farm_flax = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 }
+    preview : { pack:PACK_GENERAL, id:105, },
+    base : { pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 },
+    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
+    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
+    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
   },
   building_size : 3,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
@@ -201,10 +219,13 @@ building_farm_flax = {
 
 building_farm_henna = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 }
+    preview : { pack:PACK_GENERAL, id:105, },
+    base : { pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 },
+    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
+    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
+    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
   },
   building_size : 3,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
@@ -212,10 +233,13 @@ building_farm_henna = {
 
 building_farm_figs = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 }
+    preview : { pack:PACK_GENERAL, id:105, },
+    base : { pack:PACK_GENERAL, id:105, offset:0 },
+    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house : { pack:PACK_GENERAL, id:225 },
+    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
+    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
+    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
   },
   building_size : 3,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
@@ -498,7 +522,7 @@ building_work_camp = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:77 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:77 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:77, offset:1, max_frames:12 },
+    work : { pos : [ 25, -12], pack:PACK_GENERAL, id:77, offset:1, max_frames:12 },
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,
