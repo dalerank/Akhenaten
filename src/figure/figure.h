@@ -419,7 +419,6 @@ public:
     void hippodrome_horse_action();
     // pharaoh
     void policeman_action();
-    void festival_guy_action();
 
     void update_direction_and_image();
     int is_nearby(int category, int* distance, int max_distance = 10000, bool gang_on = true);

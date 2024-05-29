@@ -246,10 +246,8 @@ void figure_entertainer::update_animation() {
     //}
 
     int image_id;
-    if (type() == FIGURE_JUGGLER) {
-        image_id = anim("wall").first_img();
-    } else if (type() == FIGURE_MUSICIAN) {
-        image_id = image_group(ANIM_MUSICIAN_WALK);
+    if (type() == FIGURE_JUGGLER || type() == FIGURE_MUSICIAN) {
+        image_id = anim("walk").first_img();
     } else if (type() == FIGURE_DANCER) {
         image_id = image_group(ANIM_DANCER_WALK);
         if (base.wait_ticks_missile >= 96) {

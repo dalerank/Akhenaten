@@ -434,10 +434,17 @@ figure_dancer = {
 	}
 }
 
+figure_festival_guy = {
+	animations : {
+		juggler : { pack:PACK_SPR_MAIN, id:130, max_frames:12 },
+		musician : { pack:PACK_SPR_MAIN, id:191, max_frames:12 },
+	}
+}
+
 figure_musician = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_MUSICIAN_WALK, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:192, max_frames:8, loop:false },
+		walk : { pack:PACK_SPR_MAIN, id:191, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:192, max_frames:8, loop:false },
 	},
 	sounds : {
 		i_like_festivals : { sound:"musician_e01.wav", group:229, text:0 },
