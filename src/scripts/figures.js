@@ -217,7 +217,9 @@ figure_flotsam = {
 
 figure_worker = {
 	animations : {
-		work : { pos : [0, 0], anim_id: IMG_WORKER_AKNH_WORK, max_frames:12 },
+		walk : { pack:PACK_SPR_MAIN, id:116, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:117, max_frames:8, loop:false },
+		work : { pack:PACK_SPR_MAIN, id:118, max_frames:12 },
 	},
 	sounds : {
 		going_to_workplace : {sound:"worker_e02.wav", group:212, text:0},

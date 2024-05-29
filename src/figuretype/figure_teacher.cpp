@@ -102,3 +102,7 @@ int figure_teacher::provide_service() {
     int houses_serviced = figure_provide_service(tile(), &base, none_value, school_coverage);
     return houses_serviced;
 }
+
+const animations_t &figure_teacher::anim() const {
+    return teacher_m.anim;
+}

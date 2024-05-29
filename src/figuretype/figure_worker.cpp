@@ -142,18 +142,22 @@ void figure_worker::figure_action() {
         }
         break;
     }
-
-    switch (base.action_state) {
-    case FIGURE_ACTION_12_WORKER_LEVELING_GROUND:
-        image_set_animation(worker_m.anim["work"]);
-        break;
-    }
 }
 
 void figure_worker::figure_before_action() {
     building *b = home();
     if (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id())) {
         poof();
+    }
+}
+
+void figure_worker::update_animation() {
+    figure_impl::update_animation();
+
+    switch (action_state()) {
+    case FIGURE_ACTION_12_WORKER_LEVELING_GROUND:
+        image_set_animation(worker_m.anim["work"]);
+        break;
     }
 }
 
@@ -225,4 +229,8 @@ sound_key figure_worker::phrase_key() const {
 
 figure_sound_t figure_worker::get_sound_reaction(pcstr key) const {
     return worker_m.sounds[key];
+}
+
+const animations_t &figure_worker::anim() const {
+    return worker_m.anim;
 }

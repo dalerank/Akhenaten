@@ -10,11 +10,13 @@ public:
     virtual void on_create() override {}
     virtual void figure_action() override;
     virtual void figure_before_action() override;
+    virtual void update_animation() override;
     virtual void poof() override;
     virtual e_figure_sound phrase() const override { return {FIGURE_LABORER, "worker"}; }
     virtual sound_key phrase_key() const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_LABOR; }
     virtual figure_sound_t get_sound_reaction(pcstr key) const;
+    virtual const animations_t &anim() const override;
 
     tile2i small_mastaba_tile4work(building *b);
 };
