@@ -60,7 +60,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_MARKET_TRADER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, ANIM_MARKET_LADY_WALK},
   {FIGURE_PRIEST, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_PRIEST_OSIRIS},
   {FIGURE_TEACHER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_NONE},
-  {FIGURE_SCRIBER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_SCRIBER_WALK},
+  {FIGURE_SCRIBER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_NONE},
   {FIGURE_LIBRARIAN, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_LIBRARIAN},
   {FIGURE_DENTIST, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_DENTIST},
   {FIGURE_PHYSICIAN, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, ANIM_DOCTOR_WALK},
@@ -449,8 +449,6 @@ void figure::action_perform() {
         case FIGURE_PROTESTER: protestor_action(); break;
         case FIGURE_CRIMINAL: mugger_action(); break;
         case FIGURE_TOMB_ROBER: rioter_action(); break;
-
-            //            case 29: common_action(12, GROUP_FIGURE_TEACHER_LIBRARIAN); break;
             //            case 30: common_action(12, GROUP_FIGURE_TEACHER_LIBRARIAN); break; //30
             //            case 31: common_action(12, GROUP_FIGURE_BARBER); break;
             //            case 32: common_action(12, GROUP_FIGURE_BATHHOUSE_WORKER); break;

@@ -185,6 +185,7 @@ var figure_soldier_charioteer = {}
 var fishing_boat = {}
 var figure_flotsam = {}
 var figure_festival_guy = {}
+var figure_scriber = {}
 // missions
 var mission0 = {}
 var mission1 = {}

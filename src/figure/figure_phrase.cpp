@@ -38,7 +38,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "pharaoh"},
     {FIGURE_CONSTABLE, "police"},
     {FIGURE_CRIMINAL, "robber"},
-    {FIGURE_SCRIBER, "scribe"},
     {FIGURE_NONE, "senet"},
     {FIGURE_NONE, "thief"},
     {FIGURE_NONE, "transport"},

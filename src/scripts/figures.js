@@ -215,6 +215,13 @@ figure_flotsam = {
 
 }
 
+figure_scriber = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:199, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:200, max_frames:8, loop:false },
+	},
+}
+
 figure_worker = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:116, max_frames:12 },
