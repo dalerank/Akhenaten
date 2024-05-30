@@ -3,13 +3,13 @@
 #include "figure/service.h"
 
 struct dentist_model : public figures::model_t<FIGURE_DENTIST, figure_dentist> {};
-dentist_model dentist_m;
+dentist_model fdentist_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_dentist);
 void config_load_figure_dentist() {
     g_config_arch.r_section("figure_dentist", [] (archive arch) {
-        dentist_m.anim.load(arch);
-        dentist_m.sounds.load(arch);
+        fdentist_m.anim.load(arch);
+        fdentist_m.sounds.load(arch);
     });
 }
 
@@ -45,5 +45,5 @@ int figure_dentist::provide_service() {
 }
 
 const animations_t &figure_dentist::anim() const {
-    return dentist_m.anim;
+    return fdentist_m.anim;
 }
