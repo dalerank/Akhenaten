@@ -62,9 +62,9 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_TEACHER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_NONE},
   {FIGURE_SCRIBER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_NONE},
   {FIGURE_LIBRARIAN, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_LIBRARIAN},
-  {FIGURE_DENTIST, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_DENTIST},
+  {FIGURE_DENTIST, 1, TERRAIN_USAGE_ROADS, 384, 0, 0},
   {FIGURE_PHYSICIAN, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, ANIM_DOCTOR_WALK},
-  {FIGURE_HERBALIST, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, ANIM_HERBALIST_WALK},
+  {FIGURE_HERBALIST, 1, TERRAIN_USAGE_ROADS, 384, 0, 0, IMG_NONE},
   {FIGURE_EMBALMER, 1, TERRAIN_USAGE_ROADS, 384, GROUP_FIGURE_EMBALMER},
   {FIGURE_WORKER, 1, TERRAIN_USAGE_ROADS, 384, 0, 0},
   {FIGURE_MAP_FLAG, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
@@ -358,7 +358,6 @@ void figure::action_perform() {
         case FIGURE_NATIVE_TRADER:
         case FIGURE_TOWER_SENTRY:
         case FIGURE_MISSIONARY:
-        case FIGURE_DENTIST:
         case FIGURE_EMBALMER:
             if (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id)) {
                 poof();
@@ -450,7 +449,6 @@ void figure::action_perform() {
         case FIGURE_CRIMINAL: mugger_action(); break;
         case FIGURE_TOMB_ROBER: rioter_action(); break;
             //            case 30: common_action(12, GROUP_FIGURE_TEACHER_LIBRARIAN); break; //30
-            //            case 31: common_action(12, GROUP_FIGURE_BARBER); break;
             //            case 32: common_action(12, GROUP_FIGURE_BATHHOUSE_WORKER); break;
         case 36: editor_flag_action(); break;
         case FIGURE_NOBLES: noble_action(); break; 

@@ -91,8 +91,6 @@ images = [
 	{img: ANIM_TRADER_SHIP_IDLE, pack:PACK_SPR_MAIN, id:42, offset:0},
 	{img: ANIM_DOCTOR_WALK, pack:PACK_SPR_MAIN, id:71, offset:0},
 	{img: ANIM_DOCTOR_DEATH, pack:PACK_SPR_MAIN, id:72, offset:0},
-	{img: ANIM_HERBALIST_WALK, pack:PACK_SPR_MAIN, id:180, offset:0},
-	{img: ANIM_HERBALIST_DEATH, pack:PACK_SPR_MAIN, id:181, offset:0},
 	{img: ANIM_DANCER_WALK, pack:PACK_SPR_MAIN, id:128, offset:0},
 	{img: ANIM_DANCER_DEATH, pack:PACK_SPR_MAIN, id:129, offset:0},
 ]

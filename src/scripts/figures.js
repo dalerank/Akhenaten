@@ -222,6 +222,13 @@ figure_scriber = {
 	},
 }
 
+figure_dentist = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:182, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:183, max_frames:8, loop:false },
+	},
+}
+
 figure_worker = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:116, max_frames:12 },
@@ -414,8 +421,8 @@ figure_teacher = {
 
 figure_herbalist = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_HERBALIST_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_HERBALIST_DEATH, max_frames:8, loop:false },
+		walk : { pos : [0, 0], ack:PACK_SPR_MAIN, id:180, max_frames:12 },
+		death : { pos : [0, 0], ack:PACK_SPR_MAIN, id:181, max_frames:8, loop:false },
 	},
 	sounds : {
 		no_threat_malaria_here : {sound:"apothecary_e02.wav", group: 241, text:1},
