@@ -253,8 +253,8 @@ figure_worker = {
 
 figure_physician = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_DOCTOR_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_DOCTOR_DEATH, max_frames:8, loop:false },
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:71, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:72, max_frames:8, loop:false },
 	},
 	sounds : {
 		desease_can_start_at_any_moment : {sound:"doctor_e01.wav", group: 239, text:1},
