@@ -21,6 +21,7 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_BANDSTAND; }
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual bool force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
+    virtual void on_undo() override;
 
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     void draw_shows_musicians(painter &ctx, vec2i pixel, int direction, color color_mask);

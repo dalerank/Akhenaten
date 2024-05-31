@@ -11,6 +11,7 @@ public:
     virtual void on_place(int orientation, int variant) override;
     virtual void update_day() override;
     virtual void window_info_background(object_info &c) override;
+    virtual void on_undo() override;
 
     static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
 };

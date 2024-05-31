@@ -9,6 +9,7 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/ui.h"
 #include "building/count.h"
+#include "grid/building.h"
 #include "city/labor.h"
 #include "window/building/common.h"
 
@@ -55,6 +56,15 @@ void building_festival_square::window_info_background(object_info &c) {
 
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.y, FONT_LARGE_BLACK_ON_LIGHT);
+}
+
+void building_festival_square::on_undo() {
+    for (int dy = 0; dy < 5; dy++) {
+        for (int dx = 0; dx < 5; dx++) {
+            if (map_building_at(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
+                map_building_set(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), id());
+        }
+    }
 }
 
 void building_festival_square::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {

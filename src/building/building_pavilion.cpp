@@ -14,6 +14,7 @@
 #include "city/warnings.h"
 #include "construction/build_planner.h"
 #include "grid/image.h"
+#include "grid/building.h"
 #include "grid/orientation.h"
 #include "grid/building_tiles.h"
 #include "js/js_game.h"
@@ -215,5 +216,14 @@ void building_pavilion::window_info_background(object_info &c) {
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days2, c.offset.x + width + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         lang_text_draw(74, 9, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
+    }
+}
+
+void building_pavilion::on_undo() {
+    for (int dy = 0; dy < 4; dy++) {
+        for (int dx = 0; dx < 4; dx++) {
+            if (map_building_at(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
+                map_building_set(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), id());
+        }
     }
 }

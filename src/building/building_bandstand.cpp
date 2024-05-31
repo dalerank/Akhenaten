@@ -9,6 +9,7 @@
 #include "game/resource.h"
 #include "grid/property.h"
 #include "grid/image.h"
+#include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
@@ -149,6 +150,15 @@ bool building_bandstand::force_draw_height_tile(painter &ctx, tile2i tile, vec2i
        ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, mask);
     }
     return false;
+}
+
+void building_bandstand::on_undo() {
+    for (int dy = 0; dy < 3; dy++) {
+        for (int dx = 0; dx < 3; dx++) {
+            if (map_building_at(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
+                map_building_set(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), id());
+        }
+    }
 }
 
 void building_bandstand::window_info_background(object_info &c) {

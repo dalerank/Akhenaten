@@ -24,6 +24,7 @@ public:
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual bool force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual void update_map_orientation(int map_orientation) override;
+    virtual void on_undo() override;
 
     static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
 };

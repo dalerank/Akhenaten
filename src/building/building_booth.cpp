@@ -14,6 +14,7 @@
 #include "config/config.h"
 #include "grid/building_tiles.h"
 #include "grid/property.h"
+#include "grid/building.h"
 #include "grid/image.h"
 #include "window/building/common.h"
 #include "window/building/figures.h"
@@ -148,6 +149,16 @@ void building_booth::update_map_orientation(int map_orientation) {
     int plaza_image_id = params().anim["square"].first_img();
     tile2i btile(data.entertainment.booth_corner_grid_offset);
     map_add_venue_plaza_tiles(id(), base.size, btile, plaza_image_id, true);
+}
+
+void building_booth::on_undo() {
+    for (int dy = 0; dy < 2; dy++) {
+        for (int dx = 0; dx < 2; dx++) {
+            if (map_building_at(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0) {
+                map_building_set(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), id());
+            }
+        }
+    }
 }
 
 void building_booth::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
