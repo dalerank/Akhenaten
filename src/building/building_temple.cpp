@@ -97,10 +97,6 @@ void building_temple::window_info_background(object_info &c) {
     }
 }
 
-void building_temple::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
-}
-
 void building_temple::spawn_figure() {
     if (is_main()) {
         common_spawn_roamer(FIGURE_PRIEST, 50, FIGURE_ACTION_125_ROAMING);

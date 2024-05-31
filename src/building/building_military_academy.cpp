@@ -27,7 +27,3 @@ void building_military_academy::window_info_background(object_info &c) {
 void building_military_academy::spawn_figure() {
     common_spawn_figure_trigger(100);
 }
-
-void building_military_academy::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
-}

@@ -9,7 +9,6 @@ public:
 
     building_dancer_school(building &b) : building_impl(b) {}
 
-    virtual void update_count() const override;
     virtual void spawn_figure() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void window_info_background(object_info &c) override;

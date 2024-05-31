@@ -31,10 +31,6 @@ void building_conservatory::spawn_figure() {
     }
 }
 
-void building_conservatory::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
-}
-
 bool building_conservatory::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     if (worker_percentage() > 50) {
         const animation_t &anim = conservatory_m.anim["work"];

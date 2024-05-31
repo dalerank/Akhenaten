@@ -426,32 +426,18 @@ e_sound_channel_city building_farm::sound_channel() const {
 }
 
 void building_farm::update_count() const {
-    switch(type()) {
-    case BUILDING_GRAIN_FARM:
-        building_increase_industry_count(RESOURCE_GRAIN, num_workers() > 0);
-        break;
-    case BUILDING_BARLEY_FARM:
-        building_increase_industry_count(RESOURCE_BARLEY, num_workers() > 0);
-        break;
-    case BUILDING_FLAX_FARM:
-        building_increase_industry_count(RESOURCE_FLAX, num_workers() > 0);
-        break;
-    case BUILDING_LETTUCE_FARM:
-        building_increase_industry_count(RESOURCE_LETTUCE, num_workers() > 0);
-        break;
-    case BUILDING_POMEGRANATES_FARM:
-        building_increase_industry_count(RESOURCE_POMEGRANATES, num_workers() > 0);
-        break;
-    case BUILDING_CHICKPEAS_FARM:
-        building_increase_industry_count(RESOURCE_CHICKPEAS, num_workers() > 0);
-        break;
-    case BUILDING_FIGS_FARM:
-        building_increase_industry_count(RESOURCE_FIGS, num_workers() > 0);
-        break;
-    case BUILDING_HENNA_FARM:
-        building_increase_industry_count(RESOURCE_HENNA, num_workers() > 0);
-        break;
-    }
+    std::pair<e_building_type, e_resource> farms[] = {
+        {BUILDING_GRAIN_FARM, RESOURCE_GRAIN},
+        {BUILDING_BARLEY_FARM, RESOURCE_BARLEY},
+        {BUILDING_FLAX_FARM, RESOURCE_FLAX},
+        {BUILDING_LETTUCE_FARM, RESOURCE_LETTUCE},
+        {BUILDING_POMEGRANATES_FARM, RESOURCE_POMEGRANATES},
+        {BUILDING_CHICKPEAS_FARM, RESOURCE_CHICKPEAS},
+        {BUILDING_FIGS_FARM, RESOURCE_FIGS},
+        {BUILDING_HENNA_FARM, RESOURCE_HENNA}
+    };
+    auto it = std::find_if(std::begin(farms), std::end(farms), [btype = type()](auto &t) { return t.first == btype; });
+    building_increase_industry_count(it->second, num_workers() > 0);
 }
 
 void building_farm::spawn_figure() {

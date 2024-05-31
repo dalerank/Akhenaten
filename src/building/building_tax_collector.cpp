@@ -105,10 +105,6 @@ bool building_tax_collector::draw_ornaments_and_animations_height(painter &ctx, 
     return false;
 }
 
-void building_tax_collector::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
-}
-
 const building_impl::static_params &building_tax_collector::params() const {
     return (type() == BUILDING_TAX_COLLECTOR) 
                 ? *(static_params*)&btax_collector_m

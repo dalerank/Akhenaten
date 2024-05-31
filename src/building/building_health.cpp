@@ -134,6 +134,5 @@ void building_mortuary::spawn_figure() {
 }
 
 void building_mortuary::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
     g_city.health.add_mortuary_workers(num_workers());
 }

@@ -52,7 +52,7 @@ bool building_dock::can_play_animation() const {
 }
 
 void building_dock::update_count() const {
-    if (base.num_workers > 0 && base.has_open_water_access) {
+    if (num_workers() > 0 && base.has_open_water_access) {
         city_buildings_add_working_dock(id());
     }
 }

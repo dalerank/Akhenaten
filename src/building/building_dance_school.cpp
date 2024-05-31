@@ -52,10 +52,6 @@ void building_entertainment_school_draw_info(object_info& c, pcstr type, int gro
     window_building_draw_employment(&c, 142);
 }
 
-void building_dancer_school::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
-}
-
 void building_dancer_school::spawn_figure() {
     if (common_spawn_figure_trigger(50)) {
         int building_id = figure_entertainer::determine_venue_destination(base.road_access, {BUILDING_PAVILLION});

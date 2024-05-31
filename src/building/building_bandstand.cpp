@@ -224,7 +224,6 @@ void building_bandstand::draw_shows_musicians(painter &ctx, vec2i pixel, int dir
 }
 
 void building_bandstand::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
     building_increase_type_count(BUILDING_BOOTH, num_workers() > 0);
 }
 

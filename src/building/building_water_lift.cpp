@@ -69,10 +69,6 @@ void building_water_lift::spawn_figure() {
     common_spawn_figure_trigger(50);
 }
 
-void building_water_lift::update_count() const {
-    building_increase_type_count(type(), base.has_water_access);
-}
-
 bool building_water_lift::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     int orientation_rel = city_view_relative_orientation(data.industry.orientation);
     int anim_offset = 13 * orientation_rel;

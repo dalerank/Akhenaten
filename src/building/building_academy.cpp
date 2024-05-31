@@ -15,7 +15,3 @@ void config_load_building_academy() {
 void building_academy::window_info_background(object_info &c) {
     building_education_draw_info(c, "academy", FIGURE_SCRIBER, RESOURCE_NONE, vec2i{0, 0}, vec2i{0, 0});
 }
-
-void building_academy::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
-}

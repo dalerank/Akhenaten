@@ -37,7 +37,3 @@ void building_library::spawn_figure() {
     //        }
     //    }
 }
-
-void building_library::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
-}

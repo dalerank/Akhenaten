@@ -25,10 +25,6 @@ bool building_dentist::draw_ornaments_and_animations_height(painter &ctx, vec2i 
     return true;
 }
 
-void building_dentist::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
-}
-
 void building_dentist::spawn_figure() {
     common_spawn_roamer(FIGURE_DENTIST, 50, FIGURE_ACTION_125_ROAMING);
 }

@@ -90,7 +90,3 @@ void building_shrine::window_info_background(object_info &ctx) {
         break;
     }
 }
-
-void building_shrine::update_count() const {
-    building_increase_type_count(type(), has_road_access());
-}

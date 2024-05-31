@@ -52,38 +52,12 @@ void building_count_update() {
     g_city.health.reset_mortuary_workers();
 
     buildings_valid_do ( [] (building &b) {
-        if (b.house_size) {
-            return;
-        }
-
         e_building_type type = b.type;
-        switch (type) {
-        default:
+        if (!b.house_size) {
             building_increase_type_count(type, b.num_workers > 0);
-            break;
-
-        case BUILDING_RECRUITER:
-            city_buildings_set_recruiter(b.id);
-            building_increase_type_count(type, b.num_workers > 0);
-            break;
-
-            // health
-        case BUILDING_MENU_MONUMENTS:
-        case BUILDING_APOTHECARY:
-            // government
-        case BUILDING_VILLAGE_PALACE:
-        case BUILDING_TOWN_PALACE:
-            // religion
-        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        case BUILDING_TEMPLE_COMPLEX_RA:
-        case BUILDING_TEMPLE_COMPLEX_PTAH:
-        case BUILDING_TEMPLE_COMPLEX_SETH:
-        case BUILDING_TEMPLE_COMPLEX_BAST:
-        case BUILDING_ORACLE:
-            building_increase_type_count(type, b.num_workers > 0);
-            break;
+        } else {
+            building_increase_type_count(type, b.house_size > 0);
         }
-        // industry
         b.dcast()->update_count();
     });
 }

@@ -123,10 +123,6 @@ void building_senet_house::spawn_figure() {
     //    }
 }
 
-void building_senet_house::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
-}
-
 void building_bullfight_school::window_info_background(object_info &c) {
     c.help_id = 75;
     window_building_play_sound(&c, snd::get_building_info_sound("bullfight_school"));
@@ -157,8 +153,4 @@ bool building_bullfight_school::draw_ornaments_and_animations_height(painter &ct
     //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_CHARIOTS_2) + amount, x + 65, y +
     //            3, color_mask);
     return true;
-}
-
-void building_bullfight_school::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
 }

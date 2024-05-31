@@ -146,7 +146,6 @@ bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i
 }
 
 void building_pavilion::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
     building_increase_type_count(BUILDING_BANDSTAND, num_workers() > 0);
     building_increase_type_count(BUILDING_BOOTH, num_workers() > 0);
 }

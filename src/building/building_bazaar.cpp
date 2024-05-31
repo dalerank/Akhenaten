@@ -87,7 +87,7 @@ void building_bazaar::toggle_good_accepted(int index) {
 }
 
 void building_bazaar::unaccept_all_goods() {
-    base.subtype.market_goods = 0xFFFF;
+    base.subtype.market_goods = (short)0xFFFF;
 }
 
 building *building_bazaar::get_storage_destination() {
@@ -499,8 +499,4 @@ bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i p
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;
-}
-
-void building_bazaar::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
 }

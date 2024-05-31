@@ -30,10 +30,6 @@ void config_load_scribal_school() {
     });
 }
 
-void building_scribal_school::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
-}
-
 void building_scribal_school::update_month() {
     if (base.stored_full_amount <= 0) {
         return;

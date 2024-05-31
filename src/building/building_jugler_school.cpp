@@ -50,7 +50,3 @@ bool building_juggler_school::draw_ornaments_and_animations_height(painter &ctx,
 
     return true;
 }
-
-void building_juggler_school::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
-}

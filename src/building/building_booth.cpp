@@ -126,10 +126,6 @@ bool building_booth::draw_ornaments_and_animations_height(painter &ctx, vec2i po
     return true;
 }
 
-void building_booth::update_count() const {
-    building_increase_type_count(type(), num_workers() > 0);
-}
-
 bool building_booth::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     int image_id = map_image_at(tile);
     return (booth_m.booth != image_id);
