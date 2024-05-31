@@ -326,6 +326,7 @@ public:
 
     void clear_related_data();
     void clear_impl();
+    void reset_impl();
     void new_fill_in_data_for_type(e_building_type type, tile2i tile, int orientation);
     void update_tick(bool refresh_only);
 
@@ -412,7 +413,6 @@ public:
 
     void update_native_crop_progress();
     tile2i access_tile();
-    void update_road_access();
     bool figure_generate();
 
     void school_add_papyrus(int amount);

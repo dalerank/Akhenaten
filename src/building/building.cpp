@@ -372,6 +372,11 @@ void building::clear_impl() {
     _ptr = nullptr;
 }
 
+void building::reset_impl() {
+    _ptr = nullptr;
+}
+
+
 void building::clear_related_data() {
     if (storage_id)
         building_storage_delete(storage_id);
