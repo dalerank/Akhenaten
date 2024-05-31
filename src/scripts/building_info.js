@@ -514,6 +514,12 @@ building_storage_yard = {
   building_size : 3,
 }
 
+building_storage_room = {
+  animations : {
+  },
+  building_size : 3,
+}
+
 building_bazaar = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:22, },

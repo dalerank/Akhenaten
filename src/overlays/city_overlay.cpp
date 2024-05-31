@@ -173,21 +173,44 @@ int widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset) {
 }
 
 bool city_overlay::is_drawable_farm_corner(tile2i tile) const {
-    if (!map_property_is_draw_tile(tile))
+    if (!map_property_is_draw_tile(tile)) {
         return false;
+    }
 
     int map_orientation = city_view_orientation();
     int xy = map_property_multi_tile_xy(tile);
-    if (map_orientation == DIR_0_TOP_RIGHT && xy == EDGE_X0Y2)
+    if (map_orientation == DIR_0_TOP_RIGHT && xy == EDGE_X0Y2) {
         return true;
-    else if (map_orientation == DIR_2_BOTTOM_RIGHT && xy == EDGE_X0Y0)
+    } else if (map_orientation == DIR_2_BOTTOM_RIGHT && xy == EDGE_X0Y0) {
         return true;
-    else if (map_orientation == DIR_4_BOTTOM_LEFT && xy == EDGE_X2Y0)
+    } else if (map_orientation == DIR_4_BOTTOM_LEFT && xy == EDGE_X2Y0) {
         return true;
-    else if (map_orientation == DIR_6_TOP_LEFT && xy == EDGE_X2Y2)
+    } else if (map_orientation == DIR_6_TOP_LEFT && xy == EDGE_X2Y2) {
         return true;
+    }
 
     return false;
+}
+
+bool city_overlay::is_drawable_storage_yard_corner(tile2i tile) const {
+    if (!map_property_is_draw_tile(tile)) {
+        return false;
+    }
+
+    int map_orientation = city_view_orientation();
+    tile2i yard_main;
+    if (map_orientation == DIR_0_TOP_RIGHT) {
+        yard_main = tile.shifted(0, -2);
+    } else if (map_orientation == DIR_2_BOTTOM_RIGHT) {
+        /*same*/
+    } else if (map_orientation == DIR_4_BOTTOM_LEFT) {
+        yard_main = tile.shifted(-2, 0);
+    } else if (map_orientation == DIR_6_TOP_LEFT) {
+        yard_main = tile.shifted(-2, -2);
+    }
+
+    int bid = map_building_at(yard_main);
+    return (building_get(bid)->type == BUILDING_STORAGE_YARD);
 }
 
 void city_overlay::draw_overlay_column(vec2i pixel, int height, int column_style, painter &ctx) const {
@@ -271,9 +294,16 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
         if (b->type == BUILDING_FESTIVAL_SQUARE) {
             return;
         }
-        int draw = 1;
+        bool draw = true;
         if (b->size == 3 && building_is_farm(b->type)) {
             draw = is_drawable_farm_corner(tile);
+        } else if (b->type == BUILDING_STORAGE_YARD || b->type == BUILDING_STORAGE_ROOM) {
+            draw = is_drawable_storage_yard_corner(tile);
+            building *main = b->main();
+            if (draw) {
+                draw_flattened_footprint_anysize(pos, main->size, main->size, image_offset, 0, ctx);
+            }
+            draw = false;
         }
 
         if (draw) {

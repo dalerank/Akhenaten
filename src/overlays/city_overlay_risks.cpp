@@ -45,7 +45,7 @@ static int terrain_on_native_overlay(void) {
 }
 
 city_overlay *city_overlay_for_problems() {
-    city_overlay_problems overlay;
+    static city_overlay_problems overlay;
     return &overlay;
 }
 
@@ -135,7 +135,7 @@ bool city_overlay_native::show_building(const building *b) const {
 }
 
 city_overlay* city_overlay_for_native() {
-    city_overlay_native overlay;
+    static city_overlay_native overlay;
     return &overlay;
 }
 

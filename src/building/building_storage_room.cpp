@@ -13,6 +13,9 @@
 
 buildings::model_t<building_storage_room> storage_room_m;
 
+inline building_storage_room::building_storage_room(building &b) : building_impl(b), stored_full_amount(b.stored_full_amount) {
+}
+
 void building_storage_room::on_create(int orientation) {
 }
 
@@ -34,8 +37,8 @@ void building_storage_room::set_image(e_resource resource) {
         image_id = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
     } else {
         image_id = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_FILLED) + 4 * (resource - 1)
-            + resource_image_offset(resource, RESOURCE_IMAGE_STORAGE)
-            + (int)ceil((float)stored_full_amount / 100.0f) - 1;
+                    + resource_image_offset(resource, RESOURCE_IMAGE_STORAGE)
+                    + (int)ceil((float)stored_full_amount / 100.0f) - 1;
     }
     map_image_set(tile(), image_id);
 }

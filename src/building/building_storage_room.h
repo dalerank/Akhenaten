@@ -8,7 +8,7 @@ class building_storage_room : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_STORAGE_ROOM, building_storage_room)
 
-    building_storage_room(building &b) : building_impl(b), stored_full_amount(b.stored_full_amount) {}
+    building_storage_room(building &b);
 
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override { /*nothing*/ }

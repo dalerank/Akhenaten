@@ -109,6 +109,7 @@ struct city_overlay {
     void draw_overlay_column(vec2i pixel, int height, int column_style, painter &ctx) const;
     void draw_building_footprint(painter &ctx, vec2i pos, tile2i tile, int image_offset) const;
     bool is_drawable_farm_corner(tile2i tile) const;
+    bool is_drawable_storage_yard_corner(tile2i tile) const;
     bool is_drawable_farmhouse(tile2i tile, int map_orientation) const;
 };
 
