@@ -13,6 +13,7 @@ public:
     virtual bool is_workshop() const override { return true; }
     //virtual void window_info_background(object_info &c) override;
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STATUE; }
+    virtual void on_undo() override;
 
     static void create_vacant_lot(tile2i tile, int image_id);
 };

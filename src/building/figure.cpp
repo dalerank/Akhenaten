@@ -536,7 +536,8 @@ void building::update_native_crop_progress() {
         data.industry.progress = 0;
     }
 
-    map_image_set(tile.grid_offset(), image_id_from_group(GROUP_BUILDING_FARMLAND) + data.industry.progress);
+    int img_id = building_impl::params(BUILDING_BARLEY_FARM).anim["farmland"].first_img();
+    map_image_set(tile.grid_offset(), img_id + data.industry.progress);
 }
 
 tile2i building::access_tile() {
@@ -549,10 +550,6 @@ tile2i building::access_tile() {
     }
 
     return road_access;
-}
-
-void building::update_road_access() {
-    // update building road access
 }
 
 bool building::figure_generate() {

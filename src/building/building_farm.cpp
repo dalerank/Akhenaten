@@ -133,7 +133,7 @@ bool building_farm::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel,
 
 int building_farm::get_farm_image(e_building_type type, tile2i tile) {
     if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
-        int base = image_id_from_group(GROUP_BUILDING_FARMLAND);
+        int base = params(type).anim["farmland"].first_img();
         int fert_average = map_get_fertility_for_farm(tile);
         int fertility_index = 0;
 
@@ -468,6 +468,11 @@ void building_farm::spawn_figure() {
     }
 }
 
+void building_farm::on_undo() {
+    int img_id = anim("farmland").first_img();
+    map_building_tiles_add_farm(type(), id(), tile(), img_id, 0);
+}
+
 void building_farm::spawn_figure_harvests() {
     if (is_floodplain_farm()) { // floodplain farms
                                 // In OG Pharaoh, farms can NOT send out a cartpusher if the cartpusher
@@ -529,7 +534,8 @@ void building_farm::update_tiles_image() {
     }
 
     if (!is_flooded) {
-        map_building_tiles_add_farm(type(), id(), tile(), image_id_from_group(GROUP_BUILDING_FARMLAND) + 5 * (base.output_resource_first_id - 1), data.industry.progress);
+        int img_id = anim("farmland").first_img();
+        map_building_tiles_add_farm(type(), id(), tile(), img_id + 5 * (base.output_resource_first_id - 1), data.industry.progress);
     }
 }
 

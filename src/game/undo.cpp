@@ -165,73 +165,16 @@ void game_undo_finish_build(int cost) {
 }
 
 static void add_building_to_terrain(building* b) {
-    if (b->id <= 0)
+    if (b->id <= 0) {
         return;
-    if (building_is_farm(b->type)) {
-        int image_offset;
-        switch (b->type) {
-        default:
-        case BUILDING_BARLEY_FARM:
-            image_offset = 0;
-            break;
-        case BUILDING_FLAX_FARM:
-            image_offset = 5;
-            break;
-        case BUILDING_GRAIN_FARM:
-            image_offset = 10;
-            break;
-        case BUILDING_LETTUCE_FARM:
-            image_offset = 15;
-            break;
-        case BUILDING_POMEGRANATES_FARM:
-            image_offset = 20;
-            break;
-        case BUILDING_CHICKPEAS_FARM:
-            image_offset = 25;
-            break;
-        }
-        map_building_tiles_add_farm(b->type, b->id, b->tile, image_id_from_group(GROUP_BUILDING_FARMLAND) + image_offset, 0);
-    } else if (b->house_size) {
-    } else {
-        int size = building_impl::params(b->type).building_size;
-        map_building_tiles_add(b->id, b->tile, size, 0, 0);
-        b->dcast()->on_undo();
     }
+
+    int size = building_impl::params(b->type).building_size;
+    map_building_tiles_add(b->id, b->tile, size, 0, 0);
     b->state = BUILDING_STATE_VALID;
 
-    while (b->prev_part_building_id) {
-        b = building_get(b->prev_part_building_id);
-    }
-
-    switch (b->type) {
-    case BUILDING_BOOTH:
-        for (int dy = 0; dy < 2; dy++) {
-            for (int dx = 0; dx < 2; dx++) {
-                if (map_building_at(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0) {
-                    map_building_set(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), b->id);
-                }
-            }
-        }
-        break;
-    case BUILDING_BANDSTAND:
-        for (int dy = 0; dy < 3; dy++)
-            for (int dx = 0; dx < 3; dx++)
-                if (map_building_at(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
-                    map_building_set(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), b->id);
-        break;
-    case BUILDING_PAVILLION:
-        for (int dy = 0; dy < 4; dy++)
-            for (int dx = 0; dx < 4; dx++)
-                if (map_building_at(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
-                    map_building_set(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), b->id);
-        break;
-    case BUILDING_FESTIVAL_SQUARE:
-        for (int dy = 0; dy < 5; dy++)
-            for (int dx = 0; dx < 5; dx++)
-                if (map_building_at(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
-                    map_building_set(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), b->id);
-        break;
-    }
+    auto main = b->main();
+    main->dcast()->on_undo();
 }
 
 static void restore_housing(building* b) {
@@ -267,10 +210,11 @@ void game_undo_perform() {
         for (int i = 0; i < data.num_buildings; i++) {
             if (data.buildings[i].id) {
                 building* b = building_get(data.buildings[i].id);
-                if (building_is_house(data.buildings[i].type) && true)
+                if (building_is_house(data.buildings[i].type) && true) {
                     restore_housing(&data.buildings[i]);
-                else {
+                } else {
                     memcpy(b, &data.buildings[i], sizeof(building));
+                    b->reset_impl();
                     if (b->type == BUILDING_STORAGE_YARD || b->type == BUILDING_GRANARY) {
                         if (!building_storage_restore(b->storage_id))
                             building_storage_reset_building_ids();

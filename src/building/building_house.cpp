@@ -100,6 +100,10 @@ expand_direction_t expand_delta(int i) {
     return EXPAND_DIRECTION_DELTA_PH[i];
 }
 
+void building_house::on_undo() {
+    /*nothing*/
+}
+
 void building_house::create_vacant_lot(tile2i tile, int image_id) {
     building* b = building_create(BUILDING_HOUSE_VACANT_LOT, tile, 0);
     b->house_population = 0;
