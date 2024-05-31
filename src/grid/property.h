@@ -33,6 +33,7 @@ void map_property_set_multi_tile_xy(int grid_offset, int x, int y, int is_draw_t
 void map_property_clear_multi_tile_xy(int grid_offset);
 
 int map_property_multi_tile_size(int grid_offset);
+inline int map_property_multi_tile_size(tile2i tile) { return map_property_multi_tile_size(tile.grid_offset()); }
 void map_property_set_multi_tile_size(int grid_offset, int size);
 
 void map_property_init_alternate_terrain(void);

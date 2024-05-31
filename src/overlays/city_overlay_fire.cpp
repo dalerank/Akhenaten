@@ -1,13 +1,37 @@
 #include "city_overlay_fire.h"
 
-#include "city_overlay.h"
 #include "building/model.h"
 #include "game/state.h"
 #include "grid/building.h"
 #include "grid/property.h"
 #include "figure/figure.h"
 
-static int get_column_height_fire(const building* b) {
+city_overlay_fire g_city_overlay_fire;
+
+city_overlay* city_overlay_for_fire() {
+    return &g_city_overlay_fire;
+}
+
+city_overlay_fire::city_overlay_fire() {
+    type = OVERLAY_FIRE;
+    column_type = COLUMN_TYPE_RISK;
+}
+
+bool city_overlay_fire::show_figure(const figure *f) const {
+    return f->type == FIGURE_FIREMAN;
+}
+
+void city_overlay_fire::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
+    if (!map_property_is_draw_tile(point)) {
+        return;
+    }
+
+    if (map_building_at(point)) {
+        city_overlay_fire::draw_building_top(pixel, point, ctx);
+    }
+}
+
+int city_overlay_fire::get_column_height(const building *b) const {
     auto model = model_get_building(b->type);
 
     if (b->prev_part_building_id || !model->fire_risk)
@@ -21,7 +45,7 @@ static int get_column_height_fire(const building* b) {
     return b->fire_risk / 100;
 }
 
-static int get_tooltip_fire(tooltip_context* c, const building* b) {
+int city_overlay_fire::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->fire_risk <= 0)
         return 46;
     else if (b->fire_risk <= 200)
@@ -36,36 +60,6 @@ static int get_tooltip_fire(tooltip_context* c, const building* b) {
         return 51;
 }
 
-struct city_overlay_fire : public city_overlay {
-    city_overlay_fire() {
-        type = OVERLAY_FIRE;
-        column_type = COLUMN_TYPE_RISK;
-
-        get_column_height = get_column_height_fire;
-        get_tooltip_for_building = get_tooltip_fire;
-    }
-
-    bool show_figure(const figure* f) const override {
-        return f->type == FIGURE_FIREMAN;
-    }
-
-    void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {
-        if (!map_property_is_draw_tile(point)) {
-            return;
-        }
-
-        if (map_building_at(point)) {
-            city_with_overlay_draw_building_top(pixel, point, ctx);
-        }
-    }
-
-    bool show_building(const building* b) const override {
-        return b->type == BUILDING_FIREHOUSE || b->type == BUILDING_BURNING_RUIN || b->type == BUILDING_FESTIVAL_SQUARE;
-    }
-};
-
-city_overlay_fire g_city_overlay_fire;
-
-city_overlay* city_overlay_for_fire() {
-    return &g_city_overlay_fire;
+bool city_overlay_fire::show_building(const building *b) const {
+    return b->type == BUILDING_FIREHOUSE || b->type == BUILDING_BURNING_RUIN || b->type == BUILDING_FESTIVAL_SQUARE;
 }

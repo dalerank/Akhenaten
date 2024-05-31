@@ -1,23 +1,24 @@
 #include "city_overlay_juggler.h"
 
-#include "city_overlay.h"
 #include "figure/figure.h"
 #include "grid/property.h"
 #include "grid/building.h"
 #include "graphics/elements/tooltip.h"
 #include "figuretype/figure_musician.h"
+#include "city_overlay_bandstand.h"
 
-static int get_column_height_bandstand(const building* b) {
-    if (b->house_size) {
-        if (b->data.house.bandstand_musician) {
-            return b->data.house.bandstand_musician / 10;
-        }
-    }
+city_overlay_bandstand g_city_overlay_bandstand;
 
-    return NO_COLUMN;
+city_overlay* city_overlay_for_bandstand() {
+    return &g_city_overlay_bandstand;
 }
 
-static int get_tooltip_bandstand(tooltip_context* c, const building* b) {
+city_overlay_bandstand::city_overlay_bandstand() {
+    type = OVERLAY_BANDSTAND;
+    column_type = COLUMN_TYPE_POSITIVE;
+}
+
+int city_overlay_bandstand::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.bandstand_musician <= 0)
         return 79;
     else if (b->data.house.bandstand_musician >= 80)
@@ -29,40 +30,34 @@ static int get_tooltip_bandstand(tooltip_context* c, const building* b) {
     }
 }
 
-struct city_overlay_bandstand : public city_overlay {
-    city_overlay_bandstand() {
-        type = OVERLAY_BANDSTAND;
-        column_type = COLUMN_TYPE_POSITIVE;
+bool city_overlay_bandstand::show_figure(const figure *f) const {
+    figure_musician *musician = ((figure *)f)->dcast_musician();
+    return musician
+        ? musician->current_destination()->type == BUILDING_BANDSTAND
+        : false;
+}
 
-        get_column_height = get_column_height_bandstand;
-        get_tooltip_for_building = get_tooltip_bandstand;
-    }
-
-    bool show_figure(const figure* f) const override {
-        figure_musician *musician = ((figure*)f)->dcast_musician();
-        return musician
-                    ? musician->current_destination()->type == BUILDING_BANDSTAND
-                    : false;
-    }
-
-    void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {
-        int grid_offset = point.grid_offset();
-        if (!map_property_is_draw_tile(grid_offset)) {
-            return;
-        }
-
-        if (map_building_at(grid_offset)) {
-            city_with_overlay_draw_building_top(pixel, point, ctx);
+int city_overlay_bandstand::get_column_height(const building *b) const {
+    if (b->house_size) {
+        if (b->data.house.bandstand_musician) {
+            return b->data.house.bandstand_musician / 10;
         }
     }
 
-    bool show_building(const building *b) const override {
-        return b->type == BUILDING_CONSERVATORY || b->type == BUILDING_BANDSTAND;
+    return NO_COLUMN;
+}
+
+void city_overlay_bandstand::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
+    int grid_offset = point.grid_offset();
+    if (!map_property_is_draw_tile(grid_offset)) {
+        return;
     }
-};
 
-city_overlay_bandstand g_city_overlay_bandstand;
+    if (map_building_at(grid_offset)) {
+        city_overlay::draw_building_top(pixel, point, ctx);
+    }
+}
 
-city_overlay* city_overlay_for_bandstand() {
-    return &g_city_overlay_bandstand;
+inline bool city_overlay_bandstand::show_building(const building *b) const {
+    return b->type == BUILDING_CONSERVATORY || b->type == BUILDING_BANDSTAND;
 }

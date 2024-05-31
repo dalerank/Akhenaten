@@ -1,16 +1,40 @@
 #include "city_overlay_dentist.h"
 
-#include "city_overlay.h"
 #include "city/constants.h"
 #include "grid/property.h"
 #include "grid/building.h"
 #include "figure/figure.h"
 
-static int get_column_height_dentist(const building* b) {
+city_overlay_dentist g_city_overlay_dentist;
+
+city_overlay* city_overlay_for_dentist() {
+    return &g_city_overlay_dentist;
+}
+
+city_overlay_dentist::city_overlay_dentist() {
+    type = OVERLAY_DENTIST;
+    column_type = COLUMN_TYPE_POSITIVE;
+}
+
+bool city_overlay_dentist::show_figure(const figure *f) const {
+    return f->type == FIGURE_DENTIST;
+}
+
+void city_overlay_dentist::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const {
+    if (!map_property_is_draw_tile(tile)) {
+        return;
+    }
+
+    if (map_building_at(tile)) {
+        city_overlay::draw_building_top(pixel, tile, ctx);
+    }
+}
+
+int city_overlay_dentist::get_column_height(const building *b) const {
     return b->house_size && b->data.house.dentist ? b->data.house.dentist / 10 : NO_COLUMN;
 }
 
-static int get_tooltip_dentist(tooltip_context* c, const building* b) {
+int city_overlay_dentist::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.dentist <= 0)
         return 8;
     else if (b->data.house.dentist >= 80)
@@ -22,39 +46,6 @@ static int get_tooltip_dentist(tooltip_context* c, const building* b) {
     }
 }
 
-struct city_overlay_dentist : public city_overlay {
-    city_overlay_dentist() {
-        type = OVERLAY_DENTIST;
-        column_type = COLUMN_TYPE_POSITIVE;
-
-        get_column_height = get_column_height_dentist;
-        get_tooltip_for_building = get_tooltip_dentist;
-    }
-
-    bool show_figure(const figure* f) const override {
-        return f->type == FIGURE_DENTIST;
-    }
-
-    void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {
-        int grid_offset = point.grid_offset();
-        int x = pixel.x;
-        int y = pixel.y;
-        if (!map_property_is_draw_tile(grid_offset)) {
-            return;
-        }
-
-        if (map_building_at(grid_offset)) {
-            city_with_overlay_draw_building_top(pixel, point, ctx);
-        }
-    }
-
-    bool show_building(const building *b) const override {
-        return b->type == BUILDING_DENTIST;
-    }
-};
-
-city_overlay_dentist g_city_overlay_dentist;
-
-city_overlay* city_overlay_for_dentist() {
-    return &g_city_overlay_dentist;
+bool city_overlay_dentist::show_building(const building *b) const {
+    return b->type == BUILDING_DENTIST;
 }

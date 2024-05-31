@@ -4,7 +4,6 @@
 #include "game/state.h"
 #include "grid/building.h"
 #include "grid/property.h"
-#include "overlays/city_overlay.h"
 #include "city/gods.h"
 #include "figure/figure.h"
 
@@ -18,11 +17,61 @@ static void add_god(tooltip_context* c, int god_id) {
     c->num_extra_values++;
 }
 
-static int get_column_height_religion(const building* b) {
+city_overlay_religion g_city_overlay_religion;
+city_overlay* city_overlay_for_religion() {
+    return &g_city_overlay_religion;
+}
+
+city_overlay_religion_osiris g_city_overlay_religion_osiris;
+city_overlay_religion_ra g_city_overlay_religion_ra;
+city_overlay_religion_ptah g_city_overlay_religion_ptah;
+city_overlay_religion_seth g_city_overlay_religion_seth;
+city_overlay_religion_bast g_city_overlay_religion_bast;
+
+city_overlay* city_overlay_for_religion_osiris() {
+    return &g_city_overlay_religion_osiris;
+}
+
+city_overlay* city_overlay_for_religion_ra() {
+    return &g_city_overlay_religion_ra;
+}
+
+city_overlay* city_overlay_for_religion_ptah() {
+    return &g_city_overlay_religion_ptah;
+}
+
+city_overlay* city_overlay_for_religion_seth() {
+    return &g_city_overlay_religion_seth;
+}
+
+city_overlay* city_overlay_for_religion_bast() {
+    return &g_city_overlay_religion_bast;
+}
+
+city_overlay_religion::city_overlay_religion() {
+    type = OVERLAY_RELIGION;
+    column_type = COLUMN_TYPE_WATER_ACCESS;
+}
+
+bool city_overlay_religion::show_figure(const figure *f) const {
+    return f->type == FIGURE_PRIEST;
+}
+
+void city_overlay_religion::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
+    if (!map_property_is_draw_tile(point)) {
+        return;
+    }
+
+    if (map_building_at(point)) {
+        city_overlay::draw_building_top(pixel, point, ctx);
+    }
+}
+
+int city_overlay_religion::get_column_height(const building *b) const {
     return b->house_size && b->data.house.num_gods ? b->data.house.num_gods * 17 / 10 : NO_COLUMN;
 }
 
-static int get_tooltip_religion(tooltip_context* c, const building* b) {
+int city_overlay_religion::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.num_gods < 5) {
         if (b->data.house.temple_osiris)
             add_god(c, GOD_OSIRIS);
@@ -57,126 +106,31 @@ static int get_tooltip_religion(tooltip_context* c, const building* b) {
     }
 }
 
-struct city_overlay_religion : public city_overlay {
-    city_overlay_religion() {
-        type = OVERLAY_RELIGION;
-        column_type = COLUMN_TYPE_WATER_ACCESS;
-
-        get_column_height = get_column_height_religion;
-        get_tooltip_for_building = get_tooltip_religion;
-    }
-
-    bool show_figure(const figure* f) const override {
-        return f->type == FIGURE_PRIEST;
-    }
-
-    void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {
-        int grid_offset = point.grid_offset();
-        if (!map_property_is_draw_tile(grid_offset)) {
-            return;
-        }
-
-        if (map_building_at(grid_offset)) {
-            city_with_overlay_draw_building_top(pixel, point, ctx);
-        }
-    }
-
-    bool show_building(const building* b) const override {
-        return building_is_religion(b->type);
-    }
-};
-
-city_overlay_religion g_city_overlay_religion;
-city_overlay* city_overlay_for_religion() {
-    return &g_city_overlay_religion;
+bool city_overlay_religion::show_building(const building *b) const {
+    return building_is_religion(b->type);
 }
 
-struct city_overlay_religion_god : public city_overlay {
-    city_overlay_religion_god() {
-        type = OVERLAY_RELIGION_BAST;
-        column_type = COLUMN_TYPE_WATER_ACCESS;
-
-        get_column_height = get_column_height_religion;
-        get_tooltip_for_building = get_tooltip_religion;
-    }
-
-    bool show_figure(const figure* f) const override {
-        return walkers.size() > 0
-                ? std::find(walkers.begin(), walkers.end(), f->type) != walkers.end()
-                : f->type == FIGURE_PRIEST;
-    }
-
-    void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {
-        int grid_offset = point.grid_offset();
-        if (!map_property_is_draw_tile(grid_offset)) {
-            return;
-        }
-
-        if (map_building_at(grid_offset)) {
-            city_with_overlay_draw_building_top(pixel, point, ctx);
-        }
-    }
-
-    bool show_building(const building* b) const override {
-        return std::find(buildings.begin(), buildings.end(), b->type) != buildings.end();
-    }
-};
-
-struct city_overlay_religion_osiris : public city_overlay_religion_god {
-    city_overlay_religion_osiris() {
-        type = OVERLAY_RELIGION_OSIRIS;
-    }
-};
-
-struct city_overlay_religion_ra : public city_overlay_religion_god {
-    city_overlay_religion_ra() {
-        type = OVERLAY_RELIGION_RA;
-    }
-};
-
-struct city_overlay_religion_ptah : public city_overlay_religion_god {
-    city_overlay_religion_ptah() {
-        type = OVERLAY_RELIGION_PTAH;
-        buildings = {BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_SHRINE_PTAH};
-    }
-};
-
-struct city_overlay_religion_seth : public city_overlay_religion_god {
-    city_overlay_religion_seth() {
-        type = OVERLAY_RELIGION_SETH;
-        buildings = {BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_SHRINE_SETH};
-    }
-};
-
-struct city_overlay_religion_bast : public city_overlay_religion_god {
-    city_overlay_religion_bast() {
-        type = OVERLAY_RELIGION_BAST;
-        buildings = {BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST, BUILDING_SHRINE_BAST};
-    }
-};
-
-city_overlay_religion_osiris g_city_overlay_religion_osiris;
-city_overlay_religion_ra g_city_overlay_religion_ra;
-city_overlay_religion_ptah g_city_overlay_religion_ptah;
-city_overlay_religion_seth g_city_overlay_religion_seth;
-city_overlay_religion_bast g_city_overlay_religion_bast;
-
-city_overlay* city_overlay_for_religion_osiris() {
-    return &g_city_overlay_religion_osiris;
+city_overlay_religion_god::city_overlay_religion_god() {
+    type = OVERLAY_RELIGION_BAST;
+    column_type = COLUMN_TYPE_WATER_ACCESS;
 }
 
-city_overlay* city_overlay_for_religion_ra() {
-    return &g_city_overlay_religion_ra;
+bool city_overlay_religion_god::show_figure(const figure *f) const {
+    return walkers.size() > 0
+        ? std::find(walkers.begin(), walkers.end(), f->type) != walkers.end()
+        : f->type == FIGURE_PRIEST;
 }
 
-city_overlay* city_overlay_for_religion_ptah() {
-    return &g_city_overlay_religion_ptah;
+void city_overlay_religion_god::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
+    if (!map_property_is_draw_tile(point)) {
+        return;
+    }
+
+    if (map_building_at(point)) {
+        city_overlay::draw_building_top(pixel, point, ctx);
+    }
 }
 
-city_overlay* city_overlay_for_religion_seth() {
-    return &g_city_overlay_religion_seth;
-}
-
-city_overlay* city_overlay_for_religion_bast() {
-    return &g_city_overlay_religion_bast;
+bool city_overlay_religion_god::show_building(const building *b) const {
+    return std::find(buildings.begin(), buildings.end(), b->type) != buildings.end();
 }

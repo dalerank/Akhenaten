@@ -1,6 +1,5 @@
 #include "city_overlay_risks.h"
 
-#include "city_overlay.h"
 #include "building/industry.h"
 #include "building/model.h"
 #include "game/state.h"
@@ -40,53 +39,73 @@ void overlay_problems_prepare_building(building* b) {
         b->show_on_problem_overlay = 1;
 }
 
-static int show_building_problems(const building* b) {
-    return b->show_on_problem_overlay;
-}
-
-static int show_building_native(const building* b) {
-    return b->type == BUILDING_UNUSED_NATIVE_HUT_88 || b->type == BUILDING_UNUSED_NATIVE_MEETING_89 || b->type == BUILDING_RESERVER_MISSION_POST_80;
-}
-
-static int show_figure_problems(const figure* f) {
-    if (f->type == FIGURE_LABOR_SEEKER) {
-        return ((figure *)f)->home()->show_on_problem_overlay;
-    } else if (f->type == FIGURE_CART_PUSHER) {
-        return f->action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL || f->min_max_seen;
-    } else {
-        return 0;
-    }
-}
-
-static int show_figure_native(const figure* f) {
-    return f->type == FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_MISSIONARY;
-}
-
-city_overlay* city_overlay_for_problems() {
-    static city_overlay overlay = {
-        OVERLAY_PROBLEMS,
-        COLUMN_TYPE_RISK,
-        show_building_problems,
-        show_figure_problems,
-        get_column_height_none,
-        0,
-        0,
-        0,
-        0
-    };
-    return &overlay;
-}
 
 static int terrain_on_native_overlay(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
 }
 
-static void draw_footprint_native(vec2i pixel, tile2i tile, painter &ctx) {
+city_overlay *city_overlay_for_problems() {
+    city_overlay_problems overlay;
+    return &overlay;
+}
+
+city_overlay_problems::city_overlay_problems() {
+    type = OVERLAY_PROBLEMS;
+    column_type = COLUMN_TYPE_RISK;
+}
+
+bool city_overlay_problems::show_figure(const figure *f) const {
+    if (f->type == FIGURE_LABOR_SEEKER) {
+        return ((figure *)f)->home()->show_on_problem_overlay;
+    } else if (f->type == FIGURE_CART_PUSHER) {
+        return f->action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL || f->min_max_seen;
+    } 
+
+    return false;
+}
+
+int city_overlay_problems::get_column_height(const building *b) const {
+    return NO_COLUMN;
+}
+
+bool city_overlay_problems::show_building(const building *b) const {
+    return b->show_on_problem_overlay;
+}
+
+city_overlay_native::city_overlay_native() {
+    type = OVERLAY_NATIVE;
+    column_type = COLUMN_TYPE_RISK;
+}
+
+bool city_overlay_native::show_figure(const figure *f) const {
+    return f->type == FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_MISSIONARY;
+}
+
+void city_overlay_native::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const {
     if (!map_property_is_draw_tile(tile))
         return;
+
+    if (map_terrain_is(tile, terrain_on_native_overlay())) {
+        if (!map_terrain_is(tile, TERRAIN_BUILDING)) {
+            color color_mask = 0;
+            if (map_property_is_deleted(tile) && map_property_multi_tile_size(tile) == 1)
+                color_mask = COLOR_MASK_RED;
+
+            //            ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask,
+            //            city_view_get_scale_float());
+        }
+    } else if (map_building_at(tile)) {
+        city_overlay::draw_building_top(pixel, tile, ctx);
+    }
+}
+
+bool city_overlay_native::draw_custom_footprint(vec2i pixel, tile2i tile, painter &ctx) const {
+    if (!map_property_is_draw_tile(tile))
+        return true;
+
     if (map_terrain_is(tile, terrain_on_native_overlay())) {
         if (map_terrain_is(tile, TERRAIN_BUILDING))
-            city_with_overlay_draw_building_footprint(ctx, pixel, tile, 0);
+            city_overlay::draw_building_footprint(ctx, pixel, tile, 0);
         else {
             ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pixel, 0);
         }
@@ -95,7 +114,7 @@ static void draw_footprint_native(vec2i pixel, tile2i tile, painter &ctx) {
         int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(tile) & 7);
         ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, 0);
     } else if (map_terrain_is(tile, TERRAIN_BUILDING))
-        city_with_overlay_draw_building_footprint(ctx, pixel, tile, 0);
+        city_overlay::draw_building_footprint(ctx, pixel, tile, 0);
     else {
         if (map_property_is_native_land(tile)) {
             ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + 1, pixel, 0);
@@ -103,39 +122,20 @@ static void draw_footprint_native(vec2i pixel, tile2i tile, painter &ctx) {
             ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pixel, 0);
         }
     }
+
+    return true;
 }
-static void draw_top_native(vec2i pixel, tile2i point, painter &ctx) {
-    int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
-    if (!map_property_is_draw_tile(grid_offset))
-        return;
 
-    if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
-        if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            color color_mask = 0;
-            if (map_property_is_deleted(grid_offset) && map_property_multi_tile_size(grid_offset) == 1)
-                color_mask = COLOR_MASK_RED;
+int city_overlay_native::get_column_height(const building *b) const {
+    return NO_COLUMN;
+}
 
-            //            ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask,
-            //            city_view_get_scale_float());
-        }
-    } else if (map_building_at(grid_offset)) {
-        city_with_overlay_draw_building_top(pixel, point, ctx);
-    }
+bool city_overlay_native::show_building(const building *b) const {
+    return b->type == BUILDING_UNUSED_NATIVE_HUT_88 || b->type == BUILDING_UNUSED_NATIVE_MEETING_89 || b->type == BUILDING_RESERVER_MISSION_POST_80;
 }
 
 city_overlay* city_overlay_for_native() {
-    static city_overlay overlay = {
-        OVERLAY_NATIVE,
-        COLUMN_TYPE_RISK,
-        show_building_native,
-        show_figure_native,
-        get_column_height_none,
-        0,
-        0,
-        draw_footprint_native,
-        draw_top_native
-    };
+    city_overlay_native overlay;
     return &overlay;
 }
+
