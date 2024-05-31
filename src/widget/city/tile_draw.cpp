@@ -157,33 +157,6 @@ static bool has_adjacent_deletion(int grid_offset) {
     return false;
 }
 
-void draw_flattened_footprint_anysize(vec2i pos, int size_x, int size_y, int image_offset, color color_mask, painter &ctx) {
-    int image_base = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT) + image_offset;
-
-    for (int xx = 0; xx < size_x; xx++) {
-        for (int yy = 0; yy < size_y; yy++) {
-            vec2i tp = pos + vec2i{(30 * xx) + (30 * yy), (15 * xx) - (15 * yy)};
-
-            // tile shape -- image offset
-            // (0 = top corner, 1 = left edge, 2 = right edge, 3 = any other case)
-            int shape_offset = 3;
-            if (xx == 0) {
-                shape_offset = 1;
-                if (yy == size_y - 1)
-                    shape_offset = 0;
-            } else if (yy == size_y - 1) {
-                shape_offset = 2;
-            }
-
-            ImageDraw::isometric_from_drawtile(ctx, image_base + shape_offset, tp, color_mask);
-        }
-    }
-}
-
-void draw_flattened_footprint_building(const building* b, vec2i pos, int image_offset, color color_mask, painter &ctx) {
-    return draw_flattened_footprint_anysize(pos, b->size, b->size, image_offset, color_mask, ctx);
-}
-
 static void clip_between_rectangles(int* xOut, int* yOut, int* wOut, int* hOut, int xA, int yA, int wA, int hA, int xB, int yB, int wB, int hB) {
     *xOut = (xA > xB) ? xA : xB;
     *yOut = (yA > yB) ? yA : yB;

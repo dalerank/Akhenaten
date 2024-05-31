@@ -273,6 +273,34 @@ bool city_overlay::is_drawable_farmhouse(tile2i tile, int map_orientation) const
     return false;
 }
 
+void city_overlay::draw_flattened_footprint_building(const building* b, vec2i pos, int image_offset, color color_mask, painter &ctx) const {
+    draw_flattened_footprint_anysize(pos, b->size, b->size, image_offset, color_mask, ctx);
+}
+
+void city_overlay::draw_flattened_footprint_anysize(vec2i pos, int size_x, int size_y, int image_offset, color color_mask, painter &ctx) const {
+    int image_base = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT) + image_offset;
+
+    for (int xx = 0; xx < size_x; xx++) {
+        for (int yy = 0; yy < size_y; yy++) {
+            vec2i tp = pos + vec2i{(30 * xx) + (30 * yy), (15 * xx) - (15 * yy)};
+
+            // tile shape -- image offset
+            // (0 = top corner, 1 = left edge, 2 = right edge, 3 = any other case)
+            int shape_offset = 3;
+            if (xx == 0) {
+                shape_offset = 1;
+                if (yy == size_y - 1)
+                    shape_offset = 0;
+            } else if (yy == size_y - 1) {
+                shape_offset = 2;
+            }
+
+            ImageDraw::isometric_from_drawtile(ctx, image_base + shape_offset, tp, color_mask);
+        }
+    }
+}
+
+
 void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile, int image_offset) const {
     int building_id = map_building_at(tile);
     if (!building_id) {
@@ -294,6 +322,7 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
         if (b->type == BUILDING_FESTIVAL_SQUARE) {
             return;
         }
+
         bool draw = true;
         if (b->size == 3 && building_is_farm(b->type)) {
             draw = is_drawable_farm_corner(tile);
