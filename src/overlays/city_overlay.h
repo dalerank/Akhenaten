@@ -19,7 +19,6 @@ inline int get_column_height_none(const building* b) { return NO_COLUMN; }
 struct city_overlay {
     e_overlay type = OVERLAY_NONE;
     int column_type = -1;
-    int (*show_building_func)(const building* b) = 0;
     int (*show_figure_func)(const figure* f) = 0;
     int (*get_column_height_func)(const building* b) = 0;
     int (*get_tooltip_for_grid_offset_func)(tooltip_context* c, int grid_offset) = 0;
@@ -36,7 +35,6 @@ struct city_overlay {
     city_overlay() {}
     city_overlay(e_overlay _type,
                  int _column_type,
-                 int (*_show_building_func)(const building* b),
                  int (*_show_figure)(const figure* f),
                  int (*_get_column_height)(const building* b),
                  int (*_get_tooltip_for_grid_offset)(tooltip_context* c, int grid_offset),
@@ -45,7 +43,6 @@ struct city_overlay {
                  void (*_draw_custom_top)(vec2i pixel, tile2i point, painter &ctx)) {
         type = _type;
         column_type = _column_type;
-        show_building_func = _show_building_func;
         show_figure_func = _show_figure;
         get_column_height_func = _get_column_height;
         get_tooltip_for_grid_offset_func = _get_tooltip_for_grid_offset;
@@ -102,7 +99,7 @@ struct city_overlay {
     }
 
     virtual bool show_building(const building* b) const {
-        return !!show_building_func(b);
+        return false;
     }
 
     void draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const;
