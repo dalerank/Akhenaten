@@ -178,27 +178,27 @@ void figure_ostrich_hunter::update_animation() {
     case ACTION_14_RETURNING_WITH_FOOD:
     case ACTION_9_CHASE_PREY:
     case ACTION_11_HUNTER_WALK: // normal walk
-        image_set_animation(ANIM_OSTRICH_HUNTER_WALK);
+        image_set_animation("walk");
         break;
 
     case ACTION_8_RECALCULATE:
     case ACTION_13_WAIT_FOR_ACTION:
-        image_set_animation(ANIM_OSTRICH_HUNTER_FIGHT);
+        image_set_animation("fight");
         break;
 
     case ACTION_15_HUNTER_HUNT: // hunting
-        image_set_animation(ANIM_OSTRICH_HUNTER_HUNT);
+        image_set_animation("hunt");
         break;
         //        case ??: // attacking
         //            image_set_animation(GROUP_FIGURE_HUNTER, 200, 12);
         //        case ??: // attacking w/ prey on his back
         //            image_set_animation(GROUP_FIGURE_HUNTER, 296, 12);
     case ACTION_15_HUNTER_PACK:
-        image_set_animation(ANIM_OSTRICH_HUNTER_PACK, 0, 18);
+        image_set_animation("pack");
         break;
 
     case ACTION_15_HUNTER_MOVE_PACKED:
-        image_set_animation(ANIM_OSTRICH_HUNTER_MOVE_PACK);
+        image_set_animation("move_pack");
         break;
     }
 }
