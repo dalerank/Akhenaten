@@ -20,10 +20,12 @@ void map_property_mark_draw_tile(int grid_offset);
 void map_property_clear_draw_tile(int grid_offset);
 
 int map_property_is_native_land(int grid_offset);
+inline int map_property_is_native_land(tile2i tile) { return map_property_is_native_land(tile.grid_offset()); }
 void map_property_mark_native_land(int grid_offset);
 void map_property_clear_all_native_land(void);
 
 int map_property_multi_tile_xy(int grid_offset);
+inline int map_property_multi_tile_xy(tile2i tile) { return map_property_multi_tile_xy(tile.grid_offset()); }
 int map_property_multi_tile_x(int grid_offset);
 int map_property_multi_tile_y(int grid_offset);
 int map_property_is_multi_tile_xy(int grid_offset, int x, int y);

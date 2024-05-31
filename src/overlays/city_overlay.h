@@ -78,5 +78,5 @@ city_overlay *get_city_overlay(e_overlay e);
 bool select_city_overlay();
 int widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset);
 
-void city_with_overlay_draw_building_footprint(painter &ctx, vec2i pixel, int grid_offset, int image_offset);
+void city_with_overlay_draw_building_footprint(painter &ctx, vec2i pixel, tile2i tile, int image_offset);
 void city_with_overlay_draw_building_top(vec2i pixel, tile2i point, painter &ctx);

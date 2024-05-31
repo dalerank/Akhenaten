@@ -19,30 +19,28 @@ static int terrain_on_water_overlay(void) {
         | TERRAIN_MARSHLAND;
 }
 
-static void draw_footprint_water(vec2i pixel, tile2i point, painter &ctx) {
-    int grid_offset = point.grid_offset();
-
+static void draw_footprint_water(vec2i pixel, tile2i tile, painter &ctx) {
     // roads, bushes, dunes, etc. are drawn normally
-    if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
+    if (map_terrain_is(tile, terrain_on_water_overlay())) {
         // (except for roadblocks on roads, draw these as flattened tiles)
-        if (building_at(grid_offset)->type == BUILDING_ROADBLOCK) {
-            city_with_overlay_draw_building_footprint(ctx, pixel, grid_offset, 0);
-        } else if (map_property_is_draw_tile(grid_offset)) {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, 0);
-            ImageDraw::isometric_from_drawtile_top(ctx, map_image_at(grid_offset), pixel, 0);
+        if (building_at(tile)->type == BUILDING_ROADBLOCK) {
+            city_with_overlay_draw_building_footprint(ctx, pixel, tile, 0);
+        } else if (map_property_is_draw_tile(tile)) {
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pixel, 0);
+            ImageDraw::isometric_from_drawtile_top(ctx, map_image_at(tile), pixel, 0);
         }
     } else {
-        int terrain = map_terrain_get(grid_offset);
-        building* b = building_at(grid_offset);
+        int terrain = map_terrain_get(tile);
+        building* b = building_at(tile);
         // draw houses, wells and water supplies either fully or flattened
         if (terrain & TERRAIN_BUILDING && (building_is_house(b->type)) || b->type == BUILDING_WELL || b->type == BUILDING_WATER_SUPPLY) {
-            if (map_property_is_draw_tile(grid_offset)) {
-                city_with_overlay_draw_building_footprint(ctx, pixel, grid_offset, 0);
+            if (map_property_is_draw_tile(tile)) {
+                city_with_overlay_draw_building_footprint(ctx, pixel, tile, 0);
             }
         } else {
             // draw groundwater levels
             int image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_WATER);
-            switch (map_terrain_get(grid_offset) & (TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE)) {
+            switch (map_terrain_get(tile) & (TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE)) {
             case TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE:
             case TERRAIN_FOUNTAIN_RANGE:
                 image_id += 2;

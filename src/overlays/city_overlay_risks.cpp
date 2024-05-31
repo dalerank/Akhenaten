@@ -81,28 +81,26 @@ static int terrain_on_native_overlay(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
 }
 
-static void draw_footprint_native(vec2i pixel, tile2i point, painter &ctx) {
-    int grid_offset = point.grid_offset();
-
-    if (!map_property_is_draw_tile(grid_offset))
+static void draw_footprint_native(vec2i pixel, tile2i tile, painter &ctx) {
+    if (!map_property_is_draw_tile(tile))
         return;
-    if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
-        if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
-            city_with_overlay_draw_building_footprint(ctx, pixel, grid_offset, 0);
+    if (map_terrain_is(tile, terrain_on_native_overlay())) {
+        if (map_terrain_is(tile, TERRAIN_BUILDING))
+            city_with_overlay_draw_building_footprint(ctx, pixel, tile, 0);
         else {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, 0);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pixel, 0);
         }
-    } else if (map_terrain_is(grid_offset, TERRAIN_CANAL | TERRAIN_WALL)) {
+    } else if (map_terrain_is(tile, TERRAIN_CANAL | TERRAIN_WALL)) {
         // display groundwater
-        int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
+        int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(tile) & 7);
         ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, 0);
-    } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
-        city_with_overlay_draw_building_footprint(ctx, pixel, grid_offset, 0);
+    } else if (map_terrain_is(tile, TERRAIN_BUILDING))
+        city_with_overlay_draw_building_footprint(ctx, pixel, tile, 0);
     else {
-        if (map_property_is_native_land(grid_offset)) {
+        if (map_property_is_native_land(tile)) {
             ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + 1, pixel, 0);
         } else {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, 0);
+            ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pixel, 0);
         }
     }
 }

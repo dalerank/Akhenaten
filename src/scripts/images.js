@@ -74,8 +74,6 @@ images = [
 	{img: IMG_TERRAIN_FLOODPLAIN, pack:PACK_TERRAIN, id:31, offset:0},
 	{img: ANIM_MARKET_BUYER_WALK, pack:PACK_SPR_MAIN, id:16, offset:0},
 	{img: ANIM_MARKET_BUYER_DEATH, pack:PACK_SPR_MAIN, id:17, offset:0},
-	{img: ANIM_MARKET_LADY_WALK, pack:PACK_SPR_MAIN, id:18, offset:0},
-	{img: ANIM_MARKET_LADY_DEATH, pack:PACK_SPR_MAIN, id:19, offset:0},
 	{img: ANIM_DELIVERY_BOY_WALK, pack:PACK_SPR_MAIN, id:9, offset:0},
 	{img: ANIM_DELIVERY_BOY_DEATH, pack:PACK_SPR_MAIN, id:10, offset:0},
 	{img: ANIM_TRADER_SHIP_WALK, pack:PACK_SPR_MAIN, id:40, offset:0},

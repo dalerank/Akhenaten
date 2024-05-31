@@ -423,8 +423,8 @@ figure_teacher = {
 
 figure_herbalist = {
 	animations : {
-		walk : { pos : [0, 0], ack:PACK_SPR_MAIN, id:180, max_frames:12 },
-		death : { pos : [0, 0], ack:PACK_SPR_MAIN, id:181, max_frames:8, loop:false },
+		walk : { pack:PACK_SPR_MAIN, id:180, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:181, max_frames:8, loop:false },
 	},
 	sounds : {
 		no_threat_malaria_here : {sound:"apothecary_e02.wav", group: 241, text:1},
@@ -534,8 +534,8 @@ figure_juggler = {
 
 figure_market_trader = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_HERBALIST_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_HERBALIST_DEATH, max_frames:8, loop:false },
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:18, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:19, max_frames:8, loop:false },
 	},
 	sounds : {
 		goods_are_finished : {sound:"mkt_seller_e01.wav", group:245, text:0},

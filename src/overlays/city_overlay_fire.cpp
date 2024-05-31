@@ -50,14 +50,11 @@ struct city_overlay_fire : public city_overlay {
     }
 
     void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const override {
-        int grid_offset = point.grid_offset();
-        int x = pixel.x;
-        int y = pixel.y;
-        if (!map_property_is_draw_tile(grid_offset)) {
+        if (!map_property_is_draw_tile(point)) {
             return;
         }
 
-        if (map_building_at(grid_offset)) {
+        if (map_building_at(point)) {
             city_with_overlay_draw_building_top(pixel, point, ctx);
         }
     }
