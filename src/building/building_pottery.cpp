@@ -17,16 +17,11 @@
 
 #include <iostream>
 
-struct pottery_model : public buildings::model_t<building_pottery> {
-    int production_rate;
-};
-pottery_model pottery_m;
+buildings::model_t<building_pottery> pottery_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_pottery);
 void config_load_building_pottery() {
-    pottery_m.load([&] (archive arch) {
-        pottery_m.production_rate = arch.r_int("production_rate");
-    });
+    pottery_m.load();
 }
 
 declare_console_command(addpottery, game_cheat_add_resource<RESOURCE_POTTERY>);
@@ -57,10 +52,6 @@ bool building_pottery::draw_ornaments_and_animations_height(painter &ctx, vec2i 
     }
 
     return true;
-}
-
-inline int building_pottery::ready_production() const { 
-    return pottery_m.production_rate;
 }
 
 void building_pottery::update_count() const {

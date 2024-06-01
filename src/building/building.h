@@ -429,6 +429,7 @@ public:
 class building_impl {
 public:
     struct static_params {
+        static static_params dummy;
         pcstr name;
         bool fire_proof;
         bool damage_proof;
@@ -437,11 +438,11 @@ public:
         building::metainfo meta;
         e_resource output_resource;
         e_labor_category labor_category;
-        static static_params dummy;
         animations_t anim;
         uint8_t building_size;
         int window_info_height_id;
         int planer_relative_orientation;
+        uint16_t production_rate;
         bool unique_building;
 
         void load(archive arch);
@@ -476,7 +477,7 @@ public:
     virtual int get_produce_uptick_per_day() const { return base.num_workers; }
     virtual int get_fire_risk(int value) const { return value; }
     virtual std::pair<int, int> get_tooltip() const { return {-1, -1}; }
-    virtual int ready_production() const { return 100; }
+    virtual int ready_production() const { return params().production_rate; }
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
 
     virtual building_farm *dcast_farm() { return nullptr; }

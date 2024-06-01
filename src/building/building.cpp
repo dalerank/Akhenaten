@@ -984,6 +984,7 @@ void building_impl::static_params::load(archive arch) {
     unique_building = arch.r_bool("unique_building");
     planer_relative_orientation = arch.r_int("planer_relative_orientation");
     is_draggable = arch.r_bool("is_draggable");
+    production_rate = arch.r_uint("production_rate", 100);
     anim.load(arch);
 }
 

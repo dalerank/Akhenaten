@@ -1006,6 +1006,7 @@ building_clay_pit = {
   output_resource : RESOURCE_CLAY,
   building_size : 2,
   meta_id : "clay_pit",
+  production_rate : 50,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
