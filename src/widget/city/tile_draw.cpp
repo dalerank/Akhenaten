@@ -475,7 +475,7 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
         // Outside map: draw black tile
         //ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, 0);
 
-    } else if (overlay->draw_custom_footprint_func) {
+    } else if (overlay->draw_custom_footprint(pixel, point, ctx)) {
         //get_city_overlay()->draw_custom_footprint(pixel, point, ctx);
 
     } else if (map_property_is_draw_tile(grid_offset)) {

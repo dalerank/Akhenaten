@@ -19,22 +19,17 @@
 #include "config/config.h"
 #include "overlays/city_overlay.h"
 
-static int show_building_food_stocks(const building* b) {
-    return b->type == BUILDING_BAZAAR || b->type == BUILDING_FISHING_WHARF || b->type == BUILDING_GRANARY;
+city_overlay* city_overlay_for_food_stocks() {
+    static city_overlay_food_stocks overlay;
+    return &overlay;
 }
 
-static int show_figure_food_stocks(const figure* f) {
-    if (f->type == FIGURE_MARKET_BUYER || f->type == FIGURE_MARKET_TRADER || f->type == FIGURE_DELIVERY_BOY
-        || f->type == FIGURE_FISHING_BOAT) {
-        return 1;
-    } else if (f->type == FIGURE_CART_PUSHER) {
-        return resource_is_food(f->get_resource());
-    }
-
-    return 0;
+city_overlay_food_stocks::city_overlay_food_stocks() {
+    type = OVERLAY_FOOD_STOCKS;
+    column_type = COLUMN_TYPE_RISK;
 }
 
-static int get_column_height_food_stocks(const building* b) {
+int city_overlay_food_stocks::get_column_height(const building *b) const {
     if (b->house_size && model_get_house(b->subtype.house_level)->food_types) {
         int pop = b->house_population;
         int stocks = 0;
@@ -51,7 +46,7 @@ static int get_column_height_food_stocks(const building* b) {
     return NO_COLUMN;
 }
 
-static int get_tooltip_food_stocks(tooltip_context* c, const building* b) {
+int city_overlay_food_stocks::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->house_population <= 0) {
         return 0;
     }
@@ -77,17 +72,13 @@ static int get_tooltip_food_stocks(tooltip_context* c, const building* b) {
     }
 }
 
-city_overlay* city_overlay_for_food_stocks() {
-    static city_overlay overlay = {
-        OVERLAY_FOOD_STOCKS,
-        COLUMN_TYPE_RISK,
-        show_building_food_stocks,
-        show_figure_food_stocks,
-        get_column_height_food_stocks,
-        0,
-        get_tooltip_food_stocks,
-        0,
-        0
-    };
-    return &overlay;
+bool city_overlay_food_stocks::show_figure(const figure *f) const {
+    if (f->type == FIGURE_MARKET_BUYER || f->type == FIGURE_MARKET_TRADER || f->type == FIGURE_DELIVERY_BOY
+        || f->type == FIGURE_FISHING_BOAT) {
+        return 1;
+    } else if (f->type == FIGURE_CART_PUSHER) {
+        return resource_is_food(f->get_resource());
+    }
+
+    return 0;
 }

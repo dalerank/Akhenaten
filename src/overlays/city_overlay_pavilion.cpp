@@ -50,17 +50,3 @@ int city_overlay_pavilion::get_tooltip_for_building(tooltip_context *c, const bu
     }
 }
 
-void city_overlay_pavilion::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
-    int grid_offset = point.grid_offset();
-    if (!map_property_is_draw_tile(grid_offset)) {
-        return;
-    }
-
-    if (map_building_at(grid_offset)) {
-        city_overlay::draw_building_top(pixel, point, ctx);
-    }
-}
-
-bool city_overlay_pavilion::show_building(const building *b) const {
-    return building_type_any_of(b->type, BUILDING_CONSERVATORY, BUILDING_DANCE_SCHOOL, BUILDING_PAVILLION);
-}

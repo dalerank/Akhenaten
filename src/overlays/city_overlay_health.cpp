@@ -42,21 +42,3 @@ int city_overlay_health::get_tooltip_for_building(tooltip_context *c, const buil
         return 127;
     }
 }
-
-bool city_overlay_health::show_figure(const figure *f) const {
-    return (f->type == FIGURE_EMBALMER || f->type == FIGURE_HERBALIST || f->type == FIGURE_PHYSICIAN || f->type == FIGURE_DENTIST);
-}
-
-void city_overlay_health::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
-    if (!map_property_is_draw_tile(point)) {
-        return;
-    }
-
-    if (map_building_at(point)) {
-        city_overlay::draw_building_top(pixel, point, ctx);
-    }
-}
-
-bool city_overlay_health::show_building(const building *b) const {
-    return (b->type == BUILDING_MORTUARY || b->type == BUILDING_APOTHECARY || b->type == BUILDING_PHYSICIAN || b->type == BUILDING_DENTIST);
-}

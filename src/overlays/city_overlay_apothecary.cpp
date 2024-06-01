@@ -30,26 +30,8 @@ int city_overlay_apothecary::get_tooltip_for_building(tooltip_context* c, const 
     }
 }
 
-bool city_overlay_apothecary::show_figure(const figure *f) const {
-    return f->type == FIGURE_HERBALIST;
-}
-
 int city_overlay_apothecary::get_column_height(const building *b) const {
     return b->house_size && b->subtype.house_level > 0
                 ? b->data.house.apothecary / 10 
                 : NO_COLUMN;
-}
-
-void city_overlay_apothecary::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const {
-    if (!map_property_is_draw_tile(tile)) {
-        return;
-    }
-
-    if (map_building_at(tile)) {
-        city_overlay::draw_building_top(pixel, tile, ctx);
-    }
-}
-
-bool city_overlay_apothecary::show_building(const building *b) const {
-    return b->type == BUILDING_APOTHECARY;
 }

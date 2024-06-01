@@ -17,22 +17,22 @@ inline bool show_figure_none(const figure *f) { return false; }
 inline int get_column_height_none(const building* b) { return NO_COLUMN; }
 
 struct city_overlay {
+    svector<int, 10> tooltips;
+    svector<e_figure_type, 10> walkers;
+    svector<e_building_type, 10> buildings;
     e_overlay type = OVERLAY_NONE;
     int column_type = -1;
 
     int tooltip_base;
-    svector<int, 10> tooltips;
     bstring64 caption;
-    svector<e_figure_type, 4> walkers;
-    svector<e_building_type, 10> buildings;
 
-    virtual bool show_figure(const figure* f) const { return false; }
+    virtual bool show_figure(const figure *f) const;
     virtual int get_column_height(const building *b) const { return NO_COLUMN; }
     virtual int get_tooltip_for_grid_offset(tooltip_context* c, int grid_offset) const { return 0; }
     virtual int get_tooltip_for_building(tooltip_context* c, const building* b) const { return 0; }
     virtual bool draw_custom_footprint(vec2i pixel, tile2i point, painter &ctx) const { return false; }
-    virtual void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {}
-    virtual bool show_building(const building* b) const { return false; }
+    virtual void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const;
+    virtual bool show_building(const building *b) const;
 
     void draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const;
     void draw_overlay_column(vec2i pixel, int height, int column_style, painter &ctx) const;

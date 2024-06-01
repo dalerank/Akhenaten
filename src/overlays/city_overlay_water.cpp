@@ -29,10 +29,6 @@ city_overlay_water::city_overlay_water() {
     column_type = COLUMN_TYPE_WATER_ACCESS;
 }
 
-bool city_overlay_water::show_figure(const figure *f) const {
-    return f->type == FIGURE_WATER_CARRIER;
-}
-
 void city_overlay_water::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const {
     if (!map_property_is_draw_tile(tile)) {
         return;
@@ -110,8 +106,4 @@ int city_overlay_water::get_tooltip_for_grid_offset(tooltip_context* c, int grid
 
 int city_overlay_water::get_column_height(const building *b) const {
     return b->house_size ? b->data.house.water_supply * 17 / 10 : NO_COLUMN;
-}
-
-bool city_overlay_water::show_building(const building *b) const {
-    return building_type_any_of(*(building *)b, BUILDING_WELL, BUILDING_MENU_BEAUTIFICATION, BUILDING_WATER_LIFT, BUILDING_WATER_SUPPLY);
 }

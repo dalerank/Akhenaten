@@ -8,6 +8,7 @@
 #include "core/direction.h"
 #include "widget/city/tile_draw.h"
 #include "graphics/graphics.h"
+#include "figure/figure.h"
 #include "graphics/image.h"
 
 #include "overlays/city_overlay_education.h"
@@ -82,8 +83,8 @@ city_overlay* get_city_overlay(e_overlay ov) {
         return city_overlay_for_bandstand();
     case OVERLAY_PAVILION:
         return city_overlay_for_pavilion();
-    case OVERLAY_HIPPODROME:
-        return city_overlay_for_hippodrome();
+    case OVERLAY_SENET_HOUSE:
+        return city_overlay_for_senet_house();
     case OVERLAY_EDUCATION:
         return city_overlay_for_education();
     case OVERLAY_SCRIBAL_SCHOOL:
@@ -300,7 +301,6 @@ void city_overlay::draw_flattened_footprint_anysize(vec2i pos, int size_x, int s
     }
 }
 
-
 void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile, int image_offset) const {
     int building_id = map_building_at(tile);
     if (!building_id) {
@@ -339,6 +339,24 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
             draw_flattened_footprint_building(b, pos, image_offset, 0, ctx);
         }
     }
+}
+
+bool city_overlay::show_figure(const figure *f) const {
+    return std::find(walkers.begin(), walkers.end(), f->type) != walkers.end();
+}
+
+void city_overlay::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const {
+    if (!map_property_is_draw_tile(tile)) {
+        return;
+    }
+
+    if (map_building_at(tile)) {
+        city_overlay::draw_building_top(pixel, tile, ctx);
+    }
+}
+
+bool city_overlay::show_building(const building *b) const {
+    return std::find(buildings.begin(), buildings.end(), b->type) != buildings.end();
 }
 
 void city_overlay::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const {

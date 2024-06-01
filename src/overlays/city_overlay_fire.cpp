@@ -17,20 +17,6 @@ city_overlay_fire::city_overlay_fire() {
     column_type = COLUMN_TYPE_RISK;
 }
 
-bool city_overlay_fire::show_figure(const figure *f) const {
-    return f->type == FIGURE_FIREMAN;
-}
-
-void city_overlay_fire::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
-    if (!map_property_is_draw_tile(point)) {
-        return;
-    }
-
-    if (map_building_at(point)) {
-        city_overlay_fire::draw_building_top(pixel, point, ctx);
-    }
-}
-
 int city_overlay_fire::get_column_height(const building *b) const {
     auto model = model_get_building(b->type);
 
@@ -58,8 +44,4 @@ int city_overlay_fire::get_tooltip_for_building(tooltip_context *c, const buildi
         return 50;
     else
         return 51;
-}
-
-bool city_overlay_fire::show_building(const building *b) const {
-    return b->type == BUILDING_FIREHOUSE || b->type == BUILDING_BURNING_RUIN || b->type == BUILDING_FESTIVAL_SQUARE;
 }

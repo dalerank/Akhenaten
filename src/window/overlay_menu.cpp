@@ -76,7 +76,7 @@ static const int submenu_id_to_overlay[7][8] = {
    OVERLAY_BOOTH,
    OVERLAY_BANDSTAND,
    OVERLAY_PAVILION,
-   OVERLAY_HIPPODROME,
+   OVERLAY_SENET_HOUSE,
    0},
 
   { // Education

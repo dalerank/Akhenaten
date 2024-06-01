@@ -16,20 +16,6 @@ city_overlay_dentist::city_overlay_dentist() {
     column_type = COLUMN_TYPE_POSITIVE;
 }
 
-bool city_overlay_dentist::show_figure(const figure *f) const {
-    return f->type == FIGURE_DENTIST;
-}
-
-void city_overlay_dentist::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const {
-    if (!map_property_is_draw_tile(tile)) {
-        return;
-    }
-
-    if (map_building_at(tile)) {
-        city_overlay::draw_building_top(pixel, tile, ctx);
-    }
-}
-
 int city_overlay_dentist::get_column_height(const building *b) const {
     return b->house_size && b->data.house.dentist ? b->data.house.dentist / 10 : NO_COLUMN;
 }
@@ -44,8 +30,4 @@ int city_overlay_dentist::get_tooltip_for_building(tooltip_context *c, const bui
     else {
         return 11;
     }
-}
-
-bool city_overlay_dentist::show_building(const building *b) const {
-    return b->type == BUILDING_DENTIST;
 }

@@ -47,21 +47,9 @@ int city_overlay_education::get_tooltip_for_building(tooltip_context *c, const b
     }
 }
 
-bool city_overlay_education::show_building(const building *b) const {
-    return b->type == BUILDING_SCRIBAL_SCHOOL || b->type == BUILDING_LIBRARY || b->type == BUILDING_ACADEMY;
-}
-
-bool city_overlay_education::show_figure(const figure *f) const {
-    return f->type == FIGURE_SCRIBER || f->type == FIGURE_LIBRARIAN || f->type == FIGURE_TEACHER;
-}
-
 city_overlay_academy::city_overlay_academy() {
     type = OVERLAY_ACADEMY;
     column_type = COLUMN_TYPE_WATER_ACCESS;
-}
-
-bool city_overlay_academy::show_figure(const figure *f) const {
-    return f->type == FIGURE_SCRIBER;
 }
 
 int city_overlay_academy::get_tooltip_for_building(tooltip_context *c, const building *b) const {
@@ -80,17 +68,9 @@ int city_overlay_academy::get_column_height(const building *b) const {
     return b->house_size && b->data.house.academy ? b->data.house.academy / 10 : NO_COLUMN;
 }
 
-bool city_overlay_academy::show_building(const building *b) const {
-    return b->type == BUILDING_ACADEMY;
-}
-
 city_overlay_libraries::city_overlay_libraries() {
     type = OVERLAY_LIBRARY;
     column_type = COLUMN_TYPE_WATER_ACCESS;
-}
-
-bool city_overlay_libraries::show_figure(const figure *f) const {
-    return f->type == FIGURE_LIBRARIAN;
 }
 
 int city_overlay_libraries::get_column_height(const building *b) const {
@@ -107,8 +87,4 @@ int city_overlay_libraries::get_tooltip_for_building(tooltip_context *c, const b
     else {
         return 26;
     }
-}
-
-bool city_overlay_libraries::show_building(const building *b) const {
-    return b->type == BUILDING_LIBRARY;
 }

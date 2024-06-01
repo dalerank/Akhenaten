@@ -46,22 +46,3 @@ int city_overlay_crime::get_tooltip_for_building(tooltip_context* c, const build
         return 58;
     }
 }
-
-bool city_overlay_crime::show_figure(const figure *f) const {
-    return f->type == FIGURE_CONSTABLE || f->type == FIGURE_PROTESTER || f->type == FIGURE_CRIMINAL
-        || f->type == FIGURE_TOMB_ROBER;
-}
-
-void city_overlay_crime::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
-    if (!map_property_is_draw_tile(point)) {
-        return;
-    }
-
-    if (map_building_at(point)) {
-        city_overlay::draw_building_top(pixel, point, ctx);
-    }
-}
-
-bool city_overlay_crime::show_building(const building *b) const {
-    return b->type == BUILDING_POLICE_STATION || b->type == BUILDING_FESTIVAL_SQUARE;
-}

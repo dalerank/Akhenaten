@@ -57,16 +57,6 @@ int city_overlay_labor::get_tooltip_for_building(tooltip_context *c, const build
     }
 }
 
-void city_overlay_labor::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
-    if (!map_property_is_draw_tile(point)) {
-        return;
-    }
-
-    if (map_building_at(point)) {
-        city_overlay::draw_building_top(pixel, point, ctx);
-    }
-}
-
 bool city_overlay_labor::show_building(const building *b) const {
     if (b->type == BUILDING_WORK_CAMP) {
         return true;

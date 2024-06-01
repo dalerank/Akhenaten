@@ -32,11 +32,7 @@ inline city_overlay_routing::city_overlay_routing() {
 }
 
 inline bool city_overlay_routing::show_figure(const figure *f) const {
-    if (f->type != FIGURE_IMMIGRANT) {
-        return false;
-    }
-
-    return true;
+    return (f->type == FIGURE_IMMIGRANT);
 }
 
 int city_overlay_routing::get_column_height(const building *b) const {
