@@ -518,6 +518,7 @@ building_storage_room = {
   animations : {
   },
   building_size : 3,
+  fire_proof : true,
 }
 
 building_bazaar = {

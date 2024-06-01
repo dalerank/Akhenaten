@@ -38,7 +38,7 @@ struct city_overlay {
     void draw_overlay_column(vec2i pixel, int height, int column_style, painter &ctx) const;
     void draw_building_footprint(painter &ctx, vec2i pos, tile2i tile, int image_offset) const;
     bool is_drawable_farm_corner(tile2i tile) const;
-    bool is_drawable_storage_yard_corner(tile2i tile) const;
+    bool is_drawable_building_corner(tile2i tile, tile2i main, int size) const;
     bool is_drawable_farmhouse(tile2i tile, int map_orientation) const;
     void draw_flattened_footprint_anysize(vec2i pos, int size_x, int size_y, int image_offset, color color_mask, painter &ctx) const;
     void draw_flattened_footprint_building(const building *b, vec2i pos, int image_offset, color color_mask, painter &ctx) const;

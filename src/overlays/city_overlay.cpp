@@ -193,25 +193,25 @@ bool city_overlay::is_drawable_farm_corner(tile2i tile) const {
     return false;
 }
 
-bool city_overlay::is_drawable_storage_yard_corner(tile2i tile) const {
+bool city_overlay::is_drawable_building_corner(tile2i tile, tile2i main, int size) const {
     if (!map_property_is_draw_tile(tile)) {
         return false;
     }
 
     int map_orientation = city_view_orientation();
-    tile2i yard_main;
+    tile2i offset_main;
+    int offset = size - 1;
     if (map_orientation == DIR_0_TOP_RIGHT) {
-        yard_main = tile.shifted(0, -2);
+        offset_main = tile.shifted(0, -offset);
     } else if (map_orientation == DIR_2_BOTTOM_RIGHT) {
         /*same*/
     } else if (map_orientation == DIR_4_BOTTOM_LEFT) {
-        yard_main = tile.shifted(-2, 0);
+        offset_main = tile.shifted(-offset, 0);
     } else if (map_orientation == DIR_6_TOP_LEFT) {
-        yard_main = tile.shifted(-2, -2);
+        offset_main = tile.shifted(-offset, -offset);
     }
 
-    int bid = map_building_at(yard_main);
-    return (building_get(bid)->type == BUILDING_STORAGE_YARD);
+    return (offset_main == main);
 }
 
 void city_overlay::draw_overlay_column(vec2i pixel, int height, int column_style, painter &ctx) const {
@@ -319,16 +319,13 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
             ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pos, 0);
         }
     } else {
-        if (b->type == BUILDING_FESTIVAL_SQUARE) {
-            return;
-        }
-
         bool draw = true;
         if (b->size == 3 && building_is_farm(b->type)) {
             draw = is_drawable_farm_corner(tile);
-        } else if (b->type == BUILDING_STORAGE_YARD || b->type == BUILDING_STORAGE_ROOM) {
-            draw = is_drawable_storage_yard_corner(tile);
+        } else if (building_type_any_of(*b, BUILDING_STORAGE_YARD, BUILDING_STORAGE_ROOM, 
+                                            BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION, BUILDING_FESTIVAL_SQUARE)) {
             building *main = b->main();
+            draw = is_drawable_building_corner(tile, main->tile, main->size);
             if (draw) {
                 draw_flattened_footprint_anysize(pos, main->size, main->size, image_offset, 0, ctx);
             }
