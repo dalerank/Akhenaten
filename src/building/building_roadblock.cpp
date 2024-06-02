@@ -1,5 +1,15 @@
 #include "building_roadblock.h"
 
+#include "js/js_game.h"
+#include "city/labor.h"
+
+buildings::model_t<building_roadblock> roadblock_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_roadblock);
+void config_load_building_roadblock() {
+    roadblock_m.load();
+}
+
 void building_roadblock_set_permission(int p, building* b) {
     if (b->type == BUILDING_ROADBLOCK) {
         int permission_bit = 1 << p;

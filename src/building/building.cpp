@@ -1133,14 +1133,11 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
     } else if (b->type == BUILDING_WATER_LIFT || b->type == BUILDING_FERRY) {
         iob->bind____skip(88);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.orientation);
-
-    } else if (building_is_guild(b->type)) {
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.guild.max_workers);
-    } else if (building_is_farm(b->type)) {
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.farm.worker_frame);
     } else {
         iob->bind____skip(26);
-        iob->bind____skip(58);
+        iob->bind____skip(56);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.guild.max_workers);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.farm.worker_frame);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.num_shows);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days1);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days2);
