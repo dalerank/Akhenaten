@@ -170,7 +170,7 @@ int widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset) {
         tooltip = g_city_overlay->get_tooltip_for_grid_offset(c, grid_offset);
     } 
 
-    return 0;
+    return tooltip;
 }
 
 bool city_overlay::is_drawable_farm_corner(tile2i tile) const {

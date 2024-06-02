@@ -32,15 +32,16 @@ int city_overlay_fire::get_column_height(const building *b) const {
 }
 
 int city_overlay_fire::get_tooltip_for_building(tooltip_context *c, const building *b) const {
-    if (b->fire_risk <= 0)
+    auto main = const_cast<building*>(b)->main();
+    if (main->fire_risk <= 0)
         return 46;
-    else if (b->fire_risk <= 200)
+    else if (main->fire_risk <= 200)
         return 47;
-    else if (b->fire_risk <= 400)
+    else if (main->fire_risk <= 400)
         return 48;
-    else if (b->fire_risk <= 600)
+    else if (main->fire_risk <= 600)
         return 49;
-    else if (b->fire_risk <= 800)
+    else if (main->fire_risk <= 800)
         return 50;
     else
         return 51;
