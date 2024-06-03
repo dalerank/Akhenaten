@@ -5,7 +5,7 @@ class building;
 
 bool map_has_road_access(tile2i tile, int size);
 bool map_get_road_access_tile(tile2i tile, int size, tile2i &road);
-bool burning_ruin_can_be_accessed(tile2i tile, tile2i &point);
+bool road_tile_valid_access(int grid_offset);
 bool map_has_road_access_rotation(int rotation, tile2i tile, int size, tile2i *road);
 bool map_has_road_access_temple_complex(tile2i tile, int orientation, bool from_corner, tile2i* road);
 bool map_closest_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile);

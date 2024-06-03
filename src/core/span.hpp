@@ -94,6 +94,11 @@ inline constexpr auto make_span(T* arr, size_t N) {
 }
 
 template <typename T>
+inline constexpr auto make_span(T &arr) {
+    return std::span<T>(arr.data(), arr.size());
+}
+
+template <typename T>
 inline constexpr typename std::span<T>::reference std::span<T>::front() const noexcept {
     return data()[0];
 }

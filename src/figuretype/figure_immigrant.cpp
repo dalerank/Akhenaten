@@ -88,7 +88,7 @@ void figure_immigrant::figure_action() {
 void figure_immigrant::figure_before_action() {
     auto b_imm = immigrant_home();
     if (b_imm->type == BUILDING_BURNING_RUIN) {
-        poof();
+        advance_action(FIGURE_ACTION_1_IMMIGRANT_CREATED);
     }
 }
 

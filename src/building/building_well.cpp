@@ -54,3 +54,11 @@ bool building_well::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     return true;
 }
 
+bool building_well::can_play_animation() const {
+    if (map_water_supply_is_well_unnecessary(id(), 3) != WELL_NECESSARY) {
+        return false;
+    }
+
+    return true;
+}
+

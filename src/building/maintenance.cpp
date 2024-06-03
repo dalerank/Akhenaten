@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/building_house.h"
+#include "building/building_burning_ruin.h"
 #include "building/destruction.h"
 #include "building/list.h"
 #include "city/buildings.h"
@@ -33,74 +34,25 @@
 
 int g_fire_spread_direction = 0;
 
-void building_maintenance_update_fire_direction(void) {
+void building_maintenance_update_fire_direction() {
     g_fire_spread_direction = random_byte() & 7;
 }
 
-void building_maintenance_update_burning_ruins(void) {
+int building_maintenance_fire_direction() {
+    return g_fire_spread_direction;
+}
+
+void building_maintenance_update_burning_ruins() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Burning Ruins Update");
     int climate = scenario_property_climate();
     int recalculate_terrain = 0;
+
     building_list_burning_clear();
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if ((b->state != BUILDING_STATE_VALID && b->state != BUILDING_STATE_MOTHBALLED)
-            || b->type != BUILDING_BURNING_RUIN)
-            continue;
-
-        if (b->fire_duration < 0)
-            b->fire_duration = 0;
-
-        b->fire_duration++;
-        if (b->fire_duration > 32) {
-            game_undo_disable();
-            b->state = BUILDING_STATE_RUBBLE;
-            map_building_tiles_set_rubble(i, b->tile, b->size);
-            recalculate_terrain = 1;
-            continue;
-        }
-         
-        if (b->has_plague) {
-            continue;
-        }
-
-        building_list_burning_add(i);
-        if (climate == CLIMATE_DESERT) {
-            if (b->fire_duration & 3) // check spread every 4 ticks
-                continue;
-        } else {
-            if (b->fire_duration & 7) // check spread every 8 ticks
-                continue;
-        }
-        if ((b->map_random_7bit & 3) != (random_byte() & 3))
-            continue;
-
-        int dir1 = g_fire_spread_direction - 1;
-        if (dir1 < 0)
-            dir1 = 7;
-        int dir2 = g_fire_spread_direction + 1;
-        if (dir2 > 7)
-            dir2 = 0;
-
-        int grid_offset = b->tile.grid_offset();
-        int next_building_id = map_building_at(grid_offset + map_grid_direction_delta(g_fire_spread_direction));
-        if (next_building_id && !building_get(next_building_id)->fire_proof) {
-            building_destroy_by_fire(building_get(next_building_id));
-            recalculate_terrain = 1;
-        } else {
-            next_building_id = map_building_at(grid_offset + map_grid_direction_delta(dir1));
-            if (next_building_id && !building_get(next_building_id)->fire_proof) {
-                building_destroy_by_fire(building_get(next_building_id));
-                recalculate_terrain = 1;
-            } else {
-                next_building_id = map_building_at(grid_offset + map_grid_direction_delta(dir2));
-                if (next_building_id && !building_get(next_building_id)->fire_proof) {
-                    building_destroy_by_fire(building_get(next_building_id));
-                    recalculate_terrain = 1;
-                }
-            }
-        }
-    }
+    buildings_valid_do([&recalculate_terrain] (building &b) {
+        auto ruin = b.dcast_burning_ruin();
+        building_list_burning_add(b.id);
+        recalculate_terrain |= ruin->update();
+    }, BUILDING_BURNING_RUIN);
 
     if (recalculate_terrain) {
         map_routing_update_land();

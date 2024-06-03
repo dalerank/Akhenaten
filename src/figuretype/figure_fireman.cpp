@@ -220,7 +220,8 @@ void figure_fireman::extinguish_fire() {
 }
 
 bool figure_fireman::fight_fire() {
-    if (building_list_burning_items().size() <= 0) {
+    const auto &burnings = building_list_burning_items();
+    if (burnings.size() <= 0) {
         return false;
     }
 

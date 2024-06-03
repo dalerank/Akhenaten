@@ -21,11 +21,12 @@
 #include <core/random.h>
 #include <string.h>
 
-const vec2i destroy_on_fire_tiles[] = {{0, 0}, {1, 0}, {1, 1}, {0, 1}, 
-                       {2, 0}, {2, 1}, {2, 2}, {1, 2}, {0, 2}, 
-                       {3, 0}, {3, 1}, {3, 2}, {3, 3}, {2, 3}, {1, 3}, {0, 3}, 
-                       {4, 0}, {4, 1}, {4, 2}, {4, 3}, {4, 4}, {3, 4}, {2, 4}, {1, 4}, {0, 4}, 
-                       {5, 0}, {5, 1}, {5, 2}, {5, 3}, {5, 4}, {5, 5}, {4, 5}, {3, 5}, {2, 5}, {1, 5}, {0, 5}};
+const vec2i destroy_on_fire_tiles[] = {         {0, 0},
+                                        {1, 0}, {1, 1}, {0, 1}, 
+                                {2, 0}, {2, 1}, {2, 2}, {1, 2}, {0, 2}, 
+                        {3, 0}, {3, 1}, {3, 2}, {3, 3}, {2, 3}, {1, 3}, {0, 3}, 
+                {4, 0}, {4, 1}, {4, 2}, {4, 3}, {4, 4}, {3, 4}, {2, 4}, {1, 4}, {0, 4}, 
+        {5, 0}, {5, 1}, {5, 2}, {5, 3}, {5, 4}, {5, 5}, {4, 5}, {3, 5}, {2, 5}, {1, 5}, {0, 5}};
 
 static void destroy_on_fire(building* b, bool plagued) {
     game_undo_disable();
@@ -61,7 +62,7 @@ static void destroy_on_fire(building* b, bool plagued) {
 
     map_building_tiles_remove(b->id, b->tile);
     unsigned int rand_int = random_short();
-    if (map_terrain_is(b->tile.grid_offset(), TERRAIN_WATER)) {
+    if (map_terrain_is(b->tile, TERRAIN_WATER)) {
         b->state = BUILDING_STATE_DELETED_BY_GAME;
     } else {
         b->type = BUILDING_BURNING_RUIN;
@@ -82,7 +83,7 @@ static void destroy_on_fire(building* b, bool plagued) {
 
     for (int tile = 1; tile < num_tiles; tile++) {
         tile2i shifted = b->tile.shifted(destroy_on_fire_tiles[tile].x, destroy_on_fire_tiles[tile].y);
-        if (map_terrain_is(shifted.grid_offset(), TERRAIN_WATER)) {
+        if (map_terrain_is(shifted, TERRAIN_WATER)) {
             continue;
         }
 

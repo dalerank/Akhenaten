@@ -270,6 +270,7 @@ building_shipyard *building::dcast_shipyard() { return dcast()->dcast_shipyard()
 building_plaza *building::dcast_plaza() { return dcast()->dcast_plaza(); }
 building_garden *building::dcast_garden() { return dcast()->dcast_garden(); }
 building_house *building::dcast_house() { return dcast()->dcast_house(); }
+building_burning_ruin *building::dcast_burning_ruin() { return dcast()->dcast_burning_ruin(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
@@ -895,6 +896,10 @@ bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     }
 
     return false;
+}
+
+bool building_impl::can_play_animation() const {
+    return base.main()->num_workers > 0;
 }
 
 void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, color mask) {

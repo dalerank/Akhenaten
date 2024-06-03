@@ -142,9 +142,11 @@ building_farm_grain = {
     tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
     seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
     harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
-    farmland: { pack:PACK_GENERAL, id:37, offset:10 },
+    farmland: { pack:PACK_GENERAL, id:37, offset:0 },
   },
   building_size : 3,
+  fire_proof : true,
+  damage_proof : true,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -160,6 +162,8 @@ building_farm_chickpeas = {
     farmland: { pack:PACK_GENERAL, id:37, offset:25 },
   },
   building_size : 3,
+  fire_proof : true,
+  damage_proof : true,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -175,6 +179,8 @@ building_farm_lettuce = {
     farmland: { pack:PACK_GENERAL, id:37, offset:15 },
   },
   building_size : 3,
+  fire_proof : true,
+  damage_proof : true,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -190,6 +196,8 @@ building_farm_pomegranates = {
     farmland: { pack:PACK_GENERAL, id:37, offset:20 },
   },
   building_size : 3,
+  fire_proof : true,
+  damage_proof : true,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -205,6 +213,8 @@ building_farm_barley = {
     farmland: { pack:PACK_GENERAL, id:37, offset:0 },
   },
   building_size : 3,
+  fire_proof : true,
+  damage_proof : true,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -220,6 +230,8 @@ building_farm_flax = {
     farmland: { pack:PACK_GENERAL, id:37, offset:5 },
   },
   building_size : 3,
+  fire_proof : true,
+  damage_proof : true,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -235,7 +247,18 @@ building_farm_henna = {
     farmland: { pack:PACK_GENERAL, id:37 },
   },
   building_size : 3,
+  fire_proof : true,
+  damage_proof : true,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+}
+
+building_burning_ruin = {
+  animations : {
+    base : { pack:PACK_GENERAL, id:105, offset:0 },
+  },
+  building_size : 1,
+  fire_proof : true,
+  damage_proof : true,
 }
 
 building_farm_figs = {
@@ -250,6 +273,8 @@ building_farm_figs = {
     farmland: { pack:PACK_GENERAL, id:37 },
   },
   building_size : 3,
+  fire_proof : true,
+  damage_proof : true,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 

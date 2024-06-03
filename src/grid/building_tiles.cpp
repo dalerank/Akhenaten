@@ -502,15 +502,8 @@ void map_building_tiles_remove(int building_id, tile2i tile) {
 
     switch (b->type) {
     case BUILDING_BOOTH:
-        size = 2;
-        base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
-        break;
     case BUILDING_BANDSTAND:
-        size = 3;
-        base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
-        break;
-    case BUILDING_PAVILLION:
-        size = 4;
+        size = b->size;
         base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
         break;
     case BUILDING_FESTIVAL_SQUARE:

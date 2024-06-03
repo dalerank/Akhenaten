@@ -130,6 +130,7 @@ var building_weaver = {}
 var building_brick_tower = {}
 var building_mud_tower = {}
 var building_road = {}
+var building_burning_ruin = {}
 // houses
 var building_house_vacant = {}
 

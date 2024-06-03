@@ -55,6 +55,7 @@ class building_shipyard;
 class building_plaza;
 class building_garden;
 class building_house;
+class building_burning_ruin;
 struct object_info;
 struct painter;
 struct mouse;
@@ -400,6 +401,7 @@ public:
     building_plaza *dcast_plaza();
     building_garden *dcast_garden();
     building_house *dcast_house();
+    building_burning_ruin *dcast_burning_ruin();
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
@@ -469,7 +471,7 @@ public:
     virtual bool force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) { return false; }
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual bool need_road_access() const { return true; }
-    virtual bool can_play_animation() const { return true; }
+    virtual bool can_play_animation() const;
     virtual void update_count() const {}
     virtual void update_map_orientation(int orientation) {}
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_NONE; }
@@ -514,6 +516,7 @@ public:
     virtual building_plaza *dcast_plaza() { return nullptr; }
     virtual building_garden *dcast_garden() { return nullptr; }
     virtual building_house *dcast_house() { return nullptr; }
+    virtual building_burning_ruin *dcast_burning_ruin() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

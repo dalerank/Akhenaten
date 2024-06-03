@@ -14,7 +14,7 @@
 #include "grid/terrain.h"
 #include "config/config.h"
 
-static bool road_tile_valid_access(int grid_offset) {
+bool road_tile_valid_access(int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_ROAD)) {
         return false;
     }
@@ -96,23 +96,6 @@ bool map_has_road_access(tile2i tile, int size) {
 
 bool map_get_road_access_tile(tile2i tile, int size, tile2i &road) {
     return map_has_road_access_rotation(0, tile, size, &road);
-}
-
-bool burning_ruin_can_be_accessed(tile2i tile, tile2i &point) {
-    int base_offset = tile.grid_offset();
-    offsets_array offsets;
-    map_grid_adjacent_offsets(1, offsets);
-    for (const auto &tile_delta: offsets) {
-        int grid_offset = base_offset + tile_delta;
-
-        if (road_tile_valid_access(grid_offset)
-            || (building_at(grid_offset)->type == BUILDING_BURNING_RUIN
-                && building_at(grid_offset)->fire_duration <= 0)) {
-            map_point_store_result(tile2i(grid_offset), point);
-            return true;
-        }
-    }
-    return false;
 }
 
 bool map_has_road_access_rotation(int rotation, tile2i tile, int size, tile2i *road) {
