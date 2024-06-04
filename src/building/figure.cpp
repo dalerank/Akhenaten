@@ -566,8 +566,8 @@ bool building::figure_generate() {
         common_spawn_figure_trigger(50);
 
         if (is_governor_mansion() && !has_figure(BUILDING_SLOT_GOVERNOR)) {
-            tile2i road_tile;
-            if (map_closest_road_within_radius(tile, size, 2, road_tile)) {
+            tile2i road_tile = map_closest_road_within_radius(tile, size, 2);
+            if (road_tile.valid()) {
                 figure *f = figure_create(FIGURE_GOVERNOR, road_tile, DIR_4_BOTTOM_LEFT);
                 f->advance_action(FIGURE_ACTION_120_GOVERNOR_CREATED);
                 f->set_home(this);

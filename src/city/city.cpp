@@ -3,14 +3,17 @@
 #include "city/constants.h"
 #include "city/city.h"
 #include "city/gods.h"
+#include "grid/water.h"
 #include "game/difficulty.h"
 #include "scenario/scenario.h"
 #include "core/game_environment.h"
 #include "empire/empire_city.h"
 #include "io/io_buffer.h"
+#include "figuretype/figure_fishing_point.h"
 
 #include <core/string.h>
 #include <string.h>
+#include <time.h>
 
 city_t g_city;
 
@@ -126,6 +129,66 @@ int stack_proper_quantity(int full, int resource) {
     case RESOURCE_UNIT_CHARIOT:
         return full / 100;
     }
+}
+
+void city_t::fishing_points_t::create() {
+    scenario_map_foreach_fishing_point([] (tile2i tile) {
+        figure_fishing_point::create(tile);
+    });
+}
+
+void city_t::fishing_points_t::reset() {
+    tile_cache &river = river_tiles();
+    int num_points = std::max<int>(1, (int)river.size() / 500);
+    update(num_points);
+}
+
+void city_t::fishing_points_t::clear() {
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
+        figure *f = figure_get(i);
+        if (f->type != FIGURE_FISHING_POINT) {
+            continue;
+        }
+
+        f->poof();
+    }
+}
+
+void city_t::fishing_points_t::update(int points_num) {
+    clear();
+
+    if (!can_city_produce_resource(RESOURCE_FISH)) {
+        return;
+    }
+
+    int num_fishing_spots = 0;
+    for (int i = 0; i < MAX_FISH_POINTS; i++) {
+        if (g_scenario_data.fishing_points[i].x() > 0)
+            num_fishing_spots++;
+
+        g_scenario_data.fishing_points[i] = {-1, -1};
+    }
+
+    if (points_num >= 0) {
+        num_fishing_spots = std::min(MAX_FISH_POINTS, points_num);
+    }
+
+    tile_cache &river = river_tiles();
+    std::vector<int> deep_water;
+    for (const auto &tile : river) {
+        if (map_terrain_is(tile, TERRAIN_DEEPWATER)) {
+            deep_water.push_back(tile);
+        }
+    }
+
+    srand (time(nullptr));
+
+    for (int i = 0; i < num_fishing_spots; i++) {
+        int index = rand() % deep_water.size();
+        g_scenario_data.fishing_points[i] = tile2i(deep_water[index]);
+    }
+
+    create();
 }
 
 io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
@@ -417,7 +480,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.religion);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.education);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.entertainment);
-    iob->bind(BIND_SIGNATURE_INT32, &data.figure.rioters);
+    iob->bind(BIND_SIGNATURE_INT32, &data.figures.rioters);
     iob->bind____skip(20);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.selected);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_explanation);
@@ -445,8 +508,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     }
 
     iob->bind(BIND_SIGNATURE_INT16, &data.buildings.temple_complex_placed);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.figure.fish_number);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.figure.animals_number);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.figures.fish_number);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.figures.animals_number);
 
     for (int i = 0; i < 3; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &data.unused.unknown_439c[i]);
@@ -516,7 +579,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.previous_value); // ok
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.message_delay);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.low_mood_cause);
-    iob->bind(BIND_SIGNATURE_INT32, &data.figure.security_breach_duration);
+    iob->bind(BIND_SIGNATURE_INT32, &data.figures.security_breach_duration);
     for (int i = 0; i < 4; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_446c[i]);
     }
@@ -572,11 +635,11 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     }
 
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.shipyard_boats_requested);
-    iob->bind(BIND_SIGNATURE_INT32, &data.figure.enemies);
+    iob->bind(BIND_SIGNATURE_INT32, &data.figures.enemies);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.wages);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.people_in_huts);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.people_in_residences);
-    iob->bind(BIND_SIGNATURE_INT32, &data.figure.kingdome_soldiers);
+    iob->bind(BIND_SIGNATURE_INT32, &data.figures.kingdome_soldiers);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.invasion.duration_day_countdown);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.invasion.warnings_given);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.invasion.days_until_invasion);
@@ -604,7 +667,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT8, &data.sound.die_soldier);
     iob->bind(BIND_SIGNATURE_INT8, &data.sound.shoot_arrow);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.trade_center_building_id);
-    iob->bind(BIND_SIGNATURE_INT32, &data.figure.soldiers);
+    iob->bind(BIND_SIGNATURE_INT32, &data.figures.soldiers);
     iob->bind(BIND_SIGNATURE_INT8, &data.sound.hit_soldier);
     iob->bind(BIND_SIGNATURE_INT8, &data.sound.hit_spear);
     iob->bind(BIND_SIGNATURE_INT8, &data.sound.hit_club);
@@ -639,7 +702,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.mission.start_saved_game_written);
     iob->bind(BIND_SIGNATURE_INT32, &data.mission.tutorial_fire_message_shown);
     iob->bind(BIND_SIGNATURE_INT32, &data.mission.tutorial_disease_message_shown);
-    iob->bind(BIND_SIGNATURE_INT32, &data.figure.attacking_natives);
+    iob->bind(BIND_SIGNATURE_INT32, &data.figures.attacking_natives);
 
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.temple_complex_id);
     iob->bind____skip(36);

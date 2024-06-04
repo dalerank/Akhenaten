@@ -195,8 +195,8 @@ void building_maintenance_check_kingdome_access() {
     buildings_valid_do( [&problem_grid_offset] (building &b) {
         if (b.house_size) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/House");
-            tile2i road_tile;
-            if (!map_closest_road_within_radius(b, 2, road_tile)) {
+            tile2i road_tile = map_closest_road_within_radius(b, 2);
+            if (!road_tile.valid()) {
                 // no road: eject people
                 b.distance_from_entry = 0;
                 b.house_unreachable_ticks++;

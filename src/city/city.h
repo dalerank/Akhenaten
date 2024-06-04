@@ -65,7 +65,7 @@ struct city_t {
         int32_t rioters;
         int32_t soldiers;
         int32_t security_breach_duration;
-    } figure;
+    } figures;
     house_demands houses;
 
     kingdome_relation_t kingdome;
@@ -367,6 +367,13 @@ struct city_t {
         int32_t faction_id;
         int16_t faction_bytes[2];
     } unused;
+
+    struct fishing_points_t {
+        void create();
+        void reset();
+        void clear();
+        void update(int points_num);
+    } fishing_points;
 
     void houses_reset_demands();
     void houses_calculate_culture_demands();

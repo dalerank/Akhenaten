@@ -930,32 +930,35 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
     }
 
     int hx, hy;
-    map_point road_tile;
     hx = tilex();
     hy = tiley() - 8;
     map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
+    map_point road_tile = map_closest_road_within_radius(tile2i(hx, hy), 1, 6);
+    if (road_tile.valid()) {
         map_highlight_set(road_tile, 1);
     }
 
     hx = tilex() + 8;
     hy = tiley();
     map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
+    road_tile = map_closest_road_within_radius(tile2i(hx, hy), 1, 6);
+    if (road_tile.valid()) {
         map_highlight_set(road_tile, 1);
     }
 
     hx = tilex();
     hy = tiley() + 8;
     map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
+    road_tile = map_closest_road_within_radius(tile2i(hx, hy), 1, 6);
+    if (road_tile.valid()) {
         map_highlight_set(road_tile, 1);
     }
 
     hx = tilex() - 8;
     hy = tiley();
     map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(tile2i(hx, hy), 1, 6, road_tile)) {
+    road_tile = map_closest_road_within_radius(tile2i(hx, hy), 1, 6);
+    if (road_tile.valid()) {
         map_highlight_set(road_tile, 1);
     }
 }
