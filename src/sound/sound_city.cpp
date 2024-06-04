@@ -92,15 +92,6 @@ int building_type_to_channel(building *b) {
     case BUILDING_LOW_BRIDGE:
     case BUILDING_UNUSED_SHIP_BRIDGE_83:
         return 0;
-
-    case BUILDING_BURNING_RUIN: return SOUND_CHANNEL_CITY_BURNING_RUIN;
-
-    case BUILDING_BARLEY_FARM:
-    case BUILDING_FLAX_FARM:
-    case BUILDING_GRAIN_FARM:
-    case BUILDING_LETTUCE_FARM:
-    case BUILDING_POMEGRANATES_FARM:
-        return 0;
     }
 
     return b->dcast()->sound_channel();

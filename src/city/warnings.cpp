@@ -82,20 +82,6 @@ static void check_wall(int type, int x, int y, int size) {
     }
 }
 
-static void check_clay_access(int type) {
-    if (type == BUILDING_POTTERY_WORKSHOP && building_count_industry_active(RESOURCE_CLAY) <= 0) {
-        if (city_resource_count(RESOURCE_POTTERY) <= 0 && city_resource_count(RESOURCE_CLAY) <= 0) {
-            building_construction_warning_show(WARNING_CLAY_NEEDED);
-            if (empire_can_produce_resource(RESOURCE_CLAY, true))
-                building_construction_warning_show(WARNING_BUILD_CLAY_PIT);
-            else if (!empire_can_import_resource(RESOURCE_CLAY, true))
-                building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT);
-            else if (city_resource_trade_status(RESOURCE_CLAY) != TRADE_STATUS_IMPORT)
-                building_construction_warning_show(WARNING_TRADE_IMPORT_RESOURCE);
-        }
-    }
-}
-
 void building_construction_warning_generic_checks(building *b, tile2i tile, int size, int orientation) {
     if (!b) {
         return;
@@ -109,8 +95,6 @@ void building_construction_warning_generic_checks(building *b, tile2i tile, int 
 
     check_wall(type, tile.x(), tile.y(), size);
     check_water(type, tile.x(), tile.y());
-
-    check_clay_access(type);
 
     check_road_access(b, tile, size, orientation);
     b->dcast()->on_place_checks();
