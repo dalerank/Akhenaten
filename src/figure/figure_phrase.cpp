@@ -162,7 +162,7 @@ static int tower_sentry_phrase() {
 }
 
 static int soldier_phrase() {
-    int enemies = g_city.figure.enemies;
+    int enemies = g_city.figures.enemies;
     if (enemies >= 40) {
         return 11;
     } else if (enemies > 20) {

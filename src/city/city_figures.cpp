@@ -1,41 +1,41 @@
 #include "city/city.h"
 
 void city_t::figures_reset() {
-    figure.enemies = 0;
-    figure.rioters = 0;
-    figure.attacking_natives = 0;
-    figure.animals_number = 0;
-    figure.kingdome_soldiers = 0;
-    figure.soldiers = 0;
-    if (figure.security_breach_duration > 0)
-        figure.security_breach_duration--;
+    figures.enemies = 0;
+    figures.rioters = 0;
+    figures.attacking_natives = 0;
+    figures.animals_number = 0;
+    figures.kingdome_soldiers = 0;
+    figures.soldiers = 0;
+    if (figures.security_breach_duration > 0)
+        figures.security_breach_duration--;
 }
 
 void city_t::figures_add_animal() {
-    figure.animals_number++;
+    figures.animals_number++;
 }
 
 void city_t::figures_add_attacking_native() {
-    figure.security_breach_duration = 10;
-    figure.attacking_natives++;
+    figures.security_breach_duration = 10;
+    figures.attacking_natives++;
 }
 
 void city_t::figures_add_enemy() {
-    figure.enemies++;
+    figures.enemies++;
 }
 
 void city_t::figures_add_kingdome_soldier() {
-    figure.kingdome_soldiers++;
+    figures.kingdome_soldiers++;
 }
 
 void city_t::figures_add_rioter(int is_attacking) {
-    figure.rioters++;
+    figures.rioters++;
     if (is_attacking)
-        figure.security_breach_duration = 10;
+        figures.security_breach_duration = 10;
 }
 
 void city_t::figures_add_soldier() {
-    figure.soldiers++;
+    figures.soldiers++;
 }
 
 //void city_figures_set_gladiator_revolt(void) {
@@ -43,9 +43,9 @@ void city_t::figures_add_soldier() {
 //}
 
 int city_t::figures_total_invading_enemies() {
-    return figure.kingdome_soldiers + figure.enemies;
+    return figures.kingdome_soldiers + figures.enemies;
 }
 
 bool city_t::figures_has_security_breach() {
-    return figure.security_breach_duration > 0;
+    return figures.security_breach_duration > 0;
 }

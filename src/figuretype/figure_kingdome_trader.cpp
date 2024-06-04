@@ -74,10 +74,8 @@ void figure_trade_caravan::go_to_next_storageyard(tile2i src_tile, int distance_
         destination_tile = dst;
     } else {
         tile2i exit = g_city.map.exit_point;
-        tile2i road_tile;
         base.state = FIGURE_STATE_ALIVE;
-        map_closest_road_within_radius(exit, 1, 2, road_tile);
-        destination_tile = road_tile;
+        destination_tile = map_closest_road_within_radius(exit, 1, 2);
         base.direction = DIR_0_TOP_RIGHT;
         advance_action(ACTION_16_EMIGRANT_RANDOM);
         base.action_state = FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING;

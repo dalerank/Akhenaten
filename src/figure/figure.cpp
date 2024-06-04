@@ -151,6 +151,7 @@ figure_labor_seeker *figure::dcast_labor_seeker() { return dcast()->dcast_labor_
 figure_worker *figure::dcast_worker() { return dcast()->dcast_worker(); }
 figure_soldier *figure::dcast_soldier() { return dcast()->dcast_soldier(); }
 figure_fishing_boat *figure::dcast_fishing_boat() { return dcast()->dcast_fishing_boat(); }
+figure_fishing_point *figure::dcast_fishing_point() { return dcast()->dcast_fishing_point(); }
 
 bool figure::in_roam_history(int goffset) {
     auto it = std::find_if(std::begin(roam_history), std::end(roam_history), [goffset] (auto &v) { return (v == 0 || v == goffset); });

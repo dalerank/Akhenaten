@@ -366,8 +366,8 @@ void figure::init_roaming_from_building(int roam_dir) {
 
     // look for a road within the search area
     map_grid_bound(&offset_search_x, &offset_search_y);
-    tile2i road_tile;
-    int found_road = map_closest_road_within_radius(tile2i(offset_search_x, offset_search_y), 1, 6, road_tile);
+    tile2i road_tile = map_closest_road_within_radius(tile2i(offset_search_x, offset_search_y), 1, 6);
+    int found_road = road_tile.valid();
     int road_network_original = map_road_network_get(tile);
     int road_network_found = map_road_network_get(road_tile);
 
@@ -654,11 +654,9 @@ void figure::set_cross_country_direction(int x_src, int y_src, int x_dst, int y_
         cc_direction = 2;
 }
 
-void figure::set_cross_country_destination(int x_dst, int y_dst) {
-    destination_tile.set(x_dst, y_dst);
-    //    destination_tile.x() = x_dst;
-    //    destination_tile.y() = y_dst;
-    set_cross_country_direction(cc_coords.x, cc_coords.y, 15 * x_dst, 15 * y_dst, 0);
+void figure::set_cross_country_destination(tile2i dst) {
+    destination_tile = dst, dst;
+    set_cross_country_direction(cc_coords.x, cc_coords.y, 15 * dst.x(), 15 * dst.y(), 0);
 }
 
 void figure::cross_country_update_delta() {

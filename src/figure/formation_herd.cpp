@@ -295,42 +295,6 @@ static void update_herd_formation(formation* m) {
     }
 }
 
-void formation_fish_update(int points_num) {
-    figure_clear_fishing_points();
-    if (!can_city_produce_resource(RESOURCE_FISH)) {
-        return;
-    }
-
-    int num_fishing_spots = 0;
-    for (int i = 0; i < MAX_FISH_POINTS; i++) {
-        if (g_scenario_data.fishing_points[i].x() > 0)
-            num_fishing_spots++;
-
-        g_scenario_data.fishing_points[i] = {-1, -1};
-    }
-
-    if (points_num >= 0) {
-        num_fishing_spots = std::min(MAX_FISH_POINTS, points_num);
-    }
-
-    tile_cache &river = river_tiles();
-    std::vector<int> deep_water;
-    for (const auto &tile : river) {
-        if (map_terrain_is(tile, TERRAIN_DEEPWATER)) {
-            deep_water.push_back(tile);
-        }
-    }
-
-    srand (time(nullptr));
-
-    for (int i = 0; i < num_fishing_spots; i++) {
-        int index = rand() % deep_water.size();
-        g_scenario_data.fishing_points[i] = tile2i(deep_water[index]);
-    }
-
-    figure_create_fishing_points();
-}
-
 void formation_herd_update() {
     if (!scenario_map_has_animals()) {
         return;

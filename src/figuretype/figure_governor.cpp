@@ -12,8 +12,8 @@ void figure::governor_action() {
         wait_ticks = 0;
         int senate_id = city_buildings_get_palace_id();
         building* b_dst = building_get(senate_id);
-        tile2i road_tile;
-        if (map_closest_road_within_radius(b_dst->tile, b_dst->size, 2, road_tile)) {
+        tile2i road_tile = map_closest_road_within_radius(b_dst->tile, b_dst->size, 2);
+        if (road_tile.valid()) {
             destination_tile = road_tile;
             set_destination(senate_id);
             advance_action(FIGURE_ACTION_121_GOVERNOR_MOVING);

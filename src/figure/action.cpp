@@ -96,7 +96,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_BALLISTA, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_CREATURE, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_MISSIONARY, 1, TERRAIN_USAGE_ROADS, 192, GROUP_FIGURE_MISSIONARY},
-  {FIGURE_FISHING_POINT, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_FISHING_POINT},
+  {FIGURE_FISHING_POINT, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_NONE},
   {FIGURE_DELIVERY_BOY, 1, TERRAIN_USAGE_ROADS, 0, 0, 0, ANIM_DELIVERY_BOY_WALK},
   {FIGURE_SHIPWRECK, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_BIRDS, 2, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_SHEEP},
@@ -195,7 +195,7 @@ bool figure::do_goto(tile2i dest, int terrainchoice, short NEXT_ACTION, short FA
     // set up destination and move!!!
     if (use_cross_country) {
         OZZY_PROFILER_SECTION("Figure/Goto/CrossCountry");
-        set_cross_country_destination(dest.x(), dest.y());
+        set_cross_country_destination(dest);
         if (move_ticks_cross_country(1) == 1) {
             advance_action(NEXT_ACTION);
             return true;
@@ -244,7 +244,8 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, e_terrain_usage 
             }
 
             if (!found_road) {
-                found_road = map_closest_road_within_radius(main->tile, 3, 1, finish_tile);
+                finish_tile = map_closest_road_within_radius(main->tile, 3, 1);
+                found_road = finish_tile.valid();
             }
 
             if (found_road && is_coords_within_range(tile.x(), tile.y(), main->tile.x(), main->tile.y(), 3, 1)) {
@@ -268,9 +269,11 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, e_terrain_usage 
 
                 if (!found_road) {
                     if (building_is_house(dest->type) || dest->type == BUILDING_BURNING_RUIN) {
-                        found_road = map_closest_road_within_radius(dest->tile, dest->size, 2, finish_tile);
+                        finish_tile = map_closest_road_within_radius(dest->tile, dest->size, 2);
+                        found_road = finish_tile.valid();
                     } else {
-                        found_road = map_closest_road_within_radius(dest->tile, dest->size, 1, finish_tile);
+                        finish_tile = map_closest_road_within_radius(dest->tile, dest->size, 1);
+                        found_road = finish_tile.valid();
                     }
                 }
 
@@ -471,7 +474,6 @@ void figure::action_perform() {
         case FIGURE_JAVELIN: javelin_action(); break; // 60
         case FIGURE_BOLT: bolt_action(); break;
         case FIGURE_BALLISTA: ballista_action(); break;
-        case FIGURE_FISHING_POINT: fishing_point_action(); break;
         case FIGURE_SHIPWRECK: shipwreck_action(); break;
         case FIGURE_BIRDS: sheep_action(); break;
         case FIGURE_ANTELOPE: zebra_action(); break; // 70

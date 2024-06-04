@@ -147,10 +147,10 @@ void figure_entertainer::figure_action() {
         base.wait_ticks_missile = 0;
         wait_ticks--;
         if (wait_ticks <= 0) { // todo: summarize
-            tile2i road_tile;
-            if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
+            tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
+            if (road_tile.valid()) {
                 base.action_state = FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL;
-                base.set_cross_country_destination(road_tile.x(), road_tile.y());
+                base.set_cross_country_destination(road_tile);
                 base.roam_length = 0;
             } else {
                 poof();
@@ -165,8 +165,8 @@ void figure_entertainer::figure_action() {
 
             if (dst_building_id) { // todo: summarize
                 building* b_dst = building_get(dst_building_id);
-                tile2i road_tile;
-                if (map_closest_road_within_radius(b_dst->tile, b_dst->size, 2, road_tile)) {
+                tile2i road_tile = map_closest_road_within_radius(b_dst->tile, b_dst->size, 2);
+                if (road_tile.valid()) {
                     set_destination(dst_building_id);
                     advance_action(FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
                     destination_tile = road_tile;
@@ -185,8 +185,8 @@ void figure_entertainer::figure_action() {
             int dst_building_id = determine_closest_venue_destination(tile(), allow_venue_types());
             if (dst_building_id) { // todo: summarize
                 building* b_dst = building_get(dst_building_id);
-                tile2i road_tile;
-                if (map_closest_road_within_radius(b_dst->tile, b_dst->size, 2, road_tile)) {
+                tile2i road_tile = map_closest_road_within_radius(b_dst->tile, b_dst->size, 2);
+                if (road_tile.valid()) {
                     set_destination(dst_building_id);
                     advance_action(FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
                     destination_tile = road_tile;

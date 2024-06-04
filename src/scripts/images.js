@@ -9,9 +9,7 @@ images = [
 	{img: IMG_SLED_LIMESTONE_SMALL, pack:PACK_GENERAL, id:104},
 	{img: ANIM_DOCKER_WALK, pack:PACK_SPR_MAIN, id:43}, // 10005
 	// spr ambient
-	{img: IMG_FISHING_POINT, pack:PACK_SPR_AMBIENT, id:8},
 	{img: IMG_EXPLOSION, pack:PACK_SPR_AMBIENT, id:12, offset:0},
-	{img: IMG_FISHING_POINT_BUBLES, pack:PACK_SPR_AMBIENT, id:11},
 	{img: ANIM_SANDSTONE_QUARRY_2, pack:PACK_SPR_AMBIENT, id:49},
 
 	// icon resources

@@ -119,7 +119,7 @@ e_victory_state city_t::determine_victory_state() {
         }
     }
 
-    if (figures_total_invading_enemies() > 2 + figure.soldiers) {
+    if (figures_total_invading_enemies() > 2 + figures.soldiers) {
         if (population.population < population.highest_ever / 4)
             state = e_victory_state_lost;
     }

@@ -34,6 +34,7 @@ class figure_labor_seeker;
 class figure_worker;
 class figure_soldier;
 class figure_fishing_boat;
+class figure_fishing_point;
 
 struct animation_t;
 
@@ -247,6 +248,7 @@ public:
     figure_worker *dcast_worker();
     figure_soldier *dcast_soldier();
     figure_fishing_boat *dcast_fishing_boat();
+    figure_fishing_point *dcast_fishing_point();
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -363,7 +365,7 @@ public:
     void follow_ticks(int num_ticks);
     void advance_attack();
     void set_cross_country_direction(int x_src, int y_src, int x_dst, int y_dst, int is_missile);
-    void set_cross_country_destination(int x_dst, int y_dst);
+    void set_cross_country_destination(tile2i dst);
     int move_ticks_cross_country(int num_ticks);
 
     void cross_country_update_delta();
@@ -408,8 +410,6 @@ public:
     void javelin_action();
     void bolt_action();
     void ballista_action();
-    //    void missionary_action();
-    void fishing_point_action();
     void shipwreck_action();
     void sheep_action();
     void hyena_action();
@@ -525,6 +525,7 @@ public:
     virtual figure_worker *dcast_worker() { return nullptr; }
     virtual figure_soldier *dcast_soldier() { return nullptr; }
     virtual figure_fishing_boat *dcast_fishing_boat() { return nullptr; }
+    virtual figure_fishing_point *dcast_fishing_point() { return nullptr; }
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }

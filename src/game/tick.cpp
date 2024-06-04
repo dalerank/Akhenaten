@@ -109,7 +109,7 @@ static void advance_month() {
     city_population_record_monthly();
     city_festival_update();
     city_buildings_update_month();
-    formation_fish_update();
+    g_city.fishing_points.update(0);
 
     if (g_settings.monthly_autosave) {
         bstring256 autosave_file("autosave_month.", saved_game_data_expanded.extension);

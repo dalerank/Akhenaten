@@ -72,9 +72,9 @@ int ui::advisor_miliary_window::draw_background() {
     lang_text_draw(138, 36, 274, 58, FONT_SMALL_PLAIN);
 
     int enemy_text_id;
-    if (g_city.figure.enemies)
+    if (g_city.figures.enemies)
         enemy_text_id = 10;
-    else if (g_city.figure.kingdome_soldiers)
+    else if (g_city.figures.kingdome_soldiers)
         enemy_text_id = 11;
     else if (scenario_invasion_exists_upcoming())
         enemy_text_id = 9;

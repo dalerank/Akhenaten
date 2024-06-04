@@ -487,9 +487,9 @@ static void toggle_resource(int id, int param2) {
 
     if (resource == RESOURCE_FISH) {
         if (can_produce) {
-            figure_reset_fishing_points();
+            g_city.fishing_points.reset();
         } else {
-            figure_clear_fishing_points();
+            g_city.fishing_points.clear();
         }
     }
     window_invalidate();

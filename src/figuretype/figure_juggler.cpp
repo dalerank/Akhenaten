@@ -37,7 +37,7 @@ svector<e_building_type, 4> figure_juggler::allow_venue_types() const {
 }
 
 sound_key figure_juggler::phrase_key() const {
-    int enemies = g_city.figure.enemies;
+    int enemies = g_city.figures.enemies;
     if (enemies > 0) {
         return "city_not_safety_workers_leaving";
     }

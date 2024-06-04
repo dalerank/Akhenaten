@@ -32,8 +32,6 @@
 #include "grid/terrain.h"
 #include "missile.h"
 
-static const vec2i FISHPOINT_OFFSETS[] = {{0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}};
-
 static const vec2i HORSE_DESTINATION_1[] = {
     {2, 1},  {3, 1},  {4, 1},  {5, 1}, {6, 1}, {7, 1}, {8, 1}, {9, 1}, {10, 1}, {11, 1}, {12, 2},
     {12, 3}, {11, 3}, {10, 3}, {9, 3}, {8, 3}, {7, 3}, {6, 3}, {5, 3}, {4, 3},  {3, 3},  {2, 2}
@@ -51,37 +49,6 @@ static const int SHEEP_IMAGE_OFFSETS[] = {
 };
 
 enum E_HORSE { HORSE_CREATED = 0, HORSE_RACING = 1, HORSE_FINISHED = 2 };
-
-static void create_fishing_point(tile2i tile) {
-    random_generate_next();
-    figure* fish = figure_create(FIGURE_FISHING_POINT, tile, DIR_0_TOP_RIGHT);
-    fish->anim.frame = random_byte() & 0x1f;
-    fish->progress_on_tile = random_byte() & 7;
-    fish->advance_action(FIGURE_ACTION_196_FISHPOINT_BUBLES);
-    fish->set_cross_country_direction(fish->cc_coords.x, fish->cc_coords.y, 15 * fish->destination_tile.x(), 15 * fish->destination_tile.y(), 0);
-    fish->image_set_animation(IMG_FISHING_POINT, 0, 24, 6);
-}
-
-void figure_create_fishing_points() {
-    scenario_map_foreach_fishing_point(create_fishing_point);
-}
-
-void figure_reset_fishing_points() {
-    tile_cache &river = river_tiles();
-    int num_points = std::max<int>(1, (int)river.size() / 500);
-    formation_fish_update(num_points);
-}
-
-void figure_clear_fishing_points() {
-    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure *f = figure_get(i);
-        if (f->type != FIGURE_FISHING_POINT) {
-            continue;
-        }
-
-        f->poof();
-    }
-}
 
 static void create_herd(int x, int y) {
     e_figure_type herd_type;
@@ -140,46 +107,6 @@ bool figure::herd_roost(int step, int bias, int max_dist, int terrain_mask) {
     } else {
         destination_tile.set(0, 0);
         return false;
-    }
-}
-
-void figure::fishing_point_action() {
-    terrain_usage = TERRAIN_USAGE_ANY;
-    is_ghost = false;
-    use_cross_country = true;
-    bool animation_finished = false;
-    if (anim.frame == 0) {
-        progress_on_tile++;
-        if (progress_on_tile > 14) { // wrap around
-            progress_on_tile = 0;
-        }
-
-        local_data.fishpoint.offset++;
-        local_data.fishpoint.offset %= std::size(FISHPOINT_OFFSETS);
-        vec2i offset = FISHPOINT_OFFSETS[local_data.fishpoint.offset];
-        set_cross_country_destination(source_tile.x() + offset.x, source_tile.y() + offset.y);
-        animation_finished = true;
-    }
-
-    switch (action_state) {
-    case FIGURE_ACTION_196_FISHPOINT_BUBLES:
-        image_set_animation(IMG_FISHING_POINT_BUBLES, 0, 22, 4);
-        if (animation_finished) {
-            local_data.fishpoint.current_step++;
-            if (local_data.fishpoint.current_step > local_data.fishpoint.max_step) {
-                local_data.fishpoint.current_step = 0;
-                advance_action(FIGURE_ACTION_197_FISHPOINT_JUMP);
-            }
-        }
-        break;
-
-    case FIGURE_ACTION_197_FISHPOINT_JUMP:
-        image_set_animation(IMG_FISHING_POINT, 0, 24, 4);
-        if (animation_finished) {
-            advance_action(FIGURE_ACTION_196_FISHPOINT_BUBLES);
-            local_data.fishpoint.max_step = 5 + rand() % 10;
-        }
-        break;
     }
 }
 

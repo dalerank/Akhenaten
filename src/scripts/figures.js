@@ -487,6 +487,13 @@ figure_soldier_infantry = {
 	},
 }
 
+figure_fishing_point = {
+	animations : {
+		point : { pack:PACK_SPR_AMBIENT, id:8, max_frames:22, duration:4 },
+		bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames: 22, duration:4},
+	},
+}
+
 fishing_boat = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:134, max_frames:4, duration:3 },

@@ -28,8 +28,8 @@
 static const int CRIMINAL_OFFSETS[] = {0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1};
 
 static void generate_rioter(building* b) {
-    tile2i road_tile;
-    if (!map_closest_road_within_radius(b->tile, b->size, 4, road_tile)) {
+    tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 4);
+    if (!road_tile.valid()) {
         return;
     }
 
@@ -78,8 +78,8 @@ static void generate_mugger(building* b) {
     city_sentiment_add_criminal();
     if (b->house_criminal_active > 60 && city_can_create_mugger()) {
         b->house_criminal_active -= 60;
-        tile2i road_tile;
-        if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
+        tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
+        if (road_tile.valid()) {
             figure* f = figure_create(FIGURE_CRIMINAL, road_tile, DIR_4_BOTTOM_LEFT);
             f->advance_action(FIGURE_ACTION_120_MUGGER_CREATED);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
@@ -114,8 +114,8 @@ static void generate_protestor(building* b) {
     city_sentiment_add_protester();
     if (b->house_criminal_active > 30 && city_can_create_protestor()) {
         b->house_criminal_active -= 30;
-        tile2i road_tile;
-        if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
+        tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
+        if (road_tile.valid()) {
             figure* f = figure_create(FIGURE_PROTESTER, road_tile, DIR_4_BOTTOM_LEFT);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
             g_city.ratings.monument_record_criminal();
@@ -207,8 +207,8 @@ void figure::mugger_action() {
         wait_ticks = 0;
         int senate_id = city_buildings_get_palace_id();
         building* b_dst = building_get(senate_id);
-        tile2i road_tile;
-        if (map_closest_road_within_radius(b_dst->tile, b_dst->size, 2, road_tile)) {
+        tile2i road_tile = map_closest_road_within_radius(b_dst->tile, b_dst->size, 2);
+        if (road_tile.valid()) {
             destination_tile = road_tile;
             set_destination(senate_id);
             advance_action(FIGURE_ACTION_121_MUGGER_MOVING);

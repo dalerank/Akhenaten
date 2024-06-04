@@ -91,8 +91,7 @@ void figure_emigrant::figure_action() {
             wait_ticks = 20;
             route_remove();
             base.state = FIGURE_STATE_ALIVE;
-            tile2i road_tile;
-            map_closest_road_within_radius(exit, 1, 2, road_tile);
+            tile2i road_tile = map_closest_road_within_radius(exit, 1, 2);
             destination_tile = road_tile;
             base.direction = DIR_0_TOP_RIGHT;
             advance_action(ACTION_16_EMIGRANT_RANDOM);

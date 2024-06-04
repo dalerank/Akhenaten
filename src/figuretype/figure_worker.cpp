@@ -173,7 +173,7 @@ void figure_worker::poof() {
 }
 
 sound_key figure_worker::phrase_key() const {
-    int enemies = g_city.figure.enemies;
+    int enemies = g_city.figures.enemies;
     if (enemies > 10) {
         return "enemies_in_city";
     }

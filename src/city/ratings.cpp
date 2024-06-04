@@ -131,13 +131,13 @@ void city_ratings_t::update_culture_explanation() {
 
 void city_ratings_t::update_monument_explanation() {
     int reason;
-    if (g_city.figure.kingdome_soldiers)
+    if (g_city.figures.kingdome_soldiers) {
         reason = 8; // FIXED: 7+8 interchanged
-    else if (g_city.figure.enemies)
+    } else if (g_city.figures.enemies) {
         reason = 7;
-    else if (g_city.figure.rioters)
+    } else if (g_city.figures.rioters) {
         reason = 6;
-    else {
+    } else {
         if (g_city.ratings.monument < 10)
             reason = 0;
         else if (g_city.ratings.monument < 30)

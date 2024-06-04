@@ -76,7 +76,7 @@ void kingdome_relation_t::update_debt_state() {
         if (months_in_debt >= 12) {
             debt_state = 3;
             months_in_debt = 0;
-            if (!g_city.figure.kingdome_soldiers) {
+            if (!g_city.figures.kingdome_soldiers) {
                 city_message_post(true, MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
                 g_city.ratings.change_kingdom(-10);
             }
@@ -92,14 +92,14 @@ void kingdome_relation_t::update_debt_state() {
         if (months_in_debt >= 12) {
             debt_state = 4;
             months_in_debt = 0;
-            if (!g_city.figure.kingdome_soldiers)
+            if (!g_city.figures.kingdome_soldiers)
                 g_city.ratings.limit_kingdom(10);
         }
     }
 }
 
 void kingdome_relation_t::process_invasion() {
-    if (g_city.figure.kingdome_soldiers && !cheated_invasion) {
+    if (g_city.figures.kingdome_soldiers && !cheated_invasion) {
         // caesar invasion in progress
         invasion.duration_day_countdown--;
         if (g_city.ratings.kingdom >= 35 && invasion.duration_day_countdown < 176)

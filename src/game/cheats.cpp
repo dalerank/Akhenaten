@@ -6,6 +6,7 @@
 #include "building/destruction.h"
 #include "building/monuments.h"
 #include "city/finance.h"
+#include "city/city.h"
 #include "city/gods.h"
 #include "city/victory.h"
 #include "city/warning.h"
@@ -189,7 +190,7 @@ static void game_cheat_update_fish_points(pcstr args) {
     int count = 0;
     parse_integer(args ? args : "10", count);
 
-    formation_fish_update(count);
+    g_city.fishing_points.update(count);
 }
 
 static void game_cheat_spawn_nobles(pcstr args) {

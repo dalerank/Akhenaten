@@ -188,6 +188,7 @@ var figure_flotsam = {}
 var figure_festival_guy = {}
 var figure_scriber = {}
 var figure_dentist = {}
+var figure_fishing_point = {}
 // missions
 var mission0 = {}
 var mission1 = {}

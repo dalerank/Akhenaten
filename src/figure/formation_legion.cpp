@@ -301,8 +301,9 @@ void formation_legion_update(void) {
             continue;
 
         formation_decrease_monthly_counters(m);
-        if (g_city.figure.enemies <= 0)
+        if (g_city.figures.enemies <= 0) {
             formation_clear_monthly_counters(m);
+        }
 
         for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
             if (figure_get(m->figures[n])->action_state == FIGURE_ACTION_150_ATTACK)
@@ -319,7 +320,7 @@ void formation_legion_update(void) {
                 }
             }
         } else if (m->layout == FORMATION_MOP_UP) {
-            if ((enemy_army_total_enemy_formations() + g_city.figure.rioters + g_city.figure.attacking_natives) > 0) {
+            if ((enemy_army_total_enemy_formations() + g_city.figures.rioters + g_city.figures.attacking_natives) > 0) {
                 for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
                     if (m->figures[n] != 0) {
                         figure* f = figure_get(m->figures[n]);

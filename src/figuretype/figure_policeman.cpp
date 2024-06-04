@@ -24,10 +24,10 @@ void figure::policeman_action() {
         anim.frame = 0;
         wait_ticks--;
         if (wait_ticks <= 0) {
-            tile2i road_tile;
-            if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
+            tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
+            if (road_tile.valid()) {
                 action_state = FIGURE_ACTION_71_POLICEMAN_ENTERING_EXITING;
-                set_cross_country_destination(road_tile.x(), road_tile.y());
+                set_cross_country_destination(road_tile);
                 roam_length = 0;
             } else {
                 poof();
@@ -55,8 +55,8 @@ void figure::policeman_action() {
     case FIGURE_ACTION_72_POLICEMAN_ROAMING:
         roam_length++;
         if (roam_length >= max_roam_length) {
-            tile2i road_tile;
-            if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
+            tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
+            if (road_tile.valid()) {
                 action_state = FIGURE_ACTION_73_POLICEMAN_RETURNING;
                 destination_tile = road_tile;
                 route_remove();
@@ -72,7 +72,7 @@ void figure::policeman_action() {
         move_ticks(1);
         if (direction == DIR_FIGURE_NONE) {
             action_state = FIGURE_ACTION_71_POLICEMAN_ENTERING_EXITING;
-            set_cross_country_destination(b->tile.x(), b->tile.y());
+            set_cross_country_destination(b->tile);
             roam_length = 0;
         } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
@@ -82,8 +82,8 @@ void figure::policeman_action() {
     case FIGURE_ACTION_76_POLICEMAN_GOING_TO_ENEMY:
         terrain_usage = TERRAIN_USAGE_ANY;
         if (!target_is_alive()) {
-            tile2i road_tile;
-            if (map_closest_road_within_radius(b->tile, b->size, 2, road_tile)) {
+            tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
+            if (road_tile.valid()) {
                 action_state = FIGURE_ACTION_73_POLICEMAN_RETURNING;
                 destination_tile = road_tile;
                 route_remove();

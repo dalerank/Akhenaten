@@ -73,7 +73,7 @@ void figure::play_die_sound() {
     }
 
     if (f->is_enemy()) {
-        if (g_city.figure.enemies == 1) {
+        if (g_city.figures.enemies == 1) {
             sound_speech_play_file("wavs/army_war_cry.wav");
         }
     }

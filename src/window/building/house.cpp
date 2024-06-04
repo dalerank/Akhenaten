@@ -25,8 +25,8 @@ static void draw_vacant_lot(object_info* c) {
 
     int text_id = 2;
     building* b = building_get(c->building_id);
-    map_point road_tile;
-    if (map_closest_road_within_radius(b->tile, 1, 2, road_tile)) {
+    map_point road_tile = map_closest_road_within_radius(b->tile, 1, 2);
+    if (road_tile.valid()) {
         text_id = 1;
     }
 
