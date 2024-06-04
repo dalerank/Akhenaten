@@ -1,0 +1,12 @@
+#include "figure/figure.h"
+
+class figure_fishing_point : public figure_impl {
+public:
+    figure_fishing_point(figure *f) : figure_impl(f) {}
+    virtual figure_fishing_point *dcast_fishing_point() override { return this; }
+
+    virtual void on_create() override {}
+    virtual void figure_action() override;
+    virtual void update_animation() override;
+    static figure *create(tile2i tile);
+};
