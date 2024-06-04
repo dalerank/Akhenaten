@@ -911,12 +911,12 @@ void BuildPlanner::setup_build_graphics() {
 
     default: // regular buildings 
         {
+            const auto &params = building_impl::params(build_type);
             int img_id = props.anim["base"].first_img();
             if (!img_id) {
-                const auto &params = building_impl::params(build_type);
                 img_id = params.anim["preview"].first_img();
-                img_id += params.planer_relative_orientation * relative_orientation;
             }
+            img_id += params.planer_relative_orientation * relative_orientation;
             set_tiles_building(img_id, props.building_size);
         }
         break;
