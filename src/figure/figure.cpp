@@ -313,6 +313,9 @@ figure_impl::static_params figure_impl::static_params::dummy;
 void figure_impl::static_params::load(archive arch) {
     anim.load(arch);
     sounds.load(arch);
+    terrain_usage = arch.r_int("terrain_usage");
+    max_roam_length = arch.r_int("max_roam_length");
+    speed_mult = arch.r_int("speed_mult", 1);
 }
 
 void figure_impl::update_animation() {

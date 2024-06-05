@@ -20,7 +20,9 @@ figure_fireman = {
  		low_entertainment : {sound:"fireman_g08.WAV", group: 242, text:10},
  		gods_are_pleasures : {sound:"fireman_g09.WAV", group: 242, text:11},
  		city_is_amazing : {sound:"fireman_g10.wav", group: 242, text:12},
-  }
+  },
+	terrain_usage : TERRAIN_USAGE_ANIMAL,
+	max_roam_length : 640,
 }
 
 figure_water_carrier = {
@@ -39,7 +41,9 @@ figure_water_carrier = {
     low_entertainment : {sound: "water_g08.wav", group:237, text:7},
     city_is_good : {sound: "water_g09.wav", group:237, text:8},
     city_is_amazing : {sound: "water_g10.wav", group:237, text:9},
-  }
+  },
+  terrain_usage : TERRAIN_USAGE_ROADS,
+  max_roam_length : 640,
 }
 
 figure_priest = {
@@ -130,7 +134,9 @@ figure_priest = {
     bast_need_entertainment: {sound:"bast_g08.wav", groud:234, text:11},
     bast_city_is_good: {sound:"bast_g09.wav", groud:234, text:12},
     bast_city_is_amazing: {sound:"bast_g10.wav", groud:234, text:13},
-  }
+  },
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 384,
 }
 
 figure_ostrich = {
@@ -139,7 +145,8 @@ figure_ostrich = {
 		eating : { pos : [0, 0], pack:PACK_SPR_MAIN, id:159, max_frames:7 },
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:156, max_frames:12 },
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false },
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
 figure_immigrant = {
@@ -152,7 +159,8 @@ figure_immigrant = {
 		i_need_here: {sound:"immigrant_e01.wav", group: 202, text:0},
  		work_for_all : {sound:"immigrant_e02.wav", group: 202, text:1},
  		cheap_food : {sound:"immigrant_e03.wav", group: 202, text:2},
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
 figure_ostrich_hunter = {
@@ -170,6 +178,7 @@ figure_ostrich_hunter = {
     back : {sound:"hunt_ostrich_e02.wav", group:209, text:1 },
     city_is_good : {sound: "hunt_ostrich_e10.wav", phrase: "#hunter_ostrich_good_city"}
 	},
+	terrain_usage : TERRAIN_USAGE_ANIMAL,
 	max_hunting_distance : 30,
 }
 
@@ -177,6 +186,7 @@ figure_standard_bearer = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 },
 	},
+	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_native_trader = {
@@ -205,7 +215,9 @@ figure_magistrate = {
     no_entertainment_need : {sound: "magistrate_g08.wav", group:210, text:0 },
     city_not_bad : {sound: "magistrate_g09.wav", group:210, text:0 },
     city_is_amazing : {sound: "magistrate_g10.wav", group:210, text:0 },
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 800,
 }
 
 figure_lumberjack = {
@@ -218,15 +230,15 @@ figure_lumberjack = {
 	sounds : {
 		hunting : {sound:"woodcutter_e01.wav", group:209, text:0 },
     back : {sound:"woodcutter_e02.wav", group:209, text:1 },
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_flotsam = {
 	animations : {
 		walk : {pack:PACK_SPR_AMBIENT, id:0, max_frames: 12}
-
-	}
-
+	},
+	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_scriber = {
@@ -234,6 +246,8 @@ figure_scriber = {
 		walk : { pack:PACK_SPR_MAIN, id:199, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:200, max_frames:8, loop:false },
 	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 384,
 }
 
 figure_dentist = {
@@ -241,6 +255,8 @@ figure_dentist = {
 		walk : { pack:PACK_SPR_MAIN, id:182, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:183, max_frames:8, loop:false },
 	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 384,
 }
 
 figure_worker = {
@@ -282,7 +298,9 @@ figure_physician = {
     low_entertainment : {sound:"doctor_g08.wav", group: 239, text:8},
     all_good_in_city : {sound:"doctor_g09.wav", group: 239, text:9},
     city_very_healthy : {sound:"doctor_g10.wav", group: 239, text:10},
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 384,
 }
 
 figure_architector = {
@@ -303,7 +321,9 @@ figure_architector = {
     low_entertainment: {sound:"engineer_g08.wav", group: 243, text:8},
     city_is_bad: {sound:"engineer_g09.wav", group: 243, text:9},
     city_is_amazing: {sound:"engineer_g10.wav", group: 243, text:10},
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 640,
 }
 
 figure_market_buyer = {
@@ -323,7 +343,8 @@ figure_market_buyer = {
     low_entertainment : {sound:"mkt_buyer_g08.wav", group:244, text:0 },
     city_is_good : {sound:"mkt_buyer_g09.wav", group:244, text:0 },
     city_is_amazing : {sound:"mkt_buyer_g10.wav", group:244, text:0 },
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
 figure_delivery_boy = {
@@ -335,7 +356,8 @@ figure_delivery_boy = {
 		those_baskets_too_heavy : {sound: "marketboy_e01.wav", group:221, text: 0},
     i_works_all_day : {sound: "marketboy_e02.wav", group:221, text: 1},
     upon_ill_be_market_owner : {sound: "marketboy_e03.wav", group:221, text: 2},
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
 figure_cartpusher = {
@@ -351,13 +373,15 @@ figure_cartpusher = {
     i_have_no_destination : { sound:"cartpusher_e01.wav", group:223, text:0},
     back_to_home : { sound:"cartpusher_e02.wav", group:223, text:1},
     delivering_items : { sound:"cartpusher_e03.wav", group:223, text:2},
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
 figure_docker = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_DOCKER_WALK, max_frames:12 },
-	}
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:43, max_frames:12 },
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
 figure_bricklayer = {
@@ -367,7 +391,8 @@ figure_bricklayer = {
 	sounds : {
 		time_to_put_bricks : {sound:"brick_e01.wav", group:222, text: 0},
  		with_my_bricks_monuments_will_be_fine : {sound:"brick_e02.wav", group:222, text: 1},
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
 figure_storageyard_cart = {
@@ -375,14 +400,16 @@ figure_storageyard_cart = {
 		walk : { pack: PACK_SPR_MAIN, id:43, max_frames:12 },
 		death : { pack: PACK_SPR_MAIN, id:44, max_frames:8, loop:false },
 		swim : { pack:PACK_SPR_MAIN, id:138, max_frames:4, duration:4 },
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
 figure_trade_ship = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: ANIM_TRADER_SHIP_WALK, max_frames:3 },
 		idle : { pos : [0, 0], anim_id: ANIM_TRADER_SHIP_IDLE, max_frames:1 },
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_emigrant = {
@@ -396,7 +423,8 @@ figure_emigrant = {
     tax_too_high : {sound:"emigrant_e03.wav", group: 203, text:2},
     salary_too_low : {sound:"emigrant_e04.wav", group: 203, text:3},
     no_house_for_me : {sound:"emigrant_e05.wav", group: 203, text:4},
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
 figure_sled = {
@@ -409,28 +437,33 @@ figure_trade_caravan = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN },
 		death : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DEATH, loop:false },
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }
 
 figure_caravan_donkey = {
 	animations : {
 		walk : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DONKEY },
 		death : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DONKEY_DEATH, loop:false },
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }
 
 figure_homeless = {
 	animations : {
 		walk : { pos : [0, 0], pack: PACK_SPR_MAIN, id: 12, max_frames:12 },
 		death : { pos : [0, 0], pack: PACK_SPR_MAIN, id: 13, max_frames:8, loop:false },
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }
 
 figure_teacher = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:201, max_frames:12 },
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:202, max_frames:8, loop:false },
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 384,
 }
 
 figure_herbalist = {
@@ -441,7 +474,9 @@ figure_herbalist = {
 	sounds : {
 		no_threat_malaria_here : {sound:"apothecary_e02.wav", group: 241, text:1},
     have_malaria_risk_here : {sound:"apothecary_e03.wav", group: 241, text:2},
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 384,
 }
 
 figure_dancer = {
@@ -461,14 +496,18 @@ figure_dancer = {
     salary_too_low : {sound:"dancer_g08.wav", group:228, text:8},
     city_is_good : {sound:"dancer_g09.wav", group:228, text:9},
     city_is_amazing : {sound:"dancer_g10.wav", group:228, text:10},
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 512,
 }
 
 figure_festival_guy = {
 	animations : {
 		juggler : { pack:PACK_SPR_MAIN, id:130, max_frames:12 },
 		musician : { pack:PACK_SPR_MAIN, id:191, max_frames:12 },
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 512,
 }
 
 figure_musician = {
@@ -488,7 +527,9 @@ figure_musician = {
  		no_entertainment_need : { sound:"musician_g08.wav", group:229, text:0 },
  		city_not_bad : { sound:"musician_g09.wav", group:229, text:0 },
  		city_is_good : { sound:"musician_g10.wav", group:229, text:0 },
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 512,
 }
 
 figure_soldier_infantry = {
@@ -497,6 +538,7 @@ figure_soldier_infantry = {
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:65, max_frames:8, loop:false },
 		attack : { pos : [0, 0], pack:PACK_SPR_MAIN, id:66, max_frames:12 },
 	},
+	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_fishing_point = {
@@ -504,6 +546,7 @@ figure_fishing_point = {
 		point : { pack:PACK_SPR_AMBIENT, id:8, max_frames:22, duration:4 },
 		bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames: 22, duration:4},
 	},
+	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_fishing_boat = {
@@ -513,6 +556,7 @@ figure_fishing_boat = {
 		work : { pos : [0, 0], pack:PACK_SPR_MAIN, id:135, max_frames:6, duration:5 },
 		idle : { pos : [0, 0], pack:PACK_SPR_MAIN, id:136, offset:3, max_frames:1 },
 	},
+	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_soldier_archer = {
@@ -521,6 +565,7 @@ figure_soldier_archer = {
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:62, max_frames:8, loop:false },
 		attack : { pos : [0, 0], pack:PACK_SPR_MAIN, id:63, max_frames:12 },
 	},
+	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_soldier_charioteer = {
@@ -529,6 +574,7 @@ figure_soldier_charioteer = {
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:68, max_frames:8, loop:false },
 		attack : { pos : [0, 0], pack:PACK_SPR_MAIN, id:69, max_frames:12 },
 	},
+	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_juggler = {
@@ -559,7 +605,9 @@ figure_market_trader = {
 	sounds : {
 		goods_are_finished : {sound:"mkt_seller_e01.wav", group:245, text:0},
  	  we_are_selling_goods : {sound:"mkt_seller_e02.wav", group:245, text:0},
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 384,
 }
 
 figure_labor_seeker = {
@@ -580,7 +628,9 @@ figure_labor_seeker = {
     no_some_workers : { sound:"Labor_g08.WAV", group:213, text:9},
     i_want_to_leave_city : { sound:"Labor_g09.WAV", group:213, text:10},
     city_is_amazing : { sound:"Labor_g10.WAV", group:213, text:11},
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 384,
 }
 
 figure_reed_gatherer = {
@@ -590,12 +640,14 @@ figure_reed_gatherer = {
 		work : { pos : [0, 0], pack:PACK_SPR_MAIN, id:39, max_frames:15 },
 		return : { pos : [0, 0], pack:PACK_SPR_MAIN, id:40, max_frames:12 },
 	},
+	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_explosion = {
 	animations : {
 		poof : { pos : [0, 0], anim_id: IMG_EXPLOSION, max_frames:12 },
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_tax_collector = {
@@ -617,5 +669,7 @@ figure_tax_collector = {
     low_entertainment: {sound: "taxman_g08.wav", group: 245, text:10},
     city_is_good: {sound: "taxman_g09.wav", group: 245, text:11},
     city_is_amazing: {sound: "taxman_g10.wav", group: 245, text:12},
-	}
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 512,
 }

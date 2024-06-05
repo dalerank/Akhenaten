@@ -167,7 +167,7 @@ public:
     uint8_t empire_city_id;
     uint16_t trader_amount_bought;
     short name;
-    char terrain_usage;
+    uint8_t terrain_usage;
     e_move_type allow_move_type;
     uint8_t height_adjusted_ticks;
     uint8_t current_height;
@@ -491,9 +491,13 @@ class figure_impl {
 public:
     struct static_params {
         static static_params dummy;
+
         pcstr name;
         animations_t anim;
         figure_sounds_t sounds;
+        int8_t terrain_usage;
+        uint16_t max_roam_length;
+        uint8_t speed_mult;
 
         void load(archive arch);
     };

@@ -414,8 +414,8 @@ static void setup(Arguments& args) {
     }
 
     config::refresh(g_config_arch);
-    figure::check_action_properties_lookup();
 }
+
 static void teardown(void) {
     logs::info("Exiting game");
     game_exit();
