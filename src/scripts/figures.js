@@ -435,16 +435,16 @@ figure_sled = {
 
 figure_trade_caravan = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN },
-		death : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DEATH, loop:false },
+		walk : { pos : [0, 0], pack:PACK_SPR_AMBIENT, id:20, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_AMBIENT, id:21, max_frames:8, loop:false },
 	},
 	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }
 
 figure_caravan_donkey = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DONKEY },
-		death : { pos : [0, 0], anim_id: IMG_TRADER_CARAVAN_DONKEY_DEATH, loop:false },
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:52, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:53, max_frames:8, loop:false },
 	},
 	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }

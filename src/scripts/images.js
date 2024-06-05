@@ -14,7 +14,6 @@ images = [
 	// icon resources
 	{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
 
-	{img: IMG_JUGGLER_SHOW, pack:PACK_SPR_AMBIENT, id:7, offset:-1},
 	{img: IMG_SIDE_PANEL, pack:PACK_GENERAL, id:121, offset:0},
 	{img: IMG_TOP_MENU_BACKGROUND, pack:PACK_GENERAL, id:121, offset:8},
 	{img: IMG_EDITOR_SIDE_PANEL, pack:PACK_GENERAL, id:121, offset:0},
@@ -33,10 +32,6 @@ images = [
 	{img: IMG_MINIMAP_SPENT_TEAL, pack:PACK_GENERAL, id:149, offset:200},
 	{img: IMG_MINIMAP_COLOR, pack:PACK_GENERAL, id:149, offset:0},
 	{img: IMG_TRADE_AMOUNT, pack:PACK_GENERAL, id:171, offset:0},
-	{img: IMG_TRADER_CARAVAN, pack:PACK_SPR_AMBIENT, id:20, offset:0},
-	{img: IMG_TRADER_CARAVAN_DEATH, pack:PACK_SPR_AMBIENT, id:21, offset:0},
-	{img: IMG_TRADER_CARAVAN_DONKEY, pack:PACK_SPR_MAIN, id:52, offset:0},
-	{img: IMG_TRADER_CARAVAN_DONKEY_DEATH, pack:PACK_SPR_MAIN, id:53, offset:0},
 	{img: IMG_HOUSE_HUT, pack:PACK_GENERAL, id:26, offset:0},
 	{img: IMG_HOUSE_SHANTY, pack:PACK_GENERAL, id:27, offset:0},
 	{img: IMG_HOUSE_COTTAGE, pack:PACK_GENERAL, id:28, offset:0},
