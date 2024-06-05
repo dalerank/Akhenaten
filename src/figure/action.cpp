@@ -16,14 +16,6 @@
 
 /*
 static figure_action_property action_properties_lookup[] = {
-  {FIGURE_NONE,     0, 0, 0, 0},
-  {FIGURE_IMMIGRANT,1, 0, 0, 0, IMG_NONE},
-  {FIGURE_EMIGRANT, 1, 0, 0, 0, IMG_NONE},
-  {FIGURE_HOMELESS, 1, 0, 0, 0, IMG_NONE},
-  {FIGURE_CART_PUSHER, 1, 0, 0, 0,  IMG_NONE},
-  {FIGURE_LABOR_SEEKER, 1, 0, 0, 0, IMG_NONE},
-  {FIGURE_EXPLOSION, 1, 0, 0, 0, IMG_EXPLOSION},
-  {FIGURE_TAX_COLLECTOR, 1, , 0, 0, IMG_NONE},
   {FIGURE_ARCHITECT, 1, 0, 0, 0, IMG_NONE},
   {FIGURE_STORAGEYARD_CART, 1, 0, 0, 0, IMG_NONE},
   {FIGURE_FIREMAN, 1, 0, 0, 0, IMG_NONE},

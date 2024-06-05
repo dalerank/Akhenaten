@@ -29,6 +29,41 @@ void config_load_building_tax_collector() {
     btax_collector_up_m.load();
 }
 
+void building_tax_collector::spawn_figure() {
+    if (!has_road_access()) {
+        return;
+    }
+
+    check_labor_problem();
+    if (has_figure_of_type(BUILDING_SLOT_SERVICE, FIGURE_TAX_COLLECTOR)) {
+        return;
+    }
+
+    common_spawn_labor_seeker(50);
+
+    int pct_workers = worker_percentage();
+    int spawn_delay;
+    if (pct_workers >= 100) {
+        spawn_delay = 0;
+    } else if (pct_workers >= 75) {
+        spawn_delay = 1;
+    } else if (pct_workers >= 50) {
+        spawn_delay = 3;
+    } else if (pct_workers >= 25) {
+        spawn_delay = 7;
+    } else if (pct_workers >= 1) {
+        spawn_delay = 15;
+    } else {
+        return;
+    }
+
+    base.figure_spawn_delay++;
+    if (base.figure_spawn_delay > spawn_delay) {
+        base.figure_spawn_delay = 0;
+        create_roaming_figure(FIGURE_TAX_COLLECTOR, FIGURE_ACTION_40_TAX_COLLECTOR_CREATED, BUILDING_SLOT_SERVICE);
+    }
+}
+
 void building_tax_collector::window_info_background(object_info &c) {
     ui::begin_widget(c.offset);
 

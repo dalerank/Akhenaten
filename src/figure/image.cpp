@@ -139,31 +139,6 @@ void figure::image_set_animation(int collection, int group, int offset, int max_
 }
 
 void figure::figure_image_update(bool refresh_only) {
-    // update pixel coords
-    //    sprite_pixel_on_tile = {HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS};
-    //    if (use_cross_country) {
-    //        int prg_x;
-    //        int prg_y;
-    //        cc_coords_to_pixel_offset(cc_coords.x % 15, cc_coords.y % 15,
-    //                                  &prg_x, &prg_y);
-    //        sprite_pixel_on_tile += {prg_x, prg_y};
-    //    } else {
-    //        int prg_r = progress_on_tile > 7 ? progress_on_tile - 16 : progress_on_tile;
-    //        int prg_x = 2 * (prg_r);
-    //        int prg_y = (prg_r);
-    //        switch ((8 + direction - city_view_orientation()) % 8) {
-    //            case 0: sprite_pixel_on_tile += {prg_x, -prg_y}; break;
-    //            case 1: sprite_pixel_on_tile += {2 * prg_x, 0}; break;
-    //            case 2: sprite_pixel_on_tile += {prg_x, prg_y}; break;
-    //            case 3: sprite_pixel_on_tile += {0, 2 * prg_y}; break;
-    //            case 4: sprite_pixel_on_tile += {-prg_x, prg_y}; break;
-    //            case 5: sprite_pixel_on_tile += {-2 * prg_x, 0}; break;
-    //            case 6: sprite_pixel_on_tile += {-prg_x, -prg_y}; break;
-    //            case 7: sprite_pixel_on_tile += {0, -2 * prg_y}; break;
-    //        }
-    //    }
-
-
     if (!anim.valid()) {
         return;
     }

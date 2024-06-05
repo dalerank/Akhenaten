@@ -188,5 +188,5 @@ const animations_t &figure_trade_caravan::anim() const {
 
 void figure_trade_caravan::update_animation() {
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
-    base.sprite_image_id = image_group(IMG_TRADER_CARAVAN) + dir + 8 * base.anim.frame;
+    base.sprite_image_id = trade_caravan_m.anim["walk"].first_img() + dir + 8 * base.anim.frame;
 }

@@ -8,7 +8,6 @@ images = [
 	{img: IMG_SLED_GRANITE_SMALL, pack:PACK_SPR_MAIN, id:103},
 	{img: IMG_SLED_LIMESTONE_SMALL, pack:PACK_GENERAL, id:104},
 	// spr ambient
-	{img: IMG_EXPLOSION, pack:PACK_SPR_AMBIENT, id:12, offset:0},
 	{img: ANIM_SANDSTONE_QUARRY_2, pack:PACK_SPR_AMBIENT, id:49},
 
 	// icon resources

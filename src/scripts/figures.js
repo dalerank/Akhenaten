@@ -645,7 +645,7 @@ figure_reed_gatherer = {
 
 figure_explosion = {
 	animations : {
-		poof : { pos : [0, 0], anim_id: IMG_EXPLOSION, max_frames:12 },
+		poof : { pos : [0, 0], pack:PACK_SPR_AMBIENT, id:12, max_frames:12 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANY,
 }

@@ -424,47 +424,6 @@ void building::set_greate_palace_graphic() {
     }
 }
 
-void building::spawn_figure_tax_collector() {
-    if (type == BUILDING_TOWN_PALACE) {
-        set_greate_palace_graphic();
-    }
-
-    //common_spawn_roamer(FIGURE_TAX_COLLECTOR, 50);
-
-    check_labor_problem();
-    if (has_figure_of_type(0, FIGURE_TAX_COLLECTOR)) {
-        return;
-    }
-
-    if (!has_road_access) {
-        return;
-    }
-
-    common_spawn_labor_seeker(50);
-
-    int pct_workers = worker_percentage();
-    int spawn_delay;
-    if (pct_workers >= 100) {
-        spawn_delay = 0;
-    } else if (pct_workers >= 75) {
-        spawn_delay = 1;
-    } else if (pct_workers >= 50) {
-        spawn_delay = 3;
-    } else if (pct_workers >= 25) {
-        spawn_delay = 7;
-    } else if (pct_workers >= 1) {
-        spawn_delay = 15;
-    } else {
-        return;
-    }
-
-    figure_spawn_delay++;
-    if (figure_spawn_delay > spawn_delay) {
-        figure_spawn_delay = 0;
-        create_roaming_figure(FIGURE_TAX_COLLECTOR, FIGURE_ACTION_40_TAX_COLLECTOR_CREATED);
-    }
-}
-
 void building::spawn_figure_industry() {
     check_labor_problem();
     if (!has_road_access) {
@@ -560,8 +519,6 @@ bool building::figure_generate() {
         noble_generated = spawn_noble(noble_generated);
     } else if (is_workshop() || is_extractor()) {// farms are handled by a separate cycle in Pharaoh!
         spawn_figure_industry();
-    } else if (is_tax_collector()) {
-        spawn_figure_tax_collector();
     } else if (is_administration()) {
         common_spawn_figure_trigger(50);
 

@@ -572,7 +572,7 @@ building_booth = {
   animations : {
     booth : { pack:PACK_GENERAL, id:114 },
     square : { pack:PACK_GENERAL, id:112 },
-    juggler : { pos : [35, 17], anim_id : IMG_JUGGLER_SHOW }
+    juggler : { pos : [35, 17], pack:PACK_SPR_AMBIENT, id:7, offset:-1 }
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
   window_info_height_id : 2,

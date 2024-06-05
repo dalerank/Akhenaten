@@ -48,10 +48,11 @@ void figure_explosion::figure_action() {
 }
 
 void figure_explosion::update_animation() {
+    int img_id = explosion_m.anim["poff"].first_img();
     if (base.progress_on_tile < 48) {
-        base.sprite_image_id = image_group(IMG_EXPLOSION) + std::clamp(base.progress_on_tile / 2, 0, MAX_CLOUD_IMAGE_OFFSETS);
+        base.sprite_image_id = img_id + std::clamp(base.progress_on_tile / 2, 0, MAX_CLOUD_IMAGE_OFFSETS);
     } else {
-        base.sprite_image_id = image_group(IMG_EXPLOSION) + MAX_CLOUD_IMAGE_OFFSETS;
+        base.sprite_image_id = img_id + MAX_CLOUD_IMAGE_OFFSETS;
     }
     base.anim.base = 0;
 }
