@@ -10,15 +10,11 @@
 
 #include "js/js_game.h"
 
-struct dancer_model : public figures::model_t<FIGURE_DANCER, figure_dancer> {};
-dancer_model dancer_m;
+figures::model_t<figure_dancer> dancer_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_dancer);
 void config_load_figure_dancer() {
-    g_config_arch.r_section("figure_dancer", [] (archive arch) {
-        dancer_m.anim.load(arch);
-        dancer_m.sounds.load(arch);
-    });
+    dancer_m.load();
 }
 
 void figure_dancer::update_shows() {

@@ -26,15 +26,11 @@
 #include "city/finance.h"
 #include "js/js_game.h"
 
-struct cartpusher_model : public figures::model_t<FIGURE_CART_PUSHER, figure_cartpusher> {};
-cartpusher_model cartpusher_m;
+figures::model_t<figure_cartpusher> cartpusher_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_cartpusher);
 void config_load_figure_cartpusher() {
-    g_config_arch.r_section("figure_cartpusher", [] (archive arch) {
-        cartpusher_m.anim.load(arch);
-        cartpusher_m.sounds.load(arch);
-    });
+    cartpusher_m.load();
 }
 
 static const int CART_OFFSET_MULTIPLE_LOADS_FOOD[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};

@@ -4,6 +4,7 @@
 
 class figure_lumberjack : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_LUMBERJACK, figure_lumberjack)
     figure_lumberjack(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}

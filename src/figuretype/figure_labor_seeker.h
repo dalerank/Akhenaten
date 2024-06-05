@@ -2,6 +2,7 @@
 
 class figure_labor_seeker : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_LABOR_SEEKER, figure_labor_seeker)
     figure_labor_seeker(figure *f) : figure_impl(f) {}
     virtual figure_labor_seeker *dcast_labor_seeker() override { return this; }
 

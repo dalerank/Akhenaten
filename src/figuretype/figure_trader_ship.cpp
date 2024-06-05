@@ -10,15 +10,11 @@
 #include "grid/figure.h"
 #include "js/js_game.h"
 
-struct trade_ship_model : public figures::model_t<FIGURE_TRADE_SHIP, figure_trade_ship> {};
-trade_ship_model trader_ship_m;
+figures::model_t<figure_trade_ship> trader_ship_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_trade_ship);
 void config_load_figure_trade_ship() {
-    g_config_arch.r_section("figure_trade_ship", [] (archive arch) {
-        trader_ship_m.anim.load(arch);
-        trader_ship_m.sounds.load(arch);
-    });
+    trader_ship_m.load();
 }
 
 

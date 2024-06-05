@@ -4,6 +4,7 @@
 
 class figure_market_buyer : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_MARKET_BUYER, figure_market_buyer)
     figure_market_buyer(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}

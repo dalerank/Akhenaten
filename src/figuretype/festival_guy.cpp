@@ -5,15 +5,11 @@
 #include "building/count.h"
 #include "city/buildings.h"
 
-struct festival_guy_model : public figures::model_t<FIGURE_FESTIVAL_PRIEST, figure_festival_guy> {};
-festival_guy_model festival_guy_m;
+figures::model_t<figure_festival_guy> festival_guy_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_festival_guy);
 void config_load_figure_festival_guy() {
-    g_config_arch.r_section("figure_ostrich", [] (archive arch) {
-        festival_guy_m.anim.load(arch);
-        festival_guy_m.sounds.load(arch);
-    });
+    festival_guy_m.load();
 }
 
 void figure_festival_guy::on_create() {

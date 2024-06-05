@@ -4,15 +4,11 @@
 #include "core/random.h"
 
 static const vec2i FISHPOINT_OFFSETS[] = {{0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}};
-struct fishing_point_model : public figures::model_t<FIGURE_FISHING_POINT, figure_fishing_point> {};
-fishing_point_model fishing_point_m;
+figures::model_t<figure_fishing_point> fishing_point_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_fishing_point);
 void config_load_figure_fishing_point() {
-    g_config_arch.r_section("figure_fishing_point", [] (archive arch) {
-        fishing_point_m.anim.load(arch);
-        fishing_point_m.sounds.load(arch);
-    });
+    fishing_point_m.load();
 }
 
 void figure_fishing_point::figure_action() {

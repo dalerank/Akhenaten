@@ -4,6 +4,7 @@
 
 class figure_caravan_donkey : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_TRADE_CARAVAN_DONKEY, figure_caravan_donkey)
     figure_caravan_donkey(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}

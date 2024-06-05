@@ -13,15 +13,11 @@
 
 #include "js/js_game.h"
 
-struct emigrant_model : public figures::model_t<FIGURE_EMIGRANT, figure_emigrant> {};
-emigrant_model emigrant_m;
+figures::model_t<figure_emigrant> emigrant_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_emigrant);
 void config_load_figure_emigrant() {
-    g_config_arch.r_section("figure_emigrant", [] (archive arch) {
-        emigrant_m.anim.load(arch);
-        emigrant_m.sounds.load(arch);
-    });
+    emigrant_m.load();
 }
 
 void figure_create_emigrant(building* house, int num_people) {

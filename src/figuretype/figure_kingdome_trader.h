@@ -6,6 +6,7 @@ int figure_create_trade_caravan(tile2i tile, int city_id);
 
 class figure_trade_caravan : public figure_trader {
 public:
+    FIGURE_METAINFO(FIGURE_TRADE_CARAVAN, figure_trade_caravan);
     figure_trade_caravan(figure *f) : figure_trader(f) {}
 
     virtual void on_create() override {}

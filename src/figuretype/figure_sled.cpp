@@ -6,15 +6,11 @@
 
 #include "js/js_game.h"
 
-struct sled_model : public figures::model_t<FIGURE_SLED, figure_sled> {};
-sled_model sled_m;
+figures::model_t<figure_sled> sled_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_sled);
 void config_load_figure_sled() {
-    g_config_arch.r_section("figure_sled", [] (archive arch) {
-        sled_m.anim.load(arch);
-        sled_m.sounds.load(arch);
-    });
+    sled_m.load();
 }
 
 void figure_sled::figure_action() {

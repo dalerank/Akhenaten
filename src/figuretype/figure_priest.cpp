@@ -15,15 +15,11 @@
 
 #include "js/js_game.h"
 
-struct priest_model : public figures::model_t<FIGURE_PRIEST,figure_priest> {};
-priest_model priest_m;
+figures::model_t<figure_priest> priest_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_priest);
 void config_load_figure_priest() {
-    g_config_arch.r_section("figure_priest", [] (archive arch) {
-        priest_m.anim.load(arch);
-        priest_m.sounds.load(arch);
-    });
+    priest_m.load();
 }
 
 void figure_priest::figure_before_action() {

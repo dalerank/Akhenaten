@@ -2,15 +2,11 @@
 
 #include "figure/service.h"
 
-struct scriber_model : public figures::model_t<FIGURE_SCRIBER, figure_scriber> {};
-scriber_model scriber_m;
+figures::model_t<figure_scriber> scriber_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_scriber);
 void config_load_figure_scriber() {
-    g_config_arch.r_section("figure_scriber", [] (archive arch) {
-        scriber_m.anim.load(arch);
-        scriber_m.sounds.load(arch);
-    });
+    scriber_m.load();
 }
 
 void figure_scriber::figure_action() {

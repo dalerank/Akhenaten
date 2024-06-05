@@ -2,6 +2,7 @@
 
 class figure_immigrant : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_IMMIGRANT, figure_immigrant)
     figure_immigrant(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}

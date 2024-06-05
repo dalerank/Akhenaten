@@ -8,15 +8,11 @@
 #include "figure/service.h"
 #include "js/js_game.h"
 
-struct teacher_model : public figures::model_t<FIGURE_TEACHER, figure_teacher> {};
-teacher_model teacher_m;
+figures::model_t<figure_teacher> teacher_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_teacher);
 void config_load_figure_teacher() {
-    g_config_arch.r_section("figure_teacher", [] (archive arch) {
-        teacher_m.anim.load(arch);
-        teacher_m.sounds.load(arch);
-    });
+    teacher_m.load();
 }
 
 void figure_teacher::figure_action() {

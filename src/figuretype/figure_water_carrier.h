@@ -4,6 +4,7 @@
 
 class figure_water_carrier : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_WATER_CARRIER, figure_water_carrier)
     figure_water_carrier(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}

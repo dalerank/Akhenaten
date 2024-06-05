@@ -16,15 +16,11 @@
 
 #include "js/js_game.h"
 
-struct fishing_boat_model : public figures::model_t<FIGURE_FISHING_BOAT, figure_fishing_boat> {};
-fishing_boat_model fishing_boat_m;
+figures::model_t<figure_fishing_boat> fishing_boat_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_fishing_boat);
 void config_load_figure_fishing_boat() {
-    g_config_arch.r_section("fishing_boat", [] (archive arch) {
-        fishing_boat_m.anim.load(arch);
-        fishing_boat_m.sounds.load(arch);
-    });
+    fishing_boat_m.load();
 }
 
 void figure_fishing_boat::on_destroy() {

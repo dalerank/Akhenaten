@@ -4,6 +4,7 @@
 
 class figure_dentist : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_DENTIST, figure_dentist)
     figure_dentist(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}

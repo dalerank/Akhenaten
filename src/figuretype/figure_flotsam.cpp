@@ -9,15 +9,11 @@
 
 #include "js/js_game.h"
 
-struct flotsam_model : public figures::model_t<FIGURE_FLOTSAM, figure_flotsam> {};
-flotsam_model flotsam_m;
+figures::model_t<figure_flotsam> flotsam_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_flotsam);
 void config_load_figure_flotsam() {
-    g_config_arch.r_section("figure_physician", [] (archive arch) {
-        flotsam_m.anim.load(arch);
-        flotsam_m.sounds.load(arch);
-    });
+    flotsam_m.load();
 }
 
 static const int FLOTSAM_RESOURCE_IDS[] = {3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1};

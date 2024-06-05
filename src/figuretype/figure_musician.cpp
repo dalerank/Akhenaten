@@ -11,15 +11,11 @@
 
 #include "js/js_game.h"
 
-struct musician_model : public figures::model_t<FIGURE_MUSICIAN, figure_musician> {};
-musician_model musician_m;
+figures::model_t<figure_musician> musician_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_musician);
 void config_load_figure_musician() {
-    g_config_arch.r_section("figure_musician", [] (archive arch) {
-        musician_m.anim.load(arch);
-        musician_m.sounds.load(arch);
-    });
+    musician_m.load();
 }
 
 void figure_musician::update_shows() {

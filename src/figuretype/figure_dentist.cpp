@@ -2,15 +2,11 @@
 
 #include "figure/service.h"
 
-struct dentist_model : public figures::model_t<FIGURE_DENTIST, figure_dentist> {};
-dentist_model fdentist_m;
+figures::model_t<figure_dentist> fdentist_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_dentist);
 void config_load_figure_dentist() {
-    g_config_arch.r_section("figure_dentist", [] (archive arch) {
-        fdentist_m.anim.load(arch);
-        fdentist_m.sounds.load(arch);
-    });
+    fdentist_m.load();
 }
 
 void figure_dentist::figure_action() {

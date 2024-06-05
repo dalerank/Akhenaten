@@ -10,15 +10,11 @@
 
 #include "js/js_game.h"
 
-struct architector_model : public figures::model_t<FIGURE_ARCHITECT, figure_architector> {};
-architector_model architector_m;
+figures::model_t<figure_architector> architector_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_architector);
 void config_load_figure_architector() {
-    g_config_arch.r_section("figure_architect", [] (archive arch) {
-        architector_m.anim.load(arch);
-        architector_m.sounds.load(arch);
-    });
+    architector_m.load();
 }
 
 void figure_architector::figure_action() {

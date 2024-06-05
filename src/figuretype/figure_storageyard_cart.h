@@ -4,6 +4,7 @@
 
 class figure_storageyard_cart : public figure_cartpusher {
 public:
+    FIGURE_METAINFO(FIGURE_STORAGEYARD_CART, figure_storageyard_cart)
     figure_storageyard_cart(figure *f) : figure_cartpusher(f) {}
 
     virtual figure_storageyard_cart *dcast_storageyard_cart() override { return this; }

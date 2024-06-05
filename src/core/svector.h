@@ -448,7 +448,6 @@ private:
     }
 
     T* shrink_at(const T* cp, size_t num) {
-        assert(num < size());
         assert(cp);
 
         auto position = const_cast<T*>(cp);
@@ -458,6 +457,7 @@ private:
             clear();
             return begin();
         }
+        assert(num < size());
 
         const auto myend = end();
         for (auto p = position, np = position + num; np != myend; ++p, ++np) {

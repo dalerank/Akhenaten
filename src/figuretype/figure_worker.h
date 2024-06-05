@@ -4,6 +4,8 @@
 
 class figure_worker : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_LABORER, figure_worker)
+    
     figure_worker(figure *f) : figure_impl(f) {}
     virtual figure_worker *dcast_worker() override { return this; }
 

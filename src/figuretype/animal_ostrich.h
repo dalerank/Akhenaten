@@ -4,6 +4,7 @@
 
 class figure_ostrich : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_OSTRICH, figure_ostrich)
     figure_ostrich(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override;

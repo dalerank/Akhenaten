@@ -20,6 +20,7 @@ public:
 
 class figure_soldier_infantry : public figure_soldier {
 public:
+    FIGURE_METAINFO(FIGURE_INFANTRY, figure_soldier_infantry);
     figure_soldier_infantry(figure *f) : figure_soldier(f) {}
 
     virtual e_figure_sound phrase() const override { return {FIGURE_INFANTRY, "infantry"}; }
@@ -28,6 +29,7 @@ public:
 
 class figure_soldier_archer : public figure_soldier {
 public:
+    FIGURE_METAINFO(FIGURE_ARCHER, figure_soldier_archer)
     figure_soldier_archer(figure *f) : figure_soldier(f) {}
 
     virtual void update_image(const formation *m, int &dir) override;
@@ -35,14 +37,16 @@ public:
 
 class figure_soldier_charioteer : public figure_soldier {
 public:
+    FIGURE_METAINFO(FIGURE_FCHARIOTEER, figure_soldier_charioteer)
     figure_soldier_charioteer(figure *f) : figure_soldier(f) {}
     
     virtual void update_image(const formation *m, int &dir) override;
 };
 
-class figure_stadard_bearer : public figure_impl {
+class figure_standard_bearer : public figure_impl {
 public:
-    figure_stadard_bearer(figure *f) : figure_impl(f) {}
+    FIGURE_METAINFO(FIGURE_STANDARD_BEARER, figure_standard_bearer)
+    figure_standard_bearer(figure *f) : figure_impl(f) {}
 
     virtual void figure_action() override;
 };

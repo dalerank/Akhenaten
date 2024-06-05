@@ -10,15 +10,11 @@
 
 #include "js/js_game.h"
 
-struct native_trader_model : public figures::model_t<FIGURE_NATIVE_TRADER, figure_native_trader> {};
-native_trader_model native_trader_m;
+figures::model_t<figure_native_trader> native_trader_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_native_trader);
 void config_load_figure_native_trader() {
-    g_config_arch.r_section("figure_native_trader", [] (archive arch) {
-        native_trader_m.anim.load(arch);
-        native_trader_m.sounds.load(arch);
-    });
+    native_trader_m.load();
 }
 
 void figure_native_trader::figure_action() {

@@ -19,15 +19,11 @@
 
 #include "js/js_game.h"
 
-struct fireman_model : figures::model_t<FIGURE_FIREMAN, figure_fireman> {};
-fireman_model fireman_m;
+figures::model_t<figure_fireman> fireman_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_fireman);
 void config_load_figure_fireman() {
-    g_config_arch.r_section("figure_fireman", [] (archive arch) {
-        fireman_m.anim.load(arch);
-        fireman_m.sounds.load(arch);
-    });
+    fireman_m.load();
 }
 
 void figure_fireman::on_create() {

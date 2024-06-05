@@ -12,6 +12,7 @@ public:
 
 class figure_cartpusher : public figure_carrier {
 public:
+    FIGURE_METAINFO(FIGURE_CART_PUSHER, figure_cartpusher)
     figure_cartpusher(figure *f) : figure_carrier(f) {}
 
     virtual void on_create() override {}

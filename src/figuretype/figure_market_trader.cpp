@@ -6,15 +6,11 @@
 
 #include "js/js_game.h"
 
-struct market_trader_model : public figures::model_t<FIGURE_MARKET_TRADER, figure_market_trader> {};
-market_trader_model market_trader_m;
+figures::model_t<figure_market_trader> market_trader_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_market_trader);
 void config_load_figure_market_trader() {
-    g_config_arch.r_section("figure_market_trader", [] (archive arch) {
-        market_trader_m.anim.load(arch);
-        market_trader_m.sounds.load(arch);
-    });
+    market_trader_m.load();
 }
 
 void figure_market_trader::figure_action() {

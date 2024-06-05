@@ -17,6 +17,7 @@
 #include "sound/sound_walker.h"
 
 #include <string.h>
+#include <map>
 #include "dev/debug.h"
 
 declare_console_command_p(killall, console_command_killall);
@@ -293,6 +294,25 @@ figure_sound_t figure_impl::get_sound_reaction(pcstr key) const {
 
 bool figure_impl::can_move_by_water() const {
     return (base.allow_move_type == EMOVE_BOAT || base.allow_move_type == EMOVE_FLOTSAM || base.allow_move_type == EMOVE_HIPPO);
+}
+
+static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;
+void figure_impl::params(e_figure_type e, const static_params &p) {
+    if (!figure_impl_params) {
+        figure_impl_params = new std::map<e_figure_type, const figure_impl::static_params *>();
+    }
+    figure_impl_params->insert(std::make_pair(e, &p));
+}
+
+const figure_impl::static_params &figure_impl::params(e_figure_type e) {
+    auto it = figure_impl_params->find(e);
+    return (it == figure_impl_params->end()) ? figure_impl::static_params::dummy : *it->second;
+}
+
+figure_impl::static_params figure_impl::static_params::dummy;
+void figure_impl::static_params::load(archive arch) {
+    anim.load(arch);
+    sounds.load(arch);
 }
 
 void figure_impl::update_animation() {

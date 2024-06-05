@@ -14,15 +14,11 @@
 
 #include "js/js_game.h"
 
-struct worker_model : public figures::model_t<FIGURE_LABORER, figure_worker> {};
-worker_model worker_m;
+figures::model_t<figure_worker> worker_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_worker);
 void config_load_figure_worker() {
-    g_config_arch.r_section("figure_worker", [] (archive arch) {
-        worker_m.anim.load(arch);
-        worker_m.sounds.load(arch);
-    });
+    worker_m.load();
 }
 
 tile2i figure_worker::small_mastaba_tile4work(building *b) {

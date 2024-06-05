@@ -11,15 +11,11 @@
 
 #include "js/js_game.h"
 
-struct homeless_model : public figures::model_t<FIGURE_HOMELESS, figure_homeless> {};
-homeless_model homeless_m;
+figures::model_t<figure_homeless> homeless_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_homeless);
 void config_load_figure_homeless() {
-    g_config_arch.r_section("figure_homeless", [] (archive arch) {
-        homeless_m.anim.load(arch);
-        homeless_m.sounds.load(arch);
-    });
+    homeless_m.load();
 }
 
 void figure_create_homeless(tile2i tile, int num_people) {

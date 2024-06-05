@@ -8,15 +8,11 @@
 #include "grid/routing/routing.h"
 #include "js/js_game.h"
 
-struct reed_gatherer_model : public figures::model_t<FIGURE_REED_GATHERER, figure_reed_gatherer> {};
-reed_gatherer_model reed_gatherer_m;
+figures::model_t<figure_reed_gatherer> reed_gatherer_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_reed_gatherer);
 void config_load_figure_reed_gatherer() {
-    g_config_arch.r_section("figure_reed_gatherer", [] (archive arch) {
-        reed_gatherer_m.anim.load(arch);
-        reed_gatherer_m.sounds.load(arch);
-    });
+     reed_gatherer_m.load();
 }
 
 void figure_reed_gatherer::figure_before_action() {

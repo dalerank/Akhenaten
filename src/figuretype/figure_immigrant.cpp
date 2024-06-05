@@ -10,15 +10,11 @@
 
 #include "js/js_game.h"
 
-struct immigrant_model : public figures::model_t<FIGURE_IMMIGRANT, figure_immigrant> {};
-immigrant_model immigrant_m;
+figures::model_t<figure_immigrant> immigrant_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_immigrant);
 void config_load_figure_immigrant() {
-    g_config_arch.r_section("figure_immigrant", [] (archive arch) {
-        immigrant_m.anim.load(arch);
-        immigrant_m.sounds.load(arch);
-    });
+    immigrant_m.load();
 }
 
 void figure_immigrant::figure_action() {

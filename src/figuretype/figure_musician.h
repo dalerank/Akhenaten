@@ -4,6 +4,7 @@
 
 class figure_musician : public figure_entertainer {
 public:
+    FIGURE_METAINFO(FIGURE_MUSICIAN, figure_musician)
     figure_musician(figure *f) : figure_entertainer(f) {}
 
     virtual void on_create() override {}

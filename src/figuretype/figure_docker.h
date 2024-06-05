@@ -4,6 +4,7 @@
 
 class figure_docker : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_DOCKER, figure_docker)
     figure_docker(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}

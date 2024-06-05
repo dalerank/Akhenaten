@@ -4,6 +4,7 @@
 
 class figure_architector : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_ARCHITECT, figure_architector)
     figure_architector(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}

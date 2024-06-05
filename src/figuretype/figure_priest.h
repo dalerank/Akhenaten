@@ -4,6 +4,7 @@
 
 class figure_priest : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_PRIEST,figure_priest)
     figure_priest(figure *f) : figure_impl(f) {}
 
     virtual void figure_before_action() override;

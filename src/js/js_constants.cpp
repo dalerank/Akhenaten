@@ -190,6 +190,15 @@ void js_register_city_overlays(js_State *J) {
    _R(OVERLAY_COUTHOUSE)
 }
 
+void js_register_terrain(js_State *J) {
+   _R(TERRAIN_USAGE_ANY)
+   _R(TERRAIN_USAGE_ROADS)
+   _R(TERRAIN_USAGE_ENEMY)
+   _R(TERRAIN_USAGE_PREFER_ROADS)
+   _R(TERRAIN_USAGE_WALLS)
+   _R(TERRAIN_USAGE_ANIMAL)
+}
+
 void js_register_city_resources(js_State *J) {
     _R(RESOURCE_NONE)
     _R(RESOURCE_MIN)

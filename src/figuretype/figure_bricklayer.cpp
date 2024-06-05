@@ -6,15 +6,11 @@
 
 #include "js/js_game.h"
 
-struct bricklayer_model : public figures::model_t<FIGURE_BRICKLAYER, figure_bricklayer> {};
-bricklayer_model bricklayer_m;
+figures::model_t<figure_bricklayer> bricklayer_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_bricklayer);
 void config_load_figure_bricklayer() {
-    g_config_arch.r_section("figure_bricklayer", [] (archive arch) {
-        bricklayer_m.anim.load(arch);
-        bricklayer_m.sounds.load(arch);
-    });
+    bricklayer_m.load();
 }
 
 void figure_bricklayer::figure_action() {

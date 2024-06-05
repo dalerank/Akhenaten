@@ -4,6 +4,7 @@
 
 class figure_fishing_boat : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_FISHING_BOAT, figure_fishing_boat)
     figure_fishing_boat(figure *f) : figure_impl(f) {}
     virtual figure_fishing_boat *dcast_fishing_boat() override { return this; }
 

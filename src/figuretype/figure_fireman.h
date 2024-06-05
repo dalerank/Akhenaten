@@ -4,6 +4,7 @@
 
 class figure_fireman : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_FIREMAN, figure_fireman)
     figure_fireman(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override;

@@ -5,15 +5,11 @@
 
 #include "js/js_game.h"
 
-struct herbalist_model : public figures::model_t<FIGURE_HERBALIST, figure_herbalist> {};
-herbalist_model herbalist_m;
+figures::model_t<figure_herbalist> herbalist_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_herbalist);
 void config_load_figure_herbalist() {
-    g_config_arch.r_section("figure_herbalist", [] (archive arch) {
-        herbalist_m.anim.load(arch);
-        herbalist_m.sounds.load(arch);
-    });
+    herbalist_m.load();
 }
 
 void figure_herbalist::figure_before_action() {

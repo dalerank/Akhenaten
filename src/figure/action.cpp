@@ -15,10 +15,10 @@
 #include <algorithm>
 
 struct figure_action_property {
-    unsigned char ftype;
-    char speed_mult;
-    char terrain_usage;
-    short max_roam_length;
+    e_figure_type ftype;
+    uint8_t speed_mult;
+    uint8_t terrain_usage;
+    uint16_t max_roam_length;
     int _image_collection;
     int _image_group;
     e_image_id _img = IMG_NONE;

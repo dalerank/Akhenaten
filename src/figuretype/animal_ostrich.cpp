@@ -12,15 +12,11 @@
 
 #include "js/js_game.h"
 
-struct ostrich_model : public figures::model_t<FIGURE_OSTRICH, figure_ostrich> {};
-ostrich_model ostrich_m;
+figures::model_t<figure_ostrich> ostrich_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_ostrich);
 void config_load_figure_ostrich() {
-    g_config_arch.r_section("figure_ostrich", [] (archive arch) {
-        ostrich_m.anim.load(arch);
-        ostrich_m.sounds.load(arch);
-    });
+    ostrich_m.load();
 }
 
 void figure_ostrich::on_create() {

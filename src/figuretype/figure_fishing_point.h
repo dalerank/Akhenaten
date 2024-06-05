@@ -2,7 +2,9 @@
 
 class figure_fishing_point : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_FISHING_POINT, figure_fishing_point)
     figure_fishing_point(figure *f) : figure_impl(f) {}
+
     virtual figure_fishing_point *dcast_fishing_point() override { return this; }
 
     virtual void on_create() override {}

@@ -5,14 +5,11 @@
 
 #include "js/js_game.h"
 
-struct storageyard_cart_model : public figures::model_t<FIGURE_STORAGEYARD_CART, figure_storageyard_cart> {};
-storageyard_cart_model storageyard_cart_m;
+figures::model_t<figure_storageyard_cart> storageyard_cart_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_storageyard_cart);
 void config_load_figure_storageyard_cart() {
-    g_config_arch.r_section("figure_storageyard_cart", [] (archive arch) {
-        storageyard_cart_m.anim.load(arch);
-    });
+    storageyard_cart_m.load();
 }
 
 void figure_storageyard_cart::figure_before_action() {

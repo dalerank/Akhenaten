@@ -4,6 +4,7 @@
 
 class figure_homeless : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_HOMELESS, figure_homeless)
     figure_homeless(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}

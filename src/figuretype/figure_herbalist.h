@@ -4,6 +4,7 @@
 
 class figure_herbalist : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_HERBALIST, figure_herbalist)
     figure_herbalist(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}

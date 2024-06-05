@@ -7,15 +7,11 @@
 
 #include "js/js_game.h"
 
-struct delivery_boy_model : public figures::model_t<FIGURE_DELIVERY_BOY, figure_delivery_boy> {};
-delivery_boy_model delivery_boy_m;
+figures::model_t<figure_delivery_boy> delivery_boy_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_delivery_boy);
 void config_load_figure_delivery_boy() {
-    g_config_arch.r_section("figure_delivery_boy", [] (archive arch) {
-        delivery_boy_m.anim.load(arch);
-        delivery_boy_m.sounds.load(arch);
-    });
+    delivery_boy_m.load();
 }
 
 void figure_delivery_boy::figure_before_action() {

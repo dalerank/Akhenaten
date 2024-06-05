@@ -4,6 +4,7 @@
 
 class figure_sled : public figure_carrier {
 public:
+    FIGURE_METAINFO(FIGURE_SLED, figure_sled)
     figure_sled(figure *f) : figure_carrier(f) {}
 
     virtual void on_create() override {}

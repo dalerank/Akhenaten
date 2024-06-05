@@ -24,15 +24,11 @@
 
 #include "js/js_game.h"
 
-struct docker_model : public figures::model_t<FIGURE_DOCKER, figure_docker> {};
-docker_model docker_m;
+figures::model_t<figure_docker> docker_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_docker);
 void config_load_figure_docker() {
-    g_config_arch.r_section("figure_docker", [] (archive arch) {
-        docker_m.anim.load(arch);
-        docker_m.anim.load(arch);
-    });
+    docker_m.load();
 }
 
 bool figure_docker::try_import_resource(building* b, e_resource resource, int city_id) {

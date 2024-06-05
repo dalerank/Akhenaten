@@ -9,15 +9,11 @@
 
 #include "js/js_game.h"
 
-struct lumberjack_model : public figures::model_t<FIGURE_LUMBERJACK, figure_lumberjack> {};
-lumberjack_model lumberjack_m;
+figures::model_t<figure_lumberjack> lumberjack_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_lumberjack);
 void config_load_figure_lumberjack() {
-    g_config_arch.r_section("figure_lumberjack", [] (archive arch) {
-        lumberjack_m.anim.load(arch);
-        lumberjack_m.sounds.load(arch);
-    });
+    lumberjack_m.load();
 }
 
 void figure_lumberjack::figure_action() {

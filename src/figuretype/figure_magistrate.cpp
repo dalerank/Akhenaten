@@ -10,15 +10,11 @@
 
 #include "js/js_game.h"
 
-struct magistrate_model : public figures::model_t<FIGURE_MAGISTRATE, figure_magistrate> {};
-magistrate_model magistrate_m;
+figures::model_t<figure_magistrate> magistrate_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_magistrate);
 void config_load_figure_magistrate() {
-    g_config_arch.r_section("figure_magistrate", [] (archive arch) {
-        magistrate_m.anim.load(arch);
-        magistrate_m.sounds.load(arch);
-    });
+    magistrate_m.load();
 }
 
 void figure_magistrate::figure_action() {

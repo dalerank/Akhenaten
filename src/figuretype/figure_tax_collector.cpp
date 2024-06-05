@@ -16,15 +16,11 @@
 
 #include "js/js_game.h"
 
-struct tax_collector_model : figures::model_t<FIGURE_TAX_COLLECTOR, figure_tax_collector> {};
-tax_collector_model tax_collector_m;
+figures::model_t<figure_tax_collector> tax_collector_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_tax_collector);
 void config_load_figure_tax_collector() {
-    g_config_arch.r_section("figure_tax_collector", [] (archive arch) {
-        tax_collector_m.anim.load(arch);
-        tax_collector_m.sounds.load(arch);
-    });
+    tax_collector_m.load();
 }
 
 void figure_tax_collector::figure_action() {

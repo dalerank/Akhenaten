@@ -5,15 +5,11 @@
 
 #include "js/js_game.h"
 
-struct explosion_model : public figures::model_t<FIGURE_EXPLOSION, figure_explosion> {};
-explosion_model explosion_m;
+figures::model_t<figure_explosion> explosion_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_explosion);
 void config_load_figure_explosion() {
-    g_config_arch.r_section("figure_explosion", [] (archive arch) {
-        explosion_m.anim.load(arch);
-        explosion_m.sounds.load(arch);
-    });
+    explosion_m.load();
 }
 
 static const int CLOUD_TILE_OFFSETS[] = {0, 0, 0, 1, 1, 2};

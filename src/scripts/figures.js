@@ -173,6 +173,18 @@ figure_ostrich_hunter = {
 	max_hunting_distance : 30,
 }
 
+figure_standard_bearer = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 },
+	},
+}
+
+figure_native_trader = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 },
+	},
+}
+
 figure_magistrate = {
 	animations : {
 		walk : { pack: PACK_SPR_MAIN, id: 212, max_frames:12 },
@@ -273,7 +285,7 @@ figure_physician = {
 	}
 }
 
-figure_architect = {
+figure_architector = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:4, max_frames:12 },
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:5, max_frames:8, loop:false },
@@ -494,7 +506,7 @@ figure_fishing_point = {
 	},
 }
 
-fishing_boat = {
+figure_fishing_boat = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:134, max_frames:4, duration:3 },
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:135, max_frames:8, loop:false },

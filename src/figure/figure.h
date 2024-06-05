@@ -486,8 +486,18 @@ public:
     bool find_resource_tile(int resource_type, tile2i &out);
 };
 
+#define FIGURE_METAINFO(type, clsid) static constexpr e_figure_type TYPE = type; static constexpr pcstr CLSID = #clsid;
 class figure_impl {
 public:
+    struct static_params {
+        static static_params dummy;
+        pcstr name;
+        animations_t anim;
+        figure_sounds_t sounds;
+
+        void load(archive arch);
+    };
+
     figure_impl(figure *f) : base(*f), wait_ticks(f->wait_ticks), destination_tile(f->destination_tile) {}
 
     virtual void on_create() {}
@@ -512,7 +522,11 @@ public:
     virtual bool is_common_roaming() { return true; }
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
     virtual const animations_t &anim() const { static animations_t dummy; return dummy; }
+    virtual const static_params &params() const { return params(type()); }
     inline const animation_t &anim(pcstr anim_key) const { return anim()[anim_key]; }
+
+    static void params(e_figure_type, const static_params &);
+    static const static_params &params(e_figure_type);
 
     virtual figure_immigrant *dcast_immigrant() { return nullptr; }
     virtual figure_cartpusher *dcast_cartpusher() { return nullptr; }
@@ -600,14 +614,30 @@ typedef figure_impl* (*create_figure_function_cb)(e_figure_type, figure*);
 
 using FigureIterator = FuncLinkedList<create_figure_function_cb>;
 
-template<e_figure_type E, typename T>
-struct model_t {
-    static constexpr e_figure_type type = E;
-    animations_t anim;
-    figure_sounds_t sounds;
+template<typename T>
+struct model_t : public figure_impl::static_params {
+    static constexpr e_figure_type type = T::TYPE;
+    static constexpr pcstr CLSID = T::CLSID;
 
     model_t() {
+        name = CLSID;
         static FigureIterator config_handler(&create);
+        figure_impl::params(type, *this);
+    }
+
+    void load() {
+        bool loaded = false;
+        g_config_arch.r_section(name, [&] (archive arch) {
+            static_params::load(arch);
+            loaded = true;
+        });
+        assert(loaded);
+    }
+
+    template<typename F>
+    void load(F func) {
+        load();
+        g_config_arch.r_section(name, func);
     }
 
     static figure_impl *create(e_figure_type e, figure *data) {
@@ -618,5 +648,5 @@ struct model_t {
     }
 };
 
-} // end namespace config
+} // end namespace figures
     

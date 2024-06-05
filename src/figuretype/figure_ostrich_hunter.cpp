@@ -10,17 +10,15 @@
 
 #include "js/js_game.h"
 
-struct ostrich_hunter_model : public figures::model_t<FIGURE_OSTRICH_HUNTER, figure_ostrich_hunter> {
+struct ostrich_hunter_model : public figures::model_t<figure_ostrich_hunter> {
     int max_hunting_distance;
 };
 ostrich_hunter_model ostrich_hunter_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_ostrich_hunter);
 void config_load_figure_ostrich_hunter() {
-    g_config_arch.r_section("figure_ostrich_hunter", [] (archive arch) {
+    ostrich_hunter_m.load([] (archive arch) {
         ostrich_hunter_m.max_hunting_distance = arch.r_int("max_hunting_distance");
-        ostrich_hunter_m.anim.load(arch);
-        ostrich_hunter_m.sounds.load(arch);
     });
 }
 

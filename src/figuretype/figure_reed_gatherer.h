@@ -4,6 +4,7 @@
 
 class figure_reed_gatherer : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_REED_GATHERER, figure_reed_gatherer)
     figure_reed_gatherer(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}

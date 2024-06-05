@@ -11,15 +11,11 @@
 
 #include "js/js_game.h"
 
-struct physician_model : public figures::model_t<FIGURE_PHYSICIAN, figure_physician> {};
-physician_model fphysician_m;
+figures::model_t<figure_physician> fphysician_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_physician);
 void config_load_figure_physician() {
-    g_config_arch.r_section("figure_physician", [] (archive arch) {
-        fphysician_m.anim.load(arch);
-        fphysician_m.sounds.load(arch);
-    });
+    fphysician_m.load();
 }
 
 void figure_physician::figure_action() {

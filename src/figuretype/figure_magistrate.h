@@ -4,6 +4,7 @@
 
 class figure_magistrate : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_MAGISTRATE, figure_magistrate)
     figure_magistrate(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}

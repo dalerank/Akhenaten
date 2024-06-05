@@ -9,15 +9,11 @@
 
 #include "js/js_game.h"
 
-struct labor_seeker_model : public figures::model_t<FIGURE_LABOR_SEEKER, figure_labor_seeker> {};
-labor_seeker_model labor_seeker_m;
+figures::model_t<figure_labor_seeker> labor_seeker_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_labor_seeker);
 void config_load_figure_labor_seeker() {
-    g_config_arch.r_section("figure_labor_seeker", [] (archive arch) {
-        labor_seeker_m.anim.load(arch);
-        labor_seeker_m.sounds.load(arch);
-    });
+    labor_seeker_m.load();
 }
 
 void figure_labor_seeker::figure_action() {

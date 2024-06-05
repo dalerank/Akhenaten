@@ -2,6 +2,7 @@
 
 class figure_explosion : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_EXPLOSION, figure_explosion)
     figure_explosion(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}

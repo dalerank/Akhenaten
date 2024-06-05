@@ -4,6 +4,7 @@
 
 class figure_tax_collector : public figure_impl {
 public:
+    FIGURE_METAINFO(FIGURE_TAX_COLLECTOR, figure_tax_collector)
     figure_tax_collector(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}

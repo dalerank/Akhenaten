@@ -38,40 +38,20 @@ static const vec2i ALTERNATIVE_POINTS[] = {
   {-1, -6},
 };
 
-struct standard_bearer_model : public figures::model_t<FIGURE_STANDARD_BEARER, figure_stadard_bearer> {};
-struct soldier_infantry_model : public figures::model_t<FIGURE_INFANTRY, figure_soldier_infantry> {};
-struct soldier_archer_model : public figures::model_t<FIGURE_ARCHER, figure_soldier_archer> {};
-struct soldier_charioterr_model : public figures::model_t<FIGURE_FCHARIOTEER, figure_soldier_charioteer> {};
-
-standard_bearer_model standard_bearer_m;
-soldier_infantry_model soldier_infantry_m;
-soldier_archer_model soldier_archer_m;
-soldier_charioterr_model soldier_charioterr_m;
+figures::model_t<figure_standard_bearer> standard_bearer_m;
+figures::model_t<figure_soldier_infantry> soldier_infantry_m;
+figures::model_t<figure_soldier_archer> soldier_archer_m;
+figures::model_t<figure_soldier_charioteer> soldier_charioterr_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_soldiers);
 void config_load_figure_soldiers() {
-    g_config_arch.r_section("figure_stadard_bearer", [] (archive arch) {
-        standard_bearer_m.anim.load(arch);
-        standard_bearer_m.sounds.load(arch);
-    });
-
-    g_config_arch.r_section("figure_soldier_infantry", [] (archive arch) {
-        soldier_infantry_m.anim.load(arch);
-        soldier_infantry_m.sounds.load(arch);
-    });
-
-    g_config_arch.r_section("figure_soldier_archer", [] (archive arch) {
-        soldier_archer_m.anim.load(arch);
-        soldier_archer_m.sounds.load(arch);
-    });
-
-    g_config_arch.r_section("figure_soldier_charioteer", [] (archive arch) {
-        soldier_charioterr_m.anim.load(arch);
-        soldier_charioterr_m.sounds.load(arch);
-    });
+    standard_bearer_m.load();
+    soldier_infantry_m.load();
+    soldier_archer_m.load();
+    soldier_charioterr_m.load();
 }
 
-void figure_stadard_bearer::figure_action() {
+void figure_standard_bearer::figure_action() {
     const formation* m = formation_get(base.formation_id);
 
     //    terrain_usage = TERRAIN_USAGE_ANY;

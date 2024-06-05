@@ -11,6 +11,7 @@ enum {
 
 class figure_trade_ship : public figure_carrier {
 public:
+    FIGURE_METAINFO(FIGURE_TRADE_SHIP, figure_trade_ship)
     figure_trade_ship(figure *f) : figure_carrier(f) {}
 
     virtual void figure_action() override;

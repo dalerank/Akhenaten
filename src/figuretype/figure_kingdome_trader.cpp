@@ -30,15 +30,11 @@
 
 #include "js/js_game.h"
 
-struct trade_caravan_model : public figures::model_t<FIGURE_TRADE_CARAVAN, figure_trade_caravan> {};
-trade_caravan_model trade_caravan_m;
+figures::model_t<figure_trade_caravan> trade_caravan_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_trade_caravan);
 void config_load_figure_trade_caravan() {
-    g_config_arch.r_section("figure_trade_caravan", [] (archive arch) {
-        trade_caravan_m.anim.load(arch);
-        trade_caravan_m.sounds.load(arch);
-    });
+    trade_caravan_m.load();
 }
 
 int figure::trader_total_bought() {

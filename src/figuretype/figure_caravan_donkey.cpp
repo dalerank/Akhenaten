@@ -22,15 +22,11 @@
 
 #include "core/profiler.h"
 
-struct caravan_donkey_model : public figures::model_t<FIGURE_TRADE_CARAVAN_DONKEY, figure_caravan_donkey> {};
-caravan_donkey_model caravan_donkey_m;
+figures::model_t<figure_caravan_donkey> caravan_donkey_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_caravan_donkey);
 void config_load_figure_caravan_donkey() {
-    g_config_arch.r_section("figure_caravan_donkey", [] (archive arch) {
-        caravan_donkey_m.anim.load(arch);
-        caravan_donkey_m.sounds.load(arch);
-    });
+    caravan_donkey_m.load();
 }
 
 void figure_caravan_donkey::figure_action() {

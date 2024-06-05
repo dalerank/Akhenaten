@@ -9,15 +9,11 @@
 
 #include "js/js_game.h"
 
-struct juggler_model : public figures::model_t<FIGURE_JUGGLER, figure_juggler> {};
-juggler_model juggler_m;
+figures::model_t<figure_juggler> juggler_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_juggler);
 void config_load_figure_juggler() {
-    g_config_arch.r_section("figure_juggler", [] (archive arch) {
-        juggler_m.anim.load(arch);
-        juggler_m.sounds.load(arch);
-    });
+    juggler_m.load();
 }
 
 void figure_juggler::update_shows() {
