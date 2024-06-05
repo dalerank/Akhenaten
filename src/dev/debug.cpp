@@ -479,6 +479,12 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         }
         break;
 
+    case e_debug_render_damage_fire: // FIRE
+        if (b_id && b) {
+            debug_text(ctx, str, x, y + 10, 0, "", b->fire_risk, COLOR_LIGHT_RED);
+        }
+        break;
+
     case e_debug_render_marshland: // MARSHLAND
         d = map_terrain_is(grid_offset, TERRAIN_MARSHLAND);
         if (d != 0) {

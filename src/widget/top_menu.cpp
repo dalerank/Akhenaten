@@ -180,6 +180,7 @@ static menu_item menu_render[] = {
     {6, 22, menu_debug_render_change_opt, e_debug_render_figures},
     {6, 23, menu_debug_render_change_opt, e_debug_render_height},
     {6, 24, menu_debug_render_change_opt, e_debug_render_marshland_depl},
+    {6, 25, menu_debug_render_change_opt, e_debug_render_damage_fire},
 };
 
 menu_bar_item g_top_menu[] = {
@@ -271,6 +272,7 @@ static void menu_debug_render_text(int opt, bool v) {
         {"Figures ON", "Figures OFF"},
         {"Height ON", "Height OFF"},
         {"Marshland Depl ON", "Marshland Depl OFF"},
+        {"Dmg Fire ON", "Dmg Fire OFF"},
     };
     menu_update_text(g_top_menu[INDEX_DEBUG_RENDER], opt, debug_text_rend[opt][v ? 0 : 1]);
 }
