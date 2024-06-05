@@ -17,6 +17,7 @@ public:
     virtual void window_info_foreground(object_info &ctx) override;
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
     virtual bool can_play_animation() const { return false; }
+    virtual int get_fire_risk(int value) const override { return 0; }
 
     const building_storage *storage();
     building_storage_yard *yard() { return main()->dcast_storage_yard(); }
