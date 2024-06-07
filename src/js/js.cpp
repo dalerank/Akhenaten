@@ -240,6 +240,7 @@ void js_reset_vm_state() {
     js_register_ui_fonts(vm.J);
     js_register_city_resources(vm.J);
     js_register_terrain(vm.J);
+    js_register_menu(vm.J);
 
     int ok = js_vm_load_file_and_exec(":modules.js");
     if (ok) {

@@ -96,7 +96,7 @@ static int get_sidebar_x_offset() {
 
 static int is_all_button(int type) {
     auto &data = g_build_menu_data;
-    return (type == BUILDING_MENU_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES)
+    return (type == BUILDING_MENU_TEMPLES && data.selected_submenu == BUILD_MENU_TEMPLES)
            || (type == BUILDING_MENU_TEMPLE_COMPLEX && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES);
 }
 
@@ -111,10 +111,10 @@ static int set_submenu_for_type(int type) {
         data.selected_submenu = BUILD_MENU_RAW_MATERIALS;
         break;
     case BUILDING_MENU_CONSTURCTION_GUILDS:
-        data.selected_submenu = BUILD_MENU_WORKSHOPS;
+        data.selected_submenu = BUILD_MENU_GUILDS;
         break;
     case BUILDING_MENU_TEMPLES:
-        data.selected_submenu = BUILD_MENU_SMALL_TEMPLES;
+        data.selected_submenu = BUILD_MENU_TEMPLES;
         break;
     case BUILDING_MENU_TEMPLE_COMPLEX:
         data.selected_submenu = BUILD_MENU_LARGE_TEMPLES;

@@ -9,23 +9,19 @@ enum e_build_menu {
     BUILD_MENU_VACANT_HOUSE = 0,
     BUILD_MENU_CLEAR_LAND = 1,
     BUILD_MENU_ROAD = 2,
-    BUILD_MENU_WATER = 3,
     BUILD_MENU_WATER_CROSSINGS = 3,
     BUILD_MENU_HEALTH = 4,
     BUILD_MENU_RELIGION = 5,
     BUILD_MENU_EDUCATION = 6,
     BUILD_MENU_ENTERTAINMENT = 7,
     BUILD_MENU_ADMINISTRATION = 8,
-    BUILD_MENU_ENGINEERING = 9,
     BUILD_MENU_BEAUTIFICATION = 9,
     BUILD_MENU_SECURITY = 10,
     BUILD_MENU_INDUSTRY = 11,
 
     BUILD_MENU_FARMS = 12,
     BUILD_MENU_RAW_MATERIALS = 13,
-    BUILD_MENU_WORKSHOPS = 14,
     BUILD_MENU_GUILDS = 14,
-    BUILD_MENU_SMALL_TEMPLES = 15,
     BUILD_MENU_TEMPLES = 15,
     BUILD_MENU_LARGE_TEMPLES = 16,
     BUILD_MENU_TEMPLE_COMPLEX = 16,
@@ -43,7 +39,7 @@ enum e_build_menu {
 int building_menu_is_building_enabled(int type);
 void building_menu_toggle_building(int type, bool enabled = true);
 
-void building_menu_enable_all(void);
+void building_menu_set_all(bool enabled);
 
 void building_menu_update(const bstring64 &stage);
 

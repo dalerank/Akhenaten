@@ -723,7 +723,7 @@ building_bandstand = {
   animations : {
     booth : { pos:[0, 0], pack:PACK_GENERAL, id:114 },
     square : { pos:[0, 0], pack:PACK_GENERAL, id:58 },
-    juggler : { pos : [35, 17], anim_id : IMG_JUGGLER_SHOW },
+    juggler : { pos : [35, 17], pack:PACK_SPR_AMBIENT, id:7, offset:-1 },
     stand_sn_s : { pack:PACK_GENERAL, id:92, offset:0},
     stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1},
     stand_we_w: { pack:PACK_GENERAL, id:92, offset:2},
@@ -743,7 +743,7 @@ building_pavilion = {
     stand_sn_s : { pack:PACK_GENERAL, id:92, offset:0},
     stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1},
     stand_sn_e : { pack:PACK_GENERAL, id:92, offset:2},
-    juggler : { pos : [35, 17], anim_id : IMG_JUGGLER_SHOW },
+    juggler : { pos : [35, 17], pack:PACK_SPR_AMBIENT, id:7, offset:-1 },
     dancer : { pos : [65, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35 },
     musician_sn : { pos : [50, 0], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11 },
     musician_we : { pos : [48, 4], pack:PACK_SPR_AMBIENT, id:10, max_frames : 11 },

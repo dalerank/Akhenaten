@@ -12,7 +12,11 @@
 #include "building/industry.h"
 
 #include "dev/debug.h"
+#include "js/js_game.h"
+
 #include <iostream>
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_buldingin_menu);
 
 declare_console_command_p(menuupdate, game_cheat_menu_update);
 void game_cheat_menu_update(std::istream &is, std::ostream &) {
@@ -23,225 +27,110 @@ void game_cheat_menu_update(std::istream &is, std::ostream &) {
 
 #define BUILD_MENU_ITEM_MAX 30
 
-static const int MENU_CONFIG[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
-    {BUILDING_HOUSE_VACANT_LOT,
-     0},
-
-    {BUILDING_CLEAR_LAND,
-     0},
-
-    {BUILDING_ROAD,
-     0},
-
-    // water crossings
-    {BUILDING_LOW_BRIDGE,
-     BUILDING_FERRY,
-     0},
-    // health and sanitation structures
-    {BUILDING_WELL,
-     BUILDING_WATER_SUPPLY,
-     BUILDING_DENTIST,
-     BUILDING_APOTHECARY,
-     BUILDING_PHYSICIAN,
-     BUILDING_MORTUARY,
-     0},
-    // religious structures
-    {BUILDING_MENU_SHRINES,
-     BUILDING_MENU_TEMPLES,
-     BUILDING_MENU_TEMPLE_COMPLEX,
-     BUILDING_MENU_MONUMENTS,
-     BUILDING_FESTIVAL_SQUARE,
-     0},
-    // education structures
-    {BUILDING_SCRIBAL_SCHOOL,
-     BUILDING_LIBRARY,
-     0},
-    // entertainment structures
-    {BUILDING_BOOTH,
-     BUILDING_BANDSTAND,
-     BUILDING_PAVILLION,
-     BUILDING_SENET_HOUSE,
-     BUILDING_JUGGLER_SCHOOL,
-     BUILDING_CONSERVATORY,
-     BUILDING_DANCE_SCHOOL,
-     0},
-    // municipal structures
-    {BUILDING_FIREHOUSE,
-     BUILDING_ARCHITECT_POST,
-     BUILDING_POLICE_STATION,
-     BUILDING_TAX_COLLECTOR,
-     BUILDING_COURTHOUSE,
-     BUILDING_VILLAGE_PALACE,
-     BUILDING_TOWN_PALACE,
-     BUILDING_CITY_PALACE,
-     BUILDING_PERSONAL_MANSION,
-     BUILDING_FAMILY_MANSION,
-     BUILDING_DYNASTY_MANSION,
-     BUILDING_ROADBLOCK,
-     BUILDING_MENU_WATER_CROSSINGS,
-     BUILDING_MENU_BEAUTIFICATION,
-     0},
-    // beautifications
-    {BUILDING_GARDENS,
-     BUILDING_PLAZA,
-     BUILDING_SMALL_STATUE,
-     BUILDING_MEDIUM_STATUE,
-     BUILDING_LARGE_STATUE,
-     0},
-    // military structures
-    {BUILDING_MENU_DEFENSES,
-     BUILDING_RECRUITER,
-     BUILDING_MENU_FORTS,
-     BUILDING_MILITARY_ACADEMY,
-     BUILDING_WEAPONSMITH,
-     BUILDING_CHARIOTS_WORKSHOP,
-     BUILDING_WARSHIP_WHARF,
-     BUILDING_TRANSPORT_WHARF,
-     0},
-    // industry structures
-    {BUILDING_MENU_RAW_MATERIALS,
-     BUILDING_JEWELS_WORKSHOP,
-     BUILDING_POTTERY_WORKSHOP,
-     BUILDING_BREWERY_WORKSHOP,
-     BUILDING_WEAVER_WORKSHOP,
-     BUILDING_PAPYRUS_WORKSHOP,
-     BUILDING_BRICKS_WORKSHOP,
-     BUILDING_LAMP_WORKSHOP,
-     BUILDING_PAINT_WORKSHOP,
-     BUILDING_SHIPWRIGHT,
-     BUILDING_MENU_CONSTURCTION_GUILDS,
-     0},
-    // farms
-    {BUILDING_GRAIN_FARM,
-     BUILDING_LETTUCE_FARM,
-     BUILDING_POMEGRANATES_FARM,
-     BUILDING_CHICKPEAS_FARM,
-     BUILDING_FIGS_FARM,
-     BUILDING_BARLEY_FARM,
-     BUILDING_FLAX_FARM,
-     BUILDING_HENNA_FARM,
-     0},
-    // raw materials
-    {BUILDING_CLAY_PIT,
-     BUILDING_GEMSTONE_MINE,
-     BUILDING_GOLD_MINE,
-     BUILDING_COPPER_MINE,
-     BUILDING_STONE_QUARRY,
-     BUILDING_LIMESTONE_QUARRY,
-     BUILDING_GRANITE_QUARRY,
-     BUILDING_SANDSTONE_QUARRY,
-     BUILDING_REED_GATHERER,
-     BUILDING_WOOD_CUTTERS,
-     0},
-    // guilds
-    {BUILDING_CARPENTERS_GUILD,
-     BUILDING_BRICKLAYERS_GUILD,
-     BUILDING_STONEMASONS_GUILD,
-     BUILDING_ARTISANS_GUILD,
-     0},
-    // shrines
-    {BUILDING_TEMPLE_OSIRIS,
-     BUILDING_TEMPLE_RA,
-     BUILDING_TEMPLE_PTAH,
-     BUILDING_TEMPLE_SETH,
-     BUILDING_TEMPLE_BAST,
-     0},
-    // temple complexes
-    {BUILDING_TEMPLE_COMPLEX_OSIRIS,
-     BUILDING_TEMPLE_COMPLEX_RA,
-     BUILDING_TEMPLE_COMPLEX_PTAH,
-     BUILDING_TEMPLE_COMPLEX_SETH,
-     BUILDING_TEMPLE_COMPLEX_BAST,
-     BUILDING_TEMPLE_COMPLEX_ALTAR,
-     BUILDING_TEMPLE_COMPLEX_ORACLE,
-     0},
-    // forts
-    {BUILDING_FORT_INFANTRY,
-     BUILDING_FORT_ARCHERS,
-     BUILDING_FORT_CHARIOTEERS,
-     0},
-    // food structures
-    {BUILDING_MENU_FARMS,
-     BUILDING_WATER_LIFT,
-     BUILDING_IRRIGATION_DITCH,
-     BUILDING_FISHING_WHARF,
-     BUILDING_CATTLE_RANCH,
-     BUILDING_HUNTING_LODGE,
-     BUILDING_WORK_CAMP,
-     0},
-    // distribution structures
-    {BUILDING_GRANARY,
-     BUILDING_BAZAAR,
-     BUILDING_STORAGE_YARD,
-     BUILDING_DOCK,
-     0},
-    // shrines
-    {BUILDING_SHRINE_OSIRIS,
-     BUILDING_SHRINE_RA,
-     BUILDING_SHRINE_PTAH,
-     BUILDING_SHRINE_SETH,
-     BUILDING_SHRINE_BAST,
-     0},
-    // monuments
-    {BUILDING_SMALL_MASTABA,
-     BUILDING_SMALL_ROYAL_TOMB,
-     BUILDING_MEDIUM_ROYAL_TOMB,
-     BUILDING_LARGE_ROYAL_TOMB,
-     BUILDING_GRAND_ROYAL_TOMB,
-     BUILDING_PYRAMID,
-     BUILDING_SPHINX,
-     BUILDING_MAUSOLEUM,
-     BUILDING_ALEXANDRIA_LIBRARY,
-     BUILDING_CAESAREUM,
-     BUILDING_PHAROS_LIGHTHOUSE,
-     BUILDING_ABU_SIMBEL,
-     0},
-    // defensive structures
-    {BUILDING_MUD_WALL,
-     BUILDING_MUD_TOWER,
-     BUILDING_MUD_GATEHOUSE,
-     BUILDING_BRICK_WALL,
-     BUILDING_BRICK_TOWER,
-     BUILDING_BRICK_GATEHOUSE,
-     0},
+struct building_menu_item {
+    int type = -1;
+    bool enabled = false;
 };
-int g_menu_enabled[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX];
 
-static bool changed = 1;
+static building_menu_item building_menu_item_dummy{-1, false};
+struct building_menu_group {
+    using items_t = svector<building_menu_item, BUILD_MENU_ITEM_MAX>;
 
-void building_menu_disable_all() {
-    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
-        for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-            g_menu_enabled[sub][item] = 0;
+    building_menu_item &operator[](int type) {
+        auto it = std::find_if(items.begin(), items.end(), [type] (auto &item) { return item.type == type; });
+        return (it != items.end()) ? *it : building_menu_item_dummy;
+    }
+
+    void set_all(bool enabled) {
+        for (auto &it : items) {
+            it.enabled = enabled;
         }
     }
+
+    items_t::iterator begin() { return items.begin(); }
+    items_t::iterator end() { return items.end(); }
+
+    void clear() {
+        items.clear();
+    }
+
+    int id;
+    items_t items;
+};
+
+struct menu_config_t {
+    svector<building_menu_group, 30> groups;
+    building_menu_group &group(int id) {
+        static building_menu_group building_menu_group_dummy;
+        auto it = std::find_if(groups.begin(), groups.end(), [id] (auto &it) { return it.id == id; });
+        return (it != groups.end()) ? *it : building_menu_group_dummy;
+    }
+
+    void set(int type, bool enabled) {
+        for (auto &group : groups) {
+            auto &item = group[type];
+            if (item.type == type) {
+                item.enabled = enabled;
+            }
+        }
+    }
+
+    building_menu_item &get(int type) {
+        for (auto &group : groups) {
+            auto &item = group[type];
+            if (item.type == type) {
+                return item;
+            }
+        }
+
+        return building_menu_item_dummy;
+    }
+
+    bool is_enabled(int type) {
+        building_menu_item &item = get(type);
+        return (item.type == type) ? item.enabled : false;
+    }
+
+    int type(int submenu, int index) { 
+        auto &gr = group(submenu);
+        return (index < gr.items.size() ? gr.items[index].type : 0);
+    }
+
+    void set_all(bool enabled) {
+        for (auto &group : groups) {
+            group.set_all(enabled);
+        }
+    }
+
+    void clear() {
+        for (auto &gr : groups) {
+            gr.clear();
+        }
+    }
+    bool changed = true;
+} g_menu_config;
+
+void config_load_buldingin_menu() {
+    g_menu_config.groups.clear();
+    g_config_arch.r_array("building_menu", [] (archive arch) {
+        g_menu_config.groups.push_back({});
+        auto &group = g_menu_config.groups.back();
+        group.id = arch.r_int("id");
+        auto items = arch.r_array_num<int>("items");
+        for (auto &it : items) group.items.push_back({it, false});
+    });
 }
-void building_menu_enable_all() {
-    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
-        for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-            g_menu_enabled[sub][item] = 1;
-        }
-    }
+
+void building_menu_set_all(bool enabled) {
+    g_menu_config.set_all(enabled);
 }
 
 int building_menu_is_building_enabled(int type) {
-    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
-        for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-            if (MENU_CONFIG[sub][item] == type) // found matching menu item!!!
-                return g_menu_enabled[sub][item];
-        }
-    }
-    return 0;
+    return g_menu_config.is_enabled(type);
 }
 
 void building_menu_toggle_building(int type, bool enabled) {
-    // go through all the menu items, and toggle the matching one
-    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
-        for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-            if (MENU_CONFIG[sub][item] == type) // found match!
-                g_menu_enabled[sub][item] = enabled;
-        }
-    }
+    g_menu_config.set(type, enabled);
 
     // additional buildings / building menus
     if (enabled) {
@@ -495,18 +384,8 @@ void building_menu_update_monuments() {
 }
 
 void building_menu_update(const bstring64 &stage_name) {
-    // do this if loading normally from a save - tutorial stage will
-    // be determined accordingly by the set flags!
-    //if (build_set == BUILDSET_NORMAL) {
-    //    for (int i = 1; i <= 10; i++) {
-    //        if (scenario_is_mission_rank(i)) {
-    //            return tutorial_menu_update(i);
-    //        }
-    //    }
-    //}
-
     if (stage_name == tutorial_stage.disable_all) {
-        building_menu_disable_all();
+        building_menu_set_all(false);
     }
 
     for (const auto &stage : g_scenario_data.building_stages) {
@@ -541,42 +420,36 @@ void building_menu_update(const bstring64 &stage_name) {
     building_menu_toggle_building(BUILDING_ROAD);
     building_menu_toggle_building(BUILDING_WELL);
 
-    changed = 1;
+    g_menu_config.changed = 1;
 }
 
 int building_menu_count_items(int submenu) {
-    int count = 0;
-    for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-        if (g_menu_enabled[submenu][item] && MENU_CONFIG[submenu][item] > 0)
-            count++;
-    }
-
+    auto &group = g_menu_config.group(submenu);
+    int count = std::count_if(group.items.begin(), group.items.end(), [] (auto &it) { return it.enabled; });
     return count;
 }
 
 int building_menu_next_index(int submenu, int current_index) {
-    for (int i = current_index + 1; i < BUILD_MENU_ITEM_MAX; i++) {
-        if (MENU_CONFIG[submenu][i] <= 0)
-            return 0;
-
-        if (g_menu_enabled[submenu][i])
+    auto &group = g_menu_config.group(submenu);
+    for (int i = current_index + 1; i < group.items.size(); i++) {
+        if (group.items[i].enabled)
             return i;
     }
     return 0;
 }
 
 e_building_type building_menu_type(int submenu, int item) {
-    return (e_building_type)MENU_CONFIG[submenu][item];
+    return (e_building_type)g_menu_config.type(submenu, item);
 }
 
 bool building_menu_has_changed() {
-    if (changed) {
-        changed = false;
+    if (g_menu_config.changed) {
+        g_menu_config.changed = false;
         return true;
     }
     return false;
 }
 
 void building_menu_invalidate() {
-    changed = true;
+    g_menu_config.changed = true;
 }
