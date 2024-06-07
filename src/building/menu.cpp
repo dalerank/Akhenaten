@@ -131,6 +131,12 @@ void building_menu_set_all(bool enabled) {
     g_menu_config.set_all(enabled);
 }
 
+bool building_menu_is_submenu(int submenu) {
+    auto groups = g_menu_config.groups;
+    const bool is_group = (std::find_if(groups.begin(), groups.end(), [submenu](auto &gr) { return gr.type == submenu; }) != groups.end());
+    return is_group;
+}
+
 int building_menu_is_building_enabled(int type) {
     return g_menu_config.is_enabled(type);
 }

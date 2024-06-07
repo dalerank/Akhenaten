@@ -29,7 +29,7 @@ static const int Y_MENU_OFFSETS[] = {0,   322, 306, 274, 258, 226, 210, 178,  16
                                      -30, -46, -62, -78, -78, -94, -94, -110, -110, 0,   0,   0,  0,  0,  0};
 
 struct build_menu_data_t {
-    int selected_submenu;
+    int selected_submenu = BUILDING_MENU_VACANT_HOUSE;
     int num_items;
     int y_offset;
 
@@ -98,12 +98,6 @@ static int is_all_button(int type) {
     auto &data = g_build_menu_data;
     return (type == BUILDING_MENU_TEMPLES && data.selected_submenu == BUILDING_MENU_TEMPLES)
            || (type == BUILDING_MENU_TEMPLE_COMPLEX && data.selected_submenu == BUILDING_MENU_LARGE_TEMPLES);
-}
-
-static int set_submenu_for_type(int type) {
-    auto &data = g_build_menu_data;
-    int current_menu = data.selected_submenu;
-    return current_menu != data.selected_submenu;
 }
 
 static void draw_background(void) {
@@ -223,8 +217,9 @@ static void button_menu_item(int item) {
 
     Planner.setup_build(type);
 
-    if (set_submenu_for_type(type)) {
-        data.num_items = building_menu_count_items(data.selected_submenu);
+    if (building_menu_is_submenu(type)) {
+        data.num_items = building_menu_count_items(type);
+        data.selected_submenu = type;
         data.y_offset = Y_MENU_OFFSETS[data.num_items];
         Planner.reset();
         window_invalidate();

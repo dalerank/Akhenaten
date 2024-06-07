@@ -10,6 +10,7 @@ int building_menu_is_building_enabled(int type);
 void building_menu_toggle_building(int type, bool enabled = true);
 
 void building_menu_set_all(bool enabled);
+bool building_menu_is_submenu(int submenu);
 
 void building_menu_update(const bstring64 &stage);
 
