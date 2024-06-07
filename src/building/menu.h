@@ -6,37 +6,6 @@
 #include "core/bstring.h"
 #include "graphics/animation.h"
 
-enum e_build_menu {
-    BUILD_MENU_VACANT_HOUSE = 0,
-    BUILD_MENU_CLEAR_LAND = 1,
-    BUILD_MENU_ROAD = 2,
-    BUILD_MENU_WATER_CROSSINGS = 3,
-    BUILD_MENU_HEALTH = 4,
-    BUILD_MENU_RELIGION = 5,
-    BUILD_MENU_EDUCATION = 6,
-    BUILD_MENU_ENTERTAINMENT = 7,
-    BUILD_MENU_ADMINISTRATION = 8,
-    BUILD_MENU_BEAUTIFICATION = 9,
-    BUILD_MENU_SECURITY = 10,
-    BUILD_MENU_INDUSTRY = 11,
-
-    BUILD_MENU_FARMS = 12,
-    BUILD_MENU_RAW_MATERIALS = 13,
-    BUILD_MENU_GUILDS = 14,
-    BUILD_MENU_TEMPLES = 15,
-    BUILD_MENU_LARGE_TEMPLES = 16,
-    BUILD_MENU_TEMPLE_COMPLEX = 16,
-    BUILD_MENU_FORTS = 17,
-    //
-    BUILD_MENU_FOOD = 18,
-    BUILD_MENU_DISTRIBUTION = 19,
-    BUILD_MENU_SHRINES = 20,
-    BUILD_MENU_MONUMENTS = 21,
-    BUILD_MENU_DEFENCES = 22,
-    //
-    BUILD_MENU_MAX
-};
-
 int building_menu_is_building_enabled(int type);
 void building_menu_toggle_building(int type, bool enabled = true);
 

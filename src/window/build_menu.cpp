@@ -78,7 +78,7 @@ static bool init(int submenu) {
     data.y_offset = Y_MENU_OFFSETS[data.num_items];
 
     Planner.setup_build(BUILDING_NONE);
-    if (submenu == BUILD_MENU_VACANT_HOUSE || submenu == BUILD_MENU_CLEAR_LAND || submenu == BUILD_MENU_ROAD) {
+    if (submenu == BUILDING_MENU_VACANT_HOUSE || submenu == BUILDING_MENU_CLEAR_LAND || submenu == BUILDING_MENU_ROAD) {
         button_menu_item(0);
         return false;
     } else {
@@ -96,50 +96,13 @@ static int get_sidebar_x_offset() {
 
 static int is_all_button(int type) {
     auto &data = g_build_menu_data;
-    return (type == BUILDING_MENU_TEMPLES && data.selected_submenu == BUILD_MENU_TEMPLES)
-           || (type == BUILDING_MENU_TEMPLE_COMPLEX && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES);
+    return (type == BUILDING_MENU_TEMPLES && data.selected_submenu == BUILDING_MENU_TEMPLES)
+           || (type == BUILDING_MENU_TEMPLE_COMPLEX && data.selected_submenu == BUILDING_MENU_LARGE_TEMPLES);
 }
 
 static int set_submenu_for_type(int type) {
     auto &data = g_build_menu_data;
     int current_menu = data.selected_submenu;
-    switch (type) {
-    case BUILDING_MENU_FARMS:
-        data.selected_submenu = BUILD_MENU_FARMS;
-        break;
-    case BUILDING_MENU_RAW_MATERIALS:
-        data.selected_submenu = BUILD_MENU_RAW_MATERIALS;
-        break;
-    case BUILDING_MENU_CONSTURCTION_GUILDS:
-        data.selected_submenu = BUILD_MENU_GUILDS;
-        break;
-    case BUILDING_MENU_TEMPLES:
-        data.selected_submenu = BUILD_MENU_TEMPLES;
-        break;
-    case BUILDING_MENU_TEMPLE_COMPLEX:
-        data.selected_submenu = BUILD_MENU_LARGE_TEMPLES;
-        break;
-    case BUILDING_MENU_FORTS:
-        data.selected_submenu = BUILD_MENU_FORTS;
-        break;
-    case BUILDING_MENU_MONUMENTS:
-        data.selected_submenu = BUILD_MENU_MONUMENTS;
-        break;
-    case BUILDING_MENU_WATER_CROSSINGS:
-        data.selected_submenu = BUILD_MENU_WATER_CROSSINGS;
-        break;
-    case BUILDING_MENU_BEAUTIFICATION:
-        data.selected_submenu = BUILD_MENU_BEAUTIFICATION;
-        break;
-    case BUILDING_MENU_DEFENSES:
-        data.selected_submenu = BUILD_MENU_DEFENCES;
-        break;
-    case BUILDING_MENU_SHRINES:
-        data.selected_submenu = BUILD_MENU_SHRINES;
-        break;
-    default:
-        return 0;
-    }
     return current_menu != data.selected_submenu;
 }
 

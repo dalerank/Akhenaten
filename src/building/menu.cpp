@@ -57,15 +57,15 @@ struct building_menu_group {
 
     animation_t anim;
 
-    int id;
+    int type;
     items_t items;
 };
 
 struct menu_config_t {
     svector<building_menu_group, 30> groups;
-    building_menu_group &group(int id) {
+    building_menu_group &group(int type) {
         static building_menu_group building_menu_group_dummy;
-        auto it = std::find_if(groups.begin(), groups.end(), [id] (auto &it) { return it.id == id; });
+        auto it = std::find_if(groups.begin(), groups.end(), [type] (auto &it) { return it.type == type; });
         return (it != groups.end()) ? *it : building_menu_group_dummy;
     }
 
@@ -90,6 +90,7 @@ struct menu_config_t {
     }
 
     bool is_enabled(int type) {
+        auto &gr = group(type);
         building_menu_item &item = get(type);
         return (item.type == type) ? item.enabled : false;
     }
@@ -118,7 +119,8 @@ void config_load_buldingin_menu() {
     g_config_arch.r_array("building_menu", [] (archive arch) {
         g_menu_config.groups.push_back({});
         auto &group = g_menu_config.groups.back();
-        group.id = arch.r_int("id");
+        group.type = arch.r_int("id");
+        assert(group.type != 0);
         arch.r_anim("anim", group.anim);
         auto items = arch.r_array_num<int>("items");
         for (auto &it : items) group.items.push_back({it, false});
@@ -434,7 +436,16 @@ void building_menu_update(const bstring64 &stage_name) {
 
 int building_menu_count_items(int submenu) {
     auto &group = g_menu_config.group(submenu);
-    int count = std::count_if(group.items.begin(), group.items.end(), [] (auto &it) { return it.enabled; });
+    int count = 0;
+    auto groups = g_menu_config.groups;
+    for (auto &it : group.items) {
+        const bool is_group = (std::find_if(groups.begin(), groups.end(), [type = it.type](auto &gr) { return gr.type == type; }) != groups.end());
+        if (is_group) {
+            count += (building_menu_count_items(it.type) > 0 ? 1 : 0);
+        } else {
+            count += (it.enabled ? 1 : 0);
+        }
+    }
     return count;
 }
 
