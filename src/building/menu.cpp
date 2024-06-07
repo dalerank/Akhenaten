@@ -7,6 +7,7 @@
 #include "scenario/scenario.h"
 
 #include "SDL.h"
+#include "core/archive.h"
 #include "core/game_environment.h"
 #include "io/gamefiles/lang.h"
 #include "building/industry.h"
@@ -53,6 +54,8 @@ struct building_menu_group {
     void clear() {
         items.clear();
     }
+
+    animation_t anim;
 
     int id;
     items_t items;
@@ -116,6 +119,7 @@ void config_load_buldingin_menu() {
         g_menu_config.groups.push_back({});
         auto &group = g_menu_config.groups.back();
         group.id = arch.r_int("id");
+        arch.r_anim("anim", group.anim);
         auto items = arch.r_array_num<int>("items");
         for (auto &it : items) group.items.push_back({it, false});
     });
@@ -381,6 +385,11 @@ void building_menu_update_temple_complexes() {
 }
 
 void building_menu_update_monuments() {
+}
+
+const animation_t &building_menu_anim(int submenu) {
+    auto &group = g_menu_config.group(submenu);
+    return group.anim;
 }
 
 void building_menu_update(const bstring64 &stage_name) {

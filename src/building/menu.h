@@ -4,6 +4,7 @@
 #include "city/constants.h"
 #include "city/gods.h"
 #include "core/bstring.h"
+#include "graphics/animation.h"
 
 enum e_build_menu {
     BUILD_MENU_VACANT_HOUSE = 0,
@@ -48,6 +49,7 @@ int building_menu_count_items(int submenu);
 int building_menu_next_index(int submenu, int current_index);
 
 e_building_type building_menu_type(int submenu, int item);
+const animation_t &building_menu_anim(int submenu);
 
 void building_menu_update_monuments();
 void building_menu_update_temple_complexes();

@@ -270,48 +270,9 @@ static void button_menu_item(int item) {
     }
 }
 
-int window_build_menu_image() {
+const animation_t &window_build_menu_image() {
     auto &data = g_build_menu_data;
-    int image_base = image_id_from_group(GROUP_BUILD_MENU_CATEGORIES);
-    switch (data.selected_submenu) {
-    default:
-        //            return image_base;
-    case BUILD_MENU_VACANT_HOUSE:
-        return image_base + 1;
-    case BUILD_MENU_ROAD:
-        return image_base + 5;
-    case BUILD_MENU_CLEAR_LAND:
-        return image_base + 9;
-    case BUILD_MENU_FARMS:
-    case BUILD_MENU_FOOD:
-        return image_base + 10;
-    case BUILD_MENU_GUILDS:
-    case BUILD_MENU_RAW_MATERIALS:
-    case BUILD_MENU_INDUSTRY:
-        return image_base + 6;
-    case BUILD_MENU_DISTRIBUTION:
-        return image_base + 2;
-    case BUILD_MENU_ENTERTAINMENT:
-        return image_base + 3;
-    case BUILD_MENU_SHRINES:
-    case BUILD_MENU_TEMPLES:
-    case BUILD_MENU_LARGE_TEMPLES:
-    case BUILD_MENU_MONUMENTS:
-    case BUILD_MENU_RELIGION:
-        return image_base + 7;
-    case BUILD_MENU_EDUCATION:
-        return image_base + 11;
-    case BUILD_MENU_HEALTH:
-        return image_base + 4;
-    case BUILD_MENU_WATER_CROSSINGS:
-    case BUILD_MENU_BEAUTIFICATION:
-    case BUILD_MENU_ADMINISTRATION:
-        return image_base + 8;
-    case BUILD_MENU_DEFENCES:
-    case BUILD_MENU_FORTS:
-    case BUILD_MENU_SECURITY:
-        return image_base + 12;
-    }
+    return building_menu_anim(data.selected_submenu);
 }
 
 void window_build_menu_show(int submenu) {

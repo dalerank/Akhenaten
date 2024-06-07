@@ -184,7 +184,9 @@ static void draw_expanded_background(int x_offset) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded");
     painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_group(IMG_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT);
-    ImageDraw::img_generic(ctx, window_build_menu_image(), x_offset + 11, 181 + TOP_MENU_HEIGHT);
+
+    const animation_t &anim = window_build_menu_image();
+    ImageDraw::img_generic(ctx, anim.first_img(), x_offset + 11, 181 + TOP_MENU_HEIGHT);
     widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 
     // extra bar spacing on the right

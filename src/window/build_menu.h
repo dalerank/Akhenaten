@@ -1,10 +1,7 @@
-#ifndef WINDOW_BUILD_MENU_H
-#define WINDOW_BUILD_MENU_H
+#pragma once
 
 #include "building/menu.h"
+#include "graphics/animation.h"
 
-int window_build_menu_image(void);
-
+const animation_t &window_build_menu_image();
 void window_build_menu_show(int submenu);
-
-#endif // WINDOW_BUILD_MENU_H

@@ -1,5 +1,7 @@
 #include "core/archive.h"
 
+#include "graphics/animation.h"
+
 #include "mujs/mujs.h"
 
 void archive::getproperty(int idx, pcstr name) {
@@ -172,4 +174,22 @@ vec2i archive::r_vec2i(pcstr name, pcstr x, pcstr y) {
     js_pop(vm, 1);
 
     return result;
+}
+
+bool archive::r_anim(pcstr name, animation_t &anim) {
+    auto vm = (js_State *)state;
+    js_getproperty(vm, -1, name);
+    bool ok = false;
+    if (js_isundefined(vm, -1)) {
+        ;
+    } else if (js_isobject(vm, -1)) {
+        js_getproperty(vm, -1, "pack"); anim.pack = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        js_getproperty(vm, -1, "id"); anim.iid = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        js_getproperty(vm, -1, "offset"); anim.offset = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        js_getproperty(vm, -1, "duration"); anim.duration = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        js_getproperty(vm, -1, "max_frames"); anim.max_frames = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        ok = true;
+    }
+    js_pop(vm, 1);
+    return ok;
 }

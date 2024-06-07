@@ -8,6 +8,7 @@
 #include <string>
 
 enum e_image_id : uint16_t;
+struct animation_t;
 
 struct archive {
     void *state = nullptr;
@@ -21,6 +22,7 @@ struct archive {
     bool r_bool(pcstr name, bool def = false);
     vec2i r_size2i(pcstr name, pcstr w = "w", pcstr h = "h");
     vec2i r_vec2i(pcstr name, pcstr x = "x", pcstr y = "y");
+    bool r_anim(pcstr name, animation_t &anim);
 
     std::vector<vec2i> r_array_vec2i(pcstr name);
 
