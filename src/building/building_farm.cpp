@@ -27,6 +27,9 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 #include "figure/figure.h"
+#include "dev/debug.h"
+
+#include <iostream>
 
 constexpr int CROPS_OFFSETS = 6;
 
@@ -38,6 +41,8 @@ buildings::model_t<building_farm_barley> farm_barley_m;
 buildings::model_t<building_farm_flax> farm_flax_m;
 buildings::model_t<building_farm_henna> farm_henna_m;
 buildings::model_t<building_farm_figs> farm_figs_m;
+
+declare_console_command(addgrain, game_cheat_add_resource<RESOURCE_GRAIN>);
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_farm);
 void config_load_building_farm() {

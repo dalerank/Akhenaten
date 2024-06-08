@@ -12,7 +12,7 @@
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "core/game_environment.h"
-#include "figuretype/migrant.h"
+#include "figuretype/figure_emigrant.h"
 #include "figuretype/figure_immigrant.h"
 #include "figuretype/figure_homeless.h"
 #include "figure/figure.h"
@@ -161,10 +161,10 @@ int house_population_create_emigrants(int num_people) {
             }
 
             if (to_emigrate <= current_people) {
-                figure_create_emigrant(b, to_emigrate);
+                figure_emigrant::create(b, to_emigrate);
                 to_emigrate = 0;
             } else {
-                figure_create_emigrant(b, current_people);
+                figure_emigrant::create(b, current_people);
                 to_emigrate -= current_people;
             }
         }

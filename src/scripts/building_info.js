@@ -1044,6 +1044,7 @@ building_brewery = {
     barley : { pos:[65, 3], pack:PACK_GENERAL, id:208, max_frames: 12 }
   },
   window_info_height_id : 1,
+  production_rate : 20,
   building_size : 2,
 }
 

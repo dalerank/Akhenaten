@@ -627,24 +627,27 @@ storage_worker_task building_storageyard_deliver_papyrus_to_scribal_school(build
 
 storage_worker_task building_storageyard_deliver_resource_to_workshop(building *warehouse) {
     building *space = warehouse;
-
     for (int i = 0; i < 8; i++) {
         space = space->next();
-        if (space->id > 0 && space->stored_full_amount > 0) {
-            e_resource check_resource = space->subtype.warehouse_resource_id;
-            if (!city_resource_is_stockpiled(check_resource)) {
-                storage_worker_task task = {STORAGEYARD_TASK_NONE};
-                buildings_workshop_do([&] (building &b) {
-                    if (!resource_required_by_workshop(&b, space->subtype.warehouse_resource_id) || b.need_resource_amount(check_resource) < 100) {
-                        return;
-                    }
-                    task = {STORAGEYARD_TASK_DELIVERING, space, 100, space->subtype.warehouse_resource_id};
-                });
+        if (space->id <= 0 || space->stored_full_amount <= 0) {
+            continue;
+        }
 
-                if (task.result == STORAGEYARD_TASK_DELIVERING) {
-                    return task;
-                }
+        e_resource check_resource = space->subtype.warehouse_resource_id;
+        if (city_resource_is_stockpiled(check_resource)) {
+            continue;
+        }
+
+        storage_worker_task task = {STORAGEYARD_TASK_NONE};
+        buildings_workshop_do([&] (building &b) {
+            if (!resource_required_by_workshop(&b, space->subtype.warehouse_resource_id) || b.need_resource_amount(check_resource) < 100) {
+                return;
             }
+            task = {STORAGEYARD_TASK_DELIVERING, space, 100, space->subtype.warehouse_resource_id};
+        });
+
+        if (task.result == STORAGEYARD_TASK_DELIVERING) {
+            return task;
         }
     }
 

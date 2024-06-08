@@ -20,7 +20,7 @@ void config_load_figure_emigrant() {
     emigrant_m.load();
 }
 
-void figure_create_emigrant(building* house, int num_people) {
+figure *figure_emigrant::create(building* house, int num_people) {
     city_population_remove(num_people);
     if (num_people < house->house_population) {
         house->house_population -= num_people;
@@ -37,6 +37,8 @@ void figure_create_emigrant(building* house, int num_people) {
     f->action_state = FIGURE_ACTION_4_EMIGRANT_CREATED;
     f->wait_ticks = 0;
     f->migrant_num_people = num_people;
+
+    return f;
 }
 
 void figure_emigrant::figure_action() {
