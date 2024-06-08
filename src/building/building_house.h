@@ -15,6 +15,11 @@ public:
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void on_undo() override;
 
+    inline int house_population() const { return base.house_population; }
+    inline void change_population(int delta) { base.house_population += delta; }
+    inline e_house_level house_level() const { return base.subtype.house_level; }
+    void change_to_vacant_lot();
+
     static void create_vacant_lot(tile2i tile, int image_id);
 };
 
@@ -25,7 +30,6 @@ public:
 };
 
 void building_house_change_to(building* house, e_building_type type);
-void building_house_change_to_vacant_lot(building* house);
 
 void building_house_merge(building* house);
 

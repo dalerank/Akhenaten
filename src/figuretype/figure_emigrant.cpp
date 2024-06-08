@@ -20,17 +20,17 @@ void config_load_figure_emigrant() {
     emigrant_m.load();
 }
 
-figure *figure_emigrant::create(building* house, int num_people) {
+figure *figure_emigrant::create(building* b, int num_people) {
+    building_house *house = b->dcast_house();
     city_population_remove(num_people);
-    if (num_people < house->house_population) {
-        house->house_population -= num_people;
+    if (num_people < house->house_population()) {
+        house->change_population(-num_people);
     } else {
-        house->house_population = 0;
-        building_house_change_to_vacant_lot(house);
+        house->change_to_vacant_lot();
     }
 
-    figure* f = figure_create(FIGURE_EMIGRANT, house->tile, DIR_0_TOP_RIGHT);
-    if (house->subtype.house_level >= HOUSE_COMMON_MANOR) {
+    figure* f = figure_create(FIGURE_EMIGRANT, house->tile(), DIR_0_TOP_RIGHT);
+    if (house->house_level() >= HOUSE_COMMON_MANOR) {
         g_city.migration_nobles_leave_city(num_people);
     }
 

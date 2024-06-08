@@ -142,21 +142,22 @@ void building_house_change_to(building* house, e_building_type type) {
     map_building_tiles_add(house->id, house->tile, house->size, image_id, TERRAIN_BUILDING);
 }
 
-void building_house_change_to_vacant_lot(building* house) {
-    house->type = BUILDING_HOUSE_VACANT_LOT;
-    house->subtype.house_level = (e_house_level)(house->type - BUILDING_HOUSE_VACANT_LOT);
+void building_house::change_to_vacant_lot() {
+    base.house_population = 0;
+    base.type = BUILDING_HOUSE_VACANT_LOT;
+    base.subtype.house_level = (e_house_level)(base.type - BUILDING_HOUSE_VACANT_LOT);
     int vacant_lot_id = house_vacant_m.anim["base"].first_img();
-    if (house->house_is_merged) {
-        map_building_tiles_remove(house->id, house->tile);
-        house->house_is_merged = 0;
-        house->size = house->house_size = 1;
-        map_building_tiles_add(house->id, house->tile, 1, vacant_lot_id, TERRAIN_BUILDING);
+    if (base.house_is_merged) {
+        map_building_tiles_remove(base.id, base.tile);
+        base.house_is_merged = 0;
+        base.size = base.house_size = 1;
+        map_building_tiles_add(base.id, base.tile, 1, vacant_lot_id, TERRAIN_BUILDING);
 
-        building_house::create_vacant_lot(house->tile.shifted(1, 0), vacant_lot_id);
-        building_house::create_vacant_lot(house->tile.shifted(0, 1), vacant_lot_id);
-        building_house::create_vacant_lot(house->tile.shifted(1, 1), vacant_lot_id);
+        building_house::create_vacant_lot(base.tile.shifted(1, 0), vacant_lot_id);
+        building_house::create_vacant_lot(base.tile.shifted(0, 1), vacant_lot_id);
+        building_house::create_vacant_lot(base.tile.shifted(1, 1), vacant_lot_id);
     } else {
-        map_image_set(house->tile.grid_offset(), vacant_lot_id);
+        map_image_set(base.tile.grid_offset(), vacant_lot_id);
     }
 }
 
