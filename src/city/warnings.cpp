@@ -61,13 +61,6 @@ static void check_water(int type, int x, int y) {
     }
 }
 
-static void check_weapons_access(int type) {
-    if (!g_has_warning && type == BUILDING_RECRUITER) {
-        if (city_resource_count(RESOURCE_WEAPONS) <= 0)
-            building_construction_warning_show(WARNING_WEAPONS_NEEDED);
-    }
-}
-
 static void check_wall(int type, int x, int y, int size) {
     if (!g_has_warning && type == BUILDING_MUD_TOWER) {
         if (!map_terrain_is_adjacent_to_wall(x, y, size))
@@ -82,8 +75,6 @@ void building_construction_warning_generic_checks(building *b, tile2i tile, int 
 
     e_building_type type = b->type;
     building_construction_warning_check_food_stocks(type);
-
-    check_weapons_access(type);
 
     check_wall(type, tile.x(), tile.y(), size);
     check_water(type, tile.x(), tile.y());

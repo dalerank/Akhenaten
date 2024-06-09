@@ -189,7 +189,13 @@ void building_recruiter::on_create(int orientation) {
 }
 
 void building_recruiter::on_place_checks() {
+    if (building_construction_has_warning()) {
+        return;
+    }
 
+    if (city_resource_count(RESOURCE_WEAPONS) <= 0) {
+        building_construction_warning_show(WARNING_WEAPONS_NEEDED);
+    }
 }
 
 void building_recruiter::spawn_figure() {
