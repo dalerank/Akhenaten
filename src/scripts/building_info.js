@@ -395,7 +395,7 @@ building_dock = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:49 },
     base : { pack:PACK_TERRAIN, id:49 },
-    work : { pos : [-1, -1], pack:PACK_TERRAIN, id:49, offset:1, max_frames:12 }
+    work : { pack:PACK_TERRAIN, id:49, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 3,
@@ -407,7 +407,7 @@ building_personal_mansion = {
   animations : {
     preview : { pack:PACK_GENERAL, id:85 },
     base : { pack:PACK_GENERAL, id:85 },
-    work : { pos : [-1, -1], pack:PACK_GENERAL, id:85, offset:1, max_frames:12 }
+    work : { pack:PACK_GENERAL, id:85, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   building_size : 3,
@@ -430,7 +430,7 @@ building_village_mansion = {
 building_dynasty_mansion = {
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   building_size : 4,
-    unique_building : true,
+  unique_building : true,
   window_info_height_id : 1,
 }
 

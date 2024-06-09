@@ -20,9 +20,6 @@ void building_bricks_workshop::on_create(int orientation) {
     base.output_resource_first_id = RESOURCE_BRICKS;
 }
 
-void building_bricks_workshop::on_place(int orientation, int variant) {
-}
-
 void building_bricks_workshop::window_info_background(object_info &c) {
     e_resource output_resource = RESOURCE_BRICKS;
     building_workshop_draw_background(c, 1, "brick_maker", 180, output_resource, RESOURCE_CLAY, RESOURCE_STRAW);

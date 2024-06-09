@@ -49,10 +49,6 @@ static void building_shrine_draw_info(object_info& c, const char* type, int text
     }
 }
 
-void building_shrine::on_place(int orientation, int variant) {
-    building_impl::on_place(orientation, variant);
-}
-
 void building_shrine::on_place_checks() {
     if (!map_has_road_access(tile(), 2)) {
         building_construction_warning_show(WARNING_ROAD_ACCESS_NEEDED);

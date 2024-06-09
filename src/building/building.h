@@ -452,7 +452,7 @@ public:
     building_impl(building &b) : base(b), data(b.data) {}
     virtual void on_create(int orientation) {}
     virtual void on_place(int orientation, int variant);
-    virtual void on_place_update_tiles();
+    virtual void on_place_update_tiles(int orientation, int variant);
     virtual void on_place_checks();
     virtual void on_destroy() {}
     virtual void on_undo() {}
@@ -631,7 +631,7 @@ bool building_is_monument(int type);
 bool building_is_administration(e_building_type type);
 bool building_is_palace(e_building_type type);
 bool building_is_tax_collector(e_building_type type);
-bool building_is_governor_mansion(int type);
+bool building_is_governor_mansion(e_building_type type);
 bool building_is_temple(int type);
 bool building_is_large_temple(int type);
 bool building_is_shrine(int type);

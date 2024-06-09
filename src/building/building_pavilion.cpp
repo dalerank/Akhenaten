@@ -94,15 +94,12 @@ void building_pavilion::update_day() {
     data.entertainment.num_shows = shows;
 }
 
-void building_pavilion::on_place(int orientation, int variant) {
-    building_impl::on_place(orientation, variant);
-
+void building_pavilion::on_place_update_tiles(int orientation, int variant) {
     data.entertainment.booth_corner_grid_offset = tile().grid_offset();
     data.entertainment.orientation = orientation;
 
-    int size = params().building_size;
-
-    int image_id = params().anim["square"].first_img();
+    int size = pavilion_m.building_size;
+    int image_id = pavilion_m.anim["square"].first_img();
 
     int basic_orientation;
     map_orientation_for_venue_with_map_orientation(tile(), e_venue_mode_pavilion, &basic_orientation);

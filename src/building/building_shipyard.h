@@ -12,7 +12,7 @@ public:
     virtual building_shipyard *dcast_shipyard() override { return this; }
 
     virtual void on_create(int orientation) override;
-    virtual void on_place(int orientation, int variant) override;
+    virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void update_count() const override;
     virtual void window_info_background(object_info &ctx) override;
     virtual void spawn_figure() override;

@@ -8,7 +8,7 @@ public:
     virtual building_statue *dcast_statue() override { return this; }
 
     virtual void on_create(int orientation) override;
-    virtual void on_place(int orientation, int variant) override;
+    virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
     virtual bool is_workshop() const override { return true; }
     virtual void window_info_background(object_info &c) override;

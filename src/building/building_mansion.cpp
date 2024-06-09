@@ -27,12 +27,12 @@ void config_load_personal_mansion() {
 }
 
 static void button_set_salary(int rank, int param2) {
-    if (!g_city.victory_state.has_won()) {
-        g_city.kingdome.set_salary_rank(rank);
-        city_finance_update_salary();
-        g_city.ratings.update_kingdom_explanation();
-        //window_advisors_show();
+    if (g_city.victory_state.has_won()) {
+        return;
     }
+    g_city.kingdome.set_salary_rank(rank);
+    city_finance_update_salary();
+    g_city.ratings.update_kingdom_explanation();
 }
 
 static generic_button imperial_buttons[] = {
@@ -40,6 +40,8 @@ static generic_button imperial_buttons[] = {
 };
 
 void building_mansion::window_info_background(object_info &c) {
+    //ui::begin_frame();
+
     c.help_id = 78;
     c.go_to_advisor.left_a = ADVISOR_IMPERIAL;
     window_building_play_sound(&c, "wavs/gov_palace.wav");
@@ -55,6 +57,7 @@ void building_mansion::window_info_background(object_info &c) {
 }
 
 void building_mansion::on_place(int orientation, int variant) {
+    building_impl::on_place(orientation, variant);
     city_buildings_add_mansion(&base);
 }
 

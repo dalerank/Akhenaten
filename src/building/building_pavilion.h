@@ -5,12 +5,11 @@
 class building_pavilion : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_PAVILLION, building_pavilion)
-
     building_pavilion(building &b) : building_impl(b) {}
     
     virtual void on_create(int orientation) override;
     virtual void update_day() override;
-    virtual void on_place(int orientation, int variant) override;
+    virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
     virtual building_pavilion *dcast_pavilion() override { return this; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_PAVILION; }

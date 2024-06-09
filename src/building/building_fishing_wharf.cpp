@@ -34,9 +34,7 @@ void building_fishing_wharf::on_create(int orientation) {
     base.output_resource_first_id = RESOURCE_FISH;
 }
 
-void building_fishing_wharf::on_place(int orientation, int variant) {
-    building_impl::on_place(orientation, variant);
-
+void building_fishing_wharf::on_place_update_tiles(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
     int img_id = fishing_wharf_m.anim["base"].first_img();
     map_water_add_building(id(), tile(), fishing_wharf_m.building_size, img_id + orientation_rel);

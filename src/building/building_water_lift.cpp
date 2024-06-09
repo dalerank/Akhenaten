@@ -38,7 +38,7 @@ void building_water_lift::on_create(int orientation) {
     data.industry.orientation = orientation;
 }
 
-void building_water_lift::on_place(int orientation, int variant) {
+void building_water_lift::on_place_update_tiles(int orientation, int variant) {
     auto props = building_impl::params(type());
     int orientation_rel = city_view_relative_orientation(orientation);
     map_water_add_building(id(), tile(), props.building_size, props.anim["base"].first_img() + orientation_rel + 4 * variant);

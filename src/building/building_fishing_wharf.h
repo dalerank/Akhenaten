@@ -10,7 +10,7 @@ public:
     virtual building_fishing_wharf *dcast_fishing_wharf() override { return this; }
 
     virtual void on_create(int orientation) override;
-    virtual void on_place(int orientation, int variant) override;
+    virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void update_count() const override;
     virtual void update_day() override;
     virtual void spawn_figure() override;

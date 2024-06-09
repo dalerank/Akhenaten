@@ -71,12 +71,11 @@ void building_bandstand::on_place_checks() {
     }
 }
 
-void building_bandstand::on_place_update_tiles() {
-       int size = params().building_size;
+void building_bandstand::on_place_update_tiles(int orientation, int variant) {
+    int size = params().building_size;
     int image_id = params().anim["square"].first_img();
 
     // add underlying plaza first
-    int orientation = data.entertainment.orientation;
     map_add_venue_plaza_tiles(id(), size, tile(), image_id, false);
     int absolute_orientation = (abs(orientation * 2 + (8 - city_view_orientation())) % 8) / 2;
     // add additional building parts, update graphics accordingly

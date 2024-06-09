@@ -577,7 +577,7 @@ bool building_is_tax_collector(e_building_type type) {
     return building_type_any_of(type, BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED);
 }
 
-bool building_is_governor_mansion(int type) {
+bool building_is_governor_mansion(e_building_type type) {
     return (type >= BUILDING_PERSONAL_MANSION && type <= BUILDING_DYNASTY_MANSION);
 }
 
@@ -854,10 +854,10 @@ void building_impl::on_place(int orientation, int variant) {
     
     base.fire_proof = p.fire_proof;
     base.damage_proof = p.damage_proof;
-    on_place_update_tiles();
+    on_place_update_tiles(orientation, variant);
 }
 
-void building_impl::on_place_update_tiles() {
+void building_impl::on_place_update_tiles(int orientation, int variant) {
     int img_id = params().anim["base"].first_img();
     map_building_tiles_add(id(), tile(), base.size, img_id, TERRAIN_BUILDING);
 }

@@ -66,9 +66,7 @@ void building_fort::window_info_background(object_info &c) {
     window_building_draw_description_at(c, 16 * c.bgsize.y - 158, 89, text_id);
 }
 
-void building_fort::on_place(int orientation, int variant) {
-    building_impl::on_place(orientation, variant);
-
+void building_fort::on_place_update_tiles(int orientation, int variant) {
     base.prev_part_building_id = 0;
     int image_id = params().anim["base"].first_img();
     map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);
