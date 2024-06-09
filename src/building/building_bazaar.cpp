@@ -270,7 +270,7 @@ void building_bazaar::update_graphic() {
         return;
     }
 
-    base.fancy_state = (map_desirability_get(base.tile.grid_offset()) <= 30) ? efancy_normal : efancy_good;
+    base.fancy_state = (g_desirability.get(base.tile) <= 30) ? efancy_normal : efancy_good;
     const animation_t &anim = bazaar_m.anim[(base.fancy_state == efancy_normal) ? "base" : "fancy"];
     map_building_tiles_add(base.id, base.tile, base.size, anim.first_img(), TERRAIN_BUILDING);
 }

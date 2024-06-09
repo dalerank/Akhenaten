@@ -36,7 +36,10 @@ int map_property_multi_tile_size(int grid_offset);
 inline int map_property_multi_tile_size(tile2i tile) { return map_property_multi_tile_size(tile.grid_offset()); }
 void map_property_set_multi_tile_size(int grid_offset, int size);
 
-void map_property_init_alternate_terrain(void);
+int map_property_get(int grid_offset);
+inline int map_property_get(tile2i tile) { return map_property_get(tile.grid_offset()); }
+
+void map_property_init_alternate_terrain();
 int map_property_is_alternate_terrain(int grid_offset);
 void map_property_set_alternate_terrain(int grid_offset);
 

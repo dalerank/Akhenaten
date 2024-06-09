@@ -413,17 +413,6 @@ void building::set_water_supply_graphic() {
     //}
 }
 
-void building::set_greate_palace_graphic() {
-    if (state != BUILDING_STATE_VALID)
-        return;
-
-    if (map_desirability_get(tile.grid_offset()) <= 30) {
-        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_PALACE), TERRAIN_BUILDING);
-    } else {
-        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_PALACE_FANCY), TERRAIN_BUILDING);
-    }
-}
-
 void building::spawn_figure_industry() {
     check_labor_problem();
     if (!has_road_access) {

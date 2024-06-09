@@ -15,6 +15,7 @@
 #include "city/victory.h"
 #include "city/ratings.h"
 #include "grid/point.h"
+#include "grid/desirability.h"
 
 struct city_t {
     struct {
@@ -67,7 +68,7 @@ struct city_t {
         int32_t security_breach_duration;
     } figures;
     house_demands houses;
-
+    desirability_t desirability;
     kingdome_relation_t kingdome;
     city_military_t military;
     vistory_state_t victory_state;

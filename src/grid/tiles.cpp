@@ -706,7 +706,7 @@ int map_tiles_set_canal(tile2i tile) {
 }
 
 int map_tiles_is_paved_road(int grid_offset) {
-    int desirability = map_desirability_get(grid_offset);
+    int desirability = g_desirability.get(grid_offset);
     if (desirability > 4)
         return 1;
 

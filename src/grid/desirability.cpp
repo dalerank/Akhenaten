@@ -11,10 +11,41 @@
 #include "io/io_buffer.h"
 #include "scenario/map.h"
 
-static grid_xx desirability_grid = {0, {FS_INT8, FS_INT8}};
+#include "js/js_game.h"
 
-static void add_desirability_at_distance(int x, int y, int size, int distance, int desirability) {
+grid_xx g_desirability_grid = {0, {FS_INT8, FS_INT8}};
+desirability_t g_desirability;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_desirability);
+void config_load_desirability() {
+    g_desirability.load();
+}
+
+void desirability_t::load() {
+    g_config_arch.r_section("desirability", [this] (archive arch) {
+        std::pair<pcstr, desirability_t::influence_t *> items[] = {
+            {"plaza", &influence.plaza},
+            {"earthquake", &influence.earthquake},
+            {"garden", &influence.garden},
+            {"rubble", &influence.rubble},
+        };
+
+        for (auto &it : items) {
+            arch.r_section(it.first, [item = it.second] (archive iarch) {
+                item->size = iarch.r_int("size", 1);
+                item->value = iarch.r_int("value", 0);
+                item->step = iarch.r_int("step", 0);
+                item->step_size = iarch.r_int("step_size", 0);
+                item->range = iarch.r_int("range", 0);
+            });
+        }
+    });
+}
+
+void desirability_t::add_to_terrain_at_distance(tile2i tile, int size, int distance, int desirability) {
     int partially_outside_map = 0;
+    int x = tile.x();
+    int y = tile.y();
     if (x - distance < -1 || x + distance + size - 1 > scenario_map_data()->width)
         partially_outside_map = 1;
 
@@ -29,28 +60,28 @@ static void add_desirability_at_distance(int x, int y, int size, int distance, i
         for (int i = start; i < end; i++) {
             const ring_tile* tile = map_ring_tile(i);
             if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
-                map_grid_set(&desirability_grid,
+                map_grid_set(&g_desirability_grid,
                              base_offset + tile->grid_offset,
-                             calc_bound(map_grid_get(&desirability_grid, base_offset + tile->grid_offset) + desirability, -100, 100));
+                             calc_bound(map_grid_get(&g_desirability_grid, base_offset + tile->grid_offset) + desirability, -100, 100));
             }
         }
     } else {
         for (int i = start; i < end; i++) {
             const ring_tile* tile = map_ring_tile(i);
-            map_grid_set(&desirability_grid,
+            map_grid_set(&g_desirability_grid,
                          base_offset + tile->grid_offset,
-                         calc_bound(map_grid_get(&desirability_grid, base_offset + tile->grid_offset) + desirability, -100, 100));
+                         calc_bound(map_grid_get(&g_desirability_grid, base_offset + tile->grid_offset) + desirability, -100, 100));
         }
     }
 }
-static void add_to_terrain(int x, int y, int size, int desirability, int step, int step_size, int range) {
+
+void desirability_t::add_to_terrain(tile2i tile, int size, int desirability, int step, int step_size, int range) {
     if (size > 0) {
-        if (range > 6)
-            range = 6;
+        range = std::min(range, 6);
         int tiles_within_step = 0;
         int distance = 1;
         while (range > 0) {
-            add_desirability_at_distance(x, y, size, distance, desirability);
+            add_to_terrain_at_distance(tile, size, distance, desirability);
             distance++;
             range--;
             tiles_within_step++;
@@ -62,79 +93,85 @@ static void add_to_terrain(int x, int y, int size, int desirability, int step, i
     }
 }
 
-static void update_buildings(void) {
+void desirability_t::update_buildings() {
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID) {
-            const model_building* model = model_get_building(b->type);
-            add_to_terrain(b->tile.x(), b->tile.y(), b->size, model->desirability_value, model->desirability_step, model->desirability_step_size, model->desirability_range);
+        if (b->state != BUILDING_STATE_VALID) {
+            continue;
         }
+        
+        const model_building* model = model_get_building(b->type);
+        add_to_terrain(b->tile, b->size, model->desirability_value, model->desirability_step, model->desirability_step_size, model->desirability_range);
     }
 }
 
-static void update_terrain(void) {
+void desirability_t::update_terrain() {
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             int terrain = map_terrain_get(grid_offset);
-            if (map_property_is_plaza_or_earthquake(grid_offset)) {
-                int type;
-                if (terrain & TERRAIN_ROAD)
-                    type = BUILDING_PLAZA;
-                else if (terrain & TERRAIN_ROCK) {
+            tile2i tile(x, y);
+            influence_t tileinf;
+            if (map_property_is_plaza_or_earthquake(grid_offset)) {                
+                if (terrain & TERRAIN_ROAD) {
+                    tileinf = influence.plaza;
+                } else if (terrain & TERRAIN_ROCK) {
                     // earthquake fault line: slight negative
-                    type = BUILDING_HOUSE_VACANT_LOT;
+                    tileinf = influence.earthquake;
                 } else {
                     // invalid plaza/earthquake flag
+                    assert(false);
                     map_property_clear_plaza_or_earthquake(grid_offset);
                     continue;
                 }
-                const model_building* model = model_get_building(type);
-                add_to_terrain(x, y, 1, model->desirability_value, model->desirability_step, model->desirability_step_size, model->desirability_range);
             } else if (terrain & TERRAIN_GARDEN) {
-                const model_building* model = model_get_building(BUILDING_GARDENS);
-                add_to_terrain(x, y, 1, model->desirability_value, model->desirability_step, model->desirability_step_size, model->desirability_range);
+                tileinf = influence.garden;
             } else if (terrain & TERRAIN_RUBBLE) {
-                add_to_terrain(x, y, 1, -2, 1, 1, 2);
+                tileinf = influence.rubble;
+            }
+
+            if (tileinf.size > 0) {
+                add_to_terrain(tile, tileinf.size, tileinf.value, tileinf.step, tileinf.step_size, tileinf.range);
             }
         }
     }
 }
 
-void map_desirability_clear(void) {
-    map_grid_clear(&desirability_grid);
+void desirability_t::clear() {
+    map_grid_clear(&g_desirability_grid);
 }
-void map_desirability_update(void) {
+
+void desirability_t::update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Desirability Update");
-    map_desirability_clear();
+    clear();
     update_buildings();
     update_terrain();
 }
 
-int map_desirability_get(int grid_offset) {
-    return map_grid_get(&desirability_grid, grid_offset);
+int desirability_t::get(int grid_offset) {
+    return map_grid_get(&g_desirability_grid, grid_offset);
 }
 
-int map_desirability_get_max(tile2i tile, int size) {
+int desirability_t::get_max(tile2i tile, int size) {
     if (size == 1) {
-        return map_grid_get(&desirability_grid, tile.grid_offset());
+        return map_grid_get(&g_desirability_grid, tile.grid_offset());
     }
 
     int max = -9999;
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             tile2i t = tile.shifted(dx, dy);
-            int value = map_grid_get(&desirability_grid, t.grid_offset());
+            int value = map_grid_get(&g_desirability_grid, t.grid_offset());
             max = std::max(value, max);
         }
     }
     return max;
 }
 
-int map_desirabilty_avg(tile2i tile, int size) {
+int desirability_t::get_avg(tile2i tile, int size) {
     if (size == 1) {
-        return map_grid_get(&desirability_grid, tile.grid_offset());
+        return map_grid_get(&g_desirability_grid, tile.grid_offset());
     }
     grid_area area = map_grid_get_area(tile.shifted(-size, -size), tile.shifted(size, size));
 
@@ -143,7 +180,7 @@ int map_desirabilty_avg(tile2i tile, int size) {
     for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
         for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
-            summ += map_grid_get(&desirability_grid, grid_offset);
+            summ += map_grid_get(&g_desirability_grid, grid_offset);
             count++;
         }
     }
@@ -152,5 +189,5 @@ int map_desirabilty_avg(tile2i tile, int size) {
 }
 
 io_buffer* iob_desirability_grid = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &desirability_grid);
+    iob->bind(BIND_SIGNATURE_GRID, &g_desirability_grid);
 });

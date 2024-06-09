@@ -37,7 +37,7 @@ static int get_free_tile(int x, int y, int allow_negative_desirability, tile2i &
                     return 0;
                 }
 
-                int desirability = map_desirability_get(grid_offset);
+                int desirability = g_desirability.get(grid_offset);
                 if (allow_negative_desirability) {
                     if (desirability > 1) {
                         return 0;

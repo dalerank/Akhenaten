@@ -18,7 +18,7 @@ void config_load_building_water_supply() {
 }
 
 void building_water_supply::update_month() {
-    int avg_desirability = map_desirabilty_avg(tile(), 4);
+    int avg_desirability = g_desirability.get_avg(tile(), 4);
     base.fancy_state = (avg_desirability > 30) ? efancy_good : efancy_normal;
     pcstr anim_name = (base.fancy_state == efancy_good) ? "fancy" : "base";
     const animation_t &anim = water_supply_m.anim[anim_name];

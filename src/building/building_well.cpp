@@ -23,7 +23,7 @@ void config_load_building_well() {
 }
 
 void building_well::update_month() {
-    int avg_desirability = map_desirabilty_avg(tile(), 4);
+    int avg_desirability = g_desirability.get_avg(tile(), 4);
     base.fancy_state = (avg_desirability > 30 ? efancy_good : efancy_normal);
     pcstr anim = (base.fancy_state == efancy_good) ? "fancy" : "base";
     map_image_set(tile(), well_m.anim[anim]);

@@ -78,7 +78,7 @@ static void clear_map_data(void) {
     map_property_clear();
     map_sprite_clear();
     map_random_clear();
-    map_desirability_clear();
+    g_desirability.clear();
     map_elevation_clear();
     map_soldier_strength_clear();
     map_road_network_clear();

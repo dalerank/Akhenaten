@@ -11,7 +11,10 @@
 #include "graphics/view/view.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "grid/desirability.h"
 #include "grid/property.h"
+#include "grid/terrain.h"
+#include "grid/building_tiles.h"
 #include "io/gamefiles/lang.h"
 #include "config/config.h"
 #include "window/building/common.h"
@@ -95,4 +98,12 @@ bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i p
     //if (unemployment_pct > 20) ImageDraw::img_generic(ctx, image_id + 106, point.x + 66,  point.y + 20, color_mask);
 
     return true;
+}
+
+void building_palace::update_graphic() {
+    //if (g_desirability.get(tile()) <= 30) {
+    //    map_building_tiles_add(id(), tile(), size(), image_id_from_group(GROUP_BUILDING_PALACE), TERRAIN_BUILDING);
+    //} else {
+    //    map_building_tiles_add(id(), tile(), size(), image_id_from_group(GROUP_BUILDING_PALACE_FANCY), TERRAIN_BUILDING);
+    //}
 }

@@ -102,7 +102,7 @@ int city_overlay_desirability::get_tooltip_for_building(tooltip_context *c, cons
 }
 
 int city_overlay_desirability::get_tooltip_for_grid_offset(tooltip_context *c, int grid_offset) const {
-    int desirability = map_desirability_get(grid_offset);
+    int desirability = g_desirability.get(grid_offset);
     if (desirability < 0)
         return 91;
     else if (desirability == 0)
@@ -127,12 +127,12 @@ bool city_overlay_desirability::draw_custom_footprint(vec2i pixel, tile2i point,
         int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
         ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
 
-    } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_desirability_get(grid_offset)) {
+    } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || g_desirability.get(grid_offset)) {
         if (has_deleted_building(grid_offset)) {
             color_mask = COLOR_MASK_RED;
         }
 
-        int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
+        int offset = get_desirability_image_offset(g_desirability.get(grid_offset));
         int img_id = image_id_from_group(GROUP_TERRAIN_DESIRABILITY);
         ImageDraw::isometric_from_drawtile(ctx, img_id + offset, pixel, color_mask);
         ImageDraw::isometric_from_drawtile_top(ctx, img_id + offset, pixel, color_mask);

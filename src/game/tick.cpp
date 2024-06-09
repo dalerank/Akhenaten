@@ -248,7 +248,7 @@ static void advance_tick(void) {
         house_service_calculate_culture_aggregates();
         break;
     case 37:
-        map_desirability_update();
+        g_desirability.update();
         break;
     case 38:
         building_update_desirability();
