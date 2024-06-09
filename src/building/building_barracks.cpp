@@ -5,6 +5,7 @@
 #include "city/buildings.h"
 #include "city/military.h"
 #include "city/resource.h"
+#include "city/warnings.h"
 #include "city/labor.h"
 #include "core/calc.h"
 #include "figure/action.h"
@@ -185,6 +186,10 @@ bool building_recruiter::create_tower_sentry() {
 
 void building_recruiter::on_create(int orientation) {
     city_buildings_add_recruiter(&base);
+}
+
+void building_recruiter::on_place_checks() {
+
 }
 
 void building_recruiter::spawn_figure() {

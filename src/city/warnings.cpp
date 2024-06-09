@@ -61,13 +61,6 @@ static void check_water(int type, int x, int y) {
     }
 }
 
-static void check_barracks(int type) {
-    if (!g_has_warning) {
-        if (building_is_fort(type) && building_count_active(BUILDING_RECRUITER) <= 0)
-            building_construction_warning_show(WARNING_BUILD_BARRACKS);
-    }
-}
-
 static void check_weapons_access(int type) {
     if (!g_has_warning && type == BUILDING_RECRUITER) {
         if (city_resource_count(RESOURCE_WEAPONS) <= 0)
@@ -90,7 +83,6 @@ void building_construction_warning_generic_checks(building *b, tile2i tile, int 
     e_building_type type = b->type;
     building_construction_warning_check_food_stocks(type);
 
-    check_barracks(type);
     check_weapons_access(type);
 
     check_wall(type, tile.x(), tile.y(), size);
