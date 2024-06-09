@@ -54,20 +54,9 @@ void building_construction_warning_generic_checks(building *b, tile2i tile, int 
     }
 
     e_building_type type = b->type;
-    building_construction_warning_check_food_stocks(type);
-
     check_wall(type, tile.x(), tile.y(), size);
 
     check_road_access(b, tile, size, orientation);
     b->dcast()->on_place_checks();
-}
-
-void building_construction_warning_check_food_stocks(int type) {
-    if (!g_has_warning && type == BUILDING_HOUSE_VACANT_LOT) {
-        if (city_population() >= 200 && !scenario_property_kingdom_supplies_grain()) {
-            if (city_resource_food_percentage_produced() <= 95)
-                building_construction_warning_show(WARNING_MORE_FOOD_NEEDED);
-        }
-    }
 }
 

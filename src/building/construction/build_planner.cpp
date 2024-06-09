@@ -349,7 +349,7 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
     }
 
     if (!measure_only) {
-        building_construction_warning_check_food_stocks(BUILDING_HOUSE_VACANT_LOT);
+        //building_construction_warning_check_food_stocks(BUILDING_HOUSE_VACANT_LOT);
         if (needs_road_warning) {
             city_warning_show(WARNING_HOUSE_TOO_FAR_FROM_ROAD);
         }

@@ -1,6 +1,9 @@
 #include "building_house.h"
 
 #include "building/building.h"
+#include "city/warnings.h"
+#include "city/population.h"
+#include "city/resource.h"
 #include "core/game_environment.h"
 #include "city/labor.h"
 #include "game/resource.h"
@@ -575,5 +578,17 @@ void building_house_check_for_corruption(building* house) {
 }
 
 void building_house::on_place_checks() {
-    /*nothing*/
+    if (building_construction_has_warning()) {
+        return;
+    }
+        
+    if (type() != BUILDING_HOUSE_VACANT_LOT) {
+        return;
+    }
+
+    if (city_population() >= 200 && !scenario_property_kingdom_supplies_grain()) {
+        if (city_resource_food_percentage_produced() <= 95) {
+            building_construction_warning_show(WARNING_MORE_FOOD_NEEDED);
+        }
+    }
 }
