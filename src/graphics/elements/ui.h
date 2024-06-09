@@ -210,4 +210,10 @@ struct widget {
     inline void begin_frame() { ui::begin_frame(); }
 };
 
+struct info_window : public widget {
+    int resource_text_group;
+
+    void load(pcstr key);
+};
+
 } // ui

@@ -147,6 +147,7 @@ var advisor_religion_window = {}
 var workshop_info_window = {}
 var main_menu_window = {}
 var bazaar_info_window = {}
+var well_info_window = {}
 //figures
 var figure_fireman = {}
 var figure_water_carrier = {}

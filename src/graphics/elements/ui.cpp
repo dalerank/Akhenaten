@@ -433,3 +433,10 @@ void ui::egeneric_button::load(archive arch) {
         mode = 1;
     }
 }
+
+void ui::info_window::load(pcstr key) {
+    g_config_arch.r_section(key, [this] (archive arch) {
+        widget::load(arch);
+        resource_text_group = arch.r_int("resource_text_group");
+    });
+}

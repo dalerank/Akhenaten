@@ -569,8 +569,10 @@ static void set_wall_gatehouse_image_manually(int grid_offset) {
             }
         }
     }
-    if (image_offset)
+
+    if (image_offset) {
         map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_WALL) + image_offset);
+    }
 }
 
 static void set_wall_image(int grid_offset) {

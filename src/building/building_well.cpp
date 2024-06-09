@@ -6,16 +6,17 @@
 #include "grid/image.h"
 #include "grid/water_supply.h"
 #include "window/building/common.h"
-#include "graphics/elements/panel.h"
-#include "graphics/elements/lang_text.h"
+#include "graphics/elements/ui.h"
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
 
 buildings::model_t<building_well> well_m;
+ui::info_window well_w;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_well);
 void config_load_building_well() {
     well_m.load();
+    well_w.load("well_info_window");
 }
 
 void building_well::update_month() {
@@ -31,7 +32,6 @@ void building_well::on_place_checks() {
     }
 
     int has_water = map_terrain_is(tile(), TERRAIN_GROUNDWATER);
-
     if (!has_water) {
         building_construction_warning_show(WARNING_WATER_PIPE_ACCESS_NEEDED);
     }
@@ -40,8 +40,12 @@ void building_well::on_place_checks() {
 void building_well::window_info_background(object_info &c) {
     c.help_id = 62;
     window_building_play_sound(&c, "wavs/well.wav");
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(109, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+
+    auto &ui = well_w;
+    ui.begin_frame();
+
+    ui["background"].size = c.bgsize;
+    ui["title"].size.x = 16 * c.bgsize.x;
     int well_necessity = map_water_supply_is_well_unnecessary(c.building_id, 2);
     int text_id = 0;
     if (well_necessity == WELL_NECESSARY) { // well is OK
@@ -53,8 +57,12 @@ void building_well::window_info_background(object_info &c) {
     }
 
     if (text_id) {
-        window_building_draw_description_at(c, 16 * c.bgsize.y - 160, 109, text_id);
+        ui["text"].text(ui::str(109, text_id));
     }
+}
+
+void building_well::window_info_foreground(object_info &ctx) {
+    well_w.draw();
 }
 
 bool building_well::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

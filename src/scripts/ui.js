@@ -266,6 +266,14 @@ workshop_info_window = {
 	}
 }
 
+well_info_window = {
+	ui : {
+		background : { type : "outer_panel",	pos: [0, 0], size: [-1, -1] },
+		title 		 : { type : "text", pos: [0, 12], size: [-1, 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center", text: "#well_info_title"},
+		text : { type : "text", pos: [32, 56], wrap:16 * 16, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+	}
+}
+
 empire_window = {
 	trade_column_spacing : 106,
 	trade_row_spacing : 20,
