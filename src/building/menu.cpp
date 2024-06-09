@@ -48,6 +48,8 @@ struct building_menu_group {
         }
     }
 
+    inline bool enabled(int type) { return (*this)[type].enabled; }
+
     items_t::iterator begin() { return items.begin(); }
     items_t::iterator end() { return items.end(); }
 
@@ -115,15 +117,19 @@ struct menu_config_t {
 } g_menu_config;
 
 void config_load_buldingin_menu() {
+    auto copy_config = g_menu_config;
     g_menu_config.groups.clear();
-    g_config_arch.r_array("building_menu", [] (archive arch) {
+    g_config_arch.r_array("building_menu", [&copy_config] (archive arch) {
         g_menu_config.groups.push_back({});
         auto &group = g_menu_config.groups.back();
         group.type = arch.r_int("id");
         assert(group.type != 0);
         arch.r_anim("anim", group.anim);
         auto items = arch.r_array_num<int>("items");
-        for (auto &it : items) group.items.push_back({it, false});
+        for (auto &it : items) {
+            const bool enabled = copy_config.group(group.type).enabled(it);
+            group.items.push_back({it, enabled});
+        }
     });
 }
 

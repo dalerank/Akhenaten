@@ -244,7 +244,7 @@ bazaar_info_window = {
 		good2_text : { type : "text", pos: [284, 114], font: FONT_NORMAL_BLACK_ON_LIGHT },
 		good3_icon : { type : "resource_icon", pos: [362, 110] },
 		good3_text : { type : "text", pos: [394, 114], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		workers_panel : { type : "inner_panel", pos : [16, 136], size: [27, 4] }, 
+		workers_panel : { type : "inner_panel", pos : [16, 136], size: [27, 4] },
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] },
 		workers_text : { type : "text", pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK },
 		workers_desc : { type : "text", pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
