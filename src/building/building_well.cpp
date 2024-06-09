@@ -4,6 +4,9 @@
 #include "grid/terrain.h"
 #include "city/warnings.h"
 #include "grid/image.h"
+#include "config/config.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "grid/water_supply.h"
 #include "window/building/common.h"
 #include "graphics/elements/ui.h"
@@ -76,5 +79,15 @@ bool building_well::can_play_animation() const {
     }
 
     return true;
+}
+
+void building_well::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
+    if (!config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
+        return;
+    }
+
+    city_view_foreach_tile_in_range(ctx, tile.grid_offset(), 1, 2, [] (vec2i pixel, tile2i point, painter &ctx) {
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, COLOR_MASK_BLUE, zoom_get_scale());
+    });
 }
 

@@ -10,6 +10,7 @@
 #include "building/building_festival_square.h"
 #include "building/building_storage_yard.h"
 #include "building/building_road.h"
+#include "building/building_well.h"
 #include "building/industry.h"
 #include "building/monument_mastaba.h"
 #include "building/rotation.h"
@@ -174,10 +175,6 @@ void draw_building_ghost(painter &ctx, e_image_id image_id, vec2i tile, color co
 void draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_mask) {
     ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
     ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, color_mask, 1.f);
-}
-
-static void draw_fountain_range(vec2i pixel, tile2i point, painter &ctx) {
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE, zoom_get_scale());
 }
 
 static void draw_canal(map_point tile, vec2i pixel, painter &ctx) {
@@ -408,10 +405,7 @@ void BuildPlanner::draw_graphics(painter &ctx) {
         return;
 
     case BUILDING_WELL:
-        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-            painter ctx = game.painter();
-            city_view_foreach_tile_in_range(ctx, end.grid_offset(), 1, 2, draw_fountain_range);
-        }
+        building_well::ghost_preview(ctx, end, pixel, 0);        
         break;
     }
 

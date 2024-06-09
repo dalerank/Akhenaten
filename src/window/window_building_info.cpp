@@ -432,7 +432,6 @@ static void draw_refresh_background() {
         } else {
             switch (building_get(context.building_id)->type) {
             case BUILDING_ORACLE: window_building_draw_oracle(&context); break;
-            //case BUILDING_WELL: window_building_draw_fountain(&context); break;
             case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: window_building_draw_triumphal_arch(&context); break;
             
             case BUILDING_ROADBLOCK:

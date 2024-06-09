@@ -159,7 +159,7 @@ building_farm_chickpeas = {
     tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
     seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
     harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
-    farmland: { pack:PACK_GENERAL, id:37, offset:25 },
+    farmland: { pack:PACK_GENERAL, id:37, offset:0 },
   },
   building_size : 3,
   fire_proof : true,
