@@ -7,6 +7,7 @@
 #include "widget/city/tile_draw.h"
 #include "window/building/common.h"
 #include "city/labor.h"
+#include "city/warnings.h"
 #include "figure/figure.h"
 #include "building/count.h"
 #include "game/game.h"
@@ -377,6 +378,22 @@ void building_small_mastaba::on_place(int orientation, int variant) {
             prev_part->next_part_building_id = part.b->id;
         }
         prev_part = part.b;
+    }
+}
+
+void building_small_mastaba::on_place_checks() {
+    if (building_construction_has_warning()) {
+        return;
+    }
+
+    tile2i tiles_to_check[] = {tile(), tile().shifted(1, 0), tile().shifted(0, 1), tile().shifted(1, 1)};
+    bool has_water = false;
+    for (const auto &t : tiles_to_check) {
+        has_water |= map_terrain_is(t, TERRAIN_GROUNDWATER);
+    }
+    
+    if (!has_water) {
+        building_construction_warning_show(WARNING_WATER_PIPE_ACCESS_NEEDED);
     }
 }
 

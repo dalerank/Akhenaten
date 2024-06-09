@@ -11,6 +11,7 @@ public:
 
     //virtual void on_create() override;
     virtual void window_info_background(object_info &c) override;
+    virtual void on_place_checks() override;
     virtual void spawn_figure() override;
     virtual void update_month() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_WATER; }

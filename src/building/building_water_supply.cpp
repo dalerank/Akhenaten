@@ -8,6 +8,7 @@
 #include "widget/city/ornaments.h"
 #include "graphics/elements/ui.h"
 #include "city/labor.h"
+#include "city/warnings.h"
 
 buildings::model_t<building_water_supply> water_supply_m;
 
@@ -80,9 +81,9 @@ void building_water_supply::window_info_background(object_info &c) {
     lang_text_draw_centered(108, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);
-    if (!c.has_road_access)
+    if (!c.has_road_access) {
         window_building_draw_description(c, 69, 25);
-    else {
+    } else {
         if (!b->num_workers)
             window_building_draw_description(c, 108, 7);
         else {
@@ -103,4 +104,16 @@ void building_water_supply::window_info_background(object_info &c) {
     }
     inner_panel_draw(c.offset.x + 16, c.offset.y + 144, c.bgsize.x - 2, 4);
     window_building_draw_employment(&c, 150);
+}
+
+void building_water_supply::on_place_checks() {
+    if (building_construction_has_warning()) {
+        return;
+    }
+
+    int has_water = map_terrain_is(tile(), TERRAIN_GROUNDWATER);
+
+    if (!has_water) {
+        building_construction_warning_show(WARNING_WATER_PIPE_ACCESS_NEEDED);
+    }
 }

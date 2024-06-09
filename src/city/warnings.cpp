@@ -41,26 +41,6 @@ static void check_road_access(building *b, tile2i tile, int size, int orientatio
     }
 }
 
-static void check_water(int type, int x, int y) {
-    if (!g_has_warning) {
-        if (type == BUILDING_MENU_BEAUTIFICATION || type == BUILDING_MENU_MONUMENTS) {
-            int grid_offset = MAP_OFFSET(x, y);
-            int has_water = 0;
-            if (map_terrain_is(grid_offset, TERRAIN_GROUNDWATER))
-                has_water = 1;
-            else if (type == BUILDING_MENU_MONUMENTS) {
-                if (map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_GROUNDWATER)
-                    || map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_GROUNDWATER)
-                    || map_terrain_is(grid_offset + GRID_OFFSET(1, 1), TERRAIN_GROUNDWATER)) {
-                    has_water = 1;
-                }
-            }
-            if (!has_water)
-                building_construction_warning_show(WARNING_WATER_PIPE_ACCESS_NEEDED);
-        }
-    }
-}
-
 static void check_wall(int type, int x, int y, int size) {
     if (!g_has_warning && type == BUILDING_MUD_TOWER) {
         if (!map_terrain_is_adjacent_to_wall(x, y, size))
@@ -77,7 +57,6 @@ void building_construction_warning_generic_checks(building *b, tile2i tile, int 
     building_construction_warning_check_food_stocks(type);
 
     check_wall(type, tile.x(), tile.y(), size);
-    check_water(type, tile.x(), tile.y());
 
     check_road_access(b, tile, size, orientation);
     b->dcast()->on_place_checks();

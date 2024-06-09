@@ -1,6 +1,8 @@
 #include "building_well.h"
 
 #include "grid/desirability.h"
+#include "grid/terrain.h"
+#include "city/warnings.h"
 #include "grid/image.h"
 #include "grid/water_supply.h"
 #include "window/building/common.h"
@@ -24,7 +26,15 @@ void building_well::update_month() {
 }
 
 void building_well::on_place_checks() {
-    // nothing
+    if (building_construction_has_warning()) {
+        return;
+    }
+
+    int has_water = map_terrain_is(tile(), TERRAIN_GROUNDWATER);
+
+    if (!has_water) {
+        building_construction_warning_show(WARNING_WATER_PIPE_ACCESS_NEEDED);
+    }
 }
 
 void building_well::window_info_background(object_info &c) {
