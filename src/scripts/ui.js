@@ -1,5 +1,7 @@
 log_info("akhenaten: ui config started")
 
+function px(i) { return i * 16 }
+
 top_menu_bar = {
 	x_offset : 10,
 	y_offset : 6,
@@ -255,7 +257,7 @@ bazaar_info_window = {
 
 workshop_info_window = {
 	ui : {
-		background : { type : "outer_panel",	pos: [0, 0], size: [-1, -1] },
+		background : { type : "outer_panel", pos: [0, 0], size: [-1, -1] },
 		title 		 : { type : "text", pos: [0, 12], size: [-1, 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		produce_icon : { type : "resource_icon", pos: [10, 10] },
 		ready_prod : { type : "text", pos: [38, 40], size: [-1, 20], font : FONT_NORMAL_BLACK_ON_LIGHT },
@@ -268,9 +270,9 @@ workshop_info_window = {
 
 well_info_window = {
 	ui : {
-		background : { type : "outer_panel",	pos: [0, 0], size: [-1, -1] },
-		title 		 : { type : "text", pos: [0, 12], size: [-1, 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center", text: "#well_info_title"},
-		text : { type : "text", pos: [32, 56], wrap:16 * 16, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		background : { type : "outer_panel", pos: [0, 0], size: [29, 14] },
+		title 		 : { type : "text", pos: [0, 12], size: [px(28), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center", text: "#well_info_title"},
+		text : { type : "text", pos: [32, 56], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 	}
 }
 

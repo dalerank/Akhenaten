@@ -11,12 +11,12 @@
 #include "city/labor.h"
 
 buildings::model_t<building_well> well_m;
-ui::info_window well_w;
+ui::info_window well_w{"well_info_window"};
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_well);
 void config_load_building_well() {
     well_m.load();
-    well_w.load("well_info_window");
+    well_w.load();
 }
 
 void building_well::update_month() {
@@ -44,8 +44,6 @@ void building_well::window_info_background(object_info &c) {
     auto &ui = well_w;
     ui.begin_frame();
 
-    ui["background"].size = c.bgsize;
-    ui["title"].size.x = 16 * c.bgsize.x;
     int well_necessity = map_water_supply_is_well_unnecessary(c.building_id, 2);
     int text_id = 0;
     if (well_necessity == WELL_NECESSARY) { // well is OK

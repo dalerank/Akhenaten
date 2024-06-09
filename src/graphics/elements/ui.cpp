@@ -434,8 +434,9 @@ void ui::egeneric_button::load(archive arch) {
     }
 }
 
-void ui::info_window::load(pcstr key) {
-    g_config_arch.r_section(key, [this] (archive arch) {
+void ui::info_window::load() {
+    elements.clear();
+    g_config_arch.r_section(section, [this] (archive arch) {
         widget::load(arch);
         resource_text_group = arch.r_int("resource_text_group");
     });

@@ -56,7 +56,6 @@ image_button &imgcancel_button(vec2i pos, std::function<void(int, int)> cb);
 image_button &img_button(e_image_id img, vec2i pos, vec2i size, int offset = 0);
 arrow_button &arw_button(vec2i pos, bool up, bool tiny = false);
 
-
 pcstr str(int group, int id);
 inline pcstr str(std::pair<int, int> r) { return str(r.first, r.second); }
 
@@ -207,13 +206,15 @@ struct widget {
     inline int label(int group, int number, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0) { return ui::label(group, number, pos, font, flags, box_width); }
     inline void image(image_desc img, vec2i pos) { ui::eimage(img, pos); }
     inline void begin_widget(vec2i offset, bool relative = false) { ui::begin_widget(offset, relative); }
-    inline void begin_frame() { ui::begin_frame(); }
+    virtual void begin_frame() { ui::begin_frame(); }
 };
 
 struct info_window : public widget {
+    pcstr section;
     int resource_text_group;
 
-    void load(pcstr key);
+    inline info_window(pcstr s) : section(s) {}
+    void load();
 };
 
 } // ui
