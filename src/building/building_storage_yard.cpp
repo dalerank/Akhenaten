@@ -946,28 +946,6 @@ void building_storage_yard::draw_warehouse(object_info* c) {
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
     }
-    //if (GAME_ENV == ENGINE_ENV_C3) {
-    //    const resources_list* list = city_resource_get_available();
-    //    for (int i = 0; i < list->size; i++) {
-    //        e_resource resource = list->items[i];
-    //        int x, y;
-    //        if (i < 5) { // column 1
-    //            x = c->offset.x + 20;
-    //            y = c->offset.y + 24 * i + 36;
-    //        } else if (i < 10) { // column 2
-    //            x = c->offset.x + 170;
-    //            y = c->offset.y + 24 * (i - 5) + 36;
-    //        } else { // column 3
-    //            x = c->offset.x + 320;
-    //            y = c->offset.y + 24 * (i - 10) + 36;
-    //        }
-    //        int amount = building_storageyard_get_amount(b, resource);
-    //        int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-    //        ImageDraw::img_generic(image_id, x, y);
-    //        int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_SMALL_PLAIN);
-    //        lang_text_draw(23, resource, x + 24 + width, y + 7, FONT_SMALL_PLAIN);
-    //    }
-    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) 
     {
         int x = c->offset.x + 20;
         int y = c->offset.y + 45;

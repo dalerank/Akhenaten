@@ -17,9 +17,7 @@
 
 struct granary_info_window : ui::widget {
     int resource_text_group;
-};
-
-granary_info_window g_granary_info_window;
+} g_granary_info_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_granary_info_window);
 void config_load_granary_info_window() {
@@ -104,7 +102,8 @@ void building_granary::window_info_foreground(object_info &ctx) {
 }
 
 void building_granary::window_info_background(object_info &ctx) {
-    ui::begin_frame();
+    auto &ui = g_granary_info_window;
+    ui.begin_frame();
 
     if (ctx.storage_show_special_orders) {
         ctx.help_id = 3;
@@ -116,7 +115,6 @@ void building_granary::window_info_background(object_info &ctx) {
     }
 
     auto &data = g_window_building_distribution;
-    auto &ui = g_granary_info_window;
 
     ctx.help_id = 3;
     ctx.go_to_advisor.left_a = ADVISOR_LABOR;
@@ -125,9 +123,6 @@ void building_granary::window_info_background(object_info &ctx) {
     data.building_id = ctx.building_id;
     window_building_play_sound(&ctx, "wavs/granary.wav");
     
-    //outer_panel_draw(ctx.offset, ctx.width_blocks, ctx.height_blocks);
-    ui["title"].text("#granary_info_title");
-
     pcstr warning_text = !ctx.has_road_access ? "#granary_no_road_access"
                          : scenario_property_kingdom_supplies_grain() ? "#granary_kingdom_supplies_grain"
                          : nullptr;
@@ -156,7 +151,7 @@ void building_granary::window_info_background(object_info &ctx) {
 
     int text_id = get_employment_info_text_id(&ctx, &base, 1);
     int laborers = model_get_building(BUILDING_GRANARY)->laborers;
-    ui["workers_text"].text_var("%s %d(%d %s", ui::str(8, 12), num_workers(), laborers, ui::str(69, 0));
+    ui["workers_text"].text_var("%u %s (%d %s", num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
     if (text_id) {
         ui["workers_desc"].text(ui::str(69, text_id));
     }

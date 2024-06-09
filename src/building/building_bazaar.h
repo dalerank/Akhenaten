@@ -24,7 +24,6 @@ public:
     void draw_simple_background(object_info &c);
     void draw_orders_background(object_info &c);
     void draw_orders_foreground(object_info &c);
-    void draw_simple_foreground(object_info &c);
     int max_food_stock();
     int max_goods_stock();
     bool is_good_accepted(int index);

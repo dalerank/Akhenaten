@@ -204,7 +204,7 @@ granary_info_window = {
 	resource_text_group : 23,
 	ui : {
 		background : { type : "outer_panel",	pos: [0, 0], size: [29, 17] },
-		title 		 : { type : "text", pos: [0, 12], size: [28 * 16, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		title 		 : { type : "text", text: "#granary_info_title", pos: [0, 12], size: [28 * 16, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		warning_text : { type : "text", pos: [32, 40], wrap:28 * 16, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		storing    : { type : "text", pos: [34, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
 		free_space : { type : "text", pos: [220, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
@@ -220,6 +220,36 @@ granary_info_window = {
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] },
 		workers_text : { type : "text", pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK },
 		workers_desc : { type : "text", pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
+	}
+}
+
+bazaar_info_window = {
+	ui : {
+		background : { type : "outer_panel",	pos: [0, 0], size: [29, 16]},
+		title 		 : { type : "text", text: "#bazaar_info_title", pos: [0, 10], size: [16 * 29, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		warning_text : { type : "text", pos: [32, 56], wrap:16 * 16, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		food0_icon : { type : "resource_icon", pos: [32, 85] },
+		food0_text : { type : "text", pos: [64, 90], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		food1_icon : { type : "resource_icon", pos: [142, 85] },
+		food1_text : { type : "text", pos: [174, 90], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		food2_icon : { type : "resource_icon", pos: [252, 85] },
+		food2_text : { type : "text", pos: [284, 90], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		food3_icon : { type : "resource_icon", pos: [362, 85] },
+		food3_text : { type : "text", pos: [394, 90], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good0_icon : { type : "resource_icon", pos: [32, 110] },
+		good0_text : { type : "text", pos: [64, 114], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good1_icon : { type : "resource_icon", pos: [142, 110] },
+		good1_text : { type : "text", pos: [174, 114], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good2_icon : { type : "resource_icon", pos: [252, 110] },
+		good2_text : { type : "text", pos: [284, 114], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good3_icon : { type : "resource_icon", pos: [362, 110] },
+		good3_text : { type : "text", pos: [394, 114], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		workers_panel : { type : "inner_panel", pos : [16, 136], size: [27, 4] }, 
+		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] },
+		workers_text : { type : "text", pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK },
+		workers_desc : { type : "text", pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
+
+		orders : { type:"generic_button", pos:[80, 0], size:[280, 25], text:{group: 98, id: 5}},
 	}
 }
 

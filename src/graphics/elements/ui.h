@@ -58,6 +58,7 @@ arrow_button &arw_button(vec2i pos, bool up, bool tiny = false);
 
 
 pcstr str(int group, int id);
+inline pcstr str(std::pair<int, int> r) { return str(r.first, r.second); }
 
 struct element {
     bstring64 id;
@@ -205,6 +206,8 @@ struct widget {
 
     inline int label(int group, int number, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0) { return ui::label(group, number, pos, font, flags, box_width); }
     inline void image(image_desc img, vec2i pos) { ui::eimage(img, pos); }
+    inline void begin_widget(vec2i offset, bool relative = false) { ui::begin_widget(offset, relative); }
+    inline void begin_frame() { ui::begin_frame(); }
 };
 
 } // ui

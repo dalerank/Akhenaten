@@ -658,7 +658,7 @@ int window_building_info_get_type() {
     return BUILDING_NONE;
 }
 
-void window_building_info_show_storage_orders(void) {
+void window_building_info_show_storage_orders() {
     auto &context = g_building_info_context;
     context.storage_show_special_orders = 1;
     window_invalidate();
