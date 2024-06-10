@@ -8,6 +8,7 @@ public:
     virtual void on_create() override {}
     virtual void figure_action() override;
     virtual void figure_before_action() override;
+    virtual bool is_common_roaming() override { return false; }
     virtual bool can_move_by_water() const override;
     virtual figure_immigrant *dcast_immigrant() { return this; }
     virtual int y_correction(int y) const override { return 10; }

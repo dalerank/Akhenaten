@@ -363,17 +363,11 @@ void figure::action_perform() {
 
             case FIGURE_ACTION_125_ROAMING:
             case ACTION_1_ROAMING:
-                if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT) {
-                    break;
-                }
                 do_roam();
                 break;
 
             case FIGURE_ACTION_126_ROAMER_RETURNING:
             case ACTION_2_ROAMERS_RETURNING:
-                if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT) {
-                    break;
-                }
                 do_returnhome();
                 break;
             }
