@@ -6,6 +6,8 @@ class figure_carrier : public figure_impl {
 public:
     figure_carrier(figure *f) : figure_impl(f) {}
 
+    virtual bool window_info_background(object_info &ctx) override;
+
     void load_resource(e_resource resource, int amount);
     int dump_resource(int amount);
 };
@@ -20,7 +22,6 @@ public:
     virtual void before_poof() override;
     virtual void figure_action() override;
     virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) override;
-    virtual bool window_info_background(object_info &ctx) override;
     virtual e_figure_sound phrase() const override { return {FIGURE_CART_PUSHER, "cartpusher"}; }
     virtual e_overlay get_overlay() const override { return OVERLAY_NONE; }
     virtual figure_sound_t get_sound_reaction(pcstr key) const override;

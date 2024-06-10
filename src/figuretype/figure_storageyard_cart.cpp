@@ -2,7 +2,9 @@
 
 #include "core/profiler.h"
 #include "grid/road_network.h"
-
+#include "graphics/graphics.h"
+#include "graphics/image.h"
+#include "game/game.h"
 #include "js/js_game.h"
 
 figures::model_t<figure_storageyard_cart> storageyard_cart_m;

@@ -492,11 +492,6 @@ void figure_docker::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i*
     base.draw_figure_with_cart(ctx, pixel, highlight, coord_out);
 }
 
-bool figure_docker::window_info_background(object_info &c) {
-    base.draw_cartpusher(&c);
-    return true;
-}
-
 sound_key figure_docker::phrase_key() const {
     if (action_state() == FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE ||
         action_state() == FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE) {

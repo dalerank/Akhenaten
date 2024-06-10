@@ -16,7 +16,6 @@
 
 /*
 static figure_action_property action_properties_lookup[] = {
-  {FIGURE_ARCHITECT, 1, 0, 0, 0, IMG_NONE},
   {FIGURE_STORAGEYARD_CART, 1, 0, 0, 0, IMG_NONE},
   {FIGURE_FIREMAN, 1, 0, 0, 0, IMG_NONE},
   {FIGURE_ARCHER, 1, 0, 0, IMG_NONE},

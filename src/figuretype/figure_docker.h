@@ -1,16 +1,15 @@
 #pragma once
 
-#include "figure/figure.h"
+#include "figuretype/figure_cartpusher.h"
 
-class figure_docker : public figure_impl {
+class figure_docker : public figure_carrier {
 public:
     FIGURE_METAINFO(FIGURE_DOCKER, figure_docker)
-    figure_docker(figure *f) : figure_impl(f) {}
+    figure_docker(figure *f) : figure_carrier(f) {}
 
     virtual void on_create() override {}
     virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) override;
     virtual e_figure_sound phrase() const override { return {FIGURE_DOCKER, "dock_pusher"}; }
-    virtual bool window_info_background(object_info &ctx) override;
     virtual void on_destroy() override;
     virtual void figure_action() override;
     virtual sound_key phrase_key() const override;
