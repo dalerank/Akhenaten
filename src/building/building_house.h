@@ -19,6 +19,7 @@ public:
     inline void change_population(int delta) { base.house_population += delta; }
     inline e_house_level house_level() const { return base.subtype.house_level; }
     void change_to_vacant_lot();
+    void add_population(int num_people);
 
     static void create_vacant_lot(tile2i tile, int image_id);
 };

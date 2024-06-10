@@ -14,7 +14,6 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "core/profiler.h"
-#include "figuretype/migrant.h"
 #include "figuretype/figure_homeless.h"
 #include "figure/route.h"
 #include "game/tutorial.h"

@@ -3,10 +3,11 @@
 #include "city/city.h"
 #include "core/profiler.h"
 #include "core/random.h"
-#include "figuretype/migrant.h"
+#include "core/calc.h"
 #include "grid/road_access.h"
 #include "grid/terrain.h"
 #include "building/building.h"
+#include "building/building_house.h"
 #include "city/population.h"
 
 #include "js/js_game.h"
@@ -26,6 +27,26 @@ void figure_create_homeless(tile2i tile, int num_people) {
     city_population_remove_homeless(num_people);
 }
 
+int figure_homeless::find_closest_house_with_room(tile2i tile) {
+    int min_dist = 1000;
+    int min_building_id = 0;
+    int max_id = building_get_highest_id();
+    for (int i = 1; i <= max_id; i++) {
+        building* b = building_get(i);
+        if (b->state == BUILDING_STATE_VALID && b->house_size && b->distance_from_entry > 0
+            && b->house_population_room > 0) {
+            if (!b->has_figure(2)) {
+                int dist = calc_maximum_distance(tile, b->tile);
+                if (dist < min_dist) {
+                    min_dist = dist;
+                    min_building_id = i;
+                }
+            }
+        }
+    }
+    return min_building_id;
+}
+
 void figure_homeless::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Homeless");
     tile2i exit = g_city.map.exit_point;
@@ -35,7 +56,7 @@ void figure_homeless::figure_action() {
         wait_ticks++;
         if (wait_ticks > 51) {
             wait_ticks = 0;
-            int building_id = figure_closest_house_with_room(tile());
+            int building_id = find_closest_house_with_room(tile());
             if (building_id) {
                 building* b = building_get(building_id);
                 tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
@@ -64,9 +85,10 @@ void figure_homeless::figure_action() {
 
     case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE:
         {
-            building *ihome = building_get(base.immigrant_home_building_id);
-            if (do_enterbuilding(false, ihome)) {
-                figure_add_house_population(ihome, base.migrant_num_people);
+            building *b = building_get(base.immigrant_home_building_id);
+            if (do_enterbuilding(false, b)) {
+                building_house *house = b->dcast_house();
+                house->add_population(base.migrant_num_people);
             }
         }
         break;
@@ -109,7 +131,7 @@ void figure_homeless::figure_action() {
         wait_ticks++;
         if (wait_ticks > 30) {
             wait_ticks = 0;
-            int building_id = figure_closest_house_with_room(tile());
+            int building_id = find_closest_house_with_room(tile());
             if (building_id > 0) {
                 building* b = building_get(building_id);
                 tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);

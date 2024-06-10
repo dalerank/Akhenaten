@@ -127,6 +127,27 @@ static int house_image_group(int level) {
     return image_id + (use_offset ? house_img_desc.offset : 0);
 }
 
+void building_house::add_population(int num_people) {
+    int max_people = model_get_house(base.subtype.house_level)->max_people;
+    if (base.house_is_merged) {
+        max_people *= 4;
+    }
+
+    int room = std::max(max_people - base.house_population, 0);
+
+    if (room < num_people)
+        num_people = room;
+
+    if (!base.house_population) {
+        building_house_change_to(&base, BUILDING_HOUSE_CRUDE_HUT);
+    }
+
+    base.house_population += num_people;
+    base.house_population_room = max_people - base.house_population;
+    city_population_add(num_people);
+    base.remove_figure(2);
+}
+
 void building_house_change_to(building* house, e_building_type type) {
     tutorial_on_house_evolve((e_house_level)(type - BUILDING_HOUSE_VACANT_LOT));
     house->type = type;

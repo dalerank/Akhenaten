@@ -3,8 +3,7 @@
 #include "core/profiler.h"
 #include "grid/terrain.h"
 #include "core/calc.h"
-
-#include "figuretype/migrant.h"
+#include "building/building_house.h"
 #include "city/city.h"
 #include "graphics/animation.h"
 
@@ -71,7 +70,8 @@ void figure_immigrant::figure_action() {
 
     case FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE:
         if (do_enterbuilding(false, home)) {
-            figure_add_house_population(home, base.migrant_num_people);
+            building_house *house = home->dcast_house();
+            house->add_population(base.migrant_num_people);
         }
         //            is_ghost = in_building_wait_ticks ? 1 : 0;
         break;

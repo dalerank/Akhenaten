@@ -14,6 +14,8 @@ public:
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
     virtual bool is_common_roaming() override { return false; }
     virtual const animations_t &anim() const override;
+
+    int find_closest_house_with_room(tile2i tile);
     //virtual sound_key phrase_key() const override;
 };
 
