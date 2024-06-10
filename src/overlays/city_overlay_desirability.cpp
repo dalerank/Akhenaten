@@ -137,7 +137,9 @@ bool city_overlay_desirability::draw_custom_footprint(vec2i pixel, tile2i point,
         ImageDraw::isometric_from_drawtile(ctx, img_id + offset, pixel, color_mask);
         ImageDraw::isometric_from_drawtile_top(ctx, img_id + offset, pixel, color_mask);
     } else {
-        ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, color_mask);
+        int img_id = map_image_at(grid_offset);
+        ImageDraw::isometric_from_drawtile(ctx, img_id, pixel, color_mask);
+        ImageDraw::isometric_from_drawtile_top(ctx, img_id, pixel, color_mask);
     }
 
     return true;
