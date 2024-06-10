@@ -31,53 +31,50 @@ void figure_immigrant::figure_action() {
             advance_action(FIGURE_ACTION_2_IMMIGRANT_ARRIVING);
         }
         break;
+
     case FIGURE_ACTION_2_IMMIGRANT_ARRIVING:
     case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE: // arriving
-    {
-        OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant/Goto Building");
-        if (direction() <= 8) {
-            int next_tile_grid_offset = tile().grid_offset() + map_grid_direction_delta(direction());
-            if (map_terrain_is(next_tile_grid_offset, TERRAIN_WATER)) {
-                bool is_ferry_route = map_terrain_is(next_tile_grid_offset, TERRAIN_FERRY_ROUTE);
+        {
+            OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant/Goto Building");
+            if (direction() <= 8) {
+                int next_tile_grid_offset = tile().grid_offset() + map_grid_direction_delta(direction());
+                if (map_terrain_is(next_tile_grid_offset, TERRAIN_WATER)) {
+                    bool is_ferry_route = map_terrain_is(next_tile_grid_offset, TERRAIN_FERRY_ROUTE);
 
-                if (!is_ferry_route) {
-                    is_ferry_route = map_terrain_is_near_ferry_route(next_tile_grid_offset, 1);
-                }
+                    if (!is_ferry_route) {
+                        is_ferry_route = map_terrain_is_near_ferry_route(next_tile_grid_offset, 1);
+                    }
 
-                if (!is_ferry_route) {
-                    route_remove();
+                    if (!is_ferry_route) {
+                        route_remove();
+                    }
                 }
             }
-        }
 
-        do_gotobuilding(home, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE, ACTION_8_RECALCULATE);
+            do_gotobuilding(home, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE, ACTION_8_RECALCULATE);
 
-        if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            base.routing_try_reroute_counter++;
-            if (base.routing_try_reroute_counter > 20) {
-                poof();
-                break;
+            if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+                base.routing_try_reroute_counter++;
+                if (base.routing_try_reroute_counter > 20) {
+                    poof();
+                    break;
+                }
+                base.wait_ticks = 20;
+                route_remove();
+                base.state = FIGURE_STATE_ALIVE;
+                base.direction = calc_general_direction(tile(), base.destination_tile);
+                advance_action(ACTION_8_RECALCULATE);
+                base.roam_wander_freely = true;
             }
-            base.wait_ticks = 20;
-            route_remove();
-            base.state = FIGURE_STATE_ALIVE;
-            base.direction = calc_general_direction(tile(), base.destination_tile);
-            advance_action(ACTION_8_RECALCULATE);
-            base.roam_wander_freely = true;
         }
-    }
-    break;
+        break;
 
     case FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE:
-    if (do_enterbuilding(false, home)) {
-        figure_add_house_population(home, base.migrant_num_people);
-    }
-    //            is_ghost = in_building_wait_ticks ? 1 : 0;
-    break;
-    }
-    {
-        OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant/Update Image");
-        update_direction_and_image();
+        if (do_enterbuilding(false, home)) {
+            figure_add_house_population(home, base.migrant_num_people);
+        }
+        //            is_ghost = in_building_wait_ticks ? 1 : 0;
+        break;
     }
 }
 
@@ -86,6 +83,20 @@ void figure_immigrant::figure_before_action() {
     if (b_imm->type == BUILDING_BURNING_RUIN) {
         advance_action(FIGURE_ACTION_1_IMMIGRANT_CREATED);
     }
+}
+
+void figure_immigrant::update_animation() {
+    figure_impl::update_animation();
+
+    int dir = base.figure_image_direction();
+    switch (action_state()) {
+    case FIGURE_ACTION_2_IMMIGRANT_ARRIVING:
+    case FIGURE_ACTION_6_EMIGRANT_LEAVING:
+        base.cart_image_id = immigrant_m.anim["cart"].first_img() + dir;
+        base.figure_image_set_cart_offset((dir + 4) % 8);
+        break;
+    }
+
 }
 
 bool figure_immigrant::can_move_by_water() const {

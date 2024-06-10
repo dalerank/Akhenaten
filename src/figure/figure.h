@@ -420,7 +420,6 @@ public:
     // pharaoh
     void policeman_action();
 
-    void update_direction_and_image();
     int is_nearby(int category, int* distance, int max_distance = 10000, bool gang_on = true);
     bool herd_roost(int step, int bias, int max_dist, int terrain_mask);
 
@@ -518,7 +517,6 @@ public:
     virtual sound_key phrase_key() const { return {}; }
     virtual int provide_service() { return 0; }
     virtual bool play_die_sound() { return false; }
-    virtual void update_direction_and_image() { base.update_direction_and_image(); }
     virtual void update_animation();
     virtual bool can_move_by_water() const;
     virtual int y_correction(int y) const { return y; }

@@ -151,9 +151,10 @@ figure_ostrich = {
 
 figure_immigrant = {
 	animations : {
-		walk : { pos : [0, 0], pack: PACK_SPR_MAIN, id: 14, max_frames:12 },
-		death : { pos : [0, 0], pack: PACK_SPR_MAIN, id: 15, max_frames:8, loop:false },
-		swim : { pos : [0, 0], pack:PACK_SPR_MAIN, id:138, max_frames:4, duration:4 },
+		walk : { pack: PACK_SPR_MAIN, id: 14, max_frames:12 },
+		death : { pack: PACK_SPR_MAIN, id: 15, max_frames:8, loop:false },
+		swim : { pack:PACK_SPR_MAIN, id:138, max_frames:4, duration:4 },
+   	cart: { pack:PACK_SPR_MAIN, id:52, max_frames:1 },
 	},
 	sounds : {
 		i_need_here: {sound:"immigrant_e01.wav", group: 202, text:0},
@@ -192,6 +193,7 @@ figure_standard_bearer = {
 figure_native_trader = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 },
+		cart: { pack:PACK_SPR_MAIN, id:52, max_frames:1 },
 	},
 }
 
@@ -414,8 +416,9 @@ figure_trade_ship = {
 
 figure_emigrant = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:2, max_frames:12 },
-		death : { pos : [0, 0], pack: PACK_SPR_MAIN, id:3, max_frames:8, loop:false },
+		walk : { pack:PACK_SPR_MAIN, id:2, max_frames:12 },
+		death : { pack: PACK_SPR_MAIN, id:3, max_frames:8, loop:false },
+		cart: { pack:PACK_SPR_MAIN, id:52, max_frames:1 },
 	},
 	sounds : {
 		no_job_in_city : {sound:"emigrant_e01.wav", group: 203, text:0},

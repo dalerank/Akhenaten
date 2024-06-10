@@ -100,6 +100,8 @@ const animations_t &figure_native_trader::anim() const {
 }
 
 void figure_native_trader::update_animation() {
+    figure_impl::update_animation();
+
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
     if (action_state() == FIGURE_ACTION_149_CORPSE) {
         base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
@@ -108,7 +110,8 @@ void figure_native_trader::update_animation() {
         base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.anim.frame;
     }
 
-    base.cart_image_id = image_id_from_group(GROUP_FIGURE_IMMIGRANT_CART) + 8 + 8 * base.resource_id; // BUGFIX should be within else statement?
+    int cart_img = native_trader_m.anim["cart"].first_img();
+    base.cart_image_id = cart_img + 8 + 8 * base.resource_id; // BUGFIX should be within else statement?
     if (base.cart_image_id) {
         base.cart_image_id += dir;
         base.figure_image_set_cart_offset(dir);

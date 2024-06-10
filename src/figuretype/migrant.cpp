@@ -17,15 +17,6 @@
 #include "grid/road_access.h"
 #include "grid/terrain.h"
 
-void figure::update_direction_and_image() {
-    //    figure_image_update(image_id_from_group(GROUP_FIGURE_MIGRANT));
-    if (action_state == FIGURE_ACTION_2_IMMIGRANT_ARRIVING || action_state == FIGURE_ACTION_6_EMIGRANT_LEAVING) {
-        int dir = figure_image_direction();
-        cart_image_id = image_id_from_group(GROUP_FIGURE_IMMIGRANT_CART) + dir;
-        figure_image_set_cart_offset((dir + 4) % 8);
-    }
-}
-
 int figure_closest_house_with_room(tile2i tile) {
     int min_dist = 1000;
     int min_building_id = 0;

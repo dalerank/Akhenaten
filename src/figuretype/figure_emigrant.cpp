@@ -96,10 +96,18 @@ void figure_emigrant::figure_action() {
         }
         break;
     }
+}
 
-    {
-        OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Emigrant/Update Image");
-        update_direction_and_image();
+void figure_emigrant::update_animation() {
+    figure_impl::update_animation();
+
+    int dir = base.figure_image_direction();
+    switch (action_state()) {
+    case FIGURE_ACTION_2_IMMIGRANT_ARRIVING:
+    case FIGURE_ACTION_6_EMIGRANT_LEAVING:
+        base.cart_image_id = emigrant_m.anim["cart"].first_img() + dir;
+        base.figure_image_set_cart_offset((dir + 4) % 8);
+        break;
     }
 }
 
