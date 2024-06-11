@@ -485,6 +485,12 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         }
         break;
 
+    case e_debug_render_desirability: // FIRE
+        if (g_desirability.get(grid_offset) != 0) {
+            debug_text(ctx, str, x, y + 10, 0, "", g_desirability.get(grid_offset), COLOR_LIGHT_RED);
+        }
+        break;
+
     case e_debug_render_marshland: // MARSHLAND
         d = map_terrain_is(grid_offset, TERRAIN_MARSHLAND);
         if (d != 0) {
