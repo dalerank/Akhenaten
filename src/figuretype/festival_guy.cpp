@@ -39,13 +39,13 @@ void figure_festival_guy::figure_action() {
         image_set_animation(IMG_PRIEST_BAST);
         break;
     case BUILDING_JUGGLER_SCHOOL:
-        image_set_animation(festival_guy_m.anim["juggler"]);
+        image_set_animation("juggler");
         break;
     case BUILDING_CONSERVATORY:
-        image_set_animation(festival_guy_m.anim["musician"]);
+        image_set_animation("musician");
         break;
     case BUILDING_DANCE_SCHOOL:
-        image_set_animation(ANIM_DANCER_WALK);
+        image_set_animation("dancer");
         break;
     }
 

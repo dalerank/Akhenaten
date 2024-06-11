@@ -484,8 +484,8 @@ figure_herbalist = {
 
 figure_dancer = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_DANCER_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_DANCER_DEATH, max_frames:8, loop:false },
+		walk : { pack:PACK_SPR_MAIN, id:128, max_frames:12 },
+		death : { pospack:PACK_SPR_MAIN, id:129, max_frames:8, loop:false },
 	},
 	sounds : {
 		i_like_festivals : {sound:"dancer_e01.wav", group:228, text:0},
@@ -508,6 +508,7 @@ figure_festival_guy = {
 	animations : {
 		juggler : { pack:PACK_SPR_MAIN, id:130, max_frames:12 },
 		musician : { pack:PACK_SPR_MAIN, id:191, max_frames:12 },
+		dancer : {pack:PACK_SPR_MAIN, id:128, max_frames:12},
 	},
 	terrain_usage : TERRAIN_USAGE_ROADS,
 	max_roam_length : 512,

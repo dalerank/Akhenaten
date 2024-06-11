@@ -246,15 +246,8 @@ void figure_entertainer::update_animation() {
     //}
 
     int image_id;
-    if (type() == FIGURE_JUGGLER || type() == FIGURE_MUSICIAN) {
+    if (figure_type_any_of(base, FIGURE_JUGGLER, FIGURE_MUSICIAN, FIGURE_DANCER)) {
         image_id = anim("walk").first_img();
-    } else if (type() == FIGURE_DANCER) {
-        image_id = image_group(ANIM_DANCER_WALK);
-        if (base.wait_ticks_missile >= 96) {
-            image_id = image_id_from_group(GROUP_FIGURE_DANCER_WHIP);
-        }
-
-        base.cart_image_id = image_id_from_group(GROUP_FIGURE_LION);
     } else {
         return;
     }

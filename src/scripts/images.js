@@ -70,8 +70,6 @@ images = [
 	{img: ANIM_TRADER_SHIP_WALK, pack:PACK_SPR_MAIN, id:40, offset:0},
 	{img: ANIM_TRADER_SHIP_DEATH, pack:PACK_SPR_MAIN, id:41, offset:0},
 	{img: ANIM_TRADER_SHIP_IDLE, pack:PACK_SPR_MAIN, id:42, offset:0},
-	{img: ANIM_DANCER_WALK, pack:PACK_SPR_MAIN, id:128, offset:0},
-	{img: ANIM_DANCER_DEATH, pack:PACK_SPR_MAIN, id:129, offset:0},
 ]
 
 cart_images = [
