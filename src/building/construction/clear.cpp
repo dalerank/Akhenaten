@@ -4,7 +4,6 @@
 #include "building/industry.h"
 #include "building/building_farm.h"
 #include "city/warning.h"
-#include "figuretype/migrant.h"
 #include "figuretype/figure_homeless.h"
 #include "game/undo.h"
 #include "graphics/window.h"

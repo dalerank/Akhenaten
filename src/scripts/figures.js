@@ -330,7 +330,8 @@ figure_architector = {
 
 figure_market_buyer = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_MARKET_BUYER_WALK, max_frames:12 },
+		walk : { pack:PACK_SPR_MAIN, id:16, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:17, max_frames:8, loop:false },
 	},
 	sounds : {
 		goto_store : {sound:"mkt_buyer_e01.wav", group:244, text:0 },
