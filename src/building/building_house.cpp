@@ -140,6 +140,26 @@ void building_house::create_vacant_lot(tile2i tile, int image_id) {
     map_building_tiles_add(b->id, b->tile, 1, image_id, TERRAIN_BUILDING);
 }
 
+void building_house::consume_resources() {
+    auto consume_resource = [this] (int inventory, int amount) {
+        if (amount <= 0) {
+            return;
+        }
+
+        if (amount > data.house.inventory[inventory]) {
+            data.house.inventory[inventory] = 0;
+        } else {
+            data.house.inventory[inventory] -= amount;
+        }
+    };
+
+    const model_house* model = model_get_house(base.subtype.house_level);
+    consume_resource(INVENTORY_GOOD1, model->pottery);
+    consume_resource(INVENTORY_GOOD2, model->jewelry_furniture);
+    consume_resource(INVENTORY_GOOD3, model->linen_oil);
+    consume_resource(INVENTORY_GOOD4, model->beer_wine);
+}
+
 template<bool use_offset>
 static int house_image_group(int level) {
     //const auto &house_img_desc = HOUSE_IMAGE[level];

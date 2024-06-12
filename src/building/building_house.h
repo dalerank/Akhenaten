@@ -32,6 +32,7 @@ public:
     void change_to(e_building_type type);
     void merge();
     void merge_impl();
+    void consume_resources();
 
     e_house_progress check_evolve_desirability();
     e_house_progress has_required_goods_and_services(int for_upgrade, house_demands *demands);
@@ -41,12 +42,6 @@ public:
     e_house_progress check_requirements(house_demands *demands);
 
     static void create_vacant_lot(tile2i tile, int image_id);
-};
-
-class building_house_vacant : public building_house {
-public:
-    BUILDING_METAINFO(BUILDING_HOUSE_VACANT_LOT, building_house_vacant)
-    building_house_vacant(building &b) : building_house(b) {}
 };
 
 class building_house_crude_hut : public building_house {

@@ -282,24 +282,6 @@ static bool evolve_luxury_palace(building* b, house_demands* demands) {
     return 0;
 }
 
-static void consume_resource(building& b, int inventory, int amount) {
-    if (amount > 0) {
-        if (amount > b.data.house.inventory[inventory])
-            b.data.house.inventory[inventory] = 0;
-        else {
-            b.data.house.inventory[inventory] -= amount;
-        }
-    }
-}
-
-static void consume_resources(building &b) {
-    const model_house* model = model_get_house(b.subtype.house_level);
-    consume_resource(b, INVENTORY_GOOD1, model->pottery);
-    consume_resource(b, INVENTORY_GOOD2, model->jewelry_furniture);
-    consume_resource(b, INVENTORY_GOOD3, model->linen_oil);
-    consume_resource(b, INVENTORY_GOOD4, model->beer_wine);
-}
-
 static bool (*evolve_callback[])(building*, house_demands*) = {
     evolve_crudy_hut,
     evolve_sturdy_hut,
@@ -332,8 +314,9 @@ void building_house_process_evolve_and_consume_goods(void) {
         building_house_check_for_corruption(&h);
         has_expanded |= evolve_callback[h.type - BUILDING_HOUSE_VACANT_LOT](&h, &demands);
 
+        building_house *house = h.dcast_house();
         if (game_time_day() == 0 || game_time_day() == 7) {
-            consume_resources(h);
+            house->consume_resources();
         }
     });
 
