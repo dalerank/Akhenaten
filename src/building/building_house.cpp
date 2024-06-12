@@ -702,16 +702,13 @@ void building_house_expand_to_large_villa(building* house) {
     int image_id = house_image_group<true>(house->subtype.house_level);
     map_building_tiles_remove(house->id, house->tile);
     house->tile.set(g_merge_data.x, g_merge_data.y);
-    //    house->tile.x() = merge_data.x;
-    //    house->tile.y() = merge_data.y;
-    //    house->tile.grid_offset() = MAP_OFFSET(house->tile.x(), house->tile.y());
     map_building_tiles_add(house->id, house->tile, house->size, image_id, TERRAIN_BUILDING);
 }
 void building_house_expand_to_large_palace(building* house) {
     split(house, 16);
     prepare_for_merge(house->id, 16);
 
-    house->type = BUILDING_HOUSE_LARGE_PALACE;
+    house->type = BUILDING_HOUSE_MODEST_ESTATE;
     house->subtype.house_level = HOUSE_MODEST_ESTATE;
     house->size = house->house_size = 4;
     house->house_population += g_merge_data.population;
@@ -781,7 +778,7 @@ void building_house_devolve_from_large_palace(building* house) {
     map_building_tiles_remove(house->id, house->tile);
 
     // main tile
-    house->type = BUILDING_HOUSE_MEDIUM_PALACE;
+    house->type = BUILDING_HOUSE_STATELY_MANOR;
     house->subtype.house_level = (e_house_level)(house->type - BUILDING_HOUSE_VACANT_LOT);
     house->size = house->house_size = 3;
     house->house_is_merged = 0;

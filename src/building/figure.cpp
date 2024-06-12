@@ -504,7 +504,7 @@ bool building::figure_generate() {
     show_on_problem_overlay = 0;
 
     bool noble_generated = false;
-    if (type >= BUILDING_HOUSE_COMMON_MANOR && type <= BUILDING_HOUSE_LUXURY_PALACE) {
+    if (type >= BUILDING_HOUSE_COMMON_MANOR && type <= BUILDING_HOUSE_PALATIAL_ESTATE) {
         noble_generated = spawn_noble(noble_generated);
     } else if (is_workshop() || is_extractor()) {// farms are handled by a separate cycle in Pharaoh!
         spawn_figure_industry();

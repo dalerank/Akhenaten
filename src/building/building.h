@@ -567,7 +567,7 @@ public:
     building::impl_data_t &data;
 };
 
-inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE; }
+inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_PALATIAL_ESTATE; }
 
 int building_id_first(e_building_type type);
 building* building_first(e_building_type type);

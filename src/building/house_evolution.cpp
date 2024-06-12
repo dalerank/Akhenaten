@@ -211,7 +211,7 @@ static bool evolve_large_villa(building* b, house_demands* demands) {
     e_house_progress status = house->check_requirements(demands);
     if (!house->has_devolve_delay(status)) {
         if (status == e_house_evolve) {
-            house->change_to(BUILDING_HOUSE_GRAND_VILLA);
+            house->change_to(BUILDING_HOUSE_SPACIOUS_MANOR);
         } else if (status == e_house_decay) {
             building_house_devolve_from_large_villa(b);
         }
@@ -224,7 +224,7 @@ static bool evolve_grand_villa(building* b, house_demands* demands) {
     e_house_progress status = house->check_requirements(demands);
     if (!house->has_devolve_delay(status)) {
         if (status == e_house_evolve)
-            house->change_to(BUILDING_HOUSE_SMALL_PALACE);
+            house->change_to(BUILDING_HOUSE_ELEGANT_MANOR);
         else if (status == e_house_decay)
             house->change_to(BUILDING_HOUSE_COMMON_MANOR);
     }
@@ -236,9 +236,9 @@ static bool evolve_small_palace(building* b, house_demands* demands) {
     e_house_progress status = house->check_requirements(demands);
     if (!house->has_devolve_delay(status)) {
         if (status == e_house_evolve)
-            house->change_to(BUILDING_HOUSE_MEDIUM_PALACE);
+            house->change_to(BUILDING_HOUSE_STATELY_MANOR);
         else if (status == e_house_decay)
-            house->change_to(BUILDING_HOUSE_GRAND_VILLA);
+            house->change_to(BUILDING_HOUSE_SPACIOUS_MANOR);
     }
     return 0;
 }
@@ -253,7 +253,7 @@ static bool evolve_medium_palace(building* b, house_demands* demands) {
                 return 1;
             }
         } else if (status == e_house_decay) {
-            house->change_to(BUILDING_HOUSE_SMALL_PALACE);
+            house->change_to(BUILDING_HOUSE_ELEGANT_MANOR);
         }
     }
     return 0;
@@ -263,7 +263,7 @@ static bool evolve_large_palace(building* b, house_demands* demands) {
     e_house_progress status = house->check_requirements(demands);
     if (!house->has_devolve_delay(status)) {
         if (status == e_house_evolve)
-            house->change_to(BUILDING_HOUSE_LUXURY_PALACE);
+            house->change_to(BUILDING_HOUSE_PALATIAL_ESTATE);
         else if (status == e_house_decay)
             building_house_devolve_from_large_palace(b);
     }
@@ -277,7 +277,7 @@ static bool evolve_luxury_palace(building* b, house_demands* demands) {
     }
 
     if (!house->has_devolve_delay(status) && status == e_house_decay)
-        house->change_to(BUILDING_HOUSE_LARGE_PALACE);
+        house->change_to(BUILDING_HOUSE_MODEST_ESTATE);
 
     return 0;
 }

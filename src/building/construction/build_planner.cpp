@@ -189,23 +189,23 @@ static void add_building(building* b, int orientation, int variant) {
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_ELEGANT_MANOR));
         break;
 
-    case BUILDING_HOUSE_GRAND_VILLA:
+    case BUILDING_HOUSE_SPACIOUS_MANOR:
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_ELEGANT_MANOR) + 1);
         break;
 
-    case BUILDING_HOUSE_SMALL_PALACE:
+    case BUILDING_HOUSE_ELEGANT_MANOR:
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_ESTATE));
         break;
 
-    case BUILDING_HOUSE_MEDIUM_PALACE:
+    case BUILDING_HOUSE_STATELY_MANOR:
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_ESTATE) + 1);
         break;
 
-    case BUILDING_HOUSE_LARGE_PALACE:
+    case BUILDING_HOUSE_MODEST_ESTATE:
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALATIAL));
         break;
 
-    case BUILDING_HOUSE_LUXURY_PALACE:
+    case BUILDING_HOUSE_PALATIAL_ESTATE:
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALATIAL) + 1);
         break;
         // government
