@@ -166,7 +166,7 @@ static void add_building_tiles_image(building* b, int image_id) {
 
 static void add_building(building* b, int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    const auto &anim = b->dcast()->params().anim;
+    const auto &params = b->dcast()->params();
     switch (b->type) {
     // houses
     case BUILDING_HOUSE_STURDY_HUT:
@@ -182,32 +182,15 @@ static void add_building(building* b, int orientation, int variant) {
     case BUILDING_HOUSE_SPACIOUS_RESIDENCE:
     case BUILDING_HOUSE_ELEGANT_RESIDENCE:
     case BUILDING_HOUSE_FANCY_RESIDENCE:
-        add_building_tiles_image(b, anim["house"].first_img());
-        break;
-
     case BUILDING_HOUSE_COMMON_MANOR:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_ELEGANT_MANOR));
-        break;
-
     case BUILDING_HOUSE_SPACIOUS_MANOR:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_ELEGANT_MANOR) + 1);
-        break;
-
     case BUILDING_HOUSE_ELEGANT_MANOR:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_ESTATE));
-        break;
-
     case BUILDING_HOUSE_STATELY_MANOR:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_ESTATE) + 1);
-        break;
-
     case BUILDING_HOUSE_MODEST_ESTATE:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALATIAL));
+    case BUILDING_HOUSE_PALATIAL_ESTATE:
+        add_building_tiles_image(b, params.anim["house"].first_img());
         break;
 
-    case BUILDING_HOUSE_PALATIAL_ESTATE:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALATIAL) + 1);
-        break;
         // government
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:
@@ -217,18 +200,14 @@ static void add_building(building* b, int orientation, int variant) {
         add_temple_complex(b, orientation);
         break;
 
-    case BUILDING_DOCK: {
-            auto props = building_impl::params(b->type);
-            map_water_add_building(b->id, b->tile, props.building_size, props.anim["base"].first_img() + orientation_rel);
-        }
+    case BUILDING_DOCK:
+        map_water_add_building(b->id, b->tile, params.building_size, params.anim["base"].first_img() + orientation_rel);
         break;
 
     case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1);
-        //            map_orientation_update_buildings();
         map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), orientation);
         city_buildings_build_triumphal_arch();
-        //building_menu_update(BUILDSET_NORMAL);
         Planner.reset();
         break;
 

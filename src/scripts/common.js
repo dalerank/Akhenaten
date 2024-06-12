@@ -146,6 +146,12 @@ var building_house_common_residence = {}
 var building_house_spacious_residence = {}
 var building_house_elegant_residence = {}
 var building_house_fancy_residence = {}
+var building_house_common_manor = {}
+var building_house_spacious_manor = {}
+var building_house_elegant_manor = {}
+var building_house_stately_manor = {}
+var building_house_modest_estate = {}
+var building_house_palatial_estate = {}
 
 // misc
 var empire_window = {}

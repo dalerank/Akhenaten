@@ -242,6 +242,59 @@ building_house_fancy_residence = {
   window_info_height_id : 5,
 }
 
+building_house_common_manor = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 33, offset:0},
+  },
+  building_size : 1,
+  num_types : 1,
+  window_info_height_id : 5,
+}
+
+building_house_spacious_manor = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 33, offset:1},
+  },
+  building_size : 1,
+  num_types : 1,
+  window_info_height_id : 5,
+}
+
+building_house_elegant_manor = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 34, offset:0},
+  },
+  building_size : 1,
+  num_types : 1,
+  window_info_height_id : 5,
+}
+building_house_stately_manor = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 34, offset:1},
+  },
+  building_size : 1,
+  num_types : 1,
+  window_info_height_id : 5,
+}
+
+building_house_modest_estate = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 35, offset:0},
+  },
+  building_size : 1,
+  num_types : 1,
+  window_info_height_id : 5,
+}
+
+building_house_palatial_estate = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 35, offset:1},
+  },
+  building_size : 1,
+  num_types : 1,
+  window_info_height_id : 5,
+}
+
 building_cattle_ranch = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },

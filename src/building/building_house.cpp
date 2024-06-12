@@ -49,6 +49,12 @@ buildings::house_model_t<building_house_common_residence> house_common_residence
 buildings::house_model_t<building_house_spacious_residence> house_spacious_residence_m;
 buildings::house_model_t<building_house_elegant_residence> house_elegant_residence_m;
 buildings::house_model_t<building_house_fancy_residence> house_fancy_residence_m;
+buildings::house_model_t<building_house_common_manor> house_common_manor_m;
+buildings::house_model_t<building_house_spacious_manor> house_spacious_manor_m;
+buildings::house_model_t<building_house_elegant_manor> house_elegant_manor_m;
+buildings::house_model_t<building_house_stately_manor> house_stately_manor_m;
+buildings::house_model_t<building_house_modest_estate> house_modest_estate_m;
+buildings::house_model_t<building_house_palatial_estate> house_palatial_estate_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_house_models);
 void config_load_house_models() {
@@ -64,6 +70,13 @@ void config_load_house_models() {
     house_spacious_residence_m.load();
     house_elegant_residence_m.load();
     house_fancy_residence_m.load();
+    house_common_manor_m.load();
+    house_spacious_manor_m.load();
+    house_elegant_manor_m.load();
+    house_elegant_manor_m.load();
+    house_stately_manor_m.load();
+    house_modest_estate_m.load();
+    house_palatial_estate_m.load();
 }
 
 static const int HOUSE_TILE_OFFSETS_PH[] = {
@@ -105,12 +118,12 @@ const house_image_t HOUSE_IMAGE[20] = {
     {0, 0, 2, 2, IMG_NONE},
     {0, 0, 0, 2, IMG_NONE},
     {0, 0, 2, 2, IMG_NONE},
-    {GROUP_BUILDING_HOUSE_ELEGANT_MANOR, 0, 1},
-    {GROUP_BUILDING_HOUSE_ELEGANT_MANOR, 1, 1},
-    {GROUP_BUILDING_HOUSE_ESTATE, 0, 1},
-    {GROUP_BUILDING_HOUSE_ESTATE, 1, 1},
-    {GROUP_BUILDING_HOUSE_PALATIAL, 0, 1},
-    {GROUP_BUILDING_HOUSE_PALATIAL, 1, 1},
+    {0, 0, 0, 1, IMG_NONE},
+    {0, 0, 1, 1, IMG_NONE},
+    {0, 0, 0, 1, IMG_NONE},
+    {0, 0, 1, 1, IMG_NONE},
+    {0, 0, 0, 1, IMG_NONE},
+    {0, 0, 1, 1, IMG_NONE},
 };
 
 struct expand_direction_t {

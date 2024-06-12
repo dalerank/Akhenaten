@@ -116,6 +116,42 @@ public:
     building_house_fancy_residence(building &b) : building_house(b) {}
 };
 
+class building_house_common_manor : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_COMMON_MANOR, building_house_common_manor);
+    building_house_common_manor(building &b) : building_house(b) {}
+};
+
+class building_house_spacious_manor : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_SPACIOUS_MANOR, building_house_spacious_manor);
+    building_house_spacious_manor(building &b) : building_house(b) {}
+};
+
+class building_house_elegant_manor : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_ELEGANT_MANOR, building_house_elegant_manor);
+    building_house_elegant_manor(building &b) : building_house(b) {}
+};
+
+class building_house_stately_manor : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_STATELY_MANOR, building_house_stately_manor);
+    building_house_stately_manor(building &b) : building_house(b) {}
+};
+
+class building_house_modest_estate : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_MODEST_ESTATE, building_house_modest_estate);
+    building_house_modest_estate(building &b) : building_house(b) {}
+};
+
+class building_house_palatial_estate : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_PALATIAL_ESTATE, building_house_palatial_estate);
+    building_house_palatial_estate(building &b) : building_house(b) {}
+};
+
 int building_house_can_expand(building* house, int num_tiles);
 
 void building_house_expand_to_large_insula(building* house);
