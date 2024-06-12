@@ -180,15 +180,9 @@ static void add_building(building* b, int orientation, int variant) {
     case BUILDING_HOUSE_SPACIOUS_APARTMENT:
     case BUILDING_HOUSE_COMMON_RESIDENCE:
     case BUILDING_HOUSE_SPACIOUS_RESIDENCE:
-        add_building_tiles_image(b, anim["house"].first_img());
-        break;
-
     case BUILDING_HOUSE_ELEGANT_RESIDENCE:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_MANOR));
-        break;
-
     case BUILDING_HOUSE_FANCY_RESIDENCE:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_MANOR) + 2);
+        add_building_tiles_image(b, anim["house"].first_img());
         break;
 
     case BUILDING_HOUSE_COMMON_MANOR:

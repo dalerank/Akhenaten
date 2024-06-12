@@ -144,6 +144,8 @@ var building_house_modest_apartment = {}
 var building_house_spacious_apartment = {}
 var building_house_common_residence = {}
 var building_house_spacious_residence = {}
+var building_house_elegant_residence = {}
+var building_house_fancy_residence = {}
 
 // misc
 var empire_window = {}

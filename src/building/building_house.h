@@ -104,6 +104,18 @@ public:
     building_house_spacious_residence(building &b) : building_house(b) {}
 };
 
+class building_house_elegant_residence : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_ELEGANT_RESIDENCE, building_house_elegant_residence);
+    building_house_elegant_residence(building &b) : building_house(b) {}
+};
+
+class building_house_fancy_residence : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_FANCY_RESIDENCE, building_house_fancy_residence);
+    building_house_fancy_residence(building &b) : building_house(b) {}
+};
+
 int building_house_can_expand(building* house, int num_tiles);
 
 void building_house_expand_to_large_insula(building* house);
