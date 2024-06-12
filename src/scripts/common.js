@@ -138,6 +138,8 @@ var building_house_meager_shanty = {}
 var building_house_common_shanty = {}
 var building_house_rough_cottage = {}
 var building_house_ordinary_cottage = {}
+var building_house_modest_homestead = {}
+var building_house_spacious_homestead = {}
 
 // misc
 var empire_window = {}

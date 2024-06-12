@@ -170,6 +170,24 @@ building_house_ordinary_cottage = {
   window_info_height_id : 5,
 }
 
+building_house_modest_homestead = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 29, offset:0},
+  },
+  building_size : 1,
+  num_types : 2,
+  window_info_height_id : 5,
+}
+
+building_house_spacious_homestead = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 29, offset:2},
+  },
+  building_size : 1,
+  num_types : 2,
+  window_info_height_id : 5,
+}
+
 building_cattle_ranch = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },

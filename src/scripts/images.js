@@ -31,7 +31,6 @@ images = [
 	{img: IMG_MINIMAP_SPENT_TEAL, pack:PACK_GENERAL, id:149, offset:200},
 	{img: IMG_MINIMAP_COLOR, pack:PACK_GENERAL, id:149, offset:0},
 	{img: IMG_TRADE_AMOUNT, pack:PACK_GENERAL, id:171, offset:0},
-	{img: IMG_HOUSE_HOMESTEAD, pack:PACK_GENERAL, id:29, offset:0},
 	{img: IMG_HOUSE_APARTMENT, pack:PACK_GENERAL, id:30, offset:0},
 	{img: IMG_BRICKLAYER_WALK, pack:PACK_SPR_MAIN, id:109},
 	{img: IMG_BRICKLAYER_DEATH, pack:PACK_SPR_MAIN, id:110},

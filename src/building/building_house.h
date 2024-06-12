@@ -80,6 +80,18 @@ public:
     building_house_ordinary_cottage(building &b) : building_house(b) {}
 };
 
+class building_house_modest_homestead : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_MODEST_HOMESTEAD, building_house_modest_homestead);
+    building_house_modest_homestead(building &b) : building_house(b) {}
+};
+
+class building_house_spacious_homestead : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_SPACIOUS_HOMESTEAD, building_house_spacious_homestead);
+    building_house_spacious_homestead(building &b) : building_house(b) {}
+};
+
 int building_house_can_expand(building* house, int num_tiles);
 
 void building_house_expand_to_large_insula(building* house);
