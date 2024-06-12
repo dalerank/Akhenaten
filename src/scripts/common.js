@@ -140,6 +140,10 @@ var building_house_rough_cottage = {}
 var building_house_ordinary_cottage = {}
 var building_house_modest_homestead = {}
 var building_house_spacious_homestead = {}
+var building_house_modest_apartment = {}
+var building_house_spacious_apartment = {}
+var building_house_common_residence = {}
+var building_house_spacious_residence = {}
 
 // misc
 var empire_window = {}

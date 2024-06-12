@@ -45,6 +45,8 @@ buildings::house_model_t<building_house_rough_cottage> house_rough_cottage_m;
 buildings::house_model_t<building_house_ordinary_cottage> house_ordinary_cottage_m;
 buildings::house_model_t<building_house_modest_homestead> house_modest_homestead_m;
 buildings::house_model_t<building_house_spacious_homestead> house_pacious_homestead_m;
+buildings::house_model_t<building_house_common_residence> house_common_residence_m;
+buildings::house_model_t<building_house_spacious_residence> house_spacious_residence_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_house_models);
 void config_load_house_models() {
@@ -56,6 +58,8 @@ void config_load_house_models() {
     house_ordinary_cottage_m.load();
     house_modest_homestead_m.load();
     house_pacious_homestead_m.load();
+    house_common_residence_m.load();
+    house_spacious_residence_m.load();
 }
 
 static const int HOUSE_TILE_OFFSETS_PH[] = {
@@ -91,10 +95,10 @@ const house_image_t HOUSE_IMAGE[20] = {
     {0, 0, 2, 2, IMG_NONE},
     {0, 0, 0, 2, IMG_NONE},
     {0, 0, 2, 2, IMG_NONE},
-    {0, 0, 0, 2, IMG_HOUSE_APARTMENT},
-    {0, 0, 2, 2, IMG_HOUSE_APARTMENT},
-    {GROUP_BUILDING_HOUSE_RESIDENCE, 0, 2},
-    {GROUP_BUILDING_HOUSE_RESIDENCE, 2, 2},
+    {0, 0, 0, 2, IMG_NONE},
+    {0, 0, 2, 2, IMG_NONE},
+    {0, 0, 0, 2, IMG_NONE},
+    {0, 0, 2, 2, IMG_NONE},
     {GROUP_BUILDING_HOUSE_MANOR, 0, 2},
     {GROUP_BUILDING_HOUSE_MANOR, 2, 2},
     {GROUP_BUILDING_HOUSE_ELEGANT_MANOR, 0, 1},

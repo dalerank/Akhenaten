@@ -188,6 +188,42 @@ building_house_spacious_homestead = {
   window_info_height_id : 5,
 }
 
+building_house_modest_apartment = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 30, offset:0},
+  },
+  building_size : 1,
+  num_types : 2,
+  window_info_height_id : 5,
+}
+
+building_house_spacious_apartment = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 30, offset:2},
+  },
+  building_size : 1,
+  num_types : 2,
+  window_info_height_id : 5,
+}
+
+building_house_common_residence = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 31, offset:0},
+  },
+  building_size : 1,
+  num_types : 2,
+  window_info_height_id : 5,
+}
+
+building_house_spacious_residence = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 31, offset:2},
+  },
+  building_size : 1,
+  num_types : 2,
+  window_info_height_id : 5,
+}
+
 building_cattle_ranch = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },

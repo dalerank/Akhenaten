@@ -92,6 +92,18 @@ public:
     building_house_spacious_homestead(building &b) : building_house(b) {}
 };
 
+class building_house_common_residence : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_COMMON_RESIDENCE, building_house_common_residence);
+    building_house_common_residence(building &b) : building_house(b) {}
+};
+
+class building_house_spacious_residence : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_SPACIOUS_RESIDENCE, building_house_spacious_residence);
+    building_house_spacious_residence(building &b) : building_house(b) {}
+};
+
 int building_house_can_expand(building* house, int num_tiles);
 
 void building_house_expand_to_large_insula(building* house);
