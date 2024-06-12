@@ -103,29 +103,6 @@ struct house_image_t : public image_desc {
     e_image_id img_desc_id = IMG_NONE;
 };
 
-const house_image_t HOUSE_IMAGE[20] = {
-    {0, 0, 0, 2, IMG_NONE},
-    {0, 0, 2, 2, IMG_NONE},
-    {0, 0, 0, 2, IMG_NONE},
-    {0, 0, 2, 2, IMG_NONE},
-    {0, 0, 0, 2, IMG_NONE},
-    {0, 0, 2, 2, IMG_NONE},
-    {0, 0, 0, 2, IMG_NONE},
-    {0, 0, 2, 2, IMG_NONE},
-    {0, 0, 0, 2, IMG_NONE},
-    {0, 0, 2, 2, IMG_NONE},
-    {0, 0, 0, 2, IMG_NONE},
-    {0, 0, 2, 2, IMG_NONE},
-    {0, 0, 0, 2, IMG_NONE},
-    {0, 0, 2, 2, IMG_NONE},
-    {0, 0, 0, 1, IMG_NONE},
-    {0, 0, 1, 1, IMG_NONE},
-    {0, 0, 0, 1, IMG_NONE},
-    {0, 0, 1, 1, IMG_NONE},
-    {0, 0, 0, 1, IMG_NONE},
-    {0, 0, 1, 1, IMG_NONE},
-};
-
 struct expand_direction_t {
     int x;
     int y;
