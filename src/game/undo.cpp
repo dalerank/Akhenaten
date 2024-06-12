@@ -268,9 +268,9 @@ void game_undo_perform() {
 
         tile2i tile(grid_offset);
 
-        building* new_b = building_create(BUILDING_HOUSE_VACANT_LOT, tile, 0);
-        if (new_b->id > 0) {
-            map_building_tiles_add(new_b->id, tile, 1, image_group(IMG_HOUSE_HUT), TERRAIN_BUILDING);
+        building* new_house = building_create(BUILDING_HOUSE_VACANT_LOT, tile, 0);
+        if (new_house->id > 0) {
+            map_building_tiles_add(new_house->id, tile, 1, vacant_lot_image, TERRAIN_BUILDING);
         }
 
         map_image_set(grid_offset, vacant_lot_image);

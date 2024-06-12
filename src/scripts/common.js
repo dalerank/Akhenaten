@@ -132,7 +132,12 @@ var building_mud_tower = {}
 var building_road = {}
 var building_burning_ruin = {}
 // houses
-var building_house_vacant = {}
+var building_house_crude_hut = {}
+var building_house_sturdy_hut = {}
+var building_house_meager_shanty = {}
+var building_house_common_shanty = {}
+var building_house_rough_cottage = {}
+var building_house_ordinary_cottage = {}
 
 // misc
 var empire_window = {}

@@ -1,9 +1,18 @@
 #pragma once
 
+#include "city/houses.h"
 #include "building/building.h"
+
+enum e_house_progress { 
+    e_house_evolve = 1,
+    e_house_none = 0, 
+    e_house_decay = -1
+};
 
 class building_house : public building_impl {
 public:
+    BUILDING_METAINFO(BUILDING_NONE, building_house_vacant)
+
     building_house(building &b) : building_impl(b) {}
     virtual building_house *dcast_house() override { return this; }
 
@@ -20,19 +29,61 @@ public:
     inline e_house_level house_level() const { return base.subtype.house_level; }
     void change_to_vacant_lot();
     void add_population(int num_people);
+    void change_to(e_building_type type);
+    void merge();
+    void merge_impl();
+
+    e_house_progress check_evolve_desirability();
+    e_house_progress has_required_goods_and_services(int for_upgrade, house_demands *demands);
+    bool has_devolve_delay(int status);
+    int building_house_can_expand(int num_tiles);
+
+    e_house_progress check_requirements(house_demands *demands);
 
     static void create_vacant_lot(tile2i tile, int image_id);
 };
 
-class building_house_vacant: public building_house {
+class building_house_vacant : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_VACANT_LOT, building_house_vacant)
     building_house_vacant(building &b) : building_house(b) {}
 };
 
-void building_house_change_to(building* house, e_building_type type);
+class building_house_crude_hut : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_CRUDE_HUT, building_house_crude_hut);
+    building_house_crude_hut(building &b) : building_house(b) {}
+};
 
-void building_house_merge(building* house);
+class building_house_sturdy_hut : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_STURDY_HUT, building_house_sturdy_hut);
+    building_house_sturdy_hut(building &b) : building_house(b) {}
+};
+
+class building_house_meager_shanty : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_MEAGER_SHANTY, building_house_meager_shanty);
+    building_house_meager_shanty(building &b) : building_house(b) {}
+};
+
+class building_house_common_shanty : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_COMMON_SHANTY, building_house_common_shanty);
+    building_house_common_shanty(building &b) : building_house(b) {}
+};
+
+class building_house_rough_cottage : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_ROUGH_COTTAGE, building_house_rough_cottage);
+    building_house_rough_cottage(building &b) : building_house(b) {}
+};
+
+class building_house_ordinary_cottage : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_ORDINARY_COTTAGE, building_house_ordinary_cottage);
+    building_house_ordinary_cottage(building &b) : building_house(b) {}
+};
 
 int building_house_can_expand(building* house, int num_tiles);
 

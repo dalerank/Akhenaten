@@ -113,13 +113,60 @@ building_fort_ground = {
   damage_proof : 1,
 }
 
-building_house_vacant = {
+building_house_crude_hut = {
   animations : {
     preview: {pack: PACK_GENERAL, id: 36},
     base: {pack: PACK_GENERAL, id: 36},
+    house: {pack: PACK_GENERAL, id: 26},
   },
   building_size : 1,
+  num_types : 2,
   is_draggable : true,
+  window_info_height_id : 5,
+}
+
+building_house_sturdy_hut = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 26, offset:2},
+  },
+  building_size : 1,
+  num_types : 2,
+  window_info_height_id : 5,
+}
+
+building_house_meager_shanty = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 27, offset:0},
+  },
+  building_size : 1,
+  num_types : 2,
+  window_info_height_id : 5,
+}
+
+building_house_common_shanty = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 27, offset:2},
+  },
+  building_size : 1,
+  num_types : 2,
+  window_info_height_id : 5,
+}
+
+building_house_rough_cottage = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 28, offset:0},
+  },
+  building_size : 1,
+  num_types : 2,
+  window_info_height_id : 5,
+}
+
+building_house_ordinary_cottage = {
+  animations : {
+    house: {pack: PACK_GENERAL, id: 28, offset:2},
+  },
+  building_size : 1,
+  num_types : 2,
   window_info_height_id : 5,
 }
 

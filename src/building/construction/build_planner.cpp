@@ -166,26 +166,15 @@ static void add_building_tiles_image(building* b, int image_id) {
 
 static void add_building(building* b, int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
+    const auto &anim = b->dcast()->params().anim;
     switch (b->type) {
     // houses
     case BUILDING_HOUSE_STURDY_HUT:
-        add_building_tiles_image(b, image_group(IMG_HOUSE_HUT) + 2);
-        break;
-
     case BUILDING_HOUSE_MEAGER_SHANTY:
-        add_building_tiles_image(b, image_group(IMG_HOUSE_SHANTY));
-        break;
-
     case BUILDING_HOUSE_COMMON_SHANTY:
-        add_building_tiles_image(b, image_group(IMG_HOUSE_SHANTY) + 2);
-        break;
-
     case BUILDING_HOUSE_ROUGH_COTTAGE:
-        add_building_tiles_image(b, image_group(IMG_HOUSE_COTTAGE));
-        break;
-
     case BUILDING_HOUSE_ORDINARY_COTTAGE:
-        add_building_tiles_image(b, image_group(IMG_HOUSE_COTTAGE) + 2);
+        add_building_tiles_image(b, anim["house"].first_img());
         break;
 
     case BUILDING_HOUSE_MODEST_HOMESTEAD:
@@ -315,7 +304,7 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
     int needs_road_warning = 0;
     int items_placed = 0;
     game_undo_restore_building_state();
-    int vacant_lot_id = building_impl::params(BUILDING_HOUSE_VACANT_LOT).anim["base"].first_img();
+    int vacant_lot_id = building_impl::params(BUILDING_HOUSE_VACANT_LOT).anim["preview"].first_img();
     for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
         for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);

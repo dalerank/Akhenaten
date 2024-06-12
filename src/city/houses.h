@@ -20,6 +20,7 @@ struct house_demands {
         int food;
         int second_wine;
     } missing;
+
     struct {
         int school;
         int library;
