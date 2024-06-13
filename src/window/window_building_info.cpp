@@ -433,14 +433,7 @@ static void draw_refresh_background() {
             switch (building_get(context.building_id)->type) {
             case BUILDING_ORACLE: window_building_draw_oracle(&context); break;
             case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: window_building_draw_triumphal_arch(&context); break;
-            
-            case BUILDING_ROADBLOCK:
-                if (context.storage_show_special_orders)
-                    window_building_draw_roadblock_orders(&context);
-                else
-                    window_building_draw_roadblock(&context);
-                break;
-            
+                        
             case BUILDING_BURNING_RUIN: window_building_draw_burning_ruin(&context); break;
             case BUILDING_UNUSED_NATIVE_HUT_88: window_building_draw_native_hut(&context); break;
             case BUILDING_UNUSED_NATIVE_MEETING_89: window_building_draw_native_meeting(&context); break;
@@ -475,18 +468,7 @@ static void draw_foreground() {
     building *b = nullptr;
     if (context.type == BUILDING_INFO_BUILDING) {
         b = building_get(context.building_id);
-        switch (b->type) {
-        case BUILDING_ROADBLOCK:
-            if (context.storage_show_special_orders)
-                window_building_draw_roadblock_orders_foreground(&context);
-            else
-                window_building_draw_roadblock_foreground(&context);
-            break;
-
-        default:
-            b->dcast()->window_info_foreground(context);
-            break;
-        }
+        b->dcast()->window_info_foreground(context);
     } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info_foreground(&context);
     }
@@ -594,13 +576,6 @@ static int handle_specific_building_info_mouse(const mouse *m) {
     } else if (context.type == BUILDING_INFO_BUILDING) {
         building *b = building_get(context.building_id);
         switch (building_get(context.building_id)->type) {
-        case BUILDING_ROADBLOCK:
-            if (context.storage_show_special_orders)
-                return window_building_handle_mouse_roadblock_orders(m, &context);
-            else
-                return window_building_handle_mouse_roadblock(m, &context);
-            break;
-
         case BUILDING_STORAGE_YARD:
             if (context.storage_show_special_orders)
                 return window_building_handle_mouse_warehouse_orders(m, &context);

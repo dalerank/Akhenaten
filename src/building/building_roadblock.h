@@ -22,7 +22,9 @@ public:
     building_roadblock(building &b) : building_impl(b) {}
 
     virtual void on_place_checks() override;
-    //virtual void window_info_background(object_info &c) override;
+    virtual void window_info_background(object_info &c) override;
+    virtual void window_info_foreground(object_info &c) override;
+    virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
     //virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
 };

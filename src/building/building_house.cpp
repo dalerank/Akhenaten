@@ -931,9 +931,6 @@ void building_house_modest_apartment::expand_to_spacious_apartment() {
     int image_id = house_image_group<true>(base.subtype.house_level) + (map_random_get(tile().grid_offset()) & 1);
     map_building_tiles_remove(id(), tile());
     base.tile.set(g_merge_data.x, g_merge_data.y);
-    //    house->tile.x() = merge_data.x;
-    //    house->tile.y() = merge_data.y;
-    //    house->tile.grid_offset() = MAP_OFFSET(house->tile.x(), house->tile.y());
     map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);
 }
 
