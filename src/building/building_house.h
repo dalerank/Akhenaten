@@ -34,12 +34,14 @@ public:
     void merge();
     void merge_impl();
     void consume_resources();
+    void split(int num_tiles);
 
     e_house_progress check_evolve_desirability();
     e_house_progress has_required_goods_and_services(int for_upgrade, house_demands *demands);
     bool has_devolve_delay(int status);
-    int building_house_can_expand(int num_tiles);
+    int can_expand(int num_tiles);
 
+    void check_for_corruption();
     e_house_progress check_requirements(house_demands *demands);
 
     static void create_vacant_lot(tile2i tile, int image_id);
@@ -115,6 +117,7 @@ public:
     building_house_modest_apartment(building &b) : building_house(b) {}
 
     virtual bool evolve(house_demands *demands) override;
+    void expand_to_spacious_apartment();
 };
 
 class building_house_spacious_apartment : public building_house {
@@ -123,6 +126,8 @@ public:
     building_house_spacious_apartment(building &b) : building_house(b) {}
 
     virtual bool evolve(house_demands *demands) override;
+    void expand_to_common_residence();
+    void splits_spacious_apartment();
 };
 
 class building_house_common_residence : public building_house {
@@ -155,6 +160,7 @@ public:
     building_house_fancy_residence(building &b) : building_house(b) {}
 
     virtual bool evolve(house_demands *demands) override;
+    void expand_to_common_manor();
 };
 
 class building_house_common_manor : public building_house {
@@ -163,6 +169,7 @@ public:
     building_house_common_manor(building &b) : building_house(b) {}
 
     virtual bool evolve(house_demands *demands) override;
+    void devolve_to_fancy_residence();
 };
 
 class building_house_spacious_manor : public building_house {
@@ -187,6 +194,7 @@ public:
     building_house_stately_manor(building &b) : building_house(b) {}
 
     virtual bool evolve(house_demands *demands) override;
+    void expand_to_modest_estate();
 };
 
 class building_house_modest_estate : public building_house {
@@ -195,6 +203,7 @@ public:
     building_house_modest_estate(building &b) : building_house(b) {}
 
     virtual bool evolve(house_demands *demands) override;
+    void devolve_to_statel_manor();
 };
 
 class building_house_palatial_estate : public building_house {
@@ -205,14 +214,3 @@ public:
     virtual bool evolve(house_demands *demands) override;
 };
 
-int building_house_can_expand(building* house, int num_tiles);
-
-void building_house_expand_to_large_insula(building* house);
-void building_house_expand_to_large_villa(building* house);
-void building_house_expand_to_large_palace(building* house);
-
-void building_house_devolve_from_large_insula(building* house);
-void building_house_devolve_from_large_villa(building* house);
-void building_house_devolve_from_large_palace(building* house);
-
-void building_house_check_for_corruption(building* house);
