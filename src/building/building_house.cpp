@@ -13,6 +13,7 @@
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/grid.h"
+#include "grid/tiles.h"
 #include "grid/image.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
@@ -44,7 +45,9 @@ buildings::house_model_t<building_house_common_shanty> house_common_shanty_m;
 buildings::house_model_t<building_house_rough_cottage> house_rough_cottage_m;
 buildings::house_model_t<building_house_ordinary_cottage> house_ordinary_cottage_m;
 buildings::house_model_t<building_house_modest_homestead> house_modest_homestead_m;
-buildings::house_model_t<building_house_spacious_homestead> house_pacious_homestead_m;
+buildings::house_model_t<building_house_spacious_homestead> house_spacious_homestead_m;
+buildings::house_model_t<building_house_modest_apartment> house_modest_apartment_m;
+buildings::house_model_t<building_house_spacious_apartment> house_spacious_apartment_m;
 buildings::house_model_t<building_house_common_residence> house_common_residence_m;
 buildings::house_model_t<building_house_spacious_residence> house_spacious_residence_m;
 buildings::house_model_t<building_house_elegant_residence> house_elegant_residence_m;
@@ -65,7 +68,9 @@ void config_load_house_models() {
     house_rough_cottage_m.load();
     house_ordinary_cottage_m.load();
     house_modest_homestead_m.load();
-    house_pacious_homestead_m.load();
+    house_spacious_homestead_m.load();
+    house_modest_apartment_m.load();
+    house_spacious_apartment_m.load();
     house_common_residence_m.load();
     house_spacious_residence_m.load();
     house_elegant_residence_m.load();
@@ -186,8 +191,9 @@ void building_house::add_population(int num_people) {
 
     int room = std::max(max_people - base.house_population, 0);
 
-    if (room < num_people)
+    if (room < num_people) {
         num_people = room;
+    }
 
     if (!base.house_population) {
         change_to(BUILDING_HOUSE_CRUDE_HUT);
@@ -606,6 +612,7 @@ static void split_size2(building* house, e_building_type new_type) {
     create_house_tile(house->type, house->tile.shifted(0, 1), image_id, population_per_tile, inventory_per_tile);
     create_house_tile(house->type, house->tile.shifted(1, 1), image_id, population_per_tile, inventory_per_tile);
 }
+
 static void split_size3(building* house) {
     int inventory_per_tile[INVENTORY_MAX];
     int inventory_remainder[INVENTORY_MAX];
@@ -640,6 +647,7 @@ static void split_size3(building* house) {
     create_house_tile(house->type, house->tile.shifted(1, 2), image_id, population_per_tile, inventory_per_tile);
     create_house_tile(house->type, house->tile.shifted(2, 2), image_id, population_per_tile, inventory_per_tile);
 }
+
 static void split(building* house, int num_tiles) {
     int grid_offset = MAP_OFFSET(g_merge_data.x, g_merge_data.y);
     for (int i = 0; i < num_tiles; i++) {
@@ -837,4 +845,258 @@ void building_house::on_place_checks() {
             building_construction_warning_show(WARNING_MORE_FOOD_NEEDED);
         }
     }
+}
+
+bool building_house_crude_hut::evolve(house_demands* demands) {
+    if (house_population() > 0) {
+        merge();
+        int status = check_requirements(demands);
+        if (status == e_house_evolve) {
+            change_to(BUILDING_HOUSE_STURDY_HUT);
+        }
+    }
+
+    return false;
+}
+
+bool building_house_sturdy_hut::evolve(house_demands* demands) {
+    if (house_population() > 0) {
+        merge();
+        e_house_progress status = check_requirements(demands);
+        if (!has_devolve_delay(status)) {
+            if (status == e_house_evolve)
+                change_to(BUILDING_HOUSE_MEAGER_SHANTY);
+            else if (status == e_house_decay)
+                change_to(BUILDING_HOUSE_CRUDE_HUT);
+        }
+    }
+
+    return false;
+}
+
+bool building_house_meager_shanty::evolve(house_demands* demands) {
+    merge();
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_COMMON_SHANTY);
+        else if (status == e_house_decay)
+            change_to(BUILDING_HOUSE_STURDY_HUT);
+    }
+
+    return false;
+}
+
+bool building_house_common_shanty::evolve(house_demands* demands) {
+    merge();
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_ROUGH_COTTAGE);
+        else if (status == e_house_decay)
+            change_to(BUILDING_HOUSE_MEAGER_SHANTY);
+    }
+
+    return false;
+}
+
+bool building_house_rough_cottage::evolve(house_demands* demands) {
+    merge();
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_ORDINARY_COTTAGE);
+        else if (status == e_house_decay)
+            change_to(BUILDING_HOUSE_COMMON_SHANTY);
+    }
+    return false;
+}
+
+bool building_house_ordinary_cottage::evolve(house_demands* demands) {
+    merge();
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_MODEST_HOMESTEAD);
+        else if (status == e_house_decay)
+            change_to(BUILDING_HOUSE_ROUGH_COTTAGE);
+    }
+    return false;
+}
+
+bool building_house_modest_homestead::evolve(house_demands* demands) {
+    merge();
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_SPACIOUS_HOMESTEAD);
+        else if (status == e_house_decay)
+            change_to(BUILDING_HOUSE_ORDINARY_COTTAGE);
+    }
+    return false;
+}
+
+bool building_house_spacious_homestead::evolve(house_demands* demands) {
+    merge();
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_MODEST_APARTMENT);
+        else if (status == e_house_decay)
+            change_to(BUILDING_HOUSE_MODEST_HOMESTEAD);
+    }
+    return false;
+}
+
+bool building_house_common_residence::evolve(house_demands* demands) {
+    merge();
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_SPACIOUS_APARTMENT);
+        else if (status == e_house_decay)
+            change_to(BUILDING_HOUSE_SPACIOUS_HOMESTEAD);
+    }
+    return 0;
+}
+
+bool building_house_modest_apartment::evolve(house_demands* demands) {
+    merge();
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve) {
+            if (building_house_can_expand(4)) {
+                base.house_is_merged = 0;
+                building_house_expand_to_large_insula(&base);
+                map_tiles_update_all_gardens();
+                return true;
+            }
+        } else if (status == e_house_decay) {
+            change_to(BUILDING_HOUSE_MODEST_APARTMENT);
+        }
+    }
+    return false;
+}
+
+bool building_house_spacious_apartment::evolve(house_demands* demands) {
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve) {
+            change_to(BUILDING_HOUSE_SPACIOUS_RESIDENCE);
+        } else if (status == e_house_decay) {
+            building_house_devolve_from_large_insula(&base);
+        }
+    }
+    return false;
+}
+
+bool building_house_spacious_residence::evolve(house_demands* demands) {
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_ELEGANT_RESIDENCE);
+        else if (status == e_house_decay)
+            change_to(BUILDING_HOUSE_COMMON_RESIDENCE);
+    }
+    return false;
+}
+
+bool building_house_elegant_residence::evolve(house_demands* demands) {
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_FANCY_RESIDENCE);
+        else if (status == e_house_decay)
+            change_to(BUILDING_HOUSE_SPACIOUS_RESIDENCE);
+    }
+    return 0;
+}
+
+bool building_house_fancy_residence::evolve(house_demands* demands) {
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve) {
+            if (building_house_can_expand(9)) {
+                building_house_expand_to_large_villa(&base);
+                map_tiles_update_all_gardens();
+                return true;
+            }
+        } else if (status == e_house_decay) {
+            change_to(BUILDING_HOUSE_ELEGANT_RESIDENCE);
+        }
+    }
+    return false;
+}
+
+bool building_house_common_manor::evolve(house_demands* demands) {
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve) {
+            change_to(BUILDING_HOUSE_SPACIOUS_MANOR);
+        } else if (status == e_house_decay) {
+            building_house_devolve_from_large_villa(&base);
+        }
+    }
+    return false;
+}
+
+bool building_house_spacious_manor::evolve(house_demands* demands) {
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_ELEGANT_MANOR);
+        else if (status == e_house_decay)
+            change_to(BUILDING_HOUSE_COMMON_MANOR);
+    }
+    return false;
+}
+
+bool building_house_elegant_manor::evolve(house_demands* demands) {
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_STATELY_MANOR);
+        else if (status == e_house_decay)
+            change_to(BUILDING_HOUSE_SPACIOUS_MANOR);
+    }
+    return 0;
+}
+
+bool building_house_stately_manor::evolve(house_demands* demands) {
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve) {
+            if (building_house_can_expand(16)) {
+                building_house_expand_to_large_palace(&base);
+                map_tiles_update_all_gardens();
+                return true;
+            }
+        } else if (status == e_house_decay) {
+            change_to(BUILDING_HOUSE_ELEGANT_MANOR);
+        }
+    }
+    return false;
+}
+
+bool building_house_modest_estate::evolve(house_demands* demands) {
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_PALATIAL_ESTATE);
+        else if (status == e_house_decay)
+            building_house_devolve_from_large_palace(&base);
+    }
+    return false;
+}
+
+bool building_house_palatial_estate::evolve(house_demands* demands) {
+    e_house_progress status = check_evolve_desirability();
+    if (!has_required_goods_and_services(0, demands)) {
+        status = e_house_decay;
+    }
+
+    if (!has_devolve_delay(status) && status == e_house_decay)
+        change_to(BUILDING_HOUSE_MODEST_ESTATE);
+
+    return 0;
 }

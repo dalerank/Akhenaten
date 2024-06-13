@@ -23,6 +23,7 @@ public:
     //virtual void window_info_background(object_info &c) override;
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void on_undo() override;
+    virtual bool evolve(house_demands* demands) = 0;
 
     inline int house_population() const { return base.house_population; }
     inline void change_population(int delta) { base.house_population += delta; }
@@ -48,108 +49,160 @@ class building_house_crude_hut : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_CRUDE_HUT, building_house_crude_hut);
     building_house_crude_hut(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_sturdy_hut : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_STURDY_HUT, building_house_sturdy_hut);
     building_house_sturdy_hut(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_meager_shanty : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_MEAGER_SHANTY, building_house_meager_shanty);
     building_house_meager_shanty(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_common_shanty : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_COMMON_SHANTY, building_house_common_shanty);
     building_house_common_shanty(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_rough_cottage : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_ROUGH_COTTAGE, building_house_rough_cottage);
     building_house_rough_cottage(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_ordinary_cottage : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_ORDINARY_COTTAGE, building_house_ordinary_cottage);
     building_house_ordinary_cottage(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_modest_homestead : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_MODEST_HOMESTEAD, building_house_modest_homestead);
     building_house_modest_homestead(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_spacious_homestead : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_SPACIOUS_HOMESTEAD, building_house_spacious_homestead);
     building_house_spacious_homestead(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
+};
+
+class building_house_modest_apartment : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_MODEST_APARTMENT, building_house_modest_apartment);
+    building_house_modest_apartment(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
+};
+
+class building_house_spacious_apartment : public building_house {
+public:
+    BUILDING_METAINFO(BUILDING_HOUSE_SPACIOUS_APARTMENT, building_house_spacious_apartment);
+    building_house_spacious_apartment(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_common_residence : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_COMMON_RESIDENCE, building_house_common_residence);
     building_house_common_residence(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_spacious_residence : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_SPACIOUS_RESIDENCE, building_house_spacious_residence);
     building_house_spacious_residence(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_elegant_residence : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_ELEGANT_RESIDENCE, building_house_elegant_residence);
     building_house_elegant_residence(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_fancy_residence : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_FANCY_RESIDENCE, building_house_fancy_residence);
     building_house_fancy_residence(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_common_manor : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_COMMON_MANOR, building_house_common_manor);
     building_house_common_manor(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_spacious_manor : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_SPACIOUS_MANOR, building_house_spacious_manor);
     building_house_spacious_manor(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_elegant_manor : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_ELEGANT_MANOR, building_house_elegant_manor);
     building_house_elegant_manor(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_stately_manor : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_STATELY_MANOR, building_house_stately_manor);
     building_house_stately_manor(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_modest_estate : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_MODEST_ESTATE, building_house_modest_estate);
     building_house_modest_estate(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 class building_house_palatial_estate : public building_house {
 public:
     BUILDING_METAINFO(BUILDING_HOUSE_PALATIAL_ESTATE, building_house_palatial_estate);
     building_house_palatial_estate(building &b) : building_house(b) {}
+
+    virtual bool evolve(house_demands *demands) override;
 };
 
 int building_house_can_expand(building* house, int num_tiles);
