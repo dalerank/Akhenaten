@@ -20,6 +20,9 @@
 #include "config/config.h"
 #include "js/js_game.h"
 
+#include "dev/debug.h"
+#include <iostream>
+
 #define MAX_DIR 4
 
 namespace buildings {
@@ -36,6 +39,17 @@ struct house_model_t : public model_t<T> {
 };
 
 }
+
+declare_console_command_p(houseup, game_cheat_houseup)
+void game_cheat_houseup(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+
+    buildings_house_do([] (building &b) {
+        building_house *house = b.dcast_house();
+        e_building_type next_level = (e_building_type)(BUILDING_HOUSE_VACANT_LOT + house->base.subtype.house_level+1);
+        house->change_to(next_level);
+    });
+};
 
 using house_model = buildings::house_model_t<building_house>;
 buildings::house_model_t<building_house_crude_hut> house_crude_hut_m;
