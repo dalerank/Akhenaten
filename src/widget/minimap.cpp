@@ -148,17 +148,17 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
         if (map_property_is_draw_tile(grid_offset)) {
             int image_id;
             building* b = building_at(grid_offset);
-            if (terrain & TERRAIN_ROAD) {
-                if (building_is_entertainment(b->type)) {
-                    image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
-                } else if (b->type == BUILDING_FESTIVAL_SQUARE) {
-                    image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
-                } else if (b->type == BUILDING_FERRY) {
-                    image_id = image_group(IMG_MINIMAP_DARK_GREY); // dark grey
-                } else {
-                    image_id = image_group(IMG_MINIMAP_DARK_GREY); // dark grey
-                }
-            } else if (building_is_industry(b->type)) {
+            //if (terrain & TERRAIN_ROAD) {
+            //    if (building_is_entertainment(b->type)) {
+            //        image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
+            //    } else if (b->type == BUILDING_FESTIVAL_SQUARE) {
+            //        image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
+            //} else 
+            if (building_is_extractor(b->type)) {
+                image_id = image_group(IMG_MINIMAP_DARK_RED); // dark red
+            } else if (building_is_harvester(b->type)) {
+                image_id = image_group(IMG_MINIMAP_DARK_RED); // dark red
+            } else if(building_is_workshop(b->type)) {
                 image_id = image_group(IMG_MINIMAP_DARK_RED); // dark red
             } else if (building_is_entertainment(b->type)) {
                 image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
@@ -175,7 +175,7 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
             } else if (building_is_beautification(b->type)) {
                 image_id = image_group(IMG_MINIMAP_SPENT_TEAL); // spent teal
             } else if (building_is_monument(b->type)) {
-                image_id = image_group(IMG_MINIMAP_DARK_GREY); // dark grey
+                image_id = image_id_from_group(PACK_GENERAL, 149, 210); // dark grey
             } else {
                 image_id = b->minimap_anim.first_img();
             }
