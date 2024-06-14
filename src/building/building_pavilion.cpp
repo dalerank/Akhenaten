@@ -53,22 +53,20 @@ struct pavilion_model : public buildings::model_t<building_pavilion> {
         };
         svector<item, 8> items;
         void load(archive arch, pcstr section) {
-            items.clear();
-            arch.r_array(section, [this] (archive d_arch) {
-                items.push_back({});
-                items.back().load(d_arch);
+            arch.r_array(section, items, [this] (archive d_arch, auto &item) {
+                item.load(d_arch);
             });
         }
     };
 
     using inherited::load;
     virtual void load(archive arch) override {
-        for (auto &preview_dir: pavilion_m.preview_dir) {
-            preview_dir.load(arch, bstring32().printf("preview_dir_%d", std::distance(pavilion_m.preview_dir, &preview_dir)).c_str());
+        for (auto &pdir: preview_dir) {
+            pdir.load(arch, bstring32().printf("preview_dir_%d", std::distance(preview_dir, &pdir)).c_str());
         }
 
-        for (auto &place_dir : pavilion_m.place_dir) {
-            place_dir.load(arch, bstring32().printf("place_dir_%d", std::distance(pavilion_m.place_dir, &place_dir)).c_str());
+        for (auto &pdir : place_dir) {
+            pdir.load(arch, bstring32().printf("place_dir_%d", std::distance(place_dir, &pdir)).c_str());
         }
     }
 

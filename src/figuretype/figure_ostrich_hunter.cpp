@@ -11,15 +11,20 @@
 #include "js/js_game.h"
 
 struct ostrich_hunter_model : public figures::model_t<figure_ostrich_hunter> {
+    using inherited = figures::model_t<figure_ostrich_hunter>;
+
+    using inherited::load;
+    virtual void load(archive arch) {
+        max_hunting_distance = arch.r_int("max_hunting_distance");
+    }
+
     int max_hunting_distance;
 };
 ostrich_hunter_model ostrich_hunter_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_ostrich_hunter);
 void config_load_figure_ostrich_hunter() {
-    ostrich_hunter_m.load([] (archive arch) {
-        ostrich_hunter_m.max_hunting_distance = arch.r_int("max_hunting_distance");
-    });
+    ostrich_hunter_m.load();
 }
 
 static void scared_animals_in_area(tile2i center, int size) {
@@ -158,9 +163,9 @@ sound_key figure_ostrich_hunter::phrase_key() const {
         if (city_sentiment() > 40) {
             return "city_is_good";
         }
-    } else {
-        return "back";
-    }
+    } 
+    
+    return "back";
 }
 
 figure_sound_t figure_ostrich_hunter::get_sound_reaction(pcstr key) const {

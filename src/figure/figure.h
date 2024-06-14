@@ -617,6 +617,7 @@ using FigureIterator = FuncLinkedList<create_figure_function_cb>;
 
 template<typename T>
 struct model_t : public figure_impl::static_params {
+    using figure_type = T;
     static constexpr e_figure_type type = T::TYPE;
     static constexpr pcstr CLSID = T::CLSID;
 
@@ -631,19 +632,18 @@ struct model_t : public figure_impl::static_params {
         g_config_arch.r_section(name, [&] (archive arch) {
             static_params::load(arch);
             loaded = true;
+            this->load(arch);
         });
         assert(loaded);
     }
 
-    template<typename F>
-    void load(F func) {
-        load();
-        g_config_arch.r_section(name, func);
+    virtual void load(archive) {
+        /*overload options*/
     }
 
     static figure_impl *create(e_figure_type e, figure *data) {
         if (e == type) {
-            return new T(data);
+            return new figure_type(data);
         }
         return nullptr;
     }

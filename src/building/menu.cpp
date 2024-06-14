@@ -118,10 +118,7 @@ struct menu_config_t {
 
 void config_load_buldingin_menu() {
     auto copy_config = g_menu_config;
-    g_menu_config.groups.clear();
-    g_config_arch.r_array("building_menu", [&copy_config] (archive arch) {
-        g_menu_config.groups.push_back({});
-        auto &group = g_menu_config.groups.back();
+    g_config_arch.r_array("building_menu", g_menu_config.groups, [&copy_config] (archive arch, auto &group) {
         group.type = arch.r_int("id");
         assert(group.type != 0);
         arch.r_anim("anim", group.anim);

@@ -782,7 +782,7 @@ struct model_t : public building_impl::static_params {
         assert(loaded);
     }
 
-    virtual void load(archive arch) {
+    virtual void load(archive) {
         /*overload options*/
     }
 

@@ -79,6 +79,13 @@ struct archive {
         pop(1);
     }
 
+    template<typename T, typename F>
+    inline void r_array(pcstr name, T &arr, F read_func) {
+        getproperty(-1, name);
+        r_array_impl(arr, read_func);
+        pop(1);
+    }
+
     vec2i r_vec2i_impl(pcstr x, pcstr y);
 
     template<typename T>
@@ -122,6 +129,27 @@ protected:
         return true;
     }
 
+    template<typename T, typename F>
+    inline bool r_array_impl(T &arr, F read_func) {
+        if (!isarray(-1)) {
+            return false;
+        }
+
+        arr.clear();
+        int length = getlength(-1);
+        for (int i = 0; i < length; ++i) {
+            getindex(-1, i);
+
+            if (isobject(-1)) {
+                arr.push_back({});
+                read_func(state, arr.back());
+            }
+
+            pop(1);
+        }
+        return true;
+    }
+
     void getproperty(int idx, pcstr name);
     static void getproperty(archive arch, int idx, pcstr name);
     bool isarray(int idx);
@@ -143,6 +171,13 @@ struct g_archive : public archive {
     inline void r_array(pcstr name, T read_func) {
         getglobal(name);
         r_array_impl(read_func);
+        pop(1);
+    }
+
+    template<typename T, typename F>
+    inline void r_array(pcstr name, T &arr, F read_func) {
+        getglobal(name);
+        r_array_impl(arr, read_func);
         pop(1);
     }
 

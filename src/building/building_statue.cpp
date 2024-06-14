@@ -26,12 +26,10 @@ struct building_statue_model : public buildings::model_t<T> {
 
     using inherited::load;
     virtual void load(archive arch) override {
-        var.clear();
-        arch.r_array("variants", [this] (archive arch) {
-            int pack = arch.r_int("pack");
-            int id = arch.r_int("id");
-            int offset = arch.r_int("offset");
-            var.push_back({pack, id, offset});
+        arch.r_array("variants", var, [] (archive arch, auto &item) {
+            item.pack = arch.r_int("pack");
+            item.id = arch.r_int("id");
+            item.offset = arch.r_int("offset");
         });
     }
 };

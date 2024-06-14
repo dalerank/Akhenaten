@@ -23,9 +23,9 @@ struct scribal_school_model : public buildings::model_t<building_scribal_school>
 
     using inherited::load;
     virtual void load(archive arch) override {
-        scribal_school_m.papyrus = arch.r_vec2i("papyrus_icon");
-        scribal_school_m.icon_res = arch.r_vec2i("info_icon_res");
-        scribal_school_m.text_res = arch.r_vec2i("info_text_res");
+        papyrus = arch.r_vec2i("papyrus_icon");
+        icon_res = arch.r_vec2i("info_icon_res");
+        text_res = arch.r_vec2i("info_text_res");
     }
 } scribal_school_m;
 
