@@ -132,9 +132,7 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
         if (map_property_is_draw_tile(grid_offset)) {
             int image_id;
             building* b = building_at(grid_offset);
-            if (b->house_size)
-                image_id = image_id_from_group(GROUP_MINIMAP_HOUSE);
-            else if (b->type == BUILDING_WATER_LIFT || b->type == BUILDING_WELL)
+            if (b->type == BUILDING_WATER_LIFT || b->type == BUILDING_WELL)
                 image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT);
             else if (terrain & TERRAIN_ROAD) {
                 if (b->type == BUILDING_ROADBLOCK) {
@@ -169,7 +167,7 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
             } else if (building_is_monument(b->type)) {
                 image_id = image_group(IMG_MINIMAP_DARK_GREY); // dark grey
             } else {
-                image_id = image_group(IMG_MINIMAP_COLOR) + g_debug_tile;
+                image_id = b->minimap_anim.first_img();
             }
 
             auto multi_tile_size = map_property_multi_tile_size(grid_offset);

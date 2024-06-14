@@ -855,7 +855,9 @@ void building_impl::on_place(int orientation, int variant) {
     
     base.fire_proof = p.fire_proof;
     base.damage_proof = p.damage_proof;
+
     on_place_update_tiles(orientation, variant);
+    update_graphic();
 }
 
 void building_impl::on_place_update_tiles(int orientation, int variant) {
@@ -883,6 +885,10 @@ void building_impl::on_place_checks() {
             building_construction_warning_show(WARNING_WORKERS_NEEDED);
         }
     }
+}
+
+void building_impl::update_graphic() {
+    base.minimap_anim = anim("minimap");
 }
 
 void building_impl::update_day() {
@@ -994,6 +1000,7 @@ void building_impl::static_params::load(archive arch) {
     planer_relative_orientation = arch.r_int("planer_relative_orientation");
     is_draggable = arch.r_bool("is_draggable");
     production_rate = arch.r_uint("production_rate", 100);
+
     anim.load(arch);
 }
 

@@ -118,6 +118,7 @@ building_house_crude_hut = {
     preview: {pack: PACK_GENERAL, id: 36},
     base: {pack: PACK_GENERAL, id: 36},
     house: {pack: PACK_GENERAL, id: 26},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 2,
@@ -128,6 +129,7 @@ building_house_crude_hut = {
 building_house_sturdy_hut = {
   animations : {
     house: {pack: PACK_GENERAL, id: 26, offset:2},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 2,
@@ -137,6 +139,7 @@ building_house_sturdy_hut = {
 building_house_meager_shanty = {
   animations : {
     house: {pack: PACK_GENERAL, id: 27, offset:0},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 2,
@@ -146,6 +149,7 @@ building_house_meager_shanty = {
 building_house_common_shanty = {
   animations : {
     house: {pack: PACK_GENERAL, id: 27, offset:2},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 2,
@@ -155,6 +159,7 @@ building_house_common_shanty = {
 building_house_rough_cottage = {
   animations : {
     house: {pack: PACK_GENERAL, id: 28, offset:0},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 2,
@@ -164,6 +169,7 @@ building_house_rough_cottage = {
 building_house_ordinary_cottage = {
   animations : {
     house: {pack: PACK_GENERAL, id: 28, offset:2},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 2,
@@ -173,6 +179,7 @@ building_house_ordinary_cottage = {
 building_house_modest_homestead = {
   animations : {
     house: {pack: PACK_GENERAL, id: 29, offset:0},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 2,
@@ -182,6 +189,7 @@ building_house_modest_homestead = {
 building_house_spacious_homestead = {
   animations : {
     house: {pack: PACK_GENERAL, id: 29, offset:2},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 2,
@@ -191,6 +199,7 @@ building_house_spacious_homestead = {
 building_house_modest_apartment = {
   animations : {
     house: {pack: PACK_GENERAL, id: 30, offset:0},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 2,
@@ -200,6 +209,7 @@ building_house_modest_apartment = {
 building_house_spacious_apartment = {
   animations : {
     house: {pack: PACK_GENERAL, id: 30, offset:2},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 2,
@@ -209,6 +219,7 @@ building_house_spacious_apartment = {
 building_house_common_residence = {
   animations : {
     house: {pack: PACK_GENERAL, id: 31, offset:0},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 2,
@@ -218,6 +229,7 @@ building_house_common_residence = {
 building_house_spacious_residence = {
   animations : {
     house: {pack: PACK_GENERAL, id: 31, offset:2},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 2,
@@ -227,6 +239,7 @@ building_house_spacious_residence = {
 building_house_elegant_residence = {
   animations : {
     house: {pack: PACK_GENERAL, id: 32, offset:0},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 2,
@@ -236,6 +249,7 @@ building_house_elegant_residence = {
 building_house_fancy_residence = {
   animations : {
     house: {pack: PACK_GENERAL, id: 32, offset:2},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 2,
@@ -245,6 +259,7 @@ building_house_fancy_residence = {
 building_house_common_manor = {
   animations : {
     house: {pack: PACK_GENERAL, id: 33, offset:0},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 1,
@@ -254,6 +269,7 @@ building_house_common_manor = {
 building_house_spacious_manor = {
   animations : {
     house: {pack: PACK_GENERAL, id: 33, offset:1},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 1,
@@ -263,6 +279,7 @@ building_house_spacious_manor = {
 building_house_elegant_manor = {
   animations : {
     house: {pack: PACK_GENERAL, id: 34, offset:0},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 1,
@@ -271,6 +288,7 @@ building_house_elegant_manor = {
 building_house_stately_manor = {
   animations : {
     house: {pack: PACK_GENERAL, id: 34, offset:1},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 1,
@@ -280,6 +298,7 @@ building_house_stately_manor = {
 building_house_modest_estate = {
   animations : {
     house: {pack: PACK_GENERAL, id: 35, offset:0},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 1,
@@ -289,6 +308,7 @@ building_house_modest_estate = {
 building_house_palatial_estate = {
   animations : {
     house: {pack: PACK_GENERAL, id: 35, offset:1},
+    minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
   num_types : 1,

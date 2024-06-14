@@ -284,6 +284,7 @@ public:
         signed char house_happiness;
         signed char native_anger;
     } sentiment;
+    animation_t minimap_anim;
     uint8_t show_on_problem_overlay;
     uint16_t deben_storage;
     animation_context anim;
@@ -456,7 +457,7 @@ public:
     virtual void on_destroy() {}
     virtual void on_undo() {}
     virtual void spawn_figure() {}
-    virtual void update_graphic() {}
+    virtual void update_graphic();
     virtual void update_month() {}
     virtual void update_day();
     virtual const static_params &params() const { return params(type()); }
