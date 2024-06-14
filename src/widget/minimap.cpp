@@ -109,9 +109,11 @@ static int draw_figure(screen_tile screen, map_point point) {
     case FIGURE_COLOR_SOLDIER:
         color = COLOR_MINIMAP_SOLDIER;
         break;
+
     case FIGURE_COLOR_ENEMY:
         color = data.enemy_color;
         break;
+
     case FIGURE_COLOR_ANIMAL:
         color = COLOR_MINIMAP_ANIMAL;
         break;
@@ -156,8 +158,6 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
                 } else {
                     image_id = image_group(IMG_MINIMAP_DARK_GREY); // dark grey
                 }
-            } else if (building_is_food_category(b->type)) {
-                image_id = image_group(IMG_MINIMAP_GREEN); // green
             } else if (building_is_industry(b->type)) {
                 image_id = image_group(IMG_MINIMAP_DARK_RED); // dark red
             } else if (building_is_entertainment(b->type)) {
