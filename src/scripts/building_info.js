@@ -801,7 +801,8 @@ building_well = {
     base : { pack: PACK_GENERAL, id:23, max_frames:1 },
     base_work : { pack: PACK_GENERAL, id:23, max_frames:1 },
     fancy : { pack: PACK_GENERAL, id:23, offset:2, max_frames:1 },
-    fancy_work : { pack: PACK_GENERAL, id:23, offset:3, max_frames:1 }
+    fancy_work : { pack: PACK_GENERAL, id:23, offset:3, max_frames:1 },
+    minimap: {pack:PACK_GENERAL, id:151},
   },
   window_info_height_id : 4,
   fire_proof : true,
@@ -1467,7 +1468,8 @@ building_water_lift = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_TERRAIN, id:50 },
     base : { pos : [0, 0], pack:PACK_TERRAIN, id:50 },
-    work : { pos : [0, 0], pack:PACK_TERRAIN, id:50, offset:1, max_frames:12 }
+    work : { pos : [0, 0], pack:PACK_TERRAIN, id:50, offset:1, max_frames:12 },
+    minimap : {pack:PACK_GENERAL, id:151}
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
   window_info_height_id : 1,

@@ -274,8 +274,9 @@ int image_group(e_image_id type) {
 
 int image_id_from_group(int collection, int group, int pak_cache_idx) {
     imagepak* pak = pak_from_collection_id(collection, pak_cache_idx);
-    if (pak == nullptr)
+    if (pak == nullptr) {
         return -1;
+    }
     return pak->get_global_image_index(group);
 }
 

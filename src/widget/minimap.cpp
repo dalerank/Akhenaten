@@ -26,9 +26,17 @@ struct minimap_data_t {
     vec2i rel_mouse;
     vec2i mouse_last_coords;
     int refresh_requested;
+    animation_t terrain_canal;
 };
 
 minimap_data_t g_minimap_data;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_minimap);
+void config_load_minimap() {
+    g_config_arch.r_section("minimap_window", [] (archive arch) {
+        arch.r_anim("terrain_canal", g_minimap_data.terrain_canal);
+    });
+}
 
 void widget_minimap_invalidate(void) {
     auto& data = g_minimap_data;
@@ -132,9 +140,7 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
         if (map_property_is_draw_tile(grid_offset)) {
             int image_id;
             building* b = building_at(grid_offset);
-            if (b->type == BUILDING_WATER_LIFT || b->type == BUILDING_WELL)
-                image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT);
-            else if (terrain & TERRAIN_ROAD) {
+            if (terrain & TERRAIN_ROAD) {
                 if (building_is_entertainment(b->type)) {
                     image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
                 } else if (b->type == BUILDING_FESTIVAL_SQUARE) {
@@ -201,7 +207,7 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
         else if (terrain & TERRAIN_ROAD)
             image_id = image_id_from_group(GROUP_MINIMAP_ROAD);
         else if (terrain & TERRAIN_CANAL)
-            image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT);
+            image_id = g_minimap_data.terrain_canal.first_img();
         else if (terrain & TERRAIN_WALL)
             image_id = image_id_from_group(GROUP_MINIMAP_WALL);
         else if (terrain & TERRAIN_MEADOW)

@@ -293,3 +293,7 @@ empire_window = {
 	sell_res_group : 47,
 	trade_button_offset_y : 10,
 }
+
+minimap_window = {
+	terrain_canal : {pack:PACK_GENERAL, id:151},
+}
