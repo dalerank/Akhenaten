@@ -273,21 +273,11 @@ static void window_info_select_figure(int index, int param2) {
     window_invalidate();
 }
 
-static int window_info_show_overlay(figure *f) {
-    switch (f->type) {
-    case FIGURE_CONSTABLE: return OVERLAY_CRIME;
-    default:
-        return f->dcast()->get_overlay();
-    }
-
-    return OVERLAY_NONE;
-}
-
 void window_building_play_figure_phrase(object_info* c) {
     int figure_id = c->figure.figure_ids[c->figure.selected_index];
     figure* f = figure_get(figure_id);
     f->figure_phrase_play();
-    c->show_overlay = window_info_show_overlay(f);
+    c->show_overlay = f->dcast()->get_overlay();
     c->figure.phrase_group = f->phrase_group;
     c->figure.phrase_id = f->phrase_id;
     c->figure.phrase_key = f->phrase_key;

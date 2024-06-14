@@ -113,41 +113,6 @@ int figure::is_nearby(int category, int* distance, int max_distance, bool gang_o
 //     *distance = min_dist;
 //     return min_enemy_id;
 // }
-bool figure::policeman_fight_enemy(int category, int max_distance) {
-    if (!g_city.figures_has_security_breach() && enemy_army_total_enemy_formations() <= 0)
-        return false;
-
-    switch (action_state) {
-    case FIGURE_ACTION_150_ATTACK:
-    case FIGURE_ACTION_149_CORPSE:
-    case FIGURE_ACTION_70_POLICEMAN_CREATED:
-    case FIGURE_ACTION_71_POLICEMAN_ENTERING_EXITING:
-    case FIGURE_ACTION_76_POLICEMAN_GOING_TO_ENEMY:
-    case FIGURE_ACTION_77_POLICEMAN_AT_ENEMY:
-        return false;
-    }
-    wait_ticks_next_target++;
-    if (wait_ticks_next_target < 10)
-        return false;
-
-    wait_ticks_next_target = 0;
-    int distance;
-    int enemy_id = is_nearby(2, &distance);
-    if (enemy_id > 0 && distance <= max_distance) {
-        figure* enemy = figure_get(enemy_id);
-        wait_ticks_next_target = 0;
-        action_state = FIGURE_ACTION_76_POLICEMAN_GOING_TO_ENEMY;
-        destination_tile = enemy->tile;
-        //        destination_tile.x() = enemy->tile.x();
-        //        destination_tile.y() = enemy->tile.y();
-        target_figure_id = enemy_id;
-        enemy->targeted_by_figure_id = id;
-        target_figure_created_sequence = enemy->created_sequence;
-        route_remove();
-        return true;
-    }
-    return false;
-}
 
 int figure::target_is_alive() {
     if (target_figure_id <= 0)

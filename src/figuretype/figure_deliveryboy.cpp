@@ -73,10 +73,5 @@ const animations_t &figure_delivery_boy::anim() const {
 }
 
 void figure_delivery_boy::update_animation() {
-    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
-    if (action_state() == FIGURE_ACTION_149_CORPSE) {
-        base.sprite_image_id = image_group(ANIM_DELIVERY_BOY_DEATH);
-    } else {
-        base.sprite_image_id = image_group(ANIM_DELIVERY_BOY_WALK) + dir + 8 * base.anim.frame;
-    }
+    figure_impl::update_animation();
 }

@@ -434,38 +434,38 @@ figure_emigrant = {
 
 figure_sled = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: IMG_BIGSLED_EMPTY, max_frames:1 },
+		walk : { anim_id: IMG_BIGSLED_EMPTY, max_frames:1 },
 	}
 }
 
 figure_trade_caravan = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_AMBIENT, id:20, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_AMBIENT, id:21, max_frames:8, loop:false },
+		walk : { pack:PACK_SPR_AMBIENT, id:20, max_frames:12 },
+		death : { pack:PACK_SPR_AMBIENT, id:21, max_frames:8, loop:false },
 	},
 	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }
 
 figure_caravan_donkey = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:52, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:53, max_frames:8, loop:false },
+		walk : { pack:PACK_SPR_MAIN, id:52, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:53, max_frames:8, loop:false },
 	},
 	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }
 
 figure_homeless = {
 	animations : {
-		walk : { pos : [0, 0], pack: PACK_SPR_MAIN, id: 12, max_frames:12 },
-		death : { pos : [0, 0], pack: PACK_SPR_MAIN, id: 13, max_frames:8, loop:false },
+		walk : { pack: PACK_SPR_MAIN, id: 12, max_frames:12 },
+		death : { pack: PACK_SPR_MAIN, id: 13, max_frames:8, loop:false },
 	},
 	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }
 
 figure_teacher = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:201, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:202, max_frames:8, loop:false },
+		walk : { pack:PACK_SPR_MAIN, id:201, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:202, max_frames:8, loop:false },
 	},
 	terrain_usage : TERRAIN_USAGE_ROADS,
 	max_roam_length : 384,
@@ -473,11 +473,21 @@ figure_teacher = {
 
 figure_librarian = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:57, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:58, max_frames:8, loop:false },
+		walk : { pack:PACK_SPR_MAIN, id:57, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:58, max_frames:8, loop:false },
 	},
 	terrain_usage : TERRAIN_USAGE_ROADS,
 	max_roam_length : 384,
+}
+
+figure_constable = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:20, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:21, max_frames:8, loop:false },
+		attack : { pack:PACK_SPR_MAIN, id:21, max_frames:8, loop:false },
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 640,
 }
 
 figure_herbalist = {

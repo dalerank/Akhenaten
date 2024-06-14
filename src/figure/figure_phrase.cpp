@@ -34,7 +34,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "governor"},
     {FIGURE_NONE, "guard"},
     {FIGURE_NONE, "pharaoh"},
-    {FIGURE_CONSTABLE, "police"},
     {FIGURE_CRIMINAL, "robber"},
     {FIGURE_NONE, "senet"},
     {FIGURE_NONE, "thief"},
@@ -44,75 +43,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "woodcutter"},
     {FIGURE_NONE, "zookeeper"}
 };
-
-static int lion_tamer_phrase() {
-    //    if (action_state == FIGURE_ACTION_150_ATTACK) {
-    //        if (++phrase_sequence_exact >= 3)
-    //            phrase_sequence_exact = 0;
-    //
-    //        return 7 + phrase_sequence_exact;
-    //    }
-    return 0;
-}
-
-static sound_key policeman_phrase(figure *f) {
-    svector<sound_key, 10> keys;
-
-    if (f->min_max_seen < 10) {
-        keys.push_back("policeman_very_low_crime_level");
-    } else if (f->min_max_seen < 30) {
-        keys.push_back("policeman_low_crime_level");
-    } else {
-        keys.push_back("policeman_usual_crime_level");
-    }
-
-    if (formation_get_num_forts() < 0) {
-        keys.push_back("policeman_city_not_safety");
-        keys.push_back("policeman_enemies_are_coming");
-        keys.push_back("policeman_no_army");
-        keys.push_back("policeman_no_army_2");
-    }
-
-    if (g_city.labor.workers_needed >= 10) {
-        keys.push_back("policeman_need_workers");
-    }
-
-    if (g_city.labor.workers_needed >= 20) {
-        keys.push_back("policeman_need_more_workers");
-    }
-
-    if (g_city.health.value < 20) {
-        keys.push_back("policeman_desease_can_start_at_any_moment");
-    }
-
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
-        keys.push_back("policeman_no_food_in_city");
-    }
-
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("policeman_gods_are_angry");
-    }
-
-    if (g_city.labor.unemployment_percentage >= 15) {
-        keys.push_back("policeman_much_unemployments");
-    }
-
-    if (g_city.festival.months_since_festival > 6) {  // low entertainment
-        keys.push_back("policeman_low_entertainment");
-    }
-
-    if (city_sentiment() > 90) {
-        keys.push_back("policeman_city_is_amazing");
-    } else  if (city_sentiment() > 40) {
-        keys.push_back("policeman_city_is_good");
-    }
-
-    keys.push_back("policeman_iam_too_busy_that_talk");
-    keys.push_back("policeman_i_hope_my_work_is_need");
-
-    int index = rand() % keys.size();
-    return keys[index];
-}
 
 static int citizen_phrase() {
     //    if (++f->phrase_sequence_exact >= 3)
@@ -197,7 +127,6 @@ static int trade_ship_phrase() {
 
 static sound_key phrase_based_on_figure_state(figure *f) {
     switch (f->type) {
-    case FIGURE_CONSTABLE: return policeman_phrase(f);
     //        case FIGURE_PROTESTER:
     //        case FIGURE_CRIMINAL:
     //        case FIGURE_RIOTER:

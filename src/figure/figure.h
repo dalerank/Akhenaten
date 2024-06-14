@@ -417,8 +417,6 @@ public:
     void zebra_action();
     void spear_action();
     void hippodrome_horse_action();
-    // pharaoh
-    void policeman_action();
 
     int is_nearby(int category, int* distance, int max_distance = 10000, bool gang_on = true);
     bool herd_roost(int step, int bias, int max_dist, int terrain_mask);
@@ -432,7 +430,6 @@ public:
     int trader_total_bought();
     int trader_total_sold();
 
-    bool policeman_fight_enemy(int category, int max_distance);
     int target_is_alive();
 
     int figure_rioter_collapse_building();

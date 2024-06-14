@@ -316,7 +316,6 @@ void figure::action_perform() {
         building* b = home();
         figure* leader = figure_get(leading_figure_id);
         switch (type) {
-        case FIGURE_CONSTABLE:
         case FIGURE_NATIVE_TRADER:
         case FIGURE_TOWER_SENTRY:
         case FIGURE_MISSIONARY:
@@ -435,7 +434,6 @@ void figure::action_perform() {
         case FIGURE_HUNTER_ARROW: arrow_action(); break;
         case FIGURE_GOVERNOR: governor_action(); break;
         case FIGURE_HIPPO: hippo_action(); break;
-        case FIGURE_CONSTABLE: policeman_action(); break;
         case FIGURE_SLED_PULLER: sled_puller_action(); break;
         case FIGURE_HYENA: hyena_action(); break;
 
