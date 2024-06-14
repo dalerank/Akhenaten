@@ -27,6 +27,12 @@ struct minimap_data_t {
     vec2i mouse_last_coords;
     int refresh_requested;
     animation_t terrain_canal;
+    animation_t terrain_water;
+
+    void load(archive arch) {
+        arch.r_anim("terrain_canal", terrain_canal);
+        arch.r_anim("terrain_water", terrain_water);
+    }
 };
 
 minimap_data_t g_minimap_data;
@@ -34,7 +40,7 @@ minimap_data_t g_minimap_data;
 ANK_REGISTER_CONFIG_ITERATOR(config_load_minimap);
 void config_load_minimap() {
     g_config_arch.r_section("minimap_window", [] (archive arch) {
-        arch.r_anim("terrain_canal", g_minimap_data.terrain_canal);
+        g_minimap_data.load(arch);
     });
 }
 
@@ -194,9 +200,9 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
     } else {
         int rand = map_random_get(grid_offset);
         int image_id;
-        if (terrain & TERRAIN_WATER)
-            image_id = image_id_from_group(GROUP_MINIMAP_WATER) + (rand & 3);
-        else if (terrain & TERRAIN_SHRUB)
+        if (terrain & TERRAIN_WATER) {
+            image_id = g_minimap_data.terrain_water.first_img() + (rand & 3);
+        } else if (terrain & TERRAIN_SHRUB)
             image_id = image_id_from_group(GROUP_MINIMAP_TREE) + (rand & 3);
         else if (terrain & TERRAIN_TREE)
             image_id = image_id_from_group(GROUP_MINIMAP_TREE) + (rand & 3);

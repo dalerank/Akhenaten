@@ -296,4 +296,5 @@ empire_window = {
 
 minimap_window = {
 	terrain_canal : {pack:PACK_GENERAL, id:151},
+	terrain_water : {pack:PACK_GENERAL, id:142},
 }
