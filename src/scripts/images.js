@@ -20,7 +20,6 @@ images = [
 	{img: IMG_EMPIRE_ROUTE_HL_CLOSED, pack:PACK_GENERAL, id:149, offset:211},
 	{img: IMG_EMPIRE_ROUTE_OPEN, pack:PACK_GENERAL, id:149, offset:201},
 	{img: IMG_EMPIRE_ROUTE_HL_OPEN, pack:PACK_GENERAL, id:149, offset:186},
-	{img: IMG_MINIMAP_BLACK, pack:PACK_GENERAL, id:149, offset:5},
 	{img: IMG_MINIMAP_BRIGHT_TEAL, pack:PACK_GENERAL, id:149, offset:170},
 	{img: IMG_MINIMAP_DARK_GREY, pack:PACK_GENERAL, id:149, offset:210},
 	{img: IMG_MINIMAP_GREEN, pack:PACK_GENERAL, id:149, offset:160},

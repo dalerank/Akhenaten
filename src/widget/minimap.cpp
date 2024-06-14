@@ -135,9 +135,7 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
             if (b->type == BUILDING_WATER_LIFT || b->type == BUILDING_WELL)
                 image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT);
             else if (terrain & TERRAIN_ROAD) {
-                if (b->type == BUILDING_ROADBLOCK) {
-                    image_id = image_group(IMG_MINIMAP_BLACK); // black
-                } else if (building_is_entertainment(b->type)) {
+                if (building_is_entertainment(b->type)) {
                     image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
                 } else if (b->type == BUILDING_FESTIVAL_SQUARE) {
                     image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal

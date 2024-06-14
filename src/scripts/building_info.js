@@ -1038,6 +1038,7 @@ building_roadblock = {
   animations : {
     preview : { pack:PACK_GENERAL, id:98 },
     base : { pack:PACK_GENERAL, id:98 },
+    minimap: {pack:PACK_GENERAL, id:149, offset:5},
   },
   building_size : 1,
   fire_proof : true,
