@@ -57,9 +57,6 @@ images = [
 	{img: IMG_TERRAIN_FLOODPLAIN, pack:PACK_TERRAIN, id:31, offset:0},
 	{img: ANIM_DELIVERY_BOY_WALK, pack:PACK_SPR_MAIN, id:9, offset:0},
 	{img: ANIM_DELIVERY_BOY_DEATH, pack:PACK_SPR_MAIN, id:10, offset:0},
-	{img: ANIM_TRADER_SHIP_WALK, pack:PACK_SPR_MAIN, id:40, offset:0},
-	{img: ANIM_TRADER_SHIP_DEATH, pack:PACK_SPR_MAIN, id:41, offset:0},
-	{img: ANIM_TRADER_SHIP_IDLE, pack:PACK_SPR_MAIN, id:42, offset:0},
 ]
 
 cart_images = [

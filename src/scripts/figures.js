@@ -409,8 +409,9 @@ figure_storageyard_cart = {
 
 figure_trade_ship = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_TRADER_SHIP_WALK, max_frames:3 },
-		idle : { pos : [0, 0], anim_id: ANIM_TRADER_SHIP_IDLE, max_frames:1 },
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:40, max_frames:3 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:41, max_frames:3 },
+		idle : { pos : [0, 0], pack:PACK_SPR_MAIN, id:42, max_frames:1 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
@@ -599,7 +600,8 @@ figure_juggler = {
     low_entertainment : {sound:"juggler_g08.wav", group: 230, text:0 },
     city_is_good : {sound:"juggler_g09.wav", group: 230, text:0 },
     city_is_amazing : {sound:"juggler_g10.wav", group: 230, text:0 },
-	}
+	},
+	max_roam_length: 640,
 }
 
 figure_market_trader = {
