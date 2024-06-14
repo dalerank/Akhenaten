@@ -28,10 +28,6 @@ static void hippodrome_coverage(building* b, figure *f, int&) {
     b->data.house.hippodrome = MAX_COVERAGE;
 }
 
-static void library_coverage(building* b, figure *f, int&) {
-    b->data.house.library = MAX_COVERAGE;
-} 
-
 static void mortuary_coverage(building* b, figure *f, int&) {
     b->data.house.mortuary = MAX_COVERAGE;
 }
@@ -52,10 +48,6 @@ int figure::figure_service_provide_coverage() {
     switch (type) {
     case FIGURE_NOBLES:
         return 0;
-
-    case FIGURE_LIBRARIAN:
-        houses_serviced = figure_provide_culture(tile, this, library_coverage);
-        break;
 
     case FIGURE_EMBALMER:
         houses_serviced = figure_provide_culture(tile, this, mortuary_coverage);

@@ -352,8 +352,8 @@ figure_market_buyer = {
 
 figure_delivery_boy = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: ANIM_DELIVERY_BOY_WALK, max_frames:12 },
-		death : { pos : [0, 0], anim_id: ANIM_DELIVERY_BOY_DEATH, max_frames:8, loop:false },
+		walk : { pack:PACK_SPR_MAIN, id:9, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:10, max_frames:8, loop:false },
 	},
 	sounds : {
 		those_baskets_too_heavy : {sound: "marketboy_e01.wav", group:221, text: 0},
@@ -466,6 +466,15 @@ figure_teacher = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:201, max_frames:12 },
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:202, max_frames:8, loop:false },
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_roam_length : 384,
+}
+
+figure_librarian = {
+	animations : {
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:57, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:58, max_frames:8, loop:false },
 	},
 	terrain_usage : TERRAIN_USAGE_ROADS,
 	max_roam_length : 384,

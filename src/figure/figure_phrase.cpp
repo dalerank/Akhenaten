@@ -33,7 +33,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_EMBALMER, "embalmer"},
     {FIGURE_NONE, "governor"},
     {FIGURE_NONE, "guard"},
-    {FIGURE_LIBRARIAN, "library"},
     {FIGURE_NONE, "pharaoh"},
     {FIGURE_CONSTABLE, "police"},
     {FIGURE_CRIMINAL, "robber"},

@@ -213,6 +213,7 @@ var figure_dentist = {}
 var figure_fishing_point = {}
 var figure_standard_bearer = {}
 var figure_native_trader = {}
+var figure_librarian = {}
 // missions
 var mission0 = {}
 var mission1 = {}
