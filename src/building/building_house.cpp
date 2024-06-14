@@ -29,10 +29,10 @@ namespace buildings {
 template<typename T>
 struct house_model_t : public model_t<T> {
     using inherited = model_t<T>;
-    void load() {
-        inherited::load([this] (archive arch) {
-            num_types = arch.r_int("num_types");
-        });
+
+    using inherited::load;
+    virtual void load(archive arch) override {
+        num_types = arch.r_int("num_types");
     }
 
     int num_types;

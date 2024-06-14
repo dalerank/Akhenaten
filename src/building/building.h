@@ -761,6 +761,7 @@ using BuildingIterator = FuncLinkedList<create_building_function_cb>;
 
 template<typename T>
 struct model_t : public building_impl::static_params {
+    using building_type = T;
     static constexpr e_building_type TYPE = T::TYPE;
     static constexpr pcstr CLSID = T::CLSID;
 
@@ -776,19 +777,18 @@ struct model_t : public building_impl::static_params {
             static_params::load(arch);
             city_labor_set_category(*this);
             loaded = true;
+            this->load(arch);
         });
         assert(loaded);
     }
 
-    template<typename F>
-    void load(F func) {
-        load();
-        g_config_arch.r_section(name, func);
+    virtual void load(archive arch) {
+        /*overload options*/
     }
 
     static building_impl *create(e_building_type e, building &data) {
         if (e == TYPE) {
-            return new T(data);
+            return new building_type(data);
         }
         return nullptr;
     }

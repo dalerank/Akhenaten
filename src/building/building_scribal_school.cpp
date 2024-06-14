@@ -16,18 +16,22 @@
 #include "widget/city/ornaments.h"
 
 struct scribal_school_model : public buildings::model_t<building_scribal_school> {
+    using inherited = buildings::model_t<building_scribal_school>;
     vec2i papyrus;
     vec2i icon_res;
     vec2i text_res;
+
+    using inherited::load;
+    virtual void load(archive arch) override {
+        scribal_school_m.papyrus = arch.r_vec2i("papyrus_icon");
+        scribal_school_m.icon_res = arch.r_vec2i("info_icon_res");
+        scribal_school_m.text_res = arch.r_vec2i("info_text_res");
+    }
 } scribal_school_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_scribal_school);
 void config_load_scribal_school() {
-    scribal_school_m.load([] (archive arch) {
-        scribal_school_m.papyrus = arch.r_vec2i("papyrus_icon");
-        scribal_school_m.icon_res = arch.r_vec2i("info_icon_res");
-        scribal_school_m.text_res = arch.r_vec2i("info_text_res");
-    });
+    scribal_school_m.load();
 }
 
 void building_scribal_school::update_month() {

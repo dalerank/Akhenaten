@@ -24,15 +24,14 @@ struct building_statue_model : public buildings::model_t<T> {
     using inherited = buildings::model_t<T>;
     std::vector<image_desc> var;
 
-    void load() {
+    using inherited::load;
+    virtual void load(archive arch) override {
         var.clear();
-        inherited::load([this] (archive arch) {
-            arch.r_array("variants", [this] (archive arch) {
-                int pack = arch.r_int("pack");
-                int id = arch.r_int("id");
-                int offset = arch.r_int("offset");
-                var.push_back({pack, id, offset});
-            });
+        arch.r_array("variants", [this] (archive arch) {
+            int pack = arch.r_int("pack");
+            int id = arch.r_int("id");
+            int offset = arch.r_int("offset");
+            var.push_back({pack, id, offset});
         });
     }
 };

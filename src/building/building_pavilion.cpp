@@ -20,6 +20,8 @@
 #include "js/js_game.h"
 
 struct pavilion_model : public buildings::model_t<building_pavilion> {
+    using inherited = buildings::model_t<building_pavilion>;
+
     int dancer_tile = 0;
     int booth_tile = 0;
     int musician_tile_s = 0;
@@ -59,13 +61,8 @@ struct pavilion_model : public buildings::model_t<building_pavilion> {
         }
     };
 
-    preview_offset preview_dir[8];
-    place_offset place_dir[8];
-} pavilion_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_pavilion);
-void config_load_building_pavilion() {
-    pavilion_m.load([] (archive arch) {
+    using inherited::load;
+    virtual void load(archive arch) override {
         for (auto &preview_dir: pavilion_m.preview_dir) {
             preview_dir.load(arch, bstring32().printf("preview_dir_%d", std::distance(pavilion_m.preview_dir, &preview_dir)).c_str());
         }
@@ -73,7 +70,15 @@ void config_load_building_pavilion() {
         for (auto &place_dir : pavilion_m.place_dir) {
             place_dir.load(arch, bstring32().printf("place_dir_%d", std::distance(pavilion_m.place_dir, &place_dir)).c_str());
         }
-    });
+    }
+
+    preview_offset preview_dir[8];
+    place_offset place_dir[8];
+} pavilion_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_building_pavilion);
+void config_load_building_pavilion() {
+    pavilion_m.load();
     pavilion_m.dancer_tile = pavilion_m.anim["base"].first_img();
     pavilion_m.booth_tile = pavilion_m.anim["booth"].first_img();
     pavilion_m.musician_tile_s = pavilion_m.anim["stand_sn_s"].first_img();
