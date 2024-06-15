@@ -665,7 +665,7 @@ building_temple_ptah = {
   animations : {
     preview : { pack:PACK_GENERAL, id:20 },
     base : { pack:PACK_GENERAL, id:20 },
-    work : { pos : [-1, -1], pack:PACK_GENERAL, id:20, offset:1, max_frames:12 },
+    work : { pos : [70, -103], pack:PACK_GENERAL, id:20, offset:1, max_frames:11 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   building_size : 3,
