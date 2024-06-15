@@ -31,6 +31,7 @@ building_small_statue = {
     {pack: PACK_TEMPLE_RA, id: 1, offset:27},
   ],
   window_info_height_id : 1,
+  building_size : 1,
 }
 
 building_medium_statue = {
@@ -41,6 +42,7 @@ building_medium_statue = {
     {pack: PACK_EXPANSION, id: 36, offset:5},
   ],
   window_info_height_id : 1,
+  building_size : 2,
 }
 
 building_large_statue = {
@@ -51,6 +53,7 @@ building_large_statue = {
     {pack: PACK_EXPANSION, id: 35, offset:5},
   ],
   window_info_height_id : 1,
+  building_size : 3,
 }
 
 building_fort = {
@@ -1086,7 +1089,8 @@ building_ferry = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:23 },
     base : { pack:PACK_TERRAIN, id:23 },
-    work : { pack:PACK_TERRAIN, id:23 }
+    work : { pack:PACK_TERRAIN, id:23 },
+    minimap: {pack:PACK_GENERAL, id:149, offset:210}
   },
   building_size : 2,
   fire_proof : true,
