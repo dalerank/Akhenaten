@@ -117,7 +117,6 @@ public:
     building_house_modest_apartment(building &b) : building_house(b) {}
 
     virtual bool evolve(house_demands *demands) override;
-    void expand_to_spacious_apartment();
 };
 
 class building_house_spacious_apartment : public building_house {
@@ -127,7 +126,6 @@ public:
 
     virtual bool evolve(house_demands *demands) override;
     void expand_to_common_residence();
-    void splits_spacious_apartment();
 };
 
 class building_house_common_residence : public building_house {

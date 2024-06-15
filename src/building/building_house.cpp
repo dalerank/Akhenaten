@@ -675,10 +675,6 @@ void building_house::split(int num_tiles) {
     }
 }
 
-void building_house_spacious_apartment::splits_spacious_apartment() {
-    split_size2(&base, BUILDING_HOUSE_SPACIOUS_APARTMENT);
-}
-
 void building_house_common_manor::devolve_to_fancy_residence() {
     int inventory_per_tile[INVENTORY_MAX];
     int inventory_remainder[INVENTORY_MAX];
@@ -901,37 +897,19 @@ bool building_house_spacious_homestead::evolve(house_demands* demands) {
     return false;
 }
 
-bool building_house_common_residence::evolve(house_demands* demands) {
-    merge();
-    e_house_progress status = check_requirements(demands);
-    if (!has_devolve_delay(status)) {
-        if (status == e_house_evolve)
-            change_to(BUILDING_HOUSE_SPACIOUS_APARTMENT);
-        else if (status == e_house_decay)
-            change_to(BUILDING_HOUSE_SPACIOUS_HOMESTEAD);
-    }
-    return 0;
-}
-
 bool building_house_modest_apartment::evolve(house_demands* demands) {
-    merge();
     e_house_progress status = check_requirements(demands);
     if (!has_devolve_delay(status)) {
         if (status == e_house_evolve) {
-            if (can_expand(4)) {
-                base.house_is_merged = 0;
-                expand_to_spacious_apartment();
-                map_tiles_update_all_gardens();
-                return true;
-            }
+            change_to(BUILDING_HOUSE_SPACIOUS_APARTMENT);
         } else if (status == e_house_decay) {
-            change_to(BUILDING_HOUSE_MODEST_APARTMENT);
+            change_to(BUILDING_HOUSE_SPACIOUS_HOMESTEAD);
         }
     }
     return false;
 }
 
-void building_house_modest_apartment::expand_to_spacious_apartment() {
+void building_house_spacious_apartment::expand_to_common_residence() {
     split(4);
     prepare_for_merge(id(), 4);
 
@@ -949,15 +927,33 @@ void building_house_modest_apartment::expand_to_spacious_apartment() {
 }
 
 bool building_house_spacious_apartment::evolve(house_demands* demands) {
+    merge();
     e_house_progress status = check_requirements(demands);
     if (!has_devolve_delay(status)) {
         if (status == e_house_evolve) {
-            change_to(BUILDING_HOUSE_SPACIOUS_RESIDENCE);
+            if (can_expand(4)) {
+                base.house_is_merged = 0;
+                expand_to_common_residence();
+                map_tiles_update_all_gardens();
+                return true;
+            }
         } else if (status == e_house_decay) {
-            splits_spacious_apartment();
+            change_to(BUILDING_HOUSE_MODEST_APARTMENT);
         }
     }
     return false;
+}
+
+bool building_house_common_residence::evolve(house_demands* demands) {
+    merge();
+    e_house_progress status = check_requirements(demands);
+    if (!has_devolve_delay(status)) {
+        if (status == e_house_evolve)
+            change_to(BUILDING_HOUSE_SPACIOUS_RESIDENCE);
+        else if (status == e_house_decay)
+            change_to(BUILDING_HOUSE_SPACIOUS_APARTMENT);
+    }
+    return 0;
 }
 
 bool building_house_spacious_residence::evolve(house_demands* demands) {
