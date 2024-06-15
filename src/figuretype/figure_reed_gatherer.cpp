@@ -78,7 +78,9 @@ void figure_reed_gatherer::figure_action() {
         }
         break;
     }
+}
 
+void figure_reed_gatherer::update_animation() {
     switch (action_state()) {
     default: // normal walk
     case ACTION_8_RECALCULATE:
