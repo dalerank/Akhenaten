@@ -6,8 +6,7 @@ building_info = [
   { type: "marble_quarry", help_id:95, text_id:118},
   { help_id:93, type:"limestone_quarry", text_id:119},
   { help_id:94, type:"timber_yard", text_id:120},
-  { help_id:92, type:"clay_pit", text_id:121},
-  { help_id:92, type:"reed_farm", text_id:116},
+  { help_id:92, type:"clay_pit", text_id:121},,
   { help_id:92, type:"sandstone_quarry", text_id:194},
   { help_id:92, type:"granite_quarry", text_id:192},
   { help_id:92, type:"plainstone_quarry", text_id:118},
@@ -868,6 +867,8 @@ building_reed_gatherer = {
     work : { pos : [30, -17], pack:PACK_GENERAL, id:24, offset:1, max_frames:19 }
   },
   building_size : 2,
+  info_help_id:92,
+  info_text_id:116,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
