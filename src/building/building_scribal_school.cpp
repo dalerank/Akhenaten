@@ -27,7 +27,9 @@ struct scribal_school_model : public buildings::model_t<building_scribal_school>
         icon_res = arch.r_vec2i("info_icon_res");
         text_res = arch.r_vec2i("info_text_res");
     }
-} scribal_school_m;
+};
+
+scribal_school_model scribal_school_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_scribal_school);
 void config_load_scribal_school() {

@@ -7,7 +7,7 @@
 
 #include "city/labor.h"
 
-struct scribal_school_model : public buildings::model_t<building_library> {
+struct library_model : public buildings::model_t<building_library> {
 } library_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_library);
