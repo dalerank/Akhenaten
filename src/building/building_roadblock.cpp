@@ -81,7 +81,7 @@ void building_roadblock::window_info_background(object_info &c) {
         inner_panel_draw(c.offset.x + 16, y_offset + 42, c.bgsize.x - 2, 21);
     } else {
         c.help_id = 0;
-        window_building_play_sound(&c, "wavs/prefecture.wav");
+        window_building_play_sound(&c, "Wavs/prefecture.wav");
         outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
         lang_text_draw_centered(28, 115, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
         window_building_draw_description(c, 28, 116);

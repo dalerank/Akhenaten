@@ -30,7 +30,7 @@ void building_ferry::on_place_update_tiles(int orientation, int variant) {
 
 void building_ferry::window_info_background(object_info &c) {
     c.help_id = 85;
-    window_building_play_sound(&c, "wavs/gatehouse.wav");
+    window_building_play_sound(&c, "Wavs/gatehouse.wav");
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(e_text_ferry_landing, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     building *ferry = building_get(c.building_id);

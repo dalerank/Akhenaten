@@ -126,7 +126,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         //                return;
         //            }
         //            window_invalidate();
-        //            sound_speech_play_file("wavs/fanfare_nu1.wav");
+        //            sound_speech_play_file("Wavs/fanfare_nu1.wav");
         //        }
         //        if (is_mouse_hit(m_dialog, x_military, y_military, 44)) {
         //            scenario_set_campaign_mission(game_mission_military());
@@ -136,7 +136,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         //                return;
         //            }
         //            window_invalidate();
-        //            sound_speech_play_file("wavs/fanfare_nu5.wav");
+        //            sound_speech_play_file("Wavs/fanfare_nu5.wav");
         //        }
     }
 }

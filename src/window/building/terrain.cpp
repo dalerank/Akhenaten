@@ -56,7 +56,7 @@ void window_building_draw_terrain(object_info* c) {
             if (c->figure.count > 0) {
                 window_building_play_figure_phrase(c);
             } else {
-                sound_speech_play_file("wavs/empty_land.wav");
+                sound_speech_play_file("Wavs/empty_land.wav");
             }
         }
 

@@ -399,7 +399,7 @@ void building_small_mastaba::on_place_checks() {
 
 void building_small_mastaba::window_info_background(object_info &ctx) {
     ctx.help_id = 4;
-    window_building_play_sound(&ctx, "wavs/warehouse.wav");
+    window_building_play_sound(&ctx, "Wavs/warehouse.wav");
     outer_panel_draw(ctx.offset, ctx.bgsize.x, ctx.bgsize.y);
     lang_text_draw_centered(178, 12, ctx.offset.x, ctx.offset.y + 10, 16 * ctx.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     building* b = building_get(ctx.building_id);

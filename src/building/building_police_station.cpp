@@ -15,7 +15,7 @@ void config_load_building_police_station() {
 
 void building_police_station::window_info_background(object_info &c) {
     c.help_id = 86;
-    window_building_play_sound(&c, "wavs/prefecture.wav");
+    window_building_play_sound(&c, "Wavs/prefecture.wav");
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(88, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 

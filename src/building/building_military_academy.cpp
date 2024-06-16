@@ -6,7 +6,7 @@
 
 void building_military_academy::window_info_background(object_info &c) {
     c.help_id = 88;
-    window_building_play_sound(&c, "wavs/mil_acad.wav");
+    window_building_play_sound(&c, "Wavs/mil_acad.wav");
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(135, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 

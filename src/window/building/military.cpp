@@ -69,7 +69,7 @@ static void draw_priority_buttons(int x, int y, int buttons) {
 
 void window_building_draw_wall(object_info* c) {
     c->help_id = 85;
-    window_building_play_sound(c, "wavs/wall.wav");
+    window_building_play_sound(c, "Wavs/wall.wav");
     outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
     lang_text_draw_centered(139, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 16 * c->bgsize.y - 158, 139, 1);
@@ -373,19 +373,19 @@ static void button_layout(int index, int param2) {
     formation_legion_change_layout(m, new_layout);
     switch (index) {
     case 0:
-        sound_speech_play_file("wavs/cohort1.wav");
+        sound_speech_play_file("Wavs/cohort1.wav");
         break;
     case 1:
-        sound_speech_play_file("wavs/cohort2.wav");
+        sound_speech_play_file("Wavs/cohort2.wav");
         break;
     case 2:
-        sound_speech_play_file("wavs/cohort3.wav");
+        sound_speech_play_file("Wavs/cohort3.wav");
         break;
     case 3:
-        sound_speech_play_file("wavs/cohort4.wav");
+        sound_speech_play_file("Wavs/cohort4.wav");
         break;
     case 4:
-        sound_speech_play_file("wavs/cohort5.wav");
+        sound_speech_play_file("Wavs/cohort5.wav");
         break;
     }
     window_city_military_show(data.context_for_callback->formation_id);

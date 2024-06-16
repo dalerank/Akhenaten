@@ -546,7 +546,7 @@ static void military_map_click(int legion_formation_id, tile2i tile) {
         formation_legion_return_home(m);
     else {
         formation_legion_move_to(m, tile);
-        sound_speech_play_file("wavs/cohort5.wav");
+        sound_speech_play_file("Wavs/cohort5.wav");
     }
     window_city_show();
 }

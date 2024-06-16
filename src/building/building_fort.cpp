@@ -61,7 +61,7 @@ void draw_partially_blocked(painter &ctx, int fully_blocked, const std::vector<b
 
 void building_fort::window_info_background(object_info &c) {
     c.help_id = 87;
-    window_building_play_sound(&c, "wavs/fort.wav");
+    window_building_play_sound(&c, "Wavs/fort.wav");
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(89, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     int text_id = formation_get(c.formation_id)->cursed_by_mars ? 1 : 2;

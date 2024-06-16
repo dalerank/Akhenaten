@@ -17,7 +17,7 @@ void config_load_building_water_lift() {
 
 void building_water_lift::window_info_background(object_info &c) {
     c.help_id = 59;
-    window_building_play_sound(&c, "wavs/resevoir.wav");
+    window_building_play_sound(&c, "Wavs/resevoir.wav");
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(107, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 

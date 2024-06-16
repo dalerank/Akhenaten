@@ -30,7 +30,7 @@ void building_firehouse::spawn_figure() {
 void building_firehouse::window_info_background(object_info &c) {
     const int32_t LANG_GROUP_ID = 164;
     c.help_id = 81;                                      // TODO: change to firehouse
-    window_building_play_sound(&c, "wavs/prefecture.wav"); // TODO: change to firehouse
+    window_building_play_sound(&c, "Wavs/prefecture.wav"); // TODO: change to firehouse
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(LANG_GROUP_ID, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 

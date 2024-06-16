@@ -26,11 +26,11 @@ void figure::enemy_initial(formation* m) {
     if (wait_ticks <= 0) {
         if (is_ghost && index_in_formation == 0) {
             if (m->layout == FORMATION_ENEMY_MOB)
-                sound_speech_play_file("wavs/drums.wav");
+                sound_speech_play_file("Wavs/drums.wav");
             else if (m->layout == FORMATION_ENEMY12)
-                sound_speech_play_file("wavs/horn2.wav");
+                sound_speech_play_file("Wavs/horn2.wav");
             else {
-                sound_speech_play_file("wavs/horn1.wav");
+                sound_speech_play_file("Wavs/horn1.wav");
             }
         }
         is_ghost = false;

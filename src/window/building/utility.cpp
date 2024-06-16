@@ -13,7 +13,7 @@
 
 void window_building_draw_burning_ruin(object_info* c) {
     c->help_id = 0;
-    window_building_play_sound(c, "wavs/ruin.wav");
+    window_building_play_sound(c, "Wavs/ruin.wav");
     outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
     lang_text_draw_centered(111, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
@@ -22,7 +22,7 @@ void window_building_draw_burning_ruin(object_info* c) {
 }
 void window_building_draw_rubble(object_info* c) {
     c->help_id = 0;
-    window_building_play_sound(c, "wavs/ruin.wav");
+    window_building_play_sound(c, "Wavs/ruin.wav");
     outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
     lang_text_draw_centered(140, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
@@ -32,7 +32,7 @@ void window_building_draw_rubble(object_info* c) {
 
 void window_building_draw_aqueduct(object_info* c) {
     c->help_id = 60;
-    window_building_play_sound(c, "wavs/aquaduct.wav");
+    window_building_play_sound(c, "Wavs/aquaduct.wav");
     outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
     lang_text_draw_centered(141, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 16 * c->bgsize.y - 144, 141, c->aqueduct_has_water ? 1 : 2);
@@ -40,7 +40,7 @@ void window_building_draw_aqueduct(object_info* c) {
 
 void window_building_draw_fountain(object_info* c) {
     c->help_id = 61;
-    window_building_play_sound(c, "wavs/fountain.wav");
+    window_building_play_sound(c, "Wavs/fountain.wav");
     outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
     lang_text_draw_centered(108, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     int text_id;
@@ -61,7 +61,7 @@ void window_building_draw_fountain(object_info* c) {
 
 void window_building_draw_mission_post(object_info* c) {
     c->help_id = 8;
-    window_building_play_sound(c, "wavs/mission.wav");
+    window_building_play_sound(c, "Wavs/mission.wav");
     outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
     lang_text_draw_centered(134, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description(c, 134, 1);
@@ -71,7 +71,7 @@ void window_building_draw_mission_post(object_info* c) {
 
 static void draw_native(object_info* c, int group_id) {
     c->help_id = 0;
-    window_building_play_sound(c, "wavs/empty_land.wav");
+    window_building_play_sound(c, "Wavs/empty_land.wav");
     outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
     lang_text_draw_centered(group_id, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 106, group_id, 1);

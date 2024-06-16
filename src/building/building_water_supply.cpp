@@ -75,7 +75,7 @@ bool building_water_supply::draw_ornaments_and_animations_height(painter &ctx, v
 void building_water_supply::window_info_background(object_info &c) {
     c.help_id = 61;
 
-    window_building_play_sound(&c, "wavs/fountain.wav");
+    window_building_play_sound(&c, "Wavs/fountain.wav");
     
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(108, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);

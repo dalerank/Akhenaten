@@ -937,7 +937,7 @@ void building_storage_yard::draw_warehouse(object_info* c) {
     data.building_id = c->building_id;
 
     c->help_id = 4;
-    window_building_play_sound(c, "wavs/warehouse.wav");
+    window_building_play_sound(c, "Wavs/warehouse.wav");
     outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
     lang_text_draw_centered(99, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     painter ctx = game.painter();

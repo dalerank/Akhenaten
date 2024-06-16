@@ -50,7 +50,7 @@ void building_festival_square::update_day() {
 void building_festival_square::window_info_background(object_info &c) {
     const int32_t group_id = 188;
     c.help_id = 75;
-    window_building_play_sound(&c, "wavs/prefecture.wav");
+    window_building_play_sound(&c, "Wavs/prefecture.wav");
 
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.y, FONT_LARGE_BLACK_ON_LIGHT);
