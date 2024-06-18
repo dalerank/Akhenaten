@@ -184,7 +184,7 @@ void building_pavilion::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, in
 
 void building_pavilion::window_info_background(object_info &c) {
     c.help_id = 73;
-    window_building_play_sound(&c, "wavs/colloseum.wav");
+    window_building_play_sound(&c, "Wavs/colloseum.wav");
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(74, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     building* b = building_get(c.building_id);

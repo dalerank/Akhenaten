@@ -87,7 +87,7 @@ static void draw_happiness_info(object_info* c, int y_offset) {
 void window_building_draw_house(object_info* c) {
     painter ctx = game.painter();
     c->help_id = 56;
-    window_building_play_sound(c, "wavs/housing.wav");
+    window_building_play_sound(c, "Wavs/housing.wav");
     building* b = building_get(c->building_id);
     if (b->house_population <= 0) {
         draw_vacant_lot(c);

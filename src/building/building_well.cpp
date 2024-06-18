@@ -42,7 +42,7 @@ void building_well::on_place_checks() {
 
 void building_well::window_info_background(object_info &c) {
     c.help_id = 62;
-    window_building_play_sound(&c, "wavs/well.wav");
+    window_building_play_sound(&c, "Wavs/well.wav");
 
     auto &ui = well_w;
     ui.begin_frame();

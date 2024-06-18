@@ -17,14 +17,14 @@ struct music_data_t {
 music_data_t g_music_data = {TRACK_NONE, 0};
 
 static const char c3_wav[][32] = {"",
-                                  "wavs/setup.wav",
-                                  "wavs/Combat_Short.wav",
-                                  "wavs/Combat_Long.wav",
-                                  "wavs/ROME1.WAV",
-                                  "wavs/ROME2.WAV",
-                                  "wavs/ROME3.WAV",
-                                  "wavs/ROME4.WAV",
-                                  "wavs/ROME5.WAV"};
+                                  "Wavs/setup.wav",
+                                  "Wavs/Combat_Short.wav",
+                                  "Wavs/Combat_Long.wav",
+                                  "Wavs/ROME1.WAV",
+                                  "Wavs/ROME2.WAV",
+                                  "Wavs/ROME3.WAV",
+                                  "Wavs/ROME4.WAV",
+                                  "Wavs/ROME5.WAV"};
 
 static const char c3_mp3[][32] = {"",
                                   "mp3/setup.mp3",

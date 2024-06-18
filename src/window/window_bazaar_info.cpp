@@ -26,7 +26,7 @@ void building_bazaar::draw_simple_background(object_info &ctx) {
     ui.begin_frame();
 
     ctx.bgsize = ui["background"].size;
-    window_building_play_sound(&ctx, "wavs/market.wav");
+    window_building_play_sound(&ctx, "Wavs/market.wav");
 
     int text_id = get_employment_info_text_id(&ctx, &base, 1);
     int laborers = model_get_building(BUILDING_BAZAAR)->laborers;

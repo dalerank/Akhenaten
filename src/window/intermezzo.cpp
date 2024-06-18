@@ -18,7 +18,7 @@
 
 #define DISPLAY_TIME_MILLIS 1200
 
-static pcstr SOUND_FILE_LOSE = "wavs/lose_game.wav";
+static pcstr SOUND_FILE_LOSE = "Wavs/lose_game.wav";
 
 struct intermezzo_data_t {
     intermezzo_type type;

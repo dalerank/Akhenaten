@@ -121,7 +121,7 @@ void building_granary::window_info_background(object_info &ctx) {
     ctx.go_to_advisor.left_b = ADVISOR_POPULATION;
     ctx.bgsize = ui["background"].size;
     data.building_id = ctx.building_id;
-    window_building_play_sound(&ctx, "wavs/granary.wav");
+    window_building_play_sound(&ctx, "Wavs/granary.wav");
     
     pcstr warning_text = !ctx.has_road_access ? "#granary_no_road_access"
                          : scenario_property_kingdom_supplies_grain() ? "#granary_kingdom_supplies_grain"

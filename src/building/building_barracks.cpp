@@ -242,7 +242,7 @@ void building_recruiter::window_info_background(object_info &c) {
     c.help_id = 37;
     g_rectuiter_data.building_id = c.building_id;
 
-    window_building_play_sound(&c, "wavs/barracks.wav");
+    window_building_play_sound(&c, "Wavs/barracks.wav");
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(136, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_WEAPONS), c.offset + vec2i{64, 38});

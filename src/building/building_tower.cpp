@@ -29,7 +29,7 @@ void building_tower::on_create(int orientation) {
 
 void building_tower::window_info_background(object_info &c) {
     c.help_id = 85;
-    window_building_play_sound(&c, "wavs/tower.wav");
+    window_building_play_sound(&c, "Wavs/tower.wav");
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(e_text_tower, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
