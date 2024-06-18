@@ -131,6 +131,7 @@ var building_brick_tower = {}
 var building_mud_tower = {}
 var building_road = {}
 var building_burning_ruin = {}
+var building_marble_quarry = {}
 // houses
 var building_house_crude_hut = {}
 var building_house_sturdy_hut = {}
