@@ -2,8 +2,6 @@ log_info("akhenaten: building info started")
 
 building_info = [
   // { type: "academy", help_id: 69, text_id: 86},
-  { type: "library", help_id: 70, text_id: 87},
-  { type: "marble_quarry", help_id:95, text_id:118},
   { help_id:93, type:"limestone_quarry", text_id:119},
   { help_id:94, type:"timber_yard", text_id:120},
   { help_id:92, type:"clay_pit", text_id:121},,
@@ -700,6 +698,8 @@ building_library = {
     work : { pos : [33, -38], pack:PACK_GENERAL, id:43, offset:1, max_frames:12 }
   },
   window_info_height_id : 1,
+  info_help_id: 70,
+  info_text_id: 87,
   building_size : 3,
 }
 
@@ -1295,6 +1295,16 @@ building_sandstone_quarry = {
   info_help_id:93,
   info_text_id:162,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+}
+
+building_marble_quarry = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:197 },
+    base : { pack:PACK_GENERAL, id:197 },
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
+  },
+  info_help_id:95,
+  info_text_id:118,
 }
 
 building_stone_quarry = {
