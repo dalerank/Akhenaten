@@ -2,6 +2,7 @@
 
 #include "figure/figure.h"
 #include "figure/image.h"
+#include "figure/trader.h"
 #include "building/building_dock.h"
 
 #include "city/message.h"
@@ -26,8 +27,8 @@ int figure_create_trade_ship(tile2i tile, int city_id) {
     return ship->id;
 }
 
-int figure_trade_ship_is_trading(figure* ship) {
-    building* b = ship->destination();
+int figure_trade_ship::is_trading() const {
+    building* b = destination();
     if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_DOCK) {
         return TRADE_SHIP_BUYING;
     }
@@ -43,6 +44,7 @@ int figure_trade_ship_is_trading(figure* ship) {
         case FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING:
         case FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE:
             return TRADE_SHIP_BUYING;
+
         case FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE:
         case FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
         case FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING:
@@ -222,4 +224,25 @@ void figure_trade_ship::figure_action() {
 
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
     image_set_animation(trader_ship_m.anim["work"]);
+}
+
+sound_key figure_trade_ship::phrase_key() const {
+    if (action_state() == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
+        if (!trader_has_traded(base.trader_id))
+            return "no_trade"; // no trade
+        else {
+            return "good_trade"; // good trade
+        }
+    } else if (action_state() == FIGURE_ACTION_112_TRADE_SHIP_MOORED) {
+        int state = is_trading();
+        if (state == TRADE_SHIP_BUYING)
+            return "waiting_for_cargo"; // buying goods
+        else if (state == TRADE_SHIP_SELLING)
+            return "looking_for_unload"; // selling goods
+        else {
+            return "no_trade";
+        }
+    } else {
+        return "beatiful_journey"; // can't wait to trade
+    }
 }

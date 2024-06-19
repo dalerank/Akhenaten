@@ -16,9 +16,11 @@ public:
 
     virtual void figure_action() override;
     virtual figure_trade_ship *dcast_trade_ship() override { return this; }
+    virtual sound_key phrase_key() const override;
 
     int lost_queue();
     int done_trading();
+    int is_trading() const;
 };
 
 int figure_create_trade_ship(tile2i tile, int city_id);

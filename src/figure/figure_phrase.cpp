@@ -103,28 +103,6 @@ static int soldier_phrase() {
     return 0;
 }
 
-static int trade_ship_phrase() {
-    //    if (f->action_state == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
-    //        if (!trader_has_traded(f->trader_id))
-    //            return 9; // no trade
-    //        else {
-    //            return 11; // good trade
-    //        }
-    //    } else if (f->action_state == FIGURE_ACTION_112_TRADE_SHIP_MOORED) {
-    //        int state = figure_trade_ship_is_trading(f);
-    //        if (state == TRADE_SHIP_BUYING)
-    //            return 8; // buying goods
-    //        else if (state == TRADE_SHIP_SELLING)
-    //            return 7; // selling goods
-    //        else {
-    //            return 9; // no trade
-    //        }
-    //    } else {
-    //        return 10; // can't wait to trade
-    //    }
-    return 0;
-}
-
 static sound_key phrase_based_on_figure_state(figure *f) {
     switch (f->type) {
     //        case FIGURE_PROTESTER:
@@ -139,8 +117,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_FORT_MOUNTED:
     //        case FIGURE_FORT_LEGIONARY:
     //            return soldier_phrase();
-    //        case FIGURE_TRADE_SHIP:
-    //            return trade_ship_phrase(f);
     default:
         return f->dcast()->phrase_key();
     }

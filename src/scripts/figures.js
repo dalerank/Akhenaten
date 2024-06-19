@@ -413,6 +413,13 @@ figure_trade_ship = {
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:41, max_frames:3 },
 		idle : { pos : [0, 0], pack:PACK_SPR_MAIN, id:42, max_frames:1 },
 	},
+	sounds : {
+		looking_for_unload : {sound:"barge_e01.wav", group: 224, text:0},
+		waiting_for_cargo : {sound:"barge_e02.wav", group: 224, text:1},
+		no_trade : {sound:"barge_e03.wav", group: 224, text:2},
+		good_trade : {sound:"barge_e04.wav", group: 224, text:3},
+		beatiful_journey : {sound:"barge_e05.wav", group: 224, text:4},
+	},
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
