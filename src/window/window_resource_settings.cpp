@@ -17,16 +17,6 @@
 #include "window/message_dialog.h"
 #include "game/game.h"
 
-static void button_help(int param1, int param2);
-static void button_ok(int param1, int param2);
-
-static void button_toggle_trade(int param1, int param2);
-
-static image_button resource_image_buttons[] = {
-    {58 - 16, 332, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
-    {558 + 16, 335, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_ok, button_none, 0, 0, 1}
-};
-
 struct resource_settings_data {
     e_resource resource;
     int focus_button_id;
@@ -41,6 +31,7 @@ static void init(e_resource resource) {
 static void draw_background(void) {
     window_draw_underlying_window();
 }
+
 static void draw_foreground(void) {
     auto &data = g_resource_settings_data;
     painter ctx = game.painter();
@@ -203,39 +194,24 @@ static void draw_foreground(void) {
             city_resource_toggle_stockpiled(data.resource);
         });
 
-    graphics_set_to_dialog();
-    // help / back / ok buttons
-    image_buttons_draw(0, 0, resource_image_buttons, 2);
+    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(58 - 16, 332), {27, 27}, 0)
+        .onclick([] (int, int) {
+            window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, -1, 0);
+        });
 
-    graphics_reset_dialog();
+    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(558 + 16, 335), {24, 24}, 4)
+        .onclick([] (int, int) {
+            window_go_back();
+        });
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
-    auto &data = g_resource_settings_data;
     bool button_id = ui::handle_mouse(m);
-
     const mouse* m_dialog = mouse_in_dialog(m);
-
-    // help / back / ok buttons
-    if (image_buttons_handle_mouse(m_dialog, 0, 0, resource_image_buttons, 2, 0)) {
-        return;
-    }
 
     if (input_go_back_requested(m, h)) {
         window_go_back();
     }
-}
-
-static void button_help(int param1, int param2) {
-    window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, -1, 0);
-}
-static void button_ok(int param1, int param2) {
-    window_go_back();
-}
-
-static void button_toggle_trade(int param1, int param2) {
-    auto &data = g_resource_settings_data;
-    city_resource_cycle_trade_status(data.resource);
 }
 
 void window_resource_settings_show(e_resource resource) {
