@@ -16,7 +16,7 @@
 #include "city/victory.h"
 #include "core/bstring.h"
 #include "content/vfs.h"
-#include "empire/empire.h"
+#include "empire/empire_map.h"
 #include "empire/trade_prices.h"
 #include "figure/enemy_army.h"
 #include "figure/figure_names.h"
@@ -679,7 +679,7 @@ void GamestateIO::start_loaded_file() {
         game_time_init(scenario_property_start_year());
 
         // traders / empire
-        empire_init_scenario();
+        g_empire_map.init_scenario();
         traders_clear();
 
         // set up events

@@ -17,7 +17,7 @@
 #include "scenario/scenario.h"
 #include "scenario/request.h"
 #include "window/donate_to_city.h"
-#include "window/empire.h"
+#include "window/window_empire.h"
 #include "window/window_gift_to_kingdome.h"
 #include "window/popup_dialog.h"
 #include "window/set_salary.h"

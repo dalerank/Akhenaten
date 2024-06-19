@@ -15,7 +15,7 @@
 #include "graphics/window.h"
 #include "city/city.h"
 #include "empire/empire_city.h"
-#include "window/empire.h"
+#include "window/window_empire.h"
 #include "window/resource_settings.h"
 #include "window/trade_prices.h"
 #include "game/game.h"

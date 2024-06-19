@@ -13,7 +13,7 @@
 #include "city/trade.h"
 #include "core/calc.h"
 #include "empire/empire_city.h"
-#include "empire/empire.h"
+#include "empire/empire_map.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "figure/combat.h"

@@ -9,7 +9,7 @@
 #include "core/calc.h"
 #include "core/game_environment.h"
 #include "empire/empire_city.h"
-#include "empire/empire.h"
+#include "empire/empire_map.h"
 #include "empire/trade_route.h"
 #include "figure/combat.h"
 #include "figure/image.h"

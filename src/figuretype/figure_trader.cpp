@@ -2,7 +2,7 @@
 
 #include "core/calc.h"
 #include "city/trade.h"
-#include "empire/empire.h"
+#include "empire/empire_map.h"
 #include "empire/empire_city.h"
 #include "game/game.h"
 #include "building/building_storage_yard.h"

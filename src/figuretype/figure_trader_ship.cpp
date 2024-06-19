@@ -29,7 +29,7 @@ void game_cheat_sink_all_ships(std::istream &is, std::ostream &os) {
     }, FIGURE_TRADE_SHIP, FIGURE_FISHING_BOAT);
 }
 
-int figure_create_trade_ship(tile2i tile, int city_id) {
+int figure_trade_ship::create(tile2i tile, int city_id) {
     figure* ship = figure_create(FIGURE_TRADE_SHIP, tile, DIR_0_TOP_RIGHT);
     ship->empire_city_id = city_id;
     ship->action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;

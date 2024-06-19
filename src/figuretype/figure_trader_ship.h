@@ -23,6 +23,6 @@ public:
     int lost_queue();
     int done_trading();
     int is_trading() const;
-};
 
-int figure_create_trade_ship(tile2i tile, int city_id);
+    static int create(tile2i tile, int city_id);
+};

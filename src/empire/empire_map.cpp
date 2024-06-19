@@ -1,4 +1,4 @@
-#include "empire.h"
+#include "empire_map.h"
 
 #include "building/count.h"
 #include "city/constants.h"
@@ -16,6 +16,8 @@
 #include "io/io_buffer.h"
 #include <string.h>
 
+empire_map_t g_empire_map;
+
 const static vec2i EMPIRE_SIZE{1200, 1600};
 
 enum E_EMPIRE {
@@ -26,19 +28,6 @@ enum E_EMPIRE {
 };
 
 const static int EMPIRE_DATA_SIZE[2] = {12800, 15200};
-
-struct empire_map_data_t {
-    int initial_scroll_x;
-    int initial_scroll_y;
-    int scroll_x;
-    int scroll_y;
-    int selected_object;
-    int viewport_width;
-    int viewport_height;
-};
-
-empire_map_data_t g_empire_map_data;
-
 const char SCENARIO_FILE[2][2][100] = {{"c32.emp", "c3.emp"}, {"", "Pharaoh2.emp"}};
 
 bool empire_city_type_can_trade(int type) {
@@ -52,13 +41,12 @@ bool empire_city_type_can_trade(int type) {
     return false;
 }
 
-static void check_scroll_boundaries(void) {
-    auto& data = g_empire_map_data;
-    int max_x = EMPIRE_SIZE.x - data.viewport_width;
-    int max_y = EMPIRE_SIZE.y - data.viewport_height + 20;
+void empire_map_t::check_scroll_boundaries() {
+    int max_x = EMPIRE_SIZE.x - viewport_width;
+    int max_y = EMPIRE_SIZE.y - viewport_height + 20;
 
-    data.scroll_x = calc_bound(data.scroll_x, 0, max_x);
-    data.scroll_y = calc_bound(data.scroll_y, 0, max_y);
+    scroll_x = calc_bound(scroll_x, 0, max_x);
+    scroll_y = calc_bound(scroll_y, 0, max_y);
 }
 
 void empire_load_editor(int empire_id, int viewport_width, int viewport_height) {
@@ -78,59 +66,54 @@ void empire_load_editor(int empire_id, int viewport_width, int viewport_height) 
     //    }
     //    check_scroll_boundaries();
 }
-void empire_init_scenario(void) {
-    auto& data = g_empire_map_data;
-    data.scroll_x = data.initial_scroll_x;
-    data.scroll_y = data.initial_scroll_y;
-    data.viewport_width = EMPIRE_SIZE.x;
-    data.viewport_height = EMPIRE_SIZE.y;
+void empire_map_t::init_scenario() {
+    scroll_x = initial_scroll_x;
+    scroll_y = initial_scroll_y;
+    viewport_width = EMPIRE_SIZE.x;
+    viewport_height = EMPIRE_SIZE.y;
 
     empire_object_init_cities();
 }
 
-void empire_set_viewport(int width, int height) {
-    auto& data = g_empire_map_data;
-    data.viewport_width = width;
-    data.viewport_height = height;
-    check_scroll_boundaries();
-}
-void empire_get_scroll(int* x_scroll, int* y_scroll) {
-    auto& data = g_empire_map_data;
-    *x_scroll = data.scroll_x;
-    *y_scroll = data.scroll_y;
-}
-void empire_adjust_scroll(int* x_offset, int* y_offset) {
-    auto& data = g_empire_map_data;
-    *x_offset = *x_offset - data.scroll_x;
-    *y_offset = *y_offset - data.scroll_y;
-}
-void empire_set_scroll(int x, int y) {
-    auto& data = g_empire_map_data;
-    data.scroll_x = x;
-    data.scroll_y = y;
-    check_scroll_boundaries();
-}
-void empire_scroll_map(int x, int y) {
-    auto& data = g_empire_map_data;
-    data.scroll_x += x;
-    data.scroll_y += y;
+void empire_map_t::set_viewport(vec2i size) {
+    viewport_width = size.x;
+    viewport_height = size.y;
     check_scroll_boundaries();
 }
 
-int empire_selected_object(void) {
-    auto& data = g_empire_map_data;
-    return data.selected_object;
+vec2i empire_map_t::get_scroll() {
+    return {scroll_x, scroll_y};
 }
-void empire_clear_selected_object(void) {
-    auto& data = g_empire_map_data;
-    data.selected_object = 0;
-}
-void empire_select_object(int x, int y) {
-    auto& data = g_empire_map_data;
-    int map_x = x + data.scroll_x;
-    int map_y = y + data.scroll_y;
 
-    data.selected_object = empire_object_get_closest(vec2i(map_x, map_y));
+vec2i empire_map_t::adjust_scroll(vec2i pos) {
+    return {pos.x - scroll_x, pos.y - scroll_y};
+}
+
+void empire_map_t::set_scroll(vec2i pos) {
+    scroll_x = pos.x;
+    scroll_y = pos.y;
+    check_scroll_boundaries();
+}
+
+void empire_map_t::scroll_map(vec2i pos) {
+    scroll_x += pos.x;
+    scroll_y += pos.y;
+    check_scroll_boundaries();
+}
+
+int empire_map_t::selected_object() {
+    return selected_obj;
+}
+
+void empire_map_t::clear_selected_object() {
+    selected_obj = 0;
+}
+
+void empire_map_t::select_object(vec2i pos) {
+    int map_x = pos.x + scroll_x;
+    int map_y = pos.y + scroll_y;
+
+    selected_obj = empire_object_get_closest(vec2i(map_x, map_y));
 }
 
 bool empire_can_export_resource_to_city(int city_id, e_resource resource) {
@@ -261,8 +244,8 @@ int empire_can_import_resource_from_city(int city_id, e_resource resource) {
 }
 
 io_buffer* iob_empire_map_params = new io_buffer([](io_buffer* iob, size_t version) {
-    auto& data = g_empire_map_data;
+    auto& data = g_empire_map;
     iob->bind(BIND_SIGNATURE_INT32, &data.scroll_x);
     iob->bind(BIND_SIGNATURE_INT32, &data.scroll_y);
-    iob->bind(BIND_SIGNATURE_INT32, &data.selected_object);
+    iob->bind(BIND_SIGNATURE_INT32, &data.selected_obj);
 });

@@ -1,6 +1,4 @@
-#include "empire.h"
-
-#include <cmath>
+#include "window_empire.h"
 
 #include "building/menu.h"
 #include "city/military.h"
@@ -8,7 +6,7 @@
 #include "city/constants.h"
 #include "core/game_environment.h"
 #include "empire/empire_city.h"
-#include "empire/empire.h"
+#include "empire/empire_map.h"
 #include "empire/empire_object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
@@ -157,7 +155,7 @@ empire_window_t g_empire_window = {0, 1};
 static void init(void) {
     auto &data = g_empire_window;
     data.selected_button = 0;
-    int selected_object = empire_selected_object();
+    int selected_object = g_empire_map.selected_object();
     data.selected_city = selected_object ? empire_city_get_for_object(selected_object - 1) : 0;
     data.focus_button_id = 0;
 }
@@ -436,7 +434,7 @@ static void draw_enemy_army_info(const empire_object* object) {
 
 static void draw_object_info(void) {
     auto &data = g_empire_window;
-    int selected_object = empire_selected_object();
+    int selected_object = g_empire_map.selected_object();
     if (selected_object) {
         const empire_object* object = empire_object_get(selected_object - 1);
         switch (object->type) {
@@ -480,9 +478,9 @@ static void draw_empire_object(const empire_object* obj) {
         if (city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING || city->type == EMPIRE_CITY_PHARAOH_TRADING) {
             e_empire_route_state state = ROUTE_CLOSED;
             if (city->is_open) {
-                state = (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id)) ? ROUTE_OPEN_SELECTED : ROUTE_OPEN;
+                state = (g_empire_map.selected_object() && data.selected_city == empire_city_get_for_object(obj->id)) ? ROUTE_OPEN_SELECTED : ROUTE_OPEN;
             } else {
-                state = (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id)) ? ROUTE_CLOSED_SELECTED : ROUTE_CLOSED;
+                state = (g_empire_map.selected_object() && data.selected_city == empire_city_get_for_object(obj->id)) ? ROUTE_CLOSED_SELECTED : ROUTE_CLOSED;
             }
             draw_trade_route(city->route_id, state);
         }
@@ -553,15 +551,15 @@ static void draw_invasion_warning(int x, int y, int image_id) {
     ImageDraw::img_generic(ctx, image_id, vec2i{data.draw_offset.x + x, data.draw_offset.y + y});
 }
 
-static void draw_map() {
+void window_empire_draw_map() {
     auto &data = g_empire_window;
     painter ctx = game.painter();
     graphics_set_clip_rectangle(data.min_pos.x + 16, data.min_pos.y + 16, data.max_pos.x - data.min_pos.x - 32, data.max_pos.y - data.min_pos.y - 136);
 
-    empire_set_viewport(data.max_pos.x - data.min_pos.x - 32, data.max_pos.y - data.min_pos.y - 136);
+    g_empire_map.set_viewport(data.max_pos - data.min_pos - vec2i{32, 136});
 
     data.draw_offset = data.min_pos + vec2i{16, 16};
-    empire_adjust_scroll(&data.draw_offset.x, &data.draw_offset.y);
+    data.draw_offset = g_empire_map.adjust_scroll(data.draw_offset);
 
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EMPIRE_MAP), data.draw_offset);
 
@@ -663,10 +661,10 @@ static void draw_foreground(void) {
 
     ////////
 
-    draw_map();
+    window_empire_draw_map();
 
     const empire_city* city = 0;
-    int selected_object = empire_selected_object();
+    int selected_object = g_empire_map.selected_object();
     if (selected_object) {
         const empire_object* object = empire_object_get(selected_object - 1);
         if (object->type == EMPIRE_OBJECT_CITY) {
@@ -692,7 +690,7 @@ static void determine_selected_object(const mouse* m) {
         data.finished_scroll = 0;
         return;
     }
-    empire_select_object(m->x - data.min_pos.x - 16, m->y - data.min_pos.y - 16);
+    g_empire_map.select_object(vec2i{m->x, m->y} - data.min_pos - vec2i{16, 16});
     window_invalidate();
 }
 
@@ -700,7 +698,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     auto &data = g_empire_window;
     vec2i position;
     if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
-        empire_scroll_map(position.x, position.y);
+        g_empire_map.scroll_map(position);
     }
 
     if (m->is_touch) {
@@ -733,7 +731,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         data.focus_button_id = 3;
 
     determine_selected_object(m);
-    int selected_object = empire_selected_object();
+    int selected_object = g_empire_map.selected_object();
     if (selected_object) {
         const empire_object* obj = empire_object_get(selected_object - 1);
         if (obj->type == EMPIRE_OBJECT_CITY) {
@@ -773,7 +771,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
             }
         }
         if (input_go_back_requested(m, h)) {
-            empire_clear_selected_object();
+            g_empire_map.clear_selected_object();
             window_invalidate();
         }
     } else {
@@ -813,7 +811,7 @@ static e_resource get_tooltip_resource(tooltip_context* c) {
 
 static void get_tooltip_trade_route_type(tooltip_context* c) {
     auto &data = g_empire_window;
-    int selected_object = empire_selected_object();
+    int selected_object = g_empire_map.selected_object();
     if (!selected_object || empire_object_get(selected_object - 1)->type != EMPIRE_OBJECT_CITY)
         return;
 

@@ -26,7 +26,7 @@
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/window_city.h"
-#include "window/empire.h"
+#include "window/window_empire.h"
 #include "window/message_dialog.h"
 #include "window/message_list.h"
 #include "window/mission_briefing.h"
