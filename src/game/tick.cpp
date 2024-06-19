@@ -38,7 +38,6 @@
 #include "empire/empire_city.h"
 #include "figure/formation.h"
 #include "figuretype/crime.h"
-#include "figuretype/water.h"
 #include "figure/formation_herd.h"
 #include "game/settings.h"
 #include "game/time.h"
@@ -128,7 +127,7 @@ static void advance_day() {
     city_sentiment_update_day();
     city_criminals_update_day();
     city_plague_update_day();
-    city_river_update_flotsam();
+    g_city.environment.river_update_flotsam();
     city_buildings_update_day();
 
     tutorial_on_day_tick();

@@ -409,9 +409,9 @@ figure_storageyard_cart = {
 
 figure_trade_ship = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:40, max_frames:3 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:41, max_frames:3 },
-		idle : { pos : [0, 0], pack:PACK_SPR_MAIN, id:42, max_frames:1 },
+		walk : { pack:PACK_SPR_MAIN, id:40, max_frames:3 },
+		death : { pack:PACK_SPR_MAIN, id:41, max_frames:3 },
+		idle : { pack:PACK_SPR_MAIN, id:42, max_frames:1 },
 	},
 	sounds : {
 		looking_for_unload : {sound:"barge_e01.wav", group: 224, text:0},
@@ -423,11 +423,18 @@ figure_trade_ship = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
+figure_shipwreck = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:226, max_frames:12 }
+	},
+	terrain_usage : TERRAIN_USAGE_ANY,
+}
+
 figure_emigrant = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:2, max_frames:12 },
 		death : { pack: PACK_SPR_MAIN, id:3, max_frames:8, loop:false },
-		cart: { pack:PACK_SPR_MAIN, id:52, max_frames:1 },
+		cart : { pack:PACK_SPR_MAIN, id:52, max_frames:1 },
 	},
 	sounds : {
 		no_job_in_city : {sound:"emigrant_e01.wav", group: 203, text:0},

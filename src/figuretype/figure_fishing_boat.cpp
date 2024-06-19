@@ -1,8 +1,9 @@
 #include "figure_fishing_boat.h"
-#include "figuretype/figure_fishing_boat.h"
 
 #include "figure/route.h"
 #include "figure/image.h"
+#include "figure_shipwreck.h"
+#include "figure_fishing_boat.h"
 #include "window/building/figures.h"
 #include "grid/water.h"
 #include "city/message.h"
@@ -165,7 +166,7 @@ void figure_fishing_boat::kill() {
     home()->data.industry.fishing_boat_id = 0;
     base.set_home(0);
     base.wait_ticks = 0;
-    //figure_shipwreck::create(tile);
+    figure_shipwreck::create(tile());
     figure_impl::kill();
 }
 

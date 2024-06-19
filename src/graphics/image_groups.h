@@ -534,7 +534,7 @@ enum e_pack {
 #define GROUP_FIGURE_HIPPODROME_HORSE_2 PACK_SPR_MAIN, 218 // this isn't in Pharaoh
 #define GROUP_FIGURE_HIPPODROME_CART_1 PACK_SPR_MAIN, 219  // this isn't in Pharaoh
 #define GROUP_FIGURE_HIPPODROME_CART_2 PACK_SPR_MAIN, 220  // this isn't in Pharaoh
-#define GROUP_FIGURE_SHIPWRECK PACK_SPR_MAIN, 226          // this isn't in Pharaoh
+//#define GROUP_FIGURE_SHIPWRECK PACK_SPR_MAIN, 226          // this isn't in Pharaoh
 #define GROUP_FIGURE_MISSIONARY PACK_SPR_MAIN, 230         // this isn't in Pharaoh
 #define GROUP_FIGURE_SHEEP PACK_SPR_MAIN, 233              // TODO
 #define GROUP_FIGURE_HYENA PACK_SPR_MAIN, 157

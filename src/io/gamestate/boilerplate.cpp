@@ -23,7 +23,6 @@
 #include "figure/route.h"
 #include "figure/trader.h"
 #include "figuretype/animal.h"
-#include "figuretype/water.h"
 #include "game/mission.h"
 #include "game/settings.h"
 #include "game/state.h"

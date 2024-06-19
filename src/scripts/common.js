@@ -216,6 +216,7 @@ var figure_standard_bearer = {}
 var figure_native_trader = {}
 var figure_librarian = {}
 var figure_constable = {}
+var figure_shipwreck = {}
 // missions
 var mission0 = {}
 var mission1 = {}

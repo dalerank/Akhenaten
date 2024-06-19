@@ -1,6 +1,5 @@
 #include "editor_map.h"
 
-#include "figuretype/water.h"
 #include "grid/routing/routing_terrain.h"
 #include "scenario/scenario.h"
 

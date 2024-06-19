@@ -15,7 +15,6 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/formation_legion.h"
-#include "figuretype/water.h"
 #include "floods.h"
 #include "game/settings.h"
 #include "game/tutorial.h"

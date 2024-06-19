@@ -15,7 +15,6 @@
 #include "figure/route.h"
 #include "figure/trader.h"
 #include "figuretype/editor.h"
-#include "figuretype/water.h"
 #include "game/state.h"
 #include "game/time.h"
 #include "graphics/image.h"

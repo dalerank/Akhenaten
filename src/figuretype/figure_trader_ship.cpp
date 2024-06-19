@@ -3,6 +3,7 @@
 #include "figure/figure.h"
 #include "figure/image.h"
 #include "figure/trader.h"
+#include "figure_shipwreck.h"
 #include "building/building_dock.h"
 
 #include "city/message.h"
@@ -264,6 +265,6 @@ void figure_trade_ship::kill() {
     destination()->data.dock.trade_ship_id = 0;
     base.set_home(0);
     base.wait_ticks = 0;
-    //figure_shipwreck::create(tile);
+    figure_shipwreck::create(tile());
     figure_carrier::kill();
 }

@@ -22,7 +22,6 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_PROTESTER, 1, 0, GROUP_FIGURE_THIEF_WALK},
   {FIGURE_CRIMINAL, 1, 0, GROUP_FIGURE_THIEF_WALK},
   {FIGURE_TOMB_ROBER, 1, TERRAIN_USAGE_ENEMY, 480, GROUP_FIGURE_RIOTER_WALK},
-  {FIGURE_FISHING_BOAT, 1, 0, 0, 0},
   {FIGURE_MARKET_TRADER, 1, 0, 0, 0, IMG_NONE},
   {FIGURE_PRIEST, 1, 0, 0, 0, IMG_PRIEST_OSIRIS},
   {FIGURE_TEACHER, 1, 0, 0, 0, IMG_NONE},
@@ -63,9 +62,7 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_MISSIONARY, 1, TERRAIN_USAGE_ROADS, 192, GROUP_FIGURE_MISSIONARY},
   {FIGURE_FISHING_POINT, 1, 0, 0, 0, IMG_NONE},
   {FIGURE_DELIVERY_BOY, 1, 0, 0, 0, ANIM_DELIVERY_BOY_WALK},
-  {FIGURE_SHIPWRECK, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_BIRDS, 2, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_SHEEP},
-  {FIGURE_OSTRICH, 2 , 0, 0, 0, IMG_NONE},
   {FIGURE_ANTELOPE, 2, 0, GROUP_FIGURE_CROCODILE},
   {FIGURE_SPEAR, 1, 0, 0, 0},
   {FIGURE_CHARIOR_RACER, 1, 0, 0, 0},
@@ -425,7 +422,6 @@ void figure::action_perform() {
         case FIGURE_JAVELIN: javelin_action(); break; // 60
         case FIGURE_BOLT: bolt_action(); break;
         case FIGURE_BALLISTA: ballista_action(); break;
-        case FIGURE_SHIPWRECK: shipwreck_action(); break;
         case FIGURE_BIRDS: sheep_action(); break;
         case FIGURE_ANTELOPE: zebra_action(); break; // 70
         case FIGURE_SPEAR: spear_action(); break;

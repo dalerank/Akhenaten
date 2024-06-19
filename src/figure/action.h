@@ -239,4 +239,4 @@ enum e_figure_action {
     FIGURE_ACTION_MAX
 };
 
-void figure_action_handle(void);
+void figure_action_handle();

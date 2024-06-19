@@ -16,34 +16,9 @@ void config_load_figure_flotsam() {
     flotsam_m.load();
 }
 
-static const int FLOTSAM_RESOURCE_IDS[] = {3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1};
-static const int FLOTSAM_WAIT_TICKS[]  = {10, 50, 100, 130, 200, 250, 400, 430, 500, 600, 70, 750, 820, 830, 900, 980, 1010, 1030, 1200, 1300};
-
 static const int FLOTSAM_TYPE_0[] = {0, 1, 2, 3, 4, 4, 4, 3, 2, 1, 0, 0};
 static const int FLOTSAM_TYPE_12[] = {0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 3, 2, 1, 0, 0, 1, 1, 2, 2, 1, 1, 0, 0, 0};
 static const int FLOTSAM_TYPE_3[] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-
-void city_river_update_flotsam() {
-    if (!scenario_map_has_river_entry() || !scenario_map_has_river_exit() || !scenario_map_has_flotsam()) {
-        return;
-    }
-
-    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure* f = figure_get(i);
-        if (f->state == FIGURE_STATE_ALIVE && f->type == FIGURE_FLOTSAM) {
-            return;
-        }
-    }
-
-    tile2i river_entry = scenario_map_river_entry();
-    for (int i = 0; i < 1; i++) {
-        figure* f = figure_create(FIGURE_FLOTSAM, river_entry, DIR_0_TOP_RIGHT);
-        f->action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
-        f->set_resource((e_resource)FLOTSAM_RESOURCE_IDS[i]);
-        f->wait_ticks = FLOTSAM_WAIT_TICKS[i];
-        f->allow_move_type = EMOVE_FLOTSAM;
-    }
-}
 
 void figure_flotsam::on_create() {
 

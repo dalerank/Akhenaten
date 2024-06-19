@@ -376,6 +376,10 @@ struct city_t {
         void update(int points_num);
     } fishing_points;
 
+    struct environment_t {
+        void river_update_flotsam();
+    } environment;
+
     void houses_reset_demands();
     void houses_calculate_culture_demands();
 
