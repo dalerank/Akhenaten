@@ -2,6 +2,10 @@
 
 #include "js/js_game.h"
 #include "core/random.h"
+#include "city/city.h"
+#include "dev/debug.h"
+
+#include <iostream>
 
 static const vec2i FISHPOINT_OFFSETS[] = {{0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}};
 figures::model_t<figure_fishing_point> fishing_point_m;
@@ -9,6 +13,14 @@ figures::model_t<figure_fishing_point> fishing_point_m;
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_fishing_point);
 void config_load_figure_fishing_point() {
     fishing_point_m.load();
+}
+
+declare_console_command_p(addfishpoints, game_cheat_create_fishing_points)
+void game_cheat_create_fishing_points(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+    int count = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+
+    g_city.fishing_points.update(count);
 }
 
 void figure_fishing_point::figure_action() {

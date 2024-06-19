@@ -43,7 +43,6 @@ static void game_cheat_pop_milestone(pcstr);
 static void game_cheat_fire(pcstr);
 static void game_cheat_spacious_apartment(pcstr);
 static void game_cheat_spawn_nobles(pcstr);
-static void game_cheat_update_fish_points(pcstr);
 static void game_cheat_clear_progress(pcstr);
 static void game_cheat_add_clay(pcstr);
 
@@ -64,7 +63,6 @@ static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_s
                                                   {"fire", game_cheat_fire},
                                                   {"spawnnobles", game_cheat_spawn_nobles},
                                                   {"tutspaciousapt", game_cheat_spacious_apartment},
-                                                  {"upfishpoints", game_cheat_update_fish_points},
                                                   {"clearprogress", game_cheat_clear_progress}
 };
 
@@ -184,13 +182,6 @@ static void game_cheat_fire(pcstr args) {
 
 static void game_cheat_spacious_apartment(pcstr args) {
     tutorial_on_house_evolve(HOUSE_SPACIOUS_APARTMENT);
-}
-
-static void game_cheat_update_fish_points(pcstr args) {
-    int count = 0;
-    parse_integer(args ? args : "10", count);
-
-    g_city.fishing_points.update(count);
 }
 
 static void game_cheat_spawn_nobles(pcstr args) {

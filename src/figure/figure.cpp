@@ -20,8 +20,6 @@
 #include <map>
 #include "dev/debug.h"
 
-declare_console_command_p(killall, console_command_killall);
-
 struct figure_data_t {
     int created_sequence;
     bool initialized;
@@ -30,20 +28,21 @@ struct figure_data_t {
 
 figure_data_t g_figure_data = {0, false};
 
-figure *figure_get(int id) {
-    return g_figure_data.figures[id];
-}
-
-std::span<figure *> map_figures() {
-    return make_span(g_figure_data.figures.begin(), g_figure_data.figures.size());
-}
-
+declare_console_command_p(killall, console_command_killall);
 void console_command_killall(std::istream &, std::ostream &) {
     for (auto &f: map_figures()) {
         f->poof();
     }
 
     city_warning_show_console("Killed all walkers");
+}
+
+figure *figure_get(int id) {
+    return g_figure_data.figures[id];
+}
+
+std::span<figure *> map_figures() {
+    return make_span(g_figure_data.figures.begin(), g_figure_data.figures.size());
 }
 
 figure *figure_take_from_pool () {
@@ -204,6 +203,7 @@ bool figure::is_herd() {
 building* figure::home() {
     return building_get(home_building_id);
 };
+
 building* figure::destination() {
     return building_get(destination_building_id);
 };
