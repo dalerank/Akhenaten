@@ -29,6 +29,7 @@ int empire_city_get_route_id(int city_id);
 bool empire_can_import_resource(e_resource resource, bool check_if_open);
 bool empire_can_export_resource(e_resource resource, bool check_if_open);
 
+constexpr bool check_open_route = true;
 bool empire_can_produce_resource(e_resource resource, bool check_if_open);
 
 int empire_city_get_for_object(int empire_object_id);

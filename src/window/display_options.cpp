@@ -72,10 +72,11 @@ void ui::window_display_options::draw_foreground() {
 
     ui::begin_widget(screen_dialog_offset());
     pcstr fullscreen_text = (pcstr)lang_get_string(42, g_settings.is_fullscreen(e_setting_none) ? 2 : 1);
-    ui::button(fullscreen_text, {148, 76}, {224, 20}, FONT_LARGE_BLACK_ON_LIGHT, [this] (int, int) {
-        app_fullscreen(!g_settings.is_fullscreen(e_setting_none));
-        _close_cb();
-    });
+    ui::button(fullscreen_text, {148, 76}, {224, 20})
+        .onclick([this] (int, int) {
+            app_fullscreen(!g_settings.is_fullscreen(e_setting_none));
+            _close_cb();
+        });
 
     ui::imgok_button({344, 335}, [this] (int, int) {
         app_window_resize(selected_resolution);
