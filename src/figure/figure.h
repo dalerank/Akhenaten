@@ -521,6 +521,7 @@ public:
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
     virtual const animations_t &anim() const { static animations_t dummy; return dummy; }
     virtual const static_params &params() const { return params(type()); }
+    virtual void kill();
     inline const animation_t &anim(pcstr anim_key) const { return anim()[anim_key]; }
 
     static void params(e_figure_type, const static_params &);

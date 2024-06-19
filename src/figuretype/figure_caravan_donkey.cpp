@@ -81,7 +81,7 @@ bool figure_caravan_donkey::window_info_background(object_info &c) {
     lang_text_draw(21, city->name_id, c.offset.x + 40 + width, c.offset.y + 110, FONT_NORMAL_BLACK_ON_DARK);
 
     width = lang_text_draw(129, 1, c.offset.x + 40, c.offset.y + 132, FONT_NORMAL_BLACK_ON_DARK);
-    lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? 1200 : 800, c.offset.x + 40 + width, c.offset.y + 132, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw_amount(8, 10, 800, c.offset.x + 40 + width, c.offset.y + 132, FONT_NORMAL_BLACK_ON_DARK);
 
     int trader_id = f->trader_id;
     
@@ -90,15 +90,15 @@ bool figure_caravan_donkey::window_info_background(object_info &c) {
     case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING:
         text_id = 12;
         break;
+
     case FIGURE_ACTION_102_TRADE_CARAVAN_TRADING:
         text_id = 10;
         break;
+
     case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
-        if (trader_has_traded(trader_id))
-            text_id = 11;
-        else
-            text_id = 13;
+        text_id = trader_has_traded(trader_id) ? 11 : 13;
         break;
+
     default:
         text_id = 11;
         break;

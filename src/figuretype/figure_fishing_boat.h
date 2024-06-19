@@ -13,6 +13,7 @@ public:
     virtual void before_poof() override;
     virtual void figure_before_action() override {}
     virtual void figure_action() override;
+    virtual void kill() override;
     virtual e_figure_sound phrase() const override { return {FIGURE_FISHING_BOAT, "fishing"}; }
     //virtual e_overlay get_overlay() const override { return OVERLAY_APOTHECARY; }
     virtual sound_key phrase_key() const override { return {}; }

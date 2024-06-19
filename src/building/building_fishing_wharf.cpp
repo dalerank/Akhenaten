@@ -19,14 +19,17 @@
 #include "dev/debug.h"
 #include <iostream>
 
-declare_console_command_p(killfishboats, game_cheat_kill_fish_boats);
-
 struct fishing_wharf_model : public buildings::model_t<building_fishing_wharf> {
 } fishing_wharf_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_fishing_wharf);
 void config_load_building_fishing_wharf() {
     fishing_wharf_m.load();
+}
+
+declare_console_command_p(killfishboats, game_cheat_kill_fish_boats);
+void game_cheat_kill_fish_boats(std::istream &is, std::ostream &os) {
+    figure_valid_do([] (figure &f) { f.poof(); }, FIGURE_FISHING_BOAT);
 }
 
 void building_fishing_wharf::on_create(int orientation) {
@@ -167,8 +170,4 @@ void building_fishing_wharf::highlight_waypoints() {
 
     map_highlight_set(data.dock.dock_tiles[0], 3);
     map_highlight_set(data.dock.dock_tiles[1], 3);
-}
-
-void game_cheat_kill_fish_boats(std::istream &is, std::ostream &os) {
-    figure_valid_do([] (figure &f) { f.poof(); }, FIGURE_FISHING_BOAT);
 }

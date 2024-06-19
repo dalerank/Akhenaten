@@ -11,6 +11,9 @@
 #include "grid/figure.h"
 #include "js/js_game.h"
 
+#include "dev/debug.h"
+#include <iostream>
+
 figures::model_t<figure_trade_ship> trader_ship_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_trade_ship);
@@ -18,6 +21,12 @@ void config_load_figure_trade_ship() {
     trader_ship_m.load();
 }
 
+declare_console_command_p(sinkallships, game_cheat_sink_all_ships)
+void game_cheat_sink_all_ships(std::istream &is, std::ostream &os) {
+    figure_valid_do([] (figure &f) {
+        f.dcast()->kill();
+    }, FIGURE_TRADE_SHIP, FIGURE_FISHING_BOAT);
+}
 
 int figure_create_trade_ship(tile2i tile, int city_id) {
     figure* ship = figure_create(FIGURE_TRADE_SHIP, tile, DIR_0_TOP_RIGHT);
@@ -82,6 +91,10 @@ int figure_trade_ship::done_trading() {
         return 0;
     }
     return 1;
+}
+
+void figure_trade_ship::on_create() {
+    base.trader_id = trader_create();
 }
 
 void figure_trade_ship::figure_action() {
@@ -245,4 +258,12 @@ sound_key figure_trade_ship::phrase_key() const {
     } else {
         return "beatiful_journey"; // can't wait to trade
     }
+}
+
+void figure_trade_ship::kill() {
+    destination()->data.dock.trade_ship_id = 0;
+    base.set_home(0);
+    base.wait_ticks = 0;
+    //figure_shipwreck::create(tile);
+    figure_carrier::kill();
 }

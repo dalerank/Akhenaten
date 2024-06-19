@@ -88,10 +88,6 @@ figure* figure_create(e_figure_type type, tile2i tile, int dir) {
     f->name = figure_name_get(type, 0);
     f->map_figure_add();
 
-    if (type == FIGURE_TRADE_CARAVAN || type == FIGURE_TRADE_SHIP) {
-        f->trader_id = trader_create();
-    }
-
     f->dcast()->on_create();
 
     return f;
@@ -297,6 +293,11 @@ bool figure_impl::can_move_by_water() const {
 }
 
 static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;
+
+void figure_impl::kill() {
+    base.kill();
+}
+
 void figure_impl::params(e_figure_type e, const static_params &p) {
     if (!figure_impl_params) {
         figure_impl_params = new std::map<e_figure_type, const figure_impl::static_params *>();

@@ -137,14 +137,14 @@ static void draw_foreground(void) {
             //button_border_draw(btn_exp.x, btn_exp.y, btn_exp.width, 30, data.focus_button_id == 4);
             switch (trade_status) {
             default:
-                ui::button(ui::str(54, 40), {98 + 216, 221}, {268, 30})
+                ui::button(ui::str(54, 40), {98 + 216, 212}, {268, 30})
                     .onclick([] (int, int) {
                         city_resource_cycle_trade_export(g_resource_settings_data.resource);
                     });
                 break;
 
             case TRADE_STATUS_EXPORT_SURPLUS:
-                ui::button(ui::str(54, 44), {98 + 216, 221}, {268, 30})
+                ui::button(ui::str(54, 44), {98 + 216, 212}, {268, 30})
                     .onclick([] (int, int) {
                         city_resource_cycle_trade_export(g_resource_settings_data.resource);
                     });
@@ -152,7 +152,7 @@ static void draw_foreground(void) {
 
             case TRADE_STATUS_EXPORT:
                 text.printf("%s %u", ui::str(54, 20), trading_amount);
-                ui::button(text, {98 - 52, 212}, {268, 30}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelYCentered)
+                ui::button(text, {264 + 48, 212}, {268, 30}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelYCentered)
                     .onclick([] (int, int) {
                         city_resource_cycle_trade_import(g_resource_settings_data.resource);
                     });

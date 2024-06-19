@@ -78,6 +78,10 @@ void figure_trade_caravan::go_to_next_storageyard(tile2i src_tile, int distance_
     }
 }
 
+void figure_trade_caravan::on_create() {
+    base.trader_id = trader_create();
+}
+
 void figure_trade_caravan::figure_action() {
     int last_action_state = action_state();
     switch (action_state()) {

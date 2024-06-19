@@ -9,7 +9,7 @@ public:
     FIGURE_METAINFO(FIGURE_TRADE_CARAVAN, figure_trade_caravan);
     figure_trade_caravan(figure *f) : figure_trader(f) {}
 
-    virtual void on_create() override {}
+    virtual void on_create() override;
     virtual void figure_action() override;
     virtual e_figure_sound phrase() const override { return {FIGURE_TRADE_CARAVAN, "caravan"}; }
     virtual sound_key phrase_key() const override;

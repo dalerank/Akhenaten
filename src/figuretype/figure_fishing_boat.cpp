@@ -161,6 +161,14 @@ void figure_fishing_boat::figure_action() {
     }
 }
 
+void figure_fishing_boat::kill() {
+    home()->data.industry.fishing_boat_id = 0;
+    base.set_home(0);
+    base.wait_ticks = 0;
+    //figure_shipwreck::create(tile);
+    figure_impl::kill();
+}
+
 bool figure_fishing_boat::window_info_background(object_info &c) {
     painter ctx = game.painter();
     ImageDraw::img_generic(ctx, big_people_image(type()), c.offset + vec2i{28, 112});
