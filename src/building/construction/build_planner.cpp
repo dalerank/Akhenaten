@@ -200,10 +200,6 @@ static void add_building(building* b, int orientation, int variant) {
         add_temple_complex(b, orientation);
         break;
 
-    case BUILDING_DOCK:
-        map_water_add_building(b->id, b->tile, params.building_size, params.anim["base"].first_img() + orientation_rel);
-        break;
-
     case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
         add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1);
         map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), orientation);
@@ -1424,9 +1420,6 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     // update city building info with newly created
     // building for special/unique constructions
     switch (build_type) {
-    case BUILDING_DOCK:
-        city_buildings_add_dock();
-        break;
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:

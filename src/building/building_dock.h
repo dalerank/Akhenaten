@@ -12,6 +12,7 @@ public:
     virtual building_dock *dcast_dock() override { return this; }
 
     virtual void on_create(int orientation) override;
+    virtual void on_place(int orientation, int variant) override;
     virtual void on_destroy() override;
     virtual bool can_play_animation() const override;
     virtual void update_count() const;

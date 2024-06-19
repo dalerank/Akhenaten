@@ -36,6 +36,13 @@ static generic_button dock_order_buttons[] = {
 
 void building_dock::on_create(int orientation) {
     data.dock.orientation = orientation;
+
+    city_buildings_add_dock();
+}
+
+void building_dock::on_place(int orientation, int variant) {
+    int orientation_rel = city_view_relative_orientation(orientation);
+    map_water_add_building(id(), tile(), params().building_size, anim("base").first_img() + orientation_rel);
 }
 
 void building_dock::on_destroy() {
