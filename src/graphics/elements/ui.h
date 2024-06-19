@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "core/vec2i.h"
+#include "core/svector.h"
 #include "city/resource.h"
 
 #include "input/hotkey.h"
@@ -48,6 +49,7 @@ void icon(vec2i pos, e_resource img);
 void icon(vec2i pos, e_advisor advisor);
 int button_hover(const mouse *m);
 generic_button &button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, std::function<void(int, int)> cb = {});
+generic_button &button(const svector<pcstr,4> &labels, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, std::function<void(int, int)> cb = {});
 generic_button &link(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_WHITE_ON_DARK, UiFlags flags = UiFlags_None, std::function<void(int, int)> cb = {});
 generic_button &large_button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
 generic_button &button(uint32_t id);

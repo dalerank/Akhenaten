@@ -20,24 +20,11 @@
 static void button_help(int param1, int param2);
 static void button_ok(int param1, int param2);
 
-static void button_toggle_industry(int param1, int param2);
-static void button_toggle_stockpile(int param1, int param2);
 static void button_toggle_trade(int param1, int param2);
 
 static image_button resource_image_buttons[] = {
     {58 - 16, 332, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
     {558 + 16, 335, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_ok, button_none, 0, 0, 1}
-};
-
-static generic_button resource_trade_toggle_buttons[] = {
-    {98, 250, 432, 30, button_toggle_industry, button_none, 0, 0},
-    {98, 288, 432, 50, button_toggle_stockpile, button_none, 0, 0},
-    {98, 212, 432, 30, button_toggle_trade, button_none, 0, 0},
-};
-
-static generic_button resource_trade_ph_buttons[] = {
-    {98, 250, 432, 30, button_toggle_industry, button_none, 0, 0},
-    {98, 288, 432, 50, button_toggle_stockpile, button_none, 0, 0},
 };
 
 struct resource_settings_data {
@@ -191,27 +178,32 @@ static void draw_foreground(void) {
         }
     }
 
-    graphics_set_to_dialog();
-
     // toggle industry button
     if (building_count_industry_total(data.resource) > 0) {
-        button_border_draw(98, 250, 432, 30, data.focus_button_id == 1);
-        if (city_resource_is_mothballed(data.resource))
-            lang_text_draw_centered(54, 17, 114, 259, 400, FONT_NORMAL_BLACK_ON_LIGHT);
-        else
-            lang_text_draw_centered(54, 16, 114, 259, 400, FONT_NORMAL_BLACK_ON_LIGHT);
+        pcstr text = city_resource_is_mothballed(data.resource)
+                        ? ui::str(54, 17)
+                        : ui::str(54, 16);
+        ui::button(text, {98, 250}, {432, 30})
+            .onclick([] (int, int) {
+                auto &data = g_resource_settings_data;
+                if (building_count_industry_total(data.resource) > 0) {
+                    city_resource_toggle_mothballed(data.resource);
+                }
+            });
     }
 
     // stockpile button
-    button_border_draw(98, 288, 432, 50, data.focus_button_id == 2);
-    if (city_resource_is_stockpiled(data.resource)) {
-        lang_text_draw_centered(54, 26, 114, 296, 400, FONT_NORMAL_BLACK_ON_LIGHT);
-        lang_text_draw_centered(54, 27, 114, 316, 400, FONT_NORMAL_BLACK_ON_LIGHT);
-    } else {
-        lang_text_draw_centered(54, 28, 114, 296, 400, FONT_NORMAL_BLACK_ON_LIGHT);
-        lang_text_draw_centered(54, 29, 114, 316, 400, FONT_NORMAL_BLACK_ON_LIGHT);
-    }
+    auto text = city_resource_is_stockpiled(data.resource)
+                   ? svector<pcstr, 4>{ui::str(54, 26), ui::str(54, 27)}
+                   : svector<pcstr, 4>{ui::str(54, 28), ui::str(54, 29)};
 
+    ui::button(text, {98, 288}, {432, 50})
+        .onclick([] (int, int) {
+            auto &data = g_resource_settings_data;
+            city_resource_toggle_stockpiled(data.resource);
+        });
+
+    graphics_set_to_dialog();
     // help / back / ok buttons
     image_buttons_draw(0, 0, resource_image_buttons, 2);
 
@@ -241,15 +233,6 @@ static void button_ok(int param1, int param2) {
     window_go_back();
 }
 
-static void button_toggle_industry(int param1, int param2) {
-    auto &data = g_resource_settings_data;
-    if (building_count_industry_total(data.resource) > 0)
-        city_resource_toggle_mothballed(data.resource);
-}
-static void button_toggle_stockpile(int param1, int param2) {
-    auto &data = g_resource_settings_data;
-    city_resource_toggle_stockpiled(data.resource);
-}
 static void button_toggle_trade(int param1, int param2) {
     auto &data = g_resource_settings_data;
     city_resource_cycle_trade_status(data.resource);

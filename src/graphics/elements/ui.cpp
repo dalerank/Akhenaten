@@ -7,6 +7,7 @@
 #include "lang_text.h"
 #include "panel.h"
 #include "graphics/text.h"
+#include "core/svector.h"
 #include "game/game.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -89,6 +90,20 @@ generic_button &ui::link(pcstr label, vec2i pos, vec2i size, e_font font, UiFlag
     return btn;
 }
 
+template<typename T>
+void splitStringByNewline(const std::string &str, T &result) {
+    size_t start = 0;
+    size_t end = str.find('\n');
+
+    while (end != std::string::npos) {
+        result.push_back(str.substr(start, end - start));
+        start = end + 1;
+        end = str.find('\n', start);
+    }
+
+    result.push_back(str.substr(start));
+}
+
 generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFlags flags, std::function<void(int, int)> cb) {
     const vec2i offset = g_state.offset();
 
@@ -96,11 +111,40 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
     int focused = is_button_hover(g_state.buttons.back(), offset);
 
     button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, focused ? 1 : 0);
-    int symbolh = get_letter_height((uint8_t*)"H", font);
+    int symbolh = get_letter_height((uint8_t *)"H", font);
     if (!!(flags & UiFlags_LabelYCentered)) {
-        text_draw((uint8_t*)label, offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 4, font, 0);
+        text_draw((uint8_t *)label, offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 4, font, 0);
     } else {
         text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 + 4, size.x, font, 0);
+    }
+
+    auto &btn = g_state.buttons.back();
+    if (!!cb) {
+        btn.onclick(cb);
+    }
+    return btn;
+}
+
+generic_button &ui::button(const svector<pcstr,4> &labels, vec2i pos, vec2i size, e_font font, UiFlags flags, std::function<void(int, int)> cb) {
+    const vec2i offset = g_state.offset();
+
+    g_state.buttons.push_back({pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
+    int focused = is_button_hover(g_state.buttons.back(), offset);
+
+    button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, focused ? 1 : 0);
+    int symbolh = get_letter_height((uint8_t *)"H", font);
+    int labels_num = labels.size();
+    int startx = offset.y + pos.y + (size.y - (symbolh + 2) * labels_num) / 2 + 4;
+    if (!!(flags & UiFlags_LabelYCentered)) {
+        for (const auto &str : labels) {
+            text_draw((uint8_t *)str, offset.x + pos.x + 8, startx, font, 0);
+            startx += symbolh + 2;
+        }
+    } else {
+        for (const auto &str : labels) {
+            text_draw_centered((uint8_t *)str, offset.x + pos.x + 1, startx, size.x, font, 0);
+            startx += symbolh + 2;
+        }
     }
 
     auto &btn = g_state.buttons.back();
