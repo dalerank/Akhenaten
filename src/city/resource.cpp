@@ -178,11 +178,13 @@ void city_resource_cycle_trade_export(e_resource resource) {
         break;
     }
 }
+
 int city_resource_trading_amount(e_resource resource) {
     return city_data.resource.trading_amount[resource];
 }
+
 void city_resource_change_trading_amount(e_resource resource, int delta) {
-    city_data.resource.trading_amount[resource] = calc_bound(city_data.resource.trading_amount[resource] + delta, 0, 100);
+    city_data.resource.trading_amount[resource] = calc_bound(city_data.resource.trading_amount[resource] + delta, 0, 10000);
 }
 
 int city_resource_is_stockpiled(e_resource resource) {
