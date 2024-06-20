@@ -923,6 +923,12 @@ void city_t::environment_t::river_update_flotsam() {
         f->action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
         f->set_resource((e_resource)FLOTSAM_RESOURCE_IDS[i]);
         f->wait_ticks = FLOTSAM_WAIT_TICKS[i];
-        f->allow_move_type = EMOVE_FLOTSAM;
+        f->allow_move_type = EMOVE_DEEPWATER;
     }
+}
+
+void city_t::figures_update_day() {
+    figure_valid_do([] (figure &f) {
+        f.dcast()->update_day();
+    });
 }

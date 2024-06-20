@@ -374,7 +374,6 @@ public:
     void cross_country_advance();
 
     // actions.c
-    static void check_action_properties_lookup();
     void action_perform();
     void advance_action(short next_action);
     bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = ACTION_2_ROAMERS_RETURNING);
@@ -509,6 +508,7 @@ public:
     virtual int provide_service() { return 0; }
     virtual bool play_die_sound() { return false; }
     virtual void update_animation();
+    virtual void update_day() {}
     virtual bool can_move_by_water() const;
     virtual int y_correction(int y) const { return y; }
     virtual void cart_update_image() { base.cart_update_image(); }
@@ -593,6 +593,15 @@ template<typename ... Args, typename T>
 void figure_valid_do(T func, Args ... args) {
     for (auto *f: map_figures()) {
         if (f->is_valid() && figure_type_any_of(*f, args...)) {
+            func(*f);
+        }
+    }
+}
+
+template<typename ... Args, typename T>
+void figure_valid_do(T func) {
+    for (auto *f: map_figures()) {
+        if (f->is_valid()) {
             func(*f);
         }
     }

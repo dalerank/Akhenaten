@@ -419,6 +419,7 @@ struct city_t {
     void figures_add_kingdome_soldier();
     void figures_add_rioter(int is_attacking);
     void figures_add_soldier();
+    void figures_update_day();
     int figures_total_invading_enemies();
     bool figures_has_security_breach();
 

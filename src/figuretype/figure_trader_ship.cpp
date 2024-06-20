@@ -79,14 +79,6 @@ int figure_trade_ship::lost_queue() {
 bool figure_trade_ship::done_trading() {
     building* b = destination();
     if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_DOCK && b->num_workers > 0) {
-        for (int i = 0; i < 3; i++) {
-            if (b->data.dock.docker_ids[i]) {
-                figure* docker = figure_get(b->data.dock.docker_ids[i]);
-                if (docker->state == FIGURE_STATE_ALIVE && docker->action_state != FIGURE_ACTION_132_DOCKER_IDLING)
-                    return false;
-            }
-        }
-        base.trade_ship_failed_dock_attempts++;
         if (base.trade_ship_failed_dock_attempts >= 10) {
             base.trade_ship_failed_dock_attempts = 11;
             return true;
@@ -359,4 +351,15 @@ bool figure_trade_ship::window_info_background(object_info &c) {
     }
 
     return true;
+}
+
+void figure_trade_ship::update_day() {
+    building* b = destination();
+    for (const int docker_id: b->data.dock.docker_ids) {
+        figure* docker = figure_get(docker_id);
+        if (docker->state == FIGURE_STATE_ALIVE && docker->action_state != FIGURE_ACTION_132_DOCKER_IDLING) {
+            return;
+        }
+    }
+    base.trade_ship_failed_dock_attempts++;
 }

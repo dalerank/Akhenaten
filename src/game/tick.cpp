@@ -132,6 +132,7 @@ static void advance_day() {
     city_plague_update_day();
     g_city.environment.river_update_flotsam();
     city_buildings_update_day();
+    g_city.figures_update_day();
 
     tutorial_on_day_tick();
 }
