@@ -151,3 +151,7 @@ int figure_tax_collector::provide_service() {
 figure_sound_t figure_tax_collector::get_sound_reaction(pcstr key) const {
     return tax_collector_m.sounds[key];
 }
+
+const animations_t &figure_tax_collector::anim() const {
+    return tax_collector_m.anim;
+}

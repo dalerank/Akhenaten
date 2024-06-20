@@ -32,6 +32,7 @@ void game_cheat_sink_all_ships(std::istream &is, std::ostream &os) {
 int figure_trade_ship::create(tile2i tile, int city_id) {
     figure* ship = figure_create(FIGURE_TRADE_SHIP, tile, DIR_0_TOP_RIGHT);
     ship->empire_city_id = city_id;
+    ship->allow_move_type = EMOVE_BOAT;
     ship->action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
     ship->wait_ticks = 10;
     return ship->id;
@@ -235,9 +236,6 @@ void figure_trade_ship::figure_action() {
 
         break;
     }
-
-    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
-    image_set_animation(trader_ship_m.anim["work"]);
 }
 
 sound_key figure_trade_ship::phrase_key() const {
@@ -267,4 +265,28 @@ void figure_trade_ship::kill() {
     base.wait_ticks = 0;
     figure_shipwreck::create(tile());
     figure_carrier::kill();
+}
+
+void figure_trade_ship::update_animation() {
+    pcstr anim_key = "walk";
+    switch (action_state()) {
+    case FIGURE_ACTION_114_TRADE_SHIP_ANCHORED:
+    case FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE:
+        anim_key = "idle";
+        break;
+
+    case FIGURE_ACTION_149_CORPSE:
+        anim_key = "death";
+        break;
+    }
+
+    image_set_animation(anim_key);
+}
+
+void figure_trade_ship::poof() {
+    //
+}
+
+const animations_t &figure_trade_ship::anim() const {
+    return trader_ship_m.anim;
 }

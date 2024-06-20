@@ -591,7 +591,7 @@ static void draw_panel_buttons(const empire_city* city) {
 
     // trade button
     if (city && !city->is_open) {
-        if (empire_city_type_can_trade(city->type))
+        if (city->can_trade())
             button_border_draw((data.min_pos.x + data.max_pos.x - 500) / 2 + 30 + data.trade_button_offset_x,
                                data.max_pos.y - 49 + data.trade_button_offset_y,
                                generic_button_open_trade[0].width,

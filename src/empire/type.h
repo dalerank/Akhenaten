@@ -20,5 +20,3 @@ enum e_empire_city {
     EMPIRE_CITY_FOREIGN_TRADING = 5,  //     EMPIRE_CITY_VULNERABLE = 5
     EMPIRE_CITY_FOREIGN = 6           //              EMPIRE_CITY_FUTURE_ROMAN = 6,
 };
-
-bool empire_city_type_can_trade(int type);

@@ -30,17 +30,6 @@ enum E_EMPIRE {
 const static int EMPIRE_DATA_SIZE[2] = {12800, 15200};
 const char SCENARIO_FILE[2][2][100] = {{"c32.emp", "c3.emp"}, {"", "Pharaoh2.emp"}};
 
-bool empire_city_type_can_trade(int type) {
-    switch (type) {
-    case EMPIRE_CITY_PHARAOH_TRADING:
-    case EMPIRE_CITY_EGYPTIAN_TRADING:
-    case EMPIRE_CITY_FOREIGN_TRADING:
-        return true;
-    }
-    
-    return false;
-}
-
 void empire_map_t::check_scroll_boundaries() {
     int max_x = EMPIRE_SIZE.x - viewport_width;
     int max_y = EMPIRE_SIZE.y - viewport_height + 20;

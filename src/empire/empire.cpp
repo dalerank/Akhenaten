@@ -10,8 +10,19 @@
 #include "empire_object.h"
 
 #include "io/io_buffer.h"
+#include "dev/debug.h"
+#include <iostream>
 
 empire_t g_empire;
+
+declare_console_command_p(makeseatraders, game_cheat_make_sea_traders)
+void game_cheat_make_sea_traders(std::istream &is, std::ostream &os) {
+    for (auto &city : g_empire.get_cities()) {
+        if (city.in_use) {
+            city.is_sea_trade = true;
+        }
+    }
+};
 
 void empire_t::clear_cities_data() {
     memset(cities, 0, sizeof(cities));
@@ -26,7 +37,7 @@ empire_city* empire_t::city(int city_id) {
 
 bool empire_t::can_import_resource(e_resource resource, bool check_if_open) {
     for (const auto &city: cities) {
-        if (city.in_use && empire_city_type_can_trade(city.type)
+        if (city.in_use && city.can_trade()
             && (city.is_open || !check_if_open) && city.sells_resource[resource]) {
             return true;
         }
@@ -36,7 +47,7 @@ bool empire_t::can_import_resource(e_resource resource, bool check_if_open) {
 
 bool empire_t::can_export_resource(e_resource resource, bool check_if_open) {
     for (const auto &city: cities) {
-        if (city.in_use && empire_city_type_can_trade(city.type)
+        if (city.in_use && city.can_trade()
             && (city.is_open || !check_if_open) && city.buys_resource[resource]) {
             return true;
         }

@@ -409,9 +409,9 @@ figure_storageyard_cart = {
 
 figure_trade_ship = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:40, max_frames:3 },
-		death : { pack:PACK_SPR_MAIN, id:41, max_frames:3 },
-		idle : { pack:PACK_SPR_MAIN, id:42, max_frames:1 },
+		walk : { pack:PACK_SPR_MAIN, id:123, max_frames:4, duration:4 },
+		death : { pack:PACK_SPR_MAIN, id:124, max_frames:8 },
+		idle : { pack:PACK_SPR_MAIN, id:125, max_frames:1 },
 	},
 	sounds : {
 		looking_for_unload : {sound:"barge_e01.wav", group: 224, text:0},

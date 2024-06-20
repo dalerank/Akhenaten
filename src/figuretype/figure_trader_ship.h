@@ -19,6 +19,9 @@ public:
     virtual figure_trade_ship *dcast_trade_ship() override { return this; }
     virtual sound_key phrase_key() const override;
     virtual void kill() override;
+    virtual void update_animation() override;
+    virtual void poof() override;
+    virtual const animations_t &anim() const override;
 
     int lost_queue();
     int done_trading();

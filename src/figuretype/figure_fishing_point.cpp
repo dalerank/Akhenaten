@@ -4,6 +4,7 @@
 #include "core/random.h"
 #include "city/city.h"
 #include "dev/debug.h"
+#include "grid/terrain.h"
 
 #include <iostream>
 
@@ -71,6 +72,10 @@ void figure_fishing_point::update_animation() {
         image_set_animation(fishing_point_m.anim["point"]);
         break;
     }
+}
+
+bool figure_fishing_point::can_move_by_water() const {
+    return map_terrain_is(tile(), TERRAIN_DEEPWATER);
 }
 
 figure *figure_fishing_point::create(tile2i tile) {

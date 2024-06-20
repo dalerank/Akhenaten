@@ -24,6 +24,7 @@ struct empire_city {
     int trader_figure_ids[3];
 
     void remove_trader(int figure_id);
+    bool can_trade() const;
 
     void set_vulnerable() {
         type = EMPIRE_CITY_FOREIGN_TRADING;
