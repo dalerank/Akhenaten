@@ -22,6 +22,7 @@ public:
     virtual void update_animation() override;
     virtual void poof() override;
     virtual const animations_t &anim() const override;
+    virtual e_figure_sound phrase() const override { return {FIGURE_TRADE_SHIP, "barge"}; }
 
     int lost_queue();
     int done_trading();

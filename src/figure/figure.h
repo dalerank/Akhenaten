@@ -410,10 +410,8 @@ public:
     void javelin_action();
     void bolt_action();
     void ballista_action();
-    void shipwreck_action();
     void sheep_action();
     void hyena_action();
-    void hippo_action();
     void zebra_action();
     void spear_action();
     void hippodrome_horse_action();
@@ -449,9 +447,6 @@ public:
     void resume_activity_after_attack();
     void hit_opponent();
     void figure_combat_handle_attack();
-    //    int figure_combat_get_target_for_soldier(int x, int y, int max_distance);
-    //    int figure_combat_get_target_for_wolf(int x, int y, int max_distance);
-    //    int figure_combat_get_target_for_enemy(int x, int y);
     void figure_combat_attack_figure_at(int grid_offset);
 
     // missile.c

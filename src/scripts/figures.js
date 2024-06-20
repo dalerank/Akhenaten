@@ -141,10 +141,24 @@ figure_priest = {
 
 figure_ostrich = {
 	animations : {
-		idle : { pos : [0, 0], pack:PACK_SPR_MAIN, id:160, max_frames:8 },
-		eating : { pos : [0, 0], pack:PACK_SPR_MAIN, id:159, max_frames:7 },
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:156, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false },
+		walk : { pack:PACK_SPR_MAIN, id:156, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false },
+		eating : { pack:PACK_SPR_MAIN, id:159, max_frames:7 },
+		idle : { pack:PACK_SPR_MAIN, id:160, max_frames:8 },
+	},
+	terrain_usage : TERRAIN_USAGE_ANIMAL,
+}
+
+figure_hippo = {
+  animations : {
+		walk : { pack:PACK_SPR_MAIN, id:22, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:23, max_frames:8, duration:3, loop:false },
+		attack : { pack:PACK_SPR_MAIN, id:24, max_frames:7 },
+		sweem : { pack:PACK_SPR_AMBIENT, id:25, max_frames:8 },
+		sweem_attack : { pack:PACK_SPR_AMBIENT, id:26, max_frames:8 },
+		sweem_idle : { pack:PACK_SPR_AMBIENT, id:27, max_frames:8 },
+		eating : { pack:PACK_SPR_AMBIENT, id:28, max_frames:8 },
+		dance : { pack:PACK_SPR_AMBIENT, id:29, max_frames:8 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }

@@ -79,10 +79,8 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_STONEMASON, 1, 0, 0, 0},
   {FIGURE_CROCODILE, TERRAIN_USAGE_ROADS, 0, 0, 0},
   {FIGURE_HYENA, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HYENA_WALK},
-  {FIGURE_HIPPO, 1, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_HIPPO_WALK},
   {FIGURE_LABORER, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_NONE},
   {FIGURE_SLED, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_NONE},
-  {FIGURE_WATER_CARRIER, 1, 0, 0, 0, IMG_NONE},
   {FIGURE_CONSTABLE, 1, TERRAIN_USAGE_ROADS, 640, GROUP_FIGURE_POLICEMAN},
   {FIGURE_MAGISTRATE, 1, 0, 0, 0, IMG_NONE},
   {FIGURE_FESTIVAL_PRIEST, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
@@ -428,7 +426,6 @@ void figure::action_perform() {
         case FIGURE_CHARIOR_RACER: hippodrome_horse_action(); break;
         case FIGURE_HUNTER_ARROW: arrow_action(); break;
         case FIGURE_GOVERNOR: governor_action(); break;
-        case FIGURE_HIPPO: hippo_action(); break;
         case FIGURE_SLED_PULLER: sled_puller_action(); break;
         case FIGURE_HYENA: hyena_action(); break;
 

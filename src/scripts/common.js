@@ -174,6 +174,7 @@ var figure_fireman = {}
 var figure_water_carrier = {}
 var figure_priest = {}
 var figure_ostrich = {}
+var figure_hippo = {}
 var figure_immigrant = {}
 var figure_worker = {}
 var figure_architector = {}

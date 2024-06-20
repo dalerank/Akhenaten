@@ -171,10 +171,6 @@ bool figure::is_boat() {
 }
 
 bool figure::can_move_by_water() {
-    switch (type) {   
-    case FIGURE_HIPPO:
-        return !map_terrain_is(tile.grid_offset(), TERRAIN_DEEPWATER);
-    }
     return dcast()->can_move_by_water();
 }
 

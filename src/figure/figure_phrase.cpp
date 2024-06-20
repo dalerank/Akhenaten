@@ -27,7 +27,6 @@
 
 static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "artisan"},
-    {FIGURE_NONE, "barge"},
     {FIGURE_NONE, "carpenter"},
     {FIGURE_NONE, "desease"},
     {FIGURE_EMBALMER, "embalmer"},
@@ -40,7 +39,6 @@ static e_figure_sound g_figure_sounds[] = {
     {FIGURE_NONE, "transport"},
     {FIGURE_NONE, "vagrant"},
     {FIGURE_NONE, "warship"},
-    {FIGURE_NONE, "woodcutter"},
     {FIGURE_NONE, "zookeeper"}
 };
 
