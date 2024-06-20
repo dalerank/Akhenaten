@@ -12,7 +12,7 @@
 #include "city/resource.h"
 #include "city/trade.h"
 #include "core/calc.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "empire/empire_map.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
@@ -122,7 +122,8 @@ void figure_trade_caravan::figure_action() {
             if (can_buy(destination(), base.empire_city_id)) {
                 e_resource resource = trader_get_buy_resource(destination(), base.empire_city_id, one_operation_amount);
                 if (resource) {
-                    trade_route_increase_traded(empire_city_get_route_id(base.empire_city_id), resource, one_operation_amount);
+                    int route_id = g_empire.city(base.empire_city_id)->route_id;
+                    trade_route_increase_traded(route_id, resource, one_operation_amount);
                     trader_record_bought_resource(base.trader_id, resource);
                     trader_buy(one_operation_amount);
                 } else {
@@ -135,7 +136,8 @@ void figure_trade_caravan::figure_action() {
             if (move_on > 0 && can_sell(destination(), base.empire_city_id)) {
                 e_resource resource = trader_get_sell_resource(destination(), base.empire_city_id);
                 if (resource) {
-                    trade_route_increase_traded(empire_city_get_route_id(base.empire_city_id), resource, one_operation_amount);
+                    int route_id = g_empire.city(base.empire_city_id)->route_id;
+                    trade_route_increase_traded(route_id, resource, one_operation_amount);
                     trader_record_sold_resource(base.trader_id, resource);
                     trader_sell(one_operation_amount);
                 } else {

@@ -6,11 +6,12 @@
 #include "city/labor.h"
 #include "city/resource.h"
 #include "city/warning.h"
+#include "city/city.h"
 #include "city/warnings.h"
 #include "graphics/window.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 
 #include "js/js_game.h"
 #include "dev/debug.h"
@@ -65,9 +66,9 @@ void building_papyrus_maker::on_place_checks() {
     }
 
     building_construction_warning_show(WARNING_NEED_REEDS);
-    if (empire_can_produce_resource(RESOURCE_REEDS, true)) {
+    if (g_city.can_produce_resource(RESOURCE_REEDS)) {
         building_construction_warning_show(WARNING_BUILD_REEDS_GATHERER);
-    } else if (!empire_can_import_resource(RESOURCE_REEDS, true)) {
+    } else if (!g_empire.can_import_resource(RESOURCE_REEDS, true)) {
         building_construction_warning_show(WARNING_INSTRUCT_OVERSEER_TO_IMPORT_REED);
     } else if (city_resource_trade_status(RESOURCE_REEDS) != TRADE_STATUS_IMPORT) {
         building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT_REED);

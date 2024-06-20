@@ -7,6 +7,7 @@
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
 
+#include "empire/empire.h"
 #include "empire/empire_map.h"
 #include "empire/trade_prices.h"
 
@@ -18,7 +19,6 @@
 #include "graphics/graphics.h"
 #include "game/game.h"
 #include "graphics/elements/lang_text.h"
-#include "empire/empire_city.h"
 
 #include "core/profiler.h"
 
@@ -76,7 +76,7 @@ figure* figure_caravan_donkey::get_head_of_caravan() {
 bool figure_caravan_donkey::window_info_background(object_info &c) {
     painter ctx = game.painter();
     figure* f = get_head_of_caravan();
-    const empire_city* city = empire_city_get(f->empire_city_id);
+    const empire_city* city = g_empire.city(f->empire_city_id);
     int width = lang_text_draw(64, f->type, c.offset.x + 40, c.offset.y + 110, FONT_NORMAL_BLACK_ON_DARK);
     lang_text_draw(21, city->name_id, c.offset.x + 40 + width, c.offset.y + 110, FONT_NORMAL_BLACK_ON_DARK);
 

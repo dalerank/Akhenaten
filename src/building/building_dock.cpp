@@ -7,7 +7,7 @@
 #include "city/buildings.h"
 #include "city/resource.h"
 #include "core/profiler.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "grid/figure.h"
 #include "grid/grid.h"
 #include "grid/sprite.h"
@@ -337,7 +337,7 @@ int building_dock_accepts_ship(int ship_id, int dock_id) {
 
     figure* f = figure_get(ship_id);
 
-    empire_city* city = empire_city_get(f->empire_city_id);
+    empire_city* city = g_empire.city(f->empire_city_id);
     for (int resource = RESOURCE_GRAIN; resource < RESOURCES_MAX; resource++) {
         if (city->sells_resource[resource] || city->buys_resource[resource]) {
             if (!dock->is_good_accepted(resource - 1)) {

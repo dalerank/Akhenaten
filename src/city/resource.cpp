@@ -9,7 +9,7 @@
 #include "graphics/window.h"
 #include "core/calc.h"
 #include "core/profiler.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "game/tutorial.h"
 #include "grid/road_access.h"
 #include "scenario/scenario.h"
@@ -127,12 +127,12 @@ void city_resource_cycle_trade_status(e_resource resource) {
         city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
 
     if (city_data.resource.trade_status[resource] == TRADE_STATUS_IMPORT
-        && !empire_can_import_resource(resource, true)) {
+        && !g_empire.can_import_resource(resource, true)) {
         city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT;
     }
 
     if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT
-        && !empire_can_export_resource(resource, true)) {
+        && !g_empire.can_export_resource(resource, true)) {
         city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
     }
 
@@ -143,7 +143,7 @@ void city_resource_cycle_trade_status(e_resource resource) {
 
 void city_resource_cycle_trade_import(e_resource resource) {
     // no sellers?
-    if (!empire_can_import_resource(resource, true))
+    if (!g_empire.can_import_resource(resource, true))
         return;
 
     switch (city_data.resource.trade_status[resource]) {
@@ -161,7 +161,7 @@ void city_resource_cycle_trade_import(e_resource resource) {
 
 void city_resource_cycle_trade_export(e_resource resource) {
     // no buyers?
-    if (!empire_can_export_resource(resource, true))
+    if (!g_empire.can_export_resource(resource, true))
         return;
 
     switch (city_data.resource.trade_status[resource]) {
@@ -169,10 +169,12 @@ void city_resource_cycle_trade_export(e_resource resource) {
         city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT_SURPLUS;
         city_data.resource.stockpiled[resource] = false;
         break;
+
     case TRADE_STATUS_EXPORT_SURPLUS:
         city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT;
         city_data.resource.stockpiled[resource] = false;
         break;
+
     case TRADE_STATUS_EXPORT:
         city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
         break;
@@ -287,7 +289,7 @@ void city_resource_determine_available() {
     g_available_data.market_goods_list.size = 0;
 
     for (e_resource i = RESOURCE_FOOD_MIN; i < RESOURCES_FOODS_MAX; i = (e_resource)(i + 1)) {
-        if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false)) {
+        if (g_city.can_produce_resource(i) || g_empire.can_import_resource(i, false)) {
             const int food_index = g_available_data.food_list.size;
             g_available_data.food_list.items[food_index] = i;
             g_available_data.food_list.size++;
@@ -298,7 +300,7 @@ void city_resource_determine_available() {
         }
     }
     for (e_resource i = RESOURCE_MIN; i < RESOURCES_MAX; i = (e_resource)(i + 1)) {
-        if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false)) {
+        if (g_city.can_produce_resource(i) || g_empire.can_import_resource(i, false)) {
             g_available_data.resource_list.items[g_available_data.resource_list.size++] = i;
             switch (i) {
             case RESOURCE_POTTERY:

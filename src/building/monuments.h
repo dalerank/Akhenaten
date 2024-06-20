@@ -29,7 +29,7 @@ int building_monument_progress(building *b);
 bool building_monument_has_labour_problems(building *b);
 int building_monument_working(e_building_type type);
 bool building_monument_requires_resource(e_building_type type, e_resource resource);
-int building_monument_has_required_resources_to_build(e_building_type type);
+bool building_monument_has_required_resources_to_build(e_building_type type);
 int building_monument_needs_resource(building *b, e_resource resource);
 int building_monument_needs_resources(e_building_type type, e_resource resource, int phase);
 int building_monument_needs_bricklayers(e_building_type type, int phase);

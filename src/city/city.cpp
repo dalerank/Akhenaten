@@ -3,13 +3,19 @@
 #include "city/constants.h"
 #include "city/city.h"
 #include "city/gods.h"
+#include "city/trade.h"
+#include "city/buildings.h"
 #include "grid/water.h"
 #include "game/difficulty.h"
 #include "scenario/scenario.h"
 #include "core/game_environment.h"
 #include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "io/io_buffer.h"
+#include "empire/trade_route.h"
 #include "figuretype/figure_fishing_point.h"
+#include "figuretype/figure_kingdome_trader.h"
+#include "figuretype/figure_trader_ship.h"
 
 #include <core/string.h>
 #include <string.h>
@@ -83,6 +89,89 @@ int city_t::allowed_foods(int i) {
     return resource.food_types_allowed[i];
 }
 
+bool city_t::generate_trader_from(int city_id, empire_city &city) {
+    if (g_city.religion.ra_no_traders_months_left > 0) {
+        return false;
+    }
+
+    int max_traders = 0;
+    int num_resources = 0;
+    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        if (city.buys_resource[r] || city.sells_resource[r]) {
+            ++num_resources;
+            int trade_limit = trade_route_limit(city.route_id, r);
+            if (trade_limit >= 1500 && trade_limit < 2500) {
+                max_traders += 1;
+            } else if (trade_limit >= 2500 && trade_limit < 4000) {
+                max_traders += 2;
+            } else if (trade_limit >= 4000) {
+                max_traders += 3;
+            }
+        }
+    }
+
+    if (num_resources > 1) {
+        if (max_traders % num_resources)
+            max_traders = max_traders / num_resources + 1;
+        else
+            max_traders = max_traders / num_resources;
+    }
+
+    if (max_traders <= 0) {
+        return false;
+    }
+
+    int index;
+    if (max_traders == 1) {
+        if (!city.trader_figure_ids[0])
+            index = 0;
+        else
+            return false;
+    } else if (max_traders == 2) {
+        if (!city.trader_figure_ids[0])
+            index = 0;
+        else if (!city.trader_figure_ids[1])
+            index = 1;
+        else
+            return false;
+    } else { // 3
+        if (!city.trader_figure_ids[0])
+            index = 0;
+        else if (!city.trader_figure_ids[1])
+            index = 1;
+        else if (!city.trader_figure_ids[2])
+            index = 2;
+        else
+            return false;
+    }
+
+    if (city.trader_entry_delay > 0) {
+        city.trader_entry_delay--;
+        return false;
+    }
+
+    city.trader_entry_delay = city.is_sea_trade ? 30 : 4;
+
+    if (city.is_sea_trade) {
+        // generate ship
+        if (city_buildings_has_working_dock() && scenario_map_has_river_entry()
+            && !city_trade_has_sea_trade_problems()) {
+            tile2i river_entry = scenario_map_river_entry();
+            city.trader_figure_ids[index] = figure_trade_ship::create(river_entry, city_id);
+            return true;
+        }
+    } else {
+        // generate caravan and donkeys
+        if (!city_trade_has_land_trade_problems()) {
+            // caravan head
+            tile2i& entry = g_city.map.entry_point;
+            city.trader_figure_ids[index] = figure_create_trade_caravan(entry, city_id);
+            return true;
+        }
+    }
+    return false;
+}
+
 bool city_is_food_allowed(int resource) {
     bool result = false;
     for (int i = 0; i < 4; i++) {
@@ -154,10 +243,53 @@ void city_t::fishing_points_t::clear() {
     }
 }
 
+bool city_t::can_produce_resource(e_resource resource) {
+    for (const auto &city: g_empire.get_cities()) {
+        if (city.in_use && (city.type == EMPIRE_CITY_OURS)) {
+            if (city.sells_resource[resource]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void city_t::set_produce_resource(e_resource resource, bool v) {
+    for (auto &city: g_empire.get_cities()) {
+        if (city.in_use && (city.type == EMPIRE_CITY_OURS)) {
+            city.sells_resource[resource] = v;
+            break;
+        }
+    }
+}
+
+void city_t::update_allowed_resources() {
+    int food_index = 0;
+    for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_FOODS_MAX; ++resource) {
+        int can_do_food_x = g_city.can_produce_resource(resource);
+        if (can_do_food_x) {
+            g_city.set_allowed_food(food_index, resource);
+            food_index++;
+        }
+    }
+}
+
+bool city_t::available_resource(e_resource resource) {
+    e_resource raw_resource = get_raw_resource(resource);
+    // finished goods: check imports of raw materials
+    if (raw_resource != resource && g_empire.can_import_resource(raw_resource, false)) {
+        return true;
+    }
+
+    // check if we can produce the raw materials
+    return can_produce_resource(raw_resource);
+}
+
+
 void city_t::fishing_points_t::update(int points_num) {
     clear();
 
-    if (!can_city_produce_resource(RESOURCE_FISH)) {
+    if (!g_city.can_produce_resource(RESOURCE_FISH)) {
         return;
     }
 

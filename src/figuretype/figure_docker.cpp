@@ -8,7 +8,7 @@
 #include "city/trade.h"
 #include "core/calc.h"
 #include "core/game_environment.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "empire/empire_map.h"
 #include "empire/trade_route.h"
 #include "figure/combat.h"
@@ -45,7 +45,7 @@ bool figure_docker::try_import_resource(building* b, e_resource resource, int ci
         return false;
     }
 
-    int route_id = empire_city_get_route_id(city_id);
+    int route_id = g_empire.city(city_id)->route_id;
     // try existing storage bay with the same resource
     building_storage_room* space = warehouse->room();
     while (space) {
@@ -82,7 +82,8 @@ int figure_docker::try_export_resource(building* b, e_resource resource, int cit
     building_storage_room* space = warehouse->room();
     while (space) {
         if (space->stored_full_amount && space->base.subtype.warehouse_resource_id == resource) {
-            trade_route_increase_traded(empire_city_get_route_id(city_id), resource, 100);
+            int route_id = g_empire.city(city_id)->route_id;
+            trade_route_increase_traded(route_id, resource, 100);
             space->remove_export(resource);
             return 1;
         }

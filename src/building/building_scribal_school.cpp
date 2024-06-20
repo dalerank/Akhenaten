@@ -11,7 +11,8 @@
 #include "city/labor.h"
 #include "city/resource.h"
 #include "city/warnings.h"
-#include "empire/empire_city.h"
+#include "city/city.h"
+#include "empire/empire.h"
 
 #include "widget/city/ornaments.h"
 
@@ -56,9 +57,9 @@ void building_scribal_school::on_place_checks() {
     }
 
     building_construction_warning_show(WARNING_PAPYRUS_NEEDED);
-    if (empire_can_produce_resource(RESOURCE_PAPYRUS, true)) {
+    if (g_city.can_produce_resource(RESOURCE_PAPYRUS)) {
         building_construction_warning_show(WARNING_BUILD_PAPYRUS_MAKER);
-    } else if (!empire_can_import_resource(RESOURCE_PAPYRUS, true)) {
+    } else if (!g_empire.can_import_resource(RESOURCE_PAPYRUS, true)) {
         building_construction_warning_show(WARNING_INSTRUCT_OVERSEER_TO_IMPORT_PAPYRUS);
     } else if (city_resource_trade_status(RESOURCE_PAPYRUS) != TRADE_STATUS_IMPORT) {
         building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT_PAPYRUS);

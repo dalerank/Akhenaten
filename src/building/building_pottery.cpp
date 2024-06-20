@@ -5,7 +5,8 @@
 #include "city/labor.h"
 #include "city/resource.h"
 #include "city/warnings.h"
-#include "empire/empire_city.h"
+#include "city/city.h"
+#include "empire/empire.h"
 
 #include "widget/city/ornaments.h"
 #include "graphics/window.h"
@@ -42,9 +43,9 @@ void building_pottery::on_place_checks() {
     }
 
     building_construction_warning_show(WARNING_CLAY_NEEDED);
-    if (empire_can_produce_resource(RESOURCE_CLAY, true))
+    if (g_city.can_produce_resource(RESOURCE_CLAY))
         building_construction_warning_show(WARNING_BUILD_CLAY_PIT);
-    else if (!empire_can_import_resource(RESOURCE_CLAY, true))
+    else if (!g_empire.can_import_resource(RESOURCE_CLAY, true))
         building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT);
     else if (city_resource_trade_status(RESOURCE_CLAY) != TRADE_STATUS_IMPORT)
         building_construction_warning_show(WARNING_TRADE_IMPORT_RESOURCE);

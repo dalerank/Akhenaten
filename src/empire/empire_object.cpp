@@ -3,7 +3,7 @@
 #include "core/calc.h"
 #include "core/log.h"
 #include "core/game_environment.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "graphics/image.h"
@@ -100,7 +100,7 @@ static void fix_image_ids(void) {
 
 void empire_object_init_cities() {
     auto& objects = g_empire_objects;
-    empire_city_clear_all();
+    g_empire.clear_cities_data();
     //    int route_index = 1;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (!objects[i].in_use || objects[i].obj.type != EMPIRE_OBJECT_CITY)
@@ -111,7 +111,7 @@ void empire_object_init_cities() {
             obj->obj.trade_route_id = 0;
         if (obj->obj.trade_route_id >= MAX_ROUTES)
             obj->obj.trade_route_id = MAX_ROUTES - 1;
-        empire_city* city = empire_city_get(obj->city_name_id);
+        empire_city* city = g_empire.city(obj->city_name_id);
         city->in_use = 1;
         city->type = obj->city_type;
         city->name_id = obj->city_name_id;
@@ -266,7 +266,8 @@ bool empire_object_city_buys_resource(int object_id, e_resource resource, bool f
         return false;
     } 
 
-    const empire_city* city = empire_city_get(empire_city_get_for_object(object_id));
+    int city_id = g_empire.get_city_for_object(object_id);
+    const empire_city* city = g_empire.city(city_id);
     return city->buys_resource[resource];
 }
 
@@ -274,6 +275,7 @@ bool empire_object_city_sells_resource(int object_id, e_resource resource, bool 
     auto& objects = g_empire_objects;
     if (object_id == -1)
         return false;
+
     if (from_raw_object) {
         const full_empire_object* object = &objects[object_id];
         for (int i = 0; i < EMPIRE_OBJ_MAX_SOLD_RESOURCES; i++) {
@@ -283,7 +285,8 @@ bool empire_object_city_sells_resource(int object_id, e_resource resource, bool 
         return false;
     } 
     
-    const empire_city* city = empire_city_get(empire_city_get_for_object(object_id));
+    int city_id = g_empire.get_city_for_object(object_id);
+    const empire_city* city = g_empire.city(city_id);
     return city->sells_resource[resource];
 }
 

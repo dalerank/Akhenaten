@@ -1,7 +1,7 @@
 #include "empire.h"
 
 #include "core/game_environment.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "empire/empire_map.h"
 #include "empire/empire_object.h"
 #include "empire/trade_route.h"
@@ -53,7 +53,7 @@ static void init(void) {
     data.selected_button = 0;
     int selected_object = g_empire_map.selected_object();
     if (selected_object)
-        data.selected_city = empire_city_get_for_object(selected_object - 1);
+        data.selected_city = g_empire.get_city_for_object(selected_object - 1);
     else {
         data.selected_city = 0;
     }
@@ -134,7 +134,8 @@ static void draw_empire_object(const empire_object* obj) {
     }
 
     if (obj->type == EMPIRE_OBJECT_CITY) {
-        const empire_city* city = empire_city_get(empire_city_get_for_object(obj->id));
+        int city_id = g_empire.get_city_for_object(obj->id);
+        const empire_city* city = g_empire.city(city_id);
         if (city->type == EMPIRE_CITY_EGYPTIAN || city->type == EMPIRE_CITY_FOREIGN) {
             image_id = image_id_from_group(GROUP_EDITOR_EMPIRE_FOREIGN_CITY);
         }
@@ -261,8 +262,8 @@ static void draw_foreground(void) {
     if (selected_object) {
         const empire_object* object = empire_object_get(selected_object - 1);
         if (object->type == EMPIRE_OBJECT_CITY) {
-            data.selected_city = empire_city_get_for_object(object->id);
-            city = empire_city_get(data.selected_city);
+            data.selected_city = g_empire.get_city_for_object(object->id);
+            city = g_empire.city(data.selected_city);
         }
     }
     draw_panel_buttons(city);
@@ -312,7 +313,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
             int selected_object = g_empire_map.selected_object();
             if (selected_object) {
                 if (empire_object_get(selected_object - 1)->type == EMPIRE_OBJECT_CITY)
-                    data.selected_city = empire_city_get_for_object(selected_object - 1);
+                    data.selected_city = g_empire.get_city_for_object(selected_object - 1);
 
             } else if (input_go_back_requested(m, h))
                 window_editor_map_show();

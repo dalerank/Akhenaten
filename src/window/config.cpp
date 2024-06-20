@@ -482,8 +482,8 @@ static void toggle_resource(int id, int param2) {
         return;
     }
 
-    bool can_produce = !can_city_produce_resource(resource);
-    set_city_produce_resource(resource, can_produce);
+    bool can_produce = !g_city.can_produce_resource(resource);
+    g_city.set_produce_resource(resource, can_produce);
 
     if (resource == RESOURCE_FISH) {
         if (can_produce) {
@@ -550,18 +550,18 @@ static bool is_config_option_enabled(int option) {
     switch (option) {
     case CONFIG_GP_CH_CITY_HAS_ANIMALS: return g_scenario_data.env.has_animals;
     case CONFIG_GP_CH_FLOTSAM_ENABLED: return g_scenario_data.env.flotsam_enabled;
-    case CONFIG_GP_CH_RESOURCE_TIMBER: return can_city_produce_resource(RESOURCE_TIMBER);
-    case CONFIG_GP_CH_RESOURCE_COPPER: return can_city_produce_resource(RESOURCE_COPPER);
-    case CONFIG_GP_CH_RESOURCE_REED: return can_city_produce_resource(RESOURCE_REEDS);
-    case CONFIG_GP_CH_RESOURCE_FISH: return can_city_produce_resource(RESOURCE_FISH);
-    case CONFIG_GP_CH_RESOURCE_CHICKPEAS: return can_city_produce_resource(RESOURCE_CHICKPEAS);
-    case CONFIG_GP_CH_RESOURCE_POMEGRANADES: return can_city_produce_resource(RESOURCE_POMEGRANATES);
-    case CONFIG_GP_CH_RESOURCE_LETTUCE: return can_city_produce_resource(RESOURCE_LETTUCE);
-    case CONFIG_GP_CH_RESOURCE_FIGS: return can_city_produce_resource(RESOURCE_FIGS);
-    case CONFIG_GP_CH_RESOURCE_GRAIN: return can_city_produce_resource(RESOURCE_GRAIN);
-    case CONFIG_GP_CH_RESOURCE_MEAT: return can_city_produce_resource(RESOURCE_MEAT);
-    case CONFIG_GP_CH_RESOURCE_PAPYRUS: return can_city_produce_resource(RESOURCE_PAPYRUS);
-    case CONFIG_GP_CH_RESOURCE_BRICKS: return can_city_produce_resource(RESOURCE_BRICKS);
+    case CONFIG_GP_CH_RESOURCE_TIMBER: return g_city.can_produce_resource(RESOURCE_TIMBER);
+    case CONFIG_GP_CH_RESOURCE_COPPER: return g_city.can_produce_resource(RESOURCE_COPPER);
+    case CONFIG_GP_CH_RESOURCE_REED: return g_city.can_produce_resource(RESOURCE_REEDS);
+    case CONFIG_GP_CH_RESOURCE_FISH: return g_city.can_produce_resource(RESOURCE_FISH);
+    case CONFIG_GP_CH_RESOURCE_CHICKPEAS: return g_city.can_produce_resource(RESOURCE_CHICKPEAS);
+    case CONFIG_GP_CH_RESOURCE_POMEGRANADES: return g_city.can_produce_resource(RESOURCE_POMEGRANATES);
+    case CONFIG_GP_CH_RESOURCE_LETTUCE: return g_city.can_produce_resource(RESOURCE_LETTUCE);
+    case CONFIG_GP_CH_RESOURCE_FIGS: return g_city.can_produce_resource(RESOURCE_FIGS);
+    case CONFIG_GP_CH_RESOURCE_GRAIN: return g_city.can_produce_resource(RESOURCE_GRAIN);
+    case CONFIG_GP_CH_RESOURCE_MEAT: return g_city.can_produce_resource(RESOURCE_MEAT);
+    case CONFIG_GP_CH_RESOURCE_PAPYRUS: return g_city.can_produce_resource(RESOURCE_PAPYRUS);
+    case CONFIG_GP_CH_RESOURCE_BRICKS: return g_city.can_produce_resource(RESOURCE_BRICKS);
 
     case CONFIG_GP_CH_BUILDING_WOOD_CUTTER: return building_menu_is_building_enabled(BUILDING_WOOD_CUTTERS);
     case CONFIG_GP_CH_BUILDING_COPPER_MINE: return building_menu_is_building_enabled(BUILDING_COPPER_MINE);

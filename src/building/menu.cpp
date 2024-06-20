@@ -1,7 +1,8 @@
 #include "menu.h"
 
 #include "city/buildings.h"
-#include "empire/empire_city.h"
+#include "city/city.h"
+#include "empire/empire.h"
 #include "game/tutorial.h"
 #include "config/config.h"
 #include "scenario/scenario.h"
@@ -194,7 +195,7 @@ static void enable_if_allowed(int type) {
 }
 
 static int disable_raw_if_unavailable(int type, e_resource resource) {
-    if (!empire_can_produce_resource(resource, false)) {
+    if (!g_city.can_produce_resource(resource)) {
         building_menu_toggle_building(type, false);
         return 0;
     }
@@ -202,12 +203,12 @@ static int disable_raw_if_unavailable(int type, e_resource resource) {
 }
 
 static int disable_crafted_if_unavailable(int type, e_resource resource, e_resource resource2 = RESOURCE_NONE) {
-    if (!empire_can_produce_resource(resource, false)) {
+    if (!g_city.can_produce_resource(resource)) {
         building_menu_toggle_building(type, false);
         return 0;
     }
 
-    if (resource2 != RESOURCE_NONE && !empire_can_produce_resource(resource2, false)) {
+    if (resource2 != RESOURCE_NONE && !g_city.can_produce_resource(resource2)) {
         building_menu_toggle_building(type, false);
         return 0;
     }

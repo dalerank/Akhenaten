@@ -6,7 +6,7 @@
 #include "core/random.h"
 #include "core/calc.h"
 #include "core/svector.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "figure/figure_names.h"
 #include "figure/route.h"
 #include "figure/trader.h"
@@ -110,8 +110,10 @@ void figure::figure_delete_UNSAFE() {
         g_city.kingdome.mark_soldier_killed();
         break;
     }
-    if (empire_city_id)
-        empire_city_remove_trader(empire_city_id, id);
+
+    if (empire_city_id) {
+        g_empire.city(empire_city_id)->remove_trader(id);
+    }
 
     if (has_immigrant_home()) {
         auto bhome = building_get(immigrant_home_building_id);

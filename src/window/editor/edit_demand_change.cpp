@@ -1,7 +1,7 @@
 #include "edit_demand_change.h"
 
 #include "core/string.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "empire/type.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/button.h"
@@ -64,7 +64,8 @@ static void init(int id) {
 
     data.num_routes = 0;
     for (int i = 1; i < MAX_ROUTES; i++) {
-        empire_city* city = empire_city_get(empire_city_get_for_trade_route(i));
+        int city_id = g_empire.get_city_for_trade_route(i);
+        empire_city* city = g_empire.city(city_id);
         if (city && (city->type == EMPIRE_CITY_PHARAOH || city->type == EMPIRE_CITY_EGYPTIAN_TRADING)) {
             create_display_name(i, lang_get_string(21, city->name_id));
 

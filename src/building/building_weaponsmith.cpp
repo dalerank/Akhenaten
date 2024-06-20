@@ -10,7 +10,8 @@
 #include "js/js_game.h"
 #include "city/labor.h"
 #include "city/warnings.h"
-#include "empire/empire_city.h"
+#include "city/city.h"
+#include "empire/empire.h"
 
 #include "dev/debug.h"
 #include "city/resource.h"
@@ -38,9 +39,9 @@ void building_weaponsmith::on_place_checks() {
     if (city_resource_count(RESOURCE_WEAPONS) <= 0 && city_resource_count(RESOURCE_COPPER) <= 0) {
         building_construction_warning_show(WARNING_IRON_NEEDED);
 
-        if (empire_can_produce_resource(RESOURCE_COPPER, true))
+        if (g_city.can_produce_resource(RESOURCE_COPPER))
             building_construction_warning_show(WARNING_BUILD_IRON_MINE);
-        else if (!empire_can_import_resource(RESOURCE_COPPER, true))
+        else if (!g_empire.can_import_resource(RESOURCE_COPPER, true))
             building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT);
         else if (city_resource_trade_status(RESOURCE_COPPER) != TRADE_STATUS_IMPORT)
             building_construction_warning_show(WARNING_TRADE_IMPORT_RESOURCE);

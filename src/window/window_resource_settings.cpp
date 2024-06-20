@@ -2,8 +2,9 @@
 
 #include "building/count.h"
 #include "city/resource.h"
+#include "city/city.h"
 #include "core/calc.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/ui.h"
@@ -42,7 +43,7 @@ static void draw_foreground(void) {
     ui::icon(vec2i{42, 136}, data.resource);
     ui::label(ui::str(23, data.resource), vec2i{76, 137});
 
-    if (empire_can_produce_resource(data.resource, check_open_route)) {
+    if (g_city.can_produce_resource(data.resource)) {
         bstring128 text;
         int total_buildings = building_count_industry_total(data.resource);
         int active_buildings = building_count_industry_active(data.resource);
@@ -70,10 +71,10 @@ static void draw_foreground(void) {
     ui::label(stored_in_city_str, vec2i{98, 192});
 
 
-    bool can_import = empire_can_import_resource(data.resource, true);
-    bool can_export = empire_can_export_resource(data.resource, true);
-    bool could_import = empire_can_import_resource(data.resource, false);
-    bool could_export = empire_can_export_resource(data.resource, false);
+    bool can_import = g_empire.can_import_resource(data.resource, true);
+    bool can_export = g_empire.can_export_resource(data.resource, true);
+    bool could_import = g_empire.can_import_resource(data.resource, false);
+    bool could_export = g_empire.can_export_resource(data.resource, false);
 
     int trade_status = city_resource_trade_status(data.resource);
     {

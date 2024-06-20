@@ -2,6 +2,7 @@
 
 #include "city/message.h"
 #include "core/random.h"
+#include "empire/empire.h"
 #include "empire/empire_city.h"
 #include "empire/trade_route.h"
 #include "game/time.h"
@@ -26,15 +27,15 @@ void scenario_demand_change_process(void) {
         }
         int route = g_scenario_data.demand_changes[i].route_id;
         e_resource resource = g_scenario_data.demand_changes[i].resource;
-        int city_id = empire_city_get_for_trade_route(route);
+        int city_id = g_empire.get_city_for_trade_route(route);
         if (city_id < 0)
             city_id = 0;
         if (g_scenario_data.demand_changes[i].is_rise) {
-            if (trade_route_increase_limit(route, resource) && empire_city_is_trade_route_open(route))
+            if (trade_route_increase_limit(route, resource) && g_empire.is_trade_route_open(route))
                 city_message_post(true, MESSAGE_INCREASED_TRADING, city_id, resource);
 
         } else {
-            if (trade_route_decrease_limit(route, resource) && empire_city_is_trade_route_open(route)) {
+            if (trade_route_decrease_limit(route, resource) && g_empire.is_trade_route_open(route)) {
                 if (trade_route_limit(route, resource) > 0)
                     city_message_post(true, MESSAGE_DECREASED_TRADING, city_id, resource);
                 else {

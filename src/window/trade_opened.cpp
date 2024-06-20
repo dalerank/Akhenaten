@@ -1,6 +1,6 @@
 #include "trade_opened.h"
 
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
@@ -28,7 +28,7 @@ static void draw_background(void) {
 
     outer_panel_draw(vec2i{80, 64}, 30, 14);
     lang_text_draw_centered(142, 0, 80, 80, 480, FONT_LARGE_BLACK_ON_LIGHT);
-    if (empire_city_get(selected_city)->is_sea_trade) {
+    if (g_empire.city(selected_city)->is_sea_trade) {
         lang_text_draw_multiline(142, 1, vec2i{112, 120}, 416, FONT_NORMAL_BLACK_ON_LIGHT);
         lang_text_draw_multiline(142, 3, vec2i{112, 184}, 416, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {

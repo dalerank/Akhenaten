@@ -17,6 +17,8 @@
 #include "grid/point.h"
 #include "grid/desirability.h"
 
+struct empire_city;
+
 struct city_t {
     struct {
         bool palace_placed;
@@ -390,6 +392,12 @@ struct city_t {
     void init_campaign_mission();
     int allowed_foods(int i);
     void set_allowed_food(int i, int resource);
+
+    bool generate_trader_from(int city_id, empire_city &city);
+    bool available_resource(e_resource resource);
+    void update_allowed_resources();
+    bool can_produce_resource(e_resource resource);
+    void set_produce_resource(e_resource resource, bool v);
 
     void migration_update_status();
     void create_immigrants(int num_people);

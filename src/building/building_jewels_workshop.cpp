@@ -2,10 +2,11 @@
 
 #include "building/count.h"
 #include "building/building_workshop.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "city/resource.h"
 #include "city/warnings.h"
 #include "city/labor.h"
+#include "city/city.h"
 
 #include "js/js_game.h"
 
@@ -31,9 +32,9 @@ void building_jewels_workshop::on_place_checks() {
     }
 
     building_construction_warning_show(WARNING_TIMBER_NEEDED);
-    if (empire_can_produce_resource(RESOURCE_GEMS, true))
+    if (g_city.can_produce_resource(RESOURCE_GEMS))
         building_construction_warning_show(WARNING_BUILD_TIMBER_YARD);
-    else if (!empire_can_import_resource(RESOURCE_GEMS, true))
+    else if (!g_empire.can_import_resource(RESOURCE_GEMS, true))
         building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT);
     else if (city_resource_trade_status(RESOURCE_GEMS) != TRADE_STATUS_IMPORT)
         building_construction_warning_show(WARNING_TRADE_IMPORT_RESOURCE);

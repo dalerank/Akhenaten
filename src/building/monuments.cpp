@@ -6,7 +6,7 @@
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "figure/figure.h"
 #include "core/svector.h"
 #include "city/resource.h"
@@ -18,6 +18,7 @@
 #include "grid/terrain.h"
 #include "core/calc.h"
 #include "core/log.h"
+#include "city/city.h"
 #include "io/io_buffer.h"
 
 #include "js/js_game.h"
@@ -606,17 +607,17 @@ bool building_monument_requires_resource(e_building_type type, e_resource resour
     return false;
 }
 
-int building_monument_has_required_resources_to_build(e_building_type type) {
+bool building_monument_has_required_resources_to_build(e_building_type type) {
     int phases = building_monument_phases(type);
     for (int phase = 1; phase < phases; phase++) {
         for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
             if (building_monument_needs_resources(type, r, phase) > 0 &&
-                !empire_can_produce_resource(r, false) && !empire_can_produce_resource(r, false)) {
-                return 0;
+                !g_city.can_produce_resource(r)) {
+                return false;
             }
         }
     }
-    return 1;
+    return true;
 }
 
 int building_monument_upgraded(e_building_type type) {

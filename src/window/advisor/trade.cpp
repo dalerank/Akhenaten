@@ -14,7 +14,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "city/city.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "window/window_empire.h"
 #include "window/resource_settings.h"
 #include "window/trade_prices.h"
@@ -103,10 +103,10 @@ void ui::advisor_trade_window::draw_foreground() {
         int trade_amount = stack_proper_quantity(city_resource_trading_amount(resource), resource);
         switch (trade_status) {
         case TRADE_STATUS_NONE: {
-            bool can_import = empire_can_import_resource(resource, true);
-            bool can_export = empire_can_export_resource(resource, true);
-            bool could_import = empire_can_import_resource(resource, false);
-            bool could_export = empire_can_export_resource(resource, false);
+            bool can_import = g_empire.can_import_resource(resource, true);
+            bool can_export = g_empire.can_export_resource(resource, true);
+            bool could_import = g_empire.can_import_resource(resource, false);
+            bool could_export = g_empire.can_export_resource(resource, false);
             if (can_import && !can_export)
                 lang_text_draw(54, 31, IMPORT_EXPORT_X, y_offset + 61, font_color);
             else if (!can_import && can_export)

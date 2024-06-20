@@ -5,7 +5,7 @@
 #include "city/military.h"
 #include "city/ratings.h"
 #include "city/resource.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "figure/formation_legion.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -151,7 +151,7 @@ int ui::advisor_imperial_window::draw_background() {
         button_border_draw(38, 96, 560, 40, 0);
         ImageDraw::img_generic(ctx, image_id_resource_icon(military_resource), 50, 106);
         width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE_ON_DARK);
-        lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id, 80 + width, 102, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw(21, g_empire.city(city_military_distant_battle_city())->name_id, 80 + width, 102, FONT_NORMAL_WHITE_ON_DARK);
         int strength_text_id;
         int enemy_strength = city_military_distant_battle_enemy_strength();
         if (enemy_strength < 46)

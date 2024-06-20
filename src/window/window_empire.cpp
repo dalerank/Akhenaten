@@ -4,7 +4,9 @@
 #include "city/military.h"
 #include "city/warning.h"
 #include "city/constants.h"
+#include "city/finance.h"
 #include "core/game_environment.h"
+#include "empire/empire.h"
 #include "empire/empire_city.h"
 #include "empire/empire_map.h"
 #include "empire/empire_object.h"
@@ -156,7 +158,7 @@ static void init(void) {
     auto &data = g_empire_window;
     data.selected_button = 0;
     int selected_object = g_empire_map.selected_object();
-    data.selected_city = selected_object ? empire_city_get_for_object(selected_object - 1) : 0;
+    data.selected_city = selected_object ? g_empire.get_city_for_object(selected_object - 1) : 0;
     data.focus_button_id = 0;
 }
 
@@ -380,7 +382,7 @@ static void draw_city_info(const empire_object* object) {
     int x_offset = (data.min_pos.x + data.max_pos.x - 240) / 2;
     int y_offset = data.max_pos.y - 88;
 
-    const empire_city* city = empire_city_get(data.selected_city);
+    const empire_city* city = g_empire.city(data.selected_city);
 
     switch (city->type) {
     case EMPIRE_CITY_OURS:
@@ -456,7 +458,7 @@ static void draw_object_info(void) {
 static void draw_empire_object(const empire_object* obj) {
     auto &data = g_empire_window;
     if (obj->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj->type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
-        if (!empire_city_is_trade_route_open(obj->trade_route_id)) {
+        if (!g_empire.is_trade_route_open(obj->trade_route_id)) {
             return;
         }
     }
@@ -471,16 +473,16 @@ static void draw_empire_object(const empire_object* obj) {
     }
 
     if (obj->type == EMPIRE_OBJECT_CITY) {
-        int empire_city_id = empire_city_get_for_object(obj->id);
-        const empire_city* city = empire_city_get(empire_city_id);
+        int empire_city_id = g_empire.get_city_for_object(obj->id);
+        const empire_city* city = g_empire.city(empire_city_id);
 
         // draw routes!
         if (city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING || city->type == EMPIRE_CITY_PHARAOH_TRADING) {
             e_empire_route_state state = ROUTE_CLOSED;
             if (city->is_open) {
-                state = (g_empire_map.selected_object() && data.selected_city == empire_city_get_for_object(obj->id)) ? ROUTE_OPEN_SELECTED : ROUTE_OPEN;
+                state = (g_empire_map.selected_object() && data.selected_city == g_empire.get_city_for_object(obj->id)) ? ROUTE_OPEN_SELECTED : ROUTE_OPEN;
             } else {
-                state = (g_empire_map.selected_object() && data.selected_city == empire_city_get_for_object(obj->id)) ? ROUTE_CLOSED_SELECTED : ROUTE_CLOSED;
+                state = (g_empire_map.selected_object() && data.selected_city == g_empire.get_city_for_object(obj->id)) ? ROUTE_CLOSED_SELECTED : ROUTE_CLOSED;
             }
             draw_trade_route(city->route_id, state);
         }
@@ -635,7 +637,7 @@ static void draw_paneling() {
     graphics_reset_clip_rectangle();
 }
 
-static void draw_background(void) {
+static void window_empire_draw_background(void) {
     auto &data = g_empire_window;
     int s_width = screen_width();
     int s_height = screen_height();
@@ -649,7 +651,7 @@ static void draw_background(void) {
     }
 }
 
-static void draw_foreground(void) {
+static void window_empire_draw_foreground(void) {
     auto &data = g_empire_window;
     //    fade_in_out++;
     //    float v = 0.5 * (1.0 + sin(0.35 * (float)fade_in_out));
@@ -668,8 +670,8 @@ static void draw_foreground(void) {
     if (selected_object) {
         const empire_object* object = empire_object_get(selected_object - 1);
         if (object->type == EMPIRE_OBJECT_CITY) {
-            data.selected_city = empire_city_get_for_object(object->id);
-            city = empire_city_get(data.selected_city);
+            data.selected_city = g_empire.get_city_for_object(object->id);
+            city = g_empire.city(data.selected_city);
         }
     }
 
@@ -694,7 +696,7 @@ static void determine_selected_object(const mouse* m) {
     window_invalidate();
 }
 
-static void handle_input(const mouse* m, const hotkeys* h) {
+static void window_empire_handle_input(const mouse* m, const hotkeys* h) {
     auto &data = g_empire_window;
     vec2i position;
     if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
@@ -735,8 +737,8 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     if (selected_object) {
         const empire_object* obj = empire_object_get(selected_object - 1);
         if (obj->type == EMPIRE_OBJECT_CITY) {
-            data.selected_city = empire_city_get_for_object(selected_object - 1);
-            const empire_city* city = empire_city_get(data.selected_city);
+            data.selected_city = g_empire.get_city_for_object(selected_object - 1);
+            const empire_city* city = g_empire.city(data.selected_city);
 
             if ((city->type == EMPIRE_CITY_PHARAOH_TRADING || city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING)) {
                 if (city->is_open) {
@@ -793,7 +795,7 @@ static e_resource resource_from_mouse_pos(tooltip_context* c, const T& arr) {
 
 static e_resource get_tooltip_resource(tooltip_context* c) {
     auto &data = g_empire_window;
-    const empire_city* city = empire_city_get(data.selected_city);
+    const empire_city* city = g_empire.city(data.selected_city);
     // we only want to check tooltips on our own closed cities.
     // open city resource tooltips are handled by their respective buttons directly
     if (city->is_open
@@ -815,8 +817,8 @@ static void get_tooltip_trade_route_type(tooltip_context* c) {
     if (!selected_object || empire_object_get(selected_object - 1)->type != EMPIRE_OBJECT_CITY)
         return;
 
-    data.selected_city = empire_city_get_for_object(selected_object - 1);
-    const empire_city* city = empire_city_get(data.selected_city);
+    data.selected_city = g_empire.get_city_for_object(selected_object - 1);
+    const empire_city* city = g_empire.city(data.selected_city);
     if (city->type != EMPIRE_CITY_PHARAOH || city->is_open)
         return;
 
@@ -830,7 +832,7 @@ static void get_tooltip_trade_route_type(tooltip_context* c) {
     }
 }
 
-static void get_tooltip(tooltip_context* c) {
+static void window_empire_get_tooltip(tooltip_context* c) {
     auto &data = g_empire_window;
     int resource = data.focus_resource ? data.focus_resource : get_tooltip_resource(c);
     if (resource) {
@@ -873,7 +875,9 @@ static void button_show_resource_window(int resource, int param2) {
 
 static void button_open_trade(int param1, int param2) {
     window_yes_dialog_show("#popup_dialog_open_trade", [] {
-        empire_city_open_trade(g_empire_window.selected_city);
+        empire_city* city = g_empire.city(g_empire_window.selected_city);
+        city_finance_process_construction(city->cost_to_open);
+        city->is_open = 1;
         //building_menu_update(BUILDSET_NORMAL);
         window_trade_opened_show(g_empire_window.selected_city);
     });
@@ -882,10 +886,10 @@ static void button_open_trade(int param1, int param2) {
 void window_empire_show() {
     window_type window = {
         WINDOW_EMPIRE,
-        draw_background,
-        draw_foreground,
-        handle_input,
-        get_tooltip
+        window_empire_draw_background,
+        window_empire_draw_foreground,
+        window_empire_handle_input,
+        window_empire_get_tooltip
     };
 
     init();

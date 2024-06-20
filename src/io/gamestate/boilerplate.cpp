@@ -200,6 +200,8 @@ static void post_load() {
     building_storage_reset_building_ids();
     city_culture_update_coverage();
 
+    g_city.update_allowed_resources();
+
     // traders / empire
     trade_prices_reset();
 

@@ -35,7 +35,7 @@
 #include "core/profiler.h"
 #include "core/bstring.h"
 #include "editor/editor.h"
-#include "empire/empire_city.h"
+#include "empire/empire.h"
 #include "figure/formation.h"
 #include "figuretype/crime.h"
 #include "figure/formation_herd.h"
@@ -74,7 +74,7 @@ static void advance_year(void) {
     city_population_request_yearly_update();
     city_finance_handle_year_change();
     g_city.migration_advance_year();
-    empire_city_reset_yearly_trade_amounts();
+    g_empire.reset_yearly_trade_amounts();
     building_maintenance_update_fire_direction();
     g_city.ratings_update(/*yearly_update*/true);
     //    city_gods_reset_yearly_blessings();

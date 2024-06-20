@@ -4,6 +4,10 @@
 #include "game/resource.h"
 
 struct empire_city {
+    enum {
+        check_open_route = 1
+    };
+
     int in_use; // this can be 2, so it's an int!
     e_empire_city type;
     int name_id;
@@ -18,43 +22,13 @@ struct empire_city {
     int empire_object_id;
     int is_sea_trade;
     int trader_figure_ids[3];
+
+    void remove_trader(int figure_id);
+
+    void set_vulnerable() {
+        type = EMPIRE_CITY_FOREIGN_TRADING;
+    }
+    void set_foreign() {
+        type = EMPIRE_CITY_EGYPTIAN;
+    }
 };
-
-void empire_city_clear_all(void);
-
-empire_city* empire_city_get(int city_id);
-
-int empire_city_get_route_id(int city_id);
-
-bool empire_can_import_resource(e_resource resource, bool check_if_open);
-bool empire_can_export_resource(e_resource resource, bool check_if_open);
-
-constexpr bool check_open_route = true;
-bool empire_can_produce_resource(e_resource resource, bool check_if_open);
-
-int empire_city_get_for_object(int empire_object_id);
-
-int empire_city_get_for_trade_route(int route_id);
-
-bool empire_city_is_trade_route_open(int route_id);
-
-void empire_city_reset_yearly_trade_amounts();
-
-int empire_city_count_wine_sources();
-
-int empire_city_get_vulnerable_roman();
-
-void empire_city_expand_empire();
-
-void empire_city_set_vulnerable(int city_id);
-
-void empire_city_set_foreign(int city_id);
-
-void empire_city_open_trade(int city_id);
-
-void empire_city_generate_trader(void);
-
-void empire_city_remove_trader(int city_id, int figure_id);
-
-void set_city_produce_resource(e_resource resource, bool v);
-bool can_city_produce_resource(e_resource resource);
