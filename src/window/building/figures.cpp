@@ -196,9 +196,7 @@ static void draw_figure_info(object_info* c, int figure_id) {
         return;
     }
 
-    if (type == FIGURE_TRADE_SHIP) {
-        //f->draw_trader(c); //TODO: need fixes
-    } else if (type >= FIGURE_ENEMY43_SPEAR && type <= FIGURE_ENEMY53_AXE) {
+    if (type >= FIGURE_ENEMY43_SPEAR && type <= FIGURE_ENEMY53_AXE) {
         f->draw_enemy(c);
     } else if (f->is_herd()) {
         f->draw_animal(c);

@@ -5,9 +5,10 @@
 #include "figure/trader.h"
 #include "figure_shipwreck.h"
 #include "building/building_dock.h"
-
+#include "game/game.h"
+#include "empire/empire.h"
 #include "city/message.h"
-
+#include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "grid/figure.h"
 #include "js/js_game.h"
@@ -75,24 +76,24 @@ int figure_trade_ship::lost_queue() {
     return 1;
 }
 
-int figure_trade_ship::done_trading() {
+bool figure_trade_ship::done_trading() {
     building* b = destination();
     if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_DOCK && b->num_workers > 0) {
         for (int i = 0; i < 3; i++) {
             if (b->data.dock.docker_ids[i]) {
                 figure* docker = figure_get(b->data.dock.docker_ids[i]);
                 if (docker->state == FIGURE_STATE_ALIVE && docker->action_state != FIGURE_ACTION_132_DOCKER_IDLING)
-                    return 0;
+                    return false;
             }
         }
         base.trade_ship_failed_dock_attempts++;
         if (base.trade_ship_failed_dock_attempts >= 10) {
             base.trade_ship_failed_dock_attempts = 11;
-            return 1;
+            return true;
         }
-        return 0;
+        return false;
     }
-    return 1;
+    return true;
 }
 
 void figure_trade_ship::on_create() {
@@ -289,4 +290,73 @@ void figure_trade_ship::poof() {
 
 const animations_t &figure_trade_ship::anim() const {
     return trader_ship_m.anim;
+}
+
+bool figure_trade_ship::window_info_background(object_info &c) {
+    painter ctx = game.painter();
+    figure* f = &base;
+    const empire_city* city = g_empire.city(f->empire_city_id);
+    int width = lang_text_draw(64, f->type, c.offset.x + 40, c.offset.y + 110, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw(21, city->name_id, c.offset.x + 40 + width, c.offset.y + 110, FONT_NORMAL_BLACK_ON_DARK);
+
+    width = lang_text_draw(129, 1, c.offset.x + 40, c.offset.y + 132, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? 1200 : 800, c.offset.x + 40 + width, c.offset.y + 132, FONT_NORMAL_BLACK_ON_DARK);
+
+    int trader_id = f->trader_id;
+    int text_id;
+    switch (f->action_state) {
+    case FIGURE_ACTION_114_TRADE_SHIP_ANCHORED: text_id = 6; break;
+    case FIGURE_ACTION_112_TRADE_SHIP_MOORED: text_id = 7; break;
+    case FIGURE_ACTION_115_TRADE_SHIP_LEAVING: text_id = 8; break;
+    default: text_id = 9; break;
+    }
+    lang_text_draw(129, text_id, c.offset.x + 40, c.offset.y + 154, FONT_NORMAL_BLACK_ON_DARK);
+
+    if (trader_has_traded(trader_id)) {
+        // bought
+        int y_base = c.offset.y + 180;
+        width = lang_text_draw(129, 4, c.offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
+        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+            if (trader_bought_resources(trader_id, r)) {
+                width += text_draw_number(trader_bought_resources(trader_id, r), '@'," ", c.offset.x + 40 + width, y_base, FONT_NORMAL_BLACK_ON_DARK);
+                int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                ImageDraw::img_generic(ctx, image_id, vec2i{c.offset.x + 40 + width, y_base - 3});
+                width += 25;
+            }
+        }
+        // sold
+        y_base = c.offset.y + 210;
+        width = lang_text_draw(129, 5, c.offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
+        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+            if (trader_sold_resources(trader_id, r)) {
+                width += text_draw_number(trader_sold_resources(trader_id, r), '@', " ", c.offset.x + 40 + width, y_base, FONT_NORMAL_BLACK_ON_DARK);
+                int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                ImageDraw::img_generic(ctx, image_id, vec2i{c.offset.x + 40 + width, y_base - 3});
+                width += 25;
+            }
+        }
+    } else { // nothing sold/bought (yet)
+             // buying
+        int y_base = c.offset.y + 180;
+        width = lang_text_draw(129, 2, c.offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
+        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+            if (city->buys_resource[r]) {
+                int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                ImageDraw::img_generic(ctx, image_id, vec2i{c.offset.x + 40 + width, y_base - 3});
+                width += 25;
+            }
+        }
+        // selling
+        y_base = c.offset.y + 210;
+        width = lang_text_draw(129, 3, c.offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
+        for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+            if (city->sells_resource[r]) {
+                int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                ImageDraw::img_generic(ctx, image_id, vec2i{c.offset.x + 40 + width, y_base - 3});
+                width += 25;
+            }
+        }
+    }
+
+    return true;
 }

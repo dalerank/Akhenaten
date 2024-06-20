@@ -322,8 +322,9 @@ void figure_docker::figure_action() {
     case FIGURE_ACTION_132_DOCKER_IDLING:
         base.resource_id = RESOURCE_NONE;
         base.cart_image_id = 0;
-        if (!deliver_import_resource(b))
+        if (!deliver_import_resource(b)) {
             fetch_export_resource(b);
+        }
 
         base.anim.frame = 0;
         break;

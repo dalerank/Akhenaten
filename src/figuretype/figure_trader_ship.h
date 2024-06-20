@@ -23,9 +23,10 @@ public:
     virtual void poof() override;
     virtual const animations_t &anim() const override;
     virtual e_figure_sound phrase() const override { return {FIGURE_TRADE_SHIP, "barge"}; }
+    virtual bool window_info_background(object_info &c) override;
 
     int lost_queue();
-    int done_trading();
+    bool done_trading();
     int is_trading() const;
 
     static int create(tile2i tile, int city_id);

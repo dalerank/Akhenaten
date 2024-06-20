@@ -13,5 +13,4 @@ public:
     bool can_sell(building *b, int city_id);
 
     int get_closest_storageyard(tile2i tile, int city_id, int distance_from_entry, tile2i &warehouse);
-    void draw_trader(object_info *c);
 };
