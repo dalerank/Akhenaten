@@ -28,6 +28,8 @@
 #include "city/floods.h"
 #include "core/calc.h"
 #include "scenario/map.h"
+#include "game/time.h"
+#include "water.h"
 
 // #define OFFSET(x,y) (x + GRID_SIZE_PH * y)
 
@@ -803,9 +805,6 @@ void map_tiles_update_all_vegetation_tiles() {
     foreach_marshland_tile(update_marshland_image);
     foreach_tree_tile(update_tree_image);
 }
-
-#include "game/time.h"
-#include "water.h"
 
 // the x and y are all GRID COORDS, not PIXEL COORDS
 static void set_water_image(int grid_offset) {

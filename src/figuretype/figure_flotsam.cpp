@@ -84,7 +84,9 @@ void figure_flotsam::figure_action() {
         base.cc_coords.y = 15 * tiley();
         break;
     }
+}
 
+void figure_flotsam::update_animation() {
     base.local_data.flotsam.frame = std::min<short>(base.local_data.flotsam.frame++, 2048);
     int cur_frame = std::min<int>(base.local_data.flotsam.frame / 36, 35);
     base.sprite_image_id = flotsam_m.anim["walk"].first_img() + cur_frame;

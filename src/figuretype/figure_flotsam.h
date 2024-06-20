@@ -9,4 +9,5 @@ public:
 
     virtual void on_create() override;
     virtual void figure_action() override;
+    virtual void update_animation() override;
 };
