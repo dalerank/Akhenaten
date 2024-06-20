@@ -5,12 +5,10 @@
 #include "grid/water.h"
 
 buildings::model_t<building_transport_wharf> transport_wharf_m;
-buildings::model_t<building_warship_wharf> warship_wharf_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_wharf);
 void config_load_building_wharf() {
     transport_wharf_m.load();
-    warship_wharf_m.load();
 }
 
 void building_wharf::on_create(int orientation) {

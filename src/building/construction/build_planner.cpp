@@ -1182,10 +1182,12 @@ void BuildPlanner::update_coord_caches() {
         break;
     }
 }
+
 void BuildPlanner::update_orientations(bool check_if_changed) {
     int prev_orientation = relative_orientation;
     int prev_variant = variant;
     int global_rotation = building_rotation_global_rotation();
+
     switch (build_type) {
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
@@ -1193,6 +1195,7 @@ void BuildPlanner::update_orientations(bool check_if_changed) {
         relative_orientation = global_rotation + 1;
         variant = building_rotation_get_building_variant();
         break;
+
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
@@ -1308,26 +1311,33 @@ void BuildPlanner::construction_update(tile2i tile) {
     case BUILDING_CLEAR_LAND:
         items_placed = last_items_cleared = building_construction_clear_land(true, start, end);
         break;
+
     case BUILDING_MUD_WALL:
         items_placed = building_construction_place_wall(true, start, end);
         break;
+
     case BUILDING_ROAD:
         items_placed = building_road::place(true, start, end);
         break;
+
     case BUILDING_PLAZA:
         items_placed = building_plaza::place(start, end);
         break;
+
     case BUILDING_GARDENS:
         items_placed = building_garden::place(start, end);
         break;
+
     case BUILDING_IRRIGATION_DITCH:
         items_placed = building_construction_place_canal(true, start, end);
         map_tiles_update_all_canals(0);
         break;
+
     case BUILDING_LOW_BRIDGE:
     case BUILDING_UNUSED_SHIP_BRIDGE_83:
         items_placed = map_bridge_building_length();
         break;
+
     case BUILDING_HOUSE_VACANT_LOT:
         items_placed = place_houses(true, start.x(), start.y(), end.x(), end.y());
         break;
@@ -1426,6 +1436,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
         building_rotation_randomize_variant(build_type);
         update_orientations(false);
         break;
+
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
@@ -1433,11 +1444,13 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     case BUILDING_TEMPLE_COMPLEX_BAST:
         city_buildings_add_temple_complex(last_created_building);
         break;
+
     case BUILDING_VILLAGE_PALACE:
     case BUILDING_TOWN_PALACE:
     case BUILDING_CITY_PALACE:
         city_buildings_add_palace(last_created_building);
         break;
+
     case BUILDING_FERRY:
         should_recalc_ferry_routes = true;
         break;
