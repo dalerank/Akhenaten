@@ -167,7 +167,7 @@ bool figure::is_dead() {
 }
 
 bool figure::is_boat() {
-    return  (allow_move_type == EMOVE_BOAT || allow_move_type == EMOVE_FLOTSAM);
+    return  (allow_move_type == EMOVE_WATER || allow_move_type == EMOVE_DEEPWATER);
 }
 
 bool figure::can_move_by_water() {
@@ -284,7 +284,7 @@ figure_sound_t figure_impl::get_sound_reaction(pcstr key) const {
 }
 
 bool figure_impl::can_move_by_water() const {
-    return (base.allow_move_type == EMOVE_BOAT || base.allow_move_type == EMOVE_FLOTSAM || base.allow_move_type == EMOVE_HIPPO);
+    return (base.allow_move_type == EMOVE_WATER || base.allow_move_type == EMOVE_DEEPWATER || base.allow_move_type == EMOVE_HIPPO);
 }
 
 static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;

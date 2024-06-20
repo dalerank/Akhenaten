@@ -14,7 +14,7 @@ enum e_routed_mode {
 
 void map_routing_calculate_distances(tile2i tile);
 void map_routing_calculate_distances_water_boat(tile2i tile);
-void map_routing_calculate_distances_water_flotsam(tile2i tile);
+void map_routing_calculate_distances_deepwater(tile2i tile);
 
 bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct);
 bool map_routing_calculate_distances_for_building(e_routed_mode type, tile2i start);

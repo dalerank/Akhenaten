@@ -22,7 +22,7 @@ void config_load_figure_shipwreck() {
 
 void figure_shipwreck::figure_action() {
     base.height_adjusted_ticks = 0;
-    base.allow_move_type = EMOVE_BOAT;
+    base.allow_move_type = EMOVE_DEEPWATER;
     //    figure_image_increase_offset(128);
     if (wait_ticks < 1000) {
         base.map_figure_remove();

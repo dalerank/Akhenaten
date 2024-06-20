@@ -57,7 +57,7 @@ void figure_fishing_boat::figure_action() {
         }
     }
 
-    base.allow_move_type = EMOVE_BOAT;
+    base.allow_move_type = EMOVE_WATER;
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
     switch (action_state()) {

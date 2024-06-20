@@ -25,7 +25,7 @@ void figure_flotsam::on_create() {
 }
 
 void figure_flotsam::figure_action() {
-    base.allow_move_type = EMOVE_FLOTSAM;
+    base.allow_move_type = EMOVE_DEEPWATER;
     if (!scenario_map_has_river_exit()) {
         return;
     }

@@ -106,17 +106,19 @@ void map_routing_calculate_distances_water_boat(tile2i tile) {
     }
 }
 
-static void callback_calc_distance_water_flotsam(int next_offset, int dist) {
+static void callback_calc_distance_deepwater(int next_offset, int dist) {
     if (map_grid_get(&routing_tiles_water, next_offset) != WATER_N1_BLOCKED) {
-        enqueue(next_offset, dist);
+        if (map_terrain_is(next_offset, TERRAIN_DEEPWATER)) {
+            enqueue(next_offset, dist);
+        }
     }
 }
-void map_routing_calculate_distances_water_flotsam(tile2i tile) {
+void map_routing_calculate_distances_deepwater(tile2i tile) {
     int grid_offset = tile.grid_offset();
     if (map_grid_get(&routing_tiles_water, grid_offset) == WATER_N1_BLOCKED) {
         clear_distances();
     } else {
-        route_queue_dir8(grid_offset, callback_calc_distance_water_flotsam);
+        route_queue_dir8(grid_offset, callback_calc_distance_deepwater);
     }
 }
 static void callback_calc_distance_build_wall(int next_offset, int dist) {

@@ -51,8 +51,8 @@ enum e_minimap_figure_color {
 
 enum e_move_type : uint8_t {
     EMOVE_TERRAIN = 0,
-    EMOVE_BOAT = 1,
-    EMOVE_FLOTSAM = 2,
+    EMOVE_WATER = 1,
+    EMOVE_DEEPWATER = 2,
     EMOVE_HIPPO = 3,
 };
 
