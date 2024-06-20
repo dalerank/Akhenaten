@@ -397,6 +397,7 @@ figure_cartpusher = {
 figure_docker = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:43, max_frames:12 },
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:44, max_frames:8, loop:false },
 	},
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }

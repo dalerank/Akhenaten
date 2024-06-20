@@ -82,7 +82,7 @@ void building_fishing_wharf::spawn_figure() {
                     base.set_figure(BUILDING_SLOT_BOAT, f);
                     random_generate_next();
                     f->wait_ticks = random_short() % 30; // ok
-                    f->allow_move_type = EMOVE_BOAT;
+                    f->allow_move_type = EMOVE_WATER;
                     data.industry.fishing_boat_id = f->id;
                 }
             }
