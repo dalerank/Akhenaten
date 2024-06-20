@@ -289,10 +289,6 @@ bool city_t::available_resource(e_resource resource) {
 void city_t::fishing_points_t::update(int points_num) {
     clear();
 
-    if (!g_city.can_produce_resource(RESOURCE_FISH)) {
-        return;
-    }
-
     int num_fishing_spots = 0;
     for (int i = 0; i < MAX_FISH_POINTS; i++) {
         if (g_scenario_data.fishing_points[i].x() > 0)
