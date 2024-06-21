@@ -5,6 +5,8 @@
 #include "city/message.h"
 #include "city/trade.h"
 #include "city/city.h"
+#include "city/population.h"
+#include "building/count.h"
 #include "scenario/map.h"
 #include "trade_route.h"
 #include "empire_object.h"
@@ -12,6 +14,7 @@
 #include "io/io_buffer.h"
 #include "dev/debug.h"
 #include <iostream>
+#include <algorithm>
 
 empire_t g_empire;
 
@@ -153,6 +156,113 @@ void empire_t::generate_traders() {
         }
     }
 }
+
+int get_max_raw_stock_for_population(e_resource resource) {
+    int finished_good = RESOURCE_NONE;
+    switch (resource) {
+    case RESOURCE_CLAY: finished_good = RESOURCE_POTTERY; break;
+    case RESOURCE_TIMBER: finished_good = RESOURCE_LUXURY_GOODS; break;
+    case RESOURCE_STRAW: finished_good = RESOURCE_OIL; break;
+    case RESOURCE_BARLEY: finished_good = RESOURCE_BEER; break;
+    case RESOURCE_COPPER: finished_good = RESOURCE_WEAPONS; break;
+    }
+
+    int max_in_stock = 0;
+    if (finished_good) {
+        max_in_stock = 200 + 200 * building_count_industry_active(resource);
+    }
+
+    return max_in_stock;
+}
+
+int get_max_food_stock_for_population(e_resource resource) {
+    switch (resource) {
+    case RESOURCE_GRAIN:
+    case RESOURCE_MEAT:
+    case RESOURCE_LETTUCE:
+    case RESOURCE_GAMEMEAT:
+    case RESOURCE_POTTERY:
+    case RESOURCE_LUXURY_GOODS:
+    case RESOURCE_OIL:
+    case RESOURCE_BEER:
+        return std::max(100, (city_population() / 100) * 100);
+    }
+
+    return 0;
+}
+
+bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
+    empire_city* city = this->city(city_id);
+    if (!city->sells_resource[resource])
+        return 0;
+
+    int status = city_resource_trade_status(resource);
+    switch (status) {
+    case TRADE_STATUS_IMPORT:
+    case TRADE_STATUS_IMPORT_AS_NEEDED:
+        ;
+        break;
+
+    default:
+        return 0;
+    }
+
+    if (trade_route_limit_reached(city->route_id, resource)) {
+        return false;
+    }
+
+    int in_stock = city_resource_count(resource);
+    int max_in_stock = 0;
+
+    if (status == TRADE_STATUS_IMPORT_AS_NEEDED) {
+        switch (resource) {
+            // food and finished materials
+        case RESOURCE_GRAIN:
+        case RESOURCE_MEAT:
+        case RESOURCE_LETTUCE:
+        case RESOURCE_GAMEMEAT:
+        case RESOURCE_OIL:
+        case RESOURCE_BEER:
+        max_in_stock = get_max_food_stock_for_population(resource);
+        break;
+
+        case RESOURCE_MARBLE:
+        case RESOURCE_WEAPONS:
+        max_in_stock = 10;
+        break;
+
+        case RESOURCE_CLAY:
+        case RESOURCE_TIMBER:
+        case RESOURCE_STRAW: 
+        case RESOURCE_BARLEY:
+        case RESOURCE_COPPER:
+        max_in_stock = get_max_raw_stock_for_population(resource);
+        break;
+
+        case RESOURCE_BRICKS:
+        max_in_stock = std::max(100, (city_population() / 100) * 100);
+        break;
+
+        case RESOURCE_POTTERY:
+        case RESOURCE_LUXURY_GOODS:
+        max_in_stock = std::max(100, (city_population() / 100) * 50);
+        break;
+
+        case RESOURCE_PAPYRUS:
+        max_in_stock = std::max(100, (building_count_active(BUILDING_SCRIBAL_SCHOOL) + building_count_active(BUILDING_LIBRARY)) * 100);
+        break;
+
+        default:
+        max_in_stock = 100;
+        break;
+        }
+    } else {
+        max_in_stock = city_resource_trading_amount(resource);
+    }
+
+    return in_stock < max_in_stock ? 1 : 0;
+}
+
 
 io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < g_empire.get_cities().size(); i++) {

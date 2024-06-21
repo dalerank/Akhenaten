@@ -13,6 +13,7 @@ public:
     void clear_cities_data();
     bool can_import_resource(e_resource resource, bool check_if_open);
     bool can_export_resource(e_resource resource, bool check_if_open);
+    bool can_import_resource_from_city(int city_id, e_resource resource);
     int get_city_for_trade_route(int route_id);
     bool is_trade_route_open(int route_id);
     void reset_yearly_trade_amounts();

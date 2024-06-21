@@ -33,4 +33,3 @@ extern empire_map_t g_empire_map;
 
 void empire_load_editor(int empire_id, int viewport_width, int viewport_height);
 bool empire_can_export_resource_to_city(int city_id, e_resource resource);
-int empire_can_import_resource_from_city(int city_id, e_resource resource);
