@@ -66,7 +66,7 @@ bool figure_trader::can_sell(building* b, int city_id) {
     int num_importable = 0;
     for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
         if (!warehouse->is_not_accepting(r)) {
-            if (empire_can_import_resource_from_city(city_id, r))
+            if (g_empire.can_import_resource_from_city(city_id, r))
                 num_importable++;
         }
     }
@@ -76,12 +76,12 @@ bool figure_trader::can_sell(building* b, int city_id) {
 
     int can_import = 0;
     e_resource resource = city_trade_current_caravan_import_resource();
-    if (!warehouse->is_not_accepting(resource) && empire_can_import_resource_from_city(city_id, resource)) {
+    if (!warehouse->is_not_accepting(resource) && g_empire.can_import_resource_from_city(city_id, resource)) {
         can_import = 1;
     } else {
         for (int i = RESOURCE_MIN; i < RESOURCES_MAX; i++) {
             resource = city_trade_next_caravan_import_resource();
-            if (!warehouse->is_not_accepting(resource) && empire_can_import_resource_from_city(city_id, resource)) {
+            if (!warehouse->is_not_accepting(resource) && g_empire.can_import_resource_from_city(city_id, resource)) {
                 can_import = 1;
                 break;
             }
@@ -99,7 +99,7 @@ bool figure_trader::can_sell(building* b, int city_id) {
                     return true;
                 }
 
-                if (empire_can_import_resource_from_city(city_id, space->base.subtype.warehouse_resource_id))
+                if (g_empire.can_import_resource_from_city(city_id, space->base.subtype.warehouse_resource_id))
                     return true;
             }
             space = space->next_room();
@@ -121,7 +121,7 @@ int figure_trader::get_closest_storageyard(tile2i tile, int city_id, int distanc
         }
 
         if (city_id) {
-            importable[r] = empire_can_import_resource_from_city(city_id, r);
+            importable[r] = g_empire.can_import_resource_from_city(city_id, r);
         } else { // exclude own city (id=0), shouldn't happen, but still..
             importable[r] = false;
         }
@@ -154,8 +154,8 @@ int figure_trader::get_closest_storageyard(tile2i tile, int city_id, int distanc
 
         const building_storage* s = warehouse->storage();
         int num_imports_for_warehouse = 0;
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
-            if (!warehouse->is_not_accepting(r) && empire_can_import_resource_from_city(city_id, r)) {
+        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+            if (!warehouse->is_not_accepting(r) && g_empire.can_import_resource_from_city(city_id, r)) {
                 num_imports_for_warehouse++;
             }
         }

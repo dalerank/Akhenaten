@@ -93,10 +93,9 @@ int figure_docker::try_export_resource(building* b, e_resource resource, int cit
 }
 
 int figure_docker::get_closest_warehouse_for_import(tile2i pos, int city_id, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource& import_resource) {
-    int importable[16];
-    importable[RESOURCE_NONE] = 0;
+    bool importable[RESOURCES_MAX] = {0};
     for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
-        importable[r] = empire_can_import_resource_from_city(city_id, r);
+        importable[r] = g_empire.can_import_resource_from_city(city_id, r);
     }
 
     e_resource resource = city_trade_next_docker_import_resource();
