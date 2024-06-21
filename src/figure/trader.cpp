@@ -1,6 +1,7 @@
 #include "figure/trader.h"
 
 #include "core/game_environment.h"
+#include "empire/empire.h"
 #include "empire/trade_prices.h"
 #include "building/storage.h"
 #include "building/building_storage_yard.h"
@@ -119,7 +120,7 @@ e_resource trader_get_sell_resource(building* b, int city_id) {
 
     e_resource resource_to_import = city_trade_current_caravan_import_resource();
     int imp = RESOURCE_MIN;
-    while (imp < RESOURCES_MAX && !empire_can_import_resource_from_city(city_id, resource_to_import)) {
+    while (imp < RESOURCES_MAX && !g_empire.can_import_resource_from_city(city_id, resource_to_import)) {
         imp++;
         resource_to_import = city_trade_next_caravan_import_resource();
     }
@@ -152,7 +153,7 @@ e_resource trader_get_sell_resource(building* b, int city_id) {
     // find another importable resource that can be added to this warehouse
     for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
         resource_to_import = city_trade_next_caravan_backup_import_resource();
-        if (empire_can_import_resource_from_city(city_id, resource_to_import)) {
+        if (g_empire.can_import_resource_from_city(city_id, resource_to_import)) {
             space = warehouse->room();
             while (space) {
                 if (space->stored_full_amount < 400

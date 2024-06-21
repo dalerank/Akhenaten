@@ -139,7 +139,7 @@ static void advance_day() {
 
 static void update_building_tick(bool refresh_only) {
     for (auto it = building_begin(), end = building_end(); it != end; ++it) {
-        if (it->is_valid() > 0) {
+        if (it->is_valid()) {
             it->update_tick(refresh_only);
         }
     }

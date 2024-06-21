@@ -1,6 +1,8 @@
 #pragma once
 
-enum e_resource {
+#include <cstdint>
+
+enum e_resource : uint8_t {
     RESOURCE_NONE = 0,
     RESOURCE_MIN = 1,
     RESOURCE_FOOD_MIN = 1,
@@ -117,11 +119,11 @@ enum {
 int resource_image_offset(int resource, int type);
 
 inline e_resource& resourse_next(e_resource& e) {
-    ((int&)e)++;
+    e = e_resource(e + 1);
     return e;
 }
 inline e_resource& operator++(e_resource& e) {
-    ((int&)e)++;
+    e = e_resource(e + 1);
     return e;
 };
 

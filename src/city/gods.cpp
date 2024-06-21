@@ -165,7 +165,7 @@ static bool PTAH_warehouse_destruction() {
             continue;
 
         int total_stored = 0;
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
+        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
             total_stored += warehouse->amount(r);
         }
 
