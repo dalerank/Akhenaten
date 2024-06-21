@@ -71,11 +71,11 @@ void building_dock::update_map_orientation(int orientation) {
 }
 
 void building_dock::spawn_figure() {
-    check_labor_problem();
-    tile2i road;
     if (!has_road_access()) {
         return;
     }
+
+    check_labor_problem();
     common_spawn_labor_seeker(50);
     int pct_workers = worker_percentage();
     int max_dockers;
@@ -111,7 +111,7 @@ void building_dock::spawn_figure() {
     } 
     
     if (existing_dockers < max_dockers) {
-        figure *f = figure_create(FIGURE_DOCKER, road, DIR_4_BOTTOM_LEFT);
+        figure *f = figure_create(FIGURE_DOCKER, base.road_access, DIR_4_BOTTOM_LEFT);
         f->action_state = FIGURE_ACTION_132_DOCKER_IDLING;
         f->set_home(&base);
         for (int i = 0; i < 3; i++) {
