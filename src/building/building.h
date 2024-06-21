@@ -297,7 +297,7 @@ public:
     building* top_xy();
     bool is_main();
 
-    inline bool is_valid() { return state == BUILDING_STATE_VALID; }
+    inline bool is_valid() { return type != BUILDING_NONE && state == BUILDING_STATE_VALID; }
     bool is_house();
     bool is_fort();
     bool is_defense();
