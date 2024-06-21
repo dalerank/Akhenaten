@@ -35,7 +35,7 @@ public:
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
     virtual void on_place_checks() override;
 
-    const building_storage *storage();
+    const building_storage *storage() const;
     int amount(e_resource resource) const;
     bool is_accepting(e_resource resource);
     int is_not_accepting(e_resource resource);
@@ -44,6 +44,7 @@ public:
     int add_resource(e_resource resource, int is_produced, int amount);
     int total_stored() const;
     int space_for() const;
+    bool is_empty_all() const;
 
     void bless();
     bool is_gettable(e_resource resource);

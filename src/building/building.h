@@ -4,6 +4,7 @@
 #include "core/bstring.h"
 #include "core/vec2i.h"
 #include "core/core.h"
+#include "core/calc.h"
 #include "graphics/animation.h"
 #include "graphics/color.h"
 #include "building/building_type.h"
@@ -528,6 +529,8 @@ public:
     inline bool common_spawn_figure_trigger(int min_houses) { return base.common_spawn_figure_trigger(min_houses); }
     inline bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) { return base.common_spawn_roamer(type, min_houses, created_action); }
     inline const model_building *model() const { return model_get_building(type()); }
+    inline int max_workers() const { return model_get_building(type())->laborers; }
+    inline int pct_workers() const { return calc_percentage<int>(num_workers(), max_workers()); }
 
     inline bool has_figure_of_type(int i, e_figure_type _type) { return base.has_figure_of_type(i, _type);  }
     inline figure *create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE) { return base.create_figure_with_destination(_type, destination, created_action, slot); }

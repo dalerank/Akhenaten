@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <array>
+#include <type_traits>
 
 enum e_resource : uint8_t {
     RESOURCE_NONE = 0,
@@ -46,6 +48,37 @@ enum e_resource : uint8_t {
     //
     RESOURCE_DEBEN = 36,
     RESOURCE_TROOPS = 37,
+};
+
+struct resource_value {
+    e_resource type;
+    int value;
+};
+
+struct resource_foods {
+    using values_t = std::array<resource_value, RESOURCES_FOODS_MAX>;
+    using value_type = values_t::value_type;
+    using iterator = values_t::iterator;
+    using const_iterator = values_t::const_iterator;
+    values_t data = {
+        value_type{RESOURCE_NONE, 0},
+        value_type{RESOURCE_GRAIN, 0},
+        value_type{RESOURCE_MEAT, 0},
+        value_type{RESOURCE_LETTUCE, 0},
+        value_type{RESOURCE_CHICKPEAS, 0},
+        value_type{RESOURCE_POMEGRANATES, 0},
+        value_type{RESOURCE_FIGS, 0},
+        value_type{RESOURCE_FISH, 0},
+        value_type{RESOURCE_GAMEMEAT, 0}
+    };
+    inline int &operator[](e_resource r) { return data[r].value; }
+    inline const int &operator[](e_resource r) const { return data[r].value; }
+    inline iterator begin() { return data.begin(); }
+    inline const_iterator begin() const { return data.begin(); }
+    inline iterator end() { return data.end(); }
+    inline const_iterator end() const { return data.end(); }
+    inline void clear() { for (auto &item: data) { item.value = 0; } }
+    inline bool any() const { return std::find_if(data.begin(), data.end(), [] (auto &it) { return it.value > 0; }) != data.end(); }
 };
 
 enum e_inventory_good {
@@ -122,10 +155,17 @@ inline e_resource& resourse_next(e_resource& e) {
     e = e_resource(e + 1);
     return e;
 }
+
 inline e_resource& operator++(e_resource& e) {
     e = e_resource(e + 1);
     return e;
 };
+
+template<typename ... Args>
+bool resource_type_any_of(e_resource type, Args ... args) {
+    int types[] = {args...};
+    return (std::find(std::begin(types), std::end(types), type) != std::end(types));
+}
 
 int resource_is_food(int resource);
 

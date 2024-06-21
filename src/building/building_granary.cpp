@@ -57,7 +57,7 @@ struct non_getting_granaries_t {
 
 non_getting_granaries_t g_non_getting_granaries;
 
-const building_storage *building_granary::storage() {
+const building_storage *building_granary::storage() const {
     return building_storage_get(base.storage_id);
 }
 
@@ -138,6 +138,10 @@ int building_granary::total_stored() const {
 
 int building_granary::space_for() const {
     return data.granary.resource_stored[RESOURCE_NONE];
+}
+
+bool building_granary::is_empty_all() const {
+    return storage()->empty_all;
 }
 
 int building_granary::remove_resource(e_resource resource, int amount) {
