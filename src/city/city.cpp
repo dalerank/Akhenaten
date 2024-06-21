@@ -13,6 +13,7 @@
 #include "empire/empire.h"
 #include "io/io_buffer.h"
 #include "empire/trade_route.h"
+#include "building/building_granary.h"
 #include "figuretype/figure_fishing_point.h"
 #include "figuretype/figure_kingdome_trader.h"
 #include "figuretype/figure_trader_ship.h"
@@ -931,4 +932,38 @@ void city_t::figures_update_day() {
     figure_valid_do([] (figure &f) {
         f.dcast()->update_day();
     });
+}
+
+bool city_t::determine_granary_get_foods(resource_foods &foods, int road_network) {
+    if (scenario_property_kingdom_supplies_grain()) {
+        return false;
+    }
+
+    foods.clear();
+    buildings_valid_do([&] (building &b) {
+        building_granary *granary = b.dcast_granary();
+        assert(granary);
+        if (!granary->has_road_access()) {
+            return;
+        }
+
+        if (road_network != granary->road_network()) {
+            return;
+        }
+
+        int pct_workers = calc_percentage<int>(granary->num_workers(), model_get_building(granary->type())->laborers);
+        if (pct_workers < 100 || granary->amount(RESOURCE_NONE) < 100) {
+            return;
+        }
+
+        if (!granary->is_empty_all()) {
+            return;
+        }
+
+        for (auto &r: foods) {
+            r.value += granary->is_getting(r.type) ? 1 : 0;
+        }
+    }, BUILDING_GRANARY);
+
+    return foods.any();
 }

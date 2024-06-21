@@ -59,6 +59,7 @@ struct city_t {
         bool temple_complex_placed;
         int32_t temple_complex_id;
     } buildings;
+
     struct {
         uint8_t fish_number;
         uint8_t animals_number;
@@ -69,6 +70,7 @@ struct city_t {
         int32_t soldiers;
         int32_t security_breach_duration;
     } figures;
+
     house_demands houses;
     desirability_t desirability;
     kingdome_relation_t kingdome;
@@ -127,6 +129,7 @@ struct city_t {
             int32_t uncollected_nobles;
         } monthly;
     } taxes;
+
     struct {
         int32_t population;
         int32_t population_last_year;
@@ -325,6 +328,7 @@ struct city_t {
         int32_t tutorial_disease_message_shown;
         int32_t tutorial_senate_built;
     } mission;
+
     struct {
         int8_t other_player[18904];
         int8_t unknown_00a0;
@@ -429,6 +433,8 @@ struct city_t {
     void calculate_max_prosperity();
     void ratings_update_explanations();
     void ratings_update(bool is_yearly_update);
+
+    bool determine_granary_get_foods(resource_foods &foods, int road_network);
 
     e_victory_state determine_victory_state();
     void victory_check();

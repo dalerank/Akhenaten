@@ -8,6 +8,30 @@
 struct building_storage;
 class building_storage_room;
 
+enum e_storageyard_state {
+    STORAGEYARD_ROOM = 0,
+    STORAGEYARD_FULL = 1,
+    STORAGEYARD_SOME_ROOM = 2
+};
+
+enum e_storageyard_task {
+    STORAGEYARD_TASK_NONE = -1,
+    STORAGEYARD_TASK_GETTING = 0,
+    STORAGEYARD_TASK_DELIVERING = 1,
+    STORAGEYARD_TASK_EMPTYING = 2,
+    STORAGEYARD_TASK_MONUMENT = 3,
+    //
+    STORAGEYARD_TASK_GETTING_MOAR = 9,
+};
+
+struct storage_worker_task {
+    e_storageyard_task result = STORAGEYARD_TASK_NONE;
+    building *space = nullptr;
+    int amount = 0;
+    e_resource resource = RESOURCE_NONE;
+    building *dest = nullptr;
+};
+
 class building_storage_yard : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_STORAGE_YARD, building_storage_yard)
@@ -45,6 +69,7 @@ public:
     short &stored_full_amount;
 
     static void ghost_preview(vec2i tile, painter &ctx);
+    static storage_worker_task deliver_food_to_gettingup_granary(building *warehouse);
 
 private:
     void draw_warehouse_orders(object_info *c);
@@ -61,26 +86,6 @@ building_storage_yard *storage_yard_cast(building *b);
 int get_storage_accepting_amount(building *b, e_resource resource);
 int building_storage_yard_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int *understaffed, tile2i *dst);
 
-enum e_storageyard_state { STORAGEYARD_ROOM = 0, STORAGEYARD_FULL = 1, STORAGEYARD_SOME_ROOM = 2 };
-
-enum e_storageyard_task {
-    STORAGEYARD_TASK_NONE = -1,
-    STORAGEYARD_TASK_GETTING = 0,
-    STORAGEYARD_TASK_DELIVERING = 1,
-    STORAGEYARD_TASK_EMPTYING = 2,
-    STORAGEYARD_TASK_MONUMENT = 3,
-    //
-    STORAGEYARD_TASK_GETTING_MOAR = 9,
-};
-
-struct storage_worker_task {
-    e_storageyard_task result = STORAGEYARD_TASK_NONE;
-    building *space = nullptr;
-    int amount = 0;
-    e_resource resource = RESOURCE_NONE;
-    building *dest = nullptr;
-};
-
 void building_storageyard_remove_resource_curse(building* warehouse, int amount);
 
 void building_storageyard_space_remove_export(building* space, e_resource resource);
@@ -89,4 +94,3 @@ void building_storageyards_add_resource(e_resource resource, int amount);
 
 int building_storageyards_remove_resource(e_resource resource, int amount);
 
-storage_worker_task building_storageyard_determine_worker_task(building* warehouse);

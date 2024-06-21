@@ -479,39 +479,6 @@ static bool determine_granary_accept_foods(resource_foods &foods, int road_netwo
     return foods.any();
 }
 
-static bool determine_granary_get_foods(resource_foods &foods, int road_network) {
-    if (scenario_property_kingdom_supplies_grain()) {
-        return false;
-    }
-
-    foods.clear();
-    buildings_valid_do([&] (building &b) {
-        building_granary *granary = b.dcast_granary();
-        assert(granary);
-        if (!granary->has_road_access()) {
-            return;
-        }
-
-        if (road_network != granary->road_network()) {
-            return;
-        }
-
-        int pct_workers = calc_percentage<int>(granary->num_workers(), model_get_building(granary->type())->laborers);
-        if (pct_workers < 100 || granary->amount(RESOURCE_NONE) < 100) {
-            return;
-        }
-
-        if (!granary->is_empty_all()) {
-            return;
-        }
-
-        for (auto &r: foods) {
-            r.value += granary->is_getting(r.type) ? 1 : 0;
-        }
-    }, BUILDING_GRANARY);
-
-    return foods.any();
-}
 
 static bool contains_non_stockpiled_food(building* space, const resource_foods &foods) {
     if (space->id <= 0) {
@@ -667,11 +634,11 @@ storage_worker_task building_storageyard_deliver_resource_to_workshop(building *
     return {STORAGEYARD_TASK_NONE};
 }
 
-storage_worker_task building_storageyard_deliver_food_to_gettingup_granary(building *warehouse) {
+storage_worker_task building_storage_yard::deliver_food_to_gettingup_granary(building *warehouse) {
     building *space = warehouse;
 
     resource_foods granary_resources;
-    if (determine_granary_get_foods(granary_resources, warehouse->road_network_id)) {
+    if (g_city.determine_granary_get_foods(granary_resources, warehouse->road_network_id)) {
         space = warehouse;
         for (int i = 0; i < 8; i++) {
             space = space->next();
@@ -775,7 +742,7 @@ storage_worker_task building_storageyard_determine_worker_task(building* warehou
         &building_storageyard_deliver_weapons,                      // deliver weapons to barracks
         &building_storageyard_deliver_resource_to_workshop,         // deliver raw materials to workshops
         &building_storageyard_deliver_papyrus_to_scribal_school,    // deliver raw materials to workshops
-        &building_storageyard_deliver_food_to_gettingup_granary,    // deliver food to getting granary
+        &building_storage_yard::deliver_food_to_gettingup_granary,    // deliver food to getting granary
         &building_storageyard_deliver_food_to_accepting_granary,    // deliver food to accepting granary
         &building_storage_yard_deliver_emptying_resources,           // emptying resource
         &building_storageyard_deliver_to_monuments,                 // monuments resource
