@@ -161,8 +161,7 @@ int figure_docker::get_closest_warehouse_for_import(tile2i pos, int city_id, int
 }
 
 int figure_docker::get_closest_warehouse_for_export(tile2i pos, int city_id, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource& export_resource) {
-    int exportable[16];
-    exportable[RESOURCE_NONE] = 0;
+    bool exportable[RESOURCES_MAX] = {0};
     for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
         exportable[r] = empire_can_export_resource_to_city(city_id, r);
     }

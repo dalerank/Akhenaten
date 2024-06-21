@@ -87,7 +87,7 @@ int building_storage_yard::get_space_info() const {
         return STORAGEYARD_FULL;
 }
 
-const building_storage *building_storage_yard::storage() {
+const building_storage *building_storage_yard::storage() const {
     return building_storage_get(this->base.storage_id);
 }
 
@@ -445,6 +445,10 @@ int building_storage_yard::for_getting(e_resource resource, tile2i* dst) {
         return 0;
 }
 
+bool building_storage_yard::is_empty_all() const {
+    return storage()->empty_all;
+}
+
 static bool determine_granary_accept_foods(resource_foods &foods, int road_network) {
     if (scenario_property_kingdom_supplies_grain()) {
         return false;
@@ -635,17 +639,17 @@ storage_worker_task building_storageyard_deliver_resource_to_workshop(building *
 }
 
 storage_worker_task building_storage_yard::deliver_food_to_gettingup_granary(building *warehouse) {
-    building *space = warehouse;
-
     resource_foods granary_resources;
-    if (g_city.determine_granary_get_foods(granary_resources, warehouse->road_network_id)) {
-        space = warehouse;
-        for (int i = 0; i < 8; i++) {
-            space = space->next();
-            if (contains_non_stockpiled_food(space, granary_resources)) {
-                // always one load only for granaries?
-                return {STORAGEYARD_TASK_DELIVERING, space, 100, space->subtype.warehouse_resource_id};
-            }
+    if (!g_city.determine_granary_get_foods(granary_resources, warehouse->road_network_id)) {
+        return {STORAGEYARD_TASK_NONE};
+    }
+
+    building *space = warehouse;
+    for (int i = 0; i < 8; i++) {
+        space = space->next();
+        if (contains_non_stockpiled_food(space, granary_resources)) {
+            // always one load only for granaries?
+            return {STORAGEYARD_TASK_DELIVERING, space, 100, space->subtype.warehouse_resource_id};
         }
     }
 
@@ -729,10 +733,9 @@ storage_worker_task building_storage_yard_deliver_emptying_resources(building *b
     return {STORAGEYARD_TASK_NONE};
 }
 
-storage_worker_task building_storageyard_determine_worker_task(building* warehouse) {
+storage_worker_task building_storage_yard::determine_worker_task() {
     // check workers - if less than enough, no task will be done today.
-    int pct_workers = calc_percentage<int>(warehouse->num_workers, model_get_building(warehouse->type)->laborers);
-    if (pct_workers < 50) {
+    if (pct_workers() < 50) {
         return {STORAGEYARD_TASK_NONE};
     }
 
@@ -749,16 +752,15 @@ storage_worker_task building_storageyard_determine_worker_task(building* warehou
     };
 
     for (const auto &action : actions) {
-        storage_worker_task task = (*action)(warehouse);
+        storage_worker_task task = (*action)(&base);
         if (task.result != STORAGEYARD_TASK_NONE) {
             return task;
         }
     }
     
     // move goods to other warehouses
-    const building_storage* s = building_storage_get(warehouse->storage_id);
-    if (s->empty_all) {
-        building *space = warehouse;
+    if (is_empty_all()) {
+        building *space = &base;
         for (int i = 0; i < 8; i++) {
             space = space->next();
             if (space->id > 0 && space->stored_full_amount > 0) {
@@ -834,7 +836,7 @@ void building_storage_yard::spawn_figure() {
     }
 
     base.common_spawn_labor_seeker(100);
-    auto task = building_storageyard_determine_worker_task(&base);
+    auto task = determine_worker_task();
     if (task.result == STORAGEYARD_TASK_NONE || task.amount <= 0) {
         return;
     }

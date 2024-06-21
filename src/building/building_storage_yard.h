@@ -49,7 +49,7 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     
     building_storage_room *room() { return next()->dcast_storage_room(); }
-    const building_storage *storage();
+    const building_storage *storage() const;
 
     int amount(e_resource resource) const;
     int total_stored() const;
@@ -67,9 +67,12 @@ public:
 
     int for_getting(e_resource resource, tile2i *dst);
     short &stored_full_amount;
+    bool is_empty_all() const;
 
     static void ghost_preview(vec2i tile, painter &ctx);
     static storage_worker_task deliver_food_to_gettingup_granary(building *warehouse);
+
+    storage_worker_task determine_worker_task();
 
 private:
     void draw_warehouse_orders(object_info *c);
