@@ -36,7 +36,7 @@ public:
     virtual void on_place_checks() override;
 
     const building_storage *storage();
-    int amount(e_resource resource);
+    int amount(e_resource resource) const;
     bool is_accepting(e_resource resource);
     int is_not_accepting(e_resource resource);
     bool is_getting(e_resource resource);

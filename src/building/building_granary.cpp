@@ -61,7 +61,7 @@ const building_storage *building_granary::storage() {
     return building_storage_get(base.storage_id);
 }
 
-int building_granary::amount(e_resource resource) {
+int building_granary::amount(e_resource resource) const {
     if (!resource_is_food(resource)) {
         return 0;
     }
@@ -129,8 +129,8 @@ int building_granary::add_resource(e_resource resource, int is_produced, int amo
 
 int building_granary::total_stored() const {
     int result = 0;
-    for (int i = RESOURCE_FOOD_MIN; i < RESOURCES_FOODS_MAX; i++) {
-        result += data.granary.resource_stored[i];
+    for (e_resource r = RESOURCE_FOOD_MIN; r < RESOURCES_FOODS_MAX; ++r) {
+        result += amount(r);
     }
 
     return result;
@@ -514,14 +514,10 @@ void building_granary_storageyard_curse(int big) {
         int total_stored = 0;
         if (b->type == BUILDING_STORAGE_YARD) {
             building_storage_yard *warehouse = b->dcast_storage_yard();
-            for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
-                total_stored += warehouse->amount(r);
-            }
+            total_stored = warehouse->total_stored();
         } else if (b->type == BUILDING_GRANARY) {
             building_granary *granary = b->dcast_granary();
-            for (e_resource r = RESOURCE_FOOD_MIN; r < RESOURCES_FOODS_MAX; ++r) {
-                total_stored += granary->amount(r);
-            }
+            total_stored = granary->total_stored();
             total_stored /= UNITS_PER_LOAD;
         } else {
             continue;

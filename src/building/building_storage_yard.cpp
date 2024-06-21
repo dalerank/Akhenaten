@@ -91,7 +91,7 @@ const building_storage *building_storage_yard::storage() {
     return building_storage_get(this->base.storage_id);
 }
 
-int building_storage_yard::amount(e_resource resource) {
+int building_storage_yard::amount(e_resource resource) const {
     int total = 0;
     const building* space = &base;
     for (int i = 0; i < 8; i++) {
@@ -104,6 +104,15 @@ int building_storage_yard::amount(e_resource resource) {
         }
     }
     return total;
+}
+
+int building_storage_yard::total_stored() const {
+    int total_stored = 0;
+    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        total_stored += amount(r);
+    }
+
+    return total_stored;
 }
 
 int building_storage_yard::freespace(e_resource resource) {
@@ -735,7 +744,7 @@ storage_worker_task building_storage_yard_deliver_emptying_resources(building *b
         return {STORAGEYARD_TASK_NONE};
     }
 
-    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; r = (e_resource)(r + 1)) {
+    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
         if (!warehouse->is_emptying(r)) {
             continue;
         }

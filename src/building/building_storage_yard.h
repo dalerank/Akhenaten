@@ -27,7 +27,8 @@ public:
     building_storage_room *room() { return next()->dcast_storage_room(); }
     const building_storage *storage();
 
-    int amount(e_resource resource);
+    int amount(e_resource resource) const;
+    int total_stored() const;
     bool is_not_accepting(e_resource resource);
 
     int remove_resource(e_resource resource, int amount);
