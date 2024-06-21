@@ -233,6 +233,7 @@ building_impl *building::dcast() {
     if (!_ptr) {
         _ptr = buildings::create(type, *this);
     }
+    assert(!!_ptr);
     return _ptr;
 }
 
