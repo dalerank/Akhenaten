@@ -539,6 +539,13 @@ public:
     inline e_figure_type type() const { return base.type; }
     inline int id() { return base.id; }
     inline short action_state() const { return base.action_state; }
+
+    template<typename ... Args>
+    bool action_state(const Args... args) const {
+        int states[] = {args...};
+        return std::find(std::begin(states), std::end(states), base.action_state) != std::end(states);
+    }
+
     inline uint8_t direction() const { return base.direction; }
     inline const building *home() const { return base.home(); }
     inline void advance_action(int action) { int saved_action = action; base.advance_action(action); on_action_changed(saved_action); }
@@ -561,6 +568,7 @@ public:
     inline bool has_destination(int _id = -1) { return base.has_destination(_id); }
     inline void set_destination(int _id) { base.set_destination(_id); }
     inline void set_destination(building *b) { base.set_destination(b); }
+           void set_destination(building *b, tile2i t);
     inline void set_home(int _id) { base.set_home(_id); }
     inline void set_home(building *b) { base.set_home(b); }
     inline void set_direction_to(building *b) { return base.set_direction_to(b); }

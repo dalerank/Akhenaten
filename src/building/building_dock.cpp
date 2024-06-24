@@ -319,6 +319,10 @@ bool map_tile_is_connected_to_open_water(tile2i tile) {
     return map_terrain_is_adjacent_to_open_water(tile, 3);
 }
 
+int building_dock::trader_id() {
+    return figure_get(data.dock.trade_ship_id)->trader_id;
+}
+
 bool building_dock::is_good_accepted(int index) {
     int goods_bit = 1 << index;
     return !(base.subtype.market_goods & goods_bit);
@@ -372,26 +376,14 @@ building_dest map_get_free_destination_dock(int ship_id) {
         return {0, tile2i::invalid};
 
     building* dock = building_get(dock_id);
-    int dx, dy;
+    vec2i offset;
     switch (dock->data.dock.orientation) {
-    case 0:
-        dx = 1;
-        dy = -1;
-        break;
-    case 1:
-        dx = 3;
-        dy = 1;
-        break;
-    case 2:
-        dx = 1;
-        dy = 3;
-        break;
-    default:
-        dx = -1;
-        dy = 1;
-        break;
+    case 0: offset = {1, -1};  break;
+    case 1: offset = {3, 1}; break;
+    case 2: offset = {1, 3}; break;
+    default: offset = {-1, 1}; break;
     }
-    tile2i dock_tile = dock->tile.shifted(dx, dy);
+    tile2i dock_tile = dock->tile.shifted(offset.x, offset.y);
     tile2i dest_tile;
     map_point_store_result(dock_tile, dest_tile);
     dock->data.dock.trade_ship_id = ship_id;

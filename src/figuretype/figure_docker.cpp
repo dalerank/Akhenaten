@@ -4,6 +4,7 @@
 #include "building/storage.h"
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
+#include "building/building_dock.h"
 #include "city/buildings.h"
 #include "city/trade.h"
 #include "core/calc.h"
@@ -233,6 +234,11 @@ tile2i figure_docker::get_trade_center_location() {
     }
 }
 
+int figure_docker::trader_id() {
+    building_dock *dock = home()->dcast_dock();
+    return dock->trader_id();
+}
+
 bool figure_docker::deliver_import_resource(building* dock) {
     int ship_id = dock->data.dock.trade_ship_id;
     if (!ship_id) {
@@ -418,12 +424,11 @@ void figure_docker::figure_action() {
                                     : 0;
 
             if (try_import_resource(destination(), base.resource_id, trade_city_id)) {
-                int trader_id = figure_get(b->data.dock.trade_ship_id)->trader_id;
-                trader_record_sold_resource(trader_id, base.resource_id);
-                advance_action(FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING);
                 wait_ticks = 0;
-                destination_tile = base.source_tile;
-                base.resource_id = RESOURCE_NONE;
+                trader_record_sold_resource(trader_id(), base.resource_id);
+                advance_action(FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING);
+                load_resource(RESOURCE_NONE, 0);
+                set_destination(home(), home()->tile);
                 fetch_export_resource(b);
             } else {
                 advance_action(FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING);
@@ -442,12 +447,12 @@ void figure_docker::figure_action() {
                                     : 0;
 
             advance_action(FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING);
-            base.destination_tile = base.source_tile;
             wait_ticks = 0;
-            if (try_export_resource(destination(), base.resource_id, trade_city_id)) {
-                int trader_id = figure_get(b->data.dock.trade_ship_id)->trader_id;
-                int amount = trader_record_bought_resource(trader_id, base.resource_id);
-                base.resource_amount_full += amount;
+            const bool can_export = try_export_resource(destination(), base.resource_id, trade_city_id);
+            if (can_export) {
+                int amount = trader_record_bought_resource(trader_id(), base.resource_id);
+                load_resource(base.resource_id, amount);
+                set_destination(home(), home()->tile);
                 advance_action(FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING);
             } else {
                 fetch_export_resource(b);
@@ -463,25 +468,27 @@ void figure_docker::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i*
 }
 
 sound_key figure_docker::phrase_key() const {
-    if (action_state() == FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE ||
-        action_state() == FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE) {
+    const bool in_action = action_state(FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE, FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE);
+    if (in_action) {
         int dist = calc_maximum_distance(destination_tile, base.source_tile);
         if (dist >= 25) {
             return "too_far"; // too far
         }
     }
+
     return {};
 }
 
 void figure_docker::update_animation() {
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
 
-    if (action_state() == FIGURE_ACTION_149_CORPSE) {
+    if (action_state(FIGURE_ACTION_149_CORPSE)) {
         base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
         base.cart_image_id = 0;
     } else {
         base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.anim.frame;
     }
+
     if (base.cart_image_id) {
         base.cart_image_id += dir;
         base.figure_image_set_cart_offset(dir);

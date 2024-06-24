@@ -24,13 +24,14 @@ public:
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 
+    int trader_id();
     bool is_good_accepted(int index);
     void toggle_good_accepted(int index);
     int count_idle_dockers() const;
     void draw_dock_orders(object_info *c);
     void draw_dock(object_info *c);
     void draw_dock_orders_foreground(object_info *c);
-    void draw_dock_foreground(object_info *c);
+    //void draw_dock_foreground(object_info *c);
 };
 
 struct building_dest {
