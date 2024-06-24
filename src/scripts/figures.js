@@ -422,6 +422,14 @@ figure_storageyard_cart = {
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
+figure_governor = {
+	animations : {
+		walk : { pack: PACK_SPR_MAIN, id:189, max_frames:12 },
+		death : { pack: PACK_SPR_MAIN, id:190, max_frames:8, loop:false },
+	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+}
+
 figure_trade_ship = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:123, max_frames:4, duration:4 },

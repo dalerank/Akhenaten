@@ -50,27 +50,6 @@ static int citizen_phrase() {
     return 0;
 }
 
-static sound_key governor_phrase(figure *f) {
-    int nobles_in_city = 0;
-    buildings_valid_do([&] (building &b) {
-        if (!b.house_size || !b.house_population || b.subtype.house_level < BUILDING_HOUSE_COMMON_MANOR) {
-            return;
-        }
-        nobles_in_city += b.house_population;
-    });
-
-    int nolbes_leave_city_pct = calc_percentage<int>(g_city.migration.nobles_leave_city_this_year, nobles_in_city);
-    if (nolbes_leave_city_pct > 10) {
-        return "governor_city_left_much_nobles";
-    }
-
-    if (g_city.festival.months_since_festival < 6) {
-        return "governor_festival_was_near";
-    }
-
-    return {};
-}
-
 static int tower_sentry_phrase() {
     //    if (++f->phrase_sequence_exact >= 2)
     //        f->phrase_sequence_exact = 0;
@@ -108,7 +87,6 @@ static sound_key phrase_based_on_figure_state(figure *f) {
     //        case FIGURE_RIOTER:
     //        case FIGURE_MISSIONARY:
     //            return citizen_phrase(f);
-    case FIGURE_GOVERNOR: return governor_phrase(f);
     //        case FIGURE_TOWER_SENTRY:
     //            return tower_sentry_phrase(f);
     //        case FIGURE_FORT_JAVELIN:

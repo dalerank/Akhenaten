@@ -218,6 +218,7 @@ var figure_native_trader = {}
 var figure_librarian = {}
 var figure_constable = {}
 var figure_shipwreck = {}
+var figure_governor = {}
 // missions
 var mission0 = {}
 var mission1 = {}

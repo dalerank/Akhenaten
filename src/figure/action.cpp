@@ -423,7 +423,6 @@ void figure::action_perform() {
         case FIGURE_SPEAR: spear_action(); break;
         case FIGURE_CHARIOR_RACER: hippodrome_horse_action(); break;
         case FIGURE_HUNTER_ARROW: arrow_action(); break;
-        case FIGURE_GOVERNOR: governor_action(); break;
         case FIGURE_SLED_PULLER: sled_puller_action(); break;
         case FIGURE_HYENA: hyena_action(); break;
 

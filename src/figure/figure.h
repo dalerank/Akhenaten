@@ -387,7 +387,6 @@ public:
     void protestor_action();
     void mugger_action();
     void rioter_action();
-    void governor_action();
     void editor_flag_action();
     void noble_action();
     void indigenous_native_action();

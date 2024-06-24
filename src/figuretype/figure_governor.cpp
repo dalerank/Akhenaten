@@ -1,11 +1,24 @@
-#include "figure/figure.h"
+#include "figure_governor.h"
+#include "figure_governor.h"
+#include "figure_governor.h"
 
 #include "city/buildings.h"
 #include "grid/road_access.h"
 #include "graphics/image.h"
 
-void figure::governor_action() {
-    switch (action_state) {
+#include "city/city.h"
+
+#include "js/js_game.h"
+
+figures::model_t<figure_governor> governor_m;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_governor);
+void config_load_figure_governor() {
+    governor_m.load();
+}
+
+void figure_governor::figure_action() {
+    switch (action_state()) {
     case FIGURE_ACTION_120_GOVERNOR_CREATED:
     {
         // if city has palace, all mugger will go there
@@ -25,27 +38,46 @@ void figure::governor_action() {
     break;
 
     case FIGURE_ACTION_121_GOVERNOR_MOVING:
-    {
-        move_ticks(1);
-        wait_ticks = 0;
-        if (direction == DIR_FIGURE_NONE) {
+        base.move_ticks(1);
+        base.wait_ticks = 0;
+        if (direction() == DIR_FIGURE_NONE) {
             poof();
-        } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
-            action_state = FIGURE_ACTION_120_GOVERNOR_CREATED;
+        } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            advance_action(FIGURE_ACTION_120_GOVERNOR_CREATED);
             route_remove();
         }
-    }
     break;
 
     }
 
-    wait_ticks++;
+    base.wait_ticks++;
     if (wait_ticks > 200) {
         poof();
-        anim.frame = 0;
+        base.anim.frame = 0;
+    }
+}
+
+sound_key figure_governor::phrase_key() const {
+    int nobles_in_city = 0;
+    buildings_valid_do([&] (building &b) {
+        if (!b.house_size || !b.house_population || b.subtype.house_level < BUILDING_HOUSE_COMMON_MANOR) {
+            return;
+        }
+        nobles_in_city += b.house_population;
+    });
+
+    int nolbes_leave_city_pct = calc_percentage<int>(g_city.migration.nobles_leave_city_this_year, nobles_in_city);
+    if (nolbes_leave_city_pct > 10) {
+        return "governor_city_left_much_nobles";
     }
 
-    if (action_state == FIGURE_ACTION_149_CORPSE) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_GOVERNOR_DEATH);
+    if (g_city.festival.months_since_festival < 6) {
+        return "governor_festival_was_near";
     }
+
+    return {};
+}
+
+const animations_t &figure_governor::anim() const {
+    return governor_m.anim;
 }
