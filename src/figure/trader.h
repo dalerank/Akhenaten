@@ -15,20 +15,8 @@ void traders_clear();
  * @return ID of the new trader
  */
 int trader_create();
-
-/**
- * Record that the trader has bought a resource from the city
- * @param trader_id Trader
- * @param resource Resource bought
- */
-void trader_record_bought_resource(int trader_id, e_resource resource);
-
-/**
- * Record that the trader has sold a resource to the city
- * @param trader_id Trader
- * @param resource Resource sold
- */
-void trader_record_sold_resource(int trader_id, e_resource resource);
+int trader_record_bought_resource(int trader_id, e_resource resource);
+int trader_record_sold_resource(int trader_id, e_resource resource);
 
 /**
  * Gets the amount bought of the given resource

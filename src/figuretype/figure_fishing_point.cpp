@@ -78,6 +78,10 @@ bool figure_fishing_point::can_move_by_water() const {
     return map_terrain_is(tile(), TERRAIN_DEEPWATER);
 }
 
+void figure_fishing_point::main_update_image() {
+    base.sprite_image_id = base.anim.start() + base.anim.current_frame();
+}
+
 figure *figure_fishing_point::create(tile2i tile) {
     random_generate_next();
     figure* fish = figure_create(FIGURE_FISHING_POINT, tile, DIR_0_TOP_RIGHT);

@@ -512,6 +512,7 @@ public:
     virtual bool can_move_by_water() const;
     virtual int y_correction(int y) const { return y; }
     virtual void cart_update_image() { base.cart_update_image(); }
+    virtual void main_update_image();
     virtual bool is_common_roaming() { return true; }
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
     virtual const animations_t &anim() const { assert(false); /*no anim*/ static animations_t dummy; return dummy; }

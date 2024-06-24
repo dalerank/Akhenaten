@@ -287,6 +287,14 @@ bool figure_impl::can_move_by_water() const {
     return (base.allow_move_type == EMOVE_WATER || base.allow_move_type == EMOVE_DEEPWATER || base.allow_move_type == EMOVE_HIPPO);
 }
 
+void figure_impl::main_update_image() {
+    if (base.state == FIGURE_STATE_DYING) {
+        base.sprite_image_id = base.anim.start() + base.anim.current_frame();
+    } else {
+        base.sprite_image_id = base.anim.start() + base.figure_image_direction() + 8 * base.anim.current_frame();
+    }
+}
+
 static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;
 
 void figure_impl::kill() {

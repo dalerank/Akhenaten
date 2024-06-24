@@ -146,14 +146,6 @@ void figure::figure_image_update(bool refresh_only) {
     anim.update(refresh_only);
 
     switch (type) {
-    case FIGURE_FISHING_POINT:
-        break;
-
-    default:
-        dcast()->cart_update_image();
-    }
-
-    switch (type) {
     case FIGURE_JAVELIN:
     case FIGURE_ARROW:
     case FIGURE_HUNTER_ARROW: {
@@ -165,18 +157,9 @@ void figure::figure_image_update(bool refresh_only) {
     case FIGURE_EXPLOSION:
         break;
 
-    case FIGURE_FISHING_POINT: {
-        sprite_image_id = anim.start() + anim.current_frame();
-        break;
-    }
-
     default:
-        if (state == FIGURE_STATE_DYING) {
-            sprite_image_id = anim.start() + anim.current_frame();
-        } else {
-            sprite_image_id = anim.start() + figure_image_direction() + 8 * anim.current_frame();
-        }
-        break;
+        dcast()->main_update_image();
+        dcast()->cart_update_image();
     }
 }
 
@@ -236,6 +219,7 @@ void figure::cart_update_image() {
     case RESOURCE_BARLEY:
     case RESOURCE_COPPER:
     case RESOURCE_BEER:
+    case RESOURCE_PAPYRUS:
         cart_image_id = image_group(resource2cartanim(RESOURCE_NONE));
         if (resource_amount_full > 0) {
             cart_image_id = image_group(resource2cartanim(resource_id));

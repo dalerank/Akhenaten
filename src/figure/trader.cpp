@@ -43,25 +43,32 @@ void traders_clear(void) {
 int trader_create(void) {
     auto &data = g_figure_trader_data;
     int trader_id = data.next_index++;
-    if (data.next_index >= MAX_TRADERS)
+    if (data.next_index >= MAX_TRADERS) {
         data.next_index = 0;
+    }
 
     memset(&data.traders[trader_id], 0, sizeof(struct trader));
     return trader_id;
 }
 
-void trader_record_bought_resource(int trader_id, e_resource resource) {
+int trader_record_bought_resource(int trader_id, e_resource resource) {
+    constexpr int amount = 100;
     auto &data = g_figure_trader_data;
-    data.traders[trader_id].bought_amount += 100;
-    data.traders[trader_id].bought_resources[resource] += 100;
+    data.traders[trader_id].bought_amount += amount;
+    data.traders[trader_id].bought_resources[resource] += amount;
     data.traders[trader_id].bought_value += trade_price_sell(resource);
+
+    return amount;
 }
 
-void trader_record_sold_resource(int trader_id, e_resource resource) {
+int trader_record_sold_resource(int trader_id, e_resource resource) {
+    constexpr int amount = 100;
     auto &data = g_figure_trader_data;
-    data.traders[trader_id].sold_amount += 100;
-    data.traders[trader_id].sold_resources[resource] += 100;
+    data.traders[trader_id].sold_amount += amount;
+    data.traders[trader_id].sold_resources[resource] += amount;
     data.traders[trader_id].sold_value += trade_price_buy(resource);
+
+    return amount;
 }
 
 int trader_bought_resources(int trader_id, e_resource resource) {

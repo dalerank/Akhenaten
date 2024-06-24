@@ -426,7 +426,7 @@ figure_trade_ship = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:123, max_frames:4, duration:4 },
 		death : { pack:PACK_SPR_MAIN, id:124, max_frames:8 },
-		idle : { pack:PACK_SPR_MAIN, id:125, max_frames:1 },
+		idle : { pack:PACK_SPR_MAIN, id:125, max_frames:1, offset:0 },
 	},
 	sounds : {
 		looking_for_unload : {sound:"barge_e01.wav", group: 224, text:0},
