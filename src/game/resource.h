@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <array>
+#include <algorithm>
 #include <type_traits>
 
 enum e_resource : uint8_t {
@@ -60,17 +61,9 @@ struct resource_foods {
     using value_type = values_t::value_type;
     using iterator = values_t::iterator;
     using const_iterator = values_t::const_iterator;
-    values_t data = {
-        value_type{RESOURCE_NONE, 0},
-        value_type{RESOURCE_GRAIN, 0},
-        value_type{RESOURCE_MEAT, 0},
-        value_type{RESOURCE_LETTUCE, 0},
-        value_type{RESOURCE_CHICKPEAS, 0},
-        value_type{RESOURCE_POMEGRANATES, 0},
-        value_type{RESOURCE_FIGS, 0},
-        value_type{RESOURCE_FISH, 0},
-        value_type{RESOURCE_GAMEMEAT, 0}
-    };
+    values_t data = {};
+
+    inline resource_foods() { for (auto &it : data) { it = {(e_resource)std::distance(data.data(), &it), 0}; } }
     inline int &operator[](e_resource r) { return data[r].value; }
     inline const int &operator[](e_resource r) const { return data[r].value; }
     inline iterator begin() { return data.begin(); }

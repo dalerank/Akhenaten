@@ -14,10 +14,11 @@ public:
     virtual void figure_action() override;
     virtual sound_key phrase_key() const override;
     virtual void update_animation() override;
+    virtual void poof() override;
 
     int deliver_import_resource(building *dock);
     tile2i get_trade_center_location();
-    int fetch_export_resource(building* dock);
+    bool fetch_export_resource(building* dock);
     bool try_import_resource(building *b, e_resource resource, int city_id);
     int try_export_resource(building *b, e_resource resource, int city_id);
     int get_closest_warehouse_for_import(tile2i pos, int city_id, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource &import_resource);
