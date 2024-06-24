@@ -239,6 +239,11 @@ int figure_docker::trader_id() {
     return dock->trader_id();
 }
 
+int figure_docker::trader_city_id() {
+    building_dock *dock = home()->dcast_dock();
+    return dock->trader_city_id();
+}
+
 bool figure_docker::deliver_import_resource(building* dock) {
     int ship_id = dock->data.dock.trade_ship_id;
     if (!ship_id) {
@@ -407,9 +412,13 @@ void figure_docker::figure_action() {
         break;
 
     case FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE, ACTION_8_RECALCULATE);
-        if (destination()->state != BUILDING_STATE_VALID)
+        if (do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE, ACTION_8_RECALCULATE)) {
+            load_resource(RESOURCE_NONE, 0);
+        }
+
+        if (destination()->state != BUILDING_STATE_VALID) {
             poof();
+        }
         break;
 
     case FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING:
@@ -442,10 +451,7 @@ void figure_docker::figure_action() {
     case FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE:
         wait_ticks++;
         if (wait_ticks > 10) {
-            int trade_city_id = b->data.dock.trade_ship_id
-                                    ? figure_get(b->data.dock.trade_ship_id)->empire_city_id
-                                    : 0;
-
+            int trade_city_id = trader_city_id();
             advance_action(FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING);
             wait_ticks = 0;
             const bool can_export = try_export_resource(destination(), base.resource_id, trade_city_id);

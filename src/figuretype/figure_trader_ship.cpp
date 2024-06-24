@@ -140,12 +140,8 @@ void figure_trade_ship::figure_action() {
             }
         }
         if (destination()->state != BUILDING_STATE_VALID) {
-            base.action_state = FIGURE_ACTION_115_TRADE_SHIP_LEAVING;
+            advance_action(FIGURE_ACTION_115_TRADE_SHIP_LEAVING, scenario_map_river_exit());
             base.wait_ticks = 0;
-            base.destination_tile = scenario_map_river_exit();
-            //                map_point river_exit = scenario_map_river_exit();
-            //                destination_tile.x() = river_exit.x();
-            //                destination_tile.y() = river_exit.y();
         }
         break;
 
@@ -210,6 +206,10 @@ void figure_trade_ship::figure_action() {
             if (free_dock.tile.valid() && map_figure_id_get(free_dock.tile) != id() && queue_dock.bid) {
                 base.action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
                 base.destination_tile = free_dock.tile;
+            }
+
+            if (base.trade_ship_failed_dock_attempts >= 10) {
+                advance_action(FIGURE_ACTION_115_TRADE_SHIP_LEAVING, scenario_map_river_exit());
             }
             base.wait_ticks = 0;
         }
@@ -278,7 +278,7 @@ void figure_trade_ship::update_animation() {
 }
 
 void figure_trade_ship::poof() {
-    //
+    figure_carrier::poof();
 }
 
 const animations_t &figure_trade_ship::anim() const {
@@ -355,6 +355,11 @@ bool figure_trade_ship::window_info_background(object_info &c) {
 }
 
 void figure_trade_ship::update_day() {
+    const bool on_raid = action_state(FIGURE_ACTION_114_TRADE_SHIP_ANCHORED, FIGURE_ACTION_112_TRADE_SHIP_MOORED);
+    if (!on_raid) {
+        return;
+    }
+
     building* b = destination();
     for (const int docker_id: b->data.dock.docker_ids) {
         figure* docker = figure_get(docker_id);

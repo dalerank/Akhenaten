@@ -323,6 +323,12 @@ int building_dock::trader_id() {
     return figure_get(data.dock.trade_ship_id)->trader_id;
 }
 
+int building_dock::trader_city_id() {
+    return data.dock.trade_ship_id
+                ? figure_get(data.dock.trade_ship_id)->empire_city_id
+                : 0;
+}
+
 bool building_dock::is_good_accepted(int index) {
     int goods_bit = 1 << index;
     return !(base.subtype.market_goods & goods_bit);

@@ -549,6 +549,7 @@ public:
     inline uint8_t direction() const { return base.direction; }
     inline const building *home() const { return base.home(); }
     inline void advance_action(int action) { int saved_action = action; base.advance_action(action); on_action_changed(saved_action); }
+           void advance_action(int action, tile2i t);
     virtual void on_action_changed(int saved_action) {}
     inline bool do_returnhome(e_terrain_usage terrainchoice, short next_action = -1) { return base.do_returnhome(terrainchoice, next_action); }
     inline bool do_gotobuilding(building *dest, bool stop_at_road = true, e_terrain_usage terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1) { return base.do_gotobuilding(dest, stop_at_road, terrainchoice, NEXT_ACTION, FAIL_ACTION); }

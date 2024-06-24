@@ -17,6 +17,7 @@ public:
     virtual void poof() override;
 
     int trader_id();
+    int trader_city_id();
     bool deliver_import_resource(building *dock);
     tile2i get_trade_center_location();
     bool fetch_export_resource(building* dock);

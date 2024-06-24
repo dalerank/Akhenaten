@@ -39,13 +39,11 @@ void figure_flotsam::figure_action() {
         if (wait_ticks <= 0) {
             base.action_state = FIGURE_ACTION_129_FLOTSAM_FLOATING;
             wait_ticks = 0;
-            if (!base.resource_id && city_god_osiris_create_shipwreck_flotsam())
+            if (!base.resource_id && city_god_osiris_create_shipwreck_flotsam()) {
                 base.min_max_seen = 1;
+            }
 
             destination_tile = scenario_map_river_exit();
-            //                map_point river_exit = scenario_map_river_exit();
-            //                destination_tile.x() = river_exit.x();
-            //                destination_tile.y() = river_exit.y();
         }
         break;
 

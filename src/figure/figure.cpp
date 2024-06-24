@@ -315,6 +315,11 @@ const figure_impl::static_params &figure_impl::params(e_figure_type e) {
     return (it == figure_impl_params->end()) ? figure_impl::static_params::dummy : *it->second;
 }
 
+void figure_impl::advance_action(int action, tile2i t) {
+    advance_action(action);
+    base.destination_tile = t;
+}
+
 void figure_impl::set_destination(building *b, tile2i t) {
     base.set_destination(b);
     base.destination_tile = t;
