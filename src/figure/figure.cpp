@@ -31,7 +31,9 @@ figure_data_t g_figure_data = {0, false};
 declare_console_command_p(killall, console_command_killall);
 void console_command_killall(std::istream &, std::ostream &) {
     for (auto &f: map_figures()) {
-        f->poof();
+        if (f->is_valid()) {
+            f->poof();
+        }
     }
 
     city_warning_show_console("Killed all walkers");
@@ -341,6 +343,7 @@ figure_impl *figures::create(e_figure_type e, figure *data) {
         }
     }
 
+    assert(false);
     return new figure_impl(data);
 }
 
