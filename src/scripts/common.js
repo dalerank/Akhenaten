@@ -158,6 +158,7 @@ var building_house_palatial_estate = {}
 var empire_window = {}
 var empire_images_remap = []
 var imagepaks = []
+
 // ui
 var advisor_chief_window = {}
 var advisor_rating_window = {}
@@ -169,6 +170,8 @@ var main_menu_window = {}
 var bazaar_info_window = {}
 var well_info_window = {}
 var minimap_window = {}
+var advisor_trade_window = {}
+
 //figures
 var figure_fireman = {}
 var figure_water_carrier = {}

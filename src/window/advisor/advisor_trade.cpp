@@ -1,4 +1,4 @@
-#include "trade.h"
+#include "advisor_trade.h"
 
 #include "graphics/image.h"
 #include "graphics/graphics.h"
@@ -20,9 +20,14 @@
 #include "window/trade_prices.h"
 #include "game/game.h"
 
-#define ADVISOR_HEIGHT 27
-
 ui::advisor_trade_window g_advisor_trade_window;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_trade);
+void config_load_advisor_trade() {
+    g_config_arch.r_section("advisor_trade_window", [] (archive arch) {
+        g_advisor_trade_window.load(arch);
+    });
+}
 
 static void button_prices(int param1, int param2);
 static void button_empire(int param1, int param2);
@@ -55,31 +60,28 @@ static int focus_button_id;
 static void on_scroll(void) {
     window_invalidate();
 }
-static scrollbar_type scrollbar = {590, 52, 336, on_scroll};
+
+static scrollbar_t g_advisor_trade_scrollbar = {{590, 52}, 336, on_scroll};
 
 #define IMPORT_EXPORT_X 310
 
 int ui::advisor_trade_window::draw_background() {
-    painter ctx = game.painter();
     city_resource_determine_available();
 
-    outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 4, 10, 10);
+    auto &ui = g_advisor_trade_window;
 
-    lang_text_draw(54, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
-    int width = lang_text_get_width(54, 1, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(54, 1, 60, 38, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    return ADVISOR_HEIGHT;
+    return 0;
 }
 
 void ui::advisor_trade_window::draw_foreground() {
     painter ctx = game.painter();
-    inner_panel_draw(17, 52, 36, 21);
+
+    g_advisor_trade_window.draw();
+
     graphics_set_clip_rectangle(20, 39, 575, 346);
     const resources_list* list = city_resource_get_available();
-    for (int i = scrollbar.scroll_position; i < list->size; i++) {
-        int y_offset = 22 * (i - scrollbar.scroll_position);
+    for (int i = g_advisor_trade_scrollbar.scroll_position; i < list->size; i++) {
+        int y_offset = 22 * (i - g_advisor_trade_scrollbar.scroll_position);
         e_resource resource = list->items[i];
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         ImageDraw::img_generic(ctx, image_id_resource_icon(image_offset), 24, y_offset + 58);
@@ -140,16 +142,16 @@ void ui::advisor_trade_window::draw_foreground() {
         }
 
         // update/draw buttons accordingly
-        if (focus_button_id - 3 == i - scrollbar.scroll_position)
+        if (focus_button_id - 3 == i - g_advisor_trade_scrollbar.scroll_position)
             button_border_draw(TRADE_BUTTON_X, y_offset + 54, TRADE_BUTTON_WIDTH, 24, true);
-        resource_buttons[i + 2 - scrollbar.scroll_position].parameter1 = i;
+        resource_buttons[i + 2 - g_advisor_trade_scrollbar.scroll_position].parameter1 = i;
     }
     graphics_reset_clip_rectangle();
 
     // scrollbar
-    inner_panel_draw(scrollbar.x + 3, scrollbar.y + 20, 2, 19);
-    scrollbar.max_scroll_position = city_resource_get_available()->size - 15;
-    scrollbar_draw(&scrollbar);
+    inner_panel_draw(g_advisor_trade_scrollbar.pos.x + 3, g_advisor_trade_scrollbar.pos.y + 20, 2, 19);
+    g_advisor_trade_scrollbar.max_scroll_position = city_resource_get_available()->size - 15;
+    scrollbar_draw(&g_advisor_trade_scrollbar);
 
     // prices
     button_border_draw(98, 396, 200, 24, focus_button_id == 2);
@@ -165,7 +167,7 @@ int ui::advisor_trade_window::handle_mouse(const mouse* m) {
     if (num_resources > 15)
         num_resources = 15;
 
-    bool handled = scrollbar_handle_mouse(&scrollbar, m);
+    bool handled = scrollbar_handle_mouse(&g_advisor_trade_scrollbar, m);
     if (handled)
         return handled;
 

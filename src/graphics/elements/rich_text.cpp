@@ -15,7 +15,7 @@
 
 static void on_scroll(void);
 
-static scrollbar_type scrollbar = {0, 0, 0, on_scroll};
+static scrollbar_t g_richtext_scrollbar = {{0, 0}, 0, on_scroll};
 
 struct rich_text_link_t {
     int message_id;
@@ -55,10 +55,10 @@ int rich_text_init(const uint8_t* text, int x_text, int y_text, int width_blocks
         data.text_width_blocks = width_blocks;
 
         data.num_lines = rich_text_draw(text, data.x_text + 8, data.y_text + 6, 16 * data.text_width_blocks - 16, data.text_height_lines, 1);
-        scrollbar.x = data.x_text + 16 * data.text_width_blocks - 1;
-        scrollbar.y = data.y_text;
-        scrollbar.height = 16 * data.text_height_blocks;
-        scrollbar_init(&scrollbar, scrollbar.scroll_position, data.num_lines - data.text_height_lines);
+        g_richtext_scrollbar.pos.x = data.x_text + 16 * data.text_width_blocks - 1;
+        g_richtext_scrollbar.pos.y = data.y_text;
+        g_richtext_scrollbar.height = 16 * data.text_height_blocks;
+        g_richtext_scrollbar.init(g_richtext_scrollbar.scroll_position, data.num_lines - data.text_height_lines);
         if (data.num_lines <= data.text_height_lines && adjust_width_on_no_scroll) {
             data.text_width_blocks += 2;
         }
@@ -75,7 +75,7 @@ void rich_text_set_fonts(e_font normal_font, e_font link_font) {
 
 void rich_text_reset(int scroll_position) {
     auto &data = g_rich_text_data;
-    scrollbar_reset(&scrollbar, scroll_position);
+    scrollbar_reset(&g_richtext_scrollbar, scroll_position);
     data.num_lines = 0;
     rich_text_clear_links();
 }
@@ -308,7 +308,7 @@ static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, 
 
         int outside_viewport = 0;
         if (!measure_only) {
-            if (line < scrollbar.scroll_position || line >= scrollbar.scroll_position + height_lines)
+            if (line < g_richtext_scrollbar.scroll_position || line >= g_richtext_scrollbar.scroll_position + height_lines)
                 outside_viewport = 1;
         }
 
@@ -324,11 +324,11 @@ static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, 
                     const image_t* img = image_get(image_id);
                     image_height_lines = img->height / 16 + 2;
                     int image_offset_x = x_offset + (box_width - img->width) / 2 - 4;
-                    if (line < height_lines + scrollbar.scroll_position) {
-                        if (line >= scrollbar.scroll_position)
+                    if (line < height_lines + g_richtext_scrollbar.scroll_position) {
+                        if (line >= g_richtext_scrollbar.scroll_position)
                             ImageDraw::img_generic(ctx, image_id, image_offset_x, y + 8);
                         else {
-                            ImageDraw::img_generic(ctx, image_id, image_offset_x, y + 8 - 16 * (scrollbar.scroll_position - line));
+                            ImageDraw::img_generic(ctx, image_id, image_offset_x, y + 8 - 16 * (g_richtext_scrollbar.scroll_position - line));
                         }
                     }
                     image_id = 0;
@@ -352,11 +352,11 @@ int rich_text_draw_colored(const uint8_t* text, int x_offset, int y_offset, int 
 }
 
 void rich_text_draw_scrollbar(void) {
-    scrollbar_draw(&scrollbar);
+    scrollbar_draw(&g_richtext_scrollbar);
 }
 
 int rich_text_handle_mouse(const mouse* m) {
-    return scrollbar_handle_mouse(&scrollbar, m);
+    return scrollbar_handle_mouse(&g_richtext_scrollbar, m);
 }
 
 static void on_scroll(void) {
@@ -365,5 +365,5 @@ static void on_scroll(void) {
 }
 
 int rich_text_scroll_position(void) {
-    return scrollbar.scroll_position;
+    return g_richtext_scrollbar.scroll_position;
 }

@@ -3,7 +3,7 @@
 #include "platform/renderer.h"
 #include "graphics/elements/ui.h"
 
-struct scroll_list_panel;
+class scroll_list_panel;
 
 namespace ui {
     struct window_display_options {

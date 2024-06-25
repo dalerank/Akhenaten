@@ -26,7 +26,7 @@ static void button_return_to_fort(int legion_id, int param2);
 static void button_empire_service(int legion_id, int param2);
 static void on_scroll();
 
-static scrollbar_type scrollbar = {592, 70, 272, on_scroll};
+static scrollbar_t g_advisor_mil_scrollbar = {{592, 70}, 272, on_scroll};
 
 static generic_button fort_buttons[] = {
   {384, 83, 30, 30, button_go_to_legion, button_none, 1, 0},
@@ -54,7 +54,7 @@ static int num_legions;
 
 void ui::advisor_miliary_window::init() {
     num_legions = formation_get_num_forts();
-    scrollbar_init(&scrollbar, 0, num_legions - 6);
+    g_advisor_mil_scrollbar.init(0, num_legions - 6);
 }
 
 int ui::advisor_miliary_window::draw_background() {
@@ -120,7 +120,7 @@ int ui::advisor_miliary_window::draw_background() {
         return ADVISOR_HEIGHT;
     }
     for (int i = 0; i < 6 && i < num_legions; i++) {
-        const formation* m = formation_get(formation_for_legion(i + 1 + scrollbar.scroll_position));
+        const formation* m = formation_get(formation_for_legion(i + 1 + g_advisor_mil_scrollbar.scroll_position));
         button_border_draw(22, 77 + 44 * i, 560, 40, 0);
         ImageDraw::img_generic(ctx, image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id, vec2i{32, 82 + 44 * i});
         lang_text_draw(138, m->legion_id, 84, 83 + 44 * i, FONT_NORMAL_WHITE_ON_DARK);
@@ -161,7 +161,7 @@ int ui::advisor_miliary_window::draw_background() {
 }
 
 void ui::advisor_miliary_window::draw_foreground() {
-    scrollbar_draw(&scrollbar);
+    scrollbar_draw(&g_advisor_mil_scrollbar);
     num_legions = formation_get_num_forts();
     for (int i = 0; i < 6 && i < num_legions; i++) {
         button_border_draw(384, 83 + 44 * i, 30, 30, focus_button_id == 3 * i + 1);
@@ -171,20 +171,20 @@ void ui::advisor_miliary_window::draw_foreground() {
 }
 
 int ui::advisor_miliary_window::handle_mouse(const mouse* m) {
-    if (scrollbar_handle_mouse(&scrollbar, m))
+    if (scrollbar_handle_mouse(&g_advisor_mil_scrollbar, m))
         return 1;
 
     return generic_buttons_handle_mouse(m, 0, 0, fort_buttons, 3 * num_legions, &focus_button_id);
 }
 
 static void button_go_to_legion(int legion_id, int param2) {
-    const formation* m = formation_get(formation_for_legion(legion_id + scrollbar.scroll_position));
+    const formation* m = formation_get(formation_for_legion(legion_id + g_advisor_mil_scrollbar.scroll_position));
     camera_go_to_mappoint(m->home);
     window_city_show();
 }
 
 static void button_return_to_fort(int legion_id, int param2) {
-    formation* m = formation_get(formation_for_legion(legion_id + scrollbar.scroll_position));
+    formation* m = formation_get(formation_for_legion(legion_id + g_advisor_mil_scrollbar.scroll_position));
     if (!m->in_distant_battle) {
         formation_legion_return_home(m);
         window_invalidate();
@@ -192,7 +192,7 @@ static void button_return_to_fort(int legion_id, int param2) {
 }
 
 static void button_empire_service(int legion_id, int param2) {
-    int formation_id = formation_for_legion(legion_id + scrollbar.scroll_position);
+    int formation_id = formation_for_legion(legion_id + g_advisor_mil_scrollbar.scroll_position);
     formation_toggle_empire_service(formation_id);
     formation_calculate_figures();
     window_invalidate();

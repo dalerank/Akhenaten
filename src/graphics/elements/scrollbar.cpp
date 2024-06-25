@@ -19,23 +19,23 @@ static image_button image_button_scroll_down = {0, 0, SCROLL_BUTTON_WIDTH, SCROL
 static image_button image_button_scroll_up_thin = {0, 0, SCROLL_BUTTON_WIDTH, SCROLL_BUTTON_HEIGHT, IB_SCROLL, GROUP_SYSTEM_GRAPHICS, 15, text_scroll, button_none, 0, 1, 1};
 static image_button image_button_scroll_down_thin = {0, 0, SCROLL_BUTTON_WIDTH, SCROLL_BUTTON_HEIGHT, IB_SCROLL, GROUP_SYSTEM_GRAPHICS, 17, text_scroll, button_none, 1, 1, 1};
 
-static scrollbar_type* current;
+static scrollbar_t* g_scrollbar_current;
 
-void scrollbar_init(scrollbar_type* scrollbar, int scroll_position, int max_scroll_position) {
-    if (max_scroll_position < 0)
-        max_scroll_position = 0;
+void scrollbar_t::init(int position, int max_position) {
+    if (max_position < 0)
+        max_position = 0;
 
-    scrollbar->scroll_position = calc_bound(scroll_position, 0, max_scroll_position);
-    scrollbar->max_scroll_position = max_scroll_position;
-    scrollbar->is_dragging_scroll = 0;
+    scroll_position = calc_bound(position, 0, max_position);
+    max_scroll_position = max_position;
+    is_dragging_scroll = 0;
 }
 
-void scrollbar_reset(scrollbar_type* scrollbar, int scroll_position) {
+void scrollbar_reset(scrollbar_t* scrollbar, int scroll_position) {
     scrollbar->scroll_position = scroll_position;
     scrollbar->is_dragging_scroll = 0;
 }
 
-void scrollbar_update_max(scrollbar_type* scrollbar, int max_scroll_position) {
+void scrollbar_update_max(scrollbar_t* scrollbar, int max_scroll_position) {
     if (max_scroll_position < 0)
         max_scroll_position = 0;
 
@@ -44,19 +44,19 @@ void scrollbar_update_max(scrollbar_type* scrollbar, int max_scroll_position) {
         scrollbar->scroll_position = max_scroll_position;
 }
 
-void scrollbar_draw(scrollbar_type* scrollbar) {
+void scrollbar_draw(scrollbar_t* scrollbar) {
     painter ctx = game.painter();
     if (scrollbar->max_scroll_position > 0 || scrollbar->always_visible) {
         if (!scrollbar->thin) {
-            image_buttons_draw(scrollbar->x, scrollbar->y, &image_button_scroll_up, 1);
-            image_buttons_draw(scrollbar->x,
-                               scrollbar->y + scrollbar->height - SCROLL_BUTTON_HEIGHT,
+            image_buttons_draw(scrollbar->pos.x, scrollbar->pos.y, &image_button_scroll_up, 1);
+            image_buttons_draw(scrollbar->pos.x,
+                               scrollbar->pos.y + scrollbar->height - SCROLL_BUTTON_HEIGHT,
                                &image_button_scroll_down,
                                1);
         } else {
-            image_buttons_draw(scrollbar->x, scrollbar->y, &image_button_scroll_up_thin, 1);
-            image_buttons_draw(scrollbar->x,
-                               scrollbar->y + scrollbar->height - SCROLL_BUTTON_HEIGHT,
+            image_buttons_draw(scrollbar->pos.x, scrollbar->pos.y, &image_button_scroll_up_thin, 1);
+            image_buttons_draw(scrollbar->pos.x,
+                               scrollbar->pos.y + scrollbar->height - SCROLL_BUTTON_HEIGHT,
                                &image_button_scroll_down_thin,
                                1);
         }
@@ -74,24 +74,24 @@ void scrollbar_draw(scrollbar_type* scrollbar) {
             offset = scrollbar->scroll_position_drag;
 
         ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_BUTTON) + 39,
-                               scrollbar->x + (SCROLL_BUTTON_WIDTH - SCROLL_DOT_SIZE) / 2,
-                               scrollbar->y + offset + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding);
+                               scrollbar->pos.x + (SCROLL_BUTTON_WIDTH - SCROLL_DOT_SIZE) / 2,
+                               scrollbar->pos.y + offset + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding);
     }
 }
 
-static bool handle_scrollbar_dot(scrollbar_type* scrollbar, const mouse* m) {
+static bool handle_scrollbar_dot(scrollbar_t* scrollbar, const mouse* m) {
     if (scrollbar->max_scroll_position <= 0 || !m->left.is_down)
         return false;
 
     int track_height = scrollbar->height - TOTAL_BUTTON_HEIGHT - 2 * scrollbar->dot_padding;
-    if (m->x < scrollbar->x || m->x >= scrollbar->x + SCROLL_BUTTON_WIDTH)
+    if (m->x < scrollbar->pos.x || m->x >= scrollbar->pos.x + SCROLL_BUTTON_WIDTH)
         return false;
 
-    if (m->y < scrollbar->y + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding
-        || m->y > scrollbar->y + scrollbar->height - SCROLL_BUTTON_HEIGHT - scrollbar->dot_padding) {
+    if (m->y < scrollbar->pos.y + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding
+        || m->y > scrollbar->pos.y + scrollbar->height - SCROLL_BUTTON_HEIGHT - scrollbar->dot_padding) {
         return false;
     }
-    int dot_offset = m->y - scrollbar->y - SCROLL_DOT_SIZE / 2 - SCROLL_BUTTON_HEIGHT;
+    int dot_offset = m->y - scrollbar->pos.y - SCROLL_DOT_SIZE / 2 - SCROLL_BUTTON_HEIGHT;
     if (dot_offset < 0)
         dot_offset = 0;
 
@@ -111,35 +111,26 @@ static bool handle_scrollbar_dot(scrollbar_type* scrollbar, const mouse* m) {
     return true;
 }
 
-int scrollbar_handle_mouse(scrollbar_type* scrollbar, const mouse* m) {
+int scrollbar_handle_mouse(scrollbar_t* scrollbar, const mouse* m) {
     if (scrollbar->max_scroll_position <= 0)
         return 0;
 
-    current = scrollbar;
+    g_scrollbar_current = scrollbar;
     if (m->scrolled == SCROLL_DOWN)
         text_scroll(1, 3);
     else if (m->scrolled == SCROLL_UP)
         text_scroll(0, 3);
 
+    int tmp_btn_id;
     if (!scrollbar->thin) {
-        if (image_buttons_handle_mouse(m, scrollbar->x, scrollbar->y, &image_button_scroll_up, 1, 0))
+        if (image_buttons_handle_mouse(m, scrollbar->pos, image_button_scroll_up, tmp_btn_id))
             return 1;
-        if (image_buttons_handle_mouse(m,
-                                       scrollbar->x,
-                                       scrollbar->y + scrollbar->height - SCROLL_BUTTON_HEIGHT,
-                                       &image_button_scroll_down,
-                                       1,
-                                       0))
+        if (image_buttons_handle_mouse(m, scrollbar->pos + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, image_button_scroll_down, tmp_btn_id))
             return 1;
     } else {
-        if (image_buttons_handle_mouse(m, scrollbar->x, scrollbar->y, &image_button_scroll_up_thin, 1, 0))
+        if (image_buttons_handle_mouse(m, scrollbar->pos, image_button_scroll_up_thin, tmp_btn_id))
             return 1;
-        if (image_buttons_handle_mouse(m,
-                                       scrollbar->x,
-                                       scrollbar->y + scrollbar->height - SCROLL_BUTTON_HEIGHT,
-                                       &image_button_scroll_down_thin,
-                                       1,
-                                       0))
+        if (image_buttons_handle_mouse(m, scrollbar->pos + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, image_button_scroll_down_thin, tmp_btn_id))
             return 1;
     }
 
@@ -147,7 +138,7 @@ int scrollbar_handle_mouse(scrollbar_type* scrollbar, const mouse* m) {
 }
 
 static void text_scroll(int is_down, int num_lines) {
-    scrollbar_type* scrollbar = current;
+    scrollbar_t* scrollbar = g_scrollbar_current;
     if (is_down) {
         scrollbar->scroll_position += num_lines;
         if (scrollbar->scroll_position > scrollbar->max_scroll_position)

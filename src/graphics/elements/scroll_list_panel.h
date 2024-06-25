@@ -52,7 +52,7 @@ private:
     void (*double_click_callback)(int param1, int param2) = nullptr;
     void (*focus_change_callback)(int param1, int param2) = nullptr;
 
-    scrollbar_type scrollbar;
+    scrollbar_t scrollbar;
 
     const dir_listing* file_finder = nullptr;
     bstring256 files_dir;

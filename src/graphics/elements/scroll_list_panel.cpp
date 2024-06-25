@@ -136,7 +136,7 @@ void scroll_list_panel::refresh_file_finder() {
     refresh_scrollbar();
 }
 void scroll_list_panel::refresh_scrollbar() {
-    scrollbar_init(&scrollbar, 0, num_total_entries - num_buttons);
+    scrollbar.init(0, num_total_entries - num_buttons);
     //    clamp_scrollbar_position();
 }
 void scroll_list_panel::clamp_scrollbar_position() {
@@ -271,14 +271,14 @@ scroll_list_panel::scroll_list_panel(int n_buttons,
     }
 
     // init scrollbar
-    scrollbar.x = ui_params.x + DEFAULT_BLOCK_SIZE * ui_params.blocks_x + ui_params.scrollbar_margin_x;
-    scrollbar.y = ui_params.y + ui_params.scrollbar_margin_top;
+    scrollbar.pos.x = ui_params.x + DEFAULT_BLOCK_SIZE * ui_params.blocks_x + ui_params.scrollbar_margin_x;
+    scrollbar.pos.y = ui_params.y + ui_params.scrollbar_margin_top;
     scrollbar.height = DEFAULT_BLOCK_SIZE * ui_params.blocks_y - ui_params.scrollbar_margin_bottom;
     scrollbar.thin = ui_params.thin_scrollbar;
     scrollbar.always_visible = ui_params.draw_scrollbar_always;
     scrollbar.dot_padding = ui_params.scrollbar_dot_padding;
     scrollbar.on_scroll_callback = on_scroll;
-    scrollbar_init(&scrollbar, 0, num_total_entries - num_buttons);
+    scrollbar.init(0, num_total_entries - num_buttons);
 
     // init dir_listing
     using_file_finder = use_file_finder;

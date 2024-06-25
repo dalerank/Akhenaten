@@ -4,6 +4,7 @@
 #include "graphics/elements/ui.h"
 
 namespace ui {
+
 struct advisor_chief_window : public advisor_window {
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
@@ -13,4 +14,5 @@ struct advisor_chief_window : public advisor_window {
 
     static advisor_window *instance();
 };
-}
+
+} // ui

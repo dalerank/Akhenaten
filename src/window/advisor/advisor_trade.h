@@ -4,6 +4,7 @@
 #include "graphics/elements/ui.h"
 
 namespace ui {
+
 struct advisor_trade_window : public advisor_window {
     virtual int handle_mouse(const mouse *m) override;
     virtual int get_tooltip_text() override;
@@ -13,6 +14,5 @@ struct advisor_trade_window : public advisor_window {
 
     static advisor_window *instance();
 };
-}
 
-//void window_advisor_trade_draw_dialog_background();
+} // ui

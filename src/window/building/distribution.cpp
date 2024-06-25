@@ -278,7 +278,7 @@ std::pair<int, int> window_building_get_tooltip_granary_orders() {
 static void on_scroll(void) {
     //    window_invalidate();
 }
-static scrollbar_type scrollbar = {590, 52, 336, on_scroll};
+static scrollbar_t g_distribution_scrollbar = {{590, 52}, 336, on_scroll};
 
 int window_building_handle_mouse_warehouse(const mouse* m, object_info* c) {
     auto &data = g_window_building_distribution;

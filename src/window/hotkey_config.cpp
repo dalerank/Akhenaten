@@ -30,7 +30,7 @@ static void button_hotkey(int row, int is_alternative);
 static void button_reset_defaults(int param1, int param2);
 static void button_close(int save, int param2);
 
-static scrollbar_type scrollbar = {580, 72, 352, on_scroll};
+static scrollbar_t g_hotkey_window_scrollbar = {{580, 72}, 352, on_scroll};
 
 struct hotkey_widget {
     int action;
@@ -173,7 +173,7 @@ static void init(void (*close_callback)(void)) {
     auto& data = g_hotkeys_window_data;
     data.close_callback = close_callback;
 
-    scrollbar_init(&scrollbar, 0, std::size(hotkey_widgets) - NUM_VISIBLE_OPTIONS);
+    g_hotkey_window_scrollbar.init(0, std::size(hotkey_widgets) - NUM_VISIBLE_OPTIONS);
 
     for (int i = 0; i < HOTKEY_MAX_ITEMS; i++) {
         hotkey_mapping empty = {KEY_NONE, KEY_MOD_NONE, i};
@@ -209,7 +209,7 @@ static void draw_background() {
     inner_panel_draw(20, 72, 35, 22);
     int y_base = 80;
     for (int i = 0; i < NUM_VISIBLE_OPTIONS; i++) {
-        hotkey_widget* widget = &hotkey_widgets[i + scrollbar.scroll_position];
+        hotkey_widget* widget = &hotkey_widgets[i + g_hotkey_window_scrollbar.scroll_position];
         int text_offset = y_base + 6 + 24 * i;
         if (widget->action == HOTKEY_HEADER)
             text_draw(translation_for(widget->name_translation), 32, text_offset, FONT_NORMAL_WHITE_ON_DARK, 0);
@@ -257,10 +257,10 @@ static void draw_foreground() {
     auto& data = g_hotkeys_window_data;
     graphics_set_to_dialog();
 
-    scrollbar_draw(&scrollbar);
+    scrollbar_draw(&g_hotkey_window_scrollbar);
 
     for (int i = 0; i < NUM_VISIBLE_OPTIONS; i++) {
-        hotkey_widget* widget = &hotkey_widgets[i + scrollbar.scroll_position];
+        hotkey_widget* widget = &hotkey_widgets[i + g_hotkey_window_scrollbar.scroll_position];
         if (widget->action != HOTKEY_HEADER) {
             generic_button* btn = &hotkey_buttons[2 * i];
             button_border_draw(btn->x, btn->y, btn->width, btn->height, data.focus_button == 1 + 2 * i);
@@ -282,7 +282,7 @@ static void draw_foreground() {
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto& data = g_hotkeys_window_data;
     const mouse* m_dialog = mouse_in_dialog(m);
-    if (scrollbar_handle_mouse(&scrollbar, m_dialog))
+    if (scrollbar_handle_mouse(&g_hotkey_window_scrollbar, m_dialog))
         return;
 
     int mouse_button = 0;
@@ -304,7 +304,7 @@ static void set_hotkey(int action, int index, int key, int modifiers) {
 }
 
 static void button_hotkey(int row, int is_alternative) {
-    hotkey_widget* widget = &hotkey_widgets[row + scrollbar.scroll_position];
+    hotkey_widget* widget = &hotkey_widgets[row + g_hotkey_window_scrollbar.scroll_position];
     if (widget->action == HOTKEY_HEADER) {
         return;
     }

@@ -46,7 +46,7 @@ static generic_button generic_buttons_messages[] = {
   {0, 180, 412, 18, button_message, button_delete, 9, 0},
 };
 
-static scrollbar_type scrollbar = {432, 112, 208, on_scroll};
+static scrollbar_t g_messages_scrollbar = {{432, 112}, 208, on_scroll};
 
 static struct {
     int width_blocks;
@@ -61,7 +61,7 @@ static struct {
 
 static void init(void) {
     city_message_sort_and_compact();
-    scrollbar_init(&scrollbar, city_message_scroll_position(), city_message_count() - MAX_MESSAGES);
+    g_messages_scrollbar.init(city_message_scroll_position(), city_message_count() - MAX_MESSAGES);
 }
 
 static void draw_background(void) {
@@ -93,7 +93,7 @@ static void draw_messages(int total_messages) {
     painter ctx = game.painter();
 
     int max = total_messages < MAX_MESSAGES ? total_messages : MAX_MESSAGES;
-    int index = scrollbar.scroll_position;
+    int index = g_messages_scrollbar.scroll_position;
 
     for (int i = 0; i < max; i++, index++) {
         const city_message* msg = city_message_get(index);
@@ -178,7 +178,7 @@ static void draw_messages(int total_messages) {
             text_draw(lang_msg->title.text, data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
         }
     }
-    scrollbar_draw(&scrollbar);
+    scrollbar_draw(&g_messages_scrollbar);
 }
 static void draw_foreground(void) {
     graphics_set_to_dialog();
@@ -209,7 +209,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         data.focus_button_id = 12;
     }
 
-    if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
+    if (scrollbar_handle_mouse(&g_messages_scrollbar, m_dialog)) {
         data.focus_button_id = 13;
     }
 
@@ -226,7 +226,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void on_scroll(void) {
-    city_message_set_scroll_position(scrollbar.scroll_position);
+    city_message_set_scroll_position(g_messages_scrollbar.scroll_position);
     window_invalidate();
 }
 
@@ -236,19 +236,21 @@ static void button_help(int param1, int param2) {
 static void button_close(int param1, int param2) {
     window_city_show();
 }
+
 static void button_message(int param1, int param2) {
-    int id = city_message_set_current(scrollbar.scroll_position + param1);
+    int id = city_message_set_current(g_messages_scrollbar.scroll_position + param1);
     if (id < city_message_count()) {
         const city_message* msg = city_message_get(id);
         city_message_mark_read(id);
         window_message_dialog_show_city_message(msg->MM_text_id, id, msg->year, msg->month, msg->param1, msg->param2, msg->MM_text_id, 0);
     }
 }
+
 static void button_delete(int id_to_delete, int param2) {
-    int id = city_message_set_current(scrollbar.scroll_position + id_to_delete);
+    int id = city_message_set_current(g_messages_scrollbar.scroll_position + id_to_delete);
     if (id < city_message_count()) {
         city_message_delete(id);
-        scrollbar_update_max(&scrollbar, city_message_count() - MAX_MESSAGES);
+        scrollbar_update_max(&g_messages_scrollbar, city_message_count() - MAX_MESSAGES);
         window_invalidate();
     }
 }

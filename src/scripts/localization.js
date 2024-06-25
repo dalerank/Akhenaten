@@ -35,6 +35,8 @@ localization = [
   {key: "#chief_adv_military", group:61, id:10 },
   {key: "#chief_adv_kingdom", group:61, id:11 },
   {key: "#chief_adv_nilometr", group:61, id:12 },
+  {key: "#trade_overseer", group:54, id:0 },
+  {key: "#trade_overseer_hint", group:54, id:1 },
   {key: "#building_have_no_access", group:69, id:25 },
   {key: "#bazaar_info_title", group: 97, id:0},
   {key: "#well_info_title", group:109, id:0},

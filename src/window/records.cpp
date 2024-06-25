@@ -21,7 +21,7 @@ static void on_scroll(void);
 #define LIST_WIDTH 33
 #define LIST_MAX_SIZE 21
 
-static scrollbar_type scrollbar = {LIST_X + LIST_WIDTH * 16, LIST_Y - 12, (LIST_MAX_SIZE + 1) * 16, on_scroll};
+static scrollbar_t g_records_scrollbar = {{LIST_X + LIST_WIDTH * 16, LIST_Y - 12}, (LIST_MAX_SIZE + 1) * 16, on_scroll};
 
 struct records_data_t {
     const dir_listing* file_list;
@@ -31,7 +31,7 @@ records_data_t g_records_data;
 
 void init() {
     highscores_load();
-    scrollbar_init(&scrollbar, 0, highscores_count() - LIST_MAX_SIZE);
+    g_records_scrollbar.init(0, highscores_count() - LIST_MAX_SIZE);
 }
 
 static void draw_background() {
@@ -50,7 +50,7 @@ static void draw_foreground(void) {
     // high scores
     e_font font = FONT_SMALL_SHADED;
     for (int i = 0; i < LIST_MAX_SIZE; i++) {
-        const player_record* record = highscores_get(scrollbar.scroll_position + i);
+        const player_record* record = highscores_get(g_records_scrollbar.scroll_position + i);
         if (record->nonempty) {
             text_draw_number(record->score, '@', " ", LIST_X + 10, LIST_Y + 16 * i, font);
             text_draw_number(records_calc_score(record), '@', " ", LIST_X + 80, LIST_Y + 16 * i, font);
@@ -78,7 +78,7 @@ static void draw_foreground(void) {
     // bottom text
     lang_text_draw_centered(31, 1, 160, 450, 304, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    scrollbar_draw(&scrollbar);
+    scrollbar_draw(&g_records_scrollbar);
 
     graphics_reset_dialog();
 }
@@ -91,7 +91,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         window_go_back();
 
     const mouse* m_dialog = mouse_in_dialog(m);
-    if (scrollbar_handle_mouse(&scrollbar, m_dialog))
+    if (scrollbar_handle_mouse(&g_records_scrollbar, m_dialog))
         return;
 }
 
