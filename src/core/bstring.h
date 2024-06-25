@@ -64,6 +64,7 @@ public:
     inline ref cat(pcstr*s1,pcstr s2, pcstr s3, pcstr s4, pcstr s5) { snprintf(_data, _size, "%s%s%s%s%s%s", _data, s1, s2, s3, s4, s5); return *this; }
 
     inline ref ncat(pcstr s, size_t cnt) { ::strncat(_data, s, cnt); return *this; }
+    inline bool operator!() const { return empty(); }
 
     template <typename... Args>
     inline ref append(pcstr fmt, Args&&... args) {

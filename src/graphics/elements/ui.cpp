@@ -118,6 +118,7 @@ void ui::begin_widget(vec2i offset, bool relative) {
 }
 
 void ui::begin_frame() {
+    assert(g_state.buttons.size() < 1000);
     g_state._offset = {};
     g_state.buttons.clear();
     g_state.scrollbars.clear();
@@ -192,12 +193,19 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
     generic_button &gbutton = g_state.buttons.back().g_button;
     int focused = is_button_hover(gbutton, offset);
 
-    button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, focused ? 1 : 0);
+    if (focused) {
+        button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, true);
+    } else if (!(flags & UiFlags_NoBody)) {
+        button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, 0);
+    }
+
     int symbolh = get_letter_height((uint8_t *)"H", font);
-    if (!!(flags & UiFlags_LabelYCentered)) {
-        text_draw((uint8_t *)label, offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 4, font, 0);
-    } else {
-        text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 + 4, size.x, font, 0);
+    if (label) {
+        if (!!(flags & UiFlags_LabelYCentered)) {
+            text_draw((uint8_t *)label, offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 4, font, 0);
+        } else {
+            text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 + 4, size.x, font, 0);
+        }
     }
 
     if (!!cb) {

@@ -214,6 +214,8 @@ static void draw_foreground(void) {
     image_buttons_draw(0, 440, advisor_buttons, 14);
     graphics_reset_dialog();
 
+    data.current_advisor_window->ui_draw_foreground();
+
     graphics_set_to_dialog();
     data.current_advisor_window->draw_foreground();
     graphics_reset_dialog();
@@ -229,6 +231,7 @@ static void handle_hotkeys(const hotkeys* h) {
         }
     }
 }
+
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto &data = g_window_advisors;
     handle_hotkeys(h);
@@ -245,6 +248,10 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 
     if (data.current_advisor_window->handle_mouse(m_dialog)) {
+        return;
+    }
+
+    if (data.current_advisor_window->ui_handle_mouse(m)) {
         return;
     }
 
@@ -330,4 +337,8 @@ int window_advisors_show_advisor(e_advisor advisor) {
     set_advisor(advisor);
     window_advisors_show();
     return 1;
+}
+
+int advisor_window::ui_handle_mouse(const mouse *m) {
+    return ui::handle_mouse(m);
 }

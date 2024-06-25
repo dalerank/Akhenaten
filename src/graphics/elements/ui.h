@@ -29,6 +29,7 @@ enum UiFlags_ {
     UiFlags_PanelInner = 1 << 3,
     UiFlags_LabelMultiline = 1 << 4,
     UiFlags_LabelYCentered = 1 << 5,
+    UiFlags_NoBody = 1 << 6,
 };
 using UiFlags = int;
 
@@ -221,9 +222,13 @@ struct widget {
     element& operator[](pcstr id);
     inline element &operator[](const bstring32 &id) { return (*this)[id.c_str()]; }
 
-    inline int label(int group, int number, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0) { return ui::label(group, number, pos, font, flags, box_width); }
+    template<typename ... Args>
+    int label(const Args ... args) { return ui::label(args...); }
+    template<typename ... Args>
+    generic_button &button(const Args ... args) { return ui::button(args...); }
     inline void image(image_desc img, vec2i pos) { ui::eimage(img, pos); }
     inline void begin_widget(vec2i offset, bool relative = false) { ui::begin_widget(offset, relative); }
+    inline void icon(vec2i pos, e_resource img) { ui::icon(pos, img); }
     virtual void begin_frame() { ui::begin_frame(); }
 };
 

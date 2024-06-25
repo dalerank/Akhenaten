@@ -35,8 +35,8 @@ static void draw_background(void) {
 
 static void draw_foreground(void) {
     auto &data = g_resource_settings_data;
-    painter ctx = game.painter();
 
+    ui::begin_frame();
     ui::begin_widget(screen_dialog_offset());
     ui::panel({32, 128}, {36, 15}, UiFlags_PanelOuter);
 
@@ -69,7 +69,6 @@ static void draw_foreground(void) {
     int stored = city_resource_count(data.resource);
     stored_in_city_str.printf("%u %s %s", stored, ui::str(8, 10), ui::str(54, 15));
     ui::label(stored_in_city_str, vec2i{98, 192});
-
 
     bool can_import = g_empire.can_import_resource(data.resource, true);
     bool can_export = g_empire.can_export_resource(data.resource, true);
@@ -208,7 +207,6 @@ static void draw_foreground(void) {
 
 static void handle_input(const mouse* m, const hotkeys* h) {
     bool button_id = ui::handle_mouse(m);
-    const mouse* m_dialog = mouse_in_dialog(m);
 
     if (input_go_back_requested(m, h)) {
         window_go_back();
