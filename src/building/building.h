@@ -171,10 +171,11 @@ public:
         struct dock_t {
             short queued_docker_id;
             int dock_tiles[2];
-            unsigned char num_ships;
-            signed char orientation;
+            uint8_t num_ships;
+            char orientation;
             short docker_ids[3];
             short trade_ship_id;
+            uint8_t docker_anim_frame;
         } dock;
         struct market_t {
             short inventory[8];

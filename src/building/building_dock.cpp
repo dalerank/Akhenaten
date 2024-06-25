@@ -248,27 +248,21 @@ int building_dock::window_info_handle_mouse(const mouse *m, object_info &c) {
 }
 
 bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color color_mask) {
-    int num_dockers = count_idle_dockers();
-    if (num_dockers > 0) {
+    int num_idle_dockers = count_idle_dockers();
+    if (num_idle_dockers > 0) {
         int image_dock = map_image_at(t);
-        int image_dockers = image_id_from_group(GROUP_BUILDING_DOCK_DOCKERS);
+        animation_t anim_dockers;
         int image_dock_base = dock_m.anim["base"].first_img();
-        if (image_dock == image_dock_base)
-            image_dockers += 0;
-        else if (image_dock == image_dock_base + 1)
-            image_dockers += 3;
-        else if (image_dock == image_dock_base + 2)
-            image_dockers += 6;
-        else
-            image_dockers += 9;
+        if (image_dock == image_dock_base) anim_dockers = dock_m.anim["work_n"];
+        else if (image_dock == image_dock_base + 1) anim_dockers = dock_m.anim["work_w"];
+        else if (image_dock == image_dock_base + 2) anim_dockers = dock_m.anim["work_s"];
+        else anim_dockers = dock_m.anim["work_e"];
 
-        if (num_dockers == 2)
-            image_dockers += 1;
-        else if (num_dockers == 3)
-            image_dockers += 2;
-
-        const image_t* img = image_get(image_dockers);
-        ImageDraw::img_generic(ctx, image_dockers, t.x() + img->animation.sprite_offset.x, t.y() + img->animation.sprite_offset.y, color_mask);
+        data.dock.docker_anim_frame++;
+        data.dock.docker_anim_frame %= (anim_dockers.max_frames * anim_dockers.duration);
+        int img_id = anim_dockers.first_img() + (data.dock.docker_anim_frame / anim_dockers.duration) * 4;
+        const image_t* img = image_get(img_id);
+        ImageDraw::img_generic(ctx, img_id, point + anim_dockers.pos, color_mask);
     }
     return false;
 }
