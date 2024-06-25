@@ -185,7 +185,7 @@ struct escrollbar : public element {
     scrollbar_t scrollbar;
 
     virtual int value() const override { return scrollbar.scroll_position; }
-    virtual void max_value(int v) override { scrollbar.scroll_position = v; }
+    virtual void max_value(int v) override { scrollbar.max_scroll_position = v; }
     virtual void onevent(std::function<void()> func) override { scrollbar.onscroll(func); }
     virtual void draw() override;
     virtual void load(archive elem) override;

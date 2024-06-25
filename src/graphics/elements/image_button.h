@@ -38,6 +38,8 @@ struct image_button {
     std::function<void(int,int)> _onclick;
 
     template<class Func> image_button &onclick(Func f) { _onclick = f; return *this; }
+    inline vec2i pos() const { return {x, y}; }
+    inline vec2i size() const { return {width, height}; }
 };
 
 template<size_t N>

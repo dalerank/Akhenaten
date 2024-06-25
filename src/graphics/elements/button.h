@@ -12,7 +12,8 @@ inline void button_border_draw(vec2i pos, vec2i size, bool has_focus) { button_b
 template<class T>
 bool is_button_hover(const T &button, vec2i context) {
     const mouse *m = mouse_get();
-    vec2i bpos = context + vec2i{button.x, button.y};
-    return (   bpos.x <= m->x && bpos.x + button.width > m->x
-            && bpos.y <= m->y && bpos.y + button.height > m->y);
+    vec2i bpos = context + button.pos();
+    vec2i bsize = button.size();
+    return (   bpos.x <= m->x && bpos.x + bsize.x > m->x
+            && bpos.y <= m->y && bpos.y + bsize.y > m->y);
 }

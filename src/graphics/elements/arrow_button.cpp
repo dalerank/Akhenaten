@@ -73,7 +73,7 @@ int arrow_buttons_handle_mouse(const mouse* m, int x, int y, arrow_button* butto
     }
 
     arrow_button* btn = &buttons[button_id - 1];
-    if (m->left.went_down) {
+    if (m->left.went_up) {
         btn->pressed = BUTTON_PRESSED_FRAMES;
         btn->repeats = 0;
         btn->click_handler(btn->parameter1, btn->parameter2);

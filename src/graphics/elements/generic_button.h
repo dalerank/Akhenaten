@@ -14,13 +14,16 @@ struct generic_button {
     int y;
     int width;
     int height;
-    void (*left_click_handler)(int param1, int param2);
-    void (*right_click_handler)(int param1, int param2);
-    int parameter1;
-    int parameter2;
+    void (*left_click_handler)(int param1, int param2) = nullptr;
+    void (*right_click_handler)(int param1, int param2) = nullptr;
+    int parameter1 = 0;
+    int parameter2 = 0;
 
-    std::function<void(int,int)> _onclick;
+    std::function<void(int, int)> _onclick = nullptr;
     std::pair<int, int> _tooltip;
+
+    inline vec2i pos() const { return {x, y}; }
+    inline vec2i size() const { return {width, height}; }
 
     template<class Func> generic_button &onclick(Func f) { _onclick = f; return *this; }
     void tooltip(std::pair<int, int> t) { _tooltip = t; }

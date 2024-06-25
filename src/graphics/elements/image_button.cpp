@@ -4,6 +4,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "sound/effect.h"
+#include "core/span.hpp"
 #include "game/game.h"
 
 #define PRESSED_EFFECT_MILLIS 100
@@ -25,11 +26,11 @@ static void fade_pressed_effect(image_button* buttons, int num_buttons) {
 
 static void remove_pressed_effect_build(image_button* buttons, int num_buttons) {
     // un-press all buttons
-    for (int i = 0; i < num_buttons; i++) {
-        image_button* btn = &buttons[i];
-        if (btn->pressed) {
-            btn->pressed = 0;
-            btn->floating = 0;
+    auto btns = make_span(buttons, num_buttons);
+    for (auto &btn: btns) {
+        if (btn.pressed) {
+            btn.pressed = 0;
+            btn.floating = 0;
         }
     }
 }
@@ -83,6 +84,7 @@ bool image_buttons_handle_mouse(const mouse* m, int x, int y, image_button* butt
             }
         }
     }
+
     if (!hit_button) {
         return false;
     }

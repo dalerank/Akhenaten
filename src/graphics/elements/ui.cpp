@@ -11,16 +11,94 @@
 #include "game/game.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "core/span.hpp"
 #include "io/gamefiles/lang.h"
 
 #include <stack>
 
 namespace ui {
+    struct universal_button {
+        enum e_btn_type {
+            unknown = -1,
+            generic = 0,
+            image,
+            arrow
+        };
+        e_btn_type type = unknown;
+        generic_button g_button;
+        image_button i_button;
+        arrow_button a_button;
+    
+        bool handle_mouse(const mouse *m, vec2i offset) {
+            int tmp_btn;
+            switch (type) {
+            case generic: return !!generic_buttons_handle_mouse(m, offset, make_span(&g_button, 1), tmp_btn);
+            case image: return !!image_buttons_handle_mouse(m, offset, make_span(&i_button, 1), tmp_btn);
+            case arrow: return !!arrow_buttons_handle_mouse(m, offset, make_span(&a_button, 1), tmp_btn);
+            }
+
+            return false;
+        }
+
+        vec2i pos() const {
+            switch (type) {
+            case generic: return { g_button.x, g_button.y };
+            case image: return { i_button.x, i_button.y };
+            case arrow: return { a_button.x, a_button.y };
+            }
+
+            return {0, 0};
+        }
+
+        vec2i size() const {
+            switch (type) {
+            case generic: return { g_button.width, g_button.height };
+            case image: return { i_button.width, i_button.height };
+            case arrow: return { a_button.size, a_button.size };
+            }
+
+            return {0, 0};
+        }
+
+        template<class Func> void onclick(Func f) { 
+            switch (type) {
+            case generic: g_button.onclick(f); break;
+            case image: i_button.onclick(f); break;
+            case arrow: a_button.onclick(f); break;
+            }
+        }
+
+        universal_button() {}
+        ~universal_button() {}
+
+        universal_button(const universal_button &o) {
+            type = o.type;
+            switch (type) {
+            case generic: g_button = o.g_button; break;
+            case image: i_button = o.i_button; break;
+            case arrow: a_button = o.a_button; break;
+            }
+        }
+
+        universal_button(const generic_button &b) {
+            type = generic;
+            g_button = b;
+        }
+
+        universal_button(const image_button &b) {
+            type = image;
+            i_button = b;
+        }
+
+        universal_button(const arrow_button &b) {
+            type = arrow;
+            a_button = b;
+        }
+    };
+
     struct state {
         std::stack<vec2i> _offset;
-        std::vector<generic_button> buttons;
-        std::vector<image_button> img_buttons;
-        std::vector<arrow_button> arw_buttons;
+        std::vector<universal_button> buttons;
         std::vector<scrollbar_t*> scrollbars;
 
         inline const vec2i offset() { return _offset.empty() ? vec2i{0, 0} : _offset.top(); }
@@ -42,8 +120,6 @@ void ui::begin_widget(vec2i offset, bool relative) {
 void ui::begin_frame() {
     g_state._offset = {};
     g_state.buttons.clear();
-    g_state.img_buttons.clear();
-    g_state.arw_buttons.clear();
     g_state.scrollbars.clear();
 }
 
@@ -55,16 +131,12 @@ void ui::end_widget() {
 
 bool ui::handle_mouse(const mouse *m) {
     bool handle = false;
-    int tmp_btn = 0;
-    handle |= !!generic_buttons_handle_mouse(m, g_state.offset(), g_state.buttons, tmp_btn);
-    handle |= !!image_buttons_handle_mouse(m, g_state.offset(), g_state.img_buttons, tmp_btn);
-    handle |= !!arrow_buttons_handle_mouse(m, g_state.offset(), g_state.arw_buttons, tmp_btn);
+    for (int i = g_state.buttons.size() - 1; i >= 0 && !handle; --i) {
+        handle |= !!g_state.buttons[i].handle_mouse(m, g_state.offset());
+    }
 
-    for (auto *scr : g_state.scrollbars) {
-        if (handle) {
-            break;
-        }
-        handle |= !!scrollbar_handle_mouse(scr, m);
+    for (int i = g_state.scrollbars.size() - 1; i >= 0 && !handle; --i) {
+        handle |= !!scrollbar_handle_mouse(g_state.scrollbars[i], m);
     }
 
     return handle;
@@ -87,16 +159,16 @@ int ui::button_hover(const mouse *m) {
 generic_button &ui::link(pcstr label, vec2i pos, vec2i size, e_font font, UiFlags flags, std::function<void(int, int)> cb) {
     const vec2i offset = g_state.offset();
 
-    g_state.buttons.push_back({pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
-    int focused = is_button_hover(g_state.buttons.back(), offset);
+    g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
+    auto &gbutton = g_state.buttons.back().g_button;
+    int focused = is_button_hover(gbutton, offset);
 
     text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y, size.x, focused ? FONT_NORMAL_YELLOW : font, 0);
 
-    auto &btn = g_state.buttons.back();
     if (!!cb) {
-        btn.onclick(cb);
+        gbutton.onclick(cb);
     }
-    return btn;
+    return gbutton;
 }
 
 template<typename T>
@@ -116,8 +188,9 @@ void splitStringByNewline(const std::string &str, T &result) {
 generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFlags flags, std::function<void(int, int)> cb) {
     const vec2i offset = g_state.offset();
 
-    g_state.buttons.push_back({pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
-    int focused = is_button_hover(g_state.buttons.back(), offset);
+    g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
+    generic_button &gbutton = g_state.buttons.back().g_button;
+    int focused = is_button_hover(gbutton, offset);
 
     button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, focused ? 1 : 0);
     int symbolh = get_letter_height((uint8_t *)"H", font);
@@ -127,18 +200,18 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
         text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 + 4, size.x, font, 0);
     }
 
-    auto &btn = g_state.buttons.back();
     if (!!cb) {
-        btn.onclick(cb);
+        gbutton.onclick(cb);
     }
-    return btn;
+    return gbutton;
 }
 
 generic_button &ui::button(const svector<pcstr,4> &labels, vec2i pos, vec2i size, e_font font, UiFlags flags, std::function<void(int, int)> cb) {
     const vec2i offset = g_state.offset();
 
-    g_state.buttons.push_back({pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
-    int focused = is_button_hover(g_state.buttons.back(), offset);
+    g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
+    auto &gbutton = g_state.buttons.back().g_button;
+    int focused = is_button_hover(gbutton, offset);
 
     button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, focused ? 1 : 0);
     int symbolh = get_letter_height((uint8_t *)"H", font);
@@ -156,42 +229,42 @@ generic_button &ui::button(const svector<pcstr,4> &labels, vec2i pos, vec2i size
         }
     }
 
-    auto &btn = g_state.buttons.back();
     if (!!cb) {
-        btn.onclick(cb);
+        gbutton.onclick(cb);
     }
-    return btn;
+    return gbutton;
 }
 
 generic_button &ui::large_button(pcstr label, vec2i pos, vec2i size, e_font font) {
     const vec2i offset = g_state.offset();
 
-    g_state.buttons.push_back({pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
-    int focused = is_button_hover(g_state.buttons.back(), offset);
+    g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
+    auto &gbutton = g_state.buttons.back().g_button;
+    int focused = is_button_hover(gbutton, offset);
 
     large_label_draw(offset.x + pos.x, offset.y + pos.y, size.x / 16, focused ? 1 : 0);
     int letter_height = get_letter_height((uint8_t *)"A", font);
     text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + 2 + (size.y - letter_height) / 2, size.x, font, 0);
 
-    auto &btn = g_state.buttons.back();
-    return btn;
+    return gbutton;
 }
 
 generic_button &ui::button(uint32_t id) {
-    return (id < g_state.buttons.size()) ? g_state.buttons[id] : dummy;
+    return (id < g_state.buttons.size()) ? g_state.buttons[id].g_button : dummy;
 }
 
 image_button &ui::img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size, int offset) {
     const vec2i img_offset = g_state.offset();
     const mouse *m = mouse_get();
 
-    g_state.img_buttons.push_back({pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, group, id, offset, button_none, button_none, 0, 0, true});
-    auto &button = g_state.img_buttons.back();
-    button.focused = is_button_hover(g_state.img_buttons.back(), img_offset);
-    button.pressed = button.focused && m->left.is_down;
-    image_buttons_draw(img_offset, button);
+    g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, group, id, offset, button_none, button_none, 0, 0, true});
+    auto &ibutton = g_state.buttons.back().i_button;
 
-    return g_state.img_buttons.back();
+    ibutton.focused = is_button_hover(ibutton, img_offset);
+    ibutton.pressed = ibutton.focused && m->left.is_down;
+    image_buttons_draw(img_offset, ibutton);
+
+    return ibutton;
 }
 
 image_button &ui::imgok_button(vec2i pos, std::function<void(int, int)> cb) {
@@ -274,10 +347,11 @@ void ui::icon(vec2i pos, e_advisor adv) {
 arrow_button &ui::arw_button(vec2i pos, bool up, bool tiny) {
     const vec2i offset = g_state.offset();
 
-    g_state.arw_buttons.push_back({pos.x, pos.y, up ? 17 : 15, 24, button_none, 0, 0});
-    arrow_buttons_draw(offset, g_state.arw_buttons.back(), tiny);
+    g_state.buttons.push_back(arrow_button{pos.x, pos.y, up ? 17 : 15, 24, button_none, 0, 0});
+    auto &abutton = g_state.buttons.back().a_button;
+    arrow_buttons_draw(offset, abutton, tiny);
 
-    return g_state.arw_buttons.back();
+    return abutton;
 }
 
 scrollbar_t &ui::scrollbar(scrollbar_t &scr, vec2i pos, int &value, vec2i size) {

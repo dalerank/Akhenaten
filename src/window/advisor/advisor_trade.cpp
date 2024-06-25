@@ -63,6 +63,7 @@ int ui::advisor_trade_window::draw_background() {
     city_resource_determine_available();
 
     auto &ui = g_advisor_trade_window;
+    ui.begin_frame();
     ui["scrollbar"].onevent([] {
         window_invalidate();
     });
