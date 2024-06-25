@@ -57,18 +57,15 @@ static generic_button resource_buttons[]
 
 static int focus_button_id;
 
-static void on_scroll(void) {
-    window_invalidate();
-}
-
-static scrollbar_t g_advisor_trade_scrollbar = {{590, 52}, 336, on_scroll};
-
 #define IMPORT_EXPORT_X 310
 
 int ui::advisor_trade_window::draw_background() {
     city_resource_determine_available();
 
     auto &ui = g_advisor_trade_window;
+    ui["scrollbar"].onevent([] {
+        window_invalidate();
+    });
 
     return 0;
 }
@@ -78,10 +75,14 @@ void ui::advisor_trade_window::draw_foreground() {
 
     g_advisor_trade_window.draw();
 
+    auto &ui = g_advisor_trade_window;
+    auto &scrollbar = ui["scrollbar"];
+    int scroll_position = scrollbar.value();
+
     graphics_set_clip_rectangle(20, 39, 575, 346);
     const resources_list* list = city_resource_get_available();
-    for (int i = g_advisor_trade_scrollbar.scroll_position; i < list->size; i++) {
-        int y_offset = 22 * (i - g_advisor_trade_scrollbar.scroll_position);
+    for (int i = scroll_position; i < list->size; i++) {
+        int y_offset = 22 * (i - scroll_position);
         e_resource resource = list->items[i];
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         ImageDraw::img_generic(ctx, image_id_resource_icon(image_offset), 24, y_offset + 58);
@@ -142,16 +143,15 @@ void ui::advisor_trade_window::draw_foreground() {
         }
 
         // update/draw buttons accordingly
-        if (focus_button_id - 3 == i - g_advisor_trade_scrollbar.scroll_position)
+        if (focus_button_id - 3 == i - scroll_position)
             button_border_draw(TRADE_BUTTON_X, y_offset + 54, TRADE_BUTTON_WIDTH, 24, true);
-        resource_buttons[i + 2 - g_advisor_trade_scrollbar.scroll_position].parameter1 = i;
+        resource_buttons[i + 2 - scroll_position].parameter1 = i;
     }
     graphics_reset_clip_rectangle();
 
     // scrollbar
-    inner_panel_draw(g_advisor_trade_scrollbar.pos.x + 3, g_advisor_trade_scrollbar.pos.y + 20, 2, 19);
-    g_advisor_trade_scrollbar.max_scroll_position = city_resource_get_available()->size - 15;
-    scrollbar_draw(&g_advisor_trade_scrollbar);
+    inner_panel_draw(scrollbar.pos.x + 3, scrollbar.pos.y + 20, 2, 19);
+    scrollbar.max_value(city_resource_get_available()->size - 15);
 
     // prices
     button_border_draw(98, 396, 200, 24, focus_button_id == 2);
@@ -163,13 +163,10 @@ void ui::advisor_trade_window::draw_foreground() {
 }
 
 int ui::advisor_trade_window::handle_mouse(const mouse* m) {
-    int num_resources = city_resource_get_available()->size;
-    if (num_resources > 15)
-        num_resources = 15;
+    int num_resources = std::min(city_resource_get_available()->size, 15);
 
-    bool handled = scrollbar_handle_mouse(&g_advisor_trade_scrollbar, m);
-    if (handled)
-        return handled;
+    auto &ui = g_advisor_trade_window;
+    ui::handle_mouse(m);
 
     return generic_buttons_handle_mouse(m, 0, 0, resource_buttons, num_resources + 2, &focus_button_id);
 }

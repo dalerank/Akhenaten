@@ -21,6 +21,7 @@ namespace ui {
         std::vector<generic_button> buttons;
         std::vector<image_button> img_buttons;
         std::vector<arrow_button> arw_buttons;
+        std::vector<scrollbar_t*> scrollbars;
 
         inline const vec2i offset() { return _offset.empty() ? vec2i{0, 0} : _offset.top(); }
     };
@@ -43,6 +44,7 @@ void ui::begin_frame() {
     g_state.buttons.clear();
     g_state.img_buttons.clear();
     g_state.arw_buttons.clear();
+    g_state.scrollbars.clear();
 }
 
 void ui::end_widget() {
@@ -57,6 +59,13 @@ bool ui::handle_mouse(const mouse *m) {
     handle |= !!generic_buttons_handle_mouse(m, g_state.offset(), g_state.buttons, tmp_btn);
     handle |= !!image_buttons_handle_mouse(m, g_state.offset(), g_state.img_buttons, tmp_btn);
     handle |= !!arrow_buttons_handle_mouse(m, g_state.offset(), g_state.arw_buttons, tmp_btn);
+
+    for (auto *scr : g_state.scrollbars) {
+        if (handle) {
+            break;
+        }
+        handle |= !!scrollbar_handle_mouse(scr, m);
+    }
 
     return handle;
 }
@@ -271,6 +280,13 @@ arrow_button &ui::arw_button(vec2i pos, bool up, bool tiny) {
     return g_state.arw_buttons.back();
 }
 
+scrollbar_t &ui::scrollbar(scrollbar_t &scr, vec2i pos, int &value, vec2i size) {
+    g_state.scrollbars.push_back(&scr);
+    scrollbar_draw(&scr);
+
+    return scr;
+}
+
 void ui::element::load(archive arch) {
     pos = arch.r_vec2i("pos");
     size = arch.r_size2i("size");
@@ -318,6 +334,8 @@ void ui::widget::load(archive arch) {
         element::ptr elm;
         if (!strcmp(type, "outer_panel")) {
             elm = std::make_shared<eouter_panel>();
+        } else if (!strcmp(type, "scrollbar")) {
+            elm = std::make_shared<escrollbar>();
         } else if (!strcmp(type, "inner_panel")) {
             elm = std::make_shared<einner_panel>();
         } else if (!strcmp(type, "image")) {
@@ -447,6 +465,20 @@ void ui::etext::load(archive arch) {
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "text"));
+}
+
+void ui::escrollbar::draw() {
+    ui::scrollbar(this->scrollbar, pos, this->scrollbar.scroll_position);
+}
+
+void ui::escrollbar::load(archive arch) {
+    element::load(arch);
+
+    pcstr type = arch.r_string("type");
+    assert(!strcmp(type, "scrollbar"));
+
+    scrollbar.pos = pos;
+    scrollbar.height = size.y;
 }
 
 void ui::etext::draw() {

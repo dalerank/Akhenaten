@@ -112,14 +112,16 @@ static bool handle_scrollbar_dot(scrollbar_t* scrollbar, const mouse* m) {
 }
 
 int scrollbar_handle_mouse(scrollbar_t* scrollbar, const mouse* m) {
-    if (scrollbar->max_scroll_position <= 0)
+    if (scrollbar->max_scroll_position <= 0) {
         return 0;
+    }
 
     g_scrollbar_current = scrollbar;
-    if (m->scrolled == SCROLL_DOWN)
+    if (m->scrolled == SCROLL_DOWN) {
         text_scroll(1, 3);
-    else if (m->scrolled == SCROLL_UP)
+    } else if (m->scrolled == SCROLL_UP) {
         text_scroll(0, 3);
+    }
 
     int tmp_btn_id;
     if (!scrollbar->thin) {
@@ -139,17 +141,14 @@ int scrollbar_handle_mouse(scrollbar_t* scrollbar, const mouse* m) {
 
 static void text_scroll(int is_down, int num_lines) {
     scrollbar_t* scrollbar = g_scrollbar_current;
-    if (is_down) {
-        scrollbar->scroll_position += num_lines;
-        if (scrollbar->scroll_position > scrollbar->max_scroll_position)
-            scrollbar->scroll_position = scrollbar->max_scroll_position;
-
-    } else {
-        scrollbar->scroll_position -= num_lines;
-        if (scrollbar->scroll_position < 0)
-            scrollbar->scroll_position = 0;
-    }
+    scrollbar->scroll_position = std::clamp(scrollbar->scroll_position + (is_down ? num_lines : -num_lines), 0, scrollbar->max_scroll_position);
     scrollbar->is_dragging_scroll = 0;
-    if (scrollbar->on_scroll_callback)
+
+    if (scrollbar->on_scroll_callback) {
         scrollbar->on_scroll_callback();
+    }
+
+    if (scrollbar->_onscroll) {
+        scrollbar->_onscroll();
+    }
 }

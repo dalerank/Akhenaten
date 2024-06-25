@@ -113,12 +113,13 @@ advisor_religion_window = {
 }
 
 advisor_trade_window = {
-		ui : {
+	ui : {
 		outer_panel : { type : "outer_panel", pos:[0, 0], size:[40, 27] },
 		advisor_icon : { type : "image", pack:PACK_GENERAL, id:128, offset:4, pos:[10, 10] },
 		header_label : { type : "label", font : FONT_LARGE_BLACK_ON_LIGHT, text:"#trade_overseer", pos:[60, 17]},
 		hint_label : { type : "label", font : FONT_NORMAL_BLACK_ON_DARK, text:"#trade_overseer_hint", pos:[60, 40]},
 		inner_panel : { type : "inner_panel", pos:[17, 60], size:[36, 21] },
+		scrollbar : { type: "scrollbar", pos:[590, 52], size:[-1, 336] },
 	}
 }
 

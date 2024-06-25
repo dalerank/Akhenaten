@@ -11,6 +11,7 @@
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/arrow_button.h"
+#include "graphics/elements/scrollbar.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/button.h"
 #include "graphics/elements/panel.h"
@@ -58,6 +59,7 @@ image_button &imgok_button(vec2i pos, std::function<void(int, int)> cb);
 image_button &imgcancel_button(vec2i pos, std::function<void(int, int)> cb);
 image_button &img_button(e_image_id img, vec2i pos, vec2i size, int offset = 0);
 arrow_button &arw_button(vec2i pos, bool up, bool tiny = false);
+scrollbar_t &scrollbar(scrollbar_t &scrollbar, vec2i pos, int &value, vec2i size = {-1, -1});
 
 pcstr str(int group, int id);
 inline pcstr str(std::pair<int, int> r) { return str(r.first, r.second); }
@@ -71,13 +73,16 @@ struct element {
     virtual void draw() {}
     virtual void load(archive);
     virtual void text(pcstr) {}
-    inline void text(int font, pcstr v) { this->font(font);  this->text(v); }
+    inline void text(int font, pcstr v) { this->font(font); this->text(v); }
     virtual void color(int) {}
     virtual void image(int) {}
     virtual image_desc image() const { return {}; }
     virtual void font(int) {}
     virtual void width(int) {}
+    virtual int value() const { return 0; }
+    virtual void max_value(int v) {}
     virtual void onclick(std::function<void(int, int)>) {}
+    virtual void onevent(std::function<void()>) {}
 
     pcstr text_from_key(pcstr key);
 
@@ -172,6 +177,16 @@ struct elabel : public element {
 };
 
 struct etext : public elabel {
+    virtual void draw() override;
+    virtual void load(archive elem) override;
+};
+
+struct escrollbar : public element {
+    scrollbar_t scrollbar;
+
+    virtual int value() const override { return scrollbar.scroll_position; }
+    virtual void max_value(int v) override { scrollbar.scroll_position = v; }
+    virtual void onevent(std::function<void()> func) override { scrollbar.onscroll(func); }
     virtual void draw() override;
     virtual void load(archive elem) override;
 };

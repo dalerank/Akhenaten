@@ -4,6 +4,8 @@
 #include "graphics/font.h"
 #include "input/mouse.h"
 
+#include <functional>
+
 struct scrollbar_t {
     vec2i pos;
     int height;
@@ -17,6 +19,10 @@ struct scrollbar_t {
     bool thin;
 
     void init(int scroll_position, int max_scroll_position);
+
+    std::function<void()> _onscroll;
+
+    template<class Func> scrollbar_t &onscroll(Func f) { _onscroll = f; return *this; }
 };
 
 /**
