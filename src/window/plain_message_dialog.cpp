@@ -40,7 +40,7 @@ static void draw_background(void) {
 
 static void draw_foreground(void) {
     graphics_set_to_dialog();
-    image_buttons_draw(80, 80, buttons, 1);
+    image_buttons_draw({80, 80}, buttons, 1);
     graphics_reset_dialog();
 }
 
@@ -49,7 +49,7 @@ static void close(void) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
-    if (image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 1, 0))
+    if (image_buttons_handle_mouse(mouse_in_dialog(m), {80, 80}, buttons, 1, 0))
         return;
     if (input_go_back_requested(m, h) || h->enter_pressed)
         close();

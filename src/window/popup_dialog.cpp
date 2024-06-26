@@ -68,7 +68,7 @@ static void draw_foreground(void) {
 
     graphics_set_to_dialog();
     if (data.num_buttons > 0) // this can be 0, 1 or 2
-        image_buttons_draw(80, 80, buttons, data.num_buttons);
+        image_buttons_draw({80, 80}, buttons, data.num_buttons);
     else
         lang_text_draw_centered(13, 1, 80, 208, 480, FONT_NORMAL_BLACK_ON_LIGHT);
     graphics_reset_dialog();
@@ -77,7 +77,7 @@ static void draw_foreground(void) {
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto& data = g_popup_dialog;
 
-    if (data.num_buttons && image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, data.num_buttons, 0))
+    if (data.num_buttons && image_buttons_handle_mouse(mouse_in_dialog(m), {80, 80}, buttons, data.num_buttons, 0))
         return;
     if (input_go_back_requested(m, h)) {
         data.close_func(0);

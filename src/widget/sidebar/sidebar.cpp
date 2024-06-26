@@ -150,15 +150,15 @@ static void draw_number_of_messages(int x_offset) {
 }
 
 static void draw_buttons_collapsed(int x_offset) {
-    image_buttons_draw(x_offset, TOP_MENU_HEIGHT, button_expand_sidebar, 1);
-    image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_build_collapsed, 12);
+    image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, button_expand_sidebar, 1);
+    image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_build_collapsed, 12);
 }
 static void draw_buttons_expanded(int x_offset) {
     buttons_build_expanded[12].enabled = game_can_undo();
     buttons_build_expanded[14].enabled = city_message_problem_area_count();
-    image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_overlays_collapse_sidebar, 1);
-    image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_build_expanded, 15);
-    image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_top_expanded, 3);
+    image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_overlays_collapse_sidebar, 1);
+    image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_build_expanded, 15);
+    image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_top_expanded, 3);
 }
 
 static void refresh_build_menu_buttons(void) {
@@ -253,12 +253,12 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
     data.focus_tooltip_text_id = 0;
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = sidebar_common_get_x_offset_collapsed();
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, (int)std::size(button_expand_sidebar), &button_id);
+        handled |= image_buttons_handle_mouse(m, {x_offset, 24}, button_expand_sidebar, (int)std::size(button_expand_sidebar), &button_id);
         if (button_id) {
             data.focus_tooltip_text_id = 12;
         }
 
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed, (int)std::size(buttons_build_collapsed), &button_id);
+        handled |= image_buttons_handle_mouse(m, {x_offset, 24}, buttons_build_collapsed, (int)std::size(buttons_build_collapsed), &button_id);
         if (button_id) {
             data.focus_tooltip_text_id = button_id + 19;
         }
@@ -269,17 +269,17 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
         }
 
         int x_offset = sidebar_common_get_x_offset_expanded();
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, (int)std::size(buttons_overlays_collapse_sidebar), &button_id);
+        handled |= image_buttons_handle_mouse(m, {x_offset, 24}, buttons_overlays_collapse_sidebar, (int)std::size(buttons_overlays_collapse_sidebar), &button_id);
         if (button_id) {
             data.focus_tooltip_text_id = button_id + 9;
         }
 
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, (int)std::size(buttons_build_expanded), &button_id);
+        handled |= image_buttons_handle_mouse(m, {x_offset, 24}, buttons_build_expanded, (int)std::size(buttons_build_expanded), &button_id);
         if (button_id) {
             data.focus_tooltip_text_id = button_id + 19;
         }
 
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_top_expanded, (int)std::size(buttons_top_expanded), &button_id);
+        handled |= image_buttons_handle_mouse(m, {x_offset, 24}, buttons_top_expanded, (int)std::size(buttons_top_expanded), &button_id);
         if (button_id) {
             data.focus_tooltip_text_id = button_id + 40;
         }
@@ -291,9 +291,9 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
 
 int widget_sidebar_city_handle_mouse_build_menu(const mouse* m) {
     if (city_view_is_sidebar_collapsed()) {
-        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_collapsed(), 24, buttons_build_collapsed, (int)std::size(buttons_build_collapsed), 0);
+        return image_buttons_handle_mouse(m, {sidebar_common_get_x_offset_collapsed(), 24}, buttons_build_collapsed, (int)std::size(buttons_build_collapsed), 0);
     } else {
-        return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24, buttons_build_expanded, (int)std::size(buttons_build_expanded), 0);
+        return image_buttons_handle_mouse(m, {sidebar_common_get_x_offset_expanded(), 24}, buttons_build_expanded, (int)std::size(buttons_build_expanded), 0);
     }
 }
 

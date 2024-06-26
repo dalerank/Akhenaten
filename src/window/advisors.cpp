@@ -210,8 +210,8 @@ static void draw_foreground(void) {
     auto &data = g_window_advisors;
 
     graphics_set_to_dialog();
-    image_buttons_draw(0, 16 * (data.advisor_height - 2), &help_button, 1);
-    image_buttons_draw(0, 440, advisor_buttons, 14);
+    image_buttons_draw({0, 16 * (data.advisor_height - 2)}, &help_button, 1);
+    image_buttons_draw({0, 440}, advisor_buttons, 14);
     graphics_reset_dialog();
 
     data.current_advisor_window->ui_draw_foreground();
@@ -237,12 +237,12 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     handle_hotkeys(h);
     const mouse* m_dialog = mouse_in_dialog(m);
     int old_focus_button_id = data.focus_button_id;
-    if (image_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons, 14, &data.focus_button_id)) {
+    if (image_buttons_handle_mouse(m_dialog, {0, 440}, advisor_buttons, 14, &data.focus_button_id)) {
         return;
     }
 
     int button_id;
-    image_buttons_handle_mouse(m_dialog, 0, 16 * (data.advisor_height - 2), &help_button, 1, &button_id);
+    image_buttons_handle_mouse(m_dialog, {0, 16 * (data.advisor_height - 2)}, &help_button, 1, &button_id);
     if (button_id) {
         data.focus_button_id = -1;
     }

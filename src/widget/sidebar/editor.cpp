@@ -118,7 +118,7 @@ static image_button buttons_build[] = {
 };
 
 static void draw_buttons(void) {
-    image_buttons_draw(sidebar_common_get_x_offset_expanded(), TOP_MENU_HEIGHT, buttons_build, 17);
+    image_buttons_draw({sidebar_common_get_x_offset_expanded(), TOP_MENU_HEIGHT}, buttons_build, 17);
 }
 
 static void draw_status(void) {
@@ -213,15 +213,15 @@ int widget_sidebar_editor_handle_mouse(const mouse* m) {
     if (widget_minimap_handle_mouse(m))
         return 1;
 
-    return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24, buttons_build, 17, 0);
+    return image_buttons_handle_mouse(m, {sidebar_common_get_x_offset_expanded(), 24}, buttons_build, 17, 0);
 }
 
 int widget_sidebar_editor_handle_mouse_build_menu(const mouse* m) {
-    return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24, buttons_build, 17, 0);
+    return image_buttons_handle_mouse(m, {sidebar_common_get_x_offset_expanded(), 24}, buttons_build, 17, 0);
 }
 
 int widget_sidebar_editor_handle_mouse_attributes(const mouse* m) {
-    return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24, buttons_build, 2, 0);
+    return image_buttons_handle_mouse(m, {sidebar_common_get_x_offset_expanded(), 24}, buttons_build, 2, 0);
 }
 
 static void button_attributes(int show, int param2) {

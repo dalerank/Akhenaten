@@ -583,11 +583,11 @@ static void draw_city_name(const empire_city* city) {
 
 static void draw_panel_buttons(const empire_city* city) {
     auto &data = g_empire_window;
-    image_buttons_draw(data.min_pos.x + 20, data.max_pos.y - 44, image_button_help, 1);
-    image_buttons_draw(data.max_pos.x - 44, data.max_pos.y - 44, image_button_return_to_city, 1);
+    image_buttons_draw(data.min_pos + vec2i{20, -44}, image_button_help, 1);
+    image_buttons_draw(data.max_pos - vec2i{44, 44}, image_button_return_to_city, 1);
 
     ADVISOR_BUTTON_X = data.min_pos.x + 24;
-    image_buttons_draw(ADVISOR_BUTTON_X, data.max_pos.y - 120, image_button_advisor, 1);
+    image_buttons_draw({ADVISOR_BUTTON_X, data.max_pos.y - 120}, image_button_advisor, 1);
 
     // trade button
     if (city && !city->is_open) {
@@ -721,14 +721,15 @@ static void window_empire_handle_input(const mouse* m, const hotkeys* h) {
     data.focus_button_id = 0;
     data.focus_resource = 0;
     int button_id;
-    image_buttons_handle_mouse(m, data.min_pos.x + 20, data.max_pos.y - 44, image_button_help, 1, &button_id);
+    image_buttons_handle_mouse(m, data.min_pos + vec2i{20, -44}, image_button_help, 1, &button_id);
     if (button_id)
         data.focus_button_id = 1;
 
-    image_buttons_handle_mouse(m, data.max_pos.x - 44, data.max_pos.y - 44, image_button_return_to_city, 1, &button_id);
+    image_buttons_handle_mouse(m, data.max_pos - vec2i{44, 44}, image_button_return_to_city, 1, &button_id);
     if (button_id)
         data.focus_button_id = 2;
-    image_buttons_handle_mouse(m, ADVISOR_BUTTON_X, data.max_pos.y - 120, image_button_advisor, 1, &button_id);
+
+    image_buttons_handle_mouse(m, {ADVISOR_BUTTON_X, data.max_pos.y - 120}, image_button_advisor, 1, &button_id);
     if (button_id)
         data.focus_button_id = 3;
 

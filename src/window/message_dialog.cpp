@@ -633,38 +633,38 @@ static void draw_foreground_normal() {
     const lang_message* msg = lang_get_message(data.text_id);
 
     if (msg->type == TYPE_MANUAL && data.num_history > 0) {
-        image_buttons_draw(data.x + 16, data.y + 16 * msg->height_blocks - 36, &image_button_back, 1);
+        image_buttons_draw({data.x + 16, data.y + 16 * msg->height_blocks - 36}, &image_button_back, 1);
         lang_text_draw(12, 0, data.x + 52, data.y + 16 * msg->height_blocks - 31, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     if (msg->type == TYPE_MESSAGE) {
-        image_buttons_draw(data.x + 16, data.y + 16 * msg->height_blocks - 40, get_advisor_button(), 1);
+        image_buttons_draw({data.x + 16, data.y + 16 * msg->height_blocks - 40}, get_advisor_button(), 1);
         if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION)
-            image_buttons_draw(data.x + 64, data.y_text + 36, &image_button_go_to_problem, 1);
+            image_buttons_draw({data.x + 64, data.y_text + 36}, &image_button_go_to_problem, 1);
     }
-    image_buttons_draw(data.x + 16 * msg->width_blocks - 38, data.y + 16 * msg->height_blocks - 36, &image_button_close, 1);
+    image_buttons_draw({data.x + 16 * msg->width_blocks - 38, data.y + 16 * msg->height_blocks - 36}, &image_button_close, 1);
     rich_text_draw_scrollbar();
 }
 
 static void draw_foreground_image() {
     auto &data = g_message_dialog_data;
 
-    image_buttons_draw(data.x + 16, data.y + 408, get_advisor_button(), 1);
-    image_buttons_draw(data.x + 372, data.y + 410, &image_button_close, 1);
+    image_buttons_draw({data.x + 16, data.y + 408}, get_advisor_button(), 1);
+    image_buttons_draw({data.x + 372, data.y + 410}, &image_button_close, 1);
     const lang_message* msg = lang_get_message(data.text_id);
     if (is_problem_message(msg)) {
-        image_buttons_draw(data.x + 48, data.y + 407, &image_button_go_to_problem, 1);
+        image_buttons_draw({data.x + 48, data.y + 407}, &image_button_go_to_problem, 1);
     }
 }
 
 static void draw_foreground_video() {
     auto &data = g_message_dialog_data;
     video_draw(data.x + 8, data.y + 8);
-    image_buttons_draw(data.x + 16, data.y + 408, get_advisor_button(), 1);
-    image_buttons_draw(data.x + 372, data.y + 410, &image_button_close, 1);
+    image_buttons_draw({data.x + 16, data.y + 408}, get_advisor_button(), 1);
+    image_buttons_draw({data.x + 372, data.y + 410}, &image_button_close, 1);
     const lang_message* msg = lang_get_message(data.text_id);
     if (is_problem_message(msg)) {
-        image_buttons_draw(data.x + 48, data.y + 407, &image_button_go_to_problem, 1);
+        image_buttons_draw({data.x + 48, data.y + 407}, &image_button_go_to_problem, 1);
     }
 }
 
@@ -684,16 +684,16 @@ static void draw_foreground() {
 
 static bool handle_input_video(const mouse* m_dialog, const lang_message* msg) {
     auto &data = g_message_dialog_data;
-    if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, {data.x + 16, data.y + 408}, get_advisor_button(), 1, 0)) {
         return true;
     }
 
-    if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, {data.x + 372, data.y + 410}, &image_button_close, 1, 0)) {
         return true;
     }
 
     if (is_problem_message(msg)) {
-        if (image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id)) {
+        if (image_buttons_handle_mouse(m_dialog, {data.x + 48, data.y + 407}, &image_button_go_to_problem, 1, &data.focus_button_id)) {
             return true;
         }
     }
@@ -702,16 +702,16 @@ static bool handle_input_video(const mouse* m_dialog, const lang_message* msg) {
 
 static bool handle_input_godmsg(const mouse* m_dialog, const lang_message* msg) {
     auto &data = g_message_dialog_data;
-    if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, {data.x + 16, data.y + 408}, get_advisor_button(), 1, 0)) {
         return true;
     }
 
-    if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, {data.x + 372, data.y + 410}, &image_button_close, 1, 0)) {
         return true;
     }
 
     if (is_problem_message(msg)) {
-        if (image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id)) {
+        if (image_buttons_handle_mouse(m_dialog, {data.x + 48, data.y + 407}, &image_button_go_to_problem, 1, &data.focus_button_id)) {
             return true;
         }
     }
@@ -720,22 +720,22 @@ static bool handle_input_godmsg(const mouse* m_dialog, const lang_message* msg) 
 
 static bool handle_input_normal(const mouse* m_dialog, const lang_message* msg) {
     auto &data = g_message_dialog_data;
-    if (msg->type == TYPE_MANUAL && image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 36, &image_button_back, 1, 0)) {
+    if (msg->type == TYPE_MANUAL && image_buttons_handle_mouse(m_dialog, {data.x + 16, data.y + 16 * msg->height_blocks - 36}, &image_button_back, 1, 0)) {
         return true;
     }
 
     if (msg->type == TYPE_MESSAGE) {
-        if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 40, get_advisor_button(), 1, 0)) {
+        if (image_buttons_handle_mouse(m_dialog, {data.x + 16, data.y + 16 * msg->height_blocks - 40}, get_advisor_button(), 1, 0)) {
             return true;
         }
 
         if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION) {
-            if (image_buttons_handle_mouse(m_dialog, data.x + 64, data.y_text + 36, &image_button_go_to_problem, 1, 0))
+            if (image_buttons_handle_mouse(m_dialog, {data.x + 64, data.y_text + 36}, &image_button_go_to_problem, 1, 0))
                 return true;
         }
     }
 
-    if (image_buttons_handle_mouse(m_dialog, data.x + 16 * msg->width_blocks - 38, data.y + 16 * msg->height_blocks - 36, &image_button_close, 1, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, {data.x + 16 * msg->width_blocks - 38, data.y + 16 * msg->height_blocks - 36}, &image_button_close, 1, 0)) {
         return true;
     }
 

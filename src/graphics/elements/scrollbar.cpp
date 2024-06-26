@@ -48,17 +48,11 @@ void scrollbar_draw(scrollbar_t* scrollbar) {
     painter ctx = game.painter();
     if (scrollbar->max_scroll_position > 0 || scrollbar->always_visible) {
         if (!scrollbar->thin) {
-            image_buttons_draw(scrollbar->pos.x, scrollbar->pos.y, &image_button_scroll_up, 1);
-            image_buttons_draw(scrollbar->pos.x,
-                               scrollbar->pos.y + scrollbar->height - SCROLL_BUTTON_HEIGHT,
-                               &image_button_scroll_down,
-                               1);
+            image_buttons_draw(scrollbar->pos, &image_button_scroll_up, 1);
+            image_buttons_draw(scrollbar->pos + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, &image_button_scroll_down, 1);
         } else {
-            image_buttons_draw(scrollbar->pos.x, scrollbar->pos.y, &image_button_scroll_up_thin, 1);
-            image_buttons_draw(scrollbar->pos.x,
-                               scrollbar->pos.y + scrollbar->height - SCROLL_BUTTON_HEIGHT,
-                               &image_button_scroll_down_thin,
-                               1);
+            image_buttons_draw(scrollbar->pos, &image_button_scroll_up_thin, 1);
+            image_buttons_draw(scrollbar->pos + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, &image_button_scroll_down_thin, 1);
         }
         int pct;
         if (scrollbar->scroll_position <= 0)
@@ -125,14 +119,14 @@ int scrollbar_handle_mouse(scrollbar_t* scrollbar, const mouse* m) {
 
     int tmp_btn_id;
     if (!scrollbar->thin) {
-        if (image_buttons_handle_mouse(m, scrollbar->pos, image_button_scroll_up, tmp_btn_id))
+        if (image_buttons_handle_mouse(m, scrollbar->pos, &image_button_scroll_up, 1, &tmp_btn_id))
             return 1;
-        if (image_buttons_handle_mouse(m, scrollbar->pos + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, image_button_scroll_down, tmp_btn_id))
+        if (image_buttons_handle_mouse(m, scrollbar->pos + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, &image_button_scroll_down, 1, &tmp_btn_id))
             return 1;
     } else {
-        if (image_buttons_handle_mouse(m, scrollbar->pos, image_button_scroll_up_thin, tmp_btn_id))
+        if (image_buttons_handle_mouse(m, scrollbar->pos, &image_button_scroll_up_thin, 1, &tmp_btn_id))
             return 1;
-        if (image_buttons_handle_mouse(m, scrollbar->pos + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, image_button_scroll_down_thin, tmp_btn_id))
+        if (image_buttons_handle_mouse(m, scrollbar->pos + vec2i{0, scrollbar->height - SCROLL_BUTTON_HEIGHT}, &image_button_scroll_down_thin, 1, &tmp_btn_id))
             return 1;
     }
 

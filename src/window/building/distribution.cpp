@@ -243,11 +243,11 @@ int window_building_handle_mouse_granary_orders(const mouse* m, object_info* c) 
 
     // arrows
     bool handled = false;
-    if (image_buttons_handle_mouse(m, c->offset.x + 165, y_offset + 49, data.orders_decrease_arrows.data(), 20, &data.decr_arrow_focus_button_id)) {
+    if (image_buttons_handle_mouse(m, {c->offset.x + 165, y_offset + 49}, data.orders_decrease_arrows.data(), 20, &data.decr_arrow_focus_button_id)) {
         handled = true;
     }
 
-    if (image_buttons_handle_mouse(m, c->offset.x + 165 + 18, y_offset + 49, data.orders_increase_arrows.data(), 20, &data.decr_arrow_focus_button_id)) {
+    if (image_buttons_handle_mouse(m, {c->offset.x + 165 + 18, y_offset + 49}, data.orders_increase_arrows.data(), 20, &data.decr_arrow_focus_button_id)) {
         handled = true;
     }
 
@@ -304,11 +304,11 @@ int window_building_handle_mouse_warehouse_orders(const mouse* m, object_info* c
     //        return handled;
 
     // arrows
-    if (image_buttons_handle_mouse(m, c->offset.x + 165, y_offset + 49, data.orders_decrease_arrows.data(), 20, &data.decr_arrow_focus_button_id)) {
+    if (image_buttons_handle_mouse(m, {c->offset.x + 165, y_offset + 49}, data.orders_decrease_arrows.data(), 20, &data.decr_arrow_focus_button_id)) {
         handled = true;
     }
 
-    if (image_buttons_handle_mouse(m, c->offset.x + 165 + 18, y_offset + 49, data.orders_increase_arrows.data(), 20, &data.decr_arrow_focus_button_id)) {
+    if (image_buttons_handle_mouse(m, {c->offset.x + 165 + 18, y_offset + 49}, data.orders_increase_arrows.data(), 20, &data.decr_arrow_focus_button_id)) {
         handled = true;
     }
 

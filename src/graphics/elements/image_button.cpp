@@ -35,7 +35,7 @@ static void remove_pressed_effect_build(image_button* buttons, int num_buttons) 
     }
 }
 
-void image_buttons_draw(int x, int y, image_button* buttons, int num_buttons, int starting_button) {
+void image_buttons_draw(vec2i pos, image_button* buttons, int num_buttons, int starting_button) {
     painter ctx = game.painter();
     fade_pressed_effect(buttons, num_buttons);
     for (int i = starting_button; i < starting_button + num_buttons; i++) {
@@ -50,11 +50,11 @@ void image_buttons_draw(int x, int y, image_button* buttons, int num_buttons, in
         } else {
             image_id += 3;
         }
-        ImageDraw::img_generic(ctx, image_id, vec2i{x + btn->x, y + btn->y});
+        ImageDraw::img_generic(ctx, image_id, pos + vec2i{btn->x, btn->y});
     }
 }
 
-bool image_buttons_handle_mouse(const mouse* m, int x, int y, image_button* buttons, int num_buttons, int* focus_button_id) {
+bool image_buttons_handle_mouse(const mouse* m, vec2i pos, image_button* buttons, int num_buttons, int* focus_button_id) {
     fade_pressed_effect(buttons, num_buttons);
     //    remove_pressed_effect_build(buttons, num_buttons);
     image_button* hit_button = 0;
@@ -66,8 +66,8 @@ bool image_buttons_handle_mouse(const mouse* m, int x, int y, image_button* butt
         if (btn->focused)
             btn->focused--;
 
-        if (x + btn->x <= m->x && x + btn->x + btn->width > m->x && y + btn->y <= m->y
-            && y + btn->y + btn->height > m->y) {
+        if (pos.x + btn->x <= m->x && pos.x + btn->x + btn->width > m->x && pos.y + btn->y <= m->y
+            && pos.y + btn->y + btn->height > m->y) {
             if (focus_button_id)
                 *focus_button_id = i + 1;
 

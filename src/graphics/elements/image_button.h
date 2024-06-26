@@ -44,7 +44,7 @@ struct image_button {
 
 template<size_t N>
 bool image_buttons_handle_mouse(const mouse *m, vec2i pos, image_button (&buttons)[N], int &focus_button_id) {
-    return image_buttons_handle_mouse(m, pos.x, pos.y, std::begin(buttons), (int)N, &focus_button_id);
+    return image_buttons_handle_mouse(m, pos, std::begin(buttons), (int)N, &focus_button_id);
 }
 
 template<class T>
@@ -56,13 +56,10 @@ bool image_buttons_handle_mouse(const mouse *m, vec2i pos, T &buttons, int &focu
 
 template<class T>
 void image_buttons_draw(vec2i pos, T &buttons, int starting_button = 0) {
-    image_buttons_draw(pos.x, pos.y, std::begin(buttons), (int)std::size(buttons), starting_button);
+    image_buttons_draw(pos, std::begin(buttons), (int)std::size(buttons), starting_button);
 }
 
-void image_buttons_draw(int x, int y, image_button* buttons, int num_buttons, int starting_button = 0);
-inline void image_buttons_draw(vec2i pos, image_button &buttons) { image_buttons_draw(pos.x, pos.y, &buttons, 1); }
-
-bool image_buttons_handle_mouse(const mouse* m, int x, int y, image_button* buttons, int num_buttons, int* focus_button_id);
-inline bool image_buttons_handle_mouse(const mouse *m, vec2i pos, image_button &buttons, int &focus_button_id) { return image_buttons_handle_mouse(m, pos.x, pos.y, &buttons, 1, &focus_button_id); }
+void image_buttons_draw(vec2i pos, image_button* buttons, int num_buttons, int starting_button = 0);
+bool image_buttons_handle_mouse(const mouse* m, vec2i pos, image_button* buttons, int num_buttons, int* focus_button_id);
 
 void image_buttons_release_press(image_button* buttons, int num_buttons);

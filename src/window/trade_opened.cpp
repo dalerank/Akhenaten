@@ -41,12 +41,12 @@ static void draw_background(void) {
 
 static void draw_foreground(void) {
     graphics_set_to_dialog();
-    image_buttons_draw(0, 0, image_buttons, 2);
+    image_buttons_draw({0, 0}, image_buttons, 2);
     graphics_reset_dialog();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
-    if (image_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, image_buttons, 2, 0))
+    if (image_buttons_handle_mouse(mouse_in_dialog(m), {0, 0}, image_buttons, 2, 0))
         return;
     if (input_go_back_requested(m, h))
         window_empire_show();

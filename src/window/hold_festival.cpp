@@ -100,14 +100,14 @@ static void draw_background(void) {
 static void draw_foreground(void) {
     graphics_set_to_dialog();
     draw_buttons();
-    image_buttons_draw(0, 0, image_buttons_bottom, 4);
+    image_buttons_draw({0, 0}, image_buttons_bottom, 4);
     graphics_reset_dialog();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
     const mouse* m_dialog = mouse_in_dialog(m);
     int handled = 0;
-    handled |= image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons_bottom, 4, &focus_image_button_id);
+    handled |= image_buttons_handle_mouse(m_dialog, {0, 0}, image_buttons_bottom, 4, &focus_image_button_id);
     handled |= generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons_gods_size, 8, &focus_button_id);
     if (focus_image_button_id)
         focus_button_id = 0;

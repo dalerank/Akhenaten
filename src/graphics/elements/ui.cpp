@@ -33,7 +33,7 @@ namespace ui {
             int tmp_btn;
             switch (type) {
             case generic: return !!generic_buttons_handle_mouse(m, offset, &g_button, 1, &tmp_btn);
-            case image: return !!image_buttons_handle_mouse(m, offset, make_span(&i_button, 1), tmp_btn);
+            case image: return !!image_buttons_handle_mouse(m, offset, &i_button, 1, &tmp_btn);
             case arrow: return !!arrow_buttons_handle_mouse(m, offset, make_span(&a_button, 1), tmp_btn);
             }
 
@@ -270,7 +270,7 @@ image_button &ui::img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size,
 
     ibutton.focused = is_button_hover(ibutton, img_offset);
     ibutton.pressed = ibutton.focused && m->left.is_down;
-    image_buttons_draw(img_offset, ibutton);
+    image_buttons_draw(img_offset, &ibutton, 1);
 
     return ibutton;
 }

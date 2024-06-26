@@ -182,8 +182,8 @@ static void draw_messages(int total_messages) {
 }
 static void draw_foreground(void) {
     graphics_set_to_dialog();
-    image_buttons_draw(16, 32 + 16 * data.height_blocks - 42, &image_button_help, 1);
-    image_buttons_draw(16 * data.width_blocks - 38, 32 + 16 * data.height_blocks - 36, &image_button_close, 1);
+    image_buttons_draw({16, 32 + 16 * data.height_blocks - 42}, &image_button_help, 1);
+    image_buttons_draw({16 * data.width_blocks - 38, 32 + 16 * data.height_blocks - 36}, &image_button_close, 1);
 
     int total_messages = city_message_count();
     if (total_messages > 0) {
@@ -199,12 +199,12 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     data.focus_button_id = 0;
 
     int button_id;
-    bool handled = image_buttons_handle_mouse(m_dialog, 16, 32 + 16 * data.height_blocks - 42, &image_button_help, 1, &button_id);
+    bool handled = image_buttons_handle_mouse(m_dialog, {16, 32 + 16 * data.height_blocks - 42}, &image_button_help, 1, &button_id);
     if (button_id) {
         data.focus_button_id = 11;
     }
 
-    handled |= image_buttons_handle_mouse(m_dialog, 16 * data.width_blocks - 38, 32 + 16 * data.height_blocks - 36, &image_button_close, 1, &button_id);
+    handled |= image_buttons_handle_mouse(m_dialog, {16 * data.width_blocks - 38, 32 + 16 * data.height_blocks - 36}, &image_button_close, 1, &button_id);
     if (button_id) {
         data.focus_button_id = 12;
     }

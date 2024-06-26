@@ -47,7 +47,7 @@ static void draw_foreground() {
     lang_text_draw(12, 0, 200, 256, FONT_NORMAL_BLACK_ON_LIGHT);
     input_box_draw(&g_new_career.player_name_input);
 
-    image_buttons_draw(159, 249, g_new_career.image_buttons, 2);
+    image_buttons_draw({159, 249}, g_new_career.image_buttons, 2);
 
     graphics_reset_dialog();
 }
@@ -68,7 +68,7 @@ static void confirm_new_player_name(int param1, int param2) {
 
 static void handle_input(const mouse* m, const hotkeys* h) {
     const mouse* m_dialog = mouse_in_dialog(m);
-    if (input_box_handle_mouse(m_dialog, &g_new_career.player_name_input) || image_buttons_handle_mouse(m_dialog, 159, 249, g_new_career.image_buttons, 2, 0)) {
+    if (input_box_handle_mouse(m_dialog, &g_new_career.player_name_input) || image_buttons_handle_mouse(m_dialog, {159, 249}, g_new_career.image_buttons, 2, 0)) {
         return;
     }
 

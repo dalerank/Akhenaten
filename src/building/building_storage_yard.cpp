@@ -1011,8 +1011,8 @@ void building_storage_yard::draw_warehouse_orders_foreground(object_info* c) {
         // arrows
         int state = storage()->resource_state[resource];
         if (state == STORAGE_STATE_PHARAOH_ACCEPT || state == STORAGE_STATE_PHARAOH_GET) {
-            image_buttons_draw(c->offset.x + 165, y_offset + 49, data.orders_decrease_arrows.data(), 1, i);
-            image_buttons_draw(c->offset.x + 165 + 18, y_offset + 49, data.orders_increase_arrows.data(), 1, i);
+            image_buttons_draw({c->offset.x + 165, y_offset + 49}, data.orders_decrease_arrows.data(), 1, i);
+            image_buttons_draw({c->offset.x + 165 + 18, y_offset + 49}, data.orders_increase_arrows.data(), 1, i);
         }
     }
 
