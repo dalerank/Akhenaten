@@ -564,6 +564,7 @@ public:
     virtual resources_vec required_resource() const { return {}; }
     building::metainfo get_info() const;
     void set_animation(const animation_t &anim);
+    inline void set_animation(pcstr key) { set_animation(anim(key)); }
 
     static void params(e_building_type, const static_params &);
     static const static_params &params(e_building_type);
