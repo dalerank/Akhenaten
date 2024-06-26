@@ -106,12 +106,11 @@ static void main_menu_handle_input(const mouse* m, const hotkeys* h) {
 }
 
 void window_main_menu_show(bool restart_music) {
-    auto &data = g_main_menu_data;
     if (restart_music) {
         sound_music_play_intro();
     }
 
-    window_type window = {
+    static window_type window = {
         WINDOW_MAIN_MENU,
         main_menu_draw_background,
         main_menu_draw_foreground,

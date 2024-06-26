@@ -101,12 +101,14 @@ void building_scribal_school::spawn_figure() {
     }
 }
 
+void building_scribal_school::update_day() {
+    set_animation(can_play_animation() ? "work" : "off");
+}
+
 bool building_scribal_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
-    building_draw_normal_anim(ctx, point, &base, tile, scribal_school_m.anim["work"], mask);
+    building_impl::draw_ornaments_and_animations_height(ctx, point, tile, mask);
 
-    int amount = 0;
-    amount = ceil((float)base.stored_amount() / 100.0) - 1;
-
+    int amount = ceil((float)base.stored_amount() / 100.0) - 1;
     if (amount >= 0) {
         ImageDraw::img_generic(ctx, image_group(IMG_RESOURCE_PAPYRUS) + amount, point + scribal_school_m.papyrus, mask);
     }
