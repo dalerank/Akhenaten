@@ -72,7 +72,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     else {
         num_buttons = 1;
     }
-    generic_buttons_handle_mouse(mouse_in_dialog(m), 48, 128, victory_buttons, num_buttons, &focus_button_id);
+    generic_buttons_handle_mouse(mouse_in_dialog(m), {48, 128}, victory_buttons, num_buttons, &focus_button_id);
 }
 
 static void button_accept(int param1, int param2) {

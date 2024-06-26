@@ -143,7 +143,7 @@ void ui::advisor_ratings_window::draw_foreground() {
 }
 
 int ui::advisor_ratings_window::handle_mouse(const mouse* m) {
-    return generic_buttons_handle_mouse(m, 0, 0, rating_buttons, 4, &g_advisor_rating_window.focus_button_id);
+    return generic_buttons_handle_mouse(m, {0, 0}, rating_buttons, 4, &g_advisor_rating_window.focus_button_id);
 }
 
 static void button_rating(int rating, int param2) {

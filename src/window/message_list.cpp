@@ -213,7 +213,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         data.focus_button_id = 13;
     }
 
-    handled |= (generic_buttons_handle_mouse(m_dialog, data.x_text, data.y_text + 4, generic_buttons_messages, MAX_MESSAGES, &button_id) != 0);
+    handled |= (generic_buttons_handle_mouse(m_dialog, {data.x_text, data.y_text + 4}, generic_buttons_messages, MAX_MESSAGES, &button_id) != 0);
     if (!data.focus_button_id) {
         data.focus_button_id = button_id;
     }

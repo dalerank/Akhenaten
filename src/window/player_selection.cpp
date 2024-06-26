@@ -211,7 +211,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         return;
     }
 
-    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 4, &data.focus_button_id)) {
+    if (generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons, 4, &data.focus_button_id)) {
         return;
     }
 }

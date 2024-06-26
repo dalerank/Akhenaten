@@ -138,7 +138,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
             advance_to_next_mission();
         }
     } else {
-        generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, fired_buttons, 1, &focus_button_id);
+        generic_buttons_handle_mouse(mouse_in_dialog(m), {0, 0}, fired_buttons, 1, &focus_button_id);
     }
 }
 static void button_fired(int param1, int param2) {

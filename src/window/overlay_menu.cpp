@@ -254,14 +254,14 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     auto& data = g_overlay_menu_data;
     int x_offset = get_sidebar_x_offset();
     bool handled = false;
-    handled |= !!generic_buttons_handle_mouse(m, x_offset - 170, 72, menu_buttons, 8, &data.menu_focus_button_id);
+    handled |= !!generic_buttons_handle_mouse(m, {x_offset - 170, 72}, menu_buttons, 8, &data.menu_focus_button_id);
 
     if (!data.keep_submenu_open) {
         handle_submenu_focus();
     }
 
     if (data.selected_submenu) {
-        handled |= !!generic_buttons_handle_mouse(m, x_offset - 348, 72 + 24 * data.selected_menu, submenu_buttons, data.num_submenu_items, &data.submenu_focus_button_id);
+        handled |= !!generic_buttons_handle_mouse(m, {x_offset - 348, 72 + 24 * data.selected_menu}, submenu_buttons, data.num_submenu_items, &data.submenu_focus_button_id);
     }
 
     if (!handled && input_go_back_requested(m, h)) {

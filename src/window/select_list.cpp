@@ -115,15 +115,15 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     auto &data = g_select_list;
     if (data.num_items > MAX_ITEMS_PER_LIST) {
         int items_first = items_in_first_list();
-        if (generic_buttons_handle_mouse(m, data.x, data.y, buttons_list1, items_first, &data.focus_button_id))
+        if (generic_buttons_handle_mouse(m, {data.x, data.y}, buttons_list1, items_first, &data.focus_button_id))
             return;
         int second_id = 0;
-        generic_buttons_handle_mouse(m, data.x, data.y, buttons_list2, data.num_items - items_first, &second_id);
+        generic_buttons_handle_mouse(m, {data.x, data.y}, buttons_list2, data.num_items - items_first, &second_id);
         if (second_id > 0)
             data.focus_button_id = second_id + MAX_ITEMS_PER_LIST;
 
     } else {
-        if (generic_buttons_handle_mouse(m, data.x, data.y, buttons_list1, data.num_items, &data.focus_button_id))
+        if (generic_buttons_handle_mouse(m, {data.x, data.y}, buttons_list1, data.num_items, &data.focus_button_id))
             return;
     }
     if (input_go_back_requested(m, h))

@@ -388,10 +388,10 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     const mouse* m_dialog = mouse_in_dialog(m);
     bool mouse_button = false;
 
-    mouse_button |= !!generic_buttons_min_handle_mouse(m_dialog, 0, 0, checkbox_buttons, data.starting_option + options_per_page[data.page], &data.focus_button, data.starting_option);
-    mouse_button |= !!generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, (int)std::size(bottom_buttons), &data.bottom_focus_button);
-    mouse_button |= !!generic_buttons_handle_mouse(m_dialog, 0, 0, page_buttons, (int)std::size(page_buttons), &data.page_focus_button);
-    mouse_button |= !!generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
+    mouse_button |= !!generic_buttons_min_handle_mouse(m_dialog, {0, 0}, checkbox_buttons, data.starting_option + options_per_page[data.page], &data.focus_button, data.starting_option);
+    mouse_button |= !!generic_buttons_handle_mouse(m_dialog, {0, 0}, bottom_buttons, (int)std::size(bottom_buttons), &data.bottom_focus_button);
+    mouse_button |= !!generic_buttons_handle_mouse(m_dialog, {0, 0}, page_buttons, (int)std::size(page_buttons), &data.page_focus_button);
+    mouse_button |= !!generic_buttons_handle_mouse(m_dialog, {0, 0}, &language_button, 1, &data.language_focus_button);
 
     if (!mouse_button && (m->right.went_up || h->escape_pressed)) {
         if (data.close_callback) {

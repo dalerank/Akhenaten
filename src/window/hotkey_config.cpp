@@ -286,10 +286,8 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         return;
 
     int mouse_button = 0;
-    mouse_button
-      |= generic_buttons_handle_mouse(m_dialog, 0, 0, hotkey_buttons, NUM_VISIBLE_OPTIONS * 2, &data.focus_button);
-    mouse_button
-      |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
+    mouse_button |= generic_buttons_handle_mouse(m_dialog, {0, 0}, hotkey_buttons, NUM_VISIBLE_OPTIONS * 2, &data.focus_button);
+    mouse_button |= generic_buttons_handle_mouse(m_dialog, {0, 0}, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
 
     if (!mouse_button && (m->right.went_up || h->escape_pressed)) {
         data.close_callback();

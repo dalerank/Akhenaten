@@ -32,8 +32,6 @@ static generic_button buttons[] = {{21, 51, 25, 25, button_number, button_none, 
                                    {21, 171, 85, 25, button_cancel, button_none, 1, 0}};
 
 struct numeric_input_t : public vec2i {
-    int x;
-    int y;
     int max_digits;
     int max_value;
     void (*callback)(int);
@@ -100,7 +98,7 @@ static void draw_foreground() {
 
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto &data = g_numeric_input;
-    if (generic_buttons_handle_mouse(m, data.x, data.y, buttons, 12, &data.focus_button_id))
+    if (generic_buttons_handle_mouse(m, data, buttons, 12, &data.focus_button_id))
         return;
 
     if (input_go_back_requested(m, h))

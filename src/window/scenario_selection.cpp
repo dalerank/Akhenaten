@@ -516,15 +516,15 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
         if (data.dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST && data.panel->get_selected_entry_idx() != -1) {
             if (!data.scores_or_goals) {
-                if (generic_buttons_handle_mouse(m_dialog, 0, 0, &button_scores_goals[0], 1, &data.focus_button_id))
+                if (generic_buttons_handle_mouse(m_dialog, {0, 0}, &button_scores_goals[0], 1, &data.focus_button_id))
                     return;
-            } else if (generic_buttons_handle_mouse(m_dialog, 0, 0, &button_scores_goals[1], 1, &data.focus_button_id))
+            } else if (generic_buttons_handle_mouse(m_dialog, {0, 0}, &button_scores_goals[1], 1, &data.focus_button_id))
                 return;
         }
         break;
     case MAP_SELECTION_CAMPAIGN:
         int last_focus = data.focus_button_id;
-        if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons_campaigns, 9, &data.focus_button_id))
+        if (generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons_campaigns, 9, &data.focus_button_id))
             return;
         if (last_focus != data.focus_button_id)
             window_invalidate();

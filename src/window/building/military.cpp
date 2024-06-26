@@ -296,13 +296,13 @@ void window_building_draw_legion_info_foreground(object_info* c) {
 int window_building_handle_mouse_legion_info(const mouse* m, object_info* c) {
     auto& data = g_military_data;
     data.context_for_callback = c;
-    int button_id = generic_buttons_handle_mouse(m, c->offset.x, c->offset.y, layout_buttons, 5, &data.focus_button_id);
+    int button_id = generic_buttons_handle_mouse(m, c->offset, layout_buttons, 5, &data.focus_button_id);
     if (formation_get(c->formation_id)->figure_type == FIGURE_INFANTRY) {
         if (data.focus_button_id == 1 || (data.focus_button_id == 2 && c->formation_types == 3))
             data.focus_button_id = 0;
     }
     if (!button_id) {
-        button_id = generic_buttons_handle_mouse(m, c->offset.x + 16 * (c->bgsize.x - 18) / 2, c->offset.y + 16 * c->bgsize.y - 48, return_button, 1, &data.return_button_id);
+        button_id = generic_buttons_handle_mouse(m, {c->offset.x + 16 * (c->bgsize.x - 18) / 2, c->offset.y + 16 * c->bgsize.y - 48}, return_button, 1, &data.return_button_id);
     }
     data.context_for_callback = 0;
     return button_id;

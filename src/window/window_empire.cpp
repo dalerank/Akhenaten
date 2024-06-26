@@ -752,12 +752,12 @@ static void window_empire_handle_input(const mouse* m, const hotkeys* h) {
                         if (empire_object_city_sells_resource(obj->id, resource)) {
                             int column_offset = data.trade_column_spacing * column_idx(index_sell) - 150;
                             int row_offset = data.trade_row_spacing * row_idx(index_sell) + 20;
-                            generic_buttons_handle_mouse(m, x_offset + column_offset + 125, y_offset + data.info_y_traded + row_offset - 7, generic_button_trade_resource + resource - 1, 1, &button_id);
+                            generic_buttons_handle_mouse(m, {x_offset + column_offset + 125, y_offset + data.info_y_traded + row_offset - 7}, generic_button_trade_resource + resource - 1, 1, &button_id);
                             index_sell++;
                         } else if (empire_object_city_buys_resource(obj->id, resource)) {
                             int column_offset = data.trade_column_spacing * column_idx(index_buy) + 200;
                             int row_offset = data.trade_row_spacing * row_idx(index_buy) + 20;
-                            generic_buttons_handle_mouse(m, x_offset + column_offset + 125, y_offset + data.info_y_traded + row_offset - 7, generic_button_trade_resource + resource - 1, 1, &button_id);
+                            generic_buttons_handle_mouse(m, {x_offset + column_offset + 125, y_offset + data.info_y_traded + row_offset - 7}, generic_button_trade_resource + resource - 1, 1, &button_id);
                             index_buy++;
                         }
 
@@ -768,7 +768,9 @@ static void window_empire_handle_input(const mouse* m, const hotkeys* h) {
                         }
                     }
                 } else {
-                    generic_buttons_handle_mouse(m, (data.min_pos.x + data.max_pos.x - 500) / 2 + data.trade_button_offset_x, data.max_pos.y - 105 + data.trade_button_offset_y, generic_button_open_trade, 1, &data.selected_button);
+                    generic_buttons_handle_mouse(m,
+                                                {(data.min_pos.x + data.max_pos.x - 500) / 2 + data.trade_button_offset_x, data.max_pos.y - 105 + data.trade_button_offset_y},
+                                                generic_button_open_trade, 1, &data.selected_button);
                 }
             }
         }

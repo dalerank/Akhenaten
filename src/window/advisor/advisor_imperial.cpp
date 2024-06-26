@@ -203,7 +203,7 @@ void ui::advisor_imperial_window::draw_foreground() {
 }
 
 int ui::advisor_imperial_window::handle_mouse(const mouse* m) {
-    return generic_buttons_handle_mouse(m, 0, 0, imperial_buttons, 8, &focus_button_id);
+    return generic_buttons_handle_mouse(m, {0, 0}, imperial_buttons, 8, &focus_button_id);
 }
 
 static void button_donate_to_city(int param1, int param2) {
