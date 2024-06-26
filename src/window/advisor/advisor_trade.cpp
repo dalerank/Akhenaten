@@ -26,14 +26,6 @@ void config_load_advisor_trade() {
     });
 }
 
-static void button_prices(int param1, int param2);
-static void button_empire(int param1, int param2);
-
-static generic_button resource_buttons[] = {
-    {400, 398, 200, 23, button_prices, button_none, 1, 0},
-    {100, 398, 200, 23, button_empire, button_none, 1, 0},
-};
-
 int ui::advisor_trade_window::draw_background() {
     city_resource_determine_available();
 
@@ -56,14 +48,22 @@ void ui::advisor_trade_window::ui_draw_foreground() {
 
     const resources_list* list = city_resource_get_available();
     for (int i = scroll_position; i < list->size; i++) {
-        int y_offset = ui["inner_panel"].pos.y + 22 * (i - scroll_position);
+        int y_offset = ui["inner_panel"].pos.y + 23 * (i - scroll_position) + 8;
+
+        ui.button("", vec2i{20, y_offset}, vec2i{570, 22}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_NoBody)
+            .tooltip({68, 109})
+            .onclick([resource_index = i] (int, int) {
+                auto resource = city_resource_get_available()->items[resource_index];
+                window_resource_settings_show(resource);
+            });
+
         e_resource resource = list->items[i];
+        y_offset += 4;
         ui.icon({24, y_offset}, resource);
 
-        e_font font_color = FONT_NORMAL_WHITE_ON_DARK;
-        if (city_resource_is_mothballed(resource)) {
-            font_color = FONT_NORMAL_YELLOW;
-        }
+        e_font font_color = city_resource_is_mothballed(resource) 
+                                ? FONT_NORMAL_YELLOW
+                                : FONT_NORMAL_WHITE_ON_DARK;
 
         // resource name and amount in warehouses
         int res_count = city_resource_count(resource);
@@ -93,90 +93,64 @@ void ui::advisor_trade_window::ui_draw_foreground() {
         int trade_amount = stack_proper_quantity(city_resource_trading_amount(resource), resource);
         std::pair<bstring64, e_font> text;
         switch (trade_status) {
-        case TRADE_STATUS_NONE: {
-            bool can_import = g_empire.can_import_resource(resource, true);
-            bool can_export = g_empire.can_export_resource(resource, true);
-            bool could_import = g_empire.can_import_resource(resource, false);
-            bool could_export = g_empire.can_export_resource(resource, false);
-            if (can_import && !can_export) text = {ui::str(54, 31), font_color};
-            else if (!can_import && can_export) text = {ui::str(54, 32), font_color};
-            else if (can_import && can_export) text = {ui::str(54, 33), font_color};
-            else if (could_import && !could_export) text = {ui::str(54, 34), FONT_NORMAL_BLACK_ON_DARK};
-            else if (!could_import && could_export) text = {ui::str(54, 35), FONT_NORMAL_BLACK_ON_DARK};
-            else if (could_import && could_export) text = {ui::str(54, 36), FONT_NORMAL_BLACK_ON_DARK};
-        }
-                              break;
+            case TRADE_STATUS_NONE: {
+                bool can_import = g_empire.can_import_resource(resource, true);
+                bool can_export = g_empire.can_export_resource(resource, true);
+                bool could_import = g_empire.can_import_resource(resource, false);
+                bool could_export = g_empire.can_export_resource(resource, false);
+                if (can_import && !can_export) text = {ui::str(54, 31), font_color};
+                else if (!can_import && can_export) text = {ui::str(54, 32), font_color};
+                else if (can_import && can_export) text = {ui::str(54, 33), font_color};
+                else if (could_import && !could_export) text = {ui::str(54, 34), FONT_NORMAL_BLACK_ON_DARK};
+                else if (!could_import && could_export) text = {ui::str(54, 35), FONT_NORMAL_BLACK_ON_DARK};
+                else if (could_import && could_export) text = {ui::str(54, 36), FONT_NORMAL_BLACK_ON_DARK};
+            }
+            break;
 
         case TRADE_STATUS_IMPORT:
-        text = {bstring64().printf("%s %u", ui::str(54, 5), trade_amount),  font_color};
-        break;
+            text = {bstring64().printf("%s %u", ui::str(54, 5), trade_amount),  font_color};
+            break;
 
         case TRADE_STATUS_EXPORT:
-        text = {bstring64().printf("%s %u", ui::str(54, 6), trade_amount), font_color};
-        break;
+            text = {bstring64().printf("%s %u", ui::str(54, 6), trade_amount), font_color};
+            break;
 
         case TRADE_STATUS_IMPORT_AS_NEEDED:
-        text = {ui::str(54, 37), font_color};
-        break;
+            text = {ui::str(54, 37), font_color};
+            break;
 
         case TRADE_STATUS_EXPORT_SURPLUS:
-        text = {ui::str(54, 38), font_color};
-        break;
+            text = {ui::str(54, 38), font_color};
+            break;
         }
 
         ui.label(text.first.c_str(), vec2i{310, y_offset}, font_color);
-
-        // update/draw buttons accordingly
-        ui.button("", vec2i{20, y_offset}, vec2i{570, 20}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_NoBody)
-            .onclick([resource_index = i] (int, int) {
-            auto resource = city_resource_get_available()->items[resource_index];
-            window_resource_settings_show(resource);
-        });
     }
+
+    ui::button(ui::str(54, 30), vec2i{98, 396}, vec2i{200, 24}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelCentered)
+           .tooltip({68, 108})
+           .onclick([] (int, int) {
+                window_trade_prices_show();
+           });
+
+    ui::button(ui::str(54, 2), vec2i{398, 396}, vec2i{200, 24}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelCentered)
+           .tooltip({68, 42}) 
+           .onclick([] (int, int) {
+                window_empire_show();
+           });
 }
 
 void ui::advisor_trade_window::draw_foreground() {
-    painter ctx = game.painter();
-
-    // prices
-    button_border_draw(98, 396, 200, 24, false);
-    lang_text_draw_centered(54, 30, 100, 402, 200, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    // map
-    button_border_draw(398, 396, 200, 24, false);
-    lang_text_draw_centered(54, 2, 400, 402, 200, FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
 int ui::advisor_trade_window::handle_mouse(const mouse* m) {
-    int num_resources = std::min(city_resource_get_available()->size, 15);
-
-    return generic_buttons_handle_mouse(m, 0, 0, resource_buttons, num_resources + 2, nullptr);
-}
-
-static void button_prices(int param1, int param2) {
-    window_trade_prices_show();
-}
-static void button_empire(int param1, int param2) {
-    window_empire_show();
+    return 0;
 }
 
 int ui::advisor_trade_window::get_tooltip_text(void) {
-   //if (focus_button_id == 1)
-   //    return 108;
-   //else if (focus_button_id == 2)
-   //    return 42;
-   //else if (focus_button_id)
-   //    return 109;
-   //else
-   //    return 0;
     return 0;
 }
 
 advisor_window* ui::advisor_trade_window::instance() {
     return &g_advisor_trade_window;
-}
-
-void window_advisor_trade_draw_dialog_background(void) {
-    //draw_background();
-    //draw_foreground();
 }
