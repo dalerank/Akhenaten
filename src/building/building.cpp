@@ -897,8 +897,13 @@ void building_impl::update_day() {
 }
 
 bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    int image_id = map_image_at(tile.grid_offset());
-    building_draw_normal_anim(ctx, point, &base, tile, image_id, color_mask);
+    if (!base.anim.valid()) {
+        int image_id = map_image_at(tile.grid_offset());
+        building_draw_normal_anim(ctx, point, &base, tile, image_id, color_mask);
+    } else {
+        draw_normal_anim(ctx, point, tile, color_mask);
+    }
+
     if (base.has_plague) {
         ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PLAGUE_SKULL), point.x + 18, point.y - 32, color_mask);
     }
