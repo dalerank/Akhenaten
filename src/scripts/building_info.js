@@ -1569,7 +1569,7 @@ building_scribal_school = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
     base : { pack:PACK_GENERAL, id:42},
-    work : { pos:[20, -15], pack:PACK_GENERAL, id:42, offset:1, max_frames:11 }
+    work : { pos:[17, -18], pack:PACK_GENERAL, id:42, offset:1, max_frames:11, duration:1 }
   },
 
   info_icon_res :[32, 106],

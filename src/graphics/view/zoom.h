@@ -4,8 +4,8 @@
 #include "input/touch.h"
 
 #define ZOOM_LERP_COEFF 0.55f
-#define ZOOM_MIN 50.0f
-#define ZOOM_MAX 200.0f
+#define ZOOM_MIN 25.0f
+#define ZOOM_MAX 250.0f
 #define ZOOM_DEFAULT 100.0f
 
 void zoom_map(const mouse* m);

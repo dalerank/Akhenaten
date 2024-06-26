@@ -9,7 +9,7 @@ struct zoom_data_t {
     float zoom = ZOOM_DEFAULT;
     float target = ZOOM_DEFAULT;
     float delta;
-    float zoom_speed = 20.0f; // TODO: settings
+    float zoom_speed = 25.0f;
     vec2i input_offset;
     struct {
         bool active;
@@ -21,11 +21,7 @@ struct zoom_data_t {
 zoom_data_t g_zoom;
 
 static float bound_zoom(float z) {
-    if (z < ZOOM_MIN)
-        z = ZOOM_MIN;
-    if (z > ZOOM_MAX)
-        z = ZOOM_MAX;
-    return z;
+    return std::clamp(z, ZOOM_MIN, ZOOM_MAX);
 }
 
 static void start_touch(const touch* first, const touch* last, int scale) {
@@ -63,51 +59,44 @@ void zoom_update_touch(const touch* first, const touch* last, int scale) {
 void zoom_end_touch(void) {
     g_zoom.touch.active = false;
 }
-int allowed_zoom_levels[8] = {50, 65, 80, 100, 120, 145, 175, 200};
+
 void zoom_map(const mouse* m) {
     auto& data = g_zoom;
 
-    if (data.touch.active || m->is_touch)
+    if (data.touch.active || m->is_touch) {
         return;
-    if (m->middle.went_up && data.input_offset.x == m->x && data.input_offset.y == m->y)
-        data.target = ZOOM_DEFAULT;
-    if (m->scrolled != SCROLL_NONE) {
-        if (false) {
-            int current_zoom = data.zoom;
-            int target_prev = current_zoom;
-            int target_next = current_zoom;
-            for (int i = 0; i < 8; ++i) {
-                if (allowed_zoom_levels[i] < current_zoom)
-                    target_prev = allowed_zoom_levels[calc_bound(i, 0, 7)];
-                if (allowed_zoom_levels[7 - i] > current_zoom)
-                    target_next = allowed_zoom_levels[calc_bound((7 - i), 0, 7)];
-            }
-            data.target = (m->scrolled == SCROLL_DOWN) ? target_next : target_prev;
-        } else {
-            data.target += (m->scrolled == SCROLL_DOWN) ? data.zoom_speed : -data.zoom_speed;
-            if (data.target < ZOOM_MIN)
-                data.target = ZOOM_MIN;
-            if (data.target > ZOOM_MAX)
-                data.target = ZOOM_MAX;
-        }
     }
-    //    data.input_offset = pixel_to_viewport_coord({m->x, m->y});
-    data.input_offset.x = m->x;
-    data.input_offset.y = m->y;
+
+    if (m->middle.went_up && data.input_offset == vec2i{m->x, m->y}) {
+        data.target = ZOOM_DEFAULT;
+    }
+
+    if (m->scrolled != SCROLL_NONE) {
+        data.target += (m->scrolled == SCROLL_DOWN) ? data.zoom_speed : -data.zoom_speed;
+        data.target = std::clamp(data.target, ZOOM_MIN, ZOOM_MAX);
+    }
+
+    data.input_offset = {m->x, m->y};
 }
 bool zoom_update_value(vec2i* camera_position) {
     auto& data = g_zoom;
 
-    if (data.zoom == data.target)
+    if (data.zoom == data.target) {
         return false;
+    }
+
+    if (!config_get(CONFIG_UI_ZOOM_STEPPED)) {
+        data.target = ZOOM_DEFAULT;
+    }
+
     auto old_zoom = data.zoom;
-    //    data.delta = (float)(data.target - data.zoom) * ZOOM_LERP_COEFF;
-    if (!data.touch.active)
+    if (!data.touch.active) {
         data.delta = calc_bound(data.target - data.zoom, -data.zoom_speed, data.zoom_speed);
-    else
+    } else {
         data.delta = (float)(data.touch.current_zoom - data.zoom);
-    data.zoom
-      = bound_zoom(data.zoom + data.delta); // todo: bind camera to max window size... or find a way to mask the borders
+    }
+    data.zoom = bound_zoom(data.zoom + data.delta); // todo: bind camera to max window size... or find a way to mask the borders
+    
     if (data.zoom == data.target) {
         data.zoom = data.target;
         data.delta = 0.0f;
@@ -145,7 +134,6 @@ float zoom_debug_delta() {
 }
 
 float zoom_get_scale() {
-    //    return (float)(int)(data.zoom + 0.5f) / 100.0f;
     return 1.0f / (g_zoom.zoom / 100.0f);
 }
 
@@ -154,6 +142,10 @@ float zoom_get_percentage() {
 }
 
 void zoom_set_scale(float z) {
+    if (!config_get(CONFIG_UI_ZOOM_STEPPED)) {
+        z = 100;
+    }
+
     auto& data = g_zoom;
 
     z = calc_bound(z, 50, 200);

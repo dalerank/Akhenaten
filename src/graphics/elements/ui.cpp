@@ -32,7 +32,7 @@ namespace ui {
         bool handle_mouse(const mouse *m, vec2i offset) {
             int tmp_btn;
             switch (type) {
-            case generic: return !!generic_buttons_handle_mouse(m, offset, make_span(&g_button, 1), tmp_btn);
+            case generic: return !!generic_buttons_handle_mouse(m, offset, &g_button, 1, &tmp_btn);
             case image: return !!image_buttons_handle_mouse(m, offset, make_span(&i_button, 1), tmp_btn);
             case arrow: return !!arrow_buttons_handle_mouse(m, offset, make_span(&a_button, 1), tmp_btn);
             }
