@@ -217,6 +217,9 @@ struct egeneric_button : public elabel {
 struct eimage_button : public element {
     e_image_id img;
     int offset;
+    float scale = 1.f;
+    void *icon_texture = nullptr;
+
     std::function<void(int, int)> _func;
 
     virtual void load(archive elem) override;

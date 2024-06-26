@@ -706,9 +706,9 @@ bool graphics_renderer_interface::has_texture_scale_mode() {
     return HAS_TEXTURE_SCALE_MODE;
 }
 
-SDL_Texture* graphics_renderer_interface::create_texture_from_png_buffer(void *buffer, int size) {
+SDL_Texture* graphics_renderer_interface::create_texture_from_png_buffer(void *buffer, int size, vec2i &txsize) {
     auto &data = g_renderer_data;
-    SDL_RWops *rw = SDL_RWFromMem(buffer , size);
+    SDL_RWops *rw = SDL_RWFromMem(buffer, size);
     SDL_Surface* loadedSurface= IMG_LoadPNG_RW(rw);
 
     if (loadedSurface == nullptr) {
@@ -717,6 +717,8 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_png_buffer(void *b
 
     if(loadedSurface != NULL) {
         SDL_Texture *texture = SDL_CreateTextureFromSurface(data.renderer, loadedSurface);
+        txsize.x = loadedSurface->w;
+        txsize.y = loadedSurface->h;
         SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
         SDL_FreeSurface( loadedSurface );
         return texture;

@@ -64,7 +64,7 @@ const uint8_t *lang_get_string(int group, int index);
 pcstr archive::r_string(pcstr name) {
     auto vm = (js_State *)state;
     js_getproperty(vm, -1, name);
-    const char *result = "";
+    pcstr result = "";
     if (js_isundefined(vm, -1)) {
         ;
     } else if (js_isstring(vm, -1)) {

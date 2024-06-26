@@ -23,19 +23,9 @@
 #include "io/gamestate/boilerplate.h"
 #include "resource/icons.h"
 
-static void button_click(int type, int param2);
+ui::widget g_main_menu_data;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_main_menu);
-
-struct main_menu_data : public ui::widget {
-    SDL_Texture *dicord_texture = nullptr;
-    SDL_Texture *patreon_texture = nullptr;
-    generic_button discord_button[1] = { {0, 0, 48, 48, button_click, button_none, 10, 0} };
-    generic_button patreon_button[1] = { {0, 0, 48, 48, button_click, button_none, 11, 0} };
-};
-
-main_menu_data g_main_menu_data;
-
 void config_load_main_menu() {
     g_config_arch.r_section("main_menu_window", [] (archive arch) {
         g_main_menu_data.load(arch);
@@ -58,36 +48,38 @@ static void main_menu_draw_background() {
         }
     });
 
-    ui["select_player"].onclick([] { window_player_selection_show(); });
-    ui["show_records"].onclick([] { window_records_show(); });
-    ui["show_config"].onclick([] { window_config_show(window_config_show_back); });
+    ui["select_player"].onclick([] {
+        window_player_selection_show(); 
+    });
+    ui["show_records"].onclick([] {
+        window_records_show();
+    });
+    ui["show_config"].onclick([] {
+        window_config_show(window_config_show_back);
+    });
     ui["quit_game"].onclick([] { 
         window_yes_dialog_show("#popup_dialog_quit", [] { 
             app_request_exit(); 
         });
     });
+
+    ui["discord"].onclick([] {
+        platform_open_url("https://discord.gg/HS4njmBvpb", "");
+    });
+
+    ui["patreon"].onclick([] {
+        platform_open_url("https://www.patreon.com/imspinner", "");
+    });
 }
 
 static void main_menu_draw_foreground() {
-    auto &data = g_main_menu_data;
+    auto &ui = g_main_menu_data;
 
-    ui::begin_widget(screen_dialog_offset());
-    g_main_menu_data.draw();
-
-    painter ctx = game.painter();
-    vec2i scr_size = screen_size();
-    if (data.dicord_texture) {
-        ctx.draw(data.dicord_texture, scr_size - vec2i(50, 50), {0, 0}, {48, 48}, 0xffffffff, 0.75f, false, true);
-    }
-
-    if (data.patreon_texture) {
-        ctx.draw(data.patreon_texture, scr_size - vec2i(100, 50), {0, 0}, {48, 48}, 0xffffffff, 0.75f, false, true);
-    }
+    ui.begin_frame();
+    ui.draw();
 }
 
 static void button_click(int type, int param2) {
-    switch (type) {
-
 //    case 3:
 //        window_scenario_selection_show(MAP_SELECTION_CUSTOM);
 //        break;
@@ -99,35 +91,10 @@ static void button_click(int type, int param2) {
 //            sound_music_play_editor();
 //        }
 //        break;
-
-
-    case 10:
-        platform_open_url("https://discord.gg/HS4njmBvpb", "");
-        break;
-
-    case 11:
-        platform_open_url("https://www.patreon.com/imspinner", "");
-        break;
-
-    default:
-        logs::error("Unknown button index");
-    }
 }
 
 static void main_menu_handle_input(const mouse* m, const hotkeys* h) {
-    const mouse* m_dialog = mouse_in_dialog(m);
-    int tmp_button_id = 0;
-
     ui::handle_mouse(m);
-
-    vec2i scr_size = screen_size();
-    if (generic_buttons_handle_mouse(m, scr_size - vec2i(50, 50), g_main_menu_data.discord_button, tmp_button_id)) {
-        return;
-    }
-
-    if (generic_buttons_handle_mouse(m, scr_size - vec2i(100, 50), g_main_menu_data.patreon_button, tmp_button_id)) {
-        return;
-    }
 
     if (h->escape_pressed) {
         hotkey_handle_escape();
@@ -142,14 +109,6 @@ void window_main_menu_show(bool restart_music) {
     auto &data = g_main_menu_data;
     if (restart_music) {
         sound_music_play_intro();
-    }
-
-    if (!data.dicord_texture) {
-        data.dicord_texture = load_icon_texture("discord");
-    }
-
-    if (!data.patreon_texture) {
-        data.patreon_texture = load_icon_texture(":patreon_48.png");
     }
 
     window_type window = {

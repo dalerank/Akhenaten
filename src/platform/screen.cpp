@@ -176,13 +176,14 @@ int platform_screen_create(char const* title, const char *renderer, bool fullscr
         return 0;
     }
 
-    SDL_SetWindowIcon(g_screen.window, load_icon_surface(":akhenaten_72.png"));
+    vec2i tmp_size;
+    SDL_SetWindowIcon(g_screen.window, load_icon_surface(":akhenaten_72.png", tmp_size));
 
 #if !defined(__APPLE__)
     if (fullscreen && SDL_GetNumVideoDisplays() > 1) {
         SDL_SetWindowGrab(g_screen.window, SDL_TRUE);
     }
-#endif
+#endif // !__APPLE__
     set_scale_percentage(display_scale_percentage, wsize.x, wsize.y);
     return platform_screen_resize(wsize.x, wsize.y, 1);
 }

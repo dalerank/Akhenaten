@@ -31,6 +31,16 @@ CMRC_DECLARE(akhenaten);
 SDL_Surface *IMG_LoadPNG_RW(SDL_RWops *src);
 constexpr pcstr internal_res_path = "res/";
 
+struct inres_icon {
+    pcstr name;
+    void *data;
+    int length;
+};
+
+static inres_icon inres_icons[] = {
+    {"!discord", (void*)gDiscordIcon, (int)gDiscordIcon_length}
+};
+
 std::pair<void *, uint32_t> internal_read_data(pcstr path) {
     if (!path || !*path) {
         return {nullptr, 0};
@@ -47,20 +57,29 @@ std::pair<void *, uint32_t> internal_read_data(pcstr path) {
     return {(void*)fd1.begin(), (uint32_t)fd1.size()};
 }
 
-SDL_Texture *load_icon_texture(const char *name) {
+SDL_Texture *load_icon_texture(pcstr name, vec2i &size) {
     SDL_Surface *loadedSurface = nullptr;
-    if (strcmp(name, "discord") == 0) {
-        return graphics_renderer()->create_texture_from_png_buffer((void*)gDiscordIcon, gDiscordIcon_length);
+    if (name && *name == '!') {
+        auto it = std::find_if(std::begin(inres_icons), std::end(inres_icons), [name] (auto &it) { return strcmp(name, it.name) == 0; });
+        if (it != std::end(inres_icons)) {
+            return graphics_renderer()->create_texture_from_png_buffer(it->data, it->length, size);
+        }
     }
     
     auto data = internal_read_data(name);
-    return graphics_renderer()->create_texture_from_png_buffer((void*)data.first, data.second);
+    auto texture = graphics_renderer()->create_texture_from_png_buffer((void*)data.first, data.second, size);
+
+    return texture;
 }
 
-SDL_Surface *load_icon_surface(const char *name) {
+SDL_Surface *load_icon_surface(pcstr name, vec2i &size) {
     SDL_RWops *rw = nullptr;
-    if (strcmp(name, "discord") == 0) {
-        rw = SDL_RWFromMem((void*)gDiscordIcon, gDiscordIcon_length);
+
+    if (name && *name == '!') {
+        auto it = std::find_if(std::begin(inres_icons), std::end(inres_icons), [name] (auto &it) { return strcmp(name, it.name) == 0; });
+        if (it != std::end(inres_icons)) {
+            rw = SDL_RWFromMem(it->data, it->length);
+        }
     } else {
         auto data = internal_read_data(name);
         rw = SDL_RWFromMem((void *)data.first, data.second);

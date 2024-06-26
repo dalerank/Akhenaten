@@ -12,6 +12,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "core/span.hpp"
+#include "resource/icons.h"
 #include "io/gamefiles/lang.h"
 
 #include <stack>
@@ -474,7 +475,6 @@ void ui::eimg::load(archive arch) {
 
 void ui::ebackground::draw() {
     painter ctx = game.painter();
-    const vec2i offset = g_state.offset();
     ImageDraw::img_background(ctx, image_group(img_desc), 1.f, pos);
 }
 
@@ -554,11 +554,22 @@ void ui::eimage_button::load(archive arch) {
 
     img = arch.r_image("image");
     offset = arch.r_int("offset");
+    scale = arch.r_float("scale", 1.f);
+    pcstr name_icon_texture = arch.r_string("icon_texture");
+    if (name_icon_texture && *name_icon_texture) {
+        vec2i tmp_size;
+        icon_texture = load_icon_texture(name_icon_texture, tmp_size);
+    }
 }
 
 void ui::eimage_button::draw() {
     ui::img_button(img, pos, size, offset)
         .onclick(_func);
+
+    if (icon_texture) {
+        painter ctx = game.painter();
+        ctx.draw((SDL_Texture*)icon_texture, pos, {0, 0}, size, 0xffffffff, scale, false, true);
+    }
 }
 
 void ui::etext::load(archive arch) {

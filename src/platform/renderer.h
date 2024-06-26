@@ -82,7 +82,7 @@ public:
     vec2i get_max_image_size();
 
     SDL_Texture* create_texture_from_buffer(color* p_data, int width, int height);
-    SDL_Texture* create_texture_from_png_buffer(void* p_data, int size);
+    SDL_Texture* create_texture_from_png_buffer(void* p_data, int size, vec2i &txsize);
 
     bool has_texture_scale_mode();
 
