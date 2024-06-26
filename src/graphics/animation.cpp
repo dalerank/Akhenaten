@@ -44,6 +44,7 @@ void animation_context::setup(const animation_t &anim) {
    frame_duration = std::max(1, anim.duration);
    pos = anim.pos;
    can_reverse = anim.can_reverse;
+   loop = anim.loop;
 }
 
 void animation_context::update(bool refresh_only) {
