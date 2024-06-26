@@ -178,7 +178,7 @@ static void draw_foreground(void) {
 
 static int handle_build_submenu(const mouse* m) {
     auto &data = g_build_menu_data;
-    return generic_buttons_handle_mouse(m, get_sidebar_x_offset() - 258, data.y_offset + 110, data.buttons, data.num_items, &data.focus_button_id);
+    return generic_buttons_handle_mouse(m, {get_sidebar_x_offset() - 258, data.y_offset + 110}, data.buttons, data.num_items, &data.focus_button_id);
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {

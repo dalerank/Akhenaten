@@ -259,7 +259,7 @@ void window_building_prepare_figure_list(object_info* c) {
 int window_building_handle_mouse_figure_list(const mouse* m, object_info* c) {
     auto& data = g_building_figures_data;
     data.context_for_callback = c;
-    int button_id = generic_buttons_handle_mouse(m, c->offset.x, c->offset.y, figure_buttons, c->figure.count, &data.focus_button_id);
+    int button_id = generic_buttons_handle_mouse(m, c->offset, figure_buttons, c->figure.count, &data.focus_button_id);
     data.context_for_callback = 0;
     return button_id;
 }

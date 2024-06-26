@@ -174,7 +174,7 @@ int ui::advisor_miliary_window::handle_mouse(const mouse* m) {
     if (scrollbar_handle_mouse(&g_advisor_mil_scrollbar, m))
         return 1;
 
-    return generic_buttons_handle_mouse(m, 0, 0, fort_buttons, 3 * num_legions, &focus_button_id);
+    return generic_buttons_handle_mouse(m, {0, 0}, fort_buttons, 3 * num_legions, &focus_button_id);
 }
 
 static void button_go_to_legion(int legion_id, int param2) {

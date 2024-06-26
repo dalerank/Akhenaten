@@ -531,7 +531,7 @@ void ui::advisor_population_window::draw_foreground() {
 }
 
 int ui::advisor_population_window::handle_mouse(const mouse* m) {
-    return generic_buttons_handle_mouse(m, 0, 0, graph_buttons, 3, &focus_button_id);
+    return generic_buttons_handle_mouse(m, {0, 0}, graph_buttons, 3, &focus_button_id);
 }
 
 static void button_graph(int param1, int param2) {

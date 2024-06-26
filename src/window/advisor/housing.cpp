@@ -112,7 +112,7 @@ void ui::advisor_housing_window::draw_foreground() {
 }
 
 int ui::advisor_housing_window::handle_mouse(const mouse* m) {
-    return generic_buttons_handle_mouse(m, 0, 0, back_button, 1, &focus_button_id);
+    return generic_buttons_handle_mouse(m, {0, 0}, back_button, 1, &focus_button_id);
 }
 
 static void go_back(int param1, int param2) {
