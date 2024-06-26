@@ -83,6 +83,7 @@ struct element {
     virtual int value() const { return 0; }
     virtual void max_value(int v) {}
     virtual void onclick(std::function<void(int, int)>) {}
+            void onclick(std::function<void()> f) { onclick([f] (int, int) { f(); }); }
     virtual void onevent(std::function<void()>) {}
 
     pcstr text_from_key(pcstr key);
@@ -142,6 +143,16 @@ struct eimg : public element {
     virtual void load(archive elem) override;
     virtual image_desc image() const override { return img_desc; }
 };
+
+struct ebackground : public element {
+    image_desc img_desc;
+    float scale = 1.f;
+
+    virtual void draw() override;
+    virtual void load(archive elem) override;
+    virtual image_desc image() const override { return img_desc; }
+};
+
 
 struct eresource_icon : public element {
     e_resource res;

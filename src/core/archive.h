@@ -17,6 +17,7 @@ struct archive {
     pcstr r_string(pcstr name);
     std::vector<std::string> r_array_str(pcstr name);
     int r_int(pcstr name, int def = 0);
+    float r_float(pcstr name, float def = 0.f);
     uint32_t r_uint(pcstr name, uint32_t def = 0);
     e_image_id r_image(pcstr name);
     bool r_bool(pcstr name, bool def = false);

@@ -46,11 +46,10 @@ static void window_config_show_back() {
 }
 
 static void main_menu_draw_background() {
-    painter ctx = game.painter();
     graphics_clear_screen();
-    ImageDraw::img_background(ctx, image_id_from_group(GROUP_MAIN_MENU_BACKGROUND));
 
-    g_main_menu_data["continue_game"].onclick([] (int, int) {
+    auto &ui = g_main_menu_data;
+    ui["continue_game"].onclick([] {
         pcstr last_save = config_get_string(CONFIG_STRING_LAST_SAVE);
         pcstr last_player = config_get_string(CONFIG_STRING_LAST_PLAYER);
         g_settings.set_player_name((const uint8_t *)last_player);
@@ -59,20 +58,13 @@ static void main_menu_draw_background() {
         }
     });
 
-    g_main_menu_data["select_player"].onclick([] (int, int) {
-        window_player_selection_show();
-    });
-
-    g_main_menu_data["show_records"].onclick([] (int, int) {
-        window_records_show();
-    });
-
-    g_main_menu_data["show_config"].onclick([] (int, int) {
-        window_config_show(window_config_show_back);
-    });
-
-    g_main_menu_data["quit_game"].onclick([] (int, int) {
-        window_yes_dialog_show("#popup_dialog_quit", [] { app_request_exit(); });
+    ui["select_player"].onclick([] { window_player_selection_show(); });
+    ui["show_records"].onclick([] { window_records_show(); });
+    ui["show_config"].onclick([] { window_config_show(window_config_show_back); });
+    ui["quit_game"].onclick([] { 
+        window_yes_dialog_show("#popup_dialog_quit", [] { 
+            app_request_exit(); 
+        });
     });
 }
 

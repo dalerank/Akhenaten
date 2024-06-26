@@ -122,6 +122,14 @@ int archive::r_int(pcstr name, int def) {
     return result;
 }
 
+float archive::r_float(pcstr name, float def) {
+    auto vm = (js_State *)state;
+    js_getproperty(vm, -1, name);
+    float result = js_isundefined(vm, -1) ? def : (float)js_tonumber(vm, -1);
+    js_pop(vm, 1);
+    return result;
+}
+
 uint32_t archive::r_uint(pcstr name, uint32_t def) {
     auto vm = (js_State *)state;
     js_getproperty(vm, -1, name);

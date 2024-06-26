@@ -16,6 +16,7 @@ top_menu_bar = {
 
 main_menu_window = {
 	ui : {
+		background    : { type:"background", pos:[0, 0], pack:PACK_UNLOADED, id:14, offset:0 },
 		continue_game : { type:"large_button", pos:[192, 125 + 40 * 0], size:[256, 25], text:{group: 13, id: 5}},
 		select_player : { type:"large_button", pos:[192, 125 + 40 * 1], size:[256, 25], text:{group: 30, id: 0}},
 		show_records  : { type:"large_button", pos:[192, 125 + 40 * 2], size:[256, 25], text:{group: 30, id: 5}},

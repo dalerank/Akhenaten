@@ -420,6 +420,8 @@ void ui::widget::load(archive arch) {
             elm = std::make_shared<escrollbar>();
         } else if (!strcmp(type, "inner_panel")) {
             elm = std::make_shared<einner_panel>();
+        } else if (!strcmp(type, "background")) {
+            elm = std::make_shared<ebackground>();
         } else if (!strcmp(type, "image")) {
             elm = std::make_shared<eimg>();
         } else if (!strcmp(type, "label")) {
@@ -465,6 +467,23 @@ void ui::eimg::load(archive arch) {
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "image"));
     img = arch.r_image("image");
+    img_desc.pack = arch.r_int("pack");
+    img_desc.id = arch.r_int("id");
+    img_desc.offset = arch.r_int("offset");
+}
+
+void ui::ebackground::draw() {
+    painter ctx = game.painter();
+    const vec2i offset = g_state.offset();
+    ImageDraw::img_background(ctx, image_group(img_desc), 1.f, pos);
+}
+
+void ui::ebackground::load(archive arch) {
+    element::load(arch);
+
+    pcstr type = arch.r_string("type");
+    assert(!strcmp(type, "background"));
+    scale = arch.r_float("scale", 1.f);
     img_desc.pack = arch.r_int("pack");
     img_desc.id = arch.r_int("id");
     img_desc.offset = arch.r_int("offset");

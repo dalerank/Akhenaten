@@ -754,15 +754,12 @@ void ImageDraw::img_letter(painter &ctx, e_font font, int letter_id, int x, int 
     graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale);
 }
 
-void ImageDraw::img_background(painter &ctx, int image_id, float scale) {
-    //    graphics_set_to_dialog();
-    //    ImageDraw::img_generic(image_id, 0, 0, COLOR_MASK_NONE, scale);
-    //    graphics_reset_dialog();
+void ImageDraw::img_background(painter &ctx, int image_id, float scale, vec2i offset) {
     const image_t* img = image_get(image_id);
     if (scale == -1) {
         //        graphics_renderer()->draw_image(img, 0, 0, COLOR_MASK_NONE, scale, false); // todo?
     } else {
-        g_render.draw_image(ctx, img, (screen_width() - img->width) / 2, (screen_height() - img->height) / 2, COLOR_MASK_NONE, scale);
+        g_render.draw_image(ctx, img, (screen_width() - img->width) / 2 + offset.x, (screen_height() - img->height) / 2 + offset.y, COLOR_MASK_NONE, scale);
     }
 }
 
