@@ -3,19 +3,38 @@
 #include "input/mouse.h"
 #include "input/touch.h"
 
-#define ZOOM_LERP_COEFF 0.55f
-#define ZOOM_MIN 25.0f
-#define ZOOM_MAX 250.0f
-#define ZOOM_DEFAULT 100.0f
+struct zoom_t {
+    static constexpr float ZOOM_LERP_COEFF = 0.55;
+    static constexpr float ZOOM_MIN = 25.0f;
+    static constexpr float ZOOM_MAX = 250.0f;
+    static constexpr float ZOOM_DEFAULT = 100.0f;
 
-void zoom_map(const mouse* m);
-void zoom_update_touch(const touch* first, const touch* last, int scale);
-void zoom_end_touch(void);
-bool zoom_update_value(vec2i* camera_position);
+    float zoom = ZOOM_DEFAULT;
+    float target = ZOOM_DEFAULT;
+    float delta;
+    float zoom_speed = 25.0f;
+    vec2i input_offset;
 
-float zoom_debug_target();
-float zoom_debug_delta();
+    struct {
+        bool active;
+        int start_zoom;
+        int current_zoom;
+    } touch;
 
-float zoom_get_scale();
-float zoom_get_percentage();
-void zoom_set_scale(float z);
+    void handle_mouse(const mouse* m);
+    void handle_touch(const ::touch* first, const ::touch * last, int scale);
+    void end_touch();
+
+    bool update_value(vec2i* camera_position);
+    float debug_target();
+    float debug_delta();
+
+    float get_scale();
+    float get_percentage();
+    void set_scale(float z);
+};
+
+extern zoom_t g_zoom;
+
+
+

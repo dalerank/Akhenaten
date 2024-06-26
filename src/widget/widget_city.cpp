@@ -62,7 +62,7 @@ void set_city_clip_rectangle(painter &ctx) {
 
 static void update_zoom_level(painter &ctx) {
     vec2i offset = camera_get_position();
-    if (zoom_update_value(&offset)) {
+    if (g_zoom.update_value(&offset)) {
         city_view_refresh_viewport();
         camera_go_to_pixel(ctx, offset, true);
         sound_city_decay_views();
@@ -188,7 +188,7 @@ void widget_city_draw_with_overlay(painter &ctx, tile2i tile) {
 void widget_city_draw(painter &ctx) {
     auto& data = g_wdiget_city_data;
     update_zoom_level(ctx);
-    set_render_scale(ctx, zoom_get_scale());
+    set_render_scale(ctx, g_zoom.get_scale());
     set_city_clip_rectangle(ctx);
     if (game.current_overlay) {
         widget_city_draw_with_overlay(ctx, data.current_tile);
@@ -227,7 +227,7 @@ bool widget_city_draw_construction_cost_and_size() {
     screen_tile screen = camera_get_selected_screen_tile();
     int x = screen.x;
     int y = screen.y;
-    int inverted_scale = calc_percentage<int>(100, zoom_get_percentage());
+    int inverted_scale = calc_percentage<int>(100, g_zoom.get_percentage());
     x = calc_adjust_with_percentage(x, inverted_scale);
     y = calc_adjust_with_percentage(y, inverted_scale);
 
@@ -381,10 +381,10 @@ static void handle_touch_scroll(const touch* t) {
 }
 static void handle_touch_zoom(const touch* first, const touch* last) {
     if (touch_not_click(first))
-        zoom_update_touch(first, last, zoom_get_percentage());
+        g_zoom.handle_touch(first, last, g_zoom.get_percentage());
 
     if (first->has_ended || last->has_ended)
-        zoom_end_touch();
+        g_zoom.end_touch();
 }
 
 static void handle_first_touch(map_point tile) {
@@ -492,14 +492,16 @@ static void handle_touch(void) {
 
     Planner.draw_as_constructing = false;
 }
+
 int widget_city_has_input(void) {
     auto& data = g_wdiget_city_data;
     return data.capture_input;
 }
+
 static void handle_mouse(const mouse* m) {
     auto& data = g_wdiget_city_data;
     data.current_tile = update_city_view_coords({m->x, m->y});
-    zoom_map(m);
+    g_zoom.handle_mouse(m);
     Planner.draw_as_constructing = false;
     if (m->left.went_down) {
         if (handle_legion_click(data.current_tile)) {

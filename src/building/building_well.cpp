@@ -87,7 +87,7 @@ void building_well::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int or
     }
 
     city_view_foreach_tile_in_range(ctx, tile.grid_offset(), 1, 2, [] (vec2i pixel, tile2i point, painter &ctx) {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, COLOR_MASK_BLUE, zoom_get_scale());
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, COLOR_MASK_BLUE, g_zoom.get_scale());
     });
 }
 

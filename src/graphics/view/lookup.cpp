@@ -119,8 +119,8 @@ vec2i pixel_to_camera_coord(vec2i pixel, bool relative) {
     pixel = pixel_to_viewport(pixel);
 
     // adjust by zoom scale
-    pixel.x = calc_adjust_with_percentage<int>(pixel.x, zoom_get_percentage());
-    pixel.y = calc_adjust_with_percentage<int>(pixel.y, zoom_get_percentage());
+    pixel.x = calc_adjust_with_percentage<int>(pixel.x, g_zoom.get_percentage());
+    pixel.y = calc_adjust_with_percentage<int>(pixel.y, g_zoom.get_percentage());
 
     pixel += relative ? vec2i{0, 0} : city_view_data_unsafe().camera.position;
     return pixel;

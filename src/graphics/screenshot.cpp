@@ -282,12 +282,12 @@ static void create_full_city_screenshot() {
     }
     memset(canvas, 0, sizeof(color) * city_canvas_pixels.x * canvas_height);
 
-    int old_scale = zoom_get_scale() * 100;
+    int old_scale = g_zoom.get_scale() * 100;
 
     int error = 0;
     int base_height = image_set_loop_height_limits(min_pos.y, max_pos.y);
     int size;
-    zoom_set_scale(100);
+    g_zoom.set_scale(100);
     graphics_set_clip_rectangle(0, TOP_MENU_HEIGHT, canvas_width, canvas_height);
     
     vec2i viewport_offset, viewport_size;
@@ -350,7 +350,7 @@ static void create_full_city_screenshot() {
     }
 
     city_view_set_viewport(viewport_size.x + (city_view_is_sidebar_collapsed() ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH), viewport_size.y + TOP_MENU_HEIGHT);
-    zoom_set_scale(old_scale);
+    g_zoom.set_scale(old_scale);
 
     graphics_reset_clip_rectangle();
     painter global_context = game.painter();

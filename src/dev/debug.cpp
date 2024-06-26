@@ -148,7 +148,7 @@ void debug_draw_sprite_box(int x, int y, const image_t* img, float scale, color 
 }
 
 void debug_draw_tile_box(int x, int y, color rect, color bb, int tile_size_x, int tile_size_y) {
-    float scale = zoom_get_scale();
+    float scale = g_zoom.get_scale();
 
     int left_x = x;
     int left_y = y + HALF_TILE_HEIGHT_PIXELS;
@@ -174,7 +174,7 @@ void debug_draw_tile_box(int x, int y, color rect, color bb, int tile_size_x, in
     }
 }
 void debug_draw_tile_top_bb(int x, int y, int height, color color, int size) {
-    float scale = zoom_get_scale();
+    float scale = g_zoom.get_scale();
 
     int left_x = x;
     int left_bottom = y + HALF_TILE_HEIGHT_PIXELS;
@@ -1180,11 +1180,11 @@ void draw_debug_ui(int x, int y) {
         debug_text_dual_left(str, x, y + 105, 90, 40, "v.tiles:", viewdata.viewport.size_pixels.x / 60, viewdata.viewport.size_pixels.y / 30);
         debug_text_dual_left(str, x, y + 115, 90, 40, "v.pixels:", viewdata.viewport.size_pixels.y, viewdata.viewport.size_pixels.y);
 
-        debug_text(ctx, str, x, y + 125, 50, "zoom:", zoom_get_percentage());
-        debug_text_float(str, x, y + 125, 50 + 40, "", zoom_get_scale());
+        debug_text(ctx, str, x, y + 125, 50, "zoom:", g_zoom.get_percentage());
+        debug_text_float(str, x, y + 125, 50 + 40, "", g_zoom.get_scale());
 
-        debug_text_float(str, x, y + 135, 50, "target:", zoom_debug_target());
-        debug_text_float(str, x + 100, y + 135, 50, "delta:", zoom_debug_delta());
+        debug_text_float(str, x, y + 135, 50, "target:", g_zoom.debug_target());
+        debug_text_float(str, x + 100, y + 135, 50, "delta:", g_zoom.debug_delta());
 
         vec2i pixel = {mouse_get()->x, mouse_get()->y};
         debug_text(ctx, str, x, y + 145, 50, "mouse:", pixel.x);
