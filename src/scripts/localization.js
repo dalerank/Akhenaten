@@ -40,6 +40,10 @@ localization = [
   {key: "#building_have_no_access", group:69, id:25 },
   {key: "#bazaar_info_title", group: 97, id:0},
   {key: "#well_info_title", group:109, id:0},
+  {key: "#trade_overseer_prices", group:54, id:30},
+  {key: "#trade_overseer_prices_hint", group:68, id:108},
+  {key: "#trade_overseer_goto_empire", group:54, id:2},
+  {key: "#trade_overseer_goto_empire_hint", group:68, id:42},
 
   {key: "#hunter_ostrich_good_city", lang:"en", text: "I like it here, but there is always room for improvement."},
 ]

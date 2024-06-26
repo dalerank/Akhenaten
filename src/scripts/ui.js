@@ -120,6 +120,8 @@ advisor_trade_window = {
 		hint_label : { type : "label", font : FONT_NORMAL_BLACK_ON_DARK, text:"#trade_overseer_hint", pos:[60, 40]},
 		inner_panel : { type : "inner_panel", pos:[17, 60], size:[36, 21] },
 		scrollbar : { type: "scrollbar", pos:[590, 52], size:[-1, 336] },
+		show_prices : { type:"generic_button", pos:[48, 396], size:[200, 24], text:"#trade_overseer_prices", tooltip:"#trade_overseer_prices_hint" },
+		goto_mempire : { type:"generic_button", pos:[368, 396], size:[200, 24], text:"#trade_overseer_goto_empire", tooltip:"#trade_overseer_goto_empire_hint" },
 	}
 }
 

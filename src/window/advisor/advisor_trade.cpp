@@ -127,17 +127,8 @@ void ui::advisor_trade_window::ui_draw_foreground() {
         ui.label(text.first.c_str(), vec2i{310, y_offset}, font_color);
     }
 
-    ui::button(ui::str(54, 30), vec2i{98, 396}, vec2i{200, 24}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelCentered)
-           .tooltip({68, 108})
-           .onclick([] (int, int) {
-                window_trade_prices_show();
-           });
-
-    ui::button(ui::str(54, 2), vec2i{398, 396}, vec2i{200, 24}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelCentered)
-           .tooltip({68, 42}) 
-           .onclick([] (int, int) {
-                window_empire_show();
-           });
+    ui["show_prices"].onclick([] (int, int) { window_trade_prices_show(); });
+    ui["goto_empire"].onclick([] (int, int) { window_empire_show(); });
 }
 
 void ui::advisor_trade_window::draw_foreground() {
