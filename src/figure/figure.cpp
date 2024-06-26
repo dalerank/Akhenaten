@@ -276,6 +276,28 @@ void figure::kill() {
     set_state(FIGURE_STATE_DYING);
 }
 
+void figure_impl::figure_roaming_action() {
+    switch (action_state()) {
+    case FIGURE_ACTION_150_ATTACK:
+        base.figure_combat_handle_attack();
+        break;
+
+    case FIGURE_ACTION_149_CORPSE:
+        base.figure_combat_handle_corpse();
+        break;
+
+    case FIGURE_ACTION_125_ROAMING:
+    case ACTION_1_ROAMING:
+        base.do_roam();
+        break;
+
+    case FIGURE_ACTION_126_ROAMER_RETURNING:
+    case ACTION_2_ROAMERS_RETURNING:
+        base.do_returnhome();
+        break;
+    }
+}
+
 void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
     base.draw_figure_main(ctx, base.cached_pos, highlight, coord_out);
 }

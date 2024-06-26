@@ -481,6 +481,7 @@ void figure::roam_ticks(int num_ticks) {
         else if (direction < 0) direction = 6;
         return direction;
     };
+
     while (num_ticks > 0) {
         num_ticks--;
         progress_on_tile++;

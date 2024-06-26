@@ -9,7 +9,7 @@ public:
 
     virtual void on_create() override {}
     virtual void figure_action() override;
-    virtual bool is_common_roaming() override { return false; }
+    virtual void figure_roaming_action() override { /*nothing*/ }
     virtual void update_animation() override;
     virtual e_figure_sound phrase() const override { return {FIGURE_EMIGRANT, "emigrant"}; }
     virtual figure_sound_t get_sound_reaction(pcstr key) const override;

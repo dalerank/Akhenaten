@@ -496,6 +496,7 @@ public:
     virtual void on_destroy() {}
     virtual void figure_action() {}
     virtual void figure_before_action() {}
+    virtual void figure_roaming_action();
     virtual bool window_info_background(object_info &ctx) { return false; }
     virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out);
     virtual void before_poof() {}
@@ -503,7 +504,7 @@ public:
     virtual e_figure_sound phrase() const { return {FIGURE_NONE, ""}; }
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual figure_sound_t get_sound_reaction(pcstr key) const;
-    virtual sound_key phrase_key() const { return {}; }
+    virtual sound_key phrase_key() const { return "empty"; }
     virtual int provide_service() { return 0; }
     virtual bool play_die_sound() { return false; }
     virtual void update_animation();
@@ -512,7 +513,6 @@ public:
     virtual int y_correction(int y) const { return y; }
     virtual void cart_update_image() { base.cart_update_image(); }
     virtual void main_update_image();
-    virtual bool is_common_roaming() { return true; }
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
     virtual const animations_t &anim() const { assert(false); /*no anim*/ static animations_t dummy; return dummy; }
     virtual const static_params &params() const { return params(type()); }
