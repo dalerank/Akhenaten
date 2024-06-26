@@ -78,7 +78,7 @@ int ui::advisor_labors_window::draw_background() {
 
 void ui::advisor_labors_window::draw_foreground() {
     painter ctx = game.painter();
-    arrow_buttons_draw(0, 0, wage_buttons, 2);
+    arrow_buttons_draw({0, 0}, wage_buttons, 2);
 
     inner_panel_draw(32, 70, 36, 15);
 
@@ -106,7 +106,7 @@ int ui::advisor_labors_window::handle_mouse(const mouse* m) {
     if (generic_buttons_handle_mouse(m, {0, 0}, category_buttons, 9, &focus_button_id))
         return 1;
 
-    return arrow_buttons_handle_mouse(m, 0, 0, wage_buttons, 2, &arrow_button_focus);
+    return arrow_buttons_handle_mouse(m, {0, 0}, wage_buttons, 2, &arrow_button_focus);
 }
 
 static void arrow_button_wages(int is_down, int param2) {

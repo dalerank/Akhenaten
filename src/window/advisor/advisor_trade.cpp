@@ -2,8 +2,6 @@
 
 #include "graphics/image.h"
 #include "graphics/graphics.h"
-#include "graphics/elements/rich_text.h"
-#include "graphics/elements/scrollbar.h"
 
 #include "city/resource.h"
 #include "game/resource.h"

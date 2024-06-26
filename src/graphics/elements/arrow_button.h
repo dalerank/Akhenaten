@@ -21,9 +21,9 @@ struct arrow_button {
     template<class Func> arrow_button &onclick(Func f) { _onclick = f; return *this; }
 };
 
-void arrow_buttons_draw(int x, int y, arrow_button* buttons, int num_buttons, bool tiny = false);
-int get_arrow_button(const mouse *m, int x, int y, arrow_button *buttons, int num_buttons);
-int arrow_buttons_handle_mouse(const mouse* m, int x, int y, arrow_button* buttons, int num_buttons, int* focus_button_id);
+void arrow_buttons_draw(vec2i pos, arrow_button* buttons, int num_buttons, bool tiny = false);
+int get_arrow_button(const mouse *m, vec2i pos, arrow_button *buttons, int num_buttons);
+int arrow_buttons_handle_mouse(const mouse* m, vec2i pos, arrow_button* buttons, int num_buttons, int* focus_button_id);
 
 template<class T>
 bool arrow_buttons_handle_mouse(const mouse *m, vec2i pos, T &buttons, int &focus_button_id) {
@@ -33,5 +33,5 @@ bool arrow_buttons_handle_mouse(const mouse *m, vec2i pos, T &buttons, int &focu
 }
 
 inline void arrow_buttons_draw(vec2i pos, arrow_button &button, bool tiny) {
-    arrow_buttons_draw(pos.x, pos.y, &button, 1, tiny);
+    arrow_buttons_draw(pos, &button, 1, tiny);
 }

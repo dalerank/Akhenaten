@@ -111,11 +111,11 @@ int ui::advisor_financial_window::draw_background() {
 }
 
 void ui::advisor_financial_window::draw_foreground() {
-    arrow_buttons_draw(0, 0, arrow_buttons_taxes, 2);
+    arrow_buttons_draw({0, 0}, arrow_buttons_taxes, 2);
 }
 
 int ui::advisor_financial_window::handle_mouse(const mouse* m) {
-    return arrow_buttons_handle_mouse(m, 0, 0, arrow_buttons_taxes, 2, &arrow_button_focus);
+    return arrow_buttons_handle_mouse(m, {0, 0}, arrow_buttons_taxes, 2, &arrow_button_focus);
 }
 
 static void button_change_taxes(int is_down, int param2) {

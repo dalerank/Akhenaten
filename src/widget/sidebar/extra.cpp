@@ -193,7 +193,7 @@ static void draw_extra_info_panel(void) {
         y_current_line += EXTRA_INFO_LINE_SPACE + EXTRA_INFO_VERTICAL_PADDING;
 
         text_draw_percentage(data.game_speed, data.x_offset + 60, y_current_line, FONT_NORMAL_BLACK_ON_DARK);
-        arrow_buttons_draw(data.x_offset, data.y_offset, arrow_buttons_speed, 2);
+        arrow_buttons_draw({data.x_offset, data.y_offset}, arrow_buttons_speed, 2);
 
         y_current_line += EXTRA_INFO_VERTICAL_PADDING * 2;
     }
@@ -252,14 +252,14 @@ void sidebar_extra_draw_foreground(void) {
     if (update_extra_info(0))
         draw_extra_info_panel(); // Updates displayed speed % after clicking the arrows
     else if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)
-        arrow_buttons_draw(data.x_offset, data.y_offset, arrow_buttons_speed, 2);
+        arrow_buttons_draw({data.x_offset, data.y_offset}, arrow_buttons_speed, 2);
 }
 int sidebar_extra_handle_mouse(const mouse* m) {
     auto& data = g_extra_data;
     if (!(data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED))
         return 0;
 
-    return arrow_buttons_handle_mouse(m, data.x_offset, data.y_offset, arrow_buttons_speed, 2, 0);
+    return arrow_buttons_handle_mouse(m, {data.x_offset, data.y_offset}, arrow_buttons_speed, 2, 0);
 }
 
 static void button_game_speed(int is_down, int param2) {
