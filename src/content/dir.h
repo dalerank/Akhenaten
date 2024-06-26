@@ -59,4 +59,7 @@ std::vector<path> dir_find_all_subdirectories(vfs::path dir, bool);
 vfs::path content_file(const char *filepath);
 vfs::path content_path(const char *filepath);
 
+void content_cache_real_file_paths(pcstr folder);
+void content_cache_paths();
+
 } // vfs

@@ -160,7 +160,7 @@ int platform_file_manager_list_directory_contents(const char *dir, int type, con
     return match;
 }
 
-int platform_file_manager_should_case_correct_file(void) {
+int platform_file_manager_should_case_correct_file() {
 #if defined(GAME_PLATFORM_WIN) || defined(GAME_PLATFORM_ANDROID)
     return 0;
 #else
@@ -168,7 +168,7 @@ int platform_file_manager_should_case_correct_file(void) {
 #endif
 }
 
-int platform_file_manager_set_base_path(const char *path) {
+int platform_file_manager_set_base_path(pcstr path) {
     content_dir = path;
 #if defined(GAME_PLATFORM_ANDROID)
     if (!path) {

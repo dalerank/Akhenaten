@@ -15,6 +15,7 @@ void init_game_environment(int env) {
     pref_filename = "data_dir_pharaoh.txt";
     logs::info("Engine set to %s", game_name);
 }
+
 void assert_env_init() {
     assert(GAME_ENV < ENGINE_ENV_MAX);
 }

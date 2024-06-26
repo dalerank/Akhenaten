@@ -9,6 +9,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <filesystem>
+#include <filesystem>
+#include <map>
+
+namespace fs = std::filesystem;
 
 #define BASE_MAX_FILES 100
 
@@ -22,6 +26,68 @@ dir_data_t g_dir_data;
 
 namespace vfs {
 
+struct path_uri {
+    vfs::path original;
+    vfs::path lowered;
+};
+
+std::map<size_t, path_uri> path_cache;
+
+vfs::path content_internal_path(pcstr path) {
+    vfs::path corrected_path = platform_file_manager_get_base_path();
+    if (corrected_path.back() != '/') {
+        corrected_path.append('/');
+    }
+
+    corrected_path.append(path);
+    corrected_path.replace('\\', '/');
+    return corrected_path;
+}
+
+void content_cache_real_file_paths(pcstr f) {
+    vfs::path folder = content_internal_path(f);
+    if (!fs::exists(folder.c_str()) || !fs::is_directory(folder.c_str())) {
+        return;
+    }
+
+    auto add_cached_path = [] (pcstr entry) {
+        path_uri uri;
+        uri.original = entry;
+        uri.original.replace('\\', '/');
+        uri.lowered = uri.original;
+        uri.lowered.tolower();
+        size_t lhash = uri.lowered.hash();
+
+        path_cache.insert({lhash, uri});
+    };
+
+    add_cached_path(folder);
+
+    for (const auto &entry : fs::directory_iterator(folder.c_str())) {
+        if (!fs::is_regular_file(entry.path())) {
+            continue;
+        }
+
+        add_cached_path(entry.path().string().c_str());
+    }
+}
+
+void content_cache_paths() {
+    pcstr folders[] = {
+        "",
+        "AUDIO",
+        "AUDIO/Ambient",
+        "AUDIO/Music",
+        "AUDIO/Voice",
+        "AUDIO/Wavs",
+        "data"
+    };
+
+    for (const auto &folder : folders) {
+        content_cache_real_file_paths(folder);
+    }
+}
+
 static void allocate_listing_files(int min, int max) {
     auto &data = g_dir_data;
     for (int i = min; i < max; i++) {
@@ -30,7 +96,7 @@ static void allocate_listing_files(int min, int max) {
     }
 }
 
-static void clear_dir_listing(void) {
+static void clear_dir_listing() {
     auto &data = g_dir_data;
     data.listing.num_files = 0;
     if (data.max_files <= 0) {
@@ -44,7 +110,7 @@ static void clear_dir_listing(void) {
     }
 }
 
-static void expand_dir_listing(void) {
+static void expand_dir_listing() {
     auto &data = g_dir_data;
     int old_max_files = data.max_files;
 
@@ -108,30 +174,27 @@ static int compare_case(const char *filename) {
     return LIST_NO_MATCH;
 }
 
-static int correct_case(const char *dir, char *filename, int type) {
+static int correct_case(pcstr dir, char *filename, int type) {
     auto &data = g_dir_data;
 
     data.cased_filename = filename;
     return platform_file_manager_list_directory_contents(dir, type, 0, compare_case) == LIST_MATCH;
 }
 
-static void move_left(char *str) {
-    while (*str) {
-        str[0] = str[1];
-        str++;
-    }
-    *str = 0;
-}
+vfs::path content_path(pcstr path) {
+    vfs::path uri_path = content_internal_path(path);
+    vfs::path orig_path = uri_path;
+    size_t lhash = uri_path.tolower().hash();
 
-vfs::path content_path(const char *path) {
-    bstring256 corrected_path = platform_file_manager_get_base_path();
-    if (corrected_path.back() != '/') {
-        corrected_path.append('/');
+    auto it = path_cache.find(lhash);
+    if (it != path_cache.end()) {
+        const bool is_equal = strcmp(it->second.lowered.c_str(), uri_path.c_str()) == 0;
+        if (is_equal) {
+            return it->second.original;
+        }
     }
 
-    corrected_path.append(path);
-    corrected_path.replace('\\', '/');
-    return corrected_path;
+    return orig_path;
 }
 
 vfs::path content_file(const char *filepath) {

@@ -171,6 +171,8 @@ static int get_elapsed_ticks() {
 }
 
 bool game_pre_init(void) {
+    vfs::content_cache_paths();
+
     if (!lang_load(0)) {
         return false;
     }

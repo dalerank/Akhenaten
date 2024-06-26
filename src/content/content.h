@@ -26,7 +26,7 @@ enum {
  * @param path The path to be set as the base
  * @return true if the base path was correctly set, false otherwise
  */
-int platform_file_manager_set_base_path(const char *path);
+int platform_file_manager_set_base_path(pcstr path);
 const char *platform_file_manager_get_base_path();
 
 /**
@@ -37,13 +37,13 @@ const char *platform_file_manager_get_base_path();
  * @param callback The function to call when a matched file is found
  * @return LIST_ERROR if error, LIST_MATCH if there was a match in the callback, LIST_NO_MATCH if no match was set
  */
-int platform_file_manager_list_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *));
+int platform_file_manager_list_directory_contents(pcstr dir, int type, pcstr extension, int (*callback)(pcstr));
 
 /**
  * Indicates whether the file name casing should be checked
  * @return Whether file name casing should be checked
  */
-int platform_file_manager_should_case_correct_file(void);
+int platform_file_manager_should_case_correct_file();
 
 /**
  * Opens a file
@@ -51,7 +51,7 @@ int platform_file_manager_should_case_correct_file(void);
  * @param mode The mode to open the file - refer to fopen()
  * @return A pointer to a FILE structure on success, NULL otherwise
  */
-FILE *platform_file_manager_open_file(const char *filename, const char *mode);
+FILE *platform_file_manager_open_file(pcstr filename, pcstr mode);
 
 /**
  * Removes a file
