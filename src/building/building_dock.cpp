@@ -225,7 +225,7 @@ void window_building_dock_orders(int index, int param2) {
 
 int window_building_handle_mouse_dock(const mouse* m, object_info* c) {
     auto &data = g_window_building_distribution;
-    return generic_buttons_handle_mouse(m, c->offset.x + 80, c->offset.y + 16 * c->bgsize.y - 34, data.go_to_orders_button.data(), 1, &data.focus_button_id);
+    return generic_buttons_handle_mouse(m, {c->offset.x + 80, c->offset.y + 16 * c->bgsize.y - 34}, data.go_to_orders_button.data(), 1, &data.focus_button_id);
 }
 
 int window_building_handle_mouse_dock_orders(const mouse* m, object_info* c) {
@@ -233,11 +233,11 @@ int window_building_handle_mouse_dock_orders(const mouse* m, object_info* c) {
     int y_offset = window_building_get_vertical_offset(c, 28);
 
     data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m, c->offset.x + 180, y_offset + 46, data.orders_resource_buttons.data(), 15, &data.resource_focus_button_id)) {
+    if (generic_buttons_handle_mouse(m, {c->offset.x + 180, y_offset + 46}, data.orders_resource_buttons.data(), 15, &data.resource_focus_button_id)) {
         return 1;
     }
 
-    return generic_buttons_handle_mouse(m, c->offset.x + 80, y_offset + 404, dock_order_buttons, 1, &data.orders_focus_button_id);
+    return generic_buttons_handle_mouse(m, {c->offset.x + 80, y_offset + 404}, dock_order_buttons, 1, &data.orders_focus_button_id);
 }
 
 int building_dock::window_info_handle_mouse(const mouse *m, object_info &c) {

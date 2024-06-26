@@ -294,7 +294,7 @@ static void button_priority(int index, int param2) {
 
 int building_recruiter::window_info_handle_mouse(const mouse* m, object_info &c) {
     auto& data = g_rectuiter_data;
-    if (generic_buttons_handle_mouse(m, c.offset.x + 46, c.offset.y + 224, data.priority_buttons, 2, &data.focus_priority_button_id)) {
+    if (generic_buttons_handle_mouse(m, {c.offset.x + 46, c.offset.y + 224}, data.priority_buttons, 2, &data.focus_priority_button_id)) {
         window_invalidate();
         return 1;
     }

@@ -30,17 +30,17 @@ struct generic_button {
     generic_button &tooltip(const std::initializer_list<int> &t) { _tooltip.first = *t.begin(); _tooltip.second = *(t.begin() + 1); return *this; }
 };
 
-int generic_buttons_handle_mouse(const mouse* m, int x, int y, const generic_button* buttons, int num_buttons, int* focus_button_id);
-int generic_buttons_min_handle_mouse(const mouse* m, int x, int y, const generic_button* buttons, int num_buttons, int* focus_button_id, int minimum_button);
+int generic_buttons_handle_mouse(const mouse* m, vec2i pos, const generic_button* buttons, int num_buttons, int* focus_button_id);
+int generic_buttons_min_handle_mouse(const mouse* m, vec2i pos, const generic_button* buttons, int num_buttons, int* focus_button_id, int minimum_button);
 
 template<uint32_t N>
 inline int generic_buttons_handle_mouse(const mouse *m, vec2i pos, const generic_button (&buttons)[N], int &focus_button_id) {
-    return generic_buttons_handle_mouse(m, pos.x, pos.y, buttons, N, &focus_button_id);
+    return generic_buttons_handle_mouse(m, pos, buttons, N, &focus_button_id);
 }
 
 template<class T>
 inline int generic_buttons_handle_mouse(const mouse *m, vec2i pos, const T &buttons, int &focus_button_id) {
     return buttons.size() > 0
-                ? generic_buttons_handle_mouse(m, pos.x, pos.y, &buttons.front(), (int)buttons.size(), &focus_button_id)
+                ? generic_buttons_handle_mouse(m, pos, &buttons.front(), (int)buttons.size(), &focus_button_id)
                 : 0; 
 }
