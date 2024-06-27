@@ -362,19 +362,24 @@ cmrc_add_resource_library(
     ALIAS akhenaten::rc
     NAMESPACE akhenaten
 
-    ${SCRIPTS_FOLDER}/modules.js
-    ${SCRIPTS_FOLDER}/math.js
-    ${SCRIPTS_FOLDER}/common.js
-    ${SCRIPTS_FOLDER}/city_sounds.js
-    ${SCRIPTS_FOLDER}/building_sounds.js
     ${SCRIPTS_FOLDER}/building_info.js
-    ${SCRIPTS_FOLDER}/walker_sounds.js
-    ${SCRIPTS_FOLDER}/mission_sounds.js
-    ${SCRIPTS_FOLDER}/overlays.js
+    ${SCRIPTS_FOLDER}/building_menu.js
+    ${SCRIPTS_FOLDER}/building_sounds.js
+    ${SCRIPTS_FOLDER}/city_sounds.js
+    ${SCRIPTS_FOLDER}/desirability.js
+    ${SCRIPTS_FOLDER}/figures.js
+    ${SCRIPTS_FOLDER}/imagepaks.js
     ${SCRIPTS_FOLDER}/images.js
     ${SCRIPTS_FOLDER}/images_remap.js
-    ${SCRIPTS_FOLDER}/imagepaks.js
+    ${SCRIPTS_FOLDER}/common.js
+    ${SCRIPTS_FOLDER}/localization.js
+    ${SCRIPTS_FOLDER}/math.js
+    ${SCRIPTS_FOLDER}/mission_sounds.js
+    ${SCRIPTS_FOLDER}/missions.js
+    ${SCRIPTS_FOLDER}/modules.js
+    ${SCRIPTS_FOLDER}/overlays.js
     ${SCRIPTS_FOLDER}/ui.js
+    ${SCRIPTS_FOLDER}/walker_sounds.js
     ${PROJECT_SOURCE_DIR}/res/akhenaten_72.png
     ${PROJECT_SOURCE_DIR}/res/patreon_48.png
 )
