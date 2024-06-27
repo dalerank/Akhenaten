@@ -2,11 +2,12 @@
 
 #include "core/archive.h"
 #include "graphics/image_desc.h"
+#include "core/xstring.h"
 
 #include <vector>
 
 struct animation_t {
-    bstring64 id;
+    xstring id;
     vec2i pos;
     e_image_id base_id = IMG_NONE;
     e_image_id anim_id = IMG_NONE;
@@ -23,6 +24,7 @@ struct animation_t {
 };
 
 struct animation_context {
+    xstring id;
     int base;
     int offset;
     vec2i pos;
@@ -45,12 +47,12 @@ struct animations_t {
 
     void load(archive arch, pcstr section = "animations");
 
-    const animation_t &operator[](pcstr key) const {
+    const animation_t &operator[](const xstring &key) const {
         static animation_t dummy;
         if (data.empty()) {
             return dummy;
         }
-        auto it = std::find_if(data.begin(), data.end(), [key] (auto &it) { return it.id.equals(key); });
+        auto it = std::find_if(data.begin(), data.end(), [key] (auto &it) { return it.id == key; });
         return (it == data.end()) ? dummy : *it;
     }
 };

@@ -102,7 +102,7 @@ void building_scribal_school::spawn_figure() {
 }
 
 void building_scribal_school::update_day() {
-    set_animation(can_play_animation() ? "work" : "off");
+    set_animation(can_play_animation() ? animkeys().work : animkeys().none);
 }
 
 bool building_scribal_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {

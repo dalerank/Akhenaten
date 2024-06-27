@@ -3,6 +3,7 @@
 #include "core/vec2i.h"
 #include "graphics/color.h"
 #include "graphics/font.h"
+#include "graphics/animkeys.h"
 
 struct painter;
 struct image_t;

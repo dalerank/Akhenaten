@@ -552,7 +552,7 @@ public:
     inline bool has_road_access() const { return base.has_road_access; }
     inline short distance_from_entry() const { return base.distance_from_entry; }
     inline int road_network() const { return base.road_network_id; }
-    inline const animation_t &anim(pcstr key) const { return params().anim[key]; }
+    inline const animation_t &anim(const xstring &key) const { return params().anim[key]; }
 
     virtual bool is_workshop() const { return false; }
     virtual bool is_administration() const { return false; }
@@ -564,7 +564,7 @@ public:
     virtual resources_vec required_resource() const { return {}; }
     building::metainfo get_info() const;
     void set_animation(const animation_t &anim);
-    inline void set_animation(pcstr key) { set_animation(anim(key)); }
+    inline void set_animation(const xstring &key) { set_animation(anim(key)); }
 
     static void params(e_building_type, const static_params &);
     static const static_params &params(e_building_type);
