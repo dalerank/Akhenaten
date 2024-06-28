@@ -276,6 +276,10 @@ void figure::kill() {
     set_state(FIGURE_STATE_DYING);
 }
 
+void figure_impl::on_create() {
+    assert(base.tile.x() < GRID_LENGTH && base.tile.y() < GRID_LENGTH);
+}
+
 void figure_impl::figure_roaming_action() {
     switch (action_state()) {
     case FIGURE_ACTION_150_ATTACK:

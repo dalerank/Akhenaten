@@ -84,30 +84,14 @@ vec2i figure::tile_pixel_coords() {
         int prg_x = 2 * (prg_r);
         int prg_y = (prg_r);
         switch ((8 + direction - city_view_orientation()) % 8) {
-        case 0:
-            return {prg_x, -prg_y};
-            break;
-        case 1:
-            return {2 * prg_x, 0};
-            break;
-        case 2:
-            return {prg_x, prg_y};
-            break;
-        case 3:
-            return {0, 2 * prg_y};
-            break;
-        case 4:
-            return {-prg_x, prg_y};
-            break;
-        case 5:
-            return {-2 * prg_x, 0};
-            break;
-        case 6:
-            return {-prg_x, -prg_y};
-            break;
-        case 7:
-            return {0, -2 * prg_y};
-            break;
+        case 0: return {prg_x, -prg_y};
+        case 1: return {2 * prg_x, 0};
+        case 2: return {prg_x, prg_y};
+        case 3: return {0, 2 * prg_y};
+        case 4: return {-prg_x, prg_y};
+        case 5: return {-2 * prg_x, 0};
+        case 6: return {-prg_x, -prg_y};
+        case 7: return {0, -2 * prg_y};
         }
     } else {
         cc_coords_to_pixel_offset(cc_coords.x % 15, cc_coords.y % 15, &x, &y);

@@ -492,7 +492,7 @@ public:
 
     figure_impl(figure *f) : base(*f), wait_ticks(f->wait_ticks), destination_tile(f->destination_tile) {}
 
-    virtual void on_create() {}
+    virtual void on_create();
     virtual void on_destroy() {}
     virtual void figure_action() {}
     virtual void figure_before_action() {}

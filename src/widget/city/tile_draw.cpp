@@ -415,7 +415,7 @@ void draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
             continue;
         }
 
-        if (f->cached_pos.x < pixel.x || f->cached_pos.x > pixel.x + TILE_WIDTH_PIXELS) {
+        if (f->cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f->cached_pos.x > pixel.x + TILE_WIDTH_PIXELS) {
             continue;
         }
 

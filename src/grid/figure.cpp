@@ -26,6 +26,7 @@ void map_figure_sort_by_y() {
             if (f->tile.x() >= GRID_LENGTH || f->tile.y() > GRID_LENGTH) {
                 f->tile = {-1, -1};
                 f->cached_pos = {-1, -1};
+                f->poof();
                 continue;
             }
             f->cached_pos = tile_to_pixel(f->tile);

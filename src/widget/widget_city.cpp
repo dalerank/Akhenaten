@@ -170,8 +170,9 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
 }
 
 void widget_city_draw_with_overlay(painter &ctx, tile2i tile) {
-    if (!select_city_overlay())
+    if (!select_city_overlay()) {
         return;
+    }
 
     map_render_clear();
 
@@ -190,11 +191,13 @@ void widget_city_draw(painter &ctx) {
     update_zoom_level(ctx);
     set_render_scale(ctx, g_zoom.get_scale());
     set_city_clip_rectangle(ctx);
+
     if (game.current_overlay) {
         widget_city_draw_with_overlay(ctx, data.current_tile);
     } else {
         widget_city_draw_without_overlay(ctx, 0, nullptr, data.current_tile);
     }
+
     graphics_reset_clip_rectangle();
     set_render_scale(ctx, 1.0f);
 }
