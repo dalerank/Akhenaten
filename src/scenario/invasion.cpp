@@ -275,8 +275,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
         e_figure_type figure_type = ENEMY_PROPERTIES[enemy_type].figure_types[type];
         for (int i = 0; i < formations_per_type[type]; i++) {
             int formation_id = formation_create_enemy(figure_type,
-                                                      x,
-                                                      y,
+                                                      tile2i{x, y},
                                                       ENEMY_PROPERTIES[enemy_type].formation_layout,
                                                       orientation,
                                                       enemy_type,

@@ -72,8 +72,8 @@ formation* formation_create_legion(int building_id, int x, int y, e_figure_type 
 
     building* fort_ground = building_get(building_get(building_id)->next_part_building_id);
     m->home = fort_ground->tile;
-    m->x = m->standard_x = fort_ground->tile.x();
-    m->y = m->standard_y = fort_ground->tile.y();
+    m->tile = fort_ground->tile;
+    m->standard_tile = fort_ground->tile;
 
     data.num_formations++;
     if (formation_id > data.id_last_in_use)
@@ -82,15 +82,15 @@ formation* formation_create_legion(int building_id, int x, int y, e_figure_type 
     return m;
 }
 
-static int formation_create(e_figure_type figure_type, int layout, int orientation, int x, int y) {
+static int formation_create(e_figure_type figure_type, int layout, int orientation, tile2i tile) {
     int formation_id = get_free_formation(10);
-    if (!formation_id)
+    if (!formation_id) {
         return 0;
+    }
 
     formation* f = &g_formations[formation_id];
     f->faction_id = 0;
-    f->x = x;
-    f->y = y;
+    f->tile = tile;
     f->in_use = 1;
     f->is_legion = 0;
     f->figure_type = figure_type;
@@ -108,8 +108,8 @@ static int formation_create(e_figure_type figure_type, int layout, int orientati
     return formation_id;
 }
 
-int formation_create_herd(e_figure_type figure_type, int x, int y, int num_animals) {
-    int formation_id = formation_create(figure_type, FORMATION_HERD, 0, x, y);
+int formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animals) {
+    int formation_id = formation_create(figure_type, FORMATION_HERD, 0, tile);
     if (!formation_id)
         return 0;
 
@@ -120,8 +120,8 @@ int formation_create_herd(e_figure_type figure_type, int x, int y, int num_anima
     return formation_id;
 }
 
-int formation_create_enemy(e_figure_type figure_type, int x, int y, int layout, int orientation, int enemy_type, int attack_type, int invasion_id, int invasion_sequence) {
-    int formation_id = formation_create(figure_type, layout, orientation, x, y);
+int formation_create_enemy(e_figure_type figure_type, tile2i tile, int layout, int orientation, int enemy_type, int attack_type, int invasion_id, int invasion_sequence) {
+    int formation_id = formation_create(figure_type, layout, orientation, tile);
     if (!formation_id)
         return 0;
 
@@ -584,10 +584,8 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &f->morale);      // 100
 
         iob->bind(BIND_SIGNATURE_UINT32, f->home);        // 44
-        iob->bind(BIND_SIGNATURE_UINT16, &f->standard_x);    //
-        iob->bind(BIND_SIGNATURE_UINT16, &f->standard_y);    //
-        iob->bind(BIND_SIGNATURE_UINT16, &f->x);             // 44
-        iob->bind(BIND_SIGNATURE_UINT16, &f->y);             // 58
+        iob->bind(BIND_SIGNATURE_UINT32, f->standard_tile);    //
+        iob->bind(BIND_SIGNATURE_UINT32, f->tile);             // 44
         iob->bind(BIND_SIGNATURE_UINT16, &f->destination_x); // 49
         iob->bind(BIND_SIGNATURE_UINT16, &f->destination_y); // 49
         
