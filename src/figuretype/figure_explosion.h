@@ -9,4 +9,5 @@ public:
     virtual void figure_action() override;
     virtual void cart_update_image() override {}
     virtual void update_animation() override;
+    virtual void main_update_image() override {}
 };

@@ -2,6 +2,7 @@
 
 #include "core/profiler.h"
 #include "graphics/image.h"
+#include "graphics/animkeys.h"
 
 #include "js/js_game.h"
 
@@ -48,7 +49,7 @@ void figure_explosion::figure_action() {
 }
 
 void figure_explosion::update_animation() {
-    int img_id = explosion_m.anim["poff"].first_img();
+    int img_id = anim(animkeys().poof).first_img();
     if (base.progress_on_tile < 48) {
         base.sprite_image_id = img_id + std::clamp(base.progress_on_tile / 2, 0, MAX_CLOUD_IMAGE_OFFSETS);
     } else {

@@ -698,17 +698,17 @@ figure_labor_seeker = {
 
 figure_reed_gatherer = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:37, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:38, max_frames:8, loop:false },
-		work : { pos : [0, 0], pack:PACK_SPR_MAIN, id:39, max_frames:15 },
-		return : { pos : [0, 0], pack:PACK_SPR_MAIN, id:40, max_frames:12 },
+		walk : { pack:PACK_SPR_MAIN, id:37, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:38, max_frames:8, loop:false },
+		work : { pack:PACK_SPR_MAIN, id:39, max_frames:15 },
+		return : { pack:PACK_SPR_MAIN, id:40, max_frames:12 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_explosion = {
 	animations : {
-		poof : { pos : [0, 0], pack:PACK_SPR_AMBIENT, id:12, max_frames:12 },
+		poof : { pack:PACK_SPR_AMBIENT, id:12, max_frames:12 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANY,
 }

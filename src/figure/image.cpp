@@ -154,9 +154,6 @@ void figure::figure_image_update(bool refresh_only) {
         break;
     }
 
-    case FIGURE_EXPLOSION:
-        break;
-
     default:
         dcast()->main_update_image();
         dcast()->cart_update_image();

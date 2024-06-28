@@ -5,6 +5,7 @@ const xstring id_anim_t::base = "base";
 const xstring id_anim_t::preview = "preview";
 const xstring id_anim_t::work = "work";
 const xstring id_anim_t::none = "none";
+const xstring id_anim_t::poof = "poof";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

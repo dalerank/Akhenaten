@@ -514,10 +514,10 @@ public:
     virtual void cart_update_image() { base.cart_update_image(); }
     virtual void main_update_image();
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
-    virtual const animations_t &anim() const { assert(false); /*no anim*/ static animations_t dummy; return dummy; }
+    virtual const animations_t &anim() const { return params().anim; }
     virtual const static_params &params() const { return params(type()); }
     virtual void kill();
-    inline const animation_t &anim(pcstr anim_key) const { return anim()[anim_key]; }
+    inline const animation_t &anim(const xstring &anim_key) const { return anim()[anim_key]; }
 
     static void params(e_figure_type, const static_params &);
     static const static_params &params(e_figure_type);
