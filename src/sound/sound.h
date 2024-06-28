@@ -5,6 +5,7 @@
 #include "content/dir.h"
 #include "content/vfs.h"
 #include "sound/channel.h"
+#include "sound/effect.h"
 #include <array>
 
 struct music_player_t;
@@ -41,6 +42,7 @@ public:
     void music_set_volume(int volume_pct);
     bool is_audio_stream_active();
     void set_volume(int b, int e, int percentage);
+    void play_effect(int effect);
 
 private:
     static void channel_finished_cb(int channel);

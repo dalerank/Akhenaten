@@ -4,7 +4,7 @@
 #include "grid/road_access.h"
 #include "core/calc.h"
 #include "figure_fireman.h"
-#include "sound/effect.h"
+#include "sound/sound.h"
 #include "config/config.h"
 #include "building/list.h"
 #include "building/maintenance.h"
@@ -195,7 +195,7 @@ void figure_fireman::extinguish_fire() {
     if ((burn->state == BUILDING_STATE_VALID || burn->state == BUILDING_STATE_MOTHBALLED)
         && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
         burn->fire_duration = 32;
-        sound_effect_play(SOUND_EFFECT_FIRE_SPLASH);
+        g_sound.play_effect(SOUND_EFFECT_FIRE_SPLASH);
     } else {
         base.wait_ticks = 1;
     }

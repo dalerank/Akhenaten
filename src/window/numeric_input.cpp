@@ -9,7 +9,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "input/keyboard.h"
-#include "sound/effect.h"
+#include "sound/sound.h"
 
 static void button_number(int number, int param2);
 static void button_accept(int param1, int param2);
@@ -125,7 +125,7 @@ static void input_number(int number) {
     if (data.num_digits < data.max_digits) {
         data.value = data.value * 10 + number;
         data.num_digits++;
-        sound_effect_play(SOUND_EFFECT_BUILD);
+        g_sound.play_effect(SOUND_EFFECT_BUILD);
     }
 }
 

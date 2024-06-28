@@ -15,7 +15,7 @@
 #include "input/scroll.h"
 #include "config/config.h"
 #include "sound/sound_city.h"
-#include "sound/effect.h"
+#include "sound/sound.h"
 #include "widget/city/tile_draw.h"
 #include "widget/map_editor_tool.h"
 #include "game/game.h"
@@ -339,7 +339,7 @@ void widget_map_editor_handle_input(const mouse* m, const hotkeys* h) {
 
     if (m->left.went_up) {
         editor_tool_end_use(data.current_tile);
-        sound_effect_play(SOUND_EFFECT_BUILD);
+        g_sound.play_effect(SOUND_EFFECT_BUILD);
     }
 }
 

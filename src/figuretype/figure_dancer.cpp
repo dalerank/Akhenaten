@@ -6,7 +6,7 @@
 #include "city/sentiment.h"
 #include "city/city.h"
 #include "city/ratings.h"
-#include "sound/effect.h"
+#include "sound/sound.h"
 
 #include "js/js_game.h"
 
@@ -76,7 +76,7 @@ sound_key figure_dancer::phrase_key() const {
 }
 
 bool figure_dancer::play_die_sound() {
-    sound_effect_play(SOUND_EFFECT_DANCER_DIE);
+    g_sound.play_effect(SOUND_EFFECT_DANCER_DIE);
     return true;
 }
 

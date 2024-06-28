@@ -16,7 +16,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
-#include "sound/effect.h"
+#include "sound/sound.h"
 
 #include <core/random.h>
 #include <string.h>
@@ -143,7 +143,7 @@ void building_destroy_by_collapse(building* b) {
     map_building_tiles_set_rubble(b->id, b->tile, b->size);
     figure_create_explosion_cloud(b->tile, b->size);
     destroy_linked_parts(b, false);
-    sound_effect_play(SOUND_EFFECT_EXPLOSION);
+    g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
 }
 
 void building_destroy_by_poof(building* b, bool clouds) {
@@ -152,7 +152,7 @@ void building_destroy_by_poof(building* b, bool clouds) {
         figure_create_explosion_cloud(b->tile, b->size);
     }
 
-    sound_effect_play(SOUND_EFFECT_EXPLOSION);
+    g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
 
     do {
         b->state = BUILDING_STATE_UNUSED;
@@ -169,7 +169,7 @@ void building_destroy_by_fire(building* b) {
     b = b->main();
     destroy_on_fire(b, false);
     destroy_linked_parts(b, true);
-    sound_effect_play(SOUND_EFFECT_EXPLOSION);
+    g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
 }
 
 void building_mark_plague(building* b) {
@@ -192,7 +192,7 @@ int building_destroy_first_of_type(e_building_type type) {
         game_undo_disable();
         b->state = BUILDING_STATE_RUBBLE;
         map_building_tiles_set_rubble(i, b->tile, b->size);
-        sound_effect_play(SOUND_EFFECT_EXPLOSION);
+        g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
         map_routing_update_land();
         return grid_offset;
     }

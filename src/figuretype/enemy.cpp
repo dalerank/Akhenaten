@@ -82,7 +82,7 @@ void figure::enemy_initial(formation* m) {
                 formation_record_missile_fired(m);
             }
             if (missile_type == FIGURE_ARROW && city_sound_update_shoot_arrow())
-                sound_effect_play(SOUND_EFFECT_ARROW);
+                g_sound.play_effect(SOUND_EFFECT_ARROW);
 
             attack_image_offset++;
             if (attack_image_offset > 100)
@@ -110,6 +110,7 @@ void figure::enemy_marching(const formation* m) {
         action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
     }
 }
+
 void figure::enemy_fighting(const formation* m) {
     if (!m->recent_fight)
         action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
@@ -117,11 +118,11 @@ void figure::enemy_fighting(const formation* m) {
     if (type != FIGURE_ENEMY46_CAMEL && type != FIGURE_ENEMY47_ELEPHANT) {
         if (type == FIGURE_ENEMY48_CHARIOT || type == FIGURE_ENEMY52_MOUNTED_ARCHER) {
             if (city_sound_update_march_horse())
-                sound_effect_play(SOUND_EFFECT_HORSE_MOVING);
+                g_sound.play_effect(SOUND_EFFECT_HORSE_MOVING);
 
         } else {
             if (city_sound_update_march_enemy())
-                sound_effect_play(SOUND_EFFECT_MARCHING);
+                g_sound.play_effect(SOUND_EFFECT_MARCHING);
         }
     }
     int target_id = target_figure_id;

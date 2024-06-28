@@ -3,7 +3,7 @@
 #include "core/game_environment.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "sound/effect.h"
+#include "sound/sound.h"
 #include "core/span.hpp"
 #include "game/game.h"
 
@@ -104,7 +104,7 @@ bool image_buttons_handle_mouse(const mouse* m, vec2i pos, image_button* buttons
         hit_button->pressed = 1;
 
     if (m->left.went_up) {
-        sound_effect_play(SOUND_EFFECT_ICON);
+        g_sound.play_effect(SOUND_EFFECT_ICON);
         remove_pressed_effect_build(buttons, num_buttons);
         if (hit_button->button_type == IB_BUILD || hit_button->button_type == IB_OVERSEER) {
             hit_button->pressed = 1;

@@ -11,7 +11,7 @@
 #include "figure/properties.h"
 #include "grid/grid.h"
 #include "config/config.h"
-#include "sound/effect.h"
+#include "sound/sound.h"
 
 #include <string.h>
 
@@ -477,7 +477,7 @@ void formation_calculate_figures(void) {
                     enemy_army_totals_add_legion_formation(total_strength);
                     if (m->figure_type == FIGURE_STANDARD_BEARER) {
                         if (!was_halted && m->is_halted)
-                            sound_effect_play(SOUND_EFFECT_FORMATION_SHIELD);
+                            g_sound.play_effect(SOUND_EFFECT_FORMATION_SHIELD);
                     }
                 }
             } else {

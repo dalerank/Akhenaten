@@ -674,3 +674,15 @@ void sound_manager_t::update_channel(int channel, vfs::path filename) {
         init_channel(channel, original);
     }
 }
+
+void sound_manager_t::play_effect(int effect) {
+    if (!g_settings.get_sound(SOUND_EFFECTS)->enabled) {
+        return;
+    }
+
+    if (is_channel_playing(effect)) {
+        return;
+    }
+
+    play_channel(effect, g_settings.get_sound(SOUND_EFFECTS)->volume);
+}

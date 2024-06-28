@@ -9,7 +9,7 @@
 #include "graphics/view/view.h"
 #include "grid/figure.h"
 #include "grid/point.h"
-#include "sound/effect.h"
+#include "sound/sound.h"
 
 
 void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, e_figure_type type) {
@@ -114,7 +114,7 @@ void figure::arrow_action() {
     int target_id = get_non_citizen_on_tile(tile.grid_offset());
     if (target_id) {
         missile_hit_target(target_id, FIGURE_STANDARD_BEARER);
-        sound_effect_play(SOUND_EFFECT_ARROW_HIT);
+        g_sound.play_effect(SOUND_EFFECT_ARROW_HIT);
     } else if (should_die) {
         poof();
     }
@@ -131,7 +131,7 @@ void figure::spear_action() {
     int target_id = get_citizen_on_tile(tile.grid_offset());
     if (target_id) {
         missile_hit_target(target_id, FIGURE_STANDARD_BEARER);
-        sound_effect_play(SOUND_EFFECT_JAVELIN);
+        g_sound.play_effect(SOUND_EFFECT_JAVELIN);
     } else if (should_die) {
         poof();
     }
@@ -151,7 +151,7 @@ void figure::javelin_action() {
     int target_id = get_non_citizen_on_tile(tile.grid_offset());
     if (target_id) {
         missile_hit_target(target_id, FIGURE_ENEMY_CAESAR_LEGIONARY);
-        sound_effect_play(SOUND_EFFECT_JAVELIN);
+        g_sound.play_effect(SOUND_EFFECT_JAVELIN);
     } else if (should_die) {
         poof();
     }
@@ -186,11 +186,11 @@ void figure::bolt_action() {
             formation_update_morale_after_death(formation_get(target->formation_id));
         }
 
-        sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_PERSON);
+        g_sound.play_effect(SOUND_EFFECT_BALLISTA_HIT_PERSON);
         poof();
 
     } else if (should_die) {
-        sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_GROUND);
+        g_sound.play_effect(SOUND_EFFECT_BALLISTA_HIT_GROUND);
         poof();
     }
     int dir = (16 + direction - 2 * city_view_orientation()) % 16;

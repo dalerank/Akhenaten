@@ -266,7 +266,7 @@ static void build_move(tile2i tile) {
 static void build_end(void) {
     if (Planner.in_progress) {
         if (Planner.build_type != BUILDING_NONE)
-            sound_effect_play(SOUND_EFFECT_BUILD);
+            g_sound.play_effect(SOUND_EFFECT_BUILD);
 
         Planner.construction_finalize();
     }

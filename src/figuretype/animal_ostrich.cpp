@@ -7,7 +7,7 @@
 #include "core/random.h"
 #include "graphics/image_groups.h"
 #include "graphics/image.h"
-#include "sound/effect.h"
+#include "sound/sound.h"
 #include "graphics/animation.h"
 
 #include "js/js_game.h"
@@ -116,6 +116,6 @@ void figure_ostrich::before_poof() {
 }
 
 bool figure_ostrich::play_die_sound() {
-    sound_effect_play(SOUND_EFFECT_OSTRICH_DIE);
+    g_sound.play_effect(SOUND_EFFECT_OSTRICH_DIE);
     return true;
 }

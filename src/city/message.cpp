@@ -1,7 +1,7 @@
 #include "message.h"
-#include "io/io_buffer.h"
-#include <scenario/events.h>
 
+#include "io/io_buffer.h"
+#include "scenario/events.h"
 #include "content/vfs.h"
 #include "core/encoding.h"
 #include "core/string.h"
@@ -12,7 +12,7 @@
 #include "graphics/window.h"
 #include "graphics/image.h"
 #include "io/gamefiles/lang.h"
-#include "sound/effect.h"
+#include "sound/sound.h"
 #include "window/message_dialog.h"
 
 #define MAX_MESSAGES 1000
@@ -137,9 +137,9 @@ static void enqueue_message(int sequence) {
 
 static void play_sound(int text_id) {
     if (lang_get_message(text_id)->urgent == 1) {
-        sound_effect_play(SOUND_EFFECT_FANFARE_URGENT);
+        g_sound.play_effect(SOUND_EFFECT_FANFARE_URGENT);
     } else {
-        sound_effect_play(SOUND_EFFECT_FANFARE);
+        g_sound.play_effect(SOUND_EFFECT_FANFARE);
     }
 }
 

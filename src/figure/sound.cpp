@@ -6,40 +6,23 @@
 #include "sound/sound.h"
 
 void figure::play_die_sound() {
-    figure* f = this;
-    int is_soldier = 0;
-    int is_citizen = 0;
-    if (f->dcast()->play_die_sound()) {
+
+    if (dcast()->play_die_sound()) {
         return;
     }
 
-    switch (f->type) {
-    // case FIGURE_WOLF:
-    //     sound_effect_play(SOUND_EFFECT_WOLF_DIE);
-    //     break;
-    case FIGURE_BIRDS:
-        sound_effect_play(SOUND_EFFECT_SHEEP_DIE);
-        break;
-
-    case FIGURE_ANTELOPE:
-        sound_effect_play(SOUND_EFFECT_ZEBRA_DIE);
-        break;
+    int is_soldier = 0;
+    int is_citizen = 0;
+    int effect = 0;
+    switch (type) {
+    case FIGURE_BIRDS: effect = SOUND_EFFECT_SHEEP_DIE; break;
+    case FIGURE_ANTELOPE: effect = SOUND_EFFECT_ZEBRA_DIE; break;
+    case FIGURE_ENEMY46_CAMEL: effect = SOUND_EFFECT_CAMEL; break;
+    case FIGURE_ENEMY47_ELEPHANT: effect = SOUND_EFFECT_ELEPHANT_DIE; break;
 
     case FIGURE_ENEMY48_CHARIOT:
     case FIGURE_ENEMY52_MOUNTED_ARCHER:
-        sound_effect_play(SOUND_EFFECT_HORSE2);
-        break;
-
-    case FIGURE_ENEMY46_CAMEL:
-        sound_effect_play(SOUND_EFFECT_CAMEL);
-        break;
-
-    case FIGURE_ENEMY47_ELEPHANT:
-        sound_effect_play(SOUND_EFFECT_ELEPHANT_DIE);
-        break;
-
-    case FIGURE_NATIVE_TRADER:
-    case FIGURE_TRADE_CARAVAN_DONKEY:
+        effect = SOUND_EFFECT_HORSE2;
         break;
 
     case FIGURE_ARCHER:
@@ -66,13 +49,17 @@ void figure::play_die_sound() {
         break;
     }
 
-    if (is_soldier) {
-        sound_effect_play(SOUND_EFFECT_SOLDIER_DIE + city_sound_update_die_soldier());
-    } else if (is_citizen) {
-        sound_effect_play(SOUND_EFFECT_CITIZEN_DIE + city_sound_update_die_citizen());
+    if (effect) {
+        g_sound.play_effect(effect);
     }
 
-    if (f->is_enemy()) {
+    if (is_soldier) {
+        g_sound.play_effect(SOUND_EFFECT_SOLDIER_DIE + city_sound_update_die_soldier());
+    } else if (is_citizen) {
+        g_sound.play_effect(SOUND_EFFECT_CITIZEN_DIE + city_sound_update_die_citizen());
+    }
+
+    if (is_enemy()) {
         if (g_city.figures.enemies == 1) {
             g_sound.speech_play_file("Wavs/army_war_cry.wav", 255);
         }
@@ -80,12 +67,13 @@ void figure::play_die_sound() {
 }
 
 void figure::play_hit_sound() {
-    figure* f = this;
+    int effect = 0;
     switch (type) {
     case FIGURE_INFANTRY:
     case FIGURE_ENEMY_CAESAR_LEGIONARY:
-        if (city_sound_update_hit_soldier())
-            sound_effect_play(SOUND_EFFECT_SWORD);
+        if (city_sound_update_hit_soldier()) {
+            effect = SOUND_EFFECT_SWORD;
+        }
         break;
 
     case FIGURE_FCHARIOTEER:
@@ -95,39 +83,41 @@ void figure::play_hit_sound() {
     case FIGURE_ENEMY52_MOUNTED_ARCHER:
     case FIGURE_ENEMY54_GLADIATOR:
         if (city_sound_update_hit_soldier())
-            sound_effect_play(SOUND_EFFECT_SWORD_SWING);
+            effect = SOUND_EFFECT_SWORD_SWING;
         break;
 
     case FIGURE_ARCHER:
         if (city_sound_update_hit_soldier())
-            sound_effect_play(SOUND_EFFECT_LIGHT_SWORD);
+            effect = SOUND_EFFECT_LIGHT_SWORD;
         break;
 
     case FIGURE_ENEMY43_SPEAR:
     case FIGURE_ENEMY51_SPEAR:
         if (city_sound_update_hit_spear())
-            sound_effect_play(SOUND_EFFECT_SPEAR);
+            effect = SOUND_EFFECT_SPEAR;
         break;
 
     case FIGURE_ENEMY44_SWORD:
     case FIGURE_ENEMY49_FAST_SWORD:
         if (city_sound_update_hit_club())
-            sound_effect_play(SOUND_EFFECT_CLUB);
+            effect = SOUND_EFFECT_CLUB;
 
         break;
     case FIGURE_ENEMY53_AXE:
         if (city_sound_update_hit_axe())
-            sound_effect_play(SOUND_EFFECT_AXE);
+            effect = SOUND_EFFECT_AXE;
 
         break;
+
     case FIGURE_ENEMY46_CAMEL:
-        sound_effect_play(SOUND_EFFECT_CAMEL);
+        effect = SOUND_EFFECT_CAMEL;
         break;
+
     case FIGURE_ENEMY47_ELEPHANT:
         if (city_sound_update_hit_elephant())
-            sound_effect_play(SOUND_EFFECT_ELEPHANT);
+            effect = SOUND_EFFECT_ELEPHANT;
         else {
-            sound_effect_play(SOUND_EFFECT_ELEPHANT_HIT);
+            effect = SOUND_EFFECT_ELEPHANT_HIT;
         }
         break;
         // case FIGURE_DANCER:
@@ -141,5 +131,9 @@ void figure::play_hit_sound() {
         break;
     default:
         break;
+    }
+
+    if (effect) {
+        g_sound.play_effect(effect);
     }
 }

@@ -7,7 +7,7 @@
 #include "graphics/elements/menu.h"
 #include "graphics/view/view.h"
 #include "graphics/window.h"
-#include "sound/effect.h"
+#include "sound/sound.h"
 #include "widget/sidebar/common.h"
 #include "window/window_city.h"
 #include "game/game.h"
@@ -78,7 +78,7 @@ void sidebar_slide(int direction,
     data.back_sidebar_draw = back_sidebar_callback;
     data.front_sidebar_draw = front_sidebar_callback;
     data.finished_callback = finished_callback;
-    sound_effect_play(SOUND_EFFECT_SIDEBAR);
+    g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
 
     window_type window = {
         WINDOW_SLIDING_SIDEBAR,

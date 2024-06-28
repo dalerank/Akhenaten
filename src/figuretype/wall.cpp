@@ -17,7 +17,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 #include "config/config.h"
-#include "sound/effect.h"
+#include "sound/sound.h"
 
 static const int BALLISTA_FIRING_OFFSETS[]
   = {0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -87,7 +87,7 @@ void figure::ballista_action() {
                 wait_ticks_missile = 0;
                 //                    figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_BOLT);
                 missile_fire_at(target_figure_id, FIGURE_BOLT);
-                sound_effect_play(SOUND_EFFECT_BALLISTA_SHOOT);
+                g_sound.play_effect(SOUND_EFFECT_BALLISTA_SHOOT);
             } else {
                 action_state = FIGURE_ACTION_180_BALLISTA_CREATED;
             }

@@ -1,5 +1,4 @@
-#ifndef SOUND_EFFECTS_H
-#define SOUND_EFFECTS_H
+#pragma once
 
 enum {
     SOUND_EFFECT_PANEL = 1,
@@ -43,7 +42,3 @@ enum {
     SOUND_EFFECT_FORMATION_SHIELD = 44,
     SOUND_EFFECT_DANCER_DIE = 45
 };
-
-void sound_effect_play(int effect);
-
-#endif // SOUND_EFFECTS_H
