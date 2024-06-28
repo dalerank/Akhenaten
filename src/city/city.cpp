@@ -234,7 +234,7 @@ void city_t::fishing_points_t::reset() {
 }
 
 void city_t::fishing_points_t::clear() {
-    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
         if (f->type != FIGURE_FISHING_POINT) {
             continue;
@@ -911,7 +911,7 @@ void city_t::environment_t::river_update_flotsam() {
         return;
     }
 
-    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_FIGURES; i++) {
         figure* f = figure_get(i);
         if (f->state == FIGURE_STATE_ALIVE && f->type == FIGURE_FLOTSAM) {
             return;

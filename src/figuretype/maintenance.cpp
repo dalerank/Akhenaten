@@ -29,14 +29,15 @@
 int figure::is_nearby(int category, int* distance, int max_distance, bool gang_on) {
     int figure_id = 0;
     int lowest_distance = max_distance;
-    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_FIGURES; i++) {
         figure* f = figure_get(i);
         if (f->is_dead()) {
             continue;
         }
 
-        if (!gang_on && f->targeted_by_figure_id)
+        if (!gang_on && f->targeted_by_figure_id) {
             continue;
+        }
 
         bool category_check = false;
         auto props = figure_properties_for_type(f->type);
@@ -45,10 +46,12 @@ int figure::is_nearby(int category, int* distance, int max_distance, bool gang_o
             if (props->category != 0)
                 category_check = true;
             break;
+
         case NEARBY_ANIMAL: // animal
             if (props->category == 6 || f->is_herd())
                 category_check = true;
             break;
+
         case NEARBY_HOSTILE: // hostile
             if (f->is_enemy() || f->type == FIGURE_TOMB_ROBER || f->is_attacking_native())
                 category_check = true;

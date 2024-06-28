@@ -19,10 +19,6 @@ void config_load_figure_ostrich() {
     ostrich_m.load();
 }
 
-void figure_ostrich::on_create() {
-    /*nothing*/
-}
-
 void figure_ostrich::figure_action() {
     const formation* m = formation_get(base.formation_id);
     g_city.figures_add_animal();

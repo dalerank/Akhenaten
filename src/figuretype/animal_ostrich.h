@@ -7,7 +7,6 @@ public:
     FIGURE_METAINFO(FIGURE_OSTRICH, figure_ostrich)
     figure_ostrich(figure *f) : figure_impl(f) {}
 
-    virtual void on_create() override;
     virtual void figure_action() override;
     virtual e_figure_sound phrase() const override { return {FIGURE_OSTRICH, "ostrich"}; }
     virtual const animations_t &anim() const override;

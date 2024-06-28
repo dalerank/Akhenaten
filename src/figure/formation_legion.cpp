@@ -108,8 +108,7 @@ void formation_legion_move_to(formation* m, tile2i tile) {
 
     if (m->cursed_by_mars)
         return;
-    m->standard_x = tile.x();
-    m->standard_y = tile.y();
+    m->standard_tile = tile;
     m->is_at_fort = 0;
 
     if (m->morale <= 20)
@@ -130,7 +129,7 @@ void formation_legion_move_to(formation* m, tile2i tile) {
 
 void formation_legion_return_home(formation* m) {
     map_routing_calculate_distances(m->home);
-    if (map_routing_distance(MAP_OFFSET(m->x, m->y)) <= 0)
+    if (map_routing_distance(m->tile) <= 0)
         return; // unable to route home
 
     if (m->cursed_by_mars) {
@@ -338,7 +337,7 @@ void formation_legion_update(void) {
 }
 
 void formation_legion_decrease_damage(void) {
-    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_FIGURES; i++) {
         figure* f = figure_get(i);
         if (f->state == FIGURE_STATE_ALIVE && f->dcast_soldier()) {
             if (f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST) {

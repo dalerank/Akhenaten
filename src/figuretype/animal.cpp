@@ -468,7 +468,7 @@ void figure_hippodrome_horse_reroute(void) {
         return;
     //}
 
-    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_FIGURES; i++) {
         figure* f = figure_get(i);
         if (f->state == FIGURE_STATE_ALIVE && f->type == FIGURE_CHARIOR_RACER) {
             f->wait_ticks_missile = 0;

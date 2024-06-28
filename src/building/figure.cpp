@@ -432,15 +432,15 @@ void building::spawn_figure_industry() {
 }
 
 int building::get_figures_number(e_figure_type ftype) {
-    int gatherers_this_yard = 0;
-    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
+    int figures_this_yard = 0;
+    for (int i = 0; i < MAX_FIGURES; i++) {
         figure* f = figure_get(i);
         if (f->has_type(ftype) && f->has_home(this)) {        // figure with type on map and  belongs to this building
-            gatherers_this_yard++;
+            figures_this_yard++;
         }
     }
 
-    return gatherers_this_yard;
+    return figures_this_yard;
 }
 
 void building::spawn_figure_native_hut() {

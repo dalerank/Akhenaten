@@ -23,7 +23,7 @@
 struct figure_data_t {
     int created_sequence;
     bool initialized;
-    svector<figure*, 5000> figures;
+    std::array<figure*, MAX_FIGURES> figures;
 };
 
 figure_data_t g_figure_data = {0, false};
@@ -44,7 +44,7 @@ figure *figure_get(int id) {
 }
 
 std::span<figure *> map_figures() {
-    return make_span(g_figure_data.figures.begin(), g_figure_data.figures.size());
+    return make_span(g_figure_data.figures.data(), g_figure_data.figures.size());
 }
 
 figure *figure_take_from_pool () {
@@ -383,8 +383,9 @@ figure_impl *figures::create(e_figure_type e, figure *data) {
 
 void init_figures() {
     if (!g_figure_data.initialized) {
-        for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
-            g_figure_data.figures.push_back(new figure(i));
+        for (int i = 0; i < MAX_FIGURES; i++) {
+            g_figure_data.figures[i] = new figure(i);
+
         }
         g_figure_data.initialized = true;
     }
@@ -527,7 +528,7 @@ void figure::bind(io_buffer* iob) {
 
 io_buffer* iob_figures = new io_buffer([](io_buffer* iob, size_t version) {
     init_figures();
-    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
+    for (int i = 0; i < MAX_FIGURES; i++) {
         figure_get(i)->bind(iob); // doing this because some members are PRIVATE.
         figure_get(i)->id = i;
     }

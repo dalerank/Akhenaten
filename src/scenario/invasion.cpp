@@ -293,7 +293,6 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
                 f->wait_ticks = 200 * seq + 10 * fig + 10;
                 f->formation_id = formation_id;
                 f->name = figure_name_get(figure_type, enemy_type);
-                //                f->is_ghost = true;
             }
             seq++;
         }

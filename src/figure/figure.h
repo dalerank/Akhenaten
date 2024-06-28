@@ -38,7 +38,7 @@ class figure_fishing_point;
 
 struct animation_t;
 
-constexpr int MAX_FIGURES[] = {5000, 2000};
+constexpr int MAX_FIGURES = 2000;
 constexpr int MAX_CLOUD_IMAGE_OFFSETS = 19;
 
 enum e_minimap_figure_color {

@@ -221,7 +221,7 @@ static void mark_construction(tile2i tile, int size_x, int size_y, int terrain, 
 }
 
 static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end) {
-    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_FIGURES; i++) {
         figure* f = figure_get(i);
         if (config_get(CONFIG_GP_CH_WOLVES_BLOCK)) {
             if (f->state != FIGURE_STATE_ALIVE || !f->is_enemy()) {

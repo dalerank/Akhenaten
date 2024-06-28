@@ -204,8 +204,8 @@ static void set_figures_to_initial(const formation* m) {
 static void update_herd_formation(formation* m) {
     if (can_spawn_ph_wolf(m)) {
         // spawn new wolf
-        if (!map_terrain_is(MAP_OFFSET(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
-            figure* wolf = figure_create(m->figure_type, tile2i(m->x, m->y), DIR_0_TOP_RIGHT);
+        if (!map_terrain_is(m->tile, TERRAIN_IMPASSABLE_WOLF)) {
+            figure* wolf = figure_create(m->figure_type, m->tile, DIR_0_TOP_RIGHT);
             wolf->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             wolf->action_state = 24;
             wolf->formation_id = m->id;
@@ -214,8 +214,8 @@ static void update_herd_formation(formation* m) {
     }
     if (can_spawn_ostrich(m) && allow_span_ostrich.value) {
         // spawn new ostrich
-        if (!map_terrain_is(MAP_OFFSET(m->x, m->y), TERRAIN_IMPASSABLE_OSTRICH)) {
-            figure* ostrich = figure_create(m->figure_type, tile2i(m->x, m->y), DIR_0_TOP_RIGHT);
+        if (!map_terrain_is(m->tile, TERRAIN_IMPASSABLE_OSTRICH)) {
+            figure* ostrich = figure_create(m->figure_type, m->tile, DIR_0_TOP_RIGHT);
             // ostrich->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             ostrich->action_state = FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE;
             ostrich->formation_id = m->id;
@@ -312,7 +312,7 @@ int formation_herd_breeding_ground_at(int x, int y, int size) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
         if (m->in_use && m->is_herd && !m->is_legion) {
-            if (m->x >= x && m->x < x + size && m->y >= y && m->y < y + size)
+            if (m->tile.x() >= x && m->tile.x() < x + size && m->tile.y() >= y && m->tile.y() < y + size)
                 return 1;
         }
     }
