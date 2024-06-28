@@ -158,13 +158,15 @@ static int get_elapsed_ticks() {
         return 0;
     }
 
-    if (scroll_in_progress() && !scroll_is_smooth())
+    if (scroll_in_progress() && !scroll_is_smooth()) {
         return 0;
+    }
 
     time_millis now = time_get_millis();
     time_millis diff = now - last_update;
-    if (diff < MILLIS_PER_TICK_PER_SPEED[game_speed_index] + 2)
+    if (diff < MILLIS_PER_TICK_PER_SPEED[game_speed_index] + 2) {
         return 0;
+    }
 
     last_update = now;
     return ticks_per_frame;
@@ -186,6 +188,9 @@ bool game_pre_init(void) {
     random_init();
 
     game.paused = false;
+    game.mt.reset(4);
+    game.mtrpc.reset(4);
+
     return true;
 }
 

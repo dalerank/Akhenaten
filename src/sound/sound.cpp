@@ -13,6 +13,7 @@
 #include "game/settings.h"
 #include "platform/platform.h"
 #include "platform/vita/vita.h"
+#include "game/game.h"
 #include "js/js_game.h"
 
 #include "lame_helper.h"
@@ -413,15 +414,17 @@ void sound_manager_t::play_channel(int channel, int volume_pct) {
         return;
     }
 
-    channel_t &ch = _channels[channel];
-    if (!load_channel(&ch)) {
-        return;
-    }
+    game.mt.detach_task([this, channel, volume_pct] () {
+        channel_t &ch = _channels[channel];
+        if (!load_channel(&ch)) {
+            return;
+        }
 
-    ch.playing = true;
-    set_channel_volume(channel, volume_pct * 0.4);
+        ch.playing = true;
+        set_channel_volume(channel, volume_pct * 0.4);
 
-    Mix_PlayChannelTimed(channel, (Mix_Chunk*)ch.chunk, 0, -1);
+        Mix_PlayChannelTimed(channel, (Mix_Chunk*)ch.chunk, 0, -1);
+    });
 }
 
 void sound_manager_t::play_channel_panned(int channel, int volume_pct, int left_pct, int right_pct) {
@@ -429,20 +432,22 @@ void sound_manager_t::play_channel_panned(int channel, int volume_pct, int left_
         return;
     }
 
-    channel_t& ch = _channels[channel];
-    if (!load_channel(&ch)) {
-        return;
-    }
+    game.mt.detach_task([this, channel, volume_pct, left_pct, right_pct] () {
+        channel_t &ch = _channels[channel];
+        if (!load_channel(&ch)) {
+            return;
+        }
 
-    ch.left_pan = left_pct * 255 / 100;
-    ch.right_pan = right_pct * 255 / 100;
-    ch.volume = volume_pct;
-    ch.playing = true;
+        ch.left_pan = left_pct * 255 / 100;
+        ch.right_pan = right_pct * 255 / 100;
+        ch.volume = volume_pct;
+        ch.playing = true;
 
-    set_channel_panning(channel, ch.left_pan, ch.right_pan);
-    set_channel_volume(channel, ch.volume);
+        set_channel_panning(channel, ch.left_pan, ch.right_pan);
+        set_channel_volume(channel, ch.volume);
 
-    Mix_PlayChannelTimed(channel, (Mix_Chunk*)ch.chunk, 0, -1);
+        Mix_PlayChannelTimed(channel, (Mix_Chunk *)ch.chunk, 0, -1);
+    });
 }
 
 void sound_manager_t::stop_music() {

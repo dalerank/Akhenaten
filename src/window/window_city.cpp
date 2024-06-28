@@ -232,6 +232,7 @@ static void handle_hotkeys(const hotkeys* h) {
         }
     }
 }
+
 static void handle_input(const mouse* m, const hotkeys* h) {
     handle_hotkeys(h);
     if (!Planner.in_progress) {
@@ -279,7 +280,7 @@ void window_city_draw() {
 }
 
 void window_city_show() {
-    window_type window = {
+    static window_type window = {
         WINDOW_CITY,
         window_city_draw_background,
         draw_foreground,
@@ -289,9 +290,16 @@ void window_city_show() {
     window_show(&window);
     city_has_loaded = false;
 }
+
 void window_city_military_show(int legion_formation_id) {
     selected_legion_formation_id = legion_formation_id;
-    window_type window
-      = {WINDOW_CITY_MILITARY, window_city_draw_background, draw_foreground_military, handle_input_military, get_tooltip};
+    static window_type window = {
+        WINDOW_CITY_MILITARY,
+        window_city_draw_background,
+        draw_foreground_military,
+        handle_input_military,
+        get_tooltip
+    };
+
     window_show(&window);
 }
