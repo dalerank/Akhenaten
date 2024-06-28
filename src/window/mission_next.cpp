@@ -10,7 +10,6 @@
 #include "graphics/window.h"
 #include "io/gamestate/boilerplate.h"
 #include "scenario/scenario.h"
-#include "sound/speech.h"
 #include "window/main_menu.h"
 #include "window/mission_briefing.h"
 #include "game/game.h"

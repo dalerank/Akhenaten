@@ -16,7 +16,7 @@
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
 #include "sound/music.h"
-#include "sound/speech.h"
+#include "sound/sound.h"
 #include "window/window_city.h"
 #include "window/intermezzo.h"
 #include "window/mission_next.h"
@@ -152,12 +152,13 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 static void button_back(int param1, int param2) {
     if (!g_mission_briefing.is_review) {
-        sound_speech_stop();
+        g_sound.speech_stop();
         window_mission_next_selection_show();
     }
 }
+
 static void button_start_mission(int param1, int param2) {
-    sound_speech_stop();
+    g_sound.speech_stop();
     sound_music_update(true);
     window_city_show();
     city_mission_reset_save_start();

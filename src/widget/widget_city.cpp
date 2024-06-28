@@ -28,7 +28,7 @@
 #include "scenario/scenario.h"
 #include "sound/sound_city.h"
 #include "sound/effect.h"
-#include "sound/speech.h"
+#include "sound/sound.h"
 #include "widget/city/ornaments.h"
 #include "widget/city/tile_draw.h"
 #include "widget/minimap.h"
@@ -535,6 +535,7 @@ static void handle_mouse(const mouse* m) {
     if (m->middle.went_up)
         scroll_drag_end();
 }
+
 static void military_map_click(int legion_formation_id, tile2i tile) {
     if (!tile.grid_offset()) {
         window_city_show();
@@ -544,14 +545,15 @@ static void military_map_click(int legion_formation_id, tile2i tile) {
     if (m->in_distant_battle || m->cursed_by_mars)
         return;
     int other_formation_id = formation_legion_at_building(tile.grid_offset());
-    if (other_formation_id && other_formation_id == legion_formation_id)
+    if (other_formation_id && other_formation_id == legion_formation_id) {
         formation_legion_return_home(m);
-    else {
+    } else {
         formation_legion_move_to(m, tile);
-        sound_speech_play_file("Wavs/cohort5.wav");
+        g_sound.speech_play_file("Wavs/cohort5.wav", 255);
     }
     window_city_show();
 }
+
 void widget_city_handle_input(const mouse* m, const hotkeys* h) {
     scroll_map(m);
 

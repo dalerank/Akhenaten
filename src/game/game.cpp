@@ -25,7 +25,7 @@
 #include "scenario/events.h"
 #include "scenario/scenario.h"
 #include "sound/sound_city.h"
-#include "sound/system.h"
+#include "sound/sound.h"
 #include "translation/translation.h"
 #include "window/window_city.h"
 #include "window/editor/map.h"
@@ -223,7 +223,7 @@ bool game_init() {
     }
 
     //    mods_init();
-    sound_system_init();
+    g_sound.init();
     game_state_init();
     window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : MESSAGE_NONE));
 
@@ -308,5 +308,5 @@ void game_exit() {
     video_shutdown();
     g_settings.save();
     config_save();
-    sound_system_shutdown();
+    g_sound.shutdown();
 }

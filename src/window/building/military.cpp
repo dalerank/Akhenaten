@@ -16,7 +16,7 @@
 #include "graphics/window.h"
 #include "grid/routing/routing.h"
 #include "io/gamefiles/lang.h"
-#include "sound/speech.h"
+#include "sound/sound.h"
 #include "window/window_city.h"
 #include "window/building/common.h"
 #include "game/game.h"
@@ -373,19 +373,19 @@ static void button_layout(int index, int param2) {
     formation_legion_change_layout(m, new_layout);
     switch (index) {
     case 0:
-        sound_speech_play_file("Wavs/cohort1.wav");
+        g_sound.speech_play_file("Wavs/cohort1.wav", 255);
         break;
     case 1:
-        sound_speech_play_file("Wavs/cohort2.wav");
+        g_sound.speech_play_file("Wavs/cohort2.wav", 255);
         break;
     case 2:
-        sound_speech_play_file("Wavs/cohort3.wav");
+        g_sound.speech_play_file("Wavs/cohort3.wav", 255);
         break;
     case 3:
-        sound_speech_play_file("Wavs/cohort4.wav");
+        g_sound.speech_play_file("Wavs/cohort4.wav", 255);
         break;
     case 4:
-        sound_speech_play_file("Wavs/cohort5.wav");
+    g_sound.speech_play_file("Wavs/cohort5.wav", 255);
         break;
     }
     window_city_military_show(data.context_for_callback->formation_id);

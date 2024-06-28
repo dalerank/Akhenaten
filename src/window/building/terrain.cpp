@@ -7,7 +7,7 @@
 #include "figure/figure.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
-#include "sound/speech.h"
+#include "sound/sound.h"
 #include "window/building/figures.h"
 #include "building/building_garden.h"
 #include "building/building_plaza.h"
@@ -56,7 +56,7 @@ void window_building_draw_terrain(object_info* c) {
             if (c->figure.count > 0) {
                 window_building_play_figure_phrase(c);
             } else {
-                sound_speech_play_file("Wavs/empty_land.wav");
+                g_sound.speech_play_file("Wavs/empty_land.wav", 255);
             }
         }
 

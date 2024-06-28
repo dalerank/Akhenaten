@@ -10,7 +10,7 @@
 #include "graphics/window.h"
 #include "scenario/scenario.h"
 #include "sound/music.h"
-#include "sound/speech.h"
+#include "sound/sound.h"
 #include "sound/sound_mission.h"
 #include "game/game.h"
 
@@ -33,11 +33,11 @@ static void init(intermezzo_type type, void (*callback)(void)) {
     g_intermezzo_data.callback = callback;
     g_intermezzo_data.start_time = time_get_millis();
     sound_music_stop();
-    sound_speech_stop();
+    g_sound.speech_stop();
 
     // play briefing sound by mission number
     if (g_intermezzo_data.type == INTERMEZZO_FIRED) {
-        sound_speech_play_file(SOUND_FILE_LOSE);
+        g_sound.speech_play_file(SOUND_FILE_LOSE, 255);
     } else if (!scenario_is_custom()) {
         int mission = scenario_campaign_scenario_id();
 
@@ -52,7 +52,7 @@ static void init(intermezzo_type type, void (*callback)(void)) {
             file2play = conf.won;
         }
 
-        sound_speech_play_file(file2play);
+        g_sound.speech_play_file(file2play, 255);
     }
 }
 

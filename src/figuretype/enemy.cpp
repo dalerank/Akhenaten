@@ -16,7 +16,7 @@
 #include "grid/figure.h"
 #include "scenario/gladiator_revolt.h"
 #include "sound/effect.h"
-#include "sound/speech.h"
+#include "sound/sound.h"
 
 void figure::enemy_initial(formation* m) {
     map_figure_update();
@@ -26,11 +26,11 @@ void figure::enemy_initial(formation* m) {
     if (wait_ticks <= 0) {
         if (is_ghost && index_in_formation == 0) {
             if (m->layout == FORMATION_ENEMY_MOB)
-                sound_speech_play_file("Wavs/drums.wav");
+                g_sound.speech_play_file("Wavs/drums.wav", 255);
             else if (m->layout == FORMATION_ENEMY12)
-                sound_speech_play_file("Wavs/horn2.wav");
+                g_sound.speech_play_file("Wavs/horn2.wav", 255);
             else {
-                sound_speech_play_file("Wavs/horn1.wav");
+                g_sound.speech_play_file("Wavs/horn1.wav", 255);
             }
         }
         is_ghost = false;

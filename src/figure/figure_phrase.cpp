@@ -20,7 +20,7 @@
 #include "figure/trader.h"
 #include "figure/formation.h"
 #include "figure/figure.h"
-#include "sound/speech.h"
+#include "sound/sound.h"
 #include "sound/sound_walker.h"
 
 #include <string.h>
@@ -195,7 +195,7 @@ static int figure_play_phrase_file(figure *f, e_figure_type type, bstring64 key)
             }
             path.printf("Voice/Walker/%s_random_%02u.wav", type_it->prefix.c_str(), key.c_str(), f->phrase_id);
 
-            if (!sound_speech_file_exist(path)) {
+            if (!g_sound.speech_file_exist(path)) {
                 // fallback to standart phrase
                 path.printf("Voice/Walker/%s_random_01.wav", type_it->prefix.c_str(), key.c_str());
             }
@@ -204,7 +204,7 @@ static int figure_play_phrase_file(figure *f, e_figure_type type, bstring64 key)
             path.printf("Voice/Walker/%s", reaction.fname.c_str());
         }
 
-        sound_speech_play_file(path);
+        g_sound.speech_play_file(path, 255);
     }
 
     return -1;

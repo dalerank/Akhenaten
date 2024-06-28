@@ -8,9 +8,8 @@
 #include "io/gamefiles/smacker.h"
 #include "platform/renderer.h"
 #include "screen.h"
-#include "sound/device.h"
+#include "sound/sound.h"
 #include "sound/music.h"
-#include "sound/speech.h"
 
 static struct {
     bool is_playing;
@@ -87,7 +86,7 @@ static int load_smk(const char* filename) {
 }
 
 static void end_video(void) {
-    sound_device_use_default_music_player();
+    g_sound.use_default_music_player();
     sound_music_update(true);
     graphics_renderer()->release_custom_texture_buffer(CUSTOM_IMAGE_VIDEO);
 }
@@ -98,7 +97,7 @@ bool video_start(const char* filename) {
 
     if (load_smk(filename)) {
         sound_music_stop();
-        sound_speech_stop();
+        g_sound.speech_stop();
         graphics_renderer()->create_custom_texture(CUSTOM_IMAGE_VIDEO, data.video.width, data.video.height);
         data.buffer.pixels = graphics_renderer()->get_custom_texture_buffer(CUSTOM_IMAGE_VIDEO, &data.buffer.width);
         data.is_playing = true;
@@ -118,8 +117,7 @@ void video_init(void) {
     if (data.audio.has_audio) {
         int audio_len = smacker_get_frame_audio_size(data.s, 0);
         if (audio_len > 0) {
-            sound_device_use_custom_music_player(
-              data.audio.bitdepth, data.audio.channels, data.audio.rate, smacker_get_frame_audio(data.s, 0), audio_len);
+            g_sound.use_custom_music_player(data.audio.bitdepth, data.audio.channels, data.audio.rate, (void*)smacker_get_frame_audio(data.s, 0), audio_len);
         }
     }
 }
@@ -167,7 +165,7 @@ static int get_next_frame(void) {
         if (data.audio.has_audio) {
             int audio_len = smacker_get_frame_audio_size(data.s, 0);
             if (audio_len > 0) {
-                sound_device_write_custom_music_data(smacker_get_frame_audio(data.s, 0), audio_len);
+                g_sound.write_custom_music_data((void*)smacker_get_frame_audio(data.s, 0), audio_len);
             }
         }
     }

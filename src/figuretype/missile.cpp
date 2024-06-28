@@ -3,7 +3,6 @@
 #include "figure/formation.h"
 #include "figure/movement.h"
 #include "figure/properties.h"
-#include "figure/sound.h"
 #include "core/profiler.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"

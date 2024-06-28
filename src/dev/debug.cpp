@@ -31,7 +31,7 @@
 #include "city/floods.h"
 #include "city/gods.h"
 #include "sound/sound_city.h"
-#include "sound/device.h"
+#include "sound/sound.h"
 #include "core/random.h"
 #include "figure/route.h"
 #include "game/time.h"
@@ -992,7 +992,7 @@ void draw_debug_ui(int x, int y) {
     }
 
     if (g_debug_show_opts[e_debug_show_sound_channels]) {
-        const auto &channels = sound_device_channels();
+        const auto &channels = g_sound.channels();
         int cl = 180;
         for (const auto &ch: channels) {
             if (!ch.playing) {

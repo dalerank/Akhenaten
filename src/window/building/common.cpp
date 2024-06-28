@@ -10,7 +10,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/view/view.h"
-#include "sound/speech.h"
+#include "sound/sound.h"
 #include "game/game.h"
 
 void window_building_set_possible_position(int* x_offset, int* y_offset, int width_blocks, int height_blocks) {
@@ -136,7 +136,7 @@ void window_building_draw_description_at(object_info* c, int y_offset, int text_
 
 void window_building_play_sound(object_info* c, const char* sound_file) {
     if (c->can_play_sound) {
-        sound_speech_play_file(sound_file);
+        g_sound.speech_play_file(sound_file, 255);
         c->can_play_sound = 0;
     }
 }

@@ -3,7 +3,7 @@
 #include "city/city.h"
 #include "city/sound.h"
 #include "sound/effect.h"
-#include "sound/speech.h"
+#include "sound/sound.h"
 
 void figure::play_die_sound() {
     figure* f = this;
@@ -74,7 +74,7 @@ void figure::play_die_sound() {
 
     if (f->is_enemy()) {
         if (g_city.figures.enemies == 1) {
-            sound_speech_play_file("Wavs/army_war_cry.wav");
+            g_sound.speech_play_file("Wavs/army_war_cry.wav", 255);
         }
     }
 }

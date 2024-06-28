@@ -13,7 +13,7 @@
 #include "sound/sound_city.h"
 #include "sound/effect.h"
 #include "sound/music.h"
-#include "sound/speech.h"
+#include "sound/sound.h"
 
 static void button_toggle(int type, int param2);
 static void button_ok(int param1, int param2);
@@ -133,7 +133,7 @@ static void button_toggle(int type, int param2) {
         }
     } else if (type == SOUND_SPEECH) {
         if (!g_settings.get_sound(SOUND_SPEECH)->enabled)
-            sound_speech_stop();
+            g_sound.speech_stop();
     }
 }
 
@@ -156,7 +156,7 @@ static void button_cancel(int param1, int param2) {
         sound_music_stop();
     }
     sound_music_set_volume(data.original_music.volume);
-    sound_speech_set_volume(data.original_speech.volume);
+    g_sound.speech_set_volume(data.original_speech.volume);
     sound_effect_set_volume(data.original_effects.volume);
     sound_city_set_volume(data.original_city.volume);
 
@@ -178,7 +178,7 @@ static void arrow_button_music(int is_down, int param2) {
 
 static void arrow_button_speech(int is_down, int param2) {
     update_volume(SOUND_SPEECH, is_down);
-    sound_speech_set_volume(g_settings.get_sound(SOUND_SPEECH)->volume);
+    g_sound.speech_set_volume(g_settings.get_sound(SOUND_SPEECH)->volume);
 }
 
 static void arrow_button_effects(int is_down, int param2) {

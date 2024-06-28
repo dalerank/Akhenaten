@@ -7,7 +7,7 @@
 #include "core/profiler.h"
 #include "game/settings.h"
 #include "content/dir.h"
-#include "sound/device.h"
+#include "sound/sound.h"
 
 struct music_data_t {
     int current_track;
@@ -91,7 +91,7 @@ static const char ph_mp3[][32] = {
 };
 
 void sound_music_play_track(int track) {
-    sound_device_stop_music();
+    g_sound.stop_music();
 
     if (track <= TRACK_NONE || track >= TRACK_MAX) {
         return;
@@ -106,13 +106,13 @@ void sound_music_play_track(int track) {
     }
 
     corrected_filename = vfs::content_file(corrected_filename);
-    sound_device_play_music(corrected_filename, volume);
+    g_sound.play_music(corrected_filename, volume);
 
     g_music_data.current_track = track;
 }
 
 void sound_music_set_volume(int percentage) {
-    sound_device_set_music_volume(percentage);
+    g_sound.set_music_volume(percentage);
 }
 
 void sound_music_play_intro() {
@@ -167,7 +167,7 @@ void sound_music_update(bool force) {
 }
 
 void sound_music_stop(void) {
-    sound_device_stop_music();
+    g_sound.stop_music();
     g_music_data.current_track = TRACK_NONE;
     g_music_data.next_check = 0;
 }

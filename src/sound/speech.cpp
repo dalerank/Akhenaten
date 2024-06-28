@@ -1,17 +1,17 @@
-#include "speech.h"
+#include "sound.h"
 
 #include "core/log.h"
 #include "game/settings.h"
 #include "content/dir.h"
 #include "content/vfs.h"
 #include "sound/channel.h"
-#include "sound/device.h"
+#include "sound/sound.h"
 
-void sound_speech_set_volume(int percentage) {
-    sound_device_set_channel_volume(SOUND_CHANNEL_SPEECH, percentage);
+void sound_manager_t::speech_set_volume(int percentage) {
+    set_channel_volume(SOUND_CHANNEL_SPEECH, percentage);
 }
 
-vfs::path sound_speed_filename(const char *filename) {
+vfs::path sound_manager_t::speech_filename(pcstr filename) {
     vfs::path fs_path = filename;
     if (strncmp(filename, vfs::content_audio, strlen(vfs::content_audio)) != 0) {
         fs_path = vfs::path(vfs::content_audio, filename);
@@ -20,16 +20,16 @@ vfs::path sound_speed_filename(const char *filename) {
     return vfs::content_file(fs_path);
 }
 
-bool sound_speech_file_exist(const char *filename) {
-    return (!sound_speed_filename(filename).empty());
+bool sound_manager_t::speech_file_exist(pcstr filename) {
+    return (!speech_filename(filename).empty());
 }
 
-void sound_speech_play_file(const char* filename, int volume) {
+void sound_manager_t::speech_play_file(pcstr filename, int volume) {
     if (!g_settings.get_sound(SOUND_SPEECH)->enabled) {
         return;
     }
 
-    sound_device_stop_channel(SOUND_CHANNEL_SPEECH);
+    stop_channel(SOUND_CHANNEL_SPEECH);
 
     vfs::path fs_path = filename;
     if (strncmp(filename, vfs::content_audio, strlen(vfs::content_audio)) != 0) {
@@ -37,15 +37,14 @@ void sound_speech_play_file(const char* filename, int volume) {
     }
 
     fs_path = vfs::content_file(fs_path);
-
     if (fs_path.empty()) {
         logs::error("Cant open audio file %s", filename);
         return;
     }
 
-    sound_device_play_file_on_channel(fs_path, SOUND_CHANNEL_SPEECH, g_settings.get_sound(SOUND_SPEECH)->volume);
+    play_file_on_channel(fs_path, SOUND_CHANNEL_SPEECH, g_settings.get_sound(SOUND_SPEECH)->volume);
 }
 
-void sound_speech_stop(void) {
-    sound_device_stop_channel(SOUND_CHANNEL_SPEECH);
+void sound_manager_t::speech_stop() {
+    stop_channel(SOUND_CHANNEL_SPEECH);
 }

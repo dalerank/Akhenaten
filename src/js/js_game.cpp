@@ -3,7 +3,6 @@
 #include "content/vfs.h"
 #include "core/log.h"
 
-#include "sound/system.h"
 #include "sound/sound_mission.h"
 #include "sound/sound_building.h"
 #include "sound/sound_walker.h"

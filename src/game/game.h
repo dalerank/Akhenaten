@@ -2,6 +2,7 @@
 
 #include "graphics/painter.h"
 #include "overlays/city_overlay_fwd.h"
+#include "core/threading.h"
 #include "core/time.h"
 
 bool game_pre_init();
@@ -52,6 +53,9 @@ struct game_t {
     void animation_timers_init();
     void animation_timers_update();
     bool animation_should_advance(uint32_t speed);
+
+    threading::thread_pool mtrpc;
+    threading::thread_pool mt;
 
     ::painter painter();
 };

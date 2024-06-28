@@ -7,7 +7,7 @@
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
 #include "sound/channel.h"
-#include "sound/device.h"
+#include "sound/sound.h"
 
 #include <assert.h>
 #include <string.h>
@@ -41,7 +41,7 @@ void sound_city_init() {
 
 void sound_city_set_volume(int percentage) {
     for (int i = SOUND_CHANNEL_CITY_MIN; i <= SOUND_CHANNEL_CITY_MAX; i++) {
-        sound_device_set_channel_volume(i, percentage);
+       g_sound.set_channel_volume(i, percentage);
     }
 }
 
@@ -170,7 +170,7 @@ static void sound_city_play_channel(int channel, int direction) {
         return;
     }
 
-    if (sound_device_is_channel_playing(channel)) {
+    if (g_sound.is_channel_playing(channel)) {
         return;
     }
 
@@ -196,7 +196,7 @@ static void sound_city_play_channel(int channel, int direction) {
         break;
     }
 
-    sound_device_play_channel_panned(channel, g_settings.get_sound(SOUND_CITY)->volume, left_pan, right_pan);
+    g_sound.play_channel_panned(channel, g_settings.get_sound(SOUND_CITY)->volume, left_pan, right_pan);
 }
 
 void sound_city_play() {

@@ -18,7 +18,7 @@
 #include "input/input.h"
 #include "scenario/scenario.h"
 #include "sound/music.h"
-#include "sound/speech.h"
+#include "sound/sound.h"
 #include "window/intermezzo.h"
 #include "window/main_menu.h"
 #include "window/mission_next.h"
@@ -134,16 +134,17 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     if (g_city.victory_state.state == e_victory_state_won) {
         if (input_go_back_requested(m, h)) {
             sound_music_stop();
-            sound_speech_stop();
+            g_sound.speech_stop();
             advance_to_next_mission();
         }
     } else {
         generic_buttons_handle_mouse(mouse_in_dialog(m), {0, 0}, fired_buttons, 1, &focus_button_id);
     }
 }
+
 static void button_fired(int param1, int param2) {
     sound_music_stop();
-    sound_speech_stop();
+    g_sound.speech_stop();
     g_city.victory_state.stop_governing();
     game_undo_disable();
     if (scenario_is_custom())
