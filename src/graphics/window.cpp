@@ -124,6 +124,7 @@ void window_update_input_after() {
 void window_draw(int force) {
     auto& data = g_window;
     // draw the current (top) window in the queue
+    ui::begin_frame();
     update_input_before();
     window_type* w = data.current_window;
     if (force || data.refresh_on_draw) {

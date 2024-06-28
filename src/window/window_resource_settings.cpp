@@ -36,7 +36,6 @@ static void draw_background(void) {
 static void draw_foreground(void) {
     auto &data = g_resource_settings_data;
 
-    ui::begin_frame();
     ui::begin_widget(screen_dialog_offset());
     ui::panel({32, 128}, {36, 15}, UiFlags_PanelOuter);
 

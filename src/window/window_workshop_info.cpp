@@ -27,14 +27,11 @@ void building_workshop_draw_foreground(object_info &c) {
 }
 
 void building_workshop_draw_background(object_info& c, int help_id, pcstr type, int group_id, e_resource resource, e_resource input_resource) {
-    ui::begin_frame();
-
     auto &ui = g_workshop_info_window;
 
     c.help_id = help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 
-    painter ctx = game.painter();
     building* b = building_get(c.building_id);
 
     int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
