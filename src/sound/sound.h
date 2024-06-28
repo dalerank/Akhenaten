@@ -1,14 +1,10 @@
 #pragma once
 
-#include "../core/string.h"
-#include "../core/span.hpp"
-#include "../content/dir.h"
+#include "core/string.h"
+#include "core/span.hpp"
+#include "content/dir.h"
+#include "content/vfs.h"
 #include <array>
-
-struct music_format {
-    const int flag;
-    pcstr desc;
-};
 
 class sound_manager_t {
 public:
@@ -57,10 +53,13 @@ private:
     void play_file_on_channel(pcstr filename, int channel, int volume_pct);
     void stop_channel(int channel);
     void free_custom_audio_stream();
-    int create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format, uint8_t dst_channels, int dst_rate);
+    bool create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format, uint8_t dst_channels, int dst_rate);
     int get_custom_audio_stream(uint8_t *dst, int len);
     static void custom_music_callback(void *dummy, uint8_t *stream, int len);
     vfs::path speech_filename(pcstr filename);
+    bool load_channel(channel_t *channel);
+    void *load_chunk(pcstr filename);
+    vfs::reader load_cached_chunk(vfs::path filename);
 
 private:
     bool initialized;
