@@ -96,6 +96,10 @@ vec2i tile_to_screen(tile2i point) {
 }
 
 static vec2i MAPPOINT_TO_PIXEL_LOOKUP[GRID_SIZE_TOTAL];
+void clear_mappoint_pixelcoord() {
+    memset(MAPPOINT_TO_PIXEL_LOOKUP, 0, sizeof(MAPPOINT_TO_PIXEL_LOOKUP));
+}
+
 void record_mappoint_pixelcoord(tile2i point, vec2i pixel) {
     MAPPOINT_TO_PIXEL_LOOKUP[point.grid_offset()] = {pixel.x, pixel.y};
 }

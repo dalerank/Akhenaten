@@ -443,9 +443,6 @@ void figure::move_ticks_tower_sentry(int num_ticks) {
 
 void figure::follow_ticks(int num_ticks) {
     figure *leader = figure_get(leading_figure_id);
-    if (tile == source_tile) {
-        is_ghost = true;
-    }
 
     while (num_ticks > 0) {
         num_ticks--;
@@ -473,6 +470,7 @@ void figure::follow_ticks(int num_ticks) {
         advance_figure_tick();
     }
 }
+
 void figure::roam_ticks(int num_ticks) {
     route_remove(); // refresh path to check if road network is disconnected
     // no destination: walk to end of tile and pick a direction

@@ -26,7 +26,6 @@ void game_cheat_create_fishing_points(std::istream &is, std::ostream &os) {
 
 void figure_fishing_point::figure_action() {
     base.terrain_usage = TERRAIN_USAGE_ANY;
-    base.is_ghost = false;
     base.use_cross_country = true;
     bool animation_finished = false;
     if (base.anim.frame == 0) {

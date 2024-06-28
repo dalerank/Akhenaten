@@ -152,6 +152,7 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
 
     map_render_clear();
 
+    clear_mappoint_pixelcoord();
     city_view_foreach_valid_map_tile(ctx, update_tile_coords);
 
     map_figure_sort_by_y();

@@ -23,10 +23,6 @@ void figure_delivery_boy::figure_before_action() {
     if (leader->action_state == FIGURE_ACTION_149_CORPSE) {  
         poof(); // TODO make runaway from this tile
     }
-
-    if (leader->is_ghost) {
-        base.is_ghost = true;
-    }
 }
 
 void figure_delivery_boy::figure_action() {
@@ -48,10 +44,6 @@ void figure_delivery_boy::figure_action() {
             home()->data.market.inventory[base.collecting_item_id] += 100;
             poof();
         }
-    }
-
-    if (leader->is_ghost) {
-        base.is_ghost = true;
     }
 }
 

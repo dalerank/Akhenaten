@@ -22,18 +22,27 @@ int map_figure_id_get(int grid_offset) {
 void map_figure_sort_by_y() {
     g_figures_y_sort.clear();
     for (auto *f : map_figures()) {
-        if (f->state != FIGURE_STATE_NONE) {
-            if (f->tile.x() >= GRID_LENGTH || f->tile.y() > GRID_LENGTH) {
-                f->tile = {-1, -1};
-                f->cached_pos = {-1, -1};
-                f->poof();
-                continue;
-            }
-            f->cached_pos = tile_to_pixel(f->tile);
-            f->cached_pos = f->adjust_pixel_offset(f->cached_pos);
-            f->is_drawn = false;
-            g_figures_y_sort.push_back(f);
+        if (f->state == FIGURE_STATE_NONE) {
+            continue;
         }
+
+        if (f->tile.x() >= GRID_LENGTH || f->tile.y() > GRID_LENGTH) {
+            f->tile = {-1, -1};
+            f->cached_pos = {-1, -1};
+            f->poof();
+            continue;
+        }
+
+        vec2i draw_pos = tile_to_pixel(f->tile);
+        if (draw_pos.x == 0 && draw_pos.y == 0) { // tile outside viewport
+            continue;
+        }
+
+        f->cached_pos = draw_pos;
+
+        f->cached_pos = f->adjust_pixel_offset(f->cached_pos);
+        f->is_drawn = false;
+        g_figures_y_sort.push_back(f);
     }
 
     std::sort(g_figures_y_sort.begin(), g_figures_y_sort.end(), [] (figure *lhs, figure *rhs) {

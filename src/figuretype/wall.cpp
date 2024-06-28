@@ -35,7 +35,6 @@ void figure::ballista_action() {
     building* b = home();
     terrain_usage = TERRAIN_USAGE_WALLS;
     use_cross_country = false;
-    is_ghost = true;
     height_adjusted_ticks = 10;
     current_height = 45;
 

@@ -24,7 +24,7 @@ void figure::enemy_initial(formation* m) {
     route_remove();
     wait_ticks--;
     if (wait_ticks <= 0) {
-        if (is_ghost && index_in_formation == 0) {
+        if (index_in_formation == 0) {
             if (m->layout == FORMATION_ENEMY_MOB)
                 g_sound.speech_play_file("Wavs/drums.wav", 255);
             else if (m->layout == FORMATION_ENEMY12)
@@ -33,7 +33,7 @@ void figure::enemy_initial(formation* m) {
                 g_sound.speech_play_file("Wavs/horn1.wav", 255);
             }
         }
-        is_ghost = false;
+
         if (m->recent_fight)
             action_state = FIGURE_ACTION_154_ENEMY_FIGHTING;
         else {

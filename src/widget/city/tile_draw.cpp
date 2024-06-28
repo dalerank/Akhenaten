@@ -313,8 +313,6 @@ void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx) {
 }
 
 void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx) {
-    auto& draw_context = get_draw_context();
-
     int grid_offset = tile.grid_offset();
     // black tile outside of map
     if (grid_offset < 0) {
@@ -407,15 +405,11 @@ void draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
     auto figures = map_figures_in_row(tile);
 
     for (auto *f : figures) {
-        if (f->is_ghost) {
-            continue;
-        }
-
         if (f->is_drawn && !force) {
             continue;
         }
 
-        if (f->cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f->cached_pos.x > pixel.x + TILE_WIDTH_PIXELS) {
+        if (f->cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f->cached_pos.x > (pixel.x + TILE_WIDTH_PIXELS)) {
             continue;
         }
 
@@ -531,15 +525,11 @@ void draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx) {
             continue;
         }
 
-        if (f->is_ghost) {
-            continue;
-        }
-
         if (f->is_drawn) {
             continue;
         }
 
-        if (f->cached_pos.x < pixel.x || f->cached_pos.x > pixel.x + TILE_WIDTH_PIXELS) {
+        if (f->cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f->cached_pos.x > (pixel.x + TILE_WIDTH_PIXELS)) {
             continue;
         }
 

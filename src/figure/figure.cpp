@@ -477,7 +477,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->index_in_formation); // 3
     iob->bind(BIND_SIGNATURE_UINT8, &f->formation_at_rest);
     iob->bind(BIND_SIGNATURE_UINT8, &f->migrant_num_people);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->is_ghost);
+    iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &f->min_max_seen);
     iob->bind(BIND_SIGNATURE_UINT8, &f->movement_ticks_watchdog);
     iob->bind(BIND_SIGNATURE_INT16, &f->leading_figure_id);

@@ -256,16 +256,12 @@ bool figure::do_returnhome(e_terrain_usage terrainchoice, short NEXT_ACTION) {
 
 bool figure::do_exitbuilding(bool invisible, short NEXT_ACTION, short FAIL_ACTION) {
     use_cross_country = true;
-    if (invisible)
-        is_ghost = true;
     // "go to" home, but stop at road = go to entrance
     return do_gotobuilding(home(), true, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
 }
 
 bool figure::do_enterbuilding(bool invisible, building* b, short NEXT_ACTION, short FAIL_ACTION) {
     use_cross_country = true;
-    if (invisible)
-        is_ghost = true;
     return do_gotobuilding(b, false, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
 }
 
@@ -292,7 +288,6 @@ void figure::action_perform() {
         cart_image_id = 0;
         max_roam_length = 0;
         use_cross_country = false;
-        is_ghost = false;
 
         // base lookup data
         const auto &params = figure_impl::params(type);

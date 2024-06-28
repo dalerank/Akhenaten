@@ -154,7 +154,6 @@ public:
     uint8_t index_in_formation;
     uint8_t formation_at_rest;
     uint8_t migrant_num_people;
-    bool is_ghost;
     bool is_drawn;
     uint8_t min_max_seen;
     uint8_t movement_ticks_watchdog;

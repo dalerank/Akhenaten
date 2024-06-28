@@ -55,10 +55,6 @@ void figure_caravan_donkey::figure_before_action() {
     if (leader->action_state == FIGURE_ACTION_149_CORPSE) {  
         poof(); // TODO make runaway from this tile
     }
-
-    if (leader->is_ghost) {
-        base.is_ghost = true;
-    }
 }
 
 void figure_caravan_donkey::update_animation() {
