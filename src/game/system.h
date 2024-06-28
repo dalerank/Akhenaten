@@ -6,28 +6,9 @@
 struct display_size;
 
 /**
- * @file
- * Functions that should implemented by the underlying system
- */
-
-/**
- * Reload game textures
- */
-void system_reload_textures(void);
-
-/**
- * Saves the screen buffer to memory
- * Even though it is set to "void", uses "color" format
- * @return true if saving was successful, false otherwise
- */
-int system_save_screen_buffer(void* pixels);
-
-/**
  * Center window
  */
 void system_center(void);
-
-void system_toggle_debug_console();
 
 /**
  * Returns whether the window must always be fullscreen

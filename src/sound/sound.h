@@ -4,7 +4,10 @@
 #include "core/span.hpp"
 #include "content/dir.h"
 #include "content/vfs.h"
+#include "sound/channel.h"
 #include <array>
+
+struct music_player_t;
 
 class sound_manager_t {
 public:
@@ -15,10 +18,6 @@ public:
         int volume = 0;
         void* chunk = nullptr;
         bool playing = false;
-    };
-
-    enum {
-        MAX_CHANNELS = 150,
     };
 
     void init();
@@ -39,12 +38,14 @@ public:
     void write_custom_music_data(void *audio_data, int len);
     bool play_music(pcstr filename, int volume_pct);
     void stop_music();
-    void set_music_volume(int volume_pct);
+    void music_set_volume(int volume_pct);
+    bool is_audio_stream_active();
+    void set_volume(int b, int e, int percentage);
 
 private:
     static void channel_finished_cb(int channel);
     void init_channel(int index, vfs::path filename);
-    void init_channels(std::span<vfs::path> channels);
+    void allocate_channels();
     void open();
     void close();
     void load_formats();
@@ -60,11 +61,13 @@ private:
     bool load_channel(channel_t *channel);
     void *load_chunk(pcstr filename);
     vfs::reader load_cached_chunk(vfs::path filename);
+    bool put_custom_audio_stream(uint8_t *audio_data, int len);
 
 private:
     bool initialized;
-    void* music;
-    std::array<channel_t, MAX_CHANNELS> _channels;
+    music_player_t *_music_player = nullptr;
+    std::array<channel_t, SOUND_CHANNEL_MAX> _channels;
+    std::array<vfs::path, SOUND_CHANNEL_MAX> _channels_info;
 };
 
 extern sound_manager_t g_sound;

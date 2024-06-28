@@ -48,8 +48,6 @@ enum e_music_track {
     TRACK_MAX
 };
 
-void sound_music_set_volume(int percentage);
-
 void sound_music_play_intro();
 void sound_music_play_track(int track);
 

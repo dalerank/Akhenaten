@@ -13,6 +13,7 @@
 #include "game/settings.h"
 #include "platform/platform.h"
 #include "platform/vita/vita.h"
+#include "js/js_game.h"
 
 #include "lame_helper.h"
 
@@ -44,7 +45,16 @@ static struct {
 } vita_music_data;
 #endif
 
-struct custom_music_t {
+ANK_REGISTER_CONFIG_ITERATOR(config_load_city_sounds);
+void config_load_city_sounds() {
+    g_config_arch.r_array("city_sounds", [] (archive arch) {
+        const int channel = arch.r_int("c");
+        const char *path = arch.r_string("p");
+        g_sound.update_channel(channel, path);
+    });
+}
+
+struct music_player_t {
     SDL_AudioFormat format;
 
 #ifdef USE_SDL_AUDIOSTREAM
@@ -57,6 +67,7 @@ struct custom_music_t {
     int buffer_size;
     int cur_read;
     int cur_write;
+    Mix_Music* music;
 
     std::map<std::string, vfs::reader> cached_chunks;
 };
@@ -66,17 +77,51 @@ struct music_format {
     pcstr desc;
 };
 
-custom_music_t g_custom_music;
 sound_manager_t g_sound;
 
 static int percentage_to_volume(int percentage) {
     return percentage * SDL_MIX_MAXVOLUME / 100;
 }
 
-vfs::reader sound_manager_t::load_cached_chunk(vfs::path filename) {
-    auto &data = g_custom_music;
+void sound_manager_t::speech_set_volume(int percentage) {
+    set_channel_volume(SOUND_CHANNEL_SPEECH, percentage);
+}
 
-    auto it = data.cached_chunks.insert({filename.c_str(), vfs::reader()});
+void sound_manager_t::init() {
+    if (!_music_player) {
+        _music_player = new music_player_t();
+    }
+
+    open();
+    allocate_channels();
+    load_formats();
+
+    set_volume(SOUND_CHANNEL_CITY_MIN, SOUND_CHANNEL_CITY_MAX, g_settings.get_sound(SOUND_CITY)->volume);
+    set_volume(SOUND_CHANNEL_EFFECTS_MIN, SOUND_CHANNEL_EFFECTS_MAX, g_settings.get_sound(SOUND_EFFECTS)->volume);
+    music_set_volume(g_settings.get_sound(SOUND_MUSIC)->volume);
+    speech_set_volume(g_settings.get_sound(SOUND_SPEECH)->volume);
+}
+
+void sound_manager_t::set_volume(int b, int e, int percentage) {
+    for (int i = b; i <= e; i++) {
+        set_channel_volume(i, percentage);
+    }
+}
+
+void sound_manager_t::shutdown() {
+    close();
+
+    // It is counter-intuitive that we must do this after sound_device_close, however it unloads shared libraries
+    // which might be required both for sound_device_close and by other threads fetching new audio chunks until
+    // sound_device_close is called. It is also surprising that we can (and must) call Mix_Quit after Mix_CloseAudio,
+    // even though Mix_CloseAudio's docs say that afterwards "the SDL_mixer functions should not be used".
+    unload_formats();
+
+    delete _music_player;
+}
+
+vfs::reader sound_manager_t::load_cached_chunk(vfs::path filename) {
+    auto it = _music_player->cached_chunks.insert({filename.c_str(), vfs::reader()});
 
     if (!it.second) {
         return it.first->second;
@@ -145,8 +190,8 @@ void sound_manager_t::channel_finished_cb(int channel) {
 
 void sound_manager_t::init_channels() {
     initialized = true;
-    for (int i = 0; i < MAX_CHANNELS; i++) {
-        _channels[i].chunk = 0;
+    for (auto &ch: _channels) {
+        ch.chunk = 0;
     }
 
     Mix_ChannelFinished(channel_finished_cb);
@@ -157,26 +202,24 @@ void sound_manager_t::init_channel(int index, vfs::path filename) {
     _channels[index].filename = filename;
 }
 
-void sound_manager_t::init_channels(std::span<vfs::path> channels) {
+void sound_manager_t::allocate_channels() {
     if (!initialized) {
         return;
     }
-    int num_channels = channels.size();
-    if (num_channels > MAX_CHANNELS) {
-        num_channels = MAX_CHANNELS;
-    }
+
+    int num_channels = std::min<int>(SOUND_CHANNEL_MAX, (int)_channels_info.size());
 
     Mix_AllocateChannels(num_channels);
     logs::info("Loading audio files");
 
     for (int i = 0; i < num_channels; i++) {
-        init_channel(i, channels[i]);
+        init_channel(i, _channels_info[i]);
     }
 }
 
 void sound_manager_t::open() {
 #ifdef USE_SDL_AUDIOSTREAM
-    g_custom_music.use_audiostream = HAS_AUDIOSTREAM();
+    _music_player->use_audiostream = HAS_AUDIOSTREAM();
 #endif
     if (0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
         init_channels();
@@ -211,13 +254,16 @@ void sound_manager_t::open() {
 }
 
 void sound_manager_t::close() {
-    if (initialized) {
-        for (int i = 0; i < MAX_CHANNELS; i++) {
-            stop_channel(i);
-        }
-        Mix_CloseAudio();
-        initialized = false;
+    if (!initialized) {
+        return;
     }
+
+    for (int i = 0, size = _channels.size(); i < size; i++) {
+        stop_channel(i);
+    }
+
+    Mix_CloseAudio();
+    initialized = false;
 }
 
 void sound_manager_t::load_formats() {
@@ -282,7 +328,7 @@ bool sound_manager_t::is_channel_playing(int channel) {
     return _channels[channel].chunk && Mix_Playing(channel);
 }
 
-void sound_manager_t::set_music_volume(int volume_pct) {
+void sound_manager_t::music_set_volume(int volume_pct) {
     Mix_VolumeMusic(percentage_to_volume(volume_pct));
 }
 
@@ -319,31 +365,32 @@ static void load_music_for_vita(const char* filename) {
 #endif
 
 bool sound_manager_t::play_music(pcstr filename, int volume_pct) {
-    if (initialized) {
-        stop_music();
-#ifdef __vita__
-        load_music_for_vita(filename);
-        if (!vita_music_data.buffer)
-            return 0;
-
-        SDL_RWops* sdl_music = SDL_RWFromMem(vita_music_data.buffer, vita_music_data.size);
-        data.music = Mix_LoadMUSType_RW(sdl_music, vfs::file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
-#else
-        music = Mix_LoadMUS(filename);
-#endif
-        if (!music) {
-            logs::warn("Error opening music file '%s'. Reason: %s", filename, Mix_GetError());
-        } else {
-            if (Mix_PlayMusic((Mix_Music*)music, -1) == -1) {
-                music = 0;
-                logs::warn("Error playing music file '%s'. Reason: %s", filename, Mix_GetError());
-            } else {
-                set_music_volume(volume_pct);
-            }
-        }
-        return !!music;
+    if (!initialized) {
+        return false;
     }
-    return false;
+
+    stop_music();
+#ifdef __vita__
+    load_music_for_vita(filename);
+    if (!vita_music_data.buffer)
+        return 0;
+
+    SDL_RWops* sdl_music = SDL_RWFromMem(vita_music_data.buffer, vita_music_data.size);
+    data.music = Mix_LoadMUSType_RW(sdl_music, vfs::file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
+#else
+    _music_player->music = Mix_LoadMUS(filename);
+#endif
+    if (!_music_player->music) {
+        logs::warn("Error opening music file '%s'. Reason: %s", filename, Mix_GetError());
+    } else {
+        if (Mix_PlayMusic(_music_player->music, -1) == -1) {
+            _music_player->music = nullptr;
+            logs::warn("Error playing music file '%s'. Reason: %s", filename, Mix_GetError());
+        } else {
+            music_set_volume(volume_pct);
+        }
+    }
+    return !!_music_player->music;
 }
 
 void sound_manager_t::play_file_on_channel(pcstr filename, int channel, int volume_pct) {
@@ -403,13 +450,13 @@ void sound_manager_t::stop_music() {
         return;
     }
 
-    if (!music) {
+    if (!_music_player->music) {
         return;
     }
 
     Mix_HaltMusic();
-    Mix_FreeMusic((Mix_Music*)music);
-    music = 0;
+    Mix_FreeMusic(_music_player->music);
+    _music_player->music = nullptr;
 }
 
 void sound_manager_t::stop_channel(int channel) {
@@ -428,134 +475,129 @@ void sound_manager_t::stop_channel(int channel) {
 }
 
 void sound_manager_t::free_custom_audio_stream() {
-    auto &custom_music = g_custom_music;
 #ifdef USE_SDL_AUDIOSTREAM
-    if (custom_music.use_audiostream) {
-        if (custom_music.stream) {
-            SDL_FreeAudioStream(custom_music.stream);
-            custom_music.stream = 0;
+    if (_music_player->use_audiostream) {
+        if (_music_player->stream) {
+            SDL_FreeAudioStream(_music_player->stream);
+            _music_player->stream = nullptr;
         }
         return;
     }
 #endif // USE_SDL_AUDIOSTREAM
 
-    if (custom_music.buffer) {
-        free(custom_music.buffer);
-        custom_music.buffer = 0;
+    if (_music_player->buffer) {
+        free(_music_player->buffer);
+        _music_player->buffer = nullptr;
     }
 }
 
 bool sound_manager_t::create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format, uint8_t dst_channels, int dst_rate) {
-    auto &custom_music = g_custom_music;
     free_custom_audio_stream();
 
 #ifdef USE_SDL_AUDIOSTREAM
-    if (custom_music.use_audiostream) {
-        custom_music.stream = SDL_NewAudioStream(src_format, src_channels, src_rate, dst_format, dst_channels, dst_rate);
-        return custom_music.stream != 0;
+    if (_music_player->use_audiostream) {
+        _music_player->stream = SDL_NewAudioStream(src_format, src_channels, src_rate, dst_format, dst_channels, dst_rate);
+        return !!_music_player->stream;
     }
 #endif
 
-    int result = SDL_BuildAudioCVT(&custom_music.cvt, src_format, src_channels, src_rate, dst_format, dst_channels, dst_rate);
+    int result = SDL_BuildAudioCVT(&_music_player->cvt, src_format, src_channels, src_rate, dst_format, dst_channels, dst_rate);
     if (result < 0) {
         return false;
     }
 
     // Allocate buffer large enough for 2 seconds of 16-bit audio
-    custom_music.buffer_size = dst_rate * dst_channels * 2 * 2;
-    custom_music.buffer = (unsigned char*)malloc(custom_music.buffer_size);
-    if (!custom_music.buffer) {
+    _music_player->buffer_size = dst_rate * dst_channels * 2 * 2;
+    _music_player->buffer = (unsigned char*)malloc(_music_player->buffer_size);
+    if (!_music_player->buffer) {
         return false;
     }
 
-    custom_music.cur_read = 0;
-    custom_music.cur_write = 0;
+    _music_player->cur_read = 0;
+    _music_player->cur_write = 0;
     return true;
 }
 
-static int custom_audio_stream_active(void) {
-    auto &custom_music = g_custom_music;
+bool sound_manager_t::is_audio_stream_active() {
 #ifdef USE_SDL_AUDIOSTREAM
-    if (custom_music.use_audiostream) {
-        return custom_music.stream != 0;
+    if (_music_player->use_audiostream) {
+        return !!_music_player->stream;
     }
 #endif
-    return custom_music.buffer != 0;
+    return !!_music_player->buffer;
 }
 
-static int put_custom_audio_stream(Uint8* audio_data, int len) {
-    auto &custom_music = g_custom_music;
-    if (!audio_data || len <= 0 || !custom_audio_stream_active()) {
+bool sound_manager_t::put_custom_audio_stream(uint8_t* audio_data, int len) {
+    if (!audio_data || len <= 0 || !is_audio_stream_active()) {
         return 0;
     }
 
 #ifdef USE_SDL_AUDIOSTREAM
-    if (custom_music.use_audiostream) {
-        return SDL_AudioStreamPut(custom_music.stream, audio_data, len) == 0;
+    if (_music_player->use_audiostream) {
+        return SDL_AudioStreamPut(_music_player->stream, audio_data, len) == 0;
     }
 #endif
 
     // Convert audio to SDL format
-    custom_music.cvt.buf = (Uint8*)malloc((size_t)(len * custom_music.cvt.len_mult));
-    if (!custom_music.cvt.buf) {
-        return 0;
+    _music_player->cvt.buf = (Uint8*)malloc((size_t)(len * _music_player->cvt.len_mult));
+    if (!_music_player->cvt.buf) {
+        return false;
     }
 
-    memcpy(custom_music.cvt.buf, audio_data, len);
-    custom_music.cvt.len = len;
-    SDL_ConvertAudio(&custom_music.cvt);
-    int converted_len = custom_music.cvt.len_cvt;
+    memcpy(_music_player->cvt.buf, audio_data, len);
+    _music_player->cvt.len = len;
+    SDL_ConvertAudio(&_music_player->cvt);
+    int converted_len = _music_player->cvt.len_cvt;
 
     // Copy data to circular buffer
-    if (converted_len + custom_music.cur_write <= custom_music.buffer_size) {
-        memcpy(&custom_music.buffer[custom_music.cur_write], custom_music.cvt.buf, converted_len);
+    if (converted_len + _music_player->cur_write <= _music_player->buffer_size) {
+        memcpy(&_music_player->buffer[_music_player->cur_write], _music_player->cvt.buf, converted_len);
     } else {
-        int end_len = custom_music.buffer_size - custom_music.cur_write;
-        memcpy(&custom_music.buffer[custom_music.cur_write], custom_music.cvt.buf, end_len);
-        memcpy(custom_music.buffer, &custom_music.cvt.buf[end_len], converted_len - end_len);
+        int end_len = _music_player->buffer_size - _music_player->cur_write;
+        memcpy(&_music_player->buffer[_music_player->cur_write], _music_player->cvt.buf, end_len);
+        memcpy(_music_player->buffer, &_music_player->cvt.buf[end_len], converted_len - end_len);
     }
-    custom_music.cur_write = (custom_music.cur_write + converted_len) % custom_music.buffer_size;
+    _music_player->cur_write = (_music_player->cur_write + converted_len) % _music_player->buffer_size;
 
     // Clean up
-    free(custom_music.cvt.buf);
-    custom_music.cvt.buf = 0;
-    custom_music.cvt.len = 0;
+    free(_music_player->cvt.buf);
+    _music_player->cvt.buf = 0;
+    _music_player->cvt.len = 0;
 
-    return 1;
+    return true;
 }
 
 int sound_manager_t::get_custom_audio_stream(Uint8* dst, int len) {
-    auto &custom_music = g_custom_music;
-    if (!dst || len <= 0 || !custom_audio_stream_active()) {
+    if (!dst || len <= 0 || !is_audio_stream_active()) {
         return 0;
     }
 
 #ifdef USE_SDL_AUDIOSTREAM
-    if (custom_music.use_audiostream) {
-        return SDL_AudioStreamGet(custom_music.stream, dst, len);
+    if (_music_player->use_audiostream) {
+        return SDL_AudioStreamGet(_music_player->stream, dst, len);
     }
 #endif
 
     int bytes_copied = 0;
-    if (custom_music.cur_read < custom_music.cur_write) {
-        int bytes_available = custom_music.cur_write - custom_music.cur_read;
+    if (_music_player->cur_read < _music_player->cur_write) {
+        int bytes_available = _music_player->cur_write - _music_player->cur_read;
         int bytes_to_copy = bytes_available < len ? bytes_available : len;
-        memcpy(dst, &custom_music.buffer[custom_music.cur_read], bytes_to_copy);
+        memcpy(dst, &_music_player->buffer[_music_player->cur_read], bytes_to_copy);
         bytes_copied = bytes_to_copy;
     } else {
-        int bytes_available = custom_music.buffer_size - custom_music.cur_read;
+        int bytes_available = _music_player->buffer_size - _music_player->cur_read;
         int bytes_to_copy = bytes_available < len ? bytes_available : len;
-        memcpy(dst, &custom_music.buffer[custom_music.cur_read], bytes_to_copy);
+        memcpy(dst, &_music_player->buffer[_music_player->cur_read], bytes_to_copy);
         bytes_copied = bytes_to_copy;
         if (bytes_copied < len) {
             int second_part_len = len - bytes_copied;
-            bytes_available = custom_music.cur_write;
+            bytes_available = _music_player->cur_write;
             bytes_to_copy = bytes_available < second_part_len ? bytes_available : second_part_len;
-            memcpy(&dst[bytes_copied], custom_music.buffer, bytes_to_copy);
+            memcpy(&dst[bytes_copied], _music_player->buffer, bytes_to_copy);
             bytes_copied += bytes_to_copy;
         }
     }
-    custom_music.cur_read = (custom_music.cur_read + bytes_copied) % custom_music.buffer_size;
+    _music_player->cur_read = (_music_player->cur_read + bytes_copied) % _music_player->buffer_size;
 
     return bytes_copied;
 }
@@ -570,7 +612,6 @@ void sound_manager_t::custom_music_callback(void* dummy, Uint8* stream, int len)
 }
 
 void sound_manager_t::use_custom_music_player(int bitdepth, int num_channels, int rate, void* audio_data, int len) {
-    auto &custom_music = g_custom_music;
     SDL_AudioFormat format;
     if (bitdepth == 8)
         format = AUDIO_U8;
@@ -584,7 +625,7 @@ void sound_manager_t::use_custom_music_player(int bitdepth, int num_channels, in
     Uint16 device_format;
     int device_channels;
     Mix_QuerySpec(&device_rate, &device_format, &device_channels);
-    custom_music.format = format;
+    _music_player->format = format;
 
     int result = create_custom_audio_stream(format, num_channels, rate, device_format, device_channels, device_rate);
     if (!result) {
@@ -597,15 +638,15 @@ void sound_manager_t::use_custom_music_player(int bitdepth, int num_channels, in
 }
 
 void sound_manager_t::write_custom_music_data(void* audio_data, int len) {
-    auto &custom_music = g_custom_music;
-    if (!audio_data || len <= 0 || !custom_audio_stream_active())
+    if (!audio_data || len <= 0 || !is_audio_stream_active()) {
         return;
+    }
     // Mix audio to sound effect volume
     Uint8* mix_buffer = (Uint8*)malloc(len);
     if (!mix_buffer)
         return;
-    memset(mix_buffer, (custom_music.format == AUDIO_U8) ? 128 : 0, len);
-    SDL_MixAudioFormat(mix_buffer, (uint8_t*)audio_data, custom_music.format, len, percentage_to_volume(g_settings.get_sound(SOUND_EFFECTS)->volume));
+    memset(mix_buffer, (_music_player->format == AUDIO_U8) ? 128 : 0, len);
+    SDL_MixAudioFormat(mix_buffer, (uint8_t*)audio_data, _music_player->format, len, percentage_to_volume(g_settings.get_sound(SOUND_EFFECTS)->volume));
 
     put_custom_audio_stream(mix_buffer, len);
     free(mix_buffer);
@@ -614,4 +655,22 @@ void sound_manager_t::write_custom_music_data(void* audio_data, int len) {
 void sound_manager_t::use_default_music_player() {
     Mix_HookMusic(0, 0);
     free_custom_audio_stream();
+}
+
+void sound_manager_t::update_channel(int channel, vfs::path filename) {
+    if (filename.empty()) {
+        return;
+    }
+
+    _channels_info[channel] = filename;
+    vfs::path &original = _channels_info[channel];
+    vfs::path audio_path("AUDIO/", _channels_info[channel]);
+
+    if (!vfs::file_exists(audio_path)) {
+        logs::info("Sound: cant find audio %s", audio_path.c_str());
+        _channels_info[channel].clear();
+    } else {
+        original = vfs::content_path(audio_path);
+        init_channel(channel, original);
+    }
 }

@@ -7,10 +7,6 @@
 #include "sound/channel.h"
 #include "sound/sound.h"
 
-void sound_manager_t::speech_set_volume(int percentage) {
-    set_channel_volume(SOUND_CHANNEL_SPEECH, percentage);
-}
-
 vfs::path sound_manager_t::speech_filename(pcstr filename) {
     vfs::path fs_path = filename;
     if (strncmp(filename, vfs::content_audio, strlen(vfs::content_audio)) != 0) {

@@ -155,10 +155,11 @@ static void button_cancel(int param1, int param2) {
     } else {
         sound_music_stop();
     }
-    sound_music_set_volume(data.original_music.volume);
+
+    g_sound.music_set_volume(data.original_music.volume);
     g_sound.speech_set_volume(data.original_speech.volume);
-    sound_effect_set_volume(data.original_effects.volume);
-    sound_city_set_volume(data.original_city.volume);
+    g_sound.set_volume(SOUND_CHANNEL_EFFECTS_MIN, SOUND_CHANNEL_EFFECTS_MAX, data.original_effects.volume);
+    g_sound.set_volume(SOUND_CHANNEL_CITY_MIN, SOUND_CHANNEL_CITY_MAX, data.original_city.volume);
 
     data.close_callback();
 }
@@ -173,7 +174,7 @@ static void update_volume(int type, int is_decrease) {
 
 static void arrow_button_music(int is_down, int param2) {
     update_volume(SOUND_MUSIC, is_down);
-    sound_music_set_volume(g_settings.get_sound(SOUND_MUSIC)->volume);
+    g_sound.music_set_volume(g_settings.get_sound(SOUND_MUSIC)->volume);
 }
 
 static void arrow_button_speech(int is_down, int param2) {
@@ -183,12 +184,12 @@ static void arrow_button_speech(int is_down, int param2) {
 
 static void arrow_button_effects(int is_down, int param2) {
     update_volume(SOUND_EFFECTS, is_down);
-    sound_effect_set_volume(g_settings.get_sound(SOUND_EFFECTS)->volume);
+    g_sound.set_volume(SOUND_CHANNEL_EFFECTS_MIN, SOUND_CHANNEL_EFFECTS_MAX, g_settings.get_sound(SOUND_EFFECTS)->volume);
 }
 
 static void arrow_button_city(int is_down, int param2) {
     update_volume(SOUND_CITY, is_down);
-    sound_city_set_volume(g_settings.get_sound(SOUND_CITY)->volume);
+    g_sound.set_volume(SOUND_CHANNEL_CITY_MIN, SOUND_CHANNEL_CITY_MAX, g_settings.get_sound(SOUND_CITY)->volume);
 }
 
 void window_sound_options_show(void (*close_callback)(void)) {

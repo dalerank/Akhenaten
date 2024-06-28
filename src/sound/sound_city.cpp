@@ -39,12 +39,6 @@ void sound_city_init() {
     }
 }
 
-void sound_city_set_volume(int percentage) {
-    for (int i = SOUND_CHANNEL_CITY_MIN; i <= SOUND_CHANNEL_CITY_MAX; i++) {
-       g_sound.set_channel_volume(i, percentage);
-    }
-}
-
 int building_type_to_channel(building *b) {
     switch (b->type) {
 

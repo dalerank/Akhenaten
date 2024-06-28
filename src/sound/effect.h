@@ -44,8 +44,6 @@ enum {
     SOUND_EFFECT_DANCER_DIE = 45
 };
 
-void sound_effect_set_volume(int percentage);
-
 void sound_effect_play(int effect);
 
 #endif // SOUND_EFFECTS_H

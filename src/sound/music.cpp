@@ -111,10 +111,6 @@ void sound_music_play_track(int track) {
     g_music_data.current_track = track;
 }
 
-void sound_music_set_volume(int percentage) {
-    g_sound.set_music_volume(percentage);
-}
-
 void sound_music_play_intro() {
     if (g_settings.get_sound(SOUND_MUSIC)->enabled) {
         sound_music_play_track(TRACK_MENU);

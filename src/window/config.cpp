@@ -281,11 +281,7 @@ static int config_change_string_basic(int key) {
             CONFIG_STRING_VALUE_MAX - 1);
     return 1;
 }
-// static int config_change_zoom(int key) {
-//     config_change_basic(key);
-////    system_reload_textures();
-//    return 1;
-//}
+
 static int config_change_string_language(int key) {
     auto& data = g_window_config_ext_data;
     config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].new_value);
