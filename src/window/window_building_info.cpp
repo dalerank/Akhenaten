@@ -110,7 +110,7 @@ static int get_height_id() {
     return 0;
 }
 
-static void get_tooltip(tooltip_context* c) {
+static void buiding_info_get_tooltip(tooltip_context* c) {
     auto &context = g_building_info_context;
     std::pair<int, int> tooltip{-1, -1};
     
@@ -157,7 +157,7 @@ int OFFSET(int x, int y) {
     return GRID_OFFSET(x, y);
 }
 
-static void init(map_point tile) {
+static void buiding_info_init(map_point tile) {
     auto &context = g_building_info_context;
     const int grid_offset = tile.grid_offset();
     context.can_play_sound = true;
@@ -420,7 +420,7 @@ static void init(map_point tile) {
     }
 }
 
-static void draw_refresh_background() {
+static void buiding_info_draw_refresh_background() {
     auto &context = g_building_info_context;
     if (context.type == BUILDING_INFO_NONE) {
         window_building_draw_no_people(&context);
@@ -453,14 +453,14 @@ static void draw_refresh_background() {
     }
 }
 
-static void draw_background() {
+static void buiding_info_draw_background() {
     game.animation = false;
     window_city_draw_panels();
     window_city_draw();
-    draw_refresh_background();
+    buiding_info_draw_refresh_background();
 }
 
-static void draw_foreground() {
+static void buiding_info_draw_foreground() {
     ui::begin_widget(g_building_info_context.offset);
     auto &context = g_building_info_context;
 
@@ -562,7 +562,7 @@ static void draw_foreground() {
     }
 }
 
-static int handle_specific_building_info_mouse(const mouse *m) {
+static int buiding_info_handle_specific_building_info_mouse(const mouse *m) {
     auto &context = g_building_info_context;
     // building-specific buttons
     if (context.type == BUILDING_INFO_NONE) {
@@ -591,13 +591,13 @@ static int handle_specific_building_info_mouse(const mouse *m) {
     return 0;
 }
 
-static void handle_input(const mouse* m, const hotkeys* h) {
+static void buiding_info_handle_input(const mouse* m, const hotkeys* h) {
     auto &context = g_building_info_context;
 
     bool button_id = ui::handle_mouse(m);
   
     if (!button_id) {
-        button_id |= !!handle_specific_building_info_mouse(m);
+        button_id |= !!buiding_info_handle_specific_building_info_mouse(m);
     }
 
     if (!button_id && input_go_back_requested(m, h)) {
@@ -612,14 +612,14 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 void window_building_info_show(const tile2i& point) {
     window_type window = {
         WINDOW_BUILDING_INFO,
-        draw_background,
-        draw_foreground,
-        handle_input,
-        get_tooltip,
-        draw_refresh_background
+        buiding_info_draw_background,
+        buiding_info_draw_foreground,
+        buiding_info_handle_input,
+        buiding_info_get_tooltip,
+        buiding_info_draw_refresh_background
     };
 
-    init(point);
+    buiding_info_init(point);
     window_show(&window);
 }
 
