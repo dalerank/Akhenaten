@@ -47,6 +47,14 @@ int figure_homeless::find_closest_house_with_room(tile2i tile) {
     return min_building_id;
 }
 
+void figure_homeless::on_destroy() {
+    auto h = home();
+    auto bhome = building_get(base.immigrant_home_building_id);
+    if (h == bhome) {
+        bhome->remove_figure(2);
+    }
+}
+
 void figure_homeless::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Homeless");
     tile2i exit = g_city.map.exit_point;

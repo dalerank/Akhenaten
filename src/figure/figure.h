@@ -309,8 +309,6 @@ public:
     void set_destination(building* b);
     bool has_home(int _id = -1);
     bool has_home(building* b);
-    bool has_immigrant_home(int _id = -1);
-    bool has_immigrant_home(building* b);
     bool has_destination(int _id = -1);
     bool has_destination(building* b);
 

@@ -80,8 +80,6 @@ figure* figure_create(e_figure_type type, tile2i tile, int dir) {
     //    f->grid_offset_figure = MAP_OFFSET(x, y);
     f->cc_coords.x = 15 * tile.x();
     f->cc_coords.y = 15 * tile.y();
-    //    f->cross_country_x = 15 * x;
-    //    f->cross_country_y = 15 * y;
     f->progress_on_tile = 8;
     f->progress_inside = 0;
     f->progress_inside_speed = 0;
@@ -115,11 +113,6 @@ void figure::figure_delete_UNSAFE() {
 
     if (empire_city_id) {
         g_empire.city(empire_city_id)->remove_trader(id);
-    }
-
-    if (has_immigrant_home()) {
-        auto bhome = building_get(immigrant_home_building_id);
-        bhome->remove_figure(2);
     }
 
     route_remove();
@@ -228,15 +221,6 @@ bool figure::has_home(int _id) {
 
 bool figure::has_home(building* b) {
     return (b == home());
-}
-bool figure::has_immigrant_home(int _id) {
-    if (_id == -1)
-        return (immigrant_home_building_id != 0);
-    return (immigrant_home_building_id == _id);
-}
-bool figure::has_immigrant_home(building* b) {
-    auto bhome = building_get(immigrant_home_building_id);
-    return (b == bhome);
 }
 
 bool figure::has_destination(int _id) {

@@ -16,6 +16,14 @@ void config_load_figure_immigrant() {
     immigrant_m.load();
 }
 
+void figure_immigrant::on_destroy() {
+    auto h = home();
+    auto bhome = building_get(base.immigrant_home_building_id);
+    if (h == bhome) {
+        bhome->remove_figure(2);
+    }
+}
+
 void figure_immigrant::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant");
     building* home = immigrant_home();
