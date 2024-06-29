@@ -548,7 +548,6 @@ void building::school_add_papyrus(int amount) {
 void building_figure_generate() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Generate");
     building_barracks_decay_tower_sentry_request();
-    int max_id = building_get_highest_id();
     buildings_valid_do([] (building &b) {
         b.figure_generate();
     });

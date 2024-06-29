@@ -721,6 +721,7 @@ bool building_is_draggable(e_building_type type) {
 int building_get_highest_id(void) {
     return building_extra_data.highest_id_in_use;
 }
+
 void building_update_highest_id(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Update Highest Id");
     auto& extra = building_extra_data;

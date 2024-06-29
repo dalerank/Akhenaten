@@ -14,6 +14,7 @@
 #include "grid/grid.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
+#include "graphics/animkeys.h"
 #include "sound/sound_walker.h"
 
 #include <string.h>
@@ -66,18 +67,12 @@ figure* figure_create(e_figure_type type, tile2i tile, int dir) {
     f->is_friendly = true;
     f->created_sequence = g_figure_data.created_sequence++;
     f->direction = dir;
-    //    f->direction = DIR_FIGURE_NONE;
     f->roam_length = 0;
     f->source_tile = tile;
     f->destination_tile = tile;
     f->previous_tile = tile;
     f->tile = tile;
     f->destination_tile.set(0, 0);
-    //    f->source_x = f->destination_x = f->previous_tile_x = f->tile_x = x;
-    //    f->source_y = f->destination_y = f->previous_tile_y = f->tile_y = y;
-    //    f->destination_x = 0;
-    //    f->destination_y = 0;
-    //    f->grid_offset_figure = MAP_OFFSET(x, y);
     f->cc_coords.x = 15 * tile.x();
     f->cc_coords.y = 15 * tile.y();
     f->progress_on_tile = 8;
@@ -90,6 +85,16 @@ figure* figure_create(e_figure_type type, tile2i tile, int dir) {
     f->dcast()->on_create();
 
     return f;
+}
+
+void figure_clear_all() {
+    if (!g_figure_data.initialized) {
+        return;
+    }
+
+    for (auto *f : g_figure_data.figures) {
+        f->clear_impl();
+    }
 }
 
 void figure::figure_delete_UNSAFE() {
@@ -175,6 +180,11 @@ bool figure::can_move_by_terrain() {
 
 void figure::set_direction_to(building *b) {
     direction = calc_general_direction(tile, b->tile);
+}
+
+void figure::clear_impl() {
+    delete _ptr;
+    _ptr = nullptr;
 }
 
 void figure::poof() {
@@ -345,11 +355,11 @@ void figure_impl::static_params::load(archive arch) {
 }
 
 void figure_impl::update_animation() {
-    pcstr anim_key = "walk";
+    xstring anim_key = animkeys().walk;
     if (action_state() == FIGURE_ACTION_149_CORPSE) {
-        anim_key = "death";
+        anim_key = animkeys().death;
     } else if (!!(base.terrain_type & TERRAIN_WATER)) {
-        anim_key = "swim";
+        anim_key = animkeys().swim;
     }
 
     image_set_animation(anim_key);
@@ -382,13 +392,16 @@ figure_impl *figures::create(e_figure_type e, figure *data) {
 // }
 
 void init_figures() {
-    if (!g_figure_data.initialized) {
-        for (int i = 0; i < MAX_FIGURES; i++) {
-            g_figure_data.figures[i] = new figure(i);
-
-        }
-        g_figure_data.initialized = true;
+    if (g_figure_data.initialized) {
+        return;
     }
+
+    for (int i = 0; i < MAX_FIGURES; i++) {
+        g_figure_data.figures[i] = new figure(i);
+
+    }
+
+    g_figure_data.initialized = true;
 }
 
 void figure_init_scenario(void) {

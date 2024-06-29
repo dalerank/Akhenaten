@@ -14,6 +14,7 @@
 #include "io/io_buffer.h"
 #include "empire/trade_route.h"
 #include "building/building_granary.h"
+#include "figure/figure.h"
 #include "figuretype/figure_fishing_point.h"
 #include "figuretype/figure_kingdome_trader.h"
 #include "figuretype/figure_trader_ship.h"
@@ -48,6 +49,7 @@ void city_t::init() {
     kingdome.gifts[GIFT_LAVISH].cost = 0;
 
     city_gods_reset();
+    figure_clear_all();
 }
 
 void city_t::init_custom_map() {

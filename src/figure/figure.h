@@ -277,6 +277,7 @@ public:
     bool can_move_by_water();
     bool can_move_by_terrain();
     void set_direction_to(building *b);
+    void clear_impl();
 
     void poof();
     inline bool available() { return state == FIGURE_STATE_NONE; };
@@ -559,7 +560,7 @@ public:
     inline int tiley() const { return base.tile.y(); }
     inline building *destination() const { return base.destination(); }
     inline void route_remove() { base.route_remove(); }
-    inline void image_set_animation(pcstr anim_key) { image_set_animation(anim(anim_key)); }
+    inline void image_set_animation(const xstring &anim_key) { image_set_animation(anim(anim_key)); }
     inline void image_set_animation(const animation_t &anim) { base.image_set_animation(anim); }
     inline void image_set_animation(e_image_id img, int offset = 0, int max_frames = 12, int duration = 1) { base.image_set_animation(img, offset, max_frames, duration);}
     inline void follow_ticks(int num_ticks) { base.follow_ticks(num_ticks); }
@@ -615,6 +616,7 @@ void figure_valid_do(T func) {
 
 int figure_movement_can_launch_cross_country_missile(tile2i src, tile2i dst);
 void figure_create_explosion_cloud(tile2i tile, int size);
+void figure_clear_all();
 
 namespace figures {
 
