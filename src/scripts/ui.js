@@ -6,8 +6,7 @@ function sh(v) { return game.screen.h + v}
 function mbutton(i) { return [sw(0) / 2 - 128, sh(0) / 2 - 100 + 40 * i] }
 
 top_menu_bar = {
-	x_offset : 10,
-	y_offset : 6,
+	offset : [10, 6],
 	item_height : 20,
 	background: IMG_TOP_MENU_BACKGROUND,
 	spacing : 32,

@@ -215,8 +215,7 @@ struct top_menu_data_t {
     int treasury;
     int month;
 
-    int x_offset;
-    int y_offset;
+    vec2i offset;
     int item_height;
     int spacing;
     e_image_id background;
@@ -316,8 +315,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_top_menu_bar);
 void config_load_top_menu_bar() {
     g_config_arch.r_section("top_menu_bar", [] (archive arch) {
         auto& data = g_top_menu_data;
-        data.x_offset = arch.r_int("x_offset");
-        data.y_offset = arch.r_int("y_offset");
+        data.offset = arch.r_vec2i("offset");
         data.item_height = arch.r_int("item_height");
         data.background = (e_image_id)arch.r_int("background");
         data.spacing = arch.r_int("spacing");
@@ -330,25 +328,25 @@ void config_load_top_menu_bar() {
 
 void menu_bar_draw(const std::span<menu_bar_item>& items) {
     auto& data = g_top_menu_data;
-    short x_offset = data.x_offset;
+    vec2i offset = data.offset;
     e_font hightlight_font = config_get(CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER) ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT;
     for (auto& item : items) {
-        item.x_start = x_offset;
+        item.x_start = offset.x;
         int current_id = std::distance(items.begin(), &item) + 1;
         e_font font = (current_id == data.focus_menu_id) ? hightlight_font : FONT_NORMAL_BLACK_ON_LIGHT;
         int text_length = item.text_raw
-                                ? lang_text_draw(item.text_raw, vec2i{x_offset, data.y_offset}, font)
-                                : lang_text_draw(item.text_group, 0, vec2i{x_offset, data.y_offset}, font);
-        x_offset += text_length;
-        item.x_end = x_offset;
-        x_offset += data.spacing;
+                                ? lang_text_draw(item.text_raw, vec2i{offset.x, data.offset.y}, font)
+                                : lang_text_draw(item.text_group, 0, vec2i{offset.x, data.offset.y}, font);
+        offset.x += text_length;
+        item.x_end = offset.x;
+        offset.x += data.spacing;
     }
 }
 
 static int get_menu_bar_item(const mouse* m, const std::span<menu_bar_item>& items) {
     auto& data = g_top_menu_data;
     for (int i = 0; i < items.size(); i++) {
-        if (items[i].x_start <= m->x && items[i].x_end > m->x && data.y_offset <= m->y && data.y_offset + 12 > m->y) {
+        if (items[i].x_start <= m->x && items[i].x_end > m->x && data.offset.y <= m->y && data.offset.y + 12 > m->y) {
             return i + 1;
         }
     }
@@ -395,7 +393,7 @@ void menu_draw(menu_bar_item& menu, int focus_item_id) {
     }
 
     unbordered_panel_draw(menu.x_start, TOP_MENU_HEIGHT, menu.calculated_width_blocks, menu.calculated_height_blocks);
-    int y_offset = TOP_MENU_HEIGHT + data.y_offset * 2;
+    int y_offset = TOP_MENU_HEIGHT + data.offset.y * 2;
     for (int i = 0; i < menu.num_items; i++) {
         menu_item* sub = &menu.items[i];
 
@@ -418,7 +416,7 @@ void menu_draw(menu_bar_item& menu, int focus_item_id) {
 
 static int get_menu_item(const mouse* m, menu_bar_item* menu) {
     auto& data = g_top_menu_data;
-    int y_offset = TOP_MENU_HEIGHT + data.y_offset * 2;
+    int y_offset = TOP_MENU_HEIGHT + data.offset.y * 2;
     for (int i = 0; i < menu->num_items; i++) {
         if (menu->items[i].hidden)
             continue;
