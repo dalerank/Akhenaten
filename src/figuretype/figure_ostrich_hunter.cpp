@@ -145,11 +145,11 @@ void figure_ostrich_hunter::figure_action() {
 
         base.target_figure_id = 0;
         if (animation().finished()) {
-            advance_action(ACTION_12_GOING_HOME_AND_UNLOAD);
+            advance_action(ACTION_12_HUNTER_MOVE_PACKED);
         }
         break;
 
-    case ACTION_12_GOING_HOME_AND_UNLOAD:                                     // returning with prey
+    case ACTION_12_HUNTER_MOVE_PACKED:                                     // returning with prey
         do_returnhome(TERRAIN_USAGE_ANIMAL, ACTION_14_HUNTER_UNLOADING);
         break;
 
@@ -206,7 +206,7 @@ void figure_ostrich_hunter::update_animation() {
         animkey = animkeys().pack;
         break;
 
-    case ACTION_15_HUNTER_MOVE_PACKED:
+    case ACTION_12_HUNTER_MOVE_PACKED:
         animkey = animkeys().move_pack;
         break;
 
