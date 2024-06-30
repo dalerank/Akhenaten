@@ -4,8 +4,9 @@
 #include "city/sentiment.h"
 #include "figure/properties.h"
 #include "grid/figure.h"
-#include "graphics/image_groups.h"
+#include "graphics/animkeys.h"
 #include "figuretype/maintenance.h"
+#include "figuretype/figure_missile.h"
 #include "core/random.h"
 
 #include "js/js_game.h"
@@ -121,7 +122,8 @@ void figure_ostrich_hunter::figure_action() {
                 advance_action(ACTION_13_WAIT_FOR_ACTION);
             } else {
                 base.direction = calc_missile_shooter_direction(tile(), prey->tile);
-                base.missile_fire_at(base.target_figure_id, FIGURE_HUNTER_ARROW);
+                figure* f = figure_get(base.target_figure_id);
+                figure_missile::create(base.home_building_id, tile(), f->tile, FIGURE_HUNTER_ARROW);
             }
         }
         break;
@@ -132,7 +134,7 @@ void figure_ostrich_hunter::figure_action() {
         }
 
         if (do_goto(prey->tile, TERRAIN_USAGE_ANIMAL, ACTION_10_PICKUP_ANIMAL, ACTION_11_GOING_TO_PICKUP_POINT)) {
-            base.anim.offset = 0;
+            animation().offset = 0;
         }
         break;
 
@@ -142,16 +144,20 @@ void figure_ostrich_hunter::figure_action() {
         }
 
         base.target_figure_id = 0;
-        if (base.anim.frame >= 17) {
+        if (animation().finished()) {
             advance_action(ACTION_12_GOING_HOME_AND_UNLOAD);
         }
         break;
 
     case ACTION_12_GOING_HOME_AND_UNLOAD:                                     // returning with prey
-        if (do_returnhome(TERRAIN_USAGE_ANIMAL)) { // add game meat to hunting lodge!
-            home()->stored_full_amount += 100;
-        }
+        do_returnhome(TERRAIN_USAGE_ANIMAL, ACTION_14_HUNTER_UNLOADING);
+        break;
 
+    case ACTION_14_HUNTER_UNLOADING:
+        if (animation().finished()) {
+            home()->stored_full_amount += 100;
+            poof();
+        }
         break;
     }
 }
@@ -177,32 +183,40 @@ const animations_t &figure_ostrich_hunter::anim() const {
 }
 
 void figure_ostrich_hunter::update_animation() {
+    xstring animkey;
     switch (action_state()) {
-    case ACTION_14_RETURNING_WITH_FOOD:
     case ACTION_9_CHASE_PREY:
-    case ACTION_11_HUNTER_WALK: // normal walk
-        image_set_animation("walk");
+    case ACTION_11_HUNTER_WALK:
+        animkey = animkeys().walk;
         break;
 
     case ACTION_8_RECALCULATE:
     case ACTION_13_WAIT_FOR_ACTION:
-        image_set_animation("fight");
+        animkey = animkeys().fight;
         break;
 
     case ACTION_15_HUNTER_HUNT: // hunting
-        image_set_animation("hunt");
+        animkey = animkeys().hunt;
         break;
         //        case ??: // attacking
         //            image_set_animation(GROUP_FIGURE_HUNTER, 200, 12);
         //        case ??: // attacking w/ prey on his back
         //            image_set_animation(GROUP_FIGURE_HUNTER, 296, 12);
-    case ACTION_15_HUNTER_PACK:
-        image_set_animation("pack");
+    case ACTION_10_PICKUP_ANIMAL:
+        animkey = animkeys().pack;
         break;
 
     case ACTION_15_HUNTER_MOVE_PACKED:
-        image_set_animation("move_pack");
+        animkey = animkeys().move_pack;
         break;
+
+    case ACTION_14_HUNTER_UNLOADING:
+        animkey = animkeys().unpack;
+        break;
+    }
+
+    if (!!animkey) {
+        image_set_animation(animkey);
     }
 }
 
