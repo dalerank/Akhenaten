@@ -15,6 +15,8 @@ void animation_t::load(archive arch) {
     duration = arch.r_int("duration", 1);
     can_reverse = arch.r_bool("can_reverse");
     loop = arch.r_bool("loop", true);
+    start_frame = arch.r_int("start_frame", 0);
+    reverse = arch.r_bool("reverse", false);
 }
 
 int animation_t::first_img() const {
@@ -44,9 +46,11 @@ void animation_context::setup(const animation_t &anim) {
     max_frames = anim.max_frames;
     frame_duration = std::max(1, anim.duration);
     pos = anim.pos;
-    can_reverse = anim.can_reverse;
     loop = anim.loop;
     was_finished = false;
+    frame = anim.start_frame;
+    is_reverse = anim.reverse;
+    can_reverse = is_reverse || anim.can_reverse;
 }
 
 void animation_context::update(bool refresh_only) {

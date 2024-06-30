@@ -8,7 +8,7 @@
 #include "city/city.h"
 #include "core/profiler.h"
 #include "figure/figure.h"
-#include "graphics/image_groups.h"
+#include "graphics/animkeys.h"
 #include "graphics/image_desc.h"
 #include "grid/road_access.h"
 
@@ -291,8 +291,10 @@ void figure::action_perform() {
         }
         max_roam_length = params.max_roam_length;
         speed_multiplier = params.speed_mult;
-        const animation_t &anim = params.anim["walk"];
-        image_set_animation(anim);
+        if (!this->anim.id) {
+            const animation_t &def_anim = params.anim[animkeys().walk];
+            image_set_animation(def_anim);
+        }
 
         // check for building being alive (at the start of the action)
         building* b = home();

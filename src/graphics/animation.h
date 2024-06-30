@@ -16,8 +16,10 @@ struct animation_t {
     int offset;
     int max_frames;
     int duration;
+    int start_frame;
     bool can_reverse;
     bool loop = true;
+    bool reverse = false;
 
     void load(archive arch);
     int first_img() const;

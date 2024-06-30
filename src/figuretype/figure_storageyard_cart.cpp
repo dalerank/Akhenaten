@@ -39,7 +39,7 @@ void figure_storageyard_cart::figure_action() {
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_52_WAREHOUSEMAN_AT_DELIVERY_BUILDING, ACTION_8_RECALCULATE);
         break;
 
-    case ACTION_12_UNLOADING1:
+    case ACTION_12_DELIVERING_UNLOADING_GOODS:
     case FIGURE_ACTION_52_WAREHOUSEMAN_AT_DELIVERY_BUILDING:
         do_deliver(true, ACTION_11_RETURNING_EMPTY);
         break;

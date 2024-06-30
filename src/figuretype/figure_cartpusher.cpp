@@ -609,12 +609,15 @@ void figure_cartpusher::figure_action() {
     case FIGURE_ACTION_20_CARTPUSHER_INITIAL:
         calculate_destination(false);
         break;
+
     case ACTION_9_DELIVERING_GOODS:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_12_UNLOADING1, ACTION_8_RECALCULATE);
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_12_DELIVERING_UNLOADING_GOODS, ACTION_8_RECALCULATE);
         break;
+
     case ACTION_10_DELIVERING_FOOD:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_13_UNLOADING2, ACTION_8_RECALCULATE);
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_13_DELIVERING_UNLOADING_FOODS, ACTION_8_RECALCULATE);
         break;
+
     case ACTION_11_DELIVERING_GOLD:
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_14_UNLOADING_GOLD, ACTION_8_RECALCULATE);
         break;
