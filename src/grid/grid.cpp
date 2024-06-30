@@ -375,8 +375,8 @@ bool map_tile_is_inside_area(tile2i tile, tile2i start, tile2i end, vec2i size) 
 bool map_grid_inside_map_area(int grid_offset, int edge_size) {
     int x = GRID_X(grid_offset);
     int y = GRID_Y(grid_offset);
-    int dist_horizontal = abs(x - y);
-    int dist_vertical = abs(y - (GRID_LENGTH - x) + 1);
+    int dist_horizontal = std::abs(x - y);
+    int dist_vertical = std::abs(y - (GRID_LENGTH - x) + 1);
 
     if (dist_horizontal < scenario_map_data()->width / 2 + 1 - edge_size
         && dist_vertical < scenario_map_data()->height / 2 + 1 - edge_size)

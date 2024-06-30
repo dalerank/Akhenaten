@@ -11,6 +11,11 @@ struct id_anim_t {
     static const xstring walk;
     static const xstring death;
     static const xstring swim;
+    static const xstring fight;
+    static const xstring hunt;
+    static const xstring pack;
+    static const xstring unpack;
+    static const xstring move_pack;
 };
 
 const id_anim_t &animkeys();

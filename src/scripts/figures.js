@@ -184,8 +184,8 @@ figure_ostrich_hunter = {
 		death : { pack:PACK_SPR_MAIN, id:46, max_frames:8, loop:false },
 		hunt : { pack:PACK_SPR_MAIN, id:47, max_frames:12 },
 		figth : { pack:PACK_SPR_MAIN, id:48, max_frames:12 },
-		pack : { pack:PACK_SPR_MAIN, id:50, max_frames:12 },
-		unpack : { pack:PACK_SPR_MAIN, id:49, max_frames:12 },
+		unpack : { pack:PACK_SPR_MAIN, id:49, max_frames:12, loop:false },
+		pack : { pack:PACK_SPR_MAIN, id:50, max_frames:12, loop:false },
 		move_pack : { pack:PACK_SPR_MAIN, id:51, max_frames:12 },
 	},
 	sounds : {
@@ -195,6 +195,43 @@ figure_ostrich_hunter = {
 	},
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 	max_hunting_distance : 30,
+}
+
+figure_hunter_arrow = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:0, max_frames:12 },
+		shadow : { pack:PACK_SPR_MAIN, id:1, max_frames:12 },
+	},
+  terrain_usage : TERRAIN_USAGE_ANY,
+}
+
+figure_arrow = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:0, max_frames:12 },
+		shadow : { pack:PACK_SPR_MAIN, id:1, max_frames:12 },
+	},
+  terrain_usage : TERRAIN_USAGE_ANY,
+}
+
+figure_spear = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:198, max_frames:12 },
+	},
+  terrain_usage : TERRAIN_USAGE_ANY,
+}
+
+figure_javelin = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:198, max_frames:4 },
+	},
+  terrain_usage : TERRAIN_USAGE_ANY,
+}
+
+figure_bolt = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:198, max_frames:12 },
+	},
+  terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_standard_bearer = {

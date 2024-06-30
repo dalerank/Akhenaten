@@ -9,6 +9,11 @@ const xstring id_anim_t::poof = "poof";
 const xstring id_anim_t::walk = "walk";
 const xstring id_anim_t::death = "death";
 const xstring id_anim_t::swim = "swim";
+const xstring id_anim_t::fight = "fight";
+const xstring id_anim_t::hunt = "hunt";
+const xstring id_anim_t::pack = "pack";
+const xstring id_anim_t::unpack = "unpack";
+const xstring id_anim_t::move_pack = "move_pack";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

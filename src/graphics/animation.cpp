@@ -12,7 +12,7 @@ void animation_t::load(archive arch) {
     iid = arch.r_int("id");
     offset = arch.r_int("offset");
     max_frames = arch.r_int("max_frames");
-    duration = arch.r_int("duration");
+    duration = arch.r_int("duration", 1);
     can_reverse = arch.r_bool("can_reverse");
     loop = arch.r_bool("loop", true);
 }
@@ -46,12 +46,14 @@ void animation_context::setup(const animation_t &anim) {
     pos = anim.pos;
     can_reverse = anim.can_reverse;
     loop = anim.loop;
+    was_finished = false;
 }
 
 void animation_context::update(bool refresh_only) {
     if (!can_reverse) {
         frame += refresh_only ? 0 : 1;
         if (frame >= max_frames * frame_duration) {
+            was_finished = !loop;
             frame = loop ? 0 : (max_frames * frame_duration - 1);
         }
     } else {
@@ -60,6 +62,7 @@ void animation_context::update(bool refresh_only) {
             if (frame < 1) {
                 frame = 0;
                 is_reverse = false;
+                was_finished = !loop;
             }
         } else {
             frame += refresh_only ? 0 : 1;

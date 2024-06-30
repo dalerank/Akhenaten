@@ -229,6 +229,35 @@ bool figure::has_home(int _id) {
     return (home_building_id == _id);
 }
 
+bool figure::is_citizen() {
+    if (action_state != FIGURE_ACTION_149_CORPSE) {
+        if ((type && type != FIGURE_EXPLOSION && type != FIGURE_STANDARD_BEARER && type != FIGURE_MAP_FLAG
+            && type != FIGURE_FLOTSAM && type < FIGURE_INDIGENOUS_NATIVE)
+            || type == FIGURE_TOWER_SENTRY) {
+            return id;
+        }
+    }
+
+    return 0;
+}
+
+bool figure::is_non_citizen() {
+    if (action_state == FIGURE_ACTION_149_CORPSE)
+        return 0;
+
+    if (is_enemy()) {
+        return id;
+    }
+
+    if (type == FIGURE_INDIGENOUS_NATIVE && action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
+        return id;
+
+    if (/*type == FIGURE_WOLF*/ type == FIGURE_OSTRICH || type == FIGURE_BIRDS || type == FIGURE_ANTELOPE)
+        return id;
+
+    return 0;
+}
+
 bool figure::has_home(building* b) {
     return (b == home());
 }

@@ -30,6 +30,7 @@ bool map_has_figure_but(tile2i tile, int id);
 inline bool map_has_figure_at(tile2i tile) { return map_has_figure_at(tile.grid_offset());  }
 
 int map_figure_foreach_until(int grid_offset, int test);
+inline int map_figure_foreach_until(tile2i tile, int test) { return map_figure_foreach_until(tile.grid_offset(), test); }
 
 void map_figure_clear();
 void map_figure_sort_by_y();

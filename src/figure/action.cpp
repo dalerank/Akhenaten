@@ -62,13 +62,8 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_DELIVERY_BOY, 1, 0, 0, 0, ANIM_DELIVERY_BOY_WALK},
   {FIGURE_BIRDS, 2, TERRAIN_USAGE_ANIMAL, 0, GROUP_FIGURE_SHEEP},
   {FIGURE_ANTELOPE, 2, 0, GROUP_FIGURE_CROCODILE},
-  {FIGURE_SPEAR, 1, 0, 0, 0},
   {FIGURE_CHARIOR_RACER, 1, 0, 0, 0},
 
-
-  {FIGURE_OSTRICH_HUNTER, 1, 0, 0, 0, IMG_NONE},
-  {FIGURE_HUNTER_ARROW, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_HUNTER_ARROW},
-  {FIGURE_LUMBERJACK, 1, 0, 0, 0},
   {FIGURE_PHARAOH, 1, TERRAIN_USAGE_ANY, 0, GROUP_FIGURE_PHARAOH_WALK},
   {FIGURE_GOVERNOR, 1, TERRAIN_USAGE_ROADS, 0, GROUP_FIGURE_GOVERNOR},
   {FIGURE_WARSHIP, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
@@ -388,15 +383,10 @@ void figure::action_perform() {
         case 53: enemy53_axe_action(); break;
         case 54: enemy_gladiator_action(); break;
         case 57: enemy_kingdome_soldier_action(); break;
-        case 59: arrow_action(); break;
-        case FIGURE_JAVELIN: javelin_action(); break; // 60
-        case FIGURE_BOLT: bolt_action(); break;
         case FIGURE_BALLISTA: ballista_action(); break;
         case FIGURE_BIRDS: sheep_action(); break;
         case FIGURE_ANTELOPE: zebra_action(); break; // 70
-        case FIGURE_SPEAR: spear_action(); break;
         case FIGURE_CHARIOR_RACER: hippodrome_horse_action(); break;
-        case FIGURE_HUNTER_ARROW: arrow_action(); break;
         case FIGURE_SLED_PULLER: sled_puller_action(); break;
         case FIGURE_HYENA: hyena_action(); break;
 

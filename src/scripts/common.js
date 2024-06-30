@@ -222,6 +222,11 @@ var figure_librarian = {}
 var figure_constable = {}
 var figure_shipwreck = {}
 var figure_governor = {}
+var figure_arrow = {}
+var figure_hunter_arrow = {}
+var figure_spear = {}
+var figure_javelin = {}
+var figure_bolt = {}
 // missions
 var mission0 = {}
 var mission1 = {}

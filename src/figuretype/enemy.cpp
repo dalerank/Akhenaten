@@ -10,7 +10,7 @@
 #include "figure/movement.h"
 #include "figure/properties.h"
 #include "figure/route.h"
-#include "figuretype/missile.h"
+#include "figuretype/figure_missile.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "grid/figure.h"
@@ -77,8 +77,8 @@ void figure::enemy_initial(formation* m) {
                     map_point_get_last_result(tile);
                 }
 
-                //                figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, missile_type);
-                missile_fire_at(target_figure_id, missile_type);
+                figure* f = figure_get(target_figure_id);
+                figure_missile::create(home_building_id, tile, f->tile, missile_type);
                 formation_record_missile_fired(m);
             }
             if (missile_type == FIGURE_ARROW && city_sound_update_shoot_arrow())

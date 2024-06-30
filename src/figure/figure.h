@@ -402,14 +402,10 @@ public:
     void enemy53_axe_action();
     void enemy_gladiator_action();
     void enemy_kingdome_soldier_action();
-    void arrow_action();
-    void javelin_action();
-    void bolt_action();
     void ballista_action();
     void sheep_action();
     void hyena_action();
     void zebra_action();
-    void spear_action();
     void hippodrome_horse_action();
 
     int is_nearby(int category, int* distance, int max_distance = 10000, bool gang_on = true);
@@ -444,10 +440,6 @@ public:
     void hit_opponent();
     void figure_combat_handle_attack();
     void figure_combat_attack_figure_at(int grid_offset);
-
-    // missile.c
-    void missile_hit_target(int target_id, int legionary_type);
-    void missile_fire_at(int target_id, e_figure_type missile_type);
 
     // wall.c
     void tower_sentry_pick_target();
@@ -516,6 +508,8 @@ public:
     virtual const static_params &params() const { return params(type()); }
     virtual void kill();
     inline const animation_t &anim(const xstring &anim_key) const { return anim()[anim_key]; }
+    inline const animation_context &animation() const { return base.anim; }
+    inline animation_context &animation() { return base.anim; }
 
     static void params(e_figure_type, const static_params &);
     static const static_params &params(e_figure_type);

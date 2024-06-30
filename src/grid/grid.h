@@ -11,8 +11,8 @@
 
 class building;
 
-#define GRID_LENGTH 228
-#define GRID_SIZE_TOTAL GRID_LENGTH* GRID_LENGTH
+constexpr int GRID_LENGTH = 228;
+constexpr int GRID_SIZE_TOTAL = GRID_LENGTH * GRID_LENGTH;
 #define GRID_OFFSET(abs_x, abs_y) ((abs_x) + GRID_LENGTH * (abs_y))
 #define GRID_X(offset) ((offset) % GRID_LENGTH)
 #define GRID_Y(offset) ((offset) / GRID_LENGTH)

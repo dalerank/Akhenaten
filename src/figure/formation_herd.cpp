@@ -212,22 +212,25 @@ static void update_herd_formation(formation* m) {
             wolf->wait_ticks = wolf->id & 0x1f;
         }
     }
-    if (can_spawn_ostrich(m) && allow_span_ostrich.value) {
-        // spawn new ostrich
-        if (!map_terrain_is(m->tile, TERRAIN_IMPASSABLE_OSTRICH)) {
+
+    if (can_spawn_ostrich(m) && allow_span_ostrich()) {
+        const bool is_passible = !map_terrain_is(m->tile, TERRAIN_IMPASSABLE_OSTRICH);
+        const bool valid_tile = m->tile.valid();
+        if (is_passible && valid_tile) {
             figure* ostrich = figure_create(m->figure_type, m->tile, DIR_0_TOP_RIGHT);
-            // ostrich->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
-            ostrich->action_state = FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE;
+            ostrich->advance_action(FIGURE_ACTION_196_HERD_ANIMAL_AT_REST);
             ostrich->formation_id = m->id;
             ostrich->wait_ticks = ostrich->id & 0x1f;
         }
     }
+
     int attacking_animals = 0;
     for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
         int figure_id = m->figures[fig];
         if (figure_id > 0 && figure_get(figure_id)->action_state == FIGURE_ACTION_150_ATTACK)
             attacking_animals++;
     }
+
     if (m->missile_attack_timeout) {
         attacking_animals = 1;
         m->missile_attack_timeout--;

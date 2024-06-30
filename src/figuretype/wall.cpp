@@ -8,7 +8,7 @@
 #include "figure/movement.h"
 #include "figure/properties.h"
 #include "figure/route.h"
-#include "figuretype/missile.h"
+#include "figuretype/figure_missile.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"
@@ -84,8 +84,8 @@ void figure::ballista_action() {
             if (figure_combat_get_missile_target_for_soldier(this, 15, &tile)) {
                 direction = calc_missile_shooter_direction(tile, tile);
                 wait_ticks_missile = 0;
-                //                    figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_BOLT);
-                missile_fire_at(target_figure_id, FIGURE_BOLT);
+                figure* f = figure_get(target_figure_id);
+                figure_missile::create(home_building_id, tile, f->tile, FIGURE_BOLT);
                 g_sound.play_effect(SOUND_EFFECT_BALLISTA_SHOOT);
             } else {
                 action_state = FIGURE_ACTION_180_BALLISTA_CREATED;
@@ -203,6 +203,7 @@ void figure::tower_sentry_action() {
             }
         }
         break;
+
     case FIGURE_ACTION_171_TOWER_SENTRY_PATROLLING:
         move_ticks(1);
         if (direction == DIR_FIGURE_NONE) {
@@ -215,6 +216,7 @@ void figure::tower_sentry_action() {
             action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
 
         break;
+
     case FIGURE_ACTION_172_TOWER_SENTRY_FIRING:
         move_ticks_tower_sentry(1);
         wait_ticks_missile++;
@@ -223,17 +225,16 @@ void figure::tower_sentry_action() {
             if (figure_combat_get_missile_target_for_soldier(this, 10, &tile)) {
                 direction = calc_missile_shooter_direction(tile, tile);
                 wait_ticks_missile = 0;
-                //                    figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_JAVELIN);
-                missile_fire_at(target_figure_id, FIGURE_JAVELIN);
+                figure* f = figure_get(target_figure_id);
+                figure_missile::create(home_building_id, tile, f->tile, FIGURE_JAVELIN);
             } else {
                 action_state = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
                 destination_tile = source_tile;
-                //                    destination_tile.x() = source_tile.x();
-                //                    destination_tile.y() = source_tile.y();
                 route_remove();
             }
         }
         break;
+
     case ACTION_11_RETURNING_EMPTY:
     case FIGURE_ACTION_173_TOWER_SENTRY_RETURNING:
         move_ticks(1);
@@ -243,6 +244,7 @@ void figure::tower_sentry_action() {
             poof();
 
         break;
+
     case FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER:
         terrain_usage = TERRAIN_USAGE_ROADS;
         if (config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))
@@ -254,14 +256,12 @@ void figure::tower_sentry_action() {
         if (direction == DIR_FIGURE_NONE) {
             map_figure_remove();
             source_tile = tile = b->tile;
-            //                source_tile.x() = tile.x() = b->tile.x();
-            //                source_tile.y() = tile.y() = b->tile.y();
-            //                tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
             map_figure_add();
             action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
             route_remove();
-        } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
+        } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
+        }
 
         break;
     }

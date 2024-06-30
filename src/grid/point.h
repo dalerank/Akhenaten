@@ -1,11 +1,13 @@
 #pragma once
 
-#define _INVALID_COORD -1
 
-enum { _X = 0, _Y = 1, _GRID_OFFSET = 2, _ABS_X = 3, _ABS_Y = 4 };
 
 #include <cmath>
 #include <cstdint>
+
+#define _INVALID_COORD -1
+enum { _X = 0, _Y = 1, _GRID_OFFSET = 2, _ABS_X = 3, _ABS_Y = 4 };
+constexpr uint32_t MAX_TILE_I = 228;
 
 class map_point {
 private:
@@ -45,7 +47,7 @@ public:
     inline self mod(int x, int y) { return self(this->x() % x, this->y() % y); }
     inline self add(self o) { return self(this->x() + o.x(), this->y() + o.y()); }
     inline self div(float d) { return self(this->x() / d, this->y() / d); }
-    inline bool valid() const { return (p_X >= 0 && p_Y >= 0 && p_X < 0xffff && p_Y < 0xffff); }
+    inline bool valid() const { return (p_X >= 0 && p_Y >= 0 && p_X < MAX_TILE_I && p_Y < MAX_TILE_I); }
 
     // SET BY CONSTRUCTION
     void set(int _x, int _y);

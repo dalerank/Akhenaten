@@ -4,7 +4,6 @@
 #include "city/message.h"
 #include "city/population.h"
 #include "city/city.h"
-#include "figuretype/missile.h"
 #include "figuretype/wall.h"
 #include "game/undo.h"
 #include "graphics/image.h"

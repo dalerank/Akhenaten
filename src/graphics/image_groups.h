@@ -333,14 +333,14 @@ enum e_pack {
 
 //#define GROUP_FIGURE_DANCER_WHIP PACK_SPR_MAIN, 109     // this isn't in Pharaoh
 //#define GROUP_FIGURE_MUSICIAN PACK_SPR_MAIN, 191        // 111
-#define GROUP_FIGURE_HUNTER_ARROW PACK_SPR_MAIN, 0
-#define GROUP_FIGURE_HUNTER_ARROW_SHADOW PACK_SPR_MAIN, 1         // 33
+//#define GROUP_FIGURE_HUNTER_ARROW PACK_SPR_MAIN, 0
+//#define GROUP_FIGURE_HUNTER_ARROW_SHADOW PACK_SPR_MAIN, 1         // 33
 //#define GROUP_FIGURE_EMIGRANT PACK_SPR_MAIN, 2                    // 65
 //#define GROUP_FIGURE_EMIGRANT_DEATH PACK_SPR_MAIN, 3              // 161
 //#define GROUP_FIGURE_ENGINEER PACK_SPR_MAIN, 4                    //  169
 //#define GROUP_FIGURE_ENGINEER_DEATH PACK_SPR_MAIN, 5              // 265
 //#define GROUP_FIGURE_FIREMAN PACK_SPR_MAIN, 6                     // 273
-#define GROUP_FIGURE_FIREMAN_DEATH PACK_SPR_MAIN, 7               // 369
+//#define GROUP_FIGURE_FIREMAN_DEATH PACK_SPR_MAIN, 7               // 369
 //#define GROUP_FIGURE_FIREMAN_ATFIRE PACK_SPR_MAIN, 8              // 377
 //#define GROUP_FIGURE_GRANARY_BOY PACK_SPR_MAIN, 9                 // 673
 #define GROUP_FIGURE_GRANARY_BOY_DEATH PACK_SPR_MAIN, 10          // 769
@@ -527,7 +527,7 @@ enum e_pack {
 #define GROUP_FIGURE_LION PACK_SPR_MAIN, 161               // 163
 //#define GROUP_FIGURE_SHIP PACK_SPR_MAIN, 34                // 165
 #define GROUP_FIGURE_TOWER_SENTRY PACK_SPR_MAIN, 194       // TODO
-#define GROUP_FIGURE_MISSILE PACK_SPR_MAIN, 198            // TODO
+//#define GROUP_FIGURE_MISSILE PACK_SPR_MAIN, 198            // TODO
 #define GROUP_FIGURE_BALLISTA PACK_SPR_MAIN, 200           // TODO
 #define GROUP_FIGURE_CHARIOTEER PACK_SPR_MAIN, 215         // this isn't in Pharaoh
 #define GROUP_FIGURE_HIPPODROME_HORSE_1 PACK_SPR_MAIN, 217 // // this isn't in Pharaoh this isn't in Pharaoh

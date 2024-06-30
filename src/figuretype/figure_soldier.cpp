@@ -10,7 +10,7 @@
 #include "figure/movement.h"
 #include "figure/properties.h"
 #include "figure/route.h"
-#include "figuretype/missile.h"
+#include "figuretype/figure_missile.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "grid/figure.h"
@@ -106,8 +106,8 @@ void figure::javelin_launch_missile() {
                 map_point_get_last_result(tile);
             }
 
-            //            figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_JAVELIN);
-            missile_fire_at(target_figure_id, FIGURE_JAVELIN);
+            figure* f = figure_get(target_figure_id);
+            figure_missile::create(home_building_id, tile, f->tile, FIGURE_JAVELIN);
             formation_record_missile_fired(formation_get(formation_id));
         }
         attack_image_offset++;

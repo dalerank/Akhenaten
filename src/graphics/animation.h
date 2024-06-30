@@ -34,12 +34,14 @@ struct animation_context {
     bool can_reverse;
     bool loop = true;
     bool is_reverse = false;
+    bool was_finished = false;
 
     void setup(const animation_t &anim);
     void update(bool refresh_only);
     inline bool valid() const { return base > 0; }
     inline int current_frame() const { return std::clamp<int>(frame / frame_duration, 0, max_frames); }
     inline int start() const { return base + offset; }
+    inline bool finished() const { return was_finished || current_frame() >= max_frames; }
 };
 
 struct animations_t {
