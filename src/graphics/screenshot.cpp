@@ -406,8 +406,7 @@ static void create_minimap_screenshot() {
     window_invalidate();
 }
 
-void graphics_save_screenshot(screenshot_type type)
-{
+void graphics_save_screenshot(screenshot_type type) {
     switch (type) {
     case SCREENSHOT_FULL_CITY:
         create_full_city_screenshot();

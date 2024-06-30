@@ -1,51 +1,45 @@
 #include "top_menu.h"
 
-#include "building/construction/build_planner.h"
-#include "city/finance.h"
-#include "city/constants.h"
-#include "city/population.h"
-#include "core/profiler.h"
-#include "config/config.h"
-#include "dev/debug.h"
-#include "game/cheats.h"
-#include "game/mission.h"
-#include "game/orientation.h"
-#include "game/settings.h"
-#include "game/state.h"
-#include "game/system.h"
-#include "game/time.h"
-#include "game/undo.h"
-#include "graphics/graphics.h"
-#include "graphics/elements/generic_button.h"
-#include "graphics/elements/image_button.h"
-#include "graphics/elements/lang_text.h"
+#include "game/game.h"
+
 #include "graphics/elements/menu.h"
-#include "graphics/elements/panel.h"
-#include "graphics/screen.h"
-#include "graphics/text.h"
+#include "graphics/elements/ui.h"
 #include "graphics/screenshot.h"
 #include "graphics/window.h"
+#include "graphics/graphics.h"
+#include "city/constants.h"
+#include "city/finance.h"
+#include "city/population.h"
+#include "core/profiler.h"
+#include "core/core_utility.h"
+#include "core/span.hpp"
+#include "config/config.h"
+#include "game/settings.h"
+#include "game/cheats.h"
+#include "game/orientation.h"
+#include "game/state.h"
+#include "game/time.h"
+#include "game/undo.h"
+#include "window/file_dialog.h"
+#include "window/message_dialog.h"
 #include "io/gamestate/boilerplate.h"
-#include "io/manager.h"
+#include "building/construction/build_planner.h"
 #include "scenario/scenario.h"
+#include "game/system.h"
+#include "graphics/screen.h"
 #include "widget/widget_city.h"
+#include "window/display_options.h"
 #include "window/advisors.h"
 #include "window/window_city.h"
-#include "window/config.h"
 #include "window/difficulty_options.h"
-#include "window/display_options.h"
-#include "window/file_dialog.h"
+#include "window/config.h"
 #include "window/game_menu.h"
 #include "window/hotkey_config.h"
 #include "window/main_menu.h"
-#include "window/message_dialog.h"
 #include "window/popup_dialog.h"
-#include "window/sound_options.h"
 #include "window/speed_options.h"
-#include "game/game.h"
-
-#include "core/core_utility.h"
-#include "core/span.hpp"
+#include "window/sound_options.h"
+#include "dev/debug.h"
 
 #include "js/js_game.h"
 
@@ -871,6 +865,7 @@ static void menu_help_help(int param) {
     window_go_back();
     window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
 }
+
 static void menu_help_mouse_help(int param) {
     g_settings.toggle_tooltips();
     set_text_for_tooltips();
@@ -879,6 +874,7 @@ static void menu_help_warnings(int param) {
     g_settings.toggle_warnings();
     set_text_for_warnings();
 }
+
 static void menu_help_about(int param) {
     widget_top_menu_clear_state();
     window_go_back();
