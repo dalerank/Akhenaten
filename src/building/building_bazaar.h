@@ -24,10 +24,14 @@ public:
     void draw_simple_background(object_info &c);
     void draw_orders_background(object_info &c);
     void draw_orders_foreground(object_info &c);
+    int handle_mouse_orders(const mouse *m, object_info &c);
+    int handle_mouse_simple(const mouse *m, object_info &c);
     int max_food_stock();
     int max_goods_stock();
     bool is_good_accepted(int index);
     void toggle_good_accepted(int index);
     void unaccept_all_goods();
+    inline int allow_food_types() const { return 4; }
+    inline int allow_good_types() const { return 4; }
 };
 

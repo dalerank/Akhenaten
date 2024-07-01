@@ -286,7 +286,8 @@ void building_bazaar::update_graphic() {
     }
 
     base.fancy_state = (g_desirability.get(base.tile) <= 30) ? efancy_normal : efancy_good;
-    const animation_t &anim = bazaar_m.anim[(base.fancy_state == efancy_normal) ? "base" : "fancy"];
+    pcstr animkey = (base.fancy_state == efancy_normal) ? "base" : "fancy";
+    const animation_t &anim = bazaar_m.anim[animkey];
     map_building_tiles_add(base.id, base.tile, base.size, anim.first_img(), TERRAIN_BUILDING);
 }
 
@@ -328,12 +329,12 @@ void building_bazaar::spawn_figure() {
     }
 }
 
-int window_building_handle_mouse_market(const mouse* m, object_info &c) {
+int building_bazaar::handle_mouse_simple(const mouse* m, object_info &c) {
     auto &data = g_window_building_distribution;
     return generic_buttons_handle_mouse(m, {c.offset.x + 80, c.offset.y + 16 * c.bgsize.x - 34}, data.go_to_orders_button.data(), 1, &data.focus_button_id);
 }
 
-int window_building_handle_mouse_market_orders(const mouse* m, object_info &c) {
+int building_bazaar::handle_mouse_orders(const mouse* m, object_info &c) {
     auto &data = g_window_building_distribution;
     int y_offset = window_building_get_vertical_offset(&c, 28 - 11);
     data.resource_focus_button_id = 0;
@@ -346,58 +347,10 @@ int window_building_handle_mouse_market_orders(const mouse* m, object_info &c) {
 
 int building_bazaar::window_info_handle_mouse(const mouse *m, object_info &c) {
     if (c.storage_show_special_orders) {
-        return window_building_handle_mouse_market_orders(m, c);
+        return handle_mouse_orders(m, c);
     }
 
-    return window_building_handle_mouse_market(m, c);
-}
-
-void building_bazaar::draw_orders_background(object_info &c) {
-    c.help_id = 2;
-    int y_offset = window_building_get_vertical_offset(&c, 28 - 11);
-    outer_panel_draw(vec2i{c.offset.x, y_offset}, 29, 28 - 11);
-    lang_text_draw_centered(97, 7, c.offset.x, y_offset + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c.offset.x + 16, y_offset + 42, c.bgsize.x - 2, 21 - 10);
-}
-
-void building_bazaar::window_info_background(object_info &c) {
-    if (c.storage_show_special_orders) {
-        draw_orders_background(c);
-    } else {
-        draw_simple_background(c);
-    }
-}
-
-void building_bazaar::draw_orders_foreground(object_info &c) {
-    auto &data = g_window_building_distribution;
-    draw_orders_background(c);
-    int line_x = c.offset.x + 215;
-    int y_offset = window_building_get_vertical_offset(&c, 28 - 11);
-    painter ctx = game.painter();
-
-    building_bazaar* bazaar = building_get(c.building_id)->dcast_bazaar();
-    //    backup_storage_settings(storage_id); // TODO: market state backup
-    const resources_list* list = city_resource_get_available_market_goods();
-    for (int i = 0; i < list->size; i++) {
-        int line_y = 20 * i;
-        int resource = list->items[i];
-        int image_id = image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-
-        ImageDraw::img_generic(ctx, image_id, c.offset.x + 25, y_offset + 48 + line_y);
-        lang_text_draw(23, resource, c.offset.x + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE_ON_DARK);
-        if (data.resource_focus_button_id - 1 == i) {
-            button_border_draw(line_x - 10, y_offset + 46 + line_y, data.orders_resource_buttons[i].width, data.orders_resource_buttons[i].height, true);
-        }
-
-        // order status
-        window_building_draw_order_instruction(INSTR_STORAGE_YARD, nullptr, resource, line_x, y_offset + 51 + line_y, bazaar->is_good_accepted(i));
-    }
-
-    // accept none button
-    // button_border_draw(c->offset.x + 80, y_offset + 382 - 10 * 16, 16 * (c->width_blocks - 10), 20,
-    //                    data.orders_focus_button_id == 2 ? 1 : 0);
-    // lang_text_draw_centered(99, 7, c->offset.x + 80, y_offset + 386 - 10 * 16,
-    //                         16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+    return handle_mouse_simple(m, c);
 }
 
 bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
