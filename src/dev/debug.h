@@ -27,6 +27,9 @@ enum e_debug_show_opt {
     e_debug_show_migration,
     e_debug_show_sentiment,
     e_debug_show_sound_channels,
+    e_debug_show_console,
+    e_debug_show_screenshot,
+    e_debug_show_full_screenshot,
 
     e_debug_opt_size,
 };

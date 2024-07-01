@@ -410,15 +410,17 @@ void ui::widget::draw() {
     }
 }
 
-void ui::widget::load(archive arch) {
+void ui::widget::load(archive arch, pcstr section) {
     elements.clear();
-    arch.r_objects("ui", [this] (pcstr key, archive elem) {
+    arch.r_objects(section, [this] (pcstr key, archive elem) {
         pcstr type = elem.r_string("type");
         element::ptr elm;
         if (!strcmp(type, "outer_panel")) {
             elm = std::make_shared<eouter_panel>();
         } else if (!strcmp(type, "scrollbar")) {
             elm = std::make_shared<escrollbar>();
+        } else if (!strcmp(type, "menu_header")) {
+            elm = std::make_shared<emenu_header>();
         } else if (!strcmp(type, "inner_panel")) {
             elm = std::make_shared<einner_panel>();
         } else if (!strcmp(type, "background")) {
@@ -605,6 +607,52 @@ void ui::etext::draw() {
     } else {
         text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _font, _color);
     }
+}
+
+void ui::emenu_header::load(archive arch) {
+    element::load(arch);
+
+    pcstr type = arch.r_string("type");
+    assert(!strcmp(type, "menu_header"));
+
+    _font = (e_font)arch.r_int("font", FONT_NORMAL_BLACK_ON_LIGHT);
+    impl.text = arch.r_string("text");
+    if (!!impl.text && impl.text[0] == '#') {
+        impl.text = lang_text_from_key(impl.text.c_str());
+    }
+}
+
+void ui::emenu_header::load_items(archive arch, pcstr section) {
+    impl.items.clear();
+
+    arch.r_objects(section, [this] (pcstr key, archive elem) {
+        pcstr type = elem.r_string("type");
+        assert(!strcmp(type, "menu_item"));
+
+        menu_item item;
+        item.id = key;
+        item.text = elem.r_string("text");
+        if (!!item.text && item.text[0] == '#') {
+            item.text = lang_text_from_key(item.text.c_str());
+        }
+        item.parameter = elem.r_int("parameter");
+        item.hidden = elem.r_bool("hidden");
+        impl.items.push_back(item);
+    });
+}
+
+void ui::emenu_header::draw() {
+    lang_text_draw(impl.text, pos, _font);
+}
+
+int ui::emenu_header::text_width() {
+    return lang_text_get_width(impl.text, _font);
+}
+
+menu_item &ui::emenu_header::item(pcstr key) {
+    static menu_item dummy;
+    auto it = std::find_if(impl.items.begin(), impl.items.end(), [key] (auto &it) { return it.id == key; });
+    return it != impl.items.end() ? *it : dummy;
 }
 
 void ui::egeneric_button::draw() {

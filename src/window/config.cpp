@@ -1,6 +1,6 @@
 #include "config.h"
 
-#include "building/menu.h"
+#include "building/building_menu.h"
 #include "core/game_environment.h"
 #include "core/string.h"
 #include "core/log.h"

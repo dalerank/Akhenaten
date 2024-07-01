@@ -10,7 +10,8 @@ class buffer;
 enum e_tooltip_show {
     e_tooltip_show_none = 0,
     e_tooltip_show_some = 1,
-    e_tooltip_show_full = 2
+    e_tooltip_show_full = 2,
+    e_tooltip_count,
 };
 using etooltip_flag = uint32_t;
 

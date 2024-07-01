@@ -7,11 +7,11 @@
 #include "window/file_dialog.h"
 #include "overlays/city_overlay_fwd.h"
 #include "building/building.h"
-#include "building/menu.h"
 #include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
 #include "graphics/font.h"
 #include "city/labor.h"
+#include "city/constants.h"
 
 #include "sound/sound_city.h"
 
@@ -202,6 +202,21 @@ void js_register_terrain(js_State *J) {
 
 void js_register_menu(js_State *J) {
 }
+
+void js_register_city_advisors(js_State *J) {
+    _R(ADVISOR_LABOR)
+    _R(ADVISOR_MILITARY)
+    _R(ADVISOR_IMPERIAL)
+    _R(ADVISOR_RATINGS)
+    _R(ADVISOR_TRADE)
+    _R(ADVISOR_POPULATION)
+    _R(ADVISOR_HEALTH)
+    _R(ADVISOR_EDUCATION)
+    _R(ADVISOR_ENTERTAINMENT)
+    _R(ADVISOR_RELIGION)
+    _R(ADVISOR_FINANCIAL)
+    _R(ADVISOR_CHIEF)
+};
 
 void js_register_city_resources(js_State *J) {
    _R(RESOURCE_NONE)

@@ -1,6 +1,6 @@
 #include "entertainment.h"
 
-#include "building/menu.h"
+#include "building/building_menu.h"
 #include "scenario/scenario.h"
 
 #include "building/count.h"

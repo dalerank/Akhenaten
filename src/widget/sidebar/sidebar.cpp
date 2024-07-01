@@ -1,7 +1,7 @@
 #include "sidebar.h"
 #include "dev/debug.h"
 
-#include "building/menu.h"
+#include "building/building_menu.h"
 #include "city/message.h"
 #include "core/game_environment.h"
 #include "core/profiler.h"

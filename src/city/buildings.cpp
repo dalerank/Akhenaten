@@ -1,7 +1,7 @@
 #include "buildings.h"
 
 #include "building/building.h"
-#include "building/menu.h"
+#include "building/building_menu.h"
 
 #include "city/city.h"
 

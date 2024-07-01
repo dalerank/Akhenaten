@@ -1,6 +1,5 @@
 #include "window_empire.h"
 
-#include "building/menu.h"
 #include "city/military.h"
 #include "city/warning.h"
 #include "city/constants.h"

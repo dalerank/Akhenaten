@@ -66,12 +66,12 @@ static menu_item menu_empire[] = {
   {149, 1, menu_empire_choose, 0},
 };
 
-static menu_bar_item menu[] = {
-  {7, menu_file, 4},
-  {2, menu_options, 3},
-  {3, menu_help, 2},
-  {10, menu_resets, 3},
-  {149, menu_empire, 1},
+static menu_header menu[] = {
+  {},//{menu_file, 4},
+  {},//{menu_options, 3},
+  {},//{menu_help, 2},
+  {},//{menu_resets, 3},
+  {}//{menu_empire, 1},
 };
 
 #define INDEX_OPTIONS 1

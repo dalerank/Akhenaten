@@ -27,7 +27,6 @@
 #include "grid/tiles.h"
 #include "io/io_buffer.h"
 #include "graphics/graphics.h"
-#include "menu.h"
 #include "monuments.h"
 #include "overlays/city_overlay.h"
 #include "city/city.h"

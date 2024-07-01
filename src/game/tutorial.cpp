@@ -1,6 +1,6 @@
 #include "tutorial.h"
 
-#include "building/menu.h"
+#include "building/building_menu.h"
 #include "city/buildings.h"
 #include "city/message.h"
 #include "city/mission.h"

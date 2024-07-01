@@ -13,3 +13,4 @@ void js_register_ui_fonts(js_State *J);
 void js_register_city_resources(js_State *J);
 void js_register_terrain(js_State *J);
 void js_register_menu(js_State *J);
+void js_register_city_advisors(js_State *J);

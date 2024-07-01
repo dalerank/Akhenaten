@@ -1,6 +1,5 @@
 #include "distant_battle.h"
 
-#include "building/menu.h"
 #include "city/buildings.h"
 #include "city/map.h"
 #include "city/message.h"

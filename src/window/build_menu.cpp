@@ -2,6 +2,7 @@
 #include "city/buildings.h"
 
 #include "building/building.h"
+#include "building/building_menu.h"
 #include "building/construction/build_planner.h"
 #include "building/model.h"
 #include "core/game_environment.h"

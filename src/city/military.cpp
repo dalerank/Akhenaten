@@ -1,6 +1,5 @@
 #include "military.h"
 
-#include "building/menu.h"
 #include "city/buildings.h"
 #include "city/city.h"
 #include "city/message.h"

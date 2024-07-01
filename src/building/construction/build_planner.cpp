@@ -7,7 +7,7 @@
 #include "widget/sidebar/sidebar.h"
 
 #include "building/building_dock.h"
-#include "building/menu.h"
+#include "building/building_menu.h"
 #include "building/count.h"
 #include "building/model.h"
 #include "building/monuments.h"

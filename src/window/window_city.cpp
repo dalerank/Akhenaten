@@ -25,7 +25,7 @@
 #include "scenario/scenario.h"
 #include "scenario/criteria.h"
 #include "widget/sidebar/sidebar.h"
-#include "widget/top_menu.h"
+#include "widget/top_menu_game.h"
 #include "widget/widget_city.h"
 #include "window/advisors.h"
 #include "window/file_dialog.h"
@@ -94,7 +94,7 @@ static void draw_cancel_construction() {
     //    city_view_dirty = 1;
 }
 
-static void draw_foreground() {
+static void window_city_draw_foreground() {
     //    clear_city_view(0);
     widget_top_menu_draw(0);
     window_city_draw();
@@ -235,6 +235,7 @@ static void handle_hotkeys(const hotkeys* h) {
 
 static void handle_input(const mouse* m, const hotkeys* h) {
     handle_hotkeys(h);
+
     if (!Planner.in_progress) {
         widget_top_menu_handle_input(m, h);
         widget_sidebar_city_handle_mouse(m);
@@ -268,7 +269,7 @@ static void get_tooltip(tooltip_context* c) {
 
 void window_city_draw_all() {
     window_city_draw_background();
-    draw_foreground();
+    window_city_draw_foreground();
 }
 void window_city_draw_panels() {
     window_city_draw_background();
@@ -283,10 +284,11 @@ void window_city_show() {
     static window_type window = {
         WINDOW_CITY,
         window_city_draw_background,
-        draw_foreground,
+        window_city_draw_foreground,
         handle_input,
         get_tooltip
     };
+
     window_show(&window);
     city_has_loaded = false;
 }

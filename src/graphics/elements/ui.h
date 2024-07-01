@@ -15,6 +15,7 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/button.h"
 #include "graphics/elements/panel.h"
+#include "graphics/elements/menu.h"
 #include "graphics/image_groups.h"
 
 #include "js/js_game.h"
@@ -65,6 +66,8 @@ scrollbar_t &scrollbar(scrollbar_t &scrollbar, vec2i pos, int &value, vec2i size
 pcstr str(int group, int id);
 inline pcstr str(std::pair<int, int> r) { return str(r.first, r.second); }
 
+struct emenu_header;
+
 struct element {
     bstring64 id;
     vec2i pos;
@@ -74,6 +77,7 @@ struct element {
     virtual void draw() {}
     virtual void load(archive);
     virtual void text(pcstr) {}
+    virtual int text_width() { return 0; }
     inline void text(int font, pcstr v) { this->font(font); this->text(v); }
     virtual void color(int) {}
     virtual void image(int) {}
@@ -85,6 +89,7 @@ struct element {
     virtual void onclick(std::function<void(int, int)>) {}
             void onclick(std::function<void()> f) { onclick([f] (int, int) { f(); }); }
     virtual void onevent(std::function<void()>) {}
+    virtual emenu_header *dcast_menu_header() { return nullptr; }
 
     pcstr text_from_key(pcstr key);
 
@@ -203,6 +208,22 @@ struct escrollbar : public element {
     virtual void load(archive elem) override;
 };
 
+struct emenu_header : public element {
+    menu_header impl;
+    e_font _font;
+
+    virtual void load(archive elem) override;
+            void load_items(archive elem, pcstr section);
+    virtual void draw() override;
+    virtual void font(int v) { _font = (e_font)v; }
+    virtual void text(pcstr text) override { impl.text = text; }
+    virtual int text_width() override;
+            menu_item &item(int i) { static menu_item dummy; return i < impl.items.size() ? impl.items[i] : dummy; }
+            menu_item &item(pcstr key);
+            void onclick(std::function<void(menu_item&)> f) { impl._onclick = f; }
+    virtual emenu_header *dcast_menu_header() override { return this; }
+};
+
 struct egeneric_button : public elabel {
     int mode = 0;
     int param1 = 0;
@@ -231,7 +252,7 @@ struct widget {
     std::vector<element::ptr> elements;
 
     virtual void draw();
-    virtual void load(archive arch);
+    virtual void load(archive arch, pcstr section = "ui");
 
     element& operator[](pcstr id);
     inline element &operator[](const bstring32 &id) { return (*this)[id.c_str()]; }

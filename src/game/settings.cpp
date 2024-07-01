@@ -192,17 +192,7 @@ void game_settings::decrease_game_speed(void) {
 
 void game_settings::toggle_tooltips() {
     auto& data = g_settings;
-    switch (data.tooltips) {
-    case e_tooltip_show_none:
-        data.tooltips = e_tooltip_show_some;
-        break;
-    case e_tooltip_show_some:
-        data.tooltips = e_tooltip_show_full;
-        break;
-    default:
-        data.tooltips = e_tooltip_show_none;
-        break;
-    }
+    data.tooltips = (data.tooltips + 1) % e_tooltip_count;
 }
 
 void game_settings::set_player_name(const uint8_t* name) {
