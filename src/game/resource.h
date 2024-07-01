@@ -75,10 +75,10 @@ struct resource_foods {
 };
 
 enum e_inventory_good {
-    //    INVENTORY_FOOD1 = 0,
-    //    INVENTORY_FOOD2 = 1,
-    //    INVENTORY_FOOD3 = 2,
-    //    INVENTORY_FOOD4 = 3,
+    INVENTORY_FOOD1 = 0,
+    INVENTORY_FOOD2 = 1,
+    INVENTORY_FOOD3 = 2,
+    INVENTORY_FOOD4 = 3,
     INVENTORY_GOOD1 = 5,
     INVENTORY_GOOD2 = 7,
     INVENTORY_GOOD3 = 6,
@@ -102,7 +102,7 @@ bool city_is_food_allowed(int resource);
 int stack_units_by_resource(int resource);
 int stack_proper_quantity(int full, int resource);
 
-const int INV_RESOURCES[20] = {
+const e_resource INV_RESOURCES[20] = {
   RESOURCE_POTTERY,
   RESOURCE_LUXURY_GOODS,
   RESOURCE_LINEN,

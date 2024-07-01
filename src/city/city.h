@@ -272,7 +272,7 @@ struct city_t {
         //        int32_t food_types_eaten;
         int8_t food_types_available_arr[RESOURCES_FOODS_MAX];
         int8_t food_types_eaten_arr[RESOURCES_FOODS_MAX];
-        int8_t food_types_allowed[4];
+        e_resource food_types_allowed[4];
         int32_t food_types_available_num;
         int32_t food_types_eaten_num;
         int32_t granary_food_stored[RESOURCES_FOODS_MAX];
@@ -394,8 +394,8 @@ struct city_t {
     void init();
     void init_custom_map();
     void init_campaign_mission();
-    int allowed_foods(int i);
-    void set_allowed_food(int i, int resource);
+    e_resource allowed_foods(int i);
+    void set_allowed_food(int i, e_resource r);
 
     bool generate_trader_from(int city_id, empire_city &city);
     bool available_resource(e_resource resource);

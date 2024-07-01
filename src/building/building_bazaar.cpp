@@ -34,6 +34,48 @@ struct resource_data {
     int building_id;
     int distance;
     int num_buildings;
+
+    void update_food(int resource, building &b, int distance) {
+        if (!resource) {
+            return;
+        }
+
+        building_granary *granary = b.dcast_granary();
+        if (!granary) {
+            return;
+        }
+
+        if (b.data.granary.resource_stored[resource] < 100) {
+            return;
+        }
+
+        num_buildings++;
+        if (distance < distance) {
+            distance = distance;
+            building_id = b.id;
+        }
+    }
+
+    void update_good(e_resource resource, building &b, int distance) {
+        if (city_resource_is_stockpiled(resource)) {
+            return;
+        }
+
+        building_storage_yard *warehouse = b.dcast_storage_yard();
+        if (!warehouse) {
+            return;
+        }
+
+        if (warehouse->amount(resource) <= 0) {
+            return;
+        }
+
+        num_buildings++;
+        if (distance < distance) {
+            distance = distance;
+            building_id = b.id;
+        }
+    }
 };
 
 int building_bazaar::max_food_stock() {
@@ -44,33 +86,6 @@ int building_bazaar::max_food_stock() {
 int building_bazaar::max_goods_stock() {
     auto it = std::max_element(data.market.inventory + INVENTORY_MIN_GOOD, data.market.inventory + INVENTORY_MAX_GOOD);
     return *it;
-}
-
-static void update_food_resource(resource_data &data, int resource, const building &b, int distance) {
-    if (!resource) {
-        return;
-    }
-
-    if (b.data.granary.resource_stored[resource] > 100) {
-        data.num_buildings++;
-        if (distance < data.distance) {
-            data.distance = distance;
-            data.building_id = b.id;
-        }
-    }
-}
-
-static void update_good_resource(resource_data &data, e_resource resource, building &b, int distance) {
-    building_storage_yard *warehouse = b.dcast_storage_yard();
-
-    if (!city_resource_is_stockpiled(resource) && warehouse->amount(resource) > 0) {
-        data.num_buildings++;
-
-        if (distance < data.distance) {
-            data.distance = distance;
-            data.building_id = b.id;
-        }
-    }
 }
 
 bool building_bazaar::is_good_accepted(int index) {
@@ -116,17 +131,17 @@ building *building_bazaar::get_storage_destination() {
             }
 
             // todo: fetch map available foods?
-            update_food_resource(resources[0], g_city.allowed_foods(0), b, distance);
-            update_food_resource(resources[1], g_city.allowed_foods(1), b, distance);
-            update_food_resource(resources[2], g_city.allowed_foods(2), b, distance);
-            update_food_resource(resources[3], g_city.allowed_foods(3), b, distance);
+            resources[0].update_food(g_city.allowed_foods(0), b, distance);
+            resources[1].update_food(g_city.allowed_foods(1), b, distance);
+            resources[2].update_food(g_city.allowed_foods(2), b, distance);
+            resources[3].update_food(g_city.allowed_foods(3), b, distance);
 
         } else if (b.type == BUILDING_STORAGE_YARD) {
             // goods
-            update_good_resource(resources[INVENTORY_GOOD1], RESOURCE_POTTERY, b, distance);
-            update_good_resource(resources[INVENTORY_GOOD2], RESOURCE_LUXURY_GOODS, b, distance);
-            update_good_resource(resources[INVENTORY_GOOD3], RESOURCE_LINEN, b, distance);
-            update_good_resource(resources[INVENTORY_GOOD4], RESOURCE_BEER, b, distance);
+            resources[INVENTORY_GOOD1].update_good(RESOURCE_POTTERY, b, distance);
+            resources[INVENTORY_GOOD2].update_good(RESOURCE_LUXURY_GOODS, b, distance);
+            resources[INVENTORY_GOOD3].update_good(RESOURCE_LINEN, b, distance);
+            resources[INVENTORY_GOOD4].update_good(RESOURCE_BEER, b, distance);
         }
     }, BUILDING_GRANARY, BUILDING_STORAGE_YARD);
 
@@ -370,27 +385,24 @@ void building_bazaar::draw_orders_foreground(object_info &c) {
 
         ImageDraw::img_generic(ctx, image_id, c.offset.x + 25, y_offset + 48 + line_y);
         lang_text_draw(23, resource, c.offset.x + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE_ON_DARK);
-        if (data.resource_focus_button_id - 1 == i)
+        if (data.resource_focus_button_id - 1 == i) {
             button_border_draw(line_x - 10, y_offset + 46 + line_y, data.orders_resource_buttons[i].width, data.orders_resource_buttons[i].height, true);
+        }
 
         // order status
         window_building_draw_order_instruction(INSTR_STORAGE_YARD, nullptr, resource, line_x, y_offset + 51 + line_y, bazaar->is_good_accepted(i));
     }
 
     // accept none button
-    //if (GAME_ENV == ENGINE_ENV_C3) {
-    //    draw_accept_none_button(c->offset.x + 394, y_offset + 404, data.orders_focus_button_id == 1);
-    //}
-    //    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-    //        button_border_draw(c->offset.x + 80, y_offset + 382 - 10 * 16, 16 * (c->width_blocks - 10), 20,
-    //                           data.orders_focus_button_id == 2 ? 1 : 0);
-    //        lang_text_draw_centered(99, 7, c->offset.x + 80, y_offset + 386 - 10 * 16,
-    //                                16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
-    //    }
+    // button_border_draw(c->offset.x + 80, y_offset + 382 - 10 * 16, 16 * (c->width_blocks - 10), 20,
+    //                    data.orders_focus_button_id == 2 ? 1 : 0);
+    // lang_text_draw_centered(99, 7, c->offset.x + 80, y_offset + 386 - 10 * 16,
+    //                         16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
 }
 
 bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const animation_t &anim = bazaar_m.anim[(base.fancy_state == efancy_normal) ? "base_work" : "fancy_work"];
+    pcstr animkey = (base.fancy_state == efancy_normal) ? "base_work" : "fancy_work";
+    const animation_t &anim = bazaar_m.anim[animkey];
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;

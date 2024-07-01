@@ -50,53 +50,49 @@ void building_bazaar::draw_simple_background(object_info &ctx) {
     }
 
     int image_id = image_id_resource_icon(0);
-    if (data.market.inventory[0] || data.market.inventory[1] || data.market.inventory[2]
-        || data.market.inventory[3]) {
-            {
-                //
-            }
+    if (data.market.inventory[0] || data.market.inventory[1] || data.market.inventory[2] || data.market.inventory[3]) {
+        //
     } else {
         window_building_draw_description_at(ctx, 48, 97, 4);
     }
 
     // food stocks
-    // todo: fetch map available foods?
-    int food1 = g_city.allowed_foods(0);
+    e_resource food1 = g_city.allowed_foods(0);
     ui["food0_icon"].image(food1);
     ui["food0_text"].font(is_good_accepted(0) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
-    ui["food0_text"].text_var(food1 ? "%u" : "", data.market.inventory[food1]);
+    ui["food0_text"].text_var(food1 ? "%u" : "", data.market.inventory[INVENTORY_FOOD1]);
 
-    int food2 = g_city.allowed_foods(1);
+    e_resource food2 = g_city.allowed_foods(1);
     ui["food1_icon"].image(food2);
     ui["food1_text"].font(is_good_accepted(1) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
-    ui["food1_text"].text_var(food2 ? "%u" : "", data.market.inventory[food2]);
+    ui["food1_text"].text_var(food2 ? "%u" : "", data.market.inventory[INVENTORY_FOOD2]);
 
-    int food3 = g_city.allowed_foods(2);
+    e_resource food3 = g_city.allowed_foods(2);
     ui["food2_icon"].image(food3);
     ui["food2_text"].font(is_good_accepted(1) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
-    ui["food2_text"].text_var(food3 ? "%u" : "", data.market.inventory[food3]);
+    ui["food2_text"].text_var(food3 ? "%u" : "", data.market.inventory[INVENTORY_FOOD3]);
 
-    int food4 = g_city.allowed_foods(3);
+    e_resource food4 = g_city.allowed_foods(3);
     ui["food3_icon"].image(food4);
     ui["food3_text"].font(is_good_accepted(1) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
-    ui["food3_text"].text_var(food4 ? "%u" : "", data.market.inventory[food4]);
+    ui["food3_text"].text_var(food4 ? "%u" : "", data.market.inventory[INVENTORY_FOOD4]);
 
-    int good1 = INV_RESOURCES[0];
+    e_resource good1 = INV_RESOURCES[0];
     ui["good0_icon"].image(good1);
     ui["good0_text"].font(is_good_accepted(INVENTORY_GOOD1) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
     ui["good0_text"].text_var(good1 ? "%u" : "", data.market.inventory[INVENTORY_GOOD1]);
 
-    int good2 = INV_RESOURCES[1];
+    e_resource good2 = INV_RESOURCES[1];
     ui["good1_icon"].image(good2);
     ui["good1_text"].font(is_good_accepted(INVENTORY_GOOD2) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
     ui["good1_text"].text_var(good2 ? "%u" : "", data.market.inventory[INVENTORY_GOOD2]);
 
-    int good3 = INV_RESOURCES[3];
+    e_resource good3 = INV_RESOURCES[3];
     ui["good2_icon"].image(good3);
     ui["good2_text"].font(is_good_accepted(INVENTORY_GOOD3) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
     ui["good2_text"].text_var(good3 ? "%u" : "", data.market.inventory[INVENTORY_GOOD3]);
 
-    int good4 = INV_RESOURCES[3];
+    e_resource good4 = INV_RESOURCES[3];
     ui["good3_icon"].image(good4);
     ui["good3_text"].font(is_good_accepted(INVENTORY_GOOD4) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
     ui["good3_text"].text_var(good4 ? "%u" : "", data.market.inventory[INVENTORY_GOOD4]);

@@ -88,7 +88,7 @@ void city_t::init_campaign_mission() {
     finance.treasury = difficulty_adjust_money(finance.treasury);
 }
 
-int city_t::allowed_foods(int i) {
+e_resource city_t::allowed_foods(int i) {
     return resource.food_types_allowed[i];
 }
 
@@ -186,7 +186,7 @@ bool city_is_food_allowed(int resource) {
     return result;
 }
 
-void city_t::set_allowed_food(int i, int r) {
+void city_t::set_allowed_food(int i, e_resource r) {
     resource.food_types_allowed[i] = r;
 }
 
@@ -431,12 +431,13 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
 
     int food_index = 0;
     for (int i = 0; i < 4; i++) // reset available foods quick array
-        data.resource.food_types_allowed[i] = 0;
+        data.resource.food_types_allowed[i] = RESOURCE_NONE;
 
-    for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_available_arr[i]);
-        if (data.resource.food_types_available_arr[i]) {
-            data.resource.food_types_allowed[food_index] = i;
+    const resource_foods rfoods;
+    for (const auto &r : rfoods) {
+        iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_available_arr[r.type]);
+        if (data.resource.food_types_available_arr[r.type]) {
+            data.resource.food_types_allowed[food_index] = r.type;
             food_index++;
         }
     }
