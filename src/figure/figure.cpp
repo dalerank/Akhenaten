@@ -93,7 +93,11 @@ void figure_clear_all() {
     }
 
     for (auto *f : g_figure_data.figures) {
+        int figure_id = f->id;
         f->clear_impl();
+        memset(f, 0, sizeof(figure));
+        f->state = FIGURE_STATE_NONE;
+        f->id = figure_id;
     }
 }
 
@@ -384,14 +388,20 @@ void figure_impl::static_params::load(archive arch) {
 }
 
 void figure_impl::update_animation() {
-    xstring anim_key = animkeys().walk;
-    if (action_state() == FIGURE_ACTION_149_CORPSE) {
-        anim_key = animkeys().death;
-    } else if (!!(base.terrain_type & TERRAIN_WATER)) {
-        anim_key = animkeys().swim;
+    xstring animkey;
+    if (!base.anim.id) {
+        animkey = animkeys().walk;
     }
 
-    image_set_animation(anim_key);
+    if (action_state() == FIGURE_ACTION_149_CORPSE) {
+        animkey = animkeys().death;
+    } else if (!!(base.terrain_type & TERRAIN_WATER)) {
+        animkey = animkeys().swim;
+    }
+
+    if (!!animkey) {
+        image_set_animation(animkey);
+    }
 }
 
 figure_impl *figures::create(e_figure_type e, figure *data) {

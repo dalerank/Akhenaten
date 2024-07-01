@@ -770,7 +770,7 @@ building_work_camp = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:77 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:77 },
-    work : { pos : [ 25, -12], pack:PACK_GENERAL, id:77, offset:1, max_frames:12 },
+    work : { pos : [ 25, -12], pack:PACK_GENERAL, id:77, offset:1, max_frames:19, can_reverse:true, duration:3 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,

@@ -112,11 +112,15 @@ void building_work_camp::spawn_figure() {
 }
 
 bool building_work_camp::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    building_draw_normal_anim(ctx, point, &base, tile, work_camp_m.anim["work"], color_mask);
+    building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
 
     return true;
 }
 
 void building_work_camp::update_day() {
+    set_animation(can_play_animation() ? animkeys().work : animkeys().none);
+}
+
+void building_work_camp::update_month() {
     data.industry.spawned_worker_this_month = false;
 }
