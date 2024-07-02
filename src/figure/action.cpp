@@ -81,7 +81,6 @@ static figure_action_property action_properties_lookup[] = {
   {FIGURE_ENEMY_WARSHIP, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_FUNERAL_WALKER, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
   {FIGURE_FISHING_SPOT, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
-  {FIGURE_SLED_PULLER, 1, TERRAIN_USAGE_ANY, 0, 0, 0, IMG_SLED_PULLER},
   {FIGURE_SHOWMAN, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
   {FIGURE_PLAGUED_CITIZEN, 1, TERRAIN_USAGE_ROADS, 0, 0, 0},
   {FIGURE_BEDOUIN_INFANTRY, 1, TERRAIN_USAGE_ANY, 0, 0, 0},
@@ -109,6 +108,7 @@ void figure::advance_action(short next_action) {
     }
     action_state = next_action;
 }
+
 bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
     terrain_usage = terrainchoice;
     roam_length++;
@@ -389,7 +389,6 @@ void figure::action_perform() {
         case FIGURE_BIRDS: sheep_action(); break;
         case FIGURE_ANTELOPE: zebra_action(); break; // 70
         case FIGURE_CHARIOR_RACER: hippodrome_horse_action(); break;
-        case FIGURE_SLED_PULLER: sled_puller_action(); break;
         case FIGURE_HYENA: hyena_action(); break;
 
         default:

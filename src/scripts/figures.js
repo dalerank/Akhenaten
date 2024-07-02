@@ -509,8 +509,22 @@ figure_emigrant = {
 
 figure_sled = {
 	animations : {
-		walk : { anim_id: IMG_BIGSLED_EMPTY, max_frames:1 },
-	}
+		empty : { pack:PACK_SPR_MAIN, id:166, max_frames:1 },
+		stone : { pack:PACK_SPR_MAIN, id:167, max_frames:1 },
+		sandstone : { pack:PACK_SPR_MAIN, id:168, max_frames:1 },
+		granite : { pack:PACK_SPR_MAIN, id:169, max_frames:1 },
+		limestone : { pack:PACK_SPR_MAIN, id:170, max_frames:1 },
+		clay : { pack:PACK_SPR_MAIN, id:171, max_frames:1 },
+		bricks : { pack:PACK_SPR_MAIN, id:172, max_frames:1 },
+	},
+	terrain_usage: TERRAIN_USAGE_ANY,
+}
+
+figure_sled_puller = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:121, max_frames:12 },
+	},
+	terrain_usage: TERRAIN_USAGE_ANY,
 }
 
 figure_trade_caravan = {

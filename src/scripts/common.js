@@ -187,6 +187,7 @@ var figure_cartpusher = {}
 var figure_storageyard_cart = {}
 var figure_trade_ship = {}
 var figure_sled = {}
+var figure_sled_puller = {}
 var figure_tax_collector = {}
 var figure_physician = {}
 var figure_herbalist = {}

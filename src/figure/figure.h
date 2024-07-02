@@ -381,7 +381,6 @@ public:
     bool do_exitbuilding(bool invisible, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
     bool do_enterbuilding(bool invisible, building* b, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
 
-    void sled_puller_action();
     void protestor_action();
     void mugger_action();
     void rioter_action();

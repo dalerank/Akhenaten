@@ -7,10 +7,12 @@
 #include "js/js_game.h"
 
 figures::model_t<figure_sled> sled_m;
+figures::model_t<figure_sled_puller> sled_puller_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_sled);
 void config_load_figure_sled() {
     sled_m.load();
+    sled_puller_m.load();
 }
 
 void figure_sled::figure_action() {
@@ -28,19 +30,24 @@ void figure_sled::figure_action() {
             return;
         }
     }
+}
 
+void figure_sled::update_animation() {
+    xstring animkey;
     switch (base.resource_id) {
-    case RESOURCE_STONE: image_set_animation(IMG_BIGSLED_STONE, 0, 1); break;
-    case RESOURCE_LIMESTONE: image_set_animation(IMG_BIGSLED_LIMESTONE, 0, 1); break;
-    case RESOURCE_GRANITE: image_set_animation(IMG_BIGSLED_GRANITE, 0, 1); break;
-    case RESOURCE_SANDSTONE: image_set_animation(IMG_BIGSLED_SANDSTONE, 0, 1); break;
-    case RESOURCE_CLAY: image_set_animation(IMG_BIGSLED_CLAY, 0, 1); break;
-    case RESOURCE_BRICKS: image_set_animation(IMG_BIGSLED_BRICKS, 0, 1); break;
+    case RESOURCE_STONE: animkey = "stone"; break;
+    case RESOURCE_LIMESTONE: animkey = "limestone"; break;
+    case RESOURCE_GRANITE: animkey = "granite"; break;
+    case RESOURCE_SANDSTONE: animkey = "sandstone"; break;
+    case RESOURCE_CLAY: animkey = "clay"; break;
+    case RESOURCE_BRICKS: animkey = "bricks"; break;
 
     default:
-        image_set_animation(IMG_BIGSLED_EMPTY, 0, 1);
+        animkey = "empty";
         break;
     }
+
+    image_set_animation(animkey);
 }
 
 void figure_sled::do_deliver(int action_done) {
@@ -61,4 +68,56 @@ void figure_sled::do_deliver(int action_done) {
         building_monument_deliver_resource(dest, resource, carrying);
         break;
     };
+}
+
+void figure_sled_puller::figure_action() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/SledPuller");
+    if (base.leading_figure_id > 0) {
+        --wait_ticks;
+        if (wait_ticks > 0) {
+            return;
+        }
+
+        figure* leader = figure_get(base.leading_figure_id);
+        if (leader->type == FIGURE_SLED_PULLER && leader->state == FIGURE_STATE_ALIVE) {
+            follow_ticks(1);
+        } else {
+            poof();
+            return;
+        }
+    }
+
+    switch (action_state()) {
+    case ACTION_8_RECALCULATE:
+    case FIGURE_ACTION_50_SLED_PULLER_CREATED:
+        --wait_ticks;
+        if (wait_ticks > 0) {
+            return;
+        }
+        advance_action(FIGURE_ACTION_51_SLED_PULLER_DELIVERING_RESOURCE);
+        destination_tile = building_monument_center_point(destination());
+        break;
+
+    case FIGURE_ACTION_51_SLED_PULLER_DELIVERING_RESOURCE:
+        do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING, FIGURE_ACTION_53_SLED_PULLER_DESTROY);
+        break;
+
+    case FIGURE_ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING:
+        //cartpusher_do_deliver(true, ACTION_11_RETURNING_EMPTY);
+        wait_ticks = 25;
+        advance_action(FIGURE_ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY);
+        break;
+
+    case FIGURE_ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY:
+        --wait_ticks;
+        if (wait_ticks > 0) {
+            return;
+        }
+        advance_action(FIGURE_ACTION_53_SLED_PULLER_DESTROY);
+        break;
+
+    case FIGURE_ACTION_53_SLED_PULLER_DESTROY:
+        poof();
+        break;
+    }
 }

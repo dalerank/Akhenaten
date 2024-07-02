@@ -17,7 +17,6 @@ public:
     FIGURE_METAINFO(FIGURE_CART_PUSHER, figure_cartpusher)
     figure_cartpusher(figure *f) : figure_carrier(f) {}
 
-    virtual void on_create() override {}
     virtual void figure_before_action() override;
     virtual void before_poof() override;
     virtual void figure_action() override;
@@ -27,7 +26,6 @@ public:
     virtual figure_sound_t get_sound_reaction(pcstr key) const override;
     virtual sound_key phrase_key() const override;
     virtual bool can_move_by_water() const override;
-    virtual const animations_t &anim() const override;
 
     virtual figure_cartpusher *dcast_cartpusher() override { return this; }
 
