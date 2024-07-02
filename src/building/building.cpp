@@ -3,6 +3,7 @@
 #include "building/rotation.h"
 #include "building/building_type.h"
 #include "building/storage.h"
+#include "building/count.h"
 #include "building/destruction.h"
 #include "city/buildings.h"
 #include "city/population.h"
@@ -913,6 +914,14 @@ bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
 
 bool building_impl::can_play_animation() const {
     return base.main()->num_workers > 0;
+}
+
+void building_impl::update_count() const {
+    if (!base.house_size) {
+        building_increase_type_count(base.type, base.num_workers > 0);
+    } else {
+        building_increase_type_count(base.type, base.house_size > 0);
+    }
 }
 
 void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, color mask) {

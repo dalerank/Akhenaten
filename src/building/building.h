@@ -473,7 +473,7 @@ public:
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual bool need_road_access() const { return true; }
     virtual bool can_play_animation() const;
-    virtual void update_count() const {}
+    virtual void update_count() const;
     virtual void update_map_orientation(int orientation) {}
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_NONE; }
     virtual int animation_speed(int speed) const { return speed; }
@@ -521,7 +521,7 @@ public:
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
-    inline bool is_main() { return base.is_main(); }
+    inline bool is_main() const { return base.is_main(); }
     inline bool is_valid() const { return base.is_valid(); }
     inline e_building_state state() const { return base.state; }
     inline void check_labor_problem() { base.check_labor_problem(); }

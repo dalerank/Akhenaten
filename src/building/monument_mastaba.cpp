@@ -198,6 +198,14 @@ void building_small_mastaba::update_month() {
     }
 }
 
+void building_small_mastaba::update_count() const {
+    if (!is_main()) {
+        return;
+    }
+
+    building_increase_type_count(TYPE, num_workers() > 0);
+}
+
 void building_small_mastaba::update_map_orientation(int map_orientation) {
     if (building_monument_is_finished(&base)) {
         building *main = base.main();

@@ -52,12 +52,6 @@ void building_count_update() {
     g_city.health.reset_mortuary_workers();
 
     buildings_valid_do ( [] (building &b) {
-        e_building_type type = b.type;
-        if (!b.house_size) {
-            building_increase_type_count(type, b.num_workers > 0);
-        } else {
-            building_increase_type_count(type, b.house_size > 0);
-        }
         b.dcast()->update_count();
     });
 }
