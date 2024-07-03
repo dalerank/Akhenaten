@@ -135,9 +135,9 @@ void building_tax_collector::update_month() {
     }
 }
 
-bool building_tax_collector::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    building_draw_normal_anim(ctx, point, &base, tile, params().anim["work"], color_mask);
-    return false;
+void building_tax_collector::update_graphic() {
+    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
+    set_animation(animkey);
 }
 
 const building_impl::static_params &building_tax_collector::params() const {
