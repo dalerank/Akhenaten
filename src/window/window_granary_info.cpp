@@ -116,35 +116,29 @@ void building_granary::window_info_background(object_info &c) {
     window_building_play_sound(&c, "Wavs/granary.wav");
     
     pcstr warning_text = !c.has_road_access ? "#granary_no_road_access"
-                         : scenario_property_kingdom_supplies_grain() ? "#granary_kingdom_supplies_grain"
-                         : nullptr;
-    ui["warning_text"].text(warning_text);
+                             : scenario_property_kingdom_supplies_grain() ? "#granary_kingdom_supplies_grain"
+                             : nullptr;
 
     building_granary* granary = building_get(c.building_id)->dcast_granary();
+    assert(granary);
 
+    ui["warning_text"].text(warning_text);
     ui["storing"].text_var("#granary_storing %u #granary_units", granary->total_stored());
     ui["free_space"].text_var("#granary_space_for %u #granary_units", granary->space_for());
 
-    int food1 = g_city.allowed_foods(0);
-    ui["food0_icon"].image(food1); // grain
-    ui["food0_text"].text_var(food1 ? "%u %s" : "", granary->data.granary.resource_stored[food1], (pcstr)lang_get_string(ui.resource_text_group, food1));
+    for (int i = 0; i < allow_food_types(); ++i) {
+        bstring32 id_icon; id_icon.printf("food%u_icon", i);
+        bstring32 id_text; id_text.printf("food%u_text", i);
 
-    int food2 = g_city.allowed_foods(1);
-    ui["food1_icon"].image(food2); // vegetables
-    ui["food1_text"].text_var(food2 ? "%u %s" : "", granary->data.granary.resource_stored[food2], (pcstr)lang_get_string(ui.resource_text_group, food2));
+        e_resource food_res = g_city.allowed_foods(INVENTORY_FOOD1 + i);
+        const int stored = granary->amount(food_res);
 
-    int food3 = g_city.allowed_foods(2);
-    ui["food2_icon"].image(food3); // vegetables
-    ui["food2_text"].text_var(food3 ? "%u %s" : "", granary->data.granary.resource_stored[food3], (pcstr)lang_get_string(ui.resource_text_group, food3));
-
-    int food4 = g_city.allowed_foods(3);
-    ui["food3_icon"].image(food4); // meat/fish
-    ui["food3_text"].text_var(food4 ? "%u %s" : "", granary->data.granary.resource_stored[food4], (pcstr)lang_get_string(ui.resource_text_group, food4));
-
-    int text_id = get_employment_info_text_id(&c, &base, 1);
-    int laborers = model_get_building(BUILDING_GRANARY)->laborers;
-    ui["workers_text"].text_var("%u %s (%d %s", num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
-    if (text_id) {
-        ui["workers_desc"].text(ui::str(69, text_id));
+        ui[id_icon].image(food_res);
+        ui[id_text].text_var(food_res ? "%u %s" : "", stored, (pcstr)lang_get_string(ui.resource_text_group, food_res));
     }
+
+    int laborers = model_get_building(BUILDING_GRANARY)->laborers;
+    int text_id = get_employment_info_text_id(&c, &base, 1);
+    ui["workers_text"].text_var("%u %s (%d %s", num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
+    ui["workers_desc"].text(text_id ? ui::str(69, text_id) : "");
 }

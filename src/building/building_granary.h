@@ -47,6 +47,7 @@ public:
     int space_for() const;
     bool is_empty_all() const;
     int capacity_stored() const { return 3200; }
+    int allow_food_types() const { return 4; }
 
     void bless();
     bool is_gettable(e_resource resource);

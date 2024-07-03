@@ -395,6 +395,7 @@ struct city_t {
     void init_custom_map();
     void init_campaign_mission();
     e_resource allowed_foods(int i);
+    bool is_food_allowed(e_resource resource);
     void set_allowed_food(int i, e_resource r);
 
     bool generate_trader_from(int city_id, empire_city &city);

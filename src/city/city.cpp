@@ -175,7 +175,7 @@ bool city_t::generate_trader_from(int city_id, empire_city &city) {
     return false;
 }
 
-bool city_is_food_allowed(int resource) {
+bool city_t::is_food_allowed(e_resource resource) {
     bool result = false;
     for (int i = 0; i < 4; i++) {
         if (g_city.allowed_foods(i) == resource) {
