@@ -81,12 +81,6 @@ int building_granary::window_info_handle_mouse(const mouse *m, object_info &c) {
     }
 }
 
-void building_granary::on_place_checks() {
-    if (building_count_active(BUILDING_BAZAAR) <= 0) {
-        building_construction_warning_show(WARNING_BUILD_MARKET);
-    }
-}
-
 void building_granary::window_info_foreground(object_info &ctx) {
     if (ctx.storage_show_special_orders) {
         draw_orders_foreground(ctx);
@@ -101,34 +95,32 @@ void building_granary::window_info_foreground(object_info &ctx) {
     draw_permissions_buttons(ctx.offset.x + 58, ctx.offset.y + 19 * ctx.bgsize.y - 82, 1);
 }
 
-void building_granary::window_info_background(object_info &ctx) {
+void building_granary::window_info_background(object_info &c) {
     auto &ui = g_granary_info_window;
-    ui.begin_frame();
-
-    if (ctx.storage_show_special_orders) {
-        ctx.help_id = 3;
-        int y_offset = window_building_get_vertical_offset(&ctx, 28 - 15);
-        outer_panel_draw(vec2i{ctx.offset.x, y_offset}, 29, 28 - 15);
-        lang_text_draw_centered(98, 6, ctx.offset.x, y_offset + 10, 16 * ctx.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-        inner_panel_draw(ctx.offset.x + 16, y_offset + 42, ctx.bgsize.x - 2, 21 - 15);
+    if (c.storage_show_special_orders) {
+        c.help_id = 3;
+        int y_offset = window_building_get_vertical_offset(&c, 28 - 15);
+        outer_panel_draw(vec2i{c.offset.x, y_offset}, 29, 28 - 15);
+        lang_text_draw_centered(98, 6, c.offset.x, y_offset + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+        inner_panel_draw(c.offset.x + 16, y_offset + 42, c.bgsize.x - 2, 21 - 15);
         return;
     }
 
     auto &data = g_window_building_distribution;
 
-    ctx.help_id = 3;
-    ctx.go_to_advisor.left_a = ADVISOR_LABOR;
-    ctx.go_to_advisor.left_b = ADVISOR_POPULATION;
-    ctx.bgsize = ui["background"].size;
-    data.building_id = ctx.building_id;
-    window_building_play_sound(&ctx, "Wavs/granary.wav");
+    c.help_id = 3;
+    c.go_to_advisor.left_a = ADVISOR_LABOR;
+    c.go_to_advisor.left_b = ADVISOR_POPULATION;
+    c.bgsize = ui["background"].size;
+    data.building_id = c.building_id;
+    window_building_play_sound(&c, "Wavs/granary.wav");
     
-    pcstr warning_text = !ctx.has_road_access ? "#granary_no_road_access"
+    pcstr warning_text = !c.has_road_access ? "#granary_no_road_access"
                          : scenario_property_kingdom_supplies_grain() ? "#granary_kingdom_supplies_grain"
                          : nullptr;
     ui["warning_text"].text(warning_text);
 
-    building_granary* granary = building_get(ctx.building_id)->dcast_granary();
+    building_granary* granary = building_get(c.building_id)->dcast_granary();
 
     ui["storing"].text_var("#granary_storing %u #granary_units", granary->total_stored());
     ui["free_space"].text_var("#granary_space_for %u #granary_units", granary->space_for());
@@ -149,7 +141,7 @@ void building_granary::window_info_background(object_info &ctx) {
     ui["food3_icon"].image(food4); // meat/fish
     ui["food3_text"].text_var(food4 ? "%u %s" : "", granary->data.granary.resource_stored[food4], (pcstr)lang_get_string(ui.resource_text_group, food4));
 
-    int text_id = get_employment_info_text_id(&ctx, &base, 1);
+    int text_id = get_employment_info_text_id(&c, &base, 1);
     int laborers = model_get_building(BUILDING_GRANARY)->laborers;
     ui["workers_text"].text_var("%u %s (%d %s", num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
     if (text_id) {
