@@ -4,6 +4,7 @@
 #include "core/profiler.h"
 #include "grid/road_access.h"
 #include "grid/building.h"
+#include "grid/random.h"
 #include "city/finance.h"
 #include "city/sentiment.h"
 #include "core/calc.h"
@@ -43,39 +44,43 @@ void figure_tax_collector::figure_action() {
         break;
 
     case FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING:
-        base.use_cross_country = true;
-        if (base.move_ticks_cross_country(1) == 1) {
-            if (base.has_home(map_building_at(tile()))) {
-                // returned to own building
-                poof();
-            } else {
-                base.action_state = FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING;
-                base.init_roaming_from_building(0);
-                base.roam_length = 0;
+        {
+            base.use_cross_country = true;
+            const bool finished = base.move_ticks_cross_country(1);
+            if (finished) {
+                if (base.has_home(map_building_at(tile()))) {
+                    // returned to own building
+                    poof();
+                } else {
+                    advance_action(FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING);
+                    base.init_roaming_from_building(0);
+                    base.roam_length = 0;
+                }
             }
         }
         break;
 
-    case ACTION_10_DELIVERING_FOOD:
     case FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING:
         base.roam_length++;
         if (base.roam_length >= base.max_roam_length) {
             tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
             if (road_tile.valid()) {
-                base.action_state = FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING;
-                destination_tile = road_tile;
+                advance_action(FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING, road_tile);
             } else {
                 poof();
             }
         }
+
         base.roam_ticks(1);
+        if (direction() == DIR_FIGURE_NONE) {
+            base.direction = (base.roam_random_counter + map_random_get(tile())) & 6;
+        }
         break;
 
-    case ACTION_11_RETURNING_EMPTY:
     case FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING:
         base.move_ticks(1);
             if (direction() == DIR_FIGURE_NONE) {
-                base.action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
+                advance_action(FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING);
                 base.set_cross_country_destination(b->tile);
                 base.roam_length = 0;
             } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
@@ -83,6 +88,9 @@ void figure_tax_collector::figure_action() {
             }
 
         break;
+
+    default:
+        assert(false);
     };
 }
 
@@ -120,7 +128,6 @@ void figure_tax_collector::figure_before_action() {
         poof();
     }
 }
-
 
 static void tax_collector_coverage(building* b, figure *f, int &max_tax_multiplier) {
     if (b->house_size && b->house_population > 0) {
