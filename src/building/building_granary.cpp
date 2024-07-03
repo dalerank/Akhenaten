@@ -334,7 +334,7 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
             continue;
 
         if (!config_get(CONFIG_GP_CH_UNDERSTAFFED_ACCEPT_GOODS)) {
-            int pct_workers = calc_percentage<int>(granary->num_workers(), model_get_building(granary->type())->laborers);
+            int pct_workers = granary->worker_percentage();
             if (pct_workers < 75) {
                 if (understaffed)
                     *understaffed += 1;
@@ -386,7 +386,7 @@ int building_getting_granary_for_storing(tile2i tile, e_resource resource, int d
         if (!granary->has_road_access() || granary->distance_from_entry() <= 0 || granary->road_network() != road_network_id)
             continue;
 
-        int pct_workers = calc_percentage<int>(granary->num_workers(), model_get_building(granary->type())->laborers);
+        int pct_workers = granary->worker_percentage();
         if (pct_workers < 100)
             continue;
 
@@ -491,19 +491,21 @@ void building_granary::bless() {
     }
 
     building_granary *granary = min_building->dcast_granary();
-    if (granary) {
-        for (int n = 0; n < 6; n++) {
-            granary->add_resource(RESOURCE_GRAIN, 0, 100);
-        }
-        for (int n = 0; n < 6; n++) {
-            granary->add_resource(RESOURCE_MEAT, 0, 100);
-        }
-        for (int n = 0; n < 6; n++) {
-            granary->add_resource(RESOURCE_LETTUCE, 0, 100);
-        }
-        for (int n = 0; n < 6; n++) {
-            granary->add_resource(RESOURCE_FIGS, 0, 100);
-        }
+    if (!granary) {
+        return;
+    }
+
+    for (int n = 0; n < 6; n++) {
+        granary->add_resource(RESOURCE_GRAIN, 0, 100);
+    }
+    for (int n = 0; n < 6; n++) {
+        granary->add_resource(RESOURCE_MEAT, 0, 100);
+    }
+    for (int n = 0; n < 6; n++) {
+        granary->add_resource(RESOURCE_LETTUCE, 0, 100);
+    }
+    for (int n = 0; n < 6; n++) {
+        granary->add_resource(RESOURCE_FIGS, 0, 100);
     }
 }
 
