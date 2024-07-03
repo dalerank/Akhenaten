@@ -14,6 +14,7 @@ const xstring id_anim_t::hunt = "hunt";
 const xstring id_anim_t::pack = "pack";
 const xstring id_anim_t::unpack = "unpack";
 const xstring id_anim_t::move_pack = "move_pack";
+const xstring id_anim_t::fight_fire = "fight_fire";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

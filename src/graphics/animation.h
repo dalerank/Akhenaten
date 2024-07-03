@@ -2,7 +2,7 @@
 
 #include "core/archive.h"
 #include "graphics/image_desc.h"
-#include "core/xstring.h"
+#include "graphics/animkeys.h"
 
 #include <vector>
 

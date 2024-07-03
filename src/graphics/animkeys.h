@@ -16,6 +16,7 @@ struct id_anim_t {
     static const xstring pack;
     static const xstring unpack;
     static const xstring move_pack;
+    static const xstring fight_fire;
 };
 
 const id_anim_t &animkeys();
