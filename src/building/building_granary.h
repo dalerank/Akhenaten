@@ -34,6 +34,7 @@ public:
     virtual void window_info_foreground(object_info &ctx) override;
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
     virtual void on_place_checks() override;
+    virtual void update_day() override;
 
     const building_storage *storage() const;
     int amount(e_resource resource) const;
@@ -45,6 +46,7 @@ public:
     int total_stored() const;
     int space_for() const;
     bool is_empty_all() const;
+    int capacity_stored() const { return 3200; }
 
     void bless();
     bool is_gettable(e_resource resource);

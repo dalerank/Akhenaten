@@ -4,8 +4,10 @@
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/building_storage_yard.h"
+#include "building/count.h"
 #include "city/message.h"
 #include "city/resource.h"
+#include "city/warnings.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "core/game_environment.h"
@@ -108,14 +110,17 @@ int building_granary::is_not_accepting(e_resource resource) {
 }
 
 int building_granary::add_resource(e_resource resource, int is_produced, int amount) {
-    if (!resource_is_food(resource))
+    if (!resource_is_food(resource)) {
         return -1;
+    }
 
-    if (data.granary.resource_stored[RESOURCE_NONE] <= 0)
+    if (data.granary.resource_stored[RESOURCE_NONE] <= 0) {
         return -1; // no space
+    }
 
-    if (is_not_accepting(resource))
+    if (is_not_accepting(resource)) {
         return -1;
+    }
 
     if (is_produced) {
         city_resource_add_produced_to_granary(ONE_LOAD);
@@ -145,18 +150,16 @@ bool building_granary::is_empty_all() const {
 }
 
 int building_granary::remove_resource(e_resource resource, int amount) {
-    if (amount <= 0)
+    if (amount <= 0) {
         return 0;
-
-    int removed;
-    if (data.granary.resource_stored[resource] >= amount) {
-        removed = amount;
-    } else {
-        removed = data.granary.resource_stored[resource];
     }
+
+    int removed = std::min<int>(data.granary.resource_stored[resource], amount);
+
     city_resource_remove_from_granary(resource, removed);
     data.granary.resource_stored[resource] -= removed;
     data.granary.resource_stored[RESOURCE_NONE] += removed;
+
     return amount - removed;
 }
 
@@ -205,9 +208,7 @@ int building_granary::remove_for_getting_deliveryman(building* srcb, building* d
             max_amount = 800;
     }
 
-    if (max_amount > dst->data.granary.resource_stored[RESOURCE_NONE]) {
-        max_amount = dst->data.granary.resource_stored[RESOURCE_NONE];
-    }
+    max_amount = std::min<int>(max_amount, dst->data.granary.resource_stored[RESOURCE_NONE]);
 
     src->remove_resource(max_resource, max_amount);
     resource = max_resource;
@@ -575,8 +576,19 @@ void building_granary_draw_anim(building &b, vec2i point, tile2i tile, color mas
 }
 
 void building_granary::on_create(int orientation) {
-    data.granary.resource_stored[RESOURCE_NONE] = 3200;
+    data.granary.resource_stored[RESOURCE_NONE] = capacity_stored();
     base.storage_id = building_storage_create(BUILDING_GRANARY);
+}
+
+void building_granary::update_day() {
+    building_impl::update_day();
+    data.granary.resource_stored[RESOURCE_NONE] = capacity_stored() - total_stored();
+}
+
+void building_granary::on_place_checks() {
+    if (building_count_active(BUILDING_BAZAAR) <= 0) {
+        building_construction_warning_show(WARNING_BUILD_MARKET);
+    }
 }
 
 void building_granary::spawn_figure() {
