@@ -91,14 +91,15 @@ bool map_road_find_minimum_tile_xy_classic(tile2i tile, int sizex, int sizey, in
 }
 
 bool map_has_road_access(tile2i tile, int size) {
-    return map_has_road_access_rotation(0, tile, size, nullptr);
+    tile2i result = map_has_road_access_rotation(0, tile, size);
+    return result.valid();
 }
 
-bool map_get_road_access_tile(tile2i tile, int size, tile2i &road) {
-    return map_has_road_access_rotation(0, tile, size, &road);
+tile2i map_get_road_access_tile(tile2i tile, int size) {
+    return map_has_road_access_rotation(0, tile, size);
 }
 
-bool map_has_road_access_rotation(int rotation, tile2i tile, int size, tile2i *road) {
+tile2i map_has_road_access_rotation(int rotation, tile2i tile, int size) {
     switch (rotation) {
     case 1:
         tile.shift(-size + 1, 0);
@@ -112,16 +113,18 @@ bool map_has_road_access_rotation(int rotation, tile2i tile, int size, tile2i *r
     default:
         break;
     }
+
     int min_value = 12;
     int min_grid_offset = tile.grid_offset();
     map_road_find_minimum_tile_xy(tile, size, size, &min_value, &min_grid_offset);
     if (min_value < 12) {
-        if (road) {
-            map_point_store_result(tile2i(min_grid_offset), *road);
-        }
-        return true;
+        tile2i result(min_grid_offset);
+        tile2i _;
+        map_point_store_result(result, _);
+        return result;
     }
-    return false;
+
+    return tile2i::invalid;
 }
 
 // int map_has_road_access_hippodrome_rotation(int x, int y, map_point *road, int rotation) {

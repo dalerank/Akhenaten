@@ -245,7 +245,8 @@ void building_maintenance_check_kingdome_access() {
                 b.road_access = road;
                 b.has_road_access = true;
             } else {
-                b.has_road_access = map_get_road_access_tile(b.tile, 3, b.road_access);
+                b.road_access = map_get_road_access_tile(b.tile, 3);
+                b.has_road_access = b.road_access.valid();
             }
         } else if (b.type == BUILDING_STORAGE_ROOM) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/Storageyard Space");
@@ -278,13 +279,14 @@ void building_maintenance_check_kingdome_access() {
             b.distance_from_entry = 0;
             bool closest_road = config_get(CONFIG_GP_CH_BUILDING_CLOSEST_ROAD) > 0;
             tile2i road = map_road_to_largest_network(b.tile, b.size, closest_road);
-            if (road.x() >= 0) {
+            if (road.valid()) {
                 b.road_network_id = map_road_network_get(road);
                 b.distance_from_entry = map_routing_distance(road);
                 b.road_access = road;
                 b.has_road_access = true;
             } else {
-                b.has_road_access = map_get_road_access_tile(b.tile, b.size, b.road_access);
+                b.road_access = map_get_road_access_tile(b.tile, b.size);
+                b.has_road_access = b.road_access.valid();
             }
         }
     });

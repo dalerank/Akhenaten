@@ -321,7 +321,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
     }
 
     // priority 1: warehouse if resource is on stockpile
-    int stockpile_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &understaffed_storages, &dst);
+    int stockpile_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &understaffed_storages, dst);
     set_destination(stockpile_id);
     if (!city_resource_is_stockpiled(base.resource_id)) {
         set_destination(0);
@@ -359,7 +359,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
     }
 
     // priority 4: warehouse
-    int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &understaffed_storages, &dst);
+    int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &understaffed_storages, dst);
     set_destination(warehouse_id);
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE);
@@ -418,7 +418,7 @@ void figure_cartpusher::determine_granaryman_destination() {
     }
 
     // priority 2: warehouse
-    int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, granary->distance_from_entry(), road_network_id, 0, &dst);
+    int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, granary->distance_from_entry(), road_network_id, 0, dst);
     set_destination(warehouse_id);
     if (has_destination()) {
         granary->remove_resource(base.resource_id, 100);
@@ -508,7 +508,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
 
     // priority 6: resource to other warehouse
     tile2i dest;
-    int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 0, &dest);
+    int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 0, dest);
     set_destination(warehouse_id);
     if (has_destination()) {
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);

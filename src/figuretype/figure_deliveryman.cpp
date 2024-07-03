@@ -37,7 +37,7 @@ void figure::determine_deliveryman_destination_food() {
         return advance_action(FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY);
     }
     // priority 2: warehouse
-    dst_building_id = building_storage_yard_for_storing(tile, resource_id, b->distance_from_entry, road_network_id, 0, &dst);
+    dst_building_id = building_storage_yard_for_storing(tile, resource_id, b->distance_from_entry, road_network_id, 0, dst);
     if (dst_building_id) {
         set_destination(dst_building_id);
         return advance_action(FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE);

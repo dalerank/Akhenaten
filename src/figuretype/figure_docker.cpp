@@ -104,8 +104,9 @@ int figure_docker::get_closest_warehouse_for_import(tile2i pos, int city_id, int
         resource = city_trade_next_docker_import_resource();
     }
 
-    if (!importable[resource])
+    if (!importable[resource]) {
         return 0;
+    }
 
     int min_distance = 10000;
     int min_building_id = 0;
@@ -148,14 +149,20 @@ int figure_docker::get_closest_warehouse_for_import(tile2i pos, int city_id, int
             }
         }
     }
-    if (!min_building_id)
-        return 0;
 
-    building* min = building_get(min_building_id);
-    if (min->has_road_access == 1) {
-        map_point_store_result(min->tile, warehouse);
-    } else if (!map_get_road_access_tile(min->tile, 3, warehouse)) {
+    if (!min_building_id) {
         return 0;
+    }
+
+    building* minb = building_get(min_building_id);
+    if (minb->has_road_access) {
+        warehouse = minb->tile;
+        map_point_store_result(minb->tile, warehouse);
+    } else {
+        warehouse = map_get_road_access_tile(minb->tile, 3);
+        if (!warehouse.valid()) {
+            return 0;
+        }
     }
 
     import_resource = resource;
@@ -213,11 +220,15 @@ int figure_docker::get_closest_warehouse_for_export(tile2i pos, int city_id, int
     if (!min_building_id)
         return 0;
 
-    building* min = building_get(min_building_id);
-    if (min->has_road_access == 1) {
-        map_point_store_result(min->tile, warehouse);
-    } else if (!map_get_road_access_tile(min->tile, 3, warehouse)) {
-        return 0;
+    building* minb = building_get(min_building_id);
+    if (minb->has_road_access == 1) {
+        warehouse = minb->tile;
+        map_point_store_result(minb->tile, warehouse);
+    } else {
+        warehouse = map_get_road_access_tile(minb->tile, 3);
+        if (!warehouse.valid()) {
+            return 0;
+        }
     }
 
     export_resource = resource;

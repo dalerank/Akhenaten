@@ -200,8 +200,11 @@ int figure_trader::get_closest_storageyard(tile2i tile, int city_id, int distanc
 
     if (min_building->has_road_access == 1) {
         map_point_store_result(min_building->tile, warehouse);
-    } else if (!map_get_road_access_tile(min_building->tile, 3, warehouse)) {
-        return 0;
+    } else {
+        warehouse = map_get_road_access_tile(min_building->tile, 3);
+        if (!warehouse.valid()) {
+            return 0;
+        }
     }
 
     return min_building->id;

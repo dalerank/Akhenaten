@@ -355,7 +355,7 @@ int building_storageyards_remove_resource(e_resource resource, int amount) {
     return amount - amount_left;
 }
 
-int building_storage_yard_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int* understaffed, tile2i* dst) {
+int building_storage_yard_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int* understaffed, tile2i &dst) {
     int min_dist = 10000;
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -395,9 +395,12 @@ int building_storage_yard_for_storing(tile2i tile, e_resource resource, int dist
     // abuse null building space
     building* b = building_get(min_building_id)->main();
     if (b->has_road_access == 1) {
-        map_point_store_result(b->tile, *dst);
-    } else if (!map_has_road_access_rotation(b->subtype.orientation, b->tile, 3, dst)) {
-        return 0;
+        map_point_store_result(b->tile, dst);
+    } else {
+        dst = map_has_road_access_rotation(b->subtype.orientation, b->tile, 3);
+        if (!dst.valid()) {
+            return 0;
+        }
     }
 
     return min_building_id;

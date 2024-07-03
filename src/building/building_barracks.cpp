@@ -109,16 +109,16 @@ bool building_recruiter::create_soldier() {
         }
         int academy_id = get_closest_military_academy(building_get(m->building_id));
         if (academy_id) {
-            tile2i road;
             building* academy = building_get(academy_id);
-            if (map_get_road_access_tile(academy->tile, academy->size, road)) {
-                f->action_state = FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY;
+            tile2i road = map_get_road_access_tile(academy->tile, academy->size);
+            if (road.valid()) {
+                f->advance_action(FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY);
                 f->destination_tile = road;
             } else {
-                f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
+                f->advance_action(FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT);
             }
         } else {
-            f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
+            f->advance_action(FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT);
         }
     }
     formation_calculate_figures();
@@ -172,8 +172,8 @@ bool building_recruiter::create_tower_sentry() {
 
     figure* f = figure_create(FIGURE_TOWER_SENTRY, base.road_access, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
-    tile2i road;
-    if (map_get_road_access_tile(tower->tile, tower->size, road)) {
+    tile2i road = map_get_road_access_tile(tower->tile, tower->size);
+    if (road.valid()) {
         f->destination_tile = road;
     } else {
         f->poof();

@@ -250,12 +250,8 @@ void city_resource_calculate_storageyard_stocks() {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_STORAGE_YARD) {
-            b->has_road_access = 0;
-            if (map_has_road_access_rotation(b->subtype.orientation, b->tile, b->size, 0)) {
-                b->has_road_access = 1;
-            } else if (map_has_road_access_rotation(b->subtype.orientation, b->tile, 3, 0)) {
-                b->has_road_access = 2;
-            }
+            tile2i road_access_tile = map_has_road_access_rotation(b->subtype.orientation, b->tile, b->size);
+            b->has_road_access = road_access_tile.valid();
         }
     }
 

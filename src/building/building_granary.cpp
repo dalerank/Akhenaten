@@ -581,8 +581,8 @@ void building_granary::on_create(int orientation) {
 
 void building_granary::spawn_figure() {
     check_labor_problem();
-    map_point road;
-    if (!map_get_road_access_tile(tile(), size(), road)) { // map_has_road_access_granary(x, y, &road)
+    tile2i road = map_get_road_access_tile(tile(), size());
+    if (!road.valid()) {
         return;
     }
     

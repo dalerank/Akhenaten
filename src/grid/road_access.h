@@ -4,9 +4,9 @@
 class building;
 
 bool map_has_road_access(tile2i tile, int size);
-bool map_get_road_access_tile(tile2i tile, int size, tile2i &road);
+tile2i map_get_road_access_tile(tile2i tile, int size);
 bool road_tile_valid_access(int grid_offset);
-bool map_has_road_access_rotation(int rotation, tile2i tile, int size, tile2i *road);
+tile2i map_has_road_access_rotation(int rotation, tile2i tile, int size);
 bool map_has_road_access_temple_complex(tile2i tile, int orientation, bool from_corner, tile2i* road);
 tile2i map_closest_road_within_radius(tile2i tile, int size, int radius);
 tile2i map_closest_road_within_radius(building &b, int radius);

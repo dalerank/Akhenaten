@@ -49,18 +49,21 @@ void building_tower::window_info_background(object_info &c) {
 
 void building_tower::spawn_figure() {
     check_labor_problem();
-    map_point road;
-    if (map_get_road_access_tile(tile(), base.size, road)) {
-        common_spawn_labor_seeker(50);
-        if (num_workers() <= 0)
-            return;
+    tile2i road = map_get_road_access_tile(tile(), base.size);
+    if (!road.valid()) {
+        return;
+    }
 
-        if (base.has_figure(0) && !base.has_figure(3)) { // has sentry but no ballista -> create
-            create_figure_generic(FIGURE_BALLISTA, FIGURE_ACTION_180_BALLISTA_CREATED, BUILDING_SLOT_BALLISTA, DIR_0_TOP_RIGHT);
-        }
+    common_spawn_labor_seeker(50);
+    if (num_workers() <= 0) {
+        return;
+    }
 
-        if (!base.has_figure(0)) {
-            building_barracks_request_tower_sentry();
-        }
+    if (base.has_figure(0) && !base.has_figure(3)) { // has sentry but no ballista -> create
+        create_figure_generic(FIGURE_BALLISTA, FIGURE_ACTION_180_BALLISTA_CREATED, BUILDING_SLOT_BALLISTA, DIR_0_TOP_RIGHT);
+    }
+
+    if (!base.has_figure(0)) {
+        building_barracks_request_tower_sentry();
     }
 }
