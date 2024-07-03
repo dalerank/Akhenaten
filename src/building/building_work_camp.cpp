@@ -117,7 +117,7 @@ bool building_work_camp::draw_ornaments_and_animations_height(painter &ctx, vec2
     return true;
 }
 
-void building_work_camp::update_day() {
+void building_work_camp::update_graphic() {
     set_animation(can_play_animation() ? animkeys().work : animkeys().none);
 }
 

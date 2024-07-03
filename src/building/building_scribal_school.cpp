@@ -103,7 +103,7 @@ void building_scribal_school::spawn_figure() {
     }
 }
 
-void building_scribal_school::update_day() {
+void building_scribal_school::update_graphic() {
     set_animation(can_play_animation() ? animkeys().work : animkeys().none);
 }
 
