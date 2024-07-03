@@ -126,6 +126,8 @@ void building_small_mastabe_finalize(building *b) {
 }
 
 void building_small_mastaba::update_day() {
+    building_impl::update_day();
+
     if (!building_monument_is_monument(&base)) {
         return;
     }

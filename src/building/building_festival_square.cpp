@@ -38,6 +38,8 @@ void building_festival_square::on_place_update_tiles(int orientation, int varian
 }
 
 void building_festival_square::update_day() {
+    building_impl::update_day();
+
     int shows = 0;
     auto update_shows = [&] (auto &days) { if (days > 0) { --days; ++shows; } };
     update_shows(data.entertainment.days1);

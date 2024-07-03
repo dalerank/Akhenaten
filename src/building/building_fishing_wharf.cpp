@@ -52,6 +52,8 @@ void building_fishing_wharf::update_count() const {
 }
 
 void building_fishing_wharf::update_day() {
+    building_impl::update_day();
+
     if (data.industry.fishing_boat_id > 0) {
         figure *f = figure_get(data.industry.fishing_boat_id);
         if (!f->is_valid() || f->type != FIGURE_FISHING_BOAT) {

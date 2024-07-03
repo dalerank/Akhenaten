@@ -88,6 +88,8 @@ void building_pavilion::on_create(int orientation) {
 }
 
 void building_pavilion::update_day() {
+    building_impl::update_day();
+
     int shows = 0;
     auto update_shows = [&] (auto &days) { if (days > 0) { --days; ++shows; } };
     update_shows(data.entertainment.days1);

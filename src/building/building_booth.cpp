@@ -34,6 +34,8 @@ void config_load_building_booth() {
 }
 
 void building_booth::update_day() {
+    building_impl::update_day();
+
     int shows = 0;
     if (data.entertainment.days1 > 0) {
         --data.entertainment.days1;
