@@ -203,7 +203,7 @@ void building_small_mastaba::update_count() const {
         return;
     }
 
-    building_increase_type_count(TYPE, num_workers() > 0);
+    building_increase_type_count(TYPE, building_monument_is_finished(&base));
 }
 
 void building_small_mastaba::update_map_orientation(int map_orientation) {
