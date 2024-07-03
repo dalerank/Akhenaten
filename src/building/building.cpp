@@ -898,7 +898,7 @@ void building_impl::update_day() {
 }
 
 bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    if (!base.anim.valid()) {
+    if (!base.anim.id) {
         int image_id = map_image_at(tile.grid_offset());
         building_draw_normal_anim(ctx, point, &base, tile, image_id, color_mask);
     } else {

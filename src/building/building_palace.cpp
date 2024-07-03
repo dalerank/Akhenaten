@@ -11,6 +11,7 @@
 #include "graphics/view/view.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "graphics/animkeys.h"
 #include "grid/desirability.h"
 #include "grid/property.h"
 #include "grid/terrain.h"
@@ -37,8 +38,15 @@ void building_palace::on_create(int orientation) {
     base.labor_category = village_building_palace_m.labor_category;
 }
 
-void building_palace::update_day() {
-    set_animation(params().anim["work"]);
+void building_palace::update_graphic() {
+    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
+    set_animation(animkey);
+
+    //if (g_desirability.get(tile()) <= 30) {
+    //    map_building_tiles_add(id(), tile(), size(), image_id_from_group(GROUP_BUILDING_PALACE), TERRAIN_BUILDING);
+    //} else {
+    //    map_building_tiles_add(id(), tile(), size(), image_id_from_group(GROUP_BUILDING_PALACE_FANCY), TERRAIN_BUILDING);
+    //}
 }
 
 void building_palace::window_info_background(object_info &c) {
@@ -98,12 +106,4 @@ bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i p
     //if (unemployment_pct > 20) ImageDraw::img_generic(ctx, image_id + 106, point.x + 66,  point.y + 20, color_mask);
 
     return true;
-}
-
-void building_palace::update_graphic() {
-    //if (g_desirability.get(tile()) <= 30) {
-    //    map_building_tiles_add(id(), tile(), size(), image_id_from_group(GROUP_BUILDING_PALACE), TERRAIN_BUILDING);
-    //} else {
-    //    map_building_tiles_add(id(), tile(), size(), image_id_from_group(GROUP_BUILDING_PALACE_FANCY), TERRAIN_BUILDING);
-    //}
 }
