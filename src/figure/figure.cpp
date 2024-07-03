@@ -21,6 +21,10 @@
 #include <map>
 #include "dev/debug.h"
 
+#ifdef _MSC_VER
+#include <windows.h>
+#endif // _MSC_VER
+
 struct figure_data_t {
     int created_sequence;
     bool initialized;
@@ -156,13 +160,16 @@ figure_fishing_boat *figure::dcast_fishing_boat() { return dcast()->dcast_fishin
 figure_fishing_point *figure::dcast_fishing_point() { return dcast()->dcast_fishing_point(); }
 
 bool figure::in_roam_history(int goffset) {
-    auto it = std::find_if(std::begin(roam_history), std::end(roam_history), [goffset] (auto &v) { return (v == 0 || v == goffset); });
-    return (it != std::end(roam_history)) && *it == goffset;
+    return roam_history.exist(goffset);
 }
 
 void figure::add_roam_history(int goffset) {
-    roam_history[roam_history_i] = goffset;
-    roam_history_i = (roam_history_i + 1) % std::size(roam_history);
+#ifdef _MSC_VER
+    if (IsDebuggerPresent() && !roam_history.empty()) {
+        assert(roam_history.tail() != goffset);
+    }
+#endif // _MSC_VER
+    roam_history.push_tail(goffset);
 }
 
 bool figure::is_dead() {

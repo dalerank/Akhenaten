@@ -471,7 +471,7 @@ void figure::follow_ticks(int num_ticks) {
     }
 }
 
-void figure::roam_ticks(int num_ticks) {
+int figure::roam_ticks(int num_ticks) {
     route_remove(); // refresh path to check if road network is disconnected
     // no destination: walk to end of tile and pick a direction
     auto clamp_direction = [] (int direction) {
@@ -489,7 +489,7 @@ void figure::roam_ticks(int num_ticks) {
 
         if (progress_on_tile >= 15) { // tile center
             if (figure_service_provide_coverage()) {
-                return;
+                return direction;
             }
 
             add_roam_history(tile.grid_offset());
@@ -529,7 +529,7 @@ void figure::roam_ticks(int num_ticks) {
 
             if (adjacent_road_tiles <= 0) {
                 roam_length = max_roam_length; // end roaming walk
-                return;
+                return direction;
             }
             
             if (adjacent_road_tiles == 1) {
@@ -597,6 +597,8 @@ void figure::roam_ticks(int num_ticks) {
 
         advance_figure_tick();
     }
+
+    return direction;
 }
 
 void figure::advance_attack() {
@@ -658,6 +660,40 @@ void figure::set_cross_country_destination(tile2i dst) {
     set_cross_country_direction(cc_coords.x, cc_coords.y, 15 * dst.x(), 15 * dst.y(), 0);
 }
 
+bool figure::move_ticks_cross_country(int num_ticks) {
+    map_figure_remove();
+    bool is_at_destination = false;
+    while (num_ticks > 0) {
+        num_ticks--;
+        if (missile_damage > 0)
+            missile_damage--;
+        else
+            missile_damage = 0;
+        if (cc_delta.x + cc_delta.y <= 0) {
+            is_at_destination = true;
+            break;
+        }
+        cross_country_advance();
+    }
+    tile2i old = tile;
+    tile.set(cc_coords.x / 15, cc_coords.y / 15);
+    //    tile.x() = cc_coords.x / 15;
+    //    tile.y() = cc_coords.y / 15;
+    //    tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
+    if (map_terrain_is(tile.grid_offset(), TERRAIN_BUILDING)) {
+        in_building_wait_ticks = 8;
+    } else if (in_building_wait_ticks) {
+        in_building_wait_ticks--;
+    }
+
+    map_figure_add();
+    if (tile.grid_offset() != old.grid_offset()) {
+        previous_tile = old;
+    }
+
+    return is_at_destination;
+}
+
 void figure::cross_country_update_delta() {
     if (cc_direction == 1) { // x
         if (cc_delta_xy >= 0)
@@ -700,37 +736,6 @@ void figure::cross_country_advance() {
             cross_country_advance_y();
         }
     }
-}
-
-int figure::move_ticks_cross_country(int num_ticks) {
-    map_figure_remove();
-    int is_at_destination = 0;
-    while (num_ticks > 0) {
-        num_ticks--;
-        if (missile_damage > 0)
-            missile_damage--;
-        else
-            missile_damage = 0;
-        if (cc_delta.x + cc_delta.y <= 0) {
-            is_at_destination = 1;
-            break;
-        }
-        cross_country_advance();
-    }
-    tile2i old = tile;
-    tile.set(cc_coords.x / 15, cc_coords.y / 15);
-    //    tile.x() = cc_coords.x / 15;
-    //    tile.y() = cc_coords.y / 15;
-    //    tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
-    if (map_terrain_is(tile.grid_offset(), TERRAIN_BUILDING))
-        in_building_wait_ticks = 8;
-    else if (in_building_wait_ticks)
-        in_building_wait_ticks--;
-
-    map_figure_add();
-    if (tile.grid_offset() != old.grid_offset())
-        previous_tile = old;
-    return is_at_destination;
 }
 
 int figure_movement_can_launch_cross_country_missile(tile2i src, tile2i dst) {

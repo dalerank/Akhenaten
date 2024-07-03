@@ -6,6 +6,7 @@
 #include "core/string.h"
 #include "core/direction.h"
 #include "core/span.hpp"
+#include "core/circullar_buffer.h"
 #include "figure/action.h"
 #include "figure/formation.h"
 #include "figure/figure_type.h"
@@ -128,8 +129,7 @@ public:
     short roam_length;
     bool roam_wander_freely;
     unsigned char roam_random_counter;
-    int roam_history[128];
-    uint8_t roam_history_i;
+    circular_buffer<int, 6> roam_history;
     signed char roam_turn_direction;
     signed char roam_ticks_until_next_turn;
     vec2i cc_coords;
@@ -359,12 +359,12 @@ public:
     void roam_set_direction();
     void move_ticks(int num_ticks, bool roaming_enabled = false);
     void move_ticks_tower_sentry(int num_ticks);
-    void roam_ticks(int num_ticks);
+    int roam_ticks(int num_ticks);
     void follow_ticks(int num_ticks);
     void advance_attack();
     void set_cross_country_direction(int x_src, int y_src, int x_dst, int y_dst, int is_missile);
     void set_cross_country_destination(tile2i dst);
-    int move_ticks_cross_country(int num_ticks);
+    bool move_ticks_cross_country(int num_ticks);
 
     void cross_country_update_delta();
     void cross_country_advance_x();
