@@ -75,6 +75,7 @@ void map_grid_load_buffer(grid_xx* grid, buffer* buf);
 // void map_grid_data_init(int width, int height, int start_offset, int border_size);
 
 bool map_grid_is_valid_offset(int grid_offset);
+inline bool map_grid_is_valid_offset(tile2i tile) { return map_grid_is_valid_offset(tile.grid_offset()); }
 int map_grid_direction_delta(int direction);
 // void map_grid_size(int *width, int *height);
 int map_grid_width();

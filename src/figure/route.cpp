@@ -52,7 +52,7 @@ int map_routing_get_first_available_id() {
 }
 
 void figure::map_figure_add() {
-    if (!map_grid_is_valid_offset(tile.grid_offset())) {
+    if (!map_grid_is_valid_offset(tile)) {
         return;
     }
 
@@ -65,9 +65,14 @@ void figure::map_figure_add() {
 
                                                 // traverse through chain
         while (checking->next_figure) {
-            if (checking->next_figure == id) // this figure is already in the chain on this tile!!
+            if (checking->next_figure == id) { // this figure is already in the chain on this tile!!
                 return;
+            }
 
+            if (checking->next_figure == checking->id) { // this figure next_id looped!!
+                checking->next_figure = 0;
+                return;
+            }
             checking = figure_get(checking->next_figure); // else, traverse chain of figures as normal...
         }
 

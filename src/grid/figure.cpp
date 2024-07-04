@@ -116,6 +116,9 @@ int map_figure_foreach_until(int grid_offset, int test) {
         int figure_id = map_figure_id_get(grid_offset);
         while (figure_id) {
             figure* f = figure_get(figure_id);
+            if (!f->type) {
+                return 0;
+            }
 
             bool result;
             switch (test) {
@@ -144,6 +147,7 @@ int map_figure_foreach_until(int grid_offset, int test) {
             }
         }
     }
+
     return 0;
 }
 

@@ -204,6 +204,7 @@ void figure::cart_update_image() {
     case RESOURCE_COPPER:
     case RESOURCE_BEER:
     case RESOURCE_PAPYRUS:
+    case RESOURCE_REEDS:
         cart_image_id = image_group(resource2cartanim(RESOURCE_NONE));
         if (resource_amount_full > 0) {
             cart_image_id = image_group(resource2cartanim(resource_id));

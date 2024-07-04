@@ -55,6 +55,7 @@ cart_images = [
 	{resource: RESOURCE_COPPER, pack:PACK_SPR_MAIN, id:107 },
 	{resource: RESOURCE_BEER, pack:PACK_SPR_MAIN, id:92 },
 	{resource: RESOURCE_PAPYRUS, pack:PACK_SPR_MAIN, id:100 },
+	{resource: RESOURCE_REEDS, pack:PACK_SPR_MAIN, id:99 },
 ]
 
 cart_offsets = [
