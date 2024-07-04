@@ -268,6 +268,9 @@ void city_t::set_produce_resource(e_resource resource, bool v) {
 
 void city_t::update_allowed_resources() {
     int food_index = 0;
+
+    std::fill_n(std::begin(resource.food_types_allowed), RESOURCES_FOODS_MAX, RESOURCE_NONE);
+
     for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_FOODS_MAX; ++resource) {
         int can_do_food_x = can_produce_resource(resource);
         if (can_do_food_x) {
@@ -429,18 +432,10 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &data.resource.granary_food_stored[i]);
     iob->bind____skip(28); // temp
 
-    int food_index = 0;
-    for (int i = 0; i < 4; i++) // reset available foods quick array
-        data.resource.food_types_allowed[i] = RESOURCE_NONE;
-
     const resource_foods rfoods;
-    for (const auto &r : rfoods) {
+    for (const auto &r : rfoods)
         iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_available_arr[r.type]);
-        if (data.resource.food_types_available_arr[r.type]) {
-            data.resource.food_types_allowed[food_index] = r.type;
-            food_index++;
-        }
-    }
+ 
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
         iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_eaten_arr[i]);
 

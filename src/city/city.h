@@ -272,7 +272,7 @@ struct city_t {
         //        int32_t food_types_eaten;
         int8_t food_types_available_arr[RESOURCES_FOODS_MAX];
         int8_t food_types_eaten_arr[RESOURCES_FOODS_MAX];
-        e_resource food_types_allowed[4];
+        e_resource food_types_allowed[RESOURCES_FOODS_MAX];
         int32_t food_types_available_num;
         int32_t food_types_eaten_num;
         int32_t granary_food_stored[RESOURCES_FOODS_MAX];
