@@ -8,7 +8,15 @@
 #include "grid/routing/routing.h"
 #include "js/js_game.h"
 
-figures::model_t<figure_reed_gatherer> reed_gatherer_m;
+struct reed_gatherer_model : public figures::model_t<figure_reed_gatherer> {
+    using inherited = figures::model_t<figure_reed_gatherer>;
+    int max_amount;
+
+    using inherited::load;
+    virtual void load(archive arch) override {
+        max_amount = arch.r_int("max_amount");
+    }
+} reed_gatherer_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_reed_gatherer);
 void config_load_figure_reed_gatherer() {
@@ -74,26 +82,29 @@ void figure_reed_gatherer::figure_action() {
 
     case ACTION_11_REED_GATHERER_RETURN_HOME: // returning with resource
         if (do_returnhome(TERRAIN_USAGE_PREFER_ROADS)) {
-            home()->stored_full_amount += 50;
+            home()->stored_full_amount += reed_gatherer_m.max_amount;
         }
         break;
     }
 }
 
 void figure_reed_gatherer::update_animation() {
+    xstring animkey;
     switch (action_state()) {
     default: // normal walk
     case ACTION_8_RECALCULATE:
     case ACTION_9_REED_GATHERER_GOTO_RESOURCE:
-        image_set_animation(reed_gatherer_m.anim["walk"]);
+        animkey = animkeys().walk;
         break;
 
     case ACTION_10_REED_GATHERER_WORK: // gathering
-        image_set_animation(reed_gatherer_m.anim["work"]);
+        animkey = animkeys().work;
         break;
 
     case ACTION_11_REED_GATHERER_RETURN_HOME: // returning
-        image_set_animation(reed_gatherer_m.anim["return"]);
+        animkey = animkeys().back;
         break;
     }
+
+    image_set_animation(animkey);
 }

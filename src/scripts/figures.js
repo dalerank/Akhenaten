@@ -753,9 +753,10 @@ figure_reed_gatherer = {
 		walk : { pack:PACK_SPR_MAIN, id:37, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:38, max_frames:8, loop:false },
 		work : { pack:PACK_SPR_MAIN, id:39, max_frames:15 },
-		return : { pack:PACK_SPR_MAIN, id:40, max_frames:12 },
+		back : { pack:PACK_SPR_MAIN, id:40, max_frames:12 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANY,
+	max_amount : 50,
 }
 
 figure_explosion = {
