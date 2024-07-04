@@ -32,7 +32,7 @@ void config_load_building_bazaar() {
 
 struct resource_data {
     int building_id;
-    int distance;
+    int min_distance;
     int num_buildings;
 
     void update_food(int resource, building &b, int distance) {
@@ -50,8 +50,8 @@ struct resource_data {
         }
 
         num_buildings++;
-        if (distance < distance) {
-            distance = distance;
+        if (distance < min_distance) {
+            min_distance = distance;
             building_id = b.id;
         }
     }
@@ -71,8 +71,8 @@ struct resource_data {
         }
 
         num_buildings++;
-        if (distance < distance) {
-            distance = distance;
+        if (distance < min_distance) {
+            min_distance = distance;
             building_id = b.id;
         }
     }
@@ -105,12 +105,7 @@ void building_bazaar::unaccept_all_goods() {
 building *building_bazaar::get_storage_destination() {
     resource_data resources[INVENTORY_MAX];
 
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        resources[i].building_id = 0;
-        resources[i].num_buildings = 0;
-        resources[i].distance = 40;
-    }
-
+    std::fill(std::begin(resources), std::end(resources), resource_data{0, 40, 0});
     buildings_valid_do([&] (building &b) {
         if (!b.has_road_access || b.distance_from_entry <= 0 || b.road_network_id != base.road_network_id) {
             return;
