@@ -835,6 +835,7 @@ building_papyrus_maker = {
     reed : { pos : [35, 4], pack:PACK_GENERAL, id:206 },
   },
   output_resource : RESOURCE_PAPYRUS,
+  production_rate : 50,
   building_size : 2,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
