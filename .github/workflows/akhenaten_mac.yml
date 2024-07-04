@@ -17,6 +17,7 @@ jobs:
     - name: update-workspace
       run: |
         brew install llvm@15
+        whereis clang++
         export CC=/usr/local/opt/llvm@15/bin/clang
         export CXX=/usr/local/opt/llvm@15/bin/clang++
         export CXXFLAGS=-stdlib=libc++
