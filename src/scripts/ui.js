@@ -362,7 +362,7 @@ bazaar_info_window = {
 		workers_text : { type : "text", pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK },
 		workers_desc : { type : "text", pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
 
-		orders : { type:"generic_button", pos:[80, 0], size:[280, 25], text:{group: 98, id: 5}},
+		orders : { type:"generic_button", pos:[100, 0], size:[270, 25], text:{group: 98, id: 5}},
 	}
 }
 

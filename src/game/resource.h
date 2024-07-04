@@ -79,10 +79,10 @@ enum e_inventory_good {
     INVENTORY_FOOD2 = 1,
     INVENTORY_FOOD3 = 2,
     INVENTORY_FOOD4 = 3,
-    INVENTORY_GOOD1 = 5,
-    INVENTORY_GOOD2 = 7,
+    INVENTORY_GOOD1 = 4,
+    INVENTORY_GOOD2 = 5,
     INVENTORY_GOOD3 = 6,
-    INVENTORY_GOOD4 = 4,
+    INVENTORY_GOOD4 = 7,
     // helper constants
     INVENTORY_MIN_FOOD = 0,
     INVENTORY_MAX_FOOD = 4,

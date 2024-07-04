@@ -81,7 +81,6 @@ void building_bazaar::draw_simple_background(object_info &ctx) {
     }
 
     ui["orders"].pos.y = 16 * ctx.bgsize.y - 40;
-    ui["orders"].size.x = 16 * ctx.bgsize.y - ui["orders"].pos.x;
     ui["orders"].onclick([] (int, int) {
         window_building_info_show_storage_orders();
     });

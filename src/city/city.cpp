@@ -269,9 +269,9 @@ void city_t::set_produce_resource(e_resource resource, bool v) {
 void city_t::update_allowed_resources() {
     int food_index = 0;
     for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_FOODS_MAX; ++resource) {
-        int can_do_food_x = g_city.can_produce_resource(resource);
+        int can_do_food_x = can_produce_resource(resource);
         if (can_do_food_x) {
-            g_city.set_allowed_food(food_index, resource);
+            set_allowed_food(food_index, resource);
             food_index++;
         }
     }
