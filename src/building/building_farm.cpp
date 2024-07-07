@@ -4,7 +4,7 @@
 #include "building/industry.h"
 #include "building/building_animation.h"
 #include "city/object_info.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/labor.h"
 #include "core/calc.h"
 #include "game/resource.h"

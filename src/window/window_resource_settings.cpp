@@ -1,7 +1,7 @@
 #include "resource_settings.h"
 
 #include "building/count.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/city.h"
 #include "core/calc.h"
 #include "empire/empire.h"

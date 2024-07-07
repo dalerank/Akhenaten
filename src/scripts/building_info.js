@@ -720,7 +720,7 @@ building_juggler_school = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:46 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:46 },
-    work : { pos : [33, -38], pack:PACK_GENERAL, id:46, offset:2, max_frames:12 }
+    work : { pos : [33, -38], pack:PACK_GENERAL, id:46, offset:1, max_frames:12, duration:3 }
   },
   window_info_height_id : 1,
   building_size : 2,

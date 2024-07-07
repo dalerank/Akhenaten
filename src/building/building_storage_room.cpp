@@ -6,7 +6,7 @@
 #include "graphics/image.h"
 #include "grid/image.h"
 #include "core/calc.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "empire/trade_prices.h"
 #include "city/finance.h"
 #include "core/log.h"

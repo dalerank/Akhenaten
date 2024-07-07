@@ -4,7 +4,7 @@
 #include "building/count.h"
 #include "core/direction.h"
 #include "city/object_info.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"

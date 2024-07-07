@@ -12,7 +12,7 @@
 #include "empire/trade_prices.h"
 
 #include "city/trade.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/finance.h"
 #include "figure/image.h"
 #include "graphics/image.h"

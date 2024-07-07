@@ -4,7 +4,7 @@
 #include "building/model.h"
 #include "city/houses.h"
 #include "city/city.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "game/resource.h"

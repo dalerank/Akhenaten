@@ -3,7 +3,7 @@
 #include "building/building_workshop.h"
 #include "graphics/animation.h"
 #include "city/labor.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/warnings.h"
 #include "city/city.h"
 #include "empire/empire.h"

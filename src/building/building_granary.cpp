@@ -6,7 +6,7 @@
 #include "building/building_storage_yard.h"
 #include "building/count.h"
 #include "city/message.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/warnings.h"
 #include "core/calc.h"
 #include "core/profiler.h"

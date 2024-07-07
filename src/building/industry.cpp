@@ -3,7 +3,7 @@
 #include "building/building_type.h"
 #include "building/building_farm.h"
 #include "building/monuments.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "game/resource.h"

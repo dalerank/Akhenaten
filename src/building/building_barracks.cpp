@@ -4,7 +4,7 @@
 #include "building/model.h"
 #include "city/buildings.h"
 #include "city/military.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/warnings.h"
 #include "city/labor.h"
 #include "core/calc.h"

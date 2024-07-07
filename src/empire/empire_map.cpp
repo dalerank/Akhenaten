@@ -3,7 +3,7 @@
 #include "building/count.h"
 #include "city/constants.h"
 #include "city/population.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/trade.h"
 #include "core/calc.h"
 #include "core/log.h"

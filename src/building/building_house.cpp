@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "city/warnings.h"
 #include "city/population.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "core/game_environment.h"
 #include "city/labor.h"
 #include "game/resource.h"

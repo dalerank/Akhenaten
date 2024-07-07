@@ -5,7 +5,7 @@
 #include "city/message.h"
 #include "city/population.h"
 #include "city/ratings.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "core/random.h"
 #include "core/svector.h"
 #include "events.h"

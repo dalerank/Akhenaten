@@ -11,7 +11,7 @@
 #include "city/victory.h"
 #include "city/warning.h"
 #include "city/health.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "core/string.h"
 #include "figure/figure.h"
 #include "game/tick.h"

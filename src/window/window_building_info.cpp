@@ -21,7 +21,7 @@
 #include "building/storage.h"
 #include "building/building_storage_yard.h"
 #include "city/city.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "overlays/city_overlay.h"
 #include "core/calc.h"
 #include "game/state.h"

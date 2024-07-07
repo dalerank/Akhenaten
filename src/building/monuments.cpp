@@ -9,7 +9,7 @@
 #include "empire/empire.h"
 #include "figure/figure.h"
 #include "core/svector.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/message.h"
 #include "game/resource.h"
 #include "grid/grid.h"

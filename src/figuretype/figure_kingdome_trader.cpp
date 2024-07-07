@@ -9,7 +9,7 @@
 #include "city/finance.h"
 #include "city/city.h"
 #include "city/message.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/trade.h"
 #include "core/calc.h"
 #include "empire/empire.h"

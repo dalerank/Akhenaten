@@ -3,7 +3,7 @@
 #include "city/city.h"
 #include "city/gods.h"
 
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "empire/trade_route.h"
 #include "events.h"
 #include "game/difficulty.h"

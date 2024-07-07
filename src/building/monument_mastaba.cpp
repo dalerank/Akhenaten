@@ -12,7 +12,7 @@
 #include "building/count.h"
 #include "game/game.h"
 #include "game/undo.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/message.h"
 #include "grid/random.h"
 #include "grid/tiles.h"

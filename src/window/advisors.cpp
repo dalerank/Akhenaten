@@ -8,7 +8,7 @@
 #include "city/labor.h"
 #include "city/migration.h"
 #include "city/ratings.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/warning.h"
 #include "figure/formation.h"
 #include "game/settings.h"

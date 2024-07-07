@@ -2,7 +2,7 @@
 
 #include "city/migration.h"
 #include "city/population.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "game/resource.h"
 #include "game/time.h"
 #include "graphics/graphics.h"

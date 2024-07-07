@@ -3,7 +3,7 @@
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "game/resource.h"
 #include "graphics/elements/ui.h"
 #include "graphics/screen.h"

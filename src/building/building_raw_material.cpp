@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "city/object_info.h"
 #include "building/count.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/resource.h"

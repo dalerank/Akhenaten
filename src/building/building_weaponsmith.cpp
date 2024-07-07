@@ -14,7 +14,7 @@
 #include "empire/empire.h"
 
 #include "dev/debug.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include <iostream>
 
 declare_console_command(addweapons, game_cheat_add_resource<RESOURCE_WEAPONS>);

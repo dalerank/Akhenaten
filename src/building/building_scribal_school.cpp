@@ -9,7 +9,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "city/labor.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/warnings.h"
 #include "city/city.h"
 #include "empire/empire.h"

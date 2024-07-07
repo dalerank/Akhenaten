@@ -25,6 +25,11 @@ void building_juggler_school::update_month() {
     data.entertainment.spawned_entertainer_this_month = false;
 }
 
+void building_juggler_school::update_graphic() {
+    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
+    set_animation(animkey);
+}
+
 void building_juggler_school::spawn_figure() {
     if (!common_spawn_figure_trigger(50)) {
         return;
@@ -45,8 +50,7 @@ void building_juggler_school::spawn_figure() {
 }
 
 bool building_juggler_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const auto &anim = juggler_school_m.anim["work"];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+    draw_normal_anim(ctx, point, tile, color_mask);
 
     return true;
 }

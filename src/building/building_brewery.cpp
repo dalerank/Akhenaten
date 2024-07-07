@@ -4,7 +4,7 @@
 #include "widget/city/ornaments.h"
 #include "city/city.h"
 #include "city/labor.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/warnings.h"
 #include "building/count.h"
 #include "empire/empire.h"

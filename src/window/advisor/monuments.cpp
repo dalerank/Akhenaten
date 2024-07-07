@@ -4,7 +4,7 @@
 #include "city/finance.h"
 #include "city/military.h"
 #include "city/ratings.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "empire/empire.h"
 #include "figure/formation_legion.h"
 #include "graphics/image.h"

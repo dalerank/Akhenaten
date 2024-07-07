@@ -21,7 +21,7 @@
 #include "building/building_road.h"
 #include "city/buildings.h"
 #include "city/finance.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/warning.h"
 #include "clear.h"
 #include "figure/formation_legion.h"

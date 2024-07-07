@@ -5,7 +5,7 @@
 #include "building/building_type.h"
 #include "grid/water.h"
 #include "city/buildings.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "core/profiler.h"
 #include "empire/empire.h"
 #include "grid/figure.h"

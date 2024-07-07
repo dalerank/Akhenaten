@@ -5,7 +5,6 @@
 
 #include "core/vec2i.h"
 #include "core/svector.h"
-#include "city/resource.h"
 
 #include "input/hotkey.h"
 #include "graphics/elements/generic_button.h"

@@ -2,7 +2,7 @@
 
 #include "building/building.h"
 #include "building/rotation.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 
 #include "io/io_buffer.h"
 #include "window/window_city.h"

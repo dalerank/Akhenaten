@@ -9,7 +9,7 @@
 #include "building/building_storage_room.h"
 #include "building/monuments.h"
 #include "city/buildings.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "figure/combat.h"

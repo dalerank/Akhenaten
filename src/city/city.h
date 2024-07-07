@@ -9,7 +9,7 @@
 #include "city/labor.h"
 #include "city/health.h"
 #include "city/military.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/map.h"
 #include "city/gods.h"
 #include "city/victory.h"

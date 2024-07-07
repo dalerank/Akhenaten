@@ -15,7 +15,7 @@
 #include "city/finance.h"
 #include "city/city.h"
 #include "city/warnings.h"
-#include "city/resource.h"
+#include "city/city_resource.h"
 #include "city/labor.h"
 #include "core/calc.h"
 #include "core/vec2i.h"
