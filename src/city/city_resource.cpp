@@ -304,6 +304,7 @@ void city_resource_determine_available() {
         }
     }
 }
+
 static void calculate_available_food() {
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
         city_data.resource.granary_food_stored[i] = 0;

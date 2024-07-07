@@ -4,6 +4,7 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 #include "city/object_info.h"
+#include "city/city_resource.h"
 #include "core/calc.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
