@@ -112,7 +112,7 @@ e_resource city_trade_next_caravan_backup_import_resource() {
 }
 
 e_resource city_trade_next_docker_import_resource() {
-    city_data.trade.docker_import_resource = (e_resource)(city_data.trade.docker_import_resource + 1);
+    city_data.trade.docker_import_resource = ++city_data.trade.docker_import_resource;
     if (city_data.trade.docker_import_resource >= RESOURCES_MAX)
         city_data.trade.docker_import_resource = RESOURCE_MIN;
 

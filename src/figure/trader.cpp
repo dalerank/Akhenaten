@@ -100,7 +100,7 @@ e_resource trader_get_buy_resource(building* b, int city_id, int amount) {
     building_storage_room* space = warehouse->room();
     while (space) {
         e_resource resource = space->base.subtype.warehouse_resource_id;
-        if (space->stored_full_amount >= amount && empire_can_export_resource_to_city(city_id, resource)) {
+        if (space->stored_full_amount >= amount && g_empire.can_export_resource_to_city(city_id, resource)) {
             // update stocks
             city_resource_remove_from_storageyard(resource, amount);
             space->stored_full_amount -= amount;

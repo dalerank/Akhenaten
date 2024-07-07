@@ -191,15 +191,47 @@ int get_max_food_stock_for_population(e_resource resource) {
     return 0;
 }
 
-resource_list empire_t::import_resources_from_city(int city_id) {
+resource_list empire_t::importable_resources_from_city(int city_id) {
     resource_list result;
     for (const auto &r: resource_list::all) {
-        if (g_empire.can_import_resource_from_city(city_id, r.type)) {
+        if (can_import_resource_from_city(city_id, r.type)) {
             result[r.type] = 1;
         }
     }
 
     return result;
+}
+
+resource_list empire_t::exportable_resources_from_city(int city_id) {
+    resource_list result;
+    for (const auto &r: resource_list::all) {
+        if (can_export_resource_to_city(city_id, r.type)) {
+            result[r.type] = 1;
+        }
+    }
+
+    return result;
+}
+
+bool empire_t::can_export_resource_to_city(int city_id, e_resource resource) {
+    empire_city* city = g_empire.city(city_id);
+    if (city_id && trade_route_limit_reached(city->route_id, resource)) {
+        // quota reached
+        return false;
+    }
+    if (city_resource_count(resource) <= city_resource_trading_amount(resource)) {
+        // stocks too low
+        return false;
+    }
+    if (city_id == 0 || city->buys_resource[resource]) {
+        int status = city_resource_trade_status(resource);
+        switch (status) {
+        case TRADE_STATUS_EXPORT: return true;
+        case TRADE_STATUS_EXPORT_SURPLUS: return city_resource_trade_surplus(resource);
+        }
+    }
+
+    return false;
 }
 
 bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {

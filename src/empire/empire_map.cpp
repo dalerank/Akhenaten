@@ -105,27 +105,6 @@ void empire_map_t::select_object(vec2i pos) {
     selected_obj = empire_object_get_closest(vec2i(map_x, map_y));
 }
 
-bool empire_can_export_resource_to_city(int city_id, e_resource resource) {
-    empire_city* city = g_empire.city(city_id);
-    if (city_id && trade_route_limit_reached(city->route_id, resource)) {
-        // quota reached
-        return false;
-    }
-    if (city_resource_count(resource) <= city_resource_trading_amount(resource)) {
-        // stocks too low
-        return false;
-    }
-    if (city_id == 0 || city->buys_resource[resource]) {
-        int status = city_resource_trade_status(resource);
-        switch (status) {
-        case TRADE_STATUS_EXPORT: return true;
-        case TRADE_STATUS_EXPORT_SURPLUS: return city_resource_trade_surplus(resource);
-        }
-    }
-    
-    return false;
-}
-
 io_buffer* iob_empire_map_params = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_empire_map;
     iob->bind(BIND_SIGNATURE_INT32, &data.scroll_x);
