@@ -15,9 +15,9 @@
 #include "scenario/scenario.h"
 
 struct available_data_t {
-    resources_list resource_list;
-    resources_list food_list;
-    resources_list market_goods_list;
+    resource_list resources;
+    resource_list foods;
+    resource_list market_goods;
 };
 
 available_data_t g_available_data;
@@ -71,20 +71,16 @@ pcstr city_resource_id(e_resource resource) {
     return "unknown";
 }
 
-const resources_list* city_resource_get_available() {
-    return &g_available_data.resource_list;
+const resource_list &city_resource_get_available() {
+    return g_available_data.resources;
 }
 
-const resources_list &city_resource_get_available_foods() {
-    return g_available_data.food_list;
+const resource_list &city_resource_get_available_foods() {
+    return g_available_data.foods;
 }
 
-e_resource city_resource_get_available_food(int index) {
-    return g_available_data.food_list.items[index];
-}
-
-const resources_list* city_resource_get_available_market_goods() {
-    return &g_available_data.market_goods_list;
+const resource_list &city_resource_get_available_market_goods() {
+    return g_available_data.market_goods;
 }
 
 int city_resource_multiple_wine_available() {
@@ -276,34 +272,26 @@ void city_resource_calculate_storageyard_stocks() {
 }
 
 void city_resource_determine_available() {
-    for (int i = 0; i < RESOURCES_MAX; i++) {
-        g_available_data.resource_list.items[i] = RESOURCE_NONE;
-        g_available_data.food_list.items[i] = RESOURCE_NONE;
-    }
-    g_available_data.resource_list.size = 0;
-    g_available_data.food_list.size = 0;
-    g_available_data.market_goods_list.size = 0;
+    g_available_data.resources.clear();
+    g_available_data.foods.clear();
+    g_available_data.market_goods.clear();
 
-    for (e_resource i = RESOURCE_FOOD_MIN; i < RESOURCES_FOODS_MAX; i = (e_resource)(i + 1)) {
-        if (g_city.can_produce_resource(i) || g_empire.can_import_resource(i, false)) {
-            const int food_index = g_available_data.food_list.size;
-            g_available_data.food_list.items[food_index] = i;
-            g_available_data.food_list.size++;
-
-            const int good_index = g_available_data.market_goods_list.size;
-            g_available_data.market_goods_list.items[good_index] = i;
-            g_available_data.market_goods_list.size++;
+    for (const auto &r: resource_list::foods) {
+        if (g_city.can_produce_resource(r.type) || g_empire.can_import_resource(r.type, false)) {
+            g_available_data.foods[r.type] = 1;
+            g_available_data.market_goods[r.type] = 1;
         }
     }
-    for (e_resource i = RESOURCE_MIN; i < RESOURCES_MAX; i = (e_resource)(i + 1)) {
-        if (g_city.can_produce_resource(i) || g_empire.can_import_resource(i, false)) {
-            g_available_data.resource_list.items[g_available_data.resource_list.size++] = i;
-            switch (i) {
+
+    for (const auto &r : resource_list::all) {
+        if (g_city.can_produce_resource(r.type) || g_empire.can_import_resource(r.type, false)) {
+            g_available_data.resources[r.type] = 1;
+            switch (r.type) {
             case RESOURCE_POTTERY:
             case RESOURCE_BEER:
             case RESOURCE_LINEN:
             case RESOURCE_LUXURY_GOODS:
-                g_available_data.market_goods_list.items[g_available_data.market_goods_list.size++] = i;
+                g_available_data.market_goods[r.type] = 1;
                 break;
             }
         }

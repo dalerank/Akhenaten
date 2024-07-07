@@ -297,6 +297,10 @@ bool building_storage_yard::is_emptying(e_resource resource) {
     return (s->resource_state[resource] == STORAGE_STATE_PHARAOH_EMPTY);
 }
 
+bool building_storage_yard::is_empty_all() {
+    return storage()->empty_all;
+}
+
 bool building_storage_yard::get_permission(int p) const {
     return building_storage_get_permission(p, &base); 
 }
@@ -452,7 +456,7 @@ bool building_storage_yard::is_empty_all() const {
     return storage()->empty_all;
 }
 
-static bool determine_granary_accept_foods(resource_foods &foods, int road_network) {
+static bool determine_granary_accept_foods(resource_list &foods, int road_network) {
     if (scenario_property_kingdom_supplies_grain()) {
         return false;
     }
@@ -478,16 +482,19 @@ static bool determine_granary_accept_foods(resource_foods &foods, int road_netwo
             return;
         }
 
-        for (auto &r : foods) {
-            foods[r.type] += granary->is_not_accepting(r.type) ? 0 : 1;
+        for (const auto &r : resource_list::foods) {
+            if (granary->is_accepting(r.type)) {
+                foods[r.type] = 1;
+            }
         }
+
     }, BUILDING_GRANARY);
 
     return foods.any();
 }
 
 
-static bool contains_non_stockpiled_food(building* space, const resource_foods &foods) {
+static bool contains_non_stockpiled_food(building* space, const resource_list &foods) {
     if (space->id <= 0) {
         return false;
     }
@@ -642,7 +649,7 @@ storage_worker_task building_storageyard_deliver_resource_to_workshop(building *
 }
 
 storage_worker_task building_storage_yard::deliver_food_to_gettingup_granary(building *warehouse) {
-    resource_foods granary_resources;
+    resource_list granary_resources;
     if (!g_city.determine_granary_get_foods(granary_resources, warehouse->road_network_id)) {
         return {STORAGEYARD_TASK_NONE};
     }
@@ -662,7 +669,7 @@ storage_worker_task building_storage_yard::deliver_food_to_gettingup_granary(bui
 storage_worker_task building_storageyard_deliver_food_to_accepting_granary(building *warehouse) {
     building *space = warehouse;
 
-    resource_foods granary_resources;
+    resource_list granary_resources;
     if (determine_granary_accept_foods(granary_resources, warehouse->road_network_id)
         && !scenario_property_kingdom_supplies_grain()) {
         space = warehouse;
@@ -934,10 +941,10 @@ void building_storage_yard::draw_warehouse(object_info* c) {
         int y = c->offset.y + 45;
         int lines = 0;
 
-        const resources_list* list = city_resource_get_available();
+        const resource_list &resources = city_resource_get_available();
         painter ctx = game.painter();
-        for (int i = 0; i < list->size; i++) {
-            e_resource resource = list->items[i];
+        for (const auto &r: resources) {
+            e_resource resource = r.type;
             int loads = warehouse->amount(resource);
             if (loads) {
                 int amount = stack_proper_quantity(loads, resource);
@@ -995,12 +1002,13 @@ void building_storage_yard::draw_warehouse_orders_foreground(object_info* c) {
     int line_x = c->offset.x + 215;
 
     backup_storage_settings(base.storage_id);
-    const resources_list* list = city_resource_get_available();
+    const resource_list &resources = city_resource_get_available();
     painter ctx = game.painter();
-    for (int i = 0; i < list->size; i++) {
+    for (const auto &r: resources) {
+        int i = std::distance(&*resources.begin(), &r);
         int line_y = 20 * i;
 
-        int resource = list->items[i];
+        e_resource resource = r.type;
         int image_id = image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         ImageDraw::img_generic(ctx, image_id, c->offset.x + 25, y_offset + 48 + line_y);
         lang_text_draw(23, resource, c->offset.x + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE_ON_DARK);

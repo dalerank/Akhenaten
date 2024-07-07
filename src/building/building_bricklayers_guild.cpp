@@ -84,6 +84,11 @@ void building_bricklayers_guild::window_info_background(object_info& c) {
     window_building_draw_employment(&c, 142);
 }
 
+void building_bricklayers_guild::update_graphic() {
+    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
+    set_animation(animkey);
+}
+
 void building_bricklayers_guild::on_create(int orientation) {
     data.guild.max_workers = 1;
 }
@@ -148,8 +153,7 @@ void building_bricklayers_guild::spawn_figure() {
 }
 
 bool building_bricklayers_guild::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    if (num_workers() > 0) {
-        building_draw_normal_anim(ctx, point, &base, tile, bricklayers_guild_m.anim["work"], color_mask);
-    }
+    building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
+
     return true;
 }

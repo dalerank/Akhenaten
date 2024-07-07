@@ -1,6 +1,7 @@
 #pragma once
 
 #include "empire_city.h"
+#include "game/resource.h"
 #include "core/span.hpp"
 
 class empire_t {
@@ -13,6 +14,7 @@ public:
     void clear_cities_data();
     bool can_import_resource(e_resource resource, bool check_if_open);
     bool can_export_resource(e_resource resource, bool check_if_open);
+    resource_list import_resources_from_city(int city_id);
     bool can_import_resource_from_city(int city_id, e_resource resource);
     int get_city_for_trade_route(int route_id);
     bool is_trade_route_open(int route_id);

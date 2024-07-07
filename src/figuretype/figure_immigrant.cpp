@@ -127,7 +127,7 @@ const animations_t &figure_immigrant::anim() const {
 void figure_immigrant::create(building *house, int num_people) {
     tile2i entry = g_city.map.entry_point;
     figure* f = figure_create(FIGURE_IMMIGRANT, entry, DIR_0_TOP_RIGHT);
-    f->action_state = FIGURE_ACTION_1_IMMIGRANT_CREATED;
+    f->advance_action(FIGURE_ACTION_1_IMMIGRANT_CREATED);
     house->set_figure(BUILDING_SLOT_IMMIGRANT, f->id);
     f->wait_ticks = 10 + (house->map_random_7bit & 0x7f);
     f->migrant_num_people = num_people;

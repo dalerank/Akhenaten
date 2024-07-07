@@ -60,6 +60,7 @@ public:
     bool is_gettable(e_resource resource);
     bool is_getting(e_resource resource);
     bool is_emptying(e_resource resource);
+    bool is_empty_all();
     bool get_permission(int p) const;
 
     int freespace(e_resource resource);
@@ -88,12 +89,6 @@ building_storage_yard *storage_yard_cast(building *b);
 
 int get_storage_accepting_amount(building *b, e_resource resource);
 int building_storage_yard_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int *understaffed, tile2i &dst);
-
 void building_storageyard_remove_resource_curse(building* warehouse, int amount);
-
-void building_storageyard_space_remove_export(building* space, e_resource resource);
-
 void building_storageyards_add_resource(e_resource resource, int amount);
-
 int building_storageyards_remove_resource(e_resource resource, int amount);
-

@@ -34,7 +34,7 @@ void config_load_figure_docker() {
 
 bool figure_docker::try_import_resource(building* b, e_resource resource, int city_id) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
-    if (warehouse) {
+    if (!warehouse) {
         return false;
     }
 
@@ -94,10 +94,7 @@ int figure_docker::try_export_resource(building* b, e_resource resource, int cit
 }
 
 int figure_docker::get_closest_warehouse_for_import(tile2i pos, int city_id, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource& import_resource) {
-    bool importable[RESOURCES_MAX] = {0};
-    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
-        importable[r] = g_empire.can_import_resource_from_city(city_id, r);
-    }
+    const resource_list importable = g_empire.import_resources_from_city(city_id);
 
     e_resource resource = city_trade_next_docker_import_resource();
     for (e_resource i = RESOURCE_MIN; i < RESOURCES_MAX && !importable[resource]; ++i) {
@@ -110,45 +107,56 @@ int figure_docker::get_closest_warehouse_for_import(tile2i pos, int city_id, int
 
     int min_distance = 10000;
     int min_building_id = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building_storage_yard* warehouse = building_get(i)->dcast_storage_yard();
-        if (!warehouse || warehouse->is_valid())
-            continue;
+    buildings_valid_do([&] (building &b) {
+        building_storage_yard *warehouse = b.dcast_storage_yard();
+        if (!warehouse || !warehouse->is_valid()) {
+            return;
+        }
 
-        if (!warehouse->has_road_access() || warehouse->base.distance_from_entry <= 0)
-            continue;
+        if (!warehouse->has_road_access() || warehouse->base.distance_from_entry <= 0) {
+            return;
+        }
 
-        if (warehouse->road_network() != road_network_id)
-            continue;
+        if (warehouse->road_network() != road_network_id) {
+            return;
+        }
 
-        if (!warehouse->get_permission(BUILDING_STORAGE_PERMISSION_DOCK))
-            continue;
+        if (!warehouse->get_permission(BUILDING_STORAGE_PERMISSION_DOCK)) {
+            return;
+        }
 
-        const building_storage* storage = warehouse->storage();
-        if (!warehouse->is_not_accepting(resource) && !storage->empty_all) {
-            int distance_penalty = 32;
-            building_storage_room* space = warehouse->room();
-            while (space) {
-                if (space->base.subtype.warehouse_resource_id == RESOURCE_NONE)
-                    distance_penalty -= 8;
+        if (warehouse->is_not_accepting(resource)) {
+            return;
+        }
 
-                if (space->base.subtype.warehouse_resource_id == resource && space->stored_full_amount < 400)
-                    distance_penalty -= 4;
+        if (warehouse->is_empty_all()) {
+            return;
+        }
 
-                space = space->next_room();
+        int distance_penalty = 32;
+        building_storage_room *space = warehouse->room();
+        while (space) {
+            if (space->base.subtype.warehouse_resource_id == RESOURCE_NONE) {
+                distance_penalty -= 8;
             }
 
-            if (distance_penalty < 32) {
-                int distance = calc_distance_with_penalty(warehouse->tile(), pos, distance_from_entry, warehouse->base.distance_from_entry);
-                // prefer emptier warehouse
-                distance += distance_penalty;
-                if (distance < min_distance) {
-                    min_distance = distance;
-                    min_building_id = i;
-                }
+            if (space->base.subtype.warehouse_resource_id == resource && space->stored_full_amount < 400) {
+                distance_penalty -= 4;
+            }
+
+            space = space->next_room();
+        }
+
+        if (distance_penalty < 32) {
+            int distance = calc_distance_with_penalty(warehouse->tile(), pos, distance_from_entry, warehouse->base.distance_from_entry);
+            // prefer emptier warehouse
+            distance += distance_penalty;
+            if (distance < min_distance) {
+                min_distance = distance;
+                min_building_id = b.id;
             }
         }
-    }
+    }, BUILDING_STORAGE_YARD);
 
     if (!min_building_id) {
         return 0;

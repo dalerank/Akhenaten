@@ -435,7 +435,7 @@ struct city_t {
     void ratings_update_explanations();
     void ratings_update(bool is_yearly_update);
 
-    bool determine_granary_get_foods(resource_foods &foods, int road_network);
+    bool determine_granary_get_foods(resource_list &foods, int road_network);
 
     e_victory_state determine_victory_state();
     void victory_check();

@@ -8,18 +8,12 @@
 #include <iosfwd>
 #include <string>
 
-struct resources_list {
-    int size;
-    e_resource items[RESOURCES_MAX];
-};
-
 int city_resource_count(e_resource resource);
 pcstr city_resource_id(e_resource resource);
 
-const resources_list* city_resource_get_available();
-const resources_list &city_resource_get_available_foods();
-e_resource city_resource_get_available_food(int index);
-const resources_list* city_resource_get_available_market_goods();
+const resource_list &city_resource_get_available();
+const resource_list &city_resource_get_available_foods();
+const resource_list &city_resource_get_available_market_goods();
 
 int city_resource_multiple_wine_available();
 int city_resource_food_types_available();

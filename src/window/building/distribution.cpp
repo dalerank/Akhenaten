@@ -256,9 +256,9 @@ int window_building_handle_mouse_granary_orders(const mouse* m, object_info* c) 
     }
 
     // resources
-    int num_resources = city_resource_get_available_foods().size;
+    size_t num_resources = city_resource_get_available_foods().size();
     data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m, {c->offset.x + 205, y_offset + 46}, data.orders_resource_buttons.data(), num_resources, &data.resource_focus_button_id)) {
+    if (generic_buttons_handle_mouse(m, {c->offset.x + 205, y_offset + 46}, data.orders_resource_buttons.data(), (int)num_resources, &data.resource_focus_button_id)) {
         return 1;
     }
 
@@ -316,10 +316,7 @@ int window_building_handle_mouse_warehouse_orders(const mouse* m, object_info* c
         return 1;
 
     // resources
-    int num_resources = city_resource_get_available()->size;
-    if (num_resources > 20) {
-        num_resources = 20;
-    }
+    int num_resources = std::min<int>((int)city_resource_get_available().size(), 20);
     data.building_id = c->building_id;
 
     if (generic_buttons_handle_mouse(m, {c->offset.x + 205, y_offset + 46}, data.orders_resource_buttons.data(), num_resources, &data.resource_focus_button_id)) {
@@ -372,9 +369,9 @@ static void toggle_resource_state(int index, int param2) {
     }
 
     if (b->type == BUILDING_STORAGE_YARD) {
-        resource = city_resource_get_available()->items[index - 1];
+        resource = city_resource_get_available().at(index - 1).type;
     } else {
-        resource = city_resource_get_available_food(index - 1);
+        resource = city_resource_get_available_foods().at(index - 1).type;
     }
 
     building_storage_cycle_resource_state(b->storage_id, resource, false);
@@ -397,9 +394,9 @@ static void toggle_resource_state_backwards(int index, int param2) {
     } 
 
     if (b->type == BUILDING_STORAGE_YARD) {
-        resource = city_resource_get_available()->items[index - 1];
+        resource = city_resource_get_available().at(index - 1).type;
     } else {
-        resource = city_resource_get_available_food(index - 1);
+        resource = city_resource_get_available_foods().at(index - 1).type;
     }
 
     building_storage_cycle_resource_state(b->storage_id, resource, true);
@@ -421,9 +418,9 @@ static void order_quantity_increase_decrease(int index, int param2) {
     }
 
     if (b->type == BUILDING_STORAGE_YARD) {
-        resource = city_resource_get_available()->items[index - 1];
+        resource = city_resource_get_available().at(index - 1).type;
     } else {
-        resource = city_resource_get_available_food(index - 1);
+        resource = city_resource_get_available_foods().at(index - 1).type;
     }
 
     building_storage_increase_decrease_resource_state(b->storage_id, resource, param2);

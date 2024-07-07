@@ -31,7 +31,7 @@ int ui::advisor_trade_window::draw_background() {
     ui["scrollbar"].onevent([] {
         window_invalidate();
     });
-    ui["scrollbar"].max_value(city_resource_get_available()->size - 15);
+    ui["scrollbar"].max_value(city_resource_get_available().size() - 15);
 
     return 0;
 }
@@ -44,18 +44,18 @@ void ui::advisor_trade_window::ui_draw_foreground() {
 
     int scroll_position = ui["scrollbar"].value();
 
-    const resources_list* list = city_resource_get_available();
-    for (int i = scroll_position; i < list->size; i++) {
+    const resource_list &resources = city_resource_get_available();
+    for (const auto &r: resources) {
+        int i = std::distance(resources.begin(), &r);
         int y_offset = ui["inner_panel"].pos.y + 23 * (i - scroll_position) + 8;
 
         ui.button("", vec2i{20, y_offset}, vec2i{570, 22}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_NoBody)
             .tooltip({68, 109})
-            .onclick([resource_index = i] (int, int) {
-                auto resource = city_resource_get_available()->items[resource_index];
-                window_resource_settings_show(resource);
+            .onclick([r] (int, int) {
+                window_resource_settings_show(r.type);
             });
 
-        e_resource resource = list->items[i];
+        e_resource resource = r.type;
         y_offset += 4;
         ui.icon({24, y_offset}, resource);
 

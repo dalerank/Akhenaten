@@ -59,9 +59,9 @@ int building_storage_create(int building_type) {
                 g_storages[i].storage.resource_max_accept[r] = 3200;
                 g_storages[i].storage.resource_max_get[r] = 3200;
             }
-            const resources_list* list = city_resource_get_available();
-            for (int r = 0; r < list->size; r++) {
-                int resource = list->items[r];
+            const resource_list &resources = city_resource_get_available();
+            for (const auto &r: resources) {
+                e_resource resource = r.type;
                 switch (building_type) {
                 case BUILDING_STORAGE_YARD:
                 case BUILDING_STORAGE_ROOM:
@@ -70,6 +70,7 @@ int building_storage_create(int building_type) {
                     else
                         g_storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_ACCEPT;
                     break;
+
                 case BUILDING_GRANARY:
                     if (resource < 9)
                         g_storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_ACCEPT;

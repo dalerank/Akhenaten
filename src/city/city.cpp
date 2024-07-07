@@ -432,15 +432,15 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &data.resource.granary_food_stored[i]);
     iob->bind____skip(28); // temp
 
-    const resource_foods rfoods;
-    for (const auto &r : rfoods)
-        iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_available_arr[r.type]);
+    for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
+        iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_available_arr[i]);
  
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
         iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_eaten_arr[i]);
 
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
         iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_arr_unk_00[i]);
+
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
         iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_arr_unk_01[i]);
 
@@ -932,7 +932,7 @@ void city_t::figures_update_day() {
     });
 }
 
-bool city_t::determine_granary_get_foods(resource_foods &foods, int road_network) {
+bool city_t::determine_granary_get_foods(resource_list &foods, int road_network) {
     if (scenario_property_kingdom_supplies_grain()) {
         return false;
     }
@@ -958,8 +958,10 @@ bool city_t::determine_granary_get_foods(resource_foods &foods, int road_network
             return;
         }
 
-        for (auto &r: foods) {
-            r.value += granary->is_getting(r.type) ? 1 : 0;
+        for (const auto &r: resource_list::foods) {
+            if (granary->is_getting(r.type)) {
+                foods[r.type] = 1;
+            }
         }
     }, BUILDING_GRANARY);
 

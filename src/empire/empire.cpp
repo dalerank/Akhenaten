@@ -191,10 +191,21 @@ int get_max_food_stock_for_population(e_resource resource) {
     return 0;
 }
 
+resource_list empire_t::import_resources_from_city(int city_id) {
+    resource_list result;
+    for (const auto &r: resource_list::all) {
+        if (g_empire.can_import_resource_from_city(city_id, r.type)) {
+            result[r.type] = 1;
+        }
+    }
+
+    return result;
+}
+
 bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
     empire_city* city = this->city(city_id);
     if (!city->sells_resource[resource])
-        return 0;
+        return false;
 
     int status = city_resource_trade_status(resource);
     switch (status) {
@@ -204,7 +215,7 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
         break;
 
     default:
-        return 0;
+        return false;
     }
 
     if (trade_route_limit_reached(city->route_id, resource)) {

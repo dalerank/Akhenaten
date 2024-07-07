@@ -1,9 +1,10 @@
 #pragma once
 
 #include <cstdint>
-#include <array>
 #include <algorithm>
 #include <type_traits>
+#include <cassert>
+#include "core/svector.h"
 
 enum e_resource : uint8_t {
     RESOURCE_NONE = 0,
@@ -56,23 +57,36 @@ struct resource_value {
     int value;
 };
 
-struct resource_foods {
-    using values_t = std::array<resource_value, RESOURCES_FOODS_MAX>;
-    using value_type = values_t::value_type;
-    using iterator = values_t::iterator;
-    using const_iterator = values_t::const_iterator;
-    values_t data = {};
+inline e_resource& resource_next(e_resource& e) { e = e_resource(e + 1); return e; }
+inline e_resource& operator++(e_resource& e) { e = e_resource(e + 1); return e; };
 
-    inline resource_foods() { for (auto &it : data) { it = {(e_resource)std::distance(data.data(), &it), 0}; } }
-    inline int &operator[](e_resource r) { return data[r].value; }
-    inline const int &operator[](e_resource r) const { return data[r].value; }
-    inline iterator begin() { return data.begin(); }
-    inline const_iterator begin() const { return data.begin(); }
-    inline iterator end() { return data.end(); }
-    inline const_iterator end() const { return data.end(); }
-    inline void clear() { for (auto &item: data) { item.value = 0; } }
-    inline bool any() const { return std::find_if(data.begin(), data.end(), [] (auto &it) { return it.value > 0; }) != data.end(); }
+struct resource_list : public svector<resource_value, RESOURCES_MAX> {
+    inline resource_list() {}
+    inline resource_list(e_resource b, e_resource e) {
+        for (e_resource i = b; i <= e; ++i) {
+            push_back({i, 0});
+        }
+    }
+
+    inline int &operator[](e_resource r) {
+        auto it = std::find_if(begin(), end(), [r] (auto &i) { return i.type == r; });
+        if (it == end()) {
+            push_back({r, 0});
+            return back().value;
+        }
+        return it->value; 
+    }
+
+    inline int operator[](e_resource r) const {
+        auto it = std::find_if(begin(), end(), [r] (auto &i) { return i.type == r; });
+        return it == end() ? 0 : it->value; 
+    }
+
+    inline bool any() const { return std::find_if(begin(), end(), [] (auto &it) { return it.value > 0; }) != end(); }
+    static const resource_list foods;
+    static const resource_list all;
 };
+
 
 enum e_inventory_good {
     INVENTORY_FOOD1 = 0,
@@ -143,16 +157,6 @@ enum {
 };
 
 int resource_image_offset(int resource, int type);
-
-inline e_resource& resourse_next(e_resource& e) {
-    e = e_resource(e + 1);
-    return e;
-}
-
-inline e_resource& operator++(e_resource& e) {
-    e = e_resource(e + 1);
-    return e;
-};
 
 template<typename ... Args>
 bool resource_type_any_of(e_resource type, Args ... args) {

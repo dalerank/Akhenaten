@@ -111,20 +111,20 @@ void building_bazaar::draw_orders_foreground(object_info &c) {
 
     building_bazaar* bazaar = building_get(c.building_id)->dcast_bazaar();
     //    backup_storage_settings(storage_id); // TODO: market state backup
-    const resources_list* list = city_resource_get_available_market_goods();
-    for (int i = 0; i < list->size; i++) {
+    const resource_list &resources = city_resource_get_available_market_goods();
+    for (const auto &r: resources) {
+        int i = std::distance(&*resources.begin(), &r);
         int line_y = 20 * i;
-        int resource = list->items[i];
-        int image_id = image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
+        int image_id = image_id_resource_icon(r.type) + resource_image_offset(r.type, RESOURCE_IMAGE_ICON);
 
         ImageDraw::img_generic(ctx, image_id, c.offset.x + 25, y_offset + 48 + line_y);
-        lang_text_draw(23, resource, c.offset.x + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw(23, r.type, c.offset.x + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE_ON_DARK);
         if (data.resource_focus_button_id - 1 == i) {
             button_border_draw(line_x - 10, y_offset + 46 + line_y, data.orders_resource_buttons[i].width, data.orders_resource_buttons[i].height, true);
         }
 
         // order status
-        window_building_draw_order_instruction(INSTR_STORAGE_YARD, nullptr, resource, line_x, y_offset + 51 + line_y, bazaar->is_good_accepted(i));
+        window_building_draw_order_instruction(INSTR_STORAGE_YARD, nullptr, r.type, line_x, y_offset + 51 + line_y, bazaar->is_good_accepted(i));
     }
 
     // accept none button

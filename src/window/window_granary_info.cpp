@@ -36,11 +36,12 @@ void building_granary::draw_orders_foreground(object_info &c) {
     int storage_id = building_get(c.building_id)->storage_id;
     backup_storage_settings(storage_id);
     const building_storage* storage = building_storage_get(storage_id);
-    const resources_list &list = city_resource_get_available_foods();
+    const resource_list &resources = city_resource_get_available_foods();
     painter ctx = game.painter();
-    for (int i = 0; i < list.size; i++) {
+    for (const auto &r: resources) {
+        int resource = r.type;
+        int i = std::distance(resources.begin(), &r);
         int line_y = 20 * i;
-        int resource = list.items[i];
         int image_id = image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
 
         ImageDraw::img_generic(ctx, image_id, c.offset.x + 25, y_offset + 48 + line_y);
