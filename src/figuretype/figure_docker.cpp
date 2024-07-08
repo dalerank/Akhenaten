@@ -1,7 +1,6 @@
 #include "figure_docker.h"
 
 #include "building/building.h"
-#include "building/storage.h"
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
 #include "building/building_dock.h"
@@ -202,7 +201,8 @@ int figure_docker::get_closest_warehouse_for_export(tile2i pos, int city_id, int
         if (b->road_network_id != road_network_id)
             continue;
 
-        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, b))
+        building_storage *s = b->dcast_storage();
+        if (!s->get_permission(BUILDING_STORAGE_PERMISSION_DOCK))
             continue;
 
         int distance_penalty = 32;
@@ -212,6 +212,7 @@ int figure_docker::get_closest_warehouse_for_export(tile2i pos, int city_id, int
             if (space->id && space->subtype.warehouse_resource_id == resource && space->stored_full_amount > 0)
                 distance_penalty--;
         }
+
         if (distance_penalty < 32) {
             int distance = calc_distance_with_penalty(b->tile, pos, distance_from_entry, b->distance_from_entry);
             // prefer fuller warehouse
@@ -222,8 +223,10 @@ int figure_docker::get_closest_warehouse_for_export(tile2i pos, int city_id, int
             }
         }
     }
-    if (!min_building_id)
+
+    if (!min_building_id) {
         return 0;
+    }
 
     building* minb = building_get(min_building_id);
     if (minb->has_road_access == 1) {

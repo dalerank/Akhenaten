@@ -1,16 +1,14 @@
 #pragma once
 
-#include "building/building.h"
-#include "game/resource.h"
+#include "building/building_storage.h"
 #include "core/vec2i.h"
 #include "grid/point.h"
 #include "graphics/color.h"
 
-struct building_storage;
-
 enum e_granary_task {
-    GRANARY_TASK_NONE = -1,
-    GRANARY_TASK_GETTING = 0,
+    GRANARY_TASK_NONE = 0,
+    GRANARY_TASK_GETTING = 1,
+    GRANARY_TASK_EMPTYING = 2,
 };
 
 struct granary_task_status {
@@ -18,11 +16,16 @@ struct granary_task_status {
     e_resource resource;
 };
 
-class building_granary : public building_impl {
+struct granary_getting_result {
+    int building_id;
+    tile2i tile;
+};
+
+class building_granary : public building_storage {
 public:
     BUILDING_METAINFO(BUILDING_GRANARY, building_granary)
 
-    building_granary(building &b) : building_impl(b) {}
+    building_granary(building &b) : building_storage(b) {}
     virtual building_granary *dcast_granary() override { return this; }
 
     virtual void on_create(int orientation) override;
@@ -36,21 +39,18 @@ public:
     virtual void on_place_checks() override;
     virtual void update_day() override;
 
-    const building_storage *storage() const;
-    int amount(e_resource resource) const;
+    virtual int amount(e_resource resource) const override;
     bool is_accepting(e_resource resource);
     int is_not_accepting(e_resource resource);
     bool is_getting(e_resource resource);
-    int for_getting(tile2i *dst);
+    granary_getting_result for_getting();
     int add_resource(e_resource resource, int is_produced, int amount);
     int total_stored() const;
     int space_for() const;
-    bool is_empty_all() const;
     int capacity_stored() const { return 3200; }
     int allow_food_types() const { return 4; }
 
     void bless();
-    bool is_gettable(e_resource resource);
     granary_task_status determine_worker_task();
     int remove_resource(e_resource resource, int amount);
     void draw_stores(vec2i point, color color_mask, painter &ctx);

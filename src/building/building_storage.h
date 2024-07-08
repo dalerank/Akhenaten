@@ -1,7 +1,6 @@
 #pragma once
 
 #include "building/building.h"
-#include "core/buffer.h"
 #include "game/resource.h"
 
 enum e_building_storage {
@@ -38,7 +37,7 @@ enum e_building_storage_permission {
     BUILDING_STORAGE_PERMISSION_DOCK = 2,
 };
 
-struct building_storage {
+struct storage_t {
     int empty_all;
     int resource_state[RESOURCES_MAX];
     int resource_max_accept[RESOURCES_MAX];
@@ -52,7 +51,7 @@ int building_storage_create(int building_type);
 int building_storage_restore(int storage_id);
 void building_storage_delete(int storage_id);
 
-const building_storage* building_storage_get(int storage_id);
+const storage_t* building_storage_get(int storage_id);
 
 void backup_storage_settings(int storage_id);
 void storage_settings_backup_check();
@@ -66,5 +65,18 @@ void building_storage_accept_none(int storage_id);
 void building_storage_toggle_empty_all(int storage_id);
 void building_storage_reset_building_ids(void);
 
-void building_storage_set_permission(int p, building* b);
-bool building_storage_get_permission(int p, building* b);
+class building_storage : public building_impl {
+public:
+    building_storage(building &b) : building_impl(b) {}
+    virtual building_storage *dcast_storage() override { return this; }
+
+    const storage_t *storage() const;
+    bool is_empty_all() const;
+    bool is_gettable(e_resource resource);
+    bool is_emptying(e_resource resource);
+
+    void set_permission(int p);
+    bool get_permission(int p);
+
+    virtual int amount(e_resource resource) const = 0;
+};

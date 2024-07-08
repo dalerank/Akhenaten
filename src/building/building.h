@@ -57,6 +57,7 @@ class building_plaza;
 class building_garden;
 class building_house;
 class building_burning_ruin;
+class building_storage;
 struct object_info;
 struct painter;
 struct mouse;
@@ -405,6 +406,7 @@ public:
     building_garden *dcast_garden();
     building_house *dcast_house();
     building_burning_ruin *dcast_burning_ruin();
+    building_storage *dcast_storage();
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
@@ -518,6 +520,7 @@ public:
     virtual building_garden *dcast_garden() { return nullptr; }
     virtual building_house *dcast_house() { return nullptr; }
     virtual building_burning_ruin *dcast_burning_ruin() { return nullptr; }
+    virtual building_storage *dcast_storage() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

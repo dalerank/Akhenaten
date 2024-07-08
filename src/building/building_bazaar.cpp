@@ -1,7 +1,6 @@
 #include "building_bazaar.h"
 
 #include "figure/figure.h"
-#include "building/storage.h"
 #include "building/building_type.h"
 #include "building/building_storage_yard.h"
 #include "graphics/elements/ui.h"
@@ -111,7 +110,8 @@ building *building_bazaar::get_storage_destination() {
             return;
         }
 
-        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_MARKET, &b)) {
+        building_storage *s = b.dcast_storage();
+        if (!s->get_permission(BUILDING_STORAGE_PERMISSION_MARKET)) {
             return;
         }
 

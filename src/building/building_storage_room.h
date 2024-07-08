@@ -2,7 +2,7 @@
 
 #include "building/building.h"
 
-struct building_storage;
+struct storage_t;
 
 class building_storage_room : public building_impl {
 public:
@@ -19,7 +19,7 @@ public:
     virtual bool can_play_animation() const { return false; }
     virtual int get_fire_risk(int value) const override { return 0; }
 
-    const building_storage *storage();
+    const storage_t *storage();
     building_storage_yard *yard() { return main()->dcast_storage_yard(); }
     building_storage_room *next_room() { return next()->dcast_storage_room(); }
     void set_image(e_resource resource);

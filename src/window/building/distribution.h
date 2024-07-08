@@ -33,12 +33,7 @@ struct window_building_distribution {
 extern window_building_distribution g_window_building_distribution;
 
 struct object_info;
-struct building_storage;
-
-void window_building_draw_dock(object_info* c);
-void window_building_draw_dock_orders_foreground(object_info* c);
-void window_building_draw_dock_orders(object_info* c);
-void window_building_draw_dock_foreground(object_info* c);
+struct storage_t;
 
 void draw_permissions_buttons(int x, int y, int buttons);
 void draw_accept_none_button(int x, int y, int focused);
@@ -52,4 +47,4 @@ int window_building_handle_mouse_warehouse(const mouse* m, object_info* c);
 int window_building_handle_mouse_warehouse_orders(const mouse* m, object_info* c);
 
 void window_building_get_tooltip_warehouse_orders(int* group_id, int* text_id);
-void window_building_draw_order_instruction(int instr_kind, const building_storage *storage, int resource, int x, int y, int market_order = -1);
+void window_building_draw_order_instruction(int instr_kind, const storage_t *storage, int resource, int x, int y, int market_order = -1);

@@ -1,12 +1,7 @@
 #pragma once
 
-#include "game/resource.h"
+#include "building/building_storage.h"
 #include "grid/point.h"
-
-#include "building/building.h"
-
-struct building_storage;
-class building_storage_room;
 
 enum e_storageyard_state {
     STORAGEYARD_ROOM = 0,
@@ -32,11 +27,11 @@ struct storage_worker_task {
     building *dest = nullptr;
 };
 
-class building_storage_yard : public building_impl {
+class building_storage_yard : public building_storage {
 public:
     BUILDING_METAINFO(BUILDING_STORAGE_YARD, building_storage_yard)
 
-    building_storage_yard(building &b) : building_impl(b), stored_full_amount(b.stored_full_amount) {}
+    building_storage_yard(building &b) : building_storage(b), stored_full_amount(b.stored_full_amount) {}
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
@@ -49,7 +44,6 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     
     building_storage_room *room() { return next()->dcast_storage_room(); }
-    const building_storage *storage() const;
 
     int amount(e_resource resource) const;
     int total_stored() const;
@@ -57,23 +51,18 @@ public:
 
     int remove_resource(e_resource resource, int amount);
     int add_resource(e_resource resource, int amount);
-    bool is_gettable(e_resource resource);
     bool is_getting(e_resource resource);
-    bool is_emptying(e_resource resource);
-    bool is_empty_all();
-    bool get_permission(int p) const;
 
     int freespace(e_resource resource);
     int accepting_amount(e_resource resource);
 
     int for_getting(e_resource resource, tile2i *dst);
-    short &stored_full_amount;
-    bool is_empty_all() const;
 
     static void ghost_preview(vec2i tile, painter &ctx);
     static storage_worker_task deliver_food_to_gettingup_granary(building *warehouse);
 
     storage_worker_task determine_worker_task();
+    short &stored_full_amount;
 
 private:
     void draw_warehouse_orders(object_info *c);

@@ -3,7 +3,6 @@
 #include "building/building_granary.h"
 #include "building/distribution.h"
 #include "building/count.h"
-#include "building/storage.h"
 #include "city/city.h"
 #include "city/warnings.h"
 #include "window/building/common.h"
@@ -35,7 +34,6 @@ void building_granary::draw_orders_foreground(object_info &c) {
 
     int storage_id = building_get(c.building_id)->storage_id;
     backup_storage_settings(storage_id);
-    const building_storage* storage = building_storage_get(storage_id);
     const resource_list &resources = city_resource_get_available_foods();
     painter ctx = game.painter();
     for (const auto &r: resources) {
@@ -51,10 +49,10 @@ void building_granary::draw_orders_foreground(object_info &c) {
         }
 
         // order status
-        window_building_draw_order_instruction(INSTR_STORAGE_YARD, storage, resource, line_x, y_offset + 51 + line_y);
+        window_building_draw_order_instruction(INSTR_STORAGE_YARD, storage(), resource, line_x, y_offset + 51 + line_y);
 
         // arrows
-        int state = storage->resource_state[resource];
+        int state = storage()->resource_state[resource];
         if (state == STORAGE_STATE_PHARAOH_ACCEPT || state == STORAGE_STATE_PHARAOH_GET) {
             image_buttons_draw(vec2i{c.offset.x + 165, y_offset + 49}, data.orders_decrease_arrows.data(), 1, i);
             image_buttons_draw(vec2i{c.offset.x + 165 + 18, y_offset + 49}, data.orders_increase_arrows.data(), 1, i);
@@ -63,7 +61,7 @@ void building_granary::draw_orders_foreground(object_info &c) {
 
     // emptying button
     button_border_draw(c.offset.x + 80, y_offset + 404 - 15 * 16, 16 * (c.bgsize.x - 10), 20, data.orders_focus_button_id == 1 ? 1 : 0);
-    if (storage->empty_all) {
+    if (is_empty_all()) {
         lang_text_draw_centered(98, 8, c.offset.x + 80, y_offset + 408 - 15 * 16, 16 * (c.bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
         lang_text_draw_centered(98, 7, c.offset.x + 80, y_offset + 408 - 15 * 16, 16 * (c.bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);

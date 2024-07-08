@@ -6,7 +6,6 @@
 #include "building/building.h"
 #include "building/building_bazaar.h"
 #include "building/building_dock.h"
-#include "building/storage.h"
 #include "building/building_storage_yard.h"
 #include "city/buildings.h"
 #include "city/city_resource.h"
@@ -141,7 +140,7 @@ uint8_t granary_3quarters_button_text[] = "18";
 uint8_t granary_half_button_text[] = "12";
 uint8_t granary_quarter_button_text[] = "6";
 
-void window_building_draw_order_instruction(int instr_kind, const building_storage* storage, int resource, int x, int y, int market_order) {
+void window_building_draw_order_instruction(int instr_kind, const storage_t* storage, int resource, int x, int y, int market_order) {
     e_font font_nope = FONT_NORMAL_BLACK_ON_DARK;
     e_font font_yes = FONT_NORMAL_WHITE_ON_DARK;
     e_font font_get = FONT_NORMAL_YELLOW;
@@ -215,9 +214,11 @@ void draw_permissions_buttons(int x, int y, int buttons) {
     return; // temp - todo: fix buttons
     uint8_t permission_button_text[] = {'x', 0};
     int offsets[] = {96, 132, 96};
+
+    building_storage *s = building_get(data.building_id)->dcast_storage();
     for (int i = 0; i < buttons; i++) {
         button_border_draw(x, y, 20, 20, data.permission_focus_button_id == i + 1 ? 1 : 0);
-        if (building_storage_get_permission(i, building_get(data.building_id))) {
+        if (s->get_permission(i)) {
             text_draw_centered(permission_button_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
         }
 
@@ -347,8 +348,9 @@ static void go_to_orders(int param1, int param2) {
 static void storage_toggle_permissions(int index, int param2) {
     auto &data = g_window_building_distribution;
     building* b = building_get(data.building_id);
-    building_storage_set_permission(index - 1, b);
-    //    window_invalidate();
+
+    building_storage *s = b->dcast_storage();
+    s->set_permission(index - 1);
 }
 
 static void toggle_resource_state(int index, int param2) {

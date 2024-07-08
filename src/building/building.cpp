@@ -2,7 +2,7 @@
 
 #include "building/rotation.h"
 #include "building/building_type.h"
-#include "building/storage.h"
+#include "building/building_storage.h"
 #include "building/count.h"
 #include "building/destruction.h"
 #include "city/buildings.h"
@@ -272,6 +272,7 @@ building_plaza *building::dcast_plaza() { return dcast()->dcast_plaza(); }
 building_garden *building::dcast_garden() { return dcast()->dcast_garden(); }
 building_house *building::dcast_house() { return dcast()->dcast_house(); }
 building_burning_ruin *building::dcast_burning_ruin() { return dcast()->dcast_burning_ruin(); }
+building_storage *building::dcast_storage() { return dcast()->dcast_storage(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
@@ -380,8 +381,9 @@ void building::reset_impl() {
 
 
 void building::clear_related_data() {
-    if (storage_id)
+    if (storage_id) {
         building_storage_delete(storage_id);
+    }
 
     if (is_palace()) {
         city_buildings_remove_palace(this);

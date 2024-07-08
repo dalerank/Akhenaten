@@ -1,8 +1,6 @@
 #include "building_storage_room.h"
 
 #include "building/building_storage_yard.h"
-#include "building/storage.h"
-
 #include "graphics/image.h"
 #include "grid/image.h"
 #include "core/calc.h"
@@ -27,7 +25,7 @@ void building_storage_room::window_info_foreground(object_info &ctx) {
     yard()->window_info_foreground(ctx);
 }
 
-const building_storage *building_storage_room::storage() {
+const storage_t *building_storage_room::storage() {
     return building_storage_get(base.storage_id);
 }
 

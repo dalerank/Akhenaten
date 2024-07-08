@@ -3,7 +3,6 @@
 #include "building/building_barracks.h"
 #include "building/building_granary.h"
 #include "building/industry.h"
-#include "building/storage.h"
 #include "building/building_type.h"
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
@@ -302,8 +301,6 @@ void figure_cartpusher::determine_deliveryman_destination() {
     int understaffed_storages = 0;
 
     destination_tile.set(0, 0);
-    //    destination_tile.x() = 0;
-    //    destination_tile.y() = 0;
 
     // before we start... check that resource is not empty.
     if (base.resource_id == RESOURCE_NONE || base.get_carrying_amount() == 0) {
@@ -391,16 +388,15 @@ void figure_cartpusher::determine_deliveryman_destination() {
 }
 
 void figure_cartpusher::determine_granaryman_destination() {
-    tile2i dst;
     int road_network_id = map_road_network_get(tile());
     building_granary* granary = home()->dcast_granary();
+
     if (!base.resource_id) {
         // getting granaryman
-        int dest_id = granary->for_getting(&dst);
-        set_destination(dest_id);
+        granary_getting_result dest = granary->for_getting();
+        set_destination(dest.building_id);
         if (has_destination()) {
             advance_action(FIGURE_ACTION_54_WAREHOUSEMAN_GETTING_FOOD);
-            //            set_destination(FIGURE_ACTION_54_WAREHOUSEMAN_GETTING_FOOD, dst_building_id, dst.x, dst.y);
             if (config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {
                 base.terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
             }
@@ -411,14 +407,16 @@ void figure_cartpusher::determine_granaryman_destination() {
     }
     // delivering resource
     // priority 1: another granary
-    set_destination(building_granary_for_storing(tile(), base.resource_id, granary->distance_from_entry(), road_network_id, 0, 0, &dst));
+    tile2i dest_b;
+    int granary_id = building_granary_for_storing(tile(), base.resource_id, granary->distance_from_entry(), road_network_id, 0, 0, &dest_b);
+    set_destination(granary_id);
     if (has_destination()) {
         granary->remove_resource(base.resource_id, 100);
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
 
     // priority 2: warehouse
-    int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, granary->distance_from_entry(), road_network_id, 0, dst);
+    int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, granary->distance_from_entry(), road_network_id, 0, dest_b);
     set_destination(warehouse_id);
     if (has_destination()) {
         granary->remove_resource(base.resource_id, 100);
@@ -426,7 +424,7 @@ void figure_cartpusher::determine_granaryman_destination() {
     }
 
     // priority 3: granary even though resource is on stockpile
-    int granary_second_id = building_granary_for_storing(tile(), base.resource_id, granary->distance_from_entry(), road_network_id, 1, 0, &dst);
+    int granary_second_id = building_granary_for_storing(tile(), base.resource_id, granary->distance_from_entry(), road_network_id, 1, 0, &dest_b);
     set_destination(granary_second_id);
     if (has_destination()) {
         granary->remove_resource(base.resource_id, 100);

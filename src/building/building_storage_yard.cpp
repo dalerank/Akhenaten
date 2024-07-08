@@ -9,7 +9,6 @@
 #include "building/model.h"
 #include "building/figure.h"
 #include "building/monuments.h"
-#include "building/storage.h"
 #include "window/building/distribution.h"
 #include "city/buildings.h"
 #include "city/finance.h"
@@ -53,7 +52,7 @@ void config_load_building_storage_yard() {
 }
 
 int get_storage_accepting_amount(building *b, e_resource resource) {
-    const building_storage* s = building_storage_get(b->storage_id);
+    const storage_t* s = building_storage_get(b->storage_id);
 
     switch (s->resource_state[resource]) {
     case STORAGE_STATE_PHARAOH_ACCEPT: return s->resource_max_accept[resource];
@@ -85,10 +84,6 @@ int building_storage_yard::get_space_info() const {
         return STORAGEYARD_SOME_ROOM;
     else
         return STORAGEYARD_FULL;
-}
-
-const building_storage *building_storage_yard::storage() const {
-    return building_storage_get(this->base.storage_id);
 }
 
 int building_storage_yard::amount(e_resource resource) const {
@@ -267,7 +262,7 @@ constexpr int HALF_WAREHOUSE = 1600;
 constexpr int QUARTER_WAREHOUSE = 800;
 
 bool building_storage_yard::is_accepting(e_resource resource) {
-    const building_storage* s = building_storage_get(base.storage_id);
+    const storage_t* s = storage();
 
     int amount = this->amount(resource);
     bool accepting = (s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT);
@@ -280,7 +275,7 @@ bool building_storage_yard::is_accepting(e_resource resource) {
 }
 
 bool building_storage_yard::is_getting(e_resource resource) {
-    const building_storage* s = building_storage_get(base.storage_id);
+    const storage_t* s = storage();
     int amount = this->amount(resource);
     if ((s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] == FULL_WAREHOUSE) 
         || (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= THREEQ_WAREHOUSE && amount < THREEQ_WAREHOUSE / 100)
@@ -292,26 +287,8 @@ bool building_storage_yard::is_getting(e_resource resource) {
     }
 }
 
-bool building_storage_yard::is_emptying(e_resource resource) {
-    const building_storage* s = building_storage_get(base.storage_id);
-    return (s->resource_state[resource] == STORAGE_STATE_PHARAOH_EMPTY);
-}
-
-bool building_storage_yard::is_empty_all() {
-    return storage()->empty_all;
-}
-
-bool building_storage_yard::get_permission(int p) const {
-    return building_storage_get_permission(p, &base); 
-}
-
 int building_storage_yard::accepting_amount(e_resource resource) {
     return get_storage_accepting_amount(&base, resource);
-}
-
-bool building_storage_yard::is_gettable(e_resource resource) {
-    const building_storage* s = building_storage_get(base.storage_id);
-    return (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET);
 }
 
 bool building_storage_yard::is_not_accepting(e_resource resource) {
@@ -372,11 +349,7 @@ int building_storage_yard_for_storing(tile2i tile, e_resource resource, int dist
             continue;
 
         building_storage_yard* warehouse = room->yard();
-        //        if (src == dest)
-        //            continue;
-
-        const building_storage* s = warehouse->storage();
-        if (warehouse->is_not_accepting(resource) || s->empty_all) {
+        if (warehouse->is_not_accepting(resource) || warehouse->is_empty_all()) {
             continue;
         }
 
@@ -425,7 +398,7 @@ int building_storage_yard::for_getting(e_resource resource, tile2i* dst) {
 
         int amounts_stored = 0;
         building_storage_room* space = other_warehouse->room();
-        const building_storage* s = space->storage();
+        const storage_t* s = space->storage();
         while (space) {
             if (space->stored_full_amount > 0) {
                 if (space->base.subtype.warehouse_resource_id == resource)
@@ -450,10 +423,6 @@ int building_storage_yard::for_getting(e_resource resource, tile2i* dst) {
         return min_building->id;
     } else
         return 0;
-}
-
-bool building_storage_yard::is_empty_all() const {
-    return storage()->empty_all;
 }
 
 static bool determine_granary_accept_foods(resource_list &foods, int road_network) {

@@ -3,7 +3,6 @@
 #include "market.h"
 #include "building/building.h"
 #include "building/building_granary.h"
-#include "building/storage.h"
 #include "window/building/figures.h"
 #include "core/log.h"
 #include "building/building_storage_yard.h"

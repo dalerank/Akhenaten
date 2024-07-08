@@ -15,7 +15,6 @@
 #include "building/building_plaza.h"
 #include "building/building_garden.h"
 #include "building/rotation.h"
-#include "building/storage.h"
 #include "building/building_statue.h"
 #include "building/building_storage_yard.h"
 #include "building/building_road.h"

@@ -3,7 +3,6 @@
 #include "figure/trader.h"
 #include "figure/figure.h"
 
-#include "building/storage.h"
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
 

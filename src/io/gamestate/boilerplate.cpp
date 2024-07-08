@@ -5,7 +5,6 @@
 #include "building/maintenance.h"
 #include "building/monuments.h"
 #include "building/building_menu.h"
-#include "building/storage.h"
 #include "config/config.h"
 #include "city/city.h"
 #include "city/map.h"

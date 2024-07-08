@@ -7,7 +7,6 @@
 #include "game/game.h"
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
-#include "building/storage.h"
 #include "grid/road_access.h"
 #include "graphics/painter.h"
 #include "graphics/graphics.h"
@@ -31,7 +30,8 @@ bool figure_trader::can_buy(building* warehouse, int city_id) {
     if (base.trader_total_bought() >= 800)
         return false;
 
-    if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_TRADERS, warehouse))
+    building_storage *s = warehouse->dcast_storage();
+    if (!s->get_permission(BUILDING_STORAGE_PERMISSION_TRADERS))
         return false;
 
     building* space = warehouse;
@@ -136,7 +136,7 @@ int figure_trader::get_closest_storageyard(tile2i tile, int city_id, int distanc
             continue;
         }
 
-        const building_storage* s = warehouse->storage();
+        const storage_t* s = warehouse->storage();
         int num_imports_for_warehouse = 0;
         for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
             if (!warehouse->is_not_accepting(r) && g_empire.can_import_resource_from_city(city_id, r)) {

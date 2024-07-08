@@ -1,4 +1,4 @@
-#include "storage.h"
+#include "building_storage.h"
 
 #include "building/building.h"
 #include "building/rotation.h"
@@ -12,13 +12,13 @@
 
 constexpr int MAX_STORAGES = 200;
 
-struct storage_t {
+struct city_storage_t {
     int in_use;
     int building_id;
-    building_storage storage;
+    storage_t storage;
 };
 
-storage_t g_storages[MAX_STORAGES];
+city_storage_t g_storages[MAX_STORAGES];
 
 void building_storage_clear_all(void) {
     memset(g_storages, 0, MAX_STORAGES * sizeof(storage_t));
@@ -97,13 +97,14 @@ void building_storage_delete(int storage_id) {
     g_storages[storage_id].in_use = 0;
 }
 
-building_storage backup_settings;
+storage_t backup_settings;
 static int backup_storage_id = -1;
 static bool has_unsaved_changes = false;
 
 void backup_storage_settings(int storage_id) {
     if (backup_storage_id != -1)
         return;
+
     has_unsaved_changes = false;
     backup_storage_id = storage_id;
     backup_settings = g_storages[storage_id].storage;
@@ -135,7 +136,7 @@ void storage_settings_backup_reset() {
     backup_storage_id = -1;
 }
 
-const building_storage* building_storage_get(int storage_id) {
+const storage_t* building_storage_get(int storage_id) {
     return &g_storages[storage_id].storage;
 }
 
@@ -170,19 +171,19 @@ void building_storage_cycle_resource_state(int storage_id, int resource_id, bool
     g_storages[storage_id].storage.resource_state[resource_id] = state;
 }
 
-void building_storage_set_permission(int p, building* b) {
+void building_storage::set_permission(int p) {
     auto& data = g_storages;
 
     has_unsaved_changes = true;
-    const building_storage* s = building_storage_get(b->storage_id);
+    const storage_t* s = storage();
     int permission_bit = 1 << p;
     int perms = s->permissions;
     perms ^= permission_bit;
-    g_storages[b->storage_id].storage.permissions = perms;
+    g_storages[base.storage_id].storage.permissions = perms;
 }
 
-bool building_storage_get_permission(int p, building* b) {
-    const building_storage* s = building_storage_get(b->storage_id);
+bool building_storage::get_permission(int p) {
+    const storage_t* s = storage();
     int permission_bit = 1 << p;
     return !(s->permissions & permission_bit);
 }
@@ -267,3 +268,21 @@ io_buffer* iob_building_storages = new io_buffer([](io_buffer* iob, size_t versi
         //        iob->bind____skip(144); // ?????
     }
 });
+
+const storage_t *building_storage::storage() const {
+    return building_storage_get(this->base.storage_id);
+}
+
+bool building_storage::is_empty_all() const {
+    return storage()->empty_all;
+}
+
+bool building_storage::is_gettable(e_resource resource) {
+    const storage_t *s = storage();
+    return (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET);
+}
+
+bool building_storage::is_emptying(e_resource resource) {
+    const storage_t *s = building_storage_get(base.storage_id);
+    return (s->resource_state[resource] == STORAGE_STATE_PHARAOH_EMPTY);
+}
