@@ -1,11 +1,15 @@
 #include "figuretype/figure_storageyard_cart.h"
 
 #include "core/profiler.h"
+#include "building/building_storage_yard.h"
+#include "building/building_storage_room.h"
+#include "building/building_granary.h"
 #include "grid/road_network.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "game/game.h"
 #include "js/js_game.h"
+#include "config/config.h"
 
 figures::model_t<figure_storageyard_cart> storageyard_cart_m;
 
@@ -22,6 +26,93 @@ void figure_storageyard_cart::figure_before_action() {
     building* b = home();
     if (b->state != BUILDING_STATE_VALID || (!b->has_figure(0, id()) && !b->has_figure(1, id()))) {
         poof();
+    }
+}
+
+std::pair<e_resource, int> remove_for_getting_deliveryman(building* srcb, building* dstb) {
+    building_storage *dst = dstb->dcast_storage();
+    building_storage *src = srcb->dcast_storage();
+
+    const storage_t* s_src = src->storage();
+    const storage_t* s_dst = dst->storage();
+
+    int max_amount = 0;
+    e_resource max_resource = RESOURCE_NONE;
+    for (const auto &r : resource_list::foods) {
+        if (dst->is_getting(r.type) && !src->is_gettable(r.type)) {
+            if (src->amount(r.type) > max_amount) {
+                max_amount = src->amount(r.type);
+                max_resource = r.type;
+            }
+        }
+    }
+
+    if (config_get(CONFIG_GP_CH_GRANARIES_GET_DOUBLE)) {
+        max_amount = std::min(max_amount, 1600);
+    } else {
+        max_amount = std::min(max_amount, 800);
+    }
+
+    max_amount = std::min<int>(max_amount, dst->freespace());
+
+    src->remove_resource(max_resource, max_amount);
+
+    return {max_resource, max_amount};
+}
+
+void figure_storageyard_cart::do_retrieve(int action_done) {
+    base.wait_ticks++;
+    base.anim.frame = 0;
+    if (base.wait_ticks > 4) {
+        building* dest = destination();
+        switch (dest->type) {
+        case BUILDING_STORAGE_YARD:
+        case BUILDING_STORAGE_ROOM: {
+            building_storage *home_storage = dest->dcast_storage();
+
+            if (home()->dcast_granary()) {
+                auto loads = remove_for_getting_deliveryman(destination(), home());
+                base.collecting_item_id = loads.first;
+            }
+
+            int home_accepting_quantity = home_storage->accepting_amount((e_resource)base.collecting_item_id);
+            int carry_amount_goal_max = std::min(UNITS_PER_LOAD, home_accepting_quantity);
+            int load_single_turn = 1;
+
+            building_storage_yard *warehouse = dest->dcast_storage_yard();
+            if (!warehouse) {
+                building_storage_room *room = dest->dcast_storage_room();
+                warehouse = room->yard();
+            }
+
+            if (true) // TODO: multiple loads setting?????
+                carry_amount_goal_max = std::min(400, home_accepting_quantity);
+
+            if (true) // TODO: more than 100 at once?????
+                load_single_turn = 4;
+
+            // grab goods, quantity & max load changed by above settings;
+            // if load is finished, go back home - otherwise, recalculate
+            if (base.get_carrying_amount() < carry_amount_goal_max) {
+                if (warehouse->remove_resource((e_resource)base.collecting_item_id, load_single_turn) == 0) {
+                    load_resource((e_resource)base.collecting_item_id, load_single_turn * UNITS_PER_LOAD);
+                    if (base.get_carrying_amount() >= carry_amount_goal_max) {
+                        advance_action(action_done);
+                    }
+                } else {
+                    advance_action(ACTION_8_RECALCULATE);
+                }
+            }
+            break;
+        }
+
+        case BUILDING_GRANARY: {
+            auto loads = remove_for_getting_deliveryman(destination(), home());
+            load_resource(loads.first, loads.second);
+            advance_action(FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD);
+            break;
+        }
+        }
     }
 }
 

@@ -223,54 +223,6 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
     }
 }
 
-void figure_cartpusher::do_retrieve(int action_done) {
-    base.wait_ticks++;
-    base.anim.frame = 0;
-    if (base.wait_ticks > 4) {
-        building* dest = destination();
-        switch (dest->type) {
-        case BUILDING_STORAGE_YARD:
-        case BUILDING_STORAGE_ROOM: {
-            int home_accepting_quantity= get_storage_accepting_amount(home(), (e_resource)base.collecting_item_id);
-            int carry_amount_goal_max = fmin(100, home_accepting_quantity);
-            int load_single_turn = 1;
-            building_storage_yard *warehouse = dest->dcast_storage_yard();
-            if (!warehouse) {
-                building_storage_room *room = dest->dcast_storage_room();
-                warehouse = room->yard();
-            }
-
-            if (true) // TODO: multiple loads setting?????
-                carry_amount_goal_max = fmin(400, home_accepting_quantity);
-
-            if (true) // TODO: more than 100 at once?????
-                load_single_turn = 4;
-
-            // grab goods, quantity & max load changed by above settings;
-            // if load is finished, go back home - otherwise, recalculate
-            if (base.get_carrying_amount() < carry_amount_goal_max) {
-                if (warehouse->remove_resource((e_resource)base.collecting_item_id, load_single_turn) == 0) {
-                    load_resource((e_resource)base.collecting_item_id, load_single_turn * 100);
-                    if (base.get_carrying_amount() >= carry_amount_goal_max) {
-                        advance_action(action_done);
-                    }
-                } else {
-                    advance_action(ACTION_8_RECALCULATE);
-                }
-            }
-            break;
-        }
-        case BUILDING_GRANARY: {
-            e_resource resource;
-            int loads = building_granary::remove_for_getting_deliveryman(destination(), home(), resource);
-            load_resource(resource, loads * 100);
-            advance_action(FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD);
-            break;
-        }
-        }
-    }
-}
-
 void figure_cartpusher::calculate_destination(bool warehouseman) {
     set_destination(0);
     base.anim.frame = 0;
@@ -393,7 +345,7 @@ void figure_cartpusher::determine_granaryman_destination() {
 
     if (!base.resource_id) {
         // getting granaryman
-        granary_getting_result dest = granary->for_getting();
+        granary_getting_result dest = granary->find_storage_for_getting();
         set_destination(dest.building_id);
         if (has_destination()) {
             advance_action(FIGURE_ACTION_54_WAREHOUSEMAN_GETTING_FOOD);
@@ -405,6 +357,7 @@ void figure_cartpusher::determine_granaryman_destination() {
         }
         return;
     }
+
     // delivering resource
     // priority 1: another granary
     tile2i dest_b;

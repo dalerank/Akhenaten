@@ -45,6 +45,7 @@ public:
     
     building_storage_room *room() { return next()->dcast_storage_room(); }
 
+    virtual 
     int amount(e_resource resource) const;
     int total_stored() const;
     bool is_not_accepting(e_resource resource);
@@ -54,7 +55,7 @@ public:
     bool is_getting(e_resource resource);
 
     int freespace(e_resource resource);
-    int accepting_amount(e_resource resource);
+    virtual int freespace() override;
 
     int for_getting(e_resource resource, tile2i *dst);
 
@@ -76,7 +77,6 @@ private:
 
 building_storage_yard *storage_yard_cast(building *b);
 
-int get_storage_accepting_amount(building *b, e_resource resource);
 int building_storage_yard_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int *understaffed, tile2i &dst);
 void building_storageyard_remove_resource_curse(building* warehouse, int amount);
 void building_storageyards_add_resource(e_resource resource, int amount);

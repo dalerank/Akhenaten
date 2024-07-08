@@ -65,10 +65,6 @@ void building_storage_room::remove_export(e_resource resource) {
     set_image(resource);
 }
 
-int building_storage_room::accepting_amount(e_resource resource) {
-    return get_storage_accepting_amount(&base, resource);
-}
-
 bool building_storage_room::is_this_space_the_best(tile2i tile, e_resource resource, int distance_from_entry) {
     building_storage_yard* warehouse = yard();
 

@@ -51,16 +51,6 @@ void config_load_building_storage_yard() {
     storage_yard_m.load();
 }
 
-int get_storage_accepting_amount(building *b, e_resource resource) {
-    const storage_t* s = building_storage_get(b->storage_id);
-
-    switch (s->resource_state[resource]) {
-    case STORAGE_STATE_PHARAOH_ACCEPT: return s->resource_max_accept[resource];
-    case STORAGE_STATE_PHARAOH_GET: return s->resource_max_get[resource];
-    default: return 0;
-    }
-}
-
 int building_storage_yard::get_space_info() const {
     int total_amounts = 0;
     int empty_spaces = 0;
@@ -121,6 +111,19 @@ int building_storage_yard::freespace(e_resource resource) {
         }
         space = space->next_room();
     }
+    return freespace;
+}
+
+int building_storage_yard::freespace() {
+    int freespace = 0;
+    building_storage_room* space = room();
+    while (space) {
+        if (!space->base.subtype.warehouse_resource_id) {
+            freespace += 400;
+        }
+        space = space->next_room();
+    }
+
     return freespace;
 }
 
@@ -285,10 +288,6 @@ bool building_storage_yard::is_getting(e_resource resource) {
     } else {
         return false;
     }
-}
-
-int building_storage_yard::accepting_amount(e_resource resource) {
-    return get_storage_accepting_amount(&base, resource);
 }
 
 bool building_storage_yard::is_not_accepting(e_resource resource) {
@@ -846,7 +845,7 @@ void building_storage_yard::spawn_figure() {
             return;
         }
 
-        cart->base.action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+        cart->advance_action(FIGURE_ACTION_50_WAREHOUSEMAN_CREATED);
 
         switch (task.result) {
         case STORAGEYARD_TASK_GETTING:

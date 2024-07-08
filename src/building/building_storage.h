@@ -3,6 +3,8 @@
 #include "building/building.h"
 #include "game/resource.h"
 
+constexpr int UNITS_PER_LOAD = 100;
+
 enum e_building_storage {
     BUILDING_STORAGE_DATA
 };
@@ -77,6 +79,10 @@ public:
 
     void set_permission(int p);
     bool get_permission(int p);
+    int accepting_amount(e_resource resource);
 
     virtual int amount(e_resource resource) const = 0;
+    virtual bool is_getting(e_resource resource) = 0;
+    virtual int remove_resource(e_resource resource, int amount) = 0;
+    virtual int freespace() = 0;
 };

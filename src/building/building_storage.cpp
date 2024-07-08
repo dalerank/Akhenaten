@@ -283,6 +283,17 @@ bool building_storage::is_gettable(e_resource resource) {
 }
 
 bool building_storage::is_emptying(e_resource resource) {
-    const storage_t *s = building_storage_get(base.storage_id);
+    const storage_t *s = storage();
     return (s->resource_state[resource] == STORAGE_STATE_PHARAOH_EMPTY);
 }
+
+int building_storage::accepting_amount(e_resource resource) {
+    const storage_t* s = storage();
+
+    switch (s->resource_state[resource]) {
+    case STORAGE_STATE_PHARAOH_ACCEPT: return s->resource_max_accept[resource];
+    case STORAGE_STATE_PHARAOH_GET: return s->resource_max_get[resource];
+    default: return 0;
+    }
+}
+

@@ -40,21 +40,20 @@ public:
     virtual void update_day() override;
 
     virtual int amount(e_resource resource) const override;
+    virtual bool is_getting(e_resource resource) override;
+    virtual int remove_resource(e_resource resource, int amount) override;
+    virtual int freespace() override;
     bool is_accepting(e_resource resource);
     int is_not_accepting(e_resource resource);
-    bool is_getting(e_resource resource);
-    granary_getting_result for_getting();
+    granary_getting_result find_storage_for_getting();
     int add_resource(e_resource resource, int is_produced, int amount);
     int total_stored() const;
-    int space_for() const;
     int capacity_stored() const { return 3200; }
     int allow_food_types() const { return 4; }
 
     void bless();
     granary_task_status determine_worker_task();
-    int remove_resource(e_resource resource, int amount);
     void draw_stores(vec2i point, color color_mask, painter &ctx);
-    static int remove_for_getting_deliveryman(building* src, building* dst, e_resource& resource);
 
     void draw_orders_foreground(object_info &c);
 };

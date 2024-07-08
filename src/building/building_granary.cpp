@@ -34,7 +34,6 @@
 
 const int MAX_GRANARIES = 100;
 const int ONE_LOAD = 100;
-const int UNITS_PER_LOAD = 100;
 const int CURSE_LOADS = 16;
 const int INFINITE = 10000;
 const int FULL_GRANARY = 3200;
@@ -130,7 +129,7 @@ int building_granary::total_stored() const {
     return result;
 }
 
-int building_granary::space_for() const {
+int building_granary::freespace() {
     return data.granary.resource_stored[RESOURCE_NONE];
 }
 
@@ -146,59 +145,6 @@ int building_granary::remove_resource(e_resource resource, int amount) {
     data.granary.resource_stored[RESOURCE_NONE] += removed;
 
     return amount - removed;
-}
-
-int building_granary::remove_for_getting_deliveryman(building* srcb, building* dstb, e_resource& resource) {
-    const storage_t* s_src = building_storage_get(srcb->storage_id);
-    const storage_t* s_dst = building_storage_get(dstb->storage_id);
-
-    building_granary *dst = dstb->dcast_granary();
-    building_granary *src = srcb->dcast_granary();
-
-    int max_amount = 0;
-    e_resource max_resource = RESOURCE_NONE;
-    if (dst->is_getting(RESOURCE_GRAIN) && !src->is_gettable(RESOURCE_GRAIN)) {
-        if (src->data.granary.resource_stored[RESOURCE_GRAIN] > max_amount) {
-            max_amount = src->data.granary.resource_stored[RESOURCE_GRAIN];
-            max_resource = RESOURCE_GRAIN;
-        }
-    }
-    if (dst->is_getting(RESOURCE_MEAT) && !src->is_gettable(RESOURCE_MEAT)) {
-        if (src->data.granary.resource_stored[RESOURCE_MEAT] > max_amount) {
-            max_amount = src->data.granary.resource_stored[RESOURCE_MEAT];
-            max_resource = RESOURCE_MEAT;
-        }
-    }
-
-    if (dst->is_getting(RESOURCE_LETTUCE) && !src->is_gettable(RESOURCE_LETTUCE)) {
-        if (src->data.granary.resource_stored[RESOURCE_LETTUCE] > max_amount) {
-            max_amount = src->data.granary.resource_stored[RESOURCE_LETTUCE];
-            max_resource = RESOURCE_LETTUCE;
-        }
-    }
-
-    if (dst->is_getting(RESOURCE_FIGS) && !src->is_gettable(RESOURCE_FIGS)) {
-        if (src->data.granary.resource_stored[RESOURCE_FIGS] > max_amount) {
-            max_amount = src->data.granary.resource_stored[RESOURCE_FIGS];
-            max_resource = RESOURCE_FIGS;
-        }
-    }
-
-    if (config_get(CONFIG_GP_CH_GRANARIES_GET_DOUBLE)) {
-        if (max_amount > 1600)
-            max_amount = 1600;
-
-    } else {
-        if (max_amount > 800)
-            max_amount = 800;
-    }
-
-    max_amount = std::min<int>(max_amount, dst->data.granary.resource_stored[RESOURCE_NONE]);
-
-    src->remove_resource(max_resource, max_amount);
-    resource = max_resource;
-
-    return max_amount / UNITS_PER_LOAD;
 }
 
 granary_task_status building_granary::determine_worker_task() {
@@ -217,7 +163,7 @@ granary_task_status building_granary::determine_worker_task() {
         return {GRANARY_TASK_NONE, RESOURCE_NONE};
     }
 
-    if (space_for() <= 0) {
+    if (freespace() <= 0) {
         return {GRANARY_TASK_NONE, RESOURCE_NONE}; // granary full, nothing to get
     }
 
@@ -400,7 +346,7 @@ int better_getting_storage(const T &ids, building_granary *home) {
     return min_building_id;
 }
 
-granary_getting_result building_granary::for_getting() {
+granary_getting_result building_granary::find_storage_for_getting() {
     if (is_empty_all()) {
         return {0, tile2i::invalid};
     }

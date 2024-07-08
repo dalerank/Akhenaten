@@ -26,7 +26,6 @@ public:
     void add_import(e_resource resource);
     bool is_this_space_the_best(tile2i tile, e_resource resource, int distance_from_entry);
     void remove_export(e_resource resource);
-    int accepting_amount(e_resource resource);
 
     short &stored_full_amount;
 };

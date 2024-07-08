@@ -123,7 +123,7 @@ void building_granary::window_info_background(object_info &c) {
 
     ui["warning_text"].text(warning_text);
     ui["storing"].text_var("#granary_storing %u #granary_units", granary->total_stored());
-    ui["free_space"].text_var("#granary_space_for %u #granary_units", granary->space_for());
+    ui["free_space"].text_var("#granary_space_for %u #granary_units", granary->freespace());
 
     for (int i = 0; i < allow_food_types(); ++i) {
         bstring32 id_icon; id_icon.printf("food%u_icon", i);
