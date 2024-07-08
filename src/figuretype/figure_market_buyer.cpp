@@ -43,15 +43,15 @@ void figure_market_buyer::figure_before_action() {
 }
 
 void figure_market_buyer::figure_action() {
-    image_set_animation(market_buyer_m.anim["walk"]);
-
+    bool ok = false;
     switch (action_state()) {
     case 8:
     case FIGURE_ACTION_144_MARKET_BUYER_CREATE:
         break;
 
     case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
-        if (do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_146_MARKET_BUYER_RETURNING)) {
+        ok = do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_146_MARKET_BUYER_RETURNING);
+        if (ok) {
             if (base.collecting_item_id > 3) {
                 if (!take_resource_from_storageyard(destination())) {
                     poof();
@@ -202,24 +202,13 @@ bool figure_market_buyer::take_resource_from_storageyard(building* b) {
 
     e_resource resource;
     switch (base.collecting_item_id) {
-    case INVENTORY_GOOD1:
-        resource = RESOURCE_POTTERY;
-        break;
-
-    case INVENTORY_GOOD2:
-        resource = RESOURCE_LUXURY_GOODS;
-        break;
-
-    case INVENTORY_GOOD3:
-        resource = RESOURCE_LINEN;
-        break;
-
-    case INVENTORY_GOOD4:
-        resource = RESOURCE_BEER;
-        break;
+    case INVENTORY_GOOD1: resource = RESOURCE_POTTERY; break;
+    case INVENTORY_GOOD2: resource = RESOURCE_LUXURY_GOODS; break;
+    case INVENTORY_GOOD3: resource = RESOURCE_LINEN; break;
+    case INVENTORY_GOOD4: resource = RESOURCE_BEER; break;
 
     default:
-    return false;
+        return false;
     }
 
     int stored = warehouse->amount(resource);

@@ -28,8 +28,10 @@
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
 #include "figuretype/figure_storageyard_cart.h"
+#include "dev/debug.h"
 
 #include <cmath>
+#include <iostream>
 
 const int MAX_GRANARIES = 100;
 const int ONE_LOAD = 100;
@@ -40,6 +42,8 @@ const int FULL_GRANARY = 3200;
 const int THREEQUARTERS_GRANARY = 2400;
 const int HALF_GRANARY = 1600;
 const int QUARTER_GRANARY = 800;
+
+declare_console_command(addchickpeas, game_cheat_add_resource<RESOURCE_CHICKPEAS>);
 
 buildings::model_t<building_granary> granary_m;
 
