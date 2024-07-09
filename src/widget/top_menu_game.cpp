@@ -587,6 +587,7 @@ static void widget_top_menu_init() {
 
     auto *file = data.headers["file"].dcast_menu_header();
     if (file) {
+        file->item("new_game").hidden = config_get(CONFIG_UI_HIDE_NEW_GAME_TOP_MENU);
         file->onclick(top_menu_file_handle);
     }
 

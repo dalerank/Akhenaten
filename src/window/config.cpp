@@ -79,6 +79,10 @@ static generic_button checkbox_buttons[] = {
     {20, 336, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
     {20, 360, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
     {20, 384, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
+
+    //
+    {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
+
     // 
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG, TR_CONFIG_FIX_IMMIGRATION_BUG},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS},
@@ -124,6 +128,7 @@ static generic_button checkbox_buttons[] = {
     {20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ENTER_POINT_ON_NEAREST_TILE, TR_CONFIG_ENTER_POINT_ON_NEAREST_TILE},
     {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FISHING_WHARF_SPAWN_BOATS, TR_CONFIG_FISHING_WHARF_SPAWN_BOATS},
     {20, 384, 20, 20, toggle_city_option, button_none, CONFIG_GP_CH_FLOTSAM_ENABLED, TR_CONFIG_CITY_FLOTSAM_ENABLED},
+
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_COPPER_NEAR_MOUNTAINS, TR_CONFIG_COPPER_NEAR_MOUNTAINS},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RECRUITER_NOT_NEED_FORTS, TR_CONFIG_RECRUITER_NOT_NEED_FORTS},
@@ -136,6 +141,7 @@ static generic_button checkbox_buttons[] = {
     {20, 120, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_PTAH_DISABLED, TR_CONFIG_GOD_PTAH_DISABLED},
     {20, 144, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_SETH_DISABLED, TR_CONFIG_GOD_SETH_DISABLED},
     {20, 168, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_BAST_DISABLED, TR_CONFIG_GOD_BAST_DISABLED},
+
     //
     {20, 72, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_WOOD_CUTTER, TR_CONFIG_BUILDING_WOOD_CUTTER},
     {20, 96, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_COPPER_MINE, TR_CONFIG_BUILDING_COPPE_MINE},
@@ -182,7 +188,7 @@ static generic_button checkbox_buttons[] = {
     {20, 360, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CLAY, TR_CONFIG_RESOURCE_CLAY},
 };
 
-static int options_per_page[] = {14, 14, 14, 14, 4, 5, 14, 13, 13};
+static int options_per_page[] = {14, 1, 14, 14, 14, 4, 5, 14, 13, 13};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -199,13 +205,16 @@ static generic_button page_buttons[] = {
 };
 
 static int page_names[] = {
-    TR_CONFIG_HEADER_UI_CHANGES,
-    TR_CONFIG_HEADER_GAMEPLAY_CHANGES,
-    TR_CONFIG_HEADER_GAMEPLAY_CHANGES,
-    TR_CONFIG_HEADER_GAMEPLAY_CHANGES,
-    TR_CONFIG_HEADER_GODS_CHANGES,
-    TR_CONFIG_HEADER_BUILDING_CHANGES,
-    TR_CONFIG_HEADER_RESOURCE_CHANGES
+    TR_CONFIG_HEADER_UI_CHANGES, // 14
+    TR_CONFIG_HEADER_UI_CHANGES, // 1
+    TR_CONFIG_HEADER_GAMEPLAY_CHANGES, // 14
+    TR_CONFIG_HEADER_GAMEPLAY_CHANGES, // 14
+    TR_CONFIG_HEADER_GAMEPLAY_CHANGES,  // 14
+    TR_CONFIG_HEADER_BUILDING_CHANGES, // 4
+    TR_CONFIG_HEADER_GODS_CHANGES,  // 5
+    TR_CONFIG_HEADER_BUILDING_CHANGES, // 14
+    TR_CONFIG_HEADER_BUILDING_CHANGES, // 13
+    TR_CONFIG_HEADER_RESOURCE_CHANGES, // 13
 };
 
 struct window_config_ext_data_t {
