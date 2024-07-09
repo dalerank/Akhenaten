@@ -528,7 +528,7 @@ public:
     inline bool is_valid() const { return base.is_valid(); }
     inline e_building_state state() const { return base.state; }
     inline void check_labor_problem() { base.check_labor_problem(); }
-    inline int worker_percentage() { return base.worker_percentage(); }
+    inline int worker_percentage() const { return base.worker_percentage(); }
     inline void common_spawn_labor_seeker(int min_houses) { base.common_spawn_labor_seeker(min_houses); }
     inline bool common_spawn_figure_trigger(int min_houses) { return base.common_spawn_figure_trigger(min_houses); }
     inline bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) { return base.common_spawn_roamer(type, min_houses, created_action); }

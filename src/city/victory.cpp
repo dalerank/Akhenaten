@@ -134,8 +134,10 @@ e_victory_state city_t::determine_victory_state() {
 }
 
 void city_t::victory_check() {
-    if (scenario_is_open_play())
+    if (scenario_is_open_play()) {
         return;
+    }
+
     victory_state.state = determine_victory_state();
 
     if (mission.has_won)

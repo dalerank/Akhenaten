@@ -134,19 +134,29 @@ void building_hunting_lodge::spawn_figure() {
 }
 
 bool building_hunting_lodge::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    if (worker_percentage() > 50) {
-        const animation_t &anim = hunting_lodge_m.anim["work"];
-        building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
-    }
+    building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
 
     int amount = ceil((float)base.stored_amount() / 100.0) - 1;
     if (amount >= 0) {
         const auto &anim = hunting_lodge_m.anim["gamemeat"];
         ImageDraw::img_generic(ctx, anim.first_img() + amount, point + anim.pos, color_mask);
     }
+
     return true;
 }
 
 void building_hunting_lodge::update_count() const {
     building_increase_industry_count(RESOURCE_GAMEMEAT, num_workers() > 0);
+}
+
+void building_hunting_lodge::update_graphic() {
+    const xstring &animkey = can_play_animation()
+                                ? animkeys().work
+                                : animkeys().none;
+
+    set_animation(animkey);
+}
+
+bool building_hunting_lodge::can_play_animation() const {
+    return (worker_percentage() > 50);
 }

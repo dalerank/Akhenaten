@@ -1558,7 +1558,7 @@ building_hunting_lodge = {
   animations : {
     preview : { pack:PACK_GENERAL, id:176},
     base : { pack:PACK_GENERAL, id:176},
-    work : { pos:[20, -15], pack:PACK_GENERAL, id:176, offset:1, max_frames:11 },
+    work : { pos:[20, -15], pack:PACK_GENERAL, id:176, offset:1, max_frames:18, duration:3 },
     gamemeat : { pos:[61, 14], pack:PACK_GENERAL, id:205 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
