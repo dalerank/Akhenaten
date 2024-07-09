@@ -756,7 +756,7 @@ figure_reed_gatherer = {
 		back : { pack:PACK_SPR_MAIN, id:40, max_frames:12 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANY,
-	max_amount : 50,
+	max_amount : 25,
 }
 
 figure_explosion = {

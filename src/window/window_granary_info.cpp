@@ -125,6 +125,14 @@ void building_granary::window_info_background(object_info &c) {
     ui["storing"].text_var("#granary_storing %u #granary_units", granary->total_stored());
     ui["free_space"].text_var("#granary_space_for %u #granary_units", granary->freespace());
 
+    auto food_icon = [] (int i) { bstring32 id_icon; id_icon.printf("food%u_icon", i); return id_icon; };
+    auto food_text = [] (int i) { bstring32 id_text; id_text.printf("food%u_text", i); return id_text; };
+
+    for (int i = 0; i < 4; ++i) {
+        ui[food_icon(i)].image(RESOURCE_NONE);
+        ui[food_text(i)].text_var("");
+    }
+
     int food_index = 0;
     for (const auto &r: resource_list::foods) {
         const int stored = granary->amount(r.type);
@@ -132,11 +140,8 @@ void building_granary::window_info_background(object_info &c) {
             continue;
         }
 
-        bstring32 id_icon; id_icon.printf("food%u_icon", food_index);
-        bstring32 id_text; id_text.printf("food%u_text", food_index);
-
-        ui[id_icon].image(r.type);
-        ui[id_text].text_var("%u %s", stored, (pcstr)lang_get_string(ui.resource_text_group, r.type));
+        ui[food_icon(food_index)].image(r.type);
+        ui[food_text(food_index)].text_var("%u %s", stored, (pcstr)lang_get_string(ui.resource_text_group, r.type));
         food_index++;
     }
 
