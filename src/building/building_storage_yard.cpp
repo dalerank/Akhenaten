@@ -210,6 +210,7 @@ int building_storage_yard::remove_resource(e_resource resource, int amount) {
         space->set_image(resource);
         space = space->next_room();
     }
+
     return amount;
 }
 void building_storageyard_remove_resource_curse(building* b, int amount) {

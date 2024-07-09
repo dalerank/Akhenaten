@@ -96,6 +96,15 @@ void figure_carrier::load_resource(e_resource resource, int amount) {
     base.resource_amount_full = amount;
 }
 
+void figure_carrier::append_resource(e_resource resource, int amount) {
+    assert(base.resource_id == RESOURCE_NONE || base.resource_id == resource);
+    if (base.resource_id == RESOURCE_NONE) {
+        base.resource_id = resource;
+        base.resource_amount_full = 0;
+    }
+    base.resource_amount_full += amount;
+}
+
 int figure_carrier::dump_resource(int amount) {
     amount = std::min<int>(amount, base.resource_amount_full);
     base.resource_amount_full -= amount;

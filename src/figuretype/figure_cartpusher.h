@@ -9,6 +9,7 @@ public:
     virtual bool window_info_background(object_info &ctx) override;
 
     void load_resource(e_resource resource, int amount);
+    void append_resource(e_resource resource, int amount);
     int dump_resource(int amount);
 };
 
