@@ -21,9 +21,17 @@
 #include "window/window_gift_to_kingdome.h"
 #include "window/popup_dialog.h"
 #include "window/set_salary.h"
+#include "graphics/screen.h"
 #include "game/game.h"
 
-#define ADVISOR_HEIGHT 27
+ui::advisor_imperial_window g_advisor_imperial_window;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_imperial);
+void config_load_advisor_imperial() {
+    g_config_arch.r_section("advisor_imperial_window", [] (archive arch) {
+        g_advisor_imperial_window.load(arch);
+    });
+}
 
 enum E_STATUS {
     STATUS_NOT_ENOUGH_RESOURCES = -1,
@@ -32,17 +40,9 @@ enum E_STATUS {
     STATUS_NO_LEGIONS_AVAILABLE = -4,
 };
 
-ui::advisor_imperial_window g_advisor_imperial_window;
-
-static void button_donate_to_city(int param1, int param2);
-static void button_set_salary(int param1, int param2);
-static void button_gift_to_kingdome(int param1, int param2);
 static void button_request(int index, int param2);
 
 static generic_button imperial_buttons[] = {
-  {320, 367, 250, 20, button_donate_to_city, button_none, 0, 0},
-  {70, 393, 500, 20, button_set_salary, button_none, 0, 0},
-  {320, 341, 250, 20, button_gift_to_kingdome, button_none, 0, 0},
   {38, 96, 560, 40, button_request, button_none, 0, 0},
   {38, 138, 560, 40, button_request, button_none, 1, 0},
   {38, 180, 560, 40, button_request, button_none, 2, 0},
@@ -70,7 +70,7 @@ static int get_request_status(int index) {
                 }
             }
         } else {
-            if (city_resource_count((e_resource)request->resource) < request->get_resource_amount()) {
+            if (city_resource_count((e_resource)request->resource) < request->resource_amount()) {
                 return STATUS_NOT_ENOUGH_RESOURCES;
             }
         }
@@ -79,141 +79,104 @@ static int get_request_status(int index) {
     return 0;
 }
 
-static void draw_request(int index, const scenario_request* request) {
-    if (index >= 5) {
-        return;
-    }
-
-    painter ctx = game.painter();
-    button_border_draw(38, 96 + 42 * index, 560, 42, 0);
-    int resource_offset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(resource_offset), 45, 103 + 42 * index);
-
-    int request_amount = 0;
-    if (request->resource == RESOURCE_DEBEN) {
-        request_amount = request->amount;
-    } else {
-        request_amount = request->get_resource_amount();
-    }
-
-    int width = text_draw_number(stack_proper_quantity(request_amount, request->resource), '@', " ", 65, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-    lang_text_draw(23, request->resource, 65 + width, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-
-    width = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-    lang_text_draw(12, 2, 310 + width, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-
-    if (request->resource == RESOURCE_DEBEN) {
-        // request for money
-        int treasury = city_finance_treasury();
-        width = text_draw_number(treasury, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        width += lang_text_draw(52, 44, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        if (treasury < request->amount) {
-            lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        } else {
-            lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        }
-    } else {
-        // normal goods request
-        int amount_stored = city_resource_count(request->resource);
-        int request_amount = request->get_resource_amount();
-        width = text_draw_number(amount_stored, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        width += lang_text_draw(52, 43, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        if (amount_stored < request_amount) {
-            lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        } else {
-            lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        }
-    }
+void ui::advisor_imperial_window::draw_foreground() {
 }
 
 int ui::advisor_imperial_window::draw_background() {
-    int military_resource = RESOURCE_WEAPONS;
-
-    painter ctx = game.painter();
     g_city.kingdome.calculate_gift_costs();
 
-    outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 2, 10, 10);
+    auto &ui = g_advisor_imperial_window;
+    ui["header_label"].text((pcstr)city_player_name());
+    ui["rating_label"].text_var("%s %u", ui::str(52, 0), g_city.ratings.kingdom);
+    ui["rating_advice"].text_var(ui::str(52, g_city.ratings.kingdom / 5 + 22));
+    ui["player_rank"].text(ui::str(32, g_city.kingdome.player_rank));
+    ui["personal_savings"].text_var("%s %u %s", ui::str(52, 1), g_city.kingdome.personal_savings, ui::str(6, 0));
+    ui["salary_rank"].text_var("%s %u %s", ui::str(52, g_city.kingdome.salary_rank + 4), g_city.kingdome.salary_amount, ui::str(52, 3));
 
-    text_draw(city_player_name(), 60, 12, FONT_LARGE_BLACK_ON_LIGHT, 0);
+    ui["donate_to_city"].onclick([] { window_donate_to_city_show(); });
+    ui["salary_rank"].onclick([] { window_set_salary_show(); });
+    ui["send_gift"].onclick([] { window_gift_to_kingdome_show(); });
 
-    int width = lang_text_draw(52, 0, 60, 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    text_draw_number(g_city.ratings.kingdom, '@', " ", 60 + width, 44, FONT_NORMAL_BLACK_ON_LIGHT);
+    return 0;
+}
 
-    lang_text_draw_multiline(52, g_city.ratings.kingdom / 5 + 22, vec2i{60, 60}, 544, FONT_NORMAL_BLACK_ON_LIGHT);
+void ui::advisor_imperial_window::ui_draw_foreground() {
+    auto &ui = g_advisor_imperial_window;
 
-    inner_panel_draw(32, 90, 36, 14);
+    ui.begin_widget(screen_dialog_offset());
+    ui.draw();
 
     int num_requests = 0;
     if (city_military_months_until_distant_battle() > 0
         && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
+        
         // can send to distant battle
-        button_border_draw(38, 96, 560, 40, 0);
-        ImageDraw::img_generic(ctx, image_id_resource_icon(military_resource), 50, 106);
-        width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE_ON_DARK);
-        lang_text_draw(21, g_empire.city(city_military_distant_battle_city())->name_id, 80 + width, 102, FONT_NORMAL_WHITE_ON_DARK);
+        ui.button("", vec2i{38, 96}, vec2i{560, 40}, FONT_NORMAL_WHITE_ON_DARK);
+        ui.icon(vec2i{50, 106}, RESOURCE_WEAPONS);
+
+        bstring128 distant_battle_text(ui::str(52, 72), ui::str(21, g_empire.city(city_military_distant_battle_city())->name_id));
+        ui.label(distant_battle_text, vec2i{80, 102}, FONT_NORMAL_WHITE_ON_DARK);
+
         int strength_text_id;
         int enemy_strength = city_military_distant_battle_enemy_strength();
-        if (enemy_strength < 46)
+        if (enemy_strength < 46) {
             strength_text_id = 73;
-        else if (enemy_strength < 89)
+        } else if (enemy_strength < 89) {
             strength_text_id = 74;
-        else {
+        } else {
             strength_text_id = 75;
         }
-        width = lang_text_draw(52, strength_text_id, 80, 120, FONT_NORMAL_WHITE_ON_DARK);
-        lang_text_draw_amount(8, 4, city_military_months_until_distant_battle(), 80 + width, 120, FONT_NORMAL_WHITE_ON_DARK);
+
+        bstring128 distant_strenght_text;
+        distant_strenght_text.printf("%s %s %d", ui::str(52, strength_text_id), ui::str(8, 4), city_military_months_until_distant_battle());
+        ui.label(distant_strenght_text, vec2i{80, 120}, FONT_NORMAL_WHITE_ON_DARK);
         num_requests = 1;
     }
-    num_requests = scenario_request_foreach_visible(num_requests, draw_request);
-    if (!num_requests) {
-        lang_text_draw_multiline(52, 21, vec2i{64, 160}, 512, FONT_NORMAL_WHITE_ON_DARK);
-    }
 
-    return ADVISOR_HEIGHT;
-}
-
-void ui::advisor_imperial_window::draw_foreground() {
-    inner_panel_draw(64, 324, 32, 6);
-
-    lang_text_draw(32, g_city.kingdome.player_rank, 72, 338, FONT_LARGE_BLACK_ON_DARK);
-
-    int width = lang_text_draw(52, 1, 72, 372, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw_money(g_city.kingdome.personal_savings, 80 + width, 372, FONT_NORMAL_WHITE_ON_DARK);
-
-    //
-    button_border_draw(320, 367, 250, 20, focus_button_id == 1);
-    lang_text_draw_centered(52, 2, 320, 372, 250, FONT_NORMAL_WHITE_ON_DARK);
-
-    // button set salary
-    button_border_draw(70, 393, 500, 20, focus_button_id == 2);
-    width = lang_text_draw(52, g_city.kingdome.salary_rank + 4, 120, 398, FONT_NORMAL_WHITE_ON_DARK);
-    width += text_draw_number(g_city.kingdome.salary_amount, '@', " ", 120 + width, 398, FONT_NORMAL_WHITE_ON_DARK);
-    lang_text_draw(52, 3, 120 + width, 398, FONT_NORMAL_WHITE_ON_DARK);
-
-    button_border_draw(320, 341, 250, 20, focus_button_id == 3);
-    lang_text_draw_centered(52, 49, 320, 346, 250, FONT_NORMAL_WHITE_ON_DARK);
-
-    // Request buttons
-    for (int i = 0; i < 5; i++) {
-        if (get_request_status(i)) {
-            button_border_draw(38, 96 + i * 42, 560, 42, focus_button_id == (4 + i));
+    num_requests = scenario_request_foreach_visible(num_requests, [&ui] (int index, const scenario_request* request) {
+        if (index >= 5) {
+            return;
         }
+
+        ui.button("", vec2i{38, 96 + 42 * index}, vec2i{560, 42});
+        ui.icon(vec2i{45, 103 + 42 * index}, request->resource);
+
+        int request_amount = request->resource_amount();
+
+        int quat = stack_proper_quantity(request_amount, request->resource);
+        bstring256 amount_text;
+        amount_text.printf("%u %s", quat, ui::str(23, request->resource));
+        ui.label(amount_text, vec2i{65, 102 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
+
+        bstring256 month_to_comply;
+        month_to_comply.printf("%s %u %s", ui::str(8, 4), request->months_to_comply, ui::str(12, 2));
+        ui.label(month_to_comply, vec2i{310, 102 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
+
+        if (request->resource == RESOURCE_DEBEN) {
+            // request for money
+            int treasury = city_finance_treasury();
+            bstring256 saved_deben;
+            pcstr allow_str = (treasury < request->amount) ? ui::str(52, 48) : ui::str(52, 47);
+            saved_deben.printf("%u %s %s", treasury, ui::str(52, 44), allow_str);
+            ui.label(saved_deben, vec2i{40, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
+        } else {
+            // normal goods request
+            int amount_stored = city_resource_count(request->resource);
+            int request_amount = request->resource_amount();
+            bstring256 saved_deben;
+            pcstr allow_str = (amount_stored < request_amount) ? ui::str(52, 48) : ui::str(52, 47);
+            saved_deben.printf("%u %s %s", amount_stored, ui::str(52, 43), allow_str);
+            ui.label(saved_deben, vec2i{40, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
+        }
+    });
+
+    if (!num_requests) {
+        ui.label(ui::str(52, 21), vec2i{64, 160}, FONT_NORMAL_WHITE_ON_DARK, UiFlags_LabelMultiline, 512);
     }
 }
 
 int ui::advisor_imperial_window::handle_mouse(const mouse* m) {
-    return generic_buttons_handle_mouse(m, {0, 0}, imperial_buttons, 8, &focus_button_id);
-}
-
-static void button_donate_to_city(int param1, int param2) {
-    window_donate_to_city_show();
-}
-static void button_set_salary(int param1, int param2) {
-    window_set_salary_show();
-}
-static void button_gift_to_kingdome(int param1, int param2) {
-    window_gift_to_kingdome_show();
+    return 0;
 }
 
 static void confirm_nothing(bool accepted) {}

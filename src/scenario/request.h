@@ -1,6 +1,7 @@
 #pragma once
 
 #include "game/resource.h"
+#include <functional>
 
 enum e_request_stat {
     e_request_state_normal = 0,
@@ -19,7 +20,7 @@ struct scenario_request {
     int amount = 0;
     int months_to_comply = 0;
 
-    int get_resource_amount() const { return amount * 100; }
+    int resource_amount() const { return resource == RESOURCE_DEBEN ? amount : amount * 100; }
 };
 
 void scenario_request_init();
@@ -33,4 +34,5 @@ void scenario_request_set_active(const scenario_request &r, bool active);
 
 const scenario_request* scenario_request_get_visible(int index);
 
-int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request* request));
+using request_visitor = std::function<void(int, const scenario_request *)>;
+int scenario_request_foreach_visible(int start_index, request_visitor cb);

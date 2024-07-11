@@ -8,6 +8,7 @@
 #include "panel.h"
 #include "graphics/text.h"
 #include "core/svector.h"
+#include "core/log.h"
 #include "game/game.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -453,6 +454,9 @@ void ui::widget::load(archive arch, pcstr section) {
 
 ui::element& ui::widget::operator[](pcstr id) {
     auto it = std::find_if(elements.begin(), elements.end(), [id] (const auto &e) { return e->id == id; });
+    if (it == elements.end()) {
+        logs::error("No element with id:%s", id);
+    }
     return (it != elements.end() ? **it : ui::dummy_element);
 }
 
@@ -658,12 +662,12 @@ menu_item &ui::emenu_header::item(pcstr key) {
 void ui::egeneric_button::draw() {
     switch (mode) {
     case 0:
-        ui::button(_text.c_str(), pos, size)
+        ui::button(_text.c_str(), pos, size, _font)
             .onclick(_func);
         break;
 
     case 1:
-        ui::large_button(_text.c_str(), pos, size)
+        ui::large_button(_text.c_str(), pos, size, _font)
             .onclick(_func);
         break;
     }

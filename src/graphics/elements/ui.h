@@ -258,8 +258,13 @@ struct widget {
 
     template<typename ... Args>
     int label(const Args ... args) { return ui::label(args...); }
+    
     template<typename ... Args>
     generic_button &button(const Args ... args) { return ui::button(args...); }
+    
+    template<typename ... Args>
+    void icon(const Args ... args) { return ui::icon(args...); }
+
     inline void image(image_desc img, vec2i pos) { ui::eimage(img, pos); }
     inline void begin_widget(vec2i offset, bool relative = false) { ui::begin_widget(offset, relative); }
     inline void icon(vec2i pos, e_resource img) { ui::icon(pos, img); }

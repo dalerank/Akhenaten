@@ -114,7 +114,7 @@ void scenario_request_dispatch(int id) {
         city_population_remove_for_troop_request(request->amount);
         building_storageyards_remove_resource(RESOURCE_WEAPONS, request->amount);
     } else {
-        int amount = request->get_resource_amount();
+        int amount = request->resource_amount();
         building_storageyards_remove_resource(request->resource, amount);
     }
 }
@@ -172,7 +172,7 @@ const scenario_request* scenario_request_get_visible(int index) {
     return nullptr;
 }
 
-int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request* request)) {
+int scenario_request_foreach_visible(int start_index, request_visitor callback) {
     int index = start_index;
     for (int i = 0; i < MAX_REQUESTS; i++) {
         auto request = scenario_request_get_visible(i);

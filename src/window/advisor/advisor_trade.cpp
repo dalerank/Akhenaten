@@ -38,7 +38,7 @@ int ui::advisor_trade_window::draw_background() {
 
 void ui::advisor_trade_window::ui_draw_foreground() {
     auto &ui = g_advisor_trade_window;
-    ui.begin_frame();
+
     ui.begin_widget(screen_dialog_offset());
     ui.draw();
 

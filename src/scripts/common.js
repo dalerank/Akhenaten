@@ -171,6 +171,7 @@ var bazaar_info_window = {}
 var well_info_window = {}
 var minimap_window = {}
 var advisor_trade_window = {}
+var advisor_imperial_window = {}
 
 //figures
 var figure_fireman = {}
