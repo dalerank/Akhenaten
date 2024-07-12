@@ -41,7 +41,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
     change(10);
     int people_to_plague = sick_people - num_mortuary_workers;
     if (people_to_plague <= 0) {
-        city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, MESSAGE_HEALTH_MALARIA_PROBLEM, 0, 0);
+        city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, false, MESSAGE_HEALTH_MALARIA_PROBLEM, 0, 0);
         return;
     }
 
@@ -101,9 +101,9 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
     e_building_type btype = (warn_building ? warn_building->type : BUILDING_NONE);
     int grid_offset = (warn_building ? warn_building->tile.grid_offset() : 0);
     if (num_mortuary_workers > 0) {
-        city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, MESSAGE_HEALTH_DISEASE, btype, grid_offset);
+        city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, false, MESSAGE_HEALTH_DISEASE, btype, grid_offset);
     } else {
-        city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, MESSAGE_HEALTH_PLAGUE, btype, grid_offset);
+        city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, false, MESSAGE_HEALTH_PLAGUE, btype, grid_offset);
     }
 }
 

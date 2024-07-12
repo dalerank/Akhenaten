@@ -224,32 +224,33 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
     should_play_sound = true;
 }
 
-static void city_message_post_common(bool use_popup, int message_id, int param1, int param2, int god, int bg_img, city_message_options *opts) {
+city_message &city_message_post_common(bool use_popup, int message_id, int param1, int param2, int god, int bg_img) {
     auto &data = g_message_data;
 
     int id = new_message_id();
     if (id < 0) {
-        return;
+        static city_message dummy;
+        return dummy;
     }
 
     data.total_messages++;
     data.current_message_id = id;
 
-    city_message *msg = &data.messages[id];
+    city_message &msg = data.messages[id];
 
     // TODO: remove this hack += 99
     message_id += 99;
 
-    msg->MM_text_id = message_id;
-    msg->is_read = 0;
-    msg->year = game_time_year();
-    msg->month = game_time_month();
-    msg->param1 = param1;
-    msg->param2 = param2;
-    msg->sequence = data.next_message_sequence++;
-    msg->god = god;
-    msg->hide_img = (opts && opts->hide_img);
-    msg->background_img = (opts && (opts->force_img >= 0)) ? opts->force_img : bg_img;
+    msg.MM_text_id = message_id;
+    msg.is_read = 0;
+    msg.year = game_time_year();
+    msg.month = game_time_month();
+    msg.param1 = param1;
+    msg.param2 = param2;
+    msg.sequence = data.next_message_sequence++;
+    msg.god = god;
+    msg.hide_img = false;
+    msg.background_img = bg_img;
 
     int text_id = city_message_get_text_id(message_id);
     int lang_msg_type = lang_get_message(text_id)->message_type;
@@ -262,28 +263,30 @@ static void city_message_post_common(bool use_popup, int message_id, int param1,
         show_message_popup(id);
     } else if (use_popup) { 
         // add to queue to be processed when player returns to city
-        enqueue_message(msg->sequence);
+        enqueue_message(msg.sequence);
     } else if (should_play_sound) {
         play_sound(text_id);
     }
 
     should_play_sound = true;
+
+    return msg;
 }
 
 void city_message_god_post(int god, bool use_popup, int message_id, int param1, int param2) {
-    city_message_post_common(use_popup, message_id, param1, param2, god, 0, nullptr);
+    city_message_post_common(use_popup, message_id, param1, param2, god, 0);
 }
 
 void city_message_population_post(bool use_popup, int message_id, int param1, int param2) {
     int img_id = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW) + 16;
-    city_message_post_common(use_popup, message_id, param1, param2, GOD_UNKNOWN, img_id, nullptr);
+    city_message_post_common(use_popup, message_id, param1, param2, GOD_UNKNOWN, img_id);
 }
 
-void city_message_post(bool use_popup, int message_id, int param1, int param2, city_message_options *opts) {
-    city_message_post_common(use_popup, message_id, param1, param2, GOD_UNKNOWN, 0, opts);
+city_message &city_message_post(bool use_popup, int message_id, int param1, int param2) {
+    return city_message_post_common(use_popup, message_id, param1, param2, GOD_UNKNOWN, 0);
 }
 
-void city_message_post_with_popup_delay(e_mesage_category category, int message_type, int param1, short param2, city_message_options *opts) {
+city_message &city_message_post_with_popup_delay(e_mesage_category category, bool force_popup, int message_type, int param1, short param2) {
     auto& data = g_message_data;
     int use_popup = false;
 
@@ -291,10 +294,12 @@ void city_message_post_with_popup_delay(e_mesage_category category, int message_
         use_popup = true;
         data.message_delay[category] = 12;
     }
-    use_popup |= (opts && opts->force_popup);
+    use_popup |= force_popup;
 
-    city_message_post(use_popup, message_type, param1, param2, opts);
+    city_message &message = city_message_post(use_popup, message_type, param1, param2);
     data.message_count[category]++;
+
+    return message;
 }
 
 void city_message_post_with_message_delay(e_mesage_category category, int use_popup, int message_type, int delay) {

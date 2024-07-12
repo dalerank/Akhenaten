@@ -56,6 +56,7 @@ struct city_ratings_t {
     void change_kingdom(int amount);
     void reset_kingdom();
     void reduce_kingdom_missed_request(int penalty);
+    void increase_kingdom_success_request(int value);
     void limit_kingdom(int max_kingdom);
 
     void update_culture_explanation();
@@ -63,6 +64,7 @@ struct city_ratings_t {
     void update_kingdom_explanation();
     void update_culture_rating();
     void update_monument_rating();
+
     void update_kingdom_rating(bool is_yearly_update);
     void update_kingdom_rating_year();
 };

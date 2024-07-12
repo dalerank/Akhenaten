@@ -41,13 +41,13 @@ enum E_STATUS {
 };
 
 static int get_request_status(int index) {
-    const scenario_request* request = scenario_request_get_visible(index);
-    if (request) {
-        if (request->resource == RESOURCE_DEBEN) {
-            if (city_finance_treasury() <= request->amount) {
+    scenario_request request = scenario_request_get_visible(index);
+    if (request.is_valid()) {
+        if (request.resource == RESOURCE_DEBEN) {
+            if (city_finance_treasury() <= request.amount) {
                 return STATUS_NOT_ENOUGH_RESOURCES;
             }
-        } else if (request->resource == RESOURCE_TROOPS) {
+        } else if (request.resource == RESOURCE_TROOPS) {
             if (city_military_months_until_distant_battle() > 0 && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
                 if (g_city.military.total_batalions <= 0) {
                     return STATUS_NO_LEGIONS_AVAILABLE;
@@ -58,11 +58,11 @@ static int get_request_status(int index) {
                 }
             }
         } else {
-            if (city_resource_count((e_resource)request->resource) < request->resource_amount()) {
+            if (city_resource_count((e_resource)request.resource) < request.resource_amount()) {
                 return STATUS_NOT_ENOUGH_RESOURCES;
             }
         }
-        return request->event_id;
+        return request.event_id;
     }
     return -1;
 }

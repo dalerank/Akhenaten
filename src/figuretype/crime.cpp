@@ -59,8 +59,6 @@ static void generate_rioter(building* b) {
         f->wait_ticks = 10 + 4 * i;
         if (target_building_id) {
             f->destination_tile.set(x_target, y_target);
-            //            f->destination_tile.x() = x_target;
-            //            f->destination_tile.y() = y_target;
             f->set_destination(target_building_id);
         } else {
             f->poof();
@@ -71,7 +69,7 @@ static void generate_rioter(building* b) {
     city_sentiment_change_happiness(20);
     tutorial_on_crime();
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
-    city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, road_tile.grid_offset());
+    city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, false, MESSAGE_RIOT, b->type, road_tile.grid_offset());
 }
 
 static void generate_mugger(building* b) {

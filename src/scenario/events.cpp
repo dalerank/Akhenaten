@@ -8,6 +8,7 @@
 #include "io/io.h"
 #include "io/io_buffer.h"
 #include "core/random.h"
+#include "request.h"
 
 #include "game/time.h"
 
@@ -66,7 +67,7 @@ event_ph_t* create_scenario_event(const event_ph_t* donor) {
 static bool create_triggered_active_event(const event_ph_t* master, const event_ph_t* parent, int trigger_type) {
     event_ph_t* child = create_scenario_event(master);
     if (child) {
-        child->event_state = EVENT_STATE_INITIAL;
+        child->event_state = e_event_state_initial;
         child->event_trigger_type = trigger_type;
 
         update_randomized_values(*child);
@@ -124,6 +125,7 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
         return;
     }
 
+    assert(event.event_id == id);
     if (event.event_trigger_type == EVENT_TRIGGER_ONLY_VIA_EVENT && !via_event_trigger) {
         return;
     }
@@ -158,67 +160,10 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
     }
 
     // ------ MAIN EVENT HANDLER
-    int chain_action_next = EVENT_ACTION_COMPLETED; // default action to fire next (determined by handler)
+    e_event_action chain_action_next = EVENT_ACTION_COMPLETED; // default action to fire next (determined by handler)
     switch (event.type) {
     case EVENT_TYPE_REQUEST: {
-        // advance time
-        if (event.quest_months_left > 0) {
-            event.quest_months_left--;
-        }
-
-        // the event is coming, but hasn't fired yet. this is always a slave / proper event object.
-        // the "facade" event is taken care of the VIA_EVENT check from above - it will never fire.
-        if (!event.is_active) {
-            event.quest_months_left = event.months_initial;
-            event.is_active = 1;
-        }
-        // handle request event immediately after activation!
-        if (event.is_active) {
-            chain_action_next = EVENT_ACTION_NONE;
-            int pharaoh_alt_shift = event.sender_faction == EVENT_FACTION_REQUEST_FROM_CITY ? 1 : 0;
-            if (event.event_state == EVENT_STATE_INITIAL) {
-                if (event.quest_months_left == event.months_initial) {
-                    // initial quest message
-                    city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
-                                           PHRASE_general_request_title_P + pharaoh_alt_shift,
-                                           PHRASE_general_request_initial_announcement_P + pharaoh_alt_shift,
-                                           PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
-                                           id, 0);
-                } else if (event.quest_months_left == 6) {
-                    // reminder of 6 months left
-                    city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
-                                           PHRASE_general_request_title_P + pharaoh_alt_shift,
-                                           PHRASE_general_request_reminder_P + pharaoh_alt_shift,
-                                           PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
-                                           id, 0);
-                } else if (event.quest_months_left == 0) {
-                    event.event_state = EVENT_STATE_OVERDUE;
-                    event.quest_months_left = 24; // hardcoded
-                    // reprimand message
-                    city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
-                                           PHRASE_general_request_title_P + pharaoh_alt_shift,
-                                           PHRASE_general_request_overdue_P + pharaoh_alt_shift,
-                                           PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
-                                           id,
-                                           0);
-                }
-            } else if (event.event_state == EVENT_STATE_OVERDUE) {
-                if (event.quest_months_left == 6) {
-                    // angry reminder of 6 months left?
-                    //                        city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id,
-                    //                        caller_event_id,
-                    //                                               PHRASE_general_request_title_P + faction_mod,
-                    //                                               PHRASE_general_request_warning_P + faction_mod,
-                    //                                               PHRASE_general_request_no_reason_P_A + faction_mod
-                    //                                               * 3, id, 0);
-                } else if (event.quest_months_left == 0) {
-                    event.event_state = EVENT_STATE_FAILED;
-                    chain_action_next = EVENT_ACTION_REFUSED;
-                    // final reprimand is the "kingdom rating" messages???
-                    // -- these are handled SEPARATELY by the chained scenario events! --
-                }
-            }
-        }
+        scenario_request_handle(event, caller_event_id, chain_action_next);
         break;
     }
     case EVENT_TYPE_INVASION:
@@ -307,11 +252,11 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
 
     // disable if already done
     if (event.event_trigger_type == EVENT_TRIGGER_ONCE) {
-        event.event_state = EVENT_TRIGGER_ALREADY_FIRED;
+        event.event_state = e_event_state_already_fired;
     }
 }
 
-void scenario_event_process() {
+void scenario_events_process() {
     auto& data = g_events_data;
     // main event update loop
     for (int i = 0; i < scenario_events_num(); i++) {
@@ -365,12 +310,14 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT16, &event.__unk07);
         iob->bind(BIND_SIGNATURE_INT16, &event.months_initial);
         iob->bind(BIND_SIGNATURE_INT16, &event.quest_months_left);
-        iob->bind(BIND_SIGNATURE_INT16, &event.event_state);
-        iob->bind(BIND_SIGNATURE_INT16, &event.is_active);
+        iob->bind(BIND_SIGNATURE_INT8,  &event.event_state);
+        iob->bind(BIND_SIGNATURE_INT8,  &event.is_overdue);
+        iob->bind(BIND_SIGNATURE_INT8,  &event.is_active);
+        iob->bind(BIND_SIGNATURE_INT8,  &event.can_comply_dialog_shown);
         iob->bind(BIND_SIGNATURE_INT16, &event.__unk11);
-        iob->bind(BIND_SIGNATURE_INT8, &event.festival_deity);
-        iob->bind(BIND_SIGNATURE_INT8, &event.__unk12_i8);
-        iob->bind(BIND_SIGNATURE_INT8, &event.invasion_attack_target);
+        iob->bind(BIND_SIGNATURE_INT8,  &event.festival_deity);
+        iob->bind(BIND_SIGNATURE_INT8,  &event.__unk12_i8);
+        iob->bind(BIND_SIGNATURE_INT8,  &event.invasion_attack_target);
         // ...
         // ...
         // ...

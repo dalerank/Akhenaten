@@ -88,7 +88,7 @@ static void advance_month() {
     city_resource_consume_food();
     scenario_distant_battle_process();
     random_generate_next();                  // TODO: find out the source / reason for this
-    scenario_event_process();
+    scenario_events_process();
     
     g_city.victory_state.update_months_to_govern();
     formation_update_monthly_morale_at_rest();

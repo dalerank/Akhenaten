@@ -6,6 +6,7 @@
 #include "city/population.h"
 #include "city/ratings.h"
 #include "city/city_resource.h"
+#include "city/city.h"
 #include "core/random.h"
 #include "core/svector.h"
 #include "events.h"
@@ -13,6 +14,7 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "scenario/scenario.h"
+#include "event_phrases.h"
 
 void scenario_request_init() {
     //for (int i = 0; i < MAX_REQUESTS; i++) {
@@ -24,74 +26,107 @@ void scenario_request_init() {
     //}
 }
 
-void scenario_request_process_on_month() {
-    //for (int i = 0; i < MAX_REQUESTS; i++) {
-    //    if (!g_scenario_data.requests[i].resource || g_scenario_data.requests[i].state > e_request_state_dispatched_late)
-    //        continue;
-    //
-    //    int state = g_scenario_data.requests[i].state;
-    //    if (state == e_request_state_dispatched || state == e_request_state_dispatched_late) {
-    //        --g_scenario_data.requests[i].months_to_comply;
-    //        if (g_scenario_data.requests[i].months_to_comply <= 0) {
-    //            if (state == e_request_state_dispatched) {
-    //                city_message_post(true, MESSAGE_REQUEST_RECEIVED, i, 0);
-    //                city_ratings_change_kingdom(g_scenario_data.requests[i].kingdom);
-    //            } else {
-    //                city_message_post(true, MESSAGE_REQUEST_RECEIVED_LATE, i, 0);
-    //                city_ratings_change_kingdom(g_scenario_data.requests[i].kingdom / 2);
-    //            }
-    //            g_scenario_data.requests[i].state = e_request_state_received;
-    //            g_scenario_data.requests[i].visible = false;
-    //        }
-    //    } else {
-    //        // normal or overdue
-    //        if (g_scenario_data.requests[i].visible) {
-    //            --g_scenario_data.requests[i].months_to_comply;
-    //            if (state == e_request_state_normal) {
-    //                if (g_scenario_data.requests[i].months_to_comply == 12) {
-    //                    // reminder
-    //                    city_message_post(true, MESSAGE_REQUEST_REMINDER, i, 0);
-    //                } else if (g_scenario_data.requests[i].months_to_comply <= 0) {
-    //                    city_message_post(true, MESSAGE_REQUEST_REFUSED, i, 0);
-    //                    g_scenario_data.requests[i].state = e_request_state_overdue;
-    //                    g_scenario_data.requests[i].months_to_comply = 24;
-    //                    city_ratings_reduce_kingdom_missed_request(3);
-    //                }
-    //            } else if (state == e_request_state_overdue) {
-    //                if (g_scenario_data.requests[i].months_to_comply <= 0) {
-    //                    city_message_post(true, MESSAGE_REQUEST_REFUSED_OVERDUE, i, 0);
-    //                    g_scenario_data.requests[i].state = e_request_state_ignored;
-    //                    g_scenario_data.requests[i].visible = false;
-    //                    city_ratings_reduce_kingdom_missed_request(5);
-    //                }
-    //            }
-    //            if (!g_scenario_data.requests[i].can_comply_dialog_shown
-    //                && city_resource_count(g_scenario_data.requests[i].resource)
-    //                     >= g_scenario_data.requests[i].amount) {
-    //                g_scenario_data.requests[i].can_comply_dialog_shown = 1;
-    //                city_message_post(true, MESSAGE_REQUEST_CAN_COMPLY, i, 0);
-    //            }
-    //        } else {
-    //            // request is not visible
-    //            int year = g_scenario_data.start_year;
-    //            if (!tutorial_adjust_request_year(&year))
-    //                return;
-    //            if (game_time_year() == year + g_scenario_data.requests[i].year
-    //                && game_time_month() == g_scenario_data.requests[i].month) {
-    //                g_scenario_data.requests[i].visible = true;
-    //                if (city_resource_count(g_scenario_data.requests[i].resource) >= g_scenario_data.requests[i].amount)
-    //                    g_scenario_data.requests[i].can_comply_dialog_shown = 1;
-    //
-    //                if (g_scenario_data.requests[i].resource == RESOURCE_DEBEN)
-    //                    city_message_post(true, MESSAGE_KINGDOME_REQUESTS_MONEY, i, 0);
-    //                else if (g_scenario_data.requests[i].resource == RESOURCE_TROOPS)
-    //                    city_message_post(true, MESSAGE_KINGDOME_REQUESTS_ARMY, i, 0);
-    //                else
-    //                    city_message_post(true, MESSAGE_KINGDOME_REQUESTS_GOODS, i, 0);
-    //            }
-    //        }
-    //    }
-    //}
+void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_action &next_action) {
+    // advance time
+    if (event.quest_months_left > 0) {
+        event.quest_months_left--;
+    }
+
+    // the event is coming, but hasn't fired yet. this is always a slave / proper event object.
+    // the "facade" event is taken care of the VIA_EVENT check from above - it will never fire.
+    if (!event.is_active) {
+        event.quest_months_left = event.months_initial;
+        event.is_active = true;
+        event.is_overdue = false;
+        event.can_comply_dialog_shown = false;
+    }
+
+    if (!event.is_active) {
+        return;
+    }
+
+    scenario_request request = scenario_request_get_visible(event.event_id);
+
+    // handle request event immediately after activation!
+    next_action = EVENT_ACTION_NONE;
+    int pharaoh_alt_shift = (event.sender_faction == EVENT_FACTION_REQUEST_FROM_CITY ? 1 : 0);
+    switch (event.event_state) {
+    case e_event_state_finished:
+        city_message_post(true, MESSAGE_REQUEST_RECEIVED, event.event_id, 0);
+        if (!event.is_overdue) {
+            g_city.ratings.increase_kingdom_success_request(3);
+        }
+        event.event_state = e_event_state_received;
+        event.is_active = false;
+        break;
+
+    case e_event_state_finished_late:
+        assert(!event.is_overdue);
+        city_message_post(true, MESSAGE_REQUEST_RECEIVED_LATE, event.event_id, 0);
+        g_city.ratings.increase_kingdom_success_request(1);
+        event.event_state = e_event_state_received;
+        event.is_active = false;
+        break;
+
+    case e_event_state_in_progress:
+    case e_event_state_initial:
+        if (!event.can_comply_dialog_shown && city_resource_count(request.resource) >= request.amount) {
+            event.can_comply_dialog_shown = true;
+            city_message &message = city_message_post(true, MESSAGE_REQUEST_CAN_COMPLY, event.event_id, 0);
+            message.req_amount = request.resource_amount();
+            message.req_resource = request.resource;
+            message.req_months_left = request.months_to_comply;
+        }
+
+        if (event.quest_months_left == event.months_initial) {
+            // initial quest message
+            city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, event.event_id, caller_event_id,
+                                   PHRASE_general_request_title_P + pharaoh_alt_shift,
+                                   PHRASE_general_request_initial_announcement_P + pharaoh_alt_shift,
+                                   PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
+                                   event.event_id, 0);
+
+        } else if (event.quest_months_left == 6) {
+            // reminder of 6 months left
+            city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, event.event_id, caller_event_id,
+                                   PHRASE_general_request_title_P + pharaoh_alt_shift,
+                                   PHRASE_general_request_reminder_P + pharaoh_alt_shift,
+                                   PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
+                                   event.event_id, 0);
+
+        } else if (event.quest_months_left == 0) {
+            g_city.ratings.reduce_kingdom_missed_request(3);
+            event.event_state = e_event_state_overdue;
+            event.is_overdue = true;
+            event.quest_months_left = 24; // hardcoded
+
+            // reprimand message
+            city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, event.event_id, caller_event_id,
+                                   PHRASE_general_request_title_P + pharaoh_alt_shift,
+                                   PHRASE_general_request_overdue_P + pharaoh_alt_shift,
+                                   PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
+                                   event.event_id,
+                                   0);
+        }
+        break;
+
+    case e_event_state_overdue:
+        if (event.quest_months_left == 6) {
+            // angry reminder of 6 months left?
+            //                        city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id,
+            //                        caller_event_id,
+            //                                               PHRASE_general_request_title_P + faction_mod,
+            //                                               PHRASE_general_request_warning_P + faction_mod,
+            //                                               PHRASE_general_request_no_reason_P_A + faction_mod
+            //                                               * 3, id, 0);
+        } else if (event.quest_months_left == 0) {
+            g_city.ratings.reduce_kingdom_missed_request(2);
+            event.event_state = e_event_state_failed;
+            event.is_active = false;
+            next_action = EVENT_ACTION_REFUSED;
+        }
+        break;
+    }
 }
 
 void scenario_request_handle_reward(const scenario_request &request) {
@@ -112,26 +147,25 @@ void scenario_request_handle_reward(const scenario_request &request) {
 }
 
 void scenario_request_dispatch(int id) {
-    const scenario_request* request = scenario_request_get_visible(id);
-    if (!request) {
+    scenario_request request = scenario_request_get_visible(id);
+    if (!request.is_valid()) {
         return;
     }
 
-    e_request_stat new_state = (request->months_to_comply <= 0)
-                                    ? e_request_state_dispatched
-                                    : e_request_state_dispatched_late;
+    e_event_state new_state = (request.months_to_comply > 0)
+                                    ? e_event_state_finished
+                                    : e_event_state_finished_late;
 
-    scenario_request_set_state(*request, new_state);
-    scenario_request_set_active(*request, false);
+    scenario_request_set_state(request, new_state);
 
-    if (request->resource == RESOURCE_DEBEN) {
-        city_finance_process_requests_and_festivals(request->amount);
-    } else if (request->resource == RESOURCE_TROOPS) {
-        city_population_remove_for_troop_request(request->amount);
-        building_storageyards_remove_resource(RESOURCE_WEAPONS, request->amount);
+    if (request.resource == RESOURCE_DEBEN) {
+        city_finance_process_requests_and_festivals(request.amount);
+    } else if (request.resource == RESOURCE_TROOPS) {
+        city_population_remove_for_troop_request(request.amount);
+        building_storageyards_remove_resource(RESOURCE_WEAPONS, request.amount);
     } else {
-        int amount = request->resource_amount();
-        building_storageyards_remove_resource(request->resource, amount);
+        int amount = request.resource_amount();
+        building_storageyards_remove_resource(request.resource, amount);
     }
 }
 
@@ -139,16 +173,16 @@ int scenario_requests_active_count() {
     int count = 0;
     for (int i = 0; i < scenario_events_num(); i++) {
         const event_ph_t* event = get_scenario_event(i);
-        if (event->type == EVENT_TYPE_REQUEST && event->is_active != 0
-            && event->event_state <= EVENT_STATE_IN_PROGRESS) {
+        if (event->type == EVENT_TYPE_REQUEST && event->is_active
+            && event->event_state <= e_event_state_overdue) {
             count++;
         }
     }
     return count;
 }
 
-static const scenario_request *scenario_request_get(const event_ph_t &event) {
-    static scenario_request request;
+const scenario_request scenario_request_get(const event_ph_t &event) {
+    scenario_request request;
 
     request.event_id = event.event_id;
     request.amount = event.amount_fields[0];
@@ -156,12 +190,12 @@ static const scenario_request *scenario_request_get(const event_ph_t &event) {
     request.state = event.event_state;
     request.months_to_comply = event.quest_months_left;
 
-    return &request;
+    return request;
 }
 
-void scenario_request_set_state(const scenario_request &request, e_request_stat new_state) {
-    event_ph_t &event = *set_scenario_event(request.event_id);
-    event.event_state = new_state;
+void scenario_request_set_state(const scenario_request &request, e_event_state new_state) {
+    event_ph_t *event = set_scenario_event(request.event_id);
+    event->event_state = new_state;
 }
 
 void scenario_request_set_active(const scenario_request &request, bool active) {
@@ -169,15 +203,15 @@ void scenario_request_set_active(const scenario_request &request, bool active) {
     event.is_active = active;
 }
 
-const scenario_request* scenario_request_get_visible(int index) {
+scenario_request scenario_request_get_visible(int index) {
     int event_index = 0;
     for (int i = 0; i < MAX_REQUESTS; i++) {
         if (i >= scenario_events_num()) {
-            return nullptr;
+            return {};
         }
         
         const event_ph_t* event = get_scenario_event(i);
-        if (event->type == EVENT_TYPE_REQUEST && event->is_active && event->event_state <= EVENT_STATE_IN_PROGRESS) {
+        if (event->type == EVENT_TYPE_REQUEST && event->is_active && event->event_state <= e_event_state_overdue) {
             if (event_index == index) {
                 return scenario_request_get(*event);
             }
@@ -185,15 +219,15 @@ const scenario_request* scenario_request_get_visible(int index) {
         }
     }
 
-    return nullptr;
+    return {};
 }
 
 int scenario_request_foreach_visible(int start_index, request_visitor callback) {
     int index = start_index;
     for (int i = 0; i < MAX_REQUESTS; i++) {
         auto request = scenario_request_get_visible(i);
-        if (request) {
-            callback(index, request);
+        if (request.is_valid()) {
+            callback(index, &request);
             index++;
         }
     }

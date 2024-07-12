@@ -87,13 +87,14 @@ enum e_event_attack {
 };
 
 enum e_event_state {
-    EVENT_STATE_INITIAL = 0,
-    EVENT_STATE_IN_PROGRESS = 1,
-    EVENT_STATE_OVERDUE = 1,
-    EVENT_STATE_FINISHED = 2,
-    EVENT_STATE_FINISHED_LATE = 3,
-    EVENT_STATE_FAILED = 4,
-    EVENT_STATE_RECEIVED = 5,
+    e_event_state_initial = 0,
+    e_event_state_in_progress = 1,
+    e_event_state_overdue = 2,
+    e_event_state_finished = 3,
+    e_event_state_finished_late = 4,
+    e_event_state_failed = 5,
+    e_event_state_received = 6,
+    e_event_state_already_fired = 7
 };
 
 enum e_event_var {
@@ -130,8 +131,10 @@ struct event_ph_t {
     int16_t __unk07;
     int16_t months_initial;
     int16_t quest_months_left;
-    int16_t event_state;
-    int16_t is_active;
+    e_event_state event_state;
+    bool is_overdue;
+    bool is_active;
+    bool can_comply_dialog_shown;
     int16_t __unk11;
     int8_t festival_deity;
     int8_t __unk12_i8;
@@ -167,7 +170,7 @@ const event_ph_t* get_scenario_event(int id);
 event_ph_t* set_scenario_event(int id);
 uint8_t* get_eventmsg_text(int group_id, int index);
 
-void scenario_event_process();
+void scenario_events_process();
 
 bool eventmsg_load();
 bool eventmsg_auto_phrases_load();

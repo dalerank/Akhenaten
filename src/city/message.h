@@ -141,7 +141,7 @@ enum e_message_type {
     MESSAGE_EMIGRATION = 111,
     MESSAGE_FIRED = 112,
     MESSAGE_ENEMY_ARMY_ATTACK = 114,
-    MESSAGE_REQUEST_CAN_COMPLY = 115,
+    MESSAGE_REQUEST_CAN_COMPLY = 314 - 99,
     MESSAGE_ROAD_TO_ROME_OBSTRUCTED = 116,
     MESSAGE_NO_WORKING_DOCK = 117,
     MESSAGE_FISHING_BOAT_BLOCKED = 118,
@@ -299,12 +299,6 @@ struct city_message {
     uint16_t background_img;
 };
 
-struct city_message_options {
-    bool force_popup = false;
-    int force_img = -1;
-    bool hide_img = false;
-};
-
 void city_message_init_scenario();
 void city_message_init_problem_areas();
 
@@ -312,9 +306,9 @@ void city_message_disable_sound_for_next_message(void);
 void city_message_apply_sound_interval(int category);
 
 void city_message_post_full(bool use_popup, int template_id, int event_id, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2);
-void city_message_post(bool use_popup, int message_id, int param1, int param2, city_message_options *opts = nullptr);
+city_message &city_message_post(bool use_popup, int message_id, int param1, int param2);
 void city_message_god_post(int god, bool use_popup, int message_id, int param1, int param2);
-void city_message_post_with_popup_delay(e_mesage_category category, int message_type, int param1, short param2, city_message_options *opts = nullptr);
+city_message &city_message_post_with_popup_delay(e_mesage_category category, bool use_popup, int message_type, int param1, short param2);
 void city_message_post_with_message_delay(e_mesage_category category, int use_popup, int message_type, int delay);
 void city_message_population_post(bool use_popup, int message_id, int param1, int param2);
 

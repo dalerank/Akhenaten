@@ -89,6 +89,10 @@ void city_ratings_t::reduce_kingdom_missed_request(int penalty) {
     kingdom_ignored_request_penalty = penalty;
 }
 
+void city_ratings_t::increase_kingdom_success_request(int value) {
+    change_kingdom(value);
+}
+
 void city_ratings_t::limit_kingdom(int max_kingdom) {
     if (kingdom > max_kingdom) {
         kingdom = max_kingdom;
