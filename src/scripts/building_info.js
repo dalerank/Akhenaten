@@ -676,7 +676,7 @@ building_temple_seth = {
   animations : {
     preview : { pack:PACK_GENERAL, id:19 },
     base : { pack:PACK_GENERAL, id:19 },
-    work : { pos : [-1, -1], pack:PACK_GENERAL, id:19, offset:1, max_frames:12 },
+    work : { pos : [70, -133], pack:PACK_GENERAL, id:19, offset:1, max_frames:11 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   building_size : 3,

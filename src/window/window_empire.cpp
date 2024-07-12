@@ -461,6 +461,7 @@ static void draw_empire_object(const empire_object* obj) {
             return;
         }
     }
+
     vec2i pos;
     int image_id;
     if (scenario_empire_is_expanded()) {
@@ -479,33 +480,36 @@ static void draw_empire_object(const empire_object* obj) {
         if (city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING || city->type == EMPIRE_CITY_PHARAOH_TRADING) {
             e_empire_route_state state = ROUTE_CLOSED;
             if (city->is_open) {
-                state = (g_empire_map.selected_object() && data.selected_city == g_empire.get_city_for_object(obj->id)) ? ROUTE_OPEN_SELECTED : ROUTE_OPEN;
+                state = (g_empire_map.selected_object() && data.selected_city == g_empire.get_city_for_object(obj->id))
+                              ? ROUTE_OPEN_SELECTED 
+                              : ROUTE_OPEN;
             } else {
-                state = (g_empire_map.selected_object() && data.selected_city == g_empire.get_city_for_object(obj->id)) ? ROUTE_CLOSED_SELECTED : ROUTE_CLOSED;
+                state = (g_empire_map.selected_object() && data.selected_city == g_empire.get_city_for_object(obj->id))
+                              ? ROUTE_CLOSED_SELECTED
+                              : ROUTE_CLOSED;
             }
             draw_trade_route(city->route_id, state);
         }
 
         int text_group = (g_settings.city_names_style == CITIES_OLD_NAMES) 
-                                ? data.text_group_old_names
-                                : data.text_group_new_names;
+                              ? data.text_group_old_names
+                              : data.text_group_new_names;
 
-        vec2i text_offset = {0, 50};
-
-        vec2i text_pos = data.draw_offset + pos + text_offset;
+        int letter_height = get_letter_height((const uint8_t*)"H", FONT_SMALL_PLAIN);
+        vec2i text_pos = data.draw_offset + pos + vec2i{0, -letter_height};
 
         switch (obj->text_align) {
         case 0:
-            lang_text_draw_left_colored(text_group, city->name_id, text_pos.x, text_pos.y + (obj->height / 2), FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
+            lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x, text_pos.y, obj->width, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
             break;
         case 1:
-            lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x - 150 + (obj->width / 2), text_pos.y - 10, 300, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
+            lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x, text_pos.y, obj->width, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
             break;
         case 2:
-            lang_text_draw_colored(text_group, city->name_id, text_pos.x + obj->width, text_pos.y + (obj->height / 2), FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
+            lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x, text_pos.y, obj->width, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
             break;
         case 3:
-            lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x - 150 + (obj->width / 2), text_pos.y + obj->height + 5, 300, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
+            lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x, text_pos.y, obj->width, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
             break;
         }
     } else if (obj->type == EMPIRE_OBJECT_TEXT) {
