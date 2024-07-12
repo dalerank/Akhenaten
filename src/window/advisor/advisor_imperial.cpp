@@ -40,18 +40,6 @@ enum E_STATUS {
     STATUS_NO_LEGIONS_AVAILABLE = -4,
 };
 
-static void button_request(int index, int param2);
-
-static generic_button imperial_buttons[] = {
-  {38, 96, 560, 40, button_request, button_none, 0, 0},
-  {38, 138, 560, 40, button_request, button_none, 1, 0},
-  {38, 180, 560, 40, button_request, button_none, 2, 0},
-  {38, 222, 560, 40, button_request, button_none, 3, 0},
-  {38, 264, 560, 40, button_request, button_none, 4, 0},
-};
-
-static int focus_button_id;
-
 static int get_request_status(int index) {
     const scenario_request* request = scenario_request_get_visible(index);
     if (request) {
@@ -76,7 +64,7 @@ static int get_request_status(int index) {
         }
         return request->event_id;
     }
-    return 0;
+    return -1;
 }
 
 void ui::advisor_imperial_window::draw_foreground() {
@@ -100,6 +88,35 @@ int ui::advisor_imperial_window::draw_background() {
     return 0;
 }
 
+void ui::advisor_imperial_window::handle_request(int index) {
+    int status = get_request_status(index);
+    // in C3, the enums are offset by two! (I have not fixed this)
+    if (status < 0) {
+        return;
+    }
+
+    g_city.military.clear_kingdome_service_batalions();
+    switch (status) {
+    case STATUS_NO_LEGIONS_AVAILABLE:
+        window_ok_dialog_show("#popup_dialog_no_legions_available");
+        break;
+    case STATUS_NO_LEGIONS_SELECTED:
+        window_ok_dialog_show("#popup_dialog_no_legions_selected");
+        break;
+    case STATUS_CONFIRM_SEND_LEGIONS:
+        window_ok_dialog_show("#popup_dialog_send_troops");
+        break;
+    case STATUS_NOT_ENOUGH_RESOURCES:
+        window_ok_dialog_show("#popup_dialog_not_enough_goods");
+        break;
+    default:
+        window_yes_dialog_show("#popup_dialog_send_goods", [selected_request_id = index] {
+            scenario_request_dispatch(selected_request_id);
+        });
+        break;
+    }
+}
+
 void ui::advisor_imperial_window::ui_draw_foreground() {
     auto &ui = g_advisor_imperial_window;
 
@@ -111,7 +128,12 @@ void ui::advisor_imperial_window::ui_draw_foreground() {
         && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
         
         // can send to distant battle
-        ui.button("", vec2i{38, 96}, vec2i{560, 40}, FONT_NORMAL_WHITE_ON_DARK);
+        ui.button("", vec2i{38, 96}, vec2i{560, 40}, FONT_NORMAL_WHITE_ON_DARK)
+            .onclick([] (int, int) {
+                formation_legions_dispatch_to_distant_battle();
+                window_empire_show();
+            });
+
         ui.icon(vec2i{50, 106}, RESOURCE_WEAPONS);
 
         bstring128 distant_battle_text(ui::str(52, 72), ui::str(21, g_empire.city(city_military_distant_battle_city())->name_id));
@@ -133,12 +155,15 @@ void ui::advisor_imperial_window::ui_draw_foreground() {
         num_requests = 1;
     }
 
-    num_requests = scenario_request_foreach_visible(num_requests, [&ui] (int index, const scenario_request* request) {
+    num_requests = scenario_request_foreach_visible(num_requests, [this, &ui] (int index, const scenario_request* request) {
         if (index >= 5) {
             return;
         }
 
-        ui.button("", vec2i{38, 96 + 42 * index}, vec2i{560, 42});
+        ui.button("", vec2i{38, 96 + 42 * index}, vec2i{560, 42})
+            .onclick([this, index] (int, int) {
+                this->handle_request(index);
+            });
         ui.icon(vec2i{45, 103 + 42 * index}, request->resource);
 
         int request_amount = request->resource_amount();
@@ -156,17 +181,21 @@ void ui::advisor_imperial_window::ui_draw_foreground() {
             // request for money
             int treasury = city_finance_treasury();
             bstring256 saved_deben;
-            pcstr allow_str = (treasury < request->amount) ? ui::str(52, 48) : ui::str(52, 47);
-            saved_deben.printf("%u %s %s", treasury, ui::str(52, 44), allow_str);
+            saved_deben.printf("%u %s", treasury, ui::str(52, 44));
             ui.label(saved_deben, vec2i{40, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
+
+            pcstr allow_str = (treasury < request->amount) ? ui::str(52, 48) : ui::str(52, 47);
+            ui.label(saved_deben, vec2i{310, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
         } else {
             // normal goods request
             int amount_stored = city_resource_count(request->resource);
             int request_amount = request->resource_amount();
             bstring256 saved_deben;
-            pcstr allow_str = (amount_stored < request_amount) ? ui::str(52, 48) : ui::str(52, 47);
-            saved_deben.printf("%u %s %s", amount_stored, ui::str(52, 43), allow_str);
+            saved_deben.printf("%u %s", amount_stored, ui::str(52, 43));
             ui.label(saved_deben, vec2i{40, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
+
+            pcstr allow_str = (amount_stored < request_amount) ? ui::str(52, 48) : ui::str(52, 47);
+            ui.label(allow_str, vec2i{310, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
         }
     });
 
@@ -179,50 +208,16 @@ int ui::advisor_imperial_window::handle_mouse(const mouse* m) {
     return 0;
 }
 
-static void confirm_nothing(bool accepted) {}
-
-static void confirm_send_troops(bool accepted) {
-    if (accepted) {
-        formation_legions_dispatch_to_distant_battle();
-        window_empire_show();
-    }
-}
-
-static void button_request(int index, int param2) {
-    int status = get_request_status(index);
-    // in C3, the enums are offset by two! (I have not fixed this)
-    if (status) {
-        g_city.military.clear_kingdome_service_batalions();
-        switch (status) {
-        case STATUS_NO_LEGIONS_AVAILABLE:
-            window_ok_dialog_show("#popup_dialog_no_legions_available");
-            break;
-        case STATUS_NO_LEGIONS_SELECTED:
-            window_ok_dialog_show("#popup_dialog_no_legions_selected");
-            break;
-        case STATUS_CONFIRM_SEND_LEGIONS:
-            window_ok_dialog_show("#popup_dialog_send_troops");
-            break;
-        case STATUS_NOT_ENOUGH_RESOURCES:
-            window_ok_dialog_show("#popup_dialog_not_enough_goods");
-            break;
-        default:
-            window_yes_dialog_show("#popup_dialog_send_goods", [selected_request_id = index] {
-                scenario_request_dispatch(selected_request_id);
-            });
-            break;
-        }
-    }
-}
-
 int ui::advisor_imperial_window::get_tooltip_text(void) {
-    if (focus_button_id && focus_button_id <= 2)
-        return 93 + focus_button_id;
-    else if (focus_button_id == 3)
-        return 131;
-    else {
-        return 0;
-    }
+    //if (focus_button_id && focus_button_id <= 2)
+    //    return 93 + focus_button_id;
+    //else if (focus_button_id == 3)
+    //    return 131;
+    //else {
+    //    return 0;
+    //}
+
+    return 0;
 }
 
 advisor_window* ui::advisor_imperial_window::instance() {

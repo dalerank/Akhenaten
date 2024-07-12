@@ -24,7 +24,7 @@ void scenario_request_init() {
     //}
 }
 
-void scenario_request_process_C3() {
+void scenario_request_process_on_month() {
     //for (int i = 0; i < MAX_REQUESTS; i++) {
     //    if (!g_scenario_data.requests[i].resource || g_scenario_data.requests[i].state > e_request_state_dispatched_late)
     //        continue;
@@ -94,18 +94,34 @@ void scenario_request_process_C3() {
     //}
 }
 
+void scenario_request_handle_reward(const scenario_request &request) {
+    //event_ph_t &event = *set_scenario_event(request.event_id);
+    //if (request.state == e_request_state_dispatched || request.state == e_request_state_dispatched_late) {
+    //    if (request.months_to_comply <= 0) {
+    //        if (state == e_request_state_dispatched) {
+    //            city_message_post(true, MESSAGE_REQUEST_RECEIVED, i, 0);
+    //            city_ratings_change_kingdom(g_scenario_data.requests[i].kingdom);
+    //        } else {
+    //            city_message_post(true, MESSAGE_REQUEST_RECEIVED_LATE, i, 0);
+    //            city_ratings_change_kingdom(g_scenario_data.requests[i].kingdom / 2);
+    //        }
+    //        g_scenario_data.requests[i].state = e_request_state_received;
+    //        g_scenario_data.requests[i].visible = false;
+    //    }
+    //}
+}
+
 void scenario_request_dispatch(int id) {
     const scenario_request* request = scenario_request_get_visible(id);
     if (!request) {
         return;
     }
 
-    e_request_stat new_state = (request->state == e_request_state_normal)
+    e_request_stat new_state = (request->months_to_comply <= 0)
                                     ? e_request_state_dispatched
                                     : e_request_state_dispatched_late;
 
     scenario_request_set_state(*request, new_state);
-    //scenario_request_delay(id, (random_byte() & 3) + 1);
     scenario_request_set_active(*request, false);
 
     if (request->resource == RESOURCE_DEBEN) {
