@@ -5,6 +5,7 @@
 #include "city/coverage.h"
 #include "city/city.h"
 #include "city/population.h"
+#include "config/config.h"
 #include "core/calc.h"
 #include "game/time.h"
 #include "scenario/criteria.h"
@@ -16,6 +17,7 @@
 declare_console_command_p(addprosperity, game_cheat_add_prosperity)
 declare_console_command_p(updatekingdome, game_cheat_update_kingdome)
 declare_console_command_p(addkingdome, game_cheat_add_kingdome)
+declare_console_command_p(addculture, game_cheat_add_culture)
 
 void game_cheat_add_prosperity(std::istream &is, std::ostream &os) {
     std::string args; is >> args;
@@ -27,6 +29,12 @@ void game_cheat_add_kingdome(std::istream &is, std::ostream &os) {
     std::string args; is >> args;
     int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
     g_city.ratings.kingdom = calc_bound(g_city.ratings.kingdom + amount, 0, 100);
+};
+
+void game_cheat_add_culture(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+    int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
+    g_city.ratings.culture = calc_bound(g_city.ratings.culture + amount, 0, 100);
 };
 
 void game_cheat_update_kingdome(std::istream &is, std::ostream &os) {
@@ -331,6 +339,7 @@ void city_ratings_t::update_kingdom_rating_year() {
     kingdom_salary_penalty = 0;
     kingdom_milestone_penalty = 0;
     kingdom_ignored_request_penalty = 0;
+
     if (!(scenario_is_mission_rank(1) || scenario_is_mission_rank(2))) {
         kingdom -= 2;
     }
@@ -408,6 +417,7 @@ void city_ratings_t::update_kingdom_rating_year() {
 
     kingdom_last_year = kingdom;
 }
+
 void city_ratings_t::update_kingdom_rating(bool is_yearly_update) {
     if (scenario_is_open_play()) {
         kingdom = 50;
