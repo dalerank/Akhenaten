@@ -1284,7 +1284,7 @@ building_mine_gems = {
   },
   output_resource : RESOURCE_GEMS,
   building_size : 2,
-  meta_id : "gems_mine",
+  info_help_id:93, info_text_id:163,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
