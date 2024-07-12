@@ -98,11 +98,19 @@ void scenario_set_campaign_scenario(int scenario_id) {
     g_scenario_data.settings.campaign_scenario_id = scenario_id;
 }
 
-bool scenario_is_mission_rank(int rank) {
-    return !g_scenario_data.settings.is_custom && g_scenario_data.settings.campaign_mission_rank == rank - 1;
+bool scenario_is_mission_rank(std::span<int> missions) {
+    bool result = false;
+    for (const int rank : missions) {
+        if (!g_scenario_data.settings.is_custom && g_scenario_data.settings.campaign_mission_rank == rank - 1) {
+            return true;
+        }
+    }
+
+    return false;
 }
-int scenario_is_tutorial_before_mission_5() {
-    return !g_scenario_data.settings.is_custom && g_scenario_data.settings.campaign_mission_rank < 5;
+
+int scenario_is_before_mission(int mission) {
+    return !g_scenario_data.settings.is_custom && g_scenario_data.settings.campaign_mission_rank < mission;
 }
 
 int scenario_starting_kingdom(void) {

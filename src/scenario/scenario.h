@@ -317,8 +317,16 @@ int scenario_campaign_scenario_id(void);
 
 void scenario_set_campaign_scenario(int scenario_id);
 
-bool scenario_is_mission_rank(int rank);
-int scenario_is_tutorial_before_mission_5(void);
+bool scenario_is_mission_rank(std::span<int> missions);
+
+template<typename ... Args>
+bool scenario_is_mission_rank(const Args ... args) {
+    int values[] = {args...};
+    return scenario_is_mission_rank(make_span(values));
+}
+
+int scenario_is_before_mission(int mission);
+
 int scenario_starting_kingdom(void);
 
 int scenario_starting_personal_savings(void);

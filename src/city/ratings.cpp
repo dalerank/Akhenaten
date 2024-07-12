@@ -340,7 +340,7 @@ void city_ratings_t::update_kingdom_rating_year() {
     kingdom_milestone_penalty = 0;
     kingdom_ignored_request_penalty = 0;
 
-    if (!(scenario_is_mission_rank(1) || scenario_is_mission_rank(2))) {
+    if (!scenario_is_before_mission(3)) {
         kingdom -= 2;
     }
 
