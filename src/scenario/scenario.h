@@ -4,6 +4,7 @@
 #include "game/resource.h"
 #include "building/building_type.h"
 #include "core/game_environment.h"
+#include "core/span.hpp"
 #include "events.h"
 #include "grid/point.h"
 #include "scenario/types.h"
@@ -290,6 +291,7 @@ struct scenario_data_t {
     struct {
         bool flotsam_enabled;
         bool has_animals;
+        uint8_t gods_least_mood;
     } env;
 
     struct {

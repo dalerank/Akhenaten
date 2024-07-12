@@ -42,6 +42,7 @@ void scenario_load_meta_data(int scenario_id) {
     g_config_arch.r_section(missionid.c_str(), [] (archive arch) {
         g_scenario_data.meta.start_message = arch.r_int("start_message");
         g_scenario_data.env.has_animals = arch.r_bool("city_has_animals");
+        g_scenario_data.env.gods_least_mood = arch.r_int("gods_least_mood", 0);
 
         memset(g_scenario_data.allowed_buildings, 0, sizeof(g_scenario_data.allowed_buildings));
         auto buildings = arch.r_array_num<e_building_type>("buildings");

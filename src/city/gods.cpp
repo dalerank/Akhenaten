@@ -626,7 +626,7 @@ static void perform_major_curse(int god) {
     }
 }
 
-static void perform_minor_curse(e_god god) {
+void city_gods_perform_minor_curse(e_god god) {
     bool success = false;
     switch (god) {
     case GOD_OSIRIS:
@@ -721,14 +721,14 @@ void city_gods_update_curses_and_blessings(int randm_god, int FORCE_EVENT) {
         } else if (FORCE_EVENT == GOD_EVENT_MINOR_CURSE
                    || (FORCE_EVENT == -1 && god->wrath_bolts > 19 && god->months_since_festival > 3)) {
             /* ***** MINOR CURSES ***** */
-            perform_minor_curse((e_god)randm_god);
+            city_gods_perform_minor_curse((e_god)randm_god);
             god->wrath_bolts = 0;
             god->mood = calc_bound(god->mood + 12, 0, 100);
         }
     }
 }
 
-static void calculate_mood_targets() {
+void city_gods_calculate_mood_targets() {
     // fix god moods to 30 if campaign has not unlocked them yet
     // TODO: move this option to city_data.gods_available
     if (scenario_campaign_scenario_id() < 4) {
@@ -802,8 +802,8 @@ static void calculate_mood_targets() {
         god->target_mood = calc_bound(god->target_mood, min_mood, max_mood);
     }
 }
-static void update_moods(e_god randm_god) {
 
+void city_gods_update_mood(e_god randm_god) {
     for (auto *god: city_gods_knowns()) {
         if (god->mood < god->target_mood) {
             god->mood++;
@@ -811,12 +811,9 @@ static void update_moods(e_god randm_god) {
             god->mood--;
         }
 
-        if (scenario_is_mission_rank(1)) {
-            if (god->mood < 50)
-                god->mood = 50;
-        }
+        god->mood = std::max(god->mood, g_scenario_data.env.gods_least_mood);
 
-        if (god->mood > 50)
+        if (god->mood > 50) 
             god->curse_done = false;
 
         if (god->mood < 50)
@@ -834,43 +831,43 @@ static void update_moods(e_god randm_god) {
             int difficultyLevels[] = {1, 1, 2, 4, 5};
             god->wrath_bolts += difficultyLevels[difficulty];
         }
+
         if (god->mood <= 20) {
             int difficultyLevels[] = {0, 1, 1, 2, 3};
             god->wrath_bolts += difficultyLevels[difficulty];
-            ;
         }
+
         if (god->mood <= 30) {
             int difficultyLevels[] = {0, 0, 0, 1, 2};
             god->wrath_bolts += difficultyLevels[difficulty];
-            ;
         }
 
-        if (god->wrath_bolts > 50)
-            god->wrath_bolts = 50;
+        god->wrath_bolts = std::min<uint8_t>(god->wrath_bolts, 50);
 
-        if (god->mood < 50)
+        if (god->mood < 50) {
             god->happy_ankhs = 0;
+        }
 
         if (god->mood >= 70) {
             int difficultyLevels[] = {6, 4, 2, 1, 1};
             god->happy_ankhs += difficultyLevels[difficulty];
         }
+
         if (god->mood >= 80) {
             int difficultyLevels[] = {3, 2, 1, 1, 0};
             god->happy_ankhs += difficultyLevels[difficulty];
         }
+
         if (god->mood >= 90) {
             int difficultyLevels[] = {2, 1, 0, 0, 0};
             god->happy_ankhs += difficultyLevels[difficulty];
-            ;
         }
 
-        if (god->happy_ankhs > 50)
-            god->happy_ankhs = 50;
+        god->happy_ankhs = std::min<uint8_t>(god->wrath_bolts, 50);
     }
 }
 
-static void update_monthly_data(int randm_god) {
+void city_gods_update_monthly_data(int randm_god) {
     // update festival counter
     for (auto *god: city_gods_knowns()) {
         god->months_since_festival++;
@@ -918,19 +915,25 @@ static void update_monthly_data(int randm_god) {
 
 void city_gods_update(bool mood_calc_only) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Gods Update");
-    calculate_mood_targets();
+    city_gods_calculate_mood_targets();
 
-    if (!mood_calc_only && g_settings.gods_enabled) {
-        e_god randm_god = e_god(anti_scum_random_15bit() % MAX_GODS);
-        update_moods(randm_god);
+    if (!g_settings.gods_enabled) {
+        return;
+    }
 
-        //        perform_minor_blessing(GOD_PTAH); // TODO: DEBUGGING
-        //        BAST_houses_destruction();
+    if (mood_calc_only) {
+        return;
+    }
 
-        // at the start of every month
-        if (game_time_day() == 0) {
-            update_monthly_data(randm_god);
-        }
+    e_god randm_god = e_god(anti_scum_random_15bit() % MAX_GODS);
+    city_gods_update_mood(randm_god);
+
+    //        perform_minor_blessing(GOD_PTAH); // TODO: DEBUGGING
+    //        BAST_houses_destruction();
+
+    // at the start of every month
+    if (game_time_day() == 0) {
+        city_gods_update_monthly_data(randm_god);
     }
 }
 
@@ -1025,12 +1028,12 @@ void city_god_spirit_of_seth_mark_used(void) {
     city_data.religion.seth_crush_enemy_troops = 0;
 }
 
-int city_god_osiris_create_shipwreck_flotsam(void) {
+bool city_god_osiris_create_shipwreck_flotsam() {
     if (city_data.religion.osiris_sank_ships) {
         city_data.religion.osiris_sank_ships = 0;
-        return 1;
+        return true;
     } else {
-        return 0;
+        return false;
     }
 }
 
@@ -1039,5 +1042,5 @@ void city_god_blessing_cheat(e_god god_id) {
 }
 
 void city_god_upset_cheat(e_god god_id) {
-    perform_minor_curse(god_id);
+    city_gods_perform_minor_curse(god_id);
 }

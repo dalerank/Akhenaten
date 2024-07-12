@@ -86,7 +86,7 @@ int city_god_months_since_festival(int god_id);
 int city_god_spirit_of_seth_power();
 void city_god_spirit_of_seth_mark_used();
 
-int city_god_osiris_create_shipwreck_flotsam(void);
+bool city_god_osiris_create_shipwreck_flotsam();
 
 void city_god_blessing_cheat(e_god god_id);
 void city_god_upset_cheat(e_god god_id);

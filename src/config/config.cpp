@@ -135,6 +135,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"city_building_booth", true},
     {"city_building_bandstand", true},
     {"ui_hide_new_game_top_menu", true},
+    {"city_save_year_kingdome_rating", false},
 };
 
 static const char* ini_string_keys[] = {

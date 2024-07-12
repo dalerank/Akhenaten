@@ -36,6 +36,7 @@ static translation_string all_strings[] = {
      {TR_CONFIG_HEADER_RESOURCE_CHANGES, "Resource changes"},
      {TR_CONFIG_SHOW_INTRO_VIDEO, "Play intro videos"},
      {TR_CONFIG_HIDE_NEW_GAME_TOP_MENU, "Hide top menu new game button"},
+     {TR_CONFIG_SAVE_YEAR_KINGDOME_RATING, "Save kingdom rating on yearly update"},
      {TR_CONFIG_SIDEBAR_INFO, "Extra information in the control panel"},
      {TR_CONFIG_SMOOTH_SCROLLING, "Enable smooth scrolling"},
      {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Improve visual feedback when clearing land"},

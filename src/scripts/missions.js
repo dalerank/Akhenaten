@@ -3,6 +3,7 @@ log_info("akhenaten: missions started")
 mission0 = { // Nubt
 	start_message : 150, //TUTORIAL_HOUSING_AND_ROADS, 248 = 150 + 99 - 1
 	city_has_animals : true,
+	gods_least_mood : 50,
 	stages : {
 		tutorial_fire: [BUILDING_FIREHOUSE],
 		tutorial_food: [BUILDING_HUNTING_LODGE, BUILDING_GRANARY, BUILDING_BAZAAR],

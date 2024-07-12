@@ -340,7 +340,8 @@ void city_ratings_t::update_kingdom_rating_year() {
     kingdom_milestone_penalty = 0;
     kingdom_ignored_request_penalty = 0;
 
-    if (!scenario_is_before_mission(3)) {
+    const bool can_update_rating = !config_get(CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING);
+    if (can_update_rating && scenario_is_before_mission(3)) {
         kingdom -= 2;
     }
 
