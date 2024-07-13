@@ -50,6 +50,9 @@ void graphics_draw_vertical_line(int x, int y1, int y2, color color) {
 void graphics_draw_horizontal_line(int x1, int x2, int y, color color) {
     graphics_renderer()->draw_line(x1, x2, y, y, color);
 }
+void graphics_draw_pixel(int x, int y, color color) {
+    graphics_renderer()->draw_pixel(x, y, color);
+}
 void graphics_draw_rect(int x, int y, int width, int height, color color) {
     graphics_renderer()->draw_rect(x, y, width, height, color);
 }

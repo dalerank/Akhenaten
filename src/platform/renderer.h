@@ -59,6 +59,7 @@ public:
     void reset_clip_rectangle();
 
     void draw_line(int x_start, int x_end, int y_start, int y_end, color color);
+    void draw_pixel(int x, int y, color color);
     void draw_rect(int x, int y, int width, int height, color color);
     void fill_rect(int x, int y, int width, int height, color color);
 

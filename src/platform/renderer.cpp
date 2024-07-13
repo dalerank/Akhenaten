@@ -134,6 +134,15 @@ void graphics_renderer_interface::draw_line(int x_start, int x_end, int y_start,
     SDL_RenderDrawLine(data.renderer, x_start, y_start, x_end, y_end);
 }
 
+void graphics_renderer_interface::draw_pixel(int x, int y, color color) {
+    auto &data = g_renderer_data;
+    SDL_SetRenderDrawColor(data.renderer,
+                           (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
+                           (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
+                           (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE,
+                           (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
+    SDL_RenderDrawPoint(data.renderer, x, y);
+}
 void graphics_renderer_interface::draw_rect(int x, int y, int width, int height, color color) {
     auto &data = g_renderer_data;
     SDL_SetRenderDrawColor(data.renderer,

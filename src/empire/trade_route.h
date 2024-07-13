@@ -11,8 +11,10 @@ struct trade_route {
     };
 
     struct route_resource {
-        int limit;
-        int traded;
+        uint16_t limit;
+        uint16_t unk_01;
+        uint16_t traded;
+        uint16_t unk_02;
     };
 
     route_resource resources[RESOURCES_MAX];

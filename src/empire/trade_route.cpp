@@ -7,8 +7,13 @@
 
 
 void trade_route::init(e_resource resource, int limit) {
-    resources[resource].limit = limit;
-    resources[resource].traded = 0;
+    if (resource != RESOURCE_NONE) {
+        resources[resource].limit = limit;
+        resources[resource].traded = 0;
+    } else {
+        resources[resource].limit = std::numeric_limits<uint16_t>::max();
+        resources[resource].traded = std::numeric_limits<uint16_t>::max();
+    }
 }
 
 int trade_route::limit(e_resource resource, int bonus_inclusion) const {
@@ -112,23 +117,27 @@ int trade_route::limit_reached(e_resource resource) {
 io_buffer* iob_trade_routes_limits = new io_buffer([](io_buffer* iob, size_t version) {
     auto data = g_empire.get_routes();
     for (int route_id = 0; route_id < empire_t::MAX_ROUTES; route_id++) {
+        auto &resources = data[route_id].resources;
         for (const auto &r: resource_list::values) {
-            data[route_id].resources[r.type].limit *= 0.01;
-            iob->bind(BIND_SIGNATURE_INT32, &data[route_id].resources[r.type].limit);
-            data[route_id].resources[r.type].limit *= 100;
-            //            data[route_id][r].traded = traded->read_i32() * 100;
+            resources[r.type].limit /= 100;
+            iob->bind(BIND_SIGNATURE_UINT16, &resources[r.type].limit);
+            iob->bind(BIND_SIGNATURE_UINT16, &resources[r.type].unk_01);
+            resources[r.type].limit *= 100;
         }
+        //assert(resources[RESOURCE_NONE].limit == std::numeric_limits<uint16_t>::max());
     }
 });
 
 io_buffer* iob_trade_routes_traded = new io_buffer([](io_buffer* iob, size_t version) {
     auto data = g_empire.get_routes();
     for (int route_id = 0; route_id < empire_t::MAX_ROUTES; route_id++) {
+        auto &resources = data[route_id].resources;
         for (const auto &r: resource_list::values) {
-            data[route_id].resources[r.type].traded *= 0.01;
-            iob->bind(BIND_SIGNATURE_INT32, &data[route_id].resources[r.type].traded);
-            data[route_id].resources[r.type].traded *= 100;
-            //            data[route_id][r].limit = limit->read_i32() * 100;
+            resources[r.type].traded /= 100;
+            iob->bind(BIND_SIGNATURE_UINT16, &resources[r.type].traded);
+            iob->bind(BIND_SIGNATURE_UINT16, &resources[r.type].unk_02);
+            resources[r.type].traded *= 100;
         }
+        //assert(resources[RESOURCE_NONE].traded == std::numeric_limits<uint16_t>::max());
     }
 });

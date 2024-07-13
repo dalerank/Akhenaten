@@ -28,10 +28,14 @@ struct minimap_data_t {
     int refresh_requested;
     animation_t terrain_canal;
     animation_t terrain_water;
+    animation_t terrain_shrub;
+    animation_t terrain_tree;
 
     void load(archive arch) {
         arch.r_anim("terrain_canal", terrain_canal);
         arch.r_anim("terrain_water", terrain_water);
+        arch.r_anim("terrain_shrub", terrain_shrub);
+        arch.r_anim("terrain_tree", terrain_tree);
     }
 };
 
@@ -48,6 +52,7 @@ void widget_minimap_invalidate(void) {
     auto& data = g_minimap_data;
     data.refresh_requested = 1;
 }
+
 static void foreach_map_tile(void (*callback)(screen_tile screen, map_point point)) {
     auto& data = g_minimap_data;
     city_view_foreach_minimap_tile(data.screen_offset.x, data.screen_offset.y, data.absolute_tile.x(), data.absolute_tile.y(), data.size_tiles.x(), data.size_tiles.y(), callback);
@@ -95,14 +100,13 @@ static int is_in_minimap(const mouse* m) {
     return 0;
 }
 
-static int draw_figure(screen_tile screen, map_point point) {
+static bool draw_figure(vec2i screen, tile2i point) {
     auto& data = g_minimap_data;
     int grid_offset = point.grid_offset();
-    int screen_x = screen.x;
-    int screen_y = screen.y;
     int colorype = map_figure_foreach_until(grid_offset, TEST_SEARCH_HAS_COLOR);
-    if (colorype == FIGURE_COLOR_NONE)
-        return 0;
+    if (colorype == FIGURE_COLOR_NONE) {
+        return false;
+    }
 
     color color = COLOR_MINIMAP_WOLF;
     switch (color) {
@@ -119,8 +123,8 @@ static int draw_figure(screen_tile screen, map_point point) {
         break;
     }
 
-    graphics_draw_horizontal_line(screen_x, screen_x + 1, screen_y, color);
-    return 1;
+    graphics_draw_pixel(screen.x, screen.y, color);
+    return true;
 }
 
 static void draw_minimap_tile(vec2i screen, tile2i point) {
@@ -203,9 +207,9 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
         if (terrain & TERRAIN_WATER) {
             image_id = g_minimap_data.terrain_water.first_img() + (rand & 3);
         } else if (terrain & TERRAIN_SHRUB)
-            image_id = image_id_from_group(GROUP_MINIMAP_TREE) + (rand & 3);
+            image_id = g_minimap_data.terrain_shrub.first_img() + (rand & 3);
         else if (terrain & TERRAIN_TREE)
-            image_id = image_id_from_group(GROUP_MINIMAP_TREE) + (rand & 3);
+            image_id = g_minimap_data.terrain_tree.first_img() + (rand & 3);
         else if (terrain & TERRAIN_ROCK)
             image_id = image_id_from_group(GROUP_MINIMAP_ROCK) + (rand & 3);
         else if (terrain & TERRAIN_ELEVATION)
@@ -275,7 +279,10 @@ void draw_minimap() {
 
     graphics_set_clip_rectangle(data.screen_offset.x, data.screen_offset.y, data.size.x, data.size.y);
     clear_minimap();
-    foreach_map_tile(draw_minimap_tile);
+    {
+        OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded/Minimap Tiles");
+        foreach_map_tile(draw_minimap_tile);
+    }
     //    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
     //    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
     draw_viewport_rectangle(ctx);

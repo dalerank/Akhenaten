@@ -20,6 +20,7 @@ void graphics_reset_clip_rectangle(void);
 void graphics_draw_line(int x_start, int x_end, int y_start, int y_end, color color);
 void graphics_draw_vertical_line(int x, int y1, int y2, color color);
 void graphics_draw_horizontal_line(int x1, int x2, int y, color color);
+void graphics_draw_pixel(int x, int y, color color);
 void graphics_draw_rect(int x, int y, int width, int height, color color);
 void graphics_draw_inset_rect(int x, int y, int width, int height);
 
