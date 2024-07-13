@@ -117,7 +117,7 @@ static bool PTAH_industry_restock() {
 
     // search for industries
     int industries_found = 0;
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 3; ++i) {
         if (building_count_total(industries[i]) > 0
             || (industry_resource[i] != RESOURCE_NONE && building_count_industry_active(industry_resource[i]) > 0)) {
             industries_found++;
