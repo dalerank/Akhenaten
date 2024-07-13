@@ -30,12 +30,16 @@ struct minimap_data_t {
     animation_t terrain_water;
     animation_t terrain_shrub;
     animation_t terrain_tree;
+    animation_t terrain_rock;
+    animation_t terrain_elevation;
 
     void load(archive arch) {
         arch.r_anim("terrain_canal", terrain_canal);
         arch.r_anim("terrain_water", terrain_water);
         arch.r_anim("terrain_shrub", terrain_shrub);
         arch.r_anim("terrain_tree", terrain_tree);
+        arch.r_anim("terrain_rock", terrain_rock);
+        arch.r_anim("terrain_elevation", terrain_elevation);
     }
 };
 
@@ -211,9 +215,9 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
         else if (terrain & TERRAIN_TREE)
             image_id = g_minimap_data.terrain_tree.first_img() + (rand & 3);
         else if (terrain & TERRAIN_ROCK)
-            image_id = image_id_from_group(GROUP_MINIMAP_ROCK) + (rand & 3);
+            image_id = g_minimap_data.terrain_rock.first_img() + (rand & 3);
         else if (terrain & TERRAIN_ELEVATION)
-            image_id = image_id_from_group(GROUP_MINIMAP_ROCK) + (rand & 3);
+            image_id = g_minimap_data.terrain_elevation.first_img() + (rand & 3);
         else if (terrain & TERRAIN_ROAD)
             image_id = image_id_from_group(GROUP_MINIMAP_ROAD);
         else if (terrain & TERRAIN_CANAL)
