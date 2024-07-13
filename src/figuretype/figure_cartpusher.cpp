@@ -136,19 +136,10 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
             return advance_action(action_done);
 
         } else {
-            building* dest = destination();
+            building* dest = destination();         
 
-            building_storage *storage = dest->dcast_storage();
-            assert(!!storage);
-
-            int accepting = storage->accepting_amount(resource);
-            int total_depositable = std::min<int>(carrying, accepting);
-            if (total_depositable <= 0) {
-                return advance_action(ACTION_8_RECALCULATE);
-            }
-
-            int amount_single_turn = fmin(total_depositable, UNITS_PER_LOAD);
-            int times = total_depositable / amount_single_turn;
+            int amount_single_turn = std::min(carrying, UNITS_PER_LOAD);
+            int times = carrying / amount_single_turn;
 
             switch (dest->type) {
             case BUILDING_GRANARY:
@@ -156,6 +147,13 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
             case BUILDING_STORAGE_ROOM:
                 {
                     building_storage *storage = dest->dcast_storage();
+                    int accepting = storage ? storage->accepting_amount(resource) : 0;
+                    int total_depositable = std::min<int>(carrying, accepting);
+                    
+                    if (total_depositable <= 0) {
+                        return advance_action(ACTION_8_RECALCULATE);
+                    }
+
                     int amount = storage->add_resource(base.resource_id, false, amount_single_turn);
                     if (amount != -1) {
                         dump_resource(amount_single_turn);
