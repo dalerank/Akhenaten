@@ -173,7 +173,7 @@ static void window_editor_draw_map() {
 
 static void draw_resource(int resource, int trade_max, int x_offset, int y_offset) {
     painter ctx = game.painter();
-    graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
+    graphics_draw_inset_rect(vec2i{x_offset, y_offset}, vec2i{26, 26});
     int image_id = resource + image_id_from_group(GROUP_EDITOR_EMPIRE_RESOURCES);
     int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);
     ImageDraw::img_generic(ctx, image_id + resource_offset, vec2i{x_offset + 1, y_offset + 1});

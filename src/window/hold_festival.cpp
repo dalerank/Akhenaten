@@ -69,11 +69,11 @@ static void draw_buttons(void) {
 
     // greying out of buttons
     if (city_finance_out_of_money()) {
-        graphics_shade_rect(104, 218, 426, 22, 0);
-        graphics_shade_rect(104, 248, 426, 22, 0);
-        graphics_shade_rect(104, 278, 426, 22, 0);
+        graphics_shade_rect(vec2i{104, 218}, vec2i{426, 22}, 0);
+        graphics_shade_rect(vec2i{104, 248}, vec2i{426, 22}, 0);
+        graphics_shade_rect(vec2i{104, 278}, vec2i{426, 22}, 0);
     } else if (city_festival_out_of_alcohol()) {
-        graphics_shade_rect(104, 278, 426, 22, 0);
+        graphics_shade_rect(vec2i{104, 278}, vec2i{426, 22}, 0);
     }
 }
 static void draw_background(void) {

@@ -60,13 +60,13 @@ static void draw_background(void) {
     outer_panel_draw(vec2i{dialog_x, 176}, dialog_width / 16, 9);
     lang_text_draw_centered(50, 25, 160, 185, 320, FONT_LARGE_BLACK_ON_LIGHT);
     for (int i = 0; i < 9; i++) {
-        graphics_draw_rect(178 + 32 * i, 221, 27, 27, COLOR_BLACK);
+        graphics_draw_rect(vec2i{178 + 32 * i, 221}, vec2i{27, 27}, COLOR_BLACK);
         lang_text_draw_centered(50, 27 + i, 178 + 32 * i, 224, 27, FONT_LARGE_BLACK_ON_LIGHT);
         if (i >= data.max_items)
-            graphics_shade_rect(179 + 32 * i, 222, 25, 25, 1);
+            graphics_shade_rect(vec2i{179 + 32 * i, 222}, vec2i{25, 25}, 1);
     }
 
-    graphics_draw_rect(180, 256, 280, 25, COLOR_BLACK);
+    graphics_draw_rect(vec2i{180, 256}, vec2i{280, 25}, COLOR_BLACK);
     lang_text_draw_centered(50, 26, 148, 263, 344, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw_centered(13, 3, 128, 296, 384, FONT_NORMAL_BLACK_ON_LIGHT);
     graphics_reset_dialog();
@@ -81,13 +81,13 @@ static void draw_foreground(void) {
         if (i == data.focus_button_id - 2)
             color = COLOR_RED;
 
-        graphics_draw_rect(178 + 32 * i, 221, 27, 27, color);
+        graphics_draw_rect(vec2i{178 + 32 * i, 221}, vec2i{27, 27}, color);
     }
     color = COLOR_BLACK;
     if (data.focus_button_id == 1)
         color = COLOR_RED;
 
-    graphics_draw_rect(180, 256, 280, 25, color);
+    graphics_draw_rect(vec2i{180, 256}, vec2i{280, 25}, color);
 
     graphics_reset_dialog();
 }

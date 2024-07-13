@@ -41,39 +41,22 @@ void graphics_reset_clip_rectangle(void) {
     graphics_renderer()->reset_clip_rectangle();
 }
 
-void graphics_draw_line(int x_start, int x_end, int y_start, int y_end, color color) {
-    graphics_renderer()->draw_line(x_start, x_end, y_start, y_end, color);
-}
-void graphics_draw_vertical_line(int x, int y1, int y2, color color) {
-    graphics_renderer()->draw_line(x, x, y1, y2, color);
-}
-void graphics_draw_horizontal_line(int x1, int x2, int y, color color) {
-    graphics_renderer()->draw_line(x1, x2, y, y, color);
-}
-void graphics_draw_pixel(int x, int y, color color) {
-    graphics_renderer()->draw_pixel(x, y, color);
-}
-void graphics_draw_rect(int x, int y, int width, int height, color color) {
-    graphics_renderer()->draw_rect(x, y, width, height, color);
-}
-void graphics_draw_inset_rect(int x, int y, int width, int height) {
-    int x_end = x + width - 1;
-    int y_end = y + height - 1;
-    graphics_renderer()->draw_line(x, x_end, y, y, COLOR_INSET_DARK);
-    graphics_renderer()->draw_line(x_end, x_end, y, y_end, COLOR_INSET_LIGHT);
-    graphics_renderer()->draw_line(x, x_end, y_end, y_end, COLOR_INSET_LIGHT);
-    graphics_renderer()->draw_line(x, x, y, y_end, COLOR_INSET_DARK);
+void graphics_draw_inset_rect(vec2i start, vec2i size) {
+    vec2i end = start + size - vec2i{1, 1};
+    graphics_renderer()->draw_line(start, vec2i{end.x, start.y}, COLOR_INSET_DARK);
+    graphics_renderer()->draw_line(vec2i{end.x, start.y}, end, COLOR_INSET_LIGHT);
+    graphics_renderer()->draw_line(vec2i{start.x, end.y}, end, COLOR_INSET_LIGHT);
+    graphics_renderer()->draw_line(start, vec2i{start.x, end.y}, COLOR_INSET_DARK);
 }
 
-void graphics_fill_rect(int x, int y, int width, int height, color color) {
-    graphics_renderer()->fill_rect(x, y, width, height, color);
+void graphics_fill_rect(vec2i start, vec2i size, color color) {
+    graphics_renderer()->fill_rect(start, size, color);
 }
-void graphics_shade_rect(int x, int y, int width, int height, int darkness) {
+
+void graphics_shade_rect(vec2i start, vec2i size, int darkness) {
     color alpha = (0x11 * darkness) << COLOR_BITSHIFT_ALPHA;
-    graphics_renderer()->fill_rect(x, y, width, height, alpha);
+    graphics_renderer()->fill_rect(start, size, alpha);
 }
-
-//////////////
 
 int graphics_save_to_texture(int image_id, int x, int y, int width, int height) {
     return graphics_renderer()->save_texture_from_screen(image_id, x, y, width, height);

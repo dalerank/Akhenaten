@@ -17,15 +17,15 @@ void graphics_reset_dialog(void);
 void graphics_set_clip_rectangle(int x, int y, int width, int height);
 void graphics_reset_clip_rectangle(void);
 
-void graphics_draw_line(int x_start, int x_end, int y_start, int y_end, color color);
-void graphics_draw_vertical_line(int x, int y1, int y2, color color);
-void graphics_draw_horizontal_line(int x1, int x2, int y, color color);
-void graphics_draw_pixel(int x, int y, color color);
-void graphics_draw_rect(int x, int y, int width, int height, color color);
-void graphics_draw_inset_rect(int x, int y, int width, int height);
+void graphics_draw_line(vec2i start, vec2i end, color color);
+void graphics_draw_vertical_line(vec2i start, int ny, color color);
+void graphics_draw_horizontal_line(vec2i start, int nx, color color);
+void graphics_draw_pixel(vec2i pixel, color color);
+void graphics_draw_rect(vec2i start, vec2i size, color color);
+void graphics_draw_inset_rect(vec2i start, vec2i size);
 
-void graphics_fill_rect(int x, int y, int width, int height, color color);
-void graphics_shade_rect(int x, int y, int width, int height, int darkness);
+void graphics_fill_rect(vec2i start, vec2i size, color color);
+void graphics_shade_rect(vec2i start, vec2i size, int darkness);
 
 int graphics_save_to_texture(int image_id, int x, int y, int width, int height);
 void graphics_draw_from_texture(int image_id, int x, int y, int width, int height);

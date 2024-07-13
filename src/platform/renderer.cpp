@@ -124,44 +124,44 @@ bool graphics_renderer_interface::save_screen_buffer(painter &ctx, color* pixels
     return SDL_RenderReadPixels(ctx.renderer, &rect, SDL_PIXELFORMAT_ARGB8888, pixels, row_width * sizeof(color)) == 0;
 }
 
-void graphics_renderer_interface::draw_line(int x_start, int x_end, int y_start, int y_end, color color) {
+void graphics_renderer_interface::draw_line(vec2i start, vec2i end, color color) {
     auto &data = g_renderer_data;
     SDL_SetRenderDrawColor(data.renderer,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
                            (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
                            (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE,
                            (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
-    SDL_RenderDrawLine(data.renderer, x_start, y_start, x_end, y_end);
+    SDL_RenderDrawLine(data.renderer, start.x, start.y, end.x, end.y);
 }
 
-void graphics_renderer_interface::draw_pixel(int x, int y, color color) {
+void graphics_renderer_interface::draw_pixel(vec2i pixel, color color) {
     auto &data = g_renderer_data;
     SDL_SetRenderDrawColor(data.renderer,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
                            (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
                            (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE,
                            (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
-    SDL_RenderDrawPoint(data.renderer, x, y);
+    SDL_RenderDrawPoint(data.renderer, pixel.x, pixel.y);
 }
-void graphics_renderer_interface::draw_rect(int x, int y, int width, int height, color color) {
+void graphics_renderer_interface::draw_rect(vec2i start, vec2i size, color color) {
     auto &data = g_renderer_data;
     SDL_SetRenderDrawColor(data.renderer,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
                            (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
                            (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE,
                            (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
-    SDL_Rect rect = {x, y, width + 1, height + 1};
+    SDL_Rect rect = {start.x, start.y, size.x + 1, size.y + 1};
     SDL_RenderDrawRect(data.renderer, &rect);
 }
 
-void graphics_renderer_interface::fill_rect(int x, int y, int width, int height, color color) {
+void graphics_renderer_interface::fill_rect(vec2i start, vec2i size, color color) {
     auto &data = g_renderer_data;
     SDL_SetRenderDrawColor(data.renderer,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
                            (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
                            (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE,
                            (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
-    SDL_Rect rect = {x, y, width + 1, height + 1};
+    SDL_Rect rect = {start.x, start.y, size.x + 1, size.y + 1};
     SDL_RenderFillRect(data.renderer, &rect);
 }
 

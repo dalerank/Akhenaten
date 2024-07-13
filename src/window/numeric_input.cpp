@@ -63,7 +63,7 @@ static void close(void) {
 
 static void draw_number_button(int x, int y, int number, int is_selected) {
     color color = is_selected ? COLOR_FONT_BLUE : COLOR_BLACK;
-    graphics_draw_rect(x, y, 25, 25, color);
+    graphics_draw_rect(vec2i{x, y}, vec2i{25, 25}, color);
     uint8_t number_string[2];
     number_string[0] = '0' + number;
     number_string[1] = 0;
@@ -74,7 +74,7 @@ static void draw_foreground() {
     auto &data = g_numeric_input;
     outer_panel_draw(data, 8, 14);
 
-    graphics_fill_rect(data.x + 16, data.y + 16, 96, 30, COLOR_BLACK);
+    graphics_fill_rect(vec2i{data.x + 16, data.y + 16}, vec2i{96, 30}, COLOR_BLACK);
     if (data.num_digits > 0)
         text_draw_number_centered_colored(data.value, data.x + 16, data.y + 19, 92, FONT_NORMAL_BLUE, COLOR_FONT_RED);
 
@@ -89,10 +89,10 @@ static void draw_foreground() {
     draw_number_button(data.x + 81, data.y + 111, 9, data.focus_button_id == 9);
     draw_number_button(data.x + 21, data.y + 141, 0, data.focus_button_id == 10);
 
-    graphics_draw_rect(data.x + 51, data.y + 141, 55, 25, data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
+    graphics_draw_rect(vec2i{data.x + 51, data.y + 141}, vec2i{55, 25}, data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
     lang_text_draw_centered_colored(44,16,data.x + 51, data.y + 147, 55, FONT_SMALL_PLAIN, data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
 
-    graphics_draw_rect(data.x + 21, data.y + 171, 85, 25, data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
+    graphics_draw_rect(vec2i{data.x + 21, data.y + 171}, vec2i{85, 25}, data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
     lang_text_draw_centered_colored(44, 17, data.x + 21, data.y + 177, 85, FONT_SMALL_PLAIN, data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
 }
 

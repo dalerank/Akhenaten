@@ -58,10 +58,10 @@ public:
     void set_clip_rectangle(int x, int y, int width, int height);
     void reset_clip_rectangle();
 
-    void draw_line(int x_start, int x_end, int y_start, int y_end, color color);
-    void draw_pixel(int x, int y, color color);
-    void draw_rect(int x, int y, int width, int height, color color);
-    void fill_rect(int x, int y, int width, int height, color color);
+    void draw_line(vec2i start, vec2i end, color color);
+    void draw_pixel(vec2i pixel, color color);
+    void draw_rect(vec2i start, vec2i size, color color);
+    void fill_rect(vec2i start, vec2i size, color color);
 
     void draw_image_part(painter &ctx, const image_t *img, int offset, float x, float y, color color = COLOR_WHITE, float scale = 1.f, bool mirrored = false , bool alpha = false);
     void draw_image(painter &ctx, const image_t* img, float x, float y, color color = COLOR_WHITE, float scale = 1.f, bool mirrored = false, bool alpha = false);

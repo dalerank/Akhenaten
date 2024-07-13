@@ -65,23 +65,18 @@ void text_draw_cursor(int x_offset, int y_offset, int is_insert) {
     }
     if (input_cursor.visible) {
         if (is_insert) {
-            graphics_draw_horizontal_line(x_offset + input_cursor.x_offset - 3,
-                                          x_offset + input_cursor.x_offset + 1,
+            graphics_draw_horizontal_line(vec2i{x_offset + input_cursor.x_offset - 3, x_offset + input_cursor.x_offset + 1},
                                           y_offset + input_cursor.y_offset - 3,
                                           COLOR_WHITE);
-            graphics_draw_vertical_line(x_offset + input_cursor.x_offset - 1,
-                                        y_offset + input_cursor.y_offset - 3,
+            graphics_draw_vertical_line(vec2i{x_offset + input_cursor.x_offset - 1, y_offset + input_cursor.y_offset - 3},
                                         y_offset + input_cursor.y_offset + 13,
                                         COLOR_WHITE);
-            graphics_draw_horizontal_line(x_offset + input_cursor.x_offset - 3,
-                                          x_offset + input_cursor.x_offset + 1,
+            graphics_draw_horizontal_line(vec2i{x_offset + input_cursor.x_offset - 3, x_offset + input_cursor.x_offset + 1},
                                           y_offset + input_cursor.y_offset + 14,
                                           COLOR_WHITE);
         } else {
-            graphics_fill_rect(x_offset + input_cursor.x_offset,
-                               y_offset + input_cursor.y_offset + 14,
-                               input_cursor.width,
-                               2,
+            graphics_fill_rect(vec2i{x_offset + input_cursor.x_offset, y_offset + input_cursor.y_offset + 14},
+                               vec2i{input_cursor.width, 2},
                                COLOR_WHITE);
         }
     }

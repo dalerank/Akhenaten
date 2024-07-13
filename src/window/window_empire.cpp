@@ -246,7 +246,7 @@ static int row_idx(int index) {
 static void draw_trade_resource(e_resource resource, int trade_max, vec2i offset, int mode) {
     auto &data = g_empire_window;
     painter ctx = game.painter();
-    graphics_draw_inset_rect(offset.x, offset.y, data.trade_resource_size, data.trade_resource_size);
+    graphics_draw_inset_rect(offset, vec2i{data.trade_resource_size, data.trade_resource_size});
     int img_id = image_id_resource_icon(resource);
     ImageDraw::img_generic(ctx, img_id, offset + vec2i{1, 1});
 

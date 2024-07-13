@@ -74,8 +74,8 @@ int ui::advisor_financial_window::draw_background() {
     draw_row(60, 20, &line_y, last_year->income.donated, this_year->income.donated);
     draw_row(60, 24, &line_y, last_year->income.gold_extracted, this_year->income.gold_extracted);
     line_y -= 2; // sum lines
-    graphics_draw_horizontal_line(280, 350, line_y, COLOR_BLACK);
-    graphics_draw_horizontal_line(420, 490, line_y, COLOR_BLACK);
+    graphics_draw_horizontal_line(vec2i{280, 350}, line_y, COLOR_BLACK);
+    graphics_draw_horizontal_line(vec2i{420, 490}, line_y, COLOR_BLACK);
     line_y += 5; // total
     draw_row(60, 10, &line_y, last_year->income.total, this_year->income.total);
 
@@ -96,8 +96,8 @@ int ui::advisor_financial_window::draw_background() {
     draw_row(60, 21, &line_y, last_year->expenses.tribute, this_year->expenses.tribute);
     draw_row(60, 22, &line_y, last_year->expenses.requests_and_festivals, this_year->expenses.requests_and_festivals);
     line_y -= 2; // sum lines
-    graphics_draw_horizontal_line(280, 350, line_y, COLOR_BLACK);
-    graphics_draw_horizontal_line(420, 490, line_y, COLOR_BLACK);
+    graphics_draw_horizontal_line(vec2i{280, 350}, line_y, COLOR_BLACK);
+    graphics_draw_horizontal_line(vec2i{420, 490}, line_y, COLOR_BLACK);
     line_y += 5; // total
     draw_row(60, 17, &line_y, last_year->expenses.total, this_year->expenses.total);
 

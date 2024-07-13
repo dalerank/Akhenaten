@@ -451,7 +451,7 @@ static void draw_background_image() {
     }
 
     outer_panel_draw(vec2i{data.x, data.y}, 26, 28);
-    graphics_draw_rect(data.x + 7, data.y + 7, 402, 294, COLOR_BLACK);
+    graphics_draw_rect(vec2i{data.x + 7, data.y + 7}, vec2i{402, 294}, COLOR_BLACK);
 
     int y_base = data.y + 308;
     int inner_height_blocks = 6;
@@ -536,7 +536,7 @@ static void draw_background_video() {
     }
 
     outer_panel_draw(vec2i{data.x, data.y}, 26, 28);
-    graphics_draw_rect(data.x + 7, data.y + 7, 402, 294, COLOR_BLACK);
+    graphics_draw_rect(vec2i{data.x + 7, data.y + 7}, vec2i{402, 294}, COLOR_BLACK);
 
     int y_base = data.y + 308;
     int inner_height_blocks = 6;

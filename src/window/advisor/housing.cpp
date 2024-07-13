@@ -93,7 +93,7 @@ int ui::advisor_housing_window::draw_background() {
 
     for (int i = 0; i < 58; i++) {
         val = i / 2;
-        graphics_draw_vertical_line(545 + i, 260 + 50 - val, 260 + 50, COLOR_RED);
+        graphics_draw_vertical_line(vec2i{545 + i, 260 + 50 - val}, 260 + 50, COLOR_RED);
     }
 
     text_draw(translation_for(TR_ADVISOR_ADVISOR_HEADER_HOUSING), 60, 12, FONT_LARGE_BLACK_ON_LIGHT, 0);

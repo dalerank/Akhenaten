@@ -123,7 +123,7 @@ static bool draw_figure(vec2i screen, tile2i point) {
         break;
     }
 
-    graphics_draw_pixel(screen.x, screen.y, color);
+    graphics_draw_pixel(screen, color);
     return true;
 }
 
@@ -252,7 +252,7 @@ static void draw_viewport_rectangle(painter &ctx) {
     }
 
     int y_offset = data.screen_offset.y + camera_tile.y() - data.absolute_tile.y() + 1;
-    graphics_draw_rect(x_offset, y_offset, view_width_tiles * 2 + 8, view_height_tiles + 3, COLOR_MINIMAP_VIEWPORT);
+    graphics_draw_rect(vec2i{x_offset, y_offset}, vec2i{view_width_tiles * 2 + 8, view_height_tiles + 3}, COLOR_MINIMAP_VIEWPORT);
 }
 
 static void prepare_minimap_cache(int width, int height) {

@@ -68,8 +68,8 @@ static void save_window_under_tooltip_to_buffer(int x, int y, int width, int hei
 }
 
 static void draw_tooltip_box(int x, int y, int width, int height) {
-    graphics_draw_rect(x, y, width, height, COLOR_TOOLTIP_BORDER);
-    graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_TOOLTIP_FILL);
+    graphics_draw_rect(vec2i{x, y}, vec2i{width, height}, COLOR_TOOLTIP_BORDER);
+    graphics_fill_rect(vec2i{x + 1, y + 1}, vec2i{width - 2, height - 2}, COLOR_TOOLTIP_FILL);
 }
 
 static void draw_button_tooltip(tooltip_context* c) {
