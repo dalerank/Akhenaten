@@ -70,9 +70,8 @@ void figure_trade_caravan::go_to_next_storageyard(tile2i src_tile, int distance_
         base.action_state = FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING;
         destination_tile = dst;
     } else {
-        tile2i exit = g_city.map.exit_point;
         base.state = FIGURE_STATE_ALIVE;
-        destination_tile = map_closest_road_within_radius(exit, 1, 2);
+        destination_tile = map_closest_road_within_radius(g_city.map.exit_point, 1, 2);
         base.direction = DIR_0_TOP_RIGHT;
         advance_action(ACTION_16_EMIGRANT_RANDOM);
         base.action_state = FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING;
@@ -88,7 +87,6 @@ void figure_trade_caravan::figure_action() {
     switch (action_state()) {
     default:
     case FIGURE_ACTION_100_TRADE_CARAVAN_CREATED:
-    case 8:
         wait_ticks++;
         if (wait_ticks > 20) {
             wait_ticks = 0;
@@ -106,7 +104,6 @@ void figure_trade_caravan::figure_action() {
         break;
 
     case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING:
-    case 9:
         do_gotobuilding(destination(), true, TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_102_TRADE_CARAVAN_TRADING, FIGURE_ACTION_100_TRADE_CARAVAN_CREATED);
         if (direction() == DIR_FIGURE_CAN_NOT_REACH || direction() == DIR_FIGURE_REROUTE) {
             int i = 0; // break
@@ -114,19 +111,17 @@ void figure_trade_caravan::figure_action() {
         break;
 
     case FIGURE_ACTION_102_TRADE_CARAVAN_TRADING:
-    case 10:
         wait_ticks++;
         if (wait_ticks > 10) {
             wait_ticks = 0;
             int move_on = 0;
-            constexpr int one_operation_amount = 100;
             if (can_buy(destination(), base.empire_city_id)) {
-                e_resource resource = trader_get_buy_resource(destination(), base.empire_city_id, one_operation_amount);
+                e_resource resource = trader_get_buy_resource(destination(), base.empire_city_id, UNITS_PER_LOAD);
                 if (resource) {
                     int route_id = g_empire.city(base.empire_city_id)->route_id;
-                    trade_route_increase_traded(route_id, resource, one_operation_amount);
+                    trade_route_increase_traded(route_id, resource, UNITS_PER_LOAD);
                     trader_record_bought_resource(base.trader_id, resource);
-                    trader_buy(one_operation_amount);
+                    trader_buy(UNITS_PER_LOAD);
                 } else {
                     move_on++;
                 }
@@ -138,9 +133,9 @@ void figure_trade_caravan::figure_action() {
                 e_resource resource = trader_get_sell_resource(destination(), base.empire_city_id);
                 if (resource) {
                     int route_id = g_empire.city(base.empire_city_id)->route_id;
-                    trade_route_increase_traded(route_id, resource, one_operation_amount);
+                    trade_route_increase_traded(route_id, resource, UNITS_PER_LOAD);
                     trader_record_sold_resource(base.trader_id, resource);
-                    trader_sell(one_operation_amount);
+                    trader_sell(UNITS_PER_LOAD);
                 } else {
                     move_on++;
                 }
@@ -155,13 +150,24 @@ void figure_trade_caravan::figure_action() {
         base.anim.frame = 0;
         break;
 
+    case FIGURE_ACTION_104_TRADE_CARAVAN_RECALC_LEAVING:
+        if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            base.direction = DIR_0_TOP_RIGHT;
+            destination_tile = g_city.map.closest_exit_tile_within_radius();
+            advance_action(FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING);
+        }
+        break;
+
     case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
-    case 11:
-        if (do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS)) {
+        if (do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS, -1, FIGURE_ACTION_104_TRADE_CARAVAN_RECALC_LEAVING)) {
             poof();
         }
         break;
     }
+}
+
+void figure_trade_caravan::before_poof() {
+    ; // nothing
 }
 
 sound_key figure_trade_caravan::phrase_key() const {

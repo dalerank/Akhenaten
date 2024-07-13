@@ -57,7 +57,6 @@ void figure_homeless::on_destroy() {
 
 void figure_homeless::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Homeless");
-    tile2i exit = g_city.map.exit_point;
     switch (action_state()) {
     case FIGURE_ACTION_7_HOMELESS_CREATED:
         base.anim.frame = 0;
@@ -118,7 +117,7 @@ void figure_homeless::figure_action() {
         break;
 
     case FIGURE_ACTION_6_HOMELESS_LEAVING:
-        if (do_goto(exit, TERRAIN_USAGE_ANY)) {
+        if (do_goto(g_city.map.exit_point, TERRAIN_USAGE_ANY)) {
             poof();
         }
 
@@ -131,7 +130,7 @@ void figure_homeless::figure_action() {
             wait_ticks = 20;
             route_remove();
             base.state = FIGURE_STATE_ALIVE;
-            destination_tile = map_closest_road_within_radius(exit, 1, 2);
+            destination_tile = g_city.map.closest_exit_tile_within_radius();
             base.direction = DIR_0_TOP_RIGHT;
             advance_action(ACTION_16_HOMELESS_RANDOM);
         }

@@ -193,20 +193,28 @@ bool map_has_road_access_temple_complex(tile2i tile, int orientation, bool from_
     return false;
 }
 
-bool map_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile) {
+bool map_road_within_radius(tile2i tile, int size, int radius, tile2i &road_tile, bool avoid_center) {
     OZZY_PROFILER_SECTION("road_within_radius");
     grid_area area = map_grid_get_area(tile, size, radius);
+    uint32_t center_offset = tile.grid_offset();
 
     for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
         for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
-            if (map_terrain_is(MAP_OFFSET(xx, yy), TERRAIN_ROAD)) {
-                // Don't spawn walkers on roadblocks
-                if (building_at(xx, yy)->type == BUILDING_ROADBLOCK)
-                    continue;
-
-                road_tile.set(xx, yy);
-                return true;
+            uint32_t grid_offset = MAP_OFFSET(xx, yy);
+            if (grid_offset == center_offset) {
+                continue;
             }
+
+            if (!map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+                continue;
+            }
+            // Don't spawn walkers on roadblocks
+            if (building_at(grid_offset)->type == BUILDING_ROADBLOCK) {
+                continue;
+            }
+
+            road_tile.set(xx, yy);
+            return true;
         }
     }
     return false;
@@ -216,11 +224,11 @@ tile2i map_closest_road_within_radius(building &b, int radius) {
     return map_closest_road_within_radius(b.tile, b.size, radius);
 }
 
-tile2i map_closest_road_within_radius(tile2i tile, int size, int radius) {
+tile2i map_closest_road_within_radius(tile2i tile, int size, int radius, bool avoid_center) {
     OZZY_PROFILER_SECTION("map_closest_road_within_radius");
     tile2i result;
     for (int r = 1; r <= radius; r++) {
-        if (map_road_within_radius(tile, size, r, result)) {
+        if (map_road_within_radius(tile, size, r, result, avoid_center)) {
             return result;
         }
     }

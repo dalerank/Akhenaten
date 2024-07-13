@@ -311,20 +311,19 @@ void figure_soldier::figure_action() {
             }
         }
         break;
+
     case FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE: {
-        tile2i exit = g_city.map.exit_point;
         base.formation_at_rest = 0;
-        destination_tile = exit;
-        //            destination_tile.x() = exit->x();
-        //            destination_tile.y() = exit->y();
+        destination_tile = g_city.map.exit_point;
         base.move_ticks(speed_factor);
         if (direction() == DIR_FIGURE_NONE) {
             base.action_state = FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE;
             route_remove();
-        } else if (direction() == DIR_FIGURE_REROUTE)
+        } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
-        else if (direction() == DIR_FIGURE_CAN_NOT_REACH)
+        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
+        }
 
         break;
     }

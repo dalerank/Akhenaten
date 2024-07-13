@@ -1,6 +1,8 @@
 #include "map.h"
 
 #include "city/city.h"
+#include "core/profiler.h"
+#include "grid/road_access.h"
 #include "grid/grid.h"
 
 tile2i city_map_t::set_entry_flag(tile2i tile) {
@@ -41,4 +43,9 @@ void city_map_t::add_to_largest_road_networks(int network_id, int size) {
             break;
         }
     }
+}
+
+tile2i city_map_t::closest_exit_tile_within_radius(int size, int radius) {
+    OZZY_PROFILER_SECTION("closest_exit_tile_within_radius");
+    return map_closest_road_within_radius(exit_point, size, radius, true);
 }

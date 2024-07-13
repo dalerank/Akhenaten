@@ -43,7 +43,6 @@ figure *figure_emigrant::create(building* b, int num_people) {
 
 void figure_emigrant::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Emigrant");
-    tile2i exit = g_city.map.exit_point;
     switch (action_state()) {
     case FIGURE_ACTION_4_EMIGRANT_CREATED:
         base.anim.frame = 0;
@@ -76,7 +75,7 @@ void figure_emigrant::figure_action() {
             break;
         }
 
-        if (do_goto(exit, TERRAIN_USAGE_ANY)) {
+        if (do_goto(g_city.map.exit_point, TERRAIN_USAGE_ANY)) {
             poof();
         }
 
@@ -89,8 +88,7 @@ void figure_emigrant::figure_action() {
             wait_ticks = 20;
             route_remove();
             base.state = FIGURE_STATE_ALIVE;
-            tile2i road_tile = map_closest_road_within_radius(exit, 1, 2);
-            destination_tile = road_tile;
+            destination_tile = g_city.map.closest_exit_tile_within_radius();
             base.direction = DIR_0_TOP_RIGHT;
             advance_action(ACTION_16_EMIGRANT_RANDOM);
         }
