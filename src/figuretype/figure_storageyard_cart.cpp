@@ -73,27 +73,28 @@ void figure_storageyard_cart::do_retrieve(int action_done) {
     building_storage *home_storage = home()->dcast_storage();
     building_storage *dest_storage = dest->dcast_storage();
 
-    int carry_amount_goal_max = 0;
     if (base.collecting_item_id == RESOURCE_NONE) {
         auto loads = acquire_resource_for_getting_deliveryman(destination(), home());
         base.collecting_item_id = loads.first;
-        carry_amount_goal_max = loads.second;
-    }
+        base.collecting_item_max = loads.second;
+    } 
 
     int home_accepting_quantity = home_storage->accepting_amount((e_resource)base.collecting_item_id);
-    carry_amount_goal_max = std::min(carry_amount_goal_max, home_accepting_quantity);
+    int carry_amount_goal_max = std::min<int>(base.collecting_item_max, home_accepting_quantity);
 
     // grab goods, quantity & max load changed by above settings;
-    // if load is finished, go back home - otherwise, recalculate
+    int previous_amount = base.get_carrying_amount();
     if (base.get_carrying_amount() < carry_amount_goal_max) {
         int left_amount = dest_storage->remove_resource((e_resource)base.collecting_item_id, UNITS_PER_LOAD);
         int dest_stored_amount = dest_storage->amount((e_resource)base.collecting_item_id);
         append_resource((e_resource)base.collecting_item_id, (UNITS_PER_LOAD - left_amount));
-        const bool full_cart = (base.get_carrying_amount() >= carry_amount_goal_max);
-        if (!dest_stored_amount || full_cart) {
-            advance_action(action_done);
-        }
         base.wait_ticks = 0;
+    }
+
+    // if load is finished, go back home
+    if (previous_amount == base.get_carrying_amount()) {
+        advance_action(action_done);
+        base.wait_ticks = 4;
     }
 }
 
@@ -113,7 +114,7 @@ void figure_storageyard_cart::figure_action() {
 
     case ACTION_12_DELIVERING_UNLOADING_GOODS:
     case FIGURE_ACTION_52_WAREHOUSEMAN_AT_DELIVERY_BUILDING:
-        do_deliver(true, ACTION_11_RETURNING_EMPTY);
+        do_deliver(true, ACTION_11_RETURNING_EMPTY, ACTION_11_RETURNING_EMPTY);
         break;
 
     case ACTION_11_RETURNING_EMPTY:
@@ -134,8 +135,12 @@ void figure_storageyard_cart::figure_action() {
     case FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE:
         if (do_returnhome(TERRAIN_USAGE_ROADS)) {
             set_destination(home());
-            do_deliver(true, 0);
+            advance_action(FIGURE_ACTION_60_WAREHOUSEMAN_UNLOADING_AT_HOME);
         }
+        break;
+
+    case FIGURE_ACTION_60_WAREHOUSEMAN_UNLOADING_AT_HOME:
+        do_deliver(true, /*action_done*/-1, ACTION_8_RECALCULATE);
         break;
 
     case ACTION_15_GETTING_GOODS:

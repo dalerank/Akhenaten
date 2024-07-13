@@ -51,7 +51,7 @@ public:
     bool is_not_accepting(e_resource resource);
 
     int remove_resource(e_resource resource, int amount);
-    int add_resource(e_resource resource, int amount);
+    virtual int add_resource(e_resource resource, bool is_produced, int amount) override;
     bool is_getting(e_resource resource);
 
     int freespace(e_resource resource);

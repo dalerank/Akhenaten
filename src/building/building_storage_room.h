@@ -13,6 +13,7 @@ public:
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override { /*nothing*/ }
     virtual building_storage_room *dcast_storage_room() { return this; }
+    virtual building_storage *dcast_storage() { return main()->dcast_storage(); }
     virtual void window_info_background(object_info &ctx) override;
     virtual void window_info_foreground(object_info &ctx) override;
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STORAGE_YARD; }

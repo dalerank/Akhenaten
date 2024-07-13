@@ -65,7 +65,7 @@ class figure {
 public:
     e_resource resource_id;
     //    unsigned char resource_amount_loads;
-    unsigned short resource_amount_full; // full load counter
+    uint16_t resource_amount_full; // full load counter
 
     short home_building_id;
     short immigrant_home_building_id;
@@ -194,7 +194,7 @@ public:
 
     // 7 bytes 00 00 00 00 00 00 00
     unsigned char routing_try_reroute_counter;
-    short unk_ph1_269;
+    uint16_t collecting_item_max;
     unsigned short sender_building_id;
     short market_lady_resource_image_offset;
     // 12 bytes FFFF FFFF FFFF FFFF FFFF FFFF

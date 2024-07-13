@@ -30,7 +30,7 @@ public:
 
     virtual figure_cartpusher *dcast_cartpusher() override { return this; }
 
-    void do_deliver(bool storageyard_cart, int action_done);
+    void do_deliver(bool storageyard_cart, int action_done, int action_fail);
     void calculate_destination(bool warehouseman);
 
     void determine_deliveryman_destination();

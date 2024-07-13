@@ -120,7 +120,7 @@ int figure::get_carrying_amount() {
     return resource_amount_full;
 }
 
-void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
+void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int action_fail) {
     base.anim.frame = 0;
     base.wait_ticks++;
 
@@ -138,37 +138,29 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
         } else {
             building* dest = destination();
 
-            int accepting = 0;
-            auto warehouse = storage_yard_cast(dest);
-            if (warehouse) {
-                accepting = warehouse->accepting_amount(base.resource_id);
-            }
+            building_storage *storage = dest->dcast_storage();
+            assert(!!storage);
 
-            if (!accepting) {
-                accepting = 200 - dest->stored_amount(resource);
-            }
-
+            int accepting = storage->accepting_amount(resource);
             int total_depositable = std::min<int>(carrying, accepting);
             if (total_depositable <= 0) {
                 return advance_action(ACTION_8_RECALCULATE);
             }
 
-            int max_single_turn = 100;
-            if (true) // TODO: more than 100 at once?????
-                max_single_turn = total_depositable;
-
-            int amount_single_turn = fmin(total_depositable, max_single_turn);
+            int amount_single_turn = fmin(total_depositable, UNITS_PER_LOAD);
             int times = total_depositable / amount_single_turn;
 
             switch (dest->type) {
             case BUILDING_GRANARY:
+            case BUILDING_STORAGE_YARD:
+            case BUILDING_STORAGE_ROOM:
                 {
-                    building_granary *granary = dest->dcast_granary();
-                    int amount = granary->add_resource(base.resource_id, 0, amount_single_turn);
+                    building_storage *storage = dest->dcast_storage();
+                    int amount = storage->add_resource(base.resource_id, false, amount_single_turn);
                     if (amount != -1) {
                         dump_resource(amount_single_turn);
                     } else {
-                        return advance_action(ACTION_8_RECALCULATE);
+                        return advance_action(action_fail);
                     }
                 }
                 break;
@@ -188,19 +180,6 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
                 }
                 break;
 
-            case BUILDING_STORAGE_YARD:
-            case BUILDING_STORAGE_ROOM:
-                for (int i = 0; i < times; i++) { // do one by one...
-                    auto warehouse = storage_yard_cast(dest);
-                    int amount_refused = warehouse->add_resource(base.resource_id, amount_single_turn);
-                    if (amount_refused != -1) {
-                        dump_resource(amount_single_turn - amount_refused);
-                    } else {
-                        return advance_action(ACTION_8_RECALCULATE);
-                    }
-                }
-                break;
-
             case BUILDING_VILLAGE_PALACE:
             case BUILDING_TOWN_PALACE:
             case BUILDING_CITY_PALACE:
@@ -217,10 +196,10 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done) {
                             advance_action(action_done);
                         }
                     } else {
-                        return advance_action(ACTION_8_RECALCULATE);
+                        return advance_action(action_fail);
                     }
                 }
-                advance_action(ACTION_8_RECALCULATE);
+                advance_action(action_fail);
                 break;
             }
         }
@@ -529,23 +508,28 @@ void figure_cartpusher::figure_action() {
     case ACTION_11_DELIVERING_GOLD:
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_14_UNLOADING_GOLD, ACTION_8_RECALCULATE);
         break;
+
     case FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE, ACTION_8_RECALCULATE);
         break;
+
     case FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY:
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY, ACTION_8_RECALCULATE);
         break;
+
     case FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP:
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP, ACTION_8_RECALCULATE);
         break;
+
     case 12: // storage yard
     case 13: // granary
     case 14: // palace
     case FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE:
     case FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY:
     case FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP:
-        do_deliver(false, FIGURE_ACTION_15_RETURNING2);
+        do_deliver(false, FIGURE_ACTION_15_RETURNING2, ACTION_8_RECALCULATE);
         break;
+
     case FIGURE_ACTION_15_RETURNING2:
     case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
         // the CARTPUSHER figure will never be retrieving goods to carry back.

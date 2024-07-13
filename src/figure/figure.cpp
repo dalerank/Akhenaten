@@ -558,7 +558,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT16, &f->opponent_id);
     //        iob->bind____skip(239);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT16, &f->unk_ph1_269);       
+    iob->bind(BIND_SIGNATURE_UINT16, &f->collecting_item_max);       
     iob->bind(BIND_SIGNATURE_UINT8, &f->routing_try_reroute_counter);                       // 269
     iob->bind(BIND_SIGNATURE_INT16, &f->phrase_group);                       // 269
     iob->bind(BIND_SIGNATURE_UINT16, &f->sender_building_id);                        // 0

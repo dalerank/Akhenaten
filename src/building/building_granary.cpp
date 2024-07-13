@@ -97,7 +97,7 @@ int building_granary::is_not_accepting(e_resource resource) {
     return !((is_accepting(resource) || is_getting(resource)));
 }
 
-int building_granary::add_resource(e_resource resource, int is_produced, int amount) {
+int building_granary::add_resource(e_resource resource, bool is_produced, int amount) {
     if (!resource_is_food(resource)) {
         return -1;
     }
@@ -111,7 +111,7 @@ int building_granary::add_resource(e_resource resource, int is_produced, int amo
     }
 
     if (is_produced) {
-        city_resource_add_produced_to_granary(ONE_LOAD);
+        city_resource_add_produced_to_granary(amount);
     }
 
     int deliverable_amount = std::min<int>(data.granary.resource_stored[RESOURCE_NONE], amount);

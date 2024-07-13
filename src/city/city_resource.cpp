@@ -458,7 +458,7 @@ void city_resource_add_items(e_resource res, int amount) {
     }
 
     if (storage_found) {
-        chosen_yard->add_resource(res, amount); // because I'm lazy.
+        chosen_yard->add_resource(res, false, amount); // because I'm lazy.
     }
 }
 

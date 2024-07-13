@@ -127,7 +127,7 @@ int building_storage_yard::freespace() {
     return freespace;
 }
 
-int building_storage_yard::add_resource(e_resource resource, int amount) {
+int building_storage_yard::add_resource(e_resource resource, bool is_produced, int amount) {
     assert(id() > 0);
 
     if (is_not_accepting(resource)) {
@@ -253,7 +253,7 @@ void building_storageyards_add_resource(e_resource resource, int amount) {
         auto warehouse = building_get(building_id)->dcast_storage_yard();
         if (warehouse && warehouse->is_valid()) {
             city_resource_set_last_used_storageyard(building_id);
-            while (amount && warehouse->add_resource(resource, 100)) {
+            while (amount && warehouse->add_resource(resource, false, UNITS_PER_LOAD)) {
                 amount--;
             }
         }
@@ -354,7 +354,7 @@ int building_storage_yard_for_storing(tile2i tile, e_resource resource, int dist
         }
 
         if (!config_get(CONFIG_GP_CH_UNDERSTAFFED_ACCEPT_GOODS)) {
-            int pct_workers = calc_percentage<int>(warehouse->num_workers(), model_get_building(warehouse->type())->laborers);
+            int pct_workers = warehouse->pct_workers();
             if (pct_workers < 100) {
                 if (understaffed)
                     *understaffed += 1;

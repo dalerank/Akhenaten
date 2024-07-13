@@ -662,7 +662,7 @@ void figure::draw_debug() {
         break;
     case 5: // FESTIVAL
         pixel.y += 30;
-        debug_text(ctx, str, pixel.x, pixel.y, indent, "", unk_ph1_269, COLOR_WHITE);
+        //debug_text(ctx, str, pixel.x, pixel.y, indent, "", unk_ph1_269, COLOR_WHITE);
         debug_text(ctx, str, pixel.x, pixel.y + 10, indent, "service[0]", local_data.value[0], COLOR_WHITE);
         debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "service[1]", local_data.value[1], COLOR_WHITE);
         debug_text(ctx, str, pixel.x, pixel.y + 30, indent, "service[2]", local_data.value[2], COLOR_WHITE);
