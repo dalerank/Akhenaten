@@ -22,6 +22,7 @@ int resource_image_offset(int resource, int type) {
 
 const resource_list resource_list::foods = resource_list(RESOURCE_GRAIN, RESOURCE_GAMEMEAT);
 const resource_list resource_list::all = resource_list(RESOURCE_GRAIN, RESOURCE_MARBLE);
+const resource_list resource_list::values = resource_list(RESOURCE_NONE, RESOURCE_MARBLE);
 
 int resource_is_food(int resource) {
     return resource == RESOURCE_GRAIN || resource == RESOURCE_MEAT || resource == RESOURCE_LETTUCE

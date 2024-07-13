@@ -112,7 +112,7 @@ int trade_route::limit_reached(e_resource resource) {
 io_buffer* iob_trade_routes_limits = new io_buffer([](io_buffer* iob, size_t version) {
     auto data = g_empire.get_routes();
     for (int route_id = 0; route_id < empire_t::MAX_ROUTES; route_id++) {
-        for (const auto &r: resource_list::all) {
+        for (const auto &r: resource_list::values) {
             data[route_id].resources[r.type].limit *= 0.01;
             iob->bind(BIND_SIGNATURE_INT32, &data[route_id].resources[r.type].limit);
             data[route_id].resources[r.type].limit *= 100;
@@ -124,7 +124,7 @@ io_buffer* iob_trade_routes_limits = new io_buffer([](io_buffer* iob, size_t ver
 io_buffer* iob_trade_routes_traded = new io_buffer([](io_buffer* iob, size_t version) {
     auto data = g_empire.get_routes();
     for (int route_id = 0; route_id < empire_t::MAX_ROUTES; route_id++) {
-        for (const auto &r: resource_list::all) {
+        for (const auto &r: resource_list::values) {
             data[route_id].resources[r.type].traded *= 0.01;
             iob->bind(BIND_SIGNATURE_INT32, &data[route_id].resources[r.type].traded);
             data[route_id].resources[r.type].traded *= 100;

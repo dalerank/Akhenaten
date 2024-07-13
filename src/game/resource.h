@@ -85,6 +85,7 @@ struct resource_list : public svector<resource_value, RESOURCES_MAX> {
     inline bool any() const { return std::find_if(begin(), end(), [] (auto &it) { return it.value > 0; }) != end(); }
     static const resource_list foods;
     static const resource_list all;
+    static const resource_list values;
 };
 
 
