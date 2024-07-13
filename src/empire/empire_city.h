@@ -2,6 +2,7 @@
 
 #include "empire/type.h"
 #include "game/resource.h"
+#include "empire/trade_route.h"
 
 struct empire_city {
     enum {
@@ -25,6 +26,8 @@ struct empire_city {
 
     void remove_trader(int figure_id);
     bool can_trade() const;
+    trade_route &get_route();
+    const trade_route &get_route() const;
 
     void set_vulnerable() {
         type = EMPIRE_CITY_FOREIGN_TRADING;

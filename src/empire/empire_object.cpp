@@ -150,7 +150,8 @@ void empire_object_init_cities() {
                 amount = 0;
                 break;
             }
-            trade_route_init(city->route_id, resource, amount);
+
+            city->get_route().init(resource, amount);
         }
         city->trader_entry_delay = 4;
         city->trader_figure_ids[0] = 0;

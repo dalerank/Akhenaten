@@ -45,12 +45,12 @@ bool figure_docker::try_import_resource(building* b, e_resource resource, int ci
         return false;
     }
 
-    int route_id = g_empire.city(city_id)->route_id;
+    auto &trade_route = g_empire.city(city_id)->get_route();
     // try existing storage bay with the same resource
     building_storage_room* space = warehouse->room();
     while (space) {
         if (space->base.stored_full_amount && space->base.stored_full_amount < 400 && space->base.subtype.warehouse_resource_id == resource) {
-            trade_route_increase_traded(route_id, resource, 100);
+            trade_route.increase_traded(resource, 100);
             space->add_import(resource);
             return true;
         }
@@ -60,7 +60,7 @@ bool figure_docker::try_import_resource(building* b, e_resource resource, int ci
     space = warehouse->room();
     while (space) {
         if (space->base.subtype.warehouse_resource_id == RESOURCE_NONE) {
-            trade_route_increase_traded(route_id, resource, 100);
+            trade_route.increase_traded(resource, 100);
             space->add_import(resource);
             return true;
         }
@@ -82,8 +82,8 @@ int figure_docker::try_export_resource(building* b, e_resource resource, int cit
     building_storage_room* space = warehouse->room();
     while (space) {
         if (space->stored_full_amount && space->base.subtype.warehouse_resource_id == resource) {
-            int route_id = g_empire.city(city_id)->route_id;
-            trade_route_increase_traded(route_id, resource, 100);
+            auto &trade_route = g_empire.city(city_id)->get_route();
+            trade_route.increase_traded(resource, 100);
             space->remove_export(resource);
             return 1;
         }

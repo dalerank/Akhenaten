@@ -300,9 +300,10 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
             int column_offset = data.trade_column_spacing * column_idx(index) - 150;
             int row_offset = data.trade_row_spacing * row_idx(index) + 20;
 
-            int trade_max = trade_route_limit(city->route_id, resource);
+            const auto &trade_route = city->get_route();
+            int trade_max = trade_route.limit(resource);
             draw_trade_resource(resource, trade_max, vec2i{x_offset + column_offset + 125, y_offset + data.info_y_traded + row_offset - 5}, 1);
-            int trade_now = trade_route_traded(city->route_id, resource);
+            int trade_now = trade_route.traded(resource);
 
             if (trade_now > trade_max)
                 trade_max = trade_now;
@@ -326,9 +327,10 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
             int column_offset = data.trade_column_spacing * column_idx(index) + 200;
             int row_offset = data.trade_row_spacing * row_idx(index) + 20;
 
-            int trade_max = trade_route_limit(city->route_id, resource);
+            const auto &trade_route = city->get_route();
+            int trade_max = trade_route.limit(resource);
             draw_trade_resource(resource, trade_max, vec2i{x_offset + column_offset + 125, y_offset + data.info_y_traded + row_offset - 5}, 0);
-            int trade_now = trade_route_traded(city->route_id, resource);
+            int trade_now = trade_route.traded(resource);
 
             if (trade_now > trade_max)
                 trade_max = trade_now;
@@ -346,26 +348,27 @@ static void draw_trade_city_info(const empire_object* object, const empire_city*
         // selling
         int spacing = 0;
         lang_text_draw(data.sell_res_group, 5, x_offset + 30, y_offset + data.info_y_sells, FONT_OBJECT_INFO);
-        for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_MAX; ++resource) {
-            if (!empire_object_city_sells_resource(object->id, resource))
+        const auto &trade_route = city->get_route();
+        for (const auto &r: resource_list::all) {
+            if (!empire_object_city_sells_resource(object->id, r.type))
                 continue;
 
-            int trade_max = trade_route_limit(city->route_id, resource);
-            trade_max = stack_proper_quantity(trade_max, resource);
-            draw_trade_resource(resource, trade_max, vec2i{x_offset + spacing + 80, y_offset + data.info_y_sells - data.trade_resource_offset}, 1);
+            int trade_max = trade_route.limit(r.type);
+            trade_max = stack_proper_quantity(trade_max, r.type);
+            draw_trade_resource(r.type, trade_max, vec2i{x_offset + spacing + 80, y_offset + data.info_y_sells - data.trade_resource_offset}, 1);
             spacing += 32;
         }
 
         // buying
         spacing = 0;
         lang_text_draw(data.sell_res_group, 4, x_offset + 30, y_offset + data.info_y_buys, FONT_OBJECT_INFO);
-        for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_MAX; ++resource) {
-            if (!empire_object_city_buys_resource(object->id, resource))
+        for (const auto &r: resource_list::all) {
+            if (!empire_object_city_buys_resource(object->id, r.type))
                 continue;
 
-            int trade_max = trade_route_limit(city->route_id, resource);
-            trade_max = stack_proper_quantity(trade_max, resource);
-            draw_trade_resource(resource, trade_max, vec2i{x_offset + spacing + 80,y_offset + data.info_y_buys - data.trade_resource_offset}, 0);
+            int trade_max = trade_route.limit(r.type);
+            trade_max = stack_proper_quantity(trade_max, r.type);
+            draw_trade_resource(r.type, trade_max, vec2i{x_offset + spacing + 80,y_offset + data.info_y_buys - data.trade_resource_offset}, 0);
             spacing += 32;
         }
 

@@ -99,10 +99,11 @@ bool city_t::generate_trader_from(int city_id, empire_city &city) {
 
     int max_traders = 0;
     int num_resources = 0;
-    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
-        if (city.buys_resource[r] || city.sells_resource[r]) {
+    auto &trade_route = city.get_route();
+    for (const auto &r: resource_list::all) {
+        if (city.buys_resource[r.type] || city.sells_resource[r.type]) {
             ++num_resources;
-            int trade_limit = trade_route_limit(city.route_id, r);
+            int trade_limit = trade_route.limit(r.type);
             if (trade_limit >= 1500 && trade_limit < 2500) {
                 max_traders += 1;
             } else if (trade_limit >= 2500 && trade_limit < 4000) {

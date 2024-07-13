@@ -118,8 +118,8 @@ void figure_trade_caravan::figure_action() {
             if (can_buy(destination(), base.empire_city_id)) {
                 e_resource resource = trader_get_buy_resource(destination(), base.empire_city_id, UNITS_PER_LOAD);
                 if (resource) {
-                    int route_id = g_empire.city(base.empire_city_id)->route_id;
-                    trade_route_increase_traded(route_id, resource, UNITS_PER_LOAD);
+                    auto &trade_route = g_empire.city(base.empire_city_id)->get_route();
+                    trade_route.increase_traded(resource, UNITS_PER_LOAD);
                     trader_record_bought_resource(base.trader_id, resource);
                     trader_buy(UNITS_PER_LOAD);
                 } else {
@@ -132,8 +132,8 @@ void figure_trade_caravan::figure_action() {
             if (move_on > 0 && can_sell(destination(), base.empire_city_id)) {
                 e_resource resource = trader_get_sell_resource(destination(), base.empire_city_id);
                 if (resource) {
-                    int route_id = g_empire.city(base.empire_city_id)->route_id;
-                    trade_route_increase_traded(route_id, resource, UNITS_PER_LOAD);
+                    auto &trade_route = g_empire.city(base.empire_city_id)->get_route();
+                    trade_route.increase_traded(resource, UNITS_PER_LOAD);
                     trader_record_sold_resource(base.trader_id, resource);
                     trader_sell(UNITS_PER_LOAD);
                 } else {

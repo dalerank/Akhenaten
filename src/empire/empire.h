@@ -3,11 +3,13 @@
 #include "empire_city.h"
 #include "game/resource.h"
 #include "core/span.hpp"
+#include "trade_route.h"
 
 class empire_t {
 public:
     enum {
-        MAX_CITIES = 61
+        MAX_CITIES = 61,
+        MAX_ROUTES = 20
     };
 
     void generate_traders();
@@ -20,6 +22,7 @@ public:
     bool can_import_resource_from_city(int city_id, e_resource resource);
     int get_city_for_trade_route(int route_id);
     bool is_trade_route_open(int route_id);
+    int trade_route_for_city(int city_id);
     void reset_yearly_trade_amounts();
     int get_city_for_object(int empire_object_id);
     int count_wine_sources();
@@ -28,6 +31,17 @@ public:
 
     empire_city *city(int city_id);
     std::span<empire_city> get_cities() { return make_span(cities); }
+    std::span<trade_route> get_routes() { return make_span(trade_routes.routes); }
+
+    inline trade_route &get_route(int route_id) {
+        route_id = std::max(route_id, 0);
+        assert(route_id < MAX_ROUTES);
+        return trade_routes.routes[route_id];
+    }
+
+    struct {
+        trade_route routes[MAX_ROUTES] = {};
+    } trade_routes;
 
 private:
     empire_city cities[MAX_CITIES] = {};

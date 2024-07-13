@@ -93,10 +93,16 @@ int empire_t::count_wine_sources() {
     return sources;
 }
 
+int empire_t::trade_route_for_city(int city_id) {
+    return city(city_id)->route_id;
+}
+
 void empire_t::reset_yearly_trade_amounts() {
     for (const auto &city: cities) {
-        if (city.in_use && city.is_open)
-            trade_route_reset_traded(city.route_id);
+        if (city.in_use && city.is_open) {
+            trade_route &route = get_route(city.route_id);
+            route.reset_traded();
+        }
     }
 }
 
@@ -215,14 +221,17 @@ resource_list empire_t::exportable_resources_from_city(int city_id) {
 
 bool empire_t::can_export_resource_to_city(int city_id, e_resource resource) {
     empire_city* city = g_empire.city(city_id);
-    if (city_id && trade_route_limit_reached(city->route_id, resource)) {
+    trade_route &trade_route = g_empire.get_route(city->route_id);
+    if (city_id && trade_route.limit_reached(resource)) {
         // quota reached
         return false;
     }
+
     if (city_resource_count(resource) <= city_resource_trading_amount(resource)) {
         // stocks too low
         return false;
     }
+
     if (city_id == 0 || city->buys_resource[resource]) {
         int status = city_resource_trade_status(resource);
         switch (status) {
@@ -236,8 +245,9 @@ bool empire_t::can_export_resource_to_city(int city_id, e_resource resource) {
 
 bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
     empire_city* city = this->city(city_id);
-    if (!city->sells_resource[resource])
+    if (!city->sells_resource[resource]) {
         return false;
+    }
 
     int status = city_resource_trade_status(resource);
     switch (status) {
@@ -250,7 +260,8 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
         return false;
     }
 
-    if (trade_route_limit_reached(city->route_id, resource)) {
+    trade_route &trade_route = g_empire.get_route(city->route_id);
+    if (trade_route.limit_reached(resource)) {
         return false;
     }
 

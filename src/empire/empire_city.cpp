@@ -1,4 +1,5 @@
 #include "empire_city.h"
+#include "empire/empire.h"
 
 void empire_city::remove_trader(int figure_id) {
     for (int i = 0; i < 3; i++) {
@@ -16,4 +17,12 @@ bool empire_city::can_trade() const {
     }
 
     return false;
+}
+
+trade_route &empire_city::get_route() {
+    return g_empire.get_route(route_id);
+}
+
+const trade_route &empire_city::get_route() const {
+    return g_empire.get_route(route_id);
 }
