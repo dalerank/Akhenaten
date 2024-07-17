@@ -20,7 +20,7 @@ public:
     //virtual void on_place(int orientation, int variant) override;
     virtual void on_place_checks() override;
     virtual bool is_workshop() const override { return true; }
-    //virtual void window_info_background(object_info &c) override;
+    virtual void window_info_background(object_info &c) override;
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void on_undo() override;
     virtual bool evolve(house_demands* demands) = 0;

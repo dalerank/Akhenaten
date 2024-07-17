@@ -38,7 +38,6 @@
 #include "window/building/distribution.h"
 #include "window/building/figures.h"
 #include "window/building/government.h"
-#include "window/building/house.h"
 #include "window/building/military.h"
 #include "window/building/terrain.h"
 #include "window/building/utility.h"
@@ -412,26 +411,20 @@ static void buiding_info_draw_refresh_background() {
     } else if (context.type == BUILDING_INFO_TERRAIN) {
         window_building_draw_terrain(&context);
     } else if (context.type == BUILDING_INFO_BUILDING) {
-        if (building_is_house(building_get(context.building_id)->type)) {
-            window_building_draw_house(&context);
-        } else {
-            switch (building_get(context.building_id)->type) {
-            case BUILDING_ORACLE: window_building_draw_oracle(&context); break;
-            case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: window_building_draw_triumphal_arch(&context); break;
+        building *b = building_get(context.building_id);
+        switch (b->type) {
+        case BUILDING_ORACLE: window_building_draw_oracle(&context); break;
+        case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: window_building_draw_triumphal_arch(&context); break;
                         
-            case BUILDING_BURNING_RUIN: window_building_draw_burning_ruin(&context); break;
-            case BUILDING_UNUSED_NATIVE_HUT_88: window_building_draw_native_hut(&context); break;
-            case BUILDING_UNUSED_NATIVE_MEETING_89: window_building_draw_native_meeting(&context); break;
-            case BUILDING_UNUSED_NATIVE_CROPS_93: window_building_draw_native_crops(&context); break;
-            case BUILDING_RESERVER_MISSION_POST_80: window_building_draw_mission_post(&context); break;
+        case BUILDING_BURNING_RUIN: window_building_draw_burning_ruin(&context); break;
+        case BUILDING_UNUSED_NATIVE_HUT_88: window_building_draw_native_hut(&context); break;
+        case BUILDING_UNUSED_NATIVE_MEETING_89: window_building_draw_native_meeting(&context); break;
+        case BUILDING_UNUSED_NATIVE_CROPS_93: window_building_draw_native_crops(&context); break;
+        case BUILDING_RESERVER_MISSION_POST_80: window_building_draw_mission_post(&context); break;
             
-            default:
-                {
-                    building *b = building_get(context.building_id);
-                    b->dcast()->window_info_background(context);
-                }
-                break;
-            }
+        default:
+            b->dcast()->window_info_background(context);
+            break;
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info(&context);
