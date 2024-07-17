@@ -170,6 +170,7 @@ static void menu_debug_opt_text(int opt, bool v) {
         {"Show console", "Show console"},
         {"Screenshot", "Screenshot"},
         {"Full Screenshot", "Full Screenshot"},
+        {"Write Video ON", "Write Video OFF"},
     };
     widget_top_menu_item_update("debug", opt, debug_text_opt[opt][v ? 0 : 1]);
 }
@@ -192,8 +193,13 @@ static void menu_debug_change_opt(menu_item &item) {
     int opt = item.parameter;
     switch (opt) {
     case e_debug_show_console: game_cheat_console(true); break;
-    case e_debug_show_screenshot: menu_debug_screenshot(0); break;
-    case e_debug_show_full_screenshot: menu_debug_full_screenshot(0); break;
+    case e_debug_make_screenshot: menu_debug_screenshot(0); break;
+    case e_debug_make_full_screenshot: menu_debug_full_screenshot(0); break;
+    case e_debug_write_video: 
+        game.set_write_video(!game.get_write_video());
+        menu_debug_opt_text(e_debug_write_video, game.get_write_video());
+        g_debug_show_opts[opt] = game.get_write_video();
+        break;
 
     default:
         g_debug_show_opts[opt] = !g_debug_show_opts[opt];

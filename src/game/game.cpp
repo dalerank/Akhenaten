@@ -33,6 +33,8 @@
 #include "window/main_menu.h"
 #include "graphics/view/view.h"
 #include "platform/renderer.h"
+#include "io/movie_writer.h"
+#include "graphics/screen.h"
 
 namespace {
     static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};
@@ -74,6 +76,50 @@ bool game_t::animation_should_advance(uint32_t speed) {
     }
 
     return animation_timers[speed].should_update;
+}
+
+void game_t::shutdown() {
+    free(frame_pixels);
+}
+
+void game_t::set_write_video(bool v) {
+    if (!write_video && v) {
+        assert(!mvwriter);
+        mvwriter = new MovieWriter("test.mp4", screen_width(), screen_height(), 4);
+    } else if (write_video && !v) {
+        assert(mvwriter);
+        delete mvwriter;
+        mvwriter = nullptr;
+    }
+    write_video = v;
+}
+
+void game_t::write_frame() {
+    if (!write_video) {
+        return;
+    }
+
+    if (!mvwriter) {
+        return;
+    }
+
+    last_frame_tick++;
+    if (last_frame_tick % 30 != 0) {
+        return;
+    }
+    last_frame_tick = 0;
+    
+    ::painter ctx = this->painter();
+    if (!frame_pixels) {
+        frame_pixels = (color*)malloc(sizeof(color) * screen_width() * screen_height());
+    }
+
+    if (!graphics_renderer()->save_screen_buffer(ctx, frame_pixels, 0, 0, screen_width(), screen_height(), screen_width())) {
+        free(frame_pixels);
+        return;
+    }
+
+    mvwriter->addFrame((const uint8_t*)frame_pixels);
 }
 
 ::painter game_t::painter() {

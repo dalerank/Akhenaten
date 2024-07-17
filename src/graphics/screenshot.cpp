@@ -36,7 +36,7 @@
 #define IMAGE_BYTES_PER_PIXEL 3
 #define MINIMAP_SCALE 2.0f
 
-static struct {
+struct screenshot_t {
     int width;
     int height;
     int row_size;
@@ -48,10 +48,11 @@ static struct {
     FILE *fp;
     png_structp png_ptr;
     png_infop info_ptr;
-} screenshot;
+};
 
-static void image_free(void)
-{
+screenshot_t screenshot;
+
+static void image_free() {
     screenshot.width = 0;
     screenshot.height = 0;
     screenshot.row_size = 0;
@@ -118,7 +119,7 @@ static const char *generate_filename(screenshot_type type) {
     return filename;
 }
 
-static int image_begin_io(const char *filename) {
+static int image_begin_io(pcstr filename) {
     vfs::path fs_file = vfs::content_path(filename);
 
     FILE *fp = vfs::file_open(fs_file, "wb");
@@ -185,14 +186,13 @@ static int image_write_rows(const color *canvas, int canvas_width) {
 }
 
 static int image_write_canvas(painter &ctx) {
-    const color *canvas;
     color *pixels = 0;
     pixels = (color *)malloc(sizeof(color) * screenshot.width * screenshot.height);
     if (!graphics_renderer()->save_screen_buffer(ctx, pixels, 0, 0, screen_width(), screen_height(), screen_width())) {
         free(pixels);
         return 0;
     }
-    canvas = pixels;
+    const color *canvas = pixels;
     int current_height = image_set_loop_height_limits(0, screenshot.height);
     int size;
     while ((size = image_request_rows()) != 0) {
@@ -222,7 +222,7 @@ static void create_window_screenshot() {
         return;
     }
 
-    const char *filename = generate_filename(SCREENSHOT_DISPLAY);
+    pcstr filename = generate_filename(SCREENSHOT_DISPLAY);
     if (!image_begin_io(filename) || !image_write_header()) {
         logs::error("Unable to write screenshot to: %s", filename);
         image_free();

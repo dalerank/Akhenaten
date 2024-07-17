@@ -2,6 +2,7 @@
 
 #include "io/io_buffer.h"
 #include "scenario/scenario.h"
+#include "core/game_environment.h"
 
 static game_time g_game_time;
 
@@ -50,8 +51,6 @@ int game_time_absolute_tick(bool since_start) {
         ticks += 9792 * game_time_year_since_start();
     return ticks;
 }
-
-#include "core/game_environment.h"
 
 int game_time_advance_tick(void) {
     if (++g_game_time.tick >= max_game_tick) {

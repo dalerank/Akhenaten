@@ -32,6 +32,13 @@ struct minimap_data_t {
     animation_t terrain_tree;
     animation_t terrain_rock;
     animation_t terrain_elevation;
+    animation_t terrain_road;
+    animation_t terrain_wall;
+    animation_t terrain_meadow;
+    animation_t terrain_flooplain;
+    animation_t terrain_marshland;
+    animation_t terrain_dune;
+    animation_t terrain_teal;
 
     void load(archive arch) {
         arch.r_anim("terrain_canal", terrain_canal);
@@ -40,6 +47,13 @@ struct minimap_data_t {
         arch.r_anim("terrain_tree", terrain_tree);
         arch.r_anim("terrain_rock", terrain_rock);
         arch.r_anim("terrain_elevation", terrain_elevation);
+        arch.r_anim("terrain_road", terrain_road);
+        arch.r_anim("terrain_wall", terrain_wall);
+        arch.r_anim("terrain_meadow", terrain_meadow);
+        arch.r_anim("terrain_flooplain", terrain_flooplain);
+        arch.r_anim("terrain_marshland", terrain_marshland);
+        arch.r_anim("terrain_dune", terrain_dune);
+        arch.r_anim("terrain_teal", terrain_teal);
     }
 };
 
@@ -181,7 +195,7 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
             } else if (building_is_military(b->type)) {
                 image_id = image_group(IMG_MINIMAP_ORANGE); // orange
             } else if (building_is_beautification(b->type)) {
-                image_id = image_group(IMG_MINIMAP_SPENT_TEAL); // spent teal
+                image_id = g_minimap_data.terrain_teal.first_img(); // spent teal
             } else if (building_is_monument(b->type)) {
                 image_id = image_id_from_group(PACK_GENERAL, 149, 210); // dark grey
             } else {
@@ -219,21 +233,21 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
         else if (terrain & TERRAIN_ELEVATION)
             image_id = g_minimap_data.terrain_elevation.first_img() + (rand & 3);
         else if (terrain & TERRAIN_ROAD)
-            image_id = image_id_from_group(GROUP_MINIMAP_ROAD);
+            image_id = g_minimap_data.terrain_road.first_img();
         else if (terrain & TERRAIN_CANAL)
             image_id = g_minimap_data.terrain_canal.first_img();
         else if (terrain & TERRAIN_WALL)
-            image_id = image_id_from_group(GROUP_MINIMAP_WALL);
+            image_id = g_minimap_data.terrain_wall.first_img();
         else if (terrain & TERRAIN_MEADOW)
-            image_id = image_id_from_group(GROUP_MINIMAP_MEADOW) + (rand & 3);
+            image_id = g_minimap_data.terrain_meadow.first_img() + (rand & 3);
         else if (terrain & TERRAIN_FLOODPLAIN && !(terrain & TERRAIN_WATER))
-            image_id = image_id_from_group(GROUP_MINIMAP_FLOODPLAIN) + (rand & 3);
+            image_id = g_minimap_data.terrain_flooplain.first_img() + (rand & 3);
         else if (terrain & TERRAIN_MARSHLAND)
-            image_id = image_id_from_group(GROUP_MINIMAP_REEDS) - 4 * (rand & 1);
+            image_id = g_minimap_data.terrain_marshland.first_img() - 4 * (rand & 1);
         else if (terrain & TERRAIN_DUNE)
-            image_id = image_id_from_group(GROUP_MINIMAP_DUNES) + (rand & 7);
+            image_id = g_minimap_data.terrain_dune.first_img() + (rand & 7);
         else if (terrain & TERRAIN_GARDEN)
-            image_id = image_group(IMG_MINIMAP_SPENT_TEAL); // spent teal
+            image_id = g_minimap_data.terrain_teal.first_img(); // spent teal
         else
             image_id = image_id_from_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
 

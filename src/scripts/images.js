@@ -25,7 +25,6 @@ images = [
 	{img: IMG_MINIMAP_PURPLE, pack:PACK_GENERAL, id:149, offset:175},
 	{img: IMG_MINIMAP_LIGHT_YELLOW, pack:PACK_GENERAL, id:149, offset:180},
 	{img: IMG_MINIMAP_LILAC, pack:PACK_GENERAL, id:149, offset:195},
-	{img: IMG_MINIMAP_SPENT_TEAL, pack:PACK_GENERAL, id:149, offset:200},
 	{img: IMG_MINIMAP_COLOR, pack:PACK_GENERAL, id:149, offset:0},
 	{img: IMG_TRADE_AMOUNT, pack:PACK_GENERAL, id:171, offset:0},
 	{img: IMG_BRICKLAYER_WALK, pack:PACK_SPR_MAIN, id:109},

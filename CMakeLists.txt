@@ -107,6 +107,10 @@ if (MSVC)
 
     file(GLOB SDL2_DLL_PUBLIC_DLL "${SDL2_EXTRACT_PATH}/lib/${GAME_PROCESSOR_ARCH}/*.dll")
     file(COPY ${SDL2_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
+
+    set(SDL_FFMPEG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/ffmpeg)
+    file(GLOB FFMPEG_PUBLIC_DLL "${SDL_FFMPEG_DIR}/bin/*.dll")
+    file(COPY ${FFMPEG_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
 endif()
 
 set(TRACY_CHECK_PATH "${TRACY_EXT_PATH}/public/TracyClient.cpp")
@@ -476,6 +480,7 @@ include_directories(ext/imgui/backends)
 
 if(MSVC)
     include_directories(ext/dirent)
+    include_directories(ext/ffmpeg/include)
     set_target_properties(${GAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${GAME_WORKING_DIRECTORY}")
 endif()
 
@@ -490,6 +495,11 @@ target_link_libraries (${GAME}
 
 if(MSVC)
    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
+   set(FFMPEG_LIB ${CMAKE_SOURCE_DIR}/ext/ffmpeg/lib)
+   target_link_libraries(${GAME} ${FFMPEG_LIB}/avcodec.lib)
+   target_link_libraries(${GAME} ${FFMPEG_LIB}/swscale.lib)
+   target_link_libraries(${GAME} ${FFMPEG_LIB}/avutil.lib)
+   target_link_libraries(${GAME} ${FFMPEG_LIB}/avformat.lib)
 endif()
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "android")

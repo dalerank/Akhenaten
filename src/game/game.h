@@ -36,6 +36,8 @@ struct animation_timer {
     bool should_update;
 };
 
+class MovieWriter;
+
 struct game_t {
     enum {
         MAX_ANIM_TIMERS = 51
@@ -44,6 +46,12 @@ struct game_t {
     bool save_debug_texture = false;
     bool animation = false;
     bool console = false;
+    uint16_t last_frame_tick = 0;
+    color *frame_pixels = nullptr;
+    bool write_video = false;
+
+    MovieWriter *mvwriter = nullptr;
+
     fps_data_t fps = {0, 0, 0};
     e_overlay current_overlay = OVERLAY_NONE;
     e_overlay previous_overlay = OVERLAY_NONE;
@@ -53,6 +61,12 @@ struct game_t {
     void animation_timers_init();
     void animation_timers_update();
     bool animation_should_advance(uint32_t speed);
+    void write_frame();
+
+    void set_write_video(bool v);
+    bool get_write_video() const { return write_video; }
+
+    void shutdown();
 
     threading::thread_pool mtrpc;
     threading::thread_pool mt;

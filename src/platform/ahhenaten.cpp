@@ -463,6 +463,8 @@ static void run_and_draw() {
     platform_renderer_render();
     game_frame_end();
 
+    game.write_frame();
+
     js_vm_sync();
 }
 

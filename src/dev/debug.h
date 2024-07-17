@@ -15,7 +15,7 @@ extern int debug_range_2;
 extern int debug_range_3;
 extern int debug_range_4;
 
-enum e_debug_show_opt {
+enum e_debug_option {
     e_debug_show_pages = 0,
     e_debug_show_game_time,
     e_debug_show_build_planner,
@@ -28,8 +28,9 @@ enum e_debug_show_opt {
     e_debug_show_sentiment,
     e_debug_show_sound_channels,
     e_debug_show_console,
-    e_debug_show_screenshot,
-    e_debug_show_full_screenshot,
+    e_debug_make_screenshot,
+    e_debug_make_full_screenshot,
+    e_debug_write_video,
 
     e_debug_opt_size,
 };

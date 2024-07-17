@@ -77,6 +77,10 @@ top_menu_bar = {
 		migration 		: { type : "menu_item", text: "", parameter: 8},
  		sentiment 		: { type : "menu_item", text: "", parameter: 9},
  		sound_channels: { type : "menu_item", text: "", parameter: 10},
+ 		show_console  : { type : "menu_item", text: "", parameter: 11},
+ 		make_screenshot : { type : "menu_item", text: "", parameter: 12},
+ 		make_full_screenshot : { type : "menu_item", text: "", parameter: 13},
+ 		write_video   : { type : "menu_item", text: "", parameter: 14},
 	},
 
 	debug_render : {
@@ -424,9 +428,17 @@ empire_window = {
 }
 
 minimap_window = {
-	terrain_canal : {pack:PACK_GENERAL, id:151},
 	terrain_water : {pack:PACK_GENERAL, id:142},
 	terrain_shrub : {pack:PACK_GENERAL, id:143},
 	terrain_tree  : {pack:PACK_GENERAL, id:143},
+	terrain_marshland : {pack:PACK_GENERAL, id:144},
 	terrain_rock  : {pack:PACK_GENERAL, id:145},
+	terrain_elevation : {pack:PACK_GENERAL, id:145},
+	terrain_meadow : {pack:PACK_GENERAL, id:146},
+	terrain_flooplain : {pack:PACK_GENERAL, id:146},
+	terrain_road : {pack:PACK_GENERAL, id:147},
+	terrain_wall : {pack:PACK_GENERAL, id:150},
+	terrain_canal : {pack:PACK_GENERAL, id:151},
+	terrain_dune : {pack:PACK_GENERAL, id:211},
+	terrain_teal : {pack:PACK_GENERAL, id:149, offset:200},
 }

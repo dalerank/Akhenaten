@@ -151,6 +151,10 @@ bool select_city_overlay() {
 }
 
 int widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset) {
+    if (!g_city_overlay) {
+        return 0;
+    }
+
     int overlay_type = g_city_overlay->type;
     int building_id = map_building_at(grid_offset);
     if (!building_id) {
