@@ -91,6 +91,7 @@ static void advance_month() {
     scenario_events_process();
     
     g_city.victory_state.update_months_to_govern();
+    g_city.update_allowed_foods();
     formation_update_monthly_morale_at_rest();
     city_message_decrease_delays();
 
@@ -296,6 +297,7 @@ void game_tick_run(void) {
         figure_action_handle(); // just update the flag figures
         return;
     }
+
     random_generate_next();
     game_undo_reduce_time_available();
     advance_tick();

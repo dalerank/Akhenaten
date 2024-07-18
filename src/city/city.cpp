@@ -267,13 +267,13 @@ void city_t::set_produce_resource(e_resource resource, bool v) {
     }
 }
 
-void city_t::update_allowed_resources() {
+void city_t::update_allowed_foods() {
     int food_index = 0;
 
     std::fill_n(std::begin(resource.food_types_allowed), RESOURCES_FOODS_MAX, RESOURCE_NONE);
 
     for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_FOODS_MAX; ++resource) {
-        int can_do_food_x = can_produce_resource(resource);
+        int can_do_food_x = g_empire.can_import_resource(resource, false);
         if (can_do_food_x) {
             set_allowed_food(food_index, resource);
             food_index++;

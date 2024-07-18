@@ -400,7 +400,7 @@ struct city_t {
 
     bool generate_trader_from(int city_id, empire_city &city);
     bool available_resource(e_resource resource);
-    void update_allowed_resources();
+    void update_allowed_foods();
     bool can_produce_resource(e_resource resource);
     void set_produce_resource(e_resource resource, bool v);
 
