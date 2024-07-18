@@ -385,6 +385,7 @@ house_info_window = {
 		tenants_panel : { type : "inner_panel", pos : [16, 148], size: [0, 10] },
 		people_icon : { type : "image", pos: [34, 154], pack:PACK_GENERAL, id:134, offset:13, },
 		people_text : { type : "text", pos: [64, 164], font: FONT_NORMAL_BLACK_ON_DARK, },
+		tax_info : { type : "text", pos: [36, 194], font: FONT_NORMAL_BLACK_ON_DARK, },
 	}
 }
 
@@ -413,7 +414,6 @@ bazaar_info_window = {
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] },
 		workers_text : { type : "text", pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK },
 		workers_desc : { type : "text", pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
-
 		orders : { type:"generic_button", pos:[100, 0], size:[270, 25], text:{group: 98, id: 5}},
 	}
 }

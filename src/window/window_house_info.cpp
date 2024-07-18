@@ -47,18 +47,6 @@ static void draw_vacant_lot(object_info &c) {
     window_building_draw_description_at(c, 16 * c.bgsize.y - 113, 128, text_id);
 }
 
-static void draw_tax_info(object_info &c, int y_offset) {
-    building* b = building_get(c.building_id);
-    if (b->house_tax_coverage) {
-        int pct = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
-        int width = lang_text_draw(127, 24, c.offset.x + 36, y_offset, FONT_NORMAL_BLACK_ON_DARK);
-        width += lang_text_draw_amount(8, 0, pct, c.offset.x + 36 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw(127, 25, c.offset.x + 36 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
-    } else {
-        lang_text_draw(127, 23, c.offset.x + 36, y_offset, FONT_NORMAL_BLACK_ON_DARK);
-    }
-}
-
 static void draw_happiness_info(object_info &c, int y_offset) {
     int happiness = building_get(c.building_id)->sentiment.house_happiness;
     int text_id;
@@ -156,7 +144,15 @@ void building_house::window_info_foreground(object_info &c) {
     }
     ui["people_text"].text_var("%s ( %s )", people_text, adv_people_text);
 
-    draw_tax_info(c, c.offset.y + 194);
+    bstring256 tax_info_text;
+    if (b->house_tax_coverage) {
+        int pct = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
+        tax_info_text.printf("%s %u %s", ui::str(127, 24), pct, ui::str(127, 25));
+    } else {
+        tax_info_text = ui::str(127, 23);
+    }
+    ui["tax_info"].text(tax_info_text);
+
     draw_happiness_info(c, c.offset.y + 214);
     if (!model_get_house(b->subtype.house_level)->food_types) { // no foods
         lang_text_draw_multiline(127, 33, c.offset + vec2i{36, 234}, 16 * (c.bgsize.x - 6), FONT_NORMAL_BLACK_ON_DARK);
