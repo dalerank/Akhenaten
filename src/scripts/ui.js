@@ -337,6 +337,7 @@ mission_briefing_window = {
 
 granary_info_window = {
 	resource_text_group : 23,
+	help_id : 3,
 	ui : {
 		background : { type : "outer_panel",	pos: [0, 0], size: [29, 17] },
 		title 		 : { type : "text", text: "#granary_info_title", pos: [0, 12], size: [28 * 16, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
@@ -355,6 +356,25 @@ granary_info_window = {
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] },
 		workers_text : { type : "text", pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK },
 		workers_desc : { type : "text", pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
+	}
+}
+
+house_info_window = {
+	resource_text_group : 23,
+	help_id : 56,
+	ui : {
+		background : { type : "outer_panel",	pos: [0, 0], size: [0, 0] },
+		title 		 : { type : "text", pos: [0, 12], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		tenants_panel : { type : "inner_panel", pos : [16, 148], size: [0, 10] },
+		evolve_reason : { type : "text", pos: [32, 40], font : FONT_NORMAL_BLACK_ON_LIGHT, rich:true },
+		food0_icon : { type : "resource_icon", pos: [34, 68] },
+		food0_text : { type : "text", pos: [68, 75], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		food1_icon : { type : "resource_icon", pos: [240, 68] },
+		food1_text : { type : "text", pos: [274, 75], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		food2_icon : { type : "resource_icon", pos: [34, 92] },
+		food2_text : { type : "text", pos: [68, 99], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		food3_icon : { type : "resource_icon", pos: [240, 92] },
+		food3_text : { type : "text", pos: [274, 99], font: FONT_NORMAL_BLACK_ON_LIGHT },
 	}
 }
 

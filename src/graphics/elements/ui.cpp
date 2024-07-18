@@ -4,6 +4,7 @@
 #include "generic_button.h"
 #include "arrow_button.h"
 #include "image_button.h"
+#include "rich_text.h"
 #include "lang_text.h"
 #include "panel.h"
 #include "graphics/text.h"
@@ -305,7 +306,9 @@ int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width)
         text_draw_centered((uint8_t*)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
         return box_width;
     } else if (!!(flags & UiFlags_LabelMultiline)) {
-        return text_draw_multiline((uint8_t*)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
+        return text_draw_multiline((uint8_t *)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
+    } else if (!!(flags & UIFlags_Rich)) {
+        return rich_text_draw((uint8_t *)label, offset.x, offset.y, box_width, 10, false);
     } else {
         return lang_text_draw(label, offset + pos, font, box_width);
     }
@@ -531,8 +534,10 @@ void ui::elabel::load(archive arch) {
     _wrap = arch.r_int("wrap");
     pcstr talign = arch.r_string("align");
     bool multiline = arch.r_bool("multiline");
+    bool rich = arch.r_bool("rich");
     _flags = (strcmp("center", talign) == 0 ? UiFlags_LabelCentered : UiFlags_None)
-               | (multiline ? UiFlags_LabelMultiline : UiFlags_None);
+               | (multiline ? UiFlags_LabelMultiline : UiFlags_None)
+               | (rich ? UIFlags_Rich : UiFlags_None);
 }
 
 void ui::elabel::text(pcstr v) {
@@ -606,8 +611,11 @@ void ui::etext::draw() {
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
         text_draw_multiline((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _wrap, _font, _color);
     } else if (!!(_flags & UiFlags_LabelYCentered)) {
-        int symbolh = get_letter_height((uint8_t*)"H", _font);
+        int symbolh = get_letter_height((uint8_t *)"H", _font);
         text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y + (size.y - symbolh) / 2, _font, _color);
+    } else if (!!(_flags & UIFlags_Rich)) {
+        rich_text_set_fonts(_font, FONT_NORMAL_YELLOW);
+        rich_text_draw((const uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, size.x, 10, false);
     } else {
         text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _font, _color);
     }

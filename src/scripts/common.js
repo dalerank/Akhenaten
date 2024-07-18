@@ -172,6 +172,7 @@ var well_info_window = {}
 var minimap_window = {}
 var advisor_trade_window = {}
 var advisor_imperial_window = {}
+var house_info_window = {}
 
 //figures
 var figure_fireman = {}

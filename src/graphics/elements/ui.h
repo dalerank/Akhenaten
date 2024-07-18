@@ -30,6 +30,7 @@ enum UiFlags_ {
     UiFlags_LabelMultiline = 1 << 4,
     UiFlags_LabelYCentered = 1 << 5,
     UiFlags_NoBody = 1 << 6,
+    UIFlags_Rich = 1 << 7,
 };
 using UiFlags = int;
 

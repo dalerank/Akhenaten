@@ -185,43 +185,66 @@ static int get_word_width(const uint8_t* str, int in_link, int* num_chars) {
     return width;
 }
 
-static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color color, bool measure_only) {
+static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color clr, bool measure_only) {
     int start_link = 0;
     int num_link_chars = 0;
+    color saved_color = clr;
+    bool long_colored_string = false;
+    const font_definition* def = normal_font_def;
+
     while (*str) {
+
         if (*str == '@') {
-            int message_id = string_to_int(++str);
-            while (*str >= '0' && *str <= '9') {
-                str++;
+            if (*(str + 1) == 'Y') {
+                str += 2;
+                long_colored_string = true;
+                def = font_definition_for(FONT_NORMAL_YELLOW);
+            } else {
+                int message_id = string_to_int(++str);
+                while (*str >= '0' && *str <= '9') {
+                    str++;
+                }
+                int width = get_word_width(str, 1, &num_link_chars);
+                add_link(message_id, x, x + width, y);
+                start_link = 1;
             }
-            int width = get_word_width(str, 1, &num_link_chars);
-            add_link(message_id, x, x + width, y);
-            start_link = 1;
         }
+
+        if (*str == '&' && long_colored_string) {
+            long_colored_string = false;
+            clr = saved_color;
+            def = normal_font_def;
+            str++;
+        }
+
         if (*str >= ' ') {
-            const font_definition* def = normal_font_def;
-            if (num_link_chars > 0)
+           
+            if (num_link_chars > 0) {
                 def = link_font_def;
+            }
 
             int num_bytes = 1;
             int letter_id = font_letter_id(def, str, &num_bytes);
-            if (letter_id < 0)
+            if (letter_id < 0) {
                 x += def->space_width;
-            else {
+            } else {
                 if (num_bytes > 1 && start_link) {
                     // add space before links in multibyte charsets
                     x += def->space_width;
                     start_link = 0;
                 }
+
                 const image_t* img = image_letter(letter_id);
                 if (!measure_only) {
                     int height = def->image_y_offset(*str, img->height, def->line_height);
-                    ImageDraw::img_letter(ctx, def->font, letter_id, x, y - height, color);
+                    ImageDraw::img_letter(ctx, def->font, letter_id, x, y - height, clr);
                 }
                 x += img->width + def->letter_spacing;
             }
-            if (num_link_chars > 0)
+
+            if (num_link_chars > 0) {
                 num_link_chars -= num_bytes;
+            }
 
             str += num_bytes;
         } else {

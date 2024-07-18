@@ -16,6 +16,20 @@
 #include "window/building/figures.h"
 #include "game/game.h"
 
+struct house_info_window_t : ui::widget {
+    int resource_text_group;
+    int help_id;
+} house_info_window;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_house_info_window);
+void config_load_house_info_window() {
+    g_config_arch.r_section("house_info_window", [] (archive arch) {
+        house_info_window.load(arch);
+        house_info_window.resource_text_group = arch.r_int("resource_text_group");
+        house_info_window.help_id = arch.r_int("help_id");
+    });
+}
+
 static void draw_vacant_lot(object_info &c) {
     window_building_prepare_figure_list(&c);
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
@@ -46,6 +60,7 @@ static void draw_population_info(object_info &c, int y_offset) {
         text_draw_number(b->house_population_room, '@', " ", c.offset.x + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
+
 static void draw_tax_info(object_info &c, int y_offset) {
     building* b = building_get(c.building_id);
     if (b->house_tax_coverage) {
@@ -84,30 +99,49 @@ static void draw_happiness_info(object_info &c, int y_offset) {
 #define Y_GOODS Y_FOODS + 20 // 174 //274
 
 void building_house::window_info_background(object_info &c) {
-    painter ctx = game.painter();
-    c.help_id = 56;
-    window_building_play_sound(&c, "Wavs/housing.wav");
+    auto &ui = house_info_window;
+
+    c.help_id = ui.help_id;
+    window_building_play_sound(&c, "wavs/housing.wav");
+
     building* b = building_get(c.building_id);
     if (b->house_population <= 0) {
         draw_vacant_lot(c);
         return;
     }
 
+    ui["background"].size = c.bgsize;
+    ui["title"].size.x = c.bgsize.x * 16;
+    ui["tenants_panel"].size.x = c.bgsize.x - 2;
+    ui["evolve_reason"].size.x = c.bgsize.x * 16;
+
     int level = b->type - 10;
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(29, level, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 148, c.bgsize.x - 2, 10);
+    ui["title"].text(ui::str(29, level));
+}
+
+void building_house::window_info_foreground(object_info &c) {
+    auto &ui = house_info_window;
+    ui.draw();
+
+    painter ctx = game.painter();
+    building* b = building_get(c.building_id);
 
     if (b->data.house.evolve_text_id == 62) { // is about to devolve
-        int width = lang_text_draw(127, 40 + b->data.house.evolve_text_id, c.offset.x + 32, c.offset.y + Y_COMPLAINTS, FONT_NORMAL_BLACK_ON_LIGHT);
-        width += lang_text_draw_colored(41, building_get(c.worst_desirability_building_id)->type, c.offset.x + 32 + width, c.offset.y + Y_COMPLAINTS, FONT_NORMAL_YELLOW, 0);
-        text_draw((uint8_t*)")", c.offset.x + 32 + width, c.offset.y + Y_COMPLAINTS, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-        lang_text_draw_multiline(127, 41 + b->data.house.evolve_text_id, c.offset + vec2i{32, Y_COMPLAINTS + 16}, 16 * (c.bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+        bstring512 text;
+        text.printf("%s @Y%s&) %s", 
+                        ui::str(127, 40 + b->data.house.evolve_text_id),
+                        ui::str(41, building_get(c.worst_desirability_building_id)->type),
+                        ui::str(127, 41 + b->data.house.evolve_text_id));
+        ui["evolve_reason"].text(text);
     } else { // needs something to evolve 
         lang_text_draw_multiline(127, 40 + b->data.house.evolve_text_id, c.offset + vec2i{32, Y_COMPLAINTS}, 16 * (c.bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     int resource_image = image_id_resource_icon(0);
+
+    auto food_icon = [] (int i) { bstring32 id_icon; id_icon.printf("food%u_icon", i); return id_icon; };
+    auto food_text = [] (int i) { bstring32 id_text; id_text.printf("food%u_text", i); return id_text; };
+    
     // food inventory
     // todo: fetch map available foods?
     int food1 = g_city.allowed_foods(0);

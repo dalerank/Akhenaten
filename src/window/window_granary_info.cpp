@@ -14,15 +14,17 @@
 
 #include "io/gamefiles/lang.h"
 
-struct granary_info_window : ui::widget {
+struct granary_info_window_t : ui::widget {
     int resource_text_group;
-} g_granary_info_window;
+    int help_id;
+} granary_info_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_granary_info_window);
 void config_load_granary_info_window() {
     g_config_arch.r_section("granary_info_window", [] (archive arch) {
-        g_granary_info_window.load(arch);
-        g_granary_info_window.resource_text_group = arch.r_int("resource_text_group");
+        granary_info_window.load(arch);
+        granary_info_window.resource_text_group = arch.r_int("resource_text_group");
+        granary_info_window.help_id = arch.r_int("help_id");
     });
 }
 
@@ -86,7 +88,7 @@ void building_granary::window_info_foreground(object_info &ctx) {
         return;
     }
 
-    g_granary_info_window.draw();
+    granary_info_window.draw();
 
     auto &data = g_window_building_distribution;
     button_border_draw(ctx.offset.x + 80, ctx.offset.y + 16 * ctx.bgsize.y - 34, 16 * (ctx.bgsize.x - 10), 20, data.focus_button_id == 1 ? 1 : 0);
@@ -95,9 +97,10 @@ void building_granary::window_info_foreground(object_info &ctx) {
 }
 
 void building_granary::window_info_background(object_info &c) {
-    auto &ui = g_granary_info_window;
+    auto &ui = granary_info_window;
+
+    c.help_id = ui.help_id;
     if (c.storage_show_special_orders) {
-        c.help_id = 3;
         int y_offset = window_building_get_vertical_offset(&c, 28 - 15);
         outer_panel_draw(vec2i{c.offset.x, y_offset}, 29, 28 - 15);
         lang_text_draw_centered(98, 6, c.offset.x, y_offset + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
@@ -107,7 +110,6 @@ void building_granary::window_info_background(object_info &c) {
 
     auto &data = g_window_building_distribution;
 
-    c.help_id = 3;
     c.go_to_advisor.left_a = ADVISOR_LABOR;
     c.go_to_advisor.left_b = ADVISOR_POPULATION;
     c.bgsize = ui["background"].size;
