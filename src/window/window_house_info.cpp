@@ -46,21 +46,6 @@ static void draw_vacant_lot(object_info &c) {
 
     window_building_draw_description_at(c, 16 * c.bgsize.y - 113, 128, text_id);
 }
-static void draw_population_info(object_info &c, int y_offset) {
-    painter ctx = game.painter();
-    building* b = building_get(c.building_id);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 13, vec2i{c.offset.x + 34, y_offset + 4});
-    int width = text_draw_number(b->house_population, '@', " ", c.offset.x + 50, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
-    width += lang_text_draw(127, 20, c.offset.x + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
-
-    if (b->house_population_room < 0) {
-        width += text_draw_number(-b->house_population_room, '@', " ", c.offset.x + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw(127, 21, c.offset.x + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
-    } else if (b->house_population_room > 0) {
-        width += lang_text_draw(127, 22, c.offset.x + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
-        text_draw_number(b->house_population_room, '@', " ", c.offset.x + 50 + width, y_offset + 14, FONT_NORMAL_BLACK_ON_DARK);
-    }
-}
 
 static void draw_tax_info(object_info &c, int y_offset) {
     building* b = building_get(c.building_id);
@@ -162,7 +147,15 @@ void building_house::window_info_foreground(object_info &c) {
         ui[good_text(i)].text_var("%u", stored);
     }
 
-    draw_population_info(c, c.offset.y + 154);
+    bstring256 people_text, adv_people_text;
+    people_text.printf("%u %s", b->house_population, ui::str(127, 20));
+    if (b->house_population_room < 0) {
+        adv_people_text.printf("%u %s", -b->house_population_room, ui::str(127, 21));
+    } else if (b->house_population_room > 0) {
+        adv_people_text.printf("%s %u", ui::str(127, 22), b->house_population_room);
+    }
+    ui["people_text"].text_var("%s ( %s )", people_text, adv_people_text);
+
     draw_tax_info(c, c.offset.y + 194);
     draw_happiness_info(c, c.offset.y + 214);
     if (!model_get_house(b->subtype.house_level)->food_types) { // no foods

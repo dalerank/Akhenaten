@@ -365,7 +365,6 @@ house_info_window = {
 	ui : {
 		background : { type : "outer_panel",	pos: [0, 0], size: [0, 0] },
 		title 		 : { type : "text", pos: [0, 12], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		tenants_panel : { type : "inner_panel", pos : [16, 148], size: [0, 10] },
 		evolve_reason : { type : "text", pos: [32, 40], font : FONT_NORMAL_BLACK_ON_LIGHT, rich:true },
 		food0_icon : { type : "resource_icon", pos: [32, 95] },
 		food0_text : { type : "text", pos: [64, 100], font: FONT_NORMAL_BLACK_ON_LIGHT },
@@ -383,6 +382,9 @@ house_info_window = {
 		good2_text : { type : "text", pos: [284, 124], font: FONT_NORMAL_BLACK_ON_LIGHT },
 		good3_icon : { type : "resource_icon", pos: [362, 120] },
 		good3_text : { type : "text", pos: [394, 124], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		tenants_panel : { type : "inner_panel", pos : [16, 148], size: [0, 10] },
+		people_icon : { type : "image", pos: [34, 154], pack:PACK_GENERAL, id:134, offset:13, },
+		people_text : { type : "text", pos: [64, 164], font: FONT_NORMAL_BLACK_ON_DARK, },
 	}
 }
 
