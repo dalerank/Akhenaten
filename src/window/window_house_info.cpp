@@ -14,6 +14,7 @@
 #include "graphics/text.h"
 #include "grid/road_access.h"
 #include "window/building/figures.h"
+#include "io/gamefiles/lang.h"
 #include "game/game.h"
 
 struct house_info_window_t : ui::widget {
@@ -134,51 +135,32 @@ void building_house::window_info_foreground(object_info &c) {
                         ui::str(127, 41 + b->data.house.evolve_text_id));
         ui["evolve_reason"].text(text);
     } else { // needs something to evolve 
-        lang_text_draw_multiline(127, 40 + b->data.house.evolve_text_id, c.offset + vec2i{32, Y_COMPLAINTS}, 16 * (c.bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+        ui["evolve_reason"].text(ui::str(127, 40 + b->data.house.evolve_text_id));
     }
 
     int resource_image = image_id_resource_icon(0);
 
     auto food_icon = [] (int i) { bstring32 id_icon; id_icon.printf("food%u_icon", i); return id_icon; };
     auto food_text = [] (int i) { bstring32 id_text; id_text.printf("food%u_text", i); return id_text; };
-    
-    // food inventory
-    // todo: fetch map available foods?
-    int food1 = g_city.allowed_foods(0);
-    int food2 = g_city.allowed_foods(1);
-    int food3 = g_city.allowed_foods(2);
-    int food4 = g_city.allowed_foods(3);
+      
+    for (int i = 0; i < 4; ++i) {
+        e_resource resource = g_city.allowed_foods(i);
+        int stored = b->data.house.inventory[i];
+        ui[food_icon(i)].image(resource);
+        ui[food_text(i)].text_var(resource ? "%u" : "", stored);
+    }
 
-    if (food1) { // wheat
-        ImageDraw::img_generic(ctx, resource_image + food1, c.offset + vec2i{32, Y_FOODS});
-        text_draw_number(b->data.house.inventory[0], '@', " ", c.offset.x + 64, c.offset.y + Y_FOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
-    }
-    if (food2) { // vegetables
-        ImageDraw::img_generic(ctx, resource_image + food2, c.offset + vec2i{142, Y_FOODS});
-        text_draw_number(b->data.house.inventory[1], '@', " ", c.offset.x + 174, c.offset.y + Y_FOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
-    }
-    if (food3) { // fruit
-        ImageDraw::img_generic(ctx, resource_image + food3, c.offset + vec2i{252, Y_FOODS});
-        text_draw_number(b->data.house.inventory[2], '@', " ", c.offset.x + 284, c.offset.y + Y_FOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
-    }
-    if (food4) { // meat/fish
-        ImageDraw::img_generic(ctx, resource_image + food4, c.offset + vec2i{362, Y_FOODS});
-        text_draw_number(b->data.house.inventory[3], '@', " ", c.offset.x + 394, c.offset.y + Y_FOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
-    }
+    auto good_icon = [] (int i) { bstring32 id_icon; id_icon.printf("good%u_icon", i); return id_icon; };
+    auto good_text = [] (int i) { bstring32 id_text; id_text.printf("good%u_text", i); return id_text; };
 
     // goods inventory
-    // pottery
-    ImageDraw::img_generic(ctx, resource_image + INV_RESOURCES[0], c.offset + vec2i{32, Y_GOODS});
-    text_draw_number(b->data.house.inventory[INVENTORY_GOOD1], '@', " ", c.offset.x + 64, c.offset.y + Y_GOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
-    // furniture
-    ImageDraw::img_generic(ctx, resource_image + INV_RESOURCES[1], c.offset + vec2i{142, Y_GOODS});
-    text_draw_number(b->data.house.inventory[INVENTORY_GOOD2], '@', " ", c.offset.x + 174, c.offset.y + Y_GOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
-    // oil
-    ImageDraw::img_generic(ctx, resource_image + INV_RESOURCES[2], c.offset + vec2i{252, Y_GOODS});
-    text_draw_number(b->data.house.inventory[INVENTORY_GOOD3], '@', " ", c.offset.x + 284, c.offset.y + Y_GOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
-    // wine
-    ImageDraw::img_generic(ctx, resource_image + INV_RESOURCES[3], c.offset + vec2i{362, Y_GOODS});
-    text_draw_number(b->data.house.inventory[INVENTORY_GOOD4], '@', " ", c.offset.x + 394, c.offset.y + Y_GOODS + 4, FONT_NORMAL_BLACK_ON_LIGHT);
+    e_resource house_goods[] = {RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS, RESOURCE_LINEN, RESOURCE_BEER};
+    for (int i = 0; i < 4; ++i) {
+        e_resource resource = house_goods[i];
+        int stored = b->data.house.inventory[INVENTORY_GOOD1 + i];
+        ui[good_icon(i)].image(resource);
+        ui[good_text(i)].text_var("%u", stored);
+    }
 
     draw_population_info(c, c.offset.y + 154);
     draw_tax_info(c, c.offset.y + 194);
