@@ -386,6 +386,8 @@ house_info_window = {
 		people_icon : { type : "image", pos: [34, 154], pack:PACK_GENERAL, id:134, offset:13, },
 		people_text : { type : "text", pos: [64, 164], font: FONT_NORMAL_BLACK_ON_DARK, },
 		tax_info : { type : "text", pos: [36, 194], font: FONT_NORMAL_BLACK_ON_DARK, },
+		happiness_info : { type : "text", pos: [36, 214], font: FONT_NORMAL_BLACK_ON_DARK, },
+		additional_info : { type : "text", pos: [36, 234], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true },
 	}
 }
 

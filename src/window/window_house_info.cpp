@@ -47,31 +47,6 @@ static void draw_vacant_lot(object_info &c) {
     window_building_draw_description_at(c, 16 * c.bgsize.y - 113, 128, text_id);
 }
 
-static void draw_happiness_info(object_info &c, int y_offset) {
-    int happiness = building_get(c.building_id)->sentiment.house_happiness;
-    int text_id;
-    if (happiness >= 50)
-        text_id = 26;
-    else if (happiness >= 40)
-        text_id = 27;
-    else if (happiness >= 30)
-        text_id = 28;
-    else if (happiness >= 20)
-        text_id = 29;
-    else if (happiness >= 10)
-        text_id = 30;
-    else if (happiness >= 1)
-        text_id = 31;
-    else {
-        text_id = 32;
-    }
-    lang_text_draw(127, text_id, c.offset.x + 36, y_offset, FONT_NORMAL_BLACK_ON_DARK);
-}
-
-#define Y_COMPLAINTS 40      // 70
-#define Y_FOODS 100          // 234
-#define Y_GOODS Y_FOODS + 20 // 174 //274
-
 void building_house::window_info_background(object_info &c) {
     auto &ui = house_info_window;
 
@@ -85,9 +60,10 @@ void building_house::window_info_background(object_info &c) {
     }
 
     ui["background"].size = c.bgsize;
-    ui["title"].size.x = c.bgsize.x * 16;
-    ui["tenants_panel"].size.x = c.bgsize.x - 2;
-    ui["evolve_reason"].size.x = c.bgsize.x * 16;
+    ui["title"].width(c.bgsize.x * 16);
+    ui["tenants_panel"].width(c.bgsize.x - 2);
+    ui["evolve_reason"].width(c.bgsize.x * 16);
+    ui["additional_info"].width(c.bgsize.x * 16);
 
     int level = b->type - 10;
     ui["title"].text(ui::str(29, level));
@@ -151,10 +127,21 @@ void building_house::window_info_foreground(object_info &c) {
     } else {
         tax_info_text = ui::str(127, 23);
     }
-    ui["tax_info"].text(tax_info_text);
+    ui["tax_info"] = tax_info_text;
 
-    draw_happiness_info(c, c.offset.y + 214);
+    int happiness = b->sentiment.house_happiness;
+    int happiness_text_id;
+    if (happiness >= 50) { happiness_text_id = 26; }
+    else if (happiness >= 40) { happiness_text_id = 27; }
+    else if (happiness >= 30) { happiness_text_id = 28; }
+    else if (happiness >= 20) { happiness_text_id = 29; }
+    else if (happiness >= 10) { happiness_text_id = 30; }
+    else if (happiness >= 1) { happiness_text_id = 31; }
+    else { happiness_text_id = 32; }
+
+    ui["happiness_info"] = ui::str(127, happiness_text_id);
+
     if (!model_get_house(b->subtype.house_level)->food_types) { // no foods
-        lang_text_draw_multiline(127, 33, c.offset + vec2i{36, 234}, 16 * (c.bgsize.x - 6), FONT_NORMAL_BLACK_ON_DARK);
+        ui["additional_info"] = ui::str(127, 33);
     }
 }

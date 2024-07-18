@@ -554,6 +554,7 @@ void ui::elabel::font(int v) {
 }
 
 void ui::elabel::width(int v) {
+    size.x = v;
     _wrap = v;
 }
 

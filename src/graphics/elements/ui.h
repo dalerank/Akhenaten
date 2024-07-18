@@ -83,7 +83,7 @@ struct element {
     virtual void image(int) {}
     virtual image_desc image() const { return {}; }
     virtual void font(int) {}
-    virtual void width(int) {}
+    virtual void width(int v) { size.x = v; }
     virtual int value() const { return 0; }
     virtual void max_value(int v) {}
     virtual void onclick(std::function<void(int, int)>) {}
@@ -92,6 +92,9 @@ struct element {
     virtual emenu_header *dcast_menu_header() { return nullptr; }
 
     pcstr text_from_key(pcstr key);
+
+    inline void operator=(pcstr t) { text(t); }
+    inline void operator=(const bstring512 &t) { text(t); }
 
     template<class T>
     void preformat_text(T& str) {
