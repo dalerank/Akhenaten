@@ -579,8 +579,8 @@ int game_reload_language() {
 }
 
 void game_t::update() {
-    OZZY_PROFILER_SECTION("Game/Run");
-    game.animation_timers_update();
+    OZZY_PROFILER_SECTION("Game/Update");
+    animation_timers_update();
 
     int num_ticks = get_elapsed_ticks();
     for (int i = 0; i < num_ticks; i++) {
@@ -596,13 +596,14 @@ void game_t::update() {
     }
 }
 
-void game_frame_draw() {
+void game_t::frame_begin() {
     OZZY_PROFILER_SECTION("Render/Frame");
+    frame++;
     window_draw(false);
 }
 
-void game_frame_end() {
-    game.animation = true;
+void game_t::frame_end() {
+    animation = true;
 }
 
 void game_sound_frame() {

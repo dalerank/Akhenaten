@@ -434,7 +434,7 @@ static void run_and_draw() {
     game.update();
     Uint32 time_between_run_and_draw = SDL_GetTicks();
 
-    game_frame_draw();
+    game.frame_begin();
     game_sound_frame();
     game_handle_input_frame();
     game_draw_frame_warning();
@@ -461,8 +461,8 @@ static void run_and_draw() {
 
     game_imgui_overlay_draw();
     platform_renderer_render();
-    game_frame_end();
 
+    game.frame_end();
     game.write_frame();
 
     js_vm_sync();

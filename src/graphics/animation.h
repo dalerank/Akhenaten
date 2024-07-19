@@ -17,9 +17,12 @@ struct animation_t {
     int max_frames;
     int duration;
     int start_frame;
+    int hashtime = 0;
     bool can_reverse;
     bool loop = true;
     bool reverse = false;
+
+    static int global_hashtime;
 
     void load(archive arch);
     int first_img() const;
@@ -29,10 +32,11 @@ struct animation_context {
     xstring id;
     int base;
     int offset;
+    int hashtime = 0;
     vec2i pos;
     uint8_t frame_duration;
-    uint8_t max_frames;
-    uint8_t frame;
+    uint16_t max_frames;
+    uint16_t frame;
     bool can_reverse;
     bool loop = true;
     bool is_reverse = false;

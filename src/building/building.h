@@ -619,10 +619,10 @@ building* building_create(e_building_type type, tile2i tile, int orientation);
 
 building* building_at(int grid_offset);
 building* building_at(int x, int y);
-building* building_at(map_point point);
+building* building_at(tile2i point);
 bool building_exists_at(int grid_offset, building* b);
 
-bool building_exists_at(map_point point, building* b);
+bool building_exists_at(tile2i point, building* b);
 
 void building_clear_all();
 // void building_totals_add_corrupted_house(int unfixable);

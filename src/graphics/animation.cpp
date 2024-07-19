@@ -1,8 +1,11 @@
 #include "graphics/animation.h"
 
 #include "js/js_game.h"
+
 #include "graphics/image_desc.h"
 #include "graphics/image.h"
+
+int animation_t::global_hashtime = 0;
 
 void animation_t::load(archive arch) {
     pos = arch.r_vec2i("pos");
@@ -17,6 +20,7 @@ void animation_t::load(archive arch) {
     loop = arch.r_bool("loop", true);
     start_frame = arch.r_int("start_frame", 0);
     reverse = arch.r_bool("reverse", false);
+    hashtime = global_hashtime;
 }
 
 int animation_t::first_img() const {
@@ -40,6 +44,10 @@ void animations_t::load(archive arch, pcstr section) {
 }
 
 void animation_context::setup(const animation_t &anim) {
+    if (id == anim.id && hashtime == anim.hashtime) {
+        return;
+    }
+
     id = anim.id;
     base = image_id_from_group(anim.pack, anim.iid);
     offset = anim.offset;
@@ -51,6 +59,7 @@ void animation_context::setup(const animation_t &anim) {
     frame = anim.start_frame;
     is_reverse = anim.reverse;
     can_reverse = is_reverse || anim.can_reverse;
+    hashtime = anim.hashtime;
 }
 
 void animation_context::update(bool refresh_only) {

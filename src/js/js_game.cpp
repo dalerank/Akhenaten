@@ -14,6 +14,7 @@
 #include "io/gamefiles/lang.h"
 #include "platform/version.hpp"
 #include "graphics/screen.h"
+#include "game/game.h"
 
 #include "js.h"
 
@@ -96,6 +97,7 @@ void js_register_game_functions(js_State *J) {
 
 void config::refresh(archive arch) {
     g_config_arch = {arch.state};
+    animation_t::global_hashtime = game.frame;
     for (ArchiveIterator *s = ArchiveIterator::tail; s; s = s->next) {
         s->func();
     }

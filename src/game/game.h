@@ -11,8 +11,6 @@ bool game_init_editor();
 
 int game_reload_language();
 
-void game_frame_draw();
-void game_frame_end();
 void game_sound_frame();
 void game_handle_input_frame();
 void game_draw_frame_warning();
@@ -38,10 +36,12 @@ struct game_t {
     enum {
         MAX_ANIM_TIMERS = 51
     };
+
     bool paused = false;
     bool save_debug_texture = false;
     bool animation = false;
     bool console = false;
+    int frame = 0;
     uint16_t last_frame_tick = 0;
     color *frame_pixels = nullptr;
     bool write_video = false;
@@ -72,6 +72,9 @@ struct game_t {
 
     void shutdown();
     bool check_valid();
+
+    void frame_begin();
+    void frame_end();
 
     threading::thread_pool mtrpc;
     threading::thread_pool mt;

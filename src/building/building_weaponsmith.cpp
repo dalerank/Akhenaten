@@ -48,6 +48,11 @@ void building_weaponsmith::on_place_checks() {
     }
 }
 
+void building_weaponsmith::update_graphic() {
+    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
+    set_animation(animkey);
+}
+
 void building_weaponsmith::window_info_background(object_info& c) {
     e_resource output_resource = RESOURCE_WEAPONS;
     building_workshop_draw_background(c, 98, "weapons_workshop", 124, output_resource, RESOURCE_COPPER);
@@ -58,8 +63,7 @@ void building_weaponsmith::window_info_foreground(object_info &ctx) {
 }
 
 bool building_weaponsmith::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const animation_t &anim = weaponsmith_m.anim["work"];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+    draw_normal_anim(ctx, point, tile, color_mask);
 
     int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
     if (amount >= 0) {

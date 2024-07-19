@@ -546,11 +546,12 @@ building_weaponsmith = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:123, },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:123, offset:0 },
-    work : { pos : [60, -15], pack:PACK_GENERAL, id:123, offset:1, max_frames:12 },
-    copper : { pos : [61, 14], pack:PACK_GENERAL, id:203 }
+    work : { pos : [57, -16], pack:PACK_GENERAL, id:123, offset:1, max_frames:20, duration:5, can_reverse:true },
+    copper : { pos : [93, 0], pack:PACK_GENERAL, id:203 }
   },
   labor_category : LABOR_CATEGORY_MILITARY,
   window_info_height_id : 1,
+  building_size : 2,
 }
 
 building_courthouse = {
