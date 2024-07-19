@@ -32,7 +32,7 @@ struct animation_context {
     xstring id;
     int base;
     int offset;
-    int hashtime = 0;
+    int hashtime = -1;
     vec2i pos;
     uint8_t frame_duration;
     uint16_t max_frames;

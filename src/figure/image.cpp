@@ -102,13 +102,12 @@ vec2i figure::tile_pixel_coords() {
 
 void figure::image_set_animation(const animation_t &anim) {
     if (anim.iid > 0) {
-        if (this->anim.id != anim.id) {
-            this->anim.setup(anim);
-        }
+        this->anim.setup(anim);
         return;
     }
 
     image_desc desc = get_image_desc(anim.anim_id);
+    this->anim.id = animkeys().none;
     image_set_animation(desc.pack, desc.id, desc.offset, anim.max_frames, anim.duration, anim.loop);
 }
 
