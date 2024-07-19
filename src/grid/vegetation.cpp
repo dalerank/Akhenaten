@@ -15,16 +15,10 @@
 #include "grid/routing/queue.h"
 
 tile_cache marshland_tiles_cache;
-tile_cache trees_tiles_cache;
 
 void foreach_marshland_tile(void (*callback)(int grid_offset)) {
     for (int i = 0; i < marshland_tiles_cache.size(); i++)
         callback(marshland_tiles_cache.at(i));
-}
-void foreach_tree_tile(void (*callback)(int grid_offset)) {
-    for (int i = 0; i < trees_tiles_cache.size(); i++) {
-        callback(trees_tiles_cache.at(i));
-    }
 }
 
 grid_xx g_terrain_vegetation_growth = {0, {FS_UINT8, FS_UINT8}};
@@ -38,7 +32,7 @@ void map_vegetation_deplete(int grid_offset) {
     map_tiles_update_vegetation(grid_offset);
 }
 
-static void vegetation_tile_update(int grid_offset) {
+void vegetation_tile_update(int grid_offset) {
     int growth = map_get_vegetation_growth(grid_offset);
     if (growth < 255) {
         random_generate_next();
@@ -51,12 +45,10 @@ static void vegetation_tile_update(int grid_offset) {
         }
     }
 }
+
 void map_vegetation_growth_update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Vegetation Groth Update");
-    for (int i = 0; i < trees_tiles_cache.size(); ++i)
-        vegetation_tile_update(trees_tiles_cache.at(i));
-
-    for (int i = 0; i < marshland_tiles_cache.size(); ++i)
+    for (int i = 0, size = marshland_tiles_cache.size(); i < size; ++i)
         vegetation_tile_update(marshland_tiles_cache.at(i));
 }
 

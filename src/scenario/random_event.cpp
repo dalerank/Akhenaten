@@ -1,4 +1,4 @@
-#include "random_event.h"
+#include "scenario.h"
 
 #include "building/destruction.h"
 #include "building/building_type.h"
@@ -10,7 +10,6 @@
 #include "city/trade.h"
 #include "core/random.h"
 #include "config/config.h"
-#include "scenario/scenario.h"
 
 enum E_EVENT_DK {
     EVENT_ROME_RAISES_WAGES = 1,
@@ -112,7 +111,7 @@ static void destroy_clay_pit(void) {
     }
 }
 
-void scenario_random_event_process(void) {
+void scenario_data_t::update_random_event() {
     int event = RANDOM_EVENT_PROBABILITY[random_byte()];
     switch (event) {
     case EVENT_ROME_RAISES_WAGES:

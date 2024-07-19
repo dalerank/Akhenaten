@@ -544,11 +544,3 @@ void building::school_add_papyrus(int amount) {
         stored_full_amount += amount;
     }
 }
-
-void building_figure_generate() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Generate");
-    building_barracks_decay_tower_sentry_request();
-    buildings_valid_do([] (building &b) {
-        b.figure_generate();
-    });
-}

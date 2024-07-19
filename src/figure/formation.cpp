@@ -548,7 +548,7 @@ static void set_legion_max_figures(void) {
 }
 
 void formation_update_all(bool second_time) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Formation Update");
+    OZZY_PROFILER_SECTION("Game/Update/Formations");
     formation_calculate_legion_totals();
     formation_calculate_figures();
     update_directions();

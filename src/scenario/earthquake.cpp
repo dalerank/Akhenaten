@@ -2,6 +2,8 @@
 
 #include "building/building.h"
 #include "building/destruction.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -9,6 +11,8 @@
 #include "game/time.h"
 #include "grid/building.h"
 #include "grid/grid.h"
+#include "grid/image.h"
+#include "grid/property.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
@@ -242,3 +246,41 @@ void scenario_earthquake_load_state(buffer* buf) {
         data.expand[i].y = buf->read_i32();
     }
 }
+
+static void set_earthquake_image(int grid_offset) {
+    if (map_terrain_is(grid_offset, TERRAIN_ROCK) && map_property_is_plaza_or_earthquake(grid_offset)) {
+        const terrain_image* img = map_image_context_get_earthquake(grid_offset);
+        if (img->is_valid) {
+            map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_EARTHQUAKE) + img->group_offset + img->item_offset);
+        } else {
+            map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_EARTHQUAKE));
+        }
+        map_property_set_multi_tile_size(grid_offset, 1);
+        map_property_mark_draw_tile(grid_offset);
+    }
+}
+
+void update_earthquake_tile(int grid_offset) {
+    tile2i point(grid_offset);
+
+    if (map_terrain_is(grid_offset, TERRAIN_ROCK) && map_property_is_plaza_or_earthquake(grid_offset)) {
+        map_terrain_add(grid_offset, TERRAIN_ROCK);
+        map_property_mark_plaza_or_earthquake(grid_offset);
+        map_tiles_foreach_region_tile(point.shifted(-1, -1), point.shifted(1, 1), set_earthquake_image);
+    }
+}
+
+void map_tiles_update_all_earthquake(void) {
+    map_tiles_foreach_map_tile(update_earthquake_tile);
+}
+
+void map_tiles_set_earthquake(int x, int y) {
+    int grid_offset = MAP_OFFSET(x, y);
+    // earthquake: terrain = rock && bitfields = plaza
+    map_terrain_add(grid_offset, TERRAIN_ROCK);
+    map_property_mark_plaza_or_earthquake(grid_offset);
+
+    map_tiles_foreach_region_tile(tile2i(x - 1, y - 1), tile2i(x + 1, y + 1), set_earthquake_image);
+}
+
+

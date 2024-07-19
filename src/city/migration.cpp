@@ -1,6 +1,6 @@
 #include "migration.h"
 
-#include "building/house_population.h"
+#include "city/city_house_population.h"
 #include "city/city.h"
 #include "city/message.h"
 #include "core/calc.h"

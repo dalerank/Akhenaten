@@ -7,6 +7,7 @@ static grid_xx terrain_moisture = {0, {FS_UINT8, FS_UINT8}};
 uint8_t map_moisture_get(int grid_offset) {
     return map_grid_get(&terrain_moisture, grid_offset);
 }
+
 uint8_t map_grasslevel_get(int grid_offset) {
     int moist = map_moisture_get(grid_offset);
     //    if (moist & MOISTURE_TALLGRASS)

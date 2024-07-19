@@ -20,21 +20,18 @@ void game_time_init(int year) {
     g_game_time.year = year;
 }
 
-int game_time_tick(void) {
-    return g_game_time.tick;
-}
-int game_time_day(void) {
+int game_time_day() {
     return g_game_time.day;
 }
-int game_time_month(void) {
+int game_time_month() {
     return g_game_time.month;
 }
 
-int game_time_year(void) {
+int game_time_year() {
     return g_game_time.year;
 }
 
-int game_time_year_since_start(void) {
+int game_time_year_since_start() {
     return g_game_time.year - scenario_property_start_year();
 }
 
@@ -52,14 +49,14 @@ int game_time_absolute_tick(bool since_start) {
     return ticks;
 }
 
-int game_time_advance_tick(void) {
+int game_time_advance_tick() {
     if (++g_game_time.tick >= max_game_tick) {
         g_game_time.tick = 0;
         return 1;
     }
     return 0;
 }
-int game_time_advance_day(void) {
+int game_time_advance_day() {
     g_game_time.total_days++;
     if (++g_game_time.day >= 16) {
         g_game_time.day = 0;
@@ -67,14 +64,14 @@ int game_time_advance_day(void) {
     }
     return 0;
 }
-int game_time_advance_month(void) {
+int game_time_advance_month() {
     if (++g_game_time.month >= 12) {
         g_game_time.month = 0;
         return 1;
     }
     return 0;
 }
-void game_time_advance_year(void) {
+void game_time_advance_year() {
     ++g_game_time.year;
 }
 

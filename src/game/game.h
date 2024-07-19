@@ -13,8 +13,6 @@ bool game_init_editor();
 
 int game_reload_language();
 
-void game_run();
-
 void game_frame_draw();
 void game_frame_end();
 void game_sound_frame();
@@ -65,6 +63,14 @@ struct game_t {
 
     void set_write_video(bool v);
     bool get_write_video() const { return write_video; }
+
+    void update();
+    void update_impl(int ticks);
+    void update_city(int ticks);
+
+    void advance_day();
+    void advance_month();
+    void advance_year();
 
     void shutdown();
 

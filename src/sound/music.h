@@ -53,6 +53,4 @@ void sound_music_play_track(int track);
 
 void sound_music_play_editor();
 
-void sound_music_update(bool force);
-
 void sound_music_stop();

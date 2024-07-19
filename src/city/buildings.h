@@ -38,7 +38,6 @@ void city_buildings_remove_triumphal_arch();
 void city_buildings_add_dock();
 void city_buildings_remove_dock();
 
-void city_buildings_reset_dock_wharf_counters();
 void city_buildings_add_working_wharf(int needs_fishing_boat);
 void city_buildings_add_working_dock(int building_id);
 void city_buildings_add_working_shipyard(int building_id);
@@ -64,4 +63,3 @@ void city_buildings_remove_temple_complex();
 
 int city_buildings_unknown_value();
 void city_buildings_update_month();
-void city_buildings_update_day();

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/buffer.h"
+
 enum e_flood_state {
     FLOOD_STATE_IMMINENT = 1,
     FLOOD_STATE_FLOODING = 2,

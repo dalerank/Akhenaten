@@ -6,6 +6,7 @@
 #include "floodplain.h"
 #include "grid/grid.h"
 #include "grid/ring.h"
+#include "grid/trees.h"
 #include "grid/routing/routing.h"
 #include "scenario/map.h"
 #include "vegetation.h"
@@ -398,7 +399,7 @@ void map_terrain_init_outside_map(void) {
 void build_terrain_caches() {
     floodplain_tiles_cache.clear();
     marshland_tiles_cache.clear();
-    trees_tiles_cache.clear();
+    map_tree_clear();
 
     map_water_cache_river_tiles();
 
@@ -415,9 +416,8 @@ void build_terrain_caches() {
             }
 
             if (map_terrain_is(grid_offset, TERRAIN_TREE)) {
-                trees_tiles_cache.push_back(grid_offset);
+                map_tree_push_back(grid_offset);
             }
-            //            }
         }
     }
     return;

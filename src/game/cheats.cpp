@@ -2,10 +2,10 @@
 
 #include "building/construction/build_planner.h"
 #include "building/building_type.h"
-#include "building/house_population.h"
 #include "building/destruction.h"
 #include "building/monuments.h"
 #include "city/finance.h"
+#include "city/city_house_population.h"
 #include "city/city.h"
 #include "city/gods.h"
 #include "city/victory.h"
@@ -14,7 +14,6 @@
 #include "city/city_resource.h"
 #include "core/string.h"
 #include "figure/figure.h"
-#include "game/tick.h"
 #include "game/tutorial.h"
 #include "graphics/color.h"
 #include "graphics/font.h"
@@ -35,7 +34,6 @@
 #endif
 
 static void game_cheat_start_invasion(pcstr);
-static void game_cheat_advance_year(pcstr);
 static void game_cheat_cast_blessing(pcstr);
 static void game_cheat_show_tooltip(pcstr);
 static void game_cheat_cast_upset(pcstr);
@@ -55,7 +53,6 @@ struct cheat_command_handle {
 
 static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_start_invasion},
                                                   {"addclay", game_cheat_add_clay},
-                                                  {"nextyear", game_cheat_advance_year},
                                                   {"blessing", game_cheat_cast_blessing},
                                                   {"godupset", game_cheat_cast_upset},
                                                   {"showtooltip", game_cheat_show_tooltip},
@@ -202,12 +199,6 @@ static void game_cheat_spawn_nobles(pcstr args) {
         }
         buildings[i]->create_roaming_figure(FIGURE_NOBLES, FIGURE_ACTION_125_ROAMING);
     }
-}
-
-static void game_cheat_advance_year(pcstr args) {
-    game_tick_cheat_year();
-
-    city_warning_show_console("Year advanced");
 }
 
 static void game_cheat_cast_blessing(pcstr args) {

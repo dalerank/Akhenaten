@@ -7,7 +7,7 @@
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/window.h"
-#include "grid/aqueduct.h"
+#include "grid/canals.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/grid.h"
@@ -115,7 +115,7 @@ int game_undo_start_build(int type) {
 
     map_image_backup();
     map_terrain_backup();
-    map_aqueduct_backup();
+    map_canal_backup();
     map_property_backup();
     map_sprite_backup();
 
@@ -150,7 +150,7 @@ static void restore_map_images(void) {
 
 void game_undo_restore_map(int include_properties) {
     map_terrain_restore();
-    map_aqueduct_restore();
+    map_canal_restore();
     if (include_properties)
         map_property_restore();
     restore_map_images();
@@ -223,14 +223,14 @@ void game_undo_perform() {
             }
         }
         map_terrain_restore();
-        map_aqueduct_restore();
+        map_canal_restore();
         map_sprite_restore();
         map_image_restore();
         map_property_restore();
         map_property_clear_constructing_and_deleted();
     } else if (data.type == BUILDING_IRRIGATION_DITCH || data.type == BUILDING_ROAD || data.type == BUILDING_MUD_WALL) {
         map_terrain_restore();
-        map_aqueduct_restore();
+        map_canal_restore();
         restore_map_images();
     } else if (data.type == BUILDING_LOW_BRIDGE || data.type == BUILDING_UNUSED_SHIP_BRIDGE_83) {
         map_terrain_restore();
@@ -238,13 +238,13 @@ void game_undo_perform() {
         restore_map_images();
     } else if (data.type == BUILDING_PLAZA || data.type == BUILDING_GARDENS) {
         map_terrain_restore();
-        map_aqueduct_restore();
+        map_canal_restore();
         map_property_restore();
         restore_map_images();
     } else if (data.num_buildings) {
         if (data.type == BUILDING_WATER_LIFT) {
             map_terrain_restore();
-            map_aqueduct_restore();
+            map_canal_restore();
             restore_map_images();
         }
         for (int i = 0; i < data.num_buildings; i++) {

@@ -1,5 +1,4 @@
-#ifndef SCENARIO_EARTHQUAKE_H
-#define SCENARIO_EARTHQUAKE_H
+#pragma once
 
 #include "core/buffer.h"
 
@@ -13,4 +12,5 @@ void scenario_earthquake_save_state(buffer* buf);
 
 void scenario_earthquake_load_state(buffer* buf);
 
-#endif // SCENARIO_EARTHQUAKE_H
+void map_tiles_update_all_earthquake(void);
+void map_tiles_set_earthquake(int x, int y);

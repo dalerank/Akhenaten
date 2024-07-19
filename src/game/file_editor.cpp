@@ -20,7 +20,7 @@
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"
-#include "grid/aqueduct.h"
+#include "grid/canals.h"
 #include "grid/building.h"
 #include "grid/desirability.h"
 #include "grid/elevation.h"
@@ -37,6 +37,7 @@
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "scenario/distant_battle.h"
+#include "scenario/earthquake.h"
 #include "scenario/editor.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
@@ -72,7 +73,7 @@ static void clear_map_data(void) {
     map_image_clear();
     map_building_clear();
     map_terrain_clear();
-    map_aqueduct_clear();
+    map_canal_clear();
     map_figure_clear();
     map_property_clear();
     map_sprite_clear();

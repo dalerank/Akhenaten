@@ -11,7 +11,7 @@
 #include "building/monuments.h"
 #include "city/city.h"
 #include "graphics/view/lookup.h"
-#include "grid/aqueduct.h"
+#include "grid/canals.h"
 #include "grid/building.h"
 #include "grid/floodplain.h"
 #include "grid/image.h"
@@ -346,7 +346,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         }
 
         if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
-            int a = map_aqueduct_at(grid_offset);
+            int a = map_canal_at(grid_offset);
             if (map_terrain_is(grid_offset, TERRAIN_WATER))
                 debug_text(ctx, str, x, y + 10, 0, "", a, 0xff557777);
             else
@@ -930,7 +930,7 @@ void draw_debug_ui(int x, int y) {
             debug_text(ctx, str, x + c3, y + 15, cl, "", building_count_total(BUILDING_SHRINE_OSIRIS));
             debug_text(ctx, str, x + c4, y + 15, cl, "", building_count_active(BUILDING_TEMPLE_OSIRIS));
             debug_text(ctx, str, x + c5, y + 15, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_OSIRIS));
-            debug_text(ctx, str, x + c6, y + 15, c7, "%", city_culture_coverage_religion(GOD_OSIRIS));
+            debug_text(ctx, str, x + c6, y + 15, c7, "%", city_avg_coverage_religion(GOD_OSIRIS));
             debug_text(ctx, str, x + c8, y + 15, cl, "", g_city.religion.gods[0].months_since_festival);
         }
 
@@ -940,7 +940,7 @@ void draw_debug_ui(int x, int y) {
             debug_text(ctx, str, x + c3, y + 25, cl, "", building_count_total(BUILDING_SHRINE_RA));
             debug_text(ctx, str, x + c4, y + 25, cl, "", building_count_active(BUILDING_TEMPLE_RA));
             debug_text(ctx, str, x + c5, y + 25, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_RA));
-            debug_text(ctx, str, x + c6, y + 25, c7, "%", city_culture_coverage_religion(GOD_RA));
+            debug_text(ctx, str, x + c6, y + 25, c7, "%", city_avg_coverage_religion(GOD_RA));
             debug_text(ctx, str, x + c8, y + 25, cl, "", g_city.religion.gods[1].months_since_festival);
         }
 
@@ -950,7 +950,7 @@ void draw_debug_ui(int x, int y) {
             debug_text(ctx, str, x + c3, y + 35, cl, "", building_count_total(BUILDING_SHRINE_PTAH));
             debug_text(ctx, str, x + c4, y + 35, cl, "", building_count_active(BUILDING_TEMPLE_PTAH));
             debug_text(ctx, str, x + c5, y + 35, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_PTAH));
-            debug_text(ctx, str, x + c6, y + 35, c7, "%", city_culture_coverage_religion(GOD_PTAH));
+            debug_text(ctx, str, x + c6, y + 35, c7, "%", city_avg_coverage_religion(GOD_PTAH));
             debug_text(ctx, str, x + c8, y + 35, cl, "", g_city.religion.gods[2].months_since_festival);
         }
 
@@ -960,7 +960,7 @@ void draw_debug_ui(int x, int y) {
             debug_text(ctx, str, x + c3, y + 45, cl, "", building_count_total(BUILDING_SHRINE_SETH));
             debug_text(ctx, str, x + c4, y + 45, cl, "", building_count_active(BUILDING_TEMPLE_SETH));
             debug_text(ctx, str, x + c5, y + 45, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_SETH));
-            debug_text(ctx, str, x + c6, y + 45, c7, "%", city_culture_coverage_religion(GOD_SETH));
+            debug_text(ctx, str, x + c6, y + 45, c7, "%", city_avg_coverage_religion(GOD_SETH));
             debug_text(ctx, str, x + c8, y + 45, cl, "", g_city.religion.gods[3].months_since_festival);
         }
 
@@ -970,7 +970,7 @@ void draw_debug_ui(int x, int y) {
             debug_text(ctx, str, x + c3, y + 55, cl, "", building_count_total(BUILDING_SHRINE_BAST));
             debug_text(ctx, str, x + c4, y + 55, cl, "", building_count_active(BUILDING_TEMPLE_BAST));
             debug_text(ctx, str, x + c5, y + 55, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_BAST));
-            debug_text(ctx, str, x + c6, y + 55, c7, "%", city_culture_coverage_religion(GOD_BAST));
+            debug_text(ctx, str, x + c6, y + 55, c7, "%", city_avg_coverage_religion(GOD_BAST));
             debug_text(ctx, str, x + c8, y + 55, cl, "", g_city.religion.gods[4].months_since_festival);
         }
 
@@ -1226,70 +1226,70 @@ void draw_debug_ui(int x, int y) {
 
     /////// TUTORIAL
     if (g_debug_show_opts[e_debug_show_tutorial]) {
-        auto flags = tutorial_flags_struct();
+        const auto &flags = g_tutorials_flags;
         struct tutopt { const char *optname; bool value; };
         for (int i = 0; i < 41; i++) {
-            tutopt f{"", flags->pharaoh.flags[i]};
+            tutopt f{"", flags.pharaoh.flags[i]};
             switch (i) {
             case 0:
-                f = { "1:fire", flags->tutorial_1.fire };
+                f = { "1:fire", flags.tutorial_1.fire };
                 break;
             case 1:
-                f = { "1:pop_150", flags->tutorial_1.population_150_reached };
+                f = { "1:pop_150", flags.tutorial_1.population_150_reached };
                 break;
             case 2:
-                f = { "1:meat_400", flags->tutorial_1.gamemeat_400_stored };
+                f = { "1:meat_400", flags.tutorial_1.gamemeat_400_stored };
                 break;
             case 3:
-                f = { "1:collapse", flags->tutorial_1.collapse };
+                f = { "1:collapse", flags.tutorial_1.collapse };
                 break;
             case 4:
-                f = { "2:gold_500", flags->tutorial_2.gold_mined_500 };
+                f = { "2:gold_500", flags.tutorial_2.gold_mined_500 };
                 break;
             case 5:
-                f = { "2:temples_done", flags->tutorial_2.temples_built };
+                f = { "2:temples_done", flags.tutorial_2.temples_built };
                 break;
             case 6:
-                f = { "2:crime", flags->tutorial_2.crime };
+                f = { "2:crime", flags.tutorial_2.crime };
                 break;
             case 7:
-                f = { "3:figs_800", flags->tutorial_3.figs_800_stored };
+                f = { "3:figs_800", flags.tutorial_3.figs_800_stored };
                 break;
             case 8:
-                f = { "3:pottery_200", flags->tutorial_3.pottery_made };
+                f = { "3:pottery_200", flags.tutorial_3.pottery_made };
                 break;
             case 9:
-                f = { "3:disease", flags->tutorial_3.disease };
+                f = { "3:disease", flags.tutorial_3.disease };
                 break;
             case 10:
-                f = { "4:beer_300", flags->tutorial_4.beer_made };
+                f = { "4:beer_300", flags.tutorial_4.beer_made };
                 break;
             case 11:
-                f = { "5:apartment", flags->tutorial_5.spacious_apartment };
+                f = { "5:apartment", flags.tutorial_5.spacious_apartment };
                 break;
             case 15:
-                f = { "tut1 start", flags->tutorial_1.started };
+                f = { "tut1 start", flags.tutorial_1.started };
                 break;
             case 16:
-                f = { "tut2 start", flags->tutorial_2.started };
+                f = { "tut2 start", flags.tutorial_2.started };
                 break;
             case 17:
-                f = { "tut3 start", flags->tutorial_3.started };
+                f = { "tut3 start", flags.tutorial_3.started };
                 break;
             case 18:
-                f = { "tut4 start", flags->tutorial_4.started };
+                f = { "tut4 start", flags.tutorial_4.started };
                 break;
             case 19:
-                f = { "tut5 start", flags->tutorial_5.started };
+                f = { "tut5 start", flags.tutorial_5.started };
                 break;
             case 20:
-                f = { "tut6 start", flags->tutorial_6.started };
+                f = { "tut6 start", flags.tutorial_6.started };
                 break;
             case 21:
-                f = { "tut7 start", flags->pharaoh.tut7_start };
+                f = { "tut7 start", flags.pharaoh.tut7_start };
                 break;
             case 22:
-                f = { "tut8 start" , flags->pharaoh.tut8_start };
+                f = { "tut8 start" , flags.pharaoh.tut8_start };
                 break;
             }
 

@@ -1,5 +1,13 @@
 #pragma once
 
+inline void decay_service(unsigned char& value) {
+    if (value > 0) {
+        --value;
+    } else {
+        value = 0;
+    }
+}
+
 struct house_demands {
     struct {
         int well;

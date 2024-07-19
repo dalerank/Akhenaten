@@ -29,7 +29,8 @@
 #include "game/tutorial.h"
 #include "game/undo.h"
 #include "graphics/image.h"
-#include "grid/aqueduct.h"
+#include "grid/canals.h"
+#include "grid/trees.h"
 #include "grid/bookmark.h"
 #include "grid/building.h"
 #include "grid/desirability.h"
@@ -59,7 +60,7 @@
 #include "scenario/price_change.h"
 #include "scenario/request.h"
 #include "sound/sound_city.h"
-#include "sound/music.h"
+#include "sound/sound.h"
 #include "widget/top_menu_game.h"
 #include "window/window_city.h"
 #include "window/file_dialog.h"
@@ -148,7 +149,7 @@ static void pre_load() { // do we NEED this...?
     map_image_clear();
     map_building_clear();
     map_terrain_clear();
-    map_aqueduct_clear();
+    map_canal_clear();
     map_figure_clear();
     map_property_clear();
     map_sprite_clear();
@@ -192,12 +193,12 @@ static void post_load() {
     map_image_fix_icorrect_tiles();
 
     // building counts / storage
-    building_count_update();
+    g_city.buildings.update_counters();
     city_granaries_calculate_stocks();
     city_resource_calculate_storageyard_stocks();
     city_resource_determine_available();
     building_storage_reset_building_ids();
-    city_culture_update_coverage();
+    g_city.avg_coverage.update();
 
     g_city.update_allowed_foods();
 
@@ -705,7 +706,7 @@ void GamestateIO::start_loaded_file() {
     // routing
     map_routing_update_all();
     figure_route_clean();
-    map_road_network_update();
+    g_city.map.update_road_network();
     map_routing_update_ferry_routes();
     building_maintenance_check_kingdome_access();
 
@@ -714,7 +715,8 @@ void GamestateIO::start_loaded_file() {
     map_tiles_update_floodplain_images();
     map_tiles_river_refresh_entire();
     map_tiles_determine_gardens();
-    map_tiles_update_all_vegetation_tiles();
+    map_tiles_upadte_all_marshland_tiles();
+    map_tree_update_all_tiles();
     map_building_update_all_tiles();
 
     if (last_loaded == e_loaded_mission) {
@@ -723,7 +725,7 @@ void GamestateIO::start_loaded_file() {
         game.paused = false;
         window_city_show();
     }
-    sound_music_update(true);
+    g_sound.music_update(true);
     last_loaded = e_loaded_none;
 }
 

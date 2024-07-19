@@ -5,7 +5,6 @@
 
 void map_tiles_update_all_rocks(void);
 
-void map_tiles_update_region_trees(int x_min, int y_min, int x_max, int y_max);
 void map_tiles_update_region_shrub(int x_min, int y_min, int x_max, int y_max);
 
 void map_tiles_update_all_gardens(void);
@@ -32,7 +31,7 @@ void map_tiles_update_all_meadow(void);
 void map_tiles_update_region_meadow(int x_min, int y_min, int x_max, int y_max);
 
 void map_tiles_update_vegetation(int grid_offset);
-void map_tiles_update_all_vegetation_tiles();
+void map_tiles_upadte_all_marshland_tiles();
 
 void map_tiles_river_refresh_entire(void);
 void map_tiles_river_refresh_region(int x_min, int y_min, int x_max, int y_max);
@@ -43,13 +42,14 @@ void map_tiles_update_all_canals(int include_construction);
 void map_tiles_update_region_canals(int x_min, int y_min, int x_max, int y_max);
 int map_tiles_set_canal(tile2i tile);
 
-void map_tiles_update_all_earthquake(void);
-void map_tiles_set_earthquake(int x, int y);
+void map_tiles_foreach_region_tile(tile2i tmin, tile2i tmax, void (*callback)(tile2i));
+void map_tiles_foreach_map_tile(void (*callback)(int));
 
 void map_tiles_update_all_rubble(void);
 void map_tiles_update_region_rubble(int x_min, int y_min, int x_max, int y_max);
 
 void map_tiles_update_all_elevation(void);
+void map_tiles_foreach_region_tile(tile2i tmin, tile2i tmax, void (*callback)(int grid_offset));
 void map_refresh_river_image_at(int grid_offset, bool force);
 
 enum {

@@ -14,34 +14,6 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/tiles.h"
 
-void building_house_process_evolve_and_consume_goods(void) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Process'n'Consume Goods");
-    g_city.houses_reset_demands();
-    house_demands &demands = g_city.houses;
-    bool has_expanded = false;
-    buildings_house_do([&] (building &h) {
-        building_house *house = h.dcast_house();
-        e_building_type save_type = h.type;
-        has_expanded |= house->evolve(&demands);
-        e_building_type new_type = h.type;
-        if (new_type != save_type) {
-            h.clear_impl();
-        }
-    });
-
-    if (game_time_day() == 0 || game_time_day() == 7) {
-        buildings_house_do([&] (building &h) {
-            building_house *house = h.dcast_house();
-            //building_house_check_for_corruption(&h);
-            house->consume_resources();
-        });
-    }
-
-    if (has_expanded) {
-        map_routing_update_land();
-    }
-}
-
 void building_house_determine_evolve_text(building* house, int worst_desirability_building) {
     int level = house->subtype.house_level;
 

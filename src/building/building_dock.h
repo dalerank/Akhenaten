@@ -2,8 +2,6 @@
 
 #include "building/building.h"
 
-void building_river_update_open_water_access();
-
 class building_dock : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_DOCK, building_dock)

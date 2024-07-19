@@ -45,13 +45,6 @@ static const int ENEMY_ATTACK_PRIORITY[4][100] = {
    BUILDING_HOUSE_MEAGER_SHANTY,  BUILDING_HOUSE_STURDY_HUT,    BUILDING_HOUSE_CRUDE_HUT,   0},
   {BUILDING_MILITARY_ACADEMY, BUILDING_POLICE_STATION, 0}};
 
-static const int RIOTER_ATTACK_PRIORITY[100] = {
-    79,  78,  77,  29, 28,  27,  26,  25,  85,  84,  32, 33, 98, 65, 66,  67,  68,  69,  87,  86, 30,
-    31,  47,  52,  46, 48,  53,  51,  24,  23,  22,  21, 20, 46, 48, 114, 113, 112, 111, 110, 71, 72,
-    70,  74,  75,  76, 60,  61,  62,  63,  64,  34,  36, 37, 35, 94, 19,  18,  17,  16,  15,  49, 106,
-    107, 109, 108, 90, 100, 101, 102, 103, 104, 105, 55, 81, 91, 92, 14,  13,  12,  11,  10,  0
-};
-
 static const int LAYOUT_ORIENTATION_OFFSETS[13][4][40]= {
       {
        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0,
@@ -185,37 +178,12 @@ static const int LAYOUT_ORIENTATION_OFFSETS[13][4][40]= {
      }
 };
 
-int formation_rioter_get_target_building(int* x_tile, int* y_tile) {
-    int best_type_index = 100;
-    building* best_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID)
-            continue;
-
-        for (int t = 0; t < 100 && t <= best_type_index && RIOTER_ATTACK_PRIORITY[t]; t++) {
-            if (b->type == RIOTER_ATTACK_PRIORITY[t]) {
-                if (t < best_type_index) {
-                    best_type_index = t;
-                    best_building = b;
-                }
-                break;
-            }
-        }
-    }
-    if (!best_building)
-        return 0;
-
-    if (best_building->type == BUILDING_STORAGE_YARD) {
-        *x_tile = best_building->tile.x() + 1;
-        *y_tile = best_building->tile.y();
-        return best_building->id + 1;
-    } else {
-        *x_tile = best_building->tile.x();
-        *y_tile = best_building->tile.y();
-        return best_building->id;
-    }
-}
+static const int ENEMY_SIMPLE_ATTACK_PRIORITY[100] = {
+    79,  78,  77,  29, 28,  27,  26,  25,  85,  84,  32, 33, 98, 65, 66,  67,  68,  69,  87,  86, 30,
+    31,  47,  52,  46, 48,  53,  51,  24,  23,  22,  21, 20, 46, 48, 114, 113, 112, 111, 110, 71, 72,
+    70,  74,  75,  76, 60,  61,  62,  63,  64,  34,  36, 37, 35, 94, 19,  18,  17,  16,  15,  49, 106,
+    107, 109, 108, 90, 100, 101, 102, 103, 104, 105, 55, 81, 91, 92, 14,  13,  12,  11,  10,  0
+};
 
 static void set_enemy_target_building(formation* m) {
     int attack = m->attack_type;
@@ -252,8 +220,8 @@ static void set_enemy_target_building(formation* m) {
             if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile.grid_offset()))
                 continue;
 
-            for (int n = 0; n < 100 && n <= best_type_index && RIOTER_ATTACK_PRIORITY[n]; n++) {
-                if (b->type == RIOTER_ATTACK_PRIORITY[n]) {
+            for (int n = 0; n < 100 && n <= best_type_index && ENEMY_SIMPLE_ATTACK_PRIORITY[n]; n++) {
+                if (b->type == (e_building_type)(ENEMY_SIMPLE_ATTACK_PRIORITY[n])) {
                     int distance = calc_maximum_distance(m->home, b->tile);
                     if (n < best_type_index) {
                         best_type_index = n;

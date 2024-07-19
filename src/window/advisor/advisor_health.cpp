@@ -74,7 +74,7 @@ int ui::advisor_health_window::draw_background() {
     int width = text_draw_number(1000 * building_count_active(BUILDING_MORTUARY), '@', " ", 280, 172, FONT_NORMAL_BLACK_ON_DARK);
     lang_text_draw(56, 6, 280 + width, 172, FONT_NORMAL_BLACK_ON_DARK);
 
-    int pct_physician = city_health_coverage_physician();
+    int pct_physician = g_coverage.physician;
     if (pct_physician == 0) {
         lang_text_draw_centered(57, 10, 440, 172, 160, FONT_NORMAL_BLACK_ON_DARK);
     } else if (pct_physician < 100) {

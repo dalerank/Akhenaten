@@ -9,7 +9,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/scenario.h"
-#include "sound/music.h"
+#include "sound/sound.h"
 #include "window/window_city.h"
 
 static void button_accept(int param1, int param2);
@@ -83,7 +83,7 @@ static void button_continue_governing(int months, int param2) {
     g_city.victory_state.continue_governing(months);
     window_city_show();
     g_city.victory_state.reset();
-    sound_music_update(true);
+    g_sound.music_update(/*force*/true);
 }
 
 void window_victory_dialog_show(void) {

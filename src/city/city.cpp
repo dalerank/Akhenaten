@@ -6,6 +6,7 @@
 #include "city/trade.h"
 #include "city/buildings.h"
 #include "grid/water.h"
+#include "core/profiler.h"
 #include "game/difficulty.h"
 #include "scenario/scenario.h"
 #include "core/game_environment.h"
@@ -292,6 +293,13 @@ bool city_t::available_resource(e_resource resource) {
     return can_produce_resource(raw_resource);
 }
 
+void city_t::buildings_generate_figure() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Generate");
+    buildings_valid_do([] (building &b) {
+        b.figure_generate();
+    });
+}
+
 
 void city_t::fishing_points_t::update(int points_num) {
     clear();
@@ -572,7 +580,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.senet_house_plays);
     iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.senet_house_no_shows_weighted);
     iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.venue_needing_shows);
-    iob->bind(BIND_SIGNATURE_INT32, &data.culture.average_entertainment);
+    iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_entertainment);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.entertainment);
     iob->bind(BIND_SIGNATURE_INT32, &data.festival.months_since_festival); // ok
 
@@ -699,10 +707,10 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.festival.grand_cost); // 93 --> 90
     iob->bind(BIND_SIGNATURE_INT32, &data.festival.grand_alcohol);
     iob->bind(BIND_SIGNATURE_INT32, &data.festival.not_enough_alcohol);
-    iob->bind(BIND_SIGNATURE_INT32, &data.culture.average_religion);
-    iob->bind(BIND_SIGNATURE_INT32, &data.culture.average_education);
-    iob->bind(BIND_SIGNATURE_INT32, &data.culture.average_health);
-    iob->bind(BIND_SIGNATURE_INT32, &data.culture.religion_coverage);
+    iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_religion);
+    iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_education);
+    iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_health);
+    iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.common_religion);
     iob->bind(BIND_SIGNATURE_INT32, &data.festival.first_festival_effect_months);
     iob->bind(BIND_SIGNATURE_INT32, &data.festival.second_festival_effect_months);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_4454);
@@ -967,4 +975,33 @@ bool city_t::determine_granary_get_foods(resource_list &foods, int road_network)
     }, BUILDING_GRANARY);
 
     return foods.any();
+}
+
+void city_t::buildings_t::update_tick(bool refresh_only) {
+    for (auto it = building_begin(), end = building_end(); it != end; ++it) {
+        if (it->is_valid()) {
+            it->update_tick(refresh_only);
+        }
+    }
+}
+
+void city_t::buildings_t::reset_dock_wharf_counters() {
+    working_wharfs = 0;
+    shipyard_boats_requested = 0;
+    for (int i = 0; i < 8; i++) {
+        working_dock_ids[i] = 0;
+    }
+    working_docks = 0;
+}
+
+void city_t::buildings_t::update_day() {
+    buildings_valid_do([] (building &b) {
+        b.dcast()->update_day();
+    });
+}
+
+void city_t::buildings_t::update_month() {
+    buildings_valid_do([] (building &b) {
+        b.dcast()->update_month();
+    });
 }

@@ -5,10 +5,11 @@
 
 #include "city/city_resource.h"
 #include "empire/trade_route.h"
+#include "earthquake.h"
+#include "emperor_change.h"
 #include "events.h"
 #include "game/difficulty.h"
 #include "game/settings.h"
-#include "scenario/scenario.h"
 
 #include "js/js_game.h"
 
@@ -365,3 +366,8 @@ io_buffer* iob_scenario_map_name = new io_buffer([](io_buffer* iob, size_t versi
     iob->bind(BIND_SIGNATURE_RAW, &g_scenario_data.scenario_name, MAX_SCENARIO_NAME);
 });
 
+void scenario_data_t::update() {
+    scenario_earthquake_process();
+    //scenario_gladiator_revolt_process();
+    scenario_kingdome_change_process();
+}

@@ -15,8 +15,10 @@
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"
 #include "grid/bridge.h"
+#include "scenario/earthquake.h"
 #include "grid/building_tiles.h"
 #include "grid/grid.h"
+#include "grid/trees.h"
 #include "grid/property.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
@@ -59,7 +61,8 @@ void map_orientation_change(int counter_clockwise) {
 
     map_tiles_update_all_empty_land();
     map_tiles_update_all_meadow();
-    map_tiles_update_all_vegetation_tiles();
+    map_tiles_upadte_all_marshland_tiles();
+    map_tree_update_all_tiles();
     map_tiles_update_all_rubble();
     map_tiles_update_all_roads();
     map_tiles_update_all_plazas();

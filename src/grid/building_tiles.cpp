@@ -7,7 +7,7 @@
 
 #include "building/industry.h"
 #include "building/building_farm.h"
-#include "grid/aqueduct.h"
+#include "grid/canals.h"
 #include "grid/bridge.h"
 #include "grid/building.h"
 #include "grid/figure.h"
@@ -526,7 +526,7 @@ void map_building_tiles_remove(int building_id, tile2i tile) {
             map_property_set_multi_tile_size(grid_offset, 1);
             map_property_clear_multi_tile_xy(grid_offset);
             map_property_mark_draw_tile(grid_offset);
-            map_aqueduct_set(grid_offset, 0);
+            map_canal_set(grid_offset, 0);
             map_building_set(grid_offset, 0);
             map_building_damage_clear(grid_offset);
             map_sprite_clear_tile(grid_offset);
@@ -563,7 +563,7 @@ void map_building_tiles_set_rubble(int building_id, tile2i tile, int size) {
 
             map_property_clear_constructing(grid_offset);
             map_property_set_multi_tile_size(grid_offset, 1);
-            map_aqueduct_set(grid_offset, 0);
+            map_canal_set(grid_offset, 0);
             map_building_set(grid_offset, 0);
             map_building_damage_clear(grid_offset);
             map_sprite_clear_tile(grid_offset);

@@ -3,7 +3,6 @@
 #include "figuretype/figure_market_buyer.h"
 #include "building/building_house.h"
 #include "building/model.h"
-#include "figuretype/crime.h"
 #include "game/resource.h"
 #include "grid/building.h"
 #include "grid/grid.h"

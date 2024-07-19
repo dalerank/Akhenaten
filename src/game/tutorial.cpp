@@ -19,7 +19,7 @@
 #include "dev/debug.h"
 #include <iostream>
 
-static tutorial_flags_t g_tutorials_flags;
+tutorial_flags_t g_tutorials_flags;
 const tutorial_stage_t tutorial_stage;
 
 declare_console_command_p(runstage, game_cheat_tutorial_step);
@@ -27,10 +27,6 @@ void game_cheat_tutorial_step(std::istream &is, std::ostream &) {
     std::string args;
     is >> args;
     tutorial_update_step(args.c_str());
-}
-
-const tutorial_flags_t* tutorial_flags_struct() {
-    return &g_tutorials_flags;
 }
 
 static void post_message(int message) {
@@ -320,7 +316,7 @@ int tutorial_handle_collapse(void) {
     return 1;
 }
 
-void tutorial_on_crime(void) {
+void tutorial_flags_t::on_crime() {
     if (!g_tutorials_flags.pharaoh.crime) {
         g_tutorials_flags.pharaoh.crime = 1;
         building_menu_update(tutorial_stage.tutorial_crime);
@@ -429,7 +425,7 @@ void tutorial_update_step(pcstr s) {
     }
 }
 
-void tutorial_starting_message() {
+void tutorial_flags_t::update_starting_message() {
     if (!g_scenario_data.meta.start_message_shown) {
         if (g_scenario_data.meta.start_message) {
             post_message(g_scenario_data.meta.start_message);

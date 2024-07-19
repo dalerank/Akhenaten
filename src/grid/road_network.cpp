@@ -75,7 +75,7 @@ static int mark_road_network(int grid_offset, uint8_t network_id) {
     return size;
 }
 
-void map_road_network_update(void) {
+void city_map_t::update_road_network() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Road Network Update");
     g_city.map.clear_largest_road_networks();
     map_grid_clear(&network);

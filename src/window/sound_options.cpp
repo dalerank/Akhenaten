@@ -127,7 +127,7 @@ static void button_toggle(int type, int param2) {
     g_settings.toggle_sound_enabled(type);
     if (type == SOUND_MUSIC) {
         if (g_settings.get_sound(SOUND_MUSIC)->enabled)
-            sound_music_update(true);
+            g_sound.music_update(true);
         else {
             sound_music_stop();
         }
@@ -150,7 +150,7 @@ static void button_cancel(int param1, int param2) {
     g_settings.reset_sound(SOUND_CITY, data.original_city.enabled, data.original_city.volume);
     if (data.original_music.enabled) {
         if (g_settings.sound_is_enabled(SOUND_MUSIC) != data.original_music.enabled)
-            sound_music_update(true);
+            g_sound.music_update(true);
 
     } else {
         sound_music_stop();

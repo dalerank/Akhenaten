@@ -2,15 +2,22 @@
 
 #include "building/construction/build_planner.h"
 #include "building/model.h"
+#include "building/building_barracks.h"
+#include "building/building_granary.h"
 #include "core/game_environment.h"
 #include "core/random.h"
 #include "core/profiler.h"
 #include "core/log.h"
+#include "grid/vegetation.h"
+#include "grid/trees.h"
+#include "grid/canals.h"
+#include "grid/natives.h"
 #include "editor/editor.h"
 #include "game/file_editor.h"
 #include "game/settings.h"
 #include "game/state.h"
-#include "game/tick.h"
+#include "game/time.h"
+#include "game/tutorial.h"
 #include "graphics/elements/warning.h"
 #include "graphics/font.h"
 #include "graphics/image.h"
@@ -22,6 +29,7 @@
 #include "io/gamefiles/lang.h"
 #include "content/content.h"
 #include "mission.h"
+#include "figure/formation.h"
 #include "scenario/events.h"
 #include "scenario/scenario.h"
 #include "sound/sound_city.h"
@@ -35,6 +43,33 @@
 #include "platform/renderer.h"
 #include "io/movie_writer.h"
 #include "graphics/screen.h"
+#include "widget/minimap.h"
+#include "city/city.h"
+#include "city/trade.h"
+#include "city/sentiment.h"
+#include "city/city_floods.h"
+#include "city/population.h"
+#include "city/message.h"
+#include "city/festival.h"
+#include "building/maintenance.h"
+#include "building/industry.h"
+#include "io/gamestate/boilerplate.h"
+#include "scenario/distant_battle.h"
+#include "scenario/empire.h"
+#include "empire/empire.h"
+#include "window/file_dialog.h"
+#include "grid/routing/routing_terrain.h"
+#include "grid/tiles.h"
+#include "undo.h"
+
+#include "dev/debug.h"
+#include <iostream>
+
+declare_console_command_p(nextyear, game_cheat_next_year)
+void game_cheat_next_year(std::istream &is, std::ostream &os) {
+    game_time_advance_year();
+    game.advance_year();
+}
 
 namespace {
     static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};
@@ -76,6 +111,245 @@ bool game_t::animation_should_advance(uint32_t speed) {
     }
 
     return animation_timers[speed].should_update;
+}
+
+void game_t::update_impl(int ticks) {
+    OZZY_PROFILER_SECTION("Game/Update/Impl");
+    if (editor_is_active()) {
+        random_generate_next(); // update random to randomize native huts
+        figure_action_handle(); // just update the flag figures
+        return;
+    }
+
+    random_generate_next();
+    game_undo_reduce_time_available();
+
+    g_tutorials_flags.update_starting_message();
+    floodplains_tick_update(false);
+
+    update_city(ticks);
+
+    if (game_time_advance_tick()) {
+        advance_day();
+    }
+
+    figure_action_handle();
+
+    g_scenario_data.update();
+    g_city.victory_check();
+}
+
+void game_t::update_city(int ticks) {
+    g_city.buildings.update_tick(game.paused);
+
+    switch (gametime().tick) {
+    case 1:
+        city_gods_update(false);
+        break;
+    case 2:
+        g_sound.music_update(false);
+        break;
+    case 3:
+        widget_minimap_invalidate();
+        break;
+    case 4:
+        g_city.kingdome.update();
+        break;
+    case 5:
+        formation_update_all(false);
+        break;
+    case 6:
+        map_natives_check_land();
+        break;
+    case 7:
+        g_city.map.update_road_network();
+        break;
+    case 8:
+        city_granaries_calculate_stocks();
+        break;
+    case 9:
+        // nothing yet
+    case 10:
+        building_update_highest_id();
+        break;
+    case 12:
+        g_city.house_service_decay_houses_covered();
+        break;
+    case 16:
+        city_resource_calculate_storageyard_stocks();
+        break;
+    case 17:
+        city_resource_calculate_food_stocks_and_supply_wheat();
+        break;
+    case 18:
+        map_vegetation_growth_update();
+        map_tree_growth_update();
+        break;
+    case 19:
+        g_city.buildings_update_open_water_access();
+        break;
+    case 20:
+        building_industry_update_production();
+        break;
+    case 21:
+        building_maintenance_check_kingdome_access();
+        break;
+    case 22:
+        g_city.house_population_update_room();
+        break;
+    case 23:
+        g_city.migration_update();
+        g_city.house_population_update_migration();
+        break;
+    case 24:
+        g_city.house_population_evict_overcrowded();
+        break;
+    case 25:
+        g_city.labor.update();
+        break;
+    case 27:
+        g_city.buildings.update_wells_range();
+        g_city.buildings.update_canals_from_water_lifts();
+        map_update_canals();
+        break;
+    case 28:
+        g_city.buildings.update_water_supply_houses();
+        g_city.buildings.update_religion_supply_houses();
+        break;
+    case 29:
+        formation_update_all(true);
+        break;
+    case 30:
+        widget_minimap_invalidate();
+        break;
+    case 31:
+        building_barracks_decay_tower_sentry_request();
+        g_city.buildings_generate_figure();
+        break;
+    case 32:
+        city_trade_update();
+        break;
+    case 33:
+        g_city.buildings.update_counters();
+        g_city.avg_coverage.update();
+        g_city.health.update_coverage();
+        building_industry_update_farms();
+        break;
+    case 34:
+        g_city.government_distribute_treasury();
+        break;
+    case 35:
+        g_city.house_service_decay_services();
+        g_city.house_service_update_health();
+        break;
+    case 36:
+        g_city.house_service_calculate_culture_aggregates();
+        break;
+    case 37:
+        g_desirability.update();
+        break;
+    case 38:
+        building_update_desirability();
+        break;
+    case 39:
+        g_city.house_process_evolve_and_consume_goods();
+        break;
+    case 40:
+        building_update_state();
+        break;
+    case 43:
+        building_maintenance_update_burning_ruins();
+        break;
+    case 44:
+        building_maintenance_check_fire_collapse();
+        break;
+    case 45:
+        g_city.figures_generate_criminals();
+        break;
+    case 46:
+        building_industry_update_wheat_production();
+        break;
+    case 48:
+        g_city.house_service_decay_tax_collector();
+        break;
+    case 49:
+        g_city.avg_coverage.update();
+        city_festival_calculate_costs();
+        break;
+    case 50:
+        break;
+    }
+}
+
+void game_t::advance_year() {
+    scenario_empire_process_expansion();
+    game_undo_disable();
+    game_time_advance_year();
+    city_population_request_yearly_update();
+    city_finance_handle_year_change();
+    g_city.migration_advance_year();
+    g_empire.reset_yearly_trade_amounts();
+    building_maintenance_update_fire_direction();
+    g_city.ratings_update(/*yearly_update*/true);
+    //    city_gods_reset_yearly_blessings();
+}
+
+void game_t::advance_month() {
+    g_city.migration_reset_newcomers();
+    g_city.health.update();
+    g_scenario_data.update_random_event();
+    city_finance_handle_month_change();
+    city_resource_consume_food();
+    scenario_distant_battle_process();
+    random_generate_next();                  // TODO: find out the source / reason for this
+    scenario_events_process();
+
+    g_city.victory_state.update_months_to_govern();
+    g_city.update_allowed_foods();
+    formation_update_monthly_morale_at_rest();
+    city_message_decrease_delays();
+
+    map_tiles_update_all_roads();
+    //    map_tiles_river_refresh_entire();
+    map_routing_update_land_citizen();
+    //    city_message_sort_and_compact();
+
+    if (game_time_advance_month()) {
+        advance_year();
+    } else {
+        g_city.ratings_update(/*yearly_update*/false);
+    }
+
+    city_population_record_monthly();
+    city_festival_update();
+    g_city.buildings.update_month();
+
+    if (g_city.can_produce_resource(RESOURCE_FISH)) {
+        g_city.fishing_points.update(0);
+    }
+
+    if (g_settings.monthly_autosave) {
+        bstring256 autosave_file("autosave_month.", saved_game_data_expanded.extension);
+        GamestateIO::write_savegame(autosave_file);
+    }
+}
+
+void game_t::advance_day() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Advance Day");
+    //    map_advance_floodplain_growth();
+
+    if (game_time_advance_day()) {
+        advance_month();
+    }
+
+    city_sentiment_update_day();
+    city_criminals_update_day();
+    city_plague_update_day();
+    g_city.environment.river_update_flotsam();
+    g_city.buildings.update_day();
+    g_city.figures_update_day();
+
+    tutorial_on_day_tick();
 }
 
 void game_t::shutdown() {
@@ -303,13 +577,14 @@ void game_exit_editor() {
 int game_reload_language() {
     return reload_language(0, 1);
 }
-void game_run() {
+
+void game_t::update() {
     OZZY_PROFILER_SECTION("Game/Run");
     game.animation_timers_update();
 
     int num_ticks = get_elapsed_ticks();
     for (int i = 0; i < num_ticks; i++) {
-        game_tick_run();
+        update_impl(1);
 
         if (window_is_invalid()) {
             break;

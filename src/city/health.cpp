@@ -1,8 +1,12 @@
 #include "health.h"
 
+#include "core/profiler.h"
+#include "core/calc.h"
 #include "building/building_house.h"
 #include "building/destruction.h"
+#include "building/count.h"
 #include "city/city.h"
+#include "city/coverage.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -106,6 +110,17 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
         city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, false, MESSAGE_HEALTH_PLAGUE, btype, grid_offset);
     }
 }
+
+void city_health_t::update_coverage() {
+    OZZY_PROFILER_SECTION("Game/Update/Health Coverage");
+    auto& coverage = g_coverage;
+    int population = g_city.population.population;
+
+    // health
+    coverage.mortuary = std::min<int>(calc_percentage(1000 * building_count_active(BUILDING_MORTUARY), population), 100);
+    coverage.physician = std::min<int>(calc_percentage(1000 * building_count_active(BUILDING_PHYSICIAN), population), 100);
+}
+
 
 void city_health_t::update() {
     if (g_city.population.population < 200 || scenario_is_mission_rank(1) || scenario_is_mission_rank(2)) {

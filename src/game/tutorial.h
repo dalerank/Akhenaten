@@ -26,8 +26,6 @@ struct tutorial_stage_t {
 #undef _RR
 };
 
-extern const tutorial_stage_t tutorial_stage;
-
 struct tutorial_flags_t {
     struct {
         bool started;
@@ -81,9 +79,13 @@ struct tutorial_flags_t {
         bool tut8_start;
 
     } pharaoh;
+
+    void update_starting_message();
+    void on_crime();
 };
 
-const tutorial_flags_t* tutorial_flags_struct();
+extern tutorial_flags_t g_tutorials_flags;
+extern const tutorial_stage_t tutorial_stage;
 
 void tutorial_init(bool clear_all_flags, bool custom);
 
@@ -104,7 +106,6 @@ int tutorial_extra_damage_risk();
 int tutorial_handle_fire();
 int tutorial_handle_collapse();
 
-void tutorial_on_crime();
 void tutorial_on_disease();
 void tutorial_on_filled_granary(int quantity);
 void tutorial_on_gold_extracted();
@@ -112,7 +113,6 @@ void tutorial_on_religion();
 void tutorial_on_house_evolve(e_house_level level);
 
 void tutorial_check_resources_on_storageyard();
-void tutorial_starting_message();
 
 void tutorial_on_day_tick();
 void tutorial_on_month_tick();

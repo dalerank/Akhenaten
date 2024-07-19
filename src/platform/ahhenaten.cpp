@@ -431,7 +431,7 @@ static void run_and_draw() {
 
     game_imgui_overlay_begin_frame();
 
-    game_run();
+    game.update();
     Uint32 time_between_run_and_draw = SDL_GetTicks();
 
     game_frame_draw();

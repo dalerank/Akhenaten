@@ -143,7 +143,7 @@ static void cycle_states_recalc() {
     int cycle_frame = floods_current_subcycle();
 
     // clamp and update flood quality
-    if (game_time_tick() == 1 && data.state != FLOOD_STATE_FLOODING) {
+    if (gametime().tick == 1 && data.state != FLOOD_STATE_FLOODING) {
         if (data.quality > data.quality_next) {
             data.quality -= 5;
             if (data.quality < data.quality_next) // clamp if over-shooting
@@ -301,7 +301,7 @@ void floodplains_tick_update(bool calc_only) {
     }
 
     // update at the end of each day
-    if (game_time_tick() == 50) {
+    if (gametime().tick == 50) {
         if (floodplains_is(FLOOD_STATE_INUNDATED)) {
             g_city.religion.osiris_flood_will_destroy_active = 0;
         }

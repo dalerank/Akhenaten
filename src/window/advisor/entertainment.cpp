@@ -41,7 +41,7 @@ static int get_entertainment_advice(void) {
     if (demands.missing.entertainment > demands.missing.more_entertainment) {
         return 3;
     } else if (!demands.missing.more_entertainment) {
-        return city_culture_average_entertainment() ? 1 : 0;
+        return g_city.avg_coverage.average_entertainment ? 1 : 0;
     } else if (g_city.entertainment.venue_needing_shows) {
         return 3 + g_city.entertainment.venue_needing_shows;
     } else {
@@ -115,7 +115,7 @@ static void draw_festival_info() {
 int ui::advisor_entertainment_window::draw_background() {
     painter ctx = game.painter();
     city_gods_update(true);
-    city_culture_calculate();
+    g_city.avg_coverage.update();
 
     outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 8, vec2i{10, 10});
@@ -134,10 +134,11 @@ int ui::advisor_entertainment_window::draw_background() {
     // theaters, jugglers
     int y_offset = 77;
     int y_dist = 23;
-    draw_entertainer(0, y_offset, BUILDING_BOOTH, g_city.entertainment.booth_shows, city_culture_coverage_booth(), 400);
-    draw_entertainer(1, y_offset + y_dist, BUILDING_BANDSTAND, g_city.entertainment.bandstand_shows, city_culture_coverage_bandstand(), 700);
-    draw_entertainer(2, y_offset + y_dist * 2, BUILDING_PAVILLION, g_city.entertainment.pavilion_shows, city_culture_coverage_colosseum(), 1200);
-    draw_entertainer(3, y_offset + y_dist * 3, BUILDING_SENET_HOUSE, g_city.entertainment.senet_house_plays, city_culture_coverage_hippodrome(), 0);
+
+    draw_entertainer(0, y_offset, BUILDING_BOOTH, g_city.entertainment.booth_shows, g_coverage.booth, 400);
+    draw_entertainer(1, y_offset + y_dist, BUILDING_BANDSTAND, g_city.entertainment.bandstand_shows, g_coverage.bandstand, 700);
+    draw_entertainer(2, y_offset + y_dist * 2, BUILDING_PAVILLION, g_city.entertainment.pavilion_shows, g_coverage.pavilion, 1200);
+    draw_entertainer(3, y_offset + y_dist * 3, BUILDING_SENET_HOUSE, g_city.entertainment.senet_house_plays, g_coverage.senet_house, 0);
     draw_entertainer(9, y_offset + y_dist * 4, BUILDING_ZOO, 0, 0, 0);
 
     lang_text_draw_multiline(58, 7 + get_entertainment_advice(), vec2i{60, 208}, 512, FONT_NORMAL_BLACK_ON_LIGHT);

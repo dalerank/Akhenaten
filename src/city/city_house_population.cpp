@@ -1,4 +1,4 @@
-#include "house_population.h"
+#include "city_house_population.h"
 
 #include "building/building.h"
 #include "building/building_house.h"
@@ -70,7 +70,7 @@ static void fill_building_list_with_houses(void) {
     }
 }
 
-void house_population_update_room(void) {
+void city_t::house_population_update_room() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/House Population Update");
     city_population_clear_capacity();
 
@@ -221,9 +221,8 @@ void city_population_reached_milestone(bool force) {
         city_message_population_post(true, MESSAGE_POPULATION_25000, 0, 0);
 }
 
-void house_population_update_migration() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/House Migration Update");
-    g_city.migration_update();
+void city_t::house_population_update_migration() {
+    OZZY_PROFILER_SECTION("Game/Update/House Migration Update");
 
     city_population_yearly_update();
     calculate_working_population();
@@ -231,7 +230,7 @@ void house_population_update_migration() {
     city_population_reached_milestone(false);
 }
 
-void house_population_evict_overcrowded(void) {
+void city_t::house_population_evict_overcrowded() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/House Overcrown Update");
     int size = building_list_large_size();
     const int* items = building_list_large_items();

@@ -43,6 +43,7 @@ public:
     bool is_audio_stream_active();
     void set_volume(int b, int e, int percentage);
     void play_effect(int effect);
+    void music_update(bool forces);
 
 private:
     static void channel_finished_cb(int channel);

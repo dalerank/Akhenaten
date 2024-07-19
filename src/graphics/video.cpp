@@ -87,7 +87,7 @@ static int load_smk(const char* filename) {
 
 static void end_video(void) {
     g_sound.use_default_music_player();
-    sound_music_update(true);
+    g_sound.music_update(true);
     graphics_renderer()->release_custom_texture_buffer(CUSTOM_IMAGE_VIDEO);
 }
 

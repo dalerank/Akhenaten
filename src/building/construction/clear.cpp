@@ -7,7 +7,7 @@
 #include "figuretype/figure_homeless.h"
 #include "game/undo.h"
 #include "graphics/window.h"
-#include "grid/aqueduct.h"
+#include "grid/canals.h"
 #include "grid/bridge.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
@@ -132,7 +132,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
             } else if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
                 items_placed++;
-                map_aqueduct_remove(grid_offset);
+                map_canal_remove(grid_offset);
             } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 if (!measure_only && map_bridge_count_figures(grid_offset) > 0)
                     city_warning_show(WARNING_PEOPLE_ON_BRIDGE);

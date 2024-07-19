@@ -166,7 +166,7 @@ static int get_sentiment_contribution_religion_coverage() {
     if (city_gods_knowns().size() > 0) {
         int average_coverage = 0;
         for (auto *god : city_gods_knowns()) {
-            average_coverage += city_culture_coverage_religion(god->type);
+            average_coverage += city_avg_coverage_religion(god->type);
         }
 
         average_coverage /= (int)city_gods_knowns().size();

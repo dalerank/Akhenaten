@@ -281,32 +281,6 @@ int building_dock::count_idle_dockers() const {
     return num_idle;
 }
 
-void building_river_update_open_water_access() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Open Water Access Update");
-    tile2i river_entry = scenario_map_river_entry();
-    if (!river_entry.valid()) {
-        return;
-    }
-
-    map_routing_calculate_distances_water_boat(river_entry);
-
-    buildings_valid_do([] (building &b) {
-        bool found = map_terrain_is_adjacent_to_open_water(b.tile, b.size);
-        if (found) {
-            b.has_water_access = true;
-            b.has_open_water_access = true;
-            ferry_tiles ppoints = map_water_docking_points(b);
-            b.data.dock.dock_tiles[0] = ppoints.point_a.grid_offset();
-            b.data.dock.dock_tiles[1] = ppoints.point_b.grid_offset();
-        } else {
-            b.has_water_access = false;
-            b.has_open_water_access = false;
-            b.data.dock.dock_tiles[0] = -1;
-            b.data.dock.dock_tiles[1] = -1;
-        }
-    }, BUILDING_DOCK, BUILDING_FISHING_WHARF, BUILDING_SHIPWRIGHT);
-}
-
 bool map_tile_is_connected_to_open_water(tile2i tile) {
     tile2i river_entry = scenario_map_river_entry();
     map_routing_calculate_distances_water_boat(river_entry);

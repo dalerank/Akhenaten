@@ -1,4 +1,4 @@
-#include "government.h"
+#include "city/city.h"
 
 #include "building/building.h"
 #include "building/count.h"
@@ -7,7 +7,7 @@
 #include "core/profiler.h"
 #include "config/config.h"
 
-void building_government_distribute_treasury() {
+void city_t::government_distribute_treasury() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Distribute Treasury");
 
     constexpr int greate_palace_units = 8;

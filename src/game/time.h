@@ -61,11 +61,6 @@ int game_time_month(void);
  */
 int game_time_day(void);
 
-/**
- * The current game tick within the day
- */
-int game_time_tick(void);
-
 int game_time_absolute_day(bool since_start = false);
 int game_time_absolute_tick(bool since_start = false);
 

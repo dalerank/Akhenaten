@@ -15,21 +15,7 @@ int house_population_add_to_city(int num_people);
  */
 int house_population_remove_from_city(int num_people);
 
-/**
- * Update room available in houses
- */
-void house_population_update_room(void);
-
-/**
- * Update migration statistics and create immigrants/emigrants
- */
-void house_population_update_migration();
 void city_population_reached_milestone(bool force);
-
-/**
- * Evict people from overcrowded houses
- */
-void house_population_evict_overcrowded(void);
 
 /**
  * Create immigrants

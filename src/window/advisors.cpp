@@ -159,8 +159,8 @@ static void init() {
     g_city.migration_determine_reason();
 
     g_city.houses_calculate_culture_demands();
-    city_culture_update_coverage();
-    city_health_update_coverage();
+    g_city.avg_coverage.update();
+    g_city.health.update();
 
     city_resource_calculate_food_stocks_and_supply_wheat();
     formation_calculate_figures();

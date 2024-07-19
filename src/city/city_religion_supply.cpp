@@ -1,10 +1,12 @@
-#include "religion_supply.h"
+#include "city_religion_supply.h"
 
 #include "building/building.h"
+#include "building/count.h"
 #include "core/svector.h"
 #include "core/profiler.h"
 #include "grid/building.h"
 #include "grid/grid.h"
+#include "city/city.h"
 
 static void mark_shrine_access(building* shrine, int radius) {
     grid_area area = map_grid_get_area(shrine->tile, 1, radius);
@@ -21,8 +23,7 @@ static void mark_shrine_access(building* shrine, int radius) {
     }
 }
 
-
-void map_religion_supply_update_houses() {
+void city_t::buildings_t::update_religion_supply_houses() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Religion Supply Update");
     svector<building*, 512> shrines;
     for (auto& b : city_buildings()) {
@@ -39,4 +40,15 @@ void map_religion_supply_update_houses() {
     for (auto& s : shrines) {
         mark_shrine_access(s, 3);
     }
+}
+
+void city_t::buildings_t::update_counters() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Buildin Count Update");
+    building_clear_counters();
+    g_city.buildings.reset_dock_wharf_counters();
+    g_city.health.reset_mortuary_workers();
+
+    buildings_valid_do ( [] (building &b) {
+        b.dcast()->update_count();
+    });
 }

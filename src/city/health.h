@@ -12,4 +12,5 @@ struct city_health_t {
     void update();
     void reset_mortuary_workers();
     void add_mortuary_workers(int amount);
+    void update_coverage();
 };

@@ -741,7 +741,7 @@ void city_gods_calculate_mood_targets() {
 
     // base happiness: percentage of houses covered
     for (auto *god: city_gods_knowns()) {
-        god->target_mood = city_culture_coverage_religion(god->type);
+        god->target_mood = city_avg_coverage_religion(god->type);
     }
 
     int max_temples = 0;

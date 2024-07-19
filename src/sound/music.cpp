@@ -123,8 +123,8 @@ void sound_music_play_editor() {
     }
 }
 
-void sound_music_update(bool force) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Music Update");
+void sound_manager_t::music_update(bool force) {
+    OZZY_PROFILER_SECTION("Game/Sound/Music Update");
     if (g_music_data.next_check && !force) {
         --g_music_data.next_check;
         return;

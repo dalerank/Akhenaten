@@ -20,7 +20,7 @@
 struct empire_city;
 
 struct city_t {
-    struct {
+    struct buildings_t {
         bool palace_placed;
         int32_t palace_building_id;
         tile2i palace_point;
@@ -58,6 +58,17 @@ struct city_t {
 
         bool temple_complex_placed;
         int32_t temple_complex_id;
+
+        void update_tick(bool refresh_only);
+        void update_water_supply_houses();
+        void mark_well_access(building *well);
+        void update_wells_range();
+        void update_canals_from_water_lifts();
+        void update_religion_supply_houses();
+        void update_counters();
+        void reset_dock_wharf_counters();
+        void update_month();
+        void update_day();
     } buildings;
 
     struct {
@@ -168,6 +179,7 @@ struct city_t {
         int32_t last_used_house_remove;
         int32_t graph_order;
     } population;
+
     city_labor_t labor;
     struct {
         int32_t immigration_duration;
@@ -212,13 +224,19 @@ struct city_t {
     } sentiment;
     city_health_t health;
     city_ratings_t ratings;
-    struct {
+
+    struct average_coverage_t {
         int32_t average_entertainment;
         int32_t average_religion;
         int32_t average_education;
         int32_t average_health;
-        int32_t religion_coverage;
-    } culture;
+
+        int32_t common_religion;
+
+        void update();
+        int calc_average_entertainment();
+    } avg_coverage;
+
     struct {
         god_state gods[MAX_GODS];
         int32_t least_happy_god;
@@ -291,6 +309,8 @@ struct city_t {
             int understaffed;
         } granaries;
         int16_t last_used_warehouse;
+
+
     } resource;
     struct {
         int8_t march_enemy;
@@ -316,6 +336,7 @@ struct city_t {
         e_resource docker_import_resource;
         e_resource docker_export_resource;
     } trade;
+
     city_map_t map;
     struct {
         int32_t has_won;
@@ -388,6 +409,15 @@ struct city_t {
 
     void houses_reset_demands();
     void houses_calculate_culture_demands();
+    void house_service_update_health();
+    void house_service_decay_tax_collector();
+    void house_service_decay_services();
+    void house_service_decay_houses_covered();
+    void house_service_calculate_culture_aggregates();
+    void house_population_update_room();
+    void house_population_update_migration();
+    void house_population_evict_overcrowded();
+    void house_process_evolve_and_consume_goods();
 
     void migration_nobles_leave_city(int num_people);
 
@@ -417,6 +447,8 @@ struct city_t {
     int migration_newcomers() { return migration.newcomers; }
     void migration_reset_newcomers() { migration.newcomers = 0; }
 
+    void coverage_update();
+
     void figures_reset();
     void figures_add_animal();
     void figures_add_attacking_native();
@@ -427,6 +459,7 @@ struct city_t {
     void figures_update_day();
     int figures_total_invading_enemies();
     bool figures_has_security_breach();
+    void figures_generate_criminals();
 
     void update_prosperity_explanation();
     bool has_made_money();
@@ -439,6 +472,10 @@ struct city_t {
 
     e_victory_state determine_victory_state();
     void victory_check();
+    void buildings_update_open_water_access();
+
+    void government_distribute_treasury();
+    void buildings_generate_figure();
 };
 
 const uint8_t* city_player_name();

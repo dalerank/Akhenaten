@@ -248,7 +248,7 @@ void figure::advance_route_tile(int roaming_enabled) {
             if (cause_damage) {
                 attack_direction = direction;
                 direction = DIR_FIGURE_ATTACK;
-                if (!(game_time_tick() & 3))
+                if (!(gametime().tick & 3))
                     building_destroy_increase_enemy_damage(target_grid_offset, max_damage);
             }
         }

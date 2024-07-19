@@ -25,9 +25,9 @@ static int get_education_advice() {
         return 4;
 
     int advice_id;
-    int coverage_school = city_culture_coverage_school();
-    int coverage_academy = city_culture_coverage_academy();
-    int coverage_library = city_culture_coverage_library();
+    int coverage_school = g_coverage.school;
+    int coverage_academy = g_coverage.academy;
+    int coverage_library = g_coverage.library;
     if (!demands.requiring.school)
         advice_id = 5; // no demands yet
     else if (!demands.requiring.library) {
@@ -83,7 +83,7 @@ int ui::advisor_education_window::draw_background() {
     width = text_draw_number(75 * building_count_active(BUILDING_SCRIBAL_SCHOOL), '@', " ", 280, 105, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(57, 7, 280 + width, 105, FONT_NORMAL_WHITE_ON_DARK);
 
-    int pct_school = city_culture_coverage_school();
+    int pct_school = g_coverage.school;
     if (pct_school == 0) {
         lang_text_draw_centered(57, 10, 420, 105, 200, FONT_NORMAL_WHITE_ON_DARK);
     } else if (pct_school < 100) {
@@ -99,7 +99,7 @@ int ui::advisor_education_window::draw_background() {
     width = text_draw_number(100 * building_count_active(BUILDING_ACADEMY), '@', " ", 280, 125, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(57, 8, 280 + width, 125, FONT_NORMAL_WHITE_ON_DARK);
 
-    int pct_academy = city_culture_coverage_academy();
+    int pct_academy = g_coverage.academy;
     if (pct_academy == 0)
         lang_text_draw_centered(57, 10, 420, 125, 200, FONT_NORMAL_WHITE_ON_DARK);
     else if (pct_academy < 100)
@@ -115,7 +115,7 @@ int ui::advisor_education_window::draw_background() {
     width = text_draw_number(800 * building_count_active(BUILDING_LIBRARY), '@', " ", 280, 145, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(57, 9, 280 + width, 145, FONT_NORMAL_WHITE_ON_DARK);
 
-    int pct_library = city_culture_coverage_library();
+    int pct_library = g_coverage.library;
     if (pct_library == 0)
         lang_text_draw_centered(57, 10, 420, 145, 200, FONT_NORMAL_WHITE_ON_DARK);
     else if (pct_library < 100)

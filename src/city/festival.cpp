@@ -162,6 +162,7 @@ static void throw_party(void) {
     city_data.festival.planned.size = FESTIVAL_NONE;
     city_data.festival.planned.months_to_go = 0;
 }
+
 void city_festival_update(void) {
     city_data.festival.months_since_festival++;
     if (city_data.festival.first_festival_effect_months)
@@ -176,6 +177,7 @@ void city_festival_update(void) {
             throw_party();
     }
 }
+
 void city_festival_calculate_costs(void) {
     city_data.festival.small_cost = city_data.population.population / 20 + 10;
     city_data.festival.large_cost = city_data.population.population / 10 + 20;

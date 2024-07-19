@@ -300,6 +300,9 @@ struct scenario_data_t {
     } meta;
 
     bool is_saved;
+
+    void update();
+    void update_random_event();
 };
 
 extern scenario_data_t g_scenario_data;

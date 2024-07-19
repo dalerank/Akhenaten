@@ -21,7 +21,7 @@ struct count_data_t {
 
 count_data_t g_count_data;
 
-static void clear_counters() {
+void building_clear_counters() {
     memset(&g_count_data, 0, sizeof(count_data_t));
 }
 
@@ -43,17 +43,6 @@ static void limit_senet_house() {
     if (g_count_data.buildings[BUILDING_SENET_HOUSE].active > 1) {
         g_count_data.buildings[BUILDING_SENET_HOUSE].active = 1;
     }
-}
-
-void building_count_update() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Buildin Count Update");
-    clear_counters();
-    city_buildings_reset_dock_wharf_counters();
-    g_city.health.reset_mortuary_workers();
-
-    buildings_valid_do ( [] (building &b) {
-        b.dcast()->update_count();
-    });
 }
 
 int building_count_active(e_building_type type) {

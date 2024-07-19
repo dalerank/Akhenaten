@@ -20,7 +20,7 @@
 #include "graphics/text.h"
 #include "graphics/view/view.h"
 #include "graphics/window.h"
-#include "grid/aqueduct.h"
+#include "grid/canals.h"
 #include "grid/building.h"
 #include "grid/figure.h"
 #include "grid/grid.h"
@@ -150,7 +150,7 @@ static void buiding_info_init(map_point tile) {
     context.building_id = map_building_at(grid_offset);
     context.rubble_building_type = map_rubble_building_type(grid_offset);
     context.has_reservoir_pipes = map_terrain_is(grid_offset, TERRAIN_GROUNDWATER);
-    context.aqueduct_has_water = map_aqueduct_at(grid_offset) && map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT) < 15;
+    context.aqueduct_has_water = map_canal_at(grid_offset) && map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT) < 15;
 
     city_resource_determine_available();
     context.type = BUILDING_INFO_TERRAIN;

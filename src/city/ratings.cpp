@@ -110,30 +110,30 @@ void city_ratings_t::limit_kingdom(int max_kingdom) {
 void city_ratings_t::update_culture_explanation() {
     int min_percentage = 100;
     int reason = 1;
-    if (g_city.culture.religion_coverage < min_percentage) {
-        min_percentage = g_city.culture.religion_coverage;
+    if (g_city.avg_coverage.average_religion < min_percentage) {
+        min_percentage = g_city.avg_coverage.average_religion;
         reason = 4;
     }
 
-    int pct_booth = city_culture_coverage_booth();
+    int pct_booth = g_coverage.booth;
     if (pct_booth < min_percentage) {
         min_percentage = pct_booth;
         reason = 5;
     }
 
-    int pct_library = city_culture_coverage_library();
+    int pct_library = g_coverage.library;
     if (pct_library < min_percentage) {
         min_percentage = pct_library;
         reason = 2;
     }
     
-    int pct_school = city_culture_coverage_school();
+    int pct_school = g_coverage.school;
     if (pct_school < min_percentage) {
         min_percentage = pct_school;
         reason = 1;
     }
 
-    int pct_academy = city_culture_coverage_academy();
+    int pct_academy = g_coverage.academy;
     if (pct_academy < min_percentage) {
         reason = 3;
     }
@@ -218,7 +218,7 @@ void city_ratings_t::update_culture_rating() {
         return;
     }
 
-    int pct_booth = city_culture_coverage_booth();
+    int pct_booth = g_coverage.booth;
     if (pct_booth >= 100) {
         culture_points.entertainment = 25;
     } else if (pct_booth > 85) {
@@ -234,7 +234,7 @@ void city_ratings_t::update_culture_rating() {
     }
     culture += culture_points.entertainment;
 
-    int pct_religion = g_city.culture.religion_coverage;
+    int pct_religion = g_city.avg_coverage.common_religion;
     if (pct_religion >= 100) {
         culture_points.religion = 30;
     } else if (pct_religion > 85) {
@@ -250,7 +250,7 @@ void city_ratings_t::update_culture_rating() {
     }
     culture += culture_points.religion;
 
-    int pct_school = city_culture_coverage_school();
+    int pct_school = g_coverage.school;
     if (pct_school >= 100)
         culture_points.school = 15;
     else if (pct_school > 85)
@@ -266,7 +266,7 @@ void city_ratings_t::update_culture_rating() {
     }
     culture += culture_points.school;
 
-    int pct_academy = city_culture_coverage_academy();
+    int pct_academy = g_coverage.academy;
     if (pct_academy >= 100)
         culture_points.academy = 10;
     else if (pct_academy > 85)
@@ -282,7 +282,7 @@ void city_ratings_t::update_culture_rating() {
     }
     culture += culture_points.academy;
 
-    int pct_library = city_culture_coverage_library();
+    int pct_library = g_coverage.library;
     if (pct_library >= 100)
         culture_points.library = 20;
     else if (pct_library > 85)

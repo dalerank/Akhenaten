@@ -2,6 +2,9 @@
 
 #include "building/building.h"
 #include "building/building_menu.h"
+#include "core/profiler.h"
+#include "grid/water.h"
+#include "grid/routing/routing.h"
 
 #include "city/city.h"
 
@@ -153,15 +156,6 @@ void city_buildings_remove_dock() {
     city_data.buildings.working_docks--;
 }
 
-void city_buildings_reset_dock_wharf_counters(void) {
-    city_data.buildings.working_wharfs = 0;
-    city_data.buildings.shipyard_boats_requested = 0;
-    for (int i = 0; i < 8; i++) {
-        city_data.buildings.working_dock_ids[i] = 0;
-    }
-    city_data.buildings.working_docks = 0;
-}
-
 void city_buildings_add_working_wharf(int needs_fishing_boat) {
     ++city_data.buildings.working_wharfs;
     if (needs_fishing_boat)
@@ -247,14 +241,28 @@ int city_buildings_unknown_value() {
     return city_data.buildings.unknown_value;
 }
 
-void city_buildings_update_day() {
-    buildings_valid_do([] (building &b) {
-        b.dcast()->update_day();
-    });
-}
+void city_t::buildings_update_open_water_access() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Open Water Access Update");
+    tile2i river_entry = scenario_map_river_entry();
+    if (!river_entry.valid()) {
+        return;
+    }
 
-void city_buildings_update_month() {
+    map_routing_calculate_distances_water_boat(river_entry);
+
     buildings_valid_do([] (building &b) {
-        b.dcast()->update_month();
-    });
+        bool found = map_terrain_is_adjacent_to_open_water(b.tile, b.size);
+        if (found) {
+            b.has_water_access = true;
+            b.has_open_water_access = true;
+            ferry_tiles ppoints = map_water_docking_points(b);
+            b.data.dock.dock_tiles[0] = ppoints.point_a.grid_offset();
+            b.data.dock.dock_tiles[1] = ppoints.point_b.grid_offset();
+        } else {
+            b.has_water_access = false;
+            b.has_open_water_access = false;
+            b.data.dock.dock_tiles[0] = -1;
+            b.data.dock.dock_tiles[1] = -1;
+        }
+    }, BUILDING_DOCK, BUILDING_FISHING_WHARF, BUILDING_SHIPWRIGHT);
 }
