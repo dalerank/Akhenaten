@@ -5,8 +5,6 @@
 #include "core/threading.h"
 #include "core/time.h"
 
-bool game_pre_init();
-
 bool game_init();
 
 bool game_init_editor();
@@ -73,6 +71,7 @@ struct game_t {
     void advance_year();
 
     void shutdown();
+    bool check_valid();
 
     threading::thread_pool mtrpc;
     threading::thread_pool mt;

@@ -121,7 +121,7 @@ bool pre_init_dir_attempt(pcstr data_dir, pcstr lmsg) {
         logs::info("%s: directory not found", data_dir);
     }
 
-    if (game_pre_init()) {
+    if (game.check_valid()) {
         return true;
     }
 
@@ -134,7 +134,7 @@ static bool pre_init(pcstr custom_data_dir) {
     }
 
     logs::info("Attempting to load game from working directory");
-    if (game_pre_init()) {
+    if (game.check_valid()) {
         return true;
     }
 

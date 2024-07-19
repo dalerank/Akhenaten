@@ -492,7 +492,7 @@ static int get_elapsed_ticks() {
     return ticks_per_frame;
 }
 
-bool game_pre_init(void) {
+bool game_t::check_valid() {
     vfs::content_cache_paths();
 
     if (!lang_load(0)) {
@@ -507,9 +507,9 @@ bool game_pre_init(void) {
     scenario_settings_init();
     random_init();
 
-    game.paused = false;
-    game.mt.reset(4);
-    game.mtrpc.reset(4);
+    paused = false;
+    mt.reset(4);
+    mtrpc.reset(4);
 
     return true;
 }
