@@ -166,37 +166,37 @@ void ui::advisor_imperial_window::ui_draw_foreground() {
             });
         ui.icon(vec2i{45, 103 + 42 * index}, request->resource);
 
-        int request_amount = request->resource_amount();
-
-        int quat = stack_proper_quantity(request_amount, request->resource);
         bstring256 amount_text;
+        bstring256 month_to_comply;
+        bstring256 saved_resources;
+        bstring256 allow_str;
+
+        int request_amount = request->resource_amount();
+        int quat = stack_proper_quantity(request_amount, request->resource);
+
         amount_text.printf("%u %s", quat, ui::str(23, request->resource));
         ui.label(amount_text, vec2i{65, 102 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
 
-        bstring256 month_to_comply;
         month_to_comply.printf("%s %u %s", ui::str(8, 4), request->months_to_comply, ui::str(12, 2));
         ui.label(month_to_comply, vec2i{310, 102 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
 
         if (request->resource == RESOURCE_DEBEN) {
             // request for money
             int treasury = city_finance_treasury();
-            bstring256 saved_deben;
-            saved_deben.printf("%u %s", treasury, ui::str(52, 44));
-            ui.label(saved_deben, vec2i{40, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
-
-            pcstr allow_str = (treasury < request->amount) ? ui::str(52, 48) : ui::str(52, 47);
-            ui.label(saved_deben, vec2i{310, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
+            saved_resources.printf("%u %s", treasury, ui::str(52, 44));
+            allow_str = (treasury < request->amount) ? ui::str(52, 48) : ui::str(52, 47);
         } else {
             // normal goods request
             int amount_stored = city_resource_count(request->resource);
+            amount_stored = stack_proper_quantity(amount_stored, request->resource);
             int request_amount = request->resource_amount();
-            bstring256 saved_deben;
-            saved_deben.printf("%u %s", amount_stored, ui::str(52, 43));
-            ui.label(saved_deben, vec2i{40, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
 
-            pcstr allow_str = (amount_stored < request_amount) ? ui::str(52, 48) : ui::str(52, 47);
-            ui.label(allow_str, vec2i{310, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
+            saved_resources.printf("%u %s", amount_stored, ui::str(52, 43));
+            allow_str = (amount_stored < request_amount) ? ui::str(52, 48) : ui::str(52, 47);
         }
+
+        ui.label(saved_resources, vec2i{40, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
+        ui.label(allow_str, vec2i{310, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
     });
 
     if (!num_requests) {
