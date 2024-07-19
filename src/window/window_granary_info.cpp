@@ -6,6 +6,7 @@
 #include "city/city.h"
 #include "city/warnings.h"
 #include "window/building/common.h"
+#include "window/window_building_info.h"
 #include "scenario/scenario.h"
 
 #include "graphics/image.h"
@@ -83,6 +84,8 @@ int building_granary::window_info_handle_mouse(const mouse *m, object_info &c) {
 }
 
 void building_granary::window_info_foreground(object_info &ctx) {
+    auto &ui = granary_info_window;
+
     if (ctx.storage_show_special_orders) {
         draw_orders_foreground(ctx);
         return;
@@ -90,9 +93,11 @@ void building_granary::window_info_foreground(object_info &ctx) {
 
     granary_info_window.draw();
 
-    auto &data = g_window_building_distribution;
-    button_border_draw(ctx.offset.x + 80, ctx.offset.y + 16 * ctx.bgsize.y - 34, 16 * (ctx.bgsize.x - 10), 20, data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(98, 5, ctx.offset.x + 80, ctx.offset.y + 16 * ctx.bgsize.y - 30, 16 * (ctx.bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
+    ui["orders"].pos.y = ctx.bgsize.y * 16 - 40;
+    ui["orders"].onclick([] (int, int) {
+        window_building_info_show_storage_orders();
+    });
+
     draw_permissions_buttons(ctx.offset.x + 58, ctx.offset.y + 19 * ctx.bgsize.y - 82, 1);
 }
 
