@@ -187,6 +187,7 @@ void figure_ostrich_hunter::update_animation() {
     switch (action_state()) {
     case ACTION_9_CHASE_PREY:
     case ACTION_11_HUNTER_WALK:
+    case ACTION_16_HUNTER_INVESTIGATE:
         animkey = animkeys().walk;
         break;
 

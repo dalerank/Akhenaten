@@ -362,7 +362,7 @@ int building_storage_yard_for_storing(tile2i tile, e_resource resource, int dist
             }
         }
 
-        int dist = room->is_this_space_the_best(tile, resource, distance_from_entry);
+        int dist = room->distance_with_penalty(tile, resource, distance_from_entry);
         if (dist > 0 && dist < min_dist) {
             min_dist = dist;
             min_building_id = i;

@@ -65,37 +65,23 @@ void building_storage_room::remove_export(e_resource resource) {
     set_image(resource);
 }
 
-bool building_storage_room::is_this_space_the_best(tile2i tile, e_resource resource, int distance_from_entry) {
+int building_storage_room::distance_with_penalty(tile2i src, e_resource resource, int distance_from_entry) {
     building_storage_yard* warehouse = yard();
 
     // check storage settings first
     if (warehouse->is_not_accepting(resource)) {
-        return 0;
+        return 10000;
     }
 
     // check for spaces that already has some of the resource, first
-    building_storage_room *check = warehouse->room();
-    while (check) {
-        if (check->base.subtype.warehouse_resource_id == resource && check->base.stored_full_amount < 400) {
-            if (check == this)
-                return calc_distance_with_penalty(this->tile(), tile, distance_from_entry, this->base.distance_from_entry);
-            else
-                return false;
-        }
-        check = check->next_room();
+    if (base.subtype.warehouse_resource_id == resource && base.stored_full_amount < 400) {
+        return calc_distance_with_penalty(tile(), src, distance_from_entry, base.distance_from_entry);
     }
 
     // second pass, return the first
-    check = warehouse->room();
-    while (check) {
-        if (check->base.subtype.warehouse_resource_id == RESOURCE_NONE) { // empty warehouse space
-            if (check == this) {
-                return calc_distance_with_penalty(this->tile(), tile, distance_from_entry, this->base.distance_from_entry);
-            } else {
-                return false;
-            }
-        }
-        check = check->next_room();
+    if (base.subtype.warehouse_resource_id == RESOURCE_NONE) { // empty warehouse space
+        return calc_distance_with_penalty(tile(), src, distance_from_entry, base.distance_from_entry);
     }
-    return 0;
+
+    return 10000;
 }
