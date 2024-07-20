@@ -148,23 +148,23 @@ void distribute_market_resources(building* b, building* market) {
     int max_food_stocks = 4 * b->house_highest_population;
     int food_types_stored_max = 0;
     for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-        if (b->data.house.inventory[i] >= max_food_stocks)
+        if (b->data.house.foods[i] >= max_food_stocks)
             food_types_stored_max++;
     }
 
     const model_house* model = model_get_house(level);
     if (model->food_types > food_types_stored_max) {
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-            if (b->data.house.inventory[i] >= max_food_stocks) {
+            if (b->data.house.foods[i] >= max_food_stocks) {
                 continue;
             }
 
             if (market->data.market.inventory[i] >= max_food_stocks) {
-                b->data.house.inventory[i] += max_food_stocks;
+                b->data.house.foods[i] += max_food_stocks;
                 market->data.market.inventory[i] -= max_food_stocks;
                 break;
             } else if (market->data.market.inventory[i]) {
-                b->data.house.inventory[i] += market->data.market.inventory[i];
+                b->data.house.foods[i] += market->data.market.inventory[i];
                 market->data.market.inventory[i] = 0;
                 break;
             }
@@ -178,17 +178,17 @@ void distribute_market_resources(building* b, building* market) {
     if (config_get(CONFIG_GP_CH_MORE_STOCKPILE))
         goods_no = 8;
 
-    if (model->jewelry_furniture) {
-        market->data.market.furniture_demand = 10;
-        distribute_good(b, market, goods_no * model->jewelry_furniture, INVENTORY_GOOD2);
+    if (model->jewelry) {
+        market->data.market.luxurygoods_demand = 10;
+        distribute_good(b, market, goods_no * model->jewelry, INVENTORY_GOOD2);
     }
-    if (model->linen_oil) {
-        market->data.market.oil_demand = 10;
-        distribute_good(b, market, goods_no * model->linen_oil, INVENTORY_GOOD3);
+    if (model->linen) {
+        market->data.market.linen_demand = 10;
+        distribute_good(b, market, goods_no * model->linen, INVENTORY_GOOD3);
     }
-    if (model->beer_wine) {
-        market->data.market.wine_demand = 10;
-        distribute_good(b, market, goods_no * model->beer_wine, INVENTORY_GOOD4);
+    if (model->beer) {
+        market->data.market.beer_demand = 10;
+        distribute_good(b, market, goods_no * model->beer, INVENTORY_GOOD4);
     }
 }
 
@@ -309,8 +309,7 @@ int figure_market_buyer::take_food_from_granary(building* market, building* b) {
     }
 
     building_granary *granary = b->dcast_granary();
-    //    building *granary = building_get(granary);
-    //    int market_units = building_get(market)->data.market.inventory[collecting_item_id];
+
     int market_units = market->data.market.inventory[base.collecting_item_id];
     int max_units = (base.collecting_item_id == 0 ? 700 : 600) - market_units;
     int granary_units = granary->data.granary.resource_stored[resource];

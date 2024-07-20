@@ -985,12 +985,12 @@ int platform_renderer_create_render_texture(int width, int height) {
     }
 }
 
-int platform_renderer_lost_render_texture(void) {
+int platform_renderer_lost_render_texture() {
     auto &data = g_renderer_data;
     return !data.render_texture && data.renderer;
 }
 
-void platform_renderer_invalidate_target_textures(void) {
+void platform_renderer_invalidate_target_textures() {
     auto &data = g_renderer_data;
     if (data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture) {
         SDL_DestroyTexture(data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture);

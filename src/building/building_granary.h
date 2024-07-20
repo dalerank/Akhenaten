@@ -46,7 +46,7 @@ public:
     bool is_accepting(e_resource resource);
     int is_not_accepting(e_resource resource);
     granary_getting_result find_storage_for_getting();
-    virtual int add_resource(e_resource resource, bool is_produced, int amount) override;
+    virtual int add_resource(e_resource resource, bool is_produced, int amount, bool force) override;
     int total_stored() const;
     int capacity_stored() const { return 3200; }
     int allow_food_types() const { return 4; }

@@ -94,7 +94,7 @@ void building_house::window_info_foreground(object_info &c) {
       
     for (int i = 0; i < 4; ++i) {
         e_resource resource = g_city.allowed_foods(i);
-        int stored = b->data.house.inventory[i];
+        int stored = b->data.house.foods[i];
         ui[food_icon(i)].image(resource);
         ui[food_text(i)].text_var(resource ? "%u" : "", stored);
     }

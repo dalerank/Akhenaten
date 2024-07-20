@@ -42,6 +42,7 @@ const int HALF_GRANARY = 1600;
 const int QUARTER_GRANARY = 800;
 
 declare_console_command(addchickpeas, game_cheat_add_resource<RESOURCE_CHICKPEAS>);
+declare_console_command(addgamemeat, game_cheat_add_resource<RESOURCE_GAMEMEAT>);
 
 buildings::model_t<building_granary> granary_m;
 
@@ -97,8 +98,8 @@ int building_granary::is_not_accepting(e_resource resource) {
     return !((is_accepting(resource) || is_getting(resource)));
 }
 
-int building_granary::add_resource(e_resource resource, bool is_produced, int amount) {
-    if (!resource_is_food(resource)) {
+int building_granary::add_resource(e_resource resource, bool is_produced, int amount, bool force) {
+    if (!force && !resource_is_food(resource)) {
         return -1;
     }
 
@@ -399,16 +400,16 @@ void building_granary::bless() {
     }
 
     for (int n = 0; n < 6; n++) {
-        granary->add_resource(RESOURCE_GRAIN, 0, 100);
+        granary->add_resource(RESOURCE_GRAIN, 0, 100, true);
     }
     for (int n = 0; n < 6; n++) {
-        granary->add_resource(RESOURCE_MEAT, 0, 100);
+        granary->add_resource(RESOURCE_MEAT, 0, 100, true);
     }
     for (int n = 0; n < 6; n++) {
-        granary->add_resource(RESOURCE_LETTUCE, 0, 100);
+        granary->add_resource(RESOURCE_LETTUCE, 0, 100, true);
     }
     for (int n = 0; n < 6; n++) {
-        granary->add_resource(RESOURCE_FIGS, 0, 100);
+        granary->add_resource(RESOURCE_FIGS, 0, 100, true);
     }
 }
 

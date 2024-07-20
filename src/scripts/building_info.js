@@ -1491,7 +1491,7 @@ building_physician = {
   animations : {
     preview : { pack:PACK_GENERAL, id:70 },
     base : { pack:PACK_GENERAL, id:70 },
-    work : { pos : [-1, -1], pack:PACK_GENERAL, id:70, offset:1, max_frames:11 }
+    work : { pos : [60, -60], pack:PACK_GENERAL, id:70, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   building_size : 2,

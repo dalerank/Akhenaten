@@ -398,7 +398,7 @@ void city_resource_consume_food() {
         b.data.house.num_foods = 0;
         if (scenario_property_kingdom_supplies_grain()) {
             city_data.resource.food_types_eaten_num = 1;
-            b.data.house.inventory[0] = amount_per_type;
+            b.data.house.foods[0] = amount_per_type;
             b.data.house.num_foods = 1;
             return;
         } 
@@ -408,15 +408,15 @@ void city_resource_consume_food() {
         }
 
         for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && b.data.house.num_foods < num_types; t++) {
-            if (b.data.house.inventory[t] >= amount_per_type) {
-                b.data.house.inventory[t] -= amount_per_type;
+            if (b.data.house.foods[t] >= amount_per_type) {
+                b.data.house.foods[t] -= amount_per_type;
                 b.data.house.num_foods++;
                 total_consumed += amount_per_type;
-            } else if (b.data.house.inventory[t]) {
+            } else if (b.data.house.foods[t] > 0) {
                 // has food but not enough
-                b.data.house.inventory[t] = 0;
+                total_consumed += b.data.house.foods[t];
+                b.data.house.foods[t] = 0;
                 b.data.house.num_foods++;
-                total_consumed += amount_per_type;
             }
 
             if (b.data.house.num_foods > city_data.resource.food_types_eaten_num) {
@@ -443,23 +443,11 @@ void city_resource_add_items(e_resource res, int amount) {
         }
     });
 
-    bool storage_found = false;
-    int lowest_resource_found = 10000;
     if (chosen_yard == nullptr) {
         return;
     }
 
-    for (int i = 0; i < 6; ++i) {
-        int stored = chosen_yard->amount(res);
-        if (stored >= 0 && stored < lowest_resource_found) {
-            lowest_resource_found = stored;
-            storage_found = true;
-        }
-    }
-
-    if (storage_found) {
-        chosen_yard->add_resource(res, false, amount); // because I'm lazy.
-    }
+    chosen_yard->add_resource(res, false, amount, /*force*/true); // because I'm lazy.
 }
 
 void city_resource_was_added_warning(e_resource res) {

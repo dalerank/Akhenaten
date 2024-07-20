@@ -113,9 +113,9 @@ bool model_load_file(const char* filepath,
         ptr = get_value(ptr, end_ptr, &houses[i].health);
         ptr = get_value(ptr, end_ptr, &houses[i].food_types);
         ptr = get_value(ptr, end_ptr, &houses[i].pottery);
-        ptr = get_value(ptr, end_ptr, &houses[i].linen_oil);
-        ptr = get_value(ptr, end_ptr, &houses[i].jewelry_furniture);
-        ptr = get_value(ptr, end_ptr, &houses[i].beer_wine);
+        ptr = get_value(ptr, end_ptr, &houses[i].linen);
+        ptr = get_value(ptr, end_ptr, &houses[i].jewelry);
+        ptr = get_value(ptr, end_ptr, &houses[i].beer);
         ptr = get_value(ptr, end_ptr, &houses[i].crime_risk);
         ptr = get_value(ptr, end_ptr, &houses[i].crime_risk_base);
         ptr = get_value(ptr, end_ptr, &houses[i].prosperity);

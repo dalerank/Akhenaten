@@ -63,9 +63,9 @@ void building_bazaar::draw_simple_background(object_info &ctx) {
         bstring32 id_icon; id_icon.printf("food%u_icon", i);
         bstring32 id_text; id_text.printf("food%u_text", i);
 
-        e_resource food_res = g_city.allowed_foods(INVENTORY_FOOD1 + i);
+        e_resource food_res = g_city.allowed_foods(i);
         ui[id_icon].image(food_res);
-        ui[id_text].font(is_good_accepted(INVENTORY_FOOD1 + i) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
+        ui[id_text].font(is_good_accepted(i) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
         ui[id_text].text_var(food_res ? "%u" : "", data.market.inventory[INVENTORY_FOOD1 + i]);
     }
 

@@ -141,25 +141,29 @@ building *building_bazaar::get_storage_destination() {
     }, BUILDING_GRANARY, BUILDING_STORAGE_YARD);
 
     // update demands
-    if (data.market.pottery_demand)
+    if (data.market.pottery_demand) {
         data.market.pottery_demand--;
-    else
+    } else {
         resources[INVENTORY_GOOD1].num_buildings = 0;
+    }
 
-    if (data.market.furniture_demand)
-        data.market.furniture_demand--;
-    else
+    if (data.market.luxurygoods_demand) {
+        data.market.luxurygoods_demand--;
+    } else {
         resources[INVENTORY_GOOD2].num_buildings = 0;
+    }
 
-    if (data.market.oil_demand)
-        data.market.oil_demand--;
-    else
+    if (data.market.linen_demand) {
+        data.market.linen_demand--;
+    } else {
         resources[INVENTORY_GOOD3].num_buildings = 0;
+    }
 
-    if (data.market.wine_demand)
-        data.market.wine_demand--;
-    else
+    if (data.market.beer_demand) {
+        data.market.beer_demand--;
+    } else {
         resources[INVENTORY_GOOD4].num_buildings = 0;
+    }
 
     int can_go = 0;
     for (int i = 0; i < INVENTORY_MAX; i++) {

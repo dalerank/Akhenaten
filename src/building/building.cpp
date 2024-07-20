@@ -1021,24 +1021,20 @@ void building_impl::static_params::load(archive arch) {
     anim.load(arch);
 }
 
-
-// void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever) {
-
-// iob->bind(BIND_SIGNATURE_INT32, &//    extra.created_sequence);
-// iob->bind(BIND_SIGNATURE_INT32, &//    extra.incorrect_houses);
-// iob->bind(BIND_SIGNATURE_INT32, &//    extra.unfixable_houses);
-// }
-
 static void read_type_data(io_buffer *iob, building *b, size_t version) {
     if (building_is_house(b->type)) {
-        for (e_resource e = RESOURCE_NONE; e < RESOURCES_FOODS_MAX; ++e) {
-            iob->bind(BIND_SIGNATURE_INT16, &b->data.house.foods[e]);
+        for (int i = 0; i < 4; ++i) {
+            iob->bind(BIND_SIGNATURE_UINT16, &b->data.house.foods[i]);
         }
 
-        for (int i = 0; i < 4; i++) {
-            e_resource good_n = g_city.allowed_foods(i);
-            b->data.house.inventory[i] = b->data.house.inventory[good_n];
-            iob->bind(BIND_SIGNATURE_INT16, &b->data.house.inventory[i + 4]);
+        uint16_t tmp;
+        iob->bind(BIND_SIGNATURE_UINT16, &tmp);
+        iob->bind(BIND_SIGNATURE_UINT16, &tmp);
+        iob->bind(BIND_SIGNATURE_UINT16, &tmp);
+        iob->bind(BIND_SIGNATURE_UINT16, &tmp);
+
+        for (int i = 0; i < 4; ++i) {
+            iob->bind(BIND_SIGNATURE_UINT16, &b->data.house.inventory[i + 4]);
         }
 
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.juggler);
@@ -1078,11 +1074,14 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         iob->bind____skip(2);
         //            iob->bind____skip(8);
         iob->bind(BIND_SIGNATURE_INT16, &b->data.market.pottery_demand);
-        iob->bind(BIND_SIGNATURE_INT16, &b->data.market.furniture_demand);
-        iob->bind(BIND_SIGNATURE_INT16, &b->data.market.oil_demand);
-        iob->bind(BIND_SIGNATURE_INT16, &b->data.market.wine_demand);
+        iob->bind(BIND_SIGNATURE_INT16, &b->data.market.luxurygoods_demand);
+        iob->bind(BIND_SIGNATURE_INT16, &b->data.market.linen_demand);
+        iob->bind(BIND_SIGNATURE_INT16, &b->data.market.beer_demand);
+
+        uint16_t tmp;
         for (int i = 0; i < INVENTORY_MAX; i++) {
-            iob->bind(BIND_SIGNATURE_INT32, &b->data.market.inventory[i]);
+            iob->bind(BIND_SIGNATURE_UINT16, &tmp);
+            iob->bind(BIND_SIGNATURE_UINT16, &b->data.market.inventory[i]);
         }
         //            iob->bind____skip(6);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.market.fetch_inventory_id);

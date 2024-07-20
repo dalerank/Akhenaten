@@ -33,9 +33,9 @@ struct model_house {
     int health;               /**< Health required: 1 = dentist or physician, 2 = dentist and physician, 3 = dentist, physician and mortuary */
     int food_types;           /**< Number of food types required */
     int pottery;              /**< Pottery required */
-    int linen_oil;            /**< Oil required */
-    int jewelry_furniture;    /**< Furniture required */
-    int beer_wine;            /**< Wine types required: 1 = any wine, 2 = two types of wine */
+    int linen;                /**< Linen required */
+    int jewelry;              /**< Jewelry required */
+    int beer;                 /**< Beer types required: 1 = any wine, 2 = two types of wine */
 
     // pharaoh
     int crime_risk;

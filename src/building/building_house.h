@@ -40,7 +40,7 @@ public:
     e_house_progress check_evolve_desirability();
     e_house_progress has_required_goods_and_services(int for_upgrade, house_demands *demands);
     bool has_devolve_delay(int status);
-    int can_expand(int num_tiles);
+    bool can_expand(int num_tiles);
 
     void check_for_corruption();
     e_house_progress check_requirements(house_demands *demands);

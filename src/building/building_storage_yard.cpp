@@ -127,21 +127,22 @@ int building_storage_yard::freespace() {
     return freespace;
 }
 
-int building_storage_yard::add_resource(e_resource resource, bool is_produced, int amount) {
+int building_storage_yard::add_resource(e_resource resource, bool is_produced, int amount, bool force) {
     assert(id() > 0);
 
-    if (is_not_accepting(resource)) {
+    if (!force && is_not_accepting(resource)) {
         return -1;
     }
 
     // check the initial provided space itself, first
     bool look_for_space = false;
-    if (base.subtype.warehouse_resource_id && base.subtype.warehouse_resource_id != resource)
+    if (base.subtype.warehouse_resource_id && base.subtype.warehouse_resource_id != resource) {
         look_for_space = true;
-    else if (base.stored_full_amount >= 400)
+    } else if (base.stored_full_amount >= 400) {
         look_for_space = true;
-    else if (type() == BUILDING_STORAGE_YARD)
+    } else if (type() == BUILDING_STORAGE_YARD) {
         look_for_space = true;
+    }
 
     // repeat until no space left... easier than calculating all amounts by hand.
     int amount_left = amount;
@@ -253,7 +254,7 @@ void building_storageyards_add_resource(e_resource resource, int amount) {
         auto warehouse = building_get(building_id)->dcast_storage_yard();
         if (warehouse && warehouse->is_valid()) {
             city_resource_set_last_used_storageyard(building_id);
-            while (amount && warehouse->add_resource(resource, false, UNITS_PER_LOAD)) {
+            while (amount && warehouse->add_resource(resource, false, UNITS_PER_LOAD, /*force*/false)) {
                 amount--;
             }
         }

@@ -179,11 +179,11 @@ public:
             uint8_t docker_anim_frame;
         } dock;
         struct market_t {
-            short inventory[8];
+            uint16_t inventory[8];
             short pottery_demand;
-            short furniture_demand;
-            short oil_demand;
-            short wine_demand;
+            short luxurygoods_demand;
+            short linen_demand;
+            short beer_demand;
             short fetch_inventory_id;
         } market;
         struct granary_t {

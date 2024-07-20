@@ -435,7 +435,8 @@ static void run_and_draw() {
     Uint32 time_between_run_and_draw = SDL_GetTicks();
 
     game.frame_begin();
-    game_sound_frame();
+    game.sound_frame_begin();
+
     game_handle_input_frame();
     game_draw_frame_warning();
     game_handle_input_after();

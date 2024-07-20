@@ -606,7 +606,7 @@ void game_t::frame_end() {
     animation = true;
 }
 
-void game_sound_frame() {
+void game_t::sound_frame_begin() {
     OZZY_PROFILER_SECTION("Sound/Frame");
     sound_city_play();
 }

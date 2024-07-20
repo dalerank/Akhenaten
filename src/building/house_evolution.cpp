@@ -57,7 +57,7 @@ void building_house_determine_evolve_text(building* house, int worst_desirabilit
     int foodtypes_required = model->food;
     int foodtypes_available = 0;
     for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-        if (house->data.house.inventory[i])
+        if (house->data.house.foods[i])
             foodtypes_available++;
     }
     if (foodtypes_available < foodtypes_required) {
@@ -96,6 +96,7 @@ void building_house_determine_evolve_text(building* house, int worst_desirabilit
         house->data.house.evolve_text_id = 18;
         return;
     }
+
     // pottery
     if (house->data.house.inventory[INVENTORY_GOOD1] < model->pottery) {
         house->data.house.evolve_text_id = 19;
@@ -134,23 +135,23 @@ void building_house_determine_evolve_text(building* house, int worst_desirabilit
         }
         return;
     }
-    // oil
-    if (house->data.house.inventory[INVENTORY_GOOD3] < model->linen_oil) {
+    // linen
+    if (house->data.house.inventory[INVENTORY_GOOD3] < model->linen) {
         house->data.house.evolve_text_id = 27;
         return;
     }
-    // furniture
-    if (house->data.house.inventory[INVENTORY_GOOD2] < model->jewelry_furniture) {
+    // jewelry
+    if (house->data.house.inventory[INVENTORY_GOOD2] < model->jewelry) {
         house->data.house.evolve_text_id = 28;
         return;
     }
-    // wine
-    int wine = model->beer_wine;
-    if (house->data.house.inventory[INVENTORY_GOOD4] < wine) {
+    // beer
+    int beer = model->beer;
+    if (house->data.house.inventory[INVENTORY_GOOD4] < beer) {
         house->data.house.evolve_text_id = 29;
         return;
     }
-    if (wine > 1 && !city_resource_multiple_wine_available()) {
+    if (beer > 1 && !city_resource_multiple_wine_available()) {
         house->data.house.evolve_text_id = 65;
         return;
     }
@@ -275,23 +276,23 @@ void building_house_determine_evolve_text(building* house, int worst_desirabilit
         }
         return;
     }
-    // oil
-    if (house->data.house.inventory[INVENTORY_GOOD3] < model->linen_oil) {
+    // linen
+    if (house->data.house.inventory[INVENTORY_GOOD3] < model->linen) {
         house->data.house.evolve_text_id = 57;
         return;
     }
-    // furniture
-    if (house->data.house.inventory[INVENTORY_GOOD2] < model->jewelry_furniture) {
+    // jewelry
+    if (house->data.house.inventory[INVENTORY_GOOD2] < model->jewelry) {
         house->data.house.evolve_text_id = 58;
         return;
     }
     // wine
-    wine = model->beer_wine;
-    if (house->data.house.inventory[INVENTORY_GOOD4] < wine) {
+    beer = model->beer;
+    if (house->data.house.inventory[INVENTORY_GOOD4] < beer) {
         house->data.house.evolve_text_id = 59;
         return;
     }
-    if (wine > 1 && !city_resource_multiple_wine_available()) {
+    if (beer > 1 && !city_resource_multiple_wine_available()) {
         house->data.house.evolve_text_id = 66;
         return;
     }
