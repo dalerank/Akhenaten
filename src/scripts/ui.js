@@ -77,10 +77,11 @@ top_menu_bar = {
 		migration 		: { type : "menu_item", text: "", parameter: 8},
  		sentiment 		: { type : "menu_item", text: "", parameter: 9},
  		sound_channels: { type : "menu_item", text: "", parameter: 10},
- 		show_console  : { type : "menu_item", text: "", parameter: 11},
- 		make_screenshot : { type : "menu_item", text: "", parameter: 12},
- 		make_full_screenshot : { type : "menu_item", text: "", parameter: 13},
- 		write_video   : { type : "menu_item", text: "", parameter: 14},
+ 		properties		: { type : "menu_item", text: "", parameter: 11},
+ 		show_console  : { type : "menu_item", text: "", parameter: 12},
+ 		make_screenshot : { type : "menu_item", text: "", parameter: 13},
+ 		make_full_screenshot : { type : "menu_item", text: "", parameter: 14},
+ 		write_video   : { type : "menu_item", text: "", parameter: 15},
 	},
 
 	debug_render : {

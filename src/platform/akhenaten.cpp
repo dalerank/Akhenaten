@@ -459,6 +459,7 @@ static void run_and_draw() {
     }
 
     game_debug_cli_draw();
+    game_debug_properties_draw();
 
     game_imgui_overlay_draw();
     platform_renderer_render();
@@ -603,7 +604,7 @@ static void main_loop() {
         while (SDL_PollEvent(&event)) {
 #endif
             game_imgui_overlay_handle_event(&event);
-            if (!game.console) {
+            if (!game.debug_console) {
                 handle_event(&event, g_application.active, g_application.quit);
             }
         }

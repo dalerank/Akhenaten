@@ -202,7 +202,7 @@ public:
     // 14 bytes 00 00 00 00 00 00 00 ...
     short market_lady_bought_amount;
     // 115 bytes
-    unsigned char draw_debug_mode;
+    uint8_t draw_debug_mode;
     union {
         struct {
             short see_low_health;

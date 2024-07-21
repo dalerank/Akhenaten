@@ -6,6 +6,7 @@
 #include <iosfwd>
 
 void game_debug_cli_draw();
+void game_debug_properties_draw();
 void game_debug_cli_message(pcstr msg);
 void game_imgui_overlay_init();
 void game_imgui_overlay_destroy();

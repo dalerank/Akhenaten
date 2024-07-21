@@ -18,6 +18,7 @@
 #include "config/config.h"
 #include "scenario/scenario.h"
 #include "widget/widget_city.h"
+#include "dev/debug.h"
 #include "game/game.h"
 
 static void window_info_select_figure(int index, int param2);
@@ -190,6 +191,8 @@ static void draw_figure_info(object_info* c, int figure_id) {
     button_border_draw(c->offset.x + 24, c->offset.y + 102, 16 * (c->bgsize.x - 3), 138, 0);
 
     figure* f = figure_get(figure_id);
+    g_debug_figure_id = figure_id;
+
     int type = f->type;
     bool custom_window = f->dcast()->window_info_background(*c);
     if (custom_window) {

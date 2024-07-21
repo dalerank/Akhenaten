@@ -39,7 +39,8 @@ struct game_t {
     bool paused = false;
     bool save_debug_texture = false;
     bool animation = false;
-    bool console = false;
+    bool debug_console = false;
+    bool debug_properties = false;
     int frame = 0;
     uint16_t last_frame_tick = 0;
     color *frame_pixels = nullptr;

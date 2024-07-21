@@ -167,6 +167,7 @@ static void menu_debug_opt_text(int opt, bool v) {
         {"Migration ON", "Migration OFF"},
         {"Sentiment ON", "Sentiment OFF"},
         {"Sound Channels ON", "Sound Channels OFF"},
+        {"Properties ON", "Properties OFF"},
         {"Show console", "Show console"},
         {"Screenshot", "Screenshot"},
         {"Full Screenshot", "Full Screenshot"},
@@ -195,6 +196,15 @@ static void menu_debug_change_opt(menu_item &item) {
     case e_debug_show_console: game_cheat_console(true); break;
     case e_debug_make_screenshot: menu_debug_screenshot(0); break;
     case e_debug_make_full_screenshot: menu_debug_full_screenshot(0); break;
+    case e_debug_show_properties: 
+        game.debug_properties = !game.debug_properties;
+        g_debug_show_opts[opt] = game.debug_properties;
+        widget_top_menu_clear_state();
+        window_go_back();
+        window_invalidate();
+        menu_debug_opt_text(e_debug_show_properties, game.debug_properties );
+        break;
+
     case e_debug_write_video: 
         game.set_write_video(!game.get_write_video());
         menu_debug_opt_text(e_debug_write_video, game.get_write_video());
@@ -616,6 +626,8 @@ static void widget_top_menu_init() {
     if (render) {
         render->onclick(menu_debug_render_change_opt);
     }
+
+    g_debug_show_opts[e_debug_show_properties] = game.debug_properties;
 
     set_text_for_autosave();
     set_text_for_tooltips();

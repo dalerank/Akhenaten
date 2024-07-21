@@ -27,6 +27,7 @@ enum e_debug_option {
     e_debug_show_migration,
     e_debug_show_sentiment,
     e_debug_show_sound_channels,
+    e_debug_show_properties,
     e_debug_show_console,
     e_debug_make_screenshot,
     e_debug_make_full_screenshot,
@@ -72,6 +73,7 @@ enum e_debug_render {
 extern bool g_debug_show_opts[e_debug_opt_size];
 extern int g_debug_tile;
 extern int g_debug_render;
+extern int g_debug_figure_id;
 
 void handle_debug_hotkeys(const hotkeys* h);
 

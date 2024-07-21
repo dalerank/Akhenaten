@@ -44,6 +44,7 @@ int g_debug_tile = 0;
 int g_debug_render = 0;
 int debug_range_3 = 0;
 int debug_range_4 = 0;
+int g_debug_figure_id = 0;
 
 void handle_debug_hotkeys(const hotkeys* h) {
     if (h->debug_tile_up) {
