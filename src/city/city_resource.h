@@ -9,7 +9,6 @@
 #include <string>
 
 int city_resource_count(e_resource resource);
-pcstr city_resource_id(e_resource resource);
 
 const resource_list &city_resource_get_available();
 const resource_list &city_resource_get_available_foods();

@@ -702,33 +702,42 @@ void figure::draw_debug() {
     }
 }
 
-const char* get_terrain_type(char* buffer, const char* def, tile2i tile) {
+bstring256 get_terrain_type(pcstr def, tile2i tile) {
     int type = map_terrain_get(tile.grid_offset());
-    strcat(buffer, def);
-    if (type & TERRAIN_DUNE) strcat(buffer, "dune,");
-    if (type & TERRAIN_TREE) strcat(buffer, "tree,");
-    if (type & TERRAIN_ROCK) strcat(buffer, "rock,");
-    if (type & TERRAIN_WATER) strcat(buffer, "water,");
+
+    bstring256 buffer = get_terrain_type(def, type);
     if (type & TERRAIN_BUILDING) {
         bstring32 bstr;
         building *b = building_get(map_building_at(tile));
         bstr.printf("bld:%d,", b ? b->type : -1);
-        strcat(buffer, bstr.c_str());
+        buffer.append(bstr);
     }
-    if (type & TERRAIN_SHRUB) strcat(buffer, "shrub,");
-    if (type & TERRAIN_GARDEN) strcat(buffer, "garden,");
-    if (type & TERRAIN_ROAD) strcat(buffer, "road,");
-    if (type & TERRAIN_GROUNDWATER) strcat(buffer, "grdwater,");
-    if (type & TERRAIN_CANAL) strcat(buffer, "canal,");
-    if (type & TERRAIN_ELEVATION) strcat(buffer, "elevat,");
-    if (type & TERRAIN_ACCESS_RAMP) strcat(buffer, "ramp,");
-    if (type & TERRAIN_MEADOW) strcat(buffer, "meadow,");
-    if (type & TERRAIN_RUBBLE) strcat(buffer, "rubble,");
-    if (type & TERRAIN_FOUNTAIN_RANGE) strcat(buffer, "fountain,");
-    if (type & TERRAIN_WALL) strcat(buffer, "wall,");
-    if (type & TERRAIN_GATEHOUSE) strcat(buffer, "gate,");
-    if (type & TERRAIN_FLOODPLAIN) strcat(buffer, "flood,");
-    if (type & TERRAIN_FERRY_ROUTE) strcat(buffer, "wtrroute,");
+
+    return buffer;
+}
+
+bstring256 get_terrain_type(pcstr def, int type) {
+    bstring256 buffer;
+    buffer.append(def);
+    if (type & TERRAIN_DUNE) buffer.append("dune,");
+    if (type & TERRAIN_TREE) buffer.append("tree,");
+    if (type & TERRAIN_ROCK) buffer.append("rock,");
+    if (type & TERRAIN_WATER) buffer.append("water,");
+
+    if (type & TERRAIN_SHRUB) buffer.append("shrub,");
+    if (type & TERRAIN_GARDEN) buffer.append("garden,");
+    if (type & TERRAIN_ROAD) buffer.append("road,");
+    if (type & TERRAIN_GROUNDWATER) buffer.append("grdwater,");
+    if (type & TERRAIN_CANAL) buffer.append("canal,");
+    if (type & TERRAIN_ELEVATION) buffer.append("elevat,");
+    if (type & TERRAIN_ACCESS_RAMP) buffer.append("ramp,");
+    if (type & TERRAIN_MEADOW) buffer.append("meadow,");
+    if (type & TERRAIN_RUBBLE) buffer.append("rubble,");
+    if (type & TERRAIN_FOUNTAIN_RANGE) buffer.append("fountain,");
+    if (type & TERRAIN_WALL) buffer.append("wall,");
+    if (type & TERRAIN_GATEHOUSE) buffer.append("gate,");
+    if (type & TERRAIN_FLOODPLAIN) buffer.append("flood,");
+    if (type & TERRAIN_FERRY_ROUTE) buffer.append("wtrroute,");
 
     return buffer;
 }
@@ -1210,8 +1219,7 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x + 40, y + 195, 50, "", point.y());
         debug_text(ctx, str, x + 80, y + 195, 50, "", point.grid_offset());
 
-        char type_str[256] = {0};
-        debug_text_a(ctx, str, x + 180, y + 195, 50, get_terrain_type(type_str, "type: ", point));
+        debug_text_a(ctx, str, x + 180, y + 195, 50, get_terrain_type("type: ", point));
         pixel = tile_to_pixel(point);
         debug_text(ctx, str, x, y + 205, 50, "pixel:", pixel.x);
         debug_text(ctx, str, x + 40, y + 205, 50, "", pixel.y);

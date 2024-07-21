@@ -76,6 +76,8 @@ extern int g_debug_render;
 extern int g_debug_figure_id;
 
 void handle_debug_hotkeys(const hotkeys* h);
+bstring256 get_terrain_type(pcstr def, tile2i tile);
+bstring256 get_terrain_type(pcstr def, int type);
 
 void debug_text(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, int value, color color = COLOR_WHITE, e_font font = FONT_SMALL_OUTLINED);
 void debug_text_a(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, color color = COLOR_WHITE, e_font font = FONT_SMALL_OUTLINED);

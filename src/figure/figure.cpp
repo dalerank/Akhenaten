@@ -457,18 +457,19 @@ void figure_init_scenario(void) {
 
 void figure::bind(io_buffer* iob) {
     figure* f = this;
+    int tmpe;
     iob->bind(BIND_SIGNATURE_UINT8, &f->alternative_location_index);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->anim.frame);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmpe);
     iob->bind(BIND_SIGNATURE_UINT8, &f->is_enemy_image);
     iob->bind(BIND_SIGNATURE_UINT8, &f->flotsam_visible);
 
     //    f->sprite_image_id = buf->read_i16() + 18;
     f->sprite_image_id -= 18;
-    iob->bind(BIND_SIGNATURE_INT16, &f->sprite_image_id);
+    iob->bind(BIND_SIGNATURE_UINT16, &f->sprite_image_id);
     f->sprite_image_id += 18;
 
-    iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_INT16, &f->next_figure);
+    iob->bind(BIND_SIGNATURE_INT16, &f->anim.frame);
+    iob->bind(BIND_SIGNATURE_UINT16, &f->next_figure);
     iob->bind(BIND_SIGNATURE_UINT8, &f->type);
     iob->bind(BIND_SIGNATURE_UINT8, &f->resource_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->use_cross_country);
@@ -485,22 +486,22 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT16, &f->damage);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_UINT32, f->destination_tile);
-    iob->bind____skip(4);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &f->progress_on_tile);              // 9
     iob->bind(BIND_SIGNATURE_UINT32, f->source_tile);
     iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_x.soldier);
     iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_y.soldier);
     iob->bind(BIND_SIGNATURE_INT8, &f->terrain_type);               // 0
     iob->bind(BIND_SIGNATURE_UINT8, &f->progress_inside_speed);
     iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks);                // 0
-    iob->bind(BIND_SIGNATURE_UINT8, &f->action_state);              // 9
-    iob->bind(BIND_SIGNATURE_UINT8, &f->progress_on_tile);          // 11
+    iob->bind(BIND_SIGNATURE_INT16, &f->action_state);              // 9
     iob->bind(BIND_SIGNATURE_INT16, &f->routing_path_id);           // 12
     iob->bind(BIND_SIGNATURE_INT16, &f->routing_path_current_tile); // 4
     iob->bind(BIND_SIGNATURE_INT16, &f->routing_path_length);       // 28
     iob->bind(BIND_SIGNATURE_UINT8, &f->in_building_wait_ticks);    // 0
     iob->bind(BIND_SIGNATURE_UINT8, &f->outside_road_ticks);        // 1
-    iob->bind(BIND_SIGNATURE_INT16, &f->max_roam_length);
-    iob->bind(BIND_SIGNATURE_INT16, &f->roam_length);
+    iob->bind(BIND_SIGNATURE_UINT16, &f->max_roam_length);
+    iob->bind(BIND_SIGNATURE_UINT16, &f->roam_length);
     iob->bind(BIND_SIGNATURE_UINT8, &f->roam_wander_freely);
     iob->bind(BIND_SIGNATURE_UINT8, &f->roam_random_counter);
     iob->bind(BIND_SIGNATURE_INT8, &f->roam_turn_direction);
@@ -516,7 +517,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->speed_multiplier);
     iob->bind(BIND_SIGNATURE_INT16, &f->home_building_id);
     iob->bind(BIND_SIGNATURE_INT16, &f->immigrant_home_building_id);
-    iob->bind(BIND_SIGNATURE_INT16, &f->destination_building_id);
+    iob->bind(BIND_SIGNATURE_UINT16, &f->destination_building_id);
     iob->bind(BIND_SIGNATURE_INT16, &f->formation_id);       // formation: 10
     iob->bind(BIND_SIGNATURE_UINT8, &f->index_in_formation); // 3
     iob->bind(BIND_SIGNATURE_UINT8, &f->formation_at_rest);
@@ -531,7 +532,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT8, &f->cart_offset.y);
     iob->bind(BIND_SIGNATURE_UINT8, &f->empire_city_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->trader_amount_bought);
-    iob->bind(BIND_SIGNATURE_INT16, &f->name); // 6
+    iob->bind(BIND_SIGNATURE_UINT16, &f->name); // 6
     iob->bind(BIND_SIGNATURE_UINT8, &f->terrain_usage);
     iob->bind(BIND_SIGNATURE_UINT8, &f->allow_move_type);
     iob->bind(BIND_SIGNATURE_UINT16, &f->resource_amount_full); // 4772 >>>> 112 (resource amount! 2-bytes)
@@ -577,7 +578,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind____skip(27);
 
     f->cart_image_id -= 18;
-    iob->bind(BIND_SIGNATURE_INT16, &f->cart_image_id);
+    iob->bind(BIND_SIGNATURE_UINT16, &f->cart_image_id);
     f->cart_image_id += 18;
 
     iob->bind____skip(2);

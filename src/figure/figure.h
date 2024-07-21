@@ -64,24 +64,23 @@ enum e_figure_draw_debug_mode {
 class figure {
 public:
     e_resource resource_id;
-    //    unsigned char resource_amount_loads;
     uint16_t resource_amount_full; // full load counter
 
-    short home_building_id;
-    short immigrant_home_building_id;
-    short destination_building_id;
+    uint16_t home_building_id;
+    uint16_t immigrant_home_building_id;
+    uint16_t destination_building_id;
 
-    int id;
-    int sprite_image_id;
-    int cart_image_id;
+    uint16_t id;
+    uint16_t sprite_image_id;
+    uint16_t cart_image_id;
     animation_context anim;
-    unsigned char is_enemy_image;
+    bool is_enemy_image;
 
-    unsigned char alternative_location_index;
+    uint8_t alternative_location_index;
     bool flotsam_visible;
-    short next_figure;
+    uint16_t next_figure;
     e_figure_type type;
-    //    unsigned char resource_id;
+
     bool use_cross_country;
     bool is_friendly;
     uint8_t state;
@@ -94,61 +93,48 @@ public:
     tile2i previous_tile;
     tile2i source_tile;
     tile2i destination_tile;
-    //    unsigned char tile_x;
-    //    unsigned char tile_y;
-    //    unsigned char previous_tile_x;
-    //    unsigned char previous_tile_y;
-    unsigned char missile_damage;
-    unsigned char damage;
-    //    int grid_offset_figure;
-    //    unsigned char destination_x;
-    //    unsigned char destination_y;
-    //    int destination_grid_offset; // only used for soldiers
-    //    unsigned char source_x;
-    //    unsigned char source_y;
+
+    uint16_t missile_damage;
+    uint16_t damage;
+
     union {
-        unsigned char soldier;
+        uint16_t soldier;
         unsigned char enemy;
     } formation_position_x;
+
     union {
         unsigned char soldier;
         signed char enemy;
     } formation_position_y;
-    unsigned char terrain_type;
+
+    uint8_t terrain_type;
     short wait_ticks;
     short action_state;
-    unsigned char progress_inside_speed;
-    char progress_inside;
-    unsigned char progress_on_tile;
+    uint8_t progress_inside_speed;
+    int8_t progress_inside;
+    uint8_t progress_on_tile;
     short routing_path_id;
     short routing_path_current_tile;
     short routing_path_length;
-    unsigned char in_building_wait_ticks;
-    unsigned char outside_road_ticks;
+
+    uint8_t in_building_wait_ticks;
+    uint8_t outside_road_ticks;
+
     short max_roam_length;
     short roam_length;
+
     bool roam_wander_freely;
-    unsigned char roam_random_counter;
+    uint8_t roam_random_counter;
     circular_buffer<int, 6> roam_history;
-    signed char roam_turn_direction;
-    signed char roam_ticks_until_next_turn;
+    int8_t roam_turn_direction;
+    int8_t roam_ticks_until_next_turn;
+
     vec2i cc_coords;
     vec2i cc_destination;
     vec2i cc_delta;
-    //    short cross_country_x; // position = 15 * x + offset on tile
-    //    short cross_country_y; // position = 15 * y + offset on tile
-    //    short cc_destination_x;
-    //    short cc_destination_y;
-    //    short cc_delta_x;
-    //    short cc_delta_y;
     short cc_delta_xy;
-    //    unsigned char loads_counter;
-    //    unsigned short loads_full; // full load counter
     uint8_t cc_direction; // 1 = x, 2 = y
     uint8_t speed_multiplier;
-    //    short building_id;
-    //    short immigrant_building_id;
-    //    short destination_building_id;
 
     short formation_id;
     uint8_t index_in_formation;
@@ -161,11 +147,10 @@ public:
     uint8_t attack_image_offset;
     uint8_t wait_ticks_missile;
     vec2i cart_offset;
-    //    signed char x_offset_cart;
-    //    signed char y_offset_cart;
+
     uint8_t empire_city_id;
     uint16_t trader_amount_bought;
-    short name;
+    uint16_t name;
     uint8_t terrain_usage;
     e_move_type allow_move_type;
     uint8_t height_adjusted_ticks;

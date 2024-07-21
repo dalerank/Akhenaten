@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <cassert>
 #include "core/svector.h"
+#include "core/bstring.h"
 
 enum e_resource : uint8_t {
     RESOURCE_NONE = 0,
@@ -113,7 +114,7 @@ enum e_resource_unit {
     RESOURCE_UNIT_CHARIOT = 3
 };
 
-bool city_is_food_allowed(int resource);
+pcstr resource_name(e_resource resource);
 int stack_units_by_resource(int resource);
 int stack_proper_quantity(int full, int resource);
 

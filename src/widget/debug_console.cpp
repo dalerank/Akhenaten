@@ -45,12 +45,50 @@ void game_debug_show_property_value(pcstr field, int &v) {
     ImGui::InputInt("##value", &v, 1);
 }
 
+void game_debug_show_property_value(pcstr field, e_move_type &v) {
+    ImGui::InputScalar(field, ImGuiDataType_S8, (void *)&v);
+}
+
+void game_debug_show_property_value(pcstr field, int8_t &v) {
+    ImGui::InputScalar(field, ImGuiDataType_S8, (void *)&v);
+}
+
 void game_debug_show_property_value(pcstr field, short &v) {
     ImGui::InputScalar(field, ImGuiDataType_S16, (void *)&v);
 }
 
+void game_debug_show_property_value(pcstr field, uint8_t &v) {
+    ImGui::InputScalar(field, ImGuiDataType_U8, (void *)&v);
+}
+
+void game_debug_show_property_value(pcstr field, uint16_t &v) {
+    ImGui::InputScalar(field, ImGuiDataType_U16, (void *)&v);
+}
+
 void game_debug_show_property_value(pcstr field, const pcstr &v) {
     ImGui::Text(v);
+}
+
+void game_debug_show_property_value(pcstr field, bool &v) {
+    ImGui::InputScalar(field, ImGuiDataType_U8, (void *)&v);
+}
+
+void game_debug_show_property_value(pcstr field, xstring &v) {
+    ImGui::Text(!!v ? v.c_str() : "none");
+}
+
+void game_debug_show_property_value(pcstr field, vec2i &v) {
+    ImGui::InputInt2(field, (int*)&v);
+}
+
+void game_debug_show_property_value(pcstr field, tile2i &v) {
+    ImGui::InputInt2(field, (int*)&v);
+}
+
+void game_debug_show_property_value(pcstr field, const std::function<void()> &f) {
+    if (ImGui::Button(field)) {
+        f();
+    }
 }
 
 template<typename T>
@@ -78,7 +116,12 @@ void game_debug_show_property_t(int &i, pcstr field, T &v, bool disabled = false
     ++i;
 }
 
-static void game_debug_show_placeholder_object(pcstr prefix, figure *f) {
+void game_debug_show_property_t(int &i, pcstr field, pcstr v) {
+    bstring256 _v(v);
+    game_debug_show_property_t(i, field, _v);
+}
+
+static void game_debug_show_properties_object(pcstr prefix, figure *f) {
     // Use object uid as identifier. Most commonly you could also use the object pointer as a base ID.
     ImGui::PushID(0x10000000 | f->id);
 
@@ -86,20 +129,137 @@ static void game_debug_show_placeholder_object(pcstr prefix, figure *f) {
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
     ImGui::AlignTextToFramePadding();
-    bool node_open = ImGui::TreeNodeEx("Figure", ImGuiTreeNodeFlags_DefaultOpen, "%s_%u", prefix, f->id);
+    bool common_open = ImGui::TreeNodeEx("Figure", ImGuiTreeNodeFlags_DefaultOpen, "Common");
     ImGui::TableSetColumnIndex(1);
     //ImGui::Text("my sailor is rich");
 
     int i = 0;
-    if (node_open) {
+    if (common_open) {
+        game_debug_show_property_t(i, "Actions", [f] { f->poof(); });
         game_debug_show_property_t(i, "id", f->id, true);
+        game_debug_show_property_t(i, "resource_id", resource_name(f->resource_id));
+        game_debug_show_property_t(i, "resource_amount_full", f->resource_amount_full);
+        game_debug_show_property_t(i, "home_building_id", f->home_building_id);
+        game_debug_show_property_t(i, "destination_building_id", f->destination_building_id);
         game_debug_show_property_t(i, "action_state", f->action_state);
         game_debug_show_property_t(i, "type", figure_impl::params(f->type).name);
         game_debug_show_property_t(i, "wait_ticks", f->wait_ticks);
+        game_debug_show_property_t(i, "terrain_type", get_terrain_type("", f->terrain_type));
         game_debug_show_property_t(i, "roam_length", f->roam_length);
+        game_debug_show_property_t(i, "sprite_image_id", f->sprite_image_id);
+        game_debug_show_property_t(i, "cart_image_id", f->cart_image_id);
+        game_debug_show_property_t(i, "use_cross_country", f->use_cross_country);
+        game_debug_show_property_t(i, "state", f->state);
+        game_debug_show_property_t(i, "faction_id", f->faction_id);
+        game_debug_show_property_t(i, "action_state_before_attack", f->action_state_before_attack);
+        game_debug_show_property_t(i, "direction", f->direction);
+        game_debug_show_property_t(i, "previous_tile_direction", f->previous_tile_direction);
+        game_debug_show_property_t(i, "attack_direction", f->attack_direction);
+        game_debug_show_property_t(i, "tile", f->tile);
+        int grid_offset = f->tile.grid_offset();
+        game_debug_show_property_t(i, "grid_offset", grid_offset, true);
+        game_debug_show_property_t(i, "previous_tile", f->previous_tile);
+        game_debug_show_property_t(i, "source_tile", f->source_tile);
+        game_debug_show_property_t(i, "destination_tile", f->destination_tile);
+        game_debug_show_property_t(i, "missile_damage", f->missile_damage);
+        game_debug_show_property_t(i, "damage", f->damage);
+        game_debug_show_property_t(i, "wait_ticks", f->wait_ticks);
+        game_debug_show_property_t(i, "action_state", f->action_state);
+        game_debug_show_property_t(i, "progress_inside_speed", f->progress_inside_speed);
+        game_debug_show_property_t(i, "progress_inside", f->progress_inside);
+        game_debug_show_property_t(i, "progress_on_tile", f->progress_on_tile);
+        game_debug_show_property_t(i, "routing_path_id", f->routing_path_id);
+        game_debug_show_property_t(i, "routing_path_current_tile", f->routing_path_current_tile);
+        game_debug_show_property_t(i, "routing_path_length", f->routing_path_length);
+        game_debug_show_property_t(i, "in_building_wait_ticks", f->in_building_wait_ticks);
+        game_debug_show_property_t(i, "outside_road_ticks", f->outside_road_ticks);
+        game_debug_show_property_t(i, "max_roam_length", f->max_roam_length);
+        game_debug_show_property_t(i, "roam_wander_freely", f->roam_wander_freely);
+        game_debug_show_property_t(i, "roam_random_counter", f->roam_random_counter);
+        game_debug_show_property_t(i, "roam_turn_direction", f->roam_turn_direction);
+        game_debug_show_property_t(i, "roam_ticks_until_next_turn", f->roam_ticks_until_next_turn);
+        game_debug_show_property_t(i, "cc_coords", f->cc_coords);
+        game_debug_show_property_t(i, "cc_destination", f->cc_destination);
+        game_debug_show_property_t(i, "cc_delta", f->cc_delta);
+        game_debug_show_property_t(i, "cc_delta_xy", f->cc_delta_xy);
+        game_debug_show_property_t(i, "cc_direction", f->cc_direction);
+        game_debug_show_property_t(i, "speed_multiplier", f->speed_multiplier);
+        game_debug_show_property_t(i, "migrant_num_people", f->migrant_num_people);
+        game_debug_show_property_t(i, "min_max_seen", f->min_max_seen);
+        game_debug_show_property_t(i, "movement_ticks_watchdog", f->movement_ticks_watchdog);
+        game_debug_show_property_t(i, "leading_figure_id", f->leading_figure_id);
+        game_debug_show_property_t(i, "cart_offset", f->cart_offset);
+        game_debug_show_property_t(i, "empire_city_id", f->empire_city_id);
+        game_debug_show_property_t(i, "trader_amount_bought", f->trader_amount_bought);
+        game_debug_show_property_t(i, "name", f->name);
+        game_debug_show_property_t(i, "terrain_usage", f->terrain_usage);
+        game_debug_show_property_t(i, "allow_move_type", f->allow_move_type);
+        game_debug_show_property_t(i, "height_adjusted_ticks", f->height_adjusted_ticks);
+        game_debug_show_property_t(i, "current_height", f->current_height);
+        game_debug_show_property_t(i, "target_height", f->target_height);
+        game_debug_show_property_t(i, "collecting_item_id", f->collecting_item_id);
+        game_debug_show_property_t(i, "trade_ship_failed_dock_attempts", f->trade_ship_failed_dock_attempts);
+        game_debug_show_property_t(i, "phrase_sequence_exact", f->phrase_sequence_exact);
+        game_debug_show_property_t(i, "phrase_group", f->phrase_group);
+        game_debug_show_property_t(i, "phrase_id", f->phrase_id);
+        game_debug_show_property_t(i, "phrase_key", f->phrase_key);
+        game_debug_show_property_t(i, "phrase_sequence_city", f->phrase_sequence_city);
+        game_debug_show_property_t(i, "trader_id", f->trader_id);
+        game_debug_show_property_t(i, "cached_pos", f->cached_pos);
+
+        if (f->type == FIGURE_IMMIGRANT) {
+            game_debug_show_property_t(i, "immigrant_home_building_id", f->immigrant_home_building_id);
+        }
+
+        if (f->type == FIGURE_HERBALIST) {
+            game_debug_show_property_t(i, "see_low_health", f->local_data.herbalist.see_low_health);
+        }
+
         ImGui::TreePop();
     }
+    ImGui::PopID();
 
+    ImGui::PushID(0x20000000 | f->id);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool anim_open = ImGui::TreeNodeEx("Anim", ImGuiTreeNodeFlags_DefaultOpen, "Anim");
+    ImGui::TableSetColumnIndex(1);
+
+    if (anim_open) {
+        game_debug_show_property_t(i, "id", f->anim.id, true);
+        game_debug_show_property_t(i, "base", f->anim.base);
+        game_debug_show_property_t(i, "offset", f->anim.offset);
+        game_debug_show_property_t(i, "hashtime", f->anim.hashtime);
+        game_debug_show_property_t(i, "pos", f->anim.pos);
+        game_debug_show_property_t(i, "frame_duration", f->anim.frame_duration);
+        game_debug_show_property_t(i, "max_frames", f->anim.max_frames);
+        game_debug_show_property_t(i, "frame", f->anim.frame);
+        game_debug_show_property_t(i, "can_reverse", f->anim.can_reverse);
+        game_debug_show_property_t(i, "loop", f->anim.loop);
+        game_debug_show_property_t(i, "is_reverse", f->anim.is_reverse);
+        game_debug_show_property_t(i, "was_finished", f->anim.was_finished);
+
+        ImGui::TreePop();
+    }
+    ImGui::PopID();
+
+    ImGui::PushID(0x40000000 | f->id);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool formation_open = ImGui::TreeNodeEx("Formation", ImGuiTreeNodeFlags_DefaultOpen, "Formation");
+    ImGui::TableSetColumnIndex(1);
+
+    if (formation_open) {
+        game_debug_show_property_t(i, "formation_id", f->formation_id, true);
+        game_debug_show_property_t(i, "index_in_formation", f->index_in_formation, true);
+        game_debug_show_property_t(i, "formation_at_rest", f->formation_at_rest, true);
+
+        ImGui::TreePop();
+    }
     ImGui::PopID();
 }
 
@@ -109,7 +269,7 @@ void game_debug_properties_draw() {
     }
 
     ImGui::SetNextWindowSize(ImVec2(430, 450), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin("Example: Property editor", &game.debug_properties)) {
+    if (!ImGui::Begin("Properties", &game.debug_properties)) {
         ImGui::End();
         return;
     }
@@ -118,14 +278,14 @@ void game_debug_properties_draw() {
     if (ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
         if (g_debug_figure_id > 0) {
             figure *f = figure_get(g_debug_figure_id);
-            game_debug_show_placeholder_object("Figure", f);
+            game_debug_show_properties_object("Figure", f);
         }
         ImGui::EndTable();
     }
     ImGui::PopStyleVar();
     ImGui::End();
 
-    g_debug_figure_id = 0;
+    //g_debug_figure_id = 0;
 }
 
 void game_debug_cli_message(pcstr msg) {
