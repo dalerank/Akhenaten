@@ -154,7 +154,7 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
                         return advance_action(ACTION_8_RECALCULATE);
                     }
 
-                    int amount = storage->add_resource(base.resource_id, false, amount_single_turn);
+                    int amount = storage->add_resource(base.resource_id, false, amount_single_turn, /*force*/false);
                     if (amount != -1) {
                         dump_resource(amount_single_turn);
                     } else {

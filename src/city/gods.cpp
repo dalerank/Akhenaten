@@ -101,7 +101,7 @@ static bool PTAH_warehouse_restock() {
         }
 
         if (chosen_resource > 0) {
-            chosen_yard->add_resource(chosen_resource, false, 999999); // because I'm lazy.
+            chosen_yard->add_resource(chosen_resource, false, 999999, /*force*/true); // because I'm lazy.
             bool was_added = (chosen_yard->amount(chosen_resource) == lowest_resource_found);
             return !was_added;
         }

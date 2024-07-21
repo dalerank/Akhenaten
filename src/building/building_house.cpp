@@ -176,9 +176,9 @@ void building_house::consume_resources() {
 
     const model_house* model = model_get_house(base.subtype.house_level);
     consume_resource(INVENTORY_GOOD1, model->pottery);
-    consume_resource(INVENTORY_GOOD2, model->jewelry_furniture);
-    consume_resource(INVENTORY_GOOD3, model->linen_oil);
-    consume_resource(INVENTORY_GOOD4, model->beer_wine);
+    consume_resource(INVENTORY_GOOD2, model->jewelry);
+    consume_resource(INVENTORY_GOOD3, model->linen);
+    consume_resource(INVENTORY_GOOD4, model->beer);
 }
 
 template<bool use_offset>
@@ -443,24 +443,25 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
     int foodtypes_required = model->food_types;
     int foodtypes_available = 0;
     for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-        if (data.house.inventory[i])
-            foodtypes_available++;
+        foodtypes_available += (data.house.foods[i] > 0) ? 1 : 0;
     }
+
     if (foodtypes_available < foodtypes_required) {
         ++demands->missing.food;
         return e_house_none;
     }
+
     // goods
     if (data.house.inventory[INVENTORY_GOOD1] < model->pottery)
         return e_house_none;
 
-    if (data.house.inventory[INVENTORY_GOOD3] < model->linen_oil)
+    if (data.house.inventory[INVENTORY_GOOD3] < model->linen)
         return e_house_none;
 
-    if (data.house.inventory[INVENTORY_GOOD2] < model->jewelry_furniture)
+    if (data.house.inventory[INVENTORY_GOOD2] < model->jewelry)
         return e_house_none;
 
-    int wine = model->beer_wine;
+    int wine = model->beer;
     if (wine && data.house.inventory[INVENTORY_GOOD4] <= 0)
         return e_house_none;
 
