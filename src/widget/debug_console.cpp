@@ -37,31 +37,31 @@ void game_debug_cli_draw() {
     debug_console().render("##console", game.debug_console, platform_window_size.x, platform_window_size.y * 0.33f);
 }
 
-void game_debug_show_property_value(pcstr field, float &v) {
-    ImGui::InputFloat("##value", &v, 1.0f);
+void game_debug_show_property_value(pcstr field, const float &v) {
+    ImGui::InputFloat("##value", (float*)&v, 1.0f);
 }
 
-void game_debug_show_property_value(pcstr field, int &v) {
-    ImGui::InputInt("##value", &v, 1);
+void game_debug_show_property_value(pcstr field, const int &v) {
+    ImGui::InputInt("##value", (int*)&v, 1);
 }
 
-void game_debug_show_property_value(pcstr field, e_move_type &v) {
+void game_debug_show_property_value(pcstr field, const e_move_type &v) {
     ImGui::InputScalar(field, ImGuiDataType_S8, (void *)&v);
 }
 
-void game_debug_show_property_value(pcstr field, int8_t &v) {
+void game_debug_show_property_value(pcstr field, const int8_t &v) {
     ImGui::InputScalar(field, ImGuiDataType_S8, (void *)&v);
 }
 
-void game_debug_show_property_value(pcstr field, short &v) {
+void game_debug_show_property_value(pcstr field, const short &v) {
     ImGui::InputScalar(field, ImGuiDataType_S16, (void *)&v);
 }
 
-void game_debug_show_property_value(pcstr field, uint8_t &v) {
+void game_debug_show_property_value(pcstr field, const uint8_t &v) {
     ImGui::InputScalar(field, ImGuiDataType_U8, (void *)&v);
 }
 
-void game_debug_show_property_value(pcstr field, uint16_t &v) {
+void game_debug_show_property_value(pcstr field, const uint16_t &v) {
     ImGui::InputScalar(field, ImGuiDataType_U16, (void *)&v);
 }
 
@@ -69,19 +69,19 @@ void game_debug_show_property_value(pcstr field, const pcstr &v) {
     ImGui::Text(v);
 }
 
-void game_debug_show_property_value(pcstr field, bool &v) {
+void game_debug_show_property_value(pcstr field, const bool &v) {
     ImGui::InputScalar(field, ImGuiDataType_U8, (void *)&v);
 }
 
-void game_debug_show_property_value(pcstr field, xstring &v) {
+void game_debug_show_property_value(pcstr field, const xstring &v) {
     ImGui::Text(!!v ? v.c_str() : "none");
 }
 
-void game_debug_show_property_value(pcstr field, vec2i &v) {
+void game_debug_show_property_value(pcstr field, const vec2i &v) {
     ImGui::InputInt2(field, (int*)&v);
 }
 
-void game_debug_show_property_value(pcstr field, tile2i &v) {
+void game_debug_show_property_value(pcstr field, const tile2i &v) {
     ImGui::InputInt2(field, (int*)&v);
 }
 
@@ -92,7 +92,7 @@ void game_debug_show_property_value(pcstr field, const std::function<void()> &f)
 }
 
 template<typename T>
-void game_debug_show_property_t(int &i, pcstr field, T &v, bool disabled = false) {
+void game_debug_show_property_t(int &i, pcstr field, const T &v, bool disabled = false) {
     ImGui::PushID(i); 
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);

@@ -423,20 +423,6 @@ figure_impl *figures::create(e_figure_type e, figure *data) {
     return new figure_impl(data);
 }
 
-// bool figure::is_roamer() {
-//     switch (action_state) {
-//         case ACTION_1_ROAMING:
-//         case ACTION_10_GOING:
-//         case FIGURE_ACTION_125_ROAMING:
-//         case FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING:
-//         case FIGURE_ACTION_62_ENGINEER_ROAMING:
-//         case FIGURE_ACTION_72_PREFECT_ROAMING:
-//         case FIGURE_ACTION_94_ENTERTAINER_ROAMING:
-//             return true;
-//     }
-//     return false;
-// }
-
 void init_figures() {
     if (g_figure_data.initialized) {
         return;
