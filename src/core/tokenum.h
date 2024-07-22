@@ -1,15 +1,9 @@
 #include <iostream>
 #include <typeinfo>
-//#include <cxxabi.h>
+
 #include <string.h>
 #include <memory>
 #include <array>
-
-using u32 = uint32_t;
-using s32 = int;
-
-using u32 = uint32_t;
-using s32 = int;
 
 // The string_literal class holds a compile-time constant string and provides both substring and character finding operations.
 template <unsigned long long length>
@@ -203,18 +197,18 @@ public:
 
 struct token {
     const char * name;
-    s32 id;
+    int id;
 };
 
 template<typename enum_type, enum_type begin, enum_type end>
 struct token_holder {
     constexpr static inline int count_values(enum_type type) {
         return (type != end)
-            ? count_values((enum_type)(s32(type)+1))
-            : (s32(type)+1);
+            ? count_values((enum_type)(int(type)+1))
+            : (int(type)+1);
     }
 
-    static constexpr u32 N = count_values(begin);
+    static constexpr uint32_t N = count_values(begin);
     using tokens = std::array<token, N+1>; // because have {0, 0} in last element
 
     template<typename e_enum_type, e_enum_type enum_value>
@@ -222,8 +216,8 @@ struct token_holder {
         return { enum_name<e_enum_type, enum_value>().name(), enum_value };
     }
 
-    template<typename e_enum_type, u32... Indices>
-    constexpr tokens make_tokens_helper(std::integer_sequence<u32, Indices...>) {
+    template<typename e_enum_type, uint32_t... Indices>
+    constexpr tokens make_tokens_helper(std::integer_sequence<uint32_t, Indices...>) {
         tokens ts = { make_name<e_enum_type, (e_enum_type)Indices>()... };
         ts[N] = {0, 0};
         return ts;
@@ -231,47 +225,7 @@ struct token_holder {
 
     template<typename e_enum_type>
     constexpr tokens make_tokens() {
-        return make_tokens_helper<e_enum_type>( std::make_integer_sequence<u32, N>{});
-    }
-
-    operator const token *() const { return values.unsafe_ptr(); }
-    const token *data() const { return values.unsafe_ptr(); }
-    constexpr token_holder() : values{make_tokens<enum_type>()} {}
-
-    tokens values;
-};
-
-struct token {
-    const char * name;
-    s32 id;
-};
-
-template<typename enum_type, enum_type begin, enum_type end>
-struct token_holder {
-    constexpr static inline int count_values(enum_type type) {
-        return (type != end)
-            ? count_values((enum_type)(s32(type)+1))
-            : (s32(type)+1);
-    }
-
-    static constexpr u32 N = count_values(begin);
-    using tokens = std::array<token, N+1>; // because have {0, 0} in last element
-
-    template<typename e_enum_type, e_enum_type enum_value>
-    constexpr token make_name() {
-        return { enum_name<e_enum_type, enum_value>().name(), enum_value };
-    }
-
-    template<typename e_enum_type, u32... Indices>
-    constexpr tokens make_tokens_helper(std::integer_sequence<u32, Indices...>) {
-        tokens ts = { make_name<e_enum_type, (e_enum_type)Indices>()... };
-        ts[N] = {0, 0};
-        return ts;
-    }
-
-    template<typename e_enum_type>
-    constexpr tokens make_tokens() {
-        return make_tokens_helper<e_enum_type>( std::make_integer_sequence<u32, N>{});
+        return make_tokens_helper<e_enum_type>( std::make_integer_sequence<uint32_t, N>{});
     }
 
     operator const token *() const { return values.unsafe_ptr(); }

@@ -110,6 +110,10 @@ uint8_t* get_eventmsg_text(int group_id, int index) {
 }
 
 static void event_process(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id = -1, int caller_event_var = EVENT_VAR_AUTO) {
+    if (id < 0) {
+        return;
+    }
+
     auto& data = g_events_data;
     if (!is_valid_event_index(id)) {
         return;
