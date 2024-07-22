@@ -59,11 +59,12 @@ void building_house::window_info_background(object_info &c) {
         return;
     }
 
+    int label_width = c.bgsize.x * 16 - 16;
     ui["background"].size = c.bgsize;
     ui["title"].width(c.bgsize.x * 16);
     ui["tenants_panel"].width(c.bgsize.x - 2);
-    ui["evolve_reason"].width(c.bgsize.x * 16);
-    ui["additional_info"].width(c.bgsize.x * 16);
+    ui["evolve_reason"].width(label_width);
+    ui["additional_info"].width(label_width);
 
     int level = b->type - 10;
     ui["title"].text(ui::str(29, level));
