@@ -18,6 +18,8 @@ struct id_anim_t {
     static const xstring move_pack;
     static const xstring fight_fire;
     static const xstring back;
+    static const xstring bubbles;
+    static const xstring point;
 };
 
 const id_anim_t &animkeys();

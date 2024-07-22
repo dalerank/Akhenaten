@@ -65,37 +65,6 @@ void scenario_map_foreach_fishing_point(void (*callback)(tile2i)) {
     }
 }
 
-bool scenario_map_closest_fishing_point(tile2i pos, tile2i &fish) {
-    int num_fishing_spots = 0;
-    for (int i = 0; i < MAX_FISH_POINTS; i++) {
-        if (g_scenario_data.fishing_points[i].x() > 0)
-            num_fishing_spots++;
-    }
-
-    if (num_fishing_spots <= 0) {
-        return 0;
-    }
-
-    int min_dist = 10000;
-    int min_fish_id = 0;
-    for (int i = 0; i < MAX_FISH_POINTS; i++) {
-        if (g_scenario_data.fishing_points[i].x() > 0) {
-            int dist = calc_maximum_distance(pos, g_scenario_data.fishing_points[i]);
-            if (dist < min_dist) {
-                min_dist = dist;
-                min_fish_id = i;
-            }
-        }
-    }
-
-    if (min_dist < 10000) {
-        map_point_store_result(g_scenario_data.fishing_points[min_fish_id], fish);
-        return true;
-    }
-
-    return false;
-}
-
 bool scenario_map_has_flotsam() {
     return g_scenario_data.env.flotsam_enabled;
 }

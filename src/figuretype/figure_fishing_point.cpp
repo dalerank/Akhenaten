@@ -10,10 +10,12 @@
 
 static const vec2i FISHPOINT_OFFSETS[] = {{0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}};
 figures::model_t<figure_fishing_point> fishing_point_m;
+figures::model_t<figure_fishing_spot> fishing_spot_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_fishing_point);
 void config_load_figure_fishing_point() {
     fishing_point_m.load();
+    fishing_spot_m.load();
 }
 
 declare_console_command_p(addfishpoints, game_cheat_create_fishing_points)
@@ -62,15 +64,18 @@ void figure_fishing_point::figure_action() {
 }
 
 void figure_fishing_point::update_animation() {
+    xstring animkey = animkeys().bubbles;
     switch (action_state()) {
     case FIGURE_ACTION_196_FISHPOINT_BUBLES:
-        image_set_animation(fishing_point_m.anim["bubbles"]);
+        animkey = animkeys().bubbles;
         break;
 
     case FIGURE_ACTION_197_FISHPOINT_JUMP:
-        image_set_animation(fishing_point_m.anim["point"]);
+        animkey = animkeys().point;
         break;
     }
+
+    image_set_animation(animkey);
 }
 
 bool figure_fishing_point::can_move_by_water() const {

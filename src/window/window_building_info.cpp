@@ -330,6 +330,7 @@ static void buiding_info_init(map_point tile) {
                 case FIGURE_BALLISTA:
                 case FIGURE_CREATURE:
                 case FIGURE_FISHING_POINT:
+                case FIGURE_FISHING_SPOT:
                 case FIGURE_SPEAR:
                 case FIGURE_CHARIOR_RACER:
                     break;

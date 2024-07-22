@@ -65,12 +65,16 @@ void game_debug_show_property_value(pcstr field, const uint16_t &v) {
     ImGui::InputScalar(field, ImGuiDataType_U16, (void *)&v);
 }
 
-void game_debug_show_property_value(pcstr field, const pcstr &v) {
-    ImGui::Text(v);
-}
-
 void game_debug_show_property_value(pcstr field, const bool &v) {
     ImGui::InputScalar(field, ImGuiDataType_U8, (void *)&v);
+}
+
+void game_debug_show_property_value(pcstr field, const bstring64 &v) {
+    ImGui::Text(!!v ? v.c_str() : "none");
+}
+
+void game_debug_show_property_value(pcstr field, const bstring256 &v) {
+    ImGui::Text(!!v ? v.c_str() : "none");
 }
 
 void game_debug_show_property_value(pcstr field, const xstring &v) {

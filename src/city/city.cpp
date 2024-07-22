@@ -225,28 +225,6 @@ int stack_proper_quantity(int full, int resource) {
     }
 }
 
-void city_t::fishing_points_t::create() {
-    scenario_map_foreach_fishing_point([] (tile2i tile) {
-        figure_fishing_point::create(tile);
-    });
-}
-
-void city_t::fishing_points_t::reset() {
-    tile_cache &river = river_tiles();
-    int num_points = std::max<int>(1, (int)river.size() / 500);
-    update(num_points);
-}
-
-void city_t::fishing_points_t::clear() {
-    for (int i = 1; i < MAX_FIGURES; i++) {
-        figure *f = figure_get(i);
-        if (f->type != FIGURE_FISHING_POINT) {
-            continue;
-        }
-
-        f->poof();
-    }
-}
 
 bool city_t::can_produce_resource(e_resource resource) {
     for (const auto &city: g_empire.get_cities()) {
@@ -300,39 +278,6 @@ void city_t::buildings_generate_figure() {
     });
 }
 
-
-void city_t::fishing_points_t::update(int points_num) {
-    clear();
-
-    int num_fishing_spots = 0;
-    for (int i = 0; i < MAX_FISH_POINTS; i++) {
-        if (g_scenario_data.fishing_points[i].x() > 0)
-            num_fishing_spots++;
-
-        g_scenario_data.fishing_points[i] = {-1, -1};
-    }
-
-    if (points_num >= 0) {
-        num_fishing_spots = std::min(MAX_FISH_POINTS, points_num);
-    }
-
-    tile_cache &river = river_tiles();
-    std::vector<int> deep_water;
-    for (const auto &tile : river) {
-        if (map_terrain_is(tile, TERRAIN_DEEPWATER)) {
-            deep_water.push_back(tile);
-        }
-    }
-
-    srand (time(nullptr));
-
-    for (int i = 0; i < num_fishing_spots; i++) {
-        int index = rand() % deep_water.size();
-        g_scenario_data.fishing_points[i] = tile2i(deep_water[index]);
-    }
-
-    create();
-}
 
 io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_city;

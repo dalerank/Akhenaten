@@ -219,6 +219,7 @@ var figure_festival_guy = {}
 var figure_scriber = {}
 var figure_dentist = {}
 var figure_fishing_point = {}
+var figure_fishing_spot = {}
 var figure_standard_bearer = {}
 var figure_native_trader = {}
 var figure_librarian = {}

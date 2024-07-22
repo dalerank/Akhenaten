@@ -1134,7 +1134,7 @@ building_fishing_wharf = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:18 },
     base : { pack:PACK_TERRAIN, id:18 },
-    work : { pack: PACK_SPR_AMBIENT, id:47, offset:0 },
+    work : { pos:[75, 10], pack: PACK_SPR_AMBIENT, id:47, offset:0, max_frames:22 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
   building_size : 2,

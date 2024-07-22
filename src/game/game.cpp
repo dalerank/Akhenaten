@@ -325,7 +325,7 @@ void game_t::advance_month() {
     g_city.buildings.update_month();
 
     if (g_city.can_produce_resource(RESOURCE_FISH)) {
-        g_city.fishing_points.update(0);
+        g_city.fishing_points.update();
     }
 
     if (g_settings.monthly_autosave) {

@@ -16,6 +16,8 @@ const xstring id_anim_t::unpack = "unpack";
 const xstring id_anim_t::move_pack = "move_pack";
 const xstring id_anim_t::fight_fire = "fight_fire";
 const xstring id_anim_t::back = "back";
+const xstring id_anim_t::bubbles = "bubbles";
+const xstring id_anim_t::point = "point";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

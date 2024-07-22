@@ -14,6 +14,7 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/ui.h"
 #include "graphics/image_desc.h"
+#include "city/city.h"
 
 #include "js/js_game.h"
 
@@ -133,9 +134,8 @@ void figure_fishing_boat::figure_action() {
             wait_ticks++;
             if (wait_ticks >= max_wait_ticks) {
                 wait_ticks = 0;
-                tile2i fish_tile;
-                bool found = scenario_map_closest_fishing_point(tile(), fish_tile);
-                if (found && map_water_is_point_inside(fish_tile)) {
+                tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile());
+                if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
                     advance_action(FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH);
                     destination_tile = fish_tile;
                     route_remove();

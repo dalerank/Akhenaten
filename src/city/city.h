@@ -10,6 +10,7 @@
 #include "city/health.h"
 #include "city/military.h"
 #include "city/city_resource.h"
+#include "city/city_fishing_points.h"
 #include "city/map.h"
 #include "city/gods.h"
 #include "city/victory.h"
@@ -396,12 +397,7 @@ struct city_t {
         int16_t faction_bytes[2];
     } unused;
 
-    struct fishing_points_t {
-        void create();
-        void reset();
-        void clear();
-        void update(int points_num);
-    } fishing_points;
+    city_fishing_points_t fishing_points;
 
     struct environment_t {
         void river_update_flotsam();
