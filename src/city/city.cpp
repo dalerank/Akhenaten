@@ -252,8 +252,9 @@ void city_t::update_allowed_foods() {
     std::fill_n(std::begin(resource.food_types_allowed), RESOURCES_FOODS_MAX, RESOURCE_NONE);
 
     for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_FOODS_MAX; ++resource) {
-        int can_do_food_x = g_empire.can_import_resource(resource, false);
-        if (can_do_food_x) {
+        bool can_import_food = g_empire.can_import_resource(resource, false);
+        bool can_produce_food = can_produce_resource(resource);
+        if (can_import_food || can_produce_food) {
             set_allowed_food(food_index, resource);
             food_index++;
         }
