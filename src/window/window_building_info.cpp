@@ -43,6 +43,7 @@
 #include "window/building/utility.h"
 #include "window/window_city.h"
 #include "window/message_dialog.h"
+#include "dev/debug.h"
 
 #include <functional>
 #include <utility>
@@ -407,6 +408,7 @@ static void buiding_info_init(map_point tile) {
 
 static void buiding_info_draw_refresh_background() {
     auto &context = g_building_info_context;
+    g_debug_building_id = context.building_id;
     if (context.type == BUILDING_INFO_NONE) {
         window_building_draw_no_people(&context);
     } else if (context.type == BUILDING_INFO_TERRAIN) {

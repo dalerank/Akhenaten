@@ -2,13 +2,13 @@
 
 #include "city/labor_category.h"
 #include "core/bstring.h"
+#include "core/tokenum.h"
 #include "core/vec2i.h"
 #include "core/core.h"
 #include "core/calc.h"
 #include "graphics/animation.h"
 #include "graphics/color.h"
 #include "building/building_type.h"
-#include "building/building_state.h"
 #include "overlays/city_overlay_fwd.h"
 #include "core/span.hpp"
 #include "figure/action.h"
@@ -70,7 +70,18 @@ enum e_labor_state {
     LABOR_STATE_JUST_ENTERED
 };
 
-building* building_get(int id);
+enum e_building_state {
+    BUILDING_STATE_UNUSED = 0,
+    BUILDING_STATE_VALID = 1,
+    BUILDING_STATE_UNDO = 2,
+    BUILDING_STATE_CREATED = 3,
+    BUILDING_STATE_RUBBLE = 4,
+    BUILDING_STATE_DELETED_BY_GAME = 5, // used for earthquakes, fires, house mergers
+    BUILDING_STATE_DELETED_BY_PLAYER = 6,
+    BUILDING_STATE_MOTHBALLED = 7,
+    BUILDING_STATE_COUNT,
+};
+const token_holder<e_building_state, BUILDING_STATE_UNUSED, BUILDING_STATE_COUNT> e_building_state_tokens;
 
 enum e_building_slot {
     BUILDING_SLOT_SERVICE = 0,
@@ -93,6 +104,8 @@ enum e_fancy_state {
 
 class building_work_camp;
 class building_farm;
+
+building* building_get(int id);
 
 class building {
 private:

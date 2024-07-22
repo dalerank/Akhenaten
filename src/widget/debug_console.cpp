@@ -6,6 +6,7 @@
 #include "graphics/text.h"
 #include "game/game.h"
 #include "dev/imgui_qconsole.h"
+#include "building/building.h"
 
 #include <SDL.h>
 #include <SDL_keyboard.h>
@@ -37,59 +38,60 @@ void game_debug_cli_draw() {
     debug_console().render("##console", game.debug_console, platform_window_size.x, platform_window_size.y * 0.33f);
 }
 
-void game_debug_show_property_value(pcstr field, const float &v) {
+void game_debug_show_property_value(pcstr field, const float &v, bool disabled) {
     ImGui::InputFloat("##value", (float*)&v, 1.0f);
 }
 
-void game_debug_show_property_value(pcstr field, const int &v) {
-    ImGui::InputInt("##value", (int*)&v, 1);
+void game_debug_show_property_value(pcstr field, const int &v, bool disabled) {
+    ImGuiInputTextFlags_ flags = disabled ? ImGuiInputTextFlags_ReadOnly : ImGuiInputTextFlags_None;
+    ImGui::InputInt("##value", (int*)&v, 1, 100, flags);
 }
 
-void game_debug_show_property_value(pcstr field, const e_move_type &v) {
+void game_debug_show_property_value(pcstr field, const e_move_type &v, bool disabled) {
     ImGui::InputScalar(field, ImGuiDataType_S8, (void *)&v);
 }
 
-void game_debug_show_property_value(pcstr field, const int8_t &v) {
+void game_debug_show_property_value(pcstr field, const int8_t &v, bool disabled) {
     ImGui::InputScalar(field, ImGuiDataType_S8, (void *)&v);
 }
 
-void game_debug_show_property_value(pcstr field, const short &v) {
+void game_debug_show_property_value(pcstr field, const short &v, bool disabled) {
     ImGui::InputScalar(field, ImGuiDataType_S16, (void *)&v);
 }
 
-void game_debug_show_property_value(pcstr field, const uint8_t &v) {
+void game_debug_show_property_value(pcstr field, const uint8_t &v, bool disabled) {
     ImGui::InputScalar(field, ImGuiDataType_U8, (void *)&v);
 }
 
-void game_debug_show_property_value(pcstr field, const uint16_t &v) {
+void game_debug_show_property_value(pcstr field, const uint16_t &v, bool disabled) {
     ImGui::InputScalar(field, ImGuiDataType_U16, (void *)&v);
 }
 
-void game_debug_show_property_value(pcstr field, const bool &v) {
+void game_debug_show_property_value(pcstr field, const bool &v, bool disabled) {
     ImGui::InputScalar(field, ImGuiDataType_U8, (void *)&v);
 }
 
-void game_debug_show_property_value(pcstr field, const bstring64 &v) {
+void game_debug_show_property_value(pcstr field, const bstring64 &v, bool disabled) {
     ImGui::Text(!!v ? v.c_str() : "none");
 }
 
-void game_debug_show_property_value(pcstr field, const bstring256 &v) {
+void game_debug_show_property_value(pcstr field, const bstring256 &v, bool disabled) {
     ImGui::Text(!!v ? v.c_str() : "none");
 }
 
-void game_debug_show_property_value(pcstr field, const xstring &v) {
+void game_debug_show_property_value(pcstr field, const xstring &v, bool disabled) {
     ImGui::Text(!!v ? v.c_str() : "none");
 }
 
-void game_debug_show_property_value(pcstr field, const vec2i &v) {
+void game_debug_show_property_value(pcstr field, const vec2i &v, bool disabled) {
     ImGui::InputInt2(field, (int*)&v);
 }
 
-void game_debug_show_property_value(pcstr field, const tile2i &v) {
+void game_debug_show_property_value(pcstr field, const tile2i &v, bool disabled) {
     ImGui::InputInt2(field, (int*)&v);
 }
 
-void game_debug_show_property_value(pcstr field, const std::function<void()> &f) {
+void game_debug_show_property_value(pcstr field, const std::function<void()> &f, bool disabled) {
     if (ImGui::Button(field)) {
         f();
     }
@@ -110,7 +112,7 @@ void game_debug_show_property_t(int &i, pcstr field, const T &v, bool disabled =
         ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
     }
 
-    game_debug_show_property_value(field, v);
+    game_debug_show_property_value(field, v, disabled);
     
     if (disabled) {
         ImGui::PopItemFlag();
@@ -124,6 +126,31 @@ void game_debug_show_property_t(int &i, pcstr field, pcstr v) {
     bstring256 _v(v);
     game_debug_show_property_t(i, field, _v);
 }
+
+static void game_debug_show_properties_object(pcstr prefix, building *b) {
+    ImGui::PushID(0x80000000 | b->id);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Building", ImGuiTreeNodeFlags_DefaultOpen, "Building");
+    ImGui::TableSetColumnIndex(1); 
+
+    int i = 0;
+    if (common_open) {
+        game_debug_show_property_t(i, "id", b->id, true);
+        game_debug_show_property_t(i, "state", e_building_state_tokens.name(b->state));
+        game_debug_show_property_t(i, "size", b->size);
+        game_debug_show_property_t(i, "house_is_merged", b->house_is_merged);
+        game_debug_show_property_t(i, "house_size", b->house_size);
+        game_debug_show_property_t(i, "tile", b->tile);
+        game_debug_show_property_t(i, "type", b->type);
+
+        ImGui::TreePop();
+    }
+    ImGui::PopID();
+}
+
 
 static void game_debug_show_properties_object(pcstr prefix, figure *f) {
     // Use object uid as identifier. Most commonly you could also use the object pointer as a base ID.
@@ -283,6 +310,11 @@ void game_debug_properties_draw() {
         if (g_debug_figure_id > 0) {
             figure *f = figure_get(g_debug_figure_id);
             game_debug_show_properties_object("Figure", f);
+        }
+
+        if (g_debug_building_id > 0) {
+            building *b = building_get(g_debug_building_id);
+            game_debug_show_properties_object("Building", b);
         }
         ImGui::EndTable();
     }

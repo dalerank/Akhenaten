@@ -81,11 +81,19 @@ private:
     T* m_storage;
 };
 
+template<typename T>
+using span_const = const span<T>;
+
 } // namespace std
 
 template <typename T, std::size_t N>
 inline constexpr auto make_span(T (&arr)[N]) {
     return std::span<T>(arr);
+}
+
+template <typename T, std::size_t N>
+inline constexpr auto make_span(const T (&arr)[N]) {
+    return std::span_const<T>(arr);
 }
 
 template <typename T>
@@ -96,6 +104,11 @@ inline constexpr auto make_span(T* arr, size_t N) {
 template <typename T>
 inline constexpr auto make_span(T &arr) {
     return std::span<T>(arr.data(), arr.size());
+}
+
+template <typename T, std::size_t N>
+inline constexpr auto make_span(const std::array<T, N> arr) {
+    return std::span_const<T>((T*)arr.data(), arr.size());
 }
 
 template <typename T>

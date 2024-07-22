@@ -5,6 +5,8 @@
 #include <memory>
 #include <array>
 
+#include "span.hpp"
+
 // The string_literal class holds a compile-time constant string and provides both substring and character finding operations.
 template <unsigned long long length>
 class								string_literal final {
@@ -198,6 +200,20 @@ public:
 struct token {
     const char * name;
     int id;
+
+    static inline const char *find_name(const token *tokens, int id) {
+        for (auto *it = tokens; !!it->name; ++it) {
+            if (it->id == id) {
+                return it->name;
+            }
+        }
+
+        return nullptr;
+    }
+
+    static inline const char *find_name(const std::span<token> &tokens, int id) {
+        return find_name(tokens.data(), id);
+    }
 };
 
 template<typename enum_type, enum_type begin, enum_type end>
@@ -231,9 +247,20 @@ struct token_holder {
     operator const token *() const { return values.unsafe_ptr(); }
     const token *data() const { return values.unsafe_ptr(); }
     constexpr token_holder() : values{make_tokens<enum_type>()} {}
+    const char *name(enum_type v) const {
+        auto it = std::find_if(values.begin(), values.end(), [v] (auto &i) { return i.id == v; });
+        return (it != values.end()) ? it->name : nullptr;
+    }
 
     tokens values;
 };
+
+template<typename enum_type, enum_type begin, enum_type end>
+inline auto make_enum_tokens() {
+    static token_holder<enum_type, begin, end> impl;
+    return make_span(impl.values);
+}
+
 
 #ifdef TOKENNUM_TEST
 enum test_enum { te_first, te_second, te_third, te_count };

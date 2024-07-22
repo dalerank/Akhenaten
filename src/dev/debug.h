@@ -74,6 +74,7 @@ extern bool g_debug_show_opts[e_debug_opt_size];
 extern int g_debug_tile;
 extern int g_debug_render;
 extern int g_debug_figure_id;
+extern int g_debug_building_id;
 
 void handle_debug_hotkeys(const hotkeys* h);
 bstring256 get_terrain_type(pcstr def, tile2i tile);
