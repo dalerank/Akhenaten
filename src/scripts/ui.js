@@ -365,7 +365,7 @@ house_info_window = {
 	resource_text_group : 23,
 	help_id : 56,
 	ui : {
-		background : { type : "outer_panel",	pos: [0, 0], size: [0, 0] },
+		background : { type : "outer_panel",	pos: [-1, -1], size: [-1, -1] }, // pos/size setup from code
 		title 		 : { type : "text", pos: [0, 12], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		evolve_reason : { type : "text", pos: [32, 40], font : FONT_NORMAL_BLACK_ON_LIGHT, rich:true },
 		food0_icon : { type : "resource_icon", pos: [32, 95] },
