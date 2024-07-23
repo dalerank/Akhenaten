@@ -220,7 +220,7 @@ water_dest map_water_get_wharf_for_new_fishing_boat(figure &boat) {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_FISHING_WHARF) {
-            int wharf_boat_id = b->data.industry.fishing_boat_id;
+            int wharf_boat_id = b->get_figure_id(BUILDING_SLOT_BOAT);
             if (!wharf_boat_id || wharf_boat_id == boat.id) {
                 wharf = b;
                 break;

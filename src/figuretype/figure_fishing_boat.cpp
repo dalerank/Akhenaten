@@ -28,11 +28,6 @@ void config_load_figure_fishing_boat() {
 void figure_fishing_boat::on_destroy() {
     building* b = home();
     b->remove_figure_by_id(id());
-    if (b->dcast_fishing_wharf() || b->dcast_shipyard()) {
-        if (b->data.industry.fishing_boat_id == id()) {
-            b->data.industry.fishing_boat_id = 0;
-        }
-    }
 }
 
 void figure_fishing_boat::before_poof() {
@@ -43,12 +38,13 @@ void figure_fishing_boat::figure_action() {
     //    if (b->state != BUILDING_STATE_VALID)
     //        poof();
 
-    if (action_state() != FIGURE_ACTION_190_FISHING_BOAT_CREATED && b->data.industry.fishing_boat_id != id()) {
+    int wharf_boat_id = b->get_figure_id(BUILDING_SLOT_BOAT);
+    if (action_state() != FIGURE_ACTION_190_FISHING_BOAT_CREATED && wharf_boat_id != id()) {
         water_dest result = map_water_get_wharf_for_new_fishing_boat(base);
         b = building_get(result.bid);
         if (b->id) {
             set_home(b->id);
-            b->data.industry.fishing_boat_id = id();
+            b->set_figure(BUILDING_SLOT_BOAT, &base);
             advance_action(FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
             destination_tile = result.tile;
             base.source_tile = result.tile;
@@ -70,7 +66,6 @@ void figure_fishing_boat::figure_action() {
             if (result.bid) {
                 b->remove_figure_by_id(id()); // remove from original building
                 set_home(result.bid);
-                building_get(result.bid)->data.industry.fishing_boat_id = id();
                 advance_action(FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
                 destination_tile = result.tile;
                 base.source_tile = result.tile;
@@ -163,7 +158,7 @@ void figure_fishing_boat::figure_action() {
 }
 
 void figure_fishing_boat::kill() {
-    home()->data.industry.fishing_boat_id = 0;
+    home()->remove_figure_by_id(id());
     base.set_home(0);
     base.wait_ticks = 0;
     figure_shipwreck::create(tile());
