@@ -34,7 +34,7 @@ struct animation_context {
     int offset;
     int hashtime = -1;
     vec2i pos;
-    uint8_t frame_duration;
+    uint8_t frame_duration = 1;
     uint16_t max_frames;
     uint16_t frame;
     bool can_reverse;
