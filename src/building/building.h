@@ -168,9 +168,9 @@ public:
     uint8_t output_resource_second_rate;
     bool has_road_access;
     short house_criminal_active;
-    unsigned char disease_days;
-    unsigned char common_health;
-    unsigned char malaria_risk;
+    uint8_t disease_days;
+    uint8_t common_health;
+    uint8_t malaria_risk;
     short damage_risk;
     short fire_risk;
     short fire_duration;
@@ -295,7 +295,7 @@ public:
     signed char desirability;
     bool is_deleted;
     bool is_adjacent_to_water;
-    unsigned char storage_id;
+    uint16_t storage_id;
     union {
         signed char house_happiness;
         signed char native_anger;

@@ -655,7 +655,7 @@ building_temple_ra = {
   animations : {
     preview : { pack:PACK_GENERAL, id:21 },
     base : { pack:PACK_GENERAL, id:21 },
-    work : { pos : [-1, -1], pack:PACK_GENERAL, id:21, offset:1, max_frames:12 },
+    work : { pos : [80, -123], pack:PACK_GENERAL, id:21, offset:1, max_frames:11 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   building_size : 3,

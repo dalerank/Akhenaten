@@ -146,9 +146,79 @@ static void game_debug_show_properties_object(pcstr prefix, building *b) {
         game_debug_show_property_t(i, "tile", b->tile);
         bstring256 type_name; type_name.printf("%s [%d]", token::find_name(e_building_type_tokens, b->type), b->type);
         game_debug_show_property_t(i, "type", type_name);
+        game_debug_show_property_t(i, "road_network_id", b->road_network_id);
+        game_debug_show_property_t(i, "houses_covered", b->houses_covered);
+        game_debug_show_property_t(i, "percentage_houses_covered", b->percentage_houses_covered);
+        game_debug_show_property_t(i, "house_population", b->house_population);
+        game_debug_show_property_t(i, "house_population_room", b->house_population_room);
+        game_debug_show_property_t(i, "distance_from_entry", b->distance_from_entry);
+        game_debug_show_property_t(i, "house_highest_population", b->house_highest_population);
+        game_debug_show_property_t(i, "house_unreachable_ticks", b->house_unreachable_ticks);
+        game_debug_show_property_t(i, "road_access", b->road_access);
+        game_debug_show_property_t(i, "figure_spawn_delay", b->figure_spawn_delay);
+        game_debug_show_property_t(i, "figure_roam_direction", b->figure_roam_direction);
+        game_debug_show_property_t(i, "has_water_access", b->has_water_access);
+        game_debug_show_property_t(i, "has_open_water_access", b->has_open_water_access);
+        game_debug_show_property_t(i, "prev_part_building_id", b->prev_part_building_id);
+        game_debug_show_property_t(i, "next_part_building_id", b->next_part_building_id);
+        game_debug_show_property_t(i, "stored_full_amount", b->stored_full_amount);
+        game_debug_show_property_t(i, "num_workers", b->num_workers);
+        game_debug_show_property_t(i, "fancy_state", b->fancy_state);
+        game_debug_show_property_t(i, "labor_category", b->labor_category);
+        game_debug_show_property_t(i, "output_resource_first_id", b->output_resource_first_id);
+        game_debug_show_property_t(i, "output_resource_second_id", b->output_resource_second_id);
+        game_debug_show_property_t(i, "output_resource_second_rate", b->output_resource_second_rate);
+        game_debug_show_property_t(i, "has_road_access", b->has_road_access);
+        game_debug_show_property_t(i, "house_criminal_active", b->house_criminal_active);
+        game_debug_show_property_t(i, "disease_days", b->disease_days);
+        game_debug_show_property_t(i, "common_health", b->common_health);
+        game_debug_show_property_t(i, "malaria_risk", b->malaria_risk);
+        game_debug_show_property_t(i, "damage_risk", b->damage_risk);
+        game_debug_show_property_t(i, "fire_risk", b->fire_risk);
+        game_debug_show_property_t(i, "fire_duration", b->fire_duration);
+        game_debug_show_property_t(i, "health_proof", b->health_proof);
+        game_debug_show_property_t(i, "fire_proof", b->fire_proof);
+        game_debug_show_property_t(i, "damage_proof", b->damage_proof);
+        game_debug_show_property_t(i, "house_tax_coverage", b->house_tax_coverage);
+        game_debug_show_property_t(i, "tax_collector_id", b->tax_collector_id);
+        game_debug_show_property_t(i, "formation_id", b->formation_id);
+        game_debug_show_property_t(i, "tax_income_or_storage", b->tax_income_or_storage);
+        game_debug_show_property_t(i, "house_days_without_food", b->house_days_without_food);
+        game_debug_show_property_t(i, "has_plague", b->has_plague);
+        game_debug_show_property_t(i, "desirability", b->desirability);
+        game_debug_show_property_t(i, "is_adjacent_to_water", b->is_adjacent_to_water);
+        game_debug_show_property_t(i, "storage_id", b->storage_id);
+        game_debug_show_property_t(i, "show_on_problem_overlay", b->show_on_problem_overlay);
+        game_debug_show_property_t(i, "deben_storage", b->deben_storage);
 
         ImGui::TreePop();
     }
+
+    ImGui::PushID(0x81000000 | b->id);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool anim_open = ImGui::TreeNodeEx("Anim", ImGuiTreeNodeFlags_DefaultOpen, "Anim");
+    ImGui::TableSetColumnIndex(1);
+
+    if (anim_open) {
+        game_debug_show_property_t(i, "id", b->anim.id, true);
+        game_debug_show_property_t(i, "base", b->anim.base);
+        game_debug_show_property_t(i, "offset", b->anim.offset);
+        game_debug_show_property_t(i, "hashtime", b->anim.hashtime);
+        game_debug_show_property_t(i, "pos", b->anim.pos);
+        game_debug_show_property_t(i, "frame_duration", b->anim.frame_duration);
+        game_debug_show_property_t(i, "max_frames", b->anim.max_frames);
+        game_debug_show_property_t(i, "frame", b->anim.frame);
+        game_debug_show_property_t(i, "can_reverse", b->anim.can_reverse);
+        game_debug_show_property_t(i, "loop", b->anim.loop);
+        game_debug_show_property_t(i, "is_reverse", b->anim.is_reverse);
+        game_debug_show_property_t(i, "was_finished", b->anim.was_finished);
+
+        ImGui::TreePop();
+    }
+    ImGui::PopID();
     ImGui::PopID();
 }
 
