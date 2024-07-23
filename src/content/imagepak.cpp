@@ -719,9 +719,9 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         img.offset_mirror = pak_buf->read_i32(); // .sg3 only
         // clamp dimensions so that it's not below zero!
         img.width = pak_buf->read_i16();
-        img.width = img.width < 0 ? 0 : img.width;
+        img.width = std::max<int>(0, img.width);
         img.height = pak_buf->read_i16();
-        img.height = img.height < 0 ? 0 : img.height;
+        img.height = std::max<int>(0, img.height);
         img.unk01 = pak_buf->read_i16();
         img.unk02 = pak_buf->read_i16();
         img.unk03 = pak_buf->read_i16();
