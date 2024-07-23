@@ -108,7 +108,7 @@ public:
         constexpr unsigned long long type_name_start  = function_name.rfind('=') + 2;
         constexpr unsigned long long type_name_end    = function_name.rfind(':') - 1;
         constexpr unsigned long long type_name_length = type_name_end - type_name_start;
-        constexpr u_string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
+        constexpr string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
         return type_name_string.c_str();
 #elif defined(__FUNCSIG__) || defined(_MSC_VER)
         constexpr static const unsigned long long function_name_length = sizeof(__FUNCSIG__);
