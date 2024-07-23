@@ -224,7 +224,7 @@ public:
             e_resource second_material_id;
             unsigned char curse_days_left;
             int unk_6[5];
-            short fishing_boat_id;
+            short reserved_id_13;
             int unk_40[40];
             e_labor_state labor_state;
             uint8_t labor_days_left;
@@ -555,6 +555,7 @@ public:
     inline figure *create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir) { return base.create_figure_generic(_type, created_action, slot, created_dir); }
     inline figure *create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, e_building_slot slot = BUILDING_SLOT_CARTPUSHER) { return base.create_cartpusher(resource_id, quantity, created_action, slot); }
     inline figure *get_figure(int slot) { return base.get_figure(slot); }
+    inline const figure *get_figure(int slot) const { return base.get_figure(slot); }
     
     inline int id() const { return base.id; }
     inline tile2i tile() const { return base.tile; }

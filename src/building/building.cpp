@@ -1138,7 +1138,7 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         for (int i = 0; i < 3; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_6[i]);
         }
-        iob->bind(BIND_SIGNATURE_INT16, &b->data.industry.fishing_boat_id);
+        iob->bind(BIND_SIGNATURE_INT16, &b->data.industry.reserved_id_13);
 
         for (int i = 0; i < 40; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_40[i]);
