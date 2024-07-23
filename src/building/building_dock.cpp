@@ -123,6 +123,22 @@ void building_dock::spawn_figure() {
     }
 }
 
+void building_dock::update_graphic() {
+    int num_idle_dockers = count_idle_dockers();
+    if (num_idle_dockers > 0) {
+        int image_dock = map_image_at(tile());
+        xstring animkey;
+        int image_dock_base = anim(animkeys().base).first_img();
+
+        if (image_dock == image_dock_base) animkey = animkeys().work_n;
+        else if (image_dock == image_dock_base + 1) animkey = animkeys().work_w;
+        else if (image_dock == image_dock_base + 2) animkey = animkeys().work_s;
+        else animkey = animkeys().work_e;
+
+        set_animation(animkey);
+    }
+}
+
 void building_dock::draw_dock_orders(object_info* c) {
     c->help_id = 83;
     int y_offset = window_building_get_vertical_offset(c, 28);
@@ -248,22 +264,14 @@ int building_dock::window_info_handle_mouse(const mouse *m, object_info &c) {
 }
 
 bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color color_mask) {
-    int num_idle_dockers = count_idle_dockers();
-    if (num_idle_dockers > 0) {
-        int image_dock = map_image_at(t);
-        animation_t anim_dockers;
-        int image_dock_base = dock_m.anim["base"].first_img();
-        if (image_dock == image_dock_base) anim_dockers = dock_m.anim["work_n"];
-        else if (image_dock == image_dock_base + 1) anim_dockers = dock_m.anim["work_w"];
-        else if (image_dock == image_dock_base + 2) anim_dockers = dock_m.anim["work_s"];
-        else anim_dockers = dock_m.anim["work_e"];
+    //draw_normal_anim(ctx, point, t, color_mask);
 
-        data.dock.docker_anim_frame++;
-        data.dock.docker_anim_frame %= (anim_dockers.max_frames * anim_dockers.duration);
-        int img_id = anim_dockers.first_img() + (data.dock.docker_anim_frame / anim_dockers.duration) * 4;
-        const image_t* img = image_get(img_id);
-        ImageDraw::img_generic(ctx, img_id, point + anim_dockers.pos, color_mask);
-    }
+    auto &anim_dockers = base.anim;
+    data.dock.docker_anim_frame++;
+    data.dock.docker_anim_frame %= (anim_dockers.max_frames * anim_dockers.frame_duration);
+    int img_id = anim_dockers.base + (data.dock.docker_anim_frame / anim_dockers.frame_duration) * 4;
+    const image_t* img = image_get(img_id);
+    ImageDraw::img_generic(ctx, img_id, point + anim_dockers.pos, color_mask, 1.f, true);
     return false;
 }
 
