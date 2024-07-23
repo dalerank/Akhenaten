@@ -18,6 +18,14 @@ const xstring id_anim_t::fight_fire = "fight_fire";
 const xstring id_anim_t::back = "back";
 const xstring id_anim_t::bubbles = "bubbles";
 const xstring id_anim_t::point = "point";
+const xstring id_anim_t::work_n = "work_n";
+const xstring id_anim_t::work_w = "work_w";
+const xstring id_anim_t::work_s = "work_s";
+const xstring id_anim_t::work_e = "work_e";
+const xstring id_anim_t::wait_n = "wait_n";
+const xstring id_anim_t::wait_w = "wait_w";
+const xstring id_anim_t::wait_s = "wait_s";
+const xstring id_anim_t::wait_e = "wait_e";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

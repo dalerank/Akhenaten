@@ -20,6 +20,14 @@ struct id_anim_t {
     static const xstring back;
     static const xstring bubbles;
     static const xstring point;
+    static const xstring work_n;
+    static const xstring work_w;
+    static const xstring work_s;
+    static const xstring work_e;
+    static const xstring wait_n;
+    static const xstring wait_w;
+    static const xstring wait_s;
+    static const xstring wait_e;
 };
 
 const id_anim_t &animkeys();
