@@ -10,6 +10,7 @@
 #include "config/config.h"
 #include "figure/figure.h"
 #include "core/random.h"
+#include "grid/image.h"
 #include "widget/city/ornaments.h"
 #include "sound/sound_building.h"
 #include "game/game.h"
@@ -45,7 +46,8 @@ void building_fishing_wharf::on_place_update_tiles(int orientation, int variant)
 
 void building_fishing_wharf::update_count() const {
     if (num_workers() > 0 && base.has_open_water_access) {
-        city_buildings_add_working_wharf(!data.industry.fishing_boat_id);
+        const figure *boat = get_figure(BUILDING_SLOT_BOAT);
+        city_buildings_add_working_wharf(boat->is_valid());
     }
 
     building_increase_industry_count(RESOURCE_FISH, num_workers() > 0);
@@ -54,12 +56,43 @@ void building_fishing_wharf::update_count() const {
 void building_fishing_wharf::update_day() {
     building_impl::update_day();
 
-    if (data.industry.fishing_boat_id > 0) {
-        figure *f = figure_get(data.industry.fishing_boat_id);
+    int boat_id = base.get_figure_id(BUILDING_SLOT_BOAT);
+    if (boat_id > 0) {
+        figure *f = get_figure(BUILDING_SLOT_BOAT);
         if (!f->is_valid() || f->type != FIGURE_FISHING_BOAT) {
-            data.industry.fishing_boat_id = 0;
+            base.set_figure(BUILDING_SLOT_BOAT, 0);
         }
     }
+}
+
+void building_fishing_wharf::update_graphic() {
+    if (!can_play_animation()) {
+        set_animation(animkeys().none);
+        return;
+    }
+    
+    figure *f = base.get_figure(BUILDING_SLOT_BOAT);
+    if (!f->is_valid()) {
+        set_animation(animkeys().none);
+        return;
+    }
+
+    int image_warf = map_image_at(tile());
+    int image_warf_base = anim(animkeys().base).first_img();
+    xstring animkey;
+    if (f->action_state != FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF) {
+        if (image_warf == image_warf_base) animkey = animkeys().wait_n;
+        else if (image_warf == image_warf_base + 1) animkey = animkeys().wait_w;
+        else if (image_warf == image_warf_base + 2) animkey = animkeys().wait_s;
+        else animkey = animkeys().wait_e;
+    } else {
+        if (image_warf == image_warf_base) animkey = animkeys().work_n;
+        else if (image_warf == image_warf_base + 1) animkey = animkeys().work_w;
+        else if (image_warf == image_warf_base + 2) animkey = animkeys().work_s;
+        else animkey = animkeys().work_e;
+    }
+
+    set_animation(animkey);
 }
 
 void building_fishing_wharf::spawn_figure() {
@@ -73,7 +106,8 @@ void building_fishing_wharf::spawn_figure() {
             ; // nothing
         } else {
             base.figure_spawn_delay++;
-            if (data.industry.fishing_boat_id == 0 && base.figure_spawn_delay > spawn_delay) {
+            int boat_id = base.get_figure_id(BUILDING_SLOT_BOAT);
+            if (!boat_id && base.figure_spawn_delay > spawn_delay) {
                 base.figure_spawn_delay = 0;
 
                 int dock_tile = data.dock.dock_tiles[0];
@@ -85,7 +119,6 @@ void building_fishing_wharf::spawn_figure() {
                     random_generate_next();
                     f->wait_ticks = random_short() % 30; // ok
                     f->allow_move_type = EMOVE_WATER;
-                    data.industry.fishing_boat_id = f->id;
                 }
             }
         }
@@ -108,7 +141,7 @@ void building_fishing_wharf::on_place_checks() {
 }
 
 void building_fishing_wharf::on_undo() {
-    data.industry.fishing_boat_id = 0;
+    base.set_figure(BUILDING_SLOT_BOAT, 0);
 }
 
 void building_fishing_wharf::update_map_orientation(int orientation) {
@@ -117,9 +150,15 @@ void building_fishing_wharf::update_map_orientation(int orientation) {
     map_water_add_building(id(), tile(), fishing_wharf_m.building_size, image_id);
 }
 
-bool building_fishing_wharf::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
-    const auto &anim = fishing_wharf_m.anim["work"];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, mask);
+bool building_fishing_wharf::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    auto &anim_wharf = base.anim;
+    if (anim_wharf.valid()) {
+        data.dock.docker_anim_frame++;
+        data.dock.docker_anim_frame %= (anim_wharf.max_frames * anim_wharf.frame_duration);
+        int img_id = anim_wharf.base + (data.dock.docker_anim_frame / anim_wharf.frame_duration) * 4;
+        const image_t *img = image_get(img_id);
+        ImageDraw::img_generic(ctx, img_id, point + anim_wharf.pos, color_mask, 1.f, true);
+    }
     return true;
 }
 
@@ -136,11 +175,12 @@ void building_fishing_wharf::window_info_background(object_info &c) {
 
     if (!c.has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (!b->data.industry.fishing_boat_id) {
+    } else if (!get_figure(BUILDING_SLOT_BOAT)->is_valid()) {
         window_building_draw_description(c, 102, 2);
     } else {
         int text_id;
-        switch (figure_get(b->data.industry.fishing_boat_id)->action_state) {
+        figure *boat = get_figure(BUILDING_SLOT_BOAT);
+        switch (boat->action_state) {
         case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH:
             text_id = 3;
             break;
