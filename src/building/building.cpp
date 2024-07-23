@@ -51,6 +51,9 @@ void game_cheat_destroy_type(std::istream &is, std::ostream &os) {
 building g_all_buildings[5000];
 std::span<building> g_city_buildings = make_span(g_all_buildings);
 
+const token_holder<e_building_state, BUILDING_STATE_UNUSED, BUILDING_STATE_COUNT> e_building_state_tokens;
+const token_holder<e_building_type, BUILDING_NONE, BUILDING_MAX> e_building_type_tokens;
+
 building_impl::static_params building_impl::static_params::dummy;
 
 std::span<building>& city_buildings() {

@@ -139,12 +139,13 @@ static void game_debug_show_properties_object(pcstr prefix, building *b) {
     int i = 0;
     if (common_open) {
         game_debug_show_property_t(i, "id", b->id, true);
-        game_debug_show_property_t(i, "state", e_building_state_tokens.name(b->state));
+        game_debug_show_property_t(i, "state", token::find_name(e_building_state_tokens, b->state));
         game_debug_show_property_t(i, "size", b->size);
         game_debug_show_property_t(i, "house_is_merged", b->house_is_merged);
         game_debug_show_property_t(i, "house_size", b->house_size);
         game_debug_show_property_t(i, "tile", b->tile);
-        game_debug_show_property_t(i, "type", b->type);
+        bstring256 type_name; type_name.printf("%s [%d]", token::find_name(e_building_type_tokens, b->type), b->type);
+        game_debug_show_property_t(i, "type", type_name);
 
         ImGui::TreePop();
     }

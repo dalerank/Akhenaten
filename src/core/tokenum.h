@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <typeinfo>
 
@@ -244,7 +246,7 @@ struct token_holder {
         return make_tokens_helper<e_enum_type>( std::make_integer_sequence<uint32_t, N>{});
     }
 
-    operator const token *() const { return values.unsafe_ptr(); }
+    operator const token *() const { return values.data(); }
     const token *data() const { return values.unsafe_ptr(); }
     constexpr token_holder() : values{make_tokens<enum_type>()} {}
     const char *name(enum_type v) const {
@@ -254,13 +256,6 @@ struct token_holder {
 
     tokens values;
 };
-
-template<typename enum_type, enum_type begin, enum_type end>
-inline auto make_enum_tokens() {
-    static token_holder<enum_type, begin, end> impl;
-    return make_span(impl.values);
-}
-
 
 #ifdef TOKENNUM_TEST
 enum test_enum { te_first, te_second, te_third, te_count };

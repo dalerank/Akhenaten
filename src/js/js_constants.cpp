@@ -120,9 +120,13 @@ void js_register_city_sound_constants(js_State *J) {
 }
 
 void js_register_city_buildings(js_State *J) {
-#define REGISTER_BLD(a, b) REGISTER_GLOBAL_CONSTANT(J, a)
-#include "building/building_type_indexes.h"
-#undef REGISTER_BLD
+    for (const auto &btype : e_building_type_tokens.values) {
+        if (!btype.name || !*btype.name) {
+            continue;
+        }
+        js_newnumber(J, btype.id);
+        js_setglobal(J, btype.name);
+    }
 }
 
 void js_register_ui_fonts(js_State *J) {

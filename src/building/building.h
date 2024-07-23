@@ -81,7 +81,7 @@ enum e_building_state {
     BUILDING_STATE_MOTHBALLED = 7,
     BUILDING_STATE_COUNT,
 };
-const token_holder<e_building_state, BUILDING_STATE_UNUSED, BUILDING_STATE_COUNT> e_building_state_tokens;
+extern const token_holder<e_building_state, BUILDING_STATE_UNUSED, BUILDING_STATE_COUNT> e_building_state_tokens;
 
 enum e_building_slot {
     BUILDING_SLOT_SERVICE = 0,
