@@ -85,4 +85,5 @@ void animation_context::update(bool refresh_only) {
             }
         }
     }
+    tick_updated = true;
 }

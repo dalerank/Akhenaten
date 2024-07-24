@@ -123,6 +123,14 @@ void building_dock::spawn_figure() {
     }
 }
 
+void building_dock::on_tick(bool refresh_only) {
+    auto &anim_wharf = base.anim;
+    if (anim_wharf.valid()) {
+        data.dock.docker_anim_frame++;
+        data.dock.docker_anim_frame %= (anim_wharf.max_frames * anim_wharf.frame_duration);
+    }
+}
+
 void building_dock::update_graphic() {
     int num_idle_dockers = count_idle_dockers();
     if (num_idle_dockers > 0) {
@@ -264,14 +272,13 @@ int building_dock::window_info_handle_mouse(const mouse *m, object_info &c) {
 }
 
 bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color color_mask) {
-    //draw_normal_anim(ctx, point, t, color_mask);
-
     auto &anim_dockers = base.anim;
-    data.dock.docker_anim_frame++;
-    data.dock.docker_anim_frame %= (anim_dockers.max_frames * anim_dockers.frame_duration);
-    int img_id = anim_dockers.base + (data.dock.docker_anim_frame / anim_dockers.frame_duration) * 4;
-    const image_t* img = image_get(img_id);
-    ImageDraw::img_generic(ctx, img_id, point + anim_dockers.pos, color_mask, 1.f, true);
+
+    if (anim_dockers.valid()) {
+        int img_id = anim_dockers.base + (data.dock.docker_anim_frame / anim_dockers.frame_duration) * 4;
+        const image_t *img = image_get(img_id);
+        ImageDraw::img_generic(ctx, img_id, point + anim_dockers.pos, color_mask, 1.f, true);
+    }
     return false;
 }
 

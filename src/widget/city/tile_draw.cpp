@@ -401,9 +401,7 @@ void draw_figures(vec2i pixel, tile2i tile, painter &ctx) {
 void draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
     auto& draw_context = get_draw_context();
 
-    int grid_offset = tile.grid_offset();
     auto figures = map_figures_in_row(tile);
-
     for (auto *f : figures) {
         if (f->is_drawn && !force) {
             continue;

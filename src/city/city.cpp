@@ -926,7 +926,7 @@ bool city_t::determine_granary_get_foods(resource_list &foods, int road_network)
 void city_t::buildings_t::update_tick(bool refresh_only) {
     for (auto it = building_begin(), end = building_end(); it != end; ++it) {
         if (it->is_valid()) {
-            it->update_tick(refresh_only);
+            it->dcast()->on_tick(refresh_only);
         }
     }
 }

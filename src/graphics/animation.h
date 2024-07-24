@@ -41,6 +41,7 @@ struct animation_context {
     bool loop = true;
     bool is_reverse = false;
     bool was_finished = false;
+    bool tick_updated = false;
 
     void setup(const animation_t &anim);
     void update(bool refresh_only);

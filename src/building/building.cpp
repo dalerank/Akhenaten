@@ -156,14 +156,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
     }
 }
 
-void building::update_tick(bool refresh_only) {
-    if (!anim.valid()) {
-        return;
-    }
-
-    anim.update(refresh_only);
-}
-
 void building::monument_remove_worker(int fid) {
     for (auto &wid : data.monuments.workers) {
         if (wid == fid) {
@@ -988,6 +980,14 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
     if (road_tile.valid()) {
         map_highlight_set(road_tile, 1);
     }
+}
+
+void building_impl::on_tick(bool refresh_only) {
+    if (!base.anim.valid()) {
+        return;
+    }
+
+    base.anim.update(refresh_only);
 }
 
 bool resource_required_by_workshop(building* b, e_resource resource) {

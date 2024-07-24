@@ -346,7 +346,6 @@ public:
     void clear_impl();
     void reset_impl();
     void new_fill_in_data_for_type(e_building_type type, tile2i tile, int orientation);
-    void update_tick(bool refresh_only);
 
     e_overlay get_overlay() const;
     const int get_figure_id(int i) const { return figure_ids[i]; };
@@ -576,6 +575,7 @@ public:
     virtual bool is_unique_building() const { return false; }
     virtual void destroy_by_poof(bool clouds);
     virtual void highlight_waypoints();
+    virtual void on_tick(bool refresh_only);
 
     using resources_vec = std::array<e_resource, 4>;
     virtual resources_vec required_resource() const { return {}; }

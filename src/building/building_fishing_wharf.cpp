@@ -95,6 +95,14 @@ void building_fishing_wharf::update_graphic() {
     set_animation(animkey);
 }
 
+void building_fishing_wharf::on_tick(bool refresh_only) {
+    auto &anim_wharf = base.anim;
+    if (anim_wharf.valid()) {
+        data.dock.docker_anim_frame++;
+        data.dock.docker_anim_frame %= (anim_wharf.max_frames * anim_wharf.frame_duration);
+    }
+}
+
 void building_fishing_wharf::spawn_figure() {
     check_labor_problem();
 
@@ -153,8 +161,6 @@ void building_fishing_wharf::update_map_orientation(int orientation) {
 bool building_fishing_wharf::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     auto &anim_wharf = base.anim;
     if (anim_wharf.valid()) {
-        data.dock.docker_anim_frame++;
-        data.dock.docker_anim_frame %= (anim_wharf.max_frames * anim_wharf.frame_duration);
         int img_id = anim_wharf.base + (data.dock.docker_anim_frame / anim_wharf.frame_duration) * 4;
         const image_t *img = image_get(img_id);
         ImageDraw::img_generic(ctx, img_id, point + anim_wharf.pos, color_mask, 1.f, true);
