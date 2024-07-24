@@ -4,6 +4,7 @@
 #include "graphics/screen.h"
 #include "graphics/graphics.h"
 #include "graphics/text.h"
+#include "building/destruction.h"
 #include "game/game.h"
 #include "dev/imgui_qconsole.h"
 #include "building/building.h"
@@ -138,6 +139,7 @@ static void game_debug_show_properties_object(pcstr prefix, building *b) {
 
     int i = 0;
     if (common_open) {
+        game_debug_show_property_t(i, "Untype/Destroy", [b] { building_destroy_by_collapse(b); });
         game_debug_show_property_t(i, "id", b->id, true);
         game_debug_show_property_t(i, "state", token::find_name(e_building_state_tokens, b->state));
         game_debug_show_property_t(i, "size", b->size);
@@ -237,7 +239,7 @@ static void game_debug_show_properties_object(pcstr prefix, figure *f) {
 
     int i = 0;
     if (common_open) {
-        game_debug_show_property_t(i, "Actions", [f] { f->poof(); });
+        game_debug_show_property_t(i, "Kill", [f] { f->poof(); });
         game_debug_show_property_t(i, "id", f->id, true);
         game_debug_show_property_t(i, "resource_id", resource_name(f->resource_id));
         game_debug_show_property_t(i, "resource_amount_full", f->resource_amount_full);

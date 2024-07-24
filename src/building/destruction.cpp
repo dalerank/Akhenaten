@@ -149,9 +149,8 @@ void building_destroy_by_poof(building* b, bool clouds) {
     b = b->main();
     if (clouds) {
         figure_create_explosion_cloud(b->tile, b->size);
+        g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
     }
-
-    g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
 
     do {
         b->state = BUILDING_STATE_UNUSED;
