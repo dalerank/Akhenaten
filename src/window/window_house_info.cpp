@@ -59,22 +59,14 @@ void building_house::window_info_background(object_info &c) {
         return;
     }
 
-    int label_width = c.bgsize.x * 16 - 16;
-    ui["background"].size = c.bgsize;
-    ui["title"].width(c.bgsize.x * 16);
-    ui["tenants_panel"].width(c.bgsize.x - 2);
-    ui["evolve_reason"].width(label_width);
-    ui["additional_info"].width(label_width);
-
     int level = b->type - 10;
-    ui["title"].text(ui::str(29, level));
+    ui["title"] = ui::str(29, level);
 }
 
 void building_house::window_info_foreground(object_info &c) {
     auto &ui = house_info_window;
     ui.draw();
 
-    painter ctx = game.painter();
     building* b = building_get(c.building_id);
 
     if (b->data.house.evolve_text_id == 62) { // is about to devolve
@@ -83,9 +75,9 @@ void building_house::window_info_foreground(object_info &c) {
                         ui::str(127, 40 + b->data.house.evolve_text_id),
                         ui::str(41, building_get(c.worst_desirability_building_id)->type),
                         ui::str(127, 41 + b->data.house.evolve_text_id));
-        ui["evolve_reason"].text(text);
+        ui["evolve_reason"] = text;
     } else { // needs something to evolve 
-        ui["evolve_reason"].text(ui::str(127, 40 + b->data.house.evolve_text_id));
+        ui["evolve_reason"] = ui::str(127, 40 + b->data.house.evolve_text_id);
     }
 
     int resource_image = image_id_resource_icon(0);

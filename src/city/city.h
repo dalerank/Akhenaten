@@ -219,7 +219,7 @@ struct city_t {
         int32_t contribution_taxes;
         int32_t contribution_wages;
         int32_t contribution_employment;
-        int32_t penalty_tents;
+        int32_t penalty_huts;
         int32_t religion_coverage;
         int32_t monuments;
     } sentiment;

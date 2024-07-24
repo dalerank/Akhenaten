@@ -85,7 +85,7 @@ int city_sentiment_criminals() {
     return city_data.sentiment.criminals;
 }
 
-static int get_sentiment_penalty_for_tent_dwellers() {
+static int get_sentiment_penalty_for_hut_dwellers() {
     // alternate the penalty for every update
     if (!city_data.sentiment.include_huts) {
         city_data.sentiment.include_huts = true;
@@ -267,19 +267,19 @@ void city_sentiment_update() {
     int sentiment_contribution_employment = get_sentiment_contribution_employment();
     int sentiment_contribution_religion_coverage = get_sentiment_contribution_religion_coverage();
     int sentiment_contribution_monuments = get_sentiment_contribution_monuments();
-    int sentiment_penalty_tents = get_sentiment_penalty_for_tent_dwellers();
+    int sentiment_penalty_huts = get_sentiment_penalty_for_hut_dwellers();
 
     city_data.sentiment.contribution_taxes = sentiment_contribution_taxes;
     city_data.sentiment.contribution_wages = sentiment_contribution_wages;
     city_data.sentiment.contribution_employment = sentiment_contribution_employment;
-    city_data.sentiment.penalty_tents = sentiment_penalty_tents;
+    city_data.sentiment.penalty_huts = sentiment_penalty_huts;
     city_data.sentiment.religion_coverage = sentiment_contribution_religion_coverage;
     city_data.sentiment.monuments = sentiment_contribution_monuments;
 
     int houses_calculated = 0;
     int houses_needing_food = 0;
     int total_sentiment_contribution_food = 0;
-    int total_sentiment_penalty_tents = 0;
+    int total_sentiment_penalty_huts = 0;
     int default_sentiment = difficulty_sentiment();
 
     buildings_valid_do([&] (building &b) {
@@ -311,12 +311,12 @@ void city_sentiment_update() {
         // population >= 300
         houses_calculated++;
         int sentiment_contribution_food = 0;
-        int sentiment_contribution_tents = 0;
+        int sentiment_contribution_huts = 0;
         if (!model_get_house(b.subtype.house_level)->food_types) {
             // tents
             b.house_days_without_food = 0;
-            sentiment_contribution_tents = sentiment_penalty_tents;
-            total_sentiment_penalty_tents += sentiment_penalty_tents;
+            sentiment_contribution_huts = sentiment_penalty_huts;
+            total_sentiment_penalty_huts += sentiment_penalty_huts;
         } else {
             // shack+
             houses_needing_food++;
@@ -341,7 +341,7 @@ void city_sentiment_update() {
         b.sentiment.house_happiness += sentiment_contribution_wages;
         b.sentiment.house_happiness += sentiment_contribution_employment;
         b.sentiment.house_happiness += sentiment_contribution_food;
-        b.sentiment.house_happiness += sentiment_contribution_tents;
+        b.sentiment.house_happiness += sentiment_contribution_huts;
         b.sentiment.house_happiness += sentiment_contribution_religion_coverage;
         b.sentiment.house_happiness += sentiment_contribution_monuments;
         b.sentiment.house_happiness = calc_bound(b.sentiment.house_happiness, 0, 100);
@@ -354,7 +354,7 @@ void city_sentiment_update() {
     }
 
     if (houses_calculated) {
-        sentiment_contribution_tents = total_sentiment_penalty_tents / houses_calculated;
+        sentiment_contribution_tents = total_sentiment_penalty_huts / houses_calculated;
     }
 
     int total_sentiment = 0;

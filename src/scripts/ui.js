@@ -371,8 +371,8 @@ house_info_window = {
 	resource_text_group : 23,
 	help_id : 56,
 	ui : {
-		background : { type : "outer_panel",	pos: [-1, -1], size: [-1, -1] }, // pos/size setup from code
-		title 		 : { type : "text", pos: [0, 12], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		background : { type : "outer_panel",	size: [29, 23] }, // pos/size setup from code
+		title 		 : { type : "text", pos: [0, 12], size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		evolve_reason : { type : "text", pos: [32, 40], font : FONT_NORMAL_BLACK_ON_LIGHT, rich:true },
 		food0_icon : { type : "resource_icon", pos: [32, 95] },
 		food0_text : { type : "text", pos: [64, 100], font: FONT_NORMAL_BLACK_ON_LIGHT },
@@ -390,12 +390,12 @@ house_info_window = {
 		good2_text : { type : "text", pos: [284, 124], font: FONT_NORMAL_BLACK_ON_LIGHT },
 		good3_icon : { type : "resource_icon", pos: [362, 120] },
 		good3_text : { type : "text", pos: [394, 124], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		tenants_panel : { type : "inner_panel", pos : [16, 148], size: [0, 10] },
+		tenants_panel : { type : "inner_panel", pos : [16, 148], size: [27, 10] },
 		people_icon : { type : "image", pos: [34, 154], pack:PACK_GENERAL, id:134, offset:13, },
 		people_text : { type : "text", pos: [64, 164], font: FONT_NORMAL_BLACK_ON_DARK, },
 		tax_info : { type : "text", pos: [36, 194], font: FONT_NORMAL_BLACK_ON_DARK, },
-		happiness_info : { type : "text", pos: [36, 214], font: FONT_NORMAL_BLACK_ON_DARK, },
-		additional_info : { type : "text", pos: [36, 234], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true },
+		happiness_info : { type : "text", pos: [36, 214], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) },
+		additional_info : { type : "text", pos: [36, 234], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) },
 	}
 }
 
