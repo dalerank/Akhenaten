@@ -29,12 +29,10 @@ void building_bazaar::draw_simple_background(object_info &ctx) {
     ctx.bgsize = ui["background"].size;
     window_building_play_sound(&ctx, "Wavs/market.wav");
 
-    int text_id = get_employment_info_text_id(&ctx, &base, 1);
-    int laborers = model_get_building(BUILDING_BAZAAR)->laborers;
-    ui["workers_text"].text_var("%d %s (%d %s", num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
-    if (text_id) {
-        ui["workers_desc"].text(ui::str(69, text_id));
-    }
+    ui["orders"].pos.y = 16 * ctx.bgsize.y - 40;
+    ui["orders"].onclick([] (int, int) {
+        window_building_info_show_storage_orders();
+    });
 
     std::pair<int, int> reason = {0, 0};
     if (!ctx.has_road_access) {
@@ -46,8 +44,16 @@ void building_bazaar::draw_simple_background(object_info &ctx) {
     }
 
     if (reason.first) {
-        ui["workers_text"].text(ui::str(reason));
+        ui["workers_desc"] = "";
+        ui["workers_text"] = ui::str(reason);
         return;
+    }
+
+    int text_id = get_employment_info_text_id(&ctx, &base, 1);
+    int laborers = model_get_building(BUILDING_BAZAAR)->laborers;
+    ui["workers_text"].text_var("%d %s (%d %s", num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
+    if (text_id) {
+        ui["workers_desc"] = ui::str(69, text_id);
     }
 
     int image_id = image_id_resource_icon(0);
@@ -78,11 +84,6 @@ void building_bazaar::draw_simple_background(object_info &ctx) {
         ui[id_text].font(is_good_accepted(INVENTORY_GOOD1 + i) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
         ui[id_text].text_var(good_res ? "%u" : "", data.market.inventory[INVENTORY_GOOD1 + i]);
     }
-
-    ui["orders"].pos.y = 16 * ctx.bgsize.y - 40;
-    ui["orders"].onclick([] (int, int) {
-        window_building_info_show_storage_orders();
-    });
 }
 
 void building_bazaar::window_info_foreground(object_info &ctx) {
