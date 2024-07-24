@@ -373,7 +373,7 @@ house_info_window = {
 	ui : {
 		background : { type : "outer_panel",	size: [29, 23] }, // pos/size setup from code
 		title 		 : { type : "text", pos: [0, 12], size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		evolve_reason : { type : "text", pos: [32, 40], font : FONT_NORMAL_BLACK_ON_LIGHT, rich:true },
+		evolve_reason : { type : "text", pos: [32, 40], font : FONT_NORMAL_BLACK_ON_LIGHT, rich:true, wrap:px(28) },
 		food0_icon : { type : "resource_icon", pos: [32, 95] },
 		food0_text : { type : "text", pos: [64, 100], font: FONT_NORMAL_BLACK_ON_LIGHT },
 		food1_icon : { type : "resource_icon", pos: [142, 95] },

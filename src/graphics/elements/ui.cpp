@@ -659,7 +659,7 @@ void ui::etext::draw() {
         }
 
         int symbolh = get_letter_height((uint8_t *)"H", _font);
-        int maxlines = pxsize().y / symbolh;
+        int maxlines = std::max(1, pxsize().y / symbolh);
 
         rich_text_set_fonts(_font, _link_font);
         rich_text_draw((const uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _wrap, maxlines, false);
