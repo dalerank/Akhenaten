@@ -285,6 +285,7 @@ struct widget {
     void set_clip_rectangle(const element &e);
     void reset_clip_rectangle();
     virtual void begin_frame() { ui::begin_frame(); }
+    bool handle_mouse(const mouse *m) { return ui::handle_mouse(m); }
 };
 
 struct info_window : public widget {

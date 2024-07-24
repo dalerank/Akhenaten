@@ -108,9 +108,14 @@ static void window_briefing_draw_background() {
     });
 }
 
-static void window_briefing_draw_foreground(void) {
+static void window_briefing_draw_foreground() {
     auto &ui = g_mission_briefing;
     ui.draw();
+}
+
+static void window_briefing_menu_handle_input(const mouse *m, const hotkeys *h) {
+    auto &ui = g_mission_briefing;
+    ui.handle_mouse(m);
 }
 
 static void show(void) {
@@ -118,7 +123,7 @@ static void show(void) {
         WINDOW_MISSION_BRIEFING,
         window_briefing_draw_background,
         window_briefing_draw_foreground,
-        nullptr
+        window_briefing_menu_handle_input
     };
     init();
     window_show(&window);
