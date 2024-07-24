@@ -409,6 +409,10 @@ void ui::einner_panel::load(archive arch) {
 }
 
 void ui::widget::draw() {
+    if (pos.x > 0 || pos.y > 0) {
+        begin_widget(pos);
+    }
+
     for (auto &e : elements) {
         if (e->enabled) {
             e->draw();
@@ -418,6 +422,7 @@ void ui::widget::draw() {
 
 void ui::widget::load(archive arch, pcstr section) {
     elements.clear();
+    pos = arch.r_vec2i("pos");
     arch.r_objects(section, [this] (pcstr key, archive elem) {
         pcstr type = elem.r_string("type");
         element::ptr elm;
@@ -454,6 +459,12 @@ void ui::widget::load(archive arch, pcstr section) {
             elements.push_back(elm);
             elm->load(elem);
         }
+    });
+}
+
+void ui::widget::load(pcstr section) {
+    g_config_arch.r_section(section, [this] (archive arch) {
+        this->load(arch);
     });
 }
 
@@ -531,8 +542,9 @@ void ui::eresource_icon::load(archive arch) {
 }
 
 void ui::elabel::draw() {
+    const vec2i offset = g_state.offset();
     if (_body.x > 0) {
-        label_draw(pos.x, pos.y, _body.x, _body.y);
+        label_draw(pos.x + offset.x, pos.y + offset.y, _body.x, _body.y);
     }
     ui::label(_text.c_str(), pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0}), _font, _flags, _wrap);
 }
@@ -545,9 +557,11 @@ void ui::elabel::load(archive arch) {
         _text = lang_text_from_key(_text.c_str());
     }
     _font = (e_font)arch.r_int("font", FONT_NORMAL_BLACK_ON_LIGHT);
+    _link_font = (e_font)arch.r_int("link_font", FONT_NORMAL_YELLOW);
     _body = arch.r_size2i("body");
     _color = arch.r_uint("color");
     _wrap = arch.r_int("wrap");
+    _clip_area = arch.r_bool("clip_area");
     pcstr talign = arch.r_string("align");
     bool multiline = arch.r_bool("multiline");
     bool rich = arch.r_bool("rich");
@@ -581,8 +595,12 @@ void ui::eimage_button::load(archive arch) {
     assert(!strcmp(type, "image_button"));
 
     img = arch.r_image("image");
-    offset = arch.r_int("offset");
     scale = arch.r_float("scale", 1.f);
+    param1 = arch.r_int("param1");
+    param2 = arch.r_int("param2");
+    img_desc.pack = arch.r_int("pack");
+    img_desc.id = arch.r_int("id");
+    img_desc.offset = arch.r_int("offset");
     pcstr name_icon_texture = arch.r_string("icon_texture");
     if (name_icon_texture && *name_icon_texture) {
         vec2i tmp_size;
@@ -591,8 +609,13 @@ void ui::eimage_button::load(archive arch) {
 }
 
 void ui::eimage_button::draw() {
-    ui::img_button(img, pos, size, offset)
-        .onclick(_func);
+    if (img) {
+        ui::img_button(img, pos, size, img_desc.offset)
+            .onclick(_func);
+    } else if (img_desc.id) {
+        ui::img_button(img_desc.pack, img_desc.id, pos, size, img_desc.offset)
+            .onclick(_func);
+    }
 
     if (icon_texture) {
         painter ctx = game.painter();
@@ -631,8 +654,20 @@ void ui::etext::draw() {
         int symbolh = get_letter_height((uint8_t *)"H", _font);
         text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y + (size.y - symbolh) / 2, _font, _color);
     } else if (!!(_flags & UIFlags_Rich)) {
-        rich_text_set_fonts(_font, FONT_NORMAL_YELLOW);
-        rich_text_draw((const uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, size.x, 10, false);
+        if (_clip_area) {
+            graphics_set_clip_rectangle(offset + pos, pxsize());
+        }
+
+        int symbolh = get_letter_height((uint8_t *)"H", _font);
+        int maxlines = pxsize().y / symbolh;
+
+        rich_text_set_fonts(_font, _link_font);
+        rich_text_draw((const uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _wrap, maxlines, false);
+        rich_text_draw_scrollbar();
+        
+        if (_clip_area) {
+            graphics_reset_clip_rectangle();
+        }
     } else {
         text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _font, _color);
     }
@@ -707,10 +742,11 @@ void ui::egeneric_button::load(archive arch) {
     }
 }
 
+void ui::info_window::load(archive arch, pcstr section) {
+    widget::load(arch, section);
+    resource_text_group = arch.r_int("resource_text_group");
+}
+
 void ui::info_window::load() {
-    elements.clear();
-    g_config_arch.r_section(section, [this] (archive arch) {
-        widget::load(arch);
-        resource_text_group = arch.r_int("resource_text_group");
-    });
+    widget::load(section);
 }

@@ -174,7 +174,7 @@ public:
         return type_name_string.c_str();
 #elif defined(__GNUC__)
         constexpr unsigned long long function_name_length = sizeof(__PRETTY_FUNCTION__);
-        constexpr string_literal<function_name_length> function_name(__PRETTY_FUNCTION__, detail::make_integer_sequence<unsigned long long, function_name_length>{});
+        constexpr string_literal<function_name_length> function_name(__PRETTY_FUNCTION__, std::make_integer_sequence<unsigned long long, function_name_length>{});
         constexpr unsigned long long type_name_start  = function_name.rfind('=') + 2;
         constexpr unsigned long long type_name_end    = function_name_length - 2;
         constexpr unsigned long long type_name_length = type_name_end - type_name_start;

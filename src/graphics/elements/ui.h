@@ -186,10 +186,12 @@ struct einner_panel : public element {
 struct elabel : public element {
     std::string _text;
     e_font _font;
+    e_font _link_font;
     vec2i _body;
     uint32_t _color;
     UiFlags _flags;
     int _wrap;
+    bool _clip_area;
 
     virtual void draw() override;
     virtual void load(archive elem) override;
@@ -243,9 +245,11 @@ struct egeneric_button : public elabel {
 
 struct eimage_button : public element {
     e_image_id img;
-    int offset;
     float scale = 1.f;
+    image_desc img_desc;
     void *icon_texture = nullptr;
+    int param1 = 0;
+    int param2 = 0;
 
     std::function<void(int, int)> _func;
 
@@ -255,10 +259,12 @@ struct eimage_button : public element {
 };
 
 struct widget {
+    vec2i pos;
     std::vector<element::ptr> elements;
 
     virtual void draw();
     virtual void load(archive arch, pcstr section = "ui");
+    void load(pcstr section);
 
     element& operator[](pcstr id);
     inline element &operator[](const bstring32 &id) { return (*this)[id.c_str()]; }
@@ -282,10 +288,11 @@ struct widget {
 };
 
 struct info_window : public widget {
-    pcstr section;
+    bstring128 section;
     int resource_text_group;
 
     inline info_window(pcstr s) : section(s) {}
+    virtual void load(archive arch, pcstr section = "ui") override;
     void load();
 };
 

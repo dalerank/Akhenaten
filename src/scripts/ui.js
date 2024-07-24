@@ -317,6 +317,7 @@ advisor_chief_window = {
 }
 
 mission_briefing_window = {
+	pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
 	ui : {
 		outer_panel : { type : "outer_panel",	pos:[16, 32], size : {w:38, h:27} },
 		title 		  : { type : "text", pos:[32, 48], font : FONT_LARGE_BLACK_ON_LIGHT },
@@ -332,7 +333,12 @@ mission_briefing_window = {
 		goal_5 : { type : "label", pos:[288 + 16, 134 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false },
 		goal_immediate : { type : "label", pos : {x:32 + 16, y:134 + 32},	body : {w:31, h:1},	font : FONT_NORMAL_YELLOW, enabled: false },
 		description_panel : { type : "inner_panel", pos : {x:32, y:200}, size: {w:33, h:14} },
-		difficulty_label : { type : "label", pos:[105, 433], font : FONT_NORMAL_BLACK_ON_LIGHT },
+		description_text : { type : "text", pos: [40, 216], size:[px(36), px(10)], wrap:px(34), font : FONT_NORMAL_WHITE_ON_DARK, link_font:FONT_NORMAL_YELLOW, rich:true, clip_area:true },
+		difficulty_label : { type : "label", pos:[105, 433], size:[31, 14], font : FONT_NORMAL_BLACK_ON_LIGHT },
+		back 			: { type:"image_button", pos:[26, 428], size:[31, 20], pack:PACK_GENERAL, id:90, offset:8 },
+		start_mission : { type:"image_button", pos:[516, 430], size:[27, 27], pack:PACK_GENERAL, id:90, offset:0 },
+		dec_difficulty : { type:"image_button", pos:[65, 428], size:[17, 17], pack:PACK_GENERAL, id:212, offset:0 },
+		inc_difficulty : { type:"image_button", pos:[65 + 18, 428], size:[17, 17], pack:PACK_GENERAL, id:212, offset:3 },
 	}
 }
 
@@ -341,8 +347,8 @@ granary_info_window = {
 	help_id : 3,
 	ui : {
 		background : { type : "outer_panel",	pos: [0, 0], size: [29, 17] },
-		title 		 : { type : "text", text: "#granary_info_title", pos: [0, 12], size: [28 * 16, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		warning_text : { type : "text", pos: [32, 40], wrap:28 * 16, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		title 		 : { type : "text", text: "#granary_info_title", pos: [0, 12], size: [px(28), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		warning_text : { type : "text", pos: [32, 40], wrap:px(28), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		storing    : { type : "text", pos: [34, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
 		free_space : { type : "text", pos: [220, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
 		food0_icon : { type : "resource_icon", pos: [34, 68] },

@@ -22,36 +22,19 @@
 #include "window/mission_next.h"
 #include "game/settings.h"
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_mission_briefing);
-
-static void button_back(int param1, int param2);
-static void button_start_mission(int param1, int param2);
-static void inc_dec_difficulty(int param1, int param2);
-
 struct mission_briefing : ui::widget {
-    struct {
-        image_button back = {0, 0, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1};
-        image_button start_mission = {0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_mission, button_none, 1, 0, 1};
-        image_button inc_difficulty = {0, 0, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 0, inc_dec_difficulty, inc_dec_difficulty, 1,  0, true};
-        image_button dec_difficulty = {0, 0, 17, 17, IB_NORMAL, GROUP_TINY_ARROWS, 3, inc_dec_difficulty, inc_dec_difficulty, -1,  0, true};
-    } buttons;
-
     int is_review;
-    int focus_button;
     int campaign_mission_loaded;
-    int difficulty;
 };
 
 mission_briefing g_mission_briefing;
 
+ANK_REGISTER_CONFIG_ITERATOR(config_load_mission_briefing);
 void config_load_mission_briefing() {
-    g_config_arch.r_section("mission_briefing_window", [] (archive arch) {
-        g_mission_briefing.load(arch);
-    });
+    g_mission_briefing.load("mission_briefing_window");
 }
 
 static void init() {
-    g_mission_briefing.focus_button = 0;
     rich_text_reset(0);
 
     // load map!
@@ -60,11 +43,9 @@ static void init() {
     }
 }
 
-static void draw_background() {
+static void window_briefing_draw_background() {
     auto &data = g_mission_briefing;
     window_draw_underlying_window();
-
-    graphics_set_to_dialog();
 
     int text_id = 200 + scenario_campaign_scenario_id();
     const lang_message* msg = lang_get_message(text_id);
@@ -97,81 +78,48 @@ static void draw_background() {
         ui["goal_immediate"].text(ui::str(62, immediate_goal_text));
     }
 
-    rich_text_set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
-    rich_text_init(msg->content.text, 64, 200, 31, 14, 0);
+    ui["description_text"] = (pcstr)msg->content.text;
 
-    graphics_reset_dialog();
-}
+    ui["back"].enabled = !ui.is_review && game_mission_has_choice();
+    ui["back"].onclick([] {
+        if (!g_mission_briefing.is_review) {
+            g_sound.speech_stop();
+            window_mission_next_selection_show();
+        }
+    });
 
-static void draw_foreground(void) {
-    auto &ui = g_mission_briefing;
-    int text_id = 200 + scenario_campaign_scenario_id();
-    const lang_message* msg = lang_get_message(text_id);
-
-    graphics_set_to_dialog();
-
-    g_mission_briefing.draw();
-
-    graphics_set_clip_rectangle({35, 187}, {522, 234});
-    rich_text_draw(msg->content.text, 48, 202, 512, 14, 0);
-    graphics_reset_clip_rectangle();
-
-    rich_text_draw_scrollbar();
-    image_buttons_draw({516, 426}, &ui.buttons.start_mission, 1);
-    if (!ui.is_review && game_mission_has_choice()) {
-        image_buttons_draw({26, 428}, &ui.buttons.back, 1);
-    }
-
-    if (!ui.is_review) {
-        image_buttons_draw({65, 428}, &ui.buttons.dec_difficulty, 1, 0);
-        image_buttons_draw({65 + 18, 428}, &ui.buttons.inc_difficulty, 1, 0);
-    }
-
-    graphics_reset_dialog();
-}
-
-static void handle_input(const mouse* m, const hotkeys* h) {
-    auto &data = g_mission_briefing;
-    const mouse* m_dialog = mouse_in_dialog(m);
-
-    if (image_buttons_handle_mouse(m_dialog, {516, 426}, &data.buttons.start_mission, 1, 0)) {
-        return;
-    }
-
-    if (!data.is_review && game_mission_has_choice()) {
-        if (image_buttons_handle_mouse(m_dialog, {26, 428}, &data.buttons.back, 1, 0))
-            return;
-    }
-
-    if (!data.is_review) {
-        image_buttons_handle_mouse(m_dialog, {65, 428}, &data.buttons.dec_difficulty, 1, 0);
-        image_buttons_handle_mouse(m_dialog, {65 + 18, 428}, &data.buttons.inc_difficulty, 1, 0);
-    }
-
-    rich_text_handle_mouse(m_dialog);
-}
-static void button_back(int param1, int param2) {
-    if (!g_mission_briefing.is_review) {
+    ui["start_mission"].onclick([] {
         g_sound.speech_stop();
-        window_mission_next_selection_show();
-    }
+        g_sound.music_update(/*force*/true);
+        window_city_show();
+        city_mission_reset_save_start();
+    });
+
+    ui["dec_difficulty"].enabled = !ui.is_review;
+    ui["dec_difficulty"].onclick([] {
+        g_settings.decrease_difficulty();
+        window_invalidate();
+    });
+
+    ui["inc_difficulty"].enabled = !ui.is_review;
+    ui["inc_difficulty"].onclick([] {
+        g_settings.increase_difficulty();
+        window_invalidate();
+    });
 }
 
-static void button_start_mission(int param1, int param2) {
-    g_sound.speech_stop();
-    g_sound.music_update(/*force*/true);
-    window_city_show();
-    city_mission_reset_save_start();
-}
-
-static void inc_dec_difficulty(int param1, int param2) {
-    if (param1 > 0) { g_settings.increase_difficulty(); }
-    else { g_settings.decrease_difficulty(); }
-    window_invalidate();
+static void window_briefing_draw_foreground(void) {
+    auto &ui = g_mission_briefing;
+    ui.draw();
 }
 
 static void show(void) {
-    window_type window = {WINDOW_MISSION_BRIEFING, draw_background, draw_foreground, handle_input};
+    static window_type window = {
+        WINDOW_MISSION_BRIEFING,
+        window_briefing_draw_background,
+        window_briefing_draw_foreground,
+        nullptr
+    };
     init();
     window_show(&window);
 }

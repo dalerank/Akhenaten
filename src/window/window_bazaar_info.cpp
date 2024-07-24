@@ -25,7 +25,6 @@ void building_bazaar::draw_simple_background(object_info &ctx) {
     ctx.help_id = 2;
 
     auto &ui = g_bazaar_info_window;
-    ui.begin_frame();
 
     ctx.bgsize = ui["background"].size;
     window_building_play_sound(&ctx, "Wavs/market.wav");

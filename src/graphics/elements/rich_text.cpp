@@ -374,7 +374,7 @@ int rich_text_draw_colored(const uint8_t* text, int x_offset, int y_offset, int 
     return rich_text_draw_impl(text, x_offset, y_offset, box_width, height_lines, color, 0);
 }
 
-void rich_text_draw_scrollbar(void) {
+void rich_text_draw_scrollbar() {
     scrollbar_draw(vec2i{0, 0}, &g_richtext_scrollbar);
 }
 

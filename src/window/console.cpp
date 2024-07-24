@@ -18,7 +18,7 @@ static void send_command(int param1, int param2);
 static void button_back(int param1, int param2);
 
 static image_button image_buttons[] = {
-    {0, 2, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1},
+    {0, 2, 31, 20, IB_NORMAL, PACK_GENERAL, 90, 8, button_back, button_none, 0, 0, 1},
     {305, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, send_command, button_none, 1, 0, 1}
 };
 

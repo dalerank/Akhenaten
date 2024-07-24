@@ -45,7 +45,6 @@ void building_well::window_info_background(object_info &c) {
     window_building_play_sound(&c, "Wavs/well.wav");
 
     auto &ui = well_w;
-    ui.begin_frame();
 
     int well_necessity = map_water_supply_is_well_unnecessary(c.building_id, 2);
     int text_id = 0;

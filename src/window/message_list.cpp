@@ -106,9 +106,9 @@ static void draw_messages(int total_messages) {
             image_type_offset = 4;
 
         if (msg->is_read) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_MESSAGE_ICON) + 15 + image_type_offset, data.x_text + 12, data.y_text + 6 + 20 * i);
+            ImageDraw::img_generic(ctx, image_id_from_group(PACK_GENERAL, 90) + 15 + image_type_offset, data.x_text + 12, data.y_text + 6 + 20 * i);
         } else {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_MESSAGE_ICON) + 14 + image_type_offset, data.x_text + 12, data.y_text + 6 + 20 * i);
+            ImageDraw::img_generic(ctx, image_id_from_group(PACK_GENERAL, 90) + 14 + image_type_offset, data.x_text + 12, data.y_text + 6 + 20 * i);
         }
 
         e_font font = FONT_NORMAL_WHITE_ON_DARK;
