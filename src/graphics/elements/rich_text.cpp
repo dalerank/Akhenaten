@@ -375,11 +375,11 @@ int rich_text_draw_colored(const uint8_t* text, int x_offset, int y_offset, int 
 }
 
 void rich_text_draw_scrollbar(void) {
-    scrollbar_draw(&g_richtext_scrollbar);
+    scrollbar_draw(vec2i{0, 0}, &g_richtext_scrollbar);
 }
 
 int rich_text_handle_mouse(const mouse* m) {
-    return scrollbar_handle_mouse(&g_richtext_scrollbar, m);
+    return scrollbar_handle_mouse(vec2i{0, 0}, &g_richtext_scrollbar, m);
 }
 
 static void on_scroll(void) {

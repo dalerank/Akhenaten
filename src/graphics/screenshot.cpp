@@ -288,7 +288,7 @@ static void create_full_city_screenshot() {
     int base_height = image_set_loop_height_limits(min_pos.y, max_pos.y);
     int size;
     g_zoom.set_scale(100);
-    graphics_set_clip_rectangle(0, TOP_MENU_HEIGHT, canvas_width, canvas_height);
+    graphics_set_clip_rectangle({0, TOP_MENU_HEIGHT}, {canvas_width, canvas_height});
     
     vec2i viewport_offset, viewport_size;
     city_view_get_viewport(viewport, viewport_offset, viewport_size);

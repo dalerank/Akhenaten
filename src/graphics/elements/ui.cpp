@@ -140,7 +140,7 @@ bool ui::handle_mouse(const mouse *m) {
     }
 
     for (int i = g_state.scrollbars.size() - 1; i >= 0 && !handle; --i) {
-        handle |= !!scrollbar_handle_mouse(g_state.scrollbars[i], m);
+        handle |= !!scrollbar_handle_mouse(g_state.offset(), g_state.scrollbars[i], m);
     }
 
     return handle;
@@ -368,8 +368,10 @@ arrow_button &ui::arw_button(vec2i pos, bool up, bool tiny) {
 }
 
 scrollbar_t &ui::scrollbar(scrollbar_t &scr, vec2i pos, int &value, vec2i size) {
+    const vec2i offset = g_state.offset();
+
     g_state.scrollbars.push_back(&scr);
-    scrollbar_draw(&scr);
+    scrollbar_draw(offset, &scr);
 
     return scr;
 }
@@ -461,6 +463,20 @@ ui::element& ui::widget::operator[](pcstr id) {
         logs::error("No element with id:%s", id);
     }
     return (it != elements.end() ? **it : ui::dummy_element);
+}
+
+void ui::widget::set_clip_rectangle(vec2i pos, vec2i size) {
+    const vec2i offset = g_state.offset();
+    graphics_set_clip_rectangle(pos + offset, size);
+}
+
+void ui::widget::set_clip_rectangle(const element &e) {
+    const vec2i offset = g_state.offset();
+    graphics_set_clip_rectangle(e.pos + offset, e.pxsize());
+}
+
+void ui::widget::reset_clip_rectangle() {
+    graphics_reset_clip_rectangle();
 }
 
 void ui::eimg::draw() {

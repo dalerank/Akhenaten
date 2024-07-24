@@ -295,7 +295,7 @@ void draw_minimap() {
     painter ctx = game.painter();
     auto& data = g_minimap_data;
 
-    graphics_set_clip_rectangle(data.screen_offset.x, data.screen_offset.y, data.size.x, data.size.y);
+    graphics_set_clip_rectangle(data.screen_offset, data.size);
     clear_minimap();
     {
         OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded/Minimap Tiles");
@@ -333,7 +333,7 @@ void draw_using_cache(vec2i offset, int width_tiles, int height_tiles, int is_sc
         }
     }
 
-    graphics_set_clip_rectangle(offset.x, offset.y, 2 * width_tiles, height_tiles);
+    graphics_set_clip_rectangle(offset, {2 * width_tiles, height_tiles});
     //    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
     draw_viewport_rectangle(ctx);
     graphics_reset_clip_rectangle();

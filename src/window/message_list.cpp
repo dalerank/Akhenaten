@@ -178,7 +178,7 @@ static void draw_messages(int total_messages) {
             text_draw(lang_msg->title.text, data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
         }
     }
-    scrollbar_draw(&g_messages_scrollbar);
+    scrollbar_draw(vec2i{0, 0}, &g_messages_scrollbar);
 }
 static void draw_foreground(void) {
     graphics_set_to_dialog();
@@ -209,7 +209,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         data.focus_button_id = 12;
     }
 
-    if (scrollbar_handle_mouse(&g_messages_scrollbar, m_dialog)) {
+    if (scrollbar_handle_mouse(vec2i{0, 0}, &g_messages_scrollbar, m_dialog)) {
         data.focus_button_id = 13;
     }
 

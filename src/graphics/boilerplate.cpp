@@ -24,20 +24,20 @@ static void set_translation(int x, int y) {
     }
 }
 
-void graphics_set_to_dialog(void) {
+void graphics_set_to_dialog() {
     set_translation(screen_dialog_offset_x(), screen_dialog_offset_y());
 }
 void graphics_in_dialog_with_size(int width, int height) {
     set_translation((screen_width() - width) / 2, (screen_height() - height) / 2);
 }
-void graphics_reset_dialog(void) {
+void graphics_reset_dialog() {
     set_translation(0, 0);
 }
 
-void graphics_set_clip_rectangle(int x, int y, int width, int height) {
-    graphics_renderer()->set_clip_rectangle(x, y, width, height);
+void graphics_set_clip_rectangle(vec2i pos, vec2i size) {
+    graphics_renderer()->set_clip_rectangle(pos.x, pos.y, size.x, size.y);
 }
-void graphics_reset_clip_rectangle(void) {
+void graphics_reset_clip_rectangle() {
     graphics_renderer()->reset_clip_rectangle();
 }
 

@@ -78,7 +78,7 @@ static void draw_foreground(void) {
     // bottom text
     lang_text_draw_centered(31, 1, 160, 450, 304, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    scrollbar_draw(&g_records_scrollbar);
+    scrollbar_draw(vec2i{0, 0}, &g_records_scrollbar);
 
     graphics_reset_dialog();
 }
@@ -86,12 +86,13 @@ static void draw_foreground(void) {
 static void on_scroll(void) {
     //    data.message_not_exist_start_time = 0;
 }
+
 static void handle_input(const mouse* m, const hotkeys* h) {
     if (input_go_back_requested(m, h))
         window_go_back();
 
     const mouse* m_dialog = mouse_in_dialog(m);
-    if (scrollbar_handle_mouse(&g_records_scrollbar, m_dialog))
+    if (scrollbar_handle_mouse(vec2i{0, 0}, &g_records_scrollbar, m_dialog))
         return;
 }
 

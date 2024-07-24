@@ -149,12 +149,13 @@ void scroll_list_panel::clamp_scrollbar_position() {
 static void on_scroll(void) {
     window_invalidate();
 }
+
 int scroll_list_panel::input_handle(const mouse* m) {
     if (!WAS_DRAWN)
         return 0;
 
     WAS_DRAWN = false;
-    if (scrollbar_handle_mouse(&scrollbar, m))
+    if (scrollbar_handle_mouse(vec2i{0, 0}, &scrollbar, m))
         return 0;
 
     int last_focused = focus_button_id;
@@ -192,8 +193,10 @@ int scroll_list_panel::input_handle(const mouse* m) {
     return 0;
 }
 void scroll_list_panel::draw() {
-    if (ui_params.draw_paneling)
+    if (ui_params.draw_paneling) {
         inner_panel_draw(ui_params.x, ui_params.y, ui_params.blocks_x, ui_params.blocks_y);
+    }
+
     bstring256 text_utf8;
     bstring256 text;
     for (int i = 0; i < num_buttons; ++i) {
@@ -229,7 +232,7 @@ void scroll_list_panel::draw() {
             text_draw(text, text_pos_x, text_pos_y, font, 0);
         }
     }
-    scrollbar_draw(&scrollbar);
+    scrollbar_draw(vec2i{0, 0}, &scrollbar);
     WAS_DRAWN = true;
 }
 

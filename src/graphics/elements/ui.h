@@ -78,6 +78,7 @@ struct element {
     virtual void load(archive);
     virtual void text(pcstr) {}
     virtual int text_width() { return 0; }
+    virtual vec2i pxsize() const { return size; }
     inline void text(int font, pcstr v) { this->font(font); this->text(v); }
     virtual void color(int) {}
     virtual void image(int) {}
@@ -172,11 +173,13 @@ struct eresource_icon : public element {
 
 struct eouter_panel : public element {
     virtual void draw() override;
+    virtual vec2i pxsize() const { return size * 16; }
     virtual void load(archive elem) override;
 };
 
 struct einner_panel : public element {
     virtual void draw() override;
+    virtual vec2i pxsize() const { return size * 16; }
     virtual void load(archive elem) override;
 };
 
@@ -272,6 +275,9 @@ struct widget {
     inline void image(image_desc img, vec2i pos) { ui::eimage(img, pos); }
     inline void begin_widget(vec2i offset, bool relative = false) { ui::begin_widget(offset, relative); }
     inline void icon(vec2i pos, e_resource img) { ui::icon(pos, img); }
+    void set_clip_rectangle(vec2i pos, vec2i size);
+    void set_clip_rectangle(const element &e);
+    void reset_clip_rectangle();
     virtual void begin_frame() { ui::begin_frame(); }
 };
 

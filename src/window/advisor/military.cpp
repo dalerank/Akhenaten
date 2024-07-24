@@ -161,7 +161,7 @@ int ui::advisor_miliary_window::draw_background() {
 }
 
 void ui::advisor_miliary_window::draw_foreground() {
-    scrollbar_draw(&g_advisor_mil_scrollbar);
+    scrollbar_draw(vec2i{0, 0}, &g_advisor_mil_scrollbar);
     num_legions = formation_get_num_forts();
     for (int i = 0; i < 6 && i < num_legions; i++) {
         button_border_draw(384, 83 + 44 * i, 30, 30, focus_button_id == 3 * i + 1);
@@ -171,8 +171,9 @@ void ui::advisor_miliary_window::draw_foreground() {
 }
 
 int ui::advisor_miliary_window::handle_mouse(const mouse* m) {
-    if (scrollbar_handle_mouse(&g_advisor_mil_scrollbar, m))
+    if (scrollbar_handle_mouse(vec2i{0, 0}, &g_advisor_mil_scrollbar, m)) {
         return 1;
+    }
 
     return generic_buttons_handle_mouse(m, {0, 0}, fort_buttons, 3 * num_legions, &focus_button_id);
 }

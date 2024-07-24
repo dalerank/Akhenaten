@@ -104,7 +104,7 @@ static void draw_background() {
 }
 
 static void draw_foreground(void) {
-    auto &data = g_mission_briefing;
+    auto &ui = g_mission_briefing;
     int text_id = 200 + scenario_campaign_scenario_id();
     const lang_message* msg = lang_get_message(text_id);
 
@@ -112,19 +112,19 @@ static void draw_foreground(void) {
 
     g_mission_briefing.draw();
 
-    graphics_set_clip_rectangle(35, 187, 522, 234);
+    graphics_set_clip_rectangle({35, 187}, {522, 234});
     rich_text_draw(msg->content.text, 48, 202, 512, 14, 0);
     graphics_reset_clip_rectangle();
 
     rich_text_draw_scrollbar();
-    image_buttons_draw({516, 426}, &data.buttons.start_mission, 1);
-    if (!data.is_review && game_mission_has_choice()) {
-        image_buttons_draw({26, 428}, &data.buttons.back, 1);
+    image_buttons_draw({516, 426}, &ui.buttons.start_mission, 1);
+    if (!ui.is_review && game_mission_has_choice()) {
+        image_buttons_draw({26, 428}, &ui.buttons.back, 1);
     }
 
-    if (!data.is_review) {
-        image_buttons_draw({65, 428}, &data.buttons.dec_difficulty, 1, 0);
-        image_buttons_draw({65 + 18, 428}, &data.buttons.inc_difficulty, 1, 0);
+    if (!ui.is_review) {
+        image_buttons_draw({65, 428}, &ui.buttons.dec_difficulty, 1, 0);
+        image_buttons_draw({65 + 18, 428}, &ui.buttons.inc_difficulty, 1, 0);
     }
 
     graphics_reset_dialog();

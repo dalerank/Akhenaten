@@ -562,7 +562,7 @@ static void draw_invasion_warning(int x, int y, int image_id) {
 void window_empire_draw_map() {
     auto &data = g_empire_window;
     painter ctx = game.painter();
-    graphics_set_clip_rectangle(data.min_pos.x + 16, data.min_pos.y + 16, data.max_pos.x - data.min_pos.x - 32, data.max_pos.y - data.min_pos.y - 136);
+    graphics_set_clip_rectangle(data.min_pos + vec2i{16, 16}, vec2i{data.max_pos - data.min_pos} - vec2i{32, 136});
 
     g_empire_map.set_viewport(data.max_pos - data.min_pos - vec2i{32, 136});
 
@@ -611,7 +611,7 @@ static void draw_paneling() {
     painter ctx = game.painter();
     int image_base = image_id_from_group(GROUP_EMPIRE_PANELS);
     // bottom panel background
-    graphics_set_clip_rectangle(data.min_pos.x, data.min_pos.y, data.max_pos.x - data.min_pos.x, data.max_pos.y - data.min_pos.y);
+    graphics_set_clip_rectangle(data.min_pos, data.max_pos - data.min_pos);
     for (int x = data.min_pos.x; x < data.max_pos.x; x += 70) {
         ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.max_pos.y - 140});
         ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.max_pos.y - 100});

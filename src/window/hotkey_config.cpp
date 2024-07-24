@@ -224,7 +224,7 @@ static void draw_background() {
             const hotkey_mapping* mapping1 = &data.mappings[widget->action][0];
             if (mapping1->key) {
                 const uint8_t* keyname = key_combination_display_name(mapping1->key, mapping1->modifiers);
-                graphics_set_clip_rectangle(HOTKEY_X_OFFSET_1, text_offset, HOTKEY_BTN_WIDTH, HOTKEY_BTN_HEIGHT);
+                graphics_set_clip_rectangle({HOTKEY_X_OFFSET_1, text_offset}, {HOTKEY_BTN_WIDTH, HOTKEY_BTN_HEIGHT});
                 text_draw_centered(
                   keyname, HOTKEY_X_OFFSET_1 + 3, text_offset, HOTKEY_BTN_WIDTH - 6, FONT_NORMAL_WHITE_ON_DARK, 0);
                 graphics_reset_clip_rectangle();
@@ -232,7 +232,7 @@ static void draw_background() {
 
             const hotkey_mapping* mapping2 = &data.mappings[widget->action][1];
             if (mapping2->key) {
-                graphics_set_clip_rectangle(HOTKEY_X_OFFSET_2, text_offset, HOTKEY_BTN_WIDTH, HOTKEY_BTN_HEIGHT);
+                graphics_set_clip_rectangle({HOTKEY_X_OFFSET_2, text_offset}, {HOTKEY_BTN_WIDTH, HOTKEY_BTN_HEIGHT});
                 const uint8_t* keyname = key_combination_display_name(mapping2->key, mapping2->modifiers);
                 text_draw_centered(
                   keyname, HOTKEY_X_OFFSET_2 + 3, text_offset, HOTKEY_BTN_WIDTH - 6, FONT_NORMAL_WHITE_ON_DARK, 0);
@@ -257,7 +257,7 @@ static void draw_foreground() {
     auto& data = g_hotkeys_window_data;
     graphics_set_to_dialog();
 
-    scrollbar_draw(&g_hotkey_window_scrollbar);
+    scrollbar_draw(vec2i{0, 0}, &g_hotkey_window_scrollbar);
 
     for (int i = 0; i < NUM_VISIBLE_OPTIONS; i++) {
         hotkey_widget* widget = &hotkey_widgets[i + g_hotkey_window_scrollbar.scroll_position];
@@ -282,8 +282,9 @@ static void draw_foreground() {
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto& data = g_hotkeys_window_data;
     const mouse* m_dialog = mouse_in_dialog(m);
-    if (scrollbar_handle_mouse(&g_hotkey_window_scrollbar, m_dialog))
+    if (scrollbar_handle_mouse(vec2i{0, 0}, &g_hotkey_window_scrollbar, m_dialog)) {
         return;
+    }
 
     int mouse_button = 0;
     mouse_button |= generic_buttons_handle_mouse(m_dialog, {0, 0}, hotkey_buttons, NUM_VISIBLE_OPTIONS * 2, &data.focus_button);

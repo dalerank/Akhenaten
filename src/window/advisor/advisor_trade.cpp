@@ -31,7 +31,7 @@ int ui::advisor_trade_window::draw_background() {
     ui["scrollbar"].onevent([] {
         window_invalidate();
     });
-    ui["scrollbar"].max_value(city_resource_get_available().size() - 15);
+    ui["scrollbar"].max_value(city_resource_get_available().size() - 14);
 
     return 0;
 }
@@ -45,6 +45,7 @@ void ui::advisor_trade_window::ui_draw_foreground() {
     int scroll_position = ui["scrollbar"].value();
 
     const resource_list &resources = city_resource_get_available();
+    ui.set_clip_rectangle(ui["inner_panel"]);
     for (const auto &r: resources) {
         int i = std::distance(resources.begin(), &r);
         int y_offset = ui["inner_panel"].pos.y + 23 * (i - scroll_position) + 8;
@@ -124,6 +125,7 @@ void ui::advisor_trade_window::ui_draw_foreground() {
 
         ui.label(text.first.c_str(), vec2i{310, y_offset}, font_color);
     }
+    ui.reset_clip_rectangle();
 
     ui["show_prices"].onclick([] (int, int) { window_trade_prices_show(); });
     ui["goto_empire"].onclick([] (int, int) { window_empire_show(); });

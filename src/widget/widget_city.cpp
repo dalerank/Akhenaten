@@ -49,7 +49,7 @@ widget_city_data_t g_wdiget_city_data;
 void set_city_clip_rectangle(painter &ctx) {
     vec2i view_pos, view_size;
     city_view_get_viewport(*ctx.view, view_pos, view_size);
-    graphics_set_clip_rectangle(view_pos.x, view_pos.y, view_size.x, view_size.y);
+    graphics_set_clip_rectangle(view_pos, view_size);
 
     // TODO?
     //    city_view_foreach_map_tile(draw_outside_map);

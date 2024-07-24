@@ -34,22 +34,29 @@ const static int EMPIRE_HEIGHT[2] = {
 static void button_change_empire(int is_up, int param2);
 static void button_ok(int param1, int param2);
 
-static arrow_button arrow_buttons_empire[]
-  = {{8, 48, 17, 24, button_change_empire, 1, 0}, {32, 48, 15, 24, button_change_empire, 0, 0}};
-static generic_button generic_button_ok[] = {{84, 48, 100, 24, button_ok, button_none, 0, 0}};
+static arrow_button arrow_buttons_empire[] = {
+    {8, 48, 17, 24, button_change_empire, 1, 0}, {32, 48, 15, 24, button_change_empire, 0, 0}
+};
+static generic_button generic_button_ok[] = {
+    {84, 48, 100, 24, button_ok, button_none, 0, 0}
+};
 
-static struct {
+struct window_empire_t {
     int selected_button;
     int selected_city;
-    int x_min, x_max, y_min, y_max;
+    vec2i p_min;
+    vec2i p_max;
     vec2i draw_offset;
     int focus_button_id;
     int is_scrolling;
     int finished_scroll;
     int show_battle_objects;
-} data;
+};
 
-static void init(void) {
+window_empire_t g_window_empire;
+
+static void init() {
+    auto &data = g_window_empire;
     data.selected_button = 0;
     int selected_object = g_empire_map.selected_object();
     if (selected_object)
@@ -61,58 +68,69 @@ static void init(void) {
 }
 
 static int map_viewport_width() {
-    return data.x_max - data.x_min - 32;
+    auto &data = g_window_empire;
+    return (data.p_max - data.p_min).x - 32;
 }
 
 static int map_viewport_height() {
-    return data.y_max - data.y_min - 136;
+    auto &data = g_window_empire;
+    return (data.p_max - data.p_min).y - 136;
+}
+
+static vec2i map_viewport_psize() {
+    auto &data = g_window_empire;
+    return (data.p_max - data.p_min);
 }
 
 static void draw_paneling() {
+    auto &data = g_window_empire;
     painter ctx = game.painter();
     int image_base = image_id_from_group(GROUP_EDITOR_EMPIRE_PANELS);
     // bottom panel background
-    graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, data.y_max - data.y_min);
-    for (int x = data.x_min; x < data.x_max; x += 70) {
-        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.y_max - 120});
-        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.y_max - 80});
-        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.y_max - 40});
+    graphics_set_clip_rectangle(data.p_min, map_viewport_psize());
+    for (int x = data.p_min.x; x < data.p_max.x; x += 70) {
+        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.p_max.y - 120});
+        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.p_max.y - 80});
+        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.p_max.y - 40});
     }
 
     // horizontal bar borders
-    for (int x = data.x_min; x < data.x_max; x += 86) {
-        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.y_min});
-        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.y_max - 120});
-        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.y_max - 16});
+    for (int x = data.p_min.x; x < data.p_max.x; x += 86) {
+        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.p_min.y});
+        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.p_max.y - 120});
+        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.p_max.y - 16});
     }
 
     // vertical bar borders
-    for (int y = data.y_min + 16; y < data.y_max; y += 86) {
-        ImageDraw::img_generic(ctx, image_base, vec2i{data.x_min, y});
-        ImageDraw::img_generic(ctx, image_base, vec2i{data.x_max - 16, y});
+    for (int y = data.p_min.y + 16; y < data.p_max.y; y += 86) {
+        ImageDraw::img_generic(ctx, image_base, vec2i{data.p_min.x, y});
+        ImageDraw::img_generic(ctx, image_base, vec2i{data.p_max.x - 16, y});
     }
 
     // crossbars
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_min, data.y_min});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_min, data.y_max - 120});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_min, data.y_max - 16});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_max - 16, data.y_min});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_max - 16, data.y_max - 120});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.x_max - 16, data.y_max - 16});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.p_min.x, data.p_min.x});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.p_min.x, data.p_max.x - 120});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.p_min.x, data.p_max.x - 16});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.p_max.x - 16, data.p_min.y});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.p_max.x - 16, data.p_max.y - 120});
+    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.p_max.x - 16, data.p_max.y - 16});
 
     graphics_reset_clip_rectangle();
 }
 
 static void draw_background(void) {
+    auto &data = g_window_empire;
+
     int s_width = screen_width();
     int s_height = screen_height();
-    data.x_min = s_width <= EMPIRE_WIDTH[GAME_ENV] ? 0 : (s_width - EMPIRE_WIDTH[GAME_ENV]) / 2;
-    data.x_max = s_width <= EMPIRE_WIDTH[GAME_ENV] ? s_width : data.x_min + EMPIRE_WIDTH[GAME_ENV];
-    data.y_min = s_height <= EMPIRE_HEIGHT[GAME_ENV] ? 0 : (s_height - EMPIRE_HEIGHT[GAME_ENV]) / 2;
-    data.y_max = s_height <= EMPIRE_HEIGHT[GAME_ENV] ? s_height : data.y_min + EMPIRE_HEIGHT[GAME_ENV];
+    data.p_min.x = s_width <= EMPIRE_WIDTH[GAME_ENV] ? 0 : (s_width - EMPIRE_WIDTH[GAME_ENV]) / 2;
+    data.p_max.x = s_width <= EMPIRE_WIDTH[GAME_ENV] ? s_width : data.p_min.x + EMPIRE_WIDTH[GAME_ENV];
+    data.p_min.y = s_height <= EMPIRE_HEIGHT[GAME_ENV] ? 0 : (s_height - EMPIRE_HEIGHT[GAME_ENV]) / 2;
+    data.p_max.y = s_height <= EMPIRE_HEIGHT[GAME_ENV] ? s_height : data.p_min.y + EMPIRE_HEIGHT[GAME_ENV];
 
-    if (data.x_min || data.y_min)
+    if (data.p_min.x || data.p_min.y) {
         graphics_clear_screen();
+    }
 
     draw_paneling();
 }
@@ -124,6 +142,7 @@ static void draw_shadowed_number(int value, int x, int y, color color) {
 }
 
 static void draw_empire_object(const empire_object* obj) {
+    auto &data = g_window_empire;
     painter ctx = game.painter();
     vec2i pos = obj->pos;
     int image_id = obj->image_id;
@@ -154,15 +173,16 @@ static void draw_empire_object(const empire_object* obj) {
 }
 
 static void window_editor_draw_map() {
+    auto &data = g_window_empire;
     painter ctx = game.painter();
     int viewport_width = map_viewport_width();
     int viewport_height = map_viewport_height();
-    graphics_set_clip_rectangle(data.x_min + 16, data.y_min + 16, viewport_width, viewport_height);
+    graphics_set_clip_rectangle({data.p_min.x + 16, data.p_min.y + 16}, {viewport_width, viewport_height});
 
     g_empire_map.set_viewport(vec2i(viewport_width, viewport_height));
 
-    data.draw_offset.x = data.x_min + 16;
-    data.draw_offset.y = data.y_min + 16;
+    data.draw_offset.x = data.p_min.x + 16;
+    data.draw_offset.y = data.p_min.y + 16;
     data.draw_offset = g_empire_map.adjust_scroll(data.draw_offset);
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_EMPIRE_MAP), data.draw_offset);
 
@@ -191,8 +211,9 @@ static void draw_resource(int resource, int trade_max, int x_offset, int y_offse
 }
 
 static void draw_city_info(const empire_city* city) {
-    int x_offset = data.x_min + 28;
-    int y_offset = data.y_max - 85;
+    auto &data = g_window_empire;
+    int x_offset = data.p_min.x + 28;
+    int y_offset = data.p_max.y - 85;
 
     int width = lang_text_draw(21, city->name_id, x_offset, y_offset, FONT_NORMAL_WHITE_ON_DARK);
 
@@ -245,20 +266,22 @@ static void draw_city_info(const empire_city* city) {
 }
 
 static void draw_panel_buttons(const empire_city* city) {
-    arrow_buttons_draw({data.x_min + 20, data.y_max - 100}, arrow_buttons_empire, 2);
+    auto &data = g_window_empire;
+    arrow_buttons_draw({data.p_min.x + 20, data.p_max.y - 100}, arrow_buttons_empire, 2);
 
     if (city)
         draw_city_info(city);
     else {
-        lang_text_draw_centered(150, scenario_empire_id(), data.x_min, data.y_max - 85, data.x_max - data.x_min, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_centered(150, scenario_empire_id(), data.p_min.x, data.p_max.y - 85, data.p_max.x - data.p_min.x, FONT_NORMAL_BLACK_ON_DARK);
     }
-    lang_text_draw(151, scenario_empire_id(), data.x_min + 220, data.y_max - 45, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw(151, scenario_empire_id(), data.p_min.x + 220, data.p_max.y - 45, FONT_NORMAL_BLACK_ON_DARK);
 
-    button_border_draw(data.x_min + 104, data.y_max - 52, 100, 24, data.focus_button_id == 1);
-    lang_text_draw_centered(44, 7, data.x_min + 104, data.y_max - 45, 100, FONT_NORMAL_BLACK_ON_DARK);
+    button_border_draw(data.p_min.x + 104, data.p_max.y - 52, 100, 24, data.focus_button_id == 1);
+    lang_text_draw_centered(44, 7, data.p_min.x + 104, data.p_max.y - 45, 100, FONT_NORMAL_BLACK_ON_DARK);
 }
 
 static void draw_foreground(void) {
+    auto &data = g_window_empire;
     window_editor_draw_map();
 
     const empire_city* city = 0;
@@ -274,19 +297,22 @@ static void draw_foreground(void) {
 }
 
 static int is_outside_map(int x, int y) {
-    return (x < data.x_min + 16 || x >= data.x_max - 16 || y < data.y_min + 16 || y >= data.y_max - 120);
+    auto &data = g_window_empire;
+    return (x < data.p_min.x + 16 || x >= data.p_max.x - 16 || y < data.p_min.y + 16 || y >= data.p_max.y - 120);
 }
 
 static void determine_selected_object(const mouse* m) {
+    auto &data = g_window_empire;
     if (!m->left.went_up || data.finished_scroll || is_outside_map(m->x, m->y)) {
         data.finished_scroll = 0;
         return;
     }
-    g_empire_map.select_object(vec2i{m->x - data.x_min - 16, m->y - data.y_min - 16});
+    g_empire_map.select_object(vec2i{m->x - data.p_min.x - 16, m->y - data.p_min.y - 16});
     window_invalidate();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto &data = g_window_empire;
     vec2i position;
     if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
         g_empire_map.scroll_map(position);
@@ -310,8 +336,8 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         }
     }
     data.focus_button_id = 0;
-    if (!arrow_buttons_handle_mouse(m, {data.x_min + 20, data.y_max - 100}, arrow_buttons_empire, 2, 0)) {
-        if (!generic_buttons_handle_mouse(m, {data.x_min + 20, data.y_max - 100}, generic_button_ok, 1, &data.focus_button_id)) {
+    if (!arrow_buttons_handle_mouse(m, {data.p_min.x + 20, data.p_max.y - 100}, arrow_buttons_empire, 2, 0)) {
+        if (!generic_buttons_handle_mouse(m, {data.p_min.x + 20, data.p_max.y - 100}, generic_button_ok, 1, &data.focus_button_id)) {
             determine_selected_object(m);
             int selected_object = g_empire_map.selected_object();
             if (selected_object) {

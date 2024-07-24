@@ -402,7 +402,7 @@ static void draw_content(const lang_message* msg) {
 
     // content!
     inner_panel_draw(data.x_text, data.y_text, data.text_width_blocks, data.text_height_blocks);
-    graphics_set_clip_rectangle(data.x_text + 3, data.y_text + 3, 16 * data.text_width_blocks - 6, 16 * data.text_height_blocks - 6);
+    graphics_set_clip_rectangle({data.x_text + 3, data.y_text + 3}, {16 * data.text_width_blocks - 6, 16 * data.text_height_blocks - 6});
     rich_text_clear_links();
 
     if (msg->type == TYPE_MESSAGE) {

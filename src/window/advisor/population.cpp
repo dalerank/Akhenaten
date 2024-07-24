@@ -133,7 +133,7 @@ static void draw_history_graph(int full_size, int x, int y) {
     }
 
     if (full_size) {
-        graphics_set_clip_rectangle(0, 0, 640, y + 200);
+        graphics_set_clip_rectangle({0, 0}, {640, y + 200});
         for (int m = 0; m < max_months; m++) {
             int pop = city_population_at_month(max_months, m);
             int val;
@@ -200,7 +200,7 @@ static void draw_census_graph(int full_size, int x, int y) {
     }
 
     if (full_size) {
-        graphics_set_clip_rectangle(0, 0, 640, y + 200);
+        graphics_set_clip_rectangle({0, 0}, {640, y + 200});
         for (int i = 0; i < 100; i++) {
             int pop = city_population_at_age(i);
             int val;
@@ -245,7 +245,7 @@ static void draw_society_graph(int full_size, int x, int y) {
     }
 
     if (full_size) {
-        graphics_set_clip_rectangle(0, 0, 640, y + 200);
+        graphics_set_clip_rectangle({0, 0}, {640, y + 200});
         for (int i = 0; i < 20; i++) {
             int pop = city_population_at_level(i);
             int val;

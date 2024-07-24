@@ -10,12 +10,12 @@ struct image_t;
 
 void graphics_clear_screen();
 
-void graphics_set_to_dialog(void);
+void graphics_set_to_dialog();
 void graphics_in_dialog_with_size(int width, int height);
-void graphics_reset_dialog(void);
+void graphics_reset_dialog();
 
-void graphics_set_clip_rectangle(int x, int y, int width, int height);
-void graphics_reset_clip_rectangle(void);
+void graphics_set_clip_rectangle(vec2i pos, vec2i size);
+void graphics_reset_clip_rectangle();
 
 void graphics_draw_line(vec2i start, vec2i end, color color);
 void graphics_draw_vertical_line(vec2i start, int ny, color color);
