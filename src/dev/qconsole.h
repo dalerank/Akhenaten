@@ -137,7 +137,7 @@ class qconsole
     const std::deque<std::string> &historyBuffer() const;
     inline const CommandTable &getCommandTable() const { return commandTable; }
     inline const CVarReadTable &getCVarReadTable() const { return cvarReadFTable; }
-    inline const cvar_print_table &getCVarPrintTable() const { return cvarPrintFTable; }
+    inline const cvar_print_table &CVarPrintTable() const { return cvar_printf; }
     inline const HelpTable &getHelpTable() const { return helpTable; }
 
   protected:
@@ -205,7 +205,7 @@ class qconsole
     CVarReadTable cvarReadFTable;
 
     /// maps strings naming cVars to functions which write the variables of arbitrary type out to a std::ostream
-    cvar_print_table cvarPrintFTable;
+    cvar_print_table cvar_printf;
 
     ///maps strings to std function objects, representing the available commands to the user.  eg, quit, set, etc
     CommandTable commandTable;
@@ -470,7 +470,7 @@ inline void dev::qconsole::bind_cvar(const std::string &str, T &var, const std::
         this->set_cvar<T>(is, os, &var);
     };
 
-    cvarPrintFTable[str] = [this, str, &var](std::istream &is, std::ostream &os) {
+    cvar_printf[str] = [this, str, &var](std::istream &is, std::ostream &os) {
         this->print_cvar<T>(os, str, &var);
     };
 
@@ -480,25 +480,21 @@ inline void dev::qconsole::bind_cvar(const std::string &str, T &var, const std::
 }
 
 template <class T>
-void dev::qconsole::set_cvar(std::istream &is, std::ostream &os, T *var) {
+inline void dev::qconsole::set_cvar(std::istream &is, std::ostream &os, T *var) {
     T tmp; ///temp argument is a necessity; without it we risk corruption of our variable value if there is a parse error.  Should be no issue unless someone is using this to parse a ginormous structure or copy construction invokes a state change.
-
     is >> tmp;
 
-    if (is.fail())
-    {
+    if (is.fail()) {
         os << error() << "SYNTAX ERROR IN VARIABLE PARSER" << std::endl;
         is.clear();
-    }
-    else
-    {
+    } else {
         *var = tmp;
     }
 }
 
 template <class T>
 inline void dev::qconsole::print_cvar(std::ostream &os, const std::string &str, T *var) {
-    os << str << " " << * var << std::endl;
+    os << str << " " << *var << std::endl;
 }
 
 template <class T>
@@ -519,25 +515,20 @@ inline void dev::qconsole::bindDynamicCVar(const std::string &var, const T &valu
 }
 
 template <class T>
-inline void dev::qconsole::bindDynamicCVar(const std::string &var, const T &valueIn)
-{
+inline void dev::qconsole::bindDynamicCVar(const std::string &var, const T &valueIn) {
     std::shared_ptr<T> ptr(new T(valueIn));
 
-    cvarReadFTable[var] =
-        [this, ptr](std::istream &is, std::ostream &os) {
-            this->assignDynamicVariable<T>(is, ptr);
-        };
+    cvarReadFTable[var] = [this, ptr](std::istream &is, std::ostream &os) {
+        this->assignDynamicVariable<T>(is, ptr);
+    };
 
-    cvarPrintFTable[var] =
-        [this, ptr](std::istream &is, std::ostream &os) {
-            this->writeDynamicVariable<T>(os, ptr);
-        };
+    cvar_printf[var] = [this, ptr](std::istream &is, std::ostream &os) {
+        this->writeDynamicVariable<T>(os, ptr);
+    };
 }
 
-inline void dev::qconsole::executeUntilEOF(std::istream &f, std::ostream &output)
-{
-    while (!f.eof())
-    {
+inline void dev::qconsole::executeUntilEOF(std::istream &f, std::ostream &output) {
+    while (!f.eof()) {
         commandExecute(f, output);
     }
 }
@@ -626,8 +617,8 @@ inline void dev::qconsole::command_echo(std::istream &is, std::ostream &os) {
         return;
     }
 
-    cvar_print_table::iterator it = cvarPrintFTable.find(x);
-    if (it != cvarPrintFTable.end()) {
+    cvar_print_table::iterator it = cvar_printf.find(x);
+    if (it != cvar_printf.end()) {
         (it->second)(is, os);
     } else {
         os << error() << "Variable " << x << " unknown." << std::endl;
@@ -694,8 +685,8 @@ inline void dev::qconsole::commandExecute(std::istream &is, std::ostream &os)
         return;
     }
 
-    cvar_print_table::iterator it = cvarPrintFTable.find(x);
-    if (it != cvarPrintFTable.end()) {
+    cvar_print_table::iterator it = cvar_printf.find(x);
+    if (it != cvar_printf.end()) {
         (it->second)(is, os);
         return;
     } 
@@ -798,10 +789,10 @@ inline void dev::qconsole::dereferenceVariables(std::istream &is, std::ostream &
         } else {
             std::string substr(str.substr(varBase, substrEnd - varBase));
             std::stringstream sstr;
-            cvar_print_table::iterator it = cvarPrintFTable.find(substr);
+            cvar_print_table::iterator it = cvar_printf.find(substr);
 
             // check that variable exists
-            if (it != cvarPrintFTable.end()) {
+            if (it != cvar_printf.end()) {
                 it->second(is, sstr);
                 str.replace(dollar, substrEnd, sstr.str());
             } else {

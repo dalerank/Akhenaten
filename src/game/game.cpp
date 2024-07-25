@@ -68,8 +68,8 @@
 game_t game;
 game_time_t game_time;
 
-declare_console_ref_int(gameyear, game_time.year)
-declare_console_ref_int(gamemonth, game_time.month)
+declare_console_ref_int16(gameyear, game_time.year)
+declare_console_ref_int16(gamemonth, game_time.month)
 declare_console_command_p(nextyear, game_cheat_next_year)
 void game_cheat_next_year(std::istream &is, std::ostream &os) {
     game_time.advance_year();

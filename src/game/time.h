@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 enum e_month {
     MONTH_JANUARY = 0,
     MONTH_FEBRUARY = 1,
@@ -23,6 +25,19 @@ enum e_month {
  * One day has 50 ticks.
  */
 
+struct game_date_t {
+    union {
+        int32_t ym;
+        struct {
+            int16_t year;
+            int16_t month;
+        };
+    };
+
+    game_date_t(int16_t y, int16_t m) : year(y), month(m) {}
+    bool operator==(const game_date_t &o) const { return o.ym == ym; }
+};
+
 struct game_time_t {
     enum {
         days_in_month = 16,
@@ -31,13 +46,13 @@ struct game_time_t {
     };
 
     int tick;  // 50 ticks in a day
-    int day;   // 16 days in a month
-    int month; // 12 months in a year
-    int year;
+    int16_t day;   // 16 days in a month
+    int16_t month; // 12 months in a year
+    int16_t year;
     int total_days;
 
     void init(int year);
-    int years_since_start() const;
+    int16_t years_since_start() const;
     int absolute_day(bool since_start = false) const;
     int absolute_tick(bool since_start = false) const;
 
@@ -45,6 +60,8 @@ struct game_time_t {
     bool advance_day();
     bool advance_month();
     void advance_year();
+
+    game_date_t date() const { return {years_since_start(), month}; }
 };
 
 const game_time_t& gametime();

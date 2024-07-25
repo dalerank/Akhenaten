@@ -12,7 +12,7 @@ void game_time_t::init(int year) {
     year = year;
 }
 
-int game_time_t::years_since_start() const {
+int16_t game_time_t::years_since_start() const {
     return year - scenario_property_start_year();
 }
 
@@ -64,9 +64,13 @@ void game_time_t::advance_year() {
 
 io_buffer* iob_game_time = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = (game_time_t&)gametime();
-    iob->bind(BIND_SIGNATURE_INT32, &data.tick);
-    iob->bind(BIND_SIGNATURE_INT32, &data.day);
-    iob->bind(BIND_SIGNATURE_INT32, &data.month);
-    iob->bind(BIND_SIGNATURE_INT32, &data.year);
+    iob->bind(BIND_SIGNATURE_INT8, &data.tick);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_INT16, &data.day);
+    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_INT16, &data.month);
+    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_INT16, &data.year);
+    iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT32, &data.total_days);
 });

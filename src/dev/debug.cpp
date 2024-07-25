@@ -1317,7 +1317,11 @@ console_var_int::console_var_int(pcstr name, int v) : value(v) {
     bind_debug_console_var_int(name, value);
 }
 
-console_ref_int::console_ref_int(pcstr name, int &v) : value(&v) {
+console_ref_int16::console_ref_int16(pcstr name, int16_t &v) : value(&v) {
+    bind_debug_console_var_int16(name, v);
+}
+
+console_ref_int32::console_ref_int32(pcstr name, int &v) : value(&v) {
     bind_debug_console_var_int(name, v);
 }
 

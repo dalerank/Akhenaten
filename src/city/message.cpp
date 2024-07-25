@@ -197,6 +197,7 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
     msg->req_resource = event->item.value;
     msg->req_amount = event->amount_fields[0];
     msg->req_city = event->location_fields[0] - 1;
+
     if (event->is_active) {
         msg->req_months_left = event->quest_months_left;
     } else {

@@ -20,6 +20,7 @@ constexpr int MAX_EVENTMSG_TEXT_DATA = NUM_PHRASES * 200;
 
 const token_holder<e_event_type, EVENT_TYPE_NONE, EVENT_TYPE_MAX> e_event_type_tokens;
 const token_holder<e_event_state, e_event_state_initial, e_event_state_max> e_event_state_tokens;
+const token_holder<e_event_trigger_type, EVENT_TRIGGER_ONCE, EVENT_TRIGGER_MAX> e_event_trigger_type_tokens;
 
 struct events_data_t {
     svector<event_ph_t, MAX_EVENTS> event_list;
@@ -87,7 +88,7 @@ event_ph_t* event_manager_t::create(const event_ph_t* parent) {
     return &new_event;
 }
 
-bool event_manager_t::create(const event_ph_t* master, const event_ph_t* parent, int trigger_type) {
+bool event_manager_t::create(const event_ph_t* master, const event_ph_t* parent, e_event_trigger_type trigger_type) {
     event_ph_t* child = create(master);
     if (child) {
         child->event_state = e_event_state_initial;
@@ -182,17 +183,19 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
     // check if the trigger time has come, if not return.
     // for ACTIVE EVENTS (requests?): ignore specific time of the year IF quest is active
-    if (!event.is_active && (event.time.value != gametime().years_since_start() || event.month != gametime().month)) {
+    const bool should_handle = !event.is_active 
+                                && event.date() == gametime().date();
+    if (!should_handle) {
         return;
     }
 
     // ------ MAIN EVENT HANDLER
     e_event_action chain_action_next = EVENT_ACTION_COMPLETED; // default action to fire next (determined by handler)
     switch (event.type) {
-    case EVENT_TYPE_REQUEST: {
+    case EVENT_TYPE_REQUEST:
         scenario_request_handle(event, caller_event_id, chain_action_next);
         break;
-    }
+
     case EVENT_TYPE_INVASION:
         // TODO
         break;
@@ -341,7 +344,8 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[3]);
         iob->bind(BIND_SIGNATURE_INT16, &event.on_completed_action);
         iob->bind(BIND_SIGNATURE_INT16, &event.on_refusal_action);
-        iob->bind(BIND_SIGNATURE_INT16, &event.event_trigger_type);
+        iob->bind(BIND_SIGNATURE_INT8, &event.event_trigger_type);
+        iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_INT16, &event.__unk07);
         iob->bind(BIND_SIGNATURE_INT16, &event.months_initial);
         iob->bind(BIND_SIGNATURE_INT16, &event.quest_months_left);

@@ -144,7 +144,7 @@ static void game_debug_show_properties_object(pcstr prefix, const event_ph_t &e)
         bstring256 type_name;
         
         type_name.printf("%s [%d]", token::find_name(e_event_type_tokens, e.type), e.type);
-        game_debug_show_property_t(i, "type", type_name);
+        game_debug_show_property_t(i, "<type>", type_name);
         game_debug_show_property_t(i, "month", e.month);
         game_debug_show_property_t(i, "time.year", e.time.value);
         game_debug_show_property_t(i, "time.f_fixed", e.time.f_fixed);
@@ -152,7 +152,8 @@ static void game_debug_show_properties_object(pcstr prefix, const event_ph_t &e)
         game_debug_show_property_t(i, "quest_months_left", e.quest_months_left);
 
         type_name.printf("%s [%d]", token::find_name(e_event_state_tokens, e.event_state), e.event_state);
-        game_debug_show_property_t(i, "event_state", type_name);
+        game_debug_show_property_t(i, "<event_state>", type_name);
+        game_debug_show_property_t(i, "event_state", e.event_state);
         game_debug_show_property_t(i, "is_overdue", e.is_overdue);
         game_debug_show_property_t(i, "is_active", e.is_active);
         game_debug_show_property_t(i, "can_comply_dialog_shown", e.can_comply_dialog_shown);
@@ -161,12 +162,15 @@ static void game_debug_show_properties_object(pcstr prefix, const event_ph_t &e)
         game_debug_show_property_t(i, "on_defeat_action", e.on_defeat_action);
         game_debug_show_property_t(i, "sender_faction", e.sender_faction);
 
+        type_name.printf("%s [%d]", token::find_name(e_event_trigger_type_tokens, e.event_trigger_type), e.event_trigger_type);
+        game_debug_show_property_t(i, "<event_trigger_type>", type_name);
+
         if (e.type == EVENT_TYPE_REQUEST) {
             type_name.printf("%s [%d]", resource_name((e_resource)e.item.value), e.item.value);
-            game_debug_show_property_t(i, "item.value", e.item.value);
-        } else {
-            game_debug_show_property_t(i, "item.value", e.item.value);
+            game_debug_show_property_t(i, "<item.value>", type_name);
         }
+
+        game_debug_show_property_t(i, "item.value", e.item.value);
         game_debug_show_property_t(i, "item.f_fixed", e.item.f_fixed);
         
         ImGui::TreePop();
@@ -541,6 +545,14 @@ void bind_debug_command(pcstr cmd, std::function<void(std::istream &, std::ostre
 }
 
 void bind_debug_console_var_int(pcstr var, int &ref) {
+    debug_console().con.bind_cvar(var, ref);
+}
+
+void bind_debug_console_var_int8(pcstr var, int8_t &ref) {
+    debug_console().con.bind_cvar(var, ref);
+}
+
+void bind_debug_console_var_int16(pcstr var, int16_t &ref) {
     debug_console().con.bind_cvar(var, ref);
 }
 

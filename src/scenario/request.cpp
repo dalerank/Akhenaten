@@ -46,6 +46,9 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
     }
 
     scenario_request request = scenario_request_get_visible(event.event_id);
+    if (request.event_id < 0) {
+        return;
+    }
 
     // handle request event immediately after activation!
     next_action = EVENT_ACTION_NONE;

@@ -2,6 +2,7 @@
 
 #include "core/bstring.h"
 #include "core/tokenum.h"
+#include "game/time.h"
 
 enum e_event_type {
     EVENT_TYPE_NONE = 0,
@@ -74,7 +75,7 @@ enum {
     EVENT_FACTION_REQUEST_FROM_PHARAOH = 1,
 };
 
-enum {
+enum e_event_trigger_type {
     EVENT_TRIGGER_ONCE = 0,
     EVENT_TRIGGER_ONLY_VIA_EVENT = 1,
     EVENT_TRIGGER_RECURRING = 2,
@@ -82,7 +83,10 @@ enum {
     EVENT_TRIGGER_ACTIVATED_8 = 8,
     EVENT_TRIGGER_BY_RATING = 10,
     EVENT_TRIGGER_ACTIVATED_12 = 12,
+
+    EVENT_TRIGGER_MAX
 };
+extern const token_holder<e_event_trigger_type, EVENT_TRIGGER_ONCE, EVENT_TRIGGER_MAX> e_event_trigger_type_tokens;
 
 enum {
     EVENT_INVADER_ENEMY = 1,
@@ -136,7 +140,7 @@ struct event_ph_t {
     int16_t location_fields[4];
     int16_t on_completed_action;
     int16_t on_refusal_action;
-    int16_t event_trigger_type;
+    e_event_trigger_type event_trigger_type;
     int16_t __unk07;
     int16_t months_initial;
     int16_t quest_months_left;
@@ -171,6 +175,8 @@ struct event_ph_t {
     int16_t __unk20c;
     int16_t __unk21;
     int16_t __unk22;
+
+    game_date_t date() { return {time.value, month}; }
 };
 
 struct mission_id_t;
@@ -182,7 +188,7 @@ struct event_manager_t {
     void process_events();
     void process_random_events();
     event_ph_t *create(const event_ph_t *parent);
-    bool create(const event_ph_t *master, const event_ph_t *parent, int trigger_type);
+    bool create(const event_ph_t *master, const event_ph_t *parent, e_event_trigger_type trigger_type);
     bool is_valid_event_index(int id);
     int get_auto_reason_phrase_id(int param_1, int param_2);
 
@@ -191,8 +197,3 @@ struct event_manager_t {
     bool msg_auto_phrases_load();
     void load_mission_metadata(const mission_id_t &missionid);
 };
-
-
-
-
-

@@ -174,27 +174,24 @@ void imgui_qconsole::render(const char *title, bool& p_open, int width, int heig
     ImGui::End();
 }
 
-void imgui_qconsole::historyCallback(ImGuiInputTextCallbackData *data)
-{
-    // Example of HISTORY
+void imgui_qconsole::historyCallback(ImGuiInputTextCallbackData *data) {
     const int prev_history_pos = HistoryPos;
-    if (data->EventKey == ImGuiKey_UpArrow)
-    {
-        if (HistoryPos == -1)
+    if (data->EventKey == ImGuiKey_UpArrow) {
+        if (HistoryPos == -1) {
             HistoryPos = con.historyBuffer().size() - 1;
-        else if (HistoryPos > 0)
+        } else if (HistoryPos > 0) {
             HistoryPos--;
-    }
-    else if (data->EventKey == ImGuiKey_DownArrow)
-    {
-        if (HistoryPos != -1)
-            if (++HistoryPos >= con.historyBuffer().size())
+        }
+    } else if (data->EventKey == ImGuiKey_DownArrow) {
+        if (HistoryPos != -1) {
+            if (++HistoryPos >= con.historyBuffer().size()) {
                 HistoryPos = -1;
+            }
+        }
     }
 
     // A better implementation would preserve the data on the current input line along with cursor position.
-    if (prev_history_pos != HistoryPos)
-    {
+    if (prev_history_pos != HistoryPos) {
         const char *history_str = (HistoryPos >= 0) ? con.historyBuffer()[HistoryPos].c_str() : "";
         data->DeleteChars(0, data->BufTextLen);
         data->InsertChars(0, history_str);

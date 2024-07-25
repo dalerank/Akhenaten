@@ -135,33 +135,36 @@ static void eventmsg_template_combine(uint8_t* template_ptr, uint8_t* out_ptr, b
     auto &data = g_message_dialog_data;
     auto msg = city_message_get(data.message_id);
 
-    uint8_t amount[6];
-    uint8_t time[6];
-    string_from_int(time, msg->req_months_left, false);
+    bstring32 amount;
+    bstring32 time; time.printf("%d", msg->req_months_left);
     int city_name_id = 0;
+
     if (phrase_modifier) {
         empire_city* city = g_empire.city(msg->req_city_past);
         if (city != nullptr) {
             city_name_id = city->name_id;
         }
-        string_from_int(amount, stack_proper_quantity(msg->req_amount_past, msg->req_resource_past), false);
+        int value = stack_proper_quantity(msg->req_amount_past, msg->req_resource_past);
+        amount.printf("%d", value);
     } else {
         empire_city *city = g_empire.city(msg->req_city);
         if (city != nullptr) {
             city_name_id = city->name_id;
         }
-        string_from_int(amount, stack_proper_quantity(msg->req_amount, msg->req_resource), false);
+        int value = stack_proper_quantity(msg->req_amount, msg->req_resource);
+        amount.printf("%d", value);
     }
+
     text_tag_substitution tags[] = {
       {"[greeting]", lang_get_string(32, 11 + scenario_campaign_rank())},
       {"[player_name]", city_player_name()},
       {"[reason_phrase]", (uint8_t*)data.phrase_text.c_str()},
       {"[city_name]", lang_get_string(195, city_name_id)},
       {"[a_foreign_army]", (uint8_t*)""}, // TODO
-      {"[amount]", amount},
+      {"[amount]", (uint8_t*)amount.c_str()},
       {"[amount_granted]", (uint8_t*)""}, // TODO
       {"[item]", lang_get_string(23, 54 + (phrase_modifier ? msg->req_resource_past : msg->req_resource))},
-      {"[time_allotted]", time},
+      {"[time_allotted]", (uint8_t*)time.c_str()},
       {"[time_until_attack]", (uint8_t*)""}, // TODO
       {"[travel_time]", (uint8_t*)""},       // TODO
       {"[god]", (uint8_t*)""},               // TODO
