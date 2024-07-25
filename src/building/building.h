@@ -245,6 +245,7 @@ public:
             uint8_t ent_reserved_u8;
             e_resource consume_material_id;
         } entertainment;
+
         struct {
             uint16_t foods[8];
             uint16_t inventory[8];
