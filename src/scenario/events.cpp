@@ -59,7 +59,7 @@ int16_t event_manager_t::events_count() {
 static void update_randomized_values(event_ph_t &event) {
     int seed = 1; // not sure what this is used for...
     randomize_event_fields((int16_t*)&event.item, &seed);
-    randomize_event_fields(event.amount_fields, &seed);
+    randomize_event_fields((int16_t*)&event.amount, &seed);
     randomize_event_fields((int16_t*)&event.time, &seed);
     randomize_event_fields(event.location_fields, &seed);
     randomize_event_fields(event.route_fields, &seed);
@@ -282,7 +282,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
     // disable if already done
     if (event.event_trigger_type == EVENT_TRIGGER_ONCE) {
-        event.event_state = e_event_state_already_fired;
+        event.event_trigger_type = EVENT_TRIGGER_ALREADY_FIRED;
     }
 }
 
@@ -330,10 +330,10 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT16, &event.item.f_fixed);
         iob->bind(BIND_SIGNATURE_INT16, &event.item.f_min);
         iob->bind(BIND_SIGNATURE_INT16, &event.item.f_max);
-        iob->bind(BIND_SIGNATURE_INT16, &event.amount_fields[0]);
-        iob->bind(BIND_SIGNATURE_INT16, &event.amount_fields[1]);
-        iob->bind(BIND_SIGNATURE_INT16, &event.amount_fields[2]);
-        iob->bind(BIND_SIGNATURE_INT16, &event.amount_fields[3]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.amount.value);
+        iob->bind(BIND_SIGNATURE_INT16, &event.amount.f_fixed);
+        iob->bind(BIND_SIGNATURE_INT16, &event.amount.f_min);
+        iob->bind(BIND_SIGNATURE_INT16, &event.amount.f_max);
         iob->bind(BIND_SIGNATURE_INT16, &event.time.value);
         iob->bind(BIND_SIGNATURE_INT16, &event.time.f_fixed);
         iob->bind(BIND_SIGNATURE_INT16, &event.time.f_min);
@@ -355,7 +355,7 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT8,  &event.can_comply_dialog_shown);
         iob->bind(BIND_SIGNATURE_INT16, &event.__unk11);
         iob->bind(BIND_SIGNATURE_INT8,  &event.festival_deity);
-        iob->bind(BIND_SIGNATURE_INT8,  &event.__unk12_i8);
+        iob->bind(BIND_SIGNATURE_INT8,  &event.reserved_unk12);
         iob->bind(BIND_SIGNATURE_INT8,  &event.invasion_attack_target);
         // ...
         // ...

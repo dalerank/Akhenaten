@@ -135,7 +135,7 @@ struct event_ph_t {
     e_event_type type;
     int8_t month;
     event_ph_value item;
-    int16_t amount_fields[4];
+    event_ph_value amount;
     event_ph_value time;
     int16_t location_fields[4];
     int16_t on_completed_action;
@@ -150,7 +150,7 @@ struct event_ph_t {
     bool can_comply_dialog_shown;
     int16_t __unk11;
     int8_t festival_deity;
-    int8_t __unk12_i8;
+    int8_t reserved_unk12;
     int8_t invasion_attack_target;
     // ...
     // ...

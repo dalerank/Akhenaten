@@ -195,7 +195,10 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
 
     const event_ph_t* event = g_scenario_data.events.at(event_id);
     msg->req_resource = event->item.value;
-    msg->req_amount = event->amount_fields[0];
+    msg->req_amount = event->amount.value; 
+    if (msg->req_amount < 100) {
+        msg->req_amount *= 100;
+    }
     msg->req_city = event->location_fields[0] - 1;
 
     if (event->is_active) {
@@ -208,7 +211,7 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
 
     const event_ph_t* parent_event = g_scenario_data.events.at(parent_event_id);
     msg->req_resource_past = parent_event->item.value;
-    msg->req_amount_past = parent_event->amount_fields[0];
+    msg->req_amount_past = parent_event->amount.value;
     msg->req_city_past = parent_event->location_fields[0] - 1;
 
     // default for sound info / template
