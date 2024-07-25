@@ -89,6 +89,7 @@ mission5 = { // Timna
 		tutorial_irrigation : [BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH, ],
 		tutorial_guilds : [BUILDING_STORAGE_YARD, BUILDING_TAX_COLLECTOR, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL]
 	},
+	city_custom_requests : true,
 	requests : [
 		{
 			year : 2850,
