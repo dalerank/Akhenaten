@@ -17,7 +17,10 @@ scenario_data_t g_scenario_data;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_scenario_load_meta_data);
 void config_load_scenario_load_meta_data() {
-    scenario_load_meta_data(g_scenario_data.settings.campaign_scenario_id);
+    mission_id_t missionid(g_scenario_data.settings.campaign_scenario_id);
+
+    scenario_load_meta_data(missionid);
+    scenario_load_events_meta_data(missionid);
 }
 
 bool scenario_is_saved() {
@@ -37,10 +40,8 @@ void scenario_settings_init_mission() {
     g_scenario_data.settings.starting_personal_savings = g_settings.personal_savings_for_mission(g_scenario_data.settings.campaign_mission_rank);
 }
 
-void scenario_load_meta_data(int scenario_id) {
-    bstring128 missionid;
-    missionid.printf("mission%d", scenario_id);
-    g_config_arch.r_section(missionid.c_str(), [] (archive arch) {
+void scenario_load_meta_data(const mission_id_t &missionid) {
+    g_config_arch.r_section(missionid, [] (archive arch) {
         g_scenario_data.meta.start_message = arch.r_int("start_message");
         g_scenario_data.env.has_animals = arch.r_bool("city_has_animals");
         g_scenario_data.env.gods_least_mood = arch.r_int("gods_least_mood", 0);

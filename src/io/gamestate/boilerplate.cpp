@@ -170,7 +170,10 @@ static void post_load() {
     int scenario_id = scenario_campaign_scenario_id();
     int mission_rank = get_scenario_mission_rank(scenario_id);
     scenario_set_campaign_rank(mission_rank);
-    scenario_load_meta_data(scenario_id);
+
+    mission_id_t missionid(scenario_id);
+    scenario_load_meta_data(missionid);
+    scenario_load_events_meta_data(missionid);
 
     // camera
     //    city_view_camera_position_refresh();

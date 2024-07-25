@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/buffer.h"
+#include "core/bstring.h"
 
 enum e_event_type {
     EVENT_TYPE_NONE = 0,
@@ -115,6 +115,13 @@ enum e_event_action {
     EVENT_ACTION_DEFEAT = 3,
 };
 
+struct event_ph_value {
+    int16_t value;
+    int16_t f_fixed;
+    int16_t f_min;
+    int16_t f_max;
+};
+
 struct event_ph_t {
     int16_t num_total_header;
     int16_t __unk01;
@@ -123,7 +130,7 @@ struct event_ph_t {
     int8_t month;
     int16_t item_fields[4];
     int16_t amount_fields[4];
-    int16_t time_fields[4];
+    event_ph_value time;
     int16_t location_fields[4];
     int16_t on_completed_action;
     int16_t on_refusal_action;
@@ -174,3 +181,6 @@ void scenario_events_process();
 
 bool eventmsg_load();
 bool eventmsg_auto_phrases_load();
+
+struct mission_id_t;
+void scenario_load_events_meta_data(const mission_id_t &missionid);

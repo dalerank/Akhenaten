@@ -160,6 +160,15 @@ struct building_stage_t {
     std::vector<e_building_type> buildings;
 };
 
+struct mission_id_t {
+    bstring128 _data;
+    inline mission_id_t(int id) {
+        _data.printf("mission%d", id);
+    }
+
+    inline operator const char*() const { return _data; }
+};
+
 struct scenario_data_t {
     uint8_t scenario_name[65];
 
@@ -366,12 +375,12 @@ int scenario_property_monuments_is_enabled(void);
 int scenario_property_monument(int field);
 void scenario_set_monument(int field, int m);
 
-void scenario_load_meta_data(int scenario_id);
+void scenario_load_meta_data(const mission_id_t &missionid);
 
 bool scenario_building_allowed(int building_type);
 
-int scenario_building_image_native_hut(void);
+int scenario_building_image_native_hut();
 
-int scenario_building_image_native_meeting(void);
+int scenario_building_image_native_meeting();
 
-int scenario_building_image_native_crops(void);
+int scenario_building_image_native_crops();

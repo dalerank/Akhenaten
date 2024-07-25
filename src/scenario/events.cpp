@@ -29,6 +29,15 @@ struct events_data_t {
 
 events_data_t g_scenario_events;
 
+void scenario_load_events_meta_data(const mission_id_t &missionid) {
+    g_config_arch.r_section(missionid, [] (archive arch) {
+        const bool enable_scenario_events = arch.r_bool("enable_scenario_events");
+        if (!enable_scenario_events) {
+            return;
+        }
+    });
+}
+
 int16_t scenario_events_num() {
     return g_scenario_events.event_list[0].num_total_header;
 }
@@ -41,7 +50,7 @@ static void update_randomized_values(event_ph_t &event) {
     int seed = 1; // not sure what this is used for...
     randomize_event_fields(event.item_fields, &seed);
     randomize_event_fields(event.amount_fields, &seed);
-    randomize_event_fields(event.time_fields, &seed);
+    randomize_event_fields((int16_t*)&event.time, &seed);
     randomize_event_fields(event.location_fields, &seed);
     randomize_event_fields(event.route_fields, &seed);
 
@@ -67,6 +76,7 @@ event_ph_t* create_scenario_event(const event_ph_t* parent) {
     }
     return nullptr;
 }
+
 static bool create_triggered_active_event(const event_ph_t* master, const event_ph_t* parent, int trigger_type) {
     event_ph_t* child = create_scenario_event(master);
     if (child) {
@@ -76,9 +86,9 @@ static bool create_triggered_active_event(const event_ph_t* master, const event_
         update_randomized_values(*child);
 
         // calculate date of activation
-        int month_abs_parent = parent->time_fields[0] * 12 + parent->month; // field is YEARS in parent
-        int month_abs_child = month_abs_parent + child->time_fields[0];     // field is MONTHS in child
-        child->time_fields[0] = month_abs_child / 12;            // relinquish previous field (the child needs this for storing the YEAR)
+        int month_abs_parent = parent->time.value * 12 + parent->month; // field is YEARS in parent
+        int month_abs_child = month_abs_parent + child->time.value;     // field is MONTHS in child
+        child->time.value = month_abs_child / 12;            // relinquish previous field (the child needs this for storing the YEAR)
         child->month = month_abs_child % 12; // update proper month value relative to the year
         child->quest_months_left = month_abs_child - month_abs_parent;
 
@@ -162,7 +172,7 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
 
     // check if the trigger time has come, if not return.
     // for ACTIVE EVENTS (requests?): ignore specific time of the year IF quest is active
-    if (!event.is_active && (event.time_fields[0] != game_time_year_since_start() || event.month != game_time_month())) {
+    if (!event.is_active && (event.time.value != game_time_year_since_start() || event.month != game_time_month())) {
         return;
     }
 
@@ -303,10 +313,10 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT16, &event.amount_fields[1]);
         iob->bind(BIND_SIGNATURE_INT16, &event.amount_fields[2]);
         iob->bind(BIND_SIGNATURE_INT16, &event.amount_fields[3]);
-        iob->bind(BIND_SIGNATURE_INT16, &event.time_fields[0]);
-        iob->bind(BIND_SIGNATURE_INT16, &event.time_fields[1]);
-        iob->bind(BIND_SIGNATURE_INT16, &event.time_fields[2]);
-        iob->bind(BIND_SIGNATURE_INT16, &event.time_fields[3]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.time.value);
+        iob->bind(BIND_SIGNATURE_INT16, &event.time.f_fixed);
+        iob->bind(BIND_SIGNATURE_INT16, &event.time.f_min);
+        iob->bind(BIND_SIGNATURE_INT16, &event.time.f_max);
         iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[0]);
         iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[1]);
         iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[2]);

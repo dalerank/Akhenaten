@@ -107,6 +107,7 @@ void randomize_event_fields(int16_t field[4], int32_t* seed) {
         determinant = 1;
     else
         determinant = (-1 < f_max) + 2;
+
     *seed = (int32_t)(random_broche / (unsigned long long)determinant);
     determinant = (int32_t)(random_broche % (unsigned long long)determinant);
     if (determinant != 0) {
