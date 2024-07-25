@@ -21,7 +21,7 @@ class qconsole
 
     typedef std::unordered_map<std::string, ConsoleFunc> CommandTable;
     typedef std::unordered_map<std::string, ConsoleFunc> CVarReadTable;
-    typedef std::unordered_map<std::string, ConsoleFunc> CVarPrintTable;
+    using cvar_print_table = std::unordered_map<std::string, ConsoleFunc>;
     typedef std::unordered_map<std::string, std::string> HelpTable;
 
     /// Constructor binds the default commands to the command table & initializes history buffer
@@ -137,7 +137,7 @@ class qconsole
     const std::deque<std::string> &historyBuffer() const;
     inline const CommandTable &getCommandTable() const { return commandTable; }
     inline const CVarReadTable &getCVarReadTable() const { return cvarReadFTable; }
-    inline const CVarPrintTable &getCVarPrintTable() const { return cvarPrintFTable; }
+    inline const cvar_print_table &getCVarPrintTable() const { return cvarPrintFTable; }
     inline const HelpTable &getHelpTable() const { return helpTable; }
 
   protected:
@@ -205,7 +205,7 @@ class qconsole
     CVarReadTable cvarReadFTable;
 
     /// maps strings naming cVars to functions which write the variables of arbitrary type out to a std::ostream
-    CVarPrintTable cvarPrintFTable;
+    cvar_print_table cvarPrintFTable;
 
     ///maps strings to std function objects, representing the available commands to the user.  eg, quit, set, etc
     CommandTable commandTable;
@@ -221,7 +221,7 @@ class qconsole
     ///function which simply prints the value of a variable to an output stream
     ///the arguments are "eaten" by std bind, allowing it to be stored as type void (*x)(void) in the cvarPrintFTable
     template <class T>
-    void printCvar(std::ostream &os, T *var);
+    void print_cvar(std::ostream &os, const std::string &str, T *var);
 
     ///dumps a list of available commands to the output stream
     void list_cmds(std::ostream &os) const;
@@ -234,7 +234,7 @@ class qconsole
     void commandSet(std::istream &is, std::ostream &os);
 
     ///the function associated with built in command "echo", which prints the value of a cvar if it is bound. if not, reports an error.
-    void commandEcho(std::istream &is, std::ostream &os);
+    void command_echo(std::istream &is, std::ostream &os);
 
     ///prints help on a topic if the user types help < topic >, or a generic help message if the user just types help
     void commandHelp(std::istream &, std::ostream &);
@@ -466,23 +466,21 @@ inline void dev::qconsole::setHelpTopic(const std::string &str, const std::strin
 
 template <class T>
 inline void dev::qconsole::bind_cvar(const std::string &str, T &var, const std::string &help) {
-    cvarReadFTable[str] =
-        [this, &var](std::istream &is, std::ostream &os) {
-            this->set_cvar<T>(is, os, &var);
-        };
+    cvarReadFTable[str] = [this, &var](std::istream &is, std::ostream &os) {
+        this->set_cvar<T>(is, os, &var);
+    };
 
-    cvarPrintFTable[str] =
-        [this, &var](std::istream &is, std::ostream &os) {
-            this->printCvar<T>(os, &var);
-        };
+    cvarPrintFTable[str] = [this, str, &var](std::istream &is, std::ostream &os) {
+        this->print_cvar<T>(os, str, &var);
+    };
 
-    if (help.length())
+    if (help.length()) {
         setHelpTopic(str, help);
+    }
 }
 
 template <class T>
-void dev::qconsole::set_cvar(std::istream &is, std::ostream &os, T *var)
-{
+void dev::qconsole::set_cvar(std::istream &is, std::ostream &os, T *var) {
     T tmp; ///temp argument is a necessity; without it we risk corruption of our variable value if there is a parse error.  Should be no issue unless someone is using this to parse a ginormous structure or copy construction invokes a state change.
 
     is >> tmp;
@@ -499,27 +497,23 @@ void dev::qconsole::set_cvar(std::istream &is, std::ostream &os, T *var)
 }
 
 template <class T>
-inline void dev::qconsole::printCvar(std::ostream &os, T *var)
-{
-    os << *var << std::endl;
+inline void dev::qconsole::print_cvar(std::ostream &os, const std::string &str, T *var) {
+    os << str << " " << * var << std::endl;
 }
 
 template <class T>
-inline void dev::qconsole::assignDynamicVariable(std::istream &is, std::shared_ptr<T> var)
-{
+inline void dev::qconsole::assignDynamicVariable(std::istream &is, std::shared_ptr<T> var) {
     is >> (*var);
 }
 
 template <class T>
-inline void dev::qconsole::writeDynamicVariable(std::ostream &os, std::shared_ptr<T> var)
-{
+inline void dev::qconsole::writeDynamicVariable(std::ostream &os, std::shared_ptr<T> var) {
     const T &deref = *(var);
     os << deref;
 }
 
 template <class T>
-inline void dev::qconsole::bindDynamicCVar(const std::string &var, const T &value, const std::string &help)
-{
+inline void dev::qconsole::bindDynamicCVar(const std::string &var, const T &value, const std::string &help) {
     helpTable[var] = help;
     bindDynamicCVar(var, value);
 }
@@ -548,16 +542,12 @@ inline void dev::qconsole::executeUntilEOF(std::istream &f, std::ostream &output
     }
 }
 
-inline void dev::qconsole::executeFile(const std::string &x, std::ostream &output)
-{
+inline void dev::qconsole::executeFile(const std::string &x, std::ostream &output) {
     std::ifstream f(x);
 
-    if (!f.is_open())
-    {
+    if (!f.is_open()) {
         output << error() << "Unable to open file : " << x << std::endl;
-    }
-    else
-    {
+    } else {
         executeUntilEOF(f, output);
     }
 
@@ -600,66 +590,51 @@ inline void dev::qconsole::list_cmds(std::ostream &os) const {
     os << std::endl;
 }
 
-inline void dev::qconsole::listCVars(std::ostream &os) const
-{
+inline void dev::qconsole::listCVars(std::ostream &os) const {
     os << "\nBound console variables:";
 
-    for (CVarReadTable::const_iterator it = cvarReadFTable.begin(); it != cvarReadFTable.end(); it++)
-    {
-        os << "\n"
-           << it->first;
+    for (CVarReadTable::const_iterator it = cvarReadFTable.begin(); it != cvarReadFTable.end(); it++) {
+        os << "\n" << it->first;
     }
 
     os << std::endl;
 }
 
-inline void dev::qconsole::commandSet(std::istream &is, std::ostream &os)
-{
+inline void dev::qconsole::commandSet(std::istream &is, std::ostream &os) {
     std::string x;
 
-    if (!(is >> x))
-    {
+    if (!(is >> x)) {
         os << error() << "Syntax error parsing argument" << std::endl;
         return;
     }
 
     CVarReadTable::iterator it = cvarReadFTable.find(x);
 
-    if (it != cvarReadFTable.end())
-    {
+    if (it != cvarReadFTable.end()) {
         it->second(is, os);
-    }
-    else
-    {
+    } else {
         os << error() << "Variable " << x << " unknown." << std::endl;
     }
 }
 
 /// the function associated with built in command "echo", which prints the value of a cvar if it is bound. if not, reports an error.
-inline void dev::qconsole::commandEcho(std::istream &is, std::ostream &os)
-{
+inline void dev::qconsole::command_echo(std::istream &is, std::ostream &os) {
     std::string x;
 
-    if (!(is >> x))
-    {
+    if (!(is >> x)) {
         os << error() << "Syntax error parsing argument." << std::endl;
         return;
     }
 
-    CVarPrintTable::iterator it = cvarPrintFTable.find(x);
-
-    if (it != cvarPrintFTable.end())
-    {
+    cvar_print_table::iterator it = cvarPrintFTable.find(x);
+    if (it != cvarPrintFTable.end()) {
         (it->second)(is, os);
-    }
-    else
-    {
+    } else {
         os << error() << "Variable " << x << " unknown." << std::endl;
     }
 }
 
-inline void dev::qconsole::commandExecute(const std::string &str, std::ostream &output)
-{
+inline void dev::qconsole::commandExecute(const std::string &str, std::ostream &output) {
     std::stringstream lineStream;
     lineStream.str(str);
     commandExecute(lineStream, output);
@@ -669,34 +644,26 @@ inline void dev::qconsole::commandExecute(const std::string &str, std::ostream &
 inline void dev::qconsole::commandExecute(std::istream &is, std::ostream &os)
 {
     char ch;
-    while (!is.eof())
-    {
+    while (!is.eof()) {
         ch = is.peek();
 
-        if (ch == std::char_traits<char>::eof())
-        {
+        if (ch == std::char_traits<char>::eof()) {
             is.get(ch);
             return;
-        }
-        else if (ch == '#')
-        {
+        } else if (ch == '#') {
             std::string tmp;
             getline(is, tmp);
             return;
         } //if newline we will not parse anything else
-        else if (std::isspace(ch))
-        {
+        else if (std::isspace(ch)) {
             is.get(ch);
             continue;
-        }
-        else
-        {
+        } else {
             break;
         }
     }
 
-    std::stringstream lineStream;
-    {
+    std::stringstream lineStream; {
         std::string lineTemp;
 
         getline(is, lineTemp);
@@ -712,22 +679,28 @@ inline void dev::qconsole::commandExecute(std::istream &is, std::ostream &os)
     }
 
     std::string x;
-
-    while (lineStream >> x)
-    {
+    bool command_found = false;
+    while (lineStream >> x) {
         CommandTable::const_iterator it = commandTable.find(x);
 
-        if (it == commandTable.end())
-        {
-            os << error() << "Command " << x << " unknown" << std::endl;
-        }
-        else
-        {
+        if (it != commandTable.end()) {
+            command_found = true;
             (it->second)(lineStream, os); //execute the command
+            os << '\n';
         }
-
-        os << '\n';
     }
+
+    if (command_found) {
+        return;
+    }
+
+    cvar_print_table::iterator it = cvarPrintFTable.find(x);
+    if (it != cvarPrintFTable.end()) {
+        (it->second)(is, os);
+        return;
+    } 
+    
+    os << error() << "Variable/Command " << x << " unknown." << std::endl;
 }
 
 inline void dev::qconsole::bindBasicCommands()
@@ -741,13 +714,9 @@ inline void dev::qconsole::bindBasicCommands()
                 "\nVariable names are any space delimited string and variable value is set to the remainder of the line.");
 
     bind_command("cmds", [this](std::istream &is, std::ostream &os) { this->list_cmds(os); }, "lists the available console commands");
-
     bind_command("set", [this](std::istream &is, std::ostream &os) { this->commandSet(is, os); }, "type set <identifier> <val> to change the value of a cvar");
-
-    bind_command("echo", [this](std::istream &is, std::ostream &os) { this->commandEcho(is, os); }, "type echo <identifier> to print the value of a cvar");
-
+    bind_command("echo", [this](std::istream &is, std::ostream &os) { this->command_echo(is, os); }, "type echo <identifier> to print the value of a cvar");
     bind_command("cvars", [this](std::istream &is, std::ostream &os) { listCVars(os); }, "lists the bound cvars");
-
     bind_command("help", [this](std::istream &is, std::ostream &os) { this->commandHelp(is, os); }, "you're a smarty");
 
     bind_command("run", [this](std::istream &is, std::ostream &os) {
@@ -809,51 +778,40 @@ inline const std::deque<std::string> &dev::qconsole::historyBuffer() const
     return history_buffer;
 }
 
-inline void dev::qconsole::dereferenceVariables(std::istream &is, std::ostream &os, std::string &str)
-{
+inline void dev::qconsole::dereferenceVariables(std::istream &is, std::ostream &os, std::string &str) {
     size_t varBase = 0;
     int n = 0;
 
-    while ((varBase = str.find('$', varBase)) != str.npos)
-    {
+    while ((varBase = str.find('$', varBase)) != str.npos) {
         size_t substrEnd = varBase;
         size_t dollar = varBase;
         varBase++;
 
         n++;
 
-        for (; ((substrEnd < str.size()) && (!isspace(str[substrEnd]))); substrEnd++)
+        for (; ((substrEnd < str.size()) && (!isspace(str[substrEnd]))); substrEnd++) {
             ;
-
-        if (substrEnd == varBase)
-        {
-            os << error() << "EXPECTED IDENTIFIER AT $" << std::endl;
         }
-        else
-        {
+
+        if (substrEnd == varBase) {
+            os << error() << "EXPECTED IDENTIFIER AT $" << std::endl;
+        } else {
             std::string substr(str.substr(varBase, substrEnd - varBase));
-
             std::stringstream sstr;
-
-            CVarPrintTable::iterator it = cvarPrintFTable.find(substr);
+            cvar_print_table::iterator it = cvarPrintFTable.find(substr);
 
             // check that variable exists
-            if (it != cvarPrintFTable.end())
-            {
+            if (it != cvarPrintFTable.end()) {
                 it->second(is, sstr);
                 str.replace(dollar, substrEnd, sstr.str());
-            }
-            else
-            {
+            } else {
                 os << error() << "Variable " << substr << " not found" << std::endl;
             }
         }
     }
 }
 
-inline dev::qconsole::qconsole(size_t maxCapacity)
-    : history_buffer(maxCapacity)
-{
+inline dev::qconsole::qconsole(size_t maxCapacity) : history_buffer(maxCapacity) {
     bindBasicCommands();
 }
 

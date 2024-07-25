@@ -1317,6 +1317,14 @@ console_var_int::console_var_int(pcstr name, int v) : value(v) {
     bind_debug_console_var_int(name, value);
 }
 
+console_ref_int::console_ref_int(pcstr name, int &v) : value(&v) {
+    bind_debug_console_var_int(name, v);
+}
+
 console_var_bool::console_var_bool(pcstr name, bool v) : value(v) {
     bind_debug_console_var_bool(name, value);
+}
+
+console_ref_bool::console_ref_bool(pcstr name, bool &v) : value(&v) {
+    bind_debug_console_var_bool(name, v);
 }

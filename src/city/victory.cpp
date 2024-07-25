@@ -17,7 +17,6 @@
 #include <iostream>
 
 declare_console_command_p(victory, game_cheat_force_victory)
-
 void game_cheat_force_victory(std::istream &is, std::ostream &os) {
     g_city.victory_state.force_win = true;
 }

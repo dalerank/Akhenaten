@@ -112,14 +112,28 @@ struct console_var_int {
     int operator()() const { return value; }
 };
 
+struct console_ref_int {
+    int *value;
+    console_ref_int(pcstr name, int &v);
+    int operator()() const { return *value; }
+};
+
 struct console_var_bool {
     bool value;
     console_var_bool(pcstr name, bool init);
     bool operator()() const { return value; }
 };
 
+struct console_ref_bool {
+    bool *value;
+    console_ref_bool(pcstr name, bool &var);
+    bool operator()() const { return *value; }
+};
+
 #define declare_console_command(a, ...) namespace console { bool cmd_##a; }; console_command a(#a, __VA_ARGS__);
 #define declare_console_command_p(a, f) namespace console { bool cmd_##a; }; void f(std::istream &, std::ostream &); console_command a(#a, f);
 #define declare_console_var_int(a, v) namespace console { bool var_##a; }; console_var_int a(#a, v);
+#define declare_console_ref_int(a, v) namespace console { bool var_##a; }; console_ref_int a(#a, v);
 #define declare_console_var_bool(a, v) namespace console { bool var_##a; }; console_var_bool a(#a, v);
+#define declare_console_ref_bool(a, v) namespace console { bool var_##a; }; console_ref_bool a(#a, v);
 

@@ -4,8 +4,6 @@
 #include "scenario/scenario.h"
 #include "core/game_environment.h"
 
-constexpr int max_game_tick = 50;
-
 void game_time_t::init(int year) {
     tick = 0;
     day = 0;
@@ -36,7 +34,7 @@ int game_time_t::absolute_tick(bool since_start) const {
 }
 
 bool game_time_t::advance_tick() {
-    if (++tick >= max_game_tick) {
+    if (++tick >= game_time_t::ticks_in_day) {
         tick = 0;
         return true;
     }
