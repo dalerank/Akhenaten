@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <type_traits>
 #include <cassert>
+
+#include "core/tokenum.h"
 #include "core/svector.h"
 #include "core/bstring.h"
 
@@ -51,7 +53,11 @@ enum e_resource : uint8_t {
     //
     RESOURCE_DEBEN = 36,
     RESOURCE_TROOPS = 37,
+
+    RESOURCE_MAX
 };
+
+extern const token_holder<e_resource, RESOURCE_NONE, RESOURCE_MAX> e_resource_tokens;
 
 struct resource_value {
     e_resource type;

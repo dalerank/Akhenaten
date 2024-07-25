@@ -160,8 +160,15 @@ static void game_debug_show_properties_object(pcstr prefix, const event_ph_t &e)
         game_debug_show_property_t(i, "on_too_late_action", e.on_too_late_action);
         game_debug_show_property_t(i, "on_defeat_action", e.on_defeat_action);
         game_debug_show_property_t(i, "sender_faction", e.sender_faction);
-        game_debug_show_property_t(i, "item.value", e.item.value);
+
+        if (e.type == EVENT_TYPE_REQUEST) {
+            type_name.printf("%s [%d]", resource_name((e_resource)e.item.value), e.item.value);
+            game_debug_show_property_t(i, "item.value", e.item.value);
+        } else {
+            game_debug_show_property_t(i, "item.value", e.item.value);
+        }
         game_debug_show_property_t(i, "item.f_fixed", e.item.f_fixed);
+        
         ImGui::TreePop();
     }
     ImGui::PopID();

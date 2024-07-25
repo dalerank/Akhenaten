@@ -5,6 +5,8 @@
 #include "core/game_environment.h"
 #include "graphics/image_groups.h"
 
+const token_holder<e_resource, RESOURCE_NONE, RESOURCE_MAX> e_resource_tokens;
+
 pcstr resource_name(e_resource resource) {
     switch (resource) {
     case RESOURCE_NONE: return "none";
