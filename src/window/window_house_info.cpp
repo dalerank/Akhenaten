@@ -20,15 +20,19 @@
 struct house_info_window_t : ui::widget {
     int resource_text_group;
     int help_id;
+
+    using widget::load;
+    virtual void load(archive arch, pcstr section) override {
+        widget::load(arch, section);
+
+        resource_text_group = arch.r_int("resource_text_group");
+        help_id = arch.r_int("help_id");
+    }
 } house_info_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_house_info_window);
 void config_load_house_info_window() {
-    g_config_arch.r_section("house_info_window", [] (archive arch) {
-        house_info_window.load(arch);
-        house_info_window.resource_text_group = arch.r_int("resource_text_group");
-        house_info_window.help_id = arch.r_int("help_id");
-    });
+    house_info_window.load("house_info_window");
 }
 
 static void draw_vacant_lot(object_info &c) {
