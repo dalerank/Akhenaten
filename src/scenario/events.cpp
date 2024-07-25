@@ -303,7 +303,10 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
     auto& data = g_scenario_events;
     // the first event's header always contains the total number of events
 
-    g_scenario_events.event_list.clear();
+    if (iob->is_read_access()) {
+        g_scenario_events.event_list.clear();
+    }
+
     int events_to_read = 0;
     for (int i = 0; i < MAX_EVENTS; i++) {
         event_ph_t &event = data.event_list[i];
