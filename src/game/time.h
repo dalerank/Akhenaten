@@ -1,15 +1,5 @@
 #pragma once
 
-#include "core/buffer.h"
-
-struct game_time {
-    int tick;  // 50 ticks in a day
-    int day;   // 16 days in a month
-    int month; // 12 months in a year
-    int year;
-    int total_days;
-};
-
 enum e_month {
     MONTH_JANUARY = 0,
     MONTH_FEBRUARY = 1,
@@ -33,58 +23,28 @@ enum e_month {
  * One day has 50 ticks.
  */
 
-/**
- * Initializes game time to the given year with all other fields zero
- * @param year Year
- */
-void game_time_init(int year);
+struct game_time_t {
+    enum {
+        days_in_month = 16,
+        ticks_in_day = 50,
+        months_in_year = 12,
+    };
 
-/**
- * The current game year
- *
- */
-int game_time_year(void);
+    int tick;  // 50 ticks in a day
+    int day;   // 16 days in a month
+    int month; // 12 months in a year
+    int year;
+    int total_days;
 
-/**
- * The current game year count since the starting year
- *
- */
-int game_time_year_since_start(void);
+    void init(int year);
+    int years_since_start() const;
+    int absolute_day(bool since_start = false) const;
+    int absolute_tick(bool since_start = false) const;
 
-/**
- * The current game month within the year
- */
-int game_time_month(void);
+    bool advance_tick();
+    bool advance_day();
+    bool advance_month();
+    void advance_year();
+};
 
-/**
- * The current game day within the month
- */
-int game_time_day(void);
-
-int game_time_absolute_day(bool since_start = false);
-int game_time_absolute_tick(bool since_start = false);
-
-/**
- * Increases tick
- * @return True if the tick overflows
- */
-int game_time_advance_tick(void);
-
-/**
- * Increase day
- * @return True if the day overflows
- */
-int game_time_advance_day(void);
-
-/**
- * Increase month
- * @return True if the month overflows
- */
-int game_time_advance_month(void);
-
-/**
- * Increase year
- */
-void game_time_advance_year(void);
-
-const game_time& gametime();
+const game_time_t& gametime();

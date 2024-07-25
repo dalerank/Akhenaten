@@ -684,7 +684,7 @@ void widget_top_menu_draw(int force) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Topmenu");
     auto& data = g_top_menu_data;
     if (!force && data.treasury == city_finance_treasury()
-        && data.population == city_population() && data.month == game_time_month()) {
+        && data.population == city_population() && data.month == gametime().month) {
         return;
     }
 
@@ -706,7 +706,7 @@ void widget_top_menu_draw(int force) {
     data.offset_date = s_width - data.offset_date_basic;
     data.offset_rotate = s_width - data.offset_rotate_basic;
 
-    lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), data.offset_date - 2, 5, 110, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    lang_text_draw_month_year_max_width(gametime().month, gametime().year, data.offset_date - 2, 5, 110, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     // Orientation icon
     painter ctx = game.painter();
     if (orientation_button_pressed) {
@@ -728,7 +728,7 @@ void widget_top_menu_draw(int force) {
         width = lang_text_draw(6, 1, 458, 5, FONT_NORMAL_BLACK_ON_LIGHT);
         text_draw_number(city_population(), '@', " ", 450 + width, 5, FONT_NORMAL_BLACK_ON_LIGHT);
 
-        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 540, 5, 100, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        lang_text_draw_month_year_max_width(gametime().month, gametime().year, 540, 5, 100, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     } else if (s_width < 1024) {
         int width = lang_text_draw_colored(6, 0, data.offset_funds + 2 + 100, 5, treasure_font, 0);
         text_draw_number_colored(treasury, '@', " ", data.offset_funds + 7 + width + 100, 5, treasure_font, 0);
@@ -745,7 +745,7 @@ void widget_top_menu_draw(int force) {
 
     data.treasury = treasury;
     data.population = city_population();
-    data.month = game_time_month();
+    data.month = gametime().month;
 }
 
 static int get_info_id(vec2i m) {

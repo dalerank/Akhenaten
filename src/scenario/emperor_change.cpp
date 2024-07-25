@@ -29,7 +29,7 @@ void scenario_kingdome_change_process() {
     }
 
     if (data.state == 0) {
-        if (game_time_year() == data.game_year && game_time_month() == data.month) {
+        if (gametime().year == data.game_year && gametime().month == data.month) {
             data.state = 1; // done
             if (config_get(CONFIG_GP_FIX_EDITOR_EVENTS)) {
                 g_city.ratings.reset_kingdom();

@@ -53,7 +53,7 @@ void city_t::update_prosperity_explanation() {
         change += 1;
 
     int reason;
-    if (ratings.prosperity <= 0 && game_time_year() == scenario_property_start_year())
+    if (ratings.prosperity <= 0 && gametime().year == scenario_property_start_year())
         reason = 0;
     else if (ratings.prosperity >= ratings.prosperity_max)
         reason = 1;

@@ -932,7 +932,7 @@ void city_gods_update(bool mood_calc_only) {
     //        BAST_houses_destruction();
 
     // at the start of every month
-    if (game_time_day() == 0) {
+    if (gametime().day == 0) {
         city_gods_update_monthly_data(randm_god);
     }
 }

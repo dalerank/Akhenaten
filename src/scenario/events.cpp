@@ -182,7 +182,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
     // check if the trigger time has come, if not return.
     // for ACTIVE EVENTS (requests?): ignore specific time of the year IF quest is active
-    if (!event.is_active && (event.time.value != game_time_year_since_start() || event.month != game_time_month())) {
+    if (!event.is_active && (event.time.value != gametime().years_since_start() || event.month != gametime().month)) {
         return;
     }
 

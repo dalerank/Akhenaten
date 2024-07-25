@@ -83,7 +83,7 @@ e_victory_state city_t::determine_victory_state() {
         // More sensible options for surival time:
         // require the user to play to the end, even if other win criteria have been set and are met.
         // At the end, let the user lose if the other win criteria are not met
-        if (game_time_year() >= scenario_criteria_max_year()) {
+        if (gametime().year >= scenario_criteria_max_year()) {
             if (scenario_criteria_time_limit_enabled()) {
                 // Lose game automatically when you go over the time limit
                 state = e_victory_state_lost;
@@ -111,7 +111,7 @@ e_victory_state city_t::determine_victory_state() {
             if (scenario_criteria_time_limit_enabled() || scenario_criteria_survival_enabled())
                 has_criteria = 1;
         }
-        if (game_time_year() >= scenario_criteria_max_year()) {
+        if (gametime().year >= scenario_criteria_max_year()) {
             if (scenario_criteria_time_limit_enabled())
                 state = e_victory_state_lost;
             else if (scenario_criteria_survival_enabled())

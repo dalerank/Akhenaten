@@ -194,7 +194,7 @@ void city_t::house_process_evolve_and_consume_goods() {
         }
     });
 
-    if (gametime().day == 0 || game_time_day() == 7) {
+    if (gametime().day == 0 || gametime().day == 7) {
         buildings_house_do([&] (building &h) {
             building_house *house = h.dcast_house();
             //building_house_check_for_corruption(&h);

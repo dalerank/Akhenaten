@@ -374,11 +374,11 @@ void city_ratings_t::update_kingdom_rating_year() {
 
     // milestone
     int milestone_pct = 0;
-    if (scenario_criteria_milestone_year(25) == game_time_year()) {
+    if (scenario_criteria_milestone_year(25) == gametime().year) {
         milestone_pct = 25;
-    } else if (scenario_criteria_milestone_year(50) == game_time_year()) {
+    } else if (scenario_criteria_milestone_year(50) == gametime().year) {
         milestone_pct = 50;
-    } else if (scenario_criteria_milestone_year(75) == game_time_year()) {
+    } else if (scenario_criteria_milestone_year(75) == gametime().year) {
         milestone_pct = 75;
     }
 

@@ -619,8 +619,7 @@ void city_labor_t::check_employment() {
 
     // workers needed message
     if (!orig_needed && workers_needed > 0) {
-        if (game_time_year() >= scenario_property_start_year())
-            city_message_post_with_message_delay(MESSAGE_CAT_WORKERS_NEEDED, 0, MESSAGE_WORKERS_NEEDED, 6);
+         city_message_post_with_message_delay(MESSAGE_CAT_WORKERS_NEEDED, 0, MESSAGE_WORKERS_NEEDED, 6);
     }
 }
 void city_labor_t::allocate_workers() {

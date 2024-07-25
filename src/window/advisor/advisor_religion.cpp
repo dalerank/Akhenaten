@@ -85,7 +85,7 @@ static void draw_festival_info(int y_offset) {
     if (city_festival_is_planned()) {
         int size = city_festival_selected_size();
         int months_left = city_festival_months_till_next();
-        int planned_month = game_time_month() + months_left;
+        int planned_month = gametime().month + months_left;
         int width = lang_text_draw(58, 34, 102, 284 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
         lang_text_draw(160, planned_month, 102 + width, 284 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
         switch (size) {

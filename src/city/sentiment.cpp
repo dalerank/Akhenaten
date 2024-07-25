@@ -223,7 +223,7 @@ static int get_sentiment_contribution_monuments() {
 void city_sentiment_update_day() {
     city_data.sentiment.last_mugger_message = std::max<short>(0, city_data.sentiment.last_mugger_message--);
 
-    if (game_time_day() % 8 == 0) {
+    if (gametime().day % 8 == 0) {
         city_sentiment_update();
     }
 }

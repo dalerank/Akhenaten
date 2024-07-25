@@ -854,18 +854,16 @@ void draw_debug_ui(int x, int y) {
 
     /////// TIME
     if (g_debug_show_opts[e_debug_show_game_time]) {
-        const auto& time = gametime();
-
-        debug_text(ctx, str, x, y + 15, 50, "tick:", time.tick);
+        debug_text(ctx, str, x, y + 15, 50, "tick:", gametime().tick);
         debug_text(ctx, str, x + 80, y + 15, 50, "iscycle:", tick_is_flood_cycle());
         debug_text(ctx, str, x, y + 25, 50, "cycle:", floods_current_cycle());
         debug_text(ctx, str, x + 90, y + 25, 60, "frame:", floods_current_subcycle());
 
-        debug_text(ctx, str, x, y + 35, 50, "day:", time.day);
-        debug_text(ctx, str, x, y + 45, 50, "month:", time.month);
-        debug_text(ctx, str, x, y + 55, 50, "year:", time.year);
-        debug_text(ctx, str, x, y + 65, 60, "abs. tick:", game_time_absolute_tick()); // absolute tick of the year
-        debug_text(ctx, str, x, y + 75, 60, "abs. day:", game_time_absolute_day());   // absolute day of the year
+        debug_text(ctx, str, x, y + 35, 50, "day:", gametime().day);
+        debug_text(ctx, str, x, y + 45, 50, "month:", gametime().month);
+        debug_text(ctx, str, x, y + 55, 50, "year:", gametime().year);
+        debug_text(ctx, str, x, y + 65, 60, "abs. tick:", gametime().absolute_tick()); // absolute tick of the year
+        debug_text(ctx, str, x, y + 75, 60, "abs. day:", gametime().absolute_day());   // absolute day of the year
         y += 80;
     }
 
@@ -1071,11 +1069,11 @@ void draw_debug_ui(int x, int y) {
         float rc_curr = fmod(_c_curr, CYCLES_IN_A_YEAR);
         float rc_start = fmod(_c_start, CYCLES_IN_A_YEAR);
         float rc_end = fmod(_c_end, CYCLES_IN_A_YEAR);
-        if (rc_curr < 0.1 && game_time_month() > 1)
+        if (rc_curr < 0.1 && gametime().month > 1)
             rc_curr = CYCLES_IN_A_YEAR;
 
         // floodplains timeline (yearly)
-        double additional_abs_ticks = CYCLES_IN_A_YEAR * (double)game_time_year_since_start();
+        double additional_abs_ticks = CYCLES_IN_A_YEAR * (double)gametime().years_since_start();
         auto dot = string_from_ascii(",");
         for (int i = 0; i < 392; ++i) {
             text_draw(dot, x + i - 1, y + 15, FONT_SMALL_PLAIN, 0);

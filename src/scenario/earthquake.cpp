@@ -101,7 +101,7 @@ void scenario_earthquake_process() {
         || g_scenario_data.earthquake_point.y() == -1)
         return;
     if (data.state == e_event_state_initial) {
-        if (game_time_year() == data.game_year && game_time_month() == data.month) {
+        if (gametime().year == data.game_year && gametime().month == data.month) {
             data.state = e_event_state_in_progress;
             data.duration = 0;
             data.delay = 0;

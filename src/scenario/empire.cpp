@@ -14,10 +14,13 @@ int scenario_empire_is_expanded(void) {
 }
 
 void scenario_empire_process_expansion(void) {
-    if (g_scenario_data.empire.is_expanded || g_scenario_data.empire.expansion_year <= 0)
+    if (g_scenario_data.empire.is_expanded || g_scenario_data.empire.expansion_year <= 0) {
         return;
-    if (game_time_year() < g_scenario_data.empire.expansion_year + g_scenario_data.start_year)
+    }
+
+    if (gametime().year < g_scenario_data.empire.expansion_year + g_scenario_data.start_year) {
         return;
+    }
 
     g_empire.expand();
 

@@ -65,7 +65,7 @@ void game_file_editor_clear_data(void) {
     formations_clear();
     figure_route_clear_all();
     traders_clear();
-    game_time_init(2098);
+    ((game_time_t&)gametime()).init(2098);
     scenario_invasion_clear();
 }
 

@@ -70,7 +70,7 @@ void kingdome_relation_t::update_debt_state() {
             city_message_post(true, MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
             months_in_debt = 0;
         }
-        if (game_time_day() == 0)
+        if (gametime().day == 0)
             months_in_debt++;
 
         if (months_in_debt >= 12) {
@@ -86,7 +86,7 @@ void kingdome_relation_t::update_debt_state() {
             city_message_post(true, MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
             months_in_debt = 0;
         }
-        if (game_time_day() == 0)
+        if (gametime().day == 0)
             months_in_debt++;
 
         if (months_in_debt >= 12) {

@@ -19,8 +19,8 @@ void scenario_price_change_process(void) {
         if (!g_scenario_data.price_changes[i].year)
             continue;
 
-        if (game_time_year() != g_scenario_data.price_changes[i].year + g_scenario_data.start_year
-            || game_time_month() != g_scenario_data.price_changes[i].month) {
+        if (gametime().year != g_scenario_data.price_changes[i].year + g_scenario_data.start_year
+            || gametime().month != g_scenario_data.price_changes[i].month) {
             continue;
         }
         int amount = g_scenario_data.price_changes[i].amount;

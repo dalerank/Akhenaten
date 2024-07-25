@@ -143,7 +143,7 @@ static void pre_load() { // do we NEED this...?
     figure_route_clear_all();
     map_clear_floodplain_growth();
 
-    game_time_init(2098);
+    game.time_init(2098);
     map_monuments_clear();
     // clear grids
     map_image_clear();
@@ -679,8 +679,7 @@ void GamestateIO::start_loaded_file() {
         g_city.map.entry_point = scenario_map_entry();
         g_city.map.exit_point = scenario_map_exit();
 
-        // game time
-        game_time_init(scenario_property_start_year());
+        game.time_init(scenario_property_start_year());
 
         // traders / empire
         g_empire_map.init_scenario();

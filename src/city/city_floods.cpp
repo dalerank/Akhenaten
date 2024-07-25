@@ -48,11 +48,11 @@ int floods_fticks() {
 
 const double CYCLES_IN_A_YEAR = 9792.0f / 25.0f; // 391.68
 double floods_current_cycle() {
-    return (double)(game_time_absolute_tick(true) + 1) / 25.0f;
+    return (double)(gametime().absolute_tick(true) + 1) / 25.0f;
 }
 
 int floods_current_subcycle() {
-    return (game_time_absolute_tick(true) + 1) % 25;
+    return (gametime().absolute_tick(true) + 1) % 25;
 }
 
 bool tick_is_flood_cycle() {
@@ -60,7 +60,7 @@ bool tick_is_flood_cycle() {
 }
 int floods_start_cycle() {
     auto& data = g_floods;
-    double cycles_so_far = CYCLES_IN_A_YEAR * game_time_year_since_start();
+    double cycles_so_far = CYCLES_IN_A_YEAR * gametime().years_since_start();
     double cycle_start = ((double)data.season * 105.0f) / 100.0f + 15.0f + cycles_so_far - 0.5f;
     return (int)cycle_start;
 }

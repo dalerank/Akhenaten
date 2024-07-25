@@ -70,8 +70,9 @@ static void get_y_axis(int max_value, int* y_max, int* y_shift) {
 
 static void get_min_max_month_year(int max_months, int* start_month, int* start_year, int* end_month, int* end_year) {
     if (city_population_monthly_count() > max_months) {
-        *end_month = game_time_month() - 1;
-        *end_year = game_time_year();
+        *end_month = gametime().month - 1;
+        *end_year = gametime().year;
+
         if (*end_month < 0)
             *end_year -= 1;
 

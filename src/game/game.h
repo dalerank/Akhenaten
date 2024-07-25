@@ -76,6 +76,8 @@ struct game_t {
     void frame_begin();
     void frame_end();
 
+    void time_init(int year);
+
     void sound_frame_begin();
 
     threading::thread_pool mtrpc;
