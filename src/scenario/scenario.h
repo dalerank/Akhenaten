@@ -308,10 +308,11 @@ struct scenario_data_t {
         bool start_message_shown;
     } meta;
 
+    event_manager_t events;
+
     bool is_saved;
 
     void update();
-    void update_random_event();
 };
 
 extern scenario_data_t g_scenario_data;

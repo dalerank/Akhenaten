@@ -30,14 +30,14 @@ static const int RANDOM_EVENT_PROBABILITY[128]
 static void raise_wages(void) {
     if (g_scenario_data.random_events.raise_wages) {
         if (g_city.labor.raise_wages_kingdome())
-            city_message_post(true, MESSAGE_ROME_RAISES_WAGES, 0, 0);
+            city_message_post(true, MESSAGE_KINGDOME_RAISES_WAGES, 0, 0);
     }
 }
 
 static void lower_wages(void) {
     if (g_scenario_data.random_events.lower_wages) {
         if (g_city.labor.lower_wages_kingdome())
-            city_message_post(true, MESSAGE_ROME_LOWERS_WAGES, 0, 0);
+            city_message_post(true, MESSAGE_KINGDOME_LOWERS_WAGES, 0, 0);
     }
 }
 
@@ -111,7 +111,7 @@ static void destroy_clay_pit(void) {
     }
 }
 
-void scenario_data_t::update_random_event() {
+void event_manager_t::process_random_events() {
     int event = RANDOM_EVENT_PROBABILITY[random_byte()];
     switch (event) {
     case EVENT_ROME_RAISES_WAGES:

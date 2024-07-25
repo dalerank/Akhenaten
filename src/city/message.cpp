@@ -193,7 +193,7 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
     msg->param2 = param2;
     msg->sequence = data.next_message_sequence++;
 
-    const event_ph_t* event = get_scenario_event(event_id);
+    const event_ph_t* event = g_scenario_data.events.at(event_id);
     msg->req_resource = event->item.value;
     msg->req_amount = event->amount_fields[0];
     msg->req_city = event->location_fields[0] - 1;
@@ -205,7 +205,7 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
         msg->req_months_left = event->months_initial;
     }
 
-    const event_ph_t* parent_event = get_scenario_event(parent_event_id);
+    const event_ph_t* parent_event = g_scenario_data.events.at(parent_event_id);
     msg->req_resource_past = parent_event->item.value;
     msg->req_amount_past = parent_event->amount_fields[0];
     msg->req_city_past = parent_event->location_fields[0] - 1;
@@ -405,8 +405,8 @@ int city_message_get_advisor(int message_type) {
 
     case MESSAGE_UNEMPLOYMENT:
     case MESSAGE_WORKERS_NEEDED:
-    case MESSAGE_ROME_LOWERS_WAGES:
-    case MESSAGE_ROME_RAISES_WAGES:
+    case MESSAGE_KINGDOME_LOWERS_WAGES:
+    case MESSAGE_KINGDOME_RAISES_WAGES:
         return MESSAGE_ADVISOR_LABOR;
 
     case MESSAGE_NOT_ENOUGH_FOOD:

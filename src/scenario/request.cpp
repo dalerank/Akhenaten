@@ -154,8 +154,8 @@ void scenario_request_dispatch(int id) {
 
 int scenario_requests_active_count() {
     int count = 0;
-    for (int i = 0; i < scenario_events_num(); i++) {
-        const event_ph_t* event = get_scenario_event(i);
+    for (int i = 0; i < g_scenario_data.events.events_count(); i++) {
+        const event_ph_t* event = g_scenario_data.events.at(i);
         if (event->type == EVENT_TYPE_REQUEST && event->is_active
             && event->event_state <= e_event_state_overdue) {
             count++;
@@ -169,7 +169,7 @@ const scenario_request scenario_request_get(const event_ph_t &event) {
 
     request.event_id = event.event_id;
     request.amount = event.amount_fields[0];
-    request.resource = (e_resource)event.item_fields[0];
+    request.resource = (e_resource)event.item.value;
     request.state = event.event_state;
     request.months_to_comply = event.quest_months_left;
 
@@ -177,23 +177,23 @@ const scenario_request scenario_request_get(const event_ph_t &event) {
 }
 
 void scenario_request_set_state(const scenario_request &request, e_event_state new_state) {
-    event_ph_t *event = set_scenario_event(request.event_id);
+    event_ph_t *event = g_scenario_data.events.at(request.event_id);
     event->event_state = new_state;
 }
 
 void scenario_request_set_active(const scenario_request &request, bool active) {
-    event_ph_t &event = *set_scenario_event(request.event_id);
+    event_ph_t &event = *g_scenario_data.events.at(request.event_id);
     event.is_active = active;
 }
 
 scenario_request scenario_request_get_visible(int index) {
     int event_index = 0;
     for (int i = 0; i < MAX_REQUESTS; i++) {
-        if (i >= scenario_events_num()) {
+        if (i >= g_scenario_data.events.events_count()) {
             return {};
         }
         
-        const event_ph_t* event = get_scenario_event(i);
+        const event_ph_t* event = g_scenario_data.events.at(i);
         if (event->type == EVENT_TYPE_REQUEST && event->is_active && event->event_state <= e_event_state_overdue) {
             if (event_index == index) {
                 return scenario_request_get(*event);

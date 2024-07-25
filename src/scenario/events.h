@@ -78,13 +78,9 @@ enum {
     EVENT_TRIGGER_ONCE = 0,
     EVENT_TRIGGER_ONLY_VIA_EVENT = 1,
     EVENT_TRIGGER_RECURRING = 2,
-
     EVENT_TRIGGER_ALREADY_FIRED = 4,
-
     EVENT_TRIGGER_ACTIVATED_8 = 8,
-
     EVENT_TRIGGER_BY_RATING = 10,
-
     EVENT_TRIGGER_ACTIVATED_12 = 12,
 };
 
@@ -177,16 +173,26 @@ struct event_ph_t {
     int16_t __unk22;
 };
 
-int16_t scenario_events_num();
-
-const event_ph_t* get_scenario_event(int id);
-event_ph_t* set_scenario_event(int id);
-uint8_t* get_eventmsg_text(int group_id, int index);
-
-void scenario_events_process();
-
-bool eventmsg_load();
-bool eventmsg_auto_phrases_load();
-
 struct mission_id_t;
-void scenario_load_events_meta_data(const mission_id_t &missionid);
+struct event_manager_t {
+    int16_t events_count();
+    const event_ph_t* at(int id) const;
+    event_ph_t* at(int id);
+    void process_event(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id = -1, int caller_event_var = EVENT_VAR_AUTO);
+    void process_events();
+    void process_random_events();
+    event_ph_t *create(const event_ph_t *parent);
+    bool create(const event_ph_t *master, const event_ph_t *parent, int trigger_type);
+    bool is_valid_event_index(int id);
+    int get_auto_reason_phrase_id(int param_1, int param_2);
+
+    uint8_t* msg_text(int group_id, int index);
+    bool msg_load();
+    bool msg_auto_phrases_load();
+    void load_mission_metadata(const mission_id_t &missionid);
+};
+
+
+
+
+

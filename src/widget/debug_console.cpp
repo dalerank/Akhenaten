@@ -439,8 +439,8 @@ void game_debug_properties_draw() {
     }
 
     if (_debug_events_open && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
-        for (int i = 0; i < scenario_events_num(); ++i) {
-            const event_ph_t *evt = get_scenario_event(i);
+        for (int i = 0; i < g_scenario_data.events.events_count(); ++i) {
+            const event_ph_t *evt = g_scenario_data.events.at(i);
             assert(evt);
             game_debug_show_properties_object("Events", *evt);
         }

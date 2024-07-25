@@ -32,7 +32,7 @@ struct events_data_t {
 
 events_data_t g_scenario_events;
 
-void scenario_load_events_meta_data(const mission_id_t &missionid) {
+void event_manager_t::load_mission_metadata(const mission_id_t &missionid) {
     g_config_arch.r_section(missionid, [] (archive arch) {
         const bool enable_scenario_events = arch.r_bool("enable_scenario_events");
         if (!enable_scenario_events) {
@@ -51,7 +51,7 @@ void scenario_load_events_meta_data(const mission_id_t &missionid) {
     });
 }
 
-int16_t scenario_events_num() {
+int16_t event_manager_t::events_count() {
     return g_scenario_events.event_list.size();
 }
 
@@ -68,27 +68,27 @@ static void update_randomized_values(event_ph_t &event) {
     random_generate_next();
 }
 
-event_ph_t* create_scenario_event(const event_ph_t* parent) {
+event_ph_t* event_manager_t::create(const event_ph_t* parent) {
     auto& data = g_scenario_events;
-    if (scenario_events_num() < MAX_EVENTS) {
-        data.event_list.push_back({});
-        int event_id = data.event_list.size() - 1;
-        event_ph_t&new_event = data.event_list.back();
-
-        // if parent event is supplied, clone it into the new event
-        if (parent != nullptr) {
-            memcpy(&new_event, parent, sizeof(event_ph_t));
-        }
-
-        new_event.event_id = event_id;
-        return &new_event;
+    if (events_count() >= MAX_EVENTS) {
+        return nullptr;
     }
 
-    return nullptr;
+    data.event_list.push_back({});
+    int event_id = data.event_list.size() - 1;
+    event_ph_t&new_event = data.event_list.back();
+
+    // if parent event is supplied, clone it into the new event
+    if (parent != nullptr) {
+        memcpy(&new_event, parent, sizeof(event_ph_t));
+    }
+
+    new_event.event_id = event_id;
+    return &new_event;
 }
 
-static bool create_triggered_active_event(const event_ph_t* master, const event_ph_t* parent, int trigger_type) {
-    event_ph_t* child = create_scenario_event(master);
+bool event_manager_t::create(const event_ph_t* master, const event_ph_t* parent, int trigger_type) {
+    event_ph_t* child = create(master);
     if (child) {
         child->event_state = e_event_state_initial;
         child->event_trigger_type = trigger_type;
@@ -107,32 +107,32 @@ static bool create_triggered_active_event(const event_ph_t* master, const event_
     return false;
 }
 
-const event_ph_t* get_scenario_event(int id) {
+const event_ph_t* event_manager_t::at(int id) const {
     return &g_scenario_events.event_list[id];
 }
 
-event_ph_t* set_scenario_event(int id) {
+event_ph_t* event_manager_t::at(int id) {
     return &g_scenario_events.event_list[id];
 }
 
-static bool is_valid_event_index(int id) {
-    if (id >= MAX_EVENTS || id >= scenario_events_num()) {
+bool event_manager_t::is_valid_event_index(int id) {
+    if (id >= MAX_EVENTS || id >= events_count()) {
         return false;
     }
     return true;
 }
 
-static int get_auto_reason_phrase_id(int param_1, int param_2) {
+int event_manager_t::get_auto_reason_phrase_id(int param_1, int param_2) {
     return g_scenario_events.auto_phrases[param_1][param_2];
 }
 
-uint8_t* get_eventmsg_text(int group_id, int index) {
+uint8_t* event_manager_t::msg_text(int group_id, int index) {
     auto& data = g_scenario_events;
     int eventmsg_id = data.eventmsg_group_offsets[group_id] + index;
     return &data.eventmsg_phrases_data[data.eventmsg_line_offsets[eventmsg_id]];
 }
 
-static void event_process(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id = -1, int caller_event_var = EVENT_VAR_AUTO) {
+void event_manager_t::process_event(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
     if (id < 0) {
         return;
     }
@@ -173,9 +173,9 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
         }
 
         if (event.type == EVENT_TYPE_REQUEST) {
-            create_triggered_active_event(&event, get_scenario_event(caller_event_id), EVENT_TRIGGER_ACTIVATED_8);
+            create(&event, at(caller_event_id), EVENT_TRIGGER_ACTIVATED_8);
         } else {
-            create_triggered_active_event(&event, get_scenario_event(caller_event_id), EVENT_TRIGGER_ACTIVATED_12);
+            create(&event, at(caller_event_id), EVENT_TRIGGER_ACTIVATED_12);
         }
         return;
     }
@@ -261,19 +261,19 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
     // propagate trigger events
     switch (chain_action_next) {
     case EVENT_ACTION_COMPLETED:
-        event_process(event.on_completed_action, true, EVENT_ACTION_COMPLETED, id);
+        process_event(event.on_completed_action, true, EVENT_ACTION_COMPLETED, id);
         break;
 
     case EVENT_ACTION_REFUSED:
-        event_process(event.on_refusal_action, true, EVENT_ACTION_REFUSED, id);
+        process_event(event.on_refusal_action, true, EVENT_ACTION_REFUSED, id);
         break;
 
     case EVENT_ACTION_TOOLATE:
-        event_process(event.on_too_late_action, true, EVENT_ACTION_TOOLATE, id);
+        process_event(event.on_too_late_action, true, EVENT_ACTION_TOOLATE, id);
         break;
 
     case EVENT_ACTION_DEFEAT:
-        event_process(event.on_defeat_action, true, EVENT_ACTION_DEFEAT, id);
+        process_event(event.on_defeat_action, true, EVENT_ACTION_DEFEAT, id);
         break;
     }
 
@@ -283,15 +283,15 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
     }
 }
 
-void scenario_events_process() {
+void event_manager_t::process_events() {
     auto& data = g_scenario_events;
     // main event update loop
-    for (int i = 0; i < scenario_events_num(); i++) {
-        event_process(i, false, -1);
+    for (int i = 0; i < events_count(); i++) {
+        process_event(i, false, -1);
     }
 
     // secondly, update random value fields for recurring events
-    for (int i = 0; i < scenario_events_num(); i++) {
+    for (int i = 0; i < events_count(); i++) {
         event_ph_t &event = data.event_list[i];
         if (event.event_trigger_type == EVENT_TRIGGER_RECURRING) {
             update_randomized_values(event);
@@ -299,20 +299,21 @@ void scenario_events_process() {
     }
 }
 
-///////
-
 io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_scenario_events;
     // the first event's header always contains the total number of events
 
     g_scenario_events.event_list.clear();
+    int events_to_read = 0;
     for (int i = 0; i < MAX_EVENTS; i++) {
         event_ph_t &event = data.event_list[i];
         iob->bind(BIND_SIGNATURE_INT16, &event.num_total_header);
-        if (i == 0) {
+        if (iob->is_read_access() && i == 0) {
+            events_to_read = event.num_total_header;
             g_scenario_events.event_list.resize(event.num_total_header);
+            g_scenario_events.event_list.front().num_total_header = events_to_read;
         }
-        if (!is_valid_event_index(i)) {
+        if (i >= events_to_read) {
             break;
         }
         iob->bind(BIND_SIGNATURE_INT16, &event.__unk01);
@@ -383,34 +384,8 @@ io_buffer* iob_scenario_events_extra = new io_buffer([](io_buffer* iob, size_t v
     // TODO ????????
 });
 
-///////
-
 #define TMP_BUFFER_SIZE 100000
 static const uint8_t PHRASE[] = {'P', 'H', 'R', 'A', 'S', 'E', '_', 0};
-
-// static int strings_equal(const uint8_t *a, const uint8_t *b, int len) {
-//     for (int i = 0; i < len; i++, a++, b++) {
-//         if (*a != *b)
-//             return 0;
-//
-//     }
-//     return 1;
-// }
-// static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length) {
-//     int needle_length = string_length(needle);
-//     for (int i = 0; i < haystack_length; i++) {
-//         if (haystack[i] == needle[0] && strings_equal(&haystack[i], needle, needle_length))
-//             return i + 1;
-//     }
-//     return 0;
-// }
-// static int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length) {
-//     for (int i = 0; i < haystack_length; i++) {
-//         if (haystack[i] == needle)
-//             return i + 1;
-//     }
-//     return 0;
-// }
 
 static const uint8_t* skip_non_digits(const uint8_t* str) {
     int safeguard = 0;
@@ -473,7 +448,7 @@ static bool is_line_standalone_group(const uint8_t* start_of_line, int size) {
     //    return true;
 }
 
-bool eventmsg_load() {
+bool event_manager_t::msg_load() {
     auto& data = g_scenario_events;
     buffer buf(TMP_BUFFER_SIZE);
 
@@ -548,7 +523,7 @@ bool eventmsg_load() {
     return true;
 }
 
-bool eventmsg_auto_phrases_load() {
+bool event_manager_t::msg_auto_phrases_load() {
     auto& data = g_scenario_events;
     buffer buf(TMP_BUFFER_SIZE);
 

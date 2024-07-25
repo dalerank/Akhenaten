@@ -173,7 +173,7 @@ static void post_load() {
 
     mission_id_t missionid(scenario_id);
     scenario_load_meta_data(missionid);
-    scenario_load_events_meta_data(missionid);
+    g_scenario_data.events.load_mission_metadata(missionid);
 
     // camera
     //    city_view_camera_position_refresh();

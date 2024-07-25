@@ -297,12 +297,13 @@ void game_t::advance_year() {
 void game_t::advance_month() {
     g_city.migration_reset_newcomers();
     g_city.health.update();
-    g_scenario_data.update_random_event();
     city_finance_handle_month_change();
     city_resource_consume_food();
     scenario_distant_battle_process();
+
     random_generate_next();                  // TODO: find out the source / reason for this
-    scenario_events_process();
+    g_scenario_data.events.process_random_events();
+    g_scenario_data.events.process_events();
 
     g_city.victory_state.update_months_to_govern();
     g_city.update_allowed_foods();
@@ -534,14 +535,16 @@ bool game_init() {
         return false;
     }
 
-    if (!eventmsg_load()) {
+    if (!g_scenario_data.events.msg_load()) {
         logs::error("unable to load eventmsg.txt");
         return false;
     }
-    if (!eventmsg_auto_phrases_load()) {
+
+    if (!g_scenario_data.events.msg_auto_phrases_load()) {
         logs::error("unable to load event auto reason phrases");
         return false;
     }
+
     if (!game_load_campaign_file()) {
         logs::error("unable to load campaign data");
         return false;

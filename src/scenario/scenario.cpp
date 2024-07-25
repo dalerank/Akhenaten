@@ -20,7 +20,7 @@ void config_load_scenario_load_meta_data() {
     mission_id_t missionid(g_scenario_data.settings.campaign_scenario_id);
 
     scenario_load_meta_data(missionid);
-    scenario_load_events_meta_data(missionid);
+    g_scenario_data.events.load_mission_metadata(missionid);
 }
 
 bool scenario_is_saved() {

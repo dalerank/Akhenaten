@@ -1,8 +1,6 @@
 #include "message_list.h"
-#include <core/game_environment.h>
-#include <dev/debug.h>
-#include <scenario/events.h>
 
+#include "scenario/scenario.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "graphics/graphics.h"
@@ -13,12 +11,14 @@
 #include "graphics/elements/scrollbar.h"
 #include "graphics/view/view.h"
 #include "graphics/image_groups.h"
+#include "graphics/image.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
 #include "io/gamefiles/lang.h"
 #include "window/window_city.h"
 #include "window/message_dialog.h"
+#include "dev/debug.h"
 #include "game/game.h"
 
 #define MAX_MESSAGES 10
@@ -173,7 +173,8 @@ static void draw_messages(int total_messages) {
         lang_text_draw_year(msg->year, data.x_text + 42 + width, data.y_text + 8 + 20 * i, font);
 
         if (msg->eventmsg_body_id != -1) {
-            text_draw(get_eventmsg_text(msg->eventmsg_title_id, 0), data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
+            auto text = g_scenario_data.events.msg_text(msg->eventmsg_title_id, 0);
+            text_draw(text, data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
         } else if (lang_msg->title.text) {// temp fix so it doesn't crash
             text_draw(lang_msg->title.text, data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
         }
