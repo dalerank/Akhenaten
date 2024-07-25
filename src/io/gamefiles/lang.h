@@ -2,24 +2,13 @@
 
 #include <stdint.h>
 
-/**
- * @file
- * Language functions for localizable strings and messages
- */
-
-/**
- * Type
- */
-enum { 
+enum e_message_arhtype { 
     TYPE_MANUAL = 0,
     TYPE_ABOUT = 1,
     TYPE_MESSAGE = 2,
     TYPE_MISSION = 3
 };
 
-/**
- * Message type
- */
 enum e_message_category {
     MESSAGE_TYPE_GENERAL = 0,
     MESSAGE_TYPE_DISASTER = 1,
@@ -53,7 +42,7 @@ struct lang_message_string {
  * Message
  */
 struct lang_message {
-    int type;
+    e_message_arhtype type;
     int message_type;
     int x;
     int y;

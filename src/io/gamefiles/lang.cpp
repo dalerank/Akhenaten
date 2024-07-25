@@ -80,7 +80,7 @@ static void parse_MM_file(buffer* buf) {
     buf->skip(24); // header
     for (int i = 0; i < MAX_MESSAGE_ENTRIES; i++) {
         lang_message* m = &g_lang_data.message_entries[i];
-        m->type = buf->read_i16();
+        m->type = (e_message_arhtype)buf->read_i16();
         m->message_type = buf->read_i16();
         buf->skip(2);
         m->x = buf->read_i16();

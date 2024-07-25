@@ -166,5 +166,11 @@ mission6 = { // Behdet
 			amount : 1400,
 			deadline : 9,
 		},
+		{
+			year : 2683,
+			resource : "beer",
+			amount : 1100,
+			deadline : 12,
+		},
 	]
 }

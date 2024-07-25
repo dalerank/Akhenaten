@@ -49,7 +49,7 @@ static void update_randomized_values(event_ph_t &event) {
     random_generate_next();
 }
 
-event_ph_t* create_scenario_event(const event_ph_t* donor) {
+event_ph_t* create_scenario_event(const event_ph_t* parent) {
     auto& data = g_events_data;
     if (ref_scenario_events_num() < MAX_EVENTS) {
         ref_scenario_events_num()++;
@@ -57,8 +57,10 @@ event_ph_t* create_scenario_event(const event_ph_t* donor) {
         event_ph_t* new_event = &data.event_list[event_id];
 
         // if parent event is supplied, clone it into the new event
-        if (donor != nullptr)
-            memcpy(new_event, donor, sizeof(event_ph_t));
+        if (parent != nullptr) {
+            memcpy(new_event, parent, sizeof(event_ph_t));
+        }
+
         new_event->event_id = event_id;
         return new_event;
     }

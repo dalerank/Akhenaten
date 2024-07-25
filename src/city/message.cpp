@@ -186,6 +186,7 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
     msg->eventmsg_body_id = body_id;
     msg->eventmsg_phrase_id = phrase_id;
     msg->is_read = 0;
+    msg->god = GOD_UNKNOWN;
     msg->year = game_time_year();
     msg->month = game_time_month();
     msg->param1 = param1;
