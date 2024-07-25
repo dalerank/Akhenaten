@@ -69,7 +69,7 @@ void game_debug_show_property_value(pcstr field, const uint16_t &v, bool disable
 }
 
 void game_debug_show_property_value(pcstr field, const bool &v, bool disabled) {
-    ImGui::InputScalar(field, ImGuiDataType_U8, (void *)&v);
+    ImGui::Checkbox("", (bool*)&v);
 }
 
 void game_debug_show_property_value(pcstr field, const bstring64 &v, bool disabled) {
@@ -126,6 +126,45 @@ void game_debug_show_property_t(int &i, pcstr field, const T &v, bool disabled =
 void game_debug_show_property_t(int &i, pcstr field, pcstr v) {
     bstring256 _v(v);
     game_debug_show_property_t(i, field, _v);
+}
+
+static void game_debug_show_properties_object(pcstr prefix, const event_ph_t &e) {
+    ImGui::PushID(0x80000000 | e.event_id);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Event", ImGuiTreeNodeFlags_DefaultOpen, "Event %d", e.event_id);
+    ImGui::TableSetColumnIndex(1); 
+
+    int i = 0;
+    if (common_open) {
+        game_debug_show_property_t(i, "event_id", e.event_id, true);
+
+        bstring256 type_name;
+        
+        type_name.printf("%s [%d]", token::find_name(e_event_type_tokens, e.type), e.type);
+        game_debug_show_property_t(i, "type", type_name);
+        game_debug_show_property_t(i, "month", e.month);
+        game_debug_show_property_t(i, "time.year", e.time.value);
+        game_debug_show_property_t(i, "time.f_fixed", e.time.f_fixed);
+        game_debug_show_property_t(i, "months_initial", e.months_initial);
+        game_debug_show_property_t(i, "quest_months_left", e.quest_months_left);
+
+        type_name.printf("%s [%d]", token::find_name(e_event_state_tokens, e.event_state), e.event_state);
+        game_debug_show_property_t(i, "event_state", type_name);
+        game_debug_show_property_t(i, "is_overdue", e.is_overdue);
+        game_debug_show_property_t(i, "is_active", e.is_active);
+        game_debug_show_property_t(i, "can_comply_dialog_shown", e.can_comply_dialog_shown);
+        game_debug_show_property_t(i, "festival_deity", e.festival_deity);
+        game_debug_show_property_t(i, "on_too_late_action", e.on_too_late_action);
+        game_debug_show_property_t(i, "on_defeat_action", e.on_defeat_action);
+        game_debug_show_property_t(i, "sender_faction", e.sender_faction);
+        game_debug_show_property_t(i, "item.value", e.item.value);
+        game_debug_show_property_t(i, "item.f_fixed", e.item.f_fixed);
+        ImGui::TreePop();
+    }
+    ImGui::PopID();
 }
 
 static void game_debug_show_properties_object(pcstr prefix, building *b) {
@@ -195,6 +234,7 @@ static void game_debug_show_properties_object(pcstr prefix, building *b) {
 
         ImGui::TreePop();
     }
+    ImGui::PopID();
 
     ImGui::PushID(0x81000000 | b->id);
 
@@ -220,7 +260,6 @@ static void game_debug_show_properties_object(pcstr prefix, building *b) {
 
         ImGui::TreePop();
     }
-    ImGui::PopID();
     ImGui::PopID();
 }
 
@@ -372,26 +411,43 @@ void game_debug_properties_draw() {
         return;
     }
 
+    static bool _debug_buildng_open = true;
+    static bool _debug_figure_open = true;
+    static bool _debug_events_open = false;
+
     ImGui::SetNextWindowSize(ImVec2(430, 450), ImGuiCond_FirstUseEver);
     if (!ImGui::Begin("Properties", &game.debug_properties)) {
         ImGui::End();
         return;
     }
 
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
-    if (ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
-        if (g_debug_figure_id > 0) {
-            figure *f = figure_get(g_debug_figure_id);
-            game_debug_show_properties_object("Figure", f);
-        }
+    ImGui::Checkbox("Building", &_debug_buildng_open); ImGui::SameLine();
+    ImGui::Checkbox("Figure", &_debug_figure_open); ImGui::SameLine();
+    ImGui::Checkbox("Events", &_debug_events_open);
 
-        if (g_debug_building_id > 0) {
-            building *b = building_get(g_debug_building_id);
-            game_debug_show_properties_object("Building", b);
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
+    if (_debug_figure_open && g_debug_figure_id > 0 && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
+        figure *f = figure_get(g_debug_figure_id);
+        game_debug_show_properties_object("Figure", f);
+        ImGui::EndTable();
+    }
+
+    if (_debug_buildng_open && g_debug_building_id > 0 && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
+        building *b = building_get(g_debug_building_id);
+        game_debug_show_properties_object("Building", b);
+        ImGui::EndTable();
+    }
+
+    if (_debug_events_open && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
+        for (int i = 0; i < scenario_events_num(); ++i) {
+            const event_ph_t *evt = get_scenario_event(i);
+            assert(evt);
+            game_debug_show_properties_object("Events", *evt);
         }
         ImGui::EndTable();
     }
     ImGui::PopStyleVar();
+
     ImGui::End();
 
     //g_debug_figure_id = 0;

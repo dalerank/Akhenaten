@@ -89,7 +89,7 @@ mission5 = { // Timna
 		tutorial_irrigation : [BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH, ],
 		tutorial_guilds : [BUILDING_STORAGE_YARD, BUILDING_TAX_COLLECTOR, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL]
 	},
-	enable_scenario_events : true,
+	enable_scenario_events : false,
 	events : [
 		{
 			year : 2850,
@@ -160,7 +160,7 @@ mission6 = { // Behdet
 										 BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_RA, BUILDING_SHRINE_RA, BUILDING_TEMPLE_BAST, BUILDING_SHRINE_BAST,
 										 BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL],
 	},
-	enable_scenario_events : true,
+	enable_scenario_events : false,
 	events : [
 		{
 			year : 2684,

@@ -194,7 +194,7 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
     msg->sequence = data.next_message_sequence++;
 
     const event_ph_t* event = get_scenario_event(event_id);
-    msg->req_resource = event->item_fields[0];
+    msg->req_resource = event->item.value;
     msg->req_amount = event->amount_fields[0];
     msg->req_city = event->location_fields[0] - 1;
     if (event->is_active) {
@@ -206,7 +206,7 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
     }
 
     const event_ph_t* parent_event = get_scenario_event(parent_event_id);
-    msg->req_resource_past = parent_event->item_fields[0];
+    msg->req_resource_past = parent_event->item.value;
     msg->req_amount_past = parent_event->amount_fields[0];
     msg->req_city_past = parent_event->location_fields[0] - 1;
 

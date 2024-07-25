@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/bstring.h"
+#include "core/tokenum.h"
 
 enum e_event_type {
     EVENT_TYPE_NONE = 0,
@@ -31,7 +32,23 @@ enum e_event_type {
     EVENT_TYPE_HAILSTORM = 26,
     EVENT_TYPE_BLOOD_RIVER = 27,
     EVENT_TYPE_CRIME_WAVE = 28,
+
+    EVENT_TYPE_MAX,
 };
+extern const token_holder<e_event_type, EVENT_TYPE_NONE, EVENT_TYPE_MAX> e_event_type_tokens;
+
+enum e_event_state {
+    e_event_state_initial = 0,
+    e_event_state_in_progress = 1,
+    e_event_state_overdue = 2,
+    e_event_state_finished = 3,
+    e_event_state_finished_late = 4,
+    e_event_state_failed = 5,
+    e_event_state_received = 6,
+    e_event_state_already_fired = 7,
+    e_event_state_max
+};
+extern const token_holder<e_event_state, e_event_state_initial, e_event_state_max> e_event_state_tokens;
 
 enum {
     EVENT_SUBTYPE_GENERIC_REQUEST = 0,
@@ -86,17 +103,6 @@ enum e_event_attack {
     EVENT_ATTACK_TARGET_RANDOM = 4,
 };
 
-enum e_event_state {
-    e_event_state_initial = 0,
-    e_event_state_in_progress = 1,
-    e_event_state_overdue = 2,
-    e_event_state_finished = 3,
-    e_event_state_finished_late = 4,
-    e_event_state_failed = 5,
-    e_event_state_received = 6,
-    e_event_state_already_fired = 7
-};
-
 enum e_event_var {
     EVENT_VAR_DIRECT_RESULT = 0, // because
     EVENT_VAR_INCIDENTALLY = 1,  // (no conjunction)
@@ -128,7 +134,7 @@ struct event_ph_t {
     int16_t event_id;
     e_event_type type;
     int8_t month;
-    int16_t item_fields[4];
+    event_ph_value item;
     int16_t amount_fields[4];
     event_ph_value time;
     int16_t location_fields[4];
@@ -149,7 +155,7 @@ struct event_ph_t {
     // ...
     // ...
     // ...
-    int16_t on_tooLate_action;
+    int16_t on_too_late_action;
     int16_t on_defeat_action;
     int8_t sender_faction;
     int8_t __unk13_i8;

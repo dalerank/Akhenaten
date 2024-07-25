@@ -18,8 +18,11 @@ constexpr int NUM_AUTO_PHRASE_VARIANTS = 54;
 constexpr int NUM_PHRASES = 601;
 constexpr int MAX_EVENTMSG_TEXT_DATA = NUM_PHRASES * 200;
 
+const token_holder<e_event_type, EVENT_TYPE_NONE, EVENT_TYPE_MAX> e_event_type_tokens;
+const token_holder<e_event_state, e_event_state_initial, e_event_state_max> e_event_state_tokens;
+
 struct events_data_t {
-    event_ph_t event_list[MAX_EVENTS];
+    svector<event_ph_t, MAX_EVENTS> event_list;
     int auto_phrases[NUM_AUTO_PHRASE_VARIANTS][36];
 
     uint8_t eventmsg_phrases_data[MAX_EVENTMSG_TEXT_DATA];
@@ -35,20 +38,26 @@ void scenario_load_events_meta_data(const mission_id_t &missionid) {
         if (!enable_scenario_events) {
             return;
         }
+
+        auto &data = g_scenario_events;
+        data.event_list.clear();
+
+        arch.r_array("events", [&data] (archive arch) {
+            data.event_list.push_back({});
+            auto &item = data.event_list.back();
+        });
+        // first element should contain number of all elements
+        data.event_list.front().num_total_header = data.event_list.size();
     });
 }
 
 int16_t scenario_events_num() {
-    return g_scenario_events.event_list[0].num_total_header;
-}
-
-int16_t &ref_scenario_events_num() {
-    return g_scenario_events.event_list[0].num_total_header;
+    return g_scenario_events.event_list.size();
 }
 
 static void update_randomized_values(event_ph_t &event) {
     int seed = 1; // not sure what this is used for...
-    randomize_event_fields(event.item_fields, &seed);
+    randomize_event_fields((int16_t*)&event.item, &seed);
     randomize_event_fields(event.amount_fields, &seed);
     randomize_event_fields((int16_t*)&event.time, &seed);
     randomize_event_fields(event.location_fields, &seed);
@@ -61,19 +70,20 @@ static void update_randomized_values(event_ph_t &event) {
 
 event_ph_t* create_scenario_event(const event_ph_t* parent) {
     auto& data = g_scenario_events;
-    if (ref_scenario_events_num() < MAX_EVENTS) {
-        ref_scenario_events_num()++;
-        int event_id = ref_scenario_events_num() - 1;
-        event_ph_t* new_event = &data.event_list[event_id];
+    if (scenario_events_num() < MAX_EVENTS) {
+        data.event_list.push_back({});
+        int event_id = data.event_list.size() - 1;
+        event_ph_t&new_event = data.event_list.back();
 
         // if parent event is supplied, clone it into the new event
         if (parent != nullptr) {
-            memcpy(new_event, parent, sizeof(event_ph_t));
+            memcpy(&new_event, parent, sizeof(event_ph_t));
         }
 
-        new_event->event_id = event_id;
-        return new_event;
+        new_event.event_id = event_id;
+        return &new_event;
     }
+
     return nullptr;
 }
 
@@ -259,7 +269,7 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
         break;
 
     case EVENT_ACTION_TOOLATE:
-        event_process(event.on_tooLate_action, true, EVENT_ACTION_TOOLATE, id);
+        event_process(event.on_too_late_action, true, EVENT_ACTION_TOOLATE, id);
         break;
 
     case EVENT_ACTION_DEFEAT:
@@ -295,9 +305,13 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
     auto& data = g_scenario_events;
     // the first event's header always contains the total number of events
 
+    g_scenario_events.event_list.clear();
     for (int i = 0; i < MAX_EVENTS; i++) {
         event_ph_t &event = data.event_list[i];
         iob->bind(BIND_SIGNATURE_INT16, &event.num_total_header);
+        if (i == 0) {
+            g_scenario_events.event_list.resize(event.num_total_header);
+        }
         if (!is_valid_event_index(i)) {
             break;
         }
@@ -305,10 +319,10 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT16, &event.event_id);
         iob->bind(BIND_SIGNATURE_INT8, &event.type);
         iob->bind(BIND_SIGNATURE_INT8, &event.month);
-        iob->bind(BIND_SIGNATURE_INT16, &event.item_fields[0]);
-        iob->bind(BIND_SIGNATURE_INT16, &event.item_fields[1]);
-        iob->bind(BIND_SIGNATURE_INT16, &event.item_fields[2]);
-        iob->bind(BIND_SIGNATURE_INT16, &event.item_fields[3]);
+        iob->bind(BIND_SIGNATURE_INT16, &event.item.value);
+        iob->bind(BIND_SIGNATURE_INT16, &event.item.f_fixed);
+        iob->bind(BIND_SIGNATURE_INT16, &event.item.f_min);
+        iob->bind(BIND_SIGNATURE_INT16, &event.item.f_max);
         iob->bind(BIND_SIGNATURE_INT16, &event.amount_fields[0]);
         iob->bind(BIND_SIGNATURE_INT16, &event.amount_fields[1]);
         iob->bind(BIND_SIGNATURE_INT16, &event.amount_fields[2]);
@@ -339,7 +353,7 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         // ...
         // ...
         iob->bind____skip(25); // ???
-        iob->bind(BIND_SIGNATURE_INT16, &event.on_tooLate_action);
+        iob->bind(BIND_SIGNATURE_INT16, &event.on_too_late_action);
         iob->bind(BIND_SIGNATURE_INT16, &event.on_defeat_action);
         iob->bind(BIND_SIGNATURE_INT8, &event.sender_faction);
         iob->bind(BIND_SIGNATURE_INT8, &event.__unk13_i8);
