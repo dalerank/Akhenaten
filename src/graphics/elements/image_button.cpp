@@ -43,13 +43,15 @@ void image_buttons_draw(vec2i pos, image_button* buttons, int num_buttons, int s
 
         int image_id = image_id_from_group(btn->image_collection, btn->image_group) + btn->image_offset;
         if (btn->enabled) {
-            if (btn->pressed)
+            if (btn->pressed) {
                 image_id += 2;
-            else if (btn->focused)
+            } else if (btn->focused) {
                 image_id += 1;
+            }
         } else {
             image_id += 3;
         }
+
         ImageDraw::img_generic(ctx, image_id, pos + vec2i{btn->x, btn->y});
     }
 }

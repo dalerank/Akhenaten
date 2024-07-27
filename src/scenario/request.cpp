@@ -171,7 +171,7 @@ const scenario_request scenario_request_get(const event_ph_t &event) {
     scenario_request request;
 
     request.event_id = event.event_id;
-    request.amount = event.amount_fields[0];
+    request.amount = event.amount.value;
     request.resource = (e_resource)event.item.value;
     request.state = event.event_state;
     request.months_to_comply = event.quest_months_left;
