@@ -81,7 +81,9 @@ void building_fishing_wharf::update_graphic() {
     int image_warf_base = anim(animkeys().base).first_img();
     xstring animkey;
     if (f->action_state != FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF) {
-        if (image_warf == image_warf_base) animkey = animkeys().wait_n;
+        const bool has_cart = base.get_figure_id(BUILDING_SLOT_CARTPUSHER);
+        if (has_cart) animkey = animkeys().none;
+        else if (image_warf == image_warf_base) animkey = animkeys().wait_n;
         else if (image_warf == image_warf_base + 1) animkey = animkeys().wait_w;
         else if (image_warf == image_warf_base + 2) animkey = animkeys().wait_s;
         else animkey = animkeys().wait_e;
@@ -161,7 +163,7 @@ void building_fishing_wharf::update_map_orientation(int orientation) {
 bool building_fishing_wharf::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     auto &anim_wharf = base.anim;
     if (anim_wharf.valid()) {
-        int img_id = anim_wharf.base + (data.dock.docker_anim_frame / anim_wharf.frame_duration) * 4;
+        int img_id = anim_wharf.start() + (data.dock.docker_anim_frame / anim_wharf.frame_duration) * 4;
         const image_t *img = image_get(img_id);
         ImageDraw::img_generic(ctx, img_id, point + anim_wharf.pos, color_mask, 1.f, true);
     }
