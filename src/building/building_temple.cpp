@@ -43,7 +43,7 @@ static void building_temple_draw_temple(object_info& c, const char* type, int gr
     window_building_draw_employment(&c, 62);
     painter ctx = game.painter();
     if (c.has_road_access) {
-        ImageDraw::img_generic(ctx, image_offset + image_id_from_group(GROUP_PANEL_WINDOWS), c.offset.x + 190, c.offset.y + 16 * c.bgsize.y - 118);
+        ImageDraw::img_generic(ctx, image_offset + image_id_from_group(PACK_UNLOADED, 21), c.offset.x + 190, c.offset.y + 16 * c.bgsize.y - 118);
     } else {
         window_building_draw_description_at(c, 16 * c.bgsize.y - 128, 69, 25);
     }
