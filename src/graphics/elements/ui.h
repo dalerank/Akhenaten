@@ -30,11 +30,14 @@ enum UiFlags_ {
     UiFlags_LabelMultiline = 1 << 4,
     UiFlags_LabelYCentered = 1 << 5,
     UiFlags_NoBody = 1 << 6,
-    UIFlags_Rich = 1 << 7,
+    UiFlags_Rich = 1 << 7,
+    UiFlags_Selected = 1 << 8,
 };
 using UiFlags = int;
 
 namespace ui {
+
+struct img_button_offsets { int data[4] = {0, 1, 2, 3}; };
 
 void begin_frame();
 void begin_widget(vec2i offset, bool relative = false);
@@ -56,7 +59,7 @@ generic_button &button(const svector<pcstr,4> &labels, vec2i pos, vec2i size, e_
 generic_button &link(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_WHITE_ON_DARK, UiFlags flags = UiFlags_None, std::function<void(int, int)> cb = {});
 generic_button &large_button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
 generic_button &button(uint32_t id);
-image_button &img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size, int offset = 0);
+image_button &img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size, const img_button_offsets offsets = {}, UiFlags_ flags = UiFlags_None);
 image_button &imgok_button(vec2i pos, std::function<void(int, int)> cb);
 image_button &imgcancel_button(vec2i pos, std::function<void(int, int)> cb);
 image_button &img_button(e_image_id img, vec2i pos, vec2i size, int offset = 0);
@@ -72,6 +75,7 @@ struct element {
     bstring64 id;
     vec2i pos;
     vec2i size;
+    bool readonly = false;
     bool enabled = true;
 
     virtual void draw() {}
@@ -86,6 +90,7 @@ struct element {
     virtual void font(int) {}
     virtual void width(int v) { size.x = v; }
     virtual int value() const { return 0; }
+    virtual void select(bool v) {}
     virtual void max_value(int v) {}
     virtual void onclick(std::function<void(int, int)>) {}
             void onclick(std::function<void()> f) { onclick([f] (int, int) { f(); }); }
@@ -250,10 +255,14 @@ struct eimage_button : public element {
     void *icon_texture = nullptr;
     int param1 = 0;
     int param2 = 0;
+    img_button_offsets offsets;
+    bool selected = false;
+    bool border = false;
 
     std::function<void(int, int)> _func;
 
     virtual void load(archive elem) override;
+    virtual void select(bool v) override { selected = v; }
     virtual void draw() override;
     virtual void onclick(std::function<void(int, int)> func) override { _func = func; }
 };

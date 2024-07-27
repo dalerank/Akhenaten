@@ -264,35 +264,56 @@ generic_button &ui::button(uint32_t id) {
     return (id < g_state.buttons.size()) ? g_state.buttons[id].g_button : dummy;
 }
 
-image_button &ui::img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size, int offset) {
-    const vec2i img_offset = g_state.offset();
+image_button &ui::img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size, const img_button_offsets offsets, UiFlags_ flags) {
+    const vec2i state_offset = g_state.offset();
     const mouse *m = mouse_get();
 
-    g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, group, id, offset, button_none, button_none, 0, 0, true});
+    g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, group, id, offsets.data[0], button_none, button_none, 0, 0, true});
     auto &ibutton = g_state.buttons.back().i_button;
 
-    ibutton.focused = is_button_hover(ibutton, img_offset);
+    ibutton.focused = is_button_hover(ibutton, state_offset) || (flags & UiFlags_Selected);
     ibutton.pressed = ibutton.focused && m->left.is_down;
-    image_buttons_draw(img_offset, &ibutton, 1);
+
+    time_millis current_time = time_get_millis();
+    if (ibutton.pressed) {
+        if (current_time - ibutton.pressed_since > 100) {
+            if (ibutton.button_type != IB_BUILD && ibutton.button_type != IB_OVERSEER && !mouse_get()->left.is_down)
+                ibutton.pressed = false;
+        }
+    }
+
+    int image_id = image_id_from_group(ibutton.image_collection, ibutton.image_group) + ibutton.image_offset;
+    if (ibutton.enabled) {
+        if (ibutton.pressed) {
+            image_id += offsets.data[2];
+        } else if (ibutton.focused) {
+            image_id += offsets.data[1];
+        }
+    } else {
+        image_id += offsets.data[3];
+    }
+
+    painter ctx = game.painter();
+    ImageDraw::img_generic(ctx, image_id, state_offset + pos);
 
     return ibutton;
 }
 
 image_button &ui::imgok_button(vec2i pos, std::function<void(int, int)> cb) {
-    auto &btn = img_button(PACK_GENERAL, 96, pos, {39, 26}, 0);
+    auto &btn = img_button(PACK_GENERAL, 96, pos, {39, 26});
     btn.onclick(cb);
     return btn;
 }
 
 image_button &ui::imgcancel_button(vec2i pos, std::function<void(int, int)> cb) {
-    auto &btn = img_button(PACK_GENERAL, 96, pos, {39, 26}, 4);
+    auto &btn = img_button(PACK_GENERAL, 96, pos, {39, 26}, {4, 1, 2, 3});
     btn.onclick(cb);
     return btn;
 }
 
 image_button &ui::img_button(e_image_id img, vec2i pos, vec2i size, int offset) {
     image_desc desc = get_image_desc(img);
-    return img_button(desc.pack, desc.id, pos, size, desc.offset + offset);
+    return img_button(desc.pack, desc.id, pos, size, {desc.offset + offset, 1, 2, 3});
 }
 
 int ui::label(int group, int number, vec2i pos, e_font font, UiFlags flags, int box_width) {
@@ -307,7 +328,7 @@ int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width)
         return box_width;
     } else if (!!(flags & UiFlags_LabelMultiline)) {
         return text_draw_multiline((uint8_t *)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
-    } else if (!!(flags & UIFlags_Rich)) {
+    } else if (!!(flags & UiFlags_Rich)) {
         return rich_text_draw((uint8_t *)label, offset.x, offset.y, box_width, 10, false);
     } else {
         return lang_text_draw(label, offset + pos, font, box_width);
@@ -567,7 +588,7 @@ void ui::elabel::load(archive arch) {
     bool rich = arch.r_bool("rich");
     _flags = (strcmp("center", talign) == 0 ? UiFlags_LabelCentered : UiFlags_None)
                | (multiline ? UiFlags_LabelMultiline : UiFlags_None)
-               | (rich ? UIFlags_Rich : UiFlags_None);
+               | (rich ? UiFlags_Rich : UiFlags_None);
 }
 
 void ui::elabel::text(pcstr v) {
@@ -601,6 +622,12 @@ void ui::eimage_button::load(archive arch) {
     img_desc.pack = arch.r_int("pack");
     img_desc.id = arch.r_int("id");
     img_desc.offset = arch.r_int("offset");
+    border = arch.r_bool("border");
+    offsets.data[0] = img_desc.offset;
+    offsets.data[1] = arch.r_int("offset_focused", 1);
+    offsets.data[2] = arch.r_int("offset_pressed", 2);
+    offsets.data[3] = arch.r_int("offset_disabled", 3);
+
     pcstr name_icon_texture = arch.r_string("icon_texture");
     if (name_icon_texture && *name_icon_texture) {
         vec2i tmp_size;
@@ -612,9 +639,22 @@ void ui::eimage_button::draw() {
     if (img) {
         ui::img_button(img, pos, size, img_desc.offset)
             .onclick(_func);
+
     } else if (img_desc.id) {
-        ui::img_button(img_desc.pack, img_desc.id, pos, size, img_desc.offset)
+        int img_id = image_id_from_group(img_desc.pack, img_desc.id);
+        const image_t *img_ptr = image_get(img_id + img_desc.offset);
+
+        vec2i tsize;
+        tsize.x = size.x > 0 ? size.x : img_ptr->width;
+        tsize.y = size.y > 0 ? size.y : img_ptr->height;
+
+        ui::img_button(img_desc.pack, img_desc.id, pos, tsize, offsets, selected ? UiFlags_Selected : UiFlags_None)
             .onclick(_func);
+
+        if (border && selected) {
+            const vec2i doffset = g_state.offset();
+            button_border_draw(doffset.x + pos.x - 4, doffset.y + pos.y - 4, tsize.x + 8, tsize.y + 8, true);
+        }
     }
 
     if (icon_texture) {
@@ -653,7 +693,7 @@ void ui::etext::draw() {
     } else if (!!(_flags & UiFlags_LabelYCentered)) {
         int symbolh = get_letter_height((uint8_t *)"H", _font);
         text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y + (size.y - symbolh) / 2, _font, _color);
-    } else if (!!(_flags & UIFlags_Rich)) {
+    } else if (!!(_flags & UiFlags_Rich)) {
         if (_clip_area) {
             graphics_set_clip_rectangle(offset + pos, pxsize());
         }
