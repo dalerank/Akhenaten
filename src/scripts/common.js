@@ -173,6 +173,7 @@ var minimap_window = {}
 var advisor_trade_window = {}
 var advisor_imperial_window = {}
 var house_info_window = {}
+var hold_festival_window = {}
 
 //figures
 var figure_fireman = {}

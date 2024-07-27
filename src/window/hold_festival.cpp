@@ -19,166 +19,149 @@
 #include "window/message_dialog.h"
 #include "game/game.h"
 
-static void button_god(int god, int param2);
-static void button_size(int size, int param2);
-static void button_help(int param1, int param2);
-static void button_close(int param1, int param2);
-static void button_hold_festival(int param1, int param2);
+ui::hold_festival_window g_hold_festival_window;
 
-static image_button image_buttons_bottom[] = {
-  {58, 316, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
-  {558, 319, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1},
-  {400, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_hold_festival, button_none, 1, 0, 1},
-  {358, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_close, button_none, 0, 0, 1},
-};
+ANK_REGISTER_CONFIG_ITERATOR(config_load_hold_festival);
+void config_load_hold_festival() {
+    g_hold_festival_window.load("hold_festival_window");
+}
 
-static generic_button buttons_gods_size[] = {
-  {70, 96, 80, 90, button_god, button_none, 0, 0},
-  {170, 96, 80, 90, button_god, button_none, 1, 0},
-  {270, 96, 80, 90, button_god, button_none, 2, 0},
-  {370, 96, 80, 90, button_god, button_none, 3, 0},
-  {470, 96, 80, 90, button_god, button_none, 4, 0},
-  {102, 216, 430, 26, button_size, button_none, 1, 0},
-  {102, 246, 430, 26, button_size, button_none, 2, 0},
-  {102, 276, 430, 26, button_size, button_none, 3, 0},
-};
+//static image_button image_buttons_bottom[] = {
+  //{58, 316, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
+  //{558, 319, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1},
+//};
 
-static int focus_button_id;
-static int focus_image_button_id;
-
-static void draw_buttons(void) {
-    painter ctx = game.painter();
-    // small festival
-    button_border_draw(102, 216, 430, 26, focus_button_id == 6);
-    int width = lang_text_draw(58, 31, 110, 224, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_amount(8, 0, city_festival_small_cost(), 110 + width, 224, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    // large festival
-    button_border_draw(102, 246, 430, 26, focus_button_id == 7);
-    width = lang_text_draw(58, 32, 110, 254, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_amount(8, 0, city_festival_large_cost(), 110 + width, 254, FONT_NORMAL_BLACK_ON_LIGHT);
-
+static void draw_buttons() {
     // grand festival
-    button_border_draw(102, 276, 430, 26, focus_button_id == 8);
-    width = lang_text_draw(58, 33, 110, 284, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += lang_text_draw_amount(8, 0, city_festival_grand_cost(), 110 + width, 284, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += lang_text_draw_amount(8, 10, city_festival_grand_alcohol(), 120 + width, 284, FONT_NORMAL_BLACK_ON_LIGHT);
+    
+    //ImageDraw::img_generic(ctx, resource_image_id, vec2i{120 + 100, 279});
+}
 
-    int resource_image_id = image_id_resource_icon(RESOURCE_BEER);
-    ImageDraw::img_generic(ctx, resource_image_id, vec2i{120 + width, 279});
-
-    // greying out of buttons
+void select_festival_size(int size) {
     if (city_finance_out_of_money()) {
-        graphics_shade_rect(vec2i{104, 218}, vec2i{426, 22}, 0);
-        graphics_shade_rect(vec2i{104, 248}, vec2i{426, 22}, 0);
-        graphics_shade_rect(vec2i{104, 278}, vec2i{426, 22}, 0);
-    } else if (city_festival_out_of_alcohol()) {
-        graphics_shade_rect(vec2i{104, 278}, vec2i{426, 22}, 0);
-    }
-}
-static void draw_background(void) {
-    painter ctx = game.painter();
-    window_advisors_draw_dialog_background();
-
-    graphics_set_to_dialog();
-
-    outer_panel_draw(vec2i{48, 48}, 34, 20);
-    lang_text_draw_centered(58, 25 + city_festival_selected_god(), 48, 60, 544, FONT_LARGE_BLACK_ON_LIGHT);
-    for (int god = 0; god < MAX_GODS; god++) {
-        if (god == city_festival_selected_god()) {
-            button_border_draw(100 * god + 66, 92, 90, 100, 1);
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_WINDOWS) + god + 21, 100 * god + 70, 96);
-        } else {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_WINDOWS) + god + 16, 100 * god + 70, 96);
-        }
-    }
-    draw_buttons();
-    lang_text_draw(58, 30 + city_festival_selected_size(), 180, 322, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    graphics_reset_dialog();
-}
-static void draw_foreground(void) {
-    graphics_set_to_dialog();
-    draw_buttons();
-    image_buttons_draw({0, 0}, image_buttons_bottom, 4);
-    graphics_reset_dialog();
-}
-
-static void handle_input(const mouse* m, const hotkeys* h) {
-    const mouse* m_dialog = mouse_in_dialog(m);
-    int handled = 0;
-    handled |= image_buttons_handle_mouse(m_dialog, {0, 0}, image_buttons_bottom, 4, &focus_image_button_id);
-    handled |= generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons_gods_size, 8, &focus_button_id);
-    if (focus_image_button_id)
-        focus_button_id = 0;
-
-    if (!handled && input_go_back_requested(m, h))
-        window_advisors_show();
-}
-
-static void button_god(int god, int param2) {
-    city_festival_select_god(god);
-    window_invalidate();
-}
-static void button_size(int size, int param2) {
-    if (!city_finance_out_of_money()) {
-        if (city_festival_select_size(size))
-            window_invalidate();
-    }
-}
-static void button_help(int param1, int param2) {
-    window_message_dialog_show(MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT, -1, 0);
-}
-static void button_close(int param1, int param2) {
-    window_advisors_show();
-}
-static void button_hold_festival(int param1, int param2) {
-    if (city_finance_out_of_money())
         return;
+    }
+
+    if (city_festival_select_size(size)) {
+        window_invalidate();
+    }
+}
+
+void hold_festival() {
+    if (city_finance_out_of_money()) {
+        return;
+    }
+
     city_festival_schedule();
     window_advisors_show();
 }
 
+static void draw_background() {
+    window_advisors_draw_dialog_background();
+
+    auto &ui = g_hold_festival_window;
+    ui["title"] = ui::str(58, 25 + city_festival_selected_god());
+
+    int resource_image_id = image_id_resource_icon(RESOURCE_BEER);
+    ui["large_festival"] = bstring64().printf("%s (%u / %u $%u)", ui::str(58, 32), city_festival_grand_cost(), city_festival_grand_alcohol(), resource_image_id);
+
+    ui["small_festival"] = bstring64().printf("%s (%u)", ui::str(58, 31), city_festival_small_cost());
+    ui["small_festival"].readonly = city_finance_out_of_money();
+    ui["small_festival"].onclick([] { select_festival_size(1); });
+
+    ui["middle_festival"] = bstring64().printf("%s (%u)", ui::str(58, 32), city_festival_large_cost());
+    ui["middle_festival"].readonly = city_finance_out_of_money();
+    ui["middle_festival"].onclick([] { select_festival_size(2); });
+
+    ui["large_festival"].readonly = city_finance_out_of_money() || city_festival_out_of_alcohol();
+    ui["large_festival"].onclick([] { select_festival_size(3); });
+
+    ui["button_ok"].onclick([] { hold_festival(); });
+    ui["button_cancel"].onclick([] { window_advisors_show(); });
+    ui["button_help"].onclick([] {
+        window_message_dialog_show(MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT, -1, 0);
+    });
+
+    for (int god = 0; god < MAX_GODS; god++) {
+        bstring32 god_id; god_id.printf("god%d", god);
+        ui[god_id].select(god == city_festival_selected_god());
+        ui[god_id].onclick([god] {
+            city_festival_select_god(god);
+            window_invalidate();
+        });
+    }
+
+    ui["festival_type"] = ui::str(58, 30 + city_festival_selected_size());
+}
+
+static void draw_foreground() {
+    auto &ui = g_hold_festival_window;
+    ui.draw();
+}
+
+static void handle_input(const mouse* m, const hotkeys* h) {
+    auto &ui = g_hold_festival_window;
+    ui.handle_mouse(m);
+
+    const mouse* m_dialog = mouse_in_dialog(m);
+    int handled = 0;
+    //andled |= image_buttons_handle_mouse(m_dialog, {0, 0}, image_buttons_bottom, 4, &focus_image_button_id);
+    //handled |= generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons_gods_size, 8, &focus_button_id);
+    //if (focus_image_button_id)
+    //    focus_button_id = 0;
+    //graphics_shade_rect;
+    if (!handled && input_go_back_requested(m, h))
+        window_advisors_show();
+}
+
 static void get_tooltip(tooltip_context* c) {
-    if (!focus_image_button_id && (!focus_button_id || focus_button_id > 5))
-        return;
-    c->type = TOOLTIP_BUTTON;
-    // image buttons
-    switch (focus_image_button_id) {
-    case 1:
-        c->text_id = 1;
-        break;
-    case 2:
-        c->text_id = 2;
-        break;
-    case 3:
-        c->text_id = 113;
-        break;
-    case 4:
-        c->text_id = 114;
-        break;
-    }
-    // gods
-    switch (focus_button_id) {
-    case 1:
-        c->text_id = 115;
-        break;
-    case 2:
-        c->text_id = 116;
-        break;
-    case 3:
-        c->text_id = 117;
-        break;
-    case 4:
-        c->text_id = 118;
-        break;
-    case 5:
-        c->text_id = 119;
-        break;
-    }
+    //if (!focus_image_button_id && (!focus_button_id || focus_button_id > 5))
+    //    return;
+    return;
+
+    //c->type = TOOLTIP_BUTTON;
+    //// image buttons
+    //switch (focus_image_button_id) {
+    //case 1:
+    //    c->text_id = 1;
+    //    break;
+    //case 2:
+    //    c->text_id = 2;
+    //    break;
+    //case 3:
+    //    c->text_id = 113;
+    //    break;
+    //case 4:
+    //    c->text_id = 114;
+    //    break;
+    //}
+    //// gods
+    //switch (focus_button_id) {
+    //case 1:
+    //    c->text_id = 115;
+    //    break;
+    //case 2:
+    //    c->text_id = 116;
+    //    break;
+    //case 3:
+    //    c->text_id = 117;
+    //    break;
+    //case 4:
+    //    c->text_id = 118;
+    //    break;
+    //case 5:
+    //    c->text_id = 119;
+    //    break;
+    //}
 }
 
 void window_hold_festival_show(void) {
-    window_type window = {WINDOW_HOLD_FESTIVAL, draw_background, draw_foreground, handle_input, get_tooltip};
+    static window_type window = {
+        WINDOW_HOLD_FESTIVAL,
+        draw_background,
+        draw_foreground,
+        handle_input, get_tooltip
+    };
+
     window_show(&window);
 }

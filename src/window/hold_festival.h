@@ -1,6 +1,13 @@
-#ifndef WINDOW_HOLD_FESTIVAL_H
-#define WINDOW_HOLD_FESTIVAL_H
+#pragma once
+
+#include "graphics/elements/ui.h"
 
 void window_hold_festival_show(void);
 
-#endif // WINDOW_HOLD_FESTIVAL_H
+namespace ui {
+    struct hold_festival_window : public widget {
+        int focus_button_id;
+
+        using widget::load;
+    };
+}
