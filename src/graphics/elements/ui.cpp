@@ -204,7 +204,15 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
 
     int symbolh = get_letter_height((uint8_t *)"H", font);
     if (label) {
-        if (!!(flags & UiFlags_LabelYCentered)) {
+        const bool ycentered = !!(flags & UiFlags_LabelYCentered);
+        const bool rich = !!(flags & UiFlags_Rich);
+        if (rich) {
+            int symbolw = text_get_width((uint8_t *)"H", font);
+            int lines_num = std::max<int>(1, (int)std::strlen(label) * symbolw / size.x);
+            int centering_y_offset = (size.y - lines_num * symbolh) / 2;
+            rich_text_set_fonts(font, FONT_NORMAL_YELLOW);
+            rich_text_draw((uint8_t *)label, offset.x + pos.x, offset.y + pos.y + centering_y_offset, size.x, lines_num, false, true);
+        } else if (ycentered) {
             text_draw((uint8_t *)label, offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 4, font, 0);
         } else {
             text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 + 4, size.x, font, 0);
@@ -329,6 +337,7 @@ int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width)
     } else if (!!(flags & UiFlags_LabelMultiline)) {
         return text_draw_multiline((uint8_t *)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
     } else if (!!(flags & UiFlags_Rich)) {
+        rich_text_set_fonts(font, FONT_NORMAL_YELLOW);
         return rich_text_draw((uint8_t *)label, offset.x, offset.y, box_width, 10, false);
     } else {
         return lang_text_draw(label, offset + pos, font, box_width);
@@ -764,7 +773,7 @@ menu_item &ui::emenu_header::item(pcstr key) {
 void ui::egeneric_button::draw() {
     switch (mode) {
     case 0:
-        ui::button(_text.c_str(), pos, size, _font)
+        ui::button(_text.c_str(), pos, size, _font, _flags)
             .onclick(_func);
         break;
 
