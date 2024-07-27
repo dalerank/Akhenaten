@@ -27,9 +27,7 @@ ui::advisor_religion_window g_advisor_religion_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_religion);
 void config_load_advisor_religion() {
-    g_config_arch.r_section("advisor_religion_window", [] (archive arch) {
-        g_advisor_religion_window.load(arch);
-    });
+    g_advisor_religion_window.load("advisor_religion_window");
 }
 
 static void button_hold_festival(int param1, int param2);
@@ -89,15 +87,9 @@ static void draw_festival_info(int y_offset) {
         int width = lang_text_draw(58, 34, 102, 284 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
         lang_text_draw(160, planned_month, 102 + width, 284 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
         switch (size) {
-        case FESTIVAL_SMALL:
-            size = 10;
-            break;
-        case FESTIVAL_LARGE:
-            size = 20;
-            break;
-        case FESTIVAL_GRAND:
-            size = 31;
-            break;
+        case FESTIVAL_SMALL: size = 10; break;
+        case FESTIVAL_LARGE: size = 20; break;
+        case FESTIVAL_GRAND: size = 31; break;
         }
         lang_text_draw_multiline(295, size + months_left - 1, vec2i{56, 305 + y_offset}, 400, FONT_NORMAL_WHITE_ON_DARK);
     } else {
