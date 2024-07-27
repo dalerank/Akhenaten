@@ -14,6 +14,7 @@ void text_capture_cursor(int cursor_position, int offset_start, int offset_end);
 void text_draw_cursor(int x_offset, int y_offset, int is_insert);
 
 int get_letter_height(const uint8_t *str, e_font font);
+int get_letter_width(const uint8_t *str, const font_definition *def, int *num_bytes);
 int text_get_width(const uint8_t* str, e_font font);
 inline int text_get_width(pcstr str, e_font font) { return text_get_width((const uint8_t*)str, font); }
 uint32_t text_get_max_length_for_width(const uint8_t* str, int length, e_font font, unsigned int requested_width, int invert);

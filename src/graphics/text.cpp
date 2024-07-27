@@ -115,18 +115,21 @@ int text_get_width(const uint8_t* str, e_font font) {
     }
     return width;
 }
-static int get_letter_width(const uint8_t* str, const font_definition* def, int* num_bytes) {
+
+int get_letter_width(const uint8_t* str, const font_definition* def, int* num_bytes) {
     *num_bytes = 1;
-    if (*str == ' ')
+    if (*str == ' ') {
         return def->space_width;
+    }
 
     int letter_id = font_letter_id(def, str, num_bytes);
-    if (letter_id >= 0)
+    if (letter_id >= 0) {
         return def->letter_spacing + image_letter(letter_id)->width;
-    else {
+    } else {
         return 0;
     }
 }
+
 static int get_word_width(const uint8_t* str, e_font font, int* out_num_chars) {
     const font_definition* def = font_definition_for(font);
     int width = 0;
