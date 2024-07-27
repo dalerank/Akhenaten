@@ -99,7 +99,7 @@ static void draw_entertainer(int type, int y_offset, e_building_type venue, int 
 static void draw_festival_info() {
     painter ctx = game.painter();
     inner_panel_draw(48, 252, 34, 6);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_WINDOWS) + 15, vec2i{460, 255});
+    ImageDraw::img_generic(ctx, image_id_from_group(PACK_UNLOADED, 21) + 15, vec2i{460, 255});
     lang_text_draw(58, 17, 52, 224, FONT_LARGE_BLACK_ON_LIGHT);
 
     int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260, FONT_NORMAL_WHITE_ON_DARK);

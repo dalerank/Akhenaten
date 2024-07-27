@@ -29,11 +29,11 @@ static void init(e_resource resource) {
     g_resource_settings_data.resource = resource;
 }
 
-static void draw_background(void) {
+static void draw_background() {
     window_draw_underlying_window();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground() {
     auto &data = g_resource_settings_data;
 
     ui::begin_widget(screen_dialog_offset());
@@ -193,12 +193,12 @@ static void draw_foreground(void) {
             city_resource_toggle_stockpiled(data.resource);
         });
 
-    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(58 - 16, 332), {27, 27}, 0)
+    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(58 - 16, 332), {27, 27}, {0})
         .onclick([] (int, int) {
             window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, -1, 0);
         });
 
-    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(558 + 16, 335), {24, 24}, 4)
+    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(558 + 16, 335), {24, 24}, {4})
         .onclick([] (int, int) {
             window_go_back();
         });

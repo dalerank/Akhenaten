@@ -458,7 +458,7 @@ static void buiding_info_draw_foreground() {
     int y_offset = (context.storage_show_special_orders) ? context.subwnd_y_offset : 0;
     int height_blocks = (context.storage_show_special_orders) ? context.height_blocks_submenu : context.bgsize.y;
 
-    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(14, y_offset + 16 * height_blocks - 40), {28, 28}, 0)
+    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(14, y_offset + 16 * height_blocks - 40), {28, 28}, {0})
                .onclick([&context] (int, int) {
                     if (context.help_id > 0) {
                         window_message_dialog_show(context.help_id, -1, window_city_draw_all);
@@ -468,7 +468,7 @@ static void buiding_info_draw_foreground() {
                     window_invalidate();
                });
 
-    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(16 * context.bgsize.x - 40, y_offset + 16 * height_blocks - 40), {28, 28}, 4)
+    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(16 * context.bgsize.x - 40, y_offset + 16 * height_blocks - 40), {28, 28}, {4})
                .onclick([&context] (int, int) {
                     if (context.storage_show_special_orders) {
                         context.storage_show_special_orders = 0;
@@ -481,7 +481,7 @@ static void buiding_info_draw_foreground() {
 
     if (!context.storage_show_special_orders && context.go_to_advisor.first && is_advisor_available(context.go_to_advisor.first)) {
         int img_offset = (context.go_to_advisor.left_a - 1) * 3;
-        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(40, 16 * context.bgsize.y - 40), {28, 28}, img_offset)
+        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(40, 16 * context.bgsize.y - 40), {28, 28}, {img_offset})
                .onclick([&context] (int, int) {
                    window_advisors_show_advisor(context.go_to_advisor.first);
                });
@@ -489,7 +489,7 @@ static void buiding_info_draw_foreground() {
 
     if (!context.storage_show_special_orders && context.go_to_advisor.left_a && is_advisor_available(context.go_to_advisor.left_a)) {
         int img_offset = (context.go_to_advisor.left_a - 1) * 3;
-        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(40, 16 * context.bgsize.y - 40), {28, 28}, img_offset)
+        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(40, 16 * context.bgsize.y - 40), {28, 28}, {img_offset})
                .onclick([&context] (int, int) {
                    window_advisors_show_advisor(context.go_to_advisor.left_a);
                });
@@ -497,7 +497,7 @@ static void buiding_info_draw_foreground() {
 
     if (!context.storage_show_special_orders && context.go_to_advisor.left_b && is_advisor_available(context.go_to_advisor.left_b)) {
         int img_offset = (context.go_to_advisor.left_b - 1) * 3;
-        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(65, 16 * context.bgsize.y - 40), {28, 28}, img_offset)
+        ui::img_button(GROUP_MESSAGE_ADVISOR_BUTTONS, vec2i(65, 16 * context.bgsize.y - 40), {28, 28}, {img_offset})
                .onclick([&context] (int, int) {
                    window_advisors_show_advisor(context.go_to_advisor.left_b);
                });

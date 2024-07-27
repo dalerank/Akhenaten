@@ -412,7 +412,7 @@ int ui::advisor_population_window::draw_background() {
         lang_text_draw(55, 2, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     }
 
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_WINDOWS) + 14, 56, 60);
+    ImageDraw::img_generic(ctx, image_id_from_group(PACK_UNLOADED, 21) + 14, 56, 60);
 
     width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK_ON_LIGHT);
     text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450 + width, 25, FONT_NORMAL_BLACK_ON_LIGHT, 0);
