@@ -253,7 +253,7 @@ static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color clr,
     }
 }
 
-static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, color color, bool measure_only) {
+static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, color color, bool measure_only, bool centered) {
     int image_height_lines = 0;
     int image_id = 0;
     int lines_before_image = 0;
@@ -336,7 +336,11 @@ static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, 
         }
 
         if (!outside_viewport) {
-            draw_line(ctx, tmp_line, x_line_offset + x_offset, y, color, measure_only);
+            int centering_offset = 0;
+            if (centered) {
+                centering_offset = (box_width - current_width) / 2;
+            }
+            draw_line(ctx, tmp_line, x_line_offset + x_offset + centering_offset, y, color, measure_only);
         }
 
         if (!measure_only) {
@@ -366,12 +370,12 @@ static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, 
     return num_lines;
 }
 
-int rich_text_draw(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, bool measure_only) {
-    return rich_text_draw_impl(text, x_offset, y_offset, box_width, height_lines, 0, measure_only);
+int rich_text_draw(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, bool measure_only, bool centered) {
+    return rich_text_draw_impl(text, x_offset, y_offset, box_width, height_lines, 0, measure_only, centered);
 }
 
 int rich_text_draw_colored(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, color color) {
-    return rich_text_draw_impl(text, x_offset, y_offset, box_width, height_lines, color, 0);
+    return rich_text_draw_impl(text, x_offset, y_offset, box_width, height_lines, color, 0, false);
 }
 
 void rich_text_draw_scrollbar() {

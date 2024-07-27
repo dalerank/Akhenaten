@@ -56,7 +56,7 @@ int rich_text_get_clicked_link(const mouse* m);
  * @param measure_only True to only measure text, not draw it
  * @return Total number of lines required for the text
  */
-int rich_text_draw(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, bool measure_only);
+int rich_text_draw(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, bool measure_only, bool centered = false);
 
 /**
  * Draws rich text with specified color
@@ -68,12 +68,7 @@ int rich_text_draw(const uint8_t* text, int x_offset, int y_offset, int box_widt
  * @param color Color to draw with
  * @return Total number of lines required for the text
  */
-int rich_text_draw_colored(const uint8_t* text,
-                           int x_offset,
-                           int y_offset,
-                           int box_width,
-                           int height_lines,
-                           color color);
+int rich_text_draw_colored(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, color color);
 
 /**
  * Draws the scrollbar
