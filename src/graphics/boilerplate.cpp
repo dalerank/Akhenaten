@@ -49,15 +49,6 @@ void graphics_draw_inset_rect(vec2i start, vec2i size) {
     graphics_renderer()->draw_line(start, vec2i{start.x, end.y}, COLOR_INSET_DARK);
 }
 
-void graphics_fill_rect(vec2i start, vec2i size, color color) {
-    graphics_renderer()->fill_rect(start, size, color);
-}
-
-void graphics_shade_rect(vec2i start, vec2i size, int darkness) {
-    color alpha = (0x11 * darkness) << COLOR_BITSHIFT_ALPHA;
-    graphics_renderer()->fill_rect(start, size, alpha);
-}
-
 int graphics_save_to_texture(int image_id, int x, int y, int width, int height) {
     return graphics_renderer()->save_texture_from_screen(image_id, x, y, width, height);
 }
