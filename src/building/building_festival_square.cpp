@@ -23,6 +23,10 @@ void config_load_building_festival_square() {
     festival_square_m.square = festival_square_m.anim["square"].first_img();
 }
 
+void building_festival_square::on_place(int orientation, int variant) {
+    city_buildings_add_festival_square(&base);
+}
+
 void building_festival_square::on_place_update_tiles(int orientation, int variant) {
     data.entertainment.booth_corner_grid_offset = tile().grid_offset();
     data.entertainment.orientation = orientation;
@@ -65,6 +69,10 @@ void building_festival_square::on_undo() {
                 map_building_set(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), id());
         }
     }
+}
+
+void building_festival_square::on_post_load() {
+    city_buildings_add_festival_square(&base);
 }
 
 void building_festival_square::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {

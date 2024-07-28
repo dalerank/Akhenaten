@@ -473,6 +473,7 @@ public:
     virtual void on_place_checks();
     virtual void on_destroy() {}
     virtual void on_undo() {}
+    virtual void on_post_load() {}
     virtual void spawn_figure() {}
     virtual void update_graphic();
     virtual void update_month() {}
