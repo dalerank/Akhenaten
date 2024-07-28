@@ -56,18 +56,19 @@ static void draw_background() {
     auto &ui = g_hold_festival_window;
     ui["title"] = ui::str(58, 25 + city_festival_selected_god());
 
-    ui["small_festival"] = bstring64().printf("%s (%u)", ui::str(58, 31), city_festival_small_cost());
+    int resource_image_deben = image_id_from_group(PACK_GENERAL, 103) + 18;
+    ui["small_festival"] = bstring64().printf("%s %u @I%u", ui::str(58, 31), city_festival_small_cost(), resource_image_deben);
     ui["small_festival"].readonly = city_finance_out_of_money();
     ui["small_festival"].onclick([] { select_festival_size(1); });
 
-    ui["middle_festival"] = bstring64().printf("%s (%u)", ui::str(58, 32), city_festival_large_cost());
+    ui["middle_festival"] = bstring64().printf("%s %u @I%u", ui::str(58, 32), city_festival_large_cost(), resource_image_deben);
     ui["middle_festival"].readonly = city_finance_out_of_money();
     ui["middle_festival"].onclick([] { select_festival_size(2); });
 
-    int resource_image_id = image_id_resource_icon(RESOURCE_BEER);
+    int resource_image_beer = image_id_resource_icon(RESOURCE_BEER);
     ui["large_festival"].readonly = city_finance_out_of_money() || city_festival_out_of_alcohol();
     ui["large_festival"].onclick([] { select_festival_size(3); });
-    ui["large_festival"] = bstring64().printf("%s (%u / %u $%u)", ui::str(58, 32), city_festival_grand_cost(), city_festival_grand_alcohol(), resource_image_id);
+    ui["large_festival"] = bstring64().printf("%s %u @I%u %u  @I%u", ui::str(58, 32), city_festival_grand_cost(), resource_image_deben, city_festival_grand_alcohol(), resource_image_beer);
 
     ui["button_ok"].onclick([] { hold_festival(); });
     ui["button_cancel"].onclick([] { window_advisors_show(); });

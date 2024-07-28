@@ -31,8 +31,6 @@ static int num_links;
 static const font_definition* normal_font_def;
 static const font_definition* link_font_def;
 
-static uint8_t tmp_line[200];
-
 struct rich_text_data_t {
     int x_text;
     int y_text;
@@ -116,6 +114,35 @@ static void add_link(int message_id, int x_start, int x_end, int y) {
     }
 }
 
+static int get_lexem_width(const uint8_t *str, int in_link) {
+    if (!str) {
+        return 0;
+    }
+
+    int width = 0;
+    int guard = 0;
+    int word_char_seen = 0;
+    int num_bytes = 1;
+    while (*str && ++guard < 2000) {
+        if (*str == ' ') {
+            if (word_char_seen) {
+                break;
+            }
+
+            width += 4;
+        } else if (*str > ' ') {
+            // normal char
+            int letter_id = font_letter_id(normal_font_def, str, &num_bytes);
+            if (letter_id >= 0) {
+                width += normal_font_def->letter_spacing + image_letter(letter_id)->width;
+            }
+        }
+        str++;
+    }
+
+    return width;
+}
+
 static int get_word_width(const uint8_t* str, int in_link, int* num_chars) {
     if (!str) {
         return 0;
@@ -193,12 +220,23 @@ static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color clr,
     const font_definition* def = normal_font_def;
 
     while (*str) {
-
         if (*str == '@') {
             if (*(str + 1) == 'Y') {
                 str += 2;
                 long_colored_string = true;
                 def = font_definition_for(FONT_NORMAL_YELLOW);
+            } else if (*(str + 1) == 'I') {
+                str += 2; // skip @I
+                int small_image_id = string_to_int(str);
+                while (*str >= '0' && *str <= '9') {
+                    str++;
+                }
+
+                const image_t* letter = image_letter('@');
+                x -= letter->width;
+                const image_t *img = ImageDraw::img_generic(ctx, small_image_id, x, y);
+                x += img->width;
+                continue;
             } else {
                 int message_id = string_to_int(++str);
                 while (*str >= '0' && *str <= '9') {
@@ -264,15 +302,18 @@ static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, 
     int line = 0;
     int num_lines = 0;
     painter ctx = game.painter();
+    struct line_image {
+        int pos;
+        int img;
+    };
+    bstring256 tmp_line;
     while (has_more_characters || image_height_lines) {
-        if (++guard >= 1000)
+        if (++guard >= 1000) {
             break;
-
-        // clear line
-        for (int i = 0; i < 200; i++) {
-            tmp_line[i] = 0;
         }
-        int line_index = 0;
+
+        tmp_line.clear();
+
         int current_width, x_line_offset;
         current_width = x_line_offset = paragraph ? 50 : 0;
         paragraph = 0;
@@ -282,7 +323,8 @@ static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, 
                 break;
             }
             int word_num_chars;
-            current_width += get_word_width(text, 0, &word_num_chars);
+            int last_word_width = get_word_width(text, 0, &word_num_chars);
+            current_width += last_word_width;
             if (current_width >= box_width) {
                 if (current_width == 0)
                     has_more_characters = 0;
@@ -300,9 +342,26 @@ static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, 
                             text++;
                             current_width = box_width;
                             break;
+                        } else if (*text == 'I') {
+                            int small_image_id = string_to_int(text + 1);
+                            int id_word_width = get_lexem_width(text - 2, 0);
+
+                            const image_t *img = image_get(small_image_id);
+                            const int img_width = img->width;
+
+                            current_width -= id_word_width;
+                            current_width -= img_width;
+
+                            tmp_line.append('@');
+                            while (c = '0' && c <= '9') {
+                                tmp_line.append(c);
+                                c = *text++;
+                            }
+                            break;
                         } else if (*text == 'G') {
-                            if (line_index)
+                            if (!tmp_line.empty()) {
                                 num_lines++;
+                            }
 
                             text++; // skip 'G'
                             current_width = box_width;
@@ -313,14 +372,16 @@ static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, 
                             }
                             image_id += image_id_from_group(GROUP_MESSAGE_IMAGES) - 1;
                             image_height_lines = image_get(image_id)->height / 16 + 2;
-                            if (line > 0)
+                            if (line > 0) {
                                 lines_before_image = 1;
+                            }
 
                             break;
                         }
                     }
-                    if (line_index || c != ' ') { // no space at start of line
-                        tmp_line[line_index++] = c;
+
+                    if (!tmp_line.empty() || c != ' ') { // no space at start of line, should we need this trim?
+                        tmp_line.append(c);
                     }
                 }
                 if (!text || !*text) {
@@ -364,8 +425,9 @@ static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, 
         }
         line++;
         num_lines++;
-        if (!outside_viewport)
+        if (!outside_viewport) {
             y += 16;
+        }
     }
     return num_lines;
 }

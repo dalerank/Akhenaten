@@ -680,23 +680,26 @@ static void draw_multibyte_letter(e_font font, const image_t* img, int x, int y,
     //    }
 }
 
-void ImageDraw::img_generic(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
+const image_t* ImageDraw::img_generic(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
     graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale);
+    return img;
 }
 
-void ImageDraw::img_generic(painter &ctx, int pak, int image_id, vec2i p, color color_mask, float scale) {
+const image_t* ImageDraw::img_generic(painter &ctx, int pak, int image_id, vec2i p, color color_mask, float scale) {
     const image_t* img = image_get(pak, image_id);
     graphics_renderer()->draw_image(ctx, img, p.x, p.y, color_mask, scale);
+    return img;
 }
 
-void ImageDraw::img_generic(painter &ctx, int image_id, vec2i p, color color_mask, float scale, bool internal_offset) {
+const image_t* ImageDraw::img_generic(painter &ctx, int image_id, vec2i p, color color_mask, float scale, bool internal_offset) {
     const image_t* img = image_get(image_id);
     vec2i offset{0, 0};
     if (internal_offset) {
         offset = img->animation.sprite_offset;
     }
     graphics_renderer()->draw_image(ctx, img, p.x - offset.x, p.y - offset.y, color_mask, scale);
+    return img;
 }
 
 void ImageDraw::img_sprite(painter &ctx, int image_id, int x, int y, color color_mask, float scale, bool alpha) {

@@ -1,5 +1,4 @@
-#ifndef GRAPHICS_RICH_TEXT_H
-#define GRAPHICS_RICH_TEXT_H
+#pragma once
 
 #include "graphics/color.h"
 #include "graphics/font.h"
@@ -33,10 +32,6 @@ void rich_text_set_fonts(e_font normal_font, e_font link_font);
  * Resets the text to the specified scroll position and forces recalculation of lines
  */
 void rich_text_reset(int scroll_position);
-
-/**
- * Clear the links table
- */
 void rich_text_clear_links(void);
 
 /**
@@ -69,10 +64,6 @@ int rich_text_draw(const uint8_t* text, int x_offset, int y_offset, int box_widt
  * @return Total number of lines required for the text
  */
 int rich_text_draw_colored(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, color color);
-
-/**
- * Draws the scrollbar
- */
 void rich_text_draw_scrollbar(void);
 
 /**
@@ -81,10 +72,4 @@ void rich_text_draw_scrollbar(void);
  * @return True if any interaction was handled
  */
 int rich_text_handle_mouse(const mouse* m);
-
-/**
- * Gets scroll position in absolute number of lines
- */
 int rich_text_scroll_position(void);
-
-#endif // GRAPHICS_RICH_TEXT_H
