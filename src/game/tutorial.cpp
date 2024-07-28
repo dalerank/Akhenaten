@@ -379,11 +379,17 @@ void tutorial_on_gold_extracted() {
 }
 
 void tutorial_on_religion() {
-    if (scenario_is_mission_rank(2) && !g_tutorials_flags.tutorial_2.temples_built) {
-        g_tutorials_flags.tutorial_2.temples_built = true;
-        building_menu_update(tutorial_stage.tutorial_entertainment);
-        post_message(MESSAGE_TUTORIAL_ENTERTAINMENT);
+    if (!scenario_is_mission_rank(2)) {
+        return;
     }
+    
+    if (!g_tutorials_flags.tutorial_2.temples_built) {
+        return;
+    }
+    
+    g_tutorials_flags.tutorial_2.temples_built = true;
+    building_menu_update(tutorial_stage.tutorial_entertainment);
+    post_message(MESSAGE_TUTORIAL_ENTERTAINMENT);
 }
 
 void tutorial_on_house_evolve(e_house_level level) {
