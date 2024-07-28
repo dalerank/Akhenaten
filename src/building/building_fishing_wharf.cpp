@@ -79,15 +79,15 @@ void building_fishing_wharf::update_graphic() {
 
     int image_warf = map_image_at(tile());
     int image_warf_base = anim(animkeys().base).first_img();
+    const bool has_cart = base.get_figure_id(BUILDING_SLOT_CARTPUSHER);
     xstring animkey;
     if (f->action_state != FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF) {
-        const bool has_cart = base.get_figure_id(BUILDING_SLOT_CARTPUSHER);
-        if (has_cart) animkey = animkeys().none;
-        else if (image_warf == image_warf_base) animkey = animkeys().wait_n;
+        if (image_warf == image_warf_base) animkey = animkeys().wait_n;
         else if (image_warf == image_warf_base + 1) animkey = animkeys().wait_w;
         else if (image_warf == image_warf_base + 2) animkey = animkeys().wait_s;
         else animkey = animkeys().wait_e;
     } else {
+        if (has_cart) animkey = animkeys().none;
         if (image_warf == image_warf_base) animkey = animkeys().work_n;
         else if (image_warf == image_warf_base + 1) animkey = animkeys().work_w;
         else if (image_warf == image_warf_base + 2) animkey = animkeys().work_s;
