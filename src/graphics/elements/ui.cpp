@@ -662,19 +662,23 @@ void ui::eimage_button::draw() {
         tsize.x = size.x > 0 ? size.x : img_ptr->width;
         tsize.y = size.y > 0 ? size.y : img_ptr->height;
 
-        ui::img_button(img_desc.pack, img_desc.id, pos, tsize, offsets, selected ? UiFlags_Selected : UiFlags_None)
+        ui::img_button(img_desc.pack, img_desc.id, pos, tsize, offsets, (selected && !readonly) ? UiFlags_Selected : UiFlags_None)
             .onclick(_func);
 
+        const vec2i doffset = g_state.offset();
         if (border && selected) {
-            const vec2i doffset = g_state.offset();
             button_border_draw(doffset.x + pos.x - 4, doffset.y + pos.y - 4, tsize.x + 8, tsize.y + 8, true);
+        }
+
+        if (readonly) {
+            graphics_shade_rect(doffset + pos, tsize, 0x80);
         }
     }
 
     if (icon_texture) {
         painter ctx = game.painter();
         ctx.draw((SDL_Texture*)icon_texture, pos, {0, 0}, size, 0xffffffff, scale, false, true);
-    }
+    } 
 }
 
 void ui::etext::load(archive arch) {
