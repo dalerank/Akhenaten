@@ -50,7 +50,7 @@ void city_gods_reset() {
 
 svector<god_state*, MAX_GODS> city_gods_knowns() {
     svector<god_state*, MAX_GODS> gods;
-    for (int i = 0; i < MAX_GODS; i++) {
+    for (e_god i = GOD_OSIRIS; i < MAX_GODS; ++i) {
         if (city_gods_is_known((e_god)i) != GOD_STATUS_UNKNOWN) {
             gods.push_back(&city_data.religion.gods[i]);
         }

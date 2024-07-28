@@ -64,6 +64,9 @@ svector<god_state *, MAX_GODS> city_gods_knowns();
 
 inline bool city_gods_is_available(int mask, e_god g) { int god_mask = (1 << g); return ((mask & god_mask) == god_mask); }
 
+inline e_god& god_next(e_god& god) { god = e_god(god + 1); return god; }
+inline e_god& operator++(e_god& god) { god = e_god(god + 1); return god; };
+
 void city_gods_reset();
 
 e_god_status city_gods_is_known(e_god god);
