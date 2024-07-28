@@ -197,6 +197,7 @@ static void post_load() {
 
     // building counts / storage
     g_city.buildings.update_counters();
+    g_city.buildings.update_unique_building_positions();
     city_granaries_calculate_stocks();
     city_resource_calculate_storageyard_stocks();
     city_resource_determine_available();

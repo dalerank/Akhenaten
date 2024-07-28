@@ -1,6 +1,7 @@
 #include "buildings.h"
 
 #include "building/building.h"
+#include "building/count.h"
 #include "building/building_menu.h"
 #include "core/profiler.h"
 #include "grid/water.h"
@@ -210,7 +211,7 @@ tile2i city_building_get_festival_square_position() {
 }
 
 void city_buildings_add_festival_square(building* square) {
-    city_data.buildings.festival_square.set(square->tile.grid_offset());
+    city_data.buildings.festival_square = square->tile;
 }
 
 void city_buildings_remove_festival_square(void) {
@@ -265,4 +266,21 @@ void city_t::buildings_update_open_water_access() {
             b.data.dock.dock_tiles[1] = -1;
         }
     }, BUILDING_DOCK, BUILDING_FISHING_WHARF, BUILDING_SHIPWRIGHT);
+}
+
+void city_t::buildings_t::update_counters() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Buildin Count Update");
+    building_clear_counters();
+    g_city.buildings.reset_dock_wharf_counters();
+    g_city.health.reset_mortuary_workers();
+
+    buildings_valid_do ( [] (building &b) {
+        b.dcast()->update_count();
+    });
+}
+
+void city_t::buildings_t::update_unique_building_positions() {
+    buildings_valid_do ( [] (building &b) {
+        b.dcast()->on_post_load();
+    });
 }

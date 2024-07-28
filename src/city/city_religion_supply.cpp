@@ -41,14 +41,3 @@ void city_t::buildings_t::update_religion_supply_houses() {
         mark_shrine_access(s, 3);
     }
 }
-
-void city_t::buildings_t::update_counters() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Buildin Count Update");
-    building_clear_counters();
-    g_city.buildings.reset_dock_wharf_counters();
-    g_city.health.reset_mortuary_workers();
-
-    buildings_valid_do ( [] (building &b) {
-        b.dcast()->update_count();
-    });
-}

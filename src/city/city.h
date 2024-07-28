@@ -68,6 +68,7 @@ struct city_t {
         void update_canals_from_water_lifts();
         void update_religion_supply_houses();
         void update_counters();
+        void update_unique_building_positions();
         void reset_dock_wharf_counters();
         void update_month();
         void update_day();
@@ -363,7 +364,7 @@ struct city_t {
         int32_t unknown_4374[2];
         int16_t unknown_439c[3];
         int8_t padding_43b2[2];
-        int32_t unknown_43d8[5];
+        int32_t unknown_43d8[4];
         int32_t unknown_43f0;
         int32_t unused_4454;
         int32_t unknown_446c[4];

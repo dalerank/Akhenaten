@@ -630,8 +630,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT32, data.buildings.recruiter.tile);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.recruiter.building_id);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.recruiter.placed);
+    iob->bind(BIND_SIGNATURE_UINT32, data.buildings.festival_square);
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 4; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_43d8[i]);
     }
     
@@ -650,7 +651,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.festival.planned.size);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.planned.months_to_go);
+    iob->bind(BIND_SIGNATURE_INT8, &data.festival.planned.months_to_go);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.festival.planned.god);
     iob->bind____skip(3);
