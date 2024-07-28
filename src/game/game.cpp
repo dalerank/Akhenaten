@@ -50,7 +50,6 @@
 #include "city/city_floods.h"
 #include "city/population.h"
 #include "city/message.h"
-#include "city/festival.h"
 #include "building/maintenance.h"
 #include "building/industry.h"
 #include "io/gamestate/boilerplate.h"
@@ -281,7 +280,7 @@ void game_t::update_city(int ticks) {
         break;
     case 49:
         g_city.avg_coverage.update();
-        city_festival_calculate_costs();
+        g_city.festival.calculate_costs();
         break;
     case 50:
         break;
@@ -329,7 +328,7 @@ void game_t::advance_month() {
     }
 
     city_population_record_monthly();
-    city_festival_update();
+    g_city.festival.update();
     g_city.buildings.update_month();
 
     if (g_city.can_produce_resource(RESOURCE_FISH)) {

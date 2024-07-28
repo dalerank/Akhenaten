@@ -37,14 +37,6 @@ enum e_no_immigratoion_reason {
     NO_IMMIGRATION_LOW_MOOD = 5
 };
 
-enum e_festival_type {
-    FESTIVAL_NONE = 0,
-    FESTIVAL_SMALL = 1,
-    FESTIVAL_LARGE = 2,
-    FESTIVAL_GRAND = 3,
-    FESTIVAL_BAST_SPECIAL = 4,
-};
-
 enum e_trade_status {
     TRADE_STATUS_NONE = 0,
     TRADE_STATUS_IMPORT = 1,

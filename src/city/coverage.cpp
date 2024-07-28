@@ -5,7 +5,6 @@
 #include "city/constants.h"
 #include "city/city.h"
 #include "city/entertainment.h"
-#include "city/festival.h"
 #include "city/constants.h"
 #include "city/population.h"
 #include "core/calc.h"

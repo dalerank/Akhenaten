@@ -8,8 +8,6 @@
 #include "window/popup_dialog.h"
 
 #include "building/count.h"
-#include "city/festival.h"
-#include "city/gods.h"
 #include "city/city.h"
 #include "game/settings.h"
 #include "graphics/graphics.h"
@@ -55,34 +53,16 @@ static int get_religion_advice() {
         return 5;
     }
 }
-static int get_festival_advice(void) {
-    int months_since_festival = city_festival_months_since_last();
-    if (months_since_festival <= 1)
-        return 0;
-    else if (months_since_festival <= 6)
-        return 1;
-    else if (months_since_festival <= 12)
-        return 2;
-    else if (months_since_festival <= 18)
-        return 3;
-    else if (months_since_festival <= 24)
-        return 4;
-    else if (months_since_festival <= 30)
-        return 5;
-    else {
-        return 6;
-    }
-}
 
 static void draw_festival_info(int y_offset) {
     auto &ui = g_advisor_religion_window;
     painter ctx = game.painter();
 
-    ui["fest_months_last"].text_var("%d %s %s", city_festival_months_since_last(), ui::str(8, 5), ui::str(58, 15));
+    ui["fest_months_last"].text_var("%d %s %s", g_city.festival.months_since_festival, ui::str(8, 5), ui::str(58, 15));
 
-    if (city_festival_is_planned()) {
-        int size = city_festival_selected_size();
-        int months_left = city_festival_months_till_next();
+    if (g_city.festival.is_planned()) {
+        int size = g_city.festival.selected_size();
+        int months_left = g_city.festival.months_till_next();
         int planned_month = gametime().month + months_left;
         int width = lang_text_draw(58, 34, 102, 284 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
         lang_text_draw(160, planned_month, 102 + width, 284 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
@@ -94,7 +74,7 @@ static void draw_festival_info(int y_offset) {
         lang_text_draw_multiline(295, size + months_left - 1, vec2i{56, 305 + y_offset}, 400, FONT_NORMAL_WHITE_ON_DARK);
     } else {
         lang_text_draw_centered(58, 16, 102, 284 + y_offset, 300, FONT_NORMAL_WHITE_ON_DARK);
-        lang_text_draw_multiline(58, 18 + get_festival_advice(), vec2i{56, 305 + y_offset}, 400, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_multiline(58, 18 + g_city.festival.get_advice(), vec2i{56, 305 + y_offset}, 400, FONT_NORMAL_WHITE_ON_DARK);
     }
 }
 
@@ -178,7 +158,7 @@ void ui::advisor_religion_window::draw_foreground() {
 
     draw_festival_info(68);
 
-    if (!city_festival_is_planned()) {
+    if (!g_city.festival.is_planned()) {
         button_border_draw(102, 280 + 68, 300, 20, g_advisor_religion_window.focus_button_id == 1);
     }
 }
@@ -192,7 +172,7 @@ static void button_hold_festival(int param1, int param2) {
         return window_ok_dialog_show("#popup_dialog_no_festival_square");
     }
 
-    if (!city_festival_is_planned()) {
+    if (!g_city.festival.is_planned()) {
         window_hold_festival_show();
     }
 }

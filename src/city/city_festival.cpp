@@ -1,0 +1,232 @@
+#include "city_festival.h"
+
+#include "building/building_type.h"
+#include "building/building_storage_yard.h"
+#include "building/count.h"
+#include "buildings.h"
+#include "city/constants.h"
+#include "city/city.h"
+#include "city/finance.h"
+#include "city/message.h"
+#include "city/sentiment.h"
+#include "core/random.h"
+#include "figure/figure.h"
+#include "config/config.h"
+#include "graphics/image_groups.h"
+
+bool city_festival_t::is_planned() {
+    return planned.size != FESTIVAL_NONE;
+}
+
+int city_festival_t::months_till_next() {
+    return planned.months_to_go;
+}
+
+int city_festival_t::selected_god() {
+    return selected.god;
+}
+void city_festival_t::select_god(e_god god_id) {
+    selected.god = god_id;
+}
+
+int city_festival_t::selected_size() {
+    return selected.size;
+}
+
+bool city_festival_t::select_size(e_festival_type size) {
+    if (size == FESTIVAL_GRAND && not_enough_alcohol) {
+        return false;
+    }
+
+    selected.size = size;
+    return true;
+}
+
+void city_festival_t::schedule() {
+    planned.god = selected.god;
+    planned.size = selected.size;
+
+    int cost;
+    int population = g_city.population.population;
+    switch (selected.size) {
+    case FESTIVAL_SMALL:
+        planned.months_to_go = small_min_months + std::max(1, population / 1000);
+        cost = small_cost;
+        break;
+
+    case FESTIVAL_LARGE:
+        planned.months_to_go = middle_min_months + std::max(1, population / 1500);
+        cost = large_cost;
+        break;
+
+    default:
+        planned.months_to_go = grand_min_minths + std::max(1, population / 2000);
+        cost = grand_cost;
+    }
+
+    city_finance_process_requests_and_festivals(cost);
+
+    if (selected.size == FESTIVAL_GRAND) {
+        building_storageyards_remove_resource(RESOURCE_BEER, grand_alcohol);
+    }
+}
+
+void city_festival_t::execute_festival() {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building* b = building_get(i);
+        if (b->state != BUILDING_STATE_VALID)
+            continue;
+
+        switch (b->type) {
+        case BUILDING_TEMPLE_OSIRIS:
+        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+        case BUILDING_TEMPLE_RA:
+        case BUILDING_TEMPLE_COMPLEX_RA:
+        case BUILDING_TEMPLE_PTAH:
+        case BUILDING_TEMPLE_COMPLEX_PTAH:
+        case BUILDING_TEMPLE_SETH:
+        case BUILDING_TEMPLE_COMPLEX_SETH:
+        case BUILDING_TEMPLE_BAST:
+        case BUILDING_TEMPLE_COMPLEX_BAST:
+        case BUILDING_JUGGLER_SCHOOL:
+        case BUILDING_CONSERVATORY:
+        case BUILDING_DANCE_SCHOOL: { // this actually doesn't happen in Pharaoh?
+                                      //                    if (b->has_figure(0))
+                                      //                        b->remove_figure(0);
+                figure* f = b->create_figure_generic(FIGURE_FESTIVAL_PRIEST, FIGURE_ACTION_10_FESTIVAL_PRIEST_CREATED, BUILDING_SLOT_PRIEST, DIR_4_BOTTOM_LEFT);
+                f->festival_remaining_dances = 10;
+
+                // choose a random tile on the festival square
+                tile2i festival = city_building_get_festival_square_position();
+                festival.shift(2, 2);
+                f->do_goto(festival, TERRAIN_USAGE_ROADS, 10);
+
+                break;
+            }
+        }
+    }
+
+    if (first_festival_effect_months <= 0) {
+        first_festival_effect_months = 12;
+        switch (planned.size) {
+        case FESTIVAL_SMALL:
+            city_sentiment_change_happiness(7);
+            break;
+        case FESTIVAL_LARGE:
+            city_sentiment_change_happiness(9);
+            break;
+        case FESTIVAL_GRAND:
+            city_sentiment_change_happiness(12);
+            break;
+        }
+    } else if (second_festival_effect_months <= 0) {
+        second_festival_effect_months = 12;
+        switch (planned.size) {
+        case FESTIVAL_SMALL:
+            city_sentiment_change_happiness(2);
+            break;
+        case FESTIVAL_LARGE:
+            city_sentiment_change_happiness(3);
+            break;
+        case FESTIVAL_GRAND:
+            city_sentiment_change_happiness(5);
+            break;
+        }
+    } else {
+        switch (planned.size) {
+        case FESTIVAL_SMALL:
+            city_sentiment_change_happiness(1);
+            break;
+        
+        case FESTIVAL_LARGE:
+            city_sentiment_change_happiness(2);
+            break;
+        
+        case FESTIVAL_GRAND:
+            city_sentiment_change_happiness(3);
+            break;
+        }
+    }
+
+    months_since_festival = 1;
+
+    g_city.religion.gods[planned.god].months_since_festival = 0;
+    switch (planned.size) {
+    case FESTIVAL_SMALL:
+        city_message_post(true, MESSAGE_SMALL_FESTIVAL, 0, 0);
+        break;
+
+    case FESTIVAL_LARGE:
+        city_message_post(true, MESSAGE_LARGE_FESTIVAL, 0, 0);
+        break;
+
+    case FESTIVAL_GRAND:
+        city_message_post(true, MESSAGE_GRAND_FESTIVAL, 0, 0);
+
+        if (config_get(CONFIG_GP_CH_GRANDFESTIVAL)) {
+            g_city.religion.gods[planned.god].blessing_done = 0;
+        }
+
+        break;
+    }
+
+    planned.size = FESTIVAL_NONE;
+    planned.months_to_go = 0;
+}
+
+void city_festival_t::update() {
+    months_since_festival = std::min<uint8_t>(60, months_since_festival++);
+
+    if (first_festival_effect_months > 0) {
+        --first_festival_effect_months;
+    }
+
+    if (second_festival_effect_months > 0) {
+        --second_festival_effect_months;
+    }
+
+    if (!is_planned()) {
+        return;
+    }
+    
+    planned.months_to_go--;
+    if (planned.months_to_go <= 0) {
+        execute_festival();
+    }
+}
+
+void city_festival_t::calculate_costs() {
+    int population = g_city.population.population;
+    small_cost = population / 20 + 10;
+    large_cost = population / 10 + 20;
+    grand_cost = population / 5 + 40;
+    grand_alcohol = population / 50 + 1;
+    not_enough_alcohol = false;
+
+    int32_t alcohol_resource = RESOURCE_BEER;
+    if (g_city.resource.stored_in_warehouses[alcohol_resource] < grand_alcohol) {
+        not_enough_alcohol = true;
+        if (selected.size == FESTIVAL_GRAND) {
+            selected.size = FESTIVAL_LARGE;
+        }
+    }
+}
+
+int city_festival_t::get_advice() {
+    if (months_since_festival <= 1)
+        return 0;
+    else if (months_since_festival <= 6)
+        return 1;
+    else if (months_since_festival <= 12)
+        return 2;
+    else if (months_since_festival <= 18)
+        return 3;
+    else if (months_since_festival <= 24)
+        return 4;
+    else if (months_since_festival <= 30)
+        return 5;
+    else {
+        return 6;
+    }
+}
+

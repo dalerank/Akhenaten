@@ -528,7 +528,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.venue_needing_shows);
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_entertainment);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.entertainment);
-    iob->bind(BIND_SIGNATURE_INT32, &data.festival.months_since_festival); // ok
+    iob->bind(BIND_SIGNATURE_INT8, &data.festival.months_since_festival); // ok
+    iob->bind____skip(3);
 
     for (int i = 0; i < MAX_GODS; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].target_mood);
@@ -643,22 +644,34 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.tribute); // ok
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.expenses.tribute);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.tribute_not_paid_last_year);
-    iob->bind(BIND_SIGNATURE_INT32, &data.festival.selected.god);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.selected.god);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.festival.selected.size); // ????
-    iob->bind(BIND_SIGNATURE_INT32, &data.festival.planned.size);
-    iob->bind(BIND_SIGNATURE_INT32, &data.festival.planned.months_to_go);
-    iob->bind(BIND_SIGNATURE_INT32, &data.festival.planned.god);
-    iob->bind(BIND_SIGNATURE_INT32, &data.festival.small_cost); // 23 --> 22 ??????
-    iob->bind(BIND_SIGNATURE_INT32, &data.festival.large_cost); // 46 --> 45
-    iob->bind(BIND_SIGNATURE_INT32, &data.festival.grand_cost); // 93 --> 90
-    iob->bind(BIND_SIGNATURE_INT32, &data.festival.grand_alcohol);
-    iob->bind(BIND_SIGNATURE_INT32, &data.festival.not_enough_alcohol);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.planned.size);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.planned.months_to_go);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.planned.god);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.festival.small_cost); // 23 --> 22 ??????
+    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.festival.large_cost); // 46 --> 45
+    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.festival.grand_cost); // 93 --> 90
+    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.festival.grand_alcohol);
+    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.not_enough_alcohol);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_religion);
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_education);
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_health);
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.common_religion);
-    iob->bind(BIND_SIGNATURE_INT32, &data.festival.first_festival_effect_months);
-    iob->bind(BIND_SIGNATURE_INT32, &data.festival.second_festival_effect_months);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.first_festival_effect_months);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.second_festival_effect_months);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_4454);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.unemployment);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.previous_value); // ok

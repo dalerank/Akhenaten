@@ -6,7 +6,6 @@
 #include "building/count.h"
 #include "city/coverage.h"
 #include "city/city.h"
-#include "city/festival.h"
 #include "city/gods.h"
 #include "city/houses.h"
 #include "graphics/image.h"
@@ -49,25 +48,6 @@ static int get_entertainment_advice(void) {
     }
 }
 
-static int get_festival_advice(void) {
-    int months_since_festival = city_festival_months_since_last();
-    if (months_since_festival <= 1)
-        return 0;
-    else if (months_since_festival <= 6)
-        return 1;
-    else if (months_since_festival <= 12)
-        return 2;
-    else if (months_since_festival <= 18)
-        return 3;
-    else if (months_since_festival <= 24)
-        return 4;
-    else if (months_since_festival <= 30)
-        return 5;
-    else {
-        return 6;
-    }
-}
-
 static void draw_entertainer(int type, int y_offset, e_building_type venue, int shows, int coverage, int entertain_coeff) {
     e_font font = FONT_NORMAL_WHITE_ON_DARK;
 
@@ -102,14 +82,15 @@ static void draw_festival_info() {
     ImageDraw::img_generic(ctx, image_id_from_group(PACK_UNLOADED, 21) + 15, vec2i{460, 255});
     lang_text_draw(58, 17, 52, 224, FONT_LARGE_BLACK_ON_LIGHT);
 
-    int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260, FONT_NORMAL_WHITE_ON_DARK);
+    int width = lang_text_draw_amount(8, 4, g_city.festival.months_since_festival, 112, 260, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(58, 15, 112 + width, 260, FONT_NORMAL_WHITE_ON_DARK);
-    if (city_festival_is_planned()) {
+    if (g_city.festival.is_planned()) {
         lang_text_draw_centered(58, 34, 102, 284, 300, FONT_NORMAL_WHITE_ON_DARK);
     } else {
         lang_text_draw_centered(58, 16, 102, 284, 300, FONT_NORMAL_WHITE_ON_DARK);
     }
-    lang_text_draw_multiline(58, 18 + get_festival_advice(), vec2i{56, 305}, 400, FONT_NORMAL_WHITE_ON_DARK);
+
+    lang_text_draw_multiline(58, 18 + g_city.festival.get_advice(), vec2i{56, 305}, 400, FONT_NORMAL_WHITE_ON_DARK);
 }
 
 int ui::advisor_entertainment_window::draw_background() {

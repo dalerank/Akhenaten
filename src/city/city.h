@@ -16,6 +16,7 @@
 #include "city/victory.h"
 #include "city/ratings.h"
 #include "grid/point.h"
+#include "city/city_festival.h"
 #include "grid/desirability.h"
 
 struct empire_city;
@@ -255,26 +256,9 @@ struct city_t {
         int32_t osiris_flood_will_destroy_active;
     } religion;
     city_entertainment_t entertainment;
-    struct {
-        struct {
-            int32_t months_to_go;
-            int32_t god;
-            int32_t size;
-        } planned;
-        struct {
-            int32_t god;
-            int32_t size;
-        } selected;
-        int32_t small_cost;
-        int32_t large_cost;
-        int32_t grand_cost;
-        int32_t grand_alcohol;
-        int32_t not_enough_alcohol;
 
-        int32_t months_since_festival;
-        int32_t first_festival_effect_months;
-        int32_t second_festival_effect_months;
-    } festival;
+    city_festival_t festival;
+
     struct {
         int16_t space_in_warehouses[RESOURCES_MAX];
         int16_t stored_in_warehouses[RESOURCES_MAX];
