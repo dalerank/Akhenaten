@@ -916,6 +916,7 @@ void city_gods_update_monthly_data(int randm_god) {
 void city_gods_update(bool mood_calc_only) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Gods Update");
     city_gods_calculate_mood_targets();
+    tutorial_on_religion();
 
     if (!g_settings.gods_enabled) {
         return;

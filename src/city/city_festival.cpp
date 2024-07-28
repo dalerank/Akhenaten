@@ -50,17 +50,17 @@ void city_festival_t::schedule() {
     int population = g_city.population.population;
     switch (selected.size) {
     case FESTIVAL_SMALL:
-        planned.months_to_go = small_min_months + std::max(1, population / 1000);
+        planned.months_to_go = small_min_months + population / 1000 + 1;
         cost = small_cost;
         break;
 
     case FESTIVAL_LARGE:
-        planned.months_to_go = middle_min_months + std::max(1, population / 1500);
+        planned.months_to_go = middle_min_months + population / 1500 + 1;
         cost = large_cost;
         break;
 
     default:
-        planned.months_to_go = grand_min_minths + std::max(1, population / 2000);
+        planned.months_to_go = grand_min_minths + population / 2000 + 1;
         cost = grand_cost;
     }
 
