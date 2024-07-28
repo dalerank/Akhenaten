@@ -284,7 +284,7 @@ image_button &ui::img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size,
     g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, group, id, offsets.data[0], button_none, button_none, 0, 0, true});
     auto &ibutton = g_state.buttons.back().i_button;
 
-    ibutton.focused = is_button_hover(ibutton, state_offset) || (flags & UiFlags_Selected);
+    ibutton.focused = !(flags & UiFlags_Readonly) && (is_button_hover(ibutton, state_offset) || !!(flags & UiFlags_Selected));
     ibutton.pressed = ibutton.focused && m->left.is_down;
 
     time_millis current_time = time_get_millis();
@@ -662,7 +662,7 @@ void ui::eimage_button::draw() {
         tsize.x = size.x > 0 ? size.x : img_ptr->width;
         tsize.y = size.y > 0 ? size.y : img_ptr->height;
 
-        ui::img_button(img_desc.pack, img_desc.id, pos, tsize, offsets, (selected && !readonly) ? UiFlags_Selected : UiFlags_None)
+        ui::img_button(img_desc.pack, img_desc.id, pos, tsize, offsets, selected ? UiFlags_Selected : UiFlags_None)
             .onclick(_func);
 
         const vec2i doffset = g_state.offset();

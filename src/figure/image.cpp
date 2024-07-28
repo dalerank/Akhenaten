@@ -107,7 +107,7 @@ void figure::image_set_animation(const animation_t &anim) {
     }
 
     image_desc desc = get_image_desc(anim.anim_id);
-    this->anim.id = animkeys().none;
+    this->anim.id = {};
     image_set_animation(desc.pack, desc.id, desc.offset, anim.max_frames, anim.duration, anim.loop);
 }
 
