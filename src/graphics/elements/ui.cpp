@@ -195,8 +195,9 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
     g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
     generic_button &gbutton = g_state.buttons.back().g_button;
     int focused = is_button_hover(gbutton, offset);
+    const bool readonly = !!(flags & UiFlags_Readonly);
 
-    if (focused) {
+    if (focused && !readonly) {
         button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, true);
     } else if (!(flags & UiFlags_NoBody)) {
         button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, 0);
@@ -208,7 +209,7 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
         const bool rich = !!(flags & UiFlags_Rich);
         if (rich) {
             int symbolw = text_get_width((uint8_t *)"H", font);
-            int lines_num = std::max<int>(1, (int)std::strlen(label) * symbolw / size.x);
+            int lines_num = std::max<int>(1, (int)strlen(label) * symbolw / size.x);
             int centering_y_offset = (size.y - lines_num * symbolh) / 2;
             rich_text_set_fonts(font, FONT_NORMAL_YELLOW);
             rich_text_draw((uint8_t *)label, offset.x + pos.x, offset.y + pos.y + centering_y_offset, size.x, lines_num, false, true);
@@ -219,7 +220,11 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
         }
     }
 
-    if (!!cb) {
+    if (readonly) {
+        graphics_shade_rect(offset + pos, size, 0x80);
+    }
+
+    if (!readonly && !!cb) {
         gbutton.onclick(cb);
     }
     return gbutton;
@@ -771,9 +776,11 @@ menu_item &ui::emenu_header::item(pcstr key) {
 }
 
 void ui::egeneric_button::draw() {
+    UiFlags flags = _flags 
+                      | (readonly ? UiFlags_Readonly : UiFlags_None);
     switch (mode) {
     case 0:
-        ui::button(_text.c_str(), pos, size, _font, _flags)
+        ui::button(_text.c_str(), pos, size, _font, flags)
             .onclick(_func);
         break;
 

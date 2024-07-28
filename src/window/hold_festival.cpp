@@ -26,11 +26,6 @@ void config_load_hold_festival() {
     g_hold_festival_window.load("hold_festival_window");
 }
 
-static void draw_buttons() {
-    // grand festival
-    //ImageDraw::img_generic(ctx, resource_image_id, vec2i{120 + 100, 279});
-}
-
 void select_festival_size(int size) {
     if (city_finance_out_of_money()) {
         return;

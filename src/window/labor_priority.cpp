@@ -63,7 +63,7 @@ static void draw_background(void) {
         graphics_draw_rect(vec2i{178 + 32 * i, 221}, vec2i{27, 27}, COLOR_BLACK);
         lang_text_draw_centered(50, 27 + i, 178 + 32 * i, 224, 27, FONT_LARGE_BLACK_ON_LIGHT);
         if (i >= data.max_items)
-            graphics_shade_rect(vec2i{179 + 32 * i, 222}, vec2i{25, 25}, 1);
+            graphics_shade_rect(vec2i{179 + 32 * i, 222}, vec2i{25, 25}, 0x80);
     }
 
     graphics_draw_rect(vec2i{180, 256}, vec2i{280, 25}, COLOR_BLACK);
