@@ -16,10 +16,12 @@
 #include "js/js_game.h"
 
 figures::model_t<figure_priest> priest_m;
+figures::model_t<figure_festival_priest> festival_priest_m;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_priest);
 void config_load_figure_priest() {
     priest_m.load();
+    festival_priest_m.load();
 }
 
 void figure_priest::figure_before_action() {
@@ -133,7 +135,6 @@ static void religion_coverage_bast(building* b, figure *f, int&) {
 }
 
 int figure_priest::provide_service() {
-    tutorial_on_religion();
     int houses_serviced = 0;
     int none_service = 0;
     switch (home()->type) {
@@ -186,34 +187,72 @@ const animations_t &figure_priest::anim() const {
 
 void figure_priest::update_animation() {
     building* temple = home();
+    xstring animkey = {};
     switch (temple->type) {
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        image_set_animation(priest_m.anim["osiris_walk"]);
+        animkey = "osiris_walk";
         break;
 
     case BUILDING_TEMPLE_RA:
     case BUILDING_TEMPLE_COMPLEX_RA:
-        image_set_animation(priest_m.anim["ra_walk"]);
+        animkey = "ra_walk";
         break;
 
     case BUILDING_TEMPLE_PTAH:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
-        image_set_animation(priest_m.anim["ptah_walk"]);
+        animkey = "ptah_walk";
         break;
 
     case BUILDING_TEMPLE_SETH:
     case BUILDING_TEMPLE_COMPLEX_SETH:
-        image_set_animation(priest_m.anim["seth_walk"]);
+        animkey = "seth_walk";
         break;
 
     case BUILDING_TEMPLE_BAST:
     case BUILDING_TEMPLE_COMPLEX_BAST:
-        image_set_animation(priest_m.anim["bast_walk"]);
+        animkey = "bast_walk";
         break;
     }
+
+    image_set_animation(animkey);
 }
 
 figure_sound_t figure_priest::get_sound_reaction(pcstr key) const {
     return priest_m.sounds[key];
+}
+
+void figure_festival_priest::figure_action() {
+    switch (action_state()) {
+    case FIGURE_ACTION_10_FESTIVAL_PRIEST_CREATED:
+        base.anim.frame = 0;
+        if (--wait_ticks <= 0) {
+            advance_action(FIGURE_ACTION_11_FESTIVAL_PRIEST_GOTO_SQUARE);
+        }
+        break;
+
+    case FIGURE_ACTION_11_FESTIVAL_PRIEST_GOTO_SQUARE:
+        if (do_goto(destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_12_FESTIVAL_PRIEST_DANCE)) {
+            wait_ticks = rand() % 20;
+        }
+        break;
+
+    case FIGURE_ACTION_12_FESTIVAL_PRIEST_DANCE:
+        if (--wait_ticks <= 0) {
+            advance_action(FIGURE_ACTION_13_FESTIVAL_PRIEST_GOTO_HOME);
+        }
+        break;
+
+    case FIGURE_ACTION_13_FESTIVAL_PRIEST_GOTO_HOME:
+        do_gotobuilding(home());
+        break;
+    }
+}
+
+void figure_festival_priest::before_poof() {
+    ; //
+}
+
+const animations_t &figure_festival_priest::anim() const {
+    return festival_priest_m.anim;
 }

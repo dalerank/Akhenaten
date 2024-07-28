@@ -13,7 +13,7 @@ enum e_festival_type {
 
 struct city_festival_t {
     struct {
-        uint8_t months_to_go;
+        int8_t months_to_go;
         e_god god;
         e_festival_type size;
     } planned;

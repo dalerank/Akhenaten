@@ -46,6 +46,15 @@ figure_water_carrier = {
   max_roam_length : 640,
 }
 
+figure_festival_priest = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:41, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:42, max_frames:8, loop:false },
+	},
+	terrain_usage : TERRAIN_USAGE_ANY,
+	max_amount : 25,
+}
+
 figure_priest = {
 	animations : {
 		osiris_walk : { pos : [0, 0], anim_id: IMG_PRIEST_OSIRIS, max_frames:12},

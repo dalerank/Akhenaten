@@ -72,6 +72,12 @@ void city_festival_t::schedule() {
 }
 
 void city_festival_t::execute_festival() {
+    tile2i square_pos = city_building_get_festival_square_position();
+    building *square = building_at(square_pos);
+    if (!square->is_valid()) {
+        return;
+    }
+
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
@@ -94,15 +100,15 @@ void city_festival_t::execute_festival() {
                                       //                    if (b->has_figure(0))
                                       //                        b->remove_figure(0);
                 figure* f = b->create_figure_generic(FIGURE_FESTIVAL_PRIEST, FIGURE_ACTION_10_FESTIVAL_PRIEST_CREATED, BUILDING_SLOT_PRIEST, DIR_4_BOTTOM_LEFT);
-                f->festival_remaining_dances = 10;
-
-                // choose a random tile on the festival square
-                tile2i festival = city_building_get_festival_square_position();
-                festival.shift(2, 2);
-                f->do_goto(festival, TERRAIN_USAGE_ROADS, 10);
-
-                break;
+                
+                tile2i tile_on_square = square_pos.shifted(rand() % square->size, rand() % square->size);
+                f->tile = b->road_access;
+                f->set_destination(square);
+                f->destination_tile = tile_on_square;
+                f->festival_remaining_dances = rand() % 10;
+                f->wait_ticks = rand() % 10;
             }
+            break;
         }
     }
 
@@ -191,6 +197,7 @@ void city_festival_t::update() {
     
     planned.months_to_go--;
     if (planned.months_to_go <= 0) {
+        planned.months_to_go = 0;
         execute_festival();
     }
 }
