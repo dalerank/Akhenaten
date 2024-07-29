@@ -4,7 +4,7 @@
 #include "building/building.h"
 #include "city/object_info.h"
 #include "city/ratings.h"
-#include "city/labor.h"
+#include "city/city.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
@@ -36,6 +36,14 @@ void config_load_building_palace_model() {
 
 void building_palace::on_create(int orientation) {
     base.labor_category = village_building_palace_m.labor_category;
+}
+
+void building_palace::on_post_load() {
+    g_city.buildings.add_palace(&base);
+}
+
+void building_palace::on_destroy() {
+    g_city.buildings.remove_palace(&base);
 }
 
 void building_palace::update_graphic() {

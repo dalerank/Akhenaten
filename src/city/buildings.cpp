@@ -19,17 +19,17 @@ int city_buildings_t::get_palace_id() {
     return palace_building_id;
 }
 
-void city_buildings_add_palace(building* palace) {
-    city_data.buildings.palace_placed = true;
-    city_data.buildings.palace_building_id = palace->id;
-    city_data.buildings.palace_point = palace->tile;
+void city_buildings_t::add_palace(building* palace) {
+    palace_placed = true;
+    palace_building_id = palace->id;
+    palace_point = palace->tile;
 }
 
-void city_buildings_remove_palace(building* palace) {
+void city_buildings_t::remove_palace(building* palace) {
     building* next_palace = building_first([](auto& b) { return b.is_administration(); });
-    city_data.buildings.palace_point.set(next_palace ? next_palace->tile.grid_offset() : 0);
-    city_data.buildings.palace_building_id = next_palace ? next_palace->id : 0;
-    city_data.buildings.palace_placed = !!next_palace;
+    palace_point.set(next_palace ? next_palace->tile.grid_offset() : 0);
+    palace_building_id = next_palace ? next_palace->id : 0;
+    palace_placed = !!next_palace;
 }
 
 bool city_buildings_has_mansion() {

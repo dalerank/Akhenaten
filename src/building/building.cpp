@@ -380,10 +380,6 @@ void building::clear_related_data() {
         building_storage_delete(storage_id);
     }
 
-    if (is_palace()) {
-        city_buildings_remove_palace(this);
-    }
-
     if (is_governor_mansion()) {
         city_buildings_remove_mansion(this);
     }

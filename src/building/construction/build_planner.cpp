@@ -1444,12 +1444,6 @@ void BuildPlanner::construction_finalize() { // confirm final placement
         city_buildings_add_temple_complex(last_created_building);
         break;
 
-    case BUILDING_VILLAGE_PALACE:
-    case BUILDING_TOWN_PALACE:
-    case BUILDING_CITY_PALACE:
-        city_buildings_add_palace(last_created_building);
-        break;
-
     case BUILDING_FERRY:
         should_recalc_ferry_routes = true;
         break;
