@@ -106,7 +106,7 @@ void config_load_building_properties(bool header) {
     static bool _debug_buildng_open = true;
 
     if (header) {
-        ImGui::Checkbox("Building", &_debug_buildng_open); ImGui::SameLine();
+        ImGui::Checkbox("Building", &_debug_buildng_open);
         return;
     } 
 
