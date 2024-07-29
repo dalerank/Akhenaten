@@ -10,14 +10,9 @@
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "core/buffer.h"
-#include "gods.h"
 
 coverage_data_t g_coverage;
 static auto &city_data = g_city;
-
-int city_avg_coverage_religion(e_god god) {
-    return g_coverage.religion[god];
-}
 
 void city_t::average_coverage_t::update() {
     OZZY_PROFILER_SECTION("Game/Update/Culture Calculate");
@@ -57,9 +52,11 @@ void city_coverage_save_state(buffer* buf) {
     buf->write_i32(coverage.physician);
     buf->write_i32(coverage.senet_house);
 
-    for (int i = GOD_OSIRIS; i <= GOD_BAST; i++) {
-        buf->write_i32(coverage.religion[i]);
-    }
+    buf->write_i32(0);
+    buf->write_i32(0);
+    buf->write_i32(0);
+    buf->write_i32(0);
+    buf->write_i32(0);
 
     buf->write_i32(coverage.oracle);
     buf->write_i32(coverage.school);
@@ -71,16 +68,13 @@ void city_coverage_save_state(buffer* buf) {
 void city_coverage_load_state(buffer* buf) {
     auto& coverage = g_coverage;
 
-    // Yes, hospital is saved twice
     coverage.booth = buf->read_i32();
     coverage.bandstand = buf->read_i32();
     coverage.pavilion = buf->read_i32();
     coverage.physician = buf->read_i32();
     coverage.senet_house = buf->read_i32();
 
-    for (int i = GOD_OSIRIS; i <= GOD_BAST; i++) {
-        coverage.religion[i] = buf->read_i32();
-    }
+    buf->skip(5);
 
     coverage.oracle = buf->read_i32();
     coverage.school = buf->read_i32();

@@ -3,7 +3,6 @@
 #include "city/labor.h"
 #include "figure/service.h"
 #include "city/city.h"
-#include "city/gods.h"
 #include "city/sentiment.h"
 #include "figure/service.h"
 
@@ -39,7 +38,7 @@ sound_key figure_juggler::phrase_key() const {
     }
 
     svector<sound_key, 10> keys;
-    uint32_t months_since_last_festival = city_months_since_last_festival();
+    uint32_t months_since_last_festival = g_city.religion.months_since_last_festival();
     if (months_since_last_festival < 6) {
         keys.push_back("i_like_festivals");
     }
@@ -71,7 +70,7 @@ sound_key figure_juggler::phrase_key() const {
         keys.push_back("salary_too_low");
     }
 
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
         keys.push_back("gods_are_angry");
     } else {
         keys.push_back("gods_are_pleasures");

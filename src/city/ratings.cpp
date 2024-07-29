@@ -234,7 +234,7 @@ void city_ratings_t::update_culture_rating() {
     }
     culture += culture_points.entertainment;
 
-    int pct_religion = g_city.avg_coverage.common_religion;
+    int pct_religion = g_city.religion.coverage_common;
     if (pct_religion >= 100) {
         culture_points.religion = 30;
     } else if (pct_religion > 85) {

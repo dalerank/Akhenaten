@@ -72,7 +72,7 @@ static void draw_background() {
 
     for (e_god god = GOD_OSIRIS; god < MAX_GODS; ++god) {
         bstring32 god_id; god_id.printf("god%d", god);
-        if (city_gods_is_known((e_god)god) == GOD_STATUS_UNKNOWN) {
+        if (g_city.religion.is_god_known(god) == GOD_STATUS_UNKNOWN) {
             ui[god_id].select(false);
             ui[god_id].readonly = true;
             continue;

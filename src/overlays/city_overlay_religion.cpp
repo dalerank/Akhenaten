@@ -4,7 +4,6 @@
 #include "game/state.h"
 #include "grid/building.h"
 #include "grid/property.h"
-#include "city/gods.h"
 #include "figure/figure.h"
 
 #include <algorithm>

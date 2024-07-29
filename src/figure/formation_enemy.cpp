@@ -3,7 +3,6 @@
 #include "building/building.h"
 #include "city/buildings.h"
 #include "city/city.h"
-#include "city/gods.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -358,9 +357,11 @@ bool formation_enemy_move_formation_to(const formation* m, tile2i tile, tile2i &
 }
 
 static void seth_kill_enemies(void) {
-    int to_kill = city_god_spirit_of_seth_power();
-    if (to_kill <= 0)
+    int to_kill = g_city.religion.spirit_of_seth_power();
+    if (to_kill <= 0) {
         return;
+    }
+
     int grid_offset = 0;
     for (int i = 1; i < MAX_FIGURES && to_kill > 0; i++) {
         figure* f = figure_get(i);
@@ -374,7 +375,8 @@ static void seth_kill_enemies(void) {
                 grid_offset = f->tile.grid_offset();
         }
     }
-    city_god_spirit_of_seth_mark_used();
+
+    g_city.religion.spirit_of_seth_mark_used();
     city_message_post(true, MESSAGE_SPIRIT_OF_MARS, 0, grid_offset);
 }
 

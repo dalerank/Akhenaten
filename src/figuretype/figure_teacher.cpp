@@ -51,7 +51,7 @@ sound_key figure_teacher::phrase_key() const {
         keys.push_back("teacher_city_not_safety");
     }
 
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
         keys.push_back("teacher_gods_are_angry");
     }
 

@@ -58,4 +58,5 @@ struct kingdome_relation_t {
     void donate_savings_to_city();
     void mark_soldier_killed();
     void force_attack(int size);
+    void reset_gifts();
 };

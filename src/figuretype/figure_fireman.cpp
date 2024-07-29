@@ -12,7 +12,6 @@
 #include "city/health.h"
 #include "city/sentiment.h"
 #include "city/labor.h"
-#include "city/gods.h"
 #include "city/city.h"
 #include "figure/service.h"
 #include "grid/building.h"
@@ -80,7 +79,7 @@ sound_key figure_fireman::phrase_key() const {
         keys.push_back("hight_fire_level");
     }
 
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
         keys.push_back("gods_are_angry");
     } else {
         keys.push_back("gods_are_pleasures");

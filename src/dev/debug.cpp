@@ -29,7 +29,6 @@
 #include "building/count.h"
 #include "city/coverage.h"
 #include "city/floods.h"
-#include "city/gods.h"
 #include "sound/sound_city.h"
 #include "sound/sound.h"
 #include "core/random.h"
@@ -933,53 +932,53 @@ void draw_debug_ui(int x, int y) {
         int c7 = 15;
         int c8 = 360;
 
-        if (city_gods_is_known(GOD_OSIRIS) != GOD_STATUS_UNKNOWN) {
+        if (g_city.religion.is_god_known(GOD_OSIRIS) != GOD_STATUS_UNKNOWN) {
             debug_text_dual_left(str, x, y + 15, c0, c1, "Osiris:", g_city.religion.gods[0].mood, g_city.religion.gods[0].target_mood);
             debug_text_dual_left(str, x + c2, y + 15, 0, c1, "", g_city.religion.gods[0].wrath_bolts, g_city.religion.gods[0].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 15, cl, "", building_count_total(BUILDING_SHRINE_OSIRIS));
             debug_text(ctx, str, x + c4, y + 15, cl, "", building_count_active(BUILDING_TEMPLE_OSIRIS));
             debug_text(ctx, str, x + c5, y + 15, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_OSIRIS));
-            debug_text(ctx, str, x + c6, y + 15, c7, "%", city_avg_coverage_religion(GOD_OSIRIS));
+            debug_text(ctx, str, x + c6, y + 15, c7, "%", g_city.religion.coverage_avg(GOD_OSIRIS));
             debug_text(ctx, str, x + c8, y + 15, cl, "", g_city.religion.gods[0].months_since_festival);
         }
 
-        if (city_gods_is_known(GOD_RA) != GOD_STATUS_UNKNOWN) {
+        if (g_city.religion.is_god_known(GOD_RA) != GOD_STATUS_UNKNOWN) {
             debug_text_dual_left(str, x, y + 25, c0, c1, "Ra:", g_city.religion.gods[1].mood, g_city.religion.gods[1].target_mood);
             debug_text_dual_left(str, x + c2, y + 25, 0, c1, "", g_city.religion.gods[1].wrath_bolts, g_city.religion.gods[1].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 25, cl, "", building_count_total(BUILDING_SHRINE_RA));
             debug_text(ctx, str, x + c4, y + 25, cl, "", building_count_active(BUILDING_TEMPLE_RA));
             debug_text(ctx, str, x + c5, y + 25, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_RA));
-            debug_text(ctx, str, x + c6, y + 25, c7, "%", city_avg_coverage_religion(GOD_RA));
+            debug_text(ctx, str, x + c6, y + 25, c7, "%", g_city.religion.coverage_avg(GOD_RA));
             debug_text(ctx, str, x + c8, y + 25, cl, "", g_city.religion.gods[1].months_since_festival);
         }
 
-        if (city_gods_is_known(GOD_PTAH) != GOD_STATUS_UNKNOWN) {
+        if (g_city.religion.is_god_known(GOD_PTAH) != GOD_STATUS_UNKNOWN) {
             debug_text_dual_left(str, x, y + 35, c0, c1, "Ptah:", g_city.religion.gods[2].mood, g_city.religion.gods[2].target_mood);
             debug_text_dual_left(str, x + c2, y + 35, 0, c1, "", g_city.religion.gods[2].wrath_bolts, g_city.religion.gods[2].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 35, cl, "", building_count_total(BUILDING_SHRINE_PTAH));
             debug_text(ctx, str, x + c4, y + 35, cl, "", building_count_active(BUILDING_TEMPLE_PTAH));
             debug_text(ctx, str, x + c5, y + 35, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_PTAH));
-            debug_text(ctx, str, x + c6, y + 35, c7, "%", city_avg_coverage_religion(GOD_PTAH));
+            debug_text(ctx, str, x + c6, y + 35, c7, "%", g_city.religion.coverage_avg(GOD_PTAH));
             debug_text(ctx, str, x + c8, y + 35, cl, "", g_city.religion.gods[2].months_since_festival);
         }
 
-        if (city_gods_is_known(GOD_SETH) != GOD_STATUS_UNKNOWN) {
+        if (g_city.religion.is_god_known(GOD_SETH) != GOD_STATUS_UNKNOWN) {
             debug_text_dual_left(str, x, y + 45, c0, c1, "Seth:", g_city.religion.gods[3].mood, g_city.religion.gods[3].target_mood);
             debug_text_dual_left(str, x + c2, y + 45, 0, c1, "", g_city.religion.gods[3].wrath_bolts, g_city.religion.gods[3].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 45, cl, "", building_count_total(BUILDING_SHRINE_SETH));
             debug_text(ctx, str, x + c4, y + 45, cl, "", building_count_active(BUILDING_TEMPLE_SETH));
             debug_text(ctx, str, x + c5, y + 45, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_SETH));
-            debug_text(ctx, str, x + c6, y + 45, c7, "%", city_avg_coverage_religion(GOD_SETH));
+            debug_text(ctx, str, x + c6, y + 45, c7, "%", g_city.religion.coverage_avg(GOD_SETH));
             debug_text(ctx, str, x + c8, y + 45, cl, "", g_city.religion.gods[3].months_since_festival);
         }
 
-        if (city_gods_is_known(GOD_BAST) != GOD_STATUS_UNKNOWN) {
+        if (g_city.religion.is_god_known(GOD_BAST) != GOD_STATUS_UNKNOWN) {
             debug_text_dual_left(str, x, y + 55, c0, c1, "Bast:", g_city.religion.gods[4].mood, g_city.religion.gods[4].target_mood);
             debug_text_dual_left(str, x + c2, y + 55, 0, c1, "", g_city.religion.gods[4].wrath_bolts, g_city.religion.gods[4].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 55, cl, "", building_count_total(BUILDING_SHRINE_BAST));
             debug_text(ctx, str, x + c4, y + 55, cl, "", building_count_active(BUILDING_TEMPLE_BAST));
             debug_text(ctx, str, x + c5, y + 55, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_BAST));
-            debug_text(ctx, str, x + c6, y + 55, c7, "%", city_avg_coverage_religion(GOD_BAST));
+            debug_text(ctx, str, x + c6, y + 55, c7, "%", g_city.religion.coverage_avg(GOD_BAST));
             debug_text(ctx, str, x + c8, y + 55, cl, "", g_city.religion.gods[4].months_since_festival);
         }
 

@@ -2,7 +2,6 @@
 
 #include "city/constants.h"
 #include "city/city.h"
-#include "city/gods.h"
 #include "city/trade.h"
 #include "city/buildings.h"
 #include "grid/water.h"
@@ -45,11 +44,8 @@ void city_t::init() {
     population.monthly.count = 0;
     festival.months_since_festival = 1;
     festival.selected.size = FESTIVAL_SMALL;
-    kingdome.gifts[GIFT_MODEST].cost = 0;
-    kingdome.gifts[GIFT_GENEROUS].cost = 0;
-    kingdome.gifts[GIFT_LAVISH].cost = 0;
-
-    city_gods_reset();
+    g_city.kingdome.reset_gifts();
+    g_city.religion.reset();
     figure_clear_all();
 }
 
@@ -668,7 +664,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_religion);
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_education);
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_health);
-    iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.common_religion);
+    iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_UINT8, &data.festival.first_festival_effect_months);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.festival.second_festival_effect_months);
@@ -826,8 +822,13 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(2); // 2800 --> 0     granary space?
     iob->bind____skip(30);
     iob->bind____skip(2); // 400 --> 0      granary used (game meat)?
-    iob->bind____skip(290);
-    iob->bind____skip(4); // something related to Bast plague (minor curse)
+    iob->bind____skip(288);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage_common);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_OSIRIS]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_RA]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_PTAH]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_SETH]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_BAST]);
     iob->bind(BIND_SIGNATURE_INT16, &data.religion.ra_slightly_increased_trading_months_left);
     iob->bind(BIND_SIGNATURE_INT16, &data.religion.ra_harshly_reduced_trading_months_left);
     iob->bind(BIND_SIGNATURE_INT16, &data.religion.ra_slightly_reduced_trading_months_left);
@@ -839,6 +840,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(60);
     //    iob->bind____skip(378);
 });
+
 io_buffer* iob_city_data_extra = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_city;
     iob->bind(BIND_SIGNATURE_INT16, &data.unused.faction_bytes[0]);

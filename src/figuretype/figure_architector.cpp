@@ -4,7 +4,6 @@
 #include "core/log.h"
 #include "city/sentiment.h"
 #include "city/labor.h"
-#include "city/gods.h"
 #include "city/city.h"
 #include "figure/service.h"
 
@@ -70,7 +69,7 @@ sound_key figure_architector::phrase_key() const {
         {"high_damage_level", hoeses_damage_high > 0},
         {"no_food_in_city", city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD},
         {"need_more_workers", g_city.labor.workers_needed >= 20},
-        {"gods_are_angry", city_gods_least_mood() <= GOD_MOOD_INDIFIRENT},
+        {"gods_are_angry", g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT},
         {"city_has_bad_reputation", city_sentiment() < 30},
         {"city_is_good", city_sentiment() > 50},
         {"city_is_bad",city_sentiment() >= 30},

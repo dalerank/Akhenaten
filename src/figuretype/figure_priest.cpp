@@ -1,7 +1,6 @@
 #include "figure_priest.h"
 
 #include "game/tutorial.h"
-#include "city/gods.h"
 #include "city/labor.h"
 #include "city/city.h"
 #include "city/sentiment.h"
@@ -53,7 +52,7 @@ sound_key figure_priest::phrase_key() const {
         keys.push_back(create_key("city_not_safety"));
     }
 
-    if (city_god_months_since_festival(god) < 6) {
+    if (g_city.religion.months_since_festival(god) < 6) {
         keys.push_back(create_key("god_love_festival"));
     }
 
@@ -92,7 +91,7 @@ sound_key figure_priest::phrase_key() const {
         keys.push_back(create_key("no_food_in_city"));
     }
 
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
         keys.push_back(create_key("gods_are_angry"));
     }
 

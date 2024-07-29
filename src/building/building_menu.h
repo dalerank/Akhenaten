@@ -2,7 +2,7 @@
 
 #include "building/building_type.h"
 #include "city/constants.h"
-#include "city/gods.h"
+#include "city/city_religion.h"
 #include "core/bstring.h"
 #include "graphics/animation.h"
 

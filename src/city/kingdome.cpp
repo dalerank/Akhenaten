@@ -297,3 +297,9 @@ void kingdome_relation_t::force_attack(int size) {
         invasion.soldiers_killed = 0;
     }
 }
+
+void kingdome_relation_t::reset_gifts() {
+    gifts[GIFT_MODEST].cost = 0;
+    gifts[GIFT_GENEROUS].cost = 0;
+    gifts[GIFT_LAVISH].cost = 0;
+}

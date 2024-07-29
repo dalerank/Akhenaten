@@ -1,8 +1,7 @@
 #include "scenario.h"
+
 #include "io/io_buffer.h"
 #include "city/city.h"
-#include "city/gods.h"
-
 #include "city/city_resource.h"
 #include "empire/trade_route.h"
 #include "earthquake.h"

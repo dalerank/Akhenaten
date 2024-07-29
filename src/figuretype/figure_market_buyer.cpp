@@ -19,7 +19,6 @@
 #include "config/config.h"
 #include "city/health.h"
 #include "grid/building.h"
-#include "city/gods.h"
 #include "city/ratings.h"
 #include "city/labor.h"
 #include "city/city.h"
@@ -99,7 +98,7 @@ sound_key figure_market_buyer::phrase_key() const {
         keys.push_back("buyer_much_unemployments");
     }
 
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
         keys.push_back("buyer_gods_are_angry");
     }
 

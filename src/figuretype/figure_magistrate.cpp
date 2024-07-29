@@ -1,7 +1,6 @@
 #include "figure_magistrate.h"
 
 #include "city/sentiment.h"
-#include "city/gods.h"
 #include "city/city.h"
 #include "city/labor.h"
 #include "city/ratings.h"
@@ -71,7 +70,7 @@ sound_key figure_magistrate::phrase_key() const {
         keys.push_back("need_workers");
     }
 
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
         keys.push_back("gods_are_angry");
     }
 

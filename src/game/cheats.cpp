@@ -7,7 +7,6 @@
 #include "city/finance.h"
 #include "city/city_house_population.h"
 #include "city/city.h"
-#include "city/gods.h"
 #include "city/victory.h"
 #include "city/warning.h"
 #include "city/health.h"
@@ -34,9 +33,7 @@
 #endif
 
 static void game_cheat_start_invasion(pcstr);
-static void game_cheat_cast_blessing(pcstr);
 static void game_cheat_show_tooltip(pcstr);
-static void game_cheat_cast_upset(pcstr);
 static void game_cheat_pop_milestone(pcstr);
 static void game_cheat_fire(pcstr);
 static void game_cheat_spacious_apartment(pcstr);
@@ -53,8 +50,6 @@ struct cheat_command_handle {
 
 static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_start_invasion},
                                                   {"addclay", game_cheat_add_clay},
-                                                  {"blessing", game_cheat_cast_blessing},
-                                                  {"godupset", game_cheat_cast_upset},
                                                   {"showtooltip", game_cheat_show_tooltip},
                                                   {"popmilestone", game_cheat_pop_milestone},
                                                   {"fire", game_cheat_fire},
@@ -199,22 +194,6 @@ static void game_cheat_spawn_nobles(pcstr args) {
         }
         buildings[i]->create_roaming_figure(FIGURE_NOBLES, FIGURE_ACTION_125_ROAMING);
     }
-}
-
-static void game_cheat_cast_blessing(pcstr args) {
-    int god_id = 0;
-    parse_integer(args, god_id);
-    city_god_blessing_cheat((e_god)god_id);
-
-    city_warning_show_console("Casted blessing");
-}
-
-static void game_cheat_cast_upset(pcstr args) {
-    int god_id = 0;
-    parse_integer(args, god_id);
-    city_god_upset_cheat((e_god)god_id);
-
-    city_warning_show_console("Casted upset");
 }
 
 static void game_cheat_show_tooltip(pcstr args) {

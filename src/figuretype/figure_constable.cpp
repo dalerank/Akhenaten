@@ -74,7 +74,7 @@ sound_key figure_constable::phrase_key() const {
         keys.push_back("policeman_no_food_in_city");
     }
 
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
         keys.push_back("policeman_gods_are_angry");
     }
 

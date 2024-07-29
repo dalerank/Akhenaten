@@ -88,7 +88,7 @@ void building_fishing_wharf::update_graphic() {
         else animkey = animkeys().wait_e;
     } else {
         if (has_cart) animkey = animkeys().none;
-        if (image_warf == image_warf_base) animkey = animkeys().work_n;
+        else if (image_warf == image_warf_base) animkey = animkeys().work_n;
         else if (image_warf == image_warf_base + 1) animkey = animkeys().work_w;
         else if (image_warf == image_warf_base + 2) animkey = animkeys().work_s;
         else animkey = animkeys().work_e;

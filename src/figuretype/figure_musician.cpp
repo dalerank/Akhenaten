@@ -1,7 +1,6 @@
 #include "figure_musician.h"
 
 #include "figure/service.h"
-#include "city/gods.h"
 #include "city/health.h"
 #include "city/sentiment.h"
 #include "city/labor.h"
@@ -29,7 +28,7 @@ svector<e_building_type, 4> figure_musician::allow_venue_types() const {
 
 sound_key figure_musician::phrase_key() const {
     svector<sound_key, 10> keys;
-    uint32_t months_since_last_festival = city_months_since_last_festival();
+    uint32_t months_since_last_festival = g_city.religion.months_since_last_festival();
     if (months_since_last_festival < 6) {
         keys.push_back("i_like_festivals");
     }
@@ -50,7 +49,7 @@ sound_key figure_musician::phrase_key() const {
         keys.push_back("need_workers");
     }
 
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
         keys.push_back("gods_are_angry");
     } else {
         keys.push_back("gods_are_pleasures");

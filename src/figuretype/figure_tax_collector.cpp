@@ -10,7 +10,6 @@
 #include "core/calc.h"
 #include "city/health.h"
 #include "city/labor.h"
-#include "city/gods.h"
 #include "city/ratings.h"
 #include "city/city.h"
 #include "figure/service.h"
@@ -108,7 +107,7 @@ sound_key figure_tax_collector::phrase_key() const {
         {"no_food_in_city", city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD},
         {"buyer_city_have_no_army", formation_get_num_forts() < 1},
         {"need_workers", g_city.labor.workers_needed >= 10},
-        {"gods_are_angry", city_gods_least_mood() <= GOD_MOOD_INDIFIRENT},
+        {"gods_are_angry", g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT},
         {"city_is_bad", g_city.ratings.kingdom < 30},
         {"much_unemployments", city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS},
         {"low_entertainment", g_city.festival.months_since_festival > 6},

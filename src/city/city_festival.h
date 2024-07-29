@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include "city/gods.h"
+#include "city/city_religion.h"
 
 enum e_festival_type {
     FESTIVAL_NONE = 0,

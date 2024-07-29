@@ -3,7 +3,6 @@
 #include "city/labor.h"
 #include "figure/service.h"
 #include "city/city.h"
-#include "city/gods.h"
 #include "city/sentiment.h"
 #include "figure/service.h"
 

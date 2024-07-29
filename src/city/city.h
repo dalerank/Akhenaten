@@ -13,7 +13,7 @@
 #include "city/city_resource.h"
 #include "city/city_fishing_points.h"
 #include "city/map.h"
-#include "city/gods.h"
+#include "city/city_religion.h"
 #include "city/victory.h"
 #include "city/ratings.h"
 #include "grid/point.h"
@@ -54,6 +54,7 @@ struct city_t {
         int8_t enemy_months_traveled;
         int8_t roman_months_traveled;
     } distant_battle;
+
     struct {
         int32_t treasury;
         int32_t tax_percentage;
@@ -73,6 +74,7 @@ struct city_t {
         int32_t wage_rate_paid_this_year;
         int32_t wage_rate_paid_last_year;
     } finance;
+
     struct {
         int32_t taxed_citizens;
         int32_t taxed_nobles;
@@ -154,6 +156,7 @@ struct city_t {
         bool migration_cap;
         bool invading_cap;
     } migration;
+
     struct {
         int32_t value;
         int32_t previous_value;
@@ -176,6 +179,7 @@ struct city_t {
         int32_t religion_coverage;
         int32_t monuments;
     } sentiment;
+
     city_health_t health;
     city_ratings_t ratings;
 
@@ -185,29 +189,11 @@ struct city_t {
         int32_t average_education;
         int32_t average_health;
 
-        int32_t common_religion;
-
         void update();
         int calc_average_entertainment();
     } avg_coverage;
 
-    struct {
-        god_state gods[MAX_GODS];
-        int32_t least_happy_god;
-        int32_t angry_message_delay;
-        bool bast_curse_active;
-        int32_t ra_150_export_profits_months_left;
-        int32_t ra_harshly_reduced_trading_months_left;
-        int32_t ra_no_traders_months_left;
-        int32_t ra_slightly_reduced_trading_months_left;
-        int32_t ra_slightly_increased_trading_months_left;
-        int32_t osiris_sank_ships;
-        int32_t seth_crush_enemy_troops;
-        int32_t seth_protect_player_troops;
-        bool osiris_double_farm_yield;
-        int32_t osiris_flood_will_destroy_active;
-
-    } religion;
+    city_religion_t religion;
     city_entertainment_t entertainment;
 
     city_festival_t festival;

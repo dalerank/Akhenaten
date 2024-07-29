@@ -1,8 +1,8 @@
 #include "figure_flotsam.h"
-#include "figuretype/figure_flotsam.h"
 
+#include "figuretype/figure_flotsam.h"
 #include "figure/figure.h"
-#include "city/gods.h"
+#include "city/city.h"
 #include "core/random.h"
 #include "graphics/image.h"
 #include "graphics/image_desc.h"
@@ -39,7 +39,7 @@ void figure_flotsam::figure_action() {
         if (wait_ticks <= 0) {
             base.action_state = FIGURE_ACTION_129_FLOTSAM_FLOATING;
             wait_ticks = 0;
-            if (!base.resource_id && city_god_osiris_create_shipwreck_flotsam()) {
+            if (!base.resource_id && g_city.religion.osiris_create_shipwreck_flotsam()) {
                 base.min_max_seen = 1;
             }
 

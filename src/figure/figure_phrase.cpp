@@ -9,7 +9,6 @@
 #include "city/houses.h"
 #include "city/city.h"
 #include "city/coverage.h"
-#include "city/gods.h"
 #include "city/labor.h"
 #include "city/population.h"
 #include "city/city_resource.h"

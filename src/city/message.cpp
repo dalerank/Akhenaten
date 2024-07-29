@@ -6,7 +6,7 @@
 #include "core/encoding.h"
 #include "core/string.h"
 #include "core/time.h"
-#include "city/gods.h"
+#include "city/city_religion.h"
 #include "figure/formation.h"
 #include "game/time.h"
 #include "graphics/window.h"

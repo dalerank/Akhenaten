@@ -150,7 +150,7 @@ void game_t::update_city(int ticks) {
 
     switch (gametime().tick) {
     case 1:
-        city_gods_update(false);
+        g_city.religion.update();
         break;
     case 2:
         g_sound.music_update(false);

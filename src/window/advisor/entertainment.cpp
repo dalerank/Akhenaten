@@ -6,7 +6,6 @@
 #include "building/count.h"
 #include "city/coverage.h"
 #include "city/city.h"
-#include "city/gods.h"
 #include "city/houses.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
@@ -95,7 +94,7 @@ static void draw_festival_info() {
 
 int ui::advisor_entertainment_window::draw_background() {
     painter ctx = game.painter();
-    city_gods_update(true);
+    g_city.religion.calculate_gods_mood_targets();
     g_city.avg_coverage.update();
 
     outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);

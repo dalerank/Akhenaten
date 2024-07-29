@@ -1,7 +1,7 @@
 #pragma once
 
 #include "overlays/city_overlay.h"
-#include "city/gods.h"
+#include "city/city_religion.h"
 
 city_overlay* city_overlay_for_religion();
 struct city_overlay_religion : public city_overlay {

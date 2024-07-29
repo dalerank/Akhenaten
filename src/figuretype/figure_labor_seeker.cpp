@@ -3,7 +3,6 @@
 #include "core/profiler.h"
 #include "city/sentiment.h"
 #include "city/labor.h"
-#include "city/gods.h"
 #include "city/city.h"
 #include "figure/service.h"
 
@@ -77,7 +76,7 @@ sound_key figure_labor_seeker::phrase_key() const {
         keys.push_back("city_not_safety_workers_leaving");
     }
 
-    if (city_gods_least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
+    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
         keys.push_back("gods_are_angry");
     } else { // gods are good
         keys.push_back("city_is_amazing");

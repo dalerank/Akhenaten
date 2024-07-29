@@ -35,9 +35,9 @@ static generic_button hold_festival_button[] = {
 };
 
 static int get_religion_advice() {
-    int least_happy = city_god_least_happy();
+    e_god least_happy = g_city.religion.least_happy_god;
     const house_demands &demands = g_city.houses;
-    if (least_happy >= 0 && city_god_wrath_bolts(least_happy) > 4) {
+    if (least_happy >= 0 && g_city.religion.god_wrath_bolts(least_happy) > 4) {
         return 6 + least_happy;
     } else if (demands.religion == 1) {
         return demands.requiring.religion ? 1 : 0;
@@ -82,7 +82,7 @@ static void draw_god_row(e_god god, int y_offset, e_building_type temple, e_buil
     auto &ui = g_advisor_religion_window;
     painter ctx = game.painter();
 
-    e_god_status is_known = city_gods_is_known(god);
+    e_god_status is_known = g_city.religion.is_god_known(god);
     e_font font = (is_known == GOD_STATUS_UNKNOWN) ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW;
 
     auto _t = [god] (pcstr w) { return bstring32().printf("god_%d_%s", god, w); };
@@ -109,16 +109,16 @@ static void draw_god_row(e_god god, int y_offset, e_building_type temple, e_buil
     ui[_t("complex")].text(bcount.c_str());
     ui[_t("temple")].text_var("%d", building_count_active(temple));
     ui[_t("shrine")].text_var("%d", building_count_active(shrine));
-    ui[_t("fest")].text_var("%d", city_god_months_since_festival(god));
-    ui[_t("mood")].text(ui::str(59, 20 + city_god_happiness(god) / 10));
+    ui[_t("fest")].text_var("%d", g_city.religion.months_since_festival(god));
+    ui[_t("mood")].text(ui::str(59, 20 + g_city.religion.god_happiness(god) / 10));
 
     auto &bolt = ui[_t("bolt")];
-    for (int i = 0; i < city_god_wrath_bolts(god) / 20; i++) {
+    for (int i = 0; i < g_city.religion.god_wrath_bolts(god) / 20; i++) {
         ui.image(bolt.image(), bolt.pos + vec2i(i * 10, 0));
     }
 
     auto &angel = ui[_t("angel")];
-    for (int i = 0; i < city_god_happy_angels(god) / 20; i++) {
+    for (int i = 0; i < g_city.religion.god_happy_angels(god) / 20; i++) {
         ui.image(angel.image(), angel.pos + vec2i(i * 10, 0));
     }
 }
@@ -126,6 +126,7 @@ static void draw_god_row(e_god god, int y_offset, e_building_type temple, e_buil
 int ui::advisor_religion_window::draw_background() {
     auto &ui = g_advisor_religion_window;
 
+    g_city.religion.calculate_least_happy_god();
     painter ctx = game.painter();
     if (!g_settings.gods_enabled) {
         ui["nogods_text"].enabled = true;
@@ -153,8 +154,6 @@ void ui::advisor_religion_window::draw_foreground() {
     draw_god_row(GOD_PTAH, 146, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_SHRINE_PTAH);
     draw_god_row(GOD_SETH, 186, BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_SHRINE_SETH);
     draw_god_row(GOD_BAST, 226, BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST, BUILDING_SHRINE_BAST);
-
-    city_gods_calculate_least_happy();
 
     draw_festival_info(68);
 
