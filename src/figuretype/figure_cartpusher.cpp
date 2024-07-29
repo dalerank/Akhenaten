@@ -24,8 +24,8 @@
 #include "graphics/elements/ui.h"
 #include "grid/routing/routing_terrain.h"
 #include "config/config.h"
+#include "city/city.h"
 
-#include "city/finance.h"
 #include "js/js_game.h"
 
 figures::model_t<figure_cartpusher> cartpusher_m;
@@ -247,7 +247,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
 
     // first: gold deliverers
     if (base.resource_id == RESOURCE_GOLD) {
-        int senate_id = city_buildings_get_palace_id();
+        int senate_id = g_city.buildings.get_palace_id();
         building* b = building_get(senate_id);
         if (senate_id && b->state == BUILDING_STATE_VALID && b->num_workers >= 5) {
             set_destination(senate_id);

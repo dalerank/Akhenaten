@@ -10,22 +10,18 @@
 #include "city/city.h"
 
 static auto &city_data = g_city;
-bool city_buildings_has_palace() {
-    return city_data.buildings.palace_placed;
-}
-
-int city_buildings_get_palace_id() {
-    if (!city_buildings_has_palace()) {
+int city_buildings_t::get_palace_id() {
+    if (!palace_placed) {
         return 0;
     }
 
-    return city_data.buildings.palace_building_id;
+    return palace_building_id;
 }
 
 void city_buildings_add_palace(building* palace) {
     city_data.buildings.palace_placed = true;
     city_data.buildings.palace_building_id = palace->id;
-    city_data.buildings.palace_point.set(palace->tile.grid_offset());
+    city_data.buildings.palace_point = palace->tile;
 }
 
 void city_buildings_remove_palace(building* palace) {

@@ -55,10 +55,10 @@ struct city_buildings_t {
     void update_day();
 
     bool has_working_shipyard();
+    int get_palace_id();
 };
 
 
-bool city_buildings_has_palace();
 int city_buildings_get_palace_id();
 void city_buildings_add_palace(building* palace);
 void city_buildings_remove_palace(building* palace);

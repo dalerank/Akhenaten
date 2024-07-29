@@ -1,6 +1,6 @@
 #include "build_menu.h"
-#include "city/buildings.h"
 
+#include "city/city.h"
 #include "building/building.h"
 #include "building/building_menu.h"
 #include "building/construction/build_planner.h"
@@ -143,7 +143,7 @@ static void draw_menu_buttons() {
         text_group tgroup = menu_index_to_text_index({28, type});
         
         if (building_is_palace(type)) {
-            bool has_palace = city_buildings_has_palace();
+            bool has_palace = g_city.buildings.palace_placed;
 
             label_draw_colored(ctx, x_offset - label_margin, data.y_offset + 110 + 24 * i, label_width, ((data.focus_button_id == i + 1) || has_palace) ? 1 : 2, has_palace ? 0xffC0C0C0 : 0xffffffff);
             lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, has_palace ? FONT_NORMAL_BLACK_ON_LIGHT : font);
@@ -212,7 +212,7 @@ static void button_menu_item(int item) {
     widget_city_clear_current_tile();
 
     e_building_type type = building_menu_type(data.selected_submenu, item);
-    if (building_is_palace(type) && city_buildings_has_palace()) {
+    if (building_is_palace(type) && g_city.buildings.palace_placed) {
         return;
     }
 
@@ -235,14 +235,16 @@ const animation_t &window_build_menu_image() {
 }
 
 void window_build_menu_show(int submenu) {
-    if (init(submenu)) {
-        window_type window = {
-            WINDOW_BUILD_MENU,
-            draw_background,
-            draw_foreground,
-            handle_input,
-            0
-        };
-        window_show(&window);
+    if (!init(submenu)) {
+        return;
     }
+
+    static window_type window = {
+        WINDOW_BUILD_MENU,
+        draw_background,
+        draw_foreground,
+        handle_input,
+        0
+    };
+    window_show(&window);
 }
