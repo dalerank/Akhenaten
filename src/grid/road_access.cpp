@@ -18,7 +18,15 @@ bool road_tile_valid_access(int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_ROAD)) {
         return false;
     }
-    
+
+    if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
+        return false;
+    }
+
+    if (map_terrain_is(grid_offset, TERRAIN_DEEPWATER)) {
+        return false;
+    }
+
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {// general case -- no buildings over road!
         e_building_type btype = building_at(grid_offset)->type; // exceptions: vvv
         if (building_type_any_of(btype, BUILDING_MUD_GATEHOUSE, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION, BUILDING_FESTIVAL_SQUARE)) {
@@ -286,6 +294,11 @@ tile2i map_road_to_largest_network_rotation(int rotation, tile2i tile, int size,
     offsets_array offsets;
     map_grid_adjacent_offsets(size, offsets);
     if (closest) {
+        std::erase_if(offsets, [base_offset] (auto &it) {
+            return map_terrain_is(base_offset + it, TERRAIN_WATER | TERRAIN_DEEPWATER)
+                     || (map_building_at(base_offset + it) > 0);
+        });
+
         std::sort(offsets.begin(), offsets.end(), [base_offset] (auto &lhs, auto &rhs) {
             int lhs_network_id = map_road_network_get(base_offset + lhs);
             int rhs_network_id = map_road_network_get(base_offset + rhs);
@@ -300,6 +313,10 @@ tile2i map_road_to_largest_network_rotation(int rotation, tile2i tile, int size,
         for (int i = 1, size = offsets.size(); i < size; ++i) {
             current_tile = tile2i(base_offset + offsets[i]);
             int cur_road_id = map_road_network_get(current_tile);
+            if (map_terrain_is(current_tile, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
+                continue;
+            }
+
             if (cur_road_id != greatest_road_id) {
                 break;
             }
