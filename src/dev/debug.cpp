@@ -992,7 +992,7 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x, y + 125, cl, "Enemy troops kill:", g_city.religion.seth_crush_enemy_troops);
         debug_text(ctx, str, x, y + 135, cl, "Player troops protection:", g_city.religion.seth_protect_player_troops);
 
-        debug_text(ctx, str, x, y + 145, cl, "Double farm yields:", g_city.religion.osiris_double_farm_yield);
+        debug_text(ctx, str, x, y + 145, cl, "Double farm yields days:", g_city.religion.osiris_double_farm_yield_days);
         debug_text(ctx, str, x, y + 155, cl, "Floods will destroy farms:", g_city.religion.osiris_flood_will_destroy_active);
         y += 170;
     }

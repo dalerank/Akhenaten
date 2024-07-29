@@ -712,7 +712,6 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_44ec);
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.ra_150_export_profits_months_left);
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.seth_crush_enemy_troops);
-    data.religion.osiris_double_farm_yield = false; // todo
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_44f8);
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.angry_message_delay);
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.food_consumed_last_month);
@@ -835,7 +834,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT16, &data.religion.seth_protect_player_troops);
     iob->bind____skip(6);
-    iob->bind(BIND_SIGNATURE_INT32, &data.religion.osiris_double_farm_yield);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_double_farm_yield_days);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.osiris_flood_will_destroy_active);
     iob->bind____skip(60);
     //    iob->bind____skip(378);

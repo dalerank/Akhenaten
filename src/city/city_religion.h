@@ -67,7 +67,7 @@ struct city_religion_t {
     int32_t osiris_sank_ships;
     int32_t seth_crush_enemy_troops;
     int32_t seth_protect_player_troops;
-    bool osiris_double_farm_yield;
+    uint8_t osiris_double_farm_yield_days;
     int32_t osiris_flood_will_destroy_active;
 
     uint8_t coverage[MAX_GODS];

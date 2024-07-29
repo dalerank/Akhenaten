@@ -97,13 +97,15 @@ int farm_expected_produce(building* b) {
     int progress = b->data.industry.ready_production > 0
                         ? b->data.industry.ready_production
                         : b->data.industry.progress;
-    if (!config_get(CONFIG_GP_FIX_FARM_PRODUCE_QUANTITY))
+    if (!config_get(CONFIG_GP_FIX_FARM_PRODUCE_QUANTITY)) {
         progress = (progress / 20) * 20;
+    }
     // In OG Pharaoh, the progress value gets counted as if it was rounded
     // down to the lowest 20 points. No idea why! But here's as an option.
 
     int modifier = 1;
-    if (g_city.religion.osiris_double_farm_yield && building_is_floodplain_farm(*b)) {
+    const bool osiris_blessing = (g_city.religion.osiris_double_farm_yield_days > 0);
+    if (osiris_blessing && building_is_floodplain_farm(*b)) {
         modifier = 2;
     }
 
@@ -133,7 +135,7 @@ void building_industry_update_production(void) {
         if (b.data.industry.curse_days_left) {
             b.data.industry.curse_days_left--;
         } else {
-            if (b.data.industry.blessing_days_left) {
+            if (b.data.industry.blessing_days_left > 0) {
                 b.data.industry.blessing_days_left--;
             }
 
@@ -154,7 +156,7 @@ void building_industry_update_production(void) {
 }
 
 void building_industry_update_farms(void) {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Farms Update");
+    OZZY_PROFILER_SECTION("Game/Update/Farms");
 
     buildings_valid_farms_do([] (building &b) {
         if (!b.output_resource_first_id) {
@@ -168,8 +170,6 @@ void building_industry_update_farms(void) {
         if (b.data.industry.blessing_days_left) {
             b.data.industry.blessing_days_left--;
         }
-        //        if (b->data.industry.blessing_days_left && building_is_farm(b->type))
-        //            b->data.industry.progress += b->num_workers;
 
         bool is_floodplain = building_is_floodplain_farm(b);
         int fert = map_get_fertility_for_farm(b.tile.grid_offset());
@@ -208,7 +208,6 @@ void building_industry_update_farms(void) {
             farm->update_tiles_image();
         }
     });
-    g_city.religion.osiris_double_farm_yield = false;
 }
 
 void building_industry_update_wheat_production() {
@@ -217,6 +216,7 @@ void building_industry_update_wheat_production() {
         return;
 
     buildings_valid_do([] (building &b) {
+        assert(b.type == BUILDING_GRAIN_FARM);
         if (!b.output_resource_first_id) {
             return;
         }
@@ -225,16 +225,18 @@ void building_industry_update_wheat_production() {
             return;
         }
 
-        if (b.type == BUILDING_BARLEY_FARM && !b.data.industry.curse_days_left) {
-            b.data.industry.progress += b.num_workers;
-            if (b.data.industry.blessing_days_left)
-                b.data.industry.progress += b.num_workers;
-
-            b.data.industry.progress = std::min<short>(b.data.industry.progress, MAX_PROGRESS_RAW);
-
-            b.dcast_farm()->update_tiles_image();
+        if (b.data.industry.curse_days_left) {
+            return;
         }
-    });
+
+        b.data.industry.progress += b.num_workers;
+        if (b.data.industry.blessing_days_left) {
+            b.data.industry.progress += b.num_workers;
+        }
+
+        b.data.industry.progress = std::min<short>(b.data.industry.progress, MAX_PROGRESS_RAW);
+        b.dcast_farm()->update_tiles_image();
+    }, BUILDING_GRAIN_FARM);
 }
 
 bool building_industry_has_produced_resource(building &b) {

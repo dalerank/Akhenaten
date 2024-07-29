@@ -530,7 +530,7 @@ void city_religion_t::perform_major_blessing(e_god god) {
     case GOD_OSIRIS:
         if (anti_scum_random_bool()) {
             // double farm yields
-            osiris_double_farm_yield = true;
+            osiris_double_farm_yield_days = 100 + rand() % 50;
             city_message_god_post(GOD_OSIRIS, true, MESSAGE_BLESSING_OSIRIS_FARMS, 0, 0);
             return;
         } else {
@@ -1013,6 +1013,9 @@ void city_religion_t::update() {
 
     //        perform_minor_blessing(GOD_PTAH); // TODO: DEBUGGING
     //        BAST_houses_destruction();
+    if (osiris_double_farm_yield_days > 0) {
+        osiris_double_farm_yield_days--;
+    }
 
     // at the start of every month
     if (gametime().day == 0) {

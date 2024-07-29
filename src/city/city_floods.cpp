@@ -270,17 +270,19 @@ void floodplains_tick_update(bool calc_only) {
 
     // update internal tick variables
     debug_year_period = ((cycle_start - 1) * 25) - (cycle * 25 + subcycle);
-    if (cycle < cycle_start)
+    if (cycle < cycle_start) {
         fticks = 0;
-    else if (cycle >= cycle_start && cycle < cycle_start + flooding_period)
+    } else if (cycle >= cycle_start && cycle < cycle_start + flooding_period) {
         fticks = (cycle - cycle_start) * 25 + subcycle + 1;
-    else if (cycle >= cycle_end - flooding_period && cycle <= cycle_end)
+    } else if (cycle >= cycle_end - flooding_period && cycle <= cycle_end) {
         fticks = (cycle_end - cycle) * 25 - subcycle - 1;
-    else
-        fticks = (flooding_period)*25;
+    } else {
+        fticks = (flooding_period) * 25;
+    }
 
-    if (calc_only)
+    if (calc_only) {
         return;
+    }
 
     // update at every full cycle
     if (subcycle == 0) {
