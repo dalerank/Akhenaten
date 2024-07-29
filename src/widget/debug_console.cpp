@@ -141,62 +141,12 @@ void game_debug_show_property(int &i, pcstr field, const vec2i &v, bool disabled
 void game_debug_show_property(int &i, pcstr field, const tile2i &v, bool disabled) { game_debug_show_property_t(i, field, v, disabled); }
 void game_debug_show_property(int &i, pcstr field, const std::function<void()> &f, bool disabled)  { game_debug_show_property_t(i, field, f, disabled); }
 
-static void game_debug_show_properties_object(pcstr prefix, const event_ph_t &e) {
-    ImGui::PushID(0x80000000 | e.event_id);
-
-    ImGui::TableNextRow();
-    ImGui::TableSetColumnIndex(0);
-    ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx("Event", ImGuiTreeNodeFlags_DefaultOpen, "Event %d", e.event_id);
-    ImGui::TableSetColumnIndex(1); 
-
-    int i = 0;
-    if (common_open) {
-        game_debug_show_property_t(i, "event_id", e.event_id, true);
-
-        bstring256 type_name;
-        
-        type_name.printf("%s [%d]", token::find_name(e_event_type_tokens, e.type), e.type);
-        game_debug_show_property_t(i, "<type>", type_name);
-        game_debug_show_property_t(i, "month", e.month);
-        game_debug_show_property_t(i, "time.year", e.time.value);
-        game_debug_show_property_t(i, "time.f_fixed", e.time.f_fixed);
-        game_debug_show_property_t(i, "months_initial", e.months_initial);
-        game_debug_show_property_t(i, "quest_months_left", e.quest_months_left);
-
-        type_name.printf("%s [%d]", token::find_name(e_event_state_tokens, e.event_state), e.event_state);
-        game_debug_show_property_t(i, "<event_state>", type_name);
-        game_debug_show_property_t(i, "event_state", e.event_state);
-        game_debug_show_property_t(i, "is_overdue", e.is_overdue);
-        game_debug_show_property_t(i, "is_active", e.is_active);
-        game_debug_show_property_t(i, "can_comply_dialog_shown", e.can_comply_dialog_shown);
-        game_debug_show_property_t(i, "festival_deity", e.festival_deity);
-        game_debug_show_property_t(i, "on_too_late_action", e.on_too_late_action);
-        game_debug_show_property_t(i, "on_defeat_action", e.on_defeat_action);
-        game_debug_show_property_t(i, "sender_faction", e.sender_faction);
-
-        type_name.printf("%s [%d]", token::find_name(e_event_trigger_type_tokens, e.event_trigger_type), e.event_trigger_type);
-        game_debug_show_property_t(i, "<event_trigger_type>", type_name);
-
-        if (e.type == EVENT_TYPE_REQUEST) {
-            type_name.printf("%s [%d]", resource_name((e_resource)e.item.value), e.item.value);
-            game_debug_show_property_t(i, "<item.value>", type_name);
-        }
-
-        game_debug_show_property_t(i, "item.value", e.item.value);
-        game_debug_show_property_t(i, "item.f_fixed", e.item.f_fixed);
-        
-        ImGui::TreePop();
-    }
-    ImGui::PopID();
-}
-
 void game_debug_properties_draw() {
     if (!game.debug_properties) {
         return;
     }
 
-    static bool _debug_events_open = false;
+    
 
     ImGui::SetNextWindowSize(ImVec2(430, 450), ImGuiCond_FirstUseEver);
     if (!ImGui::Begin("Properties", &game.debug_properties)) {
@@ -211,20 +161,9 @@ void game_debug_properties_draw() {
         }
     }
 
-    ImGui::Checkbox("Events", &_debug_events_open);
-
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
     for (debug::PropertiesIterator *s = debug::PropertiesIterator::tail; s; s = s->next) {
         s->func(/*body*/false);
-    }
-
-    if (_debug_events_open && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
-        for (int i = 0; i < g_scenario_data.events.events_count(); ++i) {
-            const event_ph_t *evt = g_scenario_data.events.at(i);
-            assert(evt);
-            game_debug_show_properties_object("Events", *evt);
-        }
-        ImGui::EndTable();
     }
     ImGui::PopStyleVar();
 
