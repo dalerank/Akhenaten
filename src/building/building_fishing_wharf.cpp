@@ -1,7 +1,7 @@
 #include "building_fishing_wharf.h"
 
 #include "js/js_game.h"
-#include "city/labor.h"
+#include "city/city.h"
 #include "grid/water.h"
 #include "grid/building.h"
 #include "city/buildings.h"
@@ -145,7 +145,7 @@ void building_fishing_wharf::spawn_figure() {
 void building_fishing_wharf::on_place_checks() {
     building_impl::on_place_checks();
 
-    if (!city_buildings_has_working_shipyard()) {
+    if (!g_city.buildings.has_working_shipyard()) {
         building_construction_warning_show(WARNING_SHIPWRIGHT_NEEDED);
     }
 }

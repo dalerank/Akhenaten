@@ -23,8 +23,8 @@ static void mark_shrine_access(building* shrine, int radius) {
     }
 }
 
-void city_t::buildings_t::update_religion_supply_houses() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Religion Supply Update");
+void city_buildings_t::update_religion_supply_houses() {
+    OZZY_PROFILER_SECTION("Game/Update/Religion Supply Update");
     svector<building*, 512> shrines;
     for (auto& b : city_buildings()) {
         if (b.state != BUILDING_STATE_VALID)

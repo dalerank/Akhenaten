@@ -3,6 +3,61 @@
 #include "grid/point.h"
 #include "building/building.h"
 
+struct city_buildings_t {
+    bool palace_placed;
+    int32_t palace_building_id;
+    tile2i palace_point;
+
+    int32_t festival_building_id;
+    tile2i festival_square;
+
+    bool mansion_placed;
+    int32_t mansion_building_id;
+    tile2i mansion;
+
+    int32_t senet_house_placed;
+
+    struct {
+        bool placed;
+        int32_t building_id;
+        tile2i tile;
+    } recruiter;
+
+    bool distribution_center_placed;
+    int32_t distribution_center_building_id;
+    tile2i distribution_center;
+
+    int32_t trade_center_building_id;
+    int8_t triumphal_arches_available;
+    int8_t triumphal_arches_placed;
+    int16_t working_wharfs;
+    int32_t shipyard_boats_requested;
+    int16_t working_docks;
+    int16_t working_dock_ids[10];
+    int16_t working_shipyards;
+    int32_t mission_post_operational;
+    tile2i main_native_meeting;
+    int8_t unknown_value;
+
+    bool temple_complex_placed;
+    int32_t temple_complex_id;
+
+    void update_tick(bool refresh_only);
+    void update_water_supply_houses();
+    void mark_well_access(building *well);
+    void update_wells_range();
+    void update_canals_from_water_lifts();
+    void update_religion_supply_houses();
+    void update_counters();
+    void update_unique_building_positions();
+    void reset_dock_wharf_counters();
+    void update_month();
+    void update_day();
+
+    bool has_working_shipyard();
+};
+
+
 bool city_buildings_has_palace();
 int city_buildings_get_palace_id();
 void city_buildings_add_palace(building* palace);
@@ -41,9 +96,7 @@ void city_buildings_remove_dock();
 void city_buildings_add_working_wharf(int needs_fishing_boat);
 void city_buildings_add_working_dock(int building_id);
 void city_buildings_add_working_shipyard(int building_id);
-int city_buildings_shipyard_boats_requested();
 bool city_buildings_has_working_dock();
-bool city_buildings_has_working_shipyard();
 int city_buildings_get_working_dock(int index);
 
 map_point city_buildings_main_native_meeting_center();
@@ -62,4 +115,3 @@ void city_buildings_add_temple_complex(building* complex);
 void city_buildings_remove_temple_complex();
 
 int city_buildings_unknown_value();
-void city_buildings_update_month();

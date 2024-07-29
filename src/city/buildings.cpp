@@ -174,17 +174,8 @@ void city_buildings_add_working_shipyard(int building_id) {
     ++city_data.buildings.working_shipyards;
 }
 
-
-int city_buildings_shipyard_boats_requested() {
-    return city_data.buildings.shipyard_boats_requested;
-}
-
 bool city_buildings_has_working_dock() {
     return city_data.buildings.working_docks > 0;
-}
-
-bool city_buildings_has_working_shipyard() {
-    return city_data.buildings.working_shipyards > 0;
 }
 
 int city_buildings_get_working_dock(int index) {
@@ -268,7 +259,7 @@ void city_t::buildings_update_open_water_access() {
     }, BUILDING_DOCK, BUILDING_FISHING_WHARF, BUILDING_SHIPWRIGHT);
 }
 
-void city_t::buildings_t::update_counters() {
+void city_buildings_t::update_counters() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Buildin Count Update");
     building_clear_counters();
     g_city.buildings.reset_dock_wharf_counters();
@@ -279,8 +270,41 @@ void city_t::buildings_t::update_counters() {
     });
 }
 
-void city_t::buildings_t::update_unique_building_positions() {
+void city_buildings_t::update_unique_building_positions() {
     buildings_valid_do ( [] (building &b) {
         b.dcast()->on_post_load();
+    });
+}
+
+void city_buildings_t::update_tick(bool refresh_only) {
+    for (auto it = building_begin(), end = building_end(); it != end; ++it) {
+        if (it->is_valid()) {
+            it->dcast()->on_tick(refresh_only);
+        }
+    }
+}
+
+void city_buildings_t::reset_dock_wharf_counters() {
+    working_wharfs = 0;
+    shipyard_boats_requested = 0;
+    for (int i = 0; i < 8; i++) {
+        working_dock_ids[i] = 0;
+    }
+    working_docks = 0;
+}
+
+void city_buildings_t::update_day() {
+    buildings_valid_do([] (building &b) {
+        b.dcast()->update_day();
+    });
+}
+
+bool city_buildings_t::has_working_shipyard() {
+    return working_shipyards > 0;
+}
+
+void city_buildings_t::update_month() {
+    buildings_valid_do([] (building &b) {
+        b.dcast()->update_month();
     });
 }

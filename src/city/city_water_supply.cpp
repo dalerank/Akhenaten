@@ -8,7 +8,7 @@
 #include "grid/canals.h"
 #include "building/building_well.h"
 
-void city_t::buildings_t::mark_well_access(building *well) {
+void city_buildings_t::mark_well_access(building *well) {
     int radius = 1;
     if (config_get(CONFIG_GP_CH_WELL_RADIUS_DEPENDS_MOISTURE)) {
         radius = (map_moisture_get(well->tile.grid_offset()) / 40);
@@ -28,7 +28,7 @@ void city_t::buildings_t::mark_well_access(building *well) {
     });
 }
 
-void city_t::buildings_t::update_wells_range() {
+void city_buildings_t::update_wells_range() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Wells Range Update");
     map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE);
     buildings_valid_do<building_well>([](building_well *b) {
@@ -36,7 +36,7 @@ void city_t::buildings_t::update_wells_range() {
     });
 }
 
-void city_t::buildings_t::update_water_supply_houses() {
+void city_buildings_t::update_water_supply_houses() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Well Access Update");
     svector<building *, 512> wells;
     buildings_valid_do([&] (building &b) {
@@ -56,7 +56,7 @@ void city_t::buildings_t::update_water_supply_houses() {
     }
 }
 
-void city_t::buildings_t::update_canals_from_water_lifts() {
+void city_buildings_t::update_canals_from_water_lifts() {
     // cached grid offsets for water lift outputs
     const int OUTPUT_OFFSETS[4][2] = {{GRID_OFFSET(0, 2), GRID_OFFSET(1, 2)},
                                       {GRID_OFFSET(-1, 0), GRID_OFFSET(-1, 1)},

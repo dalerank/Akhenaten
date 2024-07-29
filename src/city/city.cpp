@@ -936,32 +936,3 @@ bool city_t::determine_granary_get_foods(resource_list &foods, int road_network)
 
     return foods.any();
 }
-
-void city_t::buildings_t::update_tick(bool refresh_only) {
-    for (auto it = building_begin(), end = building_end(); it != end; ++it) {
-        if (it->is_valid()) {
-            it->dcast()->on_tick(refresh_only);
-        }
-    }
-}
-
-void city_t::buildings_t::reset_dock_wharf_counters() {
-    working_wharfs = 0;
-    shipyard_boats_requested = 0;
-    for (int i = 0; i < 8; i++) {
-        working_dock_ids[i] = 0;
-    }
-    working_docks = 0;
-}
-
-void city_t::buildings_t::update_day() {
-    buildings_valid_do([] (building &b) {
-        b.dcast()->update_day();
-    });
-}
-
-void city_t::buildings_t::update_month() {
-    buildings_valid_do([] (building &b) {
-        b.dcast()->update_month();
-    });
-}

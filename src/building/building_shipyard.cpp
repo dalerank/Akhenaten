@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "city/object_info.h"
 #include "city/buildings.h"
+#include "city/city.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
@@ -43,7 +44,7 @@ void building_shipyard::window_info_background(object_info &c) {
         width += text_draw_percentage(pct_done, c.offset.x + 32 + width, c.offset.y + 56, FONT_NORMAL_BLACK_ON_LIGHT);
         lang_text_draw(100, 3, c.offset.x + 32 + width, c.offset.y + 56, FONT_NORMAL_BLACK_ON_LIGHT);
 
-        if (city_buildings_shipyard_boats_requested()) {
+        if (g_city.buildings.shipyard_boats_requested) {
             lang_text_draw_multiline(100, 5, c.offset + vec2i{32, 80}, 16 * (c.bgsize.x - 6), FONT_NORMAL_BLACK_ON_LIGHT);
         } else {
             lang_text_draw_multiline(100, 4, c.offset + vec2i{32, 80}, 16 * (c.bgsize.x - 6), FONT_NORMAL_BLACK_ON_LIGHT);

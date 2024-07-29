@@ -7,6 +7,7 @@
 #include "city/finance.h"
 #include "city/houses.h"
 #include "city/labor.h"
+#include "city/buildings.h"
 #include "city/health.h"
 #include "city/military.h"
 #include "city/city_resource.h"
@@ -22,57 +23,7 @@
 struct empire_city;
 
 struct city_t {
-    struct buildings_t {
-        bool palace_placed;
-        int32_t palace_building_id;
-        tile2i palace_point;
-
-        int32_t festival_building_id;
-        tile2i festival_square;
-
-        bool mansion_placed;
-        int32_t mansion_building_id;
-        tile2i mansion;
-
-        int32_t senet_house_placed;
-
-        struct {
-            bool placed;
-            int32_t building_id;
-            tile2i tile;
-        } recruiter;
-
-        bool distribution_center_placed;
-        int32_t distribution_center_building_id;
-        tile2i distribution_center;
-
-        int32_t trade_center_building_id;
-        int8_t triumphal_arches_available;
-        int8_t triumphal_arches_placed;
-        int16_t working_wharfs;
-        int32_t shipyard_boats_requested;
-        int16_t working_docks;
-        int16_t working_dock_ids[10];
-        int16_t working_shipyards;
-        int32_t mission_post_operational;
-        tile2i main_native_meeting;
-        int8_t unknown_value;
-
-        bool temple_complex_placed;
-        int32_t temple_complex_id;
-
-        void update_tick(bool refresh_only);
-        void update_water_supply_houses();
-        void mark_well_access(building *well);
-        void update_wells_range();
-        void update_canals_from_water_lifts();
-        void update_religion_supply_houses();
-        void update_counters();
-        void update_unique_building_positions();
-        void reset_dock_wharf_counters();
-        void update_month();
-        void update_day();
-    } buildings;
+    city_buildings_t buildings;
 
     struct {
         uint8_t fish_number;
@@ -255,6 +206,7 @@ struct city_t {
         int32_t seth_protect_player_troops;
         bool osiris_double_farm_yield;
         int32_t osiris_flood_will_destroy_active;
+
     } religion;
     city_entertainment_t entertainment;
 
@@ -263,8 +215,6 @@ struct city_t {
     struct {
         int16_t space_in_warehouses[RESOURCES_MAX];
         int16_t stored_in_warehouses[RESOURCES_MAX];
-        //        int32_t space_in_workshops[6];
-        //        int32_t stored_in_workshops[6];
         int16_t trade_status[RESOURCES_MAX];
         int16_t trading_amount[RESOURCES_MAX];
         int32_t stockpiled[RESOURCES_MAX];
@@ -272,8 +222,6 @@ struct city_t {
         int16_t unk_00[RESOURCES_MAX];
 
         int32_t wine_types_available;
-        //        int32_t food_types_available;
-        //        int32_t food_types_eaten;
         int8_t food_types_available_arr[RESOURCES_FOODS_MAX];
         int8_t food_types_eaten_arr[RESOURCES_FOODS_MAX];
         e_resource food_types_allowed[RESOURCES_FOODS_MAX];
@@ -295,7 +243,6 @@ struct city_t {
             int understaffed;
         } granaries;
         int16_t last_used_warehouse;
-
 
     } resource;
     struct {
