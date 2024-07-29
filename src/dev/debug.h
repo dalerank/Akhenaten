@@ -5,6 +5,7 @@
 #include "graphics/image.h"
 #include "graphics/view/view.h"
 #include "graphics/font.h"
+#include "core/core.h"
 #include "input/hotkey.h"
 
 #include <functional>
@@ -143,4 +144,15 @@ struct console_ref_bool {
 #define declare_console_ref_int32(a, v) namespace console { bool var_##a; }; console_ref_int32 a(#a, v);
 #define declare_console_var_bool(a, v) namespace console { bool var_##a; }; console_var_bool a(#a, v);
 #define declare_console_ref_bool(a, v) namespace console { bool var_##a; }; console_ref_bool a(#a, v);
+
+namespace debug {
+
+using debug_iterator_function_cb = void(bool);
+using PropertiesIterator = FuncLinkedList<debug_iterator_function_cb*>;
+
+} // end namespace debug
+
+#define ANK_REGISTER_PROPS_ITERATOR(func) void func(bool); \
+    namespace debug {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
+    static debug::PropertiesIterator ANK_CONFIG_CC1(debug_handler, __LINE__)(func)
 

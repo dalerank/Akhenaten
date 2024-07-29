@@ -19,9 +19,8 @@ namespace config {
 void refresh(archive);
 archive load(pcstr filename);
 
-typedef void (*config_iterator_function_cb)();
-
-using ArchiveIterator = FuncLinkedList<config_iterator_function_cb>;
+using config_iterator_function_cb = void ();
+using ArchiveIterator = FuncLinkedList<config_iterator_function_cb*>;
 
 } // end namespace config
 
