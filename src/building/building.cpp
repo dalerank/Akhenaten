@@ -1121,9 +1121,10 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
             iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_b[i]);
         }
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.has_fish);
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < 13; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.unk_c[i]);
         }
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.produce_multiplier);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.blessing_days_left);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.orientation);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.industry.has_raw_materials);

@@ -212,12 +212,13 @@ public:
             short ready_production;
             short progress;
             bool spawned_worker_this_month;
-            unsigned char max_gatheres;
+            uint8_t max_gatheres;
             int unk_b[10];
             bool has_fish;
-            int unk_c[14];
-            unsigned char blessing_days_left;
-            unsigned char orientation;
+            uint8_t unk_c[13];
+            uint8_t produce_multiplier;
+            uint8_t blessing_days_left;
+            uint8_t orientation;
             short stored_amount_second;
             bool has_raw_materials;
             e_resource first_material_id;
