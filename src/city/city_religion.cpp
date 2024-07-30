@@ -823,13 +823,11 @@ void city_religion_t::update_curses_and_blessings(e_god randm_god, e_god_event f
 }
 
 void city_religion_t::calculate_gods_mood_targets() {
-    // fix god moods to 30 if campaign has not unlocked them yet
-    // TODO: move this option to city_data.gods_available
     const auto &known_gods = this->known_gods();
-    if (scenario_campaign_scenario_id() < 4) {
+    if (g_scenario_data.env.gods_least_mood > 0) {
         for (auto *god: known_gods) {
-            god->target_mood = 30;
-            god->mood = 30;
+            god->target_mood = g_scenario_data.env.gods_least_mood;
+            god->mood = g_scenario_data.env.gods_least_mood;
         }
         return;
     }

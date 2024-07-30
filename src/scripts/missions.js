@@ -4,6 +4,7 @@ mission0 = { // Nubt
 	start_message : 150, //TUTORIAL_HOUSING_AND_ROADS, 248 = 150 + 99 - 1
 	city_has_animals : true,
 	gods_least_mood : 50,
+	religion_enabled : false,
 	stages : {
 		tutorial_fire: [BUILDING_FIREHOUSE],
 		tutorial_food: [BUILDING_HUNTING_LODGE, BUILDING_GRANARY, BUILDING_BAZAAR],
@@ -15,6 +16,7 @@ mission0 = { // Nubt
 mission1 = {
 	start_message : 241 - 99, //MESSAGE_TUTORIAL_GOLD_AND_CRIME
 	city_has_animals : true,
+	gods_least_mood : 50,
 	buildings : [],
 	stages : {
 		tutorial_start: [BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_WATER_SUPPLY,
@@ -27,6 +29,7 @@ mission1 = {
 mission2 = {
 	start_message : 242 - 99,
 	city_has_animals : true,
+	gods_least_mood : 50,
 	buildings : [],
 	stages : {
 		tutorial_start: [BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE, BUILDING_WATER_SUPPLY,
