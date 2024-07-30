@@ -19,7 +19,6 @@ void city_t::coverage_update() {
 
     // education
     city_population_calculate_educational_age();
-    religion.calc_coverage();
 
     coverage.school = std::min(calc_percentage(75 * building_count_active(BUILDING_SCRIBAL_SCHOOL), city_population_school_age()), 100);
     coverage.library = std::min(calc_percentage(800 * building_count_active(BUILDING_LIBRARY), pop), 100);

@@ -36,6 +36,8 @@ declare_console_command_p(godmajorblessing, game_cheat_major_blessing)
 declare_console_command_p(godminorcurse, game_cheat_minor_curse)
 declare_console_command_p(godmajorcurse, game_cheat_major_curse)
 
+const token_holder<e_god, GOD_OSIRIS, MAX_GODS> e_god_tokens;
+
 void game_cheat_minor_blessing(std::istream &is, std::ostream &os) {
     std::string args; is >> args;
     int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
@@ -107,9 +109,18 @@ int city_religion_t::god_coverage_total(e_god god, e_building_type temple, e_bui
 
 void city_religion_t::calc_coverage() {
     int pop = g_city.population.population;
-    // religion
-    //    int oracles = building_count_total(BUILDING_ORACLE);
-    //    coverage.oracle = top(calc_percentage(500 * oracles, population));
+
+    int known_gods_num = 0;
+    for (e_god i = GOD_OSIRIS; i < MAX_GODS; ++i) {
+        if (is_god_known((e_god)i) != GOD_STATUS_UNKNOWN) {
+            known_gods_num++;
+        }
+    }
+
+    if (known_gods_num <= 0) {
+        return;
+    }
+
     coverage[GOD_OSIRIS] = std::min(calc_percentage(pop, god_coverage_total(GOD_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS)), 100);
     coverage[GOD_RA] = std::min(calc_percentage(pop, god_coverage_total(GOD_RA, BUILDING_SHRINE_RA, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA)), 100);
     coverage[GOD_PTAH] = std::min(calc_percentage(pop, god_coverage_total(GOD_PTAH, BUILDING_SHRINE_PTAH, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH)), 100);
@@ -119,7 +130,8 @@ void city_religion_t::calc_coverage() {
     coverage_common = coverage[GOD_OSIRIS] + coverage[GOD_RA]
                         + coverage[GOD_PTAH] + coverage[GOD_SETH]
                         + coverage[GOD_BAST];
-    coverage_common /= 5;
+
+    coverage_common /= known_gods_num;
 }
 
 city_religion_t::god_states city_religion_t::known_gods() {
@@ -1001,6 +1013,7 @@ void city_religion_t::update_monthly_data(e_god randm_god) {
 
 void city_religion_t::update() {
     OZZY_PROFILER_SECTION("Game/Religion/Update");
+    calc_coverage();
     calculate_gods_mood_targets();
 
     if (!g_settings.gods_enabled) {
