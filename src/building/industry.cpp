@@ -103,11 +103,18 @@ int farm_expected_produce(building* b) {
     // In OG Pharaoh, the progress value gets counted as if it was rounded
     // down to the lowest 20 points. No idea why! But here's as an option.
 
-    int modifier = 1;
+    float modifier = 1.f;
     const bool osiris_blessing = (g_city.religion.osiris_double_farm_yield_days > 0);
-    if (osiris_blessing && building_is_floodplain_farm(*b)) {
-        modifier = 2;
+    if (building_is_floodplain_farm(*b)) {
+        if (osiris_blessing) {
+            modifier = 2.f;
+        } else {
+            modifier = (1.f + b->data.industry.produce_multiplier / 100.f);
+        }
+    } else {
+        modifier = (1.f + b->data.industry.produce_multiplier / 100.f);
     }
+    b->data.industry.produce_multiplier = 0.f;
 
     return int((progress / 2.5f) * modifier);
 }
@@ -142,7 +149,7 @@ void building_industry_update_production(void) {
             int progress_per_day = b.dcast()->get_produce_uptick_per_day();
             b.data.industry.progress += progress_per_day;
 
-            if (b.data.industry.blessing_days_left && building_is_farm(b.type)) {
+            if (b.data.industry.blessing_days_left) {
                 const float normal_progress = progress_per_day;
                 b.data.industry.progress += normal_progress;
             }
@@ -163,6 +170,11 @@ void building_industry_update_farms(void) {
             return;
         }
 
+        building_farm *farm = b.dcast_farm();
+        if (farm) {
+            return;
+        }
+
         if (b.data.industry.curse_days_left) { // TODO
             b.data.industry.curse_days_left--;
         }
@@ -174,6 +186,10 @@ void building_industry_update_farms(void) {
         bool is_floodplain = building_is_floodplain_farm(b);
         int fert = map_get_fertility_for_farm(b.tile.grid_offset());
         int progress_step = (float)fert * get_farm_produce_uptick_per_day(b); // 0.16f
+        const bool osiris_blessing = g_city.religion.osiris_double_farm_yield_days > 0;
+        if (osiris_blessing) {
+            b.data.industry.produce_multiplier++;
+        }
 
         if (is_floodplain) { // floodplain farms
             // advance production
@@ -203,10 +219,7 @@ void building_industry_update_farms(void) {
         int max = max_progress(b);
         b.data.industry.progress = std::clamp<int>(b.data.industry.progress, 0, max);
 
-        building_farm *farm = b.dcast_farm();
-        if (farm) {
-            farm->update_tiles_image();
-        }
+        farm->update_tiles_image();
     });
 }
 
