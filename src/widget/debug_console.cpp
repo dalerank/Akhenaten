@@ -146,8 +146,6 @@ void game_debug_properties_draw() {
         return;
     }
 
-    
-
     ImGui::SetNextWindowSize(ImVec2(430, 450), ImGuiCond_FirstUseEver);
     if (!ImGui::Begin("Properties", &game.debug_properties)) {
         ImGui::End();

@@ -4,16 +4,18 @@
 
 #include "building/building_type.h"
 #include "core/svector.h"
+#include "core/tokenum.h"
 
 enum e_god {
-    GOD_OSIRIS = 0, // GOD_CERES = 0,
-    GOD_RA = 1,     // GOD_NEPTUNE = 1,
-    GOD_PTAH = 2,   // GOD_MERCURY = 2,
-    GOD_SETH = 3,   // GOD_MARS = 3,
-    GOD_BAST = 4,   // GOD_VENUS = 4
+    GOD_OSIRIS = 0,
+    GOD_RA = 1,
+    GOD_PTAH = 2,
+    GOD_SETH = 3,
+    GOD_BAST = 4,
     MAX_GODS,
     GOD_UNKNOWN = MAX_GODS
 };
+extern const token_holder<e_god, GOD_OSIRIS, MAX_GODS> e_god_tokens;
 
 enum e_god_status {
     GOD_STATUS_UNKNOWN = 0,
@@ -29,7 +31,7 @@ struct god_state {
     uint8_t happy_ankhs;
     bool blessing_done;
     bool curse_done;
-    uint32_t months_since_festival;
+    uint8_t months_since_festival;
     int8_t unused1;
     int8_t unused2;
     int8_t unused3;
@@ -64,11 +66,11 @@ struct city_religion_t {
     int32_t ra_no_traders_months_left;
     int32_t ra_slightly_reduced_trading_months_left;
     int32_t ra_slightly_increased_trading_months_left;
-    int32_t osiris_sank_ships;
+    int8_t osiris_sank_ships;
     int32_t seth_crush_enemy_troops;
     int32_t seth_protect_player_troops;
     uint8_t osiris_double_farm_yield_days;
-    int32_t osiris_flood_will_destroy_active;
+    bool osiris_flood_will_destroy_active;
 
     uint8_t coverage[MAX_GODS];
     uint8_t coverage_common;
