@@ -550,7 +550,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     //    for (int i = 0; i < MAX_GODS; i++)
     //        city_data.religion.gods[i].unused3 = main->read_i8();
     for (int i = 0; i < MAX_GODS; i++) {
-        iob->bind(BIND_SIGNATURE_UINT32, &data.religion.gods[i].months_since_festival);
+        iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].months_since_festival);
+        iob->bind____skip(3);
     }
 
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.least_happy_god);
@@ -786,7 +787,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT32, &data.map.largest_road_networks[i].size);
     }
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.second_wine);
-    iob->bind(BIND_SIGNATURE_INT32, &data.religion.osiris_sank_ships);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_sank_ships);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.senet_house_has_plays);
     iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.senet_house_message_shown);
     iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.pavilion_message_shown);
@@ -836,9 +838,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(6);
     iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_double_farm_yield_days);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT32, &data.religion.osiris_flood_will_destroy_active);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_flood_will_destroy_active);
+    iob->bind____skip(3);
     iob->bind____skip(60);
-    //    iob->bind____skip(378);
 });
 
 io_buffer* iob_city_data_extra = new io_buffer([](io_buffer* iob, size_t version) {
@@ -849,6 +851,7 @@ io_buffer* iob_city_data_extra = new io_buffer([](io_buffer* iob, size_t version
     iob->bind(BIND_SIGNATURE_RAW, &data.kingdome.player_name, MAX_PLAYER_NAME);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.faction_id);
 });
+
 io_buffer* iob_city_graph_order = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_city;
     iob->bind(BIND_SIGNATURE_INT32, &data.population.graph_order);
