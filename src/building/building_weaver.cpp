@@ -2,6 +2,7 @@
 
 #include "building/count.h"
 #include "building/building_workshop.h"
+#include "graphics/graphics.h"
 #include "city/city_resource.h"
 #include "city/warnings.h"
 #include "city/labor.h"
@@ -47,6 +48,11 @@ void building_weaver::on_place_checks() {
     }
 }
 
+void building_weaver::update_graphic() {
+    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
+    set_animation(animkey);
+}
+
 void building_weaver::window_info_background(object_info &ctx) {
     e_resource input_resource = RESOURCE_FLAX;
     e_resource output_resource = RESOURCE_LINEN;
@@ -58,8 +64,14 @@ void building_weaver::window_info_foreground(object_info &ctx) {
 }
 
 bool building_weaver::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_FLAX_2) + amount, x + 65, y + 3,
-    //            color_mask);
+    draw_normal_anim(ctx, point, tile, color_mask);
+
+    int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
+    if (amount >= 0) {
+        const auto &anim = bweaver_m.anim["flax"];
+        ImageDraw::img_generic(ctx, anim.first_img() + amount, point + anim.pos, color_mask);
+    }
+
     return true;
 }
 

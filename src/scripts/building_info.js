@@ -845,7 +845,8 @@ building_weaver = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:122 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:122 },
-    work : { pos : [7, -10], pack:PACK_GENERAL, id:122, offset:1, max_frames:9 },
+    work : { pos : [19, -39], pack:PACK_GENERAL, id:122, offset:1, max_frames:9 },
+    flax : { pos : [45, 3], pack:PACK_GENERAL, id:206 },
   },
   output_resource : RESOURCE_PAPYRUS,
   building_size : 2,
