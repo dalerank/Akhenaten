@@ -31,18 +31,30 @@ void building_weaver::on_place_checks() {
     }
 
     building_construction_warning_show(WARNING_OLIVES_NEEDED);
-    if (g_city.can_produce_resource(RESOURCE_STRAW))
+    if (g_city.can_produce_resource(RESOURCE_STRAW)) {
         building_construction_warning_show(WARNING_BUILD_OLIVE_FARM);
-    else if (!g_empire.can_import_resource(RESOURCE_STRAW, true))
+        return;
+    } 
+    
+    if (!g_empire.can_import_resource(RESOURCE_STRAW, true)) {
         building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT);
-    else if (city_resource_trade_status(RESOURCE_STRAW) != TRADE_STATUS_IMPORT)
+        return;
+    } 
+    
+    if (city_resource_trade_status(RESOURCE_STRAW) != TRADE_STATUS_IMPORT) {
         building_construction_warning_show(WARNING_TRADE_IMPORT_RESOURCE);
+        return;
+    }
 }
 
 void building_weaver::window_info_background(object_info &ctx) {
     e_resource input_resource = RESOURCE_FLAX;
     e_resource output_resource = RESOURCE_LINEN;
-    building_workshop_draw_background(ctx, 97, "flax_workshop", 123, output_resource, input_resource);
+    building_workshop_draw_background(ctx, bweaver_m.meta.help_id, "flax_workshop", bweaver_m.meta.text_id, output_resource, input_resource);
+}
+
+void building_weaver::window_info_foreground(object_info &ctx) {
+    building_workshop_draw_foreground(ctx);
 }
 
 bool building_weaver::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

@@ -850,6 +850,8 @@ building_weaver = {
   output_resource : RESOURCE_PAPYRUS,
   building_size : 2,
   window_info_height_id : 1,
+  info_help_id:97,
+  info_text_id:123,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
