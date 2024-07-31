@@ -27,7 +27,7 @@ void building_workshop_draw_foreground(object_info &c) {
     window_building_draw_employment(&c, 142);
 }
 
-void building_workshop_draw_background(object_info& c, pcstr type, e_resource resource) {
+void building_workshop_draw_background(object_info& c, pcstr type) {
     auto &ui = g_workshop_info_window;
 
     building *b = building_get(c.building_id);
@@ -38,7 +38,7 @@ void building_workshop_draw_background(object_info& c, pcstr type, e_resource re
     int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
     int group_id = params.meta.text_id;
     ui["background"].size = c.bgsize;
-    ui["produce_icon"].image(resource);
+    ui["produce_icon"].image(b->output_resource_first_id);
     ui["title"].size.x = c.bgwidth_px();
     ui["title"].text((pcstr)lang_get_string(group_id, 0));
     ui["ready_prod"].text_var("%s %u%% %s", (pcstr)lang_get_string(group_id, 2), pct_done, (pcstr)lang_get_string(group_id, 3));
@@ -47,7 +47,7 @@ void building_workshop_draw_background(object_info& c, pcstr type, e_resource re
 
     std::pair<int, int> trouble_text{0, 0};
     if (!c.has_road_access) { trouble_text = {69, 25}; }
-    else if (city_resource_is_mothballed(resource)) { trouble_text = {group_id, 4}; }
+    else if (city_resource_is_mothballed(b->output_resource_first_id)) { trouble_text = {group_id, 4}; }
     else if (b->num_workers <= 0) { trouble_text = {group_id, 5}; }
     else if (!b->workshop_has_resources()) { trouble_text = {group_id, 11}; }
     else if (c.worker_percentage >= 100) { trouble_text = {group_id, 6}; }
@@ -62,7 +62,7 @@ void building_workshop_draw_background(object_info& c, pcstr type, e_resource re
     ui["workers_panel"].size.x = c.bgsize.x - 2;
 }
 
-void building_workshop_draw_background(object_info& c, pcstr type, e_resource resource, e_resource input_resource_a) {
+void building_workshop_draw_background(object_info& c, pcstr type, bool v, e_resource input_resource_a) {
     painter ctx = game.painter();
     building *b = building_get(c.building_id);
     const auto &params = b->dcast()->params();
@@ -72,7 +72,7 @@ void building_workshop_draw_background(object_info& c, pcstr type, e_resource re
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(resource), c.offset.x + 10, c.offset.y + 10);
+    ImageDraw::img_generic(ctx, image_id_resource_icon(b->output_resource_first_id), c.offset.x + 10, c.offset.y + 10);
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
@@ -103,7 +103,7 @@ void building_workshop_draw_background(object_info& c, pcstr type, e_resource re
     y_offset = 110;
     if (!c.has_road_access)
         window_building_draw_description_at(c, y_offset, 69, 25);
-    else if (city_resource_is_mothballed(resource))
+    else if (city_resource_is_mothballed(b->output_resource_first_id))
         window_building_draw_description_at(c, y_offset, group_id, 4);
     else if (b->num_workers <= 0)
         window_building_draw_description_at(c, y_offset, group_id, 5);
