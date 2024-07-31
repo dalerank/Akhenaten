@@ -54,7 +54,7 @@ void building_pottery::on_place_checks() {
 void building_pottery::window_info_background(object_info& c) {
     e_resource output_resource = RESOURCE_POTTERY;
 
-    building_workshop_draw_background(c, "pottery_workshop", output_resource, RESOURCE_CLAY);
+    building_workshop_draw_background(c, "pottery_workshop", output_resource);
 }
 
 void building_pottery::window_info_foreground(object_info &c) {

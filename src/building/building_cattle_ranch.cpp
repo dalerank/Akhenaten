@@ -21,7 +21,7 @@ void building_cattle_ranch::on_create(int orientation) {
 
 void building_cattle_ranch::window_info_background(object_info &c) {
     e_resource output_resource = RESOURCE_MEAT;
-    building_workshop_draw_background(c, "cattle_ranch", output_resource, RESOURCE_STRAW);
+    building_workshop_draw_background(c, "cattle_ranch", output_resource);
 }
 
 void building_cattle_ranch::window_info_foreground(object_info &c) {

@@ -2,8 +2,8 @@
 
 #include "building/building.h"
 
-void building_workshop_draw_background(object_info &c, pcstr type, e_resource resource, e_resource input_resource);
-void building_workshop_draw_background(object_info &c, pcstr type, e_resource resource, e_resource input_resource_a, e_resource input_resource_b);
+void building_workshop_draw_background(object_info &c, pcstr type, e_resource resource);
+void building_workshop_draw_background(object_info &c, pcstr type, e_resource resource, e_resource input_resource_a);
 void building_workshop_draw_foreground(object_info &c);
 
 class building_lamp_workshop : public building_impl {

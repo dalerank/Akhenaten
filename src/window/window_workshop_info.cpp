@@ -27,7 +27,7 @@ void building_workshop_draw_foreground(object_info &c) {
     window_building_draw_employment(&c, 142);
 }
 
-void building_workshop_draw_background(object_info& c, pcstr type, e_resource resource, e_resource input_resource) {
+void building_workshop_draw_background(object_info& c, pcstr type, e_resource resource) {
     auto &ui = g_workshop_info_window;
 
     building *b = building_get(c.building_id);
@@ -42,7 +42,7 @@ void building_workshop_draw_background(object_info& c, pcstr type, e_resource re
     ui["title"].size.x = c.bgwidth_px();
     ui["title"].text((pcstr)lang_get_string(group_id, 0));
     ui["ready_prod"].text_var("%s %u%% %s", (pcstr)lang_get_string(group_id, 2), pct_done, (pcstr)lang_get_string(group_id, 3));
-    ui["resource_icon"].image(input_resource);
+    ui["resource_icon"].image(b->data.industry.first_material_id);
     ui["resource_stored"].text_var("%s %u", (pcstr)lang_get_string(group_id, 12), b->stored_amount());
 
     std::pair<int, int> trouble_text{0, 0};
@@ -62,8 +62,7 @@ void building_workshop_draw_background(object_info& c, pcstr type, e_resource re
     ui["workers_panel"].size.x = c.bgsize.x - 2;
 }
 
-void building_workshop_draw_background(object_info& c, pcstr type, e_resource resource, e_resource input_resource_a, e_resource input_resource_b) {
-
+void building_workshop_draw_background(object_info& c, pcstr type, e_resource resource, e_resource input_resource_a) {
     painter ctx = game.painter();
     building *b = building_get(c.building_id);
     const auto &params = b->dcast()->params();
@@ -91,6 +90,7 @@ void building_workshop_draw_background(object_info& c, pcstr type, e_resource re
     }
 
     int y_offset = 80;
+    e_resource input_resource_b = b->data.industry.first_material_id;
     ImageDraw::img_generic(ctx, image_id_resource_icon(input_resource_b), c.offset.x + 32, c.offset.y + y_offset);
     width = lang_text_draw(group_id, 14, c.offset.x + 60, c.offset.y + y_offset + 4, FONT_NORMAL_BLACK_ON_LIGHT);
 

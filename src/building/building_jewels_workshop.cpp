@@ -41,10 +41,9 @@ void building_jewels_workshop::on_place_checks() {
 }
 
 void building_jewels_workshop::window_info_background(object_info &ctx) {
-    e_resource input_resource = RESOURCE_GEMS;
     e_resource output_resource = RESOURCE_LUXURY_GOODS;
 
-    building_workshop_draw_background(ctx, "luxury_workshop", output_resource, input_resource);
+    building_workshop_draw_background(ctx, "luxury_workshop", output_resource);
 }
 
 bool building_jewels_workshop::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
