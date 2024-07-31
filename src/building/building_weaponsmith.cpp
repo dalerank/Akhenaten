@@ -55,7 +55,7 @@ void building_weaponsmith::update_graphic() {
 
 void building_weaponsmith::window_info_background(object_info& c) {
     e_resource output_resource = RESOURCE_WEAPONS;
-    building_workshop_draw_background(c, 98, "weapons_workshop", 124, output_resource, RESOURCE_COPPER);
+    building_workshop_draw_background(c, "weapons_workshop", output_resource, RESOURCE_COPPER);
 }
 
 void building_weaponsmith::window_info_foreground(object_info &ctx) {

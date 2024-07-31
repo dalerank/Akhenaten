@@ -35,7 +35,7 @@ void building_brewery::window_info_background(object_info& c) {
     e_resource input_resource = RESOURCE_BARLEY;
     e_resource output_resource = RESOURCE_BEER;
 
-    building_workshop_draw_background(c, 96, "brewery", 122, output_resource, input_resource);
+    building_workshop_draw_background(c, "brewery", output_resource, input_resource);
 }
 
 void building_brewery::window_info_foreground(object_info &c) {

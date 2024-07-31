@@ -27,15 +27,16 @@ void building_workshop_draw_foreground(object_info &c) {
     window_building_draw_employment(&c, 142);
 }
 
-void building_workshop_draw_background(object_info& c, int help_id, pcstr type, int group_id, e_resource resource, e_resource input_resource) {
+void building_workshop_draw_background(object_info& c, pcstr type, e_resource resource, e_resource input_resource) {
     auto &ui = g_workshop_info_window;
 
-    c.help_id = help_id;
+    building *b = building_get(c.building_id);
+    const auto &params = b->dcast()->params();
+    c.help_id = params.meta.help_id;
     window_building_play_sound(&c, snd::get_building_info_sound(type));
 
-    building* b = building_get(c.building_id);
-
     int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
+    int group_id = params.meta.text_id;
     ui["background"].size = c.bgsize;
     ui["produce_icon"].image(resource);
     ui["title"].size.x = c.bgwidth_px();
@@ -61,17 +62,20 @@ void building_workshop_draw_background(object_info& c, int help_id, pcstr type, 
     ui["workers_panel"].size.x = c.bgsize.x - 2;
 }
 
-void building_workshop_draw_background(object_info& c, int help_id, pcstr type, int group_id, e_resource resource, e_resource input_resource_a, e_resource input_resource_b) {
-    c.help_id = help_id;
-    window_building_play_sound(&c, snd::get_building_info_sound(type));
+void building_workshop_draw_background(object_info& c, pcstr type, e_resource resource, e_resource input_resource_a, e_resource input_resource_b) {
 
     painter ctx = game.painter();
+    building *b = building_get(c.building_id);
+    const auto &params = b->dcast()->params();
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
+    window_building_play_sound(&c, snd::get_building_info_sound(type));
 
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     ImageDraw::img_generic(ctx, image_id_resource_icon(resource), c.offset.x + 10, c.offset.y + 10);
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
-    building* b = building_get(c.building_id);
     int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
     int width = lang_text_draw(group_id, 2, c.offset.x + 32, c.offset.y + 40, FONT_NORMAL_BLACK_ON_LIGHT);
     width += text_draw_percentage(pct_done, c.offset.x + 32 + width, c.offset.y + 40, FONT_NORMAL_BLACK_ON_LIGHT);

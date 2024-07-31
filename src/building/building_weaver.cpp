@@ -56,7 +56,7 @@ void building_weaver::update_graphic() {
 void building_weaver::window_info_background(object_info &ctx) {
     e_resource input_resource = RESOURCE_FLAX;
     e_resource output_resource = RESOURCE_LINEN;
-    building_workshop_draw_background(ctx, bweaver_m.meta.help_id, "flax_workshop", bweaver_m.meta.text_id, output_resource, input_resource);
+    building_workshop_draw_background(ctx, "flax_workshop", output_resource, input_resource);
 }
 
 void building_weaver::window_info_foreground(object_info &ctx) {

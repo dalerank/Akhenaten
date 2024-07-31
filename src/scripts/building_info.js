@@ -323,6 +323,8 @@ building_cattle_ranch = {
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
   building_size : 3,
+  info_help_id:1,
+  info_text_id:117,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -551,6 +553,8 @@ building_weaponsmith = {
   },
   labor_category : LABOR_CATEGORY_MILITARY,
   window_info_height_id : 1,
+  info_help_id:98,
+  info_text_id:124,
   building_size : 2,
 }
 
@@ -838,6 +842,8 @@ building_papyrus_maker = {
   output_resource : RESOURCE_PAPYRUS,
   production_rate : 50,
   building_size : 2,
+  info_help_id:1,
+  info_text_id:190,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
@@ -865,6 +871,8 @@ building_jewels_workshop = {
   output_resource : RESOURCE_LUXURY_GOODS,
   building_size : 2,
   window_info_height_id : 1,
+  info_help_id:99,
+  info_text_id:125,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
@@ -1272,6 +1280,8 @@ building_brewery = {
   },
   window_info_height_id : 1,
   production_rate : 20,
+  info_help_id:96,
+  info_text_id:122,
   building_size : 2,
 }
 
@@ -1295,7 +1305,8 @@ building_mine_gems = {
   },
   output_resource : RESOURCE_GEMS,
   building_size : 2,
-  info_help_id:93, info_text_id:163,
+  info_help_id:93,
+  info_text_id:163,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
@@ -1430,6 +1441,8 @@ building_bricks_workshop = {
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,
+  info_help_id:1,
+  info_text_id:180,
   window_info_height_id : 1,
 }
 
@@ -1457,6 +1470,8 @@ building_pottery = {
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,
+  info_help_id:1,
+  info_text_id:126,
   window_info_height_id : 1,
 }
 

@@ -22,7 +22,7 @@ void building_bricks_workshop::on_create(int orientation) {
 
 void building_bricks_workshop::window_info_background(object_info &c) {
     e_resource output_resource = RESOURCE_BRICKS;
-    building_workshop_draw_background(c, 1, "brick_maker", 180, output_resource, RESOURCE_CLAY, RESOURCE_STRAW);
+    building_workshop_draw_background(c, "brick_maker", output_resource, RESOURCE_CLAY, RESOURCE_STRAW);
 }
 
 void building_bricks_workshop::update_count() const {
