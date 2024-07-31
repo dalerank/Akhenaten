@@ -28,6 +28,9 @@ struct id_anim_t {
     static const xstring wait_w;
     static const xstring wait_s;
     static const xstring wait_e;
+    static const xstring eating;
+    static const xstring idle;
+    static const xstring attack;
 };
 
 const id_anim_t &animkeys();

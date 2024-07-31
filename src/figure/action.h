@@ -186,6 +186,11 @@ enum e_figure_action {
     FIGURE_ACTION_19_HIPPO_IDLE = 19,
     FIGURE_ACTION_24_HIPPO_CREATED = 24,
 
+    FIGURE_ACTION_10_CROCODILE_MOVING = 10,
+    FIGURE_ACTION_19_CROCODILE_IDLE = 19,
+    FIGURE_ACTION_24_CROCODILE_CREATED = 24,
+    FIGURE_ACTION_150_CROCODILE_ATTACK = 150,
+
     // pharaoh
     ACTION_1_ROAMING = 1,
     ACTION_2_ROAMERS_RETURNING = 2,
@@ -245,5 +250,3 @@ enum e_figure_action {
     //    ACTION_NONE = -1,
     FIGURE_ACTION_MAX
 };
-
-void figure_action_handle();

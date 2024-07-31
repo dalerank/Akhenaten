@@ -114,7 +114,7 @@ void figure::sheep_action() {
     //    terrain_usage = TERRAIN_USAGE_ANIMAL;
     //    use_cross_country = false;
     //    is_ghost = false;
-    g_city.figures_add_animal();
+    g_city.figures.add_animal();
     //    figure_image_increase_offset(6);
 
     switch (action_state) {
@@ -161,7 +161,7 @@ void figure::sheep_action() {
 
 void figure::hyena_action() {
     const formation* m = formation_get(formation_id);
-    g_city.figures_add_animal();
+    g_city.figures.add_animal();
 
     switch (action_state) {
     case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
@@ -236,7 +236,7 @@ void figure::zebra_action() {
     //    terrain_usage = TERRAIN_USAGE_ANIMAL;
     //    use_cross_country = false;
     //    is_ghost = false;
-    g_city.figures_add_animal();
+    g_city.figures.add_animal();
     //    figure_image_increase_offset(12);
 
     switch (action_state) {

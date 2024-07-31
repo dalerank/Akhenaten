@@ -1,18 +1,44 @@
-#include "city/city.h"
+#include "city_figures.h"
 
-void city_t::figures_reset() {
-    figures.enemies = 0;
-    figures.rioters = 0;
-    figures.attacking_natives = 0;
-    figures.animals_number = 0;
-    figures.kingdome_soldiers = 0;
-    figures.soldiers = 0;
-    if (figures.security_breach_duration > 0)
-        figures.security_breach_duration--;
+#include "core/profiler.h"
+#include "city/city.h"
+#include "city/city_figures.h"
+#include "figure/figure.h"
+
+void city_figures_t::reset() {
+    enemies = 0;
+    rioters = 0;
+    attacking_natives = 0;
+    animals_number = 0;
+    kingdome_soldiers = 0;
+    soldiers = 0;
+    if (security_breach_duration > 0) {
+        security_breach_duration--;
+    }
 }
 
-void city_t::figures_add_animal() {
-    figures.animals_number++;
+void city_figures_t::on_post_load() {
+    for (auto &figure: map_figures()) {
+        if (figure->type == FIGURE_NONE) {
+            continue;
+        }
+
+        figure->dcast()->on_post_load();
+    }
+}
+
+void city_figures_t::update() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Action");
+    reset();
+    //g_city.entertainment.hippodrome_has_race = false;
+
+    for (auto &figure: map_figures()) {
+        figure->action_perform();
+    }
+}
+
+void city_figures_t::add_animal() {
+    animals_number++;
 }
 
 void city_t::figures_add_attacking_native() {

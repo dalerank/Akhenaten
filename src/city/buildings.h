@@ -49,7 +49,7 @@ struct city_buildings_t {
     void update_canals_from_water_lifts();
     void update_religion_supply_houses();
     void update_counters();
-    void update_unique_building_positions();
+    void on_post_load();
     void reset_dock_wharf_counters();
     void update_month();
     void update_day();

@@ -14,6 +14,7 @@
 #include "city/city_fishing_points.h"
 #include "city/map.h"
 #include "city/city_religion.h"
+#include "city/city_figures.h"
 #include "city/victory.h"
 #include "city/ratings.h"
 #include "grid/point.h"
@@ -24,17 +25,7 @@ struct empire_city;
 
 struct city_t {
     city_buildings_t buildings;
-
-    struct {
-        uint8_t fish_number;
-        uint8_t animals_number;
-        int32_t attacking_natives;
-        int32_t enemies;
-        int32_t kingdome_soldiers;
-        int32_t rioters;
-        int32_t soldiers;
-        int32_t security_breach_duration;
-    } figures;
+    city_figures_t figures;
 
     house_demands houses;
     desirability_t desirability;
@@ -363,8 +354,6 @@ struct city_t {
 
     void coverage_update();
 
-    void figures_reset();
-    void figures_add_animal();
     void figures_add_attacking_native();
     void figures_add_enemy();
     void figures_add_kingdome_soldier();

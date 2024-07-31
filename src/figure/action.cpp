@@ -414,13 +414,3 @@ void figure::action_perform() {
         figure_image_update(false);
     }
 }
-
-void figure_action_handle() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Action");
-    g_city.figures_reset();
-    //g_city.entertainment.hippodrome_has_race = false;
-
-    for (auto &figure: map_figures()) {
-        figure->action_perform();
-    }
-}

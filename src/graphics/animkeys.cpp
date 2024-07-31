@@ -26,6 +26,9 @@ const xstring id_anim_t::wait_n = "wait_n";
 const xstring id_anim_t::wait_w = "wait_w";
 const xstring id_anim_t::wait_s = "wait_s";
 const xstring id_anim_t::wait_e = "wait_e";
+const xstring id_anim_t::eating = "eating";
+const xstring id_anim_t::idle = "idle";
+const xstring id_anim_t::attack = "attack";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

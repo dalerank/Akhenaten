@@ -267,7 +267,7 @@ void city_buildings_t::update_counters() {
     });
 }
 
-void city_buildings_t::update_unique_building_positions() {
+void city_buildings_t::on_post_load () {
     buildings_valid_do ( [] (building &b) {
         b.dcast()->on_post_load();
     });

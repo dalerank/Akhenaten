@@ -13,12 +13,20 @@ void config_load_figure_hippo() {
     hippo_m.load();
 }
 
+void figure_hippo::on_create() {
+    base.allow_move_type = EMOVE_AMPHIBIAN;
+}
+
+void figure_hippo::on_post_load() {
+    base.allow_move_type = EMOVE_AMPHIBIAN;
+}
+
 void figure_hippo::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Hippo");
     const formation* m = formation_get(base.formation_id);
-    g_city.figures_add_animal();
+    g_city.figures.add_animal();
 
-    base.allow_move_type = EMOVE_HIPPO;
+    base.allow_move_type = EMOVE_AMPHIBIAN;
     base.roam_wander_freely = false;
 
     switch (action_state()) {
@@ -29,8 +37,6 @@ void figure_hippo::figure_action() {
     case FIGURE_ACTION_19_HIPPO_IDLE: // idle
     case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
         wait_ticks--;
-        //            if (wait_ticks % 5 == 0 && is_nearby(NEARBY_ANY, 6))
-        //                advance_action(ACTION_16_FLEEING);
         if (wait_ticks <= 0) {
             advance_action(ACTION_8_RECALCULATE);
         }
@@ -53,9 +59,6 @@ void figure_hippo::figure_action() {
     case 16: // fleeing
     case FIGURE_ACTION_10_HIPPO_MOVING:
     case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
-        //            if (action_state == 16)
-        //                while (destination_x == 0 || destination_y == 0)
-        //                    herd_roost(4, 8, 22);
         if (do_goto(destination_tile, TERRAIN_USAGE_ANY, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
             wait_ticks = 50;
         }
@@ -64,33 +67,33 @@ void figure_hippo::figure_action() {
 }
 
 void figure_hippo::update_animation() {
-    pcstr anim_key = "walk";
+    xstring anim_key = animkeys().walk;
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
-    case FIGURE_ACTION_19_HIPPO_IDLE: anim_key ="idle"; break;
-    case 18: anim_key ="eating"; break;
+    case FIGURE_ACTION_19_HIPPO_IDLE: anim_key = animkeys().idle; break;
+    case 18: anim_key = animkeys().eating; break;
 
     case 16: // fleeing
     case FIGURE_ACTION_10_HIPPO_MOVING: // on the move
-        anim_key ="walk"; break;
+        anim_key = animkeys().walk; break;
         break;
 
     case 15: // terrified
     case 14: // scared
-        anim_key ="eating";
+        anim_key = animkeys().eating;
         base.anim.frame = 0;
         break;
 
     case FIGURE_ACTION_149_CORPSE:
-        anim_key ="death";
+        anim_key = animkeys().death;
         break;
 
     case FIGURE_ACTION_150_ATTACK: // unused?
-        anim_key ="attack";
+        anim_key = animkeys().attack;
         break;
 
     default:
-        anim_key ="eating";
+        anim_key = animkeys().eating;
         break;
     }
 

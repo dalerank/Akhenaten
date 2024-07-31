@@ -54,7 +54,7 @@ enum e_move_type : uint8_t {
     EMOVE_TERRAIN = 0,
     EMOVE_WATER = 1,
     EMOVE_DEEPWATER = 2,
-    EMOVE_HIPPO = 3,
+    EMOVE_AMPHIBIAN = 3,
 };
 
 enum e_figure_draw_debug_mode {
@@ -468,6 +468,7 @@ public:
 
     virtual void on_create();
     virtual void on_destroy() {}
+    virtual void on_post_load() {}
     virtual void figure_action() {}
     virtual void figure_before_action() {}
     virtual void figure_roaming_action();

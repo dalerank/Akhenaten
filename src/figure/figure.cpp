@@ -186,7 +186,7 @@ bool figure::can_move_by_water() {
 }
 
 bool figure::can_move_by_terrain() {
-    return (allow_move_type == EMOVE_TERRAIN || allow_move_type == EMOVE_HIPPO);
+    return (allow_move_type == EMOVE_TERRAIN || allow_move_type == EMOVE_AMPHIBIAN);
 }
 
 void figure::set_direction_to(building *b) {
@@ -346,7 +346,7 @@ figure_sound_t figure_impl::get_sound_reaction(pcstr key) const {
 }
 
 bool figure_impl::can_move_by_water() const {
-    return (base.allow_move_type == EMOVE_WATER || base.allow_move_type == EMOVE_DEEPWATER || base.allow_move_type == EMOVE_HIPPO);
+    return (base.allow_move_type == EMOVE_WATER || base.allow_move_type == EMOVE_DEEPWATER || base.allow_move_type == EMOVE_AMPHIBIAN);
 }
 
 void figure_impl::main_update_image() {

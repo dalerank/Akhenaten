@@ -212,11 +212,11 @@ void figure::advance_route_tile(int roaming_enabled) {
     int target_grid_offset = tile.grid_offset() + map_grid_direction_delta(direction);
 
     const bool is_water_move = (allow_move_type == EMOVE_WATER);
-    const bool is_hippo_move = (allow_move_type == EMOVE_HIPPO);
+    const bool is_amphibia_move = (allow_move_type == EMOVE_AMPHIBIAN);
     const bool is_deepwater_move = (allow_move_type == EMOVE_DEEPWATER);
     const bool is_ferry_route = map_terrain_is(target_grid_offset, TERRAIN_FERRY_ROUTE);
     const bool is_water_tile = map_terrain_is(target_grid_offset, TERRAIN_WATER);
-    if (!is_deepwater_move && !is_water_move && !is_hippo_move && !is_ferry_route && is_water_tile) {
+    if (!is_deepwater_move && !is_water_move && !is_amphibia_move && !is_ferry_route && is_water_tile) {
         direction = DIR_FIGURE_REROUTE;
     } else if (is_water_move && !is_water_tile) { // boats can not travel on land
         direction = DIR_FIGURE_REROUTE;
@@ -232,6 +232,7 @@ void figure::advance_route_tile(int roaming_enabled) {
             case DESTROYABLE_BUILDING:
                 max_damage = 10;
                 break;
+
             case DESTROYABLE_AQUEDUCT_GARDEN:
                 if (map_terrain_is(target_grid_offset, TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE))
                     cause_damage = 0;

@@ -123,7 +123,7 @@ void game_t::update_impl(int ticks) {
     OZZY_PROFILER_SECTION("Game/Update/Impl");
     if (editor_is_active()) {
         random_generate_next(); // update random to randomize native huts
-        figure_action_handle(); // just update the flag figures
+        g_city.figures.update(); // just update the flag figures
         return;
     }
 
@@ -139,7 +139,7 @@ void game_t::update_impl(int ticks) {
         advance_day();
     }
 
-    figure_action_handle();
+    g_city.figures.update();
 
     g_scenario_data.update();
     g_city.victory_check();

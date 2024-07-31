@@ -21,7 +21,7 @@ void config_load_figure_ostrich() {
 
 void figure_ostrich::figure_action() {
     const formation* m = formation_get(base.formation_id);
-    g_city.figures_add_animal();
+    g_city.figures.add_animal();
 
     switch (base.action_state) {
     case ACTION_24_ANIMAL_SPAWNED:     // spawning

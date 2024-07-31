@@ -197,7 +197,8 @@ static void post_load() {
 
     // building counts / storage
     g_city.buildings.update_counters();
-    g_city.buildings.update_unique_building_positions();
+    g_city.buildings.on_post_load();
+    g_city.figures.on_post_load();
     city_granaries_calculate_stocks();
     city_resource_calculate_storageyard_stocks();
     city_resource_determine_available();
@@ -224,9 +225,6 @@ static void post_load() {
         tutorial_init(/*clear_all*/true, true);
         break;
     }
-
-    // building menu
-    //building_menu_update(BUILDSET_NORMAL);
 
     // city messages
     city_message_clear_scroll();
