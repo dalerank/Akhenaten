@@ -73,7 +73,7 @@ void building_wood_cutter::spawn_figure() {
 }
 
 void building_wood_cutter::window_info_background(object_info &ctx) {
-    building_raw_material_draw_info(ctx, "timber_yard", RESOURCE_TIMBER);
+    building_raw_material_draw_info(ctx, RESOURCE_TIMBER);
 }
 
 bool building_wood_cutter::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

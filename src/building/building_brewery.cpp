@@ -32,7 +32,7 @@ void building_brewery::on_create(int orientation) {
 }
 
 void building_brewery::window_info_background(object_info& c) {
-    building_workshop_draw_background(c, "brewery");
+    building_workshop_draw_background(c);
 }
 
 void building_brewery::window_info_foreground(object_info &c) {

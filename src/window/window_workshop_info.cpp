@@ -27,13 +27,13 @@ void building_workshop_draw_foreground(object_info &c) {
     window_building_draw_employment(&c, 142);
 }
 
-void building_workshop_draw_background(object_info& c, pcstr type) {
+void building_workshop_draw_background(object_info& c) {
     auto &ui = g_workshop_info_window;
 
     building *b = building_get(c.building_id);
     const auto &params = b->dcast()->params();
     c.help_id = params.meta.help_id;
-    window_building_play_sound(&c, snd::get_building_info_sound(type));
+    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
 
     int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
     int group_id = params.meta.text_id;
@@ -62,14 +62,14 @@ void building_workshop_draw_background(object_info& c, pcstr type) {
     ui["workers_panel"].size.x = c.bgsize.x - 2;
 }
 
-void building_workshop_draw_background(object_info& c, pcstr type, bool v, e_resource input_resource_a) {
+void building_workshop_draw_background(object_info& c, e_resource input_resource_a) {
     painter ctx = game.painter();
     building *b = building_get(c.building_id);
     const auto &params = b->dcast()->params();
     c.help_id = params.meta.help_id;
     int group_id = params.meta.text_id;
 
-    window_building_play_sound(&c, snd::get_building_info_sound(type));
+    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
 
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     ImageDraw::img_generic(ctx, image_id_resource_icon(b->output_resource_first_id), c.offset.x + 10, c.offset.y + 10);

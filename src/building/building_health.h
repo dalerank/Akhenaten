@@ -32,4 +32,4 @@ public:
     virtual void update_count() const override;
 };
 
-void building_health_draw_info(object_info &c, int help_id, const char *type, int group_id, e_figure_type ftype);
+void building_health_draw_info(object_info &c, e_figure_type ftype);

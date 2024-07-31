@@ -34,9 +34,14 @@ void config_load_building_temples() {
     temple_bast_m.load();
 }
 
-static void building_temple_draw_temple(object_info& c, const char* type, int group_id, int image_offset) {
-    c.help_id = 67;
-    window_building_play_sound(&c, snd::get_building_info_sound(type));
+static void building_temple_draw_temple(object_info& c, int image_offset) {
+    building *b = building_get(c.building_id);
+    const auto &params = b->dcast()->params();
+
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
+    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 12, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     inner_panel_draw(c.offset.x + 16, c.offset.y + 56, c.bgsize.x - 2, 4);
@@ -76,23 +81,23 @@ e_sound_channel_city building_temple::sound_channel() const {
 void building_temple::window_info_background(object_info &c) {
     switch (type()) {
     case BUILDING_TEMPLE_OSIRIS:
-        building_temple_draw_temple(c, "temple_osiris", 92, 21);
+        building_temple_draw_temple(c, 21);
         break;
 
     case BUILDING_TEMPLE_RA:
-        building_temple_draw_temple(c, "temple_ra", 93, 22);
+        building_temple_draw_temple(c, 22);
         break;
 
     case BUILDING_TEMPLE_PTAH:
-        building_temple_draw_temple(c, "temple_ptah", 94, 23);
+        building_temple_draw_temple(c, 23);
         break;
 
     case BUILDING_TEMPLE_SETH:
-        building_temple_draw_temple(c, "temple_seth", 95, 24);
+        building_temple_draw_temple(c, 24);
         break;
 
     case BUILDING_TEMPLE_BAST:
-        building_temple_draw_temple(c, "temple_bast", 96, 25);
+        building_temple_draw_temple(c, 25);
         break;
     }
 }

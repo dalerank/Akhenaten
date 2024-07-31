@@ -29,15 +29,19 @@ void config_load_hunting_lodge_model() {
 }
 
 void building_hunting_lodge::window_info_background(object_info &c) {
+    building* b = building_get(c.building_id);
+
     painter ctx = game.painter();
-    int group_id = 154;
-    c.help_id = 90;
-    window_building_play_sound(&c, snd::get_building_info_sound("hunting_lodge"));
+    const auto &params = b->dcast()->params();
+
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
+    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
 
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
-    building* b = building_get(c.building_id);
     ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_GAMEMEAT), c.offset.x + 32, c.offset.y + 56);
     int width = lang_text_draw(group_id, 13, c.offset.x + 60, c.offset.y + 60, FONT_NORMAL_BLACK_ON_LIGHT);
     if (!b->stored_amount(RESOURCE_GAMEMEAT)) {

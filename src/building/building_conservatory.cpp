@@ -16,7 +16,7 @@ void config_load_building_conservatory() {
 }
 
 void building_conservatory::window_info_background(object_info& c) {
-    building_entertainment_school_draw_info(c, "conservatory", 75);
+    building_entertainment_school_draw_info(c);
 }
 
 void building_conservatory::spawn_figure() {

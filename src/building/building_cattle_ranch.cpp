@@ -20,7 +20,7 @@ void building_cattle_ranch::on_create(int orientation) {
 }
 
 void building_cattle_ranch::window_info_background(object_info &c) {
-    building_workshop_draw_background(c, "cattle_ranch");
+    building_workshop_draw_background(c);
 }
 
 void building_cattle_ranch::window_info_foreground(object_info &c) {

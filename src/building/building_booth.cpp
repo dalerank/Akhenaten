@@ -75,29 +75,34 @@ void building_booth::on_place_checks() {
 }
 
 void building_booth::window_info_background(object_info &c) {
-    c.help_id = 71;
-    window_building_play_sound(&c, snd::get_building_info_sound("booth"));
+    building *b = building_get(c.building_id);
+    const auto &params = b->dcast()->params();
+
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
+    window_building_play_sound(&c, snd::get_building_info_sound(type()));
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(72, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    building* b = building_get(c.building_id);
+    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+
     if (!c.has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (b->num_workers <= 0) {
-        window_building_draw_description(c, 72, 4);
+        window_building_draw_description(c, group_id, 4);
     } else if (!b->data.entertainment.num_shows) {
-        window_building_draw_description(c, 72, 2);
+        window_building_draw_description(c, group_id, 2);
     } else if (b->data.entertainment.days1) {
-        window_building_draw_description(c, 72, 3);
+        window_building_draw_description(c, group_id, 3);
     }
 
     inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 6);
     window_building_draw_employment(&c, 138);
     if (b->data.entertainment.days1 > 0) {
-        int width = lang_text_draw(72, 6, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
+        int width = lang_text_draw(group_id, 6, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1, c.offset.x + width + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw(72, 7 + b->data.entertainment.days3_or_play, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(group_id, 7 + b->data.entertainment.days3_or_play, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
     } else {
-        lang_text_draw(72, 5, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(group_id, 5, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 

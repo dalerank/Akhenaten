@@ -18,7 +18,7 @@ void config_load_building_juggler_school() {
 }
 
 void building_juggler_school::window_info_background(object_info &c) {
-    building_entertainment_school_draw_info(c, "juggler_school", 77);
+    building_entertainment_school_draw_info(c);
 }
 
 void building_juggler_school::update_month() {

@@ -16,7 +16,7 @@ void config_load_library() {
 }
 
 void building_library::window_info_background(object_info &c) {
-    building_education_draw_info(c, "library", FIGURE_LIBRARIAN, RESOURCE_NONE, vec2i{0, 0}, vec2i{0, 0});
+    building_education_draw_info(c, FIGURE_LIBRARIAN, RESOURCE_NONE, vec2i{0, 0}, vec2i{0, 0});
 }
 
 void building_library::spawn_figure() {

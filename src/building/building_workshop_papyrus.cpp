@@ -33,7 +33,7 @@ void building_papyrus_maker::on_create(int orientation) {
 }
 
 void building_papyrus_maker::window_info_background(object_info &c) {
-    building_workshop_draw_background(c, "papyrus_workshop");
+    building_workshop_draw_background(c);
 }
 
 void building_papyrus_maker::window_info_foreground(object_info &c) {

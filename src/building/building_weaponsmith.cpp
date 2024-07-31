@@ -54,7 +54,7 @@ void building_weaponsmith::update_graphic() {
 }
 
 void building_weaponsmith::window_info_background(object_info& c) {
-    building_workshop_draw_background(c, "weapons_workshop");
+    building_workshop_draw_background(c);
 }
 
 void building_weaponsmith::window_info_foreground(object_info &ctx) {

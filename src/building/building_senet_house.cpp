@@ -124,11 +124,15 @@ void building_senet_house::spawn_figure() {
 }
 
 void building_bullfight_school::window_info_background(object_info &c) {
-    c.help_id = 75;
-    window_building_play_sound(&c, snd::get_building_info_sound("bullfight_school"));
+    building *b = building_get(c.building_id);
+    const auto &params = b->dcast()->params();
+    
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
+    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
 
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    int group_id = 78;
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     if (!c.has_road_access) {
         window_building_draw_description(c, 69, 25);

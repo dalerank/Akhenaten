@@ -171,20 +171,23 @@ bool building_fishing_wharf::draw_ornaments_and_animations_height(painter &ctx, 
 }
 
 void building_fishing_wharf::window_info_background(object_info &c) {
+    building *b = building_get(c.building_id);
+    const auto &params = b->dcast()->params();
+
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
     painter ctx = game.painter();
 
-    c.help_id = 84;
-    window_building_play_sound(&c, snd::get_building_info_sound("wharf"));
+    window_building_play_sound(&c, snd::get_building_info_sound(type()));
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(102, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_FIGS) + resource_image_offset(RESOURCE_FIGS, RESOURCE_IMAGE_ICON), c.offset.x + 10, c.offset.y + 10);
-
-    building* b = building_get(c.building_id);
 
     if (!c.has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (!get_figure(BUILDING_SLOT_BOAT)->is_valid()) {
-        window_building_draw_description(c, 102, 2);
+        window_building_draw_description(c, group_id, 2);
     } else {
         int text_id;
         figure *boat = get_figure(BUILDING_SLOT_BOAT);
@@ -208,7 +211,7 @@ void building_fishing_wharf::window_info_background(object_info &c) {
             text_id = 8;
             break;
         }
-        window_building_draw_description(c, 102, text_id);
+        window_building_draw_description(c, group_id, text_id);
     }
 
     inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);

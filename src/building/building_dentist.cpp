@@ -15,7 +15,7 @@ void config_load_building_dentist() {
 }
 
 void building_dentist::window_info_background(object_info &c) {
-    building_health_draw_info(c, 65, "dentist", e_text_building_dentist, FIGURE_DENTIST);
+    building_health_draw_info(c, FIGURE_DENTIST);
 }
 
 bool building_dentist::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

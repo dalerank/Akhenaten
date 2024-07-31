@@ -62,11 +62,16 @@ void building_statue::on_place_checks() {
 }
 
 void building_statue::window_info_background(object_info &c) {
-    c.help_id = 79;
-    window_building_play_sound(&c, snd::get_building_info_sound("statue"));
+    building* b = building_get(c.building_id);
+    const auto &params = b->dcast()->params();
+
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
+    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(80, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    window_building_draw_description_at(c, 16 * c.bgsize.y - 158, 80, 1);
+    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    window_building_draw_description_at(c, 16 * c.bgsize.y - 158, group_id, 1);
 }
 
 void building_statue::update_map_orientation(int map_orientation) {

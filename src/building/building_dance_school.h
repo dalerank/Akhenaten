@@ -15,4 +15,4 @@ public:
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_DANCE_SCHOOL; }
 };
 
-void building_entertainment_school_draw_info(object_info &c, pcstr type, int group_id);
+void building_entertainment_school_draw_info(object_info &c);

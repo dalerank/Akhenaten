@@ -58,34 +58,38 @@ void building_palace::update_graphic() {
 }
 
 void building_palace::window_info_background(object_info &c) {
+    building* b = building_get(c.building_id);
+    const auto &params = b->dcast()->params();
+
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
     painter ctx = game.painter();
     c.go_to_advisor.left_a = ADVISOR_FINANCIAL;
-    c.help_id = e_text_building_palace;
 
-    window_building_play_sound(&c, snd::get_building_info_sound("palace"));
+    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(105, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), c.offset.x + 16, c.offset.y + 36);
 
-    building* b = building_get(c.building_id);
     int width = lang_text_draw(105, 2, c.offset.x + 44, c.offset.y + 43, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw_amount(8, 0, b->tax_income_or_storage, c.offset.x + 44 + width, c.offset.y + 43, FONT_NORMAL_BLACK_ON_LIGHT);
 
     if (!c.has_road_access)
         window_building_draw_description(c, 69, 25);
     else if (b->num_workers <= 0)
-        window_building_draw_description_at(c, 72, 106, 10);
+        window_building_draw_description_at(c, 72, group_id, 10);
     else if (c.worker_percentage >= 100)
-        window_building_draw_description_at(c, 72, 106, 5);
+        window_building_draw_description_at(c, 72, group_id, 5);
     else if (c.worker_percentage >= 75)
-        window_building_draw_description_at(c, 72, 106, 6);
+        window_building_draw_description_at(c, 72, group_id, 6);
     else if (c.worker_percentage >= 50)
-        window_building_draw_description_at(c, 72, 106, 7);
+        window_building_draw_description_at(c, 72, group_id, 7);
     else if (c.worker_percentage >= 25)
-        window_building_draw_description_at(c, 72, 106, 8);
+        window_building_draw_description_at(c, 72, group_id, 8);
     else {
-        window_building_draw_description_at(c, 72, 106, 9);
+        window_building_draw_description_at(c, 72, group_id, 9);
     }
 
     inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);

@@ -59,10 +59,17 @@ void building_scribal_school::on_place_checks() {
     building_construction_warning_show(WARNING_PAPYRUS_NEEDED);
     if (g_city.can_produce_resource(RESOURCE_PAPYRUS)) {
         building_construction_warning_show(WARNING_BUILD_PAPYRUS_MAKER);
-    } else if (!g_empire.can_import_resource(RESOURCE_PAPYRUS, true)) {
+        return;
+    }
+
+    if (!g_empire.can_import_resource(RESOURCE_PAPYRUS, true)) {
         building_construction_warning_show(WARNING_INSTRUCT_OVERSEER_TO_IMPORT_PAPYRUS);
-    } else if (city_resource_trade_status(RESOURCE_PAPYRUS) != TRADE_STATUS_IMPORT) {
+        return;
+    } 
+
+    if (city_resource_trade_status(RESOURCE_PAPYRUS) != TRADE_STATUS_IMPORT) {
         building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT_PAPYRUS);
+        return;
     }
 }
 
@@ -71,7 +78,7 @@ void building_scribal_school::on_create(int orientation) {
 }
 
 void building_scribal_school::window_info_background(object_info &c) {
-    building_education_draw_info(c, "school_scribe", FIGURE_TEACHER, RESOURCE_PAPYRUS, scribal_school_m.icon_res, scribal_school_m.text_res);
+    building_education_draw_info(c, FIGURE_TEACHER, RESOURCE_PAPYRUS, scribal_school_m.icon_res, scribal_school_m.text_res);
 }
 
 void building_scribal_school::spawn_figure() {

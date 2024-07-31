@@ -41,7 +41,7 @@ void building_jewels_workshop::on_place_checks() {
 }
 
 void building_jewels_workshop::window_info_background(object_info &ctx) {
-    building_workshop_draw_background(ctx, "luxury_workshop");
+    building_workshop_draw_background(ctx);
 }
 
 bool building_jewels_workshop::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

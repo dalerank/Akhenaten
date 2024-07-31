@@ -27,9 +27,14 @@ void config_load_building_dancer_school() {
     dancer_school_m.load();
 }
 
-void building_entertainment_school_draw_info(object_info& c, pcstr type, int group_id) {
-    c.help_id = 75;
-    window_building_play_sound(&c, snd::get_building_info_sound(type));
+void building_entertainment_school_draw_info(object_info& c) {
+    building *b = building_get(c.building_id);
+    const auto &params = b->dcast()->params();
+
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
+    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
 
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
@@ -72,6 +77,6 @@ bool building_dancer_school::draw_ornaments_and_animations_height(painter &ctx, 
 }
 
 void building_dancer_school::window_info_background(object_info &c) {
-    building_entertainment_school_draw_info(c, "dancer_school", 76);
+    building_entertainment_school_draw_info(c);
 }
 

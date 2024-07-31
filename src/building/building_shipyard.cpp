@@ -29,25 +29,28 @@ void config_load_building_shipyard() {
 }
 
 void building_shipyard::window_info_background(object_info &c) {
-    c.help_id = 82;
-    window_building_play_sound(&c, snd::get_building_info_sound("shipyard"));
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(100, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    building *b = building_get(c.building_id);
+    const auto &params = b->dcast()->params();
 
-    building* b = building_get(c.building_id);
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
+    window_building_play_sound(&c, snd::get_building_info_sound(type()));
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
+    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     if (!c.has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else {
         int pct_done = calc_percentage<int>(b->data.industry.progress, 160);
-        int width = lang_text_draw(100, 2, c.offset.x + 32, c.offset.y + 56, FONT_NORMAL_BLACK_ON_LIGHT);
+        int width = lang_text_draw(group_id, 2, c.offset.x + 32, c.offset.y + 56, FONT_NORMAL_BLACK_ON_LIGHT);
         width += text_draw_percentage(pct_done, c.offset.x + 32 + width, c.offset.y + 56, FONT_NORMAL_BLACK_ON_LIGHT);
-        lang_text_draw(100, 3, c.offset.x + 32 + width, c.offset.y + 56, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw(group_id, 3, c.offset.x + 32 + width, c.offset.y + 56, FONT_NORMAL_BLACK_ON_LIGHT);
 
         if (g_city.buildings.shipyard_boats_requested) {
-            lang_text_draw_multiline(100, 5, c.offset + vec2i{32, 80}, 16 * (c.bgsize.x - 6), FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_multiline(group_id, 5, c.offset + vec2i{32, 80}, 16 * (c.bgsize.x - 6), FONT_NORMAL_BLACK_ON_LIGHT);
         } else {
-            lang_text_draw_multiline(100, 4, c.offset + vec2i{32, 80}, 16 * (c.bgsize.x - 6), FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_multiline(group_id, 4, c.offset + vec2i{32, 80}, 16 * (c.bgsize.x - 6), FONT_NORMAL_BLACK_ON_LIGHT);
         }
     }
 

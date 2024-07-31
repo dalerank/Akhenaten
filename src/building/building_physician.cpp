@@ -17,7 +17,7 @@ void config_load_building_physician() {
 
 void building_physician::window_info_background(object_info& c) {
     c.help_id = 64;
-    window_building_play_sound(&c, snd::get_building_info_sound("physician"));
+    window_building_play_sound(&c, snd::get_building_info_sound(this->TYPE));
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(e_text_building_physician, e_text_title, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 

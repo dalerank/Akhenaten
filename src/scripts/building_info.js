@@ -1,24 +1,5 @@
 log_info("akhenaten: building info started")
 
-building_info = [
-  // { type: "academy", help_id: 69, text_id: 86},
-  { help_id:93, type:"limestone_quarry", text_id:119},
-  { help_id:94, type:"timber_yard", text_id:120},
-  { help_id:92, type:"clay_pit", text_id:121},,
-  { help_id:92, type:"sandstone_quarry", text_id:194},
-  { help_id:92, type:"granite_quarry", text_id:192},
-  { help_id:92, type:"plainstone_quarry", text_id:118},
-  { help_id:89, type:"barley_farm", text_id:181},
-  { help_id:90, type:"flax_farm", text_id:115},
-  { help_id:90, type:"grain_farm", text_id:112},
-  { help_id:91, type:"lettuce_farm", text_id:113},
-  { help_id:91, type:"pomegranades_farm", text_id:114},
-  { help_id:90, type:"chickpeas_farm", text_id:182},
-  { help_id:90, type:"figs_farm", text_id:183},
-  { help_id:90, type:"henna_farm", text_id:306},
-  { help_id:92, type:"bricklayers_guild", text_id:172},
-]
-
 building_small_statue = {
   variants : [
     {pack: PACK_GENERAL, id: 61, offset:1},
@@ -28,6 +9,8 @@ building_small_statue = {
     {pack: PACK_TEMPLE_RA, id: 1, offset:27},
   ],
   window_info_height_id : 1,
+  info_help_id:79,
+  info_text_id:80,
   building_size : 1,
 }
 
@@ -39,6 +22,8 @@ building_medium_statue = {
     {pack: PACK_EXPANSION, id: 36, offset:5},
   ],
   window_info_height_id : 1,
+  info_help_id:79,
+  info_text_id:80,
   building_size : 2,
 }
 
@@ -50,6 +35,8 @@ building_large_statue = {
     {pack: PACK_EXPANSION, id: 35, offset:5},
   ],
   window_info_height_id : 1,
+  info_help_id:79,
+  info_text_id:80,
   building_size : 3,
 }
 
@@ -343,6 +330,8 @@ building_farm_grain = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
+  info_help_id:90,
+  info_text_id:112,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -361,6 +350,8 @@ building_farm_chickpeas = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
+  info_help_id:90,
+  info_text_id:182,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -379,6 +370,8 @@ building_farm_lettuce = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
+  info_help_id:91,
+  info_text_id:113,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -397,6 +390,8 @@ building_farm_pomegranates = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
+  info_help_id:91,
+  info_text_id:114,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -415,6 +410,8 @@ building_farm_barley = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
+  info_help_id:89,
+  info_text_id:181,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -433,6 +430,8 @@ building_farm_flax = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
+  info_help_id:90,
+  info_text_id:115,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -451,6 +450,8 @@ building_farm_henna = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
+  info_help_id:90,
+  info_text_id:306,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -478,6 +479,8 @@ building_farm_figs = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
+  info_help_id:90,
+  info_text_id:183,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -501,6 +504,8 @@ building_shrine_osiris = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
+  info_help_id: 67,
+  info_text_id: 0,
   building_size : 1,
 }
 
@@ -511,6 +516,8 @@ building_shrine_ra = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
+  info_help_id: 67,
+  info_text_id: 2,
   building_size : 1,
 }
 
@@ -521,6 +528,8 @@ building_shrine_ptah = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
+  info_help_id: 67,
+  info_text_id: 4,
   building_size : 1,
 }
 
@@ -531,6 +540,8 @@ building_shrine_seth = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
+  info_help_id: 67,
+  info_text_id: 6,
   building_size : 1,
 }
 
@@ -541,6 +552,8 @@ building_shrine_bast = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
+  info_help_id: 67,
+  info_text_id: 8,
   building_size : 1,
 }
 
@@ -585,6 +598,8 @@ building_bricklayers_guild = {
     work : { pos : [75, -14], pack:PACK_GENERAL, id:57, offset:1, max_frames:12, duration:4 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+  info_help_id:92,
+  info_text_id:172,
   building_size : 2,
 }
 
@@ -652,6 +667,8 @@ building_temple_osiris = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   building_size : 3,
+  info_help_id: 67,
+  info_text_id: 92,
   window_info_height_id : 1,
 }
 
@@ -663,6 +680,8 @@ building_temple_ra = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   building_size : 3,
+  info_help_id: 67,
+  info_text_id: 93,
   window_info_height_id : 1,
 }
 
@@ -674,6 +693,8 @@ building_temple_ptah = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   building_size : 3,
+  info_help_id: 67,
+  info_text_id: 94,
   window_info_height_id : 1,
 }
 
@@ -685,6 +706,8 @@ building_temple_seth = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   building_size : 3,
+  info_help_id: 67,
+  info_text_id: 95,
   window_info_height_id : 1,
 }
 
@@ -696,6 +719,8 @@ building_temple_bast = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   building_size : 3,
+  info_help_id: 67,
+  info_text_id: 96,
   window_info_height_id : 1,
 }
 
@@ -728,6 +753,8 @@ building_juggler_school = {
     work : { pos : [33, -38], pack:PACK_GENERAL, id:46, offset:1, max_frames:12, duration:3 }
   },
   window_info_height_id : 1,
+  info_help_id:75,
+  info_text_id:77,
   building_size : 2,
 }
 
@@ -738,6 +765,8 @@ building_dancer_school = {
     work : { pos : [104, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35 }
   },
   building_size : 4,
+  info_help_id:75,
+  info_text_id:76,
   window_info_height_id : 1,
 }
 
@@ -779,6 +808,8 @@ building_work_camp = {
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  info_help_id: 81,
+  info_text_id: 179,
   building_size : 2,
 }
 
@@ -790,6 +821,8 @@ building_booth = {
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
   window_info_height_id : 2,
+  info_help_id:71,
+  info_text_id:72,
   building_size : 2,
 }
 
@@ -801,6 +834,8 @@ building_apothecary = {
   },
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   window_info_height_id : 1,
+  info_help_id:63,
+  info_text_id:81,
   building_size : 1,
 }
 
@@ -883,6 +918,7 @@ building_reed_gatherer = {
     work : { pos : [30, -17], pack:PACK_GENERAL, id:24, offset:1, max_frames:19 }
   },
   building_size : 2,
+  window_info_height_id : 1,
   info_help_id:92,
   info_text_id:116,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
@@ -895,6 +931,10 @@ building_wood_cutter = {
     work : { pos : [30, -17], pack:PACK_GENERAL, id:23, offset:1, max_frames:19 },
     wood : { pos : [65, 3], pack:PACK_GENERAL, id:202 },
   },
+  building_size : 2,
+  window_info_height_id : 1,
+  info_help_id:94,
+  info_text_id:120,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
@@ -919,6 +959,8 @@ building_tax_collector = {
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   window_info_height_id : 1,
+  info_help_id:76,
+  info_text_id:120,
   building_size : 2,
 }
 
@@ -930,6 +972,8 @@ building_tax_collector_up = {
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   window_info_height_id : 1,
+  info_help_id:76,
+  info_text_id:120,
   building_size : 2,
 }
 
@@ -958,6 +1002,8 @@ building_bandstand = {
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
   window_info_height_id : 3,
+  info_help_id:72,
+  info_text_id:71,
   building_size : 3,
 }
 
@@ -1158,6 +1204,8 @@ building_fishing_wharf = {
   building_size : 2,
   window_info_height_id: 1,
   planer_relative_orientation: 1,
+  info_help_id: 84,
+  info_text_id: 102,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -1171,6 +1219,8 @@ building_shipyard = {
   building_size : 3,
   window_info_height_id : 1,
   planer_relative_orientation: 1,
+  info_help_id: 82,
+  info_text_id: 100,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
@@ -1181,6 +1231,8 @@ building_dentist = {
     work : { pack:PACK_GENERAL, id:67, offset:1, max_frames:12 }
   },
   building_size : 1,
+  info_help_id:65,
+  info_text_id:84,
   window_info_height_id : 1,
 }
 
@@ -1191,6 +1243,8 @@ building_mortuary = {
     work : { pack:PACK_GENERAL, id:175, offset:1, max_frames:12 }
   },
   building_size : 2,
+  info_help_id:66,
+  info_text_id:82,
   window_info_height_id : 1,
 }
 
@@ -1202,6 +1256,8 @@ building_plaza = {
   is_draggable : true,
   fire_proof : true,
   damage_proof : true,
+  info_help_id:80,
+  info_text_id:137,
   building_size : 1,
 }
 
@@ -1213,6 +1269,8 @@ building_garden = {
   is_draggable : true,
   fire_proof : true,
   damage_proof : true,
+  info_help_id:80,
+  info_text_id:79,
   building_size : 1,
 }
 
@@ -1224,6 +1282,8 @@ building_village_palace = {
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   unique_building : true,
+  info_help_id:77,
+  info_text_id:106,
   building_size : 4,
 }
 
@@ -1235,6 +1295,8 @@ building_town_palace = {
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   unique_building : true,
+  info_help_id:77,
+  info_text_id:106,
   building_size : 5,
 }
 
@@ -1255,6 +1317,8 @@ building_city_palace = {
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   unique_building : true,
+  info_help_id:77,
+  info_text_id:106,
   building_size : 6,
 }
 
@@ -1266,8 +1330,9 @@ building_clay_pit = {
   },
   output_resource : RESOURCE_CLAY,
   building_size : 2,
-  meta_id : "clay_pit",
   production_rate : 50,
+  info_help_id:92,
+  info_text_id:121,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
@@ -1292,7 +1357,9 @@ building_mine_copper = {
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16 }
   },
   output_resource : RESOURCE_COPPER,
-  info_help_id:93, info_text_id:193,
+  window_info_height_id : 1,
+  info_help_id:93,
+  info_text_id:193,
   building_size : 2,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
@@ -1320,6 +1387,7 @@ building_sandstone_quarry = {
   building_size : 2,
   info_help_id:93,
   info_text_id:162,
+  //help_id:92, type:"sandstone_quarry", text_id:194
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
@@ -1343,6 +1411,7 @@ building_stone_quarry = {
   building_size : 2,
   info_help_id:93,
   info_text_id:162,
+  //info_help_id:92, info_text_id:118
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
@@ -1356,6 +1425,7 @@ building_granite_quarry = {
   building_size : 2,
   info_help_id:93,
   info_text_id:162,
+  //help_id:92, text_id:192
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
@@ -1369,6 +1439,7 @@ building_limestone_quarry = {
   building_size : 2,
   info_help_id:93,
   info_text_id:162,
+  //help_id:93, text_id:119}
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
@@ -1427,6 +1498,8 @@ building_bullfight_school = {
   },
   damage_proof : true,
   window_info_height_id : 1,
+  info_help_id:75,
+  info_text_id:78,
   building_size : 4,
 }
 
@@ -1566,6 +1639,8 @@ building_architect_post = {
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
   building_size : 1,
+  info_help_id: 81,
+  info_text_id: 104,
   window_info_height_id : 1,
 }
 
@@ -1577,6 +1652,8 @@ building_conservatory = {
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
   window_info_height_id : 1,
+  info_help_id:75,
+  info_text_id:75,
   building_size : 3,
 }
 
@@ -1589,6 +1666,9 @@ building_hunting_lodge = {
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+  window_info_height_id : 1,
+  info_help_id:90,
+  info_text_id:154,
   building_size : 2,
 }
 

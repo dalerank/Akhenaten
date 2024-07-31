@@ -56,18 +56,20 @@ void config_load_building_farm() {
     farm_figs_m.load();
 }
 
-static void building_farm_draw_info(object_info &c, const char* type, e_resource resource) {
+void building_farm_draw_info(object_info &c, e_resource resource) {
     painter ctx = game.painter();
-    auto &meta = building::get_info(type);
+
+    building* b = building_get(c.building_id);
+    auto &meta = b->dcast()->params().meta;
 
     c.help_id = meta.help_id;
-    window_building_play_sound(&c, snd::get_building_info_sound(type));
+
+    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
 
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     ctx.draw(sprite_resource_icon(resource), c.offset + vec2i{10, 10});
     lang_text_draw_centered(meta.text_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
-    building* b = building_get(c.building_id);
 
     int pct_grown = calc_percentage<int>(b->data.industry.progress, 2000);
     int width = lang_text_draw(meta.text_id, 2, c.offset.x + 32, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -121,14 +123,14 @@ static void building_farm_draw_info(object_info &c, const char* type, e_resource
 
 void building_farm::window_info_background(object_info& c) {
     switch (base.type) {
-    case BUILDING_BARLEY_FARM: building_farm_draw_info(c, "barley_farm", RESOURCE_BARLEY); break;
-    case BUILDING_FLAX_FARM: building_farm_draw_info(c, "flax_farm", RESOURCE_FLAX); break;
-    case BUILDING_GRAIN_FARM: building_farm_draw_info(c, "grain_farm", RESOURCE_GRAIN); break;
-    case BUILDING_LETTUCE_FARM: building_farm_draw_info(c, "lettuce_farm", RESOURCE_LETTUCE); break;
-    case BUILDING_POMEGRANATES_FARM: building_farm_draw_info(c, "pomegranades_farm", RESOURCE_POMEGRANATES); break;
-    case BUILDING_CHICKPEAS_FARM: building_farm_draw_info(c, "chickpeas_farm", RESOURCE_CHICKPEAS); break;
-    case BUILDING_FIGS_FARM: building_farm_draw_info(c, "figs_farm", RESOURCE_FIGS); break;
-    case BUILDING_HENNA_FARM: building_farm_draw_info(c, "henna_farm", RESOURCE_HENNA); break;
+    case BUILDING_BARLEY_FARM: building_farm_draw_info(c, RESOURCE_BARLEY); break;
+    case BUILDING_FLAX_FARM: building_farm_draw_info(c, RESOURCE_FLAX); break;
+    case BUILDING_GRAIN_FARM: building_farm_draw_info(c, RESOURCE_GRAIN); break;
+    case BUILDING_LETTUCE_FARM: building_farm_draw_info(c, RESOURCE_LETTUCE); break;
+    case BUILDING_POMEGRANATES_FARM: building_farm_draw_info(c, RESOURCE_POMEGRANATES); break;
+    case BUILDING_CHICKPEAS_FARM: building_farm_draw_info(c, RESOURCE_CHICKPEAS); break;
+    case BUILDING_FIGS_FARM: building_farm_draw_info(c, RESOURCE_FIGS); break;
+    case BUILDING_HENNA_FARM: building_farm_draw_info(c, RESOURCE_HENNA); break;
     }
 }
 

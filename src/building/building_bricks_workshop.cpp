@@ -21,7 +21,7 @@ void building_bricks_workshop::on_create(int orientation) {
 }
 
 void building_bricks_workshop::window_info_background(object_info &c) {
-    building_workshop_draw_background(c, "brick_maker", true, RESOURCE_CLAY);
+    building_workshop_draw_background(c, RESOURCE_CLAY);
 }
 
 void building_bricks_workshop::update_count() const {

@@ -54,33 +54,37 @@ void console_command_collapse(std::istream &is, std::ostream &) {
 }
 
 void building_architect_post::window_info_background(object_info &c) {
-    c.help_id = 81;
-    window_building_play_sound(&c, snd::get_building_info_sound("engineer_post"));
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(104, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    building *b = building_get(c.building_id);
+    const auto &params = b->dcast()->params();
 
-    building* b = building_get(c.building_id);
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
+    window_building_play_sound(&c, snd::get_building_info_sound(type()));
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
+    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+
     if (!c.has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (!b->num_workers) {
-        window_building_draw_description(c, 104, 9);
+        window_building_draw_description(c, group_id, 9);
     } else {
         if (b->has_figure(0)) {
-            window_building_draw_description(c, 104, 2);
+            window_building_draw_description(c, group_id, 2);
         } else {
-            window_building_draw_description(c, 104, 3);
+            window_building_draw_description(c, group_id, 3);
         }
 
         if (c.worker_percentage >= 100) {
-            window_building_draw_description_at(c, 72, 104, 4);
+            window_building_draw_description_at(c, 72, group_id, 4);
         } else if (c.worker_percentage >= 75) {
-            window_building_draw_description_at(c, 72, 104, 5);
+            window_building_draw_description_at(c, 72, group_id, 5);
         } else if (c.worker_percentage >= 50) {
-            window_building_draw_description_at(c, 72, 104, 6);
+            window_building_draw_description_at(c, 72, group_id, 6);
         } else if (c.worker_percentage >= 25) {
-            window_building_draw_description_at(c, 72, 104, 7);
+            window_building_draw_description_at(c, 72, group_id, 7);
         } else {
-            window_building_draw_description_at(c, 72, 104, 8);
+            window_building_draw_description_at(c, 72, group_id, 8);
         }
     }
 

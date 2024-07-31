@@ -20,7 +20,7 @@ void config_load_building_quarry() {
 }
 
 void building_sandstone_quarry::window_info_background(object_info &c) {
-    building_raw_material_draw_info(c, "sandstone_quarry", RESOURCE_SANDSTONE);
+    building_raw_material_draw_info(c, RESOURCE_SANDSTONE);
 }
 
 void building_sandstone_quarry::on_create(int orientration) {
@@ -42,7 +42,7 @@ void building_stone_quarry::on_create(int orientration) {
 }
 
 void building_stone_quarry::window_info_background(object_info &c) {
-    building_raw_material_draw_info(c, "stone_quarry", RESOURCE_STONE);
+    building_raw_material_draw_info(c, RESOURCE_STONE);
 }
 
 bool building_stone_quarry::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
@@ -55,7 +55,7 @@ void building_stone_quarry::update_count() const {
 }
 
 void building_limestone_quarry::window_info_background(object_info &c) {
-    building_raw_material_draw_info(c, "limestone_quarry", RESOURCE_LIMESTONE);
+    building_raw_material_draw_info(c, RESOURCE_LIMESTONE);
 }
 
 void building_limestone_quarry::on_create(int orientration) {
@@ -72,7 +72,7 @@ void building_limestone_quarry::update_count() const {
 }
 
 void building_granite_quarry::window_info_background(object_info &c) {
-    building_raw_material_draw_info(c, "granite_quarry", RESOURCE_GRANITE);
+    building_raw_material_draw_info(c, RESOURCE_GRANITE);
 }
 
 void building_granite_quarry::on_create(int orientration) {

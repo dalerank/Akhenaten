@@ -54,7 +54,7 @@ void building_weaver::update_graphic() {
 }
 
 void building_weaver::window_info_background(object_info &ctx) {
-    building_workshop_draw_background(ctx, "flax_workshop");
+    building_workshop_draw_background(ctx);
 }
 
 void building_weaver::window_info_foreground(object_info &ctx) {

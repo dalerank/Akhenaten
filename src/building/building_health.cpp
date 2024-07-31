@@ -57,13 +57,15 @@ void game_cheat_start_plague(std::istream &is, std::ostream &os) {
     g_city.health.start_disease(total_population, true, plague_people);
 }
 
-void building_health_draw_info(object_info& c, int help_id, const char* type, int group_id, e_figure_type ftype) {
-    c.help_id = help_id;
-    window_building_play_sound(&c, snd::get_building_info_sound(type));
+void building_health_draw_info(object_info& c, e_figure_type ftype) {
+    building *b = building_get(c.building_id);
+    const auto &params = b->dcast()->params();
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
+    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-
-    building *b = building_get(c.building_id);
 
     if (ftype != FIGURE_NONE && b->has_figure_of_type(BUILDING_SLOT_SERVICE, ftype)) {
         window_building_draw_description(c, group_id, e_text_figure_on_patrol);
@@ -80,7 +82,7 @@ void building_health_draw_info(object_info& c, int help_id, const char* type, in
 }
 
 void building_apothecary::window_info_background(object_info& c) {
-    building_health_draw_info(c, 63, "apothecary", e_text_building_apothecary, FIGURE_HERBALIST);
+    building_health_draw_info(c, FIGURE_HERBALIST);
 }
 
 void building_apothecary::spawn_figure() {
@@ -111,7 +113,7 @@ bool building_apothecary::draw_ornaments_and_animations_height(painter &ctx, vec
 
 
 void building_mortuary::window_info_background(object_info& c) {
-    building_health_draw_info(c, 66, "mortuary", e_text_building_mortuary, FIGURE_EMBALMER);
+    building_health_draw_info(c, FIGURE_EMBALMER);
 }
 
 void building_mortuary::spawn_figure() {

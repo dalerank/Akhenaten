@@ -52,7 +52,7 @@ void building_pottery::on_place_checks() {
 }
 
 void building_pottery::window_info_background(object_info& c) {
-    building_workshop_draw_background(c, "pottery_workshop");
+    building_workshop_draw_background(c);
 }
 
 void building_pottery::window_info_foreground(object_info &c) {

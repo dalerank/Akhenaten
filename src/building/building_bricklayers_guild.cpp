@@ -37,9 +37,9 @@ void config_load_building_bricklayers_guild() {
 declare_console_command(addbricks, game_cheat_add_resource<RESOURCE_BRICKS>);
 
 void building_bricklayers_guild::window_info_background(object_info& c) {
-    constexpr pcstr btype = "bricklayers_guild";
-    auto &meta = building::get_info(btype);
-    window_building_play_sound(&c, snd::get_building_info_sound(btype));
+    building* b = building_get(c.building_id);
+    const auto &meta = b->dcast()->params().meta;
+    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
 
     painter ctx = game.painter();
 
@@ -47,7 +47,6 @@ void building_bricklayers_guild::window_info_background(object_info& c) {
     ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_BRICKS), c.offset.x + 10, c.offset.y + 10);
     lang_text_draw_centered(meta.text_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
-    building* b = building_get(c.building_id);
     int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
     int width = lang_text_draw(meta.text_id, 2, c.offset.x + 32, c.offset.y + 40, FONT_NORMAL_BLACK_ON_LIGHT);
     width += text_draw_percentage(pct_done, c.offset.x + 32 + width, c.offset.y + 40, FONT_NORMAL_BLACK_ON_LIGHT);
