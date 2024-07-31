@@ -23,8 +23,9 @@ int scenario_requests_active_count();
 void scenario_request_set_state(const scenario_request &r, e_event_state new_state);
 void scenario_request_set_active(const scenario_request &r, bool active);
 void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_action &next_action);
+void scenario_request_activate(event_ph_t &event);
 
+scenario_request scenario_request_get(const event_ph_t &event);
 scenario_request scenario_request_get_visible(int index);
 
-using request_visitor = std::function<void(int, const scenario_request *)>;
-int scenario_request_foreach_visible(int start_index, request_visitor cb);
+std::vector<scenario_request> scenario_get_visible_requests();

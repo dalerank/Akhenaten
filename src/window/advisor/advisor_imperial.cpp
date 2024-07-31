@@ -155,41 +155,40 @@ void ui::advisor_imperial_window::ui_draw_foreground() {
         num_requests = 1;
     }
 
-    num_requests = scenario_request_foreach_visible(num_requests, [this, &ui] (int index, const scenario_request* request) {
-        if (index >= 5) {
-            return;
-        }
+    auto requests = scenario_get_visible_requests();
+    for (int index = num_requests, size = std::min<int>(5, (int)requests.size()); index < size; ++index) {
+        const scenario_request &request = requests[index];
 
         ui.button("", vec2i{38, 96 + 42 * index}, vec2i{560, 42})
             .onclick([this, index] (int, int) {
                 this->handle_request(index);
             });
-        ui.icon(vec2i{45, 103 + 42 * index}, request->resource);
+        ui.icon(vec2i{45, 103 + 42 * index}, request.resource);
 
         bstring256 amount_text;
         bstring256 month_to_comply;
         bstring256 saved_resources;
         bstring256 allow_str;
 
-        int request_amount = request->resource_amount();
-        int quat = stack_proper_quantity(request_amount, request->resource);
+        int request_amount = request.resource_amount();
+        int quat = stack_proper_quantity(request_amount, request.resource);
 
-        amount_text.printf("%u %s", quat, ui::str(23, request->resource));
+        amount_text.printf("%u %s", quat, ui::str(23, request.resource));
         ui.label(amount_text, vec2i{65, 102 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
 
-        month_to_comply.printf("%s %u %s", ui::str(8, 4), request->months_to_comply, ui::str(12, 2));
+        month_to_comply.printf("%s %u %s", ui::str(8, 4), request.months_to_comply, ui::str(12, 2));
         ui.label(month_to_comply, vec2i{310, 102 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
 
-        if (request->resource == RESOURCE_DEBEN) {
+        if (request.resource == RESOURCE_DEBEN) {
             // request for money
             int treasury = city_finance_treasury();
             saved_resources.printf("%u %s", treasury, ui::str(52, 44));
-            allow_str = (treasury < request->amount) ? ui::str(52, 48) : ui::str(52, 47);
+            allow_str = (treasury < request.amount) ? ui::str(52, 48) : ui::str(52, 47);
         } else {
             // normal goods request
-            int amount_stored = city_resource_count(request->resource);
-            amount_stored = stack_proper_quantity(amount_stored, request->resource);
-            int request_amount = request->resource_amount();
+            int amount_stored = city_resource_count(request.resource);
+            amount_stored = stack_proper_quantity(amount_stored, request.resource);
+            int request_amount = request.resource_amount();
 
             saved_resources.printf("%u %s", amount_stored, ui::str(52, 43));
             allow_str = (amount_stored < request_amount) ? ui::str(52, 48) : ui::str(52, 47);
@@ -197,7 +196,7 @@ void ui::advisor_imperial_window::ui_draw_foreground() {
 
         ui.label(saved_resources, vec2i{40, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
         ui.label(allow_str, vec2i{310, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
-    });
+    }
 
     if (!num_requests) {
         ui.label(ui::str(52, 21), vec2i{64, 160}, FONT_NORMAL_WHITE_ON_DARK, UiFlags_LabelMultiline, 512);

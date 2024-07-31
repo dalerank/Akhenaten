@@ -133,6 +133,29 @@ uint8_t* event_manager_t::msg_text(int group_id, int index) {
     return &data.eventmsg_phrases_data[data.eventmsg_line_offsets[eventmsg_id]];
 }
 
+void event_manager_t::process_active_request(int id) {
+    if (id < 0) {
+        return;
+    }
+
+    auto &data = g_scenario_events;
+    if (!is_valid_event_index(id)) {
+        return;
+    }
+
+    event_ph_t &event = data.event_list[id];
+    if (event.type != EVENT_TYPE_REQUEST) {
+        return;
+    }
+
+    if (!event.is_active) {
+        return;
+    }
+
+    e_event_action chain_action_next = EVENT_ACTION_COMPLETED;
+    scenario_request_handle(event, -1, chain_action_next);
+}
+
 void event_manager_t::process_event(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
     if (id < 0) {
         return;
@@ -183,9 +206,8 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
     // check if the trigger time has come, if not return.
     // for ACTIVE EVENTS (requests?): ignore specific time of the year IF quest is active
-    const bool should_handle = !event.is_active 
-                                && event.date() == gametime().date();
-    if (!should_handle) {
+    const bool should_handle = !event.is_active && event.date() == gametime().date();
+    if (!(should_handle)) {
         return;
     }
 
@@ -193,7 +215,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     e_event_action chain_action_next = EVENT_ACTION_COMPLETED; // default action to fire next (determined by handler)
     switch (event.type) {
     case EVENT_TYPE_REQUEST:
-        scenario_request_handle(event, caller_event_id, chain_action_next);
+        scenario_request_activate(event);
         break;
 
     case EVENT_TYPE_INVASION:
@@ -288,9 +310,15 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
 void event_manager_t::process_events() {
     auto& data = g_scenario_events;
-    // main event update loop
+   
+    // main event update loop/fire events
     for (int i = 0; i < events_count(); i++) {
         process_event(i, false, -1);
+    }
+
+    // update active srequests
+    for (int i = 0; i < events_count(); i++) {
+        process_active_request(i);
     }
 
     // secondly, update random value fields for recurring events

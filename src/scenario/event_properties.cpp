@@ -31,7 +31,7 @@ void game_debug_show_properties_object(pcstr prefix, const event_ph_t &e) {
 
         type_name.printf("%s [%d]", token::find_name(e_event_state_tokens, e.event_state), e.event_state);
         game_debug_show_property(i, "<event_state>", type_name);
-        game_debug_show_property(i, "event_state", e.event_state);
+        game_debug_show_property(i, "event_state", (int8_t&)e.event_state);
         game_debug_show_property(i, "is_overdue", e.is_overdue);
         game_debug_show_property(i, "is_active", e.is_active);
         game_debug_show_property(i, "can_comply_dialog_shown", e.can_comply_dialog_shown);
@@ -42,6 +42,7 @@ void game_debug_show_properties_object(pcstr prefix, const event_ph_t &e) {
 
         type_name.printf("%s [%d]", token::find_name(e_event_trigger_type_tokens, e.event_trigger_type), e.event_trigger_type);
         game_debug_show_property(i, "<event_trigger_type>", type_name);
+        game_debug_show_property(i, "event_trigger_type", (int8_t&)e.event_trigger_type);
 
         if (e.type == EVENT_TYPE_REQUEST) {
             type_name.printf("%s [%d]", resource_name((e_resource)e.item.value), e.item.value);

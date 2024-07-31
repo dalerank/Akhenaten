@@ -26,26 +26,30 @@ void scenario_request_init() {
     //}
 }
 
+void scenario_request_activate(event_ph_t &event) {
+    // the event is coming, but hasn't fired yet. this is always a slave / proper event object.
+    // the "facade" event is taken care of the VIA_EVENT check from above - it will never fire.
+    if (event.is_active) {
+        return;
+    }
+
+    event.quest_months_left = event.months_initial;
+    event.is_active = true;
+    event.is_overdue = false;
+    event.can_comply_dialog_shown = false;
+}
+
 void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_action &next_action) {
+    if (!event.is_active) {
+        return;
+    }
+
     // advance time
     if (event.quest_months_left > 0) {
         event.quest_months_left--;
     }
 
-    // the event is coming, but hasn't fired yet. this is always a slave / proper event object.
-    // the "facade" event is taken care of the VIA_EVENT check from above - it will never fire.
-    if (!event.is_active) {
-        event.quest_months_left = event.months_initial;
-        event.is_active = true;
-        event.is_overdue = false;
-        event.can_comply_dialog_shown = false;
-    }
-
-    if (!event.is_active) {
-        return;
-    }
-
-    scenario_request request = scenario_request_get_visible(event.event_id);
+    scenario_request request = scenario_request_get(event);
     if (request.event_id < 0) {
         return;
     }
@@ -71,8 +75,11 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
         event.is_active = false;
         break;
 
-    case e_event_state_in_progress:
     case e_event_state_initial:
+        event.event_state = e_event_state_in_progress;
+        break;
+
+    case e_event_state_in_progress:
         if (!event.can_comply_dialog_shown && city_resource_count(request.resource) >= request.amount) {
             event.can_comply_dialog_shown = true;
             city_message &message = city_message_post(true, MESSAGE_REQUEST_CAN_COMPLY, event.event_id, 0);
@@ -167,7 +174,7 @@ int scenario_requests_active_count() {
     return count;
 }
 
-const scenario_request scenario_request_get(const event_ph_t &event) {
+scenario_request scenario_request_get(const event_ph_t &event) {
     scenario_request request;
 
     request.event_id = event.event_id;
@@ -189,34 +196,36 @@ void scenario_request_set_active(const scenario_request &request, bool active) {
     event.is_active = active;
 }
 
-scenario_request scenario_request_get_visible(int index) {
-    int event_index = 0;
-    for (int i = 0; i < MAX_REQUESTS; i++) {
-        if (i >= g_scenario_data.events.events_count()) {
-            return {};
-        }
-        
+std::vector<scenario_request> scenario_get_visible_requests() {
+    std::vector<scenario_request> requests;
+
+    for (int i = 0, size = g_scenario_data.events.events_count(); i < size; i++) {
         const event_ph_t* event = g_scenario_data.events.at(i);
         if (event->type == EVENT_TYPE_REQUEST && event->is_active && event->event_state <= e_event_state_overdue) {
-            if (event_index == index) {
-                return scenario_request_get(*event);
-            }
-            ++event_index;
+            requests.push_back(scenario_request_get(*event));
         }
+    }
+
+    return requests;
+}
+
+scenario_request scenario_request_get_visible(int index) {
+    int event_index = 0;
+    if (index >= g_scenario_data.events.events_count()) {
+        return {};
+    }
+
+    for (int i = 0; i < MAX_REQUESTS; i++) {
+        const event_ph_t* event = g_scenario_data.events.at(i);
+        if (!(event->type == EVENT_TYPE_REQUEST && event->is_active && event->event_state <= e_event_state_overdue)) {
+            continue;
+        }
+
+        if (event_index == index) {
+            return scenario_request_get(*event);
+        }
+        ++event_index;
     }
 
     return {};
-}
-
-int scenario_request_foreach_visible(int start_index, request_visitor callback) {
-    int index = start_index;
-    for (int i = 0; i < MAX_REQUESTS; i++) {
-        auto request = scenario_request_get_visible(i);
-        if (request.is_valid()) {
-            callback(index, &request);
-            index++;
-        }
-    }
-
-    return index;
 }

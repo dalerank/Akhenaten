@@ -54,36 +54,36 @@ static generic_button imperial_buttons[] = {
 static int focus_button_id;
 static int selected_request_id;
 
-static void draw_request(int index, const scenario_request* request) {
+static void draw_request(int index, scenario_request request) {
     painter ctx = game.painter();
     if (index >= 5)
         return;
 
     button_border_draw(38, 96 + 42 * index, 560, 40, 0);
-    text_draw_number(request->amount, '@', " ", 40, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-    int resource_offset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
+    text_draw_number(request.amount, '@', " ", 40, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
+    int resource_offset = request.resource + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON);
     ImageDraw::img_generic(ctx, image_id_resource_icon(resource_offset), vec2i{110, 100 + 42 * index});
-    lang_text_draw(23, request->resource, 150, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
+    lang_text_draw(23, request.resource, 150, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
 
-    int width = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
+    int width = lang_text_draw_amount(8, 4, request.months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(12, 2, 310 + width, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
 
-    if (request->resource == RESOURCE_DEBEN) {
+    if (request.resource == RESOURCE_DEBEN) {
         // request for money
         int treasury = city_finance_treasury();
         width = text_draw_number(treasury, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         width += lang_text_draw(52, 44, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        if (treasury < request->amount)
+        if (treasury < request.amount)
             lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         else {
             lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         }
     } else {
         // normal goods request
-        int amount_stored = city_resource_count((e_resource)request->resource);
+        int amount_stored = city_resource_count(request.resource);
         width = text_draw_number(amount_stored, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         width += lang_text_draw(52, 43, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
-        if (amount_stored < request->amount)
+        if (amount_stored < request.amount)
             lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         else {
             lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
@@ -129,10 +129,6 @@ int ui::advisor_monuments_window::draw_background() {
         width = lang_text_draw(52, strength_text_id, 80, 120, FONT_NORMAL_WHITE_ON_DARK);
         lang_text_draw_amount(8, 4, city_military_months_until_distant_battle(), 80 + width, 120, FONT_NORMAL_WHITE_ON_DARK);
         num_requests = 1;
-    }
-    num_requests = scenario_request_foreach_visible(num_requests, draw_request);
-    if (!num_requests) {
-        lang_text_draw_multiline(52, 21, vec2i{64, 160}, 512, FONT_NORMAL_WHITE_ON_DARK);
     }
 
     return ADVISOR_HEIGHT;
