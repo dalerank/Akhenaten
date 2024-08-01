@@ -298,31 +298,33 @@ void building_bazaar::on_create(int orientation) {
 void building_bazaar::spawn_figure() {
     base.check_labor_problem();
 
-    if (common_spawn_figure_trigger(50)) {
-        // market buyer
-        int spawn_delay = base.figure_spawn_timer();
-        if (!base.has_figure_of_type(1, FIGURE_MARKET_BUYER)) {
-            base.figure_spawn_delay++;
-            if (base.figure_spawn_delay > spawn_delay) {
-                building *dest = get_storage_destination();
-                if (dest->id) {
-                    base.figure_spawn_delay = 0;
-                    figure *f = base.create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, BUILDING_SLOT_MARKET_BUYER);
-                    f->collecting_item_id = data.market.fetch_inventory_id;
-                }
+    if (!common_spawn_figure_trigger(50)) {
+        return;
+    }
+
+    // market buyer
+    int spawn_delay = base.figure_spawn_timer();
+    if (!base.has_figure_of_type(BUILDING_SLOT_MARKET_BUYER, FIGURE_MARKET_BUYER)) {
+        base.figure_spawn_delay++;
+        if (base.figure_spawn_delay > spawn_delay) {
+            building *dest = get_storage_destination();
+            if (dest->id) {
+                base.figure_spawn_delay = 0;
+                figure *f = base.create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, BUILDING_SLOT_MARKET_BUYER);
+                f->collecting_item_id = data.market.fetch_inventory_id;
             }
         }
+    }
 
-        // market trader
-        if (!base.has_figure_of_type(0, FIGURE_MARKET_TRADER)) {
-            int bazar_inventory = std::accumulate(data.market.inventory, data.market.inventory + 7, 0);
-            if (bazar_inventory > 0) { // do not spawn trader if bazaar is 100% empty!
-                base.figure_spawn_delay++;
-                if (base.figure_spawn_delay > spawn_delay) {
-                    base.figure_spawn_delay = 0;
-                    base.create_roaming_figure(FIGURE_MARKET_TRADER);
-                    return;
-                }
+    // market trader
+    if (!base.has_figure_of_type(BUILDING_SLOT_SERVICE, FIGURE_MARKET_TRADER)) {
+        int bazar_inventory = std::accumulate(data.market.inventory, data.market.inventory + 7, 0);
+        if (bazar_inventory > 0) { // do not spawn trader if bazaar is 100% empty!
+            base.figure_spawn_delay++;
+            if (base.figure_spawn_delay > spawn_delay) {
+                base.figure_spawn_delay = 0;
+                base.create_roaming_figure(FIGURE_MARKET_TRADER);
+                return;
             }
         }
     }

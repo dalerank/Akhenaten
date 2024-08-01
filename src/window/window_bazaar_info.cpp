@@ -7,27 +7,35 @@
 #include "city/city.h"
 #include "window/window_building_info.h"
 #include "window/building/distribution.h"
+#include "sound/sound_building.h"
+#include "figure/figure.h"
 #include "game/game.h"
 
 struct bazaar_info_window : public ui::widget {
     int resource_text_group;
-} g_bazaar_info_window;
+
+    using widget::load;
+    virtual void load(archive arch, pcstr section) override {
+        widget::load(arch, section);
+        resource_text_group = arch.r_int("resource_text_group");
+    }
+};
+
+bazaar_info_window g_bazaar_info_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_bazaar_info_window);
 void config_load_bazaar_info_window() {
-    g_config_arch.r_section("bazaar_info_window", [] (archive arch) {
-        g_bazaar_info_window.load(arch);
-        g_bazaar_info_window.resource_text_group = arch.r_int("resource_text_group");
-    });
+    g_bazaar_info_window.load("bazaar_info_window");
 }
 
 void building_bazaar::draw_simple_background(object_info &ctx) {
-    ctx.help_id = 2;
+    const auto &meta = get_info();
+    ctx.help_id = meta.help_id;
 
     auto &ui = g_bazaar_info_window;
 
     ctx.bgsize = ui["background"].size;
-    window_building_play_sound(&ctx, "Wavs/market.wav");
+    window_building_play_sound(&ctx, snd::get_building_info_sound(type()));
 
     ui["orders"].pos.y = 16 * ctx.bgsize.y - 40;
     ui["orders"].onclick([] (int, int) {
@@ -40,7 +48,7 @@ void building_bazaar::draw_simple_background(object_info &ctx) {
     }
 
     if (base.num_workers <= 0) {
-        reason = {97, 2};
+        reason = {meta.text_id, 2};
     }
 
     if (reason.first) {
@@ -58,9 +66,18 @@ void building_bazaar::draw_simple_background(object_info &ctx) {
 
     int image_id = image_id_resource_icon(0);
     if (data.market.inventory[0] || data.market.inventory[1] || data.market.inventory[2] || data.market.inventory[3]) {
-        //
+        figure *buyer = base.get_figure(BUILDING_SLOT_MARKET_BUYER);
+        figure *trader = base.get_figure(BUILDING_SLOT_SERVICE);
+        if (buyer->is_valid() && trader->is_valid()) {
+            ui["warning_text"] = ui::str(meta.text_id, 1);
+        } else if (buyer->is_valid()) {
+            ui["warning_text"] = ui::str(meta.text_id, 10);
+        } else if (trader->is_valid()) {
+            int state = (trader->action_state == FIGURE_ACTION_126_ROAMER_RETURNING) ? 12 : 11;
+            ui["warning_text"] = ui::str(meta.text_id, state);
+        }
     } else {
-        window_building_draw_description_at(ctx, 48, 97, 4);
+        ui["warning_text"] = ui::str(meta.text_id, 4);
     }
 
     // food stocks

@@ -423,7 +423,7 @@ bazaar_info_window = {
 	ui : {
 		background : { type : "outer_panel",	pos: [0, 0], size: [29, 16]},
 		title 		 : { type : "text", text: "#bazaar_info_title", pos: [0, 10], size: [16 * 29, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		warning_text : { type : "text", pos: [32, 56], wrap:16 * 16, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		warning_text : { type : "text", pos: [32, 36], wrap:27 * 16, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		food0_icon : { type : "resource_icon", pos: [32, 85] },
 		food0_text : { type : "text", pos: [64, 90], font: FONT_NORMAL_BLACK_ON_LIGHT },
 		food1_icon : { type : "resource_icon", pos: [142, 85] },
