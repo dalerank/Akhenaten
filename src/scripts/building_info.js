@@ -796,8 +796,10 @@ building_bazaar = {
     fancy_work : { pos : [0, 0], pack:PACK_GENERAL, id:22, offset:13 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
-  window_info_height_id : 1,
   building_size : 2,
+  window_info_height_id : 1,
+  info_help_id: 2,
+  info_text_id: 97,
 }
 
 building_work_camp = {
@@ -1110,6 +1112,9 @@ building_festival_square = {
     square : { pos:[0, 0], pack:PACK_GENERAL, id:49 },
   },
   building_size : 5,
+  window_info_height_id: 1,
+  info_help_id: 75,
+  info_text_id: 188,
   unique_building : true,
 }
 
