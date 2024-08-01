@@ -44,6 +44,7 @@ localization = [
   {key: "#trade_overseer_prices_hint", group:68, id:108},
   {key: "#trade_overseer_goto_empire", group:54, id:2},
   {key: "#trade_overseer_goto_empire_hint", group:68, id:42},
+  {key: "#festival_square_info_title", group:188, id:0},
 
   {key: "#hunter_ostrich_good_city", lang:"en", text: "I like it here, but there is always room for improvement."},
 ]

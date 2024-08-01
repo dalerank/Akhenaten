@@ -11,8 +11,6 @@
 #include "building/count.h"
 #include "grid/building.h"
 #include "city/labor.h"
-#include "sound/sound_building.h"
-#include "window/building/common.h"
 
 struct festival_square_model : public buildings::model_t<building_festival_square> {
     int square;
@@ -52,19 +50,6 @@ void building_festival_square::update_day() {
     update_shows(data.entertainment.days3_or_play);
 
     data.entertainment.num_shows = shows;
-}
-
-void building_festival_square::window_info_background(object_info &c) {
-    building *b = building_get(c.building_id);
-    const auto &params = b->dcast()->params();
-
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
-
-    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
-
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.y, FONT_LARGE_BLACK_ON_LIGHT);
 }
 
 void building_festival_square::on_undo() {
