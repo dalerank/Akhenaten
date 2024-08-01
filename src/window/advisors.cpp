@@ -182,18 +182,6 @@ void window_advisors_draw_dialog_background() {
     graphics_set_to_dialog();
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_MENU_ADVISOR_LAYOUT), 0, 432);
 
-    for (int i = 0; i < 14; i++) {
-        int selected_offset = 0;
-        //if (GAME_ENV == ENGINE_ENV_C3) {
-        //    if (i == 13)
-        //        break;
-        //    if (current_advisor && i == (current_advisor % 13) - 1)
-        //        selected_offset = 13;
-        //    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + i + selected_offset, 48 * i + 12, 441);
-        //}
-        //        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        //            image_buttons_draw(0, 440, advisor_buttons_PH, 14);
-    }
     graphics_reset_dialog();
 }
 

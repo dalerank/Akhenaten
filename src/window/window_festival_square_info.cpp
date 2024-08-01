@@ -2,6 +2,7 @@
 
 #include "sound/sound_building.h"
 #include "window/building/common.h"
+#include "window/hold_festival.h"
 #include "city/city.h"
 
 ui::widget g_festival_square_info_window;
@@ -21,6 +22,9 @@ void building_festival_square::window_info_background(object_info &c) {
 
     ui["warning"] = ui::str(group_id, 1);
     ui["fest_months_last"].text_var("%d %s %s", g_city.festival.months_since_festival, ui::str(8, 5), ui::str(58, 15));
+    ui["hold_festival"].onclick([] {
+        window_hold_festival_show(false);
+    });
 }
 
 void building_festival_square::window_info_foreground(object_info &ctx) {
