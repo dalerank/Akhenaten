@@ -1286,6 +1286,7 @@ building_village_palace = {
     work : { pos : [24, -20], pack:PACK_GENERAL, id:47, offset:1, max_frames:5, duration:5, can_reverse:true }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
+  window_info_height_id : 2,
   unique_building : true,
   info_help_id:77,
   info_text_id:106,
@@ -1299,6 +1300,7 @@ building_town_palace = {
     work : { pos : [-1, -1], pack:PACK_GENERAL, id:39, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
+  window_info_height_id : 2,
   unique_building : true,
   info_help_id:77,
   info_text_id:106,

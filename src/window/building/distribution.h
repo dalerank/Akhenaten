@@ -42,9 +42,9 @@ int window_building_handle_mouse_granary(const mouse* m, object_info* c);
 int window_building_handle_mouse_granary_orders(const mouse* m, object_info* c);
 
 std::pair<int, int> window_building_get_tooltip_granary_orders();
+std::pair<int, int> window_building_get_tooltip_warehouse_orders();
 
 int window_building_handle_mouse_warehouse(const mouse* m, object_info* c);
 int window_building_handle_mouse_warehouse_orders(const mouse* m, object_info* c);
 
-void window_building_get_tooltip_warehouse_orders(int* group_id, int* text_id);
 void window_building_draw_order_instruction(int instr_kind, const storage_t *storage, int resource, int x, int y, int market_order = -1);

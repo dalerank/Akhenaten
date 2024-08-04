@@ -1,15 +1,10 @@
 #pragma once
 
 #include "core/string.h"
+#include "grid/point.h"
 #include "core/vec2i.h"
 #include "city/constants.h"
-
-enum building_info_type {
-    BUILDING_INFO_NONE = 0,
-    BUILDING_INFO_TERRAIN = 1,
-    BUILDING_INFO_BUILDING = 2,
-    BUILDING_INFO_LEGION = 4
-};
+#include "core/svector.h"
 
 enum terrain_info_type {
     TERRAIN_INFO_NONE = 0,
@@ -42,12 +37,15 @@ enum terrain_info_type {
     TERRAIN_INFO_CLIFFS = 26,
 };
 
+struct common_info_window;
+
 struct object_info {
     vec2i offset;
     int y_offset_submenu;
     vec2i bgsize;
     inline vec2i bgsize_px() const { return bgsize * 16; }
     inline int bgwidth_px() const { return bgsize.x * 16; }
+    int grid_offset;
     int height_blocks_submenu;
     int subwnd_wblocks_num;
     int subwnd_hblocks_num;
@@ -64,7 +62,7 @@ struct object_info {
     int barracks_soldiers_requested;
     int worst_desirability_building_id;
     int warehouse_space_text;
-    building_info_type type;
+    common_info_window *handler = nullptr;
     terrain_info_type terrain_type;
     int show_overlay;
     struct {
@@ -85,4 +83,6 @@ struct object_info {
         int drawn;
         int figure_ids[7];
     } figure;
+
+    void reset(tile2i tile);
 };

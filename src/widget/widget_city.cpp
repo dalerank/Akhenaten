@@ -34,6 +34,7 @@
 #include "widget/minimap.h"
 #include "window/window_building_info.h"
 #include "window/window_city.h"
+#include "window/window_city_military.h"
 #include "game/game.h"
 #include "building/building.h"
 
@@ -45,6 +46,10 @@ struct widget_city_data_t {
 };
 
 widget_city_data_t g_wdiget_city_data;
+
+void widget_city_capture_input(bool v) {
+    g_wdiget_city_data.capture_input = v;
+}
 
 void set_city_clip_rectangle(painter &ctx) {
     vec2i view_pos, view_size;
@@ -69,26 +74,28 @@ static void update_zoom_level(painter &ctx) {
     }
 }
 
-static void scroll_map(const mouse* m) {
+void widget_city_scroll_map(const mouse* m) {
     vec2i delta;
     if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
         camera_scroll(delta.x, delta.y);
         sound_city_decay_views();
     }
 }
-static map_point update_city_view_coords(vec2i pixel) {
+
+tile2i widget_city_update_city_view_coords(vec2i pixel) {
     if (!pixel_is_inside_viewport(pixel)) {
-        return map_point(0);
+        return tile2i(0);
     } else {
-        screen_tile screen = pixel_to_screentile(pixel);
+        vec2i screen = pixel_to_screentile(pixel);
         if (screen.x != -1 && screen.y != -1) {
             city_view_set_selected_view_tile(&screen);
             return screentile_to_mappoint(screen);
         } else {
-            return map_point(0);
+            return tile2i(0);
         }
     }
 }
+
 static int input_coords_in_city(int x, int y) {
     vec2i view_pos, view_size;
     view_data_t viewport = city_view_viewport();
@@ -318,6 +325,7 @@ static bool handle_right_click_allow_building_info(tile2i tile) {
     }
     return allow;
 }
+
 static bool handle_legion_click(map_point tile) {
     if (tile.grid_offset() > 0) {
         int formation_id = formation_legion_at_grid_offset(tile.grid_offset());
@@ -345,17 +353,23 @@ static bool handle_cancel_construction_button(const touch* t) {
     Planner.construction_cancel();
     return true;
 }
-void widget_city_clear_current_tile(void) {
+
+void widget_city_clear_current_tile() {
     auto& data = g_wdiget_city_data;
     data.selected_tile.set(0);
     data.current_tile.set(0);
-    //    data.selected_tile.x = -1;
-    //    data.selected_tile.y = -1;
-    //    data.selected_tile.grid_offset() = 0;
-    //    data.current_tile.grid_offset() = 0;
 }
 
-static void handle_touch_scroll(const touch* t) {
+tile2i widget_city_get_current_tile() {
+    return g_wdiget_city_data.current_tile;
+}
+
+void widget_city_set_current_tile(tile2i tile) {
+    auto& data = g_wdiget_city_data;
+    data.current_tile = tile;
+}
+
+void widget_city_handle_touch_scroll(const touch* t) {
     auto& data = g_wdiget_city_data;
     if (Planner.build_type) {
         if (t->has_started) {
@@ -407,7 +421,7 @@ static void handle_first_touch(map_point tile) {
         }
     }
 
-    handle_touch_scroll(first);
+    widget_city_handle_touch_scroll(first);
 
     if (!input_coords_in_city(first->current_point.x, first->current_point.y) || type == BUILDING_NONE)
         return;
@@ -481,7 +495,7 @@ static void handle_touch(void) {
     }
 
     if (!Planner.in_progress || input_coords_in_city(first->current_point.x, first->current_point.y))
-        data.current_tile = update_city_view_coords(first->current_point);
+        data.current_tile = widget_city_update_city_view_coords(first->current_point);
 
     if (first->has_started && input_coords_in_city(first->current_point.x, first->current_point.y)) {
         data.capture_input = true;
@@ -504,7 +518,7 @@ int widget_city_has_input(void) {
 
 static void handle_mouse(const mouse* m) {
     auto& data = g_wdiget_city_data;
-    data.current_tile = update_city_view_coords({m->x, m->y});
+    data.current_tile = widget_city_update_city_view_coords({m->x, m->y});
     g_zoom.handle_mouse(m);
     Planner.draw_as_constructing = false;
     if (m->left.went_down) {
@@ -540,26 +554,8 @@ static void handle_mouse(const mouse* m) {
         scroll_drag_end();
 }
 
-static void military_map_click(int legion_formation_id, tile2i tile) {
-    if (!tile.grid_offset()) {
-        window_city_show();
-        return;
-    }
-    formation* m = formation_get(legion_formation_id);
-    if (m->in_distant_battle || m->cursed_by_mars)
-        return;
-    int other_formation_id = formation_legion_at_building(tile.grid_offset());
-    if (other_formation_id && other_formation_id == legion_formation_id) {
-        formation_legion_return_home(m);
-    } else {
-        formation_legion_move_to(m, tile);
-        g_sound.speech_play_file("Wavs/cohort5.wav", 255);
-    }
-    window_city_show();
-}
-
 void widget_city_handle_input(const mouse* m, const hotkeys* h) {
-    scroll_map(m);
+    widget_city_scroll_map(m);
 
     if (m->is_touch)
         handle_touch();
@@ -572,34 +568,6 @@ void widget_city_handle_input(const mouse* m, const hotkeys* h) {
         } else {
             hotkey_handle_escape();
         }
-    }
-}
-void widget_city_handle_input_military(const mouse* m, const hotkeys* h, int legion_formation_id) {
-    auto& data = g_wdiget_city_data;
-    data.current_tile = update_city_view_coords({m->x, m->y});
-    if (!city_view_is_sidebar_collapsed() && widget_minimap_handle_mouse(m))
-        return;
-    if (m->is_touch) {
-        const touch* t = get_earliest_touch();
-        if (!t->in_use)
-            return;
-        if (t->has_started)
-            data.capture_input = true;
-
-        handle_touch_scroll(t);
-        if (t->has_ended)
-            data.capture_input = false;
-    }
-    scroll_map(m);
-    if (m->right.went_up || h->escape_pressed) {
-        data.capture_input = false;
-        city_warning_clear_all();
-        window_city_show();
-    } else {
-        data.current_tile = update_city_view_coords({m->x, m->y});
-        if ((!m->is_touch && m->left.went_down)
-            || (m->is_touch && m->left.went_up && touch_was_click(get_earliest_touch())))
-            military_map_click(legion_formation_id, data.current_tile);
     }
 }
 

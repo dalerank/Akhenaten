@@ -13,23 +13,25 @@
 #include "sound/sound.h"
 #include "game/game.h"
 
-void window_building_set_possible_position(int* x_offset, int* y_offset, int width_blocks, int height_blocks) {
-    int dialog_width = 16 * width_blocks;
-    int dialog_height = 16 * height_blocks;
+vec2i window_building_set_possible_position(vec2i offset, vec2i blocks) {
+    int dialog_width = 16 * blocks.x;
+    int dialog_height = 16 * blocks.y;
     vec2i view_pos, view_size;
     view_data_t viewport = city_view_viewport();
     city_view_get_viewport(viewport, view_pos, view_size);
     view_size.x -= MARGIN_POSITION;
 
-    if (*y_offset + dialog_height > screen_height() - MARGIN_POSITION) {
-        *y_offset -= dialog_height;
+    if (offset.y + dialog_height > screen_height() - MARGIN_POSITION) {
+        offset.y -= dialog_height;
     }
 
-    *y_offset = (*y_offset < MIN_Y_POSITION) ? MIN_Y_POSITION : *y_offset;
+    offset.y = (offset.y < MIN_Y_POSITION) ? MIN_Y_POSITION : offset.y;
     
-    if (*x_offset + dialog_width > view_size.x) {
-        *x_offset = view_size.x - dialog_width;
+    if (offset.x + dialog_width > view_size.x) {
+        offset.x = view_size.x - dialog_width;
     }
+
+    return offset;
 }
 
 int window_building_get_vertical_offset(object_info* c, int new_window_height) {

@@ -419,6 +419,32 @@ hold_festival_window = {
 	}
 }
 
+empty_info_window = {
+	ui : {
+		//background : { type : "outer_panel",	pos: [48, 48], size: [34, 20]},
+	}
+}
+
+figure_info_window = {
+	ui : {
+		//background : { type : "outer_panel",	pos: [48, 48], size: [34, 20]},
+	}
+}
+
+terrain_info_window = {
+	ui : {
+		//background : { type : "outer_panel",	pos: [48, 48], size: [34, 20]},
+	}
+}
+
+building_info_window = {
+
+}
+
+legion_info_window = {
+
+}
+
 bazaar_info_window = {
 	ui : {
 		background : { type : "outer_panel",	pos: [0, 0], size: [29, 16]},

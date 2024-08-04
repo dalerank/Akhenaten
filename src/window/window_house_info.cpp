@@ -14,7 +14,9 @@
 #include "graphics/text.h"
 #include "grid/road_access.h"
 #include "window/building/figures.h"
+#include "window/window_figure_info.h"
 #include "io/gamefiles/lang.h"
+#include "window/window_figure_info.h"
 #include "game/game.h"
 
 struct house_info_window_t : ui::widget {

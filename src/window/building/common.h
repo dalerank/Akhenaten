@@ -10,7 +10,7 @@ static const int MARGIN_POSITION = 16;
 int get_employment_info_text_id(object_info *c, building *b, int consider_house_covering);
 void draw_employment_details(object_info *c, building *b, int y_offset, int text_id);
 void draw_employment_details_ui(ui::widget &ui, object_info &c, building *b, int text_id);
-void window_building_set_possible_position(int* x_offset, int* y_offset, int width_blocks, int height_blocks);
+vec2i window_building_set_possible_position(vec2i offset, vec2i blocks);
 int window_building_get_vertical_offset(object_info* c, int new_window_height);
 
 void window_building_draw_employment(object_info* c, int y_offset);

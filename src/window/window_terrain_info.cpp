@@ -1,0 +1,207 @@
+#include "window_terrain_info.h"
+
+#include "city/object_info.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
+#include "grid/sprite.h"
+#include "grid/terrain.h"
+#include "grid/property.h"
+#include "sound/sound.h"
+#include "building/building_garden.h"
+#include "building/building_plaza.h"
+#include "window/building/common.h"
+#include "window_figure_info.h"
+#include "city/city.h"
+
+#include "js/js_game.h"
+
+terrain_info_window g_terrain_info_window;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_terrain_info_window);
+void config_load_terrain_info_window() {
+    g_terrain_info_window.load("terrain_info_window");
+}
+
+void window_building_draw_aqueduct(object_info* c) {
+    c->help_id = 60;
+    window_building_play_sound(c, "Wavs/aquaduct.wav");
+    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+    lang_text_draw_centered(141, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    window_building_draw_description_at(c, 16 * c->bgsize.y - 144, 141, c->aqueduct_has_water ? 1 : 2);
+}
+
+void window_building_draw_rubble(object_info* c) {
+    c->help_id = 0;
+    window_building_play_sound(c, "Wavs/ruin.wav");
+    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+    lang_text_draw_centered(140, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+
+    lang_text_draw(41, c->rubble_building_type, c->offset.x + 32, c->offset.y + 16 * c->bgsize.y - 173, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(140, 1, c->offset + vec2i{32, 16 * c->bgsize.y - 143}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+}
+
+void window_building_draw_wall(object_info* c) {
+    c->help_id = 85;
+    window_building_play_sound(c, "Wavs/wall.wav");
+    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+    lang_text_draw_centered(139, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    window_building_draw_description_at(c, 16 * c->bgsize.y - 158, 139, 1);
+}
+
+void window_building_draw_terrain(object_info* c) {
+    switch (c->terrain_type) {
+    case TERRAIN_INFO_ROAD:
+        c->help_id = 57;
+        break;
+
+    case TERRAIN_INFO_AQUEDUCT:
+        c->help_id = 60;
+        break;
+
+    case TERRAIN_INFO_WALL:
+        c->help_id = 85;
+        break;
+
+    case TERRAIN_INFO_BRIDGE:
+        c->help_id = 58;
+        break;
+
+    default:
+        c->help_id = 0;
+        break;
+    }
+
+    if (c->terrain_type == TERRAIN_INFO_AQUEDUCT)
+        window_building_draw_aqueduct(c);
+    else if (c->terrain_type == TERRAIN_INFO_RUBBLE)
+        window_building_draw_rubble(c);
+    else if (c->terrain_type == TERRAIN_INFO_WALL)
+        window_building_draw_wall(c);
+    else if (c->terrain_type == TERRAIN_INFO_GARDEN)
+        building_garden::draw_info(*c);
+    else if (c->terrain_type == TERRAIN_INFO_PLAZA && c->figure.count <= 0)
+        building_plaza::draw_info(*c);
+    else {
+        if (c->can_play_sound) {
+            c->can_play_sound = 0;
+            if (c->figure.count > 0) {
+                //window_building_play_figure_phrase(c);
+            } else {
+                g_sound.speech_play_file("Wavs/empty_land.wav", 255);
+            }
+        }
+
+        //if (c->figure.count > 0 && c->figure.figure_ids[c->figure.selected_index]) {
+        //    figure* f = figure_get(c->figure.figure_ids[c->figure.selected_index]);
+        //    if (f->type < FIGURE_SHIPWRECK)
+        //        c->help_id = 42;
+        //    else
+        //        c->help_id = 330;
+        //}
+
+       // window_building_prepare_figure_list(c);
+        outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
+
+        int text_id_offset = 0;
+        text_id_offset = 36;
+        c->figure.draw_debug_path = 1;
+
+        if (!c->figure.count) {
+            lang_text_draw_centered(70, c->terrain_type + 10, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+        }
+
+        if (c->terrain_type != TERRAIN_INFO_ROAD && c->terrain_type != TERRAIN_INFO_PLAZA) {
+            lang_text_draw_multiline(70, c->terrain_type + text_id_offset, c->offset + vec2i{40, 16 * c->bgsize.y - 113}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+        }
+        window_building_draw_figure_list(c);
+    }
+}
+
+void terrain_info_window::draw_background(object_info &c) {
+    window_building_draw_terrain(&c);
+}
+
+inline int terrain_info_window::get_height_id(object_info &c) {
+    switch (c.terrain_type) {
+    case TERRAIN_INFO_AQUEDUCT:
+        return 4;
+    case TERRAIN_INFO_RUBBLE:
+    case TERRAIN_INFO_WALL:
+    case TERRAIN_INFO_GARDEN:
+        return 1;
+    default:
+        return 5;
+    }
+}
+
+bool terrain_info_window::check(object_info &c) {
+    if (!c.building_id && map_sprite_animation_at(c.grid_offset) > 0) {
+        if (map_terrain_is(c.grid_offset, TERRAIN_WATER)) {
+            c.terrain_type = TERRAIN_INFO_BRIDGE;
+        } else {
+            c.terrain_type = TERRAIN_INFO_EMPTY;
+        }
+        return true;
+    } else if (map_property_is_plaza_or_earthquake(c.grid_offset)) {
+        if (map_terrain_is(c.grid_offset, TERRAIN_ROAD)) {
+            c.terrain_type = TERRAIN_INFO_PLAZA;
+        }
+
+        if (map_terrain_is(c.grid_offset, TERRAIN_ROCK)) {
+            c.terrain_type = TERRAIN_INFO_EARTHQUAKE;
+        }
+
+    } else if (map_terrain_is(c.grid_offset, TERRAIN_TREE)) {
+        c.terrain_type = TERRAIN_INFO_TREE;
+
+    } else if (!c.building_id && map_terrain_is(c.grid_offset, TERRAIN_FLOODPLAIN)) {
+        if (map_terrain_is(c.grid_offset, TERRAIN_WATER)) {
+            c.terrain_type = TERRAIN_INFO_FLOODPLAIN_SUBMERGED;
+        } else if (map_terrain_is(c.grid_offset, TERRAIN_ROAD)) {
+            c.terrain_type = TERRAIN_INFO_ROAD;
+        } else {
+            c.terrain_type = TERRAIN_INFO_FLOODPLAIN;
+        }
+
+    } else if (map_terrain_is(c.grid_offset, TERRAIN_MARSHLAND)) {
+        c.terrain_type = TERRAIN_INFO_MARSHLAND;
+
+    } else if (map_terrain_is(c.grid_offset, TERRAIN_DUNE)) {
+        c.terrain_type = TERRAIN_INFO_DUNES;
+
+    } else if (map_terrain_is(c.grid_offset, TERRAIN_ROCK)) {
+        if (c.grid_offset == g_city.map.entry_flag.grid_offset()) {
+            c.terrain_type = TERRAIN_INFO_ENTRY_FLAG;
+        } else if (c.grid_offset == g_city.map.exit_flag.grid_offset()) {
+            c.terrain_type = TERRAIN_INFO_EXIT_FLAG;
+        } else {
+            if (map_terrain_is(c.grid_offset, TERRAIN_ORE)) {
+                c.terrain_type = TERRAIN_INFO_ORE_ROCK;
+            } else {
+                c.terrain_type = TERRAIN_INFO_ROCK;
+            }
+        }
+    } else if ((map_terrain_get(c.grid_offset) & (TERRAIN_WATER | TERRAIN_BUILDING)) == TERRAIN_WATER) {
+        c.terrain_type = TERRAIN_INFO_WATER;
+
+    } else if (map_terrain_is(c.grid_offset, TERRAIN_SHRUB)) {
+        c.terrain_type = TERRAIN_INFO_SHRUB;
+
+    } else if (map_terrain_is(c.grid_offset, TERRAIN_GARDEN)) {
+        c.terrain_type = TERRAIN_INFO_GARDEN;
+
+    } else if ((map_terrain_get(c.grid_offset) & (TERRAIN_ROAD | TERRAIN_BUILDING)) == TERRAIN_ROAD) {
+        c.terrain_type = TERRAIN_INFO_ROAD;
+
+    } else if (map_terrain_is(c.grid_offset, TERRAIN_CANAL)) {
+        c.terrain_type = TERRAIN_INFO_AQUEDUCT;
+
+    } else if (map_terrain_is(c.grid_offset, TERRAIN_RUBBLE)) {
+        c.terrain_type = TERRAIN_INFO_RUBBLE;
+
+    } else if (map_terrain_is(c.grid_offset, TERRAIN_WALL)) {
+        c.terrain_type = TERRAIN_INFO_WALL;
+    }
+
+    return (c.terrain_type != TERRAIN_INFO_NONE);
+}

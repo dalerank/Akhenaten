@@ -216,6 +216,11 @@ void widget_sidebar_city_draw_background() {
         draw_expanded_background(sidebar_common_get_x_offset_expanded());
     }
 }
+
+void widget_sidebar_city_draw_foreground_military(void) {
+    widget_minimap_draw({sidebar_common_get_x_offset_expanded() + 8, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
+}
+
 void widget_sidebar_city_draw_foreground(void) {
     if (building_menu_has_changed()) {
         refresh_build_menu_buttons();
@@ -236,10 +241,6 @@ void widget_sidebar_city_draw_foreground(void) {
 
     window_request_refresh();
     draw_debug_ui(10, 30);
-}
-
-void widget_sidebar_city_draw_foreground_military(void) {
-    widget_minimap_draw({sidebar_common_get_x_offset_expanded() + 8, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 }
 
 int widget_sidebar_city_handle_mouse(const mouse* m) {

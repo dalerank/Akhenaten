@@ -31,8 +31,6 @@
 #include "window/file_dialog.h"
 #include "game/game.h"
 
-static int selected_legion_formation_id;
-
 static int center_in_city(int element_width_pixels) {
     vec2i view_pos, view_size;
     view_data_t viewport = city_view_viewport();
@@ -41,13 +39,13 @@ static int center_in_city(int element_width_pixels) {
     return view_pos.x + margin;
 }
 
-static void window_city_draw_background() {
+void window_city_draw_background() {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Bakground");
     widget_sidebar_city_draw_background();
     widget_top_menu_draw(1);
 }
 
-static void draw_paused_and_time_left() {
+void window_city_draw_paused_and_time_left() {
     if (scenario_criteria_time_limit_enabled() && !g_city.victory_state.has_won()) {
         int years;
         if (scenario_criteria_max_year() <= gametime().year + 1) {
@@ -100,20 +98,13 @@ static void window_city_draw_foreground() {
     window_city_draw();
     widget_sidebar_city_draw_foreground();
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
-        draw_paused_and_time_left();
+        window_city_draw_paused_and_time_left();
         draw_cancel_construction();
     }
     //    city_view_dirty |= widget_city_draw_construction_cost_and_size();
     widget_city_draw_construction_cost_and_size();
     if (window_is(WINDOW_CITY))
         city_message_process_queue();
-}
-
-static void draw_foreground_military() {
-    widget_top_menu_draw(0);
-    window_city_draw();
-    widget_sidebar_city_draw_foreground_military();
-    draw_paused_and_time_left();
 }
 
 static void exit_military_command() {
@@ -166,7 +157,7 @@ static void toggle_pause() {
 
 bool city_has_loaded = false;
 
-static void handle_hotkeys(const hotkeys* h) {
+void window_city_handle_hotkeys(const hotkeys* h) {
     handle_debug_hotkeys(h);
     ////
     if (h->toggle_pause)
@@ -233,8 +224,8 @@ static void handle_hotkeys(const hotkeys* h) {
     }
 }
 
-static void handle_input(const mouse* m, const hotkeys* h) {
-    handle_hotkeys(h);
+void window_city_handle_input(const mouse* m, const hotkeys* h) {
+    window_city_handle_hotkeys(h);
 
     if (!Planner.in_progress) {
         widget_top_menu_handle_input(m, h);
@@ -249,12 +240,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     city_has_loaded = true;
 }
 
-static void handle_input_military(const mouse* m, const hotkeys* h) {
-    handle_hotkeys(h);
-    widget_city_handle_input_military(m, h, selected_legion_formation_id);
-}
-
-static void get_tooltip(tooltip_context* c) {
+void window_city_get_tooltip(tooltip_context* c) {
     int text_id = widget_top_menu_get_tooltip_text(c);
     if (!text_id)
         text_id = widget_sidebar_city_get_tooltip_text();
@@ -285,23 +271,11 @@ void window_city_show() {
         WINDOW_CITY,
         window_city_draw_background,
         window_city_draw_foreground,
-        handle_input,
-        get_tooltip
+        window_city_handle_input,
+        window_city_get_tooltip
     };
 
     window_show(&window);
     city_has_loaded = false;
 }
 
-void window_city_military_show(int legion_formation_id) {
-    selected_legion_formation_id = legion_formation_id;
-    static window_type window = {
-        WINDOW_CITY_MILITARY,
-        window_city_draw_background,
-        draw_foreground_military,
-        handle_input_military,
-        get_tooltip
-    };
-
-    window_show(&window);
-}
