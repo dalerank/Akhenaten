@@ -673,9 +673,18 @@ void ui::eimage_button::draw() {
         if (readonly) {
             graphics_shade_rect(doffset + pos, tsize, 0x80);
         }
-    }
+    } else if (texture_id) {
+        const vec2i doffset = g_state.offset();
+        graphics_draw_from_texture(texture_id, doffset + pos, size);
 
-    if (icon_texture) {
+        if (border && selected) {
+            button_border_draw(doffset.x + pos.x - 4, doffset.y + pos.y - 4, size.x + 8, size.y + 8, true);
+        }
+
+        if (readonly) {
+            graphics_shade_rect(doffset + pos, size, 0x80);
+        }
+    } else if (icon_texture) {
         painter ctx = game.painter();
         ctx.draw((SDL_Texture*)icon_texture, pos, {0, 0}, size, 0xffffffff, scale, false, true);
     } 
@@ -785,12 +794,14 @@ void ui::egeneric_button::draw() {
     switch (mode) {
     case 0:
         ui::button(_text.c_str(), pos, size, _font, flags)
-            .onclick(_func);
+            .onclick(_func)
+            .tooltip(_tooltip);
         break;
 
     case 1:
         ui::large_button(_text.c_str(), pos, size, _font)
-            .onclick(_func);
+            .onclick(_func)
+            .tooltip(_tooltip);
         break;
     }
 }

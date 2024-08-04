@@ -27,8 +27,8 @@ void graphics_draw_inset_rect(vec2i start, vec2i size);
 void graphics_fill_rect(vec2i start, vec2i size, color color);
 void graphics_shade_rect(vec2i start, vec2i size, int darkness);
 
-int graphics_save_to_texture(int image_id, int x, int y, int width, int height);
-void graphics_draw_from_texture(int image_id, int x, int y, int width, int height);
+int graphics_save_to_texture(int image_id, vec2i pos, vec2i size);
+void graphics_draw_from_texture(int image_id, vec2i pos, vec2i size);
 
 namespace ImageDraw {
 const image_t* img_generic(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);

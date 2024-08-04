@@ -49,11 +49,12 @@ void graphics_draw_inset_rect(vec2i start, vec2i size) {
     graphics_renderer()->draw_line(start, vec2i{start.x, end.y}, COLOR_INSET_DARK);
 }
 
-int graphics_save_to_texture(int image_id, int x, int y, int width, int height) {
-    return graphics_renderer()->save_texture_from_screen(image_id, x, y, width, height);
+int graphics_save_to_texture(int image_id, vec2i pos, vec2i size) {
+    return graphics_renderer()->save_texture_from_screen(image_id, pos.x, pos.y, size.x, size.y);
 }
-void graphics_draw_from_texture(int image_id, int x, int y, int width, int height) {
-    graphics_renderer()->draw_saved_texture_to_screen(image_id, x, y, width, height);
+
+void graphics_draw_from_texture(int image_id, vec2i pos, vec2i size) {
+    graphics_renderer()->draw_saved_texture_to_screen(image_id, pos.x, pos.y, size.x, size.y);
 }
 
 // static const int FOOTPRINT_X_START_PER_HEIGHT[] = {

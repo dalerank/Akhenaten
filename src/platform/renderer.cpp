@@ -375,11 +375,13 @@ static buffer_texture* get_saved_texture_info(int texture_id) {
     if (!texture_id || !data.texture_buffers.first) {
         return 0;
     }
+
     for (buffer_texture* texture_info = data.texture_buffers.first; texture_info; texture_info = texture_info->next) {
         if (texture_info->id == texture_id) {
             return texture_info;
         }
     }
+
     return 0;
 }
 

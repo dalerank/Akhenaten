@@ -11,25 +11,38 @@
 
 #include "graphics/image.h"
 #include "graphics/graphics.h"
+#include "window/window_info.h"
 #include "game/game.h"
 
 #include "io/gamefiles/lang.h"
 
-struct granary_info_window_t : ui::widget {
+struct granary_info_window_t : public common_info_window {
     int resource_text_group;
     int help_id;
-} granary_info_window;
+
+    using widget::load;
+    virtual void load(archive arch, pcstr section) override {
+        common_info_window::load(arch, section);
+
+        resource_text_group = arch.r_int("resource_text_group");
+        help_id = arch.r_int("help_id");
+    }
+
+    virtual void window_info_background(object_info &c) override;
+    virtual void window_info_foreground(object_info &c) override;
+    virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
+    void draw_orders_foreground(object_info &c);
+};
+
+granary_info_window_t granary_info_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_granary_info_window);
 void config_load_granary_info_window() {
-    g_config_arch.r_section("granary_info_window", [] (archive arch) {
-        granary_info_window.load(arch);
-        granary_info_window.resource_text_group = arch.r_int("resource_text_group");
-        granary_info_window.help_id = arch.r_int("help_id");
-    });
+    granary_info_window.load("granary_info_window");
 }
 
-void building_granary::draw_orders_foreground(object_info &c) {
+void granary_info_window_t::draw_orders_foreground(object_info &c) {
+    auto granary = building_get(c.building_id)->dcast_granary();
     auto &data = g_window_building_distribution;
 
     int line_x = c.offset.x + 215;
@@ -52,10 +65,10 @@ void building_granary::draw_orders_foreground(object_info &c) {
         }
 
         // order status
-        window_building_draw_order_instruction(INSTR_STORAGE_YARD, storage(), resource, line_x, y_offset + 51 + line_y);
+        window_building_draw_order_instruction(INSTR_STORAGE_YARD, granary->storage(), resource, line_x, y_offset + 51 + line_y);
 
         // arrows
-        int state = storage()->resource_state[resource];
+        int state = granary->storage()->resource_state[resource];
         if (state == STORAGE_STATE_PHARAOH_ACCEPT || state == STORAGE_STATE_PHARAOH_GET) {
             image_buttons_draw(vec2i{c.offset.x + 165, y_offset + 49}, data.orders_decrease_arrows.data(), 1, i);
             image_buttons_draw(vec2i{c.offset.x + 165 + 18, y_offset + 49}, data.orders_increase_arrows.data(), 1, i);
@@ -64,7 +77,7 @@ void building_granary::draw_orders_foreground(object_info &c) {
 
     // emptying button
     button_border_draw(c.offset.x + 80, y_offset + 404 - 15 * 16, 16 * (c.bgsize.x - 10), 20, data.orders_focus_button_id == 1 ? 1 : 0);
-    if (is_empty_all()) {
+    if (granary->is_empty_all()) {
         lang_text_draw_centered(98, 8, c.offset.x + 80, y_offset + 408 - 15 * 16, 16 * (c.bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
         lang_text_draw_centered(98, 7, c.offset.x + 80, y_offset + 408 - 15 * 16, 16 * (c.bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
@@ -76,6 +89,10 @@ void building_granary::draw_orders_foreground(object_info &c) {
 }
 
 int building_granary::window_info_handle_mouse(const mouse *m, object_info &c) {
+    return 0;
+}
+
+int granary_info_window_t::window_info_handle_mouse(const mouse *m, object_info &c) {
     if (c.storage_show_special_orders) {
         return window_building_handle_mouse_granary_orders(m, &c);
     } else {
@@ -83,28 +100,13 @@ int building_granary::window_info_handle_mouse(const mouse *m, object_info &c) {
     }
 }
 
-void building_granary::window_info_foreground(object_info &ctx) {
-    auto &ui = granary_info_window;
-
-    if (ctx.storage_show_special_orders) {
-        draw_orders_foreground(ctx);
-        return;
-    }
-
-    granary_info_window.draw();
-
-    ui["orders"].pos.y = ctx.bgsize.y * 16 - 40;
-    ui["orders"].onclick([] (int, int) {
-        window_building_info_show_storage_orders();
-    });
-
-    draw_permissions_buttons(ctx.offset.x + 58, ctx.offset.y + 19 * ctx.bgsize.y - 82, 1);
-}
-
-void building_granary::window_info_background(object_info &c) {
-    auto &ui = granary_info_window;
+void granary_info_window_t::window_info_background(object_info &c) {
+    auto &ui = *this;
+    auto granary = building_get(c.building_id)->dcast_granary();
+    assert(granary);
 
     c.help_id = ui.help_id;
+    c.ui = &ui;
     if (c.storage_show_special_orders) {
         int y_offset = window_building_get_vertical_offset(&c, 28 - 15);
         outer_panel_draw(vec2i{c.offset.x, y_offset}, 29, 28 - 15);
@@ -117,7 +119,7 @@ void building_granary::window_info_background(object_info &c) {
 
     c.go_to_advisor.left_a = ADVISOR_LABOR;
     c.go_to_advisor.left_b = ADVISOR_POPULATION;
-    c.bgsize = ui["background"].size;
+
     data.building_id = c.building_id;
     window_building_play_sound(&c, "Wavs/granary.wav");
     
@@ -125,10 +127,7 @@ void building_granary::window_info_background(object_info &c) {
                              : scenario_property_kingdom_supplies_grain() ? "#granary_kingdom_supplies_grain"
                              : nullptr;
 
-    building_granary* granary = building_get(c.building_id)->dcast_granary();
-    assert(granary);
-
-    ui["warning_text"].text(warning_text);
+    ui["warning_text"] = warning_text;
     ui["storing"].text_var("#granary_storing %u #granary_units", granary->total_stored());
     ui["free_space"].text_var("#granary_space_for %u #granary_units", granary->freespace());
 
@@ -153,7 +152,33 @@ void building_granary::window_info_background(object_info &c) {
     }
 
     int laborers = model_get_building(BUILDING_GRANARY)->laborers;
-    int text_id = get_employment_info_text_id(&c, &base, 1);
-    ui["workers_text"].text_var("%u %s (%d %s", num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
-    ui["workers_desc"].text(text_id ? ui::str(69, text_id) : "");
+    int text_id = get_employment_info_text_id(&c, &granary->base, 1);
+    ui["workers_text"].text_var("%u %s (%d %s", granary->num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
+    ui["workers_desc"] = text_id ? ui::str(69, text_id) : "";
+
+    vec2i bgsize = ui["background"].pxsize();
+    ui["orders"].pos.y = bgsize.y - 40;
+    ui["orders"].onclick([] (int, int) {
+        window_building_info_show_storage_orders();
+    });
+}
+
+void granary_info_window_t::window_info_foreground(object_info &c) {
+    auto &ui = *this;
+
+    if (c.storage_show_special_orders) {
+        draw_orders_foreground(c);
+        return;
+    }
+
+    draw_permissions_buttons(c.offset.x + 58, c.offset.y + 19 * c.bgsize.y - 82, 1);
+    granary_info_window.draw();
+}
+
+void building_granary::window_info_foreground(object_info &c) {
+    granary_info_window.window_info_foreground(c);
+}
+
+void building_granary::window_info_background(object_info &c) {
+    granary_info_window.window_info_background(c);
 }

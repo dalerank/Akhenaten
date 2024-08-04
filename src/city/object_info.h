@@ -62,7 +62,7 @@ struct object_info {
     int barracks_soldiers_requested;
     int worst_desirability_building_id;
     int warehouse_space_text;
-    common_info_window *handler = nullptr;
+    common_info_window *ui = nullptr;
     terrain_info_type terrain_type;
     int show_overlay;
     struct {

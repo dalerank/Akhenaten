@@ -10,6 +10,8 @@
 #include "building/house_evolution.h"
 #include "building/government.h"
 #include "window/building/common.h"
+#include "game/game.h"
+#include "game/state.h"
 #include "dev/debug.h"
 
 building_info_window g_building_info_window;
@@ -29,7 +31,7 @@ void window_building_draw_burning_ruin(object_info* c) {
     lang_text_draw_multiline(111, 1, c->offset + vec2i{32, 16 * c->bgsize.y - 143}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
-int building_info_window::handle_mouse(const mouse *m, object_info &c) {
+int building_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {
     building *b = building_get(c.building_id);
     switch (building_get(c.building_id)->type) {
     case BUILDING_STORAGE_YARD:
@@ -65,7 +67,10 @@ void window_building_draw_native_crops(object_info* c) {
 }
 
 
-void building_info_window::draw_foreground(object_info &c) {
+void building_info_window::window_info_foreground(object_info &c) {
+    auto &ui = g_building_info_window;
+    ui.draw();
+
     building *b = building_get(c.building_id);
     b->dcast()->window_info_foreground(c);
 }
@@ -80,7 +85,9 @@ void window_building_draw_mission_post(object_info* c) {
     window_building_draw_employment_without_house_cover(c, 142);
 }
 
-void building_info_window::draw_background(object_info &c) {
+void building_info_window::window_info_background(object_info &c) {
+    auto &ui = g_building_info_window;
+
     g_debug_building_id = c.building_id;
     building *b = building_get(c.building_id);
     switch (b->type) {
@@ -94,25 +101,47 @@ void building_info_window::draw_background(object_info &c) {
     case BUILDING_RESERVER_MISSION_POST_80: window_building_draw_mission_post(&c); break;
 
     default:
-    b->dcast()->window_info_background(c);
-    break;
+        b->dcast()->window_info_background(c);
+        break;
     }
 
-    if (!c.storage_show_special_orders && b) {
-        int workers_needed = model_get_building(b->type)->laborers;
-        if (workers_needed) {
-            pcstr label = (b->state == BUILDING_STATE_VALID ? "x" : "");
-            auto tooltip = (b->state == BUILDING_STATE_VALID) ? std::pair{54, 16} : std::pair{54, 17};
-            auto &btn = ui::button(label, {400, 3 + 16 * c.bgsize.y - 40}, {20, 20})
-                .onclick([&c, b, workers_needed] (int, int) {
-                if (workers_needed) {
-                    building_mothball_toggle(b);
-                    window_invalidate();
-                }
-            });
-            btn.tooltip(tooltip);
-        }
+    int workers_needed = model_get_building(b->type)->laborers;
+    vec2i bgsize = ui["background"].pxsize();
+    ui["mothball"].pos.y = bgsize.y - 40;
+    if (workers_needed) {
+        ui["mothball"] = (b->state == BUILDING_STATE_VALID ? "x" : "");
+        ui["mothball"].onclick([&c, b, workers_needed] {
+            if (workers_needed) {
+                building_mothball_toggle(b);
+                window_invalidate();
+            }
+        });
+        auto tooltip = (b->state == BUILDING_STATE_VALID) ? std::pair{54, 16} : std::pair{54, 17};
+        ui["mothball"].tooltip(tooltip);
     }
+
+    //ui::img_button(GROUP_CONTEXT_ICONS, vec2i(16 * c.bgsize.x - 40, y_offset + 16 * height_blocks - 40), {28, 28}, {4})
+    //    .onclick([&c] (int, int) {
+    //    if (c.storage_show_special_orders) {
+    //        c.storage_show_special_orders = 0;
+    //        storage_settings_backup_reset();
+    //        window_invalidate();
+    //    } else {
+    //        window_city_show();
+    //    }
+    //});
+
+    ui["show_overlay"].enabled = (c.show_overlay != OVERLAY_NONE);
+    ui["show_overlay"] = (game.current_overlay != c.show_overlay ? "v" : "V");
+    ui["show_overlay"].pos.y = c.bgsize_px().y - 40;
+    ui["show_overlay"].onclick([&c] {
+        if (game.current_overlay != c.show_overlay) {
+            game_state_set_overlay((e_overlay)c.show_overlay);
+        } else {
+            game_state_reset_overlay();
+        }
+        window_invalidate();
+    });
 }
 
 std::pair<int, int> building_info_window::get_tooltip(object_info &c) {

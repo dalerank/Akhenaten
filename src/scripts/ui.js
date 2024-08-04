@@ -346,7 +346,7 @@ granary_info_window = {
 	resource_text_group : 23,
 	help_id : 3,
 	ui : {
-		background : { type : "outer_panel",	pos: [0, 0], size: [29, 17] },
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
 		title 		 : { type : "text", text: "#granary_info_title", pos: [0, 12], size: [px(28), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		warning_text : { type : "text", pos: [32, 40], wrap:px(28), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		storing    : { type : "text", pos: [34, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
@@ -363,7 +363,10 @@ granary_info_window = {
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] },
 		workers_text : { type : "text", pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK },
 		workers_desc : { type : "text", pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
-		orders : { type:"generic_button", pos:[100, 0], size:[270, 25], text:{group: 98, id: 5}},
+		orders : { type:"generic_button", pos:[100, -1], size:[270, 25], text:{group: 98, id: 5}},
+		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		mothball : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
 	}
 }
 
@@ -427,7 +430,20 @@ empty_info_window = {
 
 figure_info_window = {
 	ui : {
-		//background : { type : "outer_panel",	pos: [48, 48], size: [34, 20]},
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 22]},
+		title 		 	: { type : "text", pos: [48, 32], size: [px(26), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		inner_panel : { type : "inner_panel", pos : [16, 40], size: [27, 13] },
+		button_figure0 : { type : "image_button", pos:[60 * 0 + 25, 45], size:[52, 52], border:true },
+		button_figure1 : { type : "image_button", pos:[60 * 1 + 25, 45], size:[52, 52], border:true },
+		button_figure2 : { type : "image_button", pos:[60 * 2 + 25, 45], size:[52, 52], border:true },
+		button_figure3 : { type : "image_button", pos:[60 * 3 + 25, 45], size:[52, 52], border:true },
+		button_figure4 : { type : "image_button", pos:[60 * 4 + 25, 45], size:[52, 52], border:true },
+		button_figure5 : { type : "image_button", pos:[60 * 5 + 25, 45], size:[52, 52], border:true },
+		button_figure6 : { type : "image_button", pos:[60 * 6 + 25, 45], size:[52, 52], border:true },
+		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		show_path : { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
+		show_overlay : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
 	}
 }
 
@@ -438,7 +454,17 @@ terrain_info_window = {
 }
 
 building_info_window = {
-
+	ui : {
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 22]},
+		title 		 	: { type : "text", pos: [48, 32], size: [px(26), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		first_advisor  : { type : "image_button", pos:[32, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
+		second_advisor : { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
+		third_advisor : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
+		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		show_overlay : { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
+		mothball : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
+	}
 }
 
 legion_info_window = {

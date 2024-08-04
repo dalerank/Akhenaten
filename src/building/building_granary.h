@@ -54,8 +54,6 @@ public:
     void bless();
     granary_task_status determine_worker_task();
     void draw_stores(vec2i point, color color_mask, painter &ctx);
-
-    void draw_orders_foreground(object_info &c);
 };
 
 void city_granaries_calculate_stocks();

@@ -47,10 +47,8 @@ static void reset_tooltip(tooltip_context* c) {
 static void restore_window_under_tooltip_from_buffer(void) {
     if (button_tooltip_info.is_active) {
         graphics_draw_from_texture(button_tooltip_info.buffer_id,
-                                   button_tooltip_info.x,
-                                   button_tooltip_info.y,
-                                   button_tooltip_info.width,
-                                   button_tooltip_info.height);
+                                   vec2i{button_tooltip_info.x, button_tooltip_info.y},
+                                   vec2i{button_tooltip_info.width, button_tooltip_info.height});
     }
 }
 
@@ -64,7 +62,7 @@ static void save_window_under_tooltip_to_buffer(int x, int y, int width, int hei
     button_tooltip_info.y = y;
     button_tooltip_info.width = width;
     button_tooltip_info.height = height;
-    button_tooltip_info.buffer_id = graphics_save_to_texture(button_tooltip_info.buffer_id, x, y, width, height);
+    button_tooltip_info.buffer_id = graphics_save_to_texture(button_tooltip_info.buffer_id, {x, y}, {width, height});
 }
 
 static void draw_tooltip_box(int x, int y, int width, int height) {

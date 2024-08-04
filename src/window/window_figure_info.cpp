@@ -7,9 +7,14 @@
 #include "graphics/image.h"
 #include "game/game.h"
 #include "dev/debug.h"
+#include "window/message_dialog.h"
+#include "window/window_city.h"
+#include "game/game.h"
+#include "game/state.h"
+#include "sound/sound.h"
 
 struct building_figures_data_t {
-    int figure_images[7];
+    int figure_images[7] = {0};
     int focus_button_id;
     object_info* context_for_callback;
 };
@@ -26,24 +31,18 @@ void draw_figure_in_city(int figure_id, vec2i* coord, painter &ctx) {
     map_point camera_tile = city_view_get_camera_mappoint();
 
     int grid_offset = figure_get(figure_id)->tile.grid_offset();
-    //    int x, y;
-    //    screen_tile screen = mappoint_to_viewtile(map_point(grid_offset));
-
-    //    city_view_go_to_tile(x - 2, y - 6);
-
     widget_city_draw_for_figure(ctx, figure_id, coord);
-
-    //    city_view_go_to_tile(x_cam, y_cam);
 }
 
-void window_building_prepare_figure_list(object_info* c) {
+void window_figure_info_prepare_figures(object_info &c) {
     auto &data = g_building_figures_data;
     painter ctx = game.painter();
-    if (c->figure.count > 0) {
+
+    if (c.figure.count > 0) {
         vec2i coord = {0, 0};
-        for (int i = 0; i < c->figure.count; i++) {
-            draw_figure_in_city(c->figure.figure_ids[i], &coord, ctx);
-            data.figure_images[i] = graphics_save_to_texture(data.figure_images[i], coord.x, coord.y, 48, 48);
+        for (int i = 0; i < c.figure.count; i++) {
+            draw_figure_in_city(c.figure.figure_ids[i], &coord, ctx);
+            data.figure_images[i] = graphics_save_to_texture(data.figure_images[i], coord, {48, 48});
         }
         //        if (config_get(CONFIG_UI_ZOOM))
         //            graphics_set_active_canvas(CANVAS_CITY);
@@ -84,14 +83,60 @@ static generic_button figure_buttons[] = {
     {386, 46, 50, 50, window_info_select_figure, button_none, 6, 0},
 };
 
-inline void figure_info_window::draw_foreground(object_info &c) {
+inline void figure_info_window::window_info_foreground(object_info &c) {
     draw();
+
+    draw_figure_info(&c, c.figure.figure_ids[c.figure.selected_index]);
+    c.figure.drawn = 1;
 }
 
-void figure_info_window::draw_background(object_info &c) {
-    int index = c.figure.selected_index;
-    figure *f = figure_get(c.figure.figure_ids[index]);
-    f->dcast()->window_info_background(c);
+void figure_info_window::window_info_background(object_info &c) {
+    auto &ui = g_figure_info_window;
+    ui.begin_widget(c.offset);
+
+    window_figure_info_prepare_figures(c);
+
+    int text_id_offset = 36;
+    c.figure.draw_debug_path = 1;
+    vec2i bgsize = ui["background"].pxsize();
+
+    //if (!c.figure.count) {
+    //    lang_text_draw_centered(70, c.terrain_type + 10, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    //}
+
+    //if (c.terrain_type != TERRAIN_INFO_ROAD && c.terrain_type != TERRAIN_INFO_PLAZA) {
+    //    lang_text_draw_multiline(70, c.terrain_type + text_id_offset, c.offset + vec2i{40, 16 * c.bgsize.y - 113}, 16 * (c.bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
+    //}
+    for (int i = 0; i < c.figure.count; i++) {
+        bstring64 btn_id; btn_id.printf("button_figure%d", i);
+        ui[btn_id].select(i == c.figure.selected_index);
+
+        auto screen_opt = ui[btn_id].dcast_image_button();
+        if (screen_opt) {
+            screen_opt->texture_id = g_building_figures_data.figure_images[i];
+        }
+    }
+
+    figure* f = figure_get(c.figure.figure_ids[0]);
+    ui["show_path"].pos.y = bgsize.y - 40;
+    ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
+    ui["show_path"].onclick([f] {
+        f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
+        window_invalidate();
+    });
+
+    e_overlay foverlay = f->dcast()->get_overlay();
+    ui["show_overlay"].enabled = (foverlay != OVERLAY_NONE);
+    ui["show_overlay"] = (game.current_overlay != foverlay ? "v" : "V");
+    ui["show_overlay"].pos.y = bgsize.y - 40;
+    ui["show_overlay"].onclick([foverlay] {
+        if (game.current_overlay != foverlay) {
+            game_state_set_overlay((e_overlay)foverlay);
+        } else {
+            game_state_reset_overlay();
+        }
+        window_invalidate();
+    });
 }
 
 int window_building_handle_mouse_figure_list(const mouse* m, object_info* c) {
@@ -102,7 +147,7 @@ int window_building_handle_mouse_figure_list(const mouse* m, object_info* c) {
     return button_id;
 }
 
-int figure_info_window::handle_mouse(const mouse *m, object_info &c) {
+int figure_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {
     if (!c.figure.drawn) {
         return 0;
     }
@@ -170,16 +215,15 @@ void draw_figure_info(object_info* c, int figure_id) {
 
 void window_building_draw_figure_list(object_info* c) {
     inner_panel_draw(c->offset.x + 16, c->offset.y + 40, c->bgsize.x - 2, 13);
+    c->figure.drawn = 1;
     if (c->figure.count <= 0) {
         lang_text_draw_centered(70, 0, c->offset.x, c->offset.y + 120, 16 * c->bgsize.x, FONT_NORMAL_BLACK_ON_DARK);
-    } else {
-        for (int i = 0; i < c->figure.count; i++) {
-            button_border_draw(c->offset.x + 60 * i + 25, c->offset.y + 45, 52, 52, i == c->figure.selected_index);
-            graphics_draw_from_texture(g_building_figures_data.figure_images[i], c->offset.x + 27 + 60 * i, c->offset.y + 47, 48, 48);
-            //            graphics_draw_from_buffer(c->offset.x + 27 + 60 * i, c->offset.y + 47, 48, 48,
-            //            data.figure_images[i]);
-        }
-        draw_figure_info(c, c->figure.figure_ids[c->figure.selected_index]);
+        return;
+    } 
+
+    for (int i = 0; i < c->figure.count; i++) {
+        button_border_draw(c->offset.x + 60 * i + 25, c->offset.y + 45, 52, 52, i == c->figure.selected_index);
+        graphics_draw_from_texture(g_building_figures_data.figure_images[i], c->offset + vec2i(27 + 60 * i, 47), {48, 48});
     }
-    c->figure.drawn = 1;
+    draw_figure_info(c, c->figure.figure_ids[c->figure.selected_index]);
 }

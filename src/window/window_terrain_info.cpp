@@ -84,40 +84,12 @@ void window_building_draw_terrain(object_info* c) {
     else {
         if (c->can_play_sound) {
             c->can_play_sound = 0;
-            if (c->figure.count > 0) {
-                //window_building_play_figure_phrase(c);
-            } else {
-                g_sound.speech_play_file("Wavs/empty_land.wav", 255);
-            }
+            g_sound.speech_play_file("Wavs/empty_land.wav", 255);
         }
-
-        //if (c->figure.count > 0 && c->figure.figure_ids[c->figure.selected_index]) {
-        //    figure* f = figure_get(c->figure.figure_ids[c->figure.selected_index]);
-        //    if (f->type < FIGURE_SHIPWRECK)
-        //        c->help_id = 42;
-        //    else
-        //        c->help_id = 330;
-        //}
-
-       // window_building_prepare_figure_list(c);
-        outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
-
-        int text_id_offset = 0;
-        text_id_offset = 36;
-        c->figure.draw_debug_path = 1;
-
-        if (!c->figure.count) {
-            lang_text_draw_centered(70, c->terrain_type + 10, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-        }
-
-        if (c->terrain_type != TERRAIN_INFO_ROAD && c->terrain_type != TERRAIN_INFO_PLAZA) {
-            lang_text_draw_multiline(70, c->terrain_type + text_id_offset, c->offset + vec2i{40, 16 * c->bgsize.y - 113}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
-        }
-        window_building_draw_figure_list(c);
     }
 }
 
-void terrain_info_window::draw_background(object_info &c) {
+void terrain_info_window::window_info_background(object_info &c) {
     window_building_draw_terrain(&c);
 }
 

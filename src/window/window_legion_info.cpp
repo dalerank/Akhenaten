@@ -76,7 +76,7 @@ int window_building_handle_mouse_legion_info(const mouse* m, object_info* c) {
     return button_id;
 }
 
-int legion_info_window::handle_mouse(const mouse *m, object_info &c) {
+int legion_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {
     return window_building_handle_mouse_legion_info(m, &c);
 }
 
@@ -288,7 +288,7 @@ void window_legion_info_draw_foreground(object_info* c) {
     }
 }
 
-void legion_info_window::draw_foreground(object_info &c) {
+void legion_info_window::window_info_foreground(object_info &c) {
     window_legion_info_draw_foreground(&c);
 }
 
@@ -395,7 +395,7 @@ void window_building_draw_legion_info(object_info* c) {
     }
 }
 
-void legion_info_window::draw_background(object_info &c) {
+void legion_info_window::window_info_background(object_info &c) {
     window_building_draw_legion_info(&c);
 }
 

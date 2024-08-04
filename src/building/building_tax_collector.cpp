@@ -65,19 +65,15 @@ void building_tax_collector::spawn_figure() {
 }
 
 void building_tax_collector::window_info_background(object_info &c) {
-    building* b = building_get(c.building_id);
-
     ui::begin_widget(c.offset);
 
     c.go_to_advisor.left_a = ADVISOR_RATINGS;
     c.go_to_advisor.left_b = ADVISOR_FINANCIAL;
 
-    const auto &params = b->dcast()->params();
+    c.help_id = params().meta.help_id;
+    int group_id = params().meta.text_id;
 
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
-
-    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
+    window_building_play_sound(&c, get_sound());
 
     { // header
         ui::panel(vec2i{0, 0}, {c.bgsize.x, c.bgsize.y}, UiFlags_PanelOuter);
@@ -86,7 +82,7 @@ void building_tax_collector::window_info_background(object_info &c) {
     }
 
     int width = ui::label(106, 2, {44, 43});
-    int amount = config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM) ? b->deben_storage : b->tax_income_or_storage;
+    int amount = config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM) ? base.deben_storage : base.tax_income_or_storage;
     ui::label_amount(8, 0, amount, {44 + width, 43});
 
     int tax_block = c.bgsize.x * 16 / 2;
@@ -105,7 +101,7 @@ void building_tax_collector::window_info_background(object_info &c) {
 
     if (!c.has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (b->num_workers <= 0) {
+    } else if (base.num_workers <= 0) {
         window_building_draw_description_at(c, 72, 106, 10);
     } else if (c.worker_percentage >= 100) {
         window_building_draw_description_at(c, 72, 106, 5);

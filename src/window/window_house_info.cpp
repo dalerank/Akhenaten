@@ -38,7 +38,7 @@ void config_load_house_info_window() {
 }
 
 static void draw_vacant_lot(object_info &c) {
-    window_building_prepare_figure_list(&c);
+    window_figure_info_prepare_figures(c);
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(128, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_figure_list(&c);

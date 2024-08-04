@@ -30,6 +30,7 @@
 #include "graphics/graphics.h"
 #include "monuments.h"
 #include "overlays/city_overlay.h"
+#include "sound/sound_building.h"
 #include "city/city.h"
 
 #include <string.h>
@@ -210,6 +211,10 @@ building::metainfo building_impl::get_info() const {
 
 void building_impl::set_animation(const animation_t &anim) {
     base.anim.setup(anim);
+}
+
+vfs::path building_impl::get_sound() {
+    return snd::get_building_info_sound(type());
 }
 
 void building_impl::params(e_building_type e, const static_params &p) {

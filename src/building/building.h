@@ -6,6 +6,7 @@
 #include "core/vec2i.h"
 #include "core/core.h"
 #include "core/calc.h"
+#include "content/dir.h"
 #include "graphics/animation.h"
 #include "graphics/color.h"
 #include "building/building_type.h"
@@ -566,6 +567,7 @@ public:
 
     inline int size() const { return base.size; }
     inline e_building_type type() const { return base.type; }
+
     inline int figure_spawn_timer() const { return base.figure_spawn_timer(); }
     inline int num_workers() const { return base.num_workers; }
     inline bool has_road_access() const { return base.has_road_access; }
@@ -584,6 +586,7 @@ public:
     virtual resources_vec required_resource() const { return {}; }
     building::metainfo get_info() const;
     void set_animation(const animation_t &anim);
+    vfs::path get_sound();
     inline void set_animation(const xstring &key) { set_animation(anim(key)); }
 
     static void params(e_building_type, const static_params &);

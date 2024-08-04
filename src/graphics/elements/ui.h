@@ -71,6 +71,7 @@ pcstr str(int group, int id);
 inline pcstr str(std::pair<int, int> r) { return str(r.first, r.second); }
 
 struct emenu_header;
+struct eimage_button;
 
 struct element {
     bstring64 id;
@@ -82,6 +83,7 @@ struct element {
     virtual void draw() {}
     virtual void load(archive);
     virtual void text(pcstr) {}
+    virtual void tooltip(std::pair<int, int> t) {}
     virtual int text_width() { return 0; }
     virtual vec2i pxsize() const { return size; }
     inline void text(int font, pcstr v) { this->font(font); this->text(v); }
@@ -96,7 +98,9 @@ struct element {
     virtual void onclick(std::function<void(int, int)>) {}
             void onclick(std::function<void()> f) { onclick([f] (int, int) { f(); }); }
     virtual void onevent(std::function<void()>) {}
+
     virtual emenu_header *dcast_menu_header() { return nullptr; }
+    virtual eimage_button *dcast_image_button() { return nullptr; }
 
     pcstr text_from_key(pcstr key);
 
@@ -167,7 +171,6 @@ struct ebackground : public element {
     virtual void load(archive elem) override;
     virtual image_desc image() const override { return img_desc; }
 };
-
 
 struct eresource_icon : public element {
     e_resource res;
@@ -243,9 +246,11 @@ struct egeneric_button : public elabel {
     int param1 = 0;
     int param2 = 0;
     std::function<void(int, int)> _func;
+    std::pair<int, int> _tooltip;
 
     virtual void draw() override;
     virtual void load(archive arch) override;
+    virtual void tooltip(std::pair<int, int> t) override { _tooltip = t; }
     virtual void onclick(std::function<void(int, int)> func) override { _func = func; }
 };
 
@@ -259,13 +264,18 @@ struct eimage_button : public element {
     img_button_offsets offsets;
     bool selected = false;
     bool border = false;
+    int texture_id = -1;
 
     std::function<void(int, int)> _func;
 
     virtual void load(archive elem) override;
     virtual void select(bool v) override { selected = v; }
     virtual void draw() override;
+
+    using element::onclick;
     virtual void onclick(std::function<void(int, int)> func) override { _func = func; }
+
+    virtual eimage_button *dcast_image_button() override { return this; }
 };
 
 struct widget {
