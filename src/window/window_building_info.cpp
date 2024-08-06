@@ -86,8 +86,6 @@ void window_building_draw_mission_post(object_info* c) {
 }
 
 void building_info_window::window_info_background(object_info &c) {
-    auto &ui = g_building_info_window;
-
     g_debug_building_id = c.building_id;
     building *b = building_get(c.building_id);
     switch (b->type) {
@@ -105,9 +103,11 @@ void building_info_window::window_info_background(object_info &c) {
         break;
     }
 
+    auto &ui = *c.ui;
     int workers_needed = model_get_building(b->type)->laborers;
     vec2i bgsize = ui["background"].pxsize();
     ui["mothball"].pos.y = bgsize.y - 40;
+    ui["mothball"].enabled = workers_needed > 0;
     if (workers_needed) {
         ui["mothball"] = (b->state == BUILDING_STATE_VALID ? "x" : "");
         ui["mothball"].onclick([&c, b, workers_needed] {
@@ -133,7 +133,7 @@ void building_info_window::window_info_background(object_info &c) {
 
     ui["show_overlay"].enabled = (c.show_overlay != OVERLAY_NONE);
     ui["show_overlay"] = (game.current_overlay != c.show_overlay ? "v" : "V");
-    ui["show_overlay"].pos.y = c.bgsize_px().y - 40;
+    ui["show_overlay"].pos.y = bgsize.y - 40;
     ui["show_overlay"].onclick([&c] {
         if (game.current_overlay != c.show_overlay) {
             game_state_set_overlay((e_overlay)c.show_overlay);

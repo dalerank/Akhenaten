@@ -607,7 +607,6 @@ void ui::elabel::load(archive arch) {
 
 void ui::elabel::text(pcstr v) {
     _text = lang_text_from_key(v);
-    enabled = !_text.empty();
 }
 
 void ui::elabel::color(int v) {

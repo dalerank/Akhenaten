@@ -366,6 +366,7 @@ granary_info_window = {
 		orders : { type:"generic_button", pos:[100, -1], size:[270, 25], text:{group: 98, id: 5}},
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
 		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		show_overlay : { type:"generic_button", pos:[px(29)-64, 5], size:[23, 23]},
 		mothball : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
 	}
 }

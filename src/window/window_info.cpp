@@ -201,11 +201,9 @@ static void buiding_info_draw_background() {
 }
 
 static void buiding_info_draw_foreground() {
-    auto &context = g_object_info;
-
-    auto &ui = *context.ui;
+    auto &ui = *g_object_info.ui;
     ui.begin_widget(g_object_info.offset);
-    ui.window_info_foreground(context);
+    ui.window_info_foreground(g_object_info);
 }
 
 static void building_info_handle_input(const mouse* m, const hotkeys* h) {
