@@ -18,14 +18,12 @@
 
 struct granary_info_window_t : public common_info_window {
     int resource_text_group;
-    int help_id;
 
     using widget::load;
     virtual void load(archive arch, pcstr section) override {
         common_info_window::load(arch, section);
 
         resource_text_group = arch.r_int("resource_text_group");
-        help_id = arch.r_int("help_id");
     }
 
     virtual void window_info_background(object_info &c) override;
@@ -105,7 +103,7 @@ void granary_info_window_t::window_info_background(object_info &c) {
     auto granary = building_get(c.building_id)->dcast_granary();
     assert(granary);
 
-    c.help_id = ui.help_id;
+    c.help_id = granary->params().meta.help_id;
     c.ui = &ui;
     if (c.storage_show_special_orders) {
         int y_offset = window_building_get_vertical_offset(&c, 28 - 15);
@@ -164,19 +162,13 @@ void granary_info_window_t::window_info_background(object_info &c) {
 }
 
 void granary_info_window_t::window_info_foreground(object_info &c) {
-    auto &ui = *this;
-
     if (c.storage_show_special_orders) {
         draw_orders_foreground(c);
         return;
     }
 
     draw_permissions_buttons(c.offset.x + 58, c.offset.y + 19 * c.bgsize.y - 82, 1);
-    granary_info_window.draw();
-}
-
-void building_granary::window_info_foreground(object_info &c) {
-    granary_info_window.window_info_foreground(c);
+    draw();
 }
 
 void building_granary::window_info_background(object_info &c) {

@@ -89,6 +89,7 @@ struct element {
     inline void text(int font, pcstr v) { this->font(font); this->text(v); }
     virtual void color(int) {}
     virtual void image(int) {}
+    virtual void image(image_desc) {}
     virtual image_desc image() const { return {}; }
     virtual void font(int) {}
     virtual void width(int v) { size.x = v; }
@@ -160,6 +161,7 @@ struct eimg : public element {
 
     virtual void draw() override;
     virtual void load(archive elem) override;
+    virtual void image(image_desc image) override;
     virtual image_desc image() const override { return img_desc; }
 };
 

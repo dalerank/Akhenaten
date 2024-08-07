@@ -49,26 +49,9 @@ object_info g_object_info;
 svector<common_info_window *, 10> *g_window_info_handlers = nullptr;
 
 struct empty_info_window : public common_info_window {
-    using widget::load;
-    virtual void load(archive arch, pcstr section) override {
-        common_info_window::load(arch, section);
-    }
-
     virtual void window_info_background(object_info &c) override {
         //outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
         lang_text_draw_centered(70, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    }
-
-    virtual int window_info_handle_mouse(const mouse *m, object_info &c) override {
-        return 0;
-    }
-
-    virtual void window_info_foreground(object_info &c) override {
-        draw();
-    }
-
-    virtual bool check(object_info &c) override {
-        return false;
     }
 };
 

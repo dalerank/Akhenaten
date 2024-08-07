@@ -34,7 +34,6 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual std::pair<int, int> get_tooltip() const;
     virtual void window_info_background(object_info &ctx) override;
-    virtual void window_info_foreground(object_info &ctx) override;
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
     virtual void on_place_checks() override;
     virtual void update_day() override;

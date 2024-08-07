@@ -18,12 +18,48 @@
 #include "city/labor.h"
 #include "building/count.h"
 #include "widget/city/ornaments.h"
+#include "window/window_building_info.h"
 
 buildings::model_t<building_temple_osiris> temple_osiris_m;
 buildings::model_t<building_temple_ra> temple_ra_m;
 buildings::model_t<building_temple_ptah> temple_ptah_m;
 buildings::model_t<building_temple_seth> temple_seth_m;
 buildings::model_t<building_temple_bast> temple_bast_m;
+
+struct temple_info_window_t : public common_info_window {
+    virtual void window_info_background(object_info &c) override {
+        auto &ui = *this;
+        c.ui = &ui;
+
+        auto temple = building_get(c.building_id)->dcast_temple();
+
+        int image_offset = 0;
+        switch (temple->type()) {
+        case BUILDING_TEMPLE_OSIRIS: image_offset = 21; break;
+        case BUILDING_TEMPLE_RA: image_offset = 22; break;
+        case BUILDING_TEMPLE_PTAH: image_offset = 23; break;
+        case BUILDING_TEMPLE_SETH: image_offset = 24; break;
+        case BUILDING_TEMPLE_BAST: image_offset = 25; break;
+        }
+
+        c.help_id = temple->params().meta.help_id;
+        int group_id = temple->params().meta.text_id;
+
+        window_building_play_sound(&c, temple->get_sound());
+
+        ui["title"] = ui::str(group_id, 0);
+        ui["god_image"].image({PACK_UNLOADED, 21, image_offset});
+
+        int text_id = get_employment_info_text_id(&c, &temple->base, 1);
+        draw_employment_details_ui(ui, c, &temple->base, text_id);
+
+        if (!c.has_road_access) {
+            window_building_draw_description_at(c, 16 * c.bgsize.y - 128, 69, 25);
+        }
+    }
+};
+
+temple_info_window_t g_temple_info_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_temples);
 void config_load_building_temples() {
@@ -32,26 +68,7 @@ void config_load_building_temples() {
     temple_ptah_m.load();
     temple_seth_m.load();
     temple_bast_m.load();
-}
-
-static void building_temple_draw_temple(object_info& c, int image_offset) {
-    building *b = building_get(c.building_id);
-    const auto &params = b->dcast()->params();
-
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
-
-    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 12, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 56, c.bgsize.x - 2, 4);
-    window_building_draw_employment(&c, 62);
-    painter ctx = game.painter();
-    if (c.has_road_access) {
-        ImageDraw::img_generic(ctx, image_offset + image_id_from_group(PACK_UNLOADED, 21), c.offset.x + 190, c.offset.y + 16 * c.bgsize.y - 118);
-    } else {
-        window_building_draw_description_at(c, 16 * c.bgsize.y - 128, 69, 25);
-    }
+    g_temple_info_window.load("temple_info_window");
 }
 
 e_overlay building_temple::get_overlay() const {
@@ -79,27 +96,7 @@ e_sound_channel_city building_temple::sound_channel() const {
 }
 
 void building_temple::window_info_background(object_info &c) {
-    switch (type()) {
-    case BUILDING_TEMPLE_OSIRIS:
-        building_temple_draw_temple(c, 21);
-        break;
-
-    case BUILDING_TEMPLE_RA:
-        building_temple_draw_temple(c, 22);
-        break;
-
-    case BUILDING_TEMPLE_PTAH:
-        building_temple_draw_temple(c, 23);
-        break;
-
-    case BUILDING_TEMPLE_SETH:
-        building_temple_draw_temple(c, 24);
-        break;
-
-    case BUILDING_TEMPLE_BAST:
-        building_temple_draw_temple(c, 25);
-        break;
-    }
+    g_temple_info_window.window_info_background(c);
 }
 
 void building_temple::spawn_figure() {

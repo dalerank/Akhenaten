@@ -273,6 +273,7 @@ building_garden *building::dcast_garden() { return dcast()->dcast_garden(); }
 building_house *building::dcast_house() { return dcast()->dcast_house(); }
 building_burning_ruin *building::dcast_burning_ruin() { return dcast()->dcast_burning_ruin(); }
 building_storage *building::dcast_storage() { return dcast()->dcast_storage(); }
+building_temple *building::dcast_temple() { return dcast()->dcast_temple(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));

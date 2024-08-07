@@ -344,7 +344,6 @@ mission_briefing_window = {
 
 granary_info_window = {
 	resource_text_group : 23,
-	help_id : 3,
 	ui : {
 		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
 		title 		 : { type : "text", text: "#granary_info_title", pos: [0, 12], size: [px(28), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
@@ -454,9 +453,25 @@ terrain_info_window = {
 	}
 }
 
+temple_info_window = {
+	ui : {
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
+		title 		 	: { type : "text", pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		inner_panel : { type : "inner_panel", pos : [16, 56], size: [27, 4] },
+		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 70] },
+		workers_text : { type : "text", pos: [70, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		workers_desc : { type : "text", pos: [70, 78 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
+		button_help : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close: { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		show_overlay: { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
+		god_image 	: { type : "image", pos: [190, 134] },
+		mothball 		: { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
+	}
+}
+
 building_info_window = {
 	ui : {
-		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 22]},
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
 		title 		 	: { type : "text", pos: [48, 32], size: [px(26), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		first_advisor  : { type : "image_button", pos:[32, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		second_advisor : { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },

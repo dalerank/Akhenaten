@@ -544,6 +544,10 @@ void ui::eimg::load(archive arch) {
     img_desc.offset = arch.r_int("offset");
 }
 
+void ui::eimg::image(image_desc image) {
+    img_desc = image;
+}
+
 void ui::ebackground::draw() {
     painter ctx = game.painter();
     ImageDraw::img_background(ctx, image_group(img_desc), 1.f, pos);
