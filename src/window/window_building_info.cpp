@@ -24,6 +24,10 @@ void window_building_draw_burning_ruin(object_info* c) {
     lang_text_draw_multiline(111, 1, c->offset + vec2i{32, 16 * c->bgsize.y - 143}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
+building_info_window::building_info_window() {
+    window_info_register_handler(this);
+}
+
 int building_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {
     building *b = building_get(c.building_id);
     switch (building_get(c.building_id)->type) {

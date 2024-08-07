@@ -23,3 +23,4 @@ struct common_info_window : public ui::widget {
 void window_building_info_show(const tile2i& point);
 int window_building_info_get_type();
 void window_building_info_show_storage_orders();
+void window_info_register_handler(common_info_window *handler);

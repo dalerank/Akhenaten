@@ -207,15 +207,18 @@ void window_building_info_show_storage_orders() {
     window_invalidate();
 }
 
-common_info_window::common_info_window() {
+void window_info_register_handler(common_info_window *handler) {
     if (!g_window_info_handlers) {
         g_window_info_handlers = new svector<common_info_window *, 10>();
     }
 
-    auto it = std::find(g_window_info_handlers->begin(), g_window_info_handlers->end(), this);
+    auto it = std::find(g_window_info_handlers->begin(), g_window_info_handlers->end(), handler);
     if (it == g_window_info_handlers->end()) {
-        g_window_info_handlers->push_back(this);
+        g_window_info_handlers->push_back(handler);
     }
+}
+
+common_info_window::common_info_window() {
 }
 
 void common_info_window::window_info_background(object_info &c) {
