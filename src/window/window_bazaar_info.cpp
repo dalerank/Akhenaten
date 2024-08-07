@@ -11,7 +11,7 @@
 #include "figure/figure.h"
 #include "game/game.h"
 
-struct bazaar_info_window : public ui::widget {
+struct bazaar_info_window_t : public building_info_window {
     int resource_text_group;
 
     using widget::load;
@@ -19,35 +19,46 @@ struct bazaar_info_window : public ui::widget {
         widget::load(arch, section);
         resource_text_group = arch.r_int("resource_text_group");
     }
+
+    virtual void window_info_background(object_info &c) override;
+    virtual void window_info_foreground(object_info &c) override;
+    virtual bool check(object_info &c) override {
+        return building_get(c.building_id)->type == BUILDING_BAZAAR;
+    }
+
+    void draw_simple_background(object_info &c);
+    void draw_orders_background(object_info &c);
+    void draw_orders_foreground(object_info &c);
 };
 
-bazaar_info_window g_bazaar_info_window;
+bazaar_info_window_t g_bazaar_info_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_bazaar_info_window);
 void config_load_bazaar_info_window() {
     g_bazaar_info_window.load("bazaar_info_window");
 }
 
-void building_bazaar::draw_simple_background(object_info &ctx) {
-    const auto &meta = get_info();
-    ctx.help_id = meta.help_id;
+void bazaar_info_window_t::draw_simple_background(object_info &c) {
+    auto &ui = *this;
+    auto bazaar = building_get(c.building_id)->dcast_bazaar();
 
-    auto &ui = g_bazaar_info_window;
+    const auto &meta = bazaar->get_info();
+    c.help_id = meta.help_id;
 
-    ctx.bgsize = ui["background"].size;
-    window_building_play_sound(&ctx, snd::get_building_info_sound(type()));
+    vec2i bgsize = ui["background"].pxsize();
+    window_building_play_sound(&c, bazaar->get_sound());
 
-    ui["orders"].pos.y = 16 * ctx.bgsize.y - 40;
+    ui["orders"].pos.y = bgsize.y - 40;
     ui["orders"].onclick([] (int, int) {
         window_building_info_show_storage_orders();
     });
 
     std::pair<int, int> reason = {0, 0};
-    if (!ctx.has_road_access) {
+    if (!c.has_road_access) {
         reason = {69, 25};
     }
 
-    if (base.num_workers <= 0) {
+    if (bazaar->num_workers() <= 0) {
         reason = {meta.text_id, 2};
     }
 
@@ -57,17 +68,18 @@ void building_bazaar::draw_simple_background(object_info &ctx) {
         return;
     }
 
-    int text_id = get_employment_info_text_id(&ctx, &base, 1);
+    int text_id = get_employment_info_text_id(&c, &bazaar->base, 1);
     int laborers = model_get_building(BUILDING_BAZAAR)->laborers;
-    ui["workers_text"].text_var("%d %s (%d %s", num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
+    ui["workers_text"].text_var("%d %s (%d %s", bazaar->num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
     if (text_id) {
         ui["workers_desc"] = ui::str(69, text_id);
     }
 
     int image_id = image_id_resource_icon(0);
+    auto &data = bazaar->data;
     if (data.market.inventory[0] || data.market.inventory[1] || data.market.inventory[2] || data.market.inventory[3]) {
-        figure *buyer = base.get_figure(BUILDING_SLOT_MARKET_BUYER);
-        figure *trader = base.get_figure(BUILDING_SLOT_SERVICE);
+        figure *buyer = bazaar->get_figure(BUILDING_SLOT_MARKET_BUYER);
+        figure *trader = bazaar->get_figure(BUILDING_SLOT_SERVICE);
         if (buyer->is_valid() && trader->is_valid()) {
             ui["warning_text"] = ui::str(meta.text_id, 1);
         } else if (buyer->is_valid()) {
@@ -81,29 +93,29 @@ void building_bazaar::draw_simple_background(object_info &ctx) {
     }
 
     // food stocks
-    for (int i = 0; i < allow_food_types(); ++i) {
+    for (int i = 0; i < bazaar->allow_food_types(); ++i) {
         bstring32 id_icon; id_icon.printf("food%u_icon", i);
         bstring32 id_text; id_text.printf("food%u_text", i);
 
         e_resource food_res = g_city.allowed_foods(i);
         ui[id_icon].image(food_res);
-        ui[id_text].font(is_good_accepted(i) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
+        ui[id_text].font(bazaar->is_good_accepted(i) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
         ui[id_text].text_var(food_res ? "%u" : "", data.market.inventory[INVENTORY_FOOD1 + i]);
     }
 
     // good stocks
-    for (int i = 0; i < allow_good_types(); ++i) {
+    for (int i = 0; i < bazaar->allow_good_types(); ++i) {
         bstring32 id_icon; id_icon.printf("good%u_icon", i);
         bstring32 id_text; id_text.printf("good%u_text", i);
 
         e_resource good_res = INV_RESOURCES[i];
         ui[id_icon].image(good_res);
-        ui[id_text].font(is_good_accepted(INVENTORY_GOOD1 + i) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
+        ui[id_text].font(bazaar->is_good_accepted(INVENTORY_GOOD1 + i) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
         ui[id_text].text_var(good_res ? "%u" : "", data.market.inventory[INVENTORY_GOOD1 + i]);
     }
 }
 
-void building_bazaar::window_info_foreground(object_info &ctx) {
+void bazaar_info_window_t::window_info_foreground(object_info &ctx) {
     if (ctx.storage_show_special_orders) {
         draw_orders_foreground(ctx);
     } else {
@@ -112,14 +124,10 @@ void building_bazaar::window_info_foreground(object_info &ctx) {
 }
 
 void building_bazaar::window_info_background(object_info &c) {
-    if (c.storage_show_special_orders) {
-        draw_orders_background(c);
-    } else {
-        draw_simple_background(c);
-    }
+    //g_bazaar_info_window.window_info_background(c);
 }
 
-void building_bazaar::draw_orders_foreground(object_info &c) {
+void bazaar_info_window_t::draw_orders_foreground(object_info &c) {
     auto &data = g_window_building_distribution;
     draw_orders_background(c);
     int line_x = c.offset.x + 215;
@@ -151,7 +159,17 @@ void building_bazaar::draw_orders_foreground(object_info &c) {
     //                         16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
 }
 
-void building_bazaar::draw_orders_background(object_info &c) {
+void bazaar_info_window_t::window_info_background(object_info &c) {
+    building_info_window::window_info_background(c);
+
+    if (c.storage_show_special_orders) {
+        draw_orders_background(c);
+    } else {
+        draw_simple_background(c);
+    }
+}
+
+void bazaar_info_window_t::draw_orders_background(object_info &c) {
     c.help_id = 2;
     int y_offset = window_building_get_vertical_offset(&c, 28 - 11);
     outer_panel_draw(vec2i{c.offset.x, y_offset}, 29, 28 - 11);

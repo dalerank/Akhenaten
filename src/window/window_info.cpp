@@ -37,6 +37,7 @@
 #include "window/building/government.h"
 #include "window/building/terrain.h"
 #include "window/building/utility.h"
+#include "window/window_building_info.h"
 #include "window/window_city.h"
 #include "window/message_dialog.h"
 #include "dev/debug.h"
@@ -55,10 +56,12 @@ struct empty_info_window : public common_info_window {
     }
 };
 
+building_info_window g_building_info_window;
 empty_info_window g_empty_info_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_info_window);
 void config_load_info_window() {
+    g_building_info_window.load("building_info_window");
     g_empty_info_window.load("empty_info_window");
 }
 
@@ -99,6 +102,12 @@ void buiding_info_init(tile2i tile) {
         }
     }
 
+    int building_id = map_building_at(context.grid_offset);
+    if (!context.ui && building_id) {
+        context.ui = &g_building_info_window;
+        context.building_id = building_id;
+    }
+
     if (!context.ui) {
         context.ui = &g_empty_info_window;
     }
@@ -128,59 +137,6 @@ static void buiding_info_draw_background() {
     window_city_draw_panels();
     window_city_draw();
     context.ui->window_info_background(context);
-    auto &ui = *context.ui;
-
-    vec2i bgsize = ui["background"].pxsize();
-    ui["button_help"].pos.y = bgsize.y - 40;
-    ui["button_help"].onclick([&context] {
-        if (context.help_id > 0) {
-            window_message_dialog_show(context.help_id, -1, window_city_draw_all);
-        } else {
-            window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
-        }
-        window_invalidate();
-    });
-
-    ui["button_close"].pos.y = bgsize.y - 40;
-    ui["button_close"].onclick([&context] {
-        if (context.storage_show_special_orders) {
-            context.storage_show_special_orders = 0;
-            storage_settings_backup_reset();
-            window_invalidate();
-        } else {
-            window_city_show();
-        }
-    });
-
-    auto first_advisor = ui["first_advisor"].dcast_image_button();
-    if (first_advisor) {
-        first_advisor->enabled = context.go_to_advisor.first &&is_advisor_available(context.go_to_advisor.first);
-        first_advisor->img_desc.offset = (context.go_to_advisor.left_a - 1) * 3;
-        first_advisor->pos.y = bgsize.y - 40;
-        first_advisor->onclick([&context] {
-            window_advisors_show_advisor(context.go_to_advisor.first);
-        });
-    }
-
-    auto second_advisor = ui["second_advisor"].dcast_image_button();
-    if (second_advisor) {
-        second_advisor->enabled = context.go_to_advisor.left_a && is_advisor_available(context.go_to_advisor.left_a);
-        second_advisor->img_desc.offset = (context.go_to_advisor.left_a - 1) * 3;
-        second_advisor->pos.y = bgsize.y - 40;
-        second_advisor->onclick([&context] {
-            window_advisors_show_advisor(context.go_to_advisor.left_a);
-        });
-    }
-
-    auto third_advisor = ui["third_advisor"].dcast_image_button();
-    if (third_advisor) {
-        third_advisor->enabled = context.go_to_advisor.left_b && is_advisor_available(context.go_to_advisor.left_b);
-        third_advisor->img_desc.offset = (context.go_to_advisor.left_b - 1) * 3;
-        third_advisor->pos.y = bgsize.y - 40;
-        third_advisor->onclick([&context] {
-            window_advisors_show_advisor(context.go_to_advisor.left_b);
-        });
-    }
 }
 
 static void buiding_info_draw_foreground() {
@@ -259,6 +215,68 @@ common_info_window::common_info_window() {
     auto it = std::find(g_window_info_handlers->begin(), g_window_info_handlers->end(), this);
     if (it == g_window_info_handlers->end()) {
         g_window_info_handlers->push_back(this);
+    }
+}
+
+void common_info_window::window_info_background(object_info &c) {
+    ; // nothing
+
+    update_buttons(c);
+}
+
+void common_info_window::update_buttons(object_info &c) {
+    auto &ui = *c.ui;
+
+    vec2i bgsize = ui["background"].pxsize();
+    ui["button_help"].pos.y = bgsize.y - 40;
+    ui["button_help"].onclick([&c] {
+        if (c.help_id > 0) {
+            window_message_dialog_show(c.help_id, -1, window_city_draw_all);
+        } else {
+            window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
+        }
+        window_invalidate();
+    });
+
+    ui["button_close"].pos.y = bgsize.y - 40;
+    ui["button_close"].onclick([&c] {
+        if (c.storage_show_special_orders) {
+            c.storage_show_special_orders = 0;
+            storage_settings_backup_reset();
+            window_invalidate();
+        } else {
+            window_city_show();
+        }
+    });
+
+    auto first_advisor = ui["first_advisor"].dcast_image_button();
+    if (first_advisor) {
+        first_advisor->enabled = c.go_to_advisor.first &&is_advisor_available(c.go_to_advisor.first);
+        first_advisor->img_desc.offset = (c.go_to_advisor.left_a - 1) * 3;
+        first_advisor->pos.y = bgsize.y - 40;
+        first_advisor->onclick([&c] {
+            window_advisors_show_advisor(c.go_to_advisor.first);
+        });
+    }
+
+    auto second_advisor = ui["second_advisor"].dcast_image_button();
+    if (second_advisor) {
+        second_advisor->enabled = c.go_to_advisor.left_a && is_advisor_available(c.go_to_advisor.left_a);
+        second_advisor->img_desc.offset = (c.go_to_advisor.left_a - 1) * 3;
+        second_advisor->pos.y = bgsize.y - 40;
+        second_advisor->onclick([&c] {
+            window_advisors_show_advisor(c.go_to_advisor.left_a);
+        });
+    }
+
+    auto third_advisor = ui["third_advisor"].dcast_image_button();
+    if (third_advisor) {
+        third_advisor->enabled = c.go_to_advisor.left_b && is_advisor_available(c.go_to_advisor.left_b);
+        third_advisor->img_desc.offset = (c.go_to_advisor.left_b - 1) * 3;
+        third_advisor->pos.y = bgsize.y - 40;
+        third_advisor->onclick([&c] {
+            window_advisors_show_advisor(c.go_to_advisor.left_b);
+        });
     }
 }
 

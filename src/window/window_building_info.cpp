@@ -14,13 +14,6 @@
 #include "game/state.h"
 #include "dev/debug.h"
 
-building_info_window g_building_info_window;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_info_window);
-void config_load_building_info_window() {
-    g_building_info_window.load("building_info_window");
-}
-
 void window_building_draw_burning_ruin(object_info* c) {
     c->help_id = 0;
     window_building_play_sound(c, "Wavs/ruin.wav");
@@ -68,8 +61,7 @@ void window_building_draw_native_crops(object_info* c) {
 
 
 void building_info_window::window_info_foreground(object_info &c) {
-    auto &ui = g_building_info_window;
-    ui.draw();
+    c.ui->draw();
 
     building *b = building_get(c.building_id);
     b->dcast()->window_info_foreground(c);
@@ -103,67 +95,6 @@ void building_info_window::window_info_background(object_info &c) {
         break;
     }
 
-    auto &ui = *c.ui;
-    int workers_needed = model_get_building(b->type)->laborers;
-    vec2i bgsize = ui["background"].pxsize();
-    ui["mothball"].pos.y = bgsize.y - 40;
-    ui["mothball"].enabled = workers_needed > 0;
-    if (workers_needed) {
-        ui["mothball"] = (b->state == BUILDING_STATE_VALID ? "x" : "");
-        ui["mothball"].onclick([&c, b, workers_needed] {
-            if (workers_needed) {
-                building_mothball_toggle(b);
-                window_invalidate();
-            }
-        });
-        auto tooltip = (b->state == BUILDING_STATE_VALID) ? std::pair{54, 16} : std::pair{54, 17};
-        ui["mothball"].tooltip(tooltip);
-    }
-
-    //ui::img_button(GROUP_CONTEXT_ICONS, vec2i(16 * c.bgsize.x - 40, y_offset + 16 * height_blocks - 40), {28, 28}, {4})
-    //    .onclick([&c] (int, int) {
-    //    if (c.storage_show_special_orders) {
-    //        c.storage_show_special_orders = 0;
-    //        storage_settings_backup_reset();
-    //        window_invalidate();
-    //    } else {
-    //        window_city_show();
-    //    }
-    //});
-
-    ui["show_overlay"].enabled = (c.show_overlay != OVERLAY_NONE);
-    ui["show_overlay"] = (game.current_overlay != c.show_overlay ? "v" : "V");
-    ui["show_overlay"].pos.y = bgsize.y - 40;
-    ui["show_overlay"].onclick([&c] {
-        if (game.current_overlay != c.show_overlay) {
-            game_state_set_overlay((e_overlay)c.show_overlay);
-        } else {
-            game_state_reset_overlay();
-        }
-        window_invalidate();
-    });
-}
-
-std::pair<int, int> building_info_window::get_tooltip(object_info &c) {
-    if (!c.storage_show_special_orders) {
-        return {0, 0};
-    }
-
-    building *b = building_get(c.building_id);
-    if (b->type == BUILDING_STORAGE_YARD) {
-        return window_building_get_tooltip_warehouse_orders();
-    }
-
-    return b->dcast()->get_tooltip();
-}
-
-bool building_info_window::check(object_info &c) {
-    int building_id = map_building_at(c.grid_offset);
-    if (!building_id) {
-        return false;
-    }
-
-    building *b = building_get(building_id);
     c.worker_percentage = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
 
     b->dcast()->highlight_waypoints();
@@ -202,5 +133,64 @@ bool building_info_window::check(object_info &c) {
     c.show_overlay = b->get_overlay();
     c.has_road_access = b->has_road_access;
 
-    return true;
+    common_info_window::window_info_background(c);
+}
+
+std::pair<int, int> building_info_window::get_tooltip(object_info &c) {
+    if (!c.storage_show_special_orders) {
+        return {0, 0};
+    }
+
+    building *b = building_get(c.building_id);
+    if (b->type == BUILDING_STORAGE_YARD) {
+        return window_building_get_tooltip_warehouse_orders();
+    }
+
+    return b->dcast()->get_tooltip();
+}
+
+void building_info_window::update_buttons(object_info &c) {
+    auto &ui = *c.ui;
+    building *b = building_get(c.building_id);
+
+    int workers_needed = model_get_building(b->type)->laborers;
+    vec2i bgsize = ui["background"].pxsize();
+    ui["mothball"].pos.y = bgsize.y - 40;
+    ui["mothball"].enabled = workers_needed > 0;
+    if (workers_needed) {
+        ui["mothball"] = (b->state == BUILDING_STATE_VALID ? "x" : "");
+        ui["mothball"].onclick([&c, b, workers_needed] {
+            if (workers_needed) {
+                building_mothball_toggle(b);
+                window_invalidate();
+            }
+        });
+        auto tooltip = (b->state == BUILDING_STATE_VALID) ? std::pair{54, 16} : std::pair{54, 17};
+        ui["mothball"].tooltip(tooltip);
+    }
+
+    //ui::img_button(GROUP_CONTEXT_ICONS, vec2i(16 * c.bgsize.x - 40, y_offset + 16 * height_blocks - 40), {28, 28}, {4})
+    //    .onclick([&c] (int, int) {
+    //    if (c.storage_show_special_orders) {
+    //        c.storage_show_special_orders = 0;
+    //        storage_settings_backup_reset();
+    //        window_invalidate();
+    //    } else {
+    //        window_city_show();
+    //    }
+    //});
+
+    ui["show_overlay"].enabled = (c.show_overlay != OVERLAY_NONE);
+    ui["show_overlay"] = (game.current_overlay != c.show_overlay ? "v" : "V");
+    ui["show_overlay"].pos.y = bgsize.y - 40;
+    ui["show_overlay"].onclick([&c] {
+        if (game.current_overlay != c.show_overlay) {
+            game_state_set_overlay((e_overlay)c.show_overlay);
+        } else {
+            game_state_reset_overlay();
+        }
+        window_invalidate();
+    });
+
+    common_info_window::update_buttons(c);
 }

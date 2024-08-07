@@ -513,6 +513,10 @@ bazaar_info_window = {
 		workers_text : { type : "text", pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
 		workers_desc : { type : "text", pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
 		orders : { type:"generic_button", pos:[100, 0], size:[270, 25], text:{group: 98, id: 5}},
+		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		show_overlay : { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
+		mothball : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
 	}
 }
 
