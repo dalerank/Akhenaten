@@ -1656,7 +1656,7 @@ building_conservatory = {
   animations : {
     preview : { pack:PACK_GENERAL, id:51 },
     base : { pack:PACK_GENERAL, id:51 },
-    work : { pos : [82, 18], pack:PACK_SPR_AMBIENT, id:10, max_frames:11 }
+    work : { pos : [82, 18], pack:PACK_SPR_AMBIENT, id:10, max_frames:11, duration:4 }
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
   window_info_height_id : 1,

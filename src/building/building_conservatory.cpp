@@ -16,22 +16,29 @@ void config_load_building_conservatory() {
 }
 
 void building_conservatory::spawn_figure() {
-    if (common_spawn_figure_trigger(50)) {
-        int dest_id = figure_entertainer::determine_venue_destination(base.road_access, {BUILDING_PAVILLION, BUILDING_BANDSTAND});
-        building* dest = building_get(dest_id);
-        if (dest->id > 0) {
-            create_figure_with_destination(FIGURE_MUSICIAN, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-        } else {
-            common_spawn_roamer(FIGURE_MUSICIAN, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
-        }
+    if (!common_spawn_figure_trigger(50)) {
+        return;
+    }
+
+    int dest_id = figure_entertainer::determine_venue_destination(base.road_access, {BUILDING_PAVILLION, BUILDING_BANDSTAND});
+    building* dest = building_get(dest_id);
+    if (dest->id > 0) {
+        create_figure_with_destination(FIGURE_MUSICIAN, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
+    } else {
+        common_spawn_roamer(FIGURE_MUSICIAN, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }
 }
 
-bool building_conservatory::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    if (worker_percentage() > 50) {
-        const animation_t &anim = conservatory_m.anim["work"];
-        building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
-    }
+void building_conservatory::update_graphic() {
+    const bool can_teach_dancers = worker_percentage() > 50;
+    const xstring &animkey = (can_teach_dancers && can_play_animation())
+                                ? animkeys().work
+                                : animkeys().none;
 
+    set_animation(animkey);
+}
+
+bool building_conservatory::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    draw_normal_anim(ctx, point, tile, color_mask);
     return true;
 }

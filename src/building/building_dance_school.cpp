@@ -28,21 +28,29 @@ void config_load_building_dancer_school() {
 }
 
 void building_dancer_school::spawn_figure() {
-    if (common_spawn_figure_trigger(50)) {
-        int building_id = figure_entertainer::determine_venue_destination(base.road_access, {BUILDING_PAVILLION});
-        building* dest= building_get(building_id);
-        if (dest->id > 0) {
-            create_figure_with_destination(FIGURE_DANCER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-        } else {
-            common_spawn_roamer(FIGURE_DANCER, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
-        }
+    if (!common_spawn_figure_trigger(50)) {
+        return;
+    }
+
+    int building_id = figure_entertainer::determine_venue_destination(base.road_access, {BUILDING_PAVILLION});
+    building* dest= building_get(building_id);
+    if (dest->id > 0) {
+        create_figure_with_destination(FIGURE_DANCER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
+    } else {
+        common_spawn_roamer(FIGURE_DANCER, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }
 }
 
-bool building_dancer_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const auto &anim = dancer_school_m.anim["work"];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+void building_dancer_school::update_graphic() {
+    const xstring &animkey = can_play_animation()
+                                ? animkeys().work
+                                : animkeys().none;
 
+    set_animation(animkey);
+}
+
+bool building_dancer_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    draw_normal_anim(ctx, point, tile, color_mask);
     return true;
 }
 
