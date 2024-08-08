@@ -497,7 +497,7 @@ entertainment_info_window = {
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 126] },
 		workers_text : { type : "text", pos: [70, 134], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
 		workers_desc : { type : "text", pos: [70, 136 + 20], font: FONT_NORMAL_BLACK_ON_DARK },
-		first_advisor  : { type : "image_button", pos:[32, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
+		first_advisor  : { type : "image_button", pos:[42, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		second_advisor : { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		third_advisor : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },

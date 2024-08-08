@@ -19,6 +19,7 @@ void config_load_entertainment_info_window() {
 }
 
 void entertainment_info_window_t::window_info_background(object_info &c) {
+    c.go_to_advisor.first = ADVISOR_ENTERTAINMENT;
     building_info_window::window_info_background(c);
 
     building *b = building_get(c.building_id);
