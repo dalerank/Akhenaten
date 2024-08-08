@@ -68,12 +68,7 @@ void bazaar_info_window_t::draw_simple_background(object_info &c) {
         return;
     }
 
-    int text_id = get_employment_info_text_id(&c, &bazaar->base, 1);
-    int laborers = model_get_building(BUILDING_BAZAAR)->laborers;
-    ui["workers_text"].text_var("%d %s (%d %s", bazaar->num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
-    if (text_id) {
-        ui["workers_desc"] = ui::str(69, text_id);
-    }
+    draw_employment_details_ui(ui, c, &bazaar->base, -1);
 
     int image_id = image_id_resource_icon(0);
     auto &data = bazaar->data;
@@ -121,10 +116,6 @@ void bazaar_info_window_t::window_info_foreground(object_info &ctx) {
     } else {
         g_bazaar_info_window.draw();
     }
-}
-
-void building_bazaar::window_info_background(object_info &c) {
-    //g_bazaar_info_window.window_info_background(c);
 }
 
 void bazaar_info_window_t::draw_orders_foreground(object_info &c) {

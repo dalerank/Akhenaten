@@ -27,36 +27,6 @@ void config_load_building_dancer_school() {
     dancer_school_m.load();
 }
 
-void building_entertainment_school_draw_info(object_info& c) {
-    building *b = building_get(c.building_id);
-    const auto &params = b->dcast()->params();
-
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
-
-    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
-
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    if (!c.has_road_access) {
-        window_building_draw_description(c, 69, 25);
-    } else if (building_get(c.building_id)->num_workers <= 0) {
-        window_building_draw_description(c, group_id, 7);
-    } else if (c.worker_percentage >= 100) {
-        window_building_draw_description(c, group_id, 2);
-    } else if (c.worker_percentage >= 75) {
-        window_building_draw_description(c, group_id, 3);
-    } else if (c.worker_percentage >= 50) {
-        window_building_draw_description(c, group_id, 4);
-    } else if (c.worker_percentage >= 25) {
-        window_building_draw_description(c, group_id, 5);
-    } else {
-        window_building_draw_description(c, group_id, 6);
-    }
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
-    window_building_draw_employment(&c, 142);
-}
-
 void building_dancer_school::spawn_figure() {
     if (common_spawn_figure_trigger(50)) {
         int building_id = figure_entertainer::determine_venue_destination(base.road_access, {BUILDING_PAVILLION});
@@ -74,9 +44,5 @@ bool building_dancer_school::draw_ornaments_and_animations_height(painter &ctx, 
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;
-}
-
-void building_dancer_school::window_info_background(object_info &c) {
-    building_entertainment_school_draw_info(c);
 }
 

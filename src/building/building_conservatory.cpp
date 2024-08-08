@@ -15,10 +15,6 @@ void config_load_building_conservatory() {
     conservatory_m.load();
 }
 
-void building_conservatory::window_info_background(object_info& c) {
-    building_entertainment_school_draw_info(c);
-}
-
 void building_conservatory::spawn_figure() {
     if (common_spawn_figure_trigger(50)) {
         int dest_id = figure_entertainer::determine_venue_destination(base.road_access, {BUILDING_PAVILLION, BUILDING_BANDSTAND});

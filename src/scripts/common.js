@@ -180,6 +180,7 @@ var legion_info_window = {}
 var figure_info_window = {}
 var empty_info_window = {}
 var temple_info_window = {}
+var entertainment_info_window = {}
 
 //figures
 var figure_fireman = {}

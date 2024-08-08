@@ -38,6 +38,7 @@
 #include "window/building/terrain.h"
 #include "window/building/utility.h"
 #include "window/window_building_info.h"
+#include "window/window_terrain_info.h"
 #include "window/window_city.h"
 #include "window/message_dialog.h"
 #include "dev/debug.h"
@@ -56,6 +57,7 @@ struct empty_info_window : public common_info_window {
     }
 };
 
+terrain_info_window g_terrain_info_window;
 building_info_window g_building_info_window;
 empty_info_window g_empty_info_window;
 
@@ -63,6 +65,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_info_window);
 void config_load_info_window() {
     g_building_info_window.load("building_info_window");
     g_empty_info_window.load("empty_info_window");
+    g_terrain_info_window.load("terrain_info_window");
 }
 
 static int center_in_city(int element_width_pixels) {
@@ -106,6 +109,10 @@ void buiding_info_init(tile2i tile) {
     if (!context.ui && building_id) {
         context.ui = &g_building_info_window;
         context.building_id = building_id;
+    }
+
+    if (!context.ui && g_terrain_info_window.check(context)) {
+        context.ui = &g_terrain_info_window;
     }
 
     if (!context.ui) {

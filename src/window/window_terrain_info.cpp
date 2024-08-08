@@ -13,15 +13,6 @@
 #include "window_figure_info.h"
 #include "city/city.h"
 
-#include "js/js_game.h"
-
-terrain_info_window g_terrain_info_window;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_terrain_info_window);
-void config_load_terrain_info_window() {
-    g_terrain_info_window.load("terrain_info_window");
-}
-
 void window_building_draw_aqueduct(object_info* c) {
     c->help_id = 60;
     window_building_play_sound(c, "Wavs/aquaduct.wav");
@@ -93,7 +84,7 @@ void terrain_info_window::window_info_background(object_info &c) {
     window_building_draw_terrain(&c);
 }
 
-inline int terrain_info_window::get_height_id(object_info &c) {
+int terrain_info_window::get_height_id(object_info &c) {
     switch (c.terrain_type) {
     case TERRAIN_INFO_AQUEDUCT:
         return 4;

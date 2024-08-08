@@ -50,8 +50,7 @@ struct temple_info_window_t : public common_info_window {
         ui["title"] = ui::str(group_id, 0);
         ui["god_image"].image({PACK_UNLOADED, 21, image_offset});
 
-        int text_id = get_employment_info_text_id(&c, &temple->base, 1);
-        draw_employment_details_ui(ui, c, &temple->base, text_id);
+        draw_employment_details_ui(ui, c, &temple->base, -1);
 
         if (!c.has_road_access) {
             window_building_draw_description_at(c, 16 * c.bgsize.y - 128, 69, 25);

@@ -473,6 +473,30 @@ building_info_window = {
 	ui : {
 		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
 		title 		 	: { type : "text", pos: [48, 32], size: [px(26), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		warning_text : { type : "text", pos: [32, 36], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		inner_panel : { type : "inner_panel", pos : [16, 56], size: [27, 4] },
+		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 70] },
+		workers_text : { type : "text", pos: [70, 52], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		workers_desc : { type : "text", pos: [70, 52 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
+		first_advisor  : { type : "image_button", pos:[32, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
+		second_advisor : { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
+		third_advisor : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
+		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		show_overlay : { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
+		mothball : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
+	}
+}
+
+entertainment_info_window = {
+	ui : {
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
+		title 		 	: { type : "text", pos: [0, 12], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		warning_text : { type : "text", pos: [32, 46], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		inner_panel : { type : "inner_panel", pos : [16, 116], size: [27, 4] },
+		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 126] },
+		workers_text : { type : "text", pos: [70, 134], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		workers_desc : { type : "text", pos: [70, 136 + 20], font: FONT_NORMAL_BLACK_ON_DARK },
 		first_advisor  : { type : "image_button", pos:[32, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		second_advisor : { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		third_advisor : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
@@ -491,7 +515,7 @@ bazaar_info_window = {
 	ui : {
 		background : { type : "outer_panel",	pos: [0, 0], size: [29, 16]},
 		title 		 : { type : "text", text: "#bazaar_info_title", pos: [0, 10], size: [16 * 29, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		warning_text : { type : "text", pos: [32, 36], wrap:27 * 16, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		warning_text : { type : "text", pos: [32, 36], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		food0_icon : { type : "resource_icon", pos: [32, 85] },
 		food0_text : { type : "text", pos: [64, 90], font: FONT_NORMAL_BLACK_ON_LIGHT },
 		food1_icon : { type : "resource_icon", pos: [142, 85] },

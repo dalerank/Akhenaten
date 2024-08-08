@@ -17,10 +17,6 @@ void config_load_building_juggler_school() {
     juggler_school_m.load();
 }
 
-void building_juggler_school::window_info_background(object_info &c) {
-    building_entertainment_school_draw_info(c);
-}
-
 void building_juggler_school::update_month() {
     data.entertainment.spawned_entertainer_this_month = false;
 }

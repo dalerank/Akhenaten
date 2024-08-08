@@ -97,8 +97,12 @@ void draw_employment_details(object_info* c, building* b, int y_offset, int text
 void draw_employment_details_ui(ui::widget &ui, object_info &c, building* b, int text_id) {
     int laborers = model_get_building(b->type)->laborers;
     ui["workers_text"].text_var("%d %s (%d %s", b->num_workers, ui::str(8, 12), laborers, ui::str(69, 0));
-    if (text_id) {
-        ui["workers_desc"].text(ui::str(69, text_id));
+    if (text_id < 0) {
+        text_id = get_employment_info_text_id(&c, b, 1);
+    } 
+
+    if (text_id > 0) {
+        ui["workers_desc"] = ui::str(69, text_id);
     }
 }
 

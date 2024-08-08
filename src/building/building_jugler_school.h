@@ -9,7 +9,6 @@ public:
     building_juggler_school(building &b) : building_impl(b) {}
     virtual building_juggler_school *dcast_juggler_school() override { return this; }
 
-    virtual void window_info_background(object_info &c) override;
     virtual e_overlay get_overlay() const override { return OVERLAY_BOOTH; }
     virtual void spawn_figure() override;
     virtual void update_month() override;
