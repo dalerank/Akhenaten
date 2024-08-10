@@ -16,9 +16,11 @@ struct arrow_button {
     int pressed;
     int repeats;
 
-    std::function<void(int,int)> _onclick;
+    using function_cb = std::function<void(int, int)>;
+    function_cb _onclick;
 
-    template<class Func> arrow_button &onclick(Func f) { _onclick = f; return *this; }
+    arrow_button &onclick(function_cb f) { _onclick = f; return *this; }
+    arrow_button &onclick(std::function<void()> f) { return onclick([f] (int, int) { f(); }); }
 };
 
 void arrow_buttons_draw(vec2i pos, arrow_button* buttons, int num_buttons, bool tiny = false);
