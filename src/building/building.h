@@ -60,6 +60,7 @@ class building_house;
 class building_burning_ruin;
 class building_storage;
 class building_temple;
+class building_tax_collector;
 struct object_info;
 struct painter;
 struct mouse;
@@ -345,6 +346,7 @@ public:
     bool is_military();
 
     inline bool same_network(building &b) const { return road_network_id == b.road_network_id; }
+    vfs::path get_sound();
 
     void clear_related_data();
     void clear_impl();
@@ -424,6 +426,7 @@ public:
     building_burning_ruin *dcast_burning_ruin();
     building_storage *dcast_storage();
     building_temple *dcast_temple();
+    building_tax_collector *dcast_tax_collector();
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
@@ -540,6 +543,7 @@ public:
     virtual building_burning_ruin *dcast_burning_ruin() { return nullptr; }
     virtual building_storage *dcast_storage() { return nullptr; }
     virtual building_temple *dcast_temple() { return nullptr; }
+    virtual building_tax_collector *dcast_tax_collector() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
