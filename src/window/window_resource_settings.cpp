@@ -152,15 +152,15 @@ static void draw_foreground() {
             case TRADE_STATUS_EXPORT:
                 text.printf("%s %u", ui::str(54, 20), trading_amount);
                 ui::button(text, {264 + 48, 212}, {268, 30}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelYCentered)
-                    .onclick([] (int, int) {
+                    .onclick([] {
                         city_resource_cycle_trade_import(g_resource_settings_data.resource);
                     });
-                ui::arw_button({264 + 268, 215}, true)
-                    .onclick([&] (int, int) { 
+                ui::arw_button({264 + 268, 215}, false)
+                    .onclick([&] { 
                         city_resource_change_trading_amount(data.resource, -100);
                     });
-                ui::arw_button({288 + 268, 215}, false)
-                    .onclick([&] (int, int) { 
+                ui::arw_button({288 + 268, 215}, true)
+                    .onclick([&] { 
                         city_resource_change_trading_amount(data.resource, 100);
                     });
                 break;

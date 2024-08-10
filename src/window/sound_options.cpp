@@ -118,17 +118,19 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     if (generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons, 6, &data.focus_button_id)
         || arrow_buttons_handle_mouse(m_dialog, {208, 60}, arrow_buttons, 8, 0))
         return;
-    if (input_go_back_requested(m, h))
+
+    if (input_go_back_requested(m, h)) {
         data.close_callback();
+    }
 }
 
 static void button_toggle(int type, int param2) {
     auto &data = g_sound_options;
     g_settings.toggle_sound_enabled(type);
     if (type == SOUND_MUSIC) {
-        if (g_settings.get_sound(SOUND_MUSIC)->enabled)
+        if (g_settings.get_sound(SOUND_MUSIC)->enabled) {
             g_sound.music_update(true);
-        else {
+        } else {
             sound_music_stop();
         }
     } else if (type == SOUND_SPEECH) {
@@ -149,9 +151,9 @@ static void button_cancel(int param1, int param2) {
     g_settings.reset_sound(SOUND_SPEECH, data.original_speech.enabled, data.original_speech.volume);
     g_settings.reset_sound(SOUND_CITY, data.original_city.enabled, data.original_city.volume);
     if (data.original_music.enabled) {
-        if (g_settings.sound_is_enabled(SOUND_MUSIC) != data.original_music.enabled)
+        if (g_settings.sound_is_enabled(SOUND_MUSIC) != data.original_music.enabled) {
             g_sound.music_update(true);
-
+        }
     } else {
         sound_music_stop();
     }
@@ -165,9 +167,9 @@ static void button_cancel(int param1, int param2) {
 }
 
 static void update_volume(int type, int is_decrease) {
-    if (is_decrease)
+    if (is_decrease) {
         g_settings.decrease_sound_volume(type);
-    else {
+    } else {
         g_settings.increase_sound_volume(type);
     }
 }
@@ -193,7 +195,7 @@ static void arrow_button_city(int is_down, int param2) {
 }
 
 void window_sound_options_show(void (*close_callback)(void)) {
-    window_type window = {
+    static window_type window = {
       WINDOW_SOUND_OPTIONS,
       window_draw_underlying_window,
       draw_foreground,
