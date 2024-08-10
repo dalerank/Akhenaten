@@ -392,10 +392,10 @@ void ui::icon(vec2i pos, e_advisor adv) {
     ImageDraw::img_generic(ctx, image_group(IMG_ADVISOR_ICONS) + (adv - 1), offset.x + pos.x, offset.y + pos.y);
 }
 
-arrow_button &ui::arw_button(vec2i pos, bool up, bool tiny) {
+arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny) {
     const vec2i offset = g_state.offset();
 
-    g_state.buttons.push_back(arrow_button{pos.x, pos.y, up ? 17 : 15, 24, button_none, 0, 0});
+    g_state.buttons.push_back(arrow_button{pos.x, pos.y, down ? 17 : 15, 24, button_none, 0, 0});
     auto &abutton = g_state.buttons.back().a_button;
     arrow_buttons_draw(offset, abutton, tiny);
 
@@ -483,6 +483,8 @@ void ui::widget::load(archive arch, pcstr section) {
             elm = std::make_shared<eimage_button>();
         } else if (!strcmp(type, "resource_icon")) {
             elm = std::make_shared<eresource_icon>();
+        } else if (!strcmp(type, "arrow_button")) {
+            elm = std::make_shared<earrow_button>();
         } else if (!strcmp(type, "large_button")) {
             auto btn = std::make_shared<egeneric_button>();
             btn->mode = 1;
@@ -657,7 +659,7 @@ void ui::eimage_button::draw() {
         ui::img_button(img, pos, size, img_desc.offset)
             .onclick(_func);
 
-    } else if (img_desc.id) {
+    } else if (img_desc.id || img_desc.offset) {
         int img_id = image_id_from_group(img_desc.pack, img_desc.id);
         const image_t *img_ptr = image_get(img_id + img_desc.offset);
 
@@ -789,6 +791,18 @@ menu_item &ui::emenu_header::item(pcstr key) {
     static menu_item dummy;
     auto it = std::find_if(impl.items.begin(), impl.items.end(), [key] (auto &it) { return it.id == key; });
     return it != impl.items.end() ? *it : dummy;
+}
+
+void ui::earrow_button::load(archive arch) {
+    element::load(arch);
+
+    tiny = arch.r_bool("tiny");
+    down = arch.r_bool("down");
+}
+
+void ui::earrow_button::draw() {
+    ui::arw_button(pos, down, tiny)
+        .onclick(_func);
 }
 
 void ui::egeneric_button::draw() {

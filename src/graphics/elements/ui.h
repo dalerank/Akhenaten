@@ -64,7 +64,7 @@ image_button &img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size, con
 image_button &imgok_button(vec2i pos, std::function<void(int, int)> cb);
 image_button &imgcancel_button(vec2i pos, std::function<void(int, int)> cb);
 image_button &img_button(e_image_id img, vec2i pos, vec2i size, int offset = 0);
-arrow_button &arw_button(vec2i pos, bool up, bool tiny = false);
+arrow_button &arw_button(vec2i pos, bool down, bool tiny = false);
 scrollbar_t &scrollbar(scrollbar_t &scrollbar, vec2i pos, int &value, vec2i size = {-1, -1});
 
 pcstr str(int group, int id);
@@ -253,6 +253,16 @@ struct egeneric_button : public elabel {
     virtual void draw() override;
     virtual void load(archive arch) override;
     virtual void tooltip(std::pair<int, int> t) override { _tooltip = t; }
+    virtual void onclick(std::function<void(int, int)> func) override { _func = func; }
+};
+
+struct earrow_button : public element {
+    bool down;
+    bool tiny;
+
+    std::function<void(int, int)> _func;
+    virtual void load(archive elem) override;
+    virtual void draw() override;
     virtual void onclick(std::function<void(int, int)> func) override { _func = func; }
 };
 

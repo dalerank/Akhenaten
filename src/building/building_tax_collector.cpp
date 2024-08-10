@@ -64,61 +64,6 @@ void building_tax_collector::spawn_figure() {
     }
 }
 
-void building_tax_collector::window_info_background(object_info &c) {
-    ui::begin_widget(c.offset);
-
-    c.go_to_advisor.left_a = ADVISOR_RATINGS;
-    c.go_to_advisor.left_b = ADVISOR_FINANCIAL;
-
-    c.help_id = params().meta.help_id;
-    int group_id = params().meta.text_id;
-
-    window_building_play_sound(&c, get_sound());
-
-    { // header
-        ui::panel(vec2i{0, 0}, {c.bgsize.x, c.bgsize.y}, UiFlags_PanelOuter);
-        ui::label(106, 0, vec2i{0, 10}, FONT_LARGE_BLACK_ON_LIGHT, UiFlags_LabelCentered, 16 * c.bgsize.x);
-        ui::icon(vec2i{16, 36}, RESOURCE_DEBEN);
-    }
-
-    int width = ui::label(106, 2, {44, 43});
-    int amount = config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM) ? base.deben_storage : base.tax_income_or_storage;
-    ui::label_amount(8, 0, amount, {44 + width, 43});
-
-    int tax_block = c.bgsize.x * 16 / 2;
-    ui::label(60, 1, {tax_block + 50, 44});
-    ui::label_percent(city_finance_tax_percentage(), {tax_block + 140, 44});
-    ui::arw_button({tax_block + 170, 36}, true)
-            .onclick([] (int, int) { 
-                city_finance_change_tax_percentage(-1);
-                window_invalidate();
-            });
-    ui::arw_button({tax_block + 194, 36}, false)
-            .onclick([] (int, int) { 
-                city_finance_change_tax_percentage(1);
-                window_invalidate();
-            });
-
-    if (!c.has_road_access) {
-        window_building_draw_description(c, 69, 25);
-    } else if (base.num_workers <= 0) {
-        window_building_draw_description_at(c, 72, 106, 10);
-    } else if (c.worker_percentage >= 100) {
-        window_building_draw_description_at(c, 72, 106, 5);
-    } else if (c.worker_percentage >= 75) {
-        window_building_draw_description_at(c, 72, 106, 6);
-    } else if (c.worker_percentage >= 50) {
-        window_building_draw_description_at(c, 72, 106, 7);
-    } else if (c.worker_percentage >= 25) {
-        window_building_draw_description_at(c, 72, 106, 8);
-    } else {
-        window_building_draw_description_at(c, 72, 106, 9);
-    }
-
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
-    window_building_draw_employment(&c, 142);
-}
-
 void building_tax_collector::update_month() {
     if (!config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
         return;

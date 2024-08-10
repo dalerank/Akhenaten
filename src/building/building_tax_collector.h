@@ -7,8 +7,9 @@ public:
     BUILDING_METAINFO(BUILDING_TAX_COLLECTOR, building_tax_collector)
     building_tax_collector(building &b) : building_impl(b) {}
 
+    virtual building_tax_collector *dcast_tax_collector() override { return this; }
+
     virtual void spawn_figure() override;
-    virtual void window_info_background(object_info &c) override;
     virtual e_overlay get_overlay() const override { return OVERLAY_TAX_INCOME; }
     virtual void update_month() override;
     virtual void update_graphic() override;
