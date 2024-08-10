@@ -10,6 +10,7 @@
 #include "widget/city/ornaments.h"
 
 buildings::model_t<building_firehouse> firehouse_m;
+info_window_firehouse_t firehouse_infow;
 
 declare_console_command_p(nofire, console_command_nofire);
 void console_command_nofire(std::istream &, std::ostream &) {
@@ -21,43 +22,11 @@ void console_command_nofire(std::istream &, std::ostream &) {
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_firehouse);
 void config_load_building_firehouse() {
     firehouse_m.load();
+    firehouse_infow.load("building_info_window");
 }
 
 void building_firehouse::spawn_figure() {
     base.common_spawn_roamer(FIGURE_FIREMAN, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
-}
-
-void building_firehouse::window_info_background(object_info &c) {
-    const int32_t LANG_GROUP_ID = 164;
-    c.help_id = 81;                                      // TODO: change to firehouse
-    window_building_play_sound(&c, "Wavs/prefecture.wav"); // TODO: change to firehouse
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(LANG_GROUP_ID, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-
-    if (!c.has_road_access) {
-        window_building_draw_description(c, 69, 25);
-    } else if (!base.num_workers) {
-        window_building_draw_description(c, LANG_GROUP_ID, 9);
-    } else {
-        if (base.has_figure(0))
-            window_building_draw_description(c, LANG_GROUP_ID, 2);
-        else
-            window_building_draw_description(c, LANG_GROUP_ID, 3);
-
-        if (c.worker_percentage >= 100)
-            window_building_draw_description_at(c, 72, LANG_GROUP_ID, 4);
-        else if (c.worker_percentage >= 75)
-            window_building_draw_description_at(c, 72, LANG_GROUP_ID, 5);
-        else if (c.worker_percentage >= 50)
-            window_building_draw_description_at(c, 72, LANG_GROUP_ID, 6);
-        else if (c.worker_percentage >= 25)
-            window_building_draw_description_at(c, 72, LANG_GROUP_ID, 7);
-        else
-            window_building_draw_description_at(c, 72, LANG_GROUP_ID, 8);
-    }
-
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
-    window_building_draw_employment(&c, 142);
 }
 
 bool building_firehouse::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
@@ -65,4 +34,44 @@ bool building_firehouse::draw_ornaments_and_animations_height(painter &ctx, vec2
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
 
     return true;
+}
+
+void info_window_firehouse_t::window_info_background(object_info& c) {
+    building_info_window::window_info_background(c);
+
+    building* b = building_get(c.building_id);
+
+    auto& ui = *c.ui;
+    auto params = b->dcast()->params();
+
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
+    window_building_play_sound(&c, b->get_sound()); // TODO: change to firehouse
+
+    ui["title"] = ui::str(group_id, 0);
+
+    std::pair<int, int> reason = { group_id, 0 };
+    std::pair<int, int> workers = { group_id, 8 };
+    if (!c.has_road_access) {
+        reason = { 69, 25 };
+    } else if (!b->num_workers) {
+        reason.second = 9;
+    } else {
+        reason.second = b->has_figure(0) ? 2 : 3;
+
+        if (c.worker_percentage >= 100) workers.second = 4;
+        else if (c.worker_percentage >= 75) workers.second = 5;
+        else if (c.worker_percentage >= 50) workers.second = 6;
+        else if (c.worker_percentage >= 25) workers.second = 7;
+    }
+
+    ui["warning_text"] = ui::str(reason.first, reason.second);
+    ui["workers_desc"] = ui::str(workers.first, workers.second);
+
+    draw_employment_details_ui(ui, c, b, -1);
+}
+
+inline bool info_window_firehouse_t::check(object_info& c) {
+    return building_get(c.building_id)->dcast_firehouse();
 }

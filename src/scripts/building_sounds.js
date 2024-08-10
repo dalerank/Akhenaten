@@ -61,4 +61,5 @@ building_sounds = [
 	{ type: BUILDING_CATTLE_RANCH,			sound: "Wavs/cowfarm_r.wav"},
 	{ type: BUILDING_FESTIVAL_SQUARE,		sound: "Wavs/prefecture.wav"},
 	{ type: BUILDING_BAZAAR,						sound: "Wavs/market.wav"},
+	{ type: BUILDING_FIREHOUSE,					sound: "Wavs/prefecture.wav"},
 ]
