@@ -16,4 +16,6 @@ struct building_info_window : public common_info_window {
     virtual std::pair<int, int> get_tooltip(object_info &c) override;
 
     virtual void update_buttons(object_info &c) override;
+
+    void common_info_background(object_info& c);
 };

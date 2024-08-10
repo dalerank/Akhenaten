@@ -449,7 +449,11 @@ figure_info_window = {
 
 terrain_info_window = {
 	ui : {
-		//background : { type : "outer_panel",	pos: [48, 48], size: [34, 20]},
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 20]},
+		title 		 	: { type : "text", pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		describe 		: { type : "text", pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) },
+		button_help : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close: { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 	}
 }
 

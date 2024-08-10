@@ -31,57 +31,61 @@ void window_building_draw_rubble(object_info* c) {
     lang_text_draw_multiline(140, 1, c->offset + vec2i{32, 16 * c->bgsize.y - 143}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
-void window_building_draw_wall(object_info* c) {
-    c->help_id = 85;
-    window_building_play_sound(c, "Wavs/wall.wav");
-    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
-    lang_text_draw_centered(139, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    window_building_draw_description_at(c, 16 * c->bgsize.y - 158, 139, 1);
-}
+void window_building_draw_wall(object_info& c) {
+    window_building_play_sound(&c, "Wavs/wall.wav");
 
-void window_building_draw_terrain(object_info* c) {
-    switch (c->terrain_type) {
-    case TERRAIN_INFO_ROAD:
-        c->help_id = 57;
-        break;
+    auto& ui = *c.ui;
 
-    case TERRAIN_INFO_AQUEDUCT:
-        c->help_id = 60;
-        break;
-
-    case TERRAIN_INFO_WALL:
-        c->help_id = 85;
-        break;
-
-    case TERRAIN_INFO_BRIDGE:
-        c->help_id = 58;
-        break;
-
-    default:
-        c->help_id = 0;
-        break;
-    }
-
-    if (c->terrain_type == TERRAIN_INFO_AQUEDUCT)
-        window_building_draw_aqueduct(c);
-    else if (c->terrain_type == TERRAIN_INFO_RUBBLE)
-        window_building_draw_rubble(c);
-    else if (c->terrain_type == TERRAIN_INFO_WALL)
-        window_building_draw_wall(c);
-    else if (c->terrain_type == TERRAIN_INFO_GARDEN)
-        building_garden::draw_info(*c);
-    else if (c->terrain_type == TERRAIN_INFO_PLAZA && c->figure.count <= 0)
-        building_plaza::draw_info(*c);
-    else {
-        if (c->can_play_sound) {
-            c->can_play_sound = 0;
-            g_sound.speech_play_file("Wavs/empty_land.wav", 255);
-        }
-    }
+    ui["title"] = ui::str(139, 0);
+    ui["describe"] = ui::str(139, 1);
 }
 
 void terrain_info_window::window_info_background(object_info &c) {
-    window_building_draw_terrain(&c);
+    switch (c.terrain_type) {
+    case TERRAIN_INFO_ROAD:
+        c.help_id = 57;
+        break;
+
+    case TERRAIN_INFO_AQUEDUCT:
+        c.help_id = 60;
+        break;
+
+    case TERRAIN_INFO_WALL:
+        c.help_id = 85;
+        break;
+
+    case TERRAIN_INFO_BRIDGE:
+        c.help_id = 58;
+        break;
+
+    default:
+        c.help_id = 0;
+        break;
+    }
+
+    auto& ui = *c.ui;
+
+    if (c.terrain_type == TERRAIN_INFO_AQUEDUCT)
+        window_building_draw_aqueduct(&c);
+    else if (c.terrain_type == TERRAIN_INFO_RUBBLE)
+        window_building_draw_rubble(&c);
+    else if (c.terrain_type == TERRAIN_INFO_WALL)
+        window_building_draw_wall(c);
+    else if (c.terrain_type == TERRAIN_INFO_GARDEN)
+        building_garden::draw_info(c);
+    else if (c.terrain_type == TERRAIN_INFO_PLAZA && c.figure.count <= 0)
+        building_plaza::draw_info(c);
+    else {
+        if (c.can_play_sound) {
+            c.can_play_sound = 0;
+            g_sound.speech_play_file("Wavs/empty_land.wav", 255);
+        }
+
+        ui["title"] = ui::str(70, 20);
+        ui["describe"] = ui::str(70, 42);
+    }
+
+    common_info_window::window_info_background(c);
 }
 
 int terrain_info_window::get_height_id(object_info &c) {

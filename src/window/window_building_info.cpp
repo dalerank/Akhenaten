@@ -81,6 +81,42 @@ void window_building_draw_mission_post(object_info* c) {
     window_building_draw_employment_without_house_cover(c, 142);
 }
 
+void building_info_window::common_info_background(object_info& c) {
+    window_info_background(c);
+
+    building* b = building_get(c.building_id);
+
+    auto& ui = *c.ui;
+    auto params = b->dcast()->params();
+
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
+    window_building_play_sound(&c, b->get_sound()); // TODO: change to firehouse
+
+    ui["title"] = ui::str(group_id, 0);
+
+    std::pair<int, int> reason = { group_id, 0 };
+    std::pair<int, int> workers = { group_id, 8 };
+    if (!c.has_road_access) {
+        reason = { 69, 25 };
+    } else if (!b->num_workers) {
+        reason.second = 9;
+    } else {
+        reason.second = b->has_figure(0) ? 2 : 3;
+
+        if (c.worker_percentage >= 100) workers.second = 4;
+        else if (c.worker_percentage >= 75) workers.second = 5;
+        else if (c.worker_percentage >= 50) workers.second = 6;
+        else if (c.worker_percentage >= 25) workers.second = 7;
+    }
+
+    ui["warning_text"] = ui::str(reason.first, reason.second);
+    ui["workers_desc"] = ui::str(workers.first, workers.second);
+
+    draw_employment_details_ui(ui, c, b, -1);
+}
+
 void building_info_window::window_info_background(object_info &c) {
     g_debug_building_id = c.building_id;
     building *b = building_get(c.building_id);
