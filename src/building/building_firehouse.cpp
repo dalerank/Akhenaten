@@ -10,7 +10,7 @@
 #include "widget/city/ornaments.h"
 
 buildings::model_t<building_firehouse> firehouse_m;
-info_window_firehouse_t firehouse_infow;
+info_window_firehouse firehouse_infow;
 
 declare_console_command_p(nofire, console_command_nofire);
 void console_command_nofire(std::istream &, std::ostream &) {
@@ -42,7 +42,7 @@ bool building_firehouse::draw_ornaments_and_animations_height(painter &ctx, vec2
     return true;
 }
 
-void info_window_firehouse_t::window_info_background(object_info& c) {
+void info_window_firehouse::window_info_background(object_info& c) {
     building_info_window::window_info_background(c);
 
     building* b = building_get(c.building_id);
@@ -78,6 +78,6 @@ void info_window_firehouse_t::window_info_background(object_info& c) {
     draw_employment_details_ui(ui, c, b, -1);
 }
 
-inline bool info_window_firehouse_t::check(object_info& c) {
+inline bool info_window_firehouse::check(object_info& c) {
     return building_get(c.building_id)->dcast_firehouse();
 }
