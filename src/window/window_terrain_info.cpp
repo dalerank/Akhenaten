@@ -41,49 +41,54 @@ void window_building_draw_wall(object_info& c) {
 }
 
 void terrain_info_window::window_info_background(object_info &c) {
+    std::pair<int, int> reason;
+    std::pair<int, int> describe;
+
     switch (c.terrain_type) {
     case TERRAIN_INFO_ROAD:
         c.help_id = 57;
+        reason = { 28, 5 };
+        describe = { 70, 42 };
         break;
 
     case TERRAIN_INFO_AQUEDUCT:
         c.help_id = 60;
+        window_building_draw_aqueduct(&c);
         break;
 
     case TERRAIN_INFO_WALL:
         c.help_id = 85;
+        window_building_draw_wall(c);
         break;
 
     case TERRAIN_INFO_BRIDGE:
         c.help_id = 58;
         break;
 
-    default:
-        c.help_id = 0;
-        break;
-    }
-
-    auto& ui = *c.ui;
-
-    if (c.terrain_type == TERRAIN_INFO_AQUEDUCT)
-        window_building_draw_aqueduct(&c);
-    else if (c.terrain_type == TERRAIN_INFO_RUBBLE)
+    case TERRAIN_INFO_RUBBLE:
         window_building_draw_rubble(&c);
-    else if (c.terrain_type == TERRAIN_INFO_WALL)
-        window_building_draw_wall(c);
-    else if (c.terrain_type == TERRAIN_INFO_GARDEN)
+        break;
+
+    case TERRAIN_INFO_GARDEN:
         building_garden::draw_info(c);
-    else if (c.terrain_type == TERRAIN_INFO_PLAZA && c.figure.count <= 0)
+        break;
+
+    case TERRAIN_INFO_PLAZA:
         building_plaza::draw_info(c);
-    else {
+        break;
+
+    default:
         if (c.can_play_sound) {
             c.can_play_sound = 0;
             g_sound.speech_play_file("Wavs/empty_land.wav", 255);
         }
-
-        ui["title"] = ui::str(70, 20);
-        ui["describe"] = ui::str(70, 42);
+        reason = { 70, 20 };
+        describe = { 70, 42 };
+        break;
     }
+
+    ui["title"] = ui::str(reason.first, reason.second);
+    ui["describe"] = ui::str(describe.first, describe.second);
 
     common_info_window::window_info_background(c);
 }
