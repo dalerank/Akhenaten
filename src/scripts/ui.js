@@ -5,6 +5,15 @@ function sw(v) { return game.screen.w + v}
 function sh(v) { return game.screen.h + v}
 function mbutton(i) { return [sw(0) / 2 - 128, sh(0) / 2 - 100 + 40 * i] }
 
+function __baseui(base, ext) {
+    var newui = {};
+
+    for (var key in base.ui) { newui[key] = base.ui[key] }
+    for (var key in ext) { newui[key] = ext[key]}
+
+    return newui;
+}
+
 top_menu_bar = {
 	offset : [10, 6],
 	item_height : 20,
@@ -342,6 +351,15 @@ mission_briefing_window = {
 	}
 }
 
+roadblock_info_window = {
+	ui : {
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
+		title 		 : { type : "text", pos: [0, 12], size: [px(28), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+	}
+}
+
 granary_info_window = {
 	resource_text_group : 23,
 	ui : {
@@ -504,6 +522,13 @@ building_info_window = {
 		show_overlay : { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
 		mothball : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
 	}
+}
+
+info_window_fishing_wharf = {
+	ui : __baseui(building_info_window, {
+		resource_img : { type : "resource_icon", pos: [32, 176] },
+		storage_desc : { type : "text", text:"tetetetet", pos: [62, 176 + 2], font: FONT_NORMAL_BLACK_ON_DARK },
+	})
 }
 
 entertainment_info_window = {

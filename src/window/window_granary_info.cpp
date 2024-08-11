@@ -16,7 +16,7 @@
 
 #include "io/gamefiles/lang.h"
 
-struct granary_info_window_t : public common_info_window {
+struct granary_info_window_t : public building_info_window {
     int resource_text_group;
 
     using widget::load;
@@ -30,6 +30,10 @@ struct granary_info_window_t : public common_info_window {
     virtual void window_info_foreground(object_info &c) override;
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
     void draw_orders_foreground(object_info &c);
+
+    virtual bool check(object_info &c) override { return 
+        building_get(c.building_id)->dcast_granary();
+    }
 };
 
 granary_info_window_t granary_info_window;
@@ -86,10 +90,6 @@ void granary_info_window_t::draw_orders_foreground(object_info &c) {
     lang_text_draw_centered(99, 7, c.offset.x + 80, y_offset + 386 - 15 * 16, 16 * (c.bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
-int building_granary::window_info_handle_mouse(const mouse *m, object_info &c) {
-    return 0;
-}
-
 int granary_info_window_t::window_info_handle_mouse(const mouse *m, object_info &c) {
     if (c.storage_show_special_orders) {
         return window_building_handle_mouse_granary_orders(m, &c);
@@ -99,12 +99,14 @@ int granary_info_window_t::window_info_handle_mouse(const mouse *m, object_info 
 }
 
 void granary_info_window_t::window_info_background(object_info &c) {
-    auto &ui = *this;
+    c.go_to_advisor.left_a = ADVISOR_LABOR;
+    c.go_to_advisor.left_b = ADVISOR_POPULATION;
+
+    building_info_window::window_info_background(c);
+
     auto granary = building_get(c.building_id)->dcast_granary();
     assert(granary);
 
-    c.help_id = granary->params().meta.help_id;
-    c.ui = &ui;
     if (c.storage_show_special_orders) {
         int y_offset = window_building_get_vertical_offset(&c, 28 - 15);
         outer_panel_draw(vec2i{c.offset.x, y_offset}, 29, 28 - 15);
@@ -114,9 +116,6 @@ void granary_info_window_t::window_info_background(object_info &c) {
     }
 
     auto &data = g_window_building_distribution;
-
-    c.go_to_advisor.left_a = ADVISOR_LABOR;
-    c.go_to_advisor.left_b = ADVISOR_POPULATION;
 
     data.building_id = c.building_id;
     window_building_play_sound(&c, granary->get_sound());
@@ -145,7 +144,7 @@ void granary_info_window_t::window_info_background(object_info &c) {
         }
 
         ui[food_icon(food_index)].image(r.type);
-        ui[food_text(food_index)].text_var("%u %s", stored, (pcstr)lang_get_string(ui.resource_text_group, r.type));
+        ui[food_text(food_index)].text_var("%u %s", stored, (pcstr)lang_get_string(resource_text_group, r.type));
         food_index++;
     }
 
@@ -156,7 +155,7 @@ void granary_info_window_t::window_info_background(object_info &c) {
 
     vec2i bgsize = ui["background"].pxsize();
     ui["orders"].pos.y = bgsize.y - 40;
-    ui["orders"].onclick([] (int, int) {
+    ui["orders"].onclick([] {
         window_building_info_show_storage_orders();
     });
 }
@@ -169,8 +168,4 @@ void granary_info_window_t::window_info_foreground(object_info &c) {
 
     draw_permissions_buttons(c.offset.x + 58, c.offset.y + 19 * c.bgsize.y - 82, 1);
     draw();
-}
-
-void building_granary::window_info_background(object_info &c) {
-    granary_info_window.window_info_background(c);
 }

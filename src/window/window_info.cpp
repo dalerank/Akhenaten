@@ -48,7 +48,7 @@
 #include <mutex>
 
 object_info g_object_info;
-svector<common_info_window *, 10> *g_window_info_handlers = nullptr;
+std::vector<common_info_window *> *g_window_info_handlers = nullptr;
 
 struct empty_info_window : public common_info_window {
     virtual void window_info_background(object_info &c) override {
@@ -216,7 +216,7 @@ void window_building_info_show_storage_orders() {
 
 void window_info_register_handler(common_info_window *handler) {
     if (!g_window_info_handlers) {
-        g_window_info_handlers = new svector<common_info_window *, 10>();
+        g_window_info_handlers = new std::vector<common_info_window *>();
     }
 
     auto it = std::find(g_window_info_handlers->begin(), g_window_info_handlers->end(), handler);

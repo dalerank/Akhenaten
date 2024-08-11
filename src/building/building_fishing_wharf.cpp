@@ -16,9 +16,18 @@
 #include "game/game.h"
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
+#include "window/window_building_info.h"
 
 #include "dev/debug.h"
 #include <iostream>
+
+struct info_window_fishing_wharf : public building_info_window {
+    virtual bool check(object_info &c) override {
+        return building_get(c.building_id)->dcast_fishing_wharf();
+    }
+
+    virtual void window_info_background(object_info &c) override;
+} fishing_wharf_infow;
 
 struct fishing_wharf_model : public buildings::model_t<building_fishing_wharf> {
 } fishing_wharf_m;
@@ -26,6 +35,7 @@ struct fishing_wharf_model : public buildings::model_t<building_fishing_wharf> {
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_fishing_wharf);
 void config_load_building_fishing_wharf() {
     fishing_wharf_m.load();
+    fishing_wharf_infow.load("info_window_fishing_wharf");
 }
 
 declare_console_command_p(killfishboats, game_cheat_kill_fish_boats);
@@ -40,7 +50,7 @@ void building_fishing_wharf::on_create(int orientation) {
 
 void building_fishing_wharf::on_place_update_tiles(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    int img_id = fishing_wharf_m.anim["base"].first_img();
+    int img_id = anim(animkeys().base).first_img();
     map_water_add_building(id(), tile(), fishing_wharf_m.building_size, img_id + orientation_rel);
 }
 
@@ -156,7 +166,7 @@ void building_fishing_wharf::on_undo() {
 
 void building_fishing_wharf::update_map_orientation(int orientation) {
     int image_offset = city_view_relative_orientation(data.industry.orientation);
-    int image_id = fishing_wharf_m.anim["base"].first_img() + image_offset;
+    int image_id = this->anim(animkeys().base).first_img() + image_offset;
     map_water_add_building(id(), tile(), fishing_wharf_m.building_size, image_id);
 }
 
@@ -167,55 +177,8 @@ bool building_fishing_wharf::draw_ornaments_and_animations_height(painter &ctx, 
         const image_t *img = image_get(img_id);
         ImageDraw::img_generic(ctx, img_id, point + anim_wharf.pos, color_mask, 1.f, true);
     }
+
     return true;
-}
-
-void building_fishing_wharf::window_info_background(object_info &c) {
-    building *b = building_get(c.building_id);
-    const auto &params = b->dcast()->params();
-
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
-
-    painter ctx = game.painter();
-
-    window_building_play_sound(&c, snd::get_building_info_sound(type()));
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_FIGS) + resource_image_offset(RESOURCE_FIGS, RESOURCE_IMAGE_ICON), c.offset.x + 10, c.offset.y + 10);
-
-    if (!c.has_road_access) {
-        window_building_draw_description(c, 69, 25);
-    } else if (!get_figure(BUILDING_SLOT_BOAT)->is_valid()) {
-        window_building_draw_description(c, group_id, 2);
-    } else {
-        int text_id;
-        figure *boat = get_figure(BUILDING_SLOT_BOAT);
-        switch (boat->action_state) {
-        case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH:
-            text_id = 3;
-            break;
-        case FIGURE_ACTION_192_FISHING_BOAT_FISHING:
-            text_id = 4;
-            break;
-        case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF:
-            text_id = 5;
-            break;
-        case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF:
-            text_id = 6;
-            break;
-        case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH:
-            text_id = 7;
-            break;
-        default:
-            text_id = 8;
-            break;
-        }
-        window_building_draw_description(c, group_id, text_id);
-    }
-
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
-    window_building_draw_employment(&c, 142);
 }
 
 void building_fishing_wharf::highlight_waypoints() {
@@ -223,4 +186,39 @@ void building_fishing_wharf::highlight_waypoints() {
 
     map_highlight_set(data.dock.dock_tiles[0], 3);
     map_highlight_set(data.dock.dock_tiles[1], 3);
+}
+
+void info_window_fishing_wharf::window_info_background(object_info &c) {
+    building_info_window::window_info_background(c);
+
+    building *b = building_get(c.building_id);
+    const auto &params = b->dcast()->params();
+
+    painter ctx = game.painter();
+
+    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
+
+
+    std::pair<int, int> reason = { c.group_id, 0 };
+    if (!c.has_road_access) {
+        reason = { 69, 25 };
+    } else if (!b->get_figure(BUILDING_SLOT_BOAT)->is_valid()) {
+        reason = { c.group_id, 2 };
+    } else {
+        figure *boat = b->get_figure(BUILDING_SLOT_BOAT);
+        switch (boat->action_state) {
+        case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH: reason.second = 3; break;
+        case FIGURE_ACTION_192_FISHING_BOAT_FISHING: reason.second = 4; break;
+        case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF: reason.second = 5; break;
+        case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: reason.second = 6; break;
+        case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH: reason.second = 7; break;
+        default: reason.second = 8; break;
+        }
+    }
+
+    ui["resource_img"].image(RESOURCE_FISH);
+    ui["warning_text"] = ui::str(reason.first, reason.second);
+    ui["storage_desc"].text_var("Stored fish %d", b->stored_full_amount);
+
+    draw_employment_details_ui(ui, c, b, -1);
 }

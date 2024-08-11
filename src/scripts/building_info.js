@@ -494,6 +494,7 @@ building_granary = {
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
   window_info_height_id : 1,
+  info_text_id: 98,
   info_help_id: 3,
   building_size : 4,
 }
@@ -1131,6 +1132,8 @@ building_roadblock = {
   fire_proof : true,
   damage_proof : true,
   window_info_height_id : 1,
+  info_help_id: 358,
+  info_text_id: 155,
   labor_category : LABOR_CATEGORY_GOVERNMENT,
 }
 

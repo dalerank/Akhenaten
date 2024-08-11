@@ -431,46 +431,58 @@ static int terrain_is_road_like(int grid_offset) {
     return map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP) ? 1 : 0;
 }
 
-static int get_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
-    int is_road = terrain_is_road_like(grid_offset);
-    if (map_terrain_is(grid_offset, TERRAIN_WATER) && map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
+static bool is_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
+    if (map_terrain_is(grid_offset, TERRAIN_WATER) && map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         return 0;
-    if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-        building* b = building_at(grid_offset);
-        if (b->type == BUILDING_MUD_GATEHOUSE) {
-            is_road = 0;
-
-        } else if (b->type == BUILDING_ROADBLOCK) {
-            if (!building_roadblock_get_permission(perm, b)) {
-                is_road = 0;
-            }
-
-        } else if (b->type == BUILDING_GRANARY) {
-            if (map_routing_citizen_is_road(grid_offset)) {
-                if (config_get(CONFIG_GP_CH_DYNAMIC_GRANARIES)) {
-                    if (map_property_multi_tile_xy(grid_offset) == EDGE_X1Y1 || map_has_adjacent_road_tiles(grid_offset)
-                        || map_has_adjacent_granary_road(grid_offset))
-                        is_road = 1;
-
-                } else {
-                    is_road = 1;
-                }
-            }
-        } else if (b->type == BUILDING_RESERVED_TRIUMPHAL_ARCH_56) {
-            if (map_routing_citizen_is_road(grid_offset))
-                is_road = 1;
-        }
     }
+
+    int is_road = terrain_is_road_like(grid_offset);
+    if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        return is_road;
+    }
+
+    building* b = building_at(grid_offset);
+    if (b->type == BUILDING_MUD_GATEHOUSE) {
+        return false;
+    } 
+        
+    building_roadblock *roadblock = b->dcast_roadblock();
+    if (roadblock && !roadblock->get_permission((e_permission)perm)) {
+        return false;
+    } 
+        
+    if (b->type == BUILDING_GRANARY) {
+        if (map_routing_citizen_is_road(grid_offset)) {
+            if (config_get(CONFIG_GP_CH_DYNAMIC_GRANARIES)) {
+                if (map_property_multi_tile_xy(grid_offset) == EDGE_X1Y1 || map_has_adjacent_road_tiles(grid_offset)
+                    || map_has_adjacent_granary_road(grid_offset))
+                    is_road = 1;
+
+            } else {
+                is_road = 1;
+            }
+        }
+        return is_road;
+    } 
+        
+    if (b->type == BUILDING_RESERVED_TRIUMPHAL_ARCH_56) {
+        if (map_routing_citizen_is_road(grid_offset)) {
+            is_road = 1;
+        }
+
+        return is_road;
+    }
+
     return is_road;
 }
 
 int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int* road_tiles, int perm) {
     road_tiles[1] = road_tiles[3] = road_tiles[5] = road_tiles[7] = 0;
 
-    road_tiles[0] = get_adjacent_road_tile_for_roaming(grid_offset + GRID_OFFSET(0, -1), perm);
-    road_tiles[2] = get_adjacent_road_tile_for_roaming(grid_offset + GRID_OFFSET(1, 0), perm);
-    road_tiles[4] = get_adjacent_road_tile_for_roaming(grid_offset + GRID_OFFSET(0, 1), perm);
-    road_tiles[6] = get_adjacent_road_tile_for_roaming(grid_offset + GRID_OFFSET(-1, 0), perm);
+    road_tiles[0] = is_adjacent_road_tile_for_roaming(grid_offset + GRID_OFFSET(0, -1), perm);
+    road_tiles[2] = is_adjacent_road_tile_for_roaming(grid_offset + GRID_OFFSET(1, 0), perm);
+    road_tiles[4] = is_adjacent_road_tile_for_roaming(grid_offset + GRID_OFFSET(0, 1), perm);
+    road_tiles[6] = is_adjacent_road_tile_for_roaming(grid_offset + GRID_OFFSET(-1, 0), perm);
 
     return road_tiles[0] + road_tiles[2] + road_tiles[4] + road_tiles[6];
 }
