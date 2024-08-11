@@ -5,6 +5,7 @@
 #include "grid/point.h"
 
 #include <stdint.h>
+#include <algorithm>
 
 template<typename T = int>
 inline T calc_adjust_with_percentage(T value, T percentage) {
@@ -19,6 +20,12 @@ inline T calc_percentage(T value, T total) {
     }
 
     return 0;
+}
+
+template<typename T>
+inline auto approximate_value(float v, const T &arr) {
+    const T::size_type index = std::clamp<T::size_type>(v * arr.size(), 0, arr.size() - 1);
+    return arr[index];
 }
 
 inline int get_delta(int value1, int value2) {

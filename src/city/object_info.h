@@ -51,6 +51,7 @@ struct object_info {
     int subwnd_hblocks_num;
     int subwnd_y_offset;
     int help_id;
+    int group_id;
     bool can_play_sound;
     int building_id;
     int has_road_access;

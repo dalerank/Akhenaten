@@ -4,6 +4,9 @@
 
 struct id_anim_t {
     static const xstring base;
+    static const xstring base_work;
+    static const xstring fancy;
+    static const xstring fancy_work;
     static const xstring preview;
     static const xstring work;
     static const xstring none;

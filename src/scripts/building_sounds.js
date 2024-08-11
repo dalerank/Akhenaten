@@ -82,4 +82,5 @@ building_sounds = [
 	{ type: BUILDING_HOUSE_STATELY_MANOR,	sound: "Wavs/housing_r.wav"},
 	{ type: BUILDING_HOUSE_MODEST_ESTATE,	sound: "Wavs/housing_r.wav"},
 	{ type: BUILDING_HOUSE_PALATIAL_ESTATE,	sound: "Wavs/housing_r.wav"},
+	{ type: BUILDING_WATER_SUPPLY,	sound: "Wavs/fountain.wav"},
 ]

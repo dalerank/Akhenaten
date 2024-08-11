@@ -2,6 +2,9 @@
 
 static id_anim_t g_animkeys;
 const xstring id_anim_t::base = "base";
+const xstring id_anim_t::base_work = "base_work";
+const xstring id_anim_t::fancy = "fancy";
+const xstring id_anim_t::fancy_work = "fancy_work";
 const xstring id_anim_t::preview = "preview";
 const xstring id_anim_t::work = "work";
 const xstring id_anim_t::none = "none";

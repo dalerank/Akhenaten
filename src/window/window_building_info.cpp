@@ -65,7 +65,7 @@ void window_building_draw_native_crops(object_info* c) {
 
 
 void building_info_window::window_info_foreground(object_info &c) {
-    c.ui->draw();
+    draw();
 
     building *b = building_get(c.building_id);
     b->dcast()->window_info_foreground(c);
@@ -85,30 +85,19 @@ void building_info_window::common_info_background(object_info& c) {
     building_info_window::window_info_background(c);
 
     building* b = building_get(c.building_id);
-
-    auto& ui = *c.ui;
     auto params = b->dcast()->params();
-
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
 
     window_building_play_sound(&c, b->get_sound()); // TODO: change to firehouse
 
-    ui["title"] = ui::str(group_id, 0);
-
-    std::pair<int, int> reason = { group_id, 0 };
-    std::pair<int, int> workers = { group_id, 8 };
+    std::pair<int, int> reason = { c.group_id, 0 };
+    std::pair<int, int> workers = { c.group_id, 8 };
     if (!c.has_road_access) {
         reason = { 69, 25 };
     } else if (!b->num_workers) {
         reason.second = 9;
     } else {
         reason.second = b->has_figure(0) ? 2 : 3;
-
-        if (c.worker_percentage >= 100) workers.second = 4;
-        else if (c.worker_percentage >= 75) workers.second = 5;
-        else if (c.worker_percentage >= 50) workers.second = 6;
-        else if (c.worker_percentage >= 25) workers.second = 7;
+        workers.second = approximate_value(c.worker_percentage / 100.f, make_array(4, 5, 6, 7));
     }
 
     ui["warning_text"] = ui::str(reason.first, reason.second);
@@ -120,6 +109,7 @@ void building_info_window::common_info_background(object_info& c) {
 void building_info_window::window_info_background(object_info &c) {
     g_debug_building_id = c.building_id;
     building *b = building_get(c.building_id);
+
     switch (b->type) {
     case BUILDING_ORACLE: window_building_draw_oracle(&c); break;
     case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: window_building_draw_triumphal_arch(&c); break;
@@ -172,6 +162,11 @@ void building_info_window::window_info_background(object_info &c) {
 
     c.show_overlay = b->get_overlay();
     c.has_road_access = b->has_road_access;
+    const auto &params = b->dcast()->params();
+    c.help_id = params.meta.help_id;
+    c.group_id = params.meta.text_id;
+
+    ui["title"] = ui::str(c.group_id, 0);
 
     common_info_window::window_info_background(c);
 }
@@ -190,7 +185,6 @@ std::pair<int, int> building_info_window::get_tooltip(object_info &c) {
 }
 
 void building_info_window::update_buttons(object_info &c) {
-    auto &ui = *c.ui;
     building *b = building_get(c.building_id);
 
     int workers_needed = model_get_building(b->type)->laborers;

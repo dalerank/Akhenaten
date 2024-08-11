@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <array>   // std::array
 #include <cstddef> // std::size_t
@@ -109,6 +109,13 @@ inline constexpr auto make_span(T &arr) {
 template <typename T, std::size_t N>
 inline constexpr auto make_span(const std::array<T, N> arr) {
     return std::span_const<T>((T*)arr.data(), arr.size());
+}
+
+template <typename ... Args>
+inline constexpr auto make_array(const Args... args) {
+    using T = std::common_type_t<Args...>;
+    std::array<T, sizeof...(args)> result = {args...};
+    return result;
 }
 
 template <typename T>

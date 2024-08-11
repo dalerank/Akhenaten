@@ -846,12 +846,14 @@ building_water_supply = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:69 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:69, offset:0 },
-    base_work : { pos : [0, 0], pack:PACK_GENERAL, id:69, max_frames:1 },
+    base_work : { pos : [42, 10], pack:PACK_GENERAL, id:69, offset:1, max_frames:1 },
     fancy : { pos : [0, 0], pack:PACK_GENERAL, id:69, offset:2 },
-    fancy_work : { pos : [0, 0], pack:PACK_GENERAL, id:69, offset:2, max_frames:1 }
+    fancy_work : { pos : [10, 0], pack:PACK_GENERAL, id:69, offset:3, max_frames:1 }
   },
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   fire_proof : true,
+  info_help_id:61,
+  info_text_id:108,
   building_size : 2,
 }
 
