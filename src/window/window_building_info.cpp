@@ -82,7 +82,7 @@ void window_building_draw_mission_post(object_info* c) {
 }
 
 void building_info_window::common_info_background(object_info& c) {
-    window_info_background(c);
+    building_info_window::window_info_background(c);
 
     building* b = building_get(c.building_id);
 
