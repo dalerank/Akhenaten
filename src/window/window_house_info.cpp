@@ -14,73 +14,87 @@
 #include "graphics/text.h"
 #include "grid/road_access.h"
 #include "window/building/figures.h"
+#include "window/window_building_info.h"
 #include "window/window_figure_info.h"
 #include "io/gamefiles/lang.h"
-#include "window/window_figure_info.h"
 #include "game/game.h"
 
-struct house_info_window_t : ui::widget {
+struct info_window_house : building_info_window {
     int resource_text_group;
     int help_id;
 
     using widget::load;
     virtual void load(archive arch, pcstr section) override {
-        widget::load(arch, section);
+        common_info_window::load(arch, section);
 
         resource_text_group = arch.r_int("resource_text_group");
         help_id = arch.r_int("help_id");
     }
-} house_info_window;
+
+    virtual void window_info_background(object_info& c) override;
+    virtual bool check(object_info &c) override {
+        building_house *h = building_get(c.building_id)->dcast_house();
+        if (!h) {
+            return false;
+        }
+
+        return !h->is_vacant_lot();
+    }
+};
+
+struct info_window_vacant_lot : building_info_window {
+    virtual void window_info_background(object_info &c) override;
+    virtual bool check(object_info &c) override {
+        building_house *h = building_get(c.building_id)->dcast_house();
+        if (!h) {
+            return false;
+        }
+
+        return h->is_vacant_lot();
+    }
+};
+
+info_window_house house_infow;
+info_window_vacant_lot vacant_lot_infow;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_house_info_window);
 void config_load_house_info_window() {
-    house_info_window.load("house_info_window");
+    house_infow.load("info_window_house");
+    vacant_lot_infow.load("info_window_vacant_lot");
 }
 
-static void draw_vacant_lot(object_info &c) {
+void info_window_vacant_lot::window_info_background(object_info &c) {
+    building_info_window::window_info_background(c);
+
     window_figure_info_prepare_figures(c);
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(128, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_figure_list(&c);
 
-    int text_id = 2;
-    building* b = building_get(c.building_id);
+    building *b = building_get(c.building_id);
     map_point road_tile = map_closest_road_within_radius(b->tile, 1, 2);
-    if (road_tile.valid()) {
-        text_id = 1;
-    }
+    int text_id = road_tile.valid() ? 1 : 2;
 
-    window_building_draw_description_at(c, 16 * c.bgsize.y - 113, 128, text_id);
+    ui["title"] = ui::str(128, 0);
+    ui["describe"] = ui::str(128, text_id);
 }
 
-void building_house::window_info_background(object_info &c) {
-    auto &ui = house_info_window;
+void info_window_house::window_info_background(object_info &c) {
+    building_info_window::window_info_background(c);
 
-    c.help_id = ui.help_id;
-    window_building_play_sound(&c, "wavs/housing.wav");
+    c.help_id = help_id;
+    building *b = building_get(c.building_id);
+    window_building_play_sound(&c, b->get_sound());
 
-    building* b = building_get(c.building_id);
-    if (b->house_population <= 0) {
-        draw_vacant_lot(c);
-        return;
-    }
+    assert(b->house_population > 0);
 
     int level = b->type - 10;
     ui["title"] = ui::str(29, level);
-}
-
-void building_house::window_info_foreground(object_info &c) {
-    auto &ui = house_info_window;
-    ui.draw();
-
-    building* b = building_get(c.building_id);
 
     if (b->data.house.evolve_text_id == 62) { // is about to devolve
         bstring512 text;
-        text.printf("%s @Y%s&) %s", 
-                        ui::str(127, 40 + b->data.house.evolve_text_id),
-                        ui::str(41, building_get(c.worst_desirability_building_id)->type),
-                        ui::str(127, 41 + b->data.house.evolve_text_id));
+        text.printf("%s @Y%s&) %s",
+            ui::str(127, 40 + b->data.house.evolve_text_id),
+            ui::str(41, building_get(c.worst_desirability_building_id)->type),
+            ui::str(127, 41 + b->data.house.evolve_text_id));
         ui["evolve_reason"] = text;
     } else { // needs something to evolve 
         ui["evolve_reason"] = ui::str(127, 40 + b->data.house.evolve_text_id);
@@ -90,7 +104,7 @@ void building_house::window_info_foreground(object_info &c) {
 
     auto food_icon = [] (int i) { bstring32 id_icon; id_icon.printf("food%u_icon", i); return id_icon; };
     auto food_text = [] (int i) { bstring32 id_text; id_text.printf("food%u_text", i); return id_text; };
-      
+
     for (int i = 0; i < 4; ++i) {
         e_resource resource = g_city.allowed_foods(i);
         int stored = b->data.house.foods[i];
@@ -102,7 +116,7 @@ void building_house::window_info_foreground(object_info &c) {
     auto good_text = [] (int i) { bstring32 id_text; id_text.printf("good%u_text", i); return id_text; };
 
     // goods inventory
-    e_resource house_goods[] = {RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS, RESOURCE_LINEN, RESOURCE_BEER};
+    e_resource house_goods[] = { RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS, RESOURCE_LINEN, RESOURCE_BEER };
     for (int i = 0; i < 4; ++i) {
         e_resource resource = house_goods[i];
         int stored = b->data.house.inventory[INVENTORY_GOOD1 + i];
@@ -130,13 +144,7 @@ void building_house::window_info_foreground(object_info &c) {
 
     int happiness = b->sentiment.house_happiness;
     int happiness_text_id;
-    if (happiness >= 50) { happiness_text_id = 26; }
-    else if (happiness >= 40) { happiness_text_id = 27; }
-    else if (happiness >= 30) { happiness_text_id = 28; }
-    else if (happiness >= 20) { happiness_text_id = 29; }
-    else if (happiness >= 10) { happiness_text_id = 30; }
-    else if (happiness >= 1) { happiness_text_id = 31; }
-    else { happiness_text_id = 32; }
+    if (happiness >= 50) { happiness_text_id = 26; } else if (happiness >= 40) { happiness_text_id = 27; } else if (happiness >= 30) { happiness_text_id = 28; } else if (happiness >= 20) { happiness_text_id = 29; } else if (happiness >= 10) { happiness_text_id = 30; } else if (happiness >= 1) { happiness_text_id = 31; } else { happiness_text_id = 32; }
 
     ui["happiness_info"] = ui::str(127, happiness_text_id);
 

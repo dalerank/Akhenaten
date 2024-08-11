@@ -18,6 +18,7 @@ struct common_info_window : public ui::widget {
     virtual void update_buttons(object_info &c);
 
     void draw_tooltip(tooltip_context *c);
+    widget &ui;
 };
 
 void window_building_info_show(const tile2i& point);

@@ -131,6 +131,7 @@ var building_mud_tower = {}
 var building_road = {}
 var building_burning_ruin = {}
 var building_marble_quarry = {}
+
 // houses
 var building_house_crude_hut = {}
 var building_house_sturdy_hut = {}
@@ -171,7 +172,8 @@ var well_info_window = {}
 var minimap_window = {}
 var advisor_trade_window = {}
 var advisor_imperial_window = {}
-var house_info_window = {}
+var info_window_house = {}
+var info_window_vacant_lot = {}
 var hold_festival_window = {}
 var festival_square_info_window = {}
 var terrain_info_window = {}

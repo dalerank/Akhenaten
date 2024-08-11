@@ -266,8 +266,12 @@ void building_house::change_to_vacant_lot() {
         building_house::create_vacant_lot(base.tile.shifted(0, 1), vacant_lot_id);
         building_house::create_vacant_lot(base.tile.shifted(1, 1), vacant_lot_id);
     } else {
-        map_image_set(base.tile.grid_offset(), vacant_lot_id);
+        map_image_set(base.tile, vacant_lot_id);
     }
+}
+
+bool building_house::is_vacant_lot() {
+    return base.house_population == 0;
 }
 
 static void prepare_for_merge(int building_id, int num_tiles) {

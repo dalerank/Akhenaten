@@ -370,7 +370,19 @@ granary_info_window = {
 	}
 }
 
-house_info_window = {
+info_window_vacant_lot = {
+	help_id : 128,
+	ui : {
+		background : { type : "outer_panel",	size: [29, 23] }, // pos/size setup from code
+		title 		 : { type : "text", pos: [0, 12], size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		inner_panel : { type : "inner_panel", pos : [16, 40], size: [27, 13] },
+		describe 	 : { type : "text", pos: [36, 114], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(25) },
+		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+	}
+}
+
+info_window_house = {
 	resource_text_group : 23,
 	help_id : 56,
 	ui : {
@@ -399,6 +411,8 @@ house_info_window = {
 		tax_info : { type : "text", pos: [36, 194], font: FONT_NORMAL_BLACK_ON_DARK, },
 		happiness_info : { type : "text", pos: [36, 214], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) },
 		additional_info : { type : "text", pos: [36, 234], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) },
+		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 	}
 }
 

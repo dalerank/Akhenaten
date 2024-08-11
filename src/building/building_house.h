@@ -19,9 +19,6 @@ public:
     //virtual void on_create(int orientation) override;
     //virtual void on_place(int orientation, int variant) override;
     virtual void on_place_checks() override;
-    virtual bool is_workshop() const override { return true; }
-    virtual void window_info_background(object_info &c) override;
-    virtual void window_info_foreground(object_info &ctx) override;
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void on_undo() override;
     virtual bool evolve(house_demands* demands) = 0;
@@ -30,6 +27,7 @@ public:
     inline void change_population(int delta) { base.house_population += delta; }
     inline e_house_level house_level() const { return base.subtype.house_level; }
     void change_to_vacant_lot();
+    bool is_vacant_lot();
     void add_population(int num_people);
     void change_to(e_building_type type);
     void merge();

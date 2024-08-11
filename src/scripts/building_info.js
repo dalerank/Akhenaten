@@ -1486,6 +1486,8 @@ building_vacant_lot = {
     preview : { pack:PACK_GENERAL, id:36 },
     base : { pack:PACK_GENERAL, id:36 },
   },
+  info_help_id:128,
+  info_text_id:-1,
   building_size : 1,
 }
 

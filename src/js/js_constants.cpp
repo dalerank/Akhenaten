@@ -127,6 +127,8 @@ void js_register_city_buildings(js_State *J) {
         js_newnumber(J, btype.id);
         js_setglobal(J, btype.name);
     }
+    // cause it vacant lot id also
+    _R(BUILDING_HOUSE_CRUDE_HUT)
 }
 
 void js_register_ui_fonts(js_State *J) {
