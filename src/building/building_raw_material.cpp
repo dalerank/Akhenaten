@@ -42,62 +42,20 @@ void config_load_building_raw_materials() {
     gatherer_m.load();
 }
 
-void building_raw_material_draw_info(object_info& c, e_resource resource) {
-    painter ctx = game.painter();
-
-    building* b = building_get(c.building_id);
-    const auto &meta = b->dcast()->get_info();
-
-    c.help_id = meta.help_id;
-    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
-
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(resource), c.offset.x + 10, c.offset.y + 10);
-    lang_text_draw_centered(meta.text_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-
-    int pct_done = calc_percentage<int>(b->data.industry.progress, 200);
-    int width = lang_text_draw(meta.text_id, 2, c.offset.x + 32, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += text_draw_percentage(pct_done, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(meta.text_id, 3, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    if (!c.has_road_access) {
-        window_building_draw_description_at(c, 70, 69, 25);
-    } else if (city_resource_is_mothballed(resource))
-        window_building_draw_description_at(c, 70, meta.text_id, 4);
-    else if (b->data.industry.curse_days_left > 4)
-        window_building_draw_description_at(c, 70, meta.text_id, 11);
-    else if (b->num_workers <= 0)
-        window_building_draw_description_at(c, 70, meta.text_id, 5);
-    else if (c.worker_percentage >= 100)
-        window_building_draw_description_at(c, 70, meta.text_id, 6);
-    else if (c.worker_percentage >= 75)
-        window_building_draw_description_at(c, 70, meta.text_id, 7);
-    else if (c.worker_percentage >= 50)
-        window_building_draw_description_at(c, 70, meta.text_id, 8);
-    else if (c.worker_percentage >= 25)
-        window_building_draw_description_at(c, 70, meta.text_id, 9);
-    else
-        window_building_draw_description_at(c, 70, meta.text_id, 10);
-
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
-    window_building_draw_employment(&c, 142);
-    window_building_draw_description_at(c, 16 * c.bgsize.y - 136, meta.text_id, 1);
-}
-
-void building_marble_quarry_draw_info(object_info& c) {
-    building_raw_material_draw_info(c, RESOURCE_MARBLE);
-}
-
 void building_mine::on_create(int orientation) {
     base.output_resource_first_id = params().output_resource;
 }
 
-void building_mine::window_info_background(object_info &c) {
-    building_raw_material_draw_info(c, params().output_resource);
+void building_mine::update_graphic() {
+    const xstring &animkey = can_play_animation() 
+                                ? animkeys().work
+                                : animkeys().none;
+
+    set_animation(animkey);
 }
 
 bool building_mine::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    building_draw_normal_anim(ctx, point, &base, tile, anim("work"), color_mask);
+    draw_normal_anim(ctx, point, tile, color_mask);
     return true;
 }
 
@@ -113,37 +71,16 @@ void building_mine_gold::update_count() const {
     building_increase_industry_count(RESOURCE_GOLD, num_workers() > 0);
 }
 
-const building_impl::static_params &building_mine_gold::params() const { return gold_mine_m; }
-const animation_t &building_mine_gold::anim(pcstr key) const { return gold_mine_m.anim[key]; }
-
-const building_impl::static_params &building_mine_copper::params() const { return copper_mine_m; }
-const animation_t &building_mine_copper::anim(pcstr key) const { return copper_mine_m.anim[key]; }
-
 void building_mine_copper::update_count() const {
     building_increase_industry_count(RESOURCE_COPPER, num_workers() > 0);
 }
-
-const building_impl::static_params &building_mine_gems::params() const { return gems_mine_m; }
-const animation_t &building_mine_gems::anim(pcstr key) const { return gems_mine_m.anim[key]; }
 
 void building_mine_gems::update_count() const {
     building_increase_industry_count(RESOURCE_GEMS, num_workers() > 0);
 }
 
-void building_quarry_stone::on_create(int orientation) {
-    base.output_resource_first_id = RESOURCE_STONE;
-}
-
-void building_quarry_stone::window_info_background(object_info &c) {
-    building_raw_material_draw_info(c, RESOURCE_STONE);
-}
-
 void building_clay_pit::on_create(int orientation) {
     base.output_resource_first_id = clay_pit_m.output_resource;
-}
-
-void building_clay_pit::window_info_background(object_info &c) {
-    building_raw_material_draw_info(c, clay_pit_m.output_resource);
 }
 
 int building_clay_pit::get_fire_risk(int value) const {
@@ -168,10 +105,6 @@ void building_clay_pit::update_count() const {
 void building_reed_gatherer::on_create(int orientation) {
     base.output_resource_first_id = RESOURCE_REEDS;
     data.industry.max_gatheres = 1;
-}
-
-void building_reed_gatherer::window_info_background(object_info &c) {
-    building_raw_material_draw_info(c, RESOURCE_REEDS);
 }
 
 bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, int carry_per_person) {

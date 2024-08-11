@@ -275,7 +275,11 @@ void graphics_renderer_interface::draw_image_part(painter &ctx, const image_t* i
 }
 
 void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, float x, float y, color color, float scale, bool mirrored, bool alpha) {
-    if (img == nullptr) {
+    if (!img) {
+        return;
+    }
+
+    if (!img->atlas.p_atlas) {
         return;
     }
 

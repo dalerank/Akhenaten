@@ -508,7 +508,7 @@ temple_info_window = {
 building_info_window = {
 	ui : {
 		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
-		title 		 	: { type : "text", pos: [48, 16], size: [px(26), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		title 		 	: { type : "text", pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		warning_text : { type : "text", pos: [32, 46], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		inner_panel : { type : "inner_panel", pos : [16, 100], size: [27, 4] },
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 110] },
@@ -527,7 +527,15 @@ building_info_window = {
 info_window_fishing_wharf = {
 	ui : __baseui(building_info_window, {
 		resource_img : { type : "resource_icon", pos: [32, 176] },
-		storage_desc : { type : "text", text:"tetetetet", pos: [62, 176 + 2], font: FONT_NORMAL_BLACK_ON_DARK },
+		storage_desc : { type : "text", pos: [62, 176 + 2], font: FONT_NORMAL_BLACK_ON_LIGHT },
+	})
+}
+
+raw_material_info_window = {
+	ui : __baseui(building_info_window, {
+		resource_img : { type : "resource_icon", pos: [10, 10] },
+		progress_desc : { type : "text", pos: [32, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		mine_desc : { type : "text", pos: [32, 176], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true },
 	})
 }
 

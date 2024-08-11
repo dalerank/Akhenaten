@@ -923,6 +923,7 @@ building_reed_gatherer = {
     base : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
     work : { pos : [30, -17], pack:PACK_GENERAL, id:24, offset:1, max_frames:19 }
   },
+  output_resource : RESOURCE_REEDS,
   building_size : 2,
   window_info_height_id : 1,
   info_help_id:92,
@@ -937,6 +938,7 @@ building_wood_cutter = {
     work : { pos : [30, -17], pack:PACK_GENERAL, id:23, offset:1, max_frames:19 },
     wood : { pos : [65, 3], pack:PACK_GENERAL, id:202 },
   },
+  output_resource : RESOURCE_TIMBER,
   building_size : 2,
   window_info_height_id : 1,
   info_help_id:94,

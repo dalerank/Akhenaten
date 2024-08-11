@@ -72,10 +72,6 @@ void building_wood_cutter::spawn_figure() {
     base.common_spawn_goods_output_cartpusher();
 }
 
-void building_wood_cutter::window_info_background(object_info &ctx) {
-    building_raw_material_draw_info(ctx, RESOURCE_TIMBER);
-}
-
 bool building_wood_cutter::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     const auto &anim = bwood_cutter_m.anim["work"];
     building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
