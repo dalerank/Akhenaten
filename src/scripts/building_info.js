@@ -1627,7 +1627,7 @@ building_firehouse = {
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
   window_info_height_id : 1,
-  info_help_id: 81,
+  info_help_id: 355,
   info_text_id: 164,
   building_size : 1,
 }
