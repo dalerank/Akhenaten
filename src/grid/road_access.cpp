@@ -433,19 +433,27 @@ static int terrain_is_road_like(int grid_offset) {
 
 static int get_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
     int is_road = terrain_is_road_like(grid_offset);
-    if (map_terrain_is(grid_offset, TERRAIN_WATER) && map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
+    if (map_terrain_is(grid_offset, TERRAIN_WATER) && map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         return 0;
+    }
+
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         building* b = building_at(grid_offset);
         if (b->type == BUILDING_MUD_GATEHOUSE) {
             is_road = 0;
+            return is_road;
 
-        } else if (b->type == BUILDING_ROADBLOCK) {
-            if (!building_roadblock_get_permission(perm, b)) {
+        } 
+        
+        building_roadblock *roadblock = b->dcast_roadblock();
+        if (roadblock) {
+            if (!roadblock->get_permission((e_permission)perm)) {
                 is_road = 0;
             }
-
-        } else if (b->type == BUILDING_GRANARY) {
+            return is_road;
+        } 
+        
+        if (b->type == BUILDING_GRANARY) {
             if (map_routing_citizen_is_road(grid_offset)) {
                 if (config_get(CONFIG_GP_CH_DYNAMIC_GRANARIES)) {
                     if (map_property_multi_tile_xy(grid_offset) == EDGE_X1Y1 || map_has_adjacent_road_tiles(grid_offset)
@@ -456,12 +464,19 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
                     is_road = 1;
                 }
             }
-        } else if (b->type == BUILDING_RESERVED_TRIUMPHAL_ARCH_56) {
-            if (map_routing_citizen_is_road(grid_offset))
+            return is_road;
+        } 
+        
+        if (b->type == BUILDING_RESERVED_TRIUMPHAL_ARCH_56) {
+            if (map_routing_citizen_is_road(grid_offset)) {
                 is_road = 1;
+            }
+
+            return is_road;
         }
     }
-    return is_road;
+
+    return false;
 }
 
 int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int* road_tiles, int perm) {

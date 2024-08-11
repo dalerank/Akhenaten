@@ -84,15 +84,15 @@ int figure::get_permission_for_figure() {
     switch (type) {
     case FIGURE_ARCHITECT:
     case FIGURE_FIREMAN:
-        return PERMISSION_MAINTENANCE;
+        return epermission_maintenance;
         break;
 
     case FIGURE_PRIEST:
-        return PERMISSION_PRIEST;
+        return epermission_priest;
         break;
 
     case FIGURE_MARKET_TRADER:
-        return PERMISSION_MARKET;
+        return epermission_market;
         break;
 
     case FIGURE_MUSICIAN:
@@ -100,25 +100,25 @@ int figure::get_permission_for_figure() {
     case FIGURE_JUGGLER:
     case FIGURE_DANCER:
     case FIGURE_CHARIOR_RACER:
-        return PERMISSION_ENTERTAINER;
+        return epermission_entertainer;
         break;
 
     case FIGURE_PHYSICIAN:
     case FIGURE_EMBALMER:
     case FIGURE_DENTIST:
     case FIGURE_HERBALIST:
-        return PERMISSION_MEDICINE;
+        return epermission_medicine;
 
     case FIGURE_TEACHER:
     case FIGURE_SCRIBER:
     case FIGURE_LIBRARIAN:
-        return PERMISSION_EDUCATION;
+        return epermission_education;
 
     case FIGURE_TAX_COLLECTOR:
-        return PERMISSION_TAX_COLLECTOR;
+        return epermission_tax_collector;
 
     default:
-        return PERMISSION_NONE;
+        return epermission_none;
         break;
     }
 }

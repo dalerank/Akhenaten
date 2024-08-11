@@ -275,6 +275,7 @@ building_burning_ruin *building::dcast_burning_ruin() { return dcast()->dcast_bu
 building_storage *building::dcast_storage() { return dcast()->dcast_storage(); }
 building_temple *building::dcast_temple() { return dcast()->dcast_temple(); }
 building_tax_collector *building::dcast_tax_collector() { return dcast()->dcast_tax_collector(); }
+building_roadblock *building::dcast_roadblock() { return dcast()->dcast_roadblock(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));

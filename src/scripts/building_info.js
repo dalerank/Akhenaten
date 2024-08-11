@@ -1132,6 +1132,8 @@ building_roadblock = {
   fire_proof : true,
   damage_proof : true,
   window_info_height_id : 1,
+  info_help_id: 358,
+  info_text_id: 155,
   labor_category : LABOR_CATEGORY_GOVERNMENT,
 }
 

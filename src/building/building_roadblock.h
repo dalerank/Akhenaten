@@ -2,29 +2,28 @@
 
 #include "building/building.h"
 
-enum {
-    PERMISSION_NONE = 0,
-    PERMISSION_MAINTENANCE = 1,
-    PERMISSION_PRIEST = 2,
-    PERMISSION_MARKET = 3,
-    PERMISSION_ENTERTAINER = 4,
-    PERMISSION_EDUCATION = 5,
-    PERMISSION_MEDICINE = 6,
-    PERMISSION_TAX_COLLECTOR = 7
+enum e_permission {
+    epermission_none = 0,
+    epermission_maintenance = 1,
+    epermission_priest = 2,
+    epermission_market = 3,
+    epermission_entertainer = 4,
+    epermission_education = 5,
+    epermission_medicine = 6,
+    epermission_tax_collector = 7
 };
-
-void building_roadblock_set_permission(int p, building* b);
-int building_roadblock_get_permission(int p, building* b);
 
 class building_roadblock : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_ROADBLOCK, building_roadblock)
     building_roadblock(building &b) : building_impl(b) {}
 
+    virtual building_roadblock *dcast_roadblock() override { return this; }
+
     virtual void on_place_checks() override;
-    virtual void window_info_background(object_info &c) override;
-    virtual void window_info_foreground(object_info &c) override;
-    virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
-    //virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
+
+    void set_permission(e_permission p);
+    int get_permission(e_permission p);
+
 };

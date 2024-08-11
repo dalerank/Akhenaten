@@ -61,6 +61,7 @@ class building_burning_ruin;
 class building_storage;
 class building_temple;
 class building_tax_collector;
+class building_roadblock;
 struct object_info;
 struct painter;
 struct mouse;
@@ -427,6 +428,7 @@ public:
     building_storage *dcast_storage();
     building_temple *dcast_temple();
     building_tax_collector *dcast_tax_collector();
+    building_roadblock *dcast_roadblock();
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
@@ -544,6 +546,7 @@ public:
     virtual building_storage *dcast_storage() { return nullptr; }
     virtual building_temple *dcast_temple() { return nullptr; }
     virtual building_tax_collector *dcast_tax_collector() { return nullptr; }
+    virtual building_roadblock *dcast_roadblock() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
