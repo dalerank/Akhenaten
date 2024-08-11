@@ -432,25 +432,20 @@ static int terrain_is_road_like(int grid_offset) {
 }
 
 static int get_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
-    int is_road = terrain_is_road_like(grid_offset);
     if (map_terrain_is(grid_offset, TERRAIN_WATER) && map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         return 0;
     }
 
+    int is_road = terrain_is_road_like(grid_offset);
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         building* b = building_at(grid_offset);
         if (b->type == BUILDING_MUD_GATEHOUSE) {
-            is_road = 0;
-            return is_road;
-
+            return false;
         } 
         
         building_roadblock *roadblock = b->dcast_roadblock();
-        if (roadblock) {
-            if (!roadblock->get_permission((e_permission)perm)) {
-                is_road = 0;
-            }
-            return is_road;
+        if (roadblock && !roadblock->get_permission((e_permission)perm)) {
+            return false;
         } 
         
         if (b->type == BUILDING_GRANARY) {
@@ -476,7 +471,7 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
         }
     }
 
-    return false;
+    return is_road;
 }
 
 int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int* road_tiles, int perm) {
