@@ -606,9 +606,11 @@ void ui::elabel::load(archive arch) {
     pcstr talign = arch.r_string("align");
     bool multiline = arch.r_bool("multiline");
     bool rich = arch.r_bool("rich");
+    bool scroll = arch.r_bool("scroll", true);
     _flags = (strcmp("center", talign) == 0 ? UiFlags_LabelCentered : UiFlags_None)
                | (multiline ? UiFlags_LabelMultiline : UiFlags_None)
-               | (rich ? UiFlags_Rich : UiFlags_None);
+               | (rich ? UiFlags_Rich : UiFlags_None)
+               | (scroll ? UiFlags_None : UiFlags_NoScroll);
 }
 
 void ui::elabel::text(pcstr v) {
@@ -737,7 +739,10 @@ void ui::etext::draw() {
 
         rich_text_set_fonts(_font, _link_font);
         rich_text_draw((const uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _wrap, maxlines, false);
-        rich_text_draw_scrollbar();
+
+        if (!(_flags & UiFlags_NoScroll)) {
+            rich_text_draw_scrollbar();
+        }
         
         if (_clip_area) {
             graphics_reset_clip_rectangle();

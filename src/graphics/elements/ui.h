@@ -33,6 +33,7 @@ enum UiFlags_ {
     UiFlags_Rich = 1 << 7,
     UiFlags_Selected = 1 << 8,
     UiFlags_Readonly = 1 << 9,
+    UiFlags_NoScroll = 1 << 10,
 };
 using UiFlags = int;
 

@@ -66,8 +66,8 @@ void config_load_house_info_window() {
 void info_window_vacant_lot::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
-    window_figure_info_prepare_figures(c);
-    window_building_draw_figure_list(&c);
+    //window_figure_info_prepare_figures(c);
+    //window_building_draw_figure_list(&c);
 
     building *b = building_get(c.building_id);
     map_point road_tile = map_closest_road_within_radius(b->tile, 1, 2);
