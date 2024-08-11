@@ -19,11 +19,11 @@
 #include "io/gamefiles/lang.h"
 #include "game/game.h"
 
-struct info_window_house : building_info_window {
+struct info_window_house : public building_info_window {
     int resource_text_group;
     int help_id;
 
-    using widget::load;
+    using building_info_window::load;
     virtual void load(archive arch, pcstr section) override {
         common_info_window::load(arch, section);
 
