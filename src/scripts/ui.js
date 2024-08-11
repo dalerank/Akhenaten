@@ -5,6 +5,15 @@ function sw(v) { return game.screen.w + v}
 function sh(v) { return game.screen.h + v}
 function mbutton(i) { return [sw(0) / 2 - 128, sh(0) / 2 - 100 + 40 * i] }
 
+function __baseui(base, ext) {
+    var newui = {};
+
+    for (var key in base.ui) { newui[key] = base.ui[key] }
+    for (var key in ext) { newui[key] = ext[key]}
+
+    return newui;
+}
+
 top_menu_bar = {
 	offset : [10, 6],
 	item_height : 20,
@@ -513,6 +522,13 @@ building_info_window = {
 		show_overlay : { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
 		mothball : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
 	}
+}
+
+info_window_fishing_wharf = {
+	ui : __baseui(building_info_window, {
+		resource_img : { type : "resource_icon", pos: [32, 176] },
+		storage_desc : { type : "text", text:"tetetetet", pos: [62, 176 + 2], font: FONT_NORMAL_BLACK_ON_DARK },
+	})
 }
 
 entertainment_info_window = {
