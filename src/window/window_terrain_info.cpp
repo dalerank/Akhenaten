@@ -77,6 +77,11 @@ void terrain_info_window::window_info_background(object_info &c) {
         building_plaza::draw_info(c);
         break;
 
+    case TERRAIN_INFO_ORE_ROCK:
+        reason = { 70, 26 };
+        describe = { 70, 38};
+        c.help_id = 191;
+
     case TERRAIN_INFO_FLOODPLAIN:
         reason = { 70, 29 };
         describe = { 70, 55 };

@@ -36,7 +36,7 @@ void info_window_raw_material::window_info_background(object_info &c) {
 
     int pct_done = calc_percentage<int>(b->data.industry.progress, 200);
     ui["resource_img"].image(b->output_resource_first_id);
-    ui["progress_desc"].text_var("%s %d %s", ui::str(c.group_id, 2), pct_done, ui::str(c.group_id, 3));
+    ui["progress_desc"].text_var("%s %d%% %s", ui::str(c.group_id, 2), pct_done, ui::str(c.group_id, 3));
 
     std::pair<int, int> reason = { c.group_id, 10 };
     if (!c.has_road_access) { reason = { 69, 25 }; } 

@@ -26,10 +26,9 @@ buildings::model_t<building_temple_ptah> temple_ptah_m;
 buildings::model_t<building_temple_seth> temple_seth_m;
 buildings::model_t<building_temple_bast> temple_bast_m;
 
-struct temple_info_window_t : public common_info_window {
+struct temple_info_window_t : public building_info_window {
     virtual void window_info_background(object_info &c) override {
-        auto &ui = *this;
-        c.ui = &ui;
+        building_info_window::window_info_background(c);
 
         auto temple = building_get(c.building_id)->dcast_temple();
 
@@ -42,19 +41,16 @@ struct temple_info_window_t : public common_info_window {
         case BUILDING_TEMPLE_BAST: image_offset = 25; break;
         }
 
-        c.help_id = temple->params().meta.help_id;
-        int group_id = temple->params().meta.text_id;
-
         window_building_play_sound(&c, temple->get_sound());
 
-        ui["title"] = ui::str(group_id, 0);
         ui["god_image"].image({PACK_UNLOADED, 21, image_offset});
 
-        draw_employment_details_ui(ui, c, &temple->base, -1);
+        draw_employment_details(c);
+    }
 
-        if (!c.has_road_access) {
-            window_building_draw_description_at(c, 16 * c.bgsize.y - 128, 69, 25);
-        }
+    virtual bool check(object_info &c) override { 
+        building *b = building_get(c.building_id);
+        return !!b->dcast_temple();
     }
 };
 
@@ -94,10 +90,6 @@ e_sound_channel_city building_temple::sound_channel() const {
     return SOUND_CHANNEL_CITY_NONE;
 }
 
-void building_temple::window_info_background(object_info &c) {
-    g_temple_info_window.window_info_background(c);
-}
-
 void building_temple::spawn_figure() {
     if (is_main()) {
         common_spawn_roamer(FIGURE_PRIEST, 50, FIGURE_ACTION_125_ROAMING);
@@ -108,20 +100,4 @@ bool building_temple::draw_ornaments_and_animations_height(painter &ctx, vec2i p
     building_draw_normal_anim(ctx, point, &base, tile, anim("work"), color_mask);
 
     return true;
-}
-
-const building_impl::static_params &building_temple::params() const {
-    switch(type()) {
-    case BUILDING_TEMPLE_OSIRIS: return temple_osiris_m;
-    case BUILDING_TEMPLE_RA: return temple_ra_m;
-    case BUILDING_TEMPLE_PTAH: return temple_ptah_m;
-    case BUILDING_TEMPLE_SETH: return temple_seth_m;
-    case BUILDING_TEMPLE_BAST: return temple_bast_m;
-    }
-
-    return building_impl::params();
-}
-
-const animation_t &building_temple::anim(pcstr key) const {
-    return params().anim[key];
 }

@@ -491,12 +491,12 @@ terrain_info_window = {
 
 temple_info_window = {
 	ui : {
-		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 18]},
 		title 		 	: { type : "text", pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		inner_panel : { type : "inner_panel", pos : [16, 56], size: [27, 4] },
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 70] },
-		workers_text : { type : "text", pos: [70, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		workers_desc : { type : "text", pos: [70, 78 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
+		workers_text : { type : "text", pos: [70, 74], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		workers_desc : { type : "text", pos: [70, 74 + 16], font: FONT_NORMAL_BLACK_ON_DARK },
 		button_help : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
 		button_close: { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 		show_overlay: { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
@@ -526,8 +526,8 @@ building_info_window = {
 
 info_window_fishing_wharf = {
 	ui : __baseui(building_info_window, {
-		resource_img : { type : "resource_icon", pos: [32, 176] },
-		storage_desc : { type : "text", pos: [62, 176 + 2], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		resource_img : { type : "resource_icon", pos: [32, 186] },
+		storage_desc : { type : "text", pos: [62, 186 + 2], font: FONT_NORMAL_BLACK_ON_LIGHT },
 	})
 }
 
@@ -535,7 +535,7 @@ raw_material_info_window = {
 	ui : __baseui(building_info_window, {
 		resource_img : { type : "resource_icon", pos: [10, 10] },
 		progress_desc : { type : "text", pos: [32, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		mine_desc : { type : "text", pos: [32, 176], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true },
+		mine_desc : { type : "text", pos: [32, 186], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true },
 	})
 }
 
