@@ -587,7 +587,7 @@ static void top_menu_help_handle(menu_item &item) {
     else if (item.id == "about") { menu_help_about(0); }
 }
 
-static void top_menu_advisors_hanle(menu_item &item) {
+static void top_menu_advisors_handle(menu_item &item) {
     widget_top_menu_clear_state();
     window_go_back();
     window_advisors_show_advisor((e_advisor)item.parameter);
@@ -614,7 +614,7 @@ static void widget_top_menu_init() {
 
     auto *advisors = data.headers["advisors"].dcast_menu_header();
     if (advisors) {
-        advisors->onclick(top_menu_advisors_hanle);
+        advisors->onclick(top_menu_advisors_handle);
     }
 
     auto *debug = data.headers["debug"].dcast_menu_header();

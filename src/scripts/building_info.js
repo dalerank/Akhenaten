@@ -1297,7 +1297,7 @@ building_village_palace = {
   window_info_height_id : 2,
   unique_building : true,
   info_help_id:77,
-  info_text_id:106,
+  info_text_id:105,
   building_size : 4,
 }
 
@@ -1311,7 +1311,7 @@ building_town_palace = {
   window_info_height_id : 2,
   unique_building : true,
   info_help_id:77,
-  info_text_id:106,
+  info_text_id:105,
   building_size : 5,
 }
 
@@ -1333,7 +1333,7 @@ building_city_palace = {
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   unique_building : true,
   info_help_id:77,
-  info_text_id:106,
+  info_text_id:105,
   building_size : 6,
 }
 

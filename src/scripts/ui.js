@@ -510,10 +510,10 @@ building_info_window = {
 		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
 		title 		 	: { type : "text", pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		warning_text : { type : "text", pos: [32, 46], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-		inner_panel : { type : "inner_panel", pos : [16, 100], size: [27, 4] },
+		inner_panel : { type : "inner_panel", pos : [16, 100], size: [27, 5] },
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 110] },
-		workers_text : { type : "text", pos: [70, 112], font: FONT_NORMAL_BLACK_ON_DARK},
-		workers_desc : { type : "text", pos: [70, 112 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) },
+		workers_text : { type : "text", pos: [70, 116], font: FONT_NORMAL_BLACK_ON_DARK},
+		workers_desc : { type : "text", pos: [70, 116 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) },
 		first_advisor  : { type : "image_button", pos:[32, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		second_advisor : { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		third_advisor : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
@@ -536,6 +536,17 @@ raw_material_info_window = {
 		resource_img : { type : "resource_icon", pos: [10, 10] },
 		progress_desc : { type : "text", pos: [32, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
 		mine_desc : { type : "text", pos: [32, 176], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true },
+	})
+}
+
+info_window_palace = {
+	ui : __baseui(building_info_window, {
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 18]},
+		resource_img : { type : "resource_icon", pos: [16, 16] },
+		inner_panel : { type : "inner_panel", pos : [16, 100], size: [27, 6] },
+		vaults_hold : { type : "text", pos: [44, 54], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		text_visit : { type : "text", pos: [90, 252], font: FONT_NORMAL_BLACK_ON_LIGHT, text:"#visit_rating_advisor" },
+		visit_advisor  : { type : "image_button", pos:[52, 246], size:[28, 28], pack:PACK_GENERAL, id:106 },
 	})
 }
 
