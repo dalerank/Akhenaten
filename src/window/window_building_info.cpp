@@ -103,7 +103,22 @@ void building_info_window::common_info_background(object_info& c) {
     ui["warning_text"] = ui::str(reason.first, reason.second);
     ui["workers_desc"] = ui::str(workers.first, workers.second);
 
-    draw_employment_details_ui(ui, c, b, -1);
+    draw_employment_details(c, -1);
+}
+
+void building_info_window::draw_employment_details(object_info &c, int text_id) {
+    building *b = building_get(c.building_id);
+    
+    int laborers = model_get_building(b->type)->laborers;
+    ui["workers_text"].text_var("%d %s (%d %s", b->num_workers, ui::str(8, 12), laborers, ui::str(69, 0));
+    if (text_id < 0) {
+        text_id = get_employment_info_text_id(&c, b, 1);
+    }
+
+    if (text_id > 0)
+    {
+        ui["workers_desc"] = ui::str(69, text_id);
+    }
 }
 
 void building_info_window::window_info_background(object_info &c) {

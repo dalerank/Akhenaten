@@ -18,4 +18,5 @@ struct building_info_window : public common_info_window {
     virtual void update_buttons(object_info &c) override;
 
     void common_info_background(object_info& c);
+    void draw_employment_details(object_info &c, int text_id = -1);
 };
