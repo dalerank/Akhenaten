@@ -28,12 +28,6 @@ void taxcollector_info_window_t::window_info_background(object_info &c) {
 
     building *b = building_get(c.building_id);
 
-    auto &ui = *c.ui;
-    auto params = b->dcast()->params();
-
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
-
     window_building_play_sound(&c, b->get_sound());
 
     ui["title"] = ui::str(106, 0);
@@ -57,12 +51,9 @@ void taxcollector_info_window_t::window_info_background(object_info &c) {
     std::pair<int, int> reason = {106, 9};
     if (!c.has_road_access) { reason = {69, 25}; } 
     else if (b->num_workers <= 0) { reason = {106, 10}; }
-    else if (c.worker_percentage >= 100) { reason = {106, 5}; }
-    else if (c.worker_percentage >= 75) { reason = {106, 6}; }
-    else if (c.worker_percentage >= 50) { reason = {106, 7}; }
-    else if (c.worker_percentage >= 25) { reason = {106, 8}; } 
+    else if (c.worker_percentage >= 25) { reason.second = approximate_value(c.worker_percentage / 100.f, make_array(8, 7, 6, 5)); }
 
     ui["warning_text"] = ui::str(reason.first, reason.second);  
 
-    draw_employment_details_ui(ui, c, b, -1);
+    draw_employment_details(c);
 }

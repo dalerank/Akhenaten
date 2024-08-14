@@ -14,65 +14,68 @@
 #include "config/config.h"
 #include "window/building/common.h"
 #include "window/building/figures.h"
+#include "window/window_building_info.h"
 #include "sound/sound_building.h"
 
 #include "widget/city/ornaments.h"
 
+struct info_window_work_camp : public building_info_window {
+    virtual void window_info_background(object_info &c) override;
+    virtual bool check(object_info &c) override {
+        building *b = building_get(c.building_id);
+        return !!b->dcast_work_camp();
+    }
+};
+
 buildings::model_t<building_work_camp> work_camp_m;
+info_window_work_camp work_camp_infow;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_work_camp);
 void config_load_building_work_camp() {
     work_camp_m.load();
+    work_camp_infow.load("building_info_window");
 }
 
-void building_work_camp::window_info_background(object_info &c) {
+void info_window_work_camp::window_info_background(object_info &c) {
+    building_info_window::window_info_background(c);
+
     building *b = building_get(c.building_id);
     const auto &params = b->dcast()->params();
 
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
+    window_building_play_sound(&c, b->get_sound());
 
-    window_building_play_sound(&c, snd::get_building_info_sound(type()));
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-
+    std::pair<int, int> reason = { c.group_id, 0 };
     if (!c.has_road_access) {
-        window_building_draw_description(c, 69, 25);
+        reason = { 69, 25 };
+    } if (!b->num_workers) {
+        reason.second = 2; // not enough workers
     } else {
-        if (!b->num_workers) {
-            window_building_draw_description(c, group_id, 2); // not enough workers
+        if (b->has_figure(0)) {
+            figure* f = b->get_figure(0);
+            building* b_dest = f->destination();
+            if (building_is_farm(b_dest->type)) { reason.second = 5; }// working on floodplains
+            else if (building_is_monument(b_dest->id)) { reason.second = 6; } // working on monuments
+            else { reason.second = 4; }; // looking for work
+            //                window_building_draw_description(c, group_id, 7); // working on both floodplains and
+            //                monuments (unused?)
         } else {
-            if (b->has_figure(0)) {
-                figure* f = b->get_figure(0);
-                building* b_dest = f->destination();
-                if (building_is_farm(b_dest->type))
-                    window_building_draw_description(c, group_id, 5); // working on floodplains
-                else if (building_is_monument(b_dest->id))
-                    window_building_draw_description(c, group_id, 6); // working on monuments
-                else
-                    window_building_draw_description(c, group_id, 4); // looking for work
-                //                window_building_draw_description(c, group_id, 7); // working on both floodplains and
-                //                monuments (unused?)
-            } else {
-                window_building_draw_description(c, group_id, 3);
-            }
-            //            if (c.worker_percentage >= 100)
-            //                window_building_draw_description_at(c, 72, group_id, 4);
-            //            else if (c.worker_percentage >= 75)
-            //                window_building_draw_description_at(c, 72, group_id, 5);
-            //            else if (c.worker_percentage >= 50)
-            //                window_building_draw_description_at(c, 72, group_id, 6);
-            //            else if (c.worker_percentage >= 25)
-            //                window_building_draw_description_at(c, 72, group_id, 7);
-            //            else
-            //                window_building_draw_description_at(c, 72, group_id, 8);
-
-            window_building_draw_description_at(c, 16 * c.bgsize.y - 120, group_id, 1);
+            reason.second = 3;
         }
+        //            if (c.worker_percentage >= 100)
+        //                window_building_draw_description_at(c, 72, group_id, 4);
+        //            else if (c.worker_percentage >= 75)
+        //                window_building_draw_description_at(c, 72, group_id, 5);
+        //            else if (c.worker_percentage >= 50)
+        //                window_building_draw_description_at(c, 72, group_id, 6);
+        //            else if (c.worker_percentage >= 25)
+        //                window_building_draw_description_at(c, 72, group_id, 7);
+        //            else
+        //                window_building_draw_description_at(c, 72, group_id, 8);
     }
 
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
-    window_building_draw_employment(&c, 142);
+    ui["warning_text"] = ui::str(reason.first, reason.second);
+
+    draw_employment_details(c);
 }
 
 building* building_work_camp::determine_worker_needed() {

@@ -13,7 +13,6 @@ public:
     virtual void spawn_figure() override;
     virtual void update_graphic() override;
     virtual void update_month() override;
-    virtual void window_info_background(object_info &ctx) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 
     building *determine_worker_needed();
