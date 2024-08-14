@@ -539,6 +539,16 @@ raw_material_info_window = {
 	})
 }
 
+info_window_garden = {
+	ui : {
+		background 	  : { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
+		title 		 	  : { type : "text", pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		describe  		: { type : "text", pos: [32, 66], text: "#gardens_describe", wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		button_help   : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+	}
+}
+
 info_window_palace = {
 	ui : __baseui(building_info_window, {
 		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 18]},

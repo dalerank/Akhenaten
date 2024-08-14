@@ -7,7 +7,6 @@
 #include "grid/terrain.h"
 #include "grid/property.h"
 #include "sound/sound.h"
-#include "building/building_garden.h"
 #include "building/building_plaza.h"
 #include "window/building/common.h"
 #include "window_figure_info.h"
@@ -67,10 +66,6 @@ void terrain_info_window::window_info_background(object_info &c) {
 
     case TERRAIN_INFO_RUBBLE:
         window_building_draw_rubble(&c);
-        break;
-
-    case TERRAIN_INFO_GARDEN:
-        building_garden::draw_info(c);
         break;
 
     case TERRAIN_INFO_PLAZA:

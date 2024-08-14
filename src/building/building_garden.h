@@ -13,7 +13,6 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_GARDEN; }
 
     static int place(tile2i start, tile2i end);
-    static void draw_info(object_info &c);
     static void set_image(int grid_offset);
     static void determine_tile(int grid_offset);
 };

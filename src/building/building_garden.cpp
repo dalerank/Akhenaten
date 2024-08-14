@@ -9,6 +9,7 @@
 #include "io/gamefiles/lang.h"
 #include "config/config.h"
 #include "window/building/common.h"
+#include "window/window_building_info.h"
 #include "sound/sound_building.h"
 #include "game/undo.h"
 #include "grid/grid.h"
@@ -22,26 +23,36 @@
 #include "city/labor.h"
 #include "grid/tiles.h"
 
+struct info_window_garden : public common_info_window {
+    info_window_garden() {
+        window_info_register_handler(this);
+    }
+    virtual void window_info_background(object_info &c) override;
+    virtual bool check(object_info &c) override {
+        return !!map_terrain_is(c.grid_offset, TERRAIN_GARDEN);
+    }
+};
+
 buildings::model_t<building_garden> garden_m;
+info_window_garden garden_infow;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_garden);
 void config_load_building_garden() {
     garden_m.load();
+    garden_infow.load("info_window_garden");
 }
 
 void building_garden::on_place_checks() {  /*nothing*/ }
 
-void building_garden::draw_info(object_info &c) {
-    building* b = building_get(c.building_id);
-    const auto &params = b->dcast()->params();
-
+void info_window_garden::window_info_background(object_info &c) {
+    const auto &params = building_impl::params(BUILDING_GARDENS);
     c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
+    
+    common_info_window::window_info_background(c);
 
-    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    window_building_draw_description_at(c, 16 * c.bgsize.y - 158, group_id, 1);
+    window_building_play_sound(&c, snd::get_building_info_sound(BUILDING_GARDENS));
+
+    ui["title"] = ui::str(params.meta.text_id, 0);
 }
 
 int building_garden::place(tile2i start, tile2i end) {
