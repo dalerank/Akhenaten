@@ -77,6 +77,12 @@ void terrain_info_window::window_info_background(object_info &c) {
         building_plaza::draw_info(c);
         break;
 
+    case TERRAIN_INFO_FLOODPLAIN:
+        reason = { 70, 29 };
+        describe = { 70, 55 };
+        c.help_id = 45;
+        break;
+
     default:
         if (c.can_play_sound) {
             c.can_play_sound = 0;
