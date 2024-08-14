@@ -43,10 +43,7 @@ void info_window_raw_material::window_info_background(object_info &c) {
     else if (city_resource_is_mothballed(b->output_resource_first_id)) reason.second = 4;
     else if (b->data.industry.curse_days_left > 4) reason.second = 11;
     else if (b->num_workers <= 0) reason.second = 5;
-    else if (c.worker_percentage >= 100) reason.second = 6;
-    else if (c.worker_percentage >= 75) reason.second = 7;
-    else if (c.worker_percentage >= 50) reason.second = 8;
-    else if (c.worker_percentage >= 25) reason.second = 9;
+    else reason.second = approximate_value(c.worker_percentage / 100.f, make_array(9, 8, 7, 6));
 
     draw_employment_details_ui(ui, c, b, -1);
     ui["workers_desc"] = ui::str(reason.first, reason.second);
