@@ -325,9 +325,11 @@ void building_small_mastaba::on_create(int orientation) {
 }
 
 void building_small_mastaba::on_place(int orientation, int variant) {
+    building_impl::on_place(orientation, variant);
+
     base.prev_part_building_id = 0;
-    const auto &props = building_impl::params(BUILDING_SMALL_MASTABA);
-    int empty_img = props.anim["base"].first_img() + 108;
+
+    int empty_img = anim(animkeys().base).first_img() + 108;
     map_mastaba_tiles_add(id(), tile(), base.size, empty_img, TERRAIN_BUILDING);
 
     struct mastaba_part {

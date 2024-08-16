@@ -38,6 +38,8 @@ void building_water_supply::update_month() {
 void building_water_supply::update_graphic() {
     const xstring &animwork = (base.fancy_state == efancy_good) ? animkeys().fancy_work : animkeys().base_work;
     set_animation(animwork);
+
+    building_impl::update_graphic();
 }
 
 void building_water_supply::spawn_figure() {

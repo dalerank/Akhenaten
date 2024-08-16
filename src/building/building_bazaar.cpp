@@ -288,6 +288,8 @@ void building_bazaar::update_graphic() {
     pcstr animkey = (base.fancy_state == efancy_normal) ? "base" : "fancy";
     const animation_t &anim = bazaar_m.anim[animkey];
     map_building_tiles_add(base.id, base.tile, base.size, anim.first_img(), TERRAIN_BUILDING);
+
+    building_impl::update_graphic();
 }
 
 void building_bazaar::on_create(int orientation) {

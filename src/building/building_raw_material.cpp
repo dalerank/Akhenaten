@@ -52,6 +52,8 @@ void building_mine::update_graphic() {
                                 : animkeys().none;
 
     set_animation(animkey);
+
+    building_impl::update_graphic();
 }
 
 bool building_mine::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

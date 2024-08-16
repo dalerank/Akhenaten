@@ -34,6 +34,8 @@ void building_firehouse::update_graphic() {
                                 ? animkeys().work
                                 : animkeys().none;
     set_animation(animkey);
+
+    building_impl::update_graphic();
 }
 
 bool building_firehouse::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

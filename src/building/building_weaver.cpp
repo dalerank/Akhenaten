@@ -51,6 +51,8 @@ void building_weaver::on_place_checks() {
 void building_weaver::update_graphic() {
     const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
     set_animation(animkey);
+
+    building_impl::update_graphic();
 }
 
 void building_weaver::window_info_background(object_info &ctx) {

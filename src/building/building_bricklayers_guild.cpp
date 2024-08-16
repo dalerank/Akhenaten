@@ -86,6 +86,8 @@ void building_bricklayers_guild::window_info_background(object_info& c) {
 void building_bricklayers_guild::update_graphic() {
     const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
     set_animation(animkey);
+
+    building_impl::update_graphic();
 }
 
 void building_bricklayers_guild::on_create(int orientation) {

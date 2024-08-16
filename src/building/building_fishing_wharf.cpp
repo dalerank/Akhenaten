@@ -76,6 +76,8 @@ void building_fishing_wharf::update_day() {
 }
 
 void building_fishing_wharf::update_graphic() {
+    building_impl::update_graphic();
+
     if (!can_play_animation()) {
         set_animation(animkeys().none);
         return;

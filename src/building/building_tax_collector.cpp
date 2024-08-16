@@ -84,6 +84,8 @@ void building_tax_collector::update_month() {
 void building_tax_collector::update_graphic() {
     const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
     set_animation(animkey);
+
+    building_impl::update_graphic();
 }
 
 const building_impl::static_params &building_tax_collector::params() const {

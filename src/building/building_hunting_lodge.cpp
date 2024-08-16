@@ -159,6 +159,8 @@ void building_hunting_lodge::update_graphic() {
                                 : animkeys().none;
 
     set_animation(animkey);
+
+    building_impl::update_graphic();
 }
 
 bool building_hunting_lodge::can_play_animation() const {

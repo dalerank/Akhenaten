@@ -51,6 +51,8 @@ void building_weaponsmith::on_place_checks() {
 void building_weaponsmith::update_graphic() {
     const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
     set_animation(animkey);
+
+    building_impl::update_graphic();
 }
 
 void building_weaponsmith::window_info_background(object_info& c) {

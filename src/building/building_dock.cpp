@@ -43,6 +43,8 @@ void building_dock::on_create(int orientation) {
 void building_dock::on_place(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
     map_water_add_building(id(), tile(), params().building_size, anim("base").first_img() + orientation_rel);
+
+    building_impl::on_place(orientation, variant);
 }
 
 void building_dock::on_destroy() {
@@ -145,6 +147,8 @@ void building_dock::update_graphic() {
 
         set_animation(animkey);
     }
+
+    building_impl::update_graphic();
 }
 
 void building_dock::draw_dock_orders(object_info* c) {

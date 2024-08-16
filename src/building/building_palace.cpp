@@ -65,6 +65,8 @@ void building_palace::update_graphic() {
     const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
     set_animation(animkey);
 
+    building_impl::update_graphic();
+
     //if (g_desirability.get(tile()) <= 30) {
     //    map_building_tiles_add(id(), tile(), size(), image_id_from_group(GROUP_BUILDING_PALACE), TERRAIN_BUILDING);
     //} else {
