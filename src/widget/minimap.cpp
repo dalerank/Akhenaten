@@ -202,6 +202,10 @@ static void draw_minimap_tile(vec2i screen, tile2i point) {
                 image_id = b->minimap_anim.first_img();
             }
 
+            if (!image_id) {
+                image_id = g_minimap_data.terrain_teal.first_img();
+            }
+
             auto multi_tile_size = map_property_multi_tile_size(grid_offset);
             switch (multi_tile_size) {
             case 1:

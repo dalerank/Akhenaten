@@ -24,7 +24,7 @@ inline T calc_percentage(T value, T total) {
 
 template<typename T>
 inline auto approximate_value(float v, const T &arr) {
-    using size_type = T::size_type;
+    using size_type = typename T::size_type;
     auto index = std::clamp<size_type>(v * arr.size(), 0, arr.size() - 1);
     return arr[index];
 }
