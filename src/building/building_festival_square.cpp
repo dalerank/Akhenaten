@@ -5,6 +5,7 @@
 #include "js/js_game.h"
 #include "grid/grid.h"
 #include "grid/building_tiles.h"
+#include "grid/image.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/ui.h"
@@ -23,6 +24,8 @@ void config_load_building_festival_square() {
 }
 
 void building_festival_square::on_place(int orientation, int variant) {
+    building_impl::on_place(orientation, variant);
+
     city_buildings_add_festival_square(&base);
 }
 
