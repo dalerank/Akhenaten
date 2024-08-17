@@ -27,6 +27,7 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 #include "figure/figure.h"
+#include "grid/tiles.h"
 #include "dev/debug.h"
 
 #include <iostream>
@@ -61,33 +62,16 @@ bool building_farm::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel,
 }
 
 int building_farm::get_farm_image(e_building_type type, tile2i tile) {
+    auto &anim = params(type).anim;
     if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
-        int base = params(type).anim["farmland"].first_img();
+        int base = anim[animkeys().farmland].first_img();
         int fert_average = map_get_fertility_for_farm(tile);
-        int fertility_index = 0;
-
-        if (fert_average < 13)
-            fertility_index = 0;
-        else if (fert_average < 25)
-            fertility_index = 1;
-        else if (fert_average < 38)
-            fertility_index = 2;
-        else if (fert_average < 50)
-            fertility_index = 3;
-        else if (fert_average < 63)
-            fertility_index = 4;
-        else if (fert_average < 75)
-            fertility_index = 5;
-        else if (fert_average < 87)
-            fertility_index = 6;
-        else
-            fertility_index = 7;
+        int fertility_index = std::clamp<int>(fert_average / 12, 0, 7);
 
         return base + fertility_index;
-    } else {
-        const auto &p = params(type);
-        return p.anim["farm_house"].first_img();
-    }
+    } 
+
+    return anim["farm_house"].first_img();
 }
 
 void building_farm::draw_farm_worker(painter &ctx, int direction, int action, vec2i coords, color color_mask) {
@@ -242,10 +226,10 @@ static bool farm_harvesting_month_for_produce(int resource_id, int month) {
 
 bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
     if (floodplains) {
-        auto current_cycle = floods_current_cycle();
-        auto start_cycle = floods_start_cycle();
-        auto harvest_cycle = start_cycle - 28.0f;
-        return floodplains_is(FLOOD_STATE_IMMINENT) && current_cycle >= harvest_cycle;
+        float current_cycle = floods_current_cycle();
+        float start_cycle = floods_start_cycle();
+        float harvest_cycle = start_cycle - 28.0f;
+        return floodplains_is(FLOOD_STATE_IMMINENT) && (current_cycle >= harvest_cycle);
     } else {
         if (gametime().day < 2 && farm_harvesting_month_for_produce(resource_id, gametime().month))
             return true;
@@ -256,34 +240,12 @@ bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
 
 void building_farm::on_create(int orientation) {
     switch (type()) {
-    case BUILDING_HENNA_FARM:
-        base.output_resource_first_id = RESOURCE_HENNA;
-        break;
-    case BUILDING_BARLEY_FARM:
-        base.output_resource_first_id = RESOURCE_BARLEY;
-        break;
-    case BUILDING_FLAX_FARM:
-        base.output_resource_first_id = RESOURCE_FLAX;
-        break;
     case BUILDING_GRAIN_FARM:
         base.output_resource_first_id = RESOURCE_GRAIN;
         base.output_resource_second_id = RESOURCE_STRAW;
         base.output_resource_second_rate = 10;
         break;
-    case BUILDING_LETTUCE_FARM:
-        base.output_resource_first_id = RESOURCE_LETTUCE;
-        break;
-    case BUILDING_POMEGRANATES_FARM:
-        base.output_resource_first_id = RESOURCE_POMEGRANATES;
-        break;
-    case BUILDING_CHICKPEAS_FARM:
-        base.output_resource_first_id = RESOURCE_CHICKPEAS;
-        break;
-    case BUILDING_FIGS_FARM:
-        base.output_resource_first_id = RESOURCE_FIGS;
-        break;
     }
-    base.fire_proof = 1;
 }
 
 void building_farm::on_place_update_tiles(int orientation, int variant) {
@@ -349,7 +311,7 @@ e_sound_channel_city building_farm::sound_channel() const {
     case BUILDING_CHICKPEAS_FARM:
         return SOUND_CHANNEL_CITY_CHICKFARM;
     }
-    return SOUND_CHANNEL_CITY_NONE;
+    return SOUND_CHANNEL_CITY_CHICKFARM;
 }
 
 void building_farm::update_count() const {
@@ -379,6 +341,10 @@ void building_farm::spawn_figure() {
             spawn_figure_harvests();
         }
     }
+}
+
+void building_farm::update_graphic() {
+    building_impl::update_graphic();
 }
 
 void building_farm::on_undo() {

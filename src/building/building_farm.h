@@ -21,6 +21,7 @@ public:
     virtual e_sound_channel_city sound_channel() const override;
     virtual void update_count() const override;
     virtual void spawn_figure() override;
+    virtual void update_graphic() override;
     virtual void on_undo() override;
 
     void deplete_soil();
