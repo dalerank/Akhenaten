@@ -82,7 +82,6 @@ void info_window_house::window_info_background(object_info &c) {
 
     c.help_id = help_id;
     building *b = building_get(c.building_id);
-    window_building_play_sound(&c, b->get_sound());
 
     assert(b->house_population > 0);
 

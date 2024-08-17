@@ -35,7 +35,7 @@ void building_shipyard::window_info_background(object_info &c) {
     c.help_id = params.meta.help_id;
     int group_id = params.meta.text_id;
 
-    window_building_play_sound(&c, snd::get_building_info_sound(type()));
+    window_building_play_sound(&c, b->get_sound());
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 

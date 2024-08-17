@@ -25,8 +25,6 @@ void health_info_window::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
     building *b = building_get(c.building_id);
 
-    window_building_play_sound(&c, b->get_sound());
-
     e_figure_type ftype = FIGURE_NONE;
     switch (b->type) {
     case BUILDING_APOTHECARY: ftype = FIGURE_HERBALIST; break;

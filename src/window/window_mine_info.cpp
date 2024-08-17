@@ -32,7 +32,6 @@ void info_window_raw_material::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
     building *b = building_get(c.building_id);
-    window_building_play_sound(&c, b->get_sound());
 
     int pct_done = calc_percentage<int>(b->data.industry.progress, 200);
     ui["resource_img"].image(b->output_resource_first_id);

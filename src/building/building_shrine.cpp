@@ -44,7 +44,7 @@ void building_shrine_draw_info(object_info& c, int image_offset) {
 
     painter ctx = game.painter();
 
-    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
+    window_building_play_sound(&c, b->get_sound());
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(161, group_id, c.offset.x, c.offset.y + 12, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 

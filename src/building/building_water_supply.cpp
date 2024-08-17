@@ -92,8 +92,6 @@ void info_window_water_supply::window_info_background(object_info &c) {
 
     building* b = building_get(c.building_id);
 
-    window_building_play_sound(&c, b->get_sound());
-
     std::pair<int, int> reason = { c.group_id, 1 };
     std::pair<int, int> workers = { c.group_id, 0 };
     if (!c.has_road_access) {

@@ -39,7 +39,7 @@ declare_console_command(addbricks, game_cheat_add_resource<RESOURCE_BRICKS>);
 void building_bricklayers_guild::window_info_background(object_info& c) {
     building* b = building_get(c.building_id);
     const auto &meta = b->dcast()->params().meta;
-    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
+    window_building_play_sound(&c, b->get_sound());
 
     painter ctx = game.painter();
 

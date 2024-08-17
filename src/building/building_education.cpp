@@ -25,7 +25,7 @@ void building_education_draw_info(object_info& c, e_figure_type ftype, e_resourc
     const auto &meta = b->dcast()->get_info();
 
     c.help_id = meta.help_id;
-    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
+    window_building_play_sound(&c, b->get_sound());
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(meta.text_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 

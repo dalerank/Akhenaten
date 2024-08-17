@@ -98,9 +98,6 @@ void palace_info_window::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
     building *b = building_get(c.building_id);
-
-    window_building_play_sound(&c, b->get_sound());
-
     ui["resource_img"].image(RESOURCE_DEBEN);
     ui["title"] = ui::str(28, b->type);
     ui["vaults_hold"].text_var("%s %d Db", ui::str(c.group_id, 2), b->tax_income_or_storage);

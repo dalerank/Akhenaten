@@ -28,8 +28,6 @@ void taxcollector_info_window_t::window_info_background(object_info &c) {
 
     building *b = building_get(c.building_id);
 
-    window_building_play_sound(&c, b->get_sound());
-
     ui["title"] = ui::str(106, 0);
     ui["deben_icon"].image(RESOURCE_DEBEN);
 

@@ -198,7 +198,7 @@ void info_window_fishing_wharf::window_info_background(object_info &c) {
 
     painter ctx = game.painter();
 
-    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
+    window_building_play_sound(&c, b->get_sound());
 
 
     std::pair<int, int> reason = { c.group_id, 0 };

@@ -41,8 +41,6 @@ struct temple_info_window_t : public building_info_window {
         case BUILDING_TEMPLE_BAST: image_offset = 25; break;
         }
 
-        window_building_play_sound(&c, temple->get_sound());
-
         ui["god_image"].image({PACK_UNLOADED, 21, image_offset});
 
         draw_employment_details(c);

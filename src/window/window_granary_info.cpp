@@ -118,7 +118,6 @@ void granary_info_window_t::window_info_background(object_info &c) {
     auto &data = g_window_building_distribution;
 
     data.building_id = c.building_id;
-    window_building_play_sound(&c, granary->get_sound());
 
     pcstr warning_text = !c.has_road_access ? "#granary_no_road_access"
                              : scenario_property_kingdom_supplies_grain() ? "#granary_kingdom_supplies_grain"

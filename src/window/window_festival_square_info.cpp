@@ -26,8 +26,6 @@ void festival_square_info_window::window_info_background(object_info &c) {
 
     building *b = building_get(c.building_id);
 
-    window_building_play_sound(&c, b->get_sound());
-
     ui["warning"] = ui::str(c.group_id, 1);
     ui["fest_months_last"].text_var("%d %s %s", g_city.festival.months_since_festival, ui::str(8, 5), ui::str(58, 15));
 

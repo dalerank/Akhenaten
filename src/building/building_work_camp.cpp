@@ -40,9 +40,6 @@ void info_window_work_camp::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
     building *b = building_get(c.building_id);
-    const auto &params = b->dcast()->params();
-
-    window_building_play_sound(&c, b->get_sound());
 
     std::pair<int, int> reason = { c.group_id, 0 };
     if (!c.has_road_access) {

@@ -24,8 +24,6 @@ void entertainment_info_window::window_info_background(object_info &c) {
 
     building *b = building_get(c.building_id);
 
-    window_building_play_sound(&c, b->dcast()->get_sound());
-
     std::pair<int, int> reason = {c.group_id, 6};
     if (!c.has_road_access) { reason = {69, 25}; }
     else if (building_get(c.building_id)->num_workers <= 0) { reason.second = 7; }
