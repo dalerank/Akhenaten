@@ -32,6 +32,9 @@ const xstring id_anim_t::wait_e = "wait_e";
 const xstring id_anim_t::eating = "eating";
 const xstring id_anim_t::idle = "idle";
 const xstring id_anim_t::attack = "attack";
+const xstring id_anim_t::farmland = "farmland";
+const xstring id_anim_t::square = "square";
+const xstring id_anim_t::juggler = "juggler";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

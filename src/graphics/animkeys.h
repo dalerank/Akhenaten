@@ -34,6 +34,9 @@ struct id_anim_t {
     static const xstring eating;
     static const xstring idle;
     static const xstring attack;
+    static const xstring farmland;
+    static const xstring square;
+    static const xstring juggler;
 };
 
 const id_anim_t &animkeys();

@@ -53,7 +53,7 @@ void building_booth::on_place(int orientation, int variant) {
 }
 
 void building_booth::on_place_update_tiles(int orientation, int variant) {
-    int image_id = params().anim["square"].first_img();
+    int image_id = anim(animkeys().square).first_img();
 
     // add underlying plaza first
     map_add_venue_plaza_tiles(id(), params().building_size, tile(), image_id, false);
@@ -126,7 +126,7 @@ bool building_booth::draw_ornaments_and_animations_height(painter &ctx, vec2i po
 
     int grid_offset = tile.grid_offset();
     if (data.entertainment.days1 && map_image_at(grid_offset) == booth_m.booth) {
-        const animation_t &anim = booth_m.anim["juggler"];
+        const animation_t &anim = this->anim(animkeys().juggler);
         building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
     }
     return true;
@@ -148,7 +148,7 @@ bool building_booth::force_draw_height_tile(painter &ctx, tile2i tile, vec2i pix
 }
 
 void building_booth::update_map_orientation(int map_orientation) {
-    int plaza_image_id = params().anim["square"].first_img();
+    int plaza_image_id = anim(animkeys().square).first_img();
     tile2i btile(data.entertainment.booth_corner_grid_offset);
     map_add_venue_plaza_tiles(id(), base.size, btile, plaza_image_id, true);
 }
@@ -165,7 +165,7 @@ void building_booth::on_undo() {
 
 void building_booth::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
     int size = booth_m.building_size;
-    int square_id = booth_m.anim["square"].first_img();
+    int square_id = booth_m.anim[animkeys().square].first_img();
     for (int i = 0; i < size * size; i++) {
         ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
     }
