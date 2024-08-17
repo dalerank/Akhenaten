@@ -648,10 +648,11 @@ festival_square_info_window = {
 		background : { type : "outer_panel",	pos: [0, 0], size: [29, 16]},
 		title 		 : { type : "text", text: "#festival_square_info_title", pos: [0, 10], size: [px(29), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		warning		 : { type : "text", pos: [32, 36], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-		workers_panel : { type : "inner_panel", pos : [16, 106], size: [27, 6] },
+		workers_panel : { type : "inner_panel", pos : [16, 96], size: [27, 7] },
 		fest_months_last : { type : "text", pos:[32, 112], size: [px(25), 20], font:FONT_NORMAL_WHITE_ON_DARK, align:"center"},
 		hold_festival : { type:"generic_button", pos:[60, 134], size:[px(22), 25], font:FONT_NORMAL_WHITE_ON_DARK, text:{group: 58, id: 16}},
-		opinion 	: { type : "text", pos: [32, 164], font: FONT_NORMAL_WHITE_ON_DARK, wrap:px(24), text:{group: 295, id: 0}, multiline:true,},
+		planed_festival : { type : "text", pos: [102, 134], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" },
+		festival_advice : { type : "text", pos: [36, 164], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true },
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
 		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 	}
