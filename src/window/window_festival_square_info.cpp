@@ -2,31 +2,34 @@
 
 #include "sound/sound_building.h"
 #include "window/building/common.h"
+#include "window/window_building_info.h"
 #include "window/hold_festival.h"
 #include "city/city.h"
 
-ui::widget g_festival_square_info_window;
+struct festival_square_info_window : building_info_window {
+    virtual void window_info_background(object_info &c) override;
+    virtual bool check(object_info &c) override {
+        return !!building_get(c.building_id)->dcast_festival_square();
+    }
+};
+
+festival_square_info_window festival_square_infow;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_festival_square_info_window);
 void config_load_festival_square_info_window() {
-    g_festival_square_info_window.load("festival_square_info_window");
+    festival_square_infow.load("festival_square_info_window");
 }
 
-void building_festival_square::window_info_background(object_info &c) {
-    auto &ui = g_festival_square_info_window;
+void festival_square_info_window::window_info_background(object_info &c) {
+    building_info_window::window_info_background(c);
 
-    c.help_id = params().meta.help_id;
-    int group_id = params().meta.text_id;
+    building *b = building_get(c.building_id);
 
-    window_building_play_sound(&c, snd::get_building_info_sound(type()));
+    window_building_play_sound(&c, b->get_sound());
 
-    ui["warning"] = ui::str(group_id, 1);
+    ui["warning"] = ui::str(c.group_id, 1);
     ui["fest_months_last"].text_var("%d %s %s", g_city.festival.months_since_festival, ui::str(8, 5), ui::str(58, 15));
     ui["hold_festival"].onclick([] {
         window_hold_festival_show(false);
     });
-}
-
-void building_festival_square::window_info_foreground(object_info &ctx) {
-    g_festival_square_info_window.draw();
 }

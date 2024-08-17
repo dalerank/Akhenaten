@@ -220,7 +220,10 @@ advisor_religion_window = {
 		advice_text : { type : "text", pos: [60, 273], wrap:512, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		fest_inner_panel : { type : "inner_panel", pos:[48, 252 + 68], size:[34, 6] },
 		fest_icon : { type : "image", pack:PACK_UNLOADED, id:21, offset:15, pos:[460, 255 + 68] },
-		fest_months_last : { type : "label", pos:[112, 260 + 68], font:FONT_NORMAL_WHITE_ON_DARK},
+		fest_months_last : { type : "label", pos:[112, 328], font:FONT_NORMAL_WHITE_ON_DARK},
+		planed_festival : { type : "text", pos: [102, 284 + 68], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" },
+		hold_festival_btn : { type:"generic_button", pos:[102, 278 + 68], size:[300, 24] },
+		festival_advice : { type : "text", pos: [56, 305 + 68], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true },
 	}
 }
 
@@ -649,6 +652,8 @@ festival_square_info_window = {
 		fest_months_last : { type : "text", pos:[32, 112], size: [px(25), 20], font:FONT_NORMAL_WHITE_ON_DARK, align:"center"},
 		hold_festival : { type:"generic_button", pos:[60, 134], size:[px(22), 25], font:FONT_NORMAL_WHITE_ON_DARK, text:{group: 58, id: 16}},
 		opinion 	: { type : "text", pos: [32, 164], font: FONT_NORMAL_WHITE_ON_DARK, wrap:px(24), text:{group: 295, id: 0}, multiline:true,},
+		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 	}
 }
 

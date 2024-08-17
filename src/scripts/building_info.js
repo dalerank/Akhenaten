@@ -1119,7 +1119,7 @@ building_festival_square = {
   },
   building_size : 5,
   window_info_height_id: 1,
-  info_help_id: 75,
+  info_help_id: 366,
   info_text_id: 188,
   unique_building : true,
 }

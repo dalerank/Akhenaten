@@ -7,8 +7,6 @@ struct object_info;
 struct tooltip_context;
 
 struct common_info_window : public ui::widget {
-    common_info_window();
-
     virtual bool check(object_info &c) { return false; }
     virtual int get_height_id(object_info &c) { return 0; }
     virtual void window_info_background(object_info &c);
@@ -18,7 +16,6 @@ struct common_info_window : public ui::widget {
     virtual void update_buttons(object_info &c);
 
     void draw_tooltip(tooltip_context *c);
-    widget &ui;
 };
 
 void window_building_info_show(const tile2i& point);

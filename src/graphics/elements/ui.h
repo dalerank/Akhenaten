@@ -21,6 +21,7 @@
 #include <functional>
 
 struct mouse;
+struct tooltip_context;
 
 enum UiFlags_ {
     UiFlags_None = 0,
@@ -294,10 +295,13 @@ struct eimage_button : public element {
 struct widget {
     vec2i pos;
     std::vector<element::ptr> elements;
+    widget &ui;
 
     virtual void draw();
     virtual void load(archive arch, pcstr section = "ui");
     void load(pcstr section);
+
+    widget() : ui(*this) {}
 
     element& operator[](pcstr id);
     inline element &operator[](const bstring32 &id) { return (*this)[id.c_str()]; }

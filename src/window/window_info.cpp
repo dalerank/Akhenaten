@@ -225,9 +225,6 @@ void window_info_register_handler(common_info_window *handler) {
     }
 }
 
-common_info_window::common_info_window() : ui(*this) {
-}
-
 void common_info_window::window_info_background(object_info &c) {
     ; // nothing
 

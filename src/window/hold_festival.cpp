@@ -26,6 +26,15 @@ void config_load_hold_festival() {
     g_hold_festival_window.load("hold_festival_window");
 }
 
+void ui::hold_festival_window::close() {
+    if (callback) {
+        callback();
+    } else {
+        window_go_back();
+        window_invalidate();
+    }
+}
+
 void window_hold_festival_select_size(e_festival_type size) {
     if (city_finance_out_of_money()) {
         return;
@@ -36,18 +45,8 @@ void window_hold_festival_select_size(e_festival_type size) {
     }
 }
 
-void window_hold_festival_schedule() {
-    if (city_finance_out_of_money()) {
-        return;
-    }
-
-    g_city.festival.schedule();
-    window_advisors_show();
-}
-
-void window_hold_festival_draw_background() {
-    auto &ui = g_hold_festival_window;
-    if (ui.background) {
+void ui::hold_festival_window::draw_background() {
+    if (background) {
         window_advisors_draw_dialog_background();
     } else {
         game.animation = false;
@@ -71,15 +70,17 @@ void window_hold_festival_draw_background() {
     ui["large_festival"].onclick([] { window_hold_festival_select_size(FESTIVAL_GRAND); });
     ui["large_festival"] = bstring64().printf("%s %u @I%u %u  @I%u", ui::str(58, 32), g_city.festival.grand_cost, resource_image_deben, g_city.festival.grand_alcohol, resource_image_beer);
 
-    ui["button_ok"].onclick([] { window_hold_festival_schedule(); });
-    ui["button_cancel"].onclick([&ui] { 
-        if (ui.callback) {
-            ui.callback();
-        } else {
-            window_go_back();
-            window_invalidate();
+    ui["button_ok"].onclick([] { 
+        if (!city_finance_out_of_money()) {
+            g_city.festival.schedule();
         }
+        g_hold_festival_window.close();
     });
+
+    ui["button_cancel"].onclick([] { 
+        g_hold_festival_window.close();
+    });
+
     ui["button_help"].onclick([] {
         window_message_dialog_show(MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT, -1, 0);
     });
@@ -102,20 +103,14 @@ void window_hold_festival_draw_background() {
     ui["festival_type"] = ui::str(58, 30 + g_city.festival.selected_size());
 }
 
-void window_hold_festival_draw_foreground() {
-    auto &ui = g_hold_festival_window;
-    ui.draw();
-}
-
-void window_hold_festival_handle_input(const mouse* m, const hotkeys* h) {
-    auto &ui = g_hold_festival_window;
-    ui.handle_mouse(m);
+void ui::hold_festival_window::handle_input(const mouse* m, const hotkeys* h) {
+    handle_mouse(m);
 
     const mouse* m_dialog = mouse_in_dialog(m);
 
     if (input_go_back_requested(m, h)) {
-        if (ui.callback) {
-            ui.callback();
+        if (callback) {
+            callback();
         } else {
             window_go_back();
             window_invalidate();
@@ -123,7 +118,7 @@ void window_hold_festival_handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 
-void window_hold_festival_get_tooltip(tooltip_context* c) {
+void ui::hold_festival_window::get_tooltip(tooltip_context* c) {
     //if (!focus_image_button_id && (!focus_button_id || focus_button_id > 5))
     //    return;
     return;
@@ -167,10 +162,10 @@ void window_hold_festival_get_tooltip(tooltip_context* c) {
 void window_hold_festival_show(bool bg, std::function<void()> cb) {
     static window_type window = {
         WINDOW_HOLD_FESTIVAL,
-        window_hold_festival_draw_background,
-        window_hold_festival_draw_foreground,
-        window_hold_festival_handle_input,
-        window_hold_festival_get_tooltip
+        [] { g_hold_festival_window.draw_background(); },
+        [] { g_hold_festival_window.draw(); },
+        [] (const mouse *m, const hotkeys *h) { g_hold_festival_window.handle_input(m, h); },
+        [] (tooltip_context *c) { g_hold_festival_window.get_tooltip(c); } 
     };
 
     g_hold_festival_window.callback = cb;

@@ -12,6 +12,7 @@
 #include "game/settings.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "graphics/screen.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
@@ -29,10 +30,6 @@ void config_load_advisor_religion() {
 }
 
 static void button_hold_festival(int param1, int param2);
-
-static generic_button hold_festival_button[] = {
-  {102, 280 + 68, 300, 20, button_hold_festival, button_none, 0, 0},
-};
 
 static int get_religion_advice() {
     e_god least_happy = g_city.religion.least_happy_god;
@@ -54,33 +51,8 @@ static int get_religion_advice() {
     }
 }
 
-static void draw_festival_info(int y_offset) {
-    auto &ui = g_advisor_religion_window;
-    painter ctx = game.painter();
-
-    ui["fest_months_last"].text_var("%d %s %s", g_city.festival.months_since_festival, ui::str(8, 5), ui::str(58, 15));
-
-    if (g_city.festival.is_planned()) {
-        int size = g_city.festival.selected_size();
-        int months_left = g_city.festival.months_till_next();
-        int planned_month = (gametime().month + months_left) % game_time_t::months_in_year;
-        int width = lang_text_draw(58, 34, 102, 284 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
-        lang_text_draw(160, planned_month, 102 + width, 284 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
-        switch (size) {
-        case FESTIVAL_SMALL: size = 10; break;
-        case FESTIVAL_LARGE: size = 20; break;
-        case FESTIVAL_GRAND: size = 31; break;
-        }
-        lang_text_draw_multiline(295, size + months_left - 1, vec2i{56, 305 + y_offset}, 400, FONT_NORMAL_WHITE_ON_DARK);
-    } else {
-        lang_text_draw_centered(58, 16, 102, 284 + y_offset, 300, FONT_NORMAL_WHITE_ON_DARK);
-        lang_text_draw_multiline(58, 18 + g_city.festival.get_advice(), vec2i{56, 305 + y_offset}, 400, FONT_NORMAL_WHITE_ON_DARK);
-    }
-}
-
 static void draw_god_row(e_god god, int y_offset, e_building_type temple, e_building_type complex, e_building_type shrine) {
     auto &ui = g_advisor_religion_window;
-    painter ctx = game.painter();
 
     e_god_status is_known = g_city.religion.is_god_known(god);
     e_font font = (is_known == GOD_STATUS_UNKNOWN) ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW;
@@ -127,7 +99,6 @@ int ui::advisor_religion_window::draw_background() {
     auto &ui = g_advisor_religion_window;
 
     g_city.religion.calculate_least_happy_god();
-    painter ctx = game.painter();
     if (!g_settings.gods_enabled) {
         ui["nogods_text"].enabled = true;
         return 27;
@@ -136,12 +107,40 @@ int ui::advisor_religion_window::draw_background() {
     ui["nogods_text"].enabled = false;
     ui["advice_text"].text(ui::str(59, 9 + get_religion_advice()));
 
+    ui["fest_months_last"].text_var("%d %s %s", g_city.festival.months_since_festival, ui::str(8, 5), ui::str(58, 15));
+
+    if (g_city.festival.is_planned()) {
+        int size = g_city.festival.selected_size();
+        int months_left = g_city.festival.months_till_next();
+        int planned_month = (gametime().month + months_left) % game_time_t::months_in_year;
+        int festival_text_iffs[] = { 0, 10, 20, 31 };
+
+        ui["hold_festival_btn"].enabled = false;
+        ui["planed_festival"].text_var("%s %s", ui::str(58, 34), ui::str(160, planned_month));
+        ui["festival_advice"] = ui::str(295, festival_text_iffs[size] + months_left - 1);
+    } else {
+        ui["hold_festival_btn"].enabled = true;
+        ui["hold_festival_btn"] = ui::str(58, 16);
+        ui["hold_festival_btn"].onclick([] {
+            int has_square = building_count_total(BUILDING_FESTIVAL_SQUARE);
+            if (!has_square) {
+                return window_ok_dialog_show("#popup_dialog_no_festival_square");
+            }
+
+            if (!g_city.festival.is_planned()) {
+                window_hold_festival_show(true, window_advisors_show);
+            }
+        });
+        ui["festival_advice"] = ui::str(58, 18 + g_city.festival.get_advice());
+    }
+
     return 27;
 }
 
-void ui::advisor_religion_window::draw_foreground() {
+void ui::advisor_religion_window::ui_draw_foreground() {
     auto &ui = g_advisor_religion_window;
 
+    ui.begin_widget(screen_dialog_offset());
     ui.draw();
 
     if (!g_settings.gods_enabled) {
@@ -154,39 +153,24 @@ void ui::advisor_religion_window::draw_foreground() {
     draw_god_row(GOD_PTAH, 146, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_SHRINE_PTAH);
     draw_god_row(GOD_SETH, 186, BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_SHRINE_SETH);
     draw_god_row(GOD_BAST, 226, BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST, BUILDING_SHRINE_BAST);
-
-    draw_festival_info(68);
-
-    if (!g_city.festival.is_planned()) {
-        button_border_draw(102, 280 + 68, 300, 20, g_advisor_religion_window.focus_button_id == 1);
-    }
 }
 
-static void confirm_nothing(bool accepted) {
-}
-
-static void button_hold_festival(int param1, int param2) {
-    int has_square = building_count_total(BUILDING_FESTIVAL_SQUARE);
-    if (!has_square) {
-        return window_ok_dialog_show("#popup_dialog_no_festival_square");
-    }
-
-    if (!g_city.festival.is_planned()) {
-        window_hold_festival_show(true, window_advisors_show);
-    }
+void ui::advisor_religion_window::draw_foreground() {
 }
 
 int ui::advisor_religion_window::handle_mouse(const mouse* m) {
-    return generic_buttons_handle_mouse(m, {0, 0}, hold_festival_button, 1, &g_advisor_religion_window.focus_button_id);
+    return 0;
 }
 
 int  ui::advisor_religion_window::get_tooltip_text() {
-    auto &ui = g_advisor_religion_window;
-    if (ui.focus_button_id) {
-        return 112;
-    } else {
-        return 0;
-    }
+    //auto &ui = g_advisor_religion_window;
+    //if (ui.focus_button_id) {
+    //    return 112;
+    //} else {
+    //    return 0;
+    //}
+
+    return 0;
 }
 
 advisor_window* ui::advisor_religion_window::instance() {
