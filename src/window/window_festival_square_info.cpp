@@ -41,6 +41,7 @@ void festival_square_info_window::window_info_background(object_info &c) {
         ui["planed_festival"].text_var("%s %s", ui::str(58, 34), ui::str(160, planned_month));
         ui["festival_advice"] = ui::str(295, festival_text_iffs[size] + months_left - 1);
     } else {
+        ui["planed_festival"] = "";
         ui["hold_festival"].enabled = true;
         ui["hold_festival"] = ui::str(58, 16);
         ui["hold_festival"].onclick([] {

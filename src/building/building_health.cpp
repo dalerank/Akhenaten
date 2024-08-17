@@ -57,34 +57,6 @@ void game_cheat_start_plague(std::istream &is, std::ostream &os) {
     g_city.health.start_disease(total_population, true, plague_people);
 }
 
-void building_health_draw_info(object_info& c, e_figure_type ftype) {
-    building *b = building_get(c.building_id);
-    const auto &params = b->dcast()->params();
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
-
-    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-
-    if (ftype != FIGURE_NONE && b->has_figure_of_type(BUILDING_SLOT_SERVICE, ftype)) {
-        window_building_draw_description(c, group_id, e_text_figure_on_patrol);
-    } else if (!c.has_road_access) {
-        window_building_draw_description(c, e_text_building, e_text_building_no_roads);
-    } else if (building_get(c.building_id)->num_workers <= 0) {
-        window_building_draw_description(c, group_id, e_text_no_workers);
-    } else {
-        window_building_draw_description(c, group_id, e_text_works_fine);
-    }
-
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
-    window_building_draw_employment(&c, 142);
-}
-
-void building_apothecary::window_info_background(object_info& c) {
-    building_health_draw_info(c, FIGURE_HERBALIST);
-}
-
 void building_apothecary::spawn_figure() {
     common_spawn_roamer(FIGURE_HERBALIST, 50, FIGURE_ACTION_62_HERBALIST_ROAMING);
     //    check_labor_problem();
@@ -104,16 +76,17 @@ void building_apothecary::spawn_figure() {
     //    }
 }
 
-bool building_apothecary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const animation_t &anim = apothercary_m.anim["work"];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+void building_apothecary::update_graphic() {
+    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
+    set_animation(animkey);
 
-    return true;
+    building_impl::update_graphic();
 }
 
+bool building_apothecary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    draw_normal_anim(ctx, point, tile, color_mask);
 
-void building_mortuary::window_info_background(object_info& c) {
-    building_health_draw_info(c, FIGURE_EMBALMER);
+    return true;
 }
 
 void building_mortuary::spawn_figure() {
@@ -133,6 +106,19 @@ void building_mortuary::spawn_figure() {
     //            create_roaming_figure(road.x, road.y, FIGURE_BARBER);
     //        }
     //    }
+}
+
+void building_mortuary::update_graphic() {
+    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
+    set_animation(animkey);
+
+    building_impl::update_graphic();
+}
+
+bool building_mortuary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    draw_normal_anim(ctx, point, tile, color_mask);
+
+    return false;
 }
 
 void building_mortuary::update_count() const {

@@ -178,6 +178,7 @@ var info_window_fishing_wharf = {}
 var raw_material_info_window = {}
 var info_window_palace = {}
 var info_window_garden = {}
+var info_window_health = {}
 var roadblock_info_window = {}
 var hold_festival_window = {}
 var festival_square_info_window = {}
