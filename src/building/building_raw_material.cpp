@@ -93,9 +93,16 @@ int building_clay_pit::get_fire_risk(int value) const {
     return value;
 }
 
+void building_clay_pit::update_graphic() {
+    const xstring &animkey = can_play_animation()
+                                ? animkeys().work
+                                : animkeys().none;
+
+    set_animation(animkey);
+}
+
 bool building_clay_pit::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const auto &anim = clay_pit_m.anim["work"];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+    draw_normal_anim(ctx, point, tile, color_mask);
 
     return true;
 }
