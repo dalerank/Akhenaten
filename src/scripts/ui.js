@@ -675,14 +675,19 @@ festival_square_info_window = {
 
 workshop_info_window = {
 	ui : {
-		background : { type : "outer_panel", pos: [0, 0], size: [-1, -1] },
-		title 		 : { type : "text", pos: [0, 12], size: [-1, 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		background : { type : "outer_panel", pos: [0, 0], size: [29, 16] },
+		title 		 : { type : "text", pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		produce_icon : { type : "resource_icon", pos: [10, 10] },
-		ready_prod : { type : "text", pos: [38, 40], size: [-1, 20], font : FONT_NORMAL_BLACK_ON_LIGHT },
+		workers_panel : { type : "inner_panel", pos : [16, 96], size: [27, 4] },
+		workers_text : { type : "text", pos: [70, 102 + 12], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		workers_desc : { type : "text", pos: [70, 102 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
+		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 102 + 6] },
+		ready_prod : { type : "text", pos: [38, 40], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT },
 		resource_icon : { type : "resource_icon", pos: [32, 56] },
-		resource_stored : { type : "text", pos: [60, 60], size: [-1, 20], font : FONT_NORMAL_BLACK_ON_LIGHT },
-		warning_text : { type : "text", pos: [32, 86], wrap:-1, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-		workers_panel : { type : "inner_panel", pos : [16, 136], size: [-1, 4] },
+		resource_stored : { type : "text", pos: [60, 60], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT },
+		warning_text : { type : "text", pos: [32, 168], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 	}
 }
 

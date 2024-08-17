@@ -19,7 +19,6 @@ void config_load_building_jewels_workshop() {
 
 void building_jewels_workshop::on_create(int orientation) {
     data.industry.first_material_id = RESOURCE_GEMS;
-    base.output_resource_first_id = RESOURCE_LUXURY_GOODS;
 }
 
 void building_jewels_workshop::on_place_checks() {
@@ -40,11 +39,8 @@ void building_jewels_workshop::on_place_checks() {
         building_construction_warning_show(WARNING_TRADE_IMPORT_RESOURCE);
 }
 
-void building_jewels_workshop::window_info_background(object_info &ctx) {
-    building_workshop_draw_background(ctx);
-}
-
 bool building_jewels_workshop::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    draw_normal_anim(ctx, point, tile, color_mask);
     //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GEMS_2) + amount, x + 65, y + 3,
     //            color_mask);
     return true;

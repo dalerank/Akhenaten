@@ -20,7 +20,6 @@ void config_load_building_wood_cutter() {
 }
 
 void building_wood_cutter::on_create(int orientation) {
-    base.output_resource_first_id = RESOURCE_TIMBER;
     data.industry.max_gatheres = 1;
 }
 

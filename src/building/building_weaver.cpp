@@ -19,7 +19,6 @@ void config_load_building_weaver() {
 
 void building_weaver::on_create(int orientation) {
     data.industry.first_material_id = RESOURCE_FLAX;
-    base.output_resource_first_id = RESOURCE_LINEN;
 }
 
 void building_weaver::on_place_checks() {
@@ -53,14 +52,6 @@ void building_weaver::update_graphic() {
     set_animation(animkey);
 
     building_impl::update_graphic();
-}
-
-void building_weaver::window_info_background(object_info &ctx) {
-    building_workshop_draw_background(ctx);
-}
-
-void building_weaver::window_info_foreground(object_info &ctx) {
-    building_workshop_draw_foreground(ctx);
 }
 
 bool building_weaver::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

@@ -16,15 +16,6 @@ void config_load_building_cattle_ranch() {
 
 void building_cattle_ranch::on_create(int orientation) {
     data.industry.first_material_id = RESOURCE_STRAW;
-    base.output_resource_first_id = RESOURCE_MEAT;
-}
-
-void building_cattle_ranch::window_info_background(object_info &c) {
-    building_workshop_draw_background(c);
-}
-
-void building_cattle_ranch::window_info_foreground(object_info &c) {
-    building_workshop_draw_foreground(c);
 }
 
 bool building_cattle_ranch::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

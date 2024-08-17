@@ -2,7 +2,6 @@
 
 #include "building/building.h"
 
-void building_workshop_draw_background(object_info &c);
 void building_workshop_draw_background(object_info &c, e_resource input_resource_a);
 void building_workshop_draw_foreground(object_info &c);
 

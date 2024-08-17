@@ -112,7 +112,6 @@ void building_clay_pit::update_count() const {
 }
 
 void building_reed_gatherer::on_create(int orientation) {
-    base.output_resource_first_id = RESOURCE_REEDS;
     data.industry.max_gatheres = 1;
 }
 

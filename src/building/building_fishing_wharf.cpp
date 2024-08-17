@@ -45,7 +45,6 @@ void game_cheat_kill_fish_boats(std::istream &is, std::ostream &os) {
 
 void building_fishing_wharf::on_create(int orientation) {
     data.industry.orientation = orientation;
-    base.output_resource_first_id = RESOURCE_FISH;
 }
 
 void building_fishing_wharf::on_place_update_tiles(int orientation, int variant) {

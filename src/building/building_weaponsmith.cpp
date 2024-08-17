@@ -28,7 +28,6 @@ void config_load_building_weaponsmith() {
 
 void building_weaponsmith::on_create(int orientation) {
     data.industry.first_material_id = RESOURCE_COPPER;
-    base.output_resource_first_id = RESOURCE_WEAPONS;
 }
 
 void building_weaponsmith::on_place_checks() {
@@ -53,14 +52,6 @@ void building_weaponsmith::update_graphic() {
     set_animation(animkey);
 
     building_impl::update_graphic();
-}
-
-void building_weaponsmith::window_info_background(object_info& c) {
-    building_workshop_draw_background(c);
-}
-
-void building_weaponsmith::window_info_foreground(object_info &ctx) {
-    building_workshop_draw_foreground(ctx);
 }
 
 bool building_weaponsmith::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

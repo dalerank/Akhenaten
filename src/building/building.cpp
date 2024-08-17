@@ -866,6 +866,7 @@ void building_impl::on_place(int orientation, int variant) {
     
     base.fire_proof = p.fire_proof;
     base.damage_proof = p.damage_proof;
+    base.output_resource_first_id = p.output_resource;
 
     on_place_update_tiles(orientation, variant);
     update_graphic();
