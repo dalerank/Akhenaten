@@ -548,8 +548,8 @@ raw_material_info_window = {
 	ui : __baseui(building_info_window, {
 		resource_img : { type : "resource_icon", pos: [10, 10] },
 		progress_desc : { type : "text", pos: [32, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		mine_desc : { type : "text", pos: [32, 186], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true },
-		inner_panel : { type : "inner_panel", pos : [16, 136], size: [27, 4] },
+		mine_desc : { type : "text", pos: [32, 176], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true },
+		inner_panel : { type : "inner_panel", pos : [16, 106], size: [27, 4] },
 	})
 }
 
