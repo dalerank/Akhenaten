@@ -147,39 +147,39 @@ void map_building_tiles_add_farm(e_building_type type, int building_id, tile2i t
         //        int image_id = image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
         //        if (map_terrain_is(map_grid_offset(x, y), TERRAIN_FLOODPLAIN))
         //            image_id = image_id_from_group(GROUP_BUILDING_FARMLAND);
-    painter ctx = game.painter();
-    map_building_tiles_add(building_id, tile, 3, building_farm::get_farm_image(type, tile), TERRAIN_BUILDING);
+    building *b = building_get(building_id);
+    map_building_tiles_add(building_id, tile, b->size, building_farm::get_farm_image(type, tile), TERRAIN_BUILDING);
     return;
     //}
     // crop tile 1
-    int growth = progress / 10;
-    int x = tile.x();
-    int y = tile.y();
-    set_crop_tile(ctx, building_id, x, y, 0, 2, crop_image_offset, growth);
-
-    // crop tile 2
-    growth -= 4;
-    if (growth < 0)
-        growth = 0;
-    set_crop_tile(ctx, building_id, x, y, 1, 2, crop_image_offset, growth);
-
-    // crop tile 3
-    growth -= 4;
-    if (growth < 0)
-        growth = 0;
-    set_crop_tile(ctx, building_id, x, y, 2, 2, crop_image_offset, growth);
-
-    // crop tile 4
-    growth -= 4;
-    if (growth < 0)
-        growth = 0;
-    set_crop_tile(ctx, building_id, x, y, 2, 1, crop_image_offset, growth);
-
-    // crop tile 5
-    growth -= 4;
-    if (growth < 0)
-        growth = 0;
-    set_crop_tile(ctx, building_id, x, y, 2, 0, crop_image_offset, growth);
+    //int growth = progress / 10;
+    //int x = tile.x();
+    //int y = tile.y();
+    //set_crop_tile(ctx, building_id, x, y, 0, 2, crop_image_offset, growth);
+    //
+    //// crop tile 2
+    //growth -= 4;
+    //if (growth < 0)
+    //    growth = 0;
+    //set_crop_tile(ctx, building_id, x, y, 1, 2, crop_image_offset, growth);
+    //
+    //// crop tile 3
+    //growth -= 4;
+    //if (growth < 0)
+    //    growth = 0;
+    //set_crop_tile(ctx, building_id, x, y, 2, 2, crop_image_offset, growth);
+    //
+    //// crop tile 4
+    //growth -= 4;
+    //if (growth < 0)
+    //    growth = 0;
+    //set_crop_tile(ctx, building_id, x, y, 2, 1, crop_image_offset, growth);
+    //
+    //// crop tile 5
+    //growth -= 4;
+    //if (growth < 0)
+    //    growth = 0;
+    //set_crop_tile(ctx, building_id, x, y, 2, 0, crop_image_offset, growth);
 }
 
 int map_bandstand_main_img_offset(int orientation) {

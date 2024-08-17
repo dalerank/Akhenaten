@@ -46,8 +46,8 @@ int floods_fticks() {
     return fticks;
 }
 
-const double CYCLES_IN_A_YEAR = 9792.0f / 25.0f; // 391.68
-double floods_current_cycle() {
+const float CYCLES_IN_A_YEAR = 9792.0f / 25.0f; // 391.68
+float floods_current_cycle() {
     return (double)(gametime().absolute_tick(true) + 1) / 25.0f;
 }
 
@@ -70,11 +70,11 @@ int floods_end_cycle() {
     return floods_start_cycle() + data.duration + data.floodplain_width * 2;
 }
 
-double floods_period_length(bool upcoming) {
+float floods_period_length(bool upcoming) {
     auto& data = g_floods;
     if (upcoming)
-        return (float)data.quality_next * (float)data.floodplain_width * 0.01;
-    return (float)data.quality_last * (float)data.floodplain_width * 0.01;
+        return (float)data.quality_next * (float)data.floodplain_width * 0.01f;
+    return (float)data.quality_last * (float)data.floodplain_width * 0.01f;
 }
 int cycle_compare(int c2, bool relative = true) {
     double diff = c2 - floods_current_cycle();

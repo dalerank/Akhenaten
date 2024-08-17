@@ -37,13 +37,13 @@ void floodplains_init();
 int floods_debug_period();
 int floods_fticks();
 
-extern const double CYCLES_IN_A_YEAR;
-double floods_current_cycle();
+extern const float CYCLES_IN_A_YEAR;
+float floods_current_cycle();
 int floods_current_subcycle();
 bool tick_is_flood_cycle();
 int floods_start_cycle();
 int floods_end_cycle();
-double floods_period_length(bool upcoming = false);
+float floods_period_length(bool upcoming = false);
 
 bool floodplains_is(int state);
 
