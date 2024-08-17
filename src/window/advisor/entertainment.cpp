@@ -75,23 +75,6 @@ static void draw_entertainer(int type, int y_offset, e_building_type venue, int 
     }
 }
 
-static void draw_festival_info() {
-    painter ctx = game.painter();
-    inner_panel_draw(48, 252, 34, 6);
-    ImageDraw::img_generic(ctx, image_id_from_group(PACK_UNLOADED, 21) + 15, vec2i{460, 255});
-    lang_text_draw(58, 17, 52, 224, FONT_LARGE_BLACK_ON_LIGHT);
-
-    int width = lang_text_draw_amount(8, 4, g_city.festival.months_since_festival, 112, 260, FONT_NORMAL_WHITE_ON_DARK);
-    lang_text_draw(58, 15, 112 + width, 260, FONT_NORMAL_WHITE_ON_DARK);
-    if (g_city.festival.is_planned()) {
-        lang_text_draw_centered(58, 34, 102, 284, 300, FONT_NORMAL_WHITE_ON_DARK);
-    } else {
-        lang_text_draw_centered(58, 16, 102, 284, 300, FONT_NORMAL_WHITE_ON_DARK);
-    }
-
-    lang_text_draw_multiline(58, 18 + g_city.festival.get_advice(), vec2i{56, 305}, 400, FONT_NORMAL_WHITE_ON_DARK);
-}
-
 int ui::advisor_entertainment_window::draw_background() {
     painter ctx = game.painter();
     g_city.religion.calculate_gods_mood_targets();
