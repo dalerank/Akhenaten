@@ -388,6 +388,11 @@ void map_floodplain_sub_growth_tile(int grid_offset, int order) {
         return;
     }
 
+    int bid = map_building_at(grid_offset);
+    if (bid) {
+        return;
+    }
+
     int alpha = (value >> 24) & 0xff;
     if (alpha + 1 > 0xfe) {
         map_image_set(grid_offset, image_id);
