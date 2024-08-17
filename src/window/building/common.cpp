@@ -106,13 +106,6 @@ void draw_employment_details_ui(ui::widget &ui, object_info &c, building* b, int
     }
 }
 
-static void draw_employment_farm_ph_details(object_info* c, building* b, int y_offset, int text_id) {
-    painter ctx = game.painter();
-    y_offset += c->offset.y;
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 14, vec2i{c->offset.x + 40, y_offset + 6});
-    int width = lang_text_draw_multiline(177, text_id, vec2i{c->offset.x + 70, y_offset + 10}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_DARK);
-}
-
 void window_building_draw_employment(object_info* c, int y_offset) {
     building* b = building_get(c->building_id);
     int text_id = get_employment_info_text_id(c, b, 1);
@@ -125,14 +118,6 @@ void window_building_draw_employment_without_house_cover(object_info* c, int y_o
     draw_employment_details(c, b, y_offset, text_id);
 }
 
-void window_building_draw_employment_flood_farm(object_info* c, int y_offset) {
-    building* b = building_get(c->building_id);
-    int text_id = 5;
-    if (b->num_workers >= model_get_building(b->type)->laborers) {
-        text_id = 6;
-    }
-    draw_employment_farm_ph_details(c, b, y_offset, text_id);
-}
 void window_building_draw_description(object_info* c, int text_group, int text_id) {
     lang_text_draw_multiline(text_group, text_id, c->offset + vec2i{32, 56}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }

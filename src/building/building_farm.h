@@ -15,7 +15,6 @@ public:
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientration, int variant) override;
-    virtual void window_info_background(object_info &ctx) override;
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
@@ -31,7 +30,7 @@ public:
 
     static void ghost_preview(painter &ctx, e_building_type type, vec2i point, tile2i tile);
     static int get_farm_image(e_building_type type, tile2i tile);
-    static void draw_farm_crops(painter &ctx, e_building_type type, int progress, tile2i tile, vec2i point, color color_mask);
+    static void draw_crops(painter &ctx, e_building_type type, int progress, tile2i tile, vec2i point, color color_mask);
     void draw_farm_worker(painter &ctx, int direction, int action, vec2i coords, color color_mask = COLOR_MASK_NONE);
     void draw_workers(painter &ctx, building *b, tile2i tile, vec2i pos);
 };

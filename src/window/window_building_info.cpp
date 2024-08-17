@@ -10,6 +10,7 @@
 #include "building/house_evolution.h"
 #include "building/government.h"
 #include "window/building/common.h"
+#include "sound/sound.h"
 #include "game/game.h"
 #include "game/state.h"
 #include "dev/debug.h"
@@ -124,6 +125,11 @@ void building_info_window::draw_employment_details(object_info &c, int text_id) 
 void building_info_window::window_info_background(object_info &c) {
     g_debug_building_id = c.building_id;
     building *b = building_get(c.building_id);
+
+    if (c.can_play_sound) {
+        g_sound.speech_play_file(b->get_sound(), 255);
+        c.can_play_sound = 0;
+    }
 
     switch (b->type) {
     case BUILDING_ORACLE: window_building_draw_oracle(&c); break;

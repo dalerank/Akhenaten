@@ -56,84 +56,6 @@ void config_load_building_farm() {
     farm_figs_m.load();
 }
 
-void building_farm_draw_info(object_info &c, e_resource resource) {
-    painter ctx = game.painter();
-
-    building* b = building_get(c.building_id);
-    auto &meta = b->dcast()->params().meta;
-
-    c.help_id = meta.help_id;
-
-    window_building_play_sound(&c, snd::get_building_info_sound(b->type));
-
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    ctx.draw(sprite_resource_icon(resource), c.offset + vec2i{10, 10});
-    lang_text_draw_centered(meta.text_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-
-
-    int pct_grown = calc_percentage<int>(b->data.industry.progress, 2000);
-    int width = lang_text_draw(meta.text_id, 2, c.offset.x + 32, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += text_draw_percentage(pct_grown, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += lang_text_draw(meta.text_id, 3, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    // fertility
-    int pct_fertility = map_get_fertility_for_farm(b->tile.grid_offset());
-    width += lang_text_draw(meta.text_id, 12, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += text_draw_percentage(pct_fertility, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(meta.text_id, 13, c.offset.x + 32 + width, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    if (!c.has_road_access)
-        window_building_draw_description_at(c, 70, 69, 25);
-    else if (city_resource_is_mothballed(resource))
-        window_building_draw_description_at(c, 70, meta.text_id, 4);
-    else if (b->data.industry.curse_days_left > 4)
-        window_building_draw_description_at(c, 70, meta.text_id, 11);
-    else if (b->num_workers <= 0)
-        window_building_draw_description_at(c, 70, meta.text_id, 5);
-    else if (c.worker_percentage >= 100)
-        window_building_draw_description_at(c, 70, meta.text_id, 6);
-    else if (c.worker_percentage >= 75)
-        window_building_draw_description_at(c, 70, meta.text_id, 7);
-    else if (c.worker_percentage >= 50)
-        window_building_draw_description_at(c, 70, meta.text_id, 8);
-    else if (c.worker_percentage >= 25)
-        window_building_draw_description_at(c, 70, meta.text_id, 9);
-    else
-        window_building_draw_description_at(c, 70, meta.text_id, 10);
-
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
-    if (building_is_floodplain_farm(*b)) {
-        window_building_draw_employment_flood_farm(&c, 142);
-
-        // next flood info
-        int month_id = 8; // TODO: fetch flood info
-        width = lang_text_draw(177, 2, c.offset.x + 32, c.offset.y + 16 * c.bgsize.y - 136, FONT_NORMAL_BLACK_ON_LIGHT);
-        lang_text_draw(160, month_id, c.offset.x + 32 + width, c.offset.y + 16 * c.bgsize.y - 136, FONT_NORMAL_BLACK_ON_LIGHT);
-
-        // irrigated?
-        int is_not_irrigated = 0; // TODO: fetch irrigation info
-        lang_text_draw(177, is_not_irrigated, c.offset.x + 32, c.offset.y + 16 * c.bgsize.y - 120,FONT_NORMAL_BLACK_ON_LIGHT);
-
-        window_building_draw_description_at(c, 16 * c.bgsize.y - 96, meta.text_id, 1);
-    } else {
-        window_building_draw_employment(&c, 142);
-        window_building_draw_description_at(c, 16 * c.bgsize.y - 136, meta.text_id, 1);
-    }
-}
-
-void building_farm::window_info_background(object_info& c) {
-    switch (base.type) {
-    case BUILDING_BARLEY_FARM: building_farm_draw_info(c, RESOURCE_BARLEY); break;
-    case BUILDING_FLAX_FARM: building_farm_draw_info(c, RESOURCE_FLAX); break;
-    case BUILDING_GRAIN_FARM: building_farm_draw_info(c, RESOURCE_GRAIN); break;
-    case BUILDING_LETTUCE_FARM: building_farm_draw_info(c, RESOURCE_LETTUCE); break;
-    case BUILDING_POMEGRANATES_FARM: building_farm_draw_info(c, RESOURCE_POMEGRANATES); break;
-    case BUILDING_CHICKPEAS_FARM: building_farm_draw_info(c, RESOURCE_CHICKPEAS); break;
-    case BUILDING_FIGS_FARM: building_farm_draw_info(c, RESOURCE_FIGS); break;
-    case BUILDING_HENNA_FARM: building_farm_draw_info(c, RESOURCE_HENNA); break;
-    }
-}
-
 bool building_farm::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     return false;
 }
@@ -183,7 +105,7 @@ void building_farm::ghost_preview(painter &ctx, e_building_type type, vec2i poin
     int image_id = get_farm_image(type, tile);
     draw_building_ghost(ctx, image_id, point + vec2i{-60, 30});
 
-    draw_farm_crops(ctx, type, 0, tile, point + vec2i{-60, 30}, COLOR_MASK_GREEN);
+    draw_crops(ctx, type, 0, tile, point + vec2i{-60, 30}, COLOR_MASK_GREEN);
 }
 
 static const vec2i FARM_TILE_OFFSETS_FLOODPLAIN[9] = {{60, 0}, {90, 15}, {120, 30}, {30, 15}, {60, 30}, {90, 45}, {0, 30}, {30, 45}, {60, 60}};
@@ -210,7 +132,7 @@ int get_crops_image(e_building_type type, int growth) {
     return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
 }
 
-void building_farm::draw_farm_crops(painter &ctx, e_building_type type, int progress, tile2i tile, vec2i point, color color_mask) {
+void building_farm::draw_crops(painter &ctx, e_building_type type, int progress, tile2i tile, vec2i point, color color_mask) {
     int image_crops = get_crops_image(type, 0);
     if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) { // on floodplains - all
         for (int i = 0; i < 9; i++) {
@@ -402,7 +324,7 @@ void building_farm::on_place_update_tiles(int orientation, int variant) {
 
 bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color mask) {
     if (map_terrain_is(t.grid_offset(), TERRAIN_BUILDING)) {
-        draw_farm_crops(ctx, type(), data.industry.progress, tile(), point, mask);
+        draw_crops(ctx, type(), data.industry.progress, tile(), point, mask);
         draw_workers(ctx, &base, t, point);
     }
 
