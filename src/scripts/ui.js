@@ -359,7 +359,7 @@ roadblock_info_window = {
 		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
 		title 		 : { type : "text", pos: [0, 12], size: [px(28), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 	}
 }
 
@@ -369,9 +369,9 @@ orders_window_granary = {
 		title 		 : { type : "text", pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		orders_panel : { type : "inner_panel", pos : [16, 42], size: [27, 10] },
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
-		empty_all : { type:"generic_button", pos:[80, -1], size:[300, 24] },
-		accept_none : { type:"generic_button", pos:[80, -1], size:[300, 24], text:{group:99, id:7} },
+		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		empty_all : { type:"generic_button", pos:[80, -1], size:[300, 24], margin:{bottom:-64} },
+		accept_none : { type:"generic_button", pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} },
 	}
 }
 
@@ -397,7 +397,7 @@ granary_info_window = {
 		workers_desc : { type : "text", pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
 		orders : { type:"generic_button", pos:[100, -1], size:[270, 25], text:{group: 98, id: 5}},
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 		show_overlay : { type:"generic_button", pos:[px(29)-64, 5], size:[23, 23]},
 		mothball : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
 	}
@@ -411,7 +411,7 @@ info_window_vacant_lot = {
 		inner_panel : { type : "inner_panel", pos : [16, 40], size: [27, 13] },
 		describe 	 : { type : "text", pos: [36, 114], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(25) },
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 	}
 }
 
@@ -445,7 +445,7 @@ info_window_house = {
 		happiness_info : { type : "text", pos: [36, 214], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) },
 		additional_info : { type : "text", pos: [36, 234], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) },
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 	}
 }
 
@@ -488,7 +488,7 @@ figure_info_window = {
 		button_figure5 : { type : "image_button", pos:[60 * 5 + 25, 45], size:[52, 52], border:true },
 		button_figure6 : { type : "image_button", pos:[60 * 6 + 25, 45], size:[52, 52], border:true },
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 		show_path : { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
 		show_overlay : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
 	}
@@ -500,7 +500,7 @@ terrain_info_window = {
 		title 		 	: { type : "text", pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		describe 		: { type : "text", pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) },
 		button_help : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close: { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close: { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 	}
 }
 
@@ -513,7 +513,7 @@ temple_info_window = {
 		workers_text : { type : "text", pos: [70, 74], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
 		workers_desc : { type : "text", pos: [70, 74 + 16], font: FONT_NORMAL_BLACK_ON_DARK },
 		button_help : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close: { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close: { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 		show_overlay: { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
 		god_image 	: { type : "image", pos: [190, 134] },
 		mothball 		: { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
@@ -533,7 +533,7 @@ building_info_window = {
 		second_advisor : { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		third_advisor : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 		show_overlay : { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
 		mothball : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
 	}
@@ -571,7 +571,7 @@ info_window_garden = {
 		title 		 	  : { type : "text", pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		describe  		: { type : "text", pos: [32, 66], text: "#gardens_describe", wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		button_help   : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 	}
 }
 
@@ -599,7 +599,7 @@ entertainment_info_window = {
 		second_advisor : { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		third_advisor : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 		show_overlay : { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
 		mothball : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
 	}
@@ -631,7 +631,7 @@ taxcollector_info_window = {
 		second_advisor: { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		third_advisor : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 		show_overlay : { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
 		mothball 		 : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
 	}
@@ -664,7 +664,7 @@ bazaar_info_window = {
 		workers_desc : { type : "text", pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
 		orders : { type:"generic_button", pos:[100, 0], size:[270, 25], text:{group: 98, id: 5}},
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 		show_overlay : { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
 		mothball : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
 	}
@@ -681,7 +681,7 @@ festival_square_info_window = {
 		planed_festival : { type : "text", pos: [102, 134], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" },
 		festival_advice : { type : "text", pos: [36, 164], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true },
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 	}
 }
 
@@ -699,7 +699,7 @@ workshop_info_window = {
 		resource_stored : { type : "text", pos: [60, 60], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT },
 		warning_text : { type : "text", pos: [32, 168], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 	}
 }
 
@@ -750,7 +750,7 @@ info_window_storageyard = {
 
 		orders : { type:"generic_button", pos:[100, -1], size:[270, 24], text:{group: 99, id: 2}},
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 		mothball : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
 	}
 }

@@ -428,10 +428,23 @@ void ui::element::load(archive arch) {
     pos = arch.r_vec2i("pos");
     size = arch.r_size2i("size");
     enabled = arch.r_bool("enabled", true);
+    arch.r_section("margin", [this] (archive m) {
+        margin.bottom = m.r_int("bottom", recti::nomargin);
+        margin.left = m.r_int("left", recti::nomargin);
+        margin.right = m.r_int("right", recti::nomargin);
+        margin.top = m.r_int("top", recti::nomargin);
+    });
 }
 
 pcstr ui::element::text_from_key(pcstr key) {
     return lang_text_from_key(key);
+}
+
+void ui::element::update_pos(const recti &r) {
+    if (margin.left > recti::nomargin) { pos.x = r.left + margin.left; }
+    if (margin.bottom > recti::nomargin) { pos.y = r.bottom + margin.bottom; }
+    if (margin.right > recti::nomargin) { pos.x = r.right + margin.right; }
+    if (margin.top > recti::nomargin) { pos.y = r.top + margin.top; }
 }
 
 void ui::eouter_panel::draw() {
@@ -461,7 +474,10 @@ void ui::widget::draw() {
         begin_widget(pos);
     }
 
+    vec2i bsize = ui["background"].pxsize();
+    recti rect{ pos.x, pos.y, pos.x + bsize.x, pos.y + bsize.y };
     for (auto &e : elements) {
+        e->update_pos(rect);
         if (e->enabled) {
             e->draw();
         }

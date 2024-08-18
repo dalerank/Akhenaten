@@ -26,16 +26,13 @@ void orders_window_granary::window_info_background(object_info &c) {
     int storage_id = granary->storage_id();
 
     // emptying button
-    vec2i bgsize = ui["background"].pxsize();
     ui["empty_all"] = granary->is_empty_all() ? ui::str(98, 8) : ui::str(98, 7);
-    ui["empty_all"].pos.y = bgsize.y - 62;
 
     ui["empty_all"].onclick([storage_id] {
         building_storage_toggle_empty_all(storage_id);
         window_invalidate();
     });
 
-    ui["accept_none"].pos.y = bgsize.y - 36;
     ui["accept_none"].onclick([storage_id] {
         building_storage_accept_none(storage_id);
     });

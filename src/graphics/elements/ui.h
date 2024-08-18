@@ -75,10 +75,19 @@ inline pcstr str(std::pair<int, int> r) { return str(r.first, r.second); }
 struct emenu_header;
 struct eimage_button;
 
+struct recti {
+    static constexpr int nomargin = -99999;
+    int left = 0;
+    int top = 0;
+    int right = 0;
+    int bottom = 0;
+};
+
 struct element {
     bstring64 id;
     vec2i pos;
     vec2i size;
+    recti margin = { recti::nomargin, recti::nomargin, recti::nomargin, recti::nomargin };
     bool readonly = false;
     bool enabled = true;
 
@@ -109,6 +118,7 @@ struct element {
 
     inline void operator=(pcstr t) { text(t); }
     inline void operator=(const bstring512 &t) { text(t); }
+    void update_pos(const recti &r);
 
     template<class T>
     void preformat_text(T& str) {

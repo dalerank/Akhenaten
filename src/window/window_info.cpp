@@ -239,7 +239,6 @@ void common_info_window::update_buttons(object_info &c) {
     auto &ui = *c.ui;
 
     vec2i bgsize = ui["background"].pxsize();
-    ui["button_help"].pos.y = bgsize.y - 40;
     ui["button_help"].onclick([&c] {
         if (c.help_id > 0) {
             window_message_dialog_show(c.help_id, -1, window_city_draw_all);
@@ -249,7 +248,6 @@ void common_info_window::update_buttons(object_info &c) {
         window_invalidate();
     });
 
-    ui["button_close"].pos.y = bgsize.y - 40;
     ui["button_close"].onclick([&c] {
         if (c.storage_show_special_orders) {
             c.storage_show_special_orders = 0;
