@@ -789,6 +789,8 @@ building_storage_yard = {
     work : { pos : [23, 27], pack:PACK_SPR_AMBIENT, id:51, offset:1, max_frames:14 }
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  info_help_id : 4,
+  info_text_id:99,
   building_size : 3,
 }
 
@@ -1352,7 +1354,7 @@ building_clay_pit = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:40 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:40 },
-    work : { pos : [18, -20], pack:PACK_GENERAL, id:40, offset:1, max_frames:23 }
+    work : { pos : [18, -20], pack:PACK_GENERAL, id:40, offset:1, max_frames:23, duration:2 }
   },
   output_resource : RESOURCE_CLAY,
   building_size : 2,

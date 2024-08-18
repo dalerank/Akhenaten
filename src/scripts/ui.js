@@ -699,6 +699,37 @@ well_info_window = {
 	}
 }
 
+info_window_storageyard = {
+	ui : {
+		background : { type : "outer_panel", pos: [0, 0], size: [29, 19] },
+		title 		 : { type : "text", pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+
+		storing    : { type : "text", pos: [34, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
+		free_space : { type : "text", pos: [220, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
+
+		good0_icon : { type : "resource_icon", pos: [32, 40] },
+		good0_text : { type : "text", pos: [64, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good1_icon : { type : "resource_icon", pos: [142, 40] },
+		good1_text : { type : "text", pos: [174, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good2_icon : { type : "resource_icon", pos: [252, 40] },
+		good2_text : { type : "text", pos: [284, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good3_icon : { type : "resource_icon", pos: [362, 40] },
+		good3_text : { type : "text", pos: [394, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
+
+		warning_text : { type : "text", pos: [32, 56], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		workers_panel : { type : "inner_panel", pos : [16, 168], size: [27, 5] },
+		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 173] },
+		workers_text : { type : "text", pos: [70, 178], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		workers_desc : { type : "text", pos: [70, 178 + 16], font: FONT_NORMAL_BLACK_ON_DARK },
+		cartstate_img : { type : "resource_icon", pos:[40, 220] },
+		cartstate_desc : { type : "text", pos: [32, 223], wrap:px(27), font : FONT_NORMAL_BLACK_ON_DARK, multiline:true },
+
+		orders : { type:"generic_button", pos:[80, -1], size:[310, 20], text:{group: 99, id: 2}},
+		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+	}
+}
+
 empire_window = {
 	trade_column_spacing : 106,
 	trade_row_spacing : 20,

@@ -36,8 +36,6 @@ public:
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
     virtual void spawn_figure() override;
-    virtual void window_info_background(object_info &ctx) override;
-    virtual void window_info_foreground(object_info &ctx) override;
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
 
     virtual building_storage_yard *dcast_storage_yard() override { return this; }
@@ -45,9 +43,8 @@ public:
     
     building_storage_room *room() { return next()->dcast_storage_room(); }
 
-    virtual 
-    int amount(e_resource resource) const;
-    int total_stored() const;
+    virtual int amount(e_resource resource) const override;
+    virtual int total_stored() const override;
     bool is_not_accepting(e_resource resource);
 
     int remove_resource(e_resource resource, int amount);
@@ -67,10 +64,6 @@ public:
     short &stored_full_amount;
 
 private:
-    void draw_warehouse_orders(object_info *c);
-    void draw_warehouse(object_info *c);
-    void draw_warehouse_orders_foreground(object_info *c);
-    void draw_warehouse_foreground(object_info *c);
     int get_space_info() const;
     bool is_accepting(e_resource resource);
     building *add_storageyard_space(int x, int y, building *prev);

@@ -180,6 +180,7 @@ var info_window_palace = {}
 var info_window_garden = {}
 var info_window_health = {}
 var info_window_farm = {}
+var info_window_storageyard = {}
 var roadblock_info_window = {}
 var hold_festival_window = {}
 var festival_square_info_window = {}
