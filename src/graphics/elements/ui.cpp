@@ -205,7 +205,7 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
 
     int symbolh = get_letter_height((uint8_t *)"H", font);
     if (label) {
-        const bool ycentered = !!(flags & UiFlags_LabelYCentered);
+        const bool ycentered = !!(flags & UiFlags_AlignYCentered);
         const bool rich = !!(flags & UiFlags_Rich);
         if (rich) {
             int symbolw = text_get_width((uint8_t *)"H", font);
@@ -214,7 +214,7 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
             rich_text_set_fonts(font, FONT_NORMAL_YELLOW);
             rich_text_draw((uint8_t *)label, offset.x + pos.x, offset.y + pos.y + centering_y_offset, size.x, lines_num, false, true);
         } else if (ycentered) {
-            text_draw((uint8_t *)label, offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 4, font, 0);
+            text_draw((uint8_t *)label, offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 2, font, 0);
         } else {
             text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 + 4, size.x, font, 0);
         }
@@ -240,16 +240,16 @@ generic_button &ui::button(const svector<pcstr,4> &labels, vec2i pos, vec2i size
     button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, focused ? 1 : 0);
     int symbolh = get_letter_height((uint8_t *)"H", font);
     int labels_num = labels.size();
-    int startx = offset.y + pos.y + (size.y - (symbolh + 2) * labels_num) / 2 + 4;
-    if (!!(flags & UiFlags_LabelYCentered)) {
+    int starty = offset.y + pos.y + (size.y - (symbolh + 2) * labels_num) / 2 + 4;
+    if (!!(flags & UiFlags_AlignYCentered)) {
         for (const auto &str : labels) {
-            text_draw((uint8_t *)str, offset.x + pos.x + 8, startx, font, 0);
-            startx += symbolh + 2;
+            text_draw((uint8_t *)str, offset.x + pos.x + 8, starty, font, 0);
+            starty += symbolh + 2;
         }
     } else {
         for (const auto &str : labels) {
-            text_draw_centered((uint8_t *)str, offset.x + pos.x + 1, startx, size.x, font, 0);
-            startx += symbolh + 2;
+            text_draw_centered((uint8_t *)str, offset.x + pos.x + 1, starty, size.x, font, 0);
+            starty += symbolh + 2;
         }
     }
 
@@ -336,7 +336,7 @@ int ui::label(int group, int number, vec2i pos, e_font font, UiFlags flags, int 
 
 int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width) {
     const vec2i offset = g_state.offset();
-    if (!!(flags & UiFlags_LabelCentered)) {
+    if (!!(flags & UiFlags_AlignCentered)) {
         text_draw_centered((uint8_t*)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
         return box_width;
     } else if (!!(flags & UiFlags_LabelMultiline)) {
@@ -394,8 +394,9 @@ void ui::icon(vec2i pos, e_advisor adv) {
 
 arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny) {
     const vec2i offset = g_state.offset();
-
-    g_state.buttons.push_back(arrow_button{pos.x, pos.y, down ? 17 : 15, 24, button_none, 0, 0});
+    
+    int img_index = tiny ? (down ? 0 : 3) : down ? 17 : 15;
+    g_state.buttons.push_back(arrow_button{pos.x, pos.y, img_index, 24, button_none, 0, 0});
     auto &abutton = g_state.buttons.back().a_button;
     arrow_buttons_draw(offset, abutton, tiny);
 
@@ -607,7 +608,7 @@ void ui::elabel::load(archive arch) {
     bool multiline = arch.r_bool("multiline");
     bool rich = arch.r_bool("rich");
     bool scroll = arch.r_bool("scroll", true);
-    _flags = (strcmp("center", talign) == 0 ? UiFlags_LabelCentered : UiFlags_None)
+    _flags = (strcmp("center", talign) == 0 ? UiFlags_AlignCentered : UiFlags_None)
                | (multiline ? UiFlags_LabelMultiline : UiFlags_None)
                | (rich ? UiFlags_Rich : UiFlags_None)
                | (scroll ? UiFlags_None : UiFlags_NoScroll);
@@ -720,11 +721,11 @@ void ui::escrollbar::load(archive arch) {
 
 void ui::etext::draw() {
     const vec2i offset = g_state.offset();
-    if (!!(_flags & UiFlags_LabelCentered)) {
+    if (!!(_flags & UiFlags_AlignCentered)) {
         text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, size.x, _font, _color);
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
         text_draw_multiline((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _wrap, _font, _color);
-    } else if (!!(_flags & UiFlags_LabelYCentered)) {
+    } else if (!!(_flags & UiFlags_AlignYCentered)) {
         int symbolh = get_letter_height((uint8_t *)"H", _font);
         text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y + (size.y - symbolh) / 2, _font, _color);
     } else if (!!(_flags & UiFlags_Rich)) {

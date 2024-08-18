@@ -1,8 +1,6 @@
 #pragma once
 
-#include "input/mouse.h"
-#include "graphics/elements/image_button.h"
-#include "graphics/elements/generic_button.h"
+#include "graphics/elements/ui.h"
 
 #include <array>
 
@@ -38,7 +36,6 @@ struct storage_t;
 void draw_permissions_buttons(int x, int y, int buttons);
 void draw_accept_none_button(int x, int y, int focused);
 
-int window_building_handle_mouse_granary(const mouse* m, object_info* c);
 int window_building_handle_mouse_granary_orders(const mouse* m, object_info* c);
 
 std::pair<int, int> window_building_get_tooltip_granary_orders();
@@ -47,4 +44,5 @@ std::pair<int, int> window_building_get_tooltip_warehouse_orders();
 int window_building_handle_mouse_warehouse(const mouse* m, object_info* c);
 int window_building_handle_mouse_warehouse_orders(const mouse* m, object_info* c);
 
-void window_building_draw_order_instruction(int instr_kind, const storage_t *storage, int resource, int x, int y, int market_order = -1);
+void window_building_draw_order_instruction(int instr_kind, const storage_t *storage, e_resource resource, vec2i pos, int market_order = -1);
+std::pair<bstring64, e_font> window_building_get_order_instruction(int instr_kind, const storage_t *storage, e_resource resource, int market_order = -1);

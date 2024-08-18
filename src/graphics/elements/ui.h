@@ -25,11 +25,11 @@ struct tooltip_context;
 
 enum UiFlags_ {
     UiFlags_None = 0,
-    UiFlags_LabelCentered = 1 << 1,
+    UiFlags_AlignCentered = 1 << 1,
     UiFlags_PanelOuter = 1 << 2,
     UiFlags_PanelInner = 1 << 3,
     UiFlags_LabelMultiline = 1 << 4,
-    UiFlags_LabelYCentered = 1 << 5,
+    UiFlags_AlignYCentered = 1 << 5,
     UiFlags_NoBody = 1 << 6,
     UiFlags_Rich = 1 << 7,
     UiFlags_Selected = 1 << 8,
@@ -306,14 +306,10 @@ struct widget {
     element& operator[](pcstr id);
     inline element &operator[](const bstring32 &id) { return (*this)[id.c_str()]; }
 
-    template<typename ... Args>
-    int label(const Args ... args) { return ui::label(args...); }
-    
-    template<typename ... Args>
-    generic_button &button(const Args ... args) { return ui::button(args...); }
-    
-    template<typename ... Args>
-    void icon(const Args ... args) { return ui::icon(args...); }
+    template<typename ... Args> int label(const Args ... args) { return ui::label(args...); }
+    template<typename ... Args> generic_button &button(const Args ... args) { return ui::button(args...); }
+    template<typename ... Args> void icon(const Args ... args) { return ui::icon(args...); }
+    template<typename ... Args> arrow_button arw_button(const Args ... args) { return ui::arw_button(args...); }
 
     inline void image(image_desc img, vec2i pos) { ui::eimage(img, pos); }
     inline void begin_widget(vec2i offset, bool relative = false) { ui::begin_widget(offset, relative); }

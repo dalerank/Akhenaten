@@ -36,6 +36,7 @@ public:
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
     virtual void spawn_figure() override;
+    virtual void update_graphic() override;
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
 
     virtual building_storage_yard *dcast_storage_yard() override { return this; }

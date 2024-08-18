@@ -70,8 +70,8 @@ void ui::advisor_trade_window::ui_draw_foreground() {
         const bool is_stockpiled = city_resource_is_stockpiled(resource);
         const bool is_mothballed = city_resource_is_mothballed(resource);
 
-        ui.label(ui::str(23, resource), vec2i{46, y_offset}, font_color, UiFlags_LabelYCentered);
-        ui.label(bstring32().printf("%u", proper_quality).c_str(), vec2i{152, y_offset}, font_color, UiFlags_LabelCentered, 60);
+        ui.label(ui::str(23, resource), vec2i{46, y_offset}, font_color, UiFlags_AlignYCentered);
+        ui.label(bstring32().printf("%u", proper_quality).c_str(), vec2i{152, y_offset}, font_color, UiFlags_AlignYCentered, 60);
 
         // mothballed / stockpiled
         {
@@ -84,7 +84,7 @@ void ui::advisor_trade_window::ui_draw_foreground() {
             }
 
             if (!!text) {
-                ui.label(text.c_str(), vec2i{210, y_offset}, font_color, UiFlags_LabelCentered, 100);
+                ui.label(text.c_str(), vec2i{210, y_offset}, font_color, UiFlags_AlignYCentered, 100);
             }
         }
 

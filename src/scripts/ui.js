@@ -363,6 +363,18 @@ roadblock_info_window = {
 	}
 }
 
+orders_window_granary = {
+	ui : {
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
+		title 		 : { type : "text", pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		orders_panel : { type : "inner_panel", pos : [16, 42], size: [27, 10] },
+		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		empty_all : { type:"generic_button", pos:[80, -1], size:[300, 24] },
+		accept_none : { type:"generic_button", pos:[80, -1], size:[300, 24], text:{group:99, id:7} },
+	}
+}
+
 granary_info_window = {
 	resource_text_group : 23,
 	ui : {

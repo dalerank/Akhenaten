@@ -140,7 +140,67 @@ uint8_t granary_3quarters_button_text[] = "18";
 uint8_t granary_half_button_text[] = "12";
 uint8_t granary_quarter_button_text[] = "6";
 
-void window_building_draw_order_instruction(int instr_kind, const storage_t* storage, int resource, int x, int y, int market_order) {
+std::pair<bstring64, e_font> window_building_get_order_instruction(int instr_kind, const storage_t *storage, e_resource resource, int market_order) {
+    if (storage != nullptr) {
+        switch (storage->resource_state[resource]) {
+        case STORAGE_STATE_PHARAOH_ACCEPT:
+        {
+            int max_accept = storage->resource_max_accept[resource];
+            bstring64 text;
+            text.printf("%d", max_accept);
+
+            if (max_accept == 3200) { text = ui::str(99, 28); }
+            else if (max_accept == 2400) { text = ui::str(99, 27); }
+            else if (max_accept == 1600) { text = ui::str(99, 26); }
+            else if (max_accept == 800) { text = ui::str(99, 25); }
+
+            pcstr adv_text = "";
+            if (max_accept == 2400 || max_accept == 1600 || max_accept == 800)
+                adv_text = ui::str(99, 29);
+
+            bstring64 full_text;
+            full_text.printf("%s %s %s", ui::str(99, 18), text, adv_text);
+            return { full_text, FONT_NORMAL_WHITE_ON_DARK };
+        }
+
+        case STORAGE_STATE_PHARAOH_REFUSE:
+            return { ui::str(99, 8), FONT_NORMAL_BLACK_ON_DARK };
+
+        case STORAGE_STATE_PHARAOH_GET:
+        {
+            int max_get = storage->resource_max_get[resource];
+            bstring64 text;
+            text.printf("%d", max_get);
+            if (max_get == 3200) { text = ui::str(99, 31); }
+            else if (max_get == 2400) { text = ui::str(99, 27); }
+            else if (max_get == 1600) { text = ui::str(99, 26); }
+            else if (max_get == 800) { text = ui::str(99, 25); }
+
+            pcstr adv_text = "";
+            if (max_get == 2400 || max_get == 1600 || max_get == 800)
+                adv_text = ui::str(99, 29);
+
+            bstring64 full_text;
+            full_text.printf("%s %s %s", ui::str(99, 19), text, adv_text);
+            return { full_text, FONT_NORMAL_YELLOW };
+        }
+        case STORAGE_STATE_PHARAOH_EMPTY:
+            return { ui::str(99, 21), FONT_NORMAL_BLACK_ON_DARK };
+        }
+    } else {
+        switch (market_order) {
+        case BAZAAR_ORDER_STATE_BUY:
+            return { ui::str(97, 8), FONT_NORMAL_WHITE_ON_DARK };
+
+        case BAZAAR_ORDER_STATE_DONT_BUY:
+            return { ui::str(97, 9), FONT_NORMAL_BLACK_ON_DARK };
+        }
+    }
+
+    return { "unknow_storage", FONT_NORMAL_BLACK_ON_DARK };
+}
+
+void window_building_draw_order_instruction(int instr_kind, const storage_t* storage, e_resource resource, vec2i pos, int market_order) {
     e_font font_nope = FONT_NORMAL_BLACK_ON_DARK;
     e_font font_yes = FONT_NORMAL_WHITE_ON_DARK;
     e_font font_get = FONT_NORMAL_YELLOW;
@@ -148,55 +208,55 @@ void window_building_draw_order_instruction(int instr_kind, const storage_t* sto
     if (storage != nullptr) {
         switch (storage->resource_state[resource]) {
         case STORAGE_STATE_PHARAOH_ACCEPT: {
-            int width = lang_text_draw(99, 18, x, y, font_yes);
+            int width = lang_text_draw(99, 18, pos.x, pos.y, font_yes);
             int max_accept = storage->resource_max_accept[resource];
             if (max_accept == 3200)
-                width += lang_text_draw(99, 28, x + width, y, font_yes);
+                width += lang_text_draw(99, 28, pos.x + width, pos.y, font_yes);
             else if (max_accept == 2400)
-                width += lang_text_draw(99, 27, x + width, y, font_yes);
+                width += lang_text_draw(99, 27, pos.x + width, pos.y, font_yes);
             else if (max_accept == 1600)
-                width += lang_text_draw(99, 26, x + width, y, font_yes);
+                width += lang_text_draw(99, 26, pos.x + width, pos.y, font_yes);
             else if (max_accept == 800)
-                width += lang_text_draw(99, 25, x + width, y, font_yes);
+                width += lang_text_draw(99, 25, pos.x + width, pos.y, font_yes);
             else
-                width += text_draw_number(max_accept, '@', " ", x + width, y, font_yes);
+                width += text_draw_number(max_accept, '@', " ", pos.x + width, pos.y, font_yes);
             if (max_accept == 2400 || max_accept == 1600 || max_accept == 800)
-                lang_text_draw(99, 29, x + width, y, font_yes);
+                lang_text_draw(99, 29, pos.x + width, pos.y, font_yes);
             break;
         }
         case STORAGE_STATE_PHARAOH_REFUSE:
-            lang_text_draw(99, 8, x, y, font_nope);
+            lang_text_draw(99, 8, pos.x, pos.y, font_nope);
             break;
 
         case STORAGE_STATE_PHARAOH_GET: {
-            int width = lang_text_draw(99, 19, x, y, font_get);
+            int width = lang_text_draw(99, 19, pos.x, pos.y, font_get);
             int max_get = storage->resource_max_get[resource];
             if (max_get == 3200)
-                width += lang_text_draw(99, 31, x + width, y, font_get);
+                width += lang_text_draw(99, 31, pos.x + width, pos.y, font_get);
             else if (max_get == 2400)
-                width += lang_text_draw(99, 27, x + width, y, font_get);
+                width += lang_text_draw(99, 27, pos.x + width, pos.y, font_get);
             else if (max_get == 1600)
-                width += lang_text_draw(99, 26, x + width, y, font_get);
+                width += lang_text_draw(99, 26, pos.x + width, pos.y, font_get);
             else if (max_get == 800)
-                width += lang_text_draw(99, 25, x + width, y, font_get);
+                width += lang_text_draw(99, 25, pos.x + width, pos.y, font_get);
             else
-                width += text_draw_number(max_get, '@', " ", x + width, y, font_get);
+                width += text_draw_number(max_get, '@', " ", pos.x + width, pos.y, font_get);
             if (max_get == 2400 || max_get == 1600 || max_get == 800)
-                lang_text_draw(99, 29, x + width, y, font_get);
+                lang_text_draw(99, 29, pos.x + width, pos.y, font_get);
             break;
         }
         case STORAGE_STATE_PHARAOH_EMPTY:
-            lang_text_draw(99, 21, x, y, font_nope);
+            lang_text_draw(99, 21, pos.x, pos.y, font_nope);
             break;
         }
     } else {
         switch (market_order) {
         case BAZAAR_ORDER_STATE_BUY:
-            lang_text_draw(97, 8, x, y, font_yes);
+            lang_text_draw(97, 8, pos.x, pos.y, font_yes);
             break;
 
         case BAZAAR_ORDER_STATE_DONT_BUY:
-            lang_text_draw(97, 9, x, y, font_nope);
+            lang_text_draw(97, 9, pos.x, pos.y, font_nope);
             break;
         }
     }
@@ -228,14 +288,6 @@ void draw_permissions_buttons(int x, int y, int buttons) {
 
 #define Y_FOODS 90           // 234
 #define Y_GOODS Y_FOODS + 20 // 174 //274
-
-int window_building_handle_mouse_granary(const mouse* m, object_info* c) {
-    auto &data = g_window_building_distribution;
-    data.building_id = c->building_id;
-    generic_buttons_handle_mouse(m, {c->offset.x + 58, c->offset.y + 19 * c->bgsize.y - 82}, warehouse_distribution_permissions_buttons, 1, &data.permission_focus_button_id);
-    generic_buttons_handle_mouse(m, {c->offset.x + 80, c->offset.y + 16 * c->bgsize.y - 34}, data.go_to_orders_button.data(), 1, &data.focus_button_id);
-    return 0;
-}
 
 int window_building_handle_mouse_granary_orders(const mouse* m, object_info* c) {
     auto &data = g_window_building_distribution;
@@ -337,6 +389,8 @@ std::pair<int, int> window_building_get_tooltip_warehouse_orders() {
     if (data.orders_focus_button_id == 2) {
         return {15, 1};
     }
+
+    return { 0, 0 };
 }
 
 static void go_to_orders(int param1, int param2) {

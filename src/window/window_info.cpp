@@ -91,7 +91,7 @@ void object_info::reset(tile2i tile) {
     show_overlay = OVERLAY_NONE;
 }
 
-void buiding_info_init(tile2i tile) {
+void buiding_info_init(tile2i tile, bool avoid_mouse) {
     auto &context = g_object_info;
     context.reset(tile);
 
@@ -122,6 +122,10 @@ void buiding_info_init(tile2i tile) {
     // dialog size
     int bgsizey[] = {16, 16, 18, 19, 14, 23, 16};
     context.bgsize = {29, bgsizey[context.ui->get_height_id(context)]};
+
+    if (avoid_mouse) {
+        return;
+    }
 
     // dialog placement
     int s_width = screen_width();
@@ -171,7 +175,7 @@ static void building_info_handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 
-void window_building_info_show(const tile2i& point) {
+void window_building_info_show(const tile2i& point, bool avoid_mouse) {
     auto get_tooltip = [] (tooltip_context* c) {
         auto &context = g_object_info;
         if (!context.ui) {
@@ -199,7 +203,7 @@ void window_building_info_show(const tile2i& point) {
         draw_refresh,
     };
 
-    buiding_info_init(point);
+    buiding_info_init(point, avoid_mouse);
     window_show(&window);
 }
 

@@ -296,8 +296,10 @@ bool building_storage_yard::is_not_accepting(e_resource resource) {
 }
 
 bool building_storage_yard::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    building_draw_normal_anim(ctx, point, &base, tile, storage_yard_m.anim["work"], color_mask);
-    ImageDraw::img_generic(ctx, storage_yard_m.anim["base"].first_img() + 17, point.x - 5, point.y - 42, color_mask);
+    draw_normal_anim(ctx, point, tile, color_mask);
+
+    const auto &cover = anim("cover");
+    ImageDraw::img_generic(ctx, cover.first_img(), point + cover.pos , color_mask);
 
     return true;
 }
@@ -875,6 +877,12 @@ void building_storage_yard::spawn_figure() {
         base.set_figure(1, cart->id());
         cart->set_home(base.id);
     }
+}
+
+void building_storage_yard::update_graphic() {
+    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
+
+    set_animation(animkey);
 }
 
 building_storage_yard *storage_yard_cast(building *b) {

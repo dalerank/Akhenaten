@@ -66,7 +66,7 @@ void info_window_storageyard::draw_warehouse_orders_foreground(object_info *c) {
         }
 
         // order status
-        window_building_draw_order_instruction(INSTR_STORAGE_YARD, storage, resource, line_x, y_offset + 51 + line_y);
+        window_building_draw_order_instruction(INSTR_STORAGE_YARD, storage, resource, vec2i{ line_x, y_offset + 51 + line_y });
 
         // arrows
         int state = storage->resource_state[resource];

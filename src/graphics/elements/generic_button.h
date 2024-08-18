@@ -21,6 +21,7 @@ struct generic_button {
 
     using function_cb = std::function<void(int, int)>;
     function_cb _onclick = nullptr;
+    function_cb _onrclick = nullptr;
     std::pair<int, int> _tooltip;
 
     inline vec2i pos() const { return {x, y}; }
@@ -28,6 +29,10 @@ struct generic_button {
 
     generic_button &onclick(function_cb f) { _onclick = f; return *this; }
     generic_button &onclick(std::function<void()> f) { return onclick([f] (int, int) { f(); }); }
+    
+    generic_button &onrclick(function_cb f) { _onrclick = f; return *this; }
+    generic_button &onrclick(std::function<void()> f) { return onrclick([f] (int, int) { f(); }); }
+    
     generic_button &tooltip(std::pair<int, int> t) { _tooltip = t; return *this; }
     generic_button &tooltip(const std::initializer_list<int> &t) { _tooltip.first = *t.begin(); _tooltip.second = *(t.begin() + 1); return *this; }
 };

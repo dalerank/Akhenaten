@@ -142,7 +142,7 @@ void bazaar_info_window_t::draw_orders_foreground(object_info &c) {
         }
 
         // order status
-        window_building_draw_order_instruction(INSTR_STORAGE_YARD, nullptr, r.type, line_x, y_offset + 51 + line_y, bazaar->is_good_accepted(i));
+        window_building_draw_order_instruction(INSTR_STORAGE_YARD, nullptr, r.type, vec2i{ line_x, y_offset + 51 + line_y }, bazaar->is_good_accepted(i));
     }
 
     // accept none button
