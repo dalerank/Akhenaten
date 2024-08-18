@@ -4,6 +4,7 @@
 #include "window/building/common.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
+#include "graphics/window.h"
 #include "city/city.h"
 #include "window/window_building_info.h"
 #include "window/building/distribution.h"
@@ -49,8 +50,9 @@ void bazaar_info_window_t::draw_simple_background(object_info &c) {
     window_building_play_sound(&c, bazaar->get_sound());
 
     ui["orders"].pos.y = bgsize.y - 40;
-    ui["orders"].onclick([] (int, int) {
-        window_building_info_show_storage_orders();
+    ui["orders"].onclick([&c] (int, int) {
+        c.storage_show_special_orders = 1;
+        window_invalidate();
     });
 
     std::pair<int, int> reason = {0, 0};

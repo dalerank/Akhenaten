@@ -11,6 +11,7 @@
 
 #include "graphics/image.h"
 #include "graphics/graphics.h"
+#include "graphics/window.h"
 #include "window/window_info.h"
 #include "game/game.h"
 
@@ -154,8 +155,9 @@ void granary_info_window_t::window_info_background(object_info &c) {
 
     vec2i bgsize = ui["background"].pxsize();
     ui["orders"].pos.y = bgsize.y - 40;
-    ui["orders"].onclick([] {
-        window_building_info_show_storage_orders();
+    ui["orders"].onclick([&c] {
+        c.storage_show_special_orders = 1;
+        window_invalidate();
     });
 }
 

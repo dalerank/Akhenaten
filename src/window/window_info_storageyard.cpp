@@ -145,6 +145,7 @@ void info_window_storageyard::draw_warehouse(object_info *c) {
 
             ui[id_icon].image(resource);
             ui[id_text].text_var("%u %s", loads, ui::str(23, resource));
+            ++gidx;
         }
     }
 
@@ -164,6 +165,11 @@ void info_window_storageyard::draw_warehouse(object_info *c) {
 
     vec2i bgsize = ui["background"].pxsize();
     ui["orders"].pos.y = bgsize.y - 40;
+
+    ui["orders"].onclick([c] {
+        c->storage_show_special_orders = 1;
+        window_invalidate();
+    });
 
     // if (c->warehouse_space_text == 1) { // full
     //     lang_text_draw_multiline(99, 13, c->offset.x + 32, c->offset.y + 16 * c->height_blocks - 93,

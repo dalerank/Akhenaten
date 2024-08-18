@@ -707,14 +707,26 @@ info_window_storageyard = {
 		storing    : { type : "text", pos: [34, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
 		free_space : { type : "text", pos: [220, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
 
-		good0_icon : { type : "resource_icon", pos: [32, 40] },
-		good0_text : { type : "text", pos: [64, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good1_icon : { type : "resource_icon", pos: [142, 40] },
-		good1_text : { type : "text", pos: [174, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good2_icon : { type : "resource_icon", pos: [252, 40] },
-		good2_text : { type : "text", pos: [284, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good3_icon : { type : "resource_icon", pos: [362, 40] },
-		good3_text : { type : "text", pos: [394, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good0_icon : { type : "resource_icon", pos: [32, 60] },
+		good0_text : { type : "text", pos: [54, 64], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good1_icon : { type : "resource_icon", pos: [172, 60] },
+		good1_text : { type : "text", pos: [194, 64], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good2_icon : { type : "resource_icon", pos: [292, 60] },
+		good2_text : { type : "text", pos: [314, 64], font: FONT_NORMAL_BLACK_ON_LIGHT },
+
+		good3_icon : { type : "resource_icon", pos: [32, 90] },
+		good3_text : { type : "text", pos: [54, 94], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good4_icon : { type : "resource_icon", pos: [172, 60] },
+		good4_text : { type : "text", pos: [194, 94], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good5_icon : { type : "resource_icon", pos: [292, 90] },
+		good5_text : { type : "text", pos: [314, 94], font: FONT_NORMAL_BLACK_ON_LIGHT },
+
+		good6_icon : { type : "resource_icon", pos: [32, 120] },
+		good6_text : { type : "text", pos: [54, 124], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good7_icon : { type : "resource_icon", pos: [172, 120] },
+		good7_text : { type : "text", pos: [194, 124], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good8_icon : { type : "resource_icon", pos: [292, 120] },
+		good8_text : { type : "text", pos: [314, 124], font: FONT_NORMAL_BLACK_ON_LIGHT },
 
 		warning_text : { type : "text", pos: [32, 56], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		workers_panel : { type : "inner_panel", pos : [16, 168], size: [27, 5] },
@@ -724,9 +736,10 @@ info_window_storageyard = {
 		cartstate_img : { type : "resource_icon", pos:[40, 220] },
 		cartstate_desc : { type : "text", pos: [32, 223], wrap:px(27), font : FONT_NORMAL_BLACK_ON_DARK, multiline:true },
 
-		orders : { type:"generic_button", pos:[80, -1], size:[310, 20], text:{group: 99, id: 2}},
+		orders : { type:"generic_button", pos:[100, -1], size:[270, 24], text:{group: 99, id: 2}},
 		button_help  : { type : "image_button", pos:[14, -1], size:[27, 27], pack:PACK_GENERAL, id:134 },
 		button_close  : { type : "image_button", pos:[px(29) - 40, -1], size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		mothball : { type:"generic_button", pos:[px(29)-90, -1], size:[23, 23]},
 	}
 }
 
