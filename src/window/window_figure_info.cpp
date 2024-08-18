@@ -128,7 +128,6 @@ void figure_info_window::window_info_background(object_info &c) {
     e_overlay foverlay = f->dcast()->get_overlay();
     ui["show_overlay"].enabled = (foverlay != OVERLAY_NONE);
     ui["show_overlay"] = (game.current_overlay != foverlay ? "v" : "V");
-    ui["show_overlay"].pos.y = bgsize.y - 40;
     ui["show_overlay"].onclick([foverlay] {
         if (game.current_overlay != foverlay) {
             game_state_set_overlay((e_overlay)foverlay);
