@@ -119,29 +119,25 @@ void js_register_city_sound_constants(js_State *J) {
    _R(SOUND_CHANNEL_CITY_COWFARM)
 }
 
-void js_register_city_buildings(js_State *J) {
-    for (const auto &btype : e_building_type_tokens.values) {
+template<typename T>
+void js_register_tokens(js_State *J, const T& tokens) {
+    for (const auto &btype : tokens.values) {
         if (!btype.name || !*btype.name) {
             continue;
         }
         js_newnumber(J, btype.id);
         js_setglobal(J, btype.name);
     }
+}
+
+void js_register_city_buildings(js_State *J) {
+    js_register_tokens(J, e_building_type_tokens);
     // cause it vacant lot id also
     _R(BUILDING_HOUSE_CRUDE_HUT)
 }
 
 void js_register_ui_fonts(js_State *J) {
-   _R(FONT_SMALL_PLAIN)
-   _R(FONT_NORMAL_BLACK_ON_LIGHT)
-   _R(FONT_NORMAL_WHITE_ON_DARK)
-   _R(FONT_NORMAL_YELLOW)
-   _R(FONT_NORMAL_BLUE)
-   _R(FONT_LARGE_BLACK_ON_LIGHT)
-   _R(FONT_LARGE_BLACK_ON_DARK)
-   _R(FONT_SMALL_OUTLINED)
-   _R(FONT_NORMAL_BLACK_ON_DARK)
-   _R(FONT_SMALL_SHADED)
+    js_register_tokens(J, e_tont_type_tokens);
 }
 
 void js_register_city_labor_category(js_State *J) {

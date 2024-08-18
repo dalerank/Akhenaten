@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/encoding.h"
+#include "core/tokenum.h"
 
 #include <stdint.h>
 
@@ -17,6 +18,7 @@ enum e_font {
     FONT_SMALL_SHADED,
     FONT_TYPES_MAX
 };
+extern const token_holder<e_font, FONT_SMALL_PLAIN, FONT_TYPES_MAX> e_tont_type_tokens;
 
 struct font_definition {
     e_font font;
