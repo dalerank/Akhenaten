@@ -60,13 +60,23 @@ void orders_window_granary::window_info_foreground(object_info &c) {
         ui.button(status.first, vec2i{ bgsize.x / 2, line_y }, vec2i{ bgsize.x / 2 - 32, 20 }, status.second, UiFlags_NoBody|UiFlags_AlignYCentered)
             .onclick([storage_id, resource = r.type] {
                 building_storage_cycle_resource_state(storage_id, resource, false);
+            })
+            .onrclick([storage_id, resource = r.type] {
+                building_storage_cycle_resource_state(storage_id, resource, true);
             });
 
         // arrows
         int state = granary->storage()->resource_state[r.type];
         if (state == STORAGE_STATE_PHARAOH_ACCEPT || state == STORAGE_STATE_PHARAOH_GET) {
-            ui.arw_button(vec2i{ bgsize.x / 2 - 36, line_y }, true, true);
-            ui.arw_button(vec2i{ bgsize.x / 2 - 18, line_y }, false, true);
+            ui.arw_button(vec2i{ bgsize.x / 2 - 36, line_y }, true, true)
+                .onclick([storage_id, resource = r.type] {
+                    building_storage_increase_decrease_resource_state(storage_id, resource, true);
+                });
+
+            ui.arw_button(vec2i{ bgsize.x / 2 - 18, line_y }, false, true)
+                .onclick([storage_id, resource = r.type] {
+                    building_storage_increase_decrease_resource_state(storage_id, resource, false);
+                });
         }
     }
 }

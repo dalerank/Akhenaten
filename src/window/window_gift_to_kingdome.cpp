@@ -33,9 +33,9 @@ static void window_gift_to_kingdome_draw_foreground(void) {
 
     ui::icon(vec2i{112, 160}, RESOURCE_DEBEN);
 
-    ui::label(ui::str(52, 69), {144, 160}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelCentered, 462);
+    ui::label(ui::str(52, 69), {144, 160}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 462);
     ui::label(bstring128().printf("%s %d %s", ui::str(52, 50), g_city.kingdome.months_since_gift, ui::str(8, 4)),
-                                  {144, 304}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelCentered, 46);
+                                  {144, 304}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 46);
 
     if (!g_city.kingdome.can_send_gift(GIFT_MODEST)) {
         ui::label(ui::str(52, 70), vec2i{160, 224}, FONT_NORMAL_WHITE_ON_DARK, UiFlags_LabelMultiline, 352);  

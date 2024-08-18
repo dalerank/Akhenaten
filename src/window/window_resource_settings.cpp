@@ -88,7 +88,7 @@ static void draw_foreground() {
             pcstr could_import_str = could_import
                                             ? ui::str(54, 34)  // open trade route to import
                                             : ui::str(54, 41); // no sellers
-            ui::label(could_import_str, vec2i{98 - 52, 221}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelYCentered, 268);
+            ui::label(could_import_str, vec2i{98 - 52, 221}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignYCentered, 268);
         } else {
             //button_border_draw(btn_imp.x, btn_imp.y, btn_imp.width, 30, data.focus_button_id == 3);
             bstring256 text;
@@ -109,7 +109,7 @@ static void draw_foreground() {
 
             case TRADE_STATUS_IMPORT:
                 text.printf("%s %u", ui::str(54, 19), trading_amount);
-                ui::button(text, {98 - 52, 212}, {268, 30}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelYCentered)
+                ui::button(text, {98 - 52, 212}, {268, 30}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignYCentered)
                     .onclick([] (int, int) {
                         city_resource_cycle_trade_import(g_resource_settings_data.resource);
                     });
@@ -130,7 +130,7 @@ static void draw_foreground() {
             pcstr could_export_str = could_import
                                         ? ui::str(54, 35)  // open trade route to export
                                         : ui::str(54, 42); // no sellers
-            ui::label(could_export_str, vec2i{98 + 216, 221}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelCentered, 268);
+            ui::label(could_export_str, vec2i{98 + 216, 221}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 268);
         } else {
             bstring256 text;
             //button_border_draw(btn_exp.x, btn_exp.y, btn_exp.width, 30, data.focus_button_id == 4);
@@ -151,7 +151,7 @@ static void draw_foreground() {
 
             case TRADE_STATUS_EXPORT:
                 text.printf("%s %u", ui::str(54, 20), trading_amount);
-                ui::button(text, {264 + 48, 212}, {268, 30}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_LabelYCentered)
+                ui::button(text, {264 + 48, 212}, {268, 30}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignYCentered)
                     .onclick([] {
                         city_resource_cycle_trade_import(g_resource_settings_data.resource);
                     });

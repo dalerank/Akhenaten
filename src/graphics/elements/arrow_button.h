@@ -8,16 +8,20 @@ struct arrow_button {
     int x;
     int y;
     int image_id;
-    int size;
+    int wsize;
     void (*click_handler)(int param1, int param2);
     int parameter1;
     int parameter2;
     // state
-    int pressed;
+    char pressed;
+    int state;
     int repeats;
 
     using function_cb = std::function<void(int, int)>;
     function_cb _onclick;
+
+    inline vec2i pos() const { return { x, y }; }
+    inline vec2i size() const { return { wsize, wsize }; }
 
     arrow_button &onclick(function_cb f) { _onclick = f; return *this; }
     arrow_button &onclick(std::function<void()> f) { return onclick([f] (int, int) { f(); }); }

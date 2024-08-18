@@ -23,8 +23,10 @@ void arrow_buttons_draw(vec2i pos, arrow_button* buttons, int num_buttons, bool 
             image_id = image_id_from_group(GROUP_SYSTEM_GRAPHICS) + buttons[i].image_id;
         }
 
-        if (!buttons[i].pressed) {
-            image_id += 1;
+        if (buttons[i].pressed) {
+            image_id += 2;
+        } else {
+            image_id += buttons[i].state;
         }
 
         ImageDraw::img_generic(ctx, image_id, pos.x + buttons[i].x, pos.y + buttons[i].y);
@@ -33,8 +35,8 @@ void arrow_buttons_draw(vec2i pos, arrow_button* buttons, int num_buttons, bool 
 
 int get_arrow_button(const mouse* m, vec2i pos, arrow_button* buttons, int num_buttons) {
     for (int i = 0; i < num_buttons; i++) {
-        if (pos.x + buttons[i].x <= m->x && pos.x + buttons[i].x + buttons[i].size > m->x
-            && pos.y + buttons[i].y <= m->y && pos.y + buttons[i].y + buttons[i].size > m->y) {
+        if (pos.x + buttons[i].x <= m->x && pos.x + buttons[i].x + buttons[i].wsize > m->x
+            && pos.y + buttons[i].y <= m->y && pos.y + buttons[i].y + buttons[i].wsize > m->y) {
             return i + 1;
         }
     }

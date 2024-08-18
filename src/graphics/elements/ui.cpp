@@ -55,9 +55,9 @@ namespace ui {
 
         vec2i size() const {
             switch (type) {
-            case generic: return { g_button.width, g_button.height };
+            case generic: return g_button.size();
             case image: return { i_button.width, i_button.height };
-            case arrow: return { a_button.size, a_button.size };
+            case arrow: return a_button.size();
             }
 
             return {0, 0};
@@ -392,13 +392,25 @@ void ui::icon(vec2i pos, e_advisor adv) {
     ImageDraw::img_generic(ctx, image_group(IMG_ADVISOR_ICONS) + (adv - 1), offset.x + pos.x, offset.y + pos.y);
 }
 
-arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny) {
+arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
     const vec2i offset = g_state.offset();
-    
+    const mouse *m = mouse_get();
+
     int img_index = tiny ? (down ? 0 : 3) : down ? 17 : 15;
-    g_state.buttons.push_back(arrow_button{pos.x, pos.y, img_index, 24, button_none, 0, 0});
+    int size = tiny ? 17 : 24;
+    g_state.buttons.push_back(arrow_button{pos.x, pos.y, img_index, size, button_none, 0, 0});
     auto &abutton = g_state.buttons.back().a_button;
+
+    const bool hovered = !(flags & UiFlags_Readonly) && (is_button_hover(abutton, offset) || !!(flags & UiFlags_Selected));
+    const bool pressed = hovered && m->left.is_down;
+    abutton.state = (hovered ? (pressed ? 2 : 1) : 0);
+
     arrow_buttons_draw(offset, abutton, tiny);
+    const bool readonly = !!(flags & UiFlags_Readonly);
+
+    if (readonly) {
+        graphics_shade_rect(offset + pos, vec2i{ size, size }, 0x80);
+    }
 
     return abutton;
 }

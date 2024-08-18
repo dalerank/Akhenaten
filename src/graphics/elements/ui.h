@@ -66,7 +66,7 @@ image_button &img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size, con
 image_button &imgok_button(vec2i pos, std::function<void(int, int)> cb);
 image_button &imgcancel_button(vec2i pos, std::function<void(int, int)> cb);
 image_button &img_button(e_image_id img, vec2i pos, vec2i size, int offset = 0);
-arrow_button &arw_button(vec2i pos, bool down, bool tiny = false);
+arrow_button &arw_button(vec2i pos, bool down, bool tiny = false, UiFlags_ flags = UiFlags_None);
 scrollbar_t &scrollbar(scrollbar_t &scrollbar, vec2i pos, int &value, vec2i size = {-1, -1});
 
 pcstr str(int group, int id);
@@ -309,7 +309,7 @@ struct widget {
     template<typename ... Args> int label(const Args ... args) { return ui::label(args...); }
     template<typename ... Args> generic_button &button(const Args ... args) { return ui::button(args...); }
     template<typename ... Args> void icon(const Args ... args) { return ui::icon(args...); }
-    template<typename ... Args> arrow_button arw_button(const Args ... args) { return ui::arw_button(args...); }
+    template<typename ... Args> arrow_button &arw_button(const Args ... args) { return ui::arw_button(args...); }
 
     inline void image(image_desc img, vec2i pos) { ui::eimage(img, pos); }
     inline void begin_widget(vec2i offset, bool relative = false) { ui::begin_widget(offset, relative); }
