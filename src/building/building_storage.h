@@ -62,10 +62,10 @@ void storage_settings_backup_reset();
 void building_storage_cycle_resource_state(int storage_id, int resource_id, bool backwards);
 
 void building_storage_increase_decrease_resource_state(int storage_id, int resource_id, bool increase);
-void building_storage_accept_none(int storage_id);
-
-void building_storage_toggle_empty_all(int storage_id);
 void building_storage_reset_building_ids(void);
+
+void building_storage_accept_none(int storage_id);
+void building_storage_toggle_empty_all(int storage_id);
 
 class building_storage : public building_impl {
 public:
@@ -73,6 +73,7 @@ public:
     virtual building_storage *dcast_storage() override { return this; }
 
     const storage_t *storage() const;
+    int storage_id() const;
     bool is_empty_all() const;
     bool is_gettable(e_resource resource);
     bool is_emptying(e_resource resource);

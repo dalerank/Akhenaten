@@ -143,6 +143,11 @@ const storage_t* building_storage_get(int storage_id) {
 void building_storage_toggle_empty_all(int storage_id) {
     has_unsaved_changes = true;
     g_storages[storage_id].storage.empty_all = 1 - g_storages[storage_id].storage.empty_all;
+
+    auto &storage = g_storages[storage_id].storage;
+    for (auto &state : storage.resource_state) {
+        state = STORAGE_STATE_PHARAOH_EMPTY;
+    }
 }
 
 void building_storage_cycle_resource_state(int storage_id, int resource_id, bool backwards) {
@@ -239,8 +244,9 @@ void building_storage_increase_decrease_resource_state(int storage_id, int resou
 
 void building_storage_accept_none(int storage_id) {
     has_unsaved_changes = true;
-    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
-        g_storages[storage_id].storage.resource_state[r] = STORAGE_STATE_PHARAOH_REFUSE;
+    auto &storage = g_storages[storage_id].storage;
+    for (auto &state: storage.resource_state) {
+        state = STORAGE_STATE_PHARAOH_REFUSE;
     }
 }
 
@@ -270,7 +276,11 @@ io_buffer* iob_building_storages = new io_buffer([](io_buffer* iob, size_t versi
 });
 
 const storage_t *building_storage::storage() const {
-    return building_storage_get(this->base.storage_id);
+    return building_storage_get(base.storage_id);
+}
+
+int building_storage::storage_id() const {
+    return base.storage_id;
 }
 
 bool building_storage::is_empty_all() const {
