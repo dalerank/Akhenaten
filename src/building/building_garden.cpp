@@ -25,7 +25,7 @@
 
 struct info_window_garden : public common_info_window {
     info_window_garden() {
-        window_info_register_handler(this);
+        window_building_register_handler(this);
     }
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {

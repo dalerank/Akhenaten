@@ -296,18 +296,20 @@ image_button &ui::img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size,
     }
 
     int image_id = image_id_from_group(ibutton.image_collection, ibutton.image_group) + ibutton.image_offset;
-    if (ibutton.enabled) {
-        if (ibutton.pressed) {
-            image_id += offsets.data[2];
-        } else if (ibutton.focused) {
-            image_id += offsets.data[1];
+    if (image_id > 0) {
+        if (ibutton.enabled) {
+            if (ibutton.pressed) {
+                image_id += offsets.data[2];
+            } else if (ibutton.focused) {
+                image_id += offsets.data[1];
+            }
+        } else {
+            image_id += offsets.data[3];
         }
-    } else {
-        image_id += offsets.data[3];
-    }
 
-    painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id, state_offset + pos);
+        painter ctx = game.painter();
+        ImageDraw::img_generic(ctx, image_id, state_offset + pos);
+    }
 
     return ibutton;
 }
@@ -686,6 +688,7 @@ void ui::eimage_button::load(archive arch) {
 }
 
 void ui::eimage_button::draw() {
+    const vec2i doffset = g_state.offset();
     if (img) {
         ui::img_button(img, pos, size, img_desc.offset)
             .onclick(_func);
@@ -701,7 +704,6 @@ void ui::eimage_button::draw() {
         ui::img_button(img_desc.pack, img_desc.id, pos, tsize, offsets, selected ? UiFlags_Selected : UiFlags_None)
             .onclick(_func);
 
-        const vec2i doffset = g_state.offset();
         if (border && selected) {
             button_border_draw(doffset.x + pos.x - 4, doffset.y + pos.y - 4, tsize.x + 8, tsize.y + 8, true);
         }
@@ -710,12 +712,14 @@ void ui::eimage_button::draw() {
             graphics_shade_rect(doffset + pos, tsize, 0x80);
         }
     } else if (texture_id) {
-        const vec2i doffset = g_state.offset();
         graphics_draw_from_texture(texture_id, doffset + pos, size);
 
         if (border && selected) {
             button_border_draw(doffset.x + pos.x - 4, doffset.y + pos.y - 4, size.x + 8, size.y + 8, true);
         }
+
+        ui::img_button(0, 0, pos, size, offsets, UiFlags_None)
+            .onclick(_func);
 
         if (readonly) {
             graphics_shade_rect(doffset + pos, size, 0x80);
@@ -723,6 +727,9 @@ void ui::eimage_button::draw() {
     } else if (icon_texture) {
         painter ctx = game.painter();
         ctx.draw((SDL_Texture*)icon_texture, pos, {0, 0}, size, 0xffffffff, scale, false, true);
+
+        ui::img_button(0, 0, pos, size, offsets, UiFlags_None)
+            .onclick(_func);
     } 
 }
 
