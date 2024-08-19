@@ -440,7 +440,6 @@ public:
     int figure_service_provide_coverage();
 
     // window/building/figures.c
-    void draw_enemy(object_info* c);
     void draw_animal(object_info* c);
     void draw_normal_figure(object_info* c);
 

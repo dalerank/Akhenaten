@@ -477,19 +477,26 @@ empty_info_window = {
 
 figure_info_window = {
 	ui : {
+		background 		 : { type : "outer_panel",	pos: [0, 0], size: [29, 22]},
+		inner_panel 	 : { type : "inner_panel", pos : [16, 40], size: [27, 13] },
+		border 				 : { type : "border", border:0, pos : [24, 102], size: [px(26), 138] },
+		button_figure0 : { type : "image_button", pos:[60 * 0 + 27, 45], size:[52, 52], border:true },
+		button_figure1 : { type : "image_button", pos:[60 * 1 + 27, 45], size:[52, 52], border:true },
+		button_figure2 : { type : "image_button", pos:[60 * 2 + 27, 45], size:[52, 52], border:true },
+		button_figure3 : { type : "image_button", pos:[60 * 3 + 27, 45], size:[52, 52], border:true },
+		button_figure4 : { type : "image_button", pos:[60 * 4 + 27, 45], size:[52, 52], border:true },
+		button_figure5 : { type : "image_button", pos:[60 * 5 + 27, 45], size:[52, 52], border:true },
+		button_figure6 : { type : "image_button", pos:[60 * 6 + 27, 45], size:[52, 52], border:true },
+		button_help  	 : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close   : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		show_path 		 : { type : "generic_button", margin:{right:-64, bottom:-40}, size:[23, 23]},
+		show_overlay   : { type : "generic_button", margin:{right:-90, bottom:-40}, size:[23, 23]},
+	}
+}
+
+info_window_figure_enemy = {
+	ui : {
 		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 22]},
-		inner_panel : { type : "inner_panel", pos : [16, 40], size: [27, 13] },
-		button_figure0 : { type : "image_button", pos:[60 * 0 + 25, 45], size:[52, 52], border:true },
-		button_figure1 : { type : "image_button", pos:[60 * 1 + 25, 45], size:[52, 52], border:true },
-		button_figure2 : { type : "image_button", pos:[60 * 2 + 25, 45], size:[52, 52], border:true },
-		button_figure3 : { type : "image_button", pos:[60 * 3 + 25, 45], size:[52, 52], border:true },
-		button_figure4 : { type : "image_button", pos:[60 * 4 + 25, 45], size:[52, 52], border:true },
-		button_figure5 : { type : "image_button", pos:[60 * 5 + 25, 45], size:[52, 52], border:true },
-		button_figure6 : { type : "image_button", pos:[60 * 6 + 25, 45], size:[52, 52], border:true },
-		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
-		show_path : { type:"generic_button", margin:{right:-64, bottom:-40}, size:[23, 23]},
-		show_overlay : { type:"generic_button", margin:{right:-90, bottom:-40}, size:[23, 23]},
 	}
 }
 
