@@ -66,22 +66,9 @@ void window_building_play_figure_phrase(object_info* c) {
     c->figure.phrase_key = f->phrase_key;
 }
 
-static void window_info_select_figure(int index, int param2) {
-    auto& data = g_building_figures_data;
-    data.context_for_callback->figure.selected_index = index;
-    window_building_play_figure_phrase(data.context_for_callback);
-    window_invalidate();
+figure_info_window::figure_info_window() {
+    window_figure_register_handler(this);
 }
-
-static generic_button figure_buttons[] = {
-    {26, 46, 50, 50, window_info_select_figure, button_none, 0, 0},
-    {86, 46, 50, 50, window_info_select_figure, button_none, 1, 0},
-    {146, 46, 50, 50, window_info_select_figure, button_none, 2, 0},
-    {206, 46, 50, 50, window_info_select_figure, button_none, 3, 0},
-    {266, 46, 50, 50, window_info_select_figure, button_none, 4, 0},
-    {326, 46, 50, 50, window_info_select_figure, button_none, 5, 0},
-    {386, 46, 50, 50, window_info_select_figure, button_none, 6, 0},
-};
 
 inline void figure_info_window::window_info_foreground(object_info &c) {
     draw();
@@ -91,25 +78,27 @@ inline void figure_info_window::window_info_foreground(object_info &c) {
 }
 
 void figure_info_window::window_info_background(object_info &c) {
-    auto &ui = g_figure_info_window;
-    ui.begin_widget(c.offset);
+    common_info_window::window_info_background(c);
+
+    //ui.begin_widget(c.offset);
 
     window_figure_info_prepare_figures(c);
 
-    int text_id_offset = 36;
     c.figure.draw_debug_path = 1;
-    vec2i bgsize = ui["background"].pxsize();
-
     //if (!c.figure.count) {
     //    lang_text_draw_centered(70, c.terrain_type + 10, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     //}
 
-    //if (c.terrain_type != TERRAIN_INFO_ROAD && c.terrain_type != TERRAIN_INFO_PLAZA) {
-    //    lang_text_draw_multiline(70, c.terrain_type + text_id_offset, c.offset + vec2i{40, 16 * c.bgsize.y - 113}, 16 * (c.bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
-    //}
     for (int i = 0; i < c.figure.count; i++) {
         bstring64 btn_id; btn_id.printf("button_figure%d", i);
         ui[btn_id].select(i == c.figure.selected_index);
+        ui[btn_id].onclick([index = i, &c] {
+            auto &data = g_building_figures_data;
+            data.context_for_callback = &c;
+            data.context_for_callback->figure.selected_index = index;
+            window_building_play_figure_phrase(data.context_for_callback);
+            window_invalidate();
+        });
 
         auto screen_opt = ui[btn_id].dcast_image_button();
         if (screen_opt) {
@@ -118,7 +107,6 @@ void figure_info_window::window_info_background(object_info &c) {
     }
 
     figure* f = figure_get(c.figure.figure_ids[0]);
-    ui["show_path"].pos.y = bgsize.y - 40;
     ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
     ui["show_path"].onclick([f] {
         f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
@@ -138,20 +126,8 @@ void figure_info_window::window_info_background(object_info &c) {
     });
 }
 
-int window_building_handle_mouse_figure_list(const mouse* m, object_info* c) {
-    auto& data = g_building_figures_data;
-    data.context_for_callback = c;
-    int button_id = generic_buttons_handle_mouse(m, c->offset, figure_buttons, c->figure.count, &data.focus_button_id);
-    data.context_for_callback = 0;
-    return button_id;
-}
-
 int figure_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {
-    if (!c.figure.drawn) {
-        return 0;
-    }
-
-    return window_building_handle_mouse_figure_list(m, &c);
+    return 0;
 }
 
 bool figure_info_window::check(object_info &c) {
@@ -188,6 +164,7 @@ bool figure_info_window::check(object_info &c) {
         }
         figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;
     }
+
     return (c.figure.count > 0);
 }
 

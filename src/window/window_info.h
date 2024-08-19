@@ -18,7 +18,8 @@ struct common_info_window : public ui::widget {
     void draw_tooltip(tooltip_context *c);
 };
 
-void window_building_info_show(const tile2i& point, bool avoid_mouse = false);
+void window_info_show(const tile2i& point, bool avoid_mouse = false);
 int window_building_info_get_type();
 void window_building_info_show_storage_orders();
-void window_info_register_handler(common_info_window *handler);
+void window_building_register_handler(common_info_window *handler);
+void window_figure_register_handler(common_info_window *handler);

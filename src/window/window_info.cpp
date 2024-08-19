@@ -48,7 +48,8 @@
 #include <mutex>
 
 object_info g_object_info;
-std::vector<common_info_window *> *g_window_info_handlers = nullptr;
+std::vector<common_info_window *> *g_window_building_handlers = nullptr;
+std::vector<common_info_window *> *g_window_figure_handlers = nullptr;
 
 struct empty_info_window : public common_info_window {
     virtual void window_info_background(object_info &c) override {
@@ -58,12 +59,12 @@ struct empty_info_window : public common_info_window {
 };
 
 terrain_info_window g_terrain_info_window;
-building_info_window g_building_info_window;
+building_info_window g_building_common_window;
 empty_info_window g_empty_info_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_info_window);
 void config_load_info_window() {
-    g_building_info_window.load("building_info_window");
+    g_building_common_window.load("building_info_window");
     g_empty_info_window.load("empty_info_window");
     g_terrain_info_window.load("terrain_info_window");
 }
@@ -91,23 +92,32 @@ void object_info::reset(tile2i tile) {
     show_overlay = OVERLAY_NONE;
 }
 
-void buiding_info_init(tile2i tile, bool avoid_mouse) {
+void window_info_init(tile2i tile, bool avoid_mouse) {
     auto &context = g_object_info;
     context.reset(tile);
 
     city_resource_determine_available();
 
     context.ui = nullptr;
-    for (auto &handler : *g_window_info_handlers) {
-        if (handler->check(context)) {
-            context.ui = handler;
-            break;
+    auto find_handler = [] (auto &handlers, auto &context) {
+        if (context.ui) {
+            return;
         }
-    }
+
+        for (auto &handler : handlers) {
+            if (handler->check(context)) {
+                context.ui = handler;
+                break;
+            }
+        }
+    };
+
+    find_handler(*g_window_building_handlers, context);
+    find_handler(*g_window_figure_handlers, context);
 
     int building_id = map_building_at(context.grid_offset);
     if (!context.ui && building_id) {
-        context.ui = &g_building_info_window;
+        context.ui = &g_building_common_window;
         context.building_id = building_id;
     }
 
@@ -141,7 +151,7 @@ void buiding_info_init(tile2i tile, bool avoid_mouse) {
     }
 }
 
-static void buiding_info_draw_background() {
+static void window_info_draw_background() {
     auto &context = g_object_info;
 
     game.animation = false;
@@ -150,13 +160,13 @@ static void buiding_info_draw_background() {
     context.ui->window_info_background(context);
 }
 
-static void buiding_info_draw_foreground() {
+static void window_info_draw_foreground() {
     auto &ui = *g_object_info.ui;
     ui.begin_widget(g_object_info.offset);
     ui.window_info_foreground(g_object_info);
 }
 
-static void building_info_handle_input(const mouse* m, const hotkeys* h) {
+static void window_info_handle_input(const mouse* m, const hotkeys* h) {
     auto &context = g_object_info;
 
     bool button_id = ui::handle_mouse(m);
@@ -175,7 +185,7 @@ static void building_info_handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 
-void window_building_info_show(const tile2i& point, bool avoid_mouse) {
+void window_info_show(const tile2i& point, bool avoid_mouse) {
     auto get_tooltip = [] (tooltip_context* c) {
         auto &context = g_object_info;
         if (!context.ui) {
@@ -196,14 +206,14 @@ void window_building_info_show(const tile2i& point, bool avoid_mouse) {
 
     static window_type window = {
         WINDOW_BUILDING_INFO,
-        buiding_info_draw_background,
-        buiding_info_draw_foreground,
-        building_info_handle_input,
+        window_info_draw_background,
+        window_info_draw_foreground,
+        window_info_handle_input,
         get_tooltip,
         draw_refresh,
     };
 
-    buiding_info_init(point, avoid_mouse);
+    window_info_init(point, avoid_mouse);
     window_show(&window);
 }
 
@@ -218,15 +228,26 @@ void window_building_info_show_storage_orders() {
     window_invalidate();
 }
 
-void window_info_register_handler(common_info_window *handler) {
-    if (!g_window_info_handlers) {
-        g_window_info_handlers = new std::vector<common_info_window *>();
+template<typename T>
+void window_info_register_handler_t(T &ptr, common_info_window *handler) {
+    if (!ptr) {
+        using PtrT = std::remove_reference_t<T>;
+        using RawT = std::remove_pointer_t<T>;
+        ptr = new RawT();
     }
 
-    auto it = std::find(g_window_info_handlers->begin(), g_window_info_handlers->end(), handler);
-    if (it == g_window_info_handlers->end()) {
-        g_window_info_handlers->push_back(handler);
+    auto it = std::find(ptr->begin(), ptr->end(), handler);
+    if (it == ptr->end()) {
+        ptr->push_back(handler);
     }
+}
+
+void window_building_register_handler(common_info_window *handler) {
+    window_info_register_handler_t(g_window_building_handlers, handler);
+}
+
+void window_figure_register_handler(common_info_window *handler) {
+    window_info_register_handler_t(g_window_figure_handlers, handler);
 }
 
 void common_info_window::window_info_background(object_info &c) {
@@ -236,8 +257,6 @@ void common_info_window::window_info_background(object_info &c) {
 }
 
 void common_info_window::update_buttons(object_info &c) {
-    auto &ui = *c.ui;
-
     vec2i bgsize = ui["background"].pxsize();
     ui["button_help"].onclick([&c] {
         if (c.help_id > 0) {
