@@ -163,8 +163,8 @@ shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool ad
     bool matches = true;
     for (int row = 0; row < size; ++row) {
         for (int column = 0; column < size; ++column) {
-            if ((water_tiles.at(row, column) == true && row > (!adjacent) && (column > 0 && column < size - 1 && row < size - 1))
-                || (water_tiles.at(row, column) == false && row <= (!adjacent) && (column >= adjacent && column <= size - (1 + adjacent))))
+            if ((water_tiles.at(row, column) && row > (!adjacent) && (column > 0 && column < size - 1 && row < size - 1))
+                || (!water_tiles.at(row, column) && row <= (!adjacent) && (column >= adjacent && column <= size - (1 + adjacent))))
                 matches = false;
         }
     }

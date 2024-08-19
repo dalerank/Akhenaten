@@ -74,15 +74,15 @@ void game_debug_show_property_value(pcstr field, const bool &v, bool disabled) {
 }
 
 void game_debug_show_property_value(pcstr field, const bstring64 &v, bool disabled) {
-    ImGui::Text(!!v ? v.c_str() : "none");
+    ImGui::Text("%s", !!v ? v.c_str() : "none");
 }
 
 void game_debug_show_property_value(pcstr field, const bstring256 &v, bool disabled) {
-    ImGui::Text(!!v ? v.c_str() : "none");
+    ImGui::Text("%s", !!v ? v.c_str() : "none");
 }
 
 void game_debug_show_property_value(pcstr field, const xstring &v, bool disabled) {
-    ImGui::Text(!!v ? v.c_str() : "none");
+    ImGui::Text("%s", !!v ? v.c_str() : "none");
 }
 
 void game_debug_show_property_value(pcstr field, const vec2i &v, bool disabled) {
