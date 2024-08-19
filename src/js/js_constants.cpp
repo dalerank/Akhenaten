@@ -141,17 +141,7 @@ void js_register_ui_fonts(js_State *J) {
 }
 
 void js_register_city_labor_category(js_State *J) {
-   _R(LABOR_CATEGORY_NONE)
-   _R(LABOR_CATEGORY_FOOD_PRODUCTION)
-   _R(LABOR_CATEGORY_INDUSTRY_COMMERCE)
-   _R(LABOR_CATEGORY_ENTERTAINMENT)
-   _R(LABOR_CATEGORY_RELIGION)
-   _R(LABOR_CATEGORY_EDUCATION)
-   _R(LABOR_CATEGORY_WATER_HEALTH)
-   _R(LABOR_CATEGORY_INFRASTRUCTURE)
-   _R(LABOR_CATEGORY_GOVERNMENT)
-   _R(LABOR_CATEGORY_MILITARY)
-   _R(LABOR_CATEGORY_SIZE)
+    js_register_tokens(J, e_labor_category_tokens);
 }
 
 void js_register_city_overlays(js_State *J) {

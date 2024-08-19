@@ -21,6 +21,8 @@
 
 #include <iostream>
 
+#if !defined(GAME_PLATFORM_ANDROID)
+
 dev::imgui_qconsole *_debug_console = nullptr;
 
 dev::imgui_qconsole &debug_console() {
@@ -265,3 +267,5 @@ void bind_debug_console_var_int16(pcstr var, int16_t &ref) {
 void bind_debug_console_var_bool(pcstr var, bool &ref) {
     debug_console().con.bind_cvar(var, ref);
 }
+
+#endif //GAME_PLATFORM_ANDROID

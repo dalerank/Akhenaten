@@ -158,7 +158,10 @@ void Logger::write_to_file_(char const* prefix, char const* message) {
 #elif defined(GAME_PLATFORM_ANDROID)
     __android_log_print(ANDROID_LOG_INFO, "ozy-and", "%s%s", prefix, message);
 #endif
+
+#if defined(GAME_PLATFORM_ANDROID)
     game_debug_cli_message(message);
+#endif // GAME_PLATFORM_ANDROID
 }
 
 void Logger::write_to_output_(char const* prefix, char const* message) {

@@ -9,6 +9,8 @@
 #include <functional>
 #include <iosfwd>
 
+#if !defined(GAME_PLATFORM_ANDROID)
+
 void game_debug_cli_draw();
 void game_debug_properties_draw();
 void game_debug_cli_message(pcstr msg);
@@ -37,3 +39,23 @@ void game_debug_show_property(int &i, pcstr field, const xstring &v, bool disabl
 void game_debug_show_property(int &i, pcstr field, const vec2i &v, bool disabled = false);
 void game_debug_show_property(int &i, pcstr field, const tile2i &v, bool disabled = false);
 void game_debug_show_property(int &i, pcstr field, const std::function<void()> &f, bool disabled = false);
+
+#else 
+
+inline void game_debug_cli_draw() {}
+inline void game_debug_properties_draw() {}
+inline void game_imgui_overlay_draw() {}
+inline void game_debug_show_property(...) {}
+inline void game_imgui_overlay_begin_frame() {}
+inline void game_imgui_overlay_init() {}
+inline void game_imgui_overlay_handle_event(...) {}
+inline void bind_debug_command(...) {}
+inline void bind_debug_console_var_int(...) {}
+inline void bind_debug_console_var_int8(...) {}
+inline void bind_debug_console_var_int16(...) {}
+inline void bind_debug_console_var_bool(...) {}
+inline void game_imgui_overlay_destroy() {}
+
+#endif //GAME_PLATFORM_ANDROID
+
+

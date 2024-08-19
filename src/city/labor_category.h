@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/tokenum.h"
+
 enum e_labor_category {
     LABOR_CATEGORY_NONE = -1,
     LABOR_CATEGORY_FOOD_PRODUCTION = 0, // todo: wrong index...
@@ -13,3 +15,5 @@ enum e_labor_category {
     LABOR_CATEGORY_MILITARY = 8,
     LABOR_CATEGORY_SIZE = 10,
 };
+
+extern const token_holder<e_labor_category, LABOR_CATEGORY_NONE, LABOR_CATEGORY_SIZE> e_labor_category_tokens;

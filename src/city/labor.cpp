@@ -16,6 +16,8 @@
 
 #include <algorithm>
 
+const token_holder<e_labor_category, LABOR_CATEGORY_NONE, LABOR_CATEGORY_SIZE> e_labor_category_tokens;
+
 static int category_for_int_arr[] = {
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10
