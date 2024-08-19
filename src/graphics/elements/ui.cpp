@@ -492,31 +492,20 @@ void ui::widget::load(archive arch, pcstr section) {
     arch.r_objects(section, [this] (pcstr key, archive elem) {
         pcstr type = elem.r_string("type");
         element::ptr elm;
-        if (!strcmp(type, "outer_panel")) {
-            elm = std::make_shared<eouter_panel>();
-        } else if (!strcmp(type, "scrollbar")) {
-            elm = std::make_shared<escrollbar>();
-        } else if (!strcmp(type, "menu_header")) {
-            elm = std::make_shared<emenu_header>();
-        } else if (!strcmp(type, "inner_panel")) {
-            elm = std::make_shared<einner_panel>();
-        } else if (!strcmp(type, "background")) {
-            elm = std::make_shared<ebackground>();
-        } else if (!strcmp(type, "image")) {
-            elm = std::make_shared<eimg>();
-        } else if (!strcmp(type, "label")) {
-            elm = std::make_shared<elabel>();
-        } else if (!strcmp(type, "text")) {
-            elm = std::make_shared<etext>();
-        } else if (!strcmp(type, "generic_button")) {
-            elm = std::make_shared<egeneric_button>();
-        } else if (!strcmp(type, "image_button")) {
-            elm = std::make_shared<eimage_button>();
-        } else if (!strcmp(type, "resource_icon")) {
-            elm = std::make_shared<eresource_icon>();
-        } else if (!strcmp(type, "arrow_button")) {
-            elm = std::make_shared<earrow_button>();
-        } else if (!strcmp(type, "large_button")) {
+        if (!strcmp(type, "outer_panel")) { elm = std::make_shared<eouter_panel>();} 
+        else if (!strcmp(type, "scrollbar")) { elm = std::make_shared<escrollbar>(); }
+        else if (!strcmp(type, "menu_header")) { elm = std::make_shared<emenu_header>(); }
+        else if (!strcmp(type, "inner_panel")) { elm = std::make_shared<einner_panel>(); }
+        else if (!strcmp(type, "background")) { elm = std::make_shared<ebackground>(); }
+        else if (!strcmp(type, "image")) { elm = std::make_shared<eimg>(); }
+        else if (!strcmp(type, "label")) { elm = std::make_shared<elabel>(); }
+        else if (!strcmp(type, "text")) { elm = std::make_shared<etext>(); }
+        else if (!strcmp(type, "generic_button")) { elm = std::make_shared<egeneric_button>(); }
+        else if (!strcmp(type, "image_button")) { elm = std::make_shared<eimage_button>(); }
+        else if (!strcmp(type, "resource_icon")) { elm = std::make_shared<eresource_icon>(); }
+        else if (!strcmp(type, "arrow_button")) { elm = std::make_shared<earrow_button>(); }
+        else if (!strcmp(type, "border")) { elm = std::make_shared<eborder>(); }
+        else if (!strcmp(type, "large_button")) {
             auto btn = std::make_shared<egeneric_button>();
             btn->mode = 1;
             elm = btn;
@@ -596,6 +585,23 @@ void ui::ebackground::load(archive arch) {
     img_desc.id = arch.r_int("id");
     img_desc.offset = arch.r_int("offset");
 }
+
+void ui::eborder::load(archive arch) {
+    element::load(arch);
+
+    border = arch.r_int("border");
+}
+
+void ui::eborder::draw() {
+    const vec2i offset = g_state.offset();
+    switch (border) {
+    default: //fallthrought
+    case 0:
+        button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, false);
+        break;
+    }
+}
+
 
 void ui::eresource_icon::draw() {
     ui::eimage(IMG_RESOURCE_ICONS, pos, res);

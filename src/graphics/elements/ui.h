@@ -186,6 +186,13 @@ struct ebackground : public element {
     virtual image_desc image() const override { return img_desc; }
 };
 
+struct eborder : public element {
+    int border;
+
+    virtual void load(archive elem) override;
+    virtual void draw() override;
+};
+
 struct eresource_icon : public element {
     e_resource res;
 
