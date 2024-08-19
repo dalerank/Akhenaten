@@ -441,7 +441,6 @@ public:
 
     // window/building/figures.c
     void draw_animal(object_info* c);
-    void draw_normal_figure(object_info* c);
 
     // grid/marshland.c
     bool find_resource_tile(int resource_type, tile2i &out);

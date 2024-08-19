@@ -43,7 +43,7 @@ bool figure_carrier::window_info_background(object_info &ctx) {
     painter p = game.painter();
     ImageDraw::img_generic(p, big_people_image(type()), ctx.offset + vec2i{28, 112});
 
-    lang_text_draw(name_group_id(), base.name, ctx.offset.x + 90, ctx.offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
+    lang_text_draw(254, base.name, ctx.offset.x + 90, ctx.offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
     int width = 0;
     if (base.has_home()) {
         width += lang_text_draw(41, home()->type, ctx.offset.x + 92, ctx.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);

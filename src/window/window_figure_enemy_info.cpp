@@ -108,8 +108,7 @@ void figure_enemy_info_window::window_info_background(object_info &c) {
         break;
     }
 
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PORTRAITS) + image_id - 1, c.offset + vec2i{ 28, 112 });
-
-    lang_text_draw(name_group_id(), f->name, c.offset.x + 90, c.offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
-    lang_text_draw(37, scenario_property_enemy() + 20, c.offset.x + 92, c.offset.y + 149, FONT_NORMAL_BLACK_ON_DARK);
+    ui["bigimage"].image(image_id - 1);
+    ui["name"] = ui::str(254, f->name);
+    ui["type"] = ui::str(37, scenario_property_enemy() + 20);
 }

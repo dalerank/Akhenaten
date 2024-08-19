@@ -8,6 +8,7 @@
 #include "game/game.h"
 #include "dev/debug.h"
 #include "window/message_dialog.h"
+#include "window/building/figures.h"
 #include "window/window_city.h"
 #include "game/game.h"
 #include "game/state.h"
@@ -80,19 +81,27 @@ inline void figure_info_window::window_info_foreground(object_info &c) {
     figure *f = figure_get(figure_id);
     g_debug_figure_id = figure_id;
 
-    int type = f->type;
     bool custom_window = f->dcast()->window_info_background(c);
     if (custom_window) {
         return;
     }
 
+    c.figure.drawn = 1;
     if (f->is_herd()) {
         f->draw_animal(&c);
-    } else {
-        f->draw_normal_figure(&c);
+        return;
+    } 
+
+    painter ctx = game.painter();
+    int image_id = f->type;
+    if (f->action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE || f->action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
+        image_id = 18;
     }
 
-    c.figure.drawn = 1;
+    ui["bigimage"].image(image_id);
+    ui["name"] = ui::str(254, f->name);
+    ui["type"] = ui::str(64, f->type);
+    ui["phrase"] = ui::str(c.figure.phrase_group, c.figure.phrase_id);
 }
 
 void figure_info_window::window_info_background(object_info &c) {

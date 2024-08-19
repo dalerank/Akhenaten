@@ -57,29 +57,8 @@ int inventory_to_resource_id(int value) {
     }
 }
 
-int name_group_id() { // TODO
-    return 254;
-}
-
 void figure::draw_animal(object_info* c) {
     painter ctx = game.painter();
     ImageDraw::img_generic(ctx, big_people_image(type), c->offset + vec2i{28, 112});
     lang_text_draw(64, type, c->offset.x + 92, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
-}
-
-void figure::draw_normal_figure(object_info* c) {
-    painter ctx = game.painter();
-    int image_id = big_people_image(type);
-    if (action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE || action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
-        image_id = image_id_from_group(GROUP_PORTRAITS) + 18;
-    }
-
-    ImageDraw::img_generic(ctx, image_id, c->offset + vec2i{28, 112});
-
-    lang_text_draw(name_group_id(), name, c->offset.x + 90, c->offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
-    lang_text_draw(64, type, c->offset.x + 92, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
-
-    if (c->figure.phrase_group > 0 && c->figure.phrase_id >= 0) {
-        lang_text_draw_multiline(c->figure.phrase_group, c->figure.phrase_id, c->offset + vec2i{90, 160}, 16 * (c->bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK);
-    }
 }
