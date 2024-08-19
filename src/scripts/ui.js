@@ -478,7 +478,6 @@ empty_info_window = {
 figure_info_window = {
 	ui : {
 		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 22]},
-		title 		 	: { type : "text", pos: [48, 32], size: [px(26), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		inner_panel : { type : "inner_panel", pos : [16, 40], size: [27, 13] },
 		button_figure0 : { type : "image_button", pos:[60 * 0 + 25, 45], size:[52, 52], border:true },
 		button_figure1 : { type : "image_button", pos:[60 * 1 + 25, 45], size:[52, 52], border:true },
@@ -489,7 +488,7 @@ figure_info_window = {
 		button_figure6 : { type : "image_button", pos:[60 * 6 + 25, 45], size:[52, 52], border:true },
 		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
 		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
-		show_path : { type:"generic_button", pos:[px(29)-64, -1], size:[23, 23]},
+		show_path : { type:"generic_button", margin:{right:-64, bottom:-40}, size:[23, 23]},
 		show_overlay : { type:"generic_button", margin:{right:-90, bottom:-40}, size:[23, 23]},
 	}
 }
