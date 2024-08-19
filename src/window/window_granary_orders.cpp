@@ -38,7 +38,7 @@ void orders_window_granary::window_info_background(object_info &c) {
     });
 
     ui["button_close"].onclick([&c] {
-        window_building_info_show(tile2i(c.grid_offset), /*avoid_mouse*/true);
+        window_info_show(tile2i(c.grid_offset), /*avoid_mouse*/true);
     });
 }
 

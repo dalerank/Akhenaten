@@ -26,7 +26,7 @@ void window_building_draw_burning_ruin(object_info* c) {
 }
 
 building_info_window::building_info_window() {
-    window_info_register_handler(this);
+    window_building_register_handler(this);
 }
 
 int building_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {

@@ -416,7 +416,7 @@ static void handle_first_touch(map_point tile) {
         if (type == BUILDING_NONE && handle_right_click_allow_building_info(tile)) {
             scroll_drag_end();
             data.capture_input = false;
-            window_building_info_show(tile);
+            window_info_show(tile);
             return;
         }
     }
@@ -543,7 +543,7 @@ static void handle_mouse(const mouse* m) {
     if (m->right.went_up) {
         if (!Planner.build_type) {
             if (handle_right_click_allow_building_info(data.current_tile)) {
-                window_building_info_show(data.current_tile);
+                window_info_show(data.current_tile);
             }
         } else {
             Planner.construction_cancel();

@@ -3,6 +3,8 @@
 #include "window/window_info.h"
 
 struct figure_info_window : public common_info_window {
+    figure_info_window();
+
     using widget::load;
     virtual void load(archive arch, pcstr section) override {
         common_info_window::load(arch, section);
