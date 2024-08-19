@@ -1384,7 +1384,7 @@ building_mine_copper = {
   animations : {
     preview : { pack:PACK_GENERAL, id:196 },
     base : { pack:PACK_GENERAL, id:196 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2 }
   },
   output_resource : RESOURCE_COPPER,
   window_info_height_id : 1,
@@ -1398,7 +1398,7 @@ building_mine_gems = {
   animations : {
     preview : { pack:PACK_GENERAL, id:188 },
     base : { pack:PACK_GENERAL, id:188 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2 }
   },
   output_resource : RESOURCE_GEMS,
   building_size : 2,
@@ -1463,7 +1463,7 @@ building_limestone_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:170 },
     base : { pack:PACK_GENERAL, id:170 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
   },
   output_resource : RESOURCE_LIMESTONE,
   building_size : 2,
@@ -1477,7 +1477,7 @@ building_mine_gold = {
   animations : {
     preview : { pack:PACK_GENERAL, id:185 },
     base : { pack:PACK_GENERAL, id:185 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2 }
   },
   output_resource : RESOURCE_GOLD,
   building_size : 2,
@@ -1569,7 +1569,7 @@ building_pottery = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
-    work : { pos : [36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18 },
+    work : { pos : [36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18, duration:3 },
     clay : { pos:[55, 30], pack:PACK_GENERAL, id:207 },
   },
   output_resource : RESOURCE_POTTERY,
