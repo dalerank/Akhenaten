@@ -87,10 +87,6 @@ inline void figure_info_window::window_info_foreground(object_info &c) {
     }
 
     c.figure.drawn = 1;
-    if (f->is_herd()) {
-        f->draw_animal(&c);
-        return;
-    } 
 
     painter ctx = game.painter();
     int image_id = f->type;

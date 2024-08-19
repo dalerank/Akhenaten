@@ -203,13 +203,13 @@ struct eresource_icon : public element {
 
 struct eouter_panel : public element {
     virtual void draw() override;
-    virtual vec2i pxsize() const { return size * 16; }
+    virtual vec2i pxsize() const override { return size * 16; }
     virtual void load(archive elem) override;
 };
 
 struct einner_panel : public element {
     virtual void draw() override;
-    virtual vec2i pxsize() const { return size * 16; }
+    virtual vec2i pxsize() const override { return size * 16; }
     virtual void load(archive elem) override;
 };
 
@@ -253,7 +253,7 @@ struct emenu_header : public element {
     virtual void load(archive elem) override;
             void load_items(archive elem, pcstr section);
     virtual void draw() override;
-    virtual void font(int v) { _font = (e_font)v; }
+    virtual void font(int v) override { _font = (e_font)v; }
     virtual void text(pcstr text) override { impl.text = text; }
     virtual int text_width() override;
             menu_item &item(int i) { static menu_item dummy; return i < impl.items.size() ? impl.items[i] : dummy; }

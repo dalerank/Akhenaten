@@ -498,6 +498,12 @@ figure_info_window = {
 	}
 }
 
+info_window_figure_animal = {
+	ui : {
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 22]},
+	}
+}
+
 info_window_figure_enemy = {
 	ui : {
 		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 22]},

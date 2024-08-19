@@ -29,7 +29,6 @@ const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[] = {
 
 int big_people_image(e_figure_type type) {
     int result = 0;
-    int index = type;
     result = image_id_from_group(GROUP_PORTRAITS) + type;
     return result;
 }
@@ -55,10 +54,4 @@ int inventory_to_resource_id(int value) {
     default:
         return RESOURCE_NONE;
     }
-}
-
-void figure::draw_animal(object_info* c) {
-    painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, big_people_image(type), c->offset + vec2i{28, 112});
-    lang_text_draw(64, type, c->offset.x + 92, c->offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
 }

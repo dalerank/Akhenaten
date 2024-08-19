@@ -25,7 +25,7 @@ void config_load_figure_enemy_window_info() {
 }
 
 void figure_enemy_info_window::window_info_background(object_info &c) {
-    painter ctx = game.painter();
+    figure_info_window::window_info_background(c);
 
     int figure_id = map_figure_id_get(c.grid_offset);
     figure *f = figure_get(figure_id);
