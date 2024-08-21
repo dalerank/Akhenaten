@@ -31,7 +31,7 @@ void figure_carrier_info_window::window_info_background(object_info &c) {
         home_text = ui::str(41, f->home()->type);
     }
     bstring256 type_str = ui::str(64, f->type());
-    ui["type"].text_var("%s %s", home_text, type_str);
+    ui["type"].text_var("%s %s", home_text.c_str(), type_str.c_str());
 
     if (f->action_state() != FIGURE_ACTION_132_DOCKER_IDLING && f->base.resource_id) {
         int resource_img = image_id_resource_icon(f->base.resource_id);
