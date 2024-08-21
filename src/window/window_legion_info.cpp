@@ -435,7 +435,7 @@ int legion_info_window::get_height_id(object_info &c) {
 
 bool legion_info_window::check(object_info &c) {
     for (int i = 0; i < 7; i++) {
-        int figure_id = c.figure.figure_ids[i];
+        int figure_id = c.nfigure.figure_ids[i];
         if (figure_id <= 0) {
             continue;
         }

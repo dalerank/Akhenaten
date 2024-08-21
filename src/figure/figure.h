@@ -36,6 +36,7 @@ class figure_worker;
 class figure_soldier;
 class figure_fishing_boat;
 class figure_fishing_point;
+class figure_caravan_donkey;
 
 struct animation_t;
 
@@ -233,6 +234,7 @@ public:
     figure_soldier *dcast_soldier();
     figure_fishing_boat *dcast_fishing_boat();
     figure_fishing_point *dcast_fishing_point();
+    figure_caravan_donkey *dcast_caravan_donkey();
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -506,6 +508,7 @@ public:
     virtual figure_soldier *dcast_soldier() { return nullptr; }
     virtual figure_fishing_boat *dcast_fishing_boat() { return nullptr; }
     virtual figure_fishing_point *dcast_fishing_point() { return nullptr; }
+    virtual figure_caravan_donkey *dcast_caravan_donkey() { return nullptr; }
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }

@@ -38,6 +38,7 @@ enum terrain_info_type {
 };
 
 struct common_info_window;
+struct figure;
 
 struct object_info {
     vec2i offset;
@@ -83,7 +84,8 @@ struct object_info {
         int count;
         int drawn;
         int figure_ids[7];
-    } figure;
+    } nfigure;
 
     void reset(tile2i tile);
+    figure *figure_get();
 };

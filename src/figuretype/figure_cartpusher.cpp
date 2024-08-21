@@ -83,8 +83,8 @@ bool figure_carrier::window_info_background(object_info &ctx) {
         break;
     }
 
-    if (ctx.figure.phrase_group > 0 && ctx.figure.phrase_id >= 0) {
-        lang_text_draw_multiline(ctx.figure.phrase_group, ctx.figure.phrase_id, ctx.offset + vec2i{90, 180}, 16 * (ctx.bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK);
+    if (ctx.nfigure.phrase_group > 0 && ctx.nfigure.phrase_id >= 0) {
+        lang_text_draw_multiline(ctx.nfigure.phrase_group, ctx.nfigure.phrase_id, ctx.offset + vec2i{90, 180}, 16 * (ctx.bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK);
     }
 
     return true;

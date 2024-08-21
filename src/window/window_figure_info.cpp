@@ -36,7 +36,7 @@ void draw_figure_in_city(int figure_id, vec2i* coord, painter &ctx) {
 }
 
 void figure_info_window::prepare_figures(object_info &c) {
-    if (c.figure.count <= 0) {
+    if (c.nfigure.count <= 0) {
         return;
     }
 
@@ -44,8 +44,8 @@ void figure_info_window::prepare_figures(object_info &c) {
 
     painter ctx = game.painter();
     vec2i coord = {0, 0};
-    for (int i = 0; i < c.figure.count; i++) {
-        draw_figure_in_city(c.figure.figure_ids[i], &coord, ctx);
+    for (int i = 0; i < c.nfigure.count; i++) {
+        draw_figure_in_city(c.nfigure.figure_ids[i], &coord, ctx);
         data.figure_images[i] = graphics_save_to_texture(data.figure_images[i], coord, {48, 48});
     }
     //        if (config_get(CONFIG_UI_ZOOM))
@@ -60,13 +60,13 @@ void figure_info_window::prepare_figures(object_info &c) {
 }
 
 void window_building_play_figure_phrase(object_info* c) {
-    int figure_id = c->figure.figure_ids[c->figure.selected_index];
+    int figure_id = c->nfigure.figure_ids[c->nfigure.selected_index];
     figure* f = figure_get(figure_id);
     f->figure_phrase_play();
     c->show_overlay = f->dcast()->get_overlay();
-    c->figure.phrase_group = f->phrase_group;
-    c->figure.phrase_id = f->phrase_id;
-    c->figure.phrase_key = f->phrase_key;
+    c->nfigure.phrase_group = f->phrase_group;
+    c->nfigure.phrase_id = f->phrase_id;
+    c->nfigure.phrase_key = f->phrase_key;
 }
 
 figure_info_window::figure_info_window() {
@@ -76,9 +76,9 @@ figure_info_window::figure_info_window() {
 inline void figure_info_window::window_info_foreground(object_info &c) {
     draw();
 
-    int figure_id = c.figure.figure_ids[c.figure.selected_index];
+    int figure_id = c.nfigure.figure_ids[c.nfigure.selected_index];
 
-    figure *f = figure_get(figure_id);
+    figure *f = ::figure_get(figure_id);
     g_debug_figure_id = figure_id;
 
     bool custom_window = f->dcast()->window_info_background(c);
@@ -86,7 +86,7 @@ inline void figure_info_window::window_info_foreground(object_info &c) {
         return;
     }
 
-    c.figure.drawn = 1;
+    c.nfigure.drawn = 1;
 
     painter ctx = game.painter();
     int image_id = f->type;
@@ -97,7 +97,7 @@ inline void figure_info_window::window_info_foreground(object_info &c) {
     ui["bigimage"].image(image_id);
     ui["name"] = ui::str(254, f->name);
     ui["type"] = ui::str(64, f->type);
-    ui["phrase"] = ui::str(c.figure.phrase_group, c.figure.phrase_id);
+    ui["phrase"] = ui::str(c.nfigure.phrase_group, c.nfigure.phrase_id);
 }
 
 void figure_info_window::window_info_background(object_info &c) {
@@ -105,18 +105,18 @@ void figure_info_window::window_info_background(object_info &c) {
 
     prepare_figures(c);
 
-    c.figure.draw_debug_path = 1;
+    c.nfigure.draw_debug_path = 1;
     //if (!c.figure.count) {
     //    lang_text_draw_centered(70, c.terrain_type + 10, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     //}
 
-    for (int i = 0; i < c.figure.count; i++) {
+    for (int i = 0; i < c.nfigure.count; i++) {
         bstring64 btn_id; btn_id.printf("button_figure%d", i);
-        ui[btn_id].select(i == c.figure.selected_index);
+        ui[btn_id].select(i == c.nfigure.selected_index);
         ui[btn_id].onclick([index = i, &c] {
             auto &data = g_building_figures_data;
             data.context_for_callback = &c;
-            data.context_for_callback->figure.selected_index = index;
+            data.context_for_callback->nfigure.selected_index = index;
             window_building_play_figure_phrase(data.context_for_callback);
             window_invalidate();
         });
@@ -127,7 +127,7 @@ void figure_info_window::window_info_background(object_info &c) {
         }
     }
 
-    figure* f = figure_get(c.figure.figure_ids[0]);
+    figure* f = ::figure_get(c.nfigure.figure_ids[0]);
     ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
     ui["show_path"].onclick([f] {
         f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
@@ -152,15 +152,15 @@ int figure_info_window::window_info_handle_mouse(const mouse *m, object_info &c)
 }
 
 bool figure_info_window::check(object_info &c) {
-    c.figure.selected_index = 0;
-    c.figure.count = 0;
+    c.nfigure.selected_index = 0;
+    c.nfigure.count = 0;
     for (int i = 0; i < 7; i++) {
-        c.figure.figure_ids[i] = 0;
+        c.nfigure.figure_ids[i] = 0;
     }
 
     int figure_id = map_figure_id_get(c.grid_offset);
-    while (figure_id > 0 && c.figure.count < 7) {
-        figure *f = figure_get(figure_id);
+    while (figure_id > 0 && c.nfigure.count < 7) {
+        figure *f = ::figure_get(figure_id);
         if (f->state != FIGURE_STATE_DEAD && f->action_state != FIGURE_ACTION_149_CORPSE) {
             switch (f->type) {
             case FIGURE_NONE:
@@ -178,7 +178,7 @@ bool figure_info_window::check(object_info &c) {
             break;
 
             default:
-            c.figure.figure_ids[c.figure.count++] = figure_id;
+            c.nfigure.figure_ids[c.nfigure.count++] = figure_id;
             //                        f->igure_phrase_determine();
             break;
             }
@@ -186,7 +186,12 @@ bool figure_info_window::check(object_info &c) {
         figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;
     }
 
-    return (c.figure.count > 0);
+    return (c.nfigure.count > 0);
+}
+
+figure *figure_info_window::figure_get(object_info &c) {
+    int figure_id = map_figure_id_get(c.grid_offset);
+    return ::figure_get(figure_id);
 }
 
 //void window_building_draw_figure_list(object_info* c) {

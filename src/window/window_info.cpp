@@ -87,9 +87,14 @@ void object_info::reset(tile2i tile) {
     has_reservoir_pipes = map_terrain_is(tile, TERRAIN_GROUNDWATER);
     aqueduct_has_water = !!map_canal_at(grid_offset) && ((map_image_at(tile) - image_id_from_group(GROUP_BUILDING_AQUEDUCT)) < 15);
     terrain_type = TERRAIN_INFO_EMPTY;
-    figure.drawn = 0;
-    figure.draw_debug_path = 0;
+    nfigure.drawn = 0;
+    nfigure.draw_debug_path = 0;
     show_overlay = OVERLAY_NONE;
+}
+
+figure *object_info::figure_get() {
+    int figure_id = nfigure.figure_ids[nfigure.selected_index];
+    return ::figure_get(figure_id);
 }
 
 void window_info_init(tile2i tile, bool avoid_mouse) {

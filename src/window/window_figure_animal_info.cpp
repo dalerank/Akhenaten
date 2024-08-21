@@ -10,9 +10,7 @@
 struct figure_animal_info_window : public figure_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        int figure_id = map_figure_id_get(c.grid_offset);
-        figure *f = figure_get(figure_id);
-        return f->is_herd();
+        return figure_get(c)->is_herd();
     }
 };
 
@@ -27,7 +25,7 @@ void figure_animal_info_window::window_info_background(object_info &c) {
     figure_info_window::window_info_background(c);
 
     int figure_id = map_figure_id_get(c.grid_offset);
-    figure *f = figure_get(figure_id);
+    figure *f = ::figure_get(figure_id);
 
     ui["bigimage"].image(f->type);
     ui["type"] = ui::str(64, f->type);

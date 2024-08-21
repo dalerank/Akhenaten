@@ -284,8 +284,8 @@ bool figure_market_buyer::window_info_background(object_info &c) {
         ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c.offset + vec2i{90 + width, 135});
     }
 
-    if (c.figure.phrase_group > 0 && c.figure.phrase_id >= 0) {
-        lang_text_draw_multiline(c.figure.phrase_group, c.figure.phrase_id, c.offset + vec2i{90, 160}, 16 * (c.bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK);
+    if (c.nfigure.phrase_group > 0 && c.nfigure.phrase_id >= 0) {
+        lang_text_draw_multiline(c.nfigure.phrase_group, c.nfigure.phrase_id, c.offset + vec2i{90, 160}, 16 * (c.bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK);
     }
 
     return true;

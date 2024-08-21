@@ -18,14 +18,28 @@
 #include "graphics/graphics.h"
 #include "game/game.h"
 #include "graphics/elements/lang_text.h"
+#include "window/window_figure_info.h"
 
 #include "core/profiler.h"
 
 figures::model_t<figure_caravan_donkey> caravan_donkey_m;
 
+struct figure_caravan_donkey_info_window : public figure_info_window {
+    virtual void window_info_background(object_info &c) override;
+    virtual bool check(object_info &c) override {
+        figure *f = figure_get(c);
+        return f->dcast_caravan_donkey();
+    }
+};
+
 ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_caravan_donkey);
 void config_load_figure_caravan_donkey() {
     caravan_donkey_m.load();
+}
+
+const empire_city *figure_caravan_donkey::get_empire_city() const {
+    const empire_city *city = g_empire.city(base.empire_city_id);
+    return city;
 }
 
 void figure_caravan_donkey::figure_action() {
@@ -41,7 +55,7 @@ void figure_caravan_donkey::figure_action() {
         follow_ticks(1);
 
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
-    int image_id = caravan_donkey_m.anim["walk"].first_img();
+    int image_id = anim(animkeys().walk).first_img();
     base.sprite_image_id = image_id + dir + 8 * base.anim.frame;
 }
 
@@ -68,82 +82,74 @@ figure* figure_caravan_donkey::get_head_of_caravan() {
     return f;
 }
 
-bool figure_caravan_donkey::window_info_background(object_info &c) {
-    painter ctx = game.painter();
-    figure* f = get_head_of_caravan();
-    const empire_city* city = g_empire.city(f->empire_city_id);
-    int width = lang_text_draw(64, f->type, c.offset.x + 40, c.offset.y + 110, FONT_NORMAL_BLACK_ON_DARK);
-    lang_text_draw(21, city->name_id, c.offset.x + 40 + width, c.offset.y + 110, FONT_NORMAL_BLACK_ON_DARK);
+void figure_caravan_donkey_info_window::window_info_background(object_info &c) {
+    common_info_window::window_info_background(c);
 
-    width = lang_text_draw(129, 1, c.offset.x + 40, c.offset.y + 132, FONT_NORMAL_BLACK_ON_DARK);
-    lang_text_draw_amount(8, 10, 800, c.offset.x + 40 + width, c.offset.y + 132, FONT_NORMAL_BLACK_ON_DARK);
+    figure_caravan_donkey *donkey = c.figure_get()->dcast_caravan_donkey();
+    figure* f = donkey->get_head_of_caravan();
+
+    const empire_city* city = donkey->get_empire_city();
+    ui["name"].text_var("%s %s", ui::str(64, f->type), ui::str(21, city->name_id));
+    ui["type"].text_var("%s %s %u", ui::str(129, 1), ui::str(8, 10), 800);
 
     int trader_id = f->trader_id;
     
     int text_id;
     switch (f->action_state) {
-    case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING:
-        text_id = 12;
-        break;
-
-    case FIGURE_ACTION_102_TRADE_CARAVAN_TRADING:
-        text_id = 10;
-        break;
-
-    case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
-        text_id = trader_has_traded(trader_id) ? 11 : 13;
-        break;
-
-    default:
-        text_id = 11;
-        break;
+    case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING: text_id = 12; break;
+    case FIGURE_ACTION_102_TRADE_CARAVAN_TRADING: text_id = 10; break;
+    case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING: text_id = trader_has_traded(trader_id) ? 11 : 13; break;
+    default: text_id = 11; break;
     }
-    lang_text_draw(129, text_id, c.offset.x + 40, c.offset.y + 154, FONT_NORMAL_BLACK_ON_DARK);
+
+    ui["phrase"] = ui::str(129, text_id);
 
     if (trader_has_traded(trader_id)) {
         // bought
-        int y_base = c.offset.y + 180;
-        width = lang_text_draw(129, 4, c.offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
+        bstring256 bought_items = ui::str(129, 4);
         for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
             if (trader_bought_resources(trader_id, r)) {
-                width += text_draw_number(trader_bought_resources(trader_id, r), '@'," ", c.offset.x + 40 + width, y_base, FONT_NORMAL_BLACK_ON_DARK);
-                int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-                ImageDraw::img_generic(ctx, image_id, vec2i{c.offset.x + 40 + width, y_base - 3});
-                width += 25;
+                int amount = trader_bought_resources(trader_id, r);
+                int image_id = image_id_resource_icon(r);
+
+                bought_items.append("%d @Y%u& ", amount, image_id);
             }
         }
+        ui["bought_items"] = bought_items;
+
         // sold
-        y_base = c.offset.y + 210;
-        width = lang_text_draw(129, 5, c.offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
+        bstring256 sold_items = ui::str(129, 5);
         for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
             if (trader_sold_resources(trader_id, r)) {
-                width += text_draw_number(trader_sold_resources(trader_id, r), '@', " ", c.offset.x + 40 + width, y_base, FONT_NORMAL_BLACK_ON_DARK);
-                int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-                ImageDraw::img_generic(ctx, image_id, vec2i{c.offset.x + 40 + width, y_base - 3});
-                width += 25;
+                int amount = trader_sold_resources(trader_id, r);
+                int image_id = image_id_resource_icon(r);
+
+                sold_items.append("%d @Y%u& ", amount, image_id);
             }
         }
-    } else { // nothing sold/bought (yet)
-             // buying
-        int y_base = c.offset.y + 180;
-        width = lang_text_draw(129, 2, c.offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
-            if (city->buys_resource[r]) {
-                int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-                ImageDraw::img_generic(ctx, image_id, vec2i{c.offset.x + 40 + width, y_base - 3});
-                width += 25;
-            }
-        }
-        // selling
-        y_base = c.offset.y + 210;
-        width = lang_text_draw(129, 3, c.offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
-        for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
-            if (city->sells_resource[r]) {
-                int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-                ImageDraw::img_generic(ctx, image_id, vec2i{c.offset.x + 40 + width, y_base - 3});
-                width += 25;
-            }
+        ui["sold_items"] = sold_items;
+
+        return;
+    }
+    
+    // nothing sold/bought (yet)
+    // buying
+    bstring256 buing_items = ui::str(129, 2);
+    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        if (city->buys_resource[r]) {
+            int image_id = image_id_resource_icon(r);
+            buing_items.append("@Y%u& ", image_id);
         }
     }
-    return true;
+    ui["bought_items"] = buing_items;
+
+    // selling
+    bstring256 selling_items = ui::str(129, 3);
+    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+        if (city->sells_resource[r]) {
+            int image_id = image_id_resource_icon(r);
+            buing_items.append("@Y%u& ", image_id);
+        }
+    }
+    ui["sold_items"] = selling_items;
 }

@@ -184,6 +184,7 @@ var info_window_storageyard = {}
 var orders_window_granary = {}
 var info_window_figure_enemy = {}
 var info_window_figure_animal = {}
+var info_window_figure_caravan_donkey = {}
 var roadblock_info_window = {}
 var hold_festival_window = {}
 var festival_square_info_window = {}

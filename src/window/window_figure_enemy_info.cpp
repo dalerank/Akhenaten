@@ -10,8 +10,7 @@
 struct figure_enemy_info_window : public figure_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        int figure_id = map_figure_id_get(c.grid_offset);
-        figure *f = figure_get(figure_id);
+        figure *f = figure_get(c);
         return (f->type >= FIGURE_ENEMY43_SPEAR
                     && f->type <= FIGURE_ENEMY53_AXE);
     }
@@ -27,8 +26,7 @@ void config_load_figure_enemy_window_info() {
 void figure_enemy_info_window::window_info_background(object_info &c) {
     figure_info_window::window_info_background(c);
 
-    int figure_id = map_figure_id_get(c.grid_offset);
-    figure *f = figure_get(figure_id);
+    figure *f = figure_get(c);
     int formation_id = f->formation_id;
 
     int image_id = FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[f->type];

@@ -53,14 +53,10 @@ pcstr resource_name(e_resource resource) {
 
 int resource_image_offset(int resource, int type) {
     switch (type) {
-    case RESOURCE_IMAGE_STORAGE:
-        return 0;
-    case RESOURCE_IMAGE_CART:
-        return 648;
-    case RESOURCE_IMAGE_FOOD_CART:
-        return 8;
-    case RESOURCE_IMAGE_ICON:
-        return 0;
+    case RESOURCE_IMAGE_STORAGE: return 0;
+    case RESOURCE_IMAGE_CART: return 648;
+    case RESOURCE_IMAGE_FOOD_CART: return 8;
+    case RESOURCE_IMAGE_ICON: return 0;
     default:
         return 0;
     }
