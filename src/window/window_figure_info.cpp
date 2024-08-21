@@ -87,17 +87,6 @@ inline void figure_info_window::window_info_foreground(object_info &c) {
     }
 
     c.nfigure.drawn = 1;
-
-    painter ctx = game.painter();
-    int image_id = f->type;
-    if (f->action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE || f->action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
-        image_id = 18;
-    }
-
-    ui["bigimage"].image(image_id);
-    ui["name"] = ui::str(254, f->name);
-    ui["type"] = ui::str(64, f->type);
-    ui["phrase"] = ui::str(c.nfigure.phrase_group, c.nfigure.phrase_id);
 }
 
 void figure_info_window::window_info_background(object_info &c) {
@@ -105,10 +94,23 @@ void figure_info_window::window_info_background(object_info &c) {
 
     prepare_figures(c);
 
+    int figure_id = c.nfigure.figure_ids[c.nfigure.selected_index];
+    figure *f = ::figure_get(figure_id);
+
     c.nfigure.draw_debug_path = 1;
     //if (!c.figure.count) {
     //    lang_text_draw_centered(70, c.terrain_type + 10, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     //}
+
+    int image_id = f->type;
+    if (f->action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE || f->action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
+        image_id = 18;
+    }
+
+    ui["name"] = ui::str(254, f->name);
+    ui["type"] = ui::str(64, f->type);
+    ui["phrase"] = ui::str(c.nfigure.phrase_group, c.nfigure.phrase_id);
+    ui["bigimage"].image(image_id);
 
     for (int i = 0; i < c.nfigure.count; i++) {
         bstring64 btn_id; btn_id.printf("button_figure%d", i);
@@ -127,7 +129,6 @@ void figure_info_window::window_info_background(object_info &c) {
         }
     }
 
-    figure* f = ::figure_get(c.nfigure.figure_ids[0]);
     ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
     ui["show_path"].onclick([f] {
         f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
@@ -152,41 +153,7 @@ int figure_info_window::window_info_handle_mouse(const mouse *m, object_info &c)
 }
 
 bool figure_info_window::check(object_info &c) {
-    c.nfigure.selected_index = 0;
-    c.nfigure.count = 0;
-    for (int i = 0; i < 7; i++) {
-        c.nfigure.figure_ids[i] = 0;
-    }
-
-    int figure_id = map_figure_id_get(c.grid_offset);
-    while (figure_id > 0 && c.nfigure.count < 7) {
-        figure *f = ::figure_get(figure_id);
-        if (f->state != FIGURE_STATE_DEAD && f->action_state != FIGURE_ACTION_149_CORPSE) {
-            switch (f->type) {
-            case FIGURE_NONE:
-            case FIGURE_EXPLOSION:
-            case FIGURE_MAP_FLAG:
-            case FIGURE_ARROW:
-            case FIGURE_JAVELIN:
-            case FIGURE_BOLT:
-            case FIGURE_BALLISTA:
-            case FIGURE_CREATURE:
-            case FIGURE_FISHING_POINT:
-            case FIGURE_FISHING_SPOT:
-            case FIGURE_SPEAR:
-            case FIGURE_CHARIOR_RACER:
-            break;
-
-            default:
-            c.nfigure.figure_ids[c.nfigure.count++] = figure_id;
-            //                        f->igure_phrase_determine();
-            break;
-            }
-        }
-        figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;
-    }
-
-    return (c.nfigure.count > 0);
+    return false;
 }
 
 figure *figure_info_window::figure_get(object_info &c) {

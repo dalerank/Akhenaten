@@ -85,7 +85,7 @@ void info_window_granary::window_info_background(object_info &c) {
 
     for (int i = 0; i < 4; ++i) {
         ui[food_icon(i)].image(RESOURCE_NONE);
-        ui[food_text(i)].text_var("");
+        ui[food_text(i)] = "";
     }
 
     int food_index = 0;

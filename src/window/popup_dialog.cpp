@@ -50,7 +50,7 @@ static void draw_background(void) {
     window_draw_underlying_window();
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{80, 80}, 30, 10);
-    if (data.text.valid() >= 0) {
+    if (data.text.valid()) {
         lang_text_draw_centered(data.text.group, data.text.id, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
         if (lang_text_get_width(data.text.group, data.text.id + 1, FONT_NORMAL_BLACK_ON_LIGHT) >= 420) {
             lang_text_draw_multiline(data.text.group, data.text.id + 1, vec2i{110, 140}, 420, FONT_NORMAL_BLACK_ON_LIGHT);

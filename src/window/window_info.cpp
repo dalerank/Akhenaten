@@ -92,6 +92,42 @@ void object_info::reset(tile2i tile) {
     show_overlay = OVERLAY_NONE;
 }
 
+void object_info::fill_figures_info(tile2i tile) {
+    nfigure.selected_index = 0;
+    nfigure.count = 0;
+    for (int i = 0; i < 7; i++) {
+        nfigure.figure_ids[i] = 0;
+    }
+
+    int figure_id = map_figure_id_get(tile);
+    while (figure_id > 0 && nfigure.count < 7) {
+        figure *f = ::figure_get(figure_id);
+        if (f->state != FIGURE_STATE_DEAD && f->action_state != FIGURE_ACTION_149_CORPSE) {
+            switch (f->type) {
+            case FIGURE_NONE:
+            case FIGURE_EXPLOSION:
+            case FIGURE_MAP_FLAG:
+            case FIGURE_ARROW:
+            case FIGURE_JAVELIN:
+            case FIGURE_BOLT:
+            case FIGURE_BALLISTA:
+            case FIGURE_CREATURE:
+            case FIGURE_FISHING_POINT:
+            case FIGURE_FISHING_SPOT:
+            case FIGURE_SPEAR:
+            case FIGURE_CHARIOR_RACER:
+                break;
+
+            default:
+                nfigure.figure_ids[nfigure.count++] = figure_id;
+                //                        f->igure_phrase_determine();
+                break;
+            }
+        }
+        figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;
+    }
+}
+
 figure *object_info::figure_get() {
     int figure_id = nfigure.figure_ids[nfigure.selected_index];
     return ::figure_get(figure_id);
@@ -100,6 +136,7 @@ figure *object_info::figure_get() {
 void window_info_init(tile2i tile, bool avoid_mouse) {
     auto &context = g_object_info;
     context.reset(tile);
+    context.fill_figures_info(tile);
 
     city_resource_determine_available();
 
@@ -117,8 +154,8 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
         }
     };
 
-    find_handler(*g_window_building_handlers, context);
     find_handler(*g_window_figure_handlers, context);
+    find_handler(*g_window_building_handlers, context);
 
     int building_id = map_building_at(context.grid_offset);
     if (!context.ui && building_id) {

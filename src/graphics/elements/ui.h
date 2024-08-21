@@ -174,6 +174,7 @@ struct eimg : public element {
     virtual void draw() override;
     virtual void load(archive elem) override;
     virtual void image(image_desc image) override;
+    virtual void image(int image) override;
     virtual image_desc image() const override { return img_desc; }
 };
 

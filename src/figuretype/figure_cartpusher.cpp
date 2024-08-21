@@ -39,58 +39,6 @@ static const int CART_OFFSET_MULTIPLE_LOADS_FOOD[] = {0, 0, 8, 16, 0, 0, 24, 0, 
 static const int CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
 static const int CART_OFFSET_8_LOADS_FOOD[] = {0, 40, 48, 56, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-bool figure_carrier::window_info_background(object_info &ctx) {
-    painter p = game.painter();
-    ImageDraw::img_generic(p, big_people_image(type()), ctx.offset + vec2i{28, 112});
-
-    lang_text_draw(254, base.name, ctx.offset.x + 90, ctx.offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
-    int width = 0;
-    if (base.has_home()) {
-        width += lang_text_draw(41, home()->type, ctx.offset.x + 92, ctx.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
-    }
-    width += lang_text_draw(64, type(), ctx.offset.x + 92 + width, ctx.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
-
-    if (action_state() != FIGURE_ACTION_132_DOCKER_IDLING && base.resource_id) {
-        int resource = base.resource_id;
-        ImageDraw::img_generic(p, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), ctx.offset + vec2i{92, 154});
-
-        width = text_draw_number(base.resource_amount_full, ' ', " ", ctx.offset.x + 108, ctx.offset.y + 154, FONT_NORMAL_BLACK_ON_DARK);
-        width += lang_text_draw(129, 20, ctx.offset.x + 108 + width, ctx.offset.y + 154, FONT_NORMAL_BLACK_ON_DARK);
-        width += lang_text_draw(23, base.resource_id, ctx.offset.x + 108 + width, ctx.offset.y + 154, FONT_NORMAL_BLACK_ON_DARK);
-    }
-
-    //    int phrase_height = lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
-    //                                                 c->offset.x + 90, c->offset.y + 160, 16 * (c->width_blocks - 8),
-    //                                                 FONT_NORMAL_GREEN);
-
-    if (!base.has_home()) {
-        return true;
-    }
-
-    building* source_building = home();
-    building* target_building = destination();
-    bool is_returning = false;
-    switch (action_state()) {
-    case ACTION_11_RETURNING_EMPTY:
-    case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
-    case FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY:
-    case FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD:
-    case FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE:
-    case FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE:
-    case FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING:
-    case FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING:
-        is_returning = true;
-        break;
-    }
-
-    if (ctx.nfigure.phrase_group > 0 && ctx.nfigure.phrase_id >= 0) {
-        lang_text_draw_multiline(ctx.nfigure.phrase_group, ctx.nfigure.phrase_id, ctx.offset + vec2i{90, 180}, 16 * (ctx.bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK);
-    }
-
-    return true;
-}
-
-
 void figure_carrier::load_resource(e_resource resource, int amount) {
     base.resource_id = resource;
     base.resource_amount_full = amount;

@@ -87,5 +87,6 @@ struct object_info {
     } nfigure;
 
     void reset(tile2i tile);
+    void fill_figures_info(tile2i tile);
     figure *figure_get();
 };

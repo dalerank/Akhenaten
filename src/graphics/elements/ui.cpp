@@ -570,6 +570,10 @@ void ui::eimg::image(image_desc image) {
     img_desc = image;
 }
 
+void ui::eimg::image(int image) {
+    img_desc.offset = image;
+}
+
 void ui::ebackground::draw() {
     painter ctx = game.painter();
     ImageDraw::img_background(ctx, image_group(img_desc), 1.f, pos);

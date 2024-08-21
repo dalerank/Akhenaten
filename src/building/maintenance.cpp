@@ -44,7 +44,7 @@ int building_maintenance_fire_direction() {
 void building_maintenance_update_burning_ruins() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Burning Ruins Update");
     int climate = scenario_property_climate();
-    int recalculate_terrain = 0;
+    bool recalculate_terrain = 0;
 
     building_list_burning_clear();
     buildings_valid_do([&recalculate_terrain] (building &b) {
