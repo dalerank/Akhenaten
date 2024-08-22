@@ -480,10 +480,10 @@ figure_info_window = {
 		background 		 : { type : "outer_panel",	pos: [0, 0], size: [29, 22]},
 		inner_panel 	 : { type : "inner_panel", pos : [16, 40], size: [27, 13] },
 		border 				 : { type : "border", border:0, pos : [24, 102], size: [px(26), 138] },
-		bigimage    	 : { type : "image", pos: [28, 112], pack:PACK_UNLOADED, id:25 },
+		bigimage    	 : { type : "image", pos: [30, 108], pack:PACK_UNLOADED, id:25 },
 		name 					 : { type : "text", pos: [90, 108], font : FONT_LARGE_BLACK_ON_DARK },
 		type 					 : { type : "text", pos: [92, 139], font : FONT_NORMAL_BLACK_ON_DARK },
-		phrase				 : { type : "text", pos: [90, 160], font : FONT_NORMAL_BLACK_ON_DARK, wrap:px(25), multiline:true },
+		phrase				 : { type : "text", pos: [90, 160], font : FONT_NORMAL_BLACK_ON_DARK, wrap:px(23), multiline:true },
 		button_figure0 : { type : "image_button", pos:[60 * 0 + 27, 45], size:[52, 52], border:true },
 		button_figure1 : { type : "image_button", pos:[60 * 1 + 27, 45], size:[52, 52], border:true },
 		button_figure2 : { type : "image_button", pos:[60 * 2 + 27, 45], size:[52, 52], border:true },
@@ -514,7 +514,7 @@ info_window_figure_caravan_donkey = {
 info_window_figure_carrier = {
 	ui : __baseui(figure_info_window, {
 		items					 : { type : "text", pos: [92, 154], font : FONT_NORMAL_BLACK_ON_DARK },
-		phrase				 : { type : "text", pos: [90, 180], font : FONT_NORMAL_BLACK_ON_DARK, wrap:px(25), multiline:true },
+		phrase				 : { type : "text", pos: [90, 180], font : FONT_NORMAL_BLACK_ON_DARK, wrap:px(22), multiline:true },
 	})
 }
 

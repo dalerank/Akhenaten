@@ -21,12 +21,6 @@ struct building_figures_data_t {
 };
 
 building_figures_data_t g_building_figures_data;
-figure_info_window g_figure_info_window;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_window_info);
-void config_load_figure_window_info() {
-    g_figure_info_window.load("figure_info_window");
-}
 
 void draw_figure_in_city(int figure_id, vec2i* coord, painter &ctx) {
     tile2i camera_tile = city_view_get_camera_mappoint();
@@ -109,7 +103,6 @@ void figure_info_window::window_info_background(object_info &c) {
 
     ui["name"] = ui::str(254, f->name);
     ui["type"] = ui::str(64, f->type);
-    ui["phrase"] = ui::str(c.nfigure.phrase_group, c.nfigure.phrase_id);
     ui["bigimage"].image(image_id);
 
     for (int i = 0; i < c.nfigure.count; i++) {
@@ -119,7 +112,6 @@ void figure_info_window::window_info_background(object_info &c) {
             auto &data = g_building_figures_data;
             data.context_for_callback = &c;
             data.context_for_callback->nfigure.selected_index = index;
-            window_building_play_figure_phrase(data.context_for_callback);
             window_invalidate();
         });
 
@@ -128,6 +120,9 @@ void figure_info_window::window_info_background(object_info &c) {
             screen_opt->texture_id = g_building_figures_data.figure_images[i];
         }
     }
+
+    window_building_play_figure_phrase(&c);
+    ui["phrase"] = ui::str(c.nfigure.phrase_group, c.nfigure.phrase_id);
 
     ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
     ui["show_path"].onclick([f] {
