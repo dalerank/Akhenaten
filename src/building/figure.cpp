@@ -1,5 +1,3 @@
-#include "building/figure.h"
-
 #include "city/city.h"
 
 #include "building/building_barracks.h"

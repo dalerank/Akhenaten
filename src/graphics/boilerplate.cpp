@@ -53,6 +53,10 @@ int graphics_save_to_texture(int image_id, vec2i pos, vec2i size) {
     return graphics_renderer()->save_texture_from_screen(image_id, pos.x, pos.y, size.x, size.y);
 }
 
+void graphics_delete_saved_texture(int image_id) {
+    return graphics_renderer()->delete_saved_texture(image_id);
+}
+
 void graphics_draw_from_texture(int image_id, vec2i pos, vec2i size) {
     graphics_renderer()->draw_saved_texture_to_screen(image_id, pos.x, pos.y, size.x, size.y);
 }

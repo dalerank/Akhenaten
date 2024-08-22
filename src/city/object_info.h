@@ -81,9 +81,8 @@ struct object_info {
         int phrase_id;
         bstring64 phrase_key;
         int selected_index;
-        int count;
         int drawn;
-        int figure_ids[7];
+        svector<int, 7> ids;
     } nfigure;
 
     void reset(tile2i tile);

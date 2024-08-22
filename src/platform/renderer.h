@@ -76,6 +76,7 @@ public:
     void draw_custom_texture(int type, int x, int y, float scale);
 
     int save_texture_from_screen(int image_id, int x, int y, int width, int height);
+    void delete_saved_texture(int image_id);
     void draw_saved_texture_to_screen(int image_id, int x, int y, int width, int height);
     void set_texture_scale_mode(SDL_Texture *texture, float scale_factor);
     unsigned int premult_alpha();

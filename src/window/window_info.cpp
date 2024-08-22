@@ -97,13 +97,10 @@ void object_info::reset(tile2i tile) {
 
 void object_info::fill_figures_info(tile2i tile) {
     nfigure.selected_index = 0;
-    nfigure.count = 0;
-    for (int i = 0; i < 7; i++) {
-        nfigure.figure_ids[i] = 0;
-    }
+    nfigure.ids.clear();
 
     int figure_id = map_figure_id_get(tile);
-    while (figure_id > 0 && nfigure.count < 7) {
+    while (figure_id > 0 && !nfigure.ids.full()) {
         figure *f = ::figure_get(figure_id);
         if (f->state != FIGURE_STATE_DEAD && f->action_state != FIGURE_ACTION_149_CORPSE) {
             switch (f->type) {
@@ -122,7 +119,7 @@ void object_info::fill_figures_info(tile2i tile) {
                 break;
 
             default:
-                nfigure.figure_ids[nfigure.count++] = figure_id;
+                nfigure.ids.push_back(figure_id);
                 //                        f->igure_phrase_determine();
                 break;
             }
@@ -132,7 +129,7 @@ void object_info::fill_figures_info(tile2i tile) {
 }
 
 figure *object_info::figure_get() {
-    int figure_id = nfigure.figure_ids[nfigure.selected_index];
+    int figure_id = nfigure.ids[nfigure.selected_index];
     return ::figure_get(figure_id);
 }
 
@@ -157,7 +154,7 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
         }
     };
 
-    if (context.nfigure.count) {
+    if (!context.nfigure.ids.empty()) {
         find_handler(*g_window_figure_handlers, context);
         if (!context.ui) {
             context.ui = &g_figure_info_window;

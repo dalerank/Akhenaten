@@ -70,13 +70,12 @@ SDL_Surface *IMG_LoadPNG_RW(SDL_RWops *src);
 int IMG_SavePNG(SDL_Surface *surface, const char *file);
 
 struct buffer_texture {
-    SDL_Texture* texture;
+    SDL_Texture* texture = nullptr;
     int id;
     int width;
     int height;
     int tex_width;
     int tex_height;
-    struct buffer_texture* next;
 };
 
 struct renderer_data_t {
@@ -101,11 +100,8 @@ struct renderer_data_t {
         int width;
         int height;
     } max_texture_size;
-    struct {
-        buffer_texture* first;
-        buffer_texture* last;
-        int current_id;
-    } texture_buffers;
+    svector<buffer_texture, 8> texture_buffers;
+    int texture_buffer_id = 0;
     struct {
         int id;
         time_millis last_used;
@@ -376,17 +372,13 @@ void graphics_renderer_interface::update_custom_texture_yuv(int type, const uint
 }
 static buffer_texture* get_saved_texture_info(int texture_id) {
     auto &data = g_renderer_data;
-    if (!texture_id || !data.texture_buffers.first) {
-        return 0;
+    if (!texture_id || data.texture_buffers.empty()) {
+        return nullptr;
     }
 
-    for (buffer_texture* texture_info = data.texture_buffers.first; texture_info; texture_info = texture_info->next) {
-        if (texture_info->id == texture_id) {
-            return texture_info;
-        }
-    }
-
-    return 0;
+    auto it = std::find_if(data.texture_buffers.begin(), data.texture_buffers.end(), [texture_id] (auto &i) { return i.id == texture_id; });
+    
+    return (it != data.texture_buffers.end() ? it : nullptr);
 }
 
 int graphics_renderer_interface::save_texture_from_screen(int texture_id, int x, int y, int width, int height) {
@@ -396,69 +388,46 @@ int graphics_renderer_interface::save_texture_from_screen(int texture_id, int x,
         return 0;
     }
 
-    buffer_texture* texture_info = get_saved_texture_info(texture_id);
-    SDL_Texture* texture = 0;
-
-    if (!texture_info || (texture_info && (texture_info->tex_width < width || texture_info->tex_height < height))) {
-        if (texture_info) {
-            SDL_DestroyTexture(texture_info->texture);
-            texture_info->texture = 0;
-            texture_info->tex_width = 0;
-            texture_info->tex_height = 0;
-        }
-        texture = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, width, height);
-        if (!texture) {
-            return 0;
-        }
-#ifdef USE_TEXTURE_SCALE_MODE
-        if (HAS_TEXTURE_SCALE_MODE) {
-            SDL_SetTextureScaleMode(texture, SDL_ScaleModeNearest);
-        }
-#endif
-    } else {
-        texture = texture_info->texture;
+    buffer_texture texture_info;
+    texture_info.texture = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, width, height);
+    if (!texture_info.texture) {
+        return 0;
     }
+
+#ifdef USE_TEXTURE_SCALE_MODE
+    if (HAS_TEXTURE_SCALE_MODE) {
+        SDL_SetTextureScaleMode(texture_info.texture, SDL_ScaleModeNearest);
+    }
+#endif // USE_TEXTURE_SCALE_MODE
 
     SDL_Rect former_viewport;
     SDL_RenderGetViewport(data.renderer, &former_viewport);
     SDL_Rect src_rect = {x + former_viewport.x, y + former_viewport.y, width, height};
     SDL_Rect dst_rect = {0, 0, width, height};
-    SDL_SetRenderTarget(data.renderer, texture);
+    SDL_SetRenderTarget(data.renderer, texture_info.texture);
     SDL_RenderCopy(data.renderer, former_target, &src_rect, &dst_rect);
     SDL_SetRenderTarget(data.renderer, former_target);
     SDL_RenderSetViewport(data.renderer, &former_viewport);
 
-    if (!texture_info) {
-        texture_info = (buffer_texture*)malloc(sizeof(buffer_texture));
+    texture_info.id = ++data.texture_buffer_id;
+    texture_info.width = width;
+    texture_info.height = height;
 
-        if (!texture_info) {
-            SDL_DestroyTexture(texture);
-            return 0;
-        }
+    data.texture_buffers.push_back(texture_info);
 
-        memset(texture_info, 0, sizeof(buffer_texture));
+    return texture_info.id;
+}
 
-        texture_info->id = ++data.texture_buffers.current_id;
-        texture_info->next = 0;
+void graphics_renderer_interface::delete_saved_texture(int image_id) {
+    auto &data = g_renderer_data;
 
-        if (!data.texture_buffers.first) {
-            data.texture_buffers.first = texture_info;
-        } else {
-            data.texture_buffers.last->next = texture_info;
-        }
-        data.texture_buffers.last = texture_info;
-    }
-    texture_info->texture = texture;
-    texture_info->width = width;
-    texture_info->height = height;
-    if (width > texture_info->tex_width) {
-        texture_info->tex_width = width;
-    }
-    if (height > texture_info->tex_height) {
-        texture_info->tex_height = height;
+    auto it = std::find_if(data.texture_buffers.begin(), data.texture_buffers.end(), [image_id] (auto &i) { return i.id == image_id; });
+    if (it == data.texture_buffers.end()) {
+        return;
     }
 
-    return texture_info->id;
+    SDL_DestroyTexture(it->texture);
+    data.texture_buffers.erase(it);
 }
 
 void graphics_renderer_interface::draw_saved_texture_to_screen(int texture_id, int x, int y, int width, int height) {

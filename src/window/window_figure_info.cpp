@@ -14,33 +14,51 @@
 #include "game/state.h"
 #include "sound/sound.h"
 
-struct building_figures_data_t {
-    int figure_images[7] = {0};
+struct figure_small_image {
+    int image_id = 0;
+
+    figure_small_image(figure_small_image &o) {
+        this->image_id = o.image_id;
+        o.image_id = 0;
+    }
+
+    figure_small_image(int figure_id) {
+        painter ctx = game.painter();
+        vec2i coord = { 0, 0 };
+        tile2i camera_tile = city_view_get_camera_mappoint();
+
+        int grid_offset = figure_get(figure_id)->tile.grid_offset();
+        widget_city_draw_for_figure(ctx, figure_id, &coord);
+
+        image_id = graphics_save_to_texture(-1, coord, { 48, 48 });
+    }
+
+    ~figure_small_image() {
+        if (image_id) {
+            graphics_delete_saved_texture(image_id);
+        }
+    }
+};
+
+struct figures_data_t {
+    svector<figure_small_image, 7> figure_images;
     int focus_button_id;
     object_info* context_for_callback;
 };
 
-building_figures_data_t g_building_figures_data;
-
-void draw_figure_in_city(int figure_id, vec2i* coord, painter &ctx) {
-    tile2i camera_tile = city_view_get_camera_mappoint();
-
-    int grid_offset = figure_get(figure_id)->tile.grid_offset();
-    widget_city_draw_for_figure(ctx, figure_id, coord);
-}
+figures_data_t g_figures_data;
 
 void figure_info_window::prepare_figures(object_info &c) {
-    if (c.nfigure.count <= 0) {
+    if (c.nfigure.ids.size() <= 0) {
         return;
     }
 
-    auto &data = g_building_figures_data;
+    auto &data = g_figures_data;
 
-    painter ctx = game.painter();
-    vec2i coord = {0, 0};
-    for (int i = 0; i < c.nfigure.count; i++) {
-        draw_figure_in_city(c.nfigure.figure_ids[i], &coord, ctx);
-        data.figure_images[i] = graphics_save_to_texture(data.figure_images[i], coord, {48, 48});
+    data.figure_images.clear();
+
+    for (const auto &id: c.nfigure.ids) {
+        data.figure_images.emplace_back(id);
     }
     //        if (config_get(CONFIG_UI_ZOOM))
     //            graphics_set_active_canvas(CANVAS_CITY);
@@ -50,11 +68,13 @@ void figure_info_window::prepare_figures(object_info &c) {
     //            graphics_save_to_buffer(coord.x - 25, coord.y - 45, 48, 48, data.figure_images[i]);
     //        }
     //        graphics_set_active_canvas(CANVAS_UI);
+    painter ctx = game.painter();
     widget_city_draw(ctx);
 }
 
 void window_building_play_figure_phrase(object_info* c) {
-    int figure_id = c->nfigure.figure_ids[c->nfigure.selected_index];
+    int figure_id = c->nfigure.ids[c->nfigure.selected_index];
+
     figure* f = figure_get(figure_id);
     f->figure_phrase_play();
     c->show_overlay = f->dcast()->get_overlay();
@@ -70,7 +90,7 @@ figure_info_window::figure_info_window() {
 inline void figure_info_window::window_info_foreground(object_info &c) {
     draw();
 
-    int figure_id = c.nfigure.figure_ids[c.nfigure.selected_index];
+    int figure_id = c.nfigure.ids[c.nfigure.selected_index];
 
     figure *f = ::figure_get(figure_id);
     g_debug_figure_id = figure_id;
@@ -88,7 +108,7 @@ void figure_info_window::window_info_background(object_info &c) {
 
     prepare_figures(c);
 
-    int figure_id = c.nfigure.figure_ids[c.nfigure.selected_index];
+    int figure_id = c.nfigure.ids[c.nfigure.selected_index];
     figure *f = ::figure_get(figure_id);
 
     c.nfigure.draw_debug_path = 1;
@@ -105,11 +125,11 @@ void figure_info_window::window_info_background(object_info &c) {
     ui["type"] = ui::str(64, f->type);
     ui["bigimage"].image(image_id);
 
-    for (int i = 0; i < c.nfigure.count; i++) {
+    for (int i = 0; i < c.nfigure.ids.size(); i++) {
         bstring64 btn_id; btn_id.printf("button_figure%d", i);
         ui[btn_id].select(i == c.nfigure.selected_index);
         ui[btn_id].onclick([index = i, &c] {
-            auto &data = g_building_figures_data;
+            auto &data = g_figures_data;
             data.context_for_callback = &c;
             data.context_for_callback->nfigure.selected_index = index;
             window_invalidate();
@@ -117,7 +137,7 @@ void figure_info_window::window_info_background(object_info &c) {
 
         auto screen_opt = ui[btn_id].dcast_image_button();
         if (screen_opt) {
-            screen_opt->texture_id = g_building_figures_data.figure_images[i];
+            screen_opt->texture_id = g_figures_data.figure_images[i].image_id;
         }
     }
 

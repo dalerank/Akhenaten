@@ -7,7 +7,6 @@
 #include "building/industry.h"
 #include "building/rotation.h"
 #include "building/model.h"
-#include "building/figure.h"
 #include "building/monuments.h"
 #include "city/buildings.h"
 #include "city/finance.h"
