@@ -139,7 +139,7 @@ void figure_info_window::window_info_background(object_info &c) {
     play_figure_phrase(c);
     ui["phrase"] = c.nfigure.phrase.valid()
                     ? c.nfigure.phrase.c_str_safe("")
-                    : bstring256().printf("#undefined_phrase(%s)", c.nfigure.phrase_key).c_str();
+                    : bstring256().printf("#undefined_phrase ( %s )", c.nfigure.phrase_key.c_str()).c_str();
 
     ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
     ui["show_path"].onclick([f] {
