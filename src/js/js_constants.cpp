@@ -15,6 +15,17 @@
 
 #include "sound/sound_city.h"
 
+template<typename T>
+void js_register_tokens(js_State *J, const T &tokens) {
+    for (const auto &btype : tokens.values) {
+        if (!btype.name || !*btype.name) {
+            continue;
+        }
+        js_newnumber(J, btype.id);
+        js_setglobal(J, btype.name);
+    }
+}
+
 #define _R(name) js_newnumber(J, name); js_setglobal(J, #name);
 void js_register_game_constants(js_State *J) {
    _R(FILE_TYPE_SAVED_GAME)
@@ -28,21 +39,7 @@ void js_register_city_images(js_State *J) {
 }
 
 void js_register_collection_images(js_State *J) {
-   _R(PACK_UNLOADED)
-   _R(PACK_TERRAIN)
-   _R(PACK_GENERAL)
-   _R(PACK_SPR_MAIN)
-   _R(PACK_SPR_AMBIENT)
-   _R(PACK_EMPIRE)
-   _R(PACK_FONT)
-   _R(PACK_TEMPLE)
-   _R(PACK_MONUMENT)
-   _R(PACK_ENEMY)
-   _R(PACK_EXPANSION)
-   _R(PACK_EXPANSION_SPR)
-   _R(PACK_MASTABA)
-   _R(PACK_TEMPLE_RA)
-   _R(PACK_CUSTOM)
+    js_register_tokens(J, e_pack_type_tokens);
 }
 
 void js_register_city_walkers(js_State *J) {
@@ -117,17 +114,6 @@ void js_register_city_sound_constants(js_State *J) {
    _R(SOUND_CHANNEL_CITY_MARSHLAND)
    _R(SOUND_CHANNEL_CITY_CHICKFARM)
    _R(SOUND_CHANNEL_CITY_COWFARM)
-}
-
-template<typename T>
-void js_register_tokens(js_State *J, const T& tokens) {
-    for (const auto &btype : tokens.values) {
-        if (!btype.name || !*btype.name) {
-            continue;
-        }
-        js_newnumber(J, btype.id);
-        js_setglobal(J, btype.name);
-    }
 }
 
 void js_register_city_buildings(js_State *J) {

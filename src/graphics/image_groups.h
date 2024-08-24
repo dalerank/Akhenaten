@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/tokenum.h"
+
 enum e_pack {
     PACK_UNLOADED,
     PACK_GENERAL,
@@ -22,7 +24,11 @@ enum e_pack {
     PACK_TEMPLE_RA,
     //
     PACK_CUSTOM,
+    // 
+    PACK_MAX,
 };
+
+extern const token_holder<e_pack, PACK_UNLOADED, PACK_MAX> e_pack_type_tokens;
 
 ////////////////// FONT
 
