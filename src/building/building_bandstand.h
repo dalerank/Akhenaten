@@ -28,8 +28,3 @@ public:
     void draw_shows_musicians(painter &ctx, vec2i pixel, int direction, color color_mask);
     static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
 };
-
-struct info_window_bandstand : public building_info_window {
-    virtual void window_info_background(object_info &c) override;
-    virtual bool check(object_info &c) override;
-};

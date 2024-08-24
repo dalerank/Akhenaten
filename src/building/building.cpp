@@ -511,9 +511,7 @@ bool building::is_administration() {
 bool building::is_religion() {
     return building_is_religion(type);
 }
-bool building::is_entertainment() {
-    return building_is_entertainment(type);
-}
+
 bool building::is_education() {
     return building_is_education(type);
 }

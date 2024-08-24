@@ -348,7 +348,6 @@ public:
     bool is_infrastructure();
     bool is_administration();
     bool is_religion();
-    bool is_entertainment();
     bool is_education();
     bool is_military();
 

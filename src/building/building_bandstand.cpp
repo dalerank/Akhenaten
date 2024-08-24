@@ -32,7 +32,6 @@ struct bandstand_model : public buildings::model_t<building_bandstand> {
 };
 
 bandstand_model bandstand_m;
-info_window_bandstand bandstand_infow;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bandstand_config);
 void config_load_building_bandstand_config() {
@@ -42,7 +41,6 @@ void config_load_building_bandstand_config() {
     bandstand_m.stand_we_w = bandstand_m.anim["stand_we_w"].first_img();
     bandstand_m.stand_we_e = bandstand_m.anim["stand_we_e"].first_img();
     bandstand_m.booth = bandstand_m.anim["booth"].first_img();
-    bandstand_infow.load("info_window_bandstand");
 }
 
 void building_bandstand::on_create(int orientation) {
@@ -166,35 +164,6 @@ void building_bandstand::on_undo() {
     }
 }
 
-void info_window_bandstand::window_info_background(object_info &c) {
-    building_info_window::window_info_background(c);
-
-    building *b = c.building_get();
-    const auto &params = b->dcast()->params();
-
-    textid reason{ c.group_id, 0 };
-    if (!c.has_road_access) { reason = { 69, 25 }; }
-    else if (b->num_workers <= 0) { reason.id = 6; }
-    else if (!b->data.entertainment.num_shows) { reason.id = 2; }
-    else if (b->data.entertainment.num_shows == 2) { reason.id = 3; }
-    else if (b->data.entertainment.days1) { reason.id = 4; }
-    else if (b->data.entertainment.days2) { reason.id = 5; }
-
-    draw_employment_details(c);
-
-    if (b->data.entertainment.days1 > 0) {
-        ui["play_text"].text_var("%s %s %d", ui::str(c.group_id, 8), ui::str(8, 44), 2 * b->data.entertainment.days1);
-    } else {
-        ui["play_text"] = ui::str(c.group_id, 7);
-    }
-
-    if (b->data.entertainment.days2 > 0) {
-        ui["play2_text"].text_var("%s %s %d %s", ui::str(c.group_id, 10), ui::str(8, 44), 2 * 2 * b->data.entertainment.days2, ui::str(72, 7 + b->data.entertainment.days3_or_play));
-    } else {
-        ui["play2_text"] = ui::str(c.group_id, 9);
-    }
-}
-
 void building_bandstand::draw_shows_musicians(painter &ctx, vec2i pixel, int direction, color color_mask) {
     building* main = base.main();
     if (main->data.entertainment.days2) {
@@ -274,8 +243,4 @@ void building_bandstand::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, i
         draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
         break;
     }
-}
-
-inline bool info_window_bandstand::check(object_info &c) {
-    return c.building_get()->dcast_bandstand();
 }
