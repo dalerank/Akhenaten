@@ -72,15 +72,12 @@ void figure_info_window::prepare_figures(object_info &c) {
     widget_city_draw(ctx);
 }
 
-void window_building_play_figure_phrase(object_info* c) {
-    int figure_id = c->nfigure.ids[c->nfigure.selected_index];
-
-    figure* f = figure_get(figure_id);
+void figure_info_window::play_figure_phrase(object_info &c) {
+    figure* f = c.figure_get();
     f->figure_phrase_play();
-    c->show_overlay = f->dcast()->get_overlay();
-    c->nfigure.phrase_group = f->phrase_group;
-    c->nfigure.phrase_id = f->phrase_id;
-    c->nfigure.phrase_key = f->phrase_key;
+    c.show_overlay = f->dcast()->get_overlay();
+    c.nfigure.phrase = f->phrase;
+    c.nfigure.phrase_key = f->phrase_key;
 }
 
 figure_info_window::figure_info_window() {
@@ -90,10 +87,8 @@ figure_info_window::figure_info_window() {
 inline void figure_info_window::window_info_foreground(object_info &c) {
     draw();
 
-    int figure_id = c.nfigure.ids[c.nfigure.selected_index];
-
-    figure *f = ::figure_get(figure_id);
-    g_debug_figure_id = figure_id;
+    figure *f = c.figure_get();
+    g_debug_figure_id = c.figure_get_id();
 
     bool custom_window = f->dcast()->window_info_background(c);
     if (custom_window) {
@@ -141,8 +136,10 @@ void figure_info_window::window_info_background(object_info &c) {
         }
     }
 
-    window_building_play_figure_phrase(&c);
-    ui["phrase"] = ui::str(c.nfigure.phrase_group, c.nfigure.phrase_id);
+    play_figure_phrase(c);
+    ui["phrase"] = c.nfigure.phrase.valid()
+                    ? c.nfigure.phrase.c_str_safe("")
+                    : bstring256().printf("#undefined_phrase(%s)", c.nfigure.phrase_key).c_str();
 
     ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
     ui["show_path"].onclick([f] {

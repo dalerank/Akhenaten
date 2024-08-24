@@ -56,7 +56,7 @@ sound_key figure_delivery_boy::phrase_key() const {
     return keys[index];
 }
 
-figure_sound_t figure_delivery_boy::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_delivery_boy::get_sound_reaction(xstring key) const {
     return delivery_boy_m.sounds[key];
 }
 

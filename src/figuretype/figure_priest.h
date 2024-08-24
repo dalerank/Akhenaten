@@ -15,7 +15,7 @@ public:
     virtual e_overlay get_overlay() const override;
     virtual const animations_t &anim() const override;
     virtual void update_animation() override;
-    virtual figure_sound_t get_sound_reaction(pcstr key) const override;
+    virtual figure_sound_t get_sound_reaction(xstring key) const override;
 };
 
 class figure_festival_priest : public figure_impl {

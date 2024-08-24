@@ -5,6 +5,7 @@
 
 #include "core/vec2i.h"
 #include "core/svector.h"
+#include "core/string.h"
 
 #include "input/hotkey.h"
 #include "graphics/elements/generic_button.h"
@@ -40,7 +41,6 @@ using UiFlags = int;
 
 namespace ui {
 
-struct textid { int group; int id; };
 struct img_button_offsets { int data[4] = {0, 1, 2, 3}; };
 
 void begin_frame();

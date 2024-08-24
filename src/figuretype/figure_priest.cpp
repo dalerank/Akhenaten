@@ -217,7 +217,7 @@ void figure_priest::update_animation() {
     image_set_animation(animkey);
 }
 
-figure_sound_t figure_priest::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_priest::get_sound_reaction(xstring key) const {
     return priest_m.sounds[key];
 }
 

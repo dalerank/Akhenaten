@@ -108,6 +108,6 @@ const animations_t &figure_physician::anim() const {
     return fphysician_m.anim;
 }
 
-figure_sound_t figure_physician::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_physician::get_sound_reaction(xstring key) const {
     return fphysician_m.sounds[key];
 }

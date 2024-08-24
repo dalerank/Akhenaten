@@ -130,6 +130,6 @@ const animations_t &figure_magistrate::anim() const {
     return magistrate_m.anim;
 }
 
-figure_sound_t figure_magistrate::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_magistrate::get_sound_reaction(xstring key) const {
     return magistrate_m.sounds[key];
 }

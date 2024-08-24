@@ -51,7 +51,7 @@ void figure_herbalist::figure_action() {
     }
 }
 
-figure_sound_t figure_herbalist::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_herbalist::get_sound_reaction(xstring key) const {
     return herbalist_m.sounds[key];
 }
 

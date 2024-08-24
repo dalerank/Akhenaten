@@ -341,7 +341,7 @@ void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* c
     base.draw_figure_main(ctx, base.cached_pos, highlight, coord_out);
 }
 
-figure_sound_t figure_impl::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_impl::get_sound_reaction(xstring key) const {
     pcstr fname = snd::get_walker_reaction(key);
     return {key, fname, 0, 0};
 }
@@ -529,7 +529,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->collecting_item_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->trade_ship_failed_dock_attempts);
     iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_exact);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_id);
+    iob->bind(BIND_SIGNATURE_UINT8, &f->phrase.id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_city);
     iob->bind(BIND_SIGNATURE_INT8, &f->progress_inside);
     iob->bind(BIND_SIGNATURE_UINT8, &f->trader_id);
@@ -548,7 +548,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_UINT16, &f->collecting_item_max);       
     iob->bind(BIND_SIGNATURE_UINT8, &f->routing_try_reroute_counter);                       // 269
-    iob->bind(BIND_SIGNATURE_INT16, &f->phrase_group);                       // 269
+    iob->bind(BIND_SIGNATURE_UINT16, &f->phrase.group);                       // 269
     iob->bind(BIND_SIGNATURE_UINT16, &f->sender_building_id);                        // 0
     iob->bind(BIND_SIGNATURE_INT32, &f->market_lady_resource_image_offset); // 03 00 00 00
     iob->bind____skip(12);                                                  // FF FF FF FF FF ...

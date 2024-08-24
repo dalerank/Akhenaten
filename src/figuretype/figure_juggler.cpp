@@ -107,7 +107,7 @@ int figure_juggler::provide_service() {
     return houses_serviced;
 }
 
-figure_sound_t figure_juggler::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_juggler::get_sound_reaction(xstring key) const {
     return juggler_m.sounds[key];
 }
 

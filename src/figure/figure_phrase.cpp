@@ -143,16 +143,15 @@ void figure::figure_phrase_determine() {
 
     if (!phrase_key.empty()) {
         figure_sound_t reaction = dcast()->get_sound_reaction(phrase_key.c_str());
-        phrase_group = reaction.group;
-        phrase_id = reaction.text;
+        phrase = reaction.phrase;
         return;
     }
 
-    phrase_id = 0;
+    phrase = { 0, 0 };
     phrase_key = "";
     
     if (is_enemy() || type == FIGURE_INDIGENOUS_NATIVE || type == FIGURE_NATIVE_TRADER) {
-        phrase_id = -1;
+        phrase.id = -1;
         phrase_key = "unknown";
         return;
     }
@@ -166,12 +165,11 @@ void figure::figure_phrase_determine() {
 
     if (!phrase_key.empty()) {
         figure_sound_t reaction = dcast()->get_sound_reaction(phrase_key.c_str());
-        phrase_group = reaction.group;
-        phrase_id = reaction.text;
+        phrase = reaction.phrase;
     }
 }
 
-static int figure_play_phrase_file(figure *f, e_figure_type type, bstring64 key) {
+static int figure_play_phrase_file(figure *f, e_figure_type type, xstring key) {
     if (type >= 0) {
         auto type_it = std::find_if(std::begin(g_figure_sounds), std::end(g_figure_sounds), [type] (auto &t) { return t.type == type; });
 
@@ -189,10 +187,10 @@ static int figure_play_phrase_file(figure *f, e_figure_type type, bstring64 key)
 
         vfs::path path;
         if (key.empty()) {
-            if (f->phrase_id == 0) {
-                f->phrase_id = rand() % 10;
+            if (f->phrase.id == 0) {
+                f->phrase.id = rand() % 10;
             }
-            path.printf("Voice/Walker/%s_random_%02u.wav", type_it->prefix.c_str(), key.c_str(), f->phrase_id);
+            path.printf("Voice/Walker/%s_random_%02u.wav", type_it->prefix.c_str(), key.c_str(), f->phrase.id);
 
             if (!g_sound.speech_file_exist(path)) {
                 // fallback to standart phrase

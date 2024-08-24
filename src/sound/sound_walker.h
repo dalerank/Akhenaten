@@ -5,11 +5,10 @@
 #include "content/vfs.h"
 
 struct figure_sound_t {
-    bstring64 id;
+    xstring id;
     bstring64 fname;
-    int group;
-    int text;
-    xstring phrase;
+    textid phrase;
+    xstring phrase_key;
 
     void load(archive arch);
 };
@@ -19,13 +18,14 @@ struct figure_sounds_t {
 
     void load(archive arch, pcstr section = "sounds");
 
-    const figure_sound_t &operator[](pcstr key) const {
-        static figure_sound_t dummy;
-        auto it = std::find_if(data.begin(), data.end(), [key] (auto &it) { return it.id.equals(key); });
+    const figure_sound_t &operator[](xstring key) const {
+        static figure_sound_t dummy{ "", "", {0, 0}, "#undefined_phrase" };
+
+        auto it = std::find_if(data.begin(), data.end(), [key] (auto &it) { return it.id == key; });
         return (it == data.end()) ? dummy : *it;
     }
 };
 
 namespace snd {
-    bstring64 get_walker_reaction(pcstr reaction);
+    bstring64 get_walker_reaction(xstring reaction);
 }

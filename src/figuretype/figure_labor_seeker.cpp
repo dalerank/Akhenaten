@@ -109,7 +109,7 @@ int figure_labor_seeker::provide_service() {
     return houses_serviced;
 }
 
-figure_sound_t figure_labor_seeker::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_labor_seeker::get_sound_reaction(xstring key) const {
     return labor_seeker_m.sounds[key];
 }
 

@@ -109,7 +109,7 @@ void figure_emigrant::update_animation() {
     }
 }
 
-figure_sound_t figure_emigrant::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_emigrant::get_sound_reaction(xstring key) const {
     return emigrant_m.sounds[key];
 }
 

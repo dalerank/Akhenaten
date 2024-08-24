@@ -22,7 +22,7 @@ public:
     virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) override;
     virtual e_figure_sound phrase() const override { return {FIGURE_CART_PUSHER, "cartpusher"}; }
     virtual e_overlay get_overlay() const override { return OVERLAY_NONE; }
-    virtual figure_sound_t get_sound_reaction(pcstr key) const override;
+    virtual figure_sound_t get_sound_reaction(xstring key) const override;
     virtual sound_key phrase_key() const override;
     virtual bool can_move_by_water() const override;
 

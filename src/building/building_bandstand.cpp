@@ -172,7 +172,7 @@ void info_window_bandstand::window_info_background(object_info &c) {
     building *b = c.building_get();
     const auto &params = b->dcast()->params();
 
-    ui::textid reason{ c.group_id, 0 };
+    textid reason{ c.group_id, 0 };
     if (!c.has_road_access) { reason = { 69, 25 }; }
     else if (b->num_workers <= 0) { reason.id = 6; }
     else if (!b->data.entertainment.num_shows) { reason.id = 2; }

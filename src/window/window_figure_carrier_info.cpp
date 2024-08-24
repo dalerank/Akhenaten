@@ -62,7 +62,7 @@ void figure_carrier_info_window::window_info_background(object_info &c) {
         break;
     }
 
-    if (c.nfigure.phrase_group > 0 && c.nfigure.phrase_id >= 0) {
-        ui["phrase"] = ui::str(c.nfigure.phrase_group, c.nfigure.phrase_id);
+    if (c.nfigure.phrase.valid()) {
+        ui["phrase"] = ui::str(c.nfigure.phrase.group, c.nfigure.phrase.id);
     }
 }

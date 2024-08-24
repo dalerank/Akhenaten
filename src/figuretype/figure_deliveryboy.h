@@ -13,7 +13,7 @@ public:
     virtual e_figure_sound phrase() const override { return {FIGURE_DELIVERY_BOY, "marketboy"}; }
     virtual sound_key phrase_key() const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_BAZAAR_ACCESS; }
-    virtual figure_sound_t get_sound_reaction(pcstr key) const override;
+    virtual figure_sound_t get_sound_reaction(xstring key) const override;
     virtual const animations_t &anim() const override;
     virtual void update_animation() override;
 };

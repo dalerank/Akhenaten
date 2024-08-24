@@ -85,8 +85,8 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         game_debug_show_property(i, "collecting_item_id", f->collecting_item_id);
         game_debug_show_property(i, "trade_ship_failed_dock_attempts", f->trade_ship_failed_dock_attempts);
         game_debug_show_property(i, "phrase_sequence_exact", f->phrase_sequence_exact);
-        game_debug_show_property(i, "phrase_group", f->phrase_group);
-        game_debug_show_property(i, "phrase_id", f->phrase_id);
+        game_debug_show_property(i, "phrase_group", f->phrase.group);
+        game_debug_show_property(i, "phrase_id", f->phrase.id);
         game_debug_show_property(i, "phrase_key", f->phrase_key);
         game_debug_show_property(i, "phrase_sequence_city", f->phrase_sequence_city);
         game_debug_show_property(i, "trader_id", f->trader_id);

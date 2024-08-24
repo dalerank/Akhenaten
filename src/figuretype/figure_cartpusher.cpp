@@ -494,7 +494,7 @@ void figure_cartpusher::figure_draw(painter &ctx, vec2i pixel, int highlight, ve
     base.draw_figure_with_cart(ctx, base.cached_pos, highlight, coord_out);
 }
 
-figure_sound_t figure_cartpusher::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_cartpusher::get_sound_reaction(xstring key) const {
     return cartpusher_m.sounds[key];
 }
 

@@ -90,7 +90,7 @@ int figure_musician::provide_service() {
     return houses_serviced;
 }
 
-figure_sound_t figure_musician::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_musician::get_sound_reaction(xstring key) const {
     return musician_m.sounds[key];
 }
 

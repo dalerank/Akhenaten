@@ -265,7 +265,7 @@ int figure_fireman::provide_service() {
     return result;
 }
 
-figure_sound_t figure_fireman::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_fireman::get_sound_reaction(xstring key) const {
     return fireman_m.sounds[key];
 }
 

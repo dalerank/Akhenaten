@@ -160,9 +160,8 @@ public:
     uint8_t collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
     uint8_t trade_ship_failed_dock_attempts;
     uint8_t phrase_sequence_exact;
-    uint16_t phrase_group;
-    uint8_t phrase_id;
-    bstring64 phrase_key;
+    textid phrase;
+    xstring phrase_key;
     uint8_t phrase_sequence_city;
     uint8_t trader_id;
     uint8_t wait_ticks_next_target;
@@ -475,7 +474,7 @@ public:
     virtual void poof() { base.poof(); }
     virtual e_figure_sound phrase() const { return {FIGURE_NONE, ""}; }
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
-    virtual figure_sound_t get_sound_reaction(pcstr key) const;
+    virtual figure_sound_t get_sound_reaction(xstring key) const;
     virtual sound_key phrase_key() const { return "empty"; }
     virtual int provide_service() { return 0; }
     virtual bool play_die_sound() { return false; }

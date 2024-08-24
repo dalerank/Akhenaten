@@ -89,6 +89,6 @@ const animations_t &figure_dancer::anim() const {
     return dancer_m.anim;
 }
 
-figure_sound_t figure_dancer::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_dancer::get_sound_reaction(xstring key) const {
     return dancer_m.sounds[key];
 }

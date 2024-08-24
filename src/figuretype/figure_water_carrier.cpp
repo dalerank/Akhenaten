@@ -113,6 +113,6 @@ int figure_water_carrier::provide_service() {
     return figure_provide_service(tile(), &base, none_service, water_supply_coverage);
 }
 
-figure_sound_t figure_water_carrier::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_water_carrier::get_sound_reaction(xstring key) const {
     return water_carrier_m.sounds[key];
 }

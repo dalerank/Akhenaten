@@ -154,7 +154,7 @@ int figure_tax_collector::provide_service() {
     return houses_serviced;
 }
 
-figure_sound_t figure_tax_collector::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_tax_collector::get_sound_reaction(xstring key) const {
     return tax_collector_m.sounds[key];
 }
 

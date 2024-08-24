@@ -18,17 +18,17 @@ void config_load_walker_sounds() {
     });
 }
 
-bstring64 snd::get_walker_reaction(pcstr reaction) {
-    auto it = std::find_if(g_walker_reaction.begin(), g_walker_reaction.end(), [reaction] (auto &it) { return it.id.equals(reaction); });
+bstring64 snd::get_walker_reaction(xstring reaction) {
+    auto it = std::find_if(g_walker_reaction.begin(), g_walker_reaction.end(), [reaction] (auto &it) { return it.id == reaction; });
 
     return (it == g_walker_reaction.end()) ? bstring64() : it->fname;
 }
 
 void figure_sound_t::load(archive arch) {
     fname = arch.r_string("sound");
-    group = arch.r_int("group");
-    text = arch.r_int("text");
-    phrase = arch.r_string("phrase");
+    phrase.group = arch.r_int("group");
+    phrase.id = arch.r_int("text");
+    phrase_key = arch.r_string("phrase");
 }
 
 void figure_sounds_t::load(archive arch, pcstr section) {

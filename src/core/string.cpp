@@ -3,6 +3,8 @@
 #include <cstring>
 #include <ctype.h>
 
+#include <io/gamefiles/lang.h>
+
 uint8_t* string_copy(const uint8_t* src, uint8_t* dst, int maxlength) {
     int length = 0;
     while (length < maxlength && *src) {
@@ -176,4 +178,14 @@ void strncpy_safe(char* dest, const char* src, std::size_t destsz) {
         srcsz = destsz - 1;
     memmove(dest, src, srcsz); // memmove is safe if dest and src overlap
     dest[srcsz] = '\0';
+}
+
+pcstr textid::c_str_safe(pcstr def) const {
+    pcstr text = valid() ? (pcstr)lang_get_string(group, id) : nullptr;
+
+    return text ? text : def;
+}
+
+pcstr textid::c_str() const {
+    return c_str_safe("undefined");
 }

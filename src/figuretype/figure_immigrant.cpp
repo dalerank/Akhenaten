@@ -111,7 +111,7 @@ bool figure_immigrant::can_move_by_water() const {
     return map_terrain_is(tile(), TERRAIN_FERRY_ROUTE);
 }
 
-figure_sound_t figure_immigrant::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_immigrant::get_sound_reaction(xstring key) const {
     return immigrant_m.sounds[key];
 }
 

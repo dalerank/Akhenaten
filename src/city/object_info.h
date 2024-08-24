@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/xstring.h"
 #include "core/string.h"
 #include "grid/point.h"
 #include "core/vec2i.h"
@@ -53,7 +54,7 @@ struct object_info {
     int subwnd_hblocks_num;
     int subwnd_y_offset;
     int help_id;
-    int group_id;
+    uint16_t group_id;
     bool can_play_sound;
     int building_id;
     int has_road_access;
@@ -78,9 +79,8 @@ struct object_info {
     int storage_show_special_orders;
     struct {
         int draw_debug_path;
-        int phrase_group;
-        int phrase_id;
-        bstring64 phrase_key;
+        textid phrase;
+        xstring phrase_key;
         int selected_index;
         int drawn;
         svector<int, 7> ids;
@@ -89,5 +89,7 @@ struct object_info {
     void reset(tile2i tile);
     void fill_figures_info(tile2i tile);
     figure *figure_get();
+    int figure_get_id() const { return nfigure.ids[nfigure.selected_index]; }
+    bool figure_phrase_valid() const { return nfigure.phrase.valid(); }
     building *building_get();
 };

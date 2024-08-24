@@ -94,7 +94,7 @@ const animations_t &figure_architector::anim() const {
     return architector_m.anim;
 }
 
-figure_sound_t figure_architector::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_architector::get_sound_reaction(xstring key) const {
     return architector_m.sounds[key];
 }
 

@@ -14,7 +14,7 @@ public:
     virtual figure_immigrant *dcast_immigrant() { return this; }
     virtual int y_correction(int y) const override { return 10; }
     virtual e_figure_sound phrase() const override { return {FIGURE_IMMIGRANT, "immigrant"}; }
-    virtual figure_sound_t get_sound_reaction(pcstr key) const override;
+    virtual figure_sound_t get_sound_reaction(xstring key) const override;
     virtual sound_key phrase_key() const override;
     virtual const animations_t &anim() const override;
 

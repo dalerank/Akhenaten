@@ -29,7 +29,7 @@ void figure_market_trader::figure_action() {
     }
 }
 
-figure_sound_t figure_market_trader::get_sound_reaction(pcstr key) const {
+figure_sound_t figure_market_trader::get_sound_reaction(xstring key) const {
     return market_trader_m.sounds[key];
 }
 

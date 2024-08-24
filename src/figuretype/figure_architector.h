@@ -15,5 +15,5 @@ public:
     virtual e_overlay get_overlay() const override { return OVERLAY_DAMAGE; }
     virtual void on_action_changed(int saved_action) override;
     virtual const animations_t &anim() const override;
-    virtual figure_sound_t get_sound_reaction(pcstr key) const override;
+    virtual figure_sound_t get_sound_reaction(xstring key) const override;
 };
