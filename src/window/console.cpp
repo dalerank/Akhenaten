@@ -80,6 +80,7 @@ void window_console_show() {
         draw_foreground,
         handle_input
     };
+
     init();
     window_show(&window);
 }

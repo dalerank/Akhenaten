@@ -14,6 +14,9 @@
 #include "game/state.h"
 #include "sound/sound.h"
 
+declare_console_var_int(figure_small_image_x, -10)
+declare_console_var_int(figure_small_image_y, -30)
+
 struct figure_small_image {
     int image_id = 0;
 
@@ -30,7 +33,7 @@ struct figure_small_image {
         int grid_offset = figure_get(figure_id)->tile.grid_offset();
         widget_city_draw_for_figure(ctx, figure_id, &coord);
 
-        image_id = graphics_save_to_texture(-1, coord, { 48, 48 });
+        image_id = graphics_save_to_texture(-1, coord + vec2i{ figure_small_image_x(), figure_small_image_y()}, {48, 48});
     }
 
     ~figure_small_image() {
@@ -143,7 +146,7 @@ void figure_info_window::window_info_background(object_info &c) {
 
     ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
     ui["show_path"].onclick([f] {
-        f->draw_debug_mode = f->draw_debug_mode ? 0 :FIGURE_DRAW_DEBUG_ROUTING;
+        f->draw_debug_mode = f->draw_debug_mode ? 0 : FIGURE_DRAW_DEBUG_ROUTING;
         window_invalidate();
     });
 
