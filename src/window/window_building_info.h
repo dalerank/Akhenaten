@@ -2,6 +2,8 @@
 
 #include "window_info.h"
 
+struct building;
+
 struct building_info_window : public common_info_window {
     building_info_window();
 
@@ -16,6 +18,8 @@ struct building_info_window : public common_info_window {
     virtual std::pair<int, int> get_tooltip(object_info &c) override;
 
     virtual void update_buttons(object_info &c) override;
+
+    building *building_get(object_info &c);
 
     void common_info_background(object_info& c);
     void draw_employment_details(object_info &c, int text_id = -1);

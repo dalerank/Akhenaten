@@ -280,6 +280,7 @@ building_mine *building::dcast_mine() { return dcast()->dcast_mine(); }
 building_quarry *building::dcast_quarry() { return dcast()->dcast_quarry(); }
 building_palace *building::dcast_palace() { return dcast()->dcast_palace(); }
 building_festival_square *building::dcast_festival_square() { return dcast()->dcast_festival_square(); }
+building_bandstand *building::dcast_bandstand() { return dcast()->dcast_bandstand(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));

@@ -40,6 +40,7 @@ using UiFlags = int;
 
 namespace ui {
 
+struct textid { int group; int id; };
 struct img_button_offsets { int data[4] = {0, 1, 2, 3}; };
 
 void begin_frame();
@@ -118,6 +119,7 @@ struct element {
 
     inline void operator=(pcstr t) { text(t); }
     inline void operator=(const bstring512 &t) { text(t); }
+    inline void operator=(const textid &t) { text(ui::str(t.group, t.id)); }
     void update_pos(const recti &r);
 
     template<class T>

@@ -10,7 +10,7 @@
 struct festival_square_info_window : building_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return !!building_get(c.building_id)->dcast_festival_square();
+        return !!c.building_get()->dcast_festival_square();
     }
 };
 
@@ -24,7 +24,7 @@ void config_load_festival_square_info_window() {
 void festival_square_info_window::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
-    building *b = building_get(c.building_id);
+    building *b = c.building_get();
 
     ui["warning"] = ui::str(c.group_id, 1);
     ui["fest_months_last"].text_var("%d %s %s", g_city.festival.months_since_festival, ui::str(8, 5), ui::str(58, 15));

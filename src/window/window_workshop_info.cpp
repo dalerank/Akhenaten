@@ -14,7 +14,7 @@
 struct workshop_info_window : public building_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        building *b = building_get(c.building_id);
+        building *b = c.building_get();
         return b->is_workshop();
     }
 };
@@ -35,7 +35,7 @@ void building_workshop_draw_foreground(object_info &c) {
 void workshop_info_window::window_info_background(object_info& c) {
     building_info_window::window_info_background(c);
 
-    building *b = building_get(c.building_id);
+    building *b = c.building_get();
     
     window_building_play_sound(&c, b->get_sound());
 

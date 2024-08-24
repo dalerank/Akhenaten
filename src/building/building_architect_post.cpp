@@ -78,5 +78,5 @@ void info_window_architect_post::window_info_background(object_info &c) {
 }
 
 inline bool info_window_architect_post::check(object_info& c) {
-    return building_get(c.building_id)->dcast_architect_post();
+    return c.building_get()->dcast_architect_post();
 }

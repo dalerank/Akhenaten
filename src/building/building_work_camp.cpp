@@ -22,7 +22,7 @@
 struct info_window_work_camp : public building_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        building *b = building_get(c.building_id);
+        building *b = c.building_get();
         return !!b->dcast_work_camp();
     }
 };
@@ -39,7 +39,7 @@ void config_load_building_work_camp() {
 void info_window_work_camp::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
-    building *b = building_get(c.building_id);
+    building *b = c.building_get();
 
     std::pair<int, int> reason = { c.group_id, 0 };
     if (!c.has_road_access) {

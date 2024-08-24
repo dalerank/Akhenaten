@@ -32,8 +32,8 @@ struct info_window_granary : public building_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
 
-    virtual bool check(object_info &c) override { return 
-        building_get(c.building_id)->dcast_granary();
+    virtual bool check(object_info &c) override { 
+        return c.building_get()->dcast_granary();
     }
 };
 
@@ -57,7 +57,7 @@ void info_window_granary::window_info_background(object_info &c) {
 
     building_info_window::window_info_background(c);
 
-    auto granary = building_get(c.building_id)->dcast_granary();
+    auto granary = c.building_get()->dcast_granary();
     assert(granary);
 
     if (c.storage_show_special_orders) {

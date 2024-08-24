@@ -13,7 +13,7 @@ struct info_window_raw_material : building_info_window {
 
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        building *b = building_get(c.building_id);
+        building *b = c.building_get();
         return b->dcast_mine() 
                    || b->dcast_quarry()
                    || b->dcast_clay_pit()
@@ -31,7 +31,7 @@ void config_load_raw_material_info_window() {
 void info_window_raw_material::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
-    building *b = building_get(c.building_id);
+    building *b = c.building_get();
 
     int pct_done = calc_percentage<int>(b->data.industry.progress, 200);
     ui["resource_img"].image(b->output_resource_first_id);

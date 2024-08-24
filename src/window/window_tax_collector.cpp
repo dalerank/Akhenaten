@@ -10,7 +10,7 @@
 struct taxcollector_info_window_t : public building_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return building_get(c.building_id)->dcast_tax_collector();
+        return c.building_get()->dcast_tax_collector();
     }
 };
 
@@ -26,7 +26,7 @@ void taxcollector_info_window_t::window_info_background(object_info &c) {
 
     building_info_window::window_info_background(c);
 
-    building *b = building_get(c.building_id);
+    building *b = c.building_get();
 
     ui["title"] = ui::str(106, 0);
     ui["deben_icon"].image(RESOURCE_DEBEN);

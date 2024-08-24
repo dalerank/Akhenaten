@@ -7,7 +7,7 @@
 struct health_info_window : public building_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        building *b = building_get(c.building_id);
+        building *b = c.building_get();
         return building_type_any_of(*b, BUILDING_APOTHECARY, BUILDING_PHYSICIAN, BUILDING_DENTIST, BUILDING_MORTUARY);
     }
 };
@@ -23,7 +23,7 @@ void health_info_window::window_info_background(object_info &c) {
     c.go_to_advisor.first = ADVISOR_HEALTH;
 
     building_info_window::window_info_background(c);
-    building *b = building_get(c.building_id);
+    building *b = c.building_get();
 
     e_figure_type ftype = FIGURE_NONE;
     switch (b->type) {
@@ -37,7 +37,7 @@ void health_info_window::window_info_background(object_info &c) {
 
     if (!c.has_road_access) { reason = {69, 25}; }
     else if (ftype != FIGURE_NONE && b->has_figure_of_type(BUILDING_SLOT_SERVICE, ftype)) { reason.second = 1; } 
-    else if (building_get(c.building_id)->num_workers <= 0) { reason.second = 2; }
+    else if (c.building_get()->num_workers <= 0) { reason.second = 2; }
     else { reason.second = approximate_value(c.worker_percentage / 100.f, make_array(5, 4, 3, 2)); }
  
     ui["warning_text"] = ui::str(reason.first, reason.second);

@@ -28,7 +28,7 @@
 struct palace_info_window : public building_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return building_get(c.building_id)->dcast_palace();
+        return c.building_get()->dcast_palace();
     }
 };
 
@@ -97,7 +97,7 @@ bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i p
 void palace_info_window::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
-    building *b = building_get(c.building_id);
+    building *b = c.building_get();
     ui["resource_img"].image(RESOURCE_DEBEN);
     ui["title"] = ui::str(28, b->type);
     ui["vaults_hold"].text_var("%s %d Db", ui::str(c.group_id, 2), b->tax_income_or_storage);

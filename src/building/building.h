@@ -66,6 +66,7 @@ class building_mine;
 class building_quarry;
 class building_palace;
 class building_festival_square;
+class building_bandstand;
 struct object_info;
 struct painter;
 struct mouse;
@@ -437,6 +438,7 @@ public:
     building_quarry *dcast_quarry();
     building_palace *dcast_palace();
     building_festival_square *dcast_festival_square();
+    building_bandstand *dcast_bandstand();
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
@@ -559,6 +561,7 @@ public:
     virtual building_quarry *dcast_quarry() { return nullptr; }
     virtual building_palace *dcast_palace() { return nullptr; }
     virtual building_festival_square *dcast_festival_square() { return nullptr; }
+    virtual building_bandstand *dcast_bandstand() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

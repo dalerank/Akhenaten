@@ -395,7 +395,7 @@ granary_info_window = {
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] },
 		workers_text : { type : "text", pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK },
 		workers_desc : { type : "text", pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
-		orders : { type:"generic_button", pos:[100, -1], size:[270, 25], text:{group: 98, id: 5}},
+		orders : { type:"generic_button", margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}},
 		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
 		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 		show_overlay : { type:"generic_button", margin:{right:-64, bottom:-40}, size:[23, 23]},
@@ -569,6 +569,18 @@ building_info_window = {
 	}
 }
 
+info_window_bandstand = {
+	ui : __baseui(building_info_window, {
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 21]},
+		inner_panel : { type : "inner_panel", pos : [16, 136], size: [27, 7] },
+		play_text : { type : "text", pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK },
+		play2_text : { type : "text", pos: [32, 202], font: FONT_NORMAL_BLACK_ON_DARK },
+		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142] },
+		workers_text : { type : "text", pos: [70, 150], font: FONT_NORMAL_BLACK_ON_DARK},
+		workers_desc : { type : "text", pos: [70, 146 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) },
+	})
+}
+
 info_window_fishing_wharf = {
 	ui : __baseui(building_info_window, {
 		resource_img : { type : "resource_icon", pos: [32, 186] },
@@ -692,7 +704,7 @@ bazaar_info_window = {
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] },
 		workers_text : { type : "text", pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
 		workers_desc : { type : "text", pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
-		orders : { type:"generic_button", pos:[100, 0], size:[270, 25], text:{group: 98, id: 5}},
+		orders : { type:"generic_button", margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}},
 		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
 		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 		show_overlay : { type:"generic_button", margin:{right:-64, bottom:-40}, size:[23, 23]},
@@ -778,7 +790,7 @@ info_window_storageyard = {
 		cartstate_img : { type : "resource_icon", pos:[40, 220] },
 		cartstate_desc : { type : "text", pos: [32, 223], wrap:px(27), font : FONT_NORMAL_BLACK_ON_DARK, multiline:true },
 
-		orders : { type:"generic_button", pos:[100, -1], size:[270, 24], text:{group: 99, id: 2}},
+		orders : { type:"generic_button", margin:{left:100, bottom:-40}, size:[270, 24], text:{group: 99, id: 2}},
 		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
 		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 		mothball : { type:"generic_button", margin:{right:-90, bottom:-40}, size:[23, 23]},

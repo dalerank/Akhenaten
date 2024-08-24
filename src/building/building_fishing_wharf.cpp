@@ -23,7 +23,7 @@
 
 struct info_window_fishing_wharf : public building_info_window {
     virtual bool check(object_info &c) override {
-        return building_get(c.building_id)->dcast_fishing_wharf();
+        return c.building_get()->dcast_fishing_wharf();
     }
 
     virtual void window_info_background(object_info &c) override;
@@ -192,13 +192,7 @@ void building_fishing_wharf::highlight_waypoints() {
 void info_window_fishing_wharf::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
-    building *b = building_get(c.building_id);
-    const auto &params = b->dcast()->params();
-
-    painter ctx = game.painter();
-
-    window_building_play_sound(&c, b->get_sound());
-
+    building *b = c.building_get();
 
     std::pair<int, int> reason = { c.group_id, 0 };
     if (!c.has_road_access) {

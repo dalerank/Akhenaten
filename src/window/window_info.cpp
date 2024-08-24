@@ -133,6 +133,10 @@ figure *object_info::figure_get() {
     return ::figure_get(figure_id);
 }
 
+building *object_info::building_get() {
+    return ::building_get(building_id);
+}
+
 void window_info_init(tile2i tile, bool avoid_mouse) {
     auto &context = g_object_info;
     context.reset(tile);

@@ -30,7 +30,7 @@ struct temple_info_window_t : public building_info_window {
     virtual void window_info_background(object_info &c) override {
         building_info_window::window_info_background(c);
 
-        auto temple = building_get(c.building_id)->dcast_temple();
+        auto temple = c.building_get()->dcast_temple();
 
         int image_offset = 0;
         switch (temple->type()) {
@@ -47,7 +47,7 @@ struct temple_info_window_t : public building_info_window {
     }
 
     virtual bool check(object_info &c) override { 
-        building *b = building_get(c.building_id);
+        building *b = c.building_get();
         return !!b->dcast_temple();
     }
 };

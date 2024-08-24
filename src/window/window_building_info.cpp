@@ -4,8 +4,8 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/window.h"
 #include "grid/building.h"
-#include "building/distribution.h"
 #include "building/building.h"
+#include "building/distribution.h"
 #include "building/culture.h"
 #include "building/house_evolution.h"
 #include "building/government.h"
@@ -30,8 +30,8 @@ building_info_window::building_info_window() {
 }
 
 int building_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {
-    building *b = building_get(c.building_id);
-    switch (building_get(c.building_id)->type) {
+    building *b = building_get(c);
+    switch (b->type) {
     case BUILDING_STORAGE_YARD:
         if (c.storage_show_special_orders)
             return window_building_handle_mouse_warehouse_orders(m, &c);
@@ -68,7 +68,7 @@ void window_building_draw_native_crops(object_info* c) {
 void building_info_window::window_info_foreground(object_info &c) {
     draw();
 
-    building *b = building_get(c.building_id);
+    building *b = building_get(c);
     b->dcast()->window_info_foreground(c);
 }
 
@@ -85,7 +85,7 @@ void window_building_draw_mission_post(object_info* c) {
 void building_info_window::common_info_background(object_info& c) {
     building_info_window::window_info_background(c);
 
-    building* b = building_get(c.building_id);
+    building* b = building_get(c);
     auto params = b->dcast()->params();
 
     window_building_play_sound(&c, b->get_sound()); // TODO: change to firehouse
@@ -108,7 +108,7 @@ void building_info_window::common_info_background(object_info& c) {
 }
 
 void building_info_window::draw_employment_details(object_info &c, int text_id) {
-    building *b = building_get(c.building_id);
+    building *b = building_get(c);
     
     int laborers = model_get_building(b->type)->laborers;
     ui["workers_text"].text_var("%d %s (%d %s", b->num_workers, ui::str(8, 12), laborers, ui::str(69, 0));
@@ -124,7 +124,7 @@ void building_info_window::draw_employment_details(object_info &c, int text_id) 
 
 void building_info_window::window_info_background(object_info &c) {
     g_debug_building_id = c.building_id;
-    building *b = building_get(c.building_id);
+    building *b = building_get(c);
 
     if (c.can_play_sound) {
         g_sound.speech_play_file(b->get_sound(), 255);
@@ -197,7 +197,7 @@ std::pair<int, int> building_info_window::get_tooltip(object_info &c) {
         return {0, 0};
     }
 
-    building *b = building_get(c.building_id);
+    building *b = building_get(c);
     if (b->type == BUILDING_STORAGE_YARD) {
         return window_building_get_tooltip_warehouse_orders();
     }
@@ -206,7 +206,7 @@ std::pair<int, int> building_info_window::get_tooltip(object_info &c) {
 }
 
 void building_info_window::update_buttons(object_info &c) {
-    building *b = building_get(c.building_id);
+    building *b = building_get(c);
 
     int workers_needed = model_get_building(b->type)->laborers;
     vec2i bgsize = ui["background"].pxsize();
@@ -246,4 +246,8 @@ void building_info_window::update_buttons(object_info &c) {
     });
 
     common_info_window::update_buttons(c);
+}
+
+building *building_info_window::building_get(object_info &c) {
+    return c.building_get();
 }

@@ -39,6 +39,7 @@ enum terrain_info_type {
 
 struct common_info_window;
 struct figure;
+struct building;
 
 struct object_info {
     vec2i offset;
@@ -88,4 +89,5 @@ struct object_info {
     void reset(tile2i tile);
     void fill_figures_info(tile2i tile);
     figure *figure_get();
+    building *building_get();
 };

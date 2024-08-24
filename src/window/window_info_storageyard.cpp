@@ -16,7 +16,7 @@ struct info_window_storageyard : public building_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual void window_info_foreground(object_info &c) override;
     virtual bool check(object_info &c) override {
-        building *b = building_get(c.building_id);
+        building *b = c.building_get();
         return building_type_any_of(*b, BUILDING_STORAGE_YARD, BUILDING_STORAGE_YARD_UP, BUILDING_STORAGE_ROOM);
     }
 
@@ -47,7 +47,7 @@ void info_window_storageyard::draw_warehouse_orders_foreground(object_info *c) {
     int y_offset = window_building_get_vertical_offset(c, 28 + 5);
     int line_x = c->offset.x + 215;
 
-    auto *b = building_get(c->building_id);
+    auto *b = c->building_get();
     auto *storage = b->dcast_storage()->storage();
 
     backup_storage_settings(b->storage_id);
@@ -120,7 +120,7 @@ void info_window_storageyard::draw_warehouse_orders(object_info *c) {
 void info_window_storageyard::draw_warehouse(object_info *c) {
     building_info_window::window_info_background(*c);
 
-    building_storage *warehouse = building_get(c->building_id)->dcast_storage();
+    building_storage *warehouse = c->building_get()->dcast_storage();
     assert(warehouse);
 
     auto &data = g_window_building_distribution;

@@ -23,13 +23,16 @@
 #include "widget/city/building_ghost.h"
 #include "sound/sound_building.h"
 
-struct bandstand_model : public buildings::model_t<building_bandstand>{
+struct bandstand_model : public buildings::model_t<building_bandstand> {
     int stand_sn_n = 0;
     int stand_sn_s = 0;
     int stand_we_w = 0;
     int stand_we_e = 0;
     int booth = 0;
-} bandstand_m;
+};
+
+bandstand_model bandstand_m;
+info_window_bandstand bandstand_infow;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bandstand_config);
 void config_load_building_bandstand_config() {
@@ -39,6 +42,7 @@ void config_load_building_bandstand_config() {
     bandstand_m.stand_we_w = bandstand_m.anim["stand_we_w"].first_img();
     bandstand_m.stand_we_e = bandstand_m.anim["stand_we_e"].first_img();
     bandstand_m.booth = bandstand_m.anim["booth"].first_img();
+    bandstand_infow.load("info_window_bandstand");
 }
 
 void building_bandstand::on_create(int orientation) {
@@ -162,46 +166,32 @@ void building_bandstand::on_undo() {
     }
 }
 
-void building_bandstand::window_info_background(object_info &c) {
-    building *b = building_get(c.building_id);
+void info_window_bandstand::window_info_background(object_info &c) {
+    building_info_window::window_info_background(c);
+
+    building *b = c.building_get();
     const auto &params = b->dcast()->params();
 
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
+    ui::textid reason{ c.group_id, 0 };
+    if (!c.has_road_access) { reason = { 69, 25 }; }
+    else if (b->num_workers <= 0) { reason.id = 6; }
+    else if (!b->data.entertainment.num_shows) { reason.id = 2; }
+    else if (b->data.entertainment.num_shows == 2) { reason.id = 3; }
+    else if (b->data.entertainment.days1) { reason.id = 4; }
+    else if (b->data.entertainment.days2) { reason.id = 5; }
 
-    window_building_play_sound(&c, snd::get_building_info_sound(type()));
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    draw_employment_details(c);
 
-    if (!c.has_road_access) {
-        window_building_draw_description(c, 69, 25);
-    } else if (b->num_workers <= 0) {
-        window_building_draw_description(c, group_id, 6);
-    } else if (!b->data.entertainment.num_shows) {
-        window_building_draw_description(c, group_id, 2);
-    } else if (b->data.entertainment.num_shows == 2) {
-        window_building_draw_description(c, group_id, 3);
-    } else if (b->data.entertainment.days1) {
-        window_building_draw_description(c, group_id, 4);
-    } else if (b->data.entertainment.days2) {
-        window_building_draw_description(c, group_id, 5);
-    }
-
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 7);
-    window_building_draw_employment(&c, 138);
     if (b->data.entertainment.days1 > 0) {
-        int width = lang_text_draw(group_id, 8, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1, c.offset.x + width + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
+        ui["play_text"].text_var("%s %s %d", ui::str(c.group_id, 8), ui::str(8, 44), 2 * b->data.entertainment.days1);
     } else {
-        lang_text_draw(group_id, 7, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
+        ui["play_text"] = ui::str(c.group_id, 7);
     }
 
     if (b->data.entertainment.days2 > 0) {
-        int width = lang_text_draw(group_id, 10, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days2, c.offset.x + width + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw(72, 7 + b->data.entertainment.days3_or_play, c.offset.x + 32, c.offset.y + 222, FONT_NORMAL_BLACK_ON_DARK);
+        ui["play2_text"].text_var("%s %s %d %s", ui::str(c.group_id, 10), ui::str(8, 44), 2 * 2 * b->data.entertainment.days2, ui::str(72, 7 + b->data.entertainment.days3_or_play));
     } else {
-        lang_text_draw(group_id, 9, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
+        ui["play2_text"] = ui::str(c.group_id, 9);
     }
 }
 
@@ -284,4 +274,8 @@ void building_bandstand::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, i
         draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
         break;
     }
+}
+
+inline bool info_window_bandstand::check(object_info &c) {
+    return c.building_get()->dcast_bandstand();
 }

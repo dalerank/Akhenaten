@@ -14,7 +14,7 @@
 struct info_window_water_supply : building_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return building_get(c.building_id)->dcast_water_supply();
+        return c.building_get()->dcast_water_supply();
     }
 };
 
@@ -90,7 +90,7 @@ bool building_water_supply::draw_ornaments_and_animations_height(painter &ctx, v
 void info_window_water_supply::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
-    building* b = building_get(c.building_id);
+    building* b = c.building_get();
 
     std::pair<int, int> reason = { c.group_id, 1 };
     std::pair<int, int> workers = { c.group_id, 0 };

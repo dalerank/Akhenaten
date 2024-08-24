@@ -1,11 +1,13 @@
 #pragma once
 
 #include "building/building.h"
+#include "window/window_building_info.h"
 
 class building_bandstand : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_BANDSTAND, building_bandstand)
     building_bandstand(building &b) : building_impl(b) {}
+    virtual building_bandstand *dcast_bandstand() override { return this; }
 
     virtual void on_create(int orientation) override;
     virtual void update_day() override;
@@ -14,7 +16,6 @@ public:
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual void spawn_figure() override;
-    virtual void window_info_background(object_info &c) override;
     virtual int animation_speed(int speed) const override { return 4; }
     virtual int get_fire_risk(int value) const override { return value / 10; }
     virtual void update_count() const;
@@ -26,4 +27,9 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     void draw_shows_musicians(painter &ctx, vec2i pixel, int direction, color color_mask);
     static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
+};
+
+struct info_window_bandstand : public building_info_window {
+    virtual void window_info_background(object_info &c) override;
+    virtual bool check(object_info &c) override;
 };

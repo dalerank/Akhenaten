@@ -33,7 +33,7 @@ struct info_window_house : public building_info_window {
 
     virtual void window_info_background(object_info& c) override;
     virtual bool check(object_info &c) override {
-        building_house *h = building_get(c.building_id)->dcast_house();
+        building_house *h = c.building_get()->dcast_house();
         if (!h) {
             return false;
         }
@@ -45,7 +45,7 @@ struct info_window_house : public building_info_window {
 struct info_window_vacant_lot : building_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        building_house *h = building_get(c.building_id)->dcast_house();
+        building_house *h = c.building_get()->dcast_house();
         if (!h) {
             return false;
         }
@@ -69,7 +69,7 @@ void info_window_vacant_lot::window_info_background(object_info &c) {
     //window_figure_info_prepare_figures(c);
     //window_building_draw_figure_list(&c);
 
-    building *b = building_get(c.building_id);
+    building *b = c.building_get();
     map_point road_tile = map_closest_road_within_radius(b->tile, 1, 2);
     int text_id = road_tile.valid() ? 1 : 2;
 
@@ -81,7 +81,7 @@ void info_window_house::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
     c.help_id = help_id;
-    building *b = building_get(c.building_id);
+    building *b = c.building_get();
 
     assert(b->house_population > 0);
 
@@ -92,7 +92,7 @@ void info_window_house::window_info_background(object_info &c) {
         bstring512 text;
         text.printf("%s @Y%s&) %s",
             ui::str(127, 40 + b->data.house.evolve_text_id),
-            ui::str(41, building_get(c.worst_desirability_building_id)->type),
+            ui::str(41, ::building_get(c.worst_desirability_building_id)->type),
             ui::str(127, 41 + b->data.house.evolve_text_id));
         ui["evolve_reason"] = text;
     } else { // needs something to evolve 

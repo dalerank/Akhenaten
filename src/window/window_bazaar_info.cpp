@@ -24,7 +24,7 @@ struct bazaar_info_window_t : public building_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual void window_info_foreground(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return building_get(c.building_id)->type == BUILDING_BAZAAR;
+        return c.building_get()->type == BUILDING_BAZAAR;
     }
 
     void draw_simple_background(object_info &c);
@@ -40,16 +40,12 @@ void config_load_bazaar_info_window() {
 }
 
 void bazaar_info_window_t::draw_simple_background(object_info &c) {
-    auto &ui = *this;
-    auto bazaar = building_get(c.building_id)->dcast_bazaar();
+    auto bazaar = c.building_get()->dcast_bazaar();
 
     const auto &meta = bazaar->get_info();
-    c.help_id = meta.help_id;
 
-    vec2i bgsize = ui["background"].pxsize();
     window_building_play_sound(&c, bazaar->get_sound());
 
-    ui["orders"].pos.y = bgsize.y - 40;
     ui["orders"].onclick([&c] (int, int) {
         c.storage_show_special_orders = 1;
         window_invalidate();
@@ -70,7 +66,7 @@ void bazaar_info_window_t::draw_simple_background(object_info &c) {
         return;
     }
 
-    draw_employment_details_ui(ui, c, &bazaar->base, -1);
+    draw_employment_details(c);
 
     int image_id = image_id_resource_icon(0);
     auto &data = bazaar->data;
@@ -127,7 +123,7 @@ void bazaar_info_window_t::draw_orders_foreground(object_info &c) {
     int y_offset = window_building_get_vertical_offset(&c, 28 - 11);
     painter ctx = game.painter();
 
-    building_bazaar* bazaar = building_get(c.building_id)->dcast_bazaar();
+    building_bazaar* bazaar = c.building_get()->dcast_bazaar();
     //    backup_storage_settings(storage_id); // TODO: market state backup
     const resource_list &resources = city_resource_get_available_market_goods();
     for (const auto &r: resources) {

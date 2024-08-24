@@ -11,7 +11,7 @@
 struct farm_info_window : public building_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return building_get(c.building_id)->dcast_farm();
+        return c.building_get()->dcast_farm();
     }
 };
 
@@ -25,7 +25,7 @@ void config_load_farm_info_window() {
 void farm_info_window::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
-    building *b = building_get(c.building_id);
+    building *b = c.building_get();
 
     ui["resource"].image(b->output_resource_first_id);
     ui["title"] = ui::str(c.group_id, 0);

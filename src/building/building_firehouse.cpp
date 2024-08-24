@@ -49,5 +49,5 @@ void info_window_firehouse::window_info_background(object_info& c) {
 }
 
 inline bool info_window_firehouse::check(object_info& c) {
-    return building_get(c.building_id)->dcast_firehouse();
+    return c.building_get()->dcast_firehouse();
 }

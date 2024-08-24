@@ -12,7 +12,7 @@ struct info_window_roadblock : public building_info_window {
     int building_id = 0;
 
     virtual bool check(object_info &c) override {
-        return building_get(c.building_id)->dcast_roadblock();
+        return c.building_get()->dcast_roadblock();
     }
 
     virtual void window_info_background(object_info &c) override;

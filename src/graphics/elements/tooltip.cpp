@@ -135,7 +135,7 @@ static void draw_button_tooltip(tooltip_context* c) {
         break;
     }
 
-    save_window_under_tooltip_to_buffer(x, y, width, height);
+    //save_window_under_tooltip_to_buffer(x, y, width, height);
     draw_tooltip_box(x, y, width, height);
     text_draw_multiline(text, x + 5, y + 7, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
 }
