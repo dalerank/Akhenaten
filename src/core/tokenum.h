@@ -90,33 +90,33 @@ private:
 public:
     // Helper function that directly takes an enum_type value template parameter to get the name of the classes template enum type value as a string.
     template <enum_type value>
-    constexpr static const char* helper_type() {
+    static const char* helper_type() {
         // Clang compiler format:   __PRETTY_FUNCTION__ = static const char *u_enum_name<ENUM_TYPE_NAME, ENUM_TYPE_NAME::ENUM_VALUE_NAME>::helper_type() [enum_type = ENUM_TYPE_NAME, enum_value = ENUM_TYPE_NAME::ENUM_VALUE_NAME, value = ENUM_TYPE_NAME::ENUM_VALUE_NAME]
         // MSVC compiler format:    __FUNCSIG__         = const char *__cdecl u_enum_name<enum ENUM_TYPE_NAME,ENUM_VALUE>::helper_type<ENUM_TYPE_NAME::ENUM_VALUE_NAME>(void)
 
 #if defined(__clang__)
-        constexpr unsigned long long function_name_length = sizeof(__PRETTY_FUNCTION__);
-        constexpr string_literal<function_name_length> function_name(__PRETTY_FUNCTION__, std::make_integer_sequence<unsigned long long, function_name_length>{});
-        constexpr unsigned long long type_name_start  = function_name.rfind('=') + 2;
-        constexpr unsigned long long type_name_end    = function_name.rfind(':') - 1;
-        constexpr unsigned long long type_name_length = type_name_end - type_name_start;
-        constexpr string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
+        constexpr static unsigned long long function_name_length = sizeof(__PRETTY_FUNCTION__);
+        constexpr static string_literal<function_name_length> function_name(__PRETTY_FUNCTION__, std::make_integer_sequence<unsigned long long, function_name_length>{});
+        constexpr static unsigned long long type_name_start  = function_name.rfind('=') + 2;
+        constexpr static unsigned long long type_name_end    = function_name.rfind(':') - 1;
+        constexpr static unsigned long long type_name_length = type_name_end - type_name_start;
+        constexpr static string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
         return type_name_string.c_str();
 #elif defined(__GNUC__)
-        constexpr unsigned long long function_name_length = sizeof(__PRETTY_FUNCTION__);
-        constexpr string_literal<function_name_length> function_name(__PRETTY_FUNCTION__, make_integer_sequence<unsigned long long, function_name_length>{});
-        constexpr unsigned long long type_name_start  = function_name.rfind('=') + 2;
-        constexpr unsigned long long type_name_end    = function_name.rfind(':') - 1;
-        constexpr unsigned long long type_name_length = type_name_end - type_name_start;
-        constexpr string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
+        constexpr static unsigned long long function_name_length = sizeof(__PRETTY_FUNCTION__);
+        constexpr static string_literal<function_name_length> function_name(__PRETTY_FUNCTION__, make_integer_sequence<unsigned long long, function_name_length>{});
+        constexpr static unsigned long long type_name_start  = function_name.rfind('=') + 2;
+        constexpr static unsigned long long type_name_end    = function_name.rfind(':') - 1;
+        constexpr static unsigned long long type_name_length = type_name_end - type_name_start;
+        constexpr static string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
         return type_name_string.c_str();
 #elif defined(__FUNCSIG__) || defined(_MSC_VER)
-        constexpr static const unsigned long long function_name_length = sizeof(__FUNCSIG__);
-        constexpr static const string_literal<function_name_length> function_name(__FUNCSIG__, gtl::make_integer_sequence<unsigned long long, function_name_length>{});
-        constexpr static const unsigned long long type_name_start  = function_name.rfind('<') + 1;
-        constexpr static const unsigned long long type_name_end    = function_name.rfind(':') - 1;
-        constexpr static const unsigned long long type_name_length = type_name_end - type_name_start;
-        constexpr static const string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
+        constexpr static unsigned long long function_name_length = sizeof(__FUNCSIG__);
+        constexpr static string_literal<function_name_length> function_name(__FUNCSIG__, gtl::make_integer_sequence<unsigned long long, function_name_length>{});
+        constexpr static unsigned long long type_name_start  = function_name.rfind('<') + 1;
+        constexpr static unsigned long long type_name_end    = function_name.rfind(':') - 1;
+        constexpr static unsigned long long type_name_length = type_name_end - type_name_start;
+        constexpr static string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
         return type_name_string.c_str();
 #else
 #error "Unsupported compiler."
@@ -125,33 +125,33 @@ public:
 
     // Helper function that directly takes an enum_type value template parameter to get the name of the classes template enum type value as a string.
     template <enum_type value>
-    constexpr static const char* helper_value() {
+    static const char* helper_value() {
         // Clang compiler format:   __PRETTY_FUNCTION__ = static const char *u_enum_name<ENUM_TYPE_NAME, ENUM_TYPE_NAME::ENUM_VALUE_NAME>::helper_value() [enum_type = ENUM_TYPE_NAME, enum_value = ENUM_TYPE_NAME::ENUM_VALUE_NAME, value = ENUM_TYPE_NAME::ENUM_VALUE_NAME]
         // MSVC compiler format:    __FUNCSIG__         = const char *__cdecl u_enum_name<enum ENUM_TYPE_NAME,ENUM_VALUE>::helper_value<ENUM_TYPE_NAME::ENUM_VALUE_NAME>(void)
 
 #if defined(__clang__)
-        constexpr unsigned long long function_name_length = sizeof(__PRETTY_FUNCTION__);
-        constexpr string_literal<function_name_length> function_name(__PRETTY_FUNCTION__, std::make_integer_sequence<unsigned long long, function_name_length>{});
-        constexpr unsigned long long type_name_start  = function_name.rfind(':') + 1;
-        constexpr unsigned long long type_name_end    = function_name_length - 2;
-        constexpr unsigned long long type_name_length = type_name_end - type_name_start;
-        constexpr string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
+        constexpr static unsigned long long function_name_length = sizeof(__PRETTY_FUNCTION__);
+        constexpr static string_literal<function_name_length> function_name(__PRETTY_FUNCTION__, std::make_integer_sequence<unsigned long long, function_name_length>{});
+        constexpr static unsigned long long type_name_start  = function_name.rfind(':') + 1;
+        constexpr static unsigned long long type_name_end    = function_name_length - 2;
+        constexpr static unsigned long long type_name_length = type_name_end - type_name_start;
+        constexpr static string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
         return type_name_string.c_str();
 #elif defined(__GNUC__)
-        constexpr unsigned long long function_name_length = sizeof(__PRETTY_FUNCTION__);
-        constexpr string_literal<function_name_length> function_name(__PRETTY_FUNCTION__, std::make_integer_sequence<unsigned long long, function_name_length>{});
-        constexpr unsigned long long type_name_start  = function_name.rfind(':') + 1;
-        constexpr unsigned long long type_name_end    = function_name_length - 2;
-        constexpr unsigned long long type_name_length = type_name_end - type_name_start;
-        constexpr string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
+        constexpr static unsigned long long function_name_length = sizeof(__PRETTY_FUNCTION__);
+        constexpr static string_literal<function_name_length> function_name(__PRETTY_FUNCTION__, std::make_integer_sequence<unsigned long long, function_name_length>{});
+        constexpr static unsigned long long type_name_start  = function_name.rfind(':') + 1;
+        constexpr static unsigned long long type_name_end    = function_name_length - 2;
+        constexpr static unsigned long long type_name_length = type_name_end - type_name_start;
+        constexpr static string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
         return type_name_string.c_str();
 #elif defined(__FUNCSIG__) || defined(_MSC_VER)
-        constexpr static const unsigned long long function_name_length = sizeof(__FUNCSIG__);
-        constexpr static const string_literal<function_name_length> function_name(__FUNCSIG__, std::make_integer_sequence<unsigned long long, function_name_length>{});
-        constexpr static const unsigned long long type_name_start  = function_name.rfind(':') + 1;
-        constexpr static const unsigned long long type_name_end    = function_name.rfind('>');
-        constexpr static const unsigned long long type_name_length = type_name_end - type_name_start;
-        constexpr static const string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
+        constexpr static unsigned long long function_name_length = sizeof(__FUNCSIG__);
+        constexpr static string_literal<function_name_length> function_name(__FUNCSIG__, std::make_integer_sequence<unsigned long long, function_name_length>{});
+        constexpr static unsigned long long type_name_start  = function_name.rfind(':') + 1;
+        constexpr static unsigned long long type_name_end    = function_name.rfind('>');
+        constexpr static unsigned long long type_name_length = type_name_end - type_name_start;
+        constexpr static string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
         return type_name_string.c_str();
 #else
 #error "Unsupported compiler."
@@ -160,33 +160,33 @@ public:
 
     // Helper function that directly takes an enum_type value template parameter to get the name of the classes template enum type value as a string.
     template <enum_type value>
-    constexpr static const char* helper_name() {
+    static const char* helper_name() {
         // Clang compiler format:   __PRETTY_FUNCTION__ = static const char *u_enum_name<ENUM_TYPE_NAME, ENUM_TYPE_NAME::ENUM_VALUE_NAME>::helper_value() [enum_type = ENUM_TYPE_NAME, enum_value = ENUM_TYPE_NAME::ENUM_VALUE_NAME, value = ENUM_TYPE_NAME::ENUM_VALUE_NAME]
         // MSVC compiler format:    __FUNCSIG__         = const char *__cdecl u_enum_name<enum ENUM_TYPE_NAME,ENUM_VALUE>::helper_value<ENUM_TYPE_NAME::ENUM_VALUE_NAME>(void)
 
 #if defined(__clang__)
-        constexpr unsigned long long function_name_length = sizeof(__PRETTY_FUNCTION__);
-        constexpr string_literal<function_name_length> function_name(__PRETTY_FUNCTION__, std::make_integer_sequence<unsigned long long, function_name_length>{});
-        constexpr unsigned long long type_name_start  = function_name.rfind('=') + 2;
-        constexpr unsigned long long type_name_end    = function_name_length - 2;
-        constexpr unsigned long long type_name_length = type_name_end - type_name_start;
-        constexpr string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
+        constexpr static unsigned long long function_name_length = sizeof(__PRETTY_FUNCTION__);
+        constexpr static string_literal<function_name_length> function_name(__PRETTY_FUNCTION__, std::make_integer_sequence<unsigned long long, function_name_length>{});
+        constexpr static unsigned long long type_name_start  = function_name.rfind('=') + 2;
+        constexpr static unsigned long long type_name_end    = function_name_length - 2;
+        constexpr static unsigned long long type_name_length = type_name_end - type_name_start;
+        constexpr static string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
         return type_name_string.c_str();
 #elif defined(__GNUC__)
-        constexpr unsigned long long function_name_length = sizeof(__PRETTY_FUNCTION__);
-        constexpr string_literal<function_name_length> function_name(__PRETTY_FUNCTION__, std::make_integer_sequence<unsigned long long, function_name_length>{});
-        constexpr unsigned long long type_name_start  = function_name.rfind('=') + 2;
-        constexpr unsigned long long type_name_end    = function_name_length - 2;
-        constexpr unsigned long long type_name_length = type_name_end - type_name_start;
-        constexpr string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
+        constexpr static unsigned long long function_name_length = sizeof(__PRETTY_FUNCTION__);
+        constexpr static string_literal<function_name_length> function_name(__PRETTY_FUNCTION__, std::make_integer_sequence<unsigned long long, function_name_length>{});
+        constexpr static unsigned long long type_name_start  = function_name.rfind('=') + 2;
+        constexpr static unsigned long long type_name_end    = function_name_length - 2;
+        constexpr static unsigned long long type_name_length = type_name_end - type_name_start;
+        constexpr static string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
         return type_name_string.c_str();
 #elif defined(__FUNCSIG__) || defined(_MSC_VER)
-        constexpr static const unsigned long long function_name_length = sizeof(__FUNCSIG__);
-        constexpr static const string_literal<function_name_length> function_name(__FUNCSIG__, std::make_integer_sequence<unsigned long long, function_name_length>{});
-        constexpr static const unsigned long long type_name_start  = function_name.rfind('<') + 1;
-        constexpr static const unsigned long long type_name_end    = function_name.rfind('>');
-        constexpr static const unsigned long long type_name_length = type_name_end - type_name_start;
-        constexpr static const string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
+        constexpr static unsigned long long function_name_length = sizeof(__FUNCSIG__);
+        constexpr static string_literal<function_name_length> function_name(__FUNCSIG__, std::make_integer_sequence<unsigned long long, function_name_length>{});
+        constexpr static unsigned long long type_name_start  = function_name.rfind('<') + 1;
+        constexpr static unsigned long long type_name_end    = function_name.rfind('>');
+        constexpr static unsigned long long type_name_length = type_name_end - type_name_start;
+        constexpr static string_literal<type_name_length + 1> type_name_string = function_name.template substr<type_name_start, type_name_length>(std::make_integer_sequence<unsigned long long, type_name_length>{});
         return type_name_string.c_str();
 #else
 #error "Unsupported compiler."
