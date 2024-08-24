@@ -141,6 +141,7 @@ public:
     tile2i tile;
     e_building_type type;
     union {
+        uint16_t data;
         e_house_level house_level;
         e_resource warehouse_resource_id;
         //        short workshop_type;
@@ -149,7 +150,7 @@ public:
         short native_meeting_center_id;
         short market_goods;
         short roadblock_exceptions;
-        short barracks_priority;
+        uint8_t barracks_priority;
     } subtype;
     unsigned short road_network_id;
     unsigned short creation_sequence_index;
@@ -458,8 +459,6 @@ public:
     void monument_remove_worker(int fid);
     void industry_add_workers(int fid);
     void industry_remove_worker(int fid);
-    void barracks_toggle_priority();
-    int barracks_get_priority();
 };
 
 #define BUILDING_METAINFO(type, clsid) static constexpr e_building_type TYPE = type; static constexpr pcstr CLSID = #clsid;

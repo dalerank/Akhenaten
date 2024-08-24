@@ -187,6 +187,7 @@ var info_window_figure_animal = {}
 var info_window_figure_caravan_donkey = {}
 var info_window_figure_carrier = {}
 var info_window_bandstand = {}
+var info_window_recruiter = {}
 var roadblock_info_window = {}
 var hold_festival_window = {}
 var festival_square_info_window = {}

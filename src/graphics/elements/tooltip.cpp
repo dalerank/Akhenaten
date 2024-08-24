@@ -236,7 +236,7 @@ static void draw_senate_tooltip(tooltip_context* c) {
         y = c->mpos.y - 32;
     }
 
-    save_window_under_tooltip_to_buffer(x, y, width, height);
+    //save_window_under_tooltip_to_buffer(x, y, width, height);
     draw_tooltip_box(x, y, width, height);
 
     // unemployment

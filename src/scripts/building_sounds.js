@@ -83,7 +83,8 @@ building_sounds = [
 	{ type: BUILDING_HOUSE_MODEST_ESTATE,	sound: "Wavs/housing_r.wav"},
 	{ type: BUILDING_HOUSE_PALATIAL_ESTATE,	sound: "Wavs/housing_r.wav"},
 	{ type: BUILDING_WATER_SUPPLY,	sound: "Wavs/WELL.WAV"},
-  { type: BUILDING_GRANARY,                  sound: "Wavs/GRANARY1.wav"},
-  { type: BUILDING_STORAGE_YARD,             sound: "Wavs/warehouse1.wav"},
-  { type: BUILDING_DOCK,                     sound: "Wavs/DOCK1.WAV"},
+  { type: BUILDING_GRANARY,             sound: "Wavs/GRANARY1.wav"},
+  { type: BUILDING_STORAGE_YARD,        sound: "Wavs/warehouse1.wav"},
+  { type: BUILDING_DOCK,                sound: "Wavs/DOCK1.WAV"},
+  { type: BUILDING_RECRUITER,           sound: "Wavs/barracks.WAV"},
 ]

@@ -27,28 +27,13 @@
 int g_tower_sentry_request = 0;
 
 buildings::model_t<building_recruiter> brecruiter_m;
+info_window_recruiter brecruiter_infow;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_recruiter);
 void config_load_building_recruiter() {
     brecruiter_m.load();
+    brecruiter_infow.load("info_window_recruiter");
 }
-
-static void button_priority(int index, int param2);
-
-struct rectuiter_data_t {
-    int focus_button_id;
-    int focus_priority_button_id;
-    int return_button_id;
-    int building_id;
-    object_info* context_for_callback;
-
-    generic_button priority_buttons[2] = {
-        {96, 0, 24, 24, button_priority, button_none, 0, 0},
-        {96, 24, 24, 24, button_priority, button_none, 1, 0},
-    };
-};
-
-rectuiter_data_t g_rectuiter_data;
 
 static int get_closest_legion_needing_soldiers(building* barracks) {
     int recruit_type = LEGION_RECRUIT_NONE;
@@ -145,11 +130,8 @@ void building_barracks_load_state(buffer* buf) {
     g_tower_sentry_request = buf->read_i32();
 }
 
-void building::barracks_toggle_priority() {
-    subtype.barracks_priority = 1 - subtype.barracks_priority;
-}
-int building::barracks_get_priority() {
-    return subtype.barracks_priority;
+int building_recruiter::get_priority() {
+    return base.subtype.barracks_priority;
 }
 
 bool building_recruiter::create_tower_sentry() {
@@ -198,6 +180,11 @@ void building_recruiter::on_place_checks() {
     }
 }
 
+void building_recruiter::add_weapon(int amount) {
+    assert(id() > 0);
+    base.stored_full_amount += amount;
+}
+
 void building_recruiter::spawn_figure() {
     check_labor_problem();
     //    map_point road;
@@ -234,93 +221,44 @@ void building_recruiter::spawn_figure() {
     }
 }
 
-void building_recruiter::window_info_background(object_info &c) {
+void info_window_recruiter::window_info_background(object_info &c) {
+    building_info_window::window_info_background(c);
+
     c.barracks_soldiers_requested = formation_legion_recruits_needed();
     c.barracks_soldiers_requested += building_barracks_has_tower_sentry_request();
-    painter ctx = game.painter();
 
-    c.help_id = 37;
-    g_rectuiter_data.building_id = c.building_id;
+    building_recruiter *b = c.building_get()->dcast_recruiter();
 
-    window_building_play_sound(&c, "Wavs/barracks.wav");
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(136, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_WEAPONS), c.offset + vec2i{64, 38});
+    int amount = b->base.stored_full_amount < 100 ? 0 : b->base.stored_full_amount;
+    ui["storage_state"].text_var("%s ( %d )", ui::str(8, 10), amount);
 
-    building* b = building_get(c.building_id);
-    if (b->stored_full_amount < 100)
-        lang_text_draw_amount(8, 10, 0, c.offset.x + 92, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-    else
-        lang_text_draw_amount(8, 10, b->stored_full_amount, c.offset.x + 92, c.offset.y + 44, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    if (!c.has_road_access)
-        window_building_draw_description_at(c, 70, 69, 25);
-    else if (b->num_workers <= 0)
-        window_building_draw_description_at(c, 70, 136, 3);
-    else if (!c.barracks_soldiers_requested)
-        window_building_draw_description_at(c, 70, 136, 4);
-    else {
+    textid reason{ c.group_id, 0 };
+    if (!c.has_road_access) { reason = { 69, 25 }; } else if (b->num_workers() <= 0) { reason.id = 3; } else if (!c.barracks_soldiers_requested) { reason.id = 4; } else {
         int offset = 0;
-        if (b->stored_full_amount > 0)
+        if (b->base.stored_full_amount > 0) {
             offset = 4;
-
-        if (c.worker_percentage >= 100)
-            window_building_draw_description_at(c, 70, 136, 5 + offset);
-        else if (c.worker_percentage >= 66)
-            window_building_draw_description_at(c, 70, 136, 6 + offset);
-        else if (c.worker_percentage >= 33)
-            window_building_draw_description_at(c, 70, 136, 7 + offset);
-        else {
-            window_building_draw_description_at(c, 70, 136, 8 + offset);
         }
+
+        int workers_state = approximate_value(c.worker_percentage / 100.f, make_array(8, 7, 6, 5));
+        ui["workers_text"] = ui::str(c.group_id, workers_state);
     }
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
-    window_building_draw_employment(&c, 142);
-    lang_text_draw(50, 21, c.offset.x + 46, c.offset.y + 204, FONT_NORMAL_BLACK_ON_LIGHT); // "Priority"
-    lang_text_draw(91, 0, c.offset.x + 46, c.offset.y + 224, FONT_NORMAL_BLACK_ON_LIGHT);  // "Tower"
-    lang_text_draw(89, 0, c.offset.x + 46, c.offset.y + 244, FONT_NORMAL_BLACK_ON_LIGHT);  // "Fort"
+
+    draw_employment_details(c);
+
+    const int priority = b->get_priority();
+    ui["tower_button"] = (priority == 0) ? "x" : "";
+    ui["tower_button"].onclick([bid = c.building_id] {
+        building *barracks = ::building_get(bid);
+        barracks->subtype.barracks_priority = 0;
+    });
+
+    ui["fort_button"] = (priority == 1) ? "x" : "";
+    ui["fort_button"].onclick([bid = c.building_id] {
+        building *barracks = ::building_get(bid);
+        barracks->subtype.barracks_priority = 1;
+    });
 }
 
-static void draw_priority_buttons(int x, int y, int buttons) {
-    
-}
-
-static void button_priority(int index, int param2) {
-    auto& data = g_rectuiter_data;
-    building* barracks = building_get(data.building_id);
-    if (index != barracks->subtype.barracks_priority)
-        barracks->barracks_toggle_priority();
-}
-
-int building_recruiter::window_info_handle_mouse(const mouse* m, object_info &c) {
-    auto& data = g_rectuiter_data;
-    if (generic_buttons_handle_mouse(m, {c.offset.x + 46, c.offset.y + 224}, data.priority_buttons, 2, &data.focus_priority_button_id)) {
-        window_invalidate();
-        return 1;
-    }
-    return 0;
-}
-
-void building_recruiter::add_weapon(int amount) {
-    assert(id() > 0);
-    base.stored_full_amount += amount;
-}
-
-void building_recruiter::window_info_foreground(object_info &c) {
-    auto& data = g_rectuiter_data;
-    int x = c.offset.x + 46;
-    int y = c.offset.y + 224;
-    int buttons = 2;
-
-    uint8_t permission_selection_text[] = {'x', 0};
-    for (int i = 0; i < buttons; i++) {
-        int x_adj = x + data.priority_buttons[i].x;
-        int y_adj = y + data.priority_buttons[i].y;
-        building* barracks = building_get(data.building_id);
-        int priority = barracks->barracks_get_priority();
-        button_border_draw(x_adj, y_adj, 20, 20, data.focus_priority_button_id == i + 1 ? 1 : 0);
-        if (priority == i) {
-            text_draw_centered(permission_selection_text, x_adj + 1, y_adj + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-        }
-    }
+inline bool info_window_recruiter::check(object_info &c) {
+    return c.building_get()->dcast_recruiter();
 }

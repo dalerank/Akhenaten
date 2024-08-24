@@ -57,8 +57,8 @@ military_data_t g_military_data;
 void window_info_legion_button_priority(int index, int param2) {
     auto& data = g_military_data;
     building* barracks = building_get(data.building_id);
-    if (index != barracks->subtype.barracks_priority)
-        barracks->barracks_toggle_priority();
+    //if (index != barracks->subtype.barracks_priority)
+    //    barracks->barracks_toggle_priority();
 }
 
 int window_building_handle_mouse_legion_info(const mouse* m, object_info* c) {
@@ -87,11 +87,11 @@ void draw_priority_buttons(int x, int y, int buttons) {
         int x_adj = x + priority_buttons[i].x;
         int y_adj = y + priority_buttons[i].y;
         building* barracks = building_get(data.building_id);
-        int priority = barracks->barracks_get_priority();
-        button_border_draw(x_adj, y_adj, 20, 20, data.focus_priority_button_id == i + 1 ? 1 : 0);
-        if (priority == i) {
-            text_draw_centered(permission_selection_text, x_adj + 1, y_adj + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-        }
+        //int priority = barracks->barracks_get_priority();
+        //button_border_draw(x_adj, y_adj, 20, 20, data.focus_priority_button_id == i + 1 ? 1 : 0);
+        //if (priority == i) {
+        //    text_draw_centered(permission_selection_text, x_adj + 1, y_adj + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        //}
     }
 }
 

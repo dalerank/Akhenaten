@@ -1006,6 +1006,8 @@ building_recruiter = {
   },
   labor_category : LABOR_CATEGORY_MILITARY,
   window_info_height_id : 3,
+  info_help_id:37,
+  info_text_id:136,
   building_size : 3,
 }
 

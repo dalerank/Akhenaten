@@ -1,6 +1,14 @@
 #pragma once
 
 #include "building/building.h"
+#include "window/window_building_info.h"
+
+class buffer;
+
+enum e_barracks_priority {
+    PRIORITY_TOWER = 0,
+    PRIORITY_FORT = 1,
+};
 
 class building_recruiter : public building_impl {
 public:
@@ -10,26 +18,27 @@ public:
     virtual void on_create(int orientation) override;
     virtual void on_place_checks() override;
     virtual void spawn_figure() override;
-    virtual void window_info_background(object_info &ctx) override;
-    virtual void window_info_foreground(object_info &ctx) override;
-    virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
 
     virtual building_recruiter *dcast_recruiter() { return this; }
 
     void add_weapon(int amount);
+    int get_priority();
     bool create_tower_sentry();
     bool create_soldier();
+};
+
+struct info_window_recruiter : public building_info_window {
+    virtual void window_info_background(object_info &c) override;
+    virtual bool check(object_info &c) override;
+
+    int building_id;
+    object_info *context_for_callback;
 };
 
 void building_barracks_request_tower_sentry();
 void building_barracks_decay_tower_sentry_request();
 int building_barracks_has_tower_sentry_request();
 
-class buffer;
 void building_barracks_save_state(buffer* buf);
 void building_barracks_load_state(buffer* buf);
 
-enum e_barracks_priority {
-    PRIORITY_TOWER = 0,
-    PRIORITY_FORT = 1,
-};
