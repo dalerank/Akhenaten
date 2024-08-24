@@ -43,9 +43,7 @@ void js_register_collection_images(js_State *J) {
 }
 
 void js_register_city_walkers(js_State *J) {
-#define REGISTER_FIGURE(a, b) REGISTER_GLOBAL_CONSTANT(J, a)
-#include "figure/figure_type_indexes.h"
-#undef REGISTER_FIGURE
+    js_register_tokens(J, e_figure_type_tokens);
 }
 
 void js_register_city_sound_constants(js_State *J) {

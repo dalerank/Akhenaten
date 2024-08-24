@@ -1,12 +1,7 @@
 #pragma once
 
 #include <cstdint>
-
-enum e_figure_type : uint16_t {
-#define REGISTER_FIGURE(a, b) a = b,
 #include "figure_type_indexes.h"
-#undef REGISTER_FIGURE
-};
 
 enum e_enemy_type {
     ENEMY_0_BARBARIAN = 0,
