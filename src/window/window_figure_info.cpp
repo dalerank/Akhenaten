@@ -14,8 +14,8 @@
 #include "game/state.h"
 #include "sound/sound.h"
 
-declare_console_var_int(figure_small_image_x, -10)
-declare_console_var_int(figure_small_image_y, -30)
+declare_console_var_int(figure_small_image_x, -32)
+declare_console_var_int(figure_small_image_y, -48)
 
 struct figure_small_image {
     int image_id = 0;
