@@ -31,6 +31,7 @@ int ui::advisor_trade_window::draw_background() {
     ui["scrollbar"].onevent([] {
         window_invalidate();
     });
+
     ui["scrollbar"].max_value(city_resource_get_available().size() - 14);
 
     return 0;

@@ -77,13 +77,12 @@ int ui::advisor_ratings_window::draw_background() {
         caption = (pcstr)ui::str(53, 6);
         caption.append("%u", winning_population());
     }
-    g_advisor_rating_window["population_label"].text(caption);
-    return 0;// g_advisor_rating_window.outer_panel_size.y;
+    ui["population_label"].text(caption);
+
+    return 0;
 }
 
 void ui::advisor_ratings_window::draw_foreground() {
-    auto &ui = g_advisor_rating_window;
-
     ui.draw();
 
     int open_play = scenario_is_open_play();
@@ -136,14 +135,14 @@ void ui::advisor_ratings_window::draw_foreground() {
         break;
     }
 
-    button_border_draw(rating_buttons[0].x, rating_buttons[0].y, rating_buttons[0].width, rating_buttons[0].height, ui.focus_button_id == e_selected_rating_culture);
-    button_border_draw(rating_buttons[1].x, rating_buttons[1].y, rating_buttons[1].width, rating_buttons[1].height, ui.focus_button_id == e_selected_rating_prosperity);
-    button_border_draw(rating_buttons[2].x, rating_buttons[2].y, rating_buttons[2].width, rating_buttons[2].height, ui.focus_button_id == e_selected_rating_monument);
-    button_border_draw(rating_buttons[3].x, rating_buttons[3].y, rating_buttons[3].width, rating_buttons[3].height, ui.focus_button_id == e_selected_rating_kingdom);
+    button_border_draw(rating_buttons[0].x, rating_buttons[0].y, rating_buttons[0].width, rating_buttons[0].height, focus_button_id == e_selected_rating_culture);
+    button_border_draw(rating_buttons[1].x, rating_buttons[1].y, rating_buttons[1].width, rating_buttons[1].height, focus_button_id == e_selected_rating_prosperity);
+    button_border_draw(rating_buttons[2].x, rating_buttons[2].y, rating_buttons[2].width, rating_buttons[2].height, focus_button_id == e_selected_rating_monument);
+    button_border_draw(rating_buttons[3].x, rating_buttons[3].y, rating_buttons[3].width, rating_buttons[3].height, focus_button_id == e_selected_rating_kingdom);
 }
 
 int ui::advisor_ratings_window::handle_mouse(const mouse* m) {
-    return generic_buttons_handle_mouse(m, {0, 0}, rating_buttons, 4, &g_advisor_rating_window.focus_button_id);
+    return generic_buttons_handle_mouse(m, {0, 0}, rating_buttons, 4, &focus_button_id);
 }
 
 static void button_rating(int rating, int param2) {

@@ -55,10 +55,10 @@ static int get_education_advice() {
     return advice_id;
 }
 
-int ui::advisor_education_window::draw_background() {
+void ui::advisor_education_window::draw_foreground() {
     painter ctx = game.painter();
-    outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 7, vec2i{10, 10});
+    outer_panel_draw(vec2i{ 0, 0 }, 40, ADVISOR_HEIGHT);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 7, vec2i{ 10, 10 });
     lang_text_draw(57, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
 
     // x population, y school age, z academy age
@@ -124,8 +124,11 @@ int ui::advisor_education_window::draw_background() {
         lang_text_draw_centered(57, 21, 420, 145, 200, FONT_NORMAL_WHITE_ON_DARK);
     }
 
-    lang_text_draw_multiline(57, 22 + get_education_advice(), vec2i{60, 180}, 512, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(57, 22 + get_education_advice(), vec2i{ 60, 180 }, 512, FONT_NORMAL_BLACK_ON_LIGHT);
+}
 
+int ui::advisor_education_window::draw_background() {
+    
     return ADVISOR_HEIGHT;
 }
 
