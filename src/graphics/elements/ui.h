@@ -63,6 +63,7 @@ generic_button &button(const svector<pcstr,4> &labels, vec2i pos, vec2i size, e_
 generic_button &link(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_WHITE_ON_DARK, UiFlags flags = UiFlags_None, std::function<void(int, int)> cb = {});
 generic_button &large_button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
 generic_button &button(uint32_t id);
+textid button_tooltip(uint32_t id);
 image_button &img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size, const img_button_offsets offsets = {}, UiFlags_ flags = UiFlags_None);
 image_button &imgok_button(vec2i pos, std::function<void(int, int)> cb);
 image_button &imgcancel_button(vec2i pos, std::function<void(int, int)> cb);
@@ -95,7 +96,7 @@ struct element {
     virtual void draw() {}
     virtual void load(archive);
     virtual void text(pcstr) {}
-    virtual void tooltip(std::pair<int, int> t) {}
+    virtual void tooltip(textid t) {}
     virtual int text_width() { return 0; }
     virtual vec2i pxsize() const { return size; }
     inline void text(int font, pcstr v) { this->font(font); this->text(v); }
@@ -270,11 +271,11 @@ struct egeneric_button : public elabel {
     int param1 = 0;
     int param2 = 0;
     std::function<void(int, int)> _func;
-    std::pair<int, int> _tooltip;
+    textid _tooltip;
 
     virtual void draw() override;
     virtual void load(archive arch) override;
-    virtual void tooltip(std::pair<int, int> t) override { _tooltip = t; }
+    virtual void tooltip(textid t) override { _tooltip = t; }
     virtual void onclick(std::function<void(int, int)> func) override { _func = func; }
 };
 
@@ -299,6 +300,7 @@ struct eimage_button : public element {
     bool selected = false;
     bool border = false;
     int texture_id = -1;
+    textid _tooltip;
 
     std::function<void(int, int)> _func;
 
@@ -308,6 +310,7 @@ struct eimage_button : public element {
 
     using element::onclick;
     virtual void onclick(std::function<void(int, int)> func) override { _func = func; }
+    virtual void tooltip(textid t) override { _tooltip = t; }
 
     virtual eimage_button *dcast_image_button() override { return this; }
 };
@@ -333,6 +336,7 @@ struct widget {
 
     inline void image(image_desc img, vec2i pos) { ui::eimage(img, pos); }
     inline void begin_widget(vec2i offset, bool relative = false) { ui::begin_widget(offset, relative); }
+    inline void end_widget() { ui::end_widget(); }
     inline void icon(vec2i pos, e_resource img) { ui::icon(pos, img); }
     void set_clip_rectangle(vec2i pos, vec2i size);
     void set_clip_rectangle(const element &e);
