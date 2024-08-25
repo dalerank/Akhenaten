@@ -16,8 +16,7 @@ struct advisor_window : public ui::widget {
 };
 
 int window_advisors_get_advisor();
-bool is_advisor_available(int btn_id);
-void window_advisors_draw_dialog_background();
+bool is_advisor_available(e_advisor advisor);
 void window_advisors_show();
 void window_advisors_show_checked();
 int window_advisors_show_advisor(e_advisor advisor);

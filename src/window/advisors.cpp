@@ -39,29 +39,6 @@
 #include "window/message_dialog.h"
 #include "game/game.h"
 
-static void button_change_advisor(int advisor, int param2);
-static void button_back_to_city(int param1, int param2);
-static void button_help(int param1, int param2);
-
-static image_button help_button = {11, -7, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1};
-
-static image_button advisor_buttons[] = {
-  {12, 1, 33, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 0, button_change_advisor, button_none, ADVISOR_LABOR, 0},
-  {52, 1, 39, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 4, button_change_advisor, button_none, ADVISOR_MILITARY, 0},
-  {96, 1, 34, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 8, button_change_advisor, button_none, ADVISOR_IMPERIAL, 0},
-  {135, 1, 38, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 12, button_change_advisor, button_none, ADVISOR_RATINGS, 0},
-  {178, 1, 46, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 16, button_change_advisor, button_none, ADVISOR_TRADE, 0},
-  {229, 1, 48, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 20, button_change_advisor, button_none, ADVISOR_POPULATION, 0},
-  {282, 1, 35, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 24, button_change_advisor, button_none, ADVISOR_HEALTH, 0},
-  {322, 1, 38, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 28, button_change_advisor, button_none, ADVISOR_EDUCATION, 0},
-  {363, 1, 39, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 32, button_change_advisor, button_none, ADVISOR_ENTERTAINMENT, 0},
-  {406, 1, 35, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 36, button_change_advisor, button_none, ADVISOR_RELIGION, 0},
-  {445, 1, 40, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 40, button_change_advisor, button_none, ADVISOR_FINANCIAL, 0},
-  {490, 1, 46, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 44, button_change_advisor, button_none, ADVISOR_CHIEF, 0},
-  {542, 1, 40, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 48, button_change_advisor, button_none, ADVISOR_MONUMENTS, 0},
-  {588, 1, 42, 32, IB_NORMAL, GROUP_MENU_ADVISOR_BUTTONS, 52, button_back_to_city, button_none, 0, 0},
-};
-
 static const int ADVISOR_TO_MESSAGE_TEXT[] = {
   MESSAGE_DIALOG_ABOUT,
   MESSAGE_DIALOG_ADVISOR_LABOR,
@@ -85,7 +62,17 @@ static const int ADVISOR_TO_MESSAGE_TEXT[] = {
   MESSAGE_DIALOG_ADVISOR_POPULATION,
 };
 
-struct window_advisors_t {
+struct labor_btn {
+    pcstr id;
+    e_advisor adv;
+};
+static const labor_btn btns[] = { {"labor_btn", ADVISOR_LABOR}, {"military_btn", ADVISOR_MILITARY}, {"imperial_btn", ADVISOR_IMPERIAL},
+                                  {"ratings_btn", ADVISOR_RATINGS}, {"trade_btn", ADVISOR_TRADE}, {"population_btn", ADVISOR_POPULATION},
+                                  {"health_btn", ADVISOR_HEALTH}, {"education_btn", ADVISOR_EDUCATION}, {"entertainment_btn", ADVISOR_ENTERTAINMENT},
+                                  {"religion_btn", ADVISOR_RELIGION}, {"financial_btn", ADVISOR_FINANCIAL}, {"chief_btn", ADVISOR_CHIEF},
+                                  {"monuments_btn", ADVISOR_MONUMENTS} };
+
+struct window_advisors_t : public ui::widget {
     advisor_window *current_advisor_window = nullptr;
     int current_advisor = ADVISOR_NONE;
     int focus_button_id;
@@ -114,14 +101,19 @@ struct window_advisors_t {
         nullptr,
         ui::advisor_housing_window::instance()
     };
+
+    void init();
+    void draw_background();
+    void draw_foreground();
+    void set_advisor(int advisor);
+    void handle_input(const mouse *m, const hotkeys *h);
 };
 
 window_advisors_t g_window_advisors;
 
-static void clear_all_advisors_button() {
-    for (auto &btn : advisor_buttons) {
-        btn.pressed = false;
-    }
+ANK_REGISTER_CONFIG_ITERATOR(config_load_advisors_window);
+void config_load_advisors_window() {
+    g_window_advisors.load("advisors_window");
 }
 
 static void set_advisor_window() {
@@ -134,20 +126,24 @@ static void set_advisor_window() {
     }
 }
 
-static void set_advisor(int advisor) {
-    auto &data = g_window_advisors;
-    data.current_advisor = advisor;
+bool is_advisor_available(e_advisor advisor) {
+    return (mission_advisor_availability(advisor, scenario_campaign_scenario_id() + 1) == AVAILABLE);
+}
+
+void window_advisors_t::set_advisor(int advisor) {
+    current_advisor = advisor;
     g_settings.last_advisor = advisor;
-    clear_all_advisors_button();
+    
+    for (auto &btn : btns) {
+        ui[btn.id].select(false);
+    }
+
+    ui["back_btn"].enabled = true; // set button active when coming back to menu
+
     set_advisor_window();
-    advisor_buttons[advisor - 1].pressed = 1; // set button active when coming back to menu
 }
 
-bool is_advisor_available(int btn_id) {
-    return (mission_advisor_availability((e_advisor)btn_id, scenario_campaign_scenario_id() + 1) == AVAILABLE);
-}
-
-static void init() {
+void window_advisors_t::init() {
     g_city.labor.allocate_workers();
 
     city_finance_estimate_taxes();
@@ -169,43 +165,38 @@ static void init() {
 
     set_advisor_window();
 
-    for (auto &btn: advisor_buttons) {
-        btn.enabled = is_advisor_available(btn.parameter1);
+    for (auto &btn: btns) {
+        ui[btn.id].enabled = is_advisor_available(btn.adv);
     }
 
-    advisor_buttons[13].enabled = true;
+    ui["back_btn"].enabled = true;
 }
 
-void window_advisors_draw_dialog_background() {
-    painter ctx = game.painter();
-    ImageDraw::img_background(ctx, image_id_from_group(GROUP_ADVISOR_BACKGROUND));
+void window_advisors_t::draw_background() {
     graphics_set_to_dialog();
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_MENU_ADVISOR_LAYOUT), 0, 432);
-
+    advisor_height = current_advisor_window->draw_background();
     graphics_reset_dialog();
+
+    for (auto &btn : btns) {
+        ui[btn.id].onclick([advisor = btn.adv] {
+            g_window_advisors.set_advisor(advisor);
+            window_invalidate();
+        });
+        ui[btn.id].tooltip({ 1, uint8_t(70 + btn.adv) });
+    }
+
+    ui["back_btn"].onclick([] {
+        window_city_show();
+    });
 }
 
-static void draw_background(void) {
-    auto &data = g_window_advisors;
+void window_advisors_t::draw_foreground() {
+    ui.draw();
 
-    window_advisors_draw_dialog_background();
-    graphics_set_to_dialog();
-    data.advisor_height = data.current_advisor_window->draw_background();
-    graphics_reset_dialog();
-}
-
-static void draw_foreground(void) {
-    auto &data = g_window_advisors;
+    current_advisor_window->ui_draw_foreground();
 
     graphics_set_to_dialog();
-    image_buttons_draw({0, 16 * (data.advisor_height - 2)}, &help_button, 1);
-    image_buttons_draw({0, 440}, advisor_buttons, 14);
-    graphics_reset_dialog();
-
-    data.current_advisor_window->ui_draw_foreground();
-
-    graphics_set_to_dialog();
-    data.current_advisor_window->draw_foreground();
+    current_advisor_window->draw_foreground();
     graphics_reset_dialog();
 }
 
@@ -220,26 +211,19 @@ static void handle_hotkeys(const hotkeys* h) {
     }
 }
 
-static void handle_input(const mouse* m, const hotkeys* h) {
-    auto &data = g_window_advisors;
+void window_advisors_t::handle_input(const mouse* m, const hotkeys* h) {
     handle_hotkeys(h);
+
+    if (ui.handle_mouse(m)) {
+        return;
+    }
+
     const mouse* m_dialog = mouse_in_dialog(m);
-    int old_focus_button_id = data.focus_button_id;
-    if (image_buttons_handle_mouse(m_dialog, {0, 440}, advisor_buttons, 14, &data.focus_button_id)) {
+    if (current_advisor_window->handle_mouse(m_dialog)) {
         return;
     }
 
-    int button_id;
-    image_buttons_handle_mouse(m_dialog, {0, 16 * (data.advisor_height - 2)}, &help_button, 1, &button_id);
-    if (button_id) {
-        data.focus_button_id = -1;
-    }
-
-    if (data.current_advisor_window->handle_mouse(m_dialog)) {
-        return;
-    }
-
-    if (data.current_advisor_window->ui_handle_mouse(m)) {
+    if (current_advisor_window->ui_handle_mouse(m)) {
         return;
     }
 
@@ -249,17 +233,6 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 
-static void button_change_advisor(int advisor, int param2) {
-    if (advisor) {
-        set_advisor(advisor);
-        window_invalidate();
-    } else {
-        window_city_show();
-    }
-}
-static void button_back_to_city(int param1, int param2) {
-    window_city_show();
-}
 static void button_help(int param1, int param2) {
     auto &data = g_window_advisors;
     if (data.current_advisor > 0) {
@@ -269,18 +242,6 @@ static void button_help(int param1, int param2) {
 
 static void get_tooltip(tooltip_context* c) {
     auto &data = g_window_advisors;
-    if (data.focus_button_id) {
-        c->type = TOOLTIP_BUTTON;
-        if (data.focus_button_id == -1) {
-            c->text_id = 1; // help button
-        } else {
-            c->text_id = 70 + data.focus_button_id;
-            if (!advisor_buttons[data.focus_button_id - 1].enabled)
-                c->type = TOOLTIP_NONE;
-        }
-        return;
-    }
-
     int text_id = data.current_advisor_window->get_tooltip_text();
 
     if (text_id) {
@@ -295,21 +256,22 @@ int window_advisors_get_advisor(void) {
 }
 
 void window_advisors_show(void) {
-    window_type window = {
+    static window_type window = {
         WINDOW_ADVISORS,
-        draw_background,
-        draw_foreground,
-        handle_input,
+        [] { g_window_advisors.draw_background(); },
+        [] { g_window_advisors.draw_foreground(); },
+        [] (const mouse *m, const hotkeys *h) { g_window_advisors.handle_input(m, h); },
         get_tooltip
     };
-    init();
+
+    g_window_advisors.init();
     window_show(&window);
 }
 
 void window_advisors_show_checked() {
     e_availability avail = mission_advisor_availability(ADVISOR_LABOR, scenario_campaign_scenario_id() + 1);
     if (avail == AVAILABLE) {
-        set_advisor(g_settings.last_advisor);
+        g_window_advisors.set_advisor(g_settings.last_advisor);
         window_advisors_show();
     } else {
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
@@ -322,7 +284,7 @@ int window_advisors_show_advisor(e_advisor advisor) {
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
         return 0;
     }
-    set_advisor(advisor);
+    g_window_advisors.set_advisor(advisor);
     window_advisors_show();
     return 1;
 }
