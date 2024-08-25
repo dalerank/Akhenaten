@@ -270,7 +270,7 @@ int ui::advisor_chief_window::draw_background() {
 }
 
 void ui::advisor_chief_window::draw_foreground() {
-    g_advisor_chief_window.draw();
+    draw();
 
     int y_line = 306;
     int text_b = 20;
