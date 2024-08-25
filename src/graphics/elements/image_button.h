@@ -34,12 +34,14 @@ struct image_button {
     char floating;
     uint8_t focused;
     time_millis pressed_since;
+    textid _tooltip;
 
     std::function<void(int,int)> _onclick;
 
     template<class Func> image_button &onclick(Func f) { _onclick = f; return *this; }
     inline vec2i pos() const { return {x, y}; }
     inline vec2i size() const { return {width, height}; }
+    inline void tooltip(textid t) { _tooltip = t; }
 };
 
 template<size_t N>

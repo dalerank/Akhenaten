@@ -404,8 +404,8 @@ int window_building_get_legion_info_tooltip_text(object_info* c) {
     return data.focus_button_id ? 147 : 0;
 }
 
-std::pair<int, int> legion_info_window::get_tooltip(object_info &c) {
-    return {-1, window_building_get_legion_info_tooltip_text(&c)};
+textid legion_info_window::get_tooltip(object_info &c) {
+    return textid{0xffff, (uint8_t)window_building_get_legion_info_tooltip_text(&c)};
 }
 
 int legion_info_window::get_height_id(object_info &c) {

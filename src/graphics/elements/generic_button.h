@@ -22,7 +22,7 @@ struct generic_button {
     using function_cb = std::function<void(int, int)>;
     function_cb _onclick = nullptr;
     function_cb _onrclick = nullptr;
-    std::pair<int, int> _tooltip;
+    textid _tooltip;
 
     inline vec2i pos() const { return {x, y}; }
     inline vec2i size() const { return {width, height}; }
@@ -33,8 +33,8 @@ struct generic_button {
     generic_button &onrclick(function_cb f) { _onrclick = f; return *this; }
     generic_button &onrclick(std::function<void()> f) { return onrclick([f] (int, int) { f(); }); }
     
-    generic_button &tooltip(std::pair<int, int> t) { _tooltip = t; return *this; }
-    generic_button &tooltip(const std::initializer_list<int> &t) { _tooltip.first = *t.begin(); _tooltip.second = *(t.begin() + 1); return *this; }
+    generic_button &tooltip(textid t) { _tooltip = t; return *this; }
+    generic_button &tooltip(const std::initializer_list<int> &t) { _tooltip.group = *t.begin(); _tooltip.id = *(t.begin() + 1); return *this; }
 };
 
 int generic_buttons_handle_mouse(const mouse* m, vec2i pos, const generic_button* buttons, int num_buttons, int* focus_button_id);

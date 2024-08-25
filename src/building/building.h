@@ -512,7 +512,7 @@ public:
     virtual int animation_speed(int speed) const { return speed; }
     virtual int get_produce_uptick_per_day() const { return base.num_workers; }
     virtual int get_fire_risk(int value) const { return value; }
-    virtual std::pair<int, int> get_tooltip() const { return {-1, -1}; }
+    virtual textid get_tooltip() const { return {0, 0}; }
     virtual int ready_production() const { return params().production_rate; }
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
 

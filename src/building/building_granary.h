@@ -32,7 +32,7 @@ public:
     virtual void spawn_figure() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_GRANARY; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
-    virtual std::pair<int, int> get_tooltip() const override;
+    virtual textid get_tooltip() const override;
     virtual void on_place_checks() override;
     virtual void update_day() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_FOOD_STOCKS; }

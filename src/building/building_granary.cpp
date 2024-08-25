@@ -535,7 +535,7 @@ bool building_granary::draw_ornaments_and_animations_height(painter &ctx, vec2i 
     return false;
 }
 
-std::pair<int, int> building_granary::get_tooltip() const {
+textid building_granary::get_tooltip() const {
     return window_building_get_tooltip_granary_orders();
 }
 

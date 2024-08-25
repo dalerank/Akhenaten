@@ -342,9 +342,11 @@ static void button_go_to_problem(int param1, int param2) {
         window_invalidate();
     }
 }
+
 static void button_advisors(int param1, int param2) {
     window_advisors_show_checked();
 }
+
 static void button_empire(int param1, int param2) {
     window_empire_show_checked();
 }
