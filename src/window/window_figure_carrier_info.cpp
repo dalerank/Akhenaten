@@ -30,12 +30,11 @@ void figure_carrier_info_window::window_info_background(object_info &c) {
     if (f->base.has_home()) {
         home_text = ui::str(41, f->home()->type);
     }
-    bstring256 type_str = ui::str(64, f->type());
-    ui["type"].text_var("%s %s", home_text.c_str(), type_str.c_str());
+    ui["type"].text_var("%s %s", home_text.c_str(), ui::str(64, f->type()));
 
     if (f->action_state() != FIGURE_ACTION_132_DOCKER_IDLING && f->base.resource_id) {
         int resource_img = image_id_resource_icon(f->base.resource_id);
-        ui["items"].text_var("@Y%u& %u %s %s", resource_img, f->base.resource_amount_full, ui::str(129, 20), ui::str(23, f->base.resource_id));
+        ui["items"].text_var("@I%u& %u %s %s", resource_img, f->base.resource_amount_full, ui::str(129, 20), ui::str(23, f->base.resource_id));
     }
 
     //    int phrase_height = lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
