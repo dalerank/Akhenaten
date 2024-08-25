@@ -129,6 +129,8 @@ void ui::advisor_trade_window::ui_draw_foreground() {
 
     ui["show_prices"].onclick([] (int, int) { window_trade_prices_show(); });
     ui["goto_empire"].onclick([] (int, int) { window_empire_show(); });
+
+    ui.end_widget();
 }
 
 void ui::advisor_trade_window::draw_foreground() {
@@ -136,6 +138,14 @@ void ui::advisor_trade_window::draw_foreground() {
 
 int ui::advisor_trade_window::handle_mouse(const mouse* m) {
     return 0;
+}
+
+int ui::advisor_trade_window::ui_handle_mouse(const mouse *m) {
+    ui.begin_widget(screen_dialog_offset());
+    int result = advisor_window::ui_handle_mouse(m);
+    ui.end_widget();
+
+    return result;
 }
 
 int ui::advisor_trade_window::get_tooltip_text(void) {

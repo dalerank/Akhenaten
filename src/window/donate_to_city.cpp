@@ -41,12 +41,12 @@ static struct {
 } data;
 
 static void draw_background(void) {
-    window_advisors_draw_dialog_background();
+    painter ctx = game.painter();
+    ImageDraw::img_background(ctx, image_id_from_group(PACK_UNLOADED, 11));
 
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{64, 160}, 32, 10);
-    painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), vec2i{80, 176});
     lang_text_draw_centered(52, 16, 112, 176, 448, FONT_LARGE_BLACK_ON_LIGHT);
 

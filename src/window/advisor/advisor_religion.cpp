@@ -151,9 +151,19 @@ void ui::advisor_religion_window::ui_draw_foreground() {
     draw_god_row(GOD_PTAH, 146, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_SHRINE_PTAH);
     draw_god_row(GOD_SETH, 186, BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_SHRINE_SETH);
     draw_god_row(GOD_BAST, 226, BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST, BUILDING_SHRINE_BAST);
+
+    ui.end_widget();
 }
 
 void ui::advisor_religion_window::draw_foreground() {
+}
+
+int ui::advisor_religion_window::ui_handle_mouse(const mouse *m) {
+    ui.begin_widget(screen_dialog_offset());
+    int result = advisor_window::ui_handle_mouse(m);
+    ui.end_widget();
+
+    return result;
 }
 
 int ui::advisor_religion_window::handle_mouse(const mouse* m) {

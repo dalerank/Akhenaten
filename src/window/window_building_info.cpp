@@ -192,7 +192,7 @@ void building_info_window::window_info_background(object_info &c) {
     common_info_window::window_info_background(c);
 }
 
-std::pair<int, int> building_info_window::get_tooltip(object_info &c) {
+textid building_info_window::get_tooltip(object_info &c) {
     if (!c.storage_show_special_orders) {
         return {0, 0};
     }
@@ -219,7 +219,7 @@ void building_info_window::update_buttons(object_info &c) {
                 window_invalidate();
             }
         });
-        auto tooltip = (b->state == BUILDING_STATE_VALID) ? std::pair{54, 16} : std::pair{54, 17};
+        auto tooltip = (b->state == BUILDING_STATE_VALID) ? textid{54, 16} : textid{54, 17};
         ui["mothball"].tooltip(tooltip);
     }
 

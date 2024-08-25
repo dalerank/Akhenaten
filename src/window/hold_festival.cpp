@@ -45,15 +45,14 @@ void window_hold_festival_select_size(e_festival_type size) {
     }
 }
 
-void ui::hold_festival_window::draw_background() {
-    if (background) {
-        window_advisors_draw_dialog_background();
-    } else {
+void ui::hold_festival_window::draw_background() {     
+    if (!background) {
         game.animation = false;
         window_city_draw_panels();
         window_city_draw();
     }
 
+    ui["background"].enabled = background;
     ui["title"] = ui::str(58, 25 + g_city.festival.selected_god());
 
     int resource_image_deben = image_id_from_group(PACK_GENERAL, 103) + 18;

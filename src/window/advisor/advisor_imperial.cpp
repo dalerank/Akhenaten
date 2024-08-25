@@ -201,6 +201,16 @@ void ui::advisor_imperial_window::ui_draw_foreground() {
     if (!num_requests) {
         ui.label(ui::str(52, 21), vec2i{64, 160}, FONT_NORMAL_WHITE_ON_DARK, UiFlags_LabelMultiline, 512);
     }
+
+    ui.end_widget();
+}
+
+int ui::advisor_imperial_window::ui_handle_mouse(const mouse *m) {
+    ui.begin_widget(screen_dialog_offset());
+    int result = advisor_window::ui_handle_mouse(m);
+    ui.end_widget();
+
+    return result;
 }
 
 int ui::advisor_imperial_window::handle_mouse(const mouse* m) {

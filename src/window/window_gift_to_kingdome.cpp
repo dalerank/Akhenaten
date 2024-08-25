@@ -22,11 +22,7 @@ static void window_gift_to_kingdome_init(void) {
     g_city.kingdome.init_selected_gift();
 }
 
-static void window_gift_to_kingdome_draw_background() {
-    window_advisors_draw_dialog_background();
-}
-
-static void window_gift_to_kingdome_draw_foreground(void) {
+static void window_gift_to_kingdome_draw_background(void) {
     ui::begin_widget(screen_dialog_offset());
     ui::panel({96, 144}, {30, 15}, UiFlags_PanelOuter);
     ui::panel({112, 208}, {28, 5}, UiFlags_PanelInner);
@@ -77,6 +73,7 @@ static void window_gift_to_kingdome_draw_foreground(void) {
         .onclick([] (int, int) {
             window_advisors_show();
         });
+    ui::end_widget();
 }
 
 static void window_gift_to_kingdome_handle_input(const mouse* m, const hotkeys* h) {
@@ -100,10 +97,10 @@ static void button_send_gift(int param1, int param2) {
 }
 
 void window_gift_to_kingdome_show(void) {
-    window_type window = {
+    static window_type window = {
         WINDOW_GIFT_TO_EMPEROR,
         window_gift_to_kingdome_draw_background,
-        window_gift_to_kingdome_draw_foreground,
+        [] {},
         window_gift_to_kingdome_handle_input
     };
     window_gift_to_kingdome_init();

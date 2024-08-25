@@ -198,6 +198,7 @@ var figure_info_window = {}
 var empty_info_window = {}
 var temple_info_window = {}
 var info_window_entertainment = {}
+var advisors_window = {}
 var taxcollector_info_window = {}
 
 //figures
