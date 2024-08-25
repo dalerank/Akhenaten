@@ -32,16 +32,16 @@ static int get_health_advice() {
     }
 }
 
-int ui::advisor_health_window::draw_background() {
-    outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
+void ui::advisor_health_window::draw_foreground() {
+    outer_panel_draw(vec2i{ 0, 0 }, 40, ADVISOR_HEIGHT);
     painter ctx = game.painter();
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
 
     lang_text_draw(56, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     if (city_population() >= 200) {
-        lang_text_draw_multiline(56, g_city.health.value / 10 + 16, vec2i{60, 46}, 512, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_multiline(56, g_city.health.value / 10 + 16, vec2i{ 60, 46 }, 512, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
-        lang_text_draw_multiline(56, 15, vec2i{60, 46}, 512, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_multiline(56, 15, vec2i{ 60, 46 }, 512, FONT_NORMAL_BLACK_ON_LIGHT);
     }
     lang_text_draw(56, 3, 180, 94, FONT_SMALL_PLAIN);
     lang_text_draw(56, 4, 290, 94, FONT_SMALL_PLAIN);
@@ -83,8 +83,12 @@ int ui::advisor_health_window::draw_background() {
         lang_text_draw_centered(57, 21, 440, 172, 160, FONT_NORMAL_BLACK_ON_DARK);
     }
 
-    lang_text_draw_multiline(56, 7 + get_health_advice(), vec2i{60, 194}, 512, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(56, 7 + get_health_advice(), vec2i{ 60, 194 }, 512, FONT_NORMAL_BLACK_ON_LIGHT);
 
+}
+
+int ui::advisor_health_window::draw_background() {
+    
     return ADVISOR_HEIGHT;
 }
 
