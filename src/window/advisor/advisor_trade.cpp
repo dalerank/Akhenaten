@@ -17,13 +17,6 @@
 
 ui::advisor_trade_window g_advisor_trade_window;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_trade);
-void config_load_advisor_trade() {
-    g_config_arch.r_section("advisor_trade_window", [] (archive arch) {
-        g_advisor_trade_window.load(arch);
-    });
-}
-
 int ui::advisor_trade_window::draw_background() {
     city_resource_determine_available();
 

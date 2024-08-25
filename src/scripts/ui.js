@@ -158,13 +158,16 @@ advisors_window = {
 	}
 }
 
-advisor_rating_window = {
+advisor_ratings_window = {
   ui : {
 		outer_panel : { type : "outer_panel", pos:[0, 0], size:[40, 27] },
+		inner_panel : { type : "inner_panel", pos:[340, 520], size:[35, 5] },
+		advice_header : { type : "text", pos: [348, 524], font : FONT_NORMAL_WHITE_ON_DARK },
+		advice_text : { type : "text", pos: [348, 542], wrap:520, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true },
 		advisor_icon : { type : "image", pack:PACK_GENERAL, id:128, offset:3, pos:[10, 10] },
 		header_label : { type : "label", font : FONT_LARGE_BLACK_ON_LIGHT, text: {group: 53, id: 0},	pos:[60, 17] },
-		population_label : { type : "label", text : "",	pos  : {x: 300, y:20} },
-		background_image : { type : "image", pack:PACK_UNLOADED, id:2, pos : {x:60, y:38}	},
+		population_label : { type : "label", text : "",	pos :[300, 20] },
+		background_image : { type : "image", pack:PACK_UNLOADED, id:2, pos :[60, 38]	},
 	},
 	column_offset : {x: 30, y:-11}
 }

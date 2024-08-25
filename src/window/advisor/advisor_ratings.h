@@ -4,7 +4,7 @@
 #include "graphics/elements/ui.h"
 
 namespace ui {
-struct advisor_ratings_window : public advisor_window {
+struct advisor_ratings_window : public advisor_window_t<advisor_ratings_window> {
     vec2i column_offset;
     int focus_button_id;
 
@@ -13,6 +13,8 @@ struct advisor_ratings_window : public advisor_window {
     virtual void draw_foreground() override;
     virtual int draw_background() override;
     virtual void init() override {}
+
+    virtual void load(archive arch, pcstr section = "ui") override;
 
     static advisor_window *instance();
 };

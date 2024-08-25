@@ -66,6 +66,16 @@ struct labor_btn {
     pcstr id;
     e_advisor adv;
 };
+
+std::vector<autoconfig_window *> g_advisor_windows;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_windows);
+void config_load_advisor_windows() {
+    for (auto *w : g_advisor_windows) {
+        w->load(w->section);
+    }
+}
+
 static const labor_btn btns[] = { {"labor_btn", ADVISOR_LABOR}, {"military_btn", ADVISOR_MILITARY}, {"imperial_btn", ADVISOR_IMPERIAL},
                                   {"ratings_btn", ADVISOR_RATINGS}, {"trade_btn", ADVISOR_TRADE}, {"population_btn", ADVISOR_POPULATION},
                                   {"health_btn", ADVISOR_HEALTH}, {"education_btn", ADVISOR_EDUCATION}, {"entertainment_btn", ADVISOR_ENTERTAINMENT},
@@ -73,12 +83,12 @@ static const labor_btn btns[] = { {"labor_btn", ADVISOR_LABOR}, {"military_btn",
                                   {"monuments_btn", ADVISOR_MONUMENTS} };
 
 struct window_advisors_t : public ui::widget {
-    advisor_window *current_advisor_window = nullptr;
+    autoconfig_window *current_advisor_window = nullptr;
     int current_advisor = ADVISOR_NONE;
     int focus_button_id;
     int advisor_height;
 
-    advisor_window* sub_advisors[20] = {
+    autoconfig_window * sub_advisors[20] = {
         nullptr,
         ui::advisor_labors_window::instance(),
         ui::advisor_miliary_window::instance(),
@@ -289,6 +299,6 @@ int window_advisors_show_advisor(e_advisor advisor) {
     return 1;
 }
 
-int advisor_window::ui_handle_mouse(const mouse *m) {
-    return ui::handle_mouse(m);
+void register_autoconfig_window(autoconfig_window *w) {
+    g_advisor_windows.push_back(w);
 }

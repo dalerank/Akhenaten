@@ -24,11 +24,6 @@
 
 ui::advisor_religion_window g_advisor_religion_window;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_religion);
-void config_load_advisor_religion() {
-    g_advisor_religion_window.load("advisor_religion_window");
-}
-
 static void button_hold_festival(int param1, int param2);
 
 static int get_religion_advice() {

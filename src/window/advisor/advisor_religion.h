@@ -4,7 +4,7 @@
 #include "graphics/elements/ui.h"
 
 namespace ui {
-    struct advisor_religion_window : public advisor_window {
+    struct advisor_religion_window : public advisor_window_t<advisor_religion_window> {
         virtual int handle_mouse(const mouse *m) override;
         virtual int get_tooltip_text() override;
         virtual void ui_draw_foreground() override;

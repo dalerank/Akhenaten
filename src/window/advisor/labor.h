@@ -4,7 +4,7 @@
 #include "graphics/elements/ui.h"
 
 namespace ui {
-struct advisor_labors_window : public advisor_window {
+struct advisor_labors_window : public advisor_window_t<advisor_labors_window> {
     int focus_button_id;
 
     virtual int handle_mouse(const mouse *m) override;

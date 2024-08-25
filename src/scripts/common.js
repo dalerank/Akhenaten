@@ -161,7 +161,7 @@ var imagepaks = []
 
 // ui
 var advisor_chief_window = {}
-var advisor_rating_window = {}
+var advisor_ratings_window = {}
 var mission_briefing_window = {}
 var granary_info_window = {}
 var advisor_religion_window = {}

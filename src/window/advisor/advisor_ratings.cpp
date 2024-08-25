@@ -17,14 +17,9 @@
 static void button_rating(int rating, int param2);
 ui::advisor_ratings_window g_advisor_rating_window;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_rating);
-void config_load_advisor_rating() {
-    g_config_arch.r_section("advisor_rating_window", [] (archive arch) {
-        auto &ui = g_advisor_rating_window;
-
-        ui.load(arch);
-        ui.column_offset = arch.r_vec2i("column_offset");
-    });
+void ui::advisor_ratings_window::load(archive arch, pcstr section) {
+    advisor_window::load(arch, section);
+    column_offset = arch.r_vec2i("column_offset");
 }
 
 static generic_button rating_buttons[] = {
@@ -72,12 +67,42 @@ static void draw_rating(int id, int value, int open_play, int goal) {
 }
 
 int ui::advisor_ratings_window::draw_background() {
-    bstring128 caption = (pcstr)ui::str(53, 7);
+    bstring128 caption = ui::str(53, 7);
     if (!(!winning_population() || scenario_is_open_play())) {
-        caption = (pcstr)ui::str(53, 6);
+        caption = ui::str(53, 6);
         caption.append("%u", winning_population());
     }
-    ui["population_label"].text(caption);
+    ui["population_label"] = caption;
+
+    switch (g_city.ratings.selected) {
+    case e_selected_rating_culture:
+        ui["advice_header"] = ui::str(53, 1);
+        ui["advice_text"] = (g_city.ratings.culture <= 90)
+                                ?  ui::str(53, 9 + g_city.ratings.selected_explanation())
+                                :  ui::str(53, 50);
+        break;
+
+    case e_selected_rating_prosperity:
+        ui["advice_header"] = ui::str(53, 2);
+        ui["advice_text"] = (g_city.ratings.prosperity <= 90)
+                                ? ui::str(53, 16 + g_city.ratings.selected_explanation()) 
+                                : ui::str(53, 51);
+        break;
+    case e_selected_rating_monument:
+        ui["advice_header"] = ui::str(53, 3);
+        ui["advice_text"] = (g_city.ratings.monument <= 90) ? ui::str(53, 41 + g_city.ratings.selected_explanation()) : ui::str(53, 52);
+        break;
+
+    case e_selected_rating_kingdom:
+        ui["advice_header"] = ui::str(53, 4);
+        ui["advice_text"] = (g_city.ratings.kingdom <= 90) ? ui::str(53, 27 +g_city.ratings.selected_explanation()) : ui::str(53, 53);
+        break;
+
+    default:
+        ui["advice_text"] = ui::str(53, 8);
+        break;
+    }
+
 
     return 0;
 }
@@ -94,46 +119,6 @@ void ui::advisor_ratings_window::draw_foreground() {
     draw_rating(3, g_city.ratings.kingdom, open_play, winning_kingdom());
 
     // bottom info box
-    int box_x = 44;
-    int box_y = 340;
-    int box_w = 520;
-    inner_panel_draw(box_x, box_y, 35, 5);
-    switch (g_city.ratings.selected) {
-    case e_selected_rating_culture:
-        lang_text_draw(53, 1, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
-        if (g_city.ratings.culture <= 90) {
-            lang_text_draw_multiline(53, 9 + g_city.ratings.selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        } else
-            lang_text_draw_multiline(53, 50, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        break;
-
-    case e_selected_rating_prosperity:
-        lang_text_draw(53, 2, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
-        if (g_city.ratings.prosperity <= 90) {
-            lang_text_draw_multiline(53, 16 + g_city.ratings.selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        } else
-            lang_text_draw_multiline(53, 51, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        break;
-    case e_selected_rating_monument:
-        lang_text_draw(53, 3, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
-        if (g_city.ratings.monument <= 90) {
-            lang_text_draw_multiline(53, 41 + g_city.ratings.selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        } else
-            lang_text_draw_multiline(53, 52, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        break;
-
-    case e_selected_rating_kingdom:
-        lang_text_draw(53, 4, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
-        if (g_city.ratings.kingdom <= 90) {
-            lang_text_draw_multiline(53, 27 +g_city.ratings.selected_explanation(), vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        } else
-            lang_text_draw_multiline(53, 53, vec2i{box_x + 8, box_y + 22}, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        break;
-
-    default:
-        lang_text_draw_centered(53, 8, box_x + 8, 380, box_w, FONT_NORMAL_WHITE_ON_DARK);
-        break;
-    }
 
     button_border_draw(rating_buttons[0].x, rating_buttons[0].y, rating_buttons[0].width, rating_buttons[0].height, focus_button_id == e_selected_rating_culture);
     button_border_draw(rating_buttons[1].x, rating_buttons[1].y, rating_buttons[1].width, rating_buttons[1].height, focus_button_id == e_selected_rating_prosperity);
