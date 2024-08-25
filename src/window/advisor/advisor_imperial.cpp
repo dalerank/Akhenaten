@@ -74,10 +74,10 @@ int ui::advisor_imperial_window::draw_background() {
     g_city.kingdome.calculate_gift_costs();
 
     auto &ui = g_advisor_imperial_window;
-    ui["header_label"].text((pcstr)city_player_name());
+    ui["header_label"] = (pcstr)city_player_name();
     ui["rating_label"].text_var("%s %u", ui::str(52, 0), g_city.ratings.kingdom);
-    ui["rating_advice"].text_var(ui::str(52, g_city.ratings.kingdom / 5 + 22));
-    ui["player_rank"].text(ui::str(32, g_city.kingdome.player_rank));
+    ui["rating_advice"] = ui::str(52, g_city.ratings.kingdom / 5 + 22);
+    ui["player_rank"] = ui::str(32, g_city.kingdome.player_rank);
     ui["personal_savings"].text_var("%s %u %s", ui::str(52, 1), g_city.kingdome.personal_savings, ui::str(6, 0));
     ui["salary_rank"].text_var("%s %u %s", ui::str(52, g_city.kingdome.salary_rank + 4), g_city.kingdome.salary_amount, ui::str(52, 3));
 
