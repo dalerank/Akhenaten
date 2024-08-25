@@ -319,13 +319,13 @@ int window_building_handle_mouse_granary_orders(const mouse* m, object_info* c) 
     return generic_buttons_handle_mouse(m, {c->offset.x + 80, y_offset + 404}, granary_order_buttons, 2, &data.orders_focus_button_id);
 }
 
-std::pair<int, int> window_building_get_tooltip_granary_orders() {
+textid window_building_get_tooltip_granary_orders() {
     auto &data = g_window_building_distribution;
     if (data.orders_focus_button_id == 2) {
         return {143, 1};
     }
 
-    return {-1, -1};
+    return textid{0xffff, 0xff};
 }
 
 static void on_scroll(void) {
@@ -380,7 +380,7 @@ int window_building_handle_mouse_warehouse_orders(const mouse* m, object_info* c
     return generic_buttons_handle_mouse(m, {c->offset.x + 80, y_offset + 404}, warehouse_order_buttons, 2, &data.orders_focus_button_id);
 }
 
-std::pair<int, int> window_building_get_tooltip_warehouse_orders() {
+textid window_building_get_tooltip_warehouse_orders() {
     auto &data = g_window_building_distribution;
     if (data.orders_focus_button_id == 1) {
         return {99, 6};

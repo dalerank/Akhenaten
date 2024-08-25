@@ -86,6 +86,8 @@ void ui::window_display_options::draw_foreground() {
     ui::imgcancel_button({392, 335}, [this] (int, int) {
         _close_cb();
     });
+
+    ui::end_widget();
 }
 
 void ui::window_display_options::handle_input(const mouse* m, const hotkeys* h) {

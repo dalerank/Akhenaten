@@ -38,8 +38,8 @@ void draw_accept_none_button(int x, int y, int focused);
 
 int window_building_handle_mouse_granary_orders(const mouse* m, object_info* c);
 
-std::pair<int, int> window_building_get_tooltip_granary_orders();
-std::pair<int, int> window_building_get_tooltip_warehouse_orders();
+textid window_building_get_tooltip_granary_orders();
+textid window_building_get_tooltip_warehouse_orders();
 
 int window_building_handle_mouse_warehouse(const mouse* m, object_info* c);
 int window_building_handle_mouse_warehouse_orders(const mouse* m, object_info* c);

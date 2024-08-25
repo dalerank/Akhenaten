@@ -20,7 +20,6 @@
 
 struct resource_settings_data {
     e_resource resource;
-    int focus_button_id;
 };
 
 resource_settings_data g_resource_settings_data;
@@ -202,10 +201,14 @@ static void draw_foreground() {
         .onclick([] (int, int) {
             window_go_back();
         });
+
+    ui::end_widget();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    ui::begin_widget(screen_dialog_offset());
     bool button_id = ui::handle_mouse(m);
+    ui::end_widget();
 
     if (input_go_back_requested(m, h)) {
         window_go_back();

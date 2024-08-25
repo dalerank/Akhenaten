@@ -104,7 +104,17 @@ static void button_set_salary(int rank, int param2) {
     }
 }
 
+static void draw_background(void) {
+    painter ctx = game.painter();
+    ImageDraw::img_background(ctx, image_id_from_group(PACK_UNLOADED, 11));
+}
+
 void window_set_salary_show(void) {
-    window_type window = {WINDOW_SET_SALARY, window_advisors_draw_dialog_background, draw_foreground, handle_input};
+    static window_type window = {
+        WINDOW_SET_SALARY, 
+        draw_background,
+        draw_foreground, 
+        handle_input
+    };
     window_show(&window);
 }

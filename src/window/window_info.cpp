@@ -213,14 +213,19 @@ static void window_info_draw_background() {
 
 static void window_info_draw_foreground() {
     auto &ui = *g_object_info.ui;
+
     ui.begin_widget(g_object_info.offset);
     ui.window_info_foreground(g_object_info);
+    ui.end_widget();
 }
 
 static void window_info_handle_input(const mouse* m, const hotkeys* h) {
     auto &context = g_object_info;
+    auto &ui = *g_object_info.ui;
 
+    ui.begin_widget(g_object_info.offset);
     bool button_id = ui::handle_mouse(m);
+    ui.end_widget();
   
     if (!button_id) {
         int btn_id = context.ui->window_info_handle_mouse(m, context);
@@ -360,17 +365,17 @@ void common_info_window::update_buttons(object_info &c) {
 }
 
 void common_info_window::draw_tooltip(tooltip_context *c) {
-    std::pair<int, int> tooltip = get_tooltip(g_object_info);
+    textid tooltip = get_tooltip(g_object_info);
     int button_id = ui::button_hover(mouse_get());
-    if (button_id > 0 && tooltip.first < 0) {
-        tooltip = ui::button(button_id - 1)._tooltip;
+    if (button_id > 0 && tooltip.group == 0xffff) {
+        tooltip = ui::button_tooltip(button_id - 1);
     }
 
-    if (tooltip.first > 0 || tooltip.second > 0) {
+    if (tooltip.group != 0xffff || tooltip.id != 0xff ) {
         c->type = TOOLTIP_BUTTON;
-        c->text_id = tooltip.second;
-        if (tooltip.first) {
-            c->text_group = tooltip.first;
+        c->text_id = tooltip.id;
+        if (tooltip.group) {
+            c->text_group = tooltip.group;
         }
         window_invalidate();
     }
