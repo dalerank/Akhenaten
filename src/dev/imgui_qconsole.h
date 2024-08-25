@@ -2,6 +2,7 @@
 
 #include <unordered_set>
 #include <algorithm>
+#include <vector>
 
 //dependencies
 #include <imgui.h>
