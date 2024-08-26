@@ -1,7 +1,9 @@
 #pragma once
 
+#include <string_view>
+
 namespace detail {
-    template <std::size_t...Idxs>
+    template <size_t...Idxs>
     constexpr auto substring_as_array(std::string_view str, std::index_sequence<Idxs...>) {
         return std::array{ str[Idxs]..., '\n' };
     }

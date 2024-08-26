@@ -39,8 +39,8 @@ enum terrain_info_type {
 };
 
 struct common_info_window;
-struct figure;
-struct building;
+class figure;
+class building;
 
 struct object_info {
     vec2i offset;
