@@ -258,9 +258,9 @@ static void button_delete(int id_to_delete, int param2) {
 
 static void get_tooltip(tooltip_context* c) {
     if (data.focus_button_id == 11)
-        c->text_id = 1;
+        c->text.id = 1;
     else if (data.focus_button_id == 12)
-        c->text_id = 2;
+        c->text.id = 2;
     else
         return;
     c->type = TOOLTIP_BUTTON;

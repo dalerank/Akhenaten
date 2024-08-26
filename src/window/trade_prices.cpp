@@ -57,14 +57,16 @@ static int get_tooltip_resource(tooltip_context* c) {
 
 static void get_tooltip(tooltip_context* c) {
     int resource = get_tooltip_resource(c);
-    if (!resource)
+    if (!resource) {
         return;
+    }
+
     c->type = TOOLTIP_BUTTON;
-    c->text_id = 131 + resource;
+    c->text.id = 131 + resource;
 }
 
 void window_trade_prices_show(void) {
-    window_type window = {
+    static window_type window = {
         WINDOW_TRADE_PRICES,
         draw_background,
         0,

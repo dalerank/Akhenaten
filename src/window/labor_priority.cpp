@@ -109,9 +109,9 @@ static void get_tooltip(tooltip_context* c) {
         return;
     c->type = TOOLTIP_BUTTON;
     if (data.focus_button_id == 1)
-        c->text_id = 92;
+        c->text.id = 92;
     else {
-        c->text_id = 93;
+        c->text.id = 93;
     }
 }
 

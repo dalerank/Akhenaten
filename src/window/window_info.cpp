@@ -373,9 +373,9 @@ void common_info_window::draw_tooltip(tooltip_context *c) {
 
     if (tooltip.group != 0xffff || tooltip.id != 0xff ) {
         c->type = TOOLTIP_BUTTON;
-        c->text_id = tooltip.id;
+        c->text.id = tooltip.id;
         if (tooltip.group) {
-            c->text_group = tooltip.group;
+            c->text.group = tooltip.group;
         }
         window_invalidate();
     }

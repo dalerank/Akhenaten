@@ -13,6 +13,7 @@
 #include "core/log.h"
 #include "game/game.h"
 #include "graphics/graphics.h"
+#include "graphics/elements/tooltip.h"
 #include "graphics/image.h"
 #include "core/span.hpp"
 #include "resource/icons.h"
@@ -21,6 +22,12 @@
 #include <stack>
 
 namespace ui {
+    tooltip_context tooltipctx;
+
+    const tooltip_context &get_tooltip() {
+        return tooltipctx;
+    }
+
     struct universal_button {
         enum e_btn_type {
             unknown = -1,
@@ -228,10 +235,10 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
 
     g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
     generic_button &gbutton = g_state.buttons.back().g_button;
-    int focused = is_button_hover(gbutton, offset);
+    gbutton.hovered = is_button_hover(gbutton, offset);
     const bool readonly = !!(flags & UiFlags_Readonly);
 
-    if (focused && !readonly) {
+    if (gbutton.hovered && !readonly) {
         button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, true);
     } else if (!(flags & UiFlags_NoBody)) {
         button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, 0);
@@ -894,18 +901,24 @@ void ui::earrow_button::draw() {
 void ui::egeneric_button::draw() {
     UiFlags flags = _flags 
                       | (readonly ? UiFlags_Readonly : UiFlags_None);
+
+    generic_button *btn = nullptr;
     switch (mode) {
     case 0:
-        ui::button(_text.c_str(), pos, size, _font, flags)
-            .onclick(_func)
-            .tooltip(_tooltip);
+        btn = &ui::button(_text.c_str(), pos, size, _font, flags)
+                      .onclick(_func)
+                      .tooltip(_tooltip);
         break;
 
     case 1:
-        ui::large_button(_text.c_str(), pos, size, _font)
-            .onclick(_func)
-            .tooltip(_tooltip);
+        btn = &ui::large_button(_text.c_str(), pos, size, _font)
+                      .onclick(_func)
+                      .tooltip(_tooltip);
         break;
+    }
+
+    if (btn && btn->hovered) {
+        tooltipctx.set(TOOLTIP_BUTTON, _tooltip);
     }
 }
 

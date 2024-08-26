@@ -175,6 +175,10 @@ bool lang_load(int is_editor) {
            || load_files(lfc->FILE_TEXT_RUS, lfc->FILE_MM_RUS, NOT_LOCALIZED);
 }
 
+const uint8_t *lang_get_string(textid text) {
+    return lang_get_string(text.group, text.id);
+}
+
 const uint8_t* lang_get_string(int group, int index) {
     if (group < 0 || index < 0) {
         return nullptr;

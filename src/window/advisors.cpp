@@ -255,7 +255,7 @@ static void get_tooltip(tooltip_context* c) {
     int text_id = data.current_advisor_window->get_tooltip_text();
 
     if (text_id) {
-        c->text_id = text_id;
+        c->text.id = text_id;
         c->type = TOOLTIP_BUTTON;
     }
 }

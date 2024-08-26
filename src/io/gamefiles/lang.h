@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include "core/string.h"
 
 enum e_message_arhtype { 
     TYPE_MANUAL = 0,
@@ -77,6 +77,7 @@ bool lang_load(int is_editor);
  * @return String
  */
 const uint8_t* lang_get_string(int group, int index);
+const uint8_t* lang_get_string(textid text);
 
 /**
  * Gets the message for the specified ID

@@ -836,8 +836,8 @@ static void get_tooltip_trade_route_type(tooltip_context* c) {
     int y_offset_max = y_offset + 22 - 2 * city->is_sea_trade;
     if (c->mpos.x >= x_offset && c->mpos.x < x_offset + 32 && c->mpos.y >= y_offset && c->mpos.y < y_offset_max) {
         c->type = TOOLTIP_BUTTON;
-        c->text_group = 44;
-        c->text_id = 28 + city->is_sea_trade;
+        c->text.group = 44;
+        c->text.id = 28 + city->is_sea_trade;
     }
 }
 
@@ -846,19 +846,19 @@ static void window_empire_get_tooltip(tooltip_context* c) {
     int resource = data.focus_resource ? data.focus_resource : get_tooltip_resource(c);
     if (resource) {
         c->type = TOOLTIP_BUTTON;
-        c->text_group = 23;
-        c->text_id = resource;
+        c->text.group = 23;
+        c->text.id = resource;
     } else if (data.focus_button_id) {
         c->type = TOOLTIP_BUTTON;
         switch (data.focus_button_id) {
         case 1:
-            c->text_id = 1;
+            c->text.id = 1;
             break;
         case 2:
-            c->text_id = 2;
+            c->text.id = 2;
             break;
         case 3:
-            c->text_id = 70;
+            c->text.id = 70;
             break;
         }
     } else {

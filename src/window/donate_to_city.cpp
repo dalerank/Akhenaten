@@ -147,13 +147,13 @@ static void get_tooltip(tooltip_context* c) {
         return;
     c->type = TOOLTIP_BUTTON;
     if (data.focus_button_id == 1)
-        c->text_id = 98;
+        c->text.id = 98;
     else if (data.focus_button_id == 2)
-        c->text_id = 99;
+        c->text.id = 99;
     else if (data.focus_button_id)
-        c->text_id = 100;
+        c->text.id = 100;
     else if (data.focus_arrow_button_id)
-        c->text_id = 101;
+        c->text.id = 101;
 }
 
 void window_donate_to_city_show(void) {

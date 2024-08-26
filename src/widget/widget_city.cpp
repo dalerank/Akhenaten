@@ -603,9 +603,9 @@ void widget_city_get_tooltip(tooltip_context* c) {
 
     // overlay tooltips
     if (game.current_overlay != OVERLAY_NONE) {
-        c->text_group = e_text_tooltip;
-        c->text_id = widget_city_overlay_get_tooltip_text(c, grid_offset);
-        if (c->text_id) {
+        c->text.group = e_text_tooltip;
+        c->text.id = widget_city_overlay_get_tooltip_text(c, grid_offset);
+        if (c->text.id) {
             c->type = TOOLTIP_OVERLAY;
             c->high_priority = 1;
         }

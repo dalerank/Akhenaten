@@ -71,7 +71,7 @@ static void draw_tooltip_box(int x, int y, int width, int height) {
 }
 
 static void draw_button_tooltip(tooltip_context* c) {
-    const uint8_t* text = lang_get_string(c->text_group, c->text_id);
+    const uint8_t* text = lang_get_string(c->text);
     if (!text) {
         return;
     }
@@ -140,7 +140,7 @@ static void draw_button_tooltip(tooltip_context* c) {
     text_draw_multiline(text, x + 5, y + 7, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
 }
 static void draw_overlay_tooltip(tooltip_context* c) {
-    const uint8_t* text = lang_get_string(c->text_group, c->text_id);
+    const uint8_t* text = lang_get_string(c->text);
     if (c->has_numeric_prefix) {
         int offset = string_from_int(overlay_string, c->numeric_prefix, 0);
         string_copy(text, &overlay_string[offset], OVERLAY_TEXT_MAX - offset);
@@ -302,7 +302,7 @@ void tooltip_handle(const mouse* m, void (*func)(tooltip_context*)) {
         return;
     }
     tooltip_context context{*m};
-    context.text_group = DEFAULT_TEXT_GROUP;
+    context.text.group = DEFAULT_TEXT_GROUP;
     if (g_settings.tooltips && func)
         func(&context);
 

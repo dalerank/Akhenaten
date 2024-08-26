@@ -835,13 +835,12 @@ static void get_tooltip(tooltip_context* c) {
     auto &data = g_message_dialog_data;
     if (data.focus_button_id) {
         c->type = TOOLTIP_BUTTON;
-        c->text_group = 12;
-        c->text_id = 1;
+        c->text = { 12, 1 };
     }
 }
 
 void window_message_dialog_show(int text_id, int message_id, void (*background_callback)(void)) {
-    window_type window = {
+    static window_type window = {
         WINDOW_MESSAGE_DIALOG,
         draw_background,
         draw_foreground,
