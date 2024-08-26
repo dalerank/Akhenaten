@@ -118,8 +118,6 @@ void ui::advisor_imperial_window::handle_request(int index) {
 }
 
 void ui::advisor_imperial_window::ui_draw_foreground() {
-    auto &ui = g_advisor_imperial_window;
-
     ui.begin_widget(screen_dialog_offset());
     ui.draw();
 

@@ -160,14 +160,49 @@ advisors_window = {
 
 advisor_ratings_window = {
   ui : {
-		outer_panel : { type : "outer_panel", pos:[0, 0], size:[40, 27] },
-		inner_panel : { type : "inner_panel", pos:[340, 520], size:[35, 5] },
-		advice_header : { type : "text", pos: [348, 524], font : FONT_NORMAL_WHITE_ON_DARK },
-		advice_text : { type : "text", pos: [348, 542], wrap:520, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true },
-		advisor_icon : { type : "image", pack:PACK_GENERAL, id:128, offset:3, pos:[10, 10] },
-		header_label : { type : "label", font : FONT_LARGE_BLACK_ON_LIGHT, text: {group: 53, id: 0},	pos:[60, 17] },
-		population_label : { type : "label", text : "",	pos :[300, 20] },
+		outer_panel 	: { type : "outer_panel", pos:[0, 0], size:[40, 27] },
 		background_image : { type : "image", pack:PACK_UNLOADED, id:2, pos :[60, 38]	},
+		rating_culture: { type:"generic_button", pos:[80, 276], align:"xcenter", size:[120, 60], font:FONT_NORMAL_BLACK_ON_LIGHT,
+			ui : {
+				value_culture : { type : "text", pos: [0, 22], size:[120, 20], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
+				goal_culture  : { type : "text", pos: [0, 42], size:[120, 20], align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT },
+			}
+		},
+		
+		base_culture  : { type : "text", pos: [110, 213], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
+
+		rating_prosperity : { type:"generic_button", pos:[200, 276], align:"xcenter", size:[120, 60], font:FONT_NORMAL_BLACK_ON_LIGHT,
+			ui : {
+		 	  value_prosperity: { type : "text", pos: [0, 22], size:[120, 20], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
+				goal_prosperity : { type : "text", pos: [0, 42], size:[120, 20], align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT },
+			}
+		},
+		base_prosperity : { type : "text", pos: [230, 213], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
+
+		rating_monument: { type:"generic_button", pos:[320, 276], align:"xcenter", size:[120, 60], font:FONT_NORMAL_BLACK_ON_LIGHT,
+			ui : {
+				value_monument: { type : "text", pos: [0, 22], size:[120, 20], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
+				goal_monument : { type : "text", pos: [0, 42], size:[120, 20], align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT },
+			}
+		},
+		
+		base_monument : { type : "text", pos: [350, 213], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
+
+		rating_kingdom: { type:"generic_button", pos:[440, 276], align:"xcenter", size:[120, 60], font:FONT_NORMAL_BLACK_ON_LIGHT,
+			ui : {
+				value_kingdom : { type : "text", pos: [0, 22], size:[120, 20], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
+				goal_kingdom  : { type : "text", pos: [0, 42], size:[120, 20], align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT },
+			}
+		},
+		
+		base_kingdom  : { type : "text", pos: [470, 213], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
+		
+		inner_panel 	: { type : "inner_panel", pos:[40, 340], size:[35, 5] },
+		advice_header : { type : "text", pos: [68, 344], font : FONT_NORMAL_WHITE_ON_DARK },
+		advice_text 	: { type : "text", pos: [68, 368], wrap:520, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true },
+		advisor_icon 	: { type : "image", pack:PACK_GENERAL, id:128, offset:3, pos:[10, 10] },
+		header_label 	: { type : "label", font : FONT_LARGE_BLACK_ON_LIGHT, text: {group: 53, id: 0},	pos:[60, 17] },
+		population_label : { type : "label", text : "",	pos :[300, 20] },
 	},
 	column_offset : {x: 30, y:-11}
 }

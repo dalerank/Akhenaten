@@ -280,6 +280,11 @@ int image_id_from_group(int collection, int group, int pak_cache_idx) {
     return pak->get_global_image_index(group);
 }
 
+const image_t *image_get(image_desc desc) {
+    int id = image_id_from_group(desc.pack, desc.id) + desc.offset;
+    return image_get(id);
+}
+
 const image_t *image_get(int pak, int id) {
     auto& data = *g_image_data;
     if (pak >= data.common.size()) {

@@ -129,5 +129,6 @@ int image_id_from_group(int collection, int group, int pak_cache_idx = -1);
 
 const image_t* image_get(int id);
 const image_t *image_get(int pak, int id);
+const image_t *image_get(image_desc desc);
 const image_t* image_letter(int letter_id);
 const image_t* image_get_enemy(int id);

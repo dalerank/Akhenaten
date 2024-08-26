@@ -122,6 +122,30 @@ namespace ui {
     element dummy_element;
 }
 
+static ui::element::ptr create_element(pcstr type) {
+    ui::element::ptr elm;
+    if (!strcmp(type, "outer_panel")) { elm = std::make_shared<ui::eouter_panel>(); } else if (!strcmp(type, "scrollbar")) { elm = std::make_shared<ui::escrollbar>(); } else if (!strcmp(type, "menu_header")) { elm = std::make_shared<ui::emenu_header>(); } else if (!strcmp(type, "inner_panel")) { elm = std::make_shared<ui::einner_panel>(); } else if (!strcmp(type, "background")) { elm = std::make_shared<ui::ebackground>(); } else if (!strcmp(type, "image")) { elm = std::make_shared<ui::eimg>(); } else if (!strcmp(type, "label")) { elm = std::make_shared<ui::elabel>(); } else if (!strcmp(type, "text")) { elm = std::make_shared<ui::etext>(); } else if (!strcmp(type, "generic_button")) { elm = std::make_shared<ui::egeneric_button>(); } else if (!strcmp(type, "image_button")) { elm = std::make_shared<ui::eimage_button>(); } else if (!strcmp(type, "resource_icon")) { elm = std::make_shared<ui::eresource_icon>(); } else if (!strcmp(type, "arrow_button")) { elm = std::make_shared<ui::earrow_button>(); } else if (!strcmp(type, "border")) { elm = std::make_shared<ui::eborder>(); } else if (!strcmp(type, "large_button")) {
+        auto btn = std::make_shared<ui::egeneric_button>();
+        btn->mode = 1;
+        elm = btn;
+    }
+
+    return elm;
+}
+
+static void load_elements(archive arch, pcstr section, ui::element *parent, ui::element::items &elements) {
+    arch.r_objects(section, [&elements, parent] (pcstr key, archive elem) {
+        pcstr type = elem.r_string("type");
+        ui::element::ptr elm = create_element(type);
+
+        if (elm) {
+            elm->id = key;
+            elements.push_back(elm);
+            elm->load(elem, parent, elements);
+        }
+    });
+}
+
 void ui::begin_widget(vec2i offset, bool relative) {
     if (relative) {
         vec2i top = g_state._offset.empty() ? vec2i{0, 0} : g_state._offset.top();
@@ -215,7 +239,9 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
 
     int symbolh = get_letter_height((uint8_t *)"H", font);
     if (label) {
-        const bool ycentered = !!(flags & UiFlags_AlignYCentered);
+        const bool alingycenter = !!(flags & UiFlags_AlignYCentered);
+        const bool alingxcenter = !!(flags & UiFlags_AlignXCentered);
+        const bool alignleft = !!(flags & UiFlags_AlignLeft);
         const bool rich = !!(flags & UiFlags_Rich);
         if (rich) {
             int symbolw = text_get_width((uint8_t *)"H", font);
@@ -223,8 +249,12 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
             int centering_y_offset = (size.y - lines_num * symbolh) / 2;
             rich_text_set_fonts(font, FONT_NORMAL_YELLOW);
             rich_text_draw((uint8_t *)label, offset.x + pos.x, offset.y + pos.y + centering_y_offset, size.x, lines_num, false, true);
-        } else if (ycentered) {
+        } else if (alingycenter) {
             text_draw((uint8_t *)label, offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 2, font, 0);
+        } else if (alignleft) {
+            text_draw((uint8_t *)label, offset.x + pos.x + 8, offset.y + pos.y + 8, font, 0);
+        } else if (alingxcenter) {
+            text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + 4, size.x, font, 0);
         } else {
             text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 + 4, size.x, font, 0);
         }
@@ -440,8 +470,9 @@ scrollbar_t &ui::scrollbar(scrollbar_t &scr, vec2i pos, int &value, vec2i size) 
     return scr;
 }
 
-void ui::element::load(archive arch) {
-    pos = arch.r_vec2i("pos");
+void ui::element::load(archive arch, element *parent, element::items &items) {
+    vec2i parent_offset = parent ? parent->pos : vec2i{0, 0};
+    pos = arch.r_vec2i("pos") + parent_offset;
     size = arch.r_size2i("size");
     enabled = arch.r_bool("enabled", true);
     arch.r_section("margin", [this] (archive m) {
@@ -450,6 +481,8 @@ void ui::element::load(archive arch) {
         margin.right = m.r_int("right", recti::nomargin);
         margin.top = m.r_int("top", recti::nomargin);
     });
+
+    load_elements(arch, "ui", this, items);
 }
 
 pcstr ui::element::text_from_key(pcstr key) {
@@ -467,8 +500,8 @@ void ui::eouter_panel::draw() {
     ui::panel(pos, size, UiFlags_PanelOuter);
 }
 
-void ui::eouter_panel::load(archive arch) {
-    element::load(arch);
+void ui::eouter_panel::load(archive arch, element *parent, items &elems) {
+    element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "outer_panel"));
@@ -478,8 +511,8 @@ void ui::einner_panel::draw() {
     ui::panel(pos, size, UiFlags_PanelInner);
 }
 
-void ui::einner_panel::load(archive arch) {
-    element::load(arch);
+void ui::einner_panel::load(archive arch, element *parent, items &elems) {
+    element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "inner_panel"));
@@ -503,34 +536,8 @@ void ui::widget::draw() {
 void ui::widget::load(archive arch, pcstr section) {
     elements.clear();
     pos = arch.r_vec2i("pos");
-    arch.r_objects(section, [this] (pcstr key, archive elem) {
-        pcstr type = elem.r_string("type");
-        element::ptr elm;
-        if (!strcmp(type, "outer_panel")) { elm = std::make_shared<eouter_panel>();} 
-        else if (!strcmp(type, "scrollbar")) { elm = std::make_shared<escrollbar>(); }
-        else if (!strcmp(type, "menu_header")) { elm = std::make_shared<emenu_header>(); }
-        else if (!strcmp(type, "inner_panel")) { elm = std::make_shared<einner_panel>(); }
-        else if (!strcmp(type, "background")) { elm = std::make_shared<ebackground>(); }
-        else if (!strcmp(type, "image")) { elm = std::make_shared<eimg>(); }
-        else if (!strcmp(type, "label")) { elm = std::make_shared<elabel>(); }
-        else if (!strcmp(type, "text")) { elm = std::make_shared<etext>(); }
-        else if (!strcmp(type, "generic_button")) { elm = std::make_shared<egeneric_button>(); }
-        else if (!strcmp(type, "image_button")) { elm = std::make_shared<eimage_button>(); }
-        else if (!strcmp(type, "resource_icon")) { elm = std::make_shared<eresource_icon>(); }
-        else if (!strcmp(type, "arrow_button")) { elm = std::make_shared<earrow_button>(); }
-        else if (!strcmp(type, "border")) { elm = std::make_shared<eborder>(); }
-        else if (!strcmp(type, "large_button")) {
-            auto btn = std::make_shared<egeneric_button>();
-            btn->mode = 1;
-            elm = btn;
-        }
-
-        if (elm) {
-            elm->id = key;
-            elements.push_back(elm);
-            elm->load(elem);
-        }
-    });
+    
+    load_elements(arch, section, nullptr, elements);
 }
 
 void ui::widget::load(pcstr section) {
@@ -569,8 +576,8 @@ void ui::eimg::draw() {
     }
 }
 
-void ui::eimg::load(archive arch) {
-    element::load(arch);
+void ui::eimg::load(archive arch, element *parent, items &elems) {
+    element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "image"));
@@ -593,8 +600,8 @@ void ui::ebackground::draw() {
     ImageDraw::img_background(ctx, image_group(img_desc), 1.f, pos);
 }
 
-void ui::ebackground::load(archive arch) {
-    element::load(arch);
+void ui::ebackground::load(archive arch, element *parent, items &elems) {
+    element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "background"));
@@ -604,8 +611,8 @@ void ui::ebackground::load(archive arch) {
     img_desc.offset = arch.r_int("offset");
 }
 
-void ui::eborder::load(archive arch) {
-    element::load(arch);
+void ui::eborder::load(archive arch, element *parent, items &elems) {
+    element::load(arch, parent, elems);
 
     border = arch.r_int("border");
 }
@@ -629,8 +636,8 @@ void ui::eresource_icon::image(int image) {
     res = (e_resource)image;
 }
 
-void ui::eresource_icon::load(archive arch) {
-    element::load(arch);
+void ui::eresource_icon::load(archive arch, element *parent, items &elems) {
+    element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "resource_icon"));
@@ -645,8 +652,8 @@ void ui::elabel::draw() {
     ui::label(_text.c_str(), pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0}), _font, _flags, _wrap);
 }
 
-void ui::elabel::load(archive arch) {
-    element::load(arch);
+void ui::elabel::load(archive arch, element *parent, items &elems) {
+    element::load(arch, parent, elems);
 
     _text = arch.r_string("text");
     if (_text[0] == '#') {
@@ -662,7 +669,14 @@ void ui::elabel::load(archive arch) {
     bool multiline = arch.r_bool("multiline");
     bool rich = arch.r_bool("rich");
     bool scroll = arch.r_bool("scroll", true);
-    _flags = (strcmp("center", talign) == 0 ? UiFlags_AlignCentered : UiFlags_None)
+    bool aligncenter = strcmp("center", talign) == 0;
+    bool alignleft = strcmp("left", talign) == 0;
+    bool alignycenter = strcmp("ycenter", talign) == 0;
+    bool alignxcenter = strcmp("xcenter", talign) == 0;
+    _flags = (aligncenter ? UiFlags_AlignCentered : UiFlags_None)
+               | (alignycenter ? UiFlags_AlignYCentered : UiFlags_None)
+               | (alignxcenter ? UiFlags_AlignXCentered : UiFlags_None)
+               | (alignleft ? UiFlags_AlignLeft : UiFlags_None)
                | (multiline ? UiFlags_LabelMultiline : UiFlags_None)
                | (rich ? UiFlags_Rich : UiFlags_None)
                | (scroll ? UiFlags_None : UiFlags_NoScroll);
@@ -685,8 +699,8 @@ void ui::elabel::width(int v) {
     _wrap = v;
 }
 
-void ui::eimage_button::load(archive arch) {
-    element::load(arch);
+void ui::eimage_button::load(archive arch, element *parent, items &elems) {
+    element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "image_button"));
@@ -761,8 +775,8 @@ void ui::eimage_button::draw() {
     } 
 }
 
-void ui::etext::load(archive arch) {
-    elabel::load(arch);
+void ui::etext::load(archive arch, element* parent, items &elems) {
+    elabel::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "text"));
@@ -772,8 +786,8 @@ void ui::escrollbar::draw() {
     ui::scrollbar(this->scrollbar, pos, this->scrollbar.scroll_position);
 }
 
-void ui::escrollbar::load(archive arch) {
-    element::load(arch);
+void ui::escrollbar::load(archive arch, element *parent, items &elems) {
+    element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "scrollbar"));
@@ -819,8 +833,8 @@ void ui::etext::draw() {
     }
 }
 
-void ui::emenu_header::load(archive arch) {
-    element::load(arch);
+void ui::emenu_header::load(archive arch, element *parent, items &elems) {
+    element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "menu_header"));
@@ -865,8 +879,8 @@ menu_item &ui::emenu_header::item(pcstr key) {
     return it != impl.items.end() ? *it : dummy;
 }
 
-void ui::earrow_button::load(archive arch) {
-    element::load(arch);
+void ui::earrow_button::load(archive arch, element *parent, items &elems) {
+    element::load(arch, parent, elems);
 
     tiny = arch.r_bool("tiny");
     down = arch.r_bool("down");
@@ -895,8 +909,8 @@ void ui::egeneric_button::draw() {
     }
 }
 
-void ui::egeneric_button::load(archive arch) {
-    elabel::load(arch);
+void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
+    elabel::load(arch, parent, elems);
 
     pcstr mode_str = arch.r_string("mode");
     if (mode_str && !strcmp(mode_str, "large")) {

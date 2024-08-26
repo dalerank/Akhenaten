@@ -36,6 +36,8 @@ enum UiFlags_ {
     UiFlags_Selected = 1 << 8,
     UiFlags_Readonly = 1 << 9,
     UiFlags_NoScroll = 1 << 10,
+    UiFlags_AlignLeft = 1 << 11,
+    UiFlags_AlignXCentered = 1 << 12,
 };
 using UiFlags = int;
 
@@ -86,6 +88,9 @@ struct recti {
 };
 
 struct element {
+    using ptr = std::shared_ptr<element>;
+    using items = std::vector<ptr>;
+
     bstring64 id;
     vec2i pos;
     vec2i size;
@@ -94,7 +99,7 @@ struct element {
     bool enabled = true;
 
     virtual void draw() {}
-    virtual void load(archive);
+    virtual void load(archive, element* parent, items &elems);
     virtual void text(pcstr) {}
     virtual void tooltip(textid t) {}
     virtual int text_width() { return 0; }
@@ -166,8 +171,6 @@ struct element {
         preformat_text(formated_text);
         text(formated_text);
     }
-
-    using ptr = std::shared_ptr<element>;
 };
 
 struct eimg : public element {
@@ -175,7 +178,7 @@ struct eimg : public element {
     image_desc img_desc;
 
     virtual void draw() override;
-    virtual void load(archive elem) override;
+    virtual void load(archive elem, element *parent, items &elems) override;
     virtual void image(image_desc image) override;
     virtual void image(int image) override;
     virtual image_desc image() const override { return img_desc; }
@@ -186,14 +189,14 @@ struct ebackground : public element {
     float scale = 1.f;
 
     virtual void draw() override;
-    virtual void load(archive elem) override;
+    virtual void load(archive elem, element *parent, items &elems) override;
     virtual image_desc image() const override { return img_desc; }
 };
 
 struct eborder : public element {
     int border;
 
-    virtual void load(archive elem) override;
+    virtual void load(archive elem, element *parent, items &elems) override;
     virtual void draw() override;
 };
 
@@ -202,19 +205,19 @@ struct eresource_icon : public element {
 
     virtual void draw() override;
     virtual void image(int image) override;
-    virtual void load(archive elem) override;
+    virtual void load(archive elem, element *parent, items &elems) override;
 };
 
 struct eouter_panel : public element {
     virtual void draw() override;
     virtual vec2i pxsize() const override { return size * 16; }
-    virtual void load(archive elem) override;
+    virtual void load(archive elem, element *parent, items &elems) override;
 };
 
 struct einner_panel : public element {
     virtual void draw() override;
     virtual vec2i pxsize() const override { return size * 16; }
-    virtual void load(archive elem) override;
+    virtual void load(archive elem, element *parent, items &elems) override;
 };
 
 struct elabel : public element {
@@ -228,7 +231,7 @@ struct elabel : public element {
     bool _clip_area;
 
     virtual void draw() override;
-    virtual void load(archive elem) override;
+    virtual void load(archive elem, element *parent, items &elems) override;
     virtual void text(pcstr) override;
     virtual void color(int) override;
     virtual void font(int) override;
@@ -237,7 +240,7 @@ struct elabel : public element {
 
 struct etext : public elabel {
     virtual void draw() override;
-    virtual void load(archive elem) override;
+    virtual void load(archive elem, element *parent, items &elems) override;
 };
 
 struct escrollbar : public element {
@@ -247,14 +250,14 @@ struct escrollbar : public element {
     virtual void max_value(int v) override { scrollbar.max_scroll_position = v; }
     virtual void onevent(std::function<void()> func) override { scrollbar.onscroll(func); }
     virtual void draw() override;
-    virtual void load(archive elem) override;
+    virtual void load(archive elem, element *parent, items &elems) override;
 };
 
 struct emenu_header : public element {
     menu_header impl;
     e_font _font;
 
-    virtual void load(archive elem) override;
+    virtual void load(archive elem, element *parent, items &elems) override;
             void load_items(archive elem, pcstr section);
     virtual void draw() override;
     virtual void font(int v) override { _font = (e_font)v; }
@@ -274,7 +277,7 @@ struct egeneric_button : public elabel {
     textid _tooltip;
 
     virtual void draw() override;
-    virtual void load(archive arch) override;
+    virtual void load(archive arch, element *parent, items &elems) override;
     virtual void tooltip(textid t) override { _tooltip = t; }
     virtual void onclick(std::function<void(int, int)> func) override { _func = func; }
 };
@@ -284,7 +287,7 @@ struct earrow_button : public element {
     bool tiny;
 
     std::function<void(int, int)> _func;
-    virtual void load(archive elem) override;
+    virtual void load(archive elem, element *parent, items &elems) override;
     virtual void draw() override;
     virtual void onclick(std::function<void(int, int)> func) override { _func = func; }
 };
@@ -304,7 +307,7 @@ struct eimage_button : public element {
 
     std::function<void(int, int)> _func;
 
-    virtual void load(archive elem) override;
+    virtual void load(archive elem, element* parent, items &elems) override;
     virtual void select(bool v) override { selected = v; }
     virtual void draw() override;
 
@@ -317,7 +320,7 @@ struct eimage_button : public element {
 
 struct widget {
     vec2i pos;
-    std::vector<element::ptr> elements;
+    element::items elements;
     widget &ui;
 
     virtual void draw();
