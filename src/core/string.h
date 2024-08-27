@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "bstring.h"
+#include "core/vec2i.h"
 
 struct textid {
     uint16_t group = 0;
@@ -11,6 +12,13 @@ struct textid {
     bool valid() const { return group > 0 && id > 0; }
     pcstr c_str() const;
     pcstr c_str_safe(pcstr def) const;
+    textid &operator=(std::initializer_list<int> v) {
+        if (v.size() > 0) group = *v.begin();
+        if (v.size() > 1) id = *(v.begin() + 1);
+        return *this;
+    }
+    textid &operator=(vec2i v) { group = v.x; id = v.y; return *this; }
+    
 };
 
 uint8_t* string_copy(const uint8_t* src, uint8_t* dst, int maxlength);

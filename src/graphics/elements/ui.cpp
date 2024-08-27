@@ -166,6 +166,7 @@ void ui::begin_frame() {
     g_state._offset = {};
     g_state.buttons.clear();
     g_state.scrollbars.clear();
+    tooltipctx.set(TOOLTIP_NONE, textid{});
 }
 
 void ui::end_widget() {
@@ -917,7 +918,7 @@ void ui::egeneric_button::draw() {
         break;
     }
 
-    if (btn && btn->hovered) {
+    if (_tooltip.id && btn && btn->hovered) {
         tooltipctx.set(TOOLTIP_BUTTON, _tooltip);
     }
 }
@@ -929,6 +930,7 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
     if (mode_str && !strcmp(mode_str, "large")) {
         mode = 1;
     }
+    _tooltip = arch.r_vec2i("tooltip");
 }
 
 void ui::info_window::load(archive arch, pcstr section) {

@@ -117,6 +117,7 @@ int ui::advisor_ratings_window::draw_background() {
             ? ui::str(53, 16 + g_city.ratings.selected_explanation())
             : ui::str(53, 51);
         break;
+
     case e_selected_rating_monument:
         ui["advice_header"] = ui::str(53, 3);
         ui["advice_text"] = (g_city.ratings.monument <= 90) ? ui::str(53, 41 + g_city.ratings.selected_explanation()) : ui::str(53, 52);
@@ -138,21 +139,6 @@ int ui::advisor_ratings_window::draw_background() {
     draw_rating(1, g_city.ratings.prosperity, open_play, winning_prosperity());
     draw_rating(2, g_city.ratings.monument, open_play, winning_monuments());
     draw_rating(3, g_city.ratings.kingdom, open_play, winning_kingdom());
-
-    return 0;
-}
-
-int ui::advisor_ratings_window::handle_mouse(const mouse* m) {
-    return 0;
-}
-
-int ui::advisor_ratings_window::get_tooltip_text(void) {
-    switch (g_city.ratings.selected) {
-    case e_selected_rating_culture: return 102;
-    case e_selected_rating_prosperity: return 103;
-    case e_selected_rating_monument: return 104;
-    case e_selected_rating_kingdom: return 105;
-    }
 
     return 0;
 }

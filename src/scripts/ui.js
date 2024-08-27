@@ -162,7 +162,7 @@ advisor_ratings_window = {
   ui : {
 		outer_panel 	: { type : "outer_panel", pos:[0, 0], size:[40, 27] },
 		background_image : { type : "image", pack:PACK_UNLOADED, id:2, pos :[60, 38]	},
-		rating_culture: { type:"generic_button", pos:[80, 276], align:"xcenter", size:[120, 60], font:FONT_NORMAL_BLACK_ON_LIGHT,
+		rating_culture: { type:"generic_button", pos:[80, 276], align:"xcenter", size:[120, 60], tooltip:[68, 104], 
 			ui : {
 				value_culture : { type : "text", pos: [0, 22], size:[120, 20], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
 				goal_culture  : { type : "text", pos: [0, 42], size:[120, 20], align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT },
@@ -171,7 +171,7 @@ advisor_ratings_window = {
 		
 		base_culture  : { type : "text", pos: [110, 213], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
 
-		rating_prosperity : { type:"generic_button", pos:[200, 276], align:"xcenter", size:[120, 60], font:FONT_NORMAL_BLACK_ON_LIGHT,
+		rating_prosperity : { type:"generic_button", pos:[200, 276], align:"xcenter", size:[120, 60], tooltip:[68, 105],
 			ui : {
 		 	  value_prosperity: { type : "text", pos: [0, 22], size:[120, 20], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
 				goal_prosperity : { type : "text", pos: [0, 42], size:[120, 20], align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT },
@@ -179,7 +179,7 @@ advisor_ratings_window = {
 		},
 		base_prosperity : { type : "text", pos: [230, 213], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
 
-		rating_monument: { type:"generic_button", pos:[320, 276], align:"xcenter", size:[120, 60], font:FONT_NORMAL_BLACK_ON_LIGHT,
+		rating_monument: { type:"generic_button", pos:[320, 276], align:"xcenter", size:[120, 60], tooltip:[68, 106],
 			ui : {
 				value_monument: { type : "text", pos: [0, 22], size:[120, 20], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
 				goal_monument : { type : "text", pos: [0, 42], size:[120, 20], align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT },
@@ -188,7 +188,7 @@ advisor_ratings_window = {
 		
 		base_monument : { type : "text", pos: [350, 213], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
 
-		rating_kingdom: { type:"generic_button", pos:[440, 276], align:"xcenter", size:[120, 60], font:FONT_NORMAL_BLACK_ON_LIGHT,
+		rating_kingdom: { type:"generic_button", pos:[440, 276], align:"xcenter", size:[120, 60], tooltip:[68, 107],
 			ui : {
 				value_kingdom : { type : "text", pos: [0, 22], size:[120, 20], align:"center", font : FONT_LARGE_BLACK_ON_LIGHT },
 				goal_kingdom  : { type : "text", pos: [0, 42], size:[120, 20], align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT },

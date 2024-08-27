@@ -301,10 +301,17 @@ void tooltip_handle(const mouse* m, void (*func)(tooltip_context*)) {
         reset_timer();
         return;
     }
-    tooltip_context context{*m};
+    static tooltip_context context;
+    context.mpos = *m;
     context.text.group = DEFAULT_TEXT_GROUP;
-    if (g_settings.tooltips && func)
+    if (g_settings.tooltips && func) {
         func(&context);
+    }
+
+    const tooltip_context &uitooltip = ui::get_tooltip();
+    if (uitooltip.type) {
+        context.set(uitooltip.type, uitooltip.text);
+    }
 
     if (should_draw_tooltip(&context)) {
         draw_tooltip(&context);
