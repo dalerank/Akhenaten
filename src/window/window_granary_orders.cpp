@@ -6,6 +6,7 @@
 #include "city/city_resource.h"
 #include "graphics/window.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 struct orders_window_granary : public common_info_window {
     virtual void window_info_background(object_info &c) override;

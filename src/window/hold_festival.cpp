@@ -18,6 +18,7 @@
 #include "window/message_dialog.h"
 #include "window/window_city.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 ui::hold_festival_window g_hold_festival_window;
 

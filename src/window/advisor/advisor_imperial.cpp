@@ -23,6 +23,7 @@
 #include "window/set_salary.h"
 #include "graphics/screen.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 ui::advisor_imperial_window g_advisor_imperial_window;
 

@@ -14,6 +14,7 @@
 #include "graphics/window.h"
 #include "window/window_info.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 #include "io/gamefiles/lang.h"
 

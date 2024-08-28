@@ -2,10 +2,10 @@
 
 #include <cstdint>
 #include <memory>
+#include <functional>
 
-#include "core/vec2i.h"
 #include "core/svector.h"
-#include "core/string.h"
+#include "core/archive.h"
 
 #include "input/hotkey.h"
 #include "graphics/elements/generic_button.h"
@@ -17,9 +17,10 @@
 #include "graphics/elements/panel.h"
 #include "graphics/elements/menu.h"
 #include "graphics/image_groups.h"
-
-#include "js/js_game.h"
-#include <functional>
+#include "graphics/graphics.h"
+#include "graphics/screen.h"
+#include "graphics/image.h"
+#include "graphics/text.h"
 
 struct mouse;
 struct tooltip_context;

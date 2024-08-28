@@ -4,6 +4,7 @@
 #include "city/object_info.h"
 #include "graphics/window.h"
 #include "window/building/common.h"
+#include "js/js_game.h"
 
 struct info_window_roadblock : public building_info_window {
     int focus_button_id = 0;

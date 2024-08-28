@@ -11,6 +11,7 @@
 #include "graphics/window.h"
 #include "config/config.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 struct info_window_storageyard : public building_info_window {
     virtual void window_info_background(object_info &c) override;

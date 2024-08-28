@@ -14,6 +14,22 @@ function __baseui(base, ext) {
     return newui;
 }
 
+function __extend(base, ext) {
+		var newobj = {};
+
+    for (var key in base) { newobj[key] = base[key] }
+    for (var key in ext) { newobj[key] = ext[key]}
+
+    return newobj;
+}
+
+function inner_panel(config) { return __extend({type:"inner_panel"}, config) }
+function outer_panel(config) { return __extend({type:"outer_panel"}, config) }
+function text(config) { return __extend({type:"text"}, config) }
+function image(config) { return __extend({type:"image"}, config) }
+function arrowup(config) { return __extend({type:"arrow_button", down:false}, config) }
+function arrowdown(config) { return __extend({type:"arrow_button", down:true}, config) }
+
 top_menu_bar = {
 	offset : [10, 6],
 	item_height : 20,
@@ -155,6 +171,33 @@ advisors_window = {
 		chief_btn     : { type : "image_button", pos: {x:sw(-640)/2 + 490, y:sh(418)/2}, size:[46, 32], pack:PACK_GENERAL, id:159, offset:44 },
 		monuments_btn : { type : "image_button", pos: {x:sw(-640)/2 + 542, y:sh(418)/2}, size:[40, 32], pack:PACK_GENERAL, id:159, offset:48 },
 		back_btn      : { type : "image_button", pos: {x:sw(-640)/2 + 588, y:sh(418)/2}, size:[40, 32], pack:PACK_GENERAL, id:159, offset:52 },
+	}
+}
+
+advisor_labors_window = {
+	ui : {
+		background   	: outer_panel({size:[40, 27]}),
+		main_panel 	  : inner_panel({pos:[32, 70], size:[36, 15]}),
+
+		title 				: text({pos:[60, 12], text:{group:50, id:0}, font : FONT_LARGE_BLACK_ON_LIGHT }),
+		advisor_icon 	: image({pack:PACK_GENERAL, id:128, offset:0, pos:[10, 10] }),
+
+		// table headers
+		h1 		  			: text({pos:[60, 56], text:{group:50, id:21}, font : FONT_SMALL_PLAIN }),
+		h2 				    : text({pos:[170, 56], text:{group:50, id:22}, font : FONT_SMALL_PLAIN }),
+		h3 				    : text({pos:[400, 56], text:{group:50, id:23}, font : FONT_SMALL_PLAIN }),
+		h4 				    : text({pos:[500, 56], text:{group:50, id:24}, font : FONT_SMALL_PLAIN }),
+
+		// employed
+		employed	    : text({pos:[32, 320], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+
+		// wages panel
+    wages_panel 	: inner_panel({pos:[64, 350], size:[32, 2]}),
+    dec_wages	    : arrowdown({pos:[158, 354], tiny:false}),
+		inc_wages 		: arrowup({pos:[182, 354], tiny:false}),
+    wages_title		: text({text:{group:50, id:14}, pos:[70, 359], font:FONT_NORMAL_WHITE_ON_DARK}),
+    wages_value		: text({pos:[230, 359], font:FONT_NORMAL_WHITE_ON_DARK}),
+    wages_estimated : text({pos:[264, 390], font:FONT_NORMAL_BLACK_ON_LIGHT}),
 	}
 }
 

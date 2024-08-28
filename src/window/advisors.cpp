@@ -28,7 +28,7 @@
 #include "window/advisor/advisor_health.h"
 #include "window/advisor/housing.h"
 #include "window/advisor/advisor_imperial.h"
-#include "window/advisor/labor.h"
+#include "window/advisor/advisor_labor.h"
 #include "window/advisor/military.h"
 #include "window/advisor/monuments.h"
 #include "window/advisor/population.h"
@@ -38,6 +38,7 @@
 #include "window/window_city.h"
 #include "window/message_dialog.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 static const int ADVISOR_TO_MESSAGE_TEXT[] = {
   MESSAGE_DIALOG_ABOUT,

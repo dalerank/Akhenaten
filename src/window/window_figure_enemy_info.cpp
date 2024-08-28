@@ -6,6 +6,7 @@
 #include "graphics/graphics.h"
 #include "grid/figure.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 struct figure_enemy_info_window : public figure_info_window {
     virtual void window_info_background(object_info &c) override;

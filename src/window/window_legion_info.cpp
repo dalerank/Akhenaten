@@ -16,6 +16,7 @@
 #include "window/window_city_military.h"
 #include "sound/sound.h"
 #include "core/calc.h"
+#include "js/js_game.h"
 
 legion_info_window g_legion_info_window;
 ANK_REGISTER_CONFIG_ITERATOR(config_load_legion_info_window);

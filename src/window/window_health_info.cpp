@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "city/object_info.h"
 #include "window/building/common.h"
+#include "js/js_game.h"
 
 struct health_info_window : public building_info_window {
     virtual void window_info_background(object_info &c) override;

@@ -7,6 +7,7 @@
 #include "graphics/window.h"
 #include "grid/floodplain.h"
 #include "config/config.h"
+#include "js/js_game.h"
 
 struct farm_info_window : public building_info_window {
     virtual void window_info_background(object_info &c) override;

@@ -10,6 +10,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "io/gamefiles/lang.h"
+#include "js/js_game.h"
 
 struct workshop_info_window : public building_info_window {
     virtual void window_info_background(object_info &c) override;

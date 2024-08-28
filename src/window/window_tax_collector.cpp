@@ -6,6 +6,7 @@
 #include "window/building/common.h"
 #include "graphics/window.h"
 #include "config/config.h"
+#include "js/js_game.h"
 
 struct taxcollector_info_window_t : public building_info_window {
     virtual void window_info_background(object_info &c) override;

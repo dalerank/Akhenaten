@@ -4,6 +4,7 @@
 #include "city/object_info.h"
 #include "city/city_resource.h"
 #include "window/building/common.h"
+#include "js/js_game.h"
 
 struct info_window_raw_material : building_info_window {
     using building_info_window::load;

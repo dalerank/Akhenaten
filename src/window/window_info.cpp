@@ -43,6 +43,7 @@
 #include "window/window_city.h"
 #include "window/message_dialog.h"
 #include "dev/debug.h"
+#include "js/js_game.h"
 
 #include <functional>
 #include <utility>
