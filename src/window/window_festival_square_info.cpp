@@ -6,6 +6,7 @@
 #include "window/hold_festival.h"
 #include "city/city.h"
 #include "game/time.h"
+#include "js/js_game.h"
 
 struct festival_square_info_window : building_info_window {
     virtual void window_info_background(object_info &c) override;

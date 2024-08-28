@@ -302,7 +302,7 @@ void window_building_draw_legion_info(object_info* c) {
     lang_text_draw_centered(138, m->legion_id, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     // standard icon at the top
-    int image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
+    int image_id = image_id_from_group(PACK_GENERAL, 127) + m->legion_id;
     int icon_height = image_get(image_id)->height;
     ImageDraw::img_generic(ctx, image_id, c->offset + vec2i{16 + (40 - image_get(image_id)->width) / 2, 16});
     // standard flag

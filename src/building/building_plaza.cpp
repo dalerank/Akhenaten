@@ -21,6 +21,7 @@
 #include "game/undo.h"
 #include "city/labor.h"
 #include "window/window_figure_info.h"
+#include "js/js_game.h"
 
 buildings::model_t<building_plaza> plaza_m;
 

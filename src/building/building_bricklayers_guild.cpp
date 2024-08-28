@@ -24,6 +24,7 @@
 #include "widget/city/ornaments.h"
 #include "game/game.h"
 #include "dev/debug.h"
+#include "js/js_game.h"
 
 #include <iostream>
 

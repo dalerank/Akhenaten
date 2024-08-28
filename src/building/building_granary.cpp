@@ -28,6 +28,7 @@
 #include "city/labor.h"
 #include "figuretype/figure_storageyard_cart.h"
 #include "dev/debug.h"
+#include "js/js_game.h"
 
 #include <cmath>
 #include <iostream>

@@ -21,6 +21,7 @@
 #include "graphics/graphics.h"
 #include "graphics/window.h"
 #include "graphics/image.h"
+#include "js/js_game.h"
 
 #define INFINITE 10000
 

@@ -22,6 +22,7 @@
 #include "city/warnings.h"
 #include "city/labor.h"
 #include "grid/tiles.h"
+#include "js/js_game.h"
 
 struct info_window_garden : public common_info_window {
     info_window_garden() {

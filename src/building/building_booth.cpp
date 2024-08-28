@@ -22,6 +22,7 @@
 #include "widget/city/building_ghost.h"
 #include "sound/sound_building.h"
 #include "city/labor.h"
+#include "js/js_game.h"
 
 struct booth_model : public buildings::model_t<building_booth> {
     int booth = 0;

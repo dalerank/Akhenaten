@@ -192,12 +192,12 @@ static void draw_foreground() {
             city_resource_toggle_stockpiled(data.resource);
         });
 
-    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(58 - 16, 332), {27, 27}, {0})
+    ui::img_button({ GROUP_CONTEXT_ICONS }, vec2i(58 - 16, 332), { 27, 27 }, { 0 })
         .onclick([] (int, int) {
             window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, -1, 0);
         });
 
-    ui::img_button(GROUP_CONTEXT_ICONS, vec2i(558 + 16, 335), {24, 24}, {4})
+    ui::img_button({ GROUP_CONTEXT_ICONS }, vec2i(558 + 16, 335), { 24, 24 }, { 4 })
         .onclick([] (int, int) {
             window_go_back();
         });

@@ -19,6 +19,7 @@
 #include "game/game.h"
 #include "widget/city/ornaments.h"
 #include "building/count.h"
+#include "js/js_game.h"
 
 #include <numeric>
 

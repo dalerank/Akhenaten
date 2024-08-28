@@ -8,6 +8,7 @@
 #include "graphics/animation.h"
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
+#include "js/js_game.h"
 
 buildings::model_t<building_firehouse> firehouse_m;
 info_window_firehouse firehouse_infow;

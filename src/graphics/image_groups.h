@@ -180,7 +180,7 @@ extern const token_holder<e_pack, PACK_UNLOADED, PACK_MAX> e_pack_type_tokens;
 //#define GROUP_BUILDING_BRICKS_WORKSHOP PACK_GENERAL, 124
 //#define GROUP_BUILDING_POTTERY_WORKSHOP PACK_GENERAL, 125
 #define GROUP_FIGURE_FORT_FLAGS PACK_GENERAL, 126
-#define GROUP_FIGURE_FORT_STANDARD_ICONS PACK_GENERAL, 127
+//#define GROUP_FIGURE_FORT_STANDARD_ICONS PACK_GENERAL, 127
 #define GROUP_ADVISOR_ICONS PACK_GENERAL, 128
 //#define GROUP_RESOURCE_ICONS PACK_GENERAL, 129 // 267
 #define GROUP_DIALOG_BACKGROUND PACK_GENERAL, 132
@@ -236,7 +236,7 @@ extern const token_holder<e_pack, PACK_UNLOADED, PACK_MAX> e_pack_type_tokens;
 //#define GROUP_BUILDING_SENET_HOUSE PACK_GENERAL, 17               // 213 //GROUP_BUILDING_HIPPODROME_1
 #define GROUP_BUILDING_HIPPODROME_2 PACK_GENERAL, 214             // this isn't in Pharaoh
 #define GROUP_BUILDING_PALACE_FANCY PACK_GENERAL, 221             // this isn't in Pharaoh
-#define GROUP_FORT_ICONS PACK_GENERAL, 222                        // TODO?
+//#define GROUP_FORT_ICONS PACK_GENERAL, 222                        // TODO?
 #define GROUP_EMPIRE_FOREIGN_CITY PACK_GENERAL, 223               // this isn't in Pharaoh
 //#define GROUP_GOD_BOLT PACK_GENERAL, 111                          // 225
 #define GROUP_PLAGUE_SKULL PACK_GENERAL, 97                       // 227

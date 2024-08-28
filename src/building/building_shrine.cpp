@@ -19,6 +19,7 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 #include "building_shrine.h"
+#include "js/js_game.h"
 
 buildings::model_t<building_shrine_osiris> shrine_osiris_m;
 buildings::model_t<building_shrine_ra>   shrine_ra_m;

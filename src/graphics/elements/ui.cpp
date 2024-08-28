@@ -329,11 +329,11 @@ textid ui::button_tooltip(uint32_t id) {
     return (id < g_state.buttons.size()) ? g_state.buttons[id].tooltip() : textid();
 }
 
-image_button &ui::img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size, const img_button_offsets offsets, UiFlags_ flags) {
+image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_button_offsets offsets, UiFlags_ flags) {
     const vec2i state_offset = g_state.offset();
     const mouse *m = mouse_get();
 
-    g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, group, id, offsets.data[0], button_none, button_none, 0, 0, true});
+    g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, (uint32_t)desc.pack, (uint32_t)desc.id, offsets.data[0], button_none, button_none, 0, 0, true});
     auto &ibutton = g_state.buttons.back().i_button;
 
     ibutton.focused = !(flags & UiFlags_Readonly) && (is_button_hover(ibutton, state_offset) || !!(flags & UiFlags_Selected));
@@ -367,20 +367,20 @@ image_button &ui::img_button(uint32_t group, uint32_t id, vec2i pos, vec2i size,
 }
 
 image_button &ui::imgok_button(vec2i pos, std::function<void(int, int)> cb) {
-    auto &btn = img_button(PACK_GENERAL, 96, pos, {39, 26});
+    auto &btn = img_button({ PACK_GENERAL, 96 }, pos, { 39, 26 });
     btn.onclick(cb);
     return btn;
 }
 
 image_button &ui::imgcancel_button(vec2i pos, std::function<void(int, int)> cb) {
-    auto &btn = img_button(PACK_GENERAL, 96, pos, {39, 26}, {4, 1, 2, 3});
+    auto &btn = img_button({ PACK_GENERAL, 96 }, pos, { 39, 26 }, { 4, 1, 2, 3 });
     btn.onclick(cb);
     return btn;
 }
 
 image_button &ui::img_button(e_image_id img, vec2i pos, vec2i size, int offset) {
     image_desc desc = get_image_desc(img);
-    return img_button(desc.pack, desc.id, pos, size, {desc.offset + offset, 1, 2, 3});
+    return img_button(desc, pos, size, {desc.offset + offset, 1, 2, 3});
 }
 
 int ui::label(int group, int number, vec2i pos, e_font font, UiFlags flags, int box_width) {
@@ -748,7 +748,7 @@ void ui::eimage_button::draw() {
         tsize.x = size.x > 0 ? size.x : img_ptr->width;
         tsize.y = size.y > 0 ? size.y : img_ptr->height;
 
-        ui::img_button(img_desc.pack, img_desc.id, pos, tsize, offsets, selected ? UiFlags_Selected : UiFlags_None)
+        ui::img_button(img_desc, pos, tsize, offsets, selected ? UiFlags_Selected : UiFlags_None)
             .onclick(_func)
             .tooltip(_tooltip);
 
@@ -766,7 +766,7 @@ void ui::eimage_button::draw() {
             button_border_draw(doffset.x + pos.x - 4, doffset.y + pos.y - 4, size.x + 8, size.y + 8, true);
         }
 
-        ui::img_button(0, 0, pos, size, offsets, UiFlags_None)
+        ui::img_button({ 0, 0 }, pos, size, offsets, UiFlags_None)
             .onclick(_func)
             .tooltip(_tooltip);
 
@@ -777,7 +777,7 @@ void ui::eimage_button::draw() {
         painter ctx = game.painter();
         ctx.draw((SDL_Texture*)icon_texture, pos, {0, 0}, size, 0xffffffff, scale, false, true);
 
-        ui::img_button(0, 0, pos, size, offsets, UiFlags_None)
+        ui::img_button({ 0, 0 }, pos, size, offsets, UiFlags_None)
             .onclick(_func)
             .tooltip(_tooltip);
     } 

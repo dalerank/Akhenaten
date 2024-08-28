@@ -36,7 +36,7 @@
 #include "config/config.h"
 #include "widget/city/ornaments.h"
 #include "widget/city/building_ghost.h"
-
+#include "js/js_game.h"
 #include "figuretype/figure_storageyard_cart.h"
 #include "figuretype/figure_sled.h"
 

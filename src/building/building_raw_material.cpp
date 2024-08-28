@@ -24,7 +24,7 @@
 #include "grid/routing/routing.h"
 #include "grid/terrain.h"
 #include "figure/figure.h"
-
+#include "js/js_game.h"
 #include "graphics/animation.h"
 
 buildings::model_t<building_clay_pit> clay_pit_m;

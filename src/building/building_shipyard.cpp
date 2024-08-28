@@ -20,6 +20,7 @@
 #include "grid/road_access.h"
 #include "grid/building.h"
 #include "city/labor.h"
+#include "js/js_game.h"
  
 buildings::model_t<building_shipyard> building_shipyard_m;
 

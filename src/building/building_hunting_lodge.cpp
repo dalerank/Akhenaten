@@ -20,6 +20,7 @@
 #include "graphics/animation.h"
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
+#include "js/js_game.h"
 
 buildings::model_t<building_hunting_lodge> hunting_lodge_m;
 

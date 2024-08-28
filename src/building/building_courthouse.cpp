@@ -6,6 +6,7 @@
 
 #include "graphics/animation.h"
 #include "city/labor.h"
+#include "js/js_game.h"
 
 buildings::model_t<building_courthouse> courthouse_m;
 

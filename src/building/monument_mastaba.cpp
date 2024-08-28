@@ -27,6 +27,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
 #include "dev/debug.h"
+#include "js/js_game.h"
 
 #include <numeric>
 #include <string>

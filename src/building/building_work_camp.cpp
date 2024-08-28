@@ -16,7 +16,7 @@
 #include "window/building/figures.h"
 #include "window/window_building_info.h"
 #include "sound/sound_building.h"
-
+#include "js/js_game.h"
 #include "widget/city/ornaments.h"
 
 struct info_window_work_camp : public building_info_window {

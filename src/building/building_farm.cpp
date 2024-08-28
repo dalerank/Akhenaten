@@ -29,6 +29,7 @@
 #include "figure/figure.h"
 #include "grid/tiles.h"
 #include "dev/debug.h"
+#include "js/js_game.h"
 
 #include <iostream>
 

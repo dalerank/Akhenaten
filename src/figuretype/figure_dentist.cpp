@@ -1,6 +1,7 @@
 #include "figuretype/figure_dentist.h"
 
 #include "figure/service.h"
+#include "js/js_game.h"
 
 figures::model_t<figure_dentist> fdentist_m;
 

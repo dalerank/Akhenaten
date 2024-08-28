@@ -11,6 +11,7 @@
 #include "sound/sound_building.h"
 #include "figure/figure.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 struct bazaar_info_window_t : public building_info_window {
     int resource_text_group;

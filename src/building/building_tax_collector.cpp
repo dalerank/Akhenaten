@@ -19,6 +19,7 @@
 #include "game/game.h"
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
+#include "js/js_game.h"
 
 buildings::model_t<building_tax_collector> btax_collector_m;
 buildings::model_t<building_tax_collector_up> btax_collector_up_m;

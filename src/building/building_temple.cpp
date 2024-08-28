@@ -19,6 +19,7 @@
 #include "building/count.h"
 #include "widget/city/ornaments.h"
 #include "window/window_building_info.h"
+#include "js/js_game.h"
 
 buildings::model_t<building_temple_osiris> temple_osiris_m;
 buildings::model_t<building_temple_ra> temple_ra_m;

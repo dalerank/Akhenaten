@@ -24,6 +24,7 @@
 #include "window/advisors.h"
 #include "sound/sound_building.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 struct palace_info_window : public building_info_window {
     virtual void window_info_background(object_info &c) override;

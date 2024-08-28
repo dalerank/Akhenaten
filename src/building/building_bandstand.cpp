@@ -22,6 +22,7 @@
 #include "widget/city/ornaments.h"
 #include "widget/city/building_ghost.h"
 #include "sound/sound_building.h"
+#include "js/js_game.h"
 
 struct bandstand_model : public buildings::model_t<building_bandstand> {
     int stand_sn_n = 0;

@@ -29,7 +29,7 @@
 #include "window/advisor/housing.h"
 #include "window/advisor/advisor_imperial.h"
 #include "window/advisor/advisor_labor.h"
-#include "window/advisor/military.h"
+#include "window/advisor/advisor_military.h"
 #include "window/advisor/monuments.h"
 #include "window/advisor/population.h"
 #include "window/advisor/advisor_ratings.h"

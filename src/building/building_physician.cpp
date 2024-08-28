@@ -7,6 +7,7 @@
 #include "graphics/animation.h"
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
+#include "js/js_game.h"
 
 buildings::model_t<building_physician> bphysician_m;
 

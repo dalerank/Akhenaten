@@ -21,6 +21,7 @@
 #include "window/building/distribution.h"
 #include "graphics/elements/lang_text.h"
 #include "city/labor.h"
+#include "js/js_game.h"
 
 buildings::model_t<building_dock> dock_m;
 

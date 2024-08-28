@@ -19,7 +19,7 @@
 #include "game/game.h"
 #include "graphics/elements/lang_text.h"
 #include "window/window_figure_info.h"
-
+#include "js/js_game.h"
 #include "core/profiler.h"
 
 figures::model_t<figure_caravan_donkey> caravan_donkey_m;

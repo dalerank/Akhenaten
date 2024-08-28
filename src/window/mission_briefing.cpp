@@ -21,6 +21,7 @@
 #include "window/intermezzo.h"
 #include "window/mission_next.h"
 #include "game/settings.h"
+#include "js/js_game.h"
 
 struct mission_briefing : ui::widget {
     int is_review;

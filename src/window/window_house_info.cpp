@@ -18,6 +18,7 @@
 #include "window/window_figure_info.h"
 #include "io/gamefiles/lang.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 struct info_window_house : public building_info_window {
     int resource_text_group;

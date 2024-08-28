@@ -16,6 +16,7 @@
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
 #include "dev/debug.h"
+#include "js/js_game.h"
 
 #include <iostream>
 

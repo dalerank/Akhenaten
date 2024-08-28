@@ -12,6 +12,7 @@
 #include "graphics/elements/ui.h"
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
+#include "js/js_game.h"
 
 buildings::model_t<building_well> well_m;
 ui::info_window well_w{"well_info_window"};

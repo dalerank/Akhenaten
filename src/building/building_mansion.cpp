@@ -14,6 +14,7 @@
 #include "widget/city/ornaments.h"
 #include "graphics/image.h"
 #include "graphics/animation.h"
+#include "js/js_game.h"
 
 buildings::model_t<building_personal_mansion> personal_mansion_m;
 buildings::model_t<building_family_mansion> family_mansion_m;

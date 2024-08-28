@@ -11,6 +11,7 @@
 #include "city/warnings.h"
 #include "window/building/common.h"
 #include "sound/sound_building.h"
+#include "js/js_game.h"
 
 buildings::model_t<building_senet_house> senet_house_m;
 buildings::model_t<building_bullfight_school> bullfight_school_m;

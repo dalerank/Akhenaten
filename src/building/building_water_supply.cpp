@@ -10,6 +10,7 @@
 #include "window/window_building_info.h"
 #include "city/labor.h"
 #include "city/warnings.h"
+#include "js/js_game.h"
 
 struct info_window_water_supply : building_info_window {
     virtual void window_info_background(object_info &c) override;
