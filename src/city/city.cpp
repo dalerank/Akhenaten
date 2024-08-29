@@ -457,8 +457,10 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.construction);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.expenses.salary);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.salary);
-    iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.salary_amount);
-    iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.salary_rank);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.salary_amount);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.salary_rank);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.salary_so_far);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.income.total);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.income.total);
@@ -572,7 +574,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.kingdom_explanation);
     iob->bind____skip(8);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.player_rank);
-    iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.personal_savings); // ok
+    iob->bind(BIND_SIGNATURE_UINT16, &data.kingdome.personal_savings); // ok
+    iob->bind____skip(2);
                                                                           //    for (int i = 0; i < 2; i++)
     //        iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
     //    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.last_year.income.donated);

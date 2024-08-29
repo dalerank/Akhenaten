@@ -23,10 +23,10 @@ struct kingdome_relation_t {
     int32_t months_in_debt;
 
     int32_t player_rank;
-    int32_t salary_rank;
-    int32_t salary_amount;
+    uint8_t salary_rank;
+    uint8_t salary_amount;
     int32_t donate_amount;
-    int32_t personal_savings;
+    uint16_t personal_savings;
     uint8_t player_name_adversary[32];
     uint8_t player_name[32];
     uint8_t campaign_player_name[32]; /**< Temp storage for carrying over player name to next campaign mission */

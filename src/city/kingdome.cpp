@@ -38,9 +38,7 @@ void kingdome_relation_t::init_scenario(int rank, int load_type ) {
         salary_rank = scenario_property_player_rank();
     }
 
-    if (salary_rank > 10) {
-        salary_rank = 10;
-    }
+    salary_rank = std::clamp(salary_rank, 0, 10);
 
     set_salary_rank(salary_rank);
 }
