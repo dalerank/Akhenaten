@@ -5,6 +5,7 @@ mission0 = { // Nubt
 	city_has_animals : true,
 	gods_least_mood : 50,
 	religion_enabled : false,
+	player_rank : 0,
 	stages : {
 		tutorial_fire: [BUILDING_FIREHOUSE],
 		tutorial_food: [BUILDING_HUNTING_LODGE, BUILDING_GRANARY, BUILDING_BAZAAR],
@@ -17,6 +18,7 @@ mission1 = {
 	start_message : 241 - 99, //MESSAGE_TUTORIAL_GOLD_AND_CRIME
 	city_has_animals : true,
 	gods_least_mood : 50,
+	player_rank : 0,
 	buildings : [],
 	stages : {
 		tutorial_start: [BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_WATER_SUPPLY,
@@ -30,6 +32,7 @@ mission2 = {
 	start_message : 242 - 99,
 	city_has_animals : true,
 	gods_least_mood : 50,
+	player_rank : 0,
 	buildings : [],
 	stages : {
 		tutorial_start: [BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE, BUILDING_WATER_SUPPLY,
@@ -44,6 +47,7 @@ mission2 = {
 mission3 = {
 	start_message : 241 - 99,
 	city_has_animals : true,
+	player_rank : 0,
 	buildings : [],
 	stages : {
 		tutorial_start: [BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
@@ -59,6 +63,7 @@ mission3 = {
 mission4 = {
 	start_message : 241 - 99,
 	city_has_animals : true,
+	player_rank : 1,
 	buildings : [],
 	stages : {
 		tutorial_start: [BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
@@ -78,6 +83,7 @@ mission4 = {
 mission5 = { // Timna
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
+	player_rank : 1,
 	stages : {
 		tutorial_start: [BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 										 BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
@@ -146,6 +152,7 @@ mission5 = { // Timna
 mission6 = { // Behdet
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
+	player_rank : 1,
 	stages : {
 		tutorial_start: [BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 										 BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
@@ -183,6 +190,7 @@ mission6 = { // Behdet
 mission7 = { // Abydos
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
+	player_rank : 1,
 	stages : {
 		tutorial_start: [BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 										 BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
