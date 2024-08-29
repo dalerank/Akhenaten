@@ -199,18 +199,6 @@ int ui::advisor_imperial_window::ui_handle_mouse(const mouse *m) {
     return result;
 }
 
-int ui::advisor_imperial_window::get_tooltip_text(void) {
-    //if (focus_button_id && focus_button_id <= 2)
-    //    return 93 + focus_button_id;
-    //else if (focus_button_id == 3)
-    //    return 131;
-    //else {
-    //    return 0;
-    //}
-
-    return 0;
-}
-
 advisor_window* ui::advisor_imperial_window::instance() {
     return &g_advisor_imperial_window;
 }
