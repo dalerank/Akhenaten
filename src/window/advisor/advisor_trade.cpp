@@ -20,19 +20,18 @@ ui::advisor_trade_window g_advisor_trade_window;
 int ui::advisor_trade_window::draw_background() {
     city_resource_determine_available();
 
-    auto &ui = g_advisor_trade_window;
     ui["scrollbar"].onevent([] {
         window_invalidate();
     });
 
     ui["scrollbar"].max_value(city_resource_get_available().size() - 14);
+    ui["show_prices"].onclick([] (int, int) { window_trade_prices_show(); });
+    ui["goto_empire"].onclick([] (int, int) { window_empire_show(); });
 
     return 0;
 }
 
 void ui::advisor_trade_window::ui_draw_foreground() {
-    auto &ui = g_advisor_trade_window;
-
     ui.begin_widget(screen_dialog_offset());
     ui.draw();
 
@@ -121,17 +120,7 @@ void ui::advisor_trade_window::ui_draw_foreground() {
     }
     ui.reset_clip_rectangle();
 
-    ui["show_prices"].onclick([] (int, int) { window_trade_prices_show(); });
-    ui["goto_empire"].onclick([] (int, int) { window_empire_show(); });
-
     ui.end_widget();
-}
-
-void ui::advisor_trade_window::draw_foreground() {
-}
-
-int ui::advisor_trade_window::handle_mouse(const mouse* m) {
-    return 0;
 }
 
 int ui::advisor_trade_window::ui_handle_mouse(const mouse *m) {
@@ -140,10 +129,6 @@ int ui::advisor_trade_window::ui_handle_mouse(const mouse *m) {
     ui.end_widget();
 
     return result;
-}
-
-int ui::advisor_trade_window::get_tooltip_text(void) {
-    return 0;
 }
 
 advisor_window* ui::advisor_trade_window::instance() {
