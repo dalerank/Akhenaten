@@ -200,7 +200,7 @@ var empty_info_window = {}
 var temple_info_window = {}
 var info_window_entertainment = {}
 var advisors_window = {}
-var advisor_miliary_window = {}
+var advisor_military_window = {}
 var taxcollector_info_window = {}
 
 //figures

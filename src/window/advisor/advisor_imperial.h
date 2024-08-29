@@ -6,7 +6,7 @@
 namespace ui {
 
 struct advisor_imperial_window : public advisor_window_t<advisor_imperial_window> {
-    virtual int handle_mouse(const mouse *m) override;
+    virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override;
     virtual void ui_draw_foreground() override;
     virtual int ui_handle_mouse(const mouse *m) override;

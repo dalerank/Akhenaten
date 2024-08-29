@@ -23,16 +23,8 @@
 #include "window/set_salary.h"
 #include "graphics/screen.h"
 #include "game/game.h"
-#include "js/js_game.h"
 
 ui::advisor_imperial_window g_advisor_imperial_window;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_imperial);
-void config_load_advisor_imperial() {
-    g_config_arch.r_section("advisor_imperial_window", [] (archive arch) {
-        g_advisor_imperial_window.load(arch);
-    });
-}
 
 enum E_STATUS {
     STATUS_NOT_ENOUGH_RESOURCES = -1,
@@ -138,15 +130,10 @@ void ui::advisor_imperial_window::ui_draw_foreground() {
         bstring128 distant_battle_text(ui::str(52, 72), ui::str(21, g_empire.city(city_military_distant_battle_city())->name_id));
         ui.label(distant_battle_text, vec2i{80, 102}, FONT_NORMAL_WHITE_ON_DARK);
 
-        int strength_text_id;
+        int strength_text_id = 75;
         int enemy_strength = city_military_distant_battle_enemy_strength();
-        if (enemy_strength < 46) {
-            strength_text_id = 73;
-        } else if (enemy_strength < 89) {
-            strength_text_id = 74;
-        } else {
-            strength_text_id = 75;
-        }
+        if (enemy_strength < 46) { strength_text_id = 73;}
+        else if (enemy_strength < 89) { strength_text_id = 74; } 
 
         bstring128 distant_strenght_text;
         distant_strenght_text.printf("%s %s %d", ui::str(52, strength_text_id), ui::str(8, 4), city_military_months_until_distant_battle());
@@ -210,10 +197,6 @@ int ui::advisor_imperial_window::ui_handle_mouse(const mouse *m) {
     ui.end_widget();
 
     return result;
-}
-
-int ui::advisor_imperial_window::handle_mouse(const mouse* m) {
-    return 0;
 }
 
 int ui::advisor_imperial_window::get_tooltip_text(void) {

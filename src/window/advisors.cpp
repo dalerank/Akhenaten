@@ -92,7 +92,7 @@ struct window_advisors_t : public ui::widget {
     autoconfig_window * sub_advisors[20] = {
         nullptr,
         ui::advisor_labors_window::instance(),
-        ui::advisor_miliary_window::instance(),
+        ui::advisor_military_window::instance(),
         ui::advisor_imperial_window::instance(),
         ui::advisor_ratings_window::instance(),
         ui::advisor_trade_window::instance(),

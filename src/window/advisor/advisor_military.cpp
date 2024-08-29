@@ -17,7 +17,7 @@
 #include "window/window_city.h"
 #include "game/game.h"
 
-ui::advisor_miliary_window g_advisor_military_window;
+ui::advisor_military_window g_advisor_military_window;
 
 static void button_go_to_legion(int legion_id, int param2);
 static void button_return_to_fort(int legion_id, int param2);
@@ -50,12 +50,12 @@ static generic_button fort_buttons[] = {
 static int focus_button_id;
 static int num_legions;
 
-void ui::advisor_miliary_window::init() {
+void ui::advisor_military_window::init() {
     num_legions = formation_get_num_forts();
     g_advisor_mil_scrollbar.init(0, num_legions - 6);
 }
 
-int ui::advisor_miliary_window::draw_background() {
+int ui::advisor_military_window::draw_background() {
     int enemy_text_id = 8;
     if (g_city.figures.enemies) { enemy_text_id = 10; }
     else if (g_city.figures.kingdome_soldiers) { enemy_text_id = 11; }
@@ -91,7 +91,7 @@ int ui::advisor_miliary_window::draw_background() {
     return 0;
 }
 
-void ui::advisor_miliary_window::ui_draw_foreground() {
+void ui::advisor_military_window::ui_draw_foreground() {
     ui.begin_widget(screen_dialog_offset());
     ui.draw();
     if (num_legions > 0) {
@@ -132,7 +132,7 @@ void ui::advisor_miliary_window::ui_draw_foreground() {
     //}
 }
 
-int ui::advisor_miliary_window::handle_mouse(const mouse* m) {
+int ui::advisor_military_window::handle_mouse(const mouse* m) {
     if (scrollbar_handle_mouse(vec2i{0, 0}, &g_advisor_mil_scrollbar, m)) {
         return 1;
     }
@@ -165,6 +165,6 @@ static void on_scroll(void) {
     window_invalidate();
 }
 
-advisor_window* ui::advisor_miliary_window::instance() {
+advisor_window* ui::advisor_military_window::instance() {
     return &g_advisor_military_window;
 }

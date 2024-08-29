@@ -174,7 +174,7 @@ advisors_window = {
 	}
 }
 
-advisor_miliary_window = {
+advisor_military_window = {
 	ui : {
 		background   	: outer_panel({size:[40, 27]}),
 
