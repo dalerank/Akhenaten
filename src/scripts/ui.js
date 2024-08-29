@@ -26,7 +26,9 @@ function __extend(base, ext) {
 function inner_panel(config) { return __extend({type:"inner_panel"}, config) }
 function outer_panel(config) { return __extend({type:"outer_panel"}, config) }
 function text(config) { return __extend({type:"text"}, config) }
+function label(config) { return __extend({type:"label", font : FONT_NORMAL_WHITE_ON_DARK}, config) }
 function image(config) { return __extend({type:"image"}, config) }
+function button(config) { return __extend({type:"generic_button", font : FONT_NORMAL_WHITE_ON_DARK}, config) }
 function arrowup(config) { return __extend({type:"arrow_button", down:false}, config) }
 function arrowdown(config) { return __extend({type:"arrow_button", down:true}, config) }
 
@@ -378,19 +380,19 @@ advisor_trade_window = {
 
 advisor_imperial_window = {
 	ui : {
-		outer_panel : { type : "outer_panel", pos:[0, 0], size:[40, 27] },
-		advisor_icon : { type : "image", pack:PACK_GENERAL, id:128, offset:2, pos:[10, 10] },
-		header_label : { type : "label", font : FONT_LARGE_BLACK_ON_LIGHT, pos:[60, 17]},
-		rating_label : { type : "label", font : FONT_NORMAL_BLACK_ON_DARK, pos:[460, 24]},
-		rating_advice : { type : "label", font : FONT_NORMAL_BLACK_ON_DARK, pos:[60, 46], wrap: 500, multiline:true},
-		inner_panel : { type : "inner_panel", pos:[32, 90], size:[36, 14] },
+		background : outer_panel({size:[40, 27]}),
+		advisor_icon : image({pack:PACK_GENERAL, id:128, offset:2, pos:[10, 10] }),
+		header_label : label({pos:[60, 17]}),
+		rating_label : label({pos:[460, 24]}),
+		rating_advice : label({pos:[60, 46], wrap: 500, multiline:true}),
+		inner_panel : inner_panel({pos:[32, 90], size:[36, 14] }),
 
-		bottom_panel : { type : "inner_panel", pos:[64, 324], size:[32, 6] },
-		send_gift : { type:"generic_button", font : FONT_NORMAL_WHITE_ON_DARK, pos:[320, 367], size:[250, 20], text:{group:52, id:49} },
-		donate_to_city : { type:"generic_button", font : FONT_NORMAL_WHITE_ON_DARK, pos:[320, 341], size:[250, 20], text:{group:52, id:2} },
-		player_rank : { type : "label", font : FONT_NORMAL_WHITE_ON_DARK, pos:[72, 338]},
-		personal_savings : { type : "label", font : FONT_NORMAL_WHITE_ON_DARK, pos:[72, 372]},
-		salary_rank : { type:"generic_button", font : FONT_NORMAL_WHITE_ON_DARK, pos:[70, 393], size:[500, 24] },
+		bottom_panel : inner_panel({pos:[64, 324], size:[32, 6] }),
+		send_gift : button({pos:[320, 362], size:[250, 24], text:{group:52, id:49}, tooltip:[68, 133] }),
+		personal_savings : label({pos:[72, 368]}),
+		player_rank : label({pos:[72, 342]}),
+		donate_to_city : button({pos:[320, 335], size:[250, 24], text:{group:52, id:2}, tooltip:[68, 96] }),
+		salary_rank : button({pos:[70, 393], size:[500, 24], tooltip:[68, 97] }),
 	},
 }
 
