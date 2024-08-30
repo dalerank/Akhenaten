@@ -6,7 +6,7 @@
 struct autoconfig_window : public ui::widget {
     xstring section;
 
-    inline autoconfig_window(pcstr s);
+    autoconfig_window(pcstr s);
 
     virtual int handle_mouse(const mouse *m) = 0;
     virtual int draw_background() = 0;

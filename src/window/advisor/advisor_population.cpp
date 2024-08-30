@@ -1,4 +1,4 @@
-#include "population.h"
+#include "advisor_population.h"
 
 #include "city/city.h"
 #include "city/migration.h"
@@ -20,52 +20,20 @@
 #include "window/advisors.h"
 #include "game/game.h"
 
-#define ADVISOR_HEIGHT 27
-
 ui::advisor_population_window g_advisor_population_window;
 
-static void button_graph(int param1, int param2);
-
-static generic_button graph_buttons[] = {
-    {503, 61, 104, 55, button_graph, button_none, 0, 0},
-    {503, 161, 104, 55, button_graph, button_none, 1, 0},
-    {545, 260, 60, 51, button_graph, button_none, 0, 1}
-};
-
-static int focus_button_id;
-
-static void get_y_axis(int max_value, int* y_max, int* y_shift) {
-    if (max_value <= 100) {
-        *y_max = 100;
-        *y_shift = -1;
-    } else if (max_value <= 200) {
-        *y_max = 200;
-        *y_shift = 0;
-    } else if (max_value <= 400) {
-        *y_max = 400;
-        *y_shift = 1;
-    } else if (max_value <= 800) {
-        *y_max = 800;
-        *y_shift = 2;
-    } else if (max_value <= 1600) {
-        *y_max = 1600;
-        *y_shift = 3;
-    } else if (max_value <= 3200) {
-        *y_max = 3200;
-        *y_shift = 4;
-    } else if (max_value <= 6400) {
-        *y_max = 6400;
-        *y_shift = 5;
-    } else if (max_value <= 12800) {
-        *y_max = 12800;
-        *y_shift = 6;
-    } else if (max_value <= 25600) {
-        *y_max = 25600;
-        *y_shift = 7;
-    } else {
-        *y_max = 51200;
-        *y_shift = 8;
-    }
+static vec2i get_y_axis(int max_value) {
+    if (max_value <= 100) { return { 100, -1 }; }
+    else if (max_value <= 200) { return {200, 0}; }
+    else if (max_value <= 400) { return {400, 1}; }
+    else if (max_value <= 800) { return {800, 2}; }
+    else if (max_value <= 1600) { return { 1600, 3 }; }
+    else if (max_value <= 3200) { return { 3200, 4 }; }
+    else if (max_value <= 6400) { return { 6400, 5 }; }
+    else if (max_value <= 12800) { return { 12800, 6}; } 
+    else if (max_value <= 25600) { return { 25600, 7}; }
+    
+    return { 51200, 8 };
 }
 
 static void get_min_max_month_year(int max_months, int* start_month, int* start_year, int* end_month, int* end_year) {
@@ -115,8 +83,10 @@ static void draw_history_graph(int full_size, int x, int y) {
         if (value > max_value)
             max_value = value;
     }
-    int y_max, y_shift;
-    get_y_axis(max_value, &y_max, &y_shift);
+    vec2i ypx = get_y_axis(max_value);
+    int y_max = ypx.x;
+    int y_shift = ypx.y;
+
     if (full_size) {
         // y axis
         text_draw_number_centered(y_max, x - 66, y - 3, 60, FONT_SMALL_PLAIN);
@@ -187,8 +157,10 @@ static void draw_census_graph(int full_size, int x, int y) {
         if (value > max_value)
             max_value = value;
     }
-    int y_max, y_shift;
-    get_y_axis(max_value, &y_max, &y_shift);
+    vec2i ypx = get_y_axis(max_value);
+    int y_max = ypx.x;
+    int y_shift = ypx.y;
+
     if (full_size) {
         // y axis
         text_draw_number_centered(y_max, x - 66, y - 3, 60, FONT_SMALL_PLAIN);
@@ -233,8 +205,10 @@ static void draw_society_graph(int full_size, int x, int y) {
         if (value > max_value)
             max_value = value;
     }
-    int y_max, y_shift;
-    get_y_axis(max_value, &y_max, &y_shift);
+    vec2i ypx = get_y_axis(max_value);
+    int y_max = ypx.x;
+    int y_shift = ypx.y;
+
     if (full_size) {
         // y axis
         text_draw_number_centered(y_max, x - 66, y - 3, 60, FONT_SMALL_PLAIN);
@@ -269,8 +243,7 @@ static void draw_society_graph(int full_size, int x, int y) {
         }
     }
 }
-
-static void print_society_info(void) {
+ void ui::advisor_population_window::print_society_info() {
     int width;
     int avg_tax_per_house = 0;
     if (calculate_total_housing_buildings() > 0)
@@ -293,7 +266,7 @@ static void print_society_info(void) {
     text_draw_money(avg_tax_per_house, 75 + width, 396, FONT_NORMAL_WHITE_ON_DARK);
 }
 
-static void print_census_info(void) {
+void ui::advisor_population_window::print_census_info() {
     int width;
 
     // Average age
@@ -313,7 +286,7 @@ static void print_census_info(void) {
     text_draw_number(city_population_yearly_deaths(), '@', "", 75 + width, 396, FONT_NORMAL_WHITE_ON_DARK);
 }
 
-static void print_history_info(void) {
+void ui::advisor_population_window::print_history_info() {
     int width;
 
     // food stores
@@ -388,42 +361,91 @@ static void print_history_info(void) {
     }
 }
 
-static void draw_housing_button(int full_size, vec2i pos) {
-    painter ctx = game.painter();
-    const auto &anim = building_impl::params(BUILDING_HOUSE_MODEST_HOMESTEAD).anim["house"];
-    ImageDraw::isometric(ctx, anim.first_img(), pos, COLOR_MASK_NONE, 1.0f);
-    //    ImageDraw::isometric_top(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE);
+void button_graph(int next) {
+    int new_order;
+
+    switch (city_population_graph_order()) {
+    default:
+    case 0:
+        new_order = next ? 5 : 2;
+        break;
+    case 1:
+        new_order = next ? 3 : 4;
+        break;
+    case 2:
+        new_order = next ? 4 : 0;
+        break;
+    case 3:
+        new_order = next ? 1 : 5;
+        break;
+    case 4:
+        new_order = next ? 2 : 1;
+        break;
+    case 5:
+        new_order = next ? 0 : 3;
+        break;
+    }
+    city_population_set_graph_order(new_order);
+
+    window_invalidate();
 }
 
 int ui::advisor_population_window::draw_background() {
-    painter ctx = game.painter();
-    int width;
-
-    outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
-
     int graph_order = city_population_graph_order();
+ 
     // Title: depends on big graph shown
-    if (graph_order < 2) {
-        lang_text_draw(55, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
-    } else if (graph_order < 4) {
-        lang_text_draw(55, 1, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
-    } else {
-        lang_text_draw(55, 2, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
+    textid titlestr{ 55, 2 };
+    if (graph_order < 2) { titlestr = { 55, 0 }; } 
+    else if (graph_order < 4) { titlestr = { 55, 1 }; }
+
+    ui["title"] = titlestr;
+    ui["population"].text_var("%u %s", city_population(), translation_for(TR_ADVISOR_TOTAL_POPULATION));
+
+    struct {
+        int big, top, bot;
+    } textl;
+
+    switch (graph_order) {
+    default:
+    case 0: textl = { 6, 4, 5 }; break;
+    case 1: textl = { 6, 5, 4 }; break;
+    case 2: textl = { 7, 3, 5 }; break;
+    case 3: textl = { 7, 5, 3 }; break;
+    case 4: textl = { 8, 3, 4 }; break;
+    case 5: textl = { 8, 4, 3 }; break;
     }
 
-    ImageDraw::img_generic(ctx, image_id_from_group(PACK_UNLOADED, 21) + 14, 56, 60);
+    ui["housing"] = (pcstr)translation_for(TR_HEADER_HOUSING);
+    ui["big_text"] = ui::str(55, textl.big);
+    ui["top_text"] = ui::str(55, textl.top);
+    ui["bot_text"] = ui::str(55, textl.bot);
 
-    width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK_ON_LIGHT);
-    text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450 + width, 25, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    ui["housing_button"].onclick([] {
+        window_advisors_show_advisor(ADVISOR_HOUSING);
+    });
+
+    ui["next_graph"].onclick([] {
+        button_graph(true);
+    });
+
+    ui["prev_graph"].onclick([] {
+        button_graph(false);
+    });
+
+    return 0;
+}
+
+void ui::advisor_population_window::ui_draw_foreground() {
+    ui.begin_widget(screen_dialog_offset());
+    ui.draw();
 
     int big_text, top_text, bot_text;
     void (*big_graph)(int, int, int);
     void (*top_graph)(int, int, int);
     void (*bot_graph)(int, int, int);
-    void (*housing_button)(int, vec2i);
-    void (*info_panel)();
+    std::function<void()> info_panel;
 
+    int graph_order = city_population_graph_order();
     switch (graph_order) {
     default:
     case 0:
@@ -433,8 +455,7 @@ int ui::advisor_population_window::draw_background() {
         big_graph = draw_history_graph;
         top_graph = draw_census_graph;
         bot_graph = draw_society_graph;
-        housing_button = draw_housing_button;
-        info_panel = print_history_info;
+        info_panel = std::bind(&advisor_population_window::print_history_info, this);
         break;
     case 1:
         big_text = 6;
@@ -443,8 +464,7 @@ int ui::advisor_population_window::draw_background() {
         big_graph = draw_history_graph;
         top_graph = draw_society_graph;
         bot_graph = draw_census_graph;
-        housing_button = draw_housing_button;
-        info_panel = print_history_info;
+        info_panel = std::bind(&advisor_population_window::print_history_info, this);
         break;
     case 2:
         big_text = 7;
@@ -453,8 +473,7 @@ int ui::advisor_population_window::draw_background() {
         big_graph = draw_census_graph;
         top_graph = draw_history_graph;
         bot_graph = draw_society_graph;
-        housing_button = draw_housing_button;
-        info_panel = print_census_info;
+        info_panel = std::bind(&advisor_population_window::print_census_info, this);
         break;
     case 3:
         big_text = 7;
@@ -463,8 +482,7 @@ int ui::advisor_population_window::draw_background() {
         big_graph = draw_census_graph;
         top_graph = draw_society_graph;
         bot_graph = draw_history_graph;
-        housing_button = draw_housing_button;
-        info_panel = print_census_info;
+        info_panel = std::bind(&advisor_population_window::print_census_info, this);
         break;
     case 4:
         big_text = 8;
@@ -473,8 +491,7 @@ int ui::advisor_population_window::draw_background() {
         big_graph = draw_society_graph;
         top_graph = draw_history_graph;
         bot_graph = draw_census_graph;
-        housing_button = draw_housing_button;
-        info_panel = print_society_info;
+        info_panel = std::bind(&advisor_population_window::print_society_info, this);
         break;
     case 5:
         big_text = 8;
@@ -483,98 +500,26 @@ int ui::advisor_population_window::draw_background() {
         big_graph = draw_society_graph;
         top_graph = draw_census_graph;
         bot_graph = draw_history_graph;
-        housing_button = draw_housing_button;
-        info_panel = print_society_info;
+        info_panel = std::bind(&advisor_population_window::print_society_info, this);
         break;
     }
-
-    text_draw_centered(translation_for(TR_HEADER_HOUSING), 545, 315, 61, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    lang_text_draw_centered(55, big_text, 60, 295, 400, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_centered(55, top_text, 504, 130, 100, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_centered(55, bot_text, 504, 230, 100, FONT_NORMAL_BLACK_ON_LIGHT);
 
     big_graph(1, 64, 64);
     top_graph(0, 505, 63);
     bot_graph(0, 505, 163);
-    housing_button(0, vec2i{545, 275});
-
-    // info panel
-    inner_panel_draw(48, 336, 34, 5);
-    int image_id = image_id_from_group(PACK_GENERAL, 158);
-    ImageDraw::img_generic(ctx, image_id, 56, 344);
-    ImageDraw::img_generic(ctx, image_id, 56, 362);
-    ImageDraw::img_generic(ctx, image_id, 56, 380);
-    ImageDraw::img_generic(ctx, image_id, 56, 398);
 
     info_panel();
-
-    return ADVISOR_HEIGHT;
-}
-
-void ui::advisor_population_window::draw_foreground() {
-    if (focus_button_id == 0) {
-        button_border_draw(501, 60, 106, 57, 0);
-        button_border_draw(501, 160, 106, 57, 0);
-        button_border_draw(545, 260, 60, 51, 0);
-    } else if (focus_button_id == 1) {
-        button_border_draw(501, 60, 106, 57, 1);
-        button_border_draw(501, 160, 106, 57, 0);
-        button_border_draw(545, 260, 60, 51, 0);
-    } else if (focus_button_id == 2) {
-        button_border_draw(501, 60, 106, 57, 0);
-        button_border_draw(501, 160, 106, 57, 1);
-        button_border_draw(545, 260, 60, 51, 0);
-    } else if (focus_button_id == 3) {
-        button_border_draw(501, 60, 106, 57, 0);
-        button_border_draw(501, 160, 106, 57, 0);
-        button_border_draw(545, 260, 60, 51, 1);
-    }
-}
-
-int ui::advisor_population_window::handle_mouse(const mouse* m) {
-    return generic_buttons_handle_mouse(m, {0, 0}, graph_buttons, 3, &focus_button_id);
-}
-
-static void button_graph(int param1, int param2) {
-    int new_order;
-
-    if (param2) {
-        // go to housing advisor
-        window_advisors_show_advisor(ADVISOR_HOUSING);
-    } else {
-        switch (city_population_graph_order()) {
-        default:
-        case 0:
-            new_order = param1 ? 5 : 2;
-            break;
-        case 1:
-            new_order = param1 ? 3 : 4;
-            break;
-        case 2:
-            new_order = param1 ? 4 : 0;
-            break;
-        case 3:
-            new_order = param1 ? 1 : 5;
-            break;
-        case 4:
-            new_order = param1 ? 2 : 1;
-            break;
-        case 5:
-            new_order = param1 ? 0 : 3;
-            break;
-        }
-        city_population_set_graph_order(new_order);
-    }
-
-    window_invalidate();
+    ui.end_widget();
 }
 
 int ui::advisor_population_window::get_tooltip_text(void) {
-    if (focus_button_id && focus_button_id < 3)
-        return 111;
-    else {
-        return 0;
-    }
+    //if (focus_button_id && focus_button_id < 3)
+    //    return 111;
+    //else {
+    //    return 0;
+    //}
+
+    return 0;
 }
 
 advisor_window* ui::advisor_population_window::instance() {

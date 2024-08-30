@@ -26,6 +26,7 @@ function __extend(base, ext) {
 function inner_panel(config) { return __extend({type:"inner_panel"}, config) }
 function outer_panel(config) { return __extend({type:"outer_panel"}, config) }
 function text(config) { return __extend({type:"text"}, config) }
+function text_center(config) { return __extend({type:"text", align:"center"}, config) }
 function label(config) { return __extend({type:"label", font : FONT_NORMAL_WHITE_ON_DARK}, config) }
 function image(config) { return __extend({type:"image"}, config) }
 function button(config) { return __extend({type:"generic_button", font : FONT_NORMAL_BLACK_ON_LIGHT}, config) }
@@ -378,21 +379,53 @@ advisor_trade_window = {
 	}
 }
 
+advisor_population_window = {
+	ui : {
+		background   : outer_panel({size:[40, 27] }),
+		advisor_icon : image({pack:PACK_GENERAL, id:128, offset:5, pos:[10, 10] }),
+		title 			 : label({font : FONT_LARGE_BLACK_ON_LIGHT, pos:[60, 17]}),
+		bgimage 		 : image({pack : PACK_UNLOADED, id:21, offset:14, pos:[56, 60]}),
+		population   : label({font : FONT_NORMAL_BLACK_ON_DARK, pos:[450, 25]}),
+		housing      : text_center({font : FONT_NORMAL_BLACK_ON_DARK, pos:[545, 315]}),
+
+		housing_button : button({pos:[540, 260], size:[64, 50], tooltip:[68, 106],
+			ui : {
+				tx       : image({pos: [3, 18], pack: PACK_GENERAL, id: 29, isometric:true }),
+			}
+		}),
+
+		next_graph	 : button({pos:[503, 61], size:[104, 55]}),
+		prev_graph	 : button({pos:[503, 161], size:[104, 55]}),
+
+		inner_panel  : inner_panel({pos:[48, 336], size:[34, 5],
+			ui : {
+		    img1 		 : image({pack: PACK_GENERAL, id: 158, pos:[8, 8]}),
+		    img2 		 : image({pack: PACK_GENERAL, id: 158, pos:[8, 26]}),
+		    img3 		 : image({pack: PACK_GENERAL, id: 158, pos:[8, 44]}),
+		    img4 		 : image({pack: PACK_GENERAL, id: 158, pos:[8, 62]}),
+		  }
+		}),
+	}
+}
+
 advisor_imperial_window = {
 	ui : {
-		background : outer_panel({size:[40, 27]}),
+		background   : outer_panel({size:[40, 27]}),
 		advisor_icon : image({pack:PACK_GENERAL, id:128, offset:2, pos:[10, 10] }),
 		header_label : label({pos:[60, 17]}),
 		rating_label : label({pos:[460, 24]}),
 		rating_advice : label({pos:[60, 46], wrap: 500, multiline:true}),
-		inner_panel : inner_panel({pos:[32, 90], size:[36, 14] }),
+		inner_panel  : inner_panel({pos:[32, 90], size:[36, 14] }),
 
 		bottom_panel : inner_panel({pos:[64, 324], size:[32, 6] }),
-		send_gift : button({pos:[320, 362], size:[250, 24], text:{group:52, id:49}, tooltip:[68, 133] }),
+		send_gift    : button({pos:[320, 362], size:[250, 24], text:{group:52, id:49}, tooltip:[68, 133] }),
 		personal_savings : label({pos:[72, 368]}),
-		player_rank : label({pos:[72, 342]}),
+		player_rank  : label({pos:[72, 342]}),
 		donate_to_city : button({pos:[320, 335], size:[250, 24], text:{group:52, id:2}, tooltip:[68, 96] }),
-		salary_rank : button({pos:[70, 393], size:[500, 24], tooltip:[68, 97] }),
+		salary_rank  : button({pos:[70, 393], size:[500, 24], tooltip:[68, 97] }),
+		big_text     : text_center({pos:[60, 295], size:[400, 20], font:FONT_NORMAL_BLACK_ON_LIGHT}),
+    top_text     : text_center({pos:[504, 130], size:[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT}),
+    bot_text     : text_center({pos:[504, 230], size:[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT}),
 	},
 }
 

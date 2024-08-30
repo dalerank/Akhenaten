@@ -31,7 +31,7 @@
 #include "window/advisor/advisor_labor.h"
 #include "window/advisor/advisor_military.h"
 #include "window/advisor/monuments.h"
-#include "window/advisor/population.h"
+#include "window/advisor/advisor_population.h"
 #include "window/advisor/advisor_ratings.h"
 #include "window/advisor/advisor_religion.h"
 #include "window/advisor/advisor_trade.h"

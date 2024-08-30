@@ -201,6 +201,7 @@ var temple_info_window = {}
 var info_window_entertainment = {}
 var advisors_window = {}
 var advisor_military_window = {}
+var advisor_population_window = {}
 var taxcollector_info_window = {}
 
 //figures
