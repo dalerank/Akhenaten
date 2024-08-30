@@ -17,5 +17,8 @@ struct advisor_population_window : public advisor_window_t<advisor_population_wi
     void print_society_info();
     void print_census_info();
     void print_history_info();
+    void draw_society_graph(int full_size, int x, int y);
+    void draw_census_graph(int full_size, int x, int y);
+    void draw_history_graph(int full_size, int x, int y);
 };
 }

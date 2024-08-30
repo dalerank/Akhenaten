@@ -400,9 +400,13 @@ advisor_population_window = {
 		inner_panel  : inner_panel({pos:[48, 336], size:[34, 5],
 			ui : {
 		    img1 		 : image({pack: PACK_GENERAL, id: 158, pos:[8, 8]}),
+		    text1    : text({pos:[35, 8], font:FONT_NORMAL_WHITE_ON_DARK}),
 		    img2 		 : image({pack: PACK_GENERAL, id: 158, pos:[8, 26]}),
+		    text2    : text({pos:[35, 26], font:FONT_NORMAL_WHITE_ON_DARK}),
 		    img3 		 : image({pack: PACK_GENERAL, id: 158, pos:[8, 44]}),
+		    text3    : text({pos:[35, 44], font:FONT_NORMAL_WHITE_ON_DARK, multiline:true, wrap:px(32)}),
 		    img4 		 : image({pack: PACK_GENERAL, id: 158, pos:[8, 62]}),
+		    text4    : text({pos:[35, 62], font:FONT_NORMAL_WHITE_ON_DARK}),
 		  }
 		}),
 	}

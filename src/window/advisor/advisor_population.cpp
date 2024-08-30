@@ -54,27 +54,18 @@ static void get_min_max_month_year(int max_months, int* start_month, int* start_
     }
 }
 
-static void draw_history_graph(int full_size, int x, int y) {
+void ui::advisor_population_window::draw_history_graph(int full_size, int x, int y) {
     painter ctx = game.painter();
     int max_months;
     int month_count = city_population_monthly_count();
-    if (month_count <= 20)
-        max_months = 20;
-    else if (month_count <= 40)
-        max_months = 40;
-    else if (month_count <= 100)
-        max_months = 100;
-    else if (month_count <= 200)
-        max_months = 200;
-    else {
-        max_months = 400;
-    }
+    if (month_count <= 20) max_months = 20;
+    else if (month_count <= 40) max_months = 40;
+    else if (month_count <= 100) max_months = 100;
+    else if (month_count <= 200) max_months = 200;
+    else max_months = 400;
+    
     if (!full_size) {
-        if (max_months <= 40)
-            max_months = 20;
-        else {
-            max_months = 100;
-        }
+        max_months = std::clamp(max_months, 20, 100);
     }
     // determine max value
     int max_value = 0;
@@ -83,6 +74,7 @@ static void draw_history_graph(int full_size, int x, int y) {
         if (value > max_value)
             max_value = value;
     }
+
     vec2i ypx = get_y_axis(max_value);
     int y_max = ypx.x;
     int y_shift = ypx.y;
@@ -149,7 +141,7 @@ static void draw_history_graph(int full_size, int x, int y) {
     }
 }
 
-static void draw_census_graph(int full_size, int x, int y) {
+void ui::advisor_population_window::draw_census_graph(int full_size, int x, int y) {
     painter ctx = game.painter();
     int max_value = 0;
     for (int i = 0; i < 100; i++) {
@@ -197,7 +189,7 @@ static void draw_census_graph(int full_size, int x, int y) {
     }
 }
 
-static void draw_society_graph(int full_size, int x, int y) {
+void ui::advisor_population_window::draw_society_graph(int full_size, int x, int y) {
     painter ctx = game.painter();
     int max_value = 0;
     for (int i = 0; i < 20; i++) {
@@ -244,120 +236,92 @@ static void draw_society_graph(int full_size, int x, int y) {
     }
 }
  void ui::advisor_population_window::print_society_info() {
-    int width;
     int avg_tax_per_house = 0;
-    if (calculate_total_housing_buildings() > 0)
+    if (calculate_total_housing_buildings() > 0) {
         avg_tax_per_house = city_finance_estimated_tax_income() / calculate_total_housing_buildings();
+    }
 
     // Housing prosperity cap
-    width = text_draw(translation_for(TR_ADVISOR_HOUSING_PROSPERITY_RATING), 75, 342, FONT_NORMAL_WHITE_ON_DARK, 0);
-    text_draw_number(g_city.ratings.prosperity_max, '@', " ", 75 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
+    ui["text1"].text_var("%s %d", translation_for(TR_ADVISOR_HOUSING_PROSPERITY_RATING), g_city.ratings.prosperity_max);
 
     // Percent patricians
-    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_MANORS), 75, 360, FONT_NORMAL_WHITE_ON_DARK, 0);
-    text_draw_percentage(percentage_city_population_in_manors(), 75 + width, 360, FONT_NORMAL_WHITE_ON_DARK);
+    ui["text2"].text_var("%s %d", translation_for(TR_ADVISOR_PERCENTAGE_IN_MANORS), percentage_city_population_in_manors());
 
     // Percent impoverished
-    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_SHANTIES), 75, 378, FONT_NORMAL_WHITE_ON_DARK, 0);
-    text_draw_percentage(percentage_city_population_in_shanties(), 75 + width, 378, FONT_NORMAL_WHITE_ON_DARK);
+    ui["text3"].text_var("%s %d", translation_for(TR_ADVISOR_PERCENTAGE_IN_SHANTIES), percentage_city_population_in_shanties());
 
     // Average tax
-    width = text_draw(translation_for(TR_ADVISOR_AVERAGE_TAX), 75, 396, FONT_NORMAL_WHITE_ON_DARK, 0);
-    text_draw_money(avg_tax_per_house, 75 + width, 396, FONT_NORMAL_WHITE_ON_DARK);
+    ui["text4"].text_var("%s %d", translation_for(TR_ADVISOR_AVERAGE_TAX), avg_tax_per_house);
 }
 
 void ui::advisor_population_window::print_census_info() {
-    int width;
-
     // Average age
-    width = text_draw(translation_for(TR_ADVISOR_AVERAGE_AGE), 75, 342, FONT_NORMAL_WHITE_ON_DARK, 0);
-    text_draw_number(city_population_average_age(), '@', " ", 75 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
+    ui["text1"].text_var("%s %d", translation_for(TR_ADVISOR_AVERAGE_AGE), city_population_average_age());
 
     // Percent working age
-    width = text_draw(translation_for(TR_ADVISOR_PERCENT_IN_WORKFORCE), 75, 360, FONT_NORMAL_WHITE_ON_DARK, 0);
-    text_draw_percentage(city_population_percent_in_workforce(), 75 + width, 360, FONT_NORMAL_WHITE_ON_DARK);
+    ui["text2"].text_var("%s %u", translation_for(TR_ADVISOR_PERCENT_IN_WORKFORCE), city_population_percent_in_workforce());
 
     // Yearly births
-    width = text_draw(translation_for(TR_ADVISOR_BIRTHS_LAST_YEAR), 75, 378, FONT_NORMAL_WHITE_ON_DARK, 0);
-    text_draw_number(city_population_yearly_births(), '@', "", 75 + width, 378, FONT_NORMAL_WHITE_ON_DARK);
+    ui["text2"].text_var("%s %u", translation_for(TR_ADVISOR_BIRTHS_LAST_YEAR), city_population_yearly_births());
 
     // Yearly deaths
-    width = text_draw(translation_for(TR_ADVISOR_DEATHS_LAST_YEAR), 75, 396, FONT_NORMAL_WHITE_ON_DARK, 0);
-    text_draw_number(city_population_yearly_deaths(), '@', "", 75 + width, 396, FONT_NORMAL_WHITE_ON_DARK);
+    ui["text3"].text_var("%s %u", translation_for(TR_ADVISOR_DEATHS_LAST_YEAR), city_population_yearly_deaths());
 }
 
 void ui::advisor_population_window::print_history_info() {
-    int width;
-
     // food stores
     if (scenario_property_kingdom_supplies_grain()) {
-        lang_text_draw(55, 11, 75, 342, FONT_NORMAL_WHITE_ON_DARK);
+        ui["text1"] = ui::str(55, 11);
     } else {
-        width = lang_text_draw_amount(8, 6, city_resource_operating_granaries(), 70, 342, FONT_NORMAL_WHITE_ON_DARK);
+        bstring256 text;
+        text.printf("%s %u", ui::str(8, 6), city_resource_operating_granaries());
+
         if (city_resource_food_supply_months() > 0) {
-            width += lang_text_draw(55, 12, 70 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
-            lang_text_draw_amount(8, 4, city_resource_food_supply_months(), 70 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
+            text.append("%s %s %u", ui::str(55, 12), ui::str(8, 4), city_resource_food_supply_months());
         } else if (city_resource_food_stored() > city_resource_food_needed() / 2)
-            lang_text_draw(55, 13, 70 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
+            text.append(ui::str(55, 13));
         else if (city_resource_food_stored() > 0)
-            lang_text_draw(55, 15, 70 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
+            text.append(ui::str(55, 15));
         else {
-            lang_text_draw(55, 14, 70 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
+            text.append(ui::str(55, 14));
         }
+
+        ui["text1"] = text;
     }
 
     // food types eaten
-    width = lang_text_draw(55, 16, 75, 360, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw_number(city_resource_food_types_available(), '@', " ", 75 + width, 360, FONT_NORMAL_WHITE_ON_DARK);
+    ui["text2"].text_var("%s %u", ui::str(55, 16), city_resource_food_types_available());
 
     // immigration
     int newcomers = g_city.migration_newcomers();
     if (newcomers >= 5) {
-        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE_ON_DARK);
-        width = text_draw_number(newcomers, '@', " ", 70, 396, FONT_NORMAL_WHITE_ON_DARK);
-        lang_text_draw(55, 17, 70 + width, 396, FONT_NORMAL_WHITE_ON_DARK);
+        ui["text3"].text_var("%s %u %s", ui::str(55, 24), newcomers, ui::str(55, 17));
     } else if (g_city.migration_no_room_for_immigrants()) {
-        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE_ON_DARK);
-        lang_text_draw(55, 19, 75, 396, FONT_NORMAL_WHITE_ON_DARK);
+        ui["text3"].text_var("%s %s", ui::str(55, 24), ui::str(55, 19));
     } else if (g_city.migration_percentage() < 80) {
-        lang_text_draw(55, 25, 75, 378, FONT_NORMAL_WHITE_ON_DARK);
+        bstring256 text = ui::str(55, 25);
         int text_id;
         switch (g_city.migration_problems_cause()) {
-        case NO_IMMIGRATION_LOW_WAGES:
-            text_id = 20;
-            break;
-        case NO_IMMIGRATION_NO_JOBS:
-            text_id = 21;
-            break;
-        case NO_IMMIGRATION_NO_FOOD:
-            text_id = 22;
-            break;
-        case NO_IMMIGRATION_HIGH_TAXES:
-            text_id = 23;
-            break;
-        case NO_IMMIGRATION_MANY_TENTS:
-            text_id = 31;
-            break;
-        case NO_IMMIGRATION_LOW_MOOD:
-            text_id = 32;
-            break;
-        default:
-            text_id = 0;
-            break;
+        case NO_IMMIGRATION_LOW_WAGES: text_id = 20; break;
+        case NO_IMMIGRATION_NO_JOBS: text_id = 21; break;
+        case NO_IMMIGRATION_NO_FOOD: text_id = 22; break;
+        case NO_IMMIGRATION_HIGH_TAXES: text_id = 23; break;
+        case NO_IMMIGRATION_MANY_TENTS: text_id = 31; break;
+        case NO_IMMIGRATION_LOW_MOOD: text_id = 32; break;
+        default: text_id = 0; break;
         }
 
         if (text_id) {
-            lang_text_draw(55, text_id, 75, 396, FONT_NORMAL_WHITE_ON_DARK);
+            text.append(ui::str(55, text_id));
         }
 
+        ui["text3"] = text;
     } else {
-        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE_ON_DARK);
-        width = text_draw_number(newcomers, '@', " ", 70, 396, FONT_NORMAL_WHITE_ON_DARK);
-        if (newcomers == 1)
-            lang_text_draw(55, 18, 70 + width, 396, FONT_NORMAL_WHITE_ON_DARK);
-        else {
-            lang_text_draw(55, 17, 70 + width, 396, FONT_NORMAL_WHITE_ON_DARK);
-        }
+        bstring256 text;
+        text.printf("%s, %u", ui::str(55, 24), newcomers);
+        text.append(ui::str(55, newcomers == 1 ? 18 : 17));
+
+        ui["text3"] = text;
     }
 }
 
@@ -366,24 +330,12 @@ void button_graph(int next) {
 
     switch (city_population_graph_order()) {
     default:
-    case 0:
-        new_order = next ? 5 : 2;
-        break;
-    case 1:
-        new_order = next ? 3 : 4;
-        break;
-    case 2:
-        new_order = next ? 4 : 0;
-        break;
-    case 3:
-        new_order = next ? 1 : 5;
-        break;
-    case 4:
-        new_order = next ? 2 : 1;
-        break;
-    case 5:
-        new_order = next ? 0 : 3;
-        break;
+    case 0: new_order = next ? 5 : 2; break;
+    case 1: new_order = next ? 3 : 4; break;
+    case 2: new_order = next ? 4 : 0; break;
+    case 3: new_order = next ? 1 : 5; break;
+    case 4: new_order = next ? 2 : 1; break;
+    case 5: new_order = next ? 0 : 3; break;
     }
     city_population_set_graph_order(new_order);
 
@@ -440,10 +392,13 @@ void ui::advisor_population_window::ui_draw_foreground() {
     ui.draw();
 
     int big_text, top_text, bot_text;
-    void (*big_graph)(int, int, int);
-    void (*top_graph)(int, int, int);
-    void (*bot_graph)(int, int, int);
-    std::function<void()> info_panel;
+    using graph_function = void (advisor_population_window::*)(int, int, int);
+    using info_function = void (advisor_population_window::*)();
+
+    graph_function big_graph;
+    graph_function top_graph;
+    graph_function bot_graph;
+    info_function info_panel;
 
     int graph_order = city_population_graph_order();
     switch (graph_order) {
@@ -452,63 +407,63 @@ void ui::advisor_population_window::ui_draw_foreground() {
         big_text = 6;
         top_text = 4;
         bot_text = 5;
-        big_graph = draw_history_graph;
-        top_graph = draw_census_graph;
-        bot_graph = draw_society_graph;
-        info_panel = std::bind(&advisor_population_window::print_history_info, this);
+        big_graph = &advisor_population_window::draw_history_graph;
+        top_graph = &advisor_population_window::draw_census_graph;
+        bot_graph = &advisor_population_window::draw_society_graph;
+        info_panel = &advisor_population_window::print_history_info;
         break;
     case 1:
         big_text = 6;
         top_text = 5;
         bot_text = 4;
-        big_graph = draw_history_graph;
-        top_graph = draw_society_graph;
-        bot_graph = draw_census_graph;
-        info_panel = std::bind(&advisor_population_window::print_history_info, this);
+        big_graph = &advisor_population_window::draw_history_graph;
+        top_graph = &advisor_population_window::draw_society_graph;
+        bot_graph = &advisor_population_window::draw_census_graph;
+        info_panel = &advisor_population_window::print_history_info;
         break;
     case 2:
         big_text = 7;
         top_text = 3;
         bot_text = 5;
-        big_graph = draw_census_graph;
-        top_graph = draw_history_graph;
-        bot_graph = draw_society_graph;
-        info_panel = std::bind(&advisor_population_window::print_census_info, this);
+        big_graph = &advisor_population_window::draw_census_graph;
+        top_graph = &advisor_population_window::draw_history_graph;
+        bot_graph = &advisor_population_window::draw_society_graph;
+        info_panel= &advisor_population_window::print_census_info;
         break;
     case 3:
         big_text = 7;
         top_text = 5;
         bot_text = 3;
-        big_graph = draw_census_graph;
-        top_graph = draw_society_graph;
-        bot_graph = draw_history_graph;
-        info_panel = std::bind(&advisor_population_window::print_census_info, this);
+        big_graph = &advisor_population_window::draw_census_graph;
+        top_graph = &advisor_population_window::draw_society_graph;
+        bot_graph = &advisor_population_window::draw_history_graph;
+        info_panel= &advisor_population_window::print_census_info;
         break;
     case 4:
         big_text = 8;
         top_text = 3;
         bot_text = 4;
-        big_graph = draw_society_graph;
-        top_graph = draw_history_graph;
-        bot_graph = draw_census_graph;
-        info_panel = std::bind(&advisor_population_window::print_society_info, this);
+        big_graph = &advisor_population_window::draw_society_graph;
+        top_graph = &advisor_population_window::draw_history_graph;
+        bot_graph = &advisor_population_window::draw_census_graph;
+        info_panel= &advisor_population_window::print_society_info;
         break;
     case 5:
         big_text = 8;
         top_text = 4;
         bot_text = 3;
-        big_graph = draw_society_graph;
-        top_graph = draw_census_graph;
-        bot_graph = draw_history_graph;
-        info_panel = std::bind(&advisor_population_window::print_society_info, this);
+        big_graph = &advisor_population_window::draw_society_graph;
+        top_graph = &advisor_population_window::draw_census_graph;
+        bot_graph = &advisor_population_window::draw_history_graph;
+        info_panel= &advisor_population_window::print_society_info;
         break;
     }
 
-    big_graph(1, 64, 64);
-    top_graph(0, 505, 63);
-    bot_graph(0, 505, 163);
+    (*this.*big_graph)(1, 64, 64);
+    (*this.*top_graph)(0, 505, 63);
+    (*this.*bot_graph)(0, 505, 163);
 
-    info_panel();
+    (*this.*info_panel)();
     ui.end_widget();
 }
 
