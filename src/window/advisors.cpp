@@ -68,15 +68,6 @@ struct labor_btn {
     e_advisor adv;
 };
 
-std::vector<autoconfig_window *> g_advisor_windows;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_windows);
-void config_load_advisor_windows() {
-    for (auto *w : g_advisor_windows) {
-        w->load(w->section);
-    }
-}
-
 static const labor_btn btns[] = { {"labor_btn", ADVISOR_LABOR}, {"military_btn", ADVISOR_MILITARY}, {"imperial_btn", ADVISOR_IMPERIAL},
                                   {"ratings_btn", ADVISOR_RATINGS}, {"trade_btn", ADVISOR_TRADE}, {"population_btn", ADVISOR_POPULATION},
                                   {"health_btn", ADVISOR_HEALTH}, {"education_btn", ADVISOR_EDUCATION}, {"entertainment_btn", ADVISOR_ENTERTAINMENT},
@@ -298,8 +289,4 @@ int window_advisors_show_advisor(e_advisor advisor) {
     g_window_advisors.set_advisor(advisor);
     window_advisors_show();
     return 1;
-}
-
-void register_autoconfig_window(autoconfig_window *w) {
-    g_advisor_windows.push_back(w);
 }
