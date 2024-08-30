@@ -52,3 +52,7 @@ void button_border_draw(int x, int y, int width_pixels, int height_pixels, bool 
         }
     }
 }
+
+bool button_inside_clip(vec2i p) {
+    return graphics_inside_clip_rectangle(p);
+}
