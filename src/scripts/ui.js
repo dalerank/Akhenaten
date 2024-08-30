@@ -394,8 +394,22 @@ advisor_population_window = {
 			}
 		}),
 
-		next_graph	 : button({pos:[503, 61], size:[104, 55]}),
-		prev_graph	 : button({pos:[503, 161], size:[104, 55]}),
+		top_text     : text({pos:[503, 44], font:FONT_NORMAL_BLACK_ON_DARK}),
+		next_graph	 : button({pos:[503, 61], size:[104, 55], 
+				ui 			 : {
+					next_graph_tx : image({pos:[5, 0]}),
+				}
+		}),
+
+		bot_text     : text({pos:[503, 144], font:FONT_NORMAL_BLACK_ON_DARK}),
+		prev_graph	 : button({pos:[503, 161], size:[104, 55], 
+				ui 			 : {
+					prev_graph_tx : image({pos:[5, 0]}),
+				}
+		}),
+
+		big_text 		 : label({font : FONT_NORMAL_BLACK_ON_DARK, pos:[60, 44]}),
+		big_graph_tx : label({pos:[64, 62]}),
 
 		inner_panel  : inner_panel({pos:[48, 336], size:[34, 5],
 			ui : {

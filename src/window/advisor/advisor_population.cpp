@@ -54,7 +54,7 @@ static void get_min_max_month_year(int max_months, int* start_month, int* start_
     }
 }
 
-void ui::advisor_population_window::draw_history_graph(int full_size, int x, int y) {
+void ui::advisor_population_window::draw_history_graph(int full_size, vec2i pos) {
     painter ctx = game.painter();
     int max_months;
     int month_count = city_population_monthly_count();
@@ -78,6 +78,9 @@ void ui::advisor_population_window::draw_history_graph(int full_size, int x, int
     vec2i ypx = get_y_axis(max_value);
     int y_max = ypx.x;
     int y_shift = ypx.y;
+
+    int x = pos.x;
+    int y = pos.y;
 
     if (full_size) {
         // y axis
@@ -141,7 +144,7 @@ void ui::advisor_population_window::draw_history_graph(int full_size, int x, int
     }
 }
 
-void ui::advisor_population_window::draw_census_graph(int full_size, int x, int y) {
+void ui::advisor_population_window::draw_census_graph(int full_size, vec2i pos) {
     painter ctx = game.painter();
     int max_value = 0;
     for (int i = 0; i < 100; i++) {
@@ -152,6 +155,9 @@ void ui::advisor_population_window::draw_census_graph(int full_size, int x, int 
     vec2i ypx = get_y_axis(max_value);
     int y_max = ypx.x;
     int y_shift = ypx.y;
+
+    int x = pos.x;
+    int y = pos.y;
 
     if (full_size) {
         // y axis
@@ -189,7 +195,7 @@ void ui::advisor_population_window::draw_census_graph(int full_size, int x, int 
     }
 }
 
-void ui::advisor_population_window::draw_society_graph(int full_size, int x, int y) {
+void ui::advisor_population_window::draw_society_graph(int full_size, vec2i pos) {
     painter ctx = game.painter();
     int max_value = 0;
     for (int i = 0; i < 20; i++) {
@@ -200,6 +206,9 @@ void ui::advisor_population_window::draw_society_graph(int full_size, int x, int
     vec2i ypx = get_y_axis(max_value);
     int y_max = ypx.x;
     int y_shift = ypx.y;
+
+    int x = pos.x;
+    int y = pos.y;
 
     if (full_size) {
         // y axis
@@ -262,10 +271,10 @@ void ui::advisor_population_window::print_census_info() {
     ui["text2"].text_var("%s %u", translation_for(TR_ADVISOR_PERCENT_IN_WORKFORCE), city_population_percent_in_workforce());
 
     // Yearly births
-    ui["text2"].text_var("%s %u", translation_for(TR_ADVISOR_BIRTHS_LAST_YEAR), city_population_yearly_births());
+    ui["text3"].text_var("%s %u", translation_for(TR_ADVISOR_BIRTHS_LAST_YEAR), city_population_yearly_births());
 
     // Yearly deaths
-    ui["text3"].text_var("%s %u", translation_for(TR_ADVISOR_DEATHS_LAST_YEAR), city_population_yearly_deaths());
+    ui["text4"].text_var("%s %u", translation_for(TR_ADVISOR_DEATHS_LAST_YEAR), city_population_yearly_deaths());
 }
 
 void ui::advisor_population_window::print_history_info() {
@@ -391,8 +400,7 @@ void ui::advisor_population_window::ui_draw_foreground() {
     ui.begin_widget(screen_dialog_offset());
     ui.draw();
 
-    int big_text, top_text, bot_text;
-    using graph_function = void (advisor_population_window::*)(int, int, int);
+    using graph_function = void (advisor_population_window::*)(int, vec2i);
     using info_function = void (advisor_population_window::*)();
 
     graph_function big_graph;
@@ -404,54 +412,36 @@ void ui::advisor_population_window::ui_draw_foreground() {
     switch (graph_order) {
     default:
     case 0:
-        big_text = 6;
-        top_text = 4;
-        bot_text = 5;
         big_graph = &advisor_population_window::draw_history_graph;
         top_graph = &advisor_population_window::draw_census_graph;
         bot_graph = &advisor_population_window::draw_society_graph;
         info_panel = &advisor_population_window::print_history_info;
         break;
     case 1:
-        big_text = 6;
-        top_text = 5;
-        bot_text = 4;
         big_graph = &advisor_population_window::draw_history_graph;
         top_graph = &advisor_population_window::draw_society_graph;
         bot_graph = &advisor_population_window::draw_census_graph;
         info_panel = &advisor_population_window::print_history_info;
         break;
     case 2:
-        big_text = 7;
-        top_text = 3;
-        bot_text = 5;
         big_graph = &advisor_population_window::draw_census_graph;
         top_graph = &advisor_population_window::draw_history_graph;
         bot_graph = &advisor_population_window::draw_society_graph;
         info_panel= &advisor_population_window::print_census_info;
         break;
     case 3:
-        big_text = 7;
-        top_text = 5;
-        bot_text = 3;
         big_graph = &advisor_population_window::draw_census_graph;
         top_graph = &advisor_population_window::draw_society_graph;
         bot_graph = &advisor_population_window::draw_history_graph;
         info_panel= &advisor_population_window::print_census_info;
         break;
     case 4:
-        big_text = 8;
-        top_text = 3;
-        bot_text = 4;
         big_graph = &advisor_population_window::draw_society_graph;
         top_graph = &advisor_population_window::draw_history_graph;
         bot_graph = &advisor_population_window::draw_census_graph;
         info_panel= &advisor_population_window::print_society_info;
         break;
     case 5:
-        big_text = 8;
-        top_text = 4;
-        bot_text = 3;
         big_graph = &advisor_population_window::draw_society_graph;
         top_graph = &advisor_population_window::draw_census_graph;
         bot_graph = &advisor_population_window::draw_history_graph;
@@ -459,12 +449,20 @@ void ui::advisor_population_window::ui_draw_foreground() {
         break;
     }
 
-    (*this.*big_graph)(1, 64, 64);
-    (*this.*top_graph)(0, 505, 63);
-    (*this.*bot_graph)(0, 505, 163);
+    (*this.*big_graph)(1, ui["big_graph_tx"].screen_pos());
+    (*this.*top_graph)(0, ui["next_graph_tx"].screen_pos());
+    (*this.*bot_graph)(0, ui["prev_graph_tx"].screen_pos());
 
     (*this.*info_panel)();
     ui.end_widget();
+}
+
+int ui::advisor_population_window::ui_handle_mouse(const mouse *m) {
+    ui.begin_widget(screen_dialog_offset());
+    int result = advisor_window::ui_handle_mouse(m);
+    ui.end_widget();
+
+    return result;
 }
 
 int ui::advisor_population_window::get_tooltip_text(void) {

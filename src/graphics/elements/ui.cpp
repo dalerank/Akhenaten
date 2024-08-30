@@ -505,6 +505,11 @@ void ui::element::update_pos(const recti &r) {
     if (margin.top > recti::nomargin) { pos.y = r.top + margin.top; }
 }
 
+vec2i ui::element::screen_pos() const {
+    const vec2i offset = g_state.offset();
+    return offset + pos;
+}
+
 void ui::eouter_panel::draw() {
     ui::panel(pos, size, UiFlags_PanelOuter);
 }

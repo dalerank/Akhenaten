@@ -129,6 +129,7 @@ struct element {
     inline void operator=(const bstring512 &t) { text(t); }
     inline void operator=(const textid &t) { text(ui::str(t.group, t.id)); }
     void update_pos(const recti &r);
+    vec2i screen_pos() const;
 
     template<class T>
     void preformat_text(T& str) {
