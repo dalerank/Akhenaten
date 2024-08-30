@@ -178,6 +178,7 @@ struct element {
 struct eimg : public element {
     e_image_id img;
     image_desc img_desc;
+    bool isometric;
 
     virtual void draw() override;
     virtual void load(archive elem, element *parent, items &elems) override;

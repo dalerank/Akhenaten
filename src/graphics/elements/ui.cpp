@@ -580,6 +580,11 @@ void ui::widget::reset_clip_rectangle() {
 void ui::eimg::draw() {
     if (img > 0) {
         ui::eimage(img, pos);
+    } else if (isometric) {
+        painter ctx = game.painter();
+        const vec2i offset = g_state.offset();
+        ImageDraw::isometric_from_drawtile(ctx, image_group(img_desc), offset + pos);
+        ImageDraw::isometric_from_drawtile_top(ctx, image_group(img_desc), offset + pos);
     } else {
         ui::eimage(img_desc, pos);
     }
@@ -594,6 +599,7 @@ void ui::eimg::load(archive arch, element *parent, items &elems) {
     img_desc.pack = arch.r_int("pack");
     img_desc.id = arch.r_int("id");
     img_desc.offset = arch.r_int("offset");
+    isometric = arch.r_bool("isometric");
 }
 
 void ui::eimg::image(image_desc image) {
