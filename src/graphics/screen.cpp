@@ -10,10 +10,7 @@
 struct screen_data_t {
     int width;
     int height;
-    struct {
-        int x;
-        int y;
-    } dialog_offset;
+    vec2i dialog_offset;
 };
 
 screen_data_t g_screen_data;
@@ -25,7 +22,7 @@ void screen_set_resolution(int width, int height) {
     g_screen_data.dialog_offset.y = (height - 480) / 2;
 
     graphics_clear_screen();
-    graphics_renderer()->set_clip_rectangle(0, 0, width, height);
+    graphics_renderer()->set_clip_rectangle({ 0, 0 }, width, height);
 
     city_view_set_viewport(width, height);
     city_warning_clear_all();

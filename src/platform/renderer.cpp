@@ -179,10 +179,30 @@ void graphics_renderer_interface::reset_viewport(void) {
     SDL_RenderSetClipRect(data.renderer, NULL);
 }
 
-void graphics_renderer_interface::set_clip_rectangle(int x, int y, int width, int height) {
+void graphics_renderer_interface::set_clip_rectangle(vec2i pos, int width, int height) {
     auto &data = g_renderer_data;
-    SDL_Rect clip = {x, y, width, height};
+    SDL_Rect clip = {pos.x, pos.y, width, height};
     SDL_RenderSetClipRect(data.renderer, &clip);
+}
+
+bool graphics_renderer_interface::inside_clip_rectangle(vec2i pos) {
+    auto &data = g_renderer_data;
+    SDL_Rect clip;
+    SDL_RenderGetClipRect(data.renderer, &clip);
+
+    if (clip.w <= 0 || clip.h <= 0) {
+        return true;
+    }
+
+    return (pos.x > clip.x && pos.y > clip.y && pos.x < (clip.x + clip.w) && pos.y < (clip.y + clip.h));
+}
+
+rect graphics_renderer_interface::clip_rectangle() {
+    auto &data = g_renderer_data;
+    SDL_Rect clip;
+    SDL_RenderGetClipRect(data.renderer, &clip);
+
+    return { {clip.x, clip.y}, {clip.x + clip.w, clip.y + clip.h} };
 }
 
 void graphics_renderer_interface::reset_clip_rectangle(void) {

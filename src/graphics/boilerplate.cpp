@@ -35,8 +35,17 @@ void graphics_reset_dialog() {
 }
 
 void graphics_set_clip_rectangle(vec2i pos, vec2i size) {
-    graphics_renderer()->set_clip_rectangle(pos.x, pos.y, size.x, size.y);
+    graphics_renderer()->set_clip_rectangle(pos, size.x, size.y);
 }
+
+bool graphics_inside_clip_rectangle(vec2i pos) {
+    return graphics_renderer()->inside_clip_rectangle(pos);
+}
+
+rect graphics_clip_rectangle() {
+    return graphics_renderer()->clip_rectangle();
+}
+
 void graphics_reset_clip_rectangle() {
     graphics_renderer()->reset_clip_rectangle();
 }

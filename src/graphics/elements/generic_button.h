@@ -24,6 +24,7 @@ struct generic_button {
     function_cb _onrclick = nullptr;
     textid _tooltip;
     bool hovered = false;
+    rect clip = { {0, 0}, {0, 0} };
 
     inline vec2i pos() const { return {x, y}; }
     inline vec2i size() const { return {width, height}; }

@@ -55,7 +55,9 @@ public:
     void clear_screen();
     void set_viewport(int x, int y, int width, int height);
     void reset_viewport();
-    void set_clip_rectangle(int x, int y, int width, int height);
+    void set_clip_rectangle(vec2i pos, int width, int height);
+    bool inside_clip_rectangle(vec2i pos);
+    rect clip_rectangle();
     void reset_clip_rectangle();
 
     void draw_line(vec2i start, vec2i end, color color);

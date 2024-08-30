@@ -35,4 +35,5 @@ struct rect {
     inline int w() const { return mx.x - mn.x; }
     inline int h() const { return mx.y - mn.y; }
     inline bool inside(const vec2i& p) const { return (p.x >= mn.x && p.x <= mx.x && p.y >= mn.y && p.y <= mx.y); }
+    inline bool valid() const { return h() > 0 && w() > 0; }
 };

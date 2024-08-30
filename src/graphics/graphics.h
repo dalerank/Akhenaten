@@ -15,6 +15,8 @@ void graphics_in_dialog_with_size(int width, int height);
 void graphics_reset_dialog();
 
 void graphics_set_clip_rectangle(vec2i pos, vec2i size);
+bool graphics_inside_clip_rectangle(vec2i pos);
+rect graphics_clip_rectangle();
 void graphics_reset_clip_rectangle();
 
 void graphics_draw_line(vec2i start, vec2i end, color color);

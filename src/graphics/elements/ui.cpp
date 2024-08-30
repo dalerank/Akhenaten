@@ -237,6 +237,7 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
     g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
     generic_button &gbutton = g_state.buttons.back().g_button;
     gbutton.hovered = is_button_hover(gbutton, offset);
+    gbutton.clip = graphics_clip_rectangle();
     const bool readonly = !!(flags & UiFlags_Readonly);
 
     if (gbutton.hovered && !readonly) {

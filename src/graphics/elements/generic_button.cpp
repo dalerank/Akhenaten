@@ -1,6 +1,7 @@
 #include "generic_button.h"
 
 #include "input/mouse.h"
+#include "graphics/graphics.h"
 
 static int get_button(const mouse* m, vec2i pos, const generic_button* buttons, int num_buttons) {
     for (int i = 0; i < num_buttons; i++) {
@@ -32,14 +33,19 @@ int generic_buttons_handle_mouse(const mouse* m, vec2i pos, const generic_button
         return 0;
     }
 
-    const generic_button* button = &buttons[button_id - 1];
+    const generic_button &button = buttons[button_id - 1];
+    const rect clip_rect = button.clip;
+    if (clip_rect.valid() && !clip_rect.inside(*m)) {
+        return 0;
+    }
+
     if (m->left.went_up) {
-        button->left_click_handler(button->parameter1, button->parameter2);
-        if (button->_onclick) {
-            button->_onclick(button->parameter1, button->parameter2);
+        button.left_click_handler(button.parameter1, button.parameter2);
+        if (button._onclick) {
+            button._onclick(button.parameter1, button.parameter2);
         }
     } else if (m->right.went_up) {
-        button->right_click_handler(button->parameter1, button->parameter2);
+        button.right_click_handler(button.parameter1, button.parameter2);
     } else {
         return 0;
     }

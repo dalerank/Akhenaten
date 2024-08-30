@@ -25,8 +25,8 @@ int ui::advisor_trade_window::draw_background() {
     });
 
     ui["scrollbar"].max_value(city_resource_get_available().size() - 14);
-    ui["show_prices"].onclick([] (int, int) { window_trade_prices_show(); });
-    ui["goto_empire"].onclick([] (int, int) { window_empire_show(); });
+    ui["show_prices"].onclick([] { window_trade_prices_show(); });
+    ui["goto_empire"].onclick([] { window_empire_show(); });
 
     return 0;
 }
@@ -34,7 +34,6 @@ int ui::advisor_trade_window::draw_background() {
 void ui::advisor_trade_window::ui_draw_foreground() {
     ui.begin_widget(screen_dialog_offset());
     ui.draw();
-
     int scroll_position = ui["scrollbar"].value();
 
     const resource_list &resources = city_resource_get_available();
@@ -45,7 +44,7 @@ void ui::advisor_trade_window::ui_draw_foreground() {
 
         ui.button("", vec2i{20, y_offset}, vec2i{570, 22}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_NoBody)
             .tooltip({68, 109})
-            .onclick([r] (int, int) {
+            .onclick([r] {
                 window_resource_settings_show(r.type);
             });
 

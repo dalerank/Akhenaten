@@ -14,6 +14,11 @@ bool is_button_hover(const T &button, vec2i context) {
     const mouse *m = mouse_get();
     vec2i bpos = context + button.pos();
     vec2i bsize = button.size();
+
+    if (!graphics_inside_clip_rectangle(*m)) {
+        return false;
+    }
+
     return (   bpos.x <= m->x && bpos.x + bsize.x > m->x
             && bpos.y <= m->y && bpos.y + bsize.y > m->y);
 }
