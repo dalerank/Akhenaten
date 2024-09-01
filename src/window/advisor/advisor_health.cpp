@@ -12,84 +12,65 @@
 #include "graphics/text.h"
 #include "game/game.h"
 
-#define ADVISOR_HEIGHT 18
-
 ui::advisor_health_window g_advisor_health_window;
 
 static int get_health_advice() {
     house_demands &demands = g_city.houses;
     switch (demands.health) {
-    case 1:
-        return demands.requiring.water_supply ? 1 : 0;
-    case 2:
-        return demands.requiring.dentist ? 3 : 2;
-    case 3:
-        return demands.requiring.physician ? 5 : 4;
-    case 4:
-        return 6;
-    default:
-        return 7;
-    }
-}
-
-void ui::advisor_health_window::draw_foreground() {
-    outer_panel_draw(vec2i{ 0, 0 }, 40, ADVISOR_HEIGHT);
-    painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
-
-    lang_text_draw(56, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
-    if (city_population() >= 200) {
-        lang_text_draw_multiline(56, g_city.health.value / 10 + 16, vec2i{ 60, 46 }, 512, FONT_NORMAL_BLACK_ON_LIGHT);
-    } else {
-        lang_text_draw_multiline(56, 15, vec2i{ 60, 46 }, 512, FONT_NORMAL_BLACK_ON_LIGHT);
-    }
-    lang_text_draw(56, 3, 180, 94, FONT_SMALL_PLAIN);
-    lang_text_draw(56, 4, 290, 94, FONT_SMALL_PLAIN);
-    lang_text_draw_centered(56, 5, 440, 94, 160, FONT_SMALL_PLAIN);
-
-    inner_panel_draw(32, 108, 36, 5);
-
-    // apothecary
-    lang_text_draw_amount(8, 24, building_count_total(BUILDING_APOTHECARY), 40, 112, FONT_NORMAL_BLACK_ON_DARK);
-    text_draw_number_centered(building_count_active(BUILDING_APOTHECARY), 150, 112, 100, FONT_NORMAL_BLACK_ON_DARK);
-    lang_text_draw_centered(56, 2, 290, 112, 120, FONT_NORMAL_BLACK_ON_DARK);
-    lang_text_draw_centered(56, 2, 440, 112, 160, FONT_NORMAL_BLACK_ON_DARK);
-
-    // dentist
-    lang_text_draw_amount(8, 26, building_count_total(BUILDING_DENTIST), 40, 132, FONT_NORMAL_BLACK_ON_DARK);
-    text_draw_number_centered(building_count_active(BUILDING_DENTIST), 150, 132, 100, FONT_NORMAL_BLACK_ON_DARK);
-    lang_text_draw_centered(56, 2, 290, 132, 120, FONT_NORMAL_BLACK_ON_DARK);
-    lang_text_draw_centered(56, 2, 440, 132, 160, FONT_NORMAL_BLACK_ON_DARK);
-
-    // mortuary
-    lang_text_draw_amount(8, 28, building_count_total(BUILDING_MORTUARY), 40, 152, FONT_NORMAL_BLACK_ON_DARK);
-    text_draw_number_centered(building_count_active(BUILDING_MORTUARY), 150, 152, 100, FONT_NORMAL_BLACK_ON_DARK);
-    lang_text_draw_centered(56, 2, 290, 152, 120, FONT_NORMAL_BLACK_ON_DARK);
-    lang_text_draw_centered(56, 2, 440, 152, 160, FONT_NORMAL_BLACK_ON_DARK);
-
-    // physicians
-    lang_text_draw_amount(8, 30, building_count_total(BUILDING_PHYSICIAN), 40, 172, FONT_NORMAL_BLACK_ON_DARK);
-    text_draw_number_centered(building_count_active(BUILDING_PHYSICIAN), 150, 172, 100, FONT_NORMAL_BLACK_ON_DARK);
-
-    int width = text_draw_number(1000 * building_count_active(BUILDING_MORTUARY), '@', " ", 280, 172, FONT_NORMAL_BLACK_ON_DARK);
-    lang_text_draw(56, 6, 280 + width, 172, FONT_NORMAL_BLACK_ON_DARK);
-
-    int pct_physician = g_coverage.physician;
-    if (pct_physician == 0) {
-        lang_text_draw_centered(57, 10, 440, 172, 160, FONT_NORMAL_BLACK_ON_DARK);
-    } else if (pct_physician < 100) {
-        lang_text_draw_centered(57, pct_physician / 10 + 11, 440, 172, 160, FONT_NORMAL_BLACK_ON_DARK);
-    } else {
-        lang_text_draw_centered(57, 21, 440, 172, 160, FONT_NORMAL_BLACK_ON_DARK);
+    case 1: return demands.requiring.water_supply ? 1 : 0;
+    case 2: return demands.requiring.dentist ? 3 : 2;
+    case 3: return demands.requiring.physician ? 5 : 4;
+    case 4: return 6;
     }
 
-    lang_text_draw_multiline(56, 7 + get_health_advice(), vec2i{ 60, 194 }, 512, FONT_NORMAL_BLACK_ON_LIGHT);
-
+    return 7;
 }
 
 int ui::advisor_health_window::draw_background() {
-    
-    return ADVISOR_HEIGHT;
+    ui["city_health"] = (city_population() >= 200) 
+                            ? ui::str(56, g_city.health.value / 10 + 16)
+                            : ui::str(56, 15);
+
+    // apothecary
+    ui["apothecary_total"].text_var("%u %s", building_count_total(BUILDING_APOTHECARY), ui::str(8, 29));
+    ui["apothecary_active"] = bstring32(building_count_active(BUILDING_APOTHECARY));
+    ui["apothecary_care"].text_var("%u %s", 1000 * building_count_active(BUILDING_APOTHECARY), ui::str(56, 6));
+    ui["apothecary_covg"] = ui::str(57, g_coverage.apothecary / 10 + 11);
+
+    // dentist
+    ui["dentist_total"].text_var("%u %s", building_count_total(BUILDING_DENTIST), ui::str(8, 27));
+    ui["dentist_active"] = bstring32(building_count_active(BUILDING_DENTIST));
+    ui["dentist_care"].text_var("%u %s", 1000 * building_count_active(BUILDING_DENTIST), ui::str(56, 6));
+    ui["dentist_covg"] = ui::str(57, g_coverage.dentist / 10 + 11);
+
+    // physicians
+    ui["physicians_total"].text_var("%u %s", building_count_total(BUILDING_PHYSICIAN), ui::str(8, 25));
+    ui["physicians_active"] = bstring32(building_count_active(BUILDING_PHYSICIAN));
+    ui["physicians_care"].text_var("%u %s", 1000 * building_count_active(BUILDING_PHYSICIAN), ui::str(56, 6));
+    ui["physicians_covg"] = ui::str(57, g_coverage.physician / 10 + 11);
+
+    // mortuary
+    ui["mortuary_total"].text_var("%u %s", building_count_total(BUILDING_MORTUARY), ui::str(8, 31));
+    ui["mortuary_active"] = bstring32(building_count_active(BUILDING_MORTUARY));
+    ui["mortuary_care"].text_var("%u %s", 1000 * building_count_active(BUILDING_MORTUARY), ui::str(56, 6));
+    ui["mortuary_covg"] = ui::str(57, g_coverage.mortuary / 10 + 11);
+
+    ui["health_advice"] = ui::str(56, 6 + get_health_advice());
+    return 0;
+}
+
+int ui::advisor_health_window::ui_handle_mouse(const mouse *m) {
+    ui.begin_widget(screen_dialog_offset());
+    int result = advisor_window::ui_handle_mouse(m);
+    ui.end_widget();
+
+    return result;
+}
+
+void ui::advisor_health_window::ui_draw_foreground() {
+    ui.begin_widget(screen_dialog_offset());
+    ui.draw(); 
+    ui.end_widget();
 }
 
 advisor_window* ui::advisor_health_window::instance() {

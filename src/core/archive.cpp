@@ -69,6 +69,15 @@ pcstr archive::r_string(pcstr name) {
         ;
     } else if (js_isstring(vm, -1)) {
         result = js_tostring(vm, -1);
+    } else if (js_isarray(vm, -1)) {
+        int length = js_getlength(vm, -1);
+        vec2i gx;
+        if (length == 2) {
+            js_getindex(vm, -1, 0); gx.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+            js_getindex(vm, -1, 1); gx.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+        }
+
+        result = (pcstr)lang_get_string(gx.x, gx.y);
     } else if (js_isobject(vm, -1)) {
         js_getproperty(vm, -1, "group"); int group = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "id"); int id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 class buffer;
 
 struct coverage_data_t {
@@ -7,8 +9,10 @@ struct coverage_data_t {
     int bandstand;
     int pavilion;
     int senet_house;
-    int physician;
-    int mortuary;
+    uint8_t physician;
+    uint8_t dentist;
+    uint8_t apothecary;
+    uint8_t mortuary;
     int school;
     int academy;
     int library;

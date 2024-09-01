@@ -49,7 +49,10 @@ void city_coverage_save_state(buffer* buf) {
     buf->write_i32(coverage.booth);
     buf->write_i32(coverage.bandstand);
     buf->write_i32(coverage.pavilion);
-    buf->write_i32(coverage.physician);
+    buf->write_u8(coverage.physician);
+    buf->write_u8(coverage.dentist);
+    buf->write_u8(coverage.apothecary);
+    buf->write_u8(0);
     buf->write_i32(coverage.senet_house);
 
     buf->write_i32(0);
@@ -71,7 +74,10 @@ void city_coverage_load_state(buffer* buf) {
     coverage.booth = buf->read_i32();
     coverage.bandstand = buf->read_i32();
     coverage.pavilion = buf->read_i32();
-    coverage.physician = buf->read_i32();
+    coverage.physician = buf->read_u8();
+    coverage.dentist = buf->read_u8();
+    coverage.apothecary = buf->read_u8();
+    int tmp = buf->read_u8();
     coverage.senet_house = buf->read_i32();
 
     buf->skip(5);
