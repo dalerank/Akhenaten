@@ -6,7 +6,7 @@
 #include "city/sentiment.h"
 #include "city/city.h"
 #include "city/floods.h"
-#include "city/health.h"
+#include "city/city_health.h"
 #include "city/labor.h"
 #include "city/sentiment.h"
 #include "city/ratings.h"

@@ -1,7 +1,7 @@
 #include "figure_dancer.h"
 
 #include "figure/service.h"
-#include "city/health.h"
+#include "city/city_health.h"
 #include "city/sentiment.h"
 #include "city/city.h"
 #include "city/ratings.h"

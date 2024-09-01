@@ -9,7 +9,7 @@
 #include "building/list.h"
 #include "building/maintenance.h"
 #include "graphics/animation.h"
-#include "city/health.h"
+#include "city/city_health.h"
 #include "city/sentiment.h"
 #include "city/labor.h"
 #include "city/city.h"

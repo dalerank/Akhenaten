@@ -22,4 +22,14 @@ struct city_coverage_t {
     void load(buffer *buf);
 };
 
+struct city_average_coverage_t {
+    int32_t average_entertainment;
+    int32_t average_religion;
+    int32_t average_education;
+    int32_t average_health;
+
+    void update();
+    int calc_average_entertainment();
+};
+
 extern city_coverage_t g_coverage;

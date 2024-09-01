@@ -9,12 +9,19 @@ public:
     building_apothecary(building &b) : building_impl(b) {}
     virtual building_apothecary *dcast_apothecary() override { return this; }
 
+    struct static_params : public buildings::model_t<building_apothecary> {
+        int max_serve_clients;
+        virtual void load(archive arch) override;
+    };
+
     virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_APOTHECARY; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_APOTHECARY; }
     virtual int animation_speed(int speed) const override { return 3; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_graphic() override;
+
+    static const static_params &params() { return (const static_params &)building_impl::params(TYPE); }
 };
 
 class building_mortuary : public building_impl {
@@ -23,6 +30,11 @@ public:
 
     building_mortuary(building &b) : building_impl(b) {}
 
+    struct static_params : public buildings::model_t<building_mortuary> {
+        int max_serve_clients;
+        virtual void load(archive arch) override;
+    };
+
     virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_MORTUARY; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_MORTUARY; }
@@ -30,6 +42,6 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_graphic() override;
     virtual void update_count() const override;
-};
 
-void building_health_draw_info(object_info &c, e_figure_type ftype);
+    static const static_params &params() { return (const static_params &)building_impl::params(TYPE); }
+};

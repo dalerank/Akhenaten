@@ -1,7 +1,7 @@
 #include "figure_musician.h"
 
 #include "figure/service.h"
-#include "city/health.h"
+#include "city/city_health.h"
 #include "city/sentiment.h"
 #include "city/labor.h"
 #include "city/ratings.h"

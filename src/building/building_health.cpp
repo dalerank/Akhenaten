@@ -20,14 +20,8 @@
 
 #include <iostream>
 
-buildings::model_t<building_apothecary> apothercary_m;
-buildings::model_t<building_mortuary> mortuary_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_health);
-void config_load_building_health() {
-    apothercary_m.load();
-    mortuary_m.load();
-}
+building_apothecary::static_params apothercary_m;
+building_mortuary::static_params mortuary_m;
 
 declare_console_command_p(plague_start, game_cheat_start_plague);
 declare_console_command_p(plague_no, game_cheat_noplague);
@@ -74,6 +68,10 @@ void building_apothecary::spawn_figure() {
     //            create_roaming_figure(road.x, road.y, FIGURE_DOCTOR);
     //        }
     //    }
+}
+
+void building_apothecary::static_params::load(archive arch) {
+    max_serve_clients = arch.r_int("max_serve_clients");
 }
 
 void building_apothecary::update_graphic() {
@@ -123,4 +121,8 @@ bool building_mortuary::draw_ornaments_and_animations_height(painter &ctx, vec2i
 
 void building_mortuary::update_count() const {
     g_city.health.add_mortuary_workers(num_workers());
+}
+
+void building_mortuary::static_params::load(archive arch) {
+    max_serve_clients = arch.r_int("max_serve_clients");
 }

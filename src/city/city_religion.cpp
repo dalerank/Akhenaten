@@ -7,7 +7,7 @@
 #include "building/building_storage_yard.h"
 #include "city/coverage.h"
 #include "city/city.h"
-#include "city/health.h"
+#include "city/city_health.h"
 #include "city/message.h"
 #include "city/sentiment.h"
 #include "city/trade.h"

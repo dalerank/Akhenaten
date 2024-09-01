@@ -1,6 +1,6 @@
 #include "figure_teacher.h"
 
-#include "city/health.h"
+#include "city/city_health.h"
 #include "city/city.h"
 #include "city/sentiment.h"
 #include "city/ratings.h"

@@ -464,6 +464,7 @@ public:
 class building_impl {
 public:
     struct static_params {
+        e_building_type type;
         static static_params dummy;
         pcstr name;
         bool fire_proof;
@@ -495,7 +496,6 @@ public:
     virtual void update_graphic();
     virtual void update_month() {}
     virtual void update_day();
-    virtual const static_params &params() const { return params(type()); }
     virtual void window_info_background(object_info &ctx) {}
     virtual void window_info_foreground(object_info &ctx) {}
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) { return 0; }
@@ -515,6 +515,7 @@ public:
     virtual textid get_tooltip() const { return {0, 0}; }
     virtual int ready_production() const { return params().production_rate; }
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
+    virtual const static_params &params() const { return params(type()); }
 
     virtual building_farm *dcast_farm() { return nullptr; }
     virtual building_brewery *dcast_brewery() { return nullptr; }
@@ -807,8 +808,10 @@ namespace buildings {
 
 building_impl *create(e_building_type, building&);
 typedef building_impl* (*create_building_function_cb)(e_building_type, building&);
+typedef void (*load_building_params_cb)();
 
 using BuildingIterator = FuncLinkedList<create_building_function_cb>;
+using BuildingParamIterator = FuncLinkedList<load_building_params_cb>;
 
 template<typename T>
 struct model_t : public building_impl::static_params {
@@ -818,7 +821,11 @@ struct model_t : public building_impl::static_params {
 
     model_t() {
         name = CLSID;
-        static BuildingIterator config_handler(&create);
+        type = TYPE;
+
+        static BuildingIterator ctor_handler(&create);
+        static BuildingParamIterator params_handler(&static_params_load);
+
         building_impl::params(TYPE, *this);
     }
 
@@ -826,7 +833,6 @@ struct model_t : public building_impl::static_params {
         bool loaded = false;
         g_config_arch.r_section(name, [&] (archive arch) {
             static_params::load(arch);
-            city_labor_set_category(*this);
             loaded = true;
             this->load(arch);
         });
@@ -835,6 +841,12 @@ struct model_t : public building_impl::static_params {
 
     virtual void load(archive) {
         /*overload options*/
+    }
+
+    static void static_params_load() {
+        const model_t &item = static_cast<const model_t&>(building_impl::params(TYPE));
+        assert(item.TYPE == TYPE);
+        const_cast<model_t&>(item).load();
     }
 
     static building_impl *create(e_building_type e, building &data) {

@@ -13,7 +13,7 @@
 
 city_coverage_t g_coverage;
 
-void city_t::average_coverage_t::update() {
+void city_average_coverage_t::update() {
     static auto &data = g_city;
 
     OZZY_PROFILER_SECTION("Game/Update/Culture Calculate");
@@ -84,4 +84,8 @@ void city_coverage_t::load(buffer *buf) {
     library = buf->read_i32();
     academy = buf->read_i32();
     mortuary = buf->read_i32();
+}
+
+int city_average_coverage_t::calc_average_entertainment() {
+    return (g_coverage.senet_house + g_coverage.pavilion + g_coverage.bandstand + g_coverage.booth) / 4;
 }

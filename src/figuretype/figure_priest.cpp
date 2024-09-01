@@ -5,7 +5,7 @@
 #include "city/city.h"
 #include "city/sentiment.h"
 #include "city/houses.h"
-#include "city/health.h"
+#include "city/city_health.h"
 #include "city/ratings.h"
 #include "figure/service.h"
 #include "graphics/image_groups.h"

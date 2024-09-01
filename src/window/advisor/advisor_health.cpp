@@ -2,7 +2,7 @@
 
 #include "building/count.h"
 #include "city/coverage.h"
-#include "city/health.h"
+#include "city/city_health.h"
 #include "city/city.h"
 #include "city/population.h"
 #include "graphics/graphics.h"

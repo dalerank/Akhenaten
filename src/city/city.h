@@ -8,11 +8,12 @@
 #include "city/houses.h"
 #include "city/labor.h"
 #include "city/buildings.h"
-#include "city/health.h"
+#include "city/city_health.h"
 #include "city/military.h"
 #include "city/city_resource.h"
 #include "city/city_fishing_points.h"
 #include "city/map.h"
+#include "city/coverage.h"
 #include "city/city_religion.h"
 #include "city/city_figures.h"
 #include "city/victory.h"
@@ -173,16 +174,7 @@ struct city_t {
 
     city_health_t health;
     city_ratings_t ratings;
-
-    struct average_coverage_t {
-        int32_t average_entertainment;
-        int32_t average_religion;
-        int32_t average_education;
-        int32_t average_health;
-
-        void update();
-        int calc_average_entertainment();
-    } avg_coverage;
+    city_average_coverage_t avg_coverage;
 
     city_religion_t religion;
     city_entertainment_t entertainment;

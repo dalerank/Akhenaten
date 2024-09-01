@@ -1033,6 +1033,8 @@ void building_impl::static_params::load(archive arch) {
     is_draggable = arch.r_bool("is_draggable");
     production_rate = arch.r_uint("production_rate", 100);
 
+    city_labor_set_category(type, labor_category);
+
     anim.load(arch);
 }
 

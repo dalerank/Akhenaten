@@ -9,7 +9,7 @@
 #include "city/city.h"
 #include "city/victory.h"
 #include "city/warning.h"
-#include "city/health.h"
+#include "city/city_health.h"
 #include "city/city_resource.h"
 #include "core/string.h"
 #include "figure/figure.h"

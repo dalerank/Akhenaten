@@ -2,7 +2,7 @@
 
 #include "core/profiler.h"
 #include "building/building.h"
-#include "city/health.h"
+#include "city/city_health.h"
 #include "city/sentiment.h"
 #include "city/labor.h"
 #include "city/city.h"

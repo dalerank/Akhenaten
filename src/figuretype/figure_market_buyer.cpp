@@ -17,7 +17,7 @@
 #include "graphics/elements/ui.h"
 #include "graphics/image_groups.h"
 #include "config/config.h"
-#include "city/health.h"
+#include "city/city_health.h"
 #include "grid/building.h"
 #include "city/ratings.h"
 #include "city/labor.h"

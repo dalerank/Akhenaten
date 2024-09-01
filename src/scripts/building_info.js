@@ -850,6 +850,7 @@ building_apothecary = {
     work : { pos : [25, -35], pack:PACK_GENERAL, id:68, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
+  max_serve_clients : 100,
   window_info_height_id : 1,
   info_help_id:63,
   info_text_id:81,
@@ -1271,6 +1272,7 @@ building_mortuary = {
     base : { pack:PACK_GENERAL, id:175 },
     work : { pack:PACK_GENERAL, id:175, offset:1, max_frames:12 }
   },
+  max_serve_clients : 1000,
   building_size : 2,
   info_help_id:66,
   info_text_id:82,

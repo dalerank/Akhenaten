@@ -1,7 +1,8 @@
-#include "health.h"
+#include "city_health.h"
 
 #include "core/profiler.h"
 #include "core/calc.h"
+#include "building/building_health.h"
 #include "building/building_house.h"
 #include "building/destruction.h"
 #include "building/count.h"
@@ -113,12 +114,17 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
 
 void city_health_t::update_coverage() {
     OZZY_PROFILER_SECTION("Game/Update/Health Coverage");
-    auto& coverage = g_coverage;
     int population = g_city.population.population;
 
-    // health
-    coverage.mortuary = std::min<int>(calc_percentage(1000 * building_count_active(BUILDING_MORTUARY), population), 100);
-    coverage.physician = std::min<int>(calc_percentage(1000 * building_count_active(BUILDING_PHYSICIAN), population), 100);
+    const auto &mortuary_params = building_mortuary::params();
+    g_coverage.mortuary = std::min<int>(calc_percentage(mortuary_params.max_serve_clients * building_count_active(BUILDING_MORTUARY), population), 100);
+
+
+    g_coverage.physician = std::min<int>(calc_percentage(1000 * building_count_active(BUILDING_PHYSICIAN), population), 100);
+    g_coverage.dentist = std::min<int>(calc_percentage(1000 * building_count_active(BUILDING_DENTIST), population), 100);
+
+    const auto &apothecary_params = building_apothecary::params();
+    g_coverage.apothecary = std::min<int>(calc_percentage(apothecary_params.max_serve_clients * building_count_active(BUILDING_APOTHECARY), population), 100);
 }
 
 
