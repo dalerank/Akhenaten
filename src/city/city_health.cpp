@@ -119,7 +119,6 @@ void city_health_t::update_coverage() {
     const auto &mortuary_params = building_mortuary::current_params();
     g_coverage.mortuary = std::min<int>(calc_percentage(mortuary_params.max_serve_clients * building_count_active(BUILDING_MORTUARY), population), 100);
 
-
     g_coverage.physician = std::min<int>(calc_percentage(1000 * building_count_active(BUILDING_PHYSICIAN), population), 100);
     g_coverage.dentist = std::min<int>(calc_percentage(1000 * building_count_active(BUILDING_DENTIST), population), 100);
 

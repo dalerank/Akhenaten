@@ -861,7 +861,7 @@ void ui::emenu_header::load(archive arch, element *parent, items &elems) {
 
     _font = (e_font)arch.r_int("font", FONT_NORMAL_BLACK_ON_LIGHT);
     impl.text = arch.r_string("text");
-    if (!!impl.text && impl.text[0] == '#') {
+    if (!!impl.text && impl.text[0u] == '#') {
         impl.text = lang_text_from_key(impl.text.c_str());
     }
 }
@@ -876,7 +876,7 @@ void ui::emenu_header::load_items(archive arch, pcstr section) {
         menu_item item;
         item.id = key;
         item.text = elem.r_string("text");
-        if (!!item.text && item.text[0] == '#') {
+        if (!!item.text && item.text[0u] == '#') {
             item.text = lang_text_from_key(item.text.c_str());
         }
         item.parameter = elem.r_int("parameter");
