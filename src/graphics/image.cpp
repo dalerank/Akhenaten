@@ -259,10 +259,6 @@ static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
     return nullptr;
 }
 
-int image_id_resource_icon(int resource) {
-    return image_group(IMG_RESOURCE_ICONS) + resource;
-}
-
 int image_group(image_desc desc) {
     return image_id_from_group(desc.pack, desc.id) + desc.offset;
 }
