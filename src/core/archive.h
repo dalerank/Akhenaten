@@ -9,6 +9,7 @@
 
 enum e_image_id : uint16_t;
 struct animation_t;
+struct image_desc;
 
 struct archive {
     void *state = nullptr;
@@ -24,6 +25,7 @@ struct archive {
     vec2i r_size2i(pcstr name, pcstr w = "w", pcstr h = "h");
     vec2i r_vec2i(pcstr name, pcstr x = "x", pcstr y = "y");
     bool r_anim(pcstr name, animation_t &anim);
+    bool r_desc(pcstr name, image_desc &desc);
 
     std::vector<vec2i> r_array_vec2i(pcstr name);
 
