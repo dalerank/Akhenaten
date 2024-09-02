@@ -399,6 +399,7 @@ figure_architector = {
     city_is_amazing: {sound:"engineer_g10.wav", group: 243, text:10},
 	},
 	terrain_usage : TERRAIN_USAGE_ROADS,
+	max_service_buildings : 100,
 	max_roam_length : 640,
 }
 

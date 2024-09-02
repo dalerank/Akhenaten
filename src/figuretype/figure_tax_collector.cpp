@@ -18,11 +18,6 @@
 
 figures::model_t<figure_tax_collector> tax_collector_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_tax_collector);
-void config_load_figure_tax_collector() {
-    tax_collector_m.load();
-}
-
 void figure_tax_collector::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Tax Collector");
     building* b = home();

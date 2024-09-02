@@ -9,11 +9,10 @@
 
 #include "js/js_game.h"
 
-figures::model_t<figure_architector> architector_m;
+figure_architector::static_params architector_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_architector);
-void config_load_figure_architector() {
-    architector_m.load();
+void figure_architector::static_params::load(archive arch) {
+    max_service_buildings = arch.r_int("max_service_buildings");
 }
 
 void figure_architector::figure_action() {
