@@ -11,8 +11,6 @@
 #include "graphics/text.h"
 #include "game/game.h"
 
-#define ADVISOR_HEIGHT 16
-
 ui::advisor_education_window g_advisor_education_window;
 
 static int get_education_advice() {
@@ -55,81 +53,52 @@ static int get_education_advice() {
     return advice_id;
 }
 
-void ui::advisor_education_window::draw_foreground() {
-    painter ctx = game.painter();
-    outer_panel_draw(vec2i{ 0, 0 }, 40, ADVISOR_HEIGHT);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 7, vec2i{ 10, 10 });
-    lang_text_draw(57, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
+int ui::advisor_education_window::draw_background() {
+    ui["population"].text_var("%u %s", city_population(), ui::str(57, 1));
+    ui["school_age"].text_var("%u %s", city_population_school_age(), ui::str(57, 2));
+    ui["academy_age"].text_var("%u %s", city_population_academy_age(), ui::str(57, 3));
 
-    // x population, y school age, z academy age
-    int width = text_draw_number(city_population(), '@', " ", 60, 50, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += lang_text_draw(57, 1, 60 + width, 50, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += text_draw_number(city_population_school_age(), '@', " ", 60 + width, 50, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += lang_text_draw(57, 2, 60 + width, 50, FONT_NORMAL_BLACK_ON_LIGHT);
-    width += text_draw_number(city_population_academy_age(), '@', " ", 60 + width, 50, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(57, 3, 60 + width, 50, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui["school_total"].text_var("%u %s", building_count_total(BUILDING_SCRIBAL_SCHOOL), ui::str(8, 18));
+    ui["school_active"].text_var("%u", building_count_active(BUILDING_SCRIBAL_SCHOOL));
+    ui["school_care"].text_var("%u %s", 75 * building_count_active(BUILDING_SCRIBAL_SCHOOL), ui::str(57, 7));
+    textid covg_school{ 57, 21 };
+    if (g_coverage.school == 0) { covg_school = { 57, 10 }; }
+    else if (g_coverage.school < 100) { covg_school = {57, g_coverage.school / 10 + 11}; }
+    ui["school_covg"].text_var("%u %s", 75 * building_count_active(BUILDING_SCRIBAL_SCHOOL), ui::str(57, 7));
 
-    // table headers
-    lang_text_draw(57, 4, 180, 86, FONT_SMALL_PLAIN);
-    lang_text_draw(57, 5, 290, 86, FONT_SMALL_PLAIN);
-    lang_text_draw(57, 6, 478, 86, FONT_SMALL_PLAIN);
+    ui["academies_total"].text_var("%u %s", building_count_total(BUILDING_ACADEMY), ui::str(8, 20));
+    ui["academies_active"].text_var("%u", building_count_active(BUILDING_ACADEMY));
+    ui["academies_care"].text_var("%u %s", 75 * building_count_active(BUILDING_ACADEMY), ui::str(57, 8));
+    textid covg_academies{ 57, 21 };
+    if (g_coverage.academy == 0) { covg_academies = { 57, 10 }; } 
+    else if (g_coverage.academy < 100) { covg_academies = { 57, g_coverage.academy / 10 + 11 }; }
+    ui["academies_covg"].text_var("%u %s", 100 * building_count_active(BUILDING_ACADEMY), ui::str(57, 7));
 
-    inner_panel_draw(32, 100, 36, 4);
+    ui["libraries_total"].text_var("%u %s", building_count_total(BUILDING_LIBRARY), ui::str(8, 22));
+    ui["libraries_active"].text_var("%u", building_count_active(BUILDING_LIBRARY));
+    ui["libraries_care"].text_var("%u %s", 75 * building_count_active(BUILDING_LIBRARY), ui::str(57, 9));
+    textid covg_libraries{ 57, 21 };
+    if (g_coverage.library == 0) { covg_libraries = { 57, 10 }; }
+    else if (g_coverage.library < 100) { covg_libraries = { 57, g_coverage.library / 10 + 11 }; }
+    ui["libraries_covg"].text_var("%u %s", 100 * building_count_active(BUILDING_LIBRARY), ui::str(57, 7));
 
-    // schools
-    lang_text_draw_amount(8, 18, building_count_total(BUILDING_SCRIBAL_SCHOOL), 40, 105, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw_number_centered(building_count_active(BUILDING_SCRIBAL_SCHOOL), 150, 105, 100, FONT_NORMAL_WHITE_ON_DARK);
+    ui["education_advice"] = ui::str(57, 22 + get_education_advice());
 
-    width = text_draw_number(75 * building_count_active(BUILDING_SCRIBAL_SCHOOL), '@', " ", 280, 105, FONT_NORMAL_WHITE_ON_DARK);
-    lang_text_draw(57, 7, 280 + width, 105, FONT_NORMAL_WHITE_ON_DARK);
-
-    int pct_school = g_coverage.school;
-    if (pct_school == 0) {
-        lang_text_draw_centered(57, 10, 420, 105, 200, FONT_NORMAL_WHITE_ON_DARK);
-    } else if (pct_school < 100) {
-        lang_text_draw_centered(57, pct_school / 10 + 11, 420, 105, 200, FONT_NORMAL_WHITE_ON_DARK);
-    } else {
-        lang_text_draw_centered(57, 21, 420, 105, 200, FONT_NORMAL_WHITE_ON_DARK);
-    }
-
-    // academies
-    lang_text_draw_amount(8, 20, building_count_total(BUILDING_ACADEMY), 40, 125, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw_number_centered(building_count_active(BUILDING_ACADEMY), 150, 125, 100, FONT_NORMAL_WHITE_ON_DARK);
-
-    width = text_draw_number(100 * building_count_active(BUILDING_ACADEMY), '@', " ", 280, 125, FONT_NORMAL_WHITE_ON_DARK);
-    lang_text_draw(57, 8, 280 + width, 125, FONT_NORMAL_WHITE_ON_DARK);
-
-    int pct_academy = g_coverage.academy;
-    if (pct_academy == 0)
-        lang_text_draw_centered(57, 10, 420, 125, 200, FONT_NORMAL_WHITE_ON_DARK);
-    else if (pct_academy < 100)
-        lang_text_draw_centered(57, pct_academy / 10 + 11, 420, 125, 200, FONT_NORMAL_WHITE_ON_DARK);
-    else {
-        lang_text_draw_centered(57, 21, 420, 125, 200, FONT_NORMAL_WHITE_ON_DARK);
-    }
-
-    // libraries
-    lang_text_draw_amount(8, 22, building_count_total(BUILDING_LIBRARY), 40, 145, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw_number_centered(building_count_active(BUILDING_LIBRARY), 150, 145, 100, FONT_NORMAL_WHITE_ON_DARK);
-
-    width = text_draw_number(800 * building_count_active(BUILDING_LIBRARY), '@', " ", 280, 145, FONT_NORMAL_WHITE_ON_DARK);
-    lang_text_draw(57, 9, 280 + width, 145, FONT_NORMAL_WHITE_ON_DARK);
-
-    int pct_library = g_coverage.library;
-    if (pct_library == 0)
-        lang_text_draw_centered(57, 10, 420, 145, 200, FONT_NORMAL_WHITE_ON_DARK);
-    else if (pct_library < 100)
-        lang_text_draw_centered(57, pct_library / 10 + 11, 420, 145, 200, FONT_NORMAL_WHITE_ON_DARK);
-    else {
-        lang_text_draw_centered(57, 21, 420, 145, 200, FONT_NORMAL_WHITE_ON_DARK);
-    }
-
-    lang_text_draw_multiline(57, 22 + get_education_advice(), vec2i{ 60, 180 }, 512, FONT_NORMAL_BLACK_ON_LIGHT);
+    return 0;
 }
 
-int ui::advisor_education_window::draw_background() {
-    
-    return ADVISOR_HEIGHT;
+void ui::advisor_education_window::ui_draw_foreground() {
+    ui.begin_widget(screen_dialog_offset());
+    ui.draw();
+    ui.end_widget();
+}
+
+int ui::advisor_education_window::ui_handle_mouse(const mouse *m) {
+    ui.begin_widget(screen_dialog_offset());
+    int result = advisor_window::ui_handle_mouse(m);
+    ui.end_widget();
+
+    return result;
 }
 
 advisor_window* ui::advisor_education_window::instance() {

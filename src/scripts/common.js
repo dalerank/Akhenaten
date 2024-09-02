@@ -203,6 +203,7 @@ var advisors_window = {}
 var advisor_military_window = {}
 var advisor_population_window = {}
 var advisor_health_window = {}
+var advisor_education_window = {}
 var taxcollector_info_window = {}
 
 //figures
