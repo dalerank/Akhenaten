@@ -191,7 +191,7 @@ building* building_create(e_building_type type, tile2i tile, int orientation) {
 }
 
 building_impl *buildings::create(e_building_type e, building &data) {
-    for (BuildingIterator *s = BuildingIterator::tail; s; s = s->next) {
+    for (BuildingCtorIterator *s = BuildingCtorIterator::tail; s; s = s->next) {
         auto impl = s->func(e, data);
         if (impl) {
             return impl;

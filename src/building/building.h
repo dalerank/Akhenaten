@@ -808,10 +808,10 @@ namespace buildings {
 
 building_impl *create(e_building_type, building&);
 typedef building_impl* (*create_building_function_cb)(e_building_type, building&);
-typedef void (*load_building_params_cb)();
+typedef void (*load_building_static_params_cb)();
 
-using BuildingIterator = FuncLinkedList<create_building_function_cb>;
-using BuildingParamIterator = FuncLinkedList<load_building_params_cb>;
+using BuildingCtorIterator = FuncLinkedList<create_building_function_cb>;
+using BuildingParamIterator = FuncLinkedList<load_building_static_params_cb>;
 
 template<typename T>
 struct model_t : public building_impl::static_params {
@@ -823,8 +823,8 @@ struct model_t : public building_impl::static_params {
         name = CLSID;
         type = TYPE;
 
-        static BuildingIterator ctor_handler(&create);
-        static BuildingParamIterator params_handler(&static_params_load);
+        static BuildingCtorIterator ctor_handler(&create);
+        static BuildingParamIterator static_params_handler(&static_params_load);
 
         building_impl::params(TYPE, *this);
     }
