@@ -12,11 +12,6 @@
 
 figures::model_t<figure_musician> musician_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_musician);
-void config_load_figure_musician() {
-    musician_m.load();
-}
-
 void figure_musician::update_shows() {
     building* b = destination();
     b->data.entertainment.days2 = 32;

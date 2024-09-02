@@ -11,11 +11,6 @@
 
 figures::model_t<figure_dancer> dancer_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_dancer);
-void config_load_figure_dancer() {
-    dancer_m.load();
-}
-
 void figure_dancer::update_shows() {
     building* b = destination();
     b->data.entertainment.days3_or_play = 32;

@@ -12,11 +12,6 @@
 
 figures::model_t<figure_physician> fphysician_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_physician);
-void config_load_figure_physician() {
-    fphysician_m.load();
-}
-
 void figure_physician::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Physician");
     //    building *b = building_get(building_id);

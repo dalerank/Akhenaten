@@ -450,6 +450,7 @@ public:
     struct static_params {
         static static_params dummy;
 
+        e_figure_type ftype;
         pcstr name;
         animations_t anim;
         figure_sounds_t sounds;
@@ -598,19 +599,25 @@ namespace figures {
 
 figure_impl *create(e_figure_type, figure*);
 typedef figure_impl* (*create_figure_function_cb)(e_figure_type, figure*);
+typedef void (*load_figure_static_params_cb)();
 
-using FigureIterator = FuncLinkedList<create_figure_function_cb>;
+using FigureCtorIterator = FuncLinkedList<create_figure_function_cb>;
+using FigureStaticParamIterator = FuncLinkedList<load_figure_static_params_cb>;
 
 template<typename T>
 struct model_t : public figure_impl::static_params {
     using figure_type = T;
-    static constexpr e_figure_type type = T::TYPE;
+    static constexpr e_figure_type TYPE = T::TYPE;
     static constexpr pcstr CLSID = T::CLSID;
 
     model_t() {
         name = CLSID;
-        static FigureIterator config_handler(&create);
-        figure_impl::params(type, *this);
+        ftype = TYPE;
+
+        static FigureCtorIterator config_handler(&create);
+        static FigureStaticParamIterator static_params_handler(&static_params_load);
+        
+        figure_impl::params(TYPE, *this);
     }
 
     void load() {
@@ -627,8 +634,14 @@ struct model_t : public figure_impl::static_params {
         /*overload options*/
     }
 
+    static void static_params_load() {
+        const model_t &item = static_cast<const model_t &>(figure_impl::params(TYPE));
+        assert(item.TYPE == TYPE);
+        const_cast<model_t &>(item).load();
+    }
+
     static figure_impl *create(e_figure_type e, figure *data) {
-        if (e == type) {
+        if (e == TYPE) {
             return new figure_type(data);
         }
         return nullptr;

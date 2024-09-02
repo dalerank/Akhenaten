@@ -413,7 +413,7 @@ void figure_impl::update_animation() {
 }
 
 figure_impl *figures::create(e_figure_type e, figure *data) {
-    for (FigureIterator *s = FigureIterator::tail; s; s = s->next) {
+    for (FigureCtorIterator *s = FigureCtorIterator::tail; s; s = s->next) {
         auto impl = s->func(e, data);
         if (impl) {
             return impl;

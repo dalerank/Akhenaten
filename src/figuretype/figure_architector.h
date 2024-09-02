@@ -7,6 +7,11 @@ public:
     FIGURE_METAINFO(FIGURE_ARCHITECT, figure_architector)
     figure_architector(figure *f) : figure_impl(f) {}
 
+    struct static_params : public figures::model_t<figure_architector> {
+        int max_service_buildings;
+        virtual void load(archive arch) override;
+    };
+
     virtual void figure_action() override;
     virtual void figure_before_action() override;
     virtual e_figure_sound phrase() const override { return {FIGURE_ARCHITECT, "engineer"}; }
@@ -16,4 +21,6 @@ public:
     virtual void on_action_changed(int saved_action) override;
     virtual const animations_t &anim() const override;
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
+
+    static const static_params &params() { return (const static_params &)figure_impl::params(TYPE); }
 };
