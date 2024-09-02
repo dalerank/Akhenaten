@@ -160,6 +160,7 @@ var empire_images_remap = []
 var imagepaks = []
 
 // ui
+var uioptions = {}
 var advisor_chief_window = {}
 var advisor_ratings_window = {}
 var advisor_labors_window = {}

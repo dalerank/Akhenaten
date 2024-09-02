@@ -8,10 +8,10 @@ images = [
 	{img: IMG_SLED_GRANITE_SMALL, pack:PACK_SPR_MAIN, id:103},
 	{img: IMG_SLED_LIMESTONE_SMALL, pack:PACK_GENERAL, id:104},
 	// spr ambient
-	{img: ANIM_SANDSTONE_QUARRY_2, pack:PACK_SPR_AMBIENT, id:49},
+	//{img: ANIM_SANDSTONE_QUARRY_2, pack:PACK_SPR_AMBIENT, id:49},
 
 	// icon resources
-	{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
+	//{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
 
 	{img: IMG_SIDE_PANEL, pack:PACK_GENERAL, id:121, offset:0},
 	{img: IMG_TOP_MENU_BACKGROUND, pack:PACK_GENERAL, id:121, offset:8},

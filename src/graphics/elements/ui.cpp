@@ -18,6 +18,7 @@
 #include "core/span.hpp"
 #include "resource/icons.h"
 #include "io/gamefiles/lang.h"
+#include "js/js_game.h"
 
 #include <stack>
 
@@ -127,7 +128,17 @@ namespace ui {
     state g_state;
     generic_button dummy;
     element dummy_element;
+
+    image_desc resource_icons;
 }
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_ui_options);
+void config_load_ui_options() {
+    g_config_arch.r_section("uioptions", [] (archive arch) {
+        arch.r_desc("resource_icons", ui::resource_icons);
+    });
+}
+
 
 static ui::element::ptr create_element(pcstr type) {
     ui::element::ptr elm;
@@ -647,9 +658,12 @@ void ui::eborder::draw() {
     }
 }
 
-
 void ui::eresource_icon::draw() {
-    ui::eimage(IMG_RESOURCE_ICONS, pos, res);
+    ui::eimage(resource_icons + res, pos);
+}
+
+int image_id_resource_icon(int resource) {
+    return image_group(ui::resource_icons) + resource;
 }
 
 void ui::eresource_icon::image(int image) {

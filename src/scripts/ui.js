@@ -35,6 +35,10 @@ function button(config) { return __extend({type:"generic_button", font : FONT_NO
 function arrowup(config) { return __extend({type:"arrow_button", down:false}, config) }
 function arrowdown(config) { return __extend({type:"arrow_button", down:true}, config) }
 
+uioptions = {
+	resource_icons : {pack:PACK_GENERAL, id:129},
+}
+
 top_menu_bar = {
 	offset : [10, 6],
 	item_height : 20,
