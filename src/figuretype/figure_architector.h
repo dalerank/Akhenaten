@@ -22,5 +22,5 @@ public:
     virtual const animations_t &anim() const override;
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
 
-    static const static_params &params() { return (const static_params &)figure_impl::params(TYPE); }
+    static const static_params &current_params() { return (const static_params &)figure_impl::params(TYPE); }
 };
