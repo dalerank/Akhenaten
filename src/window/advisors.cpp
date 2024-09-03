@@ -23,7 +23,7 @@
 #include "input/input.h"
 #include "window/advisor/advisor_chief.h"
 #include "window/advisor/advisor_education.h"
-#include "window/advisor/entertainment.h"
+#include "window/advisor/advisor_entertainment.h"
 #include "window/advisor/advisor_financial.h"
 #include "window/advisor/advisor_health.h"
 #include "window/advisor/housing.h"
