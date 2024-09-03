@@ -139,7 +139,6 @@ void config_load_ui_options() {
     });
 }
 
-
 static ui::element::ptr create_element(pcstr type) {
     ui::element::ptr elm;
     if (!strcmp(type, "outer_panel")) { elm = std::make_shared<ui::eouter_panel>(); } else if (!strcmp(type, "scrollbar")) { elm = std::make_shared<ui::escrollbar>(); } else if (!strcmp(type, "menu_header")) { elm = std::make_shared<ui::emenu_header>(); } else if (!strcmp(type, "inner_panel")) { elm = std::make_shared<ui::einner_panel>(); } else if (!strcmp(type, "background")) { elm = std::make_shared<ui::ebackground>(); } else if (!strcmp(type, "image")) { elm = std::make_shared<ui::eimg>(); } else if (!strcmp(type, "label")) { elm = std::make_shared<ui::elabel>(); } else if (!strcmp(type, "text")) { elm = std::make_shared<ui::etext>(); } else if (!strcmp(type, "generic_button")) { elm = std::make_shared<ui::egeneric_button>(); } else if (!strcmp(type, "image_button")) { elm = std::make_shared<ui::eimage_button>(); } else if (!strcmp(type, "resource_icon")) { elm = std::make_shared<ui::eresource_icon>(); } else if (!strcmp(type, "arrow_button")) { elm = std::make_shared<ui::earrow_button>(); } else if (!strcmp(type, "border")) { elm = std::make_shared<ui::eborder>(); } else if (!strcmp(type, "large_button")) {
