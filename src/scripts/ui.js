@@ -31,9 +31,11 @@ function label(config) { return __extend({type:"label", font : FONT_NORMAL_WHITE
 function header(config) { return __extend({type:"label", font : FONT_LARGE_BLACK_ON_LIGHT}, config) }
 function multiline(config) { return __extend({type:"label", multiline:true, font : FONT_NORMAL_WHITE_ON_DARK}, config) }
 function image(config) { return __extend({type:"image"}, config) }
+function image_button(config) { return __extend({type:"image_button"}, config) }
 function button(config) { return __extend({type:"generic_button", font : FONT_NORMAL_BLACK_ON_LIGHT}, config) }
 function arrowup(config) { return __extend({type:"arrow_button", down:false}, config) }
 function arrowdown(config) { return __extend({type:"arrow_button", down:true}, config) }
+function background(config) { return __extend({type:"background", down:true}, config) }
 
 uioptions = {
 	resource_icons : {pack:PACK_GENERAL, id:129},
@@ -773,21 +775,22 @@ info_window_house = {
 
 hold_festival_window = {
 	pos : [(sw(0) - px(34)) / 2 - 50, (sh(0) - px(20)) / 2 - 100],
-	ui : {
-		background : { type : "outer_panel",	pos: [48, 48], size: [34, 20]},
-		title 		 : { type : "text", pos: [48, 60], size: [544, -1], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		god0 			 : { type : "image_button", pos:[100 * 0 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 0, offset_pressed:5, offset_focused:5, border:true },
-		god1 			 : { type : "image_button", pos:[100 * 1 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 1, offset_pressed:5, offset_focused:5, border:true },
-		god2 			 : { type : "image_button", pos:[100 * 2 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 2, offset_pressed:5, offset_focused:5, border:true },
-		god3 			 : { type : "image_button", pos:[100 * 3 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 3, offset_pressed:5, offset_focused:5, border:true },
-		god4 			 : { type : "image_button", pos:[100 * 4 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 4, offset_pressed:5, offset_focused:5, border:true },
-		small_festival : { type:"generic_button", pos:[102, 216], size:[430, 26], rich:true},
-		middle_festival : { type:"generic_button", pos:[102, 246], size:[430, 26], rich:true},
-		large_festival : { type:"generic_button", pos:[102, 276], size:[430, 26], rich:true},
-		button_ok  : { type : "image_button", pos:[400, 317], size:[39, 26], pack:PACK_GENERAL, id:96, offset:0 },
-		button_cancel  : { type : "image_button", pos:[358, 317], size:[39, 26], pack:PACK_GENERAL, id:96, offset:4 },
-		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:0 },
-		festival_type : { type : "text", pos: [220, 327], size: [544, -1] },
+	ui : { 
+		background_image : background({pack:PACK_UNLOADED, id:11}),
+		background : outer_panel({pos: [48, 48], size: [34, 20]}),
+		title 		 : text_center({pos: [48, 60], size: [544, -1], font : FONT_LARGE_BLACK_ON_LIGHT}),
+		god0 			 : image_button({pos:[100 * 0 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 0, offset_pressed:5, offset_focused:5, border:true }),
+		god1 			 : image_button({pos:[100 * 1 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 1, offset_pressed:5, offset_focused:5, border:true }),
+		god2 			 : image_button({pos:[100 * 2 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 2, offset_pressed:5, offset_focused:5, border:true }),
+		god3 			 : image_button({pos:[100 * 3 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 3, offset_pressed:5, offset_focused:5, border:true }),
+		god4 			 : image_button({pos:[100 * 4 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 4, offset_pressed:5, offset_focused:5, border:true }),
+		small_festival : button({pos:[102, 216], size:[430, 26], rich:true}),
+		middle_festival : button({pos:[102, 246], size:[430, 26], rich:true}),
+		large_festival : button({pos:[102, 276], size:[430, 26], rich:true}),
+		button_ok  : image_button({pos:[400, 317], size:[39, 26], pack:PACK_GENERAL, id:96, offset:0 }),
+		button_cancel  : image_button({pos:[358, 317], size:[39, 26], pack:PACK_GENERAL, id:96, offset:4 }),
+		button_help: image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:0 }),
+		festival_type : text({pos: [220, 327], size: [544, -1] }),
 	}
 }
 
