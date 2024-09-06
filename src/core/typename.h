@@ -5,7 +5,7 @@
 namespace detail {
     template <size_t...Idxs>
     constexpr auto substring_as_array(std::string_view str, std::index_sequence<Idxs...>) {
-        return std::array{ str[Idxs]..., '\n' };
+        return std::array{ str[Idxs]..., '\0' };
     }
 
     template <typename T>
@@ -35,14 +35,15 @@ namespace detail {
         return substring_as_array(name, std::make_index_sequence<name.size()>{});
     }
 
-    template <typename T>
-    struct type_name_holder {
-        static inline constexpr auto value = type_name_array<T>();
-    };
 } // detail
 
 template <typename T>
+struct type_name_holder {
+    static inline constexpr auto value = detail::type_name_array<T>();
+};
+
+template <typename T>
 constexpr std::string_view type_name() {
-    constexpr auto &value = detail::type_name_holder<T>::value;
+    constexpr auto &value = type_name_holder<T>::value;
     return std::string_view{ value.data(), value.size() };
 }
