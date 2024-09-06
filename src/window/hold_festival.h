@@ -1,17 +1,22 @@
 #pragma once
 
-#include "graphics/elements/ui.h"
+#include "window/autoconfig_window.h"
 
 namespace ui {
-    struct hold_festival_window : public widget {
+    struct hold_festival_window : public autoconfig_window_t<hold_festival_window> {
         std::function<void()> callback;
         bool background;
 
         using widget::load;
 
         void close();
-        void draw_background();
-        void handle_input(const mouse *m, const hotkeys *h);
+        virtual int draw_background() override;
+        virtual int handle_mouse(const mouse *m) override { return 0; }
+        virtual int ui_handle_mouse(const mouse *m) override;
+        virtual void draw_foreground() override {}
+        virtual void ui_draw_foreground() override;
+        virtual int get_tooltip_text() override { return 0; }
+        virtual void init() override {}
         void get_tooltip(tooltip_context *c);
     };
 }

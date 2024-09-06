@@ -22,11 +22,6 @@
 
 ui::hold_festival_window g_hold_festival_window;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_hold_festival);
-void config_load_hold_festival() {
-    g_hold_festival_window.load("hold_festival_window");
-}
-
 void ui::hold_festival_window::close() {
     if (callback) {
         callback();
@@ -46,29 +41,35 @@ void window_hold_festival_select_size(e_festival_type size) {
     }
 }
 
-void ui::hold_festival_window::draw_background() {     
+int ui::hold_festival_window::draw_background() {     
     if (!background) {
         game.animation = false;
         window_city_draw_panels();
         window_city_draw();
     }
 
-    ui["background"].enabled = background;
+    ui["background_image"].enabled = background;
     ui["title"] = ui::str(58, 25 + g_city.festival.selected_god());
 
     int resource_image_deben = image_id_from_group(PACK_GENERAL, 103) + 18;
-    ui["small_festival"] = bstring64().printf("%s %u @I%u", ui::str(58, 31), g_city.festival.small_cost, resource_image_deben);
+    ui["small_festival"].text_var("%s %u @I%u", ui::str(58, 31), g_city.festival.small_cost, resource_image_deben);
     ui["small_festival"].readonly = city_finance_out_of_money();
-    ui["small_festival"].onclick([] { window_hold_festival_select_size(FESTIVAL_SMALL); });
+    ui["small_festival"].onclick([] {
+        window_hold_festival_select_size(FESTIVAL_SMALL);
+    });
 
-    ui["middle_festival"] = bstring64().printf("%s %u @I%u", ui::str(58, 32), g_city.festival.large_cost, resource_image_deben);
+    ui["middle_festival"].text_var("%s %u @I%u", ui::str(58, 32), g_city.festival.large_cost, resource_image_deben);
     ui["middle_festival"].readonly = city_finance_out_of_money();
-    ui["middle_festival"].onclick([] { window_hold_festival_select_size(FESTIVAL_LARGE); });
+    ui["middle_festival"].onclick([] { 
+        window_hold_festival_select_size(FESTIVAL_LARGE); 
+    });
 
     int resource_image_beer = image_id_resource_icon(RESOURCE_BEER);
     ui["large_festival"].readonly = city_finance_out_of_money() || g_city.festival.not_enough_alcohol;
-    ui["large_festival"].onclick([] { window_hold_festival_select_size(FESTIVAL_GRAND); });
-    ui["large_festival"] = bstring64().printf("%s %u @I%u %u  @I%u", ui::str(58, 32), g_city.festival.grand_cost, resource_image_deben, g_city.festival.grand_alcohol, resource_image_beer);
+    ui["large_festival"].text_var("%s %u @I%u %u  @I%u", ui::str(58, 32), g_city.festival.grand_cost, resource_image_deben, g_city.festival.grand_alcohol, resource_image_beer);
+    ui["large_festival"].onclick([] {
+        window_hold_festival_select_size(FESTIVAL_GRAND);
+    });
 
     ui["button_ok"].onclick([] { 
         if (!city_finance_out_of_money()) {
@@ -101,12 +102,22 @@ void ui::hold_festival_window::draw_background() {
     }
 
     ui["festival_type"] = ui::str(58, 30 + g_city.festival.selected_size());
+
+    return 0;
 }
 
-void ui::hold_festival_window::handle_input(const mouse* m, const hotkeys* h) {
-    handle_mouse(m);
+void ui::hold_festival_window::ui_draw_foreground() {
+    ui.begin_widget(pos);
+    ui.draw();
+    ui.end_widget();
+}
 
-    const mouse* m_dialog = mouse_in_dialog(m);
+int ui::hold_festival_window::ui_handle_mouse(const mouse *m) {
+    ui.begin_widget(pos);
+    int result = advisor_window::ui_handle_mouse(m);
+    ui.end_widget();
+
+    const hotkeys *h = hotkey_state();
 
     if (input_go_back_requested(m, h)) {
         if (callback) {
@@ -116,6 +127,8 @@ void ui::hold_festival_window::handle_input(const mouse* m, const hotkeys* h) {
             window_invalidate();
         }
     }
+
+    return result;
 }
 
 void ui::hold_festival_window::get_tooltip(tooltip_context* c) {
@@ -163,8 +176,8 @@ void window_hold_festival_show(bool bg, std::function<void()> cb) {
     static window_type window = {
         WINDOW_HOLD_FESTIVAL,
         [] { g_hold_festival_window.draw_background(); },
-        [] { g_hold_festival_window.draw(); },
-        [] (const mouse *m, const hotkeys *h) { g_hold_festival_window.handle_input(m, h); },
+        [] { g_hold_festival_window.ui_draw_foreground(); },
+        [] (const mouse *m, const hotkeys *h) { g_hold_festival_window.ui_handle_mouse(m); },
         [] (tooltip_context *c) { g_hold_festival_window.get_tooltip(c); } 
     };
 

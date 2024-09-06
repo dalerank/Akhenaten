@@ -8,7 +8,7 @@ std::vector<autoconfig_window *> g_advisor_windows;
 ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_windows);
 void config_load_advisor_windows() {
     for (auto *w : g_advisor_windows) {
-        w->load(w->section.c_str());
+        w->load(w->get_section());
     }
 }
 
@@ -17,16 +17,7 @@ void register_autoconfig_window(autoconfig_window *w) {
 }
 
 autoconfig_window::autoconfig_window(pcstr s) {
-    bstring128 c(s);
-    pcstr colonstr = strstr(c, "::");
-    if (colonstr) { // avoid namespace
-        c = colonstr + 2;
-    }
-    char *nstr = strstr(c, "\n");
-    if (nstr) { // avoid last symbol
-        *nstr = '\0';
-    }
-    section = c;
+    assert(!strstr(s, "::"));
     logs::info("Registered window config:%s", s);
     register_autoconfig_window(this);
 }
