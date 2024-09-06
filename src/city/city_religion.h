@@ -2,19 +2,11 @@
 
 #include <cstdint>
 
+#include "game/gods.h"
 #include "building/building_type.h"
 #include "core/svector.h"
 #include "core/tokenum.h"
 
-enum e_god {
-    GOD_OSIRIS = 0,
-    GOD_RA = 1,
-    GOD_PTAH = 2,
-    GOD_SETH = 3,
-    GOD_BAST = 4,
-    MAX_GODS,
-    GOD_UNKNOWN = MAX_GODS
-};
 extern const token_holder<e_god, GOD_OSIRIS, MAX_GODS> e_god_tokens;
 
 enum e_god_status {
