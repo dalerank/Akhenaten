@@ -3,8 +3,7 @@
 #include "window/advisors.h"
 #include "graphics/elements/ui.h"
 #include "building/building_type.h"
-
-enum e_god;
+#include "game/gods.h"
 
 namespace ui {
     struct advisor_religion_window : public advisor_window_t<advisor_religion_window> {
