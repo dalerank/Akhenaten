@@ -11,10 +11,7 @@ struct mouse;
 using advisor_window = autoconfig_window;
 
 template<typename T>
-struct advisor_window_t : public advisor_window {
-    inline advisor_window_t() : advisor_window(type_name<T>().data()) {
-    }
-};
+using advisor_window_t = autoconfig_window_t<T>;
 
 int window_advisors_get_advisor();
 bool is_advisor_available(e_advisor advisor);
