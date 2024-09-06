@@ -346,7 +346,7 @@ advisor_entertainment_window = {
 
 advisor_religion_window = {
 	ui : {
-		outer_panel : { type : "outer_panel", pos:[0, 0], size:[40, 27] },
+		background : { type : "outer_panel", pos:[0, 0], size:[40, 27] },
 		title : { type : "text", pos: [60, 12], text: {group:59, id:0}, font : FONT_LARGE_BLACK_ON_LIGHT },
 		advisor_icon : { type : "image", pack:PACK_GENERAL, id:128, offset:9, pos:[10, 10] },
 		nogods_text : { type : "text", pos: [60, 256], text: {group:59, id:43}, wrap:520, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
@@ -379,7 +379,7 @@ advisor_religion_window = {
 		god_1_fest: { type : "text", pos: [390, 106]},
 		god_1_mood: { type : "text", pos: [460, 106]},
 		god_1_bolt: { type : "image", pack:PACK_GENERAL, id:129, offset:34, pos:[540, 103], enabled:false },
-		god_1_angle: { type : "image", pack:PACK_GENERAL, id:129, offset:33, pos:[540, 103], enabled:false },
+		god_1_angel: { type : "image", pack:PACK_GENERAL, id:129, offset:33, pos:[540, 103], enabled:false },
 		god_1_known: { type : "text", pos: [40, 106]},
 		god_1_desc: { type : "text", pos: [100, 126], font : FONT_NORMAL_BLACK_ON_DARK },
 		god_2_name: { type : "text", pos: [40, 146]},
@@ -403,7 +403,7 @@ advisor_religion_window = {
 		god_3_angel: { type : "image", pack:PACK_GENERAL, id:129, offset:33, pos:[540, 183], enabled:false },
 		god_3_desc: { type : "text", pos: [100, 206], font : FONT_NORMAL_BLACK_ON_DARK },
 		god_4_name: { type : "text", pos: [40, 226]},
-		god_4_comlex: { type : "text", pos: [200, 226]},
+		god_4_complex: { type : "text", pos: [200, 226]},
 		god_4_temple: { type : "text", pos: [265, 226]},
 		god_4_shrine: { type : "text", pos: [330, 226]},
 		god_4_fest: { type : "text", pos: [390, 226]},

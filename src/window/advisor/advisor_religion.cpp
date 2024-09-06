@@ -26,7 +26,7 @@ ui::advisor_religion_window g_advisor_religion_window;
 
 static void button_hold_festival(int param1, int param2);
 
-static int get_religion_advice() {
+int ui::advisor_religion_window::get_advice() {
     e_god least_happy = g_city.religion.least_happy_god;
     const house_demands &demands = g_city.houses;
     if (least_happy >= 0 && g_city.religion.god_wrath_bolts(least_happy) > 4) {
@@ -46,9 +46,7 @@ static int get_religion_advice() {
     }
 }
 
-static void draw_god_row(e_god god, int y_offset, e_building_type temple, e_building_type complex, e_building_type shrine) {
-    auto &ui = g_advisor_religion_window;
-
+void ui::advisor_religion_window::draw_god_row(e_god god, int y_offset, e_building_type temple, e_building_type complex, e_building_type shrine) {
     e_god_status is_known = g_city.religion.is_god_known(god);
     e_font font = (is_known == GOD_STATUS_UNKNOWN) ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW;
 
@@ -98,7 +96,7 @@ int ui::advisor_religion_window::draw_background() {
     }
 
     ui["nogods_text"].enabled = false;
-    ui["advice_text"].text(ui::str(59, 9 + get_religion_advice()));
+    ui["advice_text"].text(ui::str(59, 9 + get_advice()));
 
     ui["fest_months_last"].text_var("%d %s %s", g_city.festival.months_since_festival, ui::str(8, 5), ui::str(58, 15));
 
@@ -150,19 +148,12 @@ void ui::advisor_religion_window::ui_draw_foreground() {
     ui.end_widget();
 }
 
-void ui::advisor_religion_window::draw_foreground() {
-}
-
 int ui::advisor_religion_window::ui_handle_mouse(const mouse *m) {
     ui.begin_widget(screen_dialog_offset());
     int result = advisor_window::ui_handle_mouse(m);
     ui.end_widget();
 
     return result;
-}
-
-int ui::advisor_religion_window::handle_mouse(const mouse* m) {
-    return 0;
 }
 
 int  ui::advisor_religion_window::get_tooltip_text() {
