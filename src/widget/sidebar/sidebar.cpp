@@ -303,8 +303,8 @@ int widget_sidebar_city_get_tooltip_text() {
 }
 
 void widget_sidebar_city_release_build_buttons() {
-    image_buttons_release_press(buttons_build_expanded, 20);
-    image_buttons_release_press(buttons_build_collapsed, 20);
+    image_buttons_release_press(buttons_build_expanded, std::size(buttons_build_expanded));
+    image_buttons_release_press(buttons_build_collapsed, std::size(buttons_build_collapsed));
 }
 
 static void slide_finished() {
