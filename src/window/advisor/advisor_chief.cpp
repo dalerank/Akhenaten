@@ -29,16 +29,7 @@
 
 #include "js/js_game.h"
 
-#define ADVISOR_HEIGHT 24
-
 ui::advisor_chief_window g_advisor_chief_window;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_chief);
-void config_load_advisor_chief() {
-    g_config_arch.r_section("advisor_chief_window", [] (archive arch) {
-        g_advisor_chief_window.load(arch);
-    });
-}
 
 static void draw_title(int y, int text_id) {
     painter ctx = game.painter();
@@ -266,11 +257,12 @@ int ui::advisor_chief_window::draw_background() {
         }
     }
 
-    return ADVISOR_HEIGHT;
+    return 0;
 }
 
-void ui::advisor_chief_window::draw_foreground() {
-    draw();
+void ui::advisor_chief_window::ui_draw_foreground() {
+    ui.begin_widget(pos);
+    ui.draw();
 
     int y_line = 306;
     int text_b = 20;
@@ -310,6 +302,8 @@ void ui::advisor_chief_window::draw_foreground() {
     //    else
     //        lang_text_draw(61, 45, X_OFFSET, y_line, FONT_NORMAL_GREEN);
     //    y_line += 20;
+
+    ui.end_widget();
 }
 
 advisor_window* ui::advisor_chief_window::instance() {
