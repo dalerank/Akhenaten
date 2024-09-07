@@ -114,14 +114,14 @@ static image_button buttons_top_expanded[3] = {
 
 ui::sidebar_window g_sidebar;
 
-static void draw_overlay_text(int x_offset) {
-    if (game.current_overlay) {
-        const char *overlay_text = game_state_overlay_text(game.current_overlay);
-        text_draw_centered((uint8_t*)overlay_text, x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    } else {
-        const bool is_button_focused = buttons_overlays_collapse_sidebar[1].focused;
-        lang_text_draw_centered(6, 4, x_offset - 15, 30, 117, is_button_focused ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_BLACK_ON_LIGHT);
-    }
+void ui::sidebar_window::draw_overlay_text() {
+    const bool is_button_focused = buttons_overlays_collapse_sidebar[1].focused;
+    e_font font = is_button_focused ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_BLACK_ON_LIGHT;
+    pcstr overlay_text = game.current_overlay
+                            ? game_state_overlay_text(game.current_overlay)
+                            : ui::str(6, 4);
+
+    ui["overlay_text"].text(font, overlay_text);
 }
 
 static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
@@ -204,7 +204,6 @@ void ui::sidebar_window::ui_draw_foreground() {
 
     widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 
-    painter ctx = game.painter();
     // extra bar spacing on the right
     int s_num = ceil((float)(screen_height() - extra_block_size.y) / (float)extra_block_size.y) + 1;
     for (int i = s_num; i > 0; --i) {
@@ -213,11 +212,10 @@ void ui::sidebar_window::ui_draw_foreground() {
 
     ui.image(extra_block, { extra_block_x, 0 });
 
-    //ImageDraw::img_generic(ctx, image_group(IMG_SIDE_PANEL) + 2, x_offset + 162, 0);
     draw_number_of_messages(x_offset - 26);
 
     draw_buttons_expanded(x_offset);
-    draw_overlay_text(x_offset + 4);
+    draw_overlay_text();
 
     draw_sidebar_remainder(x_offset, false);
 }
@@ -239,7 +237,7 @@ void widget_sidebar_city_draw_foreground_military(void) {
     widget_minimap_draw({sidebar_common_get_x_offset_expanded() + 8, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 }
 
-void widget_sidebar_city_draw_foreground(void) {
+void widget_sidebar_city_draw_foreground() {
     if (building_menu_has_changed()) {
         refresh_build_menu_buttons();
     }
@@ -250,7 +248,7 @@ void widget_sidebar_city_draw_foreground(void) {
     } else {
         int x_offset = sidebar_common_get_x_offset_expanded();
         draw_buttons_expanded(x_offset);
-        draw_overlay_text(x_offset + 4);
+        g_sidebar.draw_overlay_text();
 
         widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
         draw_number_of_messages(x_offset - 26);

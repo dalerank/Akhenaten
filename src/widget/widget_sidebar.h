@@ -20,6 +20,8 @@ struct sidebar_window : public autoconfig_window_t<sidebar_window> {
 
     virtual void load(archive arch, pcstr section) override;
     virtual void init() override;
+
+    void draw_overlay_text();
 };
 
 }

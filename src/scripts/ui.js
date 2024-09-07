@@ -832,6 +832,8 @@ sidebar_window = {
 	ui : {
 		background 		 : image({pos:[0, 30], size: [29, 22], pack:PACK_GENERAL, id:121}),
 		build_image    : image({pos:[11, 211]}),
+
+		overlay_text   : text_center({pos:[15, 30], size:[117, 20]}),
 	}
 }
 
