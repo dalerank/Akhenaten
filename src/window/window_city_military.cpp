@@ -6,7 +6,7 @@
 #include "widget/minimap.h"
 #include "widget/top_menu_game.h"
 #include "widget/sidebar/common.h"
-#include "widget/sidebar/sidebar.h"
+#include "widget/widget_sidebar.h"
 #include "graphics/window.h"
 #include "grid/point.h"
 #include "figure/formation.h"

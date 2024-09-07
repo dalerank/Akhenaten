@@ -1,4 +1,4 @@
-#include "sidebar.h"
+#include "widget_sidebar.h"
 #include "dev/debug.h"
 
 #include "building/building_menu.h"
@@ -112,11 +112,7 @@ static image_button buttons_top_expanded[3] = {
   {COL4 - 9, ROW4, 43, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 60, button_mission_briefing, button_none, 0, 0, 1},
 };
 
-struct sidebar_data_t {
-    int focus_tooltip_text_id;
-};
-
-sidebar_data_t g_sidebar_data;
+ui::sidebar_window g_sidebar;
 
 static void draw_overlay_text(int x_offset) {
     if (game.current_overlay) {
@@ -127,6 +123,7 @@ static void draw_overlay_text(int x_offset) {
         lang_text_draw_centered(6, 4, x_offset - 15, 30, 117, is_button_focused ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
+
 static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
     int width = SIDEBAR_EXPANDED_WIDTH;
 
@@ -138,8 +135,9 @@ static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
     int extra_height = sidebar_extra_draw_background(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT, 162, available_height, is_collapsed, SIDEBAR_EXTRA_DISPLAY_ALL);
     sidebar_extra_draw_foreground();
     int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT + extra_height; // + (GAME_ENV == ENGINE_ENV_PHARAOH) * 6;
-    sidebar_common_draw_relief(x_offset, relief_y_offset, IMG_SIDE_PANEL, is_collapsed);
+    sidebar_common_draw_relief(x_offset, relief_y_offset, {PACK_GENERAL, 121}, is_collapsed);
 }
+
 static void draw_number_of_messages(int x_offset) {
     int messages = city_message_count();
     buttons_build_expanded[13].enabled = messages > 0;
@@ -153,6 +151,7 @@ static void draw_buttons_collapsed(int x_offset) {
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, button_expand_sidebar, 1);
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_build_collapsed, 12);
 }
+
 static void draw_buttons_expanded(int x_offset) {
     buttons_build_expanded[12].enabled = game_can_undo();
     buttons_build_expanded[14].enabled = city_message_problem_area_count();
@@ -173,33 +172,48 @@ static void refresh_build_menu_buttons(void) {
             buttons_build_collapsed[i].enabled = 0;
     }
 }
+
 static void draw_collapsed_background() {
     painter ctx = game.painter();
     int x_offset = sidebar_common_get_x_offset_collapsed();
-    ImageDraw::img_generic(ctx, image_group(IMG_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT);
+    ImageDraw::img_generic(ctx, image_id_from_group(PACK_GENERAL, 121) + 1, x_offset, TOP_MENU_HEIGHT);
     draw_buttons_collapsed(x_offset);
     draw_sidebar_remainder(x_offset, true);
 }
 
-static void draw_expanded_background(int x_offset) {
-    OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded");
-    painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_group(IMG_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT);
+void ui::sidebar_window::load(archive arch, pcstr section) {
+    autoconfig_window::load(arch, section);
 
+    arch.r_desc("extra_block", extra_block);
+    extra_block_x = arch.r_int("extra_block_x");
+}
+
+void ui::sidebar_window::init() {
+    extra_block_size = image_get(extra_block)->size();
+}
+
+void ui::sidebar_window::ui_draw_foreground() {
+    OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded");
+
+    x_offset = sidebar_common_get_x_offset_expanded();
+    ui.pos.x = x_offset;
+
+    ui.draw();
     const animation_t &anim = window_build_menu_image();
-    ImageDraw::img_generic(ctx, anim.first_img(), x_offset + 11, 181 + TOP_MENU_HEIGHT);
+    ui["build_image"].image(image_desc{ anim.pack, anim.iid, anim.offset });
+
     widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 
+    painter ctx = game.painter();
     // extra bar spacing on the right
-    int block_height = 702;
-    int s_end = 768;
-    int s_num = ceil((float)(screen_height() - s_end) / (float)block_height);
-    int s_start = s_num * block_height;
-    for (int i = 0; i < s_num; i++) {
-        ImageDraw::img_generic(ctx, image_group(IMG_SIDE_PANEL) + 2, x_offset + 162, s_start + i * block_height);
+    int s_num = ceil((float)(screen_height() - extra_block_size.y) / (float)extra_block_size.y) + 1;
+    for (int i = s_num; i > 0; --i) {
+        ui.image(extra_block, { extra_block_x, i * extra_block_size.y - 32 });
     }
 
-    ImageDraw::img_generic(ctx, image_group(IMG_SIDE_PANEL) + 2, x_offset + 162, 0);
+    ui.image(extra_block, { extra_block_x, 0 });
+
+    //ImageDraw::img_generic(ctx, image_group(IMG_SIDE_PANEL) + 2, x_offset + 162, 0);
     draw_number_of_messages(x_offset - 26);
 
     draw_buttons_expanded(x_offset);
@@ -208,12 +222,16 @@ static void draw_expanded_background(int x_offset) {
     draw_sidebar_remainder(x_offset, false);
 }
 
+void widget_sidebar_city_init() {
+    g_sidebar.init();
+}
+
 void widget_sidebar_city_draw_background() {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar");
     if (city_view_is_sidebar_collapsed()) {
         draw_collapsed_background();
     } else {
-        draw_expanded_background(sidebar_common_get_x_offset_expanded());
+        g_sidebar.ui_draw_foreground();
     }
 }
 
@@ -250,7 +268,7 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
 
     bool handled = false;
     int button_id;
-    auto& data = g_sidebar_data;
+    auto& data = g_sidebar;
     data.focus_tooltip_text_id = 0;
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = sidebar_common_get_x_offset_collapsed();
@@ -299,7 +317,7 @@ int widget_sidebar_city_handle_mouse_build_menu(const mouse* m) {
 }
 
 int widget_sidebar_city_get_tooltip_text() {
-    return g_sidebar_data.focus_tooltip_text_id;
+    return g_sidebar.focus_tooltip_text_id;
 }
 
 void widget_sidebar_city_release_build_buttons() {
@@ -316,10 +334,13 @@ static void slide_finished() {
 static void button_overlay(int param1, int param2) {
     window_overlay_menu_show();
 }
+
 static void button_collapse_expand(int param1, int param2) {
     city_view_start_sidebar_toggle();
+    auto draw_expanded_background = [] (int offset) { g_sidebar.x_offset = offset; };
     sidebar_slide(!city_view_is_sidebar_collapsed(), draw_collapsed_background, draw_expanded_background, slide_finished);
 }
+
 static void button_build(int submenu, int param2) {
     window_build_menu_show(submenu);
 }
@@ -358,6 +379,7 @@ static void button_rotate_north(int param1, int param2) {
     game_orientation_rotate_north();
     window_invalidate();
 }
+
 static void button_rotate(int clockwise, int param2) {
     if (clockwise) {
         game_orientation_rotate_right();

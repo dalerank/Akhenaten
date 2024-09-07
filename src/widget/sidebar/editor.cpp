@@ -195,13 +195,15 @@ static void draw_status(void) {
 
 void widget_sidebar_editor_draw_background() {
     painter ctx = game.painter();
-    int image_base = image_group(IMG_EDITOR_SIDE_PANEL);
+
+    image_desc side_panel{ PACK_GENERAL, 121 };
+    int image_base = image_group(side_panel);
     int x_offset = sidebar_common_get_x_offset_expanded();
     ImageDraw::img_generic(ctx, image_base, x_offset, TOP_MENU_HEIGHT);
     draw_buttons();
     widget_minimap_draw({x_offset + 8, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
     draw_status();
-    sidebar_common_draw_relief(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT, IMG_EDITOR_SIDE_PANEL, 0);
+    sidebar_common_draw_relief(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT, side_panel, 0);
 }
 
 void widget_sidebar_editor_draw_foreground(void) {

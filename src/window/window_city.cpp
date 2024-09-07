@@ -24,7 +24,7 @@
 #include "grid/grid.h"
 #include "scenario/scenario.h"
 #include "scenario/criteria.h"
-#include "widget/sidebar/sidebar.h"
+#include "widget/widget_sidebar.h"
 #include "widget/top_menu_game.h"
 #include "widget/widget_city.h"
 #include "window/advisors.h"
@@ -267,6 +267,10 @@ void window_city_draw() {
     widget_city_draw(ctx);
 }
 
+void window_city_init() {
+    widget_sidebar_city_init();
+}
+
 void window_city_show() {
     static window_type window = {
         WINDOW_CITY,
@@ -276,6 +280,7 @@ void window_city_show() {
         window_city_get_tooltip
     };
 
+    window_city_init();
     window_show(&window);
     city_has_loaded = false;
 }

@@ -4,7 +4,7 @@
 #include "graphics/view/lookup.h"
 #include "grid/floodplain.h"
 #include "core/log.h"
-#include "widget/sidebar/sidebar.h"
+#include "widget/widget_sidebar.h"
 
 #include "building/building_dock.h"
 #include "building/building_menu.h"

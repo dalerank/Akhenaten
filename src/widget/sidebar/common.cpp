@@ -18,12 +18,11 @@ int sidebar_common_get_height() {
     return screen_height() - TOP_MENU_HEIGHT;
 }
 
-void sidebar_common_draw_relief(int x_offset, int y_offset, e_image_id img, bool is_collapsed) {
+void sidebar_common_draw_relief(int x_offset, int y_offset, image_desc desc, bool is_collapsed) {
     painter ctx = game.painter();
     // relief images below panel
 
-    image_desc desc = get_image_desc(img);
-    int image_base = image_group(img);
+    int image_base = image_group(desc);
     int image_offset = desc.id == 121 ? 2 : 1; // GROUP_SIDE_PANEL
     int y_max = screen_height();
 

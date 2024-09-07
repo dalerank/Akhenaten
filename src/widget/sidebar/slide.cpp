@@ -11,6 +11,8 @@
 #include "widget/sidebar/common.h"
 #include "window/window_city.h"
 #include "game/game.h"
+#include "core/game_environment.h"
+#include "graphics/screen.h"
 
 #define SLIDE_SPEED 7
 #define SLIDE_ACCELERATION_MILLIS 65
@@ -24,9 +26,6 @@ static struct {
     front_sidebar_draw_function front_sidebar_draw;
     slide_finished_function finished_callback;
 } data;
-
-#include "core/game_environment.h"
-#include "graphics/screen.h"
 
 static void draw_sliding_foreground() {
     painter ctx = game.painter();
@@ -57,9 +56,9 @@ static void draw_sliding_foreground() {
 
     int s_start = s_end - ceil((float)s_end / (float)block_width) * block_width;
     for (int i = 0; s_start + i * block_width < s_end; i++) {
-        ImageDraw::img_generic(ctx, image_group(IMG_SIDE_PANEL) + 8, vec2i{s_start + (i * block_width), 0});
+        ImageDraw::img_generic(ctx, image_id_from_group(PACK_GENERAL, 121) + 8, vec2i{s_start + (i * block_width), 0});
     }
-    ImageDraw::img_generic(ctx, image_group(IMG_SIDE_PANEL) + 8, vec2i{s_end, 0});
+    ImageDraw::img_generic(ctx, image_id_from_group(PACK_GENERAL, 121) + 8, vec2i{s_end, 0});
 
     data.back_sidebar_draw();
     data.front_sidebar_draw(x_offset);
@@ -80,12 +79,13 @@ void sidebar_slide(int direction,
     data.finished_callback = finished_callback;
     g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
 
-    window_type window = {
+    static window_type window = {
         WINDOW_SLIDING_SIDEBAR,
         window_city_draw,
         draw_sliding_foreground,
         0,
         0
     };
+
     window_show(&window);
 }

@@ -2,24 +2,37 @@
 
 #include "core/log.h"
 #include "js/js_game.h"
+#include <mutex>
 
-std::vector<autoconfig_window *> g_advisor_windows;
+using autoconfig_windows = std::vector<autoconfig_window *>;
+autoconfig_windows* g_autoconfig_windows = nullptr;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_advisor_windows);
-void config_load_advisor_windows() {
-    for (auto *w : g_advisor_windows) {
-        w->load(w->get_section());
+autoconfig_windows* autoconfig_registry() {
+    if (!g_autoconfig_windows) {
+        static std::mutex registry_locker;
+
+        std::scoped_lock _(registry_locker);
+        if (!g_autoconfig_windows) {
+            g_autoconfig_windows = new std::vector<autoconfig_window *>;
+        }
     }
+
+    return g_autoconfig_windows;
 }
 
-void register_autoconfig_window(autoconfig_window *w) {
-    g_advisor_windows.push_back(w);
+ANK_REGISTER_CONFIG_ITERATOR(config_load_autoconfig_windows);
+void config_load_autoconfig_windows() {
+    auto *registry = autoconfig_registry();
+    for (auto *w : *registry) {
+        w->load(w->get_section());
+    }
 }
 
 autoconfig_window::autoconfig_window(pcstr s) {
     assert(!strstr(s, "::"));
     logs::info("Registered window config:%s", s);
-    register_autoconfig_window(this);
+    auto *registry = autoconfig_registry();
+    registry->push_back(this);
 }
 
 void autoconfig_window::load(archive arch, pcstr section) {

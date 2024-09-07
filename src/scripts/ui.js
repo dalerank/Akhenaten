@@ -826,6 +826,15 @@ hold_festival_window = {
 	}
 }
 
+sidebar_window = {
+	extra_block 	 	 : {pack:PACK_GENERAL, id:121, offset:2},
+	extra_block_x 	 : 162,
+	ui : {
+		background 		 : image({pos:[0, 30], size: [29, 22], pack:PACK_GENERAL, id:121}),
+		build_image    : image({pos:[11, 211]}),
+	}
+}
+
 empty_info_window = {
 	ui : {
 		//background : { type : "outer_panel",	pos: [48, 48], size: [34, 20]},
