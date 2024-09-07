@@ -207,6 +207,7 @@ var advisor_health_window = {}
 var advisor_education_window = {}
 var taxcollector_info_window = {}
 var advisor_entertainment_window = {}
+var advisor_financial_window = {}
 
 //figures
 var figure_fireman = {}
