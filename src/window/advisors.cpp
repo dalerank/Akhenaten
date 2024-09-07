@@ -122,6 +122,7 @@ static void set_advisor_window() {
     auto &data = g_window_advisors;
     if (data.sub_advisors[data.current_advisor]) {
         data.current_advisor_window = data.sub_advisors[data.current_advisor];
+        data.current_advisor_window->pos = screen_dialog_offset();
         data.current_advisor_window->init();
     } else {
         data.current_advisor_window = nullptr;
@@ -216,9 +217,11 @@ static void handle_hotkeys(const hotkeys* h) {
 void window_advisors_t::handle_input(const mouse* m, const hotkeys* h) {
     handle_hotkeys(h);
 
+    ui.begin_widget(pos);
     if (ui.handle_mouse(m)) {
         return;
     }
+    ui.end_widget();
 
     const mouse* m_dialog = mouse_in_dialog(m);
     if (current_advisor_window->handle_mouse(m_dialog)) {
@@ -257,19 +260,6 @@ int window_advisors_get_advisor(void) {
     return data.current_advisor;
 }
 
-void window_advisors_show(void) {
-    static window_type window = {
-        WINDOW_ADVISORS,
-        [] { g_window_advisors.draw_background(); },
-        [] { g_window_advisors.draw_foreground(); },
-        [] (const mouse *m, const hotkeys *h) { g_window_advisors.handle_input(m, h); },
-        get_tooltip
-    };
-
-    g_window_advisors.init();
-    window_show(&window);
-}
-
 void window_advisors_show_checked() {
     e_availability avail = mission_advisor_availability(ADVISOR_LABOR, scenario_campaign_scenario_id() + 1);
     if (avail == AVAILABLE) {
@@ -289,4 +279,17 @@ int window_advisors_show_advisor(e_advisor advisor) {
     g_window_advisors.set_advisor(advisor);
     window_advisors_show();
     return 1;
+}
+
+void window_advisors_show(void) {
+    static window_type window = {
+        WINDOW_ADVISORS,
+        [] { g_window_advisors.draw_background(); },
+        [] { g_window_advisors.draw_foreground(); },
+        [] (const mouse *m, const hotkeys *h) { g_window_advisors.handle_input(m, h); },
+        get_tooltip
+    };
+
+    g_window_advisors.init();
+    window_show(&window);
 }
