@@ -10,7 +10,6 @@ struct advisor_health_window : public advisor_window_t<advisor_health_window> {
     virtual void ui_draw_foreground() override;
     virtual void draw_foreground() override {}
     virtual int draw_background() override;
-    virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override {}
 
     static advisor_window *instance();

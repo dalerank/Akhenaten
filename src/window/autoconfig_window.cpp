@@ -27,5 +27,9 @@ void autoconfig_window::load(archive arch, pcstr section) {
 }
 
 int autoconfig_window::ui_handle_mouse(const mouse *m) {
-    return ui::handle_mouse(m);
+    ui.begin_widget(pos);
+    int result = ui::handle_mouse(m);
+    ui.end_widget();
+
+    return result;
 }

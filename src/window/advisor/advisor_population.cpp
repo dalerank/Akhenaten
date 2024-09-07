@@ -457,14 +457,6 @@ void ui::advisor_population_window::ui_draw_foreground() {
     ui.end_widget();
 }
 
-int ui::advisor_population_window::ui_handle_mouse(const mouse *m) {
-    ui.begin_widget(screen_dialog_offset());
-    int result = advisor_window::ui_handle_mouse(m);
-    ui.end_widget();
-
-    return result;
-}
-
 int ui::advisor_population_window::get_tooltip_text(void) {
     //if (focus_button_id && focus_button_id < 3)
     //    return 111;

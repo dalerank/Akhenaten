@@ -18,19 +18,7 @@
 #include "window/hold_festival.h"
 #include "game/game.h"
 
-#define PEOPLE_OFFSET 330
-#define COVERAGE_OFFSET 470
-#define COVERAGE_WIDTH 130
-
 ui::advisor_entertainment_window g_advisor_entertainment_window;
-
-static void button_hold_festival(int param1, int param2);
-
-static generic_button hold_festival_button[] = {
-  {102, 280, 300, 20, button_hold_festival, button_none, 0, 0},
-};
-
-static int focus_button_id;
 
 static int get_entertainment_advice(void) {
     const house_demands &demands = g_city.houses;
@@ -68,18 +56,6 @@ void ui::advisor_entertainment_window::draw_entertainer(int type, pcstr prefix, 
     }
 }
 
-int ui::advisor_entertainment_window::draw_background() {
-    return 0;
-}
-
-int ui::advisor_entertainment_window::ui_handle_mouse(const mouse *m) {
-    ui.begin_widget(screen_dialog_offset());
-    int result = advisor_window::ui_handle_mouse(m);
-    ui.end_widget();
-
-    return result;
-}
-
 void ui::advisor_entertainment_window::ui_draw_foreground() {
     ui.begin_widget(screen_dialog_offset());
     ui.draw();
@@ -100,24 +76,17 @@ void ui::advisor_entertainment_window::ui_draw_foreground() {
 }
 
 int ui::advisor_entertainment_window::handle_mouse(const mouse* m) {
-    return generic_buttons_handle_mouse(m, {0, 0}, hold_festival_button, 1, &focus_button_id);
-}
-
-static void button_hold_festival(int param1, int param2) {
-    //    if (!city_festival_is_planned())
-    //        window_hold_festival_show();
+    return 0;
 }
 
 int ui::advisor_entertainment_window::get_tooltip_text() {
-    if (focus_button_id) {
-        return 112;
-    }else {
-        return 0;
-    }
-}
+    //if (focus_button_id) {
+    //    return 112;
+    //}else {
+    //    return 0;
+    //}
 
-void ui::advisor_entertainment_window::init() {
-    focus_button_id = 0;
+    return 0;
 }
 
 advisor_window* ui::advisor_entertainment_window::instance() {

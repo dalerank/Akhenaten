@@ -59,14 +59,6 @@ int ui::advisor_health_window::draw_background() {
     return 0;
 }
 
-int ui::advisor_health_window::ui_handle_mouse(const mouse *m) {
-    ui.begin_widget(screen_dialog_offset());
-    int result = advisor_window::ui_handle_mouse(m);
-    ui.end_widget();
-
-    return result;
-}
-
 void ui::advisor_health_window::ui_draw_foreground() {
     ui.begin_widget(screen_dialog_offset());
     ui.draw(); 

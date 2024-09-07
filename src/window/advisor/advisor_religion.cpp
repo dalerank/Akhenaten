@@ -24,8 +24,6 @@
 
 ui::advisor_religion_window g_advisor_religion_window;
 
-static void button_hold_festival(int param1, int param2);
-
 int ui::advisor_religion_window::get_advice() {
     e_god least_happy = g_city.religion.least_happy_god;
     const house_demands &demands = g_city.houses;
@@ -146,14 +144,6 @@ void ui::advisor_religion_window::ui_draw_foreground() {
     draw_god_row(GOD_BAST, 226, BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST, BUILDING_SHRINE_BAST);
 
     ui.end_widget();
-}
-
-int ui::advisor_religion_window::ui_handle_mouse(const mouse *m) {
-    ui.begin_widget(screen_dialog_offset());
-    int result = advisor_window::ui_handle_mouse(m);
-    ui.end_widget();
-
-    return result;
 }
 
 int  ui::advisor_religion_window::get_tooltip_text() {

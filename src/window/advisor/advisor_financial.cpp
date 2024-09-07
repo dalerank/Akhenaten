@@ -114,10 +114,6 @@ void ui::advisor_financial_window::draw_foreground() {
     arrow_buttons_draw({0, 0}, arrow_buttons_taxes, 2);
 }
 
-int ui::advisor_financial_window::handle_mouse(const mouse* m) {
-    return arrow_buttons_handle_mouse(m, {0, 0}, arrow_buttons_taxes, 2, &arrow_button_focus);
-}
-
 static void button_change_taxes(int is_down, int param2) {
     city_finance_change_tax_percentage(is_down ? -1 : 1);
     city_finance_estimate_taxes();
