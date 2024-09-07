@@ -13,9 +13,7 @@ images = [
 	// icon resources
 	//{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
 
-	{img: IMG_SIDE_PANEL, pack:PACK_GENERAL, id:121, offset:0},
 	{img: IMG_TOP_MENU_BACKGROUND, pack:PACK_GENERAL, id:121, offset:8},
-	{img: IMG_EDITOR_SIDE_PANEL, pack:PACK_GENERAL, id:121, offset:0},
 	{img: IMG_RESOURCE_PAPYRUS, pack:PACK_GENERAL, id:207, offset:0},
 	{img: IMG_EMPIRE_ROUTE_HL_CLOSED, pack:PACK_GENERAL, id:149, offset:211},
 	{img: IMG_EMPIRE_ROUTE_OPEN, pack:PACK_GENERAL, id:149, offset:201},
