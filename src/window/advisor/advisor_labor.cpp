@@ -38,7 +38,7 @@ int ui::advisor_labors_window::draw_background() {
 }
 
 void ui::advisor_labors_window::ui_draw_foreground() {
-    ui.begin_widget(screen_dialog_offset());
+    ui.begin_widget(pos);
     ui.draw();
 
     for (int i = 0; i < 9; i++) {

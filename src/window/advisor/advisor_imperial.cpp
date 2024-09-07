@@ -111,7 +111,7 @@ void ui::advisor_imperial_window::handle_request(int index) {
 }
 
 void ui::advisor_imperial_window::ui_draw_foreground() {
-    ui.begin_widget(screen_dialog_offset());
+    ui.begin_widget(pos);
     ui.draw();
 
     int num_requests = 0;

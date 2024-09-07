@@ -33,3 +33,9 @@ int autoconfig_window::ui_handle_mouse(const mouse *m) {
 
     return result;
 }
+
+void autoconfig_window::ui_draw_foreground() {
+    ui.begin_widget(pos);
+    ui.draw();
+    ui.end_widget();
+}

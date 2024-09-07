@@ -32,8 +32,9 @@ int ui::advisor_trade_window::draw_background() {
 }
 
 void ui::advisor_trade_window::ui_draw_foreground() {
-    ui.begin_widget(screen_dialog_offset());
+    ui.begin_widget(pos);
     ui.draw();
+
     int scroll_position = ui["scrollbar"].value();
 
     const resource_list &resources = city_resource_get_available();

@@ -127,9 +127,7 @@ int ui::advisor_religion_window::draw_background() {
 }
 
 void ui::advisor_religion_window::ui_draw_foreground() {
-    auto &ui = g_advisor_religion_window;
-
-    ui.begin_widget(screen_dialog_offset());
+    ui.begin_widget(pos);
     ui.draw();
 
     if (!g_settings.gods_enabled) {

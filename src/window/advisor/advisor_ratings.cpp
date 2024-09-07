@@ -71,7 +71,7 @@ void ui::advisor_ratings_window::draw_rating(int id, int value, int open_play, i
 }
 
 void ui::advisor_ratings_window::ui_draw_foreground() {
-    ui.begin_widget(screen_dialog_offset());
+    ui.begin_widget(pos);
     ui.draw();
 
     int open_play = scenario_is_open_play();

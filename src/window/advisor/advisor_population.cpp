@@ -397,7 +397,7 @@ int ui::advisor_population_window::draw_background() {
 }
 
 void ui::advisor_population_window::ui_draw_foreground() {
-    ui.begin_widget(screen_dialog_offset());
+    ui.begin_widget(pos);
     ui.draw();
 
     using graph_function = void (advisor_population_window::*)(int, vec2i);

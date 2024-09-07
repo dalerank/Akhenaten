@@ -92,8 +92,9 @@ int ui::advisor_military_window::draw_background() {
 }
 
 void ui::advisor_military_window::ui_draw_foreground() {
-    ui.begin_widget(screen_dialog_offset());
+    ui.begin_widget(pos);
     ui.draw();
+
     if (num_legions > 0) {
         for (int i = 0; i < 6 && i < num_legions; i++) {
             const formation *form = formation_get(formation_for_legion(i + 1 + g_advisor_mil_scrollbar.scroll_position));

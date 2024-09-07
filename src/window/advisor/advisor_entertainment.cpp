@@ -57,7 +57,7 @@ void ui::advisor_entertainment_window::draw_entertainer(int type, pcstr prefix, 
 }
 
 void ui::advisor_entertainment_window::ui_draw_foreground() {
-    ui.begin_widget(screen_dialog_offset());
+    ui.begin_widget(pos);
     ui.draw();
 
     painter ctx = game.painter();

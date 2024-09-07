@@ -59,12 +59,6 @@ int ui::advisor_health_window::draw_background() {
     return 0;
 }
 
-void ui::advisor_health_window::ui_draw_foreground() {
-    ui.begin_widget(screen_dialog_offset());
-    ui.draw(); 
-    ui.end_widget();
-}
-
 advisor_window* ui::advisor_health_window::instance() {
     return &g_advisor_health_window;
 }

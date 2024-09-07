@@ -106,12 +106,6 @@ int ui::hold_festival_window::draw_background() {
     return 0;
 }
 
-void ui::hold_festival_window::ui_draw_foreground() {
-    ui.begin_widget(pos);
-    ui.draw();
-    ui.end_widget();
-}
-
 int ui::hold_festival_window::ui_handle_mouse(const mouse *m) {
     autoconfig_window::ui_handle_mouse(m);
 
