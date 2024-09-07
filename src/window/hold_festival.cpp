@@ -113,9 +113,7 @@ void ui::hold_festival_window::ui_draw_foreground() {
 }
 
 int ui::hold_festival_window::ui_handle_mouse(const mouse *m) {
-    ui.begin_widget(pos);
-    int result = advisor_window::ui_handle_mouse(m);
-    ui.end_widget();
+    autoconfig_window::ui_handle_mouse(m);
 
     const hotkeys *h = hotkey_state();
 
@@ -128,7 +126,7 @@ int ui::hold_festival_window::ui_handle_mouse(const mouse *m) {
         }
     }
 
-    return result;
+    return 0;
 }
 
 void ui::hold_festival_window::get_tooltip(tooltip_context* c) {
