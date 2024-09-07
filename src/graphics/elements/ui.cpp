@@ -592,6 +592,15 @@ void ui::widget::reset_clip_rectangle() {
     graphics_reset_clip_rectangle();
 }
 
+void ui::widget::line(bool hline, vec2i npos, int size) {
+    const vec2i offset = g_state.offset();
+    if (hline) {
+        graphics_draw_horizontal_line(npos + offset, size, COLOR_BLACK);
+    } else {
+        graphics_draw_vertical_line(npos + offset, size, COLOR_BLACK);
+    }
+}
+
 void ui::eimg::draw() {
     if (img > 0) {
         ui::eimage(img, pos);

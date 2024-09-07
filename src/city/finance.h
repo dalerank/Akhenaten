@@ -44,6 +44,7 @@ struct finance_overview {
         int donated;
         int total;
     } income;
+
     struct {
         int imports;
         int wages;
@@ -56,6 +57,7 @@ struct finance_overview {
         int requests_and_festivals;
         int total;
     } expenses;
+
     int net_in_out;
     int balance;
 };
