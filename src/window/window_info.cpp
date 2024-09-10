@@ -336,7 +336,7 @@ void common_info_window::update_buttons(object_info &c) {
 
     auto first_advisor = ui["first_advisor"].dcast_image_button();
     if (first_advisor) {
-        first_advisor->enabled = c.go_to_advisor.first &&is_advisor_available(c.go_to_advisor.first);
+        first_advisor->enabled = c.go_to_advisor.first && is_advisor_available(c.go_to_advisor.first);
         first_advisor->img_desc.offset = (c.go_to_advisor.left_a - 1) * 3;
         first_advisor->pos.y = bgsize.y - 40;
         first_advisor->onclick([&c] {

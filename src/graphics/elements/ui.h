@@ -35,10 +35,11 @@ enum UiFlags_ {
     UiFlags_NoBody = 1 << 6,
     UiFlags_Rich = 1 << 7,
     UiFlags_Selected = 1 << 8,
-    UiFlags_Readonly = 1 << 9,
+    UiFlags_Grayed = 1 << 9,
     UiFlags_NoScroll = 1 << 10,
     UiFlags_AlignLeft = 1 << 11,
     UiFlags_AlignXCentered = 1 << 12,
+    UiFlags_Readonly = 1 << 13,
 };
 using UiFlags = int;
 
@@ -68,7 +69,7 @@ generic_button &link(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORM
 generic_button &large_button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
 generic_button &button(uint32_t id);
 textid button_tooltip(uint32_t id);
-image_button &img_button(image_desc desc, vec2i pos, vec2i size, const img_button_offsets offsets = {}, UiFlags_ flags = UiFlags_None);
+image_button &img_button(image_desc desc, vec2i pos, vec2i size, const img_button_offsets offsets = {}, UiFlags flags = UiFlags_None);
 image_button &imgok_button(vec2i pos, std::function<void(int, int)> cb);
 image_button &imgcancel_button(vec2i pos, std::function<void(int, int)> cb);
 image_button &img_button(e_image_id img, vec2i pos, vec2i size, int offset = 0);
@@ -94,12 +95,13 @@ struct element {
     using ptr = std::shared_ptr<element>;
     using items = std::vector<ptr>;
 
-    bstring64 id;
+    xstring id;
     vec2i pos;
     vec2i size;
     recti margin = { recti::nomargin, recti::nomargin, recti::nomargin, recti::nomargin };
-    bool readonly = false;
+    bool readonly = true;
     bool enabled = true;
+    bool grayed = false;
 
     virtual void draw() {}
     virtual void load(archive, element* parent, items &elems);

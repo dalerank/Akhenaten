@@ -39,9 +39,9 @@ struct image_button {
     std::function<void(int,int)> _onclick;
 
     template<class Func> image_button &onclick(Func f) { _onclick = f; return *this; }
+    inline image_button &tooltip(textid t) { _tooltip = t; return *this; }
     inline vec2i pos() const { return {x, y}; }
     inline vec2i size() const { return {width, height}; }
-    inline void tooltip(textid t) { _tooltip = t; }
 };
 
 template<size_t N>

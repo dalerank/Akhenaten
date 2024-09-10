@@ -248,9 +248,9 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
     generic_button &gbutton = g_state.buttons.back().g_button;
     gbutton.hovered = is_button_hover(gbutton, offset);
     gbutton.clip = graphics_clip_rectangle();
-    const bool readonly = !!(flags & UiFlags_Readonly);
+    const bool grayed = !!(flags & UiFlags_Grayed);
 
-    if (gbutton.hovered && !readonly) {
+    if (gbutton.hovered && !grayed) {
         button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, true);
     } else if (!(flags & UiFlags_NoBody)) {
         button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, 0);
@@ -279,11 +279,11 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
         }
     }
 
-    if (readonly) {
+    if (grayed) {
         graphics_shade_rect(offset + pos, size, 0x80);
     }
 
-    if (!readonly && !!cb) {
+    if (!grayed && !!cb) {
         gbutton.onclick(cb);
     }
     return gbutton;
@@ -340,15 +340,16 @@ textid ui::button_tooltip(uint32_t id) {
     return (id < g_state.buttons.size()) ? g_state.buttons[id].tooltip() : textid();
 }
 
-image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_button_offsets offsets, UiFlags_ flags) {
+image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_button_offsets offsets, UiFlags flags) {
     const vec2i state_offset = g_state.offset();
     const mouse *m = mouse_get();
 
     g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, (uint32_t)desc.pack, (uint32_t)desc.id, offsets.data[0], button_none, button_none, 0, 0, true});
     auto &ibutton = g_state.buttons.back().i_button;
 
-    ibutton.focused = !(flags & UiFlags_Readonly) && (is_button_hover(ibutton, state_offset) || !!(flags & UiFlags_Selected));
+    ibutton.focused = !(flags & UiFlags_Grayed) && (is_button_hover(ibutton, state_offset) || !!(flags & UiFlags_Selected));
     ibutton.pressed = ibutton.focused && m->left.is_down;
+    ibutton.enabled = !(flags & UiFlags_Readonly);
 
     time_millis current_time = time_get_millis();
     if (ibutton.pressed) {
@@ -466,14 +467,14 @@ arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
     g_state.buttons.push_back(arrow_button{pos.x, pos.y, img_index, size, button_none, 0, 0});
     auto &abutton = g_state.buttons.back().a_button;
 
-    const bool hovered = !(flags & UiFlags_Readonly) && (is_button_hover(abutton, offset) || !!(flags & UiFlags_Selected));
+    const bool hovered = !(flags & UiFlags_Grayed) && (is_button_hover(abutton, offset) || !!(flags & UiFlags_Selected));
     const bool pressed = hovered && m->left.is_down;
     abutton.state = (hovered ? (pressed ? 2 : 1) : 0);
 
     arrow_buttons_draw(offset, abutton, tiny);
-    const bool readonly = !!(flags & UiFlags_Readonly);
+    const bool grayed = !!(flags & UiFlags_Grayed);
 
-    if (readonly) {
+    if (grayed) {
         graphics_shade_rect(offset + pos, vec2i{ size, size }, 0x80);
     }
 
@@ -769,6 +770,9 @@ void ui::eimage_button::load(archive arch, element *parent, items &elems) {
 
 void ui::eimage_button::draw() {
     const vec2i doffset = g_state.offset();
+    UiFlags flags = (selected ? UiFlags_Selected : UiFlags_None);
+    flags |= (readonly ? UiFlags_Readonly : UiFlags_None);
+
     if (img) {
         ui::img_button(img, pos, size, img_desc.offset)
             .onclick(_func)
@@ -782,15 +786,15 @@ void ui::eimage_button::draw() {
         tsize.x = size.x > 0 ? size.x : img_ptr->width;
         tsize.y = size.y > 0 ? size.y : img_ptr->height;
 
-        ui::img_button(img_desc, pos, tsize, offsets, selected ? UiFlags_Selected : UiFlags_None)
-            .onclick(_func)
-            .tooltip(_tooltip);
+        auto &imb = ui::img_button(img_desc, pos, tsize, offsets, flags);
+        imb.onclick(_func);
+        imb.tooltip(_tooltip);
 
         if (border && selected) {
             button_border_draw(doffset.x + pos.x - 4, doffset.y + pos.y - 4, tsize.x + 8, tsize.y + 8, true);
         }
 
-        if (readonly) {
+        if (grayed) {
             graphics_shade_rect(doffset + pos, tsize, 0x80);
         }
     } else if (texture_id > 0) {
@@ -800,11 +804,11 @@ void ui::eimage_button::draw() {
             button_border_draw(doffset.x + pos.x - 4, doffset.y + pos.y - 4, size.x + 8, size.y + 8, true);
         }
 
-        ui::img_button({ 0, 0 }, pos, size, offsets, UiFlags_None)
+        ui::img_button({ 0, 0 }, pos, size, offsets, flags)
             .onclick(_func)
             .tooltip(_tooltip);
 
-        if (readonly) {
+        if (grayed) {
             graphics_shade_rect(doffset + pos, size, 0x80);
         }
     } else if (icon_texture) {
@@ -935,7 +939,7 @@ void ui::earrow_button::draw() {
 
 void ui::egeneric_button::draw() {
     UiFlags flags = _flags 
-                      | (readonly ? UiFlags_Readonly : UiFlags_None);
+                      | (grayed ? UiFlags_Grayed : UiFlags_None);
 
     generic_button *btn = nullptr;
     switch (mode) {
