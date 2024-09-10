@@ -834,6 +834,8 @@ sidebar_window = {
 		build_image    : image({pos:[11, 211]}),
 
 		overlay_text   : text_center({pos:[15, 30], size:[117, 20]}),
+
+		goto_problem 	 : image_button({pos:[86, 434], pack:PACK_GENERAL, id:136, offset:56}),
 	}
 }
 

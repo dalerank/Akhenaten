@@ -41,7 +41,6 @@ static void button_build(int submenu, int param2);
 static void button_undo(int param1, int param2);
 static void button_messages(int param1, int param2);
 static void button_help(int param1, int param2);
-static void button_go_to_problem(int param1, int param2);
 static void button_advisors(int param1, int param2);
 static void button_empire(int param1, int param2);
 static void button_mission_briefing(int param1, int param2);
@@ -103,7 +102,6 @@ static image_button buttons_build_expanded[] = {
 
   {COL1, ROW4, 35, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
   {COL2, ROW4, 38, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 52, button_messages, button_help, 0, MESSAGE_DIALOG_MESSAGES, 1},
-  {COL3, ROW4, 28, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_go_to_problem, button_none, 0, 0, 1},
 };
 
 static image_button buttons_top_expanded[3] = {
@@ -152,15 +150,15 @@ static void draw_buttons_collapsed(int x_offset) {
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_build_collapsed, 12);
 }
 
-static void draw_buttons_expanded(int x_offset) {
+void ui::sidebar_window::draw_buttons_expanded(int x_offset) {
     buttons_build_expanded[12].enabled = game_can_undo();
-    buttons_build_expanded[14].enabled = city_message_problem_area_count();
+    ui["goto_problem"].readonly = !city_message_problem_area_count();
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_overlays_collapse_sidebar, 1);
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_build_expanded, 15);
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_top_expanded, 3);
 }
 
-static void refresh_build_menu_buttons(void) {
+static void refresh_build_menu_buttons() {
     int num_buttons = 12;
     for (int i = 0; i < num_buttons; i++) {
         buttons_build_expanded[i].enabled = 1;
@@ -190,6 +188,16 @@ void ui::sidebar_window::load(archive arch, pcstr section) {
 
 void ui::sidebar_window::init() {
     extra_block_size = image_get(extra_block)->size();
+
+    ui["goto_problem"].onclick([] {
+        int grid_offset = city_message_next_problem_area_grid_offset();
+        if (grid_offset) {
+            camera_go_to_mappoint(tile2i(grid_offset));
+            window_city_show();
+        } else {
+            window_invalidate();
+        }
+    });
 }
 
 void ui::sidebar_window::ui_draw_foreground() {
@@ -198,9 +206,11 @@ void ui::sidebar_window::ui_draw_foreground() {
     x_offset = sidebar_common_get_x_offset_expanded();
     ui.pos.x = x_offset;
 
+    ui.begin_widget(ui.pos);
     ui.draw();
     const animation_t &anim = window_build_menu_image();
     ui["build_image"].image(image_desc{ anim.pack, anim.iid, anim.offset });
+    ui.end_widget();
 
     widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 
@@ -218,14 +228,38 @@ void ui::sidebar_window::ui_draw_foreground() {
     draw_overlay_text();
 
     draw_sidebar_remainder(x_offset, false);
+
+    if (building_menu_has_changed()) {
+        refresh_build_menu_buttons();
+    }
+
+    if (city_view_is_sidebar_collapsed()) {
+        int x_offset = sidebar_common_get_x_offset_collapsed();
+        draw_buttons_collapsed(x_offset);
+    } else {
+        int x_offset = sidebar_common_get_x_offset_expanded();
+        draw_buttons_expanded(x_offset);
+
+        widget_minimap_draw({ x_offset + 12, MINIMAP_Y_OFFSET }, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
+        draw_number_of_messages(x_offset - 26);
+    }
+    sidebar_extra_draw_foreground();
+
+    window_request_refresh();
+    draw_debug_ui(10, 30);
 }
 
 void widget_sidebar_city_init() {
     g_sidebar.init();
 }
 
+void widget_sidebar_city_draw_foreground() {
+    g_sidebar.ui_draw_foreground();
+}
+
 void widget_sidebar_city_draw_background() {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar");
+
     if (city_view_is_sidebar_collapsed()) {
         draw_collapsed_background();
     } else {
@@ -237,32 +271,12 @@ void widget_sidebar_city_draw_foreground_military(void) {
     widget_minimap_draw({sidebar_common_get_x_offset_expanded() + 8, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 }
 
-void widget_sidebar_city_draw_foreground() {
-    if (building_menu_has_changed()) {
-        refresh_build_menu_buttons();
-    }
-
-    if (city_view_is_sidebar_collapsed()) {
-        int x_offset = sidebar_common_get_x_offset_collapsed();
-        draw_buttons_collapsed(x_offset);
-    } else {
-        int x_offset = sidebar_common_get_x_offset_expanded();
-        draw_buttons_expanded(x_offset);
-        g_sidebar.draw_overlay_text();
-
-        widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
-        draw_number_of_messages(x_offset - 26);
-    }
-    sidebar_extra_draw_foreground();
-
-    window_request_refresh();
-    draw_debug_ui(10, 30);
-}
-
 int widget_sidebar_city_handle_mouse(const mouse* m) {
     if (widget_city_has_input()) {
         return false;
     }
+
+    g_sidebar.ui_handle_mouse(m);
 
     bool handled = false;
     int button_id;
@@ -351,15 +365,6 @@ static void button_messages(int param1, int param2) {
 }
 static void button_help(int param1, int param2) {
     window_message_dialog_show(param2, -1, window_city_draw_all);
-}
-static void button_go_to_problem(int param1, int param2) {
-    int grid_offset = city_message_next_problem_area_grid_offset();
-    if (grid_offset) {
-        camera_go_to_mappoint(map_point(grid_offset));
-        window_city_show();
-    } else {
-        window_invalidate();
-    }
 }
 
 static void button_advisors(int param1, int param2) {

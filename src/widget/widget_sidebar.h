@@ -22,6 +22,7 @@ struct sidebar_window : public autoconfig_window_t<sidebar_window> {
     virtual void init() override;
 
     void draw_overlay_text();
+    void draw_buttons_expanded(int x_offset);
 };
 
 }

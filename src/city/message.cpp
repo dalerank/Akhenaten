@@ -486,12 +486,13 @@ void city_message_delete(int message_id) {
     data.messages[message_id].MM_text_id = 0;
     city_message_sort_and_compact();
 }
-int city_message_count(void) {
+
+int city_message_count() {
     auto& data = g_message_data;
     return data.total_messages;
 }
 
-int city_message_problem_area_count(void) {
+int city_message_problem_area_count() {
     auto& data = g_message_data;
     return data.problem_count;
 }
@@ -512,7 +513,7 @@ static int has_problem_area(const city_message* msg, int lang_msg_type) {
     return 0;
 }
 
-int city_message_next_problem_area_grid_offset(void) {
+int city_message_next_problem_area_grid_offset() {
     auto& data = g_message_data;
     time_millis now = time_get_millis();
     if (now - data.problem_last_click_time > 3000)
