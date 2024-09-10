@@ -3,6 +3,7 @@
 #include "window/building/common.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
+#include "building/destruction.h"
 
 #include "dev/debug.h"
 #include "graphics/animation.h"
@@ -14,10 +15,27 @@ buildings::model_t<building_firehouse> firehouse_m;
 info_window_firehouse firehouse_infow;
 
 declare_console_command_p(nofire, console_command_nofire);
+declare_console_command_p(startfire, console_command_startfire);
 void console_command_nofire(std::istream &, std::ostream &) {
     buildings_valid_do([&] (building &b) {
         b.fire_risk = 0;
     });
+}
+
+void console_command_startfire(std::istream &is, std::ostream &) {
+    std::string args;
+    is >> args;
+    int count = atoi(!args.empty() ? args.c_str() : "10");
+
+    svector<building *, 1000> buildings;
+    buildings_valid_do([&] (building &b) {
+        buildings.push_back(&b);
+    });
+
+    int step = std::max<int>(1, (int)buildings.size() / count);
+    for (int i = 0; i < buildings.size(); i += step) {
+        building_destroy_by_fire(buildings[i]);
+    }
 }
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_firehouse);

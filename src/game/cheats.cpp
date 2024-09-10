@@ -35,7 +35,6 @@
 static void game_cheat_start_invasion(pcstr);
 static void game_cheat_show_tooltip(pcstr);
 static void game_cheat_pop_milestone(pcstr);
-static void game_cheat_fire(pcstr);
 static void game_cheat_spacious_apartment(pcstr);
 static void game_cheat_spawn_nobles(pcstr);
 static void game_cheat_clear_progress(pcstr);
@@ -52,7 +51,6 @@ static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_s
                                                   {"addclay", game_cheat_add_clay},
                                                   {"showtooltip", game_cheat_show_tooltip},
                                                   {"popmilestone", game_cheat_pop_milestone},
-                                                  {"fire", game_cheat_fire},
                                                   {"spawnnobles", game_cheat_spawn_nobles},
                                                   {"tutspaciousapt", game_cheat_spacious_apartment},
                                                   {"clearprogress", game_cheat_clear_progress}
@@ -155,21 +153,6 @@ static void game_cheat_start_invasion(pcstr args) {
     scenario_invasion_start_from_console(attack_type, size, invasion_point);
 
     city_warning_show_console("Started invasion");
-}
-
-static void game_cheat_fire(pcstr args) {
-    int count = 0;
-    parse_integer(args ? args : (pcstr )"10", count);
-
-    svector<building *, 1000> buildings;
-    buildings_valid_do([&] (building &b) {
-        buildings.push_back(&b);
-    });
-
-    int step = std::max<int>(1, (int)buildings.size() / count);
-    for (int i = 0; i < buildings.size(); i += step) {
-        building_destroy_by_fire(buildings[i]);
-    }
 }
 
 static void game_cheat_spacious_apartment(pcstr args) {
