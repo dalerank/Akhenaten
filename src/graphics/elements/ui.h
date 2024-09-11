@@ -110,7 +110,7 @@ struct element {
     virtual int text_width() { return 0; }
     virtual vec2i pxsize() const { return size; }
     inline void text(int font, pcstr v) { this->font(font); this->text(v); }
-    virtual void color(int) {}
+    virtual void text_color(color) {}
     virtual void image(int) {}
     virtual void image(image_desc) {}
     virtual image_desc image() const { return {}; }
@@ -122,6 +122,8 @@ struct element {
     virtual void onclick(std::function<void(int, int)>) {}
             void onclick(std::function<void()> f) { onclick([f] (int, int) { f(); }); }
     virtual void onevent(std::function<void()>) {}
+    virtual void onrclick(std::function<void(int, int)>) {}
+            void onrclick(std::function<void()> f) { onrclick([f] (int, int) { f(); }); }
 
     virtual emenu_header *dcast_menu_header() { return nullptr; }
     virtual eimage_button *dcast_image_button() { return nullptr; }
@@ -232,7 +234,8 @@ struct elabel : public element {
     e_font _font;
     e_font _link_font;
     vec2i _body;
-    uint32_t _color;
+    color _color;
+    color _shadow_color;
     UiFlags _flags;
     int _wrap;
     bool _clip_area;
@@ -240,7 +243,7 @@ struct elabel : public element {
     virtual void draw() override;
     virtual void load(archive elem, element *parent, items &elems) override;
     virtual void text(pcstr) override;
-    virtual void color(int) override;
+    virtual void text_color(color) override;
     virtual void font(int) override;
     virtual void width(int) override;
 };
@@ -312,7 +315,7 @@ struct eimage_button : public element {
     int texture_id = -1;
     textid _tooltip;
 
-    std::function<void(int, int)> _func;
+    std::function<void(int, int)> _func, _rfunc;
 
     virtual void load(archive elem, element* parent, items &elems) override;
     virtual void select(bool v) override { selected = v; }
@@ -320,6 +323,7 @@ struct eimage_button : public element {
 
     using element::onclick;
     virtual void onclick(std::function<void(int, int)> func) override { _func = func; }
+    virtual void onrclick(std::function<void(int, int)> func) override { _rfunc = func; }
     virtual void tooltip(textid t) override { _tooltip = t; }
 
     virtual eimage_button *dcast_image_button() override { return this; }
@@ -338,6 +342,7 @@ struct widget {
 
     element& operator[](pcstr id);
     inline element &operator[](const bstring32 &id) { return (*this)[id.c_str()]; }
+    inline element &operator[](const xstring &id) { return (*this)[id.c_str()]; }
 
     template<typename ... Args> int label(const Args ... args) { return ui::label(args...); }
     template<typename ... Args> generic_button &button(const Args ... args) { return ui::button(args...); }

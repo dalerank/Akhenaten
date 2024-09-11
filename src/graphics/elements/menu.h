@@ -1,7 +1,7 @@
 #pragma once
 
 #include "input/mouse.h"
-#include "core/bstring.h"
+#include "core/xstring.h"
 #include "core/svector.h"
 #include <functional>
 
@@ -15,7 +15,7 @@ struct menu_item {
     int parameter;
     int hidden = false;
     bstring64 text;
-    bstring64 id;
+    xstring id;
 };
 
 struct menu_header {

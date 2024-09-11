@@ -39,7 +39,6 @@ static void button_overlay(int param1, int param2);
 static void button_collapse_expand(int param1, int param2);
 static void button_build(int submenu, int param2);
 static void button_undo(int param1, int param2);
-static void button_messages(int param1, int param2);
 static void button_help(int param1, int param2);
 static void button_advisors(int param1, int param2);
 static void button_empire(int param1, int param2);
@@ -101,7 +100,6 @@ static image_button buttons_build_expanded[] = {
   {COL4, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 44, button_build, button_none, BUILDING_MENU_SECURITY, 0, 1},
 
   {COL1, ROW4, 35, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
-  {COL2, ROW4, 38, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 52, button_messages, button_help, 0, MESSAGE_DIALOG_MESSAGES, 1},
 };
 
 static image_button buttons_top_expanded[3] = {
@@ -136,13 +134,11 @@ static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
     sidebar_common_draw_relief(x_offset, relief_y_offset, {PACK_GENERAL, 121}, is_collapsed);
 }
 
-static void draw_number_of_messages(int x_offset) {
+void ui::sidebar_window::draw_number_of_messages() {
     int messages = city_message_count();
-    buttons_build_expanded[13].enabled = messages > 0;
-    if (messages) {
-        text_draw_number_centered_colored(messages, x_offset + 74, 452, 32, FONT_SMALL_PLAIN, COLOR_BLACK);
-        text_draw_number_centered_colored(messages, x_offset + 73, 453, 32, FONT_SMALL_PLAIN, COLOR_WHITE);
-    }
+
+    ui["show_messages"].readonly = (messages <= 0);
+    ui["num_messages"] = messages > 0 ? bstring32(messages) : bstring32();
 }
 
 static void draw_buttons_collapsed(int x_offset) {
@@ -150,11 +146,11 @@ static void draw_buttons_collapsed(int x_offset) {
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_build_collapsed, 12);
 }
 
-void ui::sidebar_window::draw_buttons_expanded(int x_offset) {
+void ui::sidebar_window::draw_buttons_expanded() {
     buttons_build_expanded[12].enabled = game_can_undo();
     ui["goto_problem"].readonly = !city_message_problem_area_count();
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_overlays_collapse_sidebar, 1);
-    image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_build_expanded, 15);
+    image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_build_expanded, std::size(buttons_build_expanded));
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_top_expanded, 3);
 }
 
@@ -198,6 +194,8 @@ void ui::sidebar_window::init() {
             window_invalidate();
         }
     });
+
+    ui["show_messages"].onclick([] { window_message_list_show(); });
 }
 
 void ui::sidebar_window::ui_draw_foreground() {
@@ -222,9 +220,9 @@ void ui::sidebar_window::ui_draw_foreground() {
 
     ui.image(extra_block, { extra_block_x, 0 });
 
-    draw_number_of_messages(x_offset - 26);
+    draw_number_of_messages();
 
-    draw_buttons_expanded(x_offset);
+    draw_buttons_expanded();
     draw_overlay_text();
 
     draw_sidebar_remainder(x_offset, false);
@@ -237,11 +235,10 @@ void ui::sidebar_window::ui_draw_foreground() {
         int x_offset = sidebar_common_get_x_offset_collapsed();
         draw_buttons_collapsed(x_offset);
     } else {
-        int x_offset = sidebar_common_get_x_offset_expanded();
-        draw_buttons_expanded(x_offset);
+        draw_buttons_expanded();
 
         widget_minimap_draw({ x_offset + 12, MINIMAP_Y_OFFSET }, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
-        draw_number_of_messages(x_offset - 26);
+        draw_number_of_messages();
     }
     sidebar_extra_draw_foreground();
 
@@ -360,9 +357,7 @@ static void button_undo(int param1, int param2) {
     game_undo_perform();
     window_invalidate();
 }
-static void button_messages(int param1, int param2) {
-    window_message_list_show();
-}
+
 static void button_help(int param1, int param2) {
     window_message_dialog_show(param2, -1, window_city_draw_all);
 }

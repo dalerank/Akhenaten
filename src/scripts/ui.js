@@ -836,6 +836,8 @@ sidebar_window = {
 		overlay_text   : text_center({pos:[15, 30], size:[117, 20]}),
 
 		goto_problem 	 : image_button({pos:[86, 434], pack:PACK_GENERAL, id:136, offset:56}),
+		show_messages  : image_button({pos:[46, 434], pack:PACK_GENERAL, id:136, offset:52}),
+		num_messages   : text({pos: [52, 450], shadow:0xff000000, font:FONT_NORMAL_BLACK_ON_DARK, color:0xffffffff }),
 	}
 }
 

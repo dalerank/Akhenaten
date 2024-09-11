@@ -24,8 +24,8 @@ struct image_button {
     uint32_t image_collection;
     uint32_t image_group;
     int image_offset;
-    void (*left_click_handler)(int param1, int param2);
-    void (*right_click_handler)(int param1, int param2);
+    void (*left_click_handler)(int param1, int param2) = nullptr;
+    void (*right_click_handler)(int param1, int param2) = nullptr;
     int parameter1;
     int parameter2;
     bool enabled;
@@ -36,9 +36,10 @@ struct image_button {
     time_millis pressed_since;
     textid _tooltip;
 
-    std::function<void(int,int)> _onclick;
+    std::function<void(int,int)> _onclick, _onrclick;
 
     template<class Func> image_button &onclick(Func f) { _onclick = f; return *this; }
+    template<class Func> image_button &onrclick(Func f) { _onrclick = f; return *this; }
     inline image_button &tooltip(textid t) { _tooltip = t; return *this; }
     inline vec2i pos() const { return {x, y}; }
     inline vec2i size() const { return {width, height}; }

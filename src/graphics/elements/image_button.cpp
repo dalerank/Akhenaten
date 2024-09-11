@@ -113,7 +113,11 @@ bool image_buttons_handle_mouse(const mouse* m, vec2i pos, image_button* buttons
         }
         hit_button->floating = 0;
         hit_button->pressed_since = time_get_millis();
-        hit_button->left_click_handler(hit_button->parameter1, hit_button->parameter2);
+
+        if (hit_button->left_click_handler) {
+            hit_button->left_click_handler(hit_button->parameter1, hit_button->parameter2);
+        }
+
         if (hit_button->_onclick) {
             hit_button->_onclick(hit_button->parameter1, hit_button->parameter2);
         }
@@ -122,14 +126,24 @@ bool image_buttons_handle_mouse(const mouse* m, vec2i pos, image_button* buttons
             hit_button->pressed = 1;
         hit_button->floating = 0;
         hit_button->pressed_since = time_get_millis();
-        hit_button->right_click_handler(hit_button->parameter1, hit_button->parameter2);
+
+        if (hit_button->right_click_handler) {
+            hit_button->right_click_handler(hit_button->parameter1, hit_button->parameter2);
+        }
+
+        if (hit_button->_onrclick) {
+            hit_button->_onrclick(hit_button->parameter1, hit_button->parameter2);
+        }
     } else if (hit_button->button_type == IB_SCROLL && m->left.is_down) {
         time_millis delay = hit_button->pressed == 2 ? PRESSED_REPEAT_MILLIS : PRESSED_REPEAT_INITIAL_MILLIS;
         if (time_get_millis() - hit_button->pressed_since >= delay) {
             hit_button->pressed = 2;
             hit_button->floating = 0;
             hit_button->pressed_since = time_get_millis();
-            hit_button->left_click_handler(hit_button->parameter1, hit_button->parameter2);
+
+            if (hit_button->left_click_handler) {
+                hit_button->left_click_handler(hit_button->parameter1, hit_button->parameter2);
+            }
         }
     }
     return true;

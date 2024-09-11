@@ -64,9 +64,9 @@ struct top_menu_data_t {
     int offset_rotate;
     int offset_rotate_basic;
 
-    bstring64 open_sub_menu;
-    bstring64 focus_menu_id;
-    bstring64 focus_sub_menu_id;
+    xstring open_sub_menu;
+    xstring focus_menu_id;
+    xstring focus_sub_menu_id;
 
     int population;
     int treasury;
@@ -148,7 +148,7 @@ void config_load_top_menu_bar() {
         for (auto &header : data.headers.elements) {
             auto impl = header->dcast_menu_header();
             if (impl) {
-                impl->load_items(arch, header->id);
+                impl->load_items(arch, header->id.c_str());
             }
         }
     });
@@ -263,7 +263,7 @@ void top_menu_bar_draw() {
     }
 }
 
-static bstring64 top_menu_bar_get_selected_header(const mouse* m) {
+static xstring top_menu_bar_get_selected_header(const mouse* m) {
     auto& data = g_top_menu_data;
     auto &headers = g_top_menu_data.headers;
     for (auto &it : headers.elements) {
@@ -280,7 +280,7 @@ static bstring64 top_menu_bar_get_selected_header(const mouse* m) {
     return {};
 }
 
-static bstring64 top_menu_bar_handle_mouse(const mouse* m) {
+static xstring top_menu_bar_handle_mouse(const mouse* m) {
     g_top_menu_data.focus_menu_id = top_menu_bar_get_selected_header(m);
     return top_menu_bar_get_selected_header(m);
 }
@@ -304,7 +304,7 @@ static void top_menu_calculate_menu_dimensions(menu_header& menu) {
     menu.calculated_height_blocks = height_pixels / 16;
 }
 
-void top_menu_menu_draw(const bstring64 &header, const bstring64 &focus_item_id) {
+void top_menu_menu_draw(const xstring header, const xstring focus_item_id) {
     auto& menu = g_top_menu_data;
     auto &impl = ((ui::emenu_header *)&menu.headers[header])->impl;
 
@@ -324,7 +324,7 @@ void top_menu_menu_draw(const bstring64 &header, const bstring64 &focus_item_id)
     }
 }
 
-static bstring64 top_menu_get_subitem(const mouse* m, menu_header &menu) {
+static xstring top_menu_get_subitem(const mouse* m, menu_header &menu) {
     auto& data = g_top_menu_data;
     int y_offset = TOP_MENU_HEIGHT + data.offset.y * 2;
 
@@ -343,12 +343,12 @@ static bstring64 top_menu_get_subitem(const mouse* m, menu_header &menu) {
     return {};
 }
 
-bstring64 top_menu_menu_handle_mouse(const mouse* m, menu_header* menu, bstring64& focus_item_id) {
+xstring top_menu_menu_handle_mouse(const mouse* m, menu_header* menu, xstring& focus_item_id) {
     if (!menu) {
         return "";
     }
 
-    bstring64 item_id = top_menu_get_subitem(m, *menu);
+    xstring item_id = top_menu_get_subitem(m, *menu);
     focus_item_id = item_id;
 
     if (!item_id) {
@@ -781,7 +781,7 @@ static bool widget_top_menu_handle_input_submenu(const mouse* m, const hotkeys* 
         return true;
     }
 
-    bstring64 menu_id = top_menu_bar_handle_mouse(m);
+    xstring menu_id = top_menu_bar_handle_mouse(m);
     if (!!menu_id && menu_id != data.open_sub_menu) {
         window_invalidate();
         data.open_sub_menu = menu_id;
@@ -815,7 +815,7 @@ static bool handle_right_click(int type) {
 
 static bool widget_top_menu_handle_mouse_menu(const mouse* m) {
     auto& data = g_top_menu_data;
-    bstring64 menu_id = top_menu_bar_handle_mouse(m);
+    xstring menu_id = top_menu_bar_handle_mouse(m);
     if (!!menu_id && m->left.went_up) {
         data.open_sub_menu = menu_id;
         widget_top_menu_show();

@@ -708,6 +708,7 @@ void ui::elabel::load(archive arch, element *parent, items &elems) {
     _color = arch.r_uint("color");
     _wrap = arch.r_int("wrap");
     _clip_area = arch.r_bool("clip_area");
+    _shadow_color = arch.r_uint("shadow");
     pcstr talign = arch.r_string("align");
     bool multiline = arch.r_bool("multiline");
     bool rich = arch.r_bool("rich");
@@ -729,7 +730,7 @@ void ui::elabel::text(pcstr v) {
     _text = lang_text_from_key(v);
 }
 
-void ui::elabel::color(int v) {
+void ui::elabel::text_color(color v) {
     _color = v;
 }
 
@@ -845,11 +846,17 @@ void ui::escrollbar::load(archive arch, element *parent, items &elems) {
 void ui::etext::draw() {
     const vec2i offset = g_state.offset();
     if (!!(_flags & UiFlags_AlignCentered)) {
+        if (_shadow_color) {
+            text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x + 1, offset.y + pos.y, size.x, _font, _shadow_color);
+        }
         text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, size.x, _font, _color);
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
         text_draw_multiline((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _wrap, _font, _color);
     } else if (!!(_flags & UiFlags_AlignYCentered)) {
         int symbolh = get_letter_height((uint8_t *)"H", _font);
+        if (_shadow_color) {
+            text_draw((uint8_t *)_text.c_str(), offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2, _font, _shadow_color);
+        }
         text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y + (size.y - symbolh) / 2, _font, _color);
     } else if (!!(_flags & UiFlags_Rich)) {
         if (_clip_area) {
@@ -875,6 +882,9 @@ void ui::etext::draw() {
             graphics_reset_clip_rectangle();
         }
     } else {
+        if (_shadow_color) {
+            text_draw((uint8_t *)_text.c_str(), offset.x + pos.x + 1, offset.y + pos.y, _font, _shadow_color);
+        }
         text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _font, _color);
     }
 }
