@@ -30,7 +30,7 @@ struct archive {
     std::vector<vec2i> r_array_vec2i(pcstr name);
 
     template<class T>
-    inline T r_type(pcstr name) { return (T)r_int(name); }
+    inline T r_type(pcstr name, T def = (T)0) { return (T)r_int(name, def); }
 
     template<typename T = int>
     inline std::vector<T> r_array_num(pcstr name) {
