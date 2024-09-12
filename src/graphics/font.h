@@ -4,6 +4,7 @@
 #include "core/tokenum.h"
 
 #include <stdint.h>
+#include <array>
 
 enum e_font {
     FONT_SMALL_PLAIN,
@@ -16,9 +17,12 @@ enum e_font {
     FONT_SMALL_OUTLINED,
     FONT_NORMAL_BLACK_ON_DARK,
     FONT_SMALL_SHADED,
-    FONT_TYPES_MAX
+    FONT_TYPES_MAX,
+    FONT_INVALID = 0xff
 };
 extern const token_holder<e_font, FONT_SMALL_PLAIN, FONT_TYPES_MAX> e_tont_type_tokens;
+
+using fonts_vec = std::array<e_font, 2>;
 
 struct font_definition {
     e_font font;
