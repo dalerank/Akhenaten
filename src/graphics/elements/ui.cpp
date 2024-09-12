@@ -241,7 +241,7 @@ void splitStringByNewline(const std::string &str, T &result) {
     result.push_back(str.substr(start));
 }
 
-generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFlags flags, std::function<void(int, int)> cb) {
+generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, UiFlags flags, std::function<void(int, int)> cb) {
     const vec2i offset = g_state.offset();
 
     g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
@@ -249,11 +249,15 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
     gbutton.hovered = is_button_hover(gbutton, offset);
     gbutton.clip = graphics_clip_rectangle();
     const bool grayed = !!(flags & UiFlags_Grayed);
+    const bool noborder = !!(flags & UiFlags_NoBorder);
 
-    if (gbutton.hovered && !grayed) {
-        button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, true);
-    } else if (!(flags & UiFlags_NoBody)) {
-        button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, 0);
+    if (!noborder) {
+        button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, gbutton.hovered && !grayed);
+    }
+
+    e_font font = fonts[gbutton.hovered ? 1 : 0];
+    if (font == FONT_INVALID) {
+        font = fonts[0];
     }
 
     int symbolh = get_letter_height((uint8_t *)"H", font);
@@ -289,14 +293,19 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, e_font font, UiFl
     return gbutton;
 }
 
-generic_button &ui::button(const svector<pcstr,4> &labels, vec2i pos, vec2i size, e_font font, UiFlags flags, std::function<void(int, int)> cb) {
+generic_button &ui::button(const svector<pcstr,4> &labels, vec2i pos, vec2i size, fonts_vec fonts, UiFlags flags, std::function<void(int, int)> cb) {
     const vec2i offset = g_state.offset();
 
     g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
     auto &gbutton = g_state.buttons.back().g_button;
-    int focused = is_button_hover(gbutton, offset);
+    gbutton.hovered = is_button_hover(gbutton, offset);
 
-    button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, focused ? 1 : 0);
+    e_font font = fonts[gbutton.hovered ? 1 : 0];
+    if (font == FONT_INVALID) {
+        font = fonts[0];
+    }
+
+    button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, gbutton.hovered ? 1 : 0);
     int symbolh = get_letter_height((uint8_t *)"H", font);
     int labels_num = labels.size();
     int starty = offset.y + pos.y + (size.y - (symbolh + 2) * labels_num) / 2 + 4;
@@ -702,8 +711,9 @@ void ui::elabel::load(archive arch, element *parent, items &elems) {
     if (_text[0] == '#') {
         _text = lang_text_from_key(_text.c_str());
     }
-    _font = (e_font)arch.r_int("font", FONT_NORMAL_BLACK_ON_LIGHT);
-    _link_font = (e_font)arch.r_int("link_font", FONT_NORMAL_YELLOW);
+    _font = arch.r_type<e_font>("font", FONT_NORMAL_BLACK_ON_LIGHT);
+    _font_link = arch.r_type<e_font>("font_link", FONT_NORMAL_YELLOW);
+    _font_hover = arch.r_type< e_font>("font_hover", FONT_INVALID);
     _body = arch.r_size2i("body");
     _color = arch.r_uint("color");
     _wrap = arch.r_int("wrap");
@@ -871,7 +881,7 @@ void ui::etext::draw() {
         int rwrap = _wrap <= 0 ? size.x : _wrap;
         rwrap = rwrap <= 0 ? 9999 : rwrap;
 
-        rich_text_set_fonts(_font, _link_font);
+        rich_text_set_fonts(_font, _font_link);
         rich_text_draw((const uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, rwrap, maxlines, false);
 
         if (!(_flags & UiFlags_NoScroll)) {
@@ -949,24 +959,26 @@ void ui::earrow_button::draw() {
 
 void ui::egeneric_button::draw() {
     UiFlags flags = _flags 
-                      | (grayed ? UiFlags_Grayed : UiFlags_None);
+                      | (grayed ? UiFlags_Grayed : UiFlags_None)
+                      | (!_border ? UiFlags_NoBorder : UiFlags_None);
 
     generic_button *btn = nullptr;
     switch (mode) {
     case 0:
-        btn = &ui::button(_text.c_str(), pos, size, _font, flags)
-                      .onclick(_func)
-                      .tooltip(_tooltip);
+        btn = &ui::button(_text.c_str(), pos, size, { _font, _font_hover }, flags);
         break;
 
     case 1:
-        btn = &ui::large_button(_text.c_str(), pos, size, _font)
-                      .onclick(_func)
-                      .tooltip(_tooltip);
+        btn = &ui::large_button(_text.c_str(), pos, size, _font);
         break;
     }
 
-    if (_tooltip.id && btn && btn->hovered) {
+    if (_func) btn->onclick(_func);
+    if (_rfunc) btn->onrclick(_rfunc);
+
+    btn->tooltip(_tooltip);
+
+    if (_tooltip.id && btn->hovered) {
         tooltipctx.set(TOOLTIP_BUTTON, _tooltip);
     }
 }
@@ -979,6 +991,7 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
         mode = 1;
     }
     _tooltip = arch.r_vec2i("tooltip");
+    _border = arch.r_bool("border", true);
 }
 
 void ui::info_window::load(archive arch, pcstr section) {
