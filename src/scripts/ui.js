@@ -701,7 +701,7 @@ mission_briefing_window = {
 		goal_5 : { type : "label", pos:[288 + 16, 134 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false },
 		goal_immediate : { type : "label", pos : {x:32 + 16, y:134 + 32},	body : {w:31, h:1},	font : FONT_NORMAL_YELLOW, enabled: false },
 		description_panel : { type : "inner_panel", pos : {x:32, y:200}, size: {w:33, h:14} },
-		description_text : { type : "text", pos: [40, 216], size:[px(36), px(10)], wrap:px(34), font : FONT_NORMAL_WHITE_ON_DARK, link_font:FONT_NORMAL_YELLOW, rich:true, clip_area:true },
+		description_text : { type : "text", pos: [40, 216], size:[px(36), px(10)], wrap:px(34), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true },
 		difficulty_label : { type : "label", pos:[105, 433], size:[31, 14], font : FONT_NORMAL_BLACK_ON_LIGHT },
 		back 			: { type:"image_button", pos:[26, 428], size:[31, 20], pack:PACK_GENERAL, id:90, offset:8 },
 		start_mission : { type:"image_button", pos:[516, 430], size:[27, 27], pack:PACK_GENERAL, id:90, offset:0 },
@@ -833,7 +833,7 @@ sidebar_window = {
 		background 		 : image({pos:[0, 30], size: [29, 22], pack:PACK_GENERAL, id:121}),
 		build_image    : image({pos:[11, 211]}),
 
-		overlay_text   : text_center({pos:[15, 30], size:[117, 20]}),
+		show_overlays  : button({pos:[4, 30], size:[117, 20], border:false, font_hover:FONT_NORMAL_YELLOW }),
 
 		goto_problem 	 : image_button({pos:[86, 434], pack:PACK_GENERAL, id:136, offset:56}),
 		show_messages  : image_button({pos:[46, 434], pack:PACK_GENERAL, id:136, offset:52}),
@@ -878,8 +878,8 @@ info_window_figure_animal = {
 
 info_window_figure_caravan_donkey = {
 	ui : __baseui(figure_info_window, {
-   	bought_items   : { type : "text", pos: [40, 180], size:[px(29), px(10)], wrap:px(29), font : FONT_NORMAL_WHITE_ON_DARK, link_font:FONT_NORMAL_YELLOW, rich:true, clip_area:true },
-   	sold_items     : { type : "text", pos: [40, 210], size:[px(29), px(10)], wrap:px(29), font : FONT_NORMAL_WHITE_ON_DARK, link_font:FONT_NORMAL_YELLOW, rich:true, clip_area:true },
+   	bought_items   : { type : "text", pos: [40, 180], size:[px(29), px(10)], wrap:px(29), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true },
+   	sold_items     : { type : "text", pos: [40, 210], size:[px(29), px(10)], wrap:px(29), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true },
 	})
 }
 

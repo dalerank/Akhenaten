@@ -35,7 +35,6 @@
 
 #define MINIMAP_Y_OFFSET 59
 
-static void button_overlay(int param1, int param2);
 static void button_collapse_expand(int param1, int param2);
 static void button_build(int submenu, int param2);
 static void button_undo(int param1, int param2);
@@ -48,7 +47,6 @@ static void button_rotate(int clockwise, int param2);
 
 static image_button buttons_overlays_collapse_sidebar[2] = {
     {128, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 7, button_collapse_expand, button_none, 0, 0, 1},
-    {4, 3, 117, 31, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 0, button_overlay, button_help, 0, MESSAGE_DIALOG_OVERLAYS, 1}
 };
 
 static image_button button_expand_sidebar[1] = {
@@ -111,13 +109,11 @@ static image_button buttons_top_expanded[3] = {
 ui::sidebar_window g_sidebar;
 
 void ui::sidebar_window::draw_overlay_text() {
-    const bool is_button_focused = buttons_overlays_collapse_sidebar[1].focused;
-    e_font font = is_button_focused ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_BLACK_ON_LIGHT;
     pcstr overlay_text = game.current_overlay
                             ? game_state_overlay_text(game.current_overlay)
                             : ui::str(6, 4);
 
-    ui["overlay_text"].text(font, overlay_text);
+    ui["show_overlays"] = overlay_text;
 }
 
 static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
@@ -196,6 +192,10 @@ void ui::sidebar_window::init() {
     });
 
     ui["show_messages"].onclick([] { window_message_list_show(); });
+
+    ui["show_overlays"]
+        .onclick([] { window_overlay_menu_show(); })
+        .onrclick([] { window_message_dialog_show(MESSAGE_DIALOG_OVERLAYS, -1, window_city_draw_all);; });
 }
 
 void ui::sidebar_window::ui_draw_foreground() {
@@ -338,10 +338,6 @@ static void slide_finished() {
     city_view_toggle_sidebar();
     window_city_show();
     window_draw(1);
-}
-
-static void button_overlay(int param1, int param2) {
-    window_overlay_menu_show();
 }
 
 static void button_collapse_expand(int param1, int param2) {
