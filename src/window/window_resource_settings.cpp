@@ -108,7 +108,7 @@ static void draw_foreground() {
 
             case TRADE_STATUS_IMPORT:
                 text.printf("%s %u", ui::str(54, 19), trading_amount);
-                ui::button(text, {98 - 52, 212}, {268, 30}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignYCentered)
+                ui::button(text, { 98 - 52, 212 }, { 268, 30 }, fonts_vec{ FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_AlignYCentered)
                     .onclick([] (int, int) {
                         city_resource_cycle_trade_import(g_resource_settings_data.resource);
                     });
@@ -150,7 +150,7 @@ static void draw_foreground() {
 
             case TRADE_STATUS_EXPORT:
                 text.printf("%s %u", ui::str(54, 20), trading_amount);
-                ui::button(text, {264 + 48, 212}, {268, 30}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignYCentered)
+                ui::button(text, { 264 + 48, 212 }, { 268, 30 }, fonts_vec{ FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_AlignYCentered)
                     .onclick([] {
                         city_resource_cycle_trade_import(g_resource_settings_data.resource);
                     });

@@ -119,7 +119,7 @@ void ui::advisor_imperial_window::ui_draw_foreground() {
         && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
         
         // can send to distant battle
-        ui.button("", vec2i{38, 96}, vec2i{560, 40}, FONT_NORMAL_WHITE_ON_DARK)
+        ui.button("", vec2i{ 38, 96 }, vec2i{ 560, 40 }, fonts_vec{ FONT_NORMAL_WHITE_ON_DARK })
             .onclick([] (int, int) {
                 formation_legions_dispatch_to_distant_battle();
                 window_empire_show();

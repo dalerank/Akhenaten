@@ -43,7 +43,7 @@ void ui::advisor_trade_window::ui_draw_foreground() {
         int i = std::distance(resources.begin(), &r);
         int y_offset = ui["inner_panel"].pos.y + 23 * (i - scroll_position) + 8;
 
-        ui.button("", vec2i{20, y_offset}, vec2i{570, 22}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_NoBody)
+        ui.button("", vec2i{ 20, y_offset }, vec2i{ 570, 22 }, fonts_vec{ FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_NoBorder)
             .tooltip({68, 109})
             .onclick([r] {
                 window_resource_settings_show(r.type);

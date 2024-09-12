@@ -98,7 +98,7 @@ void ui::advisor_military_window::ui_draw_foreground() {
     if (num_legions > 0) {
         for (int i = 0; i < 6 && i < num_legions; i++) {
             const formation *form = formation_get(formation_for_legion(i + 1 + g_advisor_mil_scrollbar.scroll_position));
-            ui.button("", vec2i{ 22, 77 + 44 * i }, vec2i{ 560, 40 }, FONT_NORMAL_BLACK_ON_DARK);
+            ui.button("", vec2i{ 22, 77 + 44 * i }, vec2i{ 560, 40 }, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK });
             ui.image({ PACK_GENERAL, 127, form->legion_id }, vec2i{ 32, 82 + 44 * i });
             ui.label(ui::str(138, form->legion_id), vec2i{ 84, 83 + 44 * i }, FONT_NORMAL_WHITE_ON_DARK);
 
@@ -112,7 +112,7 @@ void ui::advisor_military_window::ui_draw_foreground() {
             ui.label(ui::str(138, 37 + form->morale / 5), vec2i{224, 91 + 44 * i}, FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered, 150);
 
             image_desc image{ PACK_GENERAL, 222 };
-            ui.button("", vec2i{384, 83 + 44 * i}, vec2i{30, 30}, FONT_NORMAL_BLACK_ON_DARK);
+            ui.button("", vec2i{ 384, 83 + 44 * i }, vec2i{ 30, 30 }, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK });
             ui.image(image + 0, vec2i{ 387, 86 + 44 * i });
 
             ui.button("", vec2i{ 464, 83 + 44 * i }, vec2i{ 30, 30 });
