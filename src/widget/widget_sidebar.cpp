@@ -86,12 +86,6 @@ static image_button buttons_build_expanded[] = {
   {COL2, ROW3, 36, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 20, button_build, button_none, BUILDING_MENU_DISTRIBUTION, 0, 1},
 
   {COL3, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 24, button_build, button_none, BUILDING_MENU_ENTERTAINMENT, 0, 1},
-  {COL3, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 28, button_build, button_none, BUILDING_MENU_RELIGION, 0, 1},
-  {COL3, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 32, button_build, button_none, BUILDING_MENU_EDUCATION, 0, 1},
-
-  {COL4, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 36, button_build, button_none, BUILDING_MENU_HEALTH, 0, 1},
-  {COL4, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 40, button_build, button_none, BUILDING_MENU_ADMINISTRATION, 0, 1},
-  {COL4, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 44, button_build, button_none, BUILDING_MENU_SECURITY, 0, 1},
 };
 
 ui::sidebar_window g_sidebar;
@@ -185,6 +179,13 @@ void ui::sidebar_window::init() {
 
     ui["show_advisors"].onclick([] { window_advisors_show_checked(); });
     ui["show_empire"].onclick([] { window_empire_show_checked(); });
+
+    ui["build_education"].onclick([] { window_build_menu_show(BUILDING_MENU_EDUCATION); });
+    ui["build_religion"].onclick([] { window_build_menu_show(BUILDING_MENU_RELIGION); });
+
+    ui["build_health"].onclick([] { window_build_menu_show(BUILDING_MENU_HEALTH); });
+    ui["build_security"].onclick([] { window_build_menu_show(BUILDING_MENU_SECURITY); });
+    ui["build_admin"].onclick([] { window_build_menu_show(BUILDING_MENU_ADMINISTRATION); });
 
     ui["undo_btn"].onclick([] {
         game_undo_perform();

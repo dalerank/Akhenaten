@@ -838,6 +838,13 @@ sidebar_window = {
 
 		show_advisors  : image_button({pos:[16, 173], pack:PACK_GENERAL, id:136, offset:64, tooltip:[68, 41]}),
 		show_empire    : image_button({pos:[90, 173], pack:PACK_GENERAL, id:136, offset:68, tooltip:[68, 42]}),
+		
+		build_health   : image_button({pos:[125, 281], pack:PACK_GENERAL, id:136, offset:36, tooltip:[68, 29]}),
+		build_admin    : image_button({pos:[125, 330], pack:PACK_GENERAL, id:136, offset:40, tooltip:[68, 30]}),
+		build_security : image_button({pos:[125, 381], pack:PACK_GENERAL, id:136, offset:44, tooltip:[68, 31]}),
+
+		build_education: image_button({pos:[86, 381], pack:PACK_GENERAL, id:136, offset:32, tooltip:[68, 28]}),
+		build_religion : image_button({pos:[86, 330], pack:PACK_GENERAL, id:136, offset:28, tooltip:[68, 27]}),
 
 		show_messages  : image_button({pos:[46, 434], pack:PACK_GENERAL, id:136, offset:52, tooltip:[68,33]}),
 		goto_problem 	 : image_button({pos:[86, 434], pack:PACK_GENERAL, id:136, offset:56, tooltip:[68,34]}),
