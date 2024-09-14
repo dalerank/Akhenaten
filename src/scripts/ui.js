@@ -835,6 +835,8 @@ sidebar_window = {
 
 		show_overlays  : button({pos:[4, 30], size:[117, 20], border:false, font_hover:FONT_NORMAL_YELLOW }),
 
+		show_advisors  : image_button({pos:[16, 173], pack:PACK_GENERAL, id:136, offset:64}),
+
 		show_messages  : image_button({pos:[46, 434], pack:PACK_GENERAL, id:136, offset:52}),
 		goto_problem 	 : image_button({pos:[86, 434], pack:PACK_GENERAL, id:136, offset:56}),
 		show_briefing  : image_button({pos:[116, 434], pack:PACK_GENERAL, id:136, offset:60}),

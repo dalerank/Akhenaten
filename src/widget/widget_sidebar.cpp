@@ -39,7 +39,6 @@ static void button_collapse_expand(int param1, int param2);
 static void button_build(int submenu, int param2);
 static void button_undo(int param1, int param2);
 static void button_help(int param1, int param2);
-static void button_advisors(int param1, int param2);
 static void button_empire(int param1, int param2);
 static void button_rotate_north(int param1, int param2);
 static void button_rotate(int clockwise, int param2);
@@ -100,7 +99,6 @@ static image_button buttons_build_expanded[] = {
 };
 
 static image_button buttons_top_expanded[] = {
-  {COL1 + 7, 143, 60, 36, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 64, button_advisors, button_none, 0, 0, 1},
   {COL3 + 4, 143, 62, 36, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 68, button_empire, button_help, 0, MESSAGE_DIALOG_EMPIRE_MAP, 1},
 };
 
@@ -195,6 +193,8 @@ void ui::sidebar_window::init() {
     });
 
     ui["show_messages"].onclick([] { window_message_list_show(); });
+
+    ui["show_advisors"].onclick([] { window_advisors_show_checked(); });
 
     ui["show_briefing"].readonly = scenario_is_custom();
     ui["show_briefing"].onclick([] { window_mission_briefing_show_review(); });
@@ -362,10 +362,6 @@ static void button_undo(int param1, int param2) {
 
 static void button_help(int param1, int param2) {
     window_message_dialog_show(param2, -1, window_city_draw_all);
-}
-
-static void button_advisors(int param1, int param2) {
-    window_advisors_show_checked();
 }
 
 static void button_empire(int param1, int param2) {
