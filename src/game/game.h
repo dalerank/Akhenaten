@@ -2,6 +2,7 @@
 
 #include "graphics/painter.h"
 #include "overlays/city_overlay_fwd.h"
+#include "core/xstring.h"
 #include "core/threading.h"
 #include "core/time.h"
 
@@ -29,6 +30,13 @@ struct animation_timer {
     bool should_update;
 };
 
+enum e_session_type {
+    e_session_none = -1,
+    e_session_mission = 0,
+    e_session_save = 1,
+    e_session_custom_map = 2
+};
+
 class MovieWriter;
 
 struct game_t {
@@ -47,6 +55,12 @@ struct game_t {
     bool write_video = false;
 
     MovieWriter *mvwriter = nullptr;
+
+    struct {
+        xstring last_loaded_mission;
+        e_session_type last_loaded = e_session_none;
+        bool active = false;
+    } session;
 
     fps_data_t fps = {0, 0, 0};
     e_overlay current_overlay = OVERLAY_NONE;

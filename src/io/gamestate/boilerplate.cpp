@@ -120,7 +120,6 @@ const int GamestateIO::read_file_version(const char* filename, int offset) {
     return small_buffer->read_i32();
 }
 
-static e_loaded_type last_loaded = e_loaded_none;
 static void pre_load() { // do we NEED this...?
     scenario_set_campaign_scenario(-1);
     map_bookmarks_clear();
@@ -210,18 +209,18 @@ static void post_load() {
     trade_prices_reset();
 
     // city data special cases
-    switch (last_loaded) {
-    case e_loaded_mission:
+    switch (game.session.last_loaded) {
+    case e_session_mission:
         g_city.init_campaign_mission();
-        g_city.kingdome.init_scenario(scenario_campaign_rank(), last_loaded);
+        g_city.kingdome.init_scenario(scenario_campaign_rank(), game.session.last_loaded);
         tutorial_init(/*clear_all*/true, false);
         break;
-    case e_loaded_save:
+    case e_session_save:
         tutorial_init(/*clear_all*/false, false);
         break;
-    case e_loaded_custom_map:
+    case e_session_custom_map:
         g_city.init_custom_map();
-        g_city.kingdome.init_scenario(scenario_campaign_rank(), last_loaded);
+        g_city.kingdome.init_scenario(scenario_campaign_rank(), game.session.last_loaded);
         tutorial_init(/*clear_all*/true, true);
         break;
     }
@@ -592,7 +591,8 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
         return false;
     }
 
-    last_loaded = e_loaded_mission;
+    game.session.last_loaded = e_session_mission;
+    game.session.last_loaded_mission = MISSION_PACK_FILE;
     scenario_set_campaign_scenario(scenario_id);
     post_load();
 
@@ -609,7 +609,8 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
 
     return true;
 }
-bool GamestateIO::load_savegame(const char* filename_short, bool start_immediately) {
+
+bool GamestateIO::load_savegame(pcstr filename_short, bool start_immediately) {
     // concatenate string
     bstring256 full = fullpath_saves(filename_short);
 
@@ -620,7 +621,8 @@ bool GamestateIO::load_savegame(const char* filename_short, bool start_immediate
         return false;
     }
 
-    last_loaded = e_loaded_save;
+    game.session.last_loaded = e_session_save;
+    game.session.last_loaded_mission = filename_short;
     post_load();
 
     // finish loading and start
@@ -630,7 +632,8 @@ bool GamestateIO::load_savegame(const char* filename_short, bool start_immediate
 
     return true;
 }
-bool GamestateIO::load_map(const char* filename_short, bool start_immediately) {
+
+bool GamestateIO::load_map(pcstr filename_short, bool start_immediately) {
     // concatenate string
     char full[MAX_FILE_NAME] = {0};
     fullpath_maps(full, filename_short);
@@ -641,7 +644,8 @@ bool GamestateIO::load_map(const char* filename_short, bool start_immediately) {
         return false;
     }
 
-    last_loaded = e_loaded_custom_map;
+    game.session.last_loaded = e_session_custom_map;
+    game.session.last_loaded_mission = filename_short;
     post_load();
 
     // finish loading and start
@@ -656,7 +660,7 @@ bool GamestateIO::load_map(const char* filename_short, bool start_immediately) {
 
 void GamestateIO::start_loaded_file() {
     // build the map grids when loading MAP files
-    if (last_loaded != e_loaded_save) {
+    if (game.session.last_loaded != e_session_save) {
         // initialize grids
         map_tiles_update_all_elevation();
         map_tiles_river_refresh_entire();
@@ -720,20 +724,23 @@ void GamestateIO::start_loaded_file() {
     map_tree_update_all_tiles();
     map_building_update_all_tiles();
 
-    if (last_loaded == e_loaded_mission) {
+    if (game.session.last_loaded == e_session_mission) {
         window_mission_briefing_show();
     } else {
         game.paused = false;
         window_city_show();
     }
+
+    game.session.active = true;
     g_sound.music_update(true);
-    last_loaded = e_loaded_none;
+    game.session.last_loaded = e_session_none;
 }
 
 bool GamestateIO::delete_mission(const int scenario_id) {
     // TODO?
     return false;
 }
+
 bool GamestateIO::delete_savegame(const char* filename_short) {
     // concatenate string
     bstring256 full = fullpath_saves(filename_short);
