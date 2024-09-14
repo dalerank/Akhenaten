@@ -141,7 +141,20 @@ void config_load_ui_options() {
 
 static ui::element::ptr create_element(pcstr type) {
     ui::element::ptr elm;
-    if (!strcmp(type, "outer_panel")) { elm = std::make_shared<ui::eouter_panel>(); } else if (!strcmp(type, "scrollbar")) { elm = std::make_shared<ui::escrollbar>(); } else if (!strcmp(type, "menu_header")) { elm = std::make_shared<ui::emenu_header>(); } else if (!strcmp(type, "inner_panel")) { elm = std::make_shared<ui::einner_panel>(); } else if (!strcmp(type, "background")) { elm = std::make_shared<ui::ebackground>(); } else if (!strcmp(type, "image")) { elm = std::make_shared<ui::eimg>(); } else if (!strcmp(type, "label")) { elm = std::make_shared<ui::elabel>(); } else if (!strcmp(type, "text")) { elm = std::make_shared<ui::etext>(); } else if (!strcmp(type, "generic_button")) { elm = std::make_shared<ui::egeneric_button>(); } else if (!strcmp(type, "image_button")) { elm = std::make_shared<ui::eimage_button>(); } else if (!strcmp(type, "resource_icon")) { elm = std::make_shared<ui::eresource_icon>(); } else if (!strcmp(type, "arrow_button")) { elm = std::make_shared<ui::earrow_button>(); } else if (!strcmp(type, "border")) { elm = std::make_shared<ui::eborder>(); } else if (!strcmp(type, "large_button")) {
+    if (!strcmp(type, "outer_panel")) { elm = std::make_shared<ui::eouter_panel>(); }
+    else if (!strcmp(type, "scrollbar")) { elm = std::make_shared<ui::escrollbar>(); }
+    else if (!strcmp(type, "menu_header")) { elm = std::make_shared<ui::emenu_header>(); }
+    else if (!strcmp(type, "inner_panel")) { elm = std::make_shared<ui::einner_panel>(); }
+    else if (!strcmp(type, "background")) { elm = std::make_shared<ui::ebackground>(); }
+    else if (!strcmp(type, "image")) { elm = std::make_shared<ui::eimg>(); }
+    else if (!strcmp(type, "label")) { elm = std::make_shared<ui::elabel>(); }
+    else if (!strcmp(type, "text")) { elm = std::make_shared<ui::etext>(); }
+    else if (!strcmp(type, "generic_button")) { elm = std::make_shared<ui::egeneric_button>(); }
+    else if (!strcmp(type, "image_button")) { elm = std::make_shared<ui::eimage_button>(); }
+    else if (!strcmp(type, "resource_icon")) { elm = std::make_shared<ui::eresource_icon>(); }
+    else if (!strcmp(type, "arrow_button")) { elm = std::make_shared<ui::earrow_button>(); }
+    else if (!strcmp(type, "border")) { elm = std::make_shared<ui::eborder>(); }
+    else if (!strcmp(type, "large_button")) {
         auto btn = std::make_shared<ui::egeneric_button>();
         btn->mode = 1;
         elm = btn;
@@ -356,8 +369,8 @@ image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
     g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, (uint32_t)desc.pack, (uint32_t)desc.id, offsets.data[0], button_none, button_none, 0, 0, true});
     auto &ibutton = g_state.buttons.back().i_button;
 
-    ibutton.focused = !(flags & UiFlags_Grayed) && (is_button_hover(ibutton, state_offset) || !!(flags & UiFlags_Selected));
-    ibutton.pressed = ibutton.focused && m->left.is_down;
+    ibutton.hovered = !(flags & UiFlags_Grayed) && (is_button_hover(ibutton, state_offset) || !!(flags & UiFlags_Selected));
+    ibutton.pressed = ibutton.hovered && m->left.is_down;
     ibutton.enabled = !(flags & UiFlags_Readonly);
 
     time_millis current_time = time_get_millis();
@@ -373,7 +386,7 @@ image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
         if (ibutton.enabled) {
             if (ibutton.pressed) {
                 image_id += offsets.data[2];
-            } else if (ibutton.focused) {
+            } else if (ibutton.hovered) {
                 image_id += offsets.data[1];
             }
         } else {
@@ -771,6 +784,7 @@ void ui::eimage_button::load(archive arch, element *parent, items &elems) {
     offsets.data[1] = arch.r_int("offset_focused", 1);
     offsets.data[2] = arch.r_int("offset_pressed", 2);
     offsets.data[3] = arch.r_int("offset_disabled", 3);
+    _tooltip = arch.r_vec2i("tooltip");
 
     pcstr name_icon_texture = arch.r_string("icon_texture");
     if (name_icon_texture && *name_icon_texture) {
@@ -784,52 +798,52 @@ void ui::eimage_button::draw() {
     UiFlags flags = (selected ? UiFlags_Selected : UiFlags_None);
     flags |= (readonly ? UiFlags_Readonly : UiFlags_None);
 
+    image_button *btn = nullptr;
+    vec2i tsize;
     if (img) {
-        ui::img_button(img, pos, size, img_desc.offset)
-            .onclick(_func)
-            .tooltip(_tooltip);
-
+        btn = &ui::img_button(img, pos, size, img_desc.offset);
     } else if (img_desc.id || img_desc.offset) {
         int img_id = image_id_from_group(img_desc.pack, img_desc.id);
         const image_t *img_ptr = image_get(img_id + img_desc.offset);
 
-        vec2i tsize;
         tsize.x = size.x > 0 ? size.x : img_ptr->width;
         tsize.y = size.y > 0 ? size.y : img_ptr->height;
 
-        auto &imb = ui::img_button(img_desc, pos, tsize, offsets, flags);
-        imb.onclick(_func);
-        imb.tooltip(_tooltip);
-
-        if (border && selected) {
-            button_border_draw(doffset.x + pos.x - 4, doffset.y + pos.y - 4, tsize.x + 8, tsize.y + 8, true);
-        }
-
-        if (grayed) {
-            graphics_shade_rect(doffset + pos, tsize, 0x80);
-        }
+        btn = &ui::img_button(img_desc, pos, tsize, offsets, flags);
     } else if (texture_id > 0) {
         graphics_draw_from_texture(texture_id, doffset + pos, size);
-
-        if (border && selected) {
-            button_border_draw(doffset.x + pos.x - 4, doffset.y + pos.y - 4, size.x + 8, size.y + 8, true);
-        }
-
-        ui::img_button({ 0, 0 }, pos, size, offsets, flags)
-            .onclick(_func)
-            .tooltip(_tooltip);
-
-        if (grayed) {
-            graphics_shade_rect(doffset + pos, size, 0x80);
-        }
+        tsize = size;
+        btn = &ui::img_button({ 0, 0 }, pos, size, offsets, flags);
     } else if (icon_texture) {
         painter ctx = game.painter();
         ctx.draw((SDL_Texture*)icon_texture, pos, {0, 0}, size, 0xffffffff, scale, false, true);
 
-        ui::img_button({ 0, 0 }, pos, size, offsets, UiFlags_None)
-            .onclick(_func)
-            .tooltip(_tooltip);
+        btn = &ui::img_button({ 0, 0 }, pos, size, offsets, UiFlags_None);
     } 
+
+    if (!btn) {
+        return;
+    }
+
+    if (grayed) {
+        graphics_shade_rect(doffset + pos, tsize, 0x80);
+        return;
+    }
+
+    if (readonly) {
+        return;
+    }
+
+    if (border && selected) {
+        button_border_draw(doffset.x + pos.x - 4, doffset.y + pos.y - 4, tsize.x + 8, tsize.y + 8, true);
+    }
+
+    btn->onclick(_func);
+    btn->tooltip(_tooltip);
+
+    if (_tooltip.id && btn->hovered) {
+        tooltipctx.set(TOOLTIP_BUTTON, _tooltip);
+    }
 }
 
 void ui::etext::load(archive arch, element* parent, items &elems) {

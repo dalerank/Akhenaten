@@ -90,8 +90,9 @@ static void draw_button_tooltip(tooltip_context* c) {
             x = c->mpos.x + 50;
         else
             x = c->mpos.x + 20;
-    } else
+    } else {
         x = c->mpos.x - width - 20;
+    }
 
     switch (window_get_id()) {
     case WINDOW_ADVISORS:

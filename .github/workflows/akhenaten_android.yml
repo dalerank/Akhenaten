@@ -33,7 +33,7 @@ jobs:
         cd android
         bash ./gradlew assembleDebug --stacktrace
     - name: Upload APK
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: apk
         path: android/akhenaten/build/outputs/apk/debug/akhenaten-debug.apk

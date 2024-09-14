@@ -37,9 +37,7 @@
 
 static void button_collapse_expand(int param1, int param2);
 static void button_build(int submenu, int param2);
-static void button_undo(int param1, int param2);
 static void button_help(int param1, int param2);
-static void button_empire(int param1, int param2);
 static void button_rotate_north(int param1, int param2);
 static void button_rotate(int clockwise, int param2);
 
@@ -94,12 +92,6 @@ static image_button buttons_build_expanded[] = {
   {COL4, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 36, button_build, button_none, BUILDING_MENU_HEALTH, 0, 1},
   {COL4, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 40, button_build, button_none, BUILDING_MENU_ADMINISTRATION, 0, 1},
   {COL4, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 44, button_build, button_none, BUILDING_MENU_SECURITY, 0, 1},
-
-  {COL1, ROW4, 35, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
-};
-
-static image_button buttons_top_expanded[] = {
-  {COL3 + 4, 143, 62, 36, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 68, button_empire, button_help, 0, MESSAGE_DIALOG_EMPIRE_MAP, 1},
 };
 
 ui::sidebar_window g_sidebar;
@@ -144,7 +136,6 @@ void ui::sidebar_window::draw_buttons_expanded() {
 
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_overlays_collapse_sidebar, 1);
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_build_expanded, std::size(buttons_build_expanded));
-    image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_top_expanded, std::size(buttons_top_expanded));
 }
 
 static void refresh_build_menu_buttons() {
@@ -192,9 +183,15 @@ void ui::sidebar_window::init() {
         }
     });
 
-    ui["show_messages"].onclick([] { window_message_list_show(); });
-
     ui["show_advisors"].onclick([] { window_advisors_show_checked(); });
+    ui["show_empire"].onclick([] { window_empire_show_checked(); });
+
+    ui["undo_btn"].onclick([] {
+        game_undo_perform();
+        window_invalidate();
+    });
+
+    ui["show_messages"].onclick([] { window_message_list_show(); });
 
     ui["show_briefing"].readonly = scenario_is_custom();
     ui["show_briefing"].onclick([] { window_mission_briefing_show_review(); });
@@ -313,11 +310,6 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
             data.focus_tooltip_text_id = button_id + 19;
         }
 
-        handled |= image_buttons_handle_mouse(m, {x_offset, 24}, buttons_top_expanded, (int)std::size(buttons_top_expanded), &button_id);
-        if (button_id) {
-            data.focus_tooltip_text_id = button_id + 40;
-        }
-
         handled |= (sidebar_extra_handle_mouse(m) != 0);
     }
     return handled;
@@ -355,18 +347,11 @@ static void button_collapse_expand(int param1, int param2) {
 static void button_build(int submenu, int param2) {
     window_build_menu_show(submenu);
 }
-static void button_undo(int param1, int param2) {
-    game_undo_perform();
-    window_invalidate();
-}
 
 static void button_help(int param1, int param2) {
     window_message_dialog_show(param2, -1, window_city_draw_all);
 }
 
-static void button_empire(int param1, int param2) {
-    window_empire_show_checked();
-}
 static void button_rotate_north(int param1, int param2) {
     game_orientation_rotate_north();
     window_invalidate();

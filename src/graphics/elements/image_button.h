@@ -32,7 +32,7 @@ struct image_button {
     // state
     char pressed;
     char floating;
-    uint8_t focused;
+    uint8_t hovered;
     time_millis pressed_since;
     textid _tooltip;
 

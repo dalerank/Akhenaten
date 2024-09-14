@@ -45,7 +45,7 @@ void image_buttons_draw(vec2i pos, image_button* buttons, int num_buttons, int s
         if (btn->enabled) {
             if (btn->pressed) {
                 image_id += 2;
-            } else if (btn->focused) {
+            } else if (btn->hovered) {
                 image_id += 1;
             }
         } else {
@@ -65,8 +65,8 @@ bool image_buttons_handle_mouse(const mouse* m, vec2i pos, image_button* buttons
 
     for (int i = 0; i < num_buttons; i++) {
         image_button* btn = &buttons[i];
-        if (btn->focused)
-            btn->focused--;
+        if (btn->hovered)
+            btn->hovered--;
 
         if (pos.x + btn->x <= m->x && pos.x + btn->x + btn->width > m->x && pos.y + btn->y <= m->y
             && pos.y + btn->y + btn->height > m->y) {
@@ -74,7 +74,7 @@ bool image_buttons_handle_mouse(const mouse* m, vec2i pos, image_button* buttons
                 *focus_button_id = i + 1;
 
             if (btn->enabled) {
-                btn->focused = 2;
+                btn->hovered = 2;
                 hit_button = btn;
             }
         } else if (btn->floating) {

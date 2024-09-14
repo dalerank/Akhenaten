@@ -830,17 +830,20 @@ sidebar_window = {
 	extra_block 	 	 : {pack:PACK_GENERAL, id:121, offset:2},
 	extra_block_x 	 : 162,
 	ui : {
+		// 68-xx tooltips for buttons
 		background 		 : image({pos:[0, 30], size: [29, 22], pack:PACK_GENERAL, id:121}),
 		build_image    : image({pos:[11, 211]}),
 
 		show_overlays  : button({pos:[4, 30], size:[117, 20], border:false, font_hover:FONT_NORMAL_YELLOW }),
 
-		show_advisors  : image_button({pos:[16, 173], pack:PACK_GENERAL, id:136, offset:64}),
+		show_advisors  : image_button({pos:[16, 173], pack:PACK_GENERAL, id:136, offset:64, tooltip:[68, 41]}),
+		show_empire    : image_button({pos:[90, 173], pack:PACK_GENERAL, id:136, offset:68, tooltip:[68, 42]}),
 
-		show_messages  : image_button({pos:[46, 434], pack:PACK_GENERAL, id:136, offset:52}),
-		goto_problem 	 : image_button({pos:[86, 434], pack:PACK_GENERAL, id:136, offset:56}),
-		show_briefing  : image_button({pos:[116, 434], pack:PACK_GENERAL, id:136, offset:60}),
+		show_messages  : image_button({pos:[46, 434], pack:PACK_GENERAL, id:136, offset:52, tooltip:[68,33]}),
+		goto_problem 	 : image_button({pos:[86, 434], pack:PACK_GENERAL, id:136, offset:56, tooltip:[68,34]}),
+		show_briefing  : image_button({pos:[116, 434], pack:PACK_GENERAL, id:136, offset:60, tooltip:[68,35]}),
 		num_messages   : text({pos: [52, 450], shadow:0xff000000, font:FONT_NORMAL_BLACK_ON_DARK, color:0xffffffff }),
+		undo_btn       : image_button({pos:[9, 434], pack:PACK_GENERAL, id:136, offset:48, tooltip:[68,32]}),
 	}
 }
 
