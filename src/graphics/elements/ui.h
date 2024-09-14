@@ -102,7 +102,7 @@ struct element {
     vec2i pos;
     vec2i size;
     recti margin = { recti::nomargin, recti::nomargin, recti::nomargin, recti::nomargin };
-    bool readonly = true;
+    bool readonly = false;
     bool enabled = true;
     bool grayed = false;
 

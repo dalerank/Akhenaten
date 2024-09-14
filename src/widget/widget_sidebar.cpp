@@ -41,7 +41,6 @@ static void button_undo(int param1, int param2);
 static void button_help(int param1, int param2);
 static void button_advisors(int param1, int param2);
 static void button_empire(int param1, int param2);
-static void button_mission_briefing(int param1, int param2);
 static void button_rotate_north(int param1, int param2);
 static void button_rotate(int clockwise, int param2);
 
@@ -100,10 +99,9 @@ static image_button buttons_build_expanded[] = {
   {COL1, ROW4, 35, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
 };
 
-static image_button buttons_top_expanded[3] = {
+static image_button buttons_top_expanded[] = {
   {COL1 + 7, 143, 60, 36, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 64, button_advisors, button_none, 0, 0, 1},
   {COL3 + 4, 143, 62, 36, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 68, button_empire, button_help, 0, MESSAGE_DIALOG_EMPIRE_MAP, 1},
-  {COL4 - 9, ROW4, 43, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 60, button_mission_briefing, button_none, 0, 0, 1},
 };
 
 ui::sidebar_window g_sidebar;
@@ -145,9 +143,10 @@ static void draw_buttons_collapsed(int x_offset) {
 void ui::sidebar_window::draw_buttons_expanded() {
     buttons_build_expanded[12].enabled = game_can_undo();
     ui["goto_problem"].readonly = !city_message_problem_area_count();
+
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_overlays_collapse_sidebar, 1);
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_build_expanded, std::size(buttons_build_expanded));
-    image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_top_expanded, 3);
+    image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_top_expanded, std::size(buttons_top_expanded));
 }
 
 static void refresh_build_menu_buttons() {
@@ -176,6 +175,10 @@ void ui::sidebar_window::load(archive arch, pcstr section) {
 
     arch.r_desc("extra_block", extra_block);
     extra_block_x = arch.r_int("extra_block_x");
+
+    if (game.session.active) {
+        init();
+    }
 }
 
 void ui::sidebar_window::init() {
@@ -192,6 +195,9 @@ void ui::sidebar_window::init() {
     });
 
     ui["show_messages"].onclick([] { window_message_list_show(); });
+
+    ui["show_briefing"].readonly = scenario_is_custom();
+    ui["show_briefing"].onclick([] { window_mission_briefing_show_review(); });
 
     ui["show_overlays"]
         .onclick([] { window_overlay_menu_show(); })
@@ -364,10 +370,6 @@ static void button_advisors(int param1, int param2) {
 
 static void button_empire(int param1, int param2) {
     window_empire_show_checked();
-}
-static void button_mission_briefing(int param1, int param2) {
-    if (!scenario_is_custom())
-        window_mission_briefing_show_review();
 }
 static void button_rotate_north(int param1, int param2) {
     game_orientation_rotate_north();
