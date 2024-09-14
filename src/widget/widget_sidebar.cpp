@@ -66,26 +66,24 @@ static image_button buttons_build_collapsed[12] = {
   {9, CL_ROW0 + 385, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 134, button_build, button_none, BUILDING_MENU_SECURITY, 0, 1},
 };
 
-#define COL1 9
-#define COL2 COL1 + 34 + 3
-#define COL3 COL2 + 36 + 4
-#define COL4 COL3 + 34 + 5
+struct btnid {
+    pcstr id;
+    e_building_type type;
+};
 
-#define ROW1 251
-#define ROW2 ROW1 + 48 + 1
-#define ROW3 ROW2 + 50 + 1
-#define ROW4 ROW3 + 49 + 4
-
-static image_button buttons_build_expanded[] = {
-  {COL1, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 0, button_build, button_none, BUILDING_MENU_VACANT_HOUSE, 0, 1},
-  {COL1, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 4, button_build, button_none, BUILDING_MENU_ROAD, 0, 1},
-  {COL1, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 8, button_build, button_none, BUILDING_MENU_CLEAR_LAND, 0, 1},
-
-  {COL2, ROW1, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 12, button_build, button_none, BUILDING_MENU_FOOD, 0, 1},
-  {COL2, ROW2, 36, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 16, button_build, button_none, BUILDING_MENU_INDUSTRY, 0, 1},
-  {COL2, ROW3, 36, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 20, button_build, button_none, BUILDING_MENU_DISTRIBUTION, 0, 1},
-
-  {COL3, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 24, button_build, button_none, BUILDING_MENU_ENTERTAINMENT, 0, 1},
+const btnid button_ids[] = {
+    {"build_house", BUILDING_MENU_VACANT_HOUSE},
+    {"build_road", BUILDING_MENU_ROAD},
+    {"clear_land", BUILDING_MENU_CLEAR_LAND},
+    {"build_food", BUILDING_MENU_FOOD},
+    {"build_industry", BUILDING_MENU_INDUSTRY},
+    {"build_distribution", BUILDING_MENU_DISTRIBUTION},
+    {"build_entertainment", BUILDING_MENU_ENTERTAINMENT},
+    {"build_religion", BUILDING_MENU_RELIGION},
+    {"build_education", BUILDING_MENU_EDUCATION},
+    {"build_health", BUILDING_MENU_HEALTH},
+    {"build_security", BUILDING_MENU_SECURITY},
+    {"build_admin", BUILDING_MENU_ADMINISTRATION },
 };
 
 ui::sidebar_window g_sidebar;
@@ -125,23 +123,19 @@ static void draw_buttons_collapsed(int x_offset) {
 }
 
 void ui::sidebar_window::draw_buttons_expanded() {
-    buttons_build_expanded[12].enabled = game_can_undo();
+    ui["undo_btn"].readonly = game_can_undo();
     ui["goto_problem"].readonly = !city_message_problem_area_count();
 
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_overlays_collapse_sidebar, 1);
-    image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_build_expanded, std::size(buttons_build_expanded));
 }
 
-static void refresh_build_menu_buttons() {
-    int num_buttons = 12;
-    for (int i = 0; i < num_buttons; i++) {
-        buttons_build_expanded[i].enabled = 1;
-        if (building_menu_count_items(buttons_build_expanded[i].parameter1) <= 0)
-            buttons_build_expanded[i].enabled = 0;
+void ui::sidebar_window::refresh_build_menu_buttons() {
+    for (const auto &btn: button_ids) {
+        ui[btn.id].enabled = (building_menu_count_items(btn.type) > 0);
+    }
 
-        buttons_build_collapsed[i].enabled = 1;
-        if (building_menu_count_items(buttons_build_collapsed[i].parameter1) <= 0)
-            buttons_build_collapsed[i].enabled = 0;
+    for (auto &btn: buttons_build_collapsed) {
+        btn.enabled = (building_menu_count_items(btn.parameter1) > 0);
     }
 }
 
@@ -180,12 +174,9 @@ void ui::sidebar_window::init() {
     ui["show_advisors"].onclick([] { window_advisors_show_checked(); });
     ui["show_empire"].onclick([] { window_empire_show_checked(); });
 
-    ui["build_education"].onclick([] { window_build_menu_show(BUILDING_MENU_EDUCATION); });
-    ui["build_religion"].onclick([] { window_build_menu_show(BUILDING_MENU_RELIGION); });
-
-    ui["build_health"].onclick([] { window_build_menu_show(BUILDING_MENU_HEALTH); });
-    ui["build_security"].onclick([] { window_build_menu_show(BUILDING_MENU_SECURITY); });
-    ui["build_admin"].onclick([] { window_build_menu_show(BUILDING_MENU_ADMINISTRATION); });
+    for (const auto &btn: button_ids) {
+        ui[btn.id].onclick([type = btn.type] { window_build_menu_show(type); });
+    }
 
     ui["undo_btn"].onclick([] {
         game_undo_perform();
@@ -306,11 +297,6 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
             data.focus_tooltip_text_id = button_id + 9;
         }
 
-        handled |= image_buttons_handle_mouse(m, {x_offset, 24}, buttons_build_expanded, (int)std::size(buttons_build_expanded), &button_id);
-        if (button_id) {
-            data.focus_tooltip_text_id = button_id + 19;
-        }
-
         handled |= (sidebar_extra_handle_mouse(m) != 0);
     }
     return handled;
@@ -320,7 +306,7 @@ int widget_sidebar_city_handle_mouse_build_menu(const mouse* m) {
     if (city_view_is_sidebar_collapsed()) {
         return image_buttons_handle_mouse(m, {sidebar_common_get_x_offset_collapsed(), 24}, buttons_build_collapsed, (int)std::size(buttons_build_collapsed), 0);
     } else {
-        return image_buttons_handle_mouse(m, {sidebar_common_get_x_offset_expanded(), 24}, buttons_build_expanded, (int)std::size(buttons_build_expanded), 0);
+        return 0; // image_buttons_handle_mouse(m, { sidebar_common_get_x_offset_expanded(), 24 }, buttons_build_expanded, (int)std::size(buttons_build_expanded), 0);
     }
 }
 
@@ -329,7 +315,7 @@ int widget_sidebar_city_get_tooltip_text() {
 }
 
 void widget_sidebar_city_release_build_buttons() {
-    image_buttons_release_press(buttons_build_expanded, std::size(buttons_build_expanded));
+    //image_buttons_release_press(buttons_build_expanded, std::size(buttons_build_expanded));
     image_buttons_release_press(buttons_build_collapsed, std::size(buttons_build_collapsed));
 }
 

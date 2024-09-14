@@ -24,6 +24,7 @@ struct sidebar_window : public autoconfig_window_t<sidebar_window> {
     void draw_overlay_text();
     void draw_buttons_expanded();
     void draw_number_of_messages();
+    void refresh_build_menu_buttons();
 };
 
 }
