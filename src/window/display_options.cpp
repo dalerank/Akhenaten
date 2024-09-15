@@ -10,11 +10,9 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "game/settings.h"
+#include "input/input.h"
 #include "graphics/screen.h"
 #include "graphics/graphics.h"
-#include "graphics/elements/image_button.h"
-#include "graphics/elements/lang_text.h"
-#include "graphics/elements/panel.h"
 #include "graphics/elements/scroll_list_panel.h"
 #include "graphics/image_groups.h"
 #include "graphics/window.h"
@@ -23,13 +21,11 @@
 
 constexpr uint32_t NUM_FILES_IN_VIEW = 13;
 
-ui::window_display_options ui::window_display_options::window;
+ui::display_options_window g_display_options_window;
 
-void ui::window_display_options::init(close_callback close_cb) {
+void ui::display_options_window::init(close_callback close_cb) {
     if (!panel) {
         scrollable_list_ui_params ui_params;
-        ui_params.x = 144;
-        ui_params.y = 100;
         ui_params.blocks_x = 20;
         ui_params.blocks_y = NUM_FILES_IN_VIEW + 1;
         ui_params.draw_scrollbar_always = true;
@@ -57,58 +53,66 @@ void ui::window_display_options::init(close_callback close_cb) {
 
     video_mode selected(wsize.x, wsize.y);
     panel->select(selected.str);
-}
 
-void ui::window_display_options::draw_foreground() {
-    graphics_set_to_dialog();
-    outer_panel_draw({128, 40}, 24, 21);
-
-    // title
-    lang_text_draw_centered(e_text_display_options, 0, 160, 50, 304, FONT_LARGE_BLACK_ON_LIGHT);
-    lang_text_draw(e_text_saving_dialog, 5, 224, 342, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    panel->draw();
-    graphics_reset_dialog();
-
-    ui::begin_widget(screen_dialog_offset());
-    pcstr fullscreen_text = (pcstr)lang_get_string(42, g_settings.is_fullscreen(e_setting_none) ? 2 : 1);
-    ui::button(fullscreen_text, {148, 76}, {224, 20})
-        .onclick([this] (int, int) {
-            app_fullscreen(!g_settings.is_fullscreen(e_setting_none));
-            _close_cb();
-        });
-
-    ui::imgok_button({344, 335}, [this] (int, int) {
+    ui["btnok"].onclick([this] {
         app_window_resize(selected_resolution);
         _close_cb();
     });
 
-    ui::imgcancel_button({392, 335}, [this] (int, int) {
+    ui["btncancel"].onclick([this] {
         _close_cb();
     });
 
-    ui::end_widget();
+    ui["btnfullscreen"] = ui::str(42, g_settings.is_fullscreen(e_setting_none) ? 2 : 1);
+    ui["btnfullscreen"].onclick([this] {
+        app_fullscreen(!g_settings.is_fullscreen(e_setting_none));
+        _close_cb();
+    });
 }
 
-void ui::window_display_options::handle_input(const mouse* m, const hotkeys* h) {
-    bool button_id = ui::handle_mouse(m);
+void ui::display_options_window::ui_draw_foreground() {
+    ui.begin_widget(pos);
+    ui.draw();
 
-    const mouse* m_dialog = mouse_in_dialog(m);
-    if (panel->input_handle(m_dialog)) {
+    vec2i scrpos = ui["background"].screen_pos();
+    panel->ui_params.x = scrpos.x + 16;
+    panel->ui_params.y = scrpos.y + 70;
+
+    panel->draw();
+    ui.end_widget();
+}
+
+int ui::display_options_window::ui_handle_mouse(const mouse* m) {
+    int result = autoconfig_window::ui_handle_mouse(m);
+
+    ui.begin_widget(pos);
+    vec2i scrpos = ui["background"].screen_pos();
+    mouse m_dialog = *m;
+    m_dialog.x -= (scrpos.x + 15);
+    m_dialog.y -= (scrpos.y + 70);
+    if (panel->input_handle(&m_dialog)) {
         auto it = video_modes.begin();
         std::advance(it, panel->get_selected_entry_idx());
         selected_resolution = {it->x, it->y};
     }
+    ui.end_widget();
+
+    const hotkeys *h = hotkey_state();
+    if (input_go_back_requested(m, h)) {
+        _close_cb();
+    }
+
+    return result;
 }
 
-void ui::window_display_options::show(close_callback close_cb) {
+void ui::display_options_window::show(close_callback close_cb) {
     static window_type instance = {
         WINDOW_FILE_DIALOG,
         window_draw_underlying_window,
-        [] { window.draw_foreground(); },
-        [] (const mouse *m, const hotkeys *h) { window.handle_input(m, h); }
+        [] { g_display_options_window.ui_draw_foreground(); },
+        [] (const mouse *m, const hotkeys *h) { g_display_options_window.ui_handle_mouse(m); }
     };
 
-    init(close_cb);
+    g_display_options_window.init(close_cb);
     window_show(&instance);
 }

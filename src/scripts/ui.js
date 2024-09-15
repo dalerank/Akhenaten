@@ -32,6 +32,8 @@ function header(config) { return __extend({type:"label", font : FONT_LARGE_BLACK
 function multiline(config) { return __extend({type:"label", multiline:true, font : FONT_NORMAL_WHITE_ON_DARK}, config) }
 function image(config) { return __extend({type:"image"}, config) }
 function image_button(config) { return __extend({type:"image_button"}, config) }
+function ok_button(config) { return __extend({type:"image_button", size:[39, 26], pack:PACK_GENERAL, id:96, offset:0 }, config) }
+function cancel_button(config) { return __extend({type:"image_button", size:[39, 26], pack:PACK_GENERAL, id:96, offset:4 }, config) }
 function button(config) { return __extend({type:"generic_button", font : FONT_NORMAL_BLACK_ON_LIGHT}, config) }
 function arrowup(config) { return __extend({type:"arrow_button", down:false}, config) }
 function arrowdown(config) { return __extend({type:"arrow_button", down:true}, config) }
@@ -682,6 +684,19 @@ advisor_chief_window = {
 		nilometr_info : { type : "label", pos:[185, 286], font:FONT_NORMAL_BLACK_ON_LIGHT, wrap:400},
 		nilometr_info2 : { type : "label", pos:[185, 306], font:FONT_NORMAL_BLACK_ON_LIGHT, wrap:400},
 	}
+}
+
+display_options_window = {
+	pos: [(sw(0) - px(24))/2, (sh(0) - px(21))/2],
+	ui : {
+		background  : outer_panel({size : [24, 21] }),
+		title 			: header({pos:[10, 10], size:[px(24), 20], text:[42, 0], align:"center"}),
+		btnfullscreen : button({pos:[16, 46], size:[224, 20] }),
+
+		save_changes: text({margin:{left:px(24)/2 - 80, bottom:-35}, text:[43, 5]}),
+		btnok 			: ok_button({margin:{left:px(24)/2 + 10, bottom:-40}}), 
+		btncancel 	: cancel_button({margin:{left:px(24)/2 + 60, bottom:-40}}), 
+  }	
 }
 
 mission_briefing_window = {

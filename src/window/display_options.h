@@ -1,18 +1,25 @@
 #pragma once
 
 #include "platform/renderer.h"
-#include "graphics/elements/ui.h"
+#include "autoconfig_window.h"
 
 class scroll_list_panel;
 
 namespace ui {
-    struct window_display_options {
+    struct display_options_window : public autoconfig_window_t<display_options_window> {
         using close_callback = void();
 
-        void show(close_callback close_cb);
+        virtual int handle_mouse(const mouse *m) override { return 0; }
+        virtual int get_tooltip_text() override { return 0; }
+        virtual void draw_foreground() override {}
+        virtual void ui_draw_foreground() override;
+        virtual int ui_handle_mouse(const mouse *m) override;
+        virtual int draw_background() override { return 0; }
+        virtual void init() override {}
+
         void init(close_callback close_cb);
-        void draw_foreground();
-        void handle_input(const mouse *m, const hotkeys *h);
+
+        static void show(close_callback close_cb);
 
     private:
         int focus_button_id;
@@ -22,8 +29,5 @@ namespace ui {
         vec2i selected_resolution;
         scroll_list_panel* panel = nullptr;
         std::vector<video_mode> video_modes;
-        
-    public:
-        static window_display_options window;
     };
 }
