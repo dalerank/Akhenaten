@@ -12,11 +12,6 @@
 
 buildings::model_t<building_juggler_school> juggler_school_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_juggler_school);
-void config_load_building_juggler_school() {
-    juggler_school_m.load();
-}
-
 void building_juggler_school::update_month() {
     data.entertainment.spawned_entertainer_this_month = false;
 }

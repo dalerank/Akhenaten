@@ -1,6 +1,7 @@
 #pragma once
 
 #include "window_info.h"
+#include "core/typename.h"
 
 struct building;
 
@@ -23,4 +24,15 @@ struct building_info_window : public common_info_window {
 
     void common_info_background(object_info& c);
     void draw_employment_details(object_info &c, int text_id = -1);
+};
+
+template<typename T>
+struct building_info_window_t : public building_info_window {
+    virtual pcstr section() const override {
+        static type_name_holder<T> _impl;
+        static pcstr _section = strstr(_impl.value.data(), "::") ? strstr(_impl.value.data(), "::") + 2
+                                : strstr(_impl.value.data(), "struct ") ? strstr(_impl.value.data(), "struct ") + 7
+                                : _impl.value.data();
+        return _section;
+    }
 };

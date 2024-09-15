@@ -7,6 +7,7 @@ struct object_info;
 struct tooltip_context;
 
 struct common_info_window : public ui::widget {
+    virtual pcstr section() const { return ""; }
     virtual bool check(object_info &c) { return false; }
     virtual int get_height_id(object_info &c) { return 0; }
     virtual void window_info_background(object_info &c);

@@ -71,6 +71,15 @@ void config_load_info_window() {
     g_empty_info_window.load("empty_info_window");
     g_terrain_info_window.load("terrain_info_window");
     g_figure_info_window.load("figure_info_window");
+
+    for (auto &building_info_handler: *g_window_building_handlers) {
+        pcstr section = building_info_handler->section();
+        if (!section || !*section) {
+            //custom loader
+            continue;
+        }
+        building_info_handler->load(section);
+    }
 }
 
 static int center_in_city(int element_width_pixels) {

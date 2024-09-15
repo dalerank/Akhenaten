@@ -24,9 +24,9 @@ template<typename T>
 struct autoconfig_window_t : public autoconfig_window {
     inline pcstr section() const { 
         static type_name_holder<T> _impl;
-        static pcstr _section = strstr(_impl.value.data(), "::")
-                                    ? strstr(_impl.value.data(), "::") + 2
-                                    : _impl.value.data();
+        static pcstr _section = strstr(_impl.value.data(), "::") ? strstr(_impl.value.data(), "::") + 2 
+                                : strstr(_impl.value.data(), "struct ") ? strstr(_impl.value.data(), "struct ") + 7
+                                : _impl.value.data();
         return _section;
     }
 

@@ -5,22 +5,22 @@
 #include "window/building/common.h"
 #include "js/js_game.h"
 
-struct entertainment_info_window : public building_info_window {
+struct info_window_entertainment : public building_info_window_t<info_window_entertainment>{
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
         building *b = c.building_get();
-        return building_type_any_of(b->type, BUILDING_PAVILLION);
+        return building_type_any_of(b->type, BUILDING_PAVILLION, BUILDING_JUGGLER_SCHOOL);
     }
 };
 
-struct info_window_bandstand : public building_info_window {
+struct info_window_bandstand : public building_info_window_t<info_window_bandstand>{
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
         return c.building_get()->dcast_bandstand();
     }
 };
 
-struct info_window_booth : public building_info_window {
+struct info_window_booth : public building_info_window_t<info_window_booth> {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
         building *b = c.building_get();
@@ -28,18 +28,11 @@ struct info_window_booth : public building_info_window {
     }
 };
 
-entertainment_info_window entertainment_infow;
+info_window_entertainment entertainment_infow;
 info_window_bandstand bandstand_infow;
 info_window_booth booth_infow;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_entertainment_info_window);
-void config_load_entertainment_info_window() {
-    entertainment_infow.load("info_window_entertainment");
-    bandstand_infow.load("info_window_bandstand");
-    booth_infow.load("info_window_bandstand");
-}
-
-void entertainment_info_window::window_info_background(object_info &c) {
+void info_window_entertainment::window_info_background(object_info &c) {
     c.go_to_advisor.first = ADVISOR_ENTERTAINMENT;
 
     building_info_window::window_info_background(c);
