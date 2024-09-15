@@ -855,6 +855,14 @@ std::vector<std::string> get_video_drivers(bool log) {
     return drivers;
 }
 
+std::string get_video_driver() {
+    auto &data = g_renderer_data;
+
+    SDL_RendererInfo info;
+    SDL_GetRendererInfo(data.renderer, &info);
+    return info.name;
+}
+
 int platform_renderer_init(SDL_Window* window, std::string renderer) {
     auto &data = g_renderer_data;
 

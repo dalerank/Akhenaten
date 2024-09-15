@@ -715,7 +715,7 @@ void ui::elabel::draw() {
     if (_body.x > 0) {
         label_draw(pos.x + offset.x, pos.y + offset.y, _body.x, _body.y);
     }
-    ui::label(_text.c_str(), pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0}), _font, _flags, _wrap);
+    ui::label(_text.c_str(), pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0}), _font, _flags, size.x);
 }
 
 void ui::elabel::load(archive arch, element *parent, items &elems) {

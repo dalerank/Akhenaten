@@ -21,8 +21,8 @@ public:
     [[nodiscard]] int get_cursor_scale_percentage() const;
     void set_cursor_scale_percentage(int value);
 
-    [[nodiscard]] const char* get_renderer() const;
-    void set_renderer(const char* value);
+    [[nodiscard]] pcstr get_renderer() const;
+    void set_renderer(pcstr value);
 
     [[nodiscard]] const char* get_data_directory() const;
     void set_data_directory(const char *value);

@@ -102,3 +102,4 @@ extern graphics_renderer_interface g_render;
 void set_render_scale(painter &ctx, float scale);
 std::vector<video_mode> get_video_modes();
 std::vector<std::string> get_video_drivers(bool log);
+std::string get_video_driver();

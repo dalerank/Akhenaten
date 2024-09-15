@@ -246,11 +246,11 @@ void Arguments::set_cursor_scale_percentage(int value) {
     cursor_scale_percentage_ = value;
 }
 
-const char *Arguments::get_renderer() const {
+pcstr Arguments::get_renderer() const {
     return renderer_.c_str();
 }
 
-void Arguments::set_renderer(const char * value) {
+void Arguments::set_renderer(pcstr value) {
     renderer_ = value;
 }
 

@@ -63,6 +63,9 @@ void ui::display_options_window::init(close_callback close_cb) {
         _close_cb();
     });
 
+    bstring128 videoriver("Video: ", get_video_driver().c_str());
+    ui["videodriver"] = videoriver;
+
     ui["btnfullscreen"] = ui::str(42, g_settings.is_fullscreen(e_setting_none) ? 2 : 1);
     ui["btnfullscreen"].onclick([this] {
         app_fullscreen(!g_settings.is_fullscreen(e_setting_none));
