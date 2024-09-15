@@ -66,7 +66,7 @@ public:
     pcstr operator*() const { return _p ? _p->value.data() : nullptr; }
 
     [[nodiscard]]
-    bool operator!() const { return _p == nullptr; }
+    bool operator!() const { return empty(); }
 
     [[nodiscard]]
     char operator[](size_t id) { return _p->value[id]; }
