@@ -203,17 +203,16 @@ void ui::sidebar_window::ui_draw_foreground() {
     ui.draw();
     const animation_t &anim = window_build_menu_image();
     ui["build_image"].image(image_desc{ anim.pack, anim.iid, anim.offset });
-    ui.end_widget();
-
-    widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 
     // extra bar spacing on the right
     int s_num = ceil((float)(screen_height() - extra_block_size.y) / (float)extra_block_size.y) + 1;
     for (int i = s_num; i > 0; --i) {
         ui.image(extra_block, { extra_block_x, i * extra_block_size.y - 32 });
     }
-
     ui.image(extra_block, { extra_block_x, 0 });
+    ui.end_widget();
+
+    widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 
     draw_number_of_messages();
 
