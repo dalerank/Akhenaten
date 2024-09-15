@@ -516,11 +516,6 @@ static void top_menu_file_handle(menu_item &item) {
     else if (item.id == "exit_game") { menu_file_exit_city(0); }
 }
 
-static void menu_options_display(int param) {
-    widget_top_menu_clear_state();
-    ui::window_display_options::window.show(window_city_show);
-}
-
 static void menu_options_sound(int param) {
     widget_top_menu_clear_state();
     window_sound_options_show(window_city_show);
@@ -550,7 +545,10 @@ static void menu_options_hotkeys(int param) {
 }
 
 static void top_menu_options_handle(menu_item &item) {
-    if (item.id == "display_options") { menu_options_display(0); }
+    if (item.id == "display_options") { 
+        widget_top_menu_clear_state();
+        ui::display_options_window::show(window_city_show); 
+    }
     else if (item.id == "sound_options") { menu_options_sound(0); }
     else if (item.id == "speed_options") { menu_options_speed(0); }
     else if (item.id == "difficulty_options") { menu_options_difficulty(0); }

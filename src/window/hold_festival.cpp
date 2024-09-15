@@ -110,7 +110,6 @@ int ui::hold_festival_window::ui_handle_mouse(const mouse *m) {
     autoconfig_window::ui_handle_mouse(m);
 
     const hotkeys *h = hotkey_state();
-
     if (input_go_back_requested(m, h)) {
         if (callback) {
             callback();

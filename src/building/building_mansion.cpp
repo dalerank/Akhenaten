@@ -41,8 +41,6 @@ static generic_button imperial_buttons[] = {
 };
 
 void building_mansion::window_info_background(object_info &c) {
-    //ui::begin_frame();
-
     c.help_id = 78;
     c.go_to_advisor.left_a = ADVISOR_IMPERIAL;
     window_building_play_sound(&c, "Wavs/gov_palace.wav");
