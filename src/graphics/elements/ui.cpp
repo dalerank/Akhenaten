@@ -186,10 +186,15 @@ void ui::begin_widget(vec2i offset, bool relative) {
 
 void ui::begin_frame() {
     assert(g_state.buttons.size() < 1000);
+    //assert(g_state._offset.size() == 0);
     g_state._offset = {};
     g_state.buttons.clear();
     g_state.scrollbars.clear();
     tooltipctx.set(TOOLTIP_NONE, textid{});
+}
+
+void ui::end_frame() {
+
 }
 
 void ui::end_widget() {
@@ -566,12 +571,8 @@ void ui::einner_panel::load(archive arch, element *parent, items &elems) {
 }
 
 void ui::widget::draw() {
-    if (pos.x > 0 || pos.y > 0) {
-        begin_widget(pos);
-    }
-
     vec2i bsize = ui["background"].pxsize();
-    recti rect{ pos.x, pos.y, pos.x + bsize.x, pos.y + bsize.y };
+    recti rect{ 0, 0, bsize.x, bsize.y };
     for (auto &e : elements) {
         e->update_pos(rect);
         if (e->enabled) {

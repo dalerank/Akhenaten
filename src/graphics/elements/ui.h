@@ -50,6 +50,7 @@ struct img_button_offsets { int data[4] = {0, 1, 2, 3}; };
 
 const tooltip_context &get_tooltip();
 void begin_frame();
+void end_frame();
 void begin_widget(vec2i offset, bool relative = false);
 void end_widget();
 bool handle_mouse(const mouse *m);

@@ -92,8 +92,6 @@ enum e_text_info {
     e_text_no_workers = 2,
     e_text_works_fine = 3,
     e_text_overlay_menu = 14,
-    e_text_display_options = 42,
-    e_text_saving_dialog = 43,
     e_text_tooltip = 66,
     e_text_senate_tooltip = 68,
     e_text_senate_tooltip_unemployed = 135,
