@@ -192,6 +192,7 @@ int scroll_list_panel::input_handle(const mouse* m) {
     }
     return 0;
 }
+
 void scroll_list_panel::draw() {
     if (ui_params.draw_paneling) {
         inner_panel_draw(ui_params.x, ui_params.y, ui_params.blocks_x, ui_params.blocks_y);
@@ -232,7 +233,7 @@ void scroll_list_panel::draw() {
             text_draw(text, text_pos_x, text_pos_y, font, 0);
         }
     }
-    scrollbar_draw(vec2i{0, 0}, &scrollbar);
+    scrollbar_draw({ui_params.x, ui_params.y}, &scrollbar);
     WAS_DRAWN = true;
 }
 
