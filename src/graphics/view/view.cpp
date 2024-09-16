@@ -294,13 +294,13 @@ static void set_viewport(int x_offset, int y_offset, int width, int height) {
     data.viewport.height_tiles = calc_adjust_with_percentage<int>(height, zoom) / HALF_TILE_HEIGHT_PIXELS;
 }
 
-static void set_viewport_with_sidebar(void) {
+static void set_viewport_with_sidebar() {
     auto& data = g_city_view_data;
 
     return set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - SIDEBAR_EXPANDED_WIDTH + 2, data.screen_height - TOP_MENU_HEIGHT);
 }
 
-static void set_viewport_without_sidebar(void) {
+void city_view_set_viewport_without_sidebar() {
     auto& data = g_city_view_data;
 
     set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - SIDEBAR_COLLAPSED_WIDTH + 2, data.screen_height - TOP_MENU_HEIGHT);
@@ -314,7 +314,7 @@ void city_view_refresh_viewport() {
     auto& view = g_city_view_data;
 
     if (view.sidebar_collapsed) {
-        set_viewport_without_sidebar();
+        city_view_set_viewport_without_sidebar();
     } else {
         set_viewport_with_sidebar();
     }
@@ -330,7 +330,7 @@ void city_view_set_viewport(int screen_width, int screen_height) {
     view.screen_width = screen_width;
     view.screen_height = screen_height;
     if (view.sidebar_collapsed) {
-        set_viewport_without_sidebar();
+        city_view_set_viewport_without_sidebar();
     } else {
         set_viewport_with_sidebar();
     }
@@ -359,18 +359,18 @@ bool pixel_is_inside_viewport(vec2i pixel) {
     }
     return true;
 }
-bool city_view_is_sidebar_collapsed(void) {
+bool city_view_is_sidebar_collapsed() {
     auto& data = g_city_view_data;
 
     return data.sidebar_collapsed;
 }
 
 void city_view_start_sidebar_toggle() {
-    set_viewport_without_sidebar();
+    city_view_set_viewport_without_sidebar();
     camera_validate_position(city_view_data_unsafe());
 }
 
-void city_view_toggle_sidebar(void) {
+void city_view_toggle_sidebar() {
     auto& view = g_city_view_data;
 
     if (view.sidebar_collapsed) {
@@ -378,7 +378,7 @@ void city_view_toggle_sidebar(void) {
         set_viewport_with_sidebar();
     } else {
         view.sidebar_collapsed = true;
-        set_viewport_without_sidebar();
+        city_view_set_viewport_without_sidebar();
     }
     camera_validate_position(view);
 }

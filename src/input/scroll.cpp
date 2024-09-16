@@ -75,8 +75,8 @@ input_scroll_data_t g_input_scroll_data;
 
 static void clear_scroll_speed(void) {
     auto &data = g_input_scroll_data;
-    speed_clear(&data.speed.x);
-    speed_clear(&data.speed.y);
+    speed_clear(data.speed.x);
+    speed_clear(data.speed.y);
     data.speed.decaying = 0;
     data.x_align_direction = SPEED_DIRECTION_STOPPED;
     data.y_align_direction = SPEED_DIRECTION_STOPPED;
@@ -258,8 +258,8 @@ static int set_scroll_speed_from_drag(bool keep_delta) {
         //                    SCROLL_DRAG_MIN_DELTA;
     }
     //    if (data.drag.has_started) {
-    speed_set_target(&data.speed.x, data.drag.delta.x, SPEED_CHANGE_IMMEDIATE, 0);
-    speed_set_target(&data.speed.y, data.drag.delta.y, SPEED_CHANGE_IMMEDIATE, 0);
+    speed_set_target(data.speed.x, data.drag.delta.x, SPEED_CHANGE_IMMEDIATE, 0);
+    speed_set_target(data.speed.y, data.drag.delta.y, SPEED_CHANGE_IMMEDIATE, 0);
     if (!keep_delta) {
         data.drag.delta.x = 0;
         data.drag.delta.y = 0;
@@ -280,13 +280,13 @@ int scroll_drag_end(void) {
         system_mouse_set_relative_mode(0);
     else if (has_scrolled) {
         const touch* t = get_earliest_touch();
-        speed_set_target(&data.speed.x, -t->frame_movement.x, SPEED_CHANGE_IMMEDIATE, 1);
-        speed_set_target(&data.speed.y, -t->frame_movement.y, SPEED_CHANGE_IMMEDIATE, 1);
+        speed_set_target(data.speed.x, -t->frame_movement.x, SPEED_CHANGE_IMMEDIATE, 1);
+        speed_set_target(data.speed.y, -t->frame_movement.y, SPEED_CHANGE_IMMEDIATE, 1);
     }
-    data.x_align_direction = speed_get_current_direction(&data.speed.x);
-    data.y_align_direction = speed_get_current_direction(&data.speed.y);
-    speed_set_target(&data.speed.x, 0, SCROLL_DRAG_DECAY_TIME, 1);
-    speed_set_target(&data.speed.y, 0, SCROLL_DRAG_DECAY_TIME, 1);
+    data.x_align_direction = speed_get_current_direction(data.speed.x);
+    data.y_align_direction = speed_get_current_direction(data.speed.y);
+    speed_set_target(data.speed.x, 0, SCROLL_DRAG_DECAY_TIME, 1);
+    speed_set_target(data.speed.y, 0, SCROLL_DRAG_DECAY_TIME, 1);
 
     return has_scrolled;
 }
@@ -399,8 +399,8 @@ static bool set_scroll_speed_from_input(const mouse* m, scroll_type type) {
     int direction = get_direction(m);
     if (direction == DIR_8_NONE) {
         time_millis time = config_get(CONFIG_UI_SMOOTH_SCROLLING) ? SCROLL_REGULAR_DECAY_TIME : SPEED_CHANGE_IMMEDIATE;
-        speed_set_target(&data.speed.x, 0, time, 1);
-        speed_set_target(&data.speed.y, 0, time, 1);
+        speed_set_target(data.speed.x, 0, time, 1);
+        speed_set_target(data.speed.y, 0, time, 1);
         return false;
     }
     if (data.speed.decaying)
@@ -421,8 +421,8 @@ static bool set_scroll_speed_from_input(const mouse* m, scroll_type type) {
             align_x = get_alignment_delta(dir_x, TILE_X_PIXELS, camera_pixels.x);
             align_y = get_alignment_delta(dir_y, TILE_Y_PIXELS, camera_pixels.y);
         }
-        speed_set_target(&data.speed.x, (step + align_x) * dir_x * do_scroll, SPEED_CHANGE_IMMEDIATE, 0);
-        speed_set_target(&data.speed.y, ((step / y_fraction) + align_y) * dir_y * do_scroll, SPEED_CHANGE_IMMEDIATE, 0);
+        speed_set_target(data.speed.x, (step + align_x) * dir_x * do_scroll, SPEED_CHANGE_IMMEDIATE, 0);
+        speed_set_target(data.speed.y, ((step / y_fraction) + align_y) * dir_y * do_scroll, SPEED_CHANGE_IMMEDIATE, 0);
         return true;
     }
 
@@ -431,21 +431,21 @@ static bool set_scroll_speed_from_input(const mouse* m, scroll_type type) {
     int max_speed_y = (max_speed / y_fraction) * dir_y;
 
     if (!data.constant_input) {
-        if (speed_get_current_direction(&data.speed.x) * dir_x < 0)
-            speed_invert(&data.speed.x);
+        if (speed_get_current_direction(data.speed.x) * dir_x < 0)
+            speed_invert(data.speed.x);
 
         else if (data.speed.x.desired_speed != max_speed_x)
-            speed_set_target(&data.speed.x, max_speed_x, SCROLL_REGULAR_DECAY_TIME, 1);
+            speed_set_target(data.speed.x, max_speed_x, SCROLL_REGULAR_DECAY_TIME, 1);
 
-        if (speed_get_current_direction(&data.speed.y) * dir_y < 0)
-            speed_invert(&data.speed.y);
+        if (speed_get_current_direction(data.speed.y) * dir_y < 0)
+            speed_invert(data.speed.y);
 
         else if (data.speed.y.desired_speed != max_speed_y)
-            speed_set_target(&data.speed.y, max_speed_y, SCROLL_REGULAR_DECAY_TIME, 1);
+            speed_set_target(data.speed.y, max_speed_y, SCROLL_REGULAR_DECAY_TIME, 1);
 
     } else {
-        speed_set_target(&data.speed.x, (int)(max_speed_x * data.speed.modifier_x), SPEED_CHANGE_IMMEDIATE, 1);
-        speed_set_target(&data.speed.y, (int)(max_speed_y * data.speed.modifier_y), SPEED_CHANGE_IMMEDIATE, 1);
+        speed_set_target(data.speed.x, (int)(max_speed_x * data.speed.modifier_x), SPEED_CHANGE_IMMEDIATE, 1);
+        speed_set_target(data.speed.y, (int)(max_speed_y * data.speed.modifier_y), SPEED_CHANGE_IMMEDIATE, 1);
     }
     return true;
 }
@@ -453,10 +453,10 @@ static bool set_scroll_speed_from_input(const mouse* m, scroll_type type) {
 int scroll_get_delta(const mouse* m, vec2i* delta, scroll_type type) {
     auto &data = g_input_scroll_data;
     data.is_scrolling = set_scroll_speed_from_input(m, type);
-    delta->x = speed_get_delta(&data.speed.x);
-    delta->y = speed_get_delta(&data.speed.y);
+    delta->x = speed_get_delta(data.speed.x);
+    delta->y = speed_get_delta(data.speed.y);
     if (!data.is_scrolling) {
-        data.speed.decaying = speed_is_changing(&data.speed.x) || speed_is_changing(&data.speed.y);
+        data.speed.decaying = speed_is_changing(data.speed.x) || speed_is_changing(data.speed.y);
         data.is_scrolling = data.speed.decaying;
     }
     return delta->x != 0 || delta->y != 0;

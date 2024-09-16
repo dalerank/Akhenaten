@@ -843,20 +843,32 @@ hold_festival_window = {
 	}
 }
 
+sidebar_window_collapsed = {
+	ui : {
+		// 68-xx tooltips for buttons
+	}
+}
+
 sidebar_window_expanded = {
 	extra_block 	 	 : {pack:PACK_GENERAL, id:121, offset:2},
-	extra_block_x 	 : 162,
+	extra_block_x 	 : -24,
+	expanded_offset_x: 186,
+	deceleration_offset_x : 125,
+  slide_acceleration_millis : 65,
+  slide_speed_x    : 7,
+
 	ui : {
 		// 68-xx tooltips for buttons
 		background 		 : image({pos:[0, 30], size: [29, 22], pack:PACK_GENERAL, id:121}),
 		build_image    : image({pos:[11, 211]}),
 
 		show_overlays  : button({pos:[4, 30], size:[117, 20], border:false, font_hover:FONT_NORMAL_YELLOW }),
+		collapse       : image_button({pos:[128, 30], pack:PACK_GENERAL, id:110, offset:7, tooltip:[68, 10]}),
 
 		show_advisors  : image_button({pos:[16, 173], pack:PACK_GENERAL, id:136, offset:64, tooltip:[68, 41]}),
 		show_empire    : image_button({pos:[90, 173], pack:PACK_GENERAL, id:136, offset:68, tooltip:[68, 42]}),
 		
-		build_house     : image_button({pos:[9, 281], pack:PACK_GENERAL, id:136, offset:0, tooltip:[68, 20]}),
+		build_house    : image_button({pos:[9, 281], pack:PACK_GENERAL, id:136, offset:0, tooltip:[68, 20]}),
 		build_road     : image_button({pos:[9, 330], pack:PACK_GENERAL, id:136, offset:4, tooltip:[68, 21]}),
 		clear_land     : image_button({pos:[9, 381], pack:PACK_GENERAL, id:136, offset:8, tooltip:[68, 22]}),
 

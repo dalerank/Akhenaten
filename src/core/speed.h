@@ -1,5 +1,4 @@
-#ifndef CORE_SPEED_H
-#define CORE_SPEED_H
+#pragma once
 
 #include "core/time.h"
 
@@ -37,7 +36,7 @@ typedef struct {
  * Clears speed structure
  * @param speed Speed structure to clear
  */
-void speed_clear(speed_type* speed);
+void speed_clear(speed_type& speed);
 
 /**
  * Sets the new target speed
@@ -49,13 +48,13 @@ void speed_clear(speed_type* speed);
  *                        If set to "0", speed_get_delta will return the brute value
  *                        without taking into account the elapsed time
  */
-void speed_set_target(speed_type* speed, double new_speed, time_millis total_time, int adjust_for_time);
+void speed_set_target(speed_type& speed, double new_speed, time_millis total_time, int adjust_for_time);
 
 /**
  * Immediately invert the speed (positive speed becomes negative and vice-versa)
  * @param sp Speed structure to act on
  */
-void speed_invert(speed_type* speed);
+void speed_invert(speed_type& speed);
 
 /**
  * Gets the delta, in pixels, to move since the last time speed_get_delta was called
@@ -65,20 +64,18 @@ void speed_invert(speed_type* speed);
  * @param speed Speed structure to act on
  * @return The delta movement
  */
-int speed_get_delta(speed_type* speed);
+int speed_get_delta(speed_type& speed);
 
 /**
  * Gets the current speed direction
  * @param speed Speed structure to act on
  * @return An enum with the current direction
  */
-int speed_get_current_direction(const speed_type* speed);
+int speed_get_current_direction(const speed_type& speed);
 
 /**
  * Indicates whether the speed is accelerating/decelerating
  * @param speed Speed structure to act on
  * @return Whether the speed is changing
  */
-bool speed_is_changing(const speed_type* speed);
-
-#endif // CORE_SPEED_H
+bool speed_is_changing(const speed_type& speed);

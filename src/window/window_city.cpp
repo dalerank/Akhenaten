@@ -41,7 +41,6 @@ static int center_in_city(int element_width_pixels) {
 
 void window_city_draw_background() {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Bakground");
-    //widget_sidebar_city_draw_background();
     widget_top_menu_draw(1);
 }
 

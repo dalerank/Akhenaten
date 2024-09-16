@@ -1,16 +1,30 @@
 #pragma once
 
 #include "window/autoconfig_window.h"
+#include "core/speed.h"
 
 namespace ui {
 
 struct sidebar_window_expanded : public autoconfig_window_t<sidebar_window_expanded> {
+    enum e_slide_mode {
+        e_slide_none = 0,
+        e_slide_collapse = 1,
+        e_slide_expand = 2,
+    };
+
     int focus_tooltip_text_id;
     int x_offset;
 
     image_desc extra_block;
     vec2i extra_block_size;
     int extra_block_x;
+    int expanded_offset_x;
+    int deceleration_offset_x;
+    int slide_acceleration_millis;
+    e_slide_mode slide_mode = e_slide_none;
+    speed_type slide_speed;
+    int slide_speed_x;
+    int position;
 
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }

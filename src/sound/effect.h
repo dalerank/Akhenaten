@@ -1,6 +1,6 @@
 #pragma once
 
-enum {
+enum e_sound_effect {
     SOUND_EFFECT_PANEL = 1,
     SOUND_EFFECT_SIDEBAR = 2,
     SOUND_EFFECT_ICON = 3,
@@ -8,6 +8,7 @@ enum {
     SOUND_EFFECT_EXPLOSION = 5,
     SOUND_EFFECT_FANFARE = 6,
     SOUND_EFFECT_FANFARE_URGENT = 7,
+
     // battle effects
     SOUND_EFFECT_ARROW = 8,
     SOUND_EFFECT_ARROW_HIT = 9,

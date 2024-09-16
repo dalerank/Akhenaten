@@ -17,6 +17,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "graphics/view/view.h"
 #include "scenario/scenario.h"
 #include "widget/widget_city.h"
 #include "widget/minimap.h"
@@ -31,6 +32,7 @@
 #include "window/message_list.h"
 #include "window/mission_briefing.h"
 #include "window/overlay_menu.h"
+#include "sound/sound.h"
 #include "game/game.h"
 
 #define MINIMAP_Y_OFFSET 59
@@ -40,10 +42,6 @@ static void button_build(int submenu, int param2);
 static void button_help(int param1, int param2);
 static void button_rotate_north(int param1, int param2);
 static void button_rotate(int clockwise, int param2);
-
-static image_button buttons_overlays_collapse_sidebar[2] = {
-    {128, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 7, button_collapse_expand, button_none, 0, 0, 1},
-};
 
 static image_button button_expand_sidebar[1] = {
     {8, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 10, button_collapse_expand, button_none, 0, 0, 1}
@@ -128,8 +126,6 @@ static void draw_buttons_collapsed(int x_offset) {
 void ui::sidebar_window_expanded::draw_buttons_expanded() {
     ui["undo_btn"].readonly = game_can_undo();
     ui["goto_problem"].readonly = !city_message_problem_area_count();
-
-    image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_overlays_collapse_sidebar, 1);
 }
 
 void ui::sidebar_window_collapsed::refresh_build_menu_buttons() {
@@ -149,6 +145,10 @@ void ui::sidebar_window_expanded::load(archive arch, pcstr section) {
 
     arch.r_desc("extra_block", extra_block);
     extra_block_x = arch.r_int("extra_block_x");
+    expanded_offset_x = arch.r_int("expanded_offset_x");
+    deceleration_offset_x = arch.r_int("deceleration_offset_x");
+    slide_acceleration_millis = arch.r_int("slide_acceleration_millis");
+    slide_speed_x = arch.r_int("slide_speed_x");
 
     if (game.session.active) {
         init();
@@ -199,6 +199,16 @@ void ui::sidebar_window_expanded::init() {
     ui["show_overlays"]
         .onclick([] { window_overlay_menu_show(); })
         .onrclick([] { window_message_dialog_show(MESSAGE_DIALOG_OVERLAYS, -1, window_city_draw_all);; });
+
+    ui["collapse"]
+        .onclick([this] {
+            city_view_start_sidebar_toggle();
+            slide_mode = e_slide_collapse;
+            position = 0;
+            speed_clear(slide_speed);
+            speed_set_target(slide_speed, slide_speed_x, slide_acceleration_millis, 1);
+            g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
+        });
 }
 
 void ui::sidebar_window_collapsed::init() {
@@ -208,20 +218,36 @@ void ui::sidebar_window_collapsed::init() {
 void ui::sidebar_window_expanded::ui_draw_foreground() {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded");
 
-    x_offset = sidebar_common_get_x_offset_expanded();
+    if (slide_mode != e_slide_none) {
+        position += speed_get_delta(slide_speed);
+        if (position >= expanded_offset_x) {
+            slide_mode = e_slide_none;
+
+            city_view_toggle_sidebar();
+            window_city_show();
+            window_draw(true);
+
+        } else {
+            x_offset = screen_width() - expanded_offset_x;
+            int rel_offset = 0;
+            if (slide_mode == e_slide_collapse) {
+                if (position > deceleration_offset_x)
+                    speed_set_target(slide_speed, 1, slide_acceleration_millis, 1);
+                rel_offset = expanded_offset_x - position;
+            } else {
+                rel_offset = position;
+            }
+            x_offset += rel_offset;
+        }
+    }
+
+    x_offset = sidebar_common_get_x_offset_expanded() + position;
     ui.pos.x = x_offset;
 
     ui.begin_widget(ui.pos);
     ui.draw();
     const animation_t &anim = window_build_menu_image();
     ui["build_image"].image(image_desc{ anim.pack, anim.iid, anim.offset });
-
-    // extra bar spacing on the right
-    int s_num = ceil((float)(screen_height() - extra_block_size.y) / (float)extra_block_size.y) + 1;
-    for (int i = s_num; i > 0; --i) {
-        ui.image(extra_block, { extra_block_x, i * extra_block_size.y - 32 });
-    }
-    ui.image(extra_block, { extra_block_x, 0 });
     ui.end_widget();
 
     widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
@@ -272,10 +298,22 @@ void widget_sidebar_city_init() {
 void widget_sidebar_city_draw_foreground() {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar");
 
-    if (city_view_is_sidebar_collapsed()) {
-        g_sidebar_collapsed.ui_draw_foreground();
-    } else {
+    bool collapsed = city_view_is_sidebar_collapsed();
+
+    if (!collapsed) {
         g_sidebar_expanded.ui_draw_foreground();
+    }
+    
+    // extra bar spacing on the right over all sidebar
+    int sw = screen_width();
+    int s_num = ceil((float)(screen_height() - g_sidebar_expanded.extra_block_size.y) / (float)g_sidebar_expanded.extra_block_size.y) + 1;
+    for (int i = s_num; i > 0; --i) {
+        ui::eimage(g_sidebar_expanded.extra_block, { sw + g_sidebar_expanded.extra_block_x, i * g_sidebar_expanded.extra_block_size.y - 32 });
+    }
+    ui::eimage(g_sidebar_expanded.extra_block, { sw + g_sidebar_expanded.extra_block_x, 0 });
+
+    if (collapsed) {
+        g_sidebar_collapsed.ui_draw_foreground();
     }
 }
 
@@ -314,13 +352,7 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
             return true;
         }
 
-        int x_offset = sidebar_common_get_x_offset_expanded();
-        handled |= image_buttons_handle_mouse(m, {x_offset, 24}, buttons_overlays_collapse_sidebar, (int)std::size(buttons_overlays_collapse_sidebar), &button_id);
-        //if (button_id) {
-        //    data.focus_tooltip_text_id = button_id + 9;
-        //}
-
-        handled |= (sidebar_extra_handle_mouse(m) != 0);
+        //int x_offset = sidebar_common_get_x_offset_expanded();
     }
     return handled;
 }

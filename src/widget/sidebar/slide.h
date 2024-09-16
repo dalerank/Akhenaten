@@ -1,6 +1,10 @@
 #pragma once
 
-enum { SLIDE_DIRECTION_IN = 0, SLIDE_DIRECTION_OUT = 1 };
+enum e_slide_direction { 
+    e_slide_direction_none = 0,
+    e_slide_direction_in = 1, 
+    e_slide_direction_out = 2
+};
 
 using back_sidebar_draw_function = void(int x_offset);
 using front_sidebar_draw_function = void(int x_offset);

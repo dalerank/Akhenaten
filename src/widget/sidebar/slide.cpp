@@ -31,7 +31,7 @@ static void draw_sliding_foreground() {
     painter ctx = game.painter();
 
     window_request_refresh();
-    data.position += speed_get_delta(&data.slide_speed);
+    data.position += speed_get_delta(data.slide_speed);
     if (data.position >= SIDEBAR_EXPANDED_WIDTH) {
         data.finished_callback();
         return;
@@ -42,9 +42,9 @@ static void draw_sliding_foreground() {
     //    //TOP_MENU_HEIGHT
 
     int rel_offset = 0;
-    if (data.direction == SLIDE_DIRECTION_IN) {
+    if (data.direction == e_slide_direction_in) {
         if (data.position > SIDEBAR_DECELERATION_OFFSET)
-            speed_set_target(&data.slide_speed, 1, SLIDE_ACCELERATION_MILLIS, 1);
+            speed_set_target(data.slide_speed, 1, SLIDE_ACCELERATION_MILLIS, 1);
         rel_offset = SIDEBAR_EXPANDED_WIDTH - data.position;
     } else {
         rel_offset = data.position;
@@ -72,8 +72,8 @@ void sidebar_slide(int direction,
                    slide_finished_function finished_callback) {
     data.direction = direction;
     data.position = 0;
-    speed_clear(&data.slide_speed);
-    speed_set_target(&data.slide_speed, SLIDE_SPEED, direction == SLIDE_DIRECTION_OUT ? SLIDE_ACCELERATION_MILLIS : SPEED_CHANGE_IMMEDIATE, 1);
+    speed_clear(data.slide_speed);
+    speed_set_target(data.slide_speed, SLIDE_SPEED, direction == e_slide_direction_out ? SLIDE_ACCELERATION_MILLIS : SPEED_CHANGE_IMMEDIATE, 1);
     data.back_sidebar_draw = back_sidebar_callback;
     data.front_sidebar_draw = front_sidebar_callback;
     data.finished_callback = finished_callback;
