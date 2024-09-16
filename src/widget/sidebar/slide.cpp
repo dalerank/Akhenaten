@@ -22,9 +22,9 @@ static struct {
     int position;
     speed_type slide_speed;
     int direction;
-    back_sidebar_draw_function back_sidebar_draw;
-    front_sidebar_draw_function front_sidebar_draw;
-    slide_finished_function finished_callback;
+    back_sidebar_draw_function *back_sidebar_draw = nullptr;
+    front_sidebar_draw_function *front_sidebar_draw = nullptr;
+    slide_finished_function *finished_callback = nullptr;
 } data;
 
 static void draw_sliding_foreground() {
@@ -60,7 +60,7 @@ static void draw_sliding_foreground() {
     }
     ImageDraw::img_generic(ctx, image_id_from_group(PACK_GENERAL, 121) + 8, vec2i{s_end, 0});
 
-    data.back_sidebar_draw();
+    data.back_sidebar_draw(x_offset);
     data.front_sidebar_draw(x_offset);
 
     //    graphics_reset_clip_rectangle();

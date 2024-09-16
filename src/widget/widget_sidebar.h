@@ -4,7 +4,7 @@
 
 namespace ui {
 
-struct sidebar_window : public autoconfig_window_t<sidebar_window> {
+struct sidebar_window_expanded : public autoconfig_window_t<sidebar_window_expanded> {
     int focus_tooltip_text_id;
     int x_offset;
 
@@ -27,9 +27,31 @@ struct sidebar_window : public autoconfig_window_t<sidebar_window> {
     void refresh_build_menu_buttons();
 };
 
+struct sidebar_window_collapsed : public autoconfig_window_t<sidebar_window_collapsed> {
+    int focus_tooltip_text_id;
+    int x_offset;
+
+    image_desc extra_block;
+    vec2i extra_block_size;
+    int extra_block_x;
+
+    virtual int handle_mouse(const mouse *m) override { return 0; }
+    virtual int get_tooltip_text() override { return 0; }
+    virtual void draw_foreground() override {}
+    virtual void ui_draw_foreground() override;
+    virtual int draw_background() override { return 0; }
+
+    virtual void load(archive arch, pcstr section) override;
+    virtual void init() override;
+
+    void refresh_build_menu_buttons();
+};
+
+struct sidebar_window {
+};
+
 }
 
-void widget_sidebar_city_draw_background();
 void widget_sidebar_city_init();
 
 void widget_sidebar_city_draw_foreground();

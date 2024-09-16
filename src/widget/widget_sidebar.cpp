@@ -86,9 +86,12 @@ const btnid button_ids[] = {
     {"build_admin", BUILDING_MENU_ADMINISTRATION },
 };
 
+ui::sidebar_window_expanded g_sidebar_expanded;
+ui::sidebar_window_collapsed g_sidebar_collapsed;
+
 ui::sidebar_window g_sidebar;
 
-void ui::sidebar_window::draw_overlay_text() {
+void ui::sidebar_window_expanded::draw_overlay_text() {
     pcstr overlay_text = game.current_overlay
                             ? game_state_overlay_text(game.current_overlay)
                             : ui::str(6, 4);
@@ -110,7 +113,7 @@ static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
     sidebar_common_draw_relief(x_offset, relief_y_offset, {PACK_GENERAL, 121}, is_collapsed);
 }
 
-void ui::sidebar_window::draw_number_of_messages() {
+void ui::sidebar_window_expanded::draw_number_of_messages() {
     int messages = city_message_count();
 
     ui["show_messages"].readonly = (messages <= 0);
@@ -122,32 +125,26 @@ static void draw_buttons_collapsed(int x_offset) {
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_build_collapsed, 12);
 }
 
-void ui::sidebar_window::draw_buttons_expanded() {
+void ui::sidebar_window_expanded::draw_buttons_expanded() {
     ui["undo_btn"].readonly = game_can_undo();
     ui["goto_problem"].readonly = !city_message_problem_area_count();
 
     image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_overlays_collapse_sidebar, 1);
 }
 
-void ui::sidebar_window::refresh_build_menu_buttons() {
-    for (const auto &btn: button_ids) {
-        ui[btn.id].enabled = (building_menu_count_items(btn.type) > 0);
-    }
-
-    for (auto &btn: buttons_build_collapsed) {
+void ui::sidebar_window_collapsed::refresh_build_menu_buttons() {
+    for (auto &btn : buttons_build_collapsed) {
         btn.enabled = (building_menu_count_items(btn.parameter1) > 0);
     }
 }
 
-static void draw_collapsed_background() {
-    painter ctx = game.painter();
-    int x_offset = sidebar_common_get_x_offset_collapsed();
-    ImageDraw::img_generic(ctx, image_id_from_group(PACK_GENERAL, 121) + 1, x_offset, TOP_MENU_HEIGHT);
-    draw_buttons_collapsed(x_offset);
-    draw_sidebar_remainder(x_offset, true);
+void ui::sidebar_window_expanded::refresh_build_menu_buttons() {
+    for (const auto &btn: button_ids) {
+        ui[btn.id].enabled = (building_menu_count_items(btn.type) > 0);
+    }
 }
 
-void ui::sidebar_window::load(archive arch, pcstr section) {
+void ui::sidebar_window_expanded::load(archive arch, pcstr section) {
     autoconfig_window::load(arch, section);
 
     arch.r_desc("extra_block", extra_block);
@@ -158,7 +155,18 @@ void ui::sidebar_window::load(archive arch, pcstr section) {
     }
 }
 
-void ui::sidebar_window::init() {
+void ui::sidebar_window_collapsed::load(archive arch, pcstr section) {
+    autoconfig_window::load(arch, section);
+
+    arch.r_desc("extra_block", extra_block);
+    extra_block_x = arch.r_int("extra_block_x");
+
+    if (game.session.active) {
+        init();
+    }
+}
+
+void ui::sidebar_window_expanded::init() {
     extra_block_size = image_get(extra_block)->size();
 
     ui["goto_problem"].onclick([] {
@@ -193,7 +201,11 @@ void ui::sidebar_window::init() {
         .onrclick([] { window_message_dialog_show(MESSAGE_DIALOG_OVERLAYS, -1, window_city_draw_all);; });
 }
 
-void ui::sidebar_window::ui_draw_foreground() {
+void ui::sidebar_window_collapsed::init() {
+    extra_block_size = image_get(extra_block)->size();
+}
+
+void ui::sidebar_window_expanded::ui_draw_foreground() {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded");
 
     x_offset = sidebar_common_get_x_offset_expanded();
@@ -240,21 +252,30 @@ void ui::sidebar_window::ui_draw_foreground() {
     draw_debug_ui(10, 30);
 }
 
+void ui::sidebar_window_collapsed::ui_draw_foreground() {
+    ui.begin_widget(ui.pos);
+    ui.draw();
+    ui.end_widget();
+
+    painter ctx = game.painter();
+    int x_offset = sidebar_common_get_x_offset_collapsed();
+    ImageDraw::img_generic(ctx, image_id_from_group(PACK_GENERAL, 121) + 1, x_offset, TOP_MENU_HEIGHT);
+    draw_buttons_collapsed(x_offset);
+    draw_sidebar_remainder(x_offset, true);
+}
+
 void widget_sidebar_city_init() {
-    g_sidebar.init();
+    g_sidebar_expanded.init();
+    g_sidebar_collapsed.init();
 }
 
 void widget_sidebar_city_draw_foreground() {
-    g_sidebar.ui_draw_foreground();
-}
-
-void widget_sidebar_city_draw_background() {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar");
 
     if (city_view_is_sidebar_collapsed()) {
-        draw_collapsed_background();
+        g_sidebar_collapsed.ui_draw_foreground();
     } else {
-        g_sidebar.ui_draw_foreground();
+        g_sidebar_expanded.ui_draw_foreground();
     }
 }
 
@@ -267,23 +288,26 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
         return false;
     }
 
-    g_sidebar.ui_handle_mouse(m);
+    if (city_view_is_sidebar_collapsed()) {
+        g_sidebar_collapsed.ui_handle_mouse(m);
+    } else {
+        g_sidebar_expanded.ui_handle_mouse(m);
+    }
 
     bool handled = false;
     int button_id;
     auto& data = g_sidebar;
-    data.focus_tooltip_text_id = 0;
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = sidebar_common_get_x_offset_collapsed();
         handled |= image_buttons_handle_mouse(m, {x_offset, 24}, button_expand_sidebar, (int)std::size(button_expand_sidebar), &button_id);
-        if (button_id) {
-            data.focus_tooltip_text_id = 12;
-        }
+        //if (button_id) {
+        //    data.focus_tooltip_text_id = 12;
+        //}
 
         handled |= image_buttons_handle_mouse(m, {x_offset, 24}, buttons_build_collapsed, (int)std::size(buttons_build_collapsed), &button_id);
-        if (button_id) {
-            data.focus_tooltip_text_id = button_id + 19;
-        }
+        //if (button_id) {
+        //    data.focus_tooltip_text_id = button_id + 19;
+        //}
 
     } else {
         if (widget_minimap_handle_mouse(m)) {
@@ -292,9 +316,9 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
 
         int x_offset = sidebar_common_get_x_offset_expanded();
         handled |= image_buttons_handle_mouse(m, {x_offset, 24}, buttons_overlays_collapse_sidebar, (int)std::size(buttons_overlays_collapse_sidebar), &button_id);
-        if (button_id) {
-            data.focus_tooltip_text_id = button_id + 9;
-        }
+        //if (button_id) {
+        //    data.focus_tooltip_text_id = button_id + 9;
+        //}
 
         handled |= (sidebar_extra_handle_mouse(m) != 0);
     }
@@ -310,7 +334,7 @@ int widget_sidebar_city_handle_mouse_build_menu(const mouse* m) {
 }
 
 int widget_sidebar_city_get_tooltip_text() {
-    return g_sidebar.focus_tooltip_text_id;
+    return 0;//g_sidebar.focus_tooltip_text_id;
 }
 
 void widget_sidebar_city_release_build_buttons() {
@@ -326,8 +350,9 @@ static void slide_finished() {
 
 static void button_collapse_expand(int param1, int param2) {
     city_view_start_sidebar_toggle();
-    auto draw_expanded_background = [] (int offset) { g_sidebar.x_offset = offset; };
-    sidebar_slide(!city_view_is_sidebar_collapsed(), draw_collapsed_background, draw_expanded_background, slide_finished);
+    auto draw_expanded_background = [] (int offset) { g_sidebar_expanded.x_offset = offset; };
+    //auto draw_expanded_background = [] (int offset) { g_sidebar_expanded.x_offset = offset; };
+    sidebar_slide(!city_view_is_sidebar_collapsed(), draw_expanded_background, draw_expanded_background, slide_finished);
 }
 
 static void button_build(int submenu, int param2) {

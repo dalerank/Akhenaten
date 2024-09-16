@@ -2,9 +2,9 @@
 
 enum { SLIDE_DIRECTION_IN = 0, SLIDE_DIRECTION_OUT = 1 };
 
-typedef void (*back_sidebar_draw_function)();
-typedef back_sidebar_draw_function slide_finished_function;
-typedef void (*front_sidebar_draw_function)(int x_offset);
+using back_sidebar_draw_function = void(int x_offset);
+using front_sidebar_draw_function = void(int x_offset);
+using slide_finished_function = void();
 
 void sidebar_slide(int direction,
                    back_sidebar_draw_function back_sidebar_callback,

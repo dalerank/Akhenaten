@@ -209,7 +209,8 @@ var taxcollector_info_window = {}
 var advisor_entertainment_window = {}
 var advisor_financial_window = {}
 var display_options_window = {}
-var sidebar_window = {}
+var sidebar_window_expanded = {}
+var sidebar_window_collapsed = {}
 
 //figures
 var figure_fireman = {}

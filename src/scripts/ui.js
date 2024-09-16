@@ -843,7 +843,7 @@ hold_festival_window = {
 	}
 }
 
-sidebar_window = {
+sidebar_window_expanded = {
 	extra_block 	 	 : {pack:PACK_GENERAL, id:121, offset:2},
 	extra_block_x 	 : 162,
 	ui : {
