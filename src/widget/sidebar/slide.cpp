@@ -9,6 +9,7 @@
 #include "graphics/window.h"
 #include "sound/sound.h"
 #include "widget/sidebar/common.h"
+#include "widget/widget_sidebar.h"
 #include "window/window_city.h"
 #include "game/game.h"
 #include "core/game_environment.h"
@@ -37,7 +38,7 @@ static void draw_sliding_foreground() {
         return;
     }
 
-    int x_offset = sidebar_common_get_x_offset_expanded();
+    int x_offset = widget_sidebar_city_offset_x();
     //    graphics_set_clip_rectangle(x_offset, 0, SIDEBAR_EXPANDED_WIDTH, sidebar_common_get_height());
     //    //TOP_MENU_HEIGHT
 

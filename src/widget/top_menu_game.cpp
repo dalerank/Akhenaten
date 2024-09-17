@@ -39,6 +39,7 @@
 #include "window/popup_dialog.h"
 #include "window/speed_options.h"
 #include "window/sound_options.h"
+#include "widget/widget_sidebar.h"
 #include "dev/debug.h"
 
 #include "js/js_game.h"
@@ -240,7 +241,7 @@ static void button_rotate_right(int param1, int param2) {
     window_invalidate();
 }
 
-void top_menu_bar_draw() {
+void widget_top_menu_draw_elements() {
     auto& data = g_top_menu_data;
     auto &headers = data.headers;
     vec2i offset = data.offset;
@@ -637,6 +638,7 @@ static void widget_top_menu_init() {
 static void top_menu_draw_background() {
     window_city_draw_panels();
     window_city_draw();
+    widget_sidebar_city_draw_foreground();
 }
 
 static void top_menu_draw_foreground() {
@@ -662,7 +664,7 @@ void widget_top_menu_show() {
 int orientation_button_state = 0;
 int orientation_button_pressed = 0;
 
-static void refresh_background() {
+void wdiget_top_menu_draw_background() {
     painter ctx = game.painter();
     int block_width = 96;
     int s_width = screen_width();
@@ -672,7 +674,7 @@ static void refresh_background() {
 
     int img_id = image_group(g_top_menu_data.background);
     for (int i = 0; s_start + i * block_width < s_end; i++) {
-        ImageDraw::img_generic(ctx, img_id, s_start + (i * block_width), COLOR_MASK_NONE);
+       ImageDraw::img_generic(ctx, img_id, s_start + (i * block_width), COLOR_MASK_NONE);
     }
 
     ImageDraw::img_generic(ctx, img_id, s_end, 0);
@@ -686,8 +688,8 @@ void widget_top_menu_draw(int force) {
         return;
     }
 
-    refresh_background();
-    top_menu_bar_draw();
+    wdiget_top_menu_draw_background();
+    widget_top_menu_draw_elements();
 
     color treasure_color = COLOR_WHITE;
     int treasury = city_finance_treasury();

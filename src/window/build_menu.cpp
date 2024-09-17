@@ -164,8 +164,9 @@ static void draw_menu_buttons() {
     }
 }
 
-static void draw_foreground(void) {
+static void draw_foreground() {
     window_city_draw();
+    widget_sidebar_city_draw_foreground();
     draw_menu_buttons();
 }
 
