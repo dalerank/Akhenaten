@@ -564,6 +564,7 @@ bool game_init() {
 
     return true;
 }
+
 bool game_init_editor() {
     if (!reload_language(1, 0))
         return false;
@@ -571,13 +572,15 @@ bool game_init_editor() {
     game_file_editor_clear_data();
     game_file_editor_create_scenario(2);
 
-    if (city_view_is_sidebar_collapsed())
+    if (city_view_is_sidebar_collapsed()) {
         city_view_toggle_sidebar();
+    }
 
     editor_set_active(1);
     window_editor_map_show();
     return true;
 }
+
 void game_exit_editor() {
     if (!reload_language(0, 0))
         return;

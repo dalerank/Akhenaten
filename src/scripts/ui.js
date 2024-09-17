@@ -844,8 +844,15 @@ hold_festival_window = {
 }
 
 sidebar_window_collapsed = {
+	expanded_offset_x: 42,
+	deceleration_offset_x : 5,
+  slide_acceleration_millis : 65, 
+  slide_speed_x    : 7,
+
 	ui : {
 		// 68-xx tooltips for buttons
+		background 		 : image({pos:[0, 30], pack:PACK_GENERAL, id:121, offset:1}),
+		expand         : image_button({pos:[8, 30], pack:PACK_GENERAL, id:110, offset:10, tooltip:[68, 12]}),
 	}
 }
 
@@ -859,7 +866,7 @@ sidebar_window_expanded = {
 
 	ui : {
 		// 68-xx tooltips for buttons
-		background 		 : image({pos:[0, 30], size: [29, 22], pack:PACK_GENERAL, id:121}),
+		background 		 : image({pos:[0, 30], pack:PACK_GENERAL, id:121}),
 		build_image    : image({pos:[11, 211]}),
 
 		show_overlays  : button({pos:[4, 30], size:[117, 20], border:false, font_hover:FONT_NORMAL_YELLOW }),

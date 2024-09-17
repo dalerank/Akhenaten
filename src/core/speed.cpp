@@ -24,8 +24,10 @@ static double adjust_speed_for_frame_time(double delta, int adjust_for_time, tim
 
 void speed_set_target(speed_type& speed, double new_speed, time_millis total_time, int adjust_for_time) {
     speed.adjust_for_time = adjust_for_time;
-    if (new_speed == speed.desired_speed)
+    if (new_speed == speed.desired_speed) {
         return;
+    }
+
     if (total_time == SPEED_CHANGE_IMMEDIATE) {
         speed.desired_speed = new_speed;
         speed.current_speed = new_speed;
@@ -37,6 +39,7 @@ void speed_set_target(speed_type& speed, double new_speed, time_millis total_tim
         }
         return;
     }
+
     speed.cumulative_delta = 0.0;
     speed.fine_position = 0.0;
     double base_speed = adjust_for_time ? speed.adjusted_current_speed : speed.current_speed;
@@ -45,6 +48,7 @@ void speed_set_target(speed_type& speed, double new_speed, time_millis total_tim
     speed.start_time = time_get_millis();
     speed.total_time = total_time;
 }
+
 void speed_invert(speed_type& speed) {
     speed_set_target(speed, -speed.current_speed, SPEED_CHANGE_IMMEDIATE, speed.adjust_for_time);
 }

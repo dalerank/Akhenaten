@@ -87,14 +87,6 @@ static bool init(int submenu) {
     }
 }
 
-static int get_sidebar_x_offset() {
-    vec2i view_pos, view_size;
-    view_data_t viewport = city_view_viewport();
-    city_view_get_viewport(viewport, view_pos, view_size);
-
-    return view_pos.x + view_size.x;
-}
-
 static int is_all_button(int type) {
     auto &data = g_build_menu_data;
     return (type == BUILDING_MENU_TEMPLES && data.selected_submenu == BUILDING_MENU_TEMPLES)
@@ -123,7 +115,7 @@ static text_group menu_index_to_text_index(text_group text) {
 
 static void draw_menu_buttons() {
     auto &data = g_build_menu_data;
-    int x_offset = get_sidebar_x_offset();
+    int x_offset = widget_sidebar_city_offset_x();
     int label_width = (BTN_W_TOT) / 16;
     int label_margin = BTN_W_TOT + 10;
     int label_offset = 20;
@@ -179,7 +171,7 @@ static void draw_foreground(void) {
 
 static int handle_build_submenu(const mouse* m) {
     auto &data = g_build_menu_data;
-    return generic_buttons_handle_mouse(m, {get_sidebar_x_offset() - 258, data.y_offset + 110}, data.buttons, data.num_items, &data.focus_button_id);
+    return generic_buttons_handle_mouse(m, { widget_sidebar_city_offset_x() - 258, data.y_offset + 110}, data.buttons, data.num_items, &data.focus_button_id);
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {

@@ -246,11 +246,15 @@ int sidebar_extra_draw_background(int x_offset,
 }
 void sidebar_extra_draw_foreground(void) {
     auto& data = g_extra_data;
-    if (update_extra_info(0))
+    if (update_extra_info(0)) {
         draw_extra_info_panel(); // Updates displayed speed % after clicking the arrows
-    else if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)
-        arrow_buttons_draw({data.x_offset, data.y_offset}, arrow_buttons_speed, 2);
+    } 
+    
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
+        arrow_buttons_draw({ data.x_offset, data.y_offset }, arrow_buttons_speed, 2);
+    }
 }
+
 int sidebar_extra_handle_mouse(const mouse* m) {
     auto& data = g_extra_data;
     if (!(data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED))

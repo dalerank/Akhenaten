@@ -85,7 +85,7 @@ void city_view_get_viewport_size_tiles(int* width, int* height);
 bool pixel_is_inside_viewport(vec2i pixel);
 bool city_view_is_sidebar_collapsed(void);
 void city_view_start_sidebar_toggle(void);
-void city_view_toggle_sidebar(void);
+void city_view_toggle_sidebar(int mode = -1);
 
 void city_view_foreach_valid_map_tile(painter &ctx,
                                       tile_draw_callback* callback1,

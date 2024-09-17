@@ -8,12 +8,6 @@
 #include "widget/minimap.h"
 #include "game/game.h"
 
-int sidebar_common_get_x_offset_expanded() {
-    return screen_width() - SIDEBAR_EXPANDED_WIDTH;
-}
-int sidebar_common_get_x_offset_collapsed() {
-    return screen_width() - SIDEBAR_COLLAPSED_WIDTH;
-}
 int sidebar_common_get_height() {
     return screen_height() - TOP_MENU_HEIGHT;
 }

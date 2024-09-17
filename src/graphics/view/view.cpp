@@ -359,10 +359,9 @@ bool pixel_is_inside_viewport(vec2i pixel) {
     }
     return true;
 }
-bool city_view_is_sidebar_collapsed() {
-    auto& data = g_city_view_data;
 
-    return data.sidebar_collapsed;
+bool city_view_is_sidebar_collapsed() {
+    return g_city_view_data.sidebar_collapsed;
 }
 
 void city_view_start_sidebar_toggle() {
@@ -370,17 +369,16 @@ void city_view_start_sidebar_toggle() {
     camera_validate_position(city_view_data_unsafe());
 }
 
-void city_view_toggle_sidebar() {
+void city_view_toggle_sidebar(int mode) {
     auto& view = g_city_view_data;
 
-    if (view.sidebar_collapsed) {
-        view.sidebar_collapsed = false;
-        set_viewport_with_sidebar();
+    if (mode == -1) {
+        view.sidebar_collapsed = !view.sidebar_collapsed;
     } else {
-        view.sidebar_collapsed = true;
-        city_view_set_viewport_without_sidebar();
+        view.sidebar_collapsed = mode;
     }
-    camera_validate_position(view);
+
+    city_view_refresh_viewport();
 }
 
 io_buffer* iob_city_view_orientation = new io_buffer([](io_buffer* iob, size_t version) {
