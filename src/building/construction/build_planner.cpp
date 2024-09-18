@@ -1286,7 +1286,7 @@ void BuildPlanner::construction_cancel() {
         in_progress = false;
     } else {
         setup_build(BUILDING_NONE);
-        widget_sidebar_city_release_build_buttons();
+        //widget_sidebar_city_release_build_buttons();
     }
     building_rotation_reset_rotation();
 }

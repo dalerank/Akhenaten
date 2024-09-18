@@ -182,7 +182,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
     if (input_go_back_requested(m, h)) {
         window_city_show();
-        widget_sidebar_city_release_build_buttons();
+        //widget_sidebar_city_release_build_buttons();
         return;
     }
 }

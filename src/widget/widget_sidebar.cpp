@@ -38,28 +38,6 @@
 
 #define MINIMAP_Y_OFFSET 59
 
-static void button_build(int submenu, int param2);
-static void button_help(int param1, int param2);
-static void button_rotate_north(int param1, int param2);
-static void button_rotate(int clockwise, int param2);
-
-#define CL_ROW0 21 // 22
-
-static image_button buttons_build_collapsed[12] = {
-  {9, CL_ROW0, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 90, button_build, button_none, BUILDING_MENU_VACANT_HOUSE, 0, 1},
-  {9, CL_ROW0 + 36, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 94, button_build, button_none, BUILDING_MENU_ROAD, 0, 1},
-  {9, CL_ROW0 + 71, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 98, button_build, button_none, BUILDING_MENU_CLEAR_LAND, 0, 1},
-  {9, CL_ROW0 + 108, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 102, button_build, button_none, BUILDING_MENU_FOOD, 0, 1},
-  {9, CL_ROW0 + 142, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 106, button_build, button_none, BUILDING_MENU_INDUSTRY, 0, 1},
-  {9, CL_ROW0 + 177, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 110, button_build, button_none, BUILDING_MENU_DISTRIBUTION, 0, 1},
-  {9, CL_ROW0 + 212, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 114, button_build, button_none, BUILDING_MENU_ENTERTAINMENT, 0, 1},
-  {9, CL_ROW0 + 245, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 118, button_build, button_none, BUILDING_MENU_RELIGION, 0, 1},
-  {9, CL_ROW0 + 281, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 122, button_build, button_none, BUILDING_MENU_EDUCATION, 0, 1},
-  {9, CL_ROW0 + 317, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 126, button_build, button_none, BUILDING_MENU_HEALTH, 0, 1},
-  {9, CL_ROW0 + 353, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 130, button_build, button_none, BUILDING_MENU_ADMINISTRATION, 0, 1},
-  {9, CL_ROW0 + 385, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 134, button_build, button_none, BUILDING_MENU_SECURITY, 0, 1},
-};
-
 struct btnid {
     pcstr id;
     e_building_type type;
@@ -99,13 +77,9 @@ static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
     sidebar_common_draw_relief(x_offset, relief_y_offset, {PACK_GENERAL, 121}, is_collapsed);
 }
 
-void ui::sidebar_window_collapsed::draw_buttons() {
-    image_buttons_draw({x_offset, TOP_MENU_HEIGHT}, buttons_build_collapsed, 12);
-}
-
 void ui::sidebar_window_collapsed::refresh_build_menu_buttons() {
-    for (auto &btn : buttons_build_collapsed) {
-        btn.enabled = (building_menu_count_items(btn.parameter1) > 0);
+    for (const auto &btn : button_ids) {
+        ui[btn.id].enabled = (building_menu_count_items(btn.type) > 0);
     }
 }
 
@@ -272,6 +246,10 @@ void ui::sidebar_window_collapsed::init() {
         speed_set_target(slider.slide_speed, slider.slide_speed_x, slider.slide_acceleration_millis, 1);
         g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
     });
+
+    for (const auto &btn : button_ids) {
+        ui[btn.id].onclick([type = btn.type] { window_build_menu_show(type); });
+    }
 }
 
 void ui::sidebar_window_collapsed::ui_draw_foreground() {
@@ -289,7 +267,6 @@ void ui::sidebar_window_collapsed::ui_draw_foreground() {
     ui.draw();
     ui.end_widget();
 
-    draw_buttons();
     draw_sidebar_remainder(x_offset, true);
 }
 
@@ -340,60 +317,22 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
         g_sidebar_expanded.ui_handle_mouse(m);
     }
 
-    bool handled = false;
-    int button_id;
-    auto& data = g_sidebar;
-    if (city_view_is_sidebar_collapsed()) {
-        int x_offset = screen_width() - g_sidebar_collapsed.expanded_offset_x;
-        handled |= image_buttons_handle_mouse(m, {x_offset, 24}, buttons_build_collapsed, (int)std::size(buttons_build_collapsed), &button_id);
-
-    } else {
+    if (!city_view_is_sidebar_collapsed()) {
         if (widget_minimap_handle_mouse(m)) {
             return true;
         }
 
         //int x_offset = sidebar_common_get_x_offset_expanded();
     }
-    return handled;
+    return 0;
 }
 
 int widget_sidebar_city_handle_mouse_build_menu(const mouse* m) {
     if (city_view_is_sidebar_collapsed()) {
-        return image_buttons_handle_mouse(m, {screen_width() - g_sidebar_collapsed.expanded_offset_x, 24}, buttons_build_collapsed, (int)std::size(buttons_build_collapsed), 0);
+        return g_sidebar_collapsed.ui_handle_mouse(m);
     } else {
         return g_sidebar_expanded.ui_handle_mouse(m);
     }
-}
-
-int widget_sidebar_city_get_tooltip_text() {
-    return 0;//g_sidebar.focus_tooltip_text_id;
-}
-
-void widget_sidebar_city_release_build_buttons() {
-    //image_buttons_release_press(buttons_build_expanded, std::size(buttons_build_expanded));
-    image_buttons_release_press(buttons_build_collapsed, std::size(buttons_build_collapsed));
-}
-
-static void button_build(int submenu, int param2) {
-    window_build_menu_show(submenu);
-}
-
-static void button_help(int param1, int param2) {
-    window_message_dialog_show(param2, -1, window_city_draw_all);
-}
-
-static void button_rotate_north(int param1, int param2) {
-    game_orientation_rotate_north();
-    window_invalidate();
-}
-
-static void button_rotate(int clockwise, int param2) {
-    if (clockwise) {
-        game_orientation_rotate_right();
-    } else {
-        game_orientation_rotate_left();
-    }
-    window_invalidate();
 }
 
 void ui::slide_driver::load(archive arch) {

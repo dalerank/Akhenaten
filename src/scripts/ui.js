@@ -854,6 +854,22 @@ sidebar_window_collapsed = {
 		// 68-xx tooltips for buttons
 		background 		 : image({pos:[0, 30], pack:PACK_GENERAL, id:121, offset:1}),
 		expand         : image_button({pos:[8, 30], pack:PACK_GENERAL, id:110, offset:10, tooltip:[68, 12]}),
+
+		build_house    : image_button({pos:[9, 21+30], pack:PACK_GENERAL, id:136, offset:90, tooltip:[68, 20]}),
+		build_road     : image_button({pos:[9, 21+66], pack:PACK_GENERAL, id:136, offset:94, tooltip:[68, 21]}),
+		clear_land     : image_button({pos:[9, 21+102], pack:PACK_GENERAL, id:136, offset:98, tooltip:[68, 22]}),
+
+		build_food     : image_button({pos:[9, 21+138], pack:PACK_GENERAL, id:136, offset:102, tooltip:[68, 23]}),
+		build_industry : image_button({pos:[9, 21+174], pack:PACK_GENERAL, id:136, offset:106, tooltip:[68, 24]}),
+		build_distribution : image_button({pos:[9, 21+210], pack:PACK_GENERAL, id:136, offset:110, tooltip:[68, 25]}),
+
+		build_entertainment: image_button({pos:[9, 21+246], pack:PACK_GENERAL, id:136, offset:114, tooltip:[68, 26]}),
+		build_religion : image_button({pos:[9, 21+282], pack:PACK_GENERAL, id:136, offset:118, tooltip:[68, 27]}),
+		build_education: image_button({pos:[9, 21+318], pack:PACK_GENERAL, id:136, offset:122, tooltip:[68, 28]}),
+
+		build_health   : image_button({pos:[9, 354], pack:PACK_GENERAL, id:136, offset:126, tooltip:[68, 29]}),
+		build_admin    : image_button({pos:[9, 390], pack:PACK_GENERAL, id:136, offset:130, tooltip:[68, 30]}),
+		build_security : image_button({pos:[9, 426], pack:PACK_GENERAL, id:136, offset:134, tooltip:[68, 31]}),
 	}
 }
 
