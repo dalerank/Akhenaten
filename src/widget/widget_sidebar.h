@@ -18,6 +18,9 @@ struct slide_driver {
     speed_type slide_speed;
     int slide_speed_x;
     int position;
+
+    void load(archive arch);
+    void update(int &x_offset, int expanded_offset_x, std::function<void()> callback);
 };
 
 struct sidebar_window_expanded : public autoconfig_window_t<sidebar_window_expanded> {

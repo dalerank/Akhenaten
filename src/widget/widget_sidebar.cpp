@@ -121,9 +121,7 @@ void ui::sidebar_window_expanded::load(archive arch, pcstr section) {
     arch.r_desc("extra_block", extra_block);
     extra_block_x = arch.r_int("extra_block_x");
     expanded_offset_x = arch.r_int("expanded_offset_x");
-    slider.deceleration_offset_x = arch.r_int("deceleration_offset_x");
-    slider.slide_acceleration_millis = arch.r_int("slide_acceleration_millis");
-    slider.slide_speed_x = arch.r_int("slide_speed_x");
+    slider.load(arch);
 
     if (game.session.active) {
         init();
@@ -190,27 +188,9 @@ void ui::sidebar_window_expanded::ui_draw_foreground() {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded");
 
     x_offset = screen_width();
-    if (slider.slide_mode != slider.e_slide_none) {
-        slider.position += speed_get_delta(slider.slide_speed);
-        if (slider.position >= expanded_offset_x) {
-            city_view_toggle_sidebar(slider.slide_mode == slider.e_slide_collapse);
-            slider.slide_mode = slider.e_slide_none;
-        } else {
-            int rel_offset = 0;
-            if (slider.slide_mode == slider.e_slide_collapse) {
-                if (slider.position > slider.deceleration_offset_x) {
-                    speed_set_target(slider.slide_speed, 1, slider.slide_acceleration_millis, 1);
-                }
-                rel_offset = -expanded_offset_x + slider.position;
-            } else {
-                rel_offset = -slider.position;
-            }
-            x_offset += rel_offset;
-        }
-        widget_top_menu_draw(true);
-    } else {
-        x_offset -= expanded_offset_x;
-    }
+    slider.update(x_offset, expanded_offset_x, [this] {
+        city_view_toggle_sidebar(slider.slide_mode == slider.e_slide_collapse);
+    });
 
     ui.pos.x = x_offset;
 
@@ -275,9 +255,7 @@ void ui::sidebar_window_collapsed::load(archive arch, pcstr section) {
     arch.r_desc("extra_block", extra_block);
     extra_block_x = arch.r_int("extra_block_x");
     expanded_offset_x = arch.r_int("expanded_offset_x");
-    slider.deceleration_offset_x = arch.r_int("deceleration_offset_x");
-    slider.slide_acceleration_millis = arch.r_int("slide_acceleration_millis");
-    slider.slide_speed_x = arch.r_int("slide_speed_x");
+    slider.load(arch);
 
     if (game.session.active) {
         init();
@@ -298,30 +276,12 @@ void ui::sidebar_window_collapsed::init() {
 
 void ui::sidebar_window_collapsed::ui_draw_foreground() {
     x_offset = screen_width();
-    if (slider.slide_mode != slider.e_slide_none) {
-        slider.position += speed_get_delta(slider.slide_speed);
-        if (slider.position >= expanded_offset_x) {
-            if (slider.slide_mode == slider.e_slide_collapse) {
-                city_view_toggle_sidebar(false);
-                g_sidebar_expanded.expand();
-            }
-            slider.slide_mode = slider.e_slide_none;
-        } else {
-            int rel_offset = 0;
-            if (slider.slide_mode == slider.e_slide_collapse) {
-                if (slider.position > slider.deceleration_offset_x) {
-                    speed_set_target(slider.slide_speed, 1, slider.slide_acceleration_millis, 1);
-                }
-                rel_offset = -expanded_offset_x + slider.position;
-            } else {
-                rel_offset = -slider.position;
-            }
-            x_offset += rel_offset;
+    slider.update(x_offset, expanded_offset_x, [this] {
+        if (slider.slide_mode == slider.e_slide_collapse) {
+            city_view_toggle_sidebar(false);
+            g_sidebar_expanded.expand();
         }
-        widget_top_menu_draw(true);
-    } else {
-        x_offset -= expanded_offset_x;
-    }
+    });
 
     ui.pos.x = x_offset;
 
@@ -434,4 +394,34 @@ static void button_rotate(int clockwise, int param2) {
         game_orientation_rotate_left();
     }
     window_invalidate();
+}
+
+void ui::slide_driver::load(archive arch) {
+    deceleration_offset_x = arch.r_int("deceleration_offset_x");
+    slide_acceleration_millis = arch.r_int("slide_acceleration_millis");
+    slide_speed_x = arch.r_int("slide_speed_x");
+}
+
+void ui::slide_driver::update(int &x_offset, int expanded_offset_x, std::function<void()> callback) {
+    if (slide_mode != e_slide_none) {
+        position += speed_get_delta(slide_speed);
+        if (position >= expanded_offset_x) {
+            callback();
+            slide_mode = e_slide_none;
+        } else {
+            int rel_offset = 0;
+            if (slide_mode == e_slide_collapse) {
+                if (position > deceleration_offset_x) {
+                    speed_set_target(slide_speed, 1, slide_acceleration_millis, 1);
+                }
+                rel_offset = -expanded_offset_x + position;
+            } else {
+                rel_offset = -position;
+            }
+            x_offset += rel_offset;
+        }
+        widget_top_menu_draw(true);
+    } else {
+        x_offset -= expanded_offset_x;
+    }
 }
