@@ -14,6 +14,7 @@
 #include "input/input.h"
 #include "io/gamefiles/lang.h"
 #include "window/window_city.h"
+#include "widget/widget_sidebar.h"
 #include "game/game.h"
 
 static void button_menu_item(int index, int param2);
@@ -127,17 +128,18 @@ struct overlay_menu_data_t {
 
 overlay_menu_data_t g_overlay_menu_data;
 
-static void init(void) {
+static void init() {
     auto& data = g_overlay_menu_data;
     data.selected_submenu = 0;
-    data.num_submenu_items = 0;
+    data.num_submenu_items = 0;   
 }
 
-static void draw_background(void) {
+static void window_overlay_draw_background() {
     window_city_draw_panels();
+    widget_sidebar_city_draw_foreground();
 }
 
-static int get_sidebar_x_offset(void) {
+static int get_sidebar_x_offset() {
     vec2i view_pos, view_size;
     const view_data_t &viewport = city_view_viewport();
     city_view_get_viewport(viewport, view_pos, view_size);
@@ -190,7 +192,7 @@ const char* game_state_overlay_text(int index) {
     return (const char*)lang_get_string(e_text_overlay_menu, index);
 }
 
-static void draw_foreground() {
+static void window_overlay_draw_foreground() {
     painter ctx = game.painter();
     auto& data = g_overlay_menu_data;
     window_city_draw();
@@ -231,14 +233,16 @@ static void open_submenu(int index, int keep_open) {
 
 static void close_submenu(void) {
     auto& data = g_overlay_menu_data;
-    data.keep_submenu_open = 0;
-    data.selected_menu = 0;
-    data.selected_submenu = 0;
-    data.num_submenu_items = 0;
-    window_invalidate();
+    if (data.selected_menu || data.selected_submenu) {
+        data.keep_submenu_open = 0;
+        data.selected_menu = 0;
+        data.selected_submenu = 0;
+        data.num_submenu_items = 0;
+        window_invalidate();
+    }
 }
 
-static void handle_submenu_focus(void) {
+static void window_overlay_handle_submenu_focus(void) {
     auto& data = g_overlay_menu_data;
     if (data.menu_focus_button_id || data.submenu_focus_button_id) {
         data.submenu_focus_time = time_get_millis();
@@ -250,14 +254,14 @@ static void handle_submenu_focus(void) {
     }
 }
 
-static void handle_input(const mouse* m, const hotkeys* h) {
+static void window_overlay_handle_input(const mouse* m, const hotkeys* h) {
     auto& data = g_overlay_menu_data;
     int x_offset = get_sidebar_x_offset();
     bool handled = false;
     handled |= !!generic_buttons_handle_mouse(m, {x_offset - 170, 72}, menu_buttons, 8, &data.menu_focus_button_id);
 
     if (!data.keep_submenu_open) {
-        handle_submenu_focus();
+        window_overlay_handle_submenu_focus();
     }
 
     if (data.selected_submenu) {
@@ -302,9 +306,9 @@ static void button_submenu_item(int index, int param2) {
 void window_overlay_menu_show(void) {
     window_type window = {
         WINDOW_OVERLAY_MENU,
-        draw_background,
-        draw_foreground,
-        handle_input
+        window_overlay_draw_background,
+        window_overlay_draw_foreground,
+        window_overlay_handle_input
     };
     init();
     window_show(&window);
