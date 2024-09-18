@@ -10,7 +10,7 @@
 #include "graphics/video.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
-#include "widget/top_menu_game.h"
+#include "widget/widget_top_menu_game.h"
 #include "window/window_city.h"
 #include "window/hotkey_editor.h"
 #include "window/main_menu.h"
