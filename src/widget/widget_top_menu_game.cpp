@@ -1,4 +1,4 @@
-#include "top_menu_game.h"
+#include "widget_top_menu_game.h"
 
 #include "game/game.h"
 
@@ -76,6 +76,7 @@ struct top_menu_data_t {
     vec2i offset;
     int item_height;
     int spacing;
+    int sidebar_offset;
     e_image_id background;
 
     ui::widget headers;
@@ -144,6 +145,7 @@ void config_load_top_menu_bar() {
         data.offset_population_basic = arch.r_int("offset_population_basic");
         data.offset_date_basic = arch.r_int("offset_date_basic");
         data.offset_rotate_basic = arch.r_int("offset_rotate_basic");
+        data.sidebar_offset = arch.r_int("sidebar_offset");
 
         data.headers.load(arch, "headers");
         for (auto &header : data.headers.elements) {
@@ -635,13 +637,13 @@ static void widget_top_menu_init() {
     set_text_for_debug_render();
 }
 
-static void top_menu_draw_background() {
+static void widget_sub_menu_draw_background() {
     window_city_draw_panels();
     window_city_draw();
     widget_sidebar_city_draw_foreground();
 }
 
-static void top_menu_draw_foreground() {
+static void widget_sub_menu_draw_foreground() {
     auto& data = g_top_menu_data;
     if (!data.open_sub_menu) {
         return;
@@ -650,11 +652,11 @@ static void top_menu_draw_foreground() {
     top_menu_menu_draw(data.open_sub_menu, data.focus_sub_menu_id);
 }
 
-void widget_top_menu_show() {
+void widget_sub_menu_show() {
     static window_type window = {
         WINDOW_TOP_MENU,
-        top_menu_draw_background,
-        top_menu_draw_foreground,
+        widget_sub_menu_draw_background,
+        widget_sub_menu_draw_foreground,
         widget_top_menu_handle_input
     };
     widget_top_menu_init();
@@ -666,18 +668,16 @@ int orientation_button_pressed = 0;
 
 void wdiget_top_menu_draw_background() {
     painter ctx = game.painter();
-    int block_width = 96;
-    int s_width = screen_width();
-
-    int s_end = s_width - 1000 - 24 + city_view_is_sidebar_collapsed() * (162 - 18);
-    int s_start = s_end - ceil((float)s_end / (float)block_width) * block_width;
 
     int img_id = image_group(g_top_menu_data.background);
-    for (int i = 0; s_start + i * block_width < s_end; i++) {
-       ImageDraw::img_generic(ctx, img_id, s_start + (i * block_width), COLOR_MASK_NONE);
+    const image_t *img = image_get(img_id);
+    const int block_width = img->width;
+
+    for (int x = -(screen_width() - widget_sidebar_city_offset_x()); x < screen_width(); x += (block_width - g_top_menu_data.sidebar_offset)) {
+       ImageDraw::img_generic(ctx, img_id, x, 0);
     }
 
-    ImageDraw::img_generic(ctx, img_id, s_end, 0);
+    ImageDraw::img_generic(ctx, img_id, widget_sidebar_city_offset_x() - block_width + g_top_menu_data.sidebar_offset, 0);
 }
 
 void widget_top_menu_draw(int force) {
@@ -818,7 +818,7 @@ static bool widget_top_menu_handle_mouse_menu(const mouse* m) {
     xstring menu_id = top_menu_bar_handle_mouse(m);
     if (!!menu_id && m->left.went_up) {
         data.open_sub_menu = menu_id;
-        widget_top_menu_show();
+        widget_sub_menu_show();
         return true;
     }
 

@@ -61,7 +61,7 @@
 #include "scenario/request.h"
 #include "sound/sound_city.h"
 #include "sound/sound.h"
-#include "widget/top_menu_game.h"
+#include "widget/widget_top_menu_game.h"
 #include "window/window_city.h"
 #include "window/file_dialog.h"
 #include "window/mission_briefing.h"

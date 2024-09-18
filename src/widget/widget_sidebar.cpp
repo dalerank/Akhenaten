@@ -32,6 +32,7 @@
 #include "window/message_list.h"
 #include "window/mission_briefing.h"
 #include "window/overlay_menu.h"
+#include "widget/widget_top_menu_game.h"
 #include "sound/sound.h"
 #include "game/game.h"
 
@@ -206,6 +207,7 @@ void ui::sidebar_window_expanded::ui_draw_foreground() {
             }
             x_offset += rel_offset;
         }
+        widget_top_menu_draw(true);
     } else {
         x_offset -= expanded_offset_x;
     }
@@ -316,6 +318,7 @@ void ui::sidebar_window_collapsed::ui_draw_foreground() {
             }
             x_offset += rel_offset;
         }
+        widget_top_menu_draw(true);
     } else {
         x_offset -= expanded_offset_x;
     }

@@ -4,7 +4,7 @@
 #include "city/warning.h"
 #include "widget/widget_city.h"
 #include "widget/minimap.h"
-#include "widget/top_menu_game.h"
+#include "widget/widget_top_menu_game.h"
 #include "widget/sidebar/common.h"
 #include "widget/widget_sidebar.h"
 #include "graphics/window.h"
@@ -73,7 +73,7 @@ void handle_input_military(const mouse* m, const hotkeys* h) {
 }
 
 void draw_foreground_military() {
-    widget_top_menu_draw(0);
+    widget_top_menu_draw(false);
     window_city_draw();
     widget_sidebar_city_draw_foreground_military();
     window_city_draw_paused_and_time_left();

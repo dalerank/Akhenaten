@@ -25,7 +25,7 @@
 #include "scenario/scenario.h"
 #include "scenario/criteria.h"
 #include "widget/widget_sidebar.h"
-#include "widget/top_menu_game.h"
+#include "widget/widget_top_menu_game.h"
 #include "widget/widget_city.h"
 #include "window/advisors.h"
 #include "window/file_dialog.h"
@@ -41,7 +41,7 @@ static int center_in_city(int element_width_pixels) {
 
 void window_city_draw_background() {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Bakground");
-    widget_top_menu_draw(1);
+    widget_top_menu_draw(true);
 }
 
 void window_city_draw_paused_and_time_left() {
@@ -93,7 +93,7 @@ static void draw_cancel_construction() {
 
 static void window_city_draw_foreground() {
     //    clear_city_view(0);
-    widget_top_menu_draw(0);
+    widget_top_menu_draw(false);
     window_city_draw();
     widget_sidebar_city_draw_foreground();
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {

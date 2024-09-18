@@ -47,6 +47,7 @@ top_menu_bar = {
 	offset : [10, 6],
 	item_height : 20,
 	background: IMG_TOP_MENU_BACKGROUND,
+	sidebar_offset : 158,
 	spacing : 32,
 	offset_funds_basic : 540,
 	offset_population_basic : 400,
