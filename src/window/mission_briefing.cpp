@@ -23,19 +23,9 @@
 #include "game/settings.h"
 #include "js/js_game.h"
 
-struct mission_briefing : ui::widget {
-    int is_review;
-    int campaign_mission_loaded;
-};
+ui::mission_briefing_window g_mission_briefing;
 
-mission_briefing g_mission_briefing;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_mission_briefing);
-void config_load_mission_briefing() {
-    g_mission_briefing.load("mission_briefing_window");
-}
-
-static void init() {
+void ui::mission_briefing_window::init() {
     rich_text_reset(0);
 
     // load map!
@@ -44,7 +34,7 @@ static void init() {
     }
 }
 
-static void window_briefing_draw_background() {
+int ui::mission_briefing_window::draw_background() {
     auto &data = g_mission_briefing;
     window_draw_underlying_window();
 
@@ -107,31 +97,19 @@ static void window_briefing_draw_background() {
         g_settings.increase_difficulty();
         window_invalidate();
     });
-}
 
-static void window_briefing_draw_foreground() {
-    auto &ui = g_mission_briefing;
-    ui.begin_widget(ui.pos);
-    ui.draw();
-    ui.end_widget();
-}
-
-static void window_briefing_menu_handle_input(const mouse *m, const hotkeys *h) {
-    auto &ui = g_mission_briefing;
-
-    ui.begin_widget(ui.pos);
-    ui.handle_mouse(m);
-    ui.end_widget();
+    return 0;
 }
 
 static void show(void) {
     static window_type window = {
         WINDOW_MISSION_BRIEFING,
-        window_briefing_draw_background,
-        window_briefing_draw_foreground,
-        window_briefing_menu_handle_input
+        [] () { g_mission_briefing.draw_background(); },
+        [] () { g_mission_briefing.ui_draw_foreground(); },
+        [] (const mouse *m, const hotkeys *h) { g_mission_briefing.ui_handle_mouse(m); }
     };
-    init();
+    
+    g_mission_briefing.init();
     window_show(&window);
 }
 
