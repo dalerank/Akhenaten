@@ -111,12 +111,17 @@ static void window_briefing_draw_background() {
 
 static void window_briefing_draw_foreground() {
     auto &ui = g_mission_briefing;
+    ui.begin_widget(ui.pos);
     ui.draw();
+    ui.end_widget();
 }
 
 static void window_briefing_menu_handle_input(const mouse *m, const hotkeys *h) {
     auto &ui = g_mission_briefing;
+
+    ui.begin_widget(ui.pos);
     ui.handle_mouse(m);
+    ui.end_widget();
 }
 
 static void show(void) {
