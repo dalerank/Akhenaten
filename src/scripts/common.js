@@ -211,6 +211,7 @@ var advisor_financial_window = {}
 var display_options_window = {}
 var sidebar_window_expanded = {}
 var sidebar_window_collapsed = {}
+var info_window_booth = {}
 
 //figures
 var figure_fireman = {}

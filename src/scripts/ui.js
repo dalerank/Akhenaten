@@ -1028,6 +1028,18 @@ info_window_bandstand = {
 	})
 }
 
+info_window_booth = {
+	ui : __baseui(building_info_window, {
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 21]},
+		inner_panel : { type : "inner_panel", pos : [16, 136], size: [27, 7] },
+		play_text : { type : "text", pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		play2_text : { type : "text", pos: [32, 202], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142] },
+		workers_text : { type : "text", pos: [70, 150], font: FONT_NORMAL_BLACK_ON_DARK},
+		workers_desc : { type : "text", pos: [70, 146 + 16], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+	})
+}
+
 info_window_fishing_wharf = {
 	ui : __baseui(building_info_window, {
 		resource_img : { type : "resource_icon", pos: [32, 186] },
