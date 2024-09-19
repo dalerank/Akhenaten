@@ -42,6 +42,7 @@
 #include "window/window_figure_info.h"
 #include "window/window_city.h"
 #include "window/message_dialog.h"
+#include "widget/widget_sidebar.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
 
@@ -218,6 +219,7 @@ static void window_info_draw_background() {
     game.animation = false;
     window_city_draw_panels();
     window_city_draw();
+    widget_sidebar_city_draw_foreground();
     context.ui->window_info_background(context);
 }
 
@@ -381,7 +383,7 @@ void common_info_window::draw_tooltip(tooltip_context *c) {
         tooltip = ui::button_tooltip(button_id - 1);
     }
 
-    if (tooltip.group != 0xffff || tooltip.id != 0xff ) {
+    if (tooltip.group > 0 && tooltip.group != 0xffff) {
         c->type = TOOLTIP_BUTTON;
         c->text.id = tooltip.id;
         if (tooltip.group) {
