@@ -680,9 +680,23 @@ void wdiget_top_menu_draw_background() {
     ImageDraw::img_generic(ctx, img_id, widget_sidebar_city_offset_x() - block_width + g_top_menu_data.sidebar_offset, 0);
 }
 
+void widget_top_menu_draw_rotate_buttons() {
+    // Orientation icon
+    auto &data = g_top_menu_data;
+    painter ctx = game.painter();
+    if (orientation_button_pressed) {
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3, data.offset_rotate, 0);
+        orientation_button_pressed--;
+    } else {
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state, data.offset_rotate, 0);
+    }
+}
+
 void widget_top_menu_draw(int force) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Topmenu");
     auto& data = g_top_menu_data;
+    widget_top_menu_draw_rotate_buttons();
+
     if (!force && data.treasury == city_finance_treasury()
         && data.population == city_population() && data.month == gametime().month) {
         return;
@@ -707,14 +721,6 @@ void widget_top_menu_draw(int force) {
     data.offset_rotate = s_width - data.offset_rotate_basic;
 
     lang_text_draw_month_year_max_width(gametime().month, gametime().year, data.offset_date - 2, 5, 110, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    // Orientation icon
-    painter ctx = game.painter();
-    if (orientation_button_pressed) {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3, data.offset_rotate, 0);
-        orientation_button_pressed--;
-    } else {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state, data.offset_rotate, 0);
-    }
 
     if (s_width < 800) {
         data.offset_funds = 338;      // +2
