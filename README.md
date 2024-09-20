@@ -165,4 +165,16 @@ Build & run with tracy enabled:
 cmake -DUSE_FUTURE_TRACY=ON .. && make akhenaten && ./akhenaten
 ```
 
+### Parameters:
+
+```
+ --display-scale NUMBER //Scales the display by a factor of NUMBER. Number can be between 0.5 and 5
+ --cursor-scale NUMBER //Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2
+ --render // use specific renderer directx, opengl, vulkan
+ --size // window size. Example: 800x600
+ --window // enable window mode
+ --mixed // hot reload scripts from disk
+ --save_debug_texture // save screen output to game folder
+```
+
 ![Alt](https://repobeats.axiom.co/api/embed/99a27c096522f0ed847ec37c6495d79552aeb13e.svg "Repobeats analytics image")
