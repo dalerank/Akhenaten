@@ -333,53 +333,6 @@ static void on_scroll(void) {
 }
 static scrollbar_t g_distribution_scrollbar = {{590, 52}, 336, on_scroll};
 
-int window_building_handle_mouse_warehouse(const mouse* m, object_info* c) {
-    auto &data = g_window_building_distribution;
-    data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m, {c->offset.x + 80, c->offset.y + 16 * c->bgsize.y - 34}, data.go_to_orders_button.data(), 1, &data.focus_button_id)) {
-    }
-    // temp - todo: fix buttons
-    //    if (generic_buttons_handle_mouse(m, c->offset.x + 64, c->offset.y + 16 * c->height_blocks - 75,
-    //                                     warehouse_distribution_permissions_buttons, 3,
-    //                                     &data.permission_focus_button_id)) {
-    //    }
-    return 0;
-}
-
-int window_building_handle_mouse_warehouse_orders(const mouse* m, object_info* c) {
-    auto &data = g_window_building_distribution;
-    int y_offset = window_building_get_vertical_offset(c, 28 + 5);
-    data.resource_focus_button_id = 0;
-
-    bool handled = false;
-    //    bool handled = scrollbar_handle_mouse(&scrollbar, m);
-    //    if (handled)
-    //        return handled;
-
-    // arrows
-    if (image_buttons_handle_mouse(m, {c->offset.x + 165, y_offset + 49}, data.orders_decrease_arrows.data(), 20, &data.decr_arrow_focus_button_id)) {
-        handled = true;
-    }
-
-    if (image_buttons_handle_mouse(m, {c->offset.x + 165 + 18, y_offset + 49}, data.orders_increase_arrows.data(), 20, &data.decr_arrow_focus_button_id)) {
-        handled = true;
-    }
-
-    if (handled)
-        return 1;
-
-    // resources
-    int num_resources = std::min<int>((int)city_resource_get_available().size(), 20);
-    data.building_id = c->building_id;
-
-    if (generic_buttons_handle_mouse(m, {c->offset.x + 205, y_offset + 46}, data.orders_resource_buttons.data(), num_resources, &data.resource_focus_button_id)) {
-        return 1;
-    }
-
-    // extra instructions
-    return generic_buttons_handle_mouse(m, {c->offset.x + 80, y_offset + 404}, warehouse_order_buttons, 2, &data.orders_focus_button_id);
-}
-
 textid window_building_get_tooltip_warehouse_orders() {
     auto &data = g_window_building_distribution;
     if (data.orders_focus_button_id == 1) {

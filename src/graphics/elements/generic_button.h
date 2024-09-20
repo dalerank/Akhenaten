@@ -19,9 +19,10 @@ struct generic_button {
     int parameter1 = 0;
     int parameter2 = 0;
 
-    using function_cb = std::function<void(int, int)>;
-    function_cb _onclick = nullptr;
-    function_cb _onrclick = nullptr;
+    using onclick_cb = std::function<void(int, int)>;
+    using onclick_void = std::function<void()>;
+    onclick_cb _onclick = nullptr;
+    onclick_cb _onrclick = nullptr;
     textid _tooltip;
     bool hovered = false;
     rect clip = { {0, 0}, {0, 0} };
@@ -29,11 +30,11 @@ struct generic_button {
     inline vec2i pos() const { return {x, y}; }
     inline vec2i size() const { return {width, height}; }
 
-    generic_button &onclick(function_cb f) { _onclick = f; return *this; }
-    generic_button &onclick(std::function<void()> f) { return onclick([f] (int, int) { f(); }); }
+    generic_button &onclick(onclick_cb f) { _onclick = f; return *this; }
+    generic_button &onclick(onclick_void f) { return onclick([f] (int, int) { f(); }); }
     
-    generic_button &onrclick(function_cb f) { _onrclick = f; return *this; }
-    generic_button &onrclick(std::function<void()> f) { return onrclick([f] (int, int) { f(); }); }
+    generic_button &onrclick(onclick_cb f) { _onrclick = f; return *this; }
+    generic_button &onrclick(onclick_void f) { return onrclick([f] (int, int) { f(); }); }
     
     generic_button &tooltip(textid t) { _tooltip = t; return *this; }
     generic_button &tooltip(const std::initializer_list<int> &t) { _tooltip.group = *t.begin(); _tooltip.id = *(t.begin() + 1); return *this; }

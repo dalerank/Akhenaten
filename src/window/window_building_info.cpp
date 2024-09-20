@@ -31,17 +31,7 @@ building_info_window::building_info_window() {
 
 int building_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {
     building *b = building_get(c);
-    switch (b->type) {
-    case BUILDING_STORAGE_YARD:
-        if (c.storage_show_special_orders)
-            return window_building_handle_mouse_warehouse_orders(m, &c);
-        else
-            return window_building_handle_mouse_warehouse(m, &c);
-        break;
-
-    default:
-        return b->dcast()->window_info_handle_mouse(m, c);
-    }
+    return b->dcast()->window_info_handle_mouse(m, c);
 }
 
 static void draw_native(object_info* c, int group_id) {

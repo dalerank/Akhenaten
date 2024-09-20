@@ -26,6 +26,7 @@ function __extend(base, ext) {
 function inner_panel(config) { return __extend({type:"inner_panel"}, config) }
 function outer_panel(config) { return __extend({type:"outer_panel"}, config) }
 function text(config) { return __extend({type:"text"}, config) }
+function dummy(config) { return __extend({type:"text"}, config) }
 function text_center(config) { return __extend({type:"text", align:"center"}, config) }
 function label(config) { return __extend({type:"label", font : FONT_NORMAL_WHITE_ON_DARK}, config) }
 function header(config) { return __extend({type:"label", font : FONT_LARGE_BLACK_ON_LIGHT}, config) }
@@ -38,6 +39,9 @@ function button(config) { return __extend({type:"generic_button", font : FONT_NO
 function arrowup(config) { return __extend({type:"arrow_button", down:false}, config) }
 function arrowdown(config) { return __extend({type:"arrow_button", down:true}, config) }
 function background(config) { return __extend({type:"background", down:true}, config) }
+function help_button(config) { return image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }) }
+function close_button(config) { return image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }) }
+function resource_icon(config) { return __extend({ type : "resource_icon"}, config) }
 
 uioptions = {
 	resource_icons : {pack:PACK_GENERAL, id:129},
@@ -1229,47 +1233,70 @@ well_info_window = {
 	}
 }
 
+info_window_storageyard_orders = {
+	parent_window_offset : [0, -250],
+	ui : {
+		background : outer_panel({size:[29, 35] }),
+		title      : text_center({text:[99, 3], pos:[10, 10], size:[px(29), 20], font: FONT_LARGE_BLACK_ON_LIGHT}),
+
+	  items_panel   : inner_panel({pos:[16, 42], size:[27, 28] }),
+	  resource_base : dummy({pos: [10, 26] }),
+	  icon_column   : dummy({pos: [26, 6] }),
+	  name_column   : dummy({pos: [56, 6] }),
+	  order_column  : dummy({pos: [px(27)/2, 4], size:[px(27)/2, 20] }),
+	  increase_column: dummy({pos: [px(27)/2 -30, 6] }),
+	  decrease_column: dummy({pos: [px(27)/2 -13, 6] }),
+	  item_row      : dummy({size: [0, 20] }),
+
+	  button_help  : help_button({}),
+		button_close : close_button({}),
+
+		empty_all   : button({pos:[80, -1], size:[300, 24], margin:{bottom:-64} }),
+		accept_none : button({pos:[80, -1], size:[300, 24], text:[99, 7], margin:{bottom:-38} }),
+	}
+}
+
 info_window_storageyard = {
 	ui : {
-		background : { type : "outer_panel", pos: [0, 0], size: [29, 19] },
-		title 		 : { type : "text", pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		background : outer_panel({size: [29, 19] }),
+		title 		 : text({pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
 
-		storing    : { type : "text", pos: [34, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
-		free_space : { type : "text", pos: [220, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
+		storing    : text({ pos: [34, 40], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		free_space : text({ pos: [220, 40], font : FONT_NORMAL_BLACK_ON_LIGHT }),
 
-		good0_icon : { type : "resource_icon", pos: [32, 60] },
-		good0_text : { type : "text", pos: [54, 64], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good1_icon : { type : "resource_icon", pos: [172, 60] },
-		good1_text : { type : "text", pos: [194, 64], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good2_icon : { type : "resource_icon", pos: [292, 60] },
-		good2_text : { type : "text", pos: [314, 64], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good0_icon : resource_icon({pos: [32, 60] }),
+		good0_text : text({pos: [54, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good1_icon : resource_icon({pos: [172, 60] }),
+		good1_text : text({pos: [194, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good2_icon : resource_icon({pos: [292, 60] }),
+		good2_text : text({pos: [314, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
 
-		good3_icon : { type : "resource_icon", pos: [32, 90] },
-		good3_text : { type : "text", pos: [54, 94], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good4_icon : { type : "resource_icon", pos: [172, 60] },
-		good4_text : { type : "text", pos: [194, 94], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good5_icon : { type : "resource_icon", pos: [292, 90] },
-		good5_text : { type : "text", pos: [314, 94], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good3_icon : resource_icon({pos: [32, 90] }),
+		good3_text : text({pos: [54, 94], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good4_icon : resource_icon({pos: [172, 60] }),
+		good4_text : text({pos: [194, 94], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good5_icon : resource_icon({pos: [292, 90] }),
+		good5_text : text({pos: [314, 94], font: FONT_NORMAL_BLACK_ON_LIGHT }),
 
-		good6_icon : { type : "resource_icon", pos: [32, 120] },
-		good6_text : { type : "text", pos: [54, 124], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good7_icon : { type : "resource_icon", pos: [172, 120] },
-		good7_text : { type : "text", pos: [194, 124], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good8_icon : { type : "resource_icon", pos: [292, 120] },
-		good8_text : { type : "text", pos: [314, 124], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		good6_icon : resource_icon({pos: [32, 120] }),
+		good6_text : text({pos: [54, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good7_icon : resource_icon({pos: [172, 120] }),
+		good7_text : text({pos: [194, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good8_icon : resource_icon({pos: [292, 120] }),
+		good8_text : text({pos: [314, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
 
-		warning_text : { type : "text", pos: [32, 56], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-		workers_panel : { type : "inner_panel", pos : [16, 168], size: [27, 5] },
-		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 173] },
-		workers_text : { type : "text", pos: [70, 178], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		workers_desc : { type : "text", pos: [70, 178 + 16], font: FONT_NORMAL_BLACK_ON_DARK },
-		cartstate_img : { type : "resource_icon", pos:[40, 220] },
-		cartstate_desc : { type : "text", pos: [32, 223], wrap:px(27), font : FONT_NORMAL_BLACK_ON_DARK, multiline:true },
+		warning_text  : text({pos: [32, 56], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		workers_panel : inner_panel({pos : [16, 168], size: [27, 5] }),
+		workers_img   : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 173] }),
+		workers_text  : text({pos: [70, 178], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		workers_desc  : text({pos: [70, 178 + 16], font: FONT_NORMAL_BLACK_ON_DARK }),
+		cartstate_img : resource_icon({pos:[40, 220] }),
+		cartstate_desc: text({pos: [32, 223], wrap:px(27), font : FONT_NORMAL_BLACK_ON_DARK, multiline:true }),
 
-		orders : { type:"generic_button", margin:{left:100, bottom:-40}, size:[270, 24], text:{group: 99, id: 2}},
-		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
-		mothball : { type:"generic_button", margin:{right:-90, bottom:-40}, size:[23, 23]},
+		orders        : button({margin:{left:100, bottom:-40}, size:[270, 24], text:[99, 2]}),
+		button_help   : help_button({}),
+		button_close  : close_button({}),
+		mothball      : button({margin:{right:-90, bottom:-40}, size:[23, 23]}),
 	}
 }
 

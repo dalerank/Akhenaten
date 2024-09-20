@@ -41,8 +41,5 @@ int window_building_handle_mouse_granary_orders(const mouse* m, object_info* c);
 textid window_building_get_tooltip_granary_orders();
 textid window_building_get_tooltip_warehouse_orders();
 
-int window_building_handle_mouse_warehouse(const mouse* m, object_info* c);
-int window_building_handle_mouse_warehouse_orders(const mouse* m, object_info* c);
-
 void window_building_draw_order_instruction(int instr_kind, const storage_t *storage, e_resource resource, vec2i pos, int market_order = -1);
 std::pair<bstring64, e_font> window_building_get_order_instruction(int instr_kind, const storage_t *storage, e_resource resource, int market_order = -1);

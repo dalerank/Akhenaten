@@ -183,6 +183,7 @@ var info_window_garden = {}
 var info_window_health = {}
 var info_window_farm = {}
 var info_window_storageyard = {}
+var info_window_storageyard_orders = {}
 var orders_window_granary = {}
 var info_window_figure_enemy = {}
 var info_window_figure_animal = {}

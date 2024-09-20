@@ -44,11 +44,6 @@
 
 buildings::model_t<building_storage_yard> storage_yard_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_storage_yard);
-void config_load_building_storage_yard() {
-    storage_yard_m.load();
-}
-
 int building_storage_yard::get_space_info() const {
     int total_amounts = 0;
     int empty_spaces = 0;

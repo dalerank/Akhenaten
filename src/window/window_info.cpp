@@ -234,14 +234,13 @@ static void window_info_draw_foreground() {
 static void window_info_handle_input(const mouse* m, const hotkeys* h) {
     auto &context = g_object_info;
     auto &ui = *g_object_info.ui;
-
-    ui.begin_widget(g_object_info.offset);
-    bool button_id = ui::handle_mouse(m);
-    ui.end_widget();
   
+    bool button_id = context.ui->window_info_handle_mouse(m, context);
+
     if (!button_id) {
-        int btn_id = context.ui->window_info_handle_mouse(m, context);
-        button_id |= !!btn_id;
+        ui.begin_widget(g_object_info.offset);
+        ui::handle_mouse(m);
+        ui.end_widget();
     }
 
     if (!button_id && input_go_back_requested(m, h)) {

@@ -32,6 +32,7 @@ struct building_info_window_t : public building_info_window {
         static type_name_holder<T> _impl;
         static pcstr _section = strstr(_impl.value.data(), "::") ? strstr(_impl.value.data(), "::") + 2
                                 : strstr(_impl.value.data(), "struct ") ? strstr(_impl.value.data(), "struct ") + 7
+                                : strstr(_impl.value.data(), "class ") ? strstr(_impl.value.data(), "class ") + 6
                                 : _impl.value.data();
         return _section;
     }
