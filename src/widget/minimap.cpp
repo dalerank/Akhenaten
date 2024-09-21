@@ -20,6 +20,7 @@ struct minimap_data_t {
     tile2i size_tiles;
     vec2i screen_offset;
     vec2i size;
+    int frame_num = 0;
     int cache_width;
     color enemy_color;
     color* cache;
@@ -300,13 +301,16 @@ void draw_minimap() {
     auto& data = g_minimap_data;
 
     graphics_set_clip_rectangle(data.screen_offset, data.size);
-    clear_minimap();
-    {
-        OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded/Minimap Tiles");
-        foreach_map_tile(draw_minimap_tile);
+    if (data.frame_num % 30 == 0) {
+        clear_minimap();
+        {
+            OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded/Minimap Tiles");
+            foreach_map_tile(draw_minimap_tile);
+        }
+        //    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
+        //    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
     }
-    //    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
-    //    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
+    data.frame_num++;
     draw_viewport_rectangle(ctx);
     graphics_reset_clip_rectangle();
 }
