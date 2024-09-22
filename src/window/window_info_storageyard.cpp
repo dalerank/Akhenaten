@@ -72,15 +72,19 @@ void info_window_storageyard::draw_background(object_info *c) {
 
     const resource_list &resources = city_resource_get_available();
     int gidx = 0;
-    for (const auto &r : resources) {
-        e_resource resource = r.type;
-        int loads = warehouse->amount(resource);
-        if (loads) {
-            bstring32 id_icon; id_icon.printf("good%u_icon", gidx);
-            bstring32 id_text; id_text.printf("good%u_text", gidx);
+    auto _icon = [] (int idx) { bstring32 id_icon; id_icon.printf("good%u_icon", idx); return id_icon; };
+    auto _text = [] (int idx) { bstring32 id_text; id_text.printf("good%u_text", idx); return id_text; };
 
-            ui[id_icon].image(resource);
-            ui[id_text].text_var("%u %s", loads, ui::str(23, resource));
+    for (int i = 0; i < 8; ++i) {
+        ui[_icon(gidx)].image(RESOURCE_NONE);
+        ui[_text(gidx)] = "";
+    }
+
+    for (const auto &r : resources) {
+        int loads = warehouse->amount(r.type);
+        if (loads) {         
+            ui[_icon(gidx)].image(r.type);
+            ui[_text(gidx)].text_var("%u %s", loads, ui::str(23, r.type));
             ++gidx;
         }
     }
