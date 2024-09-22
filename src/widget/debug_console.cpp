@@ -130,6 +130,7 @@ void game_debug_show_property_t(int &i, pcstr field, pcstr v) {
 }
 
 void game_debug_show_property(int &i, pcstr field, const int &v, bool disabled)  { game_debug_show_property_t(i, field, v, disabled); }
+void game_debug_show_property(int &i, pcstr field, const float &v, bool disabled)  { game_debug_show_property_t(i, field, v, disabled); }
 void game_debug_show_property(int &i, pcstr field, const e_move_type &v, bool disabled)  { game_debug_show_property_t(i, field, v, disabled); }
 void game_debug_show_property(int &i, pcstr field, const int8_t &v, bool disabled)  { game_debug_show_property_t(i, field, v, disabled); }
 void game_debug_show_property(int &i, pcstr field, const short &v, bool disabled) { game_debug_show_property_t(i, field, v, disabled); }

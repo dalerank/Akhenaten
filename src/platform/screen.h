@@ -8,7 +8,7 @@
 int platform_screen_create(const char * title, const char* renderer, bool fullscreen, int display_scale_percentage, vec2i screen_size);
 void platform_screen_destroy();
 
-int platform_screen_resize(int pixel_width, int pixel_height, int save);
+bool platform_screen_resize(int pixel_width, int pixel_height, int save);
 void platform_screen_move(int x, int y);
 
 void platform_screen_set_fullscreen();

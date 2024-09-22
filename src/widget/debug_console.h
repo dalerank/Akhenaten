@@ -27,6 +27,7 @@ void bind_debug_console_var_int16(pcstr var, int16_t &ref);
 void bind_debug_console_var_bool(pcstr var, bool &ref);
 
 void game_debug_show_property(int &i, pcstr field, const int &v, bool disabled = false);
+void game_debug_show_property(int &i, pcstr field, const float &v, bool disabled = false);
 void game_debug_show_property(int &i, pcstr field, const e_move_type &v, bool disabled = false);
 void game_debug_show_property(int &i, pcstr field, const int8_t &v, bool disabled = false);
 void game_debug_show_property(int &i, pcstr field, const short &v, bool disabled = false);

@@ -79,7 +79,7 @@ void config_load_god_properties(bool header) {
     } 
 
     auto &religion = g_city.religion;
-    if (_debug_gods_open &&ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
+    if (_debug_gods_open && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
         game_debug_show_properties_religion("Religion", religion);
 
         for (e_god i = GOD_OSIRIS; i < MAX_GODS; ++i) {

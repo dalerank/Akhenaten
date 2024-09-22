@@ -131,7 +131,7 @@ static int image_begin_io(pcstr filename) {
     return 1;
 }
 
-static int image_write_header(void) {
+static int image_write_header() {
     if (setjmp(png_jmpbuf(screenshot.png_ptr))) {
         return 0;
     }

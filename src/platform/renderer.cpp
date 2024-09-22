@@ -2,6 +2,7 @@
 
 #include "core/time.h"
 #include "core/log.h"
+#include "core/profiler.h"
 #include "graphics/screen.h"
 #include "platform/arguments.h"
 #include "platform/platform.h"
@@ -12,7 +13,12 @@
 #include "game/game.h"
 #include "input/cursor.h"
 
+#include <gpupixel.h>
+#undef min
+#undef max
+
 #include <SDL.h>
+#include <SDL_video.h>
 
 #include <string.h>
 #include <algorithm>
@@ -82,7 +88,11 @@ struct renderer_data_t {
     SDL_Window *window;
     SDL_Renderer* renderer;
     SDL_Texture* render_texture;
+    SDL_Texture *filter_texture = nullptr;
+    std::vector<uint8_t> filter_pixels;
+    SDL_GLContext main_gl_context;
     int is_software_renderer;
+
     struct {
         SDL_Texture* texture;
         int size;
@@ -96,10 +106,12 @@ struct renderer_data_t {
         color* buffer;
         image_t img;
     } custom_textures[CUSTOM_IMAGE_MAX];
+
     struct {
         int width;
         int height;
     } max_texture_size;
+
     svector<buffer_texture, 8> texture_buffers;
     int texture_buffer_id = 0;
     struct {
@@ -107,7 +119,9 @@ struct renderer_data_t {
         time_millis last_used;
         SDL_Texture* texture;
     } unpacked_images[MAX_UNPACKED_IMAGES];
+
     int supports_yuv_textures;
+    bool is_opengl_context;
 
     float global_render_scale = 1.0f;
 };
@@ -355,13 +369,15 @@ color* graphics_renderer_interface::get_custom_texture_buffer(int type, int* act
 #endif
     return data.custom_textures[type].buffer;
 }
+
 void graphics_renderer_interface::release_custom_texture_buffer(int type) {
     auto &data = g_renderer_data;
 #ifndef __vita__
     free(data.custom_textures[type].buffer);
-    data.custom_textures[type].buffer = 0;
+    data.custom_textures[type].buffer = nullptr;
 #endif
 }
+
 void graphics_renderer_interface::update_custom_texture(int type) {
     auto &data = g_renderer_data;
 #ifndef __vita__
@@ -373,6 +389,7 @@ void graphics_renderer_interface::update_custom_texture(int type) {
     SDL_UpdateTexture(data.custom_textures[type].texture, NULL, data.custom_textures[type].buffer, sizeof(color) * width);
 #endif
 }
+
 void graphics_renderer_interface::update_custom_texture_yuv(int type, const uint8_t* y_data, int y_width, const uint8_t* cb_data, int cb_width, const uint8_t* cr_data, int cr_width) {
     auto &data = g_renderer_data;
 #ifdef USE_YUV_TEXTURES
@@ -863,6 +880,30 @@ std::string get_video_driver() {
     return info.name;
 }
 
+void platform_render_save_options() {
+    auto &data = g_renderer_data;
+
+    std::string driver = get_video_driver();
+    data.is_opengl_context = (driver == "opengl");
+}
+
+void platform_render_make_current_context() {
+    auto &data = g_renderer_data;
+
+    if (data.is_opengl_context) {
+        SDL_GL_MakeCurrent(data.window, data.main_gl_context);
+    }
+}
+
+void platform_render_create_context() {
+    auto &data = g_renderer_data;
+
+    if (data.is_opengl_context) {
+        data.main_gl_context = SDL_GL_CreateContext(data.window);
+        SDL_GL_MakeCurrent(data.window, data.main_gl_context);
+    }
+}
+
 int platform_renderer_init(SDL_Window* window, std::string renderer) {
     auto &data = g_renderer_data;
 
@@ -883,9 +924,13 @@ int platform_renderer_init(SDL_Window* window, std::string renderer) {
         }
     }
 
+    platform_render_save_options();
+
     SDL_RendererInfo info;
     SDL_GetRendererInfo(data.renderer, &info);
     logs::info("Loaded renderer: %s", info.name);
+
+    platform_render_create_context();
 
 #ifdef USE_YUV_TEXTURES
     if (!data.supports_yuv_textures && HAS_YUV_TEXTURES) {
@@ -921,8 +966,9 @@ int platform_renderer_init(SDL_Window* window, std::string renderer) {
     SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0xff);
     IMG_InitPNG();
 
-    //    graphics_renderer_set_interface(&data.renderer_interface);
-    //    graphics_renderer = &data.renderer_interface;
+    platform_render_make_current_context();
+    platform_render_init_filter_context();
+    platform_render_init_filters();
 
     return 1;
 }
@@ -938,6 +984,11 @@ static void destroy_render_texture(void) {
 int platform_renderer_create_render_texture(int width, int height) {
     auto &data = g_renderer_data;
     destroy_render_texture();
+
+    if (data.filter_texture) {
+        SDL_DestroyTexture(data.filter_texture);
+        data.filter_texture = nullptr;
+    }
 
 #ifdef USE_TEXTURE_SCALE_MODE
     if (!HAS_TEXTURE_SCALE_MODE) {
@@ -1028,13 +1079,56 @@ void platform_renderer_clear() {
     graphics_renderer()->clear_screen();
 }
 
-void platform_renderer_render() {
+void platform_render_apply_filter() {
     auto &data = g_renderer_data;
+
+    OZZY_PROFILER_SECTION("Game/Run/Renderer/Render/Filter");
+    if (!platform_render_any_filter_active()) {
+        return;
+    }
+
+    float texw, texh;
+    int pitch, w, h;
+    uint32_t format;
+    int render_texture_id;
+
+    SDL_QueryTexture(data.render_texture, &format, NULL, &w, &h);
+    if (!data.filter_texture) {
+        data.filter_pixels.resize(w * h * SDL_BYTESPERPIXEL(format));
+        data.filter_texture = SDL_CreateTexture(data.renderer, format, SDL_TEXTUREACCESS_STREAMING, w, h);
+    }
+
+    SDL_RenderFlush(data.renderer);
+    int error = -1;
+    {
+        OZZY_PROFILER_SECTION("Game/Run/Renderer/Render/Filter/ReadPixels");
+        error = SDL_RenderReadPixels(data.renderer, NULL, format, data.filter_pixels.data(), w * SDL_BYTESPERPIXEL(format));
+    }
+
+    if (!error) {
+        SDL_GL_MakeCurrent(data.window, data.main_gl_context);
+        platform_render_proceed_filter(w, h, format, data.filter_pixels, data.filter_texture);
+    }
+}
+
+void platform_renderer_render() {
+    OZZY_PROFILER_SECTION("Game/Run/Renderer/Render");
+    auto &data = g_renderer_data;
+
+    platform_render_apply_filter();
+
     SDL_SetRenderTarget(data.renderer, NULL);
-    SDL_RenderCopy(data.renderer, data.render_texture, NULL, NULL);
+
+    if (platform_render_any_filter_active()) {
+        SDL_RenderCopy(data.renderer, data.filter_texture, NULL, NULL);
+    } else {
+        SDL_RenderCopy(data.renderer, data.render_texture, NULL, NULL);
+    }
+
 #ifdef PLATFORM_USE_SOFTWARE_CURSOR
-    draw_software_mouse_cursor();
+        draw_software_mouse_cursor();
 #endif
+
     SDL_RenderPresent(data.renderer);
     SDL_SetRenderTarget(data.renderer, data.render_texture);
 }

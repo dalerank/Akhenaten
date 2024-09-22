@@ -269,6 +269,7 @@ static void build_start(tile2i tile) {
     if (tile.grid_offset() > 0) // Allow building on paused
         Planner.construction_start(tile);
 }
+
 static void build_move(tile2i tile) {
     if (!Planner.in_progress)
         return;
@@ -336,6 +337,7 @@ static bool handle_legion_click(map_point tile) {
     }
     return false;
 }
+
 static bool handle_cancel_construction_button(const touch* t) {
     if (!Planner.build_type)
         return false;
@@ -397,6 +399,7 @@ void widget_city_handle_touch_scroll(const touch* t) {
     if (t->has_ended)
         scroll_drag_end();
 }
+
 static void handle_touch_zoom(const touch* first, const touch* last) {
     if (touch_not_click(first))
         g_zoom.handle_touch(first, last, g_zoom.get_percentage());
@@ -475,6 +478,7 @@ static void handle_first_touch(map_point tile) {
         data.selected_tile = tile;
     }
 }
+
 static void handle_last_touch(void) {
     const touch* last = get_latest_touch();
     if (!last->in_use)
@@ -486,6 +490,7 @@ static void handle_last_touch(void) {
     if (touch_not_click(last))
         handle_touch_zoom(get_earliest_touch(), last);
 }
+
 static void handle_touch(void) {
     auto& data = g_wdiget_city_data;
     const touch* first = get_earliest_touch();

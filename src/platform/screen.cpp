@@ -185,7 +185,9 @@ int platform_screen_create(char const* title, const char *renderer, bool fullscr
     }
 #endif // !__APPLE__
     set_scale_percentage(display_scale_percentage, wsize.x, wsize.y);
-    return platform_screen_resize(wsize.x, wsize.y, 1);
+    int error = platform_screen_resize(wsize.x, wsize.y, 1);
+
+    return error;
 }
 
 void platform_screen_destroy(void) {
@@ -196,7 +198,7 @@ void platform_screen_destroy(void) {
     }
 }
 
-int platform_screen_resize(int pixel_width, int pixel_height, int save) {
+bool platform_screen_resize(int pixel_width, int pixel_height, int save) {
 #ifdef __ANDROID__
     set_scale_for_screen(pixel_width, pixel_height);
 #endif
@@ -210,10 +212,10 @@ int platform_screen_resize(int pixel_width, int pixel_height, int save) {
 
     if (platform_renderer_create_render_texture(logical_width, logical_height)) {
         screen_set_resolution(logical_width, logical_height);
-        return 1;
-    } else {
-        return 0;
-    }
+        return true;
+    } 
+
+    return false;
 }
 
 int system_scale_display(int display_scale_percentage) {
@@ -307,14 +309,14 @@ void platform_screen_set_window_size(int logical_width, int logical_height) {
     g_settings.display_size = {pixel_width, pixel_height};
 }
 
-void platform_screen_center_window(void) {
+void platform_screen_center_window() {
     int display = SDL_GetWindowDisplayIndex(g_screen.window);
     SDL_SetWindowPosition(g_screen.window, SDL_WINDOWPOS_CENTERED_DISPLAY(display), SDL_WINDOWPOS_CENTERED_DISPLAY(display));
     g_screen.centered = 1;
 }
 
 #ifdef _WIN32
-void platform_screen_recreate_texture(void) {
+void platform_screen_recreate_texture() {
     // On Windows, if ctrl + alt + del is pressed during fullscreen, the rendering context may be lost for a few frames
     // after restoring the window, preventing the texture from being recreated. This forces an attempt to recreate the
     // texture every frame to bypass that issue.
