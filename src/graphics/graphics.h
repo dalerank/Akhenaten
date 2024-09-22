@@ -30,6 +30,7 @@ void graphics_fill_rect(vec2i start, vec2i size, color color);
 void graphics_shade_rect(vec2i start, vec2i size, int darkness);
 
 int graphics_save_to_texture(int image_id, vec2i pos, vec2i size);
+void graphics_clear_saved_texture(int image_id, color clr);
 void graphics_delete_saved_texture(int image_id);
 void graphics_draw_from_texture(int image_id, vec2i pos, vec2i size);
 

@@ -84,9 +84,10 @@ public:
     void update_custom_texture_yuv(int type, const uint8_t* y_data, int y_width, const uint8_t* cb_data, int cb_width, const uint8_t* cr_data, int cr_width);
     void draw_custom_texture(int type, int x, int y, float scale);
 
-    int save_texture_from_screen(int image_id, int x, int y, int width, int height);
+    int save_texture_from_screen(int image_id, vec2i pos, int width, int height);
     void delete_saved_texture(int image_id);
     void draw_saved_texture_to_screen(int image_id, int x, int y, int width, int height);
+    void clear_saved_texture(int image_id, color clr);
     void set_texture_scale_mode(SDL_Texture *texture, float scale_factor);
     unsigned int premult_alpha();
 

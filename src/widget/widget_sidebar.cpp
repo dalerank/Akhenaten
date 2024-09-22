@@ -168,12 +168,12 @@ void ui::sidebar_window_expanded::ui_draw_foreground() {
     ui.pos.x = x_offset;
 
     ui.begin_widget(ui.pos);
+    widget_minimap_draw({ x_offset + 12, MINIMAP_Y_OFFSET }, 0);
+
     ui.draw();
     const animation_t &anim = window_build_menu_image();
     ui["build_image"].image(image_desc{ anim.pack, anim.iid, anim.offset });
     ui.end_widget();
-
-    widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, 1);
 
     int messages = city_message_count();
 
@@ -195,11 +195,7 @@ void ui::sidebar_window_expanded::ui_draw_foreground() {
         refresh_build_menu_buttons();
     }
 
-    widget_minimap_draw({ x_offset + 12, MINIMAP_Y_OFFSET }, 0);
-
     sidebar_extra_draw_foreground();
-
-    //window_request_refresh();
     draw_debug_ui(10, 30);
 }
 

@@ -123,21 +123,10 @@ void minimap_window::draw_foreground() {
     graphics_set_clip_rectangle(screen_offset, size);
 
     if (refresh_requested || scroll_in_progress() || draw_force) {
-        //        if (data.refresh_requested) {
         draw_uncached(screen_offset);
         refresh_requested = 0;
-        //        } else {
-        //            draw_using_cache(x_offset, y_offset, width_tiles, height_tiles, scroll_in_progress());
-        //        }
-        //        if (GAME_ENV == ENGINE_ENV_C3) {
-        //            graphics_draw_horizontal_line(x_offset - 1, x_offset - 1 + width_tiles * 2, y_offset - 1,
-        //                                          COLOR_MINIMAP_DARK);
-        //            graphics_draw_vertical_line(x_offset - 1, y_offset, y_offset + height_tiles, COLOR_MINIMAP_DARK);
-        //            graphics_draw_vertical_line(x_offset - 1 + width_tiles * 2, y_offset, y_offset + height_tiles,
-        //                                        COLOR_MINIMAP_LIGHT);
-        //        }
     } else {
-        //draw_using_cache(screen_offset);
+        graphics_draw_from_texture(cached_texture, screen_offset, size);
     }
 
     draw_force = false;
@@ -226,8 +215,9 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
     int terrain = map_terrain_get(grid_offset);
     // exception for fort ground: display as empty land
     if (terrain & TERRAIN_BUILDING) {
-        if (building_at(grid_offset)->type == BUILDING_FORT_GROUND)
+        if (building_at(grid_offset)->type == BUILDING_FORT_GROUND) {
             terrain = 0;
+        }
     }
 
     if (terrain & TERRAIN_BUILDING) {
@@ -340,42 +330,24 @@ void minimap_window::draw_viewport_rectangle(painter &ctx) {
     graphics_draw_rect(vec2i{x_offset, y_offset}, vec2i{view_width_tiles * 2 + 8, view_height_tiles + 3}, COLOR_MINIMAP_VIEWPORT);
 }
 
-static void prepare_minimap_cache(int width, int height) {
-    return;
-    //    if (width != data.width || height != data.height ||
-    //    !graphics_renderer()->has_custom_image(CUSTOM_IMAGE_MINIMAP)) {
-    //        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_MINIMAP, width, height);
-    //    }
-    //    data.cache = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_MINIMAP, &data.cache_width);
-}
-
 void minimap_window::clear() {
-    for (int y = 0; y < size.y; y++) {
-        color* line = &cache[y * cache_width];
-        for (int x = 0; x < cache_width; x++) {
-            line[x] = COLOR_BLACK;
-        }
-    }
+    graphics_clear_saved_texture(cached_texture, 0xff000000);
 }
 
 void minimap_window::draw() {
-    if (frame_num % 30 == 0) {
-        OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded/Minimap Tiles");
-        clear();
-        city_view_foreach_minimap_tile(screen_offset.x, screen_offset.y, absolute_tile.x(), absolute_tile.y(), draw_size.x, draw_size.y, [this] (vec2i screen, tile2i point) {
-            draw_minimap_tile(screen, point);
-        });
-        //    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
-        //    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
-    }
-    frame_num++;
+    OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded/Minimap Tiles");
+    clear();
+    city_view_foreach_minimap_tile(screen_offset.x, screen_offset.y, absolute_tile.x(), absolute_tile.y(), draw_size.x, draw_size.y, [this] (vec2i screen, tile2i point) {
+        draw_minimap_tile(screen, point);
+    });
 }
 
 void minimap_window::draw_uncached(vec2i pos) {
     screen_offset = pos;
     enemy_color = ENEMY_COLOR_BY_CLIMATE[scenario_property_climate()];
-    prepare_minimap_cache(2 * draw_size.x, draw_size.y);
-    g_minimap_window.draw();
+    draw();
+
+    cached_texture = graphics_save_to_texture(cached_texture, screen_offset, size);
 }
 
 void widget_minimap_draw(vec2i offset, int force) {

@@ -418,7 +418,7 @@ static buffer_texture* get_saved_texture_info(int texture_id) {
     return (it != data.texture_buffers.end() ? it : nullptr);
 }
 
-int graphics_renderer_interface::save_texture_from_screen(int texture_id, int x, int y, int width, int height) {
+int graphics_renderer_interface::save_texture_from_screen(int texture_id, vec2i pos, int width, int height) {
     auto &data = g_renderer_data;
     SDL_Texture* former_target = SDL_GetRenderTarget(data.renderer);
     if (!former_target) {
@@ -426,7 +426,26 @@ int graphics_renderer_interface::save_texture_from_screen(int texture_id, int x,
     }
 
     buffer_texture texture_info;
-    texture_info.texture = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, width, height);
+    buffer_texture *exist_texture_info = get_saved_texture_info(texture_id);
+    if (exist_texture_info) {
+        int w, h;
+        uint32_t format;
+        SDL_QueryTexture(exist_texture_info->texture, &format, nullptr, &w, &h);
+        if (w == width && h == height) {
+            texture_info = *exist_texture_info;
+        }
+    } 
+
+    if (!texture_info.texture) {
+        texture_info.texture = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, width, height);
+
+        texture_info.id = ++data.texture_buffer_id;
+        texture_info.width = width;
+        texture_info.height = height;
+
+        data.texture_buffers.push_back(texture_info);
+    }
+
     if (!texture_info.texture) {
         return 0;
     }
@@ -439,18 +458,12 @@ int graphics_renderer_interface::save_texture_from_screen(int texture_id, int x,
 
     SDL_Rect former_viewport;
     SDL_RenderGetViewport(data.renderer, &former_viewport);
-    SDL_Rect src_rect = {x + former_viewport.x, y + former_viewport.y, width, height};
+    SDL_Rect src_rect = {pos.x + former_viewport.x, pos.y + former_viewport.y, width, height};
     SDL_Rect dst_rect = {0, 0, width, height};
     SDL_SetRenderTarget(data.renderer, texture_info.texture);
     SDL_RenderCopy(data.renderer, former_target, &src_rect, &dst_rect);
     SDL_SetRenderTarget(data.renderer, former_target);
     SDL_RenderSetViewport(data.renderer, &former_viewport);
-
-    texture_info.id = ++data.texture_buffer_id;
-    texture_info.width = width;
-    texture_info.height = height;
-
-    data.texture_buffers.push_back(texture_info);
 
     return texture_info.id;
 }
@@ -476,6 +489,32 @@ void graphics_renderer_interface::draw_saved_texture_to_screen(int texture_id, i
     SDL_Rect src_coords = {0, 0, texture_info->width, texture_info->height};
     SDL_Rect dst_coords = {x, y, width, height};
     SDL_RenderCopy(data.renderer, texture_info->texture, &src_coords, &dst_coords);
+}
+
+void graphics_renderer_interface::clear_saved_texture(int texture_id, color clr) {
+    auto &data = g_renderer_data;
+    SDL_Texture *former_target = SDL_GetRenderTarget(data.renderer);
+    if (!former_target) {
+        return;
+    }
+
+    buffer_texture *texture_info = get_saved_texture_info(texture_id);
+    if (!texture_info) {
+        return;
+    }
+
+    SDL_Rect former_viewport;
+    SDL_RenderGetViewport(data.renderer, &former_viewport);
+    SDL_Rect dst_rect = { 0, 0, texture_info->width, texture_info->height };
+    SDL_SetRenderTarget(data.renderer, texture_info->texture);
+    SDL_SetRenderDrawColor(data.renderer,
+                            (clr & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA,
+                            (clr & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
+                            (clr & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
+                            (clr & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE);
+
+    SDL_SetRenderTarget(data.renderer, former_target);
+    SDL_RenderSetViewport(data.renderer, &former_viewport);
 }
 
 static void create_blend_texture(int type) {

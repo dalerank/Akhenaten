@@ -9,14 +9,13 @@ struct minimap_window : public autoconfig_window_t<minimap_window> {
     vec2i draw_size;
     vec2i screen_offset;
     vec2i size;
-    int frame_num = 0;
     int cache_width;
     color enemy_color;
-    color *cache;
     vec2i rel_mouse;
     vec2i mouse_last_coords;
     int refresh_requested;
     bool draw_force = false;
+    int cached_texture = 0;
     animation_t terrain_canal;
     animation_t terrain_water;
     animation_t terrain_shrub;
