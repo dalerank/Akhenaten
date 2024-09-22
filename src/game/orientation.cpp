@@ -4,7 +4,7 @@
 #include "core/direction.h"
 #include "graphics/view/view.h"
 #include "grid/orientation.h"
-#include "widget/minimap.h"
+#include "widget/widget_minimap.h"
 
 void game_orientation_rotate_left(void) {
     city_view_rotate_left();

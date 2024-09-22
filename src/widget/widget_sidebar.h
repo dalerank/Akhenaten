@@ -79,6 +79,9 @@ struct sidebar_window {
 
 void widget_sidebar_city_init();
 int widget_sidebar_city_offset_x();
+int widget_sidebar_city_offset_max();
+int widget_sidebar_city_collapsed_max();
+int widget_sidebar_city_expanded_max();
 
 void widget_sidebar_city_draw_foreground();
 void widget_sidebar_city_draw_foreground_military();

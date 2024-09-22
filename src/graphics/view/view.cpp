@@ -9,7 +9,8 @@
 #include "grid/image.h"
 #include "lookup.h"
 
-#include "widget/minimap.h"
+#include "widget/widget_minimap.h"
+#include "widget/widget_sidebar.h"
 #include "widget/sidebar/common.h"
 #include "city/sentiment.h"
 #include "scenario/scenario.h"
@@ -28,19 +29,24 @@ void city_view_init() {
     g_zoom.set_scale(100.0f);
     widget_minimap_invalidate();
 }
+
 void city_settings_init() {
     city_set_can_create_mugger(scenario_campaign_scenario_id() > 0);
     city_set_can_create_protestor(scenario_campaign_scenario_id() > 1);
 }
-int city_view_orientation(void) {
+
+int city_view_orientation() {
     return g_city_view_data.orientation;
 }
+
 int city_view_relative_orientation(int orientation) {
     return (4 + orientation - city_view_orientation() / 2) % 4;
 }
+
 int city_view_absolute_orientation(int orientation_relative) {
     return (4 + orientation_relative + city_view_orientation() / 2) % 4;
 }
+
 void city_view_reset_orientation(void) {
     g_city_view_data.orientation = 0;
     //    calculate_lookup();
@@ -297,13 +303,13 @@ static void set_viewport(int x_offset, int y_offset, int width, int height) {
 static void set_viewport_with_sidebar() {
     auto& data = g_city_view_data;
 
-    return set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - SIDEBAR_EXPANDED_WIDTH + 2, data.screen_height - TOP_MENU_HEIGHT);
+    return set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - widget_sidebar_city_expanded_max() + 2, data.screen_height - TOP_MENU_HEIGHT);
 }
 
 void city_view_set_viewport_without_sidebar() {
     auto& data = g_city_view_data;
 
-    set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - SIDEBAR_COLLAPSED_WIDTH + 2, data.screen_height - TOP_MENU_HEIGHT);
+    set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - widget_sidebar_city_collapsed_max() + 2, data.screen_height - TOP_MENU_HEIGHT);
 }
 
 view_data_t &city_view_viewport() {
@@ -544,25 +550,5 @@ void city_view_foreach_tile_in_range(painter &ctx, int grid_offset, int size, in
 
         x_offset += TILE_WIDTH_PIXELS;
         y_offset += TILE_HEIGHT_PIXELS;
-    }
-}
-void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles, int height_tiles, minimap_draw_callback callback) {
-    int odd = 0;
-    int y_abs = absolute_y - 4;
-    int screen_y = y_offset - 4;
-    for (int y_rel = -4; y_rel < height_tiles + 4; y_rel++, y_abs++, screen_y++) {
-        int screen_x;
-        if (odd) {
-            screen_x = x_offset - 9;
-            odd = 0;
-        } else {
-            screen_x = x_offset - 8;
-            odd = 1;
-        }
-        int x_abs = absolute_x - 4;
-        for (int x_rel = -4; x_rel < width_tiles; x_rel++, x_abs++, screen_x += 2) {
-            if (x_abs >= 0 && x_abs < (2 * GRID_LENGTH) + 1 && y_abs >= 0 && y_abs < (2 * GRID_LENGTH) + 1)
-                callback({screen_x, screen_y}, screentile_to_mappoint({x_abs, y_abs}));
-        }
     }
 }

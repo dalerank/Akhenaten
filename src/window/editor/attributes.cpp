@@ -17,7 +17,7 @@
 #include "scenario/editor.h"
 #include "scenario/scenario.h"
 #include "widget/input_box.h"
-#include "widget/minimap.h"
+#include "widget/widget_minimap.h"
 #include "widget/sidebar/editor.h"
 #include "window/editor/allowed_buildings.h"
 #include "window/editor/demand_changes.h"

@@ -31,7 +31,7 @@
 #include "sound/sound.h"
 #include "widget/city/ornaments.h"
 #include "widget/city/tile_draw.h"
-#include "widget/minimap.h"
+#include "widget/widget_minimap.h"
 #include "window/window_building_info.h"
 #include "window/window_city.h"
 #include "window/window_city_military.h"

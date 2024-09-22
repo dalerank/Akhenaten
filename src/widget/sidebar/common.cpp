@@ -5,7 +5,6 @@
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
 #include "graphics/view/view.h"
-#include "widget/minimap.h"
 #include "game/game.h"
 
 int sidebar_common_get_height() {

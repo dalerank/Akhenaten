@@ -1319,6 +1319,8 @@ empire_window = {
 }
 
 minimap_window = {
+  draw_size : [73, 111],
+
 	terrain_water : {pack:PACK_GENERAL, id:142},
 	terrain_shrub : {pack:PACK_GENERAL, id:143},
 	terrain_tree  : {pack:PACK_GENERAL, id:143},

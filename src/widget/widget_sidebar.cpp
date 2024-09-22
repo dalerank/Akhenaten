@@ -20,10 +20,9 @@
 #include "graphics/view/view.h"
 #include "scenario/scenario.h"
 #include "widget/widget_city.h"
-#include "widget/minimap.h"
+#include "widget/widget_minimap.h"
 #include "widget/sidebar/common.h"
 #include "widget/sidebar/extra.h"
-#include "widget/sidebar/slide.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/window_city.h"
@@ -64,10 +63,10 @@ ui::sidebar_window_collapsed g_sidebar_collapsed;
 ui::sidebar_window g_sidebar;
 
 static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
-    int width = SIDEBAR_EXPANDED_WIDTH;
+    int width = g_sidebar_expanded.expanded_offset_x;
 
     if (is_collapsed) {
-        width = SIDEBAR_COLLAPSED_WIDTH;
+        width = g_sidebar_collapsed.expanded_offset_x;
     }
 
     int available_height = sidebar_common_get_height() - SIDEBAR_MAIN_SECTION_HEIGHT;
@@ -174,7 +173,7 @@ void ui::sidebar_window_expanded::ui_draw_foreground() {
     ui["build_image"].image(image_desc{ anim.pack, anim.iid, anim.offset });
     ui.end_widget();
 
-    widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
+    widget_minimap_draw({x_offset + 12, MINIMAP_Y_OFFSET}, 1);
 
     int messages = city_message_count();
 
@@ -196,7 +195,7 @@ void ui::sidebar_window_expanded::ui_draw_foreground() {
         refresh_build_menu_buttons();
     }
 
-    widget_minimap_draw({ x_offset + 12, MINIMAP_Y_OFFSET }, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
+    widget_minimap_draw({ x_offset + 12, MINIMAP_Y_OFFSET }, 0);
 
     sidebar_extra_draw_foreground();
 
@@ -250,6 +249,8 @@ void ui::sidebar_window_collapsed::init() {
     for (const auto &btn : button_ids) {
         ui[btn.id].onclick([type = btn.type] { window_build_menu_show(type); });
     }
+
+    widget_minimap_init();
 }
 
 void ui::sidebar_window_collapsed::ui_draw_foreground() {
@@ -281,6 +282,20 @@ int widget_sidebar_city_offset_x() {
              : g_sidebar_expanded.pos.x;
 }
 
+int widget_sidebar_city_offset_max() {
+    return (city_view_is_sidebar_collapsed())
+             ? g_sidebar_collapsed.expanded_offset_x
+             : g_sidebar_expanded.expanded_offset_x;
+}
+
+int widget_sidebar_city_collapsed_max() {
+    return g_sidebar_collapsed.expanded_offset_x;
+}
+
+int widget_sidebar_city_expanded_max() {
+    return g_sidebar_expanded.expanded_offset_x;
+}
+
 void widget_sidebar_city_draw_foreground() {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar");
 
@@ -302,8 +317,8 @@ void widget_sidebar_city_draw_foreground() {
     }
 }
 
-void widget_sidebar_city_draw_foreground_military(void) {
-    widget_minimap_draw({screen_width() - g_sidebar_expanded.expanded_offset_x + 8, MINIMAP_Y_OFFSET}, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
+void widget_sidebar_city_draw_foreground_military() {
+    widget_minimap_draw({screen_width() - g_sidebar_expanded.expanded_offset_x + 8, MINIMAP_Y_OFFSET}, 1);
 }
 
 int widget_sidebar_city_handle_mouse(const mouse* m) {

@@ -3,7 +3,7 @@
 #include "window_city.h"
 #include "city/warning.h"
 #include "widget/widget_city.h"
-#include "widget/minimap.h"
+#include "widget/widget_minimap.h"
 #include "widget/widget_top_menu_game.h"
 #include "widget/sidebar/common.h"
 #include "widget/widget_sidebar.h"

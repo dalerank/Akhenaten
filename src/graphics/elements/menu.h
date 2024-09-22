@@ -6,7 +6,6 @@
 #include <functional>
 
 #define TOP_MENU_HEIGHT 30
-#define SIDEBAR_EXPANDED_WIDTH 186
 
 struct menu_item {
     short text_group;

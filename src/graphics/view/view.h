@@ -96,4 +96,3 @@ void city_view_foreach_valid_map_tile(painter &ctx,
                                       tile_draw_callback* callback6 = nullptr);
 
 void city_view_foreach_tile_in_range(painter &ctx, int grid_offset, int size, int radius, tile_draw_callback* callback);
-void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles, int height_tiles, minimap_draw_callback callback);

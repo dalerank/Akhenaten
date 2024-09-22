@@ -43,7 +43,7 @@
 #include "platform/renderer.h"
 #include "io/movie_writer.h"
 #include "graphics/screen.h"
-#include "widget/minimap.h"
+#include "widget/widget_minimap.h"
 #include "city/city.h"
 #include "city/trade.h"
 #include "city/sentiment.h"

@@ -1,0 +1,389 @@
+#include "widget_minimap.h"
+
+#include "building/building.h"
+#include "core/profiler.h"
+#include "graphics/graphics.h"
+#include "graphics/view/lookup.h"
+#include "grid/figure.h"
+#include "grid/property.h"
+#include "grid/random.h"
+#include "grid/terrain.h"
+#include "input/scroll.h"
+#include "scenario/scenario.h"
+#include "game/game.h"
+#include "js/js_game.h"
+#include "dev/debug.h"
+
+static const color ENEMY_COLOR_BY_CLIMATE[] = {COLOR_MINIMAP_ENEMY_CENTRAL, COLOR_MINIMAP_ENEMY_NORTHERN, COLOR_MINIMAP_ENEMY_DESERT};
+minimap_window g_minimap_window;
+
+template<typename F>
+void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles, int height_tiles, F callback) {
+    int odd = 0;
+    int y_abs = absolute_y - 4;
+    int screen_y = y_offset - 4;
+    for (int y_rel = -4; y_rel < height_tiles + 4; y_rel++, y_abs++, screen_y++) {
+        int screen_x;
+        if (odd) {
+            screen_x = x_offset - 9;
+            odd = 0;
+        } else {
+            screen_x = x_offset - 8;
+            odd = 1;
+        }
+        int x_abs = absolute_x - 4;
+        for (int x_rel = -4; x_rel < width_tiles; x_rel++, x_abs++, screen_x += 2) {
+            if (x_abs >= 0 && x_abs < (2 * GRID_LENGTH) + 1 && y_abs >= 0 && y_abs < (2 * GRID_LENGTH) + 1)
+                callback({ screen_x, screen_y }, screentile_to_mappoint({ x_abs, y_abs }));
+        }
+    }
+}
+
+void minimap_window::load(archive arch, pcstr) {
+    draw_size = arch.r_vec2i("draw_size");
+    set_bounds(draw_size);
+
+    arch.r_anim("terrain_canal", terrain_canal);
+    arch.r_anim("terrain_water", terrain_water);
+    arch.r_anim("terrain_shrub", terrain_shrub);
+    arch.r_anim("terrain_tree", terrain_tree);
+    arch.r_anim("terrain_rock", terrain_rock);
+    arch.r_anim("terrain_elevation", terrain_elevation);
+    arch.r_anim("terrain_road", terrain_road);
+    arch.r_anim("terrain_wall", terrain_wall);
+    arch.r_anim("terrain_meadow", terrain_meadow);
+    arch.r_anim("terrain_flooplain", terrain_flooplain);
+    arch.r_anim("terrain_marshland", terrain_marshland);
+    arch.r_anim("terrain_dune", terrain_dune);
+    arch.r_anim("terrain_teal", terrain_teal);
+}
+
+void minimap_window::init() {
+    set_bounds(draw_size);
+}
+
+vec2i minimap_window::get_mouse_relative_pos(const mouse *m, float &xx, float &yy) {
+    rel_mouse = { m->x - screen_offset.x, m->y - screen_offset.y };
+    xx = rel_mouse.x / (float)size.x;
+    yy = rel_mouse.y / (float)size.y;
+
+    return rel_mouse;
+}
+
+int minimap_window::handle_mouse(const mouse *m) {
+    if (!is_in_minimap(m) || m->left.went_up || m->right.went_up) {
+        mouse_last_coords = { -1, -1 };
+        return false;
+    }
+
+    bool mouse_is_moving = false;
+    if (m->x != mouse_last_coords.x || m->y != mouse_last_coords.y) {
+        mouse_is_moving = true;
+    }
+
+    if ((m->left.went_down || m->right.went_down) || ((m->left.is_down || m->right.is_down) && mouse_is_moving)) {
+        float xx, yy;
+        vec2i relative = get_mouse_relative_pos(m, xx, yy);
+        if (relative.x > 0 && relative.y > 0) {
+            vec2i min_pos, max_pos;
+            vec2i view_pos, view_size;
+
+            city_view_get_camera_scrollable_pixel_limits(city_view_data_unsafe(), min_pos, max_pos);
+            const view_data_t &viewport = city_view_viewport();
+            city_view_get_viewport(viewport, view_pos, view_size);
+
+            max_pos += view_size;
+            vec2i city_canvas_pixels = max_pos - min_pos;
+            vec2i map_pos(city_canvas_pixels.x * xx, city_canvas_pixels.y * yy);
+
+            painter ctx = game.painter();
+            camera_go_to_pixel(ctx, min_pos + map_pos - view_size / 2, true);
+            widget_minimap_invalidate();
+            mouse_last_coords = { m->x, m->y };
+            return true;
+        }
+    }
+    return false;
+}
+
+bool minimap_window::is_in_minimap(const mouse *m) {
+    if (m->x >= screen_offset.x
+        && m->x < screen_offset.x + size.x
+        && m->y >= screen_offset.y
+        && m->y < screen_offset.y + size.y) {
+        return true;
+    }
+    return false;
+}
+
+void minimap_window::draw_foreground() {
+    OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded/Minimap");
+
+    painter ctx = game.painter();
+    graphics_set_clip_rectangle(screen_offset, size);
+
+    if (refresh_requested || scroll_in_progress() || draw_force) {
+        //        if (data.refresh_requested) {
+        draw_uncached(screen_offset);
+        refresh_requested = 0;
+        //        } else {
+        //            draw_using_cache(x_offset, y_offset, width_tiles, height_tiles, scroll_in_progress());
+        //        }
+        //        if (GAME_ENV == ENGINE_ENV_C3) {
+        //            graphics_draw_horizontal_line(x_offset - 1, x_offset - 1 + width_tiles * 2, y_offset - 1,
+        //                                          COLOR_MINIMAP_DARK);
+        //            graphics_draw_vertical_line(x_offset - 1, y_offset, y_offset + height_tiles, COLOR_MINIMAP_DARK);
+        //            graphics_draw_vertical_line(x_offset - 1 + width_tiles * 2, y_offset, y_offset + height_tiles,
+        //                                        COLOR_MINIMAP_LIGHT);
+        //        }
+    } else {
+        //draw_using_cache(screen_offset);
+    }
+
+    draw_force = false;
+
+    draw_viewport_rectangle(ctx);
+    graphics_reset_clip_rectangle();
+}
+
+void widget_minimap_init() {
+    g_minimap_window.init();
+}
+
+void widget_minimap_invalidate() {
+    g_minimap_window.refresh_requested = 1;
+}
+
+void minimap_window::set_bounds(vec2i ds) {
+    draw_size = ds;
+    size = {2 * ds.x, ds.y};
+    absolute_tile = tile2i((GRID_LENGTH - ds.x) / 2 + 1, ((2 * GRID_LENGTH) + 1 - ds.y) / 2);
+
+    //    int camera_x, camera_y;
+    map_point camera_tile = city_view_get_camera_mappoint();
+    int view_width_tiles, view_height_tiles;
+    city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
+
+    if ((scenario_map_data()->width - ds.x) / 2 > 0) {
+        if (camera_tile.x() < absolute_tile.x()) {
+            absolute_tile.set_x(camera_tile.x());
+        } else if (camera_tile.x() > ds.x + absolute_tile.x() - view_width_tiles) {
+            absolute_tile.set_x(view_width_tiles + camera_tile.x() - ds.x);
+        }
+    }
+
+    if ((2 * scenario_map_data()->height - ds.y) / 2 > 0) {
+        if (camera_tile.y() < absolute_tile.y()) {
+            absolute_tile.set_y(camera_tile.y());
+        } else if (camera_tile.y() > ds.y + absolute_tile.y() - view_height_tiles) {
+            absolute_tile.set_y(view_height_tiles + camera_tile.y() - ds.y);
+        }
+    }
+    // ensure even height
+    absolute_tile.set_y( absolute_tile.y() & ~1 );
+}
+
+bool minimap_window::draw_figure(vec2i screen, tile2i point) {
+    int grid_offset = point.grid_offset();
+    int colorype = map_figure_foreach_until(grid_offset, TEST_SEARCH_HAS_COLOR);
+    if (colorype == FIGURE_COLOR_NONE) {
+        return false;
+    }
+
+    color color = COLOR_MINIMAP_WOLF;
+    switch (color) {
+    case FIGURE_COLOR_SOLDIER:
+        color = COLOR_MINIMAP_SOLDIER;
+        break;
+
+    case FIGURE_COLOR_ENEMY:
+        color = enemy_color;
+        break;
+
+    case FIGURE_COLOR_ANIMAL:
+        color = COLOR_MINIMAP_ANIMAL;
+        break;
+    }
+
+    graphics_draw_pixel(screen, color);
+    return true;
+}
+
+void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
+    painter ctx = game.painter();
+    int grid_offset = point.grid_offset();
+    int screen_x = screen.x;
+    int screen_y = screen.y;
+    if (grid_offset < 0) {
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_MINIMAP_BLACK), screen_x, screen_y);
+        return;
+    }
+
+    if (draw_figure(screen, point)) {
+        return;
+    }
+
+    int terrain = map_terrain_get(grid_offset);
+    // exception for fort ground: display as empty land
+    if (terrain & TERRAIN_BUILDING) {
+        if (building_at(grid_offset)->type == BUILDING_FORT_GROUND)
+            terrain = 0;
+    }
+
+    if (terrain & TERRAIN_BUILDING) {
+        if (map_property_is_draw_tile(grid_offset)) {
+            int image_id;
+            building* b = building_at(grid_offset);
+            //if (terrain & TERRAIN_ROAD) {
+            //    if (building_is_entertainment(b->type)) {
+            //        image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
+            //    } else if (b->type == BUILDING_FESTIVAL_SQUARE) {
+            //        image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
+            //} else 
+            if (building_is_extractor(b->type)) {
+                image_id = image_group(IMG_MINIMAP_DARK_RED); // dark red
+            } else if (building_is_harvester(b->type)) {
+                image_id = image_group(IMG_MINIMAP_DARK_RED); // dark red
+            } else if(building_is_workshop(b->type)) {
+                image_id = image_group(IMG_MINIMAP_DARK_RED); // dark red
+            } else if (building_is_entertainment(b->type)) {
+                image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
+            } else if (building_is_religion(b->type)) {
+                image_id = image_group(IMG_MINIMAP_PURPLE); // purple
+            } else if (building_is_education(b->type)) {
+                image_id = image_group(IMG_MINIMAP_LIGHT_YELLOW); // light yellow
+            } else if (building_is_infrastructure(b->type)) {
+                image_id = image_group(IMG_MINIMAP_BRIGHT_BLUE); // bright blue
+            } else if (building_is_administration(b->type)) {
+                image_id = image_group(IMG_MINIMAP_LILAC); // lilac
+            } else if (building_is_military(b->type)) {
+                image_id = image_group(IMG_MINIMAP_ORANGE); // orange
+            } else if (building_is_beautification(b->type)) {
+                image_id = terrain_teal.first_img(); // spent teal
+            } else if (building_is_monument(b->type)) {
+                image_id = image_id_from_group(PACK_GENERAL, 149, 210); // dark grey
+            } else {
+                image_id = b->minimap_anim.first_img();
+            }
+
+            if (!image_id) {
+                image_id = terrain_teal.first_img();
+            }
+
+            auto multi_tile_size = map_property_multi_tile_size(grid_offset);
+            switch (multi_tile_size) {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                ImageDraw::img_generic(ctx, image_id + (multi_tile_size - 1), screen_x, screen_y - (multi_tile_size - 1));
+                break;
+            case 6: // TODO: make a generalized formula?
+                ImageDraw::img_generic(ctx, image_id + 2, screen_x, screen_y - 2);
+                ImageDraw::img_generic(ctx, image_id + 2, screen_x + 3, screen_y - 5);
+                ImageDraw::img_generic(ctx, image_id + 2, screen_x + 6, screen_y - 2);
+                ImageDraw::img_generic(ctx, image_id + 2, screen_x + 3, screen_y + 1);
+                break;
+            }
+        }
+    } else {
+        int rand = map_random_get(grid_offset);
+        int image_id;
+        if (terrain & TERRAIN_WATER) {
+            image_id = terrain_water.first_img() + (rand & 3);
+        } else if (terrain & TERRAIN_SHRUB)
+            image_id = terrain_shrub.first_img() + (rand & 3);
+        else if (terrain & TERRAIN_TREE)
+            image_id = terrain_tree.first_img() + (rand & 3);
+        else if (terrain & TERRAIN_ROCK)
+            image_id = terrain_rock.first_img() + (rand & 3);
+        else if (terrain & TERRAIN_ELEVATION)
+            image_id = terrain_elevation.first_img() + (rand & 3);
+        else if (terrain & TERRAIN_ROAD)
+            image_id = terrain_road.first_img();
+        else if (terrain & TERRAIN_CANAL)
+            image_id = terrain_canal.first_img();
+        else if (terrain & TERRAIN_WALL)
+            image_id = terrain_wall.first_img();
+        else if (terrain & TERRAIN_MEADOW)
+            image_id = terrain_meadow.first_img() + (rand & 3);
+        else if (terrain & TERRAIN_FLOODPLAIN && !(terrain & TERRAIN_WATER))
+            image_id = terrain_flooplain.first_img() + (rand & 3);
+        else if (terrain & TERRAIN_MARSHLAND)
+            image_id = terrain_marshland.first_img() - 4 * (rand & 1);
+        else if (terrain & TERRAIN_DUNE)
+            image_id = terrain_dune.first_img() + (rand & 7);
+        else if (terrain & TERRAIN_GARDEN)
+            image_id = terrain_teal.first_img(); // spent teal
+        else
+            image_id = image_id_from_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
+
+        ImageDraw::img_generic(ctx, image_id, screen_x, screen_y);
+    }
+}
+
+void minimap_window::draw_viewport_rectangle(painter &ctx) {
+    map_point camera_tile = city_view_get_camera_mappoint();
+    vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
+    int view_width_tiles, view_height_tiles;
+    city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
+
+    int x_offset = screen_offset.x + 2 * (camera_tile.x() - absolute_tile.x()) - 2 + camera_pixels.x / 30;
+    x_offset = std::max(x_offset, screen_offset.x);
+
+    if (x_offset + 2 * view_width_tiles + 4 > screen_offset.x + draw_size.x) {
+        x_offset -= 2;
+    }
+
+    int y_offset = screen_offset.y + camera_tile.y() - absolute_tile.y() + 1;
+    graphics_draw_rect(vec2i{x_offset, y_offset}, vec2i{view_width_tiles * 2 + 8, view_height_tiles + 3}, COLOR_MINIMAP_VIEWPORT);
+}
+
+static void prepare_minimap_cache(int width, int height) {
+    return;
+    //    if (width != data.width || height != data.height ||
+    //    !graphics_renderer()->has_custom_image(CUSTOM_IMAGE_MINIMAP)) {
+    //        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_MINIMAP, width, height);
+    //    }
+    //    data.cache = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_MINIMAP, &data.cache_width);
+}
+
+void minimap_window::clear() {
+    for (int y = 0; y < size.y; y++) {
+        color* line = &cache[y * cache_width];
+        for (int x = 0; x < cache_width; x++) {
+            line[x] = COLOR_BLACK;
+        }
+    }
+}
+
+void minimap_window::draw() {
+    if (frame_num % 30 == 0) {
+        OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded/Minimap Tiles");
+        clear();
+        city_view_foreach_minimap_tile(screen_offset.x, screen_offset.y, absolute_tile.x(), absolute_tile.y(), draw_size.x, draw_size.y, [this] (vec2i screen, tile2i point) {
+            draw_minimap_tile(screen, point);
+        });
+        //    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
+        //    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
+    }
+    frame_num++;
+}
+
+void minimap_window::draw_uncached(vec2i pos) {
+    screen_offset = pos;
+    enemy_color = ENEMY_COLOR_BY_CLIMATE[scenario_property_climate()];
+    prepare_minimap_cache(2 * draw_size.x, draw_size.y);
+    g_minimap_window.draw();
+}
+
+void widget_minimap_draw(vec2i offset, int force) {
+    g_minimap_window.screen_offset = offset;
+    g_minimap_window.draw_force = force;
+    g_minimap_window.draw_foreground();
+}
+
+bool widget_minimap_handle_mouse(const mouse* m) {
+    return g_minimap_window.handle_mouse(m);
+}

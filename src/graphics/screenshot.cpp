@@ -17,7 +17,8 @@
 #include "graphics/window.h"
 #include "graphics/view/view.h"
 #include "scenario/scenario.h"
-#include "widget/minimap.h"
+#include "widget/widget_minimap.h"
+#include "widget/widget_sidebar.h"
 #include "widget/sidebar/common.h"
 #include "widget/widget_city.h"
 #include "game/game.h"
@@ -292,7 +293,7 @@ static void create_full_city_screenshot() {
     
     vec2i viewport_offset, viewport_size;
     city_view_get_viewport(viewport, viewport_offset, viewport_size);
-    city_view_set_viewport(canvas_width + (city_view_is_sidebar_collapsed() ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH), canvas_height + TOP_MENU_HEIGHT);
+    city_view_set_viewport(canvas_width + widget_sidebar_city_offset_max(), canvas_height + TOP_MENU_HEIGHT);
     int current_height = base_height;
 
     int yy = 0;
@@ -349,7 +350,7 @@ static void create_full_city_screenshot() {
         current_height += canvas_height;
     }
 
-    city_view_set_viewport(viewport_size.x + (city_view_is_sidebar_collapsed() ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH), viewport_size.y + TOP_MENU_HEIGHT);
+    city_view_set_viewport(viewport_size.x + widget_sidebar_city_offset_max(), viewport_size.y + TOP_MENU_HEIGHT);
     g_zoom.set_scale(old_scale);
 
     graphics_reset_clip_rectangle();
@@ -393,7 +394,7 @@ static void create_minimap_screenshot() {
     painter ctx = game.painter();
 
     memset(canvas, 0, sizeof(color) * width_pixels * height_pixels);
-    widget_minimap_draw({0, 0}, width_pixels, height_pixels, 1);
+    widget_minimap_draw({0, 0}, 1);
     graphics_clear_screen();
     graphics_renderer()->draw_custom_texture(CUSTOM_IMAGE_MINIMAP, 0, 0, 1 / MINIMAP_SCALE);
     graphics_renderer()->save_screen_buffer(ctx, canvas, 0, 0, width_pixels, height_pixels, width_pixels);

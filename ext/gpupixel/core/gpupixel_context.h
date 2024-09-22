@@ -2,11 +2,11 @@
 
 #include <mutex>
 #include <functional>
+
 #include "framebuffer_cache.h"
 #include "gpupixel_macros.h"
 #include "../utils/dispatch_queue.h"
-
-#include "filter.h"
+#include "../filter/filter.h"
 #include "gl_program.h"
 #include "opengl3_loader.h"
 
