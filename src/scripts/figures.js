@@ -555,6 +555,7 @@ figure_trade_caravan = {
 		walk : { pack:PACK_SPR_AMBIENT, id:20, max_frames:12 },
 		death : { pack:PACK_SPR_AMBIENT, id:21, max_frames:8, loop:false },
 	},
+	wait_ticks_after_create : 10,
 	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }
 

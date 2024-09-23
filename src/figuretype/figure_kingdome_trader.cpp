@@ -31,12 +31,11 @@
 
 #include "js/js_game.h"
 
-figures::model_t<figure_trade_caravan> trade_caravan_m;
+figure_trade_caravan::static_params trade_caravan_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_trade_caravan);
-void config_load_figure_trade_caravan() {
-    trade_caravan_m.load();
-}
+void figure_trade_caravan::static_params::load(archive arch)  {
+    int wait_ticks_after_create = arch.r_int("wait_ticks_after_create");
+};
 
 int figure::trader_total_bought() {
     return trader_amount_bought;
@@ -50,7 +49,7 @@ int figure_create_trade_caravan(tile2i tile, int city_id) {
     figure* caravan = figure_create(FIGURE_TRADE_CARAVAN, tile, DIR_0_TOP_RIGHT);
     caravan->empire_city_id = city_id;
     caravan->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
-    caravan->wait_ticks = 10;
+    caravan->wait_ticks = trade_caravan_m.wait_ticks_after_create;
     // donkey 1
     figure* donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, tile, DIR_0_TOP_RIGHT);
     donkey1->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;

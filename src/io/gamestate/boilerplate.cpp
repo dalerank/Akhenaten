@@ -205,6 +205,8 @@ static void post_load() {
     g_city.avg_coverage.update();
 
     g_city.update_allowed_foods();
+    g_city.religion.ra_no_traders_months_left = std::clamp<int>(g_city.religion.ra_no_traders_months_left, 0, 12);
+    g_city.religion.ra_harshly_reduced_trading_months_left = std::clamp<int>(g_city.religion.ra_harshly_reduced_trading_months_left, 0, 12);
 
     trade_prices_reset();
 

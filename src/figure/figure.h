@@ -458,7 +458,7 @@ public:
         uint16_t max_roam_length;
         uint8_t speed_mult;
 
-        void load(archive arch);
+        virtual void load(archive arch);
     };
 
     figure_impl(figure *f) : base(*f), wait_ticks(f->wait_ticks), destination_tile(f->destination_tile) {}
