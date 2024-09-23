@@ -53,11 +53,11 @@ struct city_religion_t {
     e_god least_happy_god;
     int32_t angry_message_delay;
     bool bast_curse_active;
-    int32_t ra_150_export_profits_months_left;
-    int32_t ra_harshly_reduced_trading_months_left;
-    int32_t ra_no_traders_months_left;
-    int32_t ra_slightly_reduced_trading_months_left;
-    int32_t ra_slightly_increased_trading_months_left;
+    uint8_t ra_150_export_profits_months_left;
+    uint8_t ra_harshly_reduced_trading_months_left;
+    uint8_t ra_no_traders_months_left;
+    uint8_t ra_slightly_reduced_trading_months_left;
+    uint8_t ra_slightly_increased_trading_months_left;
     int8_t osiris_sank_ships;
     int32_t seth_crush_enemy_troops;
     int32_t seth_protect_player_troops;

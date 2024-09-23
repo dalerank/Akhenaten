@@ -736,7 +736,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
 
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.bast_curse_active);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_44ec);
-    iob->bind(BIND_SIGNATURE_INT32, &data.religion.ra_150_export_profits_months_left);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_150_export_profits_months_left);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.seth_crush_enemy_troops);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_44f8);
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.angry_message_delay);
@@ -835,7 +836,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(4);
     iob->bind____skip(8);
     iob->bind(BIND_SIGNATURE_UINT32, &data.finance.this_year.income.gold_extracted);
-    iob->bind(BIND_SIGNATURE_INT32, &data.religion.ra_no_traders_months_left);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_no_traders_months_left);
+    iob->bind____skip(3);
     iob->bind____skip(92);
     int reserved;
     iob->bind(BIND_SIGNATURE_INT16, &reserved);
@@ -855,10 +857,12 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_PTAH]);
     iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_SETH]);
     iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_BAST]);
-    iob->bind(BIND_SIGNATURE_INT16, &data.religion.ra_slightly_increased_trading_months_left);
-    iob->bind(BIND_SIGNATURE_INT16, &data.religion.ra_harshly_reduced_trading_months_left);
-    iob->bind(BIND_SIGNATURE_INT16, &data.religion.ra_slightly_reduced_trading_months_left);
-    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_slightly_increased_trading_months_left);
+    iob->bind____skip(1);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_harshly_reduced_trading_months_left);
+    iob->bind____skip(1);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_slightly_reduced_trading_months_left);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT16, &data.religion.seth_protect_player_troops);
     iob->bind____skip(6);
     iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_double_farm_yield_days);

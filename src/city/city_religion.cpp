@@ -35,6 +35,7 @@ declare_console_command_p(godminorblessing, game_cheat_minor_blessing)
 declare_console_command_p(godmajorblessing, game_cheat_major_blessing)
 declare_console_command_p(godminorcurse, game_cheat_minor_curse)
 declare_console_command_p(godmajorcurse, game_cheat_major_curse)
+declare_console_command_p(ranotrade, game_cheat_ranotrade)
 
 const token_holder<e_god, GOD_OSIRIS, MAX_GODS> e_god_tokens;
 
@@ -68,6 +69,15 @@ void game_cheat_major_curse(std::istream &is, std::ostream &os) {
     g_city.religion.perform_major_curse((e_god)god_id);
 
     city_warning_show_console("Casted upset");
+}
+
+void game_cheat_ranotrade(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+    int nomonth = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+
+    g_city.religion.ra_no_traders_months_left = nomonth;
+    g_city.religion.ra_harshly_reduced_trading_months_left = nomonth;
+    city_warning_show_console_var("Ra no month trade %d", nomonth);
 }
 
 void city_religion_t::reset() {
@@ -962,6 +972,9 @@ void city_religion_t::update_mood(e_god randm_god) {
     }
 }
 
+template<typename T>
+void reduce_month(T &m) { if (m > 0) { m--; }};
+
 void city_religion_t::update_monthly_data(e_god randm_god) {
     // update festival counter
     const auto &known_gods = this->known_gods();
@@ -993,20 +1006,11 @@ void city_religion_t::update_monthly_data(e_god randm_god) {
     }
 
     // update status effects with limited durations
-    if (ra_slightly_increased_trading_months_left != -1)
-        ra_slightly_increased_trading_months_left--;
-
-    if (ra_harshly_reduced_trading_months_left != -1)
-        ra_harshly_reduced_trading_months_left--;
-
-    if (ra_slightly_reduced_trading_months_left != -1)
-        ra_slightly_reduced_trading_months_left--;
-
-    if (ra_150_export_profits_months_left != -1)
-        ra_150_export_profits_months_left--;
-
-    if (ra_no_traders_months_left != -1)
-        ra_no_traders_months_left--;
+    reduce_month(ra_slightly_increased_trading_months_left);
+    reduce_month(ra_harshly_reduced_trading_months_left);
+    reduce_month(ra_slightly_reduced_trading_months_left);
+    reduce_month(ra_150_export_profits_months_left);
+    reduce_month(ra_no_traders_months_left);
 }
 
 void city_religion_t::update() {
