@@ -100,16 +100,18 @@ void info_window_house::window_info_background(object_info &c) {
         ui["evolve_reason"] = ui::str(127, 40 + b->data.house.evolve_text_id);
     }
 
-    int resource_image = image_id_resource_icon(0);
-
     auto food_icon = [] (int i) { bstring32 id_icon; id_icon.printf("food%u_icon", i); return id_icon; };
     auto food_text = [] (int i) { bstring32 id_text; id_text.printf("food%u_text", i); return id_text; };
 
+    int food_index = 0;
     for (int i = 0; i < 4; ++i) {
         e_resource resource = g_city.allowed_foods(i);
-        int stored = b->data.house.foods[i];
-        ui[food_icon(i)].image(resource);
-        ui[food_text(i)].text_var(resource ? "%u" : "", stored);
+        if (resource != RESOURCE_NONE) {
+            int stored = b->data.house.foods[i];
+            ui[food_icon(food_index)].image(resource);
+            ui[food_text(food_index)].text_var(resource ? "%u" : "", stored);
+            ++food_index;
+        }
     }
 
     auto good_icon = [] (int i) { bstring32 id_icon; id_icon.printf("good%u_icon", i); return id_icon; };
