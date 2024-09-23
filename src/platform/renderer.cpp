@@ -1121,11 +1121,15 @@ void platform_renderer_clear() {
 void platform_render_apply_filter() {
     auto &data = g_renderer_data;
 
-    OZZY_PROFILER_SECTION("Game/Run/Renderer/Render/Filter");
+    if (!platform_render_support_filters()) {
+        return;
+    }
+
     if (!platform_render_any_filter_active()) {
         return;
     }
 
+    OZZY_PROFILER_SECTION("Game/Run/Renderer/Render/Filter");
     float texw, texh;
     int pitch, w, h;
     uint32_t format;

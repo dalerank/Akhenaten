@@ -10,7 +10,7 @@ ANK_REGISTER_PROPS_ITERATOR(config_load_filter_properties);
 
 struct renderer_filter_t {
     std::shared_ptr<gpupixel::Filter> bilaterial;
-    bool bilaterial_active = true;
+    bool bilaterial_active = false;
     std::shared_ptr<gpupixel::SourceImage> sourceImage;
     std::shared_ptr<gpupixel::TargetView> outputImage;
 
@@ -43,6 +43,10 @@ void platform_render_init_filters() {
 
 void platform_render_init_filter_context() {
     auto &data = g_renderer_filter;
+
+    if (!platform_render_support_filters()) {
+        return;
+    }
 
     gpupixel::GPUPixelContext::initOpengl();
 
@@ -114,6 +118,10 @@ void platform_render_proceed_filter(int w, int h, int format, const std::vector<
 }
 
 void config_load_filter_properties(bool header) {
+    if (!platform_render_support_filters()) {
+        return;
+    }
+
     auto &data = g_renderer_filter;
     static bool _debug_filter_open = false;
 

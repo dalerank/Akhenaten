@@ -217,12 +217,6 @@ static void handle_hotkeys(const hotkeys* h) {
 void window_advisors_t::handle_input(const mouse* m, const hotkeys* h) {
     handle_hotkeys(h);
 
-    ui.begin_widget(pos);
-    if (ui.handle_mouse(m)) {
-        return;
-    }
-    ui.end_widget();
-
     const mouse* m_dialog = mouse_in_dialog(m);
     if (current_advisor_window->handle_mouse(m_dialog)) {
         return;
@@ -231,6 +225,12 @@ void window_advisors_t::handle_input(const mouse* m, const hotkeys* h) {
     if (current_advisor_window->ui_handle_mouse(m)) {
         return;
     }
+
+    ui.begin_widget(pos);
+    if (ui.handle_mouse(m)) {
+        return;
+    }
+    ui.end_widget();
 
     if (input_go_back_requested(m, h)) {
         window_city_show();
