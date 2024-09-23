@@ -75,13 +75,11 @@ void ui::display_options_window::init(close_callback close_cb) {
 
 void ui::display_options_window::ui_draw_foreground() {
     ui.begin_widget(pos);
+    
     ui.draw();
-
-    vec2i scrpos = ui["background"].screen_pos();
-    panel->ui_params.x = scrpos.x + 16;
-    panel->ui_params.y = scrpos.y + 70;
-
+    panel->ui_params.pos = ui["resolutions"].screen_pos();
     panel->draw();
+
     ui.end_widget();
 }
 

@@ -37,19 +37,13 @@ static image_button start_button = {600, 440, 27, 27, IB_NORMAL, GROUP_BUTTON_EX
 
 #define MAX_SCENARIOS 15
 
-// These braced-init-list style initializations work ONLY in C++14.
-// C++11 allows for EITHER complete braced initialization, or partial
-// braced initialization with NO default member values, since they
-// override the default (implicit) constructor.
 static scrollable_list_ui_params ui_params = [] {
     scrollable_list_ui_params ret;
-    ret.x = 16;
-    ret.y = 210;
+    ret.pos = { 16, 210 };
     ret.blocks_x = 16;
     ret.blocks_y = MAX_SCENARIOS + 1;
     ret.scrollbar_margin_x = 10;
     return ret;
-    //        .draw_scrollbar_always = true
 }();
 
 struct window_scenario_selection_t {

@@ -10,8 +10,7 @@
 #define MAX_MANUAL_ENTRIES 300
 
 struct scrollable_list_ui_params {
-    int x = 0;
-    int y = 0;
+    vec2i pos = { 0, 0 };
     int blocks_x = 10;
     int blocks_y = 10;
     int buttons_size_x = -1; // default: defined by paneling

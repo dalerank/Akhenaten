@@ -700,6 +700,8 @@ display_options_window = {
 		btnfullscreen : button({pos:[16, 46], size:[224, 20] }),
 		videodriver : text({pos:[px(24)/2 + 60, 50]}),
 
+		resolutions : dummy({pos:[16, 70]}),
+
 		save_changes: text({margin:{left:px(24)/2 - 80, bottom:-35}, text:[43, 5]}),
 		btnok 			: ok_button({margin:{left:px(24)/2 + 10, bottom:-40}}), 
 		btncancel 	: cancel_button({margin:{left:px(24)/2 + 60, bottom:-40}}), 

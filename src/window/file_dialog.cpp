@@ -48,8 +48,7 @@ static image_button image_buttons[] = {
 
 static scrollable_list_ui_params ui_params = [] {
     scrollable_list_ui_params ret;
-    ret.x = 144;
-    ret.y = 120;
+    ret.pos = { 144, 120 };
     ret.blocks_x = 20;
     ret.blocks_y = NUM_FILES_IN_VIEW + 1;
     ret.draw_scrollbar_always = true;

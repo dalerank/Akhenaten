@@ -195,7 +195,7 @@ int scroll_list_panel::input_handle(const mouse* m) {
 
 void scroll_list_panel::draw() {
     if (ui_params.draw_paneling) {
-        inner_panel_draw(ui_params.x, ui_params.y, ui_params.blocks_x, ui_params.blocks_y);
+        inner_panel_draw(ui_params.pos.x, ui_params.pos.y, ui_params.blocks_x, ui_params.blocks_y);
     }
 
     bstring256 text_utf8;
@@ -207,8 +207,8 @@ void scroll_list_panel::draw() {
         else if (focus_button_id == i + 1)
             font = ui_params.font_focus;
 
-        int button_pos_x = ui_params.x + ui_params.buttons_margin_x;
-        int button_pos_y = ui_params.y + ui_params.buttons_size_y * i + ui_params.buttons_margin_y;
+        int button_pos_x = ui_params.pos.x + ui_params.buttons_margin_x;
+        int button_pos_y = ui_params.pos.y + ui_params.buttons_size_y * i + ui_params.buttons_margin_y;
         int text_pos_x = button_pos_x + ui_params.text_padding_x;
         int text_pos_y = button_pos_y + ui_params.text_padding_y;
 
@@ -233,7 +233,7 @@ void scroll_list_panel::draw() {
             text_draw(text, text_pos_x, text_pos_y, font, 0);
         }
     }
-    scrollbar_draw({ui_params.x, ui_params.y}, &scrollbar);
+    scrollbar_draw(ui_params.pos, &scrollbar);
     WAS_DRAWN = true;
 }
 
@@ -262,8 +262,8 @@ scroll_list_panel::scroll_list_panel(int n_buttons,
     double_click_callback = dmb;
     focus_change_callback = fcc;
     for (int i = 0; i < num_buttons; ++i) {
-        int button_pos_x = ui_params.x + ui_params.buttons_margin_x;
-        int button_pos_y = ui_params.y + ui_params.buttons_size_y * i + ui_params.buttons_margin_y;
+        int button_pos_x = ui_params.pos.x + ui_params.buttons_margin_x;
+        int button_pos_y = ui_params.pos.y + ui_params.buttons_size_y * i + ui_params.buttons_margin_y;
         list_buttons[i].x = button_pos_x;
         list_buttons[i].y = button_pos_y;
         list_buttons[i].width = ui_params.buttons_size_x;
@@ -275,8 +275,8 @@ scroll_list_panel::scroll_list_panel(int n_buttons,
     }
 
     // init scrollbar
-    scrollbar.pos.x = ui_params.x + DEFAULT_BLOCK_SIZE * ui_params.blocks_x + ui_params.scrollbar_margin_x;
-    scrollbar.pos.y = ui_params.y + ui_params.scrollbar_margin_top;
+    scrollbar.pos.x = ui_params.pos.x + DEFAULT_BLOCK_SIZE * ui_params.blocks_x + ui_params.scrollbar_margin_x;
+    scrollbar.pos.y = ui_params.pos.y + ui_params.scrollbar_margin_top;
     scrollbar.height = DEFAULT_BLOCK_SIZE * ui_params.blocks_y - ui_params.scrollbar_margin_bottom;
     scrollbar.thin = ui_params.thin_scrollbar;
     scrollbar.always_visible = ui_params.draw_scrollbar_always;
