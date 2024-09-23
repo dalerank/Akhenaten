@@ -119,6 +119,7 @@ void platform_render_proceed_filter(int w, int h, int format, const std::vector<
 
 void config_load_filter_properties(bool header) {
     if (!platform_render_support_filters()) {
+        ImGui::Dummy(ImVec2(0, 0));
         return;
     }
 
