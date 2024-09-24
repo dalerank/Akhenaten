@@ -212,6 +212,7 @@ var advisor_financial_window = {}
 var display_options_window = {}
 var sidebar_window_expanded = {}
 var sidebar_window_collapsed = {}
+var sidebar_window_extra = {}
 var info_window_booth = {}
 
 //figures

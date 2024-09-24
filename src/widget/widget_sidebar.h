@@ -28,6 +28,7 @@ struct sidebar_window_expanded : public autoconfig_window_t<sidebar_window_expan
     int x_offset;
 
     image_desc extra_block;
+    image_desc relief_block;
     vec2i extra_block_size;
     int extra_block_x;
     int expanded_offset_x;
@@ -45,6 +46,8 @@ struct sidebar_window_expanded : public autoconfig_window_t<sidebar_window_expan
     void refresh_build_menu_buttons();
     void expand();
     void collapse();
+
+    void draw_sidebar_extra(vec2i offset);
 };
 
 struct sidebar_window_collapsed : public autoconfig_window_t<sidebar_window_collapsed> {
@@ -52,6 +55,7 @@ struct sidebar_window_collapsed : public autoconfig_window_t<sidebar_window_coll
     int x_offset;
 
     image_desc extra_block;
+    image_desc relief_block;
     vec2i extra_block_size;
     int extra_block_x;
     int expanded_offset_x;

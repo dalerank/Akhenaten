@@ -141,7 +141,7 @@ void widget_sidebar_editor_draw_background() {
     draw_buttons();
     widget_minimap_draw({x_offset + 8, MINIMAP_Y_OFFSET}, 1);
     draw_status();
-    sidebar_common_draw_relief(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT, side_panel, 0);
+    sidebar_common_draw_relief({ x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT }, side_panel);
 }
 
 void widget_sidebar_editor_draw_foreground(void) {

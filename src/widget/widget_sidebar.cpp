@@ -22,7 +22,7 @@
 #include "widget/widget_city.h"
 #include "widget/widget_minimap.h"
 #include "widget/sidebar/common.h"
-#include "widget/sidebar/extra.h"
+#include "widget/widget_sidebar_extra.h"
 #include "window/advisors.h"
 #include "window/build_menu.h"
 #include "window/window_city.h"
@@ -62,24 +62,10 @@ ui::sidebar_window_collapsed g_sidebar_collapsed;
 
 ui::sidebar_window g_sidebar;
 
-static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
-    int width = g_sidebar_expanded.expanded_offset_x;
-
-    if (is_collapsed) {
-        width = g_sidebar_collapsed.expanded_offset_x;
-    }
-
-    int available_height = sidebar_common_get_height() - SIDEBAR_MAIN_SECTION_HEIGHT;
-    int extra_height = sidebar_extra_draw_background(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT, 162, available_height, is_collapsed, SIDEBAR_EXTRA_DISPLAY_ALL);
-    sidebar_extra_draw_foreground();
-    int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT + extra_height; // + (GAME_ENV == ENGINE_ENV_PHARAOH) * 6;
-    sidebar_common_draw_relief(x_offset, relief_y_offset, {PACK_GENERAL, 121}, is_collapsed);
-}
-
-void ui::sidebar_window_collapsed::refresh_build_menu_buttons() {
-    for (const auto &btn : button_ids) {
-        ui[btn.id].enabled = (building_menu_count_items(btn.type) > 0);
-    }
+void ui::sidebar_window_expanded::draw_sidebar_extra(vec2i offset) {
+    int extra_height = sidebar_extra_draw(offset);
+    int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT + extra_height;
+    sidebar_common_draw_relief({ x_offset, relief_y_offset }, relief_block);
 }
 
 void ui::sidebar_window_expanded::refresh_build_menu_buttons() {
@@ -92,6 +78,7 @@ void ui::sidebar_window_expanded::load(archive arch, pcstr section) {
     autoconfig_window::load(arch, section);
 
     arch.r_desc("extra_block", extra_block);
+    arch.r_desc("relief_block", relief_block);
     extra_block_x = arch.r_int("extra_block_x");
     expanded_offset_x = arch.r_int("expanded_offset_x");
     slider.load(arch);
@@ -189,13 +176,11 @@ void ui::sidebar_window_expanded::ui_draw_foreground() {
 
     ui["show_overlays"] = overlay_text;
 
-    draw_sidebar_remainder(x_offset, false);
-
     if (building_menu_has_changed()) {
         refresh_build_menu_buttons();
     }
 
-    sidebar_extra_draw_foreground();
+    draw_sidebar_extra(ui.pos);
     draw_debug_ui(10, 30);
 }
 
@@ -206,6 +191,12 @@ void ui::sidebar_window_collapsed::collapse() {
     speed_clear(slider.slide_speed);
     speed_set_target(slider.slide_speed, slider.slide_speed_x, slider.slide_acceleration_millis, 1);
     g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
+}
+
+void ui::sidebar_window_collapsed::refresh_build_menu_buttons() {
+    for (const auto &btn : button_ids) {
+        ui[btn.id].enabled = (building_menu_count_items(btn.type) > 0);
+    }
 }
 
 void ui::sidebar_window_collapsed::expand() {
@@ -222,6 +213,7 @@ void ui::sidebar_window_collapsed::load(archive arch, pcstr section) {
     autoconfig_window::load(arch, section);
 
     arch.r_desc("extra_block", extra_block);
+    arch.r_desc("relief_block", relief_block);
     extra_block_x = arch.r_int("extra_block_x");
     expanded_offset_x = arch.r_int("expanded_offset_x");
     slider.load(arch);
@@ -264,7 +256,8 @@ void ui::sidebar_window_collapsed::ui_draw_foreground() {
     ui.draw();
     ui.end_widget();
 
-    draw_sidebar_remainder(x_offset, true);
+    int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT;
+    sidebar_common_draw_relief({ x_offset, relief_y_offset }, relief_block);
 }
 
 void widget_sidebar_city_init() {
