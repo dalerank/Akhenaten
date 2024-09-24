@@ -213,7 +213,7 @@ void window_legion_info_draw_foreground(object_info* c) {
         }
         button_border_draw(c->offset.x + 19 + 85 * i, c->offset.y + 139, 84, 84, has_focus);
     }
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 230, c->bgsize.x - 2, 4);
+    inner_panel_draw(c->offset + vec2i{ 16, 230 }, { c->bgsize.x - 2, 4 });
 
     int title_id;
     int text_id;

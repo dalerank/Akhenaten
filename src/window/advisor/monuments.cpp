@@ -106,7 +106,7 @@ int ui::advisor_monuments_window::draw_background() {
 
     lang_text_draw_multiline(52, g_city.ratings.kingdom / 5 + 22, vec2i{60, 60}, 544, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    inner_panel_draw(32, 90, 36, 14);
+    inner_panel_draw({ 32, 90 }, { 36, 14 });
 
     int num_requests = 0;
     if (city_military_months_until_distant_battle() > 0
@@ -165,7 +165,7 @@ static int get_request_status(int index) {
 }
 
 void ui::advisor_monuments_window::draw_foreground() {
-    inner_panel_draw(64, 324, 32, 6);
+    inner_panel_draw({ 64, 324 }, { 32, 6 });
 
     lang_text_draw(32, g_city.kingdome.player_rank, 72, 338, FONT_LARGE_BLACK_ON_DARK);
 

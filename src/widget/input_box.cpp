@@ -41,7 +41,7 @@ static int is_mouse_inside_input(const mouse* m, const input_box* box) {
 }
 
 void input_box_draw(const input_box* box) {
-    inner_panel_draw(box->x, box->y, box->width_blocks, box->height_blocks);
+    inner_panel_draw({ box->x, box->y }, { box->width_blocks, box->height_blocks });
     text_capture_cursor(keyboard_cursor_position(), keyboard_offset_start(), keyboard_offset_end());
     int text_x = box->x + 16;
     int text_y = box->y + 10;

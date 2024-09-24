@@ -62,7 +62,7 @@ static void draw_foreground() {
     ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), vec2i{dialog_x + 16, 48});
     lang_text_draw_centered(52, 15, dialog_x + 48, 48, dialog_width - 64, FONT_LARGE_BLACK_ON_LIGHT);
 
-    inner_panel_draw(144, 80, 22, 15);
+    inner_panel_draw({ 144, 80 }, { 22, 15 });
 
     for (int rank = 0; rank < 11; rank++) {
         e_font font = focus_button_id == rank + 2 ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;

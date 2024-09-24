@@ -65,7 +65,7 @@ void info_window_granary::window_info_background(object_info &c) {
         int y_offset = window_building_get_vertical_offset(&c, 28 - 15);
         outer_panel_draw(vec2i{c.offset.x, y_offset}, 29, 28 - 15);
         lang_text_draw_centered(98, 6, c.offset.x, y_offset + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-        inner_panel_draw(c.offset.x + 16, y_offset + 42, c.bgsize.x - 2, 21 - 15);
+        inner_panel_draw({ c.offset.x + 16, y_offset + 42 }, { c.bgsize.x - 2, 21 - 15 });
         return;
     }
 

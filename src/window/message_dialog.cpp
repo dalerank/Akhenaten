@@ -403,7 +403,7 @@ static void draw_content(const lang_message* msg) {
     data.text_width_blocks = rich_text_init(text, data.x_text, data.y_text, msg->width_blocks - 4, data.text_height_blocks, 1);
 
     // content!
-    inner_panel_draw(data.x_text, data.y_text, data.text_width_blocks, data.text_height_blocks);
+    inner_panel_draw({ data.x_text, data.y_text }, { data.text_width_blocks, data.text_height_blocks });
     graphics_set_clip_rectangle({data.x_text + 3, data.y_text + 3}, {16 * data.text_width_blocks - 6, 16 * data.text_height_blocks - 6});
     rich_text_clear_links();
 
@@ -462,7 +462,7 @@ static void draw_background_image() {
         y_base = y_base - 8;
         inner_height_blocks += 1;
     }
-    inner_panel_draw(data.x + 8, y_base, 25, inner_height_blocks);
+    inner_panel_draw({ data.x + 8, y_base }, { 25, inner_height_blocks });
     text_draw_centered(msg->title.text, data.x + 8, data.y + 414, 400, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     int width = lang_text_draw(25, g_player_message_data.month, data.x + 16, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
@@ -547,7 +547,7 @@ static void draw_background_video() {
         y_base = y_base - 8;
         inner_height_blocks += 1;
     }
-    inner_panel_draw(data.x + 8, y_base, 25, inner_height_blocks);
+    inner_panel_draw({ data.x + 8, y_base }, { 25, inner_height_blocks });
     text_draw_centered(msg->title.text, data.x + 8, data.y + 414, 400, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     int width = lang_text_draw(25, g_player_message_data.month, data.x + 16, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);

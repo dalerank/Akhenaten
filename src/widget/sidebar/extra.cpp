@@ -179,7 +179,7 @@ static void draw_extra_info_panel(void) {
     auto &data = g_extra_data;
     graphics_draw_vertical_line(vec2i{data.x_offset, data.y_offset}, data.y_offset + data.height, COLOR_WHITE);
     graphics_draw_vertical_line(vec2i{data.x_offset + data.width - 1, data.y_offset}, data.y_offset + data.height, COLOR_SIDEBAR);
-    inner_panel_draw(data.x_offset + 1, data.y_offset, data.width / 16, data.height / 16);
+    inner_panel_draw({ data.x_offset + 1, data.y_offset }, { data.width / 16, data.height / 16 });
 
     int y_current_line = data.y_offset;
 

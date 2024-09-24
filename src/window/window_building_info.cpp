@@ -68,7 +68,7 @@ void window_building_draw_mission_post(object_info* c) {
     outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
     lang_text_draw_centered(134, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description(c, 134, 1);
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 136, c->bgsize.x - 2, 4);
+    inner_panel_draw(c->offset + vec2i{ 16, 136 }, { c->bgsize.x - 2, 4 });
     window_building_draw_employment_without_house_cover(c, 142);
 }
 

@@ -61,7 +61,7 @@ static void draw_buttons(void) {
 
 static void draw_status(void) {
     int x_offset = sidebar_common_get_x_offset_expanded();
-    inner_panel_draw(x_offset + 1, 175, 10, 7);
+    inner_panel_draw({ x_offset + 1, 175 }, { 10, 7 });
     int text_offset = x_offset + 6;
 
     int selected_tool = editor_tool_type();

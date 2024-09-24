@@ -70,28 +70,28 @@ void unbordered_panel_draw(int x, int y, int width_blocks, int height_blocks) {
             image_y = 0;
     }
 }
-void inner_panel_draw(int x, int y, int width_blocks, int height_blocks) {
+void inner_panel_draw(vec2i pos, vec2i size) {
     int image_base = image_id_from_group(GROUP_SUNKEN_TEXTBOX_BACKGROUND);
     int image_y = 0;
     int y_add = 0;
     painter ctx = game.painter();
-    for (int yy = 0; yy < height_blocks; yy++) {
+    for (int yy = 0; yy < size.y; yy++) {
         int image_x = 0;
-        for (int xx = 0; xx < width_blocks; xx++) {
+        for (int xx = 0; xx < size.x; xx++) {
             int image_id;
             if (yy == 0) {
                 if (xx == 0)
                     image_id = 0;
-                else if (xx < width_blocks - 1)
+                else if (xx < size.x - 1)
                     image_id = 1 + image_x++;
                 else {
                     image_id = 6;
                 }
                 y_add = 0;
-            } else if (yy < height_blocks - 1) {
+            } else if (yy < size.y - 1) {
                 if (xx == 0)
                     image_id = 7 + image_y;
-                else if (xx < width_blocks - 1)
+                else if (xx < size.x - 1)
                     image_id = 8 + image_y + image_x++;
                 else {
                     image_id = 13 + image_y;
@@ -100,14 +100,14 @@ void inner_panel_draw(int x, int y, int width_blocks, int height_blocks) {
             } else {
                 if (xx == 0)
                     image_id = 42;
-                else if (xx < width_blocks - 1)
+                else if (xx < size.x - 1)
                     image_id = 43 + image_x++;
                 else {
                     image_id = 48;
                 }
                 y_add = 0;
             }
-            ImageDraw::img_generic(ctx, image_base + image_id, vec2i{x + 16 * xx, y + 16 * yy});
+            ImageDraw::img_generic(ctx, image_base + image_id, pos + vec2i{16 * xx, 16 * yy});
             if (image_x >= 5)
                 image_x = 0;
         }

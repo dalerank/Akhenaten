@@ -56,7 +56,7 @@ static void draw_background(void) {
 static void draw_foreground(void) {
     graphics_set_to_dialog();
 
-    inner_panel_draw(192, 184, 16, 2);
+    inner_panel_draw({ 192, 184 }, { 16, 2 });
 
     text_draw_centered(key_combination_display_name(data.key, data.modifiers), 192, 193, 256, FONT_NORMAL_WHITE_ON_DARK, 0);
 

@@ -204,7 +204,7 @@ void building_pavilion::window_info_background(object_info &c) {
     else if (b->data.entertainment.days2)
         window_building_draw_description(c, 74, 4);
 
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 6);
+    inner_panel_draw(c.offset + vec2i{ 16, 136 }, { c.bgsize.x - 2, 6 });
     window_building_draw_employment(&c, 138);
     if (b->data.entertainment.days1 > 0) {
         int width = lang_text_draw(74, 8, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);

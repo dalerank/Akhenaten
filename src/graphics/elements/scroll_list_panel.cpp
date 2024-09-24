@@ -195,7 +195,7 @@ int scroll_list_panel::input_handle(const mouse* m) {
 
 void scroll_list_panel::draw() {
     if (ui_params.draw_paneling) {
-        inner_panel_draw(ui_params.pos.x, ui_params.pos.y, ui_params.blocks_x, ui_params.blocks_y);
+        inner_panel_draw(ui_params.pos, { ui_params.blocks_x, ui_params.blocks_y });
     }
 
     bstring256 text_utf8;

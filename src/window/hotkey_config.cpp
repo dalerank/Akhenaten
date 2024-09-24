@@ -197,16 +197,10 @@ static void draw_background() {
 
     text_draw_centered(translation_for(TR_HOTKEY_TITLE), 16, 16, 608, FONT_LARGE_BLACK_ON_LIGHT, 0);
 
-    text_draw_centered(
-      translation_for(TR_HOTKEY_LABEL), HOTKEY_X_OFFSET_1, 55, HOTKEY_BTN_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    text_draw_centered(translation_for(TR_HOTKEY_ALTERNATIVE_LABEL),
-                       HOTKEY_X_OFFSET_2,
-                       55,
-                       HOTKEY_BTN_WIDTH,
-                       FONT_NORMAL_BLACK_ON_LIGHT,
-                       0);
+    text_draw_centered(translation_for(TR_HOTKEY_LABEL), HOTKEY_X_OFFSET_1, 55, HOTKEY_BTN_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    text_draw_centered(translation_for(TR_HOTKEY_ALTERNATIVE_LABEL), HOTKEY_X_OFFSET_2, 55, HOTKEY_BTN_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT,0);
 
-    inner_panel_draw(20, 72, 35, 22);
+    inner_panel_draw({ 20, 72 }, { 35, 22 });
     int y_base = 80;
     for (int i = 0; i < NUM_VISIBLE_OPTIONS; i++) {
         hotkey_widget* widget = &hotkey_widgets[i + g_hotkey_window_scrollbar.scroll_position];
@@ -217,8 +211,7 @@ static void draw_background() {
             if (widget->name_translation != TR_NONE) {
                 text_draw(translation_for(widget->name_translation), 32, text_offset, FONT_NORMAL_BLACK_ON_DARK, 0);
             } else {
-                lang_text_draw(
-                  widget->name_text_group, widget->name_text_id, 32, text_offset, FONT_NORMAL_BLACK_ON_DARK);
+                lang_text_draw(widget->name_text_group, widget->name_text_id, 32, text_offset, FONT_NORMAL_BLACK_ON_DARK);
             }
 
             const hotkey_mapping* mapping1 = &data.mappings[widget->action][0];

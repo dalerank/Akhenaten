@@ -36,7 +36,7 @@ void building_physician::window_info_background(object_info& c) {
         window_building_draw_description(c, e_text_building_physician, e_text_works_fine);
     }
 
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 136, c.bgsize.x - 2, 4);
+    inner_panel_draw(c.offset + vec2i{ 16, 136 }, { c.bgsize.x - 2, 4 });
     window_building_draw_employment(&c, 142);
 }
 

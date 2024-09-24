@@ -30,7 +30,7 @@ void building_water_lift::window_info_background(object_info &c) {
         else
             window_building_draw_description(c, 107, 1);
     }
-    inner_panel_draw(c.offset.x + 16, c.offset.y + 144, c.bgsize.x - 2, 4);
+    inner_panel_draw(c.offset + vec2i{ 16, 144 }, { c.bgsize.x - 2, 4 });
     window_building_draw_employment(&c, 150);
 }
 

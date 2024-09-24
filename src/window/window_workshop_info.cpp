@@ -119,6 +119,6 @@ void building_workshop_draw_background(object_info& c, e_resource input_resource
     else
         window_building_draw_description_at(c, y_offset, group_id, 10);
 
-    inner_panel_draw(c.offset.x + 16, c.offset.y + y_offset + 40, c.bgsize.x - 2, 4);
+    inner_panel_draw(c.offset + vec2i{ 16, y_offset + 40 }, { c.bgsize.x - 2, 4 });
     window_building_draw_employment(&c, y_offset + 48);
 }

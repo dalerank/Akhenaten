@@ -52,7 +52,7 @@ static void draw_won(void) {
     outer_panel_draw(vec2i{48, 128}, 34, 18);
     lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK_ON_LIGHT);
 
-    inner_panel_draw(64, 184, 32, 7);
+    inner_panel_draw({ 64, 184 }, { 32, 7 });
 
     if (scenario_is_custom()) {
         lang_text_draw_multiline(147, 20, vec2i{80, 192}, 488, FONT_NORMAL_WHITE_ON_DARK);

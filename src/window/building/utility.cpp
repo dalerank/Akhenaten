@@ -27,6 +27,6 @@ void window_building_draw_fountain(object_info* c) {
     else
         text_id = 3;
     window_building_draw_description(c, 108, text_id);
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 166, c->bgsize.x - 2, 4);
+    inner_panel_draw(c->offset + vec2i{ 16, 166 }, { c->bgsize.x - 2, 4 });
     window_building_draw_employment_without_house_cover(c, 172);
 }

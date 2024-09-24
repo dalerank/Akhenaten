@@ -164,5 +164,5 @@ void bazaar_info_window_t::draw_orders_background(object_info &c) {
     int y_offset = window_building_get_vertical_offset(&c, 28 - 11);
     outer_panel_draw(vec2i{c.offset.x, y_offset}, 29, 28 - 11);
     lang_text_draw_centered(97, 7, c.offset.x, y_offset + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c.offset.x + 16, y_offset + 42, c.bgsize.x - 2, 21 - 10);
+    inner_panel_draw(c.offset + vec2i{ 16, 42 }, { c.bgsize.x - 2, 21 - 10 });
 }

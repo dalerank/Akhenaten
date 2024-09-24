@@ -11,8 +11,7 @@ struct painter;
 
 void outer_panel_draw(vec2i pos, int width_blocks, int height_blocks);
 
-void inner_panel_draw(int x, int y, int width_blocks, int height_blocks);
-inline void inner_panel_draw(vec2i pos, vec2i size) { inner_panel_draw(pos.x, pos.y, size.x, size.y); }
+void inner_panel_draw(vec2i pos, vec2i size);
 void unbordered_panel_draw(int x, int y, int width_blocks, int height_blocks);
 
 void label_draw(int x, int y, int width_blocks, int type);

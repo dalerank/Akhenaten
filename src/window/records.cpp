@@ -42,7 +42,7 @@ static void draw_foreground(void) {
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{0, 0}, 40, 30);
-    inner_panel_draw(LIST_X, LIST_Y - 12, LIST_WIDTH, LIST_MAX_SIZE + 1);
+    inner_panel_draw({ LIST_X, LIST_Y - 12 }, { LIST_WIDTH, LIST_MAX_SIZE + 1 });
 
     // title
     lang_text_draw_centered(296, 0, 160, 20, 304, FONT_LARGE_BLACK_ON_LIGHT);

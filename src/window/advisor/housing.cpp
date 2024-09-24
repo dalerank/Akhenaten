@@ -84,7 +84,7 @@ int ui::advisor_housing_window::draw_background() {
     int width;
 
     outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
-    inner_panel_draw(24, 60, 32, 16);
+    inner_panel_draw({ 24, 60 }, { 32, 16 });
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 5, vec2i{10, 10});
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 5, vec2i{555, 265});
 

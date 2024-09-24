@@ -157,7 +157,7 @@ void building_dock::draw_dock_orders(object_info* c) {
     int y_offset = window_building_get_vertical_offset(c, 28);
     outer_panel_draw(vec2i{c->offset.x, y_offset}, 29, 28);
     lang_text_draw_centered(101, 0, c->offset.x, y_offset + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(c->offset.x + 16, y_offset + 42, c->bgsize.x - 2, 21);
+    inner_panel_draw({ c->offset.x + 16, y_offset + 42 }, { c->bgsize.x - 2, 21 });
 }
 
 void building_dock::draw_dock(object_info* c) {
@@ -192,7 +192,7 @@ void building_dock::draw_dock(object_info* c) {
         }
     }
 
-    inner_panel_draw(c->offset.x + 16, c->offset.y + 136, c->bgsize.x - 2, 4);
+    inner_panel_draw(c->offset + vec2i{ 16, 136 }, { c->bgsize.x - 2, 4 });
     window_building_draw_employment(c, 142);
 }
 

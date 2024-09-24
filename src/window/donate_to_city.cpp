@@ -50,7 +50,7 @@ static void draw_background(void) {
     ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), vec2i{80, 176});
     lang_text_draw_centered(52, 16, 112, 176, 448, FONT_LARGE_BLACK_ON_LIGHT);
 
-    inner_panel_draw(112, 208, 26, 4);
+    inner_panel_draw({ 112, 208 }, { 26, 4 });
 
     text_draw_number_centered(0, 124, 221, 64, FONT_NORMAL_WHITE_ON_DARK);
     text_draw_number_centered(500, 204, 221, 64, FONT_NORMAL_WHITE_ON_DARK);

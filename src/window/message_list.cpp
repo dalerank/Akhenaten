@@ -77,7 +77,7 @@ static void draw_background(void) {
 
     outer_panel_draw(vec2i{0, 32}, data.width_blocks, data.height_blocks);
     lang_text_draw_centered(63, 0, 0, 48, 16 * data.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    inner_panel_draw(data.x_text, data.y_text, data.text_width_blocks, data.text_height_blocks);
+    inner_panel_draw({ data.x_text, data.y_text }, { data.text_width_blocks, data.text_height_blocks });
 
     if (city_message_count() > 0) {
         lang_text_draw(63, 2, data.x_text + 42, data.y_text - 12, FONT_SMALL_PLAIN);
