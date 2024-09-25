@@ -67,6 +67,7 @@
 #endif
 #include <gl/GL.h>
 #elif defined(GPUPIXEL_LINUX)
+#include <GL/gl.h>
 #endif
 
 #define NS_GPUPIXEL_BEGIN namespace gpupixel {

@@ -106,6 +106,10 @@ extern "C" {
 #define GLAPI extern
 #endif
 
+#ifdef GPUPIXEL_LINUX
+#undef GL_VERSION_2_0
+#endif
+
 #include <cassert>
     /* glcorearb.h is for use with OpenGL core profile implementations.
     ** It should should be placed in the same directory as gl.h and
