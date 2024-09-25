@@ -79,20 +79,6 @@ static void main_menu_draw_foreground() {
     ui.draw();
 }
 
-static void button_click(int type, int param2) {
-//    case 3:
-//        window_scenario_selection_show(MAP_SELECTION_CUSTOM);
-//        break;
-//
-//    case 4:
-//        if (!editor_is_present() || !game_init_editor()) {
-//            window_plain_message_dialog_show(TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE);
-//        } else {
-//            sound_music_play_editor();
-//        }
-//        break;
-}
-
 static void main_menu_handle_input(const mouse* m, const hotkeys* h) {
     ui::handle_mouse(m);
 
