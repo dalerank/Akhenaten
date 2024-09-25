@@ -9,11 +9,6 @@
 #include "../core/gpupixel_context.h"
 #include "../utils/util.h"
 
-#if defined(GPUPIXEL_ANDROID)
-#include <android/bitmap.h>
-#include "jni_helpers.h"
-#endif
-
 #ifdef SOURCE_IMAGE_SBTI
 #define STBI_NO_PSD
 #include "stb_image.h"
@@ -83,4 +78,3 @@ void SourceImage::init(int width, int height, int channel_count, int texid) {
                                 texid, GL_TEXTURE_2D, 0, /*dst_x*/0, /*dst_y*/0, 0,
                                 width, height, 1));
 }
-

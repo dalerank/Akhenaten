@@ -8,6 +8,8 @@
 
 ANK_REGISTER_PROPS_ITERATOR(config_load_filter_properties);
 
+#if !defined(GAME_PLATFORM_ANDROID)
+
 struct renderer_filter_t {
     std::shared_ptr<gpupixel::Filter> bilaterial;
     bool bilaterial_active = false;
@@ -148,3 +150,14 @@ void config_load_filter_properties(bool header) {
         last->addTarget(data.outputImage);
     }
 }
+
+#else
+
+void platform_render_init_filters() {}
+bool platform_render_support_filters() { return false; }
+bool platform_render_any_filter_active() { return false; }
+void platform_render_proceed_filter(int w, int h, int format, const std::vector<uint8_t> &pixels, SDL_Texture *filter_texture) {}
+void platform_render_init_filter_context() {}
+void config_load_filter_properties(bool) {}
+
+#endif // 

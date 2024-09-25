@@ -166,7 +166,12 @@ add_subdirectory(ext/png)
 add_subdirectory(ext/expat)
 add_subdirectory(ext/mujs)
 add_subdirectory(ext/lame)
-add_subdirectory(ext/gpupixel)
+
+if (CMAKE_BUILD_PLATFORM STREQUAL "android")
+   # no filters on android
+else()
+    add_subdirectory(ext/gpupixel)
+endif()
 
 file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp)
 file(GLOB CONFIG_FILES ${PROJECT_SOURCE_DIR}/src/config/*.cpp)
@@ -473,7 +478,13 @@ include_directories(${EXTPNG_INCLUDE_DIR})
 include_directories(${EXTMUJS_INCLUDE_DIR})
 include_directories(${CMRC_INCLUDE_DIR})
 include_directories(${EXTLAME_INCLUDE_DIR})
-include_directories(${GPUPIXEL_INCLUDE_DIR})
+
+if (CMAKE_BUILD_PLATFORM STREQUAL "android")
+   # no filters on android
+   set(GPUPIXEL_LIBRARY "")
+else()
+    include_directories(${GPUPIXEL_INCLUDE_DIR})
+endif()
 
 include_directories(ext)
 include_directories(src)

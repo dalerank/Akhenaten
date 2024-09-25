@@ -181,8 +181,7 @@ std::string Util::str_format(const char* fmt, ...) {
 
 int64_t Util::nowTimeMs() {
   auto time_now = std::chrono::system_clock::now();
-  auto duration_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-      time_now.time_since_epoch());
+  auto duration_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(time_now.time_since_epoch());
   int64_t ts = duration_in_ms.count();
   return ts;
 }
@@ -202,7 +201,7 @@ void Util::Log(const std::string& tag,std::string format, ...) {
 #elif defined(GPUPIXEL_IOS) || defined(GPUPIXEL_MAC)
   NSLog(@"%s", buffer);
 #elif defined(GPUPIXEL_LINUX)
- printf("%s\n", buffer);
+  printf("%s\n", buffer);
 #endif
 }
 
