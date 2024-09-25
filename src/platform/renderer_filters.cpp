@@ -35,16 +35,8 @@ bool platform_render_support_filters() {
 void platform_render_init_filters() {
     auto &data = g_renderer_filter;
 
-    if (platform_render_any_filter_active()) {
-        return;
-    }
-
     std::string driver = get_video_driver();
     data.render_support_filters = (driver == "opengl");
-}
-
-void platform_render_init_filter_context() {
-    auto &data = g_renderer_filter;
 
     if (!platform_render_support_filters()) {
         return;
@@ -101,14 +93,16 @@ bool platform_render_bilaterial_options() {
     return (save_active != data.bilaterial_active);
 }
 
-void platform_render_proceed_filter(int w, int h, int format, const std::vector<uint8_t>&pixels, SDL_Texture *filter_texture) {
+void platform_render_proceed_filter(int w, int h, int format, const std::vector<uint8_t>&pixels, SDL_Texture *filter_texture, SDL_Texture *source_texture) {
     auto &data = g_renderer_filter;
 
     // this not work, wtf?
-    //SDL_GL_BindTexture(data.render_texture, &texw, &texh);
+    //float texw, texh;
+    //GLint render_texture_id;
+    //SDL_GL_BindTexture(source_texture, &texw, &texh);
     //glGetIntegerv(GL_TEXTURE_BINDING_2D, &render_texture_id);
-    //SDL_GL_UnbindTexture(data.render_texture);
-    //sourceImage->init(w, h, SDL_BYTESPERPIXEL(format), render_texture_id);
+    //SDL_GL_UnbindTexture(source_texture);
+    //data.sourceImage->init(w, h, SDL_BYTESPERPIXEL(format), render_texture_id);
     data.sourceImage->init(w, h, SDL_BYTESPERPIXEL(format), (uint8_t *)pixels.data());
     data.sourceImage->proceed();
 

@@ -1006,7 +1006,6 @@ int platform_renderer_init(SDL_Window* window, std::string renderer) {
     IMG_InitPNG();
 
     platform_render_make_current_context();
-    platform_render_init_filter_context();
     platform_render_init_filters();
 
     return 1;
@@ -1146,11 +1145,13 @@ void platform_render_apply_filter() {
     {
         OZZY_PROFILER_SECTION("Game/Run/Renderer/Render/Filter/ReadPixels");
         error = SDL_RenderReadPixels(data.renderer, NULL, format, data.filter_pixels.data(), w * SDL_BYTESPERPIXEL(format));
+        //SDL_RenderFlush(data.renderer);
+        //error = 0;
     }
 
     if (!error) {
         SDL_GL_MakeCurrent(data.window, data.main_gl_context);
-        platform_render_proceed_filter(w, h, format, data.filter_pixels, data.filter_texture);
+        platform_render_proceed_filter(w, h, format, data.filter_pixels, data.filter_texture, data.render_texture);
     }
 }
 

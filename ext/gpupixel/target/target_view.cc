@@ -27,8 +27,6 @@ TargetView::TargetView()
 TargetView::~TargetView() {
     delete _displayProgram;
     _displayProgram = nullptr;
-
-    delete[] _capturedFrameData;
 }
 
 void TargetView::init() {
@@ -81,7 +79,7 @@ void TargetView::onSizeChanged(int width, int height) {
         _viewWidth = width;
         _viewHeight = height;
         _framebuffer = GPUPixelContext::getInstance()->getFramebufferCache()->fetchFramebuffer(_viewWidth, _viewHeight, false);
-        _capturedFrameData = new unsigned char[_viewWidth * _viewHeight * 4];
+        _capturedFrameData.resize(_viewWidth * _viewHeight * 4);
         _updateDisplayVertices();
     }
 }
@@ -105,7 +103,7 @@ void TargetView::update(int64_t frameTime) {
     CHECK_GL(glDrawArrays(GL_TRIANGLE_STRIP, 0, 4));
 
     CHECK_GL(glReadBuffer(GL_COLOR_ATTACHMENT0));
-    CHECK_GL(glReadPixels(0, 0, _framebuffer->getWidth(), _framebuffer->getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, _capturedFrameData));
+    CHECK_GL(glReadPixels(0, 0, _framebuffer->getWidth(), _framebuffer->getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, _capturedFrameData.data()));
     //char bmpname[32] = { 0 };
     //snprintf(bmpname, 32, "gtgimg%u.bmp", testindex);
     //stbi_write_bmp(bmpname, _framebuffer->getWidth(), _framebuffer->getHeight(), 4, (const void *)_capturedFrameData);
@@ -129,8 +127,7 @@ void TargetView::_updateDisplayVertices() {
         rotatedFramebufferHeight = inputFramebuffer->getWidth();
     }
 
-    float framebufferAspectRatio =
-        rotatedFramebufferHeight / (float)rotatedFramebufferWidth;
+    float framebufferAspectRatio = rotatedFramebufferHeight / (float)rotatedFramebufferWidth;
     float viewAspectRatio = _viewHeight / (float)_viewWidth;
 
     float insetFramebufferWidth = 0.0;
@@ -145,6 +142,7 @@ void TargetView::_updateDisplayVertices() {
 
     float scaledWidth = 1.0;
     float scaledHeight = 1.0;
+
     if (_fillMode == FillMode::PreserveAspectRatio) {
         scaledWidth = insetFramebufferWidth / _viewWidth;
         scaledHeight = insetFramebufferHeight / _viewHeight;

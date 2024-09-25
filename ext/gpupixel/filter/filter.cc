@@ -240,8 +240,7 @@ void Filter::update(int64_t frameTime) {
         proceed(false);
 
         _framebuffer->active();
-        GPUPixelContext::getInstance()->capturedFrameData =
-            new unsigned char[captureWidth * captureHeight * 4];
+        GPUPixelContext::getInstance()->capturedFrameData = new unsigned char[captureWidth * captureHeight * 4];
         CHECK_GL(glReadPixels(0, 0, captureWidth, captureHeight, GL_RGBA, GL_UNSIGNED_BYTE, GPUPixelContext::getInstance()->capturedFrameData));
         _framebuffer->inactive();
     } else {

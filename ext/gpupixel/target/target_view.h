@@ -35,7 +35,7 @@ class TargetView : public Target {
   void onSizeChanged(int width, int height);
   uint32_t getWidth() const { return _viewWidth; }
   uint32_t getHeight() const { return _viewHeight; }
-  unsigned char *getPixels() { return _capturedFrameData; }
+  unsigned char *getPixels() { return _capturedFrameData.data(); }
   uint32_t getDataSize() { return _viewWidth * _viewHeight * 4; }
   virtual void update(int64_t frameTime) override;
 
@@ -49,15 +49,10 @@ class TargetView : public Target {
   GLuint _positionAttribLocation;
   GLuint _texCoordAttribLocation;
   GLuint _colorMapUniformLocation;
-  struct {
-    float r;
-    float g;
-    float b;
-    float a;
-  } _backgroundColor;
+  struct { float r, g, b, a; } _backgroundColor;
 
   GLfloat _displayVertices[8];
-  unsigned char *_capturedFrameData;
+  std::vector<uint8_t> _capturedFrameData;
 
   void _updateDisplayVertices();
   const GLfloat* _getTexureCoordinate(RotationMode rotationMode);

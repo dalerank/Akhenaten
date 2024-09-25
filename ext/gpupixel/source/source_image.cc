@@ -16,6 +16,22 @@
 
 USING_NS_GPUPIXEL
 
+SourceImage::SourceImage() {
+    _displayProgram = GLProgram::createByShaderString(kDefaultVertexShader, kDefaultFragmentShader);
+    _positionAttribLocation = _displayProgram->getAttribLocation("position");
+    _texCoordAttribLocation = _displayProgram->getAttribLocation("inputTextureCoordinate");
+    _colorMapUniformLocation = _displayProgram->getUniformLocation("textureCoordinate");
+    GPUPixelContext::getInstance()->setActiveShaderProgram(_displayProgram);
+    CHECK_GL(glEnableVertexAttribArray(_positionAttribLocation));
+    CHECK_GL(glEnableVertexAttribArray(_texCoordAttribLocation));
+    _backgroundColor = { 0.f, 1.f, 0.f, 0.f };
+}
+
+SourceImage::~SourceImage() {
+    delete _displayProgram;
+    _displayProgram = nullptr;
+}
+
 std::shared_ptr<SourceImage> SourceImage::create_from_memory(int width, int height, int channel_count, const unsigned char *pixels) {
     auto sourceImage = std::shared_ptr<SourceImage>(new SourceImage());
     sourceImage->init(width, height, channel_count, pixels);
@@ -74,7 +90,38 @@ void SourceImage::init(int width, int height, int channel_count, int texid) {
         this->setFramebuffer(_framebuffer);
     }
 
-    CHECK_GL(glCopyImageSubData(_framebuffer->getTexture(), GL_TEXTURE_2D, 0, /*src_x*/0, /*src_y*/0, 0, 
-                                texid, GL_TEXTURE_2D, 0, /*dst_x*/0, /*dst_y*/0, 0,
-                                width, height, 1));
+    GPUPixelContext::getInstance()->setActiveShaderProgram(_displayProgram);
+    _framebuffer->active();
+
+    static const GLfloat noRotationTextureCoordinates[] = {
+      0.0f, 0.0f,
+      1.0f, 0.0f,
+      0.0f, 1.0f,
+      1.0f, 1.0f,
+    };
+
+    float scaledWidth = 1.0;
+    float scaledHeight = 1.0;
+
+    const GLfloat _displayVertices[8] = {
+        -scaledWidth,
+        -scaledHeight,
+        scaledWidth,
+        -scaledHeight,
+        -scaledWidth,
+        scaledHeight,
+        scaledWidth,
+        scaledHeight
+    };
+
+    CHECK_GL(glClearColor(_backgroundColor.r, _backgroundColor.g, _backgroundColor.b, _backgroundColor.a));
+    CHECK_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+    CHECK_GL(glActiveTexture(GL_TEXTURE0));
+    CHECK_GL(glBindTexture(GL_TEXTURE_2D, texid));
+    CHECK_GL(glUniform1i(_colorMapUniformLocation, 0));
+    CHECK_GL(glVertexAttribPointer(_positionAttribLocation, 2, GL_FLOAT, 0, 0, _displayVertices));
+    CHECK_GL(glVertexAttribPointer(_texCoordAttribLocation, 2, GL_FLOAT, 0, 0, noRotationTextureCoordinates));
+    CHECK_GL(glDrawArrays(GL_TRIANGLE_STRIP, 0, 4));
+
+    _framebuffer->inactive();
 }
