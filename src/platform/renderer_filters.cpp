@@ -1,6 +1,5 @@
 #include "renderer.h"
 
-#include "gpupixel.h"
 #include "core/profiler.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
@@ -9,6 +8,7 @@
 ANK_REGISTER_PROPS_ITERATOR(config_load_filter_properties);
 
 #if !defined(GAME_PLATFORM_ANDROID)
+#include "gpupixel.h"
 
 struct renderer_filter_t {
     std::shared_ptr<gpupixel::Filter> bilaterial;
