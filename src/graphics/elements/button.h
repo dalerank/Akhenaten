@@ -6,8 +6,8 @@
 
 void button_none(int param1, int param2);
 
-void button_border_draw(int x, int y, int width_pixels, int height_pixels, bool has_focus);
-inline void button_border_draw(vec2i pos, vec2i size, bool has_focus) { button_border_draw(pos.x, pos.y, size.x, size.y, has_focus); }
+void button_border_draw(vec2i pos, vec2i size, bool has_focus);
+inline void button_border_draw(int x, int y, int width_pixels, int height_pixels, bool has_focus) { button_border_draw({ x, y }, { width_pixels, height_pixels }, has_focus); }
 bool button_inside_clip(vec2i);
 
 template<class T>

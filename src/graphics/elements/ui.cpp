@@ -270,7 +270,11 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
     const bool noborder = !!(flags & UiFlags_NoBorder);
 
     if (!noborder) {
-        button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, gbutton.hovered && !grayed);
+        button_border_draw(offset + pos, size, gbutton.hovered && !grayed);
+    } else {
+        if (gbutton.hovered && !grayed) {
+            button_border_draw(offset + pos, size, true);
+        }
     }
 
     e_font font = fonts[gbutton.hovered ? 1 : 0];
@@ -323,7 +327,7 @@ generic_button &ui::button(const svector<pcstr,4> &labels, vec2i pos, vec2i size
         font = fonts[0];
     }
 
-    button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, gbutton.hovered ? 1 : 0);
+    button_border_draw(offset + pos, size, gbutton.hovered ? 1 : 0);
     int symbolh = get_letter_height((uint8_t *)"H", font);
     int labels_num = labels.size();
     int starty = offset.y + pos.y + (size.y - (symbolh + 2) * labels_num) / 2 + 4;
@@ -685,7 +689,7 @@ void ui::eborder::draw() {
     switch (border) {
     default: //fallthrought
     case 0:
-        button_border_draw(offset.x + pos.x, offset.y + pos.y, size.x, size.y, false);
+        button_border_draw(offset + pos, size, false);
         break;
     }
 }
@@ -836,7 +840,7 @@ void ui::eimage_button::draw() {
     }
 
     if (border && selected) {
-        button_border_draw(doffset.x + pos.x - 4, doffset.y + pos.y - 4, tsize.x + 8, tsize.y + 8, true);
+        button_border_draw(doffset + pos - vec2i{ 4, 4 }, tsize + vec2i{ 8, 8 }, true);
     }
 
     btn->onclick(_func);

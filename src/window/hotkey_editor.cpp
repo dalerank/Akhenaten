@@ -62,7 +62,7 @@ static void draw_foreground(void) {
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         generic_button* btn = &bottom_buttons[i];
-        button_border_draw(btn->x, btn->y, btn->width, btn->height, data.focus_button == i + 1);
+        button_border_draw({ btn->x, btn->y }, { btn->width, btn->height }, data.focus_button == i + 1);
     }
     graphics_reset_dialog();
 }

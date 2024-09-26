@@ -13,10 +13,6 @@
 #include "game/game.h"
 #include "input/cursor.h"
 
-#include <gpupixel.h>
-#undef min
-#undef max
-
 #include <SDL.h>
 #include <SDL_video.h>
 
@@ -44,16 +40,6 @@
 #define HAS_TEXTURE_SCALE_MODE 0
 #endif
 
-// TODO: fix the render geometry functions for newer SDL version
-// Even though geometry rendering is supported since SDL 2.0.18, that version still has some drawing bugs, so we only
-// enable geometry rendering with SDL 2.0.20. Also, the software renderer also has drawing bugs, so it's also disabled.
-// #if SDL_VERSION_ATLEAST(2, 0, 20)
-// #define USE_RENDER_GEOMETRY
-// #define HAS_RENDER_GEOMETRY (platform_sdl_version_at_least(2, 0, 20) && !data.is_software_renderer)
-// #else
-#define HAS_RENDER_GEOMETRY 0
-// #endif
-
 #define MAX_UNPACKED_IMAGES 10
 
 #define MAX_PACKED_IMAGE_SIZE 64000
@@ -63,6 +49,10 @@
 // some images from the atlas with an off-by-one pixel, making things look terrible. Defining a smaller atlas texture
 // prevents the problem, at the cost of performance due to the extra texture context switching.
 #define MAX_TEXTURE_SIZE 2048
+#else
+#include <gpupixel.h>
+#undef min
+#undef max
 #endif
 
 #ifdef __vita__
@@ -723,16 +713,6 @@ void load_unpacked_image(const image_t* img, const color* pixels) {
     SDL_SetTextureBlendMode(data.unpacked_images[index].texture, SDL_BLENDMODE_BLEND);
     SDL_FreeSurface(surface);
 }
-
-// int graphics_renderer_interface::should_pack_image(int width, int height) {
-//     return width * height < MAX_PACKED_IMAGE_SIZE;
-// }
-// int graphics_renderer_interface::isometric_images_are_joined(void) {
-//     return HAS_RENDER_GEOMETRY;
-// }
-// int graphics_renderer_interface::supports_yuv_texture(void) {
-//     return data.supports_yuv_textures;
-// }
 
 SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color* p_data, int width, int height) {
     auto &data = g_renderer_data;

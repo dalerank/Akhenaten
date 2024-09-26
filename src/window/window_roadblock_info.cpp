@@ -112,7 +112,7 @@ void info_window_roadblock::window_info_foreground(object_info &c) {
         //        building *b = building_get(c->building_id);
         //    }
     } else {
-        button_border_draw(c.offset.x + 80, c.offset.y + 16 * c.bgsize.y - 34, 16 * (c.bgsize.x - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+        button_border_draw(c.offset + vec2i{ 80, 16 * c.bgsize.y - 34 }, { 16 * (c.bgsize.x - 10), 20 }, data.focus_button_id == 1 ? 1 : 0);
         lang_text_draw_centered(98, 5, c.offset.x + 80, c.offset.y + 16 * c.bgsize.y - 30, 16 * (c.bgsize.x - 10), FONT_NORMAL_BLACK_ON_LIGHT);
 
     }

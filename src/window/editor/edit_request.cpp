@@ -54,29 +54,29 @@ static void draw_foreground(void) {
     outer_panel_draw(vec2i{0, 100}, 38, 11);
     lang_text_draw(44, 21, 14, 114, FONT_LARGE_BLACK_ON_LIGHT);
 
-    button_border_draw(30, 152, 60, 25, data.focus_button_id == 1);
+    button_border_draw({ 30, 152 }, { 60, 25 }, data.focus_button_id == 1);
     text_draw_number_centered_prefix(data.request.year, '+', 30, 158, 60, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw_year(scenario_property_start_year() + data.request.year, 110, 158, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 72, 250, 158, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw(330, 152, 80, 25, data.focus_button_id == 2);
+    button_border_draw({ 330, 152 }, { 80, 25 }, data.focus_button_id == 2);
     text_draw_number_centered(data.request.amount, 330, 158, 80, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    button_border_draw(430, 152, 100, 25, data.focus_button_id == 3);
+    button_border_draw({ 430, 152 }, { 100, 25 }, data.focus_button_id == 3);
     lang_text_draw_centered(23, data.request.resource, 430, 158, 100, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 24, 40, 196, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw(70, 190, 140, 25, data.focus_button_id == 4);
+    button_border_draw({ 70, 190 }, { 140, 25 }, data.focus_button_id == 4);
     lang_text_draw_amount(8, 8, data.request.deadline_years, 80, 196, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 73, 300, 196, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw(400, 190, 80, 25, data.focus_button_id == 5);
+    button_border_draw({ 400, 190 }, { 80, 25 }, data.focus_button_id == 5);
     text_draw_number_centered_prefix(data.request.kingdom, '+', 400, 196, 80, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    button_border_draw(300, 234, 100, 25, data.focus_button_id == 7);
+    button_border_draw({ 300, 234 }, { 100, 25 }, data.focus_button_id == 7);
     lang_text_draw_centered(18, 3, 300, 240, 100, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    button_border_draw(10, 234, 250, 25, data.focus_button_id == 6);
+    button_border_draw({ 10, 234 }, { 250, 25 }, data.focus_button_id == 6);
     lang_text_draw_centered(44, 25, 10, 240, 250, FONT_NORMAL_BLACK_ON_LIGHT);
 
     graphics_reset_dialog();
