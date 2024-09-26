@@ -1,5 +1,7 @@
 #include "bilateral_filter.h"
 
+#include "../core/framebuffer.h"
+
 NS_GPUPIXEL_BEGIN
 
 REGISTER_FILTER_CLASS(BilateralMonoFilter)
@@ -121,9 +123,8 @@ BilateralMonoFilter::BilateralMonoFilter(Type type)
     _distanceNormalizationFactor(8.0) {
 }
 
-BilateralMonoFilterPtr BilateralMonoFilter::create(
-    Type type /* = HORIZONTAL*/) {
-    auto ret = std::shared_ptr<BilateralMonoFilter>(new BilateralMonoFilter(type));
+BilateralMonoFilterPtr BilateralMonoFilter::create(Type type /* = HORIZONTAL*/) {
+    auto ret = BilateralMonoFilterPtr(new BilateralMonoFilter(type));
     if (!ret || !ret->init()) {
         ret.reset();
     }

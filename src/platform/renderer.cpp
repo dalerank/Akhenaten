@@ -916,6 +916,7 @@ std::string get_video_driver() {
 
     SDL_RendererInfo info;
     SDL_GetRendererInfo(data.renderer, &info);
+
     return info.name;
 }
 
@@ -1144,8 +1145,9 @@ void platform_render_apply_filter() {
     int error = -1;
     {
         OZZY_PROFILER_SECTION("Game/Run/Renderer/Render/Filter/ReadPixels");
-        error = SDL_RenderReadPixels(data.renderer, NULL, format, data.filter_pixels.data(), w * SDL_BYTESPERPIXEL(format));
-        //SDL_RenderFlush(data.renderer);
+        //error = SDL_RenderReadPixels(data.renderer, NULL, format, data.filter_pixels.data(), w * SDL_BYTESPERPIXEL(format));
+        
+        SDL_RenderFlush(data.renderer);
         //error = 0;
     }
 
@@ -1211,5 +1213,18 @@ void platform_renderer_destroy(void) {
     if (data.renderer) {
         SDL_DestroyRenderer(data.renderer);
         data.renderer = 0;
+    }
+}
+
+void platform_render_setup_options(pcstr driver) {
+    auto &data = g_renderer_data;
+    if (data.is_opengl_context) {
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
     }
 }

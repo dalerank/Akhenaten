@@ -5,15 +5,17 @@
 #include "imgui/imgui_internal.h"
 #include "widget/debug_console.h"
 
+#include <SDL.h>
+
 ANK_REGISTER_PROPS_ITERATOR(config_load_filter_properties);
 
 #if !defined(GAME_PLATFORM_ANDROID)
 #include "gpupixel.h"
 
 struct renderer_filter_t {
-    std::shared_ptr<gpupixel::Filter> bilaterial;
+    gpupixel::FilterPtr bilaterial;
     bool bilaterial_active = false;
-    std::shared_ptr<gpupixel::SourceImage> sourceImage;
+    gpupixel::SourceImagePtr sourceImage;
     std::shared_ptr<gpupixel::TargetView> outputImage;
 
     bool render_support_filters = false;
@@ -37,6 +39,7 @@ void platform_render_init_filters() {
 
     std::string driver = get_video_driver();
     data.render_support_filters = (driver == "opengl");
+    data.render_support_filters |= SDL_VERSION_ATLEAST(2, 0, 12);
 
     if (!platform_render_support_filters()) {
         return;

@@ -111,7 +111,7 @@ static void set_window_icon() {
 }
 #endif
 
-int platform_screen_create(char const* title, const char *renderer, bool fullscreen, int display_scale_percentage, vec2i screen_size) {
+int platform_screen_create(pcstr title, pcstr renderer, bool fullscreen, int display_scale_percentage, vec2i screen_size) {
 #if defined(GAME_PLATFORM_ANDROID)
     //scale.screen_density = android_get_screen_density();
 #endif
@@ -156,6 +156,7 @@ int platform_screen_create(char const* title, const char *renderer, bool fullscr
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
 
+    platform_render_setup_options(renderer);
     g_screen.window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, wsize.x, wsize.y, flags);
 
     if (!g_screen.window) {

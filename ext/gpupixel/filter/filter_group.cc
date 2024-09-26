@@ -89,7 +89,7 @@ std::shared_ptr<Filter> FilterGroup::_predictTerminalFilter(
   }
 }
 
-std::shared_ptr<Source> FilterGroup::addTarget(std::shared_ptr<Target> target) {
+std::shared_ptr<Source> FilterGroup::addTarget(TargetPtr target) {
   if (_terminalFilter) {
     return _terminalFilter->addTarget(target);
   } else {
@@ -97,8 +97,7 @@ std::shared_ptr<Source> FilterGroup::addTarget(std::shared_ptr<Target> target) {
   }
 }
 
-std::shared_ptr<Source> FilterGroup::addTarget(std::shared_ptr<Target> target,
-                                               int inputNumber) {
+std::shared_ptr<Source> FilterGroup::addTarget(TargetPtr target, int inputNumber) {
   if (_terminalFilter) {
     return _terminalFilter->addTarget(target, inputNumber);
   } else {
@@ -116,7 +115,7 @@ std::shared_ptr<Source> FilterGroup::addTarget(id<GPUPixelTarget> target) {
 }
 #endif
 
-void FilterGroup::removeTarget(std::shared_ptr<Target> target) {
+void FilterGroup::removeTarget(TargetPtr target) {
   if (_terminalFilter) {
     _terminalFilter->removeTarget(target);
   }
@@ -128,7 +127,7 @@ void FilterGroup::removeAllTargets() {
   }
 }
 
-bool FilterGroup::hasTarget(const std::shared_ptr<Target> target) const {
+bool FilterGroup::hasTarget(const TargetPtr target) const {
   if (_terminalFilter) {
     return _terminalFilter->hasTarget(target);
   } else {
@@ -136,7 +135,7 @@ bool FilterGroup::hasTarget(const std::shared_ptr<Target> target) const {
   }
 }
 
-std::map<std::shared_ptr<Target>, int>& FilterGroup::getTargets() {
+std::map<TargetPtr, int>& FilterGroup::getTargets() {
   assert(_terminalFilter);
   return _terminalFilter->getTargets();
 }
@@ -165,23 +164,18 @@ void FilterGroup::updateTargets(int64_t frameTime) {
   }
 }
 
-void FilterGroup::setFramebuffer(
-    std::shared_ptr<Framebuffer> fb,
-    RotationMode outputRotation /* = RotationMode::NoRotation*/) {
+void FilterGroup::setFramebuffer(FramebufferPtr fb, RotationMode outputRotation /* = RotationMode::NoRotation*/) {
   // if (_terminalFilter)
   //     _terminalFilter->setFramebuffer(fb);
 }
 
-std::shared_ptr<Framebuffer> FilterGroup::getFramebuffer() const {
+FramebufferPtr FilterGroup::getFramebuffer() const {
   // if (_terminalFilter)
   //     return _terminalFilter->getFramebuffer();
   return 0;
 }
 
-void FilterGroup::setInputFramebuffer(
-    std::shared_ptr<Framebuffer> framebuffer,
-    RotationMode rotationMode /* = NoRotation*/,
-    int texIdx /* = 0*/) {
+void FilterGroup::setInputFramebuffer(FramebufferPtr framebuffer, RotationMode rotationMode /* = NoRotation*/, int texIdx /* = 0*/) {
   for (auto& filter : _filters) {
     filter->setInputFramebuffer(framebuffer, rotationMode, texIdx);
   }

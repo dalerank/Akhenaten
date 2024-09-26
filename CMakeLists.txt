@@ -66,7 +66,7 @@ else()
     SET(GAME_BUILD_TYPE "Debug")
 endif()
 
-set(SDL2_VERSION "2.28.0")
+set(SDL2_VERSION "2.30.7")
 set(SDL2_MIXER_VERSION "2.0.4")
 
 set(SDL2_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2")

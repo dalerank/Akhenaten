@@ -7,31 +7,17 @@
 
 #pragma once
 
-#include "../core/framebuffer.h"
 #include "../core/gpupixel_macros.h"
 
 #include <map>
 
 NS_GPUPIXEL_BEGIN
-enum RotationMode {
-    NoRotation = 0,
-    RotateLeft,
-    RotateRight,
-    FlipVertical,
-    FlipHorizontal,
-    RotateRightFlipVertical,
-    RotateRightFlipHorizontal,
-    Rotate180
-};
-
-class Target;
-using TargetPtr = std::shared_ptr<Target>;
 
 class Target {
 public:
     Target(int inputNumber = 1);
     virtual ~Target();
-    virtual void setInputFramebuffer(std::shared_ptr<Framebuffer> framebuffer, RotationMode rotationMode = NoRotation, int texIdx = 0);
+    virtual void setInputFramebuffer(FramebufferPtr framebuffer, RotationMode rotationMode = NoRotation, int texIdx = 0);
 
     virtual bool isPrepared() const;
     virtual void unPrepear();
@@ -40,7 +26,7 @@ public:
     // virtual void setInputSizeWithIdx(int width, int height, int textureIdx) {};
 protected:
     struct InputFrameBufferInfo {
-        std::shared_ptr<Framebuffer> frameBuffer;
+        FramebufferPtr frameBuffer;
         RotationMode rotationMode;
         int texIndex;
         bool ignoreForPrepare;

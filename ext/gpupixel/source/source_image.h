@@ -21,9 +21,9 @@ public:
 
     void init(int width, int height, int channel_count, const unsigned char *pixels);
     void init(int width, int height, int channel_count, int texid);
-    static std::shared_ptr<SourceImage> create(const std::string name);
+    static SourceImagePtr create(const std::string name);
 
-    static std::shared_ptr<SourceImage> create_from_memory(int width, int height, int channel_count, const unsigned char *pixels);
+    static SourceImagePtr create_from_memory(int width, int height, int channel_count, const unsigned char *pixels);
 private:
 
 #if defined(GPUPIXEL_ANDROID)

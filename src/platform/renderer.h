@@ -36,6 +36,7 @@ void platform_renderer_render();
 void platform_renderer_pause();
 void platform_renderer_resume();
 void platform_renderer_destroy();
+void platform_render_setup_options(pcstr driver);
 void platform_render_init_filters();
 bool platform_render_support_filters();
 void platform_render_apply_filter();

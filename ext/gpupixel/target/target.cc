@@ -23,9 +23,7 @@ Target::~Target() {
   _inputFramebuffers.clear();
 }
 
-void Target::setInputFramebuffer(std::shared_ptr<Framebuffer> framebuffer,
-                                 RotationMode rotationMode /* = NoRotation*/,
-                                 int texIdx /* = 0*/) {
+void Target::setInputFramebuffer(FramebufferPtr framebuffer, RotationMode rotationMode /* = NoRotation*/, int texIdx /* = 0*/) {
   InputFrameBufferInfo inputFrameBufferInfo;
   inputFrameBufferInfo.frameBuffer = framebuffer;
   inputFrameBufferInfo.rotationMode = rotationMode;

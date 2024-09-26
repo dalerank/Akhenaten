@@ -109,3 +109,37 @@
 #else
   #define CHECK_GL(glFunc) glFunc;
 #endif
+
+NS_GPUPIXEL_BEGIN
+
+enum RotationMode {
+    NoRotation = 0,
+    RotateLeft,
+    RotateRight,
+    FlipVertical,
+    FlipHorizontal,
+    RotateRightFlipVertical,
+    RotateRightFlipHorizontal,
+    Rotate180
+};
+
+class Source;
+using SourcePtr = std::shared_ptr<Source>;
+
+class SourceImage;
+using SourceImagePtr = std::shared_ptr<SourceImage>;
+
+class Target;
+using TargetPtr = std::shared_ptr<Target>;
+
+class Framebuffer;
+using FramebufferPtr = std::shared_ptr<Framebuffer>;
+
+class Source;
+using SourcePtr = std::shared_ptr<Source>;
+
+class Filter;
+using FilterPtr = std::shared_ptr<Filter>;
+
+
+NS_GPUPIXEL_END

@@ -14,9 +14,6 @@ typedef struct {
     GLenum type;
 } TextureAttributes;
 
-class Framebuffer;
-using FramebufferPtr = std::shared_ptr<Framebuffer>;
-
 class Framebuffer {
 public:
     Framebuffer(int width, int height, bool onlyGenerateTexture = false, const TextureAttributes textureAttributes = defaultTextureAttribures);

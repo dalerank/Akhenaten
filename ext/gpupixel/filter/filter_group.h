@@ -20,14 +20,13 @@ class FilterGroup : public Filter {
   virtual ~FilterGroup();
 
   static std::shared_ptr<FilterGroup> create();
-  static std::shared_ptr<FilterGroup> create(
-      std::vector<std::shared_ptr<Filter>> filters);
+  static std::shared_ptr<FilterGroup> create(std::vector<std::shared_ptr<Filter>> filters);
 
   bool init();
-  bool init(std::vector<std::shared_ptr<Filter>> filters);
-  bool hasFilter(const std::shared_ptr<Filter> filter) const;
-  void addFilter(std::shared_ptr<Filter> filter);
-  void removeFilter(std::shared_ptr<Filter> filter);
+  bool init(std::vector<FilterPtr> filters);
+  bool hasFilter(const FilterPtr filter) const;
+  void addFilter(FilterPtr filter);
+  void removeFilter(FilterPtr filter);
   void removeAllFilters();
 
   // Manually specify the terminal filter, which is the final output filter of
@@ -37,29 +36,22 @@ class FilterGroup : public Filter {
     _terminalFilter = filter;
   }
 
-  virtual std::shared_ptr<Source> addTarget(
-      std::shared_ptr<Target> target) override;
-  virtual std::shared_ptr<Source> addTarget(std::shared_ptr<Target> target,
-                                            int inputNumber) override;
+  virtual std::shared_ptr<Source> addTarget(TargetPtr target) override;
+  virtual std::shared_ptr<Source> addTarget(TargetPtr target, int inputNumber) override;
 #if defined(GPUPIXEL_IOS) || defined(GPUPIXEL_MAC)
   virtual std::shared_ptr<Source> addTarget(id<GPUPixelTarget> target) override;
 #endif
-  virtual void removeTarget(std::shared_ptr<Target> target) override;
+  virtual void removeTarget(TargetPtr target) override;
   virtual void removeAllTargets() override;
-  virtual bool hasTarget(const std::shared_ptr<Target> target) const override;
-  virtual std::map<std::shared_ptr<Target>, int>& getTargets() override;
-  virtual bool proceed(bool bUpdateTargets = true,
-                       int64_t frameTime = 0) override;
+  virtual bool hasTarget(const TargetPtr target) const override;
+  virtual std::map<TargetPtr, int>& getTargets() override;
+  virtual bool proceed(bool bUpdateTargets = true,int64_t frameTime = 0) override;
   virtual void update(int64_t frameTime) override;
   virtual void updateTargets(int64_t frameTime) override;
-  virtual void setFramebuffer(
-      std::shared_ptr<Framebuffer> fb,
-      RotationMode outputRotation = RotationMode::NoRotation) override;
+  virtual void setFramebuffer(FramebufferPtr fb, RotationMode outputRotation = RotationMode::NoRotation) override;
 
-  virtual std::shared_ptr<Framebuffer> getFramebuffer() const override;
-  virtual void setInputFramebuffer(std::shared_ptr<Framebuffer> framebuffer,
-                                   RotationMode rotationMode = NoRotation,
-                                   int texIdx = 0) override;
+  virtual FramebufferPtr getFramebuffer() const override;
+  virtual void setInputFramebuffer(FramebufferPtr framebuffer, RotationMode rotationMode = NoRotation, int texIdx = 0) override;
 
   virtual bool isPrepared() const override;
   virtual void unPrepear() override;

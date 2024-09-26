@@ -1,8 +1,11 @@
 #include "filter.h"
+
 #include "../core/gpupixel.h"
 #include "../core/gpupixel_context.h"
 
 #include "../../../src/core/profiler.h"
+
+#include <string>
 
 NS_GPUPIXEL_BEGIN
 
@@ -240,8 +243,8 @@ void Filter::update(int64_t frameTime) {
         proceed(false);
 
         _framebuffer->active();
-        GPUPixelContext::getInstance()->capturedFrameData = new unsigned char[captureWidth * captureHeight * 4];
-        CHECK_GL(glReadPixels(0, 0, captureWidth, captureHeight, GL_RGBA, GL_UNSIGNED_BYTE, GPUPixelContext::getInstance()->capturedFrameData));
+        GPUPixelContext::getInstance()->capturedFrameData.resize(captureWidth * captureHeight * 4);
+        CHECK_GL(glReadPixels(0, 0, captureWidth, captureHeight, GL_RGBA, GL_UNSIGNED_BYTE, GPUPixelContext::getInstance()->capturedFrameData.data()));
         _framebuffer->inactive();
     } else {
         // todo(Jeayo)

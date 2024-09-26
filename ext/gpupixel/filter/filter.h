@@ -1,18 +1,12 @@
-/*
- * GPUPixel
- *
- * Created by PixPark on 2021/6/24.
- * Copyright © 2021 PixPark. All rights reserved.
- */
-
 #pragma once
 
 #include "../core/gl_program.h"
-#include "../core/gpupixel_macros.h"
 #include "../source/source.h"
-#include "../target/target.h"
 #include "../utils/util.h"
+
 #include <string>
+#include <functional>
+#include <map>
 
 NS_GPUPIXEL_BEGIN
 const std::string kDefaultVertexShader = R"(
@@ -40,9 +34,6 @@ const std::string kDefaultFragmentShader = R"(
       gl_FragColor = texture2D(inputImageTexture, textureCoordinate);
     })";
 #endif
-
-class Filter;
-using FilterPtr = std::shared_ptr<Filter>;
 
 class Filter : public Source, public Target {
 public:
@@ -100,12 +91,7 @@ protected:
     GLProgram *_filterProgram;
     GLuint _filterPositionAttribute;
     std::string _filterClassName;
-    struct {
-        float r;
-        float g;
-        float b;
-        float a;
-    } _backgroundColor;
+    struct { float r, g, b, a; } _backgroundColor;
 
     Filter();
 
@@ -147,7 +133,7 @@ protected:
     std::map<std::string, StringProperty> _stringProperties;
 
 private:
-    static std::map<std::string, std::function<std::shared_ptr<Filter>()>> _filterFactories;
+    static std::map<std::string, std::function<FilterPtr()>> _filterFactories;
 };
 
 #define REGISTER_FILTER_CLASS(className)

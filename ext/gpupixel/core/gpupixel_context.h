@@ -10,8 +10,6 @@
 #include "gl_program.h"
 #include "opengl3_loader.h"
 
-class Filter;
-
 NS_GPUPIXEL_BEGIN
 
 class GPUPIXEL_API GPUPixelContext {
@@ -39,8 +37,8 @@ class GPUPIXEL_API GPUPixelContext {
  
   // used for capturing a processed frame data
   bool isCapturingFrame;
-  std::shared_ptr<Filter> captureUpToFilter;
-  unsigned char* capturedFrameData;
+  FilterPtr captureUpToFilter;
+  std::vector<uint8_t> capturedFrameData;
   int captureWidth;
   int captureHeight;
 

@@ -102,6 +102,7 @@ static int init_sdl() {
         logs::error("Could not initialize SDL: %s", SDL_GetError());
         return 0;
     }
+
     static_assert(SDL_VERSION_ATLEAST(2, 0, 10), "SDL version too old");
     SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
     SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
