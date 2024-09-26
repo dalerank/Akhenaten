@@ -500,6 +500,15 @@ advisor_imperial_window = {
 		rating_label : label({pos:[460, 24]}),
 		rating_advice : multiline({pos:[60, 46], wrap: 500}),
 		inner_panel  : inner_panel({pos:[32, 90], size:[36, 14] }),
+	  button_request : dummy({pos:[38, 96], size:[562, 45], 
+			ui : {
+				button_request_icon   : dummy({pos:[7, 7]}),
+				button_request_amount : dummy({pos:[30, 7], font: FONT_NORMAL_WHITE_ON_DARK}),
+				button_request_months : dummy({pos:[310, 7], font: FONT_NORMAL_WHITE_ON_DARK}),
+				button_request_saved  : dummy({pos:[30, 25], font: FONT_NORMAL_WHITE_ON_DARK}),
+				button_request_allow  : dummy({pos:[310, 25], font: FONT_NORMAL_WHITE_ON_DARK}),
+			}
+		}),
 
 		bottom_panel : inner_panel({pos:[64, 324], size:[32, 6] }),
 		send_gift    : button({pos:[320, 362], size:[250, 24], text:{group:52, id:49}, tooltip:[68, 133] }),

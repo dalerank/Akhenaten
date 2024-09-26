@@ -13,6 +13,8 @@ struct advisor_imperial_window : public advisor_window_t<advisor_imperial_window
     virtual void draw_foreground() override;
     virtual void init() override {}
 
+    virtual void load(archive arch, pcstr) override;
+
     void handle_request(int index);
 
     static advisor_window *instance();

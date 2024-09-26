@@ -4,12 +4,13 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 #include "widget/debug_console.h"
+#include "platform/platform.h"
 
 #include <SDL.h>
 
 ANK_REGISTER_PROPS_ITERATOR(config_load_filter_properties);
 
-#if !defined(GAME_PLATFORM_ANDROID)
+#if defined(GAME_PLATFORM_WIN) || defined(GAME_PLATFORM_LINUX)
 #include "gpupixel.h"
 
 struct renderer_filter_t {

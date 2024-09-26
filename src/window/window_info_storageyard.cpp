@@ -63,23 +63,21 @@ void info_window_storageyard::draw_background(object_info *c) {
     auto &data = g_window_building_distribution;
     data.building_id = c->building_id;
 
-    if (!c->has_road_access) {
-        ui["warning_text"] = ui::str(69, 25);
-    }
-
+    ui["warning_text"] = !c->has_road_access ? ui::str(69, 25) : ""; 
     ui["storing"].text_var("#granary_storing %u #granary_units", warehouse->total_stored());
     ui["free_space"].text_var("#granary_space_for %u #granary_units", warehouse->freespace());
 
     const resource_list &resources = city_resource_get_available();
-    int gidx = 0;
+
     auto _icon = [] (int idx) { bstring32 id_icon; id_icon.printf("good%u_icon", idx); return id_icon; };
     auto _text = [] (int idx) { bstring32 id_text; id_text.printf("good%u_text", idx); return id_text; };
 
-    for (int i = 0; i < 8; ++i) {
+    for (int gidx = 0; gidx < 8; ++gidx) {
         ui[_icon(gidx)].image(RESOURCE_NONE);
         ui[_text(gidx)] = "";
     }
 
+    int gidx = 0;
     for (const auto &r : resources) {
         int loads = warehouse->amount(r.type);
         if (loads) {         

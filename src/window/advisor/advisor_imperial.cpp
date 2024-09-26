@@ -35,29 +35,34 @@ enum E_STATUS {
 
 static int get_request_status(int index) {
     scenario_request request = scenario_request_get_visible(index);
-    if (request.is_valid()) {
-        if (request.resource == RESOURCE_DEBEN) {
-            if (city_finance_treasury() <= request.amount) {
-                return STATUS_NOT_ENOUGH_RESOURCES;
-            }
-        } else if (request.resource == RESOURCE_TROOPS) {
-            if (city_military_months_until_distant_battle() > 0 && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
-                if (g_city.military.total_batalions <= 0) {
-                    return STATUS_NO_LEGIONS_AVAILABLE;
-                } else if (g_city.military.kingdome_service_batalions <= 0) {
-                    return STATUS_NO_LEGIONS_SELECTED;
-                } else {
-                    return STATUS_CONFIRM_SEND_LEGIONS;
-                }
-            }
-        } else {
-            if (city_resource_count((e_resource)request.resource) < request.resource_amount()) {
-                return STATUS_NOT_ENOUGH_RESOURCES;
-            }
-        }
-        return request.event_id;
+    if (!request.is_valid()) {
+        return -1;
     }
-    return -1;
+
+    if (request.resource == RESOURCE_DEBEN && city_finance_treasury() <= request.amount) {
+        return STATUS_NOT_ENOUGH_RESOURCES;
+    } 
+    
+    if (request.resource == RESOURCE_TROOPS
+         && city_military_months_until_distant_battle() > 0 
+         && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
+
+        if (g_city.military.total_batalions <= 0) {
+            return STATUS_NO_LEGIONS_AVAILABLE;
+        } 
+        
+        if (g_city.military.kingdome_service_batalions <= 0) {
+            return STATUS_NO_LEGIONS_SELECTED;
+        } 
+            
+        return STATUS_CONFIRM_SEND_LEGIONS;
+    } 
+    
+    if (city_resource_count(request.resource) < request.resource_amount()) {
+        return STATUS_NOT_ENOUGH_RESOURCES;
+    }
+
+    return request.event_id;
 }
 
 void ui::advisor_imperial_window::draw_foreground() {
@@ -81,6 +86,12 @@ int ui::advisor_imperial_window::draw_background() {
     return 0;
 }
 
+void ui::advisor_imperial_window::load(archive arch, pcstr section) {
+    autoconfig_window::load(arch, section);
+
+
+}
+
 void ui::advisor_imperial_window::handle_request(int index) {
     int status = get_request_status(index);
     // in C3, the enums are offset by two! (I have not fixed this)
@@ -93,15 +104,19 @@ void ui::advisor_imperial_window::handle_request(int index) {
     case STATUS_NO_LEGIONS_AVAILABLE:
         window_ok_dialog_show("#popup_dialog_no_legions_available");
         break;
+
     case STATUS_NO_LEGIONS_SELECTED:
         window_ok_dialog_show("#popup_dialog_no_legions_selected");
         break;
+
     case STATUS_CONFIRM_SEND_LEGIONS:
         window_ok_dialog_show("#popup_dialog_send_troops");
         break;
+
     case STATUS_NOT_ENOUGH_RESOURCES:
         window_ok_dialog_show("#popup_dialog_not_enough_goods");
         break;
+
     default:
         window_yes_dialog_show("#popup_dialog_send_goods", [selected_request_id = index] {
             scenario_request_dispatch(selected_request_id);
@@ -114,7 +129,14 @@ void ui::advisor_imperial_window::ui_draw_foreground() {
     ui.begin_widget(pos);
     ui.draw();
 
-    int num_requests = 0;
+    const auto &button_request = ui["button_request"];
+    const auto &button_request_icon = ui["button_request_icon"];
+    const auto &button_request_amount = ui["button_request_amount"];
+    const auto &button_request_months = ui["button_request_months"];
+    const auto &button_request_saved = ui["button_request_saved"];
+    const auto &button_request_allow = ui["button_request_allow"];
+
+    int start_req_index = 0;
     if (city_military_months_until_distant_battle() > 0
         && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
         
@@ -138,18 +160,26 @@ void ui::advisor_imperial_window::ui_draw_foreground() {
         bstring128 distant_strenght_text;
         distant_strenght_text.printf("%s %s %d", ui::str(52, strength_text_id), ui::str(8, 4), city_military_months_until_distant_battle());
         ui.label(distant_strenght_text, vec2i{80, 120}, FONT_NORMAL_WHITE_ON_DARK);
-        num_requests = 1;
+        start_req_index = 1;
     }
 
+    const vec2i icon_offset = button_request_icon.pos - button_request.pos;
+    const vec2i amount_offset = button_request_amount.pos - button_request.pos;
+    const vec2i months_offset = button_request_months.pos - button_request.pos;
+    const vec2i saved_offset = button_request_saved.pos - button_request.pos;
+    const vec2i allow_offset = button_request_allow.pos - button_request.pos;
+
     auto requests = scenario_get_visible_requests();
-    for (int index = num_requests, size = std::min<int>(5, (int)requests.size()); index < size; ++index) {
+    int num_requests = std::min<int>(5, (int)requests.size());
+    for (int index = start_req_index; index < num_requests; ++index) {
         const scenario_request &request = requests[index];
 
-        ui.button("", vec2i{38, 96 + 42 * index}, vec2i{560, 42})
+        vec2i request_pos = button_request.pos + vec2i{ 0, index * button_request.size.y };
+        ui.button("", request_pos, button_request.size)
             .onclick([this, index] (int, int) {
                 this->handle_request(index);
             });
-        ui.icon(vec2i{45, 103 + 42 * index}, request.resource);
+        ui.icon(request_pos + icon_offset, request.resource);
 
         bstring256 amount_text;
         bstring256 month_to_comply;
@@ -160,10 +190,10 @@ void ui::advisor_imperial_window::ui_draw_foreground() {
         int quat = stack_proper_quantity(request_amount, request.resource);
 
         amount_text.printf("%u %s", quat, ui::str(23, request.resource));
-        ui.label(amount_text, vec2i{65, 102 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
+        ui.label(amount_text, request_pos + amount_offset, button_request_amount.font());
 
         month_to_comply.printf("%s %u %s", ui::str(8, 4), request.months_to_comply, ui::str(12, 2));
-        ui.label(month_to_comply, vec2i{310, 102 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
+        ui.label(month_to_comply, request_pos + months_offset, button_request_months.font());
 
         if (request.resource == RESOURCE_DEBEN) {
             // request for money
@@ -180,8 +210,8 @@ void ui::advisor_imperial_window::ui_draw_foreground() {
             allow_str = (amount_stored < request_amount) ? ui::str(52, 48) : ui::str(52, 47);
         }
 
-        ui.label(saved_resources, vec2i{40, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
-        ui.label(allow_str, vec2i{310, 120 + 42 * index}, FONT_NORMAL_WHITE_ON_DARK);
+        ui.label(saved_resources, request_pos + saved_offset, button_request_saved.font());
+        ui.label(allow_str, request_pos + allow_offset, button_request_allow.font());
     }
 
     if (!num_requests) {
