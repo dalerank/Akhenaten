@@ -35,7 +35,7 @@ void building_weaponsmith::on_place_checks() {
         return;
     }
 
-    if (city_resource_count(RESOURCE_WEAPONS) <= 0 && city_resource_count(RESOURCE_COPPER) <= 0) {
+    if (city_resource_warehouse_stored(RESOURCE_WEAPONS) <= 0 && city_resource_warehouse_stored(RESOURCE_COPPER) <= 0) {
         building_construction_warning_show(WARNING_IRON_NEEDED);
 
         if (g_city.can_produce_resource(RESOURCE_COPPER))

@@ -298,40 +298,6 @@ bool building_storage_yard::draw_ornaments_and_animations_height(painter &ctx, v
     return true;
 }
 
-int building_storageyards_remove_resource(e_resource resource, int amount) {
-    int amount_left = amount;
-    int building_id = city_resource_last_used_storageyard();
-    // first go for non-getting warehouses
-    for (int i = 1; i < MAX_BUILDINGS && amount_left > 0; i++) {
-        building_id++;
-        if (building_id >= MAX_BUILDINGS) {
-            building_id = 1;
-        }
-
-        building_storage_yard *warehouse = building_get(building_id)->dcast_storage_yard();
-        if (warehouse && warehouse->is_valid()) {
-            if (!warehouse->is_getting(resource)) {
-                city_resource_set_last_used_storageyard(building_id);
-                amount_left = warehouse->remove_resource(resource, amount_left);
-            }
-        }
-    }
-    // if that doesn't work, take it anyway
-    for (int i = 1; i < MAX_BUILDINGS && amount_left > 0; i++) {
-        building_id++;
-        if (building_id >= MAX_BUILDINGS) {
-            building_id = 1;
-        }
-
-        building_storage_yard* warehouse = building_get(building_id)->dcast_storage_yard();
-        if (warehouse && warehouse->is_valid()) {
-            city_resource_set_last_used_storageyard(building_id);
-            amount_left = warehouse->remove_resource(resource, amount_left);
-        }
-    }
-    return amount - amount_left;
-}
-
 int building_storage_yard_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int* understaffed, tile2i &dst) {
     int min_dist = 10000;
     int min_building_id = 0;
@@ -506,7 +472,7 @@ storage_worker_task building_storage_yard_determine_getting_up_resources(buildin
         int lacking = requesting - total_stored;
 
         // determine if there's enough room for more to accept, depending on "get up to..." settings!
-        if (room >= 0 && lacking > 0 && city_resource_count(check_resource) - total_stored > 0) {
+        if (room >= 0 && lacking > 0 && city_resource_warehouse_stored(check_resource) - total_stored > 0) {
             if (!warehouse->for_getting(check_resource, 0)) { // any other place contain this resource..?
                 continue;
             }

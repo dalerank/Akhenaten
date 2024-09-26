@@ -172,6 +172,14 @@ bool resource_type_any_of(e_resource type, Args ... args) {
     return (std::find(std::begin(types), std::end(types), type) != std::end(types));
 }
 
-int resource_is_food(int resource);
+inline bool resource_is_food(e_resource resource) {
+    return resource_type_any_of
+    (
+        resource, 
+        RESOURCE_GRAIN, RESOURCE_MEAT, RESOURCE_LETTUCE,
+        RESOURCE_CHICKPEAS, RESOURCE_POMEGRANATES, RESOURCE_FIGS,
+        RESOURCE_FISH, RESOURCE_GAMEMEAT
+    );
+}
 
 e_resource get_raw_resource(e_resource resource);

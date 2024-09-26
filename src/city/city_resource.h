@@ -8,7 +8,9 @@
 #include <iosfwd>
 #include <string>
 
-int city_resource_count(e_resource resource);
+int city_resource_warehouse_stored(e_resource resource);
+int city_resource_granary_stored(e_resource resource);
+int city_resource_storages_stored(e_resource resource);
 
 const resource_list &city_resource_get_available();
 const resource_list &city_resource_get_available_foods();
@@ -44,6 +46,9 @@ void city_resource_calculate_food_stocks_and_supply_wheat();
 void city_resource_consume_food();
 void city_resource_add_items(e_resource res, int amount);
 void city_resource_was_added_warning(e_resource res);
+
+int city_storageyards_remove_resource(e_resource resource, int amount);
+int city_granaries_remove_resource(e_resource resource, int amount);
 
 template<e_resource R>
 void game_cheat_add_resource(std::istream &is, std::ostream &os) {

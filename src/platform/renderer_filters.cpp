@@ -154,7 +154,7 @@ void config_load_filter_properties(bool header) {
 void platform_render_init_filters() {}
 bool platform_render_support_filters() { return false; }
 bool platform_render_any_filter_active() { return false; }
-void platform_render_proceed_filter(int w, int h, int format, const std::vector<uint8_t> &pixels, SDL_Texture *filter_texture) {}
+void platform_render_proceed_filter(int w, int h, int format, const std::vector<uint8_t> &pixels, SDL_Texture *filter_texture, SDL_Texture *source_texture) {}
 void platform_render_init_filter_context() {}
 void config_load_filter_properties(bool) {}
 

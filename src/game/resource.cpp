@@ -66,12 +66,6 @@ const resource_list resource_list::foods = resource_list(RESOURCE_GRAIN, RESOURC
 const resource_list resource_list::all = resource_list(RESOURCE_GRAIN, RESOURCE_MARBLE);
 const resource_list resource_list::values = resource_list(RESOURCE_NONE, RESOURCE_MARBLE);
 
-int resource_is_food(int resource) {
-    return resource == RESOURCE_GRAIN || resource == RESOURCE_MEAT || resource == RESOURCE_LETTUCE
-           || resource == RESOURCE_CHICKPEAS || resource == RESOURCE_POMEGRANATES || resource == RESOURCE_FIGS
-           || resource == RESOURCE_FISH || resource == RESOURCE_GAMEMEAT;
-}
-
 e_resource get_raw_resource(e_resource resource) {
     switch (resource) {
     case RESOURCE_STRAW: return RESOURCE_GRAIN;

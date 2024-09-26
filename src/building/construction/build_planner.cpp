@@ -934,7 +934,7 @@ void BuildPlanner::update_requirements_check() {
     /////// special requirements
     //
     if (special_flags & PlannerFlags::Resources) {
-        if (city_resource_count((e_resource)additional_req_param1) < additional_req_param2) {
+        if (city_resource_warehouse_stored((e_resource)additional_req_param1) < additional_req_param2) {
             immediate_warning_id = additional_req_param3;
             can_place = CAN_NOT_BUT_GREEN;
         }
@@ -1470,7 +1470,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
     // consume resources for specific buildings (e.g. marble, granite)
     if (special_flags & PlannerFlags::Resources) {
-        building_storageyards_remove_resource((e_resource)additional_req_param1, additional_req_param2);
+        city_storageyards_remove_resource((e_resource)additional_req_param1, additional_req_param2);
     }
 
     // finally, go over the rest of the stuff for all building types

@@ -4,6 +4,7 @@
 #include "building/industry.h"
 #include "building/model.h"
 #include "building/building_storage_yard.h"
+#include "building/building_granary.h"
 #include "city/city.h"
 #include "city/warning.h"
 #include "graphics/window.h"
@@ -23,8 +24,20 @@ struct available_data_t {
 available_data_t g_available_data;
 
 static auto &city_data = g_city;
-int city_resource_count(e_resource resource) {
+int city_resource_warehouse_stored(e_resource resource) {
     return city_data.resource.stored_in_warehouses[resource];
+}
+
+int city_resource_granary_stored(e_resource resource) {
+    if (!resource_is_food(resource)) {
+        return 0;
+    }
+    return city_data.resource.granary_food_stored[resource];
+}
+
+int city_resource_storages_stored(e_resource resource) {
+    return city_resource_warehouse_stored(resource) 
+            + city_resource_granary_stored(resource);
 }
 
 const resource_list &city_resource_get_available() {
@@ -183,14 +196,59 @@ void city_resource_add_produced_to_granary(int amount) {
 void city_resource_remove_from_granary(int food, int amount) {
     city_data.resource.granary_food_stored[food] -= amount;
 }
+
 void city_resource_add_to_storageyard(e_resource resource, int amount) {
     city_data.resource.space_in_warehouses[resource] -= amount;
     city_data.resource.stored_in_warehouses[resource] += amount;
 }
+
 void city_resource_remove_from_storageyard(e_resource resource, int amount) {
     city_data.resource.space_in_warehouses[resource] += amount;
     city_data.resource.stored_in_warehouses[resource] -= amount;
 }
+
+int city_storageyards_remove_resource(e_resource resource, int amount) {
+    int amount_left = amount;
+
+    // first go for non-getting warehouses
+    buildings_valid_do([&] (building &b) {
+        building_storage_yard *warehouse = b.dcast_storage_yard();
+        if (warehouse && warehouse->is_valid() && !warehouse->is_getting(resource)) {
+            amount_left = warehouse->remove_resource(resource, amount_left);
+        }
+    });
+    // if that doesn't work, take it anyway
+    buildings_valid_do([&] (building &b) {
+        building_storage_yard *warehouse = b.dcast_storage_yard();
+        if (warehouse && warehouse->is_valid()) {
+            amount_left = warehouse->remove_resource(resource, amount_left);
+        }
+    });
+
+    return amount - amount_left;
+}
+
+int city_granaries_remove_resource(e_resource resource, int amount) {
+    int amount_left = amount;
+
+    // first go for non-getting warehouses
+    buildings_valid_do([&] (building &b) {
+        building_granary *granary = b.dcast_granary();
+        if (granary && granary->is_valid() && !granary->is_getting(resource)) {
+            amount_left = granary->remove_resource(resource, amount_left);
+        }
+    });
+    // if that doesn't work, take it anyway
+    buildings_valid_do([&] (building &b) {
+        building_granary *granary = b.dcast_granary();
+        if (granary && granary->is_valid()) {
+            amount_left = granary->remove_resource(resource, amount_left);
+        }
+    });
+
+    return amount - amount_left;
+}
+
 
 void city_resource_calculate_storageyard_stocks() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Warehouse Stocks Update");

@@ -37,7 +37,7 @@ void building_pottery::on_place_checks() {
         return;
     }
 
-    if (city_resource_count(RESOURCE_POTTERY) > 0 || city_resource_count(RESOURCE_CLAY) > 0) {
+    if (city_resource_warehouse_stored(RESOURCE_POTTERY) > 0 || city_resource_warehouse_stored(RESOURCE_CLAY) > 0) {
         return;
     }
 

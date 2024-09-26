@@ -346,24 +346,24 @@ void tutorial_on_filled_granary(int quantity) {
 }
 
 void tutorial_check_resources_on_storageyard() {
-    if (!g_tutorials_flags.tutorial_3.pottery_made && city_resource_count(RESOURCE_POTTERY) >= 1) {
+    if (!g_tutorials_flags.tutorial_3.pottery_made && city_resource_warehouse_stored(RESOURCE_POTTERY) >= 1) {
         g_tutorials_flags.tutorial_3.pottery_made = true;
         g_tutorials_flags.tutorial_3.pottery_made_year = gametime().year;
         //building_menu_update(BUILDSET_NORMAL);
         post_message(MESSAGE_TUTORIAL_TRADE);
-    } else if (!g_tutorials_flags.tutorial_3.pottery_made && city_resource_count(RESOURCE_POTTERY) >= 2) {
+    } else if (!g_tutorials_flags.tutorial_3.pottery_made && city_resource_warehouse_stored(RESOURCE_POTTERY) >= 2) {
         g_tutorials_flags.tutorial_3.pottery_made = true;
         building_menu_update(tutorial_stage.tutorial_gardens);
         post_message(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES);
-    } else if (!g_tutorials_flags.tutorial_4.beer_made && city_resource_count(RESOURCE_BEER) >= 3) {
+    } else if (!g_tutorials_flags.tutorial_4.beer_made && city_resource_warehouse_stored(RESOURCE_BEER) >= 3) {
         g_tutorials_flags.tutorial_4.beer_made = true;
         building_menu_update(tutorial_stage.tutorial_finance);
         post_message(MESSAGE_TUTORIAL_FINANCES);
-    } if (!g_tutorials_flags.tutorial_5.papyrus_made && city_resource_count(RESOURCE_PAPYRUS) >= 1) {
+    } if (!g_tutorials_flags.tutorial_5.papyrus_made && city_resource_warehouse_stored(RESOURCE_PAPYRUS) >= 1) {
         g_tutorials_flags.tutorial_5.papyrus_made = 1;
         building_menu_update(tutorial_stage.tutorial_trading);
         post_message(MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES);
-    } if (!g_tutorials_flags.tutorial_5.bricks_bought && city_resource_count(RESOURCE_BRICKS) >= 1) {
+    } if (!g_tutorials_flags.tutorial_5.bricks_bought && city_resource_warehouse_stored(RESOURCE_BRICKS) >= 1) {
         g_tutorials_flags.tutorial_5.bricks_bought = 1;
         building_menu_update(tutorial_stage.tutorial_monuments);
         post_message(MESSAGE_TUTORIAL_MONUMENTS);

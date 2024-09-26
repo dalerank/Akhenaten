@@ -64,7 +64,7 @@ static void draw_foreground() {
     }
 
     bstring256 stored_in_city_str;
-    int stored = city_resource_count(data.resource);
+    int stored = city_resource_warehouse_stored(data.resource);
     stored_in_city_str.printf("%u %s %s", stored, ui::str(8, 10), ui::str(54, 15));
     ui::label(stored_in_city_str, vec2i{98, 192});
 

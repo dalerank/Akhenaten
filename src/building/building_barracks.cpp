@@ -176,7 +176,7 @@ void building_recruiter::on_place_checks() {
         return;
     }
 
-    if (city_resource_count(RESOURCE_WEAPONS) <= 0) {
+    if (city_resource_warehouse_stored(RESOURCE_WEAPONS) <= 0) {
         building_construction_warning_show(WARNING_WEAPONS_NEEDED);
     }
 }

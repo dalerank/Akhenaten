@@ -58,7 +58,8 @@ static int get_request_status(int index) {
         return STATUS_CONFIRM_SEND_LEGIONS;
     } 
     
-    if (city_resource_count(request.resource) < request.resource_amount()) {
+    int stored_in_city = city_resource_warehouse_stored(request.resource) + city_resource_granary_stored(request.resource);
+    if (stored_in_city < request.resource_amount()) {
         return STATUS_NOT_ENOUGH_RESOURCES;
     }
 
@@ -94,7 +95,6 @@ void ui::advisor_imperial_window::load(archive arch, pcstr section) {
 
 void ui::advisor_imperial_window::handle_request(int index) {
     int status = get_request_status(index);
-    // in C3, the enums are offset by two! (I have not fixed this)
     if (status < 0) {
         return;
     }
@@ -195,23 +195,26 @@ void ui::advisor_imperial_window::ui_draw_foreground() {
         month_to_comply.printf("%s %u %s", ui::str(8, 4), request.months_to_comply, ui::str(12, 2));
         ui.label(month_to_comply, request_pos + months_offset, button_request_months.font());
 
+        e_font allow_font;
         if (request.resource == RESOURCE_DEBEN) {
             // request for money
             int treasury = city_finance_treasury();
             saved_resources.printf("%u %s", treasury, ui::str(52, 44));
             allow_str = (treasury < request.amount) ? ui::str(52, 48) : ui::str(52, 47);
+            allow_font = button_request_allow.font();
         } else {
             // normal goods request
-            int amount_stored = city_resource_count(request.resource);
+            int amount_stored = city_resource_storages_stored(request.resource);
             amount_stored = stack_proper_quantity(amount_stored, request.resource);
             int request_amount = request.resource_amount();
 
             saved_resources.printf("%u %s", amount_stored, ui::str(52, 43));
             allow_str = (amount_stored < request_amount) ? ui::str(52, 48) : ui::str(52, 47);
+            allow_font = (amount_stored < request_amount) ? button_request_allow.font() : FONT_NORMAL_YELLOW;
         }
 
         ui.label(saved_resources, request_pos + saved_offset, button_request_saved.font());
-        ui.label(allow_str, request_pos + allow_offset, button_request_allow.font());
+        ui.label(allow_str, request_pos + allow_offset, allow_font);
     }
 
     if (!num_requests) {

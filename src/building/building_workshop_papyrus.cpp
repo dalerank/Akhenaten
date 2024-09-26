@@ -51,7 +51,7 @@ void building_papyrus_maker::on_place_checks() {
         return;
     }
 
-    if (city_resource_count(RESOURCE_REEDS) > 0) {
+    if (city_resource_warehouse_stored(RESOURCE_REEDS) > 0) {
         return;
     }
 

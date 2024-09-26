@@ -80,7 +80,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
         break;
 
     case e_event_state_in_progress:
-        if (!event.can_comply_dialog_shown && city_resource_count(request.resource) >= request.amount) {
+        if (!event.can_comply_dialog_shown && city_resource_storages_stored(request.resource) >= request.amount) {
             event.can_comply_dialog_shown = true;
             city_message &message = city_message_post(true, MESSAGE_REQUEST_CAN_COMPLY, event.event_id, 0);
             message.req_amount = request.resource_amount();
@@ -155,10 +155,13 @@ void scenario_request_dispatch(int id) {
         city_finance_process_requests_and_festivals(request.amount);
     } else if (request.resource == RESOURCE_TROOPS) {
         city_population_remove_for_troop_request(request.amount);
-        building_storageyards_remove_resource(RESOURCE_WEAPONS, request.amount);
+        city_storageyards_remove_resource(RESOURCE_WEAPONS, request.amount);
     } else {
         int amount = request.resource_amount();
-        building_storageyards_remove_resource(request.resource, amount);
+        amount -= city_storageyards_remove_resource(request.resource, amount);
+        if (amount > 0) {
+            city_granaries_remove_resource(request.resource, amount);
+        }
     }
 }
 
