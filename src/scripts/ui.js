@@ -1115,6 +1115,7 @@ info_window_recruiter = {
 info_window_farm = {
 	ui : __baseui(building_info_window, {
 		resource : { type : "resource_icon", pos:[10, 10] },
+		workers_desc : { type : "text", pos: [70, 116], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(23) },
 		farm_desc : { type : "text", pos: [32, 64], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true },
 		farm_state : { type : "text", pos: [32, 186], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true },
 		flood_info : { type : "text", pos: [32, 206], font: FONT_NORMAL_BLACK_ON_LIGHT },

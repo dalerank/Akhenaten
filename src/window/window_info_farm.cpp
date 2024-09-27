@@ -9,21 +9,16 @@
 #include "config/config.h"
 #include "js/js_game.h"
 
-struct farm_info_window : public building_info_window {
+struct info_window_farm : public building_info_window_t<info_window_farm> {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
         return c.building_get()->dcast_farm();
     }
 };
 
-farm_info_window farm_infow;
+info_window_farm farm_infow;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_farm_info_window);
-void config_load_farm_info_window() {
-    farm_infow.load("info_window_farm");
-}
-
-void farm_info_window::window_info_background(object_info &c) {
+void info_window_farm::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
     building *b = c.building_get();
@@ -37,23 +32,19 @@ void farm_info_window::window_info_background(object_info &c) {
                                     ui::str(c.group_id, 2), pct_grown, ui::str(c.group_id, 3),
                                     ui::str(c.group_id, 12), pct_fertility, ui::str(c.group_id, 13));
 
-    std::pair<int, int> reason = { c.group_id, 0 };
-    if (!c.has_road_access) { reason = { 69, 25 }; }
-    else if (city_resource_is_mothballed(b->output_resource_first_id)) { reason.second = 4; }
-    else if (b->data.industry.curse_days_left > 4) { reason.second = 11; }
-    else if (b->num_workers <= 0) { reason.second = 5; }
-    else reason.second = approximate_value(c.worker_percentage / 100.f, make_array(10, 9, 8, 7, 6));
-
-    ui["workers_text"] = ui::str(reason.first, reason.second);
+    textid reason{ c.group_id, 0 };
+    if (!b->num_workers) {
+        reason = { 177, 5 };
+    } else {
+        if (!c.has_road_access) { reason = { 69, 25 }; }
+        else if (city_resource_is_mothballed(b->output_resource_first_id)) { reason.id = 4; }
+        else if (b->data.industry.curse_days_left > 4) { reason.id = 11; }
+        else if (b->num_workers <= 0) { reason.id = 5; }
+        else reason.id = approximate_value(c.worker_percentage / 100.f, make_array(10, 9, 8, 7, 6));
+    }
+    ui["workers_desc"] = reason;
 
     if (building_is_floodplain_farm(*b)) {
-        int text_id = 5;
-        if (b->num_workers >= model_get_building(b->type)->laborers) {
-            text_id = 6;
-        }
-       
-        ui["workers_desc"] = ui::str(177, text_id);
-
         // next flood info
         int month_id = 8; // TODO: fetch flood info
         ui["flood_info"].text_var("%s %s", ui::str(177, 2), ui::str(160, month_id));
