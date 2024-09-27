@@ -92,18 +92,19 @@ static void draw_cancel_construction() {
 }
 
 static void window_city_draw_foreground() {
-    //    clear_city_view(0);
     widget_top_menu_draw(false);
     window_city_draw();
     widget_sidebar_city_draw_foreground();
+
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
         window_city_draw_paused_and_time_left();
         draw_cancel_construction();
     }
-    //    city_view_dirty |= widget_city_draw_construction_cost_and_size();
+
     widget_city_draw_construction_cost_and_size();
-    if (window_is(WINDOW_CITY))
+    if (window_is(WINDOW_CITY)) {
         city_message_process_queue();
+    }
 }
 
 static void exit_military_command() {

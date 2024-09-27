@@ -242,10 +242,12 @@ static void button_rotate_reset(int param1, int param2) {
     game_orientation_rotate_north();
     window_invalidate();
 }
+
 static void button_rotate_left(int param1, int param2) {
     game_orientation_rotate_left();
     window_invalidate();
 }
+
 static void button_rotate_right(int param1, int param2) {
     game_orientation_rotate_right();
     window_invalidate();
@@ -701,11 +703,6 @@ void widget_top_menu_draw(int force) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Topmenu");
     auto& data = g_top_menu;
     widget_top_menu_draw_rotate_buttons();
-
-    if (!force && data.treasury == city_finance_treasury()
-        && data.population == city_population() && data.month == gametime().month) {
-        return;
-    }
 
     wdiget_top_menu_draw_background();
     widget_top_menu_draw_elements();
