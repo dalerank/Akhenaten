@@ -171,7 +171,7 @@ void building_industry_update_farms(void) {
         }
 
         building_farm *farm = b.dcast_farm();
-        if (farm) {
+        if (!farm) {
             return;
         }
 
