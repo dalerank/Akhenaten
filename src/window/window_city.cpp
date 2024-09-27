@@ -240,13 +240,13 @@ void window_city_handle_input(const mouse* m, const hotkeys* h) {
 }
 
 void window_city_get_tooltip(tooltip_context* c) {
-    int text_id = widget_top_menu_get_tooltip_text(c);
-
-    if (text_id) {
-        c->type = TOOLTIP_BUTTON;
-        c->text.id = text_id;
-        return;
-    }
+    //int text_id = widget_top_menu_get_tooltip_text(c);
+    //
+    //if (text_id) {
+    //    c->type = TOOLTIP_BUTTON;
+    //    c->text.id = text_id;
+    //    return;
+    //}
     widget_city_get_tooltip(c);
 }
 

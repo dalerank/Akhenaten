@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/string.h"
+#include "core/xstring.h"
 #include "input/mouse.h"
 #include "graphics/text.h"
 #include "graphics/elements/button.h"
@@ -23,7 +23,7 @@ struct generic_button {
     using onclick_void = std::function<void()>;
     onclick_cb _onclick = nullptr;
     onclick_cb _onrclick = nullptr;
-    textid _tooltip;
+    xstring _tooltip;
     bool hovered = false;
     rect clip = { {0, 0}, {0, 0} };
 
@@ -36,8 +36,9 @@ struct generic_button {
     generic_button &onrclick(onclick_cb f) { _onrclick = f; return *this; }
     generic_button &onrclick(onclick_void f) { return onrclick([f] (int, int) { f(); }); }
     
-    generic_button &tooltip(textid t) { _tooltip = t; return *this; }
-    generic_button &tooltip(const std::initializer_list<int> &t) { _tooltip.group = *t.begin(); _tooltip.id = *(t.begin() + 1); return *this; }
+    generic_button &tooltip(textid t);
+    generic_button &tooltip(pcstr t) { _tooltip = t; return *this; }
+    generic_button &tooltip(const std::initializer_list<int> &t);
 };
 
 int generic_buttons_handle_mouse(const mouse* m, vec2i pos, const generic_button* buttons, int num_buttons, int* focus_button_id);

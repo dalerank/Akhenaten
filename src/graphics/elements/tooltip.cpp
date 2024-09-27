@@ -2,7 +2,7 @@
 
 #include "city/city.h"
 #include "city/ratings.h"
-#include "core/string.h"
+#include "core/bstring.h"
 #include "game/settings.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/lang_text.h"
@@ -24,7 +24,7 @@ static const int DEFAULT_TEXT_GROUP = 68;
 static const time_millis TOOLTIP_DELAY_MILLIS = 150;
 
 static time_millis last_update = 0;
-static uint8_t overlay_string[OVERLAY_TEXT_MAX];
+static bstring1024 overlay_string;
 struct button_tooltip_data_t {
     bool is_active;
     int x;
@@ -71,19 +71,18 @@ static void draw_tooltip_box(int x, int y, int width, int height) {
 }
 
 static void draw_button_tooltip(tooltip_context* c) {
-    const uint8_t* text = lang_get_string(c->text);
-    if (!text) {
+    if (!c->text.empty()) {
         return;
     }
 
     int width = 200;
-    int lines = text_measure_multiline(text, width - 5, FONT_SMALL_SHADED);
+    int lines = text_measure_multiline(c->text, width - 5, FONT_SMALL_SHADED);
     if (lines > 2) {
         width = 300;
-        lines = text_measure_multiline(text, width - 5, FONT_SMALL_SHADED);
+        lines = text_measure_multiline(c->text, width - 5, FONT_SMALL_SHADED);
     }
-    int height = 16 * lines + 10;
 
+    int height = 16 * lines + 10;
     int x, y;
     if (c->mpos.x < screen_dialog_offset_x() + width + 100) {
         if (window_is(WINDOW_ADVISORS))
@@ -138,17 +137,19 @@ static void draw_button_tooltip(tooltip_context* c) {
 
     //save_window_under_tooltip_to_buffer(x, y, width, height);
     draw_tooltip_box(x, y, width, height);
-    text_draw_multiline(text, x + 5, y + 7, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    text_draw_multiline(c->text, x + 5, y + 7, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
 }
+
 static void draw_overlay_tooltip(tooltip_context* c) {
-    const uint8_t* text = lang_get_string(c->text);
+    bstring1024 text = c->text;
+    overlay_string.clear();
     if (c->has_numeric_prefix) {
-        int offset = string_from_int(overlay_string, c->numeric_prefix, 0);
-        string_copy(text, &overlay_string[offset], OVERLAY_TEXT_MAX - offset);
+        string_from_int((uint8_t*)overlay_string, c->numeric_prefix, 0);
+        overlay_string.append(text);
         text = overlay_string;
     } else if (c->num_extra_values > 0) {
-        string_copy(text, overlay_string, OVERLAY_TEXT_MAX);
-        int offset = string_length(overlay_string);
+        text = overlay_string;
+        int offset = text.len();
         overlay_string[offset++] = ':';
         overlay_string[offset++] = '\n';
         for (int i = 0; i < c->num_extra_values; i++) {
@@ -156,9 +157,8 @@ static void draw_overlay_tooltip(tooltip_context* c) {
                 overlay_string[offset++] = ',';
                 overlay_string[offset++] = ' ';
             }
-            const uint8_t* extra_value = lang_get_string(c->extra_value_text_groups[i], c->extra_value_text_ids[i]);
-            string_copy(extra_value, &overlay_string[offset], OVERLAY_TEXT_MAX - offset);
-            offset += string_length(extra_value);
+            pcstr extra_value = (pcstr)lang_get_string(c->extra_value_text_groups[i], c->extra_value_text_ids[i]);
+            overlay_string.append(extra_value);
         }
         text = overlay_string;
     }
@@ -294,9 +294,11 @@ static bool should_draw_tooltip(tooltip_context* c) {
         return false;
     return true;
 }
+
 void tooltip_invalidate(void) {
     button_tooltip_info.is_active = false;
 }
+
 void tooltip_handle(const mouse* m, void (*func)(tooltip_context*)) {
     if (m->is_touch && !m->left.is_down) {
         reset_timer();
@@ -304,7 +306,7 @@ void tooltip_handle(const mouse* m, void (*func)(tooltip_context*)) {
     }
     static tooltip_context context;
     context.mpos = *m;
-    context.text.group = DEFAULT_TEXT_GROUP;
+    context.text = "";
     if (g_settings.tooltips && func) {
         func(&context);
     }
@@ -321,4 +323,14 @@ void tooltip_handle(const mouse* m, void (*func)(tooltip_context*)) {
         restore_window_under_tooltip_from_buffer();
         button_tooltip_info.is_active = false;
     }
+}
+
+void tooltip_context::set(int t, textid tx) { 
+    type = t;
+    text = (pcstr)lang_get_string(tx);
+}
+
+void tooltip_context::set(int t, pcstr tx) {
+    type = t;
+    text = tx;
 }

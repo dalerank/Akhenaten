@@ -11,6 +11,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "window/advisors.h"
+#include "io/gamefiles/lang.h"
 #include "game/game.h"
 
 static void draw_background() {
@@ -62,7 +63,7 @@ static void get_tooltip(tooltip_context* c) {
     }
 
     c->type = TOOLTIP_BUTTON;
-    c->text.id = 131 + resource;
+    c->text = (pcstr)lang_get_string(0, 131 + resource);
 }
 
 void window_trade_prices_show(void) {

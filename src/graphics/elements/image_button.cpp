@@ -1,6 +1,7 @@
 #include "image_button.h"
 
 #include "core/game_environment.h"
+#include "io/gamefiles/lang.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "sound/sound.h"
@@ -148,6 +149,9 @@ bool image_buttons_handle_mouse(const mouse* m, vec2i pos, image_button* buttons
     }
     return true;
 }
+
 void image_buttons_release_press(image_button* buttons, int num_buttons) {
     remove_pressed_effect_build(buttons, num_buttons);
 }
+
+image_button &image_button::tooltip(textid t) { _tooltip = (pcstr)lang_get_string(t); return *this; }

@@ -36,26 +36,32 @@ void ui::advisor_trade_window::ui_draw_foreground() {
     ui.draw();
 
     int scroll_position = ui["scrollbar"].value();
+    ui.set_clip_rectangle(ui["inner_panel"]);
 
     const resource_list &resources = city_resource_get_available();
-    ui.set_clip_rectangle(ui["inner_panel"]);
+
+    const auto &items = ui["items"];
+    const auto &item_button = ui["item_button"];
+    const auto &item_name = ui["item_name"];
+    const auto &item_icon = ui["item_icon"];
+    const auto &item_quality = ui["item_quality"];
+    const auto &item_state = ui["item_state"];
+    const auto &item_status = ui["item_status"];
+
     for (const auto &r: resources) {
         int i = std::distance(resources.begin(), &r);
-        int y_offset = ui["inner_panel"].pos.y + 23 * (i - scroll_position) + 8;
+        vec2i offset = { 0, items.pos.y + item_button.size.y * (i - scroll_position) + 8 };
 
-        ui.button("", vec2i{ 20, y_offset }, vec2i{ 570, 22 }, fonts_vec{ FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_NoBorder)
-            .tooltip({68, 109})
+        ui.button("", offset + item_button.pos, item_button.size, fonts_vec{ FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_NoBorder)
+            .tooltip(item_button.tooltip())
             .onclick([r] {
                 window_resource_settings_show(r.type);
             });
 
         e_resource resource = r.type;
-        y_offset += 4;
-        ui.icon({24, y_offset}, resource);
+        ui.icon(offset + item_icon.pos, resource);
 
-        e_font font_color = city_resource_is_mothballed(resource) 
-                                ? FONT_NORMAL_YELLOW
-                                : FONT_NORMAL_WHITE_ON_DARK;
+        e_font font_color = city_resource_is_mothballed(resource) ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
 
         // resource name and amount in warehouses
         int res_count = city_resource_warehouse_stored(resource);
@@ -63,8 +69,8 @@ void ui::advisor_trade_window::ui_draw_foreground() {
         const bool is_stockpiled = city_resource_is_stockpiled(resource);
         const bool is_mothballed = city_resource_is_mothballed(resource);
 
-        ui.label(ui::str(23, resource), vec2i{46, y_offset}, font_color, UiFlags_AlignYCentered);
-        ui.label(bstring32().printf("%u", proper_quality).c_str(), vec2i{152, y_offset}, font_color, UiFlags_AlignYCentered, 60);
+        ui.label(ui::str(23, resource), offset + item_name.pos, font_color, UiFlags_AlignYCentered);
+        ui.label(bstring32().printf("%u", proper_quality).c_str(), offset + item_quality.pos, font_color, UiFlags_AlignYCentered, 60);
 
         // mothballed / stockpiled
         {
@@ -77,7 +83,7 @@ void ui::advisor_trade_window::ui_draw_foreground() {
             }
 
             if (!!text) {
-                ui.label(text.c_str(), vec2i{210, y_offset}, font_color, UiFlags_AlignYCentered, 100);
+                ui.label(text.c_str(), offset + item_state.pos, font_color, UiFlags_AlignYCentered, 100);
             }
         }
 
@@ -116,7 +122,7 @@ void ui::advisor_trade_window::ui_draw_foreground() {
             break;
         }
 
-        ui.label(text.first.c_str(), vec2i{310, y_offset}, font_color);
+        ui.label(text.first.c_str(), offset + item_status.pos, font_color);
     }
     ui.reset_clip_rectangle();
 

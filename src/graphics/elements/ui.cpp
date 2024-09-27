@@ -52,13 +52,13 @@ namespace ui {
             return false;
         }
 
-        textid tooltip() {
+        pcstr tooltip() const {
             switch (type) {
-            case generic: return g_button._tooltip;
-            case image: return i_button._tooltip; 
+            case generic: return g_button._tooltip.c_str();
+            case image: return i_button._tooltip.c_str(); 
             }
 
-            return textid{};
+            return "";
         }
 
         vec2i pos() const {
@@ -367,8 +367,8 @@ generic_button &ui::button(uint32_t id) {
     return (id < g_state.buttons.size()) ? g_state.buttons[id].g_button : dummy;
 }
 
-textid ui::button_tooltip(uint32_t id) {
-    return (id < g_state.buttons.size()) ? g_state.buttons[id].tooltip() : textid();
+pcstr ui::button_tooltip(uint32_t id) {
+    return (id < g_state.buttons.size()) ? g_state.buttons[id].tooltip() : "";
 }
 
 image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_button_offsets offsets, UiFlags flags) {
@@ -737,6 +737,7 @@ void ui::elabel::load(archive arch, element *parent, items &elems) {
     _wrap = arch.r_int("wrap");
     _clip_area = arch.r_bool("clip_area");
     _shadow_color = arch.r_uint("shadow");
+    _tooltip = arch.r_string("tooltip");
     pcstr talign = arch.r_string("align");
     bool multiline = arch.r_bool("multiline");
     bool rich = arch.r_bool("rich");

@@ -43,6 +43,7 @@
 #include "window/window_city.h"
 #include "window/message_dialog.h"
 #include "widget/widget_sidebar.h"
+#include "io/gamefiles/lang.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
 
@@ -376,18 +377,16 @@ void common_info_window::update_buttons(object_info &c) {
 }
 
 void common_info_window::draw_tooltip(tooltip_context *c) {
-    textid tooltip = get_tooltip(g_object_info);
+    textid tx = get_tooltip(g_object_info);
+    pcstr tooltip = (pcstr)lang_get_string(tx);
     int button_id = ui::button_hover(mouse_get());
-    if (button_id > 0 && tooltip.group == 0xffff) {
+    if (button_id > 0 && !(tooltip && *tooltip)) {
         tooltip = ui::button_tooltip(button_id - 1);
     }
 
-    if (tooltip.group > 0 && tooltip.group != 0xffff) {
+    if (tooltip && *tooltip) {
         c->type = TOOLTIP_BUTTON;
-        c->text.id = tooltip.id;
-        if (tooltip.group) {
-            c->text.group = tooltip.group;
-        }
+        c->text = tooltip;
         window_invalidate();
     }
 }

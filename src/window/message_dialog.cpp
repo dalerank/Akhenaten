@@ -831,13 +831,13 @@ static void button_go_to_problem(int param1, int param2) {
     window_city_show();
 }
 
-static void get_tooltip(tooltip_context* c) {
-    auto &data = g_message_dialog_data;
-    if (data.focus_button_id) {
-        c->type = TOOLTIP_BUTTON;
-        c->text = { 12, 1 };
-    }
-}
+//static void get_tooltip(tooltip_context* c) {
+//    auto &data = g_message_dialog_data;
+//    if (data.focus_button_id) {
+//        c->type = TOOLTIP_BUTTON;
+//        c->text = { 12, 1 };
+//    }
+//}
 
 void window_message_dialog_show(int text_id, int message_id, void (*background_callback)(void)) {
     static window_type window = {
@@ -845,7 +845,7 @@ void window_message_dialog_show(int text_id, int message_id, void (*background_c
         draw_background,
         draw_foreground,
         handle_input,
-        get_tooltip
+        nullptr
     };
 
     init(text_id, message_id, background_callback);

@@ -2,7 +2,7 @@
 
 #include "button.h"
 #include "input/mouse.h"
-
+#include "core/xstring.h"
 #include "core/time.h"
 
 #include <vector>
@@ -34,13 +34,13 @@ struct image_button {
     char floating;
     uint8_t hovered;
     time_millis pressed_since;
-    textid _tooltip;
+    xstring _tooltip;
 
     std::function<void(int,int)> _onclick, _onrclick;
 
     template<class Func> image_button &onclick(Func f) { _onclick = f; return *this; }
     template<class Func> image_button &onrclick(Func f) { _onrclick = f; return *this; }
-    inline image_button &tooltip(textid t) { _tooltip = t; return *this; }
+    image_button &tooltip(textid t);
     inline vec2i pos() const { return {x, y}; }
     inline vec2i size() const { return {width, height}; }
 };

@@ -438,7 +438,20 @@ advisor_trade_window = {
 		advisor_icon : image({pack:PACK_GENERAL, id:128, offset:4, pos:[10, 10] }),
 		header_label : label({font : FONT_LARGE_BLACK_ON_LIGHT, text:"#trade_overseer", pos:[60, 17]}),
 		hint_label   : label({font : FONT_NORMAL_BLACK_ON_DARK, text:"#trade_overseer_hint", pos:[60, 40]}),
+
 		inner_panel  : inner_panel({pos:[17, 60], size:[36, 21] }),
+		items 			 : dummy({pos:[17, 60], 
+			ui : {
+				item_button : dummy({pos:[20, 0], size:[570, 22], tooltip:[68, 109]}),
+				item_icon : dummy({pos:[24, 0]}),
+				item_name : dummy({pos:[46, 0]}),
+				item_quality : dummy({pos:[152, 0]}),
+				item_state : dummy({pos:[210, 0]}),
+				item_status : dummy({pos:[310, 0]}),
+
+			}
+		}),
+
 		scrollbar    : { type: "scrollbar", pos:[594, 60], size:[-1, 336] },
 		goto_empire  : button({pos:[48, 396], size:[200, 24], text:"#trade_overseer_prices", tooltip:"#trade_overseer_prices_hint" }),
 		show_prices  : button({pos:[368, 396], size:[200, 24], text:"#trade_overseer_goto_empire", tooltip:"#trade_overseer_goto_empire_hint" }),
@@ -943,9 +956,9 @@ sidebar_window_expanded = {
 		build_road     : image_button({pos:[9, 330], pack:PACK_GENERAL, id:136, offset:4, tooltip:[68, 21]}),
 		clear_land     : image_button({pos:[9, 381], pack:PACK_GENERAL, id:136, offset:8, tooltip:[68, 22]}),
 
-		build_food     : image_button({pos:[45, 281], pack:PACK_GENERAL, id:136, offset:12, tooltip:[68, 23]}),
-		build_industry : image_button({pos:[45, 330], pack:PACK_GENERAL, id:136, offset:16, tooltip:[68, 24]}),
-		build_distribution : image_button({pos:[45, 381], pack:PACK_GENERAL, id:136, offset:20, tooltip:[68, 25]}),
+		build_food     : image_button({pos:[46, 281], pack:PACK_GENERAL, id:136, offset:12, tooltip:[68, 23]}),
+		build_industry : image_button({pos:[46, 330], pack:PACK_GENERAL, id:136, offset:16, tooltip:[68, 24]}),
+		build_distribution : image_button({pos:[46, 381], pack:PACK_GENERAL, id:136, offset:20, tooltip:[68, 25]}),
 
 		build_entertainment: image_button({pos:[86, 281], pack:PACK_GENERAL, id:136, offset:24, tooltip:[68, 26]}),
 		build_religion : image_button({pos:[86, 330], pack:PACK_GENERAL, id:136, offset:28, tooltip:[68, 27]}),

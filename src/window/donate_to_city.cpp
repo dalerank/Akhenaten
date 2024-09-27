@@ -142,22 +142,28 @@ static void arrow_button_amount(int is_down, int param2) {
     window_invalidate();
 }
 
-static void get_tooltip(tooltip_context* c) {
-    if (!data.focus_button_id && !data.focus_arrow_button_id)
-        return;
-    c->type = TOOLTIP_BUTTON;
-    if (data.focus_button_id == 1)
-        c->text.id = 98;
-    else if (data.focus_button_id == 2)
-        c->text.id = 99;
-    else if (data.focus_button_id)
-        c->text.id = 100;
-    else if (data.focus_arrow_button_id)
-        c->text.id = 101;
-}
+//static void get_tooltip(tooltip_context* c) {
+//    if (!data.focus_button_id && !data.focus_arrow_button_id)
+//        return;
+//    c->type = TOOLTIP_BUTTON;
+//    if (data.focus_button_id == 1)
+//        c->text.id = 98;
+//    else if (data.focus_button_id == 2)
+//        c->text.id = 99;
+//    else if (data.focus_button_id)
+//        c->text.id = 100;
+//    else if (data.focus_arrow_button_id)
+//        c->text.id = 101;
+//}
 
 void window_donate_to_city_show(void) {
-    window_type window = {WINDOW_DONATE_TO_CITY, draw_background, draw_foreground, handle_input, get_tooltip};
+    static window_type window = {
+        WINDOW_DONATE_TO_CITY, 
+        draw_background, 
+        draw_foreground, 
+        handle_input, 
+        nullptr
+    };
     g_city.kingdome.init_donation_amount();
     window_show(&window);
 }

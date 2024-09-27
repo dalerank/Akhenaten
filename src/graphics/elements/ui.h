@@ -72,7 +72,7 @@ generic_button &button(const svector<pcstr,4> &labels, vec2i pos, vec2i size, fo
 generic_button &link(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_WHITE_ON_DARK, UiFlags flags = UiFlags_None, std::function<void(int, int)> cb = {});
 generic_button &large_button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
 generic_button &button(uint32_t id);
-textid button_tooltip(uint32_t id);
+pcstr button_tooltip(uint32_t id);
 image_button &img_button(image_desc desc, vec2i pos, vec2i size, const img_button_offsets offsets = {}, UiFlags flags = UiFlags_None);
 image_button &imgok_button(vec2i pos, std::function<void(int, int)> cb);
 image_button &imgcancel_button(vec2i pos, std::function<void(int, int)> cb);
@@ -124,6 +124,7 @@ struct element {
     virtual int value() const { return 0; }
     virtual void select(bool v) {}
     virtual void max_value(int v) {}
+    virtual pcstr tooltip() const { return ""; }
     virtual element &onclick(std::function<void(int, int)>) { return *this; }
             element &onclick(std::function<void()> f) { onclick([f] (int, int) { f(); });  return *this; }
     virtual void onevent(std::function<void()>) { }
@@ -242,6 +243,7 @@ struct elabel : public element {
     vec2i _body;
     color _color;
     color _shadow_color;
+    xstring _tooltip;
     UiFlags _flags;
     int _wrap;
     bool _clip_area;
@@ -252,6 +254,7 @@ struct elabel : public element {
     virtual void text_color(color) override;
     virtual void font(int) override;
     virtual e_font font() const override { return _font; }
+    virtual pcstr tooltip() const override { return _tooltip.c_str(); }
     virtual void width(int) override;
 };
 

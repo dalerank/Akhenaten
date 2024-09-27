@@ -821,49 +821,49 @@ static e_resource get_tooltip_resource(tooltip_context* c) {
 }
 
 static void get_tooltip_trade_route_type(tooltip_context* c) {
-    auto &data = g_empire_window;
-    int selected_object = g_empire_map.selected_object();
-    if (!selected_object || empire_object_get(selected_object - 1)->type != EMPIRE_OBJECT_CITY)
-        return;
-
-    data.selected_city = g_empire.get_city_for_object(selected_object - 1);
-    const empire_city* city = g_empire.city(data.selected_city);
-    if (city->type != EMPIRE_CITY_PHARAOH || city->is_open)
-        return;
-
-    int x_offset = (data.min_pos.x + data.max_pos.x + 300) / 2;
-    int y_offset = data.max_pos.y - 41;
-    int y_offset_max = y_offset + 22 - 2 * city->is_sea_trade;
-    if (c->mpos.x >= x_offset && c->mpos.x < x_offset + 32 && c->mpos.y >= y_offset && c->mpos.y < y_offset_max) {
-        c->type = TOOLTIP_BUTTON;
-        c->text.group = 44;
-        c->text.id = 28 + city->is_sea_trade;
-    }
+    //auto &data = g_empire_window;
+    //int selected_object = g_empire_map.selected_object();
+    //if (!selected_object || empire_object_get(selected_object - 1)->type != EMPIRE_OBJECT_CITY)
+    //    return;
+    //
+    //data.selected_city = g_empire.get_city_for_object(selected_object - 1);
+    //const empire_city* city = g_empire.city(data.selected_city);
+    //if (city->type != EMPIRE_CITY_PHARAOH || city->is_open)
+    //    return;
+    //
+    //int x_offset = (data.min_pos.x + data.max_pos.x + 300) / 2;
+    //int y_offset = data.max_pos.y - 41;
+    //int y_offset_max = y_offset + 22 - 2 * city->is_sea_trade;
+    //if (c->mpos.x >= x_offset && c->mpos.x < x_offset + 32 && c->mpos.y >= y_offset && c->mpos.y < y_offset_max) {
+    //    c->type = TOOLTIP_BUTTON;
+    //    c->text.group = 44;
+    //    c->text.id = 28 + city->is_sea_trade;
+    //}
 }
 
 static void window_empire_get_tooltip(tooltip_context* c) {
-    auto &data = g_empire_window;
-    int resource = data.focus_resource ? data.focus_resource : get_tooltip_resource(c);
-    if (resource) {
-        c->type = TOOLTIP_BUTTON;
-        c->text.group = 23;
-        c->text.id = resource;
-    } else if (data.focus_button_id) {
-        c->type = TOOLTIP_BUTTON;
-        switch (data.focus_button_id) {
-        case 1:
-            c->text.id = 1;
-            break;
-        case 2:
-            c->text.id = 2;
-            break;
-        case 3:
-            c->text.id = 70;
-            break;
-        }
-    } else {
-        get_tooltip_trade_route_type(c);
-    }
+    //auto &data = g_empire_window;
+    //int resource = data.focus_resource ? data.focus_resource : get_tooltip_resource(c);
+    //if (resource) {
+    //    c->type = TOOLTIP_BUTTON;
+    //    c->text.group = 23;
+    //    c->text.id = resource;
+    //} else if (data.focus_button_id) {
+    //    c->type = TOOLTIP_BUTTON;
+    //    switch (data.focus_button_id) {
+    //    case 1:
+    //        c->text.id = 1;
+    //        break;
+    //    case 2:
+    //        c->text.id = 2;
+    //        break;
+    //    case 3:
+    //        c->text.id = 70;
+    //        break;
+    //    }
+    //} else {
+    //    get_tooltip_trade_route_type(c);
+    //}
 }
 
 static void button_help(int param1, int param2) {

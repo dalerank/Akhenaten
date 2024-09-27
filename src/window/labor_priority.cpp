@@ -104,19 +104,25 @@ static void button_set_priority(int new_priority, int param2) {
     window_go_back();
 }
 
-static void get_tooltip(tooltip_context* c) {
-    if (!data.focus_button_id)
-        return;
-    c->type = TOOLTIP_BUTTON;
-    if (data.focus_button_id == 1)
-        c->text.id = 92;
-    else {
-        c->text.id = 93;
-    }
-}
+//static void get_tooltip(tooltip_context* c) {
+//    if (!data.focus_button_id)
+//        return;
+//    c->type = TOOLTIP_BUTTON;
+//    if (data.focus_button_id == 1)
+//        c->text.id = 68-92;
+//    else {
+//        c->text.id = 68-93;
+//    }
+//}
 
 void window_labor_priority_show(int category) {
-    window_type window = {WINDOW_LABOR_PRIORITY, draw_background, draw_foreground, handle_input, get_tooltip};
+    static window_type window = {
+        WINDOW_LABOR_PRIORITY, 
+        draw_background, 
+        draw_foreground, 
+        handle_input, 
+        nullptr
+    };
     init(category);
     window_show(&window);
 }

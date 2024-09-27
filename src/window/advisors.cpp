@@ -245,16 +245,6 @@ static void button_help(int param1, int param2) {
     }
 }
 
-static void get_tooltip(tooltip_context* c) {
-    auto &data = g_window_advisors;
-    int text_id = data.current_advisor_window->get_tooltip_text();
-
-    if (text_id) {
-        c->text.id = text_id;
-        c->type = TOOLTIP_BUTTON;
-    }
-}
-
 int window_advisors_get_advisor(void) {
     auto &data = g_window_advisors;
     return data.current_advisor;
@@ -287,7 +277,7 @@ void window_advisors_show(void) {
         [] { g_window_advisors.draw_background(); },
         [] { g_window_advisors.draw_foreground(); },
         [] (const mouse *m, const hotkeys *h) { g_window_advisors.handle_input(m, h); },
-        get_tooltip
+        nullptr
     };
 
     g_window_advisors.init();
