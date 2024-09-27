@@ -47,7 +47,7 @@ uioptions = {
 	resource_icons : {pack:PACK_GENERAL, id:129},
 }
 
-top_menu_bar = {
+top_menu_widget = {
 	offset : [10, 6],
 	item_height : 20,
 	background: IMG_TOP_MENU_BACKGROUND,
