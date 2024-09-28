@@ -65,7 +65,7 @@ void orders_window_granary::window_info_foreground(object_info &c) {
 
         // order status
         auto status = window_building_get_order_instruction(INSTR_STORAGE_YARD, granary->storage(), r.type);
-        ui.button(status.first, vec2i{ bgsize.x / 2, line_y }, vec2i{ bgsize.x / 2 - 32, 20 }, fonts_vec{ status.second }, UiFlags_NoBorder | UiFlags_AlignYCentered)
+        ui.button(status.first, vec2i{ bgsize.x / 2, line_y }, vec2i{ bgsize.x / 2 - 32, 20 }, fonts_vec{ status.second }, UiFlags_NoBody | UiFlags_AlignYCentered)
             .onclick([storage_id, resource = r.type] {
                 building_storage_cycle_resource_state(storage_id, resource, false);
             })
