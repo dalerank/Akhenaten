@@ -317,12 +317,16 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         return;
     }
 
+    mouse m_buttons = *mouse_in_dialog(m);
+    if (image_buttons_handle_mouse(&m_buttons, { 0, 0 }, image_buttons, 2, 0)) {
+        return;
+    }
+
     mouse m_dialog = *mouse_in_dialog(m);
     m_dialog.x -= 140;
     m_dialog.y -= 120;
     if (input_box_handle_mouse(&m_dialog, &file_name_input)
-        || data.panel->input_handle(&m_dialog)
-        || image_buttons_handle_mouse(&m_dialog, {0, 0}, image_buttons, 2, 0)) {
+        || data.panel->input_handle(&m_dialog)) {
         return;
     }
 }

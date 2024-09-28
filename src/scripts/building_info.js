@@ -1374,7 +1374,7 @@ building_brewery = {
     preview : { pack:PACK_GENERAL, id:116 },
     base : { pack:PACK_GENERAL, id:116 },
     work : { pack:PACK_GENERAL, id:116, max_frames: 12 },
-    barley : { pos:[65, 3], pack:PACK_GENERAL, id:208, max_frames: 12 }
+    barley : { pos:[28, -35], pack:PACK_GENERAL, id:208, max_frames: 12 }
   },
   output_resource : RESOURCE_BEER,
   window_info_height_id : 1,
