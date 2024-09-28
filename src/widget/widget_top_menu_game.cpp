@@ -85,6 +85,7 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     virtual void draw_foreground() override;
     virtual void ui_draw_foreground() override {}
     virtual int get_tooltip_text() override { return 0; }
+    virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override;
 
     virtual void load(archive arch, pcstr section) override {
@@ -126,6 +127,9 @@ static generic_button orientation_buttons_ph[] = {
 };
 
 void top_menu_widget::init() {
+    ui["date"].onrclick([] {
+        window_message_dialog_show(MESSAGE_DIALOG_TOP_DATE, -1, window_city_draw_all);
+    });
 }
 
 void top_menu_widget::menu_item_update(pcstr header, int item, pcstr text) {
@@ -817,27 +821,27 @@ static bool handle_right_click(int type) {
         window_message_dialog_show(MESSAGE_DIALOG_TOP_FUNDS, -1, window_city_draw_all);
     } else if (type == INFO_POPULATION) {
         window_message_dialog_show(MESSAGE_DIALOG_TOP_POPULATION, -1, window_city_draw_all);
-    } else if (type == INFO_DATE) {
-        window_message_dialog_show(MESSAGE_DIALOG_TOP_DATE, -1, window_city_draw_all);
-    }
+    } 
 
     return true;
 }
 
-static bool widget_top_menu_handle_mouse_menu(const mouse* m) {
-    auto& data = g_top_menu;
+int top_menu_widget::ui_handle_mouse(const mouse *m) {
+    autoconfig_window::ui_handle_mouse(m);
+
+    auto &data = g_top_menu;
     xstring menu_id = top_menu_bar_handle_mouse(m);
     if (!!menu_id && m->left.went_up) {
         data.open_sub_menu = menu_id;
         widget_sub_menu_show();
-        return true;
+        return 0;
     }
 
     if (m->right.went_up) {
         return handle_right_click(get_info_id(*m));
     }
 
-    return false;
+    return 0;
 }
 
 void widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
@@ -861,7 +865,7 @@ void widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
         else if (!!data.open_sub_menu)
             widget_top_menu_handle_input_submenu(m, h);
         else
-            widget_top_menu_handle_mouse_menu(m);
+            g_top_menu.ui_handle_mouse(m);
     }
 }
 

@@ -47,6 +47,9 @@ int generic_buttons_handle_mouse(const mouse* m, vec2i pos, const generic_button
         }
     } else if (m->right.went_up) {
         button.right_click_handler(button.parameter1, button.parameter2);
+        if (button._onrclick) {
+            button._onrclick(button.parameter1, button.parameter2);
+        }
     } else {
         return 0;
     }
@@ -63,13 +66,13 @@ int generic_buttons_min_handle_mouse(const mouse* m, vec2i pos, const generic_bu
         return 0;
 
     const generic_button* button = &buttons[button_id - 1];
-    if (m->left.went_up)
+    if (m->left.went_up) {
         button->left_click_handler(button->parameter1, button->parameter2);
-
-    else if (m->right.went_up)
+    } else if (m->right.went_up) {
         button->right_click_handler(button->parameter1, button->parameter2);
-    else
+    } else {
         return 0;
+    }
 
     return button_id;
 }
