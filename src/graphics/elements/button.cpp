@@ -15,7 +15,7 @@ void button_border_draw(vec2i pos, vec2i size, bool has_focus) {
         width_blocks++;
 
     int height_blocks = size.y / 16;
-    if (size.x % 16)
+    if (size.y % 16)
         height_blocks++;
 
     int last_block_offset_x = 16 * width_blocks - size.x;
