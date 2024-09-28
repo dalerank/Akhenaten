@@ -267,11 +267,12 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
     gbutton.hovered = is_button_hover(gbutton, offset);
     gbutton.clip = graphics_clip_rectangle();
     const bool grayed = !!(flags & UiFlags_Grayed);
-    const bool noborder = !!(flags & UiFlags_NoBorder);
+    const bool hasbody = !(flags & UiFlags_NoBody);
+    const bool hasborder = !(flags & UiFlags_NoBorder);
 
-    if (!noborder) {
+    if (hasbody) {
         button_border_draw(offset + pos, size, gbutton.hovered && !grayed);
-    } else {
+    } else if (hasborder) {
         if (gbutton.hovered && !grayed) {
             button_border_draw(offset + pos, size, true);
         }
@@ -454,6 +455,14 @@ int ui::label_amount(int group, int number, int amount, vec2i pos, e_font font, 
 int ui::label_percent(int amount, vec2i pos, e_font font) {
     const vec2i offset = g_state.offset();
     return text_draw_percentage(amount, offset.x + pos.x, offset.y + pos.y, font);
+}
+
+int ui::label_colored(textid tx, vec2i pos, e_font font, color color) {
+    return lang_text_draw_colored(tx.group, tx.id, pos.x, pos.y, font, color);
+}
+
+int ui::label_colored(pcstr tx, vec2i pos, e_font font, color color) {
+    return lang_text_draw_colored(tx, pos.x, pos.y, font, color);
 }
 
 void ui::eimage(e_image_id group, vec2i pos, int img) {
@@ -980,7 +989,8 @@ void ui::earrow_button::draw() {
 void ui::egeneric_button::draw() {
     UiFlags flags = _flags 
                       | (grayed ? UiFlags_Grayed : UiFlags_None)
-                      | (!_border ? UiFlags_NoBorder : UiFlags_None);
+                      | (!_border ? UiFlags_NoBorder : UiFlags_None)
+                      | (!_hbody ? UiFlags_NoBody : UiFlags_None);
 
     generic_button *btn = nullptr;
     switch (mode) {
@@ -1012,6 +1022,7 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
     }
     _tooltip = arch.r_vec2i("tooltip");
     _border = arch.r_bool("border", true);
+    _hbody = arch.r_bool("hbody", true);
 }
 
 void ui::info_window::load(archive arch, pcstr section) {
