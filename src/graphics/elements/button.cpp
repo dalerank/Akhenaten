@@ -11,12 +11,10 @@ void button_none(int param1, int param2) {
 void button_border_draw(vec2i pos, vec2i size, bool has_focus) {
     painter ctx = game.painter();
     int width_blocks = size.x / 16;
-    if (size.x % 16)
-        width_blocks++;
+    width_blocks += (size.x % 16) ? 1 : 0;
 
     int height_blocks = size.y / 16;
-    if (size.y % 16)
-        height_blocks++;
+    height_blocks += (size.y % 16) ? 1 : 0;
 
     int last_block_offset_x = 16 * width_blocks - size.x;
     int last_block_offset_y = 16 * height_blocks - size.y;

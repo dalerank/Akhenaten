@@ -141,7 +141,7 @@ static void draw_button_tooltip(tooltip_context* c) {
 }
 
 static void draw_overlay_tooltip(tooltip_context* c) {
-    bstring1024 text = c->text;
+    bstring1024 text = c->text.c_str();
     overlay_string.clear();
     if (c->has_numeric_prefix) {
         string_from_int((uint8_t*)overlay_string, c->numeric_prefix, 0);

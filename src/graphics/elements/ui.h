@@ -303,6 +303,7 @@ struct egeneric_button : public elabel {
     virtual void draw() override;
     virtual void load(archive arch, element *parent, items &elems) override;
     virtual void tooltip(textid t) override { _tooltip = t; }
+
     virtual element &onclick(std::function<void(int, int)> func) override { _func = func; return *this; }
     virtual element &onrclick(std::function<void(int, int)> func) override { _rfunc = func; return *this; }
 };

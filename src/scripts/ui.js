@@ -56,7 +56,6 @@ top_menu_widget = {
 	spacing : 32,
 	offset_funds_basic : 540,
 	offset_population_basic : 400,
-	offset_date_basic : [-150, 5],
 	offset_rotate_basic : 200,
 
 	headers : {
@@ -155,6 +154,11 @@ top_menu_widget = {
     marshland_depl: { type : "menu_item", text:"", parameter:26},
     damage_fire 	: { type : "menu_item", text:"", parameter:27},
     desirability 	: { type : "menu_item", text:"", parameter:28},
+	},
+
+	ui : {
+		background 		: dummy({pos:[0, 0], size:[sw(0), 30]}),
+		date          : link({pos:[0, 2], margin:{right: -150}, size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW }),
 	}
 }
 
