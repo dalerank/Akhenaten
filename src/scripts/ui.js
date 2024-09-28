@@ -36,6 +36,7 @@ function image_button(config) { return __extend({type:"image_button"}, config) }
 function ok_button(config) { return __extend({type:"image_button", size:[39, 26], pack:PACK_GENERAL, id:96, offset:0 }, config) }
 function cancel_button(config) { return __extend({type:"image_button", size:[39, 26], pack:PACK_GENERAL, id:96, offset:4 }, config) }
 function button(config) { return __extend({type:"generic_button", font : FONT_NORMAL_BLACK_ON_LIGHT}, config) }
+function link(config) { return __extend({type:"generic_button", hbody:false, border:false, font : FONT_NORMAL_BLACK_ON_LIGHT}, config) }
 function arrowup(config) { return __extend({type:"arrow_button", down:false}, config) }
 function arrowdown(config) { return __extend({type:"arrow_button", down:true}, config) }
 function background(config) { return __extend({type:"background", down:true}, config) }
@@ -55,7 +56,7 @@ top_menu_widget = {
 	spacing : 32,
 	offset_funds_basic : 540,
 	offset_population_basic : 400,
-	offset_date_basic : 150,
+	offset_date_basic : [-150, 5],
 	offset_rotate_basic : 200,
 
 	headers : {
@@ -440,14 +441,14 @@ advisor_trade_window = {
 		hint_label   : label({font : FONT_NORMAL_BLACK_ON_DARK, text:"#trade_overseer_hint", pos:[60, 40]}),
 
 		inner_panel  : inner_panel({pos:[17, 60], size:[36, 21] }),
-		items 			 : dummy({pos:[17, 60], 
+		items 			 : dummy({pos:[17, 30], 
 			ui : {
-				item_button : dummy({pos:[20, 0], size:[570, 22], tooltip:[68, 109]}),
-				item_icon : dummy({pos:[24, 0]}),
-				item_name : dummy({pos:[46, 0]}),
-				item_quality : dummy({pos:[152, 0]}),
-				item_state : dummy({pos:[210, 0]}),
-				item_status : dummy({pos:[310, 0]}),
+				item_button : dummy({pos:[20, 0], size:[550, 22], tooltip:[68, 109]}),
+				item_icon : dummy({pos:[24, 3]}),
+				item_name : dummy({pos:[46, 5]}),
+				item_quality : dummy({pos:[152, 5]}),
+				item_state : dummy({pos:[200, 3]}),
+				item_status : dummy({pos:[300, 3]}),
 
 			}
 		}),
@@ -946,7 +947,7 @@ sidebar_window_expanded = {
 		background 		 : image({pos:[0, 30], pack:PACK_GENERAL, id:121}),
 		build_image    : image({pos:[11, 211]}),
 
-		show_overlays  : button({pos:[4, 30], size:[117, 20], border:false, font_hover:FONT_NORMAL_YELLOW }),
+		show_overlays  : link({pos:[4, 30], size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW }),
 		collapse       : image_button({pos:[128, 30], pack:PACK_GENERAL, id:110, offset:7, tooltip:[68, 10]}),
 
 		show_advisors  : image_button({pos:[16, 173], pack:PACK_GENERAL, id:136, offset:64, tooltip:[68, 41]}),

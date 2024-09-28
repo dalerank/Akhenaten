@@ -73,7 +73,7 @@ void handle_input_military(const mouse* m, const hotkeys* h) {
 }
 
 void draw_foreground_military() {
-    widget_top_menu_draw(false);
+    widget_top_menu_draw();
     window_city_draw();
     widget_sidebar_city_draw_foreground_military();
     window_city_draw_paused_and_time_left();

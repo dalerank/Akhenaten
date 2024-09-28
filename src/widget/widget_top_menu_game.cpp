@@ -61,8 +61,8 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     int offset_funds_basic;
     int offset_population;
     int offset_population_basic;
-    int offset_date;
-    int offset_date_basic;
+    vec2i offset_date;
+    vec2i offset_date_basic;
     int offset_rotate;
     int offset_rotate_basic;
 
@@ -96,7 +96,7 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
         spacing = arch.r_int("spacing");
         offset_funds_basic = arch.r_int("offset_funds_basic");
         offset_population_basic = arch.r_int("offset_population_basic");
-        offset_date_basic = arch.r_int("offset_date_basic");
+        offset_date_basic = arch.r_vec2i("offset_date_basic");
         offset_rotate_basic = arch.r_int("offset_rotate_basic");
         sidebar_offset = arch.r_int("sidebar_offset");
 
@@ -110,6 +110,7 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     }
 
     void menu_item_update(pcstr header, int item, pcstr text);
+    void draw_month_year_max_width(uint8_t month, int year, vec2i offset, int box_width, e_font font, color color);
 };
 
 top_menu_widget g_top_menu;
@@ -130,6 +131,31 @@ void top_menu_widget::menu_item_update(pcstr header, int item, pcstr text) {
     }
 
     menu->item(item).text = text;
+}
+
+void top_menu_widget::draw_month_year_max_width(uint8_t month, int year, vec2i offset, int box_width, e_font font, color color) {
+    int month_width = lang_text_get_width(25, month, font);
+    int ad_bc_width = lang_text_get_width(20, year >= 0 ? 1 : 0, font);
+    int space_width = font_definition_for(font)->space_width;
+
+    int negative_padding = 0;
+    // assume 3 digits in the year times 11 pixels plus letter spacing = approx 35px
+    int total_width = month_width + ad_bc_width + 35 + 2 * space_width;
+    if (total_width > box_width) {
+        // take the overflow and divide it by two since we have two places to correct: after month, and after year
+        negative_padding = std::max((box_width - total_width) / 2, -2 * (space_width - 2));
+    }
+
+    int width = negative_padding + ui::label_colored({ 25, month }, offset, font, color);
+    bstring32 text;
+    if (year >= 0) {
+        int use_year_ad = locale_year_before_ad();
+        if (use_year_ad) { text.printf(" %d %s", year, ui::str(20, 1)); } else { text.printf(" %s %d", year, ui::str(20, 1)); }
+    } else {
+        text.printf(" %d %s", -year, ui::str(20, 0));
+    }
+
+    ui::label_colored(text, { offset.x + width, offset.y }, font, color);
 }
 
 static void menu_debug_render_text(int opt, bool v) {
@@ -699,7 +725,7 @@ void widget_top_menu_draw_rotate_buttons() {
     }
 }
 
-void widget_top_menu_draw(int force) {
+void widget_top_menu_draw() {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Topmenu");
     auto& data = g_top_menu;
     widget_top_menu_draw_rotate_buttons();
@@ -719,10 +745,10 @@ void widget_top_menu_draw(int force) {
 
     data.offset_funds = s_width - data.offset_funds_basic;
     data.offset_population = s_width - data.offset_population_basic;
-    data.offset_date = s_width - data.offset_date_basic;
+    data.offset_date = vec2i{ s_width, 0 } + data.offset_date_basic;
     data.offset_rotate = s_width - data.offset_rotate_basic;
 
-    lang_text_draw_month_year_max_width(gametime().month, gametime().year, data.offset_date - 2, 5, 110, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    g_top_menu.draw_month_year_max_width(gametime().month, gametime().year, data.offset_date, 110, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     int width = lang_text_draw_colored(6, 0, data.offset_funds + 2, 5, treasure_font, 0);
     text_draw_number_colored(treasury, '@', " ", data.offset_funds + 7 + width, 5, treasure_font, 0);
@@ -746,8 +772,8 @@ static int get_info_id(vec2i m) {
     if (m.x > data.offset_population && m.x < data.offset_population + 128)
         return INFO_POPULATION;
 
-    if (m.x > data.offset_date && m.x < data.offset_date + 128)
-        return INFO_DATE;
+    //if (m.x > data.offset_date && m.x < data.offset_date + 128)
+    //    return INFO_DATE;
 
     if (m.x > data.offset_rotate && m.x < data.offset_rotate + 36) {
         if (m.x <= data.offset_rotate + 12)

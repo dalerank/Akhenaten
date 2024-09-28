@@ -363,7 +363,7 @@ void ui::slide_driver::update(int &x_offset, int expanded_offset_x, std::functio
             }
             x_offset += rel_offset;
         }
-        widget_top_menu_draw(true);
+        widget_top_menu_draw();
     } else {
         x_offset -= expanded_offset_x;
     }
