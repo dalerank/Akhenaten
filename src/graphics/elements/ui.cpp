@@ -814,6 +814,8 @@ void ui::eimage_button::draw() {
     flags |= (readonly ? UiFlags_Readonly : UiFlags_None);
 
     image_button *btn = nullptr;
+    pcstr pid = id.c_str();
+
     vec2i tsize;
     if (img) {
         btn = &ui::img_button(img, pos, size, img_desc.offset);

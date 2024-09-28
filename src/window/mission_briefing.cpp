@@ -43,9 +43,9 @@ int ui::mission_briefing_window::draw_background() {
 
     auto &ui = g_mission_briefing;
 
-    ui["title"].text((pcstr)msg->title.text);
-    ui["subtitle"].text((pcstr)msg->subtitle.text);
-    ui["difficulty_label"].text(ui::str(153, g_settings.difficulty + 1));
+    ui["title"] = (pcstr)msg->title.text;
+    ui["subtitle"] = (pcstr)msg->subtitle.text;
+    ui["difficulty_label"] = ui::str(153, g_settings.difficulty + 1);
 
     const pcstr widgets[] = {"goal_0", "goal_1", "goal_2", "goal_3", "goal_4", "goal_5"};
     auto goal_label = widgets;

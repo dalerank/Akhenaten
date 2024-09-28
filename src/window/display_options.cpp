@@ -77,6 +77,7 @@ void ui::display_options_window::ui_draw_foreground() {
     ui.begin_widget(pos);
     
     ui.draw();
+
     panel->ui_params.pos = ui["resolutions"].screen_pos();
     panel->draw();
 

@@ -228,11 +228,13 @@ void scroll_list_panel::draw() {
         if (using_custom_text_render) {
             custom_text_render(i, text, text_pos_x, text_pos_y, font);
         } else {
-            if (ui_params.text_max_width != -1)
+            if (ui_params.text_max_width != -1) {
                 text_ellipsize(text, font, ui_params.text_max_width);
+            }
             text_draw(text, text_pos_x, text_pos_y, font, 0);
         }
     }
+
     scrollbar_draw(ui_params.pos, &scrollbar);
     WAS_DRAWN = true;
 }
@@ -244,15 +246,17 @@ scroll_list_panel::scroll_list_panel(int n_buttons,
                                      void (*fcc)(int param1, int param2),
                                      scrollable_list_ui_params params,
                                      bool use_file_finder,
-                                     const char* dir,
-                                     const char* ext) {
+                                     pcstr dir,
+                                     pcstr ext) {
     // gather the UI params
     ui_params = params;
-    if (ui_params.buttons_size_x == -1)
+    if (ui_params.buttons_size_x == -1) {
         ui_params.buttons_size_x = ui_params.blocks_x * DEFAULT_BLOCK_SIZE - ui_params.buttons_margin_x - 2;
+    }
 
-    if (ui_params.text_max_width == -1)
+    if (ui_params.text_max_width == -1) {
         ui_params.text_max_width = ui_params.buttons_size_x - ui_params.text_padding_x;
+    }
 
     // init dynamic button list
     num_buttons = n_buttons;

@@ -40,9 +40,11 @@ function link(config) { return __extend({type:"generic_button", hbody:false, bor
 function arrowup(config) { return __extend({type:"arrow_button", down:false}, config) }
 function arrowdown(config) { return __extend({type:"arrow_button", down:true}, config) }
 function background(config) { return __extend({type:"background", down:true}, config) }
-function help_button(config) { return image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }) }
-function close_button(config) { return image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }) }
 function resource_icon(config) { return __extend({ type : "resource_icon"}, config) }
+
+function help_button(config) { var i = image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }); return __extend(i, config) }
+function close_button(config) { var i = image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }); return __extend(i, config) }
+function next_button(config) { var i = image_button({size:[27, 27], pack:PACK_GENERAL, id:90 }); return __extend(i, config) }
 
 uioptions = {
 	resource_icons : {pack:PACK_GENERAL, id:129},
@@ -753,9 +755,9 @@ mission_briefing_window = {
 		goal_immediate : { type : "label", pos : {x:32 + 16, y:134 + 32},	body : {w:31, h:1},	font : FONT_NORMAL_YELLOW, enabled: false },
 		description_panel : { type : "inner_panel", pos : {x:32, y:200}, size: {w:33, h:14} },
 		description_text : { type : "text", pos: [40, 216], size:[px(36), px(10)], wrap:px(34), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true },
-		difficulty_label : { type : "label", pos:[105, 433], size:[31, 14], font : FONT_NORMAL_BLACK_ON_LIGHT },
+		difficulty_label : { type : "label", pos:[105, 433], size:[80, 14], font : FONT_NORMAL_BLACK_ON_LIGHT },
 		back 			: { type:"image_button", pos:[26, 428], size:[31, 20], pack:PACK_GENERAL, id:90, offset:8 },
-		start_mission : { type:"image_button", pos:[516, 430], size:[27, 27], pack:PACK_GENERAL, id:90, offset:0 },
+		start_mission : next_button({pos:[516, 430]}),
 		dec_difficulty : { type:"image_button", pos:[65, 428], size:[17, 17], pack:PACK_GENERAL, id:212, offset:0 },
 		inc_difficulty : { type:"image_button", pos:[65 + 18, 428], size:[17, 17], pack:PACK_GENERAL, id:212, offset:3 },
 	}

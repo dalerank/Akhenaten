@@ -88,6 +88,9 @@ public:
     [[nodiscard]]
     bool equal(const xstring& rhs) const { return (_p == rhs._p); }
 
+    [[nodiscard]]
+    bool equal(pcstr rhs) const { return strcmp(c_str(), rhs) == 0; }
+
     xstring& printf(const char* format, ...) {
         bstring<4096> buf;
         va_list p;
@@ -111,6 +114,7 @@ struct std::hash<xstring>
 };
 
 inline bool operator==(xstring const& a, xstring const& b) { return a._get() == b._get(); }
+inline bool operator==(xstring const& a, pcstr b) { return a.equal(b); }
 inline bool operator!=(xstring const& a, xstring const& b) { return a._get() != b._get(); }
 inline bool operator<(xstring const& a, xstring const& b) { return a._get() < b._get(); }
 inline bool operator>(xstring const& a, xstring const& b) { return a._get() > b._get(); }
