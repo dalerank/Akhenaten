@@ -131,6 +131,7 @@ var building_mud_tower = {}
 var building_road = {}
 var building_burning_ruin = {}
 var building_marble_quarry = {}
+var trade_prices_window = {}
 
 // houses
 var building_house_crude_hut = {}

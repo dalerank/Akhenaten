@@ -55,6 +55,7 @@ void empire_load_editor(int empire_id, int viewport_width, int viewport_height) 
     //    }
     //    check_scroll_boundaries();
 }
+
 void empire_map_t::init_scenario() {
     scroll_x = initial_scroll_x;
     scroll_y = initial_scroll_y;

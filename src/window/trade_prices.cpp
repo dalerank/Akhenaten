@@ -11,35 +11,86 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "window/advisors.h"
+#include "window/autoconfig_window.h"
 #include "io/gamefiles/lang.h"
 #include "game/game.h"
 
-static void draw_background() {
+struct trade_prices_window : autoconfig_window_t<trade_prices_window> {
+    virtual int handle_mouse(const mouse *m) override { return 0; }
+    virtual int get_tooltip_text() override { return 0; }
+    virtual void draw_foreground() override {}
+    virtual int draw_background() override;
+    virtual void ui_draw_foreground() override;
+    virtual int ui_handle_mouse(const mouse *m) override;
+    virtual void init() {}
+
+    virtual void load(archive arch, pcstr section) override {
+        autoconfig_window::load(arch, section);
+
+        next_row_offset = arch.r_vec2i("next_row_offset");
+        next_item_offset = arch.r_vec2i("next_item_offset");
+        receive_offset = arch.r_vec2i("receive_offset");
+        buyer_offset = arch.r_vec2i("buyer_offset");
+        next = arch.r_int("next");
+    }
+
+    vec2i next_row_offset;
+    vec2i next_item_offset;
+    vec2i receive_offset;
+    vec2i buyer_offset;
+    int next;
+};
+
+trade_prices_window trade_prices_w;
+
+int trade_prices_window::draw_background() {
     window_draw_underlying_window();
 
-    graphics_set_to_dialog();
-
-    graphics_shade_rect(vec2i{33, 53}, vec2i{574, 334}, 0x80);
-    outer_panel_draw(vec2i{16, 144}, 38, 11);
-    lang_text_draw(54, 21, 26, 153, FONT_LARGE_BLACK_ON_LIGHT);
-    lang_text_draw(54, 22, 26, 228, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(54, 23, 26, 253, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    painter ctx = game.painter();
-    for (int i = 1; i < 16; i++) {
-        int image_offset = i + resource_image_offset(i, RESOURCE_IMAGE_ICON);
-        ImageDraw::img_generic(ctx, image_id_resource_icon(image_offset), vec2i{126 + 30 * i, 194});
-        text_draw_number_centered(trade_price_buy(i), 120 + 30 * i, 229, 30, FONT_SMALL_OUTLINED);
-        text_draw_number_centered(trade_price_sell(i), 120 + 30 * i, 254, 30, FONT_SMALL_OUTLINED);
-    }
-    lang_text_draw_centered(13, 1, 16, 296, 608, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    graphics_reset_dialog();
+    return 0;
 }
 
-static void handle_input(const mouse* m, const hotkeys* h) {
-    if (input_go_back_requested(m, h))
+void trade_prices_window::ui_draw_foreground() {
+    ui.begin_widget(ui.pos);
+    ui.draw();
+
+    vec2i items_pos = ui["items"].pos;
+    vec2i current_pos = items_pos;
+    int start_i = 0;
+    for (int i = 1; (start_i + i) < RESOURCES_MAX; i++) {
+        int image_offset = i;
+        if (i >= next) {
+            start_i += next;
+            i = 0;
+            items_pos += next_row_offset;
+            current_pos = items_pos;
+        }
+
+        e_resource resource = e_resource(start_i + i);
+        if (resource == RESOURCE_UNUSED12) {
+            continue;
+        }
+
+        ui.icon(current_pos, resource);
+
+        const int buy_price = trade_price_buy(i);
+        const int sell_price = trade_price_sell(i);
+        ui.label(bstring32(buy_price), current_pos + buyer_offset , FONT_NORMAL_BLACK_ON_LIGHT);
+        ui.label(bstring32(sell_price), current_pos + receive_offset, FONT_NORMAL_BLACK_ON_LIGHT);
+
+        current_pos += next_item_offset;
+    }
+
+    ui.end_widget();
+}
+
+int trade_prices_window::ui_handle_mouse(const mouse *m) {
+    const hotkeys *h = hotkey_state();
+    if (input_go_back_requested(m, h)) {
         window_advisors_show();
+        return 0;
+    }
+
+    return autoconfig_window::ui_handle_mouse(m);
 }
 
 static int get_tooltip_resource(tooltip_context* c) {
@@ -68,10 +119,11 @@ static void get_tooltip(tooltip_context* c) {
 void window_trade_prices_show(void) {
     static window_type window = {
         WINDOW_TRADE_PRICES,
-        draw_background,
-        0,
-        handle_input,
-        get_tooltip
+        [] { trade_prices_w.draw_background(); },
+        [] { trade_prices_w.ui_draw_foreground(); },
+        [] (const mouse *m, const hotkeys *h) { trade_prices_w.ui_handle_mouse(m); },
+        nullptr
     };
+
     window_show(&window);
 }

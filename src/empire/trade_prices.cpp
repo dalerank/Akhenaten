@@ -11,14 +11,14 @@ struct trade_price {
 
 static const struct trade_price DEFAULT_PRICES[RESOURCES_MAX] = {
   {0, 0},
-  {28, 21}, // grain
-  {47, 35},             // meat
-  {33, 25},             // lettuce
-  {33, 25},             // chickpeas
-  {33, 25},             // pomegranates
-  {33, 25},             // figs
-  {42, 33},             // fish
-  {44, 34},             // gamemeat
+  {28, 21},   // grain
+  {47, 35},   // meat
+  {33, 25},   // lettuce
+  {33, 25},   // chickpeas
+  {33, 25},   // pomegranates
+  {33, 25},   // figs
+  {42, 33},   // fish
+  {44, 34},   // gamemeat
 
   {21, 16},   // straw
   {325, 275}, // weapons
@@ -56,6 +56,7 @@ void trade_prices_reset(void) {
         prices[i] = DEFAULT_PRICES[i];
     }
 }
+
 int trade_price_change(int resource, int amount) {
     if (amount < 0 && prices[resource].sell <= 0) {
         // cannot lower the price to negative
@@ -74,14 +75,12 @@ int trade_price_change(int resource, int amount) {
 int trade_price_buy(int resource) {
     return prices[resource].buy;
 }
+
 int trade_price_sell(int resource, int bonus_inclusion) {
     switch (bonus_inclusion) {
-    case PRICE_WITH_BONUS:
-        return prices[resource].sell * (city_data.religion.ra_150_export_profits_months_left > 0 ? 1.5f : 1.0f);
-    case PRICE_ONLY_BASE:
-        return prices[resource].sell;
-    case PRICE_ONLY_BONUS:
-        return prices[resource].sell * (city_data.religion.ra_150_export_profits_months_left > 0 ? 0.5f : 0.0f);
+    case PRICE_WITH_BONUS: return prices[resource].sell * (city_data.religion.ra_150_export_profits_months_left > 0 ? 1.5f : 1.0f);
+    case PRICE_ONLY_BASE: return prices[resource].sell;
+    case PRICE_ONLY_BONUS: return prices[resource].sell * (city_data.religion.ra_150_export_profits_months_left > 0 ? 0.5f : 0.0f);
     }
 
     return 999;
