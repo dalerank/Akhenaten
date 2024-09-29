@@ -230,12 +230,8 @@ void window_city_handle_input(const mouse* m, const hotkeys* h) {
     if (!Planner.in_progress) {
         widget_top_menu_handle_input(m, h);
         widget_sidebar_city_handle_mouse(m);
-
-        //        if (widget_top_menu_handle_input(m, h))
-        //            return;
-        //        if (widget_sidebar_city_handle_mouse(m))
-        //            return;
     }
+
     widget_city_handle_input(m, h);
     city_has_loaded = true;
 }

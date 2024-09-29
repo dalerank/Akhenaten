@@ -6,8 +6,9 @@
 #include "city/ratings.h"
 #include "city/city.h"
 #include "game/resource.h"
-#include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/elements/tooltip.h"
+#include "graphics/elements/panel.h"
 #include "graphics/view/view.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -22,6 +23,8 @@
 #include "window/window_building_info.h"
 #include "widget/city/ornaments.h"
 #include "window/advisors.h"
+#include "scenario/criteria.h"
+#include "scenario/scenario.h"
 #include "sound/sound_building.h"
 #include "game/game.h"
 #include "js/js_game.h"
@@ -37,14 +40,6 @@ buildings::model_t<building_village_palace> village_building_palace_m;
 buildings::model_t<building_town_palace> town_building_palace_m;
 buildings::model_t<building_city_palace> city_building_palace_m;
 palace_info_window palace_infow;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_palace_model);
-void config_load_building_palace_model() {
-    village_building_palace_m.load();
-    town_building_palace_m.load();
-    city_building_palace_m.load();
-    palace_infow.load("info_window_palace");
-}
 
 void building_palace::on_create(int orientation) {
     base.labor_category = village_building_palace_m.labor_category;
@@ -73,6 +68,60 @@ void building_palace::update_graphic() {
     //} else {
     //    map_building_tiles_add(id(), tile(), size(), image_id_from_group(GROUP_BUILDING_PALACE_FANCY), TERRAIN_BUILDING);
     //}
+}
+
+void building_palace::draw_tooltip(tooltip_context *c) {
+    int x, y;
+    int width = 220;
+    int height = 80;
+
+    if (c->mpos.x < width + 20)
+        x = c->mpos.x + 20;
+    else {
+        x = c->mpos.x - width - 20;
+    }
+
+    if (c->mpos.y < 200) {
+        y = c->mpos.y + 10;
+    } else if (c->mpos.y + height - 32 > screen_height()) {
+        y = screen_height() - height;
+    } else {
+        y = c->mpos.y - 32;
+    }
+
+    //save_window_under_tooltip_to_buffer(x, y, width, height);
+    draw_tooltip_box(x, y, width, height);
+
+    // unemployment
+    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_unemployed, x + 5, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    width = text_draw_number_colored(g_city.labor.unemployment_percentage, '@', "%", x + 140, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    text_draw_number_colored(g_city.labor.workers_unemployed - g_city.labor.workers_needed, '(', ")", x + 140 + width, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+
+    // ratings
+    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_culture, x + 5, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    text_draw_number_colored(g_city.ratings.culture, '@', " ", x + 140, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    if (!scenario_is_open_play() && winning_culture()) {
+        text_draw_number_colored(winning_culture(), '(', ")", x + 140 + width, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    }
+
+    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_prosperity, x + 5, y + 33, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    text_draw_number_colored(g_city.ratings.prosperity, '@', " ", x + 140, y + 33, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+
+    if (!scenario_is_open_play() && winning_prosperity()) {
+        text_draw_number_colored(winning_prosperity(), '(', ")", x + 140 + width, y + 33, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    }
+
+    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_monuments, x + 5, y + 47, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    text_draw_number_colored(g_city.ratings.monument, '@', " ", x + 140, y + 47, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    if (!scenario_is_open_play() && winning_monuments()) {
+        text_draw_number_colored(winning_monuments(), '(', ")", x + 140 + width, y + 47, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    }
+
+    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_kingdom, x + 5, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    text_draw_number_colored(g_city.ratings.kingdom, '@', " ", x + 140, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    if (!scenario_is_open_play() && winning_kingdom()) {
+        text_draw_number_colored(winning_kingdom(), '(', ")", x + 140 + width, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    }
 }
 
 bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

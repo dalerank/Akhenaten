@@ -12,6 +12,7 @@ public:
     virtual void on_destroy() override;
     virtual bool can_play_animation() const override;
     virtual void update_graphic() override;
+    virtual void draw_tooltip(tooltip_context *c) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 };
 

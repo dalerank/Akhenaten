@@ -62,7 +62,6 @@ static void get_tooltip(tooltip_context* c) {
         return;
     }
 
-    c->type = TOOLTIP_BUTTON;
     c->text = (pcstr)lang_get_string(0, 131 + resource);
 }
 

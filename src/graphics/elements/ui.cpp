@@ -190,7 +190,7 @@ void ui::begin_frame() {
     g_state._offset = {};
     g_state.buttons.clear();
     g_state.scrollbars.clear();
-    tooltipctx.set(TOOLTIP_NONE, textid{});
+    tooltipctx.set(0, "");
 }
 
 void ui::end_frame() {
@@ -859,7 +859,7 @@ void ui::eimage_button::draw() {
     btn->tooltip(_tooltip);
 
     if (_tooltip.id && btn->hovered) {
-        tooltipctx.set(TOOLTIP_BUTTON, _tooltip);
+        tooltipctx.set(0, _tooltip);
     }
 }
 
@@ -1011,7 +1011,7 @@ void ui::egeneric_button::draw() {
     btn->tooltip(_tooltip);
 
     if (_tooltip.id && btn->hovered) {
-        tooltipctx.set(TOOLTIP_BUTTON, _tooltip);
+        tooltipctx.set(0, _tooltip);
     }
 }
 

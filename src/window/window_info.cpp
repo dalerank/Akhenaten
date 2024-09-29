@@ -385,7 +385,6 @@ void common_info_window::draw_tooltip(tooltip_context *c) {
     }
 
     if (tooltip && *tooltip) {
-        c->type = TOOLTIP_BUTTON;
         c->text = tooltip;
         window_invalidate();
     }

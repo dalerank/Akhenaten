@@ -40,8 +40,8 @@ static void reset_timer(void) {
     last_update = time_get_millis();
 }
 static void reset_tooltip(tooltip_context* c) {
-    if (c->type != TOOLTIP_NONE)
-        c->type = TOOLTIP_NONE;
+    c->_drawtooltip = nullptr;
+    c->text = "";
 }
 
 static void restore_window_under_tooltip_from_buffer(void) {
@@ -65,7 +65,7 @@ static void save_window_under_tooltip_to_buffer(int x, int y, int width, int hei
     button_tooltip_info.buffer_id = graphics_save_to_texture(button_tooltip_info.buffer_id, {x, y}, {width, height});
 }
 
-static void draw_tooltip_box(int x, int y, int width, int height) {
+void draw_tooltip_box(int x, int y, int width, int height) {
     graphics_draw_rect(vec2i{x, y}, vec2i{width, height}, COLOR_TOOLTIP_BORDER);
     graphics_fill_rect(vec2i{x + 1, y + 1}, vec2i{width - 2, height - 2}, COLOR_TOOLTIP_FILL);
 }
@@ -218,80 +218,35 @@ static void draw_tile_tooltip(tooltip_context* c) {
         text_draw_label_and_number("y: ", y_tile, " ", x + 2, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
     }
 }
-static void draw_senate_tooltip(tooltip_context* c) {
-    int x, y;
-    int width = 220;
-    int height = 80;
-
-    if (c->mpos.x < width + 20)
-        x = c->mpos.x + 20;
-    else {
-        x = c->mpos.x - width - 20;
-    }
-
-    if (c->mpos.y < 200) {
-        y = c->mpos.y + 10;
-    } else if (c->mpos.y + height - 32 > screen_height()) {
-        y = screen_height() - height;
-    } else {
-        y = c->mpos.y - 32;
-    }
-
-    //save_window_under_tooltip_to_buffer(x, y, width, height);
-    draw_tooltip_box(x, y, width, height);
-
-    // unemployment
-    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_unemployed, x + 5, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    width = text_draw_number_colored(g_city.labor.unemployment_percentage, '@', "%", x + 140, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    text_draw_number_colored(g_city.labor.workers_unemployed - g_city.labor.workers_needed, '(', ")", x + 140 + width, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-
-    // ratings
-    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_culture, x + 5, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    text_draw_number_colored(g_city.ratings.culture, '@', " ", x + 140, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    if (!scenario_is_open_play() && winning_culture()) {
-        text_draw_number_colored(winning_culture(), '(', ")", x + 140 + width, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    }
-
-    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_prosperity, x + 5, y + 33, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    text_draw_number_colored(g_city.ratings.prosperity, '@', " ", x + 140, y + 33, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-
-    if (!scenario_is_open_play() && winning_prosperity()) {
-        text_draw_number_colored(winning_prosperity(), '(', ")", x + 140 + width, y + 33, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    }
-
-    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_monuments, x + 5, y + 47, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    text_draw_number_colored(g_city.ratings.monument, '@', " ", x + 140, y + 47, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    if (!scenario_is_open_play() && winning_monuments()) {
-        text_draw_number_colored(winning_monuments(), '(', ")", x + 140 + width, y + 47, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    }
-
-    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_kingdom, x + 5, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    text_draw_number_colored(g_city.ratings.kingdom, '@', " ", x + 140, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    if (!scenario_is_open_play() && winning_kingdom()) {
-        text_draw_number_colored(winning_kingdom(), '(', ")", x + 140 + width, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    }
-}
 
 static void draw_tooltip(tooltip_context* c) {
-    switch (c->type) {
-    case TOOLTIP_BUTTON: draw_button_tooltip(c); break;
-    case TOOLTIP_OVERLAY: draw_overlay_tooltip(c); break;
-    case TOOLTIP_TILES: draw_tile_tooltip(c); break;
-    case TOOLTIP_SENATE: draw_senate_tooltip(c); break;
+    if (c->_drawtooltip) {
+        c->_drawtooltip();
     }
+
+    //switch (c->type) {
+    //case TOOLTIP_BUTTON: draw_button_tooltip(c); break;
+    //case TOOLTIP_OVERLAY: draw_overlay_tooltip(c); break;
+    //case TOOLTIP_TILES: draw_tile_tooltip(c); break;
+    //case TOOLTIP_SENATE: draw_senate_tooltip(c); break;
+    //}
 }
 
 static bool should_draw_tooltip(tooltip_context* c) {
-    if (c->type == TOOLTIP_NONE) {
+    if (!c->text) {
         reset_timer();
         return false;
     }
+
     if (!c->high_priority && g_settings.tooltips != e_tooltip_show_full) {
         reset_timer();
         return false;
     }
-    if (time_get_millis() - last_update < TOOLTIP_DELAY_MILLIS) // delay drawing tooltip
+
+    if (time_get_millis() - last_update < TOOLTIP_DELAY_MILLIS) { // delay drawing tooltip
         return false;
+    }
+
     return true;
 }
 
@@ -304,6 +259,7 @@ void tooltip_handle(const mouse* m, void (*func)(tooltip_context*)) {
         reset_timer();
         return;
     }
+
     static tooltip_context context;
     context.mpos = *m;
     context.text = "";
@@ -311,9 +267,9 @@ void tooltip_handle(const mouse* m, void (*func)(tooltip_context*)) {
         func(&context);
     }
 
-    const tooltip_context &uitooltip = ui::get_tooltip();
-    if (uitooltip.type) {
-        context.set(uitooltip.type, uitooltip.text);
+    if (!context.text) {
+        const tooltip_context &uitooltip = ui::get_tooltip();
+        context.text = uitooltip.text;
     }
 
     if (should_draw_tooltip(&context)) {
@@ -326,11 +282,9 @@ void tooltip_handle(const mouse* m, void (*func)(tooltip_context*)) {
 }
 
 void tooltip_context::set(int t, textid tx) { 
-    type = t;
     text = (pcstr)lang_get_string(tx);
 }
 
 void tooltip_context::set(int t, pcstr tx) {
-    type = t;
     text = tx;
 }

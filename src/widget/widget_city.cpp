@@ -592,25 +592,27 @@ void widget_city_get_tooltip(tooltip_context* c) {
     }
 
     int building_id = map_building_at(grid_offset);
+    building_impl *b = building_get(building_id)->dcast();
+    b->draw_tooltip(c);
     // cheat tooltips
-    if (game.current_overlay == OVERLAY_NONE && game_cheat_tooltip_enabled()) {
-        c->type = TOOLTIP_TILES;
-        c->high_priority = 1;
-        return;
-    }
-
-    // regular tooltips
-    if (game.current_overlay == OVERLAY_NONE && building_id && building_get(building_id)->is_palace()) {
-        c->type = TOOLTIP_SENATE;
-        c->high_priority = 1;
-        return;
-    }
-
-    // overlay tooltips
-    if (game.current_overlay != OVERLAY_NONE) {
-        c->type = TOOLTIP_OVERLAY;
-        c->high_priority = 1;
-        int id = widget_city_overlay_get_tooltip_text(c, grid_offset);
-        c->text = ui::str(66, id);
-    }
+    //if (game.current_overlay == OVERLAY_NONE && game_cheat_tooltip_enabled()) {
+    //    c->type = TOOLTIP_TILES;
+    //    c->high_priority = 1;
+    //    return;
+    //}
+    //
+    //// regular tooltips
+    //if (game.current_overlay == OVERLAY_NONE && building_id && building_get(building_id)->is_palace()) {
+    //    c->type = TOOLTIP_SENATE;
+    //    c->high_priority = 1;
+    //    return;
+    //}
+    //
+    //// overlay tooltips
+    //if (game.current_overlay != OVERLAY_NONE) {
+    //    c->type = TOOLTIP_OVERLAY;
+    //    c->high_priority = 1;
+    //    int id = widget_city_overlay_get_tooltip_text(c, grid_offset);
+    //    c->text = ui::str(66, id);
+    //}
 }

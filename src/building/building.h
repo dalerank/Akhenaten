@@ -67,6 +67,7 @@ class building_quarry;
 class building_palace;
 class building_festival_square;
 class building_bandstand;
+struct tooltip_context;
 struct object_info;
 struct painter;
 struct mouse;
@@ -515,6 +516,7 @@ public:
     virtual textid get_tooltip() const { return {0, 0}; }
     virtual int ready_production() const { return params().production_rate; }
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
+    virtual void draw_tooltip(tooltip_context *c) {};
     virtual const static_params &params() const { return params(type()); }
 
     virtual building_farm *dcast_farm() { return nullptr; }
