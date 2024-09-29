@@ -71,7 +71,7 @@ void draw_tooltip_box(int x, int y, int width, int height) {
 }
 
 static void draw_button_tooltip(tooltip_context* c) {
-    if (!c->text.empty()) {
+    if (c->text.empty()) {
         return;
     }
 
@@ -222,13 +222,14 @@ static void draw_tile_tooltip(tooltip_context* c) {
 static void draw_tooltip(tooltip_context* c) {
     if (c->_drawtooltip) {
         c->_drawtooltip();
+    } else {
+        draw_button_tooltip(c);
     }
 
     //switch (c->type) {
-    //case TOOLTIP_BUTTON: draw_button_tooltip(c); break;
+    //case TOOLTIP_BUTTON: ; break;
     //case TOOLTIP_OVERLAY: draw_overlay_tooltip(c); break;
     //case TOOLTIP_TILES: draw_tile_tooltip(c); break;
-    //case TOOLTIP_SENATE: draw_senate_tooltip(c); break;
     //}
 }
 

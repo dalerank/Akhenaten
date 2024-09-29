@@ -601,13 +601,6 @@ void widget_city_get_tooltip(tooltip_context* c) {
     //    return;
     //}
     //
-    //// regular tooltips
-    //if (game.current_overlay == OVERLAY_NONE && building_id && building_get(building_id)->is_palace()) {
-    //    c->type = TOOLTIP_SENATE;
-    //    c->high_priority = 1;
-    //    return;
-    //}
-    //
     //// overlay tooltips
     //if (game.current_overlay != OVERLAY_NONE) {
     //    c->type = TOOLTIP_OVERLAY;
