@@ -9,4 +9,3 @@ enum e_empire_route_state {
 
 void window_empire_show();
 void window_empire_show_checked();
-

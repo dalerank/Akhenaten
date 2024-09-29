@@ -32,6 +32,7 @@
 #include "window/message_dialog.h"
 #include "window/popup_dialog.h"
 #include "window/resource_settings.h"
+#include "window/autoconfig_window.h"
 #include "window/trade_opened.h"
 #include "game/game.h"
 
@@ -123,9 +124,9 @@ struct object_trade_info {
     e_resource res;
 };
 
-struct empire_window_t {
-    int selected_button;
-    int selected_city;
+struct empire_window : public autoconfig_window_t<empire_window> {
+    int selected_button = 0;
+    int selected_city = 1;
     vec2i min_pos, max_pos;
     vec2i draw_offset;
     int focus_button_id;
@@ -149,38 +150,43 @@ struct empire_window_t {
     int trade_button_offset_y;
     svector<object_trade_info, 16> buying_goods;
     svector<object_trade_info, 16> selling_goods;
+
+    virtual int handle_mouse(const mouse *m) override { return 0; }
+    virtual int get_tooltip_text() override { return 0; }
+    virtual void draw_foreground() override {}
+    virtual int draw_background() override { return 0; }
+    virtual void ui_draw_foreground() override;
+    virtual int ui_handle_mouse(const mouse *m) override { return 0; }
+    virtual void init() override;
+
+    virtual void load(archive arch, pcstr section) override {
+        autoconfig_window::load(arch, section);
+    
+        trade_column_spacing = arch.r_int("trade_column_spacing");
+        trade_row_spacing = arch.r_int("trade_row_spacing");
+        info_y_traded = arch.r_int("info_y_traded");
+        trade_button_offset_x = arch.r_int("trade_button_offset_x");
+        info_y_sells = arch.r_int("info_y_sells");
+        info_y_buys = arch.r_int("info_y_buys");
+        info_y_footer_1 = arch.r_int("info_y_footer_1");
+        info_y_city_name = arch.r_int("info_y_city_name");
+        info_y_city_desc = arch.r_int("info_y_city_desc");
+        text_group_old_names = arch.r_int("text_group_old_names");
+        text_group_new_names = arch.r_int("text_group_new_names");
+        trade_resource_size = arch.r_int("trade_resource_size");
+        trade_resource_offset = arch.r_int("trade_resource_offset");
+        sell_res_group = arch.r_int("sell_res_group");
+        trade_button_offset_y = arch.r_int("trade_button_offset_y");
+    }
 };
 
-empire_window_t g_empire_window = {0, 1};
+empire_window g_empire_window;
 
-static void init(void) {
-    auto &data = g_empire_window;
-    data.selected_button = 0;
+void empire_window::init() {
+    selected_button = 0;
     int selected_object = g_empire_map.selected_object();
-    data.selected_city = selected_object ? g_empire.get_city_for_object(selected_object - 1) : 0;
-    data.focus_button_id = 0;
-}
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_empire_window_config);
-void config_load_empire_window_config() {
-    g_config_arch.r_section("empire_window", [] (archive arch) {
-        auto &g = g_empire_window;
-        g.trade_column_spacing = arch.r_int("trade_column_spacing");
-        g.trade_row_spacing = arch.r_int("trade_row_spacing");
-        g.info_y_traded = arch.r_int("info_y_traded");
-        g.trade_button_offset_x = arch.r_int("trade_button_offset_x");
-        g.info_y_sells = arch.r_int("info_y_sells");
-        g.info_y_buys = arch.r_int("info_y_buys");
-        g.info_y_footer_1 = arch.r_int("info_y_footer_1");
-        g.info_y_city_name = arch.r_int("info_y_city_name");
-        g.info_y_city_desc = arch.r_int("info_y_city_desc");
-        g.text_group_old_names = arch.r_int("text_group_old_names");
-        g.text_group_new_names = arch.r_int("text_group_new_names");
-        g.trade_resource_size = arch.r_int("trade_resource_size");
-        g.trade_resource_offset = arch.r_int("trade_resource_offset");
-        g.sell_res_group = arch.r_int("sell_res_group");
-        g.trade_button_offset_y = arch.r_int("trade_button_offset_y");
-    });
+    selected_city = selected_object ? g_empire.get_city_for_object(selected_object - 1) : 0;
+    focus_button_id = 0;
 }
 
 static void draw_trade_route(int route_id, e_empire_route_state effect) {
@@ -657,7 +663,7 @@ static void window_empire_draw_background(void) {
     }
 }
 
-static void window_empire_draw_foreground(void) {
+void empire_window::ui_draw_foreground() {
     auto &data = g_empire_window;
     //    fade_in_out++;
     //    float v = 0.5 * (1.0 + sin(0.35 * (float)fade_in_out));
@@ -893,15 +899,15 @@ static void button_open_trade(int param1, int param2) {
 }
 
 void window_empire_show() {
-    window_type window = {
+    static window_type window = {
         WINDOW_EMPIRE,
         window_empire_draw_background,
-        window_empire_draw_foreground,
+        [] { g_empire_window.ui_draw_foreground(); },
         window_empire_handle_input,
         window_empire_get_tooltip
     };
 
-    init();
+    g_empire_window.init();
     window_show(&window);
 }
 
