@@ -45,32 +45,17 @@
 
 #include "js/js_game.h"
 
-enum e_info {
-    INFO_NONE = 0,
-    INFO_FUNDS = 1,
-    INFO_POPULATION = 2,
-    INFO_DATE = 3
-};
-
 static void button_rotate_left(int param1, int param2);
 static void button_rotate_reset(int param1, int param2);
 static void button_rotate_right(int param1, int param2);
 
 struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
-    int offset_funds;
-    int offset_funds_basic;
-    int offset_population;
-    int offset_population_basic;
     int offset_rotate;
     int offset_rotate_basic;
 
     xstring open_sub_menu;
     xstring focus_menu_id;
     xstring focus_sub_menu_id;
-
-    int population;
-    int treasury;
-    int month;
 
     vec2i offset;
     int item_height;
@@ -95,8 +80,6 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
         item_height = arch.r_int("item_height");
         background = (e_image_id)arch.r_int("background");
         spacing = arch.r_int("spacing");
-        offset_funds_basic = arch.r_int("offset_funds_basic");
-        offset_population_basic = arch.r_int("offset_population_basic");
         offset_rotate_basic = arch.r_int("offset_rotate_basic");
         sidebar_offset = arch.r_int("sidebar_offset");
 
@@ -129,6 +112,14 @@ static generic_button orientation_buttons_ph[] = {
 void top_menu_widget::init() {
     ui["date"].onrclick([] {
         window_message_dialog_show(MESSAGE_DIALOG_TOP_DATE, -1, window_city_draw_all);
+    });
+
+    ui["population"].onrclick([] {
+        window_message_dialog_show(MESSAGE_DIALOG_TOP_POPULATION, -1, window_city_draw_all);
+    });
+
+    ui["funds"].onrclick([] {
+        window_message_dialog_show(MESSAGE_DIALOG_TOP_FUNDS, -1, window_city_draw_all);
     });
 }
 
@@ -729,30 +720,20 @@ void top_menu_widget::draw_foreground() {
     wdiget_top_menu_draw_background();
     widget_top_menu_draw_elements();
 
-    color treasure_color = COLOR_WHITE;
-    treasury = city_finance_treasury();
+    color treasure_color = city_finance_treasury() < 0 ? COLOR_FONT_RED : COLOR_WHITE;
 
-    if (treasury < 0) {
-        treasure_color = COLOR_FONT_RED;
-    }
-
-    e_font treasure_font = (treasury >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_BLUE);
+    e_font treasure_font = (city_finance_treasury() >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_BLUE);
     int s_width = screen_width();
 
-    offset_funds = s_width - offset_funds_basic;
-    offset_population = s_width - offset_population_basic;
     offset_rotate = s_width - offset_rotate_basic;
 
-    g_top_menu.update_month_year_max_width(gametime().month, gametime().year);
+    update_month_year_max_width(gametime().month, gametime().year);
 
-    int width = lang_text_draw_colored(6, 0, offset_funds + 2, 5, treasure_font, 0);
-    text_draw_number_colored(treasury, '@', " ", offset_funds + 7 + width, 5, treasure_font, 0);
+    ui["funds"].font(treasure_font);
+    ui["funds"].text_color(treasure_color);
+    ui["funds"].text_var("%s %d", ui::str(6, 0), city_finance_treasury());
 
-    width = lang_text_draw(6, 1, offset_population + 2, 5, FONT_NORMAL_BLACK_ON_LIGHT);
-    text_draw_number(city_population(), '@', " ", offset_population + 7 + width, 5, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    this->population = city_population();
-    this->month = gametime().month;
+    ui["population"].text_var("%s %d", ui::str(6, 1), city_population());
 
     ui.begin_widget({ 0, 0 });
     ui.draw();
@@ -761,31 +742,6 @@ void top_menu_widget::draw_foreground() {
 
 void widget_top_menu_draw() {
     g_top_menu.draw_foreground();
-}
-
-static int get_info_id(vec2i m) {
-    auto& data = g_top_menu;
-    if (m.y < 4 || m.y >= 18)
-        return INFO_NONE;
-
-    if (m.x > data.offset_funds && m.x < data.offset_funds + 128)
-        return INFO_FUNDS;
-
-    if (m.x > data.offset_population && m.x < data.offset_population + 128)
-        return INFO_POPULATION;
-
-    //if (m.x > data.offset_date && m.x < data.offset_date + 128)
-    //    return INFO_DATE;
-
-    if (m.x > data.offset_rotate && m.x < data.offset_rotate + 36) {
-        if (m.x <= data.offset_rotate + 12)
-            return -15;
-        else if (m.x <= data.offset_rotate + 24)
-            return -16;
-        else
-            return -14;
-    }
-    return INFO_NONE;
 }
 
 static bool widget_top_menu_handle_input_submenu(const mouse* m, const hotkeys* h) {
@@ -813,19 +769,6 @@ static bool widget_top_menu_handle_input_submenu(const mouse* m, const hotkeys* 
     return false;
 }
 
-static bool handle_right_click(int type) {
-    if (type == INFO_NONE)
-        return false;
-
-    if (type == INFO_FUNDS) {
-        window_message_dialog_show(MESSAGE_DIALOG_TOP_FUNDS, -1, window_city_draw_all);
-    } else if (type == INFO_POPULATION) {
-        window_message_dialog_show(MESSAGE_DIALOG_TOP_POPULATION, -1, window_city_draw_all);
-    } 
-
-    return true;
-}
-
 int top_menu_widget::ui_handle_mouse(const mouse *m) {
     autoconfig_window::ui_handle_mouse(m);
 
@@ -835,10 +778,6 @@ int top_menu_widget::ui_handle_mouse(const mouse *m) {
         data.open_sub_menu = menu_id;
         widget_sub_menu_show();
         return 0;
-    }
-
-    if (m->right.went_up) {
-        return handle_right_click(get_info_id(*m));
     }
 
     return 0;

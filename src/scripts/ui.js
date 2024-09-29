@@ -56,8 +56,6 @@ top_menu_widget = {
 	background: IMG_TOP_MENU_BACKGROUND,
 	sidebar_offset : 158,
 	spacing : 32,
-	offset_funds_basic : 540,
-	offset_population_basic : 400,
 	offset_rotate_basic : 200,
 
 	headers : {
@@ -160,7 +158,9 @@ top_menu_widget = {
 
 	ui : {
 		background 		: dummy({pos:[0, 0], size:[sw(0), 30]}),
-		date          : link({pos:[0, 2], margin:{right: -150}, size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooptip:[68, 63] }),
+		date          : link({pos:[0, 2], margin:{right: -150}, size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 63] }),
+		population    : link({pos:[0, 2], margin:{right: -320}, size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 62] }),
+		funds         : link({pos:[0, 2], margin:{right: -450}, size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 62] }),
 	}
 }
 
