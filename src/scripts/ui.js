@@ -191,6 +191,7 @@ trade_prices_window = {
 		title 				: text_center({pos:[0, 12], size:[px(56), 20], text:[54, 21], font : FONT_LARGE_BLACK_ON_LIGHT }),
 	
 		items 			     : dummy({pos:[156, 44]}),
+		item_button      : dummy({pos:[-7, -7], size:[38, 74]}),
 
 		buyers_pay1      : text({text:[54, 22], pos:[26, 72], font: FONT_NORMAL_BLACK_ON_LIGHT}),
 		sellers_receive1 : text({text:[54, 23], pos:[26, 92], font:FONT_NORMAL_BLACK_ON_LIGHT}),

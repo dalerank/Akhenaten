@@ -55,6 +55,7 @@ void trade_prices_window::ui_draw_foreground() {
 
     vec2i items_pos = ui["items"].pos;
     vec2i current_pos = items_pos;
+    const auto &item_button = ui["item_button"];
     int start_i = 0;
     for (int i = 1; (start_i + i) < RESOURCES_MAX; i++) {
         int image_offset = i;
@@ -71,6 +72,10 @@ void trade_prices_window::ui_draw_foreground() {
         }
 
         ui.icon(current_pos, resource);
+        const auto &btn = ui.button("", current_pos + item_button.pos, item_button.size, fonts_vec{}, UiFlags_NoBody);
+        if (btn.hovered) {
+            ui::set_tooltip((pcstr)lang_get_string(23, resource));
+        }
 
         const int buy_price = trade_price_buy(i);
         const int sell_price = trade_price_sell(i);
@@ -93,36 +98,13 @@ int trade_prices_window::ui_handle_mouse(const mouse *m) {
     return autoconfig_window::ui_handle_mouse(m);
 }
 
-static int get_tooltip_resource(tooltip_context* c) {
-    int x_base = screen_dialog_offset_x() + 124;
-    int y = screen_dialog_offset_y() + 192;
-    int x_mouse = c->mpos.x;
-    int y_mouse = c->mpos.y;
-
-    for (int i = 1; i < 16; i++) {
-        int x = x_base + 30 * i;
-        if (x <= x_mouse && x + 24 > x_mouse && y <= y_mouse && y + 24 > y_mouse)
-            return i;
-    }
-    return 0;
-}
-
-static void get_tooltip(tooltip_context* c) {
-    int resource = get_tooltip_resource(c);
-    if (!resource) {
-        return;
-    }
-
-    c->text = (pcstr)lang_get_string(0, 131 + resource);
-}
-
 void window_trade_prices_show(void) {
     static window_type window = {
         WINDOW_TRADE_PRICES,
         [] { trade_prices_w.draw_background(); },
         [] { trade_prices_w.ui_draw_foreground(); },
         [] (const mouse *m, const hotkeys *h) { trade_prices_w.ui_handle_mouse(m); },
-        nullptr
+        [] (tooltip_context *) { trade_prices_w.get_tooltip_text(); }
     };
 
     window_show(&window);
