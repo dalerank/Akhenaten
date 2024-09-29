@@ -154,7 +154,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
     virtual void draw_foreground() override {}
-    virtual int draw_background() override { return 0; }
+    virtual int draw_background() override;
     virtual void ui_draw_foreground() override;
     virtual int ui_handle_mouse(const mouse *m) override { return 0; }
     virtual void init() override;
@@ -178,6 +178,8 @@ struct empire_window : public autoconfig_window_t<empire_window> {
         sell_res_group = arch.r_int("sell_res_group");
         trade_button_offset_y = arch.r_int("trade_button_offset_y");
     }
+
+    void draw_map();
 };
 
 empire_window g_empire_window;
@@ -565,17 +567,16 @@ static void draw_invasion_warning(int x, int y, int image_id) {
     ImageDraw::img_generic(ctx, image_id, vec2i{data.draw_offset.x + x, data.draw_offset.y + y});
 }
 
-void window_empire_draw_map() {
-    auto &data = g_empire_window;
+void empire_window::draw_map() {
     painter ctx = game.painter();
-    graphics_set_clip_rectangle(data.min_pos + vec2i{16, 16}, vec2i{data.max_pos - data.min_pos} - vec2i{32, 136});
+    graphics_set_clip_rectangle(min_pos + vec2i{16, 16}, vec2i{max_pos - min_pos} - vec2i{32, 136});
 
-    g_empire_map.set_viewport(data.max_pos - data.min_pos - vec2i{32, 136});
+    g_empire_map.set_viewport(max_pos - min_pos - vec2i{32, 136});
 
-    data.draw_offset = data.min_pos + vec2i{16, 16};
-    data.draw_offset = g_empire_map.adjust_scroll(data.draw_offset);
+    draw_offset = min_pos + vec2i{16, 16};
+    draw_offset = g_empire_map.adjust_scroll(draw_offset);
 
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EMPIRE_MAP), data.draw_offset);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EMPIRE_MAP), draw_offset);
 
     empire_object_foreach(draw_empire_object);
 
@@ -649,7 +650,7 @@ static void draw_paneling() {
     graphics_reset_clip_rectangle();
 }
 
-static void window_empire_draw_background(void) {
+int empire_window::draw_background() {
     auto &data = g_empire_window;
     int s_width = screen_width();
     int s_height = screen_height();
@@ -661,29 +662,20 @@ static void window_empire_draw_background(void) {
     if (data.min_pos.x || data.min_pos.y) {
         graphics_clear_screen();
     }
+
+    return 0;
 }
 
 void empire_window::ui_draw_foreground() {
-    auto &data = g_empire_window;
-    //    fade_in_out++;
-    //    float v = 0.5 * (1.0 + sin(0.35 * (float)fade_in_out));
-    //    int mm = int(v * 0xff);
-    //    color r = mm * 0x00010000;
-    //    color g = mm * 0x00000100;
-    //    color b = mm * 0x00000001;
-    //    fade_in_out_color = 0xff000000 + r + g + b;
-
-    ////////
-
-    window_empire_draw_map();
+    draw_map();
 
     const empire_city* city = 0;
     int selected_object = g_empire_map.selected_object();
     if (selected_object) {
         const empire_object* object = empire_object_get(selected_object - 1);
         if (object->type == EMPIRE_OBJECT_CITY) {
-            data.selected_city = g_empire.get_city_for_object(object->id);
-            city = g_empire.city(data.selected_city);
+            selected_city = g_empire.get_city_for_object(object->id);
+            city = g_empire.city(selected_city);
         }
     }
 
@@ -901,7 +893,7 @@ static void button_open_trade(int param1, int param2) {
 void window_empire_show() {
     static window_type window = {
         WINDOW_EMPIRE,
-        window_empire_draw_background,
+        [] { g_empire_window.draw_background(); },
         [] { g_empire_window.ui_draw_foreground(); },
         window_empire_handle_input,
         window_empire_get_tooltip

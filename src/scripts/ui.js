@@ -1406,6 +1406,11 @@ empire_window = {
 	trade_resource_offset : 3,
 	sell_res_group : 47,
 	trade_button_offset_y : 10,
+
+	ui : {
+
+		
+	}
 }
 
 minimap_window = {
