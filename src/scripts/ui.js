@@ -41,13 +41,14 @@ function arrowup(config) { return __extend({type:"arrow_button", down:false}, co
 function arrowdown(config) { return __extend({type:"arrow_button", down:true}, config) }
 function background(config) { return __extend({type:"background", down:true}, config) }
 function resource_icon(config) { return __extend({ type : "resource_icon"}, config) }
+function large_button(config) { return __extend({ type : "large_button"}, config) }
 
 function help_button(config) { var i = image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }); return __extend(i, config) }
 function close_button(config) { var i = image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }); return __extend(i, config) }
 function next_button(config) { var i = image_button({size:[27, 27], pack:PACK_GENERAL, id:90 }); return __extend(i, config) }
 
 uioptions = {
-	resource_icons : {pack:PACK_GENERAL, id:129},
+	resource_icons : {pack:PACK_EXPANSION, id:3},
 }
 
 top_menu_widget = {
@@ -167,14 +168,37 @@ top_menu_widget = {
 main_menu_window = {
 	ui : {
 		background    : { type:"background", pack:PACK_UNLOADED, id:14, offset:0 },
-		continue_game : { type:"large_button", pos:mbutton(0), size:[256, 25], text:{group: 13, id: 5}},
-		select_player : { type:"large_button", pos:mbutton(1), size:[256, 25], text:{group: 30, id: 0}},
-		show_records  : { type:"large_button", pos:mbutton(2), size:[256, 25], text:{group: 30, id: 5}},
-		show_config   : { type:"large_button", pos:mbutton(3), size:[256, 25], text:{group: 2,  id: 0}},
-		quit_game     : { type:"large_button", pos:mbutton(4), size:[256, 25], text:{group: 30, id: 4}},
-		discord 			: { type:"image_button", pos:[sw(-100), sh(-50)], size:[48, 48], icon_texture:"!discord", scale:0.75 },
-		patreon 			: { type:"image_button", pos:[sw(-50), sh(-50)], size:[48, 48], icon_texture:":patreon_48.png", scale:0.75 },
-		version_number: { type:"text", pos:[18, sh(-30)], text: game.version, font: FONT_SMALL_PLAIN, color: 0xffb3b3b3}
+		continue_game : large_button({ pos:mbutton(0), size:[256, 25], text:[13, 5]}),
+		select_player : large_button({ pos:mbutton(1), size:[256, 25], text:[30, 0]}),
+		show_records  : large_button({ pos:mbutton(2), size:[256, 25], text:[30, 5]}),
+		show_config   : large_button({ pos:mbutton(3), size:[256, 25], text:[2,  0]}),
+		quit_game     : large_button({ pos:mbutton(4), size:[256, 25], text:[30, 4]}),
+		discord 			: image_button({ pos:[sw(-100), sh(-50)], size:[48, 48], icon_texture:"!discord", scale:0.75 }),
+		patreon 			: image_button({ pos:[sw(-50), sh(-50)], size:[48, 48], icon_texture:":patreon_48.png", scale:0.75 }),
+		version_number: text({pos:[18, sh(-30)], text: game.version, font: FONT_SMALL_PLAIN, color: 0xffb3b3b3})
+	}
+}
+
+trade_prices_window = {
+	pos: [(sw(0) - px(56))/2, (sh(0) - px(11))/2],
+  next_row_offset : [0, 90], 
+  next_item_offset : [42, 0], 
+  receive_offset : [0, 50], 
+  buyer_offset : [0, 30], 
+  next : 18,
+	ui : {
+		background    : outer_panel({pos:[0, 0], size:[56, 16]}),
+		title 				: text_center({pos:[0, 12], size:[px(56), 20], text:[54, 21], font : FONT_LARGE_BLACK_ON_LIGHT }),
+	
+		items 			     : dummy({pos:[156, 44]}),
+
+		buyers_pay1      : text({text:[54, 22], pos:[26, 72], font: FONT_NORMAL_BLACK_ON_LIGHT}),
+		sellers_receive1 : text({text:[54, 23], pos:[26, 92], font:FONT_NORMAL_BLACK_ON_LIGHT}),
+
+		buyers_pay2      : text({text:[54, 22], pos:[26, 162], font: FONT_NORMAL_BLACK_ON_LIGHT}),
+		sellers_receive2 : text({text:[54, 23], pos:[26, 182], font:FONT_NORMAL_BLACK_ON_LIGHT}),
+
+		back          : text_center({pos:[13, -1], margin:{bottom:-35}, text:[13, 1], size:[px(56), 20], font:FONT_NORMAL_BLACK_ON_LIGHT }),
 	}
 }
 

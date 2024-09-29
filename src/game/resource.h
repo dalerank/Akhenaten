@@ -54,10 +54,10 @@ enum e_resource : uint8_t {
     RESOURCE_DEBEN = 36,
     RESOURCE_TROOPS = 37,
 
-    RESOURCE_MAX
+    RESOURCE_COUNT
 };
 
-extern const token_holder<e_resource, RESOURCE_NONE, RESOURCE_MAX> e_resource_tokens;
+extern const token_holder<e_resource, RESOURCE_NONE, RESOURCE_COUNT> e_resource_tokens;
 
 struct resource_value {
     e_resource type;
