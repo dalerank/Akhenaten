@@ -27,7 +27,6 @@ struct image_data_t {
 
     std::vector<imagepak**> pak_list;
 
-    imagepak* expansion = nullptr;
     imagepak* sprmain2 = nullptr;
 
     std::vector<imagepak*> temple_paks;
@@ -152,12 +151,10 @@ bool image_load_paks() {
     data.pak_list.push_back(&data.temple);
     data.pak_list.push_back(&data.empire);
     data.pak_list.push_back(&data.sprmain2);
-    data.pak_list.push_back(&data.expansion);
     data.pak_list.push_back(&data.monument);
 
     data.empire = new imagepak("Empire", 20305);                   // 20305 --> 20506 (+177)
     data.sprmain2 = new imagepak("SprMain2", 20683);               // 20683 --> 23035
-    data.expansion = new imagepak("Expansion", 23035);             // 23035 --> 23935 (-200)
     // <--- original pyramid pak in here                                                                            //
     // 23735 --> 24163
 
@@ -248,9 +245,6 @@ static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
             return data.enemy;
         else
             return data.enemy_paks.at(pak_cache_idx);
-        /////
-    case PACK_EXPANSION:
-        return data.expansion;
 
     case PACK_EXPANSION_SPR:
         return data.sprmain2;
