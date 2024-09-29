@@ -59,9 +59,9 @@ top_menu_widget = {
 	offset_rotate_basic : 200,
 
 	headers : {
-		file 					: { type: "menu_header", text: {group:7, id:0} },
-		options				: { type: "menu_header", text: {group:2, id:0} },
-		help		   		: { type: "menu_header", text: {group:3, id:0} },
+		file 					: { type: "menu_header", text: {group:7, id:0}, tooltip:[68, 51] },
+		options				: { type: "menu_header", text: {group:2, id:0}, tooltip:[68, 52] },
+		help		   		: { type: "menu_header", text: {group:3, id:0}, tooltip:[68, 53] },
 		advisors  		: { type: "menu_header", text: {group:4, id:0} },
 		debug		   		: { type: "menu_header", text: "Debug" },
 		debug_render  : { type: "menu_header", text: "Render" },

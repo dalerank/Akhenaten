@@ -76,10 +76,10 @@ static void draw_button_tooltip(tooltip_context* c) {
     }
 
     int width = 200;
-    int lines = text_measure_multiline(c->text, width - 5, FONT_SMALL_SHADED);
+    int lines = text_measure_multiline((const uint8_t *)c->text.c_str(), width - 5, FONT_SMALL_SHADED);
     if (lines > 2) {
         width = 300;
-        lines = text_measure_multiline(c->text, width - 5, FONT_SMALL_SHADED);
+        lines = text_measure_multiline((const uint8_t*)c->text.c_str(), width - 5, FONT_SMALL_SHADED);
     }
 
     int height = 16 * lines + 10;
@@ -137,7 +137,7 @@ static void draw_button_tooltip(tooltip_context* c) {
 
     //save_window_under_tooltip_to_buffer(x, y, width, height);
     draw_tooltip_box(x, y, width, height);
-    text_draw_multiline(c->text, x + 5, y + 7, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    text_draw_multiline((const uint8_t *)c->text.c_str(), x + 5, y + 7, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
 }
 
 static void draw_overlay_tooltip(tooltip_context* c) {
@@ -149,7 +149,7 @@ static void draw_overlay_tooltip(tooltip_context* c) {
         text = overlay_string;
     } else if (c->num_extra_values > 0) {
         text = overlay_string;
-        int offset = text.len();
+        size_t offset = text.len();
         overlay_string[offset++] = ':';
         overlay_string[offset++] = '\n';
         for (int i = 0; i < c->num_extra_values; i++) {

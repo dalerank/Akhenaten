@@ -279,10 +279,16 @@ void widget_top_menu_draw_elements() {
             continue;
         }
 
+        const bool is_hovered = (it->id == data.focus_menu_id);
+
         header->impl.x_start = offset.x;
-        header->font((it->id == data.focus_menu_id) ? hightlight_font : FONT_NORMAL_BLACK_ON_LIGHT);
+        header->font(is_hovered ? hightlight_font : FONT_NORMAL_BLACK_ON_LIGHT);
         header->pos = vec2i{offset.x, data.offset.y};
         header->draw();
+
+        if (is_hovered) {
+            ui::set_tooltip(header->tooltip());
+        }
 
         offset.x += header->text_width();
         header->impl.x_end = offset.x;
@@ -321,7 +327,7 @@ static void top_menu_calculate_menu_dimensions(menu_header& menu) {
             continue;
         }
 
-        int width_pixels = lang_text_get_width(item.text, FONT_NORMAL_BLACK_ON_LIGHT);
+        int width_pixels = lang_text_get_width(item.text.c_str(), FONT_NORMAL_BLACK_ON_LIGHT);
         max_width = std::max(max_width, width_pixels);
 
         height_pixels += data.item_height;
@@ -346,7 +352,7 @@ void top_menu_menu_draw(const xstring header, const xstring focus_item_id) {
             continue;
         }
         // Set color/font on the menu item mouse hover
-        lang_text_draw(item.text, vec2i{impl.x_start + 8, y_offset}, item.id == focus_item_id ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw(item.text.c_str(), vec2i{impl.x_start + 8, y_offset}, item.id == focus_item_id ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT);
         y_offset += menu.item_height;
     }
 }

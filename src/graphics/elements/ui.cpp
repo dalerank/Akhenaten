@@ -29,6 +29,10 @@ namespace ui {
         return tooltipctx;
     }
 
+    void set_tooltip(const xstring &text) {
+        tooltipctx.text = text;
+    }
+
     struct universal_button {
         enum e_btn_type {
             unknown = -1,
@@ -937,6 +941,8 @@ void ui::emenu_header::load(archive arch, element *parent, items &elems) {
     assert(!strcmp(type, "menu_header"));
 
     _font = (e_font)arch.r_int("font", FONT_NORMAL_BLACK_ON_LIGHT);
+    _tooltip = arch.r_string("tooltip");
+
     impl.text = arch.r_string("text");
     if (!!impl.text && impl.text[0u] == '#') {
         impl.text = lang_text_from_key(impl.text.c_str());

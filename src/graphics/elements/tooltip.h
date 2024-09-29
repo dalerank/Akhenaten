@@ -2,6 +2,7 @@
 
 #include "core/vec2i.h"
 #include "core/string.h"
+#include "core/xstring.h"
 
 #include <functional>
 
@@ -11,7 +12,7 @@ struct mouse;
 struct tooltip_context {
     vec2i mpos;
     int high_priority = 0;
-    bstring256 text;
+    xstring text;
     int has_numeric_prefix = 0;
     int numeric_prefix = 0;
     int num_extra_values = 0;

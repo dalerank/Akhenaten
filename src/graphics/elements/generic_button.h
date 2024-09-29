@@ -37,7 +37,7 @@ struct generic_button {
     generic_button &onrclick(onclick_void f) { return onrclick([f] (int, int) { f(); }); }
     
     generic_button &tooltip(textid t);
-    generic_button &tooltip(pcstr t) { _tooltip = t; return *this; }
+    generic_button &tooltip(const xstring &t) { _tooltip = t; return *this; }
     generic_button &tooltip(const std::initializer_list<int> &t);
 };
 

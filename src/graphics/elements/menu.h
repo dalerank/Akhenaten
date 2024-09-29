@@ -13,7 +13,7 @@ struct menu_item {
     void (*left_click_handler)(int) = nullptr;
     int parameter;
     int hidden = false;
-    bstring64 text;
+    xstring text;
     xstring id;
 };
 

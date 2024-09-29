@@ -49,6 +49,7 @@ namespace ui {
 struct img_button_offsets { int data[4] = {0, 1, 2, 3}; };
 
 const tooltip_context &get_tooltip();
+void set_tooltip(const xstring &text);
 void begin_frame();
 void end_frame();
 void begin_widget(vec2i offset, bool relative = false);
@@ -126,7 +127,7 @@ struct element {
     virtual int value() const { return 0; }
     virtual void select(bool v) {}
     virtual void max_value(int v) {}
-    virtual pcstr tooltip() const { return ""; }
+    virtual const xstring &tooltip() const { return xstring(); }
     virtual element &onclick(std::function<void(int, int)>) { return *this; }
             element &onclick(std::function<void()> f) { onclick([f] (int, int) { f(); });  return *this; }
     virtual void onevent(std::function<void()>) { }
@@ -256,7 +257,7 @@ struct elabel : public element {
     virtual void text_color(color) override;
     virtual void font(int) override;
     virtual e_font font() const override { return _font; }
-    virtual pcstr tooltip() const override { return _tooltip.c_str(); }
+    virtual const xstring &tooltip() const override { return _tooltip; }
     virtual void width(int) override;
 };
 
@@ -277,6 +278,7 @@ struct escrollbar : public element {
 
 struct emenu_header : public element {
     menu_header impl;
+    xstring _tooltip;
     e_font _font;
 
     virtual void load(archive elem, element *parent, items &elems) override;
@@ -284,6 +286,7 @@ struct emenu_header : public element {
     virtual void draw() override;
     virtual void font(int v) override { _font = (e_font)v; }
     virtual void text(pcstr text) override { impl.text = text; }
+    virtual const xstring &tooltip() const override { return _tooltip; }
     virtual int text_width() override;
             menu_item &item(int i) { static menu_item dummy; return i < impl.items.size() ? impl.items[i] : dummy; }
             menu_item &item(pcstr key);
