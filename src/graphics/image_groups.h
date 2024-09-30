@@ -36,7 +36,7 @@ extern const token_holder<e_pack, PACK_UNLOADED, PACK_MAX> e_pack_type_tokens;
 
 ////////////////// EMPIRE MAP
 
-#define GROUP_EMPIRE_MAP PACK_EMPIRE, 1
+//#define GROUP_EMPIRE_MAP PACK_EMPIRE, 1
 
 ////////////////// TERRAIN
 

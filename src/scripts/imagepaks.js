@@ -10,5 +10,6 @@ imagepaks = [
   {id: PACK_TEMPLE_RA, name:"Temple_ra", index:32000, system:false}, // 32000 --> 32000 + 239
   {id: PACK_TEMPLE_RA, name:"Temple_ra", index:32000, system:false}, // 32000 --> 32000 + 239
   {id: PACK_EXPANSION, name:"Expansion", index:23035, system:false}, // 23035 --> 23935
+  {id: PACK_EMPIRE, name:"Empire", index:23035, system:false}, // 23035 --> 23935
   //{id: PACK_CUSTOM, name:"Pharaoh_Custom", index:30000, system:false, custom:true},  // 30000 -->
 ]

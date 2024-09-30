@@ -37,7 +37,6 @@ struct image_data_t {
     imagepak* temple = nullptr;
     imagepak* monument = nullptr;
     imagepak* enemy = nullptr;
-    imagepak* empire = nullptr;
     imagepak* font = nullptr;
 
     color* tmp_image_data = nullptr;
@@ -149,11 +148,9 @@ bool image_load_paks() {
 
     // add paks to parsing list cache
     data.pak_list.push_back(&data.temple);
-    data.pak_list.push_back(&data.empire);
     data.pak_list.push_back(&data.sprmain2);
     data.pak_list.push_back(&data.monument);
 
-    data.empire = new imagepak("Empire", 20305);                   // 20305 --> 20506 (+177)
     data.sprmain2 = new imagepak("SprMain2", 20683);               // 20683 --> 23035
     // <--- original pyramid pak in here                                                                            //
     // 23735 --> 24163
@@ -220,9 +217,6 @@ static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
     }
 
     switch (collection) {
-    case PACK_EMPIRE:
-        return data.empire;
-        /////
     case PACK_FONT:
         if (pak_cache_idx < 0 || pak_cache_idx >= data.font_paks.size())
             return data.font;
