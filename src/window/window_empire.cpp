@@ -191,6 +191,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     void draw_map();
     void draw_empire_object(const empire_object *obj);
     void draw_paneling();
+    void draw_object_info();
 };
 
 empire_window g_empire_window;
@@ -455,8 +456,7 @@ static void draw_enemy_army_info(const empire_object* object) {
     }
 }
 
-static void draw_object_info(void) {
-    auto &data = g_empire_window;
+void empire_window::draw_object_info() {
     int selected_object = g_empire_map.selected_object();
     if (selected_object) {
         const empire_object* object = empire_object_get(selected_object - 1);
@@ -464,15 +464,17 @@ static void draw_object_info(void) {
         case EMPIRE_OBJECT_CITY:
             draw_city_info(object);
             break;
+
         case EMPIRE_OBJECT_KINGDOME_ARMY:
             draw_kingdome_army_info(object);
             break;
+
         case EMPIRE_OBJECT_ENEMY_ARMY:
             draw_enemy_army_info(object);
             break;
         }
     } else {
-        lang_text_draw_centered(data.sell_res_group, 9, data.min_pos.x, data.max_pos.y - 68, data.max_pos.x - data.min_pos.x, FONT_OBJECT_INFO);
+        lang_text_draw_centered(sell_res_group, 9, min_pos.x, max_pos.y - 68, max_pos.x - min_pos.x, FONT_OBJECT_INFO);
     }
 }
 
@@ -524,12 +526,15 @@ void empire_window::draw_empire_object(const empire_object* obj) {
         case 0:
             lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x, text_pos.y, obj->width, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
             break;
+
         case 1:
             lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x, text_pos.y, obj->width, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
             break;
+
         case 2:
             lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x, text_pos.y, obj->width, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
             break;
+
         case 3:
             lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x, text_pos.y, obj->width, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
             break;
@@ -595,34 +600,6 @@ void empire_window::draw_map() {
     graphics_reset_clip_rectangle();
 }
 
-static void draw_city_name(const empire_city* city) {
-    auto &data = g_empire_window;
-    painter ctx = game.painter();
-    if (city) {
-        int text_group = g_settings.city_names_style == CITIES_OLD_NAMES ? data.text_group_old_names : data.text_group_new_names;
-        lang_text_draw_centered(text_group, city->name_id, (data.min_pos.x + data.max_pos.x - 332) / 2 + 32, data.max_pos.y - data.info_y_city_name, 268, FONT_LARGE_BLACK_ON_LIGHT);
-    }
-}
-
-static void draw_panel_buttons(const empire_city* city) {
-    auto &data = g_empire_window;
-    image_buttons_draw(data.min_pos + vec2i{20, -44}, image_button_help, 1);
-    image_buttons_draw(data.max_pos - vec2i{44, 44}, image_button_return_to_city, 1);
-
-    ADVISOR_BUTTON_X = data.min_pos.x + 24;
-    image_buttons_draw({ADVISOR_BUTTON_X, data.max_pos.y - 120}, image_button_advisor, 1);
-
-    // trade button
-    if (city && !city->is_open) {
-        if (city->can_trade())
-            button_border_draw((data.min_pos.x + data.max_pos.x - 500) / 2 + 30 + data.trade_button_offset_x,
-                               data.max_pos.y - 49 + data.trade_button_offset_y,
-                               generic_button_open_trade[0].width,
-                               generic_button_open_trade[0].height,
-                               data.selected_button);
-    }
-}
-
 void empire_window::draw_paneling() {
     painter ctx = game.painter();
     // bottom panel background
@@ -678,7 +655,7 @@ int empire_window::draw_background() {
 void empire_window::ui_draw_foreground() {
     draw_map();
 
-    const empire_city* city = 0;
+    const empire_city* city = nullptr;
     int selected_object = g_empire_map.selected_object();
     if (selected_object) {
         const empire_object* object = empire_object_get(selected_object - 1);
@@ -689,8 +666,28 @@ void empire_window::ui_draw_foreground() {
     }
 
     draw_paneling();
-    draw_city_name(city);
-    draw_panel_buttons(city);
+    
+    if (city) {
+        int text_group = g_settings.city_names_style == CITIES_OLD_NAMES ? text_group_old_names : text_group_new_names;
+        lang_text_draw_centered(text_group, city->name_id, (min_pos.x + max_pos.x - 332) / 2 + 32, max_pos.y - info_y_city_name, 268, FONT_LARGE_BLACK_ON_LIGHT);
+
+        image_buttons_draw(min_pos + vec2i{ 20, -44 }, image_button_help, 1);
+        image_buttons_draw(max_pos - vec2i{ 44, 44 }, image_button_return_to_city, 1);
+
+        ADVISOR_BUTTON_X = min_pos.x + 24;
+        image_buttons_draw({ ADVISOR_BUTTON_X, max_pos.y - 120 }, image_button_advisor, 1);
+
+        // trade button
+        if (!city->is_open) {
+            if (city->can_trade())
+                button_border_draw((min_pos.x + max_pos.x - 500) / 2 + 30 + trade_button_offset_x,
+                max_pos.y - 49 + trade_button_offset_y,
+                generic_button_open_trade[0].width,
+                generic_button_open_trade[0].height,
+                selected_button);
+        }
+    }
+
     draw_object_info();
 }
 
