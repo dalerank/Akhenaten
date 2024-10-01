@@ -4,6 +4,8 @@
 #include "core/vec2i.h"
 #include "game/resource.h"
 
+#include <functional>
+
 struct empire_object {
     int id;
     int type;
@@ -49,7 +51,7 @@ const full_empire_object* empire_get_full_object(int object_id);
 const empire_object* empire_object_get(int object_id);
 const empire_object* empire_object_get_our_city(void);
 
-void empire_object_foreach(void (*callback)(const empire_object*));
+void empire_object_foreach(std::function<void(const empire_object *)> callback);
 
 const empire_object* empire_object_get_battle_icon(int path_id, int year);
 

@@ -4,6 +4,7 @@
 #include "platform/renderer.h"
 #include "graphics/font.h"
 #include "graphics/view/view.h"
+#include "graphics/image_desc.h"
 #include "core/profiler.h"
 #include "game/game.h"
 
@@ -697,6 +698,12 @@ const image_t* ImageDraw::img_generic(painter &ctx, int image_id, int x, int y, 
 
 const image_t* ImageDraw::img_generic(painter &ctx, int pak, int image_id, vec2i p, color color_mask, float scale) {
     const image_t* img = image_get(pak, image_id);
+    graphics_renderer()->draw_image(ctx, img, p.x, p.y, color_mask, scale);
+    return img;
+}
+
+const image_t *ImageDraw::img_generic(painter &ctx, const image_desc &imgd, vec2i p, color color_mask, float scale) {
+    const image_t *img = image_get(imgd);
     graphics_renderer()->draw_image(ctx, img, p.x, p.y, color_mask, scale);
     return img;
 }

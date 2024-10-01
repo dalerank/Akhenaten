@@ -19,7 +19,7 @@
 
 full_empire_object g_empire_objects[MAX_OBJECTS];
 
-void empire_object_foreach(void (*callback)(const empire_object*)) {
+void empire_object_foreach(std::function<void(const empire_object*)> callback) {
     auto& objects = g_empire_objects;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use)

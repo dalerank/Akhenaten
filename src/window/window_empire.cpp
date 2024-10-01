@@ -148,6 +148,8 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     int trade_resource_offset;
     int sell_res_group;
     int trade_button_offset_y;
+    vec2i start_pos, finish_pos;
+    image_desc image, bottom_image, horizontal_bar, vertical_bar, cross_bar;
     svector<object_trade_info, 16> buying_goods;
     svector<object_trade_info, 16> selling_goods;
 
@@ -177,9 +179,18 @@ struct empire_window : public autoconfig_window_t<empire_window> {
         trade_resource_offset = arch.r_int("trade_resource_offset");
         sell_res_group = arch.r_int("sell_res_group");
         trade_button_offset_y = arch.r_int("trade_button_offset_y");
+        start_pos = arch.r_vec2i("start_pos");
+        finish_pos = arch.r_vec2i("finish_pos");
+        arch.r_desc("image", image);
+        arch.r_desc("bottom_image", bottom_image);
+        arch.r_desc("horizontal_bar", horizontal_bar);
+        arch.r_desc("vertical_bar", vertical_bar);
+        arch.r_desc("cross_bar", cross_bar);
     }
 
     void draw_map();
+    void draw_empire_object(const empire_object *obj);
+    void draw_paneling();
 };
 
 empire_window g_empire_window;
@@ -465,7 +476,7 @@ static void draw_object_info(void) {
     }
 }
 
-static void draw_empire_object(const empire_object* obj) {
+void empire_window::draw_empire_object(const empire_object* obj) {
     auto &data = g_empire_window;
     if (obj->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj->type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
         if (!g_empire.is_trade_route_open(obj->trade_route_id)) {
@@ -561,26 +572,25 @@ static void draw_empire_object(const empire_object* obj) {
     }
 }
 
-static void draw_invasion_warning(int x, int y, int image_id) {
-    auto &data = g_empire_window;
-    painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id, vec2i{data.draw_offset.x + x, data.draw_offset.y + y});
-}
-
 void empire_window::draw_map() {
     painter ctx = game.painter();
-    graphics_set_clip_rectangle(min_pos + vec2i{16, 16}, vec2i{max_pos - min_pos} - vec2i{32, 136});
 
-    g_empire_map.set_viewport(max_pos - min_pos - vec2i{32, 136});
+    graphics_set_clip_rectangle(min_pos + start_pos, vec2i{max_pos - min_pos} - finish_pos);
 
-    draw_offset = min_pos + vec2i{16, 16};
+    g_empire_map.set_viewport(max_pos - min_pos - finish_pos);
+
+    draw_offset = min_pos + start_pos;
     draw_offset = g_empire_map.adjust_scroll(draw_offset);
 
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EMPIRE_MAP), draw_offset);
+    ImageDraw::img_generic(ctx, image_group(image), draw_offset);
 
-    empire_object_foreach(draw_empire_object);
+    empire_object_foreach([this] (const empire_object *obj) {
+        draw_empire_object(obj);
+    });
 
-    scenario_invasion_foreach_warning(draw_invasion_warning);
+    scenario_invasion_foreach_warning([&] (vec2i pos, int image_id) {
+        ImageDraw::img_generic(ctx, image_id, draw_offset + pos);
+    });
 
     graphics_reset_clip_rectangle();
 }
@@ -613,39 +623,38 @@ static void draw_panel_buttons(const empire_city* city) {
     }
 }
 
-static void draw_paneling() {
-    auto &data = g_empire_window;
+void empire_window::draw_paneling() {
     painter ctx = game.painter();
-    int image_base = image_id_from_group(GROUP_EMPIRE_PANELS);
     // bottom panel background
-    graphics_set_clip_rectangle(data.min_pos, data.max_pos - data.min_pos);
-    for (int x = data.min_pos.x; x < data.max_pos.x; x += 70) {
-        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.max_pos.y - 140});
-        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.max_pos.y - 100});
-        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.max_pos.y - 60});
-        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.max_pos.y - 20});
+    graphics_set_clip_rectangle(min_pos, max_pos - min_pos);
+
+    for (int x = min_pos.x; x < max_pos.x; x += 70) {
+        ImageDraw::img_generic(ctx, bottom_image, vec2i{x, max_pos.y - 140});
+        ImageDraw::img_generic(ctx, bottom_image, vec2i{x, max_pos.y - 100});
+        ImageDraw::img_generic(ctx, bottom_image, vec2i{x, max_pos.y - 60});
+        ImageDraw::img_generic(ctx, bottom_image, vec2i{x, max_pos.y - 20});
     }
 
     // horizontal bar borders
-    for (int x = data.min_pos.x; x < data.max_pos.x; x += 86) {
-        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.min_pos.y});
-        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.max_pos.y - 140});
-        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.max_pos.y - 16});
+    for (int x = min_pos.x; x < max_pos.x; x += 86) {
+        ImageDraw::img_generic(ctx, horizontal_bar, vec2i{x, min_pos.y});
+        ImageDraw::img_generic(ctx, horizontal_bar, vec2i{x, max_pos.y - 140});
+        ImageDraw::img_generic(ctx, horizontal_bar, vec2i{x, max_pos.y - 16});
     }
 
     // vertical bar borders
-    for (int y = data.min_pos.y + 16; y < data.max_pos.y; y += 86) {
-        ImageDraw::img_generic(ctx, image_base, vec2i{data.min_pos.x, y});
-        ImageDraw::img_generic(ctx, image_base, vec2i{data.max_pos.x - 16, y});
+    for (int y = min_pos.y + 16; y < max_pos.y; y += 86) {
+        ImageDraw::img_generic(ctx, vertical_bar, vec2i{min_pos.x, y});
+        ImageDraw::img_generic(ctx, vertical_bar, vec2i{max_pos.x - 16, y});
     }
 
     // crossbars
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.min_pos.x, data.min_pos.y});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.min_pos.x, data.max_pos.y - 140});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.min_pos.x, data.max_pos.y - 16});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.max_pos.x - 16, data.min_pos.y});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.max_pos.x - 16, data.max_pos.y - 140});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.max_pos.x - 16, data.max_pos.y - 16});
+    ImageDraw::img_generic(ctx, cross_bar, vec2i{min_pos.x, min_pos.y});
+    ImageDraw::img_generic(ctx, cross_bar, vec2i{min_pos.x, max_pos.y - 140});
+    ImageDraw::img_generic(ctx, cross_bar, vec2i{min_pos.x, max_pos.y - 16});
+    ImageDraw::img_generic(ctx, cross_bar, vec2i{max_pos.x - 16, min_pos.y});
+    ImageDraw::img_generic(ctx, cross_bar, vec2i{max_pos.x - 16, max_pos.y - 140});
+    ImageDraw::img_generic(ctx, cross_bar, vec2i{max_pos.x - 16, max_pos.y - 16});
 
     graphics_reset_clip_rectangle();
 }

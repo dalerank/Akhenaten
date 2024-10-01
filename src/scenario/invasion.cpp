@@ -134,11 +134,11 @@ bool scenario_invasion_exists_upcoming(void) {
     return false;
 }
 
-void scenario_invasion_foreach_warning(void (*callback)(int x, int y, int image_id)) {
+void scenario_invasion_foreach_warning(std::function<void(vec2i, int)> callback) {
     auto &data = g_invasion_data;
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
         if (data.warnings[i].in_use && data.warnings[i].handled)
-            callback(data.warnings[i].pos.x, data.warnings[i].pos.y, data.warnings[i].image_id);
+            callback(data.warnings[i].pos, data.warnings[i].image_id);
     }
 }
 

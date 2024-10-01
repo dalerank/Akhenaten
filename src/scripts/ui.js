@@ -1406,10 +1406,17 @@ empire_window = {
 	trade_resource_offset : 3,
 	sell_res_group : 47,
 	trade_button_offset_y : 10,
+	start_pos : [16, 16],
+	finish_pos : [32, 136],
+	image : {pack:PACK_EMPIRE, id:1},
+	bottom_image : {pack:PACK_GENERAL, id:172, offset:3},
+	horizontal_bar : {pack:PACK_GENERAL, id:172, offset:1},
+	vertical_bar : {pack:PACK_GENERAL, id:172, offset:0},
+	cross_bar : {pack:PACK_GENERAL, id:172, offset:2},
 
 	ui : {
 
-		
+
 	}
 }
 
