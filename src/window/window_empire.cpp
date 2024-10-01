@@ -56,15 +56,10 @@ int image_id_remap(int id) {
 const static vec2i EMPIRE_SIZE{1200 + 32,  1600 + 136 + 20};
 const static e_font FONT_OBJECT_INFO = FONT_NORMAL_BLACK_ON_LIGHT;
 
-static void button_help(int param1, int param2);
 static void button_return_to_city(int param1, int param2);
 static void button_advisor(int advisor, int param2);
 static void button_open_trade(int param1, int param2);
 static void button_show_resource_window(int resource, int param2);
-
-static image_button image_button_help[] = {
-    {0, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1}
-};
 
 static image_button image_button_return_to_city[] = {
     {0, 0, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_return_to_city, button_none, 0, 0, 1}
@@ -140,7 +135,6 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     int info_y_sells;
     int info_y_buys;
     int info_y_footer_1;
-    int info_y_city_name;
     int info_y_city_desc;
     int text_group_old_names;
     int text_group_new_names;
@@ -158,7 +152,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     virtual void draw_foreground() override {}
     virtual int draw_background() override;
     virtual void ui_draw_foreground() override;
-    virtual int ui_handle_mouse(const mouse *m) override { return 0; }
+    virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override;
 
     virtual void load(archive arch, pcstr section) override {
@@ -171,7 +165,6 @@ struct empire_window : public autoconfig_window_t<empire_window> {
         info_y_sells = arch.r_int("info_y_sells");
         info_y_buys = arch.r_int("info_y_buys");
         info_y_footer_1 = arch.r_int("info_y_footer_1");
-        info_y_city_name = arch.r_int("info_y_city_name");
         info_y_city_desc = arch.r_int("info_y_city_desc");
         text_group_old_names = arch.r_int("text_group_old_names");
         text_group_new_names = arch.r_int("text_group_new_names");
@@ -192,6 +185,8 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     void draw_empire_object(const empire_object *obj);
     void draw_paneling();
     void draw_object_info();
+    bool is_outside_map(int x, int y);
+    void determine_selected_object(const mouse *m);
 };
 
 empire_window g_empire_window;
@@ -478,6 +473,113 @@ void empire_window::draw_object_info() {
     }
 }
 
+void empire_window::determine_selected_object(const mouse *m) {
+    if (!m->left.went_up || finished_scroll || is_outside_map(m->x, m->y)) {
+        finished_scroll = 0;
+        return;
+    }
+    g_empire_map.select_object(vec2i{ m->x, m->y } - min_pos - vec2i{ 16, 16 });
+    window_invalidate();
+}
+
+bool empire_window::is_outside_map(int x, int y) {
+    return (x < min_pos.x + 16 || x >= max_pos.x - 16 || y < min_pos.y + 16 || y >= max_pos.y - 120);
+}
+
+int empire_window::ui_handle_mouse(const mouse *m) {
+    const hotkeys *h = hotkey_state();
+
+    vec2i position;
+    if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
+        g_empire_map.scroll_map(position);
+    }
+
+    if (m->is_touch) {
+        const touch *t = get_earliest_touch();
+        if (!is_outside_map(t->current_point.x, t->current_point.y)) {
+            if (t->has_started) {
+                is_scrolling = 1;
+                scroll_drag_start(1);
+            }
+        }
+        if (t->has_ended) {
+            is_scrolling = 0;
+            finished_scroll = !touch_was_click(t);
+            scroll_drag_end();
+        }
+    }
+
+    focus_button_id = 0;
+    focus_resource = 0;
+    int button_id;
+    image_buttons_handle_mouse(m, max_pos - vec2i{ 44, 44 }, image_button_return_to_city, 1, &button_id);
+    if (button_id)
+        focus_button_id = 2;
+
+    image_buttons_handle_mouse(m, { ADVISOR_BUTTON_X, max_pos.y - 120 }, image_button_advisor, 1, &button_id);
+    if (button_id)
+        focus_button_id = 3;
+
+    determine_selected_object(m);
+    int selected_object = g_empire_map.selected_object();
+    if (selected_object) {
+        const empire_object *obj = empire_object_get(selected_object - 1);
+        if (obj->type == EMPIRE_OBJECT_CITY) {
+            selected_city = g_empire.get_city_for_object(selected_object - 1);
+            const empire_city *city = g_empire.city(selected_city);
+
+            if ((city->type == EMPIRE_CITY_PHARAOH_TRADING || city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING)) {
+                if (city->is_open) {
+                    int x_offset = (min_pos.x + max_pos.x - 500) / 2;
+                    int y_offset = max_pos.y - 113;
+                    int index_sell = 0;
+                    int index_buy = 0;
+
+                    // we only want to handle resource buttons that the selected city trades
+                    for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_MAX; ++resource) {
+                        if (empire_object_city_sells_resource(obj->id, resource)) {
+                            int column_offset = trade_column_spacing * column_idx(index_sell) - 150;
+                            int row_offset = trade_row_spacing * row_idx(index_sell) + 20;
+                            generic_buttons_handle_mouse(m, { x_offset + column_offset + 125, y_offset + info_y_traded + row_offset - 7 }, generic_button_trade_resource + resource - 1, 1, &button_id);
+                            index_sell++;
+                        } else if (empire_object_city_buys_resource(obj->id, resource)) {
+                            int column_offset = trade_column_spacing * column_idx(index_buy) + 200;
+                            int row_offset = trade_row_spacing * row_idx(index_buy) + 20;
+                            generic_buttons_handle_mouse(m, { x_offset + column_offset + 125, y_offset + info_y_traded + row_offset - 7 }, generic_button_trade_resource + resource - 1, 1, &button_id);
+                            index_buy++;
+                        }
+
+                        if (button_id) {
+                            focus_resource = resource;
+                            // if we're focusing any button we can skip further checks
+                            break;
+                        }
+                    }
+                } else {
+                    generic_buttons_handle_mouse(m,
+                        { (min_pos.x + max_pos.x - 500) / 2 + trade_button_offset_x, max_pos.y - 105 + trade_button_offset_y },
+                        generic_button_open_trade, 1, &selected_button);
+                }
+            }
+        }
+
+        if (input_go_back_requested(m, h)) {
+            g_empire_map.clear_selected_object();
+            window_invalidate();
+            return 0;
+        }
+    } else if (input_go_back_requested(m, h)) {
+        window_city_show();
+        return 0;
+    }
+
+    ui.begin_widget({ 0, 0 });
+    ui.handle_mouse(m);
+    ui.end_widget();
+
+    return 0;
+}
+
 void empire_window::draw_empire_object(const empire_object* obj) {
     auto &data = g_empire_window;
     if (obj->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj->type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
@@ -649,6 +751,10 @@ int empire_window::draw_background() {
         graphics_clear_screen();
     }
 
+    ui["button_help"].onclick([] {
+        window_message_dialog_show(MESSAGE_DIALOG_EMPIRE_MAP, -1, 0);
+    });
+
     return 0;
 }
 
@@ -658,141 +764,44 @@ void empire_window::ui_draw_foreground() {
     const empire_city* city = nullptr;
     int selected_object = g_empire_map.selected_object();
     if (selected_object) {
-        const empire_object* object = empire_object_get(selected_object - 1);
+        const empire_object *object = empire_object_get(selected_object - 1);
         if (object->type == EMPIRE_OBJECT_CITY) {
             selected_city = g_empire.get_city_for_object(object->id);
             city = g_empire.city(selected_city);
         }
     }
 
-    draw_paneling();
-    
+    ui["city_name"] = "";
+    ui["button_help"].enabled = !!city;
     if (city) {
         int text_group = g_settings.city_names_style == CITIES_OLD_NAMES ? text_group_old_names : text_group_new_names;
-        lang_text_draw_centered(text_group, city->name_id, (min_pos.x + max_pos.x - 332) / 2 + 32, max_pos.y - info_y_city_name, 268, FONT_LARGE_BLACK_ON_LIGHT);
+        ui["city_name"] = ui::str(text_group, city->name_id);
+    }
 
-        image_buttons_draw(min_pos + vec2i{ 20, -44 }, image_button_help, 1);
+    draw_paneling();
+
+    ui.begin_widget({ 0, 0 });
+    ui.draw();
+    
+    if (city) {
         image_buttons_draw(max_pos - vec2i{ 44, 44 }, image_button_return_to_city, 1);
 
         ADVISOR_BUTTON_X = min_pos.x + 24;
         image_buttons_draw({ ADVISOR_BUTTON_X, max_pos.y - 120 }, image_button_advisor, 1);
 
         // trade button
-        if (!city->is_open) {
-            if (city->can_trade())
-                button_border_draw((min_pos.x + max_pos.x - 500) / 2 + 30 + trade_button_offset_x,
-                max_pos.y - 49 + trade_button_offset_y,
-                generic_button_open_trade[0].width,
-                generic_button_open_trade[0].height,
-                selected_button);
+        if (!city->is_open && city->can_trade()) {
+            button_border_draw((min_pos.x + max_pos.x - 500) / 2 + 30 + trade_button_offset_x,
+                                max_pos.y - 49 + trade_button_offset_y,
+                                generic_button_open_trade[0].width,
+                                generic_button_open_trade[0].height,
+                                selected_button);
         }
     }
 
     draw_object_info();
-}
 
-static int is_outside_map(int x, int y) {
-    auto &data = g_empire_window;
-    return (x < data.min_pos.x + 16 || x >= data.max_pos.x - 16 || y < data.min_pos.y + 16 || y >= data.max_pos.y - 120);
-}
-
-static void determine_selected_object(const mouse* m) {
-    auto &data = g_empire_window;
-    if (!m->left.went_up || data.finished_scroll || is_outside_map(m->x, m->y)) {
-        data.finished_scroll = 0;
-        return;
-    }
-    g_empire_map.select_object(vec2i{m->x, m->y} - data.min_pos - vec2i{16, 16});
-    window_invalidate();
-}
-
-static void window_empire_handle_input(const mouse* m, const hotkeys* h) {
-    auto &data = g_empire_window;
-    vec2i position;
-    if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
-        g_empire_map.scroll_map(position);
-    }
-
-    if (m->is_touch) {
-        const touch* t = get_earliest_touch();
-        if (!is_outside_map(t->current_point.x, t->current_point.y)) {
-            if (t->has_started) {
-                data.is_scrolling = 1;
-                scroll_drag_start(1);
-            }
-        }
-        if (t->has_ended) {
-            data.is_scrolling = 0;
-            data.finished_scroll = !touch_was_click(t);
-            scroll_drag_end();
-        }
-    }
-
-    data.focus_button_id = 0;
-    data.focus_resource = 0;
-    int button_id;
-    image_buttons_handle_mouse(m, data.min_pos + vec2i{20, -44}, image_button_help, 1, &button_id);
-    if (button_id)
-        data.focus_button_id = 1;
-
-    image_buttons_handle_mouse(m, data.max_pos - vec2i{44, 44}, image_button_return_to_city, 1, &button_id);
-    if (button_id)
-        data.focus_button_id = 2;
-
-    image_buttons_handle_mouse(m, {ADVISOR_BUTTON_X, data.max_pos.y - 120}, image_button_advisor, 1, &button_id);
-    if (button_id)
-        data.focus_button_id = 3;
-
-    determine_selected_object(m);
-    int selected_object = g_empire_map.selected_object();
-    if (selected_object) {
-        const empire_object* obj = empire_object_get(selected_object - 1);
-        if (obj->type == EMPIRE_OBJECT_CITY) {
-            data.selected_city = g_empire.get_city_for_object(selected_object - 1);
-            const empire_city* city = g_empire.city(data.selected_city);
-
-            if ((city->type == EMPIRE_CITY_PHARAOH_TRADING || city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING)) {
-                if (city->is_open) {
-                    int x_offset = (data.min_pos.x + data.max_pos.x - 500) / 2;
-                    int y_offset = data.max_pos.y - 113;
-                    int index_sell = 0;
-                    int index_buy = 0;
-
-                    // we only want to handle resource buttons that the selected city trades
-                    for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_MAX; ++resource) {
-                        if (empire_object_city_sells_resource(obj->id, resource)) {
-                            int column_offset = data.trade_column_spacing * column_idx(index_sell) - 150;
-                            int row_offset = data.trade_row_spacing * row_idx(index_sell) + 20;
-                            generic_buttons_handle_mouse(m, {x_offset + column_offset + 125, y_offset + data.info_y_traded + row_offset - 7}, generic_button_trade_resource + resource - 1, 1, &button_id);
-                            index_sell++;
-                        } else if (empire_object_city_buys_resource(obj->id, resource)) {
-                            int column_offset = data.trade_column_spacing * column_idx(index_buy) + 200;
-                            int row_offset = data.trade_row_spacing * row_idx(index_buy) + 20;
-                            generic_buttons_handle_mouse(m, {x_offset + column_offset + 125, y_offset + data.info_y_traded + row_offset - 7}, generic_button_trade_resource + resource - 1, 1, &button_id);
-                            index_buy++;
-                        }
-
-                        if (button_id) {
-                            data.focus_resource = resource;
-                            // if we're focusing any button we can skip further checks
-                            break;
-                        }
-                    }
-                } else {
-                    generic_buttons_handle_mouse(m,
-                                                {(data.min_pos.x + data.max_pos.x - 500) / 2 + data.trade_button_offset_x, data.max_pos.y - 105 + data.trade_button_offset_y},
-                                                generic_button_open_trade, 1, &data.selected_button);
-                }
-            }
-        }
-        if (input_go_back_requested(m, h)) {
-            g_empire_map.clear_selected_object();
-            window_invalidate();
-        }
-    } else {
-        if (input_go_back_requested(m, h))
-            window_city_show();
-    }
+    ui.end_widget();
 }
 
 template<typename T>
@@ -870,10 +879,6 @@ static void window_empire_get_tooltip(tooltip_context* c) {
     //}
 }
 
-static void button_help(int param1, int param2) {
-    window_message_dialog_show(MESSAGE_DIALOG_EMPIRE_MAP, -1, 0);
-}
-
 static void button_return_to_city(int param1, int param2) {
     window_city_show();
 }
@@ -901,7 +906,7 @@ void window_empire_show() {
         WINDOW_EMPIRE,
         [] { g_empire_window.draw_background(); },
         [] { g_empire_window.ui_draw_foreground(); },
-        window_empire_handle_input,
+        [] (const mouse *m, const hotkeys *h) { g_empire_window.ui_handle_mouse(m); },
         window_empire_get_tooltip
     };
 

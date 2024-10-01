@@ -544,6 +544,7 @@ void ui::element::load(archive arch, element *parent, element::items &items) {
         margin.left = m.r_int("left", recti::nomargin);
         margin.right = m.r_int("right", recti::nomargin);
         margin.top = m.r_int("top", recti::nomargin);
+        margin.centerx = m.r_int("centerx", recti::nomargin);
     });
 
     load_elements(arch, "ui", this, items);
@@ -558,6 +559,7 @@ void ui::element::update_pos(const recti &r) {
     if (margin.bottom > recti::nomargin) { pos.y = r.bottom + margin.bottom; }
     if (margin.right > recti::nomargin) { pos.x = r.right + margin.right; }
     if (margin.top > recti::nomargin) { pos.y = r.top + margin.top; }
+    if (margin.centerx > recti::nomargin) { pos.x = (r.right - r.left) / 2 + margin.centerx; }
 }
 
 vec2i ui::element::screen_pos() const {

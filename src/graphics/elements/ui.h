@@ -96,6 +96,7 @@ struct recti {
     int top = 0;
     int right = 0;
     int bottom = 0;
+    int centerx = 0;
 };
 
 struct element {
@@ -105,7 +106,7 @@ struct element {
     xstring id;
     vec2i pos;
     vec2i size;
-    recti margin = { recti::nomargin, recti::nomargin, recti::nomargin, recti::nomargin };
+    recti margin = { recti::nomargin, recti::nomargin, recti::nomargin, recti::nomargin, recti::nomargin };
     bool readonly = false;
     bool enabled = true;
     bool grayed = false;

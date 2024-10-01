@@ -1398,7 +1398,6 @@ empire_window = {
 	info_y_sells : 30,
 	info_y_buys : 52,
 	info_y_footer_1 : 78,
-	info_y_city_name : 120,
 	info_y_city_desc : 28,
 	text_group_old_names : 195,
 	text_group_new_names : 21,
@@ -1415,8 +1414,9 @@ empire_window = {
 	cross_bar : {pack:PACK_GENERAL, id:172, offset:2},
 
 	ui : {
-
-
+		background : dummy({size:[sw(0), sh(0)]}),
+		city_name : header({pos:[0, -1], margin:{bottom:-120}, size:[sw(0), 20], align:"center"}),
+		button_help : help_button({margin:{centerx:575, bottom:-120}}),
 	}
 }
 
