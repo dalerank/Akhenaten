@@ -56,14 +56,10 @@ int image_id_remap(int id) {
 const static vec2i EMPIRE_SIZE{1200 + 32,  1600 + 136 + 20};
 const static e_font FONT_OBJECT_INFO = FONT_NORMAL_BLACK_ON_LIGHT;
 
-static void button_return_to_city(int param1, int param2);
 static void button_advisor(int advisor, int param2);
 static void button_open_trade(int param1, int param2);
 static void button_show_resource_window(int resource, int param2);
 
-static image_button image_button_return_to_city[] = {
-    {0, 0, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_return_to_city, button_none, 0, 0, 1}
-};
 
 static image_button image_button_advisor[] = {
     {-4, 0, 24, 24, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1},
@@ -502,6 +498,7 @@ int empire_window::ui_handle_mouse(const mouse *m) {
                 scroll_drag_start(1);
             }
         }
+
         if (t->has_ended) {
             is_scrolling = 0;
             finished_scroll = !touch_was_click(t);
@@ -512,13 +509,11 @@ int empire_window::ui_handle_mouse(const mouse *m) {
     focus_button_id = 0;
     focus_resource = 0;
     int button_id;
-    image_buttons_handle_mouse(m, max_pos - vec2i{ 44, 44 }, image_button_return_to_city, 1, &button_id);
-    if (button_id)
-        focus_button_id = 2;
 
     image_buttons_handle_mouse(m, { ADVISOR_BUTTON_X, max_pos.y - 120 }, image_button_advisor, 1, &button_id);
-    if (button_id)
+    if (button_id) {
         focus_button_id = 3;
+    }
 
     determine_selected_object(m);
     int selected_object = g_empire_map.selected_object();
@@ -755,6 +750,10 @@ int empire_window::draw_background() {
         window_message_dialog_show(MESSAGE_DIALOG_EMPIRE_MAP, -1, 0);
     });
 
+    ui["button_close"].onclick([] {
+        window_city_show();
+    });
+
     return 0;
 }
 
@@ -784,8 +783,6 @@ void empire_window::ui_draw_foreground() {
     ui.draw();
     
     if (city) {
-        image_buttons_draw(max_pos - vec2i{ 44, 44 }, image_button_return_to_city, 1);
-
         ADVISOR_BUTTON_X = min_pos.x + 24;
         image_buttons_draw({ ADVISOR_BUTTON_X, max_pos.y - 120 }, image_button_advisor, 1);
 
@@ -877,10 +874,6 @@ static void window_empire_get_tooltip(tooltip_context* c) {
     //} else {
     //    get_tooltip_trade_route_type(c);
     //}
-}
-
-static void button_return_to_city(int param1, int param2) {
-    window_city_show();
 }
 
 static void button_advisor(int advisor, int param2) {

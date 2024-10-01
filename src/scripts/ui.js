@@ -1417,6 +1417,7 @@ empire_window = {
 		background : dummy({size:[sw(0), sh(0)]}),
 		city_name : header({pos:[0, -1], margin:{bottom:-120}, size:[sw(0), 20], align:"center"}),
 		button_help : help_button({margin:{centerx:575, bottom:-120}}),
+		button_close : close_button({margin:{centerx:575, bottom:-40}}),
 	}
 }
 
