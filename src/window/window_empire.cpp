@@ -56,14 +56,9 @@ int image_id_remap(int id) {
 const static vec2i EMPIRE_SIZE{1200 + 32,  1600 + 136 + 20};
 const static e_font FONT_OBJECT_INFO = FONT_NORMAL_BLACK_ON_LIGHT;
 
-static void button_advisor(int advisor, int param2);
-static void button_open_trade(int param1, int param2);
 static void button_show_resource_window(int resource, int param2);
 
 
-static image_button image_button_advisor[] = {
-    {-4, 0, 24, 24, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1},
-};
 static int ADVISOR_BUTTON_X = 0;
 
 static generic_button generic_button_trade_resource[] = {
@@ -105,9 +100,6 @@ static generic_button generic_button_trade_resource[] = {
   {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_LAMPS, 0},
   {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_MARBLE, 0},
   //        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_UNUSED16, 0},
-};
-static generic_button generic_button_open_trade[] = {
-    {30, 56, 440, 20, button_open_trade, button_none, 0, 0}
 };
 
 struct object_trade_info {
@@ -510,11 +502,6 @@ int empire_window::ui_handle_mouse(const mouse *m) {
     focus_resource = 0;
     int button_id;
 
-    image_buttons_handle_mouse(m, { ADVISOR_BUTTON_X, max_pos.y - 120 }, image_button_advisor, 1, &button_id);
-    if (button_id) {
-        focus_button_id = 3;
-    }
-
     determine_selected_object(m);
     int selected_object = g_empire_map.selected_object();
     if (selected_object) {
@@ -550,10 +537,6 @@ int empire_window::ui_handle_mouse(const mouse *m) {
                             break;
                         }
                     }
-                } else {
-                    generic_buttons_handle_mouse(m,
-                        { (min_pos.x + max_pos.x - 500) / 2 + trade_button_offset_x, max_pos.y - 105 + trade_button_offset_y },
-                        generic_button_open_trade, 1, &selected_button);
                 }
             }
         }
@@ -754,6 +737,19 @@ int empire_window::draw_background() {
         window_city_show();
     });
 
+    ui["button_advisor"].onclick([] {
+        window_advisors_show_advisor(ADVISOR_TRADE);
+    });
+
+    ui["button_open_trade"].onclick([] {
+        window_yes_dialog_show("#popup_dialog_open_trade", [] {
+            empire_city *city = g_empire.city(g_empire_window.selected_city);
+            city_finance_process_construction(city->cost_to_open);
+            city->is_open = 1;
+            window_trade_opened_show(g_empire_window.selected_city);
+        });
+    });
+
     return 0;
 }
 
@@ -772,6 +768,9 @@ void empire_window::ui_draw_foreground() {
 
     ui["city_name"] = "";
     ui["button_help"].enabled = !!city;
+    ui["button_close"].enabled = !!city;
+    ui["button_advisor"].enabled = !!city;
+    ui["button_open_trade"].enabled = city && !city->is_open && city->can_trade();
     if (city) {
         int text_group = g_settings.city_names_style == CITIES_OLD_NAMES ? text_group_old_names : text_group_new_names;
         ui["city_name"] = ui::str(text_group, city->name_id);
@@ -782,19 +781,6 @@ void empire_window::ui_draw_foreground() {
     ui.begin_widget({ 0, 0 });
     ui.draw();
     
-    if (city) {
-        ADVISOR_BUTTON_X = min_pos.x + 24;
-        image_buttons_draw({ ADVISOR_BUTTON_X, max_pos.y - 120 }, image_button_advisor, 1);
-
-        // trade button
-        if (!city->is_open && city->can_trade()) {
-            button_border_draw((min_pos.x + max_pos.x - 500) / 2 + 30 + trade_button_offset_x,
-                                max_pos.y - 49 + trade_button_offset_y,
-                                generic_button_open_trade[0].width,
-                                generic_button_open_trade[0].height,
-                                selected_button);
-        }
-    }
 
     draw_object_info();
 
@@ -876,22 +862,8 @@ static void window_empire_get_tooltip(tooltip_context* c) {
     //}
 }
 
-static void button_advisor(int advisor, int param2) {
-    window_advisors_show_advisor((e_advisor)advisor);
-}
-
 static void button_show_resource_window(int resource, int param2) {
     window_resource_settings_show((e_resource)resource);
-}
-
-static void button_open_trade(int param1, int param2) {
-    window_yes_dialog_show("#popup_dialog_open_trade", [] {
-        empire_city* city = g_empire.city(g_empire_window.selected_city);
-        city_finance_process_construction(city->cost_to_open);
-        city->is_open = 1;
-        //building_menu_update(BUILDSET_NORMAL);
-        window_trade_opened_show(g_empire_window.selected_city);
-    });
 }
 
 void window_empire_show() {

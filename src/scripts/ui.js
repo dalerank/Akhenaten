@@ -46,6 +46,7 @@ function large_button(config) { return __extend({ type : "large_button"}, config
 function help_button(config) { var i = image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }); return __extend(i, config) }
 function close_button(config) { var i = image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }); return __extend(i, config) }
 function next_button(config) { var i = image_button({size:[27, 27], pack:PACK_GENERAL, id:90 }); return __extend(i, config) }
+function advisor_button(config) { var i = image_button({pack:PACK_GENERAL, id:106, offset:12, tooltip:[68, 41]}); return __extend(i, config) }
 
 uioptions = {
 	resource_icons : {pack:PACK_EXPANSION, id:3},
@@ -981,7 +982,7 @@ sidebar_window_expanded = {
 		show_overlays  : link({pos:[4, 30], size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW }),
 		collapse       : image_button({pos:[128, 30], pack:PACK_GENERAL, id:110, offset:7, tooltip:[68, 10]}),
 
-		show_advisors  : image_button({pos:[16, 173], pack:PACK_GENERAL, id:136, offset:64, tooltip:[68, 41]}),
+		show_advisors  : advisor_button({pos:[16, 173], pack:PACK_GENERAL, id:136, offset:64, tooltip:[68, 41]}),
 		show_empire    : image_button({pos:[90, 173], pack:PACK_GENERAL, id:136, offset:68, tooltip:[68, 42]}),
 		
 		build_house    : image_button({pos:[9, 281], pack:PACK_GENERAL, id:136, offset:0, tooltip:[68, 20]}),
@@ -1418,6 +1419,8 @@ empire_window = {
 		city_name : header({pos:[0, -1], margin:{bottom:-120}, size:[sw(0), 20], align:"center"}),
 		button_help : help_button({margin:{centerx:575, bottom:-120}}),
 		button_close : close_button({margin:{centerx:575, bottom:-40}}),
+		button_advisor : advisor_button({margin:{centerx:-595, bottom:-120}}),
+		button_open_trade : button({margin:{centerx:-220, bottom:-40}, size:[440, 20]}),
 	}
 }
 

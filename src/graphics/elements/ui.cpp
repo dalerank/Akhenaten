@@ -614,7 +614,7 @@ void ui::widget::load(pcstr section) {
 }
 
 ui::element& ui::widget::operator[](pcstr id) {
-    auto it = std::find_if(elements.begin(), elements.end(), [id] (const auto &e) { return e->id == id; });
+    auto it = std::find_if(elements.begin(), elements.end(), [xid = xstring(id)] (const auto &e) { return e->id == xid; });
     if (it == elements.end()) {
         logs::error("No element with id:%s", id);
     }
