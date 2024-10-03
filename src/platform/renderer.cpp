@@ -409,6 +409,8 @@ static buffer_texture* get_saved_texture_info(int texture_id) {
 }
 
 int graphics_renderer_interface::save_texture_from_screen(int texture_id, vec2i pos, int width, int height) {
+    assert(width > 0 && height > 0);
+
     auto &data = g_renderer_data;
     SDL_Texture* former_target = SDL_GetRenderTarget(data.renderer);
     if (!former_target) {

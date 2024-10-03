@@ -1392,19 +1392,16 @@ info_window_storageyard = {
 }
 
 empire_window = {
-	trade_column_spacing : 106,
+	trade_column_spacing : 146,
 	trade_row_spacing : 20,
 	info_y_traded : -3,
 	trade_button_offset_x : 0,
-	info_y_sells : 30,
-	info_y_buys : 52,
 	info_y_footer_1 : 78,
 	info_y_city_desc : 28,
 	text_group_old_names : 195,
 	text_group_new_names : 21,
 	trade_resource_size : 18,
 	trade_resource_offset : 3,
-	sell_res_group : 47,
 	trade_button_offset_y : 10,
 	start_pos : [16, 16],
 	finish_pos : [32, 136],
@@ -1413,6 +1410,7 @@ empire_window = {
 	horizontal_bar : {pack:PACK_GENERAL, id:172, offset:1},
 	vertical_bar : {pack:PACK_GENERAL, id:172, offset:0},
 	cross_bar : {pack:PACK_GENERAL, id:172, offset:2},
+	trade_amount : {pack:PACK_GENERAL, id:171},
 
 	ui : {
 		background : dummy({size:[sw(0), sh(0)]}),
@@ -1421,6 +1419,23 @@ empire_window = {
 		button_close : close_button({margin:{centerx:575, bottom:-40}}),
 		button_advisor : advisor_button({margin:{centerx:-595, bottom:-120}}),
 		button_open_trade : button({margin:{centerx:-220, bottom:-40}, size:[440, 20]}),
+		info_tooltip : text({margin:{centerx:-200, bottom:-60}, size:[400, 20], font:FONT_NORMAL_BLACK_ON_LIGHT, align:"center"}),
+
+		city_sell_title : text({text:[47, 11], margin:{centerx:250, bottom:-120}, font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		city_sell_items : dummy({pos:[0, 100], size:[200, 0], margin:{centerx:100, bottom:-90}}),
+		city_sell_item : dummy({size:[120, 20], font:FONT_SMALL_PLAIN}),
+	
+		city_buy_title : text({text:[47, 10], margin:{centerx:-300, bottom:-120}, font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		city_buy_items : dummy({pos:[0, 0], size:[200, 0], margin:{centerx:-430, bottom:-90}}),
+		city_buy_item : dummy({size:[120, 20], font:FONT_SMALL_PLAIN}),
+
+		city_want_sell_title : text({text:[47, 5], margin:{centerx:-220, bottom:-90}, font: FONT_NORMAL_BLACK_ON_LIGHT }),
+   	city_want_sell_items : dummy({pos:[0, 100], margin:{centerx:-170, bottom:-90}}),
+		city_want_sell_item : dummy({size:[110, 0], font:FONT_SMALL_PLAIN}),
+
+   	city_want_buy_title : text({text:[47, 4], margin:{centerx:-220, bottom:-70}, font: FONT_NORMAL_BLACK_ON_LIGHT }),
+	  city_want_buy_items : dummy({pos:[0, 0], margin:{centerx:-170, bottom:-70}}),
+		city_want_buy_item : dummy({size:[110, 0], font:FONT_SMALL_PLAIN}),
 	}
 }
 
@@ -1435,9 +1450,9 @@ minimap_window = {
 	terrain_elevation : {pack:PACK_GENERAL, id:145},
 	terrain_meadow : {pack:PACK_GENERAL, id:146},
 	terrain_flooplain : {pack:PACK_GENERAL, id:146},
-	terrain_road : {pack:PACK_GENERAL, id:147},
-	terrain_wall : {pack:PACK_GENERAL, id:150},
+	terrain_road  : {pack:PACK_GENERAL, id:147},
+	terrain_wall  : {pack:PACK_GENERAL, id:150},
 	terrain_canal : {pack:PACK_GENERAL, id:151},
-	terrain_dune : {pack:PACK_GENERAL, id:211},
-	terrain_teal : {pack:PACK_GENERAL, id:149, offset:200},
+	terrain_dune  : {pack:PACK_GENERAL, id:211},
+	terrain_teal  : {pack:PACK_GENERAL, id:149, offset:200},
 }

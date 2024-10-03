@@ -41,6 +41,7 @@ enum UiFlags_ {
     UiFlags_AlignXCentered = 1 << 12,
     UiFlags_Readonly = 1 << 13,
     UiFlags_NoBorder = 1 << 14,
+    UiFlags_Outline = 1 << 15,
 };
 using UiFlags = int;
 
@@ -65,7 +66,7 @@ int label_colored(pcstr tx, vec2i pos, e_font font, color color);
 void eimage(e_image_id img, vec2i pos, int offset = 0);
 void eimage(image_desc img, vec2i pos);
 void panel(vec2i pos, vec2i size, UiFlags flags);
-void icon(vec2i pos, e_resource img);
+void icon(vec2i pos, e_resource img, UiFlags flags = UiFlags_None);
 void icon(vec2i pos, e_advisor advisor);
 int button_hover(const mouse *m);
 
@@ -102,6 +103,7 @@ struct recti {
 struct element {
     using ptr = std::shared_ptr<element>;
     using items = std::vector<ptr>;
+    using draw_callback = std::function<void(element*)>;
 
     xstring id;
     vec2i pos;
@@ -110,6 +112,7 @@ struct element {
     bool readonly = false;
     bool enabled = true;
     bool grayed = false;
+    draw_callback _draw_callback;
 
     virtual void draw() {}
     virtual void load(archive, element* parent, items &elems);
@@ -128,12 +131,13 @@ struct element {
     virtual int value() const { return 0; }
     virtual void select(bool v) {}
     virtual void max_value(int v) {}
-    virtual const xstring &tooltip() const { return xstring(); }
+    virtual const xstring &tooltip() const { static xstring dummy;  return dummy; }
     virtual element &onclick(std::function<void(int, int)>) { return *this; }
             element &onclick(std::function<void()> f) { onclick([f] (int, int) { f(); });  return *this; }
     virtual void onevent(std::function<void()>) { }
     virtual element &onrclick(std::function<void(int, int)>) { return *this; }
             element &onrclick(std::function<void()> f) { onrclick([f] (int, int) { f(); }); return *this;}
+    virtual void ondraw(draw_callback f) { _draw_callback = f;};
 
     virtual emenu_header *dcast_menu_header() { return nullptr; }
     virtual eimage_button *dcast_image_button() { return nullptr; }

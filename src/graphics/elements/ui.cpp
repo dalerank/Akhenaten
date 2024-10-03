@@ -198,7 +198,7 @@ void ui::begin_frame() {
 }
 
 void ui::end_frame() {
-
+    
 }
 
 void ui::end_widget() {
@@ -490,10 +490,13 @@ void ui::panel(vec2i pos, vec2i size, UiFlags flags) {
     }
 }
 
-void ui::icon(vec2i pos, e_resource img) {
+void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
     const vec2i offset = g_state.offset();
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id_resource_icon(img), offset.x + pos.x, offset.y + pos.y);
+    const image_t *img = ImageDraw::img_generic(ctx, image_id_resource_icon(res), offset.x + pos.x, offset.y + pos.y);
+    if (!!(flags & UiFlags_Outline)) {
+        graphics_draw_inset_rect(pos - vec2i{1, 1}, vec2i{ img->width, img->height } + vec2i{2, 2});
+    }
 }
 
 void ui::icon(vec2i pos, e_advisor adv) {
@@ -735,6 +738,10 @@ void ui::elabel::draw() {
         label_draw(pos.x + offset.x, pos.y + offset.y, _body.x, _body.y);
     }
     ui::label(_text.c_str(), pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0}), _font, _flags, size.x);
+
+    if (_draw_callback) {
+        _draw_callback(this);
+    }
 }
 
 void ui::elabel::load(archive arch, element *parent, items &elems) {
@@ -933,6 +940,10 @@ void ui::etext::draw() {
             text_draw((uint8_t *)_text.c_str(), offset.x + pos.x + 1, offset.y + pos.y, _font, _shadow_color);
         }
         text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _font, _color);
+    }
+
+    if (_draw_callback) {
+        _draw_callback(this);
     }
 }
 

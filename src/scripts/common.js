@@ -132,6 +132,10 @@ var building_road = {}
 var building_burning_ruin = {}
 var building_marble_quarry = {}
 var trade_prices_window = {}
+var trade_city_sell = {}
+var trade_city_want_sell = {}
+var trade_city_buy = {}
+var trade_city_want_buy = {}
 
 // houses
 var building_house_crude_hut = {}
