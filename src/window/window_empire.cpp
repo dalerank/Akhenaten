@@ -65,6 +65,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     int selected_city = 1;
     vec2i min_pos, max_pos;
     vec2i draw_offset;
+    vec2i last_mouse_pos;
     int is_scrolling;
     int finished_scroll;
     int trade_column_spacing;
@@ -81,6 +82,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     image_desc image, bottom_image, horizontal_bar,
                vertical_bar, cross_bar, trade_amount,
                closed_trade_route_hl, open_trade_route, open_trade_route_hl;
+    xstring hovered_object_tooltip;
     //svector<object_trade_info, 16> buying_goods;
     //svector<object_trade_info, 16> selling_goods;
 
@@ -132,6 +134,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     void draw_city_info(const empire_object *object);
     void draw_trade_resource(e_resource resource, int trade_now, int trade_max, vec2i offset, e_font font);
     void draw_trade_route(int route_id, e_empire_route_state effect);
+    void draw_object_tooltip();
 };
 
 empire_window g_empire_window;
@@ -424,6 +427,7 @@ int empire_window::ui_handle_mouse(const mouse *m) {
     const hotkeys *h = hotkey_state();
 
     vec2i position;
+    last_mouse_pos = { m->x, m->y };
     if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
         g_empire_map.scroll_map(position);
     }
@@ -479,6 +483,7 @@ void empire_window::draw_empire_object(const empire_object* obj) {
 
     vec2i pos;
     int image_id;
+    pcstr tooltip_text = "";
     if (scenario_empire_is_expanded()) {
         pos = obj->expanded.pos;
         image_id = obj->expanded.image_id;
@@ -510,17 +515,21 @@ void empire_window::draw_empire_object(const empire_object* obj) {
         int letter_height = get_letter_height((const uint8_t*)"H", FONT_SMALL_PLAIN);
         vec2i text_pos = draw_offset + pos + vec2i{0, -letter_height};
 
+        tooltip_text = ui::str(text_group, city->name_id);
+
         switch (obj->text_align) {
-        case 0: ui::label_colored(ui::str(text_group, city->name_id), text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
-        case 1: ui::label_colored(ui::str(text_group, city->name_id), text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
-        case 2: ui::label_colored(ui::str(text_group, city->name_id), text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
-        case 3: ui::label_colored(ui::str(text_group, city->name_id), text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
+        case 0: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
+        case 1: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
+        case 2: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
+        case 3: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
         }
+
     } else if (obj->type == EMPIRE_OBJECT_TEXT) {
         const full_empire_object* full = empire_get_full_object(obj->id);
         vec2i text_pos = draw_offset + pos;
 
-        ui::label_colored(ui::str(196, full->city_name_id), text_pos - vec2i{5, 0}, FONT_SMALL_PLAIN, COLOR_FONT_SHITTY_BROWN, 100);
+        tooltip_text = ui::str(196, full->city_name_id);
+        ui::label_colored(tooltip_text, text_pos - vec2i{5, 0}, FONT_SMALL_PLAIN, COLOR_FONT_SHITTY_BROWN, 100);
         return;
     }
 
@@ -544,32 +553,37 @@ void empire_window::draw_empire_object(const empire_object* obj) {
     }
 
     image_id = image_id_remap(image_id);
-    const image_t *img = ui::eimage(image_id, draw_offset + pos);
+    const vec2i draw_pos = draw_offset + pos;
+    const image_t *img = ui::eimage(image_id, draw_pos);
+
+    if (last_mouse_pos.x > draw_pos.x && last_mouse_pos.y > draw_pos.y
+        && last_mouse_pos.x < draw_pos.x + img->width && last_mouse_pos.y < draw_pos.y + img->height) {
+        hovered_object_tooltip = tooltip_text;
+    }
 
     if (img && img->animation.speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
-        ui::eimage({ PACK_GENERAL, image_id + new_animation }, draw_offset + pos + img->animation.sprite_offset);
+        ui::eimage({ PACK_GENERAL, image_id + new_animation }, draw_pos + img->animation.sprite_offset);
     }
 }
 
 void empire_window::draw_map() {
-    painter ctx = game.painter();
-
     graphics_set_clip_rectangle(min_pos + start_pos, vec2i{max_pos - min_pos} - finish_pos);
 
     g_empire_map.set_viewport(max_pos - min_pos - finish_pos);
 
     draw_offset = min_pos + start_pos;
     draw_offset = g_empire_map.adjust_scroll(draw_offset);
+    hovered_object_tooltip = "";
 
-    ImageDraw::img_generic(ctx, image_group(image), draw_offset);
+    ui::eimage(image, draw_offset);
 
     empire_object_foreach([this] (const empire_object *obj) {
         draw_empire_object(obj);
     });
 
     scenario_invasion_foreach_warning([&] (vec2i pos, int image_id) {
-        ImageDraw::img_generic(ctx, image_id, draw_offset + pos);
+        ui::eimage(image_id, draw_offset + pos);
     });
 
     graphics_reset_clip_rectangle();
@@ -682,49 +696,15 @@ void empire_window::ui_draw_foreground() {
     ui.draw();
     
     draw_object_info();
+    draw_object_tooltip();
 
     ui.end_widget();
 }
 
-static void get_tooltip_trade_route_type(tooltip_context* c) {
-    //auto &data = g_empire_window;
-    //int selected_object = g_empire_map.selected_object();
-    //if (!selected_object || empire_object_get(selected_object - 1)->type != EMPIRE_OBJECT_CITY)
-    //    return;
-    //
-    //data.selected_city = g_empire.get_city_for_object(selected_object - 1);
-    //const empire_city* city = g_empire.city(data.selected_city);
-    //if (city->type != EMPIRE_CITY_PHARAOH || city->is_open)
-    //    return;
-    //
-    //int x_offset = (data.min_pos.x + data.max_pos.x + 300) / 2;
-    //int y_offset = data.max_pos.y - 41;
-    //int y_offset_max = y_offset + 22 - 2 * city->is_sea_trade;
-    //if (c->mpos.x >= x_offset && c->mpos.x < x_offset + 32 && c->mpos.y >= y_offset && c->mpos.y < y_offset_max) {
-    //    c->type = TOOLTIP_BUTTON;
-    //    c->text.group = 44;
-    //    c->text.id = 28 + city->is_sea_trade;
-    //}
-}
-
-static void window_empire_get_tooltip(tooltip_context* c) {
-    //auto &data = g_empire_window;
-    //if (data.focus_button_id) {
-    //    c->type = TOOLTIP_BUTTON;
-    //    switch (data.focus_button_id) {
-    //    case 1:
-    //        c->text.id = 1;
-    //        break;
-    //    case 2:
-    //        c->text.id = 2;
-    //        break;
-    //    case 3:
-    //        c->text.id = 70;
-    //        break;
-    //    }
-    //} else {
-    //    get_tooltip_trade_route_type(c);
-    //}
+void empire_window::draw_object_tooltip() {
+    if (!!hovered_object_tooltip) {
+        ui::set_tooltip(hovered_object_tooltip);
+    }
 }
 
 void window_empire_show() {
@@ -733,7 +713,7 @@ void window_empire_show() {
         [] { g_empire_window.draw_background(); },
         [] { g_empire_window.ui_draw_foreground(); },
         [] (const mouse *m, const hotkeys *h) { g_empire_window.ui_handle_mouse(m); },
-        window_empire_get_tooltip
+        nullptr
     };
 
     g_empire_window.init();
