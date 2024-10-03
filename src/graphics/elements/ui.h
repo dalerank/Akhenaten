@@ -61,10 +61,10 @@ int label(int group, int number, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_L
 int label(pcstr, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0);
 int label_amount(int group, int number, int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, pcstr postfix = "");
 int label_percent(int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
-int label_colored(textid tx, vec2i pos, e_font font, color color);
-int label_colored(pcstr tx, vec2i pos, e_font font, color color);
-void eimage(e_image_id img, vec2i pos, int offset = 0);
-void eimage(image_desc img, vec2i pos);
+int label_colored(textid tx, vec2i pos, e_font font, color color, int box_width = 0);
+int label_colored(pcstr tx, vec2i pos, e_font font, color color, int box_width = 0);
+const image_t *eimage(int imgid, vec2i pos);
+const image_t *eimage(image_desc img, vec2i pos);
 void panel(vec2i pos, vec2i size, UiFlags flags);
 void icon(vec2i pos, e_resource img, UiFlags flags = UiFlags_None);
 void icon(vec2i pos, e_advisor advisor);

@@ -65,10 +65,8 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     int selected_city = 1;
     vec2i min_pos, max_pos;
     vec2i draw_offset;
-    int focus_button_id;
     int is_scrolling;
     int finished_scroll;
-    int focus_resource;
     int trade_column_spacing;
     int trade_row_spacing;
     int info_y_traded;
@@ -81,7 +79,8 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     int trade_button_offset_y;
     vec2i start_pos, finish_pos;
     image_desc image, bottom_image, horizontal_bar,
-               vertical_bar, cross_bar, trade_amount;
+               vertical_bar, cross_bar, trade_amount,
+               closed_trade_route_hl, open_trade_route, open_trade_route_hl;
     //svector<object_trade_info, 16> buying_goods;
     //svector<object_trade_info, 16> selling_goods;
 
@@ -113,6 +112,9 @@ struct empire_window : public autoconfig_window_t<empire_window> {
         arch.r_desc("vertical_bar", vertical_bar);
         arch.r_desc("cross_bar", cross_bar);
         arch.r_desc("trade_amount", trade_amount);
+        arch.r_desc("closed_trade_route_hl", closed_trade_route_hl);
+        arch.r_desc("open_trade_route", open_trade_route);
+        arch.r_desc("open_trade_route_hl", open_trade_route_hl);
 
         init();
     }
@@ -129,6 +131,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     void determine_selected_object(const mouse *m);
     void draw_city_info(const empire_object *object);
     void draw_trade_resource(e_resource resource, int trade_now, int trade_max, vec2i offset, e_font font);
+    void draw_trade_route(int route_id, e_empire_route_state effect);
 };
 
 empire_window g_empire_window;
@@ -137,7 +140,6 @@ void empire_window::init() {
     selected_button = 0;
     int selected_object = g_empire_map.selected_object();
     selected_city = selected_object ? g_empire.get_city_for_object(selected_object - 1) : 0;
-    focus_button_id = 0;
 
     ui["city_want_sell_items"].ondraw([this] (ui::element *e) { draw_city_want_sell(e); });
     ui["city_want_buy_items"].ondraw([this] (ui::element *e) { draw_city_want_buy(e); });
@@ -145,8 +147,7 @@ void empire_window::init() {
     ui["city_buy_items"].ondraw([this] (ui::element *e) { draw_city_buy(e); });
 }
 
-static void draw_trade_route(int route_id, e_empire_route_state effect) {
-    auto &data = g_empire_window;
+void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) {
     painter ctx = game.painter();
 
     map_route_object* obj = empire_get_route_object(route_id);
@@ -162,13 +163,13 @@ static void draw_trade_route(int route_id, e_empire_route_state effect) {
         //image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 211;
         break;
     case ROUTE_CLOSED_SELECTED: // highlighted, closed
-        image_id = image_group(IMG_EMPIRE_ROUTE_HL_CLOSED);
+        image_id = image_group(closed_trade_route_hl);
         break;
     case ROUTE_OPEN: // open
-        image_id = image_group(IMG_EMPIRE_ROUTE_OPEN);
+        image_id = image_group(open_trade_route);
         break;
     case ROUTE_OPEN_SELECTED: // highlighted, open
-        image_id = image_group(IMG_EMPIRE_ROUTE_HL_OPEN);
+        image_id = image_group(open_trade_route_hl);
         break;
     }
 
@@ -176,7 +177,7 @@ static void draw_trade_route(int route_id, e_empire_route_state effect) {
         const auto &route_point = obj->points[i];
 
         // first corner in pair
-        ImageDraw::img_generic(ctx, image_id, data.draw_offset + route_point.p);
+        ImageDraw::img_generic(ctx, image_id, draw_offset + route_point.p);
 
         // draw lines connecting the turns
         if (i < obj->num_points - 1) {
@@ -189,7 +190,7 @@ static void draw_trade_route(int route_id, e_empire_route_state effect) {
 
             float progress = 1.0;
             while (progress < len) {
-                vec2i disp = data.draw_offset + route_point.p + vec2i{(int)(scaled_x * progress), (int)(scaled_y * progress)};
+                vec2i disp = draw_offset + route_point.p + vec2i{(int)(scaled_x * progress), (int)(scaled_y * progress)};
                 ImageDraw::img_generic(ctx, image_id, disp);
                 progress += 1.0f;
             }
@@ -197,17 +198,7 @@ static void draw_trade_route(int route_id, e_empire_route_state effect) {
     }
 }
 
-static int column_idx(int index) {
-    return index % 2;
-}
-
-static int row_idx(int index) {
-    return index / 2;
-}
-
 void empire_window::draw_trade_resource(e_resource resource, int trade_now, int trade_max, vec2i offset, e_font font) {
-    painter ctx = game.painter();
-    int img_id = image_id_resource_icon(resource);
     ui.icon(offset + vec2i{ 1, 1 }, resource, UiFlags_Outline);
     ui.button("", offset - vec2i{ 2, 2 }, vec2i{ 105, 24 }, fonts_vec{}, UiFlags_NoBody)
          .tooltip({23, resource})
@@ -224,20 +215,9 @@ void empire_window::draw_trade_resource(e_resource resource, int trade_now, int 
     ui.label(text.c_str(), offset + vec2i{ 40, 0 }, font);
 
     switch (trade_max) {
-    case 1500:
-    case 15:
-        ImageDraw::img_generic(ctx, image_group(trade_amount), offset + vec2i{21, -1});
-        break;
-
-    case 2500:
-    case 25:
-        ImageDraw::img_generic(ctx, image_group(trade_amount + 1), offset + vec2i{17, -1});
-        break;
-
-    case 4000:
-    case 40:
-        ImageDraw::img_generic(ctx, image_group(trade_amount + 2), offset + vec2i{13, -1});
-        break;
+    case 1500: case 15: ui.image(trade_amount, offset + vec2i{21, -1}); break;
+    case 2500: case 25: ui.image(trade_amount + 1, offset + vec2i{17, -1}); break;
+    case 4000: case 40: ui.image(trade_amount + 2, offset + vec2i{13, -1}); break;
     }
 }
 
@@ -294,9 +274,6 @@ void empire_window::draw_city_buy(ui::element *e) {
         if (!empire_object_city_buys_resource(object->id, resource))
             continue;
 
-        int column_offset = trade_column_spacing * column_idx(index) + 200;
-        int row_offset = trade_row_spacing * row_idx(index) + 20;
-
         const auto &trade_route = city->get_route();
         int trade_max = trade_route.limit(resource);
         int trade_now = std::min(trade_max, trade_route.traded(resource));
@@ -326,9 +303,6 @@ void empire_window::draw_city_selling(ui::element *e) {
         if (!empire_object_city_sells_resource(object->id, resource)) {
             continue;
         }
-
-        int column_offset = trade_column_spacing * column_idx(index) - 150;
-        int row_offset = trade_row_spacing * row_idx(index) + 20;
 
         const auto &trade_route = city->get_route();
         int trade_max = trade_route.limit(resource);
@@ -437,6 +411,7 @@ void empire_window::determine_selected_object(const mouse *m) {
         finished_scroll = 0;
         return;
     }
+
     g_empire_map.select_object(vec2i{ m->x, m->y } - min_pos - vec2i{ 16, 16 });
     window_invalidate();
 }
@@ -469,17 +444,13 @@ int empire_window::ui_handle_mouse(const mouse *m) {
         }
     }
 
-    focus_button_id = 0;
-    focus_resource = 0;
-    int button_id;
-
     determine_selected_object(m);
+
     int selected_object = g_empire_map.selected_object();
     if (selected_object) {
         const empire_object *obj = empire_object_get(selected_object - 1);
         if (obj->type == EMPIRE_OBJECT_CITY) {
             selected_city = g_empire.get_city_for_object(selected_object - 1);
-            const empire_city *city = g_empire.city(selected_city);
         }
 
         if (input_go_back_requested(m, h)) {
@@ -500,7 +471,6 @@ int empire_window::ui_handle_mouse(const mouse *m) {
 }
 
 void empire_window::draw_empire_object(const empire_object* obj) {
-    auto &data = g_empire_window;
     if (obj->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj->type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
         if (!g_empire.is_trade_route_open(obj->trade_route_id)) {
             return;
@@ -525,46 +495,32 @@ void empire_window::draw_empire_object(const empire_object* obj) {
         if (city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING || city->type == EMPIRE_CITY_PHARAOH_TRADING) {
             e_empire_route_state state = ROUTE_CLOSED;
             if (city->is_open) {
-                state = (g_empire_map.selected_object() && data.selected_city == g_empire.get_city_for_object(obj->id))
+                state = (g_empire_map.selected_object() && selected_city == g_empire.get_city_for_object(obj->id))
                               ? ROUTE_OPEN_SELECTED 
                               : ROUTE_OPEN;
             } else {
-                state = (g_empire_map.selected_object() && data.selected_city == g_empire.get_city_for_object(obj->id))
+                state = (g_empire_map.selected_object() && selected_city == g_empire.get_city_for_object(obj->id))
                               ? ROUTE_CLOSED_SELECTED
                               : ROUTE_CLOSED;
             }
             draw_trade_route(city->route_id, state);
         }
 
-        int text_group = (g_settings.city_names_style == CITIES_OLD_NAMES) 
-                              ? data.text_group_old_names
-                              : data.text_group_new_names;
-
+        int text_group = (g_settings.city_names_style == CITIES_OLD_NAMES)  ? text_group_old_names : text_group_new_names;
         int letter_height = get_letter_height((const uint8_t*)"H", FONT_SMALL_PLAIN);
-        vec2i text_pos = data.draw_offset + pos + vec2i{0, -letter_height};
+        vec2i text_pos = draw_offset + pos + vec2i{0, -letter_height};
 
         switch (obj->text_align) {
-        case 0:
-            lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x, text_pos.y, obj->width, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
-            break;
-
-        case 1:
-            lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x, text_pos.y, obj->width, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
-            break;
-
-        case 2:
-            lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x, text_pos.y, obj->width, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
-            break;
-
-        case 3:
-            lang_text_draw_centered_colored(text_group, city->name_id, text_pos.x, text_pos.y, obj->width, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
-            break;
+        case 0: ui::label_colored(ui::str(text_group, city->name_id), text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
+        case 1: ui::label_colored(ui::str(text_group, city->name_id), text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
+        case 2: ui::label_colored(ui::str(text_group, city->name_id), text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
+        case 3: ui::label_colored(ui::str(text_group, city->name_id), text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
         }
     } else if (obj->type == EMPIRE_OBJECT_TEXT) {
         const full_empire_object* full = empire_get_full_object(obj->id);
-        vec2i text_pos = data.draw_offset + pos;
+        vec2i text_pos = draw_offset + pos;
 
-        lang_text_draw_centered_colored(196, full->city_name_id, text_pos.x - 5, text_pos.y, 100, FONT_SMALL_PLAIN, COLOR_FONT_SHITTY_BROWN);
+        ui::label_colored(ui::str(196, full->city_name_id), text_pos - vec2i{5, 0}, FONT_SMALL_PLAIN, COLOR_FONT_SHITTY_BROWN, 100);
         return;
     }
 
@@ -587,14 +543,12 @@ void empire_window::draw_empire_object(const empire_object* obj) {
             return;
     }
 
-    painter ctx = game.painter();
     image_id = image_id_remap(image_id);
-    const image_t* img = image_get(PACK_GENERAL, image_id);
-    ImageDraw::img_generic(ctx, PACK_GENERAL, image_id, data.draw_offset + pos);
+    const image_t *img = ui::eimage(image_id, draw_offset + pos);
 
     if (img && img->animation.speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
-        ImageDraw::img_generic(ctx, PACK_GENERAL, image_id + new_animation, data.draw_offset + pos + img->animation.sprite_offset);
+        ui::eimage({ PACK_GENERAL, image_id + new_animation }, draw_offset + pos + img->animation.sprite_offset);
     }
 }
 

@@ -461,24 +461,34 @@ int ui::label_percent(int amount, vec2i pos, e_font font) {
     return text_draw_percentage(amount, offset.x + pos.x, offset.y + pos.y, font);
 }
 
-int ui::label_colored(textid tx, vec2i pos, e_font font, color color) {
-    return lang_text_draw_colored(tx.group, tx.id, pos.x, pos.y, font, color);
+int ui::label_colored(textid tx, vec2i pos, e_font font, color color, int box_width) {
+    if (box_width > 0) {
+        lang_text_draw_centered_colored(tx.group, tx.id, pos.x, pos.y, box_width, font, color);
+        return box_width;
+    } else {
+        return lang_text_draw_colored(tx.group, tx.id, pos.x, pos.y, font, color);
+    }
 }
 
-int ui::label_colored(pcstr tx, vec2i pos, e_font font, color color) {
-    return lang_text_draw_colored(tx, pos.x, pos.y, font, color);
+int ui::label_colored(pcstr tx, vec2i pos, e_font font, color color, int box_width) {
+    if (box_width > 0) {
+        text_draw_centered((const uint8_t*)tx, pos.x, pos.y, box_width, font, color);
+        return box_width;
+    } else {
+        return lang_text_draw_colored(tx, pos.x, pos.y, font, color);
+    }
 }
 
-void ui::eimage(e_image_id group, vec2i pos, int img) {
+const image_t *ui::eimage(int imgid, vec2i pos) {
     painter ctx = game.painter();
     const vec2i offset = g_state.offset();
-    ImageDraw::img_generic(ctx, image_group(group) + img, pos + offset);
+    return ImageDraw::img_generic(ctx, imgid, pos + offset);
 }
 
-void ui::eimage(image_desc imgd, vec2i pos) {
+const image_t *ui::eimage(image_desc imgd, vec2i pos) {
     painter ctx = game.painter();
     const vec2i offset = g_state.offset();
-    ImageDraw::img_generic(ctx, image_group(imgd), pos + offset);
+    return ImageDraw::img_generic(ctx, image_group(imgd), pos + offset);
 }
 
 void ui::panel(vec2i pos, vec2i size, UiFlags flags) {
@@ -649,7 +659,7 @@ void ui::widget::line(bool hline, vec2i npos, int size) {
 
 void ui::eimg::draw() {
     if (img > 0) {
-        ui::eimage(img, pos);
+        //ui::eimage(img, pos);
     } else if (isometric) {
         painter ctx = game.painter();
         const vec2i offset = g_state.offset();

@@ -1411,6 +1411,9 @@ empire_window = {
 	vertical_bar : {pack:PACK_GENERAL, id:172, offset:0},
 	cross_bar : {pack:PACK_GENERAL, id:172, offset:2},
 	trade_amount : {pack:PACK_GENERAL, id:171},
+	closed_trade_route_hl : {pack:PACK_GENERAL, id:149, offset:211},
+	open_trade_route : {pack:PACK_GENERAL, id:149, offset:201},
+	open_trade_route_hl : {pack:PACK_GENERAL, id:149, offset:186},
 
 	ui : {
 		background : dummy({size:[sw(0), sh(0)]}),
