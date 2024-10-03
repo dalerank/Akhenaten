@@ -72,10 +72,8 @@ void trade_prices_window::ui_draw_foreground() {
         }
 
         ui.icon(current_pos, resource);
-        const auto &btn = ui.button("", current_pos + item_button.pos, item_button.size, fonts_vec{}, UiFlags_NoBody);
-        if (btn.hovered) {
-            ui::set_tooltip((pcstr)lang_get_string(23, resource));
-        }
+        ui.button("", current_pos + item_button.pos, item_button.size, fonts_vec{}, UiFlags_NoBody)
+            .tooltip({23, resource});
 
         const int buy_price = trade_price_buy(i);
         const int sell_price = trade_price_sell(i);

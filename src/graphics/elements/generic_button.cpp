@@ -4,6 +4,8 @@
 #include "graphics/graphics.h"
 #include "io/gamefiles/lang.h"
 
+#include "graphics/elements/ui.h"
+
 static int get_button(const mouse* m, vec2i pos, const generic_button* buttons, int num_buttons) {
     for (int i = 0; i < num_buttons; i++) {
         if (pos.x + buttons[i].x <= m->x && pos.x + buttons[i].x + buttons[i].width > m->x && pos.y + buttons[i].y <= m->y
@@ -78,9 +80,18 @@ int generic_buttons_min_handle_mouse(const mouse* m, vec2i pos, const generic_bu
 }
 
 generic_button &generic_button::tooltip(textid t) { 
-    _tooltip = (pcstr)lang_get_string(t); return *this;
+    return tooltip((pcstr)lang_get_string(t));
+}
+
+generic_button &generic_button::tooltip(const xstring &t) { 
+    _tooltip = t;
+    if (hovered) {
+        ui::set_tooltip(_tooltip);
+    }
+    return *this;
 }
 
 generic_button &generic_button::tooltip(const std::initializer_list<int> &t) {
-    _tooltip = (pcstr)lang_get_string(*t.begin(), *(t.begin() + 1)); return *this;
+    pcstr new_value = (pcstr)lang_get_string(*t.begin(), *(t.begin() + 1));
+    return tooltip(new_value);
 }
