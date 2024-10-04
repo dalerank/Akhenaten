@@ -44,7 +44,7 @@ struct temple_info_window_t : public building_info_window {
 
         ui["god_image"].image({PACK_UNLOADED, 21, image_offset});
 
-        draw_employment_details(c);
+        fill_employment_details(c);
     }
 
     virtual bool check(object_info &c) override { 

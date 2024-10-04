@@ -13,7 +13,7 @@
 #include "game/game.h"
 #include "js/js_game.h"
 
-struct bazaar_info_window_t : public building_info_window {
+struct bazaar_info_window : public building_info_window {
     int resource_text_group;
 
     using widget::load;
@@ -33,14 +33,14 @@ struct bazaar_info_window_t : public building_info_window {
     void draw_orders_foreground(object_info &c);
 };
 
-bazaar_info_window_t g_bazaar_info_window;
+bazaar_info_window g_bazaar_info_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_bazaar_info_window);
 void config_load_bazaar_info_window() {
     g_bazaar_info_window.load("bazaar_info_window");
 }
 
-void bazaar_info_window_t::draw_simple_background(object_info &c) {
+void bazaar_info_window::draw_simple_background(object_info &c) {
     auto bazaar = c.building_get()->dcast_bazaar();
 
     const auto &meta = bazaar->get_info();
@@ -67,7 +67,7 @@ void bazaar_info_window_t::draw_simple_background(object_info &c) {
         return;
     }
 
-    draw_employment_details(c);
+    fill_employment_details(c);
 
     int image_id = image_id_resource_icon(0);
     auto &data = bazaar->data;
@@ -109,7 +109,7 @@ void bazaar_info_window_t::draw_simple_background(object_info &c) {
     }
 }
 
-void bazaar_info_window_t::window_info_foreground(object_info &ctx) {
+void bazaar_info_window::window_info_foreground(object_info &ctx) {
     if (ctx.storage_show_special_orders) {
         draw_orders_foreground(ctx);
     } else {
@@ -117,7 +117,7 @@ void bazaar_info_window_t::window_info_foreground(object_info &ctx) {
     }
 }
 
-void bazaar_info_window_t::draw_orders_foreground(object_info &c) {
+void bazaar_info_window::draw_orders_foreground(object_info &c) {
     auto &data = g_window_building_distribution;
     draw_orders_background(c);
     int line_x = c.offset.x + 215;
@@ -149,7 +149,7 @@ void bazaar_info_window_t::draw_orders_foreground(object_info &c) {
     //                         16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
 }
 
-void bazaar_info_window_t::window_info_background(object_info &c) {
+void bazaar_info_window::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
     if (c.storage_show_special_orders) {
@@ -159,7 +159,7 @@ void bazaar_info_window_t::window_info_background(object_info &c) {
     }
 }
 
-void bazaar_info_window_t::draw_orders_background(object_info &c) {
+void bazaar_info_window::draw_orders_background(object_info &c) {
     c.help_id = 2;
     int y_offset = window_building_get_vertical_offset(&c, 28 - 11);
     outer_panel_draw(vec2i{c.offset.x, y_offset}, 29, 28 - 11);

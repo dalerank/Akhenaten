@@ -72,7 +72,7 @@ void info_window_work_camp::window_info_background(object_info &c) {
 
     ui["warning_text"] = ui::str(reason.first, reason.second);
 
-    draw_employment_details(c);
+    fill_employment_details(c);
 }
 
 building* building_work_camp::determine_worker_needed() {

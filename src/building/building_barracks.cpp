@@ -244,7 +244,7 @@ void info_window_recruiter::window_info_background(object_info &c) {
         ui["workers_text"] = ui::str(c.group_id, workers_state);
     }
 
-    draw_employment_details(c);
+    fill_employment_details(c);
 
     const int priority = b->get_priority();
     ui["tower_button"] = (priority == 0) ? "x" : "";

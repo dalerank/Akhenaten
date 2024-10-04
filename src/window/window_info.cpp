@@ -192,7 +192,7 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
         context.ui = &g_empty_info_window;
     }
 
-    context.ui->init();
+    context.ui->init(context);
 
     // dialog size
     int bgsizey[] = {16, 16, 18, 19, 14, 23, 16};
@@ -320,10 +320,6 @@ void window_figure_register_handler(common_info_window *handler) {
     window_info_register_handler_t(g_window_figure_handlers, handler);
 }
 
-void common_info_window::window_info_background(object_info &c) {
-    
-}
-
 void common_info_window::update_buttons(object_info &c) {
     vec2i bgsize = ui["background"].pxsize();
     ui["button_help"].onclick([&c] {
@@ -379,11 +375,17 @@ void common_info_window::update_buttons(object_info &c) {
 void common_info_window::load(archive arch, pcstr section) {
     widget::load(arch, section);
 
-    init();
+    building *b = g_object_info.building_get();
+    if (b->type) {
+        init(g_object_info);
+    }
 }
 
-void common_info_window::init() {
-    update_buttons(g_object_info);
+void common_info_window::init(object_info &c) {
+    building *b = c.building_get();
+    ui["title"] = ui::str(28, b->type);
+
+    update_buttons(c);
 }
 
 void common_info_window::draw_tooltip(tooltip_context *c) {

@@ -54,7 +54,7 @@ void info_window_farm::window_info_background(object_info &c) {
         ui["farm_state"] = ui::str(177, is_not_irrigated);
         ui["farm_desc"] = ui::str(c.group_id, 1);
     } else {
-        draw_employment_details(c);
+        fill_employment_details(c);
         ui["farm_state"] = ui::str(c.group_id, 1);
     }
 }

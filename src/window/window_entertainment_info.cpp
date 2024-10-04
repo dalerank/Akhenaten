@@ -45,7 +45,7 @@ void info_window_entertainment::window_info_background(object_info &c) {
     else { reason.second = approximate_value(c.worker_percentage / 100.f, make_array(5, 4, 3, 2)); }
  
     ui["warning_text"] = ui::str(reason.first, reason.second);
-    draw_employment_details(c);
+    fill_employment_details(c);
 }
 
 void info_window_bandstand::window_info_background(object_info &c) {
@@ -61,7 +61,7 @@ void info_window_bandstand::window_info_background(object_info &c) {
     else if (b->data.entertainment.days1) { reason.id = 4; } 
     else if (b->data.entertainment.days2) { reason.id = 5; }
 
-    draw_employment_details(c);
+    fill_employment_details(c);
 
     if (b->data.entertainment.days1 > 0) {
         ui["play_text"].text_var("%s %s %d", ui::str(c.group_id, 8), ui::str(8, 44), 2 * b->data.entertainment.days1);
@@ -87,7 +87,7 @@ void info_window_booth::window_info_background(object_info &c) {
     else if (!b->data.entertainment.num_shows) { reason.id = 2; }
     else if (b->data.entertainment.days1) { reason.id = 3; }
 
-    draw_employment_details(c);
+    fill_employment_details(c);
 
     if (b->data.entertainment.days1 > 0) {
         ui["play_text"].text_var("%s %s %d %s", ui::str(c.group_id, 6), ui::str(8, 44), 2 * b->data.entertainment.days1, ui::str(c.group_id, 7 + b->data.entertainment.days3_or_play));

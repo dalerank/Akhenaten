@@ -1199,6 +1199,14 @@ info_window_palace = {
 	})
 }
 
+info_window_courthouse = {
+	ui : __baseui(building_info_window, {
+		background 	: outer_panel({size: [29, 17]}),
+		vaults_hold : text({pos: [44, 54], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		state       : text({margin:{left:20, bottom: -80} , font: FONT_NORMAL_BLACK_ON_DARK}),
+	})
+}
+
 info_window_entertainment = {
 	ui : {
 		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},

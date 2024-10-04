@@ -87,4 +87,5 @@ building_sounds = [
   { type: BUILDING_STORAGE_YARD,        sound: "Wavs/warehouse1.wav"},
   { type: BUILDING_DOCK,                sound: "Wavs/DOCK1.WAV"},
   { type: BUILDING_RECRUITER,           sound: "Wavs/barracks.WAV"},
+  { type: BUILDING_COURTHOUSE,          sound: "Wavs/forum.WAV"},
 ]

@@ -87,7 +87,7 @@ void info_window_storageyard::draw_background(object_info *c) {
         }
     }
 
-    draw_employment_details(*c);
+    fill_employment_details(*c);
 
     // cartpusher state
     figure *cartpusher = warehouse->get_figure(BUILDING_SLOT_SERVICE);

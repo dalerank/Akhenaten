@@ -42,5 +42,5 @@ void health_info_window::window_info_background(object_info &c) {
     else { reason.second = approximate_value(c.worker_percentage / 100.f, make_array(5, 4, 3, 2)); }
  
     ui["warning_text"] = ui::str(reason.first, reason.second);
-    draw_employment_details(c);
+    fill_employment_details(c);
 }

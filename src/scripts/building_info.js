@@ -591,6 +591,8 @@ building_courthouse = {
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
   building_size : 3,
+  info_text_id:176,
+  info_help_id:75,
 }
 
 building_guild_stonemasons = {

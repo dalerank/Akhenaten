@@ -58,7 +58,7 @@ void workshop_info_window::window_info_background(object_info& c) {
     ui["warning_text"].width(c.bgwidth_px() - 40);
     ui["warning_text"].text((pcstr)lang_get_string(trouble_text.first, trouble_text.second));
 
-    draw_employment_details(c);
+    fill_employment_details(c);
 }
 
 void building_workshop_draw_background(object_info& c, e_resource input_resource_a) {

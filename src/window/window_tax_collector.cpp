@@ -54,5 +54,5 @@ void taxcollector_info_window_t::window_info_background(object_info &c) {
 
     ui["warning_text"] = ui::str(reason.first, reason.second);  
 
-    draw_employment_details(c);
+    fill_employment_details(c);
 }

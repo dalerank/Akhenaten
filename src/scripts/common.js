@@ -184,6 +184,7 @@ var info_window_vacant_lot = {}
 var info_window_fishing_wharf = {}
 var raw_material_info_window = {}
 var info_window_palace = {}
+var info_window_courthouse = {}
 var info_window_garden = {}
 var info_window_health = {}
 var info_window_farm = {}

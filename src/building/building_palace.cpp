@@ -30,7 +30,7 @@
 #include "js/js_game.h"
 
 struct info_window_palace : public building_info_window_t<info_window_palace> {
-    virtual void window_info_background(object_info &c) override;
+    virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         return c.building_get()->dcast_palace();
     }
@@ -144,20 +144,23 @@ bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i p
     return true;
 }
 
-void info_window_palace::window_info_background(object_info &c) {
-    building_info_window::window_info_background(c);
+void info_window_palace::init(object_info &c) {
+    building_info_window::init(c);
 
-    building *b = c.building_get();
+    building_palace *palace = c.building_get()->dcast_palace();
+    if (!palace) {
+        return;
+    }
+
     ui["resource_img"].image(RESOURCE_DEBEN);
-    ui["title"] = ui::str(28, b->type);
-    ui["vaults_hold"].text_var("%s %d Db", ui::str(c.group_id, 2), b->tax_income_or_storage);
+    ui["vaults_hold"].text_var("%s %d Db", ui::str(c.group_id, 2), palace->base.tax_income_or_storage);
 
     std::pair<int, int> reason = { c.group_id, 0 };
     if (!c.has_road_access) reason = { 69, 25 };
-    else if (b->num_workers <= 0) reason.second = 10;
+    else if (palace->num_workers() <= 0) reason.second = 10;
     else reason.second = approximate_value(c.worker_percentage / 100.f, make_array(9, 8, 7, 6, 5));
 
-    draw_employment_details(c);
+    fill_employment_details(c);
     ui["workers_desc"] = ui::str(reason.first, reason.second);
 
     ui["visit_advisor"].onclick([] {
