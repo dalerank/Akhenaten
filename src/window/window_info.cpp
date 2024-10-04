@@ -192,6 +192,8 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
         context.ui = &g_empty_info_window;
     }
 
+    context.ui->init();
+
     // dialog size
     int bgsizey[] = {16, 16, 18, 19, 14, 23, 16};
     context.bgsize = {29, bgsizey[context.ui->get_height_id(context)]};
@@ -319,9 +321,7 @@ void window_figure_register_handler(common_info_window *handler) {
 }
 
 void common_info_window::window_info_background(object_info &c) {
-    ; // nothing
-
-    update_buttons(c);
+    
 }
 
 void common_info_window::update_buttons(object_info &c) {
@@ -376,6 +376,16 @@ void common_info_window::update_buttons(object_info &c) {
     }
 }
 
+void common_info_window::load(archive arch, pcstr section) {
+    widget::load(arch, section);
+
+    init();
+}
+
+void common_info_window::init() {
+    update_buttons(g_object_info);
+}
+
 void common_info_window::draw_tooltip(tooltip_context *c) {
     textid tx = get_tooltip(g_object_info);
     pcstr tooltip = (pcstr)lang_get_string(tx);
@@ -384,8 +394,5 @@ void common_info_window::draw_tooltip(tooltip_context *c) {
         tooltip = ui::button_tooltip(button_id - 1);
     }
 
-    if (tooltip && *tooltip) {
-        c->text = tooltip;
-        window_invalidate();
-    }
+    //ui::set_tooltip(tooltip);
 }

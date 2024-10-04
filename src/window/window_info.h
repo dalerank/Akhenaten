@@ -16,6 +16,10 @@ struct common_info_window : public ui::widget {
     virtual textid get_tooltip(object_info &c) { return {0, 0}; }
     virtual void update_buttons(object_info &c);
 
+    using widget::load;
+    virtual void load(archive arch, pcstr section) override;
+    virtual void init();
+
     void draw_tooltip(tooltip_context *c);
 };
 

@@ -29,7 +29,7 @@
 #include "game/game.h"
 #include "js/js_game.h"
 
-struct palace_info_window : public building_info_window {
+struct info_window_palace : public building_info_window_t<info_window_palace> {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
         return c.building_get()->dcast_palace();
@@ -39,7 +39,7 @@ struct palace_info_window : public building_info_window {
 buildings::model_t<building_village_palace> village_building_palace_m;
 buildings::model_t<building_town_palace> town_building_palace_m;
 buildings::model_t<building_city_palace> city_building_palace_m;
-palace_info_window palace_infow;
+info_window_palace palace_infow;
 
 void building_palace::on_create(int orientation) {
     base.labor_category = village_building_palace_m.labor_category;
@@ -144,7 +144,7 @@ bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i p
     return true;
 }
 
-void palace_info_window::window_info_background(object_info &c) {
+void info_window_palace::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
     building *b = c.building_get();
