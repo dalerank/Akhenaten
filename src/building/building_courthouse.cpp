@@ -3,6 +3,8 @@
 #include "window/building/common.h"
 #include "widget/city/ornaments.h"
 #include "graphics/elements/ui.h"
+#include "figure/figure.h"
+#include "window/window_building_info.h"
 
 #include "graphics/animation.h"
 #include "city/labor.h"
@@ -10,42 +12,51 @@
 
 buildings::model_t<building_courthouse> courthouse_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_courthouse);
-void config_load_building_courthouse() {
-    courthouse_m.load();
+struct info_window_courthouse : public building_info_window_t<info_window_courthouse> {
+    virtual void init(object_info &c) override;
+    virtual bool check(object_info &c) override {
+        return c.building_get()->dcast_courthouse();
+    }
+};
+
+info_window_courthouse courthouse_infow;
+
+void info_window_courthouse::init(object_info &c) {
+    building_info_window::init(c);
+
+    building* b = c.building_get();
+    std::pair<int, int> reason = { c.group_id, 0 };
+
+    if (!c.has_road_access) reason = { 69, 25 };
+    else if (b->num_workers <= 0) reason.second = 2;
+    else reason.second = approximate_value(c.worker_percentage / 100.f, make_array(4, 5, 6));
+    ui["workers_desc"] = ui::str(reason.first, reason.second);
+
+    textid magistrate_state{58 ,51};
+    if (b->num_workers > 0) {
+        if (!b->get_figure(BUILDING_SLOT_SERVICE)->is_valid()) {
+            magistrate_state = { c.group_id, 8 };
+        } else {
+            magistrate_state = { c.group_id, 7 };
+        }
+    } 
+
+    ui["state"] = magistrate_state;
+
+    fill_employment_details(c);
+    ui["warning_text"] = ui::str(c.group_id, 1);
 }
 
 void building_courthouse::spawn_figure() {
     common_spawn_roamer(FIGURE_MAGISTRATE, 50, FIGURE_ACTION_125_ROAMING);
 }
 
-void building_courthouse::window_info_background(object_info &c) {
-    const int LANG_GROUP_ID = 176;
-    c.help_id = 76;
-    window_building_play_sound(&c, "Wavs/forum.wav");
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(LANG_GROUP_ID, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-
-    building* b = building_get(c.building_id);
-
-    if (!c.has_road_access)
-        window_building_draw_description(c, 69, 25);
-    else if (b->num_workers <= 0)
-        window_building_draw_description_at(c, 72, LANG_GROUP_ID, 10);
-    else if (c.worker_percentage >= 100)
-        window_building_draw_description_at(c, 72, LANG_GROUP_ID, 5);
-    else if (c.worker_percentage >= 75)
-        window_building_draw_description_at(c, 72, LANG_GROUP_ID, 6);
-    else if (c.worker_percentage >= 50)
-        window_building_draw_description_at(c, 72, LANG_GROUP_ID, 7);
-    else if (c.worker_percentage >= 25)
-        window_building_draw_description_at(c, 72, LANG_GROUP_ID, 8);
-    else {
-        window_building_draw_description_at(c, 72, LANG_GROUP_ID, 9);
-    }
-
-    inner_panel_draw(c.offset + vec2i{ 16, 136 }, { c.bgsize.x - 2, 4 });
-    window_building_draw_employment(&c, 142);
+void building_courthouse::update_graphic() {
+    const xstring &animkey = can_play_animation()
+                                ? animkeys().work
+                                : animkeys().none;
+    set_animation(animkey);
+    building_impl::update_graphic();
 }
 
 bool building_courthouse::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
