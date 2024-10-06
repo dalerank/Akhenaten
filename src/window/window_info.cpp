@@ -55,6 +55,8 @@ object_info g_object_info;
 std::vector<common_info_window *> *g_window_building_handlers = nullptr;
 std::vector<common_info_window *> *g_window_figure_handlers = nullptr;
 
+int common_info_window::backside_texture = -1;
+
 struct empty_info_window : public common_info_window {
     virtual void window_info_background(object_info &c) override {
         //outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
@@ -242,7 +244,7 @@ static void window_info_handle_input(const mouse* m, const hotkeys* h) {
 
     if (!button_id) {
         ui.begin_widget(g_object_info.offset);
-        ui::handle_mouse(m);
+        button_id = ui::handle_mouse(m);
         ui.end_widget();
     }
 
@@ -320,6 +322,11 @@ void window_figure_register_handler(common_info_window *handler) {
     window_info_register_handler_t(g_window_figure_handlers, handler);
 }
 
+void common_info_window::window_info_foreground(object_info &c) { 
+    graphics_draw_from_texture(backside_texture, { 0, 0 }, screen_size());
+    ui.draw(); 
+}
+
 void common_info_window::update_buttons(object_info &c) {
     vec2i bgsize = ui["background"].pxsize();
     ui["button_help"].onclick([&c] {
@@ -379,6 +386,11 @@ void common_info_window::load(archive arch, pcstr section) {
     if (b->type) {
         init(g_object_info);
     }
+}
+
+void common_info_window::init(object_info &c) {
+    graphics_delete_saved_texture(backside_texture);
+    backside_texture = graphics_save_to_texture(backside_texture, { 0, 0 }, screen_size());
 }
 
 void common_info_window::draw_tooltip(tooltip_context *c) {

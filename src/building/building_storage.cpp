@@ -99,19 +99,21 @@ void building_storage_delete(int storage_id) {
 
 storage_t backup_settings;
 static int backup_storage_id = -1;
-static bool has_unsaved_changes = false;
 
 void backup_storage_settings(int storage_id) {
     if (backup_storage_id != -1)
         return;
 
-    has_unsaved_changes = false;
     backup_storage_id = storage_id;
     backup_settings = g_storages[storage_id].storage;
 }
 
+bool building_storage_has_unsaved_changes() {
+    return memcmp(&backup_settings, &g_storages[backup_storage_id].storage, sizeof(backup_settings)) != 0;
+ }
+
 void storage_settings_backup_check() {
-    if (has_unsaved_changes) {
+    if (building_storage_has_unsaved_changes()) {
         window_popup_dialog_show_confirmation("#exit_without_saving", [] (bool do_forget_changes) {
             if (!do_forget_changes) {
                 return;
@@ -132,7 +134,6 @@ void storage_settings_backup_check() {
 }
 
 void storage_settings_backup_reset() {
-    has_unsaved_changes = false;
     backup_storage_id = -1;
 }
 
@@ -141,7 +142,6 @@ const storage_t* building_storage_get(int storage_id) {
 }
 
 void building_storage_toggle_empty_all(int storage_id) {
-    has_unsaved_changes = true;
     g_storages[storage_id].storage.empty_all = 1 - g_storages[storage_id].storage.empty_all;
 
     auto &storage = g_storages[storage_id].storage;
@@ -151,7 +151,6 @@ void building_storage_toggle_empty_all(int storage_id) {
 }
 
 void building_storage_cycle_resource_state(int storage_id, int resource_id, bool backwards) {
-    has_unsaved_changes = true;
     int state = g_storages[storage_id].storage.resource_state[resource_id];
     if (!backwards) {
         if (state == STORAGE_STATE_PHARAOH_ACCEPT)
@@ -179,7 +178,6 @@ void building_storage_cycle_resource_state(int storage_id, int resource_id, bool
 void building_storage::set_permission(int p) {
     auto& data = g_storages;
 
-    has_unsaved_changes = true;
     const storage_t* s = storage();
     int permission_bit = 1 << p;
     int perms = s->permissions;
@@ -197,7 +195,6 @@ void building_storage_increase_decrease_resource_state(int storage_id, int resou
     int state = g_storages[storage_id].storage.resource_state[resource_id];
     if (state == STORAGE_STATE_PHARAOH_ACCEPT) {
         int max_accept = g_storages[storage_id].storage.resource_max_accept[resource_id];
-        int old = max_accept;
         if (increase) {
             if (max_accept == 2400)
                 max_accept = 3200;
@@ -214,12 +211,8 @@ void building_storage_increase_decrease_resource_state(int storage_id, int resou
                 max_accept = 800;
         }
         g_storages[storage_id].storage.resource_max_accept[resource_id] = max_accept;
-        if (old != max_accept)
-            has_unsaved_changes = true;
-
     } else if (state == STORAGE_STATE_PHARAOH_GET) {
         int max_get = g_storages[storage_id].storage.resource_max_get[resource_id];
-        int old = max_get;
         if (increase) {
             if (max_get == 2400)
                 max_get = 3200;
@@ -237,13 +230,10 @@ void building_storage_increase_decrease_resource_state(int storage_id, int resou
         }
 
         g_storages[storage_id].storage.resource_max_get[resource_id] = max_get;
-        if (old != max_get)
-            has_unsaved_changes = true;
     }
 }
 
 void building_storage_accept_none(int storage_id) {
-    has_unsaved_changes = true;
     auto &storage = g_storages[storage_id].storage;
     for (auto &state: storage.resource_state) {
         state = STORAGE_STATE_PHARAOH_REFUSE;

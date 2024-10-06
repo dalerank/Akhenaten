@@ -52,6 +52,7 @@ int building_storage_create(int building_type);
 
 int building_storage_restore(int storage_id);
 void building_storage_delete(int storage_id);
+bool building_storage_has_unsaved_changes();
 
 const storage_t* building_storage_get(int storage_id);
 

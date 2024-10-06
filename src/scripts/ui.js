@@ -798,43 +798,67 @@ roadblock_info_window = {
 	}
 }
 
-orders_window_granary = {
+granary_orders_window = {
 	ui : {
-		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
-		title 		 : { type : "text", pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		orders_panel : { type : "inner_panel", pos : [16, 42], size: [27, 10] },
-		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
-		empty_all : { type:"generic_button", pos:[80, -1], size:[300, 24], margin:{bottom:-64} },
-		accept_none : { type:"generic_button", pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} },
+		background 	: outer_panel({size: [29, 17]}),
+		title 		 : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		orders_panel : inner_panel({pos : [16, 42], size: [27, 10] }),
+		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
+		button_close  : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
+		empty_all : button({pos:[80, -1], size:[300, 24], margin:{bottom:-64} }),
+		accept_none : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
+
+		item_orders_column : dummy({margin:{centerx:0}}),
+		item_arrows_column : dummy({margin:{centerx:-36}}),
+		item_icon_column : dummy({pos:[25, 0]}),
+		item_row     : dummy({size:[px(13), 20]}),      
+		items_area	 : dummy({pos:[0, 50]}), 
 	}
 }
 
 granary_info_window = {
 	resource_text_group : 23,
 	ui : {
-		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
-		title 		 : { type : "text", text: "#granary_info_title", pos: [0, 12], size: [px(28), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		warning_text : { type : "text", pos: [32, 40], wrap:px(28), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-		storing    : { type : "text", pos: [34, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
-		free_space : { type : "text", pos: [220, 40], font : FONT_NORMAL_BLACK_ON_LIGHT },
-		food0_icon : { type : "resource_icon", pos: [34, 68] },
-		food0_text : { type : "text", pos: [68, 75], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		food1_icon : { type : "resource_icon", pos: [240, 68] },
-		food1_text : { type : "text", pos: [274, 75], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		food2_icon : { type : "resource_icon", pos: [34, 92] },
-		food2_text : { type : "text", pos: [68, 99], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		food3_icon : { type : "resource_icon", pos: [240, 92] },
-		food3_text : { type : "text", pos: [274, 99], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		workers_panel : { type : "inner_panel", pos : [16, 142], size: [27, 5] },
-		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] },
-		workers_text : { type : "text", pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK },
-		workers_desc : { type : "text", pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
-		orders : { type:"generic_button", margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}},
-		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
-		show_overlay : { type:"generic_button", margin:{right:-64, bottom:-40}, size:[23, 23]},
-		mothball : { type:"generic_button", margin:{right:-90, bottom:-40}, size:[23, 23]},
+		background 	: outer_panel({size: [29, 17]}),
+		title 		 : text({text: "#granary_info_title", pos: [0, 12], size: [px(28), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		warning_text : text({pos: [32, 40], wrap:px(28), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		storing    : text({pos: [34, 40], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		free_space : text({pos: [220, 40], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		food0_icon : resource_icon({pos:[34, 68]}),
+		food0_text : text({pos: [68, 75], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		food1_icon : resource_icon({pos: [240, 68] }),
+		food1_text : text({pos: [274, 75], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		food2_icon : resource_icon({pos: [34, 92] }),
+		food2_text : text({pos: [68, 99], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		food3_icon : resource_icon({pos: [240, 92] }),
+		food3_text : text({pos: [274, 99], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		workers_panel : inner_panel({pos: [16, 142], size: [27, 5] }),
+		workers_img  : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] }),
+		workers_text : text({pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK }),
+		workers_desc : text({pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK }),
+		orders : button({margin:{centerx:-135, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}}),  
+		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
+		button_close : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
+		show_overlay : button({margin:{right:-64, bottom:-40}, size:[23, 23]}),
+		mothball     : button({margin:{right:-90, bottom:-40}, size:[23, 23]}),
+	}
+}
+
+bazaar_orders_window = {
+  ui : {
+		background 	: outer_panel({size: [29, 17]}),
+		title 		 : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		orders_panel : inner_panel({pos : [16, 42], size: [27, 10] }),
+		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
+		button_close  : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
+		empty_all : button({pos:[80, -1], size:[300, 24], margin:{bottom:-64} }),
+		accept_none : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
+
+		item_orders_column : dummy({margin:{centerx:0}}),
+		item_arrows_column : dummy({margin:{centerx:-36}}),
+		item_icon_column : dummy({pos:[25, 0]}),
+		item_row     : dummy({size:[px(13), 20]}),      
+		items_area	 : dummy({pos:[0, 50]}), 
 	}
 }
 

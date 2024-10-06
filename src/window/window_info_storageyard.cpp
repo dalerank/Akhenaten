@@ -40,10 +40,7 @@ void info_window_storageyard::window_info_foreground(object_info &c) {
 
 int info_window_storageyard::window_info_handle_mouse(const mouse *m, object_info &c) {
     if (c.storage_show_special_orders) {
-        ui.begin_widget(c.offset);
-        int result = storageyard_orders_infow.window_info_handle_mouse(m, c);
-        ui.end_widget();
-        return result;
+        return storageyard_orders_infow.window_info_handle_mouse(m, c);
     } 
 
     return building_info_window::window_info_handle_mouse(m, c);
@@ -108,22 +105,4 @@ void info_window_storageyard::draw_background(object_info *c) {
         c->storage_show_special_orders = 1;
         window_invalidate();
     });
-
-    // if (c->warehouse_space_text == 1) { // full
-    //     lang_text_draw_multiline(99, 13, c->offset.x + 32, c->offset.y + 16 * c->height_blocks - 93,
-    //         16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
-    // }  else if (c->warehouse_space_text == 2) {
-    //     lang_text_draw_multiline(99, 14, c->offset.x + 32, c->offset.y + 16 * c->height_blocks - 93,
-    //         16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
-    // }
-
-    //    imagedrawnamespace::image_draw_namespace::image_draw(image_id_from_group(GROUP_FIGURE_MARKET_LADY) + 4,
-    //    c->offset.x + 32,
-    //               c->offset.y + 16 * c->height_blocks - 93);
-    //    imagedrawnamespace::image_draw_namespace::image_draw(image_id_from_group(GROUP_FIGURE_TRADE_CARAVAN) + 4,
-    //    c->offset.x + 128,
-    //               c->offset.y + 16 * c->height_blocks - 93);
-    //    imagedrawnamespace::image_draw_namespace::image_draw(image_id_from_group(GROUP_FIGURE_SHIP) + 4, c->offset.x +
-    //    216,
-    //               c->offset.y + 16 * c->height_blocks - 110);
 }

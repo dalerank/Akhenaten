@@ -4,6 +4,7 @@
 #include "building/building_storage_yard.h"
 #include "city/city_resource.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "game/game.h"
 
 void info_window_storageyard_orders::draw_background(object_info *c) {
@@ -84,9 +85,15 @@ void info_window_storageyard_orders::draw_foreground(object_info *c) {
 }
 
 int info_window_storageyard_orders::window_info_handle_mouse(const mouse *m, object_info &c) {
-    ui.begin_widget(parent_window_offset, true);
+    ui.begin_widget(c.offset + parent_window_offset, true);
     int result = ui.handle_mouse(m);
     ui.end_widget();
+
+    const hotkeys *h = hotkey_state();
+    if (!result && input_go_back_requested(m, h)) {
+        storage_settings_backup_check();
+        return -1;
+    }
     
     return result;
 }

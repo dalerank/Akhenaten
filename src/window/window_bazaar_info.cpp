@@ -13,7 +13,9 @@
 #include "game/game.h"
 #include "js/js_game.h"
 
-struct bazaar_info_window : public building_info_window {
+void window_bazaar_orders_show(object_info &c);
+
+struct bazaar_info_window : public building_info_window_t<bazaar_info_window>{
     int resource_text_group;
 
     using widget::load;
@@ -24,6 +26,7 @@ struct bazaar_info_window : public building_info_window {
 
     virtual void window_info_background(object_info &c) override;
     virtual void window_info_foreground(object_info &c) override;
+    virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         return c.building_get()->type == BUILDING_BAZAAR;
     }
@@ -33,12 +36,7 @@ struct bazaar_info_window : public building_info_window {
     void draw_orders_foreground(object_info &c);
 };
 
-bazaar_info_window g_bazaar_info_window;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_bazaar_info_window);
-void config_load_bazaar_info_window() {
-    g_bazaar_info_window.load("bazaar_info_window");
-}
+bazaar_info_window g_bazaar_infow;
 
 void bazaar_info_window::draw_simple_background(object_info &c) {
     auto bazaar = c.building_get()->dcast_bazaar();
@@ -46,11 +44,6 @@ void bazaar_info_window::draw_simple_background(object_info &c) {
     const auto &meta = bazaar->get_info();
 
     window_building_play_sound(&c, bazaar->get_sound());
-
-    ui["orders"].onclick([&c] (int, int) {
-        c.storage_show_special_orders = 1;
-        window_invalidate();
-    });
 
     std::pair<int, int> reason = {0, 0};
     if (!c.has_road_access) {
@@ -113,8 +106,15 @@ void bazaar_info_window::window_info_foreground(object_info &ctx) {
     if (ctx.storage_show_special_orders) {
         draw_orders_foreground(ctx);
     } else {
-        g_bazaar_info_window.draw();
+        g_bazaar_infow.draw();
     }
+}
+
+void bazaar_info_window::init(object_info &c) {
+    ui["orders"].onclick([&c] (int, int) {
+        c.storage_show_special_orders = 1;
+        window_invalidate();
+    });
 }
 
 void bazaar_info_window::draw_orders_foreground(object_info &c) {
