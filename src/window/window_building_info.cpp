@@ -112,6 +112,30 @@ void building_info_window::fill_employment_details(object_info &c, int text_id) 
 }
 
 void building_info_window::window_info_background(object_info &c) {
+    common_info_window::window_info_background(c);
+
+    building *b = building_get(c);
+    b->dcast()->window_info_background(c);
+
+    update_buttons(c);
+}
+
+textid building_info_window::get_tooltip(object_info &c) {
+    common_info_window::init(c);
+
+    if (!c.storage_show_special_orders) {
+        return {0, 0};
+    }
+
+    building *b = building_get(c);
+    if (b->type == BUILDING_STORAGE_YARD) {
+        return window_building_get_tooltip_warehouse_orders();
+    }
+
+    return b->dcast()->get_tooltip();
+}
+
+void building_info_window::init(object_info &c) {
     g_debug_building_id = c.building_id;
     building *b = building_get(c);
 
@@ -176,25 +200,11 @@ void building_info_window::window_info_background(object_info &c) {
     c.help_id = params.meta.help_id;
     c.group_id = params.meta.text_id;
 
-    ui["title"] = ui::str(c.group_id, 0);
-
-    common_info_window::window_info_background(c);
-}
-
-textid building_info_window::get_tooltip(object_info &c) {
-    if (!c.storage_show_special_orders) {
-        return {0, 0};
-    }
-
-    building *b = building_get(c);
-    if (b->type == BUILDING_STORAGE_YARD) {
-        return window_building_get_tooltip_warehouse_orders();
-    }
-
-    return b->dcast()->get_tooltip();
+    ui["title"] = ui::str(28, b->type);
 }
 
 void building_info_window::update_buttons(object_info &c) {
+    common_info_window::update_buttons(c);
     building *b = building_get(c);
 
     int workers_needed = model_get_building(b->type)->laborers;
@@ -233,8 +243,6 @@ void building_info_window::update_buttons(object_info &c) {
         }
         window_invalidate();
     });
-
-    common_info_window::update_buttons(c);
 }
 
 building *building_info_window::building_get(object_info &c) {

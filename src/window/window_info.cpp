@@ -381,13 +381,6 @@ void common_info_window::load(archive arch, pcstr section) {
     }
 }
 
-void common_info_window::init(object_info &c) {
-    building *b = c.building_get();
-    ui["title"] = ui::str(28, b->type);
-
-    update_buttons(c);
-}
-
 void common_info_window::draw_tooltip(tooltip_context *c) {
     textid tx = get_tooltip(g_object_info);
     pcstr tooltip = (pcstr)lang_get_string(tx);

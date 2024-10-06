@@ -5,6 +5,7 @@
 #include "grid/point.h"
 #include "core/vec2i.h"
 #include "city/constants.h"
+#include "overlays/city_overlay_fwd.h"
 #include "core/svector.h"
 
 enum terrain_info_type {
@@ -68,7 +69,7 @@ struct object_info {
     int warehouse_space_text;
     common_info_window *ui = nullptr;
     terrain_info_type terrain_type;
-    int show_overlay;
+    e_overlay show_overlay;
     struct {
         e_advisor first = ADVISOR_NONE;
         e_advisor left_a = ADVISOR_NONE;
