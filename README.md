@@ -46,6 +46,8 @@ from an unmodified game installation to run, in this case it needs _Pharaoh_ **a
 Note that you must have permission to write in the game data directory as the saves will be
 stored there; also, your game must be patched to last version to run Akhenaten.
 
+[![buymeabeer](https://github.com/user-attachments/assets/657eb58a-b0c7-484c-af41-3fbfe43ef778)](https://patreon.com/imspinner)
+
 ## Building Akhenaten from source
 
 ### Windows + Visual Studio
