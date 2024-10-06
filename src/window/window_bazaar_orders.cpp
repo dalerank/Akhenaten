@@ -14,11 +14,11 @@ struct bazaar_orders_window : public building_info_window_t<bazaar_orders_window
     virtual void window_info_foreground(object_info &c) override;
 };
 
-bazaar_orders_window granary_ordersw;
+bazaar_orders_window bazaar_ordersw;
 
 
 void window_bazaar_orders_show(object_info &c) {
-    c.ui = &granary_ordersw;
+    c.ui = &bazaar_ordersw;
     c.ui->window_info_background(c);
 }
 
