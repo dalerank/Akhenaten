@@ -57,7 +57,7 @@ void info_window_storageyard_orders::draw_foreground(object_info *c) {
         ui.icon(offset + icon_column + vec2i{0, line_y}, r.type);
         ui.label(ui::str(23, r.type), offset + name_column + vec2i{ 0, line_y }, FONT_NORMAL_WHITE_ON_DARK);
 
-        auto status = window_building_get_order_instruction(INSTR_STORAGE_YARD, storage, r.type);
+        auto status = window_building_get_order_instruction(INSTR_STORAGE_YARD, *storage, r.type);
         ui.button(status.first, offset + order_column.pos + vec2i{ 0, line_y }, order_column.pxsize(), fonts_vec{ status.second }, UiFlags_NoBody | UiFlags_AlignYCentered)
             .onclick([storage_id, resource = r.type] {
                 building_storage_cycle_resource_state(storage_id, resource, false);

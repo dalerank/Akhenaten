@@ -40,7 +40,7 @@ void granary_orders_window::window_info_foreground(object_info &c) {
         ui.label(ui::str(23, r.type), items_area.pos + vec2i{ 52, line_y }, FONT_NORMAL_WHITE_ON_DARK, UiFlags_AlignCentered|UiFlags_AlignYCentered);
 
         // order status
-        auto status = window_building_get_order_instruction(INSTR_STORAGE_YARD, granary->storage(), r.type);
+        auto status = window_building_get_order_instruction(INSTR_STORAGE_YARD, *granary->storage(), r.type);
         ui.button(status.first, items_area.pos + vec2i{ order_column.pos.x, line_y }, item_row.size, fonts_vec{ status.second }, UiFlags_NoBody | UiFlags_AlignYCentered)
             .onclick([storage_id, resource = r.type] {
                 building_storage_cycle_resource_state(storage_id, resource, false);

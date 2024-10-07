@@ -364,6 +364,7 @@ struct widget {
 
     widget() : ui(*this) {}
 
+    bool contains(const xstring &id) const;
     element& operator[](pcstr id);
     inline element &operator[](const bstring32 &id) { return (*this)[id.c_str()]; }
     inline element &operator[](const xstring &id) { return (*this)[id.c_str()]; }

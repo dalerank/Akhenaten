@@ -851,12 +851,11 @@ bazaar_orders_window = {
 		orders_panel : inner_panel({pos : [16, 42], size: [27, 10] }),
 		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
 		button_close  : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
-		empty_all : button({pos:[80, -1], size:[300, 24], margin:{bottom:-64} }),
 		accept_none : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
 
 		item_orders_column : dummy({margin:{centerx:0}}),
-		item_arrows_column : dummy({margin:{centerx:-36}}),
 		item_icon_column : dummy({pos:[25, 0]}),
+		item_name_column : dummy({pos:[55, 0]}),
 		item_row     : dummy({size:[px(13), 20]}),      
 		items_area	 : dummy({pos:[0, 50]}), 
 	}

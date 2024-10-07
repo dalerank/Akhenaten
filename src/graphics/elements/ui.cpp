@@ -626,6 +626,11 @@ void ui::widget::load(pcstr section) {
     });
 }
 
+bool ui::widget::contains(const xstring &id) const {
+    auto it = std::find_if(elements.begin(), elements.end(), [xid = xstring(id)] (const auto &e) { return e->id == xid; });
+    return (it != elements.end());
+}
+
 ui::element& ui::widget::operator[](pcstr id) {
     auto it = std::find_if(elements.begin(), elements.end(), [xid = xstring(id)] (const auto &e) { return e->id == xid; });
     if (it == elements.end()) {

@@ -348,6 +348,10 @@ void common_info_window::update_buttons(object_info &c) {
         }
     });
 
+    if (!ui.contains("first_advisor")) {
+        return;
+    }
+
     auto first_advisor = ui["first_advisor"].dcast_image_button();
     if (first_advisor) {
         first_advisor->enabled = c.go_to_advisor.first && is_advisor_available(c.go_to_advisor.first);

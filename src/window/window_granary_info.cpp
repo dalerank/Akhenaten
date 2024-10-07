@@ -45,17 +45,12 @@ bool granary_info_window::check(object_info &c) {
 void granary_info_window::init(object_info &c) {
     building_info_window::init(c);
 
-    ui["orders"].onclick([&c] {
-        window_granary_orders_show(c);
-    });
+    auto granary = c.building_get()->dcast_granary();
+    if (!granary) {
+        return;
+    }
 
     c.go_to_advisor = { ADVISOR_NONE, ADVISOR_LABOR, ADVISOR_POPULATION };
-
-    building_info_window::window_info_background(c);
-
-    auto granary = c.building_get()->dcast_granary();
-    assert(granary);
-
     auto &data = g_window_building_distribution;
 
     data.building_id = c.building_id;
@@ -92,6 +87,10 @@ void granary_info_window::init(object_info &c) {
     int text_id = get_employment_info_text_id(&c, &granary->base, 1);
     ui["workers_text"].text_var("%u %s (%d %s", granary->num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
     ui["workers_desc"] = text_id ? ui::str(69, text_id) : "";
+
+    ui["orders"].onclick([&c] {
+        window_granary_orders_show(c);
+    });
 }
 
 int granary_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {

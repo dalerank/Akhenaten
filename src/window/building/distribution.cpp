@@ -140,64 +140,62 @@ uint8_t granary_3quarters_button_text[] = "18";
 uint8_t granary_half_button_text[] = "12";
 uint8_t granary_quarter_button_text[] = "6";
 
-std::pair<bstring64, e_font> window_building_get_order_instruction(int instr_kind, const storage_t *storage, e_resource resource, int market_order) {
-    if (storage != nullptr) {
-        switch (storage->resource_state[resource]) {
-        case STORAGE_STATE_PHARAOH_ACCEPT:
-        {
-            int max_accept = storage->resource_max_accept[resource];
-            bstring64 text;
-            text.printf("%d", max_accept);
+std::pair<bstring64, e_font> window_market_get_order_instruction(int instr_kind, e_resource resource, int market_order) {
+    switch (market_order) {
+    case BAZAAR_ORDER_STATE_BUY:
+        return { ui::str(97, 8), FONT_NORMAL_WHITE_ON_DARK };
 
-            if (max_accept == 3200) { text = ui::str(99, 28); }
-            else if (max_accept == 2400) { text = ui::str(99, 27); }
-            else if (max_accept == 1600) { text = ui::str(99, 26); }
-            else if (max_accept == 800) { text = ui::str(99, 25); }
+    case BAZAAR_ORDER_STATE_DONT_BUY:
+        return { ui::str(97, 9), FONT_NORMAL_BLACK_ON_DARK };
+    }
+}
 
-            pcstr adv_text = "";
-            if (max_accept == 2400 || max_accept == 1600 || max_accept == 800)
-                adv_text = ui::str(99, 29);
+std::pair<bstring64, e_font> window_building_get_order_instruction(int instr_kind, const storage_t &storage, e_resource resource) {
+    switch (storage.resource_state[resource]) {
+    case STORAGE_STATE_PHARAOH_ACCEPT: {
+        int max_accept = storage.resource_max_accept[resource];
+        bstring64 text;
+        text.printf("%d", max_accept);
 
-            bstring64 full_text;
-            full_text.printf("%s %s %s", ui::str(99, 18), text, adv_text);
-            return { full_text, FONT_NORMAL_WHITE_ON_DARK };
-        }
+        if (max_accept == 3200) { text = ui::str(99, 28); }
+        else if (max_accept == 2400) { text = ui::str(99, 27); }
+        else if (max_accept == 1600) { text = ui::str(99, 26); }
+        else if (max_accept == 800) { text = ui::str(99, 25); }
 
-        case STORAGE_STATE_PHARAOH_REFUSE:
-            return { ui::str(99, 8), FONT_NORMAL_BLACK_ON_DARK };
+        pcstr adv_text = "";
+        if (max_accept == 2400 || max_accept == 1600 || max_accept == 800)
+            adv_text = ui::str(99, 29);
 
-        case STORAGE_STATE_PHARAOH_GET:
-        {
-            int max_get = storage->resource_max_get[resource];
-            bstring64 text;
-            text.printf("%d", max_get);
-            if (max_get == 3200) { text = ui::str(99, 31); }
-            else if (max_get == 2400) { text = ui::str(99, 27); }
-            else if (max_get == 1600) { text = ui::str(99, 26); }
-            else if (max_get == 800) { text = ui::str(99, 25); }
-
-            pcstr adv_text = "";
-            if (max_get == 2400 || max_get == 1600 || max_get == 800)
-                adv_text = ui::str(99, 29);
-
-            bstring64 full_text;
-            full_text.printf("%s %s %s", ui::str(99, 19), text, adv_text);
-            return { full_text, FONT_NORMAL_YELLOW };
-        }
-        case STORAGE_STATE_PHARAOH_EMPTY:
-            return { ui::str(99, 21), FONT_NORMAL_BLACK_ON_DARK };
-        }
-    } else {
-        switch (market_order) {
-        case BAZAAR_ORDER_STATE_BUY:
-            return { ui::str(97, 8), FONT_NORMAL_WHITE_ON_DARK };
-
-        case BAZAAR_ORDER_STATE_DONT_BUY:
-            return { ui::str(97, 9), FONT_NORMAL_BLACK_ON_DARK };
-        }
+        bstring64 full_text;
+        full_text.printf("%s %s %s", ui::str(99, 18), text, adv_text);
+        return { full_text, FONT_NORMAL_WHITE_ON_DARK };
     }
 
-    return { "unknow_storage", FONT_NORMAL_BLACK_ON_DARK };
+    case STORAGE_STATE_PHARAOH_REFUSE:
+        return { ui::str(99, 8), FONT_NORMAL_BLACK_ON_DARK };
+
+    case STORAGE_STATE_PHARAOH_GET: {
+        int max_get = storage.resource_max_get[resource];
+        bstring64 text;
+        text.printf("%d", max_get);
+        if (max_get == 3200) { text = ui::str(99, 31); }
+        else if (max_get == 2400) { text = ui::str(99, 27); }
+        else if (max_get == 1600) { text = ui::str(99, 26); }
+        else if (max_get == 800) { text = ui::str(99, 25); }
+
+        pcstr adv_text = "";
+        if (max_get == 2400 || max_get == 1600 || max_get == 800)
+            adv_text = ui::str(99, 29);
+
+        bstring64 full_text;
+        full_text.printf("%s %s %s", ui::str(99, 19), text, adv_text);
+        return { full_text, FONT_NORMAL_YELLOW };
+    }
+    case STORAGE_STATE_PHARAOH_EMPTY:
+        return { ui::str(99, 21), FONT_NORMAL_BLACK_ON_DARK };
+    }
+
+    return { "unknown_storage", FONT_NORMAL_BLACK_ON_DARK };
 }
 
 void window_building_draw_order_instruction(int instr_kind, const storage_t* storage, e_resource resource, vec2i pos, int market_order) {
