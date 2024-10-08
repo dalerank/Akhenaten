@@ -199,6 +199,7 @@ void map_grid_save_buffer(grid_xx* grid, buffer* buf) {
         break;
     }
 }
+
 void map_grid_load_buffer(grid_xx* grid, buffer* buf) {
     if (!grid->initialized) {
         map_grid_init(grid);

@@ -1134,25 +1134,25 @@ building_info_window = {
 
 info_window_bandstand = {
 	ui : __baseui(building_info_window, {
-		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 21]},
-		inner_panel : { type : "inner_panel", pos : [16, 136], size: [27, 7] },
-		play_text : { type : "text", pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		play2_text : { type : "text", pos: [32, 202], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142] },
-		workers_text : { type : "text", pos: [70, 150], font: FONT_NORMAL_BLACK_ON_DARK},
-		workers_desc : { type : "text", pos: [70, 146 + 16], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 20]},
+		inner_panel : { type : "inner_panel", pos : [16, 116], size: [27, 8] },
+		play_text : { type : "text", pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		play2_text : { type : "text", pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 122] },
+		workers_text : { type : "text", pos: [70, 130], font: FONT_NORMAL_BLACK_ON_DARK},
+		workers_desc : { type : "text", pos: [70, 126 + 16], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
 	})
 }
 
 info_window_booth = {
 	ui : __baseui(building_info_window, {
-		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 21]},
-		inner_panel : { type : "inner_panel", pos : [16, 136], size: [27, 7] },
-		play_text : { type : "text", pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		play2_text : { type : "text", pos: [32, 202], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142] },
-		workers_text : { type : "text", pos: [70, 150], font: FONT_NORMAL_BLACK_ON_DARK},
-		workers_desc : { type : "text", pos: [70, 146 + 16], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 20]},
+		inner_panel : { type : "inner_panel", pos : [16, 116], size: [27, 8] },
+		play_text : { type : "text", pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		play2_text : { type : "text", pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 122] },
+		workers_text : { type : "text", pos: [70, 130], font: FONT_NORMAL_BLACK_ON_DARK},
+		workers_desc : { type : "text", pos: [70, 126 + 16], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
 	})
 }
 

@@ -60,8 +60,7 @@ void building_courthouse::update_graphic() {
 }
 
 bool building_courthouse::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const animation_t &anim = courthouse_m.anim["work"];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+    draw_normal_anim(ctx, point, tile, color_mask);
 
     return true;
 }

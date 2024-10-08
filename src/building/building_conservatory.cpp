@@ -10,11 +10,6 @@
 
 buildings::model_t<building_conservatory> conservatory_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_conservatory);
-void config_load_building_conservatory() {
-    conservatory_m.load();
-}
-
 void building_conservatory::spawn_figure() {
     if (!common_spawn_figure_trigger(50)) {
         return;
