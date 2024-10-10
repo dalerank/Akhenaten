@@ -15,7 +15,7 @@ void building_conservatory::spawn_figure() {
         return;
     }
 
-    int dest_id = figure_entertainer::determine_venue_destination(base.road_access, {BUILDING_PAVILLION, BUILDING_BANDSTAND});
+    int dest_id = figure_entertainer::determine_venue_destination(base.road_access, FIGURE_MUSICIAN, {BUILDING_PAVILLION, BUILDING_BANDSTAND});
     building* dest = building_get(dest_id);
     if (dest->id > 0) {
         create_figure_with_destination(FIGURE_MUSICIAN, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);

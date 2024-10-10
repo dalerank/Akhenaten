@@ -34,7 +34,8 @@ public:
     const int abs_x(void);
     const int abs_y(void);
 
-    inline float dist(self o) { return ::sqrtf(::powf(x() - o.x(), 2) + ::powf(y() - o.y(), 2)); }
+    inline float dist(self o) { return ::sqrtf(dist_sq(o)); }
+    inline float dist_sq(self o) { return ::powf(x() - o.x(), 2) + ::powf(y() - o.y(), 2); }
 
     // MODIFIERS
     void shift(int _x, int _y);

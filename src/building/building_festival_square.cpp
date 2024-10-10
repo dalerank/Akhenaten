@@ -48,9 +48,9 @@ void building_festival_square::update_day() {
 
     int shows = 0;
     auto update_shows = [&] (auto &days) { if (days > 0) { --days; ++shows; } };
-    update_shows(data.entertainment.days1);
-    update_shows(data.entertainment.days2);
-    update_shows(data.entertainment.days3_or_play);
+    update_shows(data.entertainment.juggler_visited);
+    update_shows(data.entertainment.musician_visited);
+    update_shows(data.entertainment.dancer_visited);
 
     data.entertainment.num_shows = shows;
 }

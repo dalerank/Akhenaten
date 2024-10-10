@@ -247,9 +247,10 @@ public:
         struct entertainment_t {
             bool spawned_entertainer_this_month;
             uint8_t num_shows;
-            uint8_t days1;
-            uint8_t days2;
-            uint8_t days3_or_play;
+            uint8_t juggler_visited;
+            uint8_t musician_visited;
+            uint8_t dancer_visited;
+            uint8_t play_index;
             uint32_t booth_corner_grid_offset;
             uint32_t latched_venue_main_grid_offset;
             uint32_t latched_venue_add_grid_offset;
@@ -264,6 +265,7 @@ public:
             uint8_t juggler;
             uint8_t bandstand_juggler;
             uint8_t bandstand_musician;
+            uint8_t pavilion_dancer;
             uint8_t senet_player;
             uint8_t magistrate;
             uint8_t hippodrome;

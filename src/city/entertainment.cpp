@@ -21,59 +21,56 @@ void city_entertainment_t::calculate_shows() {
 
         switch (b->type) {
         case BUILDING_BOOTH: // booth
-            if (b->data.entertainment.days1)
-                booth_shows++;
-            else
-                booth_no_shows_weighted++;
+            if (b->data.entertainment.juggler_visited) booth_shows++;
+            else booth_no_shows_weighted++;
             break;
-        case BUILDING_BANDSTAND: // bandstand
-            if (b->data.entertainment.days1)
-                booth_shows++;
-            else
-                booth_no_shows_weighted++;
 
-            if (b->data.entertainment.days2)
-                bandstand_shows++;
-            else
-                bandstand_no_shows_weighted++;
-            break;
+        case BUILDING_BANDSTAND: // bandstand
+            if (b->data.entertainment.juggler_visited) booth_shows++;
+            else booth_no_shows_weighted++;
+
+            if (b->data.entertainment.musician_visited) bandstand_shows++;
+            else bandstand_no_shows_weighted++;
+            break
+                ;
         case BUILDING_PAVILLION: // pavillion
-            if (b->data.entertainment.days1)
-                booth_shows++;
-            else
-                booth_no_shows_weighted++;
-            if (b->data.entertainment.days2)
-                bandstand_shows++;
-            else
-                bandstand_no_shows_weighted++;
-            if (b->data.entertainment.days3_or_play)
-                pavilion_shows++;
-            else
-                pavilion_no_shows_weighted++;
+            if (b->data.entertainment.juggler_visited) booth_shows++;
+            else booth_no_shows_weighted++;
+
+            if (b->data.entertainment.musician_visited) bandstand_shows++;
+            else bandstand_no_shows_weighted++;
+
+            if (b->data.entertainment.dancer_visited) pavilion_shows++;
+            else pavilion_no_shows_weighted++;
             break;
+
         case BUILDING_SENET_HOUSE:
-            if (b->data.entertainment.days1)
-                senet_house_plays++;
-            else
-                senet_house_no_shows_weighted += 100;
+            if (b->data.entertainment.juggler_visited) senet_house_plays++;
+            else senet_house_no_shows_weighted += 100;
+
             break;
         }
     }
+
     int worst_shows = 0;
     if (booth_no_shows_weighted > worst_shows) {
         worst_shows = booth_no_shows_weighted;
         venue_needing_shows = 1;
     }
+
     if (bandstand_no_shows_weighted > worst_shows) {
         worst_shows = bandstand_no_shows_weighted;
         venue_needing_shows = 2;
     }
+
     if (pavilion_no_shows_weighted > worst_shows) {
         worst_shows = pavilion_no_shows_weighted;
         venue_needing_shows = 3;
     }
-    if (senet_house_no_shows_weighted > worst_shows)
+
+    if (senet_house_no_shows_weighted > worst_shows) {
         venue_needing_shows = 4;
+    }
 }
 
 int city_entertainment_t::show_message_pavilion() {

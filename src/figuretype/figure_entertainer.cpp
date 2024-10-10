@@ -8,17 +8,6 @@
 #include "grid/building.h"
 #include "figure/service.h"
 
-void figure_entertainer::bandstand_coverage(building* b, int shows) {
-    b->data.house.bandstand_juggler = MAX_COVERAGE;
-    if (shows == 2) {
-        b->data.house.bandstand_musician = MAX_COVERAGE;
-    }
-}
-
-void figure_entertainer::senet_coverage(building *b, int shows) {
-    b->data.house.senet_player = MAX_COVERAGE;
-}
-
 int figure_entertainer::provide_entertainment(int shows, void (*callback)(building*, int)) {
     int serviced = 0;
     grid_area area = map_grid_get_area(tile(), 1, 2);
@@ -37,7 +26,7 @@ int figure_entertainer::provide_entertainment(int shows, void (*callback)(buildi
     return serviced;
 }
 
-int figure_entertainer::determine_venue_destination(tile2i tile, const svector<e_building_type, 4> &btypes) {
+int figure_entertainer::determine_venue_destination(tile2i tile, e_figure_type ftype, const svector<e_building_type, 4> &btypes) {
     int road_network = map_road_network_get(tile);
 
     svector<building *, 128> venues;
@@ -67,15 +56,16 @@ int figure_entertainer::determine_venue_destination(tile2i tile, const svector<e
             continue;
         }
 
-        int days_left;
-        if (btypes.size() == 3) {
-            days_left = b->data.entertainment.days3_or_play;
-        } else if (btypes.size() == 2) {
-            days_left = b->data.entertainment.days2;
-        } else {
-            days_left = b->data.entertainment.days1;
+        int days_left = 0;
+        switch (ftype) {
+        case FIGURE_JUGGLER: days_left = b->data.entertainment.juggler_visited; break;
+        case FIGURE_MUSICIAN: days_left = b->data.entertainment.musician_visited; break;
+        case FIGURE_DANCER: days_left = b->data.entertainment.dancer_visited; break;
+        default:
+            assert(false);
         }
-        int dist = days_left + calc_maximum_distance(tile, b->tile);
+
+        int dist = days_left + tile.dist(b->tile);
 
         if (dist < min_distance) {
             min_distance = dist;
@@ -161,7 +151,7 @@ void figure_entertainer::figure_action() {
     case FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL:
         base.use_cross_country = true;
         if (base.move_ticks_cross_country(1) == 1) {
-            int dst_building_id = determine_venue_destination(tile(), allow_venue_types());
+            int dst_building_id = determine_venue_destination(tile(), type(), allow_venue_types());
 
             if (dst_building_id) { // todo: summarize
                 building* b_dst = building_get(dst_building_id);

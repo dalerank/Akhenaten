@@ -87,14 +87,18 @@ void building_pavilion::on_create(int orientation) {
 
 }
 
+void building_pavilion::update_month() {
+    data.entertainment.play_index = std::rand() % 10;
+}
+
 void building_pavilion::update_day() {
     building_impl::update_day();
 
     int shows = 0;
     auto update_shows = [&] (auto &days) { if (days > 0) { --days; ++shows; } };
-    update_shows(data.entertainment.days1);
-    update_shows(data.entertainment.days2);
-    update_shows(data.entertainment.days3_or_play);
+    update_shows(data.entertainment.juggler_visited);
+    update_shows(data.entertainment.musician_visited);
+    update_shows(data.entertainment.dancer_visited);
 
     data.entertainment.num_shows = shows;
 }
@@ -124,12 +128,12 @@ void building_pavilion::on_place_checks() {
 }
 
 bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    if (data.entertainment.days3_or_play && map_image_at(tile) == pavilion_m.dancer_tile) {
+    if (data.entertainment.dancer_visited && map_image_at(tile) == pavilion_m.dancer_tile) {
         const animation_t &anim = pavilion_m.anim["dancer"];
         building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
     }
 
-    if (data.entertainment.days2) {
+    if (data.entertainment.musician_visited) {
         if (map_image_at(tile) == pavilion_m.musician_tile_s) {
             const animation_t &anim = pavilion_m.anim["musician_sn"];
             building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
@@ -139,7 +143,7 @@ bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i
         }
     }
 
-    if (data.entertainment.days1 && map_image_at(tile) == pavilion_m.booth_tile) {
+    if (data.entertainment.juggler_visited && map_image_at(tile) == pavilion_m.booth_tile) {
         const animation_t &anim = pavilion_m.anim["juggler"];
         building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
     }
@@ -157,13 +161,20 @@ void building_pavilion::spawn_figure() {
         return;
     }
 
-    if (common_spawn_figure_trigger(100)) {
-        if (data.entertainment.days1 > 0)
-            base.create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
-        if (data.entertainment.days2 > 0)
-            base.create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
-        if (data.entertainment.days3_or_play > 0)
-            base.create_roaming_figure(FIGURE_DANCER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
+    if (!common_spawn_figure_trigger(100)) {
+        return;
+    }
+
+    if (data.entertainment.juggler_visited > 0) {
+        base.create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
+    }
+
+    if (data.entertainment.musician_visited > 0) {
+        base.create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
+    }
+
+    if (data.entertainment.dancer_visited > 0) {
+        base.create_roaming_figure(FIGURE_DANCER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
     }
 }
 
@@ -199,22 +210,22 @@ void building_pavilion::window_info_background(object_info &c) {
         window_building_draw_description(c, 74, 2);
     else if (b->data.entertainment.num_shows == 2)
         window_building_draw_description(c, 74, 3);
-    else if (b->data.entertainment.days1)
+    else if (b->data.entertainment.juggler_visited)
         window_building_draw_description(c, 74, 5);
-    else if (b->data.entertainment.days2)
+    else if (b->data.entertainment.musician_visited)
         window_building_draw_description(c, 74, 4);
 
     inner_panel_draw(c.offset + vec2i{ 16, 136 }, { c.bgsize.x - 2, 6 });
     window_building_draw_employment(&c, 138);
-    if (b->data.entertainment.days1 > 0) {
+    if (b->data.entertainment.juggler_visited > 0) {
         int width = lang_text_draw(74, 8, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1, c.offset.x + width + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.juggler_visited, c.offset.x + width + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         lang_text_draw(74, 7, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
     }
-    if (b->data.entertainment.days2 > 0) {
+    if (b->data.entertainment.musician_visited > 0) {
         int width = lang_text_draw(74, 10, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days2, c.offset.x + width + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.musician_visited, c.offset.x + width + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         lang_text_draw(74, 9, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
     }

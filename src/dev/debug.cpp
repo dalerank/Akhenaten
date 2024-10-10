@@ -384,9 +384,9 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
                 }
             }
             if (b->data.entertainment.booth_corner_grid_offset) {
-                debug_text(ctx, str, x0, y + 30, 0, "", b->data.entertainment.days1, COLOR_GREEN);
-                debug_text(ctx, str, x1, y + 30, 0, "", b->data.entertainment.days2, COLOR_GREEN);
-                debug_text(ctx, str, x0, y + 40, 0, "", b->data.entertainment.days3_or_play, COLOR_GREEN);
+                debug_text(ctx, str, x0, y + 30, 0, "", b->data.entertainment.juggler_visited, COLOR_GREEN);
+                debug_text(ctx, str, x1, y + 30, 0, "", b->data.entertainment.musician_visited, COLOR_GREEN);
+                debug_text(ctx, str, x0, y + 40, 0, "", b->data.entertainment.dancer_visited, COLOR_GREEN);
             }
         }
         break;

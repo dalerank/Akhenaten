@@ -14,7 +14,7 @@ figures::model_t<figure_musician> musician_m;
 
 void figure_musician::update_shows() {
     building* b = destination();
-    b->data.entertainment.days2 = 32;
+    b->data.entertainment.musician_visited = 32;
 }
 
 svector<e_building_type, 4> figure_musician::allow_venue_types() const {
@@ -77,9 +77,13 @@ int figure_musician::provide_service() {
     int houses_serviced = 0;
     building *b = current_destination();
     if (b->type == BUILDING_BANDSTAND) {
-        houses_serviced = provide_entertainment(b->data.entertainment.days2 ? 2 : 1, bandstand_coverage);
+        houses_serviced = provide_entertainment(0, [] (building *b, int shows) {
+            b->data.house.bandstand_musician = MAX_COVERAGE;
+        });
     } else if (b->type == BUILDING_PAVILLION) {
-        houses_serviced = provide_entertainment(b->data.entertainment.days1 ? 2 : 1, senet_coverage);
+        houses_serviced = provide_entertainment(0, [] (building *b, int shows) {
+            b->data.house.bandstand_musician = MAX_COVERAGE;
+        });
     }
 
     return houses_serviced;

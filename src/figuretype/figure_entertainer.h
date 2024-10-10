@@ -13,9 +13,7 @@ public:
     virtual void update_animation() override;
 
     int provide_entertainment(int shows, void (*callback)(building *, int));
-    static void bandstand_coverage(building *b, int shows);
-    static void senet_coverage(building *b, int shows);
      
-    static int determine_venue_destination(tile2i tile, const svector<e_building_type, 4> &btypes);
+    static int determine_venue_destination(tile2i tile, e_figure_type ftype, const svector<e_building_type, 4> &btypes);
     static int determine_closest_venue_destination(tile2i tile, const svector<e_building_type, 4> &btypes);
 };

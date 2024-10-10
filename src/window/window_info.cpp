@@ -208,14 +208,8 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
     int s_width = screen_width();
     int s_height = screen_height();
     context.offset.x = center_in_city(16 * context.bgsize.x);
-    if (s_width >= 1024 && s_height >= 768) {
-        context.offset = *mouse_get();
-        context.offset = window_building_set_possible_position(context.offset, context.bgsize);
-    } else if (s_height >= 600 && mouse_get()->y <= (s_height - 24) / 2 + 24) {
-        context.offset.y = s_height - 16 * context.bgsize.y - MARGIN_POSITION;
-    } else {
-        context.offset.y = MIN_Y_POSITION;
-    }
+    context.offset = *mouse_get();
+    context.offset = window_building_set_possible_position(context.offset, context.bgsize);
 }
 
 static void window_info_draw_background() {

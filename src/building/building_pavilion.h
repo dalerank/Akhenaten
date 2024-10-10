@@ -9,6 +9,7 @@ public:
     
     virtual void on_create(int orientation) override;
     virtual void update_day() override;
+    virtual void update_month() override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
     virtual building_pavilion *dcast_pavilion() override { return this; }

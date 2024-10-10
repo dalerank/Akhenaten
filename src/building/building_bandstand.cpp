@@ -53,8 +53,8 @@ void building_bandstand::update_day() {
 
     int shows = 0;
     auto update_shows = [&] (auto &days) { if (days > 0) { --days; ++shows; } };
-    update_shows(data.entertainment.days1);
-    update_shows(data.entertainment.days2);
+    update_shows(data.entertainment.juggler_visited);
+    update_shows(data.entertainment.musician_visited);
 
     data.entertainment.num_shows = shows;
 }
@@ -127,14 +127,16 @@ void building_bandstand::spawn_figure() {
         return;
     }
 
-    if (common_spawn_figure_trigger(100)) {
-        if (data.entertainment.days1 > 0) {
-            create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
-        }
+    if (!common_spawn_figure_trigger(100)) {
+        return;
+    }
 
-        if (data.entertainment.days2 > 0) {
-            create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
-        }
+    if (data.entertainment.juggler_visited > 0) {
+        create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
+    }
+
+    if (data.entertainment.musician_visited > 0) {
+        create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
     }
 }
 
@@ -167,23 +169,25 @@ void building_bandstand::on_undo() {
 
 void building_bandstand::draw_shows_musicians(painter &ctx, vec2i pixel, int direction, color color_mask) {
     building* main = base.main();
-    if (main->data.entertainment.days2) {
-        building* next_tile = base.next();
-        switch (direction) {
-        case 0:
-        {
-            const animation_t &anim = bandstand_m.anim["musician_sn"];
-            building_draw_normal_anim(ctx, pixel, &base, tile(), anim, color_mask);
-        }
-        break;
+    if (!main->data.entertainment.musician_visited) {
+        return;
+    }
 
-        case 1:
-        {
-            const animation_t &anim = bandstand_m.anim["musician_we"];
-            building_draw_normal_anim(ctx, pixel, &base, tile(), anim, color_mask);
-        }
-        break;
-        }
+    building* next_tile = base.next();
+    switch (direction) {
+    case 0:
+    {
+        const animation_t &anim = bandstand_m.anim["musician_sn"];
+        building_draw_normal_anim(ctx, pixel, &base, tile(), anim, color_mask);
+    }
+    break;
+
+    case 1:
+    {
+        const animation_t &anim = bandstand_m.anim["musician_we"];
+        building_draw_normal_anim(ctx, pixel, &base, tile(), anim, color_mask);
+    }
+    break;
     }
 }
 
@@ -207,7 +211,7 @@ bool building_bandstand::draw_ornaments_and_animations_height(painter &ctx, vec2
     if (map_image_at(grid_offset) == bandstand_m.booth) {
         const animation_t &anim = bandstand_m.anim["juggler"];
         building* main = base.main();
-        if (main->data.entertainment.days1) {
+        if (main->data.entertainment.juggler_visited) {
             building_draw_normal_anim(ctx, point, &base, tile, anim, mask);
         }
     }

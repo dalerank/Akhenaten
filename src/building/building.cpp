@@ -1080,12 +1080,10 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.num_gods);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.devolve_delay);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.evolve_text_id);
-
-        if (version <= 160) { b->data.house.shrine_access = 0; }         else { iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.shrine_access); }
-
-        if (version <= 162) { b->data.house.bazaar_access = 0; }         else { iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.bazaar_access); }
-
-        if (version <= 163) { b->data.house.water_supply = 0; }         else { iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.water_supply); }
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.shrine_access);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.bazaar_access);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.water_supply);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.house.pavilion_dancer);
 
     } else if (b->type == BUILDING_BAZAAR) {
         iob->bind____skip(2);
@@ -1189,10 +1187,11 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.guild.max_workers);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.farm.worker_frame);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.num_shows);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days1);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days2);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.days3_or_play);
-        iob->bind____skip(20);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.juggler_visited);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.musician_visited);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.dancer_visited);
+        iob->bind(BIND_SIGNATURE_INT8, &b->data.entertainment.play_index);
+        iob->bind____skip(19);
         iob->bind(BIND_SIGNATURE_UINT32, &b->data.entertainment.latched_venue_main_grid_offset);
         iob->bind(BIND_SIGNATURE_UINT32, &b->data.entertainment.latched_venue_add_grid_offset);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.orientation);

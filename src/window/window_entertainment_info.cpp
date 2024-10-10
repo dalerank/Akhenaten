@@ -58,20 +58,20 @@ void info_window_bandstand::init(object_info &c) {
     else if (b->num_workers <= 0) { reason.id = 6; } 
     else if (!b->data.entertainment.num_shows) { reason.id = 2; }
     else if (b->data.entertainment.num_shows == 2) { reason.id = 3; } 
-    else if (b->data.entertainment.days1) { reason.id = 5; } 
-    else if (b->data.entertainment.days2) { reason.id = 4; }
+    else if (b->data.entertainment.juggler_visited) { reason.id = 5; } 
+    else if (b->data.entertainment.musician_visited) { reason.id = 4; }
 
     fill_employment_details(c);
     ui["warning_text"] = ui::str(reason);
 
-    if (b->data.entertainment.days1 > 0) {
-        ui["play_text"].text_var("%s %s %d", ui::str(c.group_id, 10), ui::str(8, 44), 2 * b->data.entertainment.days1);
+    if (b->data.entertainment.juggler_visited > 0) {
+        ui["play_text"].text_var("%s %s %d", ui::str(c.group_id, 10), ui::str(8, 44), b->data.entertainment.juggler_visited);
     } else {
         ui["play_text"] = ui::str(c.group_id, 9);
     }
   
-    if (b->data.entertainment.days2 > 0) {
-        ui["play2_text"].text_var("%s %s %d\n%s", ui::str(c.group_id, 8), ui::str(8, 44), 2 * b->data.entertainment.days2, ui::str(72, 7 + b->data.entertainment.days3_or_play));
+    if (b->data.entertainment.musician_visited > 0) {
+        ui["play2_text"].text_var("%s %s %d\n%s", ui::str(c.group_id, 8), ui::str(8, 44), b->data.entertainment.musician_visited, ui::str(72, 7 + b->data.entertainment.play_index));
     } else {
         ui["play2_text"] = ui::str(c.group_id, 7);
     }
@@ -86,13 +86,13 @@ void info_window_booth::init(object_info &c) {
     if (!c.has_road_access) { reason = {69, 25}; } 
     else if (b->num_workers <= 0) { reason.id = 4; }
     else if (!b->data.entertainment.num_shows) { reason.id = 2; }
-    else if (b->data.entertainment.days1) { reason.id = 3; }
+    else if (b->data.entertainment.juggler_visited) { reason.id = 3; }
 
     fill_employment_details(c);
     ui["warning_text"] = ui::str(reason);
 
-    if (b->data.entertainment.days1 > 0) {
-        ui["play_text"].text_var("%s %s %d", ui::str(c.group_id, 6), ui::str(8, 44), 2 * b->data.entertainment.days1);
+    if (b->data.entertainment.juggler_visited > 0) {
+        ui["play_text"].text_var("%s %s %d", ui::str(c.group_id, 6), ui::str(8, 44), b->data.entertainment.juggler_visited);
     } else {
         ui["play_text"] = ui::str(c.group_id, 5);
     }

@@ -17,14 +17,7 @@ void config_load_figure_juggler() {
 
 void figure_juggler::update_shows() {
     building *b = destination();
-    if (b->type == BUILDING_BOOTH) { // update show index for booths
-        b->data.entertainment.days3_or_play++;
-        if (b->data.entertainment.days3_or_play >= 5) {
-            b->data.entertainment.days3_or_play = 0;
-        }
-    }
-
-    b->data.entertainment.days1 = 32;
+    b->data.entertainment.juggler_visited = 32;
 }
 
 svector<e_building_type, 4> figure_juggler::allow_venue_types() const {
@@ -102,7 +95,9 @@ int figure_juggler::provide_service() {
     if (b->type == BUILDING_BOOTH) {
         houses_serviced = figure_provide_culture(tile(), &base, juggler_coverage);
     } else if (b->type == BUILDING_BANDSTAND) {
-        houses_serviced = provide_entertainment(b->data.entertainment.days1 ? 2 : 1, bandstand_coverage);
+        houses_serviced = provide_entertainment(0, [] (building * b, int shows) {
+            b->data.house.bandstand_juggler = MAX_COVERAGE;
+        });
     }
     return houses_serviced;
 }

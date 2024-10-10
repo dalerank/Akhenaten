@@ -32,7 +32,8 @@ void building_dancer_school::spawn_figure() {
         return;
     }
 
-    int building_id = figure_entertainer::determine_venue_destination(base.road_access, {BUILDING_PAVILLION});
+    int building_id = figure_entertainer::determine_venue_destination(base.road_access, FIGURE_DANCER, {BUILDING_PAVILLION});
+    
     building* dest= building_get(building_id);
     if (dest->id > 0) {
         create_figure_with_destination(FIGURE_DANCER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);

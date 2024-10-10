@@ -32,7 +32,8 @@ void building_juggler_school::spawn_figure() {
         return;
     }
 
-    int venue_destination = figure_entertainer::determine_venue_destination(base.road_access, {BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH});
+    int venue_destination = figure_entertainer::determine_venue_destination(base.road_access, FIGURE_JUGGLER, {BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH});
+
     building* dest = building_get(venue_destination);
     if (dest->id > 0) {
         create_figure_with_destination(FIGURE_JUGGLER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);

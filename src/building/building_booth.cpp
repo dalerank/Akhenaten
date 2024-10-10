@@ -37,13 +37,15 @@ void config_load_building_booth() {
 void building_booth::update_day() {
     building_impl::update_day();
 
-    int shows = 0;
-    if (data.entertainment.days1 > 0) {
-        --data.entertainment.days1;
-        ++shows;
+    data.entertainment.num_shows = 0;
+    if (data.entertainment.juggler_visited > 0) {
+        --data.entertainment.juggler_visited;
+        ++data.entertainment.num_shows;
     }
+}
 
-    data.entertainment.num_shows = shows;
+void building_booth::update_month() {
+    data.entertainment.play_index = std::rand() % 10;
 }
 
 void building_booth::on_place(int orientation, int variant) {
@@ -80,10 +82,12 @@ void building_booth::spawn_figure() {
         return;
     }
 
-    if (common_spawn_figure_trigger(100)) {
-        if (data.entertainment.days1 > 0) {
-            create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
-        }
+    if (!common_spawn_figure_trigger(100)) {
+        return;
+    }
+
+    if (data.entertainment.juggler_visited > 0) {
+        create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
     }
 }
 
@@ -94,7 +98,7 @@ bool building_booth::draw_ornaments_and_animations_height(painter &ctx, vec2i po
     }
 
     int grid_offset = tile.grid_offset();
-    if (data.entertainment.days1 && map_image_at(grid_offset) == booth_m.booth) {
+    if (data.entertainment.juggler_visited && map_image_at(grid_offset) == booth_m.booth) {
         const animation_t &anim = this->anim(animkeys().juggler);
         building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
     }
