@@ -1198,7 +1198,7 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.ent_reserved_u8);
         iob->bind____skip(6);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.consume_material_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.spawned_entertainer_this_month);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->data.entertainment.spawned_entertainer_days);
         iob->bind(BIND_SIGNATURE_UINT32, &b->data.entertainment.booth_corner_grid_offset);
     }
 }

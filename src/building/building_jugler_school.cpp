@@ -10,10 +10,18 @@
 
 #include "js/js_game.h"
 
-buildings::model_t<building_juggler_school> juggler_school_m;
+building_juggler_school::static_params juggler_school_m;
 
-void building_juggler_school::update_month() {
-    data.entertainment.spawned_entertainer_this_month = false;
+void building_juggler_school::static_params::load(archive arch) {
+    spawn_interval = arch.r_int("spawn_interval", 10);
+}
+
+void building_juggler_school::update_day() {
+    building_impl::update_day();
+
+    if (data.entertainment.spawned_entertainer_days > 0) {
+        data.entertainment.spawned_entertainer_days--;
+    }
 }
 
 void building_juggler_school::update_graphic() {
@@ -28,7 +36,7 @@ void building_juggler_school::spawn_figure() {
         return;
     }
 
-    if (data.entertainment.spawned_entertainer_this_month) {
+    if (data.entertainment.spawned_entertainer_days > 0) {
         return;
     }
 
@@ -37,7 +45,7 @@ void building_juggler_school::spawn_figure() {
     building* dest = building_get(venue_destination);
     if (dest->id > 0) {
         create_figure_with_destination(FIGURE_JUGGLER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-        data.entertainment.spawned_entertainer_this_month = true;
+        data.entertainment.spawned_entertainer_days = current_params().spawn_interval;
     } else {
         common_spawn_roamer(FIGURE_JUGGLER, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }

@@ -766,6 +766,7 @@ building_juggler_school = {
     base : { pos : [0, 0], pack:PACK_GENERAL, id:46 },
     work : { pos : [33, -38], pack:PACK_GENERAL, id:46, offset:1, max_frames:12, duration:3 }
   },
+  spawn_interval : 10,
   window_info_height_id : 1,
   info_help_id:75,
   info_text_id:77,

@@ -21,7 +21,7 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_graphic() override;
 
-    static const static_params &current_params() { return (const static_params &)building_impl::params(TYPE); }
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 class building_mortuary : public building_impl {
@@ -43,5 +43,5 @@ public:
     virtual void update_graphic() override;
     virtual void update_count() const override;
 
-    static const static_params &current_params() { return (const static_params &)building_impl::params(TYPE); }
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
