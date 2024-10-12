@@ -21,6 +21,11 @@ enum e_bazaar_order {
     BAZAAR_ORDER_STATE_BUY = 1,
 };
 
+enum e_dock_order {
+    DOCK_ORDER_STATE_DONT_TRADE = 0,
+    DOCK_ORDER_STATE_TRADE = 1,
+};
+
 enum e_old_storage_state {
     OLD_STORAGE_STATE_ACCEPTING = 0,
     OLD_STORAGE_STATE_NOT_ACCEPTING = 1,

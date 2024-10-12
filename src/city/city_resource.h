@@ -25,7 +25,7 @@ int city_resource_food_percentage_produced();
 int city_resource_operating_granaries();
 int city_resource_last_used_storageyard();
 void city_resource_set_last_used_storageyard(int warehouse_id);
-int city_resource_trade_status(e_resource resource);
+e_trade_status city_resource_trade_status(e_resource resource);
 void city_resource_cycle_trade_status(e_resource resource);
 void city_resource_cycle_trade_import(e_resource resource);
 void city_resource_cycle_trade_export(e_resource resource);

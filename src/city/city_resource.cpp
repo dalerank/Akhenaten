@@ -82,27 +82,27 @@ void city_resource_set_last_used_storageyard(int warehouse_id) {
     city_data.resource.last_used_warehouse = warehouse_id;
 }
 
-int city_resource_trade_status(e_resource resource) {
+e_trade_status city_resource_trade_status(e_resource resource) {
     return city_data.resource.trade_status[resource];
 }
 
 void city_resource_cycle_trade_status(e_resource resource) {
-    ++city_data.resource.trade_status[resource];
-    if (city_data.resource.trade_status[resource] > TRADE_STATUS_EXPORT)
-        city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
-
-    if (city_data.resource.trade_status[resource] == TRADE_STATUS_IMPORT
-        && !g_empire.can_import_resource(resource, true)) {
-        city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT;
+    auto &trade_status = city_data.resource.trade_status[resource];
+    trade_status = (e_trade_status)((int)trade_status + 1);
+    if (trade_status > TRADE_STATUS_EXPORT) {
+        trade_status = TRADE_STATUS_NONE;
     }
 
-    if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT
-        && !g_empire.can_export_resource(resource, true)) {
-        city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
+    if (trade_status == TRADE_STATUS_IMPORT && !g_empire.can_import_resource(resource, true)) {
+        trade_status = TRADE_STATUS_EXPORT;
     }
 
-    if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT) {
-        city_data.resource.stockpiled[resource] = 0;
+    if (trade_status == TRADE_STATUS_EXPORT && !g_empire.can_export_resource(resource, true)) {
+        trade_status = TRADE_STATUS_NONE;
+    }
+
+    if (trade_status == TRADE_STATUS_EXPORT) {
+        trade_status = TRADE_STATUS_NONE;
     }
 }
 

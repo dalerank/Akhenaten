@@ -184,7 +184,7 @@ struct city_t {
     struct {
         int16_t space_in_warehouses[RESOURCES_MAX];
         int16_t stored_in_warehouses[RESOURCES_MAX];
-        int16_t trade_status[RESOURCES_MAX];
+        e_trade_status trade_status[RESOURCES_MAX];
         int16_t trading_amount[RESOURCES_MAX];
         int32_t stockpiled[RESOURCES_MAX];
         int16_t mothballed[RESOURCES_MAX];
