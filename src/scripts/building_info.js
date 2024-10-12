@@ -638,6 +638,8 @@ building_dock = {
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 3,
+  info_help_id:82,
+  info_text_id:101,
   fire_proof : true,
   window_info_height_id : 1,
 }

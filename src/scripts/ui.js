@@ -844,23 +844,6 @@ granary_info_window = {
 	}
 }
 
-bazaar_orders_window = {
-  ui : {
-		background 	: outer_panel({size: [29, 17]}),
-		title 		 : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-		orders_panel : inner_panel({pos : [16, 42], size: [27, 10] }),
-		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
-		button_close  : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
-		accept_none : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
-
-		item_orders_column : dummy({margin:{centerx:0}}),
-		item_icon_column : dummy({pos:[25, 0]}),
-		item_name_column : dummy({pos:[55, 0]}),
-		item_row     : dummy({size:[px(13), 20]}),      
-		items_area	 : dummy({pos:[0, 50]}), 
-	}
-}
-
 info_window_vacant_lot = {
 	help_id : 128,
 	ui : {
@@ -1281,36 +1264,78 @@ taxcollector_info_window = {
 	}
 }
 
+dock_info_window = {
+	ui : __baseui(building_info_window, {
+		background : outer_panel({size: [29, 16]}),
+		orders : button({margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}}),
+	})
+}
+
+dock_orders_window = {
+	parent_offset: [0, -px(4)],
+  ui : {
+		background 	: outer_panel({size: [29, 22]}),
+		title 		 : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		orders_panel : inner_panel({pos : [16, 42], size: [27, 16] }),
+		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
+		button_close  : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
+		accept_none : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
+
+		item_orders_column : dummy({margin:{centerx:0}}),
+		item_icon_column : dummy({pos:[25, 0]}),
+		item_name_column : dummy({pos:[55, 0]}),
+		item_row     : dummy({size:[px(13), 20]}),      
+		items_area	 : dummy({pos:[0, 50]}), 
+	}
+}
+
 bazaar_info_window = {
 	ui : {
-		background : { type : "outer_panel",	pos: [0, 0], size: [29, 16]},
-		title 		 : { type : "text", text: "#bazaar_info_title", pos: [0, 10], size: [16 * 29, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		warning_text : { type : "text", pos: [32, 36], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-		food0_icon : { type : "resource_icon", pos: [32, 85] },
-		food0_text : { type : "text", pos: [64, 90], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		food1_icon : { type : "resource_icon", pos: [142, 85] },
-		food1_text : { type : "text", pos: [174, 90], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		food2_icon : { type : "resource_icon", pos: [252, 85] },
-		food2_text : { type : "text", pos: [284, 90], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		food3_icon : { type : "resource_icon", pos: [362, 85] },
-		food3_text : { type : "text", pos: [394, 90], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good0_icon : { type : "resource_icon", pos: [32, 110] },
-		good0_text : { type : "text", pos: [64, 114], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good1_icon : { type : "resource_icon", pos: [142, 110] },
-		good1_text : { type : "text", pos: [174, 114], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good2_icon : { type : "resource_icon", pos: [252, 110] },
-		good2_text : { type : "text", pos: [284, 114], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good3_icon : { type : "resource_icon", pos: [362, 110] },
-		good3_text : { type : "text", pos: [394, 114], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		workers_panel : { type : "inner_panel", pos : [16, 136], size: [27, 4] },
-		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] },
-		workers_text : { type : "text", pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		workers_desc : { type : "text", pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
-		orders : { type:"generic_button", margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}},
-		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
-		show_overlay : { type:"generic_button", margin:{right:-64, bottom:-40}, size:[23, 23]},
-		mothball : { type:"generic_button", margin:{right:-90, bottom:-40}, size:[23, 23]},
+		background : outer_panel({size: [29, 16]}),
+		title 		 : text({text: "#bazaar_info_title", pos: [0, 10], size: [16 * 29, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		warning_text : text({pos: [32, 36], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		food0_icon : resource_icon({pos: [32, 85]}),
+		food0_text : text({pos: [64, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		food1_icon : resource_icon({pos: [142, 85] }),
+		food1_text : text({pos: [174, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		food2_icon : resource_icon({pos: [252, 85] }),
+		food2_text : text({pos: [284, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		food3_icon : resource_icon({pos: [362, 85] }),
+		food3_text : text({pos: [394, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good0_icon : resource_icon({pos: [32, 110] }),
+		good0_text : text({pos: [64, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good1_icon : resource_icon({pos: [142, 110] }),
+		good1_text : text({pos: [174, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good2_icon : resource_icon({pos: [252, 110] }),
+		good2_text : text({pos: [284, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good3_icon : resource_icon({pos: [362, 110] }),
+		good3_text : text({pos: [394, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		workers_panel : inner_panel({pos : [16, 136], size: [27, 4] }),
+		workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] }),
+		workers_text : text({pos:[70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		workers_desc : text({pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK }),
+		orders : button({margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}}),
+		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
+		button_close  : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
+		show_overlay : button({margin:{right:-64, bottom:-40}, size:[23, 23]}),
+		mothball : button({margin:{right:-90, bottom:-40}, size:[23, 23]}),
+	}
+}
+
+bazaar_orders_window = {
+  ui : {
+		background 	: outer_panel({size: [29, 17]}),
+		title 		 : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		orders_panel : inner_panel({pos : [16, 42], size: [27, 10] }),
+		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
+		button_close  : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
+		accept_none : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
+
+		item_orders_column : dummy({margin:{centerx:0}}),
+		item_icon_column : dummy({pos:[25, 0]}),
+		item_name_column : dummy({pos:[55, 0]}),
+		item_row     : dummy({size:[px(13), 20]}),      
+		items_area	 : dummy({pos:[0, 50]}), 
 	}
 }
 
