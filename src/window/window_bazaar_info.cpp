@@ -38,7 +38,7 @@ void bazaar_info_window::init(object_info &c) {
     auto bazaar = c.building_get()->dcast_bazaar();
     window_building_play_sound(&c, bazaar->get_sound());
 
-    std::pair<int, int> reason = { 0, 0 };
+    textid reason = { 0, 0 };
     if (!c.has_road_access) {
         reason = { 69, 25 };
     }
@@ -48,7 +48,7 @@ void bazaar_info_window::init(object_info &c) {
         reason = { meta.text_id, 2 };
     }
 
-    if (reason.first) {
+    if (reason.group) {
         ui["workers_desc"] = "";
         ui["workers_text"] = ui::str(reason);
         return;
