@@ -216,7 +216,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 void window_resource_settings_show(e_resource resource) {
-    window_type window = {
+    static window_type window = {
         WINDOW_RESOURCE_SETTINGS,
         draw_background,
         draw_foreground,

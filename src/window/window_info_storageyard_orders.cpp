@@ -25,7 +25,7 @@ void info_window_storageyard_orders::draw_background(object_info *c) {
 void info_window_storageyard_orders::draw_foreground(object_info *c) {
     building_info_window::window_info_background(*c);
 
-    resource_list resources = city_resource_get_available();
+    const resource_list resources = city_resource_get_available();
     auto &data = g_window_building_distribution;
 
     auto *b = c->building_get();
