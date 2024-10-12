@@ -11,7 +11,6 @@
 #include "js/js_game.h"
 
 struct granary_orders_window : public building_info_window_t<granary_orders_window> {
-    //virtual void window_info_background(object_info &c) override;
     virtual void init(object_info &c) override;
     virtual void window_info_foreground(object_info &c) override;
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;

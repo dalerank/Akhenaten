@@ -11,14 +11,12 @@
 #include "js/js_game.h"
 
 struct bazaar_orders_window : public building_info_window_t<bazaar_orders_window> {
-    virtual void window_info_background(object_info &c) override;
     virtual void window_info_foreground(object_info &c) override;
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
     virtual void init(object_info &c) override;
 };
 
 bazaar_orders_window bazaar_ordersw;
-
 
 void window_bazaar_orders_show(object_info &c) {
     c.ui = &bazaar_ordersw;
@@ -37,10 +35,6 @@ void bazaar_orders_window::init(object_info &c) {
     });
 }
 
-void bazaar_orders_window::window_info_background(object_info &c) {
-    building_info_window::window_info_background(c);
-}
-
 void bazaar_orders_window::window_info_foreground(object_info &c) {
     building_bazaar *bazaar = c.building_get()->dcast_bazaar();
     const int building_id = bazaar->id();
@@ -48,8 +42,6 @@ void bazaar_orders_window::window_info_foreground(object_info &c) {
     auto &data = g_window_building_distribution;
     ui.begin_widget(c.offset);
     ui.draw();
-    
-    painter ctx = game.painter();
 
     //    backup_storage_settings(storage_id); // TODO: market state backup
     const auto &items_area = ui["items_area"];
