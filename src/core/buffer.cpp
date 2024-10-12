@@ -97,6 +97,17 @@ uint32_t buffer::read_u32() {
 
     return result;
 }
+
+uint64_t buffer::read_u64() {
+    uint64_t result = 0;
+    if (is_valid(sizeof(result))) {
+        result = (uint64_t&)data.at(index);
+        index += sizeof(uint64_t);
+    }
+
+    return result;
+}
+
 int8_t buffer::read_i8() {
     int8_t result = 0;
     if (is_valid(sizeof(result))) {
@@ -127,6 +138,17 @@ int32_t buffer::read_i32() {
 
     return result;
 }
+
+int64_t buffer::read_i64() {
+    int64_t result = 0;
+    if (is_valid(sizeof(result))) {
+        int64_t b0 = (int64_t&)data.at(index);
+        index += sizeof(int64_t);
+    }
+
+    return result;
+}
+
 size_t buffer::read_raw(void* value, size_t s) {
     size_t result = 0;
     if (is_valid(sizeof(result))) {
@@ -152,6 +174,7 @@ void buffer::write_u16(uint16_t value) {
         data.at(index++) = (value >> 8) & 0xff;
     }
 }
+
 void buffer::write_u32(uint32_t value) {
     if (is_valid(sizeof(value))) {
         data.at(index++) = value & 0xff;
@@ -160,6 +183,14 @@ void buffer::write_u32(uint32_t value) {
         data.at(index++) = (value >> 24) & 0xff;
     }
 }
+
+void buffer::write_u64(uint64_t value) {
+    if (is_valid(sizeof(value))) {
+        (uint64_t &)data.at(index) = value;
+        index += sizeof(uint64_t);
+    }
+}
+
 void buffer::write_i8(int8_t value) {
     if (is_valid(sizeof(value))) {
         data.at(index++) = value & 0xff;
@@ -179,6 +210,14 @@ void buffer::write_i32(int32_t value) {
         data.at(index++) = (value >> 24) & 0xff;
     }
 }
+
+void buffer::write_i64(int64_t value) {
+    if (is_valid(sizeof(value))) {
+        (int64_t &)data.at(index) = value;
+        index += sizeof(int64_t);
+    }
+}
+
 void buffer::write_raw(const void* value, size_t s) {
     if (is_valid(s)) {
         memcpy(&data.at(index), value, s);

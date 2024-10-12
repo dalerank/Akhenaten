@@ -21,6 +21,8 @@ enum bind_signature_e {
     BIND_SIGNATURE_INT16,
     BIND_SIGNATURE_UINT32,
     BIND_SIGNATURE_INT32,
+    BIND_SIGNATURE_INT64,
+    BIND_SIGNATURE_UINT64,
 
     BIND_SIGNATURE_RAW,
 
@@ -95,6 +97,10 @@ public:
             IO_BRANCH(*ext = (T)p_buf->read_i32(), p_buf->write_i32(*ext))
         case BIND_SIGNATURE_UINT32:
             IO_BRANCH(*ext = (T)p_buf->read_u32(), p_buf->write_u32(*ext))
+        case BIND_SIGNATURE_INT64:
+            IO_BRANCH(*ext = (T)p_buf->read_i64(), p_buf->write_i64(*ext))
+        case BIND_SIGNATURE_UINT64:
+            IO_BRANCH(*ext = (T)p_buf->read_u64(), p_buf->write_u64(*ext))
         }
     }
     template <typename T>
