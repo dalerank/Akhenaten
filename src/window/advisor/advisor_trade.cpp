@@ -87,7 +87,7 @@ void ui::advisor_trade_window::ui_draw_foreground() {
             }
         }
 
-        int trade_status = city_resource_trade_status(resource);
+        e_trade_status trade_status = city_resource_trade_status(resource);
         int trade_amount = stack_proper_quantity(city_resource_trading_amount(resource), resource);
         std::pair<bstring64, e_font> text;
         switch (trade_status) {

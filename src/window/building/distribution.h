@@ -46,3 +46,4 @@ void window_building_draw_order_instruction(int instr_kind, const storage_t *sto
 
 std::pair<bstring64, e_font> window_market_get_order_instruction(int instr_kind, e_resource resource, int market_order);
 std::pair<bstring64, e_font> window_building_get_order_instruction(int instr_kind, const storage_t &storage, e_resource resource);
+std::pair<bstring64, e_font> window_dock_get_order_instruction(int instr_kind, e_resource resource, int dock_order);

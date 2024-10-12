@@ -148,6 +148,22 @@ std::pair<bstring64, e_font> window_market_get_order_instruction(int instr_kind,
     case BAZAAR_ORDER_STATE_DONT_BUY:
         return { ui::str(97, 9), FONT_NORMAL_BLACK_ON_DARK };
     }
+
+    assert(false);
+    return { "", FONT_INVALID };
+}
+
+std::pair<bstring64, e_font> window_dock_get_order_instruction(int instr_kind, e_resource resource, int dock_order) {
+    switch (dock_order) {
+    case DOCK_ORDER_STATE_TRADE:
+        return { "Trade", FONT_NORMAL_WHITE_ON_DARK };
+
+    case DOCK_ORDER_STATE_DONT_TRADE:
+        return { "Don't trade", FONT_NORMAL_BLACK_ON_DARK };
+    }
+
+    assert(false);
+    return { "", FONT_INVALID };
 }
 
 std::pair<bstring64, e_font> window_building_get_order_instruction(int instr_kind, const storage_t &storage, e_resource resource) {
@@ -356,27 +372,27 @@ static void storage_toggle_permissions(int index, int param2) {
     s->set_permission(index - 1);
 }
 
-static void toggle_resource_state(int index, int param2) {
+static void toggle_resource_state(int param1, int param2) {
     auto &data = g_window_building_distribution;
     building *b = building_get(data.building_id);
-    e_resource resource;
 
     building_bazaar *bazaar = b->dcast_bazaar();
     if (bazaar) {
-        bazaar->toggle_good_accepted(index - 1);
+        bazaar->toggle_good_accepted(param1);
         return;
     } 
     
-    building_dock *dock = b->dcast_dock();
-    if (dock) {
-        dock->toggle_good_accepted(index - 1);
-        return;
-    }
+    //building_dock *dock = b->dcast_dock();
+    //if (dock) {
+    //    dock->toggle_good_accepted(resource);
+    //    return;
+    //}
 
+    e_resource resource;
     if (b->type == BUILDING_STORAGE_YARD) {
-        resource = city_resource_get_available().at(index - 1).type;
+        resource = city_resource_get_available().at(param1 - 1).type;
     } else {
-        resource = city_resource_get_available_foods().at(index - 1).type;
+        resource = city_resource_get_available_foods().at(param1 - 1).type;
     }
 
     building_storage_cycle_resource_state(b->storage_id, resource, false);
@@ -385,19 +401,19 @@ static void toggle_resource_state(int index, int param2) {
 static void toggle_resource_state_backwards(int index, int param2) {
     auto &data = g_window_building_distribution;
     building* b = building_get(data.building_id);
-    int resource;
     building_bazaar *bazaar = b->dcast_bazaar();
     if (bazaar) {
         bazaar->toggle_good_accepted(index - 1);
         return;
     }
     
-    building_dock *dock = b->dcast_dock();
-    if (dock) {
-        dock->toggle_good_accepted(index - 1);
-        return;
-    } 
+    //building_dock *dock = b->dcast_dock();
+    //if (dock) {
+    //    dock->toggle_good_accepted(index - 1);
+    //    return;
+    //} 
 
+    int resource;
     if (b->type == BUILDING_STORAGE_YARD) {
         resource = city_resource_get_available().at(index - 1).type;
     } else {
