@@ -9,6 +9,10 @@ public:
     building_dock(building &b) : building_impl(b) {}
     virtual building_dock *dcast_dock() override { return this; }
 
+    struct static_params : public buildings::model_t<building_dock> {
+        virtual void load(archive arch) override;
+    };
+
     virtual void on_create(int orientation) override;
     virtual void on_place(int orientation, int variant) override;
     virtual void on_destroy() override;
@@ -19,20 +23,16 @@ public:
     virtual void spawn_figure() override;
     virtual void update_graphic() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_DOCK; }
-    virtual void window_info_background(object_info &c) override;
-    virtual void window_info_foreground(object_info &c) override;
-    virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 
+    void unaccept_all_goods();
     int trader_id();
     int trader_city_id();
-    bool is_good_accepted(int index);
-    void toggle_good_accepted(int index);
+    bool is_good_accepted(e_resource r);
+    void toggle_good_accepted(e_resource r);
     int count_idle_dockers() const;
-    void draw_dock_orders(object_info *c);
-    void draw_dock(object_info *c);
-    void draw_dock_orders_foreground(object_info *c);
-    //void draw_dock_foreground(object_info *c);
+
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 struct building_dest {
