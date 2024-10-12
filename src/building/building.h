@@ -2,6 +2,7 @@
 
 #include "city/labor_category.h"
 #include "core/bstring.h"
+#include "core/bitarray.h"
 #include "core/tokenum.h"
 #include "core/vec2i.h"
 #include "core/core.h"
@@ -196,6 +197,7 @@ public:
         struct dock_t {
             short queued_docker_id;
             int dock_tiles[2];
+            sbitarray64 trading_goods;
             uint8_t num_ships;
             char orientation;
             short docker_ids[3];

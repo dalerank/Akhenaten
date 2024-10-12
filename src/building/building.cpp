@@ -1118,7 +1118,8 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &b->data.dock.queued_docker_id);
         iob->bind(BIND_SIGNATURE_INT32, &b->data.dock.dock_tiles[0]);
         iob->bind(BIND_SIGNATURE_INT32, &b->data.dock.dock_tiles[1]);
-        iob->bind____skip(17);
+        iob->bind(BIND_SIGNATURE_UINT64, b->data.dock.trading_goods.data_ptr());
+        iob->bind____skip(9);
         iob->bind(BIND_SIGNATURE_UINT8, &b->data.dock.num_ships);
         iob->bind____skip(2);
         iob->bind(BIND_SIGNATURE_INT8, &b->data.dock.orientation);
