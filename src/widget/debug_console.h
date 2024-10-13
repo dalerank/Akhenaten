@@ -34,6 +34,7 @@ void game_debug_show_property(int &i, pcstr field, const short &v, bool disabled
 void game_debug_show_property(int &i, pcstr field, const uint8_t &v, bool disabled = false);
 void game_debug_show_property(int &i, pcstr field, const uint16_t &v, bool disabled = false);
 void game_debug_show_property(int &i, pcstr field, const bool &v, bool disabled = false);
+void game_debug_show_property(int &i, pcstr field, const pcstr v);
 void game_debug_show_property(int &i, pcstr field, const bstring64 &v, bool disabled = false);
 void game_debug_show_property(int &i, pcstr field, const bstring256 &v, bool disabled = false);
 void game_debug_show_property(int &i, pcstr field, const xstring &v, bool disabled = false);
