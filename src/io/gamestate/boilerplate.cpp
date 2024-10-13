@@ -48,6 +48,7 @@
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "grid/floodplain.h"
+#include "grid/water.h"
 #include "game/game.h"
 #include "content/vfs.h"
 #include "scenario/criteria.h"
@@ -719,6 +720,7 @@ void GamestateIO::start_loaded_file() {
 
     // tiles
     floodplains_init();
+    map_water_rebuild_shores();
     map_tiles_update_floodplain_images();
     map_tiles_river_refresh_entire();
     map_tiles_determine_gardens();

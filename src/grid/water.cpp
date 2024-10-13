@@ -13,6 +13,7 @@
 #include <array>
 
 tile_cache river_tiles_cache;
+tile_cache g_river_shore;
 
 void foreach_river_tile(void (*callback)(int grid_offset)) {
     for (const auto &tile: river_tiles_cache) {
@@ -114,6 +115,29 @@ void map_water_add_building(int building_id, tile2i tile, int size, int image_id
 static int blocked_land_terrain(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_SHRUB | TERRAIN_GARDEN
            | TERRAIN_ROAD | TERRAIN_ELEVATION | TERRAIN_RUBBLE;
+}
+
+void map_water_rebuild_shores() {
+    foreach_river_tile([&] (int tile_offset) {
+        tile2i tile(tile_offset);
+        grid_area area = map_grid_get_area(tile, 1, 1);
+
+        bool ground_aside = false;
+        int ground_tiles_num = 0;
+        int water_tiles_num = 0;
+        map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+            if (map_terrain_is(t, TERRAIN_WATER|TERRAIN_FLOODPLAIN)) {
+                water_tiles_num++;
+            } else {
+                ground_aside = true;
+                ground_tiles_num++;
+            }
+        });
+
+        if (ground_aside) {
+            map_terrain_add(tile_offset, TERRAIN_SHORE);
+        }
+    });
 }
 
 shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool adjust_xy, bool adjacent, int shore_terrain) {
