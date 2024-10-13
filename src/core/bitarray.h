@@ -5,6 +5,12 @@
 #include <memory>
 #include <cassert>
 
+inline uint8_t bitwise_count_bits(uint8_t v) {
+    v = (v & 0x55) + ((v >> 1) & 0x55);
+    v = (v & 0x33) + ((v >> 2) & 0x33);
+    return (v & 0x0f) + ((v >> 4) & 0x0f);
+}
+
 template <typename parent_type>
 struct bitarray_base {
     typedef parent_type self_type;
@@ -326,7 +332,7 @@ public:
             result += bw_count_bits(_data[i]);
         }
         const uint32_t cur = _data[idx] & ((1 << (id % 32)) - 1);
-        result += bw_count_bits(cur);
+        result += bitwise_count_bits(cur);
 
         return (result);
     }
