@@ -320,7 +320,10 @@ void figure_impl::on_post_load() {
 }
 
 void figure_impl::on_change_terrain(int old, int current) {
-    const bool is_water = (!!(base.terrain_type & TERRAIN_WATER) || !!(base.terrain_type & TERRAIN_DEEPWATER));
+    const bool is_water = (!!(current & TERRAIN_WATER) || !!(current & TERRAIN_DEEPWATER)
+                            && !(current & TERRAIN_SHORE))
+                            && !(current & TERRAIN_BUILDING);
+
     const bool is_swim_animaion = base.anim.id == animkeys().swim;
     const bool is_walk_animaion = base.anim.id == animkeys().walk;
     const bool is_moving_animation = is_swim_animaion || is_walk_animaion;

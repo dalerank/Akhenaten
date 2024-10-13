@@ -148,7 +148,8 @@ void top_menu_widget::update_month_year_max_width(uint8_t month, int year) {
 
 static void menu_debug_render_text(int opt, bool v) {
     auto& data = g_top_menu;
-    static const char *debug_text_rend[][2] = {
+    struct option { pcstr on, off; };
+    static option debug_text_rend[] = {
         {"Buildings ON", "Buildings OFF"},
         {"Tile Size ON", "Tile Size OFF"},
         {"Roads ON", "Roads OFF"},
@@ -175,12 +176,15 @@ static void menu_debug_render_text(int opt, bool v) {
         {"Marshland Depl ON", "Marshland Depl OFF"},
         {"Dmg Fire ON", "Dmg Fire OFF"},
         {"Desirability ON", "Desirability OFF"},
+        {"River Shore ON", "River Shore OFF"},
     };
-    g_top_menu.menu_item_update("debug_render", opt, debug_text_rend[opt][v ? 0 : 1]);
+    const auto &current = debug_text_rend[opt];
+    g_top_menu.menu_item_update("debug_render", opt, v ? current.on : current.off);
 }
 
 static void menu_debug_opt_text(int opt, bool v) {
-    static const char* debug_text_opt[][2] = {
+    struct option { pcstr on, off; };
+    static option debug_text_opt[] = {
         {"Pages ON", "Pages OFF"},
         {"Game Time ON", "Game Time OFF"},
         {"Build Planner ON", "Build Planner OFF"},
@@ -198,7 +202,8 @@ static void menu_debug_opt_text(int opt, bool v) {
         {"Full Screenshot", "Full Screenshot"},
         {"Write Video ON", "Write Video OFF"},
     };
-    g_top_menu.menu_item_update("debug", opt, debug_text_opt[opt][v ? 0 : 1]);
+    const auto &current = debug_text_opt[opt];
+    g_top_menu.menu_item_update("debug", opt, v ? current.on : current.off);
 }
 
 static void menu_debug_screenshot(int opt) {
