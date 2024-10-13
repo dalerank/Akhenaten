@@ -132,7 +132,7 @@ void figure::figure_route_add() {
     }
 
     int path_length;
-    if (can_move_by_water()) {
+    if (can_move_by_water() && is_boat()) {
         if (allow_move_type == EMOVE_DEEPWATER) { // flotsam
             map_routing_calculate_distances_deepwater(tile);
             path_length = map_routing_get_path_on_water(data.direction_paths[path_id], destination_tile, true);
