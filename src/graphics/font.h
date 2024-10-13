@@ -20,6 +20,7 @@ enum e_font {
     FONT_TYPES_MAX,
     FONT_INVALID = 0xff
 };
+
 extern const token_holder<e_font, FONT_SMALL_PLAIN, FONT_TYPES_MAX> e_tont_type_tokens;
 
 using fonts_vec = std::array<e_font, 2>;
@@ -42,7 +43,11 @@ struct font_definition {
     int (*image_y_offset)(uint8_t c, int image_height, int line_height);
 };
 
-enum { NO_EXTRA_FONT = 0, FULL_CHARSET_IN_FONT = 1, MULTIBYTE_IN_FONT = 2 };
+enum { 
+    NO_EXTRA_FONT = 0,
+    FULL_CHARSET_IN_FONT = 1,
+    MULTIBYTE_IN_FONT = 2
+};
 
 /**
  * Sets the encoding for font drawing functions

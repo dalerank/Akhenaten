@@ -156,6 +156,7 @@ top_menu_widget = {
     marshland_depl: { type : "menu_item", text:"", parameter:26},
     damage_fire 	: { type : "menu_item", text:"", parameter:27},
     desirability 	: { type : "menu_item", text:"", parameter:28},
+    shoreline   	: { type : "menu_item", text:"", parameter:29},
 	},
 
 	ui : {

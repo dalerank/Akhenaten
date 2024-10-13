@@ -20,7 +20,7 @@ inline int text_get_width(pcstr str, e_font font) { return text_get_width((const
 uint32_t text_get_max_length_for_width(const uint8_t* str, int length, e_font font, unsigned int requested_width, int invert);
 void text_ellipsize(uint8_t* str, e_font font, int requested_width);
 
-int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color color);
+int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color color, float scale = 1.f);
 int text_draw(const uint8_t* str, int x, int y, e_font font, color color);
 void text_draw_centered(const uint8_t* str, int x, int y, int box_width, e_font font, color color);
 int text_draw_left(uint8_t* str, int x, int y, e_font font, color color);

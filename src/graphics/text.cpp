@@ -241,7 +241,7 @@ int text_draw(const uint8_t *str, int x, int y, e_font font, color color) {
     return text_draw(ctx, str, x, y, font, color);
 }
 
-int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color color) {
+int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color color, float scale) {
     y = y - 3;
 
     const font_definition* def = font_definition_for(font);
@@ -268,13 +268,13 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
             int width;
 
             if (*str == ' ' || *str == '_' || letter_id < 0) {
-                width = def->space_width;
+                width = (def->space_width * scale);
             } else {
                 const image_t* img = image_letter(letter_id);
                 if (img != nullptr) {
                     int height = def->image_y_offset(*str, img->height, def->line_height);
-                    ImageDraw::img_letter(ctx, font, letter_id, current_x, y - height, color);
-                    width = def->letter_spacing + img->width;
+                    ImageDraw::img_letter(ctx, font, letter_id, current_x, y - height, color, scale);
+                    width = (def->letter_spacing + img->width) * scale;
                 }
             }
 
