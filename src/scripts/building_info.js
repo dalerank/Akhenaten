@@ -631,10 +631,10 @@ building_dock = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:49 },
     base : { pack:PACK_TERRAIN, id:49 },
-    work_n : { pos:[125, -47], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 },
-    work_w : { pos:[100, -7], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:8 },
-    work_s : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 },
-    work_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:4 }
+    work_n : { pos:[135, -7], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 },
+    work_w : { pos:[100, -7], pack:PACK_SPR_AMBIENT, id:55, offset:1, max_frames:25, duration:8 },
+    work_s : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:4 },
+    work_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 }
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 3,
