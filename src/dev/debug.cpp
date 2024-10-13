@@ -499,7 +499,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
     case e_debug_render_terrain_type: // TERRAIN TYPE
         d = map_terrain_get(grid_offset);
-        debug_text(ctx, str, x, y + 10, 0, "", d, COLOR_LIGHT_BLUE);
+        text_draw(ctx, bstring32().printf("%x", d), x, y + 10, FONT_SMALL_PLAIN, COLOR_LIGHT_BLUE, 0.5f);
         break;
 
     case e_debug_render_soil: // UNKNOWN SOIL GRID
@@ -528,6 +528,15 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         d = map_building_height_at(grid_offset);
         snprintf((char *)str, 30, "%d", d);
         debug_text_a(ctx, str, x, y + 10, 0, (pcstr)str, COLOR_RED, FONT_SMALL_PLAIN);
+        break;
+
+    case e_debug_render_river_shore:
+        d = map_terrain_is(grid_offset, TERRAIN_SHORE);
+        if (d) {
+            string_from_int(str, d, 0);
+            text_draw(ctx, str, x, y + 15, FONT_SMALL_PLAIN, COLOR_WHITE);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
+        }
         break;
     }
 }

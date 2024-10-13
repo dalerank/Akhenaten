@@ -41,7 +41,7 @@ enum e_terrain {
     TERRAIN_UNK_07 = 0x10000000,
     TERRAIN_UNK_08 = 0x20000000,
     TERRAIN_UNK_09 = 0x40000000,
-    TERRAIN_UNK_10 = 0x80000000,
+    TERRAIN_SHORE = 0x80000000,
 
     // combined
     TERRAIN_ALL = 0xffffffff,
