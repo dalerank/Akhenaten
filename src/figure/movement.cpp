@@ -122,61 +122,33 @@ int figure::get_permission_for_figure() {
         break;
     }
 }
+
 void figure::move_to_next_tile() {
-    tile2i old = tile;
+    const tile2i old = tile;
+
     map_figure_remove(); // is this necessary??? maybe could be refactored in the future...
     switch (direction) {
     default:
         return;
 
-    case DIR_0_TOP_RIGHT:
-        tile.shift(0, -1);
-        //            tile.y()--;
-        break;
-    case DIR_1_RIGHT:
-        tile.shift(1, -1);
-        //            tile.x()++;
-        //            tile.y()--;
-        break;
-    case DIR_2_BOTTOM_RIGHT:
-        tile.shift(1, 0);
-        //            tile.x()++;
-        break;
-    case DIR_3_BOTTOM:
-        tile.shift(1, 1);
-        //            tile.x()++;
-        //            tile.y()++;
-        break;
-    case DIR_4_BOTTOM_LEFT:
-        tile.shift(0, 1);
-        //            tile.y()++;
-        break;
-    case DIR_5_LEFT:
-        tile.shift(-1, 1);
-        //            tile.x()--;
-        //            tile.y()++;
-        break;
-    case DIR_6_TOP_LEFT:
-        tile.shift(-1, 0);
-        //            tile.x()--;
-        break;
-    case DIR_7_TOP:
-        tile.shift(-1, -1);
-        //            tile.x()--;
-        //            tile.y()--;
-        break;
+    case DIR_0_TOP_RIGHT:    tile.shift(0, -1); break;
+    case DIR_1_RIGHT:        tile.shift(1, -1); break;
+    case DIR_2_BOTTOM_RIGHT: tile.shift(1,  0); break;
+    case DIR_3_BOTTOM:       tile.shift(1,  1); break;
+    case DIR_4_BOTTOM_LEFT:  tile.shift(0,  1); break;
+    case DIR_5_LEFT:         tile.shift(-1, 1); break;
+    case DIR_6_TOP_LEFT:     tile.shift(-1, 0); break;
+    case DIR_7_TOP:          tile.shift(-1,-1); break;
     }
-    //    tile.grid_offset() += map_grid_direction_delta(direction);
+
     map_figure_add();
-    //    if (map_terrain_is(grid_offset_figure, TERRAIN_ROAD)) {
-    //        is_on_road = 1;
-    //        if (map_terrain_is(grid_offset_figure, TERRAIN_WATER)) { // bridge
-    //            set_target_height_bridge();
-    //        }
-    //    } else {
-    //        is_on_road = 0;
-    //    }
     figure_combat_attack_figure_at(tile.grid_offset());
+
+    const int old_terrain = map_terrain_get(old);
+    const int current_terrain = map_terrain_get(tile);
+    if (old_terrain != current_terrain) {
+        dcast()->on_change_terrain(old_terrain, current_terrain);
+    }
 
     terrain_type = map_terrain_get(tile);
 

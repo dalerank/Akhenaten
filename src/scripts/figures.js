@@ -698,6 +698,7 @@ figure_fishing_spot = {
 figure_fishing_boat = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:134, max_frames:4, duration:3 },
+		swim : { pos : [0, 0], pack:PACK_SPR_MAIN, id:134, max_frames:4, duration:3 },
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:135, max_frames:8, loop:false },
 		work : { pos : [0, 0], pack:PACK_SPR_MAIN, id:135, max_frames:6, duration:5 },
 		idle : { pos : [0, 0], pack:PACK_SPR_MAIN, id:136, offset:3, max_frames:1 },

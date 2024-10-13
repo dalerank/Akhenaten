@@ -315,6 +315,27 @@ void figure_impl::on_create() {
     assert(base.tile.x() < GRID_LENGTH && base.tile.y() < GRID_LENGTH);
 }
 
+void figure_impl::on_post_load() {
+    on_change_terrain(0, base.terrain_type);
+}
+
+void figure_impl::on_change_terrain(int old, int current) {
+    const bool is_water = (!!(base.terrain_type & TERRAIN_WATER) || !!(base.terrain_type & TERRAIN_DEEPWATER));
+    const bool is_swim_animaion = base.anim.id == animkeys().swim;
+    const bool is_walk_animaion = base.anim.id == animkeys().walk;
+    const bool is_moving_animation = is_swim_animaion || is_walk_animaion;
+
+    if (!is_moving_animation) {
+        return;
+    }
+
+    if (is_water && is_walk_animaion) {
+        image_set_animation(animkeys().swim);
+    } else if (!is_water && is_swim_animaion) {
+        image_set_animation(animkeys().walk);
+    }
+}
+
 void figure_impl::figure_roaming_action() {
     switch (action_state()) {
     case FIGURE_ACTION_150_ATTACK:
@@ -400,12 +421,10 @@ void figure_impl::update_animation() {
     if (!base.anim.id) {
         animkey = animkeys().walk;
     }
-
+ 
     if (action_state() == FIGURE_ACTION_149_CORPSE) {
         animkey = animkeys().death;
-    } else if (!!(base.terrain_type & TERRAIN_WATER)) {
-        animkey = animkeys().swim;
-    }
+    }    
 
     if (!!animkey) {
         image_set_animation(animkey);

@@ -465,7 +465,8 @@ public:
 
     virtual void on_create();
     virtual void on_destroy() {}
-    virtual void on_post_load() {}
+    virtual void on_post_load();
+    virtual void on_change_terrain(int old, int current);
     virtual void figure_action() {}
     virtual void figure_before_action() {}
     virtual void figure_roaming_action();

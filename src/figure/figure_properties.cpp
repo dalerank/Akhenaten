@@ -27,7 +27,8 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         game_debug_show_property(i, "home_building_id", f->home_building_id);
         game_debug_show_property(i, "destination_building_id", f->destination_building_id);
         game_debug_show_property(i, "action_state", f->action_state);
-        game_debug_show_property(i, "type", figure_impl::params(f->type).name);
+        game_debug_show_property(i, "type(name)", (pcstr)figure_impl::params(f->type).name);
+        game_debug_show_property(i, "type", figure_impl::params(f->type).ftype, true);
         game_debug_show_property(i, "wait_ticks", f->wait_ticks);
         game_debug_show_property(i, "terrain_type", get_terrain_type("", f->terrain_type));
         game_debug_show_property(i, "roam_length", f->roam_length);
