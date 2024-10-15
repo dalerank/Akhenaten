@@ -325,7 +325,7 @@ struct city_t {
     bool is_food_allowed(e_resource resource);
     void set_allowed_food(int i, e_resource r);
 
-    bool generate_trader_from(int city_id, empire_city &city);
+    bool generate_trader_from(empire_city &city);
     bool available_resource(e_resource resource);
     void update_allowed_foods();
     bool can_produce_resource(e_resource resource);

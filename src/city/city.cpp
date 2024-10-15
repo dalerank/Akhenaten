@@ -92,7 +92,7 @@ e_resource city_t::allowed_foods(int i) {
     return resource.food_types_allowed[i];
 }
 
-bool city_t::generate_trader_from(int city_id, empire_city &city) {
+bool city_t::generate_trader_from(empire_city &city) {
     if (g_city.religion.ra_no_traders_months_left > 0) {
         return false;
     }
@@ -161,15 +161,15 @@ bool city_t::generate_trader_from(int city_id, empire_city &city) {
         if (city_buildings_has_working_dock() && scenario_map_has_river_entry()
             && !city_trade_has_sea_trade_problems()) {
             tile2i river_entry = scenario_map_river_entry();
-            city.trader_figure_ids[index] = figure_trade_ship::create(river_entry, city_id);
+            city.trader_figure_ids[index] = figure_trade_ship::create(river_entry, city);
             return true;
         }
     } else {
         // generate caravan and donkeys
         if (!city_trade_has_land_trade_problems()) {
             // caravan head
-            tile2i& entry = g_city.map.entry_point;
-            city.trader_figure_ids[index] = figure_create_trade_caravan(entry, city_id);
+            tile2i entry = g_city.map.entry_point;
+            city.trader_figure_ids[index] = figure_trade_caravan::create(entry, city);
             return true;
         }
     }
