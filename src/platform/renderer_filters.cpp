@@ -40,7 +40,7 @@ void platform_render_init_filters() {
 
     std::string driver = get_video_driver();
     data.render_support_filters = (driver == "opengl");
-    data.render_support_filters |= SDL_VERSION_ATLEAST(2, 0, 12);
+    data.render_support_filters &= SDL_VERSION_ATLEAST(2, 0, 12);
 
     if (!platform_render_support_filters()) {
         return;
