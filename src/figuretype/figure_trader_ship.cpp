@@ -120,7 +120,7 @@ void figure_trade_ship::figure_action() {
                 break;
             } 
             
-            poof();
+            advance_action(FIGURE_ACTION_115_TRADE_SHIP_LEAVING, scenario_map_river_exit());
         }
         base.anim.frame = 0;
         break;
@@ -128,17 +128,18 @@ void figure_trade_ship::figure_action() {
     case FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK:
         base.move_ticks(1);
         base.height_adjusted_ticks = 0;
-        if (direction() == DIR_FIGURE_NONE)
+        if (direction() == DIR_FIGURE_NONE) {
             base.action_state = FIGURE_ACTION_112_TRADE_SHIP_MOORED;
-        else if (direction() == DIR_FIGURE_REROUTE)
+        } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
-        else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
             if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
                 city_message_post(true, MESSAGE_NAVIGATION_IMPOSSIBLE, 0, 0);
                 city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
             }
         }
+
         if (destination()->state != BUILDING_STATE_VALID) {
             advance_action(FIGURE_ACTION_115_TRADE_SHIP_LEAVING, scenario_map_river_exit());
             base.wait_ticks = 0;
@@ -160,20 +161,14 @@ void figure_trade_ship::figure_action() {
             dst->data.dock.queued_docker_id = 0;
             dst->data.dock.num_ships = 0;
         }
+
         switch (destination()->data.dock.orientation) {
-        case 0:
-            base.direction = DIR_2_BOTTOM_RIGHT;
-            break;
-        case 1:
-            base.direction = DIR_4_BOTTOM_LEFT;
-            break;
-        case 2:
-            base.direction = DIR_6_TOP_LEFT;
-            break;
-        default:
-            base.direction = DIR_0_TOP_RIGHT;
-            break;
+        case 0: base.direction = DIR_2_BOTTOM_RIGHT; break;
+        case 1: base.direction = DIR_4_BOTTOM_LEFT; break;
+        case 2: base.direction = DIR_6_TOP_LEFT; break;
+        default: base.direction = DIR_0_TOP_RIGHT; break;
         }
+
         base.anim.frame = 0;
         city_message_reset_category_count(MESSAGE_CAT_BLOCKED_DOCK);
         break;
