@@ -94,6 +94,7 @@ int granary_orders_window::window_info_handle_mouse(const mouse *m, object_info 
     const hotkeys *h = hotkey_state();
     if (!result && input_go_back_requested(m, h)) {
         storage_settings_backup_check();
+        window_info_show(tile2i(c.grid_offset), /*avoid_mouse*/true);
         return -1;
     }
 

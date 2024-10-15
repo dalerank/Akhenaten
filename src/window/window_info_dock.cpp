@@ -4,6 +4,7 @@
 #include "city/object_info.h"
 #include "city/city_resource.h"
 #include "input/input.h"
+#include "graphics/window.h"
 #include "building/common.h"
 #include "window/building/distribution.h"
 
@@ -122,7 +123,7 @@ int dock_orders_window::window_info_handle_mouse(const mouse *m, object_info &c)
 
     const hotkeys *h = hotkey_state();
     if (!result && input_go_back_requested(m, h)) {
-        //storage_settings_backup_check();
+        window_info_show(tile2i(c.grid_offset), /*avoid_mouse*/true);
         return -1;
     }
 
