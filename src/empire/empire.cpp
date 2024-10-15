@@ -10,13 +10,18 @@
 #include "scenario/map.h"
 #include "trade_route.h"
 #include "empire_object.h"
-
 #include "io/io_buffer.h"
 #include "dev/debug.h"
+#include "io/gamefiles/lang.h"
+
 #include <iostream>
 #include <algorithm>
 
 empire_t g_empire;
+
+#ifndef _WIN32
+#define stricmp strcasecmp
+#endif
 
 declare_console_command_p(makeseatraders, game_cheat_make_sea_traders)
 void game_cheat_make_sea_traders(std::istream &is, std::ostream &os) {
@@ -27,6 +32,22 @@ void game_cheat_make_sea_traders(std::istream &is, std::ostream &os) {
     }
 };
 
+void empire_t::load_mission_metadata(const mission_id_t &missionid) {
+    g_config_arch.r_section(missionid, [] (archive arch) {
+        auto &data = g_empire;
+        arch.r_array("cities", [&data] (archive city_arch) {
+            pcstr name = city_arch.r_string("name");
+            auto city = data.city(name);
+
+            if (!city) {
+                return;
+            }
+
+            city->is_sea_trade = city_arch.r_bool("is_sea_trade", city->is_sea_trade);
+        });
+    });
+}
+
 void empire_t::clear_cities_data() {
     memset(cities, 0, sizeof(cities));
 }
@@ -36,6 +57,16 @@ empire_city* empire_t::city(int city_id) {
         return &cities[city_id];
     else
         return nullptr;
+}
+
+empire_city *empire_t::city(pcstr name) {
+    for (auto &city : cities) {
+        pcstr city_name = (pcstr)lang_get_string(195, city.name_id);
+        if (stricmp(city_name, name) == 0) {
+            return &city;
+        }
+    }
+    return nullptr;
 }
 
 bool empire_t::can_import_resource(e_resource resource, bool check_if_open) {
@@ -157,7 +188,7 @@ void empire_t::generate_traders() {
             city_trade_add_land_trade_route();
         }
 
-        if (g_city.generate_trader_from(std::distance(cities, &city), city)) {
+        if (g_city.generate_trader_from(city)) {
             break;
         }
     }

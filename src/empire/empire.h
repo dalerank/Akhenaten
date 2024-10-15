@@ -5,6 +5,8 @@
 #include "core/span.hpp"
 #include "trade_route.h"
 
+struct mission_id_t;
+
 class empire_t {
 public:
     enum {
@@ -29,7 +31,10 @@ public:
     void expand();
     int get_city_vulnerable();
 
+    void load_mission_metadata(const mission_id_t &missionid);
+
     empire_city *city(int city_id);
+    empire_city *city(pcstr name);
     std::span<empire_city> get_cities() { return make_span(cities); }
     std::span<trade_route> get_routes() { return make_span(trade_routes.routes); }
 

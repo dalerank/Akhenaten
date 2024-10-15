@@ -201,6 +201,7 @@ static const uint8_t* skip_non_digits(const uint8_t* str) {
     }
     return str;
 }
+
 static const uint8_t* get_value(const uint8_t* ptr, const uint8_t* end_ptr, int* value) {
     ptr = skip_non_digits(ptr);
     *value = string_to_int(ptr);
@@ -210,6 +211,7 @@ static const uint8_t* get_value(const uint8_t* ptr, const uint8_t* end_ptr, int*
     ptr += skip;
     return ptr;
 }
+
 bool game_load_campaign_file() {
     const char* filename = "campaign.txt";
 

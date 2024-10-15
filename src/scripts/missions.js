@@ -170,6 +170,7 @@ mission6 = { // Behdet
 										 BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_RA, BUILDING_SHRINE_RA,
 										 BUILDING_FESTIVAL_SQUARE, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL],
 	},
+
 	enable_scenario_events : false,
 	events : [
 		{
@@ -184,7 +185,24 @@ mission6 = { // Behdet
 			amount : 1100,
 			deadline : 12,
 		},
-	]
+	],
+
+	cities : [
+		{
+			name : "Byblos",
+			is_sea_trade : true,
+		},
+
+		{
+			name: "Perwadjyt",
+			is_sea_trade : true,
+		},
+
+		{
+			name: "Men-nefer",
+			is_sea_trade : true,
+		}
+	],
 }
 
 mission7 = { // Abydos

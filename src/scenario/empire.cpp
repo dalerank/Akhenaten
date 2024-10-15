@@ -5,15 +5,15 @@
 #include "game/time.h"
 #include "scenario/scenario.h"
 
-int scenario_empire_id(void) {
+int scenario_empire_id() {
     return g_scenario_data.empire.id;
 }
 
-int scenario_empire_is_expanded(void) {
+int scenario_empire_is_expanded() {
     return g_scenario_data.empire.is_expanded;
 }
 
-void scenario_empire_process_expansion(void) {
+void scenario_empire_process_expansion() {
     if (g_scenario_data.empire.is_expanded || g_scenario_data.empire.expansion_year <= 0) {
         return;
     }

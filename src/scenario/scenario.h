@@ -5,6 +5,7 @@
 #include "building/building_type.h"
 #include "core/game_environment.h"
 #include "core/span.hpp"
+#include "core/xstring.h"
 #include "events.h"
 #include "grid/point.h"
 #include "scenario/types.h"
@@ -161,12 +162,12 @@ struct building_stage_t {
 };
 
 struct mission_id_t {
-    bstring128 _data;
+    xstring _data;
     inline mission_id_t(int id) {
         _data.printf("mission%d", id);
     }
 
-    inline operator const char*() const { return _data; }
+    inline operator const char*() const { return _data.c_str(); }
 };
 
 struct scenario_data_t {
@@ -324,11 +325,11 @@ int scenario_is_custom();
 
 void scenario_set_custom(int custom);
 
-int scenario_campaign_rank(void);
+int scenario_campaign_rank();
 
 void scenario_set_campaign_rank(int rank);
 
-int scenario_campaign_scenario_id(void);
+int scenario_campaign_scenario_id();
 
 void scenario_set_campaign_scenario(int scenario_id);
 

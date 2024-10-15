@@ -66,6 +66,7 @@
 #include "window/window_city.h"
 #include "window/file_dialog.h"
 #include "window/mission_briefing.h"
+#include "empire/empire.h"
 
 #include "building/count.h"
 #include "chunks.h"
@@ -174,6 +175,7 @@ static void post_load() {
     mission_id_t missionid(scenario_id);
     scenario_load_meta_data(missionid);
     g_scenario_data.events.load_mission_metadata(missionid);
+    g_empire.load_mission_metadata(missionid);
 
     // camera
     //    city_view_camera_position_refresh();
