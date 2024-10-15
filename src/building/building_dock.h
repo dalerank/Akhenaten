@@ -28,7 +28,7 @@ public:
     void unaccept_all_goods();
     int trader_id();
     int trader_city_id();
-    bool is_good_accepted(e_resource r);
+    bool is_trade_accepted(e_resource r);
     void toggle_good_accepted(e_resource r);
     int count_idle_dockers() const;
 

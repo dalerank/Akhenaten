@@ -103,7 +103,7 @@ void dock_orders_window::window_info_foreground(object_info &c) {
         ui.icon(items_area.pos + item_icon_column.pos + vec2i{ 0, row_y }, r.type);
         ui.label(ui::str(23, r.type), items_area.pos + item_name_column.pos + vec2i{ 0, row_y });
 
-        auto status = window_dock_get_order_instruction(INSTR_DOCK, r.type, dock->is_good_accepted(r.type));
+        auto status = window_dock_get_order_instruction(INSTR_DOCK, r.type, dock->is_trade_accepted(r.type));
         ui.button(status.first, items_area.pos + vec2i{ item_orders_column.pos.x, row_y }, item_row.size, fonts_vec{ status.second }, UiFlags_NoBody | UiFlags_AlignYCentered)
             .onclick([building_id, resource = r.type] {
             building_dock *b = ::building_get(building_id)->dcast_dock();

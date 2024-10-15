@@ -191,7 +191,7 @@ int building_dock::trader_city_id() {
                 : 0;
 }
 
-bool building_dock::is_good_accepted(e_resource r) {
+bool building_dock::is_trade_accepted(e_resource r) {
     return data.dock.trading_goods.is_set(r);
 }
 
@@ -209,15 +209,14 @@ bool building_dock_accepts_ship(int ship_id, int dock_id) {
 
     empire_city* city = g_empire.city(f->empire_city_id);
     const resource_list resources = city_resource_get_available();
+    int any_acceptance = 0;
     for (auto r: resources) {
         if (city->sells_resource[r.type] || city->buys_resource[r.type]) {
-            if (!dock->is_good_accepted(r.type)) {
-                dock_id = 0;
-                return false;
-            }
+            any_acceptance += dock->is_trade_accepted(r.type) ? 1 : 0;
         }
     }
-    return true;
+
+    return (any_acceptance > 0);
 }
 
 building_dest map_get_free_destination_dock(int ship_id) {
@@ -227,17 +226,21 @@ building_dest map_get_free_destination_dock(int ship_id) {
     int dock_id = 0;
     for (int i = 0; i < 10; i++) {
         dock_id = city_buildings_get_working_dock(i);
-        if (!dock_id)
+        if (!dock_id) {
             continue;
+        }
+
         if (!building_dock_accepts_ship(ship_id, dock_id)) {
             dock_id = 0;
             continue;
         }
 
         building* dock = building_get(dock_id);
-        if (!dock->data.dock.trade_ship_id || dock->data.dock.trade_ship_id == ship_id)
+        if (!dock->data.dock.trade_ship_id || dock->data.dock.trade_ship_id == ship_id) {
             break;
+        }
     }
+
     // BUG: when 10 docks in city, always takes last one... regardless of whether it is free
     if (dock_id <= 0)
         return {0, tile2i::invalid};
