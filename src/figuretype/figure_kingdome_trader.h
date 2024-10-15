@@ -2,7 +2,7 @@
 
 #include "figure_trader.h"
 
-int figure_create_trade_caravan(tile2i tile, int city_id);
+struct empire_city;
 
 class figure_trade_caravan : public figure_trader {
 public:
@@ -27,4 +27,5 @@ public:
     const static_params &current_params() const { static_cast<const static_params &>(params()); }
 
     void go_to_next_storageyard(tile2i src_tile, int distance_to_entry);
+    static int create(tile2i tile, const empire_city& city);
 };

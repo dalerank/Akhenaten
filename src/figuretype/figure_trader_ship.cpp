@@ -30,9 +30,9 @@ void game_cheat_sink_all_ships(std::istream &is, std::ostream &os) {
     }, FIGURE_TRADE_SHIP, FIGURE_FISHING_BOAT);
 }
 
-int figure_trade_ship::create(tile2i tile, int city_id) {
+int figure_trade_ship::create(tile2i tile, const empire_city& city) {
     figure* ship = figure_create(FIGURE_TRADE_SHIP, tile, DIR_0_TOP_RIGHT);
-    ship->empire_city_id = city_id;
+    ship->empire_city_id = city.name_id;
     ship->allow_move_type = EMOVE_DEEPWATER;
     ship->action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
     ship->wait_ticks = 10;

@@ -45,9 +45,9 @@ int figure::trader_total_sold() {
     return resource_amount_full;
 }
 
-int figure_create_trade_caravan(tile2i tile, int city_id) {
+int figure_trade_caravan::create(tile2i tile, const empire_city& city) {
     figure* caravan = figure_create(FIGURE_TRADE_CARAVAN, tile, DIR_0_TOP_RIGHT);
-    caravan->empire_city_id = city_id;
+    caravan->empire_city_id = city.name_id;
     caravan->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
     caravan->wait_ticks = trade_caravan_m.wait_ticks_after_create;
     // donkey 1

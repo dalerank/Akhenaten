@@ -9,6 +9,8 @@ enum {
     TRADE_SHIP_SELLING = 2,
 };
 
+struct empire_city;
+
 class figure_trade_ship : public figure_carrier {
 public:
     FIGURE_METAINFO(FIGURE_TRADE_SHIP, figure_trade_ship)
@@ -30,5 +32,5 @@ public:
     bool done_trading();
     int is_trading() const;
 
-    static int create(tile2i tile, int city_id);
+    static int create(tile2i tile, const empire_city& city);
 };
