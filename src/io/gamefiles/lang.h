@@ -103,8 +103,4 @@ enum e_text_info {
     e_text_gate_house = 90,
     e_text_tower = 91,
     e_text_building_no_roads = 25,
-    e_text_ferry_landing = 159,
-    e_text_ferry_landing_no_routes = 1,
-    e_text_ferry_landing_no_roads = 2,
-    e_text_ferry_landing_no_workers = 3,
 };
