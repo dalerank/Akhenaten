@@ -792,10 +792,10 @@ mission_briefing_window = {
 
 roadblock_info_window = {
 	ui : {
-		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
-		title 		 : { type : "text", pos: [0, 12], size: [px(28), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		background 	: outer_panel({size: [29, 17]}),
+		title 		 : text({pos: [0, 12], size: [px(28), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		button_help  : help_button({}),
+		button_close  : close_button({}),
 	}
 }
 
@@ -1116,9 +1116,15 @@ building_info_window = {
 	}
 }
 
+info_window_ferry = {
+	ui : __baseui(building_info_window, {
+		background 	: outer_panel({size: [29, 20]}),
+	})
+}
+
 info_window_bandstand = {
 	ui : __baseui(building_info_window, {
-		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 20]},
+		background 	: { type : "outer_panel", size: [29, 20]},
 		inner_panel : { type : "inner_panel", pos : [16, 116], size: [27, 8] },
 		play_text : { type : "text", pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
 		play2_text : { type : "text", pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },

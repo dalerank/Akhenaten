@@ -1192,6 +1192,8 @@ building_ferry = {
   building_size : 2,
   fire_proof : true,
   planer_relative_orientation: 1,
+  info_help_id: 85,
+  info_text_id: 159,
   labor_category : LABOR_CATEGORY_GOVERNMENT,
 }
 
