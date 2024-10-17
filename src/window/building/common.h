@@ -7,7 +7,7 @@
 static const int MIN_Y_POSITION = 32;
 static const int MARGIN_POSITION = 16;
 
-int get_employment_info_text_id(object_info *c, building *b, int consider_house_covering);
+textid get_employment_info_text_id(object_info *c, building *b, int consider_house_covering);
 void draw_employment_details(object_info *c, building *b, int y_offset, int text_id);
 void draw_employment_details_ui(ui::widget &ui, object_info &c, building *b, int text_id);
 vec2i window_building_set_possible_position(vec2i offset, vec2i blocks);

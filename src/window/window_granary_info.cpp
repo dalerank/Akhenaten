@@ -83,10 +83,10 @@ void granary_info_window::init(object_info &c) {
         food_index++;
     }
 
+    fill_employment_details(c);
+    
     int laborers = model_get_building(BUILDING_GRANARY)->laborers;
-    int text_id = get_employment_info_text_id(&c, &granary->base, 1);
     ui["workers_text"].text_var("%u %s (%d %s", granary->num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
-    ui["workers_desc"] = text_id ? ui::str(69, text_id) : "";
 
     ui["orders"].onclick([&c] {
         window_granary_orders_show(c);
