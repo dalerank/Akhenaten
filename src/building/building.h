@@ -508,6 +508,7 @@ public:
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) { return false; }
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) { return false; }
     virtual bool force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) { return false; }
+    virtual bool force_draw_top_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) { return false; }
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual bool need_road_access() const { return true; }
     virtual bool can_play_animation() const;

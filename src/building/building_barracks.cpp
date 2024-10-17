@@ -260,6 +260,6 @@ void info_window_recruiter::window_info_background(object_info &c) {
     });
 }
 
-inline bool info_window_recruiter::check(object_info &c) {
+bool info_window_recruiter::check(object_info &c) {
     return c.building_get()->dcast_recruiter();
 }

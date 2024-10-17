@@ -17,11 +17,6 @@ struct festival_square_info_window : building_info_window {
 
 festival_square_info_window festival_square_infow;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_festival_square_info_window);
-void config_load_festival_square_info_window() {
-    festival_square_infow.load("festival_square_info_window");
-}
-
 void festival_square_info_window::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 

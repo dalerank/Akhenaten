@@ -223,6 +223,7 @@ var sidebar_window_extra = {}
 var info_window_booth = {}
 var dock_info_window = {}
 var dock_orders_window = {}
+var info_window_ferry = {}
 
 //figures
 var figure_fireman = {}

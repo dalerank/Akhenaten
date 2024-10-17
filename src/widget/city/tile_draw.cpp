@@ -206,12 +206,13 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
     if (deletion_tool || map_property_is_deleted(tile)) {
         color_mask = COLOR_MASK_RED;
     }
-
+    
+    bool force_tile_draw = false;
     if (!map_property_is_draw_tile(grid_offset)) {
         bool force_tile_draw = false;
         if (building_id > 0) {
-            building *b = building_get(building_id);
-            force_tile_draw = b->dcast()->force_draw_flat_tile(ctx, tile, pixel, color_mask);
+            building_impl *b = building_get(building_id)->dcast();
+            force_tile_draw = b->force_draw_flat_tile(ctx, tile, pixel, color_mask);
         }
 
         if (!force_tile_draw) {
@@ -266,7 +267,7 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
     }
 
     int top_height = img->isometric_top_height();
-    map_render_set(grid_offset, top_height > 0 ? RENDER_TALL_TILE : 0);
+    map_render_set(grid_offset, (top_height > 0) ? RENDER_TALL_TILE : 0);
 }
 
 void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx) {
@@ -334,6 +335,7 @@ void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx) {
         bool force_draw_tile = false;
         if (building_id > 0) {
             force_draw_tile = b->dcast()->force_draw_height_tile(ctx, tile, pixel, color_mask);
+            b->dcast()->force_draw_top_tile(ctx, tile, pixel, color_mask);
         }
 
         if (!force_draw_tile) {
