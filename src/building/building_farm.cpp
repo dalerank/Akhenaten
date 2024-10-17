@@ -46,18 +46,6 @@ buildings::model_t<building_farm_figs> farm_figs_m;
 
 declare_console_command(addgrain, game_cheat_add_resource<RESOURCE_GRAIN>);
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_farm);
-void config_load_building_farm() {
-    farm_grain_m.load();
-    farm_lettuce_m.load();
-    farm_chickpeas_m.load();
-    farm_pomegranates_m.load();
-    farm_barley_m.load();
-    farm_flax_m.load();
-    farm_henna_m.load();
-    farm_figs_m.load();
-}
-
 bool building_farm::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     return false;
 }
