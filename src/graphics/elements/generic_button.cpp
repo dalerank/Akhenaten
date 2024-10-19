@@ -48,7 +48,10 @@ int generic_buttons_handle_mouse(const mouse* m, vec2i pos, const generic_button
             button._onclick(button.parameter1, button.parameter2);
         }
     } else if (m->right.went_up) {
-        button.right_click_handler(button.parameter1, button.parameter2);
+        if (button.right_click_handler) {
+            button.right_click_handler(button.parameter1, button.parameter2);
+        }
+
         if (button._onrclick) {
             button._onrclick(button.parameter1, button.parameter2);
         }
