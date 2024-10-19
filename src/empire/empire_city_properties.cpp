@@ -19,25 +19,24 @@ void game_debug_show_properties_object(pcstr prefix, empire_city *c) {
     bool common_open = ImGui::TreeNodeEx(city_name, ImGuiTreeNodeFlags_DefaultOpen, city_name);
     ImGui::TableSetColumnIndex(1); 
 
-    int i = 0;
     if (common_open) {
-        game_debug_show_property(i, "in_use", c->in_use);
+        game_debug_show_property("in_use", c->in_use);
         bstring256 type_name; type_name.printf("%s [%d]", token::find_name(e_empire_city_tokens, c->type), c->type);
-        game_debug_show_property(i, "type<name>", type_name);
-        game_debug_show_property(i, "type", c->type);
-        game_debug_show_property(i, "name_id", c->name_id);
-        game_debug_show_property(i, "name", ui::str(195, c->name_id));
-        game_debug_show_property(i, "route_id", c->route_id);
-        game_debug_show_property(i, "is_open", c->is_open);
-        game_debug_show_property(i, "cost_to_open", c->cost_to_open);
-        game_debug_show_property(i, "ph_unk01", c->ph_unk01);
-        game_debug_show_property(i, "ph_unk02", c->ph_unk02);
-        game_debug_show_property(i, "trader_entry_delay", c->trader_entry_delay);
-        game_debug_show_property(i, "empire_object_id", c->empire_object_id);
-        game_debug_show_property(i, "is_sea_trade", c->is_sea_trade);
-        game_debug_show_property(i, "trader_figure_ids[0]", c->trader_figure_ids[0], true);
-        game_debug_show_property(i, "trader_figure_ids[1]", c->trader_figure_ids[1], true);
-        game_debug_show_property(i, "trader_figure_ids[2]", c->trader_figure_ids[2], true);
+        game_debug_show_property("type<name>", type_name);
+        game_debug_show_property("type", c->type);
+        game_debug_show_property("name_id", c->name_id);
+        game_debug_show_property("name", ui::str(195, c->name_id));
+        game_debug_show_property("route_id", c->route_id);
+        game_debug_show_property("is_open", c->is_open);
+        game_debug_show_property("cost_to_open", c->cost_to_open);
+        game_debug_show_property("ph_unk01", c->ph_unk01);
+        game_debug_show_property("ph_unk02", c->ph_unk02);
+        game_debug_show_property("trader_entry_delay", c->trader_entry_delay);
+        game_debug_show_property("empire_object_id", c->empire_object_id);
+        game_debug_show_property("is_sea_trade", c->is_sea_trade);
+        game_debug_show_property("trader_figure_ids[0]", c->trader_figure_ids[0], true);
+        game_debug_show_property("trader_figure_ids[1]", c->trader_figure_ids[1], true);
+        game_debug_show_property("trader_figure_ids[2]", c->trader_figure_ids[2], true);
 
         {
             ImGui::PushID(0x81000000 | c->name_id);
@@ -50,7 +49,7 @@ void game_debug_show_properties_object(pcstr prefix, empire_city *c) {
 
             if (buy_res_open) {
                 for (const auto r : resource_list::all) {
-                    game_debug_show_property(i, ui::resource_name(r.type), c->buys_resource[r.type]);
+                    game_debug_show_property(ui::resource_name(r.type), c->buys_resource[r.type]);
                 }
 
                 ImGui::TreePop();
@@ -69,7 +68,7 @@ void game_debug_show_properties_object(pcstr prefix, empire_city *c) {
 
             if (sell_res_open) {
                 for (const auto r : resource_list::all) {
-                    game_debug_show_property(i, ui::resource_name(r.type), c->sells_resource[r.type]);
+                    game_debug_show_property(ui::resource_name(r.type), c->sells_resource[r.type]);
                 }
 
                 ImGui::TreePop();

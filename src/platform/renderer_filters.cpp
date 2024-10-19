@@ -56,7 +56,7 @@ void platform_render_init_filters() {
     data.sourceImage->addTarget(data.bilaterial)->addTarget(data.outputImage);
 }
 
-void game_debug_show_filter_property_float(int &i, gpupixel::FilterPtr filter, const char *name) {
+void game_debug_show_filter_property_float(gpupixel::FilterPtr filter, const char *name) {
     if (!filter->hasProperty(name)) {
         return;
     }
@@ -64,7 +64,7 @@ void game_debug_show_filter_property_float(int &i, gpupixel::FilterPtr filter, c
     float value, save_value;
     filter->getProperty(name, value);
     save_value = value;
-    game_debug_show_property(i, name, value);
+    game_debug_show_property(name, value);
     if(save_value != value) {
         filter->setProperty(name, value);
     }
@@ -86,9 +86,9 @@ bool platform_render_bilaterial_options() {
 
     int i = 0;
     if (common_open) {
-        game_debug_show_property(i, "Active", data.bilaterial_active);
-        game_debug_show_filter_property_float(i, data.bilaterial, "texelSpacingMultiplier");
-        game_debug_show_filter_property_float(i, data.bilaterial, "distanceNormalizationFactor");
+        game_debug_show_property("Active", data.bilaterial_active);
+        game_debug_show_filter_property_float(data.bilaterial, "texelSpacingMultiplier");
+        game_debug_show_filter_property_float(data.bilaterial, "distanceNormalizationFactor");
         ImGui::TreePop();
     }
 
