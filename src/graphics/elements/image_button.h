@@ -36,10 +36,17 @@ struct image_button {
     time_millis pressed_since;
     xstring _tooltip;
 
-    std::function<void(int,int)> _onclick, _onrclick;
+    using onclick_cb = std::function<void(int, int)>;
+    using onclick_void = std::function<void()>;
+
+    onclick_cb _onclick, _onrclick;
 
     template<class Func> image_button &onclick(Func f) { _onclick = f; return *this; }
+    image_button &onclick(onclick_void f) { return onclick([f] (int, int) { f(); }); }
+
     template<class Func> image_button &onrclick(Func f) { _onrclick = f; return *this; }
+    image_button &onrclick(onclick_void f) { return onrclick([f] (int, int) { f(); }); }
+
     image_button &tooltip(textid t);
     inline vec2i pos() const { return {x, y}; }
     inline vec2i size() const { return {width, height}; }
