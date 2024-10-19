@@ -902,13 +902,47 @@ hold_festival_window = {
 		god2 			 : image_button({pos:[100 * 2 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 2, offset_pressed:5, offset_focused:5, border:true }),
 		god3 			 : image_button({pos:[100 * 3 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 3, offset_pressed:5, offset_focused:5, border:true }),
 		god4 			 : image_button({pos:[100 * 4 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 4, offset_pressed:5, offset_focused:5, border:true }),
-		small_festival : button({pos:[102, 216], size:[430, 26], rich:true}),
+		small_festival  : button({pos:[102, 216], size:[430, 26], rich:true}),
 		middle_festival : button({pos:[102, 246], size:[430, 26], rich:true}),
-		large_festival : button({pos:[102, 276], size:[430, 26], rich:true}),
-		button_ok  : image_button({pos:[400, 317], size:[39, 26], pack:PACK_GENERAL, id:96, offset:0 }),
-		button_cancel  : image_button({pos:[358, 317], size:[39, 26], pack:PACK_GENERAL, id:96, offset:4 }),
-		button_help: image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:0 }),
-		festival_type : text({pos: [220, 327], size: [544, -1] }),
+		large_festival  : button({pos:[102, 276], size:[430, 26], rich:true}),
+		button_ok       : image_button({pos:[400, 317], size:[39, 26], pack:PACK_GENERAL, id:96, offset:0 }),
+		button_cancel   : image_button({pos:[358, 317], size:[39, 26], pack:PACK_GENERAL, id:96, offset:4 }),
+		button_help     : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:0 }),
+		festival_type   : text({pos: [220, 327], size: [544, -1] }),
+	}
+}
+
+window trade_resource_settings_window = {
+	pos : [(sw(0) - px(36)) / 2, (sh(0) - px(15)) / 2],
+	ui : {
+		background 	: outer_panel({size: [36, 15]}),
+		icon 				: resource_icon({pos: [16, 18] }),
+		title 		  : text_center({pos: [0, 16], size: [px(36), -1], font : FONT_LARGE_BLACK_ON_LIGHT}),
+
+		production_state : text_center({pos: [48, 42], size: [px(8), -1], font : FONT_NORMAL_BLACK_ON_LIGHT}),
+		production_store : text_center({pos: [48, 62], size: [px(8), -1], font : FONT_NORMAL_BLACK_ON_LIGHT}),
+
+		could_import : text_center({pos: [46, 92], size: [px(10), 30], font : FONT_NORMAL_BLACK_ON_LIGHT}),
+		import_status: button({pos:[32, 92], size:[px(16), 30], align:"left",
+			ui : {
+				import_dec   : arrowdown({pos:[px(16) - 51, 3]}),
+				import_inc   : arrowup({pos:[px(16) - 28, 3]}),
+			}
+		}),
+
+		could_export : text_center({pos: [98 + 216, 101], size: [px(8), -1], font : FONT_NORMAL_BLACK_ON_LIGHT}),
+		export_status: button({pos:[px(36)/2, 92], size:[px(16), 30], align:"left",
+			ui : {
+				export_dec   : arrowdown({pos:[px(16) - 51, 3]}),
+				export_inc   : arrowup({pos:[px(16) - 28, 3]}),
+			}
+		}),
+
+		toggle_industry    : button({margin:{centerx:-200}, pos:[-1, 130], size:[400, 30]}),
+		stockpile_industry : button({margin:{centerx:-200}, pos:[-1, 168], size:[400, 50], split:true}),
+
+		close_button : close_button({}),
+		help_button  : help_button({}),
 	}
 }
 

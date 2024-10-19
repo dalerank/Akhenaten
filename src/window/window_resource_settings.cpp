@@ -18,211 +18,190 @@
 #include "window/message_dialog.h"
 #include "game/game.h"
 
-struct resource_settings_data {
+struct trade_resource_settings_window : autoconfig_window_t<trade_resource_settings_window> {
     e_resource resource;
+
+    virtual int draw_background() override;
+    virtual int handle_mouse(const mouse *m) override { return 0; }
+    virtual void draw_foreground() override;
+    virtual int get_tooltip_text() override { return 0; }
+    virtual int ui_handle_mouse(const mouse *m) override;
+    virtual void init() override {}
 };
 
-resource_settings_data g_resource_settings_data;
+trade_resource_settings_window trade_resource_settings_w;
 
-static void init(e_resource resource) {
-    g_resource_settings_data.resource = resource;
-}
-
-static void draw_background() {
+int trade_resource_settings_window::draw_background() {
     window_draw_underlying_window();
-}
 
-static void draw_foreground() {
-    auto &data = g_resource_settings_data;
+    ui["icon"].image(resource);
+    ui["title"] = ui::resource_name(resource);
 
-    ui::begin_widget(screen_dialog_offset());
-    ui::panel({32, 128}, {36, 15}, UiFlags_PanelOuter);
-
-    ui::icon(vec2i{42, 136}, data.resource);
-    ui::label(ui::str(23, data.resource), vec2i{76, 137});
-
-    if (g_city.can_produce_resource(data.resource)) {
-        bstring128 text;
-        int total_buildings = building_count_industry_total(data.resource);
-        int active_buildings = building_count_industry_active(data.resource);
-        if (building_count_industry_total(data.resource) <= 0) {
-            ui::label(ui::str(54, 7), vec2i(98, 172));
-        } else if (city_resource_is_mothballed(data.resource)) {
-            text.printf("%u %s", total_buildings, ui::str(54, 10 + (total_buildings > 1)));
+    bstring128 production_state;
+    if (g_city.can_produce_resource(resource)) {
+        int total_buildings = building_count_industry_total(resource);
+        int active_buildings = building_count_industry_active(resource);
+        if (building_count_industry_total(resource) <= 0) {
+            production_state = ui::str(54, 7);
+        } else if (city_resource_is_mothballed(resource)) {
+            production_state.printf("%u %s", total_buildings, ui::str(54, 10 + (total_buildings > 1)));
         } else if (total_buildings == active_buildings) {
             // not mothballed, all working
-            text.printf("%u %s", total_buildings, ui::str(54, 8 + (total_buildings > 1)));
+            production_state.printf("%u %s", total_buildings, ui::str(54, 8 + (total_buildings > 1)));
         } else {
             // not mothballed, some working
             int not_works = total_buildings - active_buildings;
-            text.printf("%u %s, %u %s", active_buildings, ui::str(54, 12), not_works, ui::str(54, 13 + (not_works > 0)));
+            production_state.printf("%u %s, %u %s", active_buildings, ui::str(54, 12), not_works, ui::str(54, 13 + (not_works > 0)));
         }
-        ui::label(text, vec2i{98, 172});
-    } else if (data.resource != RESOURCE_FIGS || !scenario_building_allowed(BUILDING_FISHING_WHARF)) {
+    } else {
         // we cannot produce this good
-        ui::label(ui::str(54, 25), vec2i{98, 172});
+        production_state = ui::str(54, 25);
     }
 
+    ui["production_state"] = production_state;
+
     bstring256 stored_in_city_str;
-    int stored = city_resource_warehouse_stored(data.resource);
+    const int stored = city_resource_warehouse_stored(resource);
     stored_in_city_str.printf("%u %s %s", stored, ui::str(8, 10), ui::str(54, 15));
-    ui::label(stored_in_city_str, vec2i{98, 192});
+    ui["production_store"] = stored_in_city_str;
 
-    bool can_import = g_empire.can_import_resource(data.resource, true);
-    bool can_export = g_empire.can_export_resource(data.resource, true);
-    bool could_import = g_empire.can_import_resource(data.resource, false);
-    bool could_export = g_empire.can_export_resource(data.resource, false);
+    ui["import_status"].onclick([this] { city_resource_cycle_trade_import(resource); });
+    ui["import_dec"].onclick([this] { city_resource_change_trading_amount(resource, -100); });
+    ui["import_inc"].onclick([this] { city_resource_change_trading_amount(resource, 100); });
+    
+    ui["export_status"].onclick([this] { city_resource_cycle_trade_export(resource); });
+    ui["export_dec"].onclick([this] { city_resource_change_trading_amount(resource, -100); });
+    ui["export_inc"].onclick([this] { city_resource_change_trading_amount(resource, 100); });
 
-    int trade_status = city_resource_trade_status(data.resource);
-    {
-        //auto btn_imp = resource_trade_ph_buttons[2];
-        //auto btn_exp = resource_trade_ph_buttons[3];
-        int trading_amount = 0;
-        if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT) {
-            trading_amount = stack_proper_quantity(city_resource_trading_amount(data.resource), data.resource);
+    ui["toggle_industry"].onclick([this] {
+        if (building_count_industry_total(resource) > 0) {
+            city_resource_toggle_mothballed(resource);
         }
+    });
 
-        // import
-        if (!can_import) {
-            pcstr could_import_str = could_import
-                                            ? ui::str(54, 34)  // open trade route to import
-                                            : ui::str(54, 41); // no sellers
-            ui::label(could_import_str, vec2i{98 - 52, 221}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignYCentered, 268);
-        } else {
-            //button_border_draw(btn_imp.x, btn_imp.y, btn_imp.width, 30, data.focus_button_id == 3);
-            bstring256 text;
-            switch (trade_status) {
-            default:
-                ui::button(ui::str(54, 39), {98 - 52, 212}, {268, 30})
-                    .onclick([] (int, int) {
-                        city_resource_cycle_trade_import(g_resource_settings_data.resource);
-                    });
-                break;
+    ui["stockpile_industry"].onclick([this] { city_resource_toggle_stockpiled(resource); });
 
-            case TRADE_STATUS_IMPORT_AS_NEEDED:
-                ui::button(ui::str(54, 43), {98 - 52, 212}, {268, 30})
-                    .onclick([] (int, int) {
-                        city_resource_cycle_trade_import(g_resource_settings_data.resource);
-                    });
-                break;
+    ui["help_button"].onclick([] { window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, -1, 0); });
+    ui["close_button"].onclick([] { window_go_back(); });
 
-            case TRADE_STATUS_IMPORT:
-                text.printf("%s %u", ui::str(54, 19), trading_amount);
-                ui::button(text, { 98 - 52, 212 }, { 268, 30 }, fonts_vec{ FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_AlignYCentered)
-                    .onclick([] (int, int) {
-                        city_resource_cycle_trade_import(g_resource_settings_data.resource);
-                    });
-                ui::arw_button({264, 215}, true)
-                    .onclick([&] (int, int) { 
-                        city_resource_change_trading_amount(data.resource, -100);
-                    });
-                ui::arw_button({288, 215}, false)
-                    .onclick([&] (int, int) { 
-                        city_resource_change_trading_amount(data.resource, 100);
-                    });
-                break;
-            }
+    return 0;
+}
+
+void trade_resource_settings_window::draw_foreground() {
+    ui.begin_widget(ui.pos);
+    ui.draw();
+
+    bool can_import = g_empire.can_import_resource(resource, true);
+    bool can_export = g_empire.can_export_resource(resource, true);
+    bool could_import = g_empire.can_import_resource(resource, false);
+    bool could_export = g_empire.can_export_resource(resource, false);
+
+    int trade_status = city_resource_trade_status(resource);
+    int trading_amount = 0;
+    if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT) {
+        trading_amount = stack_proper_quantity(city_resource_trading_amount(resource), resource);
+    }
+
+    // import
+    ui["import_dec"].enabled = false;
+    ui["import_inc"].enabled = false;
+    ui["could_import"].enabled = false;
+    ui["import_status"].enabled = false;
+    if (!can_import) {
+        pcstr could_import_str = could_import
+                                        ? ui::str(54, 34)  // open trade route to import
+                                        : ui::str(54, 41); // no sellers
+        ui["could_import"] = could_import_str;
+        ui["could_import"].enabled = true;
+    } else {
+        bstring256 text;
+        ui["import_status"].enabled = true;
+        switch (trade_status) {
+        default:
+            ui["import_status"] = ui::str(54, 39);
+            break;
+
+        case TRADE_STATUS_IMPORT_AS_NEEDED:
+            ui["import_status"] = ui::str(54, 43);
+            break;
+
+        case TRADE_STATUS_IMPORT:
+            text.printf("%s %u", ui::str(54, 19), trading_amount);
+            ui["import_status"] = text;
+            ui["import_dec"].enabled = true;
+            ui["import_inc"].enabled = true;
+            break;
         }
+    }
 
-        // export
-        if (!can_export) {
-            pcstr could_export_str = could_import
-                                        ? ui::str(54, 35)  // open trade route to export
-                                        : ui::str(54, 42); // no sellers
-            ui::label(could_export_str, vec2i{98 + 216, 221}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 268);
-        } else {
-            bstring256 text;
-            //button_border_draw(btn_exp.x, btn_exp.y, btn_exp.width, 30, data.focus_button_id == 4);
-            switch (trade_status) {
-            default:
-                ui::button(ui::str(54, 40), {98 + 216, 212}, {268, 30})
-                    .onclick([] (int, int) {
-                        city_resource_cycle_trade_export(g_resource_settings_data.resource);
-                    });
-                break;
+    // export
+    ui["could_export"].enabled = false;
+    ui["export_dec"].enabled = false;
+    ui["export_inc"].enabled = false;
+    ui["export_status"].enabled = false;
+    if (!can_export) {
+        pcstr could_export_str = could_import
+                                    ? ui::str(54, 35)  // open trade route to export
+                                    : ui::str(54, 42); // no sellers
+        ui["could_export"] = could_export_str;
+        ui["could_export"].enabled = true;
+    } else {
+        bstring256 text;
+        ui["export_status"].enabled = true;
+        switch (trade_status) {
+        default:
+            ui["export_status"] = ui::str(54, 40);
+            break;
 
-            case TRADE_STATUS_EXPORT_SURPLUS:
-                ui::button(ui::str(54, 44), {98 + 216, 212}, {268, 30})
-                    .onclick([] (int, int) {
-                        city_resource_cycle_trade_export(g_resource_settings_data.resource);
-                    });
-                break;
+        case TRADE_STATUS_EXPORT_SURPLUS:
+            ui["export_status"] = ui::str(54, 44);
+            break;
 
-            case TRADE_STATUS_EXPORT:
-                text.printf("%s %u", ui::str(54, 20), trading_amount);
-                ui::button(text, { 264 + 48, 212 }, { 268, 30 }, fonts_vec{ FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_AlignYCentered)
-                    .onclick([] {
-                        city_resource_cycle_trade_import(g_resource_settings_data.resource);
-                    });
-                ui::arw_button({264 + 268, 215}, false)
-                    .onclick([&] { 
-                        city_resource_change_trading_amount(data.resource, -100);
-                    });
-                ui::arw_button({288 + 268, 215}, true)
-                    .onclick([&] { 
-                        city_resource_change_trading_amount(data.resource, 100);
-                    });
-                break;
-            }
+        case TRADE_STATUS_EXPORT:
+            text.printf("%s %u", ui::str(54, 20), trading_amount);
+            ui["export_status"] = text;
+            ui["export_dec"].enabled = true;
+            ui["export_inc"].enabled = true;
+            break;
         }
     }
 
     // toggle industry button
-    if (building_count_industry_total(data.resource) > 0) {
-        pcstr text = city_resource_is_mothballed(data.resource)
-                        ? ui::str(54, 17)
-                        : ui::str(54, 16);
-        ui::button(text, {98, 250}, {432, 30})
-            .onclick([] (int, int) {
-                auto &data = g_resource_settings_data;
-                if (building_count_industry_total(data.resource) > 0) {
-                    city_resource_toggle_mothballed(data.resource);
-                }
-            });
+    ui["toggle_industry"].enabled = (building_count_industry_total(resource) > 0);
+    ui["toggle_industry"] = city_resource_is_mothballed(resource) ? ui::str(54, 17) : ui::str(54, 16);
+
+    bstring1024 stockpiled_str;
+    if (city_resource_is_stockpiled(resource)) {
+        stockpiled_str.printf("%s\n%s", ui::str(54, 26), ui::str(54, 27));
+    } else {
+        stockpiled_str.printf("%s\n%s", ui::str(54, 28), ui::str(54, 29));
     }
+    ui["stockpile_industry"] = stockpiled_str;
 
-    // stockpile button
-    auto text = city_resource_is_stockpiled(data.resource)
-                   ? svector<pcstr, 4>{ui::str(54, 26), ui::str(54, 27)}
-                   : svector<pcstr, 4>{ui::str(54, 28), ui::str(54, 29)};
-
-    ui::button(text, {98, 288}, {432, 50})
-        .onclick([] (int, int) {
-            auto &data = g_resource_settings_data;
-            city_resource_toggle_stockpiled(data.resource);
-        });
-
-    ui::img_button({ GROUP_CONTEXT_ICONS }, vec2i(58 - 16, 332), { 27, 27 }, { 0 })
-        .onclick([] (int, int) {
-            window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, -1, 0);
-        });
-
-    ui::img_button({ GROUP_CONTEXT_ICONS }, vec2i(558 + 16, 335), { 24, 24 }, { 4 })
-        .onclick([] (int, int) {
-            window_go_back();
-        });
-
-    ui::end_widget();
+    ui.end_widget();
 }
 
-static void handle_input(const mouse* m, const hotkeys* h) {
-    ui::begin_widget(screen_dialog_offset());
+int trade_resource_settings_window::ui_handle_mouse(const mouse* m) {
+    ui::begin_widget(ui.pos);
     bool button_id = ui::handle_mouse(m);
     ui::end_widget();
 
+    const hotkeys *h = hotkey_state();
     if (input_go_back_requested(m, h)) {
         window_go_back();
     }
+
+    return button_id;
 }
 
 void window_resource_settings_show(e_resource resource) {
     static window_type window = {
         WINDOW_RESOURCE_SETTINGS,
-        draw_background,
-        draw_foreground,
-        handle_input
+        [] { trade_resource_settings_w.draw_background(); },
+        [] { trade_resource_settings_w.draw_foreground(); },
+        [] (const mouse *m, const hotkeys *h) { trade_resource_settings_w.ui_handle_mouse(m); }
     };
 
-    init(resource);
+    trade_resource_settings_w.resource = resource;
     window_show(&window);
 }

@@ -42,6 +42,7 @@ enum UiFlags_ {
     UiFlags_Readonly = 1 << 13,
     UiFlags_NoBorder = 1 << 14,
     UiFlags_Outline = 1 << 15,
+    UiFlags_SplitText = 1 << 16,
 };
 using UiFlags = int;
 
@@ -72,7 +73,6 @@ int button_hover(const mouse *m);
 
 inline fonts_vec fonts_def() { return { FONT_NORMAL_BLACK_ON_LIGHT, FONT_INVALID }; }
 generic_button &button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts = fonts_def(), UiFlags flags = UiFlags_None, std::function<void(int, int)> cb = {});
-generic_button &button(const svector<pcstr,4> &labels, vec2i pos, vec2i size, fonts_vec fonts = fonts_def(), UiFlags flags = UiFlags_None, std::function<void(int, int)> cb = {});
 generic_button &link(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_WHITE_ON_DARK, UiFlags flags = UiFlags_None, std::function<void(int, int)> cb = {});
 generic_button &large_button(pcstr label, vec2i pos, vec2i size, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
 generic_button &button(uint32_t id);
@@ -308,6 +308,7 @@ struct egeneric_button : public elabel {
     textid _tooltip;
     bool _border;
     bool _hbody;
+    bool _split;
 
     virtual void draw() override;
     virtual void load(archive arch, element *parent, items &elems) override;

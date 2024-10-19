@@ -130,9 +130,9 @@ void game_debug_show_property_t(pcstr field, const T &v, bool disabled = false) 
     ++guid;
 }
 
-void game_debug_show_property_t(int &i, pcstr field, pcstr v) {
+void game_debug_show_property_t(pcstr field, pcstr v) {
     bstring256 _v(v);
-    game_debug_show_property_t(i, field, _v);
+    game_debug_show_property_t(field, _v);
 }
 
 void game_debug_show_property(pcstr field, const int &v, bool disabled)  { game_debug_show_property_t(field, v, disabled); }

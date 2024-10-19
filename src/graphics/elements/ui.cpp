@@ -277,6 +277,9 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
     const bool grayed = !!(flags & UiFlags_Grayed);
     const bool hasbody = !(flags & UiFlags_NoBody);
     const bool hasborder = !(flags & UiFlags_NoBorder);
+    const bool splittext = !!(flags & UiFlags_SplitText);
+    const bool alingxcenter = !!(flags & UiFlags_AlignXCentered);
+    const bool alignleft = !!(flags & UiFlags_AlignLeft);
 
     if (hasbody) {
         button_border_draw(offset + pos, size, gbutton.hovered && !grayed);
@@ -292,10 +295,23 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
     }
 
     int symbolh = get_letter_height((uint8_t *)"H", font);
-    if (label) {
+    if (splittext) {
+        svector<bstring128, 4> labels;
+        string_to_array_t(labels, label, '\n');
+
+        int labels_num = labels.size();
+        int starty = offset.y + pos.y + (size.y - (symbolh + 2) * labels_num) / 2 + 4;
+
+        for (const auto &str : labels) {
+            if (alingxcenter) {
+                text_draw_centered((uint8_t *)str.c_str(), offset.x + pos.x + 1, starty, size.x, font, 0);
+            } else {
+                text_draw((uint8_t *)str.c_str(), offset.x + pos.x + 8, starty, font, 0);
+            }
+            starty += symbolh + 2;
+        }
+    } else if (label) {
         const bool alingycenter = !!(flags & UiFlags_AlignYCentered);
-        const bool alingxcenter = !!(flags & UiFlags_AlignXCentered);
-        const bool alignleft = !!(flags & UiFlags_AlignLeft);
         const bool rich = !!(flags & UiFlags_Rich);
         if (rich) {
             int symbolw = text_get_width((uint8_t *)"H", font);
@@ -312,47 +328,13 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
         } else {
             text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 + 4, size.x, font, 0);
         }
-    }
+    }    
 
     if (grayed) {
         graphics_shade_rect(offset + pos, size, 0x80);
     }
 
     if (!grayed && !!cb) {
-        gbutton.onclick(cb);
-    }
-    return gbutton;
-}
-
-generic_button &ui::button(const svector<pcstr,4> &labels, vec2i pos, vec2i size, fonts_vec fonts, UiFlags flags, std::function<void(int, int)> cb) {
-    const vec2i offset = g_state.offset();
-
-    g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
-    auto &gbutton = g_state.buttons.back().g_button;
-    gbutton.hovered = is_button_hover(gbutton, offset);
-
-    e_font font = fonts[gbutton.hovered ? 1 : 0];
-    if (font == FONT_INVALID) {
-        font = fonts[0];
-    }
-
-    button_border_draw(offset + pos, size, gbutton.hovered ? 1 : 0);
-    int symbolh = get_letter_height((uint8_t *)"H", font);
-    int labels_num = labels.size();
-    int starty = offset.y + pos.y + (size.y - (symbolh + 2) * labels_num) / 2 + 4;
-    if (!!(flags & UiFlags_AlignYCentered)) {
-        for (const auto &str : labels) {
-            text_draw((uint8_t *)str, offset.x + pos.x + 8, starty, font, 0);
-            starty += symbolh + 2;
-        }
-    } else {
-        for (const auto &str : labels) {
-            text_draw_centered((uint8_t *)str, offset.x + pos.x + 1, starty, size.x, font, 0);
-            starty += symbolh + 2;
-        }
-    }
-
-    if (!!cb) {
         gbutton.onclick(cb);
     }
     return gbutton;
@@ -919,10 +901,15 @@ void ui::escrollbar::load(archive arch, element *parent, items &elems) {
 void ui::etext::draw() {
     const vec2i offset = g_state.offset();
     if (!!(_flags & UiFlags_AlignCentered)) {
-        if (_shadow_color) {
-            text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x + 1, offset.y + pos.y, size.x, _font, _shadow_color);
+        int additionaly = 0;
+        if (pxsize().y > 0) {
+            int symbolh = get_letter_height((uint8_t *)"H", _font);
+            additionaly = (size.y - symbolh) / 2;
         }
-        text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, size.x, _font, _color);
+        if (_shadow_color) {
+            text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x + 1, offset.y + pos.y + additionaly, size.x, _font, _shadow_color);
+        }
+        text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y + additionaly, size.x, _font, _color);
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
         text_draw_multiline((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _wrap, _font, _color);
     } else if (!!(_flags & UiFlags_AlignYCentered)) {
@@ -1030,7 +1017,8 @@ void ui::egeneric_button::draw() {
     UiFlags flags = _flags 
                       | (grayed ? UiFlags_Grayed : UiFlags_None)
                       | (!_border ? UiFlags_NoBorder : UiFlags_None)
-                      | (!_hbody ? UiFlags_NoBody : UiFlags_None);
+                      | (!_hbody ? UiFlags_NoBody : UiFlags_None)
+                      | (_split ? UiFlags_SplitText : UiFlags_None);
 
     generic_button *btn = nullptr;
     switch (mode) {
@@ -1063,6 +1051,7 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
     _tooltip = arch.r_vec2i("tooltip");
     _border = arch.r_bool("border", true);
     _hbody = arch.r_bool("hbody", true);
+    _split = arch.r_bool("split", false);
 }
 
 void ui::info_window::load(archive arch, pcstr section) {
