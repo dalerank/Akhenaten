@@ -431,7 +431,7 @@ static int terrain_is_road_like(int grid_offset) {
     return map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP) ? 1 : 0;
 }
 
-static bool is_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
+static bool is_adjacent_road_tile_for_roaming(int grid_offset, e_permission perm) {
     if (map_terrain_is(grid_offset, TERRAIN_WATER) && map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         return 0;
     }
@@ -446,8 +446,8 @@ static bool is_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
         return false;
     } 
         
-    building_roadblock *roadblock = b->dcast_roadblock();
-    if (roadblock && !roadblock->get_permission((e_permission)perm)) {
+    building_routeblock *roadblock = b->dcast_roadblock();
+    if (roadblock && !roadblock->get_permission(perm)) {
         return false;
     } 
         
@@ -476,7 +476,7 @@ static bool is_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
     return is_road;
 }
 
-int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int* road_tiles, int perm) {
+int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int* road_tiles, e_permission perm) {
     road_tiles[1] = road_tiles[3] = road_tiles[5] = road_tiles[7] = 0;
 
     road_tiles[0] = is_adjacent_road_tile_for_roaming(grid_offset + GRID_OFFSET(0, -1), perm);

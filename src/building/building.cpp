@@ -276,6 +276,7 @@ building_storage *building::dcast_storage() { return dcast()->dcast_storage(); }
 building_temple *building::dcast_temple() { return dcast()->dcast_temple(); }
 building_tax_collector *building::dcast_tax_collector() { return dcast()->dcast_tax_collector(); }
 building_roadblock *building::dcast_roadblock() { return dcast()->dcast_roadblock(); }
+building_routeblock *building::dcast_routeblock() { return dcast()->dcast_routeblock(); }
 building_mine *building::dcast_mine() { return dcast()->dcast_mine(); }
 building_quarry *building::dcast_quarry() { return dcast()->dcast_quarry(); }
 building_palace *building::dcast_palace() { return dcast()->dcast_palace(); }

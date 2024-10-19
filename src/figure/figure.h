@@ -337,7 +337,7 @@ public:
     void advance_figure_tick();
     void set_target_height_bridge();
     void set_target_height_building();
-    int get_permission_for_figure();
+    e_permission get_permission_for_figure();
     void move_to_next_tile();
     void set_next_tile_and_direction();
     void advance_route_tile(int roaming_enabled);

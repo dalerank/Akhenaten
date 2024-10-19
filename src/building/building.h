@@ -68,6 +68,7 @@ class building_quarry;
 class building_palace;
 class building_festival_square;
 class building_bandstand;
+class building_routeblock;
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -439,6 +440,7 @@ public:
     building_temple *dcast_temple();
     building_tax_collector *dcast_tax_collector();
     building_roadblock *dcast_roadblock();
+    building_routeblock *dcast_routeblock();
     building_mine *dcast_mine();
     building_quarry *dcast_quarry();
     building_palace *dcast_palace();
@@ -568,6 +570,7 @@ public:
     virtual building_palace *dcast_palace() { return nullptr; }
     virtual building_festival_square *dcast_festival_square() { return nullptr; }
     virtual building_bandstand *dcast_bandstand() { return nullptr; }
+    virtual building_routeblock *dcast_routeblock() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

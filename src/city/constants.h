@@ -50,3 +50,14 @@ enum e_availability {
     NOT_AVAILABLE = 0,
     AVAILABLE = 1,
 };
+
+enum e_permission {
+    epermission_none = 0,
+    epermission_maintenance = 1,
+    epermission_priest = 2,
+    epermission_market = 3,
+    epermission_entertainer = 4,
+    epermission_education = 5,
+    epermission_medicine = 6,
+    epermission_tax_collector = 7
+};
