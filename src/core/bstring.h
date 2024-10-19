@@ -171,6 +171,7 @@ public:
     }
 
     inline size_t len() const { return ::strlen(_data); }
+    inline void resize(size_t s) { assert(s < _size); _data[s] = '\0'; }
     inline bool empty() const { return !_data[0]; }
     inline void clear() { _data[0] = 0; }
     inline bool equals(const_ref other) const { return ::strncmp(_data, other._data, _size) == 0; }
