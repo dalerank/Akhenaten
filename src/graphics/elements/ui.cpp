@@ -224,6 +224,10 @@ pcstr ui::str(int group, int id) {
     return (pcstr)lang_get_string(group, id);
 }
 
+pcstr ui::resource_name(e_resource r) {
+    return (pcstr)lang_get_string(23, r);
+}
+
 int ui::button_hover(const mouse *m) {
     for (auto &btn : g_state.buttons) {
         if (is_button_hover(btn, g_state.offset())) {

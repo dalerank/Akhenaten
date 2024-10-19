@@ -3,6 +3,7 @@
 #include "empire/type.h"
 #include "game/resource.h"
 #include "empire/trade_route.h"
+#include "core/tokenum.h"
 
 struct empire_city {
     enum {
@@ -36,3 +37,5 @@ struct empire_city {
         type = EMPIRE_CITY_EGYPTIAN;
     }
 };
+
+extern const token_holder<e_empire_city, EMPIRE_CITY_OURS, EMPIRE_CITY_COUNT> e_empire_city_tokens;

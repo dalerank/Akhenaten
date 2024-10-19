@@ -1,6 +1,8 @@
 #include "empire_city.h"
 #include "empire/empire.h"
 
+const token_holder<e_empire_city, EMPIRE_CITY_OURS, EMPIRE_CITY_COUNT> e_empire_city_tokens;
+
 void empire_city::remove_trader(int figure_id) {
     for (int i = 0; i < 3; i++) {
         if (trader_figure_ids[i] == figure_id)

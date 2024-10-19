@@ -87,6 +87,7 @@ scrollbar_t &scrollbar(scrollbar_t &scrollbar, vec2i pos, int &value, vec2i size
 pcstr str(int group, int id);
 inline pcstr str(std::pair<int, int> r) { return str(r.first, r.second); }
 inline pcstr str(textid r) { return str(r.group, r.id); }
+pcstr resource_name(e_resource r);
 
 struct emenu_header;
 struct eimage_button;

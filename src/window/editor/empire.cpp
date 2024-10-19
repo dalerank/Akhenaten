@@ -59,11 +59,7 @@ static void init() {
     auto &data = g_window_empire;
     data.selected_button = 0;
     int selected_object = g_empire_map.selected_object();
-    if (selected_object)
-        data.selected_city = g_empire.get_city_for_object(selected_object - 1);
-    else {
-        data.selected_city = 0;
-    }
+    data.selected_city = selected_object ? g_empire.get_city_for_object(selected_object - 1) : 0;
     data.focus_button_id = 0;
 }
 

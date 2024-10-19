@@ -141,7 +141,7 @@ void game_debug_show_property(int &i, pcstr field, const short &v, bool disabled
 void game_debug_show_property(int &i, pcstr field, const uint8_t &v, bool disabled) { game_debug_show_property_t(i, field, v, disabled); }
 void game_debug_show_property(int &i, pcstr field, const uint16_t &v, bool disabled) { game_debug_show_property_t(i, field, v, disabled); }
 void game_debug_show_property(int &i, pcstr field, const bool &v, bool disabled) { game_debug_show_property_t(i, field, v, disabled); }
-void game_debug_show_property(int &i, pcstr field, const pcstr v) { game_debug_show_property_t(i, field, v, true); }
+void game_debug_show_property(int &i, pcstr field, pcstr v) { game_debug_show_property_t(i, field, v, true); }
 void game_debug_show_property(int &i, pcstr field, const bstring64 &v, bool disabled) { game_debug_show_property_t(i, field, v, disabled); }
 void game_debug_show_property(int &i, pcstr field, const bstring256 &v, bool disabled) { game_debug_show_property_t(i, field, v, disabled); }
 void game_debug_show_property(int &i, pcstr field, const xstring &v, bool disabled) { game_debug_show_property_t(i, field, v, disabled); }

@@ -54,7 +54,7 @@ void bazaar_orders_window::window_info_foreground(object_info &c) {
     int row_y = 0;
     for (const auto &r : resources) {
         ui.icon(items_area.pos + item_icon_column.pos + vec2i{ 0, row_y }, r.type);
-        ui.label(ui::str(23, r.type), items_area.pos + item_name_column.pos + vec2i{ 0, row_y });
+        ui.label(ui::resource_name(r.type), items_area.pos + item_name_column.pos + vec2i{ 0, row_y });
 
         auto status = window_market_get_order_instruction(INSTR_MARKET, r.type, bazaar->is_good_accepted(r.type));
         ui.button(status.first, items_area.pos + vec2i{ item_orders_column.pos.x, row_y }, item_row.size, fonts_vec{ status.second }, UiFlags_NoBody | UiFlags_AlignYCentered)
