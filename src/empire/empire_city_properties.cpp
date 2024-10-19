@@ -16,7 +16,7 @@ void game_debug_show_properties_object(pcstr prefix, empire_city *c) {
     ImGui::TableSetColumnIndex(0);
     ImGui::AlignTextToFramePadding();
     pcstr city_name = ui::str(195, c->name_id);
-    bool common_open = ImGui::TreeNodeEx(city_name, ImGuiTreeNodeFlags_DefaultOpen, city_name);
+    bool common_open = ImGui::TreeNodeEx(city_name, ImGuiTreeNodeFlags_DefaultOpen, "%s", city_name);
     ImGui::TableSetColumnIndex(1); 
 
     if (common_open) {
