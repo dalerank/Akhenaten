@@ -63,6 +63,7 @@ enum
 	TK_VAR,
 	TK_VOID,
 	TK_WHILE,
+	TK_WINDOWIF,
 	TK_WITH,
 };
 

@@ -61,7 +61,7 @@ static const char *tokenstring[] = {
 	"'default'", "'delete'", "'do'", "'else'", "'false'", "'finally'", "'for'",
 	"'function'", "'if'", "'in'", "'instanceof'", "'new'", "'null'", "'return'",
 	"'switch'", "'this'", "'throw'", "'true'", "'try'", "'typeof'", "'var'",
-	"'void'", "'while'", "'with'",
+	"'void'", "'while'", "'window'", "'with'"
 };
 
 const char *jsY_tokenstring(int token)
@@ -76,7 +76,7 @@ static const char *keywords[] = {
 	"break", "case", "catch", "continue", "debugger", "default", "delete",
 	"do", "else", "false", "finally", "for", "function", "if", "in",
 	"instanceof", "new", "null", "return", "switch", "this", "throw",
-	"true", "try", "typeof", "var", "void", "while", "with",
+	"true", "try", "typeof", "var", "void", "while", "window", "with"
 };
 
 int jsY_findword(const char *s, const char **list, int num)
