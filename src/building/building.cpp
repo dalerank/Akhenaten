@@ -1189,11 +1189,9 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         iob->bind____skip(26);
         iob->bind____skip(57);
         iob->bind(BIND_SIGNATURE_UINT8, &data.farm.worker_frame);
-    } else {
+    } else if (building_is_entertainment(b->type)) {
         iob->bind____skip(26);
-        iob->bind____skip(56);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.guild.max_workers);
-        iob->bind____skip(1);
+        iob->bind____skip(58);
         iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.num_shows);
         iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.juggler_visited);
         iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.musician_visited);
@@ -1208,6 +1206,12 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.consume_material_id);
         iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.spawned_entertainer_days);
         iob->bind(BIND_SIGNATURE_UINT32, &data.entertainment.booth_corner_grid_offset);
+    } else if (b->type == BUILDING_WARSHIP_WHARF) {
+        iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.orientation);
+    } else {
+        iob->bind____skip(26);
+        iob->bind____skip(56);
+        iob->bind(BIND_SIGNATURE_UINT8, &data.guild.max_workers);
     }
 }
 
@@ -1273,9 +1277,10 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->health_proof);
         iob->bind(BIND_SIGNATURE_INT16, &b->formation_id); 
 
-        read_type_data(iob, b, version); // 42 bytes for C3, 102 for PH
+        read_type_data(iob, b, version); // 102 for PH
 
         int currind = iob->get_offset() - sind;
+        assert(currind > 0);
         iob->bind____skip(184 - currind);
 
         iob->bind(BIND_SIGNATURE_INT32, &b->tax_income_or_storage);

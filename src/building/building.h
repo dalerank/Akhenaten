@@ -247,6 +247,11 @@ public:
             unsigned short work_camp_id;
             unsigned char worker_id;
         } industry;
+
+        struct  {
+            uint8_t orientation;
+        } wharf;
+
         struct entertainment_t {
             uint8_t spawned_entertainer_days;
             uint8_t num_shows;

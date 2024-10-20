@@ -4,10 +4,14 @@
 #include "city/labor.h"
 #include "grid/water.h"
 
-buildings::model_t<building_transport_wharf> transport_wharf_m;
+building_transport_wharf::static_params transport_wharf_m;
+
+void building_transport_wharf::static_params::load(archive arch) {
+
+}
 
 void building_wharf::on_create(int orientation) {
-    data.industry.orientation = orientation;
+    data.wharf.orientation = orientation;
 }
 
 void building_wharf::on_place_update_tiles(int orientation, int variant) {
