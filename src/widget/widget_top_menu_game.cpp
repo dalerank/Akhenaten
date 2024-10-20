@@ -726,10 +726,10 @@ void widget_top_menu_draw_rotate_buttons() {
 
 void top_menu_widget::draw_foreground() {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Topmenu");
-    widget_top_menu_draw_rotate_buttons();
 
     wdiget_top_menu_draw_background();
     widget_top_menu_draw_elements();
+    widget_top_menu_draw_rotate_buttons();
 
     color treasure_color = city_finance_treasury() < 0 ? COLOR_FONT_RED : COLOR_WHITE;
 
