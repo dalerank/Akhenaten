@@ -16,7 +16,7 @@ void building_warship_wharf::on_create(int orientation) {
 
 void building_warship_wharf::on_place(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    map_water_add_building(id(), tile(), params().building_size, anim("base").first_img() + orientation_rel);
+    map_water_add_building(id(), tile(), params().building_size, anim(animkeys().base).first_img() + orientation_rel);
 
     building_impl::on_place(orientation, variant);
 }

@@ -22,11 +22,10 @@
 #include "city/labor.h"
 #include "js/js_game.h"
  
-buildings::model_t<building_shipyard> building_shipyard_m;
+building_shipyard::static_params building_shipyard_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_shipyard);
-void config_load_building_shipyard() {
-    building_shipyard_m.load();
+void building_shipyard::static_params::load(archive arch) {
+
 }
 
 void building_shipyard::window_info_background(object_info &c) {
@@ -95,18 +94,18 @@ void building_shipyard::spawn_figure() {
 
 void building_shipyard::update_map_orientation(int orientation) {
     int image_offset = city_view_relative_orientation(data.industry.orientation);
-    int image_id = building_shipyard_m.anim["base"].first_img() + image_offset;
+    int image_id = anim(animkeys().base).first_img() + image_offset;
     map_water_add_building(id(), tile(), building_shipyard_m.building_size, image_id);
 }
 
 bool building_shipyard::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
-    const animation_t &anim = building_shipyard_m.anim["work"];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, mask);
+    const animation_t &canim = anim(animkeys().work);
+    building_draw_normal_anim(ctx, point, &base, tile, canim, mask);
 
     int amount = ceil((float)base.stored_amount() / 100.0) - 1;
     if (amount >= 0) {
-        const auto &anim = building_shipyard_m.anim["wood"];
-        ImageDraw::img_generic(ctx, anim.first_img() + amount, point + anim.pos, mask);
+        const auto &canim = anim("wood");
+        ImageDraw::img_generic(ctx, canim.first_img() + amount, point + canim.pos, mask);
     }
     return true;
 }

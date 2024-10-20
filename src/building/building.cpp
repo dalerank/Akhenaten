@@ -614,6 +614,7 @@ bool building_is_beautification(e_building_type type) {
 bool building_is_water_crossing(e_building_type type) {
     return (type == BUILDING_FERRY) || type == BUILDING_LOW_BRIDGE || type == BUILDING_UNUSED_SHIP_BRIDGE_83;
 }
+
 bool building_is_industry_type(const building* b) {
     return b->output_resource_first_id || building_type_any_of(b->type, BUILDING_SHIPWRIGHT, BUILDING_FISHING_WHARF);
 }
