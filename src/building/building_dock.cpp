@@ -38,7 +38,7 @@ void building_dock::on_create(int orientation) {
 
 void building_dock::on_place(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    map_water_add_building(id(), tile(), params().building_size, anim("base").first_img() + orientation_rel);
+    map_water_add_building(id(), tile(), params().building_size, anim(animkeys().base).first_img() + orientation_rel);
 
     building_impl::on_place(orientation, variant);
 }
@@ -64,7 +64,7 @@ void building_dock::update_count() const {
 
 void building_dock::update_map_orientation(int orientation) {
     int image_offset = city_view_relative_orientation(data.dock.orientation);
-    int image_id = dock_m.anim["base"].first_img() + image_offset;
+    int image_id = anim(animkeys().base).first_img() + image_offset;
     map_water_add_building(id(), tile(), 3, image_id);
 }
 

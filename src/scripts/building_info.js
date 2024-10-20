@@ -1214,13 +1214,14 @@ building_warship_wharf = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:28 },
     base : { pack:PACK_TERRAIN, id:28 },
+    work_n : { pos:[135, -7], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 },
     // work : { pack:PACK_TERRAIN, id:18, offset:1 }
   },
   building_size : 3,
-  fire_proof : 1,
+  fire_proof : true,
   window_info_height_id: 1,
   planer_relative_orientation: 1,
-  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+  labor_category : LABOR_CATEGORY_MILITARY,
 }
 
 building_fishing_wharf = {
