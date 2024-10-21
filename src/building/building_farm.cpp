@@ -340,6 +340,12 @@ void building_farm::on_undo() {
     map_building_tiles_add_farm(type(), id(), tile(), img_id, 0);
 }
 
+void building_farm::bind_dynamic(io_buffer *iob, size_t version) {
+    iob->bind____skip(26);
+    iob->bind____skip(57);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.farm.worker_frame);
+}
+
 void building_farm::spawn_figure_harvests() {
     if (is_floodplain_farm()) { // floodplain farms
                                 // In OG Pharaoh, farms can NOT send out a cartpusher if the cartpusher

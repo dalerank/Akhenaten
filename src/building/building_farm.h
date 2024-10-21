@@ -23,6 +23,7 @@ public:
     virtual void spawn_figure() override;
     virtual void update_graphic() override;
     virtual void on_undo() override;
+    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
     void deplete_soil();
     void update_tiles_image();
