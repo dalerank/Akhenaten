@@ -1,11 +1,11 @@
 #pragma once
 
-#include "building/building.h"
+#include "building/building_guild.h"
 
-class building_carpenters_guild : public building_impl {
+class building_carpenters_guild : public building_guild {
 public:
     BUILDING_METAINFO(BUILDING_CARPENTERS_GUILD, building_carpenters_guild)
-    building_carpenters_guild(building &b) : building_impl(b) {}
+    building_carpenters_guild(building &b) : building_guild(b) {}
 
     //virtual void on_create(int orientation) override;
     //virtual void on_place(int orientation, int variant) override;
