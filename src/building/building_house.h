@@ -21,6 +21,7 @@ public:
     virtual void on_place_checks() override;
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void on_undo() override;
+    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual bool evolve(house_demands* demands) = 0;
 
     inline int house_population() const { return base.house_population; }

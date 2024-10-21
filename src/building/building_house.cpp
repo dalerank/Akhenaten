@@ -168,6 +168,53 @@ void building_house::on_undo() {
     /*nothing*/
 }
 
+void building_house::bind_dynamic(io_buffer *iob, size_t version) {
+    for (int i = 0; i < 4; ++i) {
+        iob->bind(BIND_SIGNATURE_UINT16, &data.house.foods[i]);
+    }
+
+    uint16_t tmp;
+    iob->bind(BIND_SIGNATURE_UINT16, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT16, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT16, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT16, &tmp);
+
+    for (int i = 0; i < 4; ++i) {
+        iob->bind(BIND_SIGNATURE_UINT16, &data.house.inventory[i + 4]);
+    }
+
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.juggler);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.bandstand_juggler);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.bandstand_musician);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.senet_player);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.magistrate);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.hippodrome);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.school);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.library);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.academy);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.apothecary);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.dentist);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.mortuary);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.physician);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.temple_osiris);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.temple_ra);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.temple_ptah);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.temple_seth);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.temple_bast);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.no_space_to_expand);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.num_foods);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.entertainment);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.education);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.health);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.num_gods);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.devolve_delay);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.evolve_text_id);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.shrine_access);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.bazaar_access);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.water_supply);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.pavilion_dancer);
+}
+
 void building_house::create_vacant_lot(tile2i tile, int image_id) {
     building* b = building_create(BUILDING_HOUSE_VACANT_LOT, tile, 0);
     b->house_population = 0;
