@@ -21,6 +21,8 @@
 #include "dev/debug.h"
 #include <iostream>
 
+declare_console_command_p(killfishboats, game_cheat_kill_fish_boats);
+
 struct info_window_fishing_wharf : public building_info_window {
     virtual bool check(object_info &c) override {
         return c.building_get()->dcast_fishing_wharf();
@@ -29,18 +31,14 @@ struct info_window_fishing_wharf : public building_info_window {
     virtual void window_info_background(object_info &c) override;
 } fishing_wharf_infow;
 
-struct fishing_wharf_model : public buildings::model_t<building_fishing_wharf> {
-} fishing_wharf_m;
+building_fishing_wharf::static_params fishing_wharf_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_fishing_wharf);
-void config_load_building_fishing_wharf() {
-    fishing_wharf_m.load();
-    fishing_wharf_infow.load("info_window_fishing_wharf");
-}
-
-declare_console_command_p(killfishboats, game_cheat_kill_fish_boats);
 void game_cheat_kill_fish_boats(std::istream &is, std::ostream &os) {
     figure_valid_do([] (figure &f) { f.poof(); }, FIGURE_FISHING_BOAT);
+}
+
+void building_fishing_wharf::static_params::load(archive arch) {
+
 }
 
 void building_fishing_wharf::on_create(int orientation) {
@@ -50,7 +48,7 @@ void building_fishing_wharf::on_create(int orientation) {
 void building_fishing_wharf::on_place_update_tiles(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
     int img_id = anim(animkeys().base).first_img();
-    map_water_add_building(id(), tile(), fishing_wharf_m.building_size, img_id + orientation_rel);
+    map_water_add_building(id(), tile(), size(), img_id + orientation_rel);
 }
 
 void building_fishing_wharf::update_count() const {
@@ -168,7 +166,7 @@ void building_fishing_wharf::on_undo() {
 void building_fishing_wharf::update_map_orientation(int orientation) {
     int image_offset = city_view_relative_orientation(data.industry.orientation);
     int image_id = this->anim(animkeys().base).first_img() + image_offset;
-    map_water_add_building(id(), tile(), fishing_wharf_m.building_size, image_id);
+    map_water_add_building(id(), tile(), size(), image_id);
 }
 
 bool building_fishing_wharf::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
