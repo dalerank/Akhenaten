@@ -125,7 +125,7 @@ inline void string_to_array_t(arr_t &lst, pcstr src, char separator) {
     }
 
     lst.resize(t_cnt);
-    arr_t::value_type tmp;
+    typename arr_t::value_type tmp;
     for (int i = 0; i < t_cnt; i++) {
         string_item(src, i, tmp, separator, nullptr);
         string_trim(tmp.data());
