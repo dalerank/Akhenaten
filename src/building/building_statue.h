@@ -14,6 +14,7 @@ public:
     virtual void window_info_background(object_info &c) override;
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void update_map_orientation(int map_orientation) override;
+    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
     static int get_image(int type, int orientation, int variant);
     int get_image_from_value(int type, int combined, int variant, int map_orientation);

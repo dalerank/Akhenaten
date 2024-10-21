@@ -16,6 +16,7 @@
 #include "core/svector.h"
 #include "grid/terrain.h"
 #include "grid/building_tiles.h"
+#include "io/io_buffer.h"
 
 #include "js/js_game.h"
 
@@ -77,6 +78,22 @@ void building_statue::window_info_background(object_info &c) {
 void building_statue::update_map_orientation(int map_orientation) {
     int image_id = get_image_from_value(type(), 0, data.monuments.variant, map_orientation);
     map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);
+}
+
+void building_statue::bind_dynamic(io_buffer *iob, size_t version) {
+    iob->bind____skip(38);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.orientation);
+    for (int i = 0; i < 5; i++) {
+        iob->bind(BIND_SIGNATURE_UINT16, &data.monuments.workers[i]);
+    }
+    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.phase);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.statue_offset);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.temple_complex_attachments);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.variant);
+
+    for (int i = 0; i < RESOURCES_MAX; i++) {
+        iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.resources_pct[i]);
+    }
 }
 
 int building_statue_get_variant_size(int type) {
