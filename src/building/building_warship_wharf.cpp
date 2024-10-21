@@ -31,3 +31,7 @@ void building_warship_wharf::update_map_orientation(int orientation) {
     int image_id = anim(animkeys().base).first_img() + image_offset;
     map_water_add_building(id(), tile(), size(), image_id);
 }
+
+void building_warship_wharf::bind_dynamic(io_buffer *iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.orientation);
+}
