@@ -19,11 +19,10 @@
 
 declare_console_command(addbeer, game_cheat_add_resource<RESOURCE_BEER>);
 
-buildings::model_t<building_brewery> brewery_m;
+building_brewery::static_params brewery_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_brewery);
-void config_load_building_brewery() {
-    brewery_m.load();
+void building_brewery::static_params::load(archive arch) {
+
 }
 
 void building_brewery::on_create(int orientation) {
