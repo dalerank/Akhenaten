@@ -1,12 +1,12 @@
 #pragma once
 
-#include "building/building.h"
+#include "building/building_entertainment.h"
 
-class building_senet_house : public building_impl {
+class building_senet_house : public building_entertainment {
 public:
     BUILDING_METAINFO(BUILDING_SENET_HOUSE, building_senet_house)
 
-    building_senet_house(building &b) : building_impl(b) {}
+    building_senet_house(building &b) : building_entertainment(b) {}
 
     virtual void window_info_background(object_info &c) override;
     virtual void on_place_checks() override;
@@ -18,11 +18,11 @@ public:
 };
 
 
-class building_bullfight_school : public building_impl {
+class building_bullfight_school : public building_entertainment {
 public:
     BUILDING_METAINFO(BUILDING_SENET_MASTER, building_bullfight_school)
 
-    building_bullfight_school(building &b) : building_impl(b) {}
+    building_bullfight_school(building &b) : building_entertainment(b) {}
 
     virtual void window_info_background(object_info &c) override;
     //virtual void on_place_checks() override;
