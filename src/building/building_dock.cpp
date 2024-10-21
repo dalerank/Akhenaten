@@ -157,6 +157,22 @@ bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     return false;
 }
 
+void building_dock::bind_dynamic(io_buffer *iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_INT16, &data.dock.queued_docker_id);
+    iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[0]);
+    iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[1]);
+    iob->bind(BIND_SIGNATURE_UINT64, data.dock.trading_goods.data_ptr());
+    iob->bind____skip(9);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.dock.num_ships);
+    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_INT8, &data.dock.orientation);
+    iob->bind____skip(3);
+    for (int i = 0; i < 3; i++) {
+        iob->bind(BIND_SIGNATURE_INT16, &data.dock.docker_ids[i]);
+    }
+    iob->bind(BIND_SIGNATURE_INT16, &data.dock.trade_ship_id);
+}
+
 int building_dock::count_idle_dockers() const {
     int num_idle = 0;
     for (int i = 0; i < 3; i++) {

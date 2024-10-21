@@ -24,6 +24,7 @@ public:
     virtual void update_graphic() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_DOCK; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
+    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
     void unaccept_all_goods();
     int trader_id();
