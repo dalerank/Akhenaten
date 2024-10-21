@@ -489,6 +489,15 @@ void building_granary::update_day() {
     data.granary.resource_stored[RESOURCE_NONE] = capacity_stored() - total_stored();
 }
 
+void building_granary::bind_dynamic(io_buffer *iob, size_t version) {
+    iob->bind____skip(2);
+    iob->bind____skip(2);
+
+    for (int i = 0; i < RESOURCES_MAX; i++) {
+        iob->bind(BIND_SIGNATURE_INT16, &data.granary.resource_stored[i]);
+    }
+}
+
 void building_granary::on_place_checks() {
     if (building_count_active(BUILDING_BAZAAR) <= 0) {
         building_construction_warning_show(WARNING_BUILD_MARKET);

@@ -36,6 +36,7 @@ public:
     virtual void on_place_checks() override;
     virtual void update_day() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_FOOD_STOCKS; }
+    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
     virtual int amount(e_resource resource) const override;
     virtual bool is_getting(e_resource resource) override;
