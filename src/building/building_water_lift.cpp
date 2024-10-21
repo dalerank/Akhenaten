@@ -8,11 +8,10 @@
 #include "widget/city/ornaments.h"
 #include "graphics/elements/ui.h"
 
-buildings::model_t<building_water_lift> water_lift_m;
+building_water_lift::static_params water_lift_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_water_lift);
-void config_load_building_water_lift() {
-    water_lift_m.load();
+void building_water_lift::static_params::load(archive arch) {
+
 }
 
 void building_water_lift::window_info_background(object_info &c) {
@@ -102,4 +101,9 @@ void building_water_lift::update_map_orientation(int orientation) {
     }
     int image_id = water_lift_m.anim["work"].first_img() + image_offset;
     map_water_add_building(id(), tile(), 2, image_id);
+}
+
+void building_water_lift::bind_dynamic(io_buffer *iob, size_t version) {
+    iob->bind____skip(88);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.industry.orientation);
 }
