@@ -282,6 +282,9 @@ building_quarry *building::dcast_quarry() { return dcast()->dcast_quarry(); }
 building_palace *building::dcast_palace() { return dcast()->dcast_palace(); }
 building_festival_square *building::dcast_festival_square() { return dcast()->dcast_festival_square(); }
 building_bandstand *building::dcast_bandstand() { return dcast()->dcast_bandstand(); }
+building_industry *building::dcast_industry() { return dcast()->dcast_industry(); }
+building_guild *building::dcast_guild() { return dcast()->dcast_guild(); }
+building_entertainment *building::dcast_entertainment() { return dcast()->dcast_entertainment(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
@@ -615,8 +618,8 @@ bool building_is_water_crossing(e_building_type type) {
     return (type == BUILDING_FERRY) || type == BUILDING_LOW_BRIDGE || type == BUILDING_UNUSED_SHIP_BRIDGE_83;
 }
 
-bool building_is_industry_type(const building* b) {
-    return b->output_resource_first_id || building_type_any_of(b->type, BUILDING_SHIPWRIGHT, BUILDING_FISHING_WHARF);
+bool building_is_industry_type(building* b) {
+    return b->output_resource_first_id || b->dcast_industry();
 }
 
 bool building_is_industry(e_building_type type) {
@@ -948,7 +951,11 @@ void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, col
     ImageDraw::img_sprite(ctx, base.anim.start() + base.anim.current_frame(), pos.x, pos.y, mask);
 }
 
-void building_impl::destroy_by_poof(bool clouds) {
+void building_impl::bind_dynamic(io_buffer *iob, size_t version) {
+    assert(base.output_resource_first_id == RESOURCE_NONE);
+}
+
+void building_impl::destroy_by_poof(bool clouds) { 
     building_destroy_by_poof(&base, clouds);
 }
 
@@ -1040,135 +1047,11 @@ void building_impl::static_params::load(archive arch) {
     anim.load(arch);
 }
 
-static void read_type_data(io_buffer *iob, building *b, size_t version) {
+static void io_type_data(io_buffer *iob, building *b, size_t version) {
     auto &data = b->data;
-    if (building_is_house(b->type)) {
-        for (int i = 0; i < 4; ++i) {
-            iob->bind(BIND_SIGNATURE_UINT16, &data.house.foods[i]);
-        }
 
-        uint16_t tmp;
-        iob->bind(BIND_SIGNATURE_UINT16, &tmp);
-        iob->bind(BIND_SIGNATURE_UINT16, &tmp);
-        iob->bind(BIND_SIGNATURE_UINT16, &tmp);
-        iob->bind(BIND_SIGNATURE_UINT16, &tmp);
-
-        for (int i = 0; i < 4; ++i) {
-            iob->bind(BIND_SIGNATURE_UINT16, &data.house.inventory[i + 4]);
-        }
-
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.juggler);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.bandstand_juggler);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.bandstand_musician);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.senet_player);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.magistrate);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.hippodrome);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.school);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.library);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.academy);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.apothecary);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.dentist);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.mortuary);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.physician);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.temple_osiris);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.temple_ra);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.temple_ptah);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.temple_seth);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.temple_bast);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.no_space_to_expand);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.num_foods);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.entertainment);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.education);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.health);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.num_gods);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.devolve_delay);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.evolve_text_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.shrine_access);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.bazaar_access);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.water_supply);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.house.pavilion_dancer);
-
-    } else if (b->type == BUILDING_BAZAAR) {
-        iob->bind____skip(2);
-        //            iob->bind____skip(8);
-        iob->bind(BIND_SIGNATURE_INT16, &data.market.pottery_demand);
-        iob->bind(BIND_SIGNATURE_INT16, &data.market.luxurygoods_demand);
-        iob->bind(BIND_SIGNATURE_INT16, &data.market.linen_demand);
-        iob->bind(BIND_SIGNATURE_INT16, &data.market.beer_demand);
-
-        uint16_t tmp;
-        for (int i = 0; i < INVENTORY_MAX; i++) {
-            iob->bind(BIND_SIGNATURE_UINT16, &tmp);
-            iob->bind(BIND_SIGNATURE_UINT16, &data.market.inventory[i]);
-        }
-        //            iob->bind____skip(6);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.market.fetch_inventory_id);
-        iob->bind____skip(7);
-        //            iob->bind____skip(6);
-        //            iob->bind(BIND_SIGNATURE_UINT8, &b->data.market.fetch_inventory_id);
-        //            iob->bind____skip(9);
-    } else if (b->type == BUILDING_GRANARY) {
-        iob->bind____skip(2);
-        iob->bind____skip(2);
-
-        for (int i = 0; i < RESOURCES_MAX; i++) {
-            iob->bind(BIND_SIGNATURE_INT16, &data.granary.resource_stored[i]);
-            data.granary.resource_stored[i] = (data.granary.resource_stored[i] / 100) * 100; // todo
-        }
-        iob->bind____skip(6);
-
-    } else if (b->type == BUILDING_DOCK) {
-        iob->bind(BIND_SIGNATURE_INT16, &data.dock.queued_docker_id);
-        iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[0]);
-        iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[1]);
-        iob->bind(BIND_SIGNATURE_UINT64, data.dock.trading_goods.data_ptr());
-        iob->bind____skip(9);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.dock.num_ships);
-        iob->bind____skip(2);
-        iob->bind(BIND_SIGNATURE_INT8, &data.dock.orientation);
-        iob->bind____skip(3);
-        for (int i = 0; i < 3; i++) {
-            iob->bind(BIND_SIGNATURE_INT16, &data.dock.docker_ids[i]);
-        }
-        iob->bind(BIND_SIGNATURE_INT16, &b->data.dock.trade_ship_id);
-
-    } else if (building_is_industry_type(b)) {
-        iob->bind(BIND_SIGNATURE_INT16, &data.industry.ready_production);
-        iob->bind(BIND_SIGNATURE_INT16, &data.industry.progress);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.industry.spawned_worker_this_month);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.industry.max_gatheres);
-        for (int i = 0; i < 10; i++) {
-            iob->bind(BIND_SIGNATURE_UINT8, &data.industry.unk_b[i]);
-        }
-        iob->bind(BIND_SIGNATURE_UINT8, &data.industry.has_fish);
-        for (int i = 0; i < 13; i++) {
-            iob->bind(BIND_SIGNATURE_UINT8, &data.industry.unk_c[i]);
-        }
-        iob->bind(BIND_SIGNATURE_UINT8, &data.industry.produce_multiplier);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.industry.blessing_days_left);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.industry.orientation);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.industry.has_raw_materials);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.industry.second_material_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.industry.curse_days_left);
-        iob->bind(BIND_SIGNATURE_UINT16, &data.industry.stored_amount_second);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.industry.first_material_id);
-        for (int i = 0; i < 3; i++) {
-            iob->bind(BIND_SIGNATURE_UINT8, &data.industry.unk_6[i]);
-        }
-        iob->bind(BIND_SIGNATURE_INT16, &data.industry.reserved_id_13);
-
-        for (int i = 0; i < 40; i++) {
-            iob->bind(BIND_SIGNATURE_UINT8, &data.industry.unk_40[i]);
-        }
-        iob->bind(BIND_SIGNATURE_UINT8, &data.industry.labor_state);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.industry.labor_days_left);
-        for (int i = 0; i < 10; i++) {
-            iob->bind(BIND_SIGNATURE_UINT8, &data.industry.unk_12[i]);
-        }
-        iob->bind(BIND_SIGNATURE_UINT16, &data.industry.work_camp_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.industry.worker_id);
-
-    } else if (building_is_statue(b->type) || building_is_large_temple(b->type) || building_is_monument(b->type)) {
+    b->dcast()->bind_dynamic(iob, version);
+    if (building_is_large_temple(b->type) || building_is_monument(b->type)) {
         iob->bind____skip(38);
         iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.orientation);
         for (int i = 0; i < 5; i++) {
@@ -1182,36 +1065,8 @@ static void read_type_data(io_buffer *iob, building *b, size_t version) {
         for (int i = 0; i < RESOURCES_MAX; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.resources_pct[i]);
         }
-    } else if (b->type == BUILDING_WATER_LIFT || b->type == BUILDING_FERRY) {
-        iob->bind____skip(88);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.industry.orientation);
-    } else if (building_is_farm(b->type)) {
-        iob->bind____skip(26);
-        iob->bind____skip(57);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.farm.worker_frame);
-    } else if (building_is_entertainment(b->type)) {
-        iob->bind____skip(26);
-        iob->bind____skip(58);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.num_shows);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.juggler_visited);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.musician_visited);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.dancer_visited);
-        iob->bind(BIND_SIGNATURE_INT8, &data.entertainment.play_index);
-        iob->bind____skip(19);
-        iob->bind(BIND_SIGNATURE_UINT32, &data.entertainment.latched_venue_main_grid_offset);
-        iob->bind(BIND_SIGNATURE_UINT32, &data.entertainment.latched_venue_add_grid_offset);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.orientation);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.ent_reserved_u8);
-        iob->bind____skip(6);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.consume_material_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.spawned_entertainer_days);
-        iob->bind(BIND_SIGNATURE_UINT32, &data.entertainment.booth_corner_grid_offset);
-    } else if (b->type == BUILDING_WARSHIP_WHARF) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.orientation);
     } else {
-        iob->bind____skip(26);
-        iob->bind____skip(56);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.guild.max_workers);
+        ; // nothing
     }
 }
 
@@ -1277,7 +1132,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->health_proof);
         iob->bind(BIND_SIGNATURE_INT16, &b->formation_id); 
 
-        read_type_data(iob, b, version); // 102 for PH
+        io_type_data(iob, b, version); // 102 for PH
 
         int currind = iob->get_offset() - sind;
         assert(currind > 0);

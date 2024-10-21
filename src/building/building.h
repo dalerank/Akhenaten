@@ -69,6 +69,9 @@ class building_palace;
 class building_festival_square;
 class building_bandstand;
 class building_routeblock;
+class building_industry;
+class building_guild;
+class building_entertainment;
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -451,6 +454,9 @@ public:
     building_palace *dcast_palace();
     building_festival_square *dcast_festival_square();
     building_bandstand *dcast_bandstand();
+    building_industry *dcast_industry();
+    building_guild *dcast_guild();
+    building_entertainment *dcast_entertainment();
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
@@ -530,6 +536,7 @@ public:
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual void draw_tooltip(tooltip_context *c) {};
     virtual const static_params &params() const { return params(type()); }
+    virtual void bind_dynamic(io_buffer *iob, size_t version);
 
     virtual building_farm *dcast_farm() { return nullptr; }
     virtual building_brewery *dcast_brewery() { return nullptr; }
@@ -576,6 +583,9 @@ public:
     virtual building_festival_square *dcast_festival_square() { return nullptr; }
     virtual building_bandstand *dcast_bandstand() { return nullptr; }
     virtual building_routeblock *dcast_routeblock() { return nullptr; }
+    virtual building_industry *dcast_industry() { return nullptr; }
+    virtual building_guild *dcast_guild() { return nullptr; }
+    virtual building_entertainment *dcast_entertainment() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -706,7 +716,7 @@ bool building_is_guild(e_building_type type);
 bool building_is_statue(e_building_type type);
 bool building_is_beautification(e_building_type type);
 bool building_is_water_crossing(e_building_type type);
-bool building_is_industry_type(const building* b);
+bool building_is_industry_type(building* b);
 
 bool building_is_industry(e_building_type type);
 bool building_is_food_category(e_building_type type);

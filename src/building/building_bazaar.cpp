@@ -364,3 +364,19 @@ bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i p
 
     return true;
 }
+ 
+void building_bazaar::bind_dynamic(io_buffer *iob, size_t version) {
+    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_INT16, &data.market.pottery_demand);
+    iob->bind(BIND_SIGNATURE_INT16, &data.market.luxurygoods_demand);
+    iob->bind(BIND_SIGNATURE_INT16, &data.market.linen_demand);
+    iob->bind(BIND_SIGNATURE_INT16, &data.market.beer_demand);
+
+    uint16_t tmp;
+    for (int i = 0; i < INVENTORY_MAX; i++) {
+        iob->bind(BIND_SIGNATURE_UINT16, &tmp);
+        iob->bind(BIND_SIGNATURE_UINT16, &data.market.inventory[i]);
+    }
+
+    iob->bind(BIND_SIGNATURE_UINT8, &data.market.fetch_inventory_id);
+}
