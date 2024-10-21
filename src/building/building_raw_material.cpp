@@ -33,15 +33,6 @@ buildings::model_t<building_mine_gems> gems_mine_m;
 buildings::model_t<building_mine_copper> copper_mine_m;
 buildings::model_t<building_reed_gatherer> gatherer_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_raw_materials);
-void config_load_building_raw_materials() {
-    clay_pit_m.load();
-    gold_mine_m.load();
-    gems_mine_m.load();
-    copper_mine_m.load();
-    gatherer_m.load();
-}
-
 void building_mine::on_create(int orientation) {
     base.output_resource_first_id = params().output_resource;
 }
