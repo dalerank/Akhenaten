@@ -57,6 +57,10 @@ void building_ferry::highlight_waypoints() {
     map_highlight_set(fpoints.point_b, 3);
 }
 
+void building_ferry::bind_dynamic(io_buffer *iob, size_t verrsion) {
+    iob->bind____skip(88);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.industry.orientation);
+}
 
 bool info_window_ferry::check(object_info &c) {
     return c.building_get()->dcast_ferry();
