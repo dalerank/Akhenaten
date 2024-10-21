@@ -1,12 +1,12 @@
 #pragma once
 
-#include "building/building.h"
+#include "building/building_entertainment.h"
 
-class building_juggler_school : public building_impl {
+class building_juggler_school : public building_entertainment {
 public:
     BUILDING_METAINFO(BUILDING_JUGGLER_SCHOOL, building_juggler_school)
 
-    building_juggler_school(building &b) : building_impl(b) {}
+    building_juggler_school(building &b) : building_entertainment(b) {}
     virtual building_juggler_school *dcast_juggler_school() override { return this; }
 
     struct static_params : public buildings::model_t<building_juggler_school> {

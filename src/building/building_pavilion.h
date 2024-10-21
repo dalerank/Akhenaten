@@ -1,11 +1,11 @@
 #pragma once
 
-#include "building/building.h"
+#include "building/building_entertainment.h"
 
-class building_pavilion : public building_impl {
+class building_pavilion : public building_entertainment {
 public:
     BUILDING_METAINFO(BUILDING_PAVILLION, building_pavilion)
-    building_pavilion(building &b) : building_impl(b) {}
+    building_pavilion(building &b) : building_entertainment(b) {}
     
     virtual void on_create(int orientation) override;
     virtual void update_day() override;

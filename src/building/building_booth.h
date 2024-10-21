@@ -1,12 +1,12 @@
 #pragma once
 
-#include "building/building.h"
+#include "building/building_entertainment.h"
 
-class building_booth : public building_impl {
+class building_booth : public building_entertainment {
 public:
     BUILDING_METAINFO(BUILDING_BOOTH, building_booth)
 
-    building_booth(building &b) : building_impl(b) {}
+    building_booth(building &b) : building_entertainment(b) {}
     virtual building_booth *dcast_booth() override { return this; }
 
     virtual void on_create(int orientation) override {}
