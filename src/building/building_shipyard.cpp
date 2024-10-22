@@ -68,6 +68,7 @@ void building_shipyard::spawn_figure() {
     if (has_figure_of_type(BUILDING_SLOT_BOAT, FIGURE_FISHING_BOAT)) {
         return;
     }
+
     int pct_workers = worker_percentage();
     if (pct_workers >= 100)
         data.industry.progress += 10;
@@ -127,7 +128,6 @@ void building_shipyard::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_shipyard::update_count() const {
-    if (num_workers() > 0 && base.has_open_water_access) {
-        city_buildings_add_working_shipyard(id());
-    }
+    const bool is_active = (num_workers() > 0 && base.has_open_water_access);
+    g_city.buildings.track_building(type(), id(), is_active);
 }

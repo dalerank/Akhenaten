@@ -25,7 +25,7 @@ void building_clear_counters() {
     memset(&g_count_data, 0, sizeof(count_data_t));
 }
 
-void building_increase_type_count(int type, bool active) {
+void building_increase_type_count(e_building_type type, bool active) {
     g_count_data.buildings[type].total++;
     g_count_data.buildings[type].active += (active ? 1 : 0);
 }

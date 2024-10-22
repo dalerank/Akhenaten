@@ -21,6 +21,7 @@
 #include "window/building/distribution.h"
 #include "graphics/elements/lang_text.h"
 #include "city/labor.h"
+#include "city/city.h"
 #include "js/js_game.h"
 
 building_dock::static_params dock_m;
@@ -32,8 +33,6 @@ void building_dock::static_params::load(archive arch) {
 void building_dock::on_create(int orientation) {
     data.dock.orientation = orientation;
     data.dock.trading_goods.one();
-
-    city_buildings_add_dock();
 }
 
 void building_dock::on_place(int orientation, int variant) {
@@ -44,7 +43,6 @@ void building_dock::on_place(int orientation, int variant) {
 }
 
 void building_dock::on_destroy() {
-    city_buildings_remove_dock();
 }
 
 bool building_dock::can_play_animation() const {
@@ -57,9 +55,8 @@ bool building_dock::can_play_animation() const {
 }
 
 void building_dock::update_count() const {
-    if (num_workers() > 0 && base.has_open_water_access) {
-        city_buildings_add_working_dock(id());
-    }
+    const bool is_active = num_workers() > 0 && base.has_open_water_access;
+    g_city.buildings.track_building(type(), id(), is_active);
 }
 
 void building_dock::update_map_orientation(int orientation) {
@@ -215,12 +212,7 @@ void building_dock::toggle_good_accepted(e_resource r) {
     data.dock.trading_goods.flip(r);
 }
 
-bool building_dock_accepts_ship(int ship_id, int dock_id) {
-    building_dock* dock = building_get(dock_id)->dcast_dock();
-    if (!dock) {
-        return false;
-    }
-
+bool building_dock::accepts_ship(int ship_id) {
     figure* f = figure_get(ship_id);
 
     empire_city* city = g_empire.city(f->empire_city_id);
@@ -228,134 +220,123 @@ bool building_dock_accepts_ship(int ship_id, int dock_id) {
     int any_acceptance = 0;
     for (auto r: resources) {
         if (city->sells_resource[r.type] || city->buys_resource[r.type]) {
-            any_acceptance += dock->is_trade_accepted(r.type) ? 1 : 0;
+            any_acceptance += is_trade_accepted(r.type) ? 1 : 0;
         }
     }
 
     return (any_acceptance > 0);
 }
 
+tile2i building_dock::moor_tile() const {
+    vec2i offset;
+    switch (data.dock.orientation) {
+    case 0: offset = { 1, -1 };  break;
+    case 1: offset = { 3, 1 }; break;
+    case 2: offset = { 1, 3 }; break;
+    default: offset = { -1, 1 }; break;
+    }
+
+    return tile().shifted(offset.x, offset.y);
+}
+
+tile2i building_dock::wait_tile() const {
+    vec2i offset;
+    switch (data.dock.orientation) {
+    case 0: offset = { 2, -2 };  break;
+    case 1: offset = { 4, 2 }; break;
+    case 2: offset = { 2, 4 }; break;
+    default: offset = { -2, 2 }; break;
+    }
+
+    return tile().shifted(offset.x, offset.y);
+}
+
+tile2i building_dock::reid_tile() const {
+    vec2i offset;
+    switch (data.dock.orientation) {
+    case 0: offset = { 2, -3 };  break;
+    case 1: offset = { 5, 2 }; break;
+    case 2: offset = { 2, 5 }; break;
+    default: offset = { -3, 2 }; break;
+    }
+
+    return tile().shifted(offset.x, offset.y);
+}
+
 building_dest map_get_free_destination_dock(int ship_id) {
-    if (!city_buildings_has_working_dock())
-        return {0, tile2i::invalid};
+    if (!g_city.buildings.has_working_dock()) {
+        return { 0, tile2i::invalid };
+    }
 
-    int dock_id = 0;
-    for (int i = 0; i < 10; i++) {
-        dock_id = city_buildings_get_working_dock(i);
-        if (!dock_id) {
+    const auto &docks = g_city.buildings.track_buildings(BUILDING_DOCK);
+    building_dock* better_dock = nullptr;
+    for (const auto &bid: docks) {
+        building_dock *dock = ::building_get(bid)->dcast_dock();
+        if (!dock || !dock->num_workers()) {
             continue;
         }
 
-        if (!building_dock_accepts_ship(ship_id, dock_id)) {
-            dock_id = 0;
+        if (!dock->accepts_ship(ship_id)) {
+            better_dock = nullptr;
             continue;
         }
 
-        building* dock = building_get(dock_id);
+        better_dock = dock;
         if (!dock->data.dock.trade_ship_id || dock->data.dock.trade_ship_id == ship_id) {
             break;
         }
     }
 
     // BUG: when 10 docks in city, always takes last one... regardless of whether it is free
-    if (dock_id <= 0)
-        return {0, tile2i::invalid};
-
-    building* dock = building_get(dock_id);
-    vec2i offset;
-    switch (dock->data.dock.orientation) {
-    case 0: offset = {1, -1};  break;
-    case 1: offset = {3, 1}; break;
-    case 2: offset = {1, 3}; break;
-    default: offset = {-1, 1}; break;
+    if (!better_dock) {
+        return { 0, tile2i::invalid };
     }
-    tile2i dock_tile = dock->tile.shifted(offset.x, offset.y);
-    tile2i dest_tile;
-    map_point_store_result(dock_tile, dest_tile);
-    dock->data.dock.trade_ship_id = ship_id;
-    return {dock_id, dest_tile};
+
+    tile2i moor_tile = better_dock->moor_tile();
+    better_dock->data.dock.trade_ship_id = ship_id;
+    return {better_dock->id(), moor_tile };
 }
 
 building_dest map_get_queue_destination_dock(int ship_id) {
-    if (!city_buildings_has_working_dock())
-        return {0, tile2i::invalid};
+    if (!g_city.buildings.has_working_dock()) {
+        return { 0, tile2i::invalid };
+    }
 
     // first queue position
-    for (int i = 0; i < 10; i++) {
-        int dock_id = city_buildings_get_working_dock(i);
-        if (!dock_id)
-            continue;
-
-        if (!building_dock_accepts_ship(ship_id, dock_id)) {
-            dock_id = 0;
+    const auto &docks = g_city.buildings.track_buildings(BUILDING_DOCK);
+    for (const auto &bid : docks) {
+        building_dock *dock = ::building_get(bid)->dcast_dock();
+        if (!dock) {
             continue;
         }
-        building* dock = building_get(dock_id);
-        int dx, dy;
-        switch (dock->data.dock.orientation) {
-        case 0:
-            dx = 2;
-            dy = -2;
-            break;
-        case 1:
-            dx = 4;
-            dy = 2;
-            break;
-        case 2:
-            dx = 2;
-            dy = 4;
-            break;
-        default:
-            dx = -2;
-            dy = 2;
-            break;
-        }
-        tile2i dock_tile = dock->tile.shifted(dx, dy);
-        tile2i dest_dock;
-        map_point_store_result(dock_tile, dest_dock);
 
-        if (!map_has_figure_at(dest_dock)) {
-            return {dock_id, dest_dock};
+        if (!dock->accepts_ship(ship_id)) {
+            continue;
+        }
+
+        tile2i wait_tile = dock->wait_tile();
+        if (!map_has_figure_at(wait_tile)) {
+            return {dock->id(), wait_tile};
         }
     }
 
     // second queue position
-    for (int i = 0; i < 10; i++) {
-        int dock_id = city_buildings_get_working_dock(i);
-        if (!dock_id)
-            continue;
-
-        if (!building_dock_accepts_ship(ship_id, dock_id)) {
-            dock_id = 0;
+    building_dock *better_dock = nullptr;
+    for (const auto &bid : docks) {
+        building_dock *dock = ::building_get(bid)->dcast_dock();
+        if (!dock) {
             continue;
         }
-        building* dock = building_get(dock_id);
-        int dx, dy;
-        switch (dock->data.dock.orientation) {
-        case 0:
-            dx = 2;
-            dy = -3;
-            break;
-        case 1:
-            dx = 5;
-            dy = 2;
-            break;
-        case 2:
-            dx = 2;
-            dy = 5;
-            break;
-        default:
-            dx = -3;
-            dy = 2;
-            break;
+
+        if (!dock->accepts_ship(ship_id)) {
+            continue;
         }
         
-        tile2i dock_tile = dock->tile.shifted(dx, dy);
-        tile2i dest_dock;
-        map_point_store_result(dock_tile, dest_dock);
-        if (!map_has_figure_at(dest_dock)) {
-            return {dock_id, dest_dock};
+        tile2i reid_tile = dock->reid_tile();
+        if (!map_has_figure_at(reid_tile)) {
+            return {dock->id(), reid_tile};
         }
     }
+
     return {0, tile2i::invalid};
 }

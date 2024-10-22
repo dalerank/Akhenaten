@@ -32,6 +32,11 @@ void city_buildings_t::remove_palace(building* palace) {
     palace_placed = !!next_palace;
 }
 
+void city_buildings_t::track_building(e_building_type type, building_id id, bool active) {
+    tracked_buildings->at(type).push_back(id);
+    building_increase_type_count(type, active);
+}
+
 bool city_buildings_has_mansion() {
     return city_data.buildings.mansion_placed;
 }
@@ -109,7 +114,7 @@ void city_buildings_remove_distribution_center(building* center) {
     }
 }
 
-int city_buildings_get_trade_center(void) {
+int city_buildings_get_trade_center() {
     return city_data.buildings.trade_center_building_id;
 }
 
@@ -144,39 +149,6 @@ void city_buildings_remove_triumphal_arch(void) {
 
 void city_buildings_earn_triumphal_arch(void) {
     city_data.buildings.triumphal_arches_available++;
-}
-
-void city_buildings_add_dock() {
-    city_data.buildings.working_docks++;
-}
-
-void city_buildings_remove_dock() {
-    city_data.buildings.working_docks--;
-}
-
-void city_buildings_add_working_wharf(int needs_fishing_boat) {
-    ++city_data.buildings.working_wharfs;
-    if (needs_fishing_boat)
-        ++city_data.buildings.shipyard_boats_requested;
-}
-
-void city_buildings_add_working_dock(int building_id) {
-    if (city_data.buildings.working_docks < 10)
-        city_data.buildings.working_dock_ids[city_data.buildings.working_docks] = building_id;
-
-    ++city_data.buildings.working_docks;
-}
-
-void city_buildings_add_working_shipyard(int building_id) {
-    ++city_data.buildings.working_shipyards;
-}
-
-bool city_buildings_has_working_dock() {
-    return city_data.buildings.working_docks > 0;
-}
-
-int city_buildings_get_working_dock(int index) {
-    return city_data.buildings.working_dock_ids[index];
 }
 
 tile2i city_buildings_main_native_meeting_center() {
@@ -258,8 +230,9 @@ void city_t::buildings_update_open_water_access() {
 
 void city_buildings_t::update_counters() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Buildin Count Update");
+
     building_clear_counters();
-    g_city.buildings.reset_dock_wharf_counters();
+    g_city.buildings.reset_tracked_buildings_counters();
     g_city.health.reset_mortuary_workers();
 
     buildings_valid_do ( [] (building &b) {
@@ -273,6 +246,15 @@ void city_buildings_t::on_post_load () {
     });
 }
 
+void city_buildings_t::init() {
+    tracked_buildings = new tracked_buildings_t();
+}
+
+void city_buildings_t::shutdown() {
+    delete tracked_buildings;
+    tracked_buildings = nullptr;
+}
+
 void city_buildings_t::update_tick(bool refresh_only) {
     for (auto it = building_begin(), end = building_end(); it != end; ++it) {
         if (it->is_valid()) {
@@ -281,23 +263,16 @@ void city_buildings_t::update_tick(bool refresh_only) {
     }
 }
 
-void city_buildings_t::reset_dock_wharf_counters() {
-    working_wharfs = 0;
-    shipyard_boats_requested = 0;
-    for (int i = 0; i < 8; i++) {
-        working_dock_ids[i] = 0;
+void city_buildings_t::reset_tracked_buildings_counters() {
+    for (auto &bids: *tracked_buildings) {
+        bids.clear();
     }
-    working_docks = 0;
 }
 
 void city_buildings_t::update_day() {
     buildings_valid_do([] (building &b) {
         b.dcast()->update_day();
     });
-}
-
-bool city_buildings_t::has_working_shipyard() {
-    return working_shipyards > 0;
 }
 
 void city_buildings_t::update_month() {

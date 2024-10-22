@@ -54,7 +54,9 @@ void building_fishing_wharf::on_place_update_tiles(int orientation, int variant)
 void building_fishing_wharf::update_count() const {
     if (num_workers() > 0 && base.has_open_water_access) {
         const figure *boat = get_figure(BUILDING_SLOT_BOAT);
-        city_buildings_add_working_wharf(boat->is_valid());
+        if (!boat->is_valid()) {
+            g_city.buildings.request_fishing_boat();
+        }
     }
 
     building_increase_industry_count(RESOURCE_FISH, num_workers() > 0);

@@ -29,6 +29,8 @@
 city_t g_city;
 
 void city_t::init() {
+    buildings.shutdown();
+
     memset(this, 0, sizeof(struct city_t));
 
     unused.faction_bytes[0] = 0;
@@ -47,8 +49,9 @@ void city_t::init() {
     population.monthly.count = 0;
     festival.months_since_festival = 1;
     festival.selected.size = FESTIVAL_SMALL;
-    g_city.kingdome.reset_gifts();
-    g_city.religion.reset();
+    kingdome.reset_gifts();
+    religion.reset();
+    buildings.init();
     figure_clear_all();
 }
 
@@ -158,7 +161,7 @@ bool city_t::generate_trader_from(empire_city &city) {
 
     if (city.is_sea_trade) {
         // generate ship
-        if (city_buildings_has_working_dock() && scenario_map_has_river_entry()
+        if (g_city.buildings.has_working_dock() && scenario_map_has_river_entry()
             && !city_trade_has_sea_trade_problems()) {
             tile2i river_entry = scenario_map_river_entry();
             city.trader_figure_ids[index] = figure_trade_ship::create(river_entry, city);
@@ -615,8 +618,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_4374[i]);
     }
     
+    tmp = 0;
     for (int i = 0; i < 10; i++) {
-        iob->bind(BIND_SIGNATURE_INT16, &data.buildings.working_dock_ids[i]);
+        iob->bind(BIND_SIGNATURE_INT16, &tmp); // dock id
     }
 
     iob->bind(BIND_SIGNATURE_INT16, &data.buildings.temple_complex_placed);

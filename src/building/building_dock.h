@@ -32,6 +32,10 @@ public:
     bool is_trade_accepted(e_resource r);
     void toggle_good_accepted(e_resource r);
     int count_idle_dockers() const;
+    bool accepts_ship(int ship_id);
+    tile2i moor_tile() const;
+    tile2i wait_tile() const;
+    tile2i reid_tile() const;
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

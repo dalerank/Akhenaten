@@ -2,6 +2,7 @@
 
 #include "core/tokenum.h"
 
+using building_id = uint16_t;
 enum e_building_type {
 	BUILDING_NONE = 0,
 	BUILDING_RESERVED_1 = 1,

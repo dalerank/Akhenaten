@@ -30,17 +30,22 @@ struct city_buildings_t {
     int32_t trade_center_building_id;
     int8_t triumphal_arches_available;
     int8_t triumphal_arches_placed;
-    int16_t working_wharfs;
-    int32_t shipyard_boats_requested;
-    int16_t working_docks;
-    int16_t working_dock_ids[10];
-    int16_t working_shipyards;
+
+    int8_t shipyard_boats_requested;
+
+    using tracked_building_ids = std::vector<building_id>;
+    using tracked_buildings_t = std::array<tracked_building_ids, BUILDING_MAX>;
+    tracked_buildings_t *tracked_buildings = nullptr;
+
     int32_t mission_post_operational;
     tile2i main_native_meeting;
     int8_t unknown_value;
 
     bool temple_complex_placed;
     int32_t temple_complex_id;
+
+    void init();
+    void shutdown();
 
     void update_tick(bool refresh_only);
     void update_water_supply_houses();
@@ -50,15 +55,23 @@ struct city_buildings_t {
     void update_religion_supply_houses();
     void update_counters();
     void on_post_load();
-    void reset_dock_wharf_counters();
     void update_month();
     void update_day();
 
-    bool has_working_shipyard();
     int get_palace_id();
 
     void add_palace(building* palace);
     void remove_palace(building* palace);
+
+    void reset_tracked_buildings_counters();
+    void track_building(e_building_type type, building_id id, bool active);
+    const tracked_building_ids &track_buildings(e_building_type type) const { return tracked_buildings->at(type); }
+
+    void clear_fishing_boat_requests() { shipyard_boats_requested = 0; }
+    void request_fishing_boat() { ++shipyard_boats_requested; }
+
+    bool has_working_dock() const { return !tracked_buildings->at(BUILDING_DOCK).empty(); }
+    bool has_working_shipyard() const { return !tracked_buildings->at(BUILDING_SHIPWRIGHT).empty(); }
 };
 
 
@@ -88,15 +101,6 @@ int city_buildings_triumphal_arch_available();
 void city_buildings_earn_triumphal_arch();
 void city_buildings_build_triumphal_arch();
 void city_buildings_remove_triumphal_arch();
-
-void city_buildings_add_dock();
-void city_buildings_remove_dock();
-
-void city_buildings_add_working_wharf(int needs_fishing_boat);
-void city_buildings_add_working_dock(int building_id);
-void city_buildings_add_working_shipyard(int building_id);
-bool city_buildings_has_working_dock();
-int city_buildings_get_working_dock(int index);
 
 map_point city_buildings_main_native_meeting_center();
 void city_buildings_set_main_native_meeting_center(int x, int y);
