@@ -8,8 +8,12 @@ public:
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
-    //virtual void window_info_background(object_info &c) override;
-    //virtual void spawn_figure() override;
+    virtual void on_tick(bool refresh_only) override;
+    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void update_graphic() override;
+    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
+
+    virtual bool ship_moored() const { return false; }
 };
 
 class building_transport_wharf : public building_wharf {

@@ -3,15 +3,15 @@
 #include "js/js_game.h"
 #include "city/labor.h"
 #include "grid/water.h"
+#include "grid/figure.h"
+#include "grid/image.h"
 #include "grid/building_tiles.h"
+#include "city/city.h"
+#include "building/count.h"
 
 building_warship_wharf::static_params warship_wharf_m;
 
 void building_warship_wharf::static_params::load(archive arch) {
-}
-
-void building_warship_wharf::on_create(int orientation) {
-    data.wharf.orientation = orientation;
 }
 
 void building_warship_wharf::on_place(int orientation, int variant) {
@@ -32,6 +32,31 @@ void building_warship_wharf::update_map_orientation(int orientation) {
     map_water_add_building(id(), tile(), size(), image_id);
 }
 
-void building_warship_wharf::bind_dynamic(io_buffer *iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.orientation);
+void building_warship_wharf::spawn_figure() {
+    check_labor_problem();
+
+    if (has_road_access()) {
+        common_spawn_labor_seeker(100);
+    }
+}
+
+void building_warship_wharf::update_count() const {
+    if (num_workers() > 0 && base.has_open_water_access) {
+        const figure *boat = get_figure(BUILDING_SLOT_BOAT);
+        if (!boat->is_valid()) {
+            g_city.buildings.request_warship_boat();
+        }
+    }
+
+    building_increase_type_count(BUILDING_WARSHIP_WHARF, num_workers() > 0);
+}
+
+bool building_warship_wharf::ship_moored() const {
+    figure *f = base.get_figure(BUILDING_SLOT_BOAT);
+    if (!f->is_valid()) {
+        return false;
+    }
+
+    const bool moored = f->action_state == FIGURE_ACTION_203_WARSHIP_MOORED;
+    return moored;
 }

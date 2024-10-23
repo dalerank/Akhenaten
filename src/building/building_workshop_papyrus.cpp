@@ -20,11 +20,6 @@
 
 buildings::model_t<building_papyrus_maker> papyrus_maker_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_papyrus_maker);
-void config_load_building_papyrus_maker() {
-    papyrus_maker_m.load();
-}
-
 declare_console_command(addpapyrus, game_cheat_add_resource<RESOURCE_PAPYRUS>);
 
 void building_papyrus_maker::on_create(int orientation) {
@@ -36,12 +31,12 @@ void building_papyrus_maker::update_count() const {
 }
 
 bool building_papyrus_maker::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    building_draw_normal_anim(ctx, point, &base, tile, papyrus_maker_m.anim["work"], color_mask);
+    building_draw_normal_anim(ctx, point, &base, tile, anim(animkeys().work), color_mask);
 
     int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
     if (amount >= 0) {
-        const auto &anim = papyrus_maker_m.anim["reed"];
-        ImageDraw::img_generic(ctx, anim.first_img() + amount, point + anim.pos, color_mask);
+        const auto &ranim = anim("reed");
+        ImageDraw::img_generic(ctx, ranim.first_img() + amount, point + ranim.pos, color_mask);
     }
     return true;
 }

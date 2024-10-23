@@ -108,14 +108,6 @@ void building_fishing_wharf::update_graphic() {
     set_animation(animkey);
 }
 
-void building_fishing_wharf::on_tick(bool refresh_only) {
-    auto &anim_wharf = base.anim;
-    if (anim_wharf.valid()) {
-        data.dock.docker_anim_frame++;
-        data.dock.docker_anim_frame %= (anim_wharf.max_frames * anim_wharf.frame_duration);
-    }
-}
-
 void building_fishing_wharf::spawn_figure() {
     check_labor_problem();
 
