@@ -23,7 +23,7 @@
 #include <stdint.h>
 #include <algorithm>
 
-class figure;
+struct figure;
 class io_buffer;
 class building;
 class building_juggler_school;
@@ -127,7 +127,7 @@ private:
     enum { max_figures = 4 };
     class building_impl *_ptr = nullptr; // dcast
 
-    std::array<uint16_t, max_figures> figure_ids;
+    std::array<figure_id, max_figures> figure_ids;
 
 public:
     struct metainfo {
@@ -247,12 +247,15 @@ public:
             e_labor_state labor_state;
             uint8_t labor_days_left;
             int unk_12[10];
-            unsigned short work_camp_id;
-            unsigned char worker_id;
+            building_id work_camp_id;
+            figure_id worker_id;
+            e_figure_type processed_figure;
         } industry;
 
-        struct  {
+        struct {
             uint8_t orientation;
+            e_figure_type process_type;
+            bool reparing;
         } wharf;
 
         struct entertainment_t {

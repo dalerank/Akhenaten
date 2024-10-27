@@ -32,6 +32,9 @@
 #include "overlays/city_overlay.h"
 #include "sound/sound_building.h"
 #include "city/city.h"
+#include "figure/figure.h"
+#include "figuretype/figure_cartpusher.h"
+#include "config/config.h"
 
 #include <string.h>
 #include <map>
@@ -521,6 +524,63 @@ bool building::is_education() {
 }
 bool building::is_military() {
     return building_is_military(type);
+}
+
+figure *building::create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir) {
+    figure *f = figure_create(_type, road_access, created_dir);
+    f->action_state = created_action;
+    f->set_home(id);
+    set_figure(slot, f);
+
+    return f;
+}
+
+figure *building::create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action, e_building_slot slot) {
+    figure *f = create_figure_generic(FIGURE_CART_PUSHER, created_action, slot, DIR_4_BOTTOM_LEFT);
+    auto cart = f->dcast_cartpusher();
+    if (!cart) {
+        return f;
+    }
+
+    cart->load_resource(resource_id, quantity);
+    cart->set_destination(0);
+    cart->base.immigrant_home_building_id = 0;
+
+    set_figure(slot, cart->id()); // warning: this overwrites any existing figure!
+    if (config_get(CONFIG_GP_CH_CART_SPEED_QUANTITY)) {
+        f->progress_inside_speed = std::clamp(quantity / 400, 0, 2);
+    }
+    cart->wait_ticks = 30;
+
+    return f;
+}
+
+figure *building::create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action, e_building_slot slot) {
+    figure *f = create_figure_generic(_type, created_action, slot, DIR_4_BOTTOM_LEFT);
+    f->set_destination(destination->id);
+    f->immigrant_home_building_id = 0;
+
+    set_figure(slot, f->id); // warning: this overwrites any existing figure!
+    return f;
+}
+
+figure *building::create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) {
+    figure *f = create_figure_generic(_type, created_action, slot, figure_roam_direction);
+
+    f->set_destination(0);
+    f->immigrant_home_building_id = 0;
+
+    set_figure(slot, f->id); // warning: this overwrites any existing figure!
+    f->init_roaming_from_building(figure_roam_direction);
+    f->set_home(id);
+
+    // update building to have a different roamer direction for next time
+    figure_roam_direction += 2;
+    if (figure_roam_direction > 6) {
+        figure_roam_direction = 0;
+    }
+
+    return f;
 }
 
 ///////////////
