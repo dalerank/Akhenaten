@@ -84,6 +84,10 @@ void config_load_info_window() {
         }
         building_info_handler->load(section);
     }
+
+    if (g_object_info.ui) {
+        window_info_show(tile2i(g_object_info.grid_offset), true);
+    }
 }
 
 static int center_in_city(int element_width_pixels) {
