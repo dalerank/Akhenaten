@@ -10,16 +10,11 @@
 #include "io/gamefiles/lang.h"
 #include "core/direction.h"
 #include "city/labor.h"
+#include "figure/figure.h"
 #include "building/building_barracks.h"
 
 buildings::model_t<building_brick_tower> brick_tower_m;
 buildings::model_t<building_mud_tower> mud_tower_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_tower);
-void config_load_building_tower() {
-    brick_tower_m.load();
-    mud_tower_m.load();
-}
 
 void building_tower::on_create(int orientation) {
     map_terrain_remove_with_radius(tilex(), tiley(), 2, 0, TERRAIN_WALL);
