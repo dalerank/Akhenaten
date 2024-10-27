@@ -28,36 +28,6 @@ void building_shipyard::static_params::load(archive arch) {
 
 }
 
-void building_shipyard::window_info_background(object_info &c) {
-    building *b = building_get(c.building_id);
-    const auto &params = b->dcast()->params();
-
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
-
-    window_building_play_sound(&c, b->get_sound());
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-
-    if (!c.has_road_access) {
-        window_building_draw_description(c, 69, 25);
-    } else {
-        int pct_done = calc_percentage<int>(b->data.industry.progress, 160);
-        int width = lang_text_draw(group_id, 2, c.offset.x + 32, c.offset.y + 56, FONT_NORMAL_BLACK_ON_LIGHT);
-        width += text_draw_percentage(pct_done, c.offset.x + 32 + width, c.offset.y + 56, FONT_NORMAL_BLACK_ON_LIGHT);
-        lang_text_draw(group_id, 3, c.offset.x + 32 + width, c.offset.y + 56, FONT_NORMAL_BLACK_ON_LIGHT);
-
-        if (g_city.buildings.shipyard_boats_requested) {
-            lang_text_draw_multiline(group_id, 5, c.offset + vec2i{32, 80}, 16 * (c.bgsize.x - 6), FONT_NORMAL_BLACK_ON_LIGHT);
-        } else {
-            lang_text_draw_multiline(group_id, 4, c.offset + vec2i{32, 80}, 16 * (c.bgsize.x - 6), FONT_NORMAL_BLACK_ON_LIGHT);
-        }
-    }
-
-    inner_panel_draw(c.offset + vec2i{ 16, 136 }, { c.bgsize.x - 2, 4 });
-    window_building_draw_employment(&c, 142);
-}
-
 void building_shipyard::spawn_figure() {
     check_labor_problem();
     if (!map_has_road_access(tile(), size())) {
@@ -93,6 +63,16 @@ void building_shipyard::spawn_figure() {
     }
 }
 
+void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
+    building_industry::bind_dynamic(iob, version);
+
+    data.industry.first_material_id = RESOURCE_BARLEY;
+
+    iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.orientation);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.process_type);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.reparing);
+}
+
 void building_shipyard::update_map_orientation(int orientation) {
     int image_offset = city_view_relative_orientation(data.industry.orientation);
     int image_id = anim(animkeys().base).first_img() + image_offset;
@@ -105,7 +85,7 @@ bool building_shipyard::draw_ornaments_and_animations_height(painter &ctx, vec2i
 
     int amount = ceil((float)base.stored_amount() / 100.0) - 1;
     if (amount >= 0) {
-        const auto &canim = anim("wood");
+        const auto &canim = anim(animkeys().wood);
         ImageDraw::img_generic(ctx, canim.first_img() + amount, point + canim.pos, mask);
     }
     return true;
@@ -124,7 +104,7 @@ void building_shipyard::on_create(int orientation) {
 
 void building_shipyard::on_place_update_tiles(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    map_water_add_building(id(), tile(), building_shipyard_m.building_size, building_shipyard_m.anim["base"].first_img() + orientation_rel);
+    map_water_add_building(id(), tile(), size(), anim(animkeys().base).first_img() + orientation_rel);
 }
 
 void building_shipyard::update_count() const {
