@@ -71,7 +71,7 @@ public:
     uint16_t immigrant_home_building_id;
     uint16_t destination_building_id;
 
-    uint16_t id;
+    figure_id id;
     uint16_t sprite_image_id;
     uint16_t cart_image_id;
     animation_context anim;
