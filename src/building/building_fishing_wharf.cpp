@@ -28,7 +28,7 @@ struct info_window_fishing_wharf : public building_info_window {
         return c.building_get()->dcast_fishing_wharf();
     }
 
-    virtual void window_info_background(object_info &c) override;
+    virtual void init(object_info &c) override;
 } fishing_wharf_infow;
 
 building_fishing_wharf::static_params fishing_wharf_m;
@@ -181,8 +181,8 @@ void building_fishing_wharf::highlight_waypoints() {
     map_highlight_set(data.dock.dock_tiles[1], 3);
 }
 
-void info_window_fishing_wharf::window_info_background(object_info &c) {
-    building_info_window::window_info_background(c);
+void info_window_fishing_wharf::init(object_info &c) {
+    building_info_window::init(c);
 
     building *b = c.building_get();
 
@@ -207,5 +207,5 @@ void info_window_fishing_wharf::window_info_background(object_info &c) {
     ui["warning_text"] = ui::str(reason.first, reason.second);
     ui["storage_desc"].text_var("Stored fish %d", b->stored_full_amount);
 
-    draw_employment_details_ui(ui, c, b, -1);
+    fill_employment_details(c);
 }

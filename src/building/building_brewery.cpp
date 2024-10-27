@@ -30,13 +30,13 @@ void building_brewery::on_create(int orientation) {
 }
 
 bool building_brewery::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const auto &anim = brewery_m.anim["work"];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+    const auto &ranim = anim(animkeys().work);
+    building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);
 
     int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
     if (amount >= 0) {
-        const auto &anim = brewery_m.anim["barley"];
-        ImageDraw::img_generic(ctx, anim.first_img() + amount, point + anim.pos, color_mask);
+        const auto &ranim = anim(animkeys().barley);
+        ImageDraw::img_generic(ctx, ranim.first_img() + amount, point + ranim.pos, color_mask);
     }
 
     return true;
