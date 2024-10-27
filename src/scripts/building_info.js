@@ -1030,6 +1030,7 @@ building_bandstand = {
     musician_we : { pos : [48, 4], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11 }
   },
   labor_category : LABOR_CATEGORY_ENTERTAINMENT,
+  fire_proof: true,
   window_info_height_id : 3,
   info_help_id:72,
   info_text_id:71,
@@ -1225,6 +1226,8 @@ building_warship_wharf = {
   },
   building_size : 3,
   fire_proof : true,
+  info_help_id: 84,
+  info_text_id: 175,
   window_info_height_id: 1,
   planer_relative_orientation: 1,
   labor_category : LABOR_CATEGORY_MILITARY,
