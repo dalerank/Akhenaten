@@ -35,6 +35,8 @@ const xstring id_anim_t::attack = "attack";
 const xstring id_anim_t::farmland = "farmland";
 const xstring id_anim_t::square = "square";
 const xstring id_anim_t::juggler = "juggler";
+const xstring id_anim_t::barley = "barley";
+const xstring id_anim_t::wood = "wood";
 
 const id_anim_t &animkeys() {
     return g_animkeys;
