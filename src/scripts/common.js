@@ -202,7 +202,6 @@ var roadblock_info_window = {}
 var hold_festival_window = {}
 var festival_square_info_window = {}
 var terrain_info_window = {}
-var building_info_window = {}
 var legion_info_window = {}
 var figure_info_window = {}
 var empty_info_window = {}

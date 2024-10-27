@@ -1131,15 +1131,18 @@ temple_info_window = {
 	}
 }
 
-building_info_window = {
+window building_info_window = {
 	ui : {
-		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
+		background 	: outer_panel({size: [29, 17]}),
 		title 		 	: { type : "text", pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		warning_text : { type : "text", pos: [32, 46], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-		inner_panel : { type : "inner_panel", pos : [16, 100], size: [27, 5] },
-		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 110] },
-		workers_text : { type : "text", pos: [70, 116], font: FONT_NORMAL_BLACK_ON_DARK},
-		workers_desc : { type : "text", pos: [70, 116 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) },
+		inner_panel : inner_panel({pos : [16, 100], size: [27, 5],
+																ui : {
+																	workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 10] }),
+																	workers_text : text({pos: [70, 16], font: FONT_NORMAL_BLACK_ON_DARK}),
+																	workers_desc : text({pos: [70, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
+																}
+														  }),
 		first_advisor  : { type : "image_button", pos:[40, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		second_advisor : { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		third_advisor : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
@@ -1309,6 +1312,32 @@ dock_info_window = {
 	ui : __baseui(building_info_window, {
 		background : outer_panel({size: [29, 16]}),
 		orders : button({margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}}),
+	})
+}
+
+window warshipwharf_info_window = {
+	ui : __baseui(building_info_window, {
+		background : outer_panel({size: [29, 16]}),
+		resource_icon : resource_icon({pos: [32, 56] }),
+		resource_stored : text({pos: [60, 60], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		workers_desc : text({pos: [70, 116 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
+	})
+}
+
+window shipyard_info_window = {
+	ui : __baseui(building_info_window, {
+		background    : outer_panel({size: [29, 18]}),
+		warning_text : text({pos: [28, 40], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		inner_panel : inner_panel({pos : [16, 150], size: [27, 5],
+																ui : {
+																	workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 10] }),
+																	workers_text : text({pos: [70, 16], font: FONT_NORMAL_BLACK_ON_DARK}),
+																	workers_desc : text({pos: [70, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
+																}
+															}),
+		ready_prod    : text({pos: [30, 110], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+  	resource_icon : resource_icon({pos: [32, 130] }),
+		resource_stored : text({pos: [60, 130], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
 	})
 }
 
