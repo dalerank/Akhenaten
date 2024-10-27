@@ -16,7 +16,7 @@ struct dock_info_window : public building_info_window_t<dock_info_window> {
 
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return c.building_get()->type == BUILDING_DOCK;
+        return c.building_get()->dcast_dock();
     }
 };
 
