@@ -22,6 +22,7 @@
 #include "widget/city/ornaments.h"
 #include "widget/city/building_ghost.h"
 #include "sound/sound_building.h"
+#include "figure/figure.h"
 #include "js/js_game.h"
 
 struct bandstand_model : public buildings::model_t<building_bandstand> {
@@ -45,7 +46,6 @@ void config_load_building_bandstand_config() {
 }
 
 void building_bandstand::on_create(int orientation) {
-    base.fire_proof = 1;
 }
 
 void building_bandstand::update_day() {
@@ -78,7 +78,7 @@ void building_bandstand::on_place_checks() {
 
 void building_bandstand::on_place_update_tiles(int orientation, int variant) {
     int size = params().building_size;
-    int image_id = params().anim["square"].first_img();
+    int image_id = anim(animkeys().square).first_img();
 
     // add underlying plaza first
     map_add_venue_plaza_tiles(id(), size, tile(), image_id, false);
@@ -116,7 +116,7 @@ void building_bandstand::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_bandstand::update_map_orientation(int map_orientation) {
-    int plaza_image_id = params().anim["square"].first_img();
+    int plaza_image_id = anim(animkeys().square).first_img();
     tile2i btile(data.entertainment.booth_corner_grid_offset);
     map_add_venue_plaza_tiles(id(), base.size, btile, plaza_image_id, true);
     map_add_bandstand_tiles(&base);
@@ -177,15 +177,15 @@ void building_bandstand::draw_shows_musicians(painter &ctx, vec2i pixel, int dir
     switch (direction) {
     case 0:
     {
-        const animation_t &anim = bandstand_m.anim["musician_sn"];
-        building_draw_normal_anim(ctx, pixel, &base, tile(), anim, color_mask);
+        const animation_t &ranim = anim("musician_sn");
+        building_draw_normal_anim(ctx, pixel, &base, tile(), ranim, color_mask);
     }
     break;
 
     case 1:
     {
-        const animation_t &anim = bandstand_m.anim["musician_we"];
-        building_draw_normal_anim(ctx, pixel, &base, tile(), anim, color_mask);
+        const animation_t &ranim = anim("musician_we");
+        building_draw_normal_anim(ctx, pixel, &base, tile(), ranim, color_mask);
     }
     break;
     }

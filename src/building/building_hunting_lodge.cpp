@@ -20,6 +20,7 @@
 #include "graphics/animation.h"
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
+#include "figure/figure.h"
 #include "js/js_game.h"
 
 buildings::model_t<building_hunting_lodge> hunting_lodge_m;
@@ -128,7 +129,7 @@ void building_hunting_lodge::spawn_figure() {
 
     if (can_spawn_ostrich_hunter()) {
         base.figure_spawn_delay = 10;
-        figure* f = base.create_figure_generic(FIGURE_OSTRICH_HUNTER, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
+        figure* f = create_figure_generic(FIGURE_OSTRICH_HUNTER, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
         base.set_figure(BUILDING_SLOT_HUNTER, f);
     }
 

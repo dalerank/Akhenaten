@@ -36,5 +36,9 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &data.industry.unk_12[i]);
     }
     iob->bind(BIND_SIGNATURE_UINT16, &data.industry.work_camp_id);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.industry.worker_id);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.industry.worker_id);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.industry.processed_figure);
+
+    int tmp;
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp); // reserved for extended figure type
 }

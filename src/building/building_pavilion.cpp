@@ -17,6 +17,7 @@
 #include "grid/building.h"
 #include "grid/orientation.h"
 #include "grid/building_tiles.h"
+#include "figure/figure.h"
 #include "js/js_game.h"
 
 struct pavilion_model : public buildings::model_t<building_pavilion> {
