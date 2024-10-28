@@ -44,4 +44,4 @@ water_dest map_water_get_wharf_for_new_fishing_boat(figure &boat);
 water_dest map_water_find_alternative_fishing_boat_tile(figure &boat);
 water_dest map_water_find_shipwreck_tile(figure &wreck);
 void map_water_rebuild_shores();
-bool map_water_can_spawn_fishing_boat(tile2i tile, int size, tile2i &boat_tile);
+bool map_water_can_spawn_boat(tile2i tile, int size, tile2i &boat_tile);

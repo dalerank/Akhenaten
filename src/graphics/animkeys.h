@@ -39,6 +39,9 @@ struct id_anim_t {
     static const xstring juggler;
     static const xstring barley;
     static const xstring wood;
+    static const xstring work_warship;
+    static const xstring work_fishing_boat;
+    static const xstring work_transport;
 };
 
 const id_anim_t &animkeys();

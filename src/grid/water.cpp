@@ -339,7 +339,7 @@ static int num_surrounding_water_tiles(int grid_offset) {
     return amount;
 }
 
-bool map_water_can_spawn_fishing_boat(tile2i tile, int size, tile2i &boat_tile) {
+bool map_water_can_spawn_boat(tile2i tile, int size, tile2i &boat_tile) {
     int base_offset = tile.grid_offset();
     offsets_array offsets;
     map_grid_adjacent_offsets(size, offsets);

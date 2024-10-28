@@ -1260,8 +1260,10 @@ building_shipyard = {
   animations : {
     preview : { pack: PACK_TERRAIN, id:26, max_frames:1 },
     base : { pack: PACK_TERRAIN, id:26, max_frames:1 },
-    work : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11 },
-    wood : { pos : [65, 3], pack:PACK_GENERAL, id:202 }
+    wood : { pos : [65, 3], pack:PACK_GENERAL, id:202 },
+    work_warship : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11 },
+    work_fishing_boat : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11 },
+    work_transport : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11 },
   },
   building_size : 3,
   window_info_height_id : 1,

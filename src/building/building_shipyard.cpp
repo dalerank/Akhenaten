@@ -40,25 +40,28 @@ void building_shipyard::spawn_figure() {
     }
 
     int pct_workers = worker_percentage();
-    if (pct_workers >= 100)
-        data.industry.progress += 10;
-    else if (pct_workers >= 75)
-        data.industry.progress += 8;
-    else if (pct_workers >= 50)
-        data.industry.progress += 6;
-    else if (pct_workers >= 25)
-        data.industry.progress += 4;
-    else if (pct_workers >= 1)
-        data.industry.progress += 2;
+    if (pct_workers >= 100) data.industry.progress += 10;
+    else if (pct_workers >= 75) data.industry.progress += 8;
+    else if (pct_workers >= 50) data.industry.progress += 6;
+    else if (pct_workers >= 25) data.industry.progress += 4;
+    else if (pct_workers >= 1) data.industry.progress += 2;
     
-    if (data.industry.progress >= 160) {
+    tile2i boat_tile;
+    if (data.industry.progress >= 160 && map_water_can_spawn_boat(tile(), size(), boat_tile)) {
         data.industry.progress = 0;
-        tile2i boat_tile;
-        if (map_water_can_spawn_fishing_boat(tile(), size(), boat_tile)) {
+        data.wharf.process_type = FIGURE_NONE;
+        if (data.wharf.process_type == FIGURE_WARSHIP) {
+            figure *f = figure_create(FIGURE_WARSHIP, boat_tile, DIR_0_TOP_RIGHT);
+            f->action_state = FIGURE_ACTION_205_WARSHIP_CREATED;
+            f->set_home(&base);
+            base.set_figure(BUILDING_SLOT_BOAT, f);
+        } else if (data.wharf.process_type == FIGURE_FISHING_BOAT) {
             figure *f = figure_create(FIGURE_FISHING_BOAT, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
+        } else {
+            assert(false && "building_shipyard: incorrect type requested");
         }
     }
 }
@@ -66,7 +69,7 @@ void building_shipyard::spawn_figure() {
 void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
     building_industry::bind_dynamic(iob, version);
 
-    data.industry.first_material_id = RESOURCE_BARLEY;
+    data.industry.first_material_id = RESOURCE_TIMBER;
 
     iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.orientation);
     iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.process_type);
@@ -80,8 +83,7 @@ void building_shipyard::update_map_orientation(int orientation) {
 }
 
 bool building_shipyard::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
-    const animation_t &canim = anim(animkeys().work);
-    building_draw_normal_anim(ctx, point, &base, tile, canim, mask);
+    draw_normal_anim(ctx, point, tile, mask);
 
     int amount = ceil((float)base.stored_amount() / 100.0) - 1;
     if (amount >= 0) {
@@ -105,6 +107,45 @@ void building_shipyard::on_create(int orientation) {
 void building_shipyard::on_place_update_tiles(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
     map_water_add_building(id(), tile(), size(), anim(animkeys().base).first_img() + orientation_rel);
+}
+
+void building_shipyard::update_day() {
+    if (data.wharf.process_type == FIGURE_WARSHIP && g_city.buildings.warship_boats_requested > 0) {
+        g_city.buildings.warship_boats_requested--;
+        return;
+    }
+
+    if (data.wharf.process_type == FIGURE_FISHING_BOAT && g_city.buildings.fishing_boats_requested > 0) {
+        g_city.buildings.fishing_boats_requested--;
+        return;
+    }
+
+    if (data.wharf.process_type == FIGURE_NONE) {
+        if (g_city.buildings.warship_boats_requested > 0 && base.stored_full_amount > 400) {
+            data.wharf.process_type = FIGURE_WARSHIP;
+            g_city.buildings.warship_boats_requested--;
+            return;
+        }
+
+        if (g_city.buildings.fishing_boats_requested > 0) {
+            data.wharf.process_type = FIGURE_FISHING_BOAT;
+            g_city.buildings.fishing_boats_requested--;
+            return;
+        }
+
+        assert(false && "Should be a correct type for build"); 
+    }
+}
+
+void building_shipyard::update_graphic() {
+    xstring animkey;
+    switch (data.wharf.process_type) {
+    case FIGURE_WARSHIP: animkey = animkeys().work_warship; break;
+    case FIGURE_FISHING_BOAT: animkey = animkeys().work_fishing_boat; break;
+    case FIGURE_TRANSPORT: animkey = animkeys().work_transport; break;
+    }
+
+    set_animation(animkey);
 }
 
 void building_shipyard::update_count() const {

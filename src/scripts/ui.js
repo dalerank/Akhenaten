@@ -1330,9 +1330,9 @@ window shipyard_info_window = {
 		warning_text : text({pos: [28, 40], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
 		inner_panel : inner_panel({pos : [16, 150], size: [27, 5],
 																ui : {
-																	workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 10] }),
-																	workers_text : text({pos: [70, 16], font: FONT_NORMAL_BLACK_ON_DARK}),
-																	workers_desc : text({pos: [70, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
+																	workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
+																	workers_text : text({pos: [50, 16], font: FONT_NORMAL_BLACK_ON_DARK}),
+																	workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
 																}
 															}),
 		ready_prod    : text({pos: [30, 110], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),

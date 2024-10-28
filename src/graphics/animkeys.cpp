@@ -37,6 +37,9 @@ const xstring id_anim_t::square = "square";
 const xstring id_anim_t::juggler = "juggler";
 const xstring id_anim_t::barley = "barley";
 const xstring id_anim_t::wood = "wood";
+const xstring id_anim_t::work_warship = "work_warship";
+const xstring id_anim_t::work_fishing_boat = "work_fishing_boat";
+const xstring id_anim_t::work_transport = "work_transport";
 
 const id_anim_t &animkeys() {
     return g_animkeys;
