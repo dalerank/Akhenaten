@@ -67,6 +67,9 @@ void figure_sled::do_deliver(int action_done) {
     case BUILDING_SMALL_MASTABA:
         building_monument_deliver_resource(dest, resource, carrying);
         break;
+
+    default:
+        assert(false);
     };
 }
 

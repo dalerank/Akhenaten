@@ -18,7 +18,7 @@ public:
     virtual void spawn_figure() override;
     virtual int animation_speed(int speed) const override { return 4; }
     virtual int get_fire_risk(int value) const override { return value / 10; }
-    virtual void update_count() const;
+    virtual void update_count() const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_BOOTH; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_BANDSTAND; }
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;

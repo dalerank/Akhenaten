@@ -60,7 +60,7 @@ void figure_governor::figure_action() {
 sound_key figure_governor::phrase_key() const {
     int nobles_in_city = 0;
     buildings_valid_do([&] (building &b) {
-        if (!b.house_size || !b.house_population || b.subtype.house_level < BUILDING_HOUSE_COMMON_MANOR) {
+        if (!b.house_size || !b.house_population || b.subtype.house_level < HOUSE_COMMON_MANOR) {
             return;
         }
         nobles_in_city += b.house_population;

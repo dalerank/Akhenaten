@@ -362,7 +362,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
     case e_debug_render_labor: // LABOR
         if (b_id && map_property_is_draw_tile(grid_offset)
-            && (b->labor_category != (uint8_t)-1 || building_is_floodplain_farm(*b))) {
+            && (b->labor_category != LABOR_CATEGORY_NONE || building_is_floodplain_farm(*b))) {
 
             if (b->labor_category != category_for_building(b)) {
                 debug_text(ctx, str, x0, y + 10, 10, "!!", b->labor_category, COLOR_RED); // incorrect category??
@@ -406,7 +406,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
         // STATUES & MONUMENTS
 
-        if (b_id && map_property_is_draw_tile(grid_offset) && (b->labor_category != (uint8_t)-1 || building_is_floodplain_farm(*b))) {
+        if (b_id && map_property_is_draw_tile(grid_offset) && (b->labor_category != LABOR_CATEGORY_NONE || building_is_floodplain_farm(*b))) {
             switch (b->type) {
             case BUILDING_SMALL_STATUE:
             case BUILDING_MEDIUM_STATUE:

@@ -94,6 +94,9 @@ int figure_combat_get_target_for_wolf(tile2i tile, int max_distance) {
         case FIGURE_BALLISTA:
         case FIGURE_CREATURE:
             continue;
+
+        default:
+            ; // nothing
         }
         if (f->is_enemy() || f->is_herd()) {
             continue;
@@ -182,6 +185,10 @@ int figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, 
         }
 
         switch (f->type) {
+        default:
+            ; // nothing
+            break;
+
         case FIGURE_EXPLOSION:
         case FIGURE_STANDARD_BEARER:
         case FIGURE_MAP_FLAG:

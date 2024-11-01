@@ -203,6 +203,9 @@ int figure::figure_rioter_collapse_building() {
         case BUILDING_FORT_ARCHERS:
         case BUILDING_BURNING_RUIN:
             continue;
+
+        default:
+            ; // nothing
         }
 
         if (b->house_size && b->subtype.house_level < HOUSE_MODEST_HOMESTEAD) {

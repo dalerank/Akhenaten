@@ -43,6 +43,9 @@ sound_key figure_priest::phrase_key() const {
     case BUILDING_TEMPLE_PTAH: case BUILDING_TEMPLE_COMPLEX_PTAH: god = GOD_PTAH;  god_prefix = "ptah"; break;
     case BUILDING_TEMPLE_SETH: case BUILDING_TEMPLE_COMPLEX_SETH: god = GOD_SETH;  god_prefix = "seth"; break;
     case BUILDING_TEMPLE_BAST: case BUILDING_TEMPLE_COMPLEX_BAST: god = GOD_BAST;  god_prefix = "bast"; break;
+
+    default:
+        assert(false);
     }
 
     svector<sound_key, 10> keys;
@@ -175,6 +178,9 @@ e_overlay figure_priest::get_overlay() const {
     case BUILDING_SHRINE_PTAH: case BUILDING_TEMPLE_PTAH: case BUILDING_TEMPLE_COMPLEX_PTAH: return OVERLAY_RELIGION_PTAH;
     case BUILDING_SHRINE_SETH: case BUILDING_TEMPLE_SETH: case BUILDING_TEMPLE_COMPLEX_SETH: return OVERLAY_RELIGION_SETH;
     case BUILDING_SHRINE_BAST: case BUILDING_TEMPLE_BAST: case BUILDING_TEMPLE_COMPLEX_BAST: return OVERLAY_RELIGION_BAST;
+
+    default:
+        assert(false);
     }
 
     return OVERLAY_NONE;
@@ -212,6 +218,9 @@ void figure_priest::update_animation() {
     case BUILDING_TEMPLE_COMPLEX_BAST:
         animkey = "bast_walk";
         break;
+
+    default:
+        assert(false);
     }
 
     image_set_animation(animkey);

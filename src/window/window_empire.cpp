@@ -366,6 +366,9 @@ void empire_window::draw_city_info(const empire_object* object) {
         ui["city_want_buy_title"].enabled = !city->is_open;
         ui["city_want_buy_items"].enabled = !city->is_open;
         break;
+
+    default:
+        assert(false);
     }
 }
 

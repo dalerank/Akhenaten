@@ -8,7 +8,7 @@ public:
     BUILDING_METAINFO(BUILDING_FIREHOUSE, building_firehouse)
 
     building_firehouse(building &b) : building_impl(b) {}
-    virtual building_firehouse *dcast_firehouse() { return this; }
+    virtual building_firehouse *dcast_firehouse() override { return this; }
 
     virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_FIRE; }

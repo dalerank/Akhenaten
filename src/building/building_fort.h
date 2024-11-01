@@ -5,7 +5,7 @@
 class building_fort : public building_impl {
 public:
     building_fort(building &b) : building_impl(b) {}
-    virtual building_fort *dcast_fort() { return this; }
+    virtual building_fort *dcast_fort() override { return this; }
 
     virtual void window_info_background(object_info &c) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;

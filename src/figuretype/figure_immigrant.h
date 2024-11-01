@@ -4,6 +4,7 @@ class figure_immigrant : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_IMMIGRANT, figure_immigrant)
     figure_immigrant(figure *f) : figure_impl(f) {}
+    virtual figure_immigrant *dcast_immigrant() override { return this; }
 
     virtual void on_destroy() override;
     virtual void figure_action() override;
@@ -11,7 +12,6 @@ public:
     virtual void figure_roaming_action() override { /*nothing*/ }
     virtual void update_animation() override;
     virtual bool can_move_by_water() const override;
-    virtual figure_immigrant *dcast_immigrant() { return this; }
     virtual int y_correction(int y) const override { return 10; }
     virtual e_figure_sound phrase() const override { return {FIGURE_IMMIGRANT, "immigrant"}; }
     virtual figure_sound_t get_sound_reaction(xstring key) const override;

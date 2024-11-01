@@ -53,6 +53,9 @@ int32_t map_grid_get(grid_xx* grid, uint32_t at) {
     case FS_INT32:
         res = ((int32_t*)grid->items_xx)[at];
         break;
+
+    default:
+        assert(false);
     }
     return res;
 }
@@ -83,6 +86,9 @@ void map_grid_set(grid_xx* grid, uint32_t at, int64_t value) {
     case FS_INT32:
         ((int32_t*)grid->items_xx)[at] = (int32_t)value;
         break;
+
+    default:
+        assert(false);
     }
 }
 void map_grid_fill(grid_xx* grid, int64_t value) {
@@ -107,6 +113,9 @@ void map_grid_fill(grid_xx* grid, int64_t value) {
     case FS_INT32:
         memset(grid->items_xx, (int32_t)value, grid->size_total);
         break;
+
+    default:
+        assert(false);
     }
 }
 void map_grid_clear(grid_xx* grid) {
@@ -165,6 +174,9 @@ void map_grid_and_all(grid_xx* grid, int mask) {
         case FS_INT32:
             ((int32_t*)grid->items_xx)[i] &= (int32_t)mask;
             break;
+
+        default:
+            assert(false);
         }
     }
 }
@@ -197,6 +209,8 @@ void map_grid_save_buffer(grid_xx* grid, buffer* buf) {
         for (int i = 0; i < GRID_SIZE_TOTAL; i++)
             buf->write_i32(((int32_t*)grid->items_xx)[i]);
         break;
+    default:
+        assert(false);
     }
 }
 
@@ -236,6 +250,9 @@ void map_grid_load_buffer(grid_xx* grid, buffer* buf) {
             dr_data[i] = buf->read_i32();
         break;
     }
+
+    default:
+        assert(false);
     }
     return;
 }

@@ -22,7 +22,7 @@ struct trade_prices_window : autoconfig_window_t<trade_prices_window> {
     virtual int draw_background() override;
     virtual void ui_draw_foreground() override;
     virtual int ui_handle_mouse(const mouse *m) override;
-    virtual void init() {}
+    virtual void init() override {}
 
     virtual void load(archive arch, pcstr section) override {
         autoconfig_window::load(arch, section);

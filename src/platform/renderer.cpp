@@ -44,7 +44,7 @@
 
 #define MAX_PACKED_IMAGE_SIZE 64000
 
-#if defined(GAME_PLATFORM_ANDROID)
+#if defined(GAME_PLATFORM_ANDROID) || defined(GAME_PLATFORM_WEB)
 // On the arm versions of android, for some reason, atlas textures that are too large will make the renderer fetch
 // some images from the atlas with an off-by-one pixel, making things look terrible. Defining a smaller atlas texture
 // prevents the problem, at the cost of performance due to the extra texture context switching.

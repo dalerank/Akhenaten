@@ -1,8 +1,10 @@
 #pragma once
 
+#include <cstdint>
+
 // Magic value used to indicate that there is no cache entry for this particular
 // conversion yet. Should be a fairly high value to avoid collisions.
-#define DCAST_NO_OFFSET 0x7FFFFFFFFFFFFFFFLL
+constexpr ptrdiff_t DCAST_NO_OFFSET = 0x7FFFFFFFFFFFFFFFL;
 
 #include <memory>
 #include <assert.h>

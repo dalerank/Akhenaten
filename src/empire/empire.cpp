@@ -223,6 +223,9 @@ int get_max_food_stock_for_population(e_resource resource) {
     case RESOURCE_OIL:
     case RESOURCE_BEER:
         return std::max(100, (city_population() / 100) * 100);
+
+    default:
+        assert(false);
     }
 
     return 0;

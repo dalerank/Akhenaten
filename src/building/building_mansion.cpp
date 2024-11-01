@@ -73,6 +73,9 @@ bool building_mansion::draw_ornaments_and_animations_height(painter &ctx, vec2i 
             building_draw_normal_anim(ctx, point, &base, tile, anim, mask);
         }
         break;
+
+    default:
+        assert(false);
     }
     return true;
 }

@@ -542,6 +542,10 @@ void BuildPlanner::setup_build(e_building_type type) { // select building for co
 
 void BuildPlanner::setup_build_flags() {
     switch (build_type) {
+    default:
+        ; // nothing
+        break;
+
     case BUILDING_BARLEY_FARM:
     case BUILDING_FLAX_FARM:
     case BUILDING_GRAIN_FARM:
@@ -1107,6 +1111,9 @@ void BuildPlanner::update_unique_only_one_check() {
         if (city_buildings_has_temple_complex() && !config_get(CONFIG_GP_CH_MULTIPLE_TEMPLE_COMPLEXES))
             unique_already_placed = true;
         break;
+
+    default:
+        ; // nothing
     }
 
     if (unique_already_placed) {
@@ -1447,6 +1454,9 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     case BUILDING_FERRY:
         should_recalc_ferry_routes = true;
         break;
+
+    default:
+        ; // nothing
     }
 
     // update terrain data for certain special cases

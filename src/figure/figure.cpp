@@ -122,6 +122,9 @@ void figure::figure_delete_UNSAFE() {
     case FIGURE_ENEMY_CAESAR_LEGIONARY:
         g_city.kingdome.mark_soldier_killed();
         break;
+
+    default:
+        ; // nothing
     }
 
     if (empire_city_id) {

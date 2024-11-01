@@ -75,6 +75,9 @@ void city_t::government_distribute_treasury() {
                 remainder = 0;
             }
             break;
+
+        default:
+            ; // nothing
         }
     });
 }

@@ -46,7 +46,7 @@ struct minimap_window : public autoconfig_window_t<minimap_window> {
     void draw_minimap_tile(vec2i screen, tile2i point);
     void draw_viewport_rectangle(painter &ctx);
     void clear();
-    void draw();
+    virtual void draw() override;
 };
 
 void widget_minimap_init();

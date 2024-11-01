@@ -47,6 +47,9 @@ pcstr resource_name(e_resource resource) {
     case RESOURCE_MARBLE: return "marble";
     case RESOURCE_DEBEN: return "deben";
     case RESOURCE_TROOPS: return "troops";
+
+    default:
+        assert(false);
     }
     return "unknown";
 }

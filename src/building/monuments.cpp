@@ -135,6 +135,9 @@ grid_area building_monument_get_area(building *b) {
     case BUILDING_SMALL_MASTABA:
         end = main.shifted(3, 9);
         break;
+
+    default:
+        assert(false);
     }
 
     return {main, end};
@@ -164,6 +167,9 @@ tile2i building_monument_center_point(building *b) {
     case BUILDING_SMALL_MASTABA:
         end = main.shifted(3, 9);
         break;
+
+    default:
+        assert(false);
     }
 
     return main.add(end).div(2);
@@ -172,6 +178,8 @@ tile2i building_monument_center_point(building *b) {
 tile2i building_monument_access_point(building *b) {
     switch (b->type) {
     case BUILDING_SMALL_MASTABA: return b->tile.shifted(0, 10);
+    default:
+        assert(false);
     }
 
     if (b->size < 3) {
@@ -338,6 +346,9 @@ int building_image_get(building *b) {
         default:
             return building_impl::params(BUILDING_SMALL_MASTABA).anim["base"].first_img() + 1;
         }
+
+    default:
+        assert(false);
     }
 
     return 0;
@@ -706,6 +717,9 @@ bool building_monument_need_bricklayers(const building *b) {
     switch (b->type) {
     case BUILDING_SMALL_MASTABA:
         return (phase >= 2 && phase <= 5 && works_bricklayers < building_monument_needs_bricklayers(b->type, b->data.monuments.phase));
+
+    default:
+        assert(false);
     }
 
     return false;

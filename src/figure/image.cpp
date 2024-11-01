@@ -153,6 +153,9 @@ e_image_id resource_to_sled_image(e_resource res) {
     case RESOURCE_SANDSTONE: return IMG_SLED_SANDSTONE_SMALL;
     case RESOURCE_LIMESTONE: return IMG_SLED_LIMESTONE_SMALL;
     case RESOURCE_BRICKS: return IMG_SLED_BRICKS;
+
+    default:
+        assert(false);
     }
 
     return IMG_SLED_EMPTY_SMALL;
@@ -259,6 +262,10 @@ void figure::cart_update_image() {
 int figure::figure_image_corpse_offset() {
     int type_offset = 96;
     switch (type) {
+    default:
+        ; // nothing
+        break;
+
     case FIGURE_BIRDS:
         type_offset = 104;
         break;

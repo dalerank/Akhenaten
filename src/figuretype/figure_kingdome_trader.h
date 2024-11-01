@@ -24,7 +24,7 @@ public:
     virtual const animations_t &anim() const override;
     virtual void update_animation() override;
 
-    const static_params &current_params() const { static_cast<const static_params &>(params()); }
+    const static_params &current_params() const { return static_cast<const static_params &>(params()); }
 
     void go_to_next_storageyard(tile2i src_tile, int distance_to_entry);
     static int create(tile2i tile, const empire_city& city);

@@ -29,6 +29,10 @@ void platform_open_url(pcstr url, pcstr prefix);
 #define GAME_PLATFORM_UNIX
 #define GAME_PLATFORM_ANDROID
 #define GAME_PLATFORM_NAME "android"
+#elif defined(__EMSCRIPTEN__)
+#define GAME_PLATFORM_WEB
+#define GAME_PLATFORM_BROWSER
+#define GAME_PLATFORM_NAME "emscripten"
 #else
 #define GAME_PLATFORM_UNIX
 #define GAME_PLATFORM_LINUX

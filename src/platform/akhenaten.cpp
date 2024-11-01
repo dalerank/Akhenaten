@@ -50,6 +50,10 @@
 #include "platform/vita/vita_input.h"
 #endif
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#endif
+
 #if defined(_WIN32)
 
 #include <string.h>
@@ -585,43 +589,33 @@ static void handle_event(SDL_Event* event, bool &active, bool &quit) {
 }
 
 static void main_loop() {
-    mouse_set_inside_window(1);
-
-    game_imgui_overlay_init();
-
-    run_and_draw();
-    while (!g_application.quit) {
-
-        SDL_Event event;
+    SDL_Event event;
 #ifdef PLATFORM_ENABLE_PER_FRAME_CALLBACK
-        platform_per_frame_callback();
+    platform_per_frame_callback();
 #endif
-        /* Process event queue */
+    /* Process event queue */
 #ifdef __vita__
-        while (vita_poll_event(&event)) {
+    while (vita_poll_event(&event)) {
 #elif defined(__SWITCH__)
-        while (switch_poll_event(&event)) {
+    while (switch_poll_event(&event)) {
 #else
-        while (SDL_PollEvent(&event)) {
+    while (SDL_PollEvent(&event)) {
 #endif
-            game_imgui_overlay_handle_event(&event);
-            if (!game.debug_console) {
-                handle_event(&event, g_application.active, g_application.quit);
-            }
-        }
-
-        if (g_application.quit) {
-            continue;
-        }
-
-        if (g_application.active) {
-            run_and_draw();
-        } else {
-            SDL_WaitEvent(NULL);
+        game_imgui_overlay_handle_event(&event);
+        if (!game.debug_console) {
+            handle_event(&event, g_application.active, g_application.quit);
         }
     }
 
-    game_imgui_overlay_destroy();
+    if (g_application.quit) {
+        return;
+    }
+
+    if (g_application.active) {
+        run_and_draw();
+    } else {
+        SDL_WaitEvent(NULL);
+    }
 }
 
 int main(int argc, char** argv) {
@@ -630,7 +624,22 @@ int main(int argc, char** argv) {
     Arguments arguments(argc, argv);
     setup(arguments);
 
-    main_loop();
+    mouse_set_inside_window(1);
+
+    game_imgui_overlay_init();
+
+    run_and_draw();
+
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(main_loop, 0, 1);
+#else
+    while (!g_application.quit) {
+        main_loop();
+    }
+#endif
+
+    game_imgui_overlay_destroy();
+
     teardown();
 
     return EXIT_SUCCESS;

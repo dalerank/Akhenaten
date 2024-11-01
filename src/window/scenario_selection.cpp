@@ -501,6 +501,9 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
             init(MAP_SELECTION_CAMPAIGN, -1);
             break;
+
+        default:
+            assert(false);
         }
     }
     const mouse* m_dialog = mouse_in_dialog(m);
@@ -520,16 +523,20 @@ static void handle_input(const mouse* m, const hotkeys* h) {
                 return;
         }
         break;
-    case MAP_SELECTION_CAMPAIGN:
-        int last_focus = data.focus_button_id;
-        if (generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons_campaigns, 9, &data.focus_button_id)) {
-            return;
-        }
+    case MAP_SELECTION_CAMPAIGN: {
+            int last_focus = data.focus_button_id;
+            if (generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons_campaigns, 9, &data.focus_button_id)) {
+                return;
+            }
 
-        if (last_focus != data.focus_button_id) {
-            window_invalidate();
+            if (last_focus != data.focus_button_id) {
+                window_invalidate();
+            }
         }
         break;
+
+    default:
+        assert(false);
     }
 
     if (image_buttons_handle_mouse(m_dialog, {0, 0}, &start_button, 1, 0)) {

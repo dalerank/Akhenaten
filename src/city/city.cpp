@@ -242,6 +242,7 @@ int stack_proper_quantity(int full, int resource) {
     case RESOURCE_UNIT_BLOCK:
     case RESOURCE_UNIT_WEAPON:
     case RESOURCE_UNIT_CHARIOT:
+    case RESOURCE_WEAPONS:
         return full / 100;
     }
 }

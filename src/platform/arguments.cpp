@@ -80,6 +80,8 @@ void set_value(Arguments& arguments, argument_type type, std::string&& value) {
         arguments.set_window_size(v);
         break;
     }
+    default:
+        ; // nothing
     };
 }
 

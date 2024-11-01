@@ -291,6 +291,9 @@ bool map_routing_calculate_distances_for_building(e_routed_mode type, tile2i til
     case ROUTED_BUILDING_WALL:
         route_queue(tile.grid_offset(), -1, callback_calc_distance_build_wall);
         break;
+
+    default:
+        assert(false);
     }
     ++g_routing_stats.total_routes_calculated;
     return true;

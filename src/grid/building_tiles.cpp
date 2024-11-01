@@ -509,6 +509,9 @@ void map_building_tiles_remove(int building_id, tile2i tile) {
     case BUILDING_FESTIVAL_SQUARE:
         size = 5;
         break;
+
+    default:
+        ; // nothing
     }
 
     int x = MAP_X(base_grid_offset);

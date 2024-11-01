@@ -101,6 +101,9 @@ public:
             IO_BRANCH(*ext = (T)p_buf->read_i64(), p_buf->write_i64(*ext))
         case BIND_SIGNATURE_UINT64:
             IO_BRANCH(*ext = (T)p_buf->read_u64(), p_buf->write_u64(*ext))
+
+        default:
+            assert(false);
         }
     }
     template <typename T>

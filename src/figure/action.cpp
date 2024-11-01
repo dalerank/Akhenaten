@@ -284,7 +284,7 @@ void figure::action_perform() {
 
         // base lookup data
         const auto &params = figure_impl::params(type);
-        if (params.terrain_usage != 0xff && terrain_usage == 0xff) {
+        if (params.terrain_usage != -1 && terrain_usage == 0xff) {
             terrain_usage = params.terrain_usage;
         }
         max_roam_length = params.max_roam_length;

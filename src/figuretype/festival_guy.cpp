@@ -18,6 +18,10 @@ void figure_festival_guy::on_create() {
 void figure_festival_guy::figure_action() {
     building* b = home();
     switch (b->type) {
+    default:
+        assert(false);
+        break;
+
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         image_set_animation(IMG_PRIEST_OSIRIS);

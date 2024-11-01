@@ -18,7 +18,7 @@ public:
     virtual void on_destroy() override;
     virtual void on_tick(bool refresh_only) override;
     virtual bool can_play_animation() const override;
-    virtual void update_count() const;
+    virtual void update_count() const override;
     virtual void update_map_orientation(int orientation) override;
     virtual void spawn_figure() override;
     virtual void update_graphic() override;

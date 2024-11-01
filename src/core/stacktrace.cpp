@@ -6,10 +6,6 @@
 
 #include "SDL.h"
 
-#if (defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__)) || (defined(_WIN32) && defined(_M_X64))
-#define HAS_STACK_TRACE
-#endif
-
 static void display_crash_message() {
     platform_screen_show_error_message_box(
       "Ozzy has crashed :(",
@@ -24,11 +20,9 @@ static void display_crash_message() {
       "Thanks!\n");
 }
 
-#if defined(__GNUC__) && !defined(_WIN32) && !defined(ANDROID_BUILD)
+#if defined(GAME_PLATFORM_UNIX) && !defined(GAME_PLATFORM_WIN64) && !defined(ANDROID_BUILD)
 
 #include <signal.h>
-
-#ifdef HAS_STACK_TRACE
 
 #include <execinfo.h>
 
@@ -42,11 +36,6 @@ static void backtrace_print(void) {
         logs::info(stack[i]);
     }
 }
-#else
-static void backtrace_print(void) {
-    logs::info("No stack trace available");
-}
-#endif
 
 static void crash_handler(int sig) {
     logs::error("Oops, crashed with signal %d :(", sig);
@@ -59,15 +48,13 @@ void crashhandler_install(void) {
     signal(SIGSEGV, crash_handler);
 }
 
-#elif defined(_WIN32)
+#elif defined(GAME_PLATFORM_WIN64)
 
 #include <windows.h>
 
 #include <imagehlp.h>
 #include <shlwapi.h>
 #include <stdio.h>
-
-#ifdef HAS_STACK_TRACE
 
 #define log_info_sprintf(...)                                                                                          \
     snprintf(crash_info, 256, __VA_ARGS__);                                                                            \
@@ -171,8 +158,6 @@ static void print_stacktrace(LPEXCEPTION_POINTERS e) {
     }
 }
 
-#endif
-
 /** Called by windows if an exception happens. */
 static LONG CALLBACK exception_handler(LPEXCEPTION_POINTERS e) {
     // Prologue.
@@ -203,13 +188,14 @@ static LONG CALLBACK exception_handler(LPEXCEPTION_POINTERS e) {
     return EXCEPTION_EXECUTE_HANDLER;
 }
 
-void crashhandler_install(void) {
+void crashhandler_install() {
     SetUnhandledExceptionFilter(exception_handler);
 }
 
-#else // fallback
-
-void crashhandler_install(void) {
+#else
+void crashhandler_install() {
+    logs::error("Oops, crashed with signal :(");
 }
-
 #endif
+
+

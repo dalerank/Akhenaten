@@ -215,6 +215,10 @@ static void post_load() {
 
     // city data special cases
     switch (game.session.last_loaded) {
+    default:
+        assert(false);
+        break;
+
     case e_session_mission:
         g_city.init_campaign_mission();
         g_city.kingdome.init_scenario(scenario_campaign_rank(), game.session.last_loaded);
@@ -240,6 +244,10 @@ static void post_load() {
 // set up list of io_buffer chunks in correct order for specific file format read/write operations
 static void file_schema(e_file_format file_format, const int file_version) {
     switch (file_format) {
+    default:
+        assert(false);
+        break;
+
     case FILE_FORMAT_MAP_FILE:
         FILEIO.push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
         FILEIO.push_chunk(4, false, "file_version", iob_file_version);

@@ -51,6 +51,8 @@ namespace ui {
             case generic: return !!generic_buttons_handle_mouse(m, offset, &g_button, 1, &tmp_btn);
             case image: return !!image_buttons_handle_mouse(m, offset, &i_button, 1, &tmp_btn);
             case arrow: return !!arrow_buttons_handle_mouse(m, offset, &a_button, 1, &tmp_btn);
+            default:
+                assert(false);
             }
 
             return false;
@@ -60,6 +62,8 @@ namespace ui {
             switch (type) {
             case generic: return g_button._tooltip.c_str();
             case image: return i_button._tooltip.c_str(); 
+            default:
+                assert(false);
             }
 
             return "";
@@ -70,6 +74,8 @@ namespace ui {
             case generic: return { g_button.x, g_button.y };
             case image: return { i_button.x, i_button.y };
             case arrow: return { a_button.x, a_button.y };
+            default:
+                assert(false);
             }
 
             return {0, 0};
@@ -80,6 +86,8 @@ namespace ui {
             case generic: return g_button.size();
             case image: return { i_button.width, i_button.height };
             case arrow: return a_button.size();
+            default:
+                assert(false);
             }
 
             return {0, 0};
@@ -90,6 +98,8 @@ namespace ui {
             case generic: g_button.onclick(f); break;
             case image: i_button.onclick(f); break;
             case arrow: a_button.onclick(f); break;
+            default:
+                assert(false);
             }
         }
 
@@ -102,6 +112,8 @@ namespace ui {
             case generic: g_button = o.g_button; break;
             case image: i_button = o.i_button; break;
             case arrow: a_button = o.a_button; break;
+            default:
+                assert(false);
             }
         }
 

@@ -19,7 +19,7 @@ public:
     //virtual void on_create(int orientation) override;
     //virtual void on_place(int orientation, int variant) override;
     virtual void on_place_checks() override;
-    virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_STATUE; }
+    virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void on_undo() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual bool evolve(house_demands* demands) = 0;

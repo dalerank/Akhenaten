@@ -950,6 +950,9 @@ void building_impl::on_place_checks() {
     case BUILDING_TEMPLE_COMPLEX_ALTAR:
     case BUILDING_TEMPLE_COMPLEX_ORACLE:
         return;
+
+    default:
+        ; // nothing
     }
 
     if (!map_has_road_access(tile(), size())) {
@@ -1083,6 +1086,8 @@ bool resource_required_by_workshop(building* b, e_resource resource) {
     case RESOURCE_TIMBER: return b->type == BUILDING_CHARIOTS_WORKSHOP;
     case RESOURCE_HENNA: return b->type == BUILDING_PAINT_WORKSHOP;
     case RESOURCE_OIL: return b->type == BUILDING_LAMP_WORKSHOP;
+    default:
+        ; // false
     }
     return false;
 }

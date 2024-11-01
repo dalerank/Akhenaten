@@ -48,10 +48,10 @@ public:
     virtual int total_stored() const override;
     bool is_not_accepting(e_resource resource);
 
-    int remove_resource(e_resource resource, int amount);
+    virtual int remove_resource(e_resource resource, int amount) override;
     virtual int add_resource(e_resource resource, bool is_produced, int amount, bool force) override;
 
-    bool is_getting(e_resource resource);
+    virtual bool is_getting(e_resource resource) override;
 
     int freespace(e_resource resource);
     virtual int freespace() override;

@@ -14,12 +14,11 @@ class building_recruiter : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_RECRUITER, building_recruiter)
     building_recruiter(building &b) : building_impl(b) {}
+    virtual building_recruiter *dcast_recruiter() override { return this; }
 
     virtual void on_create(int orientation) override;
     virtual void on_place_checks() override;
     virtual void spawn_figure() override;
-
-    virtual building_recruiter *dcast_recruiter() { return this; }
 
     void add_weapon(int amount);
     int get_priority();

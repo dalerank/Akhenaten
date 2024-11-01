@@ -861,6 +861,9 @@ void city_religion_t::calculate_gods_mood_targets() {
         case GOD_PTAH: num_temples = building_count_total(BUILDING_TEMPLE_PTAH) + building_count_total(BUILDING_TEMPLE_COMPLEX_PTAH); break;
         case GOD_SETH: num_temples = building_count_total(BUILDING_TEMPLE_SETH) + building_count_total(BUILDING_TEMPLE_COMPLEX_SETH); break;
         case GOD_BAST: num_temples = building_count_total(BUILDING_TEMPLE_BAST) + building_count_total(BUILDING_TEMPLE_COMPLEX_BAST); break;
+
+        default:
+            assert(false);
         }
 
         if (num_temples == max_temples) {

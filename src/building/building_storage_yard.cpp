@@ -823,6 +823,9 @@ void building_storage_yard::spawn_figure() {
             cart->load_resource(task.resource, task.amount);
             remove_resource(task.resource, task.amount);
             break;
+
+        default:
+            assert(false);
         }
         base.set_figure(0, f->id);
         f->set_home(base.id);

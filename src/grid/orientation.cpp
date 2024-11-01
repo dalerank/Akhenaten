@@ -124,6 +124,9 @@ void map_orientation_update_buildings() {
                 case BUILDING_FESTIVAL_SQUARE:
                     plaza_image_id = params.anim["square"].first_img();
                     break;
+
+                default:
+                    assert(false);
                 }
                 tile2i btile(b->data.entertainment.booth_corner_grid_offset);
                 map_add_venue_plaza_tiles(b->id, params.building_size, btile, plaza_image_id, true);

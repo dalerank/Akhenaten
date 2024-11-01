@@ -41,6 +41,9 @@ void sound_city_init() {
 
 int building_type_to_channel(building *b) {
     switch (b->type) {
+    default:
+        ; // nothing
+        break;
 
     case BUILDING_HOUSE_CRUDE_HUT:
         if (b->house_population <= 0) {

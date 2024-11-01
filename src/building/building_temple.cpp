@@ -40,6 +40,9 @@ struct temple_info_window_t : public building_info_window {
         case BUILDING_TEMPLE_PTAH: image_offset = 23; break;
         case BUILDING_TEMPLE_SETH: image_offset = 24; break;
         case BUILDING_TEMPLE_BAST: image_offset = 25; break;
+
+        default:
+            assert(false);
         }
 
         ui["god_image"].image({PACK_UNLOADED, 21, image_offset});
@@ -72,6 +75,9 @@ e_overlay building_temple::get_overlay() const {
     case BUILDING_TEMPLE_PTAH: return OVERLAY_RELIGION_PTAH;
     case BUILDING_TEMPLE_SETH: return OVERLAY_RELIGION_SETH;
     case BUILDING_TEMPLE_BAST: return OVERLAY_RELIGION_BAST;
+
+    default:
+        assert(false);
     }
 
     return OVERLAY_NONE;
@@ -84,6 +90,9 @@ e_sound_channel_city building_temple::sound_channel() const {
     case BUILDING_TEMPLE_PTAH: return SOUND_CHANNEL_CITY_TEMPLE_PTAH;
     case BUILDING_TEMPLE_SETH: return SOUND_CHANNEL_CITY_TEMPLE_SETH;
     case BUILDING_TEMPLE_BAST: return SOUND_CHANNEL_CITY_TEMPLE_BAST;
+
+    default:
+        assert(false);
     }
 
     return SOUND_CHANNEL_CITY_NONE;

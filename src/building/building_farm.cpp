@@ -100,6 +100,9 @@ int get_crops_image(e_building_type type, int growth) {
     case BUILDING_POMEGRANATES_FARM: return base + 6 * 4 + growth;
     case BUILDING_CHICKPEAS_FARM: return base + 6 * 5 + growth;
     case BUILDING_FIGS_FARM: return base + 6 * 1 + growth;
+
+    default:
+        assert(false);
     }
 
     return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
@@ -233,6 +236,9 @@ void building_farm::on_create(int orientation) {
         base.output_resource_second_id = RESOURCE_STRAW;
         base.output_resource_second_rate = 10;
         break;
+
+    default:
+        assert(false);
     }
 }
 
@@ -269,6 +275,9 @@ void building_farm::on_place_update_tiles(int orientation, int variant) {
     case BUILDING_HENNA_FARM:
         map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 7, 0);
         break;
+
+    default:
+        assert(false);
     }
 }
 
@@ -297,7 +306,11 @@ void building_farm::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, col
 e_sound_channel_city building_farm::sound_channel() const {
     switch (type()) {
     case BUILDING_CHICKPEAS_FARM:
+    case BUILDING_BARLEY_FARM:
         return SOUND_CHANNEL_CITY_CHICKFARM;
+
+    default:
+        assert(false);
     }
     return SOUND_CHANNEL_CITY_CHICKFARM;
 }
