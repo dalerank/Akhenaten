@@ -7,7 +7,7 @@
 
 #include "core/tokenum.h"
 #include "core/svector.h"
-#include "core/bstring.h"
+#include "core/xstring.h"
 
 enum e_resource : uint8_t {
     RESOURCE_NONE = 0,
@@ -56,6 +56,48 @@ enum e_resource : uint8_t {
 
     RESOURCE_COUNT
 };
+
+struct id_resources_t {
+    static const xstring none;
+    static const xstring grain;
+    static const xstring meat;
+    static const xstring lettuce;
+    static const xstring chickpeas;
+    static const xstring pomegranates;
+    static const xstring figs;
+    static const xstring fish;
+    static const xstring gamemeat;
+    static const xstring straw;
+    static const xstring weapons;
+    static const xstring clay;
+    static const xstring bricks;
+    static const xstring pottery;
+    static const xstring barley;
+    static const xstring beer;
+    static const xstring flax;
+    static const xstring linen;
+    static const xstring gems;
+    static const xstring luxury_goods;
+    static const xstring timber;
+    static const xstring gold;
+    static const xstring reeds;
+    static const xstring papyrus;
+    static const xstring stone;
+    static const xstring limestone;
+    static const xstring granite;
+    static const xstring chariots;
+    static const xstring copper;
+    static const xstring sandstone;
+    static const xstring oil;
+    static const xstring henna;
+    static const xstring paint;
+    static const xstring lamps;
+    static const xstring marble;
+    static const xstring deben;
+    static const xstring troops;
+};
+
+const id_resources_t& resources();
 
 extern const token_holder<e_resource, RESOURCE_NONE, RESOURCE_COUNT> e_resource_tokens;
 
@@ -121,6 +163,7 @@ enum e_resource_unit {
 };
 
 pcstr resource_name(e_resource resource);
+e_resource resource_type(const xstring &name);
 int stack_units_by_resource(int resource);
 int stack_proper_quantity(int full, int resource);
 
