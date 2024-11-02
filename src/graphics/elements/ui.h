@@ -133,6 +133,7 @@ struct element {
     virtual void select(bool v) {}
     virtual void max_value(int v) {}
     virtual const xstring &tooltip() const { static xstring dummy;  return dummy; }
+    virtual const xstring &format() const { static xstring dummy; return dummy; }
     virtual element &onclick(std::function<void(int, int)>) { return *this; }
             element &onclick(std::function<void()> f) { onclick([f] (int, int) { f(); });  return *this; }
     virtual void onevent(std::function<void()>) { }
@@ -185,6 +186,14 @@ struct element {
         }
 
         str = result;
+    }
+
+    template<typename T>
+    inline void text_var(const T& v) {
+        bstring512 formated_text;
+        ui::format(v, format());
+        preformat_text(formated_text);
+        text(formated_text);
     }
 
     template<class ... Args> 
@@ -246,6 +255,7 @@ struct einner_panel : public element {
 
 struct elabel : public element {
     std::string _text;
+
     e_font _font;
     e_font _font_hover;
     e_font _font_link;
@@ -253,6 +263,7 @@ struct elabel : public element {
     color _color;
     color _shadow_color;
     xstring _tooltip;
+    xstring _format;
     UiFlags _flags;
     int _wrap;
     bool _clip_area;
@@ -264,6 +275,7 @@ struct elabel : public element {
     virtual void font(int) override;
     virtual e_font font() const override { return _font; }
     virtual const xstring &tooltip() const override { return _tooltip; }
+    virtual const xstring &format() const override { return _format; }
     virtual void width(int) override;
 };
 

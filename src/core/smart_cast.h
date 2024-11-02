@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include <cstddef>
 
 // Magic value used to indicate that there is no cache entry for this particular
 // conversion yet. Should be a fairly high value to avoid collisions.

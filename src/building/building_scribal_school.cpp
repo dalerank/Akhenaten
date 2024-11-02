@@ -16,25 +16,12 @@
 
 #include "widget/city/ornaments.h"
 
-struct scribal_school_model : public buildings::model_t<building_scribal_school> {
-    using inherited = buildings::model_t<building_scribal_school>;
-    vec2i papyrus;
-    vec2i icon_res;
-    vec2i text_res;
+building_scribal_school::static_params scribal_school_m;
 
-    using inherited::load;
-    virtual void load(archive arch) override {
-        papyrus = arch.r_vec2i("papyrus_icon");
-        icon_res = arch.r_vec2i("info_icon_res");
-        text_res = arch.r_vec2i("info_text_res");
-    }
-};
-
-scribal_school_model scribal_school_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_scribal_school);
-void config_load_scribal_school() {
-    scribal_school_m.load();
+void building_scribal_school::static_params::load(archive arch) {
+    papyrus = arch.r_vec2i("papyrus_icon");
+    icon_res = arch.r_vec2i("info_icon_res");
+    text_res = arch.r_vec2i("info_text_res");
 }
 
 void building_scribal_school::update_month() {
@@ -77,10 +64,6 @@ void building_scribal_school::on_create(int orientation) {
 
 }
 
-void building_scribal_school::window_info_background(object_info &c) {
-    building_education_draw_info(c, FIGURE_TEACHER, RESOURCE_PAPYRUS, scribal_school_m.icon_res, scribal_school_m.text_res);
-}
-
 void building_scribal_school::spawn_figure() {
     check_labor_problem();
     if (has_figure_of_type(BUILDING_SLOT_SERVICE, FIGURE_TEACHER)) {
@@ -111,7 +94,8 @@ void building_scribal_school::spawn_figure() {
 }
 
 void building_scribal_school::update_graphic() {
-    set_animation(can_play_animation() ? animkeys().work : animkeys().none);
+    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
+    set_animation(animkey);
 
     building_impl::update_graphic();
 }

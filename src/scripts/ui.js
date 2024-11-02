@@ -1341,6 +1341,14 @@ window shipyard_info_window = {
 	})
 }
 
+window scribal_school_info_window = {
+	ui : __baseui(building_info_window, {
+		background    : outer_panel({size: [29, 18]}),
+		resource_icon : resource_icon({pos: [32, 130] }),
+		resource_stored : text({pos: [60, 130], size: [px(27), 20], text:"{23.77} {stored.papyrus}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
+	}
+}
+
 dock_orders_window = {
 	parent_offset: [0, -px(4)],
   ui : {

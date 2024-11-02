@@ -764,6 +764,9 @@ void ui::elabel::load(archive arch, element *parent, items &elems) {
     if (_text[0] == '#') {
         _text = lang_text_from_key(_text.c_str());
     }
+    if (strchr(_text.c_str(), '{')) {
+        _format = _text.c_str();
+    }
     _font = arch.r_type<e_font>("font", FONT_NORMAL_BLACK_ON_LIGHT);
     _font_link = arch.r_type<e_font>("font_link", FONT_NORMAL_YELLOW);
     _font_hover = arch.r_type< e_font>("font_hover", FONT_INVALID);
