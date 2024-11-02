@@ -19,8 +19,8 @@ public:
     virtual void on_create(int orientation) override;
     virtual void on_place_checks() override;
     virtual void spawn_figure() override;
+    virtual bool add_resource(e_resource resource, int amount) override;
 
-    void add_weapon(int amount);
     int get_priority();
     bool create_tower_sentry();
     bool create_soldier();

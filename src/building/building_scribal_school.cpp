@@ -60,8 +60,18 @@ void building_scribal_school::on_place_checks() {
     }
 }
 
+bool building_scribal_school::add_resource(e_resource resource, int amount) {
+    if (resource != RESOURCE_PAPYRUS) {
+        return false;
+    }
+
+    assert(id() > 0);
+    base.stored_amount_first += amount;
+    return true;
+}
+
 void building_scribal_school::on_create(int orientation) {
-    data.industry.first_material_id = RESOURCE_PAPYRUS;
+    base.first_material_id = RESOURCE_PAPYRUS;
 }
 
 void building_scribal_school::spawn_figure() {

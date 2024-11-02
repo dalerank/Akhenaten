@@ -23,7 +23,7 @@ buildings::model_t<building_papyrus_maker> papyrus_maker_m;
 declare_console_command(addpapyrus, game_cheat_add_resource<RESOURCE_PAPYRUS>);
 
 void building_papyrus_maker::on_create(int orientation) {
-    data.industry.first_material_id = RESOURCE_REEDS;
+    base.first_material_id = RESOURCE_REEDS;
 }
 
 void building_papyrus_maker::update_count() const {

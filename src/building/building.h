@@ -175,6 +175,8 @@ public:
     bool has_open_water_access;
     int prev_part_building_id;
     int next_part_building_id;
+    e_resource first_material_id;
+    e_resource second_material_id;
     short stored_amount_first;
     short stored_amount_second;
     bool has_well_access;
@@ -245,8 +247,6 @@ public:
             uint8_t blessing_days_left;
             uint8_t orientation;
             bool has_raw_materials;
-            e_resource first_material_id;
-            e_resource second_material_id;
             unsigned char curse_days_left;
             int unk_6[5];
             short reserved_id_13;
@@ -480,8 +480,6 @@ public:
     tile2i access_tile();
     bool figure_generate();
 
-    void school_add_papyrus(int amount);
-
     void monument_add_workers(int fid);
     void monument_remove_worker(int fid);
     void industry_add_workers(int fid);
@@ -548,6 +546,7 @@ public:
     virtual const static_params &params() const { return params(type()); }
     virtual void bind_dynamic(io_buffer *iob, size_t version);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
+    virtual bool add_resource(e_resource resource, int amount) { return false; }
 
     virtual building_farm *dcast_farm() { return nullptr; }
     virtual building_brewery *dcast_brewery() { return nullptr; }

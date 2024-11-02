@@ -18,7 +18,7 @@ void config_load_building_jewels_workshop() {
 }
 
 void building_jewels_workshop::on_create(int orientation) {
-    data.industry.first_material_id = RESOURCE_GEMS;
+    base.first_material_id = RESOURCE_GEMS;
 }
 
 void building_jewels_workshop::on_place_checks() {

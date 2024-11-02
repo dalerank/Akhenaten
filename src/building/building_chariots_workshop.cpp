@@ -12,8 +12,8 @@ void config_load_building_chariots_workshop() {
 }
 
 void building_chariots_workshop::on_create(int orientation) {
-    data.industry.first_material_id = RESOURCE_TIMBER;
-    data.industry.second_material_id = RESOURCE_WEAPONS;
+    base.first_material_id = RESOURCE_TIMBER;
+    base.second_material_id = RESOURCE_WEAPONS;
     base.output_resource_first_id = RESOURCE_CHARIOTS;
 }
 

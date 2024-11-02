@@ -181,9 +181,14 @@ void building_recruiter::on_place_checks() {
     }
 }
 
-void building_recruiter::add_weapon(int amount) {
+bool building_recruiter::add_resource(e_resource resource, int amount) {
+    if (resource != RESOURCE_WEAPONS) {
+        return false;
+    }
+
     assert(id() > 0);
     base.stored_amount_first += amount;
+    return true;
 }
 
 void building_recruiter::spawn_figure() {

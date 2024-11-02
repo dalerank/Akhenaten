@@ -92,36 +92,34 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
             switch (dest->type) {
             case BUILDING_GRANARY:
             case BUILDING_STORAGE_YARD:
-            case BUILDING_STORAGE_ROOM:
-                {
+            case BUILDING_STORAGE_ROOM: {
                     building_storage *storage = dest->dcast_storage();
                     int accepting = storage ? storage->accepting_amount(resource) : 0;
                     int total_depositable = std::min<int>(carrying, accepting);
                     
                     if (total_depositable <= 0) {
-                        return advance_action(ACTION_8_RECALCULATE);
+                        advance_action(ACTION_8_RECALCULATE);
+                        return;
                     }
 
                     int amount = storage->add_resource(base.resource_id, false, amount_single_turn, /*force*/false);
                     if (amount != -1) {
                         dump_resource(amount_single_turn);
                     } else {
-                        return advance_action(action_fail);
+                        advance_action(action_fail);
+                        return;
                     }
                 }
                 break;
 
             case BUILDING_RECRUITER:
-                for (int i = 0; i < times; i++) { // do one by one...
-                    building_recruiter *recruiter = dest->dcast_recruiter();
-                    recruiter->add_weapon(amount_single_turn);
-                    dump_resource(amount_single_turn); // assume barracks will ALWAYS accept a weapon
-                }
-                break;
-
-            case BUILDING_SCRIBAL_SCHOOL:
-                for (int i = 0; i < times; i++) { // do one by one...
-                    dest->school_add_papyrus(amount_single_turn);
+            case BUILDING_SCRIBAL_SCHOOL: {
+                    building_impl *b = dest->dcast();
+                    bool ok = b->add_resource(resource, amount_single_turn);
+                    if (!ok) {
+                        advance_action(action_fail);
+                        return;
+                    }
                     dump_resource(amount_single_turn);
                 }
                 break;
@@ -134,18 +132,12 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
                 break;
 
             default:                              // workshop
-                for (int i = 0; i < times; i++) { // do one by one...
-                    if (dest->stored_amount(resource) < 200) {
-                        building_workshop_add_raw_material(dest, 100, resource);
-                        dump_resource(100);
-                        if (i + 1 == times) {
-                            advance_action(action_done);
-                        }
-                    } else {
-                        return advance_action(action_fail);
-                    }
+                if (dest->stored_amount(resource) < 200) {
+                    building_workshop_add_raw_material(dest, amount_single_turn, resource);
+                    dump_resource(amount_single_turn);
+                } else {
+                    return advance_action(action_fail);
                 }
-                advance_action(action_fail);
                 break;
             }
         }

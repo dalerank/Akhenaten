@@ -15,7 +15,7 @@ void config_load_building_cattle_ranch() {
 }
 
 void building_cattle_ranch::on_create(int orientation) {
-    data.industry.first_material_id = RESOURCE_STRAW;
+    base.first_material_id = RESOURCE_STRAW;
 }
 
 bool building_cattle_ranch::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

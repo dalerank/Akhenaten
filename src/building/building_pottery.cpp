@@ -21,15 +21,10 @@
 
 buildings::model_t<building_pottery> pottery_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_pottery);
-void config_load_building_pottery() {
-    pottery_m.load();
-}
-
 declare_console_command(addpottery, game_cheat_add_resource<RESOURCE_POTTERY>);
 
 void building_pottery::on_create(int orientation) {
-    data.industry.first_material_id = RESOURCE_CLAY;
+    base.first_material_id = RESOURCE_CLAY;
 }
 
 void building_pottery::on_place_checks() {

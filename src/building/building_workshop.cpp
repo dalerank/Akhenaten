@@ -14,8 +14,8 @@ void config_load_building_lamp_workshop() {
 }
 
 void building_lamp_workshop::on_create(int orientation) {
-    data.industry.first_material_id = RESOURCE_OIL;
-    data.industry.second_material_id = RESOURCE_TIMBER;
+    base.first_material_id = RESOURCE_OIL;
+    base.second_material_id = RESOURCE_TIMBER;
 }
 
 void building_lamp_workshop::update_count() const {
@@ -23,7 +23,7 @@ void building_lamp_workshop::update_count() const {
 }
 
 void building_paint_workshop::on_create(int orientation) {
-    data.industry.first_material_id = RESOURCE_OIL;
+    base.first_material_id = RESOURCE_OIL;
 }
 
 void building_paint_workshop::update_count() const {

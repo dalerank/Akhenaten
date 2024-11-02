@@ -45,7 +45,7 @@ void workshop_info_window::window_info_background(object_info& c) {
     ui["produce_icon"].image(b->output_resource_first_id);
     ui["title"].text((pcstr)lang_get_string(c.group_id, 0));
     ui["ready_prod"].text_var("%s %u%% %s", (pcstr)lang_get_string(c.group_id, 2), pct_done, (pcstr)lang_get_string(c.group_id, 3));
-    ui["resource_icon"].image(b->data.industry.first_material_id);
+    ui["resource_icon"].image(b->first_material_id);
     ui["resource_stored"].text_var("%s %u", (pcstr)lang_get_string(c.group_id, 12), b->stored_amount());
 
     std::pair<int, int> trouble_text{0, 0};
@@ -89,7 +89,7 @@ void building_workshop_draw_background(object_info& c, e_resource input_resource
     }
 
     int y_offset = 80;
-    e_resource input_resource_b = b->data.industry.first_material_id;
+    e_resource input_resource_b = b->first_material_id;
     ImageDraw::img_generic(ctx, image_id_resource_icon(input_resource_b), c.offset.x + 32, c.offset.y + y_offset);
     width = lang_text_draw(group_id, 14, c.offset.x + 60, c.offset.y + y_offset + 4, FONT_NORMAL_BLACK_ON_LIGHT);
 

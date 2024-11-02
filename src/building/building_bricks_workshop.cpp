@@ -15,8 +15,8 @@ void config_load_building_bricks_workshop() {
 }
 
 void building_bricks_workshop::on_create(int orientation) {
-    data.industry.first_material_id = RESOURCE_STRAW;
-    data.industry.second_material_id = RESOURCE_CLAY;
+    base.first_material_id = RESOURCE_STRAW;
+    base.second_material_id = RESOURCE_CLAY;
     base.output_resource_first_id = RESOURCE_BRICKS;
 }
 

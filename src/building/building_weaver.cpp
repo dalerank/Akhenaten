@@ -18,7 +18,7 @@ void config_load_building_weaver() {
 }
 
 void building_weaver::on_create(int orientation) {
-    data.industry.first_material_id = RESOURCE_FLAX;
+    base.first_material_id = RESOURCE_FLAX;
 }
 
 void building_weaver::on_place_checks() {

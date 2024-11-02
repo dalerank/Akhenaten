@@ -26,7 +26,7 @@ void building_brewery::static_params::load(archive arch) {
 }
 
 void building_brewery::on_create(int orientation) {
-    data.industry.first_material_id = RESOURCE_BARLEY;
+    base.first_material_id = RESOURCE_BARLEY;
 }
 
 bool building_brewery::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

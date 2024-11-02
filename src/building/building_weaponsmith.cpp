@@ -21,13 +21,8 @@ declare_console_command(addweapons, game_cheat_add_resource<RESOURCE_WEAPONS>);
 
 buildings::model_t<building_weaponsmith> weaponsmith_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_weaponsmith);
-void config_load_building_weaponsmith() {
-    weaponsmith_m.load();
-}
-
 void building_weaponsmith::on_create(int orientation) {
-    data.industry.first_material_id = RESOURCE_COPPER;
+    base.first_material_id = RESOURCE_COPPER;
 }
 
 void building_weaponsmith::on_place_checks() {

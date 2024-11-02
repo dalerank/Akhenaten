@@ -128,11 +128,11 @@ int building::get_figure_slot(figure* f) {
 }
 
 int building::stored_amount(e_resource res) const {
-    if (data.industry.first_material_id == res) {
+    if (first_material_id == res) {
         return stored_amount_first;
     }
 
-    if (data.industry.second_material_id == res) {
+    if (second_material_id == res) {
         return stored_amount_second;
     }
 
@@ -284,7 +284,7 @@ bool building::guild_has_resources() {
 bool building::workshop_has_resources() {
     assert(is_workshop());
     bool has_second_material = true;
-    if (data.industry.second_material_id != RESOURCE_NONE) {
+    if (second_material_id != RESOURCE_NONE) {
         has_second_material = (stored_amount_second > 100);
     }
 
@@ -295,7 +295,7 @@ bool building::workshop_has_resources() {
 void building::workshop_start_production() {
     assert(is_workshop());
     bool can_start_b = false;
-    if (data.industry.second_material_id != RESOURCE_NONE) {
+    if (second_material_id != RESOURCE_NONE) {
         can_start_b = (stored_amount_second >= 100);
     } else {
         can_start_b = true;
@@ -478,10 +478,4 @@ bool building::figure_generate() {
     }
 
     return true;
-}
-
-void building::school_add_papyrus(int amount) {
-    if (id > 0) {
-        stored_amount_first += amount;
-    }
 }

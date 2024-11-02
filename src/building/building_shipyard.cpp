@@ -70,7 +70,7 @@ void building_shipyard::spawn_figure() {
 void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
     building_industry::bind_dynamic(iob, version);
 
-    data.industry.first_material_id = RESOURCE_TIMBER;
+    base.first_material_id = RESOURCE_TIMBER;
 
     iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.orientation);
     iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.process_type);

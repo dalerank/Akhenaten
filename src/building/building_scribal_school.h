@@ -25,6 +25,7 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual void update_month() override;
     virtual void on_place_checks() override;
+    virtual bool add_resource(e_resource resource, int amount) override;
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
