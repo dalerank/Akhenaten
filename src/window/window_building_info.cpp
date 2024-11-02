@@ -14,6 +14,44 @@
 #include "game/game.h"
 #include "game/state.h"
 #include "dev/debug.h"
+#include "io/gamefiles/lang.h"
+#include "core/variant.h"
+
+namespace ui {
+    bstring512 format (const building_impl *b, pcstr fmt) {
+        bstring512 result;
+
+        svector<bstring128, 32> items;
+        string_to_array_t(items, fmt, ' ');
+
+        for (auto &item : items) {
+            if (item[0] != '$') {
+                continue;
+            }
+
+            int group, id;
+            uint32_t args_handled = sscanf(item.c_str(), "${%d.%d}", &group, &id);
+            if (args_handled == 2) {
+                item = (pcstr)lang_get_string(group, id);
+                continue;
+            }
+
+            bstring128 domain, prop;
+            args_handled = sscanf_s(item.c_str(), "${%[^.].%[^}]}", domain.data(), domain.capacity, prop.data(), prop.capacity);
+            if (args_handled == 2) {
+                bvariant bvar = b->get_property(xstring(domain), xstring(prop));
+                item = bvar.to_str();
+            }
+        }
+
+        for (const auto &item: items) {
+            result.append(item);
+            result.append(' ');
+        }
+
+        return result;
+    }
+}
 
 void window_building_draw_burning_ruin(object_info* c) {
     c->help_id = 0;
@@ -199,6 +237,12 @@ void building_info_window::init(object_info &c) {
     const auto &params = b->dcast()->params();
     c.help_id = params.meta.help_id;
     c.group_id = params.meta.text_id;
+
+    for (auto &w: ui.elements) {
+        bstring512 formated_text;
+        formated_text = ui::format(b->dcast(), w->format().c_str());
+        w->text(formated_text);
+    }
 
     ui["title"] = ui::str(28, b->type);
 
