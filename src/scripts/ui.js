@@ -1317,18 +1317,18 @@ dock_info_window = {
 
 window warshipwharf_info_window = {
 	ui : __baseui(building_info_window, {
-		background : outer_panel({size: [29, 16]}),
+		background    : outer_panel({size: [29, 16]}),
 		resource_icon : resource_icon({pos: [32, 56] }),
 		resource_stored : text({pos: [60, 60], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
-		workers_desc : text({pos: [70, 116 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
+		workers_desc  : text({pos: [70, 116 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
 	})
 }
 
 window shipyard_info_window = {
 	ui : __baseui(building_info_window, {
 		background    : outer_panel({size: [29, 18]}),
-		warning_text : text({pos: [28, 40], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-		inner_panel : inner_panel({pos : [16, 150], size: [27, 5],
+		warning_text  : text({pos: [28, 40], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		inner_panel   : inner_panel({pos : [16, 150], size: [27, 5],
 																ui : {
 																	workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
 																	workers_text : text({pos: [50, 16], font: FONT_NORMAL_BLACK_ON_DARK}),
@@ -1343,21 +1343,28 @@ window shipyard_info_window = {
 
 window scribal_school_info_window = {
 	ui : __baseui(building_info_window, {
-		background    : outer_panel({size: [29, 18]}),
-		resource_icon : resource_icon({pos: [32, 130] }),
-		resource_stored : text({pos: [60, 130], size: [px(27), 20], text:"{23.77} {stored.papyrus}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
-	}
+		background    : outer_panel({size: [29, 17]}),
+		resource_icon : resource_icon({pos: [32, 100] }),
+		resource_stored : text({pos: [60, 100], size: [px(27), 20], text:"${23.77} ${stored.papyrus}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		inner_panel   : inner_panel({pos : [16, 120], size: [27, 5],
+														ui : {
+															workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
+															workers_text : text({pos: [50, 16], font: FONT_NORMAL_BLACK_ON_DARK}),
+															workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
+														}
+													}),
+	})
 }
 
 dock_orders_window = {
 	parent_offset: [0, -px(4)],
   ui : {
-		background 	: outer_panel({size: [29, 22]}),
-		title 		 : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		background 	 : outer_panel({size: [29, 22]}),
+		title 		   : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
 		orders_panel : inner_panel({pos : [16, 42], size: [27, 16] }),
 		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
-		button_close  : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
-		accept_none : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
+		button_close : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
+		accept_none  : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
 
 		item_orders_column : dummy({margin:{centerx:0}}),
 		item_icon_column : dummy({pos:[25, 0]}),
