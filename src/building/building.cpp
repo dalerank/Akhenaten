@@ -34,6 +34,7 @@
 #include "city/city.h"
 #include "figure/figure.h"
 #include "figuretype/figure_cartpusher.h"
+#include "building/building_property.h"
 #include "config/config.h"
 
 #include <string.h>
@@ -1016,6 +1017,15 @@ void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, col
 
 void building_impl::bind_dynamic(io_buffer *iob, size_t version) {
     assert(base.output_resource_first_id == RESOURCE_NONE);
+}
+
+bvariant building_impl::get_property(const xstring &domain, const xstring &name) const {
+    if (domain == tags().stored) {
+        e_resource res = resource_type(name);
+        return bvariant(base.stored_amount(res));
+    }
+
+    return bvariant();
 }
 
 void building_impl::destroy_by_poof(bool clouds) { 
