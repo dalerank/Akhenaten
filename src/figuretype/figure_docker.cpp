@@ -49,7 +49,7 @@ bool figure_docker::try_import_resource(building* b, e_resource resource, int ci
     // try existing storage bay with the same resource
     building_storage_room* space = warehouse->room();
     while (space) {
-        if (space->base.stored_full_amount && space->base.stored_full_amount < 400 && space->base.subtype.warehouse_resource_id == resource) {
+        if (space->base.stored_amount_first > 0 && space->base.stored_amount_first < 400 && space->base.subtype.warehouse_resource_id == resource) {
             trade_route.increase_traded(resource, 100);
             space->add_import(resource);
             return true;
@@ -209,7 +209,7 @@ int figure_docker::get_closest_warehouse_for_export(tile2i pos, int city_id, int
         building* space = b;
         for (int s = 0; s < 8; s++) {
             space = space->next();
-            if (space->id && space->subtype.warehouse_resource_id == resource && space->stored_full_amount > 0)
+            if (space->id && space->subtype.warehouse_resource_id == resource && space->stored_amount_first > 0)
                 distance_penalty--;
         }
 

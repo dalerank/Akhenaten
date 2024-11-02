@@ -25,13 +25,13 @@ void building_scribal_school::static_params::load(archive arch) {
 }
 
 void building_scribal_school::update_month() {
-    if (base.stored_full_amount <= 0) {
+    if (base.stored_amount_first <= 0) {
         return;
     }
 
     short want_spent = calc_adjust_with_percentage<short>(base.num_workers, 50);
-    short spent = std::min(base.stored_full_amount, want_spent);
-    base.stored_full_amount -= spent;
+    short spent = std::min(base.stored_amount_first, want_spent);
+    base.stored_amount_first -= spent;
 }
 
 void building_scribal_school::on_place_checks() {
@@ -61,7 +61,7 @@ void building_scribal_school::on_place_checks() {
 }
 
 void building_scribal_school::on_create(int orientation) {
-
+    data.industry.first_material_id = RESOURCE_PAPYRUS;
 }
 
 void building_scribal_school::spawn_figure() {

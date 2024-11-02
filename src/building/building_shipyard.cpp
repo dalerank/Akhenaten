@@ -122,7 +122,7 @@ void building_shipyard::update_day() {
     }
 
     if (data.wharf.process_type == FIGURE_NONE) {
-        if (g_city.buildings.warship_boats_requested > 0 && base.stored_full_amount > 400) {
+        if (g_city.buildings.warship_boats_requested > 0 && base.stored_amount_first > 400) {
             data.wharf.process_type = FIGURE_WARSHIP;
             g_city.buildings.warship_boats_requested--;
             return;
@@ -133,8 +133,6 @@ void building_shipyard::update_day() {
             g_city.buildings.fishing_boats_requested--;
             return;
         }
-
-        assert(false && "Should be a correct type for build"); 
     }
 }
 

@@ -155,7 +155,7 @@ void figure_ostrich_hunter::figure_action() {
 
     case ACTION_14_HUNTER_UNLOADING:
         if (animation().finished()) {
-            home()->stored_full_amount += 100;
+            home()->stored_amount_first += 100;
             poof();
         }
         break;

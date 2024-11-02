@@ -103,7 +103,7 @@ bool building_hunting_lodge::can_spawn_ostrich_hunter() { // no cache because fu
         return false;
     }
 
-    return (base.stored_full_amount < 500);
+    return (base.stored_amount_first < 500);
 }
 
 void building_hunting_lodge::spawn_figure() {

@@ -242,7 +242,7 @@ bool city_religion_t::PTAH_industry_restock() {
                     if (b->state != BUILDING_STATE_VALID || b->type != industries[i])
                         continue;
 
-                    b->stored_full_amount = std::clamp<short>(b->stored_full_amount, 200, 9999);
+                    b->stored_amount_first = std::clamp<short>(b->stored_amount_first, 200, 9999);
                 }
                 return true;
             }

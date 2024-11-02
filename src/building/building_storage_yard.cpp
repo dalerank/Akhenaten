@@ -55,7 +55,7 @@ int building_storage_yard::get_space_info() const {
         }
 
         if (space->subtype.warehouse_resource_id) {
-            total_amounts += space->stored_full_amount;
+            total_amounts += space->stored_amount_first;
         } else {
             empty_spaces++;
         }
@@ -78,7 +78,7 @@ int building_storage_yard::amount(e_resource resource) const {
             return 0;
 
         if (space->subtype.warehouse_resource_id && space->subtype.warehouse_resource_id == resource) {
-            total += space->stored_full_amount;
+            total += space->stored_amount_first;
         }
     }
     return total;
@@ -131,7 +131,7 @@ int building_storage_yard::add_resource(e_resource resource, bool is_produced, i
     bool look_for_space = false;
     if (base.subtype.warehouse_resource_id && base.subtype.warehouse_resource_id != resource) {
         look_for_space = true;
-    } else if (base.stored_full_amount >= 400) {
+    } else if (base.stored_amount_first >= 400) {
         look_for_space = true;
     } else if (type() == BUILDING_STORAGE_YARD) {
         look_for_space = true;
@@ -185,20 +185,20 @@ int building_storage_yard::remove_resource(e_resource resource, int amount) {
         if (amount <= 0)
             return 0;
 
-        if (space->base.subtype.warehouse_resource_id != resource || space->base.stored_full_amount <= 0) {
+        if (space->base.subtype.warehouse_resource_id != resource || space->base.stored_amount_first <= 0) {
             space = space->next_room();
             continue;
         }
 
-        if (space->base.stored_full_amount > amount) {
+        if (space->base.stored_amount_first > amount) {
             city_resource_remove_from_storageyard(resource, amount);
-            space->base.stored_full_amount -= amount;
+            space->base.stored_amount_first -= amount;
             amount = 0;
 
         } else {
-            city_resource_remove_from_storageyard(resource, space->base.stored_full_amount);
-            amount -= space->base.stored_full_amount;
-            space->base.stored_full_amount = 0;
+            city_resource_remove_from_storageyard(resource, space->base.stored_amount_first);
+            amount -= space->base.stored_amount_first;
+            space->base.stored_amount_first = 0;
             space->base.subtype.warehouse_resource_id = RESOURCE_NONE;
         }
         space->set_image(resource);
@@ -430,7 +430,7 @@ static bool contains_non_stockpiled_food(building* space, const resource_list &f
         return false;
     }
 
-    if (space->stored_full_amount <= 0) {
+    if (space->stored_amount_first <= 0) {
         return false;
     }
 
@@ -503,9 +503,9 @@ storage_worker_task building_storageyard_deliver_weapons(building *warehouse) {
             space = warehouse;
             for (int i = 0; i < 8; i++) {
                 space = space->next();
-                if (space->id > 0 && space->stored_full_amount > 0
+                if (space->id > 0 && space->stored_amount_first > 0
                     && space->subtype.warehouse_resource_id == RESOURCE_WEAPONS) {
-                    available += space->stored_full_amount;
+                    available += space->stored_amount_first;
                 }
             }
 
@@ -534,9 +534,9 @@ storage_worker_task building_storageyard_deliver_papyrus_to_scribal_school(build
             space = warehouse;
             for (int i = 0; i < 8; i++) {
                 space = space->next();
-                if (space->id > 0 && space->stored_full_amount > 0
+                if (space->id > 0 && space->stored_amount_first > 0
                     && space->subtype.warehouse_resource_id == RESOURCE_PAPYRUS) {
-                    available += space->stored_full_amount;
+                    available += space->stored_amount_first;
                 }
             }
 
@@ -554,7 +554,7 @@ storage_worker_task building_storageyard_deliver_resource_to_workshop(building *
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
         space = space->next();
-        if (space->id <= 0 || space->stored_full_amount <= 0) {
+        if (space->id <= 0 || space->stored_amount_first <= 0) {
             continue;
         }
 
@@ -632,7 +632,7 @@ storage_worker_task building_storageyard_deliver_to_monuments(building *warehous
 
     for (int i = 0; i < 8; i++) {
         space = space->next();
-        int available = space->stored_full_amount;
+        int available = space->stored_amount_first;
         if (space->id <= 0 || !space->subtype.warehouse_resource_id || available <= 0) {
             continue;
         }
@@ -704,8 +704,8 @@ storage_worker_task building_storage_yard::determine_worker_task() {
         building *space = &base;
         for (int i = 0; i < 8; i++) {
             space = space->next();
-            if (space->id > 0 && space->stored_full_amount > 0) {
-                return {STORAGEYARD_TASK_DELIVERING, space, space->stored_full_amount, space->subtype.warehouse_resource_id};
+            if (space->id > 0 && space->stored_amount_first > 0) {
+                return {STORAGEYARD_TASK_DELIVERING, space, space->stored_amount_first, space->subtype.warehouse_resource_id};
             }
         }
     }

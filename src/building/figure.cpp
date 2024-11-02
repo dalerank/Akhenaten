@@ -129,11 +129,11 @@ int building::get_figure_slot(figure* f) {
 
 int building::stored_amount(e_resource res) const {
     if (data.industry.first_material_id == res) {
-        return stored_full_amount;
+        return stored_amount_first;
     }
 
     if (data.industry.second_material_id == res) {
-        return data.industry.stored_amount_second;
+        return stored_amount_second;
     }
 
     if (output_resource_first_id == res) {
@@ -141,7 +141,7 @@ int building::stored_amount(e_resource res) const {
     }
 
     // todo: dalerank, temporary, building should return own resource type only
-    return stored_full_amount;
+    return stored_amount_first;
 }
 
 int building::need_resource_amount(e_resource resource) const {
@@ -154,8 +154,8 @@ int building::max_storage_amount(e_resource resource) const {
 
 int building::stored_amount(int idx) const {
     switch (idx) {
-    case 0: return stored_full_amount;
-    case 1: return data.industry.stored_amount_second;
+    case 0: return stored_amount_first;
+    case 1: return stored_amount_second;
     }
 
     assert(false);
@@ -258,15 +258,15 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_ful
         return false;
     }
 
-    while (stored_full_amount >= min_carry) {
-        int amounts_to_carry = std::min<int>(stored_full_amount, max_carry);
+    while (stored_amount_first >= min_carry) {
+        int amounts_to_carry = std::min<int>(stored_amount_first, max_carry);
         if (only_full_loads) {
             amounts_to_carry -= amounts_to_carry % 100; // remove pittance
         }
 
         create_cartpusher(output_resource_first_id, amounts_to_carry);
-        stored_full_amount -= amounts_to_carry;
-        if (only_one || stored_full_amount == 0) {
+        stored_amount_first -= amounts_to_carry;
+        if (only_one || stored_amount_first == 0) {
             // done once, or out of goods?
             return true;
         }
@@ -277,7 +277,7 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_ful
 
 bool building::guild_has_resources() {
     assert(is_guild());
-    bool hase_first_resource = (stored_full_amount >= 100);
+    bool hase_first_resource = (stored_amount_first >= 100);
     return hase_first_resource;
 }
 
@@ -285,10 +285,10 @@ bool building::workshop_has_resources() {
     assert(is_workshop());
     bool has_second_material = true;
     if (data.industry.second_material_id != RESOURCE_NONE) {
-        has_second_material = (data.industry.stored_amount_second > 100);
+        has_second_material = (stored_amount_second > 100);
     }
 
-    bool hase_first_resource = (stored_full_amount >= 100);
+    bool hase_first_resource = (stored_amount_first >= 100);
     return has_second_material && hase_first_resource;
 }
 
@@ -296,19 +296,19 @@ void building::workshop_start_production() {
     assert(is_workshop());
     bool can_start_b = false;
     if (data.industry.second_material_id != RESOURCE_NONE) {
-        can_start_b = (data.industry.stored_amount_second >= 100);
+        can_start_b = (stored_amount_second >= 100);
     } else {
         can_start_b = true;
     }
 
-    bool can_start_a = (stored_full_amount >= 100);
+    bool can_start_a = (stored_amount_first >= 100);
     if (can_start_b && can_start_a) {
         data.industry.has_raw_materials = true;
-        if (data.industry.stored_amount_second >= 100) {
-            data.industry.stored_amount_second -= 100;
+        if (stored_amount_second >= 100) {
+            stored_amount_second -= 100;
         }
-        if (stored_full_amount >= 100) {
-            stored_full_amount -= 100;
+        if (stored_amount_first >= 100) {
+            stored_amount_first -= 100;
         }
     }
 }
@@ -482,6 +482,6 @@ bool building::figure_generate() {
 
 void building::school_add_papyrus(int amount) {
     if (id > 0) {
-        stored_full_amount += amount;
+        stored_amount_first += amount;
     }
 }

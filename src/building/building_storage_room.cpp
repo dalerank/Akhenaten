@@ -11,7 +11,7 @@
 
 buildings::model_t<building_storage_room> storage_room_m;
 
-inline building_storage_room::building_storage_room(building &b) : building_impl(b), stored_full_amount(b.stored_full_amount) {
+inline building_storage_room::building_storage_room(building &b) : building_impl(b), stored_full_amount(b.stored_amount_first) {
 }
 
 void building_storage_room::on_create(int orientation) {
@@ -31,7 +31,7 @@ const storage_t *building_storage_room::storage() {
 
 void building_storage_room::set_image(e_resource resource) {
     int image_id;
-    if (base.stored_full_amount <= 0) {
+    if (base.stored_amount_first <= 0) {
         image_id = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
     } else {
         image_id = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_FILLED) + 4 * (resource - 1)
@@ -74,7 +74,7 @@ int building_storage_room::distance_with_penalty(tile2i src, e_resource resource
     }
 
     // check for spaces that already has some of the resource, first
-    if (base.subtype.warehouse_resource_id == resource && base.stored_full_amount < 400) {
+    if (base.subtype.warehouse_resource_id == resource && base.stored_amount_first < 400) {
         return calc_distance_with_penalty(tile(), src, distance_from_entry, base.distance_from_entry);
     }
 

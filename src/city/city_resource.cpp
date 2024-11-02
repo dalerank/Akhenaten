@@ -274,7 +274,7 @@ void city_resource_calculate_storageyard_stocks() {
         if (warehouse->has_road_access) {
             b->has_road_access = warehouse->has_road_access;
             if (b->subtype.warehouse_resource_id) {
-                int amounts = b->stored_full_amount;
+                int amounts = b->stored_amount_first;
                 int resource = b->subtype.warehouse_resource_id;
                 city_data.resource.stored_in_warehouses[resource] += amounts;
                 city_data.resource.space_in_warehouses[resource] += 400 - amounts;

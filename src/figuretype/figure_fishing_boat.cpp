@@ -147,7 +147,7 @@ void figure_fishing_boat::figure_action() {
             wait_ticks = 0;
             b->figure_spawn_delay = 1;
             b->data.industry.has_fish = true;
-            b->stored_full_amount += 200;
+            b->stored_amount_first += 200;
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {

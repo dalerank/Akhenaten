@@ -31,7 +31,7 @@ class building_storage_yard : public building_storage {
 public:
     BUILDING_METAINFO(BUILDING_STORAGE_YARD, building_storage_yard)
 
-    building_storage_yard(building &b) : building_storage(b), stored_full_amount(b.stored_full_amount) {}
+    building_storage_yard(building &b) : building_storage(b) {}
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
@@ -54,6 +54,7 @@ public:
     virtual bool is_getting(e_resource resource) override;
 
     int freespace(e_resource resource);
+    int stored_full_amount() const { return base.stored_amount_first;  }
     virtual int freespace() override;
 
     int for_getting(e_resource resource, tile2i *dst);
@@ -62,7 +63,6 @@ public:
     static storage_worker_task deliver_food_to_gettingup_granary(building *warehouse);
 
     storage_worker_task determine_worker_task();
-    short &stored_full_amount;
 
 private:
     int get_space_info() const;

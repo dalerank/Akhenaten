@@ -65,7 +65,7 @@ void figure_lumberjack::figure_action() {
         break;
     case 11: // returning with resource
         if (do_returnhome(TERRAIN_USAGE_PREFER_ROADS)) {
-            home()->stored_full_amount += 25;
+            home()->stored_amount_first += 25;
         }
         break;
     }

@@ -82,13 +82,13 @@ sound_key figure_teacher::phrase_key() const {
 }
 
 void school_coverage(building* b, figure *f, int&) {
-    if (f->home()->stored_full_amount <= 0 ) {
+    if (f->home()->stored_amount_first <= 0 ) {
         return;
     }
 
     const uint8_t delta_allow_papyrus = MAX_COVERAGE / 4;
     if ((MAX_COVERAGE - b->data.house.school) > delta_allow_papyrus) {
-        f->home()->stored_full_amount--;
+        f->home()->stored_amount_first--;
     }
     b->data.house.school = MAX_COVERAGE;
 }

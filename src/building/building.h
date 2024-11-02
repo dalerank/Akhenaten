@@ -1,7 +1,7 @@
 #pragma once
 
 #include "city/labor_category.h"
-#include "core/bstring.h"
+#include "core/xstring.h"
 #include "core/bitarray.h"
 #include "core/tokenum.h"
 #include "core/vec2i.h"
@@ -18,6 +18,7 @@
 #include "game/resource.h"
 #include "grid/point.h"
 #include "sound/sound_city.h"
+#include "core/variant.h"
 #include "model.h"
 
 #include <stdint.h>
@@ -174,7 +175,8 @@ public:
     bool has_open_water_access;
     int prev_part_building_id;
     int next_part_building_id;
-    short stored_full_amount;
+    short stored_amount_first;
+    short stored_amount_second;
     bool has_well_access;
     short num_workers;
     e_fancy_state fancy_state;
@@ -225,6 +227,12 @@ public:
         struct farm_t {
             uint8_t worker_frame;
         } farm;
+
+        struct education_t {
+            e_resource first_material_id;
+            e_resource second_material_id;
+        } education;
+
         struct industry_t {
             short ready_production;
             short progress;
@@ -236,7 +244,6 @@ public:
             uint8_t produce_multiplier;
             uint8_t blessing_days_left;
             uint8_t orientation;
-            short stored_amount_second;
             bool has_raw_materials;
             e_resource first_material_id;
             e_resource second_material_id;
@@ -540,6 +547,7 @@ public:
     virtual void draw_tooltip(tooltip_context *c) {};
     virtual const static_params &params() const { return params(type()); }
     virtual void bind_dynamic(io_buffer *iob, size_t version);
+    virtual bvariant get_property(const xstring &domain, const xstring &name) const;
 
     virtual building_farm *dcast_farm() { return nullptr; }
     virtual building_brewery *dcast_brewery() { return nullptr; }

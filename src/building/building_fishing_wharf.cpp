@@ -140,7 +140,7 @@ void building_fishing_wharf::spawn_figure() {
     bool cart_spawned = base.common_spawn_goods_output_cartpusher();
     if (cart_spawned) {
         if (data.industry.has_fish) {
-            data.industry.has_fish = (base.stored_full_amount > 0);
+            data.industry.has_fish = (base.stored_amount_first > 0);
         }
     }
 }
@@ -205,7 +205,7 @@ void info_window_fishing_wharf::init(object_info &c) {
 
     ui["resource_img"].image(RESOURCE_FISH);
     ui["warning_text"] = ui::str(reason.first, reason.second);
-    ui["storage_desc"].text_var("Stored fish %d", b->stored_full_amount);
+    ui["storage_desc"].text_var("Stored fish %d", b->stored_amount_first);
 
     fill_employment_details(c);
 }

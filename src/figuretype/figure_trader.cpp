@@ -37,7 +37,7 @@ bool figure_trader::can_buy(building* warehouse, int city_id) {
     building* space = warehouse;
     for (int i = 0; i < 8; i++) {
         space = space->next();
-        if (space->id > 0 && space->stored_full_amount >= 100
+        if (space->id > 0 && space->stored_amount_first >= 100
             && g_empire.can_export_resource_to_city(city_id, space->subtype.warehouse_resource_id)) {
             return true;
         }
@@ -93,8 +93,8 @@ bool figure_trader::can_sell(building* b, int city_id) {
         // check if warehouse can store any importable goods
         auto space = warehouse->room();
         while (space) {
-            if (space->base.stored_full_amount < 400) {
-                if (!space->base.stored_full_amount) {
+            if (space->base.stored_amount_first < 400) {
+                if (!space->base.stored_amount_first) {
                     // empty space
                     return true;
                 }

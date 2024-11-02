@@ -48,7 +48,7 @@ static int get_closest_legion_needing_soldiers(building* barracks) {
         if (m->in_distant_battle || m->legion_recruit_type == LEGION_RECRUIT_NONE)
             continue;
 
-        if (m->legion_recruit_type == LEGION_RECRUIT_INFANTRY && barracks->stored_full_amount <= 0)
+        if (m->legion_recruit_type == LEGION_RECRUIT_INFANTRY && barracks->stored_amount_first <= 0)
             continue;
 
         building* fort = building_get(m->building_id);
@@ -80,7 +80,7 @@ static int get_closest_military_academy(building* fort) {
 }
 
 bool building_recruiter::create_soldier() {
-    if (base.stored_full_amount < 100) {
+    if (base.stored_amount_first < 100) {
         return false;
     }
 
@@ -90,8 +90,8 @@ bool building_recruiter::create_soldier() {
         figure* f = figure_create(m->figure_type, base.road_access, DIR_0_TOP_RIGHT);
         f->formation_id = formation_id;
         f->formation_at_rest = 1;
-        if (base.stored_full_amount > 0) {
-            base.stored_full_amount -= 100;
+        if (base.stored_amount_first > 0) {
+            base.stored_amount_first -= 100;
         }
         int academy_id = get_closest_military_academy(building_get(m->building_id));
         if (academy_id) {
@@ -183,7 +183,7 @@ void building_recruiter::on_place_checks() {
 
 void building_recruiter::add_weapon(int amount) {
     assert(id() > 0);
-    base.stored_full_amount += amount;
+    base.stored_amount_first += amount;
 }
 
 void building_recruiter::spawn_figure() {
@@ -230,13 +230,16 @@ void info_window_recruiter::window_info_background(object_info &c) {
 
     building_recruiter *b = c.building_get()->dcast_recruiter();
 
-    int amount = b->base.stored_full_amount < 100 ? 0 : b->base.stored_full_amount;
+    int amount = b->base.stored_amount_first < 100 ? 0 : b->base.stored_amount_first;
     ui["storage_state"].text_var("%s ( %d )", ui::str(8, 10), amount);
 
     textid reason{ c.group_id, 0 };
-    if (!c.has_road_access) { reason = { 69, 25 }; } else if (b->num_workers() <= 0) { reason.id = 3; } else if (!c.barracks_soldiers_requested) { reason.id = 4; } else {
+    if (!c.has_road_access) { reason = { 69, 25 }; }
+    else if (b->num_workers() <= 0) { reason.id = 3; }
+    else if (!c.barracks_soldiers_requested) { reason.id = 4; }
+    else {
         int offset = 0;
-        if (b->base.stored_full_amount > 0) {
+        if (b->base.stored_amount_first > 0) {
             offset = 4;
         }
 

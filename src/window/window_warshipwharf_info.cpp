@@ -43,7 +43,7 @@ void warshipwharf_info_window::init(object_info &c) {
 
     ui["resource_img"].image(RESOURCE_FISH);
     ui["warning_text"] = ui::str(reason.first, reason.second);
-    ui["storage_desc"].text_var("Stored weapons %d", b->stored_full_amount);
+    ui["storage_desc"].text_var("Stored weapons %d", b->stored_amount_first);
 
     fill_employment_details(c);
 }

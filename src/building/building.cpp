@@ -1160,7 +1160,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->size);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_is_merged);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_size);
-        iob->bind(BIND_SIGNATURE_INT32, b->tile);
+        iob->bind(BIND_SIGNATURE_TILE2I, b->tile);
         iob->bind____skip(2);
         iob->bind____skip(4);
         iob->bind(BIND_SIGNATURE_INT16, &b->type);
@@ -1169,13 +1169,14 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT16, &b->creation_sequence_index);
         iob->bind(BIND_SIGNATURE_INT16, &b->houses_covered);
         iob->bind(BIND_SIGNATURE_INT16, &b->percentage_houses_covered);
+
         iob->bind(BIND_SIGNATURE_INT16, &b->house_population);
         iob->bind(BIND_SIGNATURE_INT16, &b->house_population_room);
         iob->bind(BIND_SIGNATURE_INT16, &b->distance_from_entry);
         iob->bind(BIND_SIGNATURE_INT16, &b->house_highest_population);
 
         iob->bind(BIND_SIGNATURE_INT16, &b->house_unreachable_ticks);
-        iob->bind(BIND_SIGNATURE_UINT32, b->road_access);
+        iob->bind(BIND_SIGNATURE_TILE2I, b->road_access);
 
         b->bind_iob_figures(iob);
 
@@ -1187,7 +1188,7 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->malaria_risk);
         iob->bind(BIND_SIGNATURE_INT16, &b->prev_part_building_id);
         iob->bind(BIND_SIGNATURE_INT16, &b->next_part_building_id);
-        iob->bind(BIND_SIGNATURE_UINT16, &b->stored_full_amount);
+        iob->bind(BIND_SIGNATURE_INT16, &b->stored_amount_first);
         iob->bind(BIND_SIGNATURE_UINT8, &b->disease_days);
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_well_access);
 
@@ -1213,7 +1214,8 @@ io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
         assert(currind > 0);
         iob->bind____skip(184 - currind);
 
-        iob->bind(BIND_SIGNATURE_INT32, &b->tax_income_or_storage);
+        iob->bind(BIND_SIGNATURE_INT16, &b->tax_income_or_storage);
+        iob->bind(BIND_SIGNATURE_INT16, &b->stored_amount_second);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_days_without_food);
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_plague); // 1
 
