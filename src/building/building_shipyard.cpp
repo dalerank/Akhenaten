@@ -48,8 +48,6 @@ void building_shipyard::spawn_figure() {
     
     tile2i boat_tile;
     if (data.industry.progress >= 160 && map_water_can_spawn_boat(tile(), size(), boat_tile)) {
-        data.industry.progress = 0;
-        data.wharf.process_type = FIGURE_NONE;
         if (data.wharf.process_type == FIGURE_WARSHIP) {
             figure *f = figure_create(FIGURE_WARSHIP, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_205_WARSHIP_CREATED;
@@ -63,6 +61,9 @@ void building_shipyard::spawn_figure() {
         } else {
             assert(false && "building_shipyard: incorrect type requested");
         }
+
+        data.industry.progress = 0;
+        data.wharf.process_type = FIGURE_NONE;
     }
 }
 
