@@ -163,9 +163,9 @@ public:
         case (etype_u16): result.printf("u16[%d]", uint32_t(_value.u16_value)); break;
         case (etype_int32): result.printf("int32[%d]", _value.int32_t_value); break;
         case (etype_uint32): result.printf("uint32[%d]", uint32_t(_value.uint32_t_value)); break;
-        case (etype_float): result.set("float[%f]", _value.float_value); break;
-        case (etype_ptr): result.set("ptr[%p]", _value.ptr_value); break;
-        case (etype_str): result.set("str[%s]", as_str().c_str()); break;
+        case (etype_float): result.printf("float[%f]", _value.float_value); break;
+        case (etype_ptr): result.printf("ptr[%p]", _value.ptr_value); break;
+        case (etype_str): result.printf("str[%s]", as_str().c_str()); break;
         default:
             assert(false);
         };
