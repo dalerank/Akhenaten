@@ -188,14 +188,6 @@ struct element {
         str = result;
     }
 
-    template<typename T>
-    inline void text_var(const T& v) {
-        bstring512 formated_text;
-        ui::format(v, format());
-        preformat_text(formated_text);
-        text(formated_text);
-    }
-
     template<class ... Args> 
     inline void text_var(pcstr fmt, const Args&... args) {
         bstring512 formated_text;
