@@ -848,10 +848,10 @@ granary_info_window = {
 window info_window_vacant_lot = {
 	help_id : 128,
 	ui : {
-		background   : outer_panel({size: [29, 23] }), 
-		title 		   : text({pos: [0, 12], text:"${building.name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		background   : outer_panel({size: [29, 21] }), 
+		title 		   : text({pos: [0, 16], text:"${128.0}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
 		inner_panel  : inner_panel({pos : [16, 40], size: [27, 13] }),
-		describe 	   : text({pos: [36, 114], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(25) },
+		describe 	   : text({pos: [36, 114], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(25) }),
 
 		bclose_button : close_button({}),
 		help_button  : help_button({}),
@@ -1137,7 +1137,7 @@ temple_info_window = {
 window building_info_window = {
 	ui : {
 		background 	: outer_panel({size: [29, 17]}),
-		title 		 	: { type : "text", pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		title 		 	: { type : "text", pos: [0, 16], text:"${building.name}", size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		warning_text : { type : "text", pos: [32, 46], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		inner_panel : inner_panel({pos : [16, 100], size: [27, 5],
 																ui : {
