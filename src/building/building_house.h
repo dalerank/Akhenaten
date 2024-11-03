@@ -23,6 +23,7 @@ public:
     virtual void on_undo() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual bool evolve(house_demands* demands) = 0;
+    virtual bvariant get_property(const xstring &domain, const xstring &name) const override; 
 
     inline int house_population() const { return base.house_population; }
     inline void change_population(int delta) { base.house_population += delta; }

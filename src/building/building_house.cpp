@@ -1,6 +1,7 @@
 #include "building_house.h"
 
 #include "building/building.h"
+#include "building/building_property.h"
 #include "city/warnings.h"
 #include "city/population.h"
 #include "city/city_resource.h"
@@ -18,7 +19,7 @@
 #include "grid/random.h"
 #include "grid/terrain.h"
 #include "config/config.h"
-#include "js/js_game.h"
+#include "io/gamefiles/lang.h"
 
 #include "dev/debug.h"
 #include <iostream>
@@ -86,31 +87,6 @@ buildings::house_model_t<building_house_elegant_manor> house_elegant_manor_m;
 buildings::house_model_t<building_house_stately_manor> house_stately_manor_m;
 buildings::house_model_t<building_house_modest_estate> house_modest_estate_m;
 buildings::house_model_t<building_house_palatial_estate> house_palatial_estate_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_house_models);
-void config_load_house_models() {
-    house_crude_hut_m.load();
-    house_sturdy_hut_m.load();
-    house_meager_shanty_m.load();
-    house_common_shanty_m.load();
-    house_rough_cottage_m.load();
-    house_ordinary_cottage_m.load();
-    house_modest_homestead_m.load();
-    house_spacious_homestead_m.load();
-    house_modest_apartment_m.load();
-    house_spacious_apartment_m.load();
-    house_common_residence_m.load();
-    house_spacious_residence_m.load();
-    house_elegant_residence_m.load();
-    house_fancy_residence_m.load();
-    house_common_manor_m.load();
-    house_spacious_manor_m.load();
-    house_elegant_manor_m.load();
-    house_elegant_manor_m.load();
-    house_stately_manor_m.load();
-    house_modest_estate_m.load();
-    house_palatial_estate_m.load();
-}
 
 static const int HOUSE_TILE_OFFSETS_PH[] = {
   GRID_OFFSET(0, 0),
@@ -213,6 +189,17 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.bazaar_access);
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.water_supply);
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.pavilion_dancer);
+}
+
+bvariant building_house::get_property(const xstring &domain, const xstring &name) const {
+    if (domain == tags().house) {
+        if (name == tags().level_name) {
+            int level = base.type - 10;
+            return bvariant((pcstr)lang_get_string(29, level));
+        }
+    }
+
+    return building_impl::get_property(domain, name);
 }
 
 void building_house::create_vacant_lot(tile2i tile, int image_id) {
