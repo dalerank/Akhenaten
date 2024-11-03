@@ -102,31 +102,31 @@ public:
 
     inline bool is_bool() const { return (etype_bool == _value_type); }
     inline bool is_u16() const { return (etype_u16 == _value_type); }
-    inline bool is_int32_t() const { return (etype_int32_t == _value_type); }
-    inline bool is_uint32_t() const { return (etype_uint32_t == _value_type); }
+    inline bool is_int32() const { return (etype_int32 == _value_type); }
+    inline bool is_uint32() const { return (etype_uint32 == _value_type); }
     inline bool is_float() const { return (etype_float == _value_type); }
     inline bool is_ptr() const { return (etype_ptr == _value_type); }
     inline bool is_str() const { return (etype_str == _value_type); }
     
     inline bool	as_bool() const { assert(etype_bool == _value_type); return _value.bool_value; }
     inline uint16_t as_u16() const { assert(this->is_u16()); return _value.u16_value; }   
-    inline int32_t as_int32_t() const { assert(etype_int32_t == _value_type); return _value.int32_value; }
-    inline uint32_t as_uint32_t() const { assert(etype_uint32_t == _value_type); return _value.uint32_value; }
+    inline int32_t as_int32() const { assert(etype_int32 == _value_type); return _value.int32_value; }
+    inline uint32_t as_uint32() const { assert(etype_uint32 == _value_type); return _value.uint32_value; }
     inline float as_float() const { assert(etype_float == _value_type); return _value.float_value; }
     inline void *as_ptr() const { assert(etype_ptr == _value_type); return _value.ptr_value; }
     inline const xstring &as_str() const { assert(etype_str == _value_type); return *cast<xstring>(); }
 
     inline variant_t &as_bool(bool v) { return assign(v, etype_bool); }
     inline variant_t &as_u16(uint16_t v) { assign(v, etype_u16); return *this; }
-    inline variant_t &as_int32_t(int32_t v) { return assign(v, etype_int32); }
-    inline variant_t &as_uint32_t(uint32_t v) { return assign(v, etype_uint32); }
+    inline variant_t &as_int32(int32_t v) { return assign(v, etype_int32); }
+    inline variant_t &as_uint32(uint32_t v) { return assign(v, etype_uint32); }
     inline variant_t &as_float(float v) { return assign(v, etype_float); }
     inline variant_t &as_ptr(void *v) { return assign(v, etype_ptr); }
     inline variant_t &as_str(const xstring &v) { return assign(v, etype_str); }
 
     inline bool bool_or_def(const bool def) const { return is_bool() ? as_bool() : def; }
-    inline int32_t int32_or_def(const int32_t def) const { return is_int32_t() ? as_int32() : def; }
-    inline uint32_t uint32_or_def(const uint32_t def) const { return is_uint32_t() ? as_uint32() : def; }
+    inline int32_t int32_or_def(const int32_t def) const { return is_int32() ? as_int32() : def; }
+    inline uint32_t uint32_or_def(const uint32_t def) const { return is_uint32() ? as_uint32() : def; }
     inline float float_or_def(const float def) const { return is_float() ? as_float() : def; }
     inline const xstring &str_or_def(const xstring &def)	const { return is_str() ? as_str() : def; }
     inline uint8_t value_type() const { return _value_type; }
@@ -162,8 +162,8 @@ public:
         case (etype_none): result = "none"; break;
         case (etype_bool): result.printf("bool[%s]", _value.bool_value ? "TRUE" : "FALSE"); break;
         case (etype_u16): result.printf("u16[%d]", uint32_t(_value.u16_value)); break;
-        case (etype_int32): result.printf("int32[%d]", _value.int32_t_value); break;
-        case (etype_uint32): result.printf("uint32[%d]", uint32_t(_value.uint32_t_value)); break;
+        case (etype_int32): result.printf("int32[%d]", _value.int32_value); break;
+        case (etype_uint32): result.printf("uint32[%d]", uint32_t(_value.uint32_value)); break;
         case (etype_float): result.printf("float[%f]", _value.float_value); break;
         case (etype_ptr): result.printf("ptr[%p]", _value.ptr_value); break;
         case (etype_str): result.printf("str[%s]", as_str().c_str()); break;
