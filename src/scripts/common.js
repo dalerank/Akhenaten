@@ -184,7 +184,6 @@ var advisor_imperial_window = {}
 var info_window_fishing_wharf = {}
 var info_window_courthouse = {}
 var info_window_garden = {}
-var info_window_health = {}
 var info_window_farm = {}
 var info_window_storageyard = {}
 var info_window_storageyard_orders = {}

@@ -7,10 +7,13 @@ const id_property_t &tags() {
 
 const xstring id_property_t::stored = "stored";
 const xstring id_property_t::building = "building";
+const xstring id_property_t::model = "model";
 const xstring id_property_t::name = "name";
+const xstring id_property_t::laborers = "laborers";
 const xstring id_property_t::house = "house";
 const xstring id_property_t::level_name = "level_name";
 const xstring id_property_t::text = "text";
 const xstring id_property_t::industry = "industry";
 const xstring id_property_t::progress = "progress";
 const xstring id_property_t::tax_income_or_storage = "tax_income_or_storage";
+const xstring id_property_t::num_workers = "num_workers";

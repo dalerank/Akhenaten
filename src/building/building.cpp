@@ -1034,6 +1034,17 @@ bvariant building_impl::get_property(const xstring &domain, const xstring &name)
         if (name == tags().tax_income_or_storage) {
             return bvariant(base.tax_income_or_storage);
         }
+
+        if (name == tags().num_workers) {
+            return bvariant(base.num_workers);
+        }
+    }
+
+    if (domain == tags().model) {
+        const auto model = model_get_building(type());
+        if (name == tags().laborers) {
+            return bvariant(model->laborers);
+        }
     }
 
     if (domain == tags().industry) {

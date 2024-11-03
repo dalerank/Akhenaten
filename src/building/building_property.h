@@ -5,13 +5,16 @@
 struct id_property_t {
     static const xstring stored;
     static const xstring building;
+    static const xstring model;
     static const xstring name;
+    static const xstring laborers;
     static const xstring house;
     static const xstring level_name;
     static const xstring text;
     static const xstring industry;
     static const xstring progress;
     static const xstring tax_income_or_storage;
+    static const xstring num_workers;
 };
 
 const id_property_t &tags();

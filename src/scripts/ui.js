@@ -1124,7 +1124,7 @@ temple_info_window = {
 		title 		 	: { type : "text", pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		inner_panel : { type : "inner_panel", pos : [16, 56], size: [27, 4] },
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 70] },
-		workers_text : { type : "text", pos: [70, 74], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		workers_text : { type : "text", text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", pos: [70, 74], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
 		workers_desc : { type : "text", pos: [70, 74 + 16], font: FONT_NORMAL_BLACK_ON_DARK },
 		button_help : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
 		button_close: { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
@@ -1142,7 +1142,7 @@ window building_info_window = {
 		inner_panel : inner_panel({pos : [16, 100], size: [27, 5],
 												ui : {
 													workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
-													workers_text : text({pos: [50, 16], font: FONT_NORMAL_BLACK_ON_DARK}),
+													workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
 													workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
 												}
 										  }),
@@ -1169,7 +1169,7 @@ info_window_bandstand = {
 		play_text : { type : "text", pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
 		play2_text : { type : "text", pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 122] },
-		workers_text : { type : "text", pos: [70, 130], font: FONT_NORMAL_BLACK_ON_DARK},
+		workers_text : { type : "text", pos: [70, 130], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK},
 		workers_desc : { type : "text", pos: [70, 126 + 16], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
 	})
 }
@@ -1236,7 +1236,7 @@ window info_window_raw_material = {
 		inner_panel   : inner_panel({pos : [16, 130], size: [27, 5],
 												ui : {
 													workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
-													workers_text : text({pos: [50, 16], font: FONT_NORMAL_BLACK_ON_DARK}),
+													workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
 													workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
 												}
 										  }),
@@ -1260,7 +1260,7 @@ window info_window_palace = {
 		inner_panel : inner_panel({pos : [16, 120], size: [27, 6],
 																ui : {
 																	workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
-																	workers_text : text({pos: [50, 16], font: FONT_NORMAL_BLACK_ON_DARK}),
+																	workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
 																	workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
 																}
 														  }),
@@ -1298,8 +1298,10 @@ info_window_entertainment = {
 	}
 }
 
-info_window_health = {
-	ui : __baseui(building_info_window, {})
+window health_info_window = {
+	ui : __baseui(building_info_window, {
+
+	})
 }
 
 legion_info_window = {
@@ -1419,7 +1421,7 @@ bazaar_info_window = {
 		good3_text : text({pos: [394, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
 		workers_panel : inner_panel({pos : [16, 136], size: [27, 4] }),
 		workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] }),
-		workers_text : text({pos:[70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		workers_text : text({pos:[70, 142 + 12], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
 		workers_desc : text({pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK }),
 		orders : button({margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}}),
 		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
@@ -1467,7 +1469,7 @@ workshop_info_window = {
 		title 		 : { type : "text", pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		produce_icon : { type : "resource_icon", pos: [10, 10] },
 		workers_panel : { type : "inner_panel", pos : [16, 96], size: [27, 4] },
-		workers_text : { type : "text", pos: [70, 102 + 12], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		workers_text : { type : "text", pos: [70, 102 + 12], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
 		workers_desc : { type : "text", pos: [70, 102 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 102 + 6] },
 		ready_prod : { type : "text", pos: [38, 40], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT },
@@ -1542,7 +1544,7 @@ info_window_storageyard = {
 		warning_text  : text({pos: [32, 56], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
 		workers_panel : inner_panel({pos : [16, 168], size: [27, 5] }),
 		workers_img   : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 173] }),
-		workers_text  : text({pos: [70, 178], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		workers_text  : text({pos: [70, 178], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
 		workers_desc  : text({pos: [70, 178 + 16], font: FONT_NORMAL_BLACK_ON_DARK }),
 		cartstate_img : resource_icon({pos:[40, 220] }),
 		cartstate_desc: text({pos: [32, 223], wrap:px(27), font : FONT_NORMAL_BLACK_ON_DARK, multiline:true }),
