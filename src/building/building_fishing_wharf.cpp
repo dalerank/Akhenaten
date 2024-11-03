@@ -22,20 +22,20 @@
 #include <iostream>
 
 declare_console_command_p(killfishboats, game_cheat_kill_fish_boats);
+void game_cheat_kill_fish_boats(std::istream &is, std::ostream &os) {
+    figure_valid_do([] (figure &f) { f.poof(); }, FIGURE_FISHING_BOAT);
+}
 
-struct info_window_fishing_wharf : public building_info_window {
+struct info_window_fishing_wharf : public building_info_window_t<info_window_fishing_wharf> {
     virtual bool check(object_info &c) override {
         return c.building_get()->dcast_fishing_wharf();
     }
 
     virtual void init(object_info &c) override;
-} fishing_wharf_infow;
+};
 
+info_window_fishing_wharf fishing_wharf_infow;
 building_fishing_wharf::static_params fishing_wharf_m;
-
-void game_cheat_kill_fish_boats(std::istream &is, std::ostream &os) {
-    figure_valid_do([] (figure &f) { f.poof(); }, FIGURE_FISHING_BOAT);
-}
 
 void building_fishing_wharf::static_params::load(archive arch) {
 
