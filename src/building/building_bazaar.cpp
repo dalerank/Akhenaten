@@ -25,11 +25,6 @@
 
 buildings::model_t<building_bazaar> bazaar_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bazaar);
-void config_load_building_bazaar() {
-    bazaar_m.load();
-}
-
 struct resource_data {
     int building_id;
     int min_distance;

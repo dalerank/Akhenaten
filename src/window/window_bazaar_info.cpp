@@ -15,15 +15,7 @@
 
 void window_bazaar_orders_show(object_info &c);
 
-struct bazaar_info_window : public building_info_window_t<bazaar_info_window>{
-    int resource_text_group;
-
-    using widget::load;
-    virtual void load(archive arch, pcstr section) override {
-        widget::load(arch, section);
-        resource_text_group = arch.r_int("resource_text_group");
-    }
-
+struct bazaar_info_window : public building_info_window_t<bazaar_info_window> {
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         return c.building_get()->type == BUILDING_BAZAAR;
@@ -38,13 +30,11 @@ void bazaar_info_window::init(object_info &c) {
     auto bazaar = c.building_get()->dcast_bazaar();
     window_building_play_sound(&c, bazaar->get_sound());
 
+    const auto &meta = bazaar->get_info();
     textid reason = { 0, 0 };
     if (!c.has_road_access) {
         reason = { 69, 25 };
-    }
-
-    const auto &meta = bazaar->get_info();
-    if (bazaar->num_workers() <= 0) {
+    } else if (bazaar->num_workers() <= 0) {
         reason = { meta.text_id, 2 };
     }
 

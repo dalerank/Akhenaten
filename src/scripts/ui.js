@@ -799,7 +799,7 @@ roadblock_info_window = {
 	}
 }
 
-granary_orders_window = {
+window granary_orders_window = {
 	ui : {
 		background 	: outer_panel({size: [29, 17]}),
 		title 		 : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -817,7 +817,7 @@ granary_orders_window = {
 	}
 }
 
-granary_info_window = {
+window granary_info_window = {
 	resource_text_group : 23,
 	ui : {
 		background 	: outer_panel({size: [29, 17]}),
@@ -837,7 +837,7 @@ granary_info_window = {
 		workers_img  : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] }),
 		workers_text : text({pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK }),
 		workers_desc : text({pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK }),
-		orders : button({margin:{centerx:-135, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}}),  
+		orders : button({margin:{centerx:-135, bottom:-40}, size:[270, 25], text:"${98.5}"}),  
 		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
 		button_close : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
 		show_overlay : button({margin:{right:-64, bottom:-40}, size:[23, 23]}),
@@ -1398,9 +1398,9 @@ dock_orders_window = {
 	}
 }
 
-bazaar_info_window = {
+window bazaar_info_window = {
 	ui : {
-		background : outer_panel({size: [29, 16]}),
+		background : outer_panel({size: [29, 17]}),
 		title 		 : text({text: "#bazaar_info_title", pos: [0, 10], size: [16 * 29, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
 		warning_text : text({pos: [32, 36], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
 		food0_icon : resource_icon({pos: [32, 85]}),
@@ -1423,7 +1423,7 @@ bazaar_info_window = {
 		workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] }),
 		workers_text : text({pos:[70, 142 + 12], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
 		workers_desc : text({pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK }),
-		orders : button({margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}}),
+		orders : button({margin:{left:100, bottom:-40}, size:[270, 25], text:"${98.5}"}),
 		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
 		button_close  : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
 		show_overlay : button({margin:{right:-64, bottom:-40}, size:[23, 23]}),
@@ -1431,7 +1431,7 @@ bazaar_info_window = {
 	}
 }
 
-bazaar_orders_window = {
+window bazaar_orders_window = {
   ui : {
 		background 	: outer_panel({size: [29, 17]}),
 		title 		 : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
