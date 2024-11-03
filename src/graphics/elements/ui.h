@@ -134,6 +134,7 @@ struct element {
     virtual void max_value(int v) {}
     virtual const xstring &tooltip() const { static xstring dummy;  return dummy; }
     virtual const xstring &format() const { static xstring dummy; return dummy; }
+    virtual const xstring &text() const { static xstring dummy; return dummy; }
     virtual element &onclick(std::function<void(int, int)>) { return *this; }
             element &onclick(std::function<void()> f) { onclick([f] (int, int) { f(); });  return *this; }
     virtual void onevent(std::function<void()>) { }
@@ -246,7 +247,9 @@ struct einner_panel : public element {
 };
 
 struct elabel : public element {
-    std::string _text;
+    xstring _text;
+    xstring _tooltip;
+    xstring _format;
 
     e_font _font;
     e_font _font_hover;
@@ -254,8 +257,6 @@ struct elabel : public element {
     vec2i _body;
     color _color;
     color _shadow_color;
-    xstring _tooltip;
-    xstring _format;
     UiFlags _flags;
     int _wrap;
     bool _clip_area;
@@ -268,6 +269,7 @@ struct elabel : public element {
     virtual e_font font() const override { return _font; }
     virtual const xstring &tooltip() const override { return _tooltip; }
     virtual const xstring &format() const override { return _format; }
+    virtual const xstring &text() const override { return _text; }
     virtual void width(int) override;
 };
 
