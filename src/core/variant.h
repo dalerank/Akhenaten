@@ -26,12 +26,12 @@ public:
     inline variant_t(const variant_t &v) { _value_type = etype_none; this->operator=(v); }
 
     inline explicit variant_t(const bool v) { _value_type = etype_none; assign(v, etype_bool); }
-    inline explicit variant_t(int8_t v) { _value_type = etype_none; assign(int32_t(v), etype_int32_t); }
-    inline explicit variant_t(int16_t v) { _value_type = etype_none; assign(int32_t(v), etype_int32_t); }
+    inline explicit variant_t(int8_t v) { _value_type = etype_none; assign(int32_t(v), etype_int32); }
+    inline explicit variant_t(int16_t v) { _value_type = etype_none; assign(int32_t(v), etype_int32); }
     inline explicit variant_t(int32_t v) { _value_type = etype_none; assign(v, etype_int32); }
-    inline explicit variant_t(uint8_t v) { _value_type = etype_none; assign(uint32_t(v), etype_uint32_t); }
+    inline explicit variant_t(uint8_t v) { _value_type = etype_none; assign(uint32_t(v), etype_uint32); }
     inline explicit variant_t(uint16_t v) { _value_type = etype_none; assign(v, etype_u16); }
-    inline explicit variant_t(uint32_t v) { _value_type = etype_none; assign(v, etype_uint32_t); }
+    inline explicit variant_t(uint32_t v) { _value_type = etype_none; assign(v, etype_uint32); }
     inline explicit variant_t(float v) { _value_type = etype_none; assign(v, etype_float); }
     inline explicit variant_t(void *v) { _value_type = etype_none; assign(v, etype_ptr); }
     inline explicit variant_t(const xstring &v) { _value_type = etype_none; assign(v, etype_str); }
@@ -68,9 +68,9 @@ public:
         switch (_value_type) {
         case (etype_str): return (*cast<xstring>() == *v.cast<xstring>());
         case (etype_bool): return (_value.bool_value == v._value.bool_value);
-        case (etype_int32_t):
-        case (etype_uint32_t):
-            return (_value.uint32_t_value == v._value.uint32_t_value);
+        case (etype_int32):
+        case (etype_uint32):
+            return (_value.uint32_value == v._value.uint32_value);
         case (etype_float): return (fp_similar(_value.float_value, v._value.float_value));
         case (etype_u16): return (_value.u16_value == v._value.u16_value);
 
@@ -81,8 +81,8 @@ public:
 
     inline variant_t &operator=(bool v) { return assign(v, etype_bool); }
     inline variant_t &operator=(uint16_t v) { return assign(v, etype_u16); }
-    inline variant_t &operator=(int32_t v) { return assign(v, etype_int32_t); }
-    inline variant_t &operator=(uint32_t v) { return assign(v, etype_uint32_t); }
+    inline variant_t &operator=(int32_t v) { return assign(v, etype_int32); }
+    inline variant_t &operator=(uint32_t v) { return assign(v, etype_uint32); }
     inline variant_t &operator=(float v) { return assign(v, etype_float); }
     inline variant_t &operator=(void *v) { return assign(v, etype_ptr); }
     inline variant_t &operator=(const xstring &v) { return assign(v, etype_str); }
@@ -92,9 +92,9 @@ public:
         switch (_value_type) {
         case etype_none: return (true);
         case etype_str: return (!as_str());
-        case etype_int32_t:
-        case etype_uint32_t:
-            return (!_value.int32_t_value);
+        case etype_int32:
+        case etype_uint32:
+            return (!_value.int32_value);
         default:
             return (!_value.ptr_value);
         }
