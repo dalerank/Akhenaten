@@ -845,49 +845,52 @@ granary_info_window = {
 	}
 }
 
-info_window_vacant_lot = {
+window info_window_vacant_lot = {
 	help_id : 128,
 	ui : {
-		background : { type : "outer_panel",	size: [29, 23] }, // pos/size setup from code
-		title 		 : { type : "text", pos: [0, 12], size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		inner_panel : { type : "inner_panel", pos : [16, 40], size: [27, 13] },
-		describe 	 : { type : "text", pos: [36, 114], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(25) },
-		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		background   : outer_panel({size: [29, 23] }), 
+		title 		   : text({pos: [0, 12], text:"${building.name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		inner_panel  : inner_panel({pos : [16, 40], size: [27, 13] }),
+		describe 	   : text({pos: [36, 114], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(25) },
+
+		bclose_button : close_button({}),
+		help_button  : help_button({}),
 	}
 }
 
-info_window_house = {
+window info_window_house = {
 	resource_text_group : 23,
 	help_id : 56,
 	ui : {
-		background : { type : "outer_panel",	size: [29, 23] }, // pos/size setup from code
-		title 		 : { type : "text", pos: [0, 12], size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		evolve_reason : { type : "text", pos: [32, 40], font : FONT_NORMAL_BLACK_ON_LIGHT, rich:true, wrap:px(28), scroll:false },
-		food0_icon : { type : "resource_icon", pos: [32, 95] },
-		food0_text : { type : "text", pos: [64, 100], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		food1_icon : { type : "resource_icon", pos: [142, 95] },
-		food1_text : { type : "text", pos: [174, 100], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		food2_icon : { type : "resource_icon", pos: [252, 95] },
-		food2_text : { type : "text", pos: [284, 100], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		food3_icon : { type : "resource_icon", pos: [362, 95] },
-		food3_text : { type : "text", pos: [394, 100], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good0_icon : { type : "resource_icon", pos: [32, 120] },
-		good0_text : { type : "text", pos: [64, 124], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good1_icon : { type : "resource_icon", pos: [142, 120] },
-		good1_text : { type : "text", pos: [174, 124], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good2_icon : { type : "resource_icon", pos: [252, 120] },
-		good2_text : { type : "text", pos: [284, 124], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		good3_icon : { type : "resource_icon", pos: [362, 120] },
-		good3_text : { type : "text", pos: [394, 124], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		tenants_panel : { type : "inner_panel", pos : [16, 148], size: [27, 10] },
-		people_icon : { type : "image", pos: [34, 154], pack:PACK_GENERAL, id:134, offset:13, },
-		people_text : { type : "text", pos: [64, 164], font: FONT_NORMAL_BLACK_ON_DARK, },
-		tax_info : { type : "text", pos: [36, 194], font: FONT_NORMAL_BLACK_ON_DARK, },
-		happiness_info : { type : "text", pos: [36, 214], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) },
-		additional_info : { type : "text", pos: [36, 234], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) },
-		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		background : outer_panel({size: [29, 23] }), // pos/size setup from code
+		title 		 : text({pos: [0, 16], text:"${house.level_name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		evolve_reason : text({pos: [32, 40], font : FONT_NORMAL_BLACK_ON_LIGHT, rich:true, wrap:px(28), scroll:false }),
+		food0_icon : resource_icon({pos: [32, 95] }),
+		food0_text : text({pos: [64, 100], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		food1_icon : resource_icon({pos: [142, 95] }),
+		food1_text : text({pos: [174, 100], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		food2_icon : resource_icon({pos: [252, 95] }),
+		food2_text : text({pos: [284, 100], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		food3_icon : resource_icon({pos: [362, 95] }),
+		food3_text : text({pos: [394, 100], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good0_icon : resource_icon({pos: [32, 120] }),
+		good0_text : text({pos: [64, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good1_icon : resource_icon({pos: [142, 120] }),
+		good1_text : text({pos: [174, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good2_icon : resource_icon({pos: [252, 120] }),
+		good2_text : text({pos: [284, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good3_icon : resource_icon({pos: [362, 120] }),
+		good3_text : text({pos: [394, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+
+		tenants_panel : inner_panel({pos : [16, 148], size: [27, 10] }),
+		people_icon   : image({pos: [34, 154], pack:PACK_GENERAL, id:134, offset:13, }),
+		people_text   : text({pos: [64, 164], font: FONT_NORMAL_BLACK_ON_DARK, }),
+		tax_info      : text({pos: [36, 194], font: FONT_NORMAL_BLACK_ON_DARK, }),
+		happiness_info: text({pos: [36, 214], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) }),
+		additional_info : text({pos: [36, 234], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) }),
+
+		bclose_button : close_button({}),
+		help_button  : help_button({}),
 	}
 }
 
