@@ -1025,6 +1025,13 @@ bvariant building_impl::get_property(const xstring &domain, const xstring &name)
         return bvariant(base.stored_amount(res));
     }
 
+    if (domain == tags().building) {
+        if (name == tags().name) {
+            const auto &m = params().meta;
+            return bvariant(ui::str(m.text_id, 0));
+        }
+    }
+
     return bvariant();
 }
 
