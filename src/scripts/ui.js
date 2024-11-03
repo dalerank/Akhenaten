@@ -1137,15 +1137,15 @@ temple_info_window = {
 window building_info_window = {
 	ui : {
 		background 	: outer_panel({size: [29, 17]}),
-		title 		 	: { type : "text", pos: [0, 16], text:"${building.name}", size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		title 		 	: { type : "text", pos: [0, 16], text:"${building.name}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		warning_text : { type : "text", pos: [32, 46], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		inner_panel : inner_panel({pos : [16, 100], size: [27, 5],
-																ui : {
-																	workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 10] }),
-																	workers_text : text({pos: [70, 16], font: FONT_NORMAL_BLACK_ON_DARK}),
-																	workers_desc : text({pos: [70, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
-																}
-														  }),
+												ui : {
+													workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
+													workers_text : text({pos: [50, 16], font: FONT_NORMAL_BLACK_ON_DARK}),
+													workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
+												}
+										  }),
 		first_advisor  : { type : "image_button", pos:[40, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		second_advisor : { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		third_advisor : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
@@ -1224,13 +1224,16 @@ info_window_farm = {
 
 window info_window_raw_material = {
 	ui : __baseui(building_info_window, {
-		resource_img : resource_icon({pos: [10, 10]}),
+		resource_img  : resource_icon({pos: [14, 14]}),
 		progress_desc : text({pos: [32, 44], text:"${text.2} ${industry.progress} % ${text.3}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 110] },
-		workers_text : { type : "text", pos: [70, 106], font: FONT_NORMAL_BLACK_ON_DARK },
-		workers_desc : { type : "text", pos: [70, 106 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) },
-		mine_desc : text({pos: [32, 176], text:"${text.1}", font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
-		inner_panel : inner_panel({pos : [16, 100], size: [27, 4] }),
+		warning_desc  : text({pos: [32, 66], text:"${text.1}", font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
+		inner_panel   : inner_panel({pos : [16, 130], size: [27, 5],
+												ui : {
+													workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
+													workers_text : text({pos: [50, 16], font: FONT_NORMAL_BLACK_ON_DARK}),
+													workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
+												}
+										  }),
 	})
 }
 
@@ -1244,14 +1247,21 @@ info_window_garden = {
 	}
 }
 
-info_window_palace = {
+window info_window_palace = {
 	ui : __baseui(building_info_window, {
-		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 18]},
-		resource_img : { type : "resource_icon", pos: [16, 16] },
-		inner_panel : { type : "inner_panel", pos : [16, 100], size: [27, 6] },
-		vaults_hold : { type : "text", pos: [44, 54], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		text_visit : { type : "text", pos: [90, 252], font: FONT_NORMAL_BLACK_ON_LIGHT, text:"#visit_rating_advisor" },
-		visit_advisor  : { type : "image_button", pos:[52, 246], size:[28, 28], pack:PACK_GENERAL, id:106 },
+		background 	: outer_panel({size: [29, 18]}),
+		resource_img : resource_icon({pos: [16, 16], resource:RESOURCE_DEBEN}),
+		inner_panel : inner_panel({pos : [16, 120], size: [27, 6],
+																ui : {
+																	workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
+																	workers_text : text({pos: [50, 16], font: FONT_NORMAL_BLACK_ON_DARK}),
+																	workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
+																}
+														  }),
+		vaults_hold : text({pos: [44, 44], text:"${text.2} ${building.tax_income_or_storage} Db", font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		warning_desc : text({pos: [32, 66], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		text_visit : text({pos: [90, 52], font: FONT_NORMAL_BLACK_ON_LIGHT, text:"#visit_rating_advisor" }),
+		visit_advisor  : image_button({pos:[52, 246], size:[28, 28], pack:PACK_GENERAL, id:106 }),
 	})
 }
 

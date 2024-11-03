@@ -1030,6 +1030,10 @@ bvariant building_impl::get_property(const xstring &domain, const xstring &name)
         if (name == tags().name) {
             return bvariant(ui::str(m.text_id, 0));
         }
+
+        if (name == tags().tax_income_or_storage) {
+            return bvariant(base.tax_income_or_storage);
+        }
     }
 
     if (domain == tags().industry) {

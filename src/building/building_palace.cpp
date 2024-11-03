@@ -147,13 +147,7 @@ bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i p
 void info_window_palace::init(object_info &c) {
     building_info_window::init(c);
 
-    building_palace *palace = c.building_get()->dcast_palace();
-    if (!palace) {
-        return;
-    }
-
-    ui["resource_img"].image(RESOURCE_DEBEN);
-    ui["vaults_hold"].text_var("%s %d Db", ui::str(c.group_id, 2), palace->base.tax_income_or_storage);
+    building_impl *palace = c.building_get()->dcast();
 
     std::pair<int, int> reason = { c.group_id, 0 };
     if (!c.has_road_access) reason = { 69, 25 };

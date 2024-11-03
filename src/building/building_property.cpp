@@ -13,3 +13,4 @@ const xstring id_property_t::level_name = "level_name";
 const xstring id_property_t::text = "text";
 const xstring id_property_t::industry = "industry";
 const xstring id_property_t::progress = "progress";
+const xstring id_property_t::tax_income_or_storage = "tax_income_or_storage";

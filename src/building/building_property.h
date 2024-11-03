@@ -11,6 +11,7 @@ struct id_property_t {
     static const xstring text;
     static const xstring industry;
     static const xstring progress;
+    static const xstring tax_income_or_storage;
 };
 
 const id_property_t &tags();
