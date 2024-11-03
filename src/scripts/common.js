@@ -182,7 +182,6 @@ var minimap_window = {}
 var advisor_trade_window = {}
 var advisor_imperial_window = {}
 var info_window_fishing_wharf = {}
-var raw_material_info_window = {}
 var info_window_palace = {}
 var info_window_courthouse = {}
 var info_window_garden = {}

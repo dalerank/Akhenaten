@@ -1222,12 +1222,15 @@ info_window_farm = {
 	})
 }
 
-raw_material_info_window = {
+window info_window_raw_material = {
 	ui : __baseui(building_info_window, {
-		resource_img : { type : "resource_icon", pos: [10, 10] },
-		progress_desc : { type : "text", pos: [32, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		mine_desc : { type : "text", pos: [32, 176], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true },
-		inner_panel : { type : "inner_panel", pos : [16, 106], size: [27, 4] },
+		resource_img : resource_icon({pos: [10, 10]}),
+		progress_desc : text({pos: [32, 44], text:"${text.2} ${industry.progress} % ${text.3}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 110] },
+		workers_text : { type : "text", pos: [70, 106], font: FONT_NORMAL_BLACK_ON_DARK },
+		workers_desc : { type : "text", pos: [70, 106 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) },
+		mine_desc : text({pos: [32, 176], text:"${text.1}", font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
+		inner_panel : inner_panel({pos : [16, 100], size: [27, 4] }),
 	})
 }
 
