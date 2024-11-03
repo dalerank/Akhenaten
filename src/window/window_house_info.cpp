@@ -20,7 +20,7 @@
 #include "game/game.h"
 #include "js/js_game.h"
 
-struct info_window_house : public building_info_window {
+struct info_window_house : public building_info_window_t<info_window_house> {
     int resource_text_group;
     int help_id;
 
@@ -32,7 +32,7 @@ struct info_window_house : public building_info_window {
         help_id = arch.r_int("help_id");
     }
 
-    virtual void window_info_background(object_info& c) override;
+    virtual void init(object_info& c) override;
     virtual bool check(object_info &c) override {
         building_house *h = c.building_get()->dcast_house();
         if (!h) {
@@ -43,8 +43,8 @@ struct info_window_house : public building_info_window {
     }
 };
 
-struct info_window_vacant_lot : building_info_window {
-    virtual void window_info_background(object_info &c) override;
+struct info_window_vacant_lot : building_info_window_t<info_window_vacant_lot> {
+    virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         building_house *h = c.building_get()->dcast_house();
         if (!h) {
@@ -58,14 +58,8 @@ struct info_window_vacant_lot : building_info_window {
 info_window_house house_infow;
 info_window_vacant_lot vacant_lot_infow;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_house_info_window);
-void config_load_house_info_window() {
-    house_infow.load("info_window_house");
-    vacant_lot_infow.load("info_window_vacant_lot");
-}
-
-void info_window_vacant_lot::window_info_background(object_info &c) {
-    building_info_window::window_info_background(c);
+void info_window_vacant_lot::init(object_info &c) {
+    building_info_window::init(c);
 
     //window_figure_info_prepare_figures(c);
     //window_building_draw_figure_list(&c);
@@ -74,20 +68,16 @@ void info_window_vacant_lot::window_info_background(object_info &c) {
     map_point road_tile = map_closest_road_within_radius(b->tile, 1, 2);
     int text_id = road_tile.valid() ? 1 : 2;
 
-    ui["title"] = ui::str(128, 0);
     ui["describe"] = ui::str(128, text_id);
 }
 
-void info_window_house::window_info_background(object_info &c) {
-    building_info_window::window_info_background(c);
+void info_window_house::init(object_info &c) {
+    building_info_window::init(c);
 
     c.help_id = help_id;
     building *b = c.building_get();
 
     assert(b->house_population > 0);
-
-    int level = b->type - 10;
-    ui["title"] = ui::str(29, level);
 
     if (b->data.house.evolve_text_id == 62) { // is about to devolve
         bstring512 text;
@@ -132,6 +122,8 @@ void info_window_house::window_info_background(object_info &c) {
         adv_people_text.printf("%u %s", -b->house_population_room, ui::str(127, 21));
     } else if (b->house_population_room > 0) {
         adv_people_text.printf("%s %u", ui::str(127, 22), b->house_population_room);
+    } else {
+        adv_people_text = "no rooms";
     }
     ui["people_text"].text_var("%s ( %s )", people_text, adv_people_text);
 
