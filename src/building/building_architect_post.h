@@ -17,7 +17,7 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };
 
-struct info_window_architect_post : public building_info_window {
+struct info_window_architect_post : public building_info_window_t<info_window_architect_post> {
     virtual void window_info_background(object_info& c) override;
     virtual bool check(object_info& c) override;
 };

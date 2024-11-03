@@ -129,10 +129,11 @@ void building_info_window::common_info_background(object_info& c) {
         workers.second = approximate_value(c.worker_percentage / 100.f, make_array(4, 5, 6, 7));
     }
 
-    ui["warning_text"] = ui::str(reason.first, reason.second);
-    ui["workers_desc"] = ui::str(workers.first, workers.second);
+    bstring512 warning_text(ui::str(c.group_id, 1), " ", ui::str(reason));
+    ui["warning_text"] = warning_text;
 
     fill_employment_details(c);
+    ui["workers_desc"] = ui::str(workers.first, workers.second);
 }
 
 void building_info_window::fill_employment_details(object_info &c) {

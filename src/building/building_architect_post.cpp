@@ -26,12 +26,6 @@ declare_console_command_p(collapse, console_command_collapse);
 buildings::model_t<building_architect_post> architect_post_m;
 info_window_architect_post architect_post_infow;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_architect_post);
-void config_load_building_architect_post() {
-    architect_post_m.load();
-    architect_post_infow.load("building_info_window");
-}
-
 void console_command_nodamage(std::istream &, std::ostream &) {
     buildings_valid_do([&] (building &b) {
         b.damage_risk = 0;

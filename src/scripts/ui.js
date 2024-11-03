@@ -1138,7 +1138,7 @@ window building_info_window = {
 	ui : {
 		background 	: outer_panel({size: [29, 17]}),
 		title 		 	: { type : "text", pos: [0, 16], text:"${building.name}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		warning_text : { type : "text", pos: [32, 46], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		warning_text : { type : "text", pos: [20, 46], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		inner_panel : inner_panel({pos : [16, 100], size: [27, 5],
 												ui : {
 													workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
@@ -1220,6 +1220,12 @@ info_window_farm = {
 		farm_state : { type : "text", pos: [32, 186], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true },
 		flood_info : { type : "text", pos: [32, 206], font: FONT_NORMAL_BLACK_ON_LIGHT },
 	})
+}
+
+window info_window_architect_post = {
+	  ui : __baseui(building_info_window, {
+
+	  })
 }
 
 window info_window_raw_material = {
