@@ -5,8 +5,8 @@
 #include "window/building/common.h"
 #include "js/js_game.h"
 
-struct health_info_window : public building_info_window {
-    virtual void window_info_background(object_info &c) override;
+struct health_info_window : public building_info_window_t<health_info_window> {
+    virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         building *b = c.building_get();
         return building_type_any_of(*b, BUILDING_APOTHECARY, BUILDING_PHYSICIAN, BUILDING_DENTIST, BUILDING_MORTUARY);
@@ -15,12 +15,9 @@ struct health_info_window : public building_info_window {
 
 health_info_window health_infow;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_health_info_window);
-void config_load_health_info_window() {
-    health_infow.load("info_window_health");
-}
+void health_info_window::init(object_info &c) {
+    building_info_window::init(c);
 
-void health_info_window::window_info_background(object_info &c) {
     c.go_to_advisor.first = ADVISOR_HEALTH;
 
     building_info_window::window_info_background(c);
