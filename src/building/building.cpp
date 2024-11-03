@@ -1020,6 +1020,7 @@ void building_impl::bind_dynamic(io_buffer *iob, size_t version) {
 }
 
 bvariant building_impl::get_property(const xstring &domain, const xstring &name) const {
+    const auto &m = params().meta;
     if (domain == tags().stored) {
         e_resource res = resource_type(name);
         return bvariant(base.stored_amount(res));
@@ -1027,9 +1028,20 @@ bvariant building_impl::get_property(const xstring &domain, const xstring &name)
 
     if (domain == tags().building) {
         if (name == tags().name) {
-            const auto &m = params().meta;
             return bvariant(ui::str(m.text_id, 0));
         }
+    }
+
+    if (domain == tags().industry) {
+        if (name == tags().progress) {
+            int pct_done = calc_percentage<int>(data.industry.progress, 200);
+            return bvariant(pct_done);
+        }
+    }
+
+    if (domain == tags().text) {
+        int id = atoi(name.c_str());
+        return bvariant(ui::str(m.text_id, id));
     }
 
     return bvariant();

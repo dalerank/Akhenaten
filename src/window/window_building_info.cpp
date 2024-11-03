@@ -37,7 +37,7 @@ namespace ui {
             }
 
             bstring128 domain, prop;
-            args_handled = sscanf_s(item.c_str(), "${%[^.].%[^}]}", domain.data(), domain.capacity, prop.data(), prop.capacity);
+            args_handled = sscanf(item.c_str(), "${%[^.].%[^}]}", domain.data(), prop.data());
             if (args_handled == 2) {
                 bvariant bvar = b->get_property(xstring(domain), xstring(prop));
                 item = bvar.to_str();
