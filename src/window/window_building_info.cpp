@@ -238,13 +238,16 @@ void building_info_window::init(object_info &c) {
     c.help_id = params.meta.help_id;
     c.group_id = params.meta.text_id;
 
+
     for (auto &w: ui.elements) {
         bstring512 formated_text;
         formated_text = ui::format(b->dcast(), w->format().c_str());
         w->text(formated_text);
     }
 
-    ui["title"] = ui::str(28, b->type);
+    if (ui["title"].text().empty()) {
+        ui["title"] = ui::str(28, b->type);
+    }
 
     int workers_needed = model_get_building(b->type)->laborers;
     ui["mothball"].onclick([&c, b, workers_needed] {
