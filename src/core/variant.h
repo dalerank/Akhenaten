@@ -35,6 +35,7 @@ public:
     inline explicit variant_t(float v) { _value_type = etype_none; assign(v, etype_float); }
     inline explicit variant_t(void *v) { _value_type = etype_none; assign(v, etype_ptr); }
     inline explicit variant_t(const xstring &v) { _value_type = etype_none; assign(v, etype_str); }
+    inline explicit variant_t(pcstr v) { _value_type = etype_none; assign(xstring(v), etype_str); }
 
     inline variant_t &operator=(const variant_t &v) {
         if (this == &v) {
