@@ -19,34 +19,51 @@
 
 namespace ui {
     bstring512 format (const building_impl *b, pcstr fmt) {
-        bstring512 result;
+        if (!fmt || !*fmt) {
+            return {};
+        }
 
-        svector<bstring128, 32> items;
+        struct kv {
+            bstring64 key;
+            bstring128 value;
+            pstr data() { return key.data(); }
+            kv &operator=(pcstr v) { key = v; return *this; }
+            void resize(size_t s) { key.resize(s); }
+            pcstr c_str() const { return key.c_str(); }
+        };
+        svector<kv, 32> items;
         string_to_array_t(items, fmt, ' ');
 
         for (auto &item : items) {
-            if (item[0] != '$') {
+            if (strncmp(item.key, "${", 2) != 0) {
                 continue;
             }
 
+            pcstr scopeend = item.key.strchr('}');
+            if (scopeend == nullptr)  {
+                continue;
+            }
+
+            item.key.resize(scopeend - item.key + 1);
+
             int group, id;
-            uint32_t args_handled = sscanf(item.c_str(), "${%d.%d}", &group, &id);
+            uint32_t args_handled = sscanf(item.key.c_str(), "${%d.%d}", &group, &id);
             if (args_handled == 2) {
-                item = (pcstr)lang_get_string(group, id);
+                item.value = (pcstr)lang_get_string(group, id);
                 continue;
             }
 
             bstring128 domain, prop;
-            args_handled = sscanf(item.c_str(), "${%[^.].%[^}]}", domain.data(), prop.data());
+            args_handled = sscanf(item.key.c_str(), "${%[^.].%[^}]}", domain.data(), prop.data());
             if (args_handled == 2) {
                 bvariant bvar = b->get_property(xstring(domain), xstring(prop));
-                item = bvar.to_str();
+                item.value = bvar.to_str();
             }
         }
 
+        bstring512 result = fmt;
         for (const auto &item: items) {
-            result.append(item);
-            result.append(' ');
+            result.replace_str(item.key, item.value);
         }
 
         return result;
