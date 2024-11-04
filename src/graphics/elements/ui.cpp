@@ -737,12 +737,19 @@ void ui::eresource_icon::image(int image) {
     res = (e_resource)image;
 }
 
+void ui::eresource_icon::text(pcstr v) {
+    if (v && *v) {
+        res = resource_type(v);
+    }
+}
+
 void ui::eresource_icon::load(archive arch, element *parent, items &elems) {
     element::load(arch, parent, elems);
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "resource_icon"));
     res = arch.r_type<e_resource>("resource");
+    prop = arch.r_string("prop");
 }
 
 void ui::elabel::draw() {

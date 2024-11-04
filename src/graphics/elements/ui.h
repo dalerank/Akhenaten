@@ -228,9 +228,12 @@ struct eborder : public element {
 
 struct eresource_icon : public element {
     e_resource res;
+    xstring prop;
 
     virtual void draw() override;
     virtual void image(int image) override;
+    virtual void text(pcstr) override;
+    virtual const xstring &format() const override { return prop; }
     virtual void load(archive elem, element *parent, items &elems) override;
 };
 
