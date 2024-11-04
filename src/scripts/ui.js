@@ -1489,7 +1489,7 @@ well_info_window = {
 	}
 }
 
-info_window_storageyard_orders = {
+window info_window_storageyard_orders = {
 	parent_window_offset : [0, -250],
 	ui : {
 		background : outer_panel({size:[29, 35] }),
@@ -1512,7 +1512,7 @@ info_window_storageyard_orders = {
 	}
 }
 
-info_window_storageyard = {
+window info_window_storageyard = {
 	ui : {
 		background : outer_panel({size: [29, 19] }),
 		title 		 : text({pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -1549,7 +1549,7 @@ info_window_storageyard = {
 		cartstate_img : resource_icon({pos:[40, 220] }),
 		cartstate_desc: text({pos: [32, 223], wrap:px(27), font : FONT_NORMAL_BLACK_ON_DARK, multiline:true }),
 
-		orders        : button({margin:{left:100, bottom:-40}, size:[270, 24], text:[99, 2]}),
+		orders        : button({margin:{left:100, bottom:-40}, size:[270, 24], text:"${99.2}"}),
 		button_help   : help_button({}),
 		button_close  : close_button({}),
 		mothball      : button({margin:{right:-90, bottom:-40}, size:[23, 23]}),

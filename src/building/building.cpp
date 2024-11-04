@@ -1019,44 +1019,46 @@ void building_impl::bind_dynamic(io_buffer *iob, size_t version) {
     assert(base.output_resource_first_id == RESOURCE_NONE);
 }
 
+struct bproperty {
+    xstring domain;
+    xstring name;
+
+    std::function<bvariant(building &, const xstring &)> handler;
+};
+
+const bproperty bproperties[] = {
+    { tags().stored, xstring("*"),
+        [] (building &b, const xstring &name) {
+            e_resource res = resource_type(name);
+            return bvariant(b.stored_amount(res));
+        }
+    },
+
+    { tags().text, xstring("*"),
+        [] (building &b, const xstring &name) {
+             int id = atoi(name.c_str());
+             const auto &m = building_impl::params(b.type).meta;
+             return bvariant(ui::str(m.text_id, id));
+        }
+    },
+
+    { tags().building, tags().name, [] (building &b, const xstring &) { const auto &m = building_impl::params(b.type).meta; return bvariant(ui::str(m.text_id, 0)); }},
+    { tags().building, tags().tax_income_or_storage, [] (building &b, const xstring &) { return bvariant(b.tax_income_or_storage); }},
+    { tags().building, tags().num_workers, [] (building &b, const xstring &) { return bvariant(b.num_workers); }},
+    { tags().model, tags().laborers, [] (building &b, const xstring &) { const auto model = model_get_building(b.type); return bvariant(model->laborers); }},
+    { tags().industry, tags().progress, [] (building &b, const xstring &) { int pct_done = calc_percentage<int>(b.data.industry.progress, 200); return bvariant(pct_done); }},
+};
+
 bvariant building_impl::get_property(const xstring &domain, const xstring &name) const {
-    const auto &m = params().meta;
-    if (domain == tags().stored) {
-        e_resource res = resource_type(name);
-        return bvariant(base.stored_amount(res));
-    }
-
-    if (domain == tags().building) {
-        if (name == tags().name) {
-            return bvariant(ui::str(m.text_id, 0));
+    static const xstring wildname("*");
+    for (const auto &prop: bproperties) {
+        if (prop.domain != domain) {
+            continue;
         }
 
-        if (name == tags().tax_income_or_storage) {
-            return bvariant(base.tax_income_or_storage);
+        if (prop.name == name || prop.name == wildname) {
+            return prop.handler(base, name);
         }
-
-        if (name == tags().num_workers) {
-            return bvariant(base.num_workers);
-        }
-    }
-
-    if (domain == tags().model) {
-        const auto model = model_get_building(type());
-        if (name == tags().laborers) {
-            return bvariant(model->laborers);
-        }
-    }
-
-    if (domain == tags().industry) {
-        if (name == tags().progress) {
-            int pct_done = calc_percentage<int>(data.industry.progress, 200);
-            return bvariant(pct_done);
-        }
-    }
-
-    if (domain == tags().text) {
-        int id = atoi(name.c_str());
-        return bvariant(ui::str(m.text_id, id));
     }
 
     return bvariant();
