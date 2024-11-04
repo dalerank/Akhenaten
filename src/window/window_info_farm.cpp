@@ -23,9 +23,6 @@ void info_window_farm::window_info_background(object_info &c) {
 
     building *b = c.building_get();
 
-    ui["resource"].image(b->output_resource_first_id);
-    ui["title"] = ui::str(c.group_id, 0);
-
     int pct_grown = calc_percentage<int>(b->data.industry.progress, 2000);
     int pct_fertility = map_get_fertility_for_farm(b->tile.grid_offset());
     ui["progress_desc"].text_var("%s %d%% %s %s", 

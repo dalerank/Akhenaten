@@ -1195,30 +1195,30 @@ info_window_fishing_wharf = {
 
 info_window_recruiter = {
 	ui : __baseui(building_info_window, {
-		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 21]},
-		icon_weapon : { type : "resource_icon", pos:[24, 40], resource:RESOURCE_WEAPONS  },
+		background 	  : { type : "outer_panel",	pos: [0, 0], size: [29, 21]},
+		icon_weapon   : { type : "resource_icon", pos:[24, 40], resource:RESOURCE_WEAPONS  },
 		storage_state : { type : "text", pos: [46, 44], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true },
-		inner_panel : { type : "inner_panel", pos : [16, 136], size: [27, 4] },
-		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 140] },
+		inner_panel   : { type : "inner_panel", pos : [16, 136], size: [27, 4] },
+		workers_img   : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 140] },
 		progress_desc : { type : "text", pos: [32, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		workers_text : { type : "text", pos: [70, 146], font: FONT_NORMAL_BLACK_ON_DARK },
-		workers_desc : { type : "text", pos: [70, 146 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) },
+		workers_text  : { type : "text", pos: [70, 146], font: FONT_NORMAL_BLACK_ON_DARK },
+		workers_desc  : { type : "text", pos: [70, 146 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) },
 		priority_text : { type : "text", pos: [46, 208], font: FONT_NORMAL_BLACK_ON_LIGHT, text:{group:50, id:21} },
-		tower_text : { type : "text", pos: [74, 232], font: FONT_NORMAL_BLACK_ON_LIGHT, text:{group:91, id:0} },
-		tower_button : { type : "generic_button", pos: [46, 228], size:[20, 20], font: FONT_NORMAL_BLACK_ON_DARK },
-		fort_text : { type : "text", pos: [74, 252], font: FONT_NORMAL_BLACK_ON_LIGHT, text:{group:89, id:0} },
-		fort_button : { type : "generic_button", pos: [46, 248], size:[20, 20], font: FONT_NORMAL_BLACK_ON_DARK },
+		tower_text    : { type : "text", pos: [74, 232], font: FONT_NORMAL_BLACK_ON_LIGHT, text:{group:91, id:0} },
+		tower_button  : { type : "generic_button", pos: [46, 228], size:[20, 20], font: FONT_NORMAL_BLACK_ON_DARK },
+		fort_text     : { type : "text", pos: [74, 252], font: FONT_NORMAL_BLACK_ON_LIGHT, text:{group:89, id:0} },
+		fort_button   : { type : "generic_button", pos: [46, 248], size:[20, 20], font: FONT_NORMAL_BLACK_ON_DARK },
 	})
 }
 
-info_window_farm = {
+window info_window_farm = {
 	ui : __baseui(building_info_window, {
-		resource : { type : "resource_icon", pos:[10, 10] },
-		progress_desc : { type : "text", pos: [32, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		workers_desc : { type : "text", pos: [70, 116], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(23) },
-		farm_desc : { type : "text", pos: [32, 64], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true },
-		farm_state : { type : "text", pos: [32, 186], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true },
-		flood_info : { type : "text", pos: [32, 206], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		resource      : resource_icon({ pos:[10, 10], prop:"${building.output_resource}" }),
+		progress_desc : text({ pos: [32, 44], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		workers_desc  : text({ pos: [70, 116], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(23) }),
+		farm_desc     : text({ pos: [32, 64], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
+		farm_state    : text({ pos: [32, 186], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
+		flood_info    : text({ pos: [32, 206], font: FONT_NORMAL_BLACK_ON_LIGHT }),
 	})
 }
 
