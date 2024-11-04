@@ -45,6 +45,21 @@ buildings::model_t<building_farm_henna> farm_henna_m;
 buildings::model_t<building_farm_figs> farm_figs_m;
 
 declare_console_command(addgrain, game_cheat_add_resource<RESOURCE_GRAIN>);
+declare_console_command_p(farmgrow, game_cheat_farm_grow);
+
+void game_cheat_farm_grow(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+    int amount = atoi(args.empty() ? (pcstr)"100" : args.c_str());
+   
+    buildings_valid_farms_do([amount] (building &b) {
+        building_farm *farm = b.dcast_farm();
+        if (!farm) {
+            return;
+        }
+
+        b.data.industry.progress += amount;
+    });
+};
 
 bool building_farm::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     return false;
@@ -230,18 +245,6 @@ bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
     }
 }
 
-void building_farm::on_create(int orientation) {
-    switch (type()) {
-    case BUILDING_GRAIN_FARM:
-        base.output_resource_second_id = RESOURCE_STRAW;
-        base.output_resource_second_rate = 10;
-        break;
-
-    default:
-        assert(false);
-    }
-}
-
 void building_farm::on_place_update_tiles(int orientation, int variant) {
     switch (type()) {
     case BUILDING_BARLEY_FARM:
@@ -354,8 +357,9 @@ void building_farm::on_undo() {
 }
 
 void building_farm::bind_dynamic(io_buffer *iob, size_t version) {
-    iob->bind____skip(26);
+    iob->bind____skip(22);
     iob->bind____skip(57);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.industry.progress);
     iob->bind(BIND_SIGNATURE_UINT8, &data.farm.worker_frame);
 }
 
