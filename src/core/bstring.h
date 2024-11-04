@@ -200,6 +200,7 @@ public:
 
     inline pcstr strstr(pcstr sub_str) const { return ::strstr(_data, sub_str); }
     inline pcstr strstr(pcstr sub_str) { return ::strstr(_data, sub_str); }
+    inline pcstr strchr(char v) { return ::strchr(_data, v); }
     inline int cmp(pcstr str) const { return strcmp(_data, str); }
     inline int icmp(pcstr str) const { return stricmp(_data, str); }
     inline int ncmp(pcstr str, unsigned int count) const { return ::strncmp(_data, str, count); }

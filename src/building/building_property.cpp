@@ -17,3 +17,4 @@ const xstring id_property_t::industry = "industry";
 const xstring id_property_t::progress = "progress";
 const xstring id_property_t::tax_income_or_storage = "tax_income_or_storage";
 const xstring id_property_t::num_workers = "num_workers";
+const xstring id_property_t::output_resource = "output_resource";
