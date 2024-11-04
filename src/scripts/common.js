@@ -180,7 +180,6 @@ var advisor_imperial_window = {}
 var info_window_fishing_wharf = {}
 var info_window_courthouse = {}
 var info_window_garden = {}
-var info_window_farm = {}
 var info_window_figure_enemy = {}
 var info_window_figure_animal = {}
 var info_window_figure_caravan_donkey = {}

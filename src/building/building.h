@@ -499,6 +499,8 @@ public:
         bstring64 meta_id;
         building::metainfo meta;
         e_resource output_resource;
+        e_resource output_resource_second;
+        int output_resource_second_rate;
         e_labor_category labor_category;
         animations_t anim;
         uint8_t building_size;

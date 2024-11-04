@@ -932,6 +932,8 @@ void building_impl::on_place(int orientation, int variant) {
     base.fire_proof = p.fire_proof;
     base.damage_proof = p.damage_proof;
     base.output_resource_first_id = p.output_resource;
+    base.output_resource_second_id = p.output_resource_second;
+    base.output_resource_second_rate = p.output_resource_second_rate;
 
     on_place_update_tiles(orientation, variant);
     update_graphic();
@@ -1047,6 +1049,7 @@ const bproperty bproperties[] = {
     { tags().building, tags().num_workers, [] (building &b, const xstring &) { return bvariant(b.num_workers); }},
     { tags().model, tags().laborers, [] (building &b, const xstring &) { const auto model = model_get_building(b.type); return bvariant(model->laborers); }},
     { tags().industry, tags().progress, [] (building &b, const xstring &) { int pct_done = calc_percentage<int>(b.data.industry.progress, 200); return bvariant(pct_done); }},
+    { tags().building, tags().output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output_resource_first_id)); }},
 };
 
 bvariant building_impl::get_property(const xstring &domain, const xstring &name) const {
@@ -1143,6 +1146,8 @@ void building_impl::static_params::load(archive arch) {
     fire_proof = arch.r_bool("fire_proof");
     damage_proof = arch.r_bool("damage_proof");
     output_resource = arch.r_type<e_resource>("output_resource");
+    output_resource_second = arch.r_type<e_resource>("output_resource_second");
+    output_resource_second_rate = arch.r_int("output_resource_second_rate");
     meta_id = arch.r_string("meta_id");
     meta.help_id = arch.r_int("info_help_id");
     meta.text_id = arch.r_int("info_text_id");

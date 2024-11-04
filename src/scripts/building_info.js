@@ -329,6 +329,9 @@ building_farm_grain = {
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
   output_resource : RESOURCE_GRAIN,
+  output_resource_second : RESOURCE_STRAW,
+  output_resource_second_rate : 10,
+
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
