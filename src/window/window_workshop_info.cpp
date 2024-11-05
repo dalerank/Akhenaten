@@ -12,8 +12,8 @@
 #include "io/gamefiles/lang.h"
 #include "js/js_game.h"
 
-struct workshop_info_window : public building_info_window {
-    virtual void window_info_background(object_info &c) override;
+struct workshop_info_window : public building_info_window_t<workshop_info_window> {
+    virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         building *b = c.building_get();
         return b->is_workshop();
@@ -22,29 +22,19 @@ struct workshop_info_window : public building_info_window {
 
 workshop_info_window workshop_infow;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_workshop_info_window);
-void config_load_workshop_info_window() {
-    workshop_infow.load("workshop_info_window");
-}
-
 void building_workshop_draw_foreground(object_info &c) {
     workshop_infow.draw();
 
     window_building_draw_employment(&c, 142);
 }
 
-void workshop_info_window::window_info_background(object_info& c) {
-    building_info_window::window_info_background(c);
+void workshop_info_window::init(object_info& c) {
+    building_info_window::init(c);
 
     building *b = c.building_get();
     
     window_building_play_sound(&c, b->get_sound());
 
-    int pct_done = calc_percentage<int>(b->data.industry.progress, 400);
-
-    ui["produce_icon"].image(b->output_resource_first_id);
-    ui["title"].text((pcstr)lang_get_string(c.group_id, 0));
-    ui["ready_prod"].text_var("%s %u%% %s", (pcstr)lang_get_string(c.group_id, 2), pct_done, (pcstr)lang_get_string(c.group_id, 3));
     ui["resource_icon"].image(b->first_material_id);
     ui["resource_stored"].text_var("%s %u", (pcstr)lang_get_string(c.group_id, 12), b->stored_amount());
 
@@ -55,7 +45,6 @@ void workshop_info_window::window_info_background(object_info& c) {
     else if (!b->workshop_has_resources()) { trouble_text = {c.group_id, 11}; }
     else { trouble_text.second = approximate_value(c.worker_percentage / 100.f, make_array(10, 9, 8, 7, 6)); }
 
-    ui["warning_text"].width(c.bgwidth_px() - 40);
     ui["warning_text"].text((pcstr)lang_get_string(trouble_text.first, trouble_text.second));
 
     fill_employment_details(c);

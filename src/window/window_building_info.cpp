@@ -18,14 +18,14 @@
 #include "core/variant.h"
 
 namespace ui {
-    bstring512 format (const building_impl *b, pcstr fmt) {
+    bstring1024 format (const building_impl *b, pcstr fmt) {
         if (!fmt || !*fmt) {
             return {};
         }
 
         struct kv {
             bstring64 key;
-            bstring128 value;
+            bstring1024 value;
             pstr data() { return key.data(); }
             kv &operator=(pcstr v) { key = v; return *this; }
             void resize(size_t s) { key.resize(s); }
@@ -61,7 +61,7 @@ namespace ui {
             }
         }
 
-        bstring512 result = fmt;
+        bstring1024 result = fmt;
         for (const auto &item: items) {
             result.replace_str(item.key, item.value);
         }
@@ -258,7 +258,7 @@ void building_info_window::init(object_info &c) {
 
 
     for (auto &w: ui.elements) {
-        bstring512 formated_text;
+        bstring1024 formated_text;
         formated_text = ui::format(b->dcast(), w->format().c_str());
         w->text(formated_text);
     }
