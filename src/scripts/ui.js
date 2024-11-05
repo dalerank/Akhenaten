@@ -1256,7 +1256,7 @@ info_window_garden = {
 window info_window_palace = {
 	ui : __baseui(building_info_window, {
 		background 	: outer_panel({size: [29, 18]}),
-		resource_img : resource_icon({pos: [16, 16], resource:RESOURCE_DEBEN}),
+		resource_img : resource_icon({pos: [16, 16], resource:RESOURCE_GOLD}),
 		inner_panel : inner_panel({pos : [16, 120], size: [27, 6],
 																ui : {
 																	workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
@@ -1463,21 +1463,22 @@ festival_square_info_window = {
 	}
 }
 
-workshop_info_window = {
+window workshop_info_window = {
 	ui : {
-		background : { type : "outer_panel", pos: [0, 0], size: [29, 16] },
-		title 		 : { type : "text", pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		produce_icon : { type : "resource_icon", pos: [10, 10] },
-		workers_panel : { type : "inner_panel", pos : [16, 96], size: [27, 4] },
-		workers_text : { type : "text", pos: [70, 102 + 12], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		workers_desc : { type : "text", pos: [70, 102 + 26], font: FONT_NORMAL_BLACK_ON_DARK },
-		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 102 + 6] },
-		ready_prod : { type : "text", pos: [38, 40], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT },
-		resource_icon : { type : "resource_icon", pos: [32, 56] },
-		resource_stored : { type : "text", pos: [60, 60], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT },
-		warning_text : { type : "text", pos: [32, 168], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		background   : outer_panel({size: [29, 16] }),
+		title 		   : text({pos: [0, 12], size: [px(27), 20], text:"${building.name}", font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		produce_icon : resource_icon({pos: [10, 10], prop:"${building.output_resource}" }),
+		workers_panel: inner_panel({pos : [16, 96], size: [27, 4] }),
+		workers_text : text({pos: [70, 102 + 12], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		workers_desc : text({pos: [70, 102 + 26], font: FONT_NORMAL_BLACK_ON_DARK }),
+		workers_img  : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 102 + 6] }),
+		ready_prod   : text({pos: [38, 40], size: [px(27), 20], text:"${text.2} ${industry.progress}% ${text.3}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		resource_icon: resource_icon({pos: [32, 56] }),
+		resource_stored : text({pos: [60, 60], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		warning_text : text({pos: [32, 168], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		
+		button_help   : help_button({}),
+		button_close  : close_button({}),
 	}
 }
 
