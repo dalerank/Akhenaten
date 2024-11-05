@@ -271,7 +271,7 @@ figure_native_trader = {
 	},
 }
 
-figure_magistrate = {
+figure figure_magistrate = {
 	animations : {
 		walk : { pack: PACK_SPR_MAIN, id: 212, max_frames:12 },
 		death : { pack: PACK_SPR_MAIN, id: 213, max_frames:8, loop:false },

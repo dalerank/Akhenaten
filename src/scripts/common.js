@@ -248,7 +248,6 @@ var figure_docker = {}
 var figure_bricklayer = {}
 var figure_ostrich_hunter = {}
 var figure_lumberjack = {}
-var figure_magistrate = {}
 var figure_soldier_infantry = {}
 var figure_soldier_archer = {}
 var figure_soldier_charioteer = {}

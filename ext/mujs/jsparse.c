@@ -693,7 +693,7 @@ static js_Ast *statement(js_State *J)
 		return block(J);
 	}
 
-	if (jsP_accept(J, TK_VAR) || jsP_accept(J, TK_WINDOWIF)) {
+	if (jsP_accept(J, TK_VAR) || jsP_accept(J, TK_WINDOWIF) || jsP_accept(J, TK_FIGUREIF)) {
 		a = vardeclist(J, 0);
 		semicolon(J);
 		return STM1(VAR, a);
