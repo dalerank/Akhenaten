@@ -155,8 +155,8 @@ public:
         _value_type = etype_none;
     };
 
-    inline bstring128 debug_str() const {
-        bstring128 result;
+    inline bstring1024 debug_str() const {
+        bstring1024 result;
 
         switch (_value_type) {
         case (etype_none): result = "none"; break;
@@ -174,8 +174,8 @@ public:
         return result;
     }
 
-    inline bstring128 to_str() const {
-        bstring128 result;
+    inline bstring1024 to_str() const {
+        bstring1024 result;
 
         switch (_value_type) {
         case (etype_none): result = "none"; break;

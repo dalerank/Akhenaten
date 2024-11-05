@@ -155,7 +155,7 @@ public:
         return *this;
     }
     inline ref replace_str(pcstr subst, pcstr repl) {
-        const size_t _len = len();
+        size_t _len = len();
         const size_t subst_len = ::strlen(subst);
         const size_t repl_len = ::strlen(repl);
 
@@ -165,6 +165,7 @@ public:
             int sizeDiff = repl_len - subst_len;
             ::memmove(found_pos + repl_len, found_pos + subst_len, _data + _len - (found_pos + subst_len) + 1);
             ::memcpy(found_pos, repl, repl_len);
+            _len = len();
             found_pos = std::search(found_pos + repl_len, _data + _len, subst, subst + subst_len);
         }
         return *this;
