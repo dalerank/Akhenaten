@@ -1259,7 +1259,7 @@ window info_window_palace = {
 		inner_panel : inner_panel({pos : [16, 120], size: [27, 6],
 																ui : {
 																	workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
-																	workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
+																	workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} (${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
 																	workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
 																}
 														  }),

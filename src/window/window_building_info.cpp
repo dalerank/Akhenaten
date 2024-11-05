@@ -32,7 +32,22 @@ namespace ui {
             pcstr c_str() const { return key.c_str(); }
         };
         svector<kv, 32> items;
-        string_to_array_t(items, fmt, ' ');
+
+        const char *start = fmt;
+        while ((start = strstr(start, "${")) != NULL) {  // Find the start of "${"
+            const char *end = ::strchr(start, '}'); // Find the closing '}'
+            if (end != NULL) {
+                const int length = end - start + 1;
+
+                auto &item = items.emplace_back();
+                item.key.ncat(start, length);
+
+                // Move the pointer past the current block
+                start = end + 1;
+            } else {
+                break; // Exit if no closing '}' is found
+            }
+        }
 
         for (auto &item : items) {
             if (strncmp(item.key, "${", 2) != 0) {

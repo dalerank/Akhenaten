@@ -32,6 +32,9 @@ void workshop_info_window::init(object_info& c) {
     building_info_window::init(c);
 
     building *b = c.building_get();
+    if (!b->is_workshop()) {
+        return;
+    }
     
     window_building_play_sound(&c, b->get_sound());
 
