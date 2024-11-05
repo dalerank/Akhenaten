@@ -131,13 +131,6 @@ private:
     std::array<figure_id, max_figures> figure_ids;
 
 public:
-    struct metainfo {
-        int help_id;
-        int text_id;
-    };
-    static building::metainfo &get_info(pcstr type);
-
-public:
     int id;
     e_building_state state;
     uint8_t faction_id;
@@ -485,6 +478,8 @@ public:
     void monument_remove_worker(int fid);
     void industry_add_workers(int fid);
     void industry_remove_worker(int fid);
+
+    static const metainfo &get_info(pcstr type);
 };
 
 #define BUILDING_METAINFO(type, clsid) static constexpr e_building_type TYPE = type; static constexpr pcstr CLSID = #clsid;
@@ -498,7 +493,7 @@ public:
         bool damage_proof;
         bool is_draggable;
         bstring64 meta_id;
-        building::metainfo meta;
+        metainfo meta;
         e_resource output_resource;
         e_resource output_resource_second;
         int output_resource_second_rate;
@@ -646,7 +641,7 @@ public:
 
     using resources_vec = std::array<e_resource, 4>;
     virtual resources_vec required_resource() const { return {}; }
-    building::metainfo get_info() const;
+    metainfo get_info() const;
     void set_animation(const animation_t &anim);
     vfs::path get_sound();
     inline void set_animation(const xstring &key) { set_animation(anim(key)); }

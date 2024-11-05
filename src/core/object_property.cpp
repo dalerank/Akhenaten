@@ -1,4 +1,4 @@
-#include "building_property.h"
+#include "object_property.h"
 
 static id_property_t g_tags;
 const id_property_t &tags() {
@@ -7,8 +7,10 @@ const id_property_t &tags() {
 
 const xstring id_property_t::stored = "stored";
 const xstring id_property_t::building = "building";
+const xstring id_property_t::figure = "figure";
 const xstring id_property_t::model = "model";
 const xstring id_property_t::name = "name";
+const xstring id_property_t::class_name = "class_name";
 const xstring id_property_t::laborers = "laborers";
 const xstring id_property_t::house = "house";
 const xstring id_property_t::level_name = "level_name";

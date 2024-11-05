@@ -17,74 +17,6 @@
 #include "io/gamefiles/lang.h"
 #include "core/variant.h"
 
-namespace ui {
-    bstring1024 format (const building_impl *b, pcstr fmt) {
-        if (!fmt || !*fmt) {
-            return {};
-        }
-
-        struct kv {
-            bstring64 key;
-            bstring1024 value;
-            pstr data() { return key.data(); }
-            kv &operator=(pcstr v) { key = v; return *this; }
-            void resize(size_t s) { key.resize(s); }
-            pcstr c_str() const { return key.c_str(); }
-        };
-        svector<kv, 32> items;
-
-        const char *start = fmt;
-        while ((start = strstr(start, "${")) != NULL) {  // Find the start of "${"
-            const char *end = ::strchr(start, '}'); // Find the closing '}'
-            if (end != NULL) {
-                const int length = end - start + 1;
-
-                auto &item = items.emplace_back();
-                item.key.ncat(start, length);
-
-                // Move the pointer past the current block
-                start = end + 1;
-            } else {
-                break; // Exit if no closing '}' is found
-            }
-        }
-
-        for (auto &item : items) {
-            if (strncmp(item.key, "${", 2) != 0) {
-                continue;
-            }
-
-            pcstr scopeend = item.key.strchr('}');
-            if (scopeend == nullptr)  {
-                continue;
-            }
-
-            item.key.resize(scopeend - item.key + 1);
-
-            int group, id;
-            uint32_t args_handled = sscanf(item.key.c_str(), "${%d.%d}", &group, &id);
-            if (args_handled == 2) {
-                item.value = (pcstr)lang_get_string(group, id);
-                continue;
-            }
-
-            bstring128 domain, prop;
-            args_handled = sscanf(item.key.c_str(), "${%[^.].%[^}]}", domain.data(), prop.data());
-            if (args_handled == 2) {
-                bvariant bvar = b->get_property(xstring(domain), xstring(prop));
-                item.value = bvar.to_str();
-            }
-        }
-
-        bstring1024 result = fmt;
-        for (const auto &item: items) {
-            result.replace_str(item.key, item.value);
-        }
-
-        return result;
-    }
-}
-
 void window_building_draw_burning_ruin(object_info* c) {
     c->help_id = 0;
     window_building_play_sound(c, "Wavs/ruin.wav");
@@ -271,10 +203,9 @@ void building_info_window::init(object_info &c) {
     c.help_id = params.meta.help_id;
     c.group_id = params.meta.text_id;
 
-
     for (auto &w: ui.elements) {
         bstring1024 formated_text;
-        formated_text = ui::format(b->dcast(), w->format().c_str());
+        formated_text = common_info_window::format(b->dcast(), w->format().c_str());
         w->text(formated_text);
     }
 

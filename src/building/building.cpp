@@ -34,7 +34,7 @@
 #include "city/city.h"
 #include "figure/figure.h"
 #include "figuretype/figure_cartpusher.h"
-#include "building/building_property.h"
+#include "core/object_property.h"
 #include "config/config.h"
 
 #include <string.h>
@@ -206,7 +206,7 @@ building_impl *buildings::create(e_building_type e, building &data) {
 }
 
 static std::map<e_building_type, const building_impl::static_params *> *building_impl_params = nullptr;
-building::metainfo building_impl::get_info() const {
+metainfo building_impl::get_info() const {
     const auto &metainfo = !params().meta_id.empty()
                                 ? base.get_info(params().meta_id)
                                 : params().meta;

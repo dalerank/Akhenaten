@@ -1,7 +1,7 @@
 #include "building_house.h"
 
 #include "building/building.h"
-#include "building/building_property.h"
+#include "core/object_property.h"
 #include "city/warnings.h"
 #include "city/population.h"
 #include "city/city_resource.h"

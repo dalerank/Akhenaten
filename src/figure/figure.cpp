@@ -16,6 +16,7 @@
 #include "io/io_buffer.h"
 #include "graphics/animkeys.h"
 #include "sound/sound_walker.h"
+#include "core/object_property.h"
 
 #include <string.h>
 #include <map>
@@ -413,6 +414,10 @@ void figure_impl::set_destination(building *b, tile2i t) {
     base.destination_tile = t;
 }
 
+metainfo figure_impl::get_info() const {
+    return params(type()).meta;
+}
+
 figure_impl::static_params figure_impl::static_params::dummy;
 void figure_impl::static_params::load(archive arch) {
     anim.load(arch);
@@ -420,6 +425,8 @@ void figure_impl::static_params::load(archive arch) {
     terrain_usage = arch.r_int("terrain_usage");
     max_roam_length = arch.r_int("max_roam_length");
     speed_mult = arch.r_int("speed_mult", 1);
+    meta.help_id = arch.r_int("info_help_id");
+    meta.text_id = arch.r_int("info_text_id");
 }
 
 void figure_impl::update_animation() {
@@ -435,6 +442,48 @@ void figure_impl::update_animation() {
     if (!!animkey) {
         image_set_animation(animkey);
     }
+}
+
+struct fproperty {
+    xstring domain;
+    xstring name;
+
+    std::function<bvariant(figure &, const xstring &)> handler;
+};
+
+const fproperty fproperties[] = {
+    //{ tags().stored, xstring("*"),
+    //    [] (figure &b, const xstring &name) {
+    //        e_resource res = resource_type(name);
+    //        return bvariant(b.stored_amount(res));
+    //    }
+    //},
+
+    { tags().text, xstring("*"),
+        [] (figure &b, const xstring &name) {
+             int id = atoi(name.c_str());
+             const auto &m = figure_impl::params(b.type).meta;
+             return bvariant(ui::str(m.text_id, id));
+        }
+    },
+
+    { tags().figure, tags().name, [] (figure &f, const xstring &) { return bvariant(ui::str(254, f.name)); }},
+    { tags().figure, tags().class_name, [] (figure &f, const xstring &) { return bvariant(ui::str(64, f.type)); }},
+};
+
+bvariant figure_impl::get_property(const xstring &domain, const xstring &name) const {
+    static const xstring wildname("*");
+    for (const auto &prop : fproperties) {
+        if (prop.domain != domain) {
+            continue;
+        }
+
+        if (prop.name == name || prop.name == wildname) {
+            return prop.handler(base, name);
+        }
+    }
+
+    return bvariant();
 }
 
 figure_impl *figures::create(e_figure_type e, figure *data) {

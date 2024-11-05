@@ -114,13 +114,20 @@ void figure_info_window::window_info_background(object_info &c) {
     //    lang_text_draw_centered(70, c.terrain_type + 10, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     //}
 
+    const auto &meta = figure_impl::params(f->type).meta;
+    c.help_id = meta.help_id;
+    c.group_id = meta.text_id;
+
+    for (auto &w : ui.elements) {
+        bstring1024 formated_text;
+        formated_text = common_info_window::format(f->dcast(), w->format().c_str());
+        w->text(formated_text);
+    }
+
     int image_id = f->type;
     if (f->action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE || f->action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
         image_id = 18;
     }
-
-    ui["name"] = ui::str(254, f->name);
-    ui["type"] = ui::str(64, f->type);
     ui["bigimage"].image(image_id);
 
     for (int i = 0; i < c.nfigure.ids.size(); i++) {
@@ -175,18 +182,3 @@ figure *figure_info_window::figure_get(object_info &c) {
     int figure_id = map_figure_id_get(c.grid_offset);
     return ::figure_get(figure_id);
 }
-
-//void window_building_draw_figure_list(object_info* c) {
-//    inner_panel_draw(c->offset.x + 16, c->offset.y + 40, c->bgsize.x - 2, 13);
-//    c->figure.drawn = 1;
-//    if (c->figure.count <= 0) {
-//        lang_text_draw_centered(70, 0, c->offset.x, c->offset.y + 120, 16 * c->bgsize.x, FONT_NORMAL_BLACK_ON_DARK);
-//        return;
-//    } 
-//
-//    for (int i = 0; i < c->figure.count; i++) {
-//        button_border_draw(c->offset.x + 60 * i + 25, c->offset.y + 45, 52, 52, i == c->figure.selected_index);
-//        graphics_draw_from_texture(g_building_figures_data.figure_images[i], c->offset + vec2i(27 + 60 * i, 47), {48, 48});
-//    }
-//    draw_figure_info(c, c->figure.figure_ids[c->figure.selected_index]);
-//}

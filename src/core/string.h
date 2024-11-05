@@ -19,7 +19,11 @@ struct textid {
         return *this;
     }
     textid &operator=(vec2i v) { group = v.x; id = v.y; return *this; }
-    
+};
+
+struct metainfo {
+    int help_id;
+    int text_id;
 };
 
 uint8_t* string_copy(const uint8_t* src, uint8_t* dst, int maxlength);

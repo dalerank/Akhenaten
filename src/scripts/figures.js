@@ -292,6 +292,8 @@ figure figure_magistrate = {
     city_not_bad : {sound: "magistrate_g09.wav", group:210, text:0 },
     city_is_amazing : {sound: "magistrate_g10.wav", group:210, text:0 },
 	},
+	info_help_id:182,
+  info_text_id:210,
 	terrain_usage : TERRAIN_USAGE_ROADS,
 	max_roam_length : 800,
 }

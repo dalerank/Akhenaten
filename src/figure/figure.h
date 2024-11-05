@@ -457,6 +457,7 @@ public:
         int8_t terrain_usage;
         uint16_t max_roam_length;
         uint8_t speed_mult;
+        metainfo meta;
 
         virtual void load(archive arch);
     };
@@ -549,6 +550,10 @@ public:
     inline void set_home(int _id) { base.set_home(_id); }
     inline void set_home(building *b) { base.set_home(b); }
     inline void set_direction_to(building *b) { return base.set_direction_to(b); }
+
+    bvariant get_property(const xstring &domain, const xstring &name) const;
+
+    metainfo get_info() const;
 
     figure &base;
     short &wait_ticks;
