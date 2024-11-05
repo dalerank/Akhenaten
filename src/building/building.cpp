@@ -1050,6 +1050,8 @@ const bproperty bproperties[] = {
     { tags().model, tags().laborers, [] (building &b, const xstring &) { const auto model = model_get_building(b.type); return bvariant(model->laborers); }},
     { tags().industry, tags().progress, [] (building &b, const xstring &) { int pct_done = calc_percentage<int>(b.data.industry.progress, b.data.industry.progress_max); return bvariant(pct_done); }},
     { tags().building, tags().output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output_resource_first_id)); }},
+    { tags().building, tags().first_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.first_material_id)); }},
+    { tags().building, tags().first_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount_first); }},
 };
 
 bvariant building_impl::get_property(const xstring &domain, const xstring &name) const {
