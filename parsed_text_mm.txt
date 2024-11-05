@@ -5229,21 +5229,21 @@
 201-7:  Generic8
 201-8:  Generic9
 201-9:  Generic10
-202-0:  I'm new here.  I wonder what the city will offer to a person like me.
+202-0:  I'm new here.  I wonder what the city will offer to a person like me. // immigrant
 202-1:  I heard there is a job here for anyone who wants one.
 202-2:  People say that this city has plenty of food to go around.
-203-0:  I can't find a job here. I will look elsewhere.
+203-0:  I can't find a job here. I will look elsewhere. 					  // emigrant
 203-1:  There's not enough food for me to eat. I'm moving out of this desert!
 203-2:  Taxes are too high here. I'm surprised I wasn't taxed for leaving.
 203-3:  I can't live on what they pay me here.
 203-4:  Houses I've seen are overstuffed with people. I can't stay here without a place to live.
-204-0:  I've been kicked out of my home, and through no fault of my own.
+204-0:  I've been kicked out of my home, and through no fault of my own.      // homeless
 204-1:  I can't find a place to live!
-205-0:  Maybe stealing from his treasury will get that false beard's attention!
+205-0:  Maybe stealing from his treasury will get that false beard's attention! // cart_pusher
 205-1:  I take what I want! Don't try to stop me!
 205-2:  Thievery is a lot more profitable than other jobs in this city!
 205-3:  Take, take, take. That's all I ever do.
-206-0:  Ohhh, my stomach! Oh, my head!
+206-0:  Ohhh, my stomach! Oh, my head! 											// labor seeker
 207-0:  Plague could break out at any time! I hope it stays in the poor parts of town!
 207-1:  That a person of my quality could know hunger is scandalous!
 207-2:  I don't think this city could handle an attack, and I have so very much to lose.
@@ -5255,9 +5255,9 @@
 207-8:  This city passes muster, I suppose.
 207-9:  This city couldn't be better!
 207-10:  These festivals would be so much better if they were by invitation only.
-208-0:  Antelopes are no match for us!
+208-0:  Antelopes are no match for us!   										// hunter antelope
 208-1:  There will be steaks for everyone tonight.
-209-0:  Ostriches are nearly invisible when they put their heads in the sand.
+209-0:  Ostriches are nearly invisible when they put their heads in the sand.   // hunter ostrich
 209-1:  Now, those are some BIG drumsticks!
 210-0:  Birds are wily. They'll fly away if you don't approach them just right.
 210-1:  Look at those beautiful birds, ready for roasting!

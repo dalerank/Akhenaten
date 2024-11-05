@@ -276,7 +276,7 @@ figure figure_magistrate = {
 		walk : { pack: PACK_SPR_MAIN, id: 212, max_frames:12 },
 		death : { pack: PACK_SPR_MAIN, id: 213, max_frames:8, loop:false },
 	},
-	sound : {
+	sounds : {
     i_hope_we_are_ready : {sound: "magistrate_e02.wav", group:210, text:0 },
     no_criminals_in_city : {sound: "magistrate_e03.wav", group:210, text:0 },
     all_good_in_city : {sound: "magistrate_e04.wav", group:210, text:0 },
@@ -745,7 +745,7 @@ figure_juggler = {
 	max_roam_length: 640,
 }
 
-figure_market_trader = {
+figure figure_market_trader = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:18, max_frames:12 },
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:19, max_frames:8, loop:false },

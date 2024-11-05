@@ -233,7 +233,6 @@ var figure_tax_collector = {}
 var figure_physician = {}
 var figure_herbalist = {}
 var figure_emigrant = {}
-var figure_market_trader = {}
 var figure_juggler = {}
 var figure_dancer = {}
 var figure_musician = {}
