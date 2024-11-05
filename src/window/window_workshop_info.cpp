@@ -35,17 +35,14 @@ void workshop_info_window::init(object_info& c) {
     
     window_building_play_sound(&c, b->get_sound());
 
-    ui["resource_icon"].image(b->first_material_id);
-    ui["resource_stored"].text_var("%s %u", (pcstr)lang_get_string(c.group_id, 12), b->stored_amount());
-
-    std::pair<int, int> trouble_text{0, 0};
+    textid trouble_text{ c.group_id, 0 };
     if (!c.has_road_access) { trouble_text = {69, 25}; }
-    else if (city_resource_is_mothballed(b->output_resource_first_id)) { trouble_text = {c.group_id, 4}; }
-    else if (b->num_workers <= 0) { trouble_text = {c.group_id, 5}; }
-    else if (!b->workshop_has_resources()) { trouble_text = {c.group_id, 11}; }
-    else { trouble_text.second = approximate_value(c.worker_percentage / 100.f, make_array(10, 9, 8, 7, 6)); }
+    else if (city_resource_is_mothballed(b->output_resource_first_id)) { trouble_text.id = 4; }
+    else if (b->num_workers <= 0) { trouble_text.id = 5; }
+    else if (!b->workshop_has_resources()) { trouble_text.id = 11; }
+    else { trouble_text.id = approximate_value(c.worker_percentage / 100.f, make_array(10, 9, 8, 7, 6)); }
 
-    ui["warning_text"].text((pcstr)lang_get_string(trouble_text.first, trouble_text.second));
+    ui["workers_desc"].text(trouble_text);
 
     fill_employment_details(c);
 }
