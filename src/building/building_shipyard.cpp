@@ -103,6 +103,7 @@ void building_shipyard::highlight_waypoints() {
 
 void building_shipyard::on_create(int orientation) {
     data.industry.orientation = orientation;
+    data.industry.progress_max = 200;
 }
 
 void building_shipyard::on_place_update_tiles(int orientation, int variant) {
