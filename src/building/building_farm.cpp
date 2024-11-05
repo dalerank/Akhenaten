@@ -245,6 +245,10 @@ bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
     }
 }
 
+void building_farm::on_create(int orientation) {
+    data.industry.progress_max = 2000;
+}
+
 void building_farm::on_place_update_tiles(int orientation, int variant) {
     switch (type()) {
     case BUILDING_BARLEY_FARM:
