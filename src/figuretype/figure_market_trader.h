@@ -14,5 +14,4 @@ public:
     virtual e_overlay get_overlay() const override { return OVERLAY_BAZAAR_ACCESS; }
     virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
-    virtual const animations_t &anim() const override;
 };

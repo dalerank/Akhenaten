@@ -8,11 +8,6 @@
 
 figures::model_t<figure_market_trader> market_trader_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_market_trader);
-void config_load_figure_market_trader() {
-    market_trader_m.load();
-}
-
 void figure_market_trader::figure_action() {
     if (action_state() != FIGURE_ACTION_125_ROAMING) {
         return;
@@ -22,6 +17,7 @@ void figure_market_trader::figure_action() {
     if (!bazaar) {
         return;
     }
+
     // force return on out of stock
     int stock = bazaar->max_food_stock() + bazaar->max_goods_stock();
     if (base.roam_length >= 96 && stock <= 0) {
@@ -41,17 +37,11 @@ sound_key figure_market_trader::phrase_key() const {
     }
 }
 
-void bazaar_coverage(building* b, figure *f, int &) {
-    b->data.house.bazaar_access = MAX_COVERAGE;
-}
-
 int figure_market_trader::provide_service() {
     int none_service;
     int houses_serviced = provide_market_goods(home(), tile());
-    figure_provide_service(tile(), &base, none_service, bazaar_coverage);
+    figure_provide_service(tile(), &base, none_service, [](building *b, figure *f, int &) {
+        b->data.house.bazaar_access = MAX_COVERAGE;
+    });
     return houses_serviced;
-}
-
-const animations_t &figure_market_trader::anim() const {
-    return market_trader_m.anim;
 }

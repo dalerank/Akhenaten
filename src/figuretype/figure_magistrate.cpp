@@ -11,11 +11,6 @@
 
 figures::model_t<figure_magistrate> magistrate_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_magistrate);
-void config_load_figure_magistrate() {
-    magistrate_m.load();
-}
-
 void figure_magistrate::figure_action() {
     switch (action_state()) {
     case FIGURE_ACTION_70_POLICEMAN_CREATED:
@@ -109,13 +104,12 @@ sound_key figure_magistrate::phrase_key() const {
     return keys[index];
 }
 
-void magistrate_coverage(building* b, figure *f, int&) {
-    b->data.house.magistrate = MAX_COVERAGE;
-}
-
 int figure_magistrate::provide_service() {
     int max_criminal_active = 0;
-    int houses_serviced = figure_provide_service(tile(), &base, max_criminal_active, magistrate_coverage);
+    int houses_serviced = figure_provide_service(tile(), &base, max_criminal_active, [] (building *b, figure *f, int &) {
+        b->data.house.magistrate = MAX_COVERAGE;
+    });
+
     if (max_criminal_active > base.min_max_seen)
         base.min_max_seen = max_criminal_active;
     else if (base.min_max_seen <= 10)
@@ -124,10 +118,6 @@ int figure_magistrate::provide_service() {
         base.min_max_seen -= 10;
 
     return houses_serviced;
-}
-
-const animations_t &figure_magistrate::anim() const {
-    return magistrate_m.anim;
 }
 
 figure_sound_t figure_magistrate::get_sound_reaction(xstring key) const {
