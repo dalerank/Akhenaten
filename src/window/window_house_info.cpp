@@ -21,14 +21,11 @@
 #include "js/js_game.h"
 
 struct info_window_house : public building_info_window_t<info_window_house> {
-    int resource_text_group;
     int help_id;
 
     using building_info_window::load;
     virtual void load(archive arch, pcstr section) override {
         common_info_window::load(arch, section);
-
-        resource_text_group = arch.r_int("resource_text_group");
         help_id = arch.r_int("help_id");
     }
 
@@ -77,7 +74,9 @@ void info_window_house::init(object_info &c) {
     c.help_id = help_id;
     building *b = c.building_get();
 
-    assert(b->house_population > 0);
+    if (!b->house_population) {
+        return;
+    }
 
     if (b->data.house.evolve_text_id == 62) { // is about to devolve
         bstring512 text;
