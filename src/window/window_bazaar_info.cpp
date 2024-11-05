@@ -28,6 +28,10 @@ void bazaar_info_window::init(object_info &c) {
     building_info_window::init(c);
 
     auto bazaar = c.building_get()->dcast_bazaar();
+    if (!bazaar) {
+        return;
+    }
+
     window_building_play_sound(&c, bazaar->get_sound());
 
     const auto &meta = bazaar->get_info();
