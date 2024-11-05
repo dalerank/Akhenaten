@@ -20,7 +20,7 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.industry.has_raw_materials);
     iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &data.industry.curse_days_left);
-    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.industry.progress_max);
     iob->bind____skip(1);
     for (int i = 0; i < 3; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &data.industry.unk_6[i]);

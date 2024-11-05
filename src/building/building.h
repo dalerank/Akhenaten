@@ -238,6 +238,7 @@ public:
         struct industry_t {
             short ready_production;
             short progress;
+            short progress_max;
             bool spawned_worker_this_month;
             uint8_t max_gatheres;
             int unk_b[10];

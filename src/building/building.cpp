@@ -1048,7 +1048,7 @@ const bproperty bproperties[] = {
     { tags().building, tags().tax_income_or_storage, [] (building &b, const xstring &) { return bvariant(b.tax_income_or_storage); }},
     { tags().building, tags().num_workers, [] (building &b, const xstring &) { return bvariant(b.num_workers); }},
     { tags().model, tags().laborers, [] (building &b, const xstring &) { const auto model = model_get_building(b.type); return bvariant(model->laborers); }},
-    { tags().industry, tags().progress, [] (building &b, const xstring &) { int pct_done = calc_percentage<int>(b.data.industry.progress, 200); return bvariant(pct_done); }},
+    { tags().industry, tags().progress, [] (building &b, const xstring &) { int pct_done = calc_percentage<int>(b.data.industry.progress, b.data.industry.progress_max); return bvariant(pct_done); }},
     { tags().building, tags().output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output_resource_first_id)); }},
 };
 
