@@ -118,6 +118,7 @@ struct element {
     virtual void draw() {}
     virtual void load(archive, element* parent, items &elems);
     virtual void text(pcstr) {}
+    inline void text(textid t) { text(ui::str(t)); }
     virtual void tooltip(textid t) {}
     virtual int text_width() { return 0; }
     virtual vec2i pxsize() const { return size; }

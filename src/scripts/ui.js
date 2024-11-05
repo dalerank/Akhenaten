@@ -859,7 +859,6 @@ window info_window_vacant_lot = {
 }
 
 window info_window_house = {
-	resource_text_group : 23,
 	help_id : 56,
 	ui : {
 		background : outer_panel({size: [29, 23] }), // pos/size setup from code
@@ -1465,20 +1464,21 @@ festival_square_info_window = {
 
 window workshop_info_window = {
 	ui : {
-		background   : outer_panel({size: [29, 16] }),
-		title 		   : text({pos: [0, 12], size: [px(27), 20], text:"${building.name}", font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-		produce_icon : resource_icon({pos: [10, 10], prop:"${building.output_resource}" }),
-		workers_panel: inner_panel({pos : [16, 96], size: [27, 4] }),
-		workers_text : text({pos: [70, 102 + 12], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
-		workers_desc : text({pos: [70, 102 + 26], font: FONT_NORMAL_BLACK_ON_DARK }),
-		workers_img  : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 102 + 6] }),
+		background   : outer_panel({size: [29, 17] }),
+		title 		   : text({pos: [0, 16], size: [px(27), 20], text:"${building.name}", font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		warning_text : text({pos: [32, 58], wrap:px(27), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		produce_icon : resource_icon({pos: [16, 16], prop:"${building.output_resource}" }),
 		ready_prod   : text({pos: [38, 40], size: [px(27), 20], text:"${text.2} ${industry.progress}% ${text.3}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
-		resource_icon: resource_icon({pos: [32, 56] }),
-		resource_stored : text({pos: [60, 60], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
-		warning_text : text({pos: [32, 168], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		workers_panel: inner_panel({pos : [16, 116], size: [27, 5] }),
+		workers_text : text({pos: [55, 122 + 10], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		workers_desc : text({pos: [55, 122 + 26], font:FONT_NORMAL_BLACK_ON_DARK, wrap:px(24), multiline:true }),
+		workers_img  : image({pos:[30, 122 + 6], pack:PACK_GENERAL, id:134, offset:14}),
+		resource_icon: resource_icon({pos: [32, 205], prop:"${building.first_material}" }),
+		resource_stored : text({pos: [55, 210], size: [px(27), 20], text:"${text.12} ${building.first_material_stored}", font:FONT_NORMAL_BLACK_ON_LIGHT }),
 		
 		button_help   : help_button({}),
 		button_close  : close_button({}),
+		mothball      : button({margin:{right:-90, bottom:-40}, size:[23, 23]}),
 	}
 }
 
