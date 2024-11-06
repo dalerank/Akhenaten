@@ -49,7 +49,7 @@ struct object_info {
     vec2i bgsize;
     inline vec2i bgsize_px() const { return bgsize * 16; }
     inline int bgwidth_px() const { return bgsize.x * 16; }
-    int grid_offset;
+    int grid_offset = 0;
     int height_blocks_submenu;
     int subwnd_wblocks_num;
     int subwnd_hblocks_num;
@@ -57,7 +57,7 @@ struct object_info {
     int help_id;
     uint16_t group_id;
     bool can_play_sound;
-    int building_id;
+    int building_id = 0;
     int has_road_access;
     int worker_percentage;
     int has_reservoir_pipes;

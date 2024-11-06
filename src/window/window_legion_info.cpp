@@ -457,6 +457,10 @@ bool legion_info_window::check(object_info &c) {
         }
     }
 
+    if (!c.grid_offset) {
+        return false;
+    }
+
     int building_id = map_building_at(c.grid_offset);
     if (!building_id) {
         return false;

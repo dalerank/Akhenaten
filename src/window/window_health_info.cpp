@@ -31,13 +31,15 @@ void health_info_window::init(object_info &c) {
     case BUILDING_MORTUARY: ftype = FIGURE_EMBALMER; break;
     }
 
-    std::pair<int, int> reason = {c.group_id, 6};
+    textid reason = {c.group_id, 6};
 
     if (!c.has_road_access) { reason = {69, 25}; }
-    else if (ftype != FIGURE_NONE && b->has_figure_of_type(BUILDING_SLOT_SERVICE, ftype)) { reason.second = 1; } 
-    else if (c.building_get()->num_workers <= 0) { reason.second = 2; }
-    else { reason.second = approximate_value(c.worker_percentage / 100.f, make_array(5, 4, 3, 2)); }
+    else if (ftype != FIGURE_NONE && b->has_figure_of_type(BUILDING_SLOT_SERVICE, ftype)) { reason.id = 1; } 
+    else if (c.building_get()->num_workers <= 0) { reason.id = 2; }
+    
+    int worker_desc = c.worker_percentage > 0 ? 3 : 2;
+    ui["workers_desc"] = ui::str( c.group_id, worker_desc);
  
-    ui["warning_text"] = ui::str(reason.first, reason.second);
+    ui["warning_text"] = ui::str(reason);
     fill_employment_details(c);
 }

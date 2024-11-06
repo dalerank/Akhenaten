@@ -1067,7 +1067,7 @@ window figure_info_window = {
 		bigimage    	 : image({pos: [30, 108], pack:PACK_UNLOADED, id:25 }),
 		name 					 : text({pos: [90, 108], text:"${figure.name}", font : FONT_LARGE_BLACK_ON_DARK }),
 		typename			 : text({pos: [92, 139], text:"${figure.class_name}", font : FONT_NORMAL_BLACK_ON_DARK }),
-		phrase				 : text({pos: [90, 160], font : FONT_NORMAL_BLACK_ON_DARK, wrap:px(23), multiline:true }),
+		phrase				 : text({pos: [90, 160], font : FONT_NORMAL_BLACK_ON_DARK, wrap:px(21), multiline:true }),
 		button_figure0 : image_button({pos:[60 * 0 + 27, 45], size:[52, 52], border:true }),
 		button_figure1 : image_button({pos:[60 * 1 + 27, 45], size:[52, 52], border:true }),
 		button_figure2 : image_button({pos:[60 * 2 + 27, 45], size:[52, 52], border:true }),
@@ -1273,8 +1273,8 @@ window info_window_palace = {
 	})
 }
 
-info_window_courthouse = {
-	ui : __baseui(building_info_window, {
+window info_window_courthouse = {
+	ui : __baseui(building_info_window, { 
 		background 	: outer_panel({size: [29, 17]}),
 		vaults_hold : text({pos: [44, 54], font: FONT_NORMAL_BLACK_ON_LIGHT }),
 		state       : text({margin:{left:20, bottom: -80} , font: FONT_NORMAL_BLACK_ON_DARK}),
