@@ -384,11 +384,6 @@ void common_info_window::update_buttons(object_info &c) {
 void common_info_window::load(archive arch, pcstr section) {
     widget::load(arch, section);
 
-    building *b = g_object_info.building_get();
-    if (!b->type) {
-        return;
-    }
-
     if (check(g_object_info)) {
         init(g_object_info);
     }

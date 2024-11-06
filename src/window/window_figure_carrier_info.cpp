@@ -12,16 +12,11 @@
 struct figure_carrier_info_window : public figure_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return figure_get(c)->dcast_cartpusher();
+        return c.figure_get_id() && figure_get(c)->dcast_cartpusher();
     }
 };
 
 figure_carrier_info_window figure_carrier_infow;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_carrier_window_info);
-void config_load_figure_carrier_window_info() {
-    figure_carrier_infow.load("info_window_figure_carrier");
-}
 
 void figure_carrier_info_window::window_info_background(object_info &c) {
     figure_info_window::window_info_background(c);

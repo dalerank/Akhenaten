@@ -11,8 +11,8 @@
 struct figure_enemy_info_window : public figure_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        figure *f = figure_get(c);
-        return (f->type >= FIGURE_ENEMY43_SPEAR
+        figure *f = c.figure_get_id() ? figure_get(c) : nullptr;
+        return (f && f->type >= FIGURE_ENEMY43_SPEAR
                     && f->type <= FIGURE_ENEMY53_AXE);
     }
 };

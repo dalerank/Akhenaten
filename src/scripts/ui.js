@@ -1097,7 +1097,7 @@ info_window_figure_caravan_donkey = {
 	})
 }
 
-info_window_figure_carrier = {
+window info_window_figure_carrier = {
 	ui : __baseui(figure_info_window, {
 		items					 : { type : "text", pos: [102, 158], size:[px(29), 20], font : FONT_NORMAL_BLACK_ON_DARK, rich:true },
 		phrase				 : { type : "text", pos: [90, 180], font : FONT_NORMAL_BLACK_ON_DARK, wrap:px(22), multiline:true },
@@ -1281,22 +1281,23 @@ window info_window_courthouse = {
 	})
 }
 
-info_window_entertainment = {
+window info_window_entertainment = {
 	ui : {
-		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
-		title 		 	: { type : "text", pos: [0, 12], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		warning_text : { type : "text", pos: [32, 46], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-		inner_panel : { type : "inner_panel", pos : [16, 116], size: [27, 4] },
-		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 126] },
-		workers_text : { type : "text", pos: [70, 134], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		workers_desc : { type : "text", pos: [70, 136 + 20], font: FONT_NORMAL_BLACK_ON_DARK },
-		first_advisor  : { type : "image_button", pos:[42, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
-		second_advisor : { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
-		third_advisor : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
-		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
-		show_overlay : { type:"generic_button", margin:{right:-64, bottom:-40}, size:[23, 23]},
-		mothball : { type:"generic_button", margin:{right:-90, bottom:-40}, size:[23, 23]},
+		background 	  : outer_panel({pos: [0, 0], size: [29, 17]}),
+		title 		 	  : text({ pos: [0, 12], size: [px(29), 25], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		warning_text  : text({ pos: [32, 46], wrap:px(26), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		inner_panel   : inner_panel({ pos : [16, 116], size: [27, 5] }),
+		workers_img   : image({ pack:PACK_GENERAL, id:134, offset:14, pos:[40, 126] }),
+		workers_text  : text({ pos: [70, 124], text:"${building.num_workers} ${8.12} (${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		workers_desc  : text({ pos: [70, 124 + 20], font: FONT_NORMAL_BLACK_ON_DARK, wrap:px(24), multiline:true }),
+		first_advisor : image_button({ pos:[42, -1], size:[28, 28], pack:PACK_GENERAL, id:106 }),
+		second_advisor: image_button({ pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 }),
+		third_advisor : image_button({ pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 }),
+		
+		show_overlay  : button({ margin:{right:-64, bottom:-40}, size:[23, 23]}),
+		mothball      : button({ margin:{right:-90, bottom:-40}, size:[23, 23]}),
+		button_help   : help_button({}),
+		button_close  : close_button({}),
 	}
 }
 

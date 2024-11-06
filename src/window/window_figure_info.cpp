@@ -179,6 +179,6 @@ bool figure_info_window::check(object_info &c) {
 }
 
 figure *figure_info_window::figure_get(object_info &c) {
-    int figure_id = map_figure_id_get(c.grid_offset);
+    int figure_id = c.grid_offset ? map_figure_id_get(c.grid_offset) : 0;
     return ::figure_get(figure_id);
 }

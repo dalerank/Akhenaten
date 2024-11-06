@@ -11,7 +11,7 @@
 struct figure_animal_info_window : public figure_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return figure_get(c)->is_herd();
+        return c.figure_get_id() && figure_get(c)->is_herd();
     }
 };
 
