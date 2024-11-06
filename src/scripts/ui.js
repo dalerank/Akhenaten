@@ -1307,6 +1307,12 @@ window health_info_window = {
 	})
 }
 
+window info_window_work_camp = {
+	ui : __baseui(building_info_window, {
+
+	})
+}
+
 legion_info_window = {
 
 }
