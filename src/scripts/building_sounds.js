@@ -48,6 +48,7 @@ building_sounds = [
 	{ type: BUILDING_TEMPLE_BAST, 			sound: "Wavs/tem_bast_l.wav"},
 	{ type: BUILDING_BOOTH, 						sound: "Wavs/jugger_r.wav"},
 	{ type: BUILDING_BANDSTAND, 				sound: "Wavs/music_r.wav"},
+	{ type: BUILDING_PAVILLION,  				sound: "Wavs/music_r.wav"},
 	{ type: BUILDING_JUGGLER_SCHOOL,		sound: "Wavs/juggler_school.wav"},
 	{ type: BUILDING_CONSERVATORY, 			sound: "Wavs/music_school.wav"},
 	{ type: BUILDING_DANCE_SCHOOL, 			sound: "Wavs/dance_school.wav"},

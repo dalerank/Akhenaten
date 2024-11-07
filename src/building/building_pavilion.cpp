@@ -196,42 +196,6 @@ void building_pavilion::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, in
     draw_building_ghost(ctx, booth, pixel + preview_conf.booth, COLOR_MASK_GREEN);
 }
 
-void building_pavilion::window_info_background(object_info &c) {
-    c.help_id = 73;
-    window_building_play_sound(&c, "Wavs/colloseum.wav");
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(74, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    building* b = building_get(c.building_id);
-
-    if (!c.has_road_access)
-        window_building_draw_description(c, 69, 25);
-    else if (b->num_workers <= 0)
-        window_building_draw_description(c, 74, 6);
-    else if (!b->data.entertainment.num_shows)
-        window_building_draw_description(c, 74, 2);
-    else if (b->data.entertainment.num_shows == 2)
-        window_building_draw_description(c, 74, 3);
-    else if (b->data.entertainment.juggler_visited)
-        window_building_draw_description(c, 74, 5);
-    else if (b->data.entertainment.musician_visited)
-        window_building_draw_description(c, 74, 4);
-
-    inner_panel_draw(c.offset + vec2i{ 16, 136 }, { c.bgsize.x - 2, 6 });
-    window_building_draw_employment(&c, 138);
-    if (b->data.entertainment.juggler_visited > 0) {
-        int width = lang_text_draw(74, 8, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.juggler_visited, c.offset.x + width + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
-    } else {
-        lang_text_draw(74, 7, c.offset.x + 32, c.offset.y + 182, FONT_NORMAL_BLACK_ON_DARK);
-    }
-    if (b->data.entertainment.musician_visited > 0) {
-        int width = lang_text_draw(74, 10, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.musician_visited, c.offset.x + width + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
-    } else {
-        lang_text_draw(74, 9, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
-    }
-}
-
 void building_pavilion::on_undo() {
     for (int dy = 0; dy < 4; dy++) {
         for (int dx = 0; dx < 4; dx++) {

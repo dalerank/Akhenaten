@@ -181,7 +181,6 @@ var info_window_garden = {}
 var info_window_figure_enemy = {}
 var info_window_figure_animal = {}
 var info_window_figure_caravan_donkey = {}
-var info_window_bandstand = {}
 var info_window_recruiter = {}
 var roadblock_info_window = {}
 var hold_festival_window = {}
@@ -205,7 +204,6 @@ var sidebar_window_extra = {}
 var info_window_booth = {}
 var dock_info_window = {}
 var dock_orders_window = {}
-var info_window_ferry = {}
 
 //figures
 var figure_fireman = {}

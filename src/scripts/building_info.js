@@ -1133,6 +1133,8 @@ building_pavilion = {
     {type: BUILDING_BANDSTAND, offset:[2, 3], main:true},
     {type: BUILDING_BOOTH, offset:[2, 0], main:false}
   ],
+  info_help_id: 73,
+  info_text_id: 74,
   building_size : 4,
   window_info_height_id : 2,
 }

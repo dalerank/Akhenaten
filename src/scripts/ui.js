@@ -1175,15 +1175,32 @@ window info_window_ferry = {
 	})
 }
 
-info_window_bandstand = {
+window info_window_bandstand = {
 	ui : __baseui(building_info_window, {
-		background   : { type : "outer_panel", size: [29, 20]},
-		inner_panel  : { type : "inner_panel", pos : [16, 116], size: [27, 8] },
-		play_text    : { type : "text", pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		play2_text   : { type : "text", pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		workers_img  : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 122] },
-		workers_text : { type : "text", pos: [70, 130], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK},
-		workers_desc : { type : "text", pos: [70, 126 + 16], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		background   : outer_panel({size: [29, 20]}),
+		title 		   : text({pos: [0, 16], text:"${building.name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		warning_text : text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		inner_panel  : inner_panel({pos : [16, 116], size: [27, 8] }),
+		play_text    : text({pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		play2_text   : text({pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		workers_img  : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 122] }),
+		workers_text : text({pos: [70, 130], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
+		workers_desc : text({pos: [70, 126 + 16], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+	})
+}
+
+window info_window_pavilion = {
+	ui : __baseui(building_info_window, {
+		background   : outer_panel({size: [29, 20]}),
+		title 		   : text({pos: [0, 16], text:"${building.name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		warning_text : text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		inner_panel  : inner_panel({pos : [16, 116], size: [27, 8] }),
+		play_text    : text({pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		play2_text   : text({pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		play3_text   : text({pos: [32, 202], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		workers_img  : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 122] }),
+		workers_text : text({pos: [70, 130], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
+		workers_desc : text({pos: [70, 126 + 16], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
 	})
 }
 

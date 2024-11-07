@@ -15,7 +15,6 @@ public:
     virtual building_pavilion *dcast_pavilion() override { return this; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_PAVILION; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
-    virtual void window_info_background(object_info &c) override;
     virtual void on_undo() override;
 
     virtual void update_count() const override;
