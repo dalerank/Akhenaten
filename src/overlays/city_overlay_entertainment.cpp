@@ -23,29 +23,29 @@ int city_overlay_entertainment::get_column_height(const building *b) const {
     return b->house_size && b->data.house.entertainment ? b->data.house.entertainment / 10 : NO_COLUMN;
 }
 
-int city_overlay_entertainment::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_entertainment::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.entertainment <= 0) {
-        return 64;
+        return ui::str(66, 64);
     } else if (b->data.house.entertainment < 10) {
-        return 65;
+        return ui::str(66, 65);
     } else if (b->data.house.entertainment < 20) {
-        return 66;
+        return ui::str(66, 66);
     } else if (b->data.house.entertainment < 30) {
-        return 67;
+        return ui::str(66, 67);
     } else if (b->data.house.entertainment < 40) {
-        return 68;
+        return ui::str(66, 68);
     } else if (b->data.house.entertainment < 50) {
-        return 69;
+        return ui::str(66, 69);
     } else if (b->data.house.entertainment < 60) {
-        return 70;
+        return ui::str(66, 70);
     } else if (b->data.house.entertainment < 70) {
-        return 71;
+        return ui::str(66, 71);
     } else if (b->data.house.entertainment < 80) {
-        return 72;
+        return ui::str(66, 72);
     } else if (b->data.house.entertainment < 90) {
-        return 73;
+        return ui::str(66, 73);
     } else {
-        return 74;
+        return ui::str(66, 74);
     }
 }
 
@@ -58,14 +58,14 @@ int city_overlay_senet_house::get_column_height(const building *b) const {
     return b->house_size && b->data.house.hippodrome ? b->data.house.hippodrome / 10 : NO_COLUMN;
 }
 
-int city_overlay_senet_house::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_senet_house::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.hippodrome <= 0) {
-        return 87;
+        return ui::str(66, 87);
     } else if (b->data.house.hippodrome >= 80) {
-        return 88;
+        return ui::str(66, 88);
     } else if (b->data.house.hippodrome >= 20) {
-        return 89;
+        return ui::str(66, 89);
     } else {
-        return 90;
+        return ui::str(66, 90);
     }
 }

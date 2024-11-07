@@ -51,13 +51,13 @@ int city_overlay_food_stocks::get_column_height(const building *b) const {
     return NO_COLUMN;
 }
 
-int city_overlay_food_stocks::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_food_stocks::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->house_population <= 0) {
         return 0;
     }
 
     if (!model_get_house(b->subtype.house_level)->food_types) {
-        return 104;
+        return ui::str(66, 104);
     } else {
         int stocks_present = 0;
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
@@ -66,13 +66,13 @@ int city_overlay_food_stocks::get_tooltip_for_building(tooltip_context *c, const
 
         int stocks_per_pop = calc_percentage<int>(stocks_present, b->house_population);
         if (stocks_per_pop <= 0) {
-            return 4;
+            return ui::str(66, 4);
         } else if (stocks_per_pop < 100) {
-            return 5;
+            return ui::str(66, 5);
         } else if (stocks_per_pop <= 200) {
-            return 6;
+            return ui::str(66, 6);
         } else {
-            return 7;
+            return ui::str(66, 7);
         }
     }
 }

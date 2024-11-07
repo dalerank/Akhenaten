@@ -40,21 +40,20 @@ int city_overlay_labor::get_column_height(const building *b) const {
     return 10 - percentage / 10;
 }
 
-int city_overlay_labor::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_labor::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     int percentage = ((building*)b)->worker_percentage();
     if (percentage <= 0)
-        return 52;
+        return ui::str(66, 52);
     else if (percentage <= 20)
-        return 53;
+        return ui::str(66, 53);
     else if (percentage <= 40)
-        return 54;
+        return ui::str(66, 54);
     else if (percentage <= 60)
-        return 55;
+        return ui::str(66, 55);
     else if (percentage <= 80)
-        return 56;
-    else {
-        return 57;
-    }
+        return ui::str(66, 56);
+
+    return ui::str(66, 57);
 }
 
 bool city_overlay_labor::show_building(const building *b) const {

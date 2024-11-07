@@ -4,7 +4,7 @@
 #include "graphics/elements/tooltip.h"
 #include "core/vec2i.h"
 #include "city_overlay_fwd.h"
-#include "core/bstring.h"
+#include "core/xstring.h"
 #include "core/svector.h"
 
 constexpr int NO_COLUMN = -1;
@@ -28,8 +28,8 @@ struct city_overlay {
 
     virtual bool show_figure(const figure *f) const;
     virtual int get_column_height(const building *b) const { return NO_COLUMN; }
-    virtual int get_tooltip_for_grid_offset(tooltip_context* c, int grid_offset) const { return 0; }
-    virtual int get_tooltip_for_building(tooltip_context* c, const building* b) const { return 0; }
+    virtual xstring get_tooltip_for_grid_offset(tooltip_context *c, int grid_offset) const { return {}; }
+    virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) const { return {}; }
     virtual bool draw_custom_footprint(vec2i pixel, tile2i point, painter &ctx) const { return false; }
     virtual void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const;
     virtual bool show_building(const building *b) const;
@@ -47,4 +47,4 @@ struct city_overlay {
 const city_overlay* get_city_overlay();
 city_overlay *get_city_overlay(e_overlay e);
 bool select_city_overlay();
-int widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset);
+xstring widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset);

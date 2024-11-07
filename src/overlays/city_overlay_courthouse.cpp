@@ -28,14 +28,14 @@ int city_overlay_courthouse::get_column_height(const building *b) const {
     return NO_COLUMN;
 }
 
-int city_overlay_courthouse::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_courthouse::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.magistrate <= 0) {
-        return 158;
+        return ui::str(66, 158);
     } else if (b->data.house.magistrate <= 33) {
-        return 161;
+        return ui::str(66, 161);
     } else if (b->data.house.magistrate <= 66) {
-        return 160;
+        return ui::str(66, 160);
     } else {
-        return 159;
+        return ui::str(66, 159);
     }
 }

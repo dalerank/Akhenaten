@@ -20,14 +20,14 @@ int city_overlay_dentist::get_column_height(const building *b) const {
     return b->house_size && b->data.house.dentist ? b->data.house.dentist / 10 : NO_COLUMN;
 }
 
-int city_overlay_dentist::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_dentist::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.dentist <= 0)
-        return 8;
+        return ui::str(66, 8);
     else if (b->data.house.dentist >= 80)
-        return 9;
+        return ui::str(66, 9);
     else if (b->data.house.dentist >= 20)
-        return 10;
+        return ui::str(66, 10);
     else {
-        return 11;
+        return ui::str(66, 11);
     }
 }

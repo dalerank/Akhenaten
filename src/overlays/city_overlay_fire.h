@@ -7,7 +7,7 @@ public:
     city_overlay_fire();
 
     virtual int get_column_height(const building *b) const override;
-    virtual int get_tooltip_for_building(tooltip_context *c, const building *b) const override;
+    virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) const override;
 };
 
 city_overlay* city_overlay_for_fire();

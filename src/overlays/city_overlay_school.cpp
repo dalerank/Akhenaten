@@ -21,14 +21,14 @@ int city_overlay_schools::get_column_height(const building *b) const {
     return b->house_size && b->data.house.school ? b->data.house.school / 10 : NO_COLUMN;
 }
 
-int city_overlay_schools::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_schools::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.school <= 0)
-        return 19;
+        return ui::str(66, 19);
     else if (b->data.house.school >= 80)
-        return 20;
+        return ui::str(66, 20);
     else if (b->data.house.school >= 20)
-        return 21;
+        return ui::str(66, 21);
     else {
-        return 22;
+        return ui::str(66, 22);
     }
 }

@@ -150,15 +150,15 @@ bool select_city_overlay() {
     return g_city_overlay != 0;
 }
 
-int widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset) {
+xstring widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset) {
     if (!g_city_overlay) {
-        return 0;
+        return {};
     }
 
     int overlay_type = g_city_overlay->type;
     int building_id = map_building_at(grid_offset);
     if (!building_id) {
-        return 0;
+        return {};
     }
 
     int overlay_requires_house = (overlay_type != OVERLAY_WATER) && (overlay_type != OVERLAY_FIRE)
@@ -166,10 +166,10 @@ int widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset) {
                                     && (overlay_type != OVERLAY_DESIRABILITY);
     building* b = building_get(building_id);
     if (overlay_requires_house && !b->house_size) {
-        return 0;
+        return {};
     }
 
-    int tooltip = g_city_overlay->get_tooltip_for_building(c, b);
+    xstring tooltip = g_city_overlay->get_tooltip_for_building(c, b);
     if (!tooltip) {
         tooltip = g_city_overlay->get_tooltip_for_grid_offset(c, grid_offset);
     } 

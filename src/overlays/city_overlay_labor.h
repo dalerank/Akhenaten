@@ -7,7 +7,7 @@ struct city_overlay_labor : public city_overlay {
 
     virtual bool show_figure(const figure *f) const override;
     virtual int get_column_height(const building *b) const override;
-    virtual int get_tooltip_for_building(tooltip_context *c, const building *b) const override;
+    virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) const override;
     virtual bool show_building(const building *b) const override;
 };
 

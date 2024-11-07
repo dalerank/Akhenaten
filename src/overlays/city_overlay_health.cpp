@@ -27,18 +27,18 @@ int city_overlay_health::get_column_height(const building *b) const {
     return (100 - b->common_health) / 10;
 }
 
-int city_overlay_health::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_health::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->disease_days > 0) {
-        return 131;
+        return ui::str(66, 131);
     }
 
     if (b->common_health < 25) {
-        return 130;
+        return ui::str(66, 130);
     } else if (b->common_health < 50) {
-        return 129;
+        return ui::str(66, 129);
     } else if (b->common_health < 75) {
-        return 128;
+        return ui::str(66, 128);
     } else {
-        return 127;
+        return ui::str(66, 127);
     }
 }

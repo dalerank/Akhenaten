@@ -24,14 +24,14 @@ int city_overlay_physician::get_column_height(const building *b) const {
              : NO_COLUMN;
 }
 
-int city_overlay_physician::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_physician::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.physician <= 0) {
-        return 132;
+        return ui::str(66, 132);
     } else if (b->data.house.physician <= 33) {
-        return 133;
+        return ui::str(66, 133);
     } else if (b->data.house.physician <= 66) {
-        return 134;
+        return ui::str(66, 134);
     } else {
-        return 135;
+        return ui::str(66, 135);
     }
 }

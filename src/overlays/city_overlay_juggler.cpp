@@ -26,14 +26,14 @@ int city_overlay_booth::get_column_height(const building *b) const {
     return NO_COLUMN;
 }
 
-int city_overlay_booth::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_booth::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.juggler <= 0)
-        return 75;
+        return ui::str(66, 75);
     else if (b->data.house.juggler >= 80)
-        return 76;
+        return ui::str(66, 76);
     else if (b->data.house.juggler >= 20)
-        return 77;
+        return ui::str(66, 77);
     else {
-        return 78;
+        return ui::str(66, 78);
     }
 }

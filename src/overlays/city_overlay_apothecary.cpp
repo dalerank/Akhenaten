@@ -18,15 +18,15 @@ city_overlay_apothecary::city_overlay_apothecary() {
     column_type = COLUMN_TYPE_POSITIVE;
 }
 
-int city_overlay_apothecary::get_tooltip_for_building(tooltip_context* c, const building* b) const {
+xstring city_overlay_apothecary::get_tooltip_for_building(tooltip_context* c, const building* b) const {
     if (b->data.house.apothecary <= 0)
-        return 31;
+        return ui::str(66, 31);
     else if (b->data.house.apothecary >= 80)
-        return 32;
+        return ui::str(66, 32);
     else if (b->data.house.apothecary < 20)
-        return 33;
+        return ui::str(66, 33);
     else {
-        return 34;
+        return ui::str(66, 34);
     }
 }
 

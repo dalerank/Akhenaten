@@ -66,29 +66,29 @@ inline void city_overlay_fertility::draw_custom_top(vec2i pixel, tile2i point, p
     }
 }
 
-int city_overlay_fertility::get_tooltip_for_grid_offset(tooltip_context *c, int grid_offset) const {
-    return 0;
+xstring city_overlay_fertility::get_tooltip_for_grid_offset(tooltip_context *c, int grid_offset) const {
+    return {};
 }
 
-int city_overlay_fertility::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_fertility::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (building_is_farm(b->type)) {
         map_point tile = b->tile;
         int fertility = map_get_fertility_for_farm(tile.grid_offset());
         if (fertility > 80)
-            return 63;
+            return ui::str(66, 63);
         else if (fertility > 60)
-            return 62;
+            return ui::str(66, 62);
         else if (fertility > 40)
-            return 61;
+            return ui::str(66, 61);
         else if (fertility > 20)
-            return 60;
+            return ui::str(66, 60);
         else if (fertility > 10)
-            return 59;
+            return ui::str(66, 59);
         else {
-            return 58;
+            return ui::str(66, 58);
         }
     }
-    return 58;
+    return ui::str(66, 58);
 }
 
 int city_overlay_fertility::get_column_height(const building *b) const {

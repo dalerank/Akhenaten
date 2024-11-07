@@ -38,15 +38,15 @@ int city_overlay_pavilion::get_column_height(const building *b) const {
         : NO_COLUMN;
 }
 
-int city_overlay_pavilion::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_pavilion::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.senet_player <= 0) {
-        return 83;
+        return ui::str(66, 83);
     } else if (b->data.house.senet_player >= 80) {
-        return 84;
+        return ui::str(66, 84);
     } else if (b->data.house.senet_player >= 20) {
-        return 85;
+        return ui::str(66, 85);
     } else {
-        return 86;
+        return ui::str(66, 86);
     }
 }
 

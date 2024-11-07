@@ -591,6 +591,11 @@ void widget_city_get_tooltip(tooltip_context* c) {
         return;
     }
 
+    if (game.current_overlay != OVERLAY_NONE) {
+        c->high_priority = 1;
+        c->text = widget_city_overlay_get_tooltip_text(c, grid_offset);
+    }
+
     int building_id = map_building_at(grid_offset);
     building_impl *b = building_get(building_id)->dcast();
     b->draw_tooltip(c);
@@ -602,10 +607,5 @@ void widget_city_get_tooltip(tooltip_context* c) {
     //}
     //
     //// overlay tooltips
-    //if (game.current_overlay != OVERLAY_NONE) {
-    //    c->type = TOOLTIP_OVERLAY;
-    //    c->high_priority = 1;
-    //    int id = widget_city_overlay_get_tooltip_text(c, grid_offset);
-    //    c->text = ui::str(66, id);
-    //}
+    
 }

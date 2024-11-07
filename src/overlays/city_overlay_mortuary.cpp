@@ -20,14 +20,14 @@ int city_overlay_mortuary::get_column_height(const building *b) const {
     return b->house_size && b->data.house.mortuary ? b->data.house.mortuary / 10 : NO_COLUMN;
 }
 
-int city_overlay_mortuary::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_mortuary::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.mortuary <= 0) {
-        return 39;
+        return ui::str(66, 39);
     } else if (b->data.house.mortuary >= 80) {
-        return 40;
+        return ui::str(66, 40);
     } else if (b->data.house.mortuary >= 20) {
-        return 41;
-    } else {
-        return 42;
+        return ui::str(66, 41);
     }
+
+    return ui::str(66, 42);
 }

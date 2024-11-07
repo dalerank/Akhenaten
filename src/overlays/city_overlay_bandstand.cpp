@@ -18,16 +18,15 @@ city_overlay_bandstand::city_overlay_bandstand() {
     column_type = COLUMN_TYPE_POSITIVE;
 }
 
-int city_overlay_bandstand::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_bandstand::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.bandstand_musician <= 0)
-        return 79;
+        return ui::str(66, 79);
     else if (b->data.house.bandstand_musician >= 80)
-        return 80;
+        return ui::str(66, 80);
     else if (b->data.house.bandstand_musician >= 20)
-        return 81;
-    else {
-        return 82;
-    }
+        return ui::str(66, 81);
+
+    return ui::str(66, 82);
 }
 
 bool city_overlay_bandstand::show_figure(const figure *f) const {

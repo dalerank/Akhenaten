@@ -32,23 +32,23 @@ int city_overlay_bazaar_access::get_column_height(const building *b) const {
     return std::clamp<int>(b->data.house.bazaar_access / 10, 0, 8);
 }
 
-int city_overlay_bazaar_access::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_bazaar_access::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (building_is_farm(b->type)) {
         map_point tile = b->tile;
         int fertility = map_get_fertility_for_farm(tile.grid_offset());
         if (fertility > 80)
-            return 63;
+            return ui::str(66, 63);
         else if (fertility > 60)
-            return 62;
+            return ui::str(66, 62);
         else if (fertility > 40)
-            return 61;
+            return ui::str(66, 61);
         else if (fertility > 20)
-            return 60;
+            return ui::str(66, 60);
         else if (fertility > 10)
-            return 59;
+            return ui::str(66, 59);
         else {
-            return 58;
+            return ui::str(66, 58);
         }
     }
-    return 58;
+    return ui::str(66, 58);
 }

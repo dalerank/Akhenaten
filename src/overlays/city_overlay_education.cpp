@@ -32,16 +32,16 @@ int city_overlay_education::get_column_height(const building *b) const {
     return b->house_size && b->data.house.education ? b->data.house.education * 3 - 1 : NO_COLUMN;
 }
 
-int city_overlay_education::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_education::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     switch (b->data.house.education) {
     case 0:
-        return 100;
+        return ui::str(66, 100);
     case 1:
-        return 101;
+        return ui::str(66, 101);
     case 2:
-        return 102;
+        return ui::str(66, 102);
     case 3:
-        return 103;
+        return ui::str(66, 103);
     default:
         return 0;
     }
@@ -52,16 +52,15 @@ city_overlay_academy::city_overlay_academy() {
     column_type = COLUMN_TYPE_WATER_ACCESS;
 }
 
-int city_overlay_academy::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_academy::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.academy <= 0)
-        return 27;
+        return ui::str(66, 27);
     else if (b->data.house.academy >= 80)
-        return 28;
+        return ui::str(66, 28);
     else if (b->data.house.academy >= 20)
-        return 29;
-    else {
-        return 30;
-    }
+        return ui::str(66, 29);
+    
+    return ui::str(66, 30);
 }
 
 int city_overlay_academy::get_column_height(const building *b) const {
@@ -77,14 +76,13 @@ int city_overlay_libraries::get_column_height(const building *b) const {
     return b->house_size && b->data.house.library ? b->data.house.library / 10 : NO_COLUMN;
 }
 
-int city_overlay_libraries::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_libraries::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.library <= 0)
-        return 23;
+        return ui::str(66, 23);
     else if (b->data.house.library >= 80)
-        return 24;
+        return ui::str(66, 24);
     else if (b->data.house.library >= 20)
-        return 25;
-    else {
-        return 26;
-    }
+        return ui::str(66, 25);
+
+    return ui::str(66, 26);
 }

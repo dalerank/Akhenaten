@@ -11,6 +11,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "config/config.h"
+#include "graphics/elements/ui.h"
 
 static int terrain_on_desirability_overlay(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD
@@ -97,18 +98,18 @@ inline void city_overlay_desirability::draw_custom_top(vec2i pixel, tile2i point
     ; // nothing
 }
 
-int city_overlay_desirability::get_tooltip_for_building(tooltip_context *c, const building *b) const {
-    return 0;
+xstring city_overlay_desirability::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+    return {};
 }
 
-int city_overlay_desirability::get_tooltip_for_grid_offset(tooltip_context *c, int grid_offset) const {
+xstring city_overlay_desirability::get_tooltip_for_grid_offset(tooltip_context *c, int grid_offset) const {
     int desirability = g_desirability.get(grid_offset);
     if (desirability < 0)
-        return 91;
+        return ui::str(66, 91);
     else if (desirability == 0)
-        return 92;
+        return ui::str(66, 92);
     else {
-        return 93;
+        return ui::str(66, 93);
     }
 }
 

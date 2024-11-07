@@ -30,15 +30,15 @@ int city_overlay_tax_income::get_column_height(const building *b) const {
     return NO_COLUMN;
 }
 
-int city_overlay_tax_income::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_tax_income::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     int denarii = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
     if (denarii > 0) {
         c->has_numeric_prefix = 1;
         c->numeric_prefix = denarii;
-        return 45;
+        return ui::str(66, 45);
     } else if (b->house_tax_coverage > 0) {
-        return 44;
+        return ui::str(66, 44);
     } else {
-        return 43;
+        return ui::str(66, 43);
     }
 }

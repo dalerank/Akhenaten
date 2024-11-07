@@ -58,7 +58,7 @@ int city_overlay_religion::get_column_height(const building *b) const {
                 : NO_COLUMN;
 }
 
-int city_overlay_religion::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_religion::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.num_gods < 5) {
         if (b->data.house.temple_osiris)
             add_god(c, GOD_OSIRIS);
@@ -77,19 +77,19 @@ int city_overlay_religion::get_tooltip_for_building(tooltip_context *c, const bu
     }
 
     if (b->data.house.num_gods <= 0) {
-        return 12;
+        return ui::str(66, 12);
     } else if (b->data.house.num_gods == 1) {
-        return 13;
+        return ui::str(66, 13);
     } else if (b->data.house.num_gods == 2) {
-        return 14;
+        return ui::str(66, 14);
     } else if (b->data.house.num_gods == 3) {
-        return 15;
+        return ui::str(66, 15);
     } else if (b->data.house.num_gods == 4) {
-        return 16;
+        return ui::str(66, 16);
     } else if (b->data.house.num_gods == 5) {
-        return 17;
+        return ui::str(66, 17);
     } else {
-        return 18; // >5 gods, shouldn't happen...
+        return ui::str(66, 18); // >5 gods, shouldn't happen...
     }
 }
 

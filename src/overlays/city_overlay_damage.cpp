@@ -25,18 +25,18 @@ int city_overlay_damage::get_column_height(const building *b) const {
     return b->damage_risk / 100;
 }
 
-int city_overlay_damage::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_damage::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->damage_risk <= 0)
-        return 52;
+        return ui::str(66, 52);
     else if (b->damage_risk <= 40)
-        return 53;
+        return ui::str(66, 53);
     else if (b->damage_risk <= 80)
-        return 54;
+        return ui::str(66, 54);
     else if (b->damage_risk <= 120)
-        return 55;
+        return ui::str(66, 55);
     else if (b->damage_risk <= 160)
-        return 56;
+        return ui::str(66, 56);
     else {
-        return 57;
+        return ui::str(66, 57);
     }
 }
