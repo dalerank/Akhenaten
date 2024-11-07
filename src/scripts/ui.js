@@ -793,22 +793,22 @@ mission_briefing_window = {
 
 roadblock_info_window = {
 	ui : {
-		background 	: outer_panel({size: [29, 17]}),
-		title 		 : text({pos: [0, 12], size: [px(28), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-		button_help  : help_button({}),
+		background   	: outer_panel({size: [29, 17]}),
+		title 		    : text({pos: [0, 12], size: [px(28), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		button_help   : help_button({}),
 		button_close  : close_button({}),
 	}
 }
 
 window granary_orders_window = {
 	ui : {
-		background 	: outer_panel({size: [29, 17]}),
-		title 		 : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-		orders_panel : inner_panel({pos : [16, 42], size: [27, 10] }),
-		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
+		background   	: outer_panel({size: [29, 17]}),
+		title 		    : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		orders_panel  : inner_panel({pos : [16, 42], size: [27, 10] }),
+		button_help   : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
 		button_close  : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
-		empty_all : button({pos:[80, -1], size:[300, 24], margin:{bottom:-64} }),
-		accept_none : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
+		empty_all     : button({pos:[80, -1], size:[300, 24], margin:{bottom:-64} }),
+		accept_none   : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
 
 		item_orders_column : dummy({margin:{centerx:0}}),
 		item_arrows_column : dummy({margin:{centerx:-36}}),
@@ -821,7 +821,7 @@ window granary_orders_window = {
 window granary_info_window = {
 	resource_text_group : 23,
 	ui : {
-		background 	: outer_panel({size: [29, 17]}),
+		background : outer_panel({size: [29, 17]}),
 		title 		 : text({text: "#granary_info_title", pos: [0, 12], size: [px(28), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
 		warning_text : text({pos: [32, 40], wrap:px(28), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
 		storing    : text({pos: [34, 40], font : FONT_NORMAL_BLACK_ON_LIGHT }),
@@ -834,11 +834,11 @@ window granary_info_window = {
 		food2_text : text({pos: [68, 99], font: FONT_NORMAL_BLACK_ON_LIGHT }),
 		food3_icon : resource_icon({pos: [240, 92] }),
 		food3_text : text({pos: [274, 99], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		workers_panel : inner_panel({pos: [16, 142], size: [27, 5] }),
+		workers_panel: inner_panel({pos: [16, 142], size: [27, 5] }),
 		workers_img  : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] }),
 		workers_text : text({pos: [70, 142 + 12], font: FONT_NORMAL_BLACK_ON_DARK }),
 		workers_desc : text({pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK }),
-		orders : button({margin:{centerx:-135, bottom:-40}, size:[270, 25], text:"${98.5}"}),  
+		orders       : button({margin:{centerx:-135, bottom:-40}, size:[270, 25], text:"${98.5}"}),  
 		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
 		button_close : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
 		show_overlay : button({margin:{right:-64, bottom:-40}, size:[23, 23]}),
@@ -854,8 +854,19 @@ window info_window_vacant_lot = {
 		inner_panel  : inner_panel({pos : [16, 40], size: [27, 13] }),
 		describe 	   : text({pos: [36, 114], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(25) }),
 
-		bclose_button : close_button({}),
-		help_button  : help_button({}),
+		button_close : close_button({}),
+		button_help  : help_button({}),
+	}
+}
+
+window info_window_statue = {
+	ui : {
+		background   : outer_panel({size: [29, 17] }), // pos/size setup from code
+		title 		   : text({pos: [0, 16], text:"${building.name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		warning_text : text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+
+		button_close : close_button({}),
+		button_help  : help_button({}),
 	}
 }
 
@@ -882,29 +893,29 @@ window info_window_house = {
 		good3_icon : resource_icon({pos: [362, 120] }),
 		good3_text : text({pos: [394, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
 
-		tenants_panel : inner_panel({pos : [16, 148], size: [27, 10] }),
-		people_icon   : image({pos: [34, 154], pack:PACK_GENERAL, id:134, offset:13, }),
-		people_text   : text({pos: [64, 164], font: FONT_NORMAL_BLACK_ON_DARK, }),
-		tax_info      : text({pos: [36, 194], font: FONT_NORMAL_BLACK_ON_DARK, }),
-		happiness_info: text({pos: [36, 214], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) }),
+		tenants_panel: inner_panel({pos : [16, 148], size: [27, 10] }),
+		people_icon  : image({pos: [34, 154], pack:PACK_GENERAL, id:134, offset:13, }),
+		people_text  : text({pos: [64, 164], font: FONT_NORMAL_BLACK_ON_DARK, }),
+		tax_info     : text({pos: [36, 194], font: FONT_NORMAL_BLACK_ON_DARK, }),
+		happiness_info  : text({pos: [36, 214], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) }),
 		additional_info : text({pos: [36, 234], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) }),
 
-		bclose_button : close_button({}),
-		help_button  : help_button({}),
+		button_close : close_button({}),
+		button_help  : help_button({}),
 	}
 }
 
 hold_festival_window = {
 	pos : [(sw(0) - px(34)) / 2 - 50, (sh(0) - px(20)) / 2 - 100],
 	ui : { 
-		background_image : background({pack:PACK_UNLOADED, id:11}),
-		background : outer_panel({pos: [48, 48], size: [34, 20]}),
-		title 		 : text_center({pos: [48, 60], size: [544, -1], font : FONT_LARGE_BLACK_ON_LIGHT}),
-		god0 			 : image_button({pos:[100 * 0 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 0, offset_pressed:5, offset_focused:5, border:true }),
-		god1 			 : image_button({pos:[100 * 1 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 1, offset_pressed:5, offset_focused:5, border:true }),
-		god2 			 : image_button({pos:[100 * 2 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 2, offset_pressed:5, offset_focused:5, border:true }),
-		god3 			 : image_button({pos:[100 * 3 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 3, offset_pressed:5, offset_focused:5, border:true }),
-		god4 			 : image_button({pos:[100 * 4 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 4, offset_pressed:5, offset_focused:5, border:true }),
+		background_image: background({pack:PACK_UNLOADED, id:11}),
+		background      : outer_panel({pos: [48, 48], size: [34, 20]}),
+		title 		      : text_center({pos: [48, 60], size: [544, -1], font : FONT_LARGE_BLACK_ON_LIGHT}),
+		god0 			      : image_button({pos:[100 * 0 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 0, offset_pressed:5, offset_focused:5, border:true }),
+		god1 			      : image_button({pos:[100 * 1 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 1, offset_pressed:5, offset_focused:5, border:true }),
+		god2 			      : image_button({pos:[100 * 2 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 2, offset_pressed:5, offset_focused:5, border:true }),
+		god3 			      : image_button({pos:[100 * 3 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 3, offset_pressed:5, offset_focused:5, border:true }),
+		god4 			      : image_button({pos:[100 * 4 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 4, offset_pressed:5, offset_focused:5, border:true }),
 		small_festival  : button({pos:[102, 216], size:[430, 26], rich:true}),
 		middle_festival : button({pos:[102, 246], size:[430, 26], rich:true}),
 		large_festival  : button({pos:[102, 276], size:[430, 26], rich:true}),
@@ -918,63 +929,63 @@ hold_festival_window = {
 window trade_resource_settings_window = {
 	pos : [(sw(0) - px(36)) / 2, (sh(0) - px(15)) / 2],
 	ui : {
-		background 	: outer_panel({size: [36, 15]}),
-		icon 				: resource_icon({pos: [16, 18] }),
-		title 		  : text_center({pos: [0, 16], size: [px(36), -1], font : FONT_LARGE_BLACK_ON_LIGHT}),
+		background 			 : outer_panel({size: [36, 15]}),
+		icon 						 : resource_icon({pos: [16, 18] }),
+		title 		  		 : text_center({pos: [0, 16], size: [px(36), -1], font : FONT_LARGE_BLACK_ON_LIGHT}),
 
 		production_state : text_center({pos: [48, 42], size: [px(8), -1], font : FONT_NORMAL_BLACK_ON_LIGHT}),
 		production_store : text_center({pos: [48, 62], size: [px(8), -1], font : FONT_NORMAL_BLACK_ON_LIGHT}),
 
-		could_import : text_center({pos: [46, 92], size: [px(10), 30], font : FONT_NORMAL_BLACK_ON_LIGHT}),
-		import_status: button({pos:[32, 92], size:[px(16), 30], align:"left",
+		could_import     : text_center({pos: [46, 92], size: [px(10), 30], font : FONT_NORMAL_BLACK_ON_LIGHT}),
+		import_status    : button({pos:[32, 92], size:[px(16), 30], align:"left",
 			ui : {
 				import_dec   : arrowdown({pos:[px(16) - 51, 3]}),
 				import_inc   : arrowup({pos:[px(16) - 28, 3]}),
 			}
 		}),
 
-		could_export : text_center({pos: [98 + 216, 101], size: [px(8), -1], font : FONT_NORMAL_BLACK_ON_LIGHT}),
-		export_status: button({pos:[px(36)/2, 92], size:[px(16), 30], align:"left",
+		could_export     : text_center({pos: [98 + 216, 101], size: [px(8), -1], font : FONT_NORMAL_BLACK_ON_LIGHT}),
+		export_status    : button({pos:[px(36)/2, 92], size:[px(16), 30], align:"left",
 			ui : {
 				export_dec   : arrowdown({pos:[px(16) - 51, 3]}),
 				export_inc   : arrowup({pos:[px(16) - 28, 3]}),
 			}
 		}),
 
-		toggle_industry    : button({margin:{centerx:-200}, pos:[-1, 130], size:[400, 30]}),
-		stockpile_industry : button({margin:{centerx:-200}, pos:[-1, 168], size:[400, 50], split:true}),
+		toggle_industry  : button({margin:{centerx:-200}, pos:[-1, 130], size:[400, 30]}),
+		stockpile_industry: button({margin:{centerx:-200}, pos:[-1, 168], size:[400, 50], split:true}),
 
-		close_button : close_button({}),
-		help_button  : help_button({}),
+		button_close     : close_button({}),
+		button_help      : help_button({}),
 	}
 }
 
 sidebar_window_extra = {
   ui : {
-  	background : inner_panel({pos:[0, 480], size:[10, 19]}),
+  	background 			  : inner_panel({pos:[0, 480], size:[10, 19]}),
 
-		speed_header: text({pos:[11, 485], text:[45, 2], font:FONT_NORMAL_WHITE_ON_DARK}), 
-		speed_current: text({pos:[65, 480 + 28], font:FONT_NORMAL_WHITE_ON_DARK}), 
-  	dec_speed  : arrowdown({pos:[11, 470 + 30], tiny:false}),
-		inc_speed  : arrowup({pos:[35, 470 + 30], tiny:false}),
+		speed_header      : text({pos:[11, 485], text:[45, 2], font:FONT_NORMAL_WHITE_ON_DARK}), 
+		speed_current     : text({pos:[65, 480 + 28], font:FONT_NORMAL_WHITE_ON_DARK}), 
+  	dec_speed         : arrowdown({pos:[11, 470 + 30], tiny:false}),
+		inc_speed         : arrowup({pos:[35, 470 + 30], tiny:false}),
 
-		unemp_header: text({pos:[11, 480 + 50], text:[68, 135], font:FONT_NORMAL_WHITE_ON_DARK}), 
-		unemp_current: text({pos:[11, 480 + 70], font:FONT_NORMAL_WHITE_ON_DARK}), 
+		unemp_header      : text({pos:[11, 480 + 50], text:[68, 135], font:FONT_NORMAL_WHITE_ON_DARK}), 
+		unemp_current     : text({pos:[11, 480 + 70], font:FONT_NORMAL_WHITE_ON_DARK}), 
 
-		population_header: text({pos:[11, 480 + 90], font:FONT_NORMAL_WHITE_ON_DARK}), 
+		population_header : text({pos:[11, 480 + 90], font:FONT_NORMAL_WHITE_ON_DARK}), 
 		population_current: text({pos:[11, 480 + 110]}), 
 
-		culture_header: text({pos:[11, 480 + 130], font:FONT_NORMAL_WHITE_ON_DARK}), 
-		culture_current: text({pos:[11, 480 + 150]}),
+		culture_header    : text({pos:[11, 480 + 130], font:FONT_NORMAL_WHITE_ON_DARK}), 
+		culture_current   : text({pos:[11, 480 + 150]}),
 
-		prosperity_header: text({pos:[11, 480 + 170], font:FONT_NORMAL_WHITE_ON_DARK}), 
+		prosperity_header : text({pos:[11, 480 + 170], font:FONT_NORMAL_WHITE_ON_DARK}), 
 		prosperity_current: text({pos:[11, 480 + 190]}), 
 
-		monument_header: text({pos:[11, 480 + 210], font:FONT_NORMAL_WHITE_ON_DARK}), 
-		monument_current: text({pos:[11, 480 + 230]}), 
+		monument_header   : text({pos:[11, 480 + 210], font:FONT_NORMAL_WHITE_ON_DARK}), 
+		monument_current  : text({pos:[11, 480 + 230]}), 
 
-		kingdom_header: text({pos:[11, 480 + 250], font:FONT_NORMAL_WHITE_ON_DARK}), 
-		kingdom_current: text({pos:[11, 480 + 270]}), 
+		kingdom_header    : text({pos:[11, 480 + 250], font:FONT_NORMAL_WHITE_ON_DARK}), 
+		kingdom_current   : text({pos:[11, 480 + 270]}), 
   }
 }
 
@@ -1126,8 +1137,8 @@ temple_info_window = {
 		title 		 	: { type : "text", pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		inner_panel : { type : "inner_panel", pos : [16, 56], size: [27, 4] },
 		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 70] },
-		workers_text : { type : "text", text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", pos: [70, 74], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		workers_desc : { type : "text", pos: [70, 74 + 16], font: FONT_NORMAL_BLACK_ON_DARK },
+		workers_text: { type : "text", text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", pos: [70, 74], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		workers_desc: { type : "text", pos: [70, 74 + 16], font: FONT_NORMAL_BLACK_ON_DARK },
 		button_help : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
 		button_close: { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 		show_overlay: { type:"generic_button", margin:{right:-64, bottom:-40}, size:[23, 23]},
@@ -1140,7 +1151,7 @@ window building_info_window = {
 	ui : {
 		background 	: outer_panel({size: [29, 17]}),
 		title 		 	: { type : "text", pos: [0, 16], text:"${building.name}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		warning_text : { type : "text", pos: [20, 46], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		warning_text: { type : "text", pos: [20, 46], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		inner_panel : inner_panel({pos : [16, 100], size: [27, 5],
 												ui : {
 													workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
@@ -1150,15 +1161,15 @@ window building_info_window = {
 										  }),
 		first_advisor  : { type : "image_button", pos:[40, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
 		second_advisor : { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
-		third_advisor : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
-		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
-		show_overlay : { type:"generic_button", margin:{right:-64, bottom:-40}, size:[23, 23]},
-		mothball : { type:"generic_button", margin:{right:-90, bottom:-40}, size:[23, 23]},
+		third_advisor  : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
+		button_help    : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_close   : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		show_overlay   : { type:"generic_button", margin:{right:-64, bottom:-40}, size:[23, 23]},
+		mothball       : { type:"generic_button", margin:{right:-90, bottom:-40}, size:[23, 23]},
 	}
 }
 
-info_window_ferry = {
+window info_window_ferry = {
 	ui : __baseui(building_info_window, {
 		background 	: outer_panel({size: [29, 20]}),
 	})
@@ -1166,11 +1177,11 @@ info_window_ferry = {
 
 info_window_bandstand = {
 	ui : __baseui(building_info_window, {
-		background 	: { type : "outer_panel", size: [29, 20]},
-		inner_panel : { type : "inner_panel", pos : [16, 116], size: [27, 8] },
-		play_text : { type : "text", pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		play2_text : { type : "text", pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 122] },
+		background   : { type : "outer_panel", size: [29, 20]},
+		inner_panel  : { type : "inner_panel", pos : [16, 116], size: [27, 8] },
+		play_text    : { type : "text", pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		play2_text   : { type : "text", pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		workers_img  : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 122] },
 		workers_text : { type : "text", pos: [70, 130], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK},
 		workers_desc : { type : "text", pos: [70, 126 + 16], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
 	})
@@ -1178,11 +1189,11 @@ info_window_bandstand = {
 
 info_window_booth = {
 	ui : __baseui(building_info_window, {
-		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 20]},
-		inner_panel : { type : "inner_panel", pos : [16, 116], size: [27, 8] },
-		play_text : { type : "text", pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		play2_text : { type : "text", pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		workers_img : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 122] },
+		background 	 : { type : "outer_panel",	pos: [0, 0], size: [29, 20]},
+		inner_panel  : { type : "inner_panel", pos : [16, 116], size: [27, 8] },
+		play_text    : { type : "text", pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		play2_text   : { type : "text", pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		workers_img  : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 122] },
 		workers_text : { type : "text", pos: [70, 130], font: FONT_NORMAL_BLACK_ON_DARK},
 		workers_desc : { type : "text", pos: [70, 126 + 16], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
 	})
@@ -1257,27 +1268,27 @@ info_window_garden = {
 
 window info_window_palace = {
 	ui : __baseui(building_info_window, {
-		background 	: outer_panel({size: [29, 18]}),
-		resource_img : resource_icon({pos: [16, 16], resource:RESOURCE_GOLD}),
-		inner_panel : inner_panel({pos : [16, 120], size: [27, 6],
+		background 	  : outer_panel({size: [29, 18]}),
+		resource_img  : resource_icon({pos: [16, 16], resource:RESOURCE_GOLD}),
+		inner_panel   : inner_panel({pos : [16, 120], size: [27, 6],
 																ui : {
 																	workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
 																	workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} (${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
 																	workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
 																}
 														  }),
-		vaults_hold : text({pos: [44, 44], text:"${text.2} ${building.tax_income_or_storage} Db", font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		warning_desc : text({pos: [32, 66], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-		text_visit : text({pos: [90, 52], font: FONT_NORMAL_BLACK_ON_LIGHT, text:"#visit_rating_advisor" }),
-		visit_advisor  : image_button({pos:[52, 246], size:[28, 28], pack:PACK_GENERAL, id:106 }),
+		vaults_hold   : text({pos: [44, 44], text:"${text.2} ${building.tax_income_or_storage} Db", font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		warning_desc  : text({pos: [32, 66], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		text_visit    : text({pos: [90, 52], font: FONT_NORMAL_BLACK_ON_LIGHT, text:"#visit_rating_advisor" }),
+		visit_advisor : image_button({pos:[52, 246], size:[28, 28], pack:PACK_GENERAL, id:106 }),
 	})
 }
 
 window info_window_courthouse = {
 	ui : __baseui(building_info_window, { 
-		background 	: outer_panel({size: [29, 17]}),
-		vaults_hold : text({pos: [44, 54], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		state       : text({margin:{left:20, bottom: -80} , font: FONT_NORMAL_BLACK_ON_DARK}),
+		background 	  : outer_panel({size: [29, 17]}),
+		vaults_hold   : text({pos: [44, 54], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		state         : text({margin:{left:20, bottom: -80} , font: FONT_NORMAL_BLACK_ON_DARK}),
 	})
 }
 
@@ -1343,8 +1354,8 @@ taxcollector_info_window = {
 
 dock_info_window = {
 	ui : __baseui(building_info_window, {
-		background : outer_panel({size: [29, 16]}),
-		orders : button({margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}}),
+		background   : outer_panel({size: [29, 16]}),
+		orders       : button({margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}}),
 	})
 }
 
@@ -1409,45 +1420,45 @@ dock_orders_window = {
 
 window bazaar_info_window = {
 	ui : {
-		background : outer_panel({size: [29, 17]}),
-		title 		 : text({text: "#bazaar_info_title", pos: [0, 10], size: [16 * 29, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		background   : outer_panel({size: [29, 17]}),
+		title 		   : text({text: "#bazaar_info_title", pos: [0, 10], size: [16 * 29, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
 		warning_text : text({pos: [32, 36], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-		food0_icon : resource_icon({pos: [32, 85]}),
-		food0_text : text({pos: [64, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		food1_icon : resource_icon({pos: [142, 85] }),
-		food1_text : text({pos: [174, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		food2_icon : resource_icon({pos: [252, 85] }),
-		food2_text : text({pos: [284, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		food3_icon : resource_icon({pos: [362, 85] }),
-		food3_text : text({pos: [394, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good0_icon : resource_icon({pos: [32, 110] }),
-		good0_text : text({pos: [64, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good1_icon : resource_icon({pos: [142, 110] }),
-		good1_text : text({pos: [174, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good2_icon : resource_icon({pos: [252, 110] }),
-		good2_text : text({pos: [284, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good3_icon : resource_icon({pos: [362, 110] }),
-		good3_text : text({pos: [394, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		workers_panel : inner_panel({pos : [16, 136], size: [27, 4] }),
-		workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] }),
+		food0_icon   : resource_icon({pos: [32, 85]}),
+		food0_text   : text({pos: [64, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		food1_icon   : resource_icon({pos: [142, 85] }),
+		food1_text   : text({pos: [174, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		food2_icon   : resource_icon({pos: [252, 85] }),
+		food2_text   : text({pos: [284, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		food3_icon   : resource_icon({pos: [362, 85] }),
+		food3_text   : text({pos: [394, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good0_icon   : resource_icon({pos: [32, 110] }),
+		good0_text   : text({pos: [64, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good1_icon   : resource_icon({pos: [142, 110] }),
+		good1_text   : text({pos: [174, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good2_icon   : resource_icon({pos: [252, 110] }),
+		good2_text   : text({pos: [284, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good3_icon   : resource_icon({pos: [362, 110] }),
+		good3_text   : text({pos: [394, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		workers_panel: inner_panel({pos : [16, 136], size: [27, 4] }),
+		workers_img  : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] }),
 		workers_text : text({pos:[70, 142 + 12], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
 		workers_desc : text({pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK }),
-		orders : button({margin:{left:100, bottom:-40}, size:[270, 25], text:"${98.5}"}),
+		orders       : button({margin:{left:100, bottom:-40}, size:[270, 25], text:"${98.5}"}),
 		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
-		button_close  : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
+		button_close : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
 		show_overlay : button({margin:{right:-64, bottom:-40}, size:[23, 23]}),
-		mothball : button({margin:{right:-90, bottom:-40}, size:[23, 23]}),
+		mothball     : button({margin:{right:-90, bottom:-40}, size:[23, 23]}),
 	}
 }
 
 window bazaar_orders_window = {
   ui : {
-		background 	: outer_panel({size: [29, 17]}),
-		title 		 : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		background 	 : outer_panel({size: [29, 17]}),
+		title 		   : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
 		orders_panel : inner_panel({pos : [16, 42], size: [27, 10] }),
 		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
-		button_close  : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
-		accept_none : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
+		button_close : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
+		accept_none  : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
 
 		item_orders_column : dummy({margin:{centerx:0}}),
 		item_icon_column : dummy({pos:[25, 0]}),
@@ -1459,31 +1470,31 @@ window bazaar_orders_window = {
 
 festival_square_info_window = {
 	ui : {
-		background : { type : "outer_panel",	pos: [0, 0], size: [29, 16]},
-		title 		 : { type : "text", text: "#festival_square_info_title", pos: [0, 10], size: [px(29), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		warning		 : { type : "text", pos: [32, 36], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		background    : { type : "outer_panel",	pos: [0, 0], size: [29, 16]},
+		title 		    : { type : "text", text: "#festival_square_info_title", pos: [0, 10], size: [px(29), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		warning		    : { type : "text", pos: [32, 36], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 		workers_panel : { type : "inner_panel", pos : [16, 96], size: [27, 7] },
 		fest_months_last : { type : "text", pos:[32, 112], size: [px(25), 20], font:FONT_NORMAL_WHITE_ON_DARK, align:"center"},
 		hold_festival : { type:"generic_button", pos:[60, 134], size:[px(22), 25], font:FONT_NORMAL_WHITE_ON_DARK, text:{group: 58, id: 16}},
 		planed_festival : { type : "text", pos: [102, 134], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" },
 		festival_advice : { type : "text", pos: [36, 164], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true },
-		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
+		button_help   : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
 		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
 	}
 }
 
 window workshop_info_window = {
 	ui : {
-		background   : outer_panel({size: [29, 17] }),
-		title 		   : text({pos: [0, 16], size: [px(27), 20], text:"${building.name}", font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-		warning_text : text({pos: [32, 58], wrap:px(27), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-		produce_icon : resource_icon({pos: [16, 16], prop:"${building.output_resource}" }),
-		ready_prod   : text({pos: [38, 40], size: [px(27), 20], text:"${text.2} ${industry.progress}% ${text.3}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
-		workers_panel: inner_panel({pos : [16, 116], size: [27, 5] }),
-		workers_text : text({pos: [55, 122 + 10], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
-		workers_desc : text({pos: [55, 122 + 26], font:FONT_NORMAL_BLACK_ON_DARK, wrap:px(24), multiline:true }),
-		workers_img  : image({pos:[30, 122 + 6], pack:PACK_GENERAL, id:134, offset:14}),
-		resource_icon: resource_icon({pos: [32, 205], prop:"${building.first_material}" }),
+		background    : outer_panel({size: [29, 17] }),
+		title 		    : text({pos: [0, 16], size: [px(27), 20], text:"${building.name}", font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		warning_text  : text({pos: [32, 58], wrap:px(27), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		produce_icon  : resource_icon({pos: [16, 16], prop:"${building.output_resource}" }),
+		ready_prod    : text({pos: [38, 40], size: [px(27), 20], text:"${text.2} ${industry.progress}% ${text.3}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		workers_panel : inner_panel({pos : [16, 116], size: [27, 5] }),
+		workers_text  : text({pos: [55, 122 + 10], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		workers_desc  : text({pos: [55, 122 + 26], font:FONT_NORMAL_BLACK_ON_DARK, wrap:px(24), multiline:true }),
+		workers_img   : image({pos:[30, 122 + 6], pack:PACK_GENERAL, id:134, offset:14}),
+		resource_icon : resource_icon({pos: [32, 205], prop:"${building.first_material}" }),
 		resource_stored : text({pos: [55, 210], size: [px(27), 20], text:"${text.12} ${building.first_material_stored}", font:FONT_NORMAL_BLACK_ON_LIGHT }),
 		
 		button_help   : help_button({}),
@@ -1494,17 +1505,17 @@ window workshop_info_window = {
 
 well_info_window = {
 	ui : {
-		background : { type : "outer_panel", pos: [0, 0], size: [29, 14] },
-		title 		 : { type : "text", pos: [0, 12], size: [px(28), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center", text: "#well_info_title"},
-		text : { type : "text", pos: [32, 56], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		background    : { type : "outer_panel", pos: [0, 0], size: [29, 14] },
+		title 		    : { type : "text", pos: [0, 12], size: [px(28), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center", text: "#well_info_title"},
+		text          : { type : "text", pos: [32, 56], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
 	}
 }
 
 window info_window_storageyard_orders = {
 	parent_window_offset : [0, -250],
 	ui : {
-		background : outer_panel({size:[29, 35] }),
-		title      : text_center({text:[99, 3], pos:[10, 10], size:[px(29), 20], font: FONT_LARGE_BLACK_ON_LIGHT}),
+		background    : outer_panel({size:[29, 35] }),
+		title         : text_center({text:[99, 3], pos:[10, 10], size:[px(29), 20], font: FONT_LARGE_BLACK_ON_LIGHT}),
 
 	  items_panel   : inner_panel({pos:[16, 42], size:[27, 28] }),
 	  resource_base : dummy({pos: [10, 26] }),
@@ -1515,42 +1526,42 @@ window info_window_storageyard_orders = {
 	  decrease_column: dummy({pos: [px(27)/2 -13, 6] }),
 	  item_row      : dummy({size: [0, 20] }),
 
-	  button_help  : help_button({}),
-		button_close : close_button({}),
+	  button_help   : help_button({}),
+		button_close  : close_button({}),
 
-		empty_all   : button({pos:[80, -1], size:[300, 24], margin:{bottom:-64} }),
-		accept_none : button({pos:[80, -1], size:[300, 24], text:[99, 7], margin:{bottom:-38} }),
+		empty_all     : button({pos:[80, -1], size:[300, 24], margin:{bottom:-64} }),
+		accept_none   : button({pos:[80, -1], size:[300, 24], text:[99, 7], margin:{bottom:-38} }),
 	}
 }
 
 window info_window_storageyard = {
 	ui : {
-		background : outer_panel({size: [29, 19] }),
-		title 		 : text({pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-
-		storing    : text({ pos: [34, 40], font : FONT_NORMAL_BLACK_ON_LIGHT }),
-		free_space : text({ pos: [220, 40], font : FONT_NORMAL_BLACK_ON_LIGHT }),
-
-		good0_icon : resource_icon({pos: [32, 60] }),
-		good0_text : text({pos: [54, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good1_icon : resource_icon({pos: [172, 60] }),
-		good1_text : text({pos: [194, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good2_icon : resource_icon({pos: [292, 60] }),
-		good2_text : text({pos: [314, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-
-		good3_icon : resource_icon({pos: [32, 90] }),
-		good3_text : text({pos: [54, 94], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good4_icon : resource_icon({pos: [172, 60] }),
-		good4_text : text({pos: [194, 94], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good5_icon : resource_icon({pos: [292, 90] }),
-		good5_text : text({pos: [314, 94], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-
-		good6_icon : resource_icon({pos: [32, 120] }),
-		good6_text : text({pos: [54, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good7_icon : resource_icon({pos: [172, 120] }),
-		good7_text : text({pos: [194, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good8_icon : resource_icon({pos: [292, 120] }),
-		good8_text : text({pos: [314, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		background    : outer_panel({size: [29, 19] }),
+		title 		    : text({pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+   
+		storing       : text({ pos: [34, 40], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		free_space    : text({ pos: [220, 40], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+   
+		good0_icon    : resource_icon({pos: [32, 60] }),
+		good0_text    : text({pos: [54, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good1_icon    : resource_icon({pos: [172, 60] }),
+		good1_text    : text({pos: [194, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good2_icon    : resource_icon({pos: [292, 60] }),
+		good2_text    : text({pos: [314, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+   
+		good3_icon    : resource_icon({pos: [32, 90] }),
+		good3_text    : text({pos: [54, 94], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good4_icon    : resource_icon({pos: [172, 60] }),
+		good4_text    : text({pos: [194, 94], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good5_icon    : resource_icon({pos: [292, 90] }),
+		good5_text    : text({pos: [314, 94], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+   
+		good6_icon    : resource_icon({pos: [32, 120] }),
+		good6_text    : text({pos: [54, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good7_icon    : resource_icon({pos: [172, 120] }),
+		good7_text    : text({pos: [194, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		good8_icon    : resource_icon({pos: [292, 120] }),
+		good8_text    : text({pos: [314, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
 
 		warning_text  : text({pos: [32, 56], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
 		workers_panel : inner_panel({pos : [16, 168], size: [27, 5] }),

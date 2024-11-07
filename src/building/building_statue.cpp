@@ -17,6 +17,7 @@
 #include "grid/terrain.h"
 #include "grid/building_tiles.h"
 #include "io/io_buffer.h"
+#include "window/window_building_info.h"
 
 #include "js/js_game.h"
 
@@ -39,13 +40,6 @@ building_statue_model<building_small_statue> small_statue_m;
 building_statue_model<building_medium_statue> medium_statue_m;
 building_statue_model<building_large_statue> large_statue_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_statue_models);
-void config_load_statue_models() {
-    small_statue_m.load();
-    medium_statue_m.load();
-    large_statue_m.load();
-}
-
 void building_statue::on_create(int o) {
     int orientation = (4 + building_rotation_global_rotation() + city_view_orientation() / 2) % 4;
     data.monuments.variant = building_rotation_get_building_variant();
@@ -60,19 +54,6 @@ void building_statue::on_place_update_tiles(int orientation, int variant) {
 
 void building_statue::on_place_checks() {
     /*nothing*/
-}
-
-void building_statue::window_info_background(object_info &c) {
-    building* b = building_get(c.building_id);
-    const auto &params = b->dcast()->params();
-
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
-
-    window_building_play_sound(&c, b->get_sound());
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    window_building_draw_description_at(c, 16 * c.bgsize.y - 158, group_id, 1);
 }
 
 void building_statue::update_map_orientation(int map_orientation) {

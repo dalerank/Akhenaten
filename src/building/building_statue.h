@@ -11,7 +11,6 @@ public:
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
     virtual bool is_workshop() const override { return true; }
-    virtual void window_info_background(object_info &c) override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void update_map_orientation(int map_orientation) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
