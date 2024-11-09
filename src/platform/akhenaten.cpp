@@ -601,8 +601,8 @@ static void main_loop() {
 #else
     while (SDL_PollEvent(&event)) {
 #endif
-        game_imgui_overlay_handle_event(&event);
-        if (!game.debug_console) {
+        bool handled_imgui = game_imgui_overlay_handle_event(&event);
+        if (!handled_imgui) {
             handle_event(&event, g_application.active, g_application.quit);
         }
     }

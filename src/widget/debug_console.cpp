@@ -32,12 +32,14 @@ dev::imgui_qconsole &debug_console() {
     return *_debug_console;
 }
 
+static int game_debug_cli_guid = 0;
 void game_debug_cli_draw() {
     auto renderer = graphics_renderer();
     SDL_Point platform_window_size;
     SDL_GetWindowSize(renderer->window(), &platform_window_size.x, &platform_window_size.y);
 
     debug_console().render("##console", game.debug_console, platform_window_size.x, platform_window_size.y * 0.33f);
+    game_debug_cli_guid = 0;
 }
 
 void game_debug_show_property_value(pcstr field, const float &v, bool disabled) {
@@ -105,9 +107,7 @@ void game_debug_show_property_value(pcstr field, const std::function<void()> &f,
 
 template<typename T>
 void game_debug_show_property_t(pcstr field, const T &v, bool disabled = false) {
-    static int guid = 0;
-
-    ImGui::PushID(guid);
+    ImGui::PushID(game_debug_cli_guid);
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
     ImGui::AlignTextToFramePadding();
@@ -127,7 +127,7 @@ void game_debug_show_property_t(pcstr field, const T &v, bool disabled = false) 
     }
     ImGui::NextColumn();
     ImGui::PopID();
-    ++guid;
+    ++game_debug_cli_guid;
 }
 
 void game_debug_show_property_t(pcstr field, pcstr v) {
@@ -246,7 +246,12 @@ bool game_imgui_overlay_handle_event(void *e) {
     }
 
     ImGui_ImplSDL2_ProcessEvent(event);
-    return false;
+
+    ImGuiContext &g = *GImGui;
+    ImGuiWindow *ref_window = g.HoveredWindow;
+    ImGuiWindow *cur_window = g.CurrentWindow;
+
+    return ref_window || cur_window;
 }
 
 void game_toggle_debug_console() {
