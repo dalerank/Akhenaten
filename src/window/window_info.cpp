@@ -321,7 +321,7 @@ void window_figure_register_handler(common_info_window *handler) {
 }
 
 void common_info_window::window_info_foreground(object_info &c) { 
-    graphics_draw_from_texture(backside_texture, { 0, 0 }, screen_size());
+    //graphics_draw_from_texture(backside_texture, { 0, 0 }, screen_size());
     ui.draw(); 
 }
 
