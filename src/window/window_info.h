@@ -1,6 +1,7 @@
 #pragma once
 
 #include "grid/point.h"
+#include "core/variant.h"
 #include "graphics/elements/ui.h"
 
 struct object_info;
