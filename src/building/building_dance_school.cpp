@@ -22,11 +22,6 @@
 
 buildings::model_t<building_dancer_school> dancer_school_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_dancer_school);
-void config_load_building_dancer_school() {
-    dancer_school_m.load();
-}
-
 void building_dancer_school::spawn_figure() {
     if (!common_spawn_figure_trigger(50)) {
         return;

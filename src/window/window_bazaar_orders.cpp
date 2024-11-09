@@ -5,10 +5,10 @@
 #include "window/window_building_info.h"
 #include "city/object_info.h"
 #include "city/city_resource.h"
+#include "core/variant.h"
 #include "graphics/window.h"
 #include "input/input.h"
 #include "game/game.h"
-#include "js/js_game.h"
 
 struct bazaar_orders_window : public building_info_window_t<bazaar_orders_window> {
     virtual void window_info_foreground(object_info &c) override;
