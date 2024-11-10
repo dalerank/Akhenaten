@@ -6,7 +6,6 @@
 #include "config/config.h"
 
 #include "grid/routing/routing.h"
-#include "js/js_game.h"
 
 struct reed_gatherer_model : public figures::model_t<figure_reed_gatherer> {
     using inherited = figures::model_t<figure_reed_gatherer>;
@@ -17,11 +16,6 @@ struct reed_gatherer_model : public figures::model_t<figure_reed_gatherer> {
         max_amount = arch.r_int("max_amount");
     }
 } reed_gatherer_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_reed_gatherer);
-void config_load_figure_reed_gatherer() {
-     reed_gatherer_m.load();
-}
 
 void figure_reed_gatherer::figure_before_action() {
     building *b = home();
