@@ -146,19 +146,19 @@ void figure::figure_image_update(bool refresh_only) {
     }
 }
 
-e_image_id resource_to_sled_image(e_resource res) {
+image_desc resource_to_sled_image(e_resource res) {
     switch (res) {
-    case RESOURCE_STONE: return IMG_SLED_STONE_SMALL;
-    case RESOURCE_GRANITE: return IMG_SLED_GRANITE_SMALL;
-    case RESOURCE_SANDSTONE: return IMG_SLED_SANDSTONE_SMALL;
-    case RESOURCE_LIMESTONE: return IMG_SLED_LIMESTONE_SMALL;
-    case RESOURCE_BRICKS: return IMG_SLED_BRICKS;
+    case RESOURCE_STONE: return {PACK_SPR_MAIN, 102};
+    case RESOURCE_GRANITE: return {PACK_SPR_MAIN, 103};
+    case RESOURCE_SANDSTONE: return {PACK_SPR_MAIN, 101};
+    case RESOURCE_LIMESTONE: return {PACK_SPR_MAIN, 104};
+    case RESOURCE_BRICKS: return {PACK_SPR_MAIN, 89};
 
     default:
         assert(false);
     }
 
-    return IMG_SLED_EMPTY_SMALL;
+    return { PACK_SPR_MAIN, 77 };
 }
 
 int cart_image_offset_from_amount(int amount) {
@@ -195,10 +195,11 @@ void figure::cart_update_image() {
     case RESOURCE_SANDSTONE:
     case RESOURCE_BRICKS:
         if (resource_amount_full > 0) {
-            e_image_id image_id = resource_to_sled_image(resource_id);
-            cart_image_id = image_group(image_id);
+            image_desc imgd = resource_to_sled_image(resource_id);
+            cart_image_id = image_group(imgd);
         } else {
-            cart_image_id = image_group(IMG_SLED_EMPTY_SMALL);
+            image_desc imgd = resource_to_sled_image(RESOURCE_NONE);
+            cart_image_id = image_group(imgd);
         }
         break;
 
