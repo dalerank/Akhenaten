@@ -18,7 +18,8 @@ struct info_window_raw_material : building_info_window_t<info_window_raw_materia
         return b->dcast_mine() 
                    || b->dcast_quarry()
                    || b->dcast_clay_pit()
-                   || b->dcast_wood_cutter();
+                   || b->dcast_wood_cutter()
+                   || b->dcast_reed_gatherer();
     }
 };
 
