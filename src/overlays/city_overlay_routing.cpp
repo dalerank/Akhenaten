@@ -28,7 +28,6 @@ city_overlay* city_overlay_for_routing() {
 
 inline city_overlay_routing::city_overlay_routing() {
     type = OVERLAY_ROUTING;
-    column_type = COLUMN_TYPE_RISK;
 }
 
 inline bool city_overlay_routing::show_figure(const figure *f) const {

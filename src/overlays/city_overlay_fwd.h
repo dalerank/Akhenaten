@@ -3,7 +3,9 @@
 enum e_column_type {
     COLUMN_TYPE_RISK,
     COLUMN_TYPE_POSITIVE,
-    COLUMN_TYPE_WATER_ACCESS
+    COLUMN_TYPE_WATER_ACCESS,
+
+    COLUMN_TYPE_SIZE
 };
 
 enum e_column_color {

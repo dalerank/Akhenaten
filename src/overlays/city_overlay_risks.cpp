@@ -51,7 +51,6 @@ city_overlay *city_overlay_for_problems() {
 
 city_overlay_problems::city_overlay_problems() {
     type = OVERLAY_PROBLEMS;
-    column_type = COLUMN_TYPE_RISK;
 }
 
 bool city_overlay_problems::show_figure(const figure *f) const {

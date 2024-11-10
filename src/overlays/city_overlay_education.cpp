@@ -25,7 +25,6 @@ city_overlay* city_overlay_for_academy() {
 
 city_overlay_education::city_overlay_education() {
     type = OVERLAY_EDUCATION;
-    column_type = COLUMN_TYPE_WATER_ACCESS;
 }
 
 int city_overlay_education::get_column_height(const building *b) const {

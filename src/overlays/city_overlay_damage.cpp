@@ -15,7 +15,6 @@ city_overlay* city_overlay_for_damage() {
 
 city_overlay_damage::city_overlay_damage() {
     type = OVERLAY_DAMAGE;
-    column_type = COLUMN_TYPE_RISK;
 }
 
 int city_overlay_damage::get_column_height(const building *b) const {

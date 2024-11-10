@@ -21,7 +21,6 @@ city_overlay* city_overlay_for_bazaar_access() {
 
 city_overlay_bazaar_access::city_overlay_bazaar_access() {
     type = OVERLAY_BAZAAR_ACCESS;
-    column_type = COLUMN_TYPE_POSITIVE;
 }
 
 int city_overlay_bazaar_access::get_column_height(const building *b) const {

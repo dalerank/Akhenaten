@@ -15,7 +15,6 @@ city_overlay* city_overlay_for_bandstand() {
 
 city_overlay_bandstand::city_overlay_bandstand() {
     type = OVERLAY_BANDSTAND;
-    column_type = COLUMN_TYPE_POSITIVE;
 }
 
 xstring city_overlay_bandstand::get_tooltip_for_building(tooltip_context *c, const building *b) const {

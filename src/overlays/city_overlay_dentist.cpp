@@ -13,7 +13,6 @@ city_overlay* city_overlay_for_dentist() {
 
 city_overlay_dentist::city_overlay_dentist() {
     type = OVERLAY_DENTIST;
-    column_type = COLUMN_TYPE_POSITIVE;
 }
 
 int city_overlay_dentist::get_column_height(const building *b) const {

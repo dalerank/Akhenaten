@@ -14,7 +14,6 @@ city_overlay* city_overlay_for_fire() {
 
 city_overlay_fire::city_overlay_fire() {
     type = OVERLAY_FIRE;
-    column_type = COLUMN_TYPE_RISK;
 }
 
 int city_overlay_fire::get_column_height(const building *b) const {

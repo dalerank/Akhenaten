@@ -15,7 +15,6 @@ city_overlay* city_overlay_for_apothecary() {
 
 city_overlay_apothecary::city_overlay_apothecary() {
     type = OVERLAY_APOTHECARY;
-    column_type = COLUMN_TYPE_POSITIVE;
 }
 
 xstring city_overlay_apothecary::get_tooltip_for_building(tooltip_context* c, const building* b) const {

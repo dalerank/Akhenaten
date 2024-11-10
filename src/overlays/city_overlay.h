@@ -11,6 +11,7 @@
 constexpr int NO_COLUMN = -1;
 
 extern const token_holder<e_overlay, OVERLAY_NONE, OVERLAY_SIZE> e_overlay_tokens;
+extern const token_holder<e_column_type, COLUMN_TYPE_RISK, COLUMN_TYPE_SIZE> e_column_type_tokens;
 
 class figure;
 class building;

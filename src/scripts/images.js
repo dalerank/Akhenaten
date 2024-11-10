@@ -1,15 +1,6 @@
 log_info("akhenaten: images started")
 
 images = [
-	// spr main
-	{img: IMG_SLED_BRICKS, pack:PACK_SPR_MAIN, id:89},
-	{img: IMG_SLED_SANDSTONE_SMALL, pack:PACK_SPR_MAIN, id:101},
-	{img: IMG_SLED_STONE_SMALL, pack:PACK_SPR_MAIN, id:102},
-	{img: IMG_SLED_GRANITE_SMALL, pack:PACK_SPR_MAIN, id:103},
-	{img: IMG_SLED_LIMESTONE_SMALL, pack:PACK_GENERAL, id:104},
-	// spr ambient
-	//{img: ANIM_SANDSTONE_QUARRY_2, pack:PACK_SPR_AMBIENT, id:49},
-
 	// icon resources
 	//{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
 

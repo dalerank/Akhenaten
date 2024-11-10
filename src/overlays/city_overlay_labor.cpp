@@ -15,7 +15,6 @@ city_overlay* city_overlay_for_labor() {
 
 city_overlay_labor::city_overlay_labor() {
     type = OVERLAY_LABOR;
-    column_type = COLUMN_TYPE_RISK;
 }
 
 bool city_overlay_labor::show_figure(const figure *f) const {

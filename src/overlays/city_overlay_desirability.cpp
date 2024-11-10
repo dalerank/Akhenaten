@@ -83,7 +83,6 @@ city_overlay* city_overlay_for_desirability() {
 
 inline city_overlay_desirability::city_overlay_desirability() {
     type = OVERLAY_DESIRABILITY;
-    column_type = COLUMN_TYPE_WATER_ACCESS;
 }
 
 inline bool city_overlay_desirability::show_figure(const figure *f) const {

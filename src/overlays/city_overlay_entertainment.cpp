@@ -16,7 +16,6 @@ city_overlay* city_overlay_for_senet_house() {
 
 city_overlay_entertainment::city_overlay_entertainment() {
     type = OVERLAY_ENTERTAINMENT;
-    column_type = COLUMN_TYPE_WATER_ACCESS;
 }
 
 int city_overlay_entertainment::get_column_height(const building *b) const {

@@ -12,7 +12,6 @@ city_overlay* city_overlay_for_health() {
 
 city_overlay_health::city_overlay_health() {
     type = OVERLAY_HEALTH;
-    column_type = COLUMN_TYPE_RISK;
 }
 
 int city_overlay_health::get_column_height(const building *b) const {

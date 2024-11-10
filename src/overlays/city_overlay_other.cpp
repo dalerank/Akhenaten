@@ -26,7 +26,6 @@ city_overlay* city_overlay_for_food_stocks() {
 
 city_overlay_food_stocks::city_overlay_food_stocks() {
     type = OVERLAY_FOOD_STOCKS;
-    column_type = COLUMN_TYPE_RISK;
 }
 
 int city_overlay_food_stocks::get_column_height(const building *b) const {

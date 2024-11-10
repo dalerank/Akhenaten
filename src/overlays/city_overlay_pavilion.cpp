@@ -15,7 +15,6 @@ city_overlay* city_overlay_for_pavilion() {
 
 city_overlay_pavilion::city_overlay_pavilion() {
     type = OVERLAY_PAVILION;
-    column_type = COLUMN_TYPE_WATER_ACCESS;
 }
 
 bool city_overlay_pavilion::show_figure(const figure *f) const {

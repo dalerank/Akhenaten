@@ -49,7 +49,6 @@ city_overlay* city_overlay_for_religion_bast() {
 
 city_overlay_religion::city_overlay_religion() {
     type = OVERLAY_RELIGION;
-    column_type = COLUMN_TYPE_WATER_ACCESS;
 }
 
 int city_overlay_religion::get_column_height(const building *b) const {

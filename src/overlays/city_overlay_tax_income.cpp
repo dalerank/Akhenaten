@@ -16,7 +16,6 @@ city_overlay* city_overlay_for_tax_income() {
 
 city_overlay_tax_income::city_overlay_tax_income() {
     type = OVERLAY_TAX_INCOME;
-    column_type = COLUMN_TYPE_WATER_ACCESS;
 }
 
 int city_overlay_tax_income::get_column_height(const building *b) const {

@@ -26,7 +26,6 @@ city_overlay* city_overlay_for_water() {
 
 city_overlay_water::city_overlay_water() {
     type = OVERLAY_WATER;
-    column_type = COLUMN_TYPE_WATER_ACCESS;
 }
 
 void city_overlay_water::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const {

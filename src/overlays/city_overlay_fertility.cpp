@@ -32,7 +32,6 @@ city_overlay* city_overlay_for_fertility() {
 
 inline city_overlay_fertility::city_overlay_fertility() {
     type = OVERLAY_FERTILITY;
-    column_type = COLUMN_TYPE_POSITIVE;
 }
 
 inline bool city_overlay_fertility::show_figure(const figure *f) const {

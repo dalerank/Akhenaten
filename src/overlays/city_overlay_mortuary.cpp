@@ -13,7 +13,6 @@ city_overlay* city_overlay_for_mortuary() {
 
 city_overlay_mortuary::city_overlay_mortuary() {
     type = OVERLAY_MORTUARY;
-    column_type = COLUMN_TYPE_POSITIVE;
 }
 
 int city_overlay_mortuary::get_column_height(const building *b) const {

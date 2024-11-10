@@ -13,7 +13,6 @@ city_overlay* city_overlay_for_physician() {
 
 city_overlay_physician::city_overlay_physician() {
     type = OVERLAY_PHYSICIAN;
-    column_type = COLUMN_TYPE_WATER_ACCESS;
 }
 
 int city_overlay_physician::get_column_height(const building *b) const {

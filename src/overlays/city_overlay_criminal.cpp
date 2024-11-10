@@ -16,7 +16,6 @@ city_overlay* city_overlay_for_crime() {
 
 city_overlay_crime::city_overlay_crime() {
     type = OVERLAY_CRIME;
-    column_type = COLUMN_TYPE_RISK;
 }
 
 int city_overlay_crime::get_column_height(const building* b) const {

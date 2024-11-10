@@ -40,27 +40,33 @@
 #include "js/js_game.h"
 
 const token_holder<e_overlay, OVERLAY_NONE, OVERLAY_SIZE> e_overlay_tokens;
+const token_holder<e_column_type, COLUMN_TYPE_RISK, COLUMN_TYPE_SIZE> e_column_type_tokens;
 
 const city_overlay* g_city_overlay = 0;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_city_overlays);
 void config_load_city_overlays() {
     g_config_arch.r_array("overlays", [] (archive arch) {
-        const int e_v = arch.r_int("id");
+        const e_overlay e_v = arch.r_type<e_overlay>("id");
+        city_overlay* overlay = get_city_overlay(e_v);
+
+        if (!overlay) {
+            return;
+        }
+
         const char *caption = arch.r_string("caption");
         auto walkers = arch.r_array_num<e_figure_type>("walkers");
         auto buildings = arch.r_array_num<e_building_type>("buildings");
         int tooltip_base = arch.r_int("tooltip_base");
+        e_column_type column_type = arch.r_type<e_column_type>("column_type");
         auto tooltips = arch.r_array_num("tooltips");
-        city_overlay* overlay = get_city_overlay((e_overlay)e_v);
 
-        if (overlay) {
-            if (tooltip_base) { overlay->tooltip_base = tooltip_base; }
-            if (buildings.size()) { overlay->buildings = buildings; }
-            if (*caption) { overlay->caption = caption; }
-            if (tooltips.size()) { overlay->tooltips = tooltips; }
-            if (walkers.size()) { overlay->walkers = walkers; }
-        }
+        if (tooltip_base) { overlay->tooltip_base = tooltip_base; }
+        if (buildings.size()) { overlay->buildings = buildings; }
+        if (*caption) { overlay->caption = caption; }
+        if (tooltips.size()) { overlay->tooltips = tooltips; }
+        if (walkers.size()) { overlay->walkers = walkers; }
+        if (column_type) { overlay->column_type = column_type; }
     });
 }
 

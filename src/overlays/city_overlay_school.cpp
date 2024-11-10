@@ -8,7 +8,6 @@
 
 city_overlay_schools::city_overlay_schools() {
     type = OVERLAY_SCRIBAL_SCHOOL;
-    column_type = COLUMN_TYPE_WATER_ACCESS;
 }
 
 city_overlay_schools g_city_overlay_schools;
@@ -28,11 +27,12 @@ int city_overlay_schools::get_column_height(const building *b) const {
 xstring city_overlay_schools::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.school <= 0)
         return ui::str(66, 19);
-    else if (b->data.house.school >= 80)
+    
+    if (b->data.house.school >= 80)
         return ui::str(66, 20);
-    else if (b->data.house.school >= 20)
+    
+    if (b->data.house.school >= 20)
         return ui::str(66, 21);
-    else {
-        return ui::str(66, 22);
-    }
+    
+    return ui::str(66, 22);
 }

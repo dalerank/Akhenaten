@@ -13,7 +13,6 @@ city_overlay* city_overlay_for_booth() {
 
 city_overlay_booth::city_overlay_booth() {
     type = OVERLAY_BOOTH;
-    column_type = COLUMN_TYPE_POSITIVE;
 }
 
 int city_overlay_booth::get_column_height(const building *b) const {
