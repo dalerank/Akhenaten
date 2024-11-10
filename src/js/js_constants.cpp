@@ -5,7 +5,7 @@
 #include "input/hotkey.h"
 #include "mujs/mujs.h"
 #include "window/file_dialog.h"
-#include "overlays/city_overlay_fwd.h"
+#include "overlays/city_overlay.h"
 #include "building/building.h"
 #include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
@@ -129,42 +129,7 @@ void js_register_city_labor_category(js_State *J) {
 }
 
 void js_register_city_overlays(js_State *J) {
-   _R(OVERLAY_NONE)
-   _R(OVERLAY_WATER)
-   _R(OVERLAY_RELIGION)
-   _R(OVERLAY_FIRE)
-   _R(OVERLAY_DAMAGE)
-   _R(OVERLAY_CRIME)
-   _R(OVERLAY_ENTERTAINMENT)
-   _R(OVERLAY_BOOTH)
-   _R(OVERLAY_BANDSTAND)
-   _R(OVERLAY_PAVILION)
-   _R(OVERLAY_SENET_HOUSE)
-   _R(OVERLAY_EDUCATION)
-   _R(OVERLAY_SCRIBAL_SCHOOL)
-   _R(OVERLAY_LIBRARY)
-   _R(OVERLAY_ACADEMY)
-   _R(OVERLAY_APOTHECARY)
-   _R(OVERLAY_DENTIST)
-   _R(OVERLAY_PHYSICIAN)
-   _R(OVERLAY_MORTUARY)
-   _R(OVERLAY_TAX_INCOME)
-   _R(OVERLAY_FOOD_STOCKS)
-   _R(OVERLAY_DESIRABILITY)
-   _R(OVERLAY_WORKERS_UNUSED)
-   _R(OVERLAY_NATIVE)
-   _R(OVERLAY_PROBLEMS)
-   _R(OVERLAY_RELIGION_OSIRIS)
-   _R(OVERLAY_RELIGION_RA)
-   _R(OVERLAY_RELIGION_PTAH)
-   _R(OVERLAY_RELIGION_SETH)
-   _R(OVERLAY_RELIGION_BAST)
-   _R(OVERLAY_FERTILITY)
-   _R(OVERLAY_BAZAAR_ACCESS)
-   _R(OVERLAY_ROUTING)
-   _R(OVERLAY_HEALTH)
-   _R(OVERLAY_LABOR)
-   _R(OVERLAY_COUTHOUSE)
+    js_register_tokens(J, e_overlay_tokens);
 }
 
 void js_register_terrain(js_State *J) {

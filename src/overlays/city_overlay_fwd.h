@@ -52,4 +52,6 @@ enum e_overlay {
     OVERLAY_LABOR = 39,
     OVERLAY_COUTHOUSE = 40,
     OVERLAY_BREWERY = 41,
+
+    OVERLAY_SIZE
 };

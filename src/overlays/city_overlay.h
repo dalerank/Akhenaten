@@ -6,8 +6,11 @@
 #include "city_overlay_fwd.h"
 #include "core/xstring.h"
 #include "core/svector.h"
+#include "core/tokenum.h"
 
 constexpr int NO_COLUMN = -1;
+
+extern const token_holder<e_overlay, OVERLAY_NONE, OVERLAY_SIZE> e_overlay_tokens;
 
 class figure;
 class building;

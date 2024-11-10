@@ -39,6 +39,8 @@
 #include "game/game.h"
 #include "js/js_game.h"
 
+const token_holder<e_overlay, OVERLAY_NONE, OVERLAY_SIZE> e_overlay_tokens;
+
 const city_overlay* g_city_overlay = 0;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_city_overlays);
