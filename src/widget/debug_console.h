@@ -50,7 +50,7 @@ inline void game_imgui_overlay_draw() {}
 inline void game_debug_show_property(...) {}
 inline void game_imgui_overlay_begin_frame() {}
 inline void game_imgui_overlay_init() {}
-inline void game_imgui_overlay_handle_event(...) {}
+inline bool game_imgui_overlay_handle_event(...) { return false; }
 inline void bind_debug_command(...) {}
 inline void bind_debug_console_var_int(...) {}
 inline void bind_debug_console_var_int8(...) {}
