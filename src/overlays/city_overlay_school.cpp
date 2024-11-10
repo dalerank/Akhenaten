@@ -18,7 +18,11 @@ city_overlay* city_overlay_for_scribal_school() {
 }
 
 int city_overlay_schools::get_column_height(const building *b) const {
-    return b->house_size && b->data.house.school ? b->data.house.school / 10 : NO_COLUMN;
+    if (b->house_size == 0) {
+        return NO_COLUMN;
+    }
+
+    return b->data.house.school / 10;
 }
 
 xstring city_overlay_schools::get_tooltip_for_building(tooltip_context *c, const building *b) const {
