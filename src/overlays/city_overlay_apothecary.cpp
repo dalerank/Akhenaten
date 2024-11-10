@@ -13,10 +13,6 @@ city_overlay* city_overlay_for_apothecary() {
     return &g_city_overlay_apothecary;
 }
 
-city_overlay_apothecary::city_overlay_apothecary() {
-    type = OVERLAY_APOTHECARY;
-}
-
 xstring city_overlay_apothecary::get_tooltip_for_building(tooltip_context* c, const building* b) const {
     if (b->data.house.apothecary <= 0)
         return ui::str(66, 31);

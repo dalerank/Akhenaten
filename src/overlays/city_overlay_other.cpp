@@ -24,10 +24,6 @@ city_overlay* city_overlay_for_food_stocks() {
     return &overlay;
 }
 
-city_overlay_food_stocks::city_overlay_food_stocks() {
-    type = OVERLAY_FOOD_STOCKS;
-}
-
 int city_overlay_food_stocks::get_column_height(const building *b) const {
     if (b->house_size && model_get_house(b->subtype.house_level)->food_types) {
         int pop = b->house_population;

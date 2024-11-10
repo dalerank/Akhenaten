@@ -23,10 +23,6 @@ city_overlay* city_overlay_for_academy() {
     return &g_city_overlay_academy;
 }
 
-city_overlay_education::city_overlay_education() {
-    type = OVERLAY_EDUCATION;
-}
-
 int city_overlay_education::get_column_height(const building *b) const {
     return b->house_size && b->data.house.education ? b->data.house.education * 3 - 1 : NO_COLUMN;
 }
@@ -46,11 +42,6 @@ xstring city_overlay_education::get_tooltip_for_building(tooltip_context *c, con
     }
 }
 
-city_overlay_academy::city_overlay_academy() {
-    type = OVERLAY_ACADEMY;
-    column_type = COLUMN_TYPE_WATER_ACCESS;
-}
-
 xstring city_overlay_academy::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.academy <= 0)
         return ui::str(66, 27);
@@ -64,11 +55,6 @@ xstring city_overlay_academy::get_tooltip_for_building(tooltip_context *c, const
 
 int city_overlay_academy::get_column_height(const building *b) const {
     return b->house_size && b->data.house.academy ? b->data.house.academy / 10 : NO_COLUMN;
-}
-
-city_overlay_libraries::city_overlay_libraries() {
-    type = OVERLAY_LIBRARY;
-    column_type = COLUMN_TYPE_WATER_ACCESS;
 }
 
 int city_overlay_libraries::get_column_height(const building *b) const {

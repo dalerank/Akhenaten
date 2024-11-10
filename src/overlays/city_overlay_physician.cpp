@@ -11,10 +11,6 @@ city_overlay* city_overlay_for_physician() {
     return &g_city_overlay_physician;
 }
 
-city_overlay_physician::city_overlay_physician() {
-    type = OVERLAY_PHYSICIAN;
-}
-
 int city_overlay_physician::get_column_height(const building *b) const {
     return b->house_size && b->subtype.house_level
              ? b->data.house.physician

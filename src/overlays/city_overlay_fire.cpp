@@ -12,10 +12,6 @@ city_overlay* city_overlay_for_fire() {
     return &g_city_overlay_fire;
 }
 
-city_overlay_fire::city_overlay_fire() {
-    type = OVERLAY_FIRE;
-}
-
 int city_overlay_fire::get_column_height(const building *b) const {
     auto model = model_get_building(b->type);
 

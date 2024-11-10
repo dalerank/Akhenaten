@@ -49,10 +49,6 @@ city_overlay *city_overlay_for_problems() {
     return &overlay;
 }
 
-city_overlay_problems::city_overlay_problems() {
-    type = OVERLAY_PROBLEMS;
-}
-
 bool city_overlay_problems::show_figure(const figure *f) const {
     if (f->type == FIGURE_LABOR_SEEKER) {
         return ((figure *)f)->home()->show_on_problem_overlay;
@@ -69,15 +65,6 @@ int city_overlay_problems::get_column_height(const building *b) const {
 
 bool city_overlay_problems::show_building(const building *b) const {
     return b->show_on_problem_overlay;
-}
-
-city_overlay_native::city_overlay_native() {
-    type = OVERLAY_NATIVE;
-    column_type = COLUMN_TYPE_RISK;
-}
-
-bool city_overlay_native::show_figure(const figure *f) const {
-    return f->type == FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_MISSIONARY;
 }
 
 void city_overlay_native::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const {

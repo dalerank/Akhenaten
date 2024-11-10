@@ -14,10 +14,6 @@ city_overlay* city_overlay_for_tax_income() {
     return &g_city_overlay_tax_income;
 }
 
-city_overlay_tax_income::city_overlay_tax_income() {
-    type = OVERLAY_TAX_INCOME;
-}
-
 int city_overlay_tax_income::get_column_height(const building *b) const {
     if (b->house_size) {
         int pct = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());

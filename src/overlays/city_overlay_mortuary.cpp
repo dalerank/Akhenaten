@@ -11,10 +11,6 @@ city_overlay* city_overlay_for_mortuary() {
     return &g_city_overlay_mortuary;
 }
 
-city_overlay_mortuary::city_overlay_mortuary() {
-    type = OVERLAY_MORTUARY;
-}
-
 int city_overlay_mortuary::get_column_height(const building *b) const {
     return b->house_size && b->data.house.mortuary ? b->data.house.mortuary / 10 : NO_COLUMN;
 }

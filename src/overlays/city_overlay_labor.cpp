@@ -13,10 +13,6 @@ city_overlay* city_overlay_for_labor() {
     return &g_city_overlay_labor;
 }
 
-city_overlay_labor::city_overlay_labor() {
-    type = OVERLAY_LABOR;
-}
-
 bool city_overlay_labor::show_figure(const figure *f) const {
     if (f->type == FIGURE_LABOR_SEEKER) {
         return ((figure *)f)->home()->show_on_problem_overlay;

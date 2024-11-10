@@ -12,10 +12,6 @@ city_overlay* city_overlay_for_courthouse() {
     return &g_city_overlay_courthouse;
 }
 
-city_overlay_courthouse::city_overlay_courthouse() {
-    type = OVERLAY_COUTHOUSE;
-}
-
 int city_overlay_courthouse::get_column_height(const building *b) const {
     if (b->house_size) {
         if (b->data.house.magistrate) {

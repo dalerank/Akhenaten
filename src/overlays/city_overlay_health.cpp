@@ -10,10 +10,6 @@ city_overlay* city_overlay_for_health() {
     return &g_city_overlay_health;
 }
 
-city_overlay_health::city_overlay_health() {
-    type = OVERLAY_HEALTH;
-}
-
 int city_overlay_health::get_column_height(const building *b) const {
     if (!b->house_size || !b->house_population) {
         return NO_COLUMN;

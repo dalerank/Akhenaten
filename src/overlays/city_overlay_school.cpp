@@ -6,10 +6,6 @@
 #include "grid/property.h"
 #include "grid/building.h"
 
-city_overlay_schools::city_overlay_schools() {
-    type = OVERLAY_SCRIBAL_SCHOOL;
-}
-
 city_overlay_schools g_city_overlay_schools;
 
 city_overlay* city_overlay_for_scribal_school() {

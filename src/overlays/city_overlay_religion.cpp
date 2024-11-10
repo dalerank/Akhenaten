@@ -47,10 +47,6 @@ city_overlay* city_overlay_for_religion_bast() {
     return &g_city_overlay_religion_bast;
 }
 
-city_overlay_religion::city_overlay_religion() {
-    type = OVERLAY_RELIGION;
-}
-
 int city_overlay_religion::get_column_height(const building *b) const {
     return b->house_size && b->data.house.num_gods
                 ? b->data.house.num_gods * 17 / 10
@@ -90,21 +86,4 @@ xstring city_overlay_religion::get_tooltip_for_building(tooltip_context *c, cons
     } else {
         return ui::str(66, 18); // >5 gods, shouldn't happen...
     }
-}
-
-int city_overlay_religion_god::get_column_height(const building *b) const {
-    if (!b->house_size) {
-        return NO_COLUMN;
-    }
-
-    int value = 0;
-    switch (_god) {
-    case GOD_OSIRIS: value = b->data.house.temple_osiris; break;
-    case GOD_RA: value = b->data.house.temple_ra; break;
-    case GOD_PTAH: value = b->data.house.temple_ptah; break;
-    case GOD_SETH: value = b->data.house.temple_seth; break;
-    case GOD_BAST: value = b->data.house.temple_bast; break;
-    }
-
-    return value / 10;
 }

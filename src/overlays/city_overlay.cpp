@@ -151,7 +151,7 @@ const city_overlay* get_city_overlay() {
 }
 
 bool select_city_overlay() {
-    if (!g_city_overlay || g_city_overlay->type != game.current_overlay) {
+    if (!g_city_overlay || g_city_overlay->get_type() != game.current_overlay) {
         g_city_overlay = get_city_overlay(game.current_overlay);
     }
 
@@ -163,7 +163,7 @@ xstring widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset
         return {};
     }
 
-    int overlay_type = g_city_overlay->type;
+    int overlay_type = g_city_overlay->get_type();
     int building_id = map_building_at(grid_offset);
     if (!building_id) {
         return {};
@@ -370,7 +370,7 @@ bool city_overlay::show_building(const building *b) const {
 
 void city_overlay::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const {
     building* b = building_at(tile);
-    if (get_city_overlay()->type == OVERLAY_PROBLEMS) {
+    if (get_city_overlay()->get_type() == OVERLAY_PROBLEMS) {
         overlay_problems_prepare_building(b);
     }
 

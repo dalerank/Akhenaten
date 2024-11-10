@@ -30,10 +30,6 @@ city_overlay* city_overlay_for_fertility() {
     return &g_city_overlay_fertility;
 }
 
-inline city_overlay_fertility::city_overlay_fertility() {
-    type = OVERLAY_FERTILITY;
-}
-
 inline bool city_overlay_fertility::show_figure(const figure *f) const {
     if (f->type != FIGURE_CART_PUSHER) {
         return false;

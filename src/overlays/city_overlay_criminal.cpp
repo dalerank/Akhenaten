@@ -14,10 +14,6 @@ city_overlay* city_overlay_for_crime() {
     return &g_city_overlay_crime;
 }
 
-city_overlay_crime::city_overlay_crime() {
-    type = OVERLAY_CRIME;
-}
-
 int city_overlay_crime::get_column_height(const building* b) const {
     if (b->house_size && b->house_population > 0) {
         int crime = b->house_criminal_active;

@@ -24,7 +24,6 @@ struct city_overlay {
     svector<int, 10> tooltips;
     svector<e_figure_type, 10> walkers;
     svector<e_building_type, 10> buildings;
-    e_overlay type = OVERLAY_NONE;
     int column_type = -1;
 
     int tooltip_base;
@@ -37,6 +36,7 @@ struct city_overlay {
     virtual bool draw_custom_footprint(vec2i pixel, tile2i point, painter &ctx) const { return false; }
     virtual void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const;
     virtual bool show_building(const building *b) const;
+    virtual e_overlay get_type() const { return OVERLAY_NONE; }
 
     void draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const;
     void draw_overlay_column(vec2i pixel, int height, int column_style, painter &ctx) const;
@@ -46,6 +46,11 @@ struct city_overlay {
     bool is_drawable_farmhouse(tile2i tile, int map_orientation) const;
     void draw_flattened_footprint_anysize(vec2i pos, int size_x, int size_y, int image_offset, color color_mask, painter &ctx) const;
     void draw_flattened_footprint_building(const building *b, vec2i pos, int image_offset, color color_mask, painter &ctx) const;
+};
+
+template<e_overlay TYPE>
+struct city_overlay_t : public city_overlay {
+    virtual e_overlay get_type() const override { return TYPE; }
 };
 
 const city_overlay* get_city_overlay();

@@ -11,10 +11,6 @@ city_overlay* city_overlay_for_booth() {
     return &g_city_overlay_booth;
 }
 
-city_overlay_booth::city_overlay_booth() {
-    type = OVERLAY_BOOTH;
-}
-
 int city_overlay_booth::get_column_height(const building *b) const {
     if (b->house_size) {
         if (b->data.house.juggler || b->data.house.bandstand_juggler) {

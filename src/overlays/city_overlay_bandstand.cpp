@@ -13,10 +13,6 @@ city_overlay* city_overlay_for_bandstand() {
     return &g_city_overlay_bandstand;
 }
 
-city_overlay_bandstand::city_overlay_bandstand() {
-    type = OVERLAY_BANDSTAND;
-}
-
 xstring city_overlay_bandstand::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (b->data.house.bandstand_musician <= 0)
         return ui::str(66, 79);

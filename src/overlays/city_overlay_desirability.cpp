@@ -81,10 +81,6 @@ city_overlay* city_overlay_for_desirability() {
     return &g_city_overlay_desirability;
 }
 
-inline city_overlay_desirability::city_overlay_desirability() {
-    type = OVERLAY_DESIRABILITY;
-}
-
 inline bool city_overlay_desirability::show_figure(const figure *f) const {
     return false;
 }

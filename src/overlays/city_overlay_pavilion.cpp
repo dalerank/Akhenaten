@@ -13,10 +13,6 @@ city_overlay* city_overlay_for_pavilion() {
     return &g_city_overlay_pavilion;
 }
 
-city_overlay_pavilion::city_overlay_pavilion() {
-    type = OVERLAY_PAVILION;
-}
-
 bool city_overlay_pavilion::show_figure(const figure *f) const {
     figure_musician *musician = ((figure *)f)->dcast_musician();
     if (musician) {

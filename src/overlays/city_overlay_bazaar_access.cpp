@@ -19,10 +19,6 @@ city_overlay* city_overlay_for_bazaar_access() {
     return &g_city_overlay_bazaar_access;
 }
 
-city_overlay_bazaar_access::city_overlay_bazaar_access() {
-    type = OVERLAY_BAZAAR_ACCESS;
-}
-
 int city_overlay_bazaar_access::get_column_height(const building *b) const {
     if (b->house_population <= 0) {
         return NO_COLUMN;

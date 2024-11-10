@@ -14,10 +14,6 @@ city_overlay* city_overlay_for_senet_house() {
     return &overlay;
 }
 
-city_overlay_entertainment::city_overlay_entertainment() {
-    type = OVERLAY_ENTERTAINMENT;
-}
-
 int city_overlay_entertainment::get_column_height(const building *b) const {
     return b->house_size && b->data.house.entertainment ? b->data.house.entertainment / 10 : NO_COLUMN;
 }
@@ -46,11 +42,6 @@ xstring city_overlay_entertainment::get_tooltip_for_building(tooltip_context *c,
     } else {
         return ui::str(66, 74);
     }
-}
-
-city_overlay_senet_house::city_overlay_senet_house() {
-    type = OVERLAY_SENET_HOUSE;
-    column_type = COLUMN_TYPE_WATER_ACCESS;
 }
 
 int city_overlay_senet_house::get_column_height(const building *b) const {

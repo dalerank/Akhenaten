@@ -2,9 +2,7 @@
 
 #include "city_overlay.h"
 
-struct city_overlay_courthouse : public city_overlay {
-    city_overlay_courthouse();
-
+struct city_overlay_courthouse : public city_overlay_t<OVERLAY_COUTHOUSE> {
     virtual int get_column_height(const building *b) const override;
     virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) const override;
 };

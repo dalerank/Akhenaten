@@ -26,10 +26,6 @@ city_overlay* city_overlay_for_routing() {
     return &g_city_overlay_routing;
 }
 
-inline city_overlay_routing::city_overlay_routing() {
-    type = OVERLAY_ROUTING;
-}
-
 inline bool city_overlay_routing::show_figure(const figure *f) const {
     return (f->type == FIGURE_IMMIGRANT);
 }

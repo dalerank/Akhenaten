@@ -29,6 +29,13 @@ overlays = [
   },
 
   {
+    id:OVERLAY_NATIVE,
+    walkers:[FIGURE_INDIGENOUS_NATIVE, FIGURE_MISSIONARY],
+    buildings:[],
+    column_type: COLUMN_TYPE_RISK,
+  },
+
+  {
     id:OVERLAY_RELIGION_PTAH,
     walkers:[FIGURE_PRIEST],
     buildings:[BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_SHRINE_PTAH],
@@ -132,6 +139,14 @@ overlays = [
     id:OVERLAY_LIBRARY,
     walkers:[FIGURE_LIBRARIAN],
     buildings:[BUILDING_LIBRARY],
+    column_type: COLUMN_TYPE_WATER_ACCESS,
+  },
+
+  {
+    id:OVERLAY_ACADEMY,
+    walkers:[FIGURE_LIBRARIAN],
+    buildings:[BUILDING_LIBRARY],
+    column_type: COLUMN_TYPE_WATER_ACCESS,
   },
 
   {
@@ -154,6 +169,7 @@ overlays = [
     id:OVERLAY_SENET_HOUSE,
     walkers:[FIGURE_CHARIOR_RACER],
     buildings:[BUILDING_SENET_MASTER, BUILDING_SENET_HOUSE],
+    column_type:COLUMN_TYPE_WATER_ACCESS,
   },
 
   {
