@@ -990,7 +990,7 @@ building_tax_collector = {
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   window_info_height_id : 1,
   info_help_id:76,
-  info_text_id:120,
+  info_text_id:106,
   building_size : 2,
 }
 
