@@ -118,6 +118,18 @@ void building_info_window::window_info_background(object_info &c) {
     building *b = building_get(c);
     b->dcast()->window_info_background(c);
 
+    for (auto &w : ui.elements) {
+        bstring1024 formated_text;
+        formated_text = common_info_window::format(b->dcast(), w->format().c_str());
+        if (!formated_text.empty()) {
+            w->text(formated_text);
+        }
+    }
+
+    if (ui["title"].text().empty()) {
+        ui["title"] = ui::str(28, b->type);
+    }
+
     update_buttons(c);
 }
 
@@ -202,30 +214,24 @@ void building_info_window::init(object_info &c) {
     c.help_id = params.meta.help_id;
     c.group_id = params.meta.text_id;
 
-    for (auto &w: ui.elements) {
-        bstring1024 formated_text;
-        formated_text = common_info_window::format(b->dcast(), w->format().c_str());
-        w->text(formated_text);
+    if (ui.contains("mothball")) {
+        int workers_needed = model_get_building(b->type)->laborers;
+        ui["mothball"].onclick([&c, b, workers_needed] {
+            if (workers_needed) {
+                building_mothball_toggle(b);
+            }
+        });;
     }
 
-    if (ui["title"].text().empty()) {
-        ui["title"] = ui::str(28, b->type);
+    if (ui.contains("show_overlay")) {
+        ui["show_overlay"].onclick([&c] {
+            if (game.current_overlay != c.show_overlay) {
+                game_state_set_overlay((e_overlay)c.show_overlay);
+            } else {
+                game_state_reset_overlay();
+            }
+        });
     }
-
-    int workers_needed = model_get_building(b->type)->laborers;
-    ui["mothball"].onclick([&c, b, workers_needed] {
-        if (workers_needed) {
-            building_mothball_toggle(b);
-        }
-    });
-
-    ui["show_overlay"].onclick([&c] {
-        if (game.current_overlay != c.show_overlay) {
-            game_state_set_overlay((e_overlay)c.show_overlay);
-        } else {
-            game_state_reset_overlay();
-        }
-    });
 }
 
 void building_info_window::update_buttons(object_info &c) {
