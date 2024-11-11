@@ -228,7 +228,6 @@ static void open_submenu(int index, int keep_open) {
     data.selected_menu = index;
     data.selected_submenu = MENU_ID_TO_SUBMENU_ID[index];
     data.num_submenu_items = count_submenu_items(data.selected_submenu);
-    window_invalidate();
 }
 
 static void close_submenu(void) {
@@ -238,7 +237,6 @@ static void close_submenu(void) {
         data.selected_menu = 0;
         data.selected_submenu = 0;
         data.num_submenu_items = 0;
-        window_invalidate();
     }
 }
 

@@ -83,24 +83,7 @@ struct window_type {
     void (*handle_input)(const mouse* m, const hotkeys* h) = nullptr;
     void (*get_tooltip)(tooltip_context* c) = nullptr;
     void (*draw_refresh)() = nullptr;
-} ;
-
-/**
- * Invalidates the window immediately, indicating that the current game state
- * requires a redraw before continuing
- */
-void window_invalidate();
-void window_request_refresh_background();
-
-/**
- * Request a (soft) refresh of the window; does not invalidate the game state
- */
-void window_request_refresh();
-
-/**
- * Returns whether the window has been invalidated using `window_invalidate`
- */
-int window_is_invalid(void);
+};
 
 void window_draw(int force);
 void window_update_input_after();

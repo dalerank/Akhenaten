@@ -209,14 +209,12 @@ static void menu_debug_opt_text(int opt, bool v) {
 static void menu_debug_screenshot(int opt) {
     widget_top_menu_clear_state();
     window_go_back();
-    window_invalidate();
     graphics_save_screenshot(SCREENSHOT_DISPLAY);
 }
 
 static void menu_debug_full_screenshot(int opt) {
     widget_top_menu_clear_state();
     window_go_back();
-    window_invalidate();
     graphics_save_screenshot(SCREENSHOT_FULL_CITY);
 }
 
@@ -231,7 +229,6 @@ static void menu_debug_change_opt(menu_item &item) {
         g_debug_show_opts[opt] = game.debug_properties;
         widget_top_menu_clear_state();
         window_go_back();
-        window_invalidate();
         menu_debug_opt_text(e_debug_show_properties, game.debug_properties );
         break;
 
@@ -259,17 +256,14 @@ static void menu_debug_render_change_opt(menu_item &item) {
 
 static void button_rotate_reset(int param1, int param2) {
     game_orientation_rotate_north();
-    window_invalidate();
 }
 
 static void button_rotate_left(int param1, int param2) {
     game_orientation_rotate_left();
-    window_invalidate();
 }
 
 static void button_rotate_right(int param1, int param2) {
     game_orientation_rotate_right();
-    window_invalidate();
 }
 
 void widget_top_menu_draw_elements() {
@@ -765,7 +759,6 @@ static bool widget_top_menu_handle_input_submenu(const mouse* m, const hotkeys* 
 
     xstring menu_id = top_menu_bar_handle_mouse(m);
     if (!!menu_id && menu_id != data.open_sub_menu) {
-        window_invalidate();
         data.open_sub_menu = menu_id;
     }
 

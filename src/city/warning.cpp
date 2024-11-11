@@ -75,7 +75,6 @@ void city_warning_clear_outdated() {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         if (g_warnings[i].in_use && time_get_millis() - g_warnings[i].time > TIMEOUT_MS) {
             g_warnings[i].in_use = 0;
-            window_request_refresh();
         }
     }
 }

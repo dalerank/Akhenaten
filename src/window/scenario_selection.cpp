@@ -123,7 +123,6 @@ static void init(e_map_selection_dialog_type dialog_type, int sub_dialog_selecto
         }
         break;
     }
-    window_invalidate();
 }
 
 #define HEADER_Y 28
@@ -471,7 +470,6 @@ static void button_select_item(int index, int param2) {
         GamestateIO::load_mission(get_first_mission_in_campaign(data.campaign_sub_dialog) + data.panel->get_selected_entry_idx(), false);
         break;
     }
-    window_invalidate();
 }
 
 static void button_start_scenario(int param1, int param2) {
@@ -483,11 +481,9 @@ static void button_start_scenario(int param1, int param2) {
 static void button_scores_or_goals(int param1, int param2) {
     auto &data = g_window_scenario_selection;
     data.scores_or_goals = param1;
-    window_invalidate();
 }
 
 static void on_scroll(void) {
-    window_invalidate();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
@@ -530,7 +526,6 @@ static void handle_input(const mouse* m, const hotkeys* h) {
             }
 
             if (last_focus != data.focus_button_id) {
-                window_invalidate();
             }
         }
         break;

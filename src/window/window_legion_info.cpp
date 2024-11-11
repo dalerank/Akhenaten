@@ -470,7 +470,6 @@ bool legion_info_window::check(object_info &c) {
     c.worker_percentage = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
 
     b->dcast()->highlight_waypoints();
-    window_invalidate();
 
     switch (b->type) {
     case BUILDING_FORT_GROUND:

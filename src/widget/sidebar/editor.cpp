@@ -180,9 +180,7 @@ static void button_build_tool(int tool, int param2) {
     editor_tool_set_type(tool);
     if (window_is(WINDOW_EDITOR_BUILD_MENU))
         window_editor_map_show();
-    else {
-        window_request_refresh();
-    }
+
 }
 
 static void button_build_menu(int submenu, int param2) {

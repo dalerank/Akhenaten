@@ -27,7 +27,6 @@ void ui::hold_festival_window::close() {
         callback();
     } else {
         window_go_back();
-        window_invalidate();
     }
 }
 
@@ -37,7 +36,6 @@ void window_hold_festival_select_size(e_festival_type size) {
     }
 
     if (g_city.festival.select_size(size)) {
-        window_invalidate();
     }
 }
 
@@ -97,7 +95,6 @@ int ui::hold_festival_window::draw_background() {
         ui[god_id].select(god == g_city.festival.selected_god());
         ui[god_id].onclick([god] {
             g_city.festival.select_god(god);
-            window_invalidate();
         });
     }
 
@@ -115,7 +112,6 @@ int ui::hold_festival_window::ui_handle_mouse(const mouse *m) {
             callback();
         } else {
             window_go_back();
-            window_invalidate();
         }
     }
 

@@ -117,7 +117,6 @@ int ui::advisor_housing_window::handle_mouse(const mouse* m) {
 
 static void go_back(int param1, int param2) {
     window_advisors_show_advisor(ADVISOR_POPULATION);
-    window_invalidate();
 }
 
 int ui::advisor_housing_window::get_tooltip_text(void) {

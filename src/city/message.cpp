@@ -261,7 +261,6 @@ city_message &city_message_post_common(bool use_popup, int message_id, int param
     int lang_msg_type = lang_get_message(text_id)->message_type;
     if (lang_msg_type == MESSAGE_TYPE_DISASTER || lang_msg_type == MESSAGE_TYPE_INVASION) {
         data.problem_count = 1;
-        window_invalidate();
     }
 
     if (use_popup && window_is(WINDOW_CITY)) {

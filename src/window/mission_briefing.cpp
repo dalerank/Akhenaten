@@ -89,13 +89,11 @@ int ui::mission_briefing_window::draw_background() {
     ui["dec_difficulty"].enabled = !ui.is_review;
     ui["dec_difficulty"].onclick([] {
         g_settings.decrease_difficulty();
-        window_invalidate();
     });
 
     ui["inc_difficulty"].enabled = !ui.is_review;
     ui["inc_difficulty"].onclick([] {
         g_settings.increase_difficulty();
-        window_invalidate();
     });
 
     return 0;

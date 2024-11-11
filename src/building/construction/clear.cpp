@@ -179,7 +179,6 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
         if (config_get(CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS))
             building_update_state();
 
-        window_invalidate();
     }
     return items_placed;
 }

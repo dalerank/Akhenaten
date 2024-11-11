@@ -751,7 +751,6 @@ static bool handle_input_normal(const mouse* m_dialog, const lang_message* msg) 
         }
         data.text_id = text_id;
         rich_text_reset(0);
-        window_invalidate();
         return true;
     }
     return false;
@@ -791,14 +790,12 @@ static void button_back(int /* param1 */, int /* param2 */) {
         data.num_history--;
         data.text_id = data.history[data.num_history].text_id;
         rich_text_reset(data.history[data.num_history].scroll_position);
-        window_invalidate();
     }
 }
 
 static void button_close(int param1, int param2) {
     cleanup();
     window_go_back();
-    window_invalidate();
 }
 
 static void button_help(int param1, int param2) {

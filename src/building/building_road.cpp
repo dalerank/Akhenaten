@@ -36,7 +36,6 @@ int building_road::place(bool measure_only, tile2i start, tile2i end) {
         && place_routed_building(start, end, ROUTED_BUILDING_ROAD, &items_placed)) {
         if (!measure_only) {
             map_routing_update_land();
-            window_invalidate();
         }
     }
     return items_placed;

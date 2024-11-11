@@ -13,9 +13,6 @@ struct window_data_t {
     window_type window_queue[MAX_QUEUE];
     int queue_index;
     window_type* current_window;
-    bool refresh_immediate;
-    bool refresh_on_draw;
-    bool refresh_background;
     int underlying_windows_redrawing;
 };
 
@@ -45,27 +42,6 @@ static void decrease_queue_index(void) {
         data.queue_index = MAX_QUEUE - 1;
 }
 
-void window_invalidate() {
-    auto& data = g_window;
-    data.refresh_immediate = true;
-    data.refresh_on_draw = true;
-}
-
-void window_request_refresh_background() {
-    auto& data = g_window;
-    data.refresh_background = true;
-}
-
-int window_is_invalid(void) {
-    auto& data = g_window;
-    return data.refresh_immediate;
-}
-
-void window_request_refresh() {
-    auto& data = g_window;
-    data.refresh_on_draw = true;
-}
-
 int window_is(e_window_id id) {
     auto& data = g_window;
     return data.current_window->id == id;
@@ -93,8 +69,6 @@ void window_show(const window_type* window) {
     if (!data.current_window->handle_input) {
         data.current_window->handle_input = noop_input;
     }
-
-    window_invalidate();
 }
 
 void window_go_back() {
@@ -102,7 +76,6 @@ void window_go_back() {
     reset_input();
     decrease_queue_index();
     data.current_window = &data.window_queue[data.queue_index];
-    window_invalidate();
 }
 
 static void update_input_before() {
@@ -127,25 +100,16 @@ void window_draw(int force) {
     ui::begin_frame();
     update_input_before();
     window_type* w = data.current_window;
-    if (force || data.refresh_on_draw) {
+
+    {
         OZZY_PROFILER_SECTION("Render/Frame/Refresh");
         graphics_clear_screen();
         tooltip_invalidate();
-        {
-            OZZY_PROFILER_SECTION("Render/Frame/Window/Background");
-            w->draw_background();
-        }
-        data.refresh_on_draw = false;
-        data.refresh_immediate = false;
-        data.refresh_background = false;
     }
-
-    if (data.refresh_background) {
-        if (w->draw_refresh) {
-            w->draw_refresh();
-        }
-
-        data.refresh_background = false;
+        
+    {
+        OZZY_PROFILER_SECTION("Render/Frame/Window/Background");
+        w->draw_background();
     }
 
     {

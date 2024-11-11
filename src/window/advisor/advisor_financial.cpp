@@ -17,7 +17,6 @@ void button_change_taxes(int is_down) {
     city_finance_change_tax_percentage(is_down ? -1 : 1);
     city_finance_estimate_taxes();
     city_finance_calculate_totals();
-    window_invalidate();
 }
 
 void ui::advisor_financial_window::draw_row(pcstr text, int &y, int value_last_year, int value_this_year) {

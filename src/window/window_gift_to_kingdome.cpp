@@ -85,8 +85,7 @@ static void window_gift_to_kingdome_handle_input(const mouse* m, const hotkeys* 
 }
 
 static void button_set_gift(int gift_id, int param2) {
-    if (g_city.kingdome.set_gift_size(gift_id - 1))
-        window_invalidate();
+    g_city.kingdome.set_gift_size(gift_id - 1);
 }
 
 static void button_send_gift(int param1, int param2) {

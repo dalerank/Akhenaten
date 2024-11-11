@@ -95,7 +95,6 @@ int building_construction_place_wall(bool measure_only, tile2i start, tile2i end
         if (!measure_only) {
             map_routing_update_land();
             map_routing_update_walls();
-            window_invalidate();
         }
     }
     return items_placed;
@@ -109,7 +108,6 @@ int building_construction_place_canal(bool measure_only, tile2i start, tile2i en
         if (!measure_only) {
             map_tiles_update_all_canals(0);
             map_routing_update_land();
-            window_invalidate();
         }
     }
     return items_placed;

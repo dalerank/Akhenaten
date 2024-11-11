@@ -39,12 +39,10 @@ void taxcollector_info_window_t::window_info_background(object_info &c) {
     ui["tax_level"].text_var("%s %d%%", ui::str(60, 1), city_finance_tax_percentage());
     ui["dec_tax"].onclick([] {
         city_finance_change_tax_percentage(-1);
-        window_invalidate();
     });
 
     ui["inc_tax"].onclick([] {
         city_finance_change_tax_percentage(1);
-        window_invalidate();
     });
 
     std::pair<int, int> reason = {106, 9};

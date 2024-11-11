@@ -15,7 +15,6 @@ static void arrow_button_wages(int is_down) {
     g_city.labor.change_wages(is_down ? -1 : 1);
     city_finance_estimate_wages();
     city_finance_calculate_totals();
-    window_invalidate();
 }
 
 int ui::advisor_labors_window::draw_background() {

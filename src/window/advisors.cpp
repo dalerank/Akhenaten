@@ -183,7 +183,6 @@ void window_advisors_t::draw_background() {
     for (auto &btn : btns) {
         ui[btn.id].onclick([advisor = btn.adv] {
             g_window_advisors.set_advisor(advisor);
-            window_invalidate();
         });
         ui[btn.id].tooltip({ 1, uint8_t(70 + btn.adv) });
     }

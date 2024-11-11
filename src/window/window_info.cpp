@@ -295,7 +295,6 @@ int window_building_info_get_type() {
 void window_building_info_show_storage_orders() {
     auto &context = g_object_info;
     context.storage_show_special_orders = 1;
-    window_invalidate();
 }
 
 template<typename T>
@@ -333,14 +332,12 @@ void common_info_window::update_buttons(object_info &c) {
         } else {
             window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
         }
-        window_invalidate();
     });
 
     ui["button_close"].onclick([&c] {
         if (c.storage_show_special_orders) {
             c.storage_show_special_orders = 0;
             storage_settings_backup_reset();
-            window_invalidate();
         } else {
             window_city_show();
         }

@@ -353,7 +353,6 @@ static void button_reset_defaults(int param1, int param2) {
                 CONFIG_STRING_VALUE_MAX - 1);
     }
     set_language(0);
-    window_invalidate();
 }
 static void button_close(int save, int param2) {
     if (!save) {
@@ -384,8 +383,6 @@ static void button_page(int param1, int param2) {
     for (int i = 0; i < data.page; i++) {
         data.starting_option += options_per_page[i];
     }
-
-    window_invalidate();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
@@ -414,8 +411,6 @@ static void toggle_god_disabled(int key, int param2) {
     bool known = !data.config_values[key].new_value;
     building_menu_update_gods_available(god, known);
     g_city.religion.set_god_known(god, known ? GOD_STATUS_KNOWN : GOD_STATUS_UNKNOWN);
-
-    window_invalidate();
 }
 
 static void toggle_city_option(int key, int param2) {
@@ -423,8 +418,6 @@ static void toggle_city_option(int key, int param2) {
     case CONFIG_GP_CH_CITY_HAS_ANIMALS: g_scenario_data.env.has_animals = !g_scenario_data.env.has_animals; break;
     case CONFIG_GP_CH_FLOTSAM_ENABLED: g_scenario_data.env.flotsam_enabled = !g_scenario_data.env.flotsam_enabled; break;
     }
-    
-    window_invalidate();
 }
 
 static void toggle_building(int id, int param2) {
@@ -464,7 +457,6 @@ static void toggle_building(int id, int param2) {
     bool can_build = building_menu_is_building_enabled(type);
     building_menu_toggle_building(type, !can_build);
     building_menu_invalidate();
-    window_invalidate();
 }
 
 static void toggle_resource(int id, int param2) {
@@ -497,7 +489,6 @@ static void toggle_resource(int id, int param2) {
             g_city.fishing_points.clear();
         }
     }
-    window_invalidate();
 }
 
 static void toggle_switch(int key, int param2) {
@@ -509,8 +500,6 @@ static void toggle_switch(int key, int param2) {
         g_settings.city_names_style = data.config_values[key].new_value;
         break;
     }
-
-    window_invalidate();
 }
 
 static void init(void (*close_callback)()) {

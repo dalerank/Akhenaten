@@ -103,6 +103,5 @@ void info_window_storageyard::draw_background(object_info *c) {
 
     ui["orders"].onclick([c] {
         c->storage_show_special_orders = 1;
-        window_invalidate();
     });
 }

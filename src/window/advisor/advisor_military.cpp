@@ -151,7 +151,6 @@ static void button_return_to_fort(int legion_id, int param2) {
     formation* m = formation_get(formation_for_legion(legion_id + g_advisor_mil_scrollbar.scroll_position));
     if (!m->in_distant_battle) {
         formation_legion_return_home(m);
-        window_invalidate();
     }
 }
 
@@ -159,11 +158,10 @@ static void button_empire_service(int legion_id, int param2) {
     int formation_id = formation_for_legion(legion_id + g_advisor_mil_scrollbar.scroll_position);
     formation_toggle_empire_service(formation_id);
     formation_calculate_figures();
-    window_invalidate();
 }
 
 static void on_scroll(void) {
-    window_invalidate();
+
 }
 
 advisor_window* ui::advisor_military_window::instance() {

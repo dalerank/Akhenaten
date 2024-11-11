@@ -147,7 +147,6 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
 static void button_earthquake_severity(int param1, int param2) {
     scenario_editor_earthquake_cycle_severity();
-    window_request_refresh();
 }
 
 static void button_earthquake_year(int param1, int param2) {
@@ -157,7 +156,6 @@ static void button_earthquake_year(int param1, int param2) {
 
 static void button_gladiator_toggle(int param1, int param2) {
     scenario_editor_gladiator_revolt_toggle_enabled();
-    window_request_refresh();
 }
 
 static void button_gladiator_year(int param1, int param2) {
@@ -170,7 +168,6 @@ static void button_gladiator_year(int param1, int param2) {
 
 static void button_emperor_toggle(int param1, int param2) {
     scenario_editor_emperor_change_toggle_enabled();
-    window_request_refresh();
 }
 
 static void button_emperor_year(int param1, int param2) {
@@ -180,37 +177,30 @@ static void button_emperor_year(int param1, int param2) {
 
 static void button_sea_trade_toggle(int param1, int param2) {
     scenario_editor_sea_trade_problem_toggle_enabled();
-    window_request_refresh();
 }
 
 static void button_land_trade_toggle(int param1, int param2) {
     scenario_editor_land_trade_problem_toggle_enabled();
-    window_request_refresh();
 }
 
 static void button_raise_wages_toggle(int param1, int param2) {
     scenario_editor_raise_wages_toggle_enabled();
-    window_request_refresh();
 }
 
 static void button_lower_wages_toggle(int param1, int param2) {
     scenario_editor_lower_wages_toggle_enabled();
-    window_request_refresh();
 }
 
 static void button_contamination_toggle(int param1, int param2) {
     scenario_editor_contaminated_water_toggle_enabled();
-    window_request_refresh();
 }
 
 static void button_iron_mine_toggle(int param1, int param2) {
     scenario_editor_iron_mine_collapse_toggle_enabled();
-    window_request_refresh();
 }
 
 static void button_clay_pit_toggle(int param1, int param2) {
     scenario_editor_clay_pit_flooded_toggle_enabled();
-    window_request_refresh();
 }
 
 void window_editor_special_events_show(void) {

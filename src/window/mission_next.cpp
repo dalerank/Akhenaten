@@ -112,7 +112,6 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
         if (m_dialog->right.went_up || h->escape_pressed) {
             g_mission_next.choice = 0;
-            window_invalidate();
         }
     } else if (h->escape_pressed)
         hotkey_handle_escape();

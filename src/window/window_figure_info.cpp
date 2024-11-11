@@ -137,7 +137,6 @@ void figure_info_window::window_info_background(object_info &c) {
             auto &data = g_figures_data;
             data.context_for_callback = &c;
             data.context_for_callback->nfigure.selected_index = index;
-            window_invalidate();
         });
 
         auto screen_opt = ui[btn_id].dcast_image_button();
@@ -154,7 +153,6 @@ void figure_info_window::window_info_background(object_info &c) {
     ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
     ui["show_path"].onclick([f] {
         f->draw_debug_mode = f->draw_debug_mode ? 0 : FIGURE_DRAW_DEBUG_ROUTING;
-        window_invalidate();
     });
 
     e_overlay foverlay = f->dcast()->get_overlay();
@@ -166,7 +164,6 @@ void figure_info_window::window_info_background(object_info &c) {
         } else {
             game_state_reset_overlay();
         }
-        window_invalidate();
     });
 }
 

@@ -121,7 +121,6 @@ static void show_overlay(e_overlay overlay) {
     }
 
     select_city_overlay();
-    window_invalidate();
 }
 
 static void cycle_legion(void) {
@@ -145,7 +144,6 @@ static void cycle_legion(void) {
         if (current_legion_id > 0) {
             const formation* m = formation_get(current_legion_id);
             camera_go_to_mappoint(m->home);
-            window_invalidate();
         }
     }
 }
@@ -178,7 +176,6 @@ void window_city_handle_hotkeys(const hotkeys* h) {
         exit_military_command();
         game_state_toggle_overlay();
         select_city_overlay();
-        window_invalidate();
     }
 
     if (h->show_advisor) {
@@ -190,15 +187,13 @@ void window_city_handle_hotkeys(const hotkeys* h) {
 
     if (h->rotate_map_left) {
         game_orientation_rotate_left();
-        window_invalidate();
     }
     if (h->rotate_map_right) {
         game_orientation_rotate_right();
-        window_invalidate();
     }
     if (h->go_to_bookmark) {
-        if (map_bookmark_go_to(h->go_to_bookmark - 1))
-            window_invalidate();
+        map_bookmark_go_to(h->go_to_bookmark - 1);
+
     }
     if (h->set_bookmark)
         map_bookmark_save(h->set_bookmark - 1);

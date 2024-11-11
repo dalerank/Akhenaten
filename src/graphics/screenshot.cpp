@@ -364,7 +364,6 @@ static void create_full_city_screenshot() {
     }
     
     image_free();
-    window_invalidate();
 }
 
 static void create_minimap_screenshot() {
@@ -404,7 +403,6 @@ static void create_minimap_screenshot() {
         show_saved_notice(filename);
     }
     image_free();
-    window_invalidate();
 }
 
 void graphics_save_screenshot(screenshot_type type) {

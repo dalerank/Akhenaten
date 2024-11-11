@@ -124,7 +124,6 @@ void js_vm_sync() {
 
     vm.files2load_num = 0;
     vm.have_error = 0;
-    window_request_refresh();
 }
 
 void js_vm_reload_file(const char *path) {

@@ -60,7 +60,6 @@ void ui::advisor_ratings_window::draw_rating(int id, int value, int open_play, i
     ui[btnid] = ui::str(53, 1 + id);
     ui[btnid].onclick([id] {
         g_city.ratings.selected = id + 1;
-        window_invalidate();
     });
 
     bstring64 valueid("value_", idstr);

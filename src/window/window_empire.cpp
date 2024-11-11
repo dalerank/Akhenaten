@@ -419,7 +419,6 @@ void empire_window::determine_selected_object(const mouse *m) {
     }
 
     g_empire_map.select_object(vec2i{ m->x, m->y } - min_pos - vec2i{ 16, 16 });
-    window_invalidate();
 }
 
 bool empire_window::is_outside_map(int x, int y) {
@@ -462,7 +461,6 @@ int empire_window::ui_handle_mouse(const mouse *m) {
 
         if (input_go_back_requested(m, h)) {
             g_empire_map.clear_selected_object();
-            window_invalidate();
             return 0;
         }
     } else if (input_go_back_requested(m, h)) {

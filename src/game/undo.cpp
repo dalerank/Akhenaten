@@ -160,7 +160,6 @@ void game_undo_finish_build(int cost) {
     data.ready = 1;
     data.timeout_ticks = 500;
     data.building_cost = cost;
-    window_invalidate();
 }
 
 static void add_building_to_terrain(building* b) {
@@ -286,7 +285,6 @@ void game_undo_reduce_time_available(void) {
     if (data.timeout_ticks <= 0 || scenario_earthquake_is_in_progress()) {
         data.available = 0;
         clear_buildings();
-        window_invalidate();
         return;
     }
     data.timeout_ticks--;
@@ -306,7 +304,6 @@ void game_undo_reduce_time_available(void) {
     }
     if (data.num_buildings <= 0) {
         data.available = 0;
-        window_invalidate();
         return;
     }
     if (data.type == BUILDING_HOUSE_VACANT_LOT) {
@@ -314,7 +311,6 @@ void game_undo_reduce_time_available(void) {
             if (data.buildings[i].id && building_get(data.buildings[i].id)->house_population) {
                 // no undo on a new house where people moved in
                 data.available = 0;
-                window_invalidate();
                 return;
             }
         }
@@ -325,12 +321,10 @@ void game_undo_reduce_time_available(void) {
             if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_RUBBLE
                 || b->state == BUILDING_STATE_DELETED_BY_GAME) {
                 data.available = 0;
-                window_invalidate();
                 return;
             }
             if (b->type != data.buildings[i].type || b->tile.grid_offset() != data.buildings[i].tile.grid_offset()) {
                 data.available = 0;
-                window_invalidate();
                 return;
             }
         }

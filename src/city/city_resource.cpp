@@ -465,6 +465,5 @@ void city_resource_add_items(e_resource res, int amount) {
 }
 
 void city_resource_was_added_warning(e_resource res) {
-    window_invalidate();
     city_warning_show_console(bstring128("Added ", resource_name(res)).c_str());
 }

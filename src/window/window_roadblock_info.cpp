@@ -54,8 +54,6 @@ void toggle_figure_state(int index, int param2) {
     if (roadblock) {
         roadblock->set_permission((e_permission)index);
     }
-
-    window_invalidate();
 }
 
 static void roadblock_orders(int param1, int param2) {

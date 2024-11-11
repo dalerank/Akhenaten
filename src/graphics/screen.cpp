@@ -26,7 +26,6 @@ void screen_set_resolution(int width, int height) {
 
     city_view_set_viewport(width, height);
     city_warning_clear_all();
-    window_invalidate();
 }
 
 int screen_width(void) {

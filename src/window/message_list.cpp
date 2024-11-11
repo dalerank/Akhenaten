@@ -219,16 +219,12 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         data.focus_button_id = button_id;
     }
 
-    if (button_id && old_button_id != button_id)
-        window_invalidate();
-
     if (!handled && input_go_back_requested(m, h))
         button_close(0, 0);
 }
 
 static void on_scroll(void) {
     city_message_set_scroll_position(g_messages_scrollbar.scroll_position);
-    window_invalidate();
 }
 
 static void button_help(int param1, int param2) {
@@ -252,7 +248,6 @@ static void button_delete(int id_to_delete, int param2) {
     if (id < city_message_count()) {
         city_message_delete(id);
         scrollbar_update_max(&g_messages_scrollbar, city_message_count() - MAX_MESSAGES);
-        window_invalidate();
     }
 }
 

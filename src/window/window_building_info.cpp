@@ -165,7 +165,6 @@ void building_info_window::init(object_info &c) {
     c.worker_percentage = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
 
     b->dcast()->highlight_waypoints();
-    window_invalidate();
 
     switch (b->type) {
     case BUILDING_FORT_GROUND:
@@ -217,7 +216,6 @@ void building_info_window::init(object_info &c) {
     ui["mothball"].onclick([&c, b, workers_needed] {
         if (workers_needed) {
             building_mothball_toggle(b);
-            window_invalidate();
         }
     });
 
@@ -227,7 +225,6 @@ void building_info_window::init(object_info &c) {
         } else {
             game_state_reset_overlay();
         }
-        window_invalidate();
     });
 }
 

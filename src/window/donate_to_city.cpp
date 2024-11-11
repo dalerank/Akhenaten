@@ -125,7 +125,6 @@ static void button_set_amount(int amount_id, int param2) {
         return;
     }
     g_city.kingdome.set_donation_amount(amount);
-    window_invalidate();
 }
 
 static void button_donate(int param1, int param2) {
@@ -139,7 +138,6 @@ static void button_cancel(int param1, int param2) {
 
 static void arrow_button_amount(int is_down, int param2) {
     g_city.kingdome.change_donation_amount(is_down ? -10 : 10);
-    window_invalidate();
 }
 
 //static void get_tooltip(tooltip_context* c) {

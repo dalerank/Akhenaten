@@ -347,8 +347,6 @@ void button_graph(int next) {
     case 5: new_order = next ? 0 : 3; break;
     }
     city_population_set_graph_order(new_order);
-
-    window_invalidate();
 }
 
 int ui::advisor_population_window::draw_background() {

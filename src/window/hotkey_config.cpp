@@ -311,11 +311,10 @@ static void button_reset_defaults(int param1, int param2) {
             data.mappings[action][index] = *hotkey_default_for_action(action, index);
         }
     }
-    window_invalidate();
 }
 
 static void on_scroll(void) {
-    window_invalidate();
+
 }
 
 static void button_close(int save, int param2) {

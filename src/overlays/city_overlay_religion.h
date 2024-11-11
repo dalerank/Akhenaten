@@ -15,7 +15,6 @@ struct city_overlay_religion_god : public city_overlay_t<TYPE> {
 
     inline city_overlay_religion_god(e_god god) {
         _god = god;
-        column_type = COLUMN_TYPE_WATER_ACCESS;
     }
 
     virtual int get_column_height(const building *b) const override {

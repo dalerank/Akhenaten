@@ -107,7 +107,6 @@ int game_cheat_tooltip_enabled(void) {
 void game_cheat_money(void) {
     if (g_cheats_data.is_cheating) {
         city_finance_process_cheat();
-        window_invalidate();
     }
 }
 
@@ -134,7 +133,6 @@ static void game_cheat_add_clay(pcstr args) {
     int clay = 0;
     parse_integer(args ? args : (pcstr )"100", clay);
     city_resource_add_items(RESOURCE_CLAY, clay);
-    window_invalidate();
 
     city_warning_show_console("Added clay");
 }
@@ -202,8 +200,6 @@ static void game_cheat_add_money(std::istream &is, std::ostream &os) {
     int money = 0;
     parse_integer(args.empty() ? (pcstr )"100" : args.c_str(), money);
     city_finance_process_console(money);
-    window_invalidate();
-
     city_warning_show_console("Added money");
 }
 

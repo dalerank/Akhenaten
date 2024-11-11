@@ -96,8 +96,6 @@ void ui::sidebar_window_expanded::init() {
         if (grid_offset) {
             camera_go_to_mappoint(tile2i(grid_offset));
             window_city_show();
-        } else {
-            window_invalidate();
         }
     });
 
@@ -110,7 +108,6 @@ void ui::sidebar_window_expanded::init() {
 
     ui["undo_btn"].onclick([] {
         game_undo_perform();
-        window_invalidate();
     });
 
     ui["show_messages"].onclick([] { window_message_list_show(); });

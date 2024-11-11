@@ -216,7 +216,6 @@ static void button_menu_item(int item) {
         data.selected_submenu = type;
         data.y_offset = Y_MENU_OFFSETS[data.num_items];
         Planner.reset();
-        window_invalidate();
     } else {
         window_city_show();
     }

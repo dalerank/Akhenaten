@@ -304,7 +304,6 @@ static void determine_selected_object(const mouse* m) {
         return;
     }
     g_empire_map.select_object(vec2i{m->x - data.p_min.x - 16, m->y - data.p_min.y - 16});
-    window_invalidate();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
@@ -349,7 +348,6 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 static void button_change_empire(int is_down, int param2) {
     scenario_editor_change_empire(is_down ? -1 : 1);
     empire_load_editor(scenario_empire_id(), map_viewport_width(), map_viewport_height());
-    window_request_refresh();
 }
 
 static void button_ok(int param1, int param2) {

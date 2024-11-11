@@ -60,8 +60,6 @@ int rich_text_init(const uint8_t* text, int x_text, int y_text, int width_blocks
         if (data.num_lines <= data.text_height_lines && adjust_width_on_no_scroll) {
             data.text_width_blocks += 2;
         }
-
-        window_invalidate();
     }
     return data.text_width_blocks;
 }
@@ -450,7 +448,6 @@ int rich_text_handle_mouse(const mouse* m) {
 
 static void on_scroll(void) {
     rich_text_clear_links();
-    window_invalidate();
 }
 
 int rich_text_scroll_position(void) {

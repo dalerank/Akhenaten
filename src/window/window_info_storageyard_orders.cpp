@@ -14,7 +14,6 @@ void info_window_storageyard_orders::draw_background(object_info *c) {
 
     ui["empty_all"].onclick([storage_id] {
         building_storage_toggle_empty_all(storage_id);
-        window_invalidate();
     });
 
     ui["accept_none"].onclick([storage_id] {

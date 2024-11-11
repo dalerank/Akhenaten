@@ -294,7 +294,6 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
         }
 
         map_routing_update_land();
-        window_invalidate();
     }
     return items_placed;
 }

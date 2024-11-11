@@ -227,12 +227,10 @@ static void change_climate(int param1, int param2) {
     scenario_editor_cycle_climate();
     //    image_load_main_paks(scenario_property_climate(), 1, 0);
     widget_minimap_invalidate();
-    window_request_refresh();
 }
 
 static void change_image(int forward, int param2) {
     scenario_editor_cycle_image(forward);
-    window_request_refresh();
 }
 
 void window_editor_attributes_show(void) {

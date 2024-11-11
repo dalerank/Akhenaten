@@ -147,7 +147,6 @@ void scroll_list_panel::clamp_scrollbar_position() {
 }
 
 static void on_scroll(void) {
-    window_invalidate();
 }
 
 int scroll_list_panel::input_handle(const mouse* m) {
