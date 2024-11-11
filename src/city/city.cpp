@@ -5,6 +5,7 @@
 #include "city/trade.h"
 #include "city/buildings.h"
 #include "city/population.h"
+#include "core/object_property.h"
 #include "grid/water.h"
 #include "core/profiler.h"
 #include "core/calc.h"
@@ -913,6 +914,31 @@ void city_save_campaign_player_name() {
 void city_restore_campaign_player_name() {
     auto &data = g_city;
     string_copy(data.kingdome.campaign_player_name, data.kingdome.player_name, MAX_PLAYER_NAME);
+}
+
+struct cproperty {
+    xstring domain;
+    xstring name;
+
+    std::function<bvariant(const xstring &)> handler;
+};
+
+const cproperty cproperties[] = {
+    { tags().city, tags().tax_percentage, [] (const xstring &) { return bvariant(g_city.finance.tax_percentage); }},
+};
+
+bvariant city_get_property(const xstring &domain, const xstring &name) {
+    for (const auto &prop : cproperties) {
+        if (prop.domain != domain) {
+            continue;
+        }
+
+        if (prop.name == name) {
+            return prop.handler(name);
+        }
+    }
+
+    return bvariant();
 }
 
 void city_t::environment_t::river_update_flotsam() {

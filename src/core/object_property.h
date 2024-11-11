@@ -6,6 +6,7 @@ struct id_property_t {
     static const xstring stored;
     static const xstring building;
     static const xstring figure;
+    static const xstring city;
     static const xstring model;
     static const xstring name;
     static const xstring class_name;
@@ -20,6 +21,7 @@ struct id_property_t {
     static const xstring output_resource;
     static const xstring first_material;
     static const xstring first_material_stored;
+    static const xstring tax_percentage;
 };
 
 const id_property_t &tags();
