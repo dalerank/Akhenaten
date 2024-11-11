@@ -1,6 +1,7 @@
 #pragma once
 
 #include "grid/point.h"
+#include "city/city.h"
 #include "core/variant.h"
 #include "graphics/elements/ui.h"
 
@@ -80,13 +81,21 @@ struct common_info_window : public ui::widget {
             args_handled = sscanf(item.key.c_str(), "${%[^.].%[^}]}", domain.data(), prop.data());
             if (args_handled == 2) {
                 bvariant bvar = o->get_property(xstring(domain), xstring(prop));
-                item.value = bvar.to_str();
+                if (bvar.is_empty()) {
+                    bvar = city_get_property(xstring(domain), xstring(prop));
+                }
+
+                if (!bvar.is_empty()) {
+                    item.value = bvar.to_str();
+                }
             }
         }
 
         bstring1024 result = fmt;
         for (const auto &item : items) {
-            result.replace_str(item.key, item.value);
+            if (item.value.len()) {
+                result.replace_str(item.key, item.value);
+            }
         }
 
         return result;

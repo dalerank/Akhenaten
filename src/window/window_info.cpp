@@ -357,6 +357,10 @@ void common_info_window::update_buttons(object_info &c) {
         });
     }
 
+    if (!ui.contains("second_advisor")) {
+        return;
+    }
+
     auto second_advisor = ui["second_advisor"].dcast_image_button();
     if (second_advisor) {
         second_advisor->enabled = c.go_to_advisor.left_a && is_advisor_available(c.go_to_advisor.left_a);
@@ -365,6 +369,10 @@ void common_info_window::update_buttons(object_info &c) {
         second_advisor->onclick([&c] {
             window_advisors_show_advisor(c.go_to_advisor.left_a);
         });
+    }
+
+    if (!ui.contains("third_advisor")) {
+        return;
     }
 
     auto third_advisor = ui["third_advisor"].dcast_image_button();
