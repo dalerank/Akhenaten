@@ -24,12 +24,6 @@
 buildings::model_t<building_tax_collector> btax_collector_m;
 buildings::model_t<building_tax_collector_up> btax_collector_up_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_tax_collector);
-void config_load_building_tax_collector() {
-    btax_collector_m.load();
-    btax_collector_up_m.load();
-}
-
 void building_tax_collector::spawn_figure() {
     if (!has_road_access()) {
         return;

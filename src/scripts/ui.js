@@ -1345,27 +1345,27 @@ legion_info_window = {
 
 }
 
-taxcollector_info_window = {
+window taxcollector_info_window = {
 	ui : {
-		background 	 : { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
-		title 		 	 : { type : "text", pos: [0, 12], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		deben_icon   : { type : "resource_icon", pos: [16, 46] },
-		tax_level 	 : { type : "label", pos:[px(29) / 2 + 50, 46], font : FONT_NORMAL_BLACK_ON_LIGHT },
-		dec_tax 	   : { type : "arrow_button", pos:[px(29) / 2 + 170, 38], size:[17, 17], down:true},
-		inc_tax 		 : { type : "arrow_button", pos:[px(29) / 2 + 193, 38], size:[17, 17], down:false},
-		money_text 	 : { type : "text", pos: [44, 44], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-		warning_text : { type : "text", pos: [28, 72], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-		inner_panel  : { type : "inner_panel", pos : [16, 136], size: [27, 5] },
-		workers_img  : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 146] },
-		workers_text : { type : "text", pos: [70, 154], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		workers_desc : { type : "text", pos: [70, 156 + 20], font: FONT_NORMAL_BLACK_ON_DARK },
-		first_advisor : { type : "image_button", pos:[42, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
-		second_advisor: { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
-		third_advisor : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
-		button_help  : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
-		show_overlay : { type:"generic_button", margin:{right:-64, bottom:-40}, size:[23, 23]},
-		mothball 		 : { type:"generic_button", margin:{right:-90, bottom:-40}, size:[23, 23]},
+		background 	  : outer_panel({size: [29, 17]}),
+		title 		 	  : text({pos: [0, 12], size: [px(29), 20], text:"${text.0}", font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		deben_icon    : resource_icon({pos: [16, 46], resource:RESOURCE_GOLD}),
+		tax_level 	  : label({pos:[px(29) / 2 + 40, 46], text:"${60.1} ${city.tax_percentage}%", font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		dec_tax 	    : arrowdown({pos:[px(29) / 2 + 170, 38]}),
+		inc_tax 		  : arrowup({pos:[px(29) / 2 + 193, 38]}),
+		money_text 	  : text({pos: [44, 44], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		warning_text  : text({pos: [28, 66], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		building_desc : text({pos: [28, 86], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		inner_panel   : inner_panel({pos : [16, 136], size: [27, 5] }),
+		workers_img   : image({pack:PACK_GENERAL, id:134, offset:14, pos:[30, 146] }),
+		workers_text  : text({pos: [55, 150], text:"${building.num_workers} ${8.12} (${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK }),
+		workers_desc  : text({pos: [55, 165], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		first_advisor : image_button({pos:[42, -1], size:[28, 28], pack:PACK_GENERAL, id:106 }),
+		show_overlay  : button({margin:{right:-64, bottom:-40}, size:[23, 23]}),
+		mothball 		  : button({margin:{right:-90, bottom:-40}, size:[23, 23]}),
+
+		button_help   : help_button({}),
+		button_close  : close_button({}),
 	}
 }
 

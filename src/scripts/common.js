@@ -194,7 +194,6 @@ var advisor_military_window = {}
 var advisor_population_window = {}
 var advisor_health_window = {}
 var advisor_education_window = {}
-var taxcollector_info_window = {}
 var advisor_entertainment_window = {}
 var advisor_financial_window = {}
 var display_options_window = {}
