@@ -42,7 +42,7 @@ static void decrease_queue_index(void) {
         data.queue_index = MAX_QUEUE - 1;
 }
 
-int window_is(e_window_id id) {
+bool window_is(e_window_id id) {
     auto& data = g_window;
     return data.current_window->id == id;
 }

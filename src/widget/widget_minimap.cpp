@@ -334,7 +334,7 @@ void minimap_window::clear() {
     graphics_clear_saved_texture(cached_texture, 0xff000000);
 }
 
-void minimap_window::draw() {
+void minimap_window::draw(UiFlags flagsB) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded/Minimap Tiles");
     clear();
     city_view_foreach_minimap_tile(screen_offset.x, screen_offset.y, absolute_tile.x(), absolute_tile.y(), draw_size.x, draw_size.y, [this] (vec2i screen, tile2i point) {
@@ -345,7 +345,7 @@ void minimap_window::draw() {
 void minimap_window::draw_uncached(vec2i pos) {
     screen_offset = pos;
     enemy_color = ENEMY_COLOR_BY_CLIMATE[scenario_property_climate()];
-    draw();
+    draw(UiFlags_None);
 
     cached_texture = graphics_save_to_texture(cached_texture, screen_offset, size);
 }

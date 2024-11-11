@@ -578,7 +578,7 @@ vec2i ui::element::screen_pos() const {
     return offset + pos;
 }
 
-void ui::eouter_panel::draw() {
+void ui::eouter_panel::draw(UiFlags flags) {
     ui::panel(pos, size, UiFlags_PanelOuter);
 }
 
@@ -589,7 +589,7 @@ void ui::eouter_panel::load(archive arch, element *parent, items &elems) {
     assert(!strcmp(type, "outer_panel"));
 }
 
-void ui::einner_panel::draw() {
+void ui::einner_panel::draw(UiFlags flags) {
     ui::panel(pos, size, UiFlags_PanelInner);
 }
 
@@ -600,13 +600,13 @@ void ui::einner_panel::load(archive arch, element *parent, items &elems) {
     assert(!strcmp(type, "inner_panel"));
 }
 
-void ui::widget::draw() {
+void ui::widget::draw(UiFlags flags) {
     vec2i bsize = ui["background"].pxsize();
     recti rect{ 0, 0, bsize.x, bsize.y };
     for (auto &e : elements) {
         e->update_pos(rect);
         if (e->enabled) {
-            e->draw();
+            e->draw(flags);
         }
     }
 }
@@ -660,7 +660,7 @@ void ui::widget::line(bool hline, vec2i npos, int size) {
     }
 }
 
-void ui::eimg::draw() {
+void ui::eimg::draw(UiFlags flags) {
     if (img > 0) {
         //ui::eimage(img, pos);
     } else if (isometric) {
@@ -693,7 +693,7 @@ void ui::eimg::image(int image) {
     img_desc.offset = image;
 }
 
-void ui::ebackground::draw() {
+void ui::ebackground::draw(UiFlags flags) {
     painter ctx = game.painter();
     ImageDraw::img_background(ctx, image_group(img_desc), 1.f, pos);
 }
@@ -715,7 +715,7 @@ void ui::eborder::load(archive arch, element *parent, items &elems) {
     border = arch.r_int("border");
 }
 
-void ui::eborder::draw() {
+void ui::eborder::draw(UiFlags flags) {
     const vec2i offset = g_state.offset();
     switch (border) {
     default: //fallthrought
@@ -725,7 +725,7 @@ void ui::eborder::draw() {
     }
 }
 
-void ui::eresource_icon::draw() {
+void ui::eresource_icon::draw(UiFlags flags) {
     ui::eimage(resource_icons + res, pos);
 }
 
@@ -752,7 +752,7 @@ void ui::eresource_icon::load(archive arch, element *parent, items &elems) {
     prop = arch.r_string("prop");
 }
 
-void ui::elabel::draw() {
+void ui::elabel::draw(UiFlags flags) {
     const vec2i offset = g_state.offset();
     if (_body.x > 0) {
         label_draw(pos.x + offset.x, pos.y + offset.y, _body.x, _body.y);
@@ -844,9 +844,9 @@ void ui::eimage_button::load(archive arch, element *parent, items &elems) {
     }
 }
 
-void ui::eimage_button::draw() {
+void ui::eimage_button::draw(UiFlags gflags) {
     const vec2i doffset = g_state.offset();
-    UiFlags flags = (selected ? UiFlags_Selected : UiFlags_None);
+    UiFlags flags = gflags | (selected ? UiFlags_Selected : UiFlags_None);
     flags |= (readonly ? UiFlags_Readonly : UiFlags_None);
 
     image_button *btn = nullptr;
@@ -906,7 +906,7 @@ void ui::etext::load(archive arch, element* parent, items &elems) {
     assert(!strcmp(type, "text"));
 }
 
-void ui::escrollbar::draw() {
+void ui::escrollbar::draw(UiFlags flags) {
     ui::scrollbar(this->scrollbar, pos, this->scrollbar.scroll_position);
 }
 
@@ -920,7 +920,7 @@ void ui::escrollbar::load(archive arch, element *parent, items &elems) {
     scrollbar.height = size.y;
 }
 
-void ui::etext::draw() {
+void ui::etext::draw(UiFlags flags) {
     const vec2i offset = g_state.offset();
     if (!!(_flags & UiFlags_AlignCentered)) {
         int additionaly = 0;
@@ -1009,7 +1009,7 @@ void ui::emenu_header::load_items(archive arch, pcstr section) {
     });
 }
 
-void ui::emenu_header::draw() {
+void ui::emenu_header::draw(UiFlags flags) {
     lang_text_draw(impl.text, pos, _font);
 }
 
@@ -1030,13 +1030,13 @@ void ui::earrow_button::load(archive arch, element *parent, items &elems) {
     down = arch.r_bool("down");
 }
 
-void ui::earrow_button::draw() {
+void ui::earrow_button::draw(UiFlags flags) {
     ui::arw_button(pos, down, tiny)
         .onclick(_func);
 }
 
-void ui::egeneric_button::draw() {
-    UiFlags flags = _flags 
+void ui::egeneric_button::draw(UiFlags gflags) {
+    UiFlags flags = _flags | gflags
                       | (grayed ? UiFlags_Grayed : UiFlags_None)
                       | (!_border ? UiFlags_NoBorder : UiFlags_None)
                       | (!_hbody ? UiFlags_NoBody : UiFlags_None)

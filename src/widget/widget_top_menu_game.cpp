@@ -283,7 +283,7 @@ void widget_top_menu_draw_elements() {
         header->impl.x_start = offset.x;
         header->font(is_hovered ? hightlight_font : FONT_NORMAL_BLACK_ON_LIGHT);
         header->pos = vec2i{offset.x, data.offset.y};
-        header->draw();
+        header->draw(UiFlags_None);
 
         if (is_hovered) {
             ui::set_tooltip(header->tooltip());

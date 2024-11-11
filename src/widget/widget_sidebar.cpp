@@ -154,7 +154,9 @@ void ui::sidebar_window_expanded::ui_draw_foreground() {
     ui.begin_widget(ui.pos);
     widget_minimap_draw({ x_offset + 12, MINIMAP_Y_OFFSET }, 0);
 
-    ui.draw();
+    const bool is_disabled = !window_is(WINDOW_CITY);
+    const UiFlags wflags = is_disabled ? UiFlags_Grayed : UiFlags_None;
+    ui.draw(wflags);
     const animation_t &anim = window_build_menu_image();
     ui["build_image"].image(image_desc{ anim.pack, anim.iid, anim.offset });
     ui.end_widget();

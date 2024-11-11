@@ -21,7 +21,7 @@ int city_map_t::road_network_index(int network_id) {
             return n;
     }
     return 11;
-}
+} 
 
 void city_map_t::clear_largest_road_networks() {
     for (int i = 0; i < 10; i++) {

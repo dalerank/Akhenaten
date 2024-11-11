@@ -92,7 +92,7 @@ window_type *window_current();
 
 void window_draw_underlying_window(void);
 
-int window_is(e_window_id id);
+bool window_is(e_window_id id);
 
 void window_show(const window_type* window);
 
