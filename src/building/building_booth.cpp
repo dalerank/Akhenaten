@@ -25,14 +25,8 @@
 #include "figure/figure.h"
 #include "js/js_game.h"
 
-struct booth_model : public buildings::model_t<building_booth> {
-    int booth = 0;
-} booth_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_booth);
-void config_load_building_booth() {
-    booth_m.load();
-    booth_m.booth = booth_m.anim["booth"].first_img();
+void building_booth::static_params::load(archive arch) {
+    booth = anim["booth"].first_img();
 }
 
 void building_booth::update_day() {
@@ -99,7 +93,7 @@ bool building_booth::draw_ornaments_and_animations_height(painter &ctx, vec2i po
     }
 
     int grid_offset = tile.grid_offset();
-    if (data.entertainment.juggler_visited && map_image_at(grid_offset) == booth_m.booth) {
+    if (data.entertainment.juggler_visited && map_image_at(grid_offset) == current_params().booth) {
         const animation_t &anim = this->anim(animkeys().juggler);
         building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
     }
@@ -108,12 +102,12 @@ bool building_booth::draw_ornaments_and_animations_height(painter &ctx, vec2i po
 
 bool building_booth::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     int image_id = map_image_at(tile);
-    return (booth_m.booth != image_id);
+    return (current_params().booth != image_id);
 }
 
 bool building_booth::force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     int image_id = map_image_at(tile);
-    if (booth_m.booth == image_id) {
+    if (current_params().booth == image_id) {
         ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, mask);
         ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, mask);
     }
@@ -138,16 +132,17 @@ void building_booth::on_undo() {
 }
 
 void building_booth::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
-    int size = booth_m.building_size;
-    int square_id = booth_m.anim[animkeys().square].first_img();
+    const auto params = current_params();
+    int square_id = params.anim[animkeys().square].first_img();
+    const int size = params.building_size;
     for (int i = 0; i < size * size; i++) {
         ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
     }
 
     switch (orientation / 2) {
-    case 0: draw_building_ghost(ctx, booth_m.booth, pixel, COLOR_MASK_GREEN); break;
-    case 1: draw_building_ghost(ctx, booth_m.booth, pixel + vec2i{30, 15}, COLOR_MASK_GREEN); break;
-    case 2: draw_building_ghost(ctx, booth_m.booth, pixel + vec2i{0, 30}, COLOR_MASK_GREEN); break;
-    case 3: draw_building_ghost(ctx, booth_m.booth, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN); break;
+    case 0: draw_building_ghost(ctx, params.booth, pixel, COLOR_MASK_GREEN); break;
+    case 1: draw_building_ghost(ctx, params.booth, pixel + vec2i{30, 15}, COLOR_MASK_GREEN); break;
+    case 2: draw_building_ghost(ctx, params.booth, pixel + vec2i{0, 30}, COLOR_MASK_GREEN); break;
+    case 3: draw_building_ghost(ctx, params.booth, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN); break;
     }
 }

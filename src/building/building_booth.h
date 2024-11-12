@@ -9,6 +9,12 @@ public:
     building_booth(building &b) : building_entertainment(b) {}
     virtual building_booth *dcast_booth() override { return this; }
 
+    struct static_params : public buildings::model_t<building_booth> {
+        int booth = 0;
+
+        virtual void load(archive arch) override;
+    };
+
     virtual void on_create(int orientation) override {}
     virtual void update_day() override;
     virtual void update_month() override;
@@ -26,4 +32,5 @@ public:
     virtual void on_undo() override;
 
     static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

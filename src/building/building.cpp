@@ -205,7 +205,7 @@ building_impl *buildings::create(e_building_type e, building &data) {
     return new building_impl(data);
 }
 
-static std::map<e_building_type, const building_impl::static_params *> *building_impl_params = nullptr;
+static std::array<const building_impl::static_params *, BUILDING_MAX> *building_impl_params = nullptr;
 metainfo building_impl::get_info() const {
     const auto &metainfo = !params().meta_id.empty()
                                 ? base.get_info(params().meta_id)
@@ -223,14 +223,15 @@ vfs::path building_impl::get_sound() {
 
 void building_impl::params(e_building_type e, const static_params &p) {
     if (!building_impl_params) {
-        building_impl_params = new std::map<e_building_type, const building_impl::static_params *>();
+        building_impl_params = new std::array<const building_impl::static_params *, BUILDING_MAX>();
+        std::fill(building_impl_params->begin(), building_impl_params->end(), nullptr);
     }
-    building_impl_params->insert(std::make_pair(e, &p));
+    (*building_impl_params)[e] = &p;
 }
 
 const building_impl::static_params &building_impl::params(e_building_type e) {
-    auto it = building_impl_params->find(e);
-    return (it == building_impl_params->end()) ? building_impl::static_params::dummy : *it->second;
+    auto p = building_impl_params->at(e);
+    return (p == nullptr) ? building_impl::static_params::dummy : *p;
 }
 
 building_impl *building::dcast() {

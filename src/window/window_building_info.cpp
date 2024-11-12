@@ -238,16 +238,20 @@ void building_info_window::update_buttons(object_info &c) {
     common_info_window::update_buttons(c);
     building *b = building_get(c);
 
-    int workers_needed = model_get_building(b->type)->laborers;
-    ui["mothball"].enabled = workers_needed > 0;
-    if (workers_needed) {
-        ui["mothball"] = (b->state == BUILDING_STATE_VALID ? "x" : "");
-        auto tooltip = (b->state == BUILDING_STATE_VALID) ? textid{54, 16} : textid{54, 17};
-        ui["mothball"].tooltip(tooltip);
+    if (ui.contains("mothball")) {
+        int workers_needed = model_get_building(b->type)->laborers;
+        ui["mothball"].enabled = workers_needed > 0;
+        if (workers_needed) {
+            ui["mothball"] = (b->state == BUILDING_STATE_VALID ? "x" : "");
+            auto tooltip = (b->state == BUILDING_STATE_VALID) ? textid{ 54, 16 } : textid{ 54, 17 };
+            ui["mothball"].tooltip(tooltip);
+        }
     }
 
-    ui["show_overlay"].enabled = (c.show_overlay != OVERLAY_NONE);
-    ui["show_overlay"] = (game.current_overlay != c.show_overlay ? "v" : "V");
+    if (ui.contains("show_overlay")) {
+        ui["show_overlay"].enabled = (c.show_overlay != OVERLAY_NONE);
+        ui["show_overlay"] = (game.current_overlay != c.show_overlay ? "v" : "V");
+    }
 }
 
 building *building_info_window::building_get(object_info &c) {
