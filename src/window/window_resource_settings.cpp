@@ -26,16 +26,40 @@ struct trade_resource_settings_window : autoconfig_window_t<trade_resource_setti
     virtual void draw_foreground() override;
     virtual int get_tooltip_text() override { return 0; }
     virtual int ui_handle_mouse(const mouse *m) override;
-    virtual void init() override {}
+    virtual void init() override;
 };
 
 trade_resource_settings_window trade_resource_settings_w;
 
-int trade_resource_settings_window::draw_background() {
-    window_draw_underlying_window();
-
+void trade_resource_settings_window::init() {
     ui["icon"].image(resource);
     ui["title"] = ui::resource_name(resource);
+
+    ui["import_status"].onclick([this] { city_resource_cycle_trade_import(resource); });
+    ui["import_dec"].onclick([this] { city_resource_change_trading_amount(resource, -100); });
+    ui["import_inc"].onclick([this] { city_resource_change_trading_amount(resource, 100); });
+
+    ui["export_status"].onclick([this] { city_resource_cycle_trade_export(resource); });
+    ui["export_dec"].onclick([this] { city_resource_change_trading_amount(resource, -100); });
+    ui["export_inc"].onclick([this] { city_resource_change_trading_amount(resource, 100); });
+
+    ui["toggle_industry"].onclick([this] {
+        if (building_count_industry_total(resource) > 0) {
+            city_resource_toggle_mothballed(resource);
+        }
+    });
+
+    ui["stockpile_industry"].onclick([this] { city_resource_toggle_stockpiled(resource); });
+
+    ui["button_help"].onclick([] { window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, -1, 0); });
+    ui["button_close"].onclick([] { window_go_back(); });
+
+    const int stored = city_resource_warehouse_stored(resource);
+    ui["production_store"].text_var("%u %s %s", stored, ui::str(8, 10), ui::str(54, 15));
+}
+
+int trade_resource_settings_window::draw_background() {
+    window_draw_underlying_window();
 
     bstring128 production_state;
     if (g_city.can_produce_resource(resource)) {
@@ -59,30 +83,6 @@ int trade_resource_settings_window::draw_background() {
     }
 
     ui["production_state"] = production_state;
-
-    bstring256 stored_in_city_str;
-    const int stored = city_resource_warehouse_stored(resource);
-    stored_in_city_str.printf("%u %s %s", stored, ui::str(8, 10), ui::str(54, 15));
-    ui["production_store"] = stored_in_city_str;
-
-    ui["import_status"].onclick([this] { city_resource_cycle_trade_import(resource); });
-    ui["import_dec"].onclick([this] { city_resource_change_trading_amount(resource, -100); });
-    ui["import_inc"].onclick([this] { city_resource_change_trading_amount(resource, 100); });
-    
-    ui["export_status"].onclick([this] { city_resource_cycle_trade_export(resource); });
-    ui["export_dec"].onclick([this] { city_resource_change_trading_amount(resource, -100); });
-    ui["export_inc"].onclick([this] { city_resource_change_trading_amount(resource, 100); });
-
-    ui["toggle_industry"].onclick([this] {
-        if (building_count_industry_total(resource) > 0) {
-            city_resource_toggle_mothballed(resource);
-        }
-    });
-
-    ui["stockpile_industry"].onclick([this] { city_resource_toggle_stockpiled(resource); });
-
-    ui["help_button"].onclick([] { window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, -1, 0); });
-    ui["close_button"].onclick([] { window_go_back(); });
 
     return 0;
 }
@@ -203,5 +203,6 @@ void window_resource_settings_show(e_resource resource) {
     };
 
     trade_resource_settings_w.resource = resource;
+    trade_resource_settings_w.init();
     window_show(&window);
 }
