@@ -76,11 +76,16 @@ void figure_info_window::prepare_figures(object_info &c) {
 }
 
 void figure_info_window::play_figure_phrase(object_info &c) {
+    if (!c.can_play_sound) {
+        return;
+    }
+
     figure* f = c.figure_get();
     f->figure_phrase_play();
     c.show_overlay = f->dcast()->get_overlay();
     c.nfigure.phrase = f->phrase;
     c.nfigure.phrase_key = f->phrase_key;
+    c.can_play_sound = false;
 }
 
 figure_info_window::figure_info_window() {
@@ -104,25 +109,45 @@ inline void figure_info_window::window_info_foreground(object_info &c) {
 void figure_info_window::window_info_background(object_info &c) {
     common_info_window::window_info_background(c);
 
-    prepare_figures(c);
-
     int figure_id = c.nfigure.ids[c.nfigure.selected_index];
     figure *f = ::figure_get(figure_id);
-
-    c.nfigure.draw_debug_path = 1;
-    //if (!c.figure.count) {
-    //    lang_text_draw_centered(70, c.terrain_type + 10, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    //}
-
-    const auto &meta = figure_impl::params(f->type).meta;
-    c.help_id = meta.help_id;
-    c.group_id = meta.text_id;
 
     for (auto &w : ui.elements) {
         bstring1024 formated_text;
         formated_text = common_info_window::format(f->dcast(), w->format().c_str());
-        w->text(formated_text);
+        if (!formated_text.empty()) {
+            w->text(formated_text);
+        }
     }
+
+    ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
+
+    for (int i = 0; i < c.nfigure.ids.size(); i++) {
+        bstring64 btn_id; btn_id.printf("button_figure%d", i);
+        ui[btn_id].select(i == c.nfigure.selected_index);
+    }
+
+    if (c.can_play_sound) {
+        play_figure_phrase(c);
+    }
+
+    e_overlay foverlay = f->dcast()->get_overlay();
+    ui["show_overlay"].enabled = (foverlay != OVERLAY_NONE);
+    ui["show_overlay"] = (game.current_overlay != foverlay ? "v" : "V");    
+}
+
+int figure_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {
+    return 0;
+}
+
+void figure_info_window::init(object_info &c) {
+    common_info_window::init(c);
+
+    int figure_id = c.nfigure.ids[c.nfigure.selected_index];
+    figure *f = ::figure_get(figure_id);
+
+    prepare_figures(c);
+    c.nfigure.draw_debug_path = 1;
 
     int image_id = f->type;
     if (f->action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE || f->action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
@@ -137,6 +162,7 @@ void figure_info_window::window_info_background(object_info &c) {
             auto &data = g_figures_data;
             data.context_for_callback = &c;
             data.context_for_callback->nfigure.selected_index = index;
+            data.context_for_callback->can_play_sound = true;
         });
 
         auto screen_opt = ui[btn_id].dcast_image_button();
@@ -145,19 +171,15 @@ void figure_info_window::window_info_background(object_info &c) {
         }
     }
 
-    play_figure_phrase(c);
-    ui["phrase"] = c.nfigure.phrase.valid()
-                    ? c.nfigure.phrase.c_str_safe("")
-                    : bstring256().printf("#undefined_phrase ( %s )", c.nfigure.phrase_key.c_str()).c_str();
+    const auto &meta = figure_impl::params(f->type).meta;
+    c.help_id = meta.help_id;
+    c.group_id = meta.text_id;
 
-    ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
-    ui["show_path"].onclick([f] {
-        f->draw_debug_mode = f->draw_debug_mode ? 0 : FIGURE_DRAW_DEBUG_ROUTING;
-    });
+    ui["phrase"] = c.nfigure.phrase.valid()
+        ? c.nfigure.phrase.c_str_safe("")
+        : bstring256().printf("#undefined_phrase ( %s )", c.nfigure.phrase_key.c_str()).c_str();
 
     e_overlay foverlay = f->dcast()->get_overlay();
-    ui["show_overlay"].enabled = (foverlay != OVERLAY_NONE);
-    ui["show_overlay"] = (game.current_overlay != foverlay ? "v" : "V");
     ui["show_overlay"].onclick([foverlay] {
         if (game.current_overlay != foverlay) {
             game_state_set_overlay((e_overlay)foverlay);
@@ -165,10 +187,10 @@ void figure_info_window::window_info_background(object_info &c) {
             game_state_reset_overlay();
         }
     });
-}
 
-int figure_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {
-    return 0;
+    ui["show_path"].onclick([f] {
+        f->draw_debug_mode = f->draw_debug_mode ? 0 : FIGURE_DRAW_DEBUG_ROUTING;
+    });
 }
 
 bool figure_info_window::check(object_info &c) {
