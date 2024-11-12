@@ -52,6 +52,7 @@ static int get_land_type_citizen_building(int grid_offset) {
         return CITIZEN_2_PASSABLE_TERRAIN;
 
     case BUILDING_BANDSTAND:
+    case BUILDING_PAVILLION:
     case BUILDING_BOOTH:
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
             return CITIZEN_0_ROAD;
