@@ -782,7 +782,7 @@ building_dancer_school = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:52, },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:52, },
-    work : { pos : [104, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35 }
+    work : { pos : [104, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35, duration:2 }
   },
   building_size : 4,
   info_help_id:75,

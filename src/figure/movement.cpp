@@ -257,6 +257,7 @@ void figure::advance_route_tile(int roaming_enabled) {
         case BUILDING_FIGS_FARM:
         case BUILDING_GRAIN_FARM:
         case BUILDING_CHICKPEAS_FARM:
+        case BUILDING_BARLEY_FARM:
         case BUILDING_PAVILLION:
             //
             break; // OK to walk
