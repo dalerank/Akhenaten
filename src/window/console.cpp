@@ -30,7 +30,7 @@ static void init(void) {
     input_box_start(&command_input, (uint8_t*)command, command.capacity, 1);
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{128, 160}, 24, 8);
     text_draw_centered((uint8_t*)"Console", 128, 172, 384, FONT_LARGE_BLACK_ON_LIGHT, 0);

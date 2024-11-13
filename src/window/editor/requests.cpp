@@ -36,11 +36,11 @@ static generic_button buttons[] = {
 
 static int focus_button_id;
 
-static void draw_background() {
+static void draw_background(int) {
     window_editor_map_draw_all();
 }
 
-static void draw_foreground() {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{0, 0}, 40, 30);
@@ -89,6 +89,11 @@ static void button_request(int id, int param2) {
 }
 
 void window_editor_requests_show(void) {
-    window_type window = {WINDOW_EDITOR_REQUESTS, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_EDITOR_REQUESTS,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     window_show(&window);
 }

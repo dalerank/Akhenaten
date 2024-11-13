@@ -59,7 +59,7 @@ void trade_resource_settings_window::init() {
 }
 
 int trade_resource_settings_window::draw_background() {
-    window_draw_underlying_window();
+    window_draw_underlying_window(UiFlags_Readonly);
 
     bstring128 production_state;
     if (g_city.can_produce_resource(resource)) {
@@ -197,8 +197,8 @@ int trade_resource_settings_window::ui_handle_mouse(const mouse* m) {
 void window_resource_settings_show(e_resource resource) {
     static window_type window = {
         WINDOW_RESOURCE_SETTINGS,
-        [] { trade_resource_settings_w.draw_background(); },
-        [] { trade_resource_settings_w.draw_foreground(); },
+        [] (int) { trade_resource_settings_w.draw_background(); },
+        [] (int) { trade_resource_settings_w.draw_foreground(); },
         [] (const mouse *m, const hotkeys *h) { trade_resource_settings_w.ui_handle_mouse(m); }
     };
 

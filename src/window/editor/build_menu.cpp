@@ -81,7 +81,7 @@ static void init(int submenu) {
     data.y_offset = Y_MENU_OFFSETS[data.num_items];
 }
 
-static void draw_background(void) {
+static void draw_background(int) {
     window_editor_map_draw_panels();
 }
 
@@ -100,7 +100,7 @@ static void draw_menu_buttons(void) {
     }
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     window_editor_map_draw();
     draw_menu_buttons();
 }

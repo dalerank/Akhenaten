@@ -73,7 +73,7 @@ void ui::display_options_window::init(close_callback close_cb) {
     });
 }
 
-void ui::display_options_window::ui_draw_foreground() {
+void ui::display_options_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     
     ui.draw();
@@ -111,7 +111,7 @@ void ui::display_options_window::show(close_callback close_cb) {
     static window_type instance = {
         WINDOW_FILE_DIALOG,
         window_draw_underlying_window,
-        [] { g_display_options_window.ui_draw_foreground(); },
+        [] (int) { g_display_options_window.ui_draw_foreground(0); },
         [] (const mouse *m, const hotkeys *h) { g_display_options_window.ui_handle_mouse(m); }
     };
 

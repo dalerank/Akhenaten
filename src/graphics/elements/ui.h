@@ -57,6 +57,7 @@ void end_frame();
 void begin_widget(vec2i offset, bool relative = false);
 void end_widget();
 bool handle_mouse(const mouse *m);
+void clear_active_elements();
 
 int label(int group, int number, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0);
 int label(pcstr, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0);

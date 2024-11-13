@@ -39,7 +39,7 @@ static void init(int action, int index, void (*callback)(int, int, int, int)) {
     data.focus_button = 0;
 }
 
-static void draw_background(void) {
+static void draw_background(int) {
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{168, 128}, 19, 9);
 
@@ -53,7 +53,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
 
     inner_panel_draw({ 192, 184 }, { 16, 2 });

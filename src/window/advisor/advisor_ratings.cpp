@@ -69,7 +69,7 @@ void ui::advisor_ratings_window::draw_rating(int id, int value, int open_play, i
     ui[goalid].text_var("%u %s", enabled ? goal : 0, ui::str(53, 5));
 }
 
-void ui::advisor_ratings_window::ui_draw_foreground() {
+void ui::advisor_ratings_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     ui.draw();
 

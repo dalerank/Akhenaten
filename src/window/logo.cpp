@@ -18,14 +18,14 @@ static void init() {
     sound_music_play_intro();
 }
 
-static void draw_logo_background() {
+static void draw_logo_background(int) {
     graphics_clear_screen();
     painter ctx = game.painter();
 
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_LOGO));
 }
 
-static void draw_logo_foreground() {
+static void draw_logo_foreground(int) {
     static int logo_tick_count = 0;
     graphics_set_to_dialog();
     int current_color = 128 + std::cos(logo_tick_count * 0.03f) * 128;

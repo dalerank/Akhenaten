@@ -70,7 +70,7 @@ struct file_dialog : public autoconfig_window_t<file_dialog> {
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int draw_background() override { return 0; }
     virtual void draw_foreground() override {}
-    virtual void ui_draw_foreground() override {}
+    virtual void ui_draw_foreground(UiFlags flags) override {}
     virtual int get_tooltip_text() override { return 0; }
     virtual int ui_handle_mouse(const mouse *m) override { return 0; }
     virtual void init() override {}
@@ -159,7 +159,7 @@ static void init(file_type type, file_dialog_type dialog_type) {
     input_box_start(&file_name_input, data.typed_name, MAX_FILE_NAME, 0);
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     auto& data = g_file_dialog;
     graphics_set_to_dialog();
     uint8_t file[MAX_FILE_NAME] = {0};

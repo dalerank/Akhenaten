@@ -186,7 +186,7 @@ static void init(void (*close_callback)(void)) {
     }
 }
 
-static void draw_background() {
+static void draw_background(int) {
     painter ctx = game.painter();
     auto& data = g_hotkeys_window_data;
     graphics_clear_screen();
@@ -246,7 +246,7 @@ static void draw_background() {
     graphics_reset_dialog();
 }
 
-static void draw_foreground() {
+static void draw_foreground(int) {
     auto& data = g_hotkeys_window_data;
     graphics_set_to_dialog();
 
@@ -337,7 +337,12 @@ static void button_close(int save, int param2) {
 }
 
 void window_hotkey_config_show(void (*close_callback)(void)) {
-    window_type window = {WINDOW_HOTKEY_CONFIG, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_HOTKEY_CONFIG,
+        draw_background, 
+        draw_foreground,
+        handle_input
+    };
     init(close_callback);
     window_show(&window);
 }

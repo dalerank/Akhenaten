@@ -78,8 +78,8 @@ enum e_window_id {
 
 struct window_type {
     e_window_id id;
-    void (*draw_background)() = nullptr;
-    void (*draw_foreground)() = nullptr;
+    void (*draw_background)(int) = nullptr;
+    void (*draw_foreground)(int) = nullptr;
     void (*handle_input)(const mouse* m, const hotkeys* h) = nullptr;
     void (*get_tooltip)(tooltip_context* c) = nullptr;
     void (*draw_refresh)() = nullptr;
@@ -90,7 +90,7 @@ void window_update_input_after();
 
 window_type *window_current();
 
-void window_draw_underlying_window(void);
+void window_draw_underlying_window(int);
 
 bool window_is(e_window_id id);
 

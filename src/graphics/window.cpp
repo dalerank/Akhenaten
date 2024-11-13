@@ -18,7 +18,7 @@ struct window_data_t {
 
 window_data_t g_window;
 
-static void noop(void) {
+static void noop(int) {
 }
 static void noop_input(const mouse* m, const hotkeys* h) {
 }
@@ -109,12 +109,12 @@ void window_draw(int force) {
         
     {
         OZZY_PROFILER_SECTION("Render/Frame/Window/Background");
-        w->draw_background();
+        w->draw_background(UiFlags_None);
     }
 
     {
         OZZY_PROFILER_SECTION("Render/Frame/Foreground");
-        w->draw_foreground();
+        w->draw_foreground(UiFlags_None);
     }
 }
 
@@ -122,19 +122,21 @@ window_type *window_current() {
     return g_window.current_window;
 }
 
-void window_draw_underlying_window() {
+void window_draw_underlying_window(int flags) {
     auto& data = g_window;
     if (data.underlying_windows_redrawing < MAX_QUEUE) {
         ++data.underlying_windows_redrawing;
         decrease_queue_index();
+
         window_type* window_behind = &data.window_queue[data.queue_index];
         if (window_behind->draw_background)
-            window_behind->draw_background();
+            window_behind->draw_background(flags);
 
         if (window_behind->draw_foreground)
-            window_behind->draw_foreground();
+            window_behind->draw_foreground(flags);
 
         increase_queue_index();
+        ui::clear_active_elements();
         --data.underlying_windows_redrawing;
     }
 }

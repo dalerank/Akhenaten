@@ -395,7 +395,7 @@ static void draw_side_panel_info() {
     }
 }
 
-static void draw_background() {
+static void draw_background(int) {
     auto &data = g_window_scenario_selection;
     painter ctx = game.painter();
     switch (data.dialog) {
@@ -417,7 +417,7 @@ static void draw_background() {
     }
     graphics_reset_dialog();
 }
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     painter ctx = game.painter();
     auto &data = g_window_scenario_selection;
     graphics_set_to_dialog();
@@ -546,7 +546,12 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
 void window_scenario_selection_show(e_map_selection_dialog_type dialog_type) {
     // city construction kit
-    window_type window = {WINDOW_CCK_SELECTION, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_CCK_SELECTION,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     init(dialog_type);
     window_show(&window);
 }

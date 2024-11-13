@@ -36,7 +36,7 @@ void ui::mission_briefing_window::init() {
 
 int ui::mission_briefing_window::draw_background() {
     auto &data = g_mission_briefing;
-    window_draw_underlying_window();
+    window_draw_underlying_window(UiFlags_None);
 
     int text_id = 200 + scenario_campaign_scenario_id();
     const lang_message* msg = lang_get_message(text_id);
@@ -102,8 +102,8 @@ int ui::mission_briefing_window::draw_background() {
 static void show(void) {
     static window_type window = {
         WINDOW_MISSION_BRIEFING,
-        [] () { g_mission_briefing.draw_background(); },
-        [] () { g_mission_briefing.ui_draw_foreground(); },
+        [] (int) { g_mission_briefing.draw_background(); },
+        [] (int flags) { g_mission_briefing.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_mission_briefing.ui_handle_mouse(m); }
     };
     

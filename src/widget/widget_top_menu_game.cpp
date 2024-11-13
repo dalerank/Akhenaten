@@ -68,7 +68,7 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int draw_background() override { return 0; }
     virtual void draw_foreground() override;
-    virtual void ui_draw_foreground() override {}
+    virtual void ui_draw_foreground(UiFlags flags) override {}
     virtual int get_tooltip_text() override { return 0; }
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override;
@@ -666,13 +666,13 @@ static void widget_top_menu_init() {
     set_text_for_debug_render();
 }
 
-static void widget_sub_menu_draw_background() {
+static void widget_sub_menu_draw_background(int) {
     window_city_draw_panels();
     window_city_draw();
     widget_sidebar_city_draw_foreground();
 }
 
-static void widget_sub_menu_draw_foreground() {
+static void widget_sub_menu_draw_foreground(int) {
     auto& data = g_top_menu;
     if (!data.open_sub_menu) {
         return;

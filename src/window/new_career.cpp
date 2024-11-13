@@ -39,7 +39,7 @@ static void init() {
     input_box_start(&g_new_career.player_name_input, g_new_career.player_name, MAX_PLAYER_NAME, 1);
 }
 
-static void draw_foreground() {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{128, 160}, 24, 8);
     lang_text_draw_centered(31, 0, 128, 172, 384, FONT_LARGE_BLACK_ON_LIGHT);

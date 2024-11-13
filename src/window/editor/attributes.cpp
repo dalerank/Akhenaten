@@ -88,11 +88,11 @@ static void stop(int paused) {
     scenario_editor_update_subtitle((const char*)data.subtitle);
 }
 
-static void draw_background(void) {
+static void draw_background(int) {
     window_editor_map_draw_all();
 }
 
-static void draw_foreground() {
+static void draw_foreground(int) {
     painter ctx = game.painter();
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{0, 28}, 30, 28);
@@ -234,7 +234,12 @@ static void change_image(int forward, int param2) {
 }
 
 void window_editor_attributes_show(void) {
-    window_type window = {WINDOW_EDITOR_ATTRIBUTES, draw_background, draw_foreground, handle_input};
+    static window_type window = {
+        WINDOW_EDITOR_ATTRIBUTES,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     start();
     window_show(&window);
 }

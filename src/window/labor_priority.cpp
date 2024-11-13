@@ -50,8 +50,8 @@ static int get_dialog_width(void) {
     return dialog_width;
 }
 
-static void draw_background(void) {
-    window_draw_underlying_window();
+static void draw_background(int) {
+    window_draw_underlying_window(UiFlags_None);
 
     graphics_set_to_dialog();
 
@@ -72,7 +72,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
 
     color color;

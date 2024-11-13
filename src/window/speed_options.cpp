@@ -44,7 +44,7 @@ static void init(void (*close_callback)()) {
     data.original_scroll_speed = g_settings.scroll_speed;
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{80, 80}, 20, 14);

@@ -92,7 +92,7 @@ static void init(void) {
     menu[INDEX_OPTIONS].items[0].hidden = system_is_fullscreen_only();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     if (!data.open_sub_menu)
         return;
     window_editor_map_draw_all();

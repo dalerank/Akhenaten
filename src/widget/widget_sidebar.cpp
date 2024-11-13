@@ -141,7 +141,7 @@ void ui::sidebar_window_expanded::expand() {
     g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
 }
 
-void ui::sidebar_window_expanded::ui_draw_foreground() {
+void ui::sidebar_window_expanded::ui_draw_foreground(UiFlags flags) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded");
 
     x_offset = screen_width();
@@ -240,7 +240,7 @@ void ui::sidebar_window_collapsed::init() {
     widget_minimap_init();
 }
 
-void ui::sidebar_window_collapsed::ui_draw_foreground() {
+void ui::sidebar_window_collapsed::ui_draw_foreground(UiFlags flags) {
     x_offset = screen_width();
     slider.update(x_offset, expanded_offset_x, [this] {
         if (slider.slide_mode == slider.e_slide_collapse) {
@@ -289,7 +289,7 @@ void widget_sidebar_city_draw_foreground() {
 
     bool collapsed = city_view_is_sidebar_collapsed();
     if (!collapsed) {
-        g_sidebar_expanded.ui_draw_foreground();
+        g_sidebar_expanded.ui_draw_foreground(0);
     }
     
     // extra bar spacing on the right over all sidebar
@@ -301,7 +301,7 @@ void widget_sidebar_city_draw_foreground() {
     ui::eimage(g_sidebar_expanded.extra_block, { sw + g_sidebar_expanded.extra_block_x, 0 });
 
     if (collapsed) {
-        g_sidebar_collapsed.ui_draw_foreground();
+        g_sidebar_collapsed.ui_draw_foreground(0);
     }
 }
 

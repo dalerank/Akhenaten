@@ -56,7 +56,7 @@ static void init(intermezzo_type type, void (*callback)(void)) {
     }
 }
 
-static void draw_background(void) {
+static void draw_background(int) {
     graphics_clear_screen();
     graphics_reset_dialog();
     vec2i offset = vec2i{screen_width() - 1024, screen_height() - 768} / 2;

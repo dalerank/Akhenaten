@@ -216,7 +216,7 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
     context.offset = window_building_set_possible_position(context.offset, context.bgsize);
 }
 
-static void window_info_draw_background() {
+static void window_info_draw_background(int) {
     auto &context = g_object_info;
 
     game.animation = false;
@@ -226,7 +226,7 @@ static void window_info_draw_background() {
     context.ui->window_info_background(context);
 }
 
-static void window_info_draw_foreground() {
+static void window_info_draw_foreground(int) {
     auto &ui = *g_object_info.ui;
 
     ui.begin_widget(g_object_info.offset);

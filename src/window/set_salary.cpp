@@ -51,7 +51,7 @@ static int get_dialog_width() {
     return dialog_width;
 }
 
-static void draw_foreground() {
+static void draw_foreground(int) {
     painter ctx = game.painter();
 
     graphics_set_to_dialog();
@@ -105,7 +105,7 @@ static void button_set_salary(int rank, int param2) {
     }
 }
 
-static void draw_background(void) {
+static void draw_background(int) {
     painter ctx = game.painter();
     ImageDraw::img_background(ctx, image_id_from_group(PACK_UNLOADED, 11));
 }

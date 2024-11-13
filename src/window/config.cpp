@@ -589,7 +589,7 @@ static bool is_config_option_enabled(int option) {
     return data.config_values[option].new_value;
 }
 
-static void draw_background() {
+static void draw_background(int) {
     auto& data = g_window_config_ext_data;
     painter ctx = game.painter();
     graphics_clear_screen();
@@ -633,7 +633,7 @@ static void draw_background() {
     graphics_reset_dialog();
 }
 
-static void draw_foreground() {
+static void draw_foreground(int) {
     auto& data = g_window_config_ext_data;
     graphics_set_to_dialog();
 

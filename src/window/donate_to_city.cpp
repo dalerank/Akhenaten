@@ -40,7 +40,7 @@ static struct {
     int focus_arrow_button_id;
 } data;
 
-static void draw_background(void) {
+static void draw_background(int) {
     painter ctx = game.painter();
     ImageDraw::img_background(ctx, image_id_from_group(PACK_UNLOADED, 11));
 
@@ -75,7 +75,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
 
     button_border_draw(128, 216, 64, 20, data.focus_button_id == 3);

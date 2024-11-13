@@ -232,6 +232,11 @@ bool ui::handle_mouse(const mouse *m) {
     return handle;
 }
 
+void ui::clear_active_elements() {
+    g_state.buttons.clear();
+    g_state.scrollbars.clear();
+}
+
 pcstr ui::str(int group, int id) {
     return (pcstr)lang_get_string(group, id);
 }

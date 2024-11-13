@@ -64,7 +64,7 @@ static void init(void) {
     g_messages_scrollbar.init(city_message_scroll_position(), city_message_count() - MAX_MESSAGES);
 }
 
-static void draw_background(void) {
+static void draw_background(int) {
     window_city_draw_all();
 
     graphics_set_to_dialog();
@@ -181,7 +181,7 @@ static void draw_messages(int total_messages) {
     }
     scrollbar_draw(vec2i{0, 0}, &g_messages_scrollbar);
 }
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
     image_buttons_draw({16, 32 + 16 * data.height_blocks - 42}, &image_button_help, 1);
     image_buttons_draw({16 * data.width_blocks - 38, 32 + 16 * data.height_blocks - 36}, &image_button_close, 1);

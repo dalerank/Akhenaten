@@ -88,8 +88,8 @@ static void draw_won(void) {
 
     lang_text_draw_centered(13, 1, 64, 388, 512, FONT_NORMAL_BLACK_ON_LIGHT);
 }
-static void draw_background(void) {
-    window_draw_underlying_window();
+static void draw_background(int) {
+    window_draw_underlying_window(UiFlags_None);
     graphics_set_to_dialog();
     if (g_city.victory_state.state == e_victory_state_won)
         draw_won();
@@ -98,7 +98,7 @@ static void draw_background(void) {
     }
     graphics_reset_dialog();
 }
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     if (g_city.victory_state.state != e_victory_state_won) {
         graphics_set_to_dialog();
         large_label_draw(80, 224, 30, focus_button_id == 1);
@@ -155,7 +155,12 @@ static void button_fired(int param1, int param2) {
 }
 
 static void show_end_dialog(void) {
-    window_type window = {WINDOW_MISSION_END, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_MISSION_END,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     window_show(&window);
 }
 static void show_intermezzo(void) {

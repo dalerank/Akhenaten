@@ -47,7 +47,7 @@ struct mission_next_t {
 
 mission_next_t g_mission_next;
 
-static void draw_background() {
+static void draw_background(int) {
     painter ctx = game.painter();
     int rank = scenario_campaign_rank();
 
@@ -63,7 +63,7 @@ static void draw_background() {
     graphics_reset_dialog();
 }
 
-static void draw_foreground() {
+static void draw_foreground(int) {
     painter ctx = game.painter();
     graphics_set_to_dialog();
 

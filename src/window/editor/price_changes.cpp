@@ -46,11 +46,11 @@ static generic_button buttons[] = {
 
 static int focus_button_id;
 
-static void draw_background(void) {
+static void draw_background(int) {
     window_editor_map_draw_all();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     painter ctx = game.painter();
 
     graphics_set_to_dialog();
@@ -100,6 +100,11 @@ static void button_price_change(int id, int param2) {
 }
 
 void window_editor_price_changes_show(void) {
-    window_type window = {WINDOW_EDITOR_PRICE_CHANGES, draw_background, draw_foreground, handle_input};
+    static window_type window = {
+        WINDOW_EDITOR_PRICE_CHANGES,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     window_show(&window);
 }

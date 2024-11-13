@@ -90,7 +90,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     virtual int get_tooltip_text() override { return 0; }
     virtual void draw_foreground() override {}
     virtual int draw_background() override;
-    virtual void ui_draw_foreground() override;
+    virtual void ui_draw_foreground(UiFlags flags) override;
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override;
 
@@ -663,7 +663,7 @@ int empire_window::draw_background() {
     return 0;
 }
 
-void empire_window::ui_draw_foreground() {
+void empire_window::ui_draw_foreground(UiFlags flags) {
     draw_map();
 
     const empire_city* city = nullptr;
@@ -711,8 +711,8 @@ void empire_window::draw_object_tooltip() {
 void window_empire_show() {
     static window_type window = {
         WINDOW_EMPIRE,
-        [] { g_empire_window.draw_background(); },
-        [] { g_empire_window.ui_draw_foreground(); },
+        [] (int) { g_empire_window.draw_background(); },
+        [] (int) { g_empire_window.ui_draw_foreground(0); },
         [] (const mouse *m, const hotkeys *h) { g_empire_window.ui_handle_mouse(m); },
         nullptr
     };

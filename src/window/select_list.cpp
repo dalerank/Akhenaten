@@ -92,7 +92,7 @@ static void draw_item(int item_id, int x, int y, int selected) {
     }
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     auto &data = g_select_list;
     if (data.num_items > MAX_ITEMS_PER_LIST) {
         int max_first = items_in_first_list();
@@ -141,13 +141,23 @@ void select_item(int id, int list_id) {
 }
 
 void window_select_list_show(int x, int y, int group, int num_items, void (*callback)(int)) {
-    window_type window = {WINDOW_SELECT_LIST, window_draw_underlying_window, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_SELECT_LIST,
+        window_draw_underlying_window,
+        draw_foreground,
+        handle_input
+    };
     init_group(x, y, group, num_items, callback);
     window_show(&window);
 }
 
 void window_select_list_show_text(int x, int y, uint8_t** items, int num_items, void (*callback)(int)) {
-    window_type window = {WINDOW_SELECT_LIST, window_draw_underlying_window, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_SELECT_LIST,
+        window_draw_underlying_window,
+        draw_foreground,
+        handle_input
+    };
     init_text(x, y, items, num_items, callback);
     window_show(&window);
 }

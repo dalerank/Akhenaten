@@ -34,10 +34,10 @@ static int init(void) {
     data.current_video = 0;
     return start_next_video();
 }
-static void draw_background(void) {
+static void draw_background(int) {
     graphics_clear_screen();
 }
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     video_draw((screen_width() - data.width) / 2, (screen_height() - data.height) / 2);
 }
 static void handle_input(const mouse* m, const hotkeys* h) {
@@ -53,7 +53,12 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
 void window_intro_video_show(void) {
     if (init()) {
-        window_type window = {WINDOW_INTRO_VIDEO, draw_background, draw_foreground, handle_input};
+        window_type window = {
+            WINDOW_INTRO_VIDEO,
+            draw_background,
+            draw_foreground,
+            handle_input
+        };
         window_show(&window);
     }
 }

@@ -134,7 +134,7 @@ static void init() {
     data.num_submenu_items = 0;   
 }
 
-static void window_overlay_draw_background() {
+static void window_overlay_draw_background(int) {
     window_city_draw_panels();
     widget_sidebar_city_draw_foreground();
 }
@@ -192,7 +192,7 @@ const char* game_state_overlay_text(int index) {
     return (const char*)lang_get_string(e_text_overlay_menu, index);
 }
 
-static void window_overlay_draw_foreground() {
+static void window_overlay_draw_foreground(int) {
     painter ctx = game.painter();
     auto& data = g_overlay_menu_data;
     window_city_draw();

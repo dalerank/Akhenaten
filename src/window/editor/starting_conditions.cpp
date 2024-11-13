@@ -38,11 +38,11 @@ static generic_button buttons[] = {{262, 76, 200, 30, button_rank, button_none},
 
 static int focus_button_id;
 
-static void draw_background(void) {
+static void draw_background(int) {
     window_editor_map_draw_all();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{0, 28}, 30, 28);
@@ -147,6 +147,11 @@ static void button_milestone(int milestone_pct, int param2) {
 }
 
 void window_editor_starting_conditions_show(void) {
-    window_type window = {WINDOW_EDITOR_STARTING_CONDITIONS, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_EDITOR_STARTING_CONDITIONS,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     window_show(&window);
 }

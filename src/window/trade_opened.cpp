@@ -22,8 +22,8 @@ static image_button image_buttons[] = {
 
 static int selected_city;
 
-static void draw_background(void) {
-    window_draw_underlying_window();
+static void draw_background(int) {
+    window_draw_underlying_window(UiFlags_None);
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{80, 64}, 30, 14);
@@ -39,7 +39,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
     image_buttons_draw({0, 0}, image_buttons, 2);
     graphics_reset_dialog();
@@ -61,7 +61,12 @@ static void button_close(int param1, int param2) {
 }
 
 void window_trade_opened_show(int city) {
-    window_type window = {WINDOW_TRADE_OPENED, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_TRADE_OPENED,
+        draw_background,
+        draw_foreground, 
+        handle_input
+    };
     selected_city = city;
     window_show(&window);
 }

@@ -93,7 +93,7 @@ static int is_all_button(int type) {
            || (type == BUILDING_MENU_TEMPLE_COMPLEX && data.selected_submenu == BUILDING_MENU_LARGE_TEMPLES);
 }
 
-static void draw_background(void) {
+static void draw_background(int) {
     window_city_draw_panels();
 }
 
@@ -164,7 +164,7 @@ static void draw_menu_buttons() {
     }
 }
 
-static void draw_foreground() {
+static void draw_foreground(int) {
     window_city_draw();
     widget_sidebar_city_draw_foreground();
     draw_menu_buttons();

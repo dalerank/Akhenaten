@@ -72,7 +72,7 @@ void handle_input_military(const mouse* m, const hotkeys* h) {
     widget_city_handle_input_military(m, h, selected_legion_formation_id);
 }
 
-void draw_foreground_military() {
+void draw_foreground_military(int) {
     widget_top_menu_draw();
     window_city_draw();
     widget_sidebar_city_draw_foreground_military();

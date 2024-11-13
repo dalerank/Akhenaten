@@ -30,7 +30,7 @@ static int init(int title, int message) {
     return 1;
 }
 
-static void draw_background(void) {
+static void draw_background(int) {
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{80, 80}, 30, 12);
     text_draw_centered(data.title, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT, 0);
@@ -38,7 +38,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
     image_buttons_draw({80, 80}, buttons, 1);
     graphics_reset_dialog();
@@ -61,7 +61,12 @@ static void button_ok(int param1, int param2) {
 
 void window_plain_message_dialog_show(int title, int message) {
     if (init(title, message)) {
-        window_type window = {WINDOW_PLAIN_MESSAGE_DIALOG, draw_background, draw_foreground, handle_input};
+        window_type window = {
+            WINDOW_PLAIN_MESSAGE_DIALOG,
+            draw_background,
+            draw_foreground,
+            handle_input
+        };
         window_show(&window);
     }
 }

@@ -394,7 +394,7 @@ int ui::advisor_population_window::draw_background() {
     return 0;
 }
 
-void ui::advisor_population_window::ui_draw_foreground() {
+void ui::advisor_population_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     ui.draw();
 

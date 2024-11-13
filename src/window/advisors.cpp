@@ -74,7 +74,7 @@ static const labor_btn btns[] = { {"labor_btn", ADVISOR_LABOR}, {"military_btn",
                                   {"religion_btn", ADVISOR_RELIGION}, {"financial_btn", ADVISOR_FINANCIAL}, {"chief_btn", ADVISOR_CHIEF},
                                   {"monuments_btn", ADVISOR_MONUMENTS} };
 
-struct window_advisors_t : public ui::widget {
+struct window_advisors : public ui::widget {
     autoconfig_window *current_advisor_window = nullptr;
     int current_advisor = ADVISOR_NONE;
     int focus_button_id;
@@ -105,13 +105,13 @@ struct window_advisors_t : public ui::widget {
     };
 
     void init();
-    void draw_background();
-    void draw_foreground();
+    void draw_background(int flags);
+    void draw_foreground(int flags);
     void set_advisor(int advisor);
     void handle_input(const mouse *m, const hotkeys *h);
 };
 
-window_advisors_t g_window_advisors;
+window_advisors g_window_advisors;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_advisors_window);
 void config_load_advisors_window() {
@@ -133,7 +133,7 @@ bool is_advisor_available(e_advisor advisor) {
     return (mission_advisor_availability(advisor, scenario_campaign_scenario_id() + 1) == AVAILABLE);
 }
 
-void window_advisors_t::set_advisor(int advisor) {
+void window_advisors::set_advisor(int advisor) {
     current_advisor = advisor;
     g_settings.last_advisor = advisor;
     
@@ -146,7 +146,7 @@ void window_advisors_t::set_advisor(int advisor) {
     set_advisor_window();
 }
 
-void window_advisors_t::init() {
+void window_advisors::init() {
     g_city.labor.allocate_workers();
 
     city_finance_estimate_taxes();
@@ -173,12 +173,6 @@ void window_advisors_t::init() {
     }
 
     ui["back_btn"].enabled = true;
-}
-
-void window_advisors_t::draw_background() {
-    graphics_set_to_dialog();
-    advisor_height = current_advisor_window->draw_background();
-    graphics_reset_dialog();
 
     for (auto &btn : btns) {
         ui[btn.id].onclick([advisor = btn.adv] {
@@ -192,29 +186,30 @@ void window_advisors_t::draw_background() {
     });
 }
 
-void window_advisors_t::draw_foreground() {
+void window_advisors::draw_background(int flags) {
+    graphics_set_to_dialog();
+    advisor_height = current_advisor_window->draw_background();
+    graphics_reset_dialog();
+}
+
+void window_advisors::draw_foreground(int flags) {
     ui.draw();
 
-    current_advisor_window->ui_draw_foreground();
+    current_advisor_window->ui_draw_foreground(flags);
 
     graphics_set_to_dialog();
     current_advisor_window->draw_foreground();
     graphics_reset_dialog();
 }
 
-static void handle_hotkeys(const hotkeys* h) {
-    auto &data = g_window_advisors;
+void window_advisors::handle_input(const mouse* m, const hotkeys* h) {
     if (h->show_advisor) {
-        if (data.current_advisor == h->show_advisor)
+        if (current_advisor == h->show_advisor) {
             window_city_show();
-        else {
+        } else {
             window_advisors_show_advisor((e_advisor)h->show_advisor);
         }
     }
-}
-
-void window_advisors_t::handle_input(const mouse* m, const hotkeys* h) {
-    handle_hotkeys(h);
 
     const mouse* m_dialog = mouse_in_dialog(m);
     if (current_advisor_window->handle_mouse(m_dialog)) {
@@ -273,8 +268,8 @@ int window_advisors_show_advisor(e_advisor advisor) {
 void window_advisors_show(void) {
     static window_type window = {
         WINDOW_ADVISORS,
-        [] { g_window_advisors.draw_background(); },
-        [] { g_window_advisors.draw_foreground(); },
+        [] (int flags) { g_window_advisors.draw_background(flags); },
+        [] (int flags) { g_window_advisors.draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_window_advisors.handle_input(m, h); },
         nullptr
     };

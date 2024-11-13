@@ -23,8 +23,8 @@ static generic_button victory_buttons[] = {
 
 static int focus_button_id = 0;
 
-static void draw_background(void) {
-    window_draw_underlying_window();
+static void draw_background(int) {
+    window_draw_underlying_window(UiFlags_None);
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{48, 128}, 34, 15);
@@ -39,7 +39,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
 
     if (g_city.victory_state.state == e_victory_state_won) {
@@ -87,6 +87,11 @@ static void button_continue_governing(int months, int param2) {
 }
 
 void window_victory_dialog_show(void) {
-    window_type window = {WINDOW_VICTORY_DIALOG, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_VICTORY_DIALOG,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     window_show(&window);
 }

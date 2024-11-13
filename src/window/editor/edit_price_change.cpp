@@ -41,11 +41,11 @@ static void init(int id) {
     scenario_editor_price_change_get(id, &data.price_change);
 }
 
-static void draw_background(void) {
+static void draw_background(int) {
     window_editor_map_draw_all();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{0, 100}, 38, 11);
@@ -119,7 +119,12 @@ static void button_save(int param1, int param2) {
 }
 
 void window_editor_edit_price_change_show(int id) {
-    window_type window = {WINDOW_EDITOR_EDIT_PRICE_CHANGE, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_EDITOR_EDIT_PRICE_CHANGE,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     init(id);
     window_show(&window);
 }

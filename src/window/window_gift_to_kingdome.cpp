@@ -22,7 +22,7 @@ static void window_gift_to_kingdome_init(void) {
     g_city.kingdome.init_selected_gift();
 }
 
-static void window_gift_to_kingdome_draw_background(void) {
+static void window_gift_to_kingdome_draw_background(int) {
     ui::begin_widget(screen_dialog_offset());
     ui::panel({96, 144}, {30, 15}, UiFlags_PanelOuter);
     ui::panel({112, 208}, {28, 5}, UiFlags_PanelInner);
@@ -99,7 +99,7 @@ void window_gift_to_kingdome_show(void) {
     static window_type window = {
         WINDOW_GIFT_TO_EMPEROR,
         window_gift_to_kingdome_draw_background,
-        [] {},
+        [] (int) {},
         window_gift_to_kingdome_handle_input
     };
     window_gift_to_kingdome_init();

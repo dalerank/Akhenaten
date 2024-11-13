@@ -39,7 +39,7 @@ static int center_in_city(int element_width_pixels) {
     return view_pos.x + margin;
 }
 
-void window_city_draw_background() {
+void window_city_draw_background(int) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Bakground");
     widget_top_menu_draw();
 }
@@ -91,7 +91,7 @@ static void draw_cancel_construction() {
     //    city_view_dirty = 1;
 }
 
-static void window_city_draw_foreground() {
+static void window_city_draw_foreground(int) {
     widget_top_menu_draw();
     window_city_draw();
     widget_sidebar_city_draw_foreground();
@@ -243,11 +243,11 @@ void window_city_get_tooltip(tooltip_context* c) {
 }
 
 void window_city_draw_all() {
-    window_city_draw_background();
-    window_city_draw_foreground();
+    window_city_draw_background(0);
+    window_city_draw_foreground(0);
 }
 void window_city_draw_panels() {
-    window_city_draw_background();
+    window_city_draw_background(0);
 }
 
 void window_city_draw() {

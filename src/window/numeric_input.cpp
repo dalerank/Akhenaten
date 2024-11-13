@@ -70,7 +70,7 @@ static void draw_number_button(int x, int y, int number, int is_selected) {
     text_draw_centered(number_string, x, y, 25, FONT_NORMAL_BLUE, color);
 }
 
-static void draw_foreground() {
+static void draw_foreground(int) {
     auto &data = g_numeric_input;
     outer_panel_draw(data, 8, 14);
 

@@ -115,12 +115,12 @@ void window_player_selection_init() {
     }
 }
 
-static void draw_background() {
+static void draw_background(int) {
     painter ctx = game.painter();
     graphics_clear_screen();
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_PLAYER_SELECTION));
 }
-static void draw_foreground() {
+static void draw_foreground(int) {
     auto& data = *g_window_player_selection;
     graphics_set_to_dialog();
 
@@ -220,7 +220,7 @@ void window_player_selection_show(void) {
         g_window_player_selection = new window_player_selection_t();
     }
 
-    window_type window = {
+    static window_type window = {
         WINDOW_PLAYER_SELECTION,
         draw_background,
         draw_foreground,

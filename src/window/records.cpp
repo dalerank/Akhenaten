@@ -34,11 +34,11 @@ void init() {
     g_records_scrollbar.init(0, highscores_count() - LIST_MAX_SIZE);
 }
 
-static void draw_background() {
+static void draw_background(int) {
     painter ctx = game.painter();
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_SCORES_BACKGROUND));
 }
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{0, 0}, 40, 30);
@@ -97,7 +97,12 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 void window_records_show(void) {
-    window_type window = {WINDOW_PLAYER_SELECTION, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_PLAYER_SELECTION,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     init();
     window_show(&window);
 }

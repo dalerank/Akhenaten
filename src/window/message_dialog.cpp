@@ -589,12 +589,12 @@ static void draw_background_video() {
     draw_foreground_video();
 }
 
-static void draw_background() {
+static void draw_background(int) {
     auto &data = g_message_dialog_data;
     if (data.background_callback) {
         data.background_callback();
     } else {
-        window_draw_underlying_window();
+        window_draw_underlying_window(0);
     }
 
     graphics_set_to_dialog();
@@ -670,7 +670,7 @@ static void draw_foreground_video() {
     }
 }
 
-static void draw_foreground() {
+static void draw_foreground(int) {
     auto &data = g_message_dialog_data;
     graphics_set_to_dialog();
     if (data.show_video) {

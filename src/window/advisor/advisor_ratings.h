@@ -9,7 +9,7 @@ struct advisor_ratings_window : public advisor_window_t<advisor_ratings_window> 
     virtual int get_tooltip_text() override { return 0; }
     virtual void draw_foreground() override {};
     virtual int draw_background() override;
-    virtual void ui_draw_foreground() override;
+    virtual void ui_draw_foreground(UiFlags flags) override;
     virtual void init() override {}
 
     void draw_rating(int id, int value, int open_play, int goal);

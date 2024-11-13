@@ -125,7 +125,7 @@ void ui::advisor_imperial_window::handle_request(int index) {
     }
 }
 
-void ui::advisor_imperial_window::ui_draw_foreground() {
+void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     ui.draw();
 

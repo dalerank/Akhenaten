@@ -56,7 +56,7 @@ void ui::advisor_entertainment_window::draw_entertainer(int type, pcstr prefix, 
     }
 }
 
-void ui::advisor_entertainment_window::ui_draw_foreground() {
+void ui::advisor_entertainment_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     ui.draw();
 

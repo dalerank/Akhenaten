@@ -21,7 +21,7 @@
 
 static int city_view_dirty;
 
-static void draw_background() {
+static void draw_background(int) {
     graphics_clear_screen();
     widget_sidebar_editor_draw_background();
     widget_top_menu_editor_draw();
@@ -48,7 +48,7 @@ static void clear_city_view() {
     city_view_dirty = 0;
 }
 
-static void draw_foreground() {
+static void draw_foreground(int) {
     clear_city_view();
     widget_sidebar_editor_draw_foreground();
     widget_map_editor_draw();
@@ -74,12 +74,12 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 void window_editor_map_draw_all(void) {
-    draw_background();
-    draw_foreground();
+    draw_background(0);
+    draw_foreground(0);
 }
 
 void window_editor_map_draw_panels(void) {
-    draw_background();
+    draw_background(0);
 }
 
 void window_editor_map_draw(void) {
@@ -87,6 +87,11 @@ void window_editor_map_draw(void) {
 }
 
 void window_editor_map_show(void) {
-    window_type window = {WINDOW_EDITOR_MAP, draw_background, draw_foreground, handle_input};
+    static window_type window = {
+        WINDOW_EDITOR_MAP,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     window_show(&window);
 }

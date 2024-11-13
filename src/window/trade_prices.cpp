@@ -20,7 +20,7 @@ struct trade_prices_window : autoconfig_window_t<trade_prices_window> {
     virtual int get_tooltip_text() override { return 0; }
     virtual void draw_foreground() override {}
     virtual int draw_background() override;
-    virtual void ui_draw_foreground() override;
+    virtual void ui_draw_foreground(UiFlags flags) override;
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override {}
 
@@ -44,12 +44,12 @@ struct trade_prices_window : autoconfig_window_t<trade_prices_window> {
 trade_prices_window trade_prices_w;
 
 int trade_prices_window::draw_background() {
-    window_draw_underlying_window();
+    window_draw_underlying_window(0);
 
     return 0;
 }
 
-void trade_prices_window::ui_draw_foreground() {
+void trade_prices_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(ui.pos);
     ui.draw();
 
@@ -99,8 +99,8 @@ int trade_prices_window::ui_handle_mouse(const mouse *m) {
 void window_trade_prices_show(void) {
     static window_type window = {
         WINDOW_TRADE_PRICES,
-        [] { trade_prices_w.draw_background(); },
-        [] { trade_prices_w.ui_draw_foreground(); },
+        [] (int) { trade_prices_w.draw_background(); },
+        [] (int flags) { trade_prices_w.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { trade_prices_w.ui_handle_mouse(m); },
         [] (tooltip_context *) { trade_prices_w.get_tooltip_text(); }
     };

@@ -67,7 +67,7 @@ static void init(void (*close_callback)()) {
     data.original_city = *g_settings.get_sound(SOUND_CITY);
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     auto &data = g_sound_options;
     graphics_set_to_dialog();
 

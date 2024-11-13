@@ -20,7 +20,7 @@ static struct {
     void (*close_callback)(void);
 } data;
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{48, 80}, 24, 12);

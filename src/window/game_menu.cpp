@@ -68,14 +68,14 @@ static void init() {
     data.has_saved_games = true;
 }
 
-static void draw_background() {
+static void draw_background(int) {
     painter ctx = game.painter();
     graphics_clear_screen();
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_GAME_MENU));
     graphics_set_to_dialog();
     graphics_reset_dialog();
 }
-static void draw_foreground() {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{128, 56}, 24, 19);
 
@@ -141,7 +141,12 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 void window_game_menu_show(void) {
-    window_type window = {WINDOW_GAME_SELECTION, draw_background, draw_foreground, handle_input};
+    static window_type window = {
+        WINDOW_GAME_SELECTION,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     init();
     window_show(&window);
 }

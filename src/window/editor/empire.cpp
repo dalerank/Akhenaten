@@ -114,7 +114,7 @@ static void draw_paneling() {
     graphics_reset_clip_rectangle();
 }
 
-static void draw_background(void) {
+static void draw_background(int) {
     auto &data = g_window_empire;
 
     int s_width = screen_width();
@@ -276,7 +276,7 @@ static void draw_panel_buttons(const empire_city* city) {
     lang_text_draw_centered(44, 7, data.p_min.x + 104, data.p_max.y - 45, 100, FONT_NORMAL_BLACK_ON_DARK);
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     auto &data = g_window_empire;
     window_editor_draw_map();
 
@@ -355,7 +355,12 @@ static void button_ok(int param1, int param2) {
 }
 
 void window_editor_empire_show(void) {
-    window_type window = {WINDOW_EDITOR_EMPIRE, draw_background, draw_foreground, handle_input};
+    static window_type window = {
+        WINDOW_EDITOR_EMPIRE,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     init();
     window_show(&window);
 }

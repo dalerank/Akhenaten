@@ -32,10 +32,7 @@ void config_load_main_menu() {
     });
 }
 
-static void window_config_show_back() {
-}
-
-static void main_menu_draw_background() {
+static void main_menu_draw_background(int) {
     graphics_clear_screen();
 
     auto &ui = g_main_menu_data;
@@ -55,7 +52,9 @@ static void main_menu_draw_background() {
         window_records_show();
     });
     ui["show_config"].onclick([] {
-        window_config_show(window_config_show_back);
+        window_config_show([] {
+        
+        });
     });
     ui["quit_game"].onclick([] { 
         window_yes_dialog_show("#popup_dialog_quit", [] { 
@@ -72,7 +71,7 @@ static void main_menu_draw_background() {
     });
 }
 
-static void main_menu_draw_foreground() {
+static void main_menu_draw_foreground(int) {
     auto &ui = g_main_menu_data;
 
     ui.begin_frame();

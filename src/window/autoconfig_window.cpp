@@ -47,8 +47,8 @@ int autoconfig_window::ui_handle_mouse(const mouse *m) {
     return result;
 }
 
-void autoconfig_window::ui_draw_foreground() {
+void autoconfig_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
-    ui.draw();
+    ui.draw(flags);
     ui.end_widget();
 }

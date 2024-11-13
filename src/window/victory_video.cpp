@@ -23,11 +23,11 @@ static int init(const char* filename, int width, int height, void (*callback)(vo
     return 0;
 }
 
-static void draw_background(void) {
+static void draw_background(int) {
     graphics_clear_screen();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     video_draw((screen_width() - data.width) / 2, (screen_height() - data.height) / 2);
 }
 
@@ -40,7 +40,12 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
 void window_victory_video_show(const char* filename, int width, int height, void (*callback)(void)) {
     if (init(filename, width, height, callback)) {
-        window_type window = {WINDOW_VICTORY_VIDEO, draw_background, draw_foreground, handle_input};
+        window_type window = {
+            WINDOW_VICTORY_VIDEO,
+            draw_background,
+            draw_foreground,
+            handle_input
+        };
         window_show(&window);
     } else {
         callback();

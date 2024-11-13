@@ -31,7 +31,7 @@ int ui::advisor_trade_window::draw_background() {
     return 0;
 }
 
-void ui::advisor_trade_window::ui_draw_foreground() {
+void ui::advisor_trade_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     ui.draw();
 
@@ -48,11 +48,14 @@ void ui::advisor_trade_window::ui_draw_foreground() {
     const auto &item_state = ui["item_state"];
     const auto &item_status = ui["item_status"];
 
+    const bool readOnly = !!(flags & UiFlags_Readonly);
+    const UiFlags buttonFlags = readOnly ? UiFlags_NoBorder : UiFlags_None;
+
     for (const auto &r: resources) {
         int i = std::distance(resources.begin(), &r);
         vec2i offset = { 0, items.pos.y + item_button.size.y * (i - scroll_position) + 8 };
 
-        ui.button("", offset + item_button.pos, item_button.size, fonts_vec{ FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_NoBody)
+        ui.button("", offset + item_button.pos, item_button.size, fonts_vec{ FONT_NORMAL_BLACK_ON_LIGHT }, buttonFlags|UiFlags_NoBody)
             .tooltip(item_button.tooltip())
             .onclick([r] {
                 window_resource_settings_show(r.type);

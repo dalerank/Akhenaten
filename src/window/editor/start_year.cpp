@@ -25,11 +25,11 @@ static generic_button buttons[] = {
 
 static int focus_button_id;
 
-static void draw_background(void) {
+static void draw_background(int) {
     window_editor_map_draw_all();
 }
 
-static void draw_foreground(void) {
+static void draw_foreground(int) {
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{128, 44}, 20, 10);
@@ -70,6 +70,11 @@ static void button_year(int param1, int param2) {
 }
 
 void window_editor_start_year_show(void) {
-    window_type window = {WINDOW_EDITOR_START_YEAR, draw_background, draw_foreground, handle_input};
+    window_type window = {
+        WINDOW_EDITOR_START_YEAR,
+        draw_background,
+        draw_foreground,
+        handle_input
+    };
     window_show(&window);
 }
