@@ -107,9 +107,9 @@ int building_storage_yard::freespace(e_resource resource) {
     return freespace;
 }
 
-int building_storage_yard::freespace() {
+int building_storage_yard::freespace() const {
     int freespace = 0;
-    building_storage_room* space = room();
+    const building_storage_room* space = room();
     while (space) {
         if (!space->base.subtype.warehouse_resource_id) {
             freespace += 400;

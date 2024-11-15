@@ -67,8 +67,6 @@ void info_window_storageyard::init(object_info &c) {
     building_storage *warehouse = c.building_get()->dcast_storage();
     assert(warehouse);
 
-    ui["free_space"].text_var("#granary_space_for %u #granary_units", warehouse->freespace());
-
     const resource_list &resources = city_resource_get_available();
 
     auto _icon = [] (int idx) { bstring32 id_icon; id_icon.printf("good%u_icon", idx); return id_icon; };

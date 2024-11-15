@@ -1558,7 +1558,7 @@ window info_window_storageyard = {
    
 		warning_text  : text({pos: [22, 36], wrap:px(28), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
 		storing       : text({ pos: [24, 90], text:"${loc.granary_storing} ${building.total_stored} ${loc.granary_units}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
-		free_space    : text({ pos: [220, 90], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		free_space    : text({ pos: [220, 90], text:"${loc.granary_space_for} ${building.free_space} ${loc.granary_units}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
    
     stored_items  : dummy({pos:[0, 110],
     	ui : {

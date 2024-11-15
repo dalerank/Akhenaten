@@ -23,6 +23,7 @@ struct id_property_t {
     static const xstring first_material_stored;
     static const xstring tax_percentage;
     static const xstring total_stored;
+    static const xstring free_space;
 };
 
 const id_property_t &tags();

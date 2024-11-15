@@ -11,7 +11,7 @@
 
 buildings::model_t<building_storage_room> storage_room_m;
 
-inline building_storage_room::building_storage_room(building &b) : building_impl(b), stored_full_amount(b.stored_amount_first) {
+inline building_storage_room::building_storage_room(building &b) : building_impl(b) {
 }
 
 void building_storage_room::on_create(int orientation) {
@@ -36,14 +36,14 @@ void building_storage_room::set_image(e_resource resource) {
     } else {
         image_id = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_FILLED) + 4 * (resource - 1)
                     + resource_image_offset(resource, RESOURCE_IMAGE_STORAGE)
-                    + (int)ceil((float)stored_full_amount / 100.0f) - 1;
+                    + (int)ceil((float)base.stored_amount_first / 100.0f) - 1;
     }
     map_image_set(tile(), image_id);
 }
 
 void building_storage_room::add_import(e_resource resource) {
     city_resource_add_to_storageyard(resource, 100);
-    stored_full_amount += 100;
+    base.stored_amount_first += 100;
     base.subtype.warehouse_resource_id = resource;
 
     int price = trade_price_buy(resource);
@@ -54,8 +54,8 @@ void building_storage_room::add_import(e_resource resource) {
 
 void building_storage_room::remove_export(e_resource resource) {
     city_resource_remove_from_storageyard(resource, 100);
-    stored_full_amount -= 100;
-    if (stored_full_amount <= 0) {
+    base.stored_amount_first -= 100;
+    if (base.stored_amount_first <= 0) {
         base.subtype.warehouse_resource_id = RESOURCE_NONE;
     }
 

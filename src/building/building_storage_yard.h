@@ -43,9 +43,11 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     
     building_storage_room *room() { return next()->dcast_storage_room(); }
+    const building_storage_room *room() const { return ((building_impl*)this)->next()->dcast_storage_room(); }
 
     virtual int amount(e_resource resource) const override;
     virtual int total_stored() const override;
+    virtual int freespace() const override;
     bool is_not_accepting(e_resource resource);
 
     virtual int remove_resource(e_resource resource, int amount) override;
@@ -55,7 +57,6 @@ public:
 
     int freespace(e_resource resource);
     int stored_full_amount() const { return base.stored_amount_first;  }
-    virtual int freespace() override;
 
     int for_getting(e_resource resource, tile2i *dst);
 

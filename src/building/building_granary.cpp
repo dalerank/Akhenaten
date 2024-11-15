@@ -131,7 +131,7 @@ int building_granary::total_stored() const {
     return result;
 }
 
-int building_granary::freespace() {
+int building_granary::freespace() const {
     return data.granary.resource_stored[RESOURCE_NONE];
 }
 

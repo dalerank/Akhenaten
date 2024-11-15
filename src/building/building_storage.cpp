@@ -307,6 +307,7 @@ struct sproperty {
 
 const sproperty sproperties[] = {
     { tags().building, tags().total_stored, [] (const building_storage &b, const xstring &) { return bvariant(b.total_stored()); }},
+    { tags().building, tags().free_space, [] (const building_storage &b, const xstring &) { return bvariant(b.freespace()); }},
 };
 
 bvariant building_storage::get_property(const xstring &domain, const xstring &name) const {

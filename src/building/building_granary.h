@@ -41,7 +41,7 @@ public:
     virtual int amount(e_resource resource) const override;
     virtual bool is_getting(e_resource resource) override;
     virtual int remove_resource(e_resource resource, int amount) override;
-    virtual int freespace() override;
+    virtual int freespace() const override;
     bool is_accepting(e_resource resource);
     int is_not_accepting(e_resource resource);
     granary_getting_result find_storage_for_getting();
