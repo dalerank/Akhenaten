@@ -157,6 +157,8 @@ void building_info_window::init(object_info &c) {
 
     g_debug_building_id = c.building_id;
     building *b = building_get(c);
+
+    c.go_to_advisor.first = ADVISOR_NONE;
     if (first_advisor != ADVISOR_NONE) {
         c.go_to_advisor.first = first_advisor;
     }

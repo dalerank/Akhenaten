@@ -19,7 +19,7 @@
 #include "game/game.h"
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
-#include "graphics/window.h"
+
 #include "graphics/image.h"
 #include "js/js_game.h"
 
@@ -28,13 +28,6 @@
 int g_tower_sentry_request = 0;
 
 buildings::model_t<building_recruiter> brecruiter_m;
-info_window_recruiter brecruiter_infow;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_recruiter);
-void config_load_building_recruiter() {
-    brecruiter_m.load();
-    brecruiter_infow.load("info_window_recruiter");
-}
 
 static int get_closest_legion_needing_soldiers(building* barracks) {
     int recruit_type = LEGION_RECRUIT_NONE;
@@ -225,49 +218,4 @@ void building_recruiter::spawn_figure() {
             }
         }
     }
-}
-
-void info_window_recruiter::window_info_background(object_info &c) {
-    building_info_window::window_info_background(c);
-
-    c.barracks_soldiers_requested = formation_legion_recruits_needed();
-    c.barracks_soldiers_requested += building_barracks_has_tower_sentry_request();
-
-    building_recruiter *b = c.building_get()->dcast_recruiter();
-
-    int amount = b->base.stored_amount_first < 100 ? 0 : b->base.stored_amount_first;
-    ui["storage_state"].text_var("%s ( %d )", ui::str(8, 10), amount);
-
-    textid reason{ c.group_id, 0 };
-    if (!c.has_road_access) { reason = { 69, 25 }; }
-    else if (b->num_workers() <= 0) { reason.id = 3; }
-    else if (!c.barracks_soldiers_requested) { reason.id = 4; }
-    else {
-        int offset = 0;
-        if (b->base.stored_amount_first > 0) {
-            offset = 4;
-        }
-
-        int workers_state = approximate_value(c.worker_percentage / 100.f, make_array(8, 7, 6, 5));
-        ui["workers_text"] = ui::str(c.group_id, workers_state);
-    }
-
-    fill_employment_details(c);
-
-    const int priority = b->get_priority();
-    ui["tower_button"] = (priority == 0) ? "x" : "";
-    ui["tower_button"].onclick([bid = c.building_id] {
-        building *barracks = ::building_get(bid);
-        barracks->subtype.barracks_priority = 0;
-    });
-
-    ui["fort_button"] = (priority == 1) ? "x" : "";
-    ui["fort_button"].onclick([bid = c.building_id] {
-        building *barracks = ::building_get(bid);
-        barracks->subtype.barracks_priority = 1;
-    });
-}
-
-bool info_window_recruiter::check(object_info &c) {
-    return c.building_get()->dcast_recruiter();
 }

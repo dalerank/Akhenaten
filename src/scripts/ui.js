@@ -1223,21 +1223,25 @@ info_window_fishing_wharf = {
 	})
 }
 
-info_window_recruiter = {
+window info_window_recruiter = {
 	ui : __baseui(building_info_window, {
-		background 	  : { type : "outer_panel",	pos: [0, 0], size: [29, 21]},
-		icon_weapon   : { type : "resource_icon", pos:[24, 40], resource:RESOURCE_WEAPONS  },
-		storage_state : { type : "text", pos: [46, 44], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true },
-		inner_panel   : { type : "inner_panel", pos : [16, 136], size: [27, 4] },
-		workers_img   : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 140] },
-		progress_desc : { type : "text", pos: [32, 44], font: FONT_NORMAL_BLACK_ON_LIGHT },
-		workers_text  : { type : "text", pos: [70, 146], font: FONT_NORMAL_BLACK_ON_DARK },
-		workers_desc  : { type : "text", pos: [70, 146 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) },
-		priority_text : { type : "text", pos: [46, 208], font: FONT_NORMAL_BLACK_ON_LIGHT, text:{group:50, id:21} },
-		tower_text    : { type : "text", pos: [74, 232], font: FONT_NORMAL_BLACK_ON_LIGHT, text:{group:91, id:0} },
-		tower_button  : { type : "generic_button", pos: [46, 228], size:[20, 20], font: FONT_NORMAL_BLACK_ON_DARK },
-		fort_text     : { type : "text", pos: [74, 252], font: FONT_NORMAL_BLACK_ON_LIGHT, text:{group:89, id:0} },
-		fort_button   : { type : "generic_button", pos: [46, 248], size:[20, 20], font: FONT_NORMAL_BLACK_ON_DARK },
+		background 	  : outer_panel({size: [29, 20]}),
+		warning_text: { type : "text", pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		icon_weapon   : resource_icon({pos:[24, 100], resource:RESOURCE_WEAPONS  }),
+		storage_state : text({pos: [46, 104], text:"${8.10} ${building.first_material_stored}", font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
+		progress_desc : { type : "text", pos: [32, 104], font: FONT_NORMAL_BLACK_ON_LIGHT },
+		inner_panel   : inner_panel({pos : [16, 125], size: [27, 5],
+												ui : {
+													workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
+													workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
+													workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
+												}
+										  }),
+		priority_text : { type : "text", pos: [46, 210], font: FONT_NORMAL_BLACK_ON_LIGHT, text:{group:50, id:21} },
+		tower_text    : text({pos: [74, 232], font: FONT_NORMAL_BLACK_ON_LIGHT, text:{group:91, id:0} }),
+		tower_button  : button({pos: [46, 228], size:[20, 20], font: FONT_NORMAL_BLACK_ON_DARK }),
+		fort_text     : text({pos: [74, 252], font: FONT_NORMAL_BLACK_ON_LIGHT, text:{group:89, id:0} }),
+		fort_button   : button({pos: [46, 248], size:[20, 20], font: FONT_NORMAL_BLACK_ON_DARK }),
 	})
 }
 
@@ -1539,8 +1543,8 @@ window info_window_storageyard_orders = {
 	  icon_column   : dummy({pos: [26, 6] }),
 	  name_column   : dummy({pos: [56, 6] }),
 	  order_column  : dummy({pos: [px(27)/2, 4], size:[px(27)/2, 20] }),
-	  increase_column: dummy({pos: [px(27)/2 -30, 6] }),
-	  decrease_column: dummy({pos: [px(27)/2 -13, 6] }),
+	  increase_column: dummy({pos: [px(27)/2 -13, 6] }),
+	  decrease_column: dummy({pos: [px(27)/2 -30, 6] }),
 	  item_row      : dummy({size: [0, 20] }),
 
 	  button_help   : help_button({}),
