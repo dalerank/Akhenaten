@@ -31,8 +31,8 @@ void building_rotation_rotate_by_hotkey() {
     }
 }
 
-void building_rotation_randomize_variant(int type) {
-    variant = 0;
+void building_rotation_randomize_variant(tile2i tile, int type) {
+    variant = tile.grid_offset();
     switch (type) {
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:

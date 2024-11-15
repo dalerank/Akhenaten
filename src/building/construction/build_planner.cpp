@@ -519,7 +519,7 @@ void BuildPlanner::setup_build(e_building_type type) { // select building for co
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
-        building_rotation_randomize_variant(type);
+        building_rotation_randomize_variant(end, type);
         relative_orientation = 1; // force these buildings to start in a specific orientation
         update_orientations(false);
         break;
@@ -823,7 +823,7 @@ void BuildPlanner::setup_build_graphics() {
         break;
 
     case BUILDING_STORAGE_YARD:
-        set_tiles_building(props.anim["base"].first_img(), 3);
+        set_tiles_building(props.anim[animkeys().base].first_img(), 3);
         break;
 
     case BUILDING_SMALL_MASTABA:
@@ -854,9 +854,9 @@ void BuildPlanner::setup_build_graphics() {
     default: // regular buildings 
         {
             const auto &params = building_impl::params(build_type);
-            int img_id = props.anim["base"].first_img();
+            int img_id = props.anim[animkeys().base].first_img();
             if (!img_id) {
-                img_id = params.anim["preview"].first_img();
+                img_id = params.anim[animkeys().preview].first_img();
             }
             img_id += params.planer_relative_orientation * relative_orientation;
             set_tiles_building(img_id, props.building_size);
@@ -1438,7 +1438,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
-        building_rotation_randomize_variant(build_type);
+        building_rotation_randomize_variant(end, build_type);
         update_orientations(false);
         break;
 
