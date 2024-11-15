@@ -77,7 +77,7 @@ static void draw_housing_table() {
     }
 }
 
-int ui::advisor_housing_window::draw_background() {
+int ui::advisor_housing_window::draw_background(UiFlags flags) {
     painter ctx = game.painter();
 
     int val;
@@ -104,7 +104,7 @@ int ui::advisor_housing_window::draw_background() {
     return ADVISOR_HEIGHT;
 }
 
-void ui::advisor_housing_window::draw_foreground() {
+void ui::advisor_housing_window::draw_foreground(UiFlags flags) {
     if (focus_button_id == 0)
         button_border_draw({ 545, 260 }, { 60, 51 }, 0);
     else if (focus_button_id == 1)

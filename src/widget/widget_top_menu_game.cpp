@@ -66,8 +66,8 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     ui::widget headers;
 
     virtual int handle_mouse(const mouse *m) override { return 0; }
-    virtual int draw_background() override { return 0; }
-    virtual void draw_foreground() override;
+    virtual int draw_background(UiFlags flags) override { return 0; }
+    virtual void draw_foreground(UiFlags flags) override;
     virtual void ui_draw_foreground(UiFlags flags) override {}
     virtual int get_tooltip_text() override { return 0; }
     virtual int ui_handle_mouse(const mouse *m) override;
@@ -718,7 +718,7 @@ void widget_top_menu_draw_rotate_buttons() {
     }
 }
 
-void top_menu_widget::draw_foreground() {
+void top_menu_widget::draw_foreground(UiFlags flags) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Topmenu");
 
     wdiget_top_menu_draw_background();
@@ -746,7 +746,7 @@ void top_menu_widget::draw_foreground() {
 }
 
 void widget_top_menu_draw() {
-    g_top_menu.draw_foreground();
+    g_top_menu.draw_foreground(0);
 }
 
 static bool widget_top_menu_handle_input_submenu(const mouse* m, const hotkeys* h) {

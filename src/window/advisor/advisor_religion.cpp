@@ -86,7 +86,7 @@ void ui::advisor_religion_window::draw_god_row(e_god god, int y_offset, e_buildi
     }
 }
 
-int ui::advisor_religion_window::draw_background() {
+int ui::advisor_religion_window::draw_background(UiFlags flags) {
     g_city.religion.calculate_least_happy_god();
     if (!g_settings.gods_enabled) {
         ui["nogods_text"].enabled = true;

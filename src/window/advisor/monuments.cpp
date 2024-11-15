@@ -54,8 +54,7 @@ static generic_button imperial_buttons[] = {
 static int focus_button_id;
 static int selected_request_id;
 
-int ui::advisor_monuments_window::draw_background() {
-
+int ui::advisor_monuments_window::draw_background(UiFlags flags) {
     return ADVISOR_HEIGHT;
 }
 
@@ -64,7 +63,7 @@ static int get_request_status(int index) {
     return 0;
 }
 
-void ui::advisor_monuments_window::draw_foreground() {
+void ui::advisor_monuments_window::draw_foreground(UiFlags flags) {
     inner_panel_draw({ 64, 324 }, { 32, 6 });
 
     lang_text_draw(32, g_city.kingdome.player_rank, 72, 338, FONT_LARGE_BLACK_ON_DARK);

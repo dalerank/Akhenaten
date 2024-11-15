@@ -47,7 +47,7 @@ static int init(loc_text loc, loc_text custom_text, window_popup_dialog_callback
 static void draw_background(int) {
     auto& data = g_popup_dialog;
 
-    window_draw_underlying_window(UiFlags_None);
+    window_draw_underlying_window(UiFlags_Readonly);
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{80, 80}, 30, 10);
     if (data.text.valid()) {

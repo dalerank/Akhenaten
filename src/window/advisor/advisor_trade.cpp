@@ -17,7 +17,7 @@
 
 ui::advisor_trade_window g_advisor_trade_window;
 
-int ui::advisor_trade_window::draw_background() {
+int ui::advisor_trade_window::draw_background(UiFlags flags) {
     city_resource_determine_available();
 
     ui["scrollbar"].onevent([] {

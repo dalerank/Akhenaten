@@ -83,7 +83,7 @@ void ui::advisor_ratings_window::ui_draw_foreground(UiFlags flags) {
     ui.end_widget();
 }
 
-int ui::advisor_ratings_window::draw_background() {
+int ui::advisor_ratings_window::draw_background(UiFlags flags) {
     bstring128 caption = ui::str(53, 7);
     if (!(!winning_population() || scenario_is_open_play())) {
         caption = ui::str(53, 6);

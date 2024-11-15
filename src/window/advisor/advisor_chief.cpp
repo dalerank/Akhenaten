@@ -37,7 +37,7 @@ static void draw_title(int y, int text_id) {
     lang_text_draw(61, text_id, 44, y, FONT_NORMAL_WHITE_ON_DARK);
 }
 
-int ui::advisor_chief_window::draw_background() {
+int ui::advisor_chief_window::draw_background(UiFlags flags) {
     auto &ui = g_advisor_chief_window;
 
     // sentiment

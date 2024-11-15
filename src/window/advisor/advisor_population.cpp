@@ -349,7 +349,7 @@ void button_graph(int next) {
     city_population_set_graph_order(new_order);
 }
 
-int ui::advisor_population_window::draw_background() {
+int ui::advisor_population_window::draw_background(UiFlags flags) {
     int graph_order = city_population_graph_order();
  
     // Title: depends on big graph shown

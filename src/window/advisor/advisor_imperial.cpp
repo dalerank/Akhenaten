@@ -66,10 +66,10 @@ static int get_request_status(int index) {
     return request.event_id;
 }
 
-void ui::advisor_imperial_window::draw_foreground() {
+void ui::advisor_imperial_window::draw_foreground(UiFlags flags) {
 }
 
-int ui::advisor_imperial_window::draw_background() {
+int ui::advisor_imperial_window::draw_background(UiFlags flags) {
     g_city.kingdome.calculate_gift_costs();
 
     auto &ui = g_advisor_imperial_window;

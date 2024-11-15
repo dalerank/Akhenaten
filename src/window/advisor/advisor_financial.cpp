@@ -36,7 +36,7 @@ void ui::advisor_financial_window::load(archive arch, pcstr section) {
     line_size_x = arch.r_int("line_size_x");
 }
 
-int ui::advisor_financial_window::draw_background() {
+int ui::advisor_financial_window::draw_background(UiFlags flags) {
     int treasury = city_finance_treasury();
 
     pcstr prefix = (treasury < 0) ? ui::str(60, 3) : ui::str(60, 2);

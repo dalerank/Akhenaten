@@ -55,7 +55,7 @@ void ui::advisor_military_window::init() {
     g_advisor_mil_scrollbar.init(0, num_legions - 6);
 }
 
-int ui::advisor_military_window::draw_background() {
+int ui::advisor_military_window::draw_background(UiFlags flags) {
     int enemy_text_id = 8;
     if (g_city.figures.enemies) { enemy_text_id = 10; }
     else if (g_city.figures.kingdome_soldiers) { enemy_text_id = 11; }

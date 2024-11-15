@@ -285,18 +285,20 @@ void splitStringByNewline(const std::string &str, T &result) {
 }
 
 generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, UiFlags flags, std::function<void(int, int)> cb) {
-    const vec2i offset = g_state.offset();
-
-    g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
-    generic_button &gbutton = g_state.buttons.back().g_button;
-    gbutton.hovered = is_button_hover(gbutton, offset);
-    gbutton.clip = graphics_clip_rectangle();
     const bool grayed = !!(flags & UiFlags_Grayed);
     const bool hasbody = !(flags & UiFlags_NoBody);
     const bool hasborder = !(flags & UiFlags_NoBorder);
     const bool splittext = !!(flags & UiFlags_SplitText);
     const bool alingxcenter = !!(flags & UiFlags_AlignXCentered);
     const bool alignleft = !!(flags & UiFlags_AlignLeft);
+    const bool readonly = !!(flags & UiFlags_Readonly);
+
+    const vec2i offset = g_state.offset();
+
+    g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
+    generic_button &gbutton = g_state.buttons.back().g_button;
+    gbutton.hovered = is_button_hover(gbutton, offset) && !readonly;
+    gbutton.clip = graphics_clip_rectangle();
 
     if (hasbody) {
         button_border_draw(offset + pos, size, gbutton.hovered && !grayed);
@@ -765,7 +767,7 @@ void ui::elabel::draw(UiFlags flags) {
     ui::label(_text.c_str(), pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0}), _font, _flags, size.x);
 
     if (_draw_callback) {
-        _draw_callback(this);
+        _draw_callback(this, flags);
     }
 }
 
@@ -976,7 +978,7 @@ void ui::etext::draw(UiFlags flags) {
     }
 
     if (_draw_callback) {
-        _draw_callback(this);
+        _draw_callback(this, flags);
     }
 }
 

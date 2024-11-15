@@ -188,7 +188,7 @@ void window_advisors::init() {
 
 void window_advisors::draw_background(int flags) {
     graphics_set_to_dialog();
-    advisor_height = current_advisor_window->draw_background();
+    advisor_height = current_advisor_window->draw_background(flags);
     graphics_reset_dialog();
 }
 
@@ -198,7 +198,7 @@ void window_advisors::draw_foreground(int flags) {
     current_advisor_window->ui_draw_foreground(flags);
 
     graphics_set_to_dialog();
-    current_advisor_window->draw_foreground();
+    current_advisor_window->draw_foreground(flags);
     graphics_reset_dialog();
 }
 

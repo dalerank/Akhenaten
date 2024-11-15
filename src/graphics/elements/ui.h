@@ -105,7 +105,7 @@ struct recti {
 struct element {
     using ptr = std::shared_ptr<element>;
     using items = std::vector<ptr>;
-    using draw_callback = std::function<void(element*)>;
+    using draw_callback = std::function<void(element*, UiFlags)>;
 
     xstring id;
     vec2i pos;

@@ -34,7 +34,7 @@ void ui::mission_briefing_window::init() {
     }
 }
 
-int ui::mission_briefing_window::draw_background() {
+int ui::mission_briefing_window::draw_background(UiFlags flags) {
     auto &data = g_mission_briefing;
     window_draw_underlying_window(UiFlags_None);
 
@@ -102,7 +102,7 @@ int ui::mission_briefing_window::draw_background() {
 static void show(void) {
     static window_type window = {
         WINDOW_MISSION_BRIEFING,
-        [] (int) { g_mission_briefing.draw_background(); },
+        [] (int flags) { g_mission_briefing.draw_background(flags); },
         [] (int flags) { g_mission_briefing.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_mission_briefing.ui_handle_mouse(m); }
     };

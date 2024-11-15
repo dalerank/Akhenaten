@@ -10,10 +10,10 @@ namespace ui {
         using widget::load;
 
         void close();
-        virtual int draw_background() override;
+        virtual int draw_background(UiFlags flags) override;
+        virtual void draw_foreground(UiFlags flags) override {}
         virtual int handle_mouse(const mouse *m) override { return 0; }
         virtual int ui_handle_mouse(const mouse *m) override;
-        virtual void draw_foreground() override {}
         virtual int get_tooltip_text() override { return 0; }
         virtual void init() override {}
         void get_tooltip(tooltip_context *c);

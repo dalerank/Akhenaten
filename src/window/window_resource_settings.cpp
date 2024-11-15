@@ -21,9 +21,9 @@
 struct trade_resource_settings_window : autoconfig_window_t<trade_resource_settings_window> {
     e_resource resource;
 
-    virtual int draw_background() override;
+    virtual int draw_background(UiFlags flags) override;
+    virtual void draw_foreground(UiFlags flags) override;
     virtual int handle_mouse(const mouse *m) override { return 0; }
-    virtual void draw_foreground() override;
     virtual int get_tooltip_text() override { return 0; }
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override;
@@ -58,7 +58,7 @@ void trade_resource_settings_window::init() {
     ui["production_store"].text_var("%u %s %s", stored, ui::str(8, 10), ui::str(54, 15));
 }
 
-int trade_resource_settings_window::draw_background() {
+int trade_resource_settings_window::draw_background(UiFlags flags) {
     window_draw_underlying_window(UiFlags_Readonly);
 
     bstring128 production_state;
@@ -87,7 +87,7 @@ int trade_resource_settings_window::draw_background() {
     return 0;
 }
 
-void trade_resource_settings_window::draw_foreground() {
+void trade_resource_settings_window::draw_foreground(UiFlags flags) {
     ui.begin_widget(ui.pos);
     ui.draw();
 
@@ -197,8 +197,8 @@ int trade_resource_settings_window::ui_handle_mouse(const mouse* m) {
 void window_resource_settings_show(e_resource resource) {
     static window_type window = {
         WINDOW_RESOURCE_SETTINGS,
-        [] (int) { trade_resource_settings_w.draw_background(); },
-        [] (int) { trade_resource_settings_w.draw_foreground(); },
+        [] (int) { trade_resource_settings_w.draw_background(0); },
+        [] (int) { trade_resource_settings_w.draw_foreground(0); },
         [] (const mouse *m, const hotkeys *h) { trade_resource_settings_w.ui_handle_mouse(m); }
     };
 

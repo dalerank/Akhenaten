@@ -46,9 +46,9 @@ struct sidebar_window_extra : public autoconfig_window_t<sidebar_window_extra> {
     objective kingdom;
     objective population;
 
-    virtual int draw_background() override;
+    virtual int draw_background(UiFlags flags) override;
+    virtual void draw_foreground(UiFlags flags) override;
     virtual int handle_mouse(const mouse *m) override { return 0; }
-    virtual void draw_foreground() override;
     virtual int get_tooltip_text() override { return 0; }
     virtual void init() override {}
 
@@ -167,7 +167,7 @@ void sidebar_window_extra::draw_objective(pcstr prefix, int text_group, int text
     ui[id("current")].text_var("%u (%u)", obj.value, obj.target);
 }
 
-int sidebar_window_extra::draw_background() {
+int sidebar_window_extra::draw_background(UiFlags flags) {
     this->size.y = calculate_height();
 
     int available_height = screen_height() - offset.y - size.y;
@@ -196,13 +196,13 @@ int sidebar_extra_draw(vec2i offset) {
     g_sidebar_extra.info_to_display = SIDEBAR_EXTRA_DISPLAY_ALL;
 
     g_sidebar_extra.pos = offset;
-    g_sidebar_extra.draw_background();
-    g_sidebar_extra.draw_foreground();
+    g_sidebar_extra.draw_background(0);
+    g_sidebar_extra.draw_foreground(0);
 
     return g_sidebar_extra.calculate_height();
 }
 
-void sidebar_window_extra::draw_foreground() {
+void sidebar_window_extra::draw_foreground(UiFlags flags) {
     if (is_collapsed) {
         return;
     }

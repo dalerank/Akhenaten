@@ -88,8 +88,8 @@ struct empire_window : public autoconfig_window_t<empire_window> {
 
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
-    virtual void draw_foreground() override {}
-    virtual int draw_background() override;
+    virtual void draw_foreground(UiFlags flags) override {}
+    virtual int draw_background(UiFlags flags) override;
     virtual void ui_draw_foreground(UiFlags flags) override;
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override;
@@ -125,14 +125,14 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     void draw_empire_object(const empire_object *obj);
     void draw_paneling();
     void draw_object_info();
-    void draw_city_want_sell(ui::element *e);
-    void draw_city_want_buy(ui::element *e);
-    void draw_city_selling(ui::element *e);
-    void draw_city_buy(ui::element *e);
+    void draw_city_want_sell(ui::element *e, UiFlags flags);
+    void draw_city_want_buy(ui::element *e, UiFlags flags);
+    void draw_city_selling(ui::element *e, UiFlags flags);
+    void draw_city_buy(ui::element *e, UiFlags flags);
     bool is_outside_map(int x, int y);
     void determine_selected_object(const mouse *m);
     void draw_city_info(const empire_object *object);
-    void draw_trade_resource(e_resource resource, int trade_now, int trade_max, vec2i offset, e_font font);
+    void draw_trade_resource(UiFlags flags, e_resource resource, int trade_now, int trade_max, vec2i offset, e_font font);
     void draw_trade_route(int route_id, e_empire_route_state effect);
     void draw_object_tooltip();
 };
@@ -144,10 +144,24 @@ void empire_window::init() {
     int selected_object = g_empire_map.selected_object();
     selected_city = selected_object ? g_empire.get_city_for_object(selected_object - 1) : 0;
 
-    ui["city_want_sell_items"].ondraw([this] (ui::element *e) { draw_city_want_sell(e); });
-    ui["city_want_buy_items"].ondraw([this] (ui::element *e) { draw_city_want_buy(e); });
-    ui["city_sell_items"].ondraw([this] (ui::element *e) { draw_city_selling(e); });
-    ui["city_buy_items"].ondraw([this] (ui::element *e) { draw_city_buy(e); });
+    ui["city_want_sell_items"].ondraw([this] (ui::element *e, UiFlags flags) { draw_city_want_sell(e, flags); });
+    ui["city_want_buy_items"].ondraw([this] (ui::element *e, UiFlags flags) { draw_city_want_buy(e, flags); });
+    ui["city_sell_items"].ondraw([this] (ui::element *e, UiFlags flags) { draw_city_selling(e, flags); });
+    ui["city_buy_items"].ondraw([this] (ui::element *e, UiFlags flags) { draw_city_buy(e, flags); });
+
+    ui["button_help"].onclick([] { window_message_dialog_show(MESSAGE_DIALOG_EMPIRE_MAP, -1, 0); });
+    ui["button_close"].onclick([] { window_city_show(); });
+    ui["button_advisor"].onclick([] { window_advisors_show_advisor(ADVISOR_TRADE); });
+
+    ui["button_open_trade"].onclick([] {
+        window_yes_dialog_show("#popup_dialog_open_trade", [] {
+            empire_city *city = g_empire.city(g_empire_window.selected_city);
+            city_finance_process_construction(city->cost_to_open);
+            city->is_open = 1;
+            window_trade_opened_show(g_empire_window.selected_city);
+        });
+    });
+
 }
 
 void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) {
@@ -201,9 +215,9 @@ void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) 
     }
 }
 
-void empire_window::draw_trade_resource(e_resource resource, int trade_now, int trade_max, vec2i offset, e_font font) {
+void empire_window::draw_trade_resource(UiFlags flags, e_resource resource, int trade_now, int trade_max, vec2i offset, e_font font) {
     ui.icon(offset + vec2i{ 1, 1 }, resource, UiFlags_Outline);
-    ui.button("", offset - vec2i{ 2, 2 }, vec2i{ 105, 24 }, fonts_vec{}, UiFlags_NoBody)
+    ui.button("", offset - vec2i{ 2, 2 }, vec2i{ 105, 24 }, fonts_vec{}, flags|UiFlags_NoBody)
          .tooltip({23, resource})
          .onclick([resource] {
             window_resource_settings_show(resource);
@@ -224,7 +238,7 @@ void empire_window::draw_trade_resource(e_resource resource, int trade_now, int 
     }
 }
 
-void empire_window::draw_city_want_sell(ui::element *e) {
+void empire_window::draw_city_want_sell(ui::element *e, UiFlags flags) {
     int selected_object = g_empire_map.selected_object();
     const empire_object *object = empire_object_get(selected_object - 1);
     const empire_city *city = g_empire.city(selected_city);
@@ -239,12 +253,12 @@ void empire_window::draw_city_want_sell(ui::element *e) {
 
         int trade_max = trade_route.limit(r.type);
         trade_max = stack_proper_quantity(trade_max, r.type);
-        draw_trade_resource(r.type, -1, trade_max, e->pos + item_sell.size * sell_index, item_sell.font());
+        draw_trade_resource(flags, r.type, -1, trade_max, e->pos + item_sell.size * sell_index, item_sell.font());
         sell_index++;
     }
 }
 
-void empire_window::draw_city_want_buy(ui::element *e) {
+void empire_window::draw_city_want_buy(ui::element *e, UiFlags flags) {
     int selected_object = g_empire_map.selected_object();
     const empire_object *object = empire_object_get(selected_object - 1);
     const empire_city *city = g_empire.city(selected_city);
@@ -259,12 +273,12 @@ void empire_window::draw_city_want_buy(ui::element *e) {
 
         int trade_max = trade_route.limit(r.type);
         trade_max = stack_proper_quantity(trade_max, r.type);
-        draw_trade_resource(r.type, -1, trade_max, e->pos + item_buy.size * buy_index, item_buy.font());
+        draw_trade_resource(flags, r.type, -1, trade_max, e->pos + item_buy.size * buy_index, item_buy.font());
         buy_index++;
     }
 }
 
-void empire_window::draw_city_buy(ui::element *e) {
+void empire_window::draw_city_buy(ui::element *e, UiFlags flags) {
     int selected_object = g_empire_map.selected_object();
     const empire_object *object = empire_object_get(selected_object - 1);
     const empire_city *city = g_empire.city(selected_city);
@@ -284,7 +298,7 @@ void empire_window::draw_city_buy(ui::element *e) {
         trade_max = stack_proper_quantity(trade_max, resource);
 
         vec2i local_offset = vec2i{ item_buy.size.x, 0 } * index;
-        draw_trade_resource(resource, trade_now, trade_max, e_offset + local_offset, item_buy.font());
+        draw_trade_resource(flags, resource, trade_now, trade_max, e_offset + local_offset, item_buy.font());
         index++;
 
         if (local_offset.x > e->size.x) {
@@ -294,7 +308,7 @@ void empire_window::draw_city_buy(ui::element *e) {
     }
 }
 
-void empire_window::draw_city_selling(ui::element *e) {
+void empire_window::draw_city_selling(ui::element *e, UiFlags flags) {
     int selected_object = g_empire_map.selected_object();
     const empire_object *object = empire_object_get(selected_object - 1);
     const empire_city *city = g_empire.city(selected_city);
@@ -314,7 +328,7 @@ void empire_window::draw_city_selling(ui::element *e) {
         trade_max = stack_proper_quantity(trade_max, resource);
 
         vec2i local_offset = vec2i{ item_sell.size.x, 0 } * index;
-        draw_trade_resource(resource, trade_now, trade_max, e_offset + local_offset, item_sell.font());
+        draw_trade_resource(flags, resource, trade_now, trade_max, e_offset + local_offset, item_sell.font());
         index++;
 
         if(local_offset.x > e->size.x) {
@@ -626,7 +640,7 @@ void empire_window::draw_paneling() {
     graphics_reset_clip_rectangle();
 }
 
-int empire_window::draw_background() {
+int empire_window::draw_background(UiFlags flags) {
     auto &data = g_empire_window;
     int s_width = screen_width();
     int s_height = screen_height();
@@ -638,27 +652,6 @@ int empire_window::draw_background() {
     if (data.min_pos.x || data.min_pos.y) {
         graphics_clear_screen();
     }
-
-    ui["button_help"].onclick([] {
-        window_message_dialog_show(MESSAGE_DIALOG_EMPIRE_MAP, -1, 0);
-    });
-
-    ui["button_close"].onclick([] {
-        window_city_show();
-    });
-
-    ui["button_advisor"].onclick([] {
-        window_advisors_show_advisor(ADVISOR_TRADE);
-    });
-
-    ui["button_open_trade"].onclick([] {
-        window_yes_dialog_show("#popup_dialog_open_trade", [] {
-            empire_city *city = g_empire.city(g_empire_window.selected_city);
-            city_finance_process_construction(city->cost_to_open);
-            city->is_open = 1;
-            window_trade_opened_show(g_empire_window.selected_city);
-        });
-    });
 
     return 0;
 }
@@ -694,7 +687,7 @@ void empire_window::ui_draw_foreground(UiFlags flags) {
     draw_paneling();
 
     ui.begin_widget({ 0, 0 });
-    ui.draw();
+    ui.draw(flags);
     
     draw_object_info();
     draw_object_tooltip();
@@ -711,8 +704,8 @@ void empire_window::draw_object_tooltip() {
 void window_empire_show() {
     static window_type window = {
         WINDOW_EMPIRE,
-        [] (int) { g_empire_window.draw_background(); },
-        [] (int) { g_empire_window.ui_draw_foreground(0); },
+        [] (int flags) { g_empire_window.draw_background(flags); },
+        [] (int flags) { g_empire_window.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_empire_window.ui_handle_mouse(m); },
         nullptr
     };

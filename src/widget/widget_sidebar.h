@@ -36,9 +36,9 @@ struct sidebar_window_expanded : public autoconfig_window_t<sidebar_window_expan
 
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
-    virtual void draw_foreground() override {}
+    virtual void draw_foreground(UiFlags flags) override {}
+    virtual int draw_background(UiFlags flags) override { return 0; }
     virtual void ui_draw_foreground(UiFlags flags) override;
-    virtual int draw_background() override { return 0; }
 
     virtual void load(archive arch, pcstr section) override;
     virtual void init() override;
@@ -63,9 +63,9 @@ struct sidebar_window_collapsed : public autoconfig_window_t<sidebar_window_coll
 
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
-    virtual void draw_foreground() override {}
+    virtual void draw_foreground(UiFlags flags) override {}
+    virtual int draw_background(UiFlags flags) override { return 0; }
     virtual void ui_draw_foreground(UiFlags flags) override;
-    virtual int draw_background() override { return 0; }
 
     virtual void load(archive arch, pcstr section) override;
     virtual void init() override;

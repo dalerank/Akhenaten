@@ -53,7 +53,7 @@ static int get_education_advice() {
     return advice_id;
 }
 
-int ui::advisor_education_window::draw_background() {
+int ui::advisor_education_window::draw_background(UiFlags flags) {
     ui["population"].text_var("%u %s", city_population(), ui::str(57, 1));
     ui["school_age"].text_var("%u %s", city_population_school_age(), ui::str(57, 2));
     ui["academy_age"].text_var("%u %s", city_population_academy_age(), ui::str(57, 3));
