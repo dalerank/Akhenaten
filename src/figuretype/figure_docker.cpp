@@ -81,7 +81,7 @@ int figure_docker::try_export_resource(building* b, e_resource resource, int cit
 
     building_storage_room* space = warehouse->room();
     while (space) {
-        if (space->stored_full_amount && space->base.subtype.warehouse_resource_id == resource) {
+        if (space->base.stored_amount_first && space->base.subtype.warehouse_resource_id == resource) {
             auto &trade_route = g_empire.city(city_id)->get_route();
             trade_route.increase_traded(resource, 100);
             space->remove_export(resource);
@@ -139,7 +139,7 @@ int figure_docker::get_closest_warehouse_for_import(tile2i pos, int city_id, int
                 distance_penalty -= 8;
             }
 
-            if (space->base.subtype.warehouse_resource_id == resource && space->stored_full_amount < 400) {
+            if (space->base.subtype.warehouse_resource_id == resource && space->base.stored_amount_first < 400) {
                 distance_penalty -= 4;
             }
 

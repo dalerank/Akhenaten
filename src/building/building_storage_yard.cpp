@@ -100,7 +100,7 @@ int building_storage_yard::freespace(e_resource resource) {
         if (!space->base.subtype.warehouse_resource_id) {
             freespace += 400;
         } else if(space->base.subtype.warehouse_resource_id == resource) {
-            freespace += (400 - space->stored_full_amount);
+            freespace += (400 - space->base.stored_amount_first);
         }
         space = space->next_room();
     }
@@ -146,7 +146,7 @@ int building_storage_yard::add_resource(e_resource resource, bool is_produced, i
             bool space_found = false;
             while (space) {
                 if (!space->base.subtype.warehouse_resource_id || space->base.subtype.warehouse_resource_id == resource) {
-                    if (space->stored_full_amount < 400) {
+                    if (space->base.stored_amount_first < 400) {
                         space_found = true;
                         break;
                     }
@@ -161,9 +161,9 @@ int building_storage_yard::add_resource(e_resource resource, bool is_produced, i
 
         city_resource_add_to_storageyard(resource, 1);
         space->base.subtype.warehouse_resource_id = resource;
-        int space_on_tile = 400 - space->stored_full_amount;
+        int space_on_tile = 400 - space->base.stored_amount_first;
         int unloading_amount = std::min<int>(space_on_tile, amount_left);
-        space->stored_full_amount += unloading_amount;
+        space->base.stored_amount_first += unloading_amount;
         space_on_tile -= unloading_amount;
         if (space_on_tile == 0) {
             look_for_space = true;
@@ -215,19 +215,19 @@ void building_storageyard_remove_resource_curse(building* b, int amount) {
     
     building_storage_room* space = warehouse->room();
     while(space && amount > 0) {
-        if (space->stored_full_amount <= 0) {
+        if (space->base.stored_amount_first <= 0) {
             continue;
         }
 
         e_resource resource = space->base.subtype.warehouse_resource_id;
-        if (space->stored_full_amount > amount) {
+        if (space->base.stored_amount_first > amount) {
             city_resource_remove_from_storageyard(resource, amount);
-            space->stored_full_amount -= amount;
+            space->base.stored_amount_first -= amount;
             amount = 0;
         } else {
-            city_resource_remove_from_storageyard(resource, space->stored_full_amount);
-            amount -= space->stored_full_amount;
-            space->stored_full_amount = 0;
+            city_resource_remove_from_storageyard(resource, space->base.stored_amount_first);
+            amount -= space->base.stored_amount_first;
+            space->base.stored_amount_first = 0;
             space->base.subtype.warehouse_resource_id = RESOURCE_NONE;
         }
         space->set_image(resource);
@@ -362,9 +362,9 @@ int building_storage_yard::for_getting(e_resource resource, tile2i* dst) {
         building_storage_room* space = other_warehouse->room();
         const storage_t* s = space->storage();
         while (space) {
-            if (space->stored_full_amount > 0) {
+            if (space->base.stored_amount_first > 0) {
                 if (space->base.subtype.warehouse_resource_id == resource)
-                    amounts_stored += space->stored_full_amount;
+                    amounts_stored += space->base.stored_amount_first;
             }
             space = space->next_room();
         }
@@ -457,13 +457,13 @@ storage_worker_task building_storage_yard_determine_getting_up_resources(buildin
         int room = 0;         // total potential room for resource!
         auto space = warehouse->room();
         while (space) {
-            if (space->stored_full_amount <= 0) { // this space (tile) is empty! FREE REAL ESTATE
+            if (space->base.stored_amount_first <= 0) { // this space (tile) is empty! FREE REAL ESTATE
                 room += 4;
             }
 
             if (space->base.subtype.warehouse_resource_id == check_resource) { // found a space (tile) with resource on it!
-                total_stored += space->stored_full_amount;   // add loads to total, if any!
-                room += 400 - space->stored_full_amount;     // add room to total, if any!
+                total_stored += space->base.stored_amount_first;   // add loads to total, if any!
+                room += 400 - space->base.stored_amount_first;     // add room to total, if any!
             }
             space = space->next_room();
         }

@@ -6,13 +6,11 @@
 struct building;
 
 struct building_info_window : public common_info_window {
+    e_advisor first_advisor = ADVISOR_NONE;
     building_info_window();
 
     using widget::load;
-    virtual void load(archive arch, pcstr section) override {
-        common_info_window::load(arch, section);
-    }
-
+    virtual void load(archive arch, pcstr section) override;
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
     virtual void window_info_foreground(object_info &c) override;
     virtual void window_info_background(object_info &c) override;

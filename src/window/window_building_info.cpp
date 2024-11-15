@@ -36,6 +36,11 @@ int building_info_window::window_info_handle_mouse(const mouse *m, object_info &
     return b->dcast()->window_info_handle_mouse(m, c);
 }
 
+void building_info_window::load(archive arch, pcstr section) {
+    common_info_window::load(arch, section);
+    first_advisor = arch.r_type<e_advisor>("first_advisor");
+}
+
 static void draw_native(object_info* c, int group_id) {
     c->help_id = 0;
     window_building_play_sound(c, "Wavs/empty_land.wav");
@@ -55,7 +60,6 @@ void window_building_draw_native_meeting(object_info* c) {
 void window_building_draw_native_crops(object_info* c) {
     draw_native(c, 133);
 }
-
 
 void building_info_window::window_info_foreground(object_info &c) {
     common_info_window::window_info_foreground(c);
@@ -82,22 +86,22 @@ void building_info_window::common_info_background(object_info& c) {
 
     window_building_play_sound(&c, b->get_sound()); // TODO: change to firehouse
 
-    std::pair<int, int> reason = { c.group_id, 0 };
-    std::pair<int, int> workers = { c.group_id, 8 };
+    textid reason = { c.group_id, 0 };
+    textid workers = { c.group_id, 8 };
     if (!c.has_road_access) {
         reason = { 69, 25 };
     } else if (!b->num_workers) {
-        reason.second = 9;
+        reason.id = 9;
     } else {
-        reason.second = b->has_figure(0) ? 2 : 3;
-        workers.second = approximate_value(c.worker_percentage / 100.f, make_array(4, 5, 6, 7));
+        reason.id = b->has_figure(0) ? 2 : 3;
+        workers.id = approximate_value(c.worker_percentage / 100.f, make_array(4, 5, 6, 7));
     }
 
     bstring512 warning_text(ui::str(c.group_id, 1), " ", ui::str(reason));
     ui["warning_text"] = warning_text;
 
     fill_employment_details(c);
-    ui["workers_desc"] = ui::str(workers.first, workers.second);
+    ui["workers_desc"] = ui::str(workers);
 }
 
 void building_info_window::fill_employment_details(object_info &c) {
@@ -153,6 +157,9 @@ void building_info_window::init(object_info &c) {
 
     g_debug_building_id = c.building_id;
     building *b = building_get(c);
+    if (first_advisor != ADVISOR_NONE) {
+        c.go_to_advisor.first = first_advisor;
+    }
 
     if (c.can_play_sound) {
         g_sound.speech_play_file(b->get_sound(), 255);

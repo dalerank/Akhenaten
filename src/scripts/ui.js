@@ -1552,6 +1552,7 @@ window info_window_storageyard_orders = {
 }
 
 window info_window_storageyard = {
+	first_advisor		: ADVISOR_TRADE,
 	ui : {
 		background    : outer_panel({size: [29, 21] }),
 		title 		    : text({pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -1596,6 +1597,8 @@ window info_window_storageyard = {
 		button_help   : help_button({}),
 		button_close  : close_button({}),
 		mothball      : button({margin:{right:-90, bottom:-40}, size:[23, 23]}),
+
+		first_advisor : image_button({margin:{left:40, bottom:-40}, size:[28, 28], pack:PACK_GENERAL, id:106 }),
 	}
 }
 

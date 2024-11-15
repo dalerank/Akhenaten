@@ -17,7 +17,6 @@ info_window_storageyard storageyard_infow;
 info_window_storageyard_orders storageyard_orders_infow;
 
 void info_window_storageyard::window_info_background(object_info &c) {
-    c.go_to_advisor = { ADVISOR_NONE, ADVISOR_IMPERIAL, ADVISOR_TRADE };
     if (c.storage_show_special_orders) {
         storageyard_orders_infow.draw_background(&c);
         return;
@@ -62,7 +61,7 @@ int info_window_storageyard::window_info_handle_mouse(const mouse *m, object_inf
 }
 
 void info_window_storageyard::init(object_info &c) {
-    building_info_window_t::init(c);
+    building_info_window::init(c);
 
     building_storage *warehouse = c.building_get()->dcast_storage();
     assert(warehouse);

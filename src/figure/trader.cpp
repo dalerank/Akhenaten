@@ -99,11 +99,11 @@ e_resource trader_get_buy_resource(building* b, int city_id, int amount) {
     building_storage_room* space = warehouse->room();
     while (space) {
         e_resource resource = space->base.subtype.warehouse_resource_id;
-        if (space->stored_full_amount >= amount && g_empire.can_export_resource_to_city(city_id, resource)) {
+        if (space->base.stored_amount_first >= amount && g_empire.can_export_resource_to_city(city_id, resource)) {
             // update stocks
             city_resource_remove_from_storageyard(resource, amount);
-            space->stored_full_amount -= amount;
-            if (space->stored_full_amount <= 0)
+            space->base.stored_amount_first -= amount;
+            if (space->base.stored_amount_first <= 0)
                 space->base.subtype.warehouse_resource_id = RESOURCE_NONE;
 
             // update finances
@@ -138,7 +138,7 @@ e_resource trader_get_sell_resource(building* b, int city_id) {
     // add to existing bay with room
     building_storage_room* space = warehouse->room();
     while (space) {
-        if (space->stored_full_amount > 0 && space->stored_full_amount < 400
+        if (space->base.stored_amount_first > 0 && space->base.stored_amount_first < 400
             && space->base.subtype.warehouse_resource_id == resource_to_import) {
             space->add_import(resource_to_import);
             city_trade_next_caravan_import_resource();
@@ -149,7 +149,7 @@ e_resource trader_get_sell_resource(building* b, int city_id) {
     // add to empty bay
     space = warehouse->room();
     while (space) {
-        if (!space->stored_full_amount) {
+        if (!space->base.stored_amount_first) {
             space->add_import(resource_to_import);
             city_trade_next_caravan_import_resource();
             return resource_to_import;
@@ -162,7 +162,7 @@ e_resource trader_get_sell_resource(building* b, int city_id) {
         if (g_empire.can_import_resource_from_city(city_id, resource_to_import)) {
             space = warehouse->room();
             while (space) {
-                if (space->stored_full_amount < 400
+                if (space->base.stored_amount_first < 400
                     && space->base.subtype.warehouse_resource_id == resource_to_import) {
                     space->add_import(resource_to_import);
                     return resource_to_import;

@@ -161,7 +161,7 @@ int figure_trader::get_closest_storageyard(tile2i tile, int city_id, int distanc
                     if (space->base.subtype.warehouse_resource_id == RESOURCE_NONE)
                         distance_penalty -= 16;
 
-                    if (importable[space->base.subtype.warehouse_resource_id] && space->stored_full_amount < 400
+                    if (importable[space->base.subtype.warehouse_resource_id] && space->base.stored_amount_first < 400
                         && space->base.subtype.warehouse_resource_id == resource) {
                         distance_penalty -= 8;
                     }
