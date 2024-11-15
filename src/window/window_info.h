@@ -77,6 +77,13 @@ struct common_info_window : public ui::widget {
                 continue;
             }
 
+            bstring128 loc("#");
+            args_handled = sscanf(item.key.c_str(), "${loc.%[^}]}", loc.data() + 1);
+            if (args_handled == 1) {
+                item.value = lang_text_from_key(loc.c_str());
+                continue;
+            }
+
             bstring128 domain, prop;
             args_handled = sscanf(item.key.c_str(), "${%[^.].%[^}]}", domain.data(), prop.data());
             if (args_handled == 2) {

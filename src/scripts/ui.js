@@ -161,7 +161,7 @@ top_menu_widget = {
 	},
 
 	ui : {
-		background 		: dummy({pos:[0, 0], size:[sw(0), 30]}),
+		background 		: dummy({size:[sw(0), 30]}),
 		date          : link({pos:[0, 2], margin:{right: -150}, size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 63] }),
 		population    : link({pos:[0, 2], margin:{right: -320}, size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 62] }),
 		funds         : link({pos:[0, 2], margin:{right: -450}, size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 62] }),
@@ -1553,38 +1553,42 @@ window info_window_storageyard_orders = {
 
 window info_window_storageyard = {
 	ui : {
-		background    : outer_panel({size: [29, 19] }),
+		background    : outer_panel({size: [29, 21] }),
 		title 		    : text({pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
    
-		storing       : text({ pos: [34, 40], font : FONT_NORMAL_BLACK_ON_LIGHT }),
-		free_space    : text({ pos: [220, 40], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		warning_text  : text({pos: [22, 36], wrap:px(28), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		storing       : text({ pos: [24, 90], text:"${loc.granary_storing} ${building.total_stored} ${loc.granary_units}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		free_space    : text({ pos: [220, 90], font : FONT_NORMAL_BLACK_ON_LIGHT }),
    
-		good0_icon    : resource_icon({pos: [32, 60] }),
-		good0_text    : text({pos: [54, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good1_icon    : resource_icon({pos: [172, 60] }),
-		good1_text    : text({pos: [194, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good2_icon    : resource_icon({pos: [292, 60] }),
-		good2_text    : text({pos: [314, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-   
-		good3_icon    : resource_icon({pos: [32, 90] }),
-		good3_text    : text({pos: [54, 94], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good4_icon    : resource_icon({pos: [172, 60] }),
-		good4_text    : text({pos: [194, 94], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good5_icon    : resource_icon({pos: [292, 90] }),
-		good5_text    : text({pos: [314, 94], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-   
-		good6_icon    : resource_icon({pos: [32, 120] }),
-		good6_text    : text({pos: [54, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good7_icon    : resource_icon({pos: [172, 120] }),
-		good7_text    : text({pos: [194, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		good8_icon    : resource_icon({pos: [292, 120] }),
-		good8_text    : text({pos: [314, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+    stored_items  : dummy({pos:[0, 110],
+    	ui : {
+				good0_icon : resource_icon({pos: [32, 0] }),
+				good0_text : text({pos: [54, 4], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+				good1_icon : resource_icon({pos: [172, 0] }),
+				good1_text : text({pos: [194, 4], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+				good2_icon : resource_icon({pos: [292, 0] }),
+				good2_text : text({pos: [314, 4], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		    
+				good3_icon : resource_icon({pos: [32, 30] }),
+				good3_text : text({pos: [54, 34], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+				good4_icon : resource_icon({pos: [172, 30] }),
+				good4_text : text({pos: [194, 34], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+				good5_icon : resource_icon({pos: [292, 30] }),
+				good5_text : text({pos: [314, 34], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		    
+				good6_icon : resource_icon({pos: [32, 60] }),
+				good6_text : text({pos: [54, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+				good7_icon : resource_icon({pos: [172, 60] }),
+				good7_text : text({pos: [194, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+				good8_icon : resource_icon({pos: [292, 60] }),
+				good8_text : text({pos: [314, 64], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+			}
+		}),
 
-		warning_text  : text({pos: [32, 56], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-		workers_panel : inner_panel({pos : [16, 168], size: [27, 5] }),
-		workers_img   : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 173] }),
-		workers_text  : text({pos: [70, 178], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
-		workers_desc  : text({pos: [70, 178 + 16], font: FONT_NORMAL_BLACK_ON_DARK }),
+		workers_panel : inner_panel({pos : [16, 198], size: [27, 5] }),
+		workers_img   : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 203] }),
+		workers_text  : text({pos: [70, 208], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		workers_desc  : text({pos: [70, 208 + 16], font: FONT_NORMAL_BLACK_ON_DARK }),
 		cartstate_img : resource_icon({pos:[40, 220] }),
 		cartstate_desc: text({pos: [32, 223], wrap:px(27), font : FONT_NORMAL_BLACK_ON_DARK, multiline:true }),
 

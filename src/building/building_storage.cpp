@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/rotation.h"
+#include "core/object_property.h"
 #include "city/city_resource.h"
 
 #include "io/io_buffer.h"
@@ -297,3 +298,23 @@ int building_storage::accepting_amount(e_resource resource) {
     }
 }
 
+struct sproperty {
+    xstring domain;
+    xstring name;
+
+    std::function<bvariant(const building_storage &, const xstring &)> handler;
+};
+
+const sproperty sproperties[] = {
+    { tags().building, tags().total_stored, [] (const building_storage &b, const xstring &) { return bvariant(b.total_stored()); }},
+};
+
+bvariant building_storage::get_property(const xstring &domain, const xstring &name) const {
+    for (const auto &prop : sproperties) {
+        if (prop.domain == domain && prop.name == name) {
+            return prop.handler(*this, name);
+        }
+    }
+
+    return building_impl::get_property(domain, name);
+}

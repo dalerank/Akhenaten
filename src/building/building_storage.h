@@ -83,6 +83,7 @@ public:
     bool is_empty_all() const;
     bool is_gettable(e_resource resource);
     bool is_emptying(e_resource resource);
+    virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
 
     void set_permission(int p);
     bool get_permission(int p);
@@ -94,4 +95,5 @@ public:
     virtual int freespace() = 0;
     virtual int total_stored() const = 0;
     virtual int add_resource(e_resource resource, bool is_produced, int amount, bool force) = 0;
+
 };

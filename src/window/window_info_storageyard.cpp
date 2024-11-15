@@ -20,13 +20,28 @@ void info_window_storageyard::window_info_background(object_info &c) {
     c.go_to_advisor = { ADVISOR_NONE, ADVISOR_IMPERIAL, ADVISOR_TRADE };
     if (c.storage_show_special_orders) {
         storageyard_orders_infow.draw_background(&c);
-    } else {
-        draw_background(&c);
+        return;
     }
-}
 
-void info_window_storageyard::draw_foreground(object_info *c) {
-    ui.draw();
+    building_info_window::window_info_background(c);
+
+    building_storage *warehouse = c.building_get()->dcast_storage();
+    assert(warehouse);
+
+    auto &data = g_window_building_distribution;
+    data.building_id = c.building_id;
+
+    // cartpusher state
+    figure *cartpusher = warehouse->get_figure(BUILDING_SLOT_SERVICE);
+    if (cartpusher->state == FIGURE_STATE_ALIVE) {
+        e_resource resource = cartpusher->get_resource();
+        ui["cartstate_img"].image(resource);
+        ui["cartstate_desc"] = ui::str(c.group_id, 17);
+    } else if (warehouse->num_workers()) {
+        // cartpusher is waiting for orders
+        ui["cartstate_img"].image(RESOURCE_NONE);
+        ui["cartstate_desc"] = ui::str(c.group_id, 15);
+    }
 }
 
 void info_window_storageyard::window_info_foreground(object_info &c) {
@@ -35,7 +50,7 @@ void info_window_storageyard::window_info_foreground(object_info &c) {
         return;
     }
     
-    draw_foreground(&c);
+    ui.draw();
 }
 
 int info_window_storageyard::window_info_handle_mouse(const mouse *m, object_info &c) {
@@ -46,22 +61,12 @@ int info_window_storageyard::window_info_handle_mouse(const mouse *m, object_inf
     return building_info_window::window_info_handle_mouse(m, c);
 }
 
-void info_window_storageyard::draw_background(object_info *c) {
-    if (c->storage_show_special_orders) {
-        storageyard_orders_infow.draw_background(c);
-        return;
-    }
+void info_window_storageyard::init(object_info &c) {
+    building_info_window_t::init(c);
 
-    building_info_window::window_info_background(*c);
-
-    building_storage *warehouse = c->building_get()->dcast_storage();
+    building_storage *warehouse = c.building_get()->dcast_storage();
     assert(warehouse);
 
-    auto &data = g_window_building_distribution;
-    data.building_id = c->building_id;
-
-    ui["warning_text"] = !c->has_road_access ? ui::str(69, 25) : ""; 
-    ui["storing"].text_var("#granary_storing %u #granary_units", warehouse->total_stored());
     ui["free_space"].text_var("#granary_space_for %u #granary_units", warehouse->freespace());
 
     const resource_list &resources = city_resource_get_available();
@@ -77,31 +82,16 @@ void info_window_storageyard::draw_background(object_info *c) {
     int gidx = 0;
     for (const auto &r : resources) {
         int loads = warehouse->amount(r.type);
-        if (loads) {         
+        if (loads) {
             ui[_icon(gidx)].image(r.type);
             ui[_text(gidx)].text_var("%u %s", loads, ui::str(23, r.type));
             ++gidx;
         }
     }
 
-    fill_employment_details(*c);
+    fill_employment_details(c);
 
-    // cartpusher state
-    figure *cartpusher = warehouse->get_figure(BUILDING_SLOT_SERVICE);
-    if (cartpusher->state == FIGURE_STATE_ALIVE) {
-        e_resource resource = cartpusher->get_resource();
-        ui["cartstate_img"].image(resource);
-        ui["cartstate_desc"] = ui::str(99, 17);
-    } else if (warehouse->num_workers()) {
-        // cartpusher is waiting for orders
-        ui["cartstate_img"].image(RESOURCE_NONE);
-        ui["cartstate_desc"] = ui::str(99, 15);
-    }
-
-    vec2i bgsize = ui["background"].pxsize();
-    ui["orders"].pos.y = bgsize.y - 40;
-
-    ui["orders"].onclick([c] {
-        c->storage_show_special_orders = 1;
+    ui["orders"].onclick([&c] {
+        c.storage_show_special_orders = 1;
     });
 }

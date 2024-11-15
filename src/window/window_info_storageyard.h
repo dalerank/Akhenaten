@@ -5,6 +5,7 @@
 #include "building/building.h"
 
 struct info_window_storageyard : public building_info_window_t<info_window_storageyard> {
+    virtual void init(object_info &c) override;
     virtual void window_info_background(object_info &c) override;
     virtual void window_info_foreground(object_info &c) override;
     virtual bool check(object_info &c) override {
@@ -13,9 +14,6 @@ struct info_window_storageyard : public building_info_window_t<info_window_stora
     }
 
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
-
-    void draw_background(object_info *c);
-    void draw_foreground(object_info *c);
 };
 
 struct info_window_storageyard_orders : building_info_window_t<info_window_storageyard_orders> {
