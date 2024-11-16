@@ -284,7 +284,7 @@ public:
             uint8_t pavillion_dancer;
             uint8_t senet_player;
             uint8_t magistrate;
-            uint8_t hippodrome;
+            uint8_t bullfighter;
             uint8_t school;
             uint8_t library;
             uint8_t academy;

@@ -164,7 +164,7 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.bandstand_musician);
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.senet_player);
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.magistrate);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.house.hippodrome);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.bullfighter);
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.school);
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.library);
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.academy);
