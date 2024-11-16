@@ -129,7 +129,7 @@ void city_t::house_service_decay_services() {
         decay_service(b.data.house.pavillion_musician);
         decay_service(b.data.house.senet_player);
         decay_service(b.data.house.magistrate);
-        decay_service(b.data.house.hippodrome);
+        decay_service(b.data.house.bullfighter);
         decay_service(b.data.house.school);
         decay_service(b.data.house.library);
         decay_service(b.data.house.academy);
@@ -220,25 +220,18 @@ void city_t::house_service_calculate_culture_aggregates() {
         // entertainment
         b->data.house.entertainment = base_entertainment;
         const int jugglers_value = std::max<int>(b->data.house.booth_juggler, b->data.house.bandstand_juggler);
-        b->data.house.entertainment += (jugglers_value / 6);
+        b->data.house.entertainment += (jugglers_value / 10);
  
         const int musicians_value = std::max<int>(b->data.house.bandstand_musician, b->data.house.pavillion_musician);
-        b->data.house.entertainment += (musicians_value / 6);
+        b->data.house.entertainment += (musicians_value / 5);
 
         const int dancers_value = b->data.house.pavillion_dancer;
-        b->data.house.entertainment += (dancers_value / 6);
+        b->data.house.entertainment += (dancers_value / 3);
 
-        if (b->data.house.senet_player) {
-            //            if (b->data.house.magistrate)
-            //                b->data.house.entertainment += 25;
-            //            else {
-            b->data.house.entertainment += 15;
-            //            }
-        }
+        const int senet_value = b->data.house.senet_player;
+        b->data.house.entertainment += (senet_value / 2.5f);
 
-        if (b->data.house.hippodrome) {
-            b->data.house.entertainment += 30;
-        }
+        b->data.house.entertainment = std::min<int>(b->data.house.entertainment, 100);
 
         // education
         b->data.house.education = 0;
