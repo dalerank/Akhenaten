@@ -193,7 +193,7 @@ add_subdirectory(ext/expat)
 add_subdirectory(ext/mujs)
 add_subdirectory(ext/lame)
 
-if (PLATFORM_ANDROID OR WIN_EMSCRIPTEN)
+if (PLATFORM_ANDROID OR WIN_EMSCRIPTEN OR APPLE)
    # no filters on android
 else()
     add_subdirectory(ext/gpupixel)
@@ -512,9 +512,9 @@ include_directories(${EXTMUJS_INCLUDE_DIR})
 include_directories(${CMRC_INCLUDE_DIR})
 include_directories(${EXTLAME_INCLUDE_DIR})
 
-if (PLATFORM_ANDROID OR WIN_EMSCRIPTEN)
-   # no filters on android
-   set(GPUPIXEL_LIBRARY "")
+if (PLATFORM_ANDROID OR WIN_EMSCRIPTEN OR APPLE)
+    # no filters on android
+    set(GPUPIXEL_LIBRARY "")
 else()
     include_directories(${GPUPIXEL_INCLUDE_DIR})
 endif()
