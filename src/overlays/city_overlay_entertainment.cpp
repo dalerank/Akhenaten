@@ -9,13 +9,8 @@ city_overlay* city_overlay_for_entertainment() {
     return &overlay;
 }
 
-city_overlay* city_overlay_for_senet_house() {
-    static city_overlay_senet_house overlay;
-    return &overlay;
-}
-
 int city_overlay_entertainment::get_column_height(const building *b) const {
-    return b->house_size && b->data.house.entertainment ? b->data.house.entertainment / 10 : NO_COLUMN;
+    return b->house_size ? b->data.house.entertainment / 10 : NO_COLUMN;
 }
 
 xstring city_overlay_entertainment::get_tooltip_for_building(tooltip_context *c, const building *b) const {
@@ -41,21 +36,5 @@ xstring city_overlay_entertainment::get_tooltip_for_building(tooltip_context *c,
         return ui::str(66, 73);
     } else {
         return ui::str(66, 74);
-    }
-}
-
-int city_overlay_senet_house::get_column_height(const building *b) const {
-    return b->house_size && b->data.house.hippodrome ? b->data.house.hippodrome / 10 : NO_COLUMN;
-}
-
-xstring city_overlay_senet_house::get_tooltip_for_building(tooltip_context *c, const building *b) const {
-    if (b->data.house.hippodrome <= 0) {
-        return ui::str(66, 87);
-    } else if (b->data.house.hippodrome >= 80) {
-        return ui::str(66, 88);
-    } else if (b->data.house.hippodrome >= 20) {
-        return ui::str(66, 89);
-    } else {
-        return ui::str(66, 90);
     }
 }
