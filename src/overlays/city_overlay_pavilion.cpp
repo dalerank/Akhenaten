@@ -7,10 +7,9 @@
 #include "figuretype/figure_musician.h"
 #include "figuretype/figure_dancer.h"
 
-city_overlay_pavilion g_city_overlay_pavilion;
-
 city_overlay* city_overlay_for_pavilion() {
-    return &g_city_overlay_pavilion;
+    static city_overlay_pavilion inst;
+    return &inst;
 }
 
 bool city_overlay_pavilion::show_figure(const figure *f) const {
@@ -28,7 +27,7 @@ bool city_overlay_pavilion::show_figure(const figure *f) const {
 }
 
 int city_overlay_pavilion::get_column_height(const building *b) const {
-    return (b->house_size && b->data.house.senet_player)
+    return (b->house_size)
         ? b->data.house.senet_player / 10 
         : NO_COLUMN;
 }
