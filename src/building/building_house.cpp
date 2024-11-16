@@ -159,7 +159,7 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT16, &data.house.inventory[i + 4]);
     }
 
-    iob->bind(BIND_SIGNATURE_UINT8, &data.house.juggler);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.booth_juggler);
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.bandstand_juggler);
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.bandstand_musician);
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.senet_player);
@@ -188,7 +188,8 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.shrine_access);
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.bazaar_access);
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.water_supply);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.house.pavilion_dancer);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.pavillion_dancer);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.house.pavillion_musician);
 }
 
 bvariant building_house::get_property(const xstring &domain, const xstring &name) const {

@@ -14,11 +14,12 @@ city_overlay* city_overlay_for_bandstand() {
 }
 
 xstring city_overlay_bandstand::get_tooltip_for_building(tooltip_context *c, const building *b) const {
-    if (b->data.house.bandstand_musician <= 0)
+    const int musician_value = std::max<int>(b->data.house.bandstand_musician, b->data.house.pavillion_musician);
+    if (musician_value <= 0)
         return ui::str(66, 79);
-    else if (b->data.house.bandstand_musician >= 80)
+    else if (musician_value >= 80)
         return ui::str(66, 80);
-    else if (b->data.house.bandstand_musician >= 20)
+    else if (musician_value >= 20)
         return ui::str(66, 81);
 
     return ui::str(66, 82);
@@ -33,9 +34,8 @@ bool city_overlay_bandstand::show_figure(const figure *f) const {
 
 int city_overlay_bandstand::get_column_height(const building *b) const {
     if (b->house_size) {
-        if (b->data.house.bandstand_musician) {
-            return b->data.house.bandstand_musician / 10;
-        }
+        const int musician_value = std::max<int>(b->data.house.bandstand_musician, b->data.house.pavillion_musician);
+        return musician_value / 10;
     }
 
     return NO_COLUMN;

@@ -13,8 +13,8 @@ city_overlay* city_overlay_for_booth() {
 
 int city_overlay_booth::get_column_height(const building *b) const {
     if (b->house_size) {
-        if (b->data.house.juggler || b->data.house.bandstand_juggler) {
-            return std::max<int>(b->data.house.juggler, b->data.house.bandstand_juggler) / 10;
+        if (b->data.house.booth_juggler || b->data.house.bandstand_juggler) {
+            return std::max<int>(b->data.house.booth_juggler, b->data.house.bandstand_juggler) / 10;
         }
     }
 
@@ -22,11 +22,12 @@ int city_overlay_booth::get_column_height(const building *b) const {
 }
 
 xstring city_overlay_booth::get_tooltip_for_building(tooltip_context *c, const building *b) const {
-    if (b->data.house.juggler <= 0)
+    int juggler_value = std::max<int>(b->data.house.booth_juggler, b->data.house.bandstand_juggler);
+    if (juggler_value <= 0)
         return ui::str(66, 75);
-    else if (b->data.house.juggler >= 80)
+    else if (juggler_value >= 80)
         return ui::str(66, 76);
-    else if (b->data.house.juggler >= 20)
+    else if (juggler_value >= 20)
         return ui::str(66, 77);
     else {
         return ui::str(66, 78);

@@ -82,7 +82,7 @@ int figure_musician::provide_service() {
         });
     } else if (b->type == BUILDING_PAVILLION) {
         houses_serviced = provide_entertainment(0, [] (building *b, int shows) {
-            b->data.house.bandstand_musician = MAX_COVERAGE;
+            b->data.house.pavillion_musician = MAX_COVERAGE;
         });
     }
 

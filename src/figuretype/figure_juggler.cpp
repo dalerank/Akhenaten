@@ -10,11 +10,6 @@
 
 figures::model_t<figure_juggler> juggler_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_juggler);
-void config_load_figure_juggler() {
-    juggler_m.load();
-}
-
 void figure_juggler::update_shows() {
     building *b = destination();
     b->data.entertainment.juggler_visited = 32;
@@ -85,15 +80,13 @@ sound_key figure_juggler::phrase_key() const {
     return keys[index];
 }
 
-void juggler_coverage(building* b, figure *f, int&) {
-    b->data.house.juggler = MAX_COVERAGE;
-}
-
 int figure_juggler::provide_service() {
     int houses_serviced = 0;
     building* b = home();
     if (b->type == BUILDING_BOOTH) {
-        houses_serviced = figure_provide_culture(tile(), &base, juggler_coverage);
+        houses_serviced = figure_provide_culture(tile(), &base, [] (building *b, figure *f, int &) {
+            b->data.house.booth_juggler = MAX_COVERAGE;
+        });
     } else if (b->type == BUILDING_BANDSTAND) {
         houses_serviced = provide_entertainment(0, [] (building * b, int shows) {
             b->data.house.bandstand_juggler = MAX_COVERAGE;

@@ -76,8 +76,8 @@ bool figure_dancer::play_die_sound() {
 
 int figure_dancer::provide_service() {
     building *b = current_destination();
-    int houses_serviced = provide_entertainment(0, [](building *b, int shows) {
-        b->data.house.bandstand_musician = MAX_COVERAGE;
+    int houses_serviced = provide_entertainment(0, [] (building *b, int shows) {
+        b->data.house.pavillion_dancer = MAX_COVERAGE;
     });
     return houses_serviced;
 }

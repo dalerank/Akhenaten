@@ -277,10 +277,11 @@ public:
         struct {
             uint16_t foods[8];
             uint16_t inventory[8];
-            uint8_t juggler;
+            uint8_t booth_juggler;
             uint8_t bandstand_juggler;
             uint8_t bandstand_musician;
-            uint8_t pavilion_dancer;
+            uint8_t pavillion_musician;
+            uint8_t pavillion_dancer;
             uint8_t senet_player;
             uint8_t magistrate;
             uint8_t hippodrome;
