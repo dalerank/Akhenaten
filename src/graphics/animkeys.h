@@ -33,6 +33,13 @@ struct id_anim_t {
     static const xstring wait_e;
     static const xstring eating;
     static const xstring idle;
+    static const xstring booth;
+    static const xstring stand_sn_s;
+    static const xstring stand_sn_n;
+    static const xstring stand_sn_e;
+    static const xstring dancer;
+    static const xstring musician_sn;
+    static const xstring musician_we;
     static const xstring attack;
     static const xstring farmland;
     static const xstring square;

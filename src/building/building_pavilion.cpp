@@ -69,20 +69,16 @@ struct pavilion_model : public buildings::model_t<building_pavilion> {
         for (auto &pdir : place_dir) {
             pdir.load(arch, bstring32().printf("place_dir_%d", std::distance(place_dir, &pdir)).c_str());
         }
+
+        dancer_tile = anim[animkeys().base].first_img();
+        booth_tile = anim[animkeys().booth].first_img();
+        musician_tile_s = anim[animkeys().stand_sn_s].first_img();
+        musician_tile_e = anim[animkeys().stand_sn_e].first_img();
     }
 
     preview_offset preview_dir[8];
     place_offset place_dir[8];
 } pavilion_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_pavilion);
-void config_load_building_pavilion() {
-    pavilion_m.load();
-    pavilion_m.dancer_tile = pavilion_m.anim["base"].first_img();
-    pavilion_m.booth_tile = pavilion_m.anim["booth"].first_img();
-    pavilion_m.musician_tile_s = pavilion_m.anim["stand_sn_s"].first_img();
-    pavilion_m.musician_tile_e = pavilion_m.anim["stand_sn_e"].first_img();
-}
 
 void building_pavilion::on_create(int orientation) {
 
@@ -109,7 +105,7 @@ void building_pavilion::on_place_update_tiles(int orientation, int variant) {
     data.entertainment.orientation = orientation;
 
     int size = pavilion_m.building_size;
-    int image_id = pavilion_m.anim["square"].first_img();
+    int image_id = anim(animkeys().square).first_img();
 
     int basic_orientation;
     map_orientation_for_venue_with_map_orientation(tile(), e_venue_mode_pavilion, &basic_orientation);
@@ -130,23 +126,23 @@ void building_pavilion::on_place_checks() {
 
 bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     if (data.entertainment.dancer_visited && map_image_at(tile) == pavilion_m.dancer_tile) {
-        const animation_t &anim = pavilion_m.anim["dancer"];
-        building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+        const animation_t &ranim = anim(animkeys().dancer);
+        building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);
     }
 
     if (data.entertainment.musician_visited) {
         if (map_image_at(tile) == pavilion_m.musician_tile_s) {
-            const animation_t &anim = pavilion_m.anim["musician_sn"];
-            building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+            const animation_t &ranim = anim(animkeys().musician_sn);
+            building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);
         } else if (map_image_at(tile) == pavilion_m.musician_tile_e) {
-            const animation_t &anim = pavilion_m.anim["musician_we"];
-            building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+            const animation_t &ranim = anim(animkeys().musician_we);
+            building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);
         }
     }
 
     if (data.entertainment.juggler_visited && map_image_at(tile) == pavilion_m.booth_tile) {
-        const animation_t &anim = pavilion_m.anim["juggler"];
-        building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+        const animation_t &ranim = anim(animkeys().juggler);
+        building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);
     }
 
     return true;
@@ -181,15 +177,17 @@ void building_pavilion::spawn_figure() {
 
 void building_pavilion::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
     int size = pavilion_m.building_size;
-    int square_id = building_impl::params(BUILDING_PAVILLION).anim["square"].first_img();
+    const auto &params = building_impl::params(BUILDING_PAVILLION);
+    int square_id = params.anim[animkeys().square].first_img();
     for (int i = 0; i < size * size; i++) {
         ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
     }
-    int stand_sn_n = pavilion_m.anim["stand_sn_n"].first_img();
-    int stand_sn_s = pavilion_m.anim["stand_sn_s"].first_img();
-    int booth = pavilion_m.anim["booth"].first_img();
-    int stand = pavilion_m.anim["base"].first_img();
+    int stand_sn_n = params.anim[animkeys().stand_sn_n].first_img();
+    int stand_sn_s = params.anim[animkeys().stand_sn_s].first_img();
+    int booth = params.anim[animkeys().booth].first_img();
+    int stand = params.anim[animkeys().base].first_img();
     const auto &preview_conf = pavilion_m.preview_dir[orientation];
+
     draw_building_ghost(ctx, stand, pixel + preview_conf.stand, COLOR_MASK_GREEN);
     draw_building_ghost(ctx, stand_sn_n + preview_conf.stand_b_img, pixel + preview_conf.stand_b, COLOR_MASK_GREEN);
     draw_building_ghost(ctx, stand_sn_s + preview_conf.stand_e_img, pixel + preview_conf.stand_e, COLOR_MASK_GREEN);
@@ -199,8 +197,9 @@ void building_pavilion::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, in
 void building_pavilion::on_undo() {
     for (int dy = 0; dy < 4; dy++) {
         for (int dx = 0; dx < 4; dx++) {
-            if (map_building_at(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
-                map_building_set(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), id());
+            const uint32_t offset = data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy);
+            if (map_building_at(offset) == 0)
+                map_building_set(offset, id());
         }
     }
 }
