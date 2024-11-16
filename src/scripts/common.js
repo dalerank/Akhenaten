@@ -260,6 +260,7 @@ var figure_hunter_arrow = {}
 var figure_spear = {}
 var figure_javelin = {}
 var figure_bolt = {}
+var figure_senet_player = {}
 // missions
 var mission0 = {}
 var mission1 = {}

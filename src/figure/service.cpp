@@ -23,10 +23,6 @@ static int provide_missionary_coverage(int x, int y) {
     return 1;
 }
 
-static void hippodrome_coverage(building* b, figure *f, int&) {
-    b->data.house.hippodrome = MAX_COVERAGE;
-}
-
 static void mortuary_coverage(building* b, figure *f, int&) {
     b->data.house.mortuary = MAX_COVERAGE;
 }
@@ -48,8 +44,9 @@ int figure::figure_service_provide_coverage() {
         break;
 
     case FIGURE_CHARIOR_RACER:
-    case FIGURE_SENET_PLAYER:
-        houses_serviced = figure_provide_culture(tile, this, hippodrome_coverage);
+        houses_serviced = figure_provide_culture(tile, this, [] (building *b, figure *f, int &) {
+            b->data.house.bullfighter = MAX_COVERAGE;
+        });
         break;
  
     case FIGURE_TOMB_ROBER:

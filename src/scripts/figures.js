@@ -747,6 +747,27 @@ figure_juggler = {
 	max_roam_length: 640,
 }
 
+figure_senet_player = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:132, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:133, max_frames:8, loop:false },
+	},
+	sounds : {
+		i_like_festivals : {sound:"juggler_e01.wav", group: 230, text:0 },
+    disease_in_city : {sound:"juggler_g01.wav", group: 230, text:0 },
+    city_low_sentiment : {sound:"juggler_g02.wav", group: 230, text:0 },
+    city_not_safety_workers_leaving : {sound:"juggler_g03.wav", group: 230, text:0 },
+    salary_too_low : {sound:"juggler_g04.wav", group: 230, text:0 },
+    gods_are_angry : {sound:"juggler_g05.wav", group: 230, text:0 },
+    city_verylow_sentiment : {sound:"juggler_g06.wav", group: 230, text:0 },
+    much_unemployments : {sound:"juggler_g07.wav", group: 230, text:0 },
+    low_entertainment : {sound:"juggler_g08.wav", group: 230, text:0 },
+    city_is_good : {sound:"juggler_g09.wav", group: 230, text:0 },
+    city_is_amazing : {sound:"juggler_g10.wav", group: 230, text:0 },
+	},
+	max_roam_length: 640,
+}
+
 figure figure_market_trader = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:18, max_frames:12 },
