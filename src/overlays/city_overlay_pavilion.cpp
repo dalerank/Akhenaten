@@ -28,7 +28,7 @@ bool city_overlay_pavilion::show_figure(const figure *f) const {
 
 int city_overlay_pavilion::get_column_height(const building *b) const {
     return (b->house_size)
-        ? b->data.house.senet_player / 10 
+        ? b->data.house.pavillion_dancer / 10 
         : NO_COLUMN;
 }
 
