@@ -77,12 +77,12 @@ void building_booth::spawn_figure() {
         return;
     }
 
-    if (!common_spawn_figure_trigger(100)) {
+    if (!common_spawn_figure_trigger(100, BUILDING_SLOT_JUGGLER)) {
         return;
     }
 
     if (data.entertainment.juggler_visited > 0) {
-        create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
+        create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
     }
 }
 
