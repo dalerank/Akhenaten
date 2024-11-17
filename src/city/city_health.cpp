@@ -55,7 +55,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
     // kill people where has little common_health
     building *warn_building = nullptr;
     buildings_valid_do([&] (building &b) {
-        if (people_to_plague <= 0 || !b.house_size || !b.house_population) {
+        if (people_to_plague <= 0 || !b.house_size || b.house_population <= 0) {
             return;
         }
 
@@ -68,7 +68,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
 
     // kill people who don't have access to apothecary/physician
     buildings_valid_do([&] (building &b) {
-        if (people_to_plague <= 0 || !b.house_size || !b.house_population) {
+        if (people_to_plague <= 0 || !b.house_size || b.house_population <= 0) {
             return;
         }
 
@@ -81,7 +81,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
 
     // kill people in tents
     buildings_valid_do([&] (building &b) {
-        if (people_to_plague <= 0 || !b.house_size || !b.house_population) {
+        if (people_to_plague <= 0 || !b.house_size || b.house_population <= 0) {
             return;
         }
 
@@ -94,7 +94,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
 
     // kill anyone
     buildings_valid_do([&] (building &b) {
-        if (people_to_plague <= 0 || !b.house_size || !b.house_population) {
+        if (people_to_plague <= 0 || !b.house_size || b.house_population <= 0) {
             return;
         }
 
@@ -137,7 +137,7 @@ void city_health_t::update() {
     int total_population = 0;
     int healthy_population = 0;
     buildings_valid_do([&] (building &b) {
-        if (!b.house_size || !b.house_population) {
+        if (!b.house_size || b.house_population <= 0) {
             return;
         }
 
