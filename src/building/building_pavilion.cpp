@@ -158,20 +158,25 @@ void building_pavilion::spawn_figure() {
         return;
     }
 
-    if (!common_spawn_figure_trigger(100)) {
-        return;
+    if (common_spawn_figure_trigger(100, BUILDING_SLOT_JUGGLER)) {
+        if (data.entertainment.juggler_visited > 0) {
+            base.create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
+            return;
+        }
     }
 
-    if (data.entertainment.juggler_visited > 0) {
-        base.create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
+    if (common_spawn_figure_trigger(100, BUILDING_SLOT_MUSICIAN)) {
+        if (data.entertainment.musician_visited > 0) {
+            base.create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_MUSICIAN);
+            return;
+        }
     }
 
-    if (data.entertainment.musician_visited > 0) {
-        base.create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
-    }
-
-    if (data.entertainment.dancer_visited > 0) {
-        base.create_roaming_figure(FIGURE_DANCER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
+    if (common_spawn_figure_trigger(100, BUILDING_SLOT_DANCER)) {
+        if (data.entertainment.dancer_visited > 0) {
+            base.create_roaming_figure(FIGURE_DANCER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_DANCER);
+            return;
+        }
     }
 }
 
