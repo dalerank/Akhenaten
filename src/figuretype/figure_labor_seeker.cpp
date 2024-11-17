@@ -62,7 +62,7 @@ sound_key figure_labor_seeker::phrase_key() const {
 
     int houses_in_disease = 0;
     buildings_valid_do([&] (building &b) {
-        if (!b.house_size || !b.house_population) {
+        if (!b.house_size || b.house_population <= 0) {
             return;
         }
         houses_in_disease = (b.disease_days > 0) ? 1 : 0;
