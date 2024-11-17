@@ -252,7 +252,7 @@ void building_house::add_population(int num_people) {
         num_people = room;
     }
 
-    if (!base.house_population) {
+    if (base.house_population <= 0) {
         change_to(BUILDING_HOUSE_CRUDE_HUT);
     }
 

@@ -25,8 +25,8 @@ public:
     virtual bool evolve(house_demands* demands) = 0;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override; 
 
-    inline int house_population() const { return base.house_population; }
-    inline void change_population(int delta) { base.house_population += delta; }
+    inline short house_population() const { return base.house_population; }
+    inline void change_population(short delta) { base.house_population += delta; }
     inline e_house_level house_level() const { return base.subtype.house_level; }
     void change_to_vacant_lot();
     bool is_vacant_lot();
