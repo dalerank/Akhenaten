@@ -31,7 +31,7 @@ static void destroy_on_fire(building* b, bool plagued) {
     game_undo_disable();
     b->fire_risk = 0;
     b->damage_risk = 0;
-    if (b->house_size && b->house_population) {
+    if (b->house_size && b->house_population > 0) {
         city_population_remove_home_removed(b->house_population);
     }
 

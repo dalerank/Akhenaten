@@ -97,7 +97,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                     }
                 }
 
-                if (b->house_size && b->house_population && !measure_only) {
+                if (b->house_size > 0 && b->house_population > 0 && !measure_only) {
                     figure_create_homeless(b->tile, b->house_population);
                     b->house_population = 0;
                 }

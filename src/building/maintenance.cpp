@@ -200,7 +200,7 @@ void building_maintenance_check_kingdome_access() {
                 b.distance_from_entry = 0;
                 b.house_unreachable_ticks++;
                 if (b.house_unreachable_ticks > 4) {
-                    if (b.house_population) {
+                    if (b.house_population > 0) {
                         figure_create_homeless(b.tile, b.house_population);
                         b.house_population = 0;
                         b.house_unreachable_ticks = 0;
