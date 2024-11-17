@@ -36,7 +36,7 @@ void city_t::houses_reset_demands() {
 void city_t::house_service_update_health() {
     OZZY_PROFILER_SECTION("Game/Update/House Service Update Health");
     buildings_valid_do([] (building &b) {
-        if (!b.house_size) {
+        if (!b.house_size || b.house_population <= 0) {
             return;
         }
 
@@ -55,7 +55,7 @@ void city_t::house_service_update_health() {
             int chance_death = std::max(100 - b.common_health, 10);
             int randm = (random_short() % 99 + 1);
             bool has_death_today = (randm < chance_death);
-            if (has_death_today) {
+            if (has_death_today && b.house_population > 0) {
                 --b.house_population;
             }
         }

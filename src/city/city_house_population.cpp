@@ -90,7 +90,7 @@ void city_t::house_population_update_room() {
             if (b->house_population > b->house_highest_population)
                 b->house_highest_population = b->house_population;
 
-        } else if (b->house_population) {
+        } else if (b->house_population > 0) {
             // not connected to Rome, mark people for eviction
             b->house_population_room = -b->house_population;
         }
