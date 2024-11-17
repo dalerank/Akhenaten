@@ -211,33 +211,6 @@ void building::common_spawn_labor_seeker(int min_houses) {
     create_roaming_figure(FIGURE_LABOR_SEEKER, FIGURE_ACTION_125_ROAMING, BUILDING_SLOT_LABOR_SEEKER);
 }
 
-bool building::common_spawn_figure_trigger(int min_houses) {
-    check_labor_problem();
-    if (has_figure(BUILDING_SLOT_SERVICE)) {
-        return false;
-    }
-
-    if (has_road_access) {
-        if (main() == this) { // only spawn from the main building
-            common_spawn_labor_seeker(min_houses);
-        }
-
-        int pct_workers = worker_percentage();
-        int spawn_delay = figure_spawn_timer();
-        if (spawn_delay == -1) {
-            return false;
-        }
-
-        figure_spawn_delay++;
-        if (figure_spawn_delay > spawn_delay) {
-            figure_spawn_delay = 0;
-            return true;
-        }
-    }
-
-    return false;
-}
-
 bool building::common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) {
     if (common_spawn_figure_trigger(min_houses)) {
         create_roaming_figure(type, created_action);
