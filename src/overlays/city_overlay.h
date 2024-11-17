@@ -8,8 +8,6 @@
 #include "core/svector.h"
 #include "core/tokenum.h"
 
-constexpr int NO_COLUMN = -1;
-
 extern const token_holder<e_overlay, OVERLAY_NONE, OVERLAY_SIZE> e_overlay_tokens;
 extern const token_holder<e_column_type, COLUMN_TYPE_RISK, COLUMN_TYPE_SIZE> e_column_type_tokens;
 
@@ -18,19 +16,20 @@ class building;
 struct painter;
 
 inline bool show_figure_none(const figure *f) { return false; }
-inline int get_column_height_none(const building* b) { return NO_COLUMN; }
 
 struct city_overlay {
     svector<int, 10> tooltips;
     svector<e_figure_type, 10> walkers;
     svector<e_building_type, 10> buildings;
-    int column_type = -1;
+    e_column_type column_type = COLUMN_TYPE_NONE;
+    animation_t anim;
 
     int tooltip_base;
     bstring64 caption;
 
     virtual bool show_figure(const figure *f) const;
-    virtual int get_column_height(const building *b) const { return NO_COLUMN; }
+    virtual int get_column_height(const building *b) const { return COLUMN_TYPE_NONE; }
+    virtual e_column_color get_column_color(const building *b) const { return COLUMN_COLOR_NONE; }
     virtual xstring get_tooltip_for_grid_offset(tooltip_context *c, int grid_offset) const { return {}; }
     virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) const { return {}; }
     virtual bool draw_custom_footprint(vec2i pixel, tile2i point, painter &ctx) const { return false; }
@@ -39,7 +38,7 @@ struct city_overlay {
     virtual e_overlay get_type() const { return OVERLAY_NONE; }
 
     void draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const;
-    void draw_overlay_column(vec2i pixel, int height, int column_style, painter &ctx) const;
+    void draw_overlay_column(e_column_color c, vec2i pixel, int height, int column_style, painter &ctx) const;
     void draw_building_footprint(painter &ctx, vec2i pos, tile2i tile, int image_offset) const;
     bool is_drawable_farm_corner(tile2i tile) const;
     bool is_drawable_building_corner(tile2i tile, tile2i main, int size) const;

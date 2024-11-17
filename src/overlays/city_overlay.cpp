@@ -55,18 +55,16 @@ void config_load_city_overlays() {
         }
 
         const char *caption = arch.r_string("caption");
-        auto walkers = arch.r_array_num<e_figure_type>("walkers");
-        auto buildings = arch.r_array_num<e_building_type>("buildings");
         int tooltip_base = arch.r_int("tooltip_base");
-        e_column_type column_type = arch.r_type<e_column_type>("column_type");
-        auto tooltips = arch.r_array_num("tooltips");
 
         if (tooltip_base) { overlay->tooltip_base = tooltip_base; }
-        if (buildings.size()) { overlay->buildings = buildings; }
         if (*caption) { overlay->caption = caption; }
-        if (tooltips.size()) { overlay->tooltips = tooltips; }
-        if (walkers.size()) { overlay->walkers = walkers; }
-        if (column_type) { overlay->column_type = column_type; }
+
+        overlay->buildings = arch.r_array_num<e_building_type>("buildings");
+        overlay->walkers = arch.r_array_num<e_figure_type>("walkers");
+        overlay->column_type = arch.r_type<e_column_type>("column_type");
+        overlay->tooltips = arch.r_array_num("tooltips");
+        arch.r_anim("column_anim", overlay->anim);
     });
 }
 
@@ -226,33 +224,29 @@ bool city_overlay::is_drawable_building_corner(tile2i tile, tile2i main, int siz
     return (offset_main == main);
 }
 
-void city_overlay::draw_overlay_column(vec2i pixel, int height, int column_style, painter &ctx) const {
-    int image_id = image_id_from_group(GROUP_OVERLAY_COLUMN);
-    switch (column_style) {
-    case COLUMN_TYPE_RISK:
-        if (height <= 5)
-            image_id += COLUMN_COLOR_PLAIN;
-        else if (height < 7)
-            image_id += COLUMN_COLOR_YELLOW;
-        else if (height < 9)
-            image_id += COLUMN_COLOR_ORANGE;
-        else
-            image_id += COLUMN_COLOR_RED;
-        break;
+void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int height, int column_style, painter &ctx) const {
+    if (color == COLUMN_COLOR_NONE) {
+        switch (column_style) {
+        case COLUMN_TYPE_RISK:
+            if (height <= 5) { color = COLUMN_COLOR_PLAIN; }
+            else if (height < 7) { color = COLUMN_COLOR_YELLOW; }
+            else if (height < 9) { color = COLUMN_COLOR_ORANGE; }
+            else { color = COLUMN_COLOR_RED; }
+            break;
 
-    case COLUMN_TYPE_POSITIVE:
-        image_id += COLUMN_COLOR_BLUE;
-        break;
+        case COLUMN_TYPE_POSITIVE:
+            color = COLUMN_COLOR_BLUE;
+            break;
 
-    case COLUMN_TYPE_WATER_ACCESS:
-        image_id += COLUMN_COLOR_BLUE;
-        break;
+        case COLUMN_TYPE_WATER_ACCESS:
+            color = COLUMN_COLOR_BLUE;
+            break;
+        }
     }
 
-    if (height > 10) {
-        height = 10;
-    }
+    int image_id = anim.first_img() + color;
 
+    height = std::min(height, 10);
     int capital_height = image_get(image_id)->height;
     // base
     ImageDraw::img_generic(ctx, image_id + 2, pixel.x + 9, pixel.y - 8);
@@ -381,7 +375,8 @@ void city_overlay::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) con
     }
 
     int column_height = get_city_overlay()->get_column_height(b);
-    if (column_height == NO_COLUMN) {
+    e_column_color column_color = get_city_overlay()->get_column_color(b);
+    if (column_height == COLUMN_TYPE_NONE) {
         return;
     }
 
@@ -391,6 +386,6 @@ void city_overlay::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) con
     }
 
     if (draw) {
-        draw_overlay_column(pixel, column_height, get_city_overlay()->column_type, ctx);
+        draw_overlay_column(column_color, pixel, column_height, get_city_overlay()->column_type, ctx);
     }
 }
