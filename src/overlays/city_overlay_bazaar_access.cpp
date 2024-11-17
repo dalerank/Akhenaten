@@ -21,7 +21,7 @@ city_overlay* city_overlay_for_bazaar_access() {
 
 int city_overlay_bazaar_access::get_column_height(const building *b) const {
     if (b->house_population <= 0) {
-        return NO_COLUMN;
+        return COLUMN_TYPE_NONE;
     }
 
     return std::clamp<int>(b->data.house.bazaar_access / 10, 0, 8);

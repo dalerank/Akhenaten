@@ -100,5 +100,5 @@ xstring city_overlay_water::get_tooltip_for_grid_offset(tooltip_context* c, int 
 }
 
 int city_overlay_water::get_column_height(const building *b) const {
-    return b->house_size ? b->data.house.water_supply * 17 / 10 : NO_COLUMN;
+    return b->house_size ? b->data.house.water_supply * 17 / 10 : COLUMN_TYPE_NONE;
 }

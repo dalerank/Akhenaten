@@ -10,7 +10,7 @@ city_overlay* city_overlay_for_entertainment() {
 }
 
 int city_overlay_entertainment::get_column_height(const building *b) const {
-    return b->house_size ? b->data.house.entertainment / 10 : NO_COLUMN;
+    return b->house_size ? b->data.house.entertainment / 10 : COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_entertainment::get_tooltip_for_building(tooltip_context *c, const building *b) const {

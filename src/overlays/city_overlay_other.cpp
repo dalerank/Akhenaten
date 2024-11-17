@@ -43,7 +43,7 @@ int city_overlay_food_stocks::get_column_height(const building *b) const {
         if (pct_stocks <= 200)
             return 1;
     }
-    return NO_COLUMN;
+    return COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_food_stocks::get_tooltip_for_building(tooltip_context *c, const building *b) const {

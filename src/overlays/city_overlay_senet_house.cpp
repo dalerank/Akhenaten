@@ -10,7 +10,7 @@ city_overlay *city_overlay_for_senet_house() {
 }
 
 int city_overlay_senet_house::get_column_height(const building *b) const {
-    return b->house_size ? b->data.house.senet_player / 10 : NO_COLUMN;
+    return b->house_size ? b->data.house.senet_player / 10 : COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_senet_house::get_tooltip_for_building(tooltip_context *c, const building *b) const {

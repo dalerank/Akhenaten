@@ -50,7 +50,7 @@ city_overlay* city_overlay_for_religion_bast() {
 int city_overlay_religion::get_column_height(const building *b) const {
     return b->house_size && b->data.house.num_gods
                 ? b->data.house.num_gods * 17 / 10
-                : NO_COLUMN;
+                : COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_religion::get_tooltip_for_building(tooltip_context *c, const building *b) const {

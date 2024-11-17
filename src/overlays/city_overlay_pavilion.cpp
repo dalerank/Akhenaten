@@ -29,7 +29,7 @@ bool city_overlay_pavilion::show_figure(const figure *f) const {
 int city_overlay_pavilion::get_column_height(const building *b) const {
     return (b->house_size)
         ? b->data.house.pavillion_dancer / 10 
-        : NO_COLUMN;
+        : COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_pavilion::get_tooltip_for_building(tooltip_context *c, const building *b) const {

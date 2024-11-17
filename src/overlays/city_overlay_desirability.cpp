@@ -86,7 +86,7 @@ inline bool city_overlay_desirability::show_figure(const figure *f) const {
 }
 
 int city_overlay_desirability::get_column_height(const building *b) const {
-    return NO_COLUMN;
+    return COLUMN_TYPE_NONE;
 }
 
 inline void city_overlay_desirability::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {

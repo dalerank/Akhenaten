@@ -38,5 +38,5 @@ int city_overlay_bandstand::get_column_height(const building *b) const {
         return musician_value / 10;
     }
 
-    return NO_COLUMN;
+    return COLUMN_TYPE_NONE;
 }

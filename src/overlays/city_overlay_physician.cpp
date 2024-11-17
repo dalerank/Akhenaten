@@ -16,7 +16,7 @@ int city_overlay_physician::get_column_height(const building *b) const {
              ? b->data.house.physician
                 ? b->data.house.physician / 10
                 : 0
-             : NO_COLUMN;
+             : COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_physician::get_tooltip_for_building(tooltip_context *c, const building *b) const {

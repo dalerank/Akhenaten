@@ -87,7 +87,7 @@ xstring city_overlay_fertility::get_tooltip_for_building(tooltip_context *c, con
 }
 
 int city_overlay_fertility::get_column_height(const building *b) const {
-    return NO_COLUMN;
+    return COLUMN_TYPE_NONE;
 }
 
 inline bool city_overlay_fertility::show_building(const building *b) const {

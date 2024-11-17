@@ -1,6 +1,7 @@
 #pragma once
 
 enum e_column_type {
+    COLUMN_TYPE_NONE = -1,
     COLUMN_TYPE_RISK,
     COLUMN_TYPE_POSITIVE,
     COLUMN_TYPE_WATER_ACCESS,
@@ -9,6 +10,7 @@ enum e_column_type {
 };
 
 enum e_column_color {
+    COLUMN_COLOR_NONE = -1,
     COLUMN_COLOR_PLAIN = 0,
     COLUMN_COLOR_YELLOW = 3,
     COLUMN_COLOR_ORANGE = 6,

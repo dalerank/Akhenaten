@@ -14,7 +14,7 @@ city_overlay* city_overlay_for_scribal_school() {
 
 int city_overlay_schools::get_column_height(const building *b) const {
     if (b->house_size == 0) {
-        return NO_COLUMN;
+        return COLUMN_TYPE_NONE;
     }
 
     return b->data.house.school / 10;

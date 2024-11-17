@@ -60,7 +60,7 @@ bool city_overlay_problems::show_figure(const figure *f) const {
 }
 
 int city_overlay_problems::get_column_height(const building *b) const {
-    return NO_COLUMN;
+    return COLUMN_TYPE_NONE;
 }
 
 bool city_overlay_problems::show_building(const building *b) const {
@@ -113,7 +113,7 @@ bool city_overlay_native::draw_custom_footprint(vec2i pixel, tile2i tile, painte
 }
 
 int city_overlay_native::get_column_height(const building *b) const {
-    return NO_COLUMN;
+    return COLUMN_TYPE_NONE;
 }
 
 bool city_overlay_native::show_building(const building *b) const {

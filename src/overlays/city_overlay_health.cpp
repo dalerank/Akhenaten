@@ -11,8 +11,8 @@ city_overlay* city_overlay_for_health() {
 }
 
 int city_overlay_health::get_column_height(const building *b) const {
-    if (!b->house_size || !b->house_population) {
-        return NO_COLUMN;
+    if (!b->house_size || b->house_population <= 0) {
+        return COLUMN_TYPE_NONE;
     }
 
     if (b->disease_days > 0) {
@@ -20,6 +20,16 @@ int city_overlay_health::get_column_height(const building *b) const {
     }
 
     return (100 - b->common_health) / 10;
+}
+
+e_column_color city_overlay_health::get_column_color(const building *b) const {
+    if (!b->house_size || b->house_population <= 0) {
+        return COLUMN_COLOR_NONE;
+    }
+
+    if (b->disease_days > 0) {
+        return COLUMN_COLOR_RED;
+    }
 }
 
 xstring city_overlay_health::get_tooltip_for_building(tooltip_context *c, const building *b) const {

@@ -31,7 +31,7 @@ inline bool city_overlay_routing::show_figure(const figure *f) const {
 }
 
 int city_overlay_routing::get_column_height(const building *b) const {
-    return NO_COLUMN;
+    return COLUMN_TYPE_NONE;
 }
 
 inline void city_overlay_routing::draw_custom_top(vec2i pixel, map_point point, painter &ctx) const {

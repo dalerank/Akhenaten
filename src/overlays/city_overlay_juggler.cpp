@@ -18,7 +18,7 @@ int city_overlay_booth::get_column_height(const building *b) const {
         }
     }
 
-    return NO_COLUMN;
+    return COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_booth::get_tooltip_for_building(tooltip_context *c, const building *b) const {

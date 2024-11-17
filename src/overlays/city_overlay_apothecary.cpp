@@ -28,5 +28,5 @@ xstring city_overlay_apothecary::get_tooltip_for_building(tooltip_context* c, co
 int city_overlay_apothecary::get_column_height(const building *b) const {
     return b->house_size && b->subtype.house_level > 0
                 ? b->data.house.apothecary / 10 
-                : NO_COLUMN;
+                : COLUMN_TYPE_NONE;
 }

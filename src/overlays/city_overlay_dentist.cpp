@@ -12,7 +12,7 @@ city_overlay* city_overlay_for_dentist() {
 }
 
 int city_overlay_dentist::get_column_height(const building *b) const {
-    return b->house_size && b->data.house.dentist ? b->data.house.dentist / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.dentist ? b->data.house.dentist / 10 : COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_dentist::get_tooltip_for_building(tooltip_context *c, const building *b) const {

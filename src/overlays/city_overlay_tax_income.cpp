@@ -22,7 +22,7 @@ int city_overlay_tax_income::get_column_height(const building *b) const {
         }
     }
 
-    return NO_COLUMN;
+    return COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_tax_income::get_tooltip_for_building(tooltip_context *c, const building *b) const {

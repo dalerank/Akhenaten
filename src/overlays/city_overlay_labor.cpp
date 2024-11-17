@@ -23,12 +23,12 @@ bool city_overlay_labor::show_figure(const figure *f) const {
 
 int city_overlay_labor::get_column_height(const building *b) const {
     if (b->state == BUILDING_STATE_VALID) {
-        return NO_COLUMN;
+        return COLUMN_TYPE_NONE;
     }
 
     int need_workers = model_get_building(b->type)->laborers;
     if (!need_workers) {
-        return NO_COLUMN;
+        return COLUMN_TYPE_NONE;
     }
 
     int percentage = ((building*)b)->worker_percentage();

@@ -20,7 +20,7 @@ int city_overlay_courthouse::get_column_height(const building *b) const {
         return 0;
     }
 
-    return NO_COLUMN;
+    return COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_courthouse::get_tooltip_for_building(tooltip_context *c, const building *b) const {

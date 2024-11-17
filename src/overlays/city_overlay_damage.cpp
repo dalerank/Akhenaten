@@ -16,7 +16,7 @@ city_overlay* city_overlay_for_damage() {
 int city_overlay_damage::get_column_height(const building *b) const {
     auto model = model_get_building(b->type);
     if (b->prev_part_building_id || !model->damage_risk)
-        return NO_COLUMN;
+        return COLUMN_TYPE_NONE;
     return b->damage_risk / 100;
 }
 

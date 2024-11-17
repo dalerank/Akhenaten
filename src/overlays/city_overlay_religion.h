@@ -19,7 +19,7 @@ struct city_overlay_religion_god : public city_overlay_t<TYPE> {
 
     virtual int get_column_height(const building *b) const override {
         if (!b->house_size) {
-            return NO_COLUMN;
+            return COLUMN_TYPE_NONE;
         }
 
         int value = 0;
