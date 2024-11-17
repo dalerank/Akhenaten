@@ -869,8 +869,10 @@ void building_update_state(void) {
                 land_recalc = true;
                 building_delete_UNSAFE(b);
             } else if (b->state == BUILDING_STATE_RUBBLE) {
-                if (b->house_size)
+                if (b->house_size > 0) {
                     city_population_remove_home_removed(b->house_population);
+                }
+
                 building_delete_UNSAFE(b);
             } else if (b->state == BUILDING_STATE_DELETED_BY_GAME) {
                 building_delete_UNSAFE(b);

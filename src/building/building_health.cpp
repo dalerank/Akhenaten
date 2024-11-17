@@ -28,7 +28,7 @@ declare_console_command_p(plague_no, game_cheat_noplague);
 
 void game_cheat_noplague(std::istream &is, std::ostream &os) {
     buildings_valid_do([&] (building &b) {
-        if (!b.house_size || !b.house_population) {
+        if (!b.house_size || b.house_population <= 0) {
             return;
         }
         building *main = b.main();
@@ -43,7 +43,7 @@ void game_cheat_start_plague(std::istream &is, std::ostream &os) {
 
     int total_population = 0;
     buildings_valid_do([&] (building &b) {
-        if (!b.house_size || !b.house_population) {
+        if (!b.house_size || b.house_population <= 0) {
             return;
         }
         total_population += b.house_population;
