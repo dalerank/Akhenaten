@@ -288,7 +288,7 @@ void city_sentiment_update() {
             return;
         }
 
-        if (!b.house_population) {
+        if (b.house_population <= 0) {
             b.sentiment.house_happiness = 10 + default_sentiment;
             return;
         }
@@ -361,7 +361,7 @@ void city_sentiment_update() {
     int total_sentiment = 0;
     int total_houses = 0;
     buildings_valid_do([&total_houses, &total_sentiment] (building &b) {
-        if (b.house_size && b.house_population) {
+        if (b.house_size && b.house_population > 0) {
             total_houses++;
             total_sentiment += b.sentiment.house_happiness;
         }
