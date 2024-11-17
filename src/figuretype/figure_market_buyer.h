@@ -16,10 +16,9 @@ public:
     virtual int provide_service() override;
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
     virtual bool window_info_background(object_info &ctx) override;
-    virtual const animations_t &anim() const override;
 
     bool take_resource_from_storageyard(building *warehouse);
-    int take_food_from_granary(building *market, building *granary);
+    int take_food_from_storage(building *market, building *granary);
     int create_delivery_boy(int leader_id);
 };
 

@@ -52,12 +52,12 @@ void figure_market_buyer::figure_action() {
         if (ok) {
             if (base.collecting_item_id > 3) {
                 if (!take_resource_from_storageyard(destination())) {
-                    poof();
+                    advance_action(FIGURE_ACTION_146_MARKET_BUYER_RETURNING);
                 }
 
             } else {
-                if (!take_food_from_granary(home(), destination())) {
-                    poof();
+                if (!take_food_from_storage(home(), destination())) {
+                    advance_action(FIGURE_ACTION_146_MARKET_BUYER_RETURNING);
                 }
             }
         }
@@ -291,12 +291,8 @@ bool figure_market_buyer::window_info_background(object_info &c) {
     return true;
 }
 
-const animations_t &figure_market_buyer::anim() const {
-    return market_buyer_m.anim;
-}
-
-int figure_market_buyer::take_food_from_granary(building* market, building* b) {
-    int resource;
+int figure_market_buyer::take_food_from_storage(building* market, building* b) {
+    e_resource resource;
     switch (base.collecting_item_id) {
     case 0: resource = g_city.allowed_foods(0); break;
     case 1: resource = g_city.allowed_foods(1); break;
@@ -304,42 +300,26 @@ int figure_market_buyer::take_food_from_granary(building* market, building* b) {
     case 3: resource = g_city.allowed_foods(3); break;
 
     default:
-    return 0;
+        return 0;
     }
 
-    building_granary *granary = b->dcast_granary();
+    building_storage *storage = b->dcast_storage();
+    if (!storage) {
+        return 0;
+    }
 
     int market_units = market->data.market.inventory[base.collecting_item_id];
-    int max_units = (base.collecting_item_id == 0 ? 700 : 600) - market_units;
-    int granary_units = granary->data.granary.resource_stored[resource];
-    int num_loads;
-    //    if (granary_units >= 800)
-    //        num_loads = 8;
-    //    else
-    if (granary_units >= 700)
-        num_loads = 7;
-    else if (granary_units >= 600)
-        num_loads = 6;
-    else if (granary_units >= 500)
-        num_loads = 5;
-    else if (granary_units >= 400)
-        num_loads = 4;
-    else if (granary_units >= 300)
-        num_loads = 3;
-    else if (granary_units >= 200)
-        num_loads = 2;
-    else if (granary_units >= 100)
-        num_loads = 1;
-    else
-        num_loads = 0;
+    int storage_units = storage->amount(resource);
 
-    if (num_loads > max_units / 100)
-        num_loads = max_units / 100;
+    const int max_units = (base.collecting_item_id == 0 ? 700 : 600) - market_units;
+    const int max_num_loads = max_units / 100;
+    const int num_loads = std::clamp(storage_units / 100, 0, max_num_loads);
 
-    if (num_loads <= 0)
+    if (num_loads <= 0) {
         return 0;
+    }
 
-    granary->remove_resource((e_resource)resource, 100 * num_loads);
+    storage->remove_resource(resource, 100 * num_loads);
 
     // create delivery boys
     int previous_boy = id();
