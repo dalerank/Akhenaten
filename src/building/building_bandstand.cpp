@@ -127,16 +127,18 @@ void building_bandstand::spawn_figure() {
         return;
     }
 
-    if (!common_spawn_figure_trigger(100)) {
-        return;
+    if (common_spawn_figure_trigger(100, BUILDING_SLOT_JUGGLER)) {
+        if (data.entertainment.juggler_visited > 0) {
+            create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
+            return;
+        }
     }
 
-    if (data.entertainment.juggler_visited > 0) {
-        create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
-    }
-
-    if (data.entertainment.musician_visited > 0) {
-        create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
+    if (common_spawn_figure_trigger(100, BUILDING_SLOT_MUSICIAN)) {
+        if (data.entertainment.musician_visited > 0) {
+            create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_MUSICIAN);
+            return;
+        }
     }
 }
 
