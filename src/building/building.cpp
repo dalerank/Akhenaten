@@ -528,6 +528,35 @@ bool building::is_military() {
     return building_is_military(type);
 }
 
+bool building::common_spawn_figure_trigger(int min_houses, int slot) {
+    check_labor_problem();
+    if (!has_road_access) {
+        return false;
+    }
+
+    if (main() == this) { // only spawn from the main building
+        common_spawn_labor_seeker(min_houses);
+    }
+
+    if (has_figure(slot)) {
+        return false;
+    }
+
+    int spawn_delay = figure_spawn_timer();
+    if (spawn_delay == -1) {
+        return false;
+    }
+
+    figure_spawn_delay++;
+    if (figure_spawn_delay > spawn_delay) {
+        figure_spawn_delay = 0;
+        return true;
+    }
+
+    return false;
+}
+
+
 figure *building::create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir) {
     figure *f = figure_create(_type, road_access, created_dir);
     f->action_state = created_action;

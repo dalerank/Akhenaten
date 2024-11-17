@@ -104,6 +104,9 @@ enum e_building_slot {
     BUILDING_SLOT_CARTPUSHER = 1,
     BUILDING_SLOT_MARKET_BUYER = 1,
     BUILDING_SLOT_LABOR_SEEKER = 2,
+    BUILDING_SLOT_JUGGLER = 0,
+    BUILDING_SLOT_MUSICIAN = 1,
+    BUILDING_SLOT_DANCER = 2,
     BUILDING_SLOT_PRIEST = 2,
     BUILDING_SLOT_IMMIGRANT = 2,
     BUILDING_SLOT_GOVERNOR = 3,
@@ -404,7 +407,7 @@ public:
     int worker_percentage();
     int figure_spawn_timer();
     void check_labor_problem();
-    bool common_spawn_figure_trigger(int min_houses);
+    bool common_spawn_figure_trigger(int min_houses, int slot = BUILDING_SLOT_SERVICE);
     void common_spawn_labor_seeker(int min_houses);
     bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action = FIGURE_ACTION_125_ROAMING);
     bool common_spawn_goods_output_cartpusher(bool only_one = true, bool only_full_loads = true, int min_carry = 100, int max_carry = 800);
@@ -604,7 +607,7 @@ public:
     inline void check_labor_problem() { base.check_labor_problem(); }
     inline int worker_percentage() const { return base.worker_percentage(); }
     inline void common_spawn_labor_seeker(int min_houses) { base.common_spawn_labor_seeker(min_houses); }
-    inline bool common_spawn_figure_trigger(int min_houses) { return base.common_spawn_figure_trigger(min_houses); }
+    inline bool common_spawn_figure_trigger(int min_houses, int slot = BUILDING_SLOT_SERVICE) { return base.common_spawn_figure_trigger(min_houses, slot); }
     inline bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) { return base.common_spawn_roamer(type, min_houses, created_action); }
     inline const model_building *model() const { return model_get_building(type()); }
     inline int max_workers() const { return model_get_building(type())->laborers; }
