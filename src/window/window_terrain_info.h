@@ -12,11 +12,13 @@ struct terrain_info_window : public common_info_window {
         return 0;
     }
 
+    virtual void window_info_background(object_info &c) override;
+
     virtual void window_info_foreground(object_info &c) override {
         draw();
     }
 
-    virtual void window_info_background(object_info &c) override;
+    virtual void init(object_info &c) override;
     virtual int get_height_id(object_info &c) override;
     virtual bool check(object_info &c) override;
 };

@@ -40,8 +40,14 @@ void window_building_draw_wall(object_info& c) {
 }
 
 void terrain_info_window::window_info_background(object_info &c) {
-    std::pair<int, int> reason;
-    std::pair<int, int> describe;
+}
+
+void terrain_info_window::init(object_info &c) {
+    common_info_window::init(c);
+
+    textid reason;
+    textid describe;
+    svector<pcstr, 16> sounds;
 
     switch (c.terrain_type) {
     case TERRAIN_INFO_ROAD:
@@ -73,9 +79,17 @@ void terrain_info_window::window_info_background(object_info &c) {
         break;
 
     case TERRAIN_INFO_ORE_ROCK:
+        sounds = { "wavs/rock1.wav", "wavs/rock2.wav", "wavs/rock3.wav", "wavs/rock4.wav", "wavs/rock5.wav" };
         reason = { 70, 26 };
         describe = { 70, 38};
         c.help_id = 191;
+
+    case TERRAIN_INFO_ROCK:
+        sounds = { "wavs/rock1.wav", "wavs/rock2.wav", "wavs/rock3.wav", "wavs/rock4.wav", "wavs/rock5.wav" };
+        reason = { 70, 12 };
+        describe = { 70, 38 };
+        c.help_id = 191;
+        break;
 
     case TERRAIN_INFO_FLOODPLAIN:
         reason = { 70, 29 };
@@ -84,19 +98,20 @@ void terrain_info_window::window_info_background(object_info &c) {
         break;
 
     default:
-        if (c.can_play_sound) {
-            c.can_play_sound = 0;
-            g_sound.speech_play_file("Wavs/empty_land.wav", 255);
-        }
+        sounds.push_back("Wavs/empty_land.wav");
         reason = { 70, 20 };
         describe = { 70, 42 };
         break;
     }
 
-    ui["title"] = ui::str(reason.first, reason.second);
-    ui["describe"] = ui::str(describe.first, describe.second);
+    if (c.can_play_sound) {
+        c.can_play_sound = 0;
+        pcstr sound = sounds[rand() % sounds.size()];
+        g_sound.speech_play_file(sound, 255);
+    }
 
-    common_info_window::window_info_background(c);
+    ui["title"] = ui::str(reason);
+    ui["describe"] = ui::str(describe);
 }
 
 int terrain_info_window::get_height_id(object_info &c) {
