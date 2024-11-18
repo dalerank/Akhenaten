@@ -150,7 +150,7 @@ mission5 = { // Timna
 }
 
 mission6 = { // Behdet
-	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
+	start_message : 245, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
 	player_rank : 1,
 	stages : {

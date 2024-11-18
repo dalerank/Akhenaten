@@ -765,29 +765,39 @@ display_options_window = {
   }	
 }
 
-mission_briefing_window = {
+window mission_end_window = {
+		pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
+		ui : {
+		}
+}
+
+window mission_briefing_window = {
 	pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
 	ui : {
-		outer_panel : { type : "outer_panel",	pos:[16, 32], size : {w:38, h:27} },
-		title 		  : { type : "text", pos:[32, 48], font : FONT_LARGE_BLACK_ON_LIGHT },
-		subtitle 		: { type : "text",	pos:[32, 78], font : FONT_NORMAL_BLACK_ON_LIGHT },
-		objectives_panel : { type : "inner_panel", pos:[32, 96], size: {w:36, h:6} },
-		objectives_label : { type : "label", text : {group:62, id:10}, pos : {x:48, y:104},	font : FONT_NORMAL_WHITE_ON_DARK },
-		tocity_label : { type : "label", text : {group:62, id:7},	pos : {x:416, y:433}, font : FONT_NORMAL_BLACK_ON_LIGHT },
-		goal_0 : { type : "label", pos:[32  + 16, 90  + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false	},
-		goal_1 : { type : "label", pos:[288 + 16, 90  + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false },
-		goal_2 : { type : "label", pos:[32  + 16, 112 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false	},
-		goal_3 : { type : "label", pos:[288 + 16, 112 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false },
-		goal_4 : { type : "label", pos:[32  + 16, 134 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false	},
-		goal_5 : { type : "label", pos:[288 + 16, 134 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false },
-		goal_immediate : { type : "label", pos : {x:32 + 16, y:134 + 32},	body : {w:31, h:1},	font : FONT_NORMAL_YELLOW, enabled: false },
-		description_panel : { type : "inner_panel", pos : {x:32, y:200}, size: {w:33, h:14} },
-		description_text : { type : "text", pos: [40, 216], size:[px(36), px(10)], wrap:px(34), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true },
-		difficulty_label : { type : "label", pos:[105, 433], size:[80, 14], font : FONT_NORMAL_BLACK_ON_LIGHT },
-		back 			: { type:"image_button", pos:[26, 428], size:[31, 20], pack:PACK_GENERAL, id:90, offset:8 },
-		start_mission : next_button({pos:[516, 430]}),
-		dec_difficulty : { type:"image_button", pos:[65, 428], size:[17, 17], pack:PACK_GENERAL, id:212, offset:0 },
-		inc_difficulty : { type:"image_button", pos:[65 + 18, 428], size:[17, 17], pack:PACK_GENERAL, id:212, offset:3 },
+		outer_panel      : outer_panel({pos:[16, 32], size : {w:38, h:27} }),
+		title 		       : text({pos:[32, 48], font : FONT_LARGE_BLACK_ON_LIGHT }),
+		subtitle 		     : text({pos:[32, 78], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		objectives_panel : inner_panel({pos:[32, 96], size: {w:36, h:6} }),
+		objectives_label : label({text : {group:62, id:10}, pos : {x:48, y:104},	font : FONT_NORMAL_WHITE_ON_DARK }),
+		tocity_label     : label({text : {group:62, id:7},	pos : {x:416, y:433}, font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		
+		goal_0           : label({pos:[32  + 16, 90  + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false	}),
+		goal_1           : label({pos:[288 + 16, 90  + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false }),
+		goal_2           : label({pos:[32  + 16, 112 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false	}),
+		goal_3           : label({pos:[288 + 16, 112 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false }),
+		goal_4           : label({pos:[32  + 16, 134 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false	}),
+		goal_5           : label({pos:[288 + 16, 134 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false }),
+		goal_immediate   : label({pos : {x:32 + 16, y:134 + 32},	body : {w:31, h:1},	font : FONT_NORMAL_YELLOW, enabled: false }),
+		
+		description_panel: inner_panel({pos : {x:32, y:200}, size: {w:33, h:14} }),
+		description_text : text({pos: [40, 216], size:[px(36), px(10)], wrap:px(34), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true }),
+		difficulty_label : label({pos:[105, 433], size:[80, 14], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		back 			       : image_button({pos:[26, 428], size:[31, 20], pack:PACK_GENERAL, id:90, offset:8 }),
+
+		dec_difficulty   : image_button({pos:[65, 428], size:[17, 17], pack:PACK_GENERAL, id:212, offset:0 }),
+		inc_difficulty   : image_button({pos:[65 + 18, 428], size:[17, 17], pack:PACK_GENERAL, id:212, offset:3 }),
+
+		start_mission    : next_button({pos:[516, 430]}),
 	}
 }
 
@@ -1126,7 +1136,7 @@ window terrain_info_window = {
 		background 	: outer_panel({size: [29, 20]}),
 		title 		 	: text({pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
 		describe 		: text({pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) }),
-		
+
 		button_help   : help_button({}),
 		button_close  : close_button({}),
 	}
@@ -1382,6 +1392,7 @@ dock_info_window = {
 }
 
 window warshipwharf_info_window = {
+	first_advisor		: ADVISOR_MILITARY,
 	ui : __baseui(building_info_window, {
 		background    : outer_panel({size: [29, 16]}),
 		resource_icon : resource_icon({pos: [32, 56] }),

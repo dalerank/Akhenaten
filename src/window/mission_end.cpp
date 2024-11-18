@@ -23,6 +23,9 @@
 #include "window/main_menu.h"
 #include "window/mission_next.h"
 #include "window/victory_video.h"
+#include "core/game_environment.h"
+
+ui::mission_end_window g_mission_end;
 
 static void button_fired(int param1, int param2);
 
@@ -48,6 +51,7 @@ static void draw_lost(void) {
     lang_text_draw_centered(62, 1, 48, 32, 544, FONT_LARGE_BLACK_ON_LIGHT);
     lang_text_draw_multiline(62, 16, vec2i{64, 72}, 496, FONT_NORMAL_BLACK_ON_LIGHT);
 }
+
 static void draw_won(void) {
     outer_panel_draw(vec2i{48, 128}, 34, 18);
     lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK_ON_LIGHT);
@@ -88,17 +92,21 @@ static void draw_won(void) {
 
     lang_text_draw_centered(13, 1, 64, 388, 512, FONT_NORMAL_BLACK_ON_LIGHT);
 }
-static void draw_background(int) {
+
+int ui::mission_end_window::draw_background(UiFlags flags) {
     window_draw_underlying_window(UiFlags_None);
     graphics_set_to_dialog();
-    if (g_city.victory_state.state == e_victory_state_won)
+    if (g_city.victory_state.state == e_victory_state_won) {
         draw_won();
-    else {
+    } else {
         draw_lost();
     }
     graphics_reset_dialog();
+
+    return 0;
 }
-static void draw_foreground(int) {
+
+void ui::mission_end_window::draw_foreground(UiFlags flags) {
     if (g_city.victory_state.state != e_victory_state_won) {
         graphics_set_to_dialog();
         large_label_draw(80, 224, 30, focus_button_id == 1);
@@ -130,7 +138,9 @@ static void advance_to_next_mission(void) {
     }
 }
 
-static void handle_input(const mouse* m, const hotkeys* h) {
+int ui::mission_end_window::handle_mouse(const mouse* m) {
+    const hotkeys* h = hotkey_state();
+
     if (g_city.victory_state.state == e_victory_state_won) {
         if (input_go_back_requested(m, h)) {
             sound_music_stop();
@@ -140,6 +150,8 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     } else {
         generic_buttons_handle_mouse(mouse_in_dialog(m), {0, 0}, fired_buttons, 1, &focus_button_id);
     }
+
+    return 0;
 }
 
 static void button_fired(int param1, int param2) {
@@ -147,9 +159,9 @@ static void button_fired(int param1, int param2) {
     g_sound.speech_stop();
     g_city.victory_state.stop_governing();
     game_undo_disable();
-    if (scenario_is_custom())
+    if (scenario_is_custom()) {
         window_main_menu_show(1);
-    else {
+    } else {
         window_mission_next_selection_show();
     }
 }
@@ -157,17 +169,16 @@ static void button_fired(int param1, int param2) {
 static void show_end_dialog(void) {
     window_type window = {
         WINDOW_MISSION_END,
-        draw_background,
-        draw_foreground,
-        handle_input
+        [] (int flags) { g_mission_end.draw_background(flags); },
+        [] (int flags) { g_mission_end.ui_draw_foreground(flags); },
+        [] (const mouse *m, const hotkeys *h) { g_mission_end.ui_handle_mouse(m); }
     };
     window_show(&window);
 }
+
 static void show_intermezzo(void) {
     window_intermezzo_show(INTERMEZZO_WON, show_end_dialog);
 }
-
-#include "core/game_environment.h"
 
 void window_mission_end_show_won(void) {
     mouse_reset_up_state();

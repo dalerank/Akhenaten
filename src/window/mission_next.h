@@ -1,6 +1,3 @@
-#ifndef MISSION_SELECTION_H
-#define MISSION_SELECTION_H
+#pragma once
 
 void window_mission_next_selection_show(void);
-
-#endif // MISSION_SELECTION_H

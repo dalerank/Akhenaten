@@ -169,7 +169,6 @@ var uioptions = {}
 var advisor_chief_window = {}
 var advisor_ratings_window = {}
 var advisor_labors_window = {}
-var mission_briefing_window = {}
 var advisor_religion_window = {}
 var main_menu_window = {}
 var well_info_window = {}
