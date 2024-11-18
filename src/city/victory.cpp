@@ -17,6 +17,12 @@
 #include <iostream>
 
 declare_console_command_p(victory, game_cheat_force_victory)
+declare_console_command_p(defeat, game_cheat_force_defeat)
+
+void game_cheat_force_defeat(std::istream &is, std::ostream &os) {
+    g_city.victory_state.force_lost = true;
+}
+
 void game_cheat_force_victory(std::istream &is, std::ostream &os) {
     g_city.victory_state.force_win = true;
 }
@@ -139,11 +145,17 @@ void city_t::victory_check() {
 
     victory_state.state = determine_victory_state();
 
-    if (mission.has_won)
+    if (mission.has_won) {
         victory_state.state = mission.continue_months_left <= 0 ? e_victory_state_won : e_victory_state_none;
+    }
 
-    if (victory_state.force_win)
+    if (victory_state.force_win) {
         victory_state.state = e_victory_state_won;
+    }
+
+    if (victory_state.force_lost) {
+        victory_state.state = e_victory_state_lost;
+    }
 
     if (victory_state.state != e_victory_state_none) {
         Planner.reset();

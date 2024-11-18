@@ -9,12 +9,13 @@ enum e_victory_state {
 struct vistory_state_t {
     e_victory_state state;
     bool force_win;
+    bool force_lost;
     
     void reset();
-    void update_months_to_govern(void);
+    void update_months_to_govern();
     void continue_governing(int months);
-    void stop_governing(void);
-    bool has_won(void);
+    void stop_governing();
+    bool has_won();
 };
 
 
