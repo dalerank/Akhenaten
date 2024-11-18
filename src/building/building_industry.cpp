@@ -21,6 +21,10 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &data.industry.curse_days_left);
     iob->bind(BIND_SIGNATURE_UINT16, &data.industry.progress_max);
+    if (data.industry.progress_max == 0) {
+        data.industry.progress_max = 400;
+    }
+
     iob->bind____skip(1);
     for (int i = 0; i < 3; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &data.industry.unk_6[i]);
@@ -41,4 +45,8 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
 
     int tmp;
     iob->bind(BIND_SIGNATURE_UINT8, &tmp); // reserved for extended figure type
+}
+
+void building_industry::on_create(int orientation) {
+    data.industry.progress_max = 400;
 }

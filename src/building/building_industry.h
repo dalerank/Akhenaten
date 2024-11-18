@@ -8,4 +8,5 @@ public:
     virtual building_industry *dcast_industry() override { return this; }
 
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void on_create(int orientation) override;
 };
