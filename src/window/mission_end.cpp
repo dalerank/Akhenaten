@@ -24,8 +24,14 @@
 #include "window/mission_next.h"
 #include "window/victory_video.h"
 #include "core/game_environment.h"
+#include "building/construction/build_planner.h"
+#include "io/gamestate/boilerplate.h"
+#include "window/window_city.h"
+#include "widget/widget_top_menu_game.h"
 
 ui::mission_end_window g_mission_end;
+ui::mission_won_window g_mission_won;
+ui::mission_lost_window g_mission_lost;
 
 static void button_fired(int param1, int param2);
 
@@ -37,22 +43,18 @@ static int focus_button_id;
 
 static int get_max(int value1, int value2, int value3) {
     int max = value1;
-    if (value2 > max)
+    if (value2 > max) {
         max = value2;
+    }
 
-    if (value3 > max)
+    if (value3 > max) {
         max = value3;
+    }
 
     return max;
 }
 
-static void draw_lost(void) {
-    outer_panel_draw(vec2i{48, 16}, 34, 16);
-    lang_text_draw_centered(62, 1, 48, 32, 544, FONT_LARGE_BLACK_ON_LIGHT);
-    lang_text_draw_multiline(62, 16, vec2i{64, 72}, 496, FONT_NORMAL_BLACK_ON_LIGHT);
-}
-
-static void draw_won(void) {
+int ui::mission_won_window::draw_background(UiFlags flags) {
     outer_panel_draw(vec2i{48, 128}, 34, 18);
     lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK_ON_LIGHT);
 
@@ -91,28 +93,41 @@ static void draw_won(void) {
     text_draw_number(city_finance_treasury(), '@', " ", right_offset + width, 348, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw_centered(13, 1, 64, 388, 512, FONT_NORMAL_BLACK_ON_LIGHT);
-}
-
-int ui::mission_end_window::draw_background(UiFlags flags) {
-    window_draw_underlying_window(UiFlags_None);
-    graphics_set_to_dialog();
-    if (g_city.victory_state.state == e_victory_state_won) {
-        draw_won();
-    } else {
-        draw_lost();
-    }
-    graphics_reset_dialog();
 
     return 0;
 }
 
+void ui::mission_end_window::init() {
+    autoconfig_window &cui = getui();
+
+    cui["replay_mission"].onclick([] {
+        Planner.reset();
+        if (scenario_is_custom()) {
+            GamestateIO::load_savegame("autosave_replay.sav");
+            window_city_show();
+        } else {
+            int scenario_id = scenario_campaign_scenario_id();
+            widget_top_menu_clear_state();
+            GamestateIO::load_mission(scenario_id, true);
+        }
+    });
+}
+
 void ui::mission_end_window::draw_foreground(UiFlags flags) {
-    if (g_city.victory_state.state != e_victory_state_won) {
-        graphics_set_to_dialog();
-        large_label_draw(80, 224, 30, focus_button_id == 1);
-        lang_text_draw_centered(62, 6, 80, 230, 480, FONT_NORMAL_BLACK_ON_DARK);
-        graphics_reset_dialog();
+    window_draw_underlying_window(UiFlags_None);
+
+    if (g_city.victory_state.state == e_victory_state_won) {
+        g_mission_won.draw(flags);
+    } else {
+        g_mission_lost.ui_draw_foreground(flags);
     }
+}
+
+int ui::mission_end_window::draw_background(UiFlags flags) {
+    autoconfig_window &cui = getui();
+
+    cui.format_all(&g_city);
+    return cui.draw_background(flags);
 }
 
 static void advance_to_next_mission(void) {
@@ -154,6 +169,17 @@ int ui::mission_end_window::handle_mouse(const mouse* m) {
     return 0;
 }
 
+int ui::mission_end_window::ui_handle_mouse(const mouse *m) {
+    autoconfig_window &cui = getui();
+    return cui.ui_handle_mouse(m);
+}
+
+autoconfig_window &ui::mission_end_window::getui() {
+    autoconfig_window &mission_won = g_mission_won;
+    autoconfig_window &mission_lost = g_mission_lost;
+    return (g_city.victory_state.state == e_victory_state_won) ? mission_won : mission_lost;
+}
+
 static void button_fired(int param1, int param2) {
     sound_music_stop();
     g_sound.speech_stop();
@@ -170,9 +196,11 @@ static void show_end_dialog(void) {
     window_type window = {
         WINDOW_MISSION_END,
         [] (int flags) { g_mission_end.draw_background(flags); },
-        [] (int flags) { g_mission_end.ui_draw_foreground(flags); },
+        [] (int flags) { g_mission_end.draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_mission_end.ui_handle_mouse(m); }
     };
+
+    g_mission_end.init();
     window_show(&window);
 }
 

@@ -24,6 +24,7 @@ struct id_property_t {
     static const xstring tax_percentage;
     static const xstring total_stored;
     static const xstring free_space;
+    static const xstring population;
 };
 
 const id_property_t &tags();

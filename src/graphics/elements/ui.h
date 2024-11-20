@@ -398,6 +398,99 @@ struct widget {
     virtual void begin_frame() { ui::begin_frame(); }
     void line(bool hline, vec2i pos, int size);
     bool handle_mouse(const mouse *m) { return ui::handle_mouse(m); }
+
+    template<typename T>
+    bstring1024 format(const T * o, pcstr fmt) {
+        if (!fmt || !*fmt) {
+            return {};
+        }
+
+        struct kv {
+            bstring64 key;
+            bstring1024 value;
+            pstr data() { return key.data(); }
+            kv &operator=(pcstr v) { key = v; return *this; }
+            void resize(size_t s) { key.resize(s); }
+            pcstr c_str() const { return key.c_str(); }
+        };
+        svector<kv, 32> items;
+
+        const char *start = fmt;
+        while ((start = strstr(start, "${")) != NULL) {  // Find the start of "${"
+            const char *end = ::strchr(start, '}'); // Find the closing '}'
+            if (end != NULL) {
+                const int length = end - start + 1;
+
+                auto &item = items.emplace_back();
+                item.key.ncat(start, length);
+
+                // Move the pointer past the current block
+                start = end + 1;
+            } else {
+                break; // Exit if no closing '}' is found
+            }
+        }
+
+        for (auto &item : items) {
+            if (strncmp(item.key, "${", 2) != 0) {
+                continue;
+            }
+
+            pcstr scopeend = item.key.strchr('}');
+            if (scopeend == nullptr) {
+                continue;
+            }
+
+            item.key.resize(scopeend - item.key + 1);
+
+            int group, id;
+            uint32_t args_handled = sscanf(item.key.c_str(), "${%d.%d}", &group, &id);
+            if (args_handled == 2) {
+                item.value = ui::str(group, id);
+                continue;
+            }
+
+            bstring128 loc("#");
+            args_handled = sscanf(item.key.c_str(), "${loc.%[^}]}", loc.data() + 1);
+            if (args_handled == 1) {
+                item.value = lang_text_from_key(loc.c_str());
+                continue;
+            }
+
+            bstring128 domain, prop;
+            args_handled = sscanf(item.key.c_str(), "${%[^.].%[^}]}", domain.data(), prop.data());
+            if (args_handled == 2) {
+                bvariant bvar = o->get_property(xstring(domain), xstring(prop));
+                if (bvar.is_empty()) {
+                    bvar = city_get_property(xstring(domain), xstring(prop));
+                }
+
+                if (!bvar.is_empty()) {
+                    item.value = bvar.to_str();
+                }
+            }
+        }
+
+        bstring1024 result = fmt;
+        for (const auto &item : items) {
+            if (item.value.len()) {
+                result.replace_str(item.key, item.value);
+            }
+        }
+
+        return result;
+    }
+
+    template<typename T>
+    void format_all(const T *o) {
+        for (auto &w : elements) {
+            bstring1024 formated_text;
+            formated_text = format(o, w->format().c_str());
+            if (!formated_text.empty()) {
+                w->text(formated_text);
+            }
+        }
+    }
 };
 
 struct info_window : public widget {

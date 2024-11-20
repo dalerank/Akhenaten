@@ -122,13 +122,7 @@ void building_info_window::window_info_background(object_info &c) {
     building *b = building_get(c);
     b->dcast()->window_info_background(c);
 
-    for (auto &w : ui.elements) {
-        bstring1024 formated_text;
-        formated_text = common_info_window::format(b->dcast(), w->format().c_str());
-        if (!formated_text.empty()) {
-            w->text(formated_text);
-        }
-    }
+    ui.format_all(b->dcast());
 
     if (ui["title"].text().empty()) {
         ui["title"] = ui::str(28, b->type);

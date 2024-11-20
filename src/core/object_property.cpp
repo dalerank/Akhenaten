@@ -26,3 +26,4 @@ const xstring id_property_t::first_material_stored = "first_material_stored";
 const xstring id_property_t::tax_percentage = "tax_percentage";
 const xstring id_property_t::total_stored = "total_stored";
 const xstring id_property_t::free_space = "free_space";
+const xstring id_property_t::population = "population";

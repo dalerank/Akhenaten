@@ -925,6 +925,7 @@ struct cproperty {
 
 const cproperty cproperties[] = {
     { tags().city, tags().tax_percentage, [] (const xstring &) { return bvariant(g_city.finance.tax_percentage); }},
+    { tags().city, tags().population, [] (const xstring &) { return bvariant(g_city.population.population); }},
 };
 
 bvariant city_get_property(const xstring &domain, const xstring &name) {
@@ -939,6 +940,10 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
     }
 
     return bvariant();
+}
+
+bvariant city_t::get_property(const xstring &domain, const xstring &name) const {
+    return city_get_property(domain, name);
 }
 
 void city_t::environment_t::river_update_flotsam() {

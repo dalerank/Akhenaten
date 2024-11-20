@@ -112,13 +112,7 @@ void figure_info_window::window_info_background(object_info &c) {
     int figure_id = c.nfigure.ids[c.nfigure.selected_index];
     figure *f = ::figure_get(figure_id);
 
-    for (auto &w : ui.elements) {
-        bstring1024 formated_text;
-        formated_text = common_info_window::format(f->dcast(), w->format().c_str());
-        if (!formated_text.empty()) {
-            w->text(formated_text);
-        }
-    }
+    ui.format_all(f->dcast());
 
     ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
 

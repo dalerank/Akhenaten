@@ -771,10 +771,27 @@ window mission_end_window = {
 		}
 }
 
+window mission_won_window = {
+		pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
+		ui : {
+		}
+}
+
+window mission_lost_window = {
+		pos: [(sw(0) - px(34))/2, (sh(0) - px(16))/2],
+		ui : {
+			background     : outer_panel({size:[34, 16]}),
+			title 		     : text({pos:[0, 32], text:"${62.1}", font : FONT_LARGE_BLACK_ON_LIGHT, align:"center", size:[px(32), 20] }),
+			warning_text   : text({pos:[32, 72], text:"${62.16}", wrap:px(32), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+
+			replay_mission : button({margin:{centerx:-135, bottom:-40}, size:[270, 25], text:"${loc.replay_mission}"}),  
+		}
+}
+
 window mission_briefing_window = {
 	pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
 	ui : {
-		outer_panel      : outer_panel({pos:[16, 32], size : {w:38, h:27} }),
+		background       : outer_panel({pos:[16, 32], size : {w:38, h:27} }),
 		title 		       : text({pos:[32, 48], font : FONT_LARGE_BLACK_ON_LIGHT }),
 		subtitle 		     : text({pos:[32, 78], font : FONT_NORMAL_BLACK_ON_LIGHT }),
 		objectives_panel : inner_panel({pos:[32, 96], size: {w:36, h:6} }),
