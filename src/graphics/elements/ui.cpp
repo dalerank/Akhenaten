@@ -1082,12 +1082,3 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
     _hbody = arch.r_bool("hbody", true);
     _split = arch.r_bool("split", false);
 }
-
-void ui::info_window::load(archive arch, pcstr section) {
-    widget::load(arch, section);
-    resource_text_group = arch.r_int("resource_text_group");
-}
-
-void ui::info_window::load() {
-    widget::load(section);
-}

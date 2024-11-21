@@ -171,7 +171,6 @@ var advisor_ratings_window = {}
 var advisor_labors_window = {}
 var advisor_religion_window = {}
 var main_menu_window = {}
-var well_info_window = {}
 var minimap_window = {}
 var advisor_trade_window = {}
 var advisor_imperial_window = {}

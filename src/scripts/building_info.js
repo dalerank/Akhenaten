@@ -892,6 +892,8 @@ building_well = {
   window_info_height_id : 4,
   fire_proof : true,
   building_size : 1,
+  info_help_id:62,
+  info_text_id:109,
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
 }
 

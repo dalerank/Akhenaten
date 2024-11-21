@@ -12,22 +12,24 @@
 #include "graphics/elements/ui.h"
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
-#include "js/js_game.h"
+#include "window/window_building_info.h"
+
+struct well_info_window : public building_info_window_t<well_info_window> {
+    virtual void init(object_info &c) override;
+    virtual bool check(object_info &c) override {
+        building *b = c.building_get();
+        return b->dcast_well();
+    }
+};
 
 buildings::model_t<building_well> well_m;
-ui::info_window well_w{"well_info_window"};
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_well);
-void config_load_building_well() {
-    well_m.load();
-    well_w.load();
-}
+well_info_window well_infow;
 
 void building_well::update_month() {
     int avg_desirability = g_desirability.get_avg(tile(), 4);
     base.fancy_state = (avg_desirability > 30 ? efancy_good : efancy_normal);
-    pcstr anim = (base.fancy_state == efancy_good) ? "fancy" : "base";
-    map_image_set(tile(), well_m.anim[anim]);
+    pcstr ranim = (base.fancy_state == efancy_good) ? "fancy" : "base";
+    map_image_set(tile(), anim(ranim));
 }
 
 void building_well::on_place_checks() {
@@ -41,11 +43,8 @@ void building_well::on_place_checks() {
     }
 }
 
-void building_well::window_info_background(object_info &c) {
-    c.help_id = 62;
-    window_building_play_sound(&c, "Wavs/well.wav");
-
-    auto &ui = well_w;
+void well_info_window::init(object_info &c) {
+    building_info_window::init(c);
 
     int well_necessity = map_water_supply_is_well_unnecessary(c.building_id, 2);
     int text_id = 0;
@@ -58,17 +57,13 @@ void building_well::window_info_background(object_info &c) {
     }
 
     if (text_id) {
-        ui["text"].text(ui::str(109, text_id));
+        ui["text"].text(ui::str(c.group_id, text_id));
     }
 }
 
-void building_well::window_info_foreground(object_info &ctx) {
-    well_w.draw();
-}
-
 bool building_well::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    pcstr anim = (base.fancy_state == efancy_normal) ? "base_work" : "fancy_work";
-    building_draw_normal_anim(ctx, point, &base, tile, well_m.anim[anim], color_mask);
+    pcstr ranim = (base.fancy_state == efancy_normal) ? "base_work" : "fancy_work";
+    building_draw_normal_anim(ctx, point, &base, tile, anim(ranim), color_mask);
 
     return true;
 }

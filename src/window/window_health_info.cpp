@@ -20,7 +20,6 @@ void health_info_window::init(object_info &c) {
 
     c.go_to_advisor.first = ADVISOR_HEALTH;
 
-    building_info_window::window_info_background(c);
     building *b = c.building_get();
 
     e_figure_type ftype = FIGURE_NONE;

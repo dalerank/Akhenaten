@@ -1553,11 +1553,11 @@ window workshop_info_window = {
 	}
 }
 
-well_info_window = {
+window well_info_window = {
 	ui : {
-		background    : { type : "outer_panel", pos: [0, 0], size: [29, 14] },
-		title 		    : { type : "text", pos: [0, 12], size: [px(28), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center", text: "#well_info_title"},
-		text          : { type : "text", pos: [32, 56], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		background    : outer_panel({size: [29, 14] }),
+		title 		    : text({pos: [0, 12], size: [px(28), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center", text:"${loc.well_info_title}"}),
+		text          : text({pos: [32, 56], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
 	}
 }
 

@@ -6,6 +6,7 @@
 
 #include "core/svector.h"
 #include "core/archive.h"
+#include "core/variant.h"
 
 #include "input/hotkey.h"
 #include "graphics/elements/generic_button.h"
@@ -24,6 +25,8 @@
 
 struct mouse;
 struct tooltip_context;
+
+bvariant city_get_property(const xstring &domain, const xstring &name);
 
 enum UiFlags_ {
     UiFlags_None = 0,
@@ -491,15 +494,6 @@ struct widget {
             }
         }
     }
-};
-
-struct info_window : public widget {
-    bstring128 section;
-    int resource_text_group;
-
-    inline info_window(pcstr s) : section(s) {}
-    virtual void load(archive arch, pcstr section = "ui") override;
-    void load();
 };
 
 } // ui
