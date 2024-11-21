@@ -70,7 +70,7 @@ void ui::sidebar_window_expanded::draw_sidebar_extra(vec2i offset) {
 
 void ui::sidebar_window_expanded::refresh_build_menu_buttons() {
     for (const auto &btn: button_ids) {
-        ui[btn.id].enabled = (building_menu_count_items(btn.type) > 0);
+        ui[btn.id].readonly = (building_menu_count_items(btn.type) == 0);
     }
 }
 
