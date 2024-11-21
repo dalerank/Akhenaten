@@ -7,6 +7,7 @@ struct id_property_t {
     static const xstring building;
     static const xstring figure;
     static const xstring city;
+    static const xstring rating;
     static const xstring model;
     static const xstring name;
     static const xstring class_name;

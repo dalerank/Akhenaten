@@ -5,24 +5,25 @@
 namespace ui {
 
     struct mission_end_window : public autoconfig_window_t<mission_end_window> {
-        virtual int handle_mouse(const mouse *m) override;
+        virtual int handle_mouse(const mouse *m) override { return 0; }
         virtual int get_tooltip_text() override { return 0; }
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual int draw_background(UiFlags flags) override;
-        virtual int ui_handle_mouse(const mouse *m) override;
+        virtual void draw_foreground(UiFlags flags) override {}
+        virtual int draw_background(UiFlags flags) override { return 0; }
 
         autoconfig_window &getui();
 
-        virtual void init() override;
+        virtual void init() override {};
     };
 
     struct mission_won_window : public autoconfig_window_t<mission_won_window> {
         virtual int handle_mouse(const mouse *m) override { return 0; }
+        virtual int ui_handle_mouse(const mouse *m) override;
         virtual int get_tooltip_text() override { return 0; }
         virtual void draw_foreground(UiFlags flags) override {}
-        virtual int draw_background(UiFlags flags) override;
+        virtual int draw_background(UiFlags flags) override { return 0; }
+        virtual void init() override;
 
-        virtual void init() override {}
+        void advance_to_next_mission();
     };
 
     struct mission_lost_window : public autoconfig_window_t<mission_lost_window> {
@@ -31,7 +32,7 @@ namespace ui {
         virtual void draw_foreground(UiFlags flags) override {}
         virtual int draw_background(UiFlags flags) override { return 0; }
 
-        virtual void init() override {}
+        virtual void init() override;
     };
 
 }

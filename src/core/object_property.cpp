@@ -8,6 +8,7 @@ const id_property_t &tags() {
 const xstring id_property_t::stored = "stored";
 const xstring id_property_t::building = "building";
 const xstring id_property_t::city = "city";
+const xstring id_property_t::rating = "rating";
 const xstring id_property_t::figure = "figure";
 const xstring id_property_t::model = "model";
 const xstring id_property_t::name = "name";

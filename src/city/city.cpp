@@ -926,6 +926,7 @@ struct cproperty {
 const cproperty cproperties[] = {
     { tags().city, tags().tax_percentage, [] (const xstring &) { return bvariant(g_city.finance.tax_percentage); }},
     { tags().city, tags().population, [] (const xstring &) { return bvariant(g_city.population.population); }},
+    { tags().rating, tags().population, [] (const xstring &) { return bvariant(g_city.population.population); }},
 };
 
 bvariant city_get_property(const xstring &domain, const xstring &name) {
