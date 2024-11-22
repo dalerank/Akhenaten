@@ -8,6 +8,7 @@
 #include "io/io.h"
 #include "io/io_buffer.h"
 #include "core/random.h"
+#include "game/mission.h"
 #include "request.h"
 
 #include "game/time.h"

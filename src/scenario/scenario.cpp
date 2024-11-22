@@ -9,6 +9,7 @@
 #include "events.h"
 #include "game/difficulty.h"
 #include "game/settings.h"
+#include "game/mission.h"
 
 #include "js/js_game.h"
 
@@ -91,7 +92,7 @@ int scenario_is_custom() {
 void scenario_set_custom(int custom) {
     g_scenario_data.settings.is_custom = custom;
 }
-int scenario_campaign_rank(void) {
+int scenario_campaign_rank() {
     return g_scenario_data.settings.campaign_mission_rank;
 }
 void scenario_set_campaign_rank(int rank) {

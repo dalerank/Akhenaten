@@ -161,15 +161,6 @@ struct building_stage_t {
     std::vector<e_building_type> buildings;
 };
 
-struct mission_id_t {
-    xstring _data;
-    inline mission_id_t(int id) {
-        _data.printf("mission%d", id);
-    }
-
-    inline operator const char*() const { return _data.c_str(); }
-};
-
 struct scenario_data_t {
     uint8_t scenario_name[65];
 

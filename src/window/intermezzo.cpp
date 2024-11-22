@@ -22,13 +22,13 @@ static pcstr SOUND_FILE_LOSE = "Wavs/lose_game.wav";
 
 struct intermezzo_data_t {
     intermezzo_type type;
-    void (*callback)(void);
+    std::function<void ()> callback;
     time_millis start_time;
 };
 
 intermezzo_data_t g_intermezzo_data;
 
-static void init(intermezzo_type type, void (*callback)(void)) {
+static void init(intermezzo_type type, std::function<void()> callback) {
     g_intermezzo_data.type = type;
     g_intermezzo_data.callback = callback;
     g_intermezzo_data.start_time = time_get_millis();
@@ -84,7 +84,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 
-void window_intermezzo_show(intermezzo_type type, void (*callback)()) {
+void window_intermezzo_show(intermezzo_type type, std::function<void()> callback) {
     window_type window = {
         WINDOW_INTERMEZZO,
         draw_background,

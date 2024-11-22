@@ -4,6 +4,7 @@
 #include "game/resource.h"
 #include "core/span.hpp"
 #include "trade_route.h"
+#include "core/svector.h"
 
 struct mission_id_t;
 

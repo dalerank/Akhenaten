@@ -1,14 +1,25 @@
-#ifndef GAME_MISSION_H
-#define GAME_MISSION_H
+#pragma once
 
 #include <cstdint>
+#include "core/xstring.h"
+#include "core/svector.h"
 
 struct mission_step_t;
+
+struct mission_id_t {
+    xstring _data;
+    inline mission_id_t(int id) {
+        _data.printf("mission%d", id);
+    }
+
+    inline operator const char *() const { return _data.c_str(); }
+};
 
 // TODO: clean up the various engine constants into a single global namespace
 constexpr int MAX_MISSION_CHOICE_BRANCHES = 5;
 constexpr int MAX_MISSION_CAMPAIGNS = 10;
 
+// deprecated //
 struct mission_choice_branch_t {
     int path_id = -1;
     int x;
@@ -16,6 +27,12 @@ struct mission_choice_branch_t {
     int text_id;
     mission_step_t* next_play = nullptr;
 };
+
+struct mission_choice_t {
+    xstring name;
+    int id;
+};
+using mission_choice_vec = svector<mission_choice_t, 4>;
 
 struct mission_step_t {
     int scenario_id = -1;
@@ -266,17 +283,16 @@ const uint8_t* game_mission_get_name(int scenario_id);
 const mission_step_t* get_campaign_mission_step_data(int campaign_id, int step_index);
 const mission_step_t* get_scenario_step_data(int scenario_id);
 
+mission_choice_vec load_mission_choice(const mission_id_t &missionid);
+
 int get_scenario_mission_rank(int scenario_id);
 int get_scenario_campaign_id(int scenario_id);
 int get_first_mission_in_campaign(int campaign_id);
 int get_last_mission_in_campaign(int campaign_id);
-
-bool game_mission_has_choice(void);
+bool game_mission_has_choice(int scenario_id);
 
 bool game_campaign_unlocked(int campaign_id);
 bool game_scenario_unlocked(int scenario_id);
 bool game_scenario_beaten(int scenario_id);
 
 bool game_load_campaign_file();
-
-#endif // GAME_MISSION_H

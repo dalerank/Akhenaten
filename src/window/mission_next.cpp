@@ -141,27 +141,28 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 static void button_start(int param1, int param2) {
-    window_mission_briefing_show();
+    //window_mission_briefing_show();
 }
 
-void window_mission_next_selection_show(void) {
-    if (!game_mission_has_choice()) {
-        int scenario_id = scenario_campaign_scenario_id();
-        const mission_step_t* current_mission = get_scenario_step_data(scenario_id);
-        const mission_step_t* next_mision = get_scenario_step_data(scenario_id + 1);
-        if (current_mission->campaign_id == next_mision->campaign_id) {
-            GamestateIO::load_mission(scenario_id + 1, true);
-            return;
-        }
+void window_mission_next_selection_show(int scenario_id) {
+    const mission_step_t* mission = get_scenario_step_data(scenario_id);
+    if (mission->campaign_id <= 0) {
         window_main_menu_show(true);
         return;
     }
+
+    if (!game_mission_has_choice(scenario_id)) {     
+        GamestateIO::load_mission(scenario_id, true);
+        return;
+    }
+
     window_type window = {
         WINDOW_MISSION_SELECTION,
         draw_background,
         draw_foreground,
         handle_input
     };
+
     g_mission_next.choice = 0;
     g_mission_next.focus_button = 0;
     window_show(&window);

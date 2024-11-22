@@ -781,8 +781,8 @@ window mission_won_window = {
 					culture_header 		: text({pos:{x:30, y:10}, text:"${148.0} ${rating.culture}", font : FONT_NORMAL_WHITE_ON_DARK}),
 					prosperity_header : text({pos:{x:30, y:30}, text:"${148.1} ${rating.prosperity}", font : FONT_NORMAL_WHITE_ON_DARK}),
 					monument_header		: text({pos:{x:30, y:50}, text:"${148.2} ${rating.monument}", font : FONT_NORMAL_WHITE_ON_DARK}),
-					population_header	: text({pos:{x:30, y:70}, text:"${148.3} ${city.population}", font : FONT_NORMAL_WHITE_ON_DARK}),
-					treasury_header		: text({pos:{x:30, y:90}, text:"${148.4} ${city.treasury}", font : FONT_NORMAL_WHITE_ON_DARK}),
+					treasury_header		: text({pos:{x:30, y:70}, text:"${148.3} ${city.treasury}", font : FONT_NORMAL_WHITE_ON_DARK}),
+					population_header	: text({pos:{x:30, y:90}, text:"${148.4} ${rating.kingdom}", font : FONT_NORMAL_WHITE_ON_DARK}),
 				}
 			}),
 			subtitle 		   : text({pos:[32, 178], text:"${147.21}", size:[px(32), -1], multiline:true, wrap:px(32), font : FONT_NORMAL_BLACK_ON_LIGHT }),

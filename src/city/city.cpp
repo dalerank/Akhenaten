@@ -923,13 +923,17 @@ struct cproperty {
     std::function<bvariant(const xstring &)> handler;
 };
 
-const cproperty cproperties[] = {
-    { tags().city, tags().tax_percentage, [] (const xstring &) { return bvariant(g_city.finance.tax_percentage); }},
-    { tags().city, tags().population, [] (const xstring &) { return bvariant(g_city.population.population); }},
-    { tags().rating, tags().population, [] (const xstring &) { return bvariant(g_city.population.population); }},
-};
-
 bvariant city_get_property(const xstring &domain, const xstring &name) {
+    static cproperty cproperties[] = {
+        { tags().city, tags().tax_percentage, [] (const xstring &) { return bvariant(g_city.finance.tax_percentage); }},
+        { tags().city, tags().population, [] (const xstring &) { return bvariant(g_city.population.population); }},
+        { tags().city, tags().treasury, [] (const xstring &) { return bvariant(g_city.finance.treasury); }},
+        { tags().rating, tags().culture, [] (const xstring &) { return bvariant(g_city.ratings.culture); }},
+        { tags().rating, tags().prosperity, [] (const xstring &) { return bvariant(g_city.ratings.prosperity); }},
+        { tags().rating, tags().monument, [] (const xstring &) { return bvariant(g_city.ratings.monument); }},
+        { tags().rating, tags().kingdom, [] (const xstring &) { return bvariant(g_city.ratings.kingdom); }},
+    };
+
     for (const auto &prop : cproperties) {
         if (prop.domain != domain) {
             continue;

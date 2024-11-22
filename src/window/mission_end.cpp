@@ -82,7 +82,8 @@ void ui::mission_won_window::advance_to_next_mission() {
         }
     } else {
         //        scenario_set_campaign_mission(game_mission_peaceful());
-        window_mission_next_selection_show();
+        int next_mission = scenario_campaign_scenario_id() + 1;
+        window_mission_next_selection_show(next_mission);
     }
 }
 

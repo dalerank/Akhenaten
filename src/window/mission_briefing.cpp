@@ -28,14 +28,41 @@ ui::mission_briefing_window g_mission_briefing;
 void ui::mission_briefing_window::init() {
     rich_text_reset(0);
 
+    mission_has_choice = game_mission_has_choice(scenario_id);
+
+    ui["back"].enabled = !is_review && mission_has_choice;
+    ui["dec_difficulty"].enabled = !is_review;
+    ui["inc_difficulty"].enabled = !is_review;
+
     // load map!
     if (!g_mission_briefing.campaign_mission_loaded) {
         g_mission_briefing.campaign_mission_loaded = 1;
     }
+
+    ui["dec_difficulty"].onclick([] {
+        g_settings.decrease_difficulty();
+    });
+
+    if (!g_mission_briefing.is_review) {
+        ui["back"].onclick([sid = scenario_id] {
+            g_sound.speech_stop();
+            window_mission_next_selection_show(sid);
+        });
+    }
+
+    ui["inc_difficulty"].onclick([] {
+        g_settings.increase_difficulty();
+    });
+
+    ui["start_mission"].onclick([] {
+        g_sound.speech_stop();
+        g_sound.music_update(/*force*/true);
+        window_city_show();
+        city_mission_reset_save_start();
+    });
 }
 
 int ui::mission_briefing_window::draw_background(UiFlags flags) {
-    auto &data = g_mission_briefing;
     window_draw_underlying_window(UiFlags_None);
 
     int text_id = 200 + scenario_campaign_scenario_id();
@@ -71,35 +98,10 @@ int ui::mission_briefing_window::draw_background(UiFlags flags) {
 
     ui["description_text"] = (pcstr)msg->content.text;
 
-    ui["back"].enabled = !ui.is_review && game_mission_has_choice();
-    ui["back"].onclick([] {
-        if (!g_mission_briefing.is_review) {
-            g_sound.speech_stop();
-            window_mission_next_selection_show();
-        }
-    });
-
-    ui["start_mission"].onclick([] {
-        g_sound.speech_stop();
-        g_sound.music_update(/*force*/true);
-        window_city_show();
-        city_mission_reset_save_start();
-    });
-
-    ui["dec_difficulty"].enabled = !ui.is_review;
-    ui["dec_difficulty"].onclick([] {
-        g_settings.decrease_difficulty();
-    });
-
-    ui["inc_difficulty"].enabled = !ui.is_review;
-    ui["inc_difficulty"].onclick([] {
-        g_settings.increase_difficulty();
-    });
-
     return 0;
 }
 
-static void show(void) {
+static void show() {
     static window_type window = {
         WINDOW_MISSION_BRIEFING,
         [] (int flags) { g_mission_briefing.draw_background(flags); },
@@ -111,8 +113,9 @@ static void show(void) {
     window_show(&window);
 }
 
-void window_mission_briefing_show() {
+void window_mission_briefing_show(int scenario_id) {
     auto &data = g_mission_briefing;
+    data.scenario_id = scenario_id;
     data.is_review = 0;
     data.campaign_mission_loaded = 0;
     window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
@@ -120,6 +123,7 @@ void window_mission_briefing_show() {
 
 void window_mission_briefing_show_review() {
     auto &data = g_mission_briefing;
+    data.scenario_id = scenario_campaign_scenario_id();
     data.is_review = 1;
     data.campaign_mission_loaded = 1;
     window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);

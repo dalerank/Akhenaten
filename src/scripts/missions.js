@@ -203,6 +203,18 @@ mission6 = { // Behdet
 			is_sea_trade : true,
 		}
 	],
+
+	choice : [
+		{
+			name : "Abydos",
+			id : 6,
+		},
+
+		{
+			name : "Behdet",
+			id : 7,
+		}
+	],
 }
 
 mission7 = { // Abydos
@@ -226,6 +238,7 @@ mission7 = { // Abydos
 										 BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_RA, BUILDING_SHRINE_RA,
 										 BUILDING_FESTIVAL_SQUARE, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL],
 	},
+	
 	enable_scenario_events : false,
 	events : [
 		{
@@ -234,5 +247,17 @@ mission7 = { // Abydos
 			amount : 1400,
 			deadline : 9,
 		},
-	]
+	],
+
+	choice : [
+		{
+			name : "Abydos",
+			id : 6,
+		},
+
+		{
+			name : "Behdet",
+			id : 7,
+		}
+	],
 }

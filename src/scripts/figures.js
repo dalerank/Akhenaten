@@ -158,6 +158,17 @@ figure figure_ostrich = {
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
+figure figure_antelope = {
+	animations : {
+		walk : { pack:PACK_SPR_AMBIENT, id:30, max_frames:12 },
+		death : { pack:PACK_SPR_AMBIENT, id:31, max_frames:8, duration:3, loop:false },
+		eating : { pack:PACK_SPR_AMBIENT, id:32, max_frames:7 },
+		idle : { pack:PACK_SPR_AMBIENT, id:33, max_frames:8 },
+		run : { pack:PACK_SPR_AMBIENT, id:34, max_frames:8 },
+	},
+	terrain_usage : TERRAIN_USAGE_ANIMAL,
+}
+
 figure figure_birds = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:156, max_frames:12 },
@@ -183,9 +194,9 @@ figure_crocodile = {
 
 figure_hippo = {
   animations : {
-		walk : { pack:PACK_SPR_MAIN, id:22, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:23, max_frames:8, duration:3, loop:false },
-		attack : { pack:PACK_SPR_MAIN, id:24, max_frames:7 },
+		walk : { pack:PACK_SPR_AMBIENT, id:22, max_frames:12 },
+		death : { pack:PACK_SPR_AMBIENT, id:23, max_frames:8, duration:3, loop:false },
+		attack : { pack:PACK_SPR_AMBIENT, id:24, max_frames:7 },
 		sweem : { pack:PACK_SPR_AMBIENT, id:25, max_frames:8 },
 		sweem_attack : { pack:PACK_SPR_AMBIENT, id:26, max_frames:8 },
 		sweem_idle : { pack:PACK_SPR_AMBIENT, id:27, max_frames:8 },

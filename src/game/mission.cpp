@@ -108,20 +108,18 @@ int get_first_mission_in_campaign(int campaign_id) {
         step = step->next_in_list;
     return step->scenario_id;
 }
+
 int get_last_mission_in_campaign(int campaign_id) {
     if (campaign_id < CAMPAIGN_PHARAOH_PREDYNASTIC || campaign_id >= CAMPAIGN_MAX)
         return SCENARIO_NULL;
     auto campaign = &g_mission_data.campaigns[campaign_id];
     return campaign->steps[campaign->num_steps - 1].scenario_id;
 }
-bool game_mission_has_choice(void) {
-    return false; // TODO
-    //    if (GAME_ENV == ENGINE_ENV_C3)
-    //        return RANK_CHOICE_C3[scenario_campaign_rank()];
-    //    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-    //        int selector = scenario_ph_mission_selector();
-    //        return CAN_CHOOSE_NEXT_SCENARIO_PH[selector];
-    //    }
+
+bool game_mission_has_choice(int scenario_id) {
+    mission_id_t missionid(scenario_id);
+    mission_choice_vec choices = load_mission_choice(missionid);
+    return !choices.empty();
 }
 
 bool game_campaign_unlocked(int campaign_id) {
@@ -380,4 +378,17 @@ bool game_load_campaign_file() {
 
     logs::info("Campaign mission data loaded");
     return true;
+}
+
+mission_choice_vec load_mission_choice(const mission_id_t &missionid) {
+    mission_choice_vec result;
+    g_config_arch.r_section(missionid, [&] (archive arch) {
+        arch.r_array("choice", [&] (archive choice_arch) {
+            auto item = result.emplace_back();
+            item.name = choice_arch.r_string("name");
+            item.id = choice_arch.r_int("id");
+        });
+    });
+
+    return result;
 }
