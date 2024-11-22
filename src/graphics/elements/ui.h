@@ -27,6 +27,7 @@ struct mouse;
 struct tooltip_context;
 
 bvariant city_get_property(const xstring &domain, const xstring &name);
+pcstr lang_text_from_key(pcstr key);
 
 enum UiFlags_ {
     UiFlags_None = 0,

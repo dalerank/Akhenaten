@@ -148,7 +148,17 @@ figure_priest = {
 	max_roam_length : 384,
 }
 
-figure_ostrich = {
+figure figure_ostrich = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:156, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false },
+		eating : { pack:PACK_SPR_MAIN, id:159, max_frames:7 },
+		idle : { pack:PACK_SPR_MAIN, id:160, max_frames:8 },
+	},
+	terrain_usage : TERRAIN_USAGE_ANIMAL,
+}
+
+figure figure_birds = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:156, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false },
@@ -509,7 +519,7 @@ figure_trade_ship = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure_shipwreck = {
+figure figure_shipwreck = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:226, max_frames:12 }
 	},

@@ -8,17 +8,9 @@
 #include "graphics/elements/ui.h"
 #include "window/building/figures.h"
 #include "game/game.h"
-
 #include "city/labor.h"
 
-#include "js/js_game.h"
-
 figures::model_t<figure_shipwreck> shipwreck_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_shipwreck);
-void config_load_figure_shipwreck() {
-    shipwreck_m.load();
-}
 
 void figure_shipwreck::figure_action() {
     base.height_adjusted_ticks = 0;
@@ -42,7 +34,7 @@ void figure_shipwreck::figure_action() {
 }
 
 void figure_shipwreck::update_animation() {
-    base.sprite_image_id = anim("walk").first_img() + base.anim.frame / 16;
+    base.sprite_image_id = anim(animkeys().walk).first_img() + base.anim.frame / 16;
 }
 
 bool figure_shipwreck::window_info_background(object_info &c) {
@@ -60,6 +52,6 @@ figure *figure_shipwreck::create(tile2i tile) {
     f->progress_on_tile = random_byte() & 7;
     f->advance_action(FIGURE_ACTION_15_RETURNING2);
     f->set_cross_country_direction(f->cc_coords.x, f->cc_coords.y, 15 * f->destination_tile.x(), 15 * f->destination_tile.y(), 0);
-    f->image_set_animation(shipwreck_m.anim["walk"]);
+    f->image_set_animation(shipwreck_m.anim[animkeys().walk]);
     return f;
 }

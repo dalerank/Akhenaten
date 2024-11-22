@@ -1,4 +1,4 @@
-#include "animal_ostrich.h"
+#include "animal_birds.h"
 
 #include "figure/figure.h"
 #include "city/city.h"
@@ -12,9 +12,9 @@
 
 #include "js/js_game.h"
 
-figures::model_t<figure_ostrich> ostrich_m;
+figures::model_t<figure_birds> birds_m;
 
-void figure_ostrich::figure_action() {
+void figure_birds::figure_action() {
     const formation* m = formation_get(base.formation_id);
     g_city.figures.add_animal();
 
@@ -59,34 +59,30 @@ void figure_ostrich::figure_action() {
     }
 }
 
-const animations_t &figure_ostrich::anim() const {
-    return ostrich_m.anim;
-}
-
-void figure_ostrich::update_animation() {
+void figure_birds::update_animation() {
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
     case FIGURE_ACTION_19_ANIMAL_IDLE: // idle
-        image_set_animation(ostrich_m.anim["idle"]);
+        image_set_animation(animkeys().idle);
         break;
 
     case ACTION_18_ROOSTING: // roosting
-        image_set_animation(ostrich_m.anim["eating"]);
+        image_set_animation(animkeys().eating);
         break;
 
     case ACTION_16_FLEEING: // fleeing
     case ACTION_10_GOING:   // on the move
-        image_set_animation(ostrich_m.anim["walk"]);
+        image_set_animation(animkeys().walk);
         break;
 
     case ACTION_15_ANIMAL_TERRIFIED: // terrified
     case 14:                         // scared
-        image_set_animation(ostrich_m.anim["idle"]);
+        image_set_animation(animkeys().idle);
         base.anim.frame = 0;
         break;
 
     case FIGURE_ACTION_149_CORPSE:
-        image_set_animation(ostrich_m.anim["death"]);
+        image_set_animation(animkeys().death);
         break;
 
     case FIGURE_ACTION_150_ATTACK:
@@ -97,16 +93,18 @@ void figure_ostrich::update_animation() {
 
     default:
         // In any strange situation load eating/roosting animation
-        image_set_animation(ostrich_m.anim["eating"]);
+        image_set_animation(animkeys().eating);
         break;
     }
+
+    base.sprite_image_id = anim(animkeys().walk).first_img() + base.anim.frame / 16;
 }
 
-void figure_ostrich::before_poof() {
+void figure_birds::before_poof() {
 
 }
 
-bool figure_ostrich::play_die_sound() {
+bool figure_birds::play_die_sound() {
     g_sound.play_effect(SOUND_EFFECT_OSTRICH_DIE);
     return true;
 }

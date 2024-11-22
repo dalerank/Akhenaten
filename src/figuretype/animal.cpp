@@ -54,18 +54,17 @@ void figure_create_herd(tile2i tile) {
     int num_animals;
     switch (scenario_property_climate()) {
     case CLIMATE_CENTRAL:
-        herd_type = FIGURE_BIRDS;
+        herd_type = FIGURE_ANTELOPE;
         num_animals = 10;
         break;
 
     case CLIMATE_NORTHERN:
-        // herd_type = FIGURE_WOLF;
-        herd_type = FIGURE_OSTRICH;
+        herd_type = FIGURE_CROCODILE;
         num_animals = 8;
         break;
 
     case CLIMATE_DESERT:
-        herd_type = FIGURE_OSTRICH; // FIGURE_ZEBRA
+        herd_type = FIGURE_OSTRICH;
         num_animals = 12;
         break;
 
