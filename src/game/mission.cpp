@@ -118,8 +118,8 @@ int get_last_mission_in_campaign(int campaign_id) {
 
 bool game_mission_has_choice(int scenario_id) {
     mission_id_t missionid(scenario_id);
-    mission_choice_vec choices = load_mission_choice(missionid);
-    return !choices.empty();
+    mission_choice_t choices = load_mission_choice(missionid);
+    return !choices.points.empty();
 }
 
 bool game_campaign_unlocked(int campaign_id) {
@@ -380,14 +380,24 @@ bool game_load_campaign_file() {
     return true;
 }
 
-mission_choice_vec load_mission_choice(const mission_id_t &missionid) {
-    mission_choice_vec result;
+mission_choice_t load_mission_choice(const mission_id_t &missionid) {
+    mission_choice_t result;
     g_config_arch.r_section(missionid, [&] (archive arch) {
         arch.r_array("choice", [&] (archive choice_arch) {
-            auto item = result.emplace_back();
+            auto &item = result.points.emplace_back();
             item.name = choice_arch.r_string("name");
+            item.tooltip = choice_arch.r_string("tooltip");
             item.id = choice_arch.r_int("id");
+            item.pos = arch.r_vec2i("pos");
+            choice_arch.r_desc("image", item.image);
         });
+
+        arch.r_desc("choice_background", result.background);
+        arch.r_desc("choice_image1", result.image1);
+        result.image1_pos = arch.r_vec2i("choice_image1_pos");
+        arch.r_desc("choice_image2", result.image2);
+        result.image2_pos = arch.r_vec2i("choice_image2_pos");
+        result.title = arch.r_string("choice_title");
     });
 
     return result;

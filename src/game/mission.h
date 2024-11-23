@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include "graphics/animation.h"
 #include "core/xstring.h"
 #include "core/svector.h"
 
@@ -29,10 +30,21 @@ struct mission_choice_branch_t {
 };
 
 struct mission_choice_t {
-    xstring name;
-    int id;
+    struct point {
+        xstring name;
+        vec2i pos;
+        xstring tooltip;
+        image_desc image;
+        int id;
+    };
+    image_desc background;
+    image_desc image1;
+    vec2i image1_pos;
+    image_desc image2;
+    vec2i image2_pos;
+    xstring title;
+    svector<point, 4> points;
 };
-using mission_choice_vec = svector<mission_choice_t, 4>;
 
 struct mission_step_t {
     int scenario_id = -1;
@@ -283,7 +295,7 @@ const uint8_t* game_mission_get_name(int scenario_id);
 const mission_step_t* get_campaign_mission_step_data(int campaign_id, int step_index);
 const mission_step_t* get_scenario_step_data(int scenario_id);
 
-mission_choice_vec load_mission_choice(const mission_id_t &missionid);
+mission_choice_t load_mission_choice(const mission_id_t &missionid);
 
 int get_scenario_mission_rank(int scenario_id);
 int get_scenario_campaign_id(int scenario_id);
