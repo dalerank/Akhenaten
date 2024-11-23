@@ -23,6 +23,7 @@ struct tooltip_context {
 
     void set(int t, textid tx);
     void set(int t, pcstr tx);
+    void set(int t, const xstring &tx);
 };
 
 void tooltip_invalidate();

@@ -289,3 +289,7 @@ void tooltip_context::set(int t, textid tx) {
 void tooltip_context::set(int t, pcstr tx) {
     text = tx;
 }
+
+void tooltip_context::set(int t, const xstring &tx) {
+    text = tx;
+}
