@@ -28,7 +28,7 @@ struct intermezzo_data_t {
 
 intermezzo_data_t g_intermezzo_data;
 
-static void init(intermezzo_type type, std::function<void()> callback) {
+static void init(int mission_id, intermezzo_type type, std::function<void()> callback) {
     g_intermezzo_data.type = type;
     g_intermezzo_data.callback = callback;
     g_intermezzo_data.start_time = time_get_millis();
@@ -39,11 +39,9 @@ static void init(intermezzo_type type, std::function<void()> callback) {
     if (g_intermezzo_data.type == INTERMEZZO_FIRED) {
         g_sound.speech_play_file(SOUND_FILE_LOSE, 255);
     } else if (!scenario_is_custom()) {
-        int mission = scenario_campaign_scenario_id();
-
-        auto conf = snd::get_mission_config(mission);
+        auto conf = snd::get_mission_config(mission_id);
         if (conf.briefing.empty()) {
-            logs::info("Intermezzo: can't found sound for mission %u", mission);
+            logs::info("Intermezzo: can't found sound for mission %u", mission_id);
             return;
         }
 
@@ -84,13 +82,13 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 
-void window_intermezzo_show(intermezzo_type type, std::function<void()> callback) {
+void window_intermezzo_show(int mission_id, intermezzo_type type, std::function<void()> callback) {
     window_type window = {
         WINDOW_INTERMEZZO,
         draw_background,
         nullptr,
         handle_input
     };
-    init(type, callback);
+    init(mission_id, type, callback);
     window_show(&window);
 }

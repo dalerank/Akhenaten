@@ -8,4 +8,4 @@ typedef enum {
     INTERMEZZO_WON = 2,
 } intermezzo_type;
 
-void window_intermezzo_show(intermezzo_type type, std::function<void()> f);
+void window_intermezzo_show(int mission_id, intermezzo_type type, std::function<void()> f);
