@@ -24,7 +24,7 @@ static void button_back(int param1, int param2);
 struct new_career_t {
     image_button image_buttons[2] = {
         {0, 2, 31, 20, IB_NORMAL, PACK_GENERAL, 90, 8, button_back, button_none, 0, 0, 1},
-        {305, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, confirm_new_player_name, button_none, 1, 0, 1}
+        {305, 0, 27, 27, IB_NORMAL, PACK_GENERAL, 193, 4, confirm_new_player_name, button_none, 1, 0, 1}
     };
     input_box player_name_input = {160, 208, 20, 2, FONT_NORMAL_WHITE_ON_DARK};
     uint8_t player_name[MAX_PLAYER_NAME] = {0};

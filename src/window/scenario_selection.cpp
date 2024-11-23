@@ -33,7 +33,7 @@ static void button_start_scenario(int param1, int param2);
 static void button_scores_or_goals(int param1, int param2);
 static void on_scroll(void);
 
-static image_button start_button = {600, 440, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_scenario, button_none, 1, 0, 1};
+static image_button start_button = {600, 440, 27, 27, IB_NORMAL, PACK_GENERAL, 193, 4, button_start_scenario, button_none, 1, 0, 1};
 
 #define MAX_SCENARIOS 15
 
