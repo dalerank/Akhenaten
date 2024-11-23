@@ -766,39 +766,55 @@ display_options_window = {
 }
 
 window mission_end_window = {
-		pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
-		ui : {
-		}
+	pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
+	ui : {
+	}
 }
 
 window mission_won_window = {
-		pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
-		ui : {
-			background     : outer_panel({size:[34, 18]}),
-		  title 		     : text({pos:[0, 16], size:[px(34), 20], text:"${62.0}", align:"center", font : FONT_LARGE_BLACK_ON_LIGHT }),
-			description_panel: inner_panel({pos : {x:32, y:40}, size: {w:30, h:8},
-				ui : {
-					culture_header 		: text({pos:{x:30, y:10}, text:"${148.0} ${rating.culture}", font : FONT_NORMAL_WHITE_ON_DARK}),
-					prosperity_header : text({pos:{x:30, y:30}, text:"${148.1} ${rating.prosperity}", font : FONT_NORMAL_WHITE_ON_DARK}),
-					monument_header		: text({pos:{x:30, y:50}, text:"${148.2} ${rating.monument}", font : FONT_NORMAL_WHITE_ON_DARK}),
-					treasury_header		: text({pos:{x:30, y:70}, text:"${148.3} ${city.treasury}", font : FONT_NORMAL_WHITE_ON_DARK}),
-					population_header	: text({pos:{x:30, y:90}, text:"${148.4} ${rating.kingdom}", font : FONT_NORMAL_WHITE_ON_DARK}),
-				}
-			}),
-			subtitle 		   : text({pos:[32, 178], text:"${147.21}", size:[px(32), -1], multiline:true, wrap:px(32), font : FONT_NORMAL_BLACK_ON_LIGHT }),
-			desc_header		: text({margin:{left:0, bottom:-40}, size:[px(32), 20], align:"center", text:"${13.1}", font : FONT_NORMAL_BLACK_ON_LIGHT}),
-		}
+	pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
+	ui : {
+		background     	: outer_panel({size:[34, 18]}),
+	  title 		     	: text({pos:[0, 16], size:[px(34), 20], text:"${62.0}", align:"center", font : FONT_LARGE_BLACK_ON_LIGHT }),
+		description_panel: inner_panel({pos : {x:32, y:40}, size: {w:30, h:8},
+			ui : {
+				culture_header 		: text({pos:{x:30, y:10}, text:"${148.0} ${rating.culture}", font : FONT_NORMAL_WHITE_ON_DARK}),
+				prosperity_header : text({pos:{x:30, y:30}, text:"${148.1} ${rating.prosperity}", font : FONT_NORMAL_WHITE_ON_DARK}),
+				monument_header		: text({pos:{x:30, y:50}, text:"${148.2} ${rating.monument}", font : FONT_NORMAL_WHITE_ON_DARK}),
+				treasury_header		: text({pos:{x:30, y:70}, text:"${148.3} ${city.treasury}", font : FONT_NORMAL_WHITE_ON_DARK}),
+				population_header	: text({pos:{x:30, y:90}, text:"${148.4} ${rating.kingdom}", font : FONT_NORMAL_WHITE_ON_DARK}),
+			}
+		}),
+		subtitle 		   	: text({pos:[32, 178], text:"${147.21}", size:[px(32), -1], multiline:true, wrap:px(32), font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		desc_header			: text({margin:{left:0, bottom:-40}, size:[px(32), 20], align:"center", text:"${13.1}", font : FONT_NORMAL_BLACK_ON_LIGHT}),
+	}
 }
 
 window mission_lost_window = {
-		pos: [(sw(0) - px(34))/2, (sh(0) - px(16))/2],
-		ui : {
-			background     : outer_panel({size:[34, 16]}),
-			title 		     : text({pos:[0, 32], text:"${62.1}", font : FONT_LARGE_BLACK_ON_LIGHT, align:"center", size:[px(32), 20] }),
-			warning_text   : text({pos:[32, 72], text:"${62.16}", wrap:px(32), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+	pos: [(sw(0) - px(34))/2, (sh(0) - px(16))/2],
+	ui : {
+		background     	: outer_panel({size:[34, 16]}),
+		title 		    	: text({pos:[0, 32], text:"${62.1}", font : FONT_LARGE_BLACK_ON_LIGHT, align:"center", size:[px(32), 20] }),
+		warning_text   	: text({pos:[32, 72], text:"${62.16}", wrap:px(32), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
 
-			replay_mission : button({margin:{centerx:-135, bottom:-40}, size:[270, 25], text:"${loc.replay_mission}"}),  
-		}
+		replay_mission 	: button({margin:{centerx:-135, bottom:-40}, size:[270, 25], text:"${loc.replay_mission}"}),  
+	}
+}
+
+window mission_choice_window = {
+	pos: [(sw(0) - 1024)/2, (sh(0) - 768)/2],
+	ui : {
+		background    	 : image({pack:PACK_UNLOADED, id:12 }),
+		image1					 : image({}),
+		image2					 : image({}),
+		title						 : text({pos:[204, 548], font : FONT_LARGE_BLACK_ON_LIGHT }),
+		mission_name 		 : text({pos:[214, 580], size:[px(32), 20], wrap:px(32), text:"${144.0}"}),
+
+		point0					 : image_button({}),
+		point1					 : image_button({}),
+		point2					 : image_button({}),
+		point3					 : image_button({}),
+	}
 }
 
 window mission_briefing_window = {
