@@ -155,3 +155,4 @@ void image_buttons_release_press(image_button* buttons, int num_buttons) {
 }
 
 image_button &image_button::tooltip(textid t) { _tooltip = (pcstr)lang_get_string(t); return *this; }
+image_button &image_button::tooltip(const xstring &t) { _tooltip = t; return *this; }

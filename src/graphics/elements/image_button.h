@@ -48,6 +48,7 @@ struct image_button {
     image_button &onrclick(onclick_void f) { return onrclick([f] (int, int) { f(); }); }
 
     image_button &tooltip(textid t);
+    image_button &tooltip(const xstring &t);
     inline vec2i pos() const { return {x, y}; }
     inline vec2i size() const { return {width, height}; }
 };
