@@ -842,7 +842,7 @@ void ui::eimage_button::load(archive arch, element *parent, items &elems) {
     offsets.data[1] = arch.r_int("offset_focused", 1);
     offsets.data[2] = arch.r_int("offset_pressed", 2);
     offsets.data[3] = arch.r_int("offset_disabled", 3);
-    _tooltip = arch.r_vec2i("tooltip");
+    _tooltip = arch.r_string("tooltip");
 
     pcstr name_icon_texture = arch.r_string("icon_texture");
     if (name_icon_texture && *name_icon_texture) {
@@ -901,7 +901,7 @@ void ui::eimage_button::draw(UiFlags gflags) {
     btn->onclick(_func);
     btn->tooltip(_tooltip);
 
-    if (_tooltip.id && btn->hovered) {
+    if (!_tooltip.empty() && btn->hovered) {
         tooltipctx.set(0, _tooltip);
     }
 }
@@ -1065,7 +1065,7 @@ void ui::egeneric_button::draw(UiFlags gflags) {
 
     btn->tooltip(_tooltip);
 
-    if (_tooltip.id && btn->hovered) {
+    if (!_tooltip.empty() && btn->hovered) {
         tooltipctx.set(0, _tooltip);
     }
 }
@@ -1077,7 +1077,7 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
     if (mode_str && !strcmp(mode_str, "large")) {
         mode = 1;
     }
-    _tooltip = arch.r_vec2i("tooltip");
+    _tooltip = arch.r_string("tooltip");
     _border = arch.r_bool("border", true);
     _hbody = arch.r_bool("hbody", true);
     _split = arch.r_bool("split", false);

@@ -125,6 +125,7 @@ struct element {
     virtual void text(pcstr) {}
     inline void text(textid t) { text(ui::str(t)); }
     virtual void tooltip(textid t) {}
+    virtual void tooltip(const xstring &t) {}
     virtual int text_width() { return 0; }
     virtual vec2i pxsize() const { return size; }
     inline void text(int font, pcstr v) { this->font(font); this->text(v); }
@@ -155,6 +156,7 @@ struct element {
 
     inline void operator=(pcstr t) { text(t); }
     inline void operator=(const bstring512 &t) { text(t); }
+    inline void operator=(const xstring &t) { text(t.c_str()); }
     inline void operator=(const textid &t) { text(ui::str(t.group, t.id)); }
     void update_pos(const recti &r);
     vec2i screen_pos() const;
@@ -320,14 +322,15 @@ struct egeneric_button : public elabel {
     int param1 = 0;
     int param2 = 0;
     std::function<void(int, int)> _func, _rfunc;
-    textid _tooltip;
+    xstring _tooltip;
     bool _border;
     bool _hbody;
     bool _split;
 
     virtual void draw(UiFlags flags) override;
     virtual void load(archive arch, element *parent, items &elems) override;
-    virtual void tooltip(textid t) override { _tooltip = t; }
+    virtual void tooltip(textid t) override { _tooltip = ui::str(t); }
+    virtual void tooltip(const xstring &t) override { _tooltip = t; }
 
     virtual element &onclick(std::function<void(int, int)> func) override { _func = func; return *this; }
     virtual element &onrclick(std::function<void(int, int)> func) override { _rfunc = func; return *this; }
@@ -354,7 +357,7 @@ struct eimage_button : public element {
     bool selected = false;
     bool border = false;
     int texture_id = -1;
-    textid _tooltip;
+    xstring _tooltip;
 
     std::function<void(int, int)> _func, _rfunc;
 
@@ -365,7 +368,9 @@ struct eimage_button : public element {
     using element::onclick;
     virtual element &onclick(std::function<void(int, int)> func) override { _func = func; return *this; }
     virtual element &onrclick(std::function<void(int, int)> func) override { _rfunc = func; return *this; }
-    virtual void tooltip(textid t) override { _tooltip = t; }
+    virtual void tooltip(textid t) override { _tooltip = ui::str(t); }
+    virtual void tooltip(const xstring &t) override { _tooltip = t; }
+    virtual void image(image_desc d) override { img_desc = d; }
 
     virtual eimage_button *dcast_image_button() override { return this; }
 };
@@ -464,7 +469,7 @@ struct widget {
             bstring128 domain, prop;
             args_handled = sscanf(item.key.c_str(), "${%[^.].%[^}]}", domain.data(), prop.data());
             if (args_handled == 2) {
-                bvariant bvar = o->get_property(xstring(domain), xstring(prop));
+                bvariant bvar = o ? o->get_property(xstring(domain), xstring(prop)) : bvariant{};
                 if (bvar.is_empty()) {
                     bvar = city_get_property(xstring(domain), xstring(prop));
                 }
