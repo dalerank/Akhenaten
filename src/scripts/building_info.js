@@ -640,6 +640,7 @@ building_dock = {
     work_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 }
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  planer_relative_orientation: 1,
   building_size : 3,
   info_help_id:82,
   info_text_id:101,

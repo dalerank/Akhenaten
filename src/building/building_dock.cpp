@@ -12,6 +12,7 @@
 #include "grid/grid.h"
 #include "grid/sprite.h"
 #include "grid/image.h"
+#include "grid/building_tiles.h"
 #include "grid/routing/routing.h"
 #include "grid/terrain.h"
 #include "graphics/image.h"
@@ -63,6 +64,11 @@ void building_dock::update_map_orientation(int orientation) {
     int image_offset = city_view_relative_orientation(data.dock.orientation);
     int image_id = anim(animkeys().base).first_img() + image_offset;
     map_water_add_building(id(), tile(), 3, image_id);
+}
+
+void building_dock::on_place_update_tiles(int orientation, int variant) {
+    int img_id = anim(animkeys().base).first_img() + orientation;
+    map_water_add_building(id(), tile(), size(), img_id);
 }
 
 void building_dock::spawn_figure() {
