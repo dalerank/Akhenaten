@@ -11,7 +11,7 @@ void building_transport_wharf::static_params::load(archive arch) {
 }
 
 void building_wharf::on_create(int orientation) {
-    data.wharf.orientation = orientation;
+    data.dock.orientation = orientation;
 }
 
 void building_wharf::on_place_update_tiles(int orientation, int variant) {
@@ -20,7 +20,7 @@ void building_wharf::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_wharf::bind_dynamic(io_buffer *iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.orientation);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.dock.orientation);
 }
 
 inline void building_wharf::on_tick(bool refresh_only) {

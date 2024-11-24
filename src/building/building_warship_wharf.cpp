@@ -27,7 +27,7 @@ void building_warship_wharf::on_place_update_tiles(int orientation, int variant)
 }
 
 void building_warship_wharf::update_map_orientation(int orientation) {
-    int image_offset = city_view_relative_orientation(data.wharf.orientation);
+    int image_offset = city_view_relative_orientation(data.dock.orientation);
     int image_id = anim(animkeys().base).first_img() + image_offset;
     map_water_add_building(id(), tile(), size(), image_id);
 }

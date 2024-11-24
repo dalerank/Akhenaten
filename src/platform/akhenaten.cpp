@@ -406,7 +406,7 @@ static void setup(Arguments& args) {
     g_settings.set_cli_fullscreen(args.is_fullscreen());
     platform_init_cursors(args.get_cursor_scale_percentage()); // this has to come after platform_screen_create,
                                                                // otherwise it fails on Nintendo Switch
-    image_data_init();                                         // image paks strcutures init
+    image_data_init();                                         // image paks structures init
                                                                
     js_vm_set_scripts_folder(args.get_scripts_directory());    // setup script engine
     js_vm_setup();

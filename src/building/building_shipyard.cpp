@@ -48,12 +48,12 @@ void building_shipyard::spawn_figure() {
     
     tile2i boat_tile;
     if (data.industry.progress >= 160 && map_water_can_spawn_boat(tile(), size(), boat_tile)) {
-        if (data.wharf.process_type == FIGURE_WARSHIP) {
+        if (data.dock.process_type == FIGURE_WARSHIP) {
             figure *f = figure_create(FIGURE_WARSHIP, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_205_WARSHIP_CREATED;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
-        } else if (data.wharf.process_type == FIGURE_FISHING_BOAT) {
+        } else if (data.dock.process_type == FIGURE_FISHING_BOAT) {
             figure *f = figure_create(FIGURE_FISHING_BOAT, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
             f->set_home(&base);
@@ -63,7 +63,7 @@ void building_shipyard::spawn_figure() {
         }
 
         data.industry.progress = 0;
-        data.wharf.process_type = FIGURE_NONE;
+        data.dock.process_type = FIGURE_NONE;
     }
 }
 
@@ -72,9 +72,9 @@ void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
 
     base.first_material_id = RESOURCE_TIMBER;
 
-    iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.orientation);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.process_type);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.wharf.reparing);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.dock.orientation);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.dock.process_type);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.dock.reparing);
 }
 
 void building_shipyard::update_map_orientation(int orientation) {
@@ -112,34 +112,36 @@ void building_shipyard::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_shipyard::update_day() {
-    if (data.wharf.process_type == FIGURE_WARSHIP && g_city.buildings.warship_boats_requested > 0) {
+    if (data.dock.process_type == FIGURE_WARSHIP && g_city.buildings.warship_boats_requested > 0) {
         g_city.buildings.warship_boats_requested--;
         return;
     }
 
-    if (data.wharf.process_type == FIGURE_FISHING_BOAT && g_city.buildings.fishing_boats_requested > 0) {
+    if (data.dock.process_type == FIGURE_FISHING_BOAT && g_city.buildings.fishing_boats_requested > 0) {
         g_city.buildings.fishing_boats_requested--;
         return;
     }
 
-    if (data.wharf.process_type == FIGURE_NONE) {
+    if (data.dock.process_type == FIGURE_NONE) {
         if (g_city.buildings.warship_boats_requested > 0 && base.stored_amount_first > 400) {
-            data.wharf.process_type = FIGURE_WARSHIP;
+            data.dock.process_type = FIGURE_WARSHIP;
             g_city.buildings.warship_boats_requested--;
             return;
         }
 
         if (g_city.buildings.fishing_boats_requested > 0) {
-            data.wharf.process_type = FIGURE_FISHING_BOAT;
+            data.dock.process_type = FIGURE_FISHING_BOAT;
             g_city.buildings.fishing_boats_requested--;
             return;
         }
     }
+
+    building_industry::update_day();
 }
 
 void building_shipyard::update_graphic() {
     xstring animkey;
-    switch (data.wharf.process_type) {
+    switch (data.dock.process_type) {
     case FIGURE_WARSHIP: animkey = animkeys().work_warship; break;
     case FIGURE_FISHING_BOAT: animkey = animkeys().work_fishing_boat; break;
     case FIGURE_TRANSPORT: animkey = animkeys().work_transport; break;

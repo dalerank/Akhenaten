@@ -122,6 +122,8 @@ static void add_temple_complex(building* b, int orientation) {
 void build_planner_latch_on_venue(e_building_type type, building *b, int dx, int dy, int orientation, bool main_venue) {
     tile2i point = b->tile.shifted(dx, dy);
     // set map graphics accordingly
+
+    const auto &params = b->dcast()->params();
     switch (type) {
     case BUILDING_GARDENS:
         map_terrain_add(point, TERRAIN_GARDEN);
@@ -129,20 +131,18 @@ void build_planner_latch_on_venue(e_building_type type, building *b, int dx, int
         break;
 
     case BUILDING_BOOTH: {
-           int booth = building_impl::params(BUILDING_BOOTH).anim["booth"].first_img();
+           int booth = params.anim["booth"].first_img();
            map_image_set(point, booth);
         }
         break;
 
     case BUILDING_BANDSTAND:
         if (main_venue) {
-            const auto &params = b->dcast()->params();
             int stand_sn_s = params.anim["stand_sn_s"].first_img();
             b->data.entertainment.latched_venue_main_grid_offset = point.grid_offset();
             int offset = map_bandstand_main_img_offset(orientation);
             map_image_set(point, stand_sn_s + offset);
         } else {
-            const auto &params = b->dcast()->params();
             int stand_sn_s = params.anim["stand_sn_s"].first_img();
             b->data.entertainment.latched_venue_add_grid_offset = point.grid_offset();
             int offset = map_bandstand_add_img_offset(orientation);
@@ -151,7 +151,6 @@ void build_planner_latch_on_venue(e_building_type type, building *b, int dx, int
         break;
 
     case BUILDING_PAVILLION: {
-            const auto &params = b->dcast()->params();
             int base_id = params.anim["base"].first_img();
             map_building_tiles_add(b->id, point, 2, base_id, TERRAIN_BUILDING);
         }

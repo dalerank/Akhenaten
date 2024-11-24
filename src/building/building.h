@@ -207,6 +207,8 @@ public:
             short docker_ids[3];
             short trade_ship_id;
             uint8_t docker_anim_frame;
+            e_figure_type process_type;
+            bool reparing;
         } dock;
         struct market_t {
             uint16_t inventory[8];
@@ -255,12 +257,6 @@ public:
             figure_id worker_id;
             e_figure_type processed_figure;
         } industry;
-
-        struct {
-            uint8_t orientation;
-            e_figure_type process_type;
-            bool reparing;
-        } wharf;
 
         struct entertainment_t {
             uint8_t spawned_entertainer_days;

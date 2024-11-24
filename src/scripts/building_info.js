@@ -636,7 +636,7 @@ building_dock = {
     base : { pack:PACK_TERRAIN, id:49 },
     work_n : { pos:[135, -7], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 },
     work_w : { pos:[100, -7], pack:PACK_SPR_AMBIENT, id:55, offset:1, max_frames:25, duration:8 },
-    work_s : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:4 },
+    work_s : { pos:[55, 7], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:4 },
     work_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 }
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
@@ -1025,8 +1025,8 @@ building_recruiter = {
 
 building_bandstand = {
   animations : {
-    booth : { pos:[0, 0], pack:PACK_GENERAL, id:114 },
-    square : { pos:[0, 0], pack:PACK_GENERAL, id:58 },
+    booth : {pack:PACK_GENERAL, id:114 },
+    square : {pack:PACK_GENERAL, id:58 },
     juggler : { pos : [35, 17], pack:PACK_SPR_AMBIENT, id:7, offset:-1 },
     stand_sn_s : { pack:PACK_GENERAL, id:92, offset:0},
     stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1},

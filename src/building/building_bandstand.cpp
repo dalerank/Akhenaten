@@ -25,24 +25,14 @@
 #include "figure/figure.h"
 #include "js/js_game.h"
 
-struct bandstand_model : public buildings::model_t<building_bandstand> {
-    int stand_sn_n = 0;
-    int stand_sn_s = 0;
-    int stand_we_w = 0;
-    int stand_we_e = 0;
-    int booth = 0;
-};
+building_bandstand::static_params bandstand_m;
 
-bandstand_model bandstand_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_bandstand_config);
-void config_load_building_bandstand_config() {
-    bandstand_m.load();
-    bandstand_m.stand_sn_n = bandstand_m.anim["stand_sn_n"].first_img();
-    bandstand_m.stand_sn_s = bandstand_m.anim["stand_sn_s"].first_img();
-    bandstand_m.stand_we_w = bandstand_m.anim["stand_we_w"].first_img();
-    bandstand_m.stand_we_e = bandstand_m.anim["stand_we_e"].first_img();
-    bandstand_m.booth = bandstand_m.anim["booth"].first_img();
+void building_bandstand::static_params::load(archive arch) {
+   stand_sn_n = anim["stand_sn_n"].first_img();
+   stand_sn_s = anim["stand_sn_s"].first_img();
+   stand_we_w = anim["stand_we_w"].first_img();
+   stand_we_e = anim["stand_we_e"].first_img();
+   booth = anim["booth"].first_img();
 }
 
 void building_bandstand::on_create(int orientation) {

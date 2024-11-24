@@ -9,6 +9,16 @@ public:
     building_bandstand(building &b) : building_entertainment(b) {}
     virtual building_bandstand *dcast_bandstand() override { return this; }
 
+    struct static_params : public buildings::model_t<building_bandstand> {
+        int stand_sn_n = 0;
+        int stand_sn_s = 0;
+        int stand_we_w = 0;
+        int stand_we_e = 0;
+        int booth = 0;
+
+        virtual void load(archive arch) override;
+    };
+
     virtual void on_create(int orientation) override;
     virtual void update_day() override;
     virtual void on_place(int orientation, int variant) override;
@@ -28,4 +38,6 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     void draw_shows_musicians(painter &ctx, vec2i pixel, int direction, color color_mask);
     static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
+
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
