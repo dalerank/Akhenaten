@@ -131,8 +131,9 @@ static void show_end_dialog(void) {
     window_show(&window);
 }
 
-static void show_intermezzo(void) {
-    window_intermezzo_show(INTERMEZZO_WON, show_end_dialog);
+static void show_intermezzo() {
+    int scenario_id = scenario_campaign_scenario_id();
+    window_intermezzo_show(scenario_id, INTERMEZZO_WON, show_end_dialog);
 }
 
 void window_mission_end_show_won(void) {
@@ -151,6 +152,8 @@ void window_mission_end_show_won(void) {
         }
     }
 }
-void window_mission_end_show_fired(void) {
-    window_intermezzo_show(INTERMEZZO_FIRED, show_end_dialog);
+
+void window_mission_end_show_fired() {
+    int scenario_id = scenario_campaign_scenario_id();
+    window_intermezzo_show(scenario_id, INTERMEZZO_FIRED, show_end_dialog);
 }

@@ -65,7 +65,7 @@ void ui::mission_briefing_window::init() {
 int ui::mission_briefing_window::draw_background(UiFlags flags) {
     window_draw_underlying_window(UiFlags_None);
 
-    int text_id = 200 + scenario_campaign_scenario_id();
+    int text_id = 200 + scenario_id;
     const lang_message* msg = lang_get_message(text_id);
 
     auto &ui = g_mission_briefing;
@@ -118,7 +118,7 @@ void window_mission_briefing_show(int scenario_id) {
     data.scenario_id = scenario_id;
     data.is_review = 0;
     data.campaign_mission_loaded = 0;
-    window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
+    window_intermezzo_show(scenario_id, INTERMEZZO_MISSION_BRIEFING, show);
 }
 
 void window_mission_briefing_show_review() {
@@ -126,5 +126,5 @@ void window_mission_briefing_show_review() {
     data.scenario_id = scenario_campaign_scenario_id();
     data.is_review = 1;
     data.campaign_mission_loaded = 1;
-    window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
+    window_intermezzo_show(data.scenario_id, INTERMEZZO_MISSION_BRIEFING, show);
 }
