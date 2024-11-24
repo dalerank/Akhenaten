@@ -54,9 +54,13 @@ void ui::mission_briefing_window::init() {
         g_settings.increase_difficulty();
     });
 
-    ui["start_mission"].onclick([] {
+    ui["start_mission"].onclick([this] {
         g_sound.speech_stop();
         g_sound.music_update(/*force*/true);
+
+        if (!is_review) {
+            GamestateIO::load_mission(scenario_id, true);
+        }
         window_city_show();
         city_mission_reset_save_start();
     });
