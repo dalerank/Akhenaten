@@ -58,6 +58,8 @@ void building_shipyard::spawn_figure() {
             f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
+        } else if (data.dock.process_type == FIGURE_NONE) {
+            ; // nothing
         } else {
             assert(false && "building_shipyard: incorrect type requested");
         }
