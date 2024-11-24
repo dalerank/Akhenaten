@@ -6,6 +6,7 @@
 #include "figure_fishing_boat.h"
 #include "window/building/figures.h"
 #include "grid/water.h"
+#include "grid/figure.h"
 #include "city/message.h"
 #include "game/game.h"
 #include "core/calc.h"
@@ -19,11 +20,6 @@
 #include "js/js_game.h"
 
 figures::model_t<figure_fishing_boat> fishing_boat_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_fishing_boat);
-void config_load_figure_fishing_boat() {
-    fishing_boat_m.load();
-}
 
 void figure_fishing_boat::on_destroy() {
     building* b = home();
@@ -78,6 +74,18 @@ void figure_fishing_boat::figure_action() {
         base.move_ticks(1);
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
+            grid_area area = map_grid_get_area(tile(), 1, 1);
+            tile2i another_boat_tile = area.find_if([this] (const tile2i &tt) {
+                bool has_figure = map_has_figure_types_at(tt, FIGURE_FISHING_BOAT);
+                return (has_figure && map_figure_id_get(tt) != id());
+            });
+
+            if (another_boat_tile.valid()) {
+                wait_ticks = 999;
+                advance_action(FIGURE_ACTION_196_FISHING_BOAT_RANDOM_FPOINT);
+                return;
+            }
+
             water_dest result = map_water_find_alternative_fishing_boat_tile(base);
             if (result.found) {
                 route_remove();
@@ -118,26 +126,36 @@ void figure_fishing_boat::figure_action() {
         }
         break;
 
-    case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: {
-        int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
-        int max_wait_ticks = 5 * (102 - pct_workers);
-        if (b->data.industry.has_fish) {
-            pct_workers = 0;
-        }
+    case FIGURE_ACTION_196_FISHING_BOAT_RANDOM_FPOINT: {
+            wait_ticks = 0;
+            tile2i fish_tile = g_city.fishing_points.random_fishing_point(tile(), true);
+            if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
+                advance_action(FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH);
+                destination_tile = fish_tile;
+                route_remove();
+            }
+        } break;
 
-        if (pct_workers > 0) {
-            wait_ticks++;
-            if (wait_ticks >= max_wait_ticks) {
-                wait_ticks = 0;
-                tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile());
-                if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
-                    advance_action(FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH);
-                    destination_tile = fish_tile;
-                    route_remove();
+    case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: {
+            int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
+            int max_wait_ticks = 5 * (102 - pct_workers);
+            if (b->data.industry.has_fish) {
+                pct_workers = 0;
+            }
+
+            if (pct_workers > 0) {
+                wait_ticks++;
+                if (wait_ticks >= max_wait_ticks) {
+                    wait_ticks = 0;
+                    tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile(), true);
+                    if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
+                        advance_action(FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH);
+                        destination_tile = fish_tile;
+                        route_remove();
+                    }
                 }
             }
-        }
-    } break;
+        } break;
 
     case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH:
         base.move_ticks(1);

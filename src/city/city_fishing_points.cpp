@@ -4,6 +4,10 @@
 #include "scenario/map.h"
 #include "figuretype/figure_fishing_point.h"
 #include "grid/water.h"
+#include "grid/figure.h"
+
+#include <algorithm>
+#include <random>
 #include <time.h>
 
 void city_fishing_points_t::create() {
@@ -12,34 +16,69 @@ void city_fishing_points_t::create() {
     });
 }
 
-tile2i city_fishing_points_t::closest_fishing_point(tile2i pos) {
-    int num_fishing_spots = 0;
-    for (int i = 0; i < MAX_FISH_POINTS; i++) {
-        if (g_scenario_data.fishing_points[i].x() > 0)
-            num_fishing_spots++;
+tile2i city_fishing_points_t::random_fishing_point(tile2i pos, bool free_only) {
+    const auto &fpoints = g_scenario_data.fishing_points;
+
+    svector<tile2i, MAX_FISH_POINTS> apoints;
+    std::copy_if(std::begin(fpoints), std::end(fpoints), std::back_inserter(apoints), [] (auto p) { return p.x() > 0; });
+
+    if (apoints.empty()) {
+        return tile2i::invalid;
     }
 
-    if (num_fishing_spots <= 0) {
+    std::random_device rd;
+    std::mt19937 g(rd());
+
+    std::shuffle(std::begin(apoints), std::end(apoints), g);
+    for (auto p: apoints) {
+        if (free_only) {
+            grid_area area = map_grid_get_area(pos, 1, 1);
+            tile2i result = area.find_if([] (const tile2i &tt) {
+                return map_has_figure_types_at(tt, FIGURE_FISHING_BOAT);
+            });
+
+            if (!result.valid()) {
+                continue;
+            }
+        }
+
+        return p;
+    }
+
+    return tile2i::invalid;
+}
+
+tile2i city_fishing_points_t::closest_fishing_point(tile2i pos, bool free_only) {
+    const auto &fpoints = g_scenario_data.fishing_points;
+    
+    svector<tile2i, MAX_FISH_POINTS> apoints;
+    std::copy_if(std::begin(fpoints), std::end(fpoints), std::back_inserter(apoints), [] (auto p) { return p.x() > 0; });
+
+    if (apoints.empty()) {
         return tile2i::invalid;
     }
 
     int min_dist = 10000;
-    int min_fish_id = 0;
-    for (int i = 0; i < MAX_FISH_POINTS; i++) {
-        if (g_scenario_data.fishing_points[i].x() > 0) {
-            int dist = calc_maximum_distance(pos, g_scenario_data.fishing_points[i]);
-            if (dist < min_dist) {
-                min_dist = dist;
-                min_fish_id = i;
-            }
+    tile2i result;
+    for (auto p: apoints) {
+        int dist = calc_maximum_distance(pos, p);
+
+        if (free_only) {
+            grid_area area = map_grid_get_area(pos, 1, 1);
+            tile2i result = area.find_if([] (const tile2i &tt) {
+                return map_has_figure_types_at(tt, FIGURE_FISHING_BOAT);
+            });
+
+            dist += result.valid() ? 100 : 0;
+        }
+
+        if (dist < min_dist) {
+            min_dist = dist;
+            result = p;
         }
     }
 
-    if (min_dist < 10000) {
-        return g_scenario_data.fishing_points[min_fish_id];
-    }
-
-    return tile2i::invalid;
+    return (min_dist < 10000) ? result : tile2i::invalid;
 }
 
 void city_fishing_points_t::reset() {

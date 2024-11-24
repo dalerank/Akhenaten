@@ -53,6 +53,30 @@ struct grid_xx {
 struct grid_area {
     tile2i tmin;
     tile2i tmax;
+
+    template<typename T>
+    void for_each(T f) {
+        for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+            for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
+                tile2i tt(xx, yy);
+                f(tt);
+            }
+        }
+    }
+
+    template<typename T>
+    tile2i find_if(T f) {
+        for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+            for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
+                tile2i tt(xx, yy);
+                if (f(tt)) {
+                    return tt;
+                }
+            }
+        }
+
+        return tile2i::invalid;
+    }
 };
 
 using grid_tiles = std::vector<tile2i>;

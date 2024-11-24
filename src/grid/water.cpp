@@ -285,21 +285,17 @@ water_dest map_water_find_alternative_fishing_boat_tile(figure &boat) {
         return {false};
     }
 
-    for (int radius = 1; radius <= 5; radius++) {
-        grid_area area = map_grid_get_area(boat.tile, 1, radius);
+    grid_area area = map_grid_get_area(boat.tile, 1, 1);
 
-        for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-            for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
-                int grid_offset = MAP_OFFSET(xx, yy);
-                if (!map_has_figure_at(grid_offset) && map_terrain_is(grid_offset, TERRAIN_WATER)) {
-                    tile2i tile;
-                    map_point_store_result(tile2i(xx, yy), tile);
-                    return {true, 0, tile};
-                }
-            }
+    svector<tile2i, 16> tiles;
+    area.for_each([&] (tile2i tt) {
+        if (!map_has_figure_at(tt) && map_terrain_is(tt, TERRAIN_WATER)) {
+            tiles.push_back(tt);
         }
-    }
-    return {false};
+    });
+
+    tile2i result = tiles.empty() ? tile2i::invalid : tiles[rand() % tiles.size()];
+    return { result.valid(), 0, result };
 }
 
 water_dest map_water_find_shipwreck_tile(figure &wreck) {
