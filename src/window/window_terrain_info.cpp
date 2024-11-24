@@ -106,8 +106,10 @@ void terrain_info_window::init(object_info &c) {
 
     if (c.can_play_sound) {
         c.can_play_sound = 0;
-        pcstr sound = sounds[rand() % sounds.size()];
-        g_sound.speech_play_file(sound, 255);
+        if (sounds.size() > 0) {
+            pcstr sound = sounds[rand() % sounds.size()];
+            g_sound.speech_play_file(sound, 255);
+        }
     }
 
     ui["title"] = ui::str(reason);
