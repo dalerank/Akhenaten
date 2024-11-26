@@ -507,6 +507,10 @@ void empire_window::draw_empire_object(const empire_object* obj) {
         image_id = obj->image_id;
     }
 
+    image_id = image_id_remap(image_id);
+    const vec2i draw_pos = draw_offset + pos;
+    const image_t *img = ui::eimage(image_id, draw_pos);
+
     if (obj->type == EMPIRE_OBJECT_CITY) {
         int empire_city_id = g_empire.get_city_for_object(obj->id);
         const empire_city* city = g_empire.city(empire_city_id);
@@ -528,7 +532,7 @@ void empire_window::draw_empire_object(const empire_object* obj) {
 
         int text_group = (g_settings.city_names_style == CITIES_OLD_NAMES)  ? text_group_old_names : text_group_new_names;
         int letter_height = get_letter_height((const uint8_t*)"H", FONT_SMALL_PLAIN);
-        vec2i text_pos = draw_offset + pos + vec2i{0, -letter_height};
+        vec2i text_pos = draw_offset + pos + vec2i{img->width, (img->height - letter_height)/2};
 
         tooltip_text = ui::str(text_group, city->name_id);
 
@@ -566,10 +570,6 @@ void empire_window::draw_empire_object(const empire_object* obj) {
         if (city_military_distant_battle_kingdome_months_traveled() != obj->distant_battle_travel_months)
             return;
     }
-
-    image_id = image_id_remap(image_id);
-    const vec2i draw_pos = draw_offset + pos;
-    const image_t *img = ui::eimage(image_id, draw_pos);
 
     if (last_mouse_pos.x > draw_pos.x && last_mouse_pos.y > draw_pos.y
         && last_mouse_pos.x < draw_pos.x + img->width && last_mouse_pos.y < draw_pos.y + img->height) {

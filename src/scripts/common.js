@@ -120,7 +120,6 @@ var building_farm_chickpeas = {}
 var building_farm_lettuce = {}
 var building_farm_pomegranates = {}
 var building_farm_barley = {}
-var building_farm_flax = {}
 var building_farm_henna = {}
 var building_farm_figs = {}
 var building_plaza = {}

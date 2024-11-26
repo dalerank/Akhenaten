@@ -337,6 +337,7 @@ building_farm_grain = {
   damage_proof : true,
   info_help_id:90,
   info_text_id:112,
+  progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -358,6 +359,7 @@ building_farm_chickpeas = {
   damage_proof : true,
   info_help_id:90,
   info_text_id:182,
+  progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -379,6 +381,7 @@ building_farm_lettuce = {
   damage_proof : true,
   info_help_id:91,
   info_text_id:113,
+  progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -400,6 +403,7 @@ building_farm_pomegranates = {
   damage_proof : true,
   info_help_id:91,
   info_text_id:114,
+  progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -421,10 +425,11 @@ building_farm_barley = {
   damage_proof : true,
   info_help_id:89,
   info_text_id:181,
+  progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
-building_farm_flax = {
+building building_farm_flax = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -433,15 +438,16 @@ building_farm_flax = {
     tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
     seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
     harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
-    farmland: { pack:PACK_GENERAL, id:37, offset:5 },
+    farmland: { pack:PACK_GENERAL, id:37, offset:0 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
   output_resource : RESOURCE_FLAX,
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
-  info_help_id:90,
-  info_text_id:115,
+  info_help_id: 90,
+  info_text_id: 115,
+  progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -463,6 +469,7 @@ building_farm_henna = {
   damage_proof : true,
   info_help_id:90,
   info_text_id:306,
+  progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -493,6 +500,7 @@ building_farm_figs = {
   damage_proof : true,
   info_help_id:90,
   info_text_id:183,
+  progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -1025,8 +1033,8 @@ building_recruiter = {
 
 building_bandstand = {
   animations : {
-    booth : {pack:PACK_GENERAL, id:114 },
-    square : {pack:PACK_GENERAL, id:58 },
+    booth : {pack:PACK_GENERAL, id:114},
+    square : {pack:PACK_GENERAL, id:58},
     juggler : { pos : [35, 17], pack:PACK_SPR_AMBIENT, id:7, offset:-1 },
     stand_sn_s : { pack:PACK_GENERAL, id:92, offset:0},
     stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1},
