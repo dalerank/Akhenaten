@@ -51,6 +51,7 @@ struct id_anim_t {
     static const xstring work_transport;
     static const xstring flax;
     static const xstring clay;
+    static const xstring copper;
 };
 
 const id_anim_t &animkeys();

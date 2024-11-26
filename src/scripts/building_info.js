@@ -580,13 +580,14 @@ building_shrine_bast = {
   building_size : 1,
 }
 
-building_weaponsmith = {
+building building_weaponsmith = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:123, },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:123, offset:0 },
     work : { pos : [57, -16], pack:PACK_GENERAL, id:123, offset:1, max_frames:20, duration:5, can_reverse:true },
     copper : { pos : [93, 0], pack:PACK_GENERAL, id:203 }
   },
+  input_resource : RESOURCE_COPPER,
   output_resource : RESOURCE_WEAPONS,
   labor_category : LABOR_CATEGORY_MILITARY,
   window_info_height_id : 1,
@@ -1275,7 +1276,7 @@ building_fishing_wharf = {
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
-building_shipyard = {
+building building_shipyard = {
   animations : {
     preview : { pack: PACK_TERRAIN, id:26, max_frames:1 },
     base : { pack: PACK_TERRAIN, id:26, max_frames:1 },
@@ -1284,6 +1285,7 @@ building_shipyard = {
     work_fishing_boat : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11 },
     work_transport : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11 },
   },
+  input_resource : RESOURCE_TIMBER,
   building_size : 3,
   window_info_height_id : 1,
   planer_relative_orientation: 1,

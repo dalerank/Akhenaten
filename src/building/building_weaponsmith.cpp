@@ -21,10 +21,6 @@ declare_console_command(addweapons, game_cheat_add_resource<RESOURCE_WEAPONS>);
 
 buildings::model_t<building_weaponsmith> weaponsmith_m;
 
-void building_weaponsmith::on_create(int orientation) {
-    base.first_material_id = RESOURCE_COPPER;
-}
-
 void building_weaponsmith::on_place_checks() {
     if (building_count_industry_active(RESOURCE_COPPER) > 0) {
         return;
@@ -42,13 +38,12 @@ void building_weaponsmith::on_place_checks() {
     }
 }
 
-void building_weaponsmith::update_graphic() {
-    const xstring &animkey = (can_play_animation() && base.stored_amount() >= 100) 
-                                ? animkeys().work
-                                : animkeys().none;
-    set_animation(animkey);
+bool building_weaponsmith::can_play_animation() const {
+    if (base.stored_amount() < 100) {
+        return false;
+    }
 
-    building_impl::update_graphic();
+    return building_impl::can_play_animation();
 }
 
 bool building_weaponsmith::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
@@ -56,8 +51,8 @@ bool building_weaponsmith::draw_ornaments_and_animations_height(painter &ctx, ve
 
     int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
     if (amount >= 0) {
-        const auto &anim = weaponsmith_m.anim["copper"];
-        ImageDraw::img_generic(ctx, anim.first_img() + amount, point + anim.pos, color_mask);
+        const auto &ranim = anim(animkeys().copper);
+        ImageDraw::img_generic(ctx, ranim.first_img() + amount, point + ranim.pos, color_mask);
     }
 
     return true;

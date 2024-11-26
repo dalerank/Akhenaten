@@ -21,7 +21,6 @@ var localization = []
 var top_menu_widget = {}
 // buildings
 var building_water_lift = {}
-var building_weaponsmith = {}
 var building_granary = {}
 var building_academy = {}
 var building_firehouse = {}
@@ -98,7 +97,6 @@ var building_shrine_bast = {}
 var building_fishing_wharf = {}
 var building_transport_wharf = {}
 var building_warship_wharf = {}
-var building_shipyard = {}
 var building_paint_workshop = {}
 var building_lamp_workshop = {}
 var building_vacant_lot = {}
