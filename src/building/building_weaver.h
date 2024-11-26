@@ -1,12 +1,12 @@
 #pragma once
 
-#include "building/building.h"
+#include "building/building_industry.h"
 
-class building_weaver : public building_impl {
+class building_weaver : public building_industry {
 public:
     BUILDING_METAINFO(BUILDING_WEAVER_WORKSHOP, building_weaver)
 
-    building_weaver(building &b) : building_impl(b) {}
+    building_weaver(building &b) : building_industry(b) {}
 
     virtual void on_create(int orientation) override;
     virtual void on_place_checks() override;

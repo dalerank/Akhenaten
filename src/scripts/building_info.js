@@ -921,13 +921,14 @@ building_papyrus_maker = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building_weaver = {
+building building_weaver = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:122 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:122 },
-    work : { pos : [19, -39], pack:PACK_GENERAL, id:122, offset:1, max_frames:9 },
+    work : { pos : [19, -39], pack:PACK_GENERAL, id:122, offset:1, max_frames:12, duration:2 },
     flax : { pos : [45, 3], pack:PACK_GENERAL, id:206 },
   },
+  input_resouce : RESOURCE_FLAX,
   output_resource : RESOURCE_LINEN,
   building_size : 2,
   window_info_height_id : 1,
@@ -1404,14 +1405,16 @@ building_clay_pit = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building_brewery = {
+building building_brewery = {
   animations : {
     preview : { pack:PACK_GENERAL, id:116 },
     base : { pack:PACK_GENERAL, id:116 },
     work : { pack:PACK_GENERAL, id:116, max_frames: 12 },
     barley : { pos:[28, -35], pack:PACK_GENERAL, id:208, max_frames: 12 }
   },
+  input_resouce : RESOURCE_BARLEY,
   output_resource : RESOURCE_BEER,
+  progress_max : 400,
   window_info_height_id : 1,
   production_rate : 20,
   info_help_id:96,
@@ -1574,7 +1577,7 @@ building_bullfight_school = {
   building_size : 4,
 }
 
-building_bricks_workshop = {
+building building_bricks_workshop = {
   animations : {
     preview : { pack:PACK_GENERAL, id:124 },
     base : { pack:PACK_GENERAL, id:124 },
@@ -1582,6 +1585,9 @@ building_bricks_workshop = {
     straw : { pos:[51, 18], pack:PACK_GENERAL, id:206 },
     clay : { pos:[46, 25], pack:PACK_GENERAL, id:207 },
   },
+  input_resouce : RESOURCE_STRAW,
+  output_resource : RESOURCE_BRICKS,
+  progress_max : 400,
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,

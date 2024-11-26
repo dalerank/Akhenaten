@@ -13,7 +13,6 @@ public:
         virtual void load(archive arch) override;
     };
 
-    virtual void on_create(int orientation) override;
     virtual bool is_workshop() const override { return true; }
     virtual e_overlay get_overlay() const override { return OVERLAY_BREWERY; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
