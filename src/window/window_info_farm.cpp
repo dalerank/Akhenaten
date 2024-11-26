@@ -10,7 +10,7 @@
 #include "js/js_game.h"
 
 struct info_window_farm : public building_info_window_t<info_window_farm> {
-    virtual void window_info_background(object_info &c) override;
+    virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         return c.building_get()->dcast_farm();
     }
@@ -18,16 +18,10 @@ struct info_window_farm : public building_info_window_t<info_window_farm> {
 
 info_window_farm farm_infow;
 
-void info_window_farm::window_info_background(object_info &c) {
-    building_info_window::window_info_background(c);
+void info_window_farm::init(object_info &c) {
+    building_info_window::init(c);
 
     building *b = c.building_get();
-
-    int pct_grown = calc_percentage<int>(b->data.industry.progress, 2000);
-    int pct_fertility = map_get_fertility_for_farm(b->tile.grid_offset());
-    ui["progress_desc"].text_var("%s %d%% %s %s", 
-                                    ui::str(c.group_id, 2), pct_grown, ui::str(c.group_id, 3),
-                                    ui::str(c.group_id, 12), pct_fertility, ui::str(c.group_id, 13));
 
     textid reason{ c.group_id, 0 };
     if (!b->num_workers) {
