@@ -202,6 +202,7 @@ int get_max_raw_stock_for_population(e_resource resource) {
     case RESOURCE_TIMBER: finished_good = RESOURCE_LUXURY_GOODS; break;
     case RESOURCE_STRAW: finished_good = RESOURCE_OIL; break;
     case RESOURCE_BARLEY: finished_good = RESOURCE_BEER; break;
+    case RESOURCE_FLAX: finished_good = RESOURCE_LINEN; break;
     case RESOURCE_COPPER: finished_good = RESOURCE_WEAPONS; break;
     }
 
@@ -325,6 +326,7 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
         case RESOURCE_STRAW: 
         case RESOURCE_BARLEY:
         case RESOURCE_COPPER:
+        case RESOURCE_FLAX:
         max_in_stock = get_max_raw_stock_for_population(resource);
         break;
 

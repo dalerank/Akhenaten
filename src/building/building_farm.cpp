@@ -324,7 +324,7 @@ e_sound_channel_city building_farm::sound_channel() const {
 }
 
 void building_farm::update_count() const {
-    std::pair<e_building_type, e_resource> farms[] = {
+    static std::pair<e_building_type, e_resource> farms[] = {
         {BUILDING_GRAIN_FARM, RESOURCE_GRAIN},
         {BUILDING_BARLEY_FARM, RESOURCE_BARLEY},
         {BUILDING_FLAX_FARM, RESOURCE_FLAX},

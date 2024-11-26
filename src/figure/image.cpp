@@ -210,6 +210,7 @@ void figure::cart_update_image() {
     case RESOURCE_REEDS:
     case RESOURCE_GOLD:
     case RESOURCE_GEMS:
+    case RESOURCE_FLAX:
         cart_image_id = image_group(resource2cartanim(RESOURCE_NONE));
         if (resource_amount_full > 0) {
             cart_image_id = image_group(resource2cartanim(resource_id));
