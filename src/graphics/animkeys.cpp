@@ -50,6 +50,7 @@ const xstring id_anim_t::work_transport = "work_transport";
 const xstring id_anim_t::flax = "flax";
 const xstring id_anim_t::clay = "clay";
 const xstring id_anim_t::copper = "copper";
+const xstring id_anim_t::reeds = "reeds";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

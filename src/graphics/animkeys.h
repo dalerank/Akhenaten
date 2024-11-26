@@ -52,6 +52,7 @@ struct id_anim_t {
     static const xstring flax;
     static const xstring clay;
     static const xstring copper;
+    static const xstring reeds;
 };
 
 const id_anim_t &animkeys();

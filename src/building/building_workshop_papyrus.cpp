@@ -12,8 +12,6 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "empire/empire.h"
-
-#include "js/js_game.h"
 #include "dev/debug.h"
 
 #include <iostream>
@@ -22,8 +20,12 @@ buildings::model_t<building_papyrus_maker> papyrus_maker_m;
 
 declare_console_command(addpapyrus, game_cheat_add_resource<RESOURCE_PAPYRUS>);
 
-void building_papyrus_maker::on_create(int orientation) {
-    base.first_material_id = RESOURCE_REEDS;
+bool building_papyrus_maker::can_play_animation() const {
+    if (base.stored_amount() < 100) {
+        return false;
+    }
+
+    return building_industry::can_play_animation();
 }
 
 void building_papyrus_maker::update_count() const {
@@ -35,7 +37,7 @@ bool building_papyrus_maker::draw_ornaments_and_animations_height(painter &ctx, 
 
     int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
     if (amount >= 0) {
-        const auto &ranim = anim("reed");
+        const auto &ranim = anim(animkeys().reeds);
         ImageDraw::img_generic(ctx, ranim.first_img() + amount, point + ranim.pos, color_mask);
     }
     return true;
