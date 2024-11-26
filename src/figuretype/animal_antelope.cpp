@@ -10,9 +10,7 @@
 #include "sound/sound.h"
 #include "graphics/animation.h"
 
-#include "js/js_game.h"
-
-figures::model_t<figure_antelope> birds_m;
+figures::model_t<figure_antelope> antelope_m;
 
 void figure_antelope::figure_action() {
     const formation* m = formation_get(base.formation_id);
