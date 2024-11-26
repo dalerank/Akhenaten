@@ -26,7 +26,6 @@ var building_granary = {}
 var building_academy = {}
 var building_firehouse = {}
 var building_police_station = {}
-var building_cattle_ranch = {}
 var building_fort = {}
 var building_fort_charioteers = {}
 var building_fort_infantry = {}

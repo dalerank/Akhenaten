@@ -302,13 +302,14 @@ building_house_palatial_estate = {
   window_info_height_id : 5,
 }
 
-building_cattle_ranch = {
+building building_cattle_ranch = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
     work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
+  input_resouce : RESOURCE_STRAW,
   output_resource : RESOURCE_MEAT,
   building_size : 3,
   info_help_id:1,
