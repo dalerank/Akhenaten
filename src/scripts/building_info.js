@@ -1611,13 +1611,14 @@ building_chariots_workshop = {
   window_info_height_id : 1,
 }
 
-building_pottery = {
+building building_pottery = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
     work : { pos : [36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18, duration:3 },
     clay : { pos:[55, 30], pack:PACK_GENERAL, id:207 },
   },
+  input_resource : RESOURCE_CLAY,
   output_resource : RESOURCE_POTTERY,
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,

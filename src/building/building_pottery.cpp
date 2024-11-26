@@ -23,8 +23,12 @@ buildings::model_t<building_pottery> pottery_m;
 
 declare_console_command(addpottery, game_cheat_add_resource<RESOURCE_POTTERY>);
 
-void building_pottery::on_create(int orientation) {
-    base.first_material_id = RESOURCE_CLAY;
+bool building_pottery::can_play_animation() const {
+    if (base.stored_amount() < 100) {
+        return false;
+    }
+
+    return building_industry::can_play_animation();
 }
 
 void building_pottery::on_place_checks() {
@@ -50,8 +54,8 @@ bool building_pottery::draw_ornaments_and_animations_height(painter &ctx, vec2i 
 
     int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
     if (amount >= 0) {
-        const auto &anim = this->anim("clay");
-        ImageDraw::img_generic(ctx, anim.first_img() + amount, point + anim.pos, color_mask);
+        const auto &ranim = anim(animkeys().clay);
+        ImageDraw::img_generic(ctx, ranim.first_img() + amount, point + ranim.pos, color_mask);
     }
 
     return true;

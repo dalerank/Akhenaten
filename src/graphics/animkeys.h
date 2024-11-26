@@ -50,6 +50,7 @@ struct id_anim_t {
     static const xstring work_fishing_boat;
     static const xstring work_transport;
     static const xstring flax;
+    static const xstring clay;
 };
 
 const id_anim_t &animkeys();
