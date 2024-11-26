@@ -27,22 +27,15 @@ void building_weaver::on_place_checks() {
         return;
     } 
     
-    if (!g_empire.can_import_resource(RESOURCE_STRAW, true)) {
+    if (!g_empire.can_import_resource(RESOURCE_FLAX, true)) {
         building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT);
         return;
     } 
     
-    if (city_resource_trade_status(RESOURCE_STRAW) != TRADE_STATUS_IMPORT) {
+    if (city_resource_trade_status(RESOURCE_FLAX) != TRADE_STATUS_IMPORT) {
         building_construction_warning_show(WARNING_TRADE_IMPORT_RESOURCE);
         return;
     }
-}
-
-void building_weaver::update_graphic() {
-    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
-    set_animation(animkey);
-
-    building_impl::update_graphic();
 }
 
 bool building_weaver::can_play_animation() const {

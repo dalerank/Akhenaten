@@ -47,6 +47,13 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &tmp); // reserved for extended figure type
 }
 
+void building_industry::update_graphic() {
+    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
+    set_animation(animkey);
+
+    building_impl::update_graphic();
+}
+
 void building_industry::on_create(int orientation) {
     building_impl::on_create(orientation);
 
