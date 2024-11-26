@@ -48,5 +48,9 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
 }
 
 void building_industry::on_create(int orientation) {
-    data.industry.progress_max = 400;
+    building_impl::on_create(orientation);
+
+    if (data.industry.progress_max <= 0) {
+        data.industry.progress_max = 400;
+    }
 }

@@ -12,17 +12,6 @@
 
 buildings::model_t<building_weaver> bweaver_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_weaver);
-void config_load_building_weaver() {
-    bweaver_m.load();
-}
-
-void building_weaver::on_create(int orientation) {
-    building_industry::on_create(orientation);
-
-    base.first_material_id = RESOURCE_FLAX;
-}
-
 void building_weaver::on_place_checks() {
     if (building_count_industry_active(RESOURCE_FLAX) <= 0) {
         return;
@@ -56,13 +45,21 @@ void building_weaver::update_graphic() {
     building_impl::update_graphic();
 }
 
+bool building_weaver::can_play_animation() const {
+    if (base.stored_amount() < 100) {
+        return false;
+    }
+
+    return building_industry::can_play_animation();
+}
+
 bool building_weaver::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 
     int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
     if (amount >= 0) {
-        const auto &anim = bweaver_m.anim["flax"];
-        ImageDraw::img_generic(ctx, anim.first_img() + amount, point + anim.pos, color_mask);
+        const auto &ranim = anim(animkeys().flax);
+        ImageDraw::img_generic(ctx, ranim.first_img() + amount, point + ranim.pos, color_mask);
     }
 
     return true;
