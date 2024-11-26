@@ -18,7 +18,6 @@ public:
         virtual void load(archive arch) override;
     };
 
-    virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_SCRIBAL_SCHOOL; }
     virtual void update_graphic() override;

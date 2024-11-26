@@ -70,10 +70,6 @@ bool building_scribal_school::add_resource(e_resource resource, int amount) {
     return true;
 }
 
-void building_scribal_school::on_create(int orientation) {
-    base.first_material_id = RESOURCE_PAPYRUS;
-}
-
 void building_scribal_school::spawn_figure() {
     check_labor_problem();
     if (has_figure_of_type(BUILDING_SLOT_SERVICE, FIGURE_TEACHER)) {

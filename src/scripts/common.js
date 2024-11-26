@@ -65,7 +65,6 @@ var building_mud_gatehouse = {}
 var building_personal_mansion = {}
 var building_dynasty_mansion = {}
 var building_village_mansion = {}
-var building_scribal_school = {}
 var building_library = {}
 var building_military_academy = {}
 var building_juggler_school = {}

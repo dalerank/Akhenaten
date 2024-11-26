@@ -1761,13 +1761,13 @@ building_hunting_lodge = {
   building_size : 2,
 }
 
-building_scribal_school = {
+building building_scribal_school = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
     base : { pack:PACK_GENERAL, id:42},
     work : { pos:[2, -25], pack:PACK_GENERAL, id:42, offset:1, max_frames:11, duration:4, can_reverse:true }
   },
-
+  input_resource : RESOURCE_PAPYRUS,
   info_icon_res :[32, 106],
   info_text_res :[60, 110],
   info_help_id: 68, info_text_id: 85,
