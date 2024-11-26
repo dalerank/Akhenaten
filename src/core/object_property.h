@@ -9,6 +9,7 @@ struct id_property_t {
     static const xstring city;
     static const xstring rating;
     static const xstring model;
+    static const xstring farm;
     static const xstring name;
     static const xstring class_name;
     static const xstring laborers;
@@ -31,6 +32,7 @@ struct id_property_t {
     static const xstring prosperity;
     static const xstring monument;
     static const xstring kingdom;
+    static const xstring fertility;
 };
 
 const id_property_t &tags();

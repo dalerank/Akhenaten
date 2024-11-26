@@ -1304,12 +1304,13 @@ window info_window_recruiter = {
 
 window info_window_farm = {
 	ui : __baseui(building_info_window, {
+		background 	  : outer_panel({size: [29, 18]}),
 		resource      : resource_icon({ pos:[10, 10], prop:"${building.output_resource}" }),
-		progress_desc : text({ pos: [32, 44], font: FONT_NORMAL_BLACK_ON_LIGHT }),
 		workers_desc  : text({ pos: [70, 116], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(23) }),
-		farm_desc     : text({ pos: [32, 64], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
+		farm_desc     : text({ pos: [32, 38], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
 		farm_state    : text({ pos: [32, 186], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
 		flood_info    : text({ pos: [32, 206], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		progress_desc : text({ pos: [32, 226], text:"${text.2} ${industry.progress}% ${text.3} ${text.12} ${farm.fertility}% ${text.13}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
 	})
 }
 

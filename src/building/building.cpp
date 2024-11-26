@@ -24,6 +24,7 @@
 #include "grid/random.h"
 #include "grid/image.h"
 #include "grid/routing/routing_terrain.h"
+#include "grid/floodplain.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "io/io_buffer.h"
@@ -1084,6 +1085,7 @@ const bproperty bproperties[] = {
     { tags().building, tags().output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output_resource_first_id)); }},
     { tags().building, tags().first_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.first_material_id)); }},
     { tags().building, tags().first_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount_first); }},
+    { tags().farm, tags().fertility, [] (building &b, const xstring &) { return bvariant(map_get_fertility_for_farm(b.tile.grid_offset())); }},
 };
 
 bvariant building_impl::get_property(const xstring &domain, const xstring &name) const {
