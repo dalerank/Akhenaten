@@ -8,17 +8,14 @@
 #include "city/labor.h"
 #include "city/city.h"
 
-#include "js/js_game.h"
-
 buildings::model_t<building_jewels_workshop> jewels_workshop_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_jewels_workshop);
-void config_load_building_jewels_workshop() {
-    jewels_workshop_m.load();
-}
+bool building_jewels_workshop::can_play_animation() const {
+    if (base.stored_amount() < 100) {
+        return false;
+    }
 
-void building_jewels_workshop::on_create(int orientation) {
-    base.first_material_id = RESOURCE_GEMS;
+    return building_industry::can_play_animation();
 }
 
 void building_jewels_workshop::on_place_checks() {

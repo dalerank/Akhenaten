@@ -1,13 +1,12 @@
 #pragma once
 
-#include "building/building.h"
+#include "building/building_industry.h"
 
-class building_chariots_workshop : public building_impl {
+class building_chariots_workshop : public building_industry {
 public:
     BUILDING_METAINFO(BUILDING_CHARIOTS_WORKSHOP, building_brick_tower)
-    building_chariots_workshop(building &b) : building_impl(b) {}
+    building_chariots_workshop(building &b) : building_industry(b) {}
 
-    virtual void on_create(int orientation) override;
     //virtual void on_place(int orientation, int variant) override;
     //virtual void window_info_background(object_info &c) override;
     //virtual void spawn_figure() override;

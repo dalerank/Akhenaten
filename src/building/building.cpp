@@ -964,7 +964,14 @@ void building_impl::on_place(int orientation, int variant) {
     
     base.fire_proof = p.fire_proof;
     base.damage_proof = p.damage_proof;
-    base.first_material_id = p.input_resource;
+    if (p.input_resource) {
+        base.first_material_id = p.input_resource;
+    }
+
+    if (p.input_resource_second) {
+        base.second_material_id = p.input_resource_second;
+    }
+
     base.output_resource_first_id = p.output_resource;
     base.output_resource_second_id = p.output_resource_second;
     base.output_resource_second_rate = p.output_resource_second_rate;
@@ -974,7 +981,7 @@ void building_impl::on_place(int orientation, int variant) {
 }
 
 void building_impl::on_place_update_tiles(int orientation, int variant) {
-    int img_id = params().anim["base"].first_img();
+    int img_id = anim(animkeys().base).first_img();
     map_building_tiles_add(id(), tile(), base.size, img_id, TERRAIN_BUILDING);
 }
 
@@ -1183,6 +1190,7 @@ void building_impl::static_params::load(archive arch) {
     fire_proof = arch.r_bool("fire_proof");
     damage_proof = arch.r_bool("damage_proof");
     input_resource = arch.r_type<e_resource>("input_resource");
+    input_resource_second = arch.r_type<e_resource>("input_resource_second");
     output_resource = arch.r_type<e_resource>("output_resource");
     output_resource_second = arch.r_type<e_resource>("output_resource_second");
     output_resource_second_rate = arch.r_int("output_resource_second_rate");

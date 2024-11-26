@@ -938,12 +938,13 @@ building building_weaver = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building_jewels_workshop = {
+building building_jewels_workshop = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:119 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:119 },
     work : { pos : [7, -10], pack:PACK_GENERAL, id:119, offset:1, max_frames:9 },
   },
+  input_resource: RESOURCE_GEMS,
   output_resource : RESOURCE_LUXURY_GOODS,
   building_size : 2,
   window_info_height_id : 1,
@@ -1597,7 +1598,7 @@ building building_bricks_workshop = {
   window_info_height_id : 1,
 }
 
-building_chariots_workshop = {
+building building_chariots_workshop = {
   animations : {
     preview : { pack:PACK_GENERAL, id:124 },
     base : { pack:PACK_GENERAL, id:124 },
@@ -1605,6 +1606,9 @@ building_chariots_workshop = {
     timber : { pos:[51, 18], pack:PACK_GENERAL, id:206 },
     weapon : { pos:[46, 25], pack:PACK_GENERAL, id:207 },
   },
+  input_resource : RESOURCE_TIMBER,
+  input_resource_second : RESOURCE_WEAPONS,
+  output_resource : RESOURCE_CHARIOTS,
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,

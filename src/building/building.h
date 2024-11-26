@@ -495,6 +495,7 @@ public:
         bstring64 meta_id;
         metainfo meta;
         e_resource input_resource;
+        e_resource input_resource_second;
         e_resource output_resource;
         e_resource output_resource_second;
         int output_resource_second_rate;
