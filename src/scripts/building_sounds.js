@@ -90,4 +90,7 @@ building_sounds = [
   { type: BUILDING_DOCK,             				sound: "Wavs/DOCK1.WAV"},
   { type: BUILDING_RECRUITER,        				sound: "Wavs/barracks.WAV"},
   { type: BUILDING_COURTHOUSE,       				sound: "Wavs/forum.WAV"},
+  { type: BUILDING_PERSONAL_MANSION,       	sound: "Wavs/GOV_MAN1.WAV"},
+  { type: BUILDING_FAMILY_MANSION, 	      	sound: "Wavs/GOV_MAN2.WAV"},
+  { type: BUILDING_DYNASTY_MANSION,       	sound: "Wavs/GOV_MAN3.WAV"},
 ]

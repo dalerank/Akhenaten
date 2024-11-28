@@ -658,7 +658,7 @@ building_dock = {
   window_info_height_id : 1,
 }
 
-building_personal_mansion = {
+building building_personal_mansion = {
   animations : {
     preview : { pack:PACK_GENERAL, id:85 },
     base : { pack:PACK_GENERAL, id:85 },
@@ -666,11 +666,13 @@ building_personal_mansion = {
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   building_size : 3,
+  info_help_id:78,
+  info_text_id:103,
   unique_building : true,
   window_info_height_id : 1,
 }
 
-building_village_mansion = {
+building building_village_mansion = {
   animations : {
     preview : { pack:PACK_GENERAL, id:47 },
     base : { pack:PACK_GENERAL, id:47 },
@@ -678,11 +680,20 @@ building_village_mansion = {
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   building_size : 4,
+  info_help_id:78,
+  info_text_id:103,
   unique_building : true,
   window_info_height_id : 1,
 }
 
-building_dynasty_mansion = {
+building building_dynasty_mansion = {
+  labor_category : LABOR_CATEGORY_GOVERNMENT,
+  building_size : 4,
+  unique_building : true,
+  window_info_height_id : 1,
+}
+
+building building_family_mansion = {
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   building_size : 4,
   unique_building : true,
@@ -912,7 +923,7 @@ building building_papyrus_maker = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:44 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:44 },
-    work : { pos : [7, -10], pack:PACK_GENERAL, id:44, offset:1, max_frames:9 },
+    work : { pos : [7, -10], pack:PACK_GENERAL, id:44, offset:1, max_frames:10, duration:4 },
     reeds : { pos : [35, 4], pack:PACK_GENERAL, id:206 },
   },
   input_resource : RESOURCE_REEDS,
