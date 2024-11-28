@@ -33,7 +33,7 @@ void building_papyrus_maker::update_count() const {
 }
 
 bool building_papyrus_maker::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    building_draw_normal_anim(ctx, point, &base, tile, anim(animkeys().work), color_mask);
+    draw_normal_anim(ctx, point, tile, color_mask);
 
     int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
     if (amount >= 0) {

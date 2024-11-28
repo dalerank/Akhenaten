@@ -1322,7 +1322,7 @@ window info_window_architect_post = {
 
 window info_window_raw_material = {
 	ui : __baseui(building_info_window, {
-		resource_img  : resource_icon({pos: [14, 14]}),
+		resource_img  : resource_icon({pos: [14, 14], prop:"${building.output_resource}"}),
 		progress_desc : text({pos: [32, 44], text:"${text.2} ${industry.progress} % ${text.3}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
 		warning_desc  : text({pos: [32, 66], text:"${text.1}", font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
 		inner_panel   : inner_panel({pos : [16, 130], size: [27, 5],

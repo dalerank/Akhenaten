@@ -849,7 +849,7 @@ building_work_camp = {
   building_size : 2,
 }
 
-building_booth = {
+building building_booth = {
   animations : {
     booth : { pack:PACK_GENERAL, id:114 },
     square : { pack:PACK_GENERAL, id:112 },
@@ -1396,13 +1396,14 @@ building_city_palace = {
   building_size : 6,
 }
 
-building_clay_pit = {
+building building_clay_pit = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:40 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:40 },
     work : { pos : [18, -20], pack:PACK_GENERAL, id:40, offset:1, max_frames:23, duration:2 }
   },
   output_resource : RESOURCE_CLAY,
+  progress_max : 200,
   building_size : 2,
   production_rate : 50,
   info_help_id:92,
@@ -1623,7 +1624,7 @@ building building_pottery = {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
     work : { pos : [36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18, duration:3 },
-    clay : { pos:[55, 30], pack:PACK_GENERAL, id:207 },
+    clay : { pos:[55, 30], pack:PACK_GENERAL, id:205, offset:8 },
   },
   input_resource : RESOURCE_CLAY,
   output_resource : RESOURCE_POTTERY,

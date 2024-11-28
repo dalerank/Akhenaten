@@ -25,8 +25,10 @@
 #include "figure/figure.h"
 #include "js/js_game.h"
 
+building_booth::static_params booth_m;
+
 void building_booth::static_params::load(archive arch) {
-    booth = anim["booth"].first_img();
+    booth = anim[animkeys().booth].first_img();
 }
 
 void building_booth::update_day() {
@@ -132,7 +134,7 @@ void building_booth::on_undo() {
 }
 
 void building_booth::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
-    const auto params = current_params();
+    const auto &params = current_params();
     int square_id = params.anim[animkeys().square].first_img();
     const int size = params.building_size;
     for (int i = 0; i < size * size; i++) {
