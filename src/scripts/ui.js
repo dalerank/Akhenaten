@@ -1283,7 +1283,7 @@ info_window_fishing_wharf = {
 window info_window_recruiter = {
 	ui : __baseui(building_info_window, {
 		background 	  : outer_panel({size: [29, 20]}),
-		warning_text: { type : "text", pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
+		warning_text  : text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
 		icon_weapon   : resource_icon({pos:[24, 100], resource:RESOURCE_WEAPONS  }),
 		storage_state : text({pos: [46, 104], text:"${8.10} ${building.first_material_stored}", font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
 		progress_desc : { type : "text", pos: [32, 104], font: FONT_NORMAL_BLACK_ON_LIGHT },
@@ -1318,6 +1318,15 @@ window info_window_architect_post = {
 	  ui : __baseui(building_info_window, {
 
 	  })
+}
+
+window info_window_mansion = {
+		first_advisor : ADVISOR_IMPERIAL,
+		ui : __baseui(building_info_window, {
+			background 	  : outer_panel({size: [29, 18]}),
+			warning_text	: text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+			change_salary : button({text:"${player.rank_name} ${player.salary_amount} ${52.3}", margin:{centerx:-200, bottom:-80}, size:[400, 30], font: FONT_NORMAL_BLACK_ON_DARK }),
+		})
 }
 
 window info_window_raw_material = {
