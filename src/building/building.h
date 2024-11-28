@@ -73,6 +73,7 @@ class building_routeblock;
 class building_industry;
 class building_guild;
 class building_entertainment;
+class building_mansion;
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -461,6 +462,7 @@ public:
     building_industry *dcast_industry();
     building_guild *dcast_guild();
     building_entertainment *dcast_entertainment();
+    building_mansion *dcast_mansion();
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
@@ -596,6 +598,7 @@ public:
     virtual building_industry *dcast_industry() { return nullptr; }
     virtual building_guild *dcast_guild() { return nullptr; }
     virtual building_entertainment *dcast_entertainment() { return nullptr; }
+    virtual building_mansion *dcast_mansion() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

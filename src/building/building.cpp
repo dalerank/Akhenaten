@@ -291,6 +291,7 @@ building_bandstand *building::dcast_bandstand() { return dcast()->dcast_bandstan
 building_industry *building::dcast_industry() { return dcast()->dcast_industry(); }
 building_guild *building::dcast_guild() { return dcast()->dcast_guild(); }
 building_entertainment *building::dcast_entertainment() { return dcast()->dcast_entertainment(); }
+building_mansion *building::dcast_mansion() { return dcast()->dcast_mansion(); }
 
 building* building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
