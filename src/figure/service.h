@@ -16,8 +16,8 @@ inline int figure_provide_service(tile2i tile, figure* f, int &data, T callback)
         int building_id = map_building_at(grid_offset);
         if (building_id) {
             building *b = building_get(building_id);
-            callback(b, f, data);
             if (b->house_size && b->house_population > 0) {
+                callback(b, f, data);
                 serviced++;
             }
         }
