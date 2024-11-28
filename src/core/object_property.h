@@ -33,6 +33,9 @@ struct id_property_t {
     static const xstring monument;
     static const xstring kingdom;
     static const xstring fertility;
+    static const xstring rank_name;
+    static const xstring player;
+    static const xstring salary_amount;
 };
 
 const id_property_t &tags();
