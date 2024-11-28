@@ -10,9 +10,7 @@ public:
     building_clay_pit(building &b) : building_industry(b) {}
     virtual building_clay_pit *dcast_clay_pit() override { return this; }
 
-    virtual void on_create(int orientation) override;
     virtual int get_fire_risk(int value) const override;
-    virtual void update_graphic() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_CLAY_PIT; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_count() const override;

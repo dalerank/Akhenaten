@@ -30,15 +30,13 @@ void info_window_raw_material::init(object_info &c) {
 
     building *b = c.building_get();
 
-    ui["resource_img"].image(b->output_resource_first_id);
-
-    std::pair<int, int> reason = { c.group_id, 10 };
+    textid reason = { c.group_id, 10 };
     if (!c.has_road_access) { reason = { 69, 25 }; } 
-    else if (city_resource_is_mothballed(b->output_resource_first_id)) reason.second = 4;
-    else if (b->data.industry.curse_days_left > 4) reason.second = 11;
-    else if (b->num_workers <= 0) reason.second = 5;
-    else reason.second = approximate_value(c.worker_percentage / 100.f, make_array(9, 8, 7, 6));
+    else if (city_resource_is_mothballed(b->output_resource_first_id)) reason.id = 4;
+    else if (b->data.industry.curse_days_left > 4) reason.id = 11;
+    else if (b->num_workers <= 0) reason.id = 5;
+    else reason.id = approximate_value(c.worker_percentage / 100.f, make_array(9, 8, 7, 6));
 
     fill_employment_details(c);
-    ui["workers_desc"] = ui::str(reason.first, reason.second);
+    ui["workers_desc"] = reason;
 }

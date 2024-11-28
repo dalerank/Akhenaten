@@ -72,24 +72,12 @@ void building_mine_gems::update_count() const {
     building_increase_industry_count(RESOURCE_GEMS, num_workers() > 0);
 }
 
-void building_clay_pit::on_create(int orientation) {
-    base.output_resource_first_id = clay_pit_m.output_resource;
-}
-
 int building_clay_pit::get_fire_risk(int value) const {
     if (config_get(CONFIG_GP_CH_CLAY_PIT_FIRE_RISK_REDUCED)) {
         return value / 2;
     }
 
     return value;
-}
-
-void building_clay_pit::update_graphic() {
-    const xstring &animkey = can_play_animation()
-                                ? animkeys().work
-                                : animkeys().none;
-
-    set_animation(animkey);
 }
 
 bool building_clay_pit::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
