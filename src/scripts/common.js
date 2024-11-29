@@ -177,7 +177,6 @@ var display_options_window = {}
 var sidebar_window_expanded = {}
 var sidebar_window_collapsed = {}
 var sidebar_window_extra = {}
-var info_window_booth = {}
 var dock_info_window = {}
 var dock_orders_window = {}
 

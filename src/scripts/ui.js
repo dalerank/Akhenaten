@@ -1261,15 +1261,17 @@ window info_window_pavilion = {
 	})
 }
 
-info_window_booth = {
+window info_window_booth = {
 	ui : __baseui(building_info_window, {
-		background 	 : { type : "outer_panel",	pos: [0, 0], size: [29, 20]},
-		inner_panel  : { type : "inner_panel", pos : [16, 116], size: [27, 8] },
-		play_text    : { type : "text", pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		play2_text   : { type : "text", pos: [32, 182], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
-		workers_img  : { type : "image", pack:PACK_GENERAL, id:134, offset:14, pos:[40, 122] },
-		workers_text : { type : "text", pos: [70, 130], font: FONT_NORMAL_BLACK_ON_DARK},
-		workers_desc : { type : "text", pos: [70, 126 + 16], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) },
+		background 	 : outer_panel({pos: [0, 0], size: [29, 16]}),
+		play_text    : text({pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+		inner_panel  : inner_panel({pos : [16, 110], size: [27, 6],
+											ui : {
+												workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
+												workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
+												workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
+											}
+									  }),
 	})
 }
 

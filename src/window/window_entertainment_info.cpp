@@ -103,6 +103,4 @@ void info_window_booth::init(object_info &c) {
     } else {
         ui["play_text"] = ui::str(c.group_id, 5);
     }
-
-    ui["play2_text"] = "";
 }
