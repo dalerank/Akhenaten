@@ -22,7 +22,6 @@ void info_window_mansion::init(object_info &c) {
     textid reason{ c.group_id, 0 };
     if (!c.has_road_access) { reason = { 69, 25 }; }
 
-    fill_employment_details(c);
     if (reason.id > 0) {
         ui["workers_desc"] = reason;
     }

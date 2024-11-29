@@ -1315,18 +1315,24 @@ window info_window_farm = {
 }
 
 window info_window_architect_post = {
-	  ui : __baseui(building_info_window, {
+  ui : __baseui(building_info_window, {
 
-	  })
+  })
 }
 
 window info_window_mansion = {
-		first_advisor : ADVISOR_IMPERIAL,
-		ui : __baseui(building_info_window, {
-			background 	  : outer_panel({size: [29, 18]}),
-			warning_text	: text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-			change_salary : button({text:"${player.rank_name} ${player.salary_amount} ${52.3}", margin:{centerx:-200, bottom:-80}, size:[400, 30], font: FONT_NORMAL_BLACK_ON_DARK }),
-		})
+	first_advisor : ADVISOR_IMPERIAL,
+	ui : {
+		background 	  : outer_panel({size: [29, 18]}),
+
+		title 		 		: text({pos: [0, 16], text:"${building.name}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		first_advisor : image_button({pos:[40, -1], size:[28, 28], pack:PACK_GENERAL, id:106 }),
+		warning_text	: text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		change_salary : button({text:"${player.rank_name} ${player.salary_amount} ${52.3}", margin:{centerx:-200, bottom:-80}, size:[400, 30], font: FONT_NORMAL_BLACK_ON_DARK }),
+
+	  button_help   : help_button({}),
+	  button_close  : close_button({}),
+	}
 }
 
 window info_window_raw_material = {
@@ -1349,8 +1355,8 @@ info_window_garden = {
 		background 	  : { type : "outer_panel",	pos: [0, 0], size: [29, 17]},
 		title 		 	  : { type : "text", pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
 		describe  		: { type : "text", pos: [32, 66], text: "#gardens_describe", wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-		button_help   : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		button_help   : help_button({}),
+		button_close  : close_button({}),
 	}
 }
 
