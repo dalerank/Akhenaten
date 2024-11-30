@@ -7,8 +7,6 @@
 #include "city/city.h"
 #include "figure/service.h"
 
-#include "js/js_game.h"
-
 figure_architector::static_params architector_m;
 
 void figure_architector::static_params::load(archive arch) {
@@ -89,26 +87,18 @@ void figure_architector::on_action_changed(int saved_action) {
     }
 }
 
-const animations_t &figure_architector::anim() const {
-    return architector_m.anim;
-}
-
 figure_sound_t figure_architector::get_sound_reaction(xstring key) const {
     return architector_m.sounds[key];
 }
 
-static void engineer_coverage(building* b, figure *f, int &max_damage_seen) {
-    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_ROOM) {
-        b = b->main();
-    }
-
-    max_damage_seen = std::max<short>(b->damage_risk, max_damage_seen);
-    b->damage_risk = 0;
-} 
-
 int figure_architector::provide_service() {
     int max_damage = 0;
-    int houses_serviced = figure_provide_service(tile(), &base, max_damage, engineer_coverage);
+    int houses_serviced = figure_provide_service(tile(), &base, max_damage, [] (building *b, figure *f, int &max_damage_seen) {
+        b = b->main();
+        max_damage_seen = std::max<short>(b->damage_risk, max_damage_seen);
+        b->damage_risk = 0;
+    });
+
     if (max_damage > base.min_max_seen) {
         base.min_max_seen = max_damage;
     } else if (base.min_max_seen <= 10) {
