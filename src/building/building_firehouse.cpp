@@ -38,12 +38,6 @@ void console_command_startfire(std::istream &is, std::ostream &) {
     }
 }
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_firehouse);
-void config_load_building_firehouse() {
-    firehouse_m.load();
-    firehouse_infow.load("building_info_window");
-}
-
 void building_firehouse::spawn_figure() {
     base.common_spawn_roamer(FIGURE_FIREMAN, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
 }
@@ -61,10 +55,6 @@ bool building_firehouse::draw_ornaments_and_animations_height(painter &ctx, vec2
     draw_normal_anim(ctx, point, tile, color_mask);
 
     return true;
-}
-
-void info_window_firehouse::window_info_background(object_info& c) {
-    building_info_window::common_info_background(c);
 }
 
 inline bool info_window_firehouse::check(object_info& c) {

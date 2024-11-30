@@ -1322,6 +1322,12 @@ window info_window_architect_post = {
   })
 }
 
+window info_window_firehouse = {
+  ui : __baseui(building_info_window, {
+
+  })
+}
+
 window info_window_mansion = {
 	first_advisor : ADVISOR_IMPERIAL,
 	ui : {

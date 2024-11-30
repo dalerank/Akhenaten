@@ -18,6 +18,5 @@ public:
 };
 
 struct info_window_firehouse : public building_info_window {
-    virtual void window_info_background(object_info& c) override;
     virtual bool check(object_info& c) override;
 };
