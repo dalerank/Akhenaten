@@ -40,8 +40,10 @@ sound_key figure_market_trader::phrase_key() const {
 int figure_market_trader::provide_service() {
     int none_service;
     int houses_serviced = provide_market_goods(home(), tile());
-    figure_provide_service(tile(), &base, none_service, [](building *b, figure *f, int &) {
-        b->data.house.bazaar_access = MAX_COVERAGE;
+    figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
+        if (b->house_size > 0 && b->house_population > 0) {
+            b->data.house.bazaar_access = MAX_COVERAGE;
+        }
     });
     return houses_serviced;
 }
