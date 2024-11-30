@@ -107,7 +107,9 @@ sound_key figure_magistrate::phrase_key() const {
 int figure_magistrate::provide_service() {
     int max_criminal_active = 0;
     int houses_serviced = figure_provide_service(tile(), &base, max_criminal_active, [] (building *b, figure *f, int &) {
-        b->data.house.magistrate = MAX_COVERAGE;
+        if (b->house_size > 0 && b->house_population > 0) {
+            b->data.house.magistrate = MAX_COVERAGE;
+        }
     });
 
     if (max_criminal_active > base.min_max_seen)
