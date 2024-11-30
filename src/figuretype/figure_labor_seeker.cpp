@@ -99,13 +99,11 @@ sound_key figure_labor_seeker::phrase_key() const {
     return keys[index];
 }
 
-void labor_seeker_coverage(building* b, figure *f, int&) {
-    // nothing here, the labor seeker works simply via the `houses_covered` variable
-}
-
 int figure_labor_seeker::provide_service() {
     int none_service;
-    int houses_serviced = figure_provide_service(tile(), &base, none_service, labor_seeker_coverage);
+    int houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
+        // nothing here yet, the labor seeker works simply via the `houses_covered` variable
+    });
     return houses_serviced;
 }
 
