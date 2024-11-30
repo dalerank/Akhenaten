@@ -88,14 +88,14 @@ sound_key figure_physician::phrase_key() const {
     return keys[index];
 }
 
-void physician_coverage(building* b, figure *f, int&) {
-    b->data.house.physician = MAX_COVERAGE;
-    b->common_health = std::min(b->common_health + 1, 100);
-}
-
 int figure_physician::provide_service() {
     int none_service = 0;
-    int houses_serviced = figure_provide_service(tile(), &base, none_service, physician_coverage);
+    int houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
+        if (b->house_size > 0 && b->house_population > 0) {
+            b->data.house.physician = MAX_COVERAGE;
+            b->common_health = std::min(b->common_health + 1, 100);
+        }
+    });
     return houses_serviced;
 }
 
