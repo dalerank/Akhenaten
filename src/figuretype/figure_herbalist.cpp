@@ -69,18 +69,24 @@ sound_key figure_herbalist::phrase_key() const {
     return {};
 }
 
-void apothecary_coverage(building* b, figure *f, int&) {
-    b->data.house.apothecary = MAX_COVERAGE;
-    if (b->common_health < 50) {
-        b->common_health++;
-        if (b->common_health < 20) {
-            f->local_data.herbalist.see_low_health++;
-        }
-    }
+void apothecary_coverage() {
+    
 }
 
 int figure_herbalist::provide_service() {
     int minmax = 0;
-    int houses_serviced = figure_provide_service(tile(), &base, minmax, apothecary_coverage);
+    int houses_serviced = figure_provide_service(tile(), &base, minmax, [] (building *b, figure *f, int &) {
+        if (!b->dcast_house()) {
+            return;
+        }
+
+        b->data.house.apothecary = MAX_COVERAGE;
+        if (b->common_health < 50) {
+            b->common_health++;
+            if (b->common_health < 20) {
+                f->local_data.herbalist.see_low_health++;
+            }
+        }
+    });
     return houses_serviced;
 }
