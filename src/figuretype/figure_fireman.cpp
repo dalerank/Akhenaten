@@ -16,14 +16,7 @@
 #include "figure/service.h"
 #include "grid/building.h"
 
-#include "js/js_game.h"
-
 figures::model_t<figure_fireman> fireman_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_fireman);
-void config_load_figure_fireman() {
-    fireman_m.load();
-}
 
 void figure_fireman::on_create() {
 
@@ -190,13 +183,14 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
 void figure_fireman::extinguish_fire() {
     building* burn = destination();
     int distance = calc_maximum_distance(tile(), burn->tile);
-    if ((burn->state == BUILDING_STATE_VALID || burn->state == BUILDING_STATE_MOTHBALLED)
-        && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
-        burn->fire_duration = 32;
+    const bool is_valid = (burn->state == BUILDING_STATE_VALID || burn->state == BUILDING_STATE_MOTHBALLED) && burn->type == BUILDING_BURNING_RUIN;
+    if (is_valid && distance < 2 && burn->fire_duration > 0) {
+        burn->fire_duration--;
         g_sound.play_effect(SOUND_EFFECT_FIRE_SPLASH);
     } else {
         base.wait_ticks = 1;
     }
+
     base.attack_direction = calc_general_direction(tile(), burn->tile);
     base.attack_direction = base.attack_direction % 8;
 
@@ -249,18 +243,13 @@ bool figure_fireman::fight_fire() {
     return false;
 }
 
-void prefect_coverage(building* b, figure *f, int &min_happiness_seen) {
-    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_STORAGE_ROOM) {
-        b = b->main();
-    }
-
-    b->fire_risk = 0;
-    min_happiness_seen = std::max<short>(b->sentiment.house_happiness, min_happiness_seen);
-}
-
 int figure_fireman::provide_service() {
     int min_happiness;
-    int result = figure_provide_service(tile(), &base, min_happiness, prefect_coverage);
+    int result = figure_provide_service(tile(), &base, min_happiness, [] (building *b, figure *f, int &min_happiness_seen) {
+        b = b->main();
+        b->fire_risk = 0;
+        min_happiness_seen = std::max<short>(b->sentiment.house_happiness, min_happiness_seen);
+    });
     base.min_max_seen = min_happiness;
     return result;
 }
