@@ -104,13 +104,17 @@ const animations_t &figure_water_carrier::anim() const {
     return water_carrier_m.anim;
 }
 
-void water_supply_coverage(building* b, figure *f, int&) {
-    b->data.house.water_supply = MAX_COVERAGE;
-}
 
 int figure_water_carrier::provide_service() {
     int none_service;
-    return figure_provide_service(tile(), &base, none_service, water_supply_coverage);
+    int houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
+        if (!b->dcast_house()) {
+            return;
+        }
+        b->data.house.water_supply = MAX_COVERAGE;
+    });
+
+    return houses_serviced;
 }
 
 figure_sound_t figure_water_carrier::get_sound_reaction(xstring key) const {
