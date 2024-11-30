@@ -116,53 +116,53 @@ sound_key figure_priest::phrase_key() const {
     return keys[index];
 }
 
-static void religion_coverage_osiris(building* b, figure *f, int&) {
-    b->data.house.temple_osiris = MAX_COVERAGE;
-}
-
-static void religion_coverage_ra(building* b, figure *f, int&) {
-    b->data.house.temple_ra = MAX_COVERAGE;
-}
-
-static void religion_coverage_ptah(building* b, figure *f, int&) {
-    b->data.house.temple_ptah = MAX_COVERAGE;
-}
-
-static void religion_coverage_seth(building* b, figure *f, int&) {
-    b->data.house.temple_seth = MAX_COVERAGE;
-}
-
-static void religion_coverage_bast(building* b, figure *f, int&) {
-    b->data.house.temple_bast = MAX_COVERAGE;
-}
-
 int figure_priest::provide_service() {
     int houses_serviced = 0;
     int none_service = 0;
     switch (home()->type) {
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        houses_serviced = figure_provide_service(tile(), &base, none_service, religion_coverage_osiris);
+        houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
+            if (b->house_size > 0 && b->house_population > 0) {
+                b->data.house.temple_osiris = MAX_COVERAGE;
+            }
+        });
         break;
 
     case BUILDING_TEMPLE_RA:
     case BUILDING_TEMPLE_COMPLEX_RA:
-        houses_serviced = figure_provide_service(tile(), &base, none_service, religion_coverage_ra);
+        houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
+            if (b->house_size > 0 && b->house_population > 0) {
+                b->data.house.temple_ra = MAX_COVERAGE;
+            }
+        });
         break;
 
     case BUILDING_TEMPLE_PTAH:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
-        houses_serviced = figure_provide_service(tile(), &base, none_service, religion_coverage_ptah);
+        houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
+            if (b->house_size > 0 && b->house_population > 0) {
+                b->data.house.temple_ptah = MAX_COVERAGE;
+            }
+        });
         break;
 
     case BUILDING_TEMPLE_SETH:
     case BUILDING_TEMPLE_COMPLEX_SETH:
-        houses_serviced = figure_provide_service(tile(), &base, none_service, religion_coverage_seth);
+        houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
+            if (b->house_size > 0 && b->house_population > 0) {
+                b->data.house.temple_seth = MAX_COVERAGE;
+            }
+        });
         break;
 
     case BUILDING_TEMPLE_BAST:
     case BUILDING_TEMPLE_COMPLEX_BAST:
-        houses_serviced = figure_provide_service(tile(), &base, none_service, religion_coverage_bast);
+        houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
+            if (b->house_size > 0 && b->house_population > 0) {
+                b->data.house.temple_bast = MAX_COVERAGE;
+            }
+        });
         break;
     default:
         break;
