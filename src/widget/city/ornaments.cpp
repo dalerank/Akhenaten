@@ -126,13 +126,5 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
         color_mask = COLOR_MASK_RED;
     }
 
-    switch (b->type) {
-    case BUILDING_BURNING_RUIN:
-        building_draw_normal_anim(ctx, point, b, tile, image_id, color_mask);
-        break;
-
-    default:
-        b->dcast()->draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
-        break;
-    }
+    b->dcast()->draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
 }
