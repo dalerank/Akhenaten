@@ -81,21 +81,23 @@ sound_key figure_teacher::phrase_key() const {
     return keys[index];
 }
 
-void school_coverage(building* b, figure *f, int&) {
-    if (f->home()->stored_amount_first <= 0 ) {
-        return;
-    }
-
-    const uint8_t delta_allow_papyrus = MAX_COVERAGE / 4;
-    if ((MAX_COVERAGE - b->data.house.school) > delta_allow_papyrus) {
-        f->home()->stored_amount_first--;
-    }
-    b->data.house.school = MAX_COVERAGE;
-}
-
 int figure_teacher::provide_service() {
     int none_value;
-    int houses_serviced = figure_provide_service(tile(), &base, none_value, school_coverage);
+    int houses_serviced = figure_provide_service(tile(), &base, none_value, [] (building *b, figure *f, int &) {
+        if (!b->dcast_house()) {
+            return;
+        }
+
+        if (f->home()->stored_amount_first <= 0) {
+            return;
+        }
+
+        const uint8_t delta_allow_papyrus = MAX_COVERAGE / 4;
+        if ((MAX_COVERAGE - b->data.house.school) > delta_allow_papyrus) {
+            f->home()->stored_amount_first--;
+        }
+        b->data.house.school = MAX_COVERAGE;
+    });
     return houses_serviced;
 }
 
