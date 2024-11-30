@@ -25,6 +25,10 @@ void building_mansion::on_place(int orientation, int variant) {
     city_buildings_add_mansion(&base);
 }
 
+void building_mansion::update_graphic() {
+    set_animation(animkeys().work);
+}
+
 int building_mansion::window_info_handle_mouse(const mouse *m, object_info &c) {
     return 0;
 }

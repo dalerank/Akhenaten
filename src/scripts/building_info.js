@@ -474,10 +474,18 @@ building_farm_henna = {
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
-building_burning_ruin = {
+building building_burning_ruin = {
   animations : {
-    base : { pack:PACK_GENERAL, id:105, offset:0 },
+    base0 : { pack:PACK_TERRAIN, id:36, offset:0 },
+    fire0 : { pack:PACK_TERRAIN, id:36, offset:1, max_frames:8, duration:2 },
+    base1 : { pack:PACK_TERRAIN, id:36, offset:9 },
+    fire1 : { pack:PACK_TERRAIN, id:36, offset:10, max_frames:8, duration:2 },
+    base2 : { pack:PACK_TERRAIN, id:36, offset:18 },
+    fire2 : { pack:PACK_TERRAIN, id:36, offset:19, max_frames:8, duration:2 },
+    base3 : { pack:PACK_TERRAIN, id:36, offset:27 },
+    fire3 : { pack:PACK_TERRAIN, id:36, offset:28, max_frames:8, duration:2 },
   },
+  fire_animations : 4,
   building_size : 1,
   fire_proof : true,
   damage_proof : true,
@@ -522,8 +530,8 @@ building_granary = {
 
 building_shrine_osiris = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:75, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:75, offset:0 },
+    preview : {pack:PACK_GENERAL, id:75, },
+    base : {pack:PACK_GENERAL, id:75, offset:0 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
@@ -534,8 +542,8 @@ building_shrine_osiris = {
 
 building_shrine_ra = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:74, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:74, offset:0 },
+    preview : {pack:PACK_GENERAL, id:74, },
+    base : {pack:PACK_GENERAL, id:74, offset:0 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
@@ -546,8 +554,8 @@ building_shrine_ra = {
 
 building_shrine_ptah = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:73, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:73, offset:0 },
+    preview : {pack:PACK_GENERAL, id:73, },
+    base : {pack:PACK_GENERAL, id:73, offset:0 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
@@ -558,8 +566,8 @@ building_shrine_ptah = {
 
 building_shrine_seth = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:72, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:72, offset:0 },
+    preview : {pack:PACK_GENERAL, id:72, },
+    base : {pack:PACK_GENERAL, id:72, offset:0 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
@@ -570,8 +578,8 @@ building_shrine_seth = {
 
 building_shrine_bast = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:71, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:71, offset:0 },
+    preview : {pack:PACK_GENERAL, id:71, },
+    base : {pack:PACK_GENERAL, id:71, offset:0 },
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
@@ -662,7 +670,7 @@ building building_personal_mansion = {
   animations : {
     preview : { pack:PACK_GENERAL, id:85 },
     base : { pack:PACK_GENERAL, id:85 },
-    work : { pack:PACK_GENERAL, id:85, offset:1, max_frames:12 }
+    work : { pos:[30, -70], pack:PACK_GENERAL, id:85, offset:1, max_frames:12, duration:3 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   building_size : 3,
