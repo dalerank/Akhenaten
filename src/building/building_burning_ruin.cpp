@@ -4,19 +4,18 @@
 #include "city/labor.h"
 #include "core/random.h"
 #include "grid/building_tiles.h"
+#include "grid/terrain.h"
 #include "building/maintenance.h"
 #include "building/destruction.h"
 #include "grid/building.h"
 #include "grid/grid.h"
 #include "scenario/scenario.h"
-#include "js/js_game.h"
 #include "grid/road_access.h"
 
-buildings::model_t<building_burning_ruin> burning_ruin_m;
+building_burning_ruin::static_params burning_ruin_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_burning_ruin);
-void config_load_building_burning_ruin() {
-    burning_ruin_m.load();
+void building_burning_ruin::static_params::load(archive arch) {
+    fire_animations = arch.r_int("fire_animations", 1);
 }
 
 tile2i building_burning_ruin::can_be_accessed() {
@@ -36,13 +35,55 @@ tile2i building_burning_ruin::can_be_accessed() {
     return tile2i::invalid;
 }
 
-bool building_burning_ruin::update() {
-    if (base.fire_duration < 0) {
-        base.fire_duration = 0;
+// NOTE! burning_ruin cant call on_place(), so all preparing actions should
+// be executed in on_create()
+void building_burning_ruin::on_create(int orientation) {
+    building_impl::on_create(orientation);
+    base.fire_duration = (rand() % 128) + 120;
+    base.state = BUILDING_STATE_VALID;
+
+    uint8_t random = rand() % current_params().fire_animations;
+    bstring32 anim_name; anim_name.printf("fire%d", random);
+    set_animation(xstring(anim_name));
+
+    bstring32 base_name; base_name.printf("base%d", random);
+    int img_id = anim(xstring(base_name)).first_img();
+    map_building_tiles_add(id(), tile(), base.size, img_id, TERRAIN_BUILDING);
+}
+
+void building_burning_ruin::on_tick(bool refresh_only) {
+    building_impl::on_tick(refresh_only);
+
+    if (base.state == BUILDING_STATE_RUBBLE) {
+        return;
     }
 
-    base.fire_duration++;
-    if (base.fire_duration > 32) {
+    if (base.fire_duration <= 0) {
+        base.state = BUILDING_STATE_RUBBLE;
+        map_building_tiles_set_rubble(id(), tile(), size());
+    }
+}
+
+bool building_burning_ruin::can_play_animation() const {
+    return base.fire_duration > 0;
+}
+
+bool building_burning_ruin::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    draw_normal_anim(ctx, point, tile, color_mask);
+    return true;
+}
+
+bool building_burning_ruin::update() {
+    if (base.state == BUILDING_STATE_RUBBLE) { 
+        return true;
+    }
+
+    if (base.fire_duration < 0) {
+        return true;
+    }
+
+    base.fire_duration -= rand() % 16;
+    if (base.fire_duration <= 0) {
         game_undo_disable();
         base.state = BUILDING_STATE_RUBBLE;
         map_building_tiles_set_rubble(id(), tile(), size());
