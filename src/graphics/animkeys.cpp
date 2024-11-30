@@ -8,6 +8,7 @@ const xstring id_anim_t::fancy_work = "fancy_work";
 const xstring id_anim_t::preview = "preview";
 const xstring id_anim_t::work = "work";
 const xstring id_anim_t::none = "none";
+const xstring id_anim_t::fire = "fire";
 const xstring id_anim_t::poof = "poof";
 const xstring id_anim_t::walk = "walk";
 const xstring id_anim_t::death = "death";
