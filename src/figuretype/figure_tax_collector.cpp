@@ -123,28 +123,30 @@ void figure_tax_collector::figure_before_action() {
     }
 }
 
-static void tax_collector_coverage(building* b, figure *f, int &max_tax_multiplier) {
-    if (b->house_size && b->house_population > 0) {
-        int tax_multiplier = model_get_house(b->subtype.house_level)->tax_multiplier;
-        if (tax_multiplier > max_tax_multiplier) {
-            max_tax_multiplier = tax_multiplier;
-        }
-
-        if (b->subtype.house_level < HOUSE_ORDINARY_COTTAGE) {
-            f->local_data.taxman.poor_taxed++;
-        } else if (b->subtype.house_level < HOUSE_COMMON_MANOR) {
-            f->local_data.taxman.middle_taxed++;
-        } else {
-            f->local_data.taxman.reach_taxed++;
-        }
-        b->tax_collector_id = f->home()->id;
-        b->house_tax_coverage = 50;
-    }
-}
-
 int figure_tax_collector::provide_service() {
     int max_tax_rate = 0;
-    int houses_serviced = figure_provide_service(tile(), &base, max_tax_rate, tax_collector_coverage);
+    int houses_serviced = figure_provide_service(tile(), &base, max_tax_rate, [] (building *b, figure *f, int &max_tax_multiplier) {
+        if (!b->dcast_house()) {
+            return;
+        }
+
+        if (b->house_size && b->house_population > 0) {
+            int tax_multiplier = model_get_house(b->subtype.house_level)->tax_multiplier;
+            if (tax_multiplier > max_tax_multiplier) {
+                max_tax_multiplier = tax_multiplier;
+            }
+
+            if (b->subtype.house_level < HOUSE_ORDINARY_COTTAGE) {
+                f->local_data.taxman.poor_taxed++;
+            } else if (b->subtype.house_level < HOUSE_COMMON_MANOR) {
+                f->local_data.taxman.middle_taxed++;
+            } else {
+                f->local_data.taxman.reach_taxed++;
+            }
+            b->tax_collector_id = f->home()->id;
+            b->house_tax_coverage = 50;
+        }
+    });
     base.min_max_seen = max_tax_rate;
     return houses_serviced;
 }
