@@ -29,8 +29,16 @@ bool archive::isnumber(int idx) {
     return (js_isnumber((js_State*)state, idx) || js_iscnumber((js_State*)state, idx));
 }
 
+bool archive::isstring(int idx) {
+    return js_isstring((js_State *)state, idx);
+}
+
 double archive::tonumber(int idx) {
     return js_tonumber((js_State*)state, idx);
+}
+
+pcstr archive::tostring(int idx) {
+    return js_tostring((js_State *)state, idx);
 }
 
 void archive::pop(int num) {
@@ -94,11 +102,10 @@ std::vector<std::string> archive::r_array_str(pcstr name) {
     std::vector<std::string> result;
     if (js_isarray(vm, -1)) {
         int length = js_getlength(vm, -1);
-
         for (int i = 0; i < length; ++i) {
             js_getindex(vm, -1, i);
-            std::string v = js_tostring(vm, -1);
-            result.push_back(v);
+            pcstr v = js_tostring(vm, -1);
+            result.emplace_back(v);
             js_pop(vm, 1);
         }
         js_pop(vm, 1);

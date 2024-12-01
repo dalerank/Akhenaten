@@ -50,6 +50,23 @@ struct archive {
         return result;
     }
 
+    template<typename T>
+    inline void r_array_str(pcstr name, T& arr) {
+        arr.clear();
+        getproperty(-1, name);
+        if (isarray(-1)) {
+            int length = getlength(-1);
+
+            for (int i = 0; i < length; ++i) {
+                getindex(-1, i);
+                pcstr v = isstring(-1) ? tostring(-1) : "";
+                arr.push_back(v);
+                pop(1);
+            }
+        }
+        pop(1);
+    }
+
     template<typename T = int>
     static inline std::vector<T> r_array_num(archive arch) {
         std::vector<T> result;
@@ -159,7 +176,9 @@ protected:
     int getlength(int idx);
     void getindex(int idx, int i);
     bool isnumber(int idx);
+    bool isstring(int idx);
     double tonumber(int idx);
+    pcstr tostring(int idx);
     void pop(int num);
     static void pop(archive arch, int n);
     bool isobject(int idx);
