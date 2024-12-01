@@ -20,16 +20,6 @@ void window_building_draw_aqueduct(object_info* c) {
     window_building_draw_description_at(c, 16 * c->bgsize.y - 144, 141, c->aqueduct_has_water ? 1 : 2);
 }
 
-void window_building_draw_rubble(object_info* c) {
-    c->help_id = 0;
-    window_building_play_sound(c, "Wavs/ruin.wav");
-    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
-    lang_text_draw_centered(140, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-
-    lang_text_draw(41, c->rubble_building_type, c->offset.x + 32, c->offset.y + 16 * c->bgsize.y - 173, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_multiline(140, 1, c->offset + vec2i{32, 16 * c->bgsize.y - 143}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
-}
-
 void window_building_draw_wall(object_info& c) {
     window_building_play_sound(&c, "Wavs/wall.wav");
 
@@ -68,10 +58,6 @@ void terrain_info_window::init(object_info &c) {
 
     case TERRAIN_INFO_BRIDGE:
         c.help_id = 58;
-        break;
-
-    case TERRAIN_INFO_RUBBLE:
-        window_building_draw_rubble(&c);
         break;
 
     case TERRAIN_INFO_PLAZA:
@@ -190,9 +176,6 @@ bool terrain_info_window::check(object_info &c) {
 
     } else if (map_terrain_is(c.grid_offset, TERRAIN_CANAL)) {
         c.terrain_type = TERRAIN_INFO_AQUEDUCT;
-
-    } else if (map_terrain_is(c.grid_offset, TERRAIN_RUBBLE)) {
-        c.terrain_type = TERRAIN_INFO_RUBBLE;
 
     } else if (map_terrain_is(c.grid_offset, TERRAIN_WALL)) {
         c.terrain_type = TERRAIN_INFO_WALL;

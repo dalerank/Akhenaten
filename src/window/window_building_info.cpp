@@ -17,16 +17,6 @@
 #include "io/gamefiles/lang.h"
 #include "core/variant.h"
 
-void window_building_draw_burning_ruin(object_info* c) {
-    c->help_id = 0;
-    window_building_play_sound(c, "Wavs/ruin.wav");
-    outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
-    lang_text_draw_centered(111, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-
-    lang_text_draw(41, c->rubble_building_type, c->offset.x + 32, c->offset.y + 16 * c->bgsize.y - 173, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_multiline(111, 1, c->offset + vec2i{32, 16 * c->bgsize.y - 143}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
-}
-
 building_info_window::building_info_window() {
     window_building_register_handler(this);
 }
@@ -166,7 +156,6 @@ void building_info_window::init(object_info &c) {
     case BUILDING_ORACLE: window_building_draw_oracle(&c); break;
     case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: window_building_draw_triumphal_arch(&c); break;
 
-    case BUILDING_BURNING_RUIN: window_building_draw_burning_ruin(&c); break;
     case BUILDING_UNUSED_NATIVE_HUT_88: window_building_draw_native_hut(&c); break;
     case BUILDING_UNUSED_NATIVE_MEETING_89: window_building_draw_native_meeting(&c); break;
     case BUILDING_UNUSED_NATIVE_CROPS_93: window_building_draw_native_crops(&c); break;

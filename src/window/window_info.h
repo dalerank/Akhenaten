@@ -24,7 +24,7 @@ struct common_info_window : public ui::widget {
 
     void draw_tooltip(tooltip_context *c);
 
-    static int backside_texture;
+    svector<xstring, 4> open_sounds;
 };
 
 void window_info_show(const tile2i& point, bool avoid_mouse = false);

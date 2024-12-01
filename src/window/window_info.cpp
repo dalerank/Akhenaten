@@ -40,6 +40,7 @@
 #include "window/window_building_info.h"
 #include "window/window_terrain_info.h"
 #include "window/window_figure_info.h"
+#include "window/window_ruin_info.h"
 #include "window/window_city.h"
 #include "window/message_dialog.h"
 #include "widget/widget_sidebar.h"
@@ -55,8 +56,6 @@ object_info g_object_info;
 std::vector<common_info_window *> *g_window_building_handlers = nullptr;
 std::vector<common_info_window *> *g_window_figure_handlers = nullptr;
 
-int common_info_window::backside_texture = -1;
-
 struct empty_info_window : public common_info_window {
     virtual void window_info_background(object_info &c) override {
         //outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
@@ -68,6 +67,7 @@ terrain_info_window g_terrain_info_window;
 figure_info_window g_figure_info_window;
 building_info_window g_building_common_window;
 empty_info_window g_empty_info_window;
+ruin_info_window g_ruin_info_window;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_info_window);
 void config_load_info_window() {
@@ -75,6 +75,7 @@ void config_load_info_window() {
     g_empty_info_window.load("empty_info_window");
     g_terrain_info_window.load("terrain_info_window");
     g_figure_info_window.load("figure_info_window");
+    g_ruin_info_window.load("ruin_info_window");
 
     for (auto &building_info_handler: *g_window_building_handlers) {
         pcstr section = building_info_handler->section();
@@ -104,7 +105,6 @@ void object_info::reset(tile2i tile) {
     storage_show_special_orders = 0;
     go_to_advisor = {ADVISOR_NONE, ADVISOR_NONE, ADVISOR_NONE};
     building_id = map_building_at(tile);
-    rubble_building_type = map_rubble_building_type(grid_offset);
     has_reservoir_pipes = map_terrain_is(tile, TERRAIN_GROUNDWATER);
     aqueduct_has_water = !!map_canal_at(grid_offset) && ((map_image_at(tile) - image_id_from_group(GROUP_BUILDING_AQUEDUCT)) < 15);
     terrain_type = TERRAIN_INFO_EMPTY;
@@ -188,6 +188,11 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
     if (!context.ui && building_id) {
         context.ui = &g_building_common_window;
         context.building_id = building_id;
+    }
+      
+    if (!context.ui && map_terrain_is(context.grid_offset, TERRAIN_RUBBLE)) {
+        context.terrain_type = TERRAIN_INFO_RUBBLE;
+        context.ui = &g_ruin_info_window;
     }
 
     if (!context.ui && g_terrain_info_window.check(context)) {
@@ -320,7 +325,6 @@ void window_figure_register_handler(common_info_window *handler) {
 }
 
 void common_info_window::window_info_foreground(object_info &c) { 
-    //graphics_draw_from_texture(backside_texture, { 0, 0 }, screen_size());
     ui.draw(); 
 }
 
@@ -392,11 +396,11 @@ void common_info_window::load(archive arch, pcstr section) {
     if (check(g_object_info)) {
         init(g_object_info);
     }
+
+    arch.r_array_str("open_sounds", open_sounds);
 }
 
 void common_info_window::init(object_info &c) {
-    graphics_delete_saved_texture(backside_texture);
-    backside_texture = graphics_save_to_texture(backside_texture, { 0, 0 }, screen_size());
 }
 
 void common_info_window::draw_tooltip(tooltip_context *c) {

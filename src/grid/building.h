@@ -16,6 +16,8 @@ int map_building_damage_increase(int grid_offset);
 void map_building_damage_clear(int grid_offset);
 
 int map_rubble_building_type(int grid_offset);
+inline int map_rubble_building_type(tile2i tile) { return map_rubble_building_type(tile.grid_offset()); }
+
 void map_set_rubble_building_type(int grid_offset, int type);
 
 void map_building_clear(void);

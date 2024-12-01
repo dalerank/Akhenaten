@@ -76,7 +76,6 @@ struct object_info {
         e_advisor left_b = ADVISOR_NONE;
     } go_to_advisor;
 
-    int rubble_building_type;
     int storage_show_special_orders;
     struct {
         int draw_debug_path;

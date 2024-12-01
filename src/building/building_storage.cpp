@@ -305,12 +305,12 @@ struct sproperty {
     std::function<bvariant(const building_storage &, const xstring &)> handler;
 };
 
-const sproperty sproperties[] = {
-    { tags().building, tags().total_stored, [] (const building_storage &b, const xstring &) { return bvariant(b.total_stored()); }},
-    { tags().building, tags().free_space, [] (const building_storage &b, const xstring &) { return bvariant(b.freespace()); }},
-};
-
 bvariant building_storage::get_property(const xstring &domain, const xstring &name) const {
+    static const sproperty sproperties[] = {
+        { tags().building, tags().total_stored, [] (const building_storage &b, const xstring &) { return bvariant(b.total_stored()); }},
+        { tags().building, tags().free_space, [] (const building_storage &b, const xstring &) { return bvariant(b.freespace()); }},
+    };
+
     for (const auto &prop : sproperties) {
         if (prop.domain == domain && prop.name == name) {
             return prop.handler(*this, name);
