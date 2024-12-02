@@ -93,7 +93,7 @@ figure_info_window::figure_info_window() {
 }
 
 inline void figure_info_window::window_info_foreground(object_info &c) {
-    draw();
+    common_info_window::window_info_foreground(c);
 
     figure *f = c.figure_get();
     g_debug_figure_id = c.figure_get_id();
@@ -104,6 +104,11 @@ inline void figure_info_window::window_info_foreground(object_info &c) {
     }
 
     c.nfigure.drawn = 1;
+}
+
+void figure_info_window::load(archive arch, pcstr section) {
+    common_info_window::load(arch, section);
+    assert(elements.size() > 0);
 }
 
 void figure_info_window::window_info_background(object_info &c) {

@@ -1164,10 +1164,10 @@ info_window_figure_caravan_donkey = {
 	})
 }
 
-window info_window_figure_carrier = {
+window figure_carrier_info_window = {
 	ui : __baseui(figure_info_window, {
-		items					 : { type : "text", pos: [102, 158], size:[px(29), 20], font : FONT_NORMAL_BLACK_ON_DARK, rich:true },
-		phrase				 : { type : "text", pos: [90, 180], font : FONT_NORMAL_BLACK_ON_DARK, wrap:px(22), multiline:true },
+		items					 : text({pos: [102, 158], size:[px(29), 20], font : FONT_NORMAL_BLACK_ON_DARK, rich:true }),
+		phrase				 : text({pos: [90, 180], font : FONT_NORMAL_BLACK_ON_DARK, wrap:px(22), multiline:true }),
 	})
 }
 

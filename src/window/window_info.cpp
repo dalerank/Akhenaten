@@ -77,14 +77,17 @@ void config_load_info_window() {
     g_figure_info_window.load("figure_info_window");
     g_ruin_info_window.load("ruin_info_window");
 
-    for (auto &building_info_handler: *g_window_building_handlers) {
-        pcstr section = building_info_handler->section();
-        if (!section || !*section) {
-            //custom loader
-            continue;
+    auto load_configs = [] (auto &handlers) {
+        for (auto &handler : *handlers) {
+            pcstr section = handler->section();
+            if (section && *section) {
+                handler->load(section);
+            }
         }
-        building_info_handler->load(section);
-    }
+    };
+
+    load_configs(g_window_building_handlers);
+    load_configs(g_window_figure_handlers);
 
     if (g_object_info.ui) {
         window_info_show(tile2i(g_object_info.grid_offset), true);

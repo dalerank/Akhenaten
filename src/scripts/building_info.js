@@ -1424,7 +1424,7 @@ building building_clay_pit = {
   output_resource : RESOURCE_CLAY,
   progress_max : 200,
   building_size : 2,
-  production_rate : 50,
+  production_rate : 100,
   info_help_id:92,
   info_text_id:121,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
