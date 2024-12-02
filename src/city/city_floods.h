@@ -11,7 +11,7 @@ enum e_flood_state {
     FLOOD_STATE_FARMABLE = 6,
 };
 
-struct floods_data_t {
+struct floods_t {
     int season_initial;
     int duration_initial;
     int quality_initial;
@@ -30,22 +30,23 @@ struct floods_data_t {
     e_flood_state state;
     int floodplain_width; // 0 - 30
     bool has_floodplains; // 0 - 1
+
+    int fticks;
 };
 
-extern floods_data_t g_floods;
+extern floods_t g_floods;
 
 void floodplains_init();
 
 int floods_debug_period();
-int floods_fticks();
 
-extern const double CYCLES_IN_A_YEAR;
-double floods_current_cycle();
+constexpr float CYCLES_IN_A_YEAR = 9792.0f / 25.0f; // 391.68
+float floods_current_cycle();
 int floods_current_subcycle();
 bool tick_is_flood_cycle();
 int floods_start_cycle();
 int floods_end_cycle();
-double floods_period_length(bool upcoming = false);
+float floods_period_length(bool upcoming = false);
 
 bool floodplains_is(int state);
 

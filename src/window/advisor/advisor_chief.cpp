@@ -1,6 +1,6 @@
 #include "advisor_chief.h"
 
-#include "city/floods.h"
+#include "city/city_floods.h"
 #include "scenario/request.h"
 
 #include "city/city.h"

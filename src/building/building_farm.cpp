@@ -19,7 +19,7 @@
 #include "grid/building_tiles.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
-#include "city/floods.h"
+#include "city/city_floods.h"
 #include "io/gamefiles/lang.h"
 #include "config/config.h"
 #include "window/building/common.h"

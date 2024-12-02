@@ -71,7 +71,7 @@
 #include "building/count.h"
 #include "chunks.h"
 #include "city/coverage.h"
-#include "city/floods.h"
+#include "city/city_floods.h"
 #include "io/io.h"
 #include "io/manager.h"
 

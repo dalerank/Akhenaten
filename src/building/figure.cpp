@@ -12,7 +12,7 @@
 #include "building/building_work_camp.h"
 #include "city/buildings.h"
 #include "city/entertainment.h"
-#include "city/floods.h"
+#include "city/city_floods.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "core/profiler.h"

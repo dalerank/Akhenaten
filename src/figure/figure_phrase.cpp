@@ -2,7 +2,7 @@
 
 #include "building/building.h"
 #include "building/building_bazaar.h"
-#include "city/floods.h"
+#include "city/city_floods.h"
 #include "city/constants.h"
 #include "city/city_health.h"
 #include "city/ratings.h"

@@ -28,7 +28,7 @@
 #include "building/construction/build_planner.h"
 #include "building/count.h"
 #include "city/coverage.h"
-#include "city/floods.h"
+#include "city/city_floods.h"
 #include "sound/sound_city.h"
 #include "sound/sound.h"
 #include "core/random.h"
@@ -1117,7 +1117,7 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x + rc_curr + 54, y + 25, 5, ":", g_floods.state); // current cycle
 
         debug_text(ctx, str, x, y + 35, 60, "debug:", floods_debug_period());
-        debug_text(ctx, str, x, y + 45, 60, "ftick:", floods_fticks());
+        debug_text(ctx, str, x, y + 45, 60, "ftick:", g_floods.fticks);
 
         y += 50;
 

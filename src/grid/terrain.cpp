@@ -1,7 +1,7 @@
 #include "terrain.h"
 #include "io/io_buffer.h"
 
-#include "city/floods.h"
+#include "city/city_floods.h"
 #include "core/game_environment.h"
 #include "floodplain.h"
 #include "grid/grid.h"

@@ -1,4 +1,4 @@
-#include "floods.h"
+#include "city_floods.h"
 
 #include "building/building.h"
 #include "core/calc.h"
@@ -13,7 +13,7 @@
 
 #include <cmath>
 
-floods_data_t g_floods;
+floods_t g_floods;
 
 static int flood_multiplier_grow = 20;
 static int randomizing_int_1 = 0;
@@ -37,18 +37,13 @@ void floodplains_init() {
 }
 
 static int debug_year_period = 99;
-static int fticks = 0;
+
 int floods_debug_period() {
     return debug_year_period;
 }
 
-int floods_fticks() {
-    return fticks;
-}
-
-const float CYCLES_IN_A_YEAR = 9792.0f / 25.0f; // 391.68
 float floods_current_cycle() {
-    return (double)(gametime().absolute_tick(true) + 1) / 25.0f;
+    return (gametime().absolute_tick(true) + 1) / 25.0f;
 }
 
 int floods_current_subcycle() {
@@ -60,8 +55,8 @@ bool tick_is_flood_cycle() {
 }
 int floods_start_cycle() {
     auto& data = g_floods;
-    double cycles_so_far = CYCLES_IN_A_YEAR * gametime().years_since_start();
-    double cycle_start = ((double)data.season * 105.0f) / 100.0f + 15.0f + cycles_so_far - 0.5f;
+    float cycles_so_far = CYCLES_IN_A_YEAR * gametime().years_since_start();
+    float cycle_start = ((float)data.season * 105.0f) / 100.0f + 15.0f + cycles_so_far - 0.5f;
     return (int)cycle_start;
 }
 
@@ -76,6 +71,7 @@ float floods_period_length(bool upcoming) {
         return (float)data.quality_next * (float)data.floodplain_width * 0.01f;
     return (float)data.quality_last * (float)data.floodplain_width * 0.01f;
 }
+
 int cycle_compare(int c2, bool relative = true) {
     double diff = c2 - floods_current_cycle();
     if (relative) {
@@ -271,13 +267,13 @@ void floodplains_tick_update(bool calc_only) {
     // update internal tick variables
     debug_year_period = ((cycle_start - 1) * 25) - (cycle * 25 + subcycle);
     if (cycle < cycle_start) {
-        fticks = 0;
+        g_floods.fticks = 0;
     } else if (cycle >= cycle_start && cycle < cycle_start + flooding_period) {
-        fticks = (cycle - cycle_start) * 25 + subcycle + 1;
+        g_floods.fticks = (cycle - cycle_start) * 25 + subcycle + 1;
     } else if (cycle >= cycle_end - flooding_period && cycle <= cycle_end) {
-        fticks = (cycle_end - cycle) * 25 - subcycle - 1;
+        g_floods.fticks = (cycle_end - cycle) * 25 - subcycle - 1;
     } else {
-        fticks = (flooding_period) * 25;
+        g_floods.fticks = (flooding_period) * 25;
     }
 
     if (calc_only) {

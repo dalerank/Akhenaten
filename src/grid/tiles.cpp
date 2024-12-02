@@ -26,7 +26,7 @@
 #include "building/building_plaza.h"
 #include "building/building_road.h"
 #include "city/city.h"
-#include "city/floods.h"
+#include "city/city_floods.h"
 #include "core/calc.h"
 #include "scenario/map.h"
 #include "game/time.h"

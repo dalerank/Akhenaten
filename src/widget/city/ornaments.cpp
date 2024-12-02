@@ -11,7 +11,7 @@
 #include "building/building_animation.h"
 #include "building/monument_mastaba.h"
 #include "city/buildings.h"
-#include "city/floods.h"
+#include "city/city_floods.h"
 #include "city/labor.h"
 #include "city/ratings.h"
 #include "core/direction.h"
