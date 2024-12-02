@@ -59,6 +59,7 @@ void figure_carrier_info_window::init(object_info &c) {
     }
 
     if (c.nfigure.phrase.valid()) {
-        ui["phrase"] = ui::str(c.nfigure.phrase.group, c.nfigure.phrase.id);
+        pcstr phrase = ui::str(c.nfigure.phrase);
+        ui["phrase"] = phrase;
     }
 }

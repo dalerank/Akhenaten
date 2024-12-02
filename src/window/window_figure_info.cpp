@@ -122,12 +122,7 @@ void figure_info_window::window_info_background(object_info &c) {
     ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
 
     for (int i = 0; i < c.nfigure.ids.size(); i++) {
-        bstring64 btn_id; btn_id.printf("button_figure%d", i);
-        ui[btn_id].select(i == c.nfigure.selected_index);
-    }
-
-    if (c.can_play_sound) {
-        play_figure_phrase(c);
+        ui[{"button_figure", i}].select(i == c.nfigure.selected_index);
     }
 
     e_overlay foverlay = f->dcast()->get_overlay();
@@ -147,6 +142,10 @@ void figure_info_window::init(object_info &c) {
 
     prepare_figures(c);
     c.nfigure.draw_debug_path = 1;
+
+    if (c.can_play_sound) {
+        play_figure_phrase(c);
+    }
 
     int image_id = f->type;
     if (f->action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE || f->action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {

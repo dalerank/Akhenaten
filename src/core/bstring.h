@@ -42,6 +42,7 @@ public:
     }
 
     inline bstring(pcstr s1) { concat(s1); }
+    inline bstring(pcstr s1, int v, pcstr fmt = nullptr) { snprintf(_data, _size, fmt ? fmt : "%s%d", s1, v); }
     inline bstring(pcstr s1, pcstr s2) { concat(s1, s2); }
     inline bstring(pcstr s1, pcstr s2, pcstr s3) { concat(s1, s2, s3); }
     inline bstring(pcstr s1, pcstr s2, pcstr s3, pcstr s4) { concat(s1, s2, s3, s4); }
