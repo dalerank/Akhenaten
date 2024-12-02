@@ -1273,7 +1273,7 @@ building_warship_wharf = {
   labor_category : LABOR_CATEGORY_MILITARY,
 }
 
-building_fishing_wharf = {
+building building_fishing_wharf = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:18 },
     base : { pack:PACK_TERRAIN, id:18 },
@@ -1283,7 +1283,7 @@ building_fishing_wharf = {
     work_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:46, offset:3, max_frames:24, duration:4 },
     wait_n : { pos:[85, 20], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 },
     wait_w : { pos:[85, 7], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:3 },
-    wait_s : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 },
+    wait_s : { pos:[50, 17], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 },
     wait_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:4 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
