@@ -68,7 +68,7 @@ void info_window_work_camp::init(object_info &c) {
 
 building* building_work_camp::determine_worker_needed() {
     return building_first([] (building &b) {
-        const bool floodplain_farm = floodplains_is(FLOOD_STATE_FARMABLE) && building_is_floodplain_farm(b);
+        const bool floodplain_farm = g_floods.state_is(FLOOD_STATE_FARMABLE) && building_is_floodplain_farm(b);
         if (floodplain_farm) {
             return (!b.data.industry.worker_id && b.data.industry.labor_days_left <= 47 && !b.num_workers);
         }

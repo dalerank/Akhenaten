@@ -557,7 +557,7 @@ void city_religion_t::perform_major_blessing(e_god god) {
             return;
         } else {
             // better next flood quality
-            floodplains_adjust_next_quality((anti_scum_random_15bit() % 3 * 5 + 10) * 2);
+            g_floods.adjust_next_quality((anti_scum_random_15bit() % 3 * 5 + 10) * 2);
             city_message_god_post(GOD_OSIRIS, true, MESSAGE_BLESSING_OSIRIS_FLOOD, 0, 0);
             return;
         }
@@ -608,7 +608,7 @@ void city_religion_t::perform_minor_blessing(e_god god) {
         randm = randm & 0x80000003;
         if ((int)randm < 0)
             randm = (randm - 1 | 0xfffffffc) + 1;
-        floodplains_adjust_next_quality(randm * 5 + 5);
+        g_floods.adjust_next_quality(randm * 5 + 5);
         city_message_post(true, MESSAGE_SMALL_BLESSING_OSIRIS, 0, 0);
         break;
 
@@ -661,7 +661,7 @@ void city_religion_t::perform_major_curse(e_god god) {
     case GOD_OSIRIS:
         if (anti_scum_random_bool()) {
             // worse flood quality
-            floodplains_adjust_next_quality((-2 - anti_scum_random_15bit() % 3) * 10);
+            g_floods.adjust_next_quality((-2 - anti_scum_random_15bit() % 3) * 10);
             city_message_post(true, MESSAGE_CURSE_OSIRIS_1, 0, 0);
             return;
         } else {
@@ -745,7 +745,7 @@ void city_religion_t::perform_minor_curse(e_god god) {
             if ((int)randm < 0) {
                 randm = (randm - 1 | 0xfffffffc) + 1;
             }
-            floodplains_adjust_next_quality((-1 - randm) * 5);
+            g_floods.adjust_next_quality((-1 - randm) * 5);
             city_message_god_post(GOD_OSIRIS, true, MESSAGE_SMALL_CURSE_OSIRIS, 0, 0);
             return;
         }

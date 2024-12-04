@@ -729,7 +729,7 @@ void GamestateIO::start_loaded_file() {
     building_maintenance_check_kingdome_access();
 
     // tiles
-    floodplains_init();
+    g_floods.init();
     map_water_rebuild_shores();
     map_tiles_update_floodplain_images();
     map_tiles_river_refresh_entire();

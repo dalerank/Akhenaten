@@ -131,7 +131,7 @@ void game_t::update_impl(int ticks) {
     game_undo_reduce_time_available();
 
     g_tutorials_flags.update_starting_message();
-    floodplains_tick_update(false);
+    g_floods.tick_update(false);
 
     update_city(ticks);
 

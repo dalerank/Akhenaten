@@ -237,7 +237,7 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
     // nilometr
     {
         std::pair<int, int> nilometr_status;
-        int flood_quality = floodplains_expected_quality();
+        int flood_quality = g_floods.expected_quality();
         if (flood_quality == 100) { nilometr_status = {197, FONT_NORMAL_BLACK_ON_DARK}; }
         else if (flood_quality > 75) { nilometr_status = {196, FONT_NORMAL_BLACK_ON_DARK}; }
         else if (flood_quality > 50) { nilometr_status = {195, FONT_NORMAL_BLACK_ON_DARK}; }
@@ -249,7 +249,7 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
         ui["nilometr_info"].font(nilometr_status.second);
 
         if (flood_quality > 0) {
-            int flood_month = floodplains_expected_month();
+            int flood_month = g_floods.expected_month();
             ui["nilometr_info2"].text((pcstr)lang_get_string(61, 204 + flood_month));
             ui["nilometr_info2"].font(FONT_NORMAL_BLACK_ON_DARK);
         } else {

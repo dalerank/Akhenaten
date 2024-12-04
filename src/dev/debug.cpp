@@ -863,9 +863,9 @@ void draw_debug_ui(int x, int y) {
     /////// TIME
     if (g_debug_show_opts[e_debug_show_game_time]) {
         debug_text(ctx, str, x, y + 15, 50, "tick:", gametime().tick);
-        debug_text(ctx, str, x + 80, y + 15, 50, "iscycle:", tick_is_flood_cycle());
-        debug_text(ctx, str, x, y + 25, 50, "cycle:", floods_current_cycle());
-        debug_text(ctx, str, x + 90, y + 25, 60, "frame:", floods_current_subcycle());
+        debug_text(ctx, str, x + 80, y + 15, 50, "iscycle:", g_floods.is_start_cycle());
+        debug_text(ctx, str, x, y + 25, 50, "cycle:", g_floods.current_cycle());
+        debug_text(ctx, str, x + 90, y + 25, 60, "frame:", g_floods.current_subcycle());
 
         debug_text(ctx, str, x, y + 35, 50, "day:", gametime().day);
         debug_text(ctx, str, x, y + 45, 50, "month:", gametime().month);
@@ -1067,12 +1067,12 @@ void draw_debug_ui(int x, int y) {
 
     /////// FLOODS
     if (g_debug_show_opts[e_debug_show_floods]) {
-        double _c_curr = floods_current_cycle();
-        double _c_start = floods_start_cycle();
-        double _c_end = floods_end_cycle();
+        float _c_curr = g_floods.current_cycle();
+        float _c_start = g_floods.start_cycle();
+        float _c_end = g_floods.end_cycle();
 
-        int _c_period_last = floods_period_length(false);
-        int _c_period_next = floods_period_length(true);
+        int _c_period_last = g_floods.period_length(false);
+        int _c_period_next = g_floods.period_length(true);
 
         float rc_curr = fmod(_c_curr, CYCLES_IN_A_YEAR);
         float rc_start = fmod(_c_start, CYCLES_IN_A_YEAR);
@@ -1101,7 +1101,7 @@ void draw_debug_ui(int x, int y) {
                 || (i > rc_start + CYCLES_IN_A_YEAR && i < rc_end + CYCLES_IN_A_YEAR))
                 text_draw(dot, x + i, y + 15, FONT_SMALL_PLAIN, COLOR_RED);
 
-            if (floods_debug_period() > 0) {
+            if (g_floods.debug_period() > 0) {
                 if (abs_i > _c_start + _c_period_next && abs_i < _c_end - _c_period_next)
                     text_draw(dot, x + i, y + 15, FONT_SMALL_PLAIN, COLOR_GREEN);
             } else {
@@ -1116,19 +1116,19 @@ void draw_debug_ui(int x, int y) {
         debug_text_float(str, x + rc_curr + 5, y + 25, 0, "", _c_curr);  // current cycle
         debug_text(ctx, str, x + rc_curr + 54, y + 25, 5, ":", g_floods.state); // current cycle
 
-        debug_text(ctx, str, x, y + 35, 60, "debug:", floods_debug_period());
+        debug_text(ctx, str, x, y + 35, 60, "debug:", g_floods.debug_period());
         debug_text(ctx, str, x, y + 45, 60, "ftick:", g_floods.fticks);
 
         y += 50;
 
         int cl = 60;
         debug_text(ctx, str, x, y + 15, cl + 15, "CURRENT:", _c_curr);             // current cycle
-        debug_text(ctx, str, x + 105, y + 15, 10, "/", floods_current_subcycle()); // current cycle
+        debug_text(ctx, str, x + 105, y + 15, 10, "/", g_floods.current_subcycle()); // current cycle
         debug_text(ctx, str, x, y + 25, cl, "t-49:", _c_start - 49);               // 49 cycles prior
         debug_text(ctx, str, x, y + 35, cl, "t-28:", _c_start - 28);               // 28 cycles prior
         debug_text(ctx, str, x, y + 45, cl, "  START", _c_start);                  // flood start
 
-        if (floods_debug_period() > 0) {
+        if (g_floods.debug_period() > 0) {
             debug_text(ctx, str, x, y + 55, cl, "rest:", _c_start + _c_period_next);  // first rest period
             debug_text(ctx, str, x, y + 65, cl, "retract:", _c_end - _c_period_next); // first rest period
         } else {

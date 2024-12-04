@@ -101,16 +101,16 @@ static void map_floodplain_update_inundation_row(int grid_offset, int order) {
     int local_tick_bound = calc_bound(ticks - order * 25, 0, 25);
     bool flooded = randm % 25 < local_tick_bound;
 
-    // tile is updating!
-    if (flooded == map_terrain_is(grid_offset, TERRAIN_WATER)) {
-        return;
-    }
-
     int b_id = map_building_at(grid_offset);
     building_farm* farm = building_get(b_id)->dcast_farm();
 
     // tile is FLOODING
     if (floodplain_is_flooding == 1) {
+        // tile is updating!
+        if (flooded == map_terrain_is(grid_offset, TERRAIN_WATER)) {
+            return;
+        }
+
         map_terrain_add(grid_offset, TERRAIN_WATER);
 
         map_soil_set_depletion(grid_offset, 0);

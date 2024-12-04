@@ -32,26 +32,37 @@ struct floods_t {
     bool has_floodplains; // 0 - 1
 
     int fticks;
+    int debug_year_period = 99;
+    int flood_multiplier_grow = 20;
+    int randomizing_int_1 = 0;
+    int randomizing_int_2 = 0;
+    int force_inundation = 0;
+    int force_inundation_tick = 0;
+
+    int current_subcycle();
+    bool is_start_cycle();
+    void init();
+    int debug_period();
+    float current_cycle();
+    int start_cycle();
+    int end_cycle();
+    float period_length(bool upcoming = false);
+    int cycle_compare(int c2, bool relative = true);
+    bool cycle_is(int c2, bool relative = true);
+    bool state_is(int state);
+    void adjust_next_quality(int quality);
+    int expected_quality();
+    int expected_month();
+
+    void reset_farms();
+    void cycle_states_recalc();
+    void update_next_flood_params();
+    void tick_update(bool calc_only);
 };
 
 extern floods_t g_floods;
 
-void floodplains_init();
-
-int floods_debug_period();
-
 constexpr float CYCLES_IN_A_YEAR = 9792.0f / 25.0f; // 391.68
-float floods_current_cycle();
-int floods_current_subcycle();
-bool tick_is_flood_cycle();
-int floods_start_cycle();
-int floods_end_cycle();
-float floods_period_length(bool upcoming = false);
 
-bool floodplains_is(int state);
 
-void floodplains_adjust_next_quality(int quality);
-int floodplains_expected_quality();
-int floodplains_expected_month();
 
-void floodplains_tick_update(bool calc_only);

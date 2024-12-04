@@ -148,7 +148,7 @@ void building_farm::draw_workers(painter &ctx, building* b, tile2i tile, vec2i p
     int random_seed = 1234.567f * (1 + gametime().day) * map_random_get(b->tile.grid_offset());
     int d = random_seed % 8;
     if (building_is_floodplain_farm(*b)) {
-        if (floodplains_is(FLOOD_STATE_IMMINENT)) {
+        if (g_floods.state_is(FLOOD_STATE_IMMINENT)) {
             //int random_x = random_seed % 3;
             //int random_y = int(1234.567f * random_seed) % 3;
             //auto coords = farm_tile_coords(x, y, random_x, random_y);
@@ -233,15 +233,13 @@ static bool farm_harvesting_month_for_produce(int resource_id, int month) {
 
 bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
     if (floodplains) {
-        float current_cycle = floods_current_cycle();
-        float start_cycle = floods_start_cycle();
+        float current_cycle = g_floods.current_cycle();
+        float start_cycle = g_floods.start_cycle();
         float harvest_cycle = start_cycle - 28.0f;
-        return floodplains_is(FLOOD_STATE_IMMINENT) && (current_cycle >= harvest_cycle);
+        return g_floods.state_is(FLOOD_STATE_IMMINENT) && (current_cycle >= harvest_cycle);
     } else {
-        if (gametime().day < 2 && farm_harvesting_month_for_produce(resource_id, gametime().month))
-            return true;
-
-        return false;
+        const bool result = gametime().day < 2 && farm_harvesting_month_for_produce(resource_id, gametime().month);
+        return result;
     }
 }
 

@@ -178,7 +178,7 @@ sound_key figure_worker::phrase_key() const {
         keys.push_back("going_to_workplace");
     }
 
-    if (!floodplains_is(FLOOD_STATE_FARMABLE)) {
+    if (!g_floods.state_is(FLOOD_STATE_FARMABLE)) {
         keys.push_back("farm_is_flooded");
     }
 
