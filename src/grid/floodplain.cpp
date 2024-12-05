@@ -28,14 +28,14 @@ tile_cache floodplain_tiles_caches_by_row[MAX_FLOODPLAIN_ROWS + 1];
 tile_cache floodplain_tiles_random;
 tile_cache floodplain_tiles_local;
 
-void foreach_floodplain_row(int row, void (*callback)(int grid_offset, int order)) {
+void foreach_floodplain_row(int is_flooding, int row, void (*callback)(int is_flooding, int grid_offset, int order)) {
     if (row < 0 || row > MAX_FLOODPLAIN_ROWS) {
         return;
     }
 
     auto &cache = floodplain_tiles_caches_by_row[row];
     for (const auto &grid_offset: cache) {
-        callback(grid_offset, row);
+        callback(is_flooding, grid_offset, row);
     }
 }
 
@@ -45,8 +45,8 @@ grid_xx g_terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
 grid_xx g_terrain_floodplain_max_fertile = {0, {FS_UINT8, FS_UINT8}};
 grid_xx g_terrain_floodplain_flood_shore = {0, {FS_UINT8, FS_UINT8}};
 
-int floodplain_growth_advance = 0;
 void map_floodplain_advance_growth() {
+    static int floodplain_growth_advance = 0;
     // do groups of 12 rows at a time. every 12 cycle, do another pass over them.
     if (config_get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
         //foreach_floodplain_row(0 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
@@ -65,12 +65,12 @@ void map_floodplain_advance_growth() {
         int size = std::min(floodplain_tiles_random.size() / 12, floodplain_tiles_local.size());
         for (int i = 0; i < size; ++i) {
             int grid_offset = floodplain_tiles_local[i];
-            map_floodplain_adv_growth_tile(grid_offset, 0);
+            map_floodplain_adv_growth_tile(0, grid_offset, 0);
         }
     } else {
-        foreach_floodplain_row(0 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
-        foreach_floodplain_row(12 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
-        foreach_floodplain_row(24 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
+        foreach_floodplain_row(0, 0 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
+        foreach_floodplain_row(0, 12 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
+        foreach_floodplain_row(0, 24 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
 
         floodplain_growth_advance++;
         if (floodplain_growth_advance >= 12) {
@@ -92,8 +92,7 @@ void map_floodplain_sub_growth() {
     }
 }
 
-int floodplain_is_flooding = 0;
-static void map_floodplain_update_inundation_row(int grid_offset, int order) {
+static void map_floodplain_update_inundation_row(int floodplain_is_flooding, int grid_offset, int order) {
     // TODO: I can not find the way the OG game determines which tile to update.
     //  I know it's deterministic, so I just used the random grid for now.
     int randm = map_random_get(grid_offset);
@@ -187,12 +186,11 @@ static void map_floodplain_update_inundation_row(int grid_offset, int order) {
 }
 
 void map_floodplain_update_inundation(int leading_row, int is_flooding, int flooding_ticks) {
-    floodplain_is_flooding = is_flooding;
-    if (floodplain_is_flooding == 0) {
+    if (is_flooding == 0) {
         return;
     }
     // no need to update every single row -- only update the "leading" shore
-    foreach_floodplain_row(29 - leading_row, map_floodplain_update_inundation_row);
+    foreach_floodplain_row(is_flooding, 29 - leading_row, map_floodplain_update_inundation_row);
 }
 
 int map_floodplain_rebuild_rows() {
@@ -364,7 +362,7 @@ void set_floodplain_land_tiles_image(int grid_offset, bool force) {
     map_property_mark_draw_tile(grid_offset);
 }
 
-void map_floodplain_adv_growth_tile(int grid_offset, int /*order*/) {
+void map_floodplain_adv_growth_tile(int _, int grid_offset, int /*order*/) {
     if (map_terrain_is(grid_offset, TERRAIN_WATER) || map_terrain_is(grid_offset, TERRAIN_BUILDING)
         || map_terrain_is(grid_offset, TERRAIN_ROAD) || map_terrain_is(grid_offset, TERRAIN_CANAL)) {
         map_set_floodplain_growth(grid_offset, 0);
@@ -458,16 +456,16 @@ void set_floodplain_edges_image(int grid_offset) {
 }
 
 void map_tiles_update_floodplain_images() {
-    auto callback = [] (int grid_offset, int order) { map_refresh_river_image_at(grid_offset, true); };
+    auto callback = [] (int flooding, int grid_offset, int order) { map_refresh_river_image_at(grid_offset, true); };
     if (config_get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
         for (int i = 0; i < 12; ++i) {
-            foreach_floodplain_row(0 + i, callback);
+            foreach_floodplain_row(0, 0 + i, callback);
         }
     } else {
         for (int i = 0; i < 12; ++i) {
-            foreach_floodplain_row(0 + i, callback);
-            foreach_floodplain_row(12 + i, callback);
-            foreach_floodplain_row(24 + i, callback);
+            foreach_floodplain_row(0, 0 + i, callback);
+            foreach_floodplain_row(0, 12 + i, callback);
+            foreach_floodplain_row(0, 24 + i, callback);
         }
     }
 }

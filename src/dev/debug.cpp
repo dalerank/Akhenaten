@@ -1152,12 +1152,13 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x, y + 175, cl, "quality_next:", g_floods.quality_next);
         debug_text(ctx, str, x, y + 185, cl, "quality_last:", g_floods.quality_last);
 
-        cl = 60;
+        cl = 100;
         debug_text(ctx, str, x, y + 205, cl, "progress:", g_floods.flood_progress);   // status 30 (???)
         debug_text(ctx, str, x, y + 215, cl, "(unk01):", g_floods.unk01);             // ???
         debug_text(ctx, str, x, y + 225, cl, "state:", g_floods.state);               // floodplains state
         debug_text(ctx, str, x, y + 235, cl, "width:", g_floods.floodplain_width);    // status 10 (???)
         debug_text(ctx, str, x, y + 245, cl, "hasplains:", g_floods.has_floodplains); // status 10 (???)
+        debug_text(ctx, str, x, y + 255, cl, "force_inundation:", g_floods.force_inundation); // status 10 (???)
         y += 350;
     }
 

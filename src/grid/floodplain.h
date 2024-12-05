@@ -13,7 +13,7 @@ enum e_fert_type {
 
 extern tile_cache floodplain_tiles_cache;
 
-void foreach_floodplain_row(int row, void (*callback)(int grid_offset, int order));
+void foreach_floodplain_row(int is_flooding, int row, void (*callback)(int flooding, int grid_offset, int order));
 int map_floodplain_rebuild_rows();
 void map_floodplain_rebuild_shores();
 int map_get_floodplain_edge(tile2i tile);
@@ -31,7 +31,7 @@ void map_update_tile_fertility(int grid_offset, int delta);
 void map_update_area_fertility(int x, int y, int size, int delta);
 void set_floodplain_land_tiles_image(int grid_offset, bool force);
 inline void set_floodplain_land_tiles_image(int grid_offset) { set_floodplain_land_tiles_image(grid_offset, false); }
-void map_floodplain_adv_growth_tile(int grid_offset, int order);
+void map_floodplain_adv_growth_tile(int _, int grid_offset, int order);
 void map_floodplain_sub_growth_tile(int grid_offset, int order);
 void map_image_set_road_floodplain(int grid_offset);
 void set_floodplain_edges_image(int grid_offset);
