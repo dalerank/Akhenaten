@@ -9,9 +9,9 @@
 #include "grid/random.h"
 #include "grid/terrain.h"
 #include "input/scroll.h"
+#include "city/city_buildings.h"
 #include "scenario/scenario.h"
 #include "game/game.h"
-#include "js/js_game.h"
 #include "dev/debug.h"
 
 static const color ENEMY_COLOR_BY_CLIMATE[] = {COLOR_MINIMAP_ENEMY_CENTRAL, COLOR_MINIMAP_ENEMY_NORTHERN, COLOR_MINIMAP_ENEMY_DESERT};

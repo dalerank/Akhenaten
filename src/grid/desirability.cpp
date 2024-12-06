@@ -10,6 +10,7 @@
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
 #include "scenario/map.h"
+#include "city/city.h"
 
 #include "js/js_game.h"
 

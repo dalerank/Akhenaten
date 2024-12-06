@@ -8,6 +8,7 @@
 #include "window/building/common.h"
 #include "city/labor.h"
 #include "city/warnings.h"
+#include "city/city_buildings.h"
 #include "figure/figure.h"
 #include "building/count.h"
 #include "game/game.h"

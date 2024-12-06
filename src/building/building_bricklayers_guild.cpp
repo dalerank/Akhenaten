@@ -4,7 +4,7 @@
 #include "building/count.h"
 #include "building/monuments.h"
 #include "city/object_info.h"
-#include "city/city_resource.h"
+#include "city/city.h"
 #include "city/labor.h"
 #include "core/random.h"
 #include "core/calc.h"

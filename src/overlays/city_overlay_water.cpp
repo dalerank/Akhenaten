@@ -8,7 +8,7 @@
 #include "graphics/graphics.h"
 #include "building/building.h"
 #include "widget/city/tile_draw.h"
-#include "core/vec2i.h"
+#include "city/city_buildings.h"
 #include "figure/figure.h"
 #include "widget/city/tile_draw.h"
 

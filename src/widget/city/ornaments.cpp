@@ -14,6 +14,7 @@
 #include "city/city_floods.h"
 #include "city/labor.h"
 #include "city/ratings.h"
+#include "city/city_buildings.h"
 #include "core/direction.h"
 #include "game/time.h"
 #include "graphics/graphics.h"

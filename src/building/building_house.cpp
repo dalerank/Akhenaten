@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "core/object_property.h"
+#include "city/city.h"
 #include "city/warnings.h"
 #include "city/population.h"
 #include "city/city_resource.h"

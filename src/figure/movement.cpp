@@ -18,6 +18,7 @@
 #include "grid/road_access.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
+#include "city/city_buildings.h"
 #include "config/config.h"
 
 #include <algorithm>

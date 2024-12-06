@@ -10,6 +10,7 @@
 #include "graphics/color.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "city/city_buildings.h"
 #include "game/state.h"
 
 static int terrain_on_routing_overlay() {

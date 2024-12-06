@@ -11,6 +11,7 @@
 #include "city/city_health.h"
 #include "city/military.h"
 #include "city/city_resource.h"
+#include "city/city_resource.h"
 #include "city/city_fishing_points.h"
 #include "city/map.h"
 #include "city/coverage.h"
@@ -21,6 +22,7 @@
 #include "grid/point.h"
 #include "city/city_festival.h"
 #include "grid/desirability.h"
+#include "city/city_buildings.h"
 
 struct empire_city;
 

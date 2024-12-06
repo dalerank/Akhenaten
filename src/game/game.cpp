@@ -49,6 +49,7 @@
 #include "city/sentiment.h"
 #include "city/city_floods.h"
 #include "city/population.h"
+#include "city/city_desirability.h"
 #include "city/message.h"
 #include "building/maintenance.h"
 #include "building/industry.h"

@@ -6,6 +6,7 @@
 #include "city/object_info.h"
 #include "city/city_resource.h"
 #include "city/labor.h"
+#include "city/city_buildings.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "game/time.h"

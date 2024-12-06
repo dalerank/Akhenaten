@@ -19,9 +19,10 @@
 #include "building/building_storage_yard.h"
 #include "building/building_road.h"
 #include "city/buildings.h"
+#include "city/city_buildings.h"
 #include "city/finance.h"
 #include "city/city_resource.h"
-#include "city/warning.h"
+#include "city/warnings.h"
 #include "clear.h"
 #include "figure/formation_legion.h"
 #include "game/undo.h"
@@ -41,7 +42,7 @@
 #include "grid/figure.h"
 #include "config/config.h"
 #include "routed.h"
-#include "city/warnings.h"
+#include "city/city.h"
 
 enum e_place_reservoir {
     PLACE_RESERVOIR_BLOCKED = -1,

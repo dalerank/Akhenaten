@@ -19,6 +19,7 @@
 #include "routing.h"
 #include "scenario/map.h"
 #include "figure/route.h"
+#include "city/city_buildings.h"
 
 static int get_land_type_citizen_building(int grid_offset) {
     building* b = building_at(grid_offset);

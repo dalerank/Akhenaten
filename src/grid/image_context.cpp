@@ -1,6 +1,6 @@
 #include "image_context.h"
 
-#include "building/building.h"
+#include "city/city_buildings.h"
 #include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/elevation.h"
@@ -478,12 +478,12 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES]) {
             tiles[i] = 1;
         } else if (map_terrain_is(offset, TERRAIN_BUILDING)) {
             building* b = building_at(offset);
-            if (b->type == BUILDING_GRANARY) {
-                tiles[i] = (offset == b->tile.grid_offset() + GRID_OFFSET(1, 0)) ? 1 : 0;
-                tiles[i] |= (offset == b->tile.grid_offset() + GRID_OFFSET(0, 1)) ? 1 : 0;
-                tiles[i] |= (offset == b->tile.grid_offset() + GRID_OFFSET(2, 1)) ? 1 : 0;
-                tiles[i] |= (offset == b->tile.grid_offset() + GRID_OFFSET(1, 2)) ? 1 : 0;
-            }
+            //if (b->type == BUILDING_GRANARY) {
+            //    tiles[i] = (offset == b->tile.grid_offset() + GRID_OFFSET(1, 0)) ? 1 : 0;
+            //    tiles[i] |= (offset == b->tile.grid_offset() + GRID_OFFSET(0, 1)) ? 1 : 0;
+            //    tiles[i] |= (offset == b->tile.grid_offset() + GRID_OFFSET(2, 1)) ? 1 : 0;
+            //    tiles[i] |= (offset == b->tile.grid_offset() + GRID_OFFSET(1, 2)) ? 1 : 0;
+            //}
         }
     }
 }
@@ -493,6 +493,7 @@ const terrain_image* map_image_context_get_dirt_road(int grid_offset) {
     set_tiles_road(grid_offset, tiles);
     return get_image(CONTEXT_DIRT_ROAD, tiles);
 }
+
 const terrain_image* map_image_context_get_paved_road(int grid_offset) {
     int tiles[MAX_TILES];
     set_tiles_road(grid_offset, tiles);

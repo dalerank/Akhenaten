@@ -7,7 +7,7 @@
 #include "widget/city/building_ghost.h"
 #include "widget/city/ornaments.h"
 #include "window/building/common.h"
-#include "city/finance.h"
+#include "city/city.h"
 #include "city/warnings.h"
 #include "graphics/view/view.h"
 #include "graphics/view/lookup.h"

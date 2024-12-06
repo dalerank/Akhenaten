@@ -10,6 +10,7 @@
 #include "io/io_buffer.h"
 #include "grid/terrain.h"
 #include "building/building.h"
+#include "city/city_buildings.h"
 
 #define MAX_QUEUE 1000
 

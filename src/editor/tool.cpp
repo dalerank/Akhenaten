@@ -3,6 +3,7 @@
 #include "building/construction/routed.h"
 #include "building/building_road.h"
 #include "city/warning.h"
+#include "city/city_buildings.h"
 #include "core/random.h"
 #include "editor/tool_restriction.h"
 #include "game/undo.h"

@@ -1,7 +1,7 @@
 #include "building_burning_ruin.h"
 
 #include "game/undo.h"
-#include "city/labor.h"
+#include "city/city.h"
 #include "core/random.h"
 #include "grid/building_tiles.h"
 #include "grid/terrain.h"

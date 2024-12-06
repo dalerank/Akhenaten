@@ -157,7 +157,7 @@ public:
         uint8_t barracks_priority;
     } subtype;
     unsigned short road_network_id;
-    unsigned short creation_sequence_index;
+    //unsigned short creation_sequence_index;
     short houses_covered;
     short percentage_houses_covered;
     short house_population;
@@ -658,16 +658,6 @@ public:
     building::impl_data_t &data;
 };
 
-inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_PALATIAL_ESTATE; }
-
-int building_id_first(e_building_type type);
-building* building_first(e_building_type type);
-
-building* building_next(int id, e_building_type type);
-
-inline building* building_begin() { return building_get(1); }
-inline building* building_end() { return building_get(MAX_BUILDINGS); }
-
 template<typename ... Args>
 bool building_type_any_of(e_building_type type, Args ... args) {
     int types[] = {args...};
@@ -685,30 +675,7 @@ bool building_type_none_of(building &b, Args ... args) {
     return (std::find(std::begin(types), std::end(types), b.type) == std::end(types));
 }
 
-template<typename Array, typename ... Args>
-void buildings_get(Array &arr, Args ... args) {
-    int types[] = {args...};
-    for (const auto &type : types) {
-        for (building *it = building_begin(), *e = building_end(); it != e; ++it) {
-            if (it->type == type) {
-                arr.push_back(it);
-            }
-        }
-    }
-}
-
-building* building_create(e_building_type type, tile2i tile, int orientation);
-
-building* building_at(int grid_offset);
-building* building_at(int x, int y);
-building* building_at(tile2i point);
-bool building_exists_at(int grid_offset, building* b);
-
-bool building_exists_at(tile2i point, building* b);
-
-void building_clear_all();
-// void building_totals_add_corrupted_house(int unfixable);
-
+inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_PALATIAL_ESTATE; }
 bool building_is_fort(int type);
 bool building_is_defense(e_building_type type);
 bool building_is_farm(e_building_type type);
@@ -741,106 +708,58 @@ bool building_is_military(e_building_type type);
 
 bool building_is_draggable(e_building_type type);
 
-int building_get_highest_id();
-void building_update_highest_id();
-void building_update_state();
-void building_update_desirability();
-
 int building_mothball_toggle(building* b);
 int building_mothball_set(building* b, int value);
 bool resource_required_by_workshop(building* b, e_resource resource);
 
-std::span<building>& city_buildings();
-
-template <typename T>
-inline building* building_first(T pred) {
-    for (auto it = building_begin(), end = building_end(); it != end; ++it) {
-        if (it->is_valid() && pred(*it)) {
-            return it;
-        }
-    }
-    return nullptr;
-}
-
-template <typename ... Args>
-inline building* building_first_of_type(Args ... types) {
-    for (auto &b: city_buildings()) {
-        if (b.is_valid() && building_type_any_of(b, types...)) {
-            return &b;
-        }
-    }
-    return nullptr;
-}
-
-template<typename T>
-inline building* buildings_valid_first(T func) {
-    for (auto &b: city_buildings()) {
-        if (b.is_valid()) {
-            if (func(b)) {
-                return &b;
-            }
-        }
-    }
-    return nullptr;
-}
-
-template<typename T>
-void buildings_valid_do(T func) {
-    for (auto &b: city_buildings()) {
-        if (b.is_valid()) {
-            func(b);
-        }
-    }
-}
-
-template<typename T, typename F>
-void buildings_valid_do(F func) {
-    for (auto &b: city_buildings()) {
-        if (!b.is_valid()) {
-            continue;
-        }
-        T *ptr = smart_cast<T*>(b.dcast());
-        if (ptr) {
-            func(ptr);
-        }
-    }
-}
-
-template<typename T>
-void buildings_valid_farms_do(T func) {
-    for (auto &b: city_buildings()) {
-        if (b.is_valid() && building_is_farm(b)) {
-            func(b);
-        }
-    }
-}
-
-template<typename ... Args, typename T>
-void buildings_valid_do(T func, Args ... args) {
-    for (auto &b: city_buildings()) {
-        if (b.is_valid() && building_type_any_of(b, args...)) {
-            func(b);
-        }
-    }
-}
-
-template<typename T>
-void buildings_house_do(T func) {
-    for (auto &b: city_buildings()) {
-        if (b.is_valid() && building_is_house(b.type)) {
-            func(b);
-        }
-    }
-}
-
-template<typename T>
-void buildings_workshop_do(T func) {
-    for (auto &b: city_buildings()) {
-        if (b.is_valid() && building_is_workshop(b.type)) {
-            func(b);
-        }
-    }
-}
+GENERATE_SMART_CAST(building_impl)
+GENERATE_SMART_CAST_CUSTOM(building_juggler_school, juggler_school)
+GENERATE_SMART_CAST_CUSTOM(building_storage_yard, storage_yard)
+GENERATE_SMART_CAST_CUSTOM(building_storage_room, storage_room)
+GENERATE_SMART_CAST_CUSTOM(building_brewery, brewery)
+GENERATE_SMART_CAST_CUSTOM(building_pottery, pottery)
+GENERATE_SMART_CAST_CUSTOM(building_bazaar, bazaar)
+GENERATE_SMART_CAST_CUSTOM(building_firehouse, firehouse)
+GENERATE_SMART_CAST_CUSTOM(building_architect_post, architect_post)
+GENERATE_SMART_CAST_CUSTOM(building_booth, booth)
+GENERATE_SMART_CAST_CUSTOM(building_apothecary, apothecary)
+GENERATE_SMART_CAST_CUSTOM(building_granary, granary)
+GENERATE_SMART_CAST_CUSTOM(building_water_supply, water_supply)
+GENERATE_SMART_CAST_CUSTOM(building_conservatory, conservatory)
+GENERATE_SMART_CAST_CUSTOM(building_courthouse, courthouse)
+GENERATE_SMART_CAST_CUSTOM(building_well, well)
+GENERATE_SMART_CAST_CUSTOM(building_clay_pit, clay_pit)
+GENERATE_SMART_CAST_CUSTOM(building_reed_gatherer, reed_gatherer)
+GENERATE_SMART_CAST_CUSTOM(building_papyrus_maker, papyrus_maker)
+GENERATE_SMART_CAST_CUSTOM(building_dock, dock)
+GENERATE_SMART_CAST_CUSTOM(building_small_mastaba, small_mastaba)
+GENERATE_SMART_CAST_CUSTOM(building_wood_cutter, wood_cutter)
+GENERATE_SMART_CAST_CUSTOM(building_recruiter, recruiter)
+GENERATE_SMART_CAST_CUSTOM(building_pavilion, pavilion)
+GENERATE_SMART_CAST_CUSTOM(building_statue, statue)
+GENERATE_SMART_CAST_CUSTOM(building_ferry, ferry)
+GENERATE_SMART_CAST_CUSTOM(building_fort_ground, fort_ground)
+GENERATE_SMART_CAST_CUSTOM(building_fort, fort)
+GENERATE_SMART_CAST_CUSTOM(building_fishing_wharf, fishing_wharf)
+GENERATE_SMART_CAST_CUSTOM(building_shipyard, shipyard)
+GENERATE_SMART_CAST_CUSTOM(building_plaza, plaza)
+GENERATE_SMART_CAST_CUSTOM(building_garden, garden)
+GENERATE_SMART_CAST_CUSTOM(building_house, house)
+GENERATE_SMART_CAST_CUSTOM(building_burning_ruin, burning_ruin)
+GENERATE_SMART_CAST_CUSTOM(building_storage, storage)
+GENERATE_SMART_CAST_CUSTOM(building_temple, temple)
+GENERATE_SMART_CAST_CUSTOM(building_tax_collector, tax_collector)
+GENERATE_SMART_CAST_CUSTOM(building_roadblock, roadblock)
+GENERATE_SMART_CAST_CUSTOM(building_mine, mine)
+GENERATE_SMART_CAST_CUSTOM(building_quarry, quarry)
+GENERATE_SMART_CAST_CUSTOM(building_palace, palace)
+GENERATE_SMART_CAST_CUSTOM(building_festival_square, festival_square)
+GENERATE_SMART_CAST_CUSTOM(building_bandstand, bandstand)
+GENERATE_SMART_CAST_CUSTOM(building_routeblock, routeblock)
+GENERATE_SMART_CAST_CUSTOM(building_industry, industry)
+GENERATE_SMART_CAST_CUSTOM(building_guild, guild)
+GENERATE_SMART_CAST_CUSTOM(building_entertainment, entertainment)
+GENERATE_SMART_CAST_CUSTOM(building_mansion, mansion)
 
 namespace buildings {
 

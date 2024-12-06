@@ -5,6 +5,7 @@
 #include "building/building_storage_room.h"
 #include "building/building_dock.h"
 #include "city/buildings.h"
+#include "city/city_buildings.h"
 #include "city/trade.h"
 #include "core/calc.h"
 #include "core/game_environment.h"

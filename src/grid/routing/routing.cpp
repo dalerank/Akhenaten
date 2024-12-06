@@ -5,6 +5,7 @@
 #include "grid/vegetation.h"
 #include "building/building.h"
 #include "core/game_environment.h"
+#include "city/city_buildings.h"
 #include "core/profiler.h"
 #include "grid/building.h"
 #include "grid/figure.h"

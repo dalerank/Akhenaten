@@ -18,6 +18,7 @@
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "game/game.h"
+#include "city/city_buildings.h"
 
 static int north_tile_grid_offset(tile2i tile, int* size) {
     int grid_offset = tile.grid_offset();

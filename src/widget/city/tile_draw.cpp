@@ -18,6 +18,7 @@
 #include "sound/sound_city.h"
 #include "game/game.h"
 #include "graphics/view/lookup.h"
+#include "city/city_buildings.h"
 
 #include "overlays/city_overlay.h"
 #include "overlays/city_overlay_risks.h"

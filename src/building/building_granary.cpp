@@ -7,6 +7,7 @@
 #include "city/message.h"
 #include "city/city_resource.h"
 #include "city/warnings.h"
+#include "city/city_buildings.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "core/game_environment.h"
