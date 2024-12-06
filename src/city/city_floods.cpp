@@ -308,15 +308,22 @@ void floods_t::tick_update(bool calc_only) {
 io_buffer* iob_floodplain_settings = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_floods;
 
-    iob->bind(BIND_SIGNATURE_INT32, &data.season_initial);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.season_initial);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.duration_initial);
-    iob->bind(BIND_SIGNATURE_INT32, &data.quality_initial);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.quality_initial);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.season);
     iob->bind(BIND_SIGNATURE_INT32, &data.duration);
-    iob->bind(BIND_SIGNATURE_INT32, &data.quality_current);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.quality_current);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.unk00);
-    iob->bind(BIND_SIGNATURE_INT32, &data.quality_next);
-    iob->bind(BIND_SIGNATURE_INT32, &data.quality_last);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.quality_next);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.flood_progress);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.flood_progress_target);
+    iob->bind____skip(1);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.quality_last);
+    iob->bind____skip(3);
 
     data.flood_progress = 30;
     data.unk00 = 0;
