@@ -1077,18 +1077,15 @@ void draw_debug_ui(int x, int y) {
         float rc_curr = fmod(_c_curr, CYCLES_IN_A_YEAR);
         float rc_start = fmod(_c_start, CYCLES_IN_A_YEAR);
         float rc_end = fmod(_c_end, CYCLES_IN_A_YEAR);
-        if (rc_curr < 0.1 && gametime().month > 1)
-            rc_curr = CYCLES_IN_A_YEAR;
 
         // floodplains timeline (yearly)
-        double additional_abs_ticks = CYCLES_IN_A_YEAR * (double)gametime().years_since_start();
         auto dot = string_from_ascii(",");
         for (int i = 0; i < 392; ++i) {
             text_draw(dot, x + i - 1, y + 15, FONT_SMALL_PLAIN, 0);
         }
 
         for (int i = 0; i < 392; ++i) {
-            int abs_i = i + additional_abs_ticks;
+            int abs_i = i;
             text_draw(dot, x + i, y + 15, FONT_SMALL_PLAIN, COLOR_WHITE);
 
             if ((i > rc_start - 28 && i < rc_end + 28)
@@ -1147,18 +1144,20 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x, y + 125, cl, "quality_initial:", g_floods.quality_initial);
         debug_text(ctx, str, x, y + 135, cl, "season:", g_floods.season);
         debug_text(ctx, str, x, y + 145, cl, "duration:", g_floods.duration);
-        debug_text(ctx, str, x, y + 155, cl, "quality:", g_floods.quality);
+        debug_text(ctx, str, x, y + 155, cl, "quality:", g_floods.quality_current);
         debug_text(ctx, str, x, y + 165, cl, "(unk00):", g_floods.unk00);
         debug_text(ctx, str, x, y + 175, cl, "quality_next:", g_floods.quality_next);
         debug_text(ctx, str, x, y + 185, cl, "quality_last:", g_floods.quality_last);
 
-        cl = 100;
+        cl = 150;
         debug_text(ctx, str, x, y + 205, cl, "progress:", g_floods.flood_progress);   // status 30 (???)
         debug_text(ctx, str, x, y + 215, cl, "(unk01):", g_floods.unk01);             // ???
         debug_text(ctx, str, x, y + 225, cl, "state:", g_floods.state);               // floodplains state
-        debug_text(ctx, str, x, y + 235, cl, "width:", g_floods.floodplain_width);    // status 10 (???)
-        debug_text(ctx, str, x, y + 245, cl, "hasplains:", g_floods.has_floodplains); // status 10 (???)
-        debug_text(ctx, str, x, y + 255, cl, "force_inundation:", g_floods.force_inundation); // status 10 (???)
+        debug_text(ctx, str, x, y + 235, cl, "width:", g_floods.floodplain_width);    
+        debug_text(ctx, str, x, y + 245, cl, "hasplains:", g_floods.has_floodplains); 
+        debug_text(ctx, str, x, y + 255, cl, "force_inundation:", g_floods.force_inundation);
+        debug_text(ctx, str, x, y + 265, cl, "flood_progress_tick:", g_floods.flood_progress_tick);
+        debug_text(ctx, str, x, y + 275, cl, "target_progress:", g_floods.flood_progress_target);
         y += 350;
     }
 

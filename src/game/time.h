@@ -55,6 +55,7 @@ struct game_time_t {
     int16_t years_since_start() const;
     int absolute_day(bool since_start = false) const;
     int absolute_tick(bool since_start = false) const;
+    int absolute_tick_year_start() const;
 
     bool advance_tick();
     bool advance_day();

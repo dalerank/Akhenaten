@@ -49,8 +49,9 @@ int floods_t::debug_period() {
     return debug_year_period;
 }
 
-float floods_t::current_cycle() {
-    return (gametime().absolute_tick(true) + 1) / 25.0f;
+int floods_t::current_cycle() {
+    const int tick_since_year = gametime().absolute_tick(true) - gametime().absolute_tick_year_start() + 1;
+    return (tick_since_year / 25) % CYCLES_IN_A_YEAR;
 }
 
 int floods_t::current_subcycle() {
@@ -62,8 +63,7 @@ bool floods_t::is_start_cycle() {
 }
 
 int floods_t::start_cycle() {
-    float cycles_so_far = CYCLES_IN_A_YEAR * gametime().years_since_start();
-    float cycle_start = ((float)season * 105.0f) / 100.0f + 15.0f + cycles_so_far - 0.5f;
+    float cycle_start = ((float)season * 105.0f) / 100.0f + 15.0f - 0.5f;
     return (int)cycle_start;
 }
 
@@ -77,21 +77,6 @@ float floods_t::period_length(bool upcoming) {
     }
 
     return (float)quality_last * (float)floodplain_width * 0.01f;
-}
-
-int floods_t::cycle_compare(int c2, bool relative) {
-    float diff = c2 - current_cycle();
-    if (relative) {
-        diff = fmod(diff, CYCLES_IN_A_YEAR);
-        if (diff > 0.5 * CYCLES_IN_A_YEAR) {
-            diff -= CYCLES_IN_A_YEAR;
-        }
-    }
-    return diff;
-}
-
-bool floods_t::cycle_is(int c2, bool relative) {
-    return cycle_compare(c2, relative) == 0;
 }
 
 bool floods_t::state_is(int state) {
@@ -135,49 +120,41 @@ void floods_t::cycle_states_recalc() {
     // if no floodplains present, return
     if (!has_floodplains) {
         state = FLOOD_STATE_FARMABLE;
-        quality = 0;
+        flood_progress_target = 0;
         return;
     }
 
     int cycle = current_cycle();
     int cycle_frame = current_subcycle();
 
-    // clamp and update flood quality
-    if (gametime().tick == 1 && state != FLOOD_STATE_FLOODING) {
-        if (quality > quality_next) {
-            quality -= 5;
-            if (quality < quality_next) // clamp if over-shooting
-                quality = quality_next;
-        }
-
-        if (quality < quality_next) {
-            quality += 5;
-            if (quality > quality_next) // clamp if over-shooting
-                quality = quality_next;
-        }
-    }
-
     // fetch cycle & time variables
     int cycle_start = start_cycle();
     int cycle_end = end_cycle();
-    int cycle_end_LAST_YEAR = cycle_end - CYCLES_IN_A_YEAR;
+    int cycle_end_LAST_YEAR = cycle_end - 380;
     int flooding_period = period_length();
+
+    auto inrease_progress_tick = [this] {
+        if (++flood_progress_tick > 20) {
+            flood_progress_tick = 0;
+            return true;
+        }
+        return false;
+    };
 
     // ???
     unk01 = season / 30;
     if (force_inundation != 0) {
-       
         if (force_inundation < flood_progress) {
             state = FLOOD_STATE_INUNDATED;
             force_inundation_tick++;
-            if (force_inundation_tick > 120) {
+            if (force_inundation_tick > 60) {
                 force_inundation_tick = 0;
                 flood_progress--;
             }
         } else if (force_inundation > flood_progress) {
             state = FLOOD_STATE_CONTRACTING;
             force_inundation_tick++;
-            if (force_inundation_tick > 120) {
+            if (force_inundation_tick > 60) {
                 force_inundation_tick = 0;
                 flood_progress++;
             }
@@ -185,66 +162,57 @@ void floods_t::cycle_states_recalc() {
     } else if (cycle < cycle_end_LAST_YEAR + 28) {
         // resting period from last year
         state = FLOOD_STATE_RESTING;
-        flood_progress = 30;
+        flood_progress_target = 30;
     } else if (cycle < cycle_start - 28) {
         // normal farming period
         state = FLOOD_STATE_FARMABLE;
-        flood_progress = 30;
     } else if (cycle < cycle_start) {
         // flooding imminent!
         // tell all farms to DROP EVERYTHING and deliver food
         state = FLOOD_STATE_IMMINENT;
-        flood_progress = 30;
-    } else if (cycle < cycle_start + flooding_period) {
+    } else if (cycle <= cycle_start + flooding_period) {
         // flooding in progress
         state = FLOOD_STATE_FLOODING;
-        flood_progress = 29 - (cycle - cycle_start);
-    } else if (cycle < cycle_end - flooding_period) {
+    } else if (cycle <= cycle_end - flooding_period) {
         // fully flooded
         state = FLOOD_STATE_INUNDATED;
-        flood_progress = 29 - flooding_period;
-    } else if (cycle < cycle_end) {
+        flood_progress_target = 0;
+    } else if (cycle <= cycle_end) {
         // contracting
         state = FLOOD_STATE_CONTRACTING;
-        flood_progress = 30 - (cycle_end - cycle);
-    } else if (cycle < cycle_end + 28) {
+        flood_progress_target = 30;
+    } else if (cycle <= cycle_end + 28) {
         // contracting done, resting
         state = FLOOD_STATE_RESTING;
-        flood_progress = 30;
+        flood_progress_target = 30;
     } else if (state != FLOOD_STATE_FARMABLE) {
         // flooding over, farmlands available again
         reset_farms();
         state = FLOOD_STATE_FARMABLE;
     }
 
+    if (force_inundation == 0) {
+        if (flood_progress != flood_progress_target && inrease_progress_tick()) {
+            flood_progress += (flood_progress > flood_progress_target) ? -1 : +1;
+        }
+    }
+
     // clamp flood progress
     flood_progress = std::clamp(flood_progress, 0, 30);
+    flood_progress_target = std::clamp(flood_progress_target, 0, 30);
 }
 
 void floods_t::update_next_flood_params() {
-    // update values
     season = season_initial;     // reset to initial
     duration = duration_initial; // reset to initial
 
-    quality_last = std::min(quality, 100);
+    quality_last = quality_current;
 
+    quality_current = quality_next;
     // calculate the next flood quality
-    int bnd[11] = {2, 3, 5, 10, 15, 30, 15, 10, 5, 3, 2};
-    int arr[11] = {100, 80, 60, 40, 20, 0, -20, -40, -60, -80, -100};
-    int quality_randm = 0;
-    int boundary = 0;
-    random_generate_next();
-    int randm = (random_short() % 99 + 1);
-    for (int i = 0; i < 12; ++i) {
-        boundary += bnd[i];
-        if (randm < boundary) {
-            quality_randm = arr[i];
-            break;
-        }
-    }
+    int quality_randm = (rand() % 100) + 20;
     quality_next += quality_randm;
-    quality_next = std::min(quality_next, 100);
-    quality_next = quality_next & (quality_next < 1) - 1;
+    quality_next = quality_next % 100;
 }
 
 static void post_flood_prediction_message() {
@@ -278,7 +246,7 @@ void floods_t::tick_update(bool calc_only) {
     // update internal tick variables
     debug_year_period = ((cycle_start - 1) * 25) - (cycle * 25 + subcycle);
     if (force_inundation != 0) {
-        fticks = flood_progress * 25;
+        fticks = flood_progress * 25 - 1;
     } else if (cycle < cycle_start) {
         fticks = 0;
     } else if (cycle >= cycle_start && cycle < cycle_start + flooding_period) {
@@ -295,13 +263,11 @@ void floods_t::tick_update(bool calc_only) {
 
     // update at every full cycle
     if (subcycle == 0) {
-        if (cycle == cycle_start - 49) {
-            // todo: FUN_00489310();
-            // This is where the game sends off the order to farms to drop everything and harvest in the OG game.
-            // It has been re-implemented indirectly inside the farms' figure spawn loop.
-        } else if (cycle == cycle_start - 1) {
-            if (!calc_only)
+        if (cycle == cycle_start - 1) {
+            if (!calc_only) {
                 update_next_flood_params();
+                post_flood_prediction_message();
+            }
         } else if (cycle == cycle_start + floodplain_width) {
             // This is where the fertility gets restored in the OG game.
             // It has been re-implemented differently inside the tile flooding/update procedure.
@@ -316,21 +282,23 @@ void floods_t::tick_update(bool calc_only) {
         if (state_is(FLOOD_STATE_INUNDATED)) {
             g_city.religion.osiris_flood_will_destroy_active = 0;
         }
-        // send nilometer message!
-        if (cycle_is(end_cycle() + 23)) {
-            post_flood_prediction_message();
-        }
     }
 
     // update tiles!!
-    if ((force_inundation != 0 && force_inundation < flood_progress) || (cycle >= cycle_start && cycle <= cycle_start + flooding_period)) {
-        map_floodplain_update_inundation(flood_progress, 1, fticks);
-    } else if ((force_inundation != 0 && force_inundation > flood_progress) || cycle >= cycle_end - flooding_period && cycle <= cycle_end) {
-        map_floodplain_update_inundation(flood_progress, -1, fticks);
+    if (force_inundation != 0) {
+        if (flood_progress != force_inundation) {
+            int delta = (flood_progress > force_inundation) ? 1 : -1;
+            map_floodplain_update_inundation(flood_progress, delta, fticks);
+        }
+    } else {
+        if (flood_progress != flood_progress_target) {
+            int delta = (flood_progress > flood_progress_target) ? 1 : -1;
+            map_floodplain_update_inundation(flood_progress, delta, fticks);
+        }
     }
 
     // update grass growth
-    if (subcycle % flood_multiplier_grow == 0 && (cycle < cycle_start - 27 || cycle >= cycle_end - 24)) {
+    if ((subcycle % flood_multiplier_grow == 0) && (cycle < cycle_start - 27 || cycle >= cycle_end - 24)) {
         map_floodplain_advance_growth();
     }
 
@@ -345,12 +313,10 @@ io_buffer* iob_floodplain_settings = new io_buffer([](io_buffer* iob, size_t ver
     iob->bind(BIND_SIGNATURE_INT32, &data.quality_initial);
     iob->bind(BIND_SIGNATURE_INT32, &data.season);
     iob->bind(BIND_SIGNATURE_INT32, &data.duration);
-    iob->bind(BIND_SIGNATURE_INT32, &data.quality);
+    iob->bind(BIND_SIGNATURE_INT32, &data.quality_current);
     iob->bind(BIND_SIGNATURE_INT32, &data.unk00);
     iob->bind(BIND_SIGNATURE_INT32, &data.quality_next);
-    if (FILEIO.get_file_version() >= 149) {
-        iob->bind(BIND_SIGNATURE_INT32, &data.quality_last);
-    }
+    iob->bind(BIND_SIGNATURE_INT32, &data.quality_last);
 
     data.flood_progress = 30;
     data.unk00 = 0;

@@ -17,19 +17,21 @@ struct floods_t {
     int quality_initial;
     int season;
     int duration;
-    int quality;
     int unk00; // 00
-    int quality_next;
-    int quality_last;
+    int quality_next = 100;
+    int quality_current = 100;
+    int quality_last = 100;
     //
     // Pharaoh had a struct containing tile data for the updates.
     // I reimplemented it via other means.
     //
-    int flood_progress;   // 0 - 30
+    int flood_progress = 30;   // 0 - 30
+    int flood_progress_target; // 0 - 30
     int unk01;            // season/floodplain_width -- probably a leftover from a previous flood system
     e_flood_state state;
     int floodplain_width; // 0 - 30
     bool has_floodplains; // 0 - 1
+    int flood_progress_tick = 0;
 
     int fticks;
     int debug_year_period = 99;
@@ -43,12 +45,10 @@ struct floods_t {
     bool is_start_cycle();
     void init();
     int debug_period();
-    float current_cycle();
+    int current_cycle();
     int start_cycle();
     int end_cycle();
     float period_length(bool upcoming = false);
-    int cycle_compare(int c2, bool relative = true);
-    bool cycle_is(int c2, bool relative = true);
     bool state_is(int state);
     void adjust_next_quality(int quality);
     int expected_quality();
@@ -62,7 +62,7 @@ struct floods_t {
 
 extern floods_t g_floods;
 
-constexpr float CYCLES_IN_A_YEAR = 9792.0f / 25.0f; // 391.68
+constexpr int CYCLES_IN_A_YEAR = 392;
 
 
 

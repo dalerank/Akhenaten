@@ -23,6 +23,10 @@ int game_time_t::absolute_day(bool since_start) const {
     return days;
 }
 
+int game_time_t::absolute_tick_year_start() const {
+    return (ticks_in_day * days_in_month * months_in_year) /*9792*/ * years_since_start();
+}
+
 int game_time_t::absolute_tick(bool since_start) const {
     int ticks = absolute_day() * ticks_in_day + tick;
 
