@@ -67,11 +67,3 @@ bool building_architect_post::draw_ornaments_and_animations_height(painter &ctx,
 
     return true;
 }
-
-void info_window_architect_post::window_info_background(object_info &c) {
-    building_info_window::common_info_background(c);
-}
-
-inline bool info_window_architect_post::check(object_info& c) {
-    return c.building_get()->dcast_architect_post();
-}

@@ -56,7 +56,3 @@ bool building_firehouse::draw_ornaments_and_animations_height(painter &ctx, vec2
 
     return true;
 }
-
-inline bool info_window_firehouse::check(object_info& c) {
-    return c.building_get()->dcast_firehouse();
-}

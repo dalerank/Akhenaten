@@ -1,5 +1,6 @@
 #pragma once
 
+#include "city/object_info.h"
 #include "building/building.h"
 #include "window/window_building_info.h"
 
@@ -18,6 +19,11 @@ public:
 };
 
 struct info_window_architect_post : public building_info_window_t<info_window_architect_post> {
-    virtual void window_info_background(object_info& c) override;
-    virtual bool check(object_info& c) override;
+    virtual void window_info_background(object_info& c) override {
+        building_info_window::common_info_background(c);
+    }
+
+    virtual bool check(object_info& c) override {
+        return c.building_get()->dcast_architect_post();
+    }
 };
