@@ -1401,7 +1401,7 @@ window info_window_palace = {
 														  }),
 		vaults_hold   : text({pos: [44, 44], text:"${text.2} ${building.tax_income_or_storage} Db", font: FONT_NORMAL_BLACK_ON_LIGHT }),
 		warning_desc  : text({pos: [32, 66], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-		text_visit    : text({pos: [90, 52], font: FONT_NORMAL_BLACK_ON_LIGHT, text:"#visit_rating_advisor" }),
+		text_visit    : text({pos: [90, 252], font: FONT_NORMAL_BLACK_ON_LIGHT, text:"#visit_rating_advisor" }),
 		visit_advisor : image_button({pos:[52, 246], size:[28, 28], pack:PACK_GENERAL, id:106 }),
 	})
 }
