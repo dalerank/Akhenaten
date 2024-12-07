@@ -52,13 +52,6 @@ void config_load_building_fort() {
     });
 }
 
-void draw_partially_blocked(painter &ctx, int fully_blocked, const std::vector<blocked_tile> &blocked_tiles) {
-    for (auto &tile: blocked_tiles) {
-        vec2i pixel = tile_to_pixel(tile.tile);
-        draw_flat_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
-    }
-}
-
 void building_fort::window_info_background(object_info &c) {
     c.help_id = 87;
     window_building_play_sound(&c, "Wavs/fort.wav");
@@ -138,8 +131,8 @@ void building_fort::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int or
     vec2i tile_ground_offset = fort_ghost_m.ground_check_offset[global_rotation * 4 + (city_view_orientation() / 2)];
     tile2i tile_ground = tile.shifted(tile_ground_offset.x, tile_ground_offset.y);
 
-    std::vector<blocked_tile> blocked_tiles_fort;
-    std::vector<blocked_tile> blocked_tiles_ground;
+    blocked_tile_vec blocked_tiles_fort;
+    blocked_tile_vec blocked_tiles_ground;
 
     blocked += is_blocked_for_building(tile, fort_size, blocked_tiles_fort);
     blocked += is_blocked_for_building(tile_ground, ground_size, blocked_tiles_ground);

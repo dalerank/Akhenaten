@@ -20,6 +20,7 @@
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "grid/bridge.h"
+#include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/figure.h"
 #include "grid/image_context.h"
@@ -33,6 +34,7 @@
 #include "game/game.h"
 #include "widget/city/bridges.h"
 #include "graphics/image.h"
+#include "graphics/view/lookup.h"
 
 #include <cmath>
 
@@ -145,22 +147,46 @@ static void get_building_base_xy(int map_x, int map_y, int building_size, int* x
     }
 }
 
-int is_blocked_for_building(tile2i tile, int size, std::vector<blocked_tile> &blocked_tiles) {
+int is_blocked_for_farm(tile2i tile, int size, blocked_tile_vec &blocked_tiles) {
     int orientation_index = city_view_orientation() / 2;
     int blocked = 0;
-    int num_tiles = pow(size, 2);
+    int num_tiles = (size * size);
+    for (int i = 0; i < num_tiles; i++) {
+        const int offset = TILE_GRID_OFFSETS_PH[orientation_index][i];
+        tile2i check_tile = tile.shifted(offset);
+        bool tile_blocked = !map_terrain_is(check_tile, TERRAIN_FLOODPLAIN)
+                            || (map_building_at(check_tile) != 0)
+                            || map_has_figure_at(check_tile);
+
+        blocked_tiles.push_back({ check_tile, tile_blocked });
+        blocked += (tile_blocked ? 1 : 0);
+    }
+    return blocked;
+}
+
+int is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_tiles) {
+    int orientation_index = city_view_orientation() / 2;
+    int blocked = 0;
+    int num_tiles = (size * size);
     for (int i = 0; i < num_tiles; i++) {
         int offset = TILE_GRID_OFFSETS_PH[orientation_index][i];
         tile2i check_tile = tile.shifted(offset);
         bool tile_blocked = map_terrain_is(check_tile, TERRAIN_NOT_CLEAR)
-                            || (map_terrain_count_directly_adjacent_with_type(check_tile.grid_offset(), TERRAIN_FLOODPLAIN) > 0)
-                            || (map_terrain_count_diagonally_adjacent_with_type(check_tile.grid_offset(), TERRAIN_FLOODPLAIN) > 0)
+                            || (map_terrain_count_directly_adjacent_with_type(check_tile, TERRAIN_FLOODPLAIN) > 0)
+                            || (map_terrain_count_diagonally_adjacent_with_type(check_tile, TERRAIN_FLOODPLAIN) > 0)
                             || map_has_figure_at(check_tile);
 
         blocked_tiles.push_back({check_tile, tile_blocked});
         blocked += (tile_blocked ? 1 : 0);
     }
     return blocked;
+}
+
+void draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles) {
+    for (auto &tile : blocked_tiles) {
+        vec2i pixel = tile_to_pixel(tile.tile);
+        draw_flat_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
+    }
 }
 
 void draw_flat_tile(painter &ctx, vec2i pixel, color color_mask) {

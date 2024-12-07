@@ -99,8 +99,10 @@ void map_terrain_remove_with_radius(int x, int y, int size, int radius, int terr
 void map_terrain_remove_all(int terrain);
 
 int map_terrain_count_directly_adjacent_with_type(int grid_offset, int terrain);
+inline int map_terrain_count_directly_adjacent_with_type(tile2i tile, int terrain) { return map_terrain_count_directly_adjacent_with_type(tile.grid_offset(), terrain); }
 
 int map_terrain_count_diagonally_adjacent_with_type(int grid_offset, int terrain);
+inline int map_terrain_count_diagonally_adjacent_with_type(tile2i tile, int terrain) { return map_terrain_count_diagonally_adjacent_with_type(tile.grid_offset(), terrain); }
 
 bool map_terrain_has_adjecent_with_type(int grid_offset, int terrain);
 bool map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain);

@@ -91,10 +91,17 @@ void building_farm::draw_farm_worker(painter &ctx, int direction, int action, ve
 }
 
 void building_farm::ghost_preview(painter &ctx, e_building_type type, vec2i point, tile2i tile) {
-    int image_id = get_farm_image(type, tile);
-    draw_building_ghost(ctx, image_id, point + vec2i{-60, 30});
+    blocked_tile_vec blocked_tiles_farm;
 
-    draw_crops(ctx, type, 0, tile, point + vec2i{-60, 30}, COLOR_MASK_GREEN);
+    const bool blocked = is_blocked_for_farm(tile, params(type).building_size, blocked_tiles_farm);
+
+    if (blocked) {
+        draw_partially_blocked(ctx, false, blocked_tiles_farm);
+    } else {
+        int image_id = get_farm_image(type, tile);
+        draw_building_ghost(ctx, image_id, point + vec2i{ -60, 30 });
+        draw_crops(ctx, type, 0, tile, point + vec2i{-60, 30}, COLOR_MASK_GREEN);
+    }
 }
 
 static const vec2i FARM_TILE_OFFSETS_FLOODPLAIN[9] = {{60, 0}, {90, 15}, {120, 30}, {30, 15}, {60, 30}, {90, 45}, {0, 30}, {30, 45}, {60, 60}};
