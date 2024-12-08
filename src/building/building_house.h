@@ -23,13 +23,14 @@ public:
     virtual void on_undo() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual bool evolve(house_demands* demands) = 0;
+    virtual int get_fire_risk(int value) const override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override; 
 
     inline short house_population() const { return base.house_population; }
     inline void change_population(short delta) { base.house_population += delta; }
     inline e_house_level house_level() const { return base.subtype.house_level; }
     void change_to_vacant_lot();
-    bool is_vacant_lot();
+    bool is_vacant_lot() const;
     void add_population(int num_people);
     void change_to(e_building_type type);
     void merge();

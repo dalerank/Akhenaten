@@ -193,6 +193,10 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.house.pavillion_musician);
 }
 
+int building_house::get_fire_risk(int value) const {
+    return (base.subtype.house_level == BUILDING_HOUSE_VACANT_LOT && is_vacant_lot()) ? value : 0;
+}
+
 bvariant building_house::get_property(const xstring &domain, const xstring &name) const {
     if (domain == tags().house) {
         if (name == tags().level_name) {
@@ -306,7 +310,7 @@ void building_house::change_to_vacant_lot() {
     }
 }
 
-bool building_house::is_vacant_lot() {
+bool building_house::is_vacant_lot() const {
     return base.house_population == 0;
 }
 
