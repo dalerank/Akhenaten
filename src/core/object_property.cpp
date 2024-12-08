@@ -38,3 +38,4 @@ const xstring id_property_t::fertility = "fertility";
 const xstring id_property_t::rank_name = "rank_name";
 const xstring id_property_t::player = "player";
 const xstring id_property_t::salary_amount = "salary_amount";
+const xstring id_property_t::months_since_festival = "months_since_festival";

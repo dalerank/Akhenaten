@@ -16,6 +16,7 @@ public:
 
     virtual void on_place(int orientation, int variant) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
+    virtual void on_destroy() override;
     virtual void update_day() override;
     virtual void on_undo() override;
     virtual void on_post_load() override;

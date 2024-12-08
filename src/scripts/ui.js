@@ -1567,10 +1567,11 @@ window bazaar_info_window = {
 		workers_text : text({pos:[70, 142 + 12], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
 		workers_desc : text({pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK }),
 		orders       : button({margin:{left:100, bottom:-40}, size:[270, 25], text:"${98.5}"}),
-		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
-		button_close : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
 		show_overlay : button({margin:{right:-64, bottom:-40}, size:[23, 23]}),
 		mothball     : button({margin:{right:-90, bottom:-40}, size:[23, 23]}),
+
+		button_help   : help_button({}),
+		button_close  : close_button({}),
 	}
 }
 
@@ -1579,8 +1580,6 @@ window bazaar_orders_window = {
 		background 	 : outer_panel({size: [29, 17]}),
 		title 		   : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
 		orders_panel : inner_panel({pos : [16, 42], size: [27, 10] }),
-		button_help  : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
-		button_close : image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
 		accept_none  : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
 
 		item_orders_column : dummy({margin:{centerx:0}}),
@@ -1588,21 +1587,25 @@ window bazaar_orders_window = {
 		item_name_column : dummy({pos:[55, 0]}),
 		item_row     : dummy({size:[px(13), 20]}),      
 		items_area	 : dummy({pos:[0, 50]}), 
+
+		button_help   : help_button({}),
+		button_close  : close_button({}),
 	}
 }
 
-festival_square_info_window = {
+window festival_square_info_window = {
 	ui : {
-		background    : { type : "outer_panel",	pos: [0, 0], size: [29, 16]},
-		title 		    : { type : "text", text: "#festival_square_info_title", pos: [0, 10], size: [px(29), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		warning		    : { type : "text", pos: [32, 36], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-		workers_panel : { type : "inner_panel", pos : [16, 96], size: [27, 7] },
-		fest_months_last : { type : "text", pos:[32, 112], size: [px(25), 20], font:FONT_NORMAL_WHITE_ON_DARK, align:"center"},
-		hold_festival : { type:"generic_button", pos:[60, 134], size:[px(22), 25], font:FONT_NORMAL_WHITE_ON_DARK, text:{group: 58, id: 16}},
-		planed_festival : { type : "text", pos: [102, 134], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" },
-		festival_advice : { type : "text", pos: [36, 164], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true },
-		button_help   : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-		button_close  : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
+		background    : outer_panel({pos: [0, 0], size: [29, 16]}),
+		title 		    : text({text: "#festival_square_info_title", pos: [0, 10], size: [px(29), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		warning		    : text({pos: [32, 36], wrap:px(26), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+		workers_panel : inner_panel({ pos : [16, 96], size: [27, 7] }),
+		fest_months_last : text({pos:[32, 112], size: [px(25), 20], text:"${city.months_since_festival} ${8.5} ${58.15}", font:FONT_NORMAL_WHITE_ON_DARK, align:"center"}),
+		hold_festival : button({pos:[60, 134], size:[px(22), 25], font:FONT_NORMAL_WHITE_ON_DARK, text:"${58.16}"}),
+		planed_festival : text({pos: [102, 134], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" }),
+		festival_advice : text({pos: [36, 164], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true }),
+
+		button_help   : help_button({}),
+		button_close  : close_button({}),
 	}
 }
 

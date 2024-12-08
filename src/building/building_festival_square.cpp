@@ -1,8 +1,7 @@
 #include "building_festival_square.h"
 
 #include "city/buildings.h"
-#include "city/object_info.h"
-#include "js/js_game.h"
+#include "city/city.h"
 #include "grid/grid.h"
 #include "grid/building_tiles.h"
 #include "grid/image.h"
@@ -22,7 +21,7 @@ void building_festival_square::static_params::load(archive arch) {
 void building_festival_square::on_place(int orientation, int variant) {
     building_impl::on_place(orientation, variant);
 
-    city_buildings_add_festival_square(&base);
+    g_city.buildings.festival_square = tile();
 }
 
 void building_festival_square::on_place_update_tiles(int orientation, int variant) {
@@ -36,7 +35,11 @@ void building_festival_square::on_place_update_tiles(int orientation, int varian
     }
 
     map_add_venue_plaza_tiles(id(), size, tile(), festival_square_m.square, false);
-    city_buildings_add_festival_square(&base);
+    g_city.buildings.festival_square = this->tile();
+}
+
+void building_festival_square::on_destroy() {
+    g_city.buildings.festival_square = tile2i::invalid;
 }
 
 void building_festival_square::update_day() {
@@ -61,11 +64,11 @@ void building_festival_square::on_undo() {
 }
 
 void building_festival_square::on_post_load() {
-    city_buildings_add_festival_square(&base);
+    g_city.buildings.festival_square = this->tile();
 }
 
 void building_festival_square::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
-    int square_id = festival_square_m.anim["square"].first_img();
+    int square_id = current_params().anim[animkeys().square].first_img();
     int size = festival_square_m.building_size;
     bool is_exist = building_count_total(BUILDING_FESTIVAL_SQUARE);
     int color_mask = is_exist ? COLOR_MASK_RED : COLOR_MASK_GREEN;

@@ -934,6 +934,7 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
         { tags().rating, tags().kingdom, [] (const xstring &) { return bvariant(g_city.ratings.kingdom); }},
         { tags().player, tags().rank_name, [] (const xstring &) { return bvariant(ui::str(52, g_city.kingdome.salary_rank + 4)); }},
         { tags().player, tags().salary_amount, [] (const xstring &) { return bvariant(g_city.kingdome.salary_amount); }},
+        { tags().city, tags().months_since_festival, [] (const xstring &) { return bvariant(g_city.festival.months_since_festival); }},
     };
 
     for (const auto &prop : cproperties) {

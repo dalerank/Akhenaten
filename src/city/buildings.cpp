@@ -174,8 +174,8 @@ void city_buildings_add_festival_square(building* square) {
     city_data.buildings.festival_square = square->tile;
 }
 
-void city_buildings_remove_festival_square(void) {
-    city_data.buildings.festival_square.set(0);
+void city_buildings_remove_festival_square() {
+    city_data.buildings.festival_square = tile2i::invalid;
 }
 
 bool city_buildings_has_temple_complex(void) {

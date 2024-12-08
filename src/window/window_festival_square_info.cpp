@@ -6,9 +6,8 @@
 #include "window/hold_festival.h"
 #include "city/city.h"
 #include "game/time.h"
-#include "js/js_game.h"
 
-struct festival_square_info_window : building_info_window {
+struct festival_square_info_window : building_info_window_t<festival_square_info_window> {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
         return !!c.building_get()->dcast_festival_square();
@@ -21,9 +20,6 @@ void festival_square_info_window::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
     building *b = c.building_get();
-
-    ui["warning"] = ui::str(c.group_id, 1);
-    ui["fest_months_last"].text_var("%d %s %s", g_city.festival.months_since_festival, ui::str(8, 5), ui::str(58, 15));
 
     if (g_city.festival.is_planned()) {
         int size = g_city.festival.selected_size();

@@ -1174,7 +1174,7 @@ building_pavilion = {
   window_info_height_id : 2,
 }
 
-building_festival_square = {
+building building_festival_square = {
   animations : {
     base : { pos:[0, 0], pack:PACK_GENERAL, id:49 },
     square : { pos:[0, 0], pack:PACK_GENERAL, id:49 },
@@ -1183,6 +1183,8 @@ building_festival_square = {
   window_info_height_id: 1,
   info_help_id: 366,
   info_text_id: 188,
+  fire_proof : true,
+  damage_proof : true,
   unique_building : true,
 }
 

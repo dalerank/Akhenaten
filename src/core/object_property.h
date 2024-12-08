@@ -36,6 +36,7 @@ struct id_property_t {
     static const xstring rank_name;
     static const xstring player;
     static const xstring salary_amount;
+    static const xstring months_since_festival;
 };
 
 const id_property_t &tags();
