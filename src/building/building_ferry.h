@@ -6,8 +6,8 @@
 class building_ferry : public building_routeblock {
 public:
     BUILDING_METAINFO(BUILDING_FERRY, building_ferry)
+    building_ferry(building &b) : building_routeblock(b) {}
 
-        building_ferry(building &b) : building_routeblock(b) {}
     virtual building_ferry *dcast_ferry() override { return this; }
     virtual building_routeblock *dcast_routeblock() override { return this; }
 
