@@ -9,6 +9,7 @@
 #include "grid/routing/routing.h"
 
 #include "city/city.h"
+#include <set>
 
 static auto &city_data = g_city;
 int city_buildings_t::get_palace_id() {
@@ -35,6 +36,19 @@ void city_buildings_t::remove_palace(building* palace) {
 void city_buildings_t::track_building(e_building_type type, building_id id, bool active) {
     tracked_buildings->at(type).push_back(id);
     building_increase_type_count(type, active);
+}
+
+void city_buildings_t::check_buildings_twins() {
+    std::set<int> occuped;
+    for (auto &b : city_buildings()) {
+        if (b.is_valid()) {
+            auto result = occuped.insert(b.tile.grid_offset());
+            if (!result.second) {
+                assert(false, "twin building, second will be removed");
+                b.state = BUILDING_STATE_UNUSED;
+            }
+        }
+    }
 }
 
 bool city_buildings_has_mansion() {
@@ -244,6 +258,8 @@ void city_buildings_t::on_post_load () {
     buildings_valid_do ( [] (building &b) {
         b.dcast()->on_post_load();
     });
+
+    check_buildings_twins();
 }
 
 void city_buildings_t::init() {

@@ -76,6 +76,8 @@ struct city_buildings_t {
 
     bool has_working_dock() const { return !tracked_buildings->at(BUILDING_DOCK).empty(); }
     bool has_working_shipyard() const { return !tracked_buildings->at(BUILDING_SHIPWRIGHT).empty(); }
+
+    void check_buildings_twins();
 };
 
 
