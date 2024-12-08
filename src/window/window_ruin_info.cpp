@@ -15,6 +15,8 @@ void ruin_info_window::init(object_info &c) {
 
     int rubble_building_type = map_rubble_building_type(c.grid_offset);
     ui["warning_text"] = textid{ 41, (uint8_t)rubble_building_type };
+
+    ui.format_all(&g_city);
 }
 
 void info_window_burning_ruin::init(object_info &c) {
