@@ -74,6 +74,7 @@ class building_industry;
 class building_guild;
 class building_entertainment;
 class building_mansion;
+class building_physician;
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -463,6 +464,7 @@ public:
     building_guild *dcast_guild();
     building_entertainment *dcast_entertainment();
     building_mansion *dcast_mansion();
+    building_physician *dcast_physician();
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
@@ -599,6 +601,7 @@ public:
     virtual building_guild *dcast_guild() { return nullptr; }
     virtual building_entertainment *dcast_entertainment() { return nullptr; }
     virtual building_mansion *dcast_mansion() { return nullptr; }
+    virtual building_physician *dcast_physician() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -760,6 +763,7 @@ GENERATE_SMART_CAST_CUSTOM(building_industry, industry)
 GENERATE_SMART_CAST_CUSTOM(building_guild, guild)
 GENERATE_SMART_CAST_CUSTOM(building_entertainment, entertainment)
 GENERATE_SMART_CAST_CUSTOM(building_mansion, mansion)
+GENERATE_SMART_CAST_CUSTOM(building_physician, physician)
 
 namespace buildings {
 

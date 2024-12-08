@@ -220,6 +220,7 @@ building_industry *building::dcast_industry() { return dcast()->dcast_industry()
 building_guild *building::dcast_guild() { return dcast()->dcast_guild(); }
 building_entertainment *building::dcast_entertainment() { return dcast()->dcast_entertainment(); }
 building_mansion *building::dcast_mansion() { return dcast()->dcast_mansion(); }
+building_physician *building::dcast_physician() { return dcast()->dcast_physician(); }
 
 building::building() {
 }

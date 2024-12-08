@@ -1699,13 +1699,15 @@ building_academy = {
   window_info_height_id : 1,
 }
 
-building_physician = {
+building building_physician = {
   animations : {
     preview : { pack:PACK_GENERAL, id:70 },
     base : { pack:PACK_GENERAL, id:70 },
     work : { pos : [60, -60], pack:PACK_GENERAL, id:70, offset:1, max_frames:11 }
   },
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
+  info_help_id: 64,
+  info_text_id: 83,
   building_size : 2,
 }
 

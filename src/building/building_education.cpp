@@ -36,13 +36,13 @@ void building_education_draw_info(object_info& c, e_figure_type ftype, e_resourc
     }
 
     if (ftype != FIGURE_NONE && b->has_figure_of_type(BUILDING_SLOT_SERVICE, ftype)) {
-        window_building_draw_description(c, meta.text_id, e_text_figure_on_patrol);
+        window_building_draw_description(c, meta.text_id, 1);
     } else if (!c.has_road_access) {
         window_building_draw_description(c, e_text_building, e_text_building_no_roads);
     } else if (building_get(c.building_id)->num_workers <= 0) {
-        window_building_draw_description(c, meta.text_id, e_text_no_workers);
+        window_building_draw_description(c, meta.text_id, 2);
     } else {
-        window_building_draw_description(c, meta.text_id, e_text_works_fine);
+        window_building_draw_description(c, meta.text_id, 3);
     }
 
     inner_panel_draw(c.offset + vec2i{ 16, 136 }, { c.bgsize.x - 2, 4 });

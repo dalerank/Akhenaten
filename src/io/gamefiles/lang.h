@@ -88,9 +88,6 @@ const lang_message* lang_get_message(int id);
 
 enum e_text_info {
     e_text_title = 0,
-    e_text_figure_on_patrol = 1,
-    e_text_no_workers = 2,
-    e_text_works_fine = 3,
     e_text_overlay_menu = 14,
     e_text_senate_tooltip = 68,
     e_text_senate_tooltip_unemployed = 135,
@@ -99,7 +96,6 @@ enum e_text_info {
     e_text_senate_tooltip_monuments = 138,
     e_text_senate_tooltip_kingdom = 139,
     e_text_building = 69,
-    e_text_building_physician = 83,
     e_text_gate_house = 90,
     e_text_tower = 91,
     e_text_building_no_roads = 25,
