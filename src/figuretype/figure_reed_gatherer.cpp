@@ -7,15 +7,11 @@
 
 #include "grid/routing/routing.h"
 
-struct reed_gatherer_model : public figures::model_t<figure_reed_gatherer> {
-    using inherited = figures::model_t<figure_reed_gatherer>;
-    int max_amount;
+figure_reed_gatherer::static_params reed_gatherer_m;
 
-    using inherited::load;
-    virtual void load(archive arch) override {
-        max_amount = arch.r_int("max_amount");
-    }
-} reed_gatherer_m;
+void figure_reed_gatherer::static_params::load(archive arch) {
+    max_amount = arch.r_int("max_amount");
+}
 
 void figure_reed_gatherer::figure_before_action() {
     building *b = home();

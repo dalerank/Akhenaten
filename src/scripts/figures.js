@@ -825,7 +825,7 @@ figure_labor_seeker = {
 	max_roam_length : 384,
 }
 
-figure_reed_gatherer = {
+figure figure_reed_gatherer = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:37, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:38, max_frames:8, loop:false },
