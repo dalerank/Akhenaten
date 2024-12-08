@@ -80,7 +80,7 @@ float floods_t::period_length(bool upcoming) {
 }
 
 bool floods_t::state_is(int state) {
-    return state == state;
+    return this->state == state;
 }
 
 void floods_t::adjust_next_quality(int quality) {
