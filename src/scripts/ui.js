@@ -1699,8 +1699,8 @@ window info_window_storageyard = {
 		workers_img   : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 203] }),
 		workers_text  : text({pos: [70, 208], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
 		workers_desc  : text({pos: [70, 208 + 16], font: FONT_NORMAL_BLACK_ON_DARK }),
-		cartstate_img : resource_icon({pos:[40, 220] }),
-		cartstate_desc: text({pos: [32, 223], wrap:px(27), font : FONT_NORMAL_BLACK_ON_DARK, multiline:true }),
+		cartstate_img : resource_icon({pos:[32, 260] }),
+		cartstate_desc: text({pos: [72, 260], wrap:px(27), font : FONT_NORMAL_BLACK_ON_DARK, multiline:true }),
 
 		orders        : button({margin:{left:100, bottom:-40}, size:[270, 24], text:"${99.2}"}),
 		button_help   : help_button({}),
