@@ -310,10 +310,6 @@ void building::clear_related_data() {
         //building_menu_update(BUILDSET_NORMAL);
     }
 
-    if (type == BUILDING_FESTIVAL_SQUARE) {
-        city_buildings_remove_festival_square();
-    }
-
     dcast()->on_destroy();
     clear_impl();
 }

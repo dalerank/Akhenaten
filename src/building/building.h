@@ -24,7 +24,7 @@
 #include <stdint.h>
 #include <algorithm>
 
-struct figure;
+class figure;
 class io_buffer;
 class building;
 class building_juggler_school;
