@@ -13,14 +13,10 @@
 #include "grid/building.h"
 #include "city/labor.h"
 
-struct festival_square_model : public buildings::model_t<building_festival_square> {
-    int square;
-} festival_square_m;
+building_festival_square::static_params festival_square_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_festival_square);
-void config_load_building_festival_square() {
-    festival_square_m.load();
-    festival_square_m.square = festival_square_m.anim["square"].first_img();
+void building_festival_square::static_params::load(archive arch) {
+    square = anim[animkeys().square].first_img();
 }
 
 void building_festival_square::on_place(int orientation, int variant) {

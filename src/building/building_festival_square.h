@@ -9,6 +9,11 @@ public:
     building_festival_square(building &b) : building_impl(b) {}
     virtual building_festival_square *dcast_festival_square() override { return this; }
 
+    struct static_params : public buildings::model_t<building_festival_square> {
+        int square;
+        virtual void load(archive arch) override;
+    };
+
     virtual void on_place(int orientation, int variant) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void update_day() override;
@@ -16,4 +21,6 @@ public:
     virtual void on_post_load() override;
 
     static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
+
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

@@ -974,7 +974,7 @@ building building_jewels_workshop = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building_reed_gatherer = {
+building building_reed_gatherer = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
