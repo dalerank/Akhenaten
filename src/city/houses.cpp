@@ -42,13 +42,12 @@ void city_t::house_service_update_health() {
 
         decay_service(b.common_health);
 
-        if (b.data.house.apothecary > (MAX_COVERAGE / 2)) {
-            b.common_health++;
-        }
+        int target_common_health = (!!b.data.house.apothecary ? 33 : 0)
+                                    + (!!b.data.house.physician ? 33 : 0)
+                                    + (!!b.data.house.dentist ? 33 : 0);
 
-        if (b.data.house.physician > (MAX_COVERAGE / 2)) {
-            b.common_health++;
-        }
+        b.common_health += ((b.common_health < target_common_health) ? +1 : -1);
+        b.common_health = std::clamp<int8_t>(b.common_health, 0, 100);
 
         if (b.has_plague) {
             random_generate_next();

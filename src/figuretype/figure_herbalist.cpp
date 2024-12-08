@@ -3,14 +3,7 @@
 #include "core/profiler.h"
 #include "figure/service.h"
 
-#include "js/js_game.h"
-
 figures::model_t<figure_herbalist> herbalist_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_herbalist);
-void config_load_figure_herbalist() {
-    herbalist_m.load();
-}
 
 void figure_herbalist::figure_before_action() {
     building* b = home();
@@ -67,10 +60,6 @@ sound_key figure_herbalist::phrase_key() const {
     }
 
     return {};
-}
-
-void apothecary_coverage() {
-    
 }
 
 int figure_herbalist::provide_service() {

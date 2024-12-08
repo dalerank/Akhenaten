@@ -19,7 +19,7 @@ int city_overlay_health::get_column_height(const building *b) const {
         return 10;
     }
 
-    return (100 - b->common_health) / 10;
+    return b->common_health / 10;
 }
 
 e_column_color city_overlay_health::get_column_color(const building *b) const {
