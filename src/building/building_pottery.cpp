@@ -12,8 +12,6 @@
 #include "graphics/window.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-
-#include "js/js_game.h"
 #include "dev/debug.h"
 #include "building/count.h"
 
@@ -52,10 +50,14 @@ void building_pottery::on_place_checks() {
 bool building_pottery::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 
-    int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
-    if (amount >= 0) {
+    int amount = ceilf(base.stored_amount() / 100.f);
+    if (amount > 0) {
         const auto &ranim = anim(animkeys().clay);
-        ImageDraw::img_generic(ctx, ranim.first_img() + amount, point + ranim.pos, color_mask);
+        vec2i pos = ranim.pos;
+        for (int i = 0; i < amount; ++i) {
+            ImageDraw::img_generic(ctx, ranim.first_img() + amount, point + pos, color_mask);
+            pos += {5, -5};
+        }
     }
 
     return true;
