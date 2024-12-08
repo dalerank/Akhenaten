@@ -290,6 +290,7 @@ vfs::path building::get_sound() {
 void building::clear_related_data() {
     if (storage_id) {
         building_storage_delete(storage_id);
+        storage_id = 0;
     }
 
     if (is_governor_mansion()) {
