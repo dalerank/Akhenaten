@@ -38,14 +38,7 @@ void building_shipyard::spawn_figure() {
     if (has_figure_of_type(BUILDING_SLOT_BOAT, FIGURE_FISHING_BOAT)) {
         return;
     }
-
-    int pct_workers = worker_percentage();
-    if (pct_workers >= 100) data.industry.progress += 10;
-    else if (pct_workers >= 75) data.industry.progress += 8;
-    else if (pct_workers >= 50) data.industry.progress += 6;
-    else if (pct_workers >= 25) data.industry.progress += 4;
-    else if (pct_workers >= 1) data.industry.progress += 2;
-    
+   
     tile2i boat_tile;
     if (data.industry.progress >= 160 && map_water_can_spawn_boat(tile(), size(), boat_tile)) {
         if (data.dock.process_type == FIGURE_WARSHIP) {
@@ -134,6 +127,28 @@ void building_shipyard::update_day() {
             g_city.buildings.fishing_boats_requested--;
             return;
         }
+    }
+
+    int pct_workers = worker_percentage();
+    if (data.dock.process_type == FIGURE_WARSHIP && base.stored_amount_first > 0) {
+        int delta = 0;
+        if (pct_workers >= 100) delta = 5;
+        else if (pct_workers >= 75) delta = 4;
+        else if (pct_workers >= 50) delta = 3;
+        else if (pct_workers >= 25) delta = 2;
+        else if (pct_workers >= 1) delta = 1;
+
+        delta = std::min<int>(delta * 2, base.stored_amount_first) / 2;
+        if (delta >= 1) {
+            data.industry.progress += delta;
+            base.stored_amount_first -= delta * 2;
+        }
+    } else if (data.dock.process_type == FIGURE_FISHING_BOAT) {
+        if (pct_workers >= 100) data.industry.progress += 10;
+        else if (pct_workers >= 75) data.industry.progress += 8;
+        else if (pct_workers >= 50) data.industry.progress += 6;
+        else if (pct_workers >= 25) data.industry.progress += 4;
+        else if (pct_workers >= 1) data.industry.progress += 2;
     }
 
     building_industry::update_day();
