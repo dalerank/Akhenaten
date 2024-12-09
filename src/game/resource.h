@@ -53,6 +53,8 @@ enum e_resource : uint8_t {
     //
     RESOURCE_DEBEN = 36,
     RESOURCE_TROOPS = 37,
+    // RESOURCE_WARSHIP
+    // RESOURCE_FURNITURE
 
     RESOURCE_COUNT
 };

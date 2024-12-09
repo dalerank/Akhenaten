@@ -42,6 +42,7 @@ cart_images = [
 	{resource: RESOURCE_GOLD, pack:PACK_SPR_MAIN, id:98 },
 	{resource: RESOURCE_GEMS, pack:PACK_SPR_MAIN, id:95 },
 	{resource: RESOURCE_FLAX, pack:PACK_SPR_MAIN, id:93 },
+	{resource: RESOURCE_TIMBER, pack:PACK_SPR_MAIN, id:97 },
 ]
 
 cart_offsets = [
