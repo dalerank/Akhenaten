@@ -1275,7 +1275,7 @@ window info_window_booth = {
 	})
 }
 
-info_window_fishing_wharf = {
+window info_window_fishing_wharf = {
 	ui : __baseui(building_info_window, {
 		resource_img : { type : "resource_icon", pos: [32, 186] },
 		storage_desc : { type : "text", pos: [62, 186 + 2], font: FONT_NORMAL_BLACK_ON_LIGHT },
@@ -1498,8 +1498,8 @@ window shipyard_info_window = {
 		inner_panel   : inner_panel({pos : [16, 150], size: [27, 5],
 																ui : {
 																	workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
-																	workers_text : text({pos: [50, 16], font: FONT_NORMAL_BLACK_ON_DARK}),
-																	workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
+																	workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} (${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
+																	workers_desc : text({pos: [50, 32], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
 																}
 															}),
 		ready_prod    : text({pos: [30, 110], size: [px(27), 20], font : FONT_NORMAL_BLACK_ON_LIGHT }),
@@ -1517,7 +1517,7 @@ window scribal_school_info_window = {
 														ui : {
 															workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
 															workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} (${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
-															workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
+															workers_desc : text({pos: [50, 32], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
 														}
 													}),
 	})

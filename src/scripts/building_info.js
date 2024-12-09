@@ -648,7 +648,7 @@ building_carpenters_guild = {
   building_size : 2,
 }
 
-building_dock = {
+building building_dock = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:49 },
     base : { pack:PACK_TERRAIN, id:49 },
@@ -662,7 +662,7 @@ building_dock = {
   building_size : 3,
   info_help_id:82,
   info_text_id:101,
-  fire_proof : true,
+  check_water_access : true,
   window_info_height_id : 1,
 }
 
@@ -1240,7 +1240,7 @@ building_ferry = {
   labor_category : LABOR_CATEGORY_GOVERNMENT,
 }
 
-building_transport_wharf = {
+building building_transport_wharf = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:17 },
     base : { pack:PACK_TERRAIN, id:17 },
@@ -1253,7 +1253,7 @@ building_transport_wharf = {
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
-building_warship_wharf = {
+building building_warship_wharf = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:28 },
     base : { pack:PACK_TERRAIN, id:28 },
@@ -1267,7 +1267,7 @@ building_warship_wharf = {
     wait_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:4 },
   },
   building_size : 3,
-  fire_proof : true,
+  check_water_access : true,
   info_help_id: 84,
   info_text_id: 175,
   window_info_height_id: 1,
@@ -1295,6 +1295,7 @@ building building_fishing_wharf = {
   planer_relative_orientation: 1,
   info_help_id: 84,
   info_text_id: 102,
+  check_water_access : true,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
@@ -1313,6 +1314,7 @@ building building_shipyard = {
   planer_relative_orientation: 1,
   info_help_id: 82,
   info_text_id: 100,
+  check_water_access : true,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
