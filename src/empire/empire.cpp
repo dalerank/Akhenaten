@@ -199,7 +199,7 @@ int get_max_raw_stock_for_population(e_resource resource) {
     int finished_good = RESOURCE_NONE;
     switch (resource) {
     case RESOURCE_CLAY: finished_good = RESOURCE_POTTERY; break;
-    case RESOURCE_TIMBER: finished_good = RESOURCE_LUXURY_GOODS; break;
+    case RESOURCE_GEMS: finished_good = RESOURCE_LUXURY_GOODS; break;
     case RESOURCE_STRAW: finished_good = RESOURCE_OIL; break;
     case RESOURCE_BARLEY: finished_good = RESOURCE_BEER; break;
     case RESOURCE_FLAX: finished_good = RESOURCE_LINEN; break;
@@ -313,39 +313,42 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
         case RESOURCE_GAMEMEAT:
         case RESOURCE_OIL:
         case RESOURCE_BEER:
-        max_in_stock = get_max_food_stock_for_population(resource);
-        break;
+            max_in_stock = get_max_food_stock_for_population(resource);
+            break;
 
         case RESOURCE_MARBLE:
         case RESOURCE_WEAPONS:
-        max_in_stock = 10;
-        break;
+            max_in_stock = 10;
+            break;
 
         case RESOURCE_CLAY:
-        case RESOURCE_TIMBER:
         case RESOURCE_STRAW: 
         case RESOURCE_BARLEY:
         case RESOURCE_COPPER:
         case RESOURCE_FLAX:
-        max_in_stock = get_max_raw_stock_for_population(resource);
-        break;
+            max_in_stock = get_max_raw_stock_for_population(resource);
+            break;
+
+        case RESOURCE_TIMBER:
+            max_in_stock = building_count_active(BUILDING_SHIPWRIGHT) * 200;
+            break;
 
         case RESOURCE_BRICKS:
-        max_in_stock = std::max(100, (city_population() / 100) * 100);
-        break;
+            max_in_stock = std::max(100, (city_population() / 100) * 100);
+            break;
 
         case RESOURCE_POTTERY:
         case RESOURCE_LUXURY_GOODS:
-        max_in_stock = std::max(100, (city_population() / 100) * 50);
-        break;
+            max_in_stock = std::max(100, (city_population() / 100) * 50);
+            break;
 
         case RESOURCE_PAPYRUS:
-        max_in_stock = std::max(100, (building_count_active(BUILDING_SCRIBAL_SCHOOL) + building_count_active(BUILDING_LIBRARY)) * 100);
-        break;
+            max_in_stock = std::max(100, (building_count_active(BUILDING_SCRIBAL_SCHOOL) + building_count_active(BUILDING_LIBRARY)) * 100);
+            break;
 
         default:
-        max_in_stock = 100;
-        break;
+            max_in_stock = 100;
+            break;
         }
     } else {
         max_in_stock = city_resource_trading_amount(resource);
@@ -364,11 +367,13 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         iob->bind(BIND_SIGNATURE_UINT8, &city->name_id);
         iob->bind(BIND_SIGNATURE_UINT8, &city->route_id);
         iob->bind(BIND_SIGNATURE_UINT8, &city->is_open);
+
         for (int r = 0; r < RESOURCES_MAX; r++)
             iob->bind(BIND_SIGNATURE_UINT8, &city->buys_resource[r]);
         for (int r = 0; r < RESOURCES_MAX; r++) {
             iob->bind(BIND_SIGNATURE_UINT8, &city->sells_resource[r]);
         }
+
         iob->bind(BIND_SIGNATURE_INT16, &city->cost_to_open);
         iob->bind(BIND_SIGNATURE_INT16, &city->ph_unk01);
         iob->bind(BIND_SIGNATURE_INT16, &city->trader_entry_delay);
@@ -376,8 +381,10 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         iob->bind(BIND_SIGNATURE_INT16, &city->empire_object_id);
         iob->bind(BIND_SIGNATURE_UINT8, &city->is_sea_trade);
         iob->bind____skip(1);
+
         for (int f = 0; f < 3; f++)
             iob->bind(BIND_SIGNATURE_INT16, &city->trader_figure_ids[f]);
+        
         iob->bind____skip(10);
     }
 });
