@@ -22,7 +22,7 @@ struct empire_city {
     int ph_unk02;
     int trader_entry_delay;
     int empire_object_id;
-    int is_sea_trade;
+    bool is_sea_trade;
     int trader_figure_ids[3];
 
     void remove_trader(int figure_id);
