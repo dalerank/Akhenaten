@@ -17,6 +17,7 @@ public:
     virtual void spawn_figure() override;
     virtual void update_count() const override;
     virtual bool ship_moored() const override;
+    virtual void update_month() override;
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

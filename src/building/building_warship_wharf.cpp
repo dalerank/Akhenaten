@@ -41,13 +41,6 @@ void building_warship_wharf::spawn_figure() {
 }
 
 void building_warship_wharf::update_count() const {
-    if (num_workers() > 0 && base.has_open_water_access) {
-        const figure *boat = get_figure(BUILDING_SLOT_BOAT);
-        if (!boat->is_valid()) {
-            g_city.buildings.request_warship_boat();
-        }
-    }
-
     building_increase_type_count(BUILDING_WARSHIP_WHARF, num_workers() > 0);
 }
 
@@ -59,4 +52,15 @@ bool building_warship_wharf::ship_moored() const {
 
     const bool moored = f->action_state == FIGURE_ACTION_203_WARSHIP_MOORED;
     return moored;
+}
+
+void building_warship_wharf::update_month() {
+    building_wharf::update_month();
+
+    if (num_workers() > 0 && base.has_open_water_access) {
+        const figure *boat = get_figure(BUILDING_SLOT_BOAT);
+        if (!boat->is_valid()) {
+            g_city.buildings.request_warship_boat();
+        }
+    }
 }
