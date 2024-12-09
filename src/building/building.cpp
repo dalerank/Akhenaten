@@ -964,6 +964,7 @@ void building_impl::static_params::load(archive arch) {
     planer_relative_orientation = arch.r_int("planer_relative_orientation");
     is_draggable = arch.r_bool("is_draggable");
     production_rate = arch.r_uint("production_rate", 100);
+    check_water_access = arch.r_bool("check_water_access");
 
     city_labor_set_category(type, labor_category);
 

@@ -510,6 +510,7 @@ public:
         int planer_relative_orientation;
         uint16_t production_rate;
         bool unique_building;
+        bool check_water_access;
 
         void load(archive arch);
     };
