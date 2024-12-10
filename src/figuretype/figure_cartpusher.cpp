@@ -353,6 +353,14 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         }
     }
 
+    if (base.resource_id == RESOURCE_TIMBER) {
+        auto result = building_get_asker_for_resource(tile(), BUILDING_SHIPWRIGHT, base.resource_id, road_network_id, warehouse->distance_from_entry);
+        set_destination(result.building_id);
+        if (has_destination()) {
+            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+        }
+    }
+
     // priority 3: raw materials to workshop
     {
         tile2i dest;

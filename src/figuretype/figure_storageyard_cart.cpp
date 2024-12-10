@@ -13,11 +13,6 @@
 
 figures::model_t<figure_storageyard_cart> storageyard_cart_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_storageyard_cart);
-void config_load_figure_storageyard_cart() {
-    storageyard_cart_m.load();
-}
-
 void figure_storageyard_cart::figure_before_action() {
     if (has_destination()) {
         return;
