@@ -15,6 +15,7 @@
 #include "grid/building_tiles.h"
 #include "grid/routing/routing.h"
 #include "grid/terrain.h"
+#include "grid/building.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "scenario/map.h"
@@ -23,7 +24,6 @@
 #include "graphics/elements/lang_text.h"
 #include "city/labor.h"
 #include "city/city.h"
-#include "js/js_game.h"
 
 building_dock::static_params dock_m;
 
@@ -232,6 +232,14 @@ bool building_dock::accepts_ship(int ship_id) {
 
     return (any_acceptance > 0);
 }
+
+void building_dock::highlight_waypoints() {
+    building_impl::highlight_waypoints();
+
+    map_highlight_set(data.dock.dock_tiles[0], ehighligth_green);
+    map_highlight_set(data.dock.dock_tiles[1], ehighligth_green);
+}
+
 
 tile2i building_dock::moor_tile() const {
     vec2i offset;

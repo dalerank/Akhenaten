@@ -53,8 +53,8 @@ void building_ferry::highlight_waypoints() {
     building_impl::highlight_waypoints();
 
     ferry_tiles fpoints = map_water_docking_points(base);
-    map_highlight_set(fpoints.point_a, 3);
-    map_highlight_set(fpoints.point_b, 3);
+    map_highlight_set(fpoints.point_a, ehighligth_green);
+    map_highlight_set(fpoints.point_b, ehighligth_green);
 }
 
 void building_ferry::bind_dynamic(io_buffer *iob, size_t verrsion) {

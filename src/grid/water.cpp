@@ -46,23 +46,25 @@ void map_water_cache_river_tiles() {
 }
 
 ferry_tiles map_water_docking_points(building &b) {
-    if (!building_type_any_of(b, BUILDING_FERRY, BUILDING_FISHING_WHARF, BUILDING_SHIPWRIGHT)) {
+    const auto &params = building_impl::params(b.type);
+    if (!params.check_water_access) {
         return {{-1, -1},{-1, -1}};
     }
 
     ferry_tiles result;
+    const int bsize = params.building_size;
     switch (b.data.industry.orientation) {
     case 0:
         result.point_a = b.tile.shifted(1, -1);
         result.point_b = b.tile.shifted(0, -1);
         break;
     case 1:
-        result.point_a = b.tile.shifted(2, 0);
-        result.point_b = b.tile.shifted(2, 1);
+        result.point_a = b.tile.shifted(bsize, 0);
+        result.point_b = b.tile.shifted(bsize, 1);
         break;
     case 2:
-        result.point_a = b.tile.shifted(0, 2);
-        result.point_b = b.tile.shifted(1, 2);
+        result.point_a = b.tile.shifted(0, bsize);
+        result.point_b = b.tile.shifted(1, bsize);
         break;
     case 3:
         result.point_a = b.tile.shifted(-1, 0);

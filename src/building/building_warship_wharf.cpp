@@ -1,10 +1,10 @@
 #include "building_warship_wharf.h"
 
-#include "js/js_game.h"
 #include "city/labor.h"
 #include "grid/water.h"
 #include "grid/figure.h"
 #include "grid/image.h"
+#include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "city/city.h"
 #include "building/count.h"
@@ -38,6 +38,13 @@ void building_warship_wharf::spawn_figure() {
     if (has_road_access()) {
         common_spawn_labor_seeker(100);
     }
+}
+
+void building_warship_wharf::highlight_waypoints() {
+    building_wharf::highlight_waypoints();
+
+    map_highlight_set(data.dock.dock_tiles[0], ehighligth_green);
+    map_highlight_set(data.dock.dock_tiles[1], ehighligth_green);
 }
 
 void building_warship_wharf::update_count() const {

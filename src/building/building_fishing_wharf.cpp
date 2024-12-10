@@ -177,8 +177,8 @@ bool building_fishing_wharf::draw_ornaments_and_animations_height(painter &ctx, 
 void building_fishing_wharf::highlight_waypoints() {
     building_impl::highlight_waypoints();
 
-    map_highlight_set(data.dock.dock_tiles[0], 3);
-    map_highlight_set(data.dock.dock_tiles[1], 3);
+    map_highlight_set(data.dock.dock_tiles[0], ehighligth_green);
+    map_highlight_set(data.dock.dock_tiles[1], ehighligth_green);
 }
 
 void info_window_fishing_wharf::init(object_info &c) {

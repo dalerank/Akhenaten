@@ -107,8 +107,8 @@ bool building_shipyard::draw_ornaments_and_animations_height(painter &ctx, vec2i
 void building_shipyard::highlight_waypoints() {
     building_impl::highlight_waypoints();
 
-    map_highlight_set(data.dock.dock_tiles[0], 3);
-    map_highlight_set(data.dock.dock_tiles[1], 3);
+    map_highlight_set(data.dock.dock_tiles[0], ehighligth_green);
+    map_highlight_set(data.dock.dock_tiles[1], ehighligth_green);
 }
 
 void building_shipyard::on_create(int orientation) {

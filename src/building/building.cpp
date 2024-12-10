@@ -879,7 +879,7 @@ void building_impl::destroy_by_poof(bool clouds) {
 void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for roams from this building
     map_clear_highlights();
     if (has_road_access()) {
-        map_highlight_set(base.road_access, 2);
+        map_highlight_set(base.road_access, ehighligth_red);
     }
 
     if (base.house_size) { // building doesn't send roamers
@@ -892,7 +892,7 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
     map_grid_bound(&hx, &hy);
     map_point road_tile = map_closest_road_within_radius(tile2i(hx, hy), 1, 6);
     if (road_tile.valid()) {
-        map_highlight_set(road_tile, 1);
+        map_highlight_set(road_tile, ehighligth_blue);
     }
 
     hx = tilex() + 8;
@@ -900,7 +900,7 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
     map_grid_bound(&hx, &hy);
     road_tile = map_closest_road_within_radius(tile2i(hx, hy), 1, 6);
     if (road_tile.valid()) {
-        map_highlight_set(road_tile, 1);
+        map_highlight_set(road_tile, ehighligth_blue);
     }
 
     hx = tilex();
@@ -908,7 +908,7 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
     map_grid_bound(&hx, &hy);
     road_tile = map_closest_road_within_radius(tile2i(hx, hy), 1, 6);
     if (road_tile.valid()) {
-        map_highlight_set(road_tile, 1);
+        map_highlight_set(road_tile, ehighligth_blue);
     }
 
     hx = tilex() - 8;
@@ -916,7 +916,7 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
     map_grid_bound(&hx, &hy);
     road_tile = map_closest_road_within_radius(tile2i(hx, hy), 1, 6);
     if (road_tile.valid()) {
-        map_highlight_set(road_tile, 1);
+        map_highlight_set(road_tile, ehighligth_blue);
     }
 }
 

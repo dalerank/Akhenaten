@@ -28,11 +28,19 @@ void map_building_set(int grid_offset, int building_id) {
 void map_building_damage_clear(int grid_offset) {
     map_grid_set(&g_damage_grid, grid_offset, 0);
 }
-void map_highlight_set(int grid_offset, int mode) {
+
+void map_highlight_set(int grid_offset, e_highligth_mode mode) {
     if (grid_offset < 0) {
         return;
     }
     map_grid_set(&g_highlight_grid, grid_offset, mode);
+}
+e_highligth_mode map_is_highlighted(int grid_offset) {
+    if (config_get(CONFIG_UI_WALKER_WAYPOINTS)) {
+        return (e_highligth_mode)map_grid_get(&g_highlight_grid, grid_offset);
+    }
+
+    return ehighligth_none;
 }
 void map_highlight_clear(int grid_offset) {
     map_grid_set(&g_highlight_grid, grid_offset, 0);
@@ -43,14 +51,6 @@ int map_building_height_at(int grid_offset) {
 }
 void map_building_height_set(int grid_offset, int8_t height) {
     map_grid_set(&g_height_building_grid, grid_offset, height);
-}
-
-int map_is_highlighted(int grid_offset) {
-    if (config_get(CONFIG_UI_WALKER_WAYPOINTS)) {
-        return map_grid_get(&g_highlight_grid, grid_offset);
-    }
-    
-    return 0;
 }
 
 int map_building_damage_increase(int grid_offset) {
