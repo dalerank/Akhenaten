@@ -25,7 +25,8 @@
 building_shipyard::static_params building_shipyard_m;
 
 void building_shipyard::static_params::load(archive arch) {
-
+    warship_progress_cost = arch.r_int("warship_progress_cost");
+    fishingboat_progress_cost = arch.r_int("fishingboat_progress_cost");
 }
 
 void building_shipyard::spawn_figure() {
@@ -38,27 +39,43 @@ void building_shipyard::spawn_figure() {
     if (has_figure_of_type(BUILDING_SLOT_BOAT, FIGURE_FISHING_BOAT)) {
         return;
     }
+
+    if (data.dock.process_type == FIGURE_NONE) {
+        return;
+    }
    
     tile2i boat_tile;
-    if (data.industry.progress >= 160 && map_water_can_spawn_boat(tile(), size(), boat_tile)) {
-        if (data.dock.process_type == FIGURE_WARSHIP) {
+    const bool can_spawn_boat = map_water_can_spawn_boat(tile(), size(), boat_tile);
+    if (!can_spawn_boat) {
+        return;
+    }
+
+    const auto &params = current_params();
+    switch (data.dock.process_type) {
+    case FIGURE_WARSHIP: 
+        if (data.industry.progress >= params.warship_progress_cost) {
             figure *f = figure_create(FIGURE_WARSHIP, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_205_WARSHIP_CREATED;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
-        } else if (data.dock.process_type == FIGURE_FISHING_BOAT) {
+            data.industry.progress = 0;
+            data.dock.process_type = FIGURE_NONE;
+        }
+        break;
+
+    case FIGURE_FISHING_BOAT: 
+        if (data.industry.progress >= params.fishingboat_progress_cost) {
             figure *f = figure_create(FIGURE_FISHING_BOAT, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
-        } else if (data.dock.process_type == FIGURE_NONE) {
-            ; // nothing
-        } else {
-            assert(false && "building_shipyard: incorrect type requested");
+            data.industry.progress = 0;
+            data.dock.process_type = FIGURE_NONE;
         }
+        break;
 
-        data.industry.progress = 0;
-        data.dock.process_type = FIGURE_NONE;
+    default:
+        assert(false && "building_shipyard: incorrect type requested");
     }
 }
 
@@ -163,6 +180,8 @@ void building_shipyard::update_day() {
 }
 
 void building_shipyard::update_graphic() {
+    building_industry::update_graphic();
+
     xstring animkey;
     switch (data.dock.process_type) {
     case FIGURE_WARSHIP: animkey = animkeys().work_warship; break;
