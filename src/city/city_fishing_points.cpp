@@ -32,12 +32,12 @@ tile2i city_fishing_points_t::random_fishing_point(tile2i pos, bool free_only) {
     std::shuffle(std::begin(apoints), std::end(apoints), g);
     for (auto p: apoints) {
         if (free_only) {
-            grid_area area = map_grid_get_area(pos, 1, 1);
+            grid_area area = map_grid_get_area(p, 1, 1);
             tile2i result = area.find_if([] (const tile2i &tt) {
                 return map_has_figure_types_at(tt, FIGURE_FISHING_BOAT);
             });
 
-            if (!result.valid()) {
+            if (result.valid()) {
                 continue;
             }
         }
