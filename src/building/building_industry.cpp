@@ -10,7 +10,7 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     for (int i = 0; i < 10; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &data.industry.unk_b[i]);
     }
-    iob->bind(BIND_SIGNATURE_UINT8, &data.industry.has_fish);
+    iob->bind____skip(1);
     for (int i = 0; i < 13; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &data.industry.unk_c[i]);
     }

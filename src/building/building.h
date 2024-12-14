@@ -214,6 +214,7 @@ public:
             e_figure_type process_type;
             bool reparing;
             short progress;
+            bool has_fish;
         } dock;
         struct market_t {
             uint16_t inventory[8];
@@ -245,7 +246,6 @@ public:
             bool spawned_worker_this_month;
             uint8_t max_gatheres;
             int unk_b[10];
-            bool has_fish;
             uint8_t unk_c[13];
             uint8_t produce_multiplier;
             uint8_t blessing_days_left;

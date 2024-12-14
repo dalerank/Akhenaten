@@ -44,8 +44,10 @@ void building_shipyard::spawn_figure() {
         return;
     }
    
+    int extra_radius = (data.dock.process_type == FIGURE_WARSHIP) ? 1 : 0;
+
     tile2i boat_tile;
-    const bool can_spawn_boat = map_water_can_spawn_boat(tile(), size(), boat_tile);
+    const bool can_spawn_boat = map_water_can_spawn_boat(tile(), size() + extra_radius, boat_tile);
     if (!can_spawn_boat) {
         return;
     }
@@ -56,6 +58,7 @@ void building_shipyard::spawn_figure() {
         if (data.dock.progress >= params.warship_progress_cost) {
             figure *f = figure_create(FIGURE_WARSHIP, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_205_WARSHIP_CREATED;
+            f->direction = (data.dock.orientation + 3) % 8;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
             data.dock.progress = 0;
