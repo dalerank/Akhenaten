@@ -41,10 +41,6 @@ void building_fishing_wharf::static_params::load(archive arch) {
 
 }
 
-void building_fishing_wharf::on_create(int orientation) {
-    data.industry.orientation = orientation;
-}
-
 void building_fishing_wharf::on_place_update_tiles(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
     int img_id = anim(animkeys().base).first_img();
@@ -138,8 +134,8 @@ void building_fishing_wharf::spawn_figure() {
 
     bool cart_spawned = base.common_spawn_goods_output_cartpusher();
     if (cart_spawned) {
-        if (data.industry.has_fish) {
-            data.industry.has_fish = (base.stored_amount_first > 0);
+        if (data.dock.has_fish) {
+            data.dock.has_fish = (base.stored_amount_first > 0);
         }
     }
 }
@@ -179,6 +175,12 @@ void building_fishing_wharf::highlight_waypoints() {
     map_highlight_set(data.dock.dock_tiles[0], ehighligth_green);
     map_highlight_set(data.dock.dock_tiles[1], ehighligth_green);
 }
+
+void building_fishing_wharf::bind_dynamic(io_buffer *iob, size_t version) {
+    building_wharf::bind_dynamic(iob, version);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.dock.has_fish);
+}
+
 
 void info_window_fishing_wharf::init(object_info &c) {
     building_info_window::init(c);

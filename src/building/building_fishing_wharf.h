@@ -13,7 +13,6 @@ public:
         virtual void load(archive arch) override;
     };
 
-    virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void update_count() const override;
     virtual void update_day() override;
@@ -25,6 +24,7 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_WHARF; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual void highlight_waypoints() override;
+    virtual void bind_dynamic(io_buffer *iob, size_t version);
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
