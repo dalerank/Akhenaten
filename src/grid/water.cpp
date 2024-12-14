@@ -241,47 +241,6 @@ shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool ad
     return {false, 0};
 }
 
-water_dest map_water_get_wharf_for_new_fishing_boat(figure &boat) {
-    building* wharf = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_FISHING_WHARF) {
-            int wharf_boat_id = b->get_figure_id(BUILDING_SLOT_BOAT);
-            if (!wharf_boat_id || wharf_boat_id == boat.id) {
-                wharf = b;
-                break;
-            }
-        }
-    }
-    if (!wharf) {
-        return {false, 0};
-    }
-
-    int dx, dy;
-    tile2i tile;
-    switch (wharf->data.industry.orientation) {
-    case 0:
-        dx = 1;
-        dy = -1;
-        break;
-    case 1:
-        dx = 2;
-        dy = 1;
-        break;
-    case 2:
-        dx = 1;
-        dy = 2;
-        break;
-    default:
-        dx = -1;
-        dy = 1;
-        break;
-    }
-    tile2i wharf_tile = wharf->tile.shifted(dx, dy);
-    map_point_store_result(wharf_tile, tile);
-    return {true, wharf->id, tile};
-}
-
 water_dest map_water_find_alternative_fishing_boat_tile(figure &boat) {
     if (map_figure_id_get(boat.tile) == boat.id) {
         return {false};
