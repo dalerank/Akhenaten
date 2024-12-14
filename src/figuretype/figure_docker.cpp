@@ -265,7 +265,7 @@ bool figure_docker::deliver_import_resource(building* dock) {
     }
 
     figure* f = figure_get(ship_id);
-    auto ship = f->dcast_trade_ship();
+    auto ship = smart_cast<figure_trade_ship>(f);
     if (ship->action_state() != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->base.get_carrying_amount() <= 0) {
         return false;
     }

@@ -81,7 +81,6 @@ figure_impl *figure::dcast() {
     return _ptr;
 }
 
-figure_trade_ship *figure::dcast_trade_ship() { return dcast()->dcast_trade_ship(); }
 figure_sled *figure::dcast_sled() { return dcast()->dcast_sled(); }
 figure_musician *figure::dcast_musician() { return dcast()->dcast_musician(); }
 figure_dancer *figure::dcast_dancer() { return dcast()->dcast_dancer(); }
