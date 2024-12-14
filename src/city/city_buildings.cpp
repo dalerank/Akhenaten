@@ -114,12 +114,12 @@ bool building_exists_at(tile2i tile, building *b) {
 struct building_extra_data_t {
     int highest_id_in_use;
     int highest_id_ever;
-    int created_sequence;
+    //int created_sequence;
     //    int incorrect_houses;
     //    int unfixable_houses;
 };
 
-building_extra_data_t building_extra_data = { 0, 0, 0 };
+building_extra_data_t building_extra_data = { 0, 0 };
 
 void building_clear_all() {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
@@ -128,7 +128,7 @@ void building_clear_all() {
     }
     building_extra_data.highest_id_in_use = 0;
     building_extra_data.highest_id_ever = 0;
-    building_extra_data.created_sequence = 0;
+    //building_extra_data.created_sequence = 0;
     //    extra.incorrect_houses = 0;
     //    extra.unfixable_houses = 0;
 }
@@ -343,5 +343,5 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
             b->health_proof = 0;
         }
     }
-    building_extra_data.created_sequence = 0;
+    //building_extra_data.created_sequence = 0;
 });

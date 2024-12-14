@@ -4,15 +4,9 @@
 #include "figure/image.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-
-#include "js/js_game.h"
+#include "city/city_figures.h"
 
 figures::model_t<figure_delivery_boy> delivery_boy_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_delivery_boy);
-void config_load_figure_delivery_boy() {
-    delivery_boy_m.load();
-}
 
 void figure_delivery_boy::figure_before_action() {
     figure* leader = figure_get(base.leading_figure_id);

@@ -2,14 +2,12 @@
 
 #include "core/buffer.h"
 #include "core/span.hpp"
-#include "figure/figure.h"
+#include "grid/point.h"
 
 constexpr uint32_t MAX_PATH_LENGTH = 500;
 
-void figure_route_clear_all(void);
-void figure_route_clean(void);
-// void figure_route_add();
-// void route_remove();
+void figure_route_clear_all();
+void figure_route_clean();
 int figure_route_get_direction(int path_id, int index);
 
 void map_routing_adjust_tile_in_direction(int direction, tile2i &tile, int &grid_offset);

@@ -55,6 +55,7 @@ void building::bind_iob_figures(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT16, &figure_ids[2]);
     iob->bind(BIND_SIGNATURE_UINT16, &figure_ids[3]);
 }
+
 void building::set_figure(int i, int figure_id) {
     //assert(figure_ids_array[i] == 0);
     figure_ids[i] = figure_id;

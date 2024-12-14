@@ -17,6 +17,7 @@
 #include "sound/sound_city.h"
 #include "sound/sound.h"
 #include "widget/city/tile_draw.h"
+#include "city/city_figures.h"
 #include "widget/map_editor_tool.h"
 #include "game/game.h"
 

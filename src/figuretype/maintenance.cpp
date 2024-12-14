@@ -122,7 +122,7 @@ int figure::target_is_alive() {
         return 0;
 
     figure* target = figure_get(target_figure_id);
-    if (!target->is_dead() && target->created_sequence == target_figure_created_sequence)
+    if (!target->is_dead() /* && target->created_sequence == target_figure_created_sequence */)
         return 1;
 
     return 0;

@@ -119,6 +119,7 @@ void figure::legionary_attack_adjacent_enemy() {
     for (int i = 0; i < 8 && action_state != FIGURE_ACTION_150_ATTACK; i++)
         figure_combat_attack_figure_at(tile.grid_offset() + map_grid_direction_delta(i));
 }
+
 int figure::find_mop_up_target() {
     int target_id = target_figure_id;
     if (figure_get(target_id)->is_dead()) {
@@ -130,11 +131,9 @@ int figure::find_mop_up_target() {
         if (target_id) {
             figure* target = figure_get(target_id);
             destination_tile = target->tile;
-            //            destination_tile.x() = target->tile.x();
-            //            destination_tile.y() = target->tile.y();
             target_figure_id = target_id;
             target->targeted_by_figure_id = id;
-            target_figure_created_sequence = target->created_sequence;
+            //target_figure_created_sequence = target->created_sequence;
         } else {
             action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
             anim.frame = 0;

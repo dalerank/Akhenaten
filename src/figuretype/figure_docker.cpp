@@ -22,15 +22,9 @@
 #include "graphics/image_desc.h"
 #include "grid/road_access.h"
 #include "figuretype/figure_trader_ship.h"
-
-#include "js/js_game.h"
+#include "city/city_figures.h"
 
 figures::model_t<figure_docker> docker_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_docker);
-void config_load_figure_docker() {
-    docker_m.load();
-}
 
 bool figure_docker::try_import_resource(building* b, e_resource resource, int city_id) {
     building_storage_yard *warehouse = b->dcast_storage_yard();

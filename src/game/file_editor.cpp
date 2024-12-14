@@ -59,7 +59,7 @@ void game_file_editor_clear_data(void) {
     building_menu_set_all(true);
     building_clear_all();
     building_storage_clear_all();
-    figure_init_scenario();
+    g_city.figures.init_figures();
     enemy_armies_clear();
     figure_name_init();
     formations_clear();
@@ -103,7 +103,7 @@ static void prepare_map_for_editing(void) {
     //    empire_load_external_c3(1, scenario_empire_id());
     empire_object_init_cities();
 
-    figure_init_scenario();
+    g_city.figures.init_figures();
     figure_create_editor_flags();
 
     map_tiles_update_all_elevation();

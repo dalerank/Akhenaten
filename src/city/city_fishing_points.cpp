@@ -3,6 +3,7 @@
 #include "scenario/scenario.h"
 #include "scenario/map.h"
 #include "figuretype/figure_fishing_point.h"
+#include "city/city_figures.h"
 #include "grid/water.h"
 #include "grid/figure.h"
 

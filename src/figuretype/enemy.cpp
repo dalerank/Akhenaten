@@ -138,7 +138,7 @@ void figure::enemy_fighting(const formation* m) {
             //            destination_tile.x() = target->tile.x();
             //            destination_tile.y() = target->tile.y();
             target_figure_id = target_id;
-            target_figure_created_sequence = target->created_sequence;
+            //target_figure_created_sequence = target->created_sequence;
             target->targeted_by_figure_id = id;
             route_remove();
         }

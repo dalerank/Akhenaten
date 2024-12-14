@@ -2,6 +2,7 @@
 
 #include "core/calc.h"
 #include "city/city_buildings.h"
+#include "city/city_figures.h"
 #include "grid/road_network.h"
 #include "grid/road_access.h"
 #include "graphics/image.h"

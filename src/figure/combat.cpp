@@ -1,6 +1,7 @@
 #include "combat.h"
 
 #include "core/calc.h"
+#include "city/city_figures.h"
 #include "figure/formation.h"
 #include "figure/movement.h"
 #include "figure/properties.h"

@@ -199,7 +199,7 @@ void figure::hyena_action() {
                 //                    destination_tile.y() = target->tile.y();
                 target_figure_id = target_id;
                 target->targeted_by_figure_id = id;
-                target_figure_created_sequence = target->created_sequence;
+                //target_figure_created_sequence = target->created_sequence;
                 route_remove();
             } else {
                 direction = previous_tile_direction;

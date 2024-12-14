@@ -4,22 +4,13 @@
 #include "sound/sound.h"
 #include "graphics/animkeys.h"
 #include "figure/properties.h"
-#include "js/js_game.h"
+#include "city/city_figures.h"
 
 figures::model_t<figure_hunter_arrow> hunter_arrow_m;
 figures::model_t<figure_arrow> arrow_m;
 figures::model_t<figure_spear> spear_m;
 figures::model_t<figure_javelin> javelin_m;
 figures::model_t<figure_bolt> bolt_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_missiles);
-void config_load_figure_missiles() {
-    hunter_arrow_m.load();
-    arrow_m.load();
-    spear_m.load();
-    javelin_m.load();
-    bolt_m.load();
-}
 
 void figure_missile::create(int building_id, tile2i src, tile2i dst, e_figure_type type) {
     figure* f = figure_create(type, src, DIR_0_TOP_RIGHT);

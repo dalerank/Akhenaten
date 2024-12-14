@@ -7,9 +7,8 @@
 #include "graphics/animkeys.h"
 #include "figuretype/maintenance.h"
 #include "figuretype/figure_missile.h"
+#include "city/city_figures.h"
 #include "core/random.h"
-
-#include "js/js_game.h"
 
 struct ostrich_hunter_model : public figures::model_t<figure_ostrich_hunter> {
     using inherited = figures::model_t<figure_ostrich_hunter>;
@@ -22,11 +21,6 @@ struct ostrich_hunter_model : public figures::model_t<figure_ostrich_hunter> {
     int max_hunting_distance;
 };
 ostrich_hunter_model ostrich_hunter_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_ostrich_hunter);
-void config_load_figure_ostrich_hunter() {
-    ostrich_hunter_m.load();
-}
 
 static void scared_animals_in_area(tile2i center, int size) {
     map_grid_area_foreach(center, size, [] (tile2i tile) {

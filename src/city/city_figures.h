@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "figure/figure.h"
 
 struct city_figures_t {
     uint8_t fish_number;
@@ -16,4 +16,40 @@ struct city_figures_t {
     void on_post_load();
     void update();
     void add_animal();
+    void init_figures();
 };
+
+void figure_clear_all();
+
+figure *figure_get(int id);
+std::span<figure *> map_figures();
+
+template<typename ... Args>
+bool figure_type_none_of(figure &f, Args ... args) {
+    int types[] = { args... };
+    return (std::find(std::begin(types), std::end(types), f.type) == std::end(types));
+}
+
+template<typename ... Args>
+bool figure_type_any_of(figure &f, Args ... args) {
+    int types[] = { args... };
+    return (std::find(std::begin(types), std::end(types), f.type) != std::end(types));
+}
+
+template<typename ... Args, typename T>
+void figure_valid_do(T func, Args ... args) {
+    for (auto *f : map_figures()) {
+        if (f->is_valid() && figure_type_any_of(*f, args...)) {
+            func(*f);
+        }
+    }
+}
+
+template<typename ... Args, typename T>
+void figure_valid_do(T func) {
+    for (auto *f : map_figures()) {
+        if (f->is_valid()) {
+            func(*f);
+        }
+    }
+}

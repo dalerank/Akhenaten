@@ -11,17 +11,12 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "grid/figure.h"
-#include "js/js_game.h"
-
+#include "city/city_figures.h"
 #include "dev/debug.h"
+
 #include <iostream>
 
 figures::model_t<figure_trade_ship> trader_ship_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_trade_ship);
-void config_load_figure_trade_ship() {
-    trader_ship_m.load();
-}
 
 declare_console_command_p(sinkallships, game_cheat_sink_all_ships)
 void game_cheat_sink_all_ships(std::istream &is, std::ostream &os) {

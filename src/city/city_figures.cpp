@@ -3,7 +3,29 @@
 #include "core/profiler.h"
 #include "city/city.h"
 #include "city/city_figures.h"
-#include "figure/figure.h"
+#include "figure/figure_names.h"
+#include "core/random.h"
+
+struct figure_data_t {
+    //int created_sequence;
+    bool initialized;
+    std::array<figure *, MAX_FIGURES> figures;
+
+    void init() {
+        if (initialized) {
+            return;
+        }
+
+        for (int i = 0; i < MAX_FIGURES; i++) {
+            figures[i] = new figure(i);
+
+        }
+
+        initialized = true;
+    }
+};
+
+figure_data_t g_figure_data = { 0, false };
 
 void city_figures_t::reset() {
     enemies = 0;
@@ -15,6 +37,10 @@ void city_figures_t::reset() {
     if (security_breach_duration > 0) {
         security_breach_duration--;
     }
+}
+
+void city_figures_t::init_figures() {
+    g_figure_data.init();
 }
 
 void city_figures_t::on_post_load() {
@@ -75,3 +101,77 @@ int city_t::figures_total_invading_enemies() {
 bool city_t::figures_has_security_breach() {
     return figures.security_breach_duration > 0;
 }
+
+figure *figure_get(int id) {
+    return g_figure_data.figures[id];
+}
+
+std::span<figure *> map_figures() {
+    return make_span(g_figure_data.figures.data(), g_figure_data.figures.size());
+}
+
+figure *figure_take_from_pool() {
+    auto it = std::find_if(g_figure_data.figures.begin() + 1, g_figure_data.figures.end(), [] (auto &f) { return f->available(); });
+    return it != g_figure_data.figures.end() ? *it : nullptr;
+}
+
+figure *figure_create(e_figure_type type, tile2i tile, int dir) {
+    figure *f = figure_take_from_pool();
+    if (!f) {
+        return figure_get(0);
+    }
+
+    f->state = FIGURE_STATE_ALIVE;
+    f->faction_id = 1;
+    f->type = type;
+    f->use_cross_country = false;
+    f->terrain_usage = -1;
+    f->is_friendly = true;
+    //f->created_sequence = g_figure_data.created_sequence++;
+    f->direction = dir;
+    f->roam_length = 0;
+    f->source_tile = tile;
+    f->destination_tile = tile;
+    f->previous_tile = tile;
+    f->tile = tile;
+    f->destination_tile.set(0, 0);
+    f->cc_coords.x = 15 * tile.x();
+    f->cc_coords.y = 15 * tile.y();
+    f->progress_on_tile = 8;
+    f->progress_inside = 0;
+    f->progress_inside_speed = 0;
+    f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
+    f->name = figure_name_get(type, 0);
+    f->map_figure_add();
+
+    f->dcast()->on_create();
+
+    return f;
+}
+
+void figure_clear_all() {
+    if (!g_figure_data.initialized) {
+        return;
+    }
+
+    for (auto *f : g_figure_data.figures) {
+        int figure_id = f->id;
+        f->clear_impl();
+        memset(f, 0, sizeof(figure));
+        f->state = FIGURE_STATE_NONE;
+        f->id = figure_id;
+    }
+}
+
+io_buffer *iob_figures = new io_buffer([] (io_buffer *iob, size_t version) {
+    g_figure_data.init();
+    for (int i = 0; i < MAX_FIGURES; i++) {
+        figure_get(i)->bind(iob); // doing this because some members are PRIVATE.
+        figure_get(i)->id = i;
+    }
+});
+
+io_buffer *iob_figure_sequence = new io_buffer([] (io_buffer *iob, size_t version) {
+    iob->bind____skip(4);
+    //iob->bind(BIND_SIGNATURE_INT32, &g_figure_data.created_sequence);
+});

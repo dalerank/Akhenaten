@@ -3,17 +3,10 @@
 #include "core/profiler.h"
 #include "building/monuments.h"
 #include "graphics/graphics.h"
-
-#include "js/js_game.h"
+#include "city/city_figures.h"
 
 figures::model_t<figure_sled> sled_m;
 figures::model_t<figure_sled_puller> sled_puller_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_sled);
-void config_load_figure_sled() {
-    sled_m.load();
-    sled_puller_m.load();
-}
 
 void figure_sled::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Sled");

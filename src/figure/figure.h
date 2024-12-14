@@ -168,8 +168,8 @@ public:
     uint8_t wait_ticks_next_target;
     short target_figure_id;
     short targeted_by_figure_id;
-    unsigned short created_sequence;
-    unsigned short target_figure_created_sequence;
+    //unsigned short created_sequence;
+    //unsigned short target_figure_created_sequence;
     unsigned char num_attackers;
     short attacker_id1;
     short attacker_id2;
@@ -563,46 +563,14 @@ public:
     tile2i &destination_tile;
 };
 
-figure* figure_get(int id);
-std::span<figure*> map_figures();
+GENERATE_SMART_CAST(figure_impl)
+#define GENERATE_SMART_CAST_FIGURE(type) GENERATE_SMART_CAST_CUSTOM(figure_##type, type)
+GENERATE_SMART_CAST_FIGURE(fishing_point)
 
-figure* figure_create(e_figure_type type, tile2i tile, int dir);
 
-void figure_init_scenario();
-
-template<typename ... Args>
-bool figure_type_none_of(figure &f, Args ... args) {
-    int types[] = {args...};
-    return (std::find(std::begin(types), std::end(types), f.type) == std::end(types));
-}
-
-template<typename ... Args>
-bool figure_type_any_of(figure &f, Args ... args) {
-    int types[] = {args...};
-    return (std::find(std::begin(types), std::end(types), f.type) != std::end(types));
-}
-
-template<typename ... Args, typename T>
-void figure_valid_do(T func, Args ... args) {
-    for (auto *f: map_figures()) {
-        if (f->is_valid() && figure_type_any_of(*f, args...)) {
-            func(*f);
-        }
-    }
-}
-
-template<typename ... Args, typename T>
-void figure_valid_do(T func) {
-    for (auto *f: map_figures()) {
-        if (f->is_valid()) {
-            func(*f);
-        }
-    }
-}
-
+figure *figure_create(e_figure_type type, tile2i tile, int dir);
 int figure_movement_can_launch_cross_country_missile(tile2i src, tile2i dst);
 void figure_create_explosion_cloud(tile2i tile, int size);
-void figure_clear_all();
 
 namespace figures {
 

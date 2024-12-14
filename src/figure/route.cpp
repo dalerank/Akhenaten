@@ -1,5 +1,6 @@
 #include "route.h"
 
+#include "city/city_figures.h"
 #include "core/game_environment.h"
 #include "grid/routing/queue.h"
 #include "grid/routing/routing.h"
@@ -31,6 +32,7 @@ void figure_route_clear_all(void) {
         }
     }
 }
+
 void figure_route_clean(void) {
     auto &data = g_figure_route_data;
     for (int i = 0; i < MAX_ROUTES; i++) {

@@ -5,6 +5,7 @@
 #include "graphics/image.h"
 #include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
+#include "city/city_figures.h"
 
 #include <assert.h>
 

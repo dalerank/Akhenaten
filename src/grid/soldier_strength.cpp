@@ -4,6 +4,7 @@
 #include "grid/figure.h"
 #include "grid/grid.h"
 #include "grid/routing/routing.h"
+#include "city/city_figures.h"
 
 static grid_xx strength = {0, {FS_UINT8, FS_UINT8}};
 
