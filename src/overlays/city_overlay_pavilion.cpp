@@ -13,7 +13,7 @@ city_overlay* city_overlay_for_pavilion() {
 }
 
 bool city_overlay_pavilion::show_figure(const figure *f) const {
-    figure_musician *musician = ((figure *)f)->dcast_musician();
+    figure_musician *musician = smart_cast<figure_musician>((figure *)f);
     if (musician) {
         return musician->current_destination()->type == BUILDING_PAVILLION;
     }

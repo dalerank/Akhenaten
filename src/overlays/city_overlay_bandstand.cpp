@@ -26,7 +26,7 @@ xstring city_overlay_bandstand::get_tooltip_for_building(tooltip_context *c, con
 }
 
 bool city_overlay_bandstand::show_figure(const figure *f) const {
-    figure_musician *musician = ((figure *)f)->dcast_musician();
+    figure_musician *musician = smart_cast<figure_musician>((figure *)f);
     return musician
              ? musician->current_destination()->type == BUILDING_BANDSTAND
              : false;
