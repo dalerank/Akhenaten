@@ -53,3 +53,17 @@ void figure_valid_do(T func) {
         }
     }
 }
+
+template<typename ... Args>
+bool map_has_figure_types_at(tile2i tile, Args... types) {
+    int figure_id = map_figure_id_get(tile);
+    while (figure_id) {
+        figure *f = figure_get(figure_id);
+        if (figure_type_any_of(*f, types...)) {
+            return true;
+        }
+        figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;
+    }
+
+    return false;
+}
