@@ -15,9 +15,30 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/ui.h"
 #include "graphics/image_desc.h"
+#include "building/building_fishing_wharf.h"
 #include "city/city.h"
 
 figures::model_t<figure_fishing_boat> fishing_boat_m;
+
+water_dest map_water_get_wharf_for_new_fishing_boat(figure &boat) {
+    building_wharf *wharf = nullptr;
+
+    wharf = building_first_ex<building_wharf>([&boat] (building_wharf* w) {
+        int wharf_boat_id = w->get_figure_id(BUILDING_SLOT_BOAT);
+        if (!wharf_boat_id || wharf_boat_id == boat.id) {
+            return true;
+        }
+
+        return false;
+    });
+
+    if (!wharf) {
+        return { false, 0 };
+    }
+
+    tile2i dock_tile(wharf->data.dock.dock_tiles[0]);
+    return { true, wharf->id(), dock_tile };
+}
 
 void figure_fishing_boat::on_create() {
     base.allow_move_type = EMOVE_WATER;

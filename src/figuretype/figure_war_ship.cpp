@@ -15,9 +15,30 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/ui.h"
 #include "graphics/image_desc.h"
+#include "building/building_warship_wharf.h"
 #include "city/city.h"
 
 figures::model_t<figure_warship> warship_m;
+
+water_dest map_water_get_wharf_for_new_warship(figure &boat) {
+    building_warship_wharf *wharf = nullptr;
+
+    wharf = building_first_ex<building_warship_wharf>([&boat] (building_warship_wharf *w) {
+        int wharf_boat_id = w->get_figure_id(BUILDING_SLOT_BOAT);
+        if (!wharf_boat_id || wharf_boat_id == boat.id) {
+            return true;
+        }
+
+        return false;
+    });
+
+    if (!wharf) {
+        return { false, 0 };
+    }
+
+    tile2i dock_tile(wharf->data.dock.dock_tiles[0]);
+    return { true, wharf->id(), dock_tile };
+}
 
 void figure_warship::on_create() {
     base.allow_move_type = EMOVE_WATER;
@@ -36,12 +57,12 @@ void figure_warship::figure_action() {
 
     int wharf_boat_id = b->get_figure_id(BUILDING_SLOT_BOAT);
     if (action_state() != FIGURE_ACTION_205_WARSHIP_CREATED && wharf_boat_id != id()) {
-        water_dest result = map_water_get_wharf_for_new_fishing_boat(base);
+        water_dest result = map_water_get_wharf_for_new_warship(base);
         b = building_get(result.bid);
         if (b->id) {
             set_home(b->id);
             b->set_figure(BUILDING_SLOT_BOAT, &base);
-            advance_action(FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
+            advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
             destination_tile = result.tile;
             base.source_tile = result.tile;
             route_remove();
@@ -57,7 +78,7 @@ void figure_warship::figure_action() {
         wait_ticks++;
         if (wait_ticks >= 50) {
             wait_ticks = 0;
-            water_dest result = map_water_get_wharf_for_new_fishing_boat(base);
+            water_dest result = map_water_get_wharf_for_new_warship(base);
             if (result.bid) {
                 b->remove_figure_by_id(id()); // remove from original building
                 set_home(result.bid);
