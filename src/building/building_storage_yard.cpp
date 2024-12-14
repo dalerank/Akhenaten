@@ -822,7 +822,7 @@ void building_storage_yard::spawn_figure() {
         }
 
         figure *f = figure_create(FIGURE_SLED, base.tile, 0);
-        figure_sled *sled = f->dcast_sled();
+        figure_sled *sled = smart_cast<figure_sled>(f);
         sled->set_destination(task.dest);
         sled->set_direction_to(task.dest);
         sled->load_resource(task.resource, task.amount);
