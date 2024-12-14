@@ -55,6 +55,18 @@ inline building *building_first(T pred) {
     return nullptr;
 }
 
+template <typename B, typename T>
+inline B *building_first_ex(T pred) {
+    for (auto it = building_begin(), end = building_end(); it != end; ++it) {
+        B *b = smart_cast<B *>(it);
+
+        if (b && b->is_valid() && pred(b)) {
+            return b;
+        }
+    }
+    return nullptr;
+}
+
 template <typename ... Args>
 inline building *building_first_of_type(Args ... types) {
     for (auto &b : city_buildings()) {
@@ -83,6 +95,7 @@ void buildings_valid_do(F func) {
         if (!b.is_valid()) {
             continue;
         }
+
         T *ptr = smart_cast<T *>(b.dcast());
         if (ptr) {
             func(ptr);
