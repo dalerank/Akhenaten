@@ -25,7 +25,7 @@ struct figure_data_t {
     }
 };
 
-figure_data_t g_figure_data = { 0, false };
+figure_data_t g_figure_data = { false };
 
 void city_figures_t::reset() {
     enemies = 0;
