@@ -132,7 +132,7 @@ void figure_immigrant::create(building *house, int num_people) {
     f->wait_ticks = 10 + (house->map_random_7bit & 0x7f);
     f->migrant_num_people = num_people;
 
-    figure_immigrant *imm = f->dcast_immigrant();
+    auto imm = smart_cast<figure_immigrant>(f);
     if (imm) {
         imm->set_immigrant_home(house->id);
     }

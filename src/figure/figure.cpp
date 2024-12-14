@@ -81,7 +81,6 @@ figure_impl *figure::dcast() {
     return _ptr;
 }
 
-figure_immigrant *figure::dcast_immigrant() { return dcast()->dcast_immigrant(); }
 figure_cartpusher *figure::dcast_cartpusher() { return dcast()->dcast_cartpusher(); }
 figure_storageyard_cart *figure::dcast_storageyard_cart() { return dcast()->dcast_storageyard_cart(); }
 figure_trade_ship *figure::dcast_trade_ship() { return dcast()->dcast_trade_ship(); }

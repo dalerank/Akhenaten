@@ -222,7 +222,6 @@ public:
     figure_impl *_ptr = nullptr;
     
     figure_impl *dcast();
-    figure_immigrant *dcast_immigrant();
     figure_cartpusher *dcast_cartpusher();
     figure_storageyard_cart *dcast_storageyard_cart();
     figure_trade_ship *dcast_trade_ship();
@@ -566,7 +565,12 @@ public:
 GENERATE_SMART_CAST(figure_impl)
 #define GENERATE_SMART_CAST_FIGURE(type) GENERATE_SMART_CAST_CUSTOM(figure_##type, type)
 GENERATE_SMART_CAST_FIGURE(fishing_point)
+GENERATE_SMART_CAST_FIGURE(immigrant)
 
+template <typename dest_type>
+inline typename dest_type *smart_cast(figure *b) {
+    return ::smart_cast<dest_type*>(b->dcast());
+}
 
 figure *figure_create(e_figure_type type, tile2i tile, int dir);
 int figure_movement_can_launch_cross_country_missile(tile2i src, tile2i dst);
