@@ -94,7 +94,7 @@ struct object_info {
     building *building_get();
 
     template<typename T>
-    typename T* figure_get() {
+    T* figure_get() {
         return smart_cast<T>(figure_get());
     }
 };

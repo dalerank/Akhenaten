@@ -18,7 +18,7 @@ bool city_overlay_pavilion::show_figure(const figure *f) const {
         return musician->current_destination()->type == BUILDING_PAVILLION;
     }
 
-    figure_dancer *dancer = ((figure *)f)->dcast_dancer();
+    figure_dancer *dancer = smart_cast<figure_dancer>((figure *)f);
     if (dancer) {
         return true;
     }
