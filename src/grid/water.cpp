@@ -302,7 +302,7 @@ bool map_water_can_spawn_boat(tile2i tile, int size, tile2i &boat_tile) {
     map_grid_adjacent_offsets(size, offsets);
     for (const int& tile_delta: offsets) {
         int grid_offset = base_offset + tile_delta;
-        if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
+        if (map_terrain_is(grid_offset, TERRAIN_WATER|TERRAIN_DEEPWATER)) {
             if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
                 if (num_surrounding_water_tiles(grid_offset) >= 8) {
                     map_point_store_result(tile2i(grid_offset), boat_tile);

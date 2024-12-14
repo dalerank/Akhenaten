@@ -741,11 +741,11 @@ figure figure_ferry_boat = {
 
 figure figure_warship = {
 	animations : {
-		walk : {pack:PACK_SPR_MAIN, id:141, max_frames:4, duration:3 },
-		swim : {pack:PACK_SPR_MAIN, id:141, max_frames:4, duration:3 },
+		walk : {pack:PACK_SPR_MAIN, id:141, max_frames:4, duration:10 },
+		swim : {pack:PACK_SPR_MAIN, id:141, max_frames:4, duration:10 },
 		death : {pack:PACK_SPR_MAIN, id:142, max_frames:8, loop:false },
 		attack : {pack:PACK_SPR_MAIN, id:143, max_frames:6, duration:5 },
-		idle : {pack:PACK_SPR_MAIN, id:144, offset:3, max_frames:1 },
+		idle : {pack:PACK_SPR_MAIN, id:143, offset:3, max_frames:1 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANY,
 }

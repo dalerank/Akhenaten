@@ -90,34 +90,27 @@ void figure_warship::figure_action() {
         }
         break;
 
-    case FIGURE_ACTION_206_WARSHIP_GOING_TO_POINT:
+    case FIGURE_ACTION_206_WARSHIP_GOING_TO_PATROL:
         base.move_ticks(1);
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
-            grid_area area = map_grid_get_area(tile(), 1, 1);
-            tile2i another_boat_tile = area.find_if([this] (const tile2i &tt) {
-                bool has_figure = map_has_figure_types_at(tt, FIGURE_FISHING_BOAT, FIGURE_WARSHIP);
-                return (has_figure && map_figure_id_get(tt) != id());
-            });
-
-            if (another_boat_tile.valid()) {
-                wait_ticks = 999;
-                advance_action(FIGURE_ACTION_208_WARSHIP_GOING_TO_RANDOM);
-                return;
-            }
-
-            water_dest result = map_water_find_alternative_fishing_boat_tile(base);
-            if (result.found) {
-                route_remove();
-                destination_tile = result.tile;
-            } else {
-                advance_action(FIGURE_ACTION_204_WARSHIP_ATTACK);
-                base.direction = base.previous_tile_direction;
-                wait_ticks = 0;
-            }
+            advance_action(FIGURE_ACTION_209_WARSHIP_ON_PATROL);
+            destination_tile = base.source_tile;
+            wait_ticks = 0;
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            advance_action(FIGURE_ACTION_209_WARSHIP_ON_PATROL);
+            destination_tile = base.source_tile;
+            wait_ticks = 0;
+        }
+        break;
+
+    case FIGURE_ACTION_209_WARSHIP_ON_PATROL:
+        wait_ticks++;
+        if (wait_ticks >= 200) {
+            wait_ticks = 0;
             advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
             destination_tile = base.source_tile;
+            route_remove();
         }
         break;
 
@@ -150,7 +143,7 @@ void figure_warship::figure_action() {
             wait_ticks = 0;
             tile2i fish_tile = g_city.fishing_points.random_fishing_point(tile(), true);
             if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
-                advance_action(FIGURE_ACTION_206_WARSHIP_GOING_TO_POINT);
+                advance_action(FIGURE_ACTION_206_WARSHIP_GOING_TO_PATROL);
                 destination_tile = fish_tile;
                 route_remove();
             }
@@ -159,7 +152,7 @@ void figure_warship::figure_action() {
     case FIGURE_ACTION_203_WARSHIP_MOORED: {
             int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
             int max_wait_ticks = 5 * (102 - pct_workers);
-            if (b->data.industry.has_fish) {
+            if (b->data.dock.has_fish) {
                 pct_workers = 0;
             }
 
@@ -169,7 +162,7 @@ void figure_warship::figure_action() {
                     wait_ticks = 0;
                     tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile(), true);
                     if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
-                        advance_action(FIGURE_ACTION_206_WARSHIP_GOING_TO_POINT);
+                        advance_action(FIGURE_ACTION_206_WARSHIP_GOING_TO_PATROL);
                         destination_tile = fish_tile;
                         route_remove();
                     }
@@ -197,13 +190,10 @@ bool figure_warship::window_info_background(object_info &c) {
 void figure_warship::update_animation() {
     pcstr anim_key = "walk";
     switch (action_state()) {
-    case FIGURE_ACTION_192_FISHING_BOAT_FISHING:
-        anim_key = "work";
-        break;
-
-    case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF:
-        anim_key = "idle";
-        break;
+    case FIGURE_ACTION_192_FISHING_BOAT_FISHING: anim_key = "work"; break;
+    case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: anim_key = "idle"; break;
+    case FIGURE_ACTION_205_WARSHIP_CREATED: anim_key = "idle"; break;
+    case FIGURE_ACTION_209_WARSHIP_ON_PATROL: anim_key = "idle"; break;
     }
 
     image_set_animation(anim_key);
