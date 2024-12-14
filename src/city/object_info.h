@@ -7,6 +7,7 @@
 #include "city/constants.h"
 #include "overlays/city_overlay_fwd.h"
 #include "core/svector.h"
+#include "figure/figure.h"
 
 enum terrain_info_type {
     TERRAIN_INFO_NONE = 0,
@@ -40,7 +41,6 @@ enum terrain_info_type {
 };
 
 struct common_info_window;
-class figure;
 class building;
 
 struct object_info {
