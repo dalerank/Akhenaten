@@ -119,7 +119,7 @@ void figure_fishing_boat::figure_action() {
                 wait_ticks = 0;
             }
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action(FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF);
+            advance_action(FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
             destination_tile = base.source_tile;
         }
         break;
@@ -162,7 +162,7 @@ void figure_fishing_boat::figure_action() {
     case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: {
             int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
             int max_wait_ticks = 5 * (102 - pct_workers);
-            if (b->data.industry.has_fish) {
+            if (b->data.dock.has_fish) {
                 pct_workers = 0;
             }
 
@@ -177,6 +177,8 @@ void figure_fishing_boat::figure_action() {
                         route_remove();
                     }
                 }
+            } else {
+                ; // nothing
             }
         } break;
 
@@ -187,7 +189,7 @@ void figure_fishing_boat::figure_action() {
             advance_action(FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF);
             wait_ticks = 0;
             b->figure_spawn_delay = 1;
-            b->data.industry.has_fish = true;
+            b->data.dock.has_fish = true;
             b->stored_amount_first += 200;
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
