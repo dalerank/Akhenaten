@@ -1,6 +1,7 @@
 #pragma once
 
 #include "figure/figure.h"
+#include "grid/figure.h"
 
 struct city_figures_t {
     uint8_t fish_number;
