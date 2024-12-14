@@ -222,8 +222,6 @@ public:
     figure_impl *_ptr = nullptr;
     
     figure_impl *dcast();
-    figure_labor_seeker *dcast_labor_seeker();
-    figure_worker *dcast_worker();
     figure_soldier *dcast_soldier();
     figure_fishing_boat *dcast_fishing_boat();
     figure_fishing_point *dcast_fishing_point();
@@ -546,6 +544,7 @@ public:
     inline void set_home(int _id) { base.set_home(_id); }
     inline void set_home(building *b) { base.set_home(b); }
     inline void set_direction_to(building *b) { return base.set_direction_to(b); }
+    inline bool is_alive() const { return base.is_alive(); }
 
     bvariant get_property(const xstring &domain, const xstring &name) const;
 
@@ -566,6 +565,8 @@ GENERATE_SMART_CAST_FIGURE(trade_ship)
 GENERATE_SMART_CAST_FIGURE(sled)
 GENERATE_SMART_CAST_FIGURE(musician)
 GENERATE_SMART_CAST_FIGURE(dancer)
+GENERATE_SMART_CAST_FIGURE(labor_seeker)
+GENERATE_SMART_CAST_FIGURE(worker)
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *b) {

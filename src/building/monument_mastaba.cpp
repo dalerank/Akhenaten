@@ -28,6 +28,7 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
+#include "figuretype/figure_worker.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
 
@@ -194,8 +195,8 @@ void building_small_mastaba::update_month() {
     }
 
     for (uint16_t &w_id : data.monuments.workers) {
-        figure* f = figure_get(w_id);
-        if (f->state != FIGURE_STATE_ALIVE || !f->dcast_worker() || f->destination() != &base) {
+        auto worker = figure_get<figure_worker>(w_id);
+        if (!worker || worker->is_alive() || worker->destination() != &base) {
             w_id = 0;
         }
     }

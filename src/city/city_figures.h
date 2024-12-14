@@ -23,6 +23,11 @@ struct city_figures_t {
 void figure_clear_all();
 
 figure *figure_get(int id);
+
+template<typename T>
+T* figure_get(int id) {
+    return smart_cast<T>(::figure_get(id));
+}
 std::span<figure *> map_figures();
 
 template<typename ... Args>
