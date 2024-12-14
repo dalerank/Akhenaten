@@ -702,7 +702,7 @@ figure_soldier_infantry = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure_fishing_point = {
+figure figure_fishing_point = {
 	animations : {
 		point : { pack:PACK_SPR_AMBIENT, id:8, max_frames:22, duration:4 },
 		bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames: 22, duration:4},
@@ -710,7 +710,7 @@ figure_fishing_point = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure_fishing_spot = {
+figure figure_fishing_spot = {
 	animations : {
 		point : { pack:PACK_SPR_AMBIENT, id:8, max_frames:22, duration:4 },
 		bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames: 22, duration:4},
@@ -718,31 +718,52 @@ figure_fishing_spot = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure_fishing_boat = {
+figure figure_fishing_boat = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:134, max_frames:4, duration:3 },
-		swim : { pos : [0, 0], pack:PACK_SPR_MAIN, id:134, max_frames:4, duration:3 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:135, max_frames:8, loop:false },
-		work : { pos : [0, 0], pack:PACK_SPR_MAIN, id:135, max_frames:6, duration:5 },
-		idle : { pos : [0, 0], pack:PACK_SPR_MAIN, id:136, offset:3, max_frames:1 },
+		walk : {pack:PACK_SPR_MAIN, id:134, max_frames:4, duration:3 },
+		swim : {pack:PACK_SPR_MAIN, id:134, max_frames:4, duration:3 },
+		death : {pack:PACK_SPR_MAIN, id:135, max_frames:8, loop:false },
+		work : {pack:PACK_SPR_MAIN, id:135, max_frames:6, duration:5 },
+		idle : {pack:PACK_SPR_MAIN, id:136, offset:3, max_frames:1 },
+	},
+	terrain_usage : TERRAIN_USAGE_ANY,
+}
+
+figure figure_ferry_boat = {
+	animations : {
+		walk : {pack:PACK_SPR_MAIN, id:137, max_frames:4, duration:3 },
+		swim : {pack:PACK_SPR_MAIN, id:137, max_frames:4, duration:3 },
+		death : {pack:PACK_SPR_MAIN, id:138, max_frames:8, loop:false },
+		idle : {pack:PACK_SPR_MAIN, id:139, offset:3, max_frames:1 },
+	},
+	terrain_usage : TERRAIN_USAGE_ANY,
+}
+
+figure figure_warship = {
+	animations : {
+		walk : {pack:PACK_SPR_MAIN, id:141, max_frames:4, duration:3 },
+		swim : {pack:PACK_SPR_MAIN, id:141, max_frames:4, duration:3 },
+		death : {pack:PACK_SPR_MAIN, id:142, max_frames:8, loop:false },
+		attack : {pack:PACK_SPR_MAIN, id:143, max_frames:6, duration:5 },
+		idle : {pack:PACK_SPR_MAIN, id:144, offset:3, max_frames:1 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_soldier_archer = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:61, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:62, max_frames:8, loop:false },
-		attack : { pos : [0, 0], pack:PACK_SPR_MAIN, id:63, max_frames:12 },
+		walk : {pack:PACK_SPR_MAIN, id:61, max_frames:12 },
+		death : {pack:PACK_SPR_MAIN, id:62, max_frames:8, loop:false },
+		attack : {pack:PACK_SPR_MAIN, id:63, max_frames:12 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_soldier_charioteer = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:67, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:68, max_frames:8, loop:false },
-		attack : { pos : [0, 0], pack:PACK_SPR_MAIN, id:69, max_frames:12 },
+		walk : {pack:PACK_SPR_MAIN, id:67, max_frames:12 },
+		death : {pack:PACK_SPR_MAIN, id:68, max_frames:8, loop:false },
+		attack : {pack:PACK_SPR_MAIN, id:69, max_frames:12 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANY,
 }

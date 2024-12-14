@@ -211,6 +211,7 @@ public:
             uint8_t docker_anim_frame;
             e_figure_type process_type;
             bool reparing;
+            short progress;
         } dock;
         struct market_t {
             uint16_t inventory[8];

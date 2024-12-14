@@ -163,6 +163,7 @@ figure_soldier *figure::dcast_soldier() { return dcast()->dcast_soldier(); }
 figure_fishing_boat *figure::dcast_fishing_boat() { return dcast()->dcast_fishing_boat(); }
 figure_fishing_point *figure::dcast_fishing_point() { return dcast()->dcast_fishing_point(); }
 figure_caravan_donkey *figure::dcast_caravan_donkey() { return dcast()->dcast_caravan_donkey(); }
+figure_warship *figure::dcast_warship() { return dcast()->dcast_warship(); }
 
 bool figure::in_roam_history(int goffset) {
     return roam_history.exist(goffset);

@@ -53,23 +53,23 @@ void building_shipyard::spawn_figure() {
     const auto &params = current_params();
     switch (data.dock.process_type) {
     case FIGURE_WARSHIP: 
-        if (data.industry.progress >= params.warship_progress_cost) {
+        if (data.dock.progress >= params.warship_progress_cost) {
             figure *f = figure_create(FIGURE_WARSHIP, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_205_WARSHIP_CREATED;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
-            data.industry.progress = 0;
+            data.dock.progress = 0;
             data.dock.process_type = FIGURE_NONE;
         }
         break;
 
     case FIGURE_FISHING_BOAT: 
-        if (data.industry.progress >= params.fishingboat_progress_cost) {
+        if (data.dock.progress >= params.fishingboat_progress_cost) {
             figure *f = figure_create(FIGURE_FISHING_BOAT, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
-            data.industry.progress = 0;
+            data.dock.progress = 0;
             data.dock.process_type = FIGURE_NONE;
         }
         break;
@@ -80,15 +80,14 @@ void building_shipyard::spawn_figure() {
 }
 
 void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
-    building_industry::bind_dynamic(iob, version);
-
+    iob->bind(BIND_SIGNATURE_INT16, &data.dock.progress);
     iob->bind(BIND_SIGNATURE_UINT8, &data.dock.orientation);
     iob->bind(BIND_SIGNATURE_UINT8, &data.dock.process_type);
     iob->bind(BIND_SIGNATURE_UINT8, &data.dock.reparing);
 }
 
 void building_shipyard::update_map_orientation(int orientation) {
-    int image_offset = city_view_relative_orientation(data.industry.orientation);
+    int image_offset = city_view_relative_orientation(data.dock.orientation);
     int image_id = anim(animkeys().base).first_img() + image_offset;
     map_water_add_building(id(), tile(), building_shipyard_m.building_size, image_id);
 }
@@ -112,8 +111,7 @@ void building_shipyard::highlight_waypoints() {
 }
 
 void building_shipyard::on_create(int orientation) {
-    data.industry.orientation = orientation;
-    data.industry.progress_max = 200;
+    data.dock.orientation = orientation;
 }
 
 void building_shipyard::on_place_update_tiles(int orientation, int variant) {
@@ -144,14 +142,14 @@ void building_shipyard::update_day() {
         else if (pct_workers >= 1) delta = 1;
 
         delta = std::min<int>(delta, base.stored_amount_first);
-        data.industry.progress += delta;
+        data.dock.progress += delta;
         base.stored_amount_first -= delta;
     } else if (data.dock.process_type == FIGURE_FISHING_BOAT) {
-        if (pct_workers >= 100) data.industry.progress += 10;
-        else if (pct_workers >= 75) data.industry.progress += 8;
-        else if (pct_workers >= 50) data.industry.progress += 6;
-        else if (pct_workers >= 25) data.industry.progress += 4;
-        else if (pct_workers >= 1) data.industry.progress += 2;
+        if (pct_workers >= 100) data.dock.progress += 10;
+        else if (pct_workers >= 75) data.dock.progress += 8;
+        else if (pct_workers >= 50) data.dock.progress += 6;
+        else if (pct_workers >= 25) data.dock.progress += 4;
+        else if (pct_workers >= 1) data.dock.progress += 2;
     }
 
     if (data.dock.process_type == FIGURE_WARSHIP && g_city.buildings.warship_boats_requested > 0) {
