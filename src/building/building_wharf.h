@@ -6,6 +6,8 @@ class building_wharf : public building_impl {
 public:
     building_wharf(building &b) : building_impl(b) {}
 
+    virtual building_wharf *dcast_wharf() override { return this; }
+
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_tick(bool refresh_only) override;

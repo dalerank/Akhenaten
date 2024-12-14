@@ -55,6 +55,7 @@ class building_ferry;
 class building_fort_ground;
 class building_fort;
 class building_fishing_wharf;
+class building_warship_wharf;
 class building_shipyard;
 class building_plaza;
 class building_garden;
@@ -75,6 +76,7 @@ class building_guild;
 class building_entertainment;
 class building_mansion;
 class building_physician;
+class building_wharf;
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -381,7 +383,7 @@ public:
     void new_fill_in_data_for_type(e_building_type type, tile2i tile, int orientation);
 
     e_overlay get_overlay() const;
-    const int get_figure_id(int i) const { return figure_ids[i]; };
+    int get_figure_id(int i) const { return figure_ids[i]; };
 
     figure* get_figure(int i);
     void bind_iob_figures(io_buffer* iob);
@@ -466,6 +468,8 @@ public:
     building_entertainment *dcast_entertainment();
     building_mansion *dcast_mansion();
     building_physician *dcast_physician();
+    building_wharf *dcast_wharf();
+    building_warship_wharf *dcast_warship_wharf();
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
@@ -604,6 +608,8 @@ public:
     virtual building_entertainment *dcast_entertainment() { return nullptr; }
     virtual building_mansion *dcast_mansion() { return nullptr; }
     virtual building_physician *dcast_physician() { return nullptr; }
+    virtual building_wharf *dcast_wharf() { return nullptr; }
+    virtual building_warship_wharf *dcast_warship_wharf() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -618,6 +624,7 @@ public:
     inline const model_building *model() const { return model_get_building(type()); }
     inline int max_workers() const { return model_get_building(type())->laborers; }
     inline int pct_workers() const { return calc_percentage<int>(num_workers(), max_workers()); }
+    inline int get_figure_id(int i) const { return base.get_figure_id(i); }
 
     inline bool has_figure_of_type(int i, e_figure_type _type) { return base.has_figure_of_type(i, _type);  }
     inline figure *create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE) { return base.create_figure_with_destination(_type, destination, created_action, slot); }
@@ -718,54 +725,57 @@ int building_mothball_set(building* b, int value);
 bool resource_required_by_workshop(building* b, e_resource resource);
 
 GENERATE_SMART_CAST(building_impl)
-GENERATE_SMART_CAST_CUSTOM(building_juggler_school, juggler_school)
-GENERATE_SMART_CAST_CUSTOM(building_storage_yard, storage_yard)
-GENERATE_SMART_CAST_CUSTOM(building_storage_room, storage_room)
-GENERATE_SMART_CAST_CUSTOM(building_brewery, brewery)
-GENERATE_SMART_CAST_CUSTOM(building_pottery, pottery)
-GENERATE_SMART_CAST_CUSTOM(building_bazaar, bazaar)
-GENERATE_SMART_CAST_CUSTOM(building_firehouse, firehouse)
-GENERATE_SMART_CAST_CUSTOM(building_architect_post, architect_post)
-GENERATE_SMART_CAST_CUSTOM(building_booth, booth)
-GENERATE_SMART_CAST_CUSTOM(building_apothecary, apothecary)
-GENERATE_SMART_CAST_CUSTOM(building_granary, granary)
-GENERATE_SMART_CAST_CUSTOM(building_water_supply, water_supply)
-GENERATE_SMART_CAST_CUSTOM(building_conservatory, conservatory)
-GENERATE_SMART_CAST_CUSTOM(building_courthouse, courthouse)
-GENERATE_SMART_CAST_CUSTOM(building_well, well)
-GENERATE_SMART_CAST_CUSTOM(building_clay_pit, clay_pit)
-GENERATE_SMART_CAST_CUSTOM(building_reed_gatherer, reed_gatherer)
-GENERATE_SMART_CAST_CUSTOM(building_papyrus_maker, papyrus_maker)
-GENERATE_SMART_CAST_CUSTOM(building_dock, dock)
-GENERATE_SMART_CAST_CUSTOM(building_small_mastaba, small_mastaba)
-GENERATE_SMART_CAST_CUSTOM(building_wood_cutter, wood_cutter)
-GENERATE_SMART_CAST_CUSTOM(building_recruiter, recruiter)
-GENERATE_SMART_CAST_CUSTOM(building_pavilion, pavilion)
-GENERATE_SMART_CAST_CUSTOM(building_statue, statue)
-GENERATE_SMART_CAST_CUSTOM(building_ferry, ferry)
-GENERATE_SMART_CAST_CUSTOM(building_fort_ground, fort_ground)
-GENERATE_SMART_CAST_CUSTOM(building_fort, fort)
-GENERATE_SMART_CAST_CUSTOM(building_fishing_wharf, fishing_wharf)
-GENERATE_SMART_CAST_CUSTOM(building_shipyard, shipyard)
-GENERATE_SMART_CAST_CUSTOM(building_plaza, plaza)
-GENERATE_SMART_CAST_CUSTOM(building_garden, garden)
-GENERATE_SMART_CAST_CUSTOM(building_house, house)
-GENERATE_SMART_CAST_CUSTOM(building_burning_ruin, burning_ruin)
-GENERATE_SMART_CAST_CUSTOM(building_storage, storage)
-GENERATE_SMART_CAST_CUSTOM(building_temple, temple)
-GENERATE_SMART_CAST_CUSTOM(building_tax_collector, tax_collector)
-GENERATE_SMART_CAST_CUSTOM(building_roadblock, roadblock)
-GENERATE_SMART_CAST_CUSTOM(building_mine, mine)
-GENERATE_SMART_CAST_CUSTOM(building_quarry, quarry)
-GENERATE_SMART_CAST_CUSTOM(building_palace, palace)
-GENERATE_SMART_CAST_CUSTOM(building_festival_square, festival_square)
-GENERATE_SMART_CAST_CUSTOM(building_bandstand, bandstand)
-GENERATE_SMART_CAST_CUSTOM(building_routeblock, routeblock)
-GENERATE_SMART_CAST_CUSTOM(building_industry, industry)
-GENERATE_SMART_CAST_CUSTOM(building_guild, guild)
-GENERATE_SMART_CAST_CUSTOM(building_entertainment, entertainment)
-GENERATE_SMART_CAST_CUSTOM(building_mansion, mansion)
-GENERATE_SMART_CAST_CUSTOM(building_physician, physician)
+#define GENERATE_SMART_CAST_BUILDING(type) GENERATE_SMART_CAST_CUSTOM(building_##type, type)
+GENERATE_SMART_CAST_BUILDING(juggler_school)
+GENERATE_SMART_CAST_BUILDING(storage_yard)
+GENERATE_SMART_CAST_BUILDING(storage_room)
+GENERATE_SMART_CAST_BUILDING(brewery)
+GENERATE_SMART_CAST_BUILDING(pottery)
+GENERATE_SMART_CAST_BUILDING(bazaar)
+GENERATE_SMART_CAST_BUILDING(firehouse)
+GENERATE_SMART_CAST_BUILDING(architect_post)
+GENERATE_SMART_CAST_BUILDING(booth)
+GENERATE_SMART_CAST_BUILDING(apothecary)
+GENERATE_SMART_CAST_BUILDING(granary)
+GENERATE_SMART_CAST_BUILDING(water_supply)
+GENERATE_SMART_CAST_BUILDING(conservatory)
+GENERATE_SMART_CAST_BUILDING(courthouse)
+GENERATE_SMART_CAST_BUILDING(well)
+GENERATE_SMART_CAST_BUILDING(clay_pit)
+GENERATE_SMART_CAST_BUILDING(reed_gatherer)
+GENERATE_SMART_CAST_BUILDING(papyrus_maker)
+GENERATE_SMART_CAST_BUILDING(dock)
+GENERATE_SMART_CAST_BUILDING(small_mastaba)
+GENERATE_SMART_CAST_BUILDING(wood_cutter)
+GENERATE_SMART_CAST_BUILDING(recruiter)
+GENERATE_SMART_CAST_BUILDING(pavilion)
+GENERATE_SMART_CAST_BUILDING(statue)
+GENERATE_SMART_CAST_BUILDING(ferry)
+GENERATE_SMART_CAST_BUILDING(fort_ground)
+GENERATE_SMART_CAST_BUILDING(fort)
+GENERATE_SMART_CAST_BUILDING(fishing_wharf)
+GENERATE_SMART_CAST_BUILDING(warship_wharf)
+GENERATE_SMART_CAST_BUILDING(shipyard)
+GENERATE_SMART_CAST_BUILDING(plaza)
+GENERATE_SMART_CAST_BUILDING(garden)
+GENERATE_SMART_CAST_BUILDING(house)
+GENERATE_SMART_CAST_BUILDING(burning_ruin)
+GENERATE_SMART_CAST_BUILDING(storage)
+GENERATE_SMART_CAST_BUILDING(temple)
+GENERATE_SMART_CAST_BUILDING(tax_collector)
+GENERATE_SMART_CAST_BUILDING(roadblock)
+GENERATE_SMART_CAST_BUILDING(mine)
+GENERATE_SMART_CAST_BUILDING(quarry)
+GENERATE_SMART_CAST_BUILDING(palace)
+GENERATE_SMART_CAST_BUILDING(festival_square)
+GENERATE_SMART_CAST_BUILDING(bandstand)
+GENERATE_SMART_CAST_BUILDING(routeblock)
+GENERATE_SMART_CAST_BUILDING(industry)
+GENERATE_SMART_CAST_BUILDING(guild)
+GENERATE_SMART_CAST_BUILDING(entertainment)
+GENERATE_SMART_CAST_BUILDING(mansion)
+GENERATE_SMART_CAST_BUILDING(physician)
+GENERATE_SMART_CAST_BUILDING(wharf)
 
 namespace buildings {
 

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "building/building_industry.h"
+#include "building/building_wharf.h"
 
-class building_fishing_wharf : public building_industry {
+class building_fishing_wharf : public building_wharf {
 public:
     BUILDING_METAINFO(BUILDING_FISHING_WHARF, building_fishing_wharf)
 
-    building_fishing_wharf(building &b) : building_industry(b) {}
+    building_fishing_wharf(building &b) : building_wharf(b) {}
     virtual building_fishing_wharf *dcast_fishing_wharf() override { return this; }
 
     struct static_params : public buildings::model_t<building_fishing_wharf> {

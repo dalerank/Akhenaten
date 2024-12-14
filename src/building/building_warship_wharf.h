@@ -7,6 +7,8 @@ public:
     BUILDING_METAINFO(BUILDING_WARSHIP_WHARF, building_warship_wharf)
     building_warship_wharf(building &b) : building_wharf(b) {}
 
+    virtual building_warship_wharf *dcast_warship_wharf() override { return this; }
+
     struct static_params : public buildings::model_t<building_warship_wharf> {
         virtual void load(archive arch) override;
     };
