@@ -8,11 +8,10 @@
 #include "game/game.h"
 #include "js/js_game.h"
 
-
 struct figure_carrier_info_window : public figure_info_window_t<figure_carrier_info_window> {
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return c.figure_get_id() && figure_get(c)->dcast_cartpusher();
+        return c.figure_get_id() && ::smart_cast<figure_cartpusher>(figure_get(c));
     }
 };
 
@@ -21,7 +20,7 @@ figure_carrier_info_window figure_carrier_infow;
 void figure_carrier_info_window::init(object_info &c) {
     figure_info_window::init(c);
 
-    figure_cartpusher *f = c.figure_get()->dcast_cartpusher();
+    figure_cartpusher *f = c.figure_get<figure_cartpusher>();
     
     bstring256 home_text;
     if (f->base.has_home()) {

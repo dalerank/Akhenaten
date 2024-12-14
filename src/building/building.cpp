@@ -442,7 +442,7 @@ figure *building::create_figure_generic(e_figure_type _type, e_figure_action cre
 
 figure *building::create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action, e_building_slot slot) {
     figure *f = create_figure_generic(FIGURE_CART_PUSHER, created_action, slot, DIR_4_BOTTOM_LEFT);
-    auto cart = f->dcast_cartpusher();
+    auto cart = ::smart_cast<figure_cartpusher>(f);
     if (!cart) {
         return f;
     }

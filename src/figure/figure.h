@@ -222,7 +222,6 @@ public:
     figure_impl *_ptr = nullptr;
     
     figure_impl *dcast();
-    figure_cartpusher *dcast_cartpusher();
     figure_storageyard_cart *dcast_storageyard_cart();
     figure_trade_ship *dcast_trade_ship();
     figure_sled *dcast_sled();
@@ -566,9 +565,10 @@ GENERATE_SMART_CAST(figure_impl)
 #define GENERATE_SMART_CAST_FIGURE(type) GENERATE_SMART_CAST_CUSTOM(figure_##type, type)
 GENERATE_SMART_CAST_FIGURE(fishing_point)
 GENERATE_SMART_CAST_FIGURE(immigrant)
+GENERATE_SMART_CAST_FIGURE(cartpusher)
 
 template <typename dest_type>
-inline typename dest_type *smart_cast(figure *b) {
+inline dest_type *smart_cast(figure *b) {
     return ::smart_cast<dest_type*>(b->dcast());
 }
 
