@@ -81,8 +81,6 @@ figure_impl *figure::dcast() {
     return _ptr;
 }
 
-figure_warship *figure::dcast_warship() { return dcast()->dcast_warship(); }
-
 bool figure::in_roam_history(int goffset) {
     return roam_history.exist(goffset);
 }

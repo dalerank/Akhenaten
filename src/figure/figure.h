@@ -222,7 +222,6 @@ public:
     figure_impl *_ptr = nullptr;
     
     figure_impl *dcast();
-    figure_warship *dcast_warship();
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -565,6 +564,7 @@ GENERATE_SMART_CAST_FIGURE(labor_seeker)
 GENERATE_SMART_CAST_FIGURE(worker)
 GENERATE_SMART_CAST_FIGURE(fishing_boat)
 GENERATE_SMART_CAST_FIGURE(soldier)
+GENERATE_SMART_CAST_FIGURE(warship)
 GENERATE_SMART_CAST_FIGURE(caravan_donkey)
 
 template <typename dest_type>
