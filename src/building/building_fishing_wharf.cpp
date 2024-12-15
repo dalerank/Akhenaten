@@ -61,12 +61,9 @@ void building_fishing_wharf::update_count() const {
 void building_fishing_wharf::update_day() {
     building_impl::update_day();
 
-    int boat_id = base.get_figure_id(BUILDING_SLOT_BOAT);
-    if (boat_id > 0) {
-        figure *f = get_figure(BUILDING_SLOT_BOAT);
-        if (!f->is_valid() || f->type != FIGURE_FISHING_BOAT) {
-            base.set_figure(BUILDING_SLOT_BOAT, 0);
-        }
+    auto boat = get_figure_in_slot<figure_fishing_boat>(BUILDING_SLOT_BOAT);
+    if (!boat) {
+        base.set_figure(BUILDING_SLOT_BOAT, 0);
     }
 }
 
@@ -121,7 +118,8 @@ void building_fishing_wharf::spawn_figure() {
 
                 int dock_tile = data.dock.dock_tiles[0];
                 if (config_get(CONFIG_GP_CH_FISHING_WHARF_SPAWN_BOATS) && dock_tile > 0) {
-                    figure* f = figure_create(FIGURE_FISHING_BOAT, tile2i(dock_tile), DIR_4_BOTTOM_LEFT);
+                    tile2i dtile(dock_tile);
+                    figure* f = figure_create(FIGURE_FISHING_BOAT, dtile, DIR_4_BOTTOM_LEFT);
                     f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
                     f->set_home(id());
                     base.set_figure(BUILDING_SLOT_BOAT, f);
@@ -153,7 +151,7 @@ void building_fishing_wharf::on_undo() {
 }
 
 void building_fishing_wharf::update_map_orientation(int orientation) {
-    int image_offset = city_view_relative_orientation(data.industry.orientation);
+    int image_offset = city_view_relative_orientation(data.dock.orientation);
     int image_id = this->anim(animkeys().base).first_img() + image_offset;
     map_water_add_building(id(), tile(), size(), image_id);
 }

@@ -18,6 +18,7 @@ public:
     virtual bool force_draw_top_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual void highlight_waypoints() override;
     virtual void bind_dynamic(io_buffer *iob, size_t verrsion) override;
+    virtual int get_orientation() const { return data.dock.orientation; }
 
     virtual bool get_permission(e_permission p) override { return false; }
 };

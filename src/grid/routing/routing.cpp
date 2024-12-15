@@ -249,8 +249,8 @@ bool map_routing_ferry_has_routes(building *b) {
     buildings_get(ferries, BUILDING_FERRY);
 
     for (const auto &it : ferries) {
-        ferry_tiles fpoints_begin = map_water_docking_points(*it);
-        ferry_tiles fpoints_end = map_water_docking_points(*b);
+        ferry_tiles fpoints_begin = map_water_docking_points(*it, it->dcast()->get_orientation());
+        ferry_tiles fpoints_end = map_water_docking_points(*b, b->dcast()->get_orientation());
 
         std::array<uint8_t, 500> path_data;
         map_routing_calculate_distances_water_boat(fpoints_begin.point_a);

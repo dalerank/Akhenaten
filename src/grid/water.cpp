@@ -45,7 +45,7 @@ void map_water_cache_river_tiles() {
     }
 }
 
-ferry_tiles map_water_docking_points(building &b) {
+ferry_tiles map_water_docking_points(building &b, int orientation) {
     const auto &params = building_impl::params(b.type);
     if (!params.check_water_access) {
         return {{-1, -1},{-1, -1}};
@@ -53,7 +53,7 @@ ferry_tiles map_water_docking_points(building &b) {
 
     ferry_tiles result;
     const int bsize = params.building_size;
-    switch (b.data.industry.orientation) {
+    switch (orientation) {
     case 0:
         result.point_a = b.tile.shifted(1, -1);
         result.point_b = b.tile.shifted(0, -1);

@@ -14,7 +14,7 @@ buildings::model_t<building_ferry> ferry_m;
 info_window_ferry ferry_infow;
 
 void building_ferry::on_create(int orientation) {
-    data.industry.orientation = orientation;
+    data.dock.orientation = orientation;
 }
 
 void building_ferry::on_place_update_tiles(int orientation, int variant) {
@@ -24,7 +24,7 @@ void building_ferry::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_ferry::update_map_orientation(int orientation) {
-    int image_offset = city_view_relative_orientation(data.industry.orientation);
+    int image_offset = city_view_relative_orientation(data.dock.orientation);
     int image_id = anim(animkeys().base).first_img() + image_offset;
     map_water_add_building(id(), tile(), size(), image_id);
 }
@@ -52,14 +52,14 @@ bool building_ferry::force_draw_top_tile(painter &ctx, tile2i t, vec2i pixel, co
 void building_ferry::highlight_waypoints() {
     building_impl::highlight_waypoints();
 
-    ferry_tiles fpoints = map_water_docking_points(base);
+    ferry_tiles fpoints = map_water_docking_points(base, get_orientation());
     map_highlight_set(fpoints.point_a, ehighligth_green);
     map_highlight_set(fpoints.point_b, ehighligth_green);
 }
 
 void building_ferry::bind_dynamic(io_buffer *iob, size_t verrsion) {
     iob->bind____skip(88);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.industry.orientation);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.dock.orientation);
 }
 
 bool info_window_ferry::check(object_info &c) {

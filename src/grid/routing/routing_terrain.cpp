@@ -381,10 +381,10 @@ void map_routing_update_ferry_routes() {
 
     for (auto f1 = ferries.begin(); f1 != ferries.end(); ++f1) {
         for (auto f2 = f1 + 1; f2 != ferries.end(); ++f2) {
-            ferry_tiles fpoints_begin = map_water_docking_points(**f1);
-            ferry_tiles fpoints_end = map_water_docking_points(**f2);
+            ferry_tiles fpoints_begin = map_water_docking_points(**f1, (*f1)->dcast()->get_orientation());
+            ferry_tiles fpoints_end = map_water_docking_points(**f2, (*f2)->dcast()->get_orientation());
 
-            svector<path_points, 4> possible_paths = {
+            path_points possible_paths[] = {
                 {fpoints_begin.point_a, fpoints_end.point_a},
                 {fpoints_begin.point_a, fpoints_end.point_b},
                 {fpoints_begin.point_b, fpoints_end.point_a},

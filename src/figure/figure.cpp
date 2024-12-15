@@ -73,6 +73,10 @@ void figure::figure_delete_UNSAFE() {
 }
 
 figure_impl *figure::dcast() {
+    if (!id) {
+        return nullptr;
+    }
+
     if (_ptr) {
         return _ptr;
     }

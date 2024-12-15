@@ -20,7 +20,7 @@ struct ferry_tiles {
     tile2i point_b = {-1, -1};
 };
 
-ferry_tiles map_water_docking_points(building &b);
+ferry_tiles map_water_docking_points(building &b, int orientation);
 bool map_water_is_point_inside(tile2i tile);
 
 void map_water_add_building(int building_id, tile2i tile, int size, int image_id, int ext_terrain_flags = 0);

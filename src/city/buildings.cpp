@@ -236,7 +236,7 @@ void city_t::buildings_update_open_water_access() {
         b.has_water_access |= found;
         b.has_open_water_access = found;
         if (found) {
-            ferry_tiles ppoints = map_water_docking_points(b);
+            ferry_tiles ppoints = map_water_docking_points(b, b.dcast()->get_orientation());
             b.data.dock.dock_tiles[0] = ppoints.point_a.grid_offset();
             b.data.dock.dock_tiles[1] = ppoints.point_b.grid_offset();
         } else {
