@@ -1,7 +1,6 @@
 #include "figure_caravan_donkey.h"
 
 #include "figure/trader.h"
-#include "figure/figure.h"
 
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
@@ -27,8 +26,7 @@ figures::model_t<figure_caravan_donkey> caravan_donkey_m;
 struct figure_caravan_donkey_info_window : public figure_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
-        figure *f = figure_get(c);
-        return f->dcast_caravan_donkey();
+        return !!c.figure_get<figure_caravan_donkey>();
     }
 };
 
@@ -85,7 +83,7 @@ figure* figure_caravan_donkey::get_head_of_caravan() {
 void figure_caravan_donkey_info_window::window_info_background(object_info &c) {
     common_info_window::window_info_background(c);
 
-    figure_caravan_donkey *donkey = c.figure_get()->dcast_caravan_donkey();
+    figure_caravan_donkey *donkey = c.figure_get<figure_caravan_donkey>();
     figure* f = donkey->get_head_of_caravan();
 
     const empire_city* city = donkey->get_empire_city();

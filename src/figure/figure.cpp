@@ -81,7 +81,6 @@ figure_impl *figure::dcast() {
     return _ptr;
 }
 
-figure_caravan_donkey *figure::dcast_caravan_donkey() { return dcast()->dcast_caravan_donkey(); }
 figure_warship *figure::dcast_warship() { return dcast()->dcast_warship(); }
 
 bool figure::in_roam_history(int goffset) {
