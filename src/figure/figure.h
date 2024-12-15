@@ -222,9 +222,6 @@ public:
     figure_impl *_ptr = nullptr;
     
     figure_impl *dcast();
-    figure_soldier *dcast_soldier();
-    figure_fishing_boat *dcast_fishing_boat();
-    figure_fishing_point *dcast_fishing_point();
     figure_caravan_donkey *dcast_caravan_donkey();
     figure_warship *dcast_warship();
 
@@ -567,6 +564,8 @@ GENERATE_SMART_CAST_FIGURE(musician)
 GENERATE_SMART_CAST_FIGURE(dancer)
 GENERATE_SMART_CAST_FIGURE(labor_seeker)
 GENERATE_SMART_CAST_FIGURE(worker)
+GENERATE_SMART_CAST_FIGURE(fishing_boat)
+GENERATE_SMART_CAST_FIGURE(soldier)
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *b) {

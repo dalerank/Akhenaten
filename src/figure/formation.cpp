@@ -446,7 +446,7 @@ void formation_calculate_figures(void) {
         if (f->state != FIGURE_STATE_ALIVE)
             continue;
 
-        if (!f->dcast_soldier() && !f->is_enemy() && !f->is_herd())
+        if (!::smart_cast<figure_soldier>(f) && !f->is_enemy() && !f->is_herd())
             continue;
 
         if (f->type == FIGURE_ENEMY54_GLADIATOR)

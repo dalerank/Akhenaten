@@ -102,7 +102,7 @@ int figure_combat_get_target_for_wolf(tile2i tile, int max_distance) {
         if (f->is_enemy() || f->is_herd()) {
             continue;
         }
-        if (f->dcast_soldier() && f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST) {
+        if (::smart_cast<figure_soldier>(f) && f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST) {
             continue;
         }
         int distance = calc_maximum_distance(tile, f->tile);
@@ -128,7 +128,7 @@ int figure_combat_get_target_for_enemy(tile2i tile) {
             continue;
         }
 
-        if (!f->targeted_by_figure_id && f->dcast_soldier()) {
+        if (!f->targeted_by_figure_id && ::smart_cast<figure_soldier>(f)) {
             int distance = calc_maximum_distance(tile, f->tile);
             if (distance < min_distance) {
                 min_distance = distance;
@@ -147,8 +147,9 @@ int figure_combat_get_target_for_enemy(tile2i tile) {
             continue;
         }
 
-        if (f->dcast_soldier())
+        if (::smart_cast<figure_soldier>(f)) {
             return f->id;
+        }
     }
     return 0;
 }
@@ -212,11 +213,11 @@ int figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, 
             continue;
         }
         int distance;
-        if (f->dcast_soldier())
+        if (::smart_cast<figure_soldier>(f)) {
             distance = calc_maximum_distance(enemy->tile, f->tile);
-        else if (attack_citizens && f->is_friendly)
+        } else if (attack_citizens && f->is_friendly) {
             distance = calc_maximum_distance(enemy->tile, f->tile) + 5;
-        else {
+        } else {
             continue;
         }
         if (distance < min_distance

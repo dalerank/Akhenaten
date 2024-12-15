@@ -441,7 +441,7 @@ bool legion_info_window::check(object_info &c) {
         }
 
         figure *f = figure_get(figure_id);
-        if (f->type == FIGURE_STANDARD_BEARER || f->dcast_soldier()) {
+        if (f->type == FIGURE_STANDARD_BEARER || ::smart_cast<figure_soldier>(f)) {
             c.formation_id = f->formation_id;
             const formation *m = formation_get(c.formation_id);
             if (m->figure_type != FIGURE_STANDARD_BEARER)

@@ -21,7 +21,7 @@ void map_soldier_strength_add(tile2i tile, int radius, int amount) {
         if (map_has_figure_at(grid_offset)) {
             int fid = map_figure_id_get(grid_offset);
             figure *f = figure_get(fid);
-            if (f->dcast_soldier()) {
+            if (::smart_cast<figure_soldier>(f)) {
                 map_grid_set(&strength, grid_offset, v + amount + 2);
             }
         }

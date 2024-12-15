@@ -524,7 +524,7 @@ static void update_enemy_formation(formation* m, int* roman_distance) {
         figure* f = figure_get(m->figures[n]);
         if (f->action_state == FIGURE_ACTION_150_ATTACK) {
             figure* opponent = figure_get(f->opponent_id);
-            if (!opponent->is_dead() && opponent->dcast_soldier()) {
+            if (!opponent->is_dead() && ::smart_cast<figure_soldier>(opponent)) {
                 formation_record_fight(m);
             }
         }

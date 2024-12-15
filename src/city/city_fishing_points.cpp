@@ -94,7 +94,7 @@ void city_fishing_points_t::clear() {
             continue;
         }
 
-        figure_fishing_point *fish_point = figure_get(i)->dcast_fishing_point();
+        figure_fishing_point *fish_point = figure_get<figure_fishing_point>(i);
         if (!fish_point) {
             continue;
         }

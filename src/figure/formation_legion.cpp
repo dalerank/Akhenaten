@@ -273,7 +273,7 @@ int formation_legion_curse(void) {
 }
 
 bool figure::is_formation() {
-    if (dcast_soldier() || type == FIGURE_STANDARD_BEARER)
+    if (::smart_cast<figure_soldier>(this) || type == FIGURE_STANDARD_BEARER)
         return true;
 
     return false;
@@ -339,7 +339,7 @@ void formation_legion_update(void) {
 void formation_legion_decrease_damage(void) {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure* f = figure_get(i);
-        if (f->state == FIGURE_STATE_ALIVE && f->dcast_soldier()) {
+        if (f->state == FIGURE_STATE_ALIVE && ::smart_cast<figure_soldier>(f)) {
             if (f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST) {
                 if (f->damage) {
                     f->damage--;
