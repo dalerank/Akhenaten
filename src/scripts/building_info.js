@@ -1233,6 +1233,7 @@ building_ferry = {
     minimap: {pack:PACK_GENERAL, id:149, offset:210}
   },
   building_size : 2,
+  check_water_access : true,
   fire_proof : true,
   planer_relative_orientation: 1,
   info_help_id: 85,
@@ -1610,13 +1611,14 @@ building_bullfight_school = {
 
 building building_bricks_workshop = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:124 },
-    base : { pack:PACK_GENERAL, id:124 },
+    preview : { pack:PACK_GENERAL, id:125 },
+    base : { pack:PACK_GENERAL, id:125 },
     work : { pack:PACK_GENERAL, id:124 },
     straw : { pos:[51, 18], pack:PACK_GENERAL, id:206 },
     clay : { pos:[46, 25], pack:PACK_GENERAL, id:207 },
   },
   input_resource : RESOURCE_STRAW,
+  input_resource_second : RESOURCE_CLAY,
   output_resource : RESOURCE_BRICKS,
   progress_max : 400,
   production_rate : 20,
