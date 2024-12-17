@@ -8,7 +8,7 @@
 #include "city/warnings.h"
 #include "building/count.h"
 #include "config/config.h"
-#include "figure/figure.h"
+#include "figuretype/figure_fishing_boat.h"
 #include "core/random.h"
 #include "grid/image.h"
 #include "widget/city/ornaments.h"
