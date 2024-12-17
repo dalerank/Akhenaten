@@ -61,7 +61,7 @@ void building_fishing_wharf::update_count() const {
 void building_fishing_wharf::update_day() {
     building_impl::update_day();
 
-    auto boat = get_figure_in_slot<figure_fishing_boat>(BUILDING_SLOT_BOAT);
+    auto boat = ::smart_cast<figure_fishing_boat>(get_figure_in_slot(BUILDING_SLOT_BOAT));
     if (!boat) {
         base.set_figure(BUILDING_SLOT_BOAT, 0);
     }
