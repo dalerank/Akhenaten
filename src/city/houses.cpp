@@ -219,10 +219,10 @@ void city_t::house_service_calculate_culture_aggregates() {
         // entertainment
         b->data.house.entertainment = base_entertainment;
         const int jugglers_value = std::max<int>(b->data.house.booth_juggler, b->data.house.bandstand_juggler);
-        b->data.house.entertainment += (jugglers_value / 10);
+        b->data.house.entertainment += (jugglers_value / 5);
  
         const int musicians_value = std::max<int>(b->data.house.bandstand_musician, b->data.house.pavillion_musician);
-        b->data.house.entertainment += (musicians_value / 5);
+        b->data.house.entertainment += (musicians_value / 4);
 
         const int dancers_value = b->data.house.pavillion_dancer;
         b->data.house.entertainment += (dancers_value / 3);
