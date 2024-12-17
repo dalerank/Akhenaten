@@ -18,7 +18,6 @@ var cart_images = []
 var cart_offsets = []
 var sled_offsets = []
 var localization = []
-var top_menu_widget = {}
 // buildings
 var building_water_lift = {}
 var building_granary = {}
