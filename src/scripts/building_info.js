@@ -1611,8 +1611,8 @@ building_bullfight_school = {
 
 building building_bricks_workshop = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:125 },
-    base : { pack:PACK_GENERAL, id:125 },
+    preview : { pack:PACK_GENERAL, id:124 },
+    base : { pack:PACK_GENERAL, id:124 },
     work : { pack:PACK_GENERAL, id:124 },
     straw : { pos:[51, 18], pack:PACK_GENERAL, id:206 },
     clay : { pos:[46, 25], pack:PACK_GENERAL, id:207 },

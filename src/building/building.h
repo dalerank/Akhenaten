@@ -626,10 +626,11 @@ public:
     inline int max_workers() const { return model_get_building(type())->laborers; }
     inline int pct_workers() const { return calc_percentage<int>(num_workers(), max_workers()); }
     inline int get_figure_id(int i) const { return base.get_figure_id(i); }
+    figure *get_figure_in_slot(int i);
 
     template<typename T>
     T* get_figure_in_slot(int i) {
-        figure *f = ::figure_get(get_figure_id(i));
+        figure *f = get_figure_in_slot(i);
         return ::smart_cast<T>(f);
     }
 
