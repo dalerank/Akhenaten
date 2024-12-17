@@ -63,6 +63,13 @@ void handle_debug_hotkeys(const hotkeys* h) {
     }
 }
 
+declare_console_command_p(render, game_cheat_render)
+void game_cheat_render(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+    g_debug_render  = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+};
+
+
 static const uint8_t* font_test_str = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
 static const uint8_t* font_test_str_ascii = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._";
 static const uint8_t* font_test_str_extended = (uint8_t*)(char*)"äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
@@ -76,6 +83,7 @@ static void debug_font_line(int* y, e_font font) {
     *y += line_height;
     //    text_draw(font_test_str_extended, 5, *y, font, COLOR_MASK_NONE); *y += line_height;
 }
+
 void debug_font_test() {
     graphics_fill_rect(vec2i{0, 0}, vec2i{1600, 300}, COLOR_FONT_LIGHT_GRAY);
     //    auto str = string_from_ascii(font_test_str, true);
@@ -481,6 +489,12 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_damage_fire: // FIRE
         if (b_id && b) {
             debug_text(ctx, str, x, y + 10, 0, "", b->fire_risk, COLOR_LIGHT_RED);
+        }
+        break;
+
+    case e_debug_render_overall_entertainment:
+        if (b_id && b->house_size > 0) {
+            debug_text(ctx, str, x, y + 10, 0, "", b->data.house.entertainment, COLOR_LIGHT_BLUE);
         }
         break;
 

@@ -68,6 +68,7 @@ enum e_debug_render {
     e_debug_render_damage_fire = 27,
     e_debug_render_desirability = 28,
     e_debug_render_river_shore = 29,
+    e_debug_render_overall_entertainment = 30,
 
     e_debug_render_size
 };
