@@ -9,10 +9,6 @@
 
 buildings::model_t<building_bricks_workshop> bricks_workshop_m;
 
-void building_bricks_workshop::window_info_background(object_info &c) {
-    building_workshop_draw_background(c, RESOURCE_CLAY);
-}
-
 void building_bricks_workshop::update_count() const {
     building_increase_industry_count(RESOURCE_BRICKS, num_workers() > 0);
 }
