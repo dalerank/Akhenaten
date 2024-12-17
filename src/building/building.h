@@ -24,9 +24,8 @@
 #include <stdint.h>
 #include <algorithm>
 
-class figure;
 class io_buffer;
-class building;
+class figure;
 class building_juggler_school;
 class building_storage_yard;
 class building_storage_room;
