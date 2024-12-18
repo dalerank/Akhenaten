@@ -658,8 +658,7 @@ public:
     virtual void highlight_waypoints();
     virtual void on_tick(bool refresh_only);
 
-    using resources_vec = std::array<e_resource, 4>;
-    virtual resources_vec required_resources() const { return {}; }
+    virtual resource_vec required_resources() const;
     virtual bool required_resource(e_resource) const;
     metainfo get_info() const;
     void set_animation(const animation_t &anim);

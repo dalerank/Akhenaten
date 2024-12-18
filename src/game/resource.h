@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <algorithm>
 #include <type_traits>
+#include <array>
 #include <cassert>
 
 #include "core/tokenum.h"
@@ -110,6 +111,8 @@ struct resource_value {
 
 inline e_resource& resource_next(e_resource& e) { e = e_resource(e + 1); return e; }
 inline e_resource& operator++(e_resource& e) { e = e_resource(e + 1); return e; };
+
+using resource_vec = svector<e_resource, 4>;
 
 struct resource_list : public svector<resource_value, RESOURCES_MAX> {
     inline resource_list() {}

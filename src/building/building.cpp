@@ -139,6 +139,23 @@ bool building_impl::required_resource(e_resource r) const {
     return base.first_material_id == r || base.second_material_id == r;
 }
 
+resource_vec building_impl::required_resources() const { 
+    if (base.first_material_id == RESOURCE_NONE && base.second_material_id == RESOURCE_NONE) {
+        return {}; 
+    }
+
+    resource_vec r;
+    if (base.first_material_id != RESOURCE_NONE) {
+        r.push_back(base.first_material_id);
+    }
+
+    if (base.second_material_id != RESOURCE_NONE) {
+        r.push_back(base.second_material_id);
+    }
+
+    return r;
+}
+
 metainfo building_impl::get_info() const {
     const auto &metainfo = !params().meta_id.empty()
                                 ? base.get_info(params().meta_id)
