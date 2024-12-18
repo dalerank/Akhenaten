@@ -1613,7 +1613,7 @@ building building_bricks_workshop = {
   animations : {
     preview : { pack:PACK_GENERAL, id:124 },
     base : { pack:PACK_GENERAL, id:124 },
-    work : { pack:PACK_GENERAL, id:124 },
+    work : { pos:[46, -20], pack:PACK_GENERAL, id:124, offset:1, max_frames:10, duration:5 },
     straw : { pos:[51, 18], pack:PACK_GENERAL, id:206 },
     clay : { pos:[46, 25], pack:PACK_GENERAL, id:207 },
   },

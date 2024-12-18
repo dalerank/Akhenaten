@@ -26,6 +26,7 @@ const xstring id_property_t::output_resource = "output_resource";
 const xstring id_property_t::first_material = "first_material";
 const xstring id_property_t::second_material = "second_material";
 const xstring id_property_t::first_material_stored = "first_material_stored";
+const xstring id_property_t::second_material_stored = "second_material_stored";
 const xstring id_property_t::tax_percentage = "tax_percentage";
 const xstring id_property_t::total_stored = "total_stored";
 const xstring id_property_t::free_space = "free_space";

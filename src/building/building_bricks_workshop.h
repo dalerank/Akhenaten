@@ -8,6 +8,7 @@ public:
 
     building_bricks_workshop(building &b) : building_industry(b) {}
 
+    virtual bool can_play_animation() const override;
     virtual void update_count() const override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };

@@ -862,6 +862,7 @@ const bproperty bproperties[] = {
     { tags().building, tags().first_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.first_material_id)); }},
     { tags().building, tags().first_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount_first); }},
     { tags().building, tags().second_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.second_material_id)); }},
+    { tags().building, tags().second_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount_second); }},
     { tags().farm, tags().fertility, [] (building &b, const xstring &) { return bvariant(map_get_fertility_for_farm(b.tile.grid_offset())); }},
 };
 

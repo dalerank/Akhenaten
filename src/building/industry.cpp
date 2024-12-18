@@ -288,7 +288,7 @@ void building_workshop_add_raw_material(building* b, int amount, e_resource res)
         && building_is_workshop(b->type)
         && resource_required_by_workshop(b, res)) {
         if (b->first_material_id == res) {
-            b->stored_amount_first += amount; // BUG: any raw material accepted
+            b->stored_amount_first += amount;
         } else if (b->second_material_id == res) {
             b->stored_amount_second += amount;
         } else {
