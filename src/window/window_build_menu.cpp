@@ -174,7 +174,11 @@ static int handle_build_submenu(const mouse* m) {
 }
 
 int build_menu_widget::handle_mouse(const mouse* m) {
-    if (handle_build_submenu(m) || widget_sidebar_city_handle_mouse_build_menu(m)) {
+    if (handle_build_submenu(m)) {
+        return 0;
+    }
+
+    if (widget_sidebar_city_handle_mouse_build_menu(m)) {
         return 0;
     }
 

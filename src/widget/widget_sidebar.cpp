@@ -24,7 +24,7 @@
 #include "widget/sidebar/common.h"
 #include "widget/widget_sidebar_extra.h"
 #include "window/advisors.h"
-#include "window/build_menu.h"
+#include "window/window_build_menu.h"
 #include "window/window_city.h"
 #include "window/window_empire.h"
 #include "window/message_dialog.h"
@@ -154,7 +154,7 @@ void ui::sidebar_window_expanded::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(ui.pos);
     widget_minimap_draw({ x_offset + 12, MINIMAP_Y_OFFSET }, 0);
 
-    const bool is_disabled = !window_is(WINDOW_CITY);
+    const bool is_disabled = !(window_is(WINDOW_CITY) || window_is(WINDOW_BUILD_MENU));
     const UiFlags wflags = is_disabled ? UiFlags_Grayed : UiFlags_None;
     ui.draw(wflags);
     const animation_t &anim = window_build_menu_image();
@@ -289,7 +289,7 @@ void widget_sidebar_city_draw_foreground() {
 
     bool collapsed = city_view_is_sidebar_collapsed();
     if (!collapsed) {
-        g_sidebar_expanded.ui_draw_foreground(0);
+        g_sidebar_expanded.ui_draw_foreground(UiFlags_None);
     }
     
     // extra bar spacing on the right over all sidebar
@@ -301,7 +301,7 @@ void widget_sidebar_city_draw_foreground() {
     ui::eimage(g_sidebar_expanded.extra_block, { sw + g_sidebar_expanded.extra_block_x, 0 });
 
     if (collapsed) {
-        g_sidebar_collapsed.ui_draw_foreground(0);
+        g_sidebar_collapsed.ui_draw_foreground(UiFlags_None);
     }
 }
 
