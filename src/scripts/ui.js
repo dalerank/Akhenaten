@@ -67,6 +67,12 @@ main_menu_window = {
 	}
 }
 
+window build_menu_widget = {
+	ui : {
+
+	}
+}
+
 trade_prices_window = {
 	pos: [(sw(0) - px(56))/2, (sh(0) - px(11))/2],
   next_row_offset : [0, 90], 

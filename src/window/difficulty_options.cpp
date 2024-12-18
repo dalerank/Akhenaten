@@ -38,6 +38,7 @@ static void draw_foreground(int) {
 static void handle_input(const mouse* m, const hotkeys* h) {
     if (arrow_buttons_handle_mouse(mouse_in_dialog(m), {288, 80}, arrow_buttons, 3, 0))
         return;
+
     if (input_go_back_requested(m, h))
         data.close_callback();
 }
