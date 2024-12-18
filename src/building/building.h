@@ -395,6 +395,7 @@ public:
     bool has_figure_of_type(int i, e_figure_type _type);
     int get_figure_slot(figure* f);
     int need_resource_amount(e_resource resource) const;
+    bool need_resource(e_resource resource) const;
     int max_storage_amount(e_resource res) const;
     int stored_amount(int idx = 0) const;
     int stored_amount(e_resource res) const;
@@ -658,7 +659,8 @@ public:
     virtual void on_tick(bool refresh_only);
 
     using resources_vec = std::array<e_resource, 4>;
-    virtual resources_vec required_resource() const { return {}; }
+    virtual resources_vec required_resources() const { return {}; }
+    virtual bool required_resource(e_resource) const;
     metainfo get_info() const;
     void set_animation(const animation_t &anim);
     vfs::path get_sound();
@@ -723,7 +725,6 @@ bool building_is_draggable(e_building_type type);
 
 int building_mothball_toggle(building* b);
 int building_mothball_set(building* b, int value);
-bool resource_required_by_workshop(building* b, e_resource resource);
 
 GENERATE_SMART_CAST(building_impl)
 #define GENERATE_SMART_CAST_BUILDING(type) GENERATE_SMART_CAST_CUSTOM(building_##type, type)

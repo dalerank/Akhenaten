@@ -20,7 +20,6 @@ public:
     virtual void on_place_checks() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_NONE; }
 
-    virtual resources_vec required_resource() const override { return {RESOURCE_BARLEY}; }
-
+    virtual resources_vec required_resources() const override { return {RESOURCE_BARLEY}; }
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

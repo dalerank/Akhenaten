@@ -286,7 +286,7 @@ void building_curse_farms(int big_curse) {
 void building_workshop_add_raw_material(building* b, int amount, e_resource res) {
     if (b->id > 0
         && building_is_workshop(b->type)
-        && resource_required_by_workshop(b, res)) {
+        && b->need_resource(res)) {
         if (b->first_material_id == res) {
             b->stored_amount_first += amount;
         } else if (b->second_material_id == res) {
@@ -315,7 +315,7 @@ int building_get_workshop_for_raw_material_with_room(tile2i tile, e_resource res
             return;
         }
 
-        if (resource_required_by_workshop(&b, resource) && b.road_network_id == road_network_id && b.stored_amount(resource) < 200) {
+        if (b.need_resource(resource) && (b.road_network_id == road_network_id) && b.stored_amount(resource) < 200) {
             int dist = calc_distance_with_penalty(b.tile, tile, distance_from_entry, b.distance_from_entry);
             if (b.stored_amount(resource) > 0) {
                 dist += 20;
@@ -335,6 +335,7 @@ int building_get_workshop_for_raw_material_with_room(tile2i tile, e_resource res
 
     return 0;
 }
+
 int building_get_workshop_for_raw_material(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, tile2i &dst) {
     if (city_resource_is_stockpiled(resource)) {
         return 0;
@@ -351,7 +352,7 @@ int building_get_workshop_for_raw_material(tile2i tile, e_resource resource, int
             return;
         }
 
-        if (resource_required_by_workshop(&b, resource) && b.road_network_id == road_network_id) {
+        if (b.need_resource(resource) && (b.road_network_id == road_network_id)) {
             int dist = 10 * (b.stored_amount(resource) / 100) + calc_distance_with_penalty(b.tile, tile, distance_from_entry, b.distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;

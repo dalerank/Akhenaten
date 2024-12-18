@@ -594,7 +594,7 @@ storage_worker_task building_storageyard_deliver_resource_to_workshop(building *
 
         storage_worker_task task = {STORAGEYARD_TASK_NONE};
         buildings_workshop_do([&] (building &b) {
-            if (!resource_required_by_workshop(&b, space->subtype.warehouse_resource_id) || b.need_resource_amount(check_resource) < 100) {
+            if (!b.need_resource(space->subtype.warehouse_resource_id) || b.need_resource_amount(check_resource) < 100) {
                 return;
             }
             task = {STORAGEYARD_TASK_DELIVERING, space, 100, space->subtype.warehouse_resource_id};

@@ -1520,10 +1520,10 @@ window brickworks_info_window = {
 		warning_text  : text({pos: [32, 58], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
 
 		resource_icon : resource_icon({pos: [32, 205], prop:"${building.first_material}" }),
-		resource_stored : text({pos: [55, 210], size: [px(27), 20], text:"${text.13} ${building.first_material_stored}", font:FONT_NORMAL_BLACK_ON_LIGHT }),
+		resource_stored : text({pos: [55, 210], size: [px(27), 20], text:"${text.14} ${building.first_material_stored}", font:FONT_NORMAL_BLACK_ON_LIGHT }),
 
 		resource_icon_b : resource_icon({pos: [32, 225], prop:"${building.second_material}" }),
-		resource_stored_b : text({pos: [55, 230], size: [px(27), 20], text:"${text.14} ${building.second_material_stored}", font:FONT_NORMAL_BLACK_ON_LIGHT }),
+		resource_stored_b : text({pos: [55, 230], size: [px(27), 20], text:"${text.13} ${building.second_material_stored}", font:FONT_NORMAL_BLACK_ON_LIGHT }),
 	})
 }
 

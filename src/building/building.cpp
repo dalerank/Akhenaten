@@ -56,6 +56,7 @@ void game_cheat_destroy_type(std::istream &is, std::ostream &os) {
 
 const token_holder<e_building_state, BUILDING_STATE_UNUSED, BUILDING_STATE_COUNT> e_building_state_tokens;
 const token_holder<e_building_type, BUILDING_NONE, BUILDING_MAX> e_building_type_tokens;
+static std::array<const building_impl::static_params *, BUILDING_MAX> *building_impl_params = nullptr;
 
 building_impl::static_params building_impl::static_params::dummy;
 
@@ -134,7 +135,10 @@ building_impl *buildings::create(e_building_type e, building &data) {
     return new building_impl(data);
 }
 
-static std::array<const building_impl::static_params *, BUILDING_MAX> *building_impl_params = nullptr;
+bool building_impl::required_resource(e_resource r) const {
+    return base.first_material_id == r || base.second_material_id == r;
+}
+
 metainfo building_impl::get_info() const {
     const auto &metainfo = !params().meta_id.empty()
                                 ? base.get_info(params().meta_id)
@@ -507,6 +511,10 @@ int building::stored_amount(e_resource res) const {
 
 int building::need_resource_amount(e_resource resource) const {
     return max_storage_amount(resource) - stored_amount(resource);
+}
+
+bool building::need_resource(e_resource resource) const {
+    return ((building*)this)->dcast()->required_resource(resource);
 }
 
 int building::max_storage_amount(e_resource resource) const {
@@ -1019,24 +1027,6 @@ void building_impl::on_tick(bool refresh_only) {
     }
 
     base.anim.update(refresh_only);
-}
-
-bool resource_required_by_workshop(building* b, e_resource resource) {
-    switch (resource) {
-    case RESOURCE_CLAY: return (b->type == BUILDING_POTTERY_WORKSHOP || b->type == BUILDING_BRICKS_WORKSHOP);
-    case RESOURCE_STRAW: return (b->type == BUILDING_BRICKS_WORKSHOP || b->type == BUILDING_CATTLE_RANCH);
-    case RESOURCE_BARLEY: return b->type == BUILDING_BREWERY_WORKSHOP;
-    case RESOURCE_REEDS: return b->type == BUILDING_PAPYRUS_WORKSHOP;
-    case RESOURCE_FLAX: return b->type == BUILDING_WEAVER_WORKSHOP;
-    case RESOURCE_GEMS: return b->type == BUILDING_JEWELS_WORKSHOP;
-    case RESOURCE_COPPER: return b->type == BUILDING_WEAPONSMITH;
-    case RESOURCE_TIMBER: return b->type == BUILDING_CHARIOTS_WORKSHOP;
-    case RESOURCE_HENNA: return b->type == BUILDING_PAINT_WORKSHOP;
-    case RESOURCE_OIL: return b->type == BUILDING_LAMP_WORKSHOP;
-    default:
-        ; // false
-    }
-    return false;
 }
 
 void building_impl::static_params::load(archive arch) {
