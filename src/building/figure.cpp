@@ -102,6 +102,7 @@ bool building::has_figure(int i, int figure_id) {
 bool building::has_figure(int i, figure* f) {
     return has_figure(i, f->id);
 }
+
 bool building::has_figure_of_type(int i, e_figure_type _type) {
     // seatrch through all the figures if index is -1
     if (i == -1) {
@@ -126,41 +127,6 @@ int building::get_figure_slot(figure* f) {
         }
     }
     return -1;
-}
-
-int building::stored_amount(e_resource res) const {
-    if (first_material_id == res) {
-        return stored_amount_first;
-    }
-
-    if (second_material_id == res) {
-        return stored_amount_second;
-    }
-
-    if (output_resource_first_id == res) {
-        return data.industry.ready_production;
-    }
-
-    // todo: dalerank, temporary, building should return own resource type only
-    return stored_amount_first;
-}
-
-int building::need_resource_amount(e_resource resource) const {
-    return max_storage_amount(resource) - stored_amount(resource);
-}
-
-int building::max_storage_amount(e_resource resource) const {
-    return 200;
-}
-
-int building::stored_amount(int idx) const {
-    switch (idx) {
-    case 0: return stored_amount_first;
-    case 1: return stored_amount_second;
-    }
-
-    assert(false);
-    return 0;
 }
 
 int building::worker_percentage() {
@@ -249,62 +215,9 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_ful
     return false;
 }
 
-bool building::guild_has_resources() {
-    assert(is_guild());
-    bool hase_first_resource = (stored_amount_first >= 100);
-    return hase_first_resource;
-}
-
-bool building::workshop_has_resources() {
-    assert(is_workshop());
-    bool has_second_material = true;
-    if (second_material_id != RESOURCE_NONE) {
-        has_second_material = (stored_amount_second > 100);
-    }
-
-    bool hase_first_resource = (stored_amount_first >= 100);
-    return has_second_material && hase_first_resource;
-}
-
-void building::workshop_start_production() {
-    assert(is_workshop());
-    bool can_start_b = false;
-    if (second_material_id != RESOURCE_NONE) {
-        can_start_b = (stored_amount_second >= 100);
-    } else {
-        can_start_b = true;
-    }
-
-    bool can_start_a = (stored_amount_first >= 100);
-    if (can_start_b && can_start_a) {
-        data.industry.has_raw_materials = true;
-        if (stored_amount_second >= 100) {
-            stored_amount_second -= 100;
-        }
-        if (stored_amount_first >= 100) {
-            stored_amount_first -= 100;
-        }
-    }
-}
-
 bool building::spawn_noble(bool spawned) {
     return common_spawn_roamer(FIGURE_NOBLES, 50);
 }
-
-
-//void building::set_water_supply_graphic() {
-//    if (state != BUILDING_STATE_VALID) {
-//        return;
-//    }
-//
-//    has_water_access = map_terrain_exists_tile_in_area_with_type(tile.x(), tile.y(), size, TERRAIN_GROUNDWATER);
-//
-//    if (map_desirability_get(tile.grid_offset()) <= 30) {
-//        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
-//    } else {
-//        map_building_tiles_add(id, tile, size, image_id_from_group(GROUP_BUILDING_WATER_SUPPLY) + 2, TERRAIN_BUILDING);
-//    }
-//}
 
 void building::set_water_supply_graphic() {
     //if (state != BUILDING_STATE_VALID) {
@@ -375,6 +288,7 @@ void building::spawn_figure_native_hut() {
     //        }
     //    }
 }
+
 void building::spawn_figure_native_meeting() {
     //    map_building_tiles_add(id, x, y, 2,
     //                           image_id_from_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
@@ -401,18 +315,6 @@ void building::update_native_crop_progress() {
 
     int img_id = building_impl::params(BUILDING_BARLEY_FARM).anim["farmland"].first_img();
     map_image_set(tile.grid_offset(), img_id + data.industry.progress);
-}
-
-tile2i building::access_tile() {
-    switch (type) {
-    case BUILDING_SMALL_MASTABA:
-    case BUILDING_SMALL_MASTABA_ENTRANCE:
-    case BUILDING_SMALL_MASTABA_WALL:
-    case BUILDING_SMALL_MASTABA_SIDE:
-        return main()->tile.shifted(0, 10);
-    }
-
-    return road_access;
 }
 
 bool building::figure_generate() {

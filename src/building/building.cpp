@@ -488,6 +488,91 @@ figure *building::create_roaming_figure(e_figure_type _type, e_figure_action cre
     return f;
 }
 
+int building::stored_amount(e_resource res) const {
+    if (first_material_id == res) {
+        return stored_amount_first;
+    }
+
+    if (second_material_id == res) {
+        return stored_amount_second;
+    }
+
+    if (output_resource_first_id == res) {
+        return data.industry.ready_production;
+    }
+
+    // todo: dalerank, temporary, building should return own resource type only
+    return stored_amount_first;
+}
+
+int building::need_resource_amount(e_resource resource) const {
+    return max_storage_amount(resource) - stored_amount(resource);
+}
+
+int building::max_storage_amount(e_resource resource) const {
+    return 200;
+}
+
+int building::stored_amount(int idx) const {
+    switch (idx) {
+    case 0: return stored_amount_first;
+    case 1: return stored_amount_second;
+    }
+
+    assert(false);
+    return 0;
+}
+
+bool building::guild_has_resources() {
+    assert(is_guild());
+    bool hase_first_resource = (stored_amount_first >= 100);
+    return hase_first_resource;
+}
+
+bool building::workshop_has_resources() {
+    assert(is_workshop());
+    bool has_second_material = true;
+    if (second_material_id != RESOURCE_NONE) {
+        has_second_material = (stored_amount_second > 100);
+    }
+
+    bool hase_first_resource = (stored_amount_first >= 100);
+    return has_second_material && hase_first_resource;
+}
+
+void building::workshop_start_production() {
+    assert(is_workshop());
+    bool can_start_b = false;
+    if (second_material_id != RESOURCE_NONE) {
+        can_start_b = (stored_amount_second >= 100);
+    } else {
+        can_start_b = true;
+    }
+
+    bool can_start_a = (stored_amount_first >= 100);
+    if (can_start_b && can_start_a) {
+        data.industry.has_raw_materials = true;
+        if (stored_amount_second >= 100) {
+            stored_amount_second -= 100;
+        }
+        if (stored_amount_first >= 100) {
+            stored_amount_first -= 100;
+        }
+    }
+}
+
+tile2i building::access_tile() {
+    switch (type) {
+    case BUILDING_SMALL_MASTABA:
+    case BUILDING_SMALL_MASTABA_ENTRANCE:
+    case BUILDING_SMALL_MASTABA_WALL:
+    case BUILDING_SMALL_MASTABA_SIDE:
+        return main()->tile.shifted(0, 10);
+    }
+
+    return road_access;
+}
+
 ///////////////
 
 bool building_is_fort(int type) {
@@ -547,6 +632,7 @@ bool building_is_monument(int type) {
         return false;
     }
 }
+
 bool building_is_palace(e_building_type type) {
     return building_type_any_of(type, BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_CITY_PALACE);
 }
@@ -695,8 +781,6 @@ bool building_is_draggable(e_building_type type) {
         return building_impl::params(type).is_draggable;
     }
 }
-
-
 
 int building_mothball_toggle(building* b) {
     if (b->state == BUILDING_STATE_VALID) {

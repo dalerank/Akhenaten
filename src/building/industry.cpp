@@ -298,6 +298,7 @@ void building_workshop_add_raw_material(building* b, int amount, e_resource res)
         //assert(false);
     }
 }
+
 int building_get_workshop_for_raw_material_with_room(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, tile2i &dst) {
     if (city_resource_is_stockpiled(resource)) {
         return 0;
