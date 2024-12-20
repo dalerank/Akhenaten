@@ -21,9 +21,6 @@
 #include "window/window_city.h"
 #include "game/game.h"
 
-static void button_menu_index(int param1, int param2);
-static void button_menu_item(int item);
-
 #define BTN_W_ADD 128
 #define BTN_W_MIN -BTN_W_ADD - 8
 #define BTN_W_TOT 256 + BTN_W_ADD
@@ -39,46 +36,14 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
     virtual void init() override;
 
     void draw_menu_buttons();
+    void button_menu_item(int item);
+    int button_index_to_submenu_item(int index);
 
     int selected_submenu = BUILDING_MENU_VACANT_HOUSE;
     int num_items;
     int y_offset;
 
     int focus_button_id;
-
-    generic_button buttons[30] = {
-        {BTN_W_MIN, 0, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 1, 0},
-        {BTN_W_MIN, 24, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 2, 0},
-        {BTN_W_MIN, 48, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 3, 0},
-        {BTN_W_MIN, 72, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 4, 0},
-        {BTN_W_MIN, 96, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 5, 0},
-        {BTN_W_MIN, 120, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 6, 0},
-        {BTN_W_MIN, 144, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 7, 0},
-        {BTN_W_MIN, 168, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 8, 0},
-        {BTN_W_MIN, 192, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 9, 0},
-        {BTN_W_MIN, 216, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 10, 0},
-        {BTN_W_MIN, 240, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 11, 0},
-        {BTN_W_MIN, 264, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 12, 0},
-        {BTN_W_MIN, 288, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 13, 0},
-        {BTN_W_MIN, 312, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 14, 0},
-        {BTN_W_MIN, 336, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 15, 0},
-        {BTN_W_MIN, 360, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 16, 0},
-        {BTN_W_MIN, 384, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 17, 0},
-        {BTN_W_MIN, 408, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 18, 0},
-        {BTN_W_MIN, 432, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 19, 0},
-        {BTN_W_MIN, 456, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 20, 0},
-        {BTN_W_MIN, 480, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 21, 0},
-        {BTN_W_MIN, 504, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 22, 0},
-        {BTN_W_MIN, 528, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 23, 0},
-        {BTN_W_MIN, 552, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 24, 0},
-        {BTN_W_MIN, 576, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 25, 0},
-        {BTN_W_MIN, 600, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 26, 0},
-        {BTN_W_MIN, 624, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 27, 0},
-        {BTN_W_MIN, 648, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 28, 0},
-        {BTN_W_MIN, 672, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 29, 0},
-        {BTN_W_MIN, 696, 256 + BTN_W_ADD, 20, button_menu_index, button_none, 30, 0},
-    };
-
 };
 
 build_menu_widget g_build_menuw;
@@ -106,9 +71,38 @@ static int is_all_button(int type) {
         || (type == BUILDING_MENU_TEMPLE_COMPLEX && data.selected_submenu == BUILDING_MENU_LARGE_TEMPLES);
 }
 
+void build_menu_widget::button_menu_item(int item) {
+    auto &data = g_build_menuw;
+    widget_city_clear_current_tile();
+
+    e_building_type type = building_menu_type(data.selected_submenu, item);
+    if (building_is_palace(type) && g_city.buildings.palace_placed) {
+        return;
+    }
+
+    Planner.setup_build(type);
+
+    if (building_menu_is_submenu(type)) {
+        data.num_items = building_menu_count_items(type);
+        data.selected_submenu = type;
+        data.y_offset = Y_MENU_OFFSETS[data.num_items];
+        Planner.reset();
+    } else {
+        window_city_show();
+    }
+}
+
+int build_menu_widget::button_index_to_submenu_item(int index) {
+    auto &data = g_build_menuw;
+    int item = -1;
+    for (int i = 0; i <= index; i++) {
+        item = building_menu_next_index(data.selected_submenu, item);
+    }
+    return item;
+}
+
 void build_menu_widget::draw_menu_buttons() {
     int x_offset = widget_sidebar_city_offset_x();
-    int label_width = (BTN_W_TOT) / 16;
     int label_margin = BTN_W_TOT + 10;
     int label_offset = 20;
 
@@ -118,10 +112,7 @@ void build_menu_widget::draw_menu_buttons() {
     for (int i = 0; i < num_items; i++) {
         font = FONT_NORMAL_BLACK_ON_LIGHT;
 
-        if (focus_button_id == i + 1) {
-            font = FONT_NORMAL_BLACK_ON_DARK;
-        }
-
+        generic_button *btn = nullptr;
         item_index = building_menu_next_index(selected_submenu, item_index);
         e_building_type type = building_menu_type(selected_submenu, item_index);
         textid tgroup = menu_index_to_text_index({ 28, (uint8_t)type });
@@ -129,14 +120,23 @@ void build_menu_widget::draw_menu_buttons() {
         if (building_is_palace(type)) {
             bool has_palace = g_city.buildings.palace_placed;
 
-            small_panel_draw_colored(ctx, x_offset - label_margin, y_offset + 110 + 24 * i, label_width, ((focus_button_id == i + 1) || has_palace) ? 1 : 2, has_palace ? 0xffC0C0C0 : 0xffffffff);
-            lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + label_offset, y_offset + 113 + 24 * i, 176, has_palace ? FONT_NORMAL_BLACK_ON_LIGHT : font);
-        } else {
-            ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + 24 * i }, vec2i{ BTN_W_TOT, 20 }, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_PanelSmall,
-                [] (int, int) {
-            
+            font = has_palace ? FONT_NORMAL_BLACK_ON_LIGHT : font;
+            UiFlags flags = UiFlags_PanelSmall;
+            flags |= (has_palace ? UiFlags_Grayed : UiFlags_None);
+            btn = &ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + 24 * i }, vec2i{ BTN_W_TOT, 20 }, fonts_vec{ font, FONT_NORMAL_BLACK_ON_LIGHT }, flags,
+                [this, i] (int, int) {
+                    button_menu_item(button_index_to_submenu_item(i));
                 });
-            //small_panel_draw(x_offset - label_margin, y_offset + 110 + 24 * i, label_width, focus_button_id == i + 1 ? 1 : 2);
+        } else {
+            btn = &ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + 24 * i }, vec2i{ BTN_W_TOT, 20 }, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_PanelSmall,
+                [this, i] (int, int) {
+                    button_menu_item(button_index_to_submenu_item(i));
+                });
+        }
+
+
+        if (btn->hovered) {
+            font = FONT_NORMAL_BLACK_ON_DARK;
         }
 
         if (is_all_button(type)) {
@@ -164,9 +164,9 @@ void build_menu_widget::draw_foreground(UiFlags flags) {
     window_city_draw();
     widget_sidebar_city_draw_foreground();
 
-    ui.begin_widget(pos);
+    //ui.begin_widget(pos);
     draw_menu_buttons();
-    ui.end_widget();
+    //ui.end_widget();
 }
 
 void build_menu_widget::init() {
@@ -176,15 +176,10 @@ void build_menu_widget::init() {
     Planner.setup_build(BUILDING_NONE);
 }
 
-static int handle_build_submenu(const mouse* m) {
-    auto &data = g_build_menuw;
-    return generic_buttons_handle_mouse(m, { widget_sidebar_city_offset_x() - 258, data.y_offset + 110}, data.buttons, data.num_items, &data.focus_button_id);
-}
-
 int build_menu_widget::handle_mouse(const mouse* m) {
-    if (handle_build_submenu(m)) {
-        return 0;
-    }
+    //if (handle_build_submenu(m)) {
+    //    return 0;
+    //}
 
     if (widget_sidebar_city_handle_mouse_build_menu(m)) {
         return 0;
@@ -198,40 +193,6 @@ int build_menu_widget::handle_mouse(const mouse* m) {
     return 0;
 }
 
-static int button_index_to_submenu_item(int index) {
-    auto &data = g_build_menuw;
-    int item = -1;
-    for (int i = 0; i <= index; i++) {
-        item = building_menu_next_index(data.selected_submenu, item);
-    }
-    return item;
-}
-
-static void button_menu_index(int param1, int param2) {
-    button_menu_item(button_index_to_submenu_item(param1 - 1));
-}
-
-static void button_menu_item(int item) {
-    auto &data = g_build_menuw;
-    widget_city_clear_current_tile();
-
-    e_building_type type = building_menu_type(data.selected_submenu, item);
-    if (building_is_palace(type) && g_city.buildings.palace_placed) {
-        return;
-    }
-
-    Planner.setup_build(type);
-
-    if (building_menu_is_submenu(type)) {
-        data.num_items = building_menu_count_items(type);
-        data.selected_submenu = type;
-        data.y_offset = Y_MENU_OFFSETS[data.num_items];
-        Planner.reset();
-    } else {
-        window_city_show();
-    }
-}
-
 const animation_t &window_build_menu_image() {
     auto &data = g_build_menuw;
     return building_menu_anim(data.selected_submenu);
@@ -242,7 +203,7 @@ void window_build_menu_show(int submenu) {
     g_build_menuw.init();
 
     if (submenu == BUILDING_MENU_VACANT_HOUSE || submenu == BUILDING_MENU_CLEAR_LAND || submenu == BUILDING_MENU_ROAD) {
-        button_menu_item(0);
+        g_build_menuw.button_menu_item(0);
         return;
     }
 
@@ -250,7 +211,7 @@ void window_build_menu_show(int submenu) {
         WINDOW_BUILD_MENU,
         [] (int flags) { g_build_menuw.draw_background(flags); },
         [] (int flags) { g_build_menuw.draw_foreground(flags); },
-        [] (const mouse *m, const hotkeys *h) { g_build_menuw.handle_mouse(m); },
+        [] (const mouse *m, const hotkeys *h) { g_build_menuw.ui_handle_mouse(m); },
         0
     };
     window_show(&window);
