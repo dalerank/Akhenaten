@@ -69,8 +69,10 @@ main_menu_window = {
 
 window build_menu_widget = {
 	ui : {
+		dummy : dummy({}),
+	},
 
-	}
+	btn_w_add : 128,
 }
 
 trade_prices_window = {

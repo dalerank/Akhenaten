@@ -21,10 +21,6 @@
 #include "window/window_city.h"
 #include "game/game.h"
 
-#define BTN_W_ADD 128
-#define BTN_W_MIN -BTN_W_ADD - 8
-#define BTN_W_TOT 256 + BTN_W_ADD
-
 static const int Y_MENU_OFFSETS[] = {0,   322, 306, 274, 258, 226, 210, 178,  162,  130, 114, 82, 66, 34, 18,
                                      -30, -46, -62, -78, -78, -94, -94, -110, -110, 0,   0,   0,  0,  0,  0};
 
@@ -39,11 +35,21 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
     void button_menu_item(int item);
     int button_index_to_submenu_item(int index);
 
+    virtual void load(archive arch, pcstr section) override {
+        widget::load(arch, section);
+
+        btn_w_add = arch.r_int("btn_w_add", 128);
+        btn_w_min = -btn_w_add - 8;
+        btn_w_tot = 256 + btn_w_add;
+    }
+
     int selected_submenu = BUILDING_MENU_VACANT_HOUSE;
     int num_items;
     int y_offset;
 
-    int focus_button_id;
+    int btn_w_add;
+    int btn_w_min;
+    int btn_w_tot;
 };
 
 build_menu_widget g_build_menuw;
@@ -103,7 +109,7 @@ int build_menu_widget::button_index_to_submenu_item(int index) {
 
 void build_menu_widget::draw_menu_buttons() {
     int x_offset = widget_sidebar_city_offset_x();
-    int label_margin = BTN_W_TOT + 10;
+    int label_margin = btn_w_tot + 10;
     int label_offset = 20;
 
     e_font font = FONT_NORMAL_BLACK_ON_DARK;
@@ -123,12 +129,12 @@ void build_menu_widget::draw_menu_buttons() {
             font = has_palace ? FONT_NORMAL_BLACK_ON_LIGHT : font;
             UiFlags flags = UiFlags_PanelSmall;
             flags |= (has_palace ? UiFlags_Grayed : UiFlags_None);
-            btn = &ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + 24 * i }, vec2i{ BTN_W_TOT, 20 }, fonts_vec{ font, FONT_NORMAL_BLACK_ON_LIGHT }, flags,
+            btn = &ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + 24 * i }, vec2i{ btn_w_tot, 20 }, fonts_vec{ font, FONT_NORMAL_BLACK_ON_LIGHT }, flags,
                 [this, i] (int, int) {
                     button_menu_item(button_index_to_submenu_item(i));
                 });
         } else {
-            btn = &ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + 24 * i }, vec2i{ BTN_W_TOT, 20 }, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_PanelSmall,
+            btn = &ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + 24 * i }, vec2i{ btn_w_tot, 20 }, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_PanelSmall,
                 [this, i] (int, int) {
                     button_menu_item(button_index_to_submenu_item(i));
                 });
@@ -164,9 +170,9 @@ void build_menu_widget::draw_foreground(UiFlags flags) {
     window_city_draw();
     widget_sidebar_city_draw_foreground();
 
-    //ui.begin_widget(pos);
+    ui.begin_widget(pos);
     draw_menu_buttons();
-    //ui.end_widget();
+    ui.end_widget();
 }
 
 void build_menu_widget::init() {
@@ -177,10 +183,6 @@ void build_menu_widget::init() {
 }
 
 int build_menu_widget::handle_mouse(const mouse* m) {
-    //if (handle_build_submenu(m)) {
-    //    return 0;
-    //}
-
     if (widget_sidebar_city_handle_mouse_build_menu(m)) {
         return 0;
     }
