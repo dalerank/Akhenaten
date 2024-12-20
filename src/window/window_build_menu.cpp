@@ -38,6 +38,8 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
     virtual int get_tooltip_text() override { return 0; }
     virtual void init() override;
 
+    void draw_menu_buttons();
+
     int selected_submenu = BUILDING_MENU_VACANT_HOUSE;
     int num_items;
     int y_offset;
@@ -104,8 +106,7 @@ static int is_all_button(int type) {
         || (type == BUILDING_MENU_TEMPLE_COMPLEX && data.selected_submenu == BUILDING_MENU_LARGE_TEMPLES);
 }
 
-static void draw_menu_buttons() {
-    auto &data = g_build_menuw;
+void build_menu_widget::draw_menu_buttons() {
     int x_offset = widget_sidebar_city_offset_x();
     int label_width = (BTN_W_TOT) / 16;
     int label_margin = BTN_W_TOT + 10;
@@ -114,34 +115,38 @@ static void draw_menu_buttons() {
     e_font font = FONT_NORMAL_BLACK_ON_DARK;
     int item_index = -1;
     painter ctx = game.painter();
-    for (int i = 0; i < data.num_items; i++) {
+    for (int i = 0; i < num_items; i++) {
         font = FONT_NORMAL_BLACK_ON_LIGHT;
 
-        if (data.focus_button_id == i + 1) {
+        if (focus_button_id == i + 1) {
             font = FONT_NORMAL_BLACK_ON_DARK;
         }
 
-        item_index = building_menu_next_index(data.selected_submenu, item_index);
-        e_building_type type = building_menu_type(data.selected_submenu, item_index);
+        item_index = building_menu_next_index(selected_submenu, item_index);
+        e_building_type type = building_menu_type(selected_submenu, item_index);
         textid tgroup = menu_index_to_text_index({ 28, (uint8_t)type });
 
         if (building_is_palace(type)) {
             bool has_palace = g_city.buildings.palace_placed;
 
-            label_draw_colored(ctx, x_offset - label_margin, data.y_offset + 110 + 24 * i, label_width, ((data.focus_button_id == i + 1) || has_palace) ? 1 : 2, has_palace ? 0xffC0C0C0 : 0xffffffff);
-            lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, has_palace ? FONT_NORMAL_BLACK_ON_LIGHT : font);
+            small_panel_draw_colored(ctx, x_offset - label_margin, y_offset + 110 + 24 * i, label_width, ((focus_button_id == i + 1) || has_palace) ? 1 : 2, has_palace ? 0xffC0C0C0 : 0xffffffff);
+            lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + label_offset, y_offset + 113 + 24 * i, 176, has_palace ? FONT_NORMAL_BLACK_ON_LIGHT : font);
         } else {
-            label_draw(x_offset - label_margin, data.y_offset + 110 + 24 * i, label_width, data.focus_button_id == i + 1 ? 1 : 2);
+            ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + 24 * i }, vec2i{ BTN_W_TOT, 20 }, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_PanelSmall,
+                [] (int, int) {
+            
+                });
+            //small_panel_draw(x_offset - label_margin, y_offset + 110 + 24 * i, label_width, focus_button_id == i + 1 ? 1 : 2);
         }
 
         if (is_all_button(type)) {
-            lang_text_draw_centered(52, 19, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, font);
+            lang_text_draw_centered(52, 19, x_offset - label_margin + label_offset, y_offset + 113 + 24 * i, 176, font);
         } else if (type >= BUILDING_TEMPLE_COMPLEX_ALTAR && type <= BUILDING_TEMPLE_COMPLEX_ORACLE) {
             building *b = building_get(city_buildings_get_temple_complex());
             int index = (type - BUILDING_TEMPLE_COMPLEX_ALTAR) + 2 * (b->type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
-            lang_text_draw_centered(189, index, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, font);
+            lang_text_draw_centered(189, index, x_offset - label_margin + label_offset, y_offset + 113 + 24 * i, 176, font);
         } else {
-            lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, font);
+            lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + label_offset, y_offset + 113 + 24 * i, 176, font);
         }
 
         int cost = model_get_building(type)->cost;
@@ -150,7 +155,7 @@ static void draw_menu_buttons() {
         }
 
         if (cost) {
-            text_draw_money(cost, x_offset - 82 - label_offset, data.y_offset + 114 + 24 * i, font);
+            text_draw_money(cost, x_offset - 82 - label_offset, y_offset + 114 + 24 * i, font);
         }
     }
 }
@@ -158,7 +163,10 @@ static void draw_menu_buttons() {
 void build_menu_widget::draw_foreground(UiFlags flags) {
     window_city_draw();
     widget_sidebar_city_draw_foreground();
+
+    ui.begin_widget(pos);
     draw_menu_buttons();
+    ui.end_widget();
 }
 
 void build_menu_widget::init() {

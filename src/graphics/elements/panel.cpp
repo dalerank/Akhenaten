@@ -117,33 +117,25 @@ void inner_panel_draw(vec2i pos, vec2i size) {
     }
 }
 
-void label_draw(int x, int y, int width_blocks, int type) {
+void small_panel_draw(int x, int y, int width_blocks, int type) {
     int image_base = image_id_from_group(GROUP_PANEL_BUTTON);
     painter ctx = game.painter();
     for (int i = 0; i < width_blocks; i++) {
         int image_id;
-        if (i == 0)
-            image_id = 3 * type + 40;
-        else if (i < width_blocks - 1)
-            image_id = 3 * type + 41;
-        else {
-            image_id = 3 * type + 42;
-        }
+        if (i == 0) { image_id = 3 * type + 40; }
+        else if (i < width_blocks - 1) { image_id = 3 * type + 41; }
+        else { image_id = 3 * type + 42; }
         ImageDraw::img_generic(ctx, image_base + image_id, vec2i{x + 16 * i, y});
     }
 }
 
-void label_draw_colored(painter &ctx, int x, int y, int width_blocks, int type, uint32_t mask) {
+void small_panel_draw_colored(painter &ctx, int x, int y, int width_blocks, int type, uint32_t mask) {
     int image_base = image_id_from_group(GROUP_PANEL_BUTTON);
     for (int i = 0; i < width_blocks; i++) {
         int image_id;
-        if (i == 0)
-            image_id = 3 * type + 40;
-        else if (i < width_blocks - 1)
-            image_id = 3 * type + 41;
-        else {
-            image_id = 3 * type + 42;
-        }
+        if (i == 0) { image_id = 3 * type + 40; }
+        else if (i < width_blocks - 1) { image_id = 3 * type + 41; }
+        else { image_id = 3 * type + 42; }
         ImageDraw::img_generic(ctx, image_base + image_id, vec2i{x + 16 * i, y}, mask);
     }
 }

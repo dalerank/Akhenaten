@@ -199,14 +199,14 @@ static void window_overlay_draw_foreground(int) {
     int x_offset = get_sidebar_x_offset();
 
     for (int i = 0; i < 8; i++) {
-        label_draw(x_offset - 170, 74 + 24 * i, 10, data.menu_focus_button_id == i + 1 ? 1 : 2);
+        small_panel_draw(x_offset - 170, 74 + 24 * i, 10, data.menu_focus_button_id == i + 1 ? 1 : 2);
         lang_text_draw_centered(14, MENU_ID_TO_OVERLAY[i], x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_BLACK_ON_DARK);
     }
 
     if (data.selected_submenu > 0) {
         ImageDraw::img_generic(ctx, image_id_from_group(PACK_GENERAL, 158), x_offset - 185, 80 + 24 * data.selected_menu);
         for (int i = 0; i < data.num_submenu_items; i++) {
-            label_draw(x_offset - 348, 74 + 24 * (i + data.selected_menu), 10, data.submenu_focus_button_id == i + 1 ? 1 : 2);
+            small_panel_draw(x_offset - 348, 74 + 24 * (i + data.selected_menu), 10, data.submenu_focus_button_id == i + 1 ? 1 : 2);
 
             const char* text = game_state_overlay_text(submenu_id_to_overlay[data.selected_submenu][i]);
             text_draw_centered((uint8_t*)text, x_offset - 348, 77 + 24 * (i + data.selected_menu), 160, FONT_NORMAL_BLACK_ON_DARK, 0);

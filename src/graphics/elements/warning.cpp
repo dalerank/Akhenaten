@@ -43,7 +43,7 @@ void warning_draw() {
         }
 
         int box_width = determine_width(text);
-        label_draw(center - box_width / 2 + 1, top_offset, box_width / 16 + 1, 1);
+        small_panel_draw(center - box_width / 2 + 1, top_offset, box_width / 16 + 1, 1);
         if (box_width < 460) {
             // ornaments at the side
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 15, center - box_width / 2 + 2, top_offset + 2);

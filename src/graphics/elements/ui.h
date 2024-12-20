@@ -47,6 +47,7 @@ enum UiFlags_ {
     UiFlags_NoBorder = 1 << 14,
     UiFlags_Outline = 1 << 15,
     UiFlags_SplitText = 1 << 16,
+    UiFlags_PanelSmall = 1 << 17,
 };
 using UiFlags = int;
 

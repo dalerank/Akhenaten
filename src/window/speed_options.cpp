@@ -49,8 +49,8 @@ static void draw_foreground(int) {
 
     outer_panel_draw(vec2i{80, 80}, 20, 14);
     // ok/cancel labels
-    label_draw(144, 232, 12, data.focus_button_id == 1 ? 1 : 2);
-    label_draw(144, 262, 12, data.focus_button_id == 2 ? 1 : 2);
+    small_panel_draw(144, 232, 12, data.focus_button_id == 1 ? 1 : 2);
+    small_panel_draw(144, 262, 12, data.focus_button_id == 2 ? 1 : 2);
 
     // title
     lang_text_draw_centered(45, 0, 96, 92, 288, FONT_LARGE_BLACK_ON_LIGHT);

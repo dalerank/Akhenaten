@@ -292,15 +292,18 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
     const bool alingxcenter = !!(flags & UiFlags_AlignXCentered);
     const bool alignleft = !!(flags & UiFlags_AlignLeft);
     const bool readonly = !!(flags & UiFlags_Readonly);
+    const bool small_panel = !!(flags & UiFlags_PanelSmall);
 
     const vec2i offset = g_state.offset();
 
-    g_state.buttons.push_back(generic_button{pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0});
+    g_state.buttons.push_back(generic_button{ pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0 });
     generic_button &gbutton = g_state.buttons.back().g_button;
     gbutton.hovered = is_button_hover(gbutton, offset) && !readonly;
     gbutton.clip = graphics_clip_rectangle();
 
-    if (hasbody) {
+    if (small_panel) {
+        small_panel_draw(pos.x, pos.y, (size.x / 16), gbutton.hovered ? 1 : 2);
+    } else if (hasbody) {
         button_border_draw(offset + pos, size, gbutton.hovered && !grayed);
     } else if (hasborder) {
         if (gbutton.hovered && !grayed) {
@@ -762,7 +765,7 @@ void ui::eresource_icon::load(archive arch, element *parent, items &elems) {
 void ui::elabel::draw(UiFlags flags) {
     const vec2i offset = g_state.offset();
     if (_body.x > 0) {
-        label_draw(pos.x + offset.x, pos.y + offset.y, _body.x, _body.y);
+        small_panel_draw(pos.x + offset.x, pos.y + offset.y, _body.x, _body.y);
     }
     ui::label(_text.c_str(), pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0}), _font, _flags, size.x);
 
