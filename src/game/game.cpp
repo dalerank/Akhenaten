@@ -523,7 +523,7 @@ bool game_t::check_valid() {
     return true;
 }
 
-bool game_init() {
+bool game_init(game_opts opts) {
     int missing_fonts = 0;
     if (!image_set_font_pak(encoding_get())) {
         logs::error("unable to load font graphics");
@@ -559,7 +559,10 @@ bool game_init() {
     }
 
     //    mods_init();
-    g_sound.init();
+    if (!!(opts & game_opt_sound)) {
+        g_sound.init();
+    }
+
     game_state_init();
     window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : MESSAGE_NONE));
 

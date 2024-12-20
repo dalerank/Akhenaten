@@ -5,12 +5,13 @@
 
 class Arguments {
 public:
-    Arguments(int argc, char** argv);
-
     static char const* usage();
 
     [[nodiscard]] bool is_fullscreen() const;
     void set_fullscreen();
+
+    [[nodiscart]] bool use_sound() const;
+    void set_use_sound(bool flag = true);
 
     [[nodiscard]] bool is_window_mode() const;
     void set_window_mode(bool flag = true);
@@ -31,6 +32,7 @@ public:
     void set_window_size(vec2i value);
 
     [[nodiscard]] const char* get_scripts_directory() const;
+    void parse(int argc, char **argv);
 
 private:
     vfs::path data_directory_;
@@ -41,10 +43,13 @@ private:
     int cursor_scale_percentage_ = 100;
     vec2i window_size_ = {800, 600};
     bool window_mode_ = false;
+    bool use_sound_ = true;
 
     /// apply parameters from command line
     void parse_cli_(int argc, char** argv);
 };
+
+extern Arguments g_args;
 
 namespace arguments {
 

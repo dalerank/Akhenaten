@@ -24,6 +24,8 @@
 #define MIXED_MODE_ERROR_MESSAGE "Option --mixed should have path to script folder"
 #define UNKNOWN_OPTION_ERROR_MESSAGE "Option %s not recognized"
 
+Arguments g_args;
+
 namespace {
 
 char const* const CFG_FILE_NAME = "akhenaten.cfg";
@@ -160,7 +162,7 @@ static int parse_decimal_as_percentage(const char* str) {
     return percentage;
 }
 
-Arguments::Arguments(int argc, char** argv) {
+void Arguments::parse(int argc, char** argv) {
     data_directory_ = std::filesystem::current_path().string().c_str();
 #if defined(GAME_PLATFORM_WIN)
     auto get_steam_path = [] () {
@@ -204,12 +206,22 @@ char const* Arguments::usage() {
            "          enable window mode\n"
            "  --mixed\n"
            "          hot reload scripts from disk\n"
+           "  --nosound\n"
+           "          not use sound manager\n"
            "\n"
            "The last argument, if present, is interpreted as data directory of the Pharaoh installation";
 }
 
 bool Arguments::is_fullscreen() const {
     return !window_mode_;
+}
+
+bool Arguments::use_sound() const {
+    return use_sound_;
+}
+
+void Arguments::set_use_sound(bool flag) {
+    use_sound_ = flag;
 }
 
 void Arguments::set_fullscreen() {
@@ -286,6 +298,8 @@ void Arguments::parse_cli_(int argc, char** argv) {
 
         } else if (SDL_strcmp(argv[i], "--window") == 0) {
             window_mode_ = true;
+        } else if (SDL_strcmp(argv[i], "--nosound") == 0) {
+            use_sound_ = false;
         } else if (SDL_strcmp(argv[i], "--render") == 0) {
             if (i + 1 < argc) {
                 renderer_ = argv[i + 1];

@@ -332,7 +332,7 @@ static void show_options_window(Arguments& args) {
     SDL_DestroyWindow(platform_window);
 }
 
-static void setup(Arguments& args) {
+static void setup() {
     crashhandler_install();
 
     logs::info("Akhenaten version %s", get_version().c_str());
@@ -354,7 +354,7 @@ static void setup(Arguments& args) {
 #if defined(GAME_PLATFORM_ANDROID)
     bool again = false;
 #endif // GAME_PLATFORM_ANDROID
-    while (!pre_init(args.get_data_directory())) {
+    while (!pre_init(g_args.get_data_directory())) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
                                  "Warning",
                                  "Akhenaten requires the original files from Pharaoh to run.\n"
@@ -390,31 +390,33 @@ static void setup(Arguments& args) {
         pcstr user_dir = android_show_pharaoh_path_dialog(again);
         args.set_data_directory(user_dir);
 #else
-        show_options_window(args);
+        show_options_window(g_args);
 #endif
     }
 
     // set up game display
     if (!platform_screen_create("Akhenaten",
-                                args.get_renderer(),
-                                args.is_fullscreen(),
-                                args.get_display_scale_percentage(),
-                                args.get_window_size())) {
+                                g_args.get_renderer(),
+                                g_args.is_fullscreen(),
+                                g_args.get_display_scale_percentage(),
+                                g_args.get_window_size())) {
         logs::info("Exiting: SDL create window failed");
         exit(-2);
     }
-    g_settings.set_cli_fullscreen(args.is_fullscreen());
-    platform_init_cursors(args.get_cursor_scale_percentage()); // this has to come after platform_screen_create,
+    g_settings.set_cli_fullscreen(g_args.is_fullscreen());
+    platform_init_cursors(g_args.get_cursor_scale_percentage()); // this has to come after platform_screen_create,
                                                                // otherwise it fails on Nintendo Switch
     image_data_init();                                         // image paks structures init
                                                                
-    js_vm_set_scripts_folder(args.get_scripts_directory());    // setup script engine
+    js_vm_set_scripts_folder(g_args.get_scripts_directory());    // setup script engine
     js_vm_setup();
     js_vm_sync();
 
     // init game!
     time_set_millis(SDL_GetTicks());
-    if (!game_init()) {
+    game_opts opts = g_args.use_sound() ? game_opt_sound : game_opt_none;
+
+    if (!game_init(opts)) {
         logs::info("Exiting: game init failed");
         exit(2);
     }
@@ -618,11 +620,13 @@ static void main_loop() {
     }
 }
 
+
 int main(int argc, char** argv) {
+    g_args.parse(argc, argv);
+
     logs::initialize();
 
-    Arguments arguments(argc, argv);
-    setup(arguments);
+    setup();
 
     mouse_set_inside_window(1);
 

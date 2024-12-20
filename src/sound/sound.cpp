@@ -228,7 +228,8 @@ void sound_manager_t::open() {
     }
     logs::error("Sound failed to initialize using default driver: %s", Mix_GetError());
     // Try to work around SDL choosing the wrong driver on Windows sometimes
-    for (int i = 0; i < SDL_GetNumAudioDrivers(); i++) {
+    int num_drivers = SDL_GetNumAudioDrivers();
+    for (int i = 0; i < num_drivers; i++) {
         const char* driver_name = SDL_GetAudioDriver(i);
         if (SDL_strcmp(driver_name, "disk") == 0 || SDL_strcmp(driver_name, "dummy") == 0) {
             // Skip "write-to-disk" and dummy drivers

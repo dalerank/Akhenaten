@@ -6,7 +6,14 @@
 #include "core/threading.h"
 #include "core/time.h"
 
-bool game_init();
+enum game_option {
+    game_opt_none = 0,
+    game_opt_sound = 1,
+};
+
+using game_opts = uint32_t;
+
+bool game_init(game_opts opts);
 
 bool game_init_editor();
 
