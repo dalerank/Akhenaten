@@ -39,6 +39,9 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
         widget::load(arch, section);
 
         btn_w_add = arch.r_int("btn_w_add", 128);
+        btn_w_tot_margin = arch.r_int("btn_w_tot_margin", 10);
+        btn_w_tot_offset = arch.r_int("btn_w_tot_offset", 10);
+
         btn_w_min = -btn_w_add - 8;
         btn_w_tot = 256 + btn_w_add;
     }
@@ -50,6 +53,8 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
     int btn_w_add;
     int btn_w_min;
     int btn_w_tot;
+    int btn_w_tot_margin;
+    int btn_w_tot_offset;
 };
 
 build_menu_widget g_build_menuw;
@@ -109,8 +114,7 @@ int build_menu_widget::button_index_to_submenu_item(int index) {
 
 void build_menu_widget::draw_menu_buttons() {
     int x_offset = widget_sidebar_city_offset_x();
-    int label_margin = btn_w_tot + 10;
-    int label_offset = 20;
+    int label_margin = btn_w_tot + btn_w_tot_margin;
 
     e_font font = FONT_NORMAL_BLACK_ON_DARK;
     int item_index = -1;
@@ -146,13 +150,13 @@ void build_menu_widget::draw_menu_buttons() {
         }
 
         if (is_all_button(type)) {
-            lang_text_draw_centered(52, 19, x_offset - label_margin + label_offset, y_offset + 113 + 24 * i, 176, font);
+            lang_text_draw_centered(52, 19, x_offset - label_margin + btn_w_tot_offset, y_offset + 113 + 24 * i, 176, font);
         } else if (type >= BUILDING_TEMPLE_COMPLEX_ALTAR && type <= BUILDING_TEMPLE_COMPLEX_ORACLE) {
             building *b = building_get(city_buildings_get_temple_complex());
             int index = (type - BUILDING_TEMPLE_COMPLEX_ALTAR) + 2 * (b->type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
-            lang_text_draw_centered(189, index, x_offset - label_margin + label_offset, y_offset + 113 + 24 * i, 176, font);
+            lang_text_draw_centered(189, index, x_offset - label_margin + btn_w_tot_offset, y_offset + 113 + 24 * i, 176, font);
         } else {
-            lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + label_offset, y_offset + 113 + 24 * i, 176, font);
+            lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + btn_w_tot_offset, y_offset + 113 + 24 * i, 176, font);
         }
 
         int cost = model_get_building(type)->cost;
@@ -161,7 +165,7 @@ void build_menu_widget::draw_menu_buttons() {
         }
 
         if (cost) {
-            text_draw_money(cost, x_offset - 82 - label_offset, y_offset + 114 + 24 * i, font);
+            text_draw_money(cost, x_offset - 82 - btn_w_tot_offset, y_offset + 114 + 24 * i, font);
         }
     }
 }

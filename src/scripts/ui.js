@@ -73,6 +73,8 @@ window build_menu_widget = {
 	},
 
 	btn_w_add : 128,
+	btn_w_tot_margin : 10,
+	btn_w_tot_offset : 20,
 }
 
 trade_prices_window = {
