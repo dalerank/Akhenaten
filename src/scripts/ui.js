@@ -69,12 +69,14 @@ main_menu_window = {
 
 window build_menu_widget = {
 	ui : {
-		dummy : dummy({}),
+		item : dummy({size:[-1, 24]}),
 	},
 
 	btn_w_add : 128,
 	btn_w_tot_margin : 10,
 	btn_w_tot_offset : 20,
+	y_menu_offsets : [0, 322, 306, 274, 258, 226, 210, 178, 162,  130, 114, 82, 66, 34, 18,
+                    -30, -46, -62, -78, -78, -94, -94, -110, -110, 0,   0,   0,  0,  0,  0],
 }
 
 trade_prices_window = {

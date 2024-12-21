@@ -1,5 +1,6 @@
 #include "window_build_menu.h"
 
+#include "core/svector.h"
 #include "city/city.h"
 #include "graphics/animation.h"
 #include "building/building.h"
@@ -21,13 +22,11 @@
 #include "window/window_city.h"
 #include "game/game.h"
 
-static const int Y_MENU_OFFSETS[] = {0,   322, 306, 274, 258, 226, 210, 178,  162,  130, 114, 82, 66, 34, 18,
-                                     -30, -46, -62, -78, -78, -94, -94, -110, -110, 0,   0,   0,  0,  0,  0};
-
 struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
     virtual int draw_background(UiFlags flags) override;
     virtual void draw_foreground(UiFlags flags) override;
-    virtual int handle_mouse(const mouse *m) override;
+    virtual int ui_handle_mouse(const mouse *m) override;
+    virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
     virtual void init() override;
 
@@ -41,9 +40,14 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
         btn_w_add = arch.r_int("btn_w_add", 128);
         btn_w_tot_margin = arch.r_int("btn_w_tot_margin", 10);
         btn_w_tot_offset = arch.r_int("btn_w_tot_offset", 10);
+        arch.r_array_num("y_menu_offsets", y_menu_offsets);
 
         btn_w_min = -btn_w_add - 8;
         btn_w_tot = 256 + btn_w_add;
+
+        if (game.session.active && window_is(WINDOW_BUILD_MENU)) {
+            window_build_menu_show(selected_submenu);
+        }
     }
 
     int selected_submenu = BUILDING_MENU_VACANT_HOUSE;
@@ -55,6 +59,7 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
     int btn_w_tot;
     int btn_w_tot_margin;
     int btn_w_tot_offset;
+    svector<int, 32> y_menu_offsets;
 };
 
 build_menu_widget g_build_menuw;
@@ -83,10 +88,9 @@ static int is_all_button(int type) {
 }
 
 void build_menu_widget::button_menu_item(int item) {
-    auto &data = g_build_menuw;
     widget_city_clear_current_tile();
 
-    e_building_type type = building_menu_type(data.selected_submenu, item);
+    e_building_type type = building_menu_type(selected_submenu, item);
     if (building_is_palace(type) && g_city.buildings.palace_placed) {
         return;
     }
@@ -94,9 +98,9 @@ void build_menu_widget::button_menu_item(int item) {
     Planner.setup_build(type);
 
     if (building_menu_is_submenu(type)) {
-        data.num_items = building_menu_count_items(type);
-        data.selected_submenu = type;
-        data.y_offset = Y_MENU_OFFSETS[data.num_items];
+        num_items = building_menu_count_items(type);
+        selected_submenu = type;
+        y_offset = y_menu_offsets[num_items];
         Planner.reset();
     } else {
         window_city_show();
@@ -119,6 +123,8 @@ void build_menu_widget::draw_menu_buttons() {
     e_font font = FONT_NORMAL_BLACK_ON_DARK;
     int item_index = -1;
     painter ctx = game.painter();
+
+    const auto &item = ui["item"];
     for (int i = 0; i < num_items; i++) {
         font = FONT_NORMAL_BLACK_ON_LIGHT;
 
@@ -133,12 +139,12 @@ void build_menu_widget::draw_menu_buttons() {
             font = has_palace ? FONT_NORMAL_BLACK_ON_LIGHT : font;
             UiFlags flags = UiFlags_PanelSmall;
             flags |= (has_palace ? UiFlags_Grayed : UiFlags_None);
-            btn = &ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + 24 * i }, vec2i{ btn_w_tot, 20 }, fonts_vec{ font, FONT_NORMAL_BLACK_ON_LIGHT }, flags,
+            btn = &ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + item.size.y * i }, vec2i{ btn_w_tot, 20 }, fonts_vec{ font, FONT_NORMAL_BLACK_ON_LIGHT }, flags,
                 [this, i] (int, int) {
                     button_menu_item(button_index_to_submenu_item(i));
                 });
         } else {
-            btn = &ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + 24 * i }, vec2i{ btn_w_tot, 20 }, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_PanelSmall,
+            btn = &ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + item.size.y * i }, vec2i{ btn_w_tot, 20 }, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_PanelSmall,
                 [this, i] (int, int) {
                     button_menu_item(button_index_to_submenu_item(i));
                 });
@@ -150,13 +156,13 @@ void build_menu_widget::draw_menu_buttons() {
         }
 
         if (is_all_button(type)) {
-            lang_text_draw_centered(52, 19, x_offset - label_margin + btn_w_tot_offset, y_offset + 113 + 24 * i, 176, font);
+            lang_text_draw_centered(52, 19, x_offset - label_margin + btn_w_tot_offset, y_offset + 113 + item.size.y * i, 176, font);
         } else if (type >= BUILDING_TEMPLE_COMPLEX_ALTAR && type <= BUILDING_TEMPLE_COMPLEX_ORACLE) {
             building *b = building_get(city_buildings_get_temple_complex());
             int index = (type - BUILDING_TEMPLE_COMPLEX_ALTAR) + 2 * (b->type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
             lang_text_draw_centered(189, index, x_offset - label_margin + btn_w_tot_offset, y_offset + 113 + 24 * i, 176, font);
         } else {
-            lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + btn_w_tot_offset, y_offset + 113 + 24 * i, 176, font);
+            lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + btn_w_tot_offset, y_offset + 113 + item.size.y * i, 176, font);
         }
 
         int cost = model_get_building(type)->cost;
@@ -181,12 +187,17 @@ void build_menu_widget::draw_foreground(UiFlags flags) {
 
 void build_menu_widget::init() {
     num_items = building_menu_count_items(selected_submenu);
-    y_offset = Y_MENU_OFFSETS[num_items];
+    y_offset = y_menu_offsets[num_items];
 
     Planner.setup_build(BUILDING_NONE);
 }
 
-int build_menu_widget::handle_mouse(const mouse* m) {
+int build_menu_widget::ui_handle_mouse(const mouse* m) {
+    int r = autoconfig_window::ui_handle_mouse(m);
+    if (r) {
+        return 0;
+    }
+
     if (widget_sidebar_city_handle_mouse_build_menu(m)) {
         return 0;
     }
