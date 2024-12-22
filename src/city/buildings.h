@@ -4,10 +4,6 @@
 #include "building/building.h"
 
 struct city_buildings_t {
-    bool palace_placed;
-    int32_t palace_building_id;
-    tile2i palace_point;
-
     int32_t festival_building_id;
     tile2i festival_square;
 
@@ -62,11 +58,10 @@ struct city_buildings_t {
 
     int get_palace_id();
 
-    void add_palace(building* palace);
     void remove_palace(building* palace);
 
     void reset_tracked_buildings_counters();
-    void track_building(e_building_type type, building_id id, bool active);
+    void track_building(building &b, bool active);
     const tracked_building_ids &track_buildings(e_building_type type) const { return tracked_buildings->at(type); }
 
     void clear_fishing_boat_requests() { fishing_boats_requested = 0; }

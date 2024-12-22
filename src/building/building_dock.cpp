@@ -57,7 +57,7 @@ bool building_dock::can_play_animation() const {
 
 void building_dock::update_count() const {
     const bool is_active = num_workers() > 0 && base.has_open_water_access;
-    g_city.buildings.track_building(type(), id(), is_active);
+    g_city.buildings.track_building(base, is_active);
 }
 
 void building_dock::update_map_orientation(int orientation) {

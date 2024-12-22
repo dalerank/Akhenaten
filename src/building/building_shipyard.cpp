@@ -195,5 +195,5 @@ void building_shipyard::update_graphic() {
 
 void building_shipyard::update_count() const {
     const bool is_active = (num_workers() > 0 && base.has_open_water_access);
-    g_city.buildings.track_building(type(), id(), is_active);
+    g_city.buildings.track_building(base, is_active);
 }

@@ -2,6 +2,7 @@
 
 #include "core/svector.h"
 #include "city/city.h"
+#include "building/count.h"
 #include "graphics/animation.h"
 #include "building/building.h"
 #include "building/building_menu.h"
@@ -91,7 +92,8 @@ void build_menu_widget::button_menu_item(int item) {
     widget_city_clear_current_tile();
 
     e_building_type type = building_menu_type(selected_submenu, item);
-    if (building_is_palace(type) && g_city.buildings.palace_placed) {
+    const auto &params = building_impl::params(type);
+    if (params.unique_building && building_count_total(type)) {
         return;
     }
 
@@ -133,12 +135,13 @@ void build_menu_widget::draw_menu_buttons() {
         e_building_type type = building_menu_type(selected_submenu, item_index);
         textid tgroup = menu_index_to_text_index({ 28, (uint8_t)type });
 
-        if (building_is_palace(type)) {
-            bool has_palace = g_city.buildings.palace_placed;
+        const auto &params = building_impl::params(type);
+        if (params.unique_building) {
+            bool has_building = building_count_total(type);
 
-            font = has_palace ? FONT_NORMAL_BLACK_ON_LIGHT : font;
+            font = has_building ? FONT_NORMAL_BLACK_ON_LIGHT : font;
             UiFlags flags = UiFlags_PanelSmall;
-            flags |= (has_palace ? UiFlags_Grayed : UiFlags_None);
+            flags |= (has_building ? UiFlags_Grayed : UiFlags_None);
             btn = &ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + item.size.y * i }, vec2i{ btn_w_tot, 20 }, fonts_vec{ font, FONT_NORMAL_BLACK_ON_LIGHT }, flags,
                 [this, i] (int, int) {
                     button_menu_item(button_index_to_submenu_item(i));

@@ -12,30 +12,29 @@
 #include <set>
 
 static auto &city_data = g_city;
+const auto palace_types = { BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_VILLAGE_PALACE_UP, BUILDING_TOWN_PALACE_UP, BUILDING_CITY_PALACE };
 int city_buildings_t::get_palace_id() {
-    if (!palace_placed) {
-        return 0;
+    for (auto btype : palace_types) {
+        const auto &palace = tracked_buildings->at(btype);
+        if (!palace.empty()) {
+            return palace.front();
+        }
     }
 
-    return palace_building_id;
-}
-
-void city_buildings_t::add_palace(building* palace) {
-    palace_placed = true;
-    palace_building_id = palace->id;
-    palace_point = palace->tile;
+    return 0;
 }
 
 void city_buildings_t::remove_palace(building* palace) {
-    building* next_palace = building_first([](auto& b) { return b.is_administration(); });
-    palace_point.set(next_palace ? next_palace->tile.grid_offset() : 0);
-    palace_building_id = next_palace ? next_palace->id : 0;
-    palace_placed = !!next_palace;
+    assert(!!palace->dcast_palace());
+    for (auto btype : palace_types) {
+        auto &palace = tracked_buildings->at(btype);
+        palace.clear();
+    }
 }
 
-void city_buildings_t::track_building(e_building_type type, building_id id, bool active) {
-    tracked_buildings->at(type).push_back(id);
-    building_increase_type_count(type, active);
+void city_buildings_t::track_building(building &b, bool active) {
+    tracked_buildings->at(b.type).push_back(b.id);
+    building_increase_type_count(b.type, active);
 }
 
 void city_buildings_t::check_buildings_twins() {
