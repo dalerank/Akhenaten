@@ -18,8 +18,8 @@ jobs:
       run: |
         brew install llvm@15
         whereis clang++
-        export CC=/usr/local/opt/llvm@15/bin/clang
-        export CXX=/usr/local/opt/llvm@15/bin/clang++
+        export CC=/opt/homebrew/opt/llvm@15/bin/clang
+        export CXX=/opt/homebrew/opt/llvm@15/bin/clang++
         export CXXFLAGS=-stdlib=libc++
         ./update-workspace-mac.sh
         git submodule init && git submodule update ext/cpptrace

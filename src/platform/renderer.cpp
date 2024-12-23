@@ -50,9 +50,12 @@
 // prevents the problem, at the cost of performance due to the extra texture context switching.
 #define MAX_TEXTURE_SIZE 2048
 #else
-#include <gpupixel.h>
 #undef min
 #undef max
+#endif
+
+#if !(defined(GAME_PLATFORM_ANDROID) || defined(GAME_PLATFORM_WEB) || defined(GAME_PLATFORM_MACOSX))
+#include <gpupixel.h>
 #endif
 
 #ifdef __vita__

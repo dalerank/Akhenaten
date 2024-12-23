@@ -124,7 +124,7 @@ void info_window_house::init(object_info &c) {
     } else {
         adv_people_text = "no rooms";
     }
-    ui["people_text"].text_var("%s ( %s )", people_text, adv_people_text);
+    ui["people_text"].text_var("%s ( %s )", people_text.c_str(), adv_people_text.c_str());
 
     bstring256 tax_info_text;
     if (b->house_tax_coverage) {

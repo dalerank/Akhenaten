@@ -204,7 +204,7 @@ std::pair<bstring64, e_font> window_building_get_order_instruction(int instr_kin
             adv_text = ui::str(99, 29);
 
         bstring64 full_text;
-        full_text.printf("%s %s %s", ui::str(99, 19), text, adv_text);
+        full_text.printf("%s %s %s", ui::str(99, 19), text.c_str(), adv_text);
         return { full_text, FONT_NORMAL_YELLOW };
     }
     case STORAGE_STATE_PHARAOH_EMPTY:
