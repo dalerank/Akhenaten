@@ -302,7 +302,7 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
     gbutton.clip = graphics_clip_rectangle();
 
     if (small_panel) {
-        int mask = grayed ? 0xffC0C0C0 : 0xffffffff;
+        int mask = grayed ? 0xffe0e0e0 : 0xffffffff;
         painter ctx = game.painter();
         small_panel_draw_colored(ctx, pos.x, pos.y, (size.x / 16), gbutton.hovered ? 1 : 2, mask);
     } else if (hasbody) {
