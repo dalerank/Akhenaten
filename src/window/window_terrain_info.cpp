@@ -30,6 +30,7 @@ void window_building_draw_wall(object_info& c) {
 }
 
 void terrain_info_window::window_info_background(object_info &c) {
+    update_buttons(c);
 }
 
 void terrain_info_window::init(object_info &c) {

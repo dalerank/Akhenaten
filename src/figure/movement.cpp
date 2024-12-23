@@ -265,6 +265,12 @@ void figure::advance_route_tile(int roaming_enabled) {
             //
             break; // OK to walk
 
+        case BUILDING_BURNING_RUIN:
+            if (b->state != BUILDING_STATE_RUBBLE) {
+                direction = DIR_FIGURE_REROUTE;
+            }
+            break;
+
         case BUILDING_SMALL_MASTABA:
         case BUILDING_SMALL_MASTABA_SIDE:
         case BUILDING_SMALL_MASTABA_WALL:
@@ -281,6 +287,7 @@ void figure::advance_route_tile(int roaming_enabled) {
     //    else if (map_terrain_is(target_grid_offset, TERRAIN_IMPASSABLE))
     //        direction = DIR_FIGURE_REROUTE;
 }
+
 void figure::move_ticks(int num_ticks, bool roaming_enabled) {
     while (num_ticks > 0) {
         num_ticks--;
