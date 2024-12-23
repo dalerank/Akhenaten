@@ -24,8 +24,8 @@ int city_buildings_t::get_palace_id() {
     return 0;
 }
 
-void city_buildings_t::remove_palace(building* palace) {
-    assert(!!palace->dcast_palace());
+void city_buildings_t::remove_palace(building &palace) {
+    assert(!!palace.dcast_palace());
     for (auto btype : palace_types) {
         auto &palace = tracked_buildings->at(btype);
         palace.clear();

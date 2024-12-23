@@ -58,7 +58,7 @@ struct city_buildings_t {
 
     int get_palace_id();
 
-    void remove_palace(building* palace);
+    void remove_palace(building &palace);
 
     void reset_tracked_buildings_counters();
     void track_building(building &b, bool active);

@@ -50,7 +50,7 @@ void building_palace::on_post_load() {
 }
 
 void building_palace::on_destroy() {
-    g_city.buildings.remove_palace(&base);
+    g_city.buildings.remove_palace(base);
 }
 
 bool building_palace::can_play_animation() const {
