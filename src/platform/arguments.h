@@ -10,7 +10,7 @@ public:
     [[nodiscard]] bool is_fullscreen() const;
     void set_fullscreen();
 
-    [[nodiscart]] bool use_sound() const;
+    [[nodiscard]] bool use_sound() const;
     void set_use_sound(bool flag = true);
 
     [[nodiscard]] bool is_window_mode() const;
