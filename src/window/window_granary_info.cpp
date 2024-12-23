@@ -82,9 +82,7 @@ void granary_info_window::init(object_info &c) {
         ui[food_text(food_index)].text_var("%u %s", stored, (pcstr)lang_get_string(resource_text_group, r.type));
         food_index++;
     }
-
-    fill_employment_details(c);
-    
+   
     int laborers = model_get_building(BUILDING_GRANARY)->laborers;
     ui["workers_text"].text_var("%u %s (%d %s", granary->num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
 

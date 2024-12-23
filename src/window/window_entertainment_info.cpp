@@ -51,8 +51,6 @@ void info_window_entertainment::init(object_info &c) {
         warning_text.append(ui::str(reason));
     }
     ui["warning_text"] = warning_text;
-
-    fill_employment_details(c);
 }
 
 void info_window_bandstand::init(object_info &c) {
@@ -68,7 +66,6 @@ void info_window_bandstand::init(object_info &c) {
     else if (b->data.entertainment.juggler_visited) { reason.id = 5; } 
     else if (b->data.entertainment.musician_visited) { reason.id = 4; }
 
-    fill_employment_details(c);
     ui["warning_text"] = ui::str(reason);
 
     if (b->data.entertainment.juggler_visited > 0) {
@@ -95,7 +92,6 @@ void info_window_booth::init(object_info &c) {
     else if (!b->data.entertainment.num_shows) { reason.id = 2; }
     else if (b->data.entertainment.juggler_visited) { reason.id = 3; }
 
-    fill_employment_details(c);
     ui["warning_text"] = ui::str(reason);
 
     if (b->data.entertainment.juggler_visited > 0) {

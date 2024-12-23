@@ -40,8 +40,6 @@ void info_window_recruiter::init(object_info &c) {
         ui["workers_text"] = ui::str(c.group_id, workers_state);
     }
 
-    fill_employment_details(c);
-
     ui["tower_button"].onclick([bid = c.building_id] {
         building *barracks = ::building_get(bid);
         barracks->subtype.barracks_priority = 0;

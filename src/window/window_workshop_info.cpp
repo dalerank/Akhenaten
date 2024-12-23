@@ -30,8 +30,6 @@ struct workshop_info_window : public building_info_window_t<workshop_info_window
         else { trouble_text.id = approximate_value(c.worker_percentage / 100.f, make_array(10, 9, 8, 7, 6)); }
 
         ui["workers_desc"].text(trouble_text);
-
-        fill_employment_details(c);
     }
 
     virtual bool check(object_info &c) override {
@@ -67,8 +65,6 @@ struct brickworks_info_window : public building_info_window_t<brickworks_info_wi
         } else {
             ui["warning_text"] = { c.group_id, 1 };
         }
-
-        fill_employment_details(c);
     }
     virtual bool check(object_info &c) override {
         building *b = c.building_get();

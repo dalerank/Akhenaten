@@ -154,7 +154,6 @@ void info_window_palace::init(object_info &c) {
     else if (palace->num_workers() <= 0) reason.second = 10;
     else reason.second = approximate_value(c.worker_percentage / 100.f, make_array(9, 8, 7, 6, 5));
 
-    fill_employment_details(c);
     ui["workers_desc"] = ui::str(reason.first, reason.second);
 
     ui["visit_advisor"].onclick([] {

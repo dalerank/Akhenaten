@@ -86,8 +86,6 @@ void info_window_storageyard::init(object_info &c) {
         }
     }
 
-    fill_employment_details(c);
-
     ui["orders"].onclick([&c] {
         c.storage_show_special_orders = 1;
     });

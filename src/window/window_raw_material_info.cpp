@@ -37,6 +37,5 @@ void info_window_raw_material::init(object_info &c) {
     else if (b->num_workers <= 0) reason.id = 5;
     else reason.id = approximate_value(c.worker_percentage / 100.f, make_array(9, 8, 7, 6));
 
-    fill_employment_details(c);
     ui["workers_desc"] = reason;
 }

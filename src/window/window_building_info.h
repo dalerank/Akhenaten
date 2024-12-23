@@ -22,7 +22,6 @@ struct building_info_window : public common_info_window {
     building *building_get(object_info &c);
 
     void common_info_background(object_info& c);
-    void fill_employment_details(object_info &c);
 };
 
 template<typename T>

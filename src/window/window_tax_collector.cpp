@@ -43,6 +43,4 @@ void taxcollector_info_window::init(object_info &c) {
     
     uint8_t workers_desc = approximate_value(c.worker_percentage / 100.f, make_array(10, 9, 8, 7, 6, 5));
     ui["workers_desc"] = textid{c.group_id, workers_desc};
-
-    fill_employment_details(c);
 }

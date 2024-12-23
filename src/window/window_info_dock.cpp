@@ -54,7 +54,6 @@ void dock_info_window::init(object_info &c) {
         reason.id = approximate_value(c.worker_percentage / 100.f, make_array(6, 7, 8, 9));
     }
 
-    fill_employment_details(c);
     ui["workers_desc"] = reason;
 
     ui["orders"].onclick([&c] {

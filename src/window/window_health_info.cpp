@@ -44,5 +44,4 @@ void health_info_window::init(object_info &c) {
     ui["workers_desc"] = ui::str( c.group_id, worker_desc);
  
     ui["warning_text"] = ui::str(reason);
-    fill_employment_details(c);
 }

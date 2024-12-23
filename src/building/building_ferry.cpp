@@ -80,8 +80,6 @@ void info_window_ferry::init(object_info &c) {
         reason = { c.group_id, 3 };
     }
 
-    fill_employment_details(c);
-
     if (reason.id) {
         ui["warning_text"] = reason;
     }

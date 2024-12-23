@@ -64,5 +64,4 @@ void info_window_pavilion::init(object_info &c) {
     }
 
     ui["workers_desc"] = workers_desc;
-    fill_employment_details(c);
 }

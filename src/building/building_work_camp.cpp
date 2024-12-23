@@ -62,8 +62,6 @@ void info_window_work_camp::init(object_info &c) {
         warning_text.append(ui::str(reason));
     }
     ui["warning_text"] = warning_text;
-
-    fill_employment_details(c);
 }
 
 building* building_work_camp::determine_worker_needed() {

@@ -48,8 +48,6 @@ void bazaar_info_window::init(object_info &c) {
         return;
     }
 
-    fill_employment_details(c);
-
     int image_id = image_id_resource_icon(0);
     auto &data = bazaar->data;
     if (data.market.inventory[0] || data.market.inventory[1] || data.market.inventory[2] || data.market.inventory[3]) {

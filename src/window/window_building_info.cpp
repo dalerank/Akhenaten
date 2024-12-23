@@ -89,21 +89,7 @@ void building_info_window::common_info_background(object_info& c) {
 
     bstring512 warning_text(ui::str(c.group_id, 1), " ", ui::str(reason));
     ui["warning_text"] = warning_text;
-
-    fill_employment_details(c);
     ui["workers_desc"] = ui::str(workers);
-}
-
-void building_info_window::fill_employment_details(object_info &c) {
-    building *b = c.building_get();
-    
-    //int laborers = model_get_building(b->type)->laborers;
-    //ui["workers_text"].text_var("%d %s (%d %s", b->num_workers, ui::str(8, 12), laborers, ui::str(69, 0));
-    textid text = get_employment_info_text_id(&c, b, 1);
-
-    if (text.id > 0) {
-        ui["workers_desc"] = text;
-    }
 }
 
 void building_info_window::window_info_background(object_info &c) {

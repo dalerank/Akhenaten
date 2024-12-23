@@ -67,6 +67,5 @@ void shipyard_info_window::init(object_info &c) {
         reason.id = 4;
     }
 
-    fill_employment_details(c);
     ui["workers_desc"] = reason;
 }

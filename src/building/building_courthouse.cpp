@@ -42,8 +42,6 @@ void info_window_courthouse::init(object_info &c) {
     } 
 
     ui["state"] = magistrate_state;
-
-    fill_employment_details(c);
     ui["warning_text"] = ui::str(c.group_id, 1);
 }
 

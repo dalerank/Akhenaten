@@ -179,7 +179,6 @@ void building_fishing_wharf::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.dock.has_fish);
 }
 
-
 void info_window_fishing_wharf::init(object_info &c) {
     building_info_window::init(c);
 
@@ -205,6 +204,4 @@ void info_window_fishing_wharf::init(object_info &c) {
     ui["resource_img"].image(RESOURCE_FISH);
     ui["warning_text"] = ui::str(reason.first, reason.second);
     ui["storage_desc"].text_var("Stored fish %d", b->stored_amount_first);
-
-    fill_employment_details(c);
 }
