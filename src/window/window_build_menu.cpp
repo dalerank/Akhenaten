@@ -40,7 +40,11 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
 
         btn_w_add = arch.r_int("btn_w_add", 128);
         btn_w_tot_margin = arch.r_int("btn_w_tot_margin", 10);
+        btn_w_start_pos = arch.r_vec2i("btn_w_start_pos");
+        btn_text_w_offset = arch.r_vec2i("btn_text_w_offset");
+        btn_text_w_size = arch.r_vec2i("btn_text_w_size");
         btn_w_tot_offset = arch.r_int("btn_w_tot_offset", 10);
+        btn_w_cost_offset = arch.r_int("btn_w_cost_offset", 10);
         arch.r_array_num("y_menu_offsets", y_menu_offsets);
 
         btn_w_min = -btn_w_add - 8;
@@ -56,6 +60,10 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
     int y_offset;
 
     int btn_w_add;
+    vec2i btn_w_start_pos;
+    vec2i btn_text_w_offset;
+    vec2i btn_text_w_size;
+    int btn_w_cost_offset;
     int btn_w_min;
     int btn_w_tot;
     int btn_w_tot_margin;
@@ -142,12 +150,12 @@ void build_menu_widget::draw_menu_buttons() {
             font = has_building ? FONT_NORMAL_BLACK_ON_DARK : font;
             UiFlags flags = UiFlags_PanelSmall;
             flags |= (has_building ? UiFlags_Grayed : UiFlags_None);
-            btn = &ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + item.size.y * i }, vec2i{ btn_w_tot, 20 }, fonts_vec{ font, FONT_NORMAL_BLACK_ON_LIGHT }, flags,
+            btn = &ui.button("", btn_w_start_pos + vec2i{ x_offset - label_margin, y_offset + item.size.y * i }, vec2i{ btn_w_tot, 20 }, fonts_vec{ font, FONT_NORMAL_BLACK_ON_LIGHT }, flags,
                 [this, i] (int, int) {
                     button_menu_item(button_index_to_submenu_item(i));
                 });
         } else {
-            btn = &ui.button("", vec2i{ x_offset - label_margin, y_offset + 110 + item.size.y * i }, vec2i{ btn_w_tot, 20 }, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_PanelSmall,
+            btn = &ui.button("", btn_w_start_pos + vec2i{ x_offset - label_margin, y_offset + item.size.y * i }, vec2i{ btn_w_tot, 20 }, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_PanelSmall,
                 [this, i] (int, int) {
                     button_menu_item(button_index_to_submenu_item(i));
                 });
@@ -158,14 +166,15 @@ void build_menu_widget::draw_menu_buttons() {
             font = FONT_NORMAL_BLACK_ON_DARK;
         }
 
+        int text_offset = btn_w_start_pos.y + btn_text_w_offset.y;
         if (is_all_button(type)) {
-            lang_text_draw_centered(52, 19, x_offset - label_margin + btn_w_tot_offset, y_offset + 113 + item.size.y * i, 176, font);
+            lang_text_draw_centered(52, 19, x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
         } else if (type >= BUILDING_TEMPLE_COMPLEX_ALTAR && type <= BUILDING_TEMPLE_COMPLEX_ORACLE) {
             building *b = building_get(city_buildings_get_temple_complex());
             int index = (type - BUILDING_TEMPLE_COMPLEX_ALTAR) + 2 * (b->type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
-            lang_text_draw_centered(189, index, x_offset - label_margin + btn_w_tot_offset, y_offset + 113 + 24 * i, 176, font);
+            lang_text_draw_centered(189, index, x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
         } else {
-            lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + btn_w_tot_offset, y_offset + 113 + item.size.y * i, 176, font);
+            lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
         }
 
         int cost = model_get_building(type)->cost;
@@ -174,7 +183,7 @@ void build_menu_widget::draw_menu_buttons() {
         }
 
         if (cost) {
-            text_draw_money(cost, x_offset - 82 - btn_w_tot_offset, y_offset + 114 + 24 * i, font);
+            text_draw_money(cost, x_offset + btn_w_cost_offset - btn_w_tot_offset, y_offset + text_offset + item.size.y * i, font);
         }
     }
 }
