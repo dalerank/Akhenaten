@@ -208,6 +208,10 @@ char const* Arguments::usage() {
            "          hot reload scripts from disk\n"
            "  --nosound\n"
            "          not use sound manager\n"
+           "  --nocrashdlg\n"
+           "          do not show crash dialog\n"
+           "  --fulldmp\n"
+           "         create full dump on crash\n"
            "\n"
            "The last argument, if present, is interpreted as data directory of the Pharaoh installation";
 }
@@ -300,6 +304,10 @@ void Arguments::parse_cli_(int argc, char** argv) {
             window_mode_ = true;
         } else if (SDL_strcmp(argv[i], "--nosound") == 0) {
             use_sound_ = false;
+        } else if (SDL_strcmp(argv[i], "--nocrashdlg") == 0) {
+            use_crashdlg_ = false;        
+        } else if (SDL_strcmp(argv[i], "--fulldmp") == 0) {
+            create_fulldmp_ = true;
         } else if (SDL_strcmp(argv[i], "--render") == 0) {
             if (i + 1 < argc) {
                 renderer_ = argv[i + 1];

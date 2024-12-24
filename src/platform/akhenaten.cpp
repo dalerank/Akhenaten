@@ -57,7 +57,7 @@
 
 #include <string.h>
 
-#if !defined(_MSC_VER)
+#if !defined(GAME_PLATFORM_WIN)
 #include <bits/exception_defines.h>
 #endif
 
@@ -334,8 +334,6 @@ static void show_options_window(Arguments& args) {
 static void setup() {
     platform.init_timers();
 
-    crashhandler_install();
-
     logs::info("Akhenaten version %s", get_version().c_str());
     if (!init_sdl()) {
         logs::error("Exiting: SDL init failed");
@@ -425,7 +423,7 @@ static void setup() {
     config::refresh(g_config_arch);
 }
 
-static void teardown(void) {
+static void teardown() {
     logs::info("Exiting game");
     game_exit();
     platform_screen_destroy();
@@ -621,9 +619,10 @@ static void main_loop() {
     }
 }
 
-
 int main(int argc, char** argv) {
     g_args.parse(argc, argv);
+
+    crashhandler_install();
 
     logs::initialize();
 
@@ -637,11 +636,21 @@ int main(int argc, char** argv) {
 
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop, 0, 1);
+#elif defined(GAME_PLATFORM_WIN)
+    LONG CALLBACK debug_sehgilter(PEXCEPTION_POINTERS pExceptionPointers);
+    __try {
+        while (!g_application.quit) {
+            main_loop();
+        }
+    } __except (debug_sehgilter(GetExceptionInformation())) {
+        return 0;
+    }
 #else
     while (!g_application.quit) {
         main_loop();
     }
 #endif
+    
 
     game_imgui_overlay_destroy();
 

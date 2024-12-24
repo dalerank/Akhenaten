@@ -31,6 +31,9 @@ public:
     [[nodiscard]] vec2i get_window_size() const;
     void set_window_size(vec2i value);
 
+    [[nodiscard]] bool use_crashdlg() const { return use_crashdlg_; }
+    [[nodiscard]] bool create_fulldmp() const { return create_fulldmp_; }
+
     [[nodiscard]] const char* get_scripts_directory() const;
     void parse(int argc, char **argv);
 
@@ -44,6 +47,8 @@ private:
     vec2i window_size_ = {800, 600};
     bool window_mode_ = false;
     bool use_sound_ = true;
+    bool use_crashdlg_ = true;
+    bool create_fulldmp_ = false;
 
     /// apply parameters from command line
     void parse_cli_(int argc, char** argv);
