@@ -247,7 +247,7 @@ const labor_category_data* city_labor_category(int category) {
 }
 
 void city_labor_set_category(e_building_type type, int category) {
-    category_for_int_arr_ph[int(type)] = category;
+    category_for_int_arr_ph[type] = category;
 }
 
 struct building_type_category {
