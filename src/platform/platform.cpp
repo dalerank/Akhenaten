@@ -40,7 +40,7 @@ void platform_t::init_timers() {
     qpc_per_second = qwTimeFreq;
     qpc_per_milisec = qwTimeFreq / uint64_t(1000);
     qpc_per_microsec = qwTimeFreq / uint64_t(1000000);
-#elif defined(GAME_PLATFORM_LINUX) || defined(GAME_PLATFORM_MACOSX)
+#elif defined(GAME_PLATFORM_UNIX) || defined(GAME_PLATFORM_MACOSX)
     timespec res;
     if (clock_getres(CLOCK_MONOTONIC, &res) == 0) {
         uint64_t nanoseconds_per_second = 1000000000;
@@ -60,7 +60,7 @@ uint64_t platform_t::get_qpc() {
     uint64_t _dest;
     QueryPerformanceCounter((PLARGE_INTEGER)&_dest);
     return _dest;
-#elif defined(GAME_PLATFORM_LINUX) || defined(GAME_PLATFORM_MACOSX)
+#elif defined(GAME_PLATFORM_UNIX) || defined(GAME_PLATFORM_MACOSX)
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
     return static_cast<uint64_t>(ts.tv_sec) * 1000000000ULL + ts.tv_nsec;
@@ -74,7 +74,7 @@ uint64_t platform_t::get_qpf() {
     uint64_t _dest;
     QueryPerformanceFrequency((PLARGE_INTEGER)&_dest);
     return _dest;
-#elif defined(GAME_PLATFORM_LINUX) || defined(GAME_PLATFORM_MACOSX)
+#elif defined(GAME_PLATFORM_UNIX) || defined(GAME_PLATFORM_MACOSX)
     struct timespec res;
     if (clock_getres(CLOCK_MONOTONIC, &res) != 0) {
         return 0;
