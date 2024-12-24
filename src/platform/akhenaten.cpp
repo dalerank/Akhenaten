@@ -388,7 +388,7 @@ static void setup() {
         }
         again = true;
         pcstr user_dir = android_show_pharaoh_path_dialog(again);
-        args.set_data_directory(user_dir);
+        g_args.set_data_directory(user_dir);
 #else
         show_options_window(g_args);
 #endif
