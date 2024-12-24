@@ -3,8 +3,14 @@
 #include "core/archive.h"
 #include "graphics/image_desc.h"
 #include "graphics/animkeys.h"
+#include "core/system_time.h"
 
 #include <vector>
+
+struct animation_timer {
+    time_millis last_update;
+    bool should_update;
+};
 
 struct animation_t {
     xstring id;

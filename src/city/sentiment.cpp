@@ -11,7 +11,7 @@
 #include "core/profiler.h"
 #include "game/difficulty.h"
 #include "game/tutorial.h"
-#include "game/time.h"
+#include "game/game.h"
 #include "config/config.h"
 #include "city/coverage.h"
 
@@ -224,7 +224,7 @@ static int get_sentiment_contribution_monuments() {
 void city_sentiment_update_day() {
     city_data.sentiment.last_mugger_message = std::max<short>(0, city_data.sentiment.last_mugger_message--);
 
-    if (gametime().day % 8 == 0) {
+    if (game.simtime.day % 8 == 0) {
         city_sentiment_update();
     }
 }

@@ -2,7 +2,6 @@
 
 #include "content/vfs.h"
 #include "core/game_environment.h"
-#include "core/time.h"
 #include "core/log.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"

@@ -10,7 +10,7 @@
 #include "empire/empire_object.h"
 #include "empire/type.h"
 #include "figure/formation_legion.h"
-#include "game/time.h"
+#include "game/game.h"
 #include "scenario/scenario.h"
 
 int scenario_distant_battle_kingdome_travel_months(void) {
@@ -32,8 +32,8 @@ void scenario_distant_battle_set_enemy_travel_months(void) {
 void scenario_distant_battle_process(void) {
     for (int i = 0; i < MAX_INVASIONS; i++) {
         if (g_scenario_data.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE
-            && gametime().year == g_scenario_data.invasions[i].year + g_scenario_data.start_year
-            && gametime().month == g_scenario_data.invasions[i].month
+            && game.simtime.year == g_scenario_data.invasions[i].year + g_scenario_data.start_year
+            && game.simtime.month == g_scenario_data.invasions[i].month
             && g_scenario_data.empire.distant_battle_enemy_travel_months > 4
             && g_scenario_data.empire.distant_battle_kingdome_travel_months > 4 && !city_military_has_distant_battle()) {
             city_message_post(true, MESSAGE_KINGDOME_REQUESTS_ARMY, 0, 0);

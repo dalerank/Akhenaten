@@ -7,7 +7,6 @@
 #include "core/calc.h"
 #include "figure/combat.h"
 #include "figure/route.h"
-#include "game/time.h"
 #include "graphics/image_groups.h"
 #include "grid/bridge.h"
 #include "grid/building.h"
@@ -21,6 +20,7 @@
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
 #include "config/config.h"
+#include "game/game.h"
 
 #include <algorithm>
 
@@ -223,7 +223,7 @@ void figure::advance_route_tile(int roaming_enabled) {
             if (cause_damage) {
                 attack_direction = direction;
                 direction = DIR_FIGURE_ATTACK;
-                if (!(gametime().tick & 3))
+                if (!(game.simtime.tick & 3))
                     building_destroy_increase_enemy_damage(target_grid_offset, max_damage);
             }
         }

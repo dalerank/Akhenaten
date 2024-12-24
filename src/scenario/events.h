@@ -2,7 +2,7 @@
 
 #include "core/bstring.h"
 #include "core/tokenum.h"
-#include "game/time.h"
+#include "game/simulation_time.h"
 
 enum e_event_type {
     EVENT_TYPE_NONE = 0,

@@ -1,6 +1,5 @@
 #include "renderer.h"
 
-#include "core/time.h"
 #include "core/log.h"
 #include "core/profiler.h"
 #include "graphics/screen.h"

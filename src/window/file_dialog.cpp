@@ -6,7 +6,6 @@
 #include "core/encoding.h"
 #include "core/game_environment.h"
 #include "core/string.h"
-#include "core/time.h"
 #include "content/dir.h"
 #include "game/file_editor.h"
 #include "graphics/graphics.h"

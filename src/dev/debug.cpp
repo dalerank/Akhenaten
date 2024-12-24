@@ -33,7 +33,6 @@
 #include "sound/sound.h"
 #include "core/random.h"
 #include "figure/route.h"
-#include "game/time.h"
 #include "game/tutorial.h"
 #include "grid/figure.h"
 #include "platform/renderer.h"
@@ -876,16 +875,16 @@ void draw_debug_ui(int x, int y) {
 
     /////// TIME
     if (g_debug_show_opts[e_debug_show_game_time]) {
-        debug_text(ctx, str, x, y + 15, 50, "tick:", gametime().tick);
+        debug_text(ctx, str, x, y + 15, 50, "tick:", game.simtime.tick);
         debug_text(ctx, str, x + 80, y + 15, 50, "iscycle:", g_floods.is_start_cycle());
         debug_text(ctx, str, x, y + 25, 50, "cycle:", g_floods.current_cycle());
         debug_text(ctx, str, x + 90, y + 25, 60, "frame:", g_floods.current_subcycle());
 
-        debug_text(ctx, str, x, y + 35, 50, "day:", gametime().day);
-        debug_text(ctx, str, x, y + 45, 50, "month:", gametime().month);
-        debug_text(ctx, str, x, y + 55, 50, "year:", gametime().year);
-        debug_text(ctx, str, x, y + 65, 60, "abs. tick:", gametime().absolute_tick()); // absolute tick of the year
-        debug_text(ctx, str, x, y + 75, 60, "abs. day:", gametime().absolute_day());   // absolute day of the year
+        debug_text(ctx, str, x, y + 35, 50, "day:", game.simtime.day);
+        debug_text(ctx, str, x, y + 45, 50, "month:", game.simtime.month);
+        debug_text(ctx, str, x, y + 55, 50, "year:", game.simtime.year);
+        debug_text(ctx, str, x, y + 65, 60, "abs. tick:", game.simtime.absolute_tick()); // absolute tick of the year
+        debug_text(ctx, str, x, y + 75, 60, "abs. day:", game.simtime.absolute_day());   // absolute day of the year
         y += 80;
     }
 

@@ -18,7 +18,6 @@
 #include "city_floods.h"
 #include "game/settings.h"
 #include "game/tutorial.h"
-#include "game/time.h"
 #include "grid/routing/routing_terrain.h"
 #include "config/config.h"
 #include "ratings.h"
@@ -27,6 +26,7 @@
 #include "sound/effect.h"
 #include "dev/debug.h"
 #include "city/warning.h"
+#include "game/game.h"
 
 #include <algorithm>
 #include <array>
@@ -1036,7 +1036,7 @@ void city_religion_t::update() {
     }
 
     // at the start of every month
-    if (gametime().day == 0) {
+    if (game.simtime.day == 0) {
         update_monthly_data(randm_god);
     }
 }

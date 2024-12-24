@@ -2,7 +2,7 @@
 
 #include "platform/platform.h"
 
-typedef unsigned int time_millis;
+using time_millis = uint32_t;
 
 time_millis time_get_millis(void);
 void time_set_millis(time_millis millis);

@@ -4,8 +4,8 @@
 #include "window/building/common.h"
 #include "window/window_building_info.h"
 #include "window/hold_festival.h"
+#include "game/game.h"
 #include "city/city.h"
-#include "game/time.h"
 
 struct festival_square_info_window : building_info_window_t<festival_square_info_window> {
     virtual void window_info_background(object_info &c) override;
@@ -24,7 +24,7 @@ void festival_square_info_window::window_info_background(object_info &c) {
     if (g_city.festival.is_planned()) {
         int size = g_city.festival.selected_size();
         int months_left = g_city.festival.months_till_next();
-        int planned_month = (gametime().month + months_left) % game_time_t::months_in_year;
+        int planned_month = (game.simtime.month + months_left) % simulation_time_t::months_in_year;
         int festival_text_iffs[] = { 0, 10, 20, 31 };
 
         ui["hold_festival"].enabled = false;

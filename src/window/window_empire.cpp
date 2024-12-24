@@ -449,7 +449,7 @@ int empire_window::ui_handle_mouse(const mouse *m) {
     }
 
     if (m->is_touch) {
-        const touch *t = get_earliest_touch();
+        const touch_t *t = get_earliest_touch();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {
             if (t->has_started) {
                 is_scrolling = 1;

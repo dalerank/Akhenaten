@@ -1,7 +1,6 @@
 #include "arrow_button.h"
 #include "core/game_environment.h"
 
-#include "core/time.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "game/game.h"

@@ -3,7 +3,7 @@
 #include "city/message.h"
 #include "core/random.h"
 #include "empire/trade_prices.h"
-#include "game/time.h"
+#include "game/game.h"
 #include "scenario/scenario.h"
 
 void scenario_price_change_init(void) {
@@ -19,8 +19,8 @@ void scenario_price_change_process(void) {
         if (!g_scenario_data.price_changes[i].year)
             continue;
 
-        if (gametime().year != g_scenario_data.price_changes[i].year + g_scenario_data.start_year
-            || gametime().month != g_scenario_data.price_changes[i].month) {
+        if (game.simtime.year != g_scenario_data.price_changes[i].year + g_scenario_data.start_year
+            || game.simtime.month != g_scenario_data.price_changes[i].month) {
             continue;
         }
         int amount = g_scenario_data.price_changes[i].amount;

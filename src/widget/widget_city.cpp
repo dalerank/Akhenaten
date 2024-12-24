@@ -338,7 +338,7 @@ static bool handle_legion_click(map_point tile) {
     return false;
 }
 
-static bool handle_cancel_construction_button(const touch* t) {
+static bool handle_cancel_construction_button(const touch_t * t) {
     if (!Planner.build_type)
         return false;
 
@@ -371,7 +371,7 @@ void widget_city_set_current_tile(tile2i tile) {
     data.current_tile = tile;
 }
 
-void widget_city_handle_touch_scroll(const touch* t) {
+void widget_city_handle_touch_scroll(const touch_t * t) {
     auto& data = g_wdiget_city_data;
     if (Planner.build_type) {
         if (t->has_started) {
@@ -400,7 +400,7 @@ void widget_city_handle_touch_scroll(const touch* t) {
         scroll_drag_end();
 }
 
-static void handle_touch_zoom(const touch* first, const touch* last) {
+static void handle_touch_zoom(const touch_t * first, const touch_t * last) {
     if (touch_not_click(first))
         g_zoom.handle_touch(first, last, g_zoom.get_percentage());
 
@@ -410,7 +410,7 @@ static void handle_touch_zoom(const touch* first, const touch* last) {
 
 static void handle_first_touch(map_point tile) {
     auto& data = g_wdiget_city_data;
-    const touch* first = get_earliest_touch();
+    const touch_t * first = get_earliest_touch();
     e_building_type type = Planner.build_type;
 
     if (touch_was_click(first)) {
@@ -480,7 +480,7 @@ static void handle_first_touch(map_point tile) {
 }
 
 static void handle_last_touch(void) {
-    const touch* last = get_latest_touch();
+    const touch_t * last = get_latest_touch();
     if (!last->in_use)
         return;
     if (touch_was_click(last)) {
@@ -493,7 +493,7 @@ static void handle_last_touch(void) {
 
 static void handle_touch(void) {
     auto& data = g_wdiget_city_data;
-    const touch* first = get_earliest_touch();
+    const touch_t * first = get_earliest_touch();
     if (!first->in_use) {
         scroll_restore_margins();
         return;

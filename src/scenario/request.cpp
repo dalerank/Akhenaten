@@ -11,7 +11,6 @@
 #include "core/svector.h"
 #include "events.h"
 #include "game/resource.h"
-#include "game/time.h"
 #include "game/tutorial.h"
 #include "scenario/scenario.h"
 #include "event_phrases.h"

@@ -16,7 +16,6 @@
 #include "figure/trader.h"
 #include "figuretype/editor.h"
 #include "game/state.h"
-#include "game/time.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"
@@ -65,7 +64,7 @@ void game_file_editor_clear_data(void) {
     formations_clear();
     figure_route_clear_all();
     traders_clear();
-    ((game_time_t&)gametime()).init(2098);
+    game.simtime.init(2098);
     scenario_invasion_clear();
 }
 

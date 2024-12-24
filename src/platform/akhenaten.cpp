@@ -3,7 +3,6 @@
 #include "core/encoding.h"
 #include "core/game_environment.h"
 #include "core/stacktrace.h"
-#include "core/time.h"
 #include "core/log.h"
 #include "figure/figure.h"
 #include "js/js.h"

@@ -1,6 +1,6 @@
 #include "video.h"
 
-#include "core/time.h"
+#include "core/system_time.h"
 #include "game/settings.h"
 #include "graphics/graphics.h"
 #include "content/dir.h"

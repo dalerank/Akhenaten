@@ -3,7 +3,6 @@
 #include "city/constants.h"
 #include "building/building_menu.h"
 #include "city/buildings.h"
-#include "game/time.h"
 #include "scenario/scenario.h"
 #include "window/popup_dialog.h"
 
@@ -101,7 +100,7 @@ int ui::advisor_religion_window::draw_background(UiFlags flags) {
     if (g_city.festival.is_planned()) {
         int size = g_city.festival.selected_size();
         int months_left = g_city.festival.months_till_next();
-        int planned_month = (gametime().month + months_left) % game_time_t::months_in_year;
+        int planned_month = (game.simtime.month + months_left) % simulation_time_t::months_in_year;
         int festival_text_iffs[] = { 0, 10, 20, 31 };
 
         ui["hold_festival_btn"].enabled = false;

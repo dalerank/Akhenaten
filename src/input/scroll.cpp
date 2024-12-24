@@ -3,7 +3,6 @@
 #include "core/calc.h"
 #include "core/direction.h"
 #include "core/speed.h"
-#include "core/time.h"
 #include "game/settings.h"
 #include "game/system.h"
 #include "graphics/screen.h"
@@ -242,7 +241,7 @@ static int set_scroll_speed_from_drag(bool keep_delta) {
     if (!data.drag.is_touch)
         system_mouse_get_relative_state(&delta_x, &delta_y);
     else {
-        const touch* t = get_earliest_touch();
+        const touch_t* t = get_earliest_touch();
         delta_x = -t->frame_movement.x;
         delta_y = -t->frame_movement.y;
     }
@@ -279,7 +278,7 @@ int scroll_drag_end(void) {
     if (!data.drag.is_touch)
         system_mouse_set_relative_mode(0);
     else if (has_scrolled) {
-        const touch* t = get_earliest_touch();
+        const touch_t* t = get_earliest_touch();
         speed_set_target(data.speed.x, -t->frame_movement.x, SPEED_CHANGE_IMMEDIATE, 1);
         speed_set_target(data.speed.y, -t->frame_movement.y, SPEED_CHANGE_IMMEDIATE, 1);
     }

@@ -4,7 +4,6 @@
 #include "city/population.h"
 #include "city/city_resource.h"
 #include "game/resource.h"
-#include "game/time.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/generic_button.h"

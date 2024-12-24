@@ -4,7 +4,7 @@
 #include "core/random.h"
 #include "core/profiler.h"
 #include "figure/service.h"
-#include "game/time.h"
+#include "game/game.h"
 #include "grid/routing/routing_terrain.h"
 #include "building/building_house.h"
 
@@ -194,7 +194,7 @@ void city_t::house_process_evolve_and_consume_goods() {
         }
     });
 
-    if (gametime().day == 0 || gametime().day == 7) {
+    if (game.simtime.day == 0 || game.simtime.day == 7) {
         buildings_house_do([&] (building &h) {
             building_house *house = h.dcast_house();
             //building_house_check_for_corruption(&h);

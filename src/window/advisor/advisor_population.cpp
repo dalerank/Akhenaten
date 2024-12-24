@@ -5,7 +5,6 @@
 #include "city/population.h"
 #include "city/ratings.h"
 #include "city/city_resource.h"
-#include "game/time.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
@@ -38,8 +37,8 @@ static vec2i get_y_axis(int max_value) {
 
 static void get_min_max_month_year(int max_months, int* start_month, int* start_year, int* end_month, int* end_year) {
     if (city_population_monthly_count() > max_months) {
-        *end_month = gametime().month - 1;
-        *end_year = gametime().year;
+        *end_month = game.simtime.month - 1;
+        *end_year = game.simtime.year;
 
         if (*end_month < 0)
             *end_year -= 1;

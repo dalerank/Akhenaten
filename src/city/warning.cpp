@@ -1,7 +1,6 @@
 #include "warning.h"
 
 #include "core/string.h"
-#include "core/time.h"
 #include "game/settings.h"
 #include "graphics/view/view.h"
 #include "graphics/window.h"

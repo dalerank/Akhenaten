@@ -1,7 +1,7 @@
 #include "city/city.h"
 
 #include "core/calc.h"
-#include "game/time.h"
+#include "game/game.h"
 #include "scenario/scenario.h"
 #include "building/building.h"
 
@@ -53,7 +53,7 @@ void city_t::update_prosperity_explanation() {
         change += 1;
 
     int reason;
-    if (ratings.prosperity <= 0 && gametime().year == scenario_property_start_year())
+    if (ratings.prosperity <= 0 && game.simtime.year == scenario_property_start_year())
         reason = 0;
     else if (ratings.prosperity >= ratings.prosperity_max)
         reason = 1;

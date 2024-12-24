@@ -8,12 +8,12 @@
 #include "city/city_resource.h"
 #include "empire/empire_city.h"
 #include "game/resource.h"
-#include "game/time.h"
 #include "io/io_buffer.h"
 #include "platform/arguments.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
 #include "city/sentiment.h"
+#include "game/game.h"
 
 #include <algorithm>
 #include "dev/debug.h"
@@ -348,7 +348,7 @@ void tutorial_on_filled_granary(int quantity) {
 void tutorial_check_resources_on_storageyard() {
     if (!g_tutorials_flags.tutorial_3.pottery_made && city_resource_warehouse_stored(RESOURCE_POTTERY) >= 1) {
         g_tutorials_flags.tutorial_3.pottery_made = true;
-        g_tutorials_flags.tutorial_3.pottery_made_year = gametime().year;
+        g_tutorials_flags.tutorial_3.pottery_made_year = game.simtime.year;
         //building_menu_update(BUILDSET_NORMAL);
         post_message(MESSAGE_TUTORIAL_TRADE);
     } else if (!g_tutorials_flags.tutorial_3.pottery_made && city_resource_warehouse_stored(RESOURCE_POTTERY) >= 2) {
@@ -492,7 +492,7 @@ void tutorial_on_day_tick() {
 
 void tutorial_on_month_tick() {
     if (scenario_is_mission_rank(3)) {
-        if (gametime().month == 5) {
+        if (game.simtime.month == 5) {
             city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS, 1200);
         }
     }

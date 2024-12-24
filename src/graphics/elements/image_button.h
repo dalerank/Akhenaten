@@ -3,7 +3,7 @@
 #include "button.h"
 #include "input/mouse.h"
 #include "core/xstring.h"
-#include "core/time.h"
+#include "core/system_time.h"
 
 #include <vector>
 #include <functional>

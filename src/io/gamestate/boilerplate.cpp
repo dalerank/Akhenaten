@@ -25,7 +25,6 @@
 #include "game/mission.h"
 #include "game/settings.h"
 #include "game/state.h"
-#include "game/time.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
 #include "graphics/image.h"

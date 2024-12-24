@@ -18,7 +18,6 @@
 #include "game/cheats.h"
 #include "game/orientation.h"
 #include "game/state.h"
-#include "game/time.h"
 #include "game/undo.h"
 #include "window/file_dialog.h"
 #include "window/message_dialog.h"
@@ -732,7 +731,7 @@ void top_menu_widget::draw_foreground(UiFlags flags) {
 
     offset_rotate = s_width - offset_rotate_basic;
 
-    update_month_year_max_width(gametime().month, gametime().year);
+    update_month_year_max_width(game.simtime.month, game.simtime.year);
 
     ui["funds"].font(treasure_font);
     ui["funds"].text_color(treasure_color);

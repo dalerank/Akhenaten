@@ -5,15 +5,14 @@
 #include "content/vfs.h"
 #include "core/encoding.h"
 #include "core/string.h"
-#include "core/time.h"
 #include "city/city_religion.h"
 #include "figure/formation.h"
-#include "game/time.h"
 #include "graphics/window.h"
 #include "graphics/image.h"
 #include "io/gamefiles/lang.h"
 #include "sound/sound.h"
 #include "window/message_dialog.h"
+#include "game/game.h"
 
 #define MAX_MESSAGES 1000
 #define MAX_QUEUE 20
@@ -187,8 +186,8 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
     msg->eventmsg_phrase_id = phrase_id;
     msg->is_read = 0;
     msg->god = GOD_UNKNOWN;
-    msg->year = gametime().year;
-    msg->month = gametime().month;
+    msg->year = game.simtime.year;
+    msg->month = game.simtime.month;
     msg->param1 = param1;
     msg->param2 = param2;
     msg->sequence = data.next_message_sequence++;
@@ -248,8 +247,8 @@ city_message &city_message_post_common(bool use_popup, int message_id, int param
 
     msg.MM_text_id = message_id;
     msg.is_read = 0;
-    msg.year = gametime().year;
-    msg.month = gametime().month;
+    msg.year = game.simtime.year;
+    msg.month = game.simtime.month;
     msg.param1 = param1;
     msg.param2 = param2;
     msg.sequence = data.next_message_sequence++;
@@ -507,7 +506,7 @@ static int has_problem_area(const city_message* msg, int lang_msg_type) {
         // Formations have not been updated yet because the invasion just started.
         // Invasions always start at the end of the month: return true when we're in
         // the next month
-        return (msg->month + 1) % game_time_t::months_in_year == gametime().month && msg->year + (msg->month + 1) / game_time_t::months_in_year == gametime().year;
+        return (msg->month + 1) % simulation_time_t::months_in_year == game.simtime.month && msg->year + (msg->month + 1) / simulation_time_t::months_in_year == game.simtime.year;
     }
     return 0;
 }
@@ -524,7 +523,7 @@ int city_message_next_problem_area_grid_offset() {
     data.problem_count = 0;
     for (int i = 0; i < 999; i++) {
         city_message* msg = &data.messages[i];
-        if (msg->MM_text_id && msg->year >= gametime().year - 1) {
+        if (msg->MM_text_id && msg->year >= game.simtime.year - 1) {
             const lang_message* lang_msg = lang_get_message(city_message_get_text_id(msg->MM_text_id));
             int lang_msg_type = lang_msg->message_type;
             if (has_problem_area(msg, lang_msg_type))
@@ -539,7 +538,7 @@ int city_message_next_problem_area_grid_offset() {
         data.problem_index = 0;
 
     int index = 0;
-    int current_year = gametime().year;
+    int current_year = game.simtime.year;
     for (int i = 0; i < 999; i++) {
         city_message* msg = &data.messages[i];
         if (msg->MM_text_id && msg->year >= current_year - 1) {

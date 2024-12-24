@@ -7,9 +7,9 @@
 #include "city/population.h"
 #include "config/config.h"
 #include "core/calc.h"
-#include "game/time.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
+#include "game/game.h"
 
 #include "dev/debug.h"
 #include <iostream>
@@ -374,11 +374,11 @@ void city_ratings_t::update_kingdom_rating_year() {
 
     // milestone
     int milestone_pct = 0;
-    if (scenario_criteria_milestone_year(25) == gametime().year) {
+    if (scenario_criteria_milestone_year(25) == game.simtime.year) {
         milestone_pct = 25;
-    } else if (scenario_criteria_milestone_year(50) == gametime().year) {
+    } else if (scenario_criteria_milestone_year(50) == game.simtime.year) {
         milestone_pct = 50;
-    } else if (scenario_criteria_milestone_year(75) == gametime().year) {
+    } else if (scenario_criteria_milestone_year(75) == game.simtime.year) {
         milestone_pct = 75;
     }
 

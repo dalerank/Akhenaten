@@ -3,7 +3,6 @@
 #include "core/calc.h"
 #include "core/encoding.h"
 #include "core/string.h"
-#include "core/time.h"
 #include "game/file_editor.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"

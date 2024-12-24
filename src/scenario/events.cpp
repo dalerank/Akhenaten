@@ -9,10 +9,8 @@
 #include "io/io_buffer.h"
 #include "core/random.h"
 #include "game/mission.h"
+#include "game/game.h"
 #include "request.h"
-
-#include "game/time.h"
-#include "js/js_game.h"
 
 constexpr int MAX_EVENTS = 150;
 constexpr int NUM_AUTO_PHRASE_VARIANTS = 54;
@@ -207,7 +205,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
     // check if the trigger time has come, if not return.
     // for ACTIVE EVENTS (requests?): ignore specific time of the year IF quest is active
-    const bool should_handle = !event.is_active && event.date() == gametime().date();
+    const bool should_handle = !event.is_active && event.date() == game.simtime.date();
     if (!(should_handle)) {
         return;
     }

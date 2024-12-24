@@ -2,7 +2,6 @@
 
 #include "building/building.h"
 #include "city/city.h"
-#include "core/time.h"
 #include "game/settings.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"

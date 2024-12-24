@@ -7,7 +7,7 @@
 
 zoom_t g_zoom;
 
-static void start_touch(const touch* first, const touch* last, int scale) {
+static void start_touch(const touch_t * first, const touch_t * last, int scale) {
     auto& data = g_zoom;
 
     data.touch.active = true;
@@ -16,7 +16,7 @@ static void start_touch(const touch* first, const touch* last, int scale) {
     data.touch.current_zoom = scale;
 }
 
-void zoom_t::handle_touch(const ::touch* first, const ::touch* last, int scale) {
+void zoom_t::handle_touch(const touch_t * first, const touch_t * last, int scale) {
     if (!touch.active) {
         start_touch(first, last, scale);
         return;

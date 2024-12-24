@@ -38,7 +38,7 @@ struct game_date_t {
     bool operator==(const game_date_t &o) const { return o.ym == ym; }
 };
 
-struct game_time_t {
+struct simulation_time_t {
     enum {
         days_in_month = 16,
         ticks_in_day = 50,
@@ -64,5 +64,3 @@ struct game_time_t {
 
     game_date_t date() const { return {years_since_start(), month}; }
 };
-
-const game_time_t& gametime();

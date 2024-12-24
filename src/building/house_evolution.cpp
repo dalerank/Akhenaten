@@ -8,7 +8,6 @@
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "game/resource.h"
-#include "game/time.h"
 #include "grid/building.h"
 #include "grid/grid.h"
 #include "grid/routing/routing_terrain.h"

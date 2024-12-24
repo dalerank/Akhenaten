@@ -9,7 +9,7 @@
 #include "city/city_buildings.h"
 #include "core/calc.h"
 #include "game/resource.h"
-#include "game/time.h"
+#include "game/game.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/view/view.h"
@@ -153,7 +153,7 @@ void building_farm::draw_workers(painter &ctx, building* b, tile2i tile, vec2i p
     }
 
     pos += {30, -15};
-    int random_seed = 1234.567f * (1 + gametime().day) * map_random_get(b->tile.grid_offset());
+    int random_seed = 1234.567f * (1 + game.simtime.day) * map_random_get(b->tile.grid_offset());
     int d = random_seed % 8;
     if (building_is_floodplain_farm(*b)) {
         if (g_floods.state_is(FLOOD_STATE_IMMINENT)) {
@@ -163,7 +163,7 @@ void building_farm::draw_workers(painter &ctx, building* b, tile2i tile, vec2i p
             //draw_ph_worker(d, 2, animation_offset, coords);
         } else {
             if (b->data.industry.progress < 400)
-                draw_farm_worker(ctx, gametime().absolute_tick() % 128 / 16, 1, farm_tile_coords(pos, 1, 1));
+                draw_farm_worker(ctx, game.simtime.absolute_tick() % 128 / 16, 1, farm_tile_coords(pos, 1, 1));
             else if (b->data.industry.progress < 500)
                 draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 1, 0));
             else if (b->data.industry.progress < 600)
@@ -199,7 +199,7 @@ void building_farm::draw_workers(painter &ctx, building* b, tile2i tile, vec2i p
         }
     } else {
         if (b->data.industry.progress < 100)
-            draw_farm_worker(ctx, gametime().absolute_tick() % 128 / 16, 1, farm_tile_coords(pos, 1, 1));
+            draw_farm_worker(ctx, game.simtime.absolute_tick() % 128 / 16, 1, farm_tile_coords(pos, 1, 1));
         else if (b->data.industry.progress < 400)
             draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 0, 2));
         else if (b->data.industry.progress < 800)
@@ -246,7 +246,7 @@ bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
         float harvest_cycle = start_cycle - 28.0f;
         return g_floods.state_is(FLOOD_STATE_IMMINENT) && (current_cycle >= harvest_cycle);
     } else {
-        const bool result = gametime().day < 2 && farm_harvesting_month_for_produce(resource_id, gametime().month);
+        const bool result = game.simtime.day < 2 && farm_harvesting_month_for_produce(resource_id, game.simtime.month);
         return result;
     }
 }

@@ -128,7 +128,7 @@ static int input_coords_in_map(int x, int y) {
     return (x >= 0 && x < view_size.x && y >= 0 && y < view_size.y);
 }
 
-static void handle_touch_scroll(const touch* t) {
+static void handle_touch_scroll(const touch_t * t) {
     auto &data = g_map_editor_data;
     if (editor_tool_is_active()) {
         if (t->has_started) {
@@ -160,7 +160,7 @@ static void handle_touch_scroll(const touch* t) {
         scroll_drag_end();
 }
 
-static void handle_touch_zoom(const touch* first, const touch* last) {
+static void handle_touch_zoom(const touch_t * first, const touch_t * last) {
     if (touch_not_click(first))
         g_zoom.handle_touch(first, last, g_zoom.get_percentage());
 
@@ -169,7 +169,7 @@ static void handle_touch_zoom(const touch* first, const touch* last) {
 }
 
 static void handle_last_touch(void) {
-    const touch* last = get_latest_touch();
+    const touch_t * last = get_latest_touch();
     if (!last->in_use)
         return;
     if (touch_was_click(last)) {
@@ -180,7 +180,7 @@ static void handle_last_touch(void) {
         handle_touch_zoom(get_earliest_touch(), last);
 }
 
-static bool handle_cancel_construction_button(const touch* t) {
+static bool handle_cancel_construction_button(const touch_t * t) {
     if (!editor_tool_is_active())
         return false;
 
@@ -201,7 +201,7 @@ static bool handle_cancel_construction_button(const touch* t) {
 
 static void handle_first_touch(map_point tile) {
     auto &data = g_map_editor_data;
-    const touch* first = get_earliest_touch();
+    const touch_t * first = get_earliest_touch();
 
     if (touch_was_click(first)) {
         if (handle_cancel_construction_button(first))
@@ -270,7 +270,7 @@ static void handle_first_touch(map_point tile) {
 
 static void handle_touch(void) {
     auto &data = g_map_editor_data;
-    const touch* first = get_earliest_touch();
+    const touch_t * first = get_earliest_touch();
     if (!first->in_use) {
         scroll_restore_margins();
         return;

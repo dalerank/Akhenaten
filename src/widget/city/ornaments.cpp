@@ -16,7 +16,6 @@
 #include "city/ratings.h"
 #include "city/city_buildings.h"
 #include "core/direction.h"
-#include "game/time.h"
 #include "graphics/graphics.h"
 #include "graphics/image_desc.h"
 #include "graphics/image.h"

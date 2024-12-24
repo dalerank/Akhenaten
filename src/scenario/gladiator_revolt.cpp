@@ -3,7 +3,7 @@
 #include "building/count.h"
 #include "city/message.h"
 #include "core/random.h"
-#include "game/time.h"
+#include "game/game.h"
 #include "scenario/scenario.h"
 
 static struct {
@@ -21,10 +21,12 @@ void scenario_gladiator_revolt_init(void) {
 }
 
 void scenario_gladiator_revolt_process(void) {
-    if (!g_scenario_data.gladiator_revolt.enabled)
+    if (!g_scenario_data.gladiator_revolt.enabled) {
         return;
+    }
+
     if (data.state == e_event_state_initial) {
-        if (gametime().year == data.game_year && gametime().month == data.month) {
+        if (game.simtime.year == data.game_year && game.simtime.month == data.month) {
             if (building_count_active(BUILDING_CONSERVATORY) > 0) {
                 data.state = e_event_state_in_progress;
                 city_message_post(true, MESSAGE_GLADIATOR_REVOLT, 0, 0);
@@ -33,7 +35,7 @@ void scenario_gladiator_revolt_process(void) {
             }
         }
     } else if (data.state == e_event_state_in_progress) {
-        if (data.end_month == gametime().month) {
+        if (data.end_month == game.simtime.month) {
             data.state = e_event_state_finished;
             city_message_post(true, MESSAGE_GLADIATOR_REVOLT_FINISHED, 0, 0);
         }

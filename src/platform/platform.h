@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/bstring.h"
-#include <intrin.h>
 
 int platform_sdl_version_at_least(int major, int minor, int patch);
 void platform_open_url(pcstr url, pcstr prefix);
@@ -74,8 +73,6 @@ struct platform_t {
 	uint32_t start_time_ms = 0;
 
 #ifdef GAME_PLATFORM_WIN
-	forceinline uint64_t get_clocks() { return __rdtsc(); }
-
 	uint64_t get_qpf();
 
 	forceinline	uint64_t get_elapsed_ticks() {

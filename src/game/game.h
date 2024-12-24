@@ -1,10 +1,12 @@
 #pragma once
 
 #include "graphics/painter.h"
+#include "graphics/animation.h"
 #include "overlays/city_overlay_fwd.h"
 #include "core/xstring.h"
 #include "core/threading.h"
-#include "core/time.h"
+#include "game/simulation_time.h"
+#include "core/system_time.h"
 
 enum game_option {
     game_opt_none = 0,
@@ -32,11 +34,6 @@ struct fps_data_t {
     uint32_t last_update_time;
 };
 
-struct animation_timer {
-    time_millis last_update;
-    bool should_update;
-};
-
 enum e_session_type {
     e_session_none = -1,
     e_session_mission = 0,
@@ -62,6 +59,7 @@ struct game_t {
     bool write_video = false;
 
     MovieWriter *mvwriter = nullptr;
+    simulation_time_t simtime;
 
     struct {
         xstring last_loaded_mission;

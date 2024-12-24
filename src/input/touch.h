@@ -1,8 +1,7 @@
-#ifndef INPUT_TOUCH_H
-#define INPUT_TOUCH_H
+#pragma once
 
 #include "core/vec2i.h"
-#include "core/time.h"
+#include "core/system_time.h"
 
 #define MAX_ACTIVE_TOUCHES 2
 
@@ -13,7 +12,7 @@ enum {
     TOUCH_MODE_MAX = 3
 };
 
-typedef struct {
+struct touch_t {
     int in_use;
     int has_started;
     int has_moved;
@@ -25,18 +24,18 @@ typedef struct {
     vec2i last_movement;
     time_millis start_time;
     time_millis last_change_time;
-} touch;
+};
 
-const touch* get_earliest_touch(void);
-const touch* get_latest_touch(void);
-int get_total_active_touches(void);
+const touch_t * get_earliest_touch();
+const touch_t * get_latest_touch();
+int get_total_active_touches();
 
-int touch_not_click(const touch* t);
-int touch_was_click(const touch* t);
-int touch_was_double_click(const touch* t);
+int touch_not_click(const touch_t * t);
+int touch_was_click(const touch_t * t);
+int touch_was_double_click(const touch_t * t);
 
-int touch_is_scroll(void);
-int touch_get_scroll(void);
+int touch_is_scroll();
+int touch_get_scroll();
 
 void reset_touches(int reset_old_touch);
 
@@ -48,6 +47,4 @@ int touch_in_use(int index);
 int touch_to_mouse(void);
 
 void touch_set_mode(int mode);
-void touch_cycle_mode(void);
-
-#endif // INPUT_TOUCH_H
+void touch_cycle_mode();

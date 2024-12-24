@@ -10,7 +10,7 @@
 #include "figure/formation.h"
 #include "figure/figure_names.h"
 #include "game/difficulty.h"
-#include "game/time.h"
+#include "game/game.h"
 #include "grid/grid.h"
 #include "grid/terrain.h"
 #include "scenario/map.h"
@@ -313,8 +313,8 @@ void scenario_invasion_process() {
         if (warning->months_to_go <= 0) {
             if (warning->handled != 1) {
                 warning->handled = 1;
-                warning->year_notified = gametime().year;
-                warning->month_notified = gametime().month;
+                warning->year_notified = game.simtime.year;
+                warning->month_notified = game.simtime.month;
                 if (warning->warning_years > 2)
                     city_message_post(false, MESSAGE_DISTANT_BATTLE, 0, 0);
                 else if (warning->warning_years > 1)
@@ -325,8 +325,8 @@ void scenario_invasion_process() {
             }
         }
 
-        if (gametime().year >= g_scenario_data.start_year + g_scenario_data.invasions[warning->invasion_id].year
-            && gametime().month >= g_scenario_data.invasions[warning->invasion_id].month) {
+        if (game.simtime.year >= g_scenario_data.start_year + g_scenario_data.invasions[warning->invasion_id].year
+            && game.simtime.month >= g_scenario_data.invasions[warning->invasion_id].month) {
             // invasion attack time has passed
             warning->in_use = 0;
             if (warning->warning_years > 1)
@@ -361,8 +361,8 @@ void scenario_invasion_process() {
     // local uprisings
     for (int i = 0; i < MAX_INVASIONS; i++) {
         if (g_scenario_data.invasions[i].type == INVASION_TYPE_LOCAL_UPRISING) {
-            if (gametime().year == g_scenario_data.start_year + g_scenario_data.invasions[i].year
-                && gametime().month == g_scenario_data.invasions[i].month) {
+            if (game.simtime.year == g_scenario_data.start_year + g_scenario_data.invasions[i].year
+                && game.simtime.month == g_scenario_data.invasions[i].month) {
                 int grid_offset = start_invasion(ENEMY_0_BARBARIAN,
                                                  g_scenario_data.invasions[i].amount,
                                                  g_scenario_data.invasions[i].from,

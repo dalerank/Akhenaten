@@ -2,7 +2,7 @@
 
 #include "city/message.h"
 #include "empire/empire.h"
-#include "game/time.h"
+#include "game/game.h"
 #include "scenario/scenario.h"
 
 int scenario_empire_id() {
@@ -18,7 +18,7 @@ void scenario_empire_process_expansion() {
         return;
     }
 
-    if (gametime().year < g_scenario_data.empire.expansion_year + g_scenario_data.start_year) {
+    if (game.simtime.year < g_scenario_data.empire.expansion_year + g_scenario_data.start_year) {
         return;
     }
 

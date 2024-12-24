@@ -1,6 +1,5 @@
 #include "input/mouse.h"
 
-#include "core/time.h"
 #include "graphics/screen.h"
 
 enum { SYSTEM_NONE = 0, SYSTEM_UP = 1, SYSTEM_DOWN = 2, SYSTEM_DOUBLE_CLICK = 4 };
@@ -21,7 +20,7 @@ static void clear_mouse_button(mouse_button* button) {
     button->system_change = SYSTEM_NONE;
 }
 
-void mouse_set_from_touch(const touch* first, const touch* last) {
+void mouse_set_from_touch(const touch_t* first, const touch_t* last) {
     auto &data = g_mouse;
 
     data.x = first->current_point.x;

@@ -22,7 +22,7 @@ struct zoom_t {
     } touch;
 
     void handle_mouse(const mouse* m);
-    void handle_touch(const ::touch* first, const ::touch * last, int scale);
+    void handle_touch(const touch_t* first, const touch_t * last, int scale);
     void end_touch();
 
     bool update_value(vec2i* camera_position);

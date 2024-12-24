@@ -29,7 +29,6 @@
 #include "city/city_floods.h"
 #include "core/calc.h"
 #include "scenario/map.h"
-#include "game/time.h"
 #include "water.h"
 
 // #define OFFSET(x,y) (x + GRID_SIZE_PH * y)

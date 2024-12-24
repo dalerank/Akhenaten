@@ -41,7 +41,7 @@ void widget_city_handle_input_military(const mouse* m, const hotkeys* h, int leg
     }
 
     if (m->is_touch) {
-        const touch* t = get_earliest_touch();
+        const touch_t* t = get_earliest_touch();
         if (!t->in_use)
             return;
         if (t->has_started)

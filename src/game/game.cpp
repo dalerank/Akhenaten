@@ -16,7 +16,6 @@
 #include "game/file_editor.h"
 #include "game/settings.h"
 #include "game/state.h"
-#include "game/time.h"
 #include "game/tutorial.h"
 #include "graphics/elements/warning.h"
 #include "graphics/font.h"
@@ -66,23 +65,18 @@
 #include <iostream>
 
 game_t game;
-game_time_t game_time;
 
-declare_console_ref_int16(gameyear, game_time.year)
-declare_console_ref_int16(gamemonth, game_time.month)
+declare_console_ref_int16(gameyear, game.simtime.year)
+declare_console_ref_int16(gamemonth, game.simtime.month)
 declare_console_command_p(nextyear, game_cheat_next_year)
 void game_cheat_next_year(std::istream &is, std::ostream &os) {
-    game_time.advance_year();
+    game.simtime.advance_year();
     game.advance_year();
 }
 
 namespace {
     static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};
     static time_millis last_update;
-}
-
-const game_time_t& gametime() {
-    return game_time;
 }
 
 void game_t::animation_timers_init() {
@@ -136,7 +130,7 @@ void game_t::update_impl(int ticks) {
 
     update_city(ticks);
 
-    if (game_time.advance_tick()) {
+    if (simtime.advance_tick()) {
         advance_day();
     }
 
@@ -149,7 +143,7 @@ void game_t::update_impl(int ticks) {
 void game_t::update_city(int ticks) {
     g_city.buildings.update_tick(game.paused);
 
-    switch (gametime().tick) {
+    switch (simtime.tick) {
     case 1:
         g_city.religion.update();
         g_city.coverage_update();
@@ -292,7 +286,7 @@ void game_t::update_city(int ticks) {
 void game_t::advance_year() {
     scenario_empire_process_expansion();
     game_undo_disable();
-    game_time.advance_year();
+    simtime.advance_year();
     city_population_request_yearly_update();
     city_finance_handle_year_change();
     g_city.migration_advance_year();
@@ -323,7 +317,7 @@ void game_t::advance_month() {
     map_routing_update_land_citizen();
     //    city_message_sort_and_compact();
 
-    if (game_time.advance_month()) {
+    if (simtime.advance_month()) {
         advance_year();
     } else {
         g_city.ratings_update(/*yearly_update*/false);
@@ -347,7 +341,7 @@ void game_t::advance_day() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Advance Day");
     //    map_advance_floodplain_growth();
 
-    if (game_time.advance_day()) {
+    if (simtime.advance_day()) {
         advance_month();
     }
 
@@ -624,7 +618,7 @@ void game_t::frame_end() {
 }
 
 void game_t::time_init(int year) {
-    game_time.init(year);
+    simtime.init(year);
 }
 
 void game_t::sound_frame_begin() {

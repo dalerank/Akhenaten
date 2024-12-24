@@ -1,6 +1,5 @@
 #include "overlay_menu.h"
 
-#include "core/time.h"
 #include "game/state.h"
 #include "overlays/city_overlay.h"
 #include "graphics/graphics.h"

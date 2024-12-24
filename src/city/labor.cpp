@@ -8,7 +8,6 @@
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "core/random.h"
-#include "game/time.h"
 #include "config/config.h"
 #include "scenario/scenario.h"
 #include "building/industry.h"

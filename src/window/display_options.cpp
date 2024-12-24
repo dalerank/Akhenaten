@@ -8,7 +8,6 @@
 #include "core/calc.h"
 #include "core/encoding.h"
 #include "core/string.h"
-#include "core/time.h"
 #include "game/settings.h"
 #include "input/input.h"
 #include "graphics/screen.h"

@@ -8,8 +8,8 @@
 #include "city/city.h"
 #include "core/calc.h"
 #include "game/difficulty.h"
-#include "game/time.h"
 #include "game/tutorial.h"
+#include "game/game.h"
 #include "config/config.h"
 #include "figure/figure.h"
 
@@ -140,7 +140,7 @@ void city_finance_calculate_totals() {
 void city_finance_estimate_wages() {
     int monthly_wages = city_data.labor.wages * city_data.labor.workers_employed / 10 / 12;
     city_data.finance.this_year.expenses.wages = city_data.finance.wages_so_far;
-    city_data.finance.estimated_wages = (12 - gametime().month) * monthly_wages + city_data.finance.wages_so_far;
+    city_data.finance.estimated_wages = (12 - game.simtime.month) * monthly_wages + city_data.finance.wages_so_far;
 }
 
 void city_finance_estimate_taxes() {
@@ -164,7 +164,7 @@ void city_finance_estimate_taxes() {
 
     int monthly_patricians = calc_adjust_with_percentage(city_data.taxes.monthly.collected_nobles / 2, city_data.finance.tax_percentage);
     int monthly_plebs = calc_adjust_with_percentage(city_data.taxes.monthly.collected_citizens/ 2, city_data.finance.tax_percentage);
-    int estimated_rest_of_year = (12 - gametime().month) * (monthly_patricians + monthly_plebs);
+    int estimated_rest_of_year = (12 - game.simtime.month) * (monthly_patricians + monthly_plebs);
 
     city_data.finance.this_year.income.taxes = city_data.taxes.yearly.collected_citizens + city_data.taxes.yearly.collected_nobles;
     city_data.finance.estimated_tax_income = city_data.finance.this_year.income.taxes + estimated_rest_of_year;
@@ -172,7 +172,7 @@ void city_finance_estimate_taxes() {
     // TODO: fix this calculation
     int uncollected_patricians = calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_nobles / 2, city_data.finance.tax_percentage);
     int uncollected_plebs = calc_adjust_with_percentage(city_data.taxes.monthly.uncollected_citizens / 2, city_data.finance.tax_percentage);
-    city_data.finance.estimated_tax_uncollected = (gametime().month) * (uncollected_patricians + uncollected_plebs) - city_data.finance.this_year.income.taxes;
+    city_data.finance.estimated_tax_uncollected = (game.simtime.month) * (uncollected_patricians + uncollected_plebs) - city_data.finance.this_year.income.taxes;
 }
 
 static void city_finance_collect_monthly_taxes() {

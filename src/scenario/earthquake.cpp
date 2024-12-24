@@ -8,7 +8,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/figure.h"
-#include "game/time.h"
+#include "game/game.h"
 #include "grid/building.h"
 #include "grid/grid.h"
 #include "grid/image.h"
@@ -101,7 +101,7 @@ void scenario_earthquake_process() {
         || g_scenario_data.earthquake_point.y() == -1)
         return;
     if (data.state == e_event_state_initial) {
-        if (gametime().year == data.game_year && gametime().month == data.month) {
+        if (game.simtime.year == data.game_year && game.simtime.month == data.month) {
             data.state = e_event_state_in_progress;
             data.duration = 0;
             data.delay = 0;
