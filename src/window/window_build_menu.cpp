@@ -34,6 +34,7 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
     void draw_menu_buttons();
     void button_menu_item(int item);
     int button_index_to_submenu_item(int index);
+    textid loc_title(e_building_type type, textid def);
 
     virtual void load(archive arch, pcstr section) override {
         widget::load(arch, section);
@@ -79,15 +80,15 @@ int build_menu_widget::draw_background(UiFlags flags) {
     return 0;
 }
 
-static textid menu_index_to_text_index(textid text) {
-    switch (text.id) {
-    case BUILDING_SMALL_MASTABA: return { 198, 18 };
+textid build_menu_widget::loc_title(e_building_type type, textid def) {
+    const auto &params = building_impl::params(type);
+    const auto &title = params.info_title_id;
 
-    default:
-        break;
+    if (!title.group && !title.id) {
+        return def;
     }
-
-    return text;
+    
+    return title;
 }
 
 static int is_all_button(int type) {
@@ -141,7 +142,7 @@ void build_menu_widget::draw_menu_buttons() {
         generic_button *btn = nullptr;
         item_index = building_menu_next_index(selected_submenu, item_index);
         e_building_type type = building_menu_type(selected_submenu, item_index);
-        textid tgroup = menu_index_to_text_index({ 28, (uint8_t)type });
+        textid tgroup = loc_title(type, { 28, (uint8_t)type });
 
         const auto &params = building_impl::params(type);
         if (params.unique_building) {

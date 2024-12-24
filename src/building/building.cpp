@@ -1070,6 +1070,7 @@ void building_impl::static_params::load(archive arch) {
     is_draggable = arch.r_bool("is_draggable");
     production_rate = arch.r_uint("production_rate", 100);
     check_water_access = arch.r_bool("check_water_access");
+    info_title_id = arch.r_vec2i("info_title_id");
 
     city_labor_set_category(type, labor_category);
 

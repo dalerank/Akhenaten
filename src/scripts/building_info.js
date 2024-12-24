@@ -1009,6 +1009,8 @@ building building_small_mastaba = {
     base : { pos : [0, 0], pack:PACK_MASTABA, id:2, offset:7 },
   },
   building_size : 2,
+  info_title_id:[198, 18],
+
   // todo
 }
 
@@ -1022,6 +1024,7 @@ building building_medium_mastaba = {
     base : { pos : [0, 0], pack:PACK_MASTABA, id:2, offset:7 },
   },
   building_size : 2,
+  info_title_id:[198, 19],
 }
 
 building building_medium_mastaba_part_side = building_medium_mastaba

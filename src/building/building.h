@@ -527,6 +527,7 @@ public:
         uint16_t production_rate;
         bool unique_building;
         bool check_water_access;
+        textid info_title_id;
 
         void load(archive arch);
     };
