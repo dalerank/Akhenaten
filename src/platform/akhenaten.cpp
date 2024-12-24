@@ -333,6 +333,8 @@ static void show_options_window(Arguments& args) {
 }
 
 static void setup() {
+    platform.init_timers();
+
     crashhandler_install();
 
     logs::info("Akhenaten version %s", get_version().c_str());

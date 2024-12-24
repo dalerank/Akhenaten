@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/bstring.h"
+#include <intrin.h>
 
 int platform_sdl_version_at_least(int major, int minor, int patch);
 void platform_open_url(pcstr url, pcstr prefix);
@@ -39,4 +40,59 @@ void platform_open_url(pcstr url, pcstr prefix);
 #define GAME_PLATFORM_NAME "linux"
 #endif
 
-inline pcstr platform_name() { return GAME_PLATFORM_NAME; }
+#if defined(__clang__) || defined(__gcc__)
+#		define forceinline	__attribute__((always_inline)) inline
+#		define notinline	__attribute__((noinline))
+#elif defined(_MSC_VER)
+#		define forceinline	__forceinline
+#		define notinline	__declspec(noinline)
+#else
+#error "unknown compiler"
+#endif
+
+struct platform_t {
+	struct features_t {
+		uint32_t _vmx : 1;	// actually VMX or AltiVec
+		uint32_t _sse2 : 1;
+		uint32_t _avx : 1;
+		uint32_t _f16c : 1;
+		uint32_t _fma3 : 1;
+		uint32_t _avx2 : 1;
+		uint32_t _vrs : 1;
+		uint32_t _cpucount : 8;
+	};
+
+	features_t features;
+
+	uint64_t get_qpc();
+
+	void init_timers();
+
+	uint64_t qpc_per_second = 0;
+	uint64_t qpc_per_milisec = 0;
+	uint64_t qpc_per_microsec = 0;
+	uint32_t start_time_ms = 0;
+
+#ifdef GAME_PLATFORM_WIN
+	forceinline uint64_t get_clocks() { return __rdtsc(); }
+
+	uint64_t get_qpf();
+
+	forceinline	uint64_t get_elapsed_ticks() {
+		static const uint64_t qpc_base = get_qpc();
+		return (get_qpc() - qpc_base);
+	}
+
+	forceinline	uint32_t get_elapsed_ms() {
+		static const uint64_t qpc_per_second = get_qpf();
+		return ((uint32_t)(get_elapsed_ticks() * (uint64_t)(1000) / qpc_per_second));
+	}
+#else
+	forceinline uint64_t get_clocks() { return 0; }
+#endif
+
+	inline pcstr name() { return GAME_PLATFORM_NAME; }
+};
+
+extern platform_t platform;
+
