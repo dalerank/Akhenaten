@@ -260,7 +260,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_TILE2I, b->tile);
         iob->bind____skip(2);
         iob->bind____skip(4);
-        iob->bind(BIND_SIGNATURE_INT16, &b->type);
+        iob->bind(BIND_SIGNATURE_UINT16, &b->type);
         iob->bind(BIND_SIGNATURE_INT16, &b->subtype.data); // which union field we use does not matter
         iob->bind(BIND_SIGNATURE_UINT16, &b->road_network_id);
         iob->bind____skip(2); //iob->bind(BIND_SIGNATURE_UINT16, &b->creation_sequence_index);
