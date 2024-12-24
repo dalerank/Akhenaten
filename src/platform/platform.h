@@ -39,7 +39,7 @@ void platform_open_url(pcstr url, pcstr prefix);
 #define GAME_PLATFORM_NAME "linux"
 #endif
 
-#if defined(__clang__) || defined(__gcc__)
+#if defined(__clang__) || defined(__GNUC__)
 #		define forceinline	__attribute__((always_inline)) inline
 #		define notinline	__attribute__((noinline))
 #elif defined(_MSC_VER)
