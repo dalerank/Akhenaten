@@ -25,6 +25,11 @@ if(PLATFORM_ANDROID)
     # no cpptrace for android, baa...
 else()
     if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+        if (APPLE) # Get meaningful trace on memory access errors etc.
+            add_compile_options(-fsanitize=address)
+            add_link_options(-fsanitize=address)
+        endif()
+
         set(CPPTRACE_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/cpptrace")
         set(CPPTRACE_CHECK_PATH "${CPPTRACE_EXT_PATH}/include/cpptrace/cpptrace.hpp")
 
