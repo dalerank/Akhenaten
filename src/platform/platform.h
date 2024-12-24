@@ -72,7 +72,6 @@ struct platform_t {
 	uint64_t qpc_per_microsec = 0;
 	uint32_t start_time_ms = 0;
 
-#ifdef GAME_PLATFORM_WIN
 	uint64_t get_qpf();
 
 	forceinline	uint64_t get_elapsed_ticks() {
@@ -84,9 +83,6 @@ struct platform_t {
 		static const uint64_t qpc_per_second = get_qpf();
 		return ((uint32_t)(get_elapsed_ticks() * (uint64_t)(1000) / qpc_per_second));
 	}
-#else
-	forceinline uint64_t get_clocks() { return 0; }
-#endif
 
 	inline pcstr name() { return GAME_PLATFORM_NAME; }
 };
