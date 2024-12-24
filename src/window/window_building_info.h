@@ -3,7 +3,7 @@
 #include "window_info.h"
 #include "core/typename.h"
 
-struct building;
+class building;
 
 struct building_info_window : public common_info_window {
     e_advisor first_advisor = ADVISOR_NONE;
