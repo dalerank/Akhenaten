@@ -59,6 +59,9 @@
 
 #if !defined(GAME_PLATFORM_WIN)
 #include <bits/exception_defines.h>
+#else
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #endif
 
 #endif
