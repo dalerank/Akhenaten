@@ -124,15 +124,19 @@ void building::monument_remove_worker(int fid) {
     }
 }
 
-building_impl *buildings::create(e_building_type e, building &data) {
-    for (BuildingCtorIterator *s = BuildingCtorIterator::tail; s; s = s->next) {
-        auto impl = s->func(e, data);
+void building_impl::acquire(e_building_type e, building &b) {
+    static_assert(sizeof(building_impl) <= sizeof(building::ptr_buffer_t));
+
+    using namespace buildings;
+    for (auto static_ctor = BuildingCtorIterator::tail; static_ctor; static_ctor = static_ctor->next) {
+        auto impl = static_ctor->func(e, b);
         if (impl) {
-            return impl;
+            return;
         }
     }
 
-    return new building_impl(data);
+    //assert(false && "Cant find building type in config");
+    b.acquire_impl<building_impl>();
 }
 
 bool building_impl::required_resource(e_resource r) const {
@@ -186,8 +190,9 @@ const building_impl::static_params &building_impl::params(e_building_type e) {
 
 building_impl *building::dcast() {
     if (!_ptr) {
-        _ptr = buildings::create(type, *this);
+        building_impl::acquire(type, *this);
     }
+
     assert(!!_ptr);
     return _ptr;
 }
@@ -297,7 +302,7 @@ bool building::is_main() {
 }
 
 void building::clear_impl() {
-    delete _ptr;
+    memset(&_ptr_buffer, 0, sizeof(ptr_buffer_t));
     _ptr = nullptr;
 }
 

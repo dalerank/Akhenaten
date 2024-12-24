@@ -130,8 +130,12 @@ class building_farm;
 building* building_get(int id);
 
 class building {
-private:
+public:
     enum { max_figures = 4 };
+    using ptr_buffer_t = char[24];
+
+private:
+    ptr_buffer_t _ptr_buffer = { 0 };
     class building_impl *_ptr = nullptr; // dcast
 
     std::array<figure_id, max_figures> figure_ids;
@@ -489,6 +493,13 @@ public:
     void industry_remove_worker(int fid);
 
     static const metainfo &get_info(pcstr type);
+
+    template<typename T>
+    building_impl *acquire_impl() {
+        new (&_ptr_buffer) T(*this);
+        _ptr = (building_impl *)&_ptr_buffer;
+        return _ptr;
+    }
 };
 
 #define BUILDING_METAINFO(type, clsid) static constexpr e_building_type TYPE = type; static constexpr pcstr CLSID = #clsid;
@@ -667,6 +678,7 @@ public:
 
     static void params(e_building_type, const static_params &);
     static const static_params &params(e_building_type);
+    static void acquire(e_building_type e, building &b);
 
     building &base;
     building::impl_data_t &data;
@@ -780,7 +792,6 @@ GENERATE_SMART_CAST_BUILDING(wharf)
 
 namespace buildings {
 
-building_impl *create(e_building_type, building&);
 typedef building_impl* (*create_building_function_cb)(e_building_type, building&);
 typedef void (*load_building_static_params_cb)();
 
@@ -823,9 +834,9 @@ struct model_t : public building_impl::static_params {
         const_cast<model_t&>(item).load();
     }
 
-    static building_impl *create(e_building_type e, building &data) {
+    static building_impl *create(e_building_type e, building &b) {
         if (e == TYPE) {
-            return new building_type(data);
+            return b.acquire_impl<building_type>();
         }
         return nullptr;
     }
