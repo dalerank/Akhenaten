@@ -1003,7 +1003,7 @@ building_wood_cutter = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building_small_mastaba = {
+building building_small_mastaba = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_MASTABA, id:2, offset:7 },
     base : { pos : [0, 0], pack:PACK_MASTABA, id:2, offset:7 },
@@ -1012,9 +1012,21 @@ building_small_mastaba = {
   // todo
 }
 
-building_small_mastaba_part_side = building_small_mastaba
-building_small_mastaba_part_wall = building_small_mastaba
-building_small_mastaba_part_entrance = building_small_mastaba
+building building_small_mastaba_part_side = building_small_mastaba
+building building_small_mastaba_part_wall = building_small_mastaba
+building building_small_mastaba_part_entrance = building_small_mastaba
+
+building building_medium_mastaba = {
+  animations : {
+    preview : { pos : [0, 0], pack:PACK_MASTABA, id:2, offset:7 },
+    base : { pos : [0, 0], pack:PACK_MASTABA, id:2, offset:7 },
+  },
+  building_size : 2,
+}
+
+building building_medium_mastaba_part_side = building_medium_mastaba
+building building_medium_mastaba_part_wall = building_medium_mastaba
+building building_medium_mastaba_part_entrance = building_medium_mastaba
 
 building_tax_collector = {
   animations : {
