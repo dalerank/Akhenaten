@@ -163,7 +163,7 @@ public:
         char* found_pos = std::search(_data, _data + len(), subst, subst + subst_len);
 
         while (found_pos != _data + _len) {
-            ptrdiff_t sizeDiff = repl_len - subst_len;
+            std::ptrdiff_t sizeDiff = repl_len - subst_len;
             ::memmove(found_pos + repl_len, found_pos + subst_len, _data + _len - (found_pos + subst_len) + 1);
             ::memcpy(found_pos, repl, repl_len);
             _len = len();
