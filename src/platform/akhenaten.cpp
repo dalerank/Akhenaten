@@ -346,7 +346,7 @@ static void setup() {
 #endif
 
 #if defined(GAME_PLATFORM_ANDROID)
-    args.set_data_directory(SDL_AndroidGetExternalStoragePath());
+    g_args.set_data_directory(SDL_AndroidGetExternalStoragePath());
 #endif
 
     // pre-init engine: assert game directory, pref files, etc.
