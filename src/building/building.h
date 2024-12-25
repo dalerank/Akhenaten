@@ -45,7 +45,9 @@ class building_clay_pit;
 class building_reed_gatherer;
 class building_papyrus_maker;
 class building_dock;
+class building_mastaba;
 class building_small_mastaba;
+class building_medium_mastaba;
 class building_wood_cutter;
 class building_recruiter;
 class building_pavilion;
@@ -379,6 +381,7 @@ public:
 
     inline bool same_network(building &b) const { return road_network_id == b.road_network_id; }
     vfs::path get_sound();
+    pcstr cls_name() const;
 
     void clear_related_data();
     void clear_impl();
@@ -592,7 +595,9 @@ public:
     virtual building_papyrus_maker *dcast_papyrus_maker() { return nullptr; }
     virtual building_dock *dcast_dock() { return nullptr; }
     virtual building_work_camp *dcast_work_camp() { return nullptr; }
+    virtual building_mastaba *dcast_mastaba() { return nullptr; }
     virtual building_small_mastaba *dcast_small_mastaba() { return nullptr; }
+    virtual building_medium_mastaba *dcast_medium_mastaba() { return nullptr; }
     virtual building_wood_cutter *dcast_wood_cutter() { return nullptr; }
     virtual building_recruiter *dcast_recruiter() { return nullptr; }
     virtual building_pavilion *dcast_pavilion() { return nullptr; }
@@ -685,6 +690,11 @@ public:
     building::impl_data_t &data;
 };
 
+template <typename dest_type>
+inline dest_type *smart_cast(building *b) {
+    return ::smart_cast<dest_type *>(b->dcast());
+}
+
 template<typename ... Args>
 bool building_type_any_of(e_building_type type, Args ... args) {
     int types[] = {args...};
@@ -759,7 +769,9 @@ GENERATE_SMART_CAST_BUILDING(clay_pit)
 GENERATE_SMART_CAST_BUILDING(reed_gatherer)
 GENERATE_SMART_CAST_BUILDING(papyrus_maker)
 GENERATE_SMART_CAST_BUILDING(dock)
+GENERATE_SMART_CAST_BUILDING(mastaba)
 GENERATE_SMART_CAST_BUILDING(small_mastaba)
+GENERATE_SMART_CAST_BUILDING(medium_mastaba)
 GENERATE_SMART_CAST_BUILDING(wood_cutter)
 GENERATE_SMART_CAST_BUILDING(recruiter)
 GENERATE_SMART_CAST_BUILDING(pavilion)

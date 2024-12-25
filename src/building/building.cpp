@@ -570,6 +570,16 @@ bool building::workshop_has_resources() {
     return has_second_material && hase_first_resource;
 }
 
+pcstr building::cls_name() const {
+    const auto &params = building_impl::params(type);
+    if (params.info_title_id.group != 0) {
+        return ui::str(params.info_title_id);
+    }
+
+    const auto &m = params.meta;
+    return ui::str(m.text_id, 0);
+}
+
 void building::workshop_start_production() {
     assert(is_workshop());
     bool can_start_b = false;
@@ -967,7 +977,7 @@ const bproperty bproperties[] = {
         }
     },
 
-    { tags().building, tags().name, [] (building &b, const xstring &) { const auto &m = building_impl::params(b.type).meta; return bvariant(ui::str(m.text_id, 0)); }},
+    { tags().building, tags().name, [] (building &b, const xstring &) { return bvariant(b.cls_name()); }},
     { tags().building, tags().tax_income_or_storage, [] (building &b, const xstring &) { return bvariant(b.tax_income_or_storage); }},
     { tags().building, tags().num_workers, [] (building &b, const xstring &) { return bvariant(b.num_workers); }},
     { tags().model, tags().laborers, [] (building &b, const xstring &) { const auto model = model_get_building(b.type); return bvariant(model->laborers); }},

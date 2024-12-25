@@ -1010,7 +1010,10 @@ building building_small_mastaba = {
   },
   building_size : 2,
   info_title_id:[198, 18],
-
+  fire_proof :  true,
+  damage_proof : true,
+  info_help_id:4,
+  info_text_id:120,
   // todo
 }
 
@@ -1025,6 +1028,10 @@ building building_medium_mastaba = {
   },
   building_size : 2,
   info_title_id:[198, 19],
+  fire_proof :  true,
+  damage_proof : true,
+  info_help_id:4,
+  info_text_id:120,
 }
 
 building building_medium_mastaba_part_side = building_medium_mastaba

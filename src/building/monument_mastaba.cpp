@@ -40,13 +40,7 @@ buildings::model_t<building_small_mastaba_part_side> small_mastaba_side_m;
 buildings::model_t<building_small_mastaba_part_wall> small_mastaba_wall_m;
 buildings::model_t<building_small_mastaba_part_entrance> small_mastaba_entrance_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_small_mastaba);
-void config_load_building_small_mastaba() {
-    small_mastaba_m.load();
-    small_mastaba_side_m.load();
-    small_mastaba_wall_m.load();
-    small_mastaba_entrance_m.load();
-}
+buildings::model_t<building_medium_mastaba> medium_mastaba_m;
 
 declare_console_command_p(finishphase, game_cheat_finish_phase);
 
@@ -324,12 +318,28 @@ int building_small_mastabe_get_bricks_image(int orientation, e_building_type typ
     return result;
 }
 
-void building_small_mastaba::on_create(int orientation) {
-    base.fire_proof = 1;
+void building_mastaba::on_create(int orientation) {
 }
 
+void building_mastaba::on_place_checks() {
+    if (building_construction_has_warning()) {
+        return;
+    }
+
+    const tile2i tiles_to_check[] = { tile(), tile().shifted(1, 0), tile().shifted(0, 1), tile().shifted(1, 1) };
+    bool has_water = false;
+    for (const auto &t : tiles_to_check) {
+        has_water |= map_terrain_is(t, TERRAIN_GROUNDWATER);
+    }
+
+    if (!has_water) {
+        building_construction_warning_show(WARNING_WATER_PIPE_ACCESS_NEEDED);
+    }
+}
+
+
 void building_small_mastaba::on_place(int orientation, int variant) {
-    building_impl::on_place(orientation, variant);
+    building_mastaba::on_place(orientation, variant);
 
     base.prev_part_building_id = 0;
 
@@ -341,6 +351,7 @@ void building_small_mastaba::on_place(int orientation, int variant) {
         tile2i offset;
         building *b;
     };
+
     svector<mastaba_part, 10> parts;
     switch (orientation) {
     case 0: parts = {{ BUILDING_SMALL_MASTABA, {2, 0}},  
@@ -349,12 +360,14 @@ void building_small_mastaba::on_place(int orientation, int variant) {
                      { BUILDING_SMALL_MASTABA_WALL, {0, 6}}, { BUILDING_SMALL_MASTABA_WALL, {2, 6}},
                      { BUILDING_SMALL_MASTABA_SIDE, {0, 8}}, { BUILDING_SMALL_MASTABA_SIDE, {2, 8}} }; 
           break;
+
     case 1: parts = {{ BUILDING_SMALL_MASTABA, {-2, 0}},  
                      { BUILDING_SMALL_MASTABA_WALL, {0, 2}}, {BUILDING_SMALL_MASTABA_WALL, {-2, 2}},
                      { BUILDING_SMALL_MASTABA_ENTRANCE, {0, 4}}, { BUILDING_SMALL_MASTABA_WALL, {-2, 4}},
                      { BUILDING_SMALL_MASTABA_WALL, {0, 6}}, { BUILDING_SMALL_MASTABA_WALL, {-2, 6}},
                      { BUILDING_SMALL_MASTABA_SIDE, {0, 8}}, { BUILDING_SMALL_MASTABA_SIDE, {-2, 8}} }; 
           break;
+
     case 2: parts = {{ BUILDING_SMALL_MASTABA, {-2, -8}}, { BUILDING_SMALL_MASTABA, {0, -8}},
                      { BUILDING_SMALL_MASTABA_WALL, {0, -2}}, { BUILDING_SMALL_MASTABA_WALL, {-2, -2}},
                      { BUILDING_SMALL_MASTABA_ENTRANCE, {0, -4}}, { BUILDING_SMALL_MASTABA_WALL, {-2, -4}},
@@ -362,6 +375,7 @@ void building_small_mastaba::on_place(int orientation, int variant) {
                      { BUILDING_SMALL_MASTABA_SIDE, {-2, 0}} };
           base.type = BUILDING_SMALL_MASTABA_SIDE;
           break;
+
     case 3: parts = {{ BUILDING_SMALL_MASTABA, {0, -8}}, { BUILDING_SMALL_MASTABA, {2, -8}},
                      { BUILDING_SMALL_MASTABA_WALL, {0, -6}}, { BUILDING_SMALL_MASTABA_WALL, {2, -6}},
                      { BUILDING_SMALL_MASTABA_ENTRANCE, {2, -4}}, { BUILDING_SMALL_MASTABA_WALL, {0, -4}},
@@ -392,74 +406,6 @@ void building_small_mastaba::on_place(int orientation, int variant) {
             prev_part->next_part_building_id = part.b->id;
         }
         prev_part = part.b;
-    }
-}
-
-void building_small_mastaba::on_place_checks() {
-    if (building_construction_has_warning()) {
-        return;
-    }
-
-    tile2i tiles_to_check[] = {tile(), tile().shifted(1, 0), tile().shifted(0, 1), tile().shifted(1, 1)};
-    bool has_water = false;
-    for (const auto &t : tiles_to_check) {
-        has_water |= map_terrain_is(t, TERRAIN_GROUNDWATER);
-    }
-    
-    if (!has_water) {
-        building_construction_warning_show(WARNING_WATER_PIPE_ACCESS_NEEDED);
-    }
-}
-
-void building_small_mastaba::window_info_background(object_info &ctx) {
-    ctx.help_id = 4;
-    window_building_play_sound(&ctx, "Wavs/warehouse.wav");
-    outer_panel_draw(ctx.offset, ctx.bgsize.x, ctx.bgsize.y);
-    lang_text_draw_centered(178, 12, ctx.offset.x, ctx.offset.y + 10, 16 * ctx.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    building* b = building_get(ctx.building_id);
-
-    if (building_monument_is_unfinished(b)) {
-        std::pair<int, int> reason = {0, 0};
-
-        int workers_num = 0;
-        for (auto &wid : b->data.monuments.workers) {
-            workers_num += wid > 0 ? 1 : 0;
-        }
-
-        if (b->data.monuments.phase < 3) {
-            int work_camps_num = building_count_total(BUILDING_WORK_CAMP);
-            int work_camps_active_num = building_count_active(BUILDING_WORK_CAMP);
-
-            int work_camps_near_mastaba = 0;
-            buildings_valid_do([&] (building &b) {
-                int distance_to_mastaba = b.tile.dist(base.tile);
-                work_camps_near_mastaba += (distance_to_mastaba < 10) ? 1 : 0;
-            }, BUILDING_WORK_CAMP);
-
-            if (!work_camps_num) { reason = {178, 13}; }
-            else if (!work_camps_active_num) { reason = {178, 15}; }
-            else if (workers_num > 0) { reason = {178, 39}; }
-            else if (work_camps_near_mastaba < 3) { reason = {178, 51}; } // work camps too far
-            else { reason = {178, 17}; }
-        } else {
-
-            int stonemason_guilds_num = building_count_total(BUILDING_STONEMASONS_GUILD);
-            int bricklayers_guilds_num = building_count_total(BUILDING_BRICKLAYERS_GUILD);
-            int bricklayers_guilds_active_num = building_count_active(BUILDING_BRICKLAYERS_GUILD);
-            int bricks_on_storages = city_resource_ready_for_using(RESOURCE_BRICKS);
-            bool bricks_stockpiled = city_resource_is_stockpiled(RESOURCE_BRICKS);
-            int workers_onsite = building_monument_workers_onsite(&base, FIGURE_LABORER);
-
-            if (bricks_stockpiled) { reason = {178, 103}; }
-            else if (!bricklayers_guilds_num) { reason = {178, 15}; }
-            else if (!bricklayers_guilds_active_num) { reason = {178, 19}; }
-            else if (!bricks_on_storages) { reason = {178, 27}; }
-            else if (!workers_onsite && workers_num > 0) { reason = {178, 114}; }
-        }
-
-        lang_text_draw_multiline(reason.first, reason.second, ctx.offset + vec2i{32, 223}, 16 * (ctx.bgsize.x - 4), FONT_NORMAL_BLACK_ON_DARK);
-    } else {
-        lang_text_draw_multiline(178, 41, ctx.offset + vec2i{32, 48}, 16 * (ctx.bgsize.x - 4), FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 

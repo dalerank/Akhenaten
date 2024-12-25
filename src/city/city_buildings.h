@@ -58,7 +58,7 @@ inline building *building_first(T pred) {
 template <typename B, typename T>
 inline B *building_first_ex(T pred) {
     for (auto it = building_begin(), end = building_end(); it != end; ++it) {
-        B *b = smart_cast<B *>(it);
+        B *b = smart_cast<B>(it);
 
         if (b && b->is_valid() && pred(b)) {
             return b;

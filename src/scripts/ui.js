@@ -1162,6 +1162,16 @@ window info_window_pavilion = {
 	})
 }
 
+window info_window_mastaba = {
+	ui : {
+		background 	  : outer_panel({size: [29, 18]}),
+		title 		 		: text({pos: [0, 16], text:"${building.name}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		subtitle 		  : text({pos: [32, 46], text:"${140.1}", size: [px(27), -1], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+
+		warning_text  : text({pos: [32, 86], size:[px(27), -1], wrap:px(27), multiline:true, font : FONT_NORMAL_BLACK_ON_LIGHT }),
+	}
+}
+
 window info_window_booth = {
 	ui : __baseui(building_info_window, {
 		background 	 : outer_panel({pos: [0, 0], size: [29, 16]}),

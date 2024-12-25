@@ -93,4 +93,6 @@ building_sounds = [
   { type: BUILDING_PERSONAL_MANSION,       	sound: "Wavs/GOV_MAN1.WAV"},
   { type: BUILDING_FAMILY_MANSION, 	      	sound: "Wavs/GOV_MAN2.WAV"},
   { type: BUILDING_DYNASTY_MANSION,       	sound: "Wavs/GOV_MAN3.WAV"},
+  { type: BUILDING_SMALL_MASTABA,     	  	sound: "Wavs/rock3.wav"},
+  { type: BUILDING_MEDIUM_MASTABA,     	  	sound: "Wavs/rock3.wav"},
 ]
