@@ -343,7 +343,7 @@ endif()
 
 set(MACOSX_FILES "")
 if(APPLE)
-    #set(RC_FILES ${PROJECT_SOURCE_DIR}/res/akhenaten.icns)
+    set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/akhenaten.icns)
 elseif(MSVC)
     #set(RC_FILES ${PROJECT_SOURCE_DIR}/res/akhenaten.rc)
 endif()
@@ -389,13 +389,34 @@ set(SOURCE_FILES
     ${GRID_FILES}
     ${GRID_ROUTING_FILES}
     ${IMGUI_FILES}
-    ${MACOSX_FILES}
     ${RC_FILES}
     ${TRACY_FILES}
     ${RESOURCE_FILES}
     ${JS_FILES}
     ${SCRIPTS_FILES}
+    ${MACOSX_FILES}
 )
+
+function(GET_SDL_EXT_DIR result module)
+    if(NOT module STREQUAL "")
+        set(module "_${module}")
+    endif()
+    set(SDL_LOCATION ${PROJECT_SOURCE_DIR}/ext/SDL2)
+    file(GLOB children
+        RELATIVE ${SDL_LOCATION}
+        CONFIGURE_DEPENDS
+        ${SDL_LOCATION}/SDL${module}
+        ${SDL_LOCATION}/SDL2${module}
+        ${SDL_LOCATION}/SDL${module}-*
+        ${SDL_LOCATION}/SDL2${module}-*
+    )
+    foreach(child ${children})
+        if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
+            set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
+            break()
+        endif()
+    endforeach()
+endfunction()
 
 set(SCRIPTS_FOLDER ${PROJECT_SOURCE_DIR}/src/scripts)
 
@@ -410,7 +431,9 @@ cmrc_add_resource_library(
     ${PROJECT_SOURCE_DIR}/res/patreon_48.png
 )
 
-set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
+if (!APPLE)
+    set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
+endif()
 
 if (PLATFORM_ANDROID)
     find_package(SDL2 REQUIRED CONFIG)
@@ -439,7 +462,7 @@ if (MSVC)
 endif()
 
 if(APPLE)
-    # generating a macOS icns file (see https://stackoverflow.cppom/a/20703594)
+    # generating a macOS icns file (see https://stackoverflow.com/a/20703594)
     add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/akhenaten.icns
         COMMAND mkdir -p akhenaten.iconset
         COMMAND sips -z 16 16    akhenaten_256.png --out akhenaten.iconset/icon_16x16.png
@@ -470,6 +493,7 @@ if(APPLE)
         MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/macos/Info.plist")
 
     set(DIRS "")
+    set(LIBS "")
 
     # if SDL2 library is a framework, we need to indicate to CMake
     # the path to its dependencies. SDL2_LIBRARY contains two parts.
@@ -477,21 +501,30 @@ if(APPLE)
     # So strip out everything after the ';'
     string(REGEX REPLACE ";.*$" "" SDL2_LIB_DIR "${SDL2_LIBRARY}")
     if(EXISTS "${SDL2_LIB_DIR}/Versions/A/Frameworks")
-        set(DIRS "${DIRS};${SDL2_LIB_DIR}/Versions/A/Frameworks")
+        list(APPEND DIRS "${SDL2_LIB_DIR}/Versions/A/Frameworks")
     endif()
 
     # if SDL2_mixer library is a framework, we need to indicate to CMake
     # the path to its dependencies (Ogg.framework etc):
     if(EXISTS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
-        set(DIRS "${DIRS};${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
+        list(APPEND DIRS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
     endif()
 
     # when installing, "fixup" automatically copies librairies inside the
     # bundle and links the binary against them
     install(CODE "
         include(BundleUtilities)
-        fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"\" \"${DIRS}\")
+        fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"${LIBS}\" \"${DIRS}\")
     " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
+
+    # perform ad-hoc codesigning
+	set(codesignCommand "codesign --verbose=4 --force --deep --options=runtime --timestamp=none --sign -")
+	set(codesignCommandWithEntitlements "${codesignCommand} --entitlements \"${PROJECT_SOURCE_DIR}/res/macos/Entitlements.plist\"")
+	install(CODE "
+		execute_process(COMMAND
+			${codesignCommandWithEntitlements} \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}\"
+		)
+	")
 endif()
 
 include_directories(${SDL2_INCLUDE_DIR})

@@ -65,73 +65,106 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-  set(SDL2_ARCH_64 TRUE)
-  set(SDL2_PROCESSOR_ARCH "x64")
-else()
-  set(SDL2_ARCH_64 FALSE)
-  set(SDL2_PROCESSOR_ARCH "x86")
-endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+GET_SDL_EXT_DIR(SDL_EXT_DIR "")
 
-if(MINGW AND DEFINED SDL_EXT_DIR)
-    if(SDL2_ARCH_64)
-	  set(SDL_MINGW_EXT_DIR "${SDL_EXT_DIR}/x86_64-w64-mingw32")
+IF(PLATFORM_ANDROID)
+    find_package(SDL2 REQUIRED CONFIG)
+    STRING(TOLOWER ${CMAKE_BUILD_TYPE} ANDROID_BUILD_DIR)
+    SET(SDL2_LIBRARY SDL2::SDL2)
+    SET(SDL2_ANDROID_HOOK ${SDL_EXT_DIR}/src/main/android/SDL_android_main.c)
+ELSE()
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(SDL2_ARCH_64 TRUE)
+        set(SDL2_PROCESSOR_ARCH "x64")
     else()
-	  set(SDL_MINGW_EXT_DIR "${SDL_EXT_DIR}/i686-w64-mingw32")
-	endif()
-endif()
+        set(SDL2_ARCH_64 FALSE)
+        set(SDL2_PROCESSOR_ARCH "x86")
+    endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-SET(SDL2_SEARCH_PATHS
-	~/Library/Frameworks
-	/Library/Frameworks
-	/usr/local
-	/usr
-	/sw # Fink
-	/opt/local # DarwinPorts
-	/opt/csw # Blastwave
-	/opt
-	${SDL_EXT_DIR}
-	${SDL_MINGW_EXT_DIR}
-)
+    if(MINGW AND DEFINED SDL_EXT_DIR)
+        if(SDL2_ARCH_64)
+            set(SDL_MINGW_EXT_DIR "${SDL_EXT_DIR}/x86_64-w64-mingw32")
+        else()
+            set(SDL_MINGW_EXT_DIR "${SDL_EXT_DIR}/i686-w64-mingw32")
+        endif()
+    endif()
 
-FIND_PATH(SDL2_INCLUDE_DIR SDL_log.h
-	HINTS
-	$ENV{SDL2DIR}
-	PATH_SUFFIXES include/SDL2 include
-	PATHS ${SDL2_SEARCH_PATHS}
-)
+    SET(SDL2_SEARCH_PATHS
+        ${SDL_EXT_DIR}
+        ${SDL_MINGW_EXT_DIR}
+        ~/Library/Frameworks
+        /Library/Frameworks
+        /sw # Fink
+        /opt/local # DarwinPorts
+        /opt/csw # Blastwave
+        /opt
+        /boot/system/develop/headers/SDL2 # Haiku
+        ${CMAKE_FIND_ROOT_PATH}
+    )
 
-FIND_LIBRARY(SDL2_LIBRARY_TEMP
-	NAMES SDL2
-	HINTS
-	$ENV{SDL2DIR}
-	PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
-	PATHS ${SDL2_SEARCH_PATHS}
-)
+    FIND_PATH(SDL2_INCLUDE_DIR SDL_log.h
+        HINTS
+        $ENV{SDL2DIR}
+        $ENV{SDL2_DIR}
+        PATH_SUFFIXES include/SDL2 include SDL2
+        PATHS ${SDL2_SEARCH_PATHS}
+        NO_DEFAULT_PATH
+    )
 
-IF(NOT SDL2_BUILDING_LIBRARY)
-	IF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")
-		# Non-OS X framework versions expect you to also dynamically link to
-		# SDL2main. This is mainly for Windows and OS X. Other (Unix) platforms
-		# seem to provide SDL2main for compatibility even though they don't
-		# necessarily need it.
-		FIND_LIBRARY(SDL2MAIN_LIBRARY
-			NAMES SDL2main
-			HINTS
-			$ENV{SDL2DIR}
-			PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
-			PATHS ${SDL2_SEARCH_PATHS}
-		)
-	ENDIF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")
-ENDIF(NOT SDL2_BUILDING_LIBRARY)
+    FIND_PATH(SDL2_INCLUDE_DIR SDL_log.h
+        HINTS
+        $ENV{SDL2DIR}
+        $ENV{SDL2_DIR}
+        PATH_SUFFIXES include/SDL2 include SDL2
+        PATHS ${SDL2_SEARCH_PATHS}
+        NO_CMAKE_FIND_ROOT_PATH
+    )
+
+    FIND_LIBRARY(SDL2_LIBRARY_TEMP
+        NAMES SDL2
+        HINTS
+        $ENV{SDL2DIR}
+        $ENV{SDL2_DIR}
+        PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
+        PATHS ${SDL2_SEARCH_PATHS}
+        NO_DEFAULT_PATH
+    )
+
+    FIND_LIBRARY(SDL2_LIBRARY_TEMP
+        NAMES SDL2
+        HINTS
+        $ENV{SDL2DIR}
+        $ENV{SDL2_DIR}
+        PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
+        PATHS ${SDL2_SEARCH_PATHS}
+        NO_CMAKE_FIND_ROOT_PATH
+    )
+
+    IF(NOT SDL2_BUILDING_LIBRARY)
+        IF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")
+            # Non-OS X framework versions expect you to also dynamically link to
+            # SDL2main. This is mainly for Windows and OS X. Other (Unix) platforms
+            # seem to provide SDL2main for compatibility even though they don't
+            # necessarily need it.
+            FIND_LIBRARY(SDL2MAIN_LIBRARY
+                NAMES SDL2main
+                HINTS
+                $ENV{SDL2DIR}
+                $ENV{SDL2_DIR}
+                PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
+                PATHS ${SDL2_SEARCH_PATHS}
+            )
+        ENDIF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")
+    ENDIF(NOT SDL2_BUILDING_LIBRARY)
+ENDIF()
 
 # SDL2 may require threads on your system.
 # The Apple build may not need an explicit flag because one of the
 # frameworks may already provide it.
 # But for non-OSX systems, I will use the CMake Threads package.
-IF(NOT APPLE)
+IF(NOT APPLE AND NOT EMSCRIPTEN)
     FIND_PACKAGE(Threads)
-ENDIF(NOT APPLE)
+ENDIF()
 
 # MinGW needs an additional library, mwindows
 # It's total link flags should look like -lmingw32 -lSDL2main -lSDL2 -lmwindows
@@ -196,5 +229,5 @@ endif()
 INCLUDE(FindPackageHandleStandardArgs)
 
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL2
-                                  REQUIRED_VARS SDL2_LIBRARY SDL2_INCLUDE_DIR
+                                  REQUIRED_VARS SDL2_LIBRARY
                                   VERSION_VAR SDL2_VERSION_STRING)
