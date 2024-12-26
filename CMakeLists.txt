@@ -397,27 +397,6 @@ set(SOURCE_FILES
     ${MACOSX_FILES}
 )
 
-function(GET_SDL_EXT_DIR result module)
-    if(NOT module STREQUAL "")
-        set(module "_${module}")
-    endif()
-    set(SDL_LOCATION ${PROJECT_SOURCE_DIR}/ext/SDL2)
-    file(GLOB children
-        RELATIVE ${SDL_LOCATION}
-        CONFIGURE_DEPENDS
-        ${SDL_LOCATION}/SDL${module}
-        ${SDL_LOCATION}/SDL2${module}
-        ${SDL_LOCATION}/SDL${module}-*
-        ${SDL_LOCATION}/SDL2${module}-*
-    )
-    foreach(child ${children})
-        if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
-            set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
-            break()
-        endif()
-    endforeach()
-endfunction()
-
 set(SCRIPTS_FOLDER ${PROJECT_SOURCE_DIR}/src/scripts)
 
 file(GLOB SCRIPT_FILES ${SCRIPTS_FOLDER}/*.js)
@@ -553,12 +532,8 @@ if(APPLE)
 	")
 endif()
 
-if(SDL2_INCLUDE_DIR)
-    include_directories(SYSTEM ${SDL2_INCLUDE_DIR})
-endif()
-if(SDL2_MIXER_INCLUDE_DIR)
-    include_directories(SYSTEM ${SDL2_MIXER_INCLUDE_DIR})
-endif()
+include_directories(${SDL2_INCLUDE_DIR})
+include_directories(${SDL2_MIXER_INCLUDE_DIR})
 include_directories(${EXTEXPAT_INCLUDE_DIR})
 include_directories(${EXTPNG_INCLUDE_DIR})
 include_directories(${EXTMUJS_INCLUDE_DIR})
