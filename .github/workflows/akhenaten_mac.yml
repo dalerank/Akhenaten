@@ -17,20 +17,12 @@ jobs:
         submodules: true
     - name: update-workspace
       run: |
-        # brew install llvm@15
         whereis clang++
-        # export CC=/opt/homebrew/opt/llvm@15/bin/clang
-        # export CXX=/opt/homebrew/opt/llvm@15/bin/clang++
         export CXXFLAGS=-stdlib=libc++
         ./update-workspace-mac.sh
-        git submodule init && git submodule update ext/cpptrace
         cd build
         cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" ..
         cd ..
-    - uses: actions/upload-artifact@v4.5.0
-      with:
-        name: build
-        path: build
     - name: build
       run: |
         cmake --build ./build -j6
