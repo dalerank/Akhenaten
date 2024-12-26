@@ -27,6 +27,7 @@ jobs:
         cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
         cd ..
         cmake --build ./build -j6
+        cmake --build ./build --target install
         mkdir macos_build
         cp -R ./build/akhenaten.app ./macos_build/akhenaten.app
     - uses: actions/upload-artifact@v3
