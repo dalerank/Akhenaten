@@ -36,7 +36,7 @@ jobs:
         cmake --build ./build -j6
     - name: install-and-bundle
       run: |
-        cmake --build ./build --target install -DCMAKE_INSTALL_LOCAL_ONLY=1
+        cmake --build ./build --target install/local
         mkdir macos_build
         cp -R ./build/akhenaten.app ./macos_build/akhenaten.app
     - uses: actions/upload-artifact@v4.5.0
