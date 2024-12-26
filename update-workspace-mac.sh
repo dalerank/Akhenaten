@@ -14,7 +14,7 @@ then
   hdiutil detach "$VOLUME"
 fi
 
-FILENAME_MIXER=SDL2_mixer-2.8.0.dmg
+FILENAME_MIXER=SDL2_mixer-2.6.3.dmg
 if [ ! -f "tmp/$FILENAME_MIXER" ]
 then
   curl "https://libsdl.org/projects/SDL_mixer/release/$FILENAME_MIXER" --output "tmp/$FILENAME_MIXER"
@@ -34,5 +34,5 @@ then
   hdiutil detach "$VOLUME"
 fi
 
-cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_BUILD_TYPE=Release .. -G "Unix Makefiles"
+cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" .. -G "Unix Makefiles"
 cd ..
