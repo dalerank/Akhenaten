@@ -500,7 +500,7 @@ if(APPLE)
     # For now simply copy SDL2* frameworks into bundle. Ugly, but it works
     set(USER_HOME_DIRECTORY $ENV{HOME})
     set(HOME_FRAMEWORKS_DIRECTORY "${USER_HOME_DIRECTORY}/Library/Frameworks")
-    set(APP_FRAMEWORKS_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks")
+    set(APP_FRAMEWORKS_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS")
 
     set(SDL2_FRAMEWORK_DIRECTORY "${HOME_FRAMEWORKS_DIRECTORY}/SDL2.framework")
     set(SDL2_MIXER_FRAMEWORK_DIRECTORY "${HOME_FRAMEWORKS_DIRECTORY}/SDL2_mixer.framework")
