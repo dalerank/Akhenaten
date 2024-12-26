@@ -17,7 +17,6 @@ jobs:
     - name: update-workspace
       run: |
         # brew install llvm@15
-        xcode-select --install
         whereis clang++
         # export CC=/opt/homebrew/opt/llvm@15/bin/clang
         # export CXX=/opt/homebrew/opt/llvm@15/bin/clang++
