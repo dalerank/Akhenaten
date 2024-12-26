@@ -512,10 +512,36 @@ if(APPLE)
 
     # when installing, "fixup" automatically copies librairies inside the
     # bundle and links the binary against them
+    # install(CODE "
+    #     include(BundleUtilities)
+    #     fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"${LIBS}\" \"${DIRS}\")
+    # " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
+
+
+    # For now simply copy SDL2* frameworks into bundle. Ugly, but it works
+    set(USER_HOME_DIRECTORY $ENV{HOME})
+    set(HOME_FRAMEWORKS_DIRECTORY "${USER_HOME_DIRECTORY}/Library/Frameworks")
+    set(APP_FRAMEWORKS_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks")
+
+    set(SDL2_FRAMEWORK_DIRECTORY "${HOME_FRAMEWORKS_DIRECTORY}/SDL2.framework")
+    set(SDL2_MIXER_FRAMEWORK_DIRECTORY "${HOME_FRAMEWORKS_DIRECTORY}/SDL2_mixer.framework")
+
+    set(APP_SDL2_DIRECTORY "${APP_FRAMEWORKS_DIRECTORY}/SDL2.framework")
+    set(APP_SDL2_MIXER_DIRECTORY "${APP_FRAMEWORKS_DIRECTORY}/SDL2_mixer.framework")
+
     install(CODE "
-        include(BundleUtilities)
-        fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"${LIBS}\" \"${DIRS}\")
-    " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
+        file(MAKE_DIRECTORY ${APP_FRAMEWORKS_DIRECTORY})
+        file(MAKE_DIRECTORY ${APP_SDL2_DIRECTORY})
+        file(MAKE_DIRECTORY ${APP_SDL2_MIXER_DIRECTORY})
+
+        file(INSTALL \"${SDL2_FRAMEWORK_DIRECTORY}/Versions/Current/SDL2\" DESTINATION \"${APP_SDL2_DIRECTORY}\" )
+        file(INSTALL \"${SDL2_FRAMEWORK_DIRECTORY}/Versions/Current/Resources\" DESTINATION \"${APP_SDL2_DIRECTORY}\" )
+        file(INSTALL \"${SDL2_FRAMEWORK_DIRECTORY}/Versions/Current/_CodeSignature\" DESTINATION \"${APP_SDL2_DIRECTORY}\" )
+
+        file(INSTALL \"${SDL2_MIXER_FRAMEWORK_DIRECTORY}/Versions/Current/SDL2_mixer\" DESTINATION \"${APP_SDL2_MIXER_DIRECTORY}\" )
+        file(INSTALL \"${SDL2_MIXER_FRAMEWORK_DIRECTORY}/Versions/Current/Resources\" DESTINATION \"${APP_SDL2_MIXER_DIRECTORY}\" )
+        file(INSTALL \"${SDL2_MIXER_FRAMEWORK_DIRECTORY}/Versions/Current/_CodeSignature\" DESTINATION \"${APP_SDL2_MIXER_DIRECTORY}\" )
+    ")
 
     # perform ad-hoc codesigning
 	set(codesignCommand "codesign --verbose=4 --force --deep --options=runtime --timestamp=none --sign -")
@@ -527,8 +553,12 @@ if(APPLE)
 	")
 endif()
 
-include_directories(${SDL2_INCLUDE_DIR})
-include_directories(${SDL2_MIXER_INCLUDE_DIR})
+if(SDL2_INCLUDE_DIR)
+    include_directories(SYSTEM ${SDL2_INCLUDE_DIR})
+endif()
+if(SDL2_MIXER_INCLUDE_DIR)
+    include_directories(SYSTEM ${SDL2_MIXER_INCLUDE_DIR})
+endif()
 include_directories(${EXTEXPAT_INCLUDE_DIR})
 include_directories(${EXTPNG_INCLUDE_DIR})
 include_directories(${EXTMUJS_INCLUDE_DIR})
