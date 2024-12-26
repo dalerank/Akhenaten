@@ -11,7 +11,7 @@ jobs:
     name: run on mac
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4.2.2
       with:
         fetch-depth: 0
     - name: update-workspace
@@ -26,11 +26,19 @@ jobs:
         cd build
         cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" ..
         cd ..
+    - uses: actions/upload-artifact@v4.5.0
+      with:
+        name: build
+        path: build
+    - name: build
+      run: |
         cmake --build ./build -j6
+    - name: install-and-bundle
+      run: |
         cmake --build ./build --target install
         mkdir macos_build
         cp -R ./build/akhenaten.app ./macos_build/akhenaten.app
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4.5.0
       with:
         name: macos_build
         path: macos_build
