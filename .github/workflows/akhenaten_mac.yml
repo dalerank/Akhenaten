@@ -24,7 +24,7 @@ jobs:
         ./update-workspace-mac.sh
         git submodule init && git submodule update ext/cpptrace
         cd build
-        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" ..
         cd ..
         cmake --build ./build -j6
         cmake --build ./build --target install
