@@ -25,7 +25,7 @@ if(PLATFORM_ANDROID)
     # no cpptrace for android, baa...
 else()
     if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
-        if (APPLE) # Get meaningful trace on memory access errors etc.
+        if (APPLE AND CMAKE_BUILD_TYPE STREQUAL "Debug") # Get meaningful trace on memory access errors etc.
             add_compile_options(-fsanitize=address)
             add_link_options(-fsanitize=address)
         endif()
