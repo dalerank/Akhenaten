@@ -23,5 +23,11 @@
   <url type="donation">https://www.patreon.com/imspinner</url>
   <url type="contribute">https://github.com/dalerank/Akhenaten</url>
 
+  <screenshots>
+    <screenshot type="default">
+      <image>https://img.itch.zone/aW1nLzEyODg5OTY0LnBuZw==/original/q6p6us.png</image>
+    </screenshot>
+  </screenshots>
+
   <launchable type="desktop-id">com.github.dalerank.akhenaten.desktop</launchable>
 </component>
