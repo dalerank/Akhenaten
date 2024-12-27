@@ -608,6 +608,12 @@ tile2i building::access_tile() {
     case BUILDING_SMALL_MASTABA_WALL:
     case BUILDING_SMALL_MASTABA_SIDE:
         return main()->tile.shifted(0, 10);
+
+    case BUILDING_MEDIUM_MASTABA:
+    case BUILDING_MEDIUM_MASTABA_ENTRANCE:
+    case BUILDING_MEDIUM_MASTABA_WALL:
+    case BUILDING_MEDIUM_MASTABA_SIDE:
+        return main()->tile.shifted(0, 14);
     }
 
     return road_access;
@@ -654,6 +660,10 @@ bool building_is_monument(e_building_type type) {
     case BUILDING_SMALL_MASTABA_SIDE:
     case BUILDING_SMALL_MASTABA_WALL:
     case BUILDING_SMALL_MASTABA_ENTRANCE:
+    case BUILDING_MEDIUM_MASTABA:
+    case BUILDING_MEDIUM_MASTABA_SIDE:
+    case BUILDING_MEDIUM_MASTABA_WALL:
+    case BUILDING_MEDIUM_MASTABA_ENTRANCE:
     case BUILDING_PYRAMID:
     case BUILDING_SPHINX:
     case BUILDING_MAUSOLEUM:
