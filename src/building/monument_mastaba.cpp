@@ -70,7 +70,6 @@ void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id,
 
     int x_proper = x_leftmost * (size - 1);
     int y_proper = y_leftmost * (size - 1);
-    //int clear_land_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND);
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = tile.shifted(dx, dy).grid_offset();
@@ -277,7 +276,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
         return false;
     }
 
-    int clear_land_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND);
+    int clear_land_id = anim("empty_land").first_img();
     int image_grounded = small_mastaba_m.anim[animkeys().base].first_img() + 5;
     building *main = base.main();
     color_mask = (color_mask ? color_mask : 0xffffffff);
