@@ -677,6 +677,8 @@ void BuildPlanner::setup_build_flags() {
 
 void BuildPlanner::setup_build_graphics() {
     const auto &props = building_impl::params(build_type);
+
+    vec2i init_tiles_size;
     switch (build_type) {
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:
@@ -827,13 +829,24 @@ void BuildPlanner::setup_build_graphics() {
         break;
 
     case BUILDING_SMALL_MASTABA:
+        init_tiles_size = building_small_mastaba::init_tiles_size();
         switch (city_view_orientation() / 2) {
-        case 0: init_tiles(4, 10); break;
-        case 1: init_tiles(10, 4); break;
-        case 2: init_tiles(4, 10); break;
-        case 3: init_tiles(10, 4); break;
+        case 0: init_tiles(init_tiles_size.y, init_tiles_size.x); break;
+        case 1: init_tiles(init_tiles_size.x, init_tiles_size.y); break;
+        case 2: init_tiles(init_tiles_size.y, init_tiles_size.x); break;
+        case 3: init_tiles(init_tiles_size.x, init_tiles_size.y); break;
         }
         break;    
+
+    case BUILDING_MEDIUM_MASTABA:
+        init_tiles_size = building_medium_mastaba::init_tiles_size();
+        switch (city_view_orientation() / 2) {
+        case 0: init_tiles(init_tiles_size.y, init_tiles_size.x); break;
+        case 1: init_tiles(init_tiles_size.x, init_tiles_size.y); break;
+        case 2: init_tiles(init_tiles_size.y, init_tiles_size.x); break;
+        case 3: init_tiles(init_tiles_size.x, init_tiles_size.y); break;
+        }
+        break;
 
     case BUILDING_BOOTH:
         init_tiles(2, 2);

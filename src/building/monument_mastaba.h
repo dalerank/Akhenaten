@@ -15,6 +15,14 @@ public:
 
     virtual void on_create(int orientation) override;
     virtual void on_place_checks() override;
+    
+    bool draw_ornaments_and_animations_flat_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
+
+    static void ghost_preview(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end, const vec2i size);
+
+    static void update_images(building *b, int curr_phase, const vec2i size_b);
+    static void finalize(building *b, const vec2i size_b);
+    static int get_image(int orientation, tile2i tile, tile2i start, tile2i end);
 };
 
 class building_small_mastaba : public building_mastaba {
@@ -37,6 +45,7 @@ public:
     std::span<uint16_t> active_workers();
 
     static void ghost_preview(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end);
+    static vec2i init_tiles_size();
 };
 
 class building_small_mastaba_part_side : public building_small_mastaba {
@@ -63,11 +72,33 @@ public:
     building_medium_mastaba(building &b) : building_mastaba(b) {}
 
     virtual building_medium_mastaba *dcast_medium_mastaba() override { return nullptr; }
+
+    virtual void on_place(int orientation, int variant) override;
+    virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
+    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
+
+    static void ghost_preview(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end);
+    static vec2i init_tiles_size();
+};
+
+class building_medium_mastaba_part_side : public building_medium_mastaba {
+public:
+    BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_SIDE, building_medium_mastaba_part_side)
+    building_medium_mastaba_part_side(building &b) : building_medium_mastaba(b) {}
+};
+
+class building_medium_mastaba_part_wall : public building_medium_mastaba {
+public:
+    BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_WALL, building_medium_mastaba_part_wall)
+    building_medium_mastaba_part_wall(building &b) : building_medium_mastaba(b) {}
+};
+
+class building_medium_mastaba_part_entrance : public building_medium_mastaba {
+public:
+    BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_ENTRANCE, building_medium_mastaba_part_entrance)
+    building_medium_mastaba_part_entrance(building &b) : building_medium_mastaba(b) {}
 };
 
 void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain);
-int building_small_mastabe_get_image(int orientation, tile2i tile, tile2i start, tile2i end);
-void building_small_mastabe_update_images(building *b, int curr_phase);
-int building_small_mastabe_get_image(int orientation, tile2i tile, tile2i start, tile2i end);
 tile2i building_small_mastaba_bricks_waiting_tile(building *b);
 int building_small_mastabe_get_bricks_image(int orientation, e_building_type type, tile2i tile, tile2i start, tile2i end, int layer);
