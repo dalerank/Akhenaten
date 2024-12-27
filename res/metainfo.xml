@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.github.dalerank.akhenaten</id>
+
+  <developer id="com.github.dalerank">
+    <name>dalerank</name>
+  </developer>
+
+  <name>Akhenaten</name>
+  <summary>Open-source engine for Pharaoh (1999) game</summary>
+
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>AGPL-3.0-only</project_license>
+
+  <description>
+    <p>
+      Akhenaten aims to make the original game Pharaoh compatible with modern systems with redesigned original engine. Unlike the original game, which was developed by Impressions Games, Akhenaten is a community-driven effort to keep the game alive and accessible. Allows you to load original save games from Pharaoh and play the initial campaign missions without major issues.
+    </p>
+  </description>
+
+  <url type="bugtracker">https://github.com/dalerank/Akhenaten/issues</url>
+  <url type="homepage">https://dalerank.itch.io/akhenaten</url>
+  <url type="donation">https://www.patreon.com/imspinner</url>
+  <url type="contribute">https://github.com/dalerank/Akhenaten</url>
+
+  <launchable type="desktop-id">com.github.dalerank.akhenaten.desktop</launchable>
+</component>
