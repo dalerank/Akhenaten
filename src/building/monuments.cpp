@@ -340,11 +340,14 @@ int building_monument_needs_resources(e_building_type type, e_resource resource,
 int building_image_get(building *b) {
     switch (b->type) {
     case BUILDING_SMALL_MASTABA:
+    case BUILDING_SMALL_MASTABA_SIDE:
+    case BUILDING_SMALL_MASTABA_WALL:
+    case BUILDING_SMALL_MASTABA_ENTRANCE:
         switch (b->data.monuments.phase) {
         case MONUMENT_START:
-            return building_impl::params(BUILDING_SMALL_MASTABA).anim["base"].first_img();
+            return building_impl::params(BUILDING_SMALL_MASTABA).anim[animkeys().base].first_img();
         default:
-            return building_impl::params(BUILDING_SMALL_MASTABA).anim["base"].first_img() + 1;
+            return building_impl::params(BUILDING_SMALL_MASTABA).anim[animkeys().base].first_img() + 1;
         }
 
     default:
