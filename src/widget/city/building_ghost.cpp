@@ -413,6 +413,10 @@ void BuildPlanner::draw_graphics(painter &ctx) {
         building_small_mastaba::ghost_preview(ctx, build_type, pixel, start, end);
         return;
 
+    case BUILDING_MEDIUM_MASTABA:
+        building_medium_mastaba::ghost_preview(ctx, build_type, pixel, start, end);
+        return;
+
     case BUILDING_BARLEY_FARM:
     case BUILDING_FLAX_FARM:
     case BUILDING_GRAIN_FARM:

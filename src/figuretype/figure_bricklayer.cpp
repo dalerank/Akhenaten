@@ -50,7 +50,7 @@ void figure_bricklayer::figure_action() {
         break;
 
     case FIGURE_ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE:
-        if (building_type_any_of(b_dest->type, BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE)) {
+        if (smart_cast<building_mastaba>(b_dest)) {
             tile2i wait_tile = building_small_mastaba_bricks_waiting_tile(b_dest);
             if (!wait_tile.valid()) {
                 poof();
