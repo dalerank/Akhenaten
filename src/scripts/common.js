@@ -173,7 +173,6 @@ var figure_festival_priest = {}
 var figure_hippo = {}
 var figure_crocodile = {}
 var figure_immigrant = {}
-var figure_worker = {}
 var figure_architector = {}
 var figure_market_buyer = {}
 var figure_delivery_boy = {}

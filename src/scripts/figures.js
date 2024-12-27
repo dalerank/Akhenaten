@@ -358,7 +358,7 @@ figure_dentist = {
 	max_roam_length : 384,
 }
 
-figure_worker = {
+figure figure_worker = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:116, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:117, max_frames:8, loop:false },
