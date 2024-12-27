@@ -181,7 +181,7 @@ void building_menu_toggle_building(int type, bool enabled) {
         if (building_is_water_crossing((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_WATER_CROSSINGS);
 
-        if (building_is_monument(type))
+        if (building_is_monument((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_MONUMENTS);
 
         if (building_is_education((e_building_type)type)) {

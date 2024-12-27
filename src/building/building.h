@@ -721,7 +721,7 @@ bool building_is_floodplain_farm(building &b);
 bool building_is_workshop(int type);
 bool building_is_extractor(int type);
 bool building_is_harvester(e_building_type type);
-bool building_is_monument(int type);
+bool building_is_monument(e_building_type type);
 bool building_is_administration(e_building_type type);
 bool building_is_palace(e_building_type type);
 bool building_is_tax_collector(e_building_type type);

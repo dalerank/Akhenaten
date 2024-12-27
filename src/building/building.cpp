@@ -648,7 +648,7 @@ bool building_is_harvester(e_building_type type) {
     return (type == BUILDING_REED_GATHERER || type == BUILDING_WOOD_CUTTERS);
 }
 
-bool building_is_monument(int type) {
+bool building_is_monument(e_building_type type) {
     switch (type) {
     case BUILDING_SMALL_MASTABA:
     case BUILDING_SMALL_MASTABA_SIDE:
