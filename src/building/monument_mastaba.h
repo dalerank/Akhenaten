@@ -15,11 +15,18 @@ public:
 
     virtual void on_create(int orientation) override;
     virtual void on_place_checks() override;
+    virtual void update_count() const override;
+    virtual void update_month() override;
+    virtual void update_map_orientation(int map_orientation) override;
+    virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     
-    bool draw_ornaments_and_animations_flat_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
+    bool draw_ornaments_and_animations_flat_impl(building &base, painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
+    bool draw_ornaments_and_animations_hight_impl(building &base, painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
+
+    void update_day(const vec2i tiles_size);
+    std::span<uint16_t> active_workers();
 
     static void ghost_preview(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end, const vec2i size);
-
     static void update_images(building *b, int curr_phase, const vec2i size_b);
     static void finalize(building *b, const vec2i size_b);
     static int get_image(int orientation, tile2i tile, tile2i start, tile2i end);
@@ -35,14 +42,8 @@ public:
 
     virtual void on_place(int orientation, int variant) override;
     virtual void update_day() override;
-    virtual void update_month() override;
-    virtual void update_count() const override;
-    virtual void update_map_orientation(int map_orientation) override;
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
-    virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
-
-    std::span<uint16_t> active_workers();
 
     static void ghost_preview(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end);
     static vec2i init_tiles_size();
@@ -74,6 +75,7 @@ public:
     virtual building_medium_mastaba *dcast_medium_mastaba() override { return nullptr; }
 
     virtual void on_place(int orientation, int variant) override;
+    virtual void update_day() override;
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 
