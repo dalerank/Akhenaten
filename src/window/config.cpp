@@ -171,6 +171,8 @@ static generic_button checkbox_buttons[] = {
     {20, 312, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BRICKLAYERS, TR_CONFIG_BUILDING_BRICKLAYERS},
     {20, 336, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BOOTH, TR_CONFIG_BUILDING_BOOTH},
     {20, 360, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BANDSTAND, TR_CONFIG_BUILDING_BANDSTAND},
+    {20, 384, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_MEDIUM_MASTABA, TR_CONFIG_BUILDING_MEDIUM_MASTABA },
+    //
 
     //
     {20, 72, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
@@ -583,6 +585,7 @@ static bool is_config_option_enabled(int option) {
     case CONFIG_GP_CH_BUILDING_WEAPONSMITH: return building_menu_is_building_enabled(BUILDING_WEAPONSMITH);
     case CONFIG_GP_CH_BUILDING_RECRUTER: return building_menu_is_building_enabled(BUILDING_RECRUITER);
     case CONFIG_GP_CH_BUILDING_SMALL_MASTABA: return building_menu_is_building_enabled(BUILDING_SMALL_MASTABA);
+    case CONFIG_GP_CH_BUILDING_MEDIUM_MASTABA: return building_menu_is_building_enabled(BUILDING_MEDIUM_MASTABA);
     case CONFIG_GP_CH_BUILDING_BRICKLAYERS: return building_menu_is_building_enabled(BUILDING_BRICKLAYERS_GUILD);
     }
 

@@ -119,6 +119,7 @@ static translation_string all_strings[] = {
      {TR_CONFIG_BUILDING_WEAPONSMITH, "Weapon workshop enabled"},
      {TR_CONFIG_BUILDING_RECRUTER, "Recruter enabled"},
      {TR_CONFIG_BUILDING_SMALL_MASTABA, "Small mastaba enabled"},
+     {TR_CONFIG_BUILDING_MEDIUM_MASTABA, "Medium mastaba enabled"},
      {TR_CONFIG_BUILDING_BRICKLAYERS, "Bricklayers guild enabled"},
      {TR_CONFIG_BUILDING_BOOTH, "Booth enabled"},
      {TR_CONFIG_BUILDING_BANDSTAND, "Bandstand enabled"},
