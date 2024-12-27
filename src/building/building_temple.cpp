@@ -28,8 +28,8 @@ buildings::model_t<building_temple_seth> temple_seth_m;
 buildings::model_t<building_temple_bast> temple_bast_m;
 
 struct temple_info_window_t : public building_info_window {
-    virtual void window_info_background(object_info &c) override {
-        building_info_window::window_info_background(c);
+    virtual void init(object_info &c) override {
+        building_info_window::init(c);
 
         auto temple = c.building_get()->dcast_temple();
 
