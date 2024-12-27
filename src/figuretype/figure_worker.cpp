@@ -15,11 +15,6 @@
 
 figures::model_t<figure_worker> worker_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_worker);
-void config_load_figure_worker() {
-    worker_m.load();
-}
-
 tile2i figure_worker::small_mastaba_tile4work(building *b) {
     building_small_mastaba *mastaba = b->dcast_small_mastaba();
     if (!mastaba) {
@@ -151,7 +146,11 @@ void figure_worker::update_animation() {
 
     switch (action_state()) {
     case FIGURE_ACTION_12_WORKER_LEVELING_GROUND:
-        image_set_animation(worker_m.anim["work"]);
+        image_set_animation(animkeys().work);
+        break;
+
+    case FIGURE_ACTION_13_WORKER_BACK_FROM_WORKS:
+        image_set_animation(animkeys().walk);
         break;
     }
 }
