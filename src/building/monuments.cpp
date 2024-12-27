@@ -397,7 +397,10 @@ void building_monument_set_phase(building *b, int phase) {
     }
 
     b->data.monuments.phase = phase;
-    map_building_tiles_add(b->id, b->tile, b->size, building_image_get(b), TERRAIN_BUILDING);
+    if (phase >= 2) {
+        map_building_tiles_add(b->id, b->tile, b->size, building_image_get(b), TERRAIN_BUILDING);
+    }
+
     if (b->data.monuments.phase != MONUMENT_FINISHED) {
         for (e_resource resource = RESOURCE_NONE; resource < RESOURCES_MAX; ++resource) {
             b->data.monuments.resources_pct[resource] = 0;

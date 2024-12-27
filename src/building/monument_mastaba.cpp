@@ -106,20 +106,21 @@ void building_mastaba::update_images(building *b, int curr_phase, const vec2i si
     building *main = b->main();
     building *part = b;
 
+    if (curr_phase < 2) {
+        return;
+    }
 
     while (part) {
         int image_id = 0;
-        if (curr_phase < 2) {
-            image_id = get_image(b->data.monuments.orientation, part->tile, main->tile, main->tile.shifted(size_b.y - 1, size_b.x - 1));
-        } else {
-            image_id = building_small_mastabe_get_bricks_image(b->data.monuments.orientation, part->type, part->tile, main->tile, main->tile.shifted(size_b.y - 1, size_b.x - 1), curr_phase - 2);
-        }
+            //image_id = get_image(b->data.monuments.orientation, part->tile, main->tile, main->tile.shifted(size_b.y - 1, size_b.x - 1));
+        image_id = building_small_mastabe_get_bricks_image(b->data.monuments.orientation, part->type, part->tile, main->tile, main->tile.shifted(size_b.y - 1, size_b.x - 1), curr_phase - 2);
         for (int dy = 0; dy < part->size; dy++) {
             for (int dx = 0; dx < part->size; dx++) {
                 int grid_offset = part->tile.shifted(dx, dy).grid_offset();
                 map_image_set(grid_offset, image_id);
             }
         }
+        
         part = part->has_next() ? part->next() : nullptr;
     }
 }
@@ -149,8 +150,7 @@ void building_small_mastaba::update_day() {
 }
 
 bool building_small_mastaba::draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) {
-    draw_ornaments_and_animations_flat_impl(base, ctx, point, tile, mask, init_tiles_size());
-    return false;
+    return draw_ornaments_and_animations_flat_impl(base, ctx, point, tile, mask, init_tiles_size());
 }
 
 void building_small_mastaba::ghost_preview(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end) {
@@ -204,7 +204,7 @@ int building_small_mastabe_get_bricks_image(int orientation, e_building_type typ
         int ids[4] = {image_base_bricks + 110, image_base_bricks + 104, image_base_bricks + 104, image_base_bricks + 109};
         int i = (orientation + (city_view_orientation() / 2)) % 4;
         return ids[i];
-    } else if (type == BUILDING_SMALL_MASTABA_WALL) {
+    } else if (building_type_any_of(type, BUILDING_SMALL_MASTABA_WALL, BUILDING_MEDIUM_MASTABA_WALL)) {
         return random;
     } else if (tile.y() == start.y()) { // top corner
         result = (image_id + 3);
@@ -357,7 +357,6 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
 }
 
 bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
-    int clear_land_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND);
     int image_grounded = small_mastaba_m.anim[animkeys().base].first_img() + 5;
     color_mask = (color_mask ? color_mask : 0xffffffff);
     building *main = base.main();
@@ -486,7 +485,7 @@ void building_mastaba::update_day(const vec2i tiles_size) {
         for (auto &tile : tiles) {
             int progress = map_monuments_get_progress(tile);
             if (progress == 1) {
-                map_monuments_set_progress(tile, 2);
+               // map_monuments_set_progress(tile, 2);
             }
         }
     }
@@ -580,7 +579,7 @@ void building_small_mastaba::on_place(int orientation, int variant) {
     case 3: parts = {{ BUILDING_SMALL_MASTABA, {0, -8}},          { BUILDING_SMALL_MASTABA, {2, -8}},
                      { BUILDING_SMALL_MASTABA_WALL, {0, -6}},     { BUILDING_SMALL_MASTABA_WALL, {2, -6}},
                      { BUILDING_SMALL_MASTABA_ENTRANCE, {2, -4}}, { BUILDING_SMALL_MASTABA_WALL, {0, -4}},
-                     { BUILDING_SMALL_MASTABA_WALL, {0, -2}},     {BUILDING_SMALL_MASTABA_WALL, {2, -2}},
+                     { BUILDING_SMALL_MASTABA_WALL, {0, -2}},     { BUILDING_SMALL_MASTABA_WALL, {2, -2}},
                      { BUILDING_SMALL_MASTABA_SIDE, {2, 0}} 
                     };
           base.type = BUILDING_SMALL_MASTABA_SIDE;
@@ -620,9 +619,7 @@ bool building_small_mastaba::draw_ornaments_and_animations_height(painter &ctx, 
         return false;
     }
 
-    draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, init_tiles_size());
-
-    return true;
+    return draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, init_tiles_size());
 }
 
 void game_cheat_finish_phase(std::istream &, std::ostream &) {
@@ -656,8 +653,7 @@ vec2i building_medium_mastaba::init_tiles_size() {
 }
 
 bool building_medium_mastaba::draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) {
-    draw_ornaments_and_animations_flat_impl(base, ctx, point, tile, mask, init_tiles_size());
-    return false;
+    return draw_ornaments_and_animations_flat_impl(base, ctx, point, tile, mask, init_tiles_size());
 }
 
 bool building_medium_mastaba::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
@@ -669,9 +665,7 @@ bool building_medium_mastaba::draw_ornaments_and_animations_height(painter &ctx,
         return false;
     }
 
-    draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, init_tiles_size());
-
-    return true;
+    return draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, init_tiles_size());
 }
 
 void building_medium_mastaba::on_place(int orientation, int variant) {
