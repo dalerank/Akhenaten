@@ -25,8 +25,10 @@ void figure_clear_all();
 figure *figure_get(int id);
 
 template<typename T>
-T* figure_get(int id) {
-    return smart_cast<T>(::figure_get(id));
+inline T* figure_get(int id) {
+    figure *f = ::figure_get(id);
+    T* tf = (f->type != FIGURE_NONE) ? smart_cast<T>(f) : nullptr;
+    return tf;
 }
 std::span<figure *> map_figures();
 
