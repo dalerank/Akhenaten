@@ -150,7 +150,6 @@ var roadblock_info_window = {}
 var hold_festival_window = {}
 var legion_info_window = {}
 var empty_info_window = {}
-var temple_info_window = {}
 var advisors_window = {}
 var advisor_military_window = {}
 var advisor_population_window = {}

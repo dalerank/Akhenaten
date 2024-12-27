@@ -1089,7 +1089,7 @@ window terrain_info_window = {
 	}
 }
 
-temple_info_window = {
+window temple_info_window = {
 	ui : {
 		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 18]},
 		title 		 	: { type : "text", pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
@@ -1160,6 +1160,18 @@ window info_window_pavilion = {
 		workers_text : text({pos: [70, 130], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
 		workers_desc : text({pos: [70, 126 + 16], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
 	})
+}
+
+window shrine_info_window = {
+	ui : {
+		background 	  : outer_panel({size: [29, 13]}),
+		title 		 	  : text({pos: [0, 16], text:"${building.name}", size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+		god_image 	  : image({pos: [190, 44] }),
+		show_overlay  : button({margin:{right:-64, bottom:-40}, size:[23, 23]}),
+
+		button_help   : help_button({}),
+	  button_close  : close_button({}),
+	}
 }
 
 window info_window_mastaba = {

@@ -536,7 +536,7 @@ building_shrine_osiris = {
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
   info_help_id: 67,
-  info_text_id: 0,
+  info_text_id: 161,
   building_size : 1,
 }
 
@@ -548,7 +548,7 @@ building_shrine_ra = {
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
   info_help_id: 67,
-  info_text_id: 2,
+  info_text_id: 162,
   building_size : 1,
 }
 
@@ -560,7 +560,7 @@ building_shrine_ptah = {
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
   info_help_id: 67,
-  info_text_id: 4,
+  info_text_id: 163,
   building_size : 1,
 }
 
@@ -572,7 +572,7 @@ building_shrine_seth = {
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
   info_help_id: 67,
-  info_text_id: 6,
+  info_text_id: 164,
   building_size : 1,
 }
 
@@ -584,7 +584,7 @@ building_shrine_bast = {
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
   info_help_id: 67,
-  info_text_id: 8,
+  info_text_id: 165,
   building_size : 1,
 }
 
