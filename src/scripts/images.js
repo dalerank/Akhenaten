@@ -17,7 +17,6 @@ images = [
 	{img: IMG_BRICKLAYER_WORK, pack:PACK_SPR_MAIN, id:111},
 	{img: IMG_BRICKLAYER_IDLE, pack:PACK_SPR_MAIN, id:112},
 	{img: IMG_MONUMENT_ENTER, pack:PACK_GENERAL, id:114},
-	{img: IMG_SMALL_MASTABA_BRICKS, pack:PACK_MASTABA, id:1, offset:0},
 	{img: IMG_ADVISOR_ICONS, pack:PACK_GENERAL, id:128, offset:0},
 	{img: IMG_PRIEST_OSIRIS, pack:PACK_SPR_MAIN, id:197, offset:0},
 	{img: IMG_PRIEST_OSIRIS_DEATH, pack:PACK_SPR_MAIN, id:198, offset:0},

@@ -196,7 +196,8 @@ int building_mastaba::get_image(int orientation, tile2i tile, tile2i start, tile
 }
 
 int building_small_mastabe_get_bricks_image(int orientation, e_building_type type, tile2i tile, tile2i start, tile2i end, int layer) {
-    int image_base_bricks = image_group(IMG_SMALL_MASTABA_BRICKS);
+    int image_base_bricks = building_impl::params(type).anim["base_bricks"].first_img();
+
     int image_id = image_base_bricks + (layer - 1) * 8 + 4;
     int random = (image_base_bricks + 96 + (layer - 1) + (tile.x() + tile.y()) % 1 * 6);
     int result = random;

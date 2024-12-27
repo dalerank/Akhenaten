@@ -1005,8 +1005,9 @@ building_wood_cutter = {
 
 building building_small_mastaba = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_MASTABA, id:2, offset:7 },
-    base : { pos : [0, 0], pack:PACK_MASTABA, id:2, offset:7 },
+    preview : { pack:PACK_MASTABA, id:2, offset:7 },
+    base : { pack:PACK_MASTABA, id:2, offset:7 },
+    base_bricks : { pack:PACK_MASTABA, id:1, offset:0 },
   },
   building_size : 2,
   info_title_id:[198, 18],
@@ -1023,8 +1024,9 @@ building building_small_mastaba_part_entrance = building_small_mastaba
 
 building building_medium_mastaba = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_MASTABA, id:2, offset:7 },
-    base : { pos : [0, 0], pack:PACK_MASTABA, id:2, offset:7 },
+    preview : {pack:PACK_MASTABA, id:2, offset:7 },
+    base : {pack:PACK_MASTABA, id:2, offset:7 },
+    base_bricks : { pack:PACK_MASTABA, id:1, offset:0 },
   },
   building_size : 2,
   info_title_id:[198, 19],
