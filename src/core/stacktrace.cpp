@@ -80,6 +80,10 @@ void crashhandler_install() {
 }
 
 LONG CALLBACK debug_sehgilter(PEXCEPTION_POINTERS pExceptionPointers) {
+    if (IsDebuggerPresent()) {
+        return 0;
+    }
+
     return BT_SehFilter((PEXCEPTION_POINTERS)pExceptionPointers);
 }
 
