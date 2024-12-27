@@ -57,8 +57,8 @@ struct monument {
     svector<monument_phase, MAX_PHASES> phases;
 };
 
-struct monument_mastaba : public monument {
-    monument_mastaba() : monument{BUILDING_SMALL_MASTABA} {
+struct monument_small_mastaba : public monument {
+    monument_small_mastaba() : monument{BUILDING_SMALL_MASTABA} {
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_BRICKS, 4800} });
@@ -69,12 +69,27 @@ struct monument_mastaba : public monument {
         phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 400}, {RESOURCE_BRICKS, 800}});
         phases.push_back({monument_phase_resource{RESOURCE_NONE, 0}});
     }
-} g_monument_mastaba;
+} g_monument_small_mastaba;
+
+struct monument_medium_mastaba : public monument {
+    monument_medium_mastaba() : monument{ BUILDING_MEDIUM_MASTABA } {
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_BRICKS, 8000} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 4000}, {RESOURCE_BRICKS, 8000} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 3200}, {RESOURCE_BRICKS, 6400} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 2400}, {RESOURCE_BRICKS, 4800} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 1600}, {RESOURCE_BRICKS, 3200} });
+        phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_CLAY, 800}, {RESOURCE_BRICKS, 1600} });
+        phases.push_back({ monument_phase_resource{RESOURCE_NONE, 0} });
+    }
+} g_monument_medium_mastaba;
 
 monument g_monument_invalid;
 const monument *g_monument_types[] = {
     &g_monument_invalid,
-    &g_monument_mastaba,
+    &g_monument_small_mastaba,
+    &g_monument_medium_mastaba
 };
 
 struct monument_delivery {
@@ -132,9 +147,8 @@ grid_area building_monument_get_area(building *b) {
     tile2i end = main;
 
     switch (b->type) {
-    case BUILDING_SMALL_MASTABA:
-        end = main.shifted(3, 9);
-        break;
+    case BUILDING_SMALL_MASTABA: end = main.shifted(3, 9); break;
+    case BUILDING_MEDIUM_MASTABA: end = main.shifted(5, 13); break;
 
     default:
         assert(false);
@@ -168,6 +182,10 @@ tile2i building_monument_center_point(building *b) {
         end = main.shifted(3, 9);
         break;
 
+    case BUILDING_MEDIUM_MASTABA:
+        end = main.shifted(5, 13);
+        break;
+
     default:
         assert(false);
     }
@@ -178,6 +196,7 @@ tile2i building_monument_center_point(building *b) {
 tile2i building_monument_access_point(building *b) {
     switch (b->type) {
     case BUILDING_SMALL_MASTABA: return b->tile.shifted(0, 10);
+    case BUILDING_MEDIUM_MASTABA: return b->tile.shifted(0, 14);
     default:
         assert(false);
     }
@@ -350,6 +369,17 @@ int building_image_get(building *b) {
             return building_impl::params(BUILDING_SMALL_MASTABA).anim[animkeys().base].first_img() + 1;
         }
 
+    case BUILDING_MEDIUM_MASTABA:
+    case BUILDING_MEDIUM_MASTABA_SIDE:
+    case BUILDING_MEDIUM_MASTABA_WALL:
+    case BUILDING_MEDIUM_MASTABA_ENTRANCE:
+        switch (b->data.monuments.phase) {
+        case MONUMENT_START:
+            return building_impl::params(BUILDING_MEDIUM_MASTABA).anim[animkeys().base].first_img();
+        default:
+            return building_impl::params(BUILDING_MEDIUM_MASTABA).anim[animkeys().base].first_img() + 1;
+        }
+
     default:
         assert(false);
     }
@@ -380,7 +410,8 @@ bool building_monument_is_monument(const building *b) {
 }
 
 bool building_monument_type_is_monument(e_building_type type) {
-    return building_type_any_of(type, BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE);
+    return building_type_any_of(type, BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE,
+                                      BUILDING_MEDIUM_MASTABA, BUILDING_MEDIUM_MASTABA_SIDE, BUILDING_MEDIUM_MASTABA_WALL, BUILDING_MEDIUM_MASTABA_ENTRANCE);
 }
 
 bool building_monument_type_is_mini_monument(e_building_type type) {
