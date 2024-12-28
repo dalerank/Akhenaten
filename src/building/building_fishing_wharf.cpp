@@ -59,12 +59,18 @@ void building_fishing_wharf::update_count() const {
 }
 
 void building_fishing_wharf::update_day() {
-    building_impl::update_day();
+    building_wharf::update_day();
 
     auto boat = ::smart_cast<figure_fishing_boat>(get_figure_in_slot(BUILDING_SLOT_BOAT));
     if (!boat) {
         base.set_figure(BUILDING_SLOT_BOAT, 0);
     }
+}
+
+void building_fishing_wharf::update_month() {
+    building_wharf::update_month();
+
+    map_water_update_docking_points(base, get_orientation(), 1);
 }
 
 void building_fishing_wharf::update_graphic() {
@@ -184,7 +190,7 @@ void info_window_fishing_wharf::init(object_info &c) {
 
     building *b = c.building_get();
 
-    std::pair<int, int> reason = { c.group_id, 0 };
+    textid reason = { c.group_id, 0 };
     if (!c.has_road_access) {
         reason = { 69, 25 };
     } else if (!b->get_figure(BUILDING_SLOT_BOAT)->is_valid()) {
@@ -192,16 +198,16 @@ void info_window_fishing_wharf::init(object_info &c) {
     } else {
         figure *boat = b->get_figure(BUILDING_SLOT_BOAT);
         switch (boat->action_state) {
-        case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH: reason.second = 3; break;
-        case FIGURE_ACTION_192_FISHING_BOAT_FISHING: reason.second = 4; break;
-        case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF: reason.second = 5; break;
-        case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: reason.second = 6; break;
-        case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH: reason.second = 7; break;
-        default: reason.second = 8; break;
+        case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH: reason.id = 3; break;
+        case FIGURE_ACTION_192_FISHING_BOAT_FISHING: reason.id = 4; break;
+        case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF: reason.id = 5; break;
+        case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: reason.id = 6; break;
+        case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH: reason.id = 7; break;
+        default: reason.id = 8; break;
         }
     }
 
     ui["resource_img"].image(RESOURCE_FISH);
-    ui["warning_text"] = ui::str(reason.first, reason.second);
+    ui["warning_text"] = reason;
     ui["storage_desc"].text_var("Stored fish %d", b->stored_amount_first);
 }
