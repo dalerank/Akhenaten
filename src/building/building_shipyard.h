@@ -18,6 +18,7 @@ public:
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void update_day() override;
+    virtual void update_month() override;
     virtual void update_graphic() override;
     virtual void update_count() const override;
     virtual void spawn_figure() override;

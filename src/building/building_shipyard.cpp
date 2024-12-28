@@ -87,6 +87,8 @@ void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.dock.orientation);
     iob->bind(BIND_SIGNATURE_UINT8, &data.dock.process_type);
     iob->bind(BIND_SIGNATURE_UINT8, &data.dock.reparing);
+    iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[0]);
+    iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[1]);
 }
 
 void building_shipyard::update_map_orientation(int orientation) {
@@ -178,6 +180,12 @@ void building_shipyard::update_day() {
             return;
         }
     }
+}
+
+void building_shipyard::update_month() {
+    building_industry::update_month();
+
+    map_water_update_docking_points(base, get_orientation(), 2);
 }
 
 void building_shipyard::update_graphic() {
