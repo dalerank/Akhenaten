@@ -31,11 +31,11 @@ else()
         endif()
 
         set(CPPTRACE_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/cpptrace")
-        set(CPPTRACE_CHECK_PATH "${CPPTRACE_EXT_PATH}/include/cpptrace.hpp")
+        set(CPPTRACE_CHECK_PATH "${CPPTRACE_EXT_PATH}/include/cpptrace/cpptrace.hpp")
 
         if (EXISTS "${CPPTRACE_CHECK_PATH}")
             add_definitions(-DCPPTRACE_ENABLED=ON)
-            include_directories(${PROJECT_SOURCE_DIR}/ext/cpptrace/include)
+            include_directories(${PROJECT_SOURCE_DIR}/ext/cpptrace/include/cpptrace)
             file(GLOB CPPTRACE_FILES ${CPPTRACE_EXT_PATH}/src/cpptrace.cpp)
             # set(CPPTRACE_LIBRARY cpptrace)
             add_subdirectory(ext/cpptrace)
