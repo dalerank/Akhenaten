@@ -35,7 +35,7 @@ else()
 
         if (EXISTS "${CPPTRACE_CHECK_PATH}")
             add_definitions(-DCPPTRACE_ENABLED=ON)
-            include_directories(${CPPTRACE_EXT_PATH})
+            include_directories(${PROJECT_SOURCE_DIR}/ext/cpptrace/include)
             file(GLOB CPPTRACE_FILES ${CPPTRACE_EXT_PATH}/src/cpptrace.cpp)
             add_subdirectory(ext/cpptrace)
         endif()
