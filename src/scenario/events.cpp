@@ -32,22 +32,42 @@ struct events_data_t {
 
 events_data_t g_scenario_events;
 
+void event_manager_t::load_mission_event(archive arch, event_ph_t &ev) {
+    ev.type = arch.r_type<e_event_type>("type");
+    ev.time.value = arch.r_int("year");
+    ev.amount.value = arch.r_int("amount");
+    ev.month = arch.r_int("month");
+    
+    switch (ev.type) {
+    case EVENT_TYPE_REQUEST:
+        ev.item.value = arch.r_type<e_resource>("resource");
+        break;
+    case EVENT_TYPE_INVASION:
+        ev.item.value = arch.r_int("item");
+        break;
+    }
+}
+
 void event_manager_t::load_mission_metadata(const mission_id_t &missionid) {
-    g_config_arch.r_section(missionid, [] (archive arch) {
+    auto &ev_mgr = *this;
+    auto &sc_events = g_scenario_events;
+
+    g_config_arch.r_section(missionid, [&] (archive arch) {
         const bool enable_scenario_events = arch.r_bool("enable_scenario_events");
         if (!enable_scenario_events) {
             return;
         }
 
-        auto &data = g_scenario_events;
-        data.event_list.clear();
+        sc_events.event_list.clear();
 
-        arch.r_array("events", [&data] (archive arch) {
-            data.event_list.push_back({});
-            auto &item = data.event_list.back();
+        arch.r_array("events", [&] (archive arch) {
+            sc_events.event_list.push_back({});
+            auto &item = sc_events.event_list.back();
+            ev_mgr.load_mission_event(arch, item);
         });
+
         // first element should contain number of all elements
-        data.event_list.front().num_total_header = data.event_list.size();
+        sc_events.event_list.front().num_total_header = sc_events.event_list.size();
     });
 }
 

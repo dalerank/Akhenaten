@@ -254,10 +254,18 @@ mission7 = { // Abydos
 	enable_scenario_events : false,
 	events : [
 		{
+			type: EVENT_TYPE_REQUEST,
 			year : 2684,
-			resource : "pottery",
+			month : 1,
+			resource : RESOURCE_POTTERY,
 			amount : 1400,
 			deadline : 9,
+		},
+
+		{
+			type: EVENT_TYPE_INVASION,
+			year : 2670,
+			month : 2,
 		},
 	],
 

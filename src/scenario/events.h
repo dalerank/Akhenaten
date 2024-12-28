@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/archive.h"
 #include "core/bstring.h"
 #include "core/tokenum.h"
 #include "game/simulation_time.h"
@@ -197,4 +198,5 @@ struct event_manager_t {
     bool msg_load();
     bool msg_auto_phrases_load();
     void load_mission_metadata(const mission_id_t &missionid);
+    void load_mission_event(archive arch, event_ph_t &ev);
 };

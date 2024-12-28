@@ -9,6 +9,7 @@
 #include "building/building.h"
 #include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
+#include "scenario/events.h"
 #include "graphics/font.h"
 #include "city/labor.h"
 #include "city/constants.h"
@@ -131,6 +132,10 @@ void js_register_city_labor_category(js_State *J) {
 void js_register_city_overlays(js_State *J) {
     js_register_tokens(J, e_overlay_tokens);
     js_register_tokens(J, e_column_type_tokens);
+}
+
+void js_registere_event_type(js_State *J) {
+    js_register_tokens(J, e_event_type_tokens);
 }
 
 void js_register_terrain(js_State *J) {
