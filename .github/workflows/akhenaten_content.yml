@@ -28,6 +28,7 @@ jobs:
         cp ./build/akhenaten ./artifacts/akhenaten.linux
         zip -r linux_build.zip ./artifacts
         wget https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip
+        wget https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/macos_build.zip
         unzip windows_build.zip -d artifacts
     - uses: actions/upload-artifact@v3
       with:
@@ -47,3 +48,10 @@ jobs:
         itchUsername: dalerank
         itchGameId: akhenaten
         buildChannel: linux
+    - uses: KikimoraGames/itch-publish@v0.0.3
+      with:
+        butlerApiKey: ${{ secrets.ITCHIO }}
+        gameData: macos_build.zip
+        itchUsername: dalerank
+        itchGameId: akhenaten
+        buildChannel: mac
