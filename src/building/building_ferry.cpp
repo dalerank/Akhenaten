@@ -17,6 +17,12 @@ void building_ferry::on_create(int orientation) {
     data.dock.orientation = orientation;
 }
 
+void building_ferry::update_month() {
+    building_impl::update_month();
+
+    map_water_update_docking_points(base, get_orientation(), 2);
+}
+
 void building_ferry::on_place_update_tiles(int orientation, int variant) {
     int img_id = anim(animkeys().base).first_img() + orientation;
     map_water_add_building(id(), tile(), size(), img_id);
@@ -52,7 +58,7 @@ bool building_ferry::force_draw_top_tile(painter &ctx, tile2i t, vec2i pixel, co
 void building_ferry::highlight_waypoints() {
     building_impl::highlight_waypoints();
 
-    ferry_tiles fpoints = map_water_docking_points(base, get_orientation());
+    docking_tiles fpoints = map_water_get_docking_points(base, get_orientation(), 1);
     map_highlight_set(fpoints.point_a, ehighligth_green);
     map_highlight_set(fpoints.point_b, ehighligth_green);
 }
@@ -60,6 +66,8 @@ void building_ferry::highlight_waypoints() {
 void building_ferry::bind_dynamic(io_buffer *iob, size_t verrsion) {
     iob->bind____skip(88);
     iob->bind(BIND_SIGNATURE_UINT8, &data.dock.orientation);
+    iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[0]);
+    iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[1]);
 }
 
 bool info_window_ferry::check(object_info &c) {
