@@ -15,12 +15,13 @@ void foreach_river_tile(T func) {
     }
 }
 
-struct ferry_tiles {
+struct docking_tiles {
     tile2i point_a = {-1, -1};
     tile2i point_b = {-1, -1};
 };
 
-ferry_tiles map_water_docking_points(building &b, int orientation);
+void map_water_update_docking_points(building &b, int orientation, int offset);
+docking_tiles map_water_get_docking_points(building &b, int orientation, int offset);
 bool map_water_is_point_inside(tile2i tile);
 
 void map_water_add_building(int building_id, tile2i tile, int size, int image_id, int ext_terrain_flags = 0);

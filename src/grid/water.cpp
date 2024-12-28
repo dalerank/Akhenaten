@@ -9,6 +9,7 @@
 #include "grid/point.h"
 #include "grid/property.h"
 #include "grid/terrain.h"
+#include "grid/routing/routing.h"
 
 #include <array>
 
@@ -45,30 +46,53 @@ void map_water_cache_river_tiles() {
     }
 }
 
-ferry_tiles map_water_docking_points(building &b, int orientation) {
+void map_water_update_docking_points(building &b, int orientation, int offset) {
+    tile2i river_entry = scenario_map_river_entry();
+    if (!river_entry.valid()) {
+        b.has_water_access = false;
+        b.has_open_water_access = false;
+        return;
+    }
+
+    map_routing_calculate_distances_water_boat(river_entry);
+
+    bool found = map_terrain_is_adjacent_to_open_water(b.tile, b.size);
+    b.has_water_access |= found;
+    b.has_open_water_access = found;
+    if (found) {
+        docking_tiles ppoints = map_water_get_docking_points(b, b.dcast()->get_orientation(), offset);
+        b.data.dock.dock_tiles[0] = ppoints.point_a.grid_offset();
+        b.data.dock.dock_tiles[1] = ppoints.point_b.grid_offset();
+    } else {
+        b.data.dock.dock_tiles[0] = -1;
+        b.data.dock.dock_tiles[1] = -1;
+    }
+}
+
+docking_tiles map_water_get_docking_points(building &b, int orientation, int offset) {
     const auto &params = building_impl::params(b.type);
     if (!params.check_water_access) {
         return {{-1, -1},{-1, -1}};
     }
 
-    ferry_tiles result;
+    docking_tiles result;
     const int bsize = params.building_size;
     switch (orientation) {
     case 0:
-        result.point_a = b.tile.shifted(1, -1);
-        result.point_b = b.tile.shifted(0, -1);
+        result.point_a = b.tile.shifted(1, -offset);
+        result.point_b = b.tile.shifted(0, -offset);
         break;
     case 1:
-        result.point_a = b.tile.shifted(bsize, 0);
-        result.point_b = b.tile.shifted(bsize, 1);
+        result.point_a = b.tile.shifted(bsize + (offset - 1), 0);
+        result.point_b = b.tile.shifted(bsize + (offset - 1), 1);
         break;
     case 2:
-        result.point_a = b.tile.shifted(0, bsize);
-        result.point_b = b.tile.shifted(1, bsize);
+        result.point_a = b.tile.shifted(0, bsize + (offset - 1));
+        result.point_b = b.tile.shifted(1, bsize + (offset - 1));
         break;
     case 3:
-        result.point_a = b.tile.shifted(-1, 0);
-        result.point_b = b.tile.shifted(-1, 1);
+        result.point_a = b.tile.shifted(-offset, 0);
+        result.point_b = b.tile.shifted(-offset, 1);
         break;
     }
 
