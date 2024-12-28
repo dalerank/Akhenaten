@@ -152,9 +152,6 @@ void figure_warship::figure_action() {
     case FIGURE_ACTION_203_WARSHIP_MOORED: {
             int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
             int max_wait_ticks = 5 * (102 - pct_workers);
-            if (b->data.dock.has_fish) {
-                pct_workers = 0;
-            }
 
             if (pct_workers > 0) {
                 wait_ticks++;
@@ -194,6 +191,7 @@ void figure_warship::update_animation() {
     case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: anim_key = "idle"; break;
     case FIGURE_ACTION_205_WARSHIP_CREATED: anim_key = "idle"; break;
     case FIGURE_ACTION_209_WARSHIP_ON_PATROL: anim_key = "idle"; break;
+    case FIGURE_ACTION_203_WARSHIP_MOORED: anim_key = "idle"; break;
     }
 
     image_set_animation(anim_key);
