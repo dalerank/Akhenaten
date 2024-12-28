@@ -29,6 +29,7 @@ jobs:
         cd ..
         cmake --build ./build --target akhenaten --config RelWithDebInfo
         copy ./build/RelWithDebInfo/akhenaten.exe ./bin_x64/akhenaten.exe
+        copy ./build/RelWithDebInfo/akhenaten.pdb ./bin_x64/akhenaten.pdb
     - name: create-package
       shell: pwsh
       run: |
