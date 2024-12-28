@@ -31,12 +31,13 @@ else()
         endif()
 
         set(CPPTRACE_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/cpptrace")
-        set(CPPTRACE_CHECK_PATH "${CPPTRACE_EXT_PATH}/include/cpptrace/cpptrace.hpp")
+        set(CPPTRACE_CHECK_PATH "${CPPTRACE_EXT_PATH}/include/cpptrace.hpp")
 
         if (EXISTS "${CPPTRACE_CHECK_PATH}")
             add_definitions(-DCPPTRACE_ENABLED=ON)
             include_directories(${PROJECT_SOURCE_DIR}/ext/cpptrace/include)
-            set(CPPTRACE_LIBRARY cpptrace)
+            file(GLOB CPPTRACE_FILES ${CPPTRACE_EXT_PATH}/src/cpptrace.cpp)
+            # set(CPPTRACE_LIBRARY cpptrace)
             add_subdirectory(ext/cpptrace)
         endif()
     endif()
@@ -81,6 +82,8 @@ elseif(WIN_EMSCRIPTEN)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")
     set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -fno-exceptions -Wno-varargs -Wno-constant-conversion -Wno-non-pod-varargs --std=c++17 ${CMAKE_CXX_FLAGS} ${USE_FLAGS}")
+elseif(UNIX)
+    set(CMAKE_CXX_FLAGS "-fno-exceptions -static-libgcc --std=c++17 -static-libstdc++ ${CMAKE_CXX_FLAGS}")
 else()
     set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -fno-exceptions -static-libgcc --std=c++17 -static-libstdc++ ${CMAKE_CXX_FLAGS}")
 endif()
@@ -398,6 +401,7 @@ set(SOURCE_FILES
     ${JS_FILES}
     ${SCRIPTS_FILES}
     ${MACOSX_FILES}
+    ${CPPTRACE_FILES}
 )
 
 set(SCRIPTS_FOLDER ${PROJECT_SOURCE_DIR}/src/scripts)
