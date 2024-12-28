@@ -4,6 +4,7 @@
 #include "city/object_info.h"
 #include "city/city_resource.h"
 #include "input/input.h"
+#include "grid/water.h"
 #include "graphics/window.h"
 #include "building/common.h"
 #include "figure/figure.h"
@@ -26,6 +27,8 @@ void warshipwharf_info_window::init(object_info &c) {
     building_info_window::init(c);
 
     building *b = c.building_get();
+
+    map_water_update_docking_points(*b, b->dcast()->get_orientation(), 2);
 
     std::pair<int, int> reason = { c.group_id, 0 };
     if (!c.has_road_access) {

@@ -21,6 +21,8 @@ void building_wharf::on_place_update_tiles(int orientation, int variant) {
 
 void building_wharf::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.dock.orientation);
+    iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[0]);
+    iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[1]);
 }
 
 inline void building_wharf::on_tick(bool refresh_only) {
@@ -66,4 +68,10 @@ bool building_wharf::draw_ornaments_and_animations_height(painter &ctx, vec2i po
     }
 
     return true;
+}
+
+void building_transport_wharf::update_month() {
+    building_wharf::update_month();
+
+    map_water_update_docking_points(base, get_orientation(), 2);
 }

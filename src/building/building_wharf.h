@@ -28,6 +28,8 @@ public:
         virtual void load(archive arch) override;
     };
 
+    virtual void update_month() override;
+
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 

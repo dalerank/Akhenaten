@@ -70,4 +70,6 @@ void building_warship_wharf::update_month() {
             g_city.buildings.request_warship_boat();
         }
     }
+
+    map_water_update_docking_points(base, get_orientation(), 2);
 }
