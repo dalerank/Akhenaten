@@ -60,6 +60,12 @@ void building_dock::update_count() const {
     g_city.buildings.track_building(base, is_active);
 }
 
+void building_dock::update_month() {
+    building_impl::update_month();
+
+    map_water_update_docking_points(base, get_orientation(), 2);
+}
+
 void building_dock::update_map_orientation(int orientation) {
     int image_offset = city_view_relative_orientation(data.dock.orientation);
     int image_id = anim(animkeys().base).first_img() + image_offset;
@@ -170,9 +176,11 @@ void building_dock::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT8, &data.dock.orientation);
     iob->bind____skip(3);
-    for (int i = 0; i < 3; i++) {
-        iob->bind(BIND_SIGNATURE_INT16, &data.dock.docker_ids[i]);
-    }
+
+    iob->bind(BIND_SIGNATURE_INT16, &data.dock.docker_ids[0]);
+    iob->bind(BIND_SIGNATURE_INT16, &data.dock.docker_ids[1]);
+    iob->bind(BIND_SIGNATURE_INT16, &data.dock.docker_ids[2]);
+
     iob->bind(BIND_SIGNATURE_INT16, &data.dock.trade_ship_id);
 }
 
