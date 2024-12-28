@@ -753,6 +753,7 @@ bool building_monument_need_bricklayers(const building *b) {
 
     switch (b->type) {
     case BUILDING_SMALL_MASTABA:
+    case BUILDING_MEDIUM_MASTABA:
         return (phase >= 2 && phase <= 5 && works_bricklayers < building_monument_needs_bricklayers(b->type, b->data.monuments.phase));
 
     default:

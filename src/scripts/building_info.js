@@ -626,13 +626,14 @@ building_guild_stonemasons = {
   building_size : 2,
 }
 
-building_bricklayers_guild = {
+building building_bricklayers_guild = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:57 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:57 },
     work : { pos : [75, -14], pack:PACK_GENERAL, id:57, offset:1, max_frames:12, duration:4 }
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+  input_resource : RESOURCE_BRICKS,
   info_help_id:92,
   info_text_id:172,
   building_size : 2,

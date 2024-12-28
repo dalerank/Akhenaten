@@ -1565,6 +1565,12 @@ window brickworks_info_window = {
 	})
 }
 
+window building_bricklayers_guild_info_window = {
+	ui : __baseui(workshop_info_window, {
+
+	})
+}
+
 window well_info_window = {
 	ui : {
 		background    : outer_panel({size: [29, 14] }),

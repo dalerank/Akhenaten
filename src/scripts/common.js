@@ -69,7 +69,6 @@ var building_wood_cutter = {}
 var building_water_supply = {}
 var building_well = {}
 var building_guild_stonemasons = {}
-var building_bricklayers_guild = {}
 var building_carpenters_guild = {}
 var building_tax_collector = {}
 var building_tax_collector_up = {}
