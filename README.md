@@ -30,7 +30,7 @@ For the official upcoming remaster (unrelated to Akhenaten) called _A New Era_, 
 | Platform       | Latest release | Unstable build |
 | -------------- | -------------- | -------------- |
 | Windows        | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Windows/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip)  |
-| Linux AppImage | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Linux/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_linux/master/linux_build.zip)        |
+| Linux binary | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Linux/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_linux/master/linux_build.zip)        |
 | Mac            | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Mac/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac/master/macos_build.zip)            |
 | Android        | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Android/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_android/master/apk.zip) |
 | Flatpak        | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Linux%20%28Flatpak%29/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_flatpak/master/akhenaten.flatpak.zip) |
@@ -63,7 +63,7 @@ To build with your favorite IDE, just import the cmakelists.txt file as a projec
 - Clone the repository
 - Install [CMake](https://cmake.org/download/#latest)
 - From the project's root folder execute, in order:
-  
+
   ```
   mkdir build
   cd build
@@ -79,26 +79,54 @@ To run the engine, you'll also need the necessary dynamic libraries in the same 
 
 ### Linux
 
-Only tested on Manjaro, but under Ubuntu or similar you should install the same packages:
+#### Building from source
 
 - Clone the repository
 
 - From the root folder execute:
-  
+
   ```
   $ ./update-workspace-linux.sh
   $ cmake --build ./build --target clean
   $ cmake --build ./build
   ```
 
-### MacOS
+  * The script assumes that you are running Ubuntu. On other distributions you could find and install relevant packages manually and then run these commands instead of the script:
+    ```
+    mkdir build
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+    cd ..
+    ```
 
-Only tested on Manjaro, but under Ubuntu or similar you should install the same packages:
+#### Running the binary
+
+##### Installing dependencies
+
+On Ubuntu and other `deb` distributions:
+
+`sudo apt install libsdl2-2.0.0 libsdl2-mixer-2.0.0`
+
+On Fedora and other `rpm` distributions:
+
+`sudo yum install SDL2 SDL2_mixer`
+
+##### Running the game
+
+Assuming the zip file is in your Downloads directory:
+```
+cd ~/Downloads
+unzip akhenaten_linux.zip
+chmod +x akhenaten.linux
+./akhenaten.linux
+```
+
+### MacOS
 
 - Clone the repository
 
 - From the root folder execute:
-  
+
   ```
   $ ./update-workspace-mac.sh
   $ cmake --build ./build --target clean
