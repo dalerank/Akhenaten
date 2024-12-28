@@ -192,7 +192,7 @@ struct city_t {
         int16_t mothballed[RESOURCES_MAX];
         int16_t unk_00[RESOURCES_MAX];
 
-        int32_t wine_types_available;
+        uint8_t wine_types_available;
         int8_t food_types_available_arr[RESOURCES_FOODS_MAX];
         int8_t food_types_eaten_arr[RESOURCES_FOODS_MAX];
         e_resource food_types_allowed[RESOURCES_FOODS_MAX];
@@ -246,10 +246,10 @@ struct city_t {
         int32_t has_won;
         int32_t continue_months_left;
         int32_t continue_months_chosen;
-        int32_t fired_message_shown;
-        int32_t victory_message_shown;
-        int32_t start_saved_game_written;
-        int32_t tutorial_fire_message_shown;
+        bool fired_message_shown;
+        bool victory_message_shown;
+        bool start_saved_game_written;
+        bool tutorial_fire_message_shown;
         int32_t tutorial_disease_message_shown;
         int32_t tutorial_senate_built;
     } mission;

@@ -12,9 +12,9 @@ struct city_entertainment_t {
     int32_t senet_house_plays;
     int32_t senet_house_no_shows_weighted;
     int32_t venue_needing_shows;
-    int32_t senet_house_has_plays;
-    int32_t senet_house_message_shown;
-    int32_t pavilion_message_shown;
+    bool senet_house_has_plays;
+    bool senet_house_message_shown;
+    bool pavilion_message_shown;
 
     void calculate_shows();
     int show_message_pavilion();
