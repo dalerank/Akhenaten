@@ -76,35 +76,7 @@ void sig_handler(int /* signal */) {
 #ifdef CPPTRACE_ENABLED
     auto const trace = cpptrace::generate_trace();
     std::ostringstream output_stream;
-
-    auto const frame_number_width = std::to_string(static_cast<int>(trace.size()) - 1).length();
-    std::size_t counter = 0;
-
-    output_stream << "Stack Trace:";
-    for (auto const& frame: trace)
-    {
-        output_stream
-            << "\n#"
-            << std::setw(static_cast<int>(frame_number_width))
-            << std::left
-            << counter++
-            << std::right
-            << " "
-            << std::hex
-            << "0x"
-            << std::setw(2 * sizeof(uintptr_t))
-            << std::setfill('0')
-            << frame.address
-            << std::dec
-            << std::setfill(' ')
-            << " in "
-            << frame.symbol
-            << " at "
-            << frame.filename
-            << ":"
-            << frame.line
-            << (frame.col > 0 ? ":" + std::to_string(frame.col): "");
-    }
+    trace.print_with_snippets(output_stream);
 
     logs::critical(output_stream.str().c_str());
 #endif // CPPTRACE_ENABLED

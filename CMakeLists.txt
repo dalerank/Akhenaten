@@ -50,6 +50,9 @@ else()
         endif()
 
         if (NOT (MSVC OR WIN_EMSCRIPTEN))
+            add_definitions(-DCPPTRACE_ENABLED=ON)
+            add_definitions(-DCPPTRACE_STATIC_DEFINE)
+
             include(FetchContent)
             FetchContent_Declare(
                     cpptrace
