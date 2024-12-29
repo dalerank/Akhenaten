@@ -14,7 +14,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-        submodules: true
     - name: update-workspace
       run: |
         sudo apt -qq update

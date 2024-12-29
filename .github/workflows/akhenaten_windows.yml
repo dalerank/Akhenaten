@@ -18,8 +18,6 @@ jobs:
     - name: update-workspace
       shell: pwsh
       run: |
-        git submodule init
-        git submodule update ext/cpptrace
         mkdir build
         mkdir bin_x64
     - name: build-project
