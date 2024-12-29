@@ -18,6 +18,25 @@ else()
 endif()
 
 #
+# Akhenaten
+#
+
+set(GAME akhenaten)
+project(${GAME} CXX)
+message("C++ compiler is ${CMAKE_CXX_COMPILER_ID}" )
+
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+  set(GAME_ARCH_64 TRUE)
+  set(GAME_PROCESSOR_ARCH "x64")
+else()
+  set(GAME_ARCH_64 FALSE)
+  set(GAME_PROCESSOR_ARCH "x86")
+endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include("${CMAKE_MODULE_PATH}/CMakeRC.cmake")
+
+#
 # CppTrace
 #
 
@@ -36,30 +55,13 @@ else()
         if (EXISTS "${CPPTRACE_CHECK_PATH}")
             add_definitions(-DCPPTRACE_ENABLED=ON)
             include_directories(${PROJECT_SOURCE_DIR}/ext/cpptrace/include)
+            add_library(cpptrace STATIC ${CPPTRACE_EXT_PATH}/src/cpptrace.cpp)
+            set(CPPTRACE_LIBRARY cpptrace::cpptrace)
+            find_package(cpptrace REQUIRED PATHS ${CMAKE_BINARY_DIR}/ext/cpptrace)
             file(GLOB CPPTRACE_FILES ${CPPTRACE_EXT_PATH}/src/cpptrace.cpp)
-            add_subdirectory(ext/cpptrace)
         endif()
     endif()
 endif()
-
-#
-# Akhenaten
-#
-
-set(GAME akhenaten)
-project(${GAME} CXX)
-message("C++ compiler is ${CMAKE_CXX_COMPILER_ID}" )
-
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-  set(GAME_ARCH_64 TRUE)
-  set(GAME_PROCESSOR_ARCH "x64")
-else()
-  set(GAME_ARCH_64 FALSE)
-  set(GAME_PROCESSOR_ARCH "x86")
-endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
-
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-include("${CMAKE_MODULE_PATH}/CMakeRC.cmake")
 
 if (MSVC)
     add_compile_options(/wd4244)
@@ -503,13 +505,13 @@ if(APPLE)
     " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
 
     # perform ad-hoc codesigning
-	set(codesignCommand "codesign --verbose=4 --force --deep --options=runtime --timestamp=none --sign -")
-	set(codesignCommandWithEntitlements "${codesignCommand} --entitlements \"${PROJECT_SOURCE_DIR}/res/macos/Entitlements.plist\"")
-	install(CODE "
-		execute_process(COMMAND
-			${codesignCommandWithEntitlements} \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}\"
-		)
-	")
+    set(codesignCommand "codesign --verbose=4 --force --deep --options=runtime --timestamp=none --sign -")
+    set(codesignCommandWithEntitlements "${codesignCommand} --entitlements \"${PROJECT_SOURCE_DIR}/res/macos/Entitlements.plist\"")
+    install(CODE "
+        execute_process(COMMAND
+            ${codesignCommandWithEntitlements} \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}\"
+        )
+    ")
 endif()
 
 include_directories(${SDL2_INCLUDE_DIR})
