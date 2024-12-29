@@ -49,18 +49,16 @@ else()
             add_link_options(-fsanitize=address)
         endif()
 
-        if (NOT (MSVC OR WIN_EMSCRIPTEN))
-            add_definitions(-DCPPTRACE_ENABLED=ON)
-            add_definitions(-DCPPTRACE_STATIC_DEFINE)
+        add_definitions(-DCPPTRACE_ENABLED=ON)
+        add_definitions(-DCPPTRACE_STATIC_DEFINE)
 
-            include(FetchContent)
-            FetchContent_Declare(
-                    cpptrace
-                    GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
-                    GIT_TAG        v0.7.4 # <HASH or TAG>
-            )
-            FetchContent_MakeAvailable(cpptrace)
-        endif ()
+        include(FetchContent)
+        FetchContent_Declare(
+                cpptrace
+                GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
+                GIT_TAG        v0.7.4 # <HASH or TAG>
+        )
+        FetchContent_MakeAvailable(cpptrace)
 
         set(CPPTRACE_LIBRARY cpptrace::cpptrace)
     endif()
