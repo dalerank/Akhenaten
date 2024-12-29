@@ -200,7 +200,7 @@ static void menu_debug_opt_text(int opt, bool v) {
         {"Screenshot", "Screenshot"},
         {"Full Screenshot", "Full Screenshot"},
         {"Write Video ON", "Write Video OFF"},
-        {"Don't click this button", "Don't click this button"},
+        {"Don't touch this button", "Don't touch this button"},
     };
     const auto &current = debug_text_opt[opt];
     g_top_menu.menu_item_update("debug", opt, v ? current.on : current.off);
@@ -216,6 +216,11 @@ static void menu_debug_full_screenshot(int opt) {
     widget_top_menu_clear_state();
     window_go_back();
     graphics_save_screenshot(SCREENSHOT_FULL_CITY);
+}
+
+static void cause_exception() {
+    const int *p = nullptr;
+    std::cout << *p;
 }
 
 static void menu_debug_change_opt(menu_item &item) {
@@ -238,8 +243,7 @@ static void menu_debug_change_opt(menu_item &item) {
         g_debug_show_opts[opt] = game.get_write_video();
         break;
 
-    case e_debug_cause_exception:
-        assert(1 == 2);
+    case e_debug_cause_exception: cause_exception(); break;
 
     default:
         g_debug_show_opts[opt] = !g_debug_show_opts[opt];
