@@ -56,8 +56,6 @@ else()
             add_definitions(-DCPPTRACE_ENABLED=ON)
             include_directories(${PROJECT_SOURCE_DIR}/ext/cpptrace/include)
             add_library(cpptrace STATIC ${CPPTRACE_EXT_PATH}/src/cpptrace.cpp)
-            set(CPPTRACE_LIBRARY cpptrace::cpptrace)
-            find_package(cpptrace REQUIRED PATHS ${CMAKE_BINARY_DIR}/ext/cpptrace)
             file(GLOB CPPTRACE_FILES ${CPPTRACE_EXT_PATH}/src/cpptrace.cpp)
         endif()
     endif()
@@ -544,6 +542,11 @@ endif()
 if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
     target_link_libraries(${GAME} m)
 endif()
+
+if (EXISTS "${CPPTRACE_CHECK_PATH}")
+    find_package(cpptrace REQUIRED PATHS ${CMAKE_CURRENT_BINARY_DIR}/ext/cpptrace)
+    set(CPPTRACE_LIBRARY cpptrace::cpptrace)
+endif ()
 
 target_link_libraries (${GAME}
                         ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
