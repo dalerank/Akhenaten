@@ -49,15 +49,17 @@ else()
             add_link_options(-fsanitize=address)
         endif()
 
-        set(CPPTRACE_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/cpptrace")
-        set(CPPTRACE_CHECK_PATH "${CPPTRACE_EXT_PATH}/include/cpptrace/cpptrace.hpp")
+        if (NOT (MSVC OR WIN_EMSCRIPTEN))
+            include(FetchContent)
+            FetchContent_Declare(
+                    cpptrace
+                    GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
+                    GIT_TAG        v0.7.4 # <HASH or TAG>
+            )
+            FetchContent_MakeAvailable(cpptrace)
+        endif ()
 
-        if (EXISTS "${CPPTRACE_CHECK_PATH}")
-            add_definitions(-DCPPTRACE_ENABLED=ON)
-            include_directories(${PROJECT_SOURCE_DIR}/ext/cpptrace/include)
-            add_library(cpptrace STATIC ${CPPTRACE_EXT_PATH}/src/cpptrace.cpp)
-            file(GLOB CPPTRACE_FILES ${CPPTRACE_EXT_PATH}/src/cpptrace.cpp)
-        endif()
+        set(CPPTRACE_LIBRARY cpptrace::cpptrace)
     endif()
 endif()
 
@@ -542,11 +544,6 @@ endif()
 if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
     target_link_libraries(${GAME} m)
 endif()
-
-if (EXISTS "${CPPTRACE_CHECK_PATH}")
-    find_package(cpptrace REQUIRED PATHS ${CMAKE_CURRENT_BINARY_DIR}/ext/cpptrace)
-    set(CPPTRACE_LIBRARY cpptrace::cpptrace)
-endif ()
 
 target_link_libraries (${GAME}
                         ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
