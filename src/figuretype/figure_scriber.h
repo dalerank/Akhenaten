@@ -9,7 +9,7 @@ public:
 
     virtual void on_create() override {}
     virtual void figure_action() override;
-    virtual e_figure_sound phrase() const override { return {FIGURE_SCRIBER, "scribe"}; }
+    virtual figure_phrase_t phrase() const override { return {FIGURE_SCRIBER, "scribe"}; }
     //virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_SCRIBAL_SCHOOL; }

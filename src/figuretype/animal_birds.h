@@ -8,7 +8,7 @@ public:
     figure_birds(figure *f) : figure_impl(f) {}
 
     virtual void figure_action() override;
-    virtual e_figure_sound phrase() const override { return {FIGURE_BIRDS, "birds"}; }
+    virtual figure_phrase_t phrase() const override { return {FIGURE_BIRDS, "birds"}; }
     virtual void update_animation() override;
     virtual void before_poof() override;
     virtual bool play_die_sound() override;

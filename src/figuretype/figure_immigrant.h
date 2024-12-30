@@ -13,7 +13,7 @@ public:
     virtual void update_animation() override;
     virtual bool can_move_by_water() const override;
     virtual int y_correction(int y) const override { return 10; }
-    virtual e_figure_sound phrase() const override { return {FIGURE_IMMIGRANT, "immigrant"}; }
+    virtual figure_phrase_t phrase() const override { return {FIGURE_IMMIGRANT, "immigrant"}; }
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
     virtual sound_key phrase_key() const override;
     virtual const animations_t &anim() const override;

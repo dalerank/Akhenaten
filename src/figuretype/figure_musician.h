@@ -11,7 +11,7 @@ public:
     virtual void update_shows() override;
     virtual figure_musician *dcast_musician() { return this; }
     virtual svector<e_building_type, 4> allow_venue_types() const override;
-    virtual e_figure_sound phrase() const override { return {FIGURE_MUSICIAN, "musician"}; }
+    virtual figure_phrase_t phrase() const override { return {FIGURE_MUSICIAN, "musician"}; }
     virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_BANDSTAND; }

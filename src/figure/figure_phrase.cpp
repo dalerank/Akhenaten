@@ -24,7 +24,7 @@
 
 #include <string.h>
 
-static e_figure_sound g_figure_sounds[] = {
+static figure_phrase_t g_figure_sounds[] = {
     {FIGURE_NONE, "artisan"},
     {FIGURE_NONE, "carpenter"},
     {FIGURE_NONE, "desease"},
@@ -173,8 +173,8 @@ static int figure_play_phrase_file(figure *f, e_figure_type type, xstring key) {
     if (type >= 0) {
         auto type_it = std::find_if(std::begin(g_figure_sounds), std::end(g_figure_sounds), [type] (auto &t) { return t.type == type; });
 
-        e_figure_sound phrase = (type_it == std::end(g_figure_sounds))
-                                   ? e_figure_sound{FIGURE_NONE, ""}
+        figure_phrase_t phrase = (type_it == std::end(g_figure_sounds))
+                                   ? figure_phrase_t{FIGURE_NONE, ""}
                                    : *type_it;
 
         if (phrase.type == FIGURE_NONE) {

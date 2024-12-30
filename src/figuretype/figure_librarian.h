@@ -8,7 +8,7 @@ public:
     figure_librarian(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}
-    virtual e_figure_sound phrase() const override { return {FIGURE_LIBRARIAN, "library"}; }
+    virtual figure_phrase_t phrase() const override { return {FIGURE_LIBRARIAN, "library"}; }
     //virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_LIBRARY; }

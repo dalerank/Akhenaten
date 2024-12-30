@@ -24,7 +24,7 @@ public:
     virtual void update_animation() override;
     virtual void poof() override;
     virtual const animations_t &anim() const override;
-    virtual e_figure_sound phrase() const override { return {FIGURE_TRADE_SHIP, "barge"}; }
+    virtual figure_phrase_t phrase() const override { return {FIGURE_TRADE_SHIP, "barge"}; }
     virtual bool window_info_background(object_info &c) override;
     virtual void update_day() override;
 

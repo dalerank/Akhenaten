@@ -23,7 +23,7 @@ public:
     FIGURE_METAINFO(FIGURE_INFANTRY, figure_soldier_infantry);
     figure_soldier_infantry(figure *f) : figure_soldier(f) {}
 
-    virtual e_figure_sound phrase() const override { return {FIGURE_INFANTRY, "infantry"}; }
+    virtual figure_phrase_t phrase() const override { return {FIGURE_INFANTRY, "infantry"}; }
     virtual void update_image(const formation *m, int &dir) override;
 };
 

@@ -15,7 +15,7 @@ public:
     virtual void on_create() override {}
     virtual void figure_action() override;
     virtual void figure_before_action() override;
-    virtual e_figure_sound phrase() const override { return {FIGURE_TRADE_CARAVAN_DONKEY, "donkey"}; }
+    virtual figure_phrase_t phrase() const override { return {FIGURE_TRADE_CARAVAN_DONKEY, "donkey"}; }
     virtual void update_animation() override;
 
     figure *get_head_of_caravan();

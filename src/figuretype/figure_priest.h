@@ -9,7 +9,7 @@ public:
 
     virtual void figure_before_action() override;
     virtual void figure_action() override;
-    virtual e_figure_sound phrase() const override { return {FIGURE_PRIEST, "priest"}; }
+    virtual figure_phrase_t phrase() const override { return {FIGURE_PRIEST, "priest"}; }
     virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
     virtual e_overlay get_overlay() const override;
@@ -26,7 +26,7 @@ public:
     virtual void figure_before_action() override {}
     virtual void figure_action() override;
     virtual void before_poof() override;
-    virtual e_figure_sound phrase() const override { return {FIGURE_FESTIVAL_PRIEST, "festival"}; }
+    virtual figure_phrase_t phrase() const override { return {FIGURE_FESTIVAL_PRIEST, "festival"}; }
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION; }
     virtual const animations_t &anim() const override;
 };

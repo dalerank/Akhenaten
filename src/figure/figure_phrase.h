@@ -5,7 +5,7 @@
 
 using sound_key = bstring64;
 
-struct e_figure_sound {
+struct figure_phrase_t {
     e_figure_type type;
     sound_key prefix;
 };

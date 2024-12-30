@@ -9,7 +9,7 @@ public:
 
     virtual void on_create() override {}
     virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) override;
-    virtual e_figure_sound phrase() const override { return {FIGURE_DOCKER, "dock_pusher"}; }
+    virtual figure_phrase_t phrase() const override { return {FIGURE_DOCKER, "dock_pusher"}; }
     virtual void on_destroy() override;
     virtual void figure_action() override;
     virtual sound_key phrase_key() const override;
