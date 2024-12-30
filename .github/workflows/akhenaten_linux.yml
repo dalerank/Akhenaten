@@ -11,7 +11,7 @@ jobs:
     name: run on linux
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - name: update-workspace
@@ -20,7 +20,6 @@ jobs:
         sudo apt install --yes cmake build-essential libsdl2-dev libsdl2-mixer-dev libsdl2-image-dev
     - name: build-project
       run: |
-        git submodule init && git submodule update ext/cpptrace
         mkdir build
         mkdir linux_build
         cd build
@@ -28,7 +27,7 @@ jobs:
         cd ..
         cmake --build ./build
         cp ./build/akhenaten ./linux_build/akhenaten.linux
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: linux_build
         path: linux_build

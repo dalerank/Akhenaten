@@ -18,31 +18,6 @@ else()
 endif()
 
 #
-# CppTrace
-#
-
-if(PLATFORM_ANDROID)
-    # no cpptrace for android, baa...
-else()
-    if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
-        if (APPLE AND CMAKE_BUILD_TYPE STREQUAL "Debug") # Get meaningful trace on memory access errors etc.
-            add_compile_options(-fsanitize=address)
-            add_link_options(-fsanitize=address)
-        endif()
-
-        set(CPPTRACE_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/cpptrace")
-        set(CPPTRACE_CHECK_PATH "${CPPTRACE_EXT_PATH}/include/cpptrace/cpptrace.hpp")
-
-        if (EXISTS "${CPPTRACE_CHECK_PATH}")
-            add_definitions(-DCPPTRACE_ENABLED=ON)
-            include_directories(${PROJECT_SOURCE_DIR}/ext/cpptrace/include)
-            set(CPPTRACE_LIBRARY cpptrace)
-            add_subdirectory(ext/cpptrace)
-        endif()
-    endif()
-endif()
-
-#
 # Akhenaten
 #
 
@@ -60,6 +35,34 @@ endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include("${CMAKE_MODULE_PATH}/CMakeRC.cmake")
+
+#
+# CppTrace
+#
+
+if(PLATFORM_ANDROID)
+    # no cpptrace for android, baa...
+else()
+    if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+        if (APPLE AND CMAKE_BUILD_TYPE STREQUAL "Debug") # Get meaningful trace on memory access errors etc.
+            add_compile_options(-fsanitize=address)
+            add_link_options(-fsanitize=address)
+        endif()
+
+        add_definitions(-DCPPTRACE_ENABLED=ON)
+        add_definitions(-DCPPTRACE_STATIC_DEFINE)
+
+        include(FetchContent)
+        FetchContent_Declare(
+                cpptrace
+                GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
+                GIT_TAG        v0.7.4 # <HASH or TAG>
+        )
+        FetchContent_MakeAvailable(cpptrace)
+
+        set(CPPTRACE_LIBRARY cpptrace::cpptrace)
+    endif()
+endif()
 
 if (MSVC)
     add_compile_options(/wd4244)
@@ -81,6 +84,8 @@ elseif(WIN_EMSCRIPTEN)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")
     set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -fno-exceptions -Wno-varargs -Wno-constant-conversion -Wno-non-pod-varargs --std=c++17 ${CMAKE_CXX_FLAGS} ${USE_FLAGS}")
+elseif(UNIX)
+    set(CMAKE_CXX_FLAGS "-fno-exceptions -static-libgcc --std=c++17 -static-libstdc++ ${CMAKE_CXX_FLAGS}")
 else()
     set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -fno-exceptions -static-libgcc --std=c++17 -static-libstdc++ ${CMAKE_CXX_FLAGS}")
 endif()
@@ -398,6 +403,7 @@ set(SOURCE_FILES
     ${JS_FILES}
     ${SCRIPTS_FILES}
     ${MACOSX_FILES}
+    ${CPPTRACE_FILES}
 )
 
 set(SCRIPTS_FOLDER ${PROJECT_SOURCE_DIR}/src/scripts)
@@ -500,13 +506,13 @@ if(APPLE)
     " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
 
     # perform ad-hoc codesigning
-	set(codesignCommand "codesign --verbose=4 --force --deep --options=runtime --timestamp=none --sign -")
-	set(codesignCommandWithEntitlements "${codesignCommand} --entitlements \"${PROJECT_SOURCE_DIR}/res/macos/Entitlements.plist\"")
-	install(CODE "
-		execute_process(COMMAND
-			${codesignCommandWithEntitlements} \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}\"
-		)
-	")
+    set(codesignCommand "codesign --verbose=4 --force --deep --options=runtime --timestamp=none --sign -")
+    set(codesignCommandWithEntitlements "${codesignCommand} --entitlements \"${PROJECT_SOURCE_DIR}/res/macos/Entitlements.plist\"")
+    install(CODE "
+        execute_process(COMMAND
+            ${codesignCommandWithEntitlements} \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}\"
+        )
+    ")
 endif()
 
 include_directories(${SDL2_INCLUDE_DIR})
