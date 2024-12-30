@@ -6,7 +6,7 @@
 
 struct figure_sound_t {
     xstring id;
-    bstring64 fname;
+    xstring fname;
     textid phrase;
     xstring phrase_key;
 
@@ -27,5 +27,5 @@ struct figure_sounds_t {
 };
 
 namespace snd {
-    bstring64 get_walker_reaction(xstring reaction);
+    xstring get_walker_reaction(xstring reaction);
 }

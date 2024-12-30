@@ -18,10 +18,10 @@ void config_load_walker_sounds() {
     });
 }
 
-bstring64 snd::get_walker_reaction(xstring reaction) {
+xstring snd::get_walker_reaction(xstring reaction) {
     auto it = std::find_if(g_walker_reaction.begin(), g_walker_reaction.end(), [reaction] (auto &it) { return it.id == reaction; });
 
-    return (it == g_walker_reaction.end()) ? bstring64() : it->fname;
+    return (it == g_walker_reaction.end()) ? xstring() : it->fname;
 }
 
 void figure_sound_t::load(archive arch) {

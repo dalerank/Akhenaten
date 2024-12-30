@@ -291,7 +291,7 @@ void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* c
 }
 
 figure_sound_t figure_impl::get_sound_reaction(xstring key) const {
-    pcstr fname = snd::get_walker_reaction(key);
+    const xstring fname = snd::get_walker_reaction(key);
     return {key, fname, 0, 0};
 }
 
