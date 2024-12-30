@@ -203,4 +203,11 @@ static void game_cheat_add_money(std::istream &is, std::ostream &os) {
     city_warning_show_console("Added money");
 }
 
+static void game_cheat_test_crash(std::istream &is, std::ostream &os) {
+    city_warning_show_console("Trying to crash the game");
+    const int *p = nullptr;
+    std::cout << *p;
+}
+
 declare_console_command(addmoney, game_cheat_add_money);
+declare_console_command_p(crashme, game_cheat_test_crash);

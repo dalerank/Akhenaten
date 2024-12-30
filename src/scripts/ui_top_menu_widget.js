@@ -78,7 +78,6 @@ window top_menu_widget = {
 		make_screenshot : menu_item({text: "", parameter: 13}),
 		make_full_screenshot : menu_item({text: "", parameter: 14}),
 		write_video     : menu_item({text: "", parameter: 15}),
-		cause_exception : menu_item({text: "", parameter: 16})
 	},
 
 	debug_render : {
