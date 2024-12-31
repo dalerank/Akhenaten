@@ -6,7 +6,7 @@ function menu_header(config) { return __extend({ type : "menu_header"}, config) 
 window top_menu_widget = {
 	offset : [10, 6],
 	item_height : 20,
-	background: IMG_TOP_MENU_BACKGROUND,
+	background: { pack:PACK_GENERAL, id:121, offset:8 },
 	sidebar_offset : 158,
 	spacing : 32,
 	offset_rotate_basic : 200,

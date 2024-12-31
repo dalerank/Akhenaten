@@ -60,7 +60,7 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     int item_height;
     int spacing;
     int sidebar_offset;
-    e_image_id background;
+    image_desc background;
 
     ui::widget headers;
 
@@ -77,7 +77,7 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
 
         offset = arch.r_vec2i("offset");
         item_height = arch.r_int("item_height");
-        background = (e_image_id)arch.r_int("background");
+        arch.r_desc("background", background);
         spacing = arch.r_int("spacing");
         offset_rotate_basic = arch.r_int("offset_rotate_basic");
         sidebar_offset = arch.r_int("sidebar_offset");
