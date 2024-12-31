@@ -28,7 +28,8 @@ Arguments g_args;
 
 namespace {
 
-char const* const CFG_FILE_NAME = "akhenaten.cfg";
+auto const CFG_FILE_NAME = "akhenaten.cfg";
+auto const CFG_FILE_DIR = "akhenaten";
 
 enum class argument_type {
     DATA_DIRECTORY,
@@ -111,11 +112,32 @@ std::string get_configuration_path() {
     }
 
     logs::error("Failed to retrieve AppData path.");
-#else // Linux
-    struct passwd* pw = getpwuid(getuid());
-    std::string folder_path = std::string(pw->pw_dir) + "/.config/";
-    if (std::filesystem::exists(folder_path))
-        return folder_path + CFG_FILE_NAME;
+#else // Unix
+
+    std::string cfg_dir_path;
+    if (const char* xdg_cfg_dir_path = std::getenv("XDG_CONFIG_HOME")) {
+        cfg_dir_path = std::string(xdg_cfg_dir_path) + '/' + CFG_FILE_DIR;
+    } else {
+        const passwd* pw = getpwuid(getuid());
+        cfg_dir_path = std::string(pw->pw_dir) + "/.config/" + CFG_FILE_DIR;
+    }
+
+    if (std::error_code ec; std::filesystem::create_directories(cfg_dir_path, ec)) {
+
+        logs::info(("Created configuration directory " + cfg_dir_path).c_str());
+    }
+    else if (ec.value() != 0) {
+        constexpr int buffer_size = 1000;
+        auto const format = "Failed to create configuration directory %s; Error code: %i; Error message: %s";
+        char err_msg[buffer_size];
+
+        snprintf(err_msg, buffer_size, format, cfg_dir_path.c_str(), ec.value(), ec.message().c_str());
+        logs::error(err_msg);
+        return CFG_FILE_NAME;
+    }
+
+    if (std::filesystem::exists(cfg_dir_path))
+        return cfg_dir_path + '/' + CFG_FILE_NAME;
 #endif
     logs::warn("Home folder to keep configuration file was not found");
 
