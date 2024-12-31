@@ -4,14 +4,7 @@
 #include "grid/terrain.h"
 #include "grid/grid.h"
 
-#include "js/js_game.h"
-
 figures::model_t<figure_bricklayer> bricklayer_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_bricklayer);
-void config_load_figure_bricklayer() {
-    bricklayer_m.load();
-}
 
 void figure_bricklayer::figure_action() {
     base.use_cross_country = false;
@@ -134,11 +127,11 @@ void figure_bricklayer::update_animation() {
 
     switch (action_state()) {
     case FIGURE_ACTION_13_BRICKLAYER_WAITING_RESOURCES:
-        image_set_animation(IMG_BRICKLAYER_IDLE, 0, 8);
+        image_set_animation(animkeys().idle);
         break;
 
     case FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS:
-        image_set_animation(IMG_BRICKLAYER_WORK, 0, 12);
+        image_set_animation(animkeys().work);
         break;
     }
 }
