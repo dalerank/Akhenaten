@@ -56,6 +56,13 @@ void minimap_window::load(archive arch, pcstr) {
     arch.r_anim("terrain_marshland", terrain_marshland);
     arch.r_anim("terrain_dune", terrain_dune);
     arch.r_anim("terrain_teal", terrain_teal);
+    arch.r_anim("terrain_bright_teal", terrain_bright_teal);
+    arch.r_anim("terrain_dark_red", terrain_dark_red);
+    arch.r_anim("terrain_purple", terrain_purple);
+    arch.r_anim("terrain_lilac", terrain_lilac);
+    arch.r_anim("terrain_light_yellow", terrain_light_yellow);
+    arch.r_anim("terrain_bright_blue", terrain_bright_blue);
+    arch.r_anim("terrain_orange", terrain_orange);
 }
 
 void minimap_window::init() {
@@ -231,23 +238,23 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
             //        image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
             //} else 
             if (building_is_extractor(b->type)) {
-                image_id = image_group(IMG_MINIMAP_DARK_RED); // dark red
+                image_id = terrain_dark_red.first_img(); // dark red
             } else if (building_is_harvester(b->type)) {
-                image_id = image_group(IMG_MINIMAP_DARK_RED); // dark red
+                image_id = terrain_dark_red.first_img(); // dark red
             } else if(building_is_workshop(b->type)) {
-                image_id = image_group(IMG_MINIMAP_DARK_RED); // dark red
+                image_id = terrain_dark_red.first_img(); // dark red
             } else if (building_is_entertainment(b->type)) {
-                image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
+                image_id = terrain_bright_teal.first_img(); // bright teal
             } else if (building_is_religion(b->type)) {
-                image_id = image_group(IMG_MINIMAP_PURPLE); // purple
+                image_id = terrain_purple.first_img(); // purple
             } else if (building_is_education(b->type)) {
-                image_id = image_group(IMG_MINIMAP_LIGHT_YELLOW); // light yellow
+                image_id = terrain_light_yellow.first_img(); // light yellow
             } else if (building_is_infrastructure(b->type)) {
-                image_id = image_group(IMG_MINIMAP_BRIGHT_BLUE); // bright blue
+                image_id = terrain_bright_blue.first_img(); // bright blue
             } else if (building_is_administration(b->type)) {
-                image_id = image_group(IMG_MINIMAP_LILAC); // lilac
+                image_id = terrain_lilac.first_img(); // lilac
             } else if (building_is_military(b->type)) {
-                image_id = image_group(IMG_MINIMAP_ORANGE); // orange
+                image_id = terrain_orange.first_img(); // orange
             } else if (building_is_beautification(b->type)) {
                 image_id = terrain_teal.first_img(); // spent teal
             } else if (building_is_monument(b->type)) {

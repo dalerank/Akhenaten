@@ -29,6 +29,13 @@ struct minimap_window : public autoconfig_window_t<minimap_window> {
     animation_t terrain_marshland;
     animation_t terrain_dune;
     animation_t terrain_teal;
+    animation_t terrain_bright_teal;
+    animation_t terrain_dark_red;
+    animation_t terrain_purple;
+    animation_t terrain_lilac;
+    animation_t terrain_light_yellow;
+    animation_t terrain_bright_blue;
+    animation_t terrain_orange;
 
     virtual int handle_mouse(const mouse *m) override;
     virtual int get_tooltip_text() override { return 0; }

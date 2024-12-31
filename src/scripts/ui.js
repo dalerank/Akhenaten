@@ -1720,4 +1720,11 @@ minimap_window = {
 	terrain_canal : {pack:PACK_GENERAL, id:151},
 	terrain_dune  : {pack:PACK_GENERAL, id:211},
 	terrain_teal  : {pack:PACK_GENERAL, id:149, offset:200},
+	terrain_bright_teal  : {pack:PACK_GENERAL, id:149, offset:170},
+	terrain_bright_blue  : {pack:PACK_GENERAL, id:149, offset:170},
+	terrain_dark_read  : {pack:PACK_GENERAL, id:149, offset:165},
+	terrain_purple: {pack:PACK_GENERAL, id:149, offset:175},
+	terrain_light_yellow: {pack:PACK_GENERAL, id:149, offset:180},
+	terrain_lilac : {pack:PACK_GENERAL, id:149, offset:195},
+	terrain_orange: {pack:PACK_GENERAL, id:149, offset:205},
 }
