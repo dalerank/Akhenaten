@@ -142,7 +142,7 @@ void figure::figure_phrase_determine() {
     }
 
     if (!phrase_key.empty()) {
-        figure_sound_t reaction = dcast()->get_sound_reaction(phrase_key.c_str());
+        figure_sound_t reaction = dcast()->get_sound_reaction(phrase_key);
         phrase = reaction.phrase;
         return;
     }
@@ -156,7 +156,7 @@ void figure::figure_phrase_determine() {
         return;
     }
     
-    bstring64 key = phrase_based_on_figure_state(this);
+    xstring key = phrase_based_on_figure_state(this);
     if (!key.empty()) {
         phrase_key = key;
     } else {
