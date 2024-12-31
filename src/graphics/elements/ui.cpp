@@ -146,12 +146,14 @@ namespace ui {
     element dummy_element;
 
     image_desc resource_icons;
+    image_desc advisor_icons;
 }
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_ui_options);
 void config_load_ui_options() {
     g_config_arch.r_section("uioptions", [] (archive arch) {
         arch.r_desc("resource_icons", ui::resource_icons);
+        arch.r_desc("advisor_icons", ui::advisor_icons);
     });
 }
 
@@ -522,7 +524,7 @@ void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
 void ui::icon(vec2i pos, e_advisor adv) {
     painter ctx = game.painter();
     const vec2i offset = g_state.offset();
-    ImageDraw::img_generic(ctx, image_group(IMG_ADVISOR_ICONS) + (adv - 1), offset.x + pos.x, offset.y + pos.y);
+    ImageDraw::img_generic(ctx, image_group(advisor_icons) + (adv - 1), offset.x + pos.x, offset.y + pos.y);
 }
 
 arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {

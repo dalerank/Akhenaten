@@ -50,7 +50,8 @@ function next_button(config) { var i = image_button({size:[27, 27], pack:PACK_GE
 function advisor_button(config) { var i = image_button({pack:PACK_GENERAL, id:106, offset:12, tooltip:[68, 41]}); return __extend(i, config) }
 
 uioptions = {
-	resource_icons : {pack:PACK_EXPANSION, id:3},
+	resource_icons  : {pack:PACK_EXPANSION, id:3},
+	advisor_icons   : {pack:PACK_GENERAL, id:128, offset:0},
 }
 
 main_menu_window = {
