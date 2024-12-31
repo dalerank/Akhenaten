@@ -1828,7 +1828,8 @@ building building_scribal_school = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
     base : { pack:PACK_GENERAL, id:42},
-    work : { pos:[2, -25], pack:PACK_GENERAL, id:42, offset:1, max_frames:11, duration:4, can_reverse:true }
+    work : { pos:[2, -25], pack:PACK_GENERAL, id:42, offset:1, max_frames:11, duration:4, can_reverse:true },
+    papyrus : { pos:[61, 14], pack:PACK_GENERAL, id:207, offset:0},
   },
   input_resource : RESOURCE_PAPYRUS,
   info_icon_res :[32, 106],
@@ -1836,7 +1837,6 @@ building building_scribal_school = {
   info_help_id: 68, info_text_id: 85,
   window_info_height_id : 1,
 
-  papyrus_icon:[61, 14],
   building_size : 2,
   labor_category : LABOR_CATEGORY_EDUCATION,
 }

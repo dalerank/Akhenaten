@@ -52,6 +52,7 @@ struct id_anim_t {
     static const xstring work_transport;
     static const xstring flax;
     static const xstring clay;
+    static const xstring papyrus;
     static const xstring straw;
     static const xstring copper;
     static const xstring reeds;

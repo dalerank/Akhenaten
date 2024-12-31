@@ -10,10 +10,6 @@ public:
     struct static_params : public buildings::model_t<building_scribal_school> {
         using inherited = model_t<building_scribal_school>;
 
-        vec2i papyrus;
-        vec2i icon_res;
-        vec2i text_res;
-
         using inherited::load;
         virtual void load(archive arch) override;
     };
