@@ -486,9 +486,12 @@ figure_docker = {
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
-figure_bricklayer = {
+figure figure_bricklayer = {
 	animations : {
-		walk : { pos : [0, 0], anim_id: IMG_BRICKLAYER_WALK, max_frames:12 },
+		walk : {pack:PACK_SPR_MAIN, id:109, max_frames:12 },
+		death : {pack:PACK_SPR_MAIN, id:110, max_frames:8, loop:false },
+		work : {pack:PACK_SPR_MAIN, id:111, max_frames:12, duration:4 },
+		idle : {pack:PACK_SPR_MAIN, id:112, max_frames:8, duration:2 },
 	},
 	sounds : {
 		time_to_put_bricks : {sound:"brick_e01.wav", group:222, text: 0},

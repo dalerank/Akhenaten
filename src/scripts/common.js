@@ -193,7 +193,6 @@ var figure_trade_caravan = {}
 var figure_homeless = {}
 var figure_teacher = {}
 var figure_docker = {}
-var figure_bricklayer = {}
 var figure_ostrich_hunter = {}
 var figure_lumberjack = {}
 var figure_soldier_infantry = {}
