@@ -28,8 +28,8 @@ Arguments g_args;
 
 namespace {
 
-char const* const CFG_FILE_NAME = "akhenaten.cfg";
-char const* const CFG_FILE_DIR = "akhenaten";
+auto const CFG_FILE_NAME = "akhenaten.cfg";
+auto const CFG_FILE_DIR = "akhenaten";
 
 enum class argument_type {
     DATA_DIRECTORY,
@@ -127,16 +127,12 @@ std::string get_configuration_path() {
         logs::info(("Created configuration directory " + cfg_dir_path).c_str());
     }
     else if (ec.value() != 0) {
+        constexpr int buffer_size = 1000;
+        auto const format = "Failed to create configuration directory %s; Error code: %i; Error message: %s";
+        char err_msg[buffer_size];
 
-        std::ostringstream err_msg_stream;
-        err_msg_stream
-            << "Failed to create configuration directory "
-            << cfg_dir_path
-            << "; Error code: "
-            << ec.value()
-            << "; Error message: "
-            << ec.message();
-        logs::error(err_msg_stream.str().c_str());
+        snprintf(err_msg, buffer_size, format, cfg_dir_path.c_str(), ec.value(), ec.message().c_str());
+        logs::error(err_msg);
         return CFG_FILE_NAME;
     }
 
