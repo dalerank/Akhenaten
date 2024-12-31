@@ -118,10 +118,6 @@ void figure_bricklayer::figure_action() {
     }
 }
 
-const animations_t &figure_bricklayer::anim() const {
-    return bricklayer_m.anim;
-}
-
 void figure_bricklayer::update_animation() {
     figure_impl::update_animation();
 
@@ -132,6 +128,10 @@ void figure_bricklayer::update_animation() {
 
     case FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS:
         image_set_animation(animkeys().work);
+        break;
+
+    case FIGURE_ACTION_16_BRICKLAYER_RETURN_HOME:
+        image_set_animation(animkeys().walk);
         break;
     }
 }

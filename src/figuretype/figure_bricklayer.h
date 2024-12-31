@@ -11,7 +11,6 @@ public:
     virtual void figure_action() override;
     //virtual void figure_before_action() override;
     virtual figure_phrase_t phrase() const override { return {FIGURE_BRICKLAYER, "brick"}; }
-    virtual const animations_t &anim() const override;
     virtual void update_animation() override;
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
     //virtual bool is_common_roaming() override { return false; }
