@@ -166,7 +166,6 @@ var dock_orders_window = {}
 //figures
 var figure_fireman = {}
 var figure_water_carrier = {}
-var figure_priest = {}
 var figure_festival_priest = {}
 var figure_hippo = {}
 var figure_crocodile = {}
@@ -199,7 +198,6 @@ var figure_soldier_infantry = {}
 var figure_soldier_archer = {}
 var figure_soldier_charioteer = {}
 var figure_flotsam = {}
-var figure_festival_guy = {}
 var figure_scriber = {}
 var figure_dentist = {}
 var figure_standard_bearer = {}

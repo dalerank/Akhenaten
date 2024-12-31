@@ -55,18 +55,18 @@ figure_festival_priest = {
 	max_amount : 25,
 }
 
-figure_priest = {
+figure figure_priest = {
 	animations : {
-		osiris_walk : { pos : [0, 0], anim_id: IMG_PRIEST_OSIRIS, max_frames:12},
-		osiris_death : { pos : [0, 0], anim_id: IMG_PRIEST_OSIRIS_DEATH, loop:false },
-		ra_walk : { pos : [0, 0], anim_id: IMG_PRIEST_RA, max_frames:12 },
-		ra_death : { pos : [0, 0], anim_id: IMG_PRIEST_RA_DEATH, loop:false },
-		ptah_walk : { pos : [0, 0], anim_id: IMG_PRIEST_PTAH, max_frames:12 },
-		ptah_death : { pos : [0, 0], anim_id: IMG_PRIEST_PTAH_DEATH, loop:false },
-		seth_walk : { pos : [0, 0], anim_id: IMG_PRIEST_SETH, max_frames:12 },
-		seth_death : { pos : [0, 0], anim_id: IMG_PRIEST_SETH_DEATH, loop:false },
-		bast_walk : { pos : [0, 0], anim_id: IMG_PRIEST_BAST, max_frames:12 },
-		bast_death : { pos : [0, 0], anim_id: IMG_PRIEST_BAST_DEATH, loop:false },
+		osiris_walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:197, max_frames:12},
+		osiris_death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:198, loop:false },
+		ra_walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:210, max_frames:12 },
+		ra_death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:211, loop:false },
+		ptah_walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:187, max_frames:12 },
+		ptah_death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:188, loop:false },
+		seth_walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:193, max_frames:12 },
+		seth_death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:194, loop:false },
+		bast_walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:208, max_frames:12 },
+		bast_death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:209, loop:false },
   },
   sounds : {
   	osiris_god_love_festival : {sound:"priest_osiris_e01.wav", group:230, text: 0},
@@ -664,11 +664,16 @@ figure_dancer = {
 	max_roam_length : 512,
 }
 
-figure_festival_guy = {
+figure figure_festival_guy = {
 	animations : {
 		juggler : { pack:PACK_SPR_MAIN, id:130, max_frames:12 },
 		musician : { pack:PACK_SPR_MAIN, id:191, max_frames:12 },
 		dancer : {pack:PACK_SPR_MAIN, id:128, max_frames:12},
+		priest_ra: { pack:PACK_SPR_MAIN, id:210, offset:0 },
+		priest_osiris : {pack:PACK_SPR_MAIN, id:197},
+		priest_ptah: {pack:PACK_SPR_MAIN, id:187},
+		priest_seth: {pack:PACK_SPR_MAIN, id:193},
+		priest_bast: {pack:PACK_SPR_MAIN, id:208}
 	},
 	terrain_usage : TERRAIN_USAGE_ROADS,
 	max_roam_length : 512,

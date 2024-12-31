@@ -1,16 +1,10 @@
 #include "figuretype/festival_guy.h"
 
-#include "js/js_game.h"
 #include "core/random.h"
 #include "building/count.h"
 #include "city/buildings.h"
 
 figures::model_t<figure_festival_guy> festival_guy_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_festival_guy);
-void config_load_figure_festival_guy() {
-    festival_guy_m.load();
-}
 
 void figure_festival_guy::on_create() {
 }
@@ -24,23 +18,23 @@ void figure_festival_guy::figure_action() {
 
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        image_set_animation(IMG_PRIEST_OSIRIS);
+        image_set_animation("priest_osiris");
         break;
     case BUILDING_TEMPLE_RA:
     case BUILDING_TEMPLE_COMPLEX_RA:
-        image_set_animation(IMG_PRIEST_RA);
+        image_set_animation("priest_ra");
         break;
     case BUILDING_TEMPLE_PTAH:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
-        image_set_animation(IMG_PRIEST_PTAH);
+        image_set_animation("priest_ptah");
         break;
     case BUILDING_TEMPLE_SETH:
     case BUILDING_TEMPLE_COMPLEX_SETH:
-        image_set_animation(IMG_PRIEST_SETH);
+        image_set_animation("priest_seth");
         break;
     case BUILDING_TEMPLE_BAST:
     case BUILDING_TEMPLE_COMPLEX_BAST:
-        image_set_animation(IMG_PRIEST_BAST);
+        image_set_animation("priest_bast");
         break;
     case BUILDING_JUGGLER_SCHOOL:
         image_set_animation("juggler");
