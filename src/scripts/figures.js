@@ -758,6 +758,16 @@ figure figure_warship = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
+figure figure_transport_ship = {
+	animations : {
+		walk : {pack:PACK_SPR_MAIN, id:34, max_frames:4, duration:10 },
+		swim : {pack:PACK_SPR_MAIN, id:34, max_frames:4, duration:10 },
+		death : {pack:PACK_SPR_MAIN, id:35, max_frames:8, loop:false },
+		idle : {pack:PACK_SPR_MAIN, id:35, offset:8, max_frames:1 },
+	},
+	terrain_usage : TERRAIN_USAGE_ANY,
+}
+
 figure_soldier_archer = {
 	animations : {
 		walk : {pack:PACK_SPR_MAIN, id:61, max_frames:12 },

@@ -36,6 +36,7 @@ class figure_soldier;
 class figure_fishing_boat;
 class figure_fishing_point;
 class figure_caravan_donkey;
+class figure_transport_ship;
 class figure_warship;
 
 struct animation_t;
@@ -498,6 +499,7 @@ public:
     virtual figure_fishing_point *dcast_fishing_point() { return nullptr; }
     virtual figure_caravan_donkey *dcast_caravan_donkey() { return nullptr; }
     virtual figure_warship *dcast_warship() { return nullptr; }
+    virtual figure_transport_ship *dcast_transport_ship() { return nullptr; }
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -563,6 +565,7 @@ GENERATE_SMART_CAST_FIGURE(fishing_boat)
 GENERATE_SMART_CAST_FIGURE(soldier)
 GENERATE_SMART_CAST_FIGURE(warship)
 GENERATE_SMART_CAST_FIGURE(caravan_donkey)
+GENERATE_SMART_CAST_FIGURE(transport_ship)
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *b) {

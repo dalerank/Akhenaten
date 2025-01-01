@@ -39,7 +39,7 @@ void shipyard_info_window::init(object_info &c) {
     int pct_done = calc_percentage<int>(shipyard->data.industry.progress, 400);
     ui["ready_prod"].text_var("%s %u%% %s", ui::str(c.group_id, 2), pct_done, ui::str(c.group_id, 3));
 
-    const bool ship_requested = g_city.buildings.fishing_boats_requested || g_city.buildings.warship_boats_requested;
+    const bool ship_requested = g_city.buildings.fishing_boats_requested || g_city.buildings.warships_requested;
     textid reason{ c.group_id, 0 };
     if (!c.has_road_access) {
         reason = { 69, 25 }; 
