@@ -11,6 +11,7 @@ public:
 
     struct static_params : public buildings::model_t<building_shipyard> {
         int warship_progress_cost;
+        int transport_progress_cost;
         int fishingboat_progress_cost;
         virtual void load(archive arch) override;
     };

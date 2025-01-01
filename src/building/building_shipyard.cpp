@@ -27,6 +27,7 @@ building_shipyard::static_params building_shipyard_m;
 void building_shipyard::static_params::load(archive arch) {
     warship_progress_cost = arch.r_int("warship_progress_cost");
     fishingboat_progress_cost = arch.r_int("fishingboat_progress_cost");
+    transport_progress_cost = arch.r_int("transport_progress_cost");
 }
 
 void building_shipyard::spawn_figure() {
@@ -55,7 +56,7 @@ void building_shipyard::spawn_figure() {
     const auto &params = current_params();
     switch (data.dock.process_type) {
     case FIGURE_WARSHIP: 
-        if (data.dock.progress >= params.warship_progress_cost) {
+        if ((params.warship_progress_cost > 0) && data.dock.progress >= params.warship_progress_cost) {
             figure *f = figure_create(FIGURE_WARSHIP, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_205_WARSHIP_CREATED;
             f->direction = (data.dock.orientation + 3) % 8;
@@ -66,8 +67,20 @@ void building_shipyard::spawn_figure() {
         }
         break;
 
+    case FIGURE_TRANSPORT_SHIP:
+        if ((params.transport_progress_cost > 0) && data.dock.progress >= params.transport_progress_cost) {
+            figure *f = figure_create(FIGURE_TRANSPORT_SHIP, boat_tile, DIR_0_TOP_RIGHT);
+            f->action_state = FIGURE_ACTION_211_TRANSPORT_SHIP_CREATED;
+            f->direction = (data.dock.orientation + 3) % 8;
+            f->set_home(&base);
+            base.set_figure(BUILDING_SLOT_BOAT, f);
+            data.dock.progress = 0;
+            data.dock.process_type = FIGURE_NONE;
+        }
+        break;
+
     case FIGURE_FISHING_BOAT: 
-        if (data.dock.progress >= params.fishingboat_progress_cost) {
+        if ((params.fishingboat_progress_cost > 0 ) && data.dock.progress >= params.fishingboat_progress_cost) {
             figure *f = figure_create(FIGURE_FISHING_BOAT, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
             f->set_home(&base);
@@ -134,31 +147,47 @@ bool building_shipyard::add_resource(e_resource resource, int amount) {
     return true;
 }
 
+template<typename T>
+int approach_progress(int pct_workers, const T &thresholds) {
+    auto it = std::lower_bound(thresholds.begin(), thresholds.end(), pct_workers, [] (const auto &pair, int value) { return pair.first <= value; });
+    int delta = (it != thresholds.end()) ? std::prev(it)->second : 0;
+    return delta;
+}
+
 void building_shipyard::update_day() {
     building_industry::update_day();
 
     int pct_workers = worker_percentage();
-    if (data.dock.process_type == FIGURE_WARSHIP && base.stored_amount_first > 0) {
-        int delta = 0;
-        if (pct_workers >= 100) delta = 5;
-        else if (pct_workers >= 75) delta = 4;
-        else if (pct_workers >= 50) delta = 3;
-        else if (pct_workers >= 25) delta = 2;
-        else if (pct_workers >= 1) delta = 1;
+    int delta = 0;
+    int resources = 0;
 
-        delta = std::min<int>(delta, base.stored_amount_first);
-        data.dock.progress += delta;
-        base.stored_amount_first -= delta;
+    if (data.dock.process_type == FIGURE_WARSHIP && base.stored_amount_first > 0) {
+        const std::array<std::pair<int, int>, 5> thresholds = { {{1, 1}, {25, 2}, {50, 3}, {75, 4}, {100, 5}} };
+        delta = approach_progress(pct_workers, thresholds);
+        resources = delta;
+    } else if (data.dock.process_type == FIGURE_TRANSPORT_SHIP && base.stored_amount_first > 0) {
+        const std::array<std::pair<int, int>, 5> thresholds = { {{1, 0}, {25, 1}, {50, 2}, {75, 2}, {100, 3}} };
+        delta = approach_progress(pct_workers, thresholds);
+        resources = delta;
     } else if (data.dock.process_type == FIGURE_FISHING_BOAT) {
-        if (pct_workers >= 100) data.dock.progress += 10;
-        else if (pct_workers >= 75) data.dock.progress += 8;
-        else if (pct_workers >= 50) data.dock.progress += 6;
-        else if (pct_workers >= 25) data.dock.progress += 4;
-        else if (pct_workers >= 1) data.dock.progress += 2;
+        const std::array<std::pair<int, int>, 5> thresholds = { {{1, 1}, {25, 2}, {50, 4}, {75, 6}, {100, 8}} };
+        delta = approach_progress(pct_workers, thresholds);
     }
 
-    if (data.dock.process_type == FIGURE_WARSHIP && g_city.buildings.warship_boats_requested > 0) {
-        g_city.buildings.warship_boats_requested--;
+    if (resources > 0) {
+        resources = std::min<int>(resources, base.stored_amount_first);
+        delta = resources;
+    }
+    data.dock.progress += delta;
+    base.stored_amount_first -= resources;
+
+    if (data.dock.process_type == FIGURE_WARSHIP && g_city.buildings.warships_requested > 0) {
+        g_city.buildings.warships_requested--;
+        return;
+    }
+
+    if (data.dock.process_type == FIGURE_TRANSPORT_SHIP && g_city.buildings.transport_ships_requested > 0) {
+        g_city.buildings.transport_ships_requested--;
         return;
     }
 
@@ -168,9 +197,15 @@ void building_shipyard::update_day() {
     }
 
     if (data.dock.process_type == FIGURE_NONE) {
-        if (g_city.buildings.warship_boats_requested > 0 && base.stored_amount_first >= 100) {
+        if (g_city.buildings.warships_requested > 0 && base.stored_amount_first >= 100) {
             data.dock.process_type = FIGURE_WARSHIP;
-            g_city.buildings.warship_boats_requested--;
+            g_city.buildings.warships_requested--;
+            return;
+        }
+
+        if (g_city.buildings.transport_ships_requested > 0 && base.stored_amount_first >= 100) {
+            data.dock.process_type = FIGURE_TRANSPORT_SHIP;
+            g_city.buildings.transport_ships_requested--;
             return;
         }
 
@@ -195,7 +230,7 @@ void building_shipyard::update_graphic() {
     switch (data.dock.process_type) {
     case FIGURE_WARSHIP: animkey = animkeys().work_warship; break;
     case FIGURE_FISHING_BOAT: animkey = animkeys().work_fishing_boat; break;
-    case FIGURE_TRANSPORT: animkey = animkeys().work_transport; break;
+    case FIGURE_TRANSPORT_SHIP: animkey = animkeys().work_transport; break;
     }
 
     set_animation(animkey);
