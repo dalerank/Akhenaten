@@ -766,8 +766,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     }
 
     iob->bind(BIND_SIGNATURE_INT8, &data.buildings.fishing_boats_requested);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.warship_boats_requested);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.transport_boats_requested);
+    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.warships_requested);
+    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.transport_ships_requested);
     iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_INT16, &data.figures.enemies);
     iob->bind____skip(2);
