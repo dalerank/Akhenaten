@@ -13,14 +13,10 @@ public:
         virtual void load(archive arch) override;
     };
 
-    virtual void on_place(int orientation, int variant) override;
-    virtual void on_place_update_tiles(int orientation, int variant) override;
-    virtual void update_map_orientation(int orientation) override;
     virtual void spawn_figure() override;
     virtual void update_count() const override;
     virtual bool ship_moored() const override;
     virtual void update_month() override;
-    virtual void highlight_waypoints() override;
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

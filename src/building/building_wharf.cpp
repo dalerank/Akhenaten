@@ -3,20 +3,35 @@
 #include "city/labor.h"
 #include "grid/water.h"
 #include "grid/image.h"
-
-building_transport_wharf::static_params transport_wharf_m;
-
-void building_transport_wharf::static_params::load(archive arch) {
-
-}
+#include "grid/building.h"
 
 void building_wharf::on_create(int orientation) {
     data.dock.orientation = orientation;
 }
 
+void building_wharf::on_place(int orientation, int variant) {
+    int orientation_rel = city_view_relative_orientation(orientation);
+    map_water_add_building(id(), tile(), params().building_size, anim(animkeys().base).first_img() + orientation_rel);
+
+    building_impl::on_place(orientation, variant);
+}
+
 void building_wharf::on_place_update_tiles(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    map_water_add_building(id(), tile(), transport_wharf_m.building_size, anim(animkeys().base).first_img() + orientation_rel);
+    map_water_add_building(id(), tile(), size(), anim(animkeys().base).first_img() + orientation_rel);
+}
+
+void building_wharf::update_map_orientation(int orientation) {
+    int image_offset = city_view_relative_orientation(data.dock.orientation);
+    int image_id = anim(animkeys().base).first_img() + image_offset;
+    map_water_add_building(id(), tile(), size(), image_id);
+}
+
+void building_wharf::highlight_waypoints() {
+    building_impl::highlight_waypoints();
+
+    map_highlight_set(data.dock.dock_tiles[0], ehighligth_green);
+    map_highlight_set(data.dock.dock_tiles[1], ehighligth_green);
 }
 
 void building_wharf::bind_dynamic(io_buffer *iob, size_t version) {
@@ -25,7 +40,7 @@ void building_wharf::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[1]);
 }
 
-inline void building_wharf::on_tick(bool refresh_only) {
+void building_wharf::on_tick(bool refresh_only) {
     auto &anim_wharf = base.anim;
     if (anim_wharf.valid()) {
         data.dock.docker_anim_frame++;
@@ -68,10 +83,4 @@ bool building_wharf::draw_ornaments_and_animations_height(painter &ctx, vec2i po
     }
 
     return true;
-}
-
-void building_transport_wharf::update_month() {
-    building_wharf::update_month();
-
-    map_water_update_docking_points(base, get_orientation(), 2);
 }
