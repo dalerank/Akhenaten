@@ -438,11 +438,6 @@ image_button &ui::imgcancel_button(vec2i pos, std::function<void(int, int)> cb) 
     return btn;
 }
 
-image_button &ui::img_button(e_image_id img, vec2i pos, vec2i size, int offset) {
-    image_desc desc = get_image_desc(img);
-    return img_button(desc, pos, size, {desc.offset + offset, 1, 2, 3});
-}
-
 int ui::label(int group, int number, vec2i pos, e_font font, UiFlags flags, int box_width) {
     pcstr str = (pcstr)lang_get_string(group, number);
     return label(str, pos, font, flags, box_width);
@@ -675,9 +670,7 @@ void ui::widget::line(bool hline, vec2i npos, int size) {
 }
 
 void ui::eimg::draw(UiFlags flags) {
-    if (img > 0) {
-        //ui::eimage(img, pos);
-    } else if (isometric) {
+    if (isometric) {
         painter ctx = game.painter();
         const vec2i offset = g_state.offset();
         ImageDraw::isometric_from_drawtile(ctx, image_group(img_desc), offset + pos);
@@ -692,7 +685,6 @@ void ui::eimg::load(archive arch, element *parent, items &elems) {
 
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "image"));
-    img = arch.r_image("image");
     img_desc.pack = arch.r_int("pack");
     img_desc.id = arch.r_int("id");
     img_desc.offset = arch.r_int("offset");
@@ -837,7 +829,6 @@ void ui::eimage_button::load(archive arch, element *parent, items &elems) {
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "image_button"));
 
-    img = arch.r_image("image");
     scale = arch.r_float("scale", 1.f);
     param1 = arch.r_int("param1");
     param2 = arch.r_int("param2");
@@ -867,9 +858,7 @@ void ui::eimage_button::draw(UiFlags gflags) {
     pcstr pid = id.c_str();
 
     vec2i tsize;
-    if (img) {
-        btn = &ui::img_button(img, pos, size, img_desc.offset);
-    } else if (img_desc.id || img_desc.offset) {
+    if (img_desc.id || img_desc.offset) {
         int img_id = image_id_from_group(img_desc.pack, img_desc.id);
         const image_t *img_ptr = image_get(img_id + img_desc.offset);
 

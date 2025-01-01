@@ -105,15 +105,6 @@ void figure::image_set_animation(const animation_t &anim) {
         this->anim.setup(anim);
         return;
     }
-
-    image_desc desc = get_image_desc(anim.anim_id);
-    this->anim.id = {};
-    image_set_animation(desc.pack, desc.id, desc.offset, anim.max_frames, anim.duration, anim.loop);
-}
-
-void figure::image_set_animation(e_image_id img, int offset, int max_frames, int duration) {
-    image_desc desc = get_image_desc(img);
-    image_set_animation(desc.pack, desc.id, offset, max_frames, duration);
 }
 
 void figure::image_set_animation(int collection, int group, int offset, int max_frames, int duration, bool loop) {

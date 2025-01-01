@@ -58,10 +58,6 @@ static void set_crop_tile(painter &ctx, int building_id, int x, int y, int dx, i
     ImageDraw::isometric(ctx, crop_image_id + (growth < 4 ? growth : 4), vec2i{MAP_X(grid_offset), MAP_Y(grid_offset)});
 }
 
-void map_building_tiles_add(int building_id, tile2i tile, int size, e_image_id image_id, int terrain) {
-    map_building_tiles_add(building_id, tile, size, image_group(image_id), terrain);
-}
-
 void map_building_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain) {
     int x_leftmost, y_leftmost;
     switch (city_view_orientation()) {

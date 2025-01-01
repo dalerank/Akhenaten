@@ -15,8 +15,6 @@ struct animation_timer {
 struct animation_t {
     xstring id;
     vec2i pos;
-    e_image_id base_id = IMG_NONE;
-    e_image_id anim_id = IMG_NONE;
     int pack;
     int iid;
     int offset;

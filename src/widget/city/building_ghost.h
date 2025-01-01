@@ -13,7 +13,6 @@ struct blocked_tile {
     bool blocked;
 };
 
-void draw_building_ghost(painter &ctx, e_image_id image_id, vec2i tile, color color_mask = COLOR_MASK_GREEN);
 void draw_building_ghost(painter &ctx, int image_id, vec2i tile, color color_mask = COLOR_MASK_GREEN);
 
 using blocked_tile_vec = svector<blocked_tile, 36>;

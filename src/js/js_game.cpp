@@ -42,19 +42,19 @@ void js_game_log_warn(js_State *J) {
     js_pushundefined(J);
 }
 
-void js_game_set_image(js_State *J) {
-    if (js_isobject(J, 1)) {
-        archive arch{js_vm_state()};
-        int img = arch.r_int("img");
-        int pack = arch.r_int("pack");
-        int id = arch.r_int("id");
-        int offset = arch.r_int("offset");
-        set_image_desc(img, pack, id, offset);
-        js_pop(J, 1);
-    }
-
-    js_pushundefined(J);
-}
+//void js_game_set_image(js_State *J) {
+//    if (js_isobject(J, 1)) {
+//        archive arch{js_vm_state()};
+//        int img = arch.r_int("img");
+//        int pack = arch.r_int("pack");
+//        int id = arch.r_int("id");
+//        int offset = arch.r_int("offset");
+//        set_image_desc(img, pack, id, offset);
+//        js_pop(J, 1);
+//    }
+//
+//    js_pushundefined(J);
+//}
 
 void js_game_load_text(js_State *J) {
     const char *path = js_tostring(J, 1);
@@ -92,7 +92,7 @@ void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
-    REGISTER_GLOBAL_FUNCTION(J, js_game_set_image, "set_image", 1);
+    //REGISTER_GLOBAL_FUNCTION(J, js_game_set_image, "set_image", 1);
 }
 
 void config::refresh(archive arch) {

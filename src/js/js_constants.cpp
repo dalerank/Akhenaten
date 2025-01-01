@@ -33,12 +33,6 @@ void js_register_game_constants(js_State *J) {
    _R(FILE_DIALOG_LOAD)
 }
 
-void js_register_city_images(js_State *J) {
-#define REGISTER_IMG(a, b) REGISTER_GLOBAL_CONSTANT(J, a)
-#include "graphics/indexes.h"
-#undef REGISTER_IMG
-}
-
 void js_register_collection_images(js_State *J) {
     js_register_tokens(J, e_pack_type_tokens);
 }

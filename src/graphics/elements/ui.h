@@ -86,7 +86,6 @@ pcstr button_tooltip(uint32_t id);
 image_button &img_button(image_desc desc, vec2i pos, vec2i size, const img_button_offsets offsets = {}, UiFlags flags = UiFlags_None);
 image_button &imgok_button(vec2i pos, std::function<void(int, int)> cb);
 image_button &imgcancel_button(vec2i pos, std::function<void(int, int)> cb);
-image_button &img_button(e_image_id img, vec2i pos, vec2i size, int offset = 0);
 arrow_button &arw_button(vec2i pos, bool down, bool tiny = false, UiFlags_ flags = UiFlags_None);
 scrollbar_t &scrollbar(scrollbar_t &scrollbar, vec2i pos, int &value, vec2i size = {-1, -1});
 
@@ -208,7 +207,6 @@ struct element {
 };
 
 struct eimg : public element {
-    e_image_id img;
     image_desc img_desc;
     bool isometric;
 
@@ -348,7 +346,6 @@ struct earrow_button : public element {
 };
 
 struct eimage_button : public element {
-    e_image_id img;
     float scale = 1.f;
     image_desc img_desc;
     void *icon_texture = nullptr;

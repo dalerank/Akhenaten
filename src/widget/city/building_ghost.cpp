@@ -193,11 +193,6 @@ void draw_flat_tile(painter &ctx, vec2i pixel, color color_mask) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, color_mask);
 }
 
-void draw_building_ghost(painter &ctx, e_image_id image_id, vec2i tile, color color_mask) {
-    int img = image_group(image_id);
-    ImageDraw::isometric(ctx, img, tile, color_mask);
-}
-
 void draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_mask) {
     ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
     ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, color_mask, 1.f);

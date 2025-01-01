@@ -297,7 +297,6 @@ public:
 
     // image.c
     void image_set_animation(const animation_t &anim);
-    void image_set_animation(e_image_id img, int offset = 0, int max_frames = 12, int duration = 1);
     void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1, bool loop = true);
     void figure_image_update(bool refresh_only);
     void figure_image_set_sled_offset(int direction);
@@ -529,7 +528,6 @@ public:
     inline void route_remove() { base.route_remove(); }
     inline void image_set_animation(const xstring &anim_key) { image_set_animation(anim(anim_key)); }
     inline void image_set_animation(const animation_t &anim) { base.image_set_animation(anim); }
-    inline void image_set_animation(e_image_id img, int offset = 0, int max_frames = 12, int duration = 1) { base.image_set_animation(img, offset, max_frames, duration);}
     inline void follow_ticks(int num_ticks) { base.follow_ticks(num_ticks); }
     inline bool has_destination(int _id = -1) { return base.has_destination(_id); }
     inline void set_destination(int _id) { base.set_destination(_id); }

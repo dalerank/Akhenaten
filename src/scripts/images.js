@@ -1,12 +1,8 @@
 log_info("akhenaten: images started")
 
-images = [
-	// icon resources
-	//{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
-	//{img: IMG_MINIMAP_COLOR, pack:PACK_GENERAL, id:149, offset:0},
-
-	{img: IMG_TERRAIN_FLOODPLAIN, pack:PACK_TERRAIN, id:31, offset:0},
-]
+// icon resources
+//{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
+//{img: IMG_MINIMAP_COLOR, pack:PACK_GENERAL, id:149, offset:0},
 
 cart_images = [
 	{resource: RESOURCE_NONE, pack:PACK_SPR_MAIN, id:77 },

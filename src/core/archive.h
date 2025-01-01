@@ -7,7 +7,6 @@
 #include <vector>
 #include <string>
 
-enum e_image_id : uint16_t;
 struct animation_t;
 struct image_desc;
 
@@ -20,7 +19,6 @@ struct archive {
     int r_int(pcstr name, int def = 0);
     float r_float(pcstr name, float def = 0.f);
     uint32_t r_uint(pcstr name, uint32_t def = 0);
-    e_image_id r_image(pcstr name);
     bool r_bool(pcstr name, bool def = false);
     vec2i r_size2i(pcstr name, pcstr w = "w", pcstr h = "h");
     vec2i r_vec2i(pcstr name, pcstr x = "x", pcstr y = "y");

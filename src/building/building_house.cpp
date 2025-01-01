@@ -110,7 +110,6 @@ static const int HOUSE_TILE_OFFSETS_PH[] = {
 
 struct house_image_t : public image_desc {
     int num_types;
-    e_image_id img_desc_id = IMG_NONE;
 };
 
 struct expand_direction_t {
@@ -121,9 +120,9 @@ struct expand_direction_t {
 
 expand_direction_t expand_direction;
 
-const expand_direction_t EXPAND_DIRECTION_DELTA_PH[MAX_DIR]
-  = {{0, 0, 0}, {-1, -1, -GRID_LENGTH - 1}, {-1, 0, -1}, {0, -1, -GRID_LENGTH}};
-;
+const expand_direction_t EXPAND_DIRECTION_DELTA_PH[MAX_DIR] = {
+    {0, 0, 0}, {-1, -1, -GRID_LENGTH - 1}, {-1, 0, -1}, {0, -1, -GRID_LENGTH}
+};
 
 struct merge_data_t {
     tile2i tile;

@@ -24,10 +24,6 @@ void map_image_set(int grid_offset, int image_id);
 inline void map_image_set(tile2i tile, int image_id) { map_image_set(tile.grid_offset(), image_id); }
 void map_image_set(tile2i teil, const animation_t &anim);
 void map_image_alt_set(int grid_offset, int image_id, int alpha);
-void map_image_set(int grid_offset, e_image_id img);
-inline void map_image_set(tile2i tile, e_image_id img) { map_image_set(tile.grid_offset(), img); }
-void map_image_set(int grid_offset, e_image_id img, int offset);
-inline void map_image_set(tile2i tile, e_image_id img, int offset) { map_image_set(tile.grid_offset(), img, offset); }
 
 void map_image_backup();
 void map_image_restore();

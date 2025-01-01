@@ -4,7 +4,6 @@
 #include "graphics/image_desc.h"
 #include "building/building.h"
 
-void map_building_tiles_add(int building_id, tile2i tile, int size, e_image_id img, int terrain);
 void map_building_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain);
 void map_building_tiles_add_farm(e_building_type type, int building_id, tile2i tile, int crop_image_offset, int progress);
 

@@ -9,8 +9,6 @@ int animation_t::global_hashtime = 0;
 
 void animation_t::load(archive arch) {
     pos = arch.r_vec2i("pos");
-    base_id = (e_image_id)arch.r_int("base_id");
-    anim_id = (e_image_id)arch.r_int("anim_id");
     pack = arch.r_int("pack");
     iid = arch.r_int("id");
     offset = arch.r_int("offset");
@@ -24,13 +22,7 @@ void animation_t::load(archive arch) {
 }
 
 int animation_t::first_img() const {
-    int image_id = 0;
-    if (anim_id) {
-        image_id = image_group(anim_id);
-    } else {
-        image_id = image_id_from_group(pack, iid) + offset;
-    }
-    
+    int image_id = image_id_from_group(pack, iid) + offset;   
     return image_id;
 }
 

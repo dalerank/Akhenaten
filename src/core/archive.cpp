@@ -155,10 +155,6 @@ uint32_t archive::r_uint(pcstr name, uint32_t def) {
     return result;
 }
 
-e_image_id archive::r_image(pcstr name) { 
-    return (e_image_id)r_int(name);
-}
-
 bool archive::r_bool(pcstr name, bool def) {
     auto vm = (js_State *)state;
     js_getproperty(vm, -1, name);

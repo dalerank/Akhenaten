@@ -13,7 +13,6 @@ struct image_t;
 struct sprite {
     const image_t *img = nullptr;
     inline sprite() {}
-    sprite(e_image_id);
 };
 
 struct sprite_resource_icon : public sprite {
