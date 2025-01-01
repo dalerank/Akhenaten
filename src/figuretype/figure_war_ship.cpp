@@ -37,7 +37,7 @@ water_dest map_water_get_wharf_for_new_warship(figure &boat) {
     }
 
     tile2i dock_tile(wharf->data.dock.dock_tiles[0]);
-    return { true, wharf->id(), dock_tile };
+    return { dock_tile.valid(), wharf->id(), dock_tile };
 }
 
 void figure_warship::on_create() {
@@ -79,7 +79,7 @@ void figure_warship::figure_action() {
         if (wait_ticks >= 50) {
             wait_ticks = 0;
             water_dest result = map_water_get_wharf_for_new_warship(base);
-            if (result.bid) {
+            if (result.bid && result.found) {
                 b->remove_figure_by_id(id()); // remove from original building
                 set_home(result.bid);
                 advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
@@ -133,9 +133,7 @@ void figure_warship::figure_action() {
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            // cannot reach grounds
-            city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
-            poof();
+            advance_action(FIGURE_ACTION_205_WARSHIP_CREATED);
         }
         break;
 
