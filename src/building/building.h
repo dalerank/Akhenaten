@@ -79,6 +79,7 @@ class building_mansion;
 class building_physician;
 class building_wharf;
 class building_shrine;
+class building_transport_wharf;
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -630,6 +631,7 @@ public:
     virtual building_wharf *dcast_wharf() { return nullptr; }
     virtual building_warship_wharf *dcast_warship_wharf() { return nullptr; }
     virtual building_shrine *dcast_shrine() { return nullptr; }
+    virtual building_transport_wharf *dcast_transport_wharf() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -805,6 +807,7 @@ GENERATE_SMART_CAST_BUILDING(mansion)
 GENERATE_SMART_CAST_BUILDING(physician)
 GENERATE_SMART_CAST_BUILDING(wharf)
 GENERATE_SMART_CAST_BUILDING(shrine)
+GENERATE_SMART_CAST_BUILDING(transport_wharf)
 
 namespace buildings {
 

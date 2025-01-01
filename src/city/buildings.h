@@ -28,8 +28,8 @@ struct city_buildings_t {
     int8_t triumphal_arches_placed;
 
     int8_t fishing_boats_requested;
-    int8_t warship_boats_requested;
-    int8_t transport_boats_requested;
+    int8_t warships_requested;
+    int8_t transport_ships_requested;
 
     using tracked_building_ids = std::vector<building_id>;
     using tracked_buildings_t = std::array<tracked_building_ids, BUILDING_MAX>;
@@ -66,8 +66,8 @@ struct city_buildings_t {
 
     void clear_fishing_boat_requests() { fishing_boats_requested = 0; }
     void request_fishing_boat() { ++fishing_boats_requested; }
-    void request_warship_boat() { ++warship_boats_requested; }
-    void request_transport_boat() { ++transport_boats_requested; }
+    void request_warship_ship() { ++warships_requested; }
+    void request_transport_ship() { ++transport_ships_requested; }
 
     bool has_working_dock() const { return !tracked_buildings->at(BUILDING_DOCK).empty(); }
     bool has_working_shipyard() const { return !tracked_buildings->at(BUILDING_SHIPWRIGHT).empty(); }
