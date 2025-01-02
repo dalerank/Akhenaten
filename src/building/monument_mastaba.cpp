@@ -485,7 +485,7 @@ void building_mastaba::update_day(const vec2i tiles_size) {
         for (auto &tile : tiles) {
             int progress = map_monuments_get_progress(tile);
             if (progress == 1) {
-               // map_monuments_set_progress(tile, 2);
+               map_monuments_set_progress(tile, 2);
             }
         }
     }

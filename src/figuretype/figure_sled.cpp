@@ -58,6 +58,7 @@ void figure_sled::do_deliver(int action_done) {
     building* dest = destination();
     switch (dest->type) {
     case BUILDING_SMALL_MASTABA:
+    case BUILDING_MEDIUM_MASTABA:
         building_monument_deliver_resource(dest, resource, carrying);
         break;
 
