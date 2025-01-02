@@ -1,6 +1,7 @@
 #pragma once
 
 #include "building/building.h"
+#include "window/window_building_info.h"
 
 class building_fort : public building_impl {
 public:
@@ -24,7 +25,6 @@ public:
         }
     };
 
-    virtual void window_info_background(object_info &c) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
     virtual void spawn_figure() override;
@@ -70,4 +70,9 @@ public:
     using static_params = static_params_t<building_fort_infantry>;
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
+};
+
+struct info_window_fort : public building_info_window_t<info_window_fort> {
+    virtual void init(object_info &c) override;
+    virtual bool check(object_info &c) override;
 };

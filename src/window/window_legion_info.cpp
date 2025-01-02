@@ -349,7 +349,7 @@ void window_building_draw_legion_info(object_info* c) {
     lang_text_draw(138, 25, c->offset.x + 100, c->offset.y + 100, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(18, m->has_military_training, c->offset.x + 300, c->offset.y + 100, FONT_NORMAL_BLACK_ON_LIGHT);
     // morale
-    if (m->cursed_by_mars)
+    if (m->cursed_by_seth)
         lang_text_draw(138, 59, c->offset.x + 100, c->offset.y + 120, FONT_NORMAL_BLACK_ON_LIGHT);
     else {
         lang_text_draw(138, 36, c->offset.x + 100, c->offset.y + 120, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -382,7 +382,7 @@ void window_building_draw_legion_info(object_info* c) {
     } else {
         // no soldiers
         int group_id;
-        if (m->cursed_by_mars) {
+        if (m->cursed_by_seth) {
             group_id = 89;
             text_id = 1;
         } else if (building_count_active(BUILDING_RECRUITER)) {

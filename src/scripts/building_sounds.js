@@ -95,4 +95,7 @@ building_sounds = [
   { type: BUILDING_DYNASTY_MANSION,       	sound: "Wavs/GOV_MAN3.WAV"},
   { type: BUILDING_SMALL_MASTABA,     	  	sound: "Wavs/rock3.wav"},
   { type: BUILDING_MEDIUM_MASTABA,     	  	sound: "Wavs/rock3.wav"},
+  { type: BUILDING_FORT_CHARIOTEERS,     	  sound: "Wavs/f_chariot.wav"},
+  { type: BUILDING_FORT_ARCHERS,		     	  sound: "Wavs/F_ARCHER.WAV"},
+  { type: BUILDING_FORT_INFANTRY,		     	  sound: "Wavs/f_infantry.wav"},
 ]

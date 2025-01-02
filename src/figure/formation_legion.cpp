@@ -53,7 +53,7 @@ int formation_legion_recruits_needed(void) {
 void formation_legion_update_recruit_status(building* fort) {
     formation* m = formation_get(fort->formation_id);
     m->legion_recruit_type = LEGION_RECRUIT_NONE;
-    if (!m->is_at_fort || m->cursed_by_mars || m->num_figures == m->max_figures)
+    if (!m->is_at_fort || m->cursed_by_seth || m->num_figures == m->max_figures)
         return;
     if (m->num_figures < m->max_figures) {
         int type = fort->data.fort.figure_type;
@@ -106,8 +106,9 @@ void formation_legion_move_to(formation* m, tile2i tile) {
     if (tile == m->home)
         return; // use formation_legion_return_home
 
-    if (m->cursed_by_mars)
+    if (m->cursed_by_seth)
         return;
+
     m->standard_tile = tile;
     m->is_at_fort = 0;
 
@@ -132,7 +133,7 @@ void formation_legion_return_home(formation* m) {
     if (map_routing_distance(m->tile) <= 0)
         return; // unable to route home
 
-    if (m->cursed_by_mars) {
+    if (m->cursed_by_seth) {
         return;
     }
 
@@ -267,7 +268,7 @@ int formation_legion_curse(void) {
         if (best_legion->figures[i] > 0)
             figure_get(best_legion->figures[i])->action_state = FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
     }
-    best_legion->cursed_by_mars = 96;
+    best_legion->cursed_by_seth = 96;
     formation_calculate_figures();
     return 1;
 }

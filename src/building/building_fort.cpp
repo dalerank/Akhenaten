@@ -28,15 +28,7 @@ building_fort_charioteers::static_params fort_charioteers_m;
 building_fort_archers::static_params fort_archers_m;
 building_fort_infantry::static_params fort_infantry_m;
 buildings::model_t<building_fort_ground> fort_ground_m;
-
-void building_fort::window_info_background(object_info &c) {
-    c.help_id = 87;
-    window_building_play_sound(&c, "Wavs/fort.wav");
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(89, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    int text_id = formation_get(c.formation_id)->cursed_by_mars ? 1 : 2;
-    window_building_draw_description_at(c, 16 * c.bgsize.y - 158, 89, text_id);
-}
+info_window_fort fort_infow;
 
 void building_fort::on_place_update_tiles(int orientation, int variant) {
     base.prev_part_building_id = 0;
@@ -143,4 +135,23 @@ void building_fort::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int or
 
 void building_fort::spawn_figure() {
     formation_legion_update_recruit_status(&base);
+}
+
+bool info_window_fort::check(object_info &c) {
+    if (!c.building_id) {
+        return false;
+    }
+
+    building *b = c.building_get();
+    const bool is_fort = b->dcast_fort() || b->dcast_fort_ground();
+    return is_fort;
+}
+
+void info_window_fort::init(object_info &c) {
+    building_info_window::init(c);
+
+    building *fort = c.building_get();
+
+    int text_id = formation_get(c.formation_id)->cursed_by_seth ? 1 : 2;
+    ui["describe"] = ui::str(c.group_id, text_id);
 }

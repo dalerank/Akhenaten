@@ -61,6 +61,8 @@ building building_fort_charioteers = {
   window_info_height_id : 1,
   fire_proof : 1,
   damage_proof : 1,
+  info_help_id:87,
+  info_text_id:89,
 }
 
 building building_fort_infantry = {
@@ -75,6 +77,8 @@ building building_fort_infantry = {
   window_info_height_id : 1,
   fire_proof : 1,
   damage_proof : 1,
+  info_help_id:87,
+  info_text_id:89,
 }
 
 building building_fort_archers = {
@@ -89,6 +93,8 @@ building building_fort_archers = {
   window_info_height_id : 1,
   fire_proof : 1,
   damage_proof : 1,
+  info_help_id:87,
+  info_text_id:89,
 }
 
 building building_fort_ground = {

@@ -362,8 +362,8 @@ void formation_update_monthly_morale_at_rest(void) {
 
 void formation_decrease_monthly_counters(formation* m) {
     if (m->is_legion) {
-        if (m->cursed_by_mars)
-            m->cursed_by_mars--;
+        if (m->cursed_by_seth)
+            m->cursed_by_seth--;
     }
     if (m->missile_fired)
         m->missile_fired--;
@@ -618,7 +618,7 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &f->missile_attack_timeout);
         iob->bind(BIND_SIGNATURE_INT16, &f->missile_attack_formation_id);
         iob->bind(BIND_SIGNATURE_INT16, &f->prev.layout);
-        iob->bind(BIND_SIGNATURE_INT16, &f->cursed_by_mars);
+        iob->bind(BIND_SIGNATURE_INT16, &f->cursed_by_seth);
         iob->bind(BIND_SIGNATURE_UINT8, &f->months_low_morale);
         f->months_very_low_morale = 0;
         iob->bind(BIND_SIGNATURE_UINT8, &f->empire_service);

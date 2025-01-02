@@ -97,7 +97,7 @@ struct formation {
     /* Legion-related */
     int empire_service;        /**< Flag to indicate this legion is selected for empire service */
     int in_distant_battle;     /**< Flag to indicate this legion is away in a distant battle */
-    int cursed_by_mars;        /**< Flag to indicate this legion is cursed */
+    int cursed_by_seth;        /**< Flag to indicate this legion is cursed */
     int has_military_training; /**< Flag to indicate this legion has had military training */
     int legion_recruit_type;   /**< Recruit type: none if this legion is fully occupied */
     int is_at_fort;            /**< Flag to indicate this legion is resting at the fort */

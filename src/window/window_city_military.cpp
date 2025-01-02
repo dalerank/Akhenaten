@@ -21,7 +21,7 @@ void military_map_click(int legion_formation_id, tile2i tile) {
         return;
     }
     formation* m = formation_get(legion_formation_id);
-    if (m->in_distant_battle || m->cursed_by_mars)
+    if (m->in_distant_battle || m->cursed_by_seth)
         return;
     int other_formation_id = formation_legion_at_building(tile.grid_offset());
     if (other_formation_id && other_formation_id == legion_formation_id) {
