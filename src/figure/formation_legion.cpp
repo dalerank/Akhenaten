@@ -16,7 +16,7 @@
 int formation_legion_create_for_fort(building* fort) {
     formation_calculate_legion_totals();
 
-    formation* m = formation_create_legion(fort->id, fort->tile.x(), fort->tile.y(), fort->subtype.fort_figure_type);
+    formation* m = formation_create_legion(fort->id, fort->tile.x(), fort->tile.y(), fort->data.fort.figure_type);
     if (!m->id)
         return 0;
 
@@ -56,7 +56,7 @@ void formation_legion_update_recruit_status(building* fort) {
     if (!m->is_at_fort || m->cursed_by_mars || m->num_figures == m->max_figures)
         return;
     if (m->num_figures < m->max_figures) {
-        int type = fort->subtype.fort_figure_type;
+        int type = fort->data.fort.figure_type;
         if (type == FIGURE_INFANTRY)
             m->legion_recruit_type = LEGION_RECRUIT_INFANTRY;
         else if (type == FIGURE_ARCHER)

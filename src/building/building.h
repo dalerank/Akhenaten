@@ -160,7 +160,6 @@ public:
         e_resource warehouse_resource_id;
         //        short workshop_type;
         short orientation;
-        e_figure_type fort_figure_type;
         short native_meeting_center_id;
         short market_goods;
         short roadblock_exceptions;
@@ -269,6 +268,10 @@ public:
             figure_id worker_id;
             e_figure_type processed_figure;
         } industry;
+
+        struct fort_t {
+            e_figure_type figure_type;
+        } fort;
 
         struct entertainment_t {
             uint8_t spawned_entertainer_days;

@@ -40,26 +40,22 @@ building_large_statue = {
   building_size : 3,
 }
 
-building_fort = {
-  ghost : {
-    main : [[-55, 20], [-55, -35], [-55, -35], [-60, -40]],
-    ground : [[35, 65], [5, -70], [-200, -55], [-180, 46]],
-    ground_check : [[3, -1], [4, -1], [4, 0], [3, 0],
-                    [-1,-4], [0, -4], [0,-3], [-1,-3],
-                    [-4, 0], [-3, 0], [-3,1], [-4, 1],
-                    [0,  3], [1,  3], [1, 4], [0,  4]],
-  },
-  labor_category : LABOR_CATEGORY_MILITARY,
-  fire_proof : 1,
-  damage_proof : 1,
+var base_fort_ghost = {
+  main : [[-55, 20], [-55, -35], [-55, -35], [-60, -40]],
+  ground : [[35, 65], [5, -70], [-200, -55], [-180, 46]],
+  ground_check : [[3, -1], [4, -1], [4, 0], [3, 0],
+                  [-1,-4], [0, -4], [0,-3], [-1,-3],
+                  [-4, 0], [-3, 0], [-3,1], [-4, 1],
+                  [0,  3], [1,  3], [1, 4], [0,  4]],
 }
 
-building_fort_charioteers = {
+building building_fort_charioteers = {
   animations : {
     base: {pack: PACK_GENERAL, id: 66},
     ground: {pack: PACK_GENERAL, id: 66, offset:1},
     picture: {pack: PACK_GENERAL, id: 66, offset:3, pos:[93, -21]},
   },
+  ghost : base_fort_ghost,
   labor_category : LABOR_CATEGORY_MILITARY,
   building_size : 3,
   window_info_height_id : 1,
@@ -67,12 +63,13 @@ building_fort_charioteers = {
   damage_proof : 1,
 }
 
-building_fort_infantry = {
+building building_fort_infantry = {
   animations : {
     base: {pack: PACK_GENERAL, id: 66},
     ground: {pack: PACK_GENERAL, id: 66, offset:1},
     picture: {pack: PACK_GENERAL, id: 66, offset:4, pos:[93, -21]},
   },
+  ghost : base_fort_ghost,
   labor_category : LABOR_CATEGORY_MILITARY,
   building_size : 3,
   window_info_height_id : 1,
@@ -80,12 +77,13 @@ building_fort_infantry = {
   damage_proof : 1,
 }
 
-building_fort_archers = {
+building building_fort_archers = {
   animations : {
     base: {pack: PACK_GENERAL, id: 66},
     ground: {pack: PACK_GENERAL, id: 66, offset:1},
     picture: {pack: PACK_GENERAL, id: 66, offset:2, pos:[93, -21]},
   },
+  ghost : base_fort_ghost,
   labor_category : LABOR_CATEGORY_MILITARY,
   building_size : 3,
   window_info_height_id : 1,
@@ -93,7 +91,7 @@ building_fort_archers = {
   damage_proof : 1,
 }
 
-building_fort_ground = {
+building building_fort_ground = {
   labor_category : LABOR_CATEGORY_MILITARY,
   building_size : 4,
   fire_proof : 1,
