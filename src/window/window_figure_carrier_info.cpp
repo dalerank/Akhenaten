@@ -6,7 +6,6 @@
 #include "graphics/graphics.h"
 #include "grid/figure.h"
 #include "game/game.h"
-#include "js/js_game.h"
 
 struct figure_carrier_info_window : public figure_info_window_t<figure_carrier_info_window> {
     virtual void init(object_info &c) override;

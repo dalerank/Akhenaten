@@ -16,9 +16,18 @@
 #include "graphics/elements/ui.h"
 #include "graphics/image_desc.h"
 #include "building/building_warship_wharf.h"
+#include "window/window_figure_info.h"
 #include "city/city.h"
 
+struct figure_warship_info_window : public figure_info_window_t<figure_warship_info_window> {
+    virtual void init(object_info &c) override;
+    virtual bool check(object_info &c) override {
+        return c.figure_get_id() && ::smart_cast<figure_warship>(figure_get(c));
+    }
+};
+
 figures::model_t<figure_warship> warship_m;
+figure_warship_info_window figure_warship_infow;
 
 water_dest map_water_get_wharf_for_new_warship(figure &boat) {
     building_warship_wharf *wharf = nullptr;
@@ -175,13 +184,6 @@ void figure_warship::kill() {
     figure_impl::kill();
 }
 
-bool figure_warship::window_info_background(object_info &c) {
-    painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, big_people_image(type()), c.offset + vec2i{28, 112});
-    lang_text_draw(64, type(), c.offset.x + 92, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
-    return true;
-}
-
 void figure_warship::update_animation() {
     pcstr anim_key = "walk";
     switch (action_state()) {
@@ -193,4 +195,11 @@ void figure_warship::update_animation() {
     }
 
     image_set_animation(anim_key);
+}
+
+
+void figure_warship_info_window::init(object_info &c) {
+    figure_info_window::init(c);
+
+    figure_cartpusher *f = c.figure_get<figure_cartpusher>();
 }
