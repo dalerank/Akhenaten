@@ -26,14 +26,7 @@
 #include "config/config.h"
 #include "city/city.h"
 
-#include "js/js_game.h"
-
 figures::model_t<figure_cartpusher> cartpusher_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_cartpusher);
-void config_load_figure_cartpusher() {
-    cartpusher_m.load();
-}
 
 static const int CART_OFFSET_MULTIPLE_LOADS_FOOD[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static const int CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
