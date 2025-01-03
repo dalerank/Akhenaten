@@ -25,24 +25,27 @@ void figure::enemy_initial(formation* m) {
     wait_ticks--;
     if (wait_ticks <= 0) {
         if (index_in_formation == 0) {
-            if (m->layout == FORMATION_ENEMY_MOB)
+            if (m->layout == FORMATION_ENEMY_MOB) {
                 g_sound.speech_play_file("Wavs/drums.wav", 255);
-            else if (m->layout == FORMATION_ENEMY12)
+            } else if (m->layout == FORMATION_ENEMY12) {
                 g_sound.speech_play_file("Wavs/horn2.wav", 255);
-            else {
+            } else {
                 g_sound.speech_play_file("Wavs/horn1.wav", 255);
             }
         }
 
-        if (m->recent_fight)
+        if (m->recent_fight) {
             action_state = FIGURE_ACTION_154_ENEMY_FIGHTING;
-        else {
-            destination_tile.set(m->destination_x + formation_position_x.enemy,
-                                 m->destination_y + formation_position_y.enemy);
-            //            destination_tile.x() = m->destination_x + formation_position_x.enemy;
-            //            destination_tile.y() = m->destination_y + formation_position_y.enemy;
-            if (calc_general_direction(tile, destination_tile) < 8)
+        } else {
+            int formationx = formation_layout_position_x(m->layout, index_in_formation);
+            int formationy = formation_layout_position_y(m->layout, index_in_formation);
+
+            destination_tile.set(m->destination_x + formationx,
+                                 m->destination_y + formationy);
+
+            if (calc_general_direction(tile, destination_tile) < 8) {
                 action_state = FIGURE_ACTION_153_ENEMY_MARCHING;
+            }
         }
     }
     if (type == FIGURE_ENEMY43_SPEAR || type == FIGURE_ENEMY46_CAMEL || type == FIGURE_ENEMY51_SPEAR
@@ -94,10 +97,11 @@ void figure::enemy_marching(const formation* m) {
     wait_ticks--;
     if (wait_ticks <= 0) {
         wait_ticks = 50;
-        destination_tile.set(m->destination_x + formation_position_x.enemy,
-                             m->destination_y + formation_position_y.enemy);
-        //        destination_tile.x() = m->destination_x + formation_position_x.enemy;
-        //        destination_tile.y() = m->destination_y + formation_position_y.enemy;
+
+        int formationx = formation_layout_position_x(m->layout, index_in_formation);
+        int formationy = formation_layout_position_y(m->layout, index_in_formation);
+
+        destination_tile.set(m->destination_x + formationx, m->destination_y + formationy);
         if (calc_general_direction(tile, destination_tile) == DIR_FIGURE_NONE) {
             action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
             return;
@@ -164,14 +168,13 @@ void figure::enemy_fighting(const formation* m) {
 void figure::enemy_action(formation* m) {
     g_city.figures_add_enemy();
     terrain_usage = TERRAIN_USAGE_ENEMY;
-    formation_position_x.enemy = formation_layout_position_x(m->layout, index_in_formation);
-    formation_position_y.enemy = formation_layout_position_y(m->layout, index_in_formation);
+    //int formationx = formation_layout_position_x(m->layout, index_in_formation);
+    //int formationy = formation_layout_position_y(m->layout, index_in_formation);
 
     switch (action_state) {
     case FIGURE_ACTION_148_FLEEING:
         destination_tile = source_tile;
-        //            destination_tile.x() = source_tile.x();
-        //            destination_tile.y() = source_tile.y();
+
         move_ticks(speed_multiplier);
         if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
             poof();

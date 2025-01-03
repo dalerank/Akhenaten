@@ -453,8 +453,8 @@ void figure::bind(io_buffer* iob) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &f->progress_on_tile);              // 9
     iob->bind(BIND_SIGNATURE_UINT32, f->source_tile);
-    iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_x.soldier);
-    iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_y.soldier);
+    iob->bind____skip(2); // iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_x.soldier);
+    iob->bind____skip(2); // iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_y.soldier);
     iob->bind(BIND_SIGNATURE_INT8, &f->terrain_type);               // 0
     iob->bind(BIND_SIGNATURE_UINT8, &f->progress_inside_speed);
     iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks);                // 0

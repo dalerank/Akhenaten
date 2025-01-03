@@ -189,8 +189,8 @@ void figure_soldier::figure_action() {
     if (base.formation_at_rest || action_state() == FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT)
         layout = FORMATION_AT_REST;
 
-    base.formation_position_x.soldier = m->tile.x() + formation_layout_position_x(layout, base.index_in_formation);
-    base.formation_position_y.soldier = m->tile.y() + formation_layout_position_y(layout, base.index_in_formation);
+    const vec2i offset{ formation_layout_position_x(layout, base.index_in_formation), formation_layout_position_y(layout, base.index_in_formation) };
+    tile2i formation_position = m->tile.shifted(offset.x, offset.y);
 
     switch (action_state()) {
     case FIGURE_ACTION_80_SOLDIER_AT_REST:
@@ -198,7 +198,7 @@ void figure_soldier::figure_action() {
         wait_ticks = 0;
         base.formation_at_rest = 1;
         base.anim.frame = 0;
-        if (tilex() != base.formation_position_x.soldier || tiley() != base.formation_position_y.soldier)
+        if (tile() != formation_position)
             base.action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
         break;
 
@@ -206,7 +206,7 @@ void figure_soldier::figure_action() {
     case FIGURE_ACTION_148_FLEEING:
         wait_ticks = 0;
         base.formation_at_rest = 1;
-        destination_tile.set(base.formation_position_x.soldier, base.formation_position_y.soldier);
+        destination_tile = formation_position;
         base.move_ticks(speed_factor);
         if (direction() == DIR_FIGURE_NONE)
             base.action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
@@ -330,7 +330,7 @@ void figure_soldier::figure_action() {
         //            is_ghost = false;
         wait_ticks = 0;
         base.formation_at_rest = 1;
-        destination_tile.set(base.formation_position_x.soldier, base.formation_position_y.soldier);
+        destination_tile = formation_position;
         //            destination_tile.x() = formation_position_x.soldier;
         //            destination_tile.y() = formation_position_y.soldier;
         //            destination_tile.grid_offset() = MAP_OFFSET(destination_tile.x(), destination_tile.y());

@@ -99,16 +99,6 @@ public:
     uint16_t missile_damage;
     uint16_t damage;
 
-    union {
-        uint16_t soldier;
-        unsigned char enemy;
-    } formation_position_x;
-
-    union {
-        unsigned char soldier;
-        signed char enemy;
-    } formation_position_y;
-
     uint8_t terrain_type;
     short wait_ticks;
     short action_state;

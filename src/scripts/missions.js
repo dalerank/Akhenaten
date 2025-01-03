@@ -267,6 +267,12 @@ mission7 = { // Abydos
 			year : 2670,
 			month : 2,
 		},
+
+		{
+			type: "pharaoh_gift", //EVENT_TYPE_INVASION,
+			year: 2670,
+			month: 8,
+		},
 	],
 
 	cities : [
