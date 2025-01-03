@@ -27,7 +27,7 @@ jobs:
         restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
 
     - name: download-sdl
-      if: steps.cache-sdl-libs.outputs.cache-hit != true
+      if: steps.cache-sdl-libs.outputs.cache-hit != 'true'
       run: ./update-workspace-mac.sh
 
     - name: update-workspace
