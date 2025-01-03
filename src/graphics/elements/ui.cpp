@@ -640,7 +640,7 @@ bool ui::widget::contains(const xstring &id) const {
 
 ui::element& ui::widget::operator[](pcstr id) {
     auto it = std::find_if(elements.begin(), elements.end(), [xid = xstring(id)] (const auto &e) { return e->id == xid; });
-    if (it == elements.end()) {
+    if (check_errors && it == elements.end()) {
         logs::error("No element with id:%s", id);
     }
     return (it != elements.end() ? **it : ui::dummy_element);

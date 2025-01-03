@@ -151,10 +151,16 @@ void figure_info_window::init(object_info &c) {
     if (f->action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE || f->action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
         image_id = 18;
     }
+
+    ui.check_errors = false;
     ui["bigimage"].image(image_id);
 
     for (int i = 0; i < c.nfigure.ids.size(); i++) {
-        bstring64 btn_id; btn_id.printf("button_figure%d", i);
+        xstring btn_id; btn_id.printf("button_figure%d", i);
+        if (!ui.contains(btn_id)) {
+            break;
+        }
+
         ui[btn_id].select(i == c.nfigure.selected_index);
         ui[btn_id].onclick([index = i, &c] {
             auto &data = g_figures_data;

@@ -375,6 +375,7 @@ struct eimage_button : public element {
 
 struct widget {
     vec2i pos;
+    bool check_errors;
     element::items elements;
     widget &ui;
 
@@ -397,7 +398,7 @@ struct widget {
     inline void image(image_desc img, vec2i pos) { ui::eimage(img, pos); }
     inline void icon(vec2i pos, e_resource img) { ui::icon(pos, img); }
 
-    inline void begin_widget(vec2i offset, bool relative = false) { ui::begin_widget(offset, relative); }
+    inline void begin_widget(vec2i offset, bool relative = false) { check_errors = true; ui::begin_widget(offset, relative); }
     inline void end_widget() { ui::end_widget(); }
     void set_clip_rectangle(vec2i pos, vec2i size);
     void set_clip_rectangle(const element &e);
