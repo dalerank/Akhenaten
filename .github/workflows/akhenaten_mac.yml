@@ -26,7 +26,7 @@ jobs:
 
     - name: download-sdl
       if: steps.cache-sdl-libs.outputs.cache-hit != 'true'
-      run: ./update-workspace-mac.sh
+      run: ./.ci-scripts/mac/download-sdl.sh
 
     - name: update-workspace
       run: |
