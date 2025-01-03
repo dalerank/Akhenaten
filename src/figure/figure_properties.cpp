@@ -98,7 +98,7 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         }
 
         if (f->type == FIGURE_HERBALIST) {
-            game_debug_show_property("see_low_health", f->local_data.herbalist.see_low_health);
+            game_debug_show_property("see_low_health", f->data.herbalist.see_low_health);
         }
 
         ImGui::TreePop();

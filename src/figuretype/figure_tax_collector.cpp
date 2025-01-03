@@ -89,7 +89,7 @@ void figure_tax_collector::figure_action() {
 }
 
 sound_key figure_tax_collector::phrase_key() const {
-    auto &taxman = base.local_data.taxman;
+    auto &taxman = base.data.taxman;
 
     int all_taxed = taxman.poor_taxed + taxman.middle_taxed + taxman.reach_taxed;
     int poor_taxed = calc_percentage<int>(taxman.poor_taxed, all_taxed);
@@ -137,11 +137,11 @@ int figure_tax_collector::provide_service() {
             }
 
             if (b->subtype.house_level < HOUSE_ORDINARY_COTTAGE) {
-                f->local_data.taxman.poor_taxed++;
+                f->data.taxman.poor_taxed++;
             } else if (b->subtype.house_level < HOUSE_COMMON_MANOR) {
-                f->local_data.taxman.middle_taxed++;
+                f->data.taxman.middle_taxed++;
             } else {
-                f->local_data.taxman.reach_taxed++;
+                f->data.taxman.reach_taxed++;
             }
             b->tax_collector_id = f->home()->id;
             b->house_tax_coverage = 50;

@@ -53,7 +53,7 @@ const animations_t &figure_herbalist::anim() const {
 }
 
 sound_key figure_herbalist::phrase_key() const {
-    if (base.local_data.herbalist.see_low_health > 0) {
+    if (data.herbalist.see_low_health > 0) {
         return "have_malaria_risk_here";
     } else {
         return "no_threat_malaria_here";
@@ -73,7 +73,7 @@ int figure_herbalist::provide_service() {
         if (b->common_health < 50) {
             b->common_health++;
             if (b->common_health < 20) {
-                f->local_data.herbalist.see_low_health++;
+                f->data.herbalist.see_low_health++;
             }
         }
     });

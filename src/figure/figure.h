@@ -179,7 +179,7 @@ public:
     short market_lady_bought_amount;
     // 115 bytes
     uint8_t draw_debug_mode;
-    union {
+    union data_t {
         struct {
             short see_low_health;
             short reserved_1;
@@ -207,7 +207,7 @@ public:
         } bricklayer;
 
         short value[3];
-    } local_data;
+    } data;
     char festival_remaining_dances;
     figure_impl *_ptr = nullptr;
     
@@ -439,7 +439,7 @@ public:
         virtual void load(archive arch);
     };
 
-    figure_impl(figure *f) : base(*f), wait_ticks(f->wait_ticks), destination_tile(f->destination_tile) {}
+    figure_impl(figure *f) : base(*f), data(f->data), wait_ticks(f->wait_ticks), destination_tile(f->destination_tile) {}
 
     virtual void on_create();
     virtual void on_destroy() {}
@@ -535,6 +535,7 @@ public:
     metainfo get_info() const;
 
     figure &base;
+    figure::data_t &data;
     short &wait_ticks;
     tile2i &destination_tile;
 };
