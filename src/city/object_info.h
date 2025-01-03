@@ -95,6 +95,10 @@ struct object_info {
 
     template<typename T>
     T* figure_get() {
+        if (!figure_get_id()) {
+            return nullptr;
+        }
+
         return smart_cast<T>(figure_get());
     }
 };
