@@ -30,9 +30,9 @@ jobs:
 
     - name: update-workspace
       run: |
-        whereis clang++
-        export CXXFLAGS=-stdlib=libc++
+        mkdir -p build
         cd build
+        export CXXFLAGS=-stdlib=libc++
         cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" .. -G "Unix Makefiles"
         cd ..
 
