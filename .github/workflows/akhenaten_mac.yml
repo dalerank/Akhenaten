@@ -11,26 +11,44 @@ jobs:
     name: run on mac
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v4.2.2
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+
+    - uses: actions/cache@v4
+      env:
+        cache-name: cache-sdl-libs
+      with:
+        path: |
+          ~/Library/Frameworks/SDL2.framework
+          ~/Library/Frameworks/SDL2_image.framework
+          ~/Library/Frameworks/SDL2_mixer.framework
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./update-workspace-mac.sh') }}
+        restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
+
+    - name: download-sdl
+      if: steps.cache-sdl-libs.outputs.cache-hit != true
+      run: ./update-workspace-mac.sh
+
     - name: update-workspace
       run: |
         whereis clang++
         export CXXFLAGS=-stdlib=libc++
-        ./update-workspace-mac.sh
         cd build
-        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" ..
+        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" .. -G "Unix Makefiles"
         cd ..
+
     - name: build
       run: |
         cmake --build ./build -j6
+
     - name: install-and-bundle
       run: |
         cmake --build ./build --target install/local
         mkdir macos_build
         cp -R ./build/akhenaten.app ./macos_build/akhenaten.app
-    - uses: actions/upload-artifact@v4.5.0
+
+    - uses: actions/upload-artifact@v4
       with:
         name: macos_build
         path: macos_build
