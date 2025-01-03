@@ -1060,9 +1060,30 @@ info_window_figure_animal = {
 }
 
 window figure_warship_info_window = {
-	ui : __baseui(figure_info_window, {
+	ui : {
+		background 		  : outer_panel({size: [29, 23]}),
+		name 					  : text_center({pos: [16, 16], size: [px(27), 20], text:"${figure.class_name}", font : FONT_LARGE_BLACK_ON_DARK }),
+		hullstrength_lb : text({pos: [102, 58], text:"${184.2}" }),
+		hullstrength_val: text({pos: [202, 58], text:"" }),
+		crewfatique_lb  : text({pos: [102, 88], text:"${184.27}" }),
+		crewfatique_val : text({pos: [202, 88], text:"" }),
 
-	})
+		hold_position   : image_button({pos:[87 * 0 + 16, 136], pack:PACK_UNLOADED, id:37, offset:0 + 0, offset_pressed:0, offset_focused:0, border:true }),
+		engage_nearby   : image_button({pos:[87 * 1 + 16, 136], pack:PACK_UNLOADED, id:37, offset:0 + 1, offset_pressed:0, offset_focused:0, border:true }),
+		seek_and_destroy: image_button({pos:[87 * 2 + 16, 136], pack:PACK_UNLOADED, id:37, offset:0 + 2, offset_pressed:0, offset_focused:0, border:true }),
+		repair		      : image_button({pos:[87 * 3 + 16, 136], pack:PACK_UNLOADED, id:37, offset:0 + 3, offset_pressed:0, offset_focused:0, border:true }),
+		return_to_wharf : image_button({pos:[87 * 4 + 16, 136], pack:PACK_UNLOADED, id:37, offset:0 + 4, offset_pressed:0, offset_focused:0, border:true }),
+
+		inner_panel 	  : inner_panel({pos : [16, 220], size: [27, 6],
+			ui : {
+				action_header: text({pos: [10, 10], font : FONT_NORMAL_BLACK_ON_DARK }),
+				action_text	: text({pos: [10, 30], font : FONT_NORMAL_BLACK_ON_DARK, wrap:px(21), multiline:true }),
+			}
+		}),
+
+		button_help    : help_button({}),
+		button_close   : close_button({}),
+	}
 }
 
 info_window_figure_caravan_donkey = {
