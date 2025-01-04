@@ -9,7 +9,15 @@
 
 #include <SDL.h>
 
-void painter::draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color, float scale, bool mirrored, bool alpha) {
+void painter::draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color, float scale, bool mirrored, ImgFlags flags) {
+    if (!(flags & ImgFlag_Grayscale)) {
+        draw_impl(texture, x, y, offset, size, color, scale, mirrored, flags);
+    } else {
+        draw_grayscale(texture, x, y, offset, size, scale, mirrored, !!(flags & ImgFlag_Alpha));
+    }
+}
+
+void painter::draw_impl(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color, float scale, bool mirrored, ImgFlags flags) {
     if (texture == nullptr) {
         return;
     }
@@ -26,24 +34,13 @@ void painter::draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i s
 
     graphics_renderer()->set_texture_scale_mode(texture, overall_scale_factor);
 
-#ifdef USE_RENDER_GEOMETRY
-    // if (HAS_RENDER_GEOMETRY) {
-    //     SDL_Rect src_coords = { x_offset, y_offset, img->width, height };
-    //     SDL_FRect dst_coords = { x / scale, y / scale, img->width / scale, height / scale };
-    //     if (img->type == IMAGE_TYPE_ISOMETRIC) {
-    //         draw_isometric_footprint_raw(img, texture, &src_coords, &dst_coords, color, scale);
-    //     } else {
-    //         draw_texture_raw(img, texture, &src_coords, &dst_coords, color, scale);
-    //     }
-    //     return;
-    // }
-#endif
-
     SDL_SetTextureColorMod(texture,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
                            (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
                            (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE);
     SDL_SetTextureAlphaMod(texture, (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
+
+    const bool alpha = !!(flags & ImgFlag_Alpha);
     SDL_SetTextureBlendMode(texture, alpha ? SDL_BLENDMODE_BLEND : (SDL_BlendMode)graphics_renderer()->premult_alpha());
 
     // uncomment here if you want save something from atlases
@@ -81,19 +78,108 @@ void painter::draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i s
     } else {
         SDL_RenderCopyExF(this->renderer, texture, &texture_coords, &screen_coords, 0, nullptr, SDL_FLIP_NONE);
     }
+}
 
-    // #ifdef USE_RENDERCOPYF
-    //     if (HAS_RENDERCOPYF) {
-    //         SDL_FRect dst_coords = { x / scale, y / scale, img->width / scale, height / scale };
-    //         SDL_Point center = {0, 0};
-    //         SDL_RenderCopyF(data.renderer, texture, &src_coords, &dst_coords);
-    //         return;
-    //     }
-    // #endif
-    //
-    //     SDL_Rect dst_coords = { (int) round(x / scale), (int) round(y / scale),
-    //         (int) round(img->width / scale), (int) round(height / scale) };
-    //     SDL_RenderCopy(data.renderer, texture, &src_coords, &dst_coords);
+std::unordered_map<uint64_t, SDL_Texture *> grayscaled_txs;
+
+SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i size) {
+    if (!tx) {
+        return nullptr;
+    }
+
+    uint64_t hash = ((uint64_t)tx & 0xffffffff) | ((uint64_t)offset.x << 32) | ((uint64_t)offset.y << 48);
+
+    auto it = grayscaled_txs.find(hash);
+    if (it != grayscaled_txs.end()) {
+        return it->second;
+    }
+
+    auto gray_tx = grayscaled_txs.insert({ hash , nullptr });
+
+    uint32_t format;
+    int w, h;
+
+    /* Get information about texture we want to save */
+    int st = SDL_QueryTexture(tx, &format, NULL, &w, &h);
+    if (st != 0) {
+        return nullptr;
+    }
+
+    if (SDL_BYTESPERPIXEL(format) != 4) {
+        return nullptr;
+    }
+
+    SDL_Texture* ren_tex = SDL_CreateTexture(this->renderer, format, SDL_TEXTUREACCESS_TARGET, size.x, size.y);
+    if (!ren_tex) {
+        return nullptr;
+    }
+
+    struct RenTexDeleter {
+        SDL_Texture *tx;
+        ~RenTexDeleter() { SDL_DestroyTexture(tx); }
+    } _renTexDeleter{ ren_tex };
+
+    /*
+     * Initialize our canvas, then copy texture to a target whose pixel data we
+     * can access
+     */
+    SDL_Texture *old_target = SDL_GetRenderTarget(this->renderer);
+    st = SDL_SetRenderTarget(this->renderer, ren_tex);
+    if (st != 0) {
+        return nullptr;
+    }
+
+    SDL_SetRenderDrawColor(this->renderer, 0x00, 0x00, 0x00, 0x00);
+    SDL_RenderClear(this->renderer);
+
+    SDL_Rect srcrect{ offset.x, offset.y, size.x, size.y };
+    st = SDL_RenderCopy(this->renderer, tx, &srcrect, NULL);
+    if (st != 0) {
+        return nullptr;
+    }
+
+    /* Create buffer to hold texture data and load it */
+    std::vector<uint32_t> pixels(size.x * size.y);
+    st = SDL_RenderReadPixels(this->renderer, NULL, format, pixels.data(), size.x * SDL_BYTESPERPIXEL(format));
+
+    const SDL_PixelFormat *pxformat = SDL_AllocFormat(format);
+    for (int y = 0; y < size.y; ++y) {
+        for (int x = 0; x < size.x; ++x) {
+            Uint32 *pixel = pixels.data() + y * size.x + x;
+            Uint8 r, g, b, a;
+            SDL_GetRGBA(*pixel, pxformat, &r, &g, &b, &a);
+            Uint8 gray = static_cast<Uint8>(0.3 * r + 0.59 * g + 0.11 * b);
+            *pixel = SDL_MapRGBA(pxformat, gray, gray, gray, a);
+        }
+    }
+
+    /* Copy pixel data over to surface */
+    SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormatFrom(pixels.data(), size.x, size.y, SDL_BITSPERPIXEL(format), size.x * SDL_BYTESPERPIXEL(format), format);
+    if (!surface) {
+        return nullptr;
+    }
+
+    SDL_Texture *gray_tx_ptr = SDL_CreateTextureFromSurface(this->renderer, surface);
+
+    gray_tx.first->second = gray_tx_ptr;
+    SDL_FreeSurface(surface);
+
+    SDL_SetRenderTarget(this->renderer, old_target);
+
+    return gray_tx_ptr;
+}
+
+void painter::draw_grayscale(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, float scale, bool mirrored, bool alpha) {
+    if (texture == nullptr) {
+        return;
+    }
+
+    SDL_Texture *grtx = convertToGrayscale(texture, offset, size);
+    if (!grtx) { 
+        return;
+    }
+
+    draw_impl(grtx, x, y, vec2i{ 0, 0 }, size, COLOR_WHITE, scale, mirrored, alpha);
 }
 
 void painter::draw(const sprite &spr, vec2i pos, color color_mask, float scale, bool mirrored, bool alpha) {

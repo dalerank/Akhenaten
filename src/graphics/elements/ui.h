@@ -31,15 +31,15 @@ pcstr lang_text_from_key(pcstr key);
 
 enum UiFlags_ {
     UiFlags_None = 0,
-    UiFlags_AlignCentered = 1 << 1,
-    UiFlags_PanelOuter = 1 << 2,
+    UiFlags_Darkened = 1 << 1,
+    UiFlags_Grayscale = 1 << 2,
     UiFlags_PanelInner = 1 << 3,
     UiFlags_LabelMultiline = 1 << 4,
     UiFlags_AlignYCentered = 1 << 5,
     UiFlags_NoBody = 1 << 6,
     UiFlags_Rich = 1 << 7,
     UiFlags_Selected = 1 << 8,
-    UiFlags_Darkened = 1 << 9,
+    UiFlags_AlignCentered = 1 << 9,
     UiFlags_NoScroll = 1 << 10,
     UiFlags_AlignLeft = 1 << 11,
     UiFlags_AlignXCentered = 1 << 12,
@@ -48,6 +48,7 @@ enum UiFlags_ {
     UiFlags_Outline = 1 << 15,
     UiFlags_SplitText = 1 << 16,
     UiFlags_PanelSmall = 1 << 17,
+    UiFlags_PanelOuter = 1 << 18,
 };
 using UiFlags = int;
 

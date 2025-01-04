@@ -1,6 +1,7 @@
 #pragma once
 
 #include "graphics/color.h"
+#include "graphics/graphics.h"
 
 #include "content/file_formats.h"
 #include "content/vfs.h"
@@ -74,7 +75,8 @@ public:
     void fill_rect(vec2i start, vec2i size, color color);
 
     void draw_image_part(painter &ctx, const image_t *img, int offset, float x, float y, color color = COLOR_WHITE, float scale = 1.f, bool mirrored = false , bool alpha = false);
-    void draw_image(painter &ctx, const image_t* img, float x, float y, color color = COLOR_WHITE, float scale = 1.f, bool mirrored = false, bool alpha = false);
+    void draw_image(painter &ctx, const image_t* img, float x, float y, color color = COLOR_WHITE, float scale = 1.f, bool mirrored = false, ImgFlags flags = ImgFlag_None);
+    void draw_image_grayscale(painter &ctx, const image_t* img, float x, float y, float scale = 1.f, bool mirrored = false, bool alpha = false);
     bool save_screen_buffer(painter &ctx, color *pixels, int x, int y, int width, int height, int row_width);
 
     void create_custom_texture(int type, int width, int height);

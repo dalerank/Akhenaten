@@ -708,17 +708,18 @@ const image_t *ImageDraw::img_generic(painter &ctx, const image_desc &imgd, vec2
     return img;
 }
 
-const image_t* ImageDraw::img_generic(painter &ctx, int image_id, vec2i p, color color_mask, float scale, bool internal_offset) {
+const image_t* ImageDraw::img_generic(painter &ctx, int image_id, vec2i p, color color_mask, float scale, bool internal_offset, ImgFlags flags) {
     const image_t* img = image_get(image_id);
     vec2i offset{0, 0};
     if (internal_offset) {
         offset = img->animation.sprite_offset;
     }
-    graphics_renderer()->draw_image(ctx, img, p.x - offset.x, p.y - offset.y, color_mask, scale);
+
+    graphics_renderer()->draw_image(ctx, img, p.x - offset.x, p.y - offset.y, color_mask, scale, false, flags);
     return img;
 }
 
-void ImageDraw::img_sprite(painter &ctx, int image_id, int x, int y, color color_mask, float scale, bool alpha) {
+void ImageDraw::img_sprite(painter &ctx, int image_id, int x, int y, color color_mask, float scale, ImgFlags flags) {
     const image_t* img = image_get(image_id);
     bool mirrored = (img->offset_mirror != 0);
    
@@ -730,7 +731,7 @@ void ImageDraw::img_sprite(painter &ctx, int image_id, int x, int y, color color
     }
 
     y -= img->animation.sprite_offset.y;
-    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, mirrored, alpha);
+    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, mirrored, flags);
 }
 
 void ImageDraw::img_ornament(painter &ctx, int image_id, int base_id, int x, int y, color color_mask, float scale) {

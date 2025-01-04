@@ -35,13 +35,22 @@ void graphics_clear_saved_texture(int image_id, color clr);
 void graphics_delete_saved_texture(int image_id);
 void graphics_draw_from_texture(int image_id, vec2i pos, vec2i size);
 
+enum ImgFlag_ {
+    ImgFlag_None = 0,
+    ImgFlag_Alpha = (1 << 1),
+    ImgFlag_Grayscale = (1 << 2),
+    ImgFlag_Mirrored = (1 << 3),
+};
+
+using ImgFlags = uint32_t;
+
 namespace ImageDraw {
 const image_t* img_generic(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 const image_t* img_generic(painter &ctx, int pak, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 const image_t* img_generic(painter &ctx, const image_desc &img, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
-const image_t* img_generic(painter &ctx, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, bool internal_offset = false);
-void img_sprite(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, bool alpha = false);
-inline void img_sprite(painter &ctx, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, bool alpha = false) { img_sprite(ctx, image_id, p.x, p.y, color_mask, scale, alpha); }
+const image_t* img_generic(painter &ctx, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, bool internal_offset = false, ImgFlags flags = ImgFlag_None);
+void img_sprite(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, ImgFlags flags = ImgFlag_None );
+inline void img_sprite(painter &ctx, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, ImgFlags flags = ImgFlag_None) { img_sprite(ctx, image_id, p.x, p.y, color_mask, scale, flags); }
 
 void img_ornament(painter &ctx, int image_id, int base_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void img_from_below(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);

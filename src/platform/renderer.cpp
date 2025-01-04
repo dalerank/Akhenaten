@@ -296,7 +296,7 @@ void graphics_renderer_interface::draw_image_part(painter &ctx, const image_t* i
     ctx.draw(img->atlas.p_atlas->texture, x, y, atlas_offset, size, color, scale, mirrored, alpha);
 }
 
-void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, float x, float y, color color, float scale, bool mirrored, bool alpha) {
+void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, float x, float y, color color, float scale, bool mirrored, ImgFlags flags) {
     if (!img) {
         return;
     }
@@ -308,7 +308,23 @@ void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, f
     vec2i offset = img->atlas.offset;
     vec2i size = {img->width, img->height};
     if (offset.x >= 0 && offset.y >= 0) {
-        ctx.draw(img->atlas.p_atlas->texture, x, y, offset, size, color, scale, mirrored, alpha);
+        ctx.draw(img->atlas.p_atlas->texture, x, y, offset, size, color, scale, mirrored, flags);
+    }
+}
+
+void graphics_renderer_interface::draw_image_grayscale(painter &ctx, const image_t *img, float x, float y, float scale, bool mirrored, bool alpha) {
+    if (!img) {
+        return;
+    }
+
+    if (!img->atlas.p_atlas) {
+        return;
+    }
+
+    vec2i offset = img->atlas.offset;
+    vec2i size = { img->width, img->height };
+    if (offset.x >= 0 && offset.y >= 0) {
+        ctx.draw(img->atlas.p_atlas->texture, x, y, offset, size, scale, mirrored, alpha);
     }
 }
 
@@ -790,16 +806,15 @@ bool graphics_renderer_interface::save_texture_to_file(const char* filename, SDL
     int st;
     int w;
     int h;
-    int format;
+    uint32_t format;
     void* pixels;
 
     pixels = NULL;
     surf = NULL;
     ren_tex = NULL;
-    format = SDL_PIXELFORMAT_RGBA32;
 
     /* Get information about texture we want to save */
-    st = SDL_QueryTexture(tex, NULL, NULL, &w, &h);
+    st = SDL_QueryTexture(tex, &format, NULL, &w, &h);
     if (st != 0) {
         logs::info("Failed querying texture: %s\n", SDL_GetError());
         goto cleanup;
@@ -844,8 +859,7 @@ bool graphics_renderer_interface::save_texture_to_file(const char* filename, SDL
     }
 
     /* Copy pixel data over to surface */
-    surf = SDL_CreateRGBSurfaceWithFormatFrom(
-      pixels, w, h, SDL_BITSPERPIXEL(format), w * SDL_BYTESPERPIXEL(format), format);
+    surf = SDL_CreateRGBSurfaceWithFormatFrom(pixels, w, h, SDL_BITSPERPIXEL(format), w * SDL_BYTESPERPIXEL(format), format);
     if (!surf) {
         logs::info("Failed creating new surface: %s\n", SDL_GetError());
         goto cleanup;
