@@ -150,7 +150,7 @@ void build_menu_widget::draw_menu_buttons() {
 
             font = has_building ? FONT_NORMAL_BLACK_ON_DARK : font;
             UiFlags flags = UiFlags_PanelSmall;
-            flags |= (has_building ? UiFlags_Grayed : UiFlags_None);
+            flags |= (has_building ? UiFlags_Darkened : UiFlags_None);
             btn = &ui.button("", btn_w_start_pos + vec2i{ x_offset - label_margin, y_offset + item.size.y * i }, vec2i{ btn_w_tot, 20 }, fonts_vec{ font, FONT_NORMAL_BLACK_ON_LIGHT }, flags,
                 [this, i] (int, int) {
                     button_menu_item(button_index_to_submenu_item(i));

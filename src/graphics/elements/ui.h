@@ -39,7 +39,7 @@ enum UiFlags_ {
     UiFlags_NoBody = 1 << 6,
     UiFlags_Rich = 1 << 7,
     UiFlags_Selected = 1 << 8,
-    UiFlags_Grayed = 1 << 9,
+    UiFlags_Darkened = 1 << 9,
     UiFlags_NoScroll = 1 << 10,
     UiFlags_AlignLeft = 1 << 11,
     UiFlags_AlignXCentered = 1 << 12,
@@ -117,7 +117,7 @@ struct element {
     recti margin = { recti::nomargin, recti::nomargin, recti::nomargin, recti::nomargin, recti::nomargin };
     bool readonly = false;
     bool enabled = true;
-    bool grayed = false;
+    uint8_t darkened = 0;
     draw_callback _draw_callback;
 
     virtual void draw(UiFlags flags) {}

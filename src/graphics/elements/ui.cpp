@@ -287,7 +287,7 @@ void splitStringByNewline(const std::string &str, T &result) {
 }
 
 generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, UiFlags flags, std::function<void(int, int)> cb) {
-    const bool grayed = !!(flags & UiFlags_Grayed);
+    const bool darkened = !!(flags & UiFlags_Darkened);
     const bool hasbody = !(flags & UiFlags_NoBody);
     const bool hasborder = !(flags & UiFlags_NoBorder);
     const bool splittext = !!(flags & UiFlags_SplitText);
@@ -304,13 +304,13 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
     gbutton.clip = graphics_clip_rectangle();
 
     if (small_panel) {
-        int mask = grayed ? 0xffe0e0e0 : 0xffffffff;
+        int mask = darkened ? 0xffe0e0e0 : 0xffffffff;
         painter ctx = game.painter();
         small_panel_draw_colored(ctx, pos.x, pos.y, (size.x / 16), gbutton.hovered ? 1 : 2, mask);
     } else if (hasbody) {
-        button_border_draw(offset + pos, size, gbutton.hovered && !grayed);
+        button_border_draw(offset + pos, size, gbutton.hovered && !darkened);
     } else if (hasborder) {
-        if (gbutton.hovered && !grayed) {
+        if (gbutton.hovered && !darkened) {
             button_border_draw(offset + pos, size, true);
         }
     }
@@ -356,11 +356,11 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
         }
     }    
 
-    if (grayed) {
+    if (darkened) {
         graphics_shade_rect(offset + pos, size, 0x80);
     }
 
-    if (!grayed && !!cb) {
+    if (!darkened && !!cb) {
         gbutton.onclick(cb);
     }
     return gbutton;
@@ -395,7 +395,7 @@ image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
     g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, (uint32_t)desc.pack, (uint32_t)desc.id, offsets.data[0], button_none, button_none, 0, 0, true});
     auto &ibutton = g_state.buttons.back().i_button;
 
-    ibutton.hovered = !(flags & UiFlags_Grayed) && (is_button_hover(ibutton, state_offset) || !!(flags & UiFlags_Selected));
+    ibutton.hovered = !(flags & UiFlags_Darkened) && (is_button_hover(ibutton, state_offset) || !!(flags & UiFlags_Selected));
     ibutton.pressed = ibutton.hovered && m->left.is_down;
     ibutton.enabled = !(flags & UiFlags_Readonly);
 
@@ -531,14 +531,14 @@ arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
     g_state.buttons.push_back(arrow_button{pos.x, pos.y, img_index, size, button_none, 0, 0});
     auto &abutton = g_state.buttons.back().a_button;
 
-    const bool hovered = !(flags & UiFlags_Grayed) && (is_button_hover(abutton, offset) || !!(flags & UiFlags_Selected));
+    const bool hovered = !(flags & UiFlags_Darkened) && (is_button_hover(abutton, offset) || !!(flags & UiFlags_Selected));
     const bool pressed = hovered && m->left.is_down;
     abutton.state = (hovered ? (pressed ? 2 : 1) : 0);
 
     arrow_buttons_draw(offset, abutton, tiny);
-    const bool grayed = !!(flags & UiFlags_Grayed);
+    const bool darkened = !!(flags & UiFlags_Darkened);
 
-    if (grayed) {
+    if (darkened) {
         graphics_shade_rect(offset + pos, vec2i{ size, size }, 0x80);
     }
 
@@ -881,7 +881,7 @@ void ui::eimage_button::draw(UiFlags gflags) {
         return;
     }
 
-    if (grayed) {
+    if (darkened > 0) {
         graphics_shade_rect(doffset + pos, tsize, 0x80);
         return;
     }
@@ -1042,7 +1042,7 @@ void ui::earrow_button::draw(UiFlags flags) {
 
 void ui::egeneric_button::draw(UiFlags gflags) {
     UiFlags flags = _flags | gflags
-                      | (grayed ? UiFlags_Grayed : UiFlags_None)
+                      | ((darkened == 1) ? UiFlags_Darkened : UiFlags_None)
                       | (!_border ? UiFlags_NoBorder : UiFlags_None)
                       | (!_hbody ? UiFlags_NoBody : UiFlags_None)
                       | (_split ? UiFlags_SplitText : UiFlags_None);

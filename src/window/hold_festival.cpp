@@ -51,19 +51,19 @@ int ui::hold_festival_window::draw_background(UiFlags flags) {
 
     int resource_image_deben = image_id_from_group(PACK_GENERAL, 103) + 18;
     ui["small_festival"].text_var("%s %u @I%u", ui::str(58, 31), g_city.festival.small_cost, resource_image_deben);
-    ui["small_festival"].grayed = city_finance_out_of_money();
+    ui["small_festival"].darkened = city_finance_out_of_money();
     ui["small_festival"].onclick([] {
         window_hold_festival_select_size(FESTIVAL_SMALL);
     });
 
     ui["middle_festival"].text_var("%s %u @I%u", ui::str(58, 32), g_city.festival.large_cost, resource_image_deben);
-    ui["middle_festival"].grayed = city_finance_out_of_money();
+    ui["middle_festival"].darkened = city_finance_out_of_money();
     ui["middle_festival"].onclick([] { 
         window_hold_festival_select_size(FESTIVAL_LARGE); 
     });
 
     int resource_image_beer = image_id_resource_icon(RESOURCE_BEER);
-    ui["large_festival"].grayed = city_finance_out_of_money() || g_city.festival.not_enough_alcohol;
+    ui["large_festival"].darkened = city_finance_out_of_money() || g_city.festival.not_enough_alcohol;
     ui["large_festival"].text_var("%s %u @I%u %u  @I%u", ui::str(58, 32), g_city.festival.grand_cost, resource_image_deben, g_city.festival.grand_alcohol, resource_image_beer);
     ui["large_festival"].onclick([] {
         window_hold_festival_select_size(FESTIVAL_GRAND);
@@ -88,7 +88,7 @@ int ui::hold_festival_window::draw_background(UiFlags flags) {
         bstring32 god_id; god_id.printf("god%d", god);
         if (g_city.religion.is_god_known(god) == GOD_STATUS_UNKNOWN) {
             ui[god_id].select(false);
-            ui[god_id].grayed = true;
+            ui[god_id].darkened = true;
             continue;
         }
 
