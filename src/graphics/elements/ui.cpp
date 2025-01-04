@@ -896,6 +896,8 @@ void ui::eimage_button::draw(UiFlags gflags) {
 
     btn->onclick(_func);
     btn->tooltip(_tooltip);
+    btn->parameter1 = param1;
+    btn->parameter2 = param2;
 
     if (!_tooltip.empty() && btn->hovered) {
         tooltipctx.set(0, _tooltip);

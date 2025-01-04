@@ -206,6 +206,10 @@ public:
             short idle_wait_count;
         } bricklayer;
 
+        struct {
+            short active_order;
+        } warship;
+
         short value[3];
     } data;
     char festival_remaining_dances;

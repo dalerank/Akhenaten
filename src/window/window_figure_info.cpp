@@ -119,6 +119,7 @@ void figure_info_window::window_info_background(object_info &c) {
 
     ui.format_all(f->dcast());
 
+    ui.check_errors = false;
     ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
 
     for (int i = 0; i < c.nfigure.ids.size(); i++) {

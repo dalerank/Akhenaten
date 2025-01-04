@@ -3,8 +3,7 @@
 #include "figure/route.h"
 #include "figure/image.h"
 #include "figure_shipwreck.h"
-#include "figure_fishing_boat.h"
-#include "window/building/figures.h"
+#include "figure/properties.h"
 #include "grid/water.h"
 #include "grid/figure.h"
 #include "city/message.h"
@@ -16,15 +15,7 @@
 #include "graphics/elements/ui.h"
 #include "graphics/image_desc.h"
 #include "building/building_warship_wharf.h"
-#include "window/window_figure_info.h"
 #include "city/city.h"
-
-struct figure_warship_info_window : public figure_info_window_t<figure_warship_info_window> {
-    virtual void init(object_info &c) override;
-    virtual bool check(object_info &c) override {
-        return !!c.figure_get<figure_warship>();
-    }
-};
 
 figures::model_t<figure_warship> warship_m;
 figure_warship_info_window figure_warship_infow;
@@ -51,6 +42,7 @@ water_dest map_water_get_wharf_for_new_warship(figure &boat) {
 
 void figure_warship::on_create() {
     base.allow_move_type = EMOVE_WATER;
+    data.warship.active_order = e_order_goto_wharf;
 }
 
 void figure_warship::on_destroy() {
@@ -197,9 +189,31 @@ void figure_warship::update_animation() {
     image_set_animation(anim_key);
 }
 
-
+pcstr button_ids[] = { "hold_position", "engage_nearby", "seek_and_destroy", "repair", "return_to_wharf" };
 void figure_warship_info_window::init(object_info &c) {
     figure_info_window::init(c);
 
-    figure_cartpusher *f = c.figure_get<figure_cartpusher>();
+    figure_warship *f = c.figure_get<figure_warship>();
+
+    for (const pcstr id: button_ids) {
+        ui[id].onclick([f] (int p1, int p2) {
+            f->data.warship.active_order = p1;
+        });
+    }
+}
+
+void figure_warship_info_window::window_info_background(object_info &c) {
+    figure_info_window::window_info_background(c);
+
+    figure_warship *f = c.figure_get<figure_warship>();
+    const short order = f->data.warship.active_order;
+
+    const figure_properties *target_props = figure_properties_for_type(f->type());
+    ui["repair"].grayed = (f->base.damage == 0);
+    ui["return_to_wharf"].grayed = (f->base.action_state == FIGURE_ACTION_203_WARSHIP_MOORED);
+
+    for (const pcstr id : button_ids) {
+        auto imgbtn = ui[id].dcast_image_button();
+        imgbtn->select(order == imgbtn->param1);
+    }
 }

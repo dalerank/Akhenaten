@@ -1068,11 +1068,11 @@ window figure_warship_info_window = {
 		crewfatique_lb  : text({pos: [102, 88], text:"${184.27}" }),
 		crewfatique_val : text({pos: [202, 88], text:"" }),
 
-		hold_position   : image_button({pos:[87 * 0 + 16, 136], pack:PACK_UNLOADED, id:37, offset:0 + 0, offset_pressed:0, offset_focused:0, border:true }),
-		engage_nearby   : image_button({pos:[87 * 1 + 16, 136], pack:PACK_UNLOADED, id:37, offset:0 + 1, offset_pressed:0, offset_focused:0, border:true }),
-		seek_and_destroy: image_button({pos:[87 * 2 + 16, 136], pack:PACK_UNLOADED, id:37, offset:0 + 2, offset_pressed:0, offset_focused:0, border:true }),
-		repair		      : image_button({pos:[87 * 3 + 16, 136], pack:PACK_UNLOADED, id:37, offset:0 + 3, offset_pressed:0, offset_focused:0, border:true }),
-		return_to_wharf : image_button({pos:[87 * 4 + 16, 136], pack:PACK_UNLOADED, id:37, offset:0 + 4, offset_pressed:0, offset_focused:0, border:true }),
+		hold_position   : image_button({param1:3, pos:[87 * 0 + 16, 134], pack:PACK_UNLOADED, id:37, offset:0 + 0, offset_pressed:0, offset_focused:0, border:true }),
+		engage_nearby   : image_button({param1:2, pos:[87 * 1 + 16, 134], pack:PACK_UNLOADED, id:37, offset:0 + 1, offset_pressed:0, offset_focused:0, border:true }),
+		seek_and_destroy: image_button({param1:4, pos:[87 * 2 + 16, 134], pack:PACK_UNLOADED, id:37, offset:0 + 2, offset_pressed:0, offset_focused:0, border:true }),
+		repair		      : image_button({param1:5, pos:[87 * 3 + 16, 134], pack:PACK_UNLOADED, id:37, offset:0 + 3, offset_pressed:0, offset_focused:0, border:true }),
+		return_to_wharf : image_button({param1:1, pos:[87 * 4 + 16, 134], pack:PACK_UNLOADED, id:37, offset:0 + 4, offset_pressed:0, offset_focused:0, border:true }),
 
 		inner_panel 	  : inner_panel({pos : [16, 220], size: [27, 6],
 			ui : {
