@@ -553,7 +553,10 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(1344, false, "bizarre_ordered_fields_8", iob_bizarre_ordered_fields_8);
         FILEIO.push_chunk(1776, false, "bizarre_ordered_fields_9", iob_bizarre_ordered_fields_9);
         FILEIO.push_chunk(51984, false, "terrain_floodplain_growth", iob_terrain_floodplain_growth);
-        FILEIO.push_chunk(207936, false, "monuments_progress", iob_monuments_progress_grid);
+        FILEIO.push_chunk(207936, false, "monuments_progress", iob_monuments_progress_grid); // (228²) * 4
+        if (file_version > 165) {
+            FILEIO.push_chunk(51984, false, "rubble_type_grid", iob_rubble_type_grid); //  (228²) * 1
+        }
         break;
     }
 }

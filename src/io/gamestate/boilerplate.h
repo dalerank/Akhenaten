@@ -15,7 +15,7 @@
 //  163 akhenaten: save bazaar_days in house
 //  164 akhenaten: save water_supply in house
 //  165 akhenaten: save house health option
-constexpr uint32_t latest_save_version = 165;
+constexpr uint32_t latest_save_version = 166;
 
 bstring256 fullpath_saves(const char* filename);
 void fullpath_maps(char* full, const char* filename);

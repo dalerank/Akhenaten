@@ -19,6 +19,7 @@ extern io_buffer* iob_random_grid;
 extern io_buffer* iob_desirability_grid;
 extern io_buffer* iob_elevation_grid;
 extern io_buffer* iob_damage_grid;
+extern io_buffer* iob_rubble_type_grid;
 extern io_buffer* iob_aqueduct_backup_grid;
 extern io_buffer* iob_sprite_backup_grid;
 extern io_buffer* iob_figures;

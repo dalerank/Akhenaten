@@ -82,6 +82,10 @@ io_buffer* iob_damage_grid = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_damage_grid);
 });
 
+io_buffer *iob_rubble_type_grid = new io_buffer([] (io_buffer *iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &g_rubble_type_grid);
+});
+
 int map_building_is_reservoir(tile2i tile) {
     if (!map_grid_is_inside(tile, 3))
         return 0;
