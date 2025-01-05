@@ -9,6 +9,7 @@
 #include "city/labor.h"
 #include "city/buildings.h"
 #include "city/city_health.h"
+#include "city/city_animals.h"
 #include "city/military.h"
 #include "city/city_resource.h"
 #include "city/city_resource.h"
@@ -301,6 +302,7 @@ struct city_t {
     } unused;
 
     city_fishing_points_t fishing_points;
+    city_animals_t animals;
 
     struct environment_t {
         void river_update_flotsam();

@@ -19,7 +19,6 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "figuretype/animal.h"
 #include "config/config.h"
 #include "content/dir.h"
 #include "io/gamefiles/lang.h"

@@ -6,7 +6,6 @@
 #include "empire/empire_city.h"
 #include "figure/combat.h"
 #include "figure/figure.h"
-#include "figuretype/animal.h"
 #include "figure/formation.h"
 #include "figure/formation_enemy.h"
 #include "figure/route.h"

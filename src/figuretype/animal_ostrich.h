@@ -1,6 +1,6 @@
 #pragma once
 
-#include "animal.h"
+#include "figure_animal.h"
 
 class figure_ostrich : public figure_impl {
 public:

@@ -47,7 +47,7 @@ tile2i scenario_map_river_exit() {
     return g_scenario_data.river_exit_point;
 }
 
-void scenario_map_foreach_herd_point(void (*callback)(tile2i)) {
+void scenario_map_foreach_herd_point(std::function<void(tile2i)> callback) {
     for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) {
         tile2i tile = g_scenario_data.herd_points_predator[i];
         if (tile.valid()) {

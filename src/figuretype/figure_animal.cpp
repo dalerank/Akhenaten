@@ -1,4 +1,4 @@
-#include "animal.h"
+#include "figure_animal.h"
 
 #include "building/building.h"
 #include "city/entertainment.h"
@@ -48,46 +48,6 @@ static const int SHEEP_IMAGE_OFFSETS[] = {
 };
 
 enum E_HORSE { HORSE_CREATED = 0, HORSE_RACING = 1, HORSE_FINISHED = 2 };
-
-void figure_create_herd(tile2i tile) {
-    e_figure_type herd_type;
-    int num_animals;
-    switch (scenario_property_climate()) {
-    case CLIMATE_CENTRAL:
-        herd_type = FIGURE_ANTELOPE;
-        num_animals = 10;
-        break;
-
-    case CLIMATE_NORTHERN:
-        herd_type = FIGURE_CROCODILE;
-        num_animals = 8;
-        break;
-
-    case CLIMATE_DESERT:
-        herd_type = FIGURE_OSTRICH;
-        num_animals = 12;
-        break;
-
-    default:
-        return;
-    }
-
-    int formation_id = formation_create_herd(herd_type, tile, num_animals);
-    if (formation_id > 0) {
-        for (int fig = 0; fig < num_animals; fig++) {
-            random_generate_next();
-
-            figure* f = figure_create(herd_type, tile, DIR_0_TOP_RIGHT);
-            f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
-            f->formation_id = formation_id;
-            f->wait_ticks = f->id & 0x1f;
-        }
-    }
-}
-
-void figure_create_herds() {
-    scenario_map_foreach_herd_point(figure_create_herd);
-}
 
 bool figure::herd_roost(int step, int bias, int max_dist, int terrain_mask) {
     OZZY_PROFILER_SECTION("Figure/Herd Rooost");

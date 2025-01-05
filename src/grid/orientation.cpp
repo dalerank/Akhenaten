@@ -8,7 +8,6 @@
 #include "building/building_statue.h"
 #include "core/direction.h"
 #include "core/log.h"
-#include "figuretype/animal.h"
 #include "figuretype/wall.h"
 #include "game/undo.h"
 #include "graphics/image.h"
@@ -74,7 +73,7 @@ void map_orientation_change(int counter_clockwise) {
     map_routing_update_walls();
 
     figure_tower_sentry_reroute();
-    figure_hippodrome_horse_reroute();
+    //figure_hippodrome_horse_reroute();
     Planner.update_orientations(false);
 }
 

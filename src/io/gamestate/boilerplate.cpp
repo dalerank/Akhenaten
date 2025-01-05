@@ -21,7 +21,6 @@
 #include "figure/figure_names.h"
 #include "figure/route.h"
 #include "figure/trader.h"
-#include "figuretype/animal.h"
 #include "game/mission.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -692,7 +691,7 @@ void GamestateIO::start_loaded_file() {
 
         //        map_natives_init();
         g_city.fishing_points.create();
-        figure_create_herds();
+        g_city.animals.create_herds();
 
         g_city.map.entry_point = scenario_map_entry();
         g_city.map.exit_point = scenario_map_exit();
