@@ -74,6 +74,75 @@ void figure_warship::figure_action() {
 
     assert(base.allow_move_type == EMOVE_WATER);
 
+    switch (data.warship.active_order) {
+    case e_order_goto_wharf:
+        figure_action_goto_wharf();
+        break;
+
+    default:
+        figure_action_common();
+    }
+}
+
+void figure_warship::kill() {
+    home()->remove_figure_by_id(id());
+    base.set_home(0);
+    base.wait_ticks = 0;
+    figure_shipwreck::create(tile());
+    figure_impl::kill();
+}
+
+void figure_warship::update_animation() {
+    pcstr anim_key = "walk";
+    switch (action_state()) {
+    case FIGURE_ACTION_192_FISHING_BOAT_FISHING: anim_key = "work"; break;
+    case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: anim_key = "idle"; break;
+    case FIGURE_ACTION_205_WARSHIP_CREATED: anim_key = "idle"; break;
+    case FIGURE_ACTION_209_WARSHIP_ON_PATROL: anim_key = "idle"; break;
+    case FIGURE_ACTION_203_WARSHIP_MOORED: anim_key = "idle"; break;
+    }
+
+    image_set_animation(anim_key);
+}
+
+void figure_warship::figure_action_goto_wharf() {
+    if (action_state() == FIGURE_ACTION_204_WARSHIP_ATTACK) {
+        wait_ticks++;
+        if (wait_ticks >= 200) {
+            wait_ticks = 0;
+            advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
+            destination_tile = base.source_tile;
+            route_remove();
+        }
+        return;
+    }
+
+    if (action_state() == FIGURE_ACTION_203_WARSHIP_MOORED) {
+        return;
+    }
+
+    building_warship_wharf *wharf = smart_cast<building_warship_wharf>(home());
+    if (!wharf) {
+        return;
+    }
+
+    advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
+    destination_tile.set(wharf->data.dock.dock_tiles[0]);
+    base.move_ticks(1);
+    base.height_adjusted_ticks = 0;
+    if (direction() == DIR_FIGURE_NONE) {
+        advance_action(FIGURE_ACTION_203_WARSHIP_MOORED);
+        wait_ticks = 0;
+    } else if (direction() == DIR_FIGURE_REROUTE) {
+        route_remove();
+    } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+        advance_action(FIGURE_ACTION_205_WARSHIP_CREATED);
+    }
+}
+
+void figure_warship::figure_action_common() {
+    building *b = home();
+
     switch (action_state()) {
     case FIGURE_ACTION_205_WARSHIP_CREATED:
         wait_ticks++;
@@ -138,55 +207,36 @@ void figure_warship::figure_action() {
         }
         break;
 
-    case FIGURE_ACTION_208_WARSHIP_GOING_TO_RANDOM: {
-            wait_ticks = 0;
-            tile2i fish_tile = g_city.fishing_points.random_fishing_point(tile(), true);
-            if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
-                advance_action(FIGURE_ACTION_206_WARSHIP_GOING_TO_PATROL);
-                destination_tile = fish_tile;
-                route_remove();
-            }
-        } break;
+    case FIGURE_ACTION_208_WARSHIP_GOING_TO_RANDOM:
+    {
+        wait_ticks = 0;
+        tile2i fish_tile = g_city.fishing_points.random_fishing_point(tile(), true);
+        if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
+            advance_action(FIGURE_ACTION_206_WARSHIP_GOING_TO_PATROL);
+            destination_tile = fish_tile;
+            route_remove();
+        }
+    } break;
 
-    case FIGURE_ACTION_203_WARSHIP_MOORED: {
-            int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
-            int max_wait_ticks = 5 * (102 - pct_workers);
+    case FIGURE_ACTION_203_WARSHIP_MOORED:
+    {
+        int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
+        int max_wait_ticks = 5 * (102 - pct_workers);
 
-            if (pct_workers > 0) {
-                wait_ticks++;
-                if (wait_ticks >= max_wait_ticks) {
-                    wait_ticks = 0;
-                    tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile(), true);
-                    if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
-                        advance_action(FIGURE_ACTION_206_WARSHIP_GOING_TO_PATROL);
-                        destination_tile = fish_tile;
-                        route_remove();
-                    }
+        if (pct_workers > 0) {
+            wait_ticks++;
+            if (wait_ticks >= max_wait_ticks) {
+                wait_ticks = 0;
+                tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile(), true);
+                if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
+                    advance_action(FIGURE_ACTION_206_WARSHIP_GOING_TO_PATROL);
+                    destination_tile = fish_tile;
+                    route_remove();
                 }
             }
-        } break;
+        }
+    } break;
     }
-}
-
-void figure_warship::kill() {
-    home()->remove_figure_by_id(id());
-    base.set_home(0);
-    base.wait_ticks = 0;
-    figure_shipwreck::create(tile());
-    figure_impl::kill();
-}
-
-void figure_warship::update_animation() {
-    pcstr anim_key = "walk";
-    switch (action_state()) {
-    case FIGURE_ACTION_192_FISHING_BOAT_FISHING: anim_key = "work"; break;
-    case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: anim_key = "idle"; break;
-    case FIGURE_ACTION_205_WARSHIP_CREATED: anim_key = "idle"; break;
-    case FIGURE_ACTION_209_WARSHIP_ON_PATROL: anim_key = "idle"; break;
-    case FIGURE_ACTION_203_WARSHIP_MOORED: anim_key = "idle"; break;
-    }
-
-    image_set_animation(anim_key);
 }
 
 pcstr button_ids[] = { "hold_position", "engage_nearby", "seek_and_destroy", "repair", "return_to_wharf" };

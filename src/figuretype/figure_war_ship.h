@@ -28,6 +28,9 @@ public:
     virtual sound_key phrase_key() const override { return {}; }
     virtual figure_sound_t get_sound_reaction(xstring key) const override { return {}; }
     virtual void update_animation() override;
+
+    void figure_action_goto_wharf();
+    void figure_action_common();
 };
 
 struct figure_warship_info_window : public figure_info_window_t<figure_warship_info_window> {
