@@ -22,8 +22,8 @@ struct textid {
 };
 
 struct metainfo {
-    int help_id;
-    int text_id;
+    uint16_t help_id;
+    uint16_t text_id;
 };
 
 uint8_t* string_copy(const uint8_t* src, uint8_t* dst, int maxlength);

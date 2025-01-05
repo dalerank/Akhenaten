@@ -17,8 +17,17 @@
 #include "building/building_warship_wharf.h"
 #include "city/city.h"
 
-figures::model_t<figure_warship> warship_m;
+figure_warship::static_params warship_m;
 figure_warship_info_window figure_warship_infow;
+
+void figure_warship::static_params::load(archive arch) {
+    orders_info.fill(0);
+    arch.r_objects("orders", [this] (pcstr key, archive or_arch) {
+        int id = or_arch.r_int("id");
+        int text = or_arch.r_int("text");
+        orders_info[id] = text;
+    });
+}
 
 water_dest map_water_get_wharf_for_new_warship(figure &boat) {
     building_warship_wharf *wharf = nullptr;
@@ -246,7 +255,8 @@ void figure_warship_info_window::init(object_info &c) {
     figure_warship *f = c.figure_get<figure_warship>();
 
     for (const pcstr id: button_ids) {
-        ui[id].onclick([f] (int p1, int p2) {
+        ui[id].onclick([f, this] (int p1, int p2) {
+            const auto &params = f->params();
             f->data.warship.active_order = p1;
         });
     }
@@ -266,4 +276,8 @@ void figure_warship_info_window::window_info_background(object_info &c) {
         auto imgbtn = ui[id].dcast_image_button();
         imgbtn->select(order == imgbtn->param1);
     }
+
+    const auto &orders_info = f->current_params().orders_info;
+    ui["action_header"] = ui::str(c.group_id, orders_info[order]);
+    ui["action_text"] = ui::str(c.group_id, orders_info[order] + 1);
 }

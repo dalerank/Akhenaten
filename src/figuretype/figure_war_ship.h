@@ -11,12 +11,18 @@ public:
         e_order_engage_nearby,
         e_order_hold_position,
         e_order_seek_and_destroy,
-        e_order_repair
+        e_order_repair,
+        e_order_max,
     };
 
     FIGURE_METAINFO(FIGURE_WARSHIP, figure_warship)
     figure_warship(figure *f) : figure_impl(f) {}
     virtual figure_warship *dcast_warship() override { return this; }
+
+    struct static_params : public figures::model_t<figure_warship> {
+        std::array<short, e_order_max> orders_info;
+        virtual void load(archive arch) override;
+    };
 
     virtual void on_create() override;
     virtual void on_destroy() override;
@@ -31,6 +37,8 @@ public:
 
     void figure_action_goto_wharf();
     void figure_action_common();
+
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 struct figure_warship_info_window : public figure_info_window_t<figure_warship_info_window> {

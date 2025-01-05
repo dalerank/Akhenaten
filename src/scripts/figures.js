@@ -755,6 +755,15 @@ figure figure_warship = {
 		attack : {pack:PACK_SPR_MAIN, id:143, max_frames:6, duration:5 },
 		idle : {pack:PACK_SPR_MAIN, id:143, offset:3, max_frames:1 },
 	},
+	orders : {
+		goto_wharf : { id: 1, text: 9 },
+		engage_nearby : { id: 1, text: 11 },
+		hold_position : { id: 1, text: 13 },
+		seek_and_destroy : { id: 1, text: 15 },
+		repair : { id: 1, text: 17 },
+	},
+	info_help_id: 84,
+  info_text_id: 184,
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
