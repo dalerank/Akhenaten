@@ -34,6 +34,6 @@ struct painter {
 
 protected:
     void draw_impl(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color = COLOR_MASK_NONE, float scale = 1.f, bool mirrored = false, ImgFlags flags = ImgFlag_None);
-    SDL_Texture *painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i size);
+    SDL_Texture *convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i size);
 };
 
