@@ -1076,7 +1076,7 @@ window figure_warship_info_window = {
 
 		inner_panel 	  : inner_panel({pos : [16, 220], size: [27, 6],
 			ui : {
-				action_header: text({pos: [10, 10], font : FONT_NORMAL_BLACK_ON_DARK }),
+				action_header: text({pos: [10, 10], font : FONT_NORMAL_WHITE_ON_DARK }),
 				action_text	: text({pos: [10, 30], font : FONT_NORMAL_BLACK_ON_DARK, wrap:px(21), multiline:true }),
 			}
 		}),

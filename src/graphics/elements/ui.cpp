@@ -881,6 +881,10 @@ void ui::eimage_button::draw(UiFlags gflags) {
         return;
     }
 
+    if (border && selected) {
+        button_border_draw(doffset + pos - vec2i{ 4, 4 }, tsize + vec2i{ 8, 8 }, true);
+    }
+
     if (!!(darkened & UiFlags_Darkened)) {
         graphics_shade_rect(doffset + pos, tsize, 0x80);
         return;
@@ -892,10 +896,6 @@ void ui::eimage_button::draw(UiFlags gflags) {
 
     if (readonly) {
         return;
-    }
-
-    if (border && selected) {
-        button_border_draw(doffset + pos - vec2i{ 4, 4 }, tsize + vec2i{ 8, 8 }, true);
     }
 
     btn->onclick(_func);
