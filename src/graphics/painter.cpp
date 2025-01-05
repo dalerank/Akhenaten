@@ -6,6 +6,7 @@
 #include "platform/renderer.h"
 
 #include <string>
+#include <unordered_map>
 
 #include <SDL.h>
 
