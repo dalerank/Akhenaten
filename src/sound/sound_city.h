@@ -2,6 +2,7 @@
 
 #include "core/system_time.h"
 #include "sound/channel.h"
+#include "core/tokenum.h"
 
 #include <array>
 
@@ -82,7 +83,11 @@ enum e_sound_channel_city {
     SOUND_CHANNEL_CITY_MARSHLAND,
     SOUND_CHANNEL_CITY_CHICKFARM,
     SOUND_CHANNEL_CITY_COWFARM,
+
+    SOUND_CHANNEL_CITY_COUNT,
 };
+
+extern const token_holder<e_sound_channel_city, SOUND_CHANNEL_CITY_NONE, SOUND_CHANNEL_CITY_COUNT> e_sound_channel_city_tokens;
 
 struct city_sound_channel {
     int in_use;
