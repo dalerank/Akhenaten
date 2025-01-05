@@ -10,15 +10,15 @@
 
 #include <SDL.h>
 
-void painter::draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color, float scale, bool mirrored, ImgFlags flags) {
+void painter::draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color, float scale, ImgFlags flags) {
     if (!(flags & ImgFlag_Grayscale)) {
-        draw_impl(texture, x, y, offset, size, color, scale, mirrored, flags);
+        draw_impl(texture, x, y, offset, size, color, scale, flags);
     } else {
-        draw_grayscale(texture, x, y, offset, size, scale, mirrored, !!(flags & ImgFlag_Alpha));
+        draw_grayscale(texture, x, y, offset, size, scale, !!(flags & ImgFlag_Alpha));
     }
 }
 
-void painter::draw_impl(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color, float scale, bool mirrored, ImgFlags flags) {
+void painter::draw_impl(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color, float scale, ImgFlags flags) {
     if (texture == nullptr) {
         return;
     }
@@ -74,7 +74,7 @@ void painter::draw_impl(SDL_Texture *texture, float x, float y, vec2i offset, ve
                          size.y * overall_scale_factor};
     }
 
-    if (mirrored) {
+    if (!!(flags & ImgFlag_Mirrored)) {
         SDL_RenderCopyExF(this->renderer, texture, &texture_coords, &screen_coords, 0, nullptr, SDL_FLIP_HORIZONTAL);
     } else {
         SDL_RenderCopyExF(this->renderer, texture, &texture_coords, &screen_coords, 0, nullptr, SDL_FLIP_NONE);
@@ -170,7 +170,7 @@ SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i si
     return gray_tx_ptr;
 }
 
-void painter::draw_grayscale(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, float scale, bool mirrored, bool alpha) {
+void painter::draw_grayscale(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, float scale, ImgFlags flags) {
     if (texture == nullptr) {
         return;
     }
@@ -180,17 +180,17 @@ void painter::draw_grayscale(SDL_Texture *texture, float x, float y, vec2i offse
         return;
     }
 
-    draw_impl(grtx, x, y, vec2i{ 0, 0 }, size, COLOR_WHITE, scale, mirrored, alpha);
+    draw_impl(grtx, x, y, vec2i{ 0, 0 }, size, COLOR_WHITE, scale, flags);
 }
 
-void painter::draw(const sprite &spr, vec2i pos, color color_mask, float scale, bool mirrored, bool alpha) {
+void painter::draw(const sprite &spr, vec2i pos, color color_mask, float scale, ImgFlags flags) {
     if (spr.img == nullptr) {
         return;
     }
 
     vec2i offset = spr.img->atlas.offset;
     vec2i size = spr.img->size();
-    draw(spr.img->atlas.p_atlas->texture, pos.x, pos.y, offset, size, color_mask, scale, mirrored, alpha);
+    draw(spr.img->atlas.p_atlas->texture, pos.x, pos.y, offset, size, color_mask, scale, flags);
 }
 
 sprite_resource_icon::sprite_resource_icon(e_resource res) {

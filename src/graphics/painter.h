@@ -25,15 +25,15 @@ struct painter {
     SDL_Renderer *renderer;
     float global_render_scale;
 
-    void draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color = COLOR_MASK_NONE, float scale = 1.f, bool mirrored = false, ImgFlags flags = ImgFlag_None);
-    void draw_grayscale(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, float scale = 1.f, bool mirrored = false, bool alpha = false);
-    inline void draw(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color = COLOR_MASK_NONE, float scale = 1.f, bool mirrored = false, bool alpha = false) {
-        draw(texture, pos.x, pos.y, offset, size, color, scale, mirrored, alpha);
+    void draw(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color = COLOR_MASK_NONE, float scale = 1.f, ImgFlags flags = ImgFlag_None);
+    void draw_grayscale(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, float scale = 1.f, ImgFlags flags = ImgFlag_None);
+    inline void draw(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color = COLOR_MASK_NONE, float scale = 1.f, ImgFlags flags = ImgFlag_None) {
+        draw(texture, pos.x, pos.y, offset, size, color, scale, flags);
     }
-    void draw(const sprite &spr, vec2i pos, color color_mask = COLOR_MASK_NONE, float scale = 1.f, bool mirrored = false, bool alpha = false);
+    void draw(const sprite &spr, vec2i pos, color color_mask = COLOR_MASK_NONE, float scale = 1.f, ImgFlags flags = ImgFlag_None);
 
 protected:
-    void draw_impl(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color = COLOR_MASK_NONE, float scale = 1.f, bool mirrored = false, ImgFlags flags = ImgFlag_None);
+    void draw_impl(SDL_Texture *texture, float x, float y, vec2i offset, vec2i size, color color = COLOR_MASK_NONE, float scale = 1.f, ImgFlags flags = ImgFlag_None);
     SDL_Texture *convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i size);
 };
 

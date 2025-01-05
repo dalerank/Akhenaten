@@ -872,7 +872,7 @@ void ui::eimage_button::draw(UiFlags gflags) {
         btn = &ui::img_button({ 0, 0 }, pos, size, offsets, flags);
     } else if (icon_texture) {
         painter ctx = game.painter();
-        ctx.draw((SDL_Texture*)icon_texture, pos, {0, 0}, size, 0xffffffff, scale, false, true);
+        ctx.draw((SDL_Texture*)icon_texture, pos, {0, 0}, size, 0xffffffff, scale, ImgFlag_Alpha);
 
         btn = &ui::img_button({ 0, 0 }, pos, size, offsets, UiFlags_None);
     } 

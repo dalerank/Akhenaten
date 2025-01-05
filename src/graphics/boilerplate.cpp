@@ -715,7 +715,7 @@ const image_t* ImageDraw::img_generic(painter &ctx, int image_id, vec2i p, color
         offset = img->animation.sprite_offset;
     }
 
-    graphics_renderer()->draw_image(ctx, img, p.x - offset.x, p.y - offset.y, color_mask, scale, false, flags);
+    graphics_renderer()->draw_image(ctx, img, p.x - offset.x, p.y - offset.y, color_mask, scale, flags);
     return img;
 }
 
@@ -730,8 +730,10 @@ void ImageDraw::img_sprite(painter &ctx, int image_id, int x, int y, color color
         x -= img->animation.sprite_offset.x;
     }
 
+    flags |= (mirrored ? ImgFlag_Mirrored : ImgFlag_None);
+
     y -= img->animation.sprite_offset.y;
-    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, mirrored, flags);
+    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, flags);
 }
 
 void ImageDraw::img_ornament(painter &ctx, int image_id, int base_id, int x, int y, color color_mask, float scale) {
@@ -786,7 +788,9 @@ const image_t* ImageDraw::isometric_from_drawtile(painter &ctx, int image_id, ve
     //        assets_load_unpacked_asset(image_id);
     //    }
     pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
-    g_render.draw_image(ctx, img, pos.x, pos.y, color_mask, 1.f, false, alpha);
+
+    ImgFlags flags = alpha ? ImgFlag_Alpha : ImgFlag_None;
+    g_render.draw_image(ctx, img, pos.x, pos.y, color_mask, 1.f, flags);
     return img;
 }
 
@@ -800,6 +804,8 @@ const image_t* ImageDraw::isometric_from_drawtile_top(painter &ctx, int image_id
         return nullptr;
     }
     pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
-    g_render.draw_image(ctx, img_top, pos.x, pos.y, color_mask, 1.f, false, alpha);
+
+    ImgFlags flags = alpha ? ImgFlag_Alpha : ImgFlag_None;
+    g_render.draw_image(ctx, img_top, pos.x, pos.y, color_mask, 1.f, flags);
     return img;
 }
