@@ -1,4 +1,4 @@
-#include "animal_antelope.h"
+#include "figure_antelope.h"
 
 #include "figure/figure.h"
 #include "city/city.h"

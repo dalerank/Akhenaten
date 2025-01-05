@@ -236,9 +236,11 @@ int figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, 
 bool figure::is_attacking_native() {
     return type == FIGURE_INDIGENOUS_NATIVE && action_state == FIGURE_ACTION_159_NATIVE_ATTACKING;
 }
+
 void figure::figure_combat_handle_corpse() {
-    if (wait_ticks < 0)
+    if (wait_ticks < 0) {
         wait_ticks = 0;
+    }
 
     wait_ticks++;
     if (wait_ticks >= 128) {
@@ -255,6 +257,7 @@ void figure::resume_activity_after_attack() {
     attacker_id2 = 0;
     route_remove();
 }
+
 void figure::hit_opponent() {
     const formation* m = formation_get(formation_id);
     figure* opponent = figure_get(opponent_id);
@@ -312,6 +315,7 @@ void figure::hit_opponent() {
         formation_update_morale_after_death(opponent_formation);
     }
 }
+
 void figure::figure_combat_handle_attack() {
     advance_attack();
     if (num_attackers == 0) {
