@@ -886,6 +886,10 @@ void ui::eimage_button::draw(UiFlags gflags) {
         return;
     }
 
+    if (!!(darkened & UiFlags_Grayscale)) {
+        return;
+    }
+
     if (readonly) {
         return;
     }
