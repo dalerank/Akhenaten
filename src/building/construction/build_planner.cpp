@@ -1038,6 +1038,7 @@ void BuildPlanner::update_requirements_check() {
         }
     }
 }
+
 void BuildPlanner::update_special_case_orientations_check() {
     int dir_relative;
 
@@ -1237,12 +1238,14 @@ void BuildPlanner::update_orientations(bool check_if_changed) {
     setup_build_graphics(); // reload graphics, tiles, etc.
     update_coord_caches();  // refresh caches
 }
+
 void BuildPlanner::construction_record_view_position(vec2i pixel, tile2i point) {
     if (point == start) {
         start_offset_screen_x = pixel.x;
         start_offset_screen_y = pixel.y;
     }
 }
+
 void BuildPlanner::dispatch_warnings() {
     if (immediate_warning_id > -1)
         city_warning_show(immediate_warning_id);

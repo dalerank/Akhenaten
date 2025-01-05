@@ -1,6 +1,7 @@
 #include "city_animals.h"
 
 #include "core/random.h"
+#include "dev/debug.h"
 
 void city_animals_t::create_herd(tile2i tile) {
     e_figure_type herd_type;

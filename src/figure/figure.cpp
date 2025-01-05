@@ -27,6 +27,7 @@
 #endif // _MSC_VER
 
 declare_console_command_p(killall, console_command_killall);
+declare_console_command_p(createfigure, console_command_create_figure)
 void console_command_killall(std::istream &, std::ostream &) {
     for (auto &f: map_figures()) {
         if (f->is_valid()) {
@@ -36,6 +37,19 @@ void console_command_killall(std::istream &, std::ostream &) {
 
     city_warning_show_console("Killed all walkers");
 }
+
+void console_command_create_figure(std::istream &is, std::ostream &os) {
+    std::string args; is >> args;
+    int f_type = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+
+    if (!f_type) {
+        return;
+    }
+
+    const mouse *m = mouse_get();
+    tile2i current_tile = widget_city_update_city_view_coords({ m->x, m->y });;
+    figure_create((e_figure_type)f_type, current_tile, 1);
+};
 
 void figure::figure_delete_UNSAFE() {
     dcast()->on_destroy();
