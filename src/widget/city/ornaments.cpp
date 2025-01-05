@@ -52,7 +52,7 @@ void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile
     if (base_id == sprite_id) {
         ImageDraw::img_ornament(ctx, sprite_id + animation_offset, base_id, pos.x, pos.y, color_mask);
     } else {
-        ImageDraw::img_sprite(ctx, sprite_id + animation_offset, pos.x, pos.y, color_mask);
+        ImageDraw::img_sprite(ctx, sprite_id + animation_offset, pos, color_mask);
     }
 }
 

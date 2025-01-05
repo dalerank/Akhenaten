@@ -22,7 +22,7 @@ void figure::draw_fort_standard(vec2i pixel, int highlight, vec2i* coord_out) {
     painter ctx = game.painter();
     if (!formation_get(formation_id)->in_distant_battle) {
         // base
-        ImageDraw::img_generic(ctx, sprite_image_id, pixel.x, pixel.y);
+        ImageDraw::img_generic(ctx, sprite_image_id, pixel);
         // flag
         int flag_height = image_get(cart_image_id)->height;
         ImageDraw::img_generic(ctx, cart_image_id, pixel.x, pixel.y - flag_height);
@@ -120,12 +120,12 @@ void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight, vec2i* c
     y_correction = dcast()->y_correction(y_correction);
 
     const image_t* img = is_enemy_image ? image_get_enemy(sprite_image_id) : image_get(sprite_image_id);
-    ImageDraw::img_sprite(ctx, sprite_image_id, pixel.x + x_correction, pixel.y + y_correction, COLOR_MASK_NONE);
+    ImageDraw::img_sprite(ctx, sprite_image_id, pixel + vec2i{ x_correction, y_correction }, COLOR_MASK_NONE);
 }
 
 void figure::draw_figure_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
     const image_t* img = image_get(cart_image_id);
-    ImageDraw::img_sprite(ctx, cart_image_id, pixel.x + cart_offset.x, pixel.y + cart_offset.y - 7);
+    ImageDraw::img_sprite(ctx, cart_image_id, pixel + cart_offset - vec2i{0, 7});
 }
 
 void figure::draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
@@ -170,7 +170,7 @@ void figure::city_draw_figure(painter &ctx, int highlight, vec2i* coord_out) {
     } else {
         draw_figure_main(ctx, cached_pos, highlight, coord_out);
         if (!is_enemy_image && highlight) {
-            ImageDraw::img_sprite(ctx, sprite_image_id, cached_pos.x, cached_pos.y, COLOR_MASK_LEGION_HIGHLIGHT);
+            ImageDraw::img_sprite(ctx, sprite_image_id, cached_pos, COLOR_MASK_LEGION_HIGHLIGHT);
         }
     }
 

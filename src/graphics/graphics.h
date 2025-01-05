@@ -49,8 +49,7 @@ const image_t* img_generic(painter &ctx, int image_id, int x, int y, color color
 const image_t* img_generic(painter &ctx, int pak, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 const image_t* img_generic(painter &ctx, const image_desc &img, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 const image_t* img_generic(painter &ctx, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, bool internal_offset = false, ImgFlags flags = ImgFlag_None);
-void img_sprite(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, ImgFlags flags = ImgFlag_None );
-inline void img_sprite(painter &ctx, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, ImgFlags flags = ImgFlag_None) { img_sprite(ctx, image_id, p.x, p.y, color_mask, scale, flags); }
+void img_sprite(painter &ctx, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, ImgFlags flags = ImgFlag_None);
 
 void img_ornament(painter &ctx, int image_id, int base_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void img_from_below(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);

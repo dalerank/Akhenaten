@@ -957,7 +957,7 @@ void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, col
     }
 
     vec2i pos = pixel + base.anim.pos;
-    ImageDraw::img_sprite(ctx, base.anim.start() + base.anim.current_frame(), pos.x, pos.y, mask);
+    ImageDraw::img_sprite(ctx, base.anim.start() + base.anim.current_frame(), pos, mask);
 }
 
 void building_impl::bind_dynamic(io_buffer *iob, size_t version) {

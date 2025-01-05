@@ -623,7 +623,7 @@ static const color* tile_data(const color* data, int index) {
     return &data[900 * index];
 }
 
-static void draw_footprint_size_any(int image_id, int x, int y, int size, color color_mask, float scale) {
+static void draw_footprint_size_any(int image_id, vec2i pos, int size, color color_mask, float scale) {
     //    const color *data = image_data(image_id);
     const image_t* img = image_get(image_id);
 
@@ -645,7 +645,7 @@ static void draw_footprint_size_any(int image_id, int x, int y, int size, color 
             int y_offset = k * 15;
 
             //            draw_footprint_tile(tile_data(data, index++), x + x_offset, y + y_offset, color_mask);
-            g_render.draw_image(ctx, img, x, y, color_mask, scale);
+            g_render.draw_image(ctx, img, pos, color_mask, scale);
         }
     }
 }
@@ -692,19 +692,19 @@ static void draw_multibyte_letter(e_font font, const image_t* img, int x, int y,
 
 const image_t* ImageDraw::img_generic(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
-    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale);
+    graphics_renderer()->draw_image(ctx, img, vec2i{x, y}, color_mask, scale);
     return img;
 }
 
 const image_t* ImageDraw::img_generic(painter &ctx, int pak, int image_id, vec2i p, color color_mask, float scale) {
     const image_t* img = image_get(pak, image_id);
-    graphics_renderer()->draw_image(ctx, img, p.x, p.y, color_mask, scale);
+    graphics_renderer()->draw_image(ctx, img, p, color_mask, scale);
     return img;
 }
 
 const image_t *ImageDraw::img_generic(painter &ctx, const image_desc &imgd, vec2i p, color color_mask, float scale) {
     const image_t *img = image_get(imgd);
-    graphics_renderer()->draw_image(ctx, img, p.x, p.y, color_mask, scale);
+    graphics_renderer()->draw_image(ctx, img, p, color_mask, scale);
     return img;
 }
 
@@ -715,25 +715,25 @@ const image_t* ImageDraw::img_generic(painter &ctx, int image_id, vec2i p, color
         offset = img->animation.sprite_offset;
     }
 
-    graphics_renderer()->draw_image(ctx, img, p.x - offset.x, p.y - offset.y, color_mask, scale, flags);
+    graphics_renderer()->draw_image(ctx, img, p - offset, color_mask, scale, flags);
     return img;
 }
 
-void ImageDraw::img_sprite(painter &ctx, int image_id, int x, int y, color color_mask, float scale, ImgFlags flags) {
+void ImageDraw::img_sprite(painter &ctx, int image_id, vec2i p, color color_mask, float scale, ImgFlags flags) {
     const image_t* img = image_get(image_id);
     bool mirrored = (img->offset_mirror != 0);
    
     if (mirrored) {
         img = img->mirrored_img;
-        x -= (img->width - img->animation.sprite_offset.x);
+        p.x -= (img->width - img->animation.sprite_offset.x);
     } else {
-        x -= img->animation.sprite_offset.x;
+        p.x -= img->animation.sprite_offset.x;
     }
 
     flags |= (mirrored ? ImgFlag_Mirrored : ImgFlag_None);
 
-    y -= img->animation.sprite_offset.y;
-    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale, flags);
+    p.y -= img->animation.sprite_offset.y;
+    graphics_renderer()->draw_image(ctx, img, p, color_mask, scale, flags);
 }
 
 void ImageDraw::img_ornament(painter &ctx, int image_id, int base_id, int x, int y, color color_mask, float scale) {
@@ -743,12 +743,12 @@ void ImageDraw::img_ornament(painter &ctx, int image_id, int base_id, int x, int
     x += base->animation.sprite_offset.x;
     y += base->animation.sprite_offset.y - base->height + ydiff;
     //    y += base->animation.sprite_y_offset - img->isometric_ydiff();
-    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale);
+    graphics_renderer()->draw_image(ctx, img, vec2i{ x, y }, color_mask, scale);
 }
 
 void ImageDraw::img_from_below(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
-    graphics_renderer()->draw_image(ctx, img, x, y - img->height, color_mask, scale);
+    graphics_renderer()->draw_image(ctx, img, vec2i{ x, y - img->height }, color_mask, scale);
 }
 
 void ImageDraw::img_letter(painter &ctx, e_font font, int letter_id, int x, int y, color color_mask, float scale) {
@@ -761,9 +761,9 @@ void ImageDraw::img_letter(painter &ctx, e_font font, int letter_id, int x, int 
         color_mask = base_color_for_font(font);
 
     if (font == FONT_SMALL_SHADED)
-        graphics_renderer()->draw_image(ctx, img, x + 1, y + 1, COLOR_BLACK, scale);
+        graphics_renderer()->draw_image(ctx, img, vec2i{ x + 1, y + 1 }, COLOR_BLACK, scale);
 
-    graphics_renderer()->draw_image(ctx, img, x, y, color_mask, scale);
+    graphics_renderer()->draw_image(ctx, img, vec2i{ x, y }, color_mask, scale);
 }
 
 void ImageDraw::img_background(painter &ctx, int image_id, float scale, vec2i offset) {
@@ -771,7 +771,7 @@ void ImageDraw::img_background(painter &ctx, int image_id, float scale, vec2i of
     if (scale == -1) {
         //        graphics_renderer()->draw_image(img, 0, 0, COLOR_MASK_NONE, scale, false); // todo?
     } else {
-        g_render.draw_image(ctx, img, (screen_width() - img->width) / 2 + offset.x, (screen_height() - img->height) / 2 + offset.y, COLOR_MASK_NONE, scale);
+        g_render.draw_image(ctx, img, vec2i{ (screen_width() - img->width) / 2, (screen_height() - img->height) / 2 } + offset, COLOR_MASK_NONE, scale);
     }
 }
 
@@ -790,7 +790,7 @@ const image_t* ImageDraw::isometric_from_drawtile(painter &ctx, int image_id, ve
     pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
 
     ImgFlags flags = alpha ? ImgFlag_Alpha : ImgFlag_None;
-    g_render.draw_image(ctx, img, pos.x, pos.y, color_mask, 1.f, flags);
+    g_render.draw_image(ctx, img, pos, color_mask, 1.f, flags);
     return img;
 }
 
@@ -806,6 +806,6 @@ const image_t* ImageDraw::isometric_from_drawtile_top(painter &ctx, int image_id
     pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
 
     ImgFlags flags = alpha ? ImgFlag_Alpha : ImgFlag_None;
-    g_render.draw_image(ctx, img_top, pos.x, pos.y, color_mask, 1.f, flags);
+    g_render.draw_image(ctx, img_top, pos, color_mask, 1.f, flags);
     return img;
 }

@@ -286,17 +286,17 @@ unsigned int graphics_renderer_interface::premult_alpha() {
     return ::premult_alpha;
 }
 
-void graphics_renderer_interface::draw_image_part(painter &ctx, const image_t* img, int offset, float x, float y, color color, float scale, ImgFlags flags) {
+void graphics_renderer_interface::draw_image_part(painter &ctx, const image_t* img, int offset, vec2i pos, color color, float scale, ImgFlags flags) {
     if (img == nullptr) {
         return;
     }
 
     vec2i atlas_offset = img->atlas.offset;
     vec2i size = {img->width, (img->height - offset) / 2 + offset};
-    ctx.draw(img->atlas.p_atlas->texture, x, y, atlas_offset, size, color, scale, flags);
+    ctx.draw(img->atlas.p_atlas->texture, pos, atlas_offset, size, color, scale, flags);
 }
 
-void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, float x, float y, color color, float scale, ImgFlags flags) {
+void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, vec2i pos, color color, float scale, ImgFlags flags) {
     if (!img) {
         return;
     }
@@ -308,11 +308,11 @@ void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, f
     vec2i offset = img->atlas.offset;
     vec2i size = {img->width, img->height};
     if (offset.x >= 0 && offset.y >= 0) {
-        ctx.draw(img->atlas.p_atlas->texture, x, y, offset, size, color, scale, flags);
+        ctx.draw(img->atlas.p_atlas->texture, pos, offset, size, color, scale, flags);
     }
 }
 
-void graphics_renderer_interface::draw_image_grayscale(painter &ctx, const image_t *img, float x, float y, float scale, ImgFlags flags) {
+void graphics_renderer_interface::draw_image_grayscale(painter &ctx, const image_t *img, vec2i pos, float scale, ImgFlags flags) {
     if (!img) {
         return;
     }
@@ -324,7 +324,7 @@ void graphics_renderer_interface::draw_image_grayscale(painter &ctx, const image
     vec2i offset = img->atlas.offset;
     vec2i size = { img->width, img->height };
     if (offset.x >= 0 && offset.y >= 0) {
-        ctx.draw(img->atlas.p_atlas->texture, x, y, offset, size, scale, flags);
+        ctx.draw(img->atlas.p_atlas->texture, pos, offset, size, scale, flags);
     }
 }
 
