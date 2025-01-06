@@ -7,6 +7,7 @@ void figure_standard_bearer::figure_action() {
 
     //    terrain_usage = TERRAIN_USAGE_ANY;
     //    figure_image_increase_offset(16);
+    base.wait_ticks = 0;
     base.map_figure_remove();
     if (m->is_at_fort) {
         base.tile = m->tile;
@@ -52,4 +53,7 @@ void figure_standard_bearer::figure_draw(painter &ctx, vec2i pixel, int hightlig
     // top icon
     int icon_image_id = image_id_from_group(PACK_GENERAL, 127) + formation_get(base.formation_id)->legion_id;
     ImageDraw::img_generic(ctx, icon_image_id, pixel.x, pixel.y - image_get(icon_image_id)->height - flag_height);
+}
+
+void figure_standard_bearer::before_poof() {
 }

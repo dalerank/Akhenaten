@@ -9,4 +9,5 @@ public:
 
     virtual void figure_action() override;
     virtual void figure_draw(painter &ctx, vec2i pixel, int hightlight, vec2i *coord_out) override;
+    virtual void before_poof() override;
 };
