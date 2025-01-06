@@ -42,11 +42,3 @@ public:
     
     virtual void update_image(const formation *m, int &dir) override;
 };
-
-class figure_standard_bearer : public figure_impl {
-public:
-    FIGURE_METAINFO(FIGURE_STANDARD_BEARER, figure_standard_bearer)
-    figure_standard_bearer(figure *f) : figure_impl(f) {}
-
-    virtual void figure_action() override;
-};

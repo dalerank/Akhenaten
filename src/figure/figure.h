@@ -310,8 +310,6 @@ public:
     void city_draw_figure(painter &ctx, int highlight, vec2i* coord_out = nullptr);
     //    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
     void draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out = nullptr);
-    //    void draw_hippodrome_horse(int x, int y);
-    void draw_fort_standard(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
     void draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
 
     // movement.c

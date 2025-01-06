@@ -101,7 +101,7 @@ void figure::hyena_action() {
     case FIGURE_ACTION_199_WOLF_ATTACKING:
         move_ticks(2);
         if (direction == DIR_FIGURE_NONE) {
-            int target_id = figure_combat_get_target_for_wolf(tile, 6);
+            int target_id = figure_combat_get_target_for_hyena(tile, 6);
             if (target_id) {
                 figure* target = figure_get(target_id);
                 destination_tile = target->tile;

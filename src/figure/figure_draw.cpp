@@ -18,20 +18,6 @@ static const vec2i crowd_offsets[] = {
 };
 constexpr int crowd_offsets_size = (int)std::size(crowd_offsets);
 
-void figure::draw_fort_standard(vec2i pixel, int highlight, vec2i* coord_out) {
-    painter ctx = game.painter();
-    if (!formation_get(formation_id)->in_distant_battle) {
-        // base
-        ImageDraw::img_generic(ctx, sprite_image_id, pixel);
-        // flag
-        int flag_height = image_get(cart_image_id)->height;
-        ImageDraw::img_generic(ctx, cart_image_id, pixel.x, pixel.y - flag_height);
-        // top icon
-        int icon_image_id = image_id_from_group(PACK_GENERAL, 127) + formation_get(formation_id)->legion_id;
-        ImageDraw::img_generic(ctx, icon_image_id, pixel.x, pixel.y - image_get(icon_image_id)->height - flag_height);
-    }
-}
-
 void figure::draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out) {
     painter ctx = game.painter();
     // base
@@ -156,9 +142,6 @@ void figure::city_draw_figure(painter &ctx, int highlight, vec2i* coord_out) {
 
     if (cart_image_id) {
         switch (type) {
-        case FIGURE_STANDARD_BEARER:
-            draw_fort_standard(cached_pos, highlight, coord_out);
-            break;
         case FIGURE_MAP_FLAG:
             draw_map_flag(cached_pos, highlight, coord_out);
             break;

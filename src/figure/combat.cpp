@@ -70,7 +70,7 @@ int figure_combat_get_target_for_soldier(tile2i tile, int max_distance) {
     return 0;
 }
 
-int figure_combat_get_target_for_wolf(tile2i tile, int max_distance) {
+int figure_combat_get_target_for_hyena(tile2i tile, int max_distance) {
     int min_figure_id = 0;
     int min_distance = 10000;
     for (figure* f: map_figures()) {

@@ -132,7 +132,7 @@ static void move_animals(const formation* m, int attacking_animals, int terrain_
         }
 
         if (attacking_animals) {
-            int target_id = figure_combat_get_target_for_wolf(f->tile, 6);
+            int target_id = figure_combat_get_target_for_hyena(f->tile, 6);
             if (target_id) {
                 f->destination_tile.set(0, 0);
                 //                    while (f->destination_x == 0 || f->destination_y == 0)

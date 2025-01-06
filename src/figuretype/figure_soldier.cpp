@@ -18,8 +18,6 @@
 #include "grid/point.h"
 #include "sound/sound.h"
 
-#include "js/js_game.h"
-
 static const vec2i ALTERNATIVE_POINTS[] = {
   {-1, -6}, {0, -1}, {1, -1},  {1, 0},   {1, 1},   {0, 1},   {-1, 1},  {-1, 0},  {-1, -1}, {0, -2},  {1, -2},  {2, -2},
   {2, -1},  {2, 0},  {2, 1},   {2, 2},   {1, 2},   {0, 2},   {-1, 2},  {-2, 2},  {-2, 1},  {-2, 0},  {-2, -1}, {-2, -2},
@@ -38,56 +36,10 @@ static const vec2i ALTERNATIVE_POINTS[] = {
   {-1, -6},
 };
 
-figures::model_t<figure_standard_bearer> standard_bearer_m;
+
 figures::model_t<figure_soldier_infantry> soldier_infantry_m;
 figures::model_t<figure_soldier_archer> soldier_archer_m;
 figures::model_t<figure_soldier_charioteer> soldier_charioterr_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_soldiers);
-void config_load_figure_soldiers() {
-    standard_bearer_m.load();
-    soldier_infantry_m.load();
-    soldier_archer_m.load();
-    soldier_charioterr_m.load();
-}
-
-void figure_standard_bearer::figure_action() {
-    const formation* m = formation_get(base.formation_id);
-
-    //    terrain_usage = TERRAIN_USAGE_ANY;
-    //    figure_image_increase_offset(16);
-    base.map_figure_remove();
-    if (m->is_at_fort) {
-        base.tile = m->tile;
-    } else {
-        base.tile = m->standard_tile;
-    }
-    //    tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
-    base.cc_coords.x = 15 * tilex() + 7;
-    base.cc_coords.y = 15 * tiley() + 7;
-    base.map_figure_add();
-
-    base.sprite_image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
-    if (m->figure_type == FIGURE_INFANTRY) {
-        if (m->is_halted)
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 8;
-        else {
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + base.anim.frame / 2;
-        }
-    } else if (m->figure_type == FIGURE_FCHARIOTEER) {
-        if (m->is_halted)
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 26;
-        else {
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 18 + base.anim.frame / 2;
-        }
-    } else {
-        if (m->is_halted)
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 17;
-        else {
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 9 + base.anim.frame / 2;
-        }
-    }
-}
 
 void figure::javelin_launch_missile() {
     tile2i tile = {-1, -1};
@@ -115,6 +67,7 @@ void figure::javelin_launch_missile() {
             attack_image_offset = 0;
     }
 }
+
 void figure::legionary_attack_adjacent_enemy() {
     for (int i = 0; i < 8 && action_state != FIGURE_ACTION_150_ATTACK; i++)
         figure_combat_attack_figure_at(tile.grid_offset() + map_grid_direction_delta(i));
@@ -326,14 +279,11 @@ void figure_soldier::figure_action() {
 
         break;
     }
+
     case FIGURE_ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE:
-        //            is_ghost = false;
         wait_ticks = 0;
         base.formation_at_rest = 1;
         destination_tile = formation_position;
-        //            destination_tile.x() = formation_position_x.soldier;
-        //            destination_tile.y() = formation_position_y.soldier;
-        //            destination_tile.grid_offset() = MAP_OFFSET(destination_tile.x(), destination_tile.y());
         base.move_ticks(speed_factor);
         if (direction() == DIR_FIGURE_NONE) {
             base.action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
@@ -345,7 +295,6 @@ void figure_soldier::figure_action() {
         break;
 
     case FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE:
-        //            is_ghost = true;
         base.formation_at_rest = 1;
         break;
     }
