@@ -68,56 +68,6 @@ bool figure::herd_roost(int step, int bias, int max_dist, int terrain_mask) {
     }
 }
 
-void figure::sheep_action() {
-    const formation* m = formation_get(formation_id);
-    //    terrain_usage = TERRAIN_USAGE_ANIMAL;
-    //    use_cross_country = false;
-    //    is_ghost = false;
-    g_city.figures.add_animal();
-    //    figure_image_increase_offset(6);
-
-    switch (action_state) {
-    case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
-        wait_ticks++;
-        if (wait_ticks > 400) {
-            wait_ticks = id & 0x1f;
-            action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-            destination_tile.set(m->destination_x + formation_layout_position_x(FORMATION_HERD, index_in_formation),
-                                 m->destination_y + formation_layout_position_y(FORMATION_HERD, index_in_formation));
-            //                destination_tile.x() = m->destination_x + formation_layout_position_x(FORMATION_HERD,
-            //                index_in_formation); destination_tile.y() = m->destination_y +
-            //                formation_layout_position_y(FORMATION_HERD, index_in_formation);
-            roam_length = 0;
-        }
-        break;
-
-    case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
-        move_ticks(1);
-        if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_CAN_NOT_REACH) {
-            direction = previous_tile_direction;
-            action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
-            wait_ticks = id & 0x1f;
-        } else if (direction == DIR_FIGURE_REROUTE)
-            route_remove();
-
-        break;
-    }
-
-    int dir = figure_image_direction();
-    if (action_state == FIGURE_ACTION_149_CORPSE) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_SHEEP) + 104 + figure_image_corpse_offset();
-    } else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
-        if (id & 3) {
-            sprite_image_id = image_id_from_group(GROUP_FIGURE_SHEEP) + 48 + dir + 8 * SHEEP_IMAGE_OFFSETS[wait_ticks & 0x3f];
-        } else {
-            sprite_image_id = image_id_from_group(GROUP_FIGURE_SHEEP) + 96 + dir;
-        }
-    } else {
-        image_set_animation(GROUP_FIGURE_SHEEP, 0, 6);
-    }
-    //        sprite_image_id = image_id_from_group(GROUP_FIGURE_SHEEP) + dir + 8 * anim_frame;
-}
-
 void figure::hyena_action() {
     const formation* m = formation_get(formation_id);
     g_city.figures.add_animal();

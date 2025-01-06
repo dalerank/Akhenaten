@@ -369,7 +369,6 @@ public:
     void enemy_gladiator_action();
     void enemy_kingdome_soldier_action();
     void ballista_action();
-    void sheep_action();
     void hyena_action();
     void zebra_action();
     void hippodrome_horse_action();
