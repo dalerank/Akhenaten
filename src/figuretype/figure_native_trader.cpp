@@ -48,9 +48,9 @@ void figure_native_trader::figure_action() {
 
     case FIGURE_ACTION_162_NATIVE_TRADER_CREATED:
         //            is_ghost = true;
-        wait_ticks++;
-        if (wait_ticks > 10) {
-            wait_ticks = 0;
+        base.wait_ticks++;
+        if (base.wait_ticks > 10) {
+            base.wait_ticks = 0;
             tile2i tile;
             int building_id = get_closest_storageyard(tile, 0, -1, tile);
             if (building_id) {
@@ -65,9 +65,9 @@ void figure_native_trader::figure_action() {
         break;
 
     case FIGURE_ACTION_163_NATIVE_TRADER_AT_WAREHOUSE:
-        wait_ticks++;
-        if (wait_ticks > 10) {
-            wait_ticks = 0;
+        base.wait_ticks++;
+        if (base.wait_ticks > 10) {
+            base.wait_ticks = 0;
             if (can_buy(destination(), 0)) {
                 e_resource resource = trader_get_buy_resource(destination(), 0, 100);
                 trader_record_bought_resource(base.trader_id, resource);

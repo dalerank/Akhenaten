@@ -86,9 +86,9 @@ void figure_trade_caravan::figure_action() {
     switch (action_state()) {
     default:
     case FIGURE_ACTION_100_TRADE_CARAVAN_CREATED:
-        wait_ticks++;
-        if (wait_ticks > 20) {
-            wait_ticks = 0;
+        base.wait_ticks++;
+        if (base.wait_ticks > 20) {
+            base.wait_ticks = 0;
             tile2i base_tile;
             int trade_center_id = city_buildings_get_trade_center();
             if (trade_center_id) {
@@ -110,9 +110,9 @@ void figure_trade_caravan::figure_action() {
         break;
 
     case FIGURE_ACTION_102_TRADE_CARAVAN_TRADING:
-        wait_ticks++;
-        if (wait_ticks > 10) {
-            wait_ticks = 0;
+        base.wait_ticks++;
+        if (base.wait_ticks > 10) {
+            base.wait_ticks = 0;
             int move_on = 0;
             if (can_buy(destination(), base.empire_city_id)) {
                 e_resource resource = trader_get_buy_resource(destination(), base.empire_city_id, UNITS_PER_LOAD);

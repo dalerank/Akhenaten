@@ -21,7 +21,7 @@ void figure_lumberjack::figure_action() {
     case ACTION_8_RECALCULATE:
     case ACTION_14_GATHERER_CREATED: // spawning
         base.anim.frame = 0;
-        if (--wait_ticks <= 0) {
+        if (--base.wait_ticks <= 0) {
             tile2i dest(-1, -1);
             bool found_resource = base.find_resource_tile(RESOURCE_TIMBER, dest);
 
@@ -38,7 +38,7 @@ void figure_lumberjack::figure_action() {
     case 9: // go to gathering place
         if (do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS)) {
             if (!can_harvest_point(MAP_OFFSET(destination_tile.x(), destination_tile.y()))) {
-                wait_ticks = 0;
+                base.wait_ticks = 0;
                 advance_action(8);
             } else
                 advance_action(10);
@@ -48,19 +48,19 @@ void figure_lumberjack::figure_action() {
     case 10: // gathering resource
         // someone finished harvesting this spot (for "multiple gatherers" config setting enabled)
         if (map_get_vegetation_growth(tile()) < 255) {
-            wait_ticks = 10;
+            base.wait_ticks = 10;
             advance_action(8);
         } else {
             // harvesting.....
-            if (wait_ticks >= 300) {
+            if (base.wait_ticks >= 300) {
                 map_vegetation_deplete(tile());
                 advance_action(11);
             }
             // progress faster with multiple people on one spot
             if (config_get(CONFIG_GP_CH_MULTIPLE_GATHERERS))
-                wait_ticks += gatherers_harvesting_point(tile());
+                base.wait_ticks += gatherers_harvesting_point(tile());
             else
-                wait_ticks++;
+                base.wait_ticks++;
         }
         break;
     case 11: // returning with resource

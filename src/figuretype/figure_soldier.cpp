@@ -148,7 +148,7 @@ void figure_soldier::figure_action() {
     switch (action_state()) {
     case FIGURE_ACTION_80_SOLDIER_AT_REST:
         base.map_figure_update();
-        wait_ticks = 0;
+        base.wait_ticks = 0;
         base.formation_at_rest = 1;
         base.anim.frame = 0;
         if (tile() != formation_position)
@@ -157,7 +157,7 @@ void figure_soldier::figure_action() {
 
     case FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT:
     case FIGURE_ACTION_148_FLEEING:
-        wait_ticks = 0;
+        base.wait_ticks = 0;
         base.formation_at_rest = 1;
         destination_tile = formation_position;
         base.move_ticks(speed_factor);
@@ -281,7 +281,7 @@ void figure_soldier::figure_action() {
     }
 
     case FIGURE_ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE:
-        wait_ticks = 0;
+        base.wait_ticks = 0;
         base.formation_at_rest = 1;
         destination_tile = formation_position;
         base.move_ticks(speed_factor);

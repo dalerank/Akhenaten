@@ -280,7 +280,7 @@ bool figure_docker::deliver_import_resource(building* dock) {
 
     ship->dump_resource(100);
     set_destination(warehouse_id);
-    wait_ticks = 0;
+    base.wait_ticks = 0;
     advance_action(FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE);
     destination_tile = tile;
     base.resource_id = resource;
@@ -311,7 +311,7 @@ bool figure_docker::fetch_export_resource(building* dock) {
     ship->trader_amount_bought++;
     set_destination(warehouse_id);
     advance_action(FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE);
-    wait_ticks = 0;
+    base.wait_ticks = 0;
     destination_tile = tile;
     base.resource_id = resource;
     return true;
@@ -356,15 +356,15 @@ void figure_docker::figure_action() {
         base.anim.frame = 0;
         if (b->data.dock.queued_docker_id <= 0) {
             b->data.dock.queued_docker_id = id();
-            wait_ticks = 0;
+            base.wait_ticks = 0;
         }
 
         if (b->data.dock.queued_docker_id == id()) {
             b->data.dock.num_ships = 120;
-            wait_ticks++;
-            if (wait_ticks >= 80) {
+            base.wait_ticks++;
+            if (base.wait_ticks >= 80) {
                 advance_action(FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE);
-                wait_ticks = 0;
+                base.wait_ticks = 0;
                 //                    set_cart_graphic();
                 b->data.dock.queued_docker_id = 0;
             }
@@ -389,23 +389,23 @@ void figure_docker::figure_action() {
     case FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE:
         if (b->data.dock.queued_docker_id <= 0) {
             b->data.dock.queued_docker_id = id();
-            wait_ticks = 0;
+            base.wait_ticks = 0;
         }
         if (b->data.dock.queued_docker_id == id()) {
             b->data.dock.num_ships = 120;
-            wait_ticks++;
-            if (wait_ticks >= 80) {
+            base.wait_ticks++;
+            if (base.wait_ticks >= 80) {
                 advance_action(FIGURE_ACTION_132_DOCKER_IDLING);
-                wait_ticks = 0;
+                base.wait_ticks = 0;
                 base.sprite_image_id = 0;
                 base.cart_image_id = 0;
                 b->data.dock.queued_docker_id = 0;
             }
         }
-        wait_ticks++;
-        if (wait_ticks >= 20) {
+        base.wait_ticks++;
+        if (base.wait_ticks >= 20) {
             advance_action(FIGURE_ACTION_132_DOCKER_IDLING);
-            wait_ticks = 0;
+            base.wait_ticks = 0;
         }
         base.anim.frame = 0;
         break;
@@ -440,14 +440,14 @@ void figure_docker::figure_action() {
         break;
 
     case FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE:
-        wait_ticks++;
-        if (wait_ticks > 10) {
+        base.wait_ticks++;
+        if (base.wait_ticks > 10) {
             int trade_city_id = b->data.dock.trade_ship_id
                                     ? figure_get(b->data.dock.trade_ship_id)->empire_city_id
                                     : 0;
 
             if (try_import_resource(destination(), base.resource_id, trade_city_id)) {
-                wait_ticks = 0;
+                base.wait_ticks = 0;
                 trader_record_sold_resource(trader_id(), base.resource_id);
                 advance_action(FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING);
                 load_resource(RESOURCE_NONE, 0);
@@ -457,17 +457,17 @@ void figure_docker::figure_action() {
                 advance_action(FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING);
                 destination_tile = base.source_tile;
             }
-            wait_ticks = 0;
+            base.wait_ticks = 0;
         }
         base.anim.frame = 0;
         break;
 
     case FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE:
-        wait_ticks++;
-        if (wait_ticks > 10) {
+        base.wait_ticks++;
+        if (base.wait_ticks > 10) {
             int trade_city_id = trader_city_id();
             advance_action(FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING);
-            wait_ticks = 0;
+            base.wait_ticks = 0;
             const bool can_export = try_export_resource(destination(), base.resource_id, trade_city_id);
             if (can_export) {
                 int amount = trader_record_bought_resource(trader_id(), base.resource_id);

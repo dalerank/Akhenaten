@@ -481,7 +481,7 @@ figure *building::create_cartpusher(e_resource resource_id, int quantity, e_figu
     if (config_get(CONFIG_GP_CH_CART_SPEED_QUANTITY)) {
         f->progress_inside_speed = std::clamp(quantity / 400, 0, 2);
     }
-    cart->wait_ticks = 30;
+    cart->base.wait_ticks = 30;
 
     return f;
 }

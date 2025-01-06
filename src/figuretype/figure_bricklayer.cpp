@@ -64,7 +64,7 @@ void figure_bricklayer::figure_action() {
     case FIGURE_ACTION_12_BRICKLAYER_GOING_TO_PLACE:
         base.roam_wander_freely = false;
         if (do_goto(destination_tile, false, TERRAIN_USAGE_ANY)) {
-            wait_ticks = 0;
+            base.wait_ticks = 0;
             base.direction = 0;
             map_grid_area_foreach(tile().shifted(-1, -1), tile(), [&] (tile2i t) { 
                 map_monuments_set_progress(t, 1); 
@@ -74,9 +74,9 @@ void figure_bricklayer::figure_action() {
         break;
 
     case FIGURE_ACTION_13_BRICKLAYER_WAITING_RESOURCES:
-        wait_ticks++;
-        if (wait_ticks > 30) {
-            wait_ticks = 0;
+        base.wait_ticks++;
+        if (base.wait_ticks > 30) {
+            base.wait_ticks = 0;
             data.bricklayer.idle_wait_count++;
             bool area_ready = true;
             map_grid_area_foreach(tile().shifted(-1, -1), tile(), [&] (tile2i t) { area_ready &= (map_monuments_get_progress(t) == 2); });
@@ -105,7 +105,7 @@ void figure_bricklayer::figure_action() {
     case FIGURE_ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT:
         base.roam_wander_freely = false;
         if (do_goto(destination_tile, false, TERRAIN_USAGE_ANY)) {
-            wait_ticks = 0;
+            base.wait_ticks = 0;
             advance_action(FIGURE_ACTION_16_BRICKLAYER_RETURN_HOME);
         }
         break;

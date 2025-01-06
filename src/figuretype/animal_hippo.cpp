@@ -36,22 +36,22 @@ void figure_hippo::figure_action() {
     case 18: // roosting
     case FIGURE_ACTION_19_HIPPO_IDLE: // idle
     case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
-        wait_ticks--;
-        if (wait_ticks <= 0) {
+        base.wait_ticks--;
+        if (base.wait_ticks <= 0) {
             advance_action(ACTION_8_RECALCULATE);
         }
         break;
 
     case 199:
     case ACTION_8_RECALCULATE:
-        wait_ticks--;
-        if (wait_ticks <= 0) {
+        base.wait_ticks--;
+        if (base.wait_ticks <= 0) {
             if (base.herd_roost(/*step*/4, /*bias*/8, /*max_dist*/32, TERRAIN_IMPASSABLE_HIPPO)) {
-                wait_ticks = 0;
+                base.wait_ticks = 0;
                 advance_action(FIGURE_ACTION_10_HIPPO_MOVING);
                 do_goto(destination_tile, TERRAIN_USAGE_ANY, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE);
             } else {
-                wait_ticks = 5;
+                base.wait_ticks = 5;
             }
         }
         break;
@@ -60,7 +60,7 @@ void figure_hippo::figure_action() {
     case FIGURE_ACTION_10_HIPPO_MOVING:
     case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
         if (do_goto(destination_tile, TERRAIN_USAGE_ANY, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
-            wait_ticks = 50;
+            base.wait_ticks = 50;
         }
         break;
     }

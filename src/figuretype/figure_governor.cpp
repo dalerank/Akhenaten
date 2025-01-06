@@ -22,7 +22,7 @@ void figure_governor::figure_action() {
     case FIGURE_ACTION_120_GOVERNOR_CREATED:
     {
         // if city has palace, all mugger will go there
-        wait_ticks = 0;
+        base.wait_ticks = 0;
         int senate_id = g_city.buildings.get_palace_id();
         building* b_dst = building_get(senate_id);
         tile2i road_tile = map_closest_road_within_radius(b_dst->tile, b_dst->size, 2);
@@ -51,7 +51,7 @@ void figure_governor::figure_action() {
     }
 
     base.wait_ticks++;
-    if (wait_ticks > 200) {
+    if (base.wait_ticks > 200) {
         poof();
         base.anim.frame = 0;
     }

@@ -234,19 +234,19 @@ void figure_festival_priest::figure_action() {
     switch (action_state()) {
     case FIGURE_ACTION_10_FESTIVAL_PRIEST_CREATED:
         base.anim.frame = 0;
-        if (--wait_ticks <= 0) {
+        if (--base.wait_ticks <= 0) {
             advance_action(FIGURE_ACTION_11_FESTIVAL_PRIEST_GOTO_SQUARE);
         }
         break;
 
     case FIGURE_ACTION_11_FESTIVAL_PRIEST_GOTO_SQUARE:
         if (do_goto(destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_12_FESTIVAL_PRIEST_DANCE)) {
-            wait_ticks = rand() % 20;
+            base.wait_ticks = rand() % 20;
         }
         break;
 
     case FIGURE_ACTION_12_FESTIVAL_PRIEST_DANCE:
-        if (--wait_ticks <= 0) {
+        if (--base.wait_ticks <= 0) {
             advance_action(FIGURE_ACTION_13_FESTIVAL_PRIEST_GOTO_HOME);
         }
         break;

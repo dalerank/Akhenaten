@@ -46,8 +46,8 @@ void figure_emigrant::figure_action() {
     switch (action_state()) {
     case FIGURE_ACTION_4_EMIGRANT_CREATED:
         base.anim.frame = 0;
-        wait_ticks++;
-        if (wait_ticks >= 5) {
+        base.wait_ticks++;
+        if (base.wait_ticks >= 5) {
             advance_action(FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE);
         }
         break;
@@ -69,8 +69,8 @@ void figure_emigrant::figure_action() {
 
     case FIGURE_ACTION_6_EMIGRANT_LEAVING:
     case 10:
-        wait_ticks--;
-        if (wait_ticks > 0) {
+        base.wait_ticks--;
+        if (base.wait_ticks > 0) {
             base.anim.frame = 0;
             break;
         }
@@ -85,7 +85,7 @@ void figure_emigrant::figure_action() {
                 poof();
                 break;
             }
-            wait_ticks = 20;
+            base.wait_ticks = 20;
             route_remove();
             base.state = FIGURE_STATE_ALIVE;
             destination_tile = g_city.map.closest_exit_tile_within_radius();

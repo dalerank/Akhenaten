@@ -82,8 +82,8 @@ void figure_ostrich_hunter::figure_action() {
             return advance_action(ACTION_8_RECALCULATE);
         }
 
-        wait_ticks--;
-        if (wait_ticks <= 0) {
+        base.wait_ticks--;
+        if (base.wait_ticks <= 0) {
             advance_action(ACTION_9_CHASE_PREY);
         }
         break;
@@ -96,23 +96,23 @@ void figure_ostrich_hunter::figure_action() {
         if (dist >= 2) {
             do_goto(prey->tile, TERRAIN_USAGE_ANIMAL, ACTION_15_HUNTER_HUNT, ACTION_8_RECALCULATE);
         } else {
-            wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
+            base.wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
             advance_action(ACTION_15_HUNTER_HUNT);
         }
         break;
 
     case ACTION_15_HUNTER_HUNT: // firing at prey
-        wait_ticks--;
-        if (wait_ticks <= 0) {
+        base.wait_ticks--;
+        if (base.wait_ticks <= 0) {
             if (!base.target_figure_id) {
                 return advance_action(ACTION_8_RECALCULATE);
             }
-            wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
+            base.wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
             if (prey->state == FIGURE_STATE_DYING) {
                 advance_action(ACTION_11_HUNTER_WALK);
                 scared_animals_in_area(prey->tile, /*dist*/16);
             } else if (dist >= 2) {
-                wait_ticks = 12;
+                base.wait_ticks = 12;
                 advance_action(ACTION_13_WAIT_FOR_ACTION);
             } else {
                 base.direction = calc_missile_shooter_direction(tile(), prey->tile);

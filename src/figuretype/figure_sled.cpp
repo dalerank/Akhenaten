@@ -45,7 +45,7 @@ void figure_sled::update_animation() {
 
 void figure_sled::do_deliver(int action_done) {
     base.anim.frame = 0;
-    wait_ticks++;
+    base.wait_ticks++;
 
     int carrying = base.get_carrying_amount();
     e_resource resource = base.get_resource();
@@ -70,8 +70,8 @@ void figure_sled::do_deliver(int action_done) {
 void figure_sled_puller::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/SledPuller");
     if (base.leading_figure_id > 0) {
-        --wait_ticks;
-        if (wait_ticks > 0) {
+        --base.wait_ticks;
+        if (base.wait_ticks > 0) {
             return;
         }
 
@@ -87,8 +87,8 @@ void figure_sled_puller::figure_action() {
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
     case FIGURE_ACTION_50_SLED_PULLER_CREATED:
-        --wait_ticks;
-        if (wait_ticks > 0) {
+        --base.wait_ticks;
+        if (base.wait_ticks > 0) {
             return;
         }
         advance_action(FIGURE_ACTION_51_SLED_PULLER_DELIVERING_RESOURCE);
@@ -101,13 +101,13 @@ void figure_sled_puller::figure_action() {
 
     case FIGURE_ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING:
         //cartpusher_do_deliver(true, ACTION_11_RETURNING_EMPTY);
-        wait_ticks = 25;
+        base.wait_ticks = 25;
         advance_action(FIGURE_ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY);
         break;
 
     case FIGURE_ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY:
-        --wait_ticks;
-        if (wait_ticks > 0) {
+        --base.wait_ticks;
+        if (base.wait_ticks > 0) {
             return;
         }
         advance_action(FIGURE_ACTION_53_SLED_PULLER_DESTROY);

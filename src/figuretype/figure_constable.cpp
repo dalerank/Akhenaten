@@ -166,8 +166,8 @@ void figure_constable::figure_action() {
     switch (action_state()) {
     case FIGURE_ACTION_70_POLICEMAN_CREATED:
         base.anim.frame = 0;
-        wait_ticks--;
-        if (wait_ticks <= 0) {
+        base.wait_ticks--;
+        if (base.wait_ticks <= 0) {
             tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
             if (road_tile.valid()) {
                 advance_action(FIGURE_ACTION_71_POLICEMAN_ENTERING_EXITING);

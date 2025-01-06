@@ -137,8 +137,8 @@ void figure_entertainer::figure_action() {
     case FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED:
         base.anim.frame = 0;
         base.wait_ticks_missile = 0;
-        wait_ticks--;
-        if (wait_ticks <= 0) { // todo: summarize
+        base.wait_ticks--;
+        if (base.wait_ticks <= 0) { // todo: summarize
             tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
             if (road_tile.valid()) {
                 base.action_state = FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL;

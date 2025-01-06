@@ -440,7 +440,7 @@ public:
         virtual void load(archive arch);
     };
 
-    figure_impl(figure *f) : base(*f), data(f->data), wait_ticks(f->wait_ticks), destination_tile(f->destination_tile) {}
+    figure_impl(figure *f) : base(*f), data(f->data), destination_tile(f->destination_tile) {}
 
     virtual void on_create();
     virtual void on_destroy() {}
@@ -537,7 +537,6 @@ public:
 
     figure &base;
     figure::data_t &data;
-    short &wait_ticks;
     tile2i &destination_tile;
 };
 

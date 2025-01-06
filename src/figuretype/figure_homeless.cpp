@@ -60,9 +60,9 @@ void figure_homeless::figure_action() {
     switch (action_state()) {
     case FIGURE_ACTION_7_HOMELESS_CREATED:
         base.anim.frame = 0;
-        wait_ticks++;
-        if (wait_ticks > 51) {
-            wait_ticks = 0;
+        base.wait_ticks++;
+        if (base.wait_ticks > 51) {
+            base.wait_ticks = 0;
             int building_id = find_closest_house_with_room(tile());
             if (building_id) {
                 building* b = building_get(building_id);
@@ -127,7 +127,7 @@ void figure_homeless::figure_action() {
                 poof();
                 break;
             }
-            wait_ticks = 20;
+            base.wait_ticks = 20;
             route_remove();
             base.state = FIGURE_STATE_ALIVE;
             destination_tile = g_city.map.closest_exit_tile_within_radius();
@@ -135,9 +135,9 @@ void figure_homeless::figure_action() {
             advance_action(ACTION_16_HOMELESS_RANDOM);
         }
 
-        wait_ticks++;
-        if (wait_ticks > 30) {
-            wait_ticks = 0;
+        base.wait_ticks++;
+        if (base.wait_ticks > 30) {
+            base.wait_ticks = 0;
             int building_id = find_closest_house_with_room(tile());
             if (building_id > 0) {
                 building* b = building_get(building_id);
