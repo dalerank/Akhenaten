@@ -43,6 +43,8 @@ void js_register_city_walkers(js_State *J) {
 
 void js_register_city_sound_constants(js_State *J) {
     js_register_tokens(J, e_sound_channel_city_tokens);
+    // repeated for alias id
+    _R(SOUND_CHANNEL_CITY_HOUSE_SLUM)
 }
 
 void js_register_city_buildings(js_State *J) {
