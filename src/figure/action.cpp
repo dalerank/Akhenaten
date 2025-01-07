@@ -385,7 +385,6 @@ void figure::action_perform() {
         case FIGURE_BALLISTA: ballista_action(); break;
         case FIGURE_ANTELOPE: zebra_action(); break; // 70
         case FIGURE_CHARIOR_RACER: hippodrome_horse_action(); break;
-        case FIGURE_HYENA: hyena_action(); break;
 
         default:
             {

@@ -7,6 +7,7 @@
 #include "figure/combat.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
+#include "figuretype/figure_hyena.h"
 #include "figure/formation_enemy.h"
 #include "figure/route.h"
 #include "grid/desirability.h"

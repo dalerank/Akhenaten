@@ -1,17 +1,11 @@
 #include "animal_crocodile.h"
 
-#include "js/js_game.h"
 #include "core/profiler.h"
 #include "grid/terrain.h"
 #include "city/city.h"
 #include "core/random.h"
 
 figures::model_t<figure_crocodile> crocodile_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_crocodile);
-void config_load_figure_crocodile() {
-    crocodile_m.load();
-}
 
 void figure_crocodile::on_create() {
     base.allow_move_type = EMOVE_AMPHIBIAN;

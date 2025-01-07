@@ -70,56 +70,6 @@ int figure_combat_get_target_for_soldier(tile2i tile, int max_distance) {
     return 0;
 }
 
-int figure_combat_get_target_for_hyena(tile2i tile, int max_distance) {
-    int min_figure_id = 0;
-    int min_distance = 10000;
-    for (figure* f: map_figures()) {
-        if (!f->is_valid() || f->is_dead() || !f->type) {
-            continue;
-        }
-
-        switch (f->type) {
-        case FIGURE_EXPLOSION:
-        case FIGURE_STANDARD_BEARER:
-        case FIGURE_TRADE_SHIP:
-        case FIGURE_FISHING_BOAT:
-        case FIGURE_MAP_FLAG:
-        case FIGURE_FLOTSAM:
-        case FIGURE_SHIPWRECK:
-        case FIGURE_INDIGENOUS_NATIVE:
-        case FIGURE_TOWER_SENTRY:
-        case FIGURE_NATIVE_TRADER:
-        case FIGURE_ARROW:
-        case FIGURE_JAVELIN:
-        case FIGURE_BOLT:
-        case FIGURE_BALLISTA:
-        case FIGURE_CREATURE:
-            continue;
-
-        default:
-            ; // nothing
-        }
-        if (f->is_enemy() || f->is_herd()) {
-            continue;
-        }
-        if (::smart_cast<figure_soldier>(f) && f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST) {
-            continue;
-        }
-        int distance = calc_maximum_distance(tile, f->tile);
-        if (f->targeted_by_figure_id) {
-            distance *= 2;
-        }
-        if (distance < min_distance) {
-            min_distance = distance;
-            min_figure_id = f->id;
-        }
-    }
-    if (min_distance <= max_distance && min_figure_id) {
-        return min_figure_id;
-    }
-    return 0;
-}
-
 int figure_combat_get_target_for_enemy(tile2i tile) {
     int min_figure_id = 0;
     int min_distance = 10000;

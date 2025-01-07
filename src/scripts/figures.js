@@ -158,6 +158,16 @@ figure figure_ostrich = {
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
+figure figure_hyena = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:161, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:162, max_frames:8, duration:3, loop:false },
+		eating : { pack:PACK_SPR_MAIN, id:163, max_frames:7 },
+		idle : { pack:PACK_SPR_MAIN, id:164, max_frames:8 },
+	},
+	terrain_usage : TERRAIN_USAGE_ANIMAL,
+}
+
 figure figure_antelope = {
 	animations : {
 		walk : { pack:PACK_SPR_AMBIENT, id:30, max_frames:12 },
@@ -757,10 +767,10 @@ figure figure_warship = {
 	},
 	orders : {
 		goto_wharf : { id: 1, text: 9 },
-		engage_nearby : { id: 1, text: 11 },
-		hold_position : { id: 1, text: 13 },
-		seek_and_destroy : { id: 1, text: 15 },
-		repair : { id: 1, text: 17 },
+		engage_nearby : { id: 2, text: 11 },
+		hold_position : { id: 3, text: 13 },
+		seek_and_destroy : { id: 4, text: 15 },
+		repair : { id: 5, text: 17 },
 	},
 	info_help_id: 84,
   info_text_id: 184,
