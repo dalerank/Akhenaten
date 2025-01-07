@@ -32,12 +32,12 @@ void figure_bricklayer::figure_action() {
         break;
 
     case FIGURE_ACTION_10_BRIRKLAYER_CREATED:
-        destination_tile = destination()->access_tile();
+        base.destination_tile = destination()->access_tile();
         advance_action(FIGURE_ACTION_11_BRIRKLAYER_GOING);
         break;
 
     case FIGURE_ACTION_11_BRIRKLAYER_GOING:
-        if (do_goto(destination_tile, terrain_usage, -1, FIGURE_ACTION_20_BRIRKLAYER_DESTROY)) {
+        if (do_goto(base.destination_tile, terrain_usage, -1, FIGURE_ACTION_20_BRIRKLAYER_DESTROY)) {
             advance_action(FIGURE_ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
         }
         break;
@@ -56,14 +56,14 @@ void figure_bricklayer::figure_action() {
                 }
             });
 
-            destination_tile = wait_tile;
+            base.destination_tile = wait_tile;
             advance_action(FIGURE_ACTION_12_BRICKLAYER_GOING_TO_PLACE);
         }
         break;
 
     case FIGURE_ACTION_12_BRICKLAYER_GOING_TO_PLACE:
         base.roam_wander_freely = false;
-        if (do_goto(destination_tile, false, TERRAIN_USAGE_ANY)) {
+        if (do_goto(base.destination_tile, false, TERRAIN_USAGE_ANY)) {
             base.wait_ticks = 0;
             base.direction = 0;
             map_grid_area_foreach(tile().shifted(-1, -1), tile(), [&] (tile2i t) { 
@@ -83,8 +83,8 @@ void figure_bricklayer::figure_action() {
             if (area_ready) {
                 advance_action(FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS);
             } else if (data.bricklayer.idle_wait_count > 20) {
-                destination_tile = building_monument_access_point(destination());
-                destination_tile.shift(1, 1);
+                base.destination_tile = building_monument_access_point(destination());
+                base.destination_tile.shift(1, 1);
                 advance_action(FIGURE_ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT);
             }
         }
@@ -104,7 +104,7 @@ void figure_bricklayer::figure_action() {
 
     case FIGURE_ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT:
         base.roam_wander_freely = false;
-        if (do_goto(destination_tile, false, TERRAIN_USAGE_ANY)) {
+        if (do_goto(base.destination_tile, false, TERRAIN_USAGE_ANY)) {
             base.wait_ticks = 0;
             advance_action(FIGURE_ACTION_16_BRICKLAYER_RETURN_HOME);
         }

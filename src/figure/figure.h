@@ -440,7 +440,7 @@ public:
         virtual void load(archive arch);
     };
 
-    figure_impl(figure *f) : base(*f), data(f->data), destination_tile(f->destination_tile) {}
+    figure_impl(figure *f) : base(*f), data(f->data) {}
 
     virtual void on_create();
     virtual void on_destroy() {}
@@ -537,7 +537,6 @@ public:
 
     figure &base;
     figure::data_t &data;
-    tile2i &destination_tile;
 };
 
 GENERATE_SMART_CAST(figure_impl)

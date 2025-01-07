@@ -161,7 +161,7 @@ void figure_entertainer::figure_action() {
                 if (road_tile.valid()) {
                     set_destination(dst_building_id);
                     advance_action(FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-                    destination_tile = road_tile;
+                    base.destination_tile = road_tile;
                     base.roam_length = 0;
                 } else {
                     advance_action(FIGURE_ACTION_93_ENTERTAINER_GOING_TO_RANDOM_ROAD);
@@ -181,7 +181,7 @@ void figure_entertainer::figure_action() {
                 if (road_tile.valid()) {
                     set_destination(dst_building_id);
                     advance_action(FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-                    destination_tile = road_tile;
+                    base.destination_tile = road_tile;
                     base.roam_length = 0;
                 } else {
                     advance_action(ACTION_11_RETURNING_EMPTY);

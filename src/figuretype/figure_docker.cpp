@@ -282,7 +282,7 @@ bool figure_docker::deliver_import_resource(building* dock) {
     set_destination(warehouse_id);
     base.wait_ticks = 0;
     advance_action(FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE);
-    destination_tile = tile;
+    base.destination_tile = tile;
     base.resource_id = resource;
     base.resource_amount_full = 100;
     return true;
@@ -312,7 +312,7 @@ bool figure_docker::fetch_export_resource(building* dock) {
     set_destination(warehouse_id);
     advance_action(FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE);
     base.wait_ticks = 0;
-    destination_tile = tile;
+    base.destination_tile = tile;
     base.resource_id = resource;
     return true;
 }
@@ -455,7 +455,7 @@ void figure_docker::figure_action() {
                 fetch_export_resource(b);
             } else {
                 advance_action(FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING);
-                destination_tile = base.source_tile;
+                base.destination_tile = base.source_tile;
             }
             base.wait_ticks = 0;
         }
@@ -490,7 +490,7 @@ void figure_docker::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i*
 sound_key figure_docker::phrase_key() const {
     const bool in_action = action_state(FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE, FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE);
     if (in_action) {
-        int dist = calc_maximum_distance(destination_tile, base.source_tile);
+        int dist = calc_maximum_distance(base.destination_tile, base.source_tile);
         if (dist >= 25) {
             return "too_far"; // too far
         }

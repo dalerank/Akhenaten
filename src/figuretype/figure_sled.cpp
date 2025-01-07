@@ -92,11 +92,11 @@ void figure_sled_puller::figure_action() {
             return;
         }
         advance_action(FIGURE_ACTION_51_SLED_PULLER_DELIVERING_RESOURCE);
-        destination_tile = building_monument_center_point(destination());
+        base.destination_tile = building_monument_center_point(destination());
         break;
 
     case FIGURE_ACTION_51_SLED_PULLER_DELIVERING_RESOURCE:
-        do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING, FIGURE_ACTION_53_SLED_PULLER_DESTROY);
+        do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING, FIGURE_ACTION_53_SLED_PULLER_DESTROY);
         break;
 
     case FIGURE_ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING:

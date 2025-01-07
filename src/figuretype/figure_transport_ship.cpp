@@ -53,7 +53,7 @@ void figure_transport_ship::figure_action() {
             set_home(b->id);
             b->set_figure(BUILDING_SLOT_BOAT, &base);
             advance_action(FIGURE_ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF);
-            destination_tile = result.tile;
+            base.destination_tile = result.tile;
             base.source_tile = result.tile;
             route_remove();
         } else {
@@ -73,7 +73,7 @@ void figure_transport_ship::figure_action() {
                 b->remove_figure_by_id(id()); // remove from original building
                 set_home(result.bid);
                 advance_action(FIGURE_ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF);
-                destination_tile = result.tile;
+                base.destination_tile = result.tile;
                 base.source_tile = result.tile;
                 route_remove();
             }
@@ -110,7 +110,7 @@ void figure_transport_ship::figure_action() {
                 tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile(), true);
                 if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
                     advance_action(FIGURE_ACTION_213_TRANSPORT_SHIP_MOORED);
-                    destination_tile = fish_tile;
+                    base.destination_tile = fish_tile;
                     route_remove();
                 }
             }

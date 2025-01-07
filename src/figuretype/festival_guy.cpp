@@ -56,12 +56,12 @@ void figure_festival_guy::figure_action() {
 
         // still going to the square center, first
         if (base.terrain_usage == TERRAIN_USAGE_ROADS) {
-            if (do_goto(destination_tile, TERRAIN_USAGE_ROADS, 10))
+            if (do_goto(base.destination_tile, TERRAIN_USAGE_ROADS, 10))
                 base.terrain_usage = TERRAIN_USAGE_ANY;
         } else {
             //                use_cross_country = true; // todo?
             if (base.routing_path_id) {
-                do_goto(destination_tile, TERRAIN_USAGE_ANY, 11);
+                do_goto(base.destination_tile, TERRAIN_USAGE_ANY, 11);
             } else {
                 bool has_square = building_count_total(BUILDING_FESTIVAL_SQUARE);
                 if (base.festival_remaining_dances == 0 || !has_square) {

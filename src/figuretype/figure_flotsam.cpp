@@ -43,7 +43,7 @@ void figure_flotsam::figure_action() {
                 base.min_max_seen = 1;
             }
 
-            destination_tile = scenario_map_river_exit();
+            base.destination_tile = scenario_map_river_exit();
         }
         break;
 

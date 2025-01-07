@@ -159,7 +159,7 @@ void figure_soldier::figure_action() {
     case FIGURE_ACTION_148_FLEEING:
         base.wait_ticks = 0;
         base.formation_at_rest = 1;
-        destination_tile = formation_position;
+        base.destination_tile = formation_position;
         base.move_ticks(speed_factor);
         if (direction() == DIR_FIGURE_NONE)
             base.action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
@@ -171,7 +171,7 @@ void figure_soldier::figure_action() {
 
     case FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS:
         base.formation_at_rest = 1;
-        destination_tile = base.source_tile;
+        base.destination_tile = base.source_tile;
         //            destination_tile.x() = source_tile.x();
         //            destination_tile.y() = source_tile.y();
         base.move_ticks(speed_factor);
@@ -183,12 +183,11 @@ void figure_soldier::figure_action() {
 
         break;
     case FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD:
-    base.formation_at_rest = 0;
-        destination_tile= m->standard_tile.shifted(formation_layout_position_x(m->layout, base.index_in_formation),
+        base.formation_at_rest = 0;
+        base.destination_tile = m->standard_tile.shifted(formation_layout_position_x(m->layout, base.index_in_formation),
                                                     formation_layout_position_y(m->layout, base.index_in_formation));
         if (base.alternative_location_index) {
-            destination_tile.set(ALTERNATIVE_POINTS[base.alternative_location_index].x,
-                                 ALTERNATIVE_POINTS[base.alternative_location_index].y);
+            base.destination_tile.shift(ALTERNATIVE_POINTS[base.alternative_location_index]);
         }
         //            destination_tile.grid_offset() = MAP_OFFSET(destination_tile.x(), destination_tile.y());
         base.move_ticks(speed_factor);
@@ -211,14 +210,13 @@ void figure_soldier::figure_action() {
         base.formation_at_rest = 0;
         base.anim.frame = 0;
         base.map_figure_update();
-        destination_tile = m->standard_tile.shifted(formation_layout_position_x(m->layout, base.index_in_formation),
+        base.destination_tile = m->standard_tile.shifted(formation_layout_position_x(m->layout, base.index_in_formation),
                                                      formation_layout_position_y(m->layout, base.index_in_formation));
 
         if (base.alternative_location_index) {
-            destination_tile.set(ALTERNATIVE_POINTS[base.alternative_location_index].x,
-                                 ALTERNATIVE_POINTS[base.alternative_location_index].y);
+            base.destination_tile.shift(ALTERNATIVE_POINTS[base.alternative_location_index]);
         }
-        if (tilex() != destination_tile.x() || tiley() != destination_tile.y()) {
+        if (tile() != base.destination_tile) {
             if (m->missile_fired <= 0 && m->recent_fight <= 0 && m->missile_attack_timeout <= 0) {
                 base.action_state = FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD;
                 base.alternative_location_index = 0;
@@ -252,7 +250,7 @@ void figure_soldier::figure_action() {
             base.move_ticks(speed_factor);
             if (direction() == DIR_FIGURE_NONE) {
                 figure* target = figure_get(base.target_figure_id);
-                destination_tile = target->tile;
+                base.destination_tile = target->tile;
                 //                    destination_tile.x() = target->tile.x();
                 //                    destination_tile.y() = target->tile.y();
                 route_remove();
@@ -266,7 +264,7 @@ void figure_soldier::figure_action() {
 
     case FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE: {
         base.formation_at_rest = 0;
-        destination_tile = g_city.map.exit_point;
+        base.destination_tile = g_city.map.exit_point;
         base.move_ticks(speed_factor);
         if (direction() == DIR_FIGURE_NONE) {
             base.action_state = FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE;
@@ -283,7 +281,7 @@ void figure_soldier::figure_action() {
     case FIGURE_ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE:
         base.wait_ticks = 0;
         base.formation_at_rest = 1;
-        destination_tile = formation_position;
+        base.destination_tile = formation_position;
         base.move_ticks(speed_factor);
         if (direction() == DIR_FIGURE_NONE) {
             base.action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;

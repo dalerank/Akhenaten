@@ -148,7 +148,7 @@ bool figure_constable::fight_enemy(int category, int max_distance) {
         figure* enemy = figure_get(enemy_id);
         base.wait_ticks_next_target = 0;
         advance_action(FIGURE_ACTION_76_POLICEMAN_GOING_TO_ENEMY);
-        destination_tile = enemy->tile;
+        base.destination_tile = enemy->tile;
         base.target_figure_id = enemy_id;
         enemy->targeted_by_figure_id = id();
         //base.target_figure_created_sequence = enemy->created_sequence;
@@ -189,7 +189,7 @@ void figure_constable::figure_action() {
             } else {
                 advance_action(FIGURE_ACTION_72_POLICEMAN_ROAMING);
                 base.init_roaming_from_building(0);
-                base.direction = calc_general_direction(tile(), destination_tile);
+                base.direction = calc_general_direction(tile(), base.destination_tile);
                 base.roam_length = 0;
             }
         }
@@ -202,7 +202,7 @@ void figure_constable::figure_action() {
             tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
             if (road_tile.valid()) {
                 advance_action(FIGURE_ACTION_73_POLICEMAN_RETURNING);
-                destination_tile = road_tile;
+                base.destination_tile = road_tile;
                 route_remove();
             } else {
                 poof();
@@ -229,7 +229,7 @@ void figure_constable::figure_action() {
             tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
             if (road_tile.valid()) {
                 advance_action(FIGURE_ACTION_73_POLICEMAN_RETURNING);
-                destination_tile = road_tile;
+                base.destination_tile = road_tile;
                 route_remove();
                 base.roam_length = 0;
             } else {
@@ -239,7 +239,7 @@ void figure_constable::figure_action() {
         base.move_ticks(1);
         if (direction() == DIR_FIGURE_NONE) {
             figure* target = figure_get(base.target_figure_id);
-            destination_tile = target->tile;
+            base.destination_tile = target->tile;
             route_remove();
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();

@@ -65,7 +65,7 @@ void figure_fishing_boat::figure_action() {
             set_home(b->id);
             b->set_figure(BUILDING_SLOT_BOAT, &base);
             advance_action(FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
-            destination_tile = result.tile;
+            base.destination_tile = result.tile;
             base.source_tile = result.tile;
             route_remove();
         } else {
@@ -86,7 +86,7 @@ void figure_fishing_boat::figure_action() {
                 b->remove_figure_by_id(id()); // remove from original building
                 set_home(result.bid);
                 advance_action(FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
-                destination_tile = result.tile;
+                base.destination_tile = result.tile;
                 base.source_tile = result.tile;
                 route_remove();
             }
@@ -112,7 +112,7 @@ void figure_fishing_boat::figure_action() {
             water_dest result = map_water_find_alternative_fishing_boat_tile(base);
             if (result.found) {
                 route_remove();
-                destination_tile = result.tile;
+                base.destination_tile = result.tile;
             } else {
                 advance_action(FIGURE_ACTION_192_FISHING_BOAT_FISHING);
                 base.direction = base.previous_tile_direction;
@@ -120,7 +120,7 @@ void figure_fishing_boat::figure_action() {
             }
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
             advance_action(FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
-            destination_tile = base.source_tile;
+            base.destination_tile = base.source_tile;
         }
         break;
 
@@ -129,7 +129,7 @@ void figure_fishing_boat::figure_action() {
         if (base.wait_ticks >= 200) {
             base.wait_ticks = 0;
             advance_action(FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH);
-            destination_tile = base.source_tile;
+            base.destination_tile = base.source_tile;
             route_remove();
         }
         break;
@@ -154,7 +154,7 @@ void figure_fishing_boat::figure_action() {
             tile2i fish_tile = g_city.fishing_points.random_fishing_point(tile(), true);
             if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
                 advance_action(FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH);
-                destination_tile = fish_tile;
+                base.destination_tile = fish_tile;
                 route_remove();
             }
         } break;
@@ -173,7 +173,7 @@ void figure_fishing_boat::figure_action() {
                     tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile(), true);
                     if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
                         advance_action(FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH);
-                        destination_tile = fish_tile;
+                        base.destination_tile = fish_tile;
                         route_remove();
                     }
                 }

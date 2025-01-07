@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstdint>
+#include "core/vec2i.h"
 
 #define _INVALID_COORD -1
 enum { _X = 0, _Y = 1, _GRID_OFFSET = 2, _ABS_X = 3, _ABS_Y = 4 };
@@ -37,6 +38,7 @@ public:
 
     // MODIFIERS
     void shift(int _x, int _y);
+    inline void shift(vec2i xy) { shift(xy.x, xy.y); }
     void shift(int _grid_offset);
     self shifted(int _x, int _y);
     self shifted(int _grid_offset);

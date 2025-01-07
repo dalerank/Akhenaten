@@ -172,7 +172,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
     building* warehouse = home();
     int understaffed_storages = 0;
 
-    destination_tile.set(0, 0);
+    base.destination_tile = tile2i::invalid;
 
     // before we start... check that resource is not empty.
     if (base.resource_id == RESOURCE_NONE || base.get_carrying_amount() == 0) {

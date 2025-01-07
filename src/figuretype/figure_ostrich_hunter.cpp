@@ -65,12 +65,12 @@ void figure_ostrich_hunter::figure_action() {
             } else {
                 base_tile = home()->tile;
             }
-            destination_tile = random_around_point(base_tile, tile(), /*step*/4, /*bias*/8, /*max_dist*/32);
+            base.destination_tile = random_around_point(base_tile, tile(), /*step*/4, /*bias*/8, /*max_dist*/32);
         }
         break;
 
     case ACTION_16_HUNTER_INVESTIGATE:
-        do_goto(destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_8_RECALCULATE, ACTION_8_RECALCULATE);
+        do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_8_RECALCULATE, ACTION_8_RECALCULATE);
         if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             base.direction = DIR_0_TOP_RIGHT;
             advance_action(ACTION_8_RECALCULATE);

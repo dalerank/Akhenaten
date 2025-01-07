@@ -102,7 +102,7 @@ void figure_homeless::figure_action() {
 
     case ACTION_16_HOMELESS_RANDOM:
         base.roam_wander_freely = false;
-        do_goto(destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_6_HOMELESS_LEAVING, FIGURE_ACTION_6_HOMELESS_LEAVING);
+        do_goto(base.destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_6_HOMELESS_LEAVING, FIGURE_ACTION_6_HOMELESS_LEAVING);
         if (direction() == DIR_FIGURE_CAN_NOT_REACH || direction() == DIR_FIGURE_REROUTE) {
             base.routing_try_reroute_counter++;
             if (base.routing_try_reroute_counter > 20) {
@@ -110,7 +110,7 @@ void figure_homeless::figure_action() {
                 break;
             }
             base.state = FIGURE_STATE_ALIVE;
-            destination_tile = random_around_point(tile(), tile(), /*step*/2, /*bias*/4, /*max_dist*/8);
+            base.destination_tile = random_around_point(tile(), tile(), /*step*/2, /*bias*/4, /*max_dist*/8);
             base.direction = DIR_0_TOP_RIGHT;
             advance_action(FIGURE_ACTION_6_HOMELESS_LEAVING);
         }
@@ -130,7 +130,7 @@ void figure_homeless::figure_action() {
             base.wait_ticks = 20;
             route_remove();
             base.state = FIGURE_STATE_ALIVE;
-            destination_tile = g_city.map.closest_exit_tile_within_radius();
+            base.destination_tile = g_city.map.closest_exit_tile_within_radius();
             base.direction = DIR_0_TOP_RIGHT;
             advance_action(ACTION_16_HOMELESS_RANDOM);
         }

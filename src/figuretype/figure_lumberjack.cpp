@@ -36,8 +36,8 @@ void figure_lumberjack::figure_action() {
         break;
 
     case 9: // go to gathering place
-        if (do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS)) {
-            if (!can_harvest_point(MAP_OFFSET(destination_tile.x(), destination_tile.y()))) {
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS)) {
+            if (!can_harvest_point(base.destination_tile)) {
                 base.wait_ticks = 0;
                 advance_action(8);
             } else

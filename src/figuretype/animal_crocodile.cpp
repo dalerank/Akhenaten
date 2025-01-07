@@ -44,7 +44,7 @@ void figure_crocodile::figure_action() {
             if (base.herd_roost(/*step*/4, /*bias*/8, /*max_dist*/32, TERRAIN_IMPASSABLE_HIPPO)) {
                 base.wait_ticks = 0;
                 advance_action(FIGURE_ACTION_10_CROCODILE_MOVING);
-                do_goto(destination_tile, TERRAIN_USAGE_ANY, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE);
+                do_goto(base.destination_tile, TERRAIN_USAGE_ANY, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE);
             } else {
                 base.wait_ticks = 5;
             }
@@ -52,7 +52,7 @@ void figure_crocodile::figure_action() {
         break;
 
     case FIGURE_ACTION_10_CROCODILE_MOVING:
-        if (do_goto(destination_tile, TERRAIN_USAGE_ANY, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
             base.wait_ticks = 50;
         }
         break;

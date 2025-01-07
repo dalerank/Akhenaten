@@ -56,7 +56,7 @@ void figure_native_trader::figure_action() {
             if (building_id) {
                 advance_action(FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE);
                 set_destination(building_id);
-                destination_tile = tile;
+                base.destination_tile = tile;
             } else {
                 poof();
             }
@@ -78,10 +78,10 @@ void figure_native_trader::figure_action() {
                 if (building_id) {
                     advance_action(FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE);
                     set_destination(building_id);
-                    destination_tile = tile;
+                    base.destination_tile = tile;
                 } else {
                     advance_action(FIGURE_ACTION_161_NATIVE_TRADER_RETURNING);
-                    destination_tile = base.source_tile;
+                    base.destination_tile = base.source_tile;
                 }
             }
         }

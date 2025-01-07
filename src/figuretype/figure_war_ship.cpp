@@ -73,7 +73,7 @@ void figure_warship::figure_action() {
             set_home(b->id);
             b->set_figure(BUILDING_SLOT_BOAT, &base);
             advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
-            destination_tile = result.tile;
+            base.destination_tile = result.tile;
             base.source_tile = result.tile;
             route_remove();
         } else {
@@ -120,7 +120,7 @@ void figure_warship::figure_action_goto_wharf() {
         if (base.wait_ticks >= 200) {
             base.wait_ticks = 0;
             advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
-            destination_tile = base.source_tile;
+            base.destination_tile = base.source_tile;
             route_remove();
         }
         return;
@@ -136,7 +136,7 @@ void figure_warship::figure_action_goto_wharf() {
     }
 
     advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
-    destination_tile.set(wharf->data.dock.dock_tiles[0]);
+    base.destination_tile.set(wharf->data.dock.dock_tiles[0]);
     base.move_ticks(1);
     base.height_adjusted_ticks = 0;
     if (direction() == DIR_FIGURE_NONE) {
@@ -162,7 +162,7 @@ void figure_warship::figure_action_common() {
                 b->remove_figure_by_id(id()); // remove from original building
                 set_home(result.bid);
                 advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
-                destination_tile = result.tile;
+                base.destination_tile = result.tile;
                 base.source_tile = result.tile;
                 route_remove();
             }
@@ -174,11 +174,11 @@ void figure_warship::figure_action_common() {
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
             advance_action(FIGURE_ACTION_209_WARSHIP_ON_PATROL);
-            destination_tile = base.source_tile;
+            base.destination_tile = base.source_tile;
             base.wait_ticks = 0;
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
             advance_action(FIGURE_ACTION_209_WARSHIP_ON_PATROL);
-            destination_tile = base.source_tile;
+            base.destination_tile = base.source_tile;
             base.wait_ticks = 0;
         }
         break;
@@ -188,7 +188,7 @@ void figure_warship::figure_action_common() {
         if (base.wait_ticks >= 200) {
             base.wait_ticks = 0;
             advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
-            destination_tile = base.source_tile;
+            base.destination_tile = base.source_tile;
             route_remove();
         }
         break;
@@ -198,7 +198,7 @@ void figure_warship::figure_action_common() {
         if (base.wait_ticks >= 200) {
             base.wait_ticks = 0;
             advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
-            destination_tile = base.source_tile;
+            base.destination_tile = base.source_tile;
             route_remove();
         }
         break;
@@ -222,7 +222,7 @@ void figure_warship::figure_action_common() {
         tile2i fish_tile = g_city.fishing_points.random_fishing_point(tile(), true);
         if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
             advance_action(FIGURE_ACTION_206_WARSHIP_GOING_TO_PATROL);
-            destination_tile = fish_tile;
+            base.destination_tile = fish_tile;
             route_remove();
         }
     } break;
@@ -239,7 +239,7 @@ void figure_warship::figure_action_common() {
                 tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile(), true);
                 if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
                     advance_action(FIGURE_ACTION_206_WARSHIP_GOING_TO_PATROL);
-                    destination_tile = fish_tile;
+                    base.destination_tile = fish_tile;
                     route_remove();
                 }
             }

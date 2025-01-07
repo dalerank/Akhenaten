@@ -240,7 +240,7 @@ void figure_festival_priest::figure_action() {
         break;
 
     case FIGURE_ACTION_11_FESTIVAL_PRIEST_GOTO_SQUARE:
-        if (do_goto(destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_12_FESTIVAL_PRIEST_DANCE)) {
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_12_FESTIVAL_PRIEST_DANCE)) {
             base.wait_ticks = rand() % 20;
         }
         break;

@@ -67,10 +67,10 @@ void figure_trade_caravan::go_to_next_storageyard(tile2i src_tile, int distance_
     if (warehouse_id && warehouse_id != base.destinationID()) {
         set_destination(warehouse_id);
         base.action_state = FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING;
-        destination_tile = dst;
+        base.destination_tile = dst;
     } else {
         base.state = FIGURE_STATE_ALIVE;
-        destination_tile = map_closest_road_within_radius(g_city.map.exit_point, 1, 2);
+        base.destination_tile = map_closest_road_within_radius(g_city.map.exit_point, 1, 2);
         base.direction = DIR_0_TOP_RIGHT;
         advance_action(ACTION_16_EMIGRANT_RANDOM);
         base.action_state = FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING;
@@ -152,13 +152,13 @@ void figure_trade_caravan::figure_action() {
     case FIGURE_ACTION_104_TRADE_CARAVAN_RECALC_LEAVING:
         if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             base.direction = DIR_0_TOP_RIGHT;
-            destination_tile = g_city.map.closest_exit_tile_within_radius();
+            base.destination_tile = g_city.map.closest_exit_tile_within_radius();
             advance_action(FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING);
         }
         break;
 
     case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
-        if (do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS, -1, FIGURE_ACTION_104_TRADE_CARAVAN_RECALC_LEAVING)) {
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, -1, FIGURE_ACTION_104_TRADE_CARAVAN_RECALC_LEAVING)) {
             poof();
         }
         break;

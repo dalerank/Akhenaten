@@ -40,8 +40,8 @@ void figure_reed_gatherer::figure_action() {
         break;
 
     case ACTION_9_REED_GATHERER_GOTO_RESOURCE: // go to gathering place
-        if (do_goto(destination_tile, TERRAIN_USAGE_PREFER_ROADS)) {
-            if (!can_harvest_point(destination_tile)) {
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS)) {
+            if (!can_harvest_point(base.destination_tile)) {
                 base.wait_ticks = 0;
                 advance_action(ACTION_8_RECALCULATE);
             } else {
