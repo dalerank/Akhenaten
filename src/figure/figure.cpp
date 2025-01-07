@@ -91,11 +91,11 @@ figure_impl *figure::dcast() {
         return nullptr;
     }
 
-    if (_ptr) {
-        return _ptr;
+    if (!_ptr) {
+        figure_impl::acquire(type, *this);
     }
 
-    _ptr = figures::create(type, this);
+    assert(!!_ptr);
     return _ptr;
 }
 
@@ -190,6 +190,21 @@ bool figure::is_citizen() {
     }
 
     return 0;
+}
+
+void figure_impl::acquire(e_figure_type e, figure &f) {
+    static_assert(sizeof(figure_impl) <= sizeof(figure::ptr_buffer_t));
+
+    using namespace figures;
+    for (auto static_ctor = FigureCtorIterator::tail; static_ctor; static_ctor = static_ctor->next) {
+        auto impl = static_ctor->func(e, f);
+        if (impl) {
+            return;
+        }
+    }
+
+    //assert(false && "Cant find building type in config");
+    f.acquire_impl<figure_impl>();
 }
 
 bool figure::is_non_citizen() {
@@ -421,16 +436,16 @@ bvariant figure_impl::get_property(const xstring &domain, const xstring &name) c
     return bvariant();
 }
 
-figure_impl *figures::create(e_figure_type e, figure *data) {
+figure_impl *figures::create(e_figure_type e, figure &f) {
     for (FigureCtorIterator *s = FigureCtorIterator::tail; s; s = s->next) {
-        auto impl = s->func(e, data);
+        auto impl = s->func(e, f);
         if (impl) {
             return impl;
         }
     }
 
     assert(false);
-    return new figure_impl(data);
+    return f.acquire_impl<figure_impl>();
 }
 
 void figure::bind(io_buffer* iob) {

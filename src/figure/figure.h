@@ -65,6 +65,10 @@ enum e_figure_draw_debug_mode {
 
 class figure {
 public:
+    using ptr_buffer_t = char[24];
+    ptr_buffer_t _ptr_buffer = { 0 };
+    figure_impl *_ptr = nullptr;
+
     e_resource resource_id;
     uint16_t resource_amount_full; // full load counter
 
@@ -213,7 +217,6 @@ public:
         short value[3];
     } data;
     char festival_remaining_dances;
-    figure_impl *_ptr = nullptr;
     
     figure_impl *dcast();
 
@@ -420,6 +423,13 @@ public:
 
     // grid/marshland.c
     bool find_resource_tile(int resource_type, tile2i &out);
+
+    template<typename T>
+    figure_impl *acquire_impl() {
+        new (&_ptr_buffer) T(this);
+        _ptr = (figure_impl *)&_ptr_buffer;
+        return _ptr;
+    }
 };
 
 #define FIGURE_METAINFO(type, clsid) static constexpr e_figure_type TYPE = type; static constexpr pcstr CLSID = #clsid;
@@ -475,6 +485,7 @@ public:
 
     static void params(e_figure_type, const static_params &);
     static const static_params &params(e_figure_type);
+    static void acquire(e_figure_type e, figure &b);
 
     virtual figure_immigrant *dcast_immigrant() { return nullptr; }
     virtual figure_cartpusher *dcast_cartpusher() { return nullptr; }
@@ -568,8 +579,8 @@ void figure_create_explosion_cloud(tile2i tile, int size);
 
 namespace figures {
 
-figure_impl *create(e_figure_type, figure*);
-typedef figure_impl* (*create_figure_function_cb)(e_figure_type, figure*);
+figure_impl *create(e_figure_type, figure&);
+typedef figure_impl* (*create_figure_function_cb)(e_figure_type, figure&);
 typedef void (*load_figure_static_params_cb)();
 
 using FigureCtorIterator = FuncLinkedList<create_figure_function_cb>;
@@ -611,9 +622,9 @@ struct model_t : public figure_impl::static_params {
         const_cast<model_t &>(item).load();
     }
 
-    static figure_impl *create(e_figure_type e, figure *data) {
+    static figure_impl *create(e_figure_type e, figure &f) {
         if (e == TYPE) {
-            return new figure_type(data);
+            return f.acquire_impl<figure_type>();
         }
         return nullptr;
     }
