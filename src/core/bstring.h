@@ -208,12 +208,12 @@ public:
     inline int ncmp(pcstr str, unsigned int count) const { return ::strncmp(_data, str, count); }
 
     inline size_t hash() {
-        const size_t p = 31;
-        const size_t m = 1e9 + 9;
+        constexpr size_t p = 31;
+        constexpr size_t m = 1e9 + 9;
         size_t hash_value = 0;
         size_t p_pow = 1;
-        for (char c : _data) {
-            hash_value = (hash_value + (c - 'a' + 1) * p_pow) % m;
+        for (const char *c = _data; *c != 0; ++c) {
+            hash_value = (hash_value + (*c - 'a' + 1) * p_pow) % m;
             p_pow = (p_pow * p) % m;
         }
         return hash_value;

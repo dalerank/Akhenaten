@@ -80,7 +80,7 @@ void content_cache_paths() {
         "AUDIO/Music",
         "AUDIO/Voice",
         "AUDIO/Wavs",
-        "data"
+        "Data",
     };
 
     for (const auto &folder : folders) {
@@ -184,12 +184,11 @@ static int correct_case(pcstr dir, char *filename, int type) {
 vfs::path content_path(pcstr path) {
     vfs::path uri_path = content_internal_path(path);
     vfs::path orig_path = uri_path;
-    size_t lhash = uri_path.tolower().hash();
+    vfs::path lower = uri_path.tolower();
+    const size_t lhash = lower.hash();
 
-    auto it = path_cache.find(lhash);
-    if (it != path_cache.end()) {
-        const bool is_equal = strcmp(it->second.lowered.c_str(), uri_path.c_str()) == 0;
-        if (is_equal) {
+    if (const auto it = path_cache.find(lhash); it != path_cache.end()) {
+        if (strcmp(it->second.lowered.c_str(), uri_path.c_str()) == 0) {
             return it->second.original;
         }
     }
