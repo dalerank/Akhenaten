@@ -80,7 +80,7 @@ void content_cache_paths() {
         "AUDIO/Music",
         "AUDIO/Voice",
         "AUDIO/Wavs",
-        "data"
+        "Data",
     };
 
     for (const auto &folder : folders) {
