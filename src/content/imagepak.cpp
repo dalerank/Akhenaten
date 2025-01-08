@@ -394,8 +394,12 @@ imagepak::~imagepak() {
     cleanup_and_destroy();
 }
 
-std::span<const bmp_name> imagepak::names() const {
-    return std::span<const bmp_name>(bmp_names, num_bmp_names);
+std::span_const<bmp_name> imagepak::names() {
+    return std::span_const<bmp_name>(bmp_names, num_bmp_names);
+}
+
+std::span_const<uint16_t> imagepak::image_ids() {
+    return std::span_const<uint16_t>(group_image_ids, num_bmp_names);
 }
 
 void imagepak::cleanup_and_destroy() {

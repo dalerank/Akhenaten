@@ -41,7 +41,8 @@ public:
     imagepak(pcstr pak_name, int starting_index, bool system_sprites = false, bool fonts = false, bool custom = false);
     ~imagepak();
 
-    std::span<const bmp_name> names() const;
+    std::span_const<bmp_name> names();
+    std::span_const<uint16_t> image_ids();
 
     int get_entry_count();
     int get_global_image_index(int group);
