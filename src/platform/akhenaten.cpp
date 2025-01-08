@@ -26,6 +26,7 @@
 #include "platform/version.hpp"
 #include "platform/platform.h"
 #include "widget/debug_console.h"
+#include "graphics/imagepak_holder.h"
 #include "renderer.h"
 
 #include <SDL.h>

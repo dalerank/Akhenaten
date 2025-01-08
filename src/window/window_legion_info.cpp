@@ -306,7 +306,7 @@ void window_building_draw_legion_info(object_info* c) {
     int icon_height = image_get(image_id)->height;
     ImageDraw::img_generic(ctx, image_id, c->offset + vec2i{16 + (40 - image_get(image_id)->width) / 2, 16});
     // standard flag
-    image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS);
+    image_id = image_id_from_group(PACK_GENERAL, 241);
     if (m->figure_type == FIGURE_ARCHER) {
         image_id += 9;
     } else if (m->figure_type == FIGURE_FCHARIOTEER) {
@@ -320,7 +320,7 @@ void window_building_draw_legion_info(object_info* c) {
     int flag_height = image_get(image_id)->height;
     ImageDraw::img_generic(ctx, image_id, c->offset + vec2i{16 + (40 - image_get(image_id)->width) / 2,  16 + icon_height});
     // standard pole and morale ball
-    image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
+    image_id = image_id_from_group(PACK_GENERAL, 241) + 20 - m->morale / 5;
     ImageDraw::img_generic(ctx, image_id, c->offset + vec2i{16 + (40 - image_get(image_id)->width) / 2, 16 + icon_height + flag_height});
 
     // number of soldiers
