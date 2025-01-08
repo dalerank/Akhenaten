@@ -19,25 +19,20 @@ void figure_standard_bearer::figure_action() {
     base.cc_coords.y = 15 * tiley() + 7;
     base.map_figure_add();
 
-    base.sprite_image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
+    base.sprite_image_id = anim("pole").first_img() + (21 - m->morale / 5);
+    int fimg;
     if (m->figure_type == FIGURE_INFANTRY) {
-        if (m->is_halted)
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 8;
-        else {
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + base.anim.frame / 2;
-        }
+        fimg = anim("flag_infantry").first_img();
     } else if (m->figure_type == FIGURE_FCHARIOTEER) {
-        if (m->is_halted)
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 26;
-        else {
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 18 + base.anim.frame / 2;
-        }
+        fimg = anim("flag_chariots").first_img();
     } else {
-        if (m->is_halted)
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 17;
-        else {
-            base.cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 9 + base.anim.frame / 2;
-        }
+        fimg = anim("flag_archers").first_img();
+    }
+
+    if (m->is_halted) {
+        base.cart_image_id = fimg + 8;
+    } else {
+        base.cart_image_id = fimg + base.anim.frame / 2;
     }
 }
 
@@ -51,7 +46,7 @@ void figure_standard_bearer::figure_draw(painter &ctx, vec2i pixel, int hightlig
     int flag_height = image_get(base.cart_image_id)->height;
     ImageDraw::img_generic(ctx, base.cart_image_id, pixel.x, pixel.y - flag_height);
     // top icon
-    int icon_image_id = image_id_from_group(PACK_GENERAL, 127) + formation_get(base.formation_id)->legion_id;
+    int icon_image_id = anim("sign").first_img() + formation_get(base.formation_id)->legion_id;
     ImageDraw::img_generic(ctx, icon_image_id, pixel.x, pixel.y - image_get(icon_image_id)->height - flag_height);
 }
 
