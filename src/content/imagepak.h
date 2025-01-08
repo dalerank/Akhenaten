@@ -21,7 +21,7 @@ class imagepak {
     int entries_num;
     int groups_num;
     bmp_name bmp_names[PAK_GROUPS_MAX];
-    int num_bmp_names;
+    uint16_t num_bmp_names;
     uint16_t group_image_ids[PAK_GROUPS_MAX];
     std::vector<image_t> images_array;
 
@@ -33,13 +33,15 @@ class imagepak {
     void cleanup_and_destroy();
 
 public:
-    bstring512 name;
+    bstring256 name;
     std::vector<atlas_data_t> atlas_pages;
 
     int global_image_index_offset = 0;
 
     imagepak(pcstr pak_name, int starting_index, bool system_sprites = false, bool fonts = false, bool custom = false);
     ~imagepak();
+
+    std::span<const bmp_name> names() const;
 
     int get_entry_count();
     int get_global_image_index(int group);

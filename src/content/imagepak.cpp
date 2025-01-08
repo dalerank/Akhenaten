@@ -394,6 +394,10 @@ imagepak::~imagepak() {
     cleanup_and_destroy();
 }
 
+std::span<const bmp_name> imagepak::names() const {
+    return std::span<const bmp_name>(bmp_names, num_bmp_names);
+}
+
 void imagepak::cleanup_and_destroy() {
     for (int i = 0; i < atlas_pages.size(); ++i) {
         auto atlas_data = atlas_pages.at(i);
@@ -681,11 +685,8 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     }
 
     // (move buffer to the rest of the data)
-    if (vfs::file_has_extension((const char *)filename_sgx, "sg2")) {
-        pak_buf->set_offset(PAK_HEADER_SIZE_BASE + (100 * bmp_name::capacity)); // sg2 = 20680 bytes
-    } else {
-        pak_buf->set_offset(PAK_HEADER_SIZE_BASE + (200 * bmp_name::capacity)); // sg3 = 40680 bytes
-    }
+    assert(vfs::file_has_extension((const char *)filename_sgx, "sg3"));
+    pak_buf->set_offset(PAK_HEADER_SIZE_BASE + (200 * bmp_name::capacity)); // sg3 = 40680 bytes
 
     // prepare atlas packer & renderer
     vec2i max_texture_sizes = graphics_renderer()->get_max_image_size();
@@ -704,8 +705,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     int last_idx_in_bmp = 1;
     images_array.reserve(entries_num * 2);
     for (int i = 0; i < entries_num; i++) {
-        images_array.push_back({});
-        image_t &img = images_array.back();
+        image_t &img = images_array.emplace_back();
         img.is_isometric_foot = true;
         img.is_isometric_top = false;
         img.pak_name = name;
@@ -901,9 +901,13 @@ int imagepak::get_global_image_index(int group) {
 }
 
 const image_t* imagepak::get_image(int id, bool relative) {
-    if (!relative)
+    if (!relative) {
         id -= global_image_index_offset;
-    if (id < 0 || id >= entries_num)
+    }
+
+    if (id < 0 || id >= entries_num) {
         return nullptr;
-    return &images_array.at(id);
+    }
+
+    return &images_array[id];
 }
