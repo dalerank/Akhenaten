@@ -45,7 +45,7 @@ struct image_t {
     char* pak_name;
     struct {
         char* name;
-        int group_id;
+        uint8_t group_id;
         int entry_index;
     } bmp;
     int sgx_index;
@@ -68,32 +68,32 @@ struct image_t {
     short unk02; //
     short unk03; //
     struct {
-        int num_sprites;
-        int unk04; //
+        uint16_t num_sprites;
+        int16_t unk04; //
         vec2i sprite_offset;
-        int unk05; //
-        int unk06; //
-        int unk07; //
-        int unk08; //
-        int unk09; //
+        int16_t unk05; //
+        int16_t unk06; //
+        int16_t unk07; //
+        int16_t unk08; //
+        int16_t unk09; //
         bool can_reverse;
-        int unk10; //
-        int speed_id;
+        int8_t unk10; //
+        uint8_t speed_id;
     } animation;
-    int type;
+    uint8_t type;
     bool is_fully_compressed;
     bool is_external;
     bool has_isometric_top;
     int isometric_box_height;
-    int unk11; //
-    int unk12; //
-    int unk13; //
+    int8_t unk11; //
+    int8_t unk12; //
+    int8_t unk13; //
     // (anim speed id)
-    int unk14; //
-    int unk15; //
-    int unk16; //
-    int unk17; //
-    int unk18; //
+    int8_t unk14; //
+    int8_t unk15; //
+    int8_t unk16; //
+    int8_t unk17; //
+    int8_t unk18; //
 
     int unk19; //
     int unk20; //
@@ -115,7 +115,6 @@ struct image_t {
 extern int terrain_ph_offset;
 
 bool image_data_fonts_ready();
-void image_data_init();
 bool image_load_paks();
 bool image_set_font_pak(encoding_type encoding);
 bool image_set_enemy_pak(int enemy_id);

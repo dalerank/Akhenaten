@@ -10,8 +10,6 @@
 #include "sound/sound.h"
 #include "graphics/animation.h"
 
-#include "js/js_game.h"
-
 figures::model_t<figure_birds> birds_m;
 
 void figure_birds::figure_action() {

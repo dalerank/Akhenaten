@@ -3,65 +3,11 @@
 #include "image_groups.h"
 #include "content/imagepak.h"
 #include "graphics/image_desc.h"
+#include "graphics/imagepak_holder.h"
 #include "content/dir.h"
 #include "core/svector.h"
 
-#include "js/js_game.h"
-
 #include <array>
-
-struct imagepak_handle {
-    bstring128 name;
-    int id = -1;
-    int index = -1;
-    bool system = false;
-    bool custom = false;
-    imagepak *handle = nullptr;
-};
-
-struct image_data_t {
-    bool fonts_enabled = false;
-    bool fonts_loaded = false;
-    bool common_inited = false;
-    int font_base_offset;
-
-    std::vector<imagepak**> pak_list;
-
-    imagepak* sprmain2 = nullptr;
-
-    std::vector<imagepak*> temple_paks;
-    std::vector<imagepak*> monument_paks;
-    std::vector<imagepak*> enemy_paks;
-    std::vector<imagepak*> font_paks;
-
-    imagepak* temple = nullptr;
-    imagepak* monument = nullptr;
-    imagepak* enemy = nullptr;
-    imagepak* font = nullptr;
-
-    color* tmp_image_data = nullptr;
-
-    std::array<imagepak_handle, 16> common;
-};
-
-image_data_t *g_image_data = nullptr;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_imagepaks_config);
-void config_load_imagepaks_config() {
-    if (g_image_data->common_inited) {
-        return;
-    }
-    g_config_arch.r_array("imagepaks", [] (archive arch) {
-        imagepak_handle config;
-        config.id = arch.r_int("id");
-        config.name = arch.r_string("name");
-        config.index = arch.r_int("index");
-        config.system = arch.r_bool("system");
-        config.custom = arch.r_bool("custom");
-        g_image_data->common[config.id] = config;
-    });
-    g_image_data->common_inited = true;
-}
 
 // These functions are actually related to the imagepak class I/O, but it made slightly more
 // sense to me to have here as "core" image struct/class & game graphics related functions.
@@ -111,10 +57,6 @@ bool image_set_temple_complex_pak(int temple_id) {
 bool image_set_monument_pak(int monument_id) {
     auto& data = *g_image_data;
     return set_pak_in_collection(monument_id, &data.monument, &data.monument_paks);
-}
-
-void image_data_init() {
-    g_image_data = new image_data_t;
 }
 
 bool image_load_paks() {
