@@ -22,7 +22,7 @@ void game_debug_show_properties_object(imagepak_handle ipak) {
         game_debug_show_property("index", ipak.index, true);
 
         const auto &names = ipak.handle->names();
-        const auto &ids = ipak.handle->image_ids();
+        const auto &ids = ipak.handle->image_ids(); 
         for (int i = 0, size = names.size(); i < size; ++i) {
             ImGui::PushID(0x83000000 + i);
 
@@ -30,7 +30,7 @@ void game_debug_show_properties_object(imagepak_handle ipak) {
             ImGui::TableSetColumnIndex(0);
             ImGui::AlignTextToFramePadding();
             const image_t* img = image_get(image_desc{ipak.id, i, 0});
-            bool anim_open = ImGui::TreeNodeEx(img, ImGuiTreeNodeFlags_DefaultOpen, "%s", img->bmp.name);
+            bool anim_open = ImGui::TreeNodeEx(img, ImGuiTreeNodeFlags_DefaultOpen, "%s", img->bmp.name.c_str());
             ImGui::TableSetColumnIndex(1);
 
             const int ioffset = ids[i];

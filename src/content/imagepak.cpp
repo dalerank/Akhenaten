@@ -260,7 +260,7 @@ static buffer* load_external_data(const image_t &img) {
     safe_realloc_for_size(&external_image_buf, img.data_length);
 
     // file path
-    vfs::path filename("Data/", img.bmp.name);
+    vfs::path filename("Data/", img.bmp.name.c_str());
     vfs::file_change_extension(filename, "555");
 
     // load external file
@@ -679,6 +679,18 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         has_system_bmp = true;
     }
 
+    struct offset_ids {
+        int start;
+        int id;
+    };
+    svector<offset_ids, PAK_GROUPS_MAX> offset_ids_vec;
+
+    for (int ii = 0; ii < groups_num; ++ii) {
+        offset_ids_vec.push_back({ group_image_ids[ii], ii });
+    }
+
+    std::sort(offset_ids_vec.begin(), offset_ids_vec.end(), [] (auto &lhs, auto &rhs) { return lhs.start < rhs.start; });
+
     // parse bitmap names
     using bmp_name_data = std::array<char, 200>;
     std::vector<bmp_name_data> names(num_bmp_names);
@@ -752,6 +764,12 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         if (img.bmp.group_id != bmp_last_group_id) {
             last_idx_in_bmp = 1; // new bitmap name, reset bitmap grouping index
             bmp_last_group_id = img.bmp.group_id;
+        }
+
+        if (img.bmp.group_id == 0) {
+            auto it = std::lower_bound(offset_ids_vec.begin(), offset_ids_vec.end(), last_idx_in_bmp, [] (const auto &offsetid, int value) { return offsetid.start <= value; });
+            img.bmp.group_id = it->id;
+            img.bmp.name.printf("group_%d", img.bmp.group_id);
         }
 
         img.bmp.entry_index = last_idx_in_bmp;

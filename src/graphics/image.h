@@ -45,7 +45,7 @@ struct atlas_data_t {
 struct image_t {
     xstring pak_name;
     struct {
-        char* name;
+        xstring name;
         uint8_t group_id;
         int entry_index;
     } bmp;
