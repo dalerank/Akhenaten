@@ -151,7 +151,7 @@ static void update_clouds()
         clouds_pause();
     }
     const vec2i camera_coord = city_view_get_camera_in_pixels();
-    clouds_draw(camera_coord.x, camera_coord.y, map_grid_width() * 60, map_grid_height() * 30, g_zoom.get_scale());
+    clouds_draw(camera_coord.x, camera_coord.y, 162 * 60, 162 * 30, g_zoom.get_scale()); // FIXME: Magic numbers
 }
 
 void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord, tile2i tile) {
@@ -182,10 +182,11 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
         Planner.draw(ctx);
     }
 
+    update_clouds();
+
     // finally, draw these on top of everything else
     city_view_foreach_valid_map_tile(ctx, draw_debug_tile);
     city_view_foreach_valid_map_tile(ctx, draw_debug_figures);
-    update_clouds();
 }
 
 void widget_city_draw_with_overlay(painter &ctx, tile2i tile) {
