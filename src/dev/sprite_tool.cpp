@@ -2,6 +2,7 @@
 #include "imgui/imgui_internal.h"
 #include "widget/debug_console.h"
 #include "graphics/imagepak_holder.h"
+
 #include "dev/debug.h"
 
 ANK_REGISTER_PROPS_ITERATOR(dev_sprite_tool);
@@ -17,6 +18,7 @@ void game_debug_show_properties_object(imagepak_handle ipak) {
 
     if (common_open) {
         game_debug_show_property("id", ipak.id, true);
+        game_debug_show_property("id-name", e_pack_type_tokens.name((e_pack)ipak.id));
         game_debug_show_property("index", ipak.index, true);
 
         const auto &names = ipak.handle->names();
