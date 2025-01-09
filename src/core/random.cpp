@@ -209,3 +209,23 @@ bool anti_scum_random_bool() {
     }
     return rnd_bool_test;
 }
+
+int random_int() {
+    time_t t;
+    t = time(&t);
+    srand(static_cast<unsigned int>(t));
+    return rand();
+}
+
+int random_int_between(const int min, const int max) {
+    const int diff = max - min;
+    int rnd = 0;
+    if (diff > 0) {
+        rnd = random_int() % diff;
+    }
+    return min + rnd;
+}
+
+double random_fractional() {
+    return static_cast<double>(random_int()) / static_cast<double>(RAND_MAX);
+}

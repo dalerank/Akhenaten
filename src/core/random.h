@@ -39,3 +39,7 @@ bool random_bool_lerp_scalar_int(int minimum, int maximum, int v);
 
 uint16_t anti_scum_random_15bit(bool update = true);
 bool anti_scum_random_bool();
+
+int random_int();
+int random_int_between(int min, int max);
+double random_fractional();
