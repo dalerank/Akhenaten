@@ -269,7 +269,7 @@ static buffer* load_external_data(const image_t &img) {
         // try in 555 dir
         size = io_read_file_part_into_buffer(filename, MAY_BE_LOCALIZED, external_image_buf, img.data_length, img.sgx_data_offset - 1);
         if (!size) {
-            logs::error("unable to load external image %s", img.bmp.name);
+            logs::error("unable to load external image %s", img.bmp.name.c_str());
             return nullptr;
         }
     }
