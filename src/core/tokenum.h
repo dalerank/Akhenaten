@@ -250,7 +250,7 @@ struct token_holder {
     const token *data() const { return values.unsafe_ptr(); }
     constexpr token_holder() : values{make_tokens<enum_type>()} {}
     const char *name(enum_type v) const {
-        auto it = std::find(values.begin(), values.end(), [v] (auto &i) { return i.id == v; });
+        auto it = std::find_if(values.begin(), values.end(), [v] (auto &i) { return i.id == v; });
         return (it != values.end()) ? it->name : nullptr;
     }
 
