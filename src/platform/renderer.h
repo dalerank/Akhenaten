@@ -22,7 +22,8 @@ enum e_custome_image_type {
     CUSTOM_IMAGE_EMPIRE_MAP = 4,
     CUSTOM_IMAGE_RED_FOOTPRINT = 5,
     CUSTOM_IMAGE_GREEN_FOOTPRINT = 6,
-    CUSTOM_IMAGE_MAX = 7
+    CUSTOM_IMAGE_CLOUDS = 7,
+    CUSTOM_IMAGE_MAX = 8
 };
 
 enum { IMAGE_FILTER_NEAREST = 0, IMAGE_FILTER_LINEAR = 1 };
@@ -84,7 +85,9 @@ public:
     color* get_custom_texture_buffer(int type, int* actual_texture_width);
     void release_custom_texture_buffer(int type);
     void update_custom_texture(int type);
+    void update_custom_texture_from(int type, const color *buffer, int x_offset, int y_offset, int width, int height);
     void update_custom_texture_yuv(int type, const uint8_t* y_data, int y_width, const uint8_t* cb_data, int cb_width, const uint8_t* cr_data, int cr_width);
+    void draw_texture_advanced(const image_t *img, float x, float y, color color, float scale_x, float scale_y, double angle, int disable_coord_scaling);
     void draw_custom_texture(int type, int x, int y, float scale);
 
     int save_texture_from_screen(int image_id, vec2i pos, int width, int height);

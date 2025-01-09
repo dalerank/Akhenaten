@@ -210,6 +210,7 @@ bool anti_scum_random_bool() {
     return rnd_bool_test;
 }
 
+// FIXME: copied from augustus but simplified
 int random_int() {
     time_t t;
     t = time(&t);

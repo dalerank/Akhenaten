@@ -1,15 +1,15 @@
 #include "clouds.h"
 
-#include "core/config.h"
+#include "config/config.h"
 #include "core/random.h"
 #include "core/speed.h"
 #include "game/settings.h"
 #include "graphics/color.h"
 #include "graphics/image.h"
-#include "graphics/renderer.h"
+#include "platform/renderer.h"
 
-#include <math.h>
-#include <string.h>
+#include <cmath>
+#include <cstring>
 
 #define NUM_CLOUD_ELLIPSES 180
 #define CLOUD_ALPHA_INCREASE 16
@@ -56,7 +56,7 @@ typedef struct {
 } ellipse;
 
 typedef struct {
-    image_t* img; //FIXME
+    image_t img; //FIXME?
     int x;
     int y;
     cloud_status status;
@@ -74,7 +74,7 @@ static struct {
     cloud_type clouds[NUM_CLOUDS];
     int movement_timeout;
     int pause_frames;
-} data;
+} cloud_data;
 
 static int random_from_min_to_range(int min, int range)
 {
@@ -164,35 +164,36 @@ static void generate_cloud_ellipse(color *cloud, int width, int height)
     }
 }
 
-static void init_cloud_images(void)
+static void init_cloud_images()
 {
-    graphics_renderer()->create_custom_image(CUSTOM_IMAGE_CLOUDS, CLOUD_TEXTURE_WIDTH, CLOUD_TEXTURE_HEIGHT, 0);
+    graphics_renderer()->create_custom_texture(CUSTOM_IMAGE_CLOUDS, CLOUD_TEXTURE_WIDTH, CLOUD_TEXTURE_HEIGHT);
     for (int i = 0; i < NUM_CLOUDS; i++) {
-        cloud_type *cloud = &data.clouds[i];
-        image *img = &cloud->img;
-        img->width = img->original.width = CLOUD_WIDTH;
-        img->height = img->original.height = CLOUD_HEIGHT;
-        img->atlas.id = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | CUSTOM_IMAGE_CLOUDS;
-        img->atlas.x_offset = (i % CLOUD_COLUMNS) * CLOUD_WIDTH;
-        img->atlas.y_offset = (i / CLOUD_COLUMNS) * CLOUD_HEIGHT;
+        cloud_type *cloud = &cloud_data.clouds[i];
+        image_t *img = &cloud->img;
+        img->width = img->width = CLOUD_WIDTH;
+        img->height = img->height = CLOUD_HEIGHT;
+        // img->atlas.index = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | CUSTOM_IMAGE_CLOUDS;
+        img->atlas.index = CUSTOM_IMAGE_CLOUDS;
+        img->atlas.offset.x = (i % CLOUD_COLUMNS) * CLOUD_WIDTH;
+        img->atlas.offset.y = (i / CLOUD_COLUMNS) * CLOUD_HEIGHT;
         cloud->x = 0;
         cloud->y = 0;
         cloud->side = 0;
         cloud->angle = 0;
         cloud->status = STATUS_INACTIVE;
-        speed_clear(&cloud->speed.x);
-        speed_clear(&cloud->speed.y);
+        speed_clear(cloud->speed.x);
+        speed_clear(cloud->speed.y);
     }
 }
 
 static void generate_cloud(cloud_type *cloud)
 {
-    if (!graphics_renderer()->has_custom_image(CUSTOM_IMAGE_CLOUDS)) {
+    if (!graphics_renderer()->has_custom_texture(CUSTOM_IMAGE_CLOUDS)) {
         init_cloud_images();
     }
 
-    color_t pixels[CLOUD_WIDTH * CLOUD_HEIGHT];
-    memset(pixels, 0, sizeof(color_t) * CLOUD_WIDTH * CLOUD_HEIGHT);
+    color pixels[CLOUD_WIDTH * CLOUD_HEIGHT];
+    memset(pixels, 0, sizeof(color) * CLOUD_WIDTH * CLOUD_HEIGHT);
 
     int width = random_from_min_to_range((int) (CLOUD_WIDTH * 0.15f), (int) (CLOUD_WIDTH * 0.2f));
     int height = random_from_min_to_range((int) (CLOUD_HEIGHT * 0.15f), (int) (CLOUD_HEIGHT * 0.2f));
@@ -201,26 +202,26 @@ static void generate_cloud(cloud_type *cloud)
         generate_cloud_ellipse(pixels, width, height);
     }
 
-    const image *img = &cloud->img;
+    const image_t *img = &cloud->img;
 
-    graphics_renderer()->update_custom_image_from(CUSTOM_IMAGE_CLOUDS, pixels,
-        img->atlas.x_offset, img->atlas.y_offset, img->width, img->height);
+    graphics_renderer()->update_custom_texture_from(CUSTOM_IMAGE_CLOUDS, pixels,
+        img->atlas.offset.x, img->atlas.offset.y, img->width, img->height);
 
     cloud->x = 0;
     cloud->y = 0;
-    cloud->scale_x = (float) ((1.5 - random_fractional_from_stdlib()) / CLOUD_SCALE);
-    cloud->scale_y = (float) ((1.5 - random_fractional_from_stdlib()) / CLOUD_SCALE);
+    cloud->scale_x = (float) ((1.5 - random_fractional()) / CLOUD_SCALE);
+    cloud->scale_y = (float) ((1.5 - random_fractional()) / CLOUD_SCALE);
     int scaled_width = (int) (CLOUD_WIDTH / cloud->scale_x);
     int scaled_height = (int) (CLOUD_HEIGHT / cloud->scale_y);
     cloud->side = (int) sqrt(scaled_width * scaled_width + scaled_height * scaled_height);
-    cloud->angle = random_between_from_stdlib(0, 360);
+    cloud->angle = random_int_between(0, 360);
     cloud->status = STATUS_CREATED;
 }
 
 static int cloud_intersects(const cloud_type *cloud)
 {
     for (int i = 0; i < NUM_CLOUDS; i++) {
-        const cloud_type *other = &data.clouds[i];
+        const cloud_type *other = &cloud_data.clouds[i];
         if (other->status != STATUS_MOVING) {
             continue;
         }
@@ -234,47 +235,47 @@ static int cloud_intersects(const cloud_type *cloud)
 
 static void position_cloud(cloud_type *cloud, int x_limit, int y_limit)
 {
-    int offset_x = random_between_from_stdlib(0, x_limit / 2);
+    int offset_x = random_int_between(0, x_limit / 2);
 
     cloud->x = x_limit - offset_x + cloud->side;
     cloud->y = (y_limit - offset_x) / 2 - cloud->side;
 
     if (!cloud_intersects(cloud)) {
         cloud->status = STATUS_MOVING;
-        speed_clear(&cloud->speed.x);
-        speed_clear(&cloud->speed.y);
-        data.movement_timeout = random_between_from_stdlib(CLOUD_MIN_CREATION_TIMEOUT, CLOUD_MAX_CREATION_TIMEOUT);
+        speed_clear(cloud->speed.x);
+        speed_clear(cloud->speed.y);
+        cloud_data.movement_timeout = random_int_between(CLOUD_MIN_CREATION_TIMEOUT, CLOUD_MAX_CREATION_TIMEOUT);
     }
 }
 
 void clouds_pause(void)
 {
-    data.pause_frames = PAUSE_MIN_FRAMES;
+    cloud_data.pause_frames = PAUSE_MIN_FRAMES;
 }
 
 void clouds_draw(int x_offset, int y_offset, int x_limit, int y_limit, float base_scale)
 {
-// FIXME
+// FIXME: add configuration option
 //    if (!config_get(CONFIG_UI_DRAW_CLOUD_SHADOWS)) {
 //        return;
 //    }
 
     double cloud_speed = 0;
 
-    if (data.pause_frames) {
-        data.pause_frames--;
+    if (cloud_data.pause_frames) {
+        cloud_data.pause_frames--;
     } else {
-        cloud_speed = CLOUD_SPEED * setting_game_speed() / 100;
+        cloud_speed = CLOUD_SPEED * g_settings.game_speed / 100;
     }
 
     for (int i = 0; i < NUM_CLOUDS; i++) {
-        cloud_type *cloud = &data.clouds[i];
+        cloud_type *cloud = &cloud_data.clouds[i];
         if (cloud->status == STATUS_INACTIVE) {
             generate_cloud(cloud);
             continue;
         } else if (cloud->status == STATUS_CREATED) {
-            if (data.movement_timeout > 0) {
-                data.movement_timeout--;
+            if (cloud_data.movement_timeout > 0) {
+                cloud_data.movement_timeout--;
             } else {
                 position_cloud(cloud, x_limit, y_limit);
             }
@@ -284,14 +285,14 @@ void clouds_draw(int x_offset, int y_offset, int x_limit, int y_limit, float bas
             continue;
         }
 
-        speed_set_target(&cloud->speed.x, -cloud_speed, SPEED_CHANGE_IMMEDIATE, 1);
-        speed_set_target(&cloud->speed.y, cloud_speed / 2, SPEED_CHANGE_IMMEDIATE, 1);
+        speed_set_target(cloud->speed.x, -cloud_speed, SPEED_CHANGE_IMMEDIATE, 1);
+        speed_set_target(cloud->speed.y, cloud_speed / 2, SPEED_CHANGE_IMMEDIATE, 1);
 
-        graphics_renderer()->draw_image_advanced(&cloud->img,
+        graphics_renderer()->draw_texture_advanced(&cloud->img,
             (cloud->x - x_offset) / base_scale, (cloud->y - y_offset) / base_scale, COLOR_MASK_NONE,
             cloud->scale_x * base_scale, cloud->scale_y * base_scale, cloud->angle, 1);
 
-        cloud->x += speed_get_delta(&cloud->speed.x);
-        cloud->y += speed_get_delta(&cloud->speed.y);
+        cloud->x += speed_get_delta(cloud->speed.x);
+        cloud->y += speed_get_delta(cloud->speed.y);
     }
 }
