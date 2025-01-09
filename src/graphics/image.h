@@ -2,6 +2,7 @@
 
 #include "SDL_render.h"
 #include "core/encoding.h"
+#include "core/xstring.h"
 #include "core/vec2i.h"
 #include "graphics/color.h"
 #include "graphics/image_desc.h"
@@ -42,7 +43,7 @@ struct atlas_data_t {
 };
 
 struct image_t {
-    char* pak_name;
+    xstring pak_name;
     struct {
         char* name;
         uint8_t group_id;

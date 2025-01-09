@@ -40,7 +40,7 @@ void game_debug_show_properties_object(imagepak_handle ipak) {
                 game_debug_show_property("i_offset", ioffset, true);
 
                 if (img && img->atlas.p_atlas) {
-                    game_debug_show_property("atlasname", img->bmp.name);
+                    game_debug_show_property("sprites", img->animation.num_sprites);
                     const vec2i tx_offset = img->atlas.offset;
 
                     ImGui::PushID(0x88000000 + i);
