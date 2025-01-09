@@ -12,7 +12,7 @@ void game_debug_show_properties_object(imagepak_handle ipak) {
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
     ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx((void*)ipak.name.c_str(), ImGuiTreeNodeFlags_DefaultOpen, "%s", ipak.name);
+    bool common_open = ImGui::TreeNodeEx((void*)ipak.name.c_str(), ImGuiTreeNodeFlags_DefaultOpen, "%s", ipak.name.c_str());
     ImGui::TableSetColumnIndex(1); 
 
     if (common_open) {
