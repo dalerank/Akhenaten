@@ -105,6 +105,12 @@ struct image_t {
         atlas_data_t* p_atlas = nullptr;
     } atlas;
 
+    struct {
+        uint8_t animate;
+        uint8_t max_frame;
+        uint16_t frame;
+    } debug;
+
     color* temp_pixel_data = nullptr;
 
     inline vec2i size() const { return {width, height}; }

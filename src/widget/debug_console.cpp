@@ -130,12 +130,40 @@ void game_debug_show_property_t(pcstr field, const T &v, bool disabled = false) 
     ++game_debug_cli_guid;
 }
 
+template<typename T>
+void game_debug_show_property_t(pcstr field, const T &v, std::span<pcstr> modes, bool disabled = false) {
+    ImGui::PushID(game_debug_cli_guid);
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Bullet;
+    ImGui::TreeNodeEx("Field", flags, "%s", field);
+    ImGui::TableSetColumnIndex(1);
+    ImGui::SetNextItemWidth(-FLT_MIN);
+
+    if (disabled) {
+        ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+    }
+
+    int item_current = v;
+    ImGui::Combo("combo", &item_current, modes.data(), modes.size());
+    const_cast<T&>(v) = item_current;
+
+    if (disabled) {
+        ImGui::PopItemFlag();
+    }
+    ImGui::NextColumn();
+    ImGui::PopID();
+    ++game_debug_cli_guid;
+}
+
 void game_debug_show_property_t(pcstr field, pcstr v) {
     bstring256 _v(v);
     game_debug_show_property_t(field, _v);
 }
 
 void game_debug_show_property(pcstr field, const int &v, bool disabled)  { game_debug_show_property_t(field, v, disabled); }
+void game_debug_show_property(pcstr field, const uint8_t &v, std::span<pcstr> modes, bool disabled)  { game_debug_show_property_t(field, v, modes, disabled); }
 void game_debug_show_property(pcstr field, const float &v, bool disabled)  { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const e_move_type &v, bool disabled)  { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const int8_t &v, bool disabled)  { game_debug_show_property_t(field, v, disabled); }

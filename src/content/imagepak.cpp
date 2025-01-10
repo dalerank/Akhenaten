@@ -794,6 +794,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
             rect.input.width = img.width;
             rect.input.height = img.height;
         }
+        img.debug.max_frame = 0xff;
     }
 
     for (int i = 0, rect_i = entries_num; i < entries_num; ++i) {
