@@ -108,6 +108,7 @@ struct image_t {
     struct {
         uint8_t animate;
         uint8_t max_frame;
+        uint8_t frame_tick;
         uint16_t frame;
     } debug;
 
