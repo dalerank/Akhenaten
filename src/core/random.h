@@ -19,6 +19,7 @@ struct random_data_t {
     int16_t random2_15bit;
     int pool_index;
     int32_t pool[MAX_RANDOM];
+    time_t last_seed;
 } ;
 
 const random_data_t* random_data_struct();

@@ -212,9 +212,13 @@ bool anti_scum_random_bool() {
 
 // FIXME: copied from augustus but simplified
 int random_int() {
+    auto &data = g_random_data;
     time_t t;
     t = time(&t);
-    srand(static_cast<unsigned int>(t));
+    if (data.last_seed != t) {
+        srand((unsigned int) t);
+        data.last_seed = t;
+    }
     return rand();
 }
 
