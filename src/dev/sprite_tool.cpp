@@ -48,7 +48,7 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                     ImGui::SameLine(); ImGui::Text("index:%d", ipak.index);
                     ImGui::SameLine(); ImGui::Text("i_offset:%d", ioffset);
                     int item_current = img->debug.animate;
-                    pcstr animate_mode[] = { "None", "Figure" };
+                    pcstr animate_mode[] = { "None", "Figure", "Simple" };
                     ImGui::SameLine(); ImGui::Text("mode"); ImGui::SameLine(); ImGui::SetNextItemWidth(100); ImGui::Combo("##animate", &item_current, animate_mode, std::size(animate_mode));
                     img->debug.animate = item_current;
                     ImGui::SameLine(); ImGui::Text("sprites:%d", img->animation.num_sprites);
@@ -58,7 +58,15 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                     const vec2i tx_offset = img->atlas.offset;
                     ImGui::SameLine(); ImGui::Text("offset:%d, %d", tx_offset.x, tx_offset.y);
 
-                    auto drawImage = [] (image_t *img, int idx) {
+                    auto maxImageSize = [] (image_t *img, vec2i msize) {
+                        if (img->mirrored_img != 0) {
+                            img = img->mirrored_img;
+                        }
+                        msize.x = (img->width < msize.x ? msize.x : img->width);
+                        msize.y = (img->height < msize.y ? msize.y : img->height);
+                    };
+
+                    auto drawImage = [] (image_t *img, int idx, vec2i msize) {
                         if (img->mirrored_img != 0) {
                             img = img->mirrored_img;
                         }
@@ -66,19 +74,29 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                         const vec2i atlas_size(img->atlas.p_atlas->width, img->atlas.p_atlas->height);
                         ImVec2 uv_min(tx_offset.x / (float)atlas_size.x, tx_offset.y / (float)atlas_size.y);
                         ImVec2 uv_max((tx_offset.x + img->width) / (float)atlas_size.x, (tx_offset.y + img->height) / (float)atlas_size.y);
-                        const int ww = (img->width < 64 ? 64 : img->width);
-                        const int wh = (img->height < 64 ? 64 : img->height);
-                        ImGui::BeginChild(bstring32("##imageframe%d", idx), ImVec2(ww, wh), true);
+                        
+                        ImGui::BeginChild(bstring32("##imageframe%d", idx), ImVec2(msize.x, msize.y), true);
                         ImGui::Image(img->atlas.p_atlas->texture, ImVec2(img->width, img->height), uv_min, uv_max);
                         ImGui::EndChild();
                     };
 
-                    if (img->debug.animate == 1) {
+                    if (img->debug.animate == 1 || img->debug.animate == 2) {
                         static uint8_t animate_duration = 4;
                         ImGui::Text("duration"); ImGui::SameLine(); ImGui::SetNextItemWidth(60); ImGui::InputScalar("##duration", ImGuiDataType_U8, (void *)&animate_duration);
+                        vec2i msize(60, 60);
                         for (int dir = 0; dir < 8; ++dir) {
-                            image_t *animg = const_cast<image_t *>(image_get(image_desc{ ipak.id, i, img->debug.frame * 8 + dir }));
-                            drawImage(animg, dir);
+                            image_t *animg = img + img->debug.frame * 8 + dir;
+                            maxImageSize(img, msize);
+                        }
+
+                        msize.x += 16;
+                        msize.y += 16;
+                        const int dir_max = (img->debug.animate == 1) ? 8 : 1;
+                        for (int dir = 0; dir < dir_max; ++dir) {
+                            image_t *animg = (img->debug.animate == 1) 
+                                               ? img + img->debug.frame * 8 + dir
+                                               : img + img->debug.frame;
+                            drawImage(animg, dir, msize);
                             ImGui::SameLine();
                         }
 
@@ -92,7 +110,7 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                             }
                         }
                     } else {
-                        drawImage(img, 0);
+                        drawImage(img, 0, vec2i(img->width + 16, img->height + 16));
                     }
 
                     ImGui::NextColumn();
