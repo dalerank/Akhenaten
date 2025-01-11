@@ -175,8 +175,8 @@ static void init_cloud_images()
         atlas_data_t atlas_data;
 
         image_t *img = &cloud->img;
-        img->width = img->width = CLOUD_WIDTH;
-        img->height = img->height = CLOUD_HEIGHT;
+        img->width = CLOUD_WIDTH;
+        img->height = CLOUD_HEIGHT;
         // img->atlas.id = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | CUSTOM_IMAGE_CLOUDS;
         cloud->x = 0;
         cloud->y = 0;
@@ -186,17 +186,19 @@ static void init_cloud_images()
         speed_clear(cloud->speed.x);
         speed_clear(cloud->speed.y);
 
-        atlas_data.width = CLOUD_WIDTH;
-        atlas_data.height = CLOUD_HEIGHT;
+        atlas_data.width = img->width;
+        atlas_data.height = img->height;
         atlas_data.bmp_size = atlas_data.width * atlas_data.height;
         atlas_data.temp_pixel_buffer = new color[atlas_data.bmp_size];
         memset(atlas_data.temp_pixel_buffer, 0, atlas_data.bmp_size * sizeof(uint32_t));
         atlas_data.texture = nullptr;
-        atlas_pages.push_back(atlas_data);
 
-        img->atlas.p_atlas = &atlas_data;
+        img->atlas.index = i;
         img->atlas.offset.x = (i % CLOUD_COLUMNS) * CLOUD_WIDTH;
         img->atlas.offset.y = (i / CLOUD_COLUMNS) * CLOUD_HEIGHT;
+
+        atlas_pages.push_back(atlas_data);
+        img->atlas.p_atlas = &atlas_pages.at(i);
     }
 }
 
@@ -206,13 +208,13 @@ static color to_argb(uint32_t c) {
 }
 static int copy_to_atlas(const image_t* img) {
     int pixels_count = 0;
-    atlas_data_t *p_atlas = img->atlas.p_atlas;
-    color *pixels = img->temp_pixel_data;
+    const atlas_data_t *p_atlas = img->atlas.p_atlas;
+    const color *pixels = img->temp_pixel_data;
 
     for (int y = 0; y < img->height; y++) {
         color* pixel = &p_atlas->temp_pixel_buffer[(img->atlas.offset.y + y) * p_atlas->width + img->atlas.offset.x];
         for (int x = 0; x < img->width; x++) {
-            color color = to_argb(pixels[y * img->width + x]);
+            const color color = to_argb(pixels[y * img->width + x]);
             pixel[x] = color;
             pixels_count++;
         }
@@ -222,15 +224,10 @@ static int copy_to_atlas(const image_t* img) {
 
 static void generate_cloud(cloud_type *cloud)
 {
-    if (!graphics_renderer()->has_custom_texture(CUSTOM_IMAGE_CLOUDS)) {
-        init_cloud_images();
-    }
+    color pixels[CLOUD_WIDTH * CLOUD_HEIGHT] = {};
 
-    color pixels[CLOUD_WIDTH * CLOUD_HEIGHT];
-    memset(pixels, 0, sizeof(color) * CLOUD_WIDTH * CLOUD_HEIGHT);
-
-    int width = random_from_min_to_range((int) (CLOUD_WIDTH * 0.15f), (int) (CLOUD_WIDTH * 0.2f));
-    int height = random_from_min_to_range((int) (CLOUD_HEIGHT * 0.15f), (int) (CLOUD_HEIGHT * 0.2f));
+    const int width = random_from_min_to_range(static_cast<int>((CLOUD_WIDTH * 0.15f)), static_cast<int>((CLOUD_WIDTH * 0.2f)));
+    const int height = random_from_min_to_range(static_cast<int>((CLOUD_HEIGHT * 0.15f)), static_cast<int>((CLOUD_HEIGHT * 0.2f)));
 
     for (int i = 0; i < NUM_CLOUD_ELLIPSES; i++) {
         generate_cloud_ellipse(pixels, width, height);
@@ -240,17 +237,26 @@ static void generate_cloud(cloud_type *cloud)
 
     graphics_renderer()->update_custom_texture_from(CUSTOM_IMAGE_CLOUDS, pixels,
         img->atlas.offset.x, img->atlas.offset.y, img->width, img->height);
-    img->temp_pixel_data = pixels;
 
-    copy_to_atlas(img);
+    img->atlas.p_atlas->temp_pixel_buffer = img->temp_pixel_data = pixels;
+    img->atlas.p_atlas->texture = graphics_renderer()->create_texture_from_buffer(
+        img->atlas.p_atlas->temp_pixel_buffer,
+        img->atlas.p_atlas->width,
+        img->atlas.p_atlas->height
+    );
+    // copy_to_atlas(img);
+
+    // delete temp data buffer in the atlas
+    // delete img->atlas.p_atlas->temp_pixel_buffer;
+    // img->atlas.p_atlas->temp_pixel_buffer = nullptr;
 
     cloud->x = 0;
     cloud->y = 0;
-    cloud->scale_x = (float) ((1.5 - random_fractional()) / CLOUD_SCALE);
-    cloud->scale_y = (float) ((1.5 - random_fractional()) / CLOUD_SCALE);
-    int scaled_width = (int) (CLOUD_WIDTH / cloud->scale_x);
-    int scaled_height = (int) (CLOUD_HEIGHT / cloud->scale_y);
-    cloud->side = (int) sqrt(scaled_width * scaled_width + scaled_height * scaled_height);
+    cloud->scale_x = static_cast<float>((1.5 - random_fractional()) / CLOUD_SCALE);
+    cloud->scale_y = static_cast<float>((1.5 - random_fractional()) / CLOUD_SCALE);
+    const int scaled_width = static_cast<int>(CLOUD_WIDTH / cloud->scale_x);
+    const int scaled_height = static_cast<int>(CLOUD_HEIGHT / cloud->scale_y);
+    cloud->side = static_cast<int>(sqrt(scaled_width * scaled_width + scaled_height * scaled_height));
     cloud->angle = random_int_between(0, 360);
     cloud->status = STATUS_CREATED;
 }
@@ -285,7 +291,7 @@ static void position_cloud(cloud_type *cloud, int x_limit, int y_limit)
     }
 }
 
-void clouds_pause(void)
+void clouds_pause()
 {
     cloud_data.pause_frames = PAUSE_MIN_FRAMES;
 }
@@ -296,6 +302,10 @@ void clouds_draw(int x_offset, int y_offset, int x_limit, int y_limit, float bas
 //    if (!config_get(CONFIG_UI_DRAW_CLOUD_SHADOWS)) {
 //        return;
 //    }
+
+    if (!graphics_renderer()->has_custom_texture(CUSTOM_IMAGE_CLOUDS)) {
+        init_cloud_images();
+    }
 
     double cloud_speed = 0;
 
@@ -310,14 +320,16 @@ void clouds_draw(int x_offset, int y_offset, int x_limit, int y_limit, float bas
         if (cloud->status == STATUS_INACTIVE) {
             generate_cloud(cloud);
             continue;
-        } else if (cloud->status == STATUS_CREATED) {
+        }
+        if (cloud->status == STATUS_CREATED) {
             if (cloud_data.movement_timeout > 0) {
                 cloud_data.movement_timeout--;
             } else {
                 position_cloud(cloud, x_limit, y_limit);
             }
             continue;
-        } else if (cloud->x < -cloud->side || cloud->y >= y_limit) {
+        }
+        if (cloud->x < -cloud->side || cloud->y >= y_limit) {
             cloud->status = STATUS_INACTIVE;
             continue;
         }
