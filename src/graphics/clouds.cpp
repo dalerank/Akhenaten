@@ -36,7 +36,7 @@
 std::vector<atlas_data_t> atlas_pages;
 cloud_data g_cloud_data;
 
-typedef struct {
+struct ellipse {
     int x;
     int y;
     int width;
@@ -47,7 +47,7 @@ typedef struct {
     int squared_width;
     int squared_height;
     int width_times_height;
-} ellipse;
+};
 
 static int random_from_min_to_range(int min, int range)
 {
@@ -148,12 +148,6 @@ static void init_cloud_images()
         image_t *img = &cloud->img;
         img->width = CLOUD_WIDTH;
         img->height = CLOUD_HEIGHT;
-        // img->atlas.id = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | CUSTOM_IMAGE_CLOUDS;
-        cloud->x = 0;
-        cloud->y = 0;
-        cloud->side = 0;
-        cloud->angle = 0;
-        cloud->status = e_cloud_status_inactive;
         speed_clear(cloud->speed.x);
         speed_clear(cloud->speed.y);
 
@@ -213,8 +207,8 @@ static void generate_cloud(cloud_type *cloud)
     cloud->y = 0;
     cloud->scale_x = 1 / static_cast<float>((1.5 - random_fractional()) / CLOUD_SCALE);
     cloud->scale_y = 1 / static_cast<float>((1.5 - random_fractional()) / CLOUD_SCALE);
-    const int scaled_width = static_cast<int>(CLOUD_WIDTH / cloud->scale_x);
-    const int scaled_height = static_cast<int>(CLOUD_HEIGHT / cloud->scale_y);
+    const int scaled_width = static_cast<int>(CLOUD_WIDTH * cloud->scale_x);
+    const int scaled_height = static_cast<int>(CLOUD_HEIGHT * cloud->scale_y);
     cloud->side = static_cast<int>(sqrt(scaled_width * scaled_width + scaled_height * scaled_height));
     cloud->angle = random_int_between(0, 360);
     cloud->status = e_cloud_status_created;
@@ -242,12 +236,12 @@ static void position_cloud(cloud_type *cloud, int x_limit, int y_limit)
     cloud->x = x_limit - offset_x + cloud->side;
     cloud->y = (y_limit - offset_x) / 2 - cloud->side;
 
-    if (!cloud_intersects(cloud)) {
+    // if (!cloud_intersects(cloud)) {
         cloud->status = e_cloud_status_moving;
         speed_clear(cloud->speed.x);
         speed_clear(cloud->speed.y);
         g_cloud_data.movement_timeout = random_int_between(CLOUD_MIN_CREATION_TIMEOUT, CLOUD_MAX_CREATION_TIMEOUT);
-    }
+    // }
 }
 
 void clouds_pause()
@@ -315,11 +309,13 @@ void clouds_draw(painter &ctx, int x_offset, int y_offset, int x_limit, int y_li
             continue;
         }
 
+        cloud->render_x = cloud->x - x_offset;
+        cloud->render_y = cloud->y - y_offset;
+
         speed_set_target(cloud->speed.x, -cloud_speed, SPEED_CHANGE_IMMEDIATE, 1);
         speed_set_target(cloud->speed.y, cloud_speed / 2, SPEED_CHANGE_IMMEDIATE, 1);
-        x_offset = 0; y_offset = 0; // FIXME
         draw_cloud(ctx, &cloud->img,
-            (cloud->x - x_offset), (cloud->y - y_offset), COLOR_MASK_NONE,
+            cloud->render_x, cloud->render_y, COLOR_MASK_NONE,
             cloud->scale_x, cloud->scale_y, cloud->angle, 1);
 
         cloud->x += speed_get_delta(cloud->speed.x);

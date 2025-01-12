@@ -23,6 +23,8 @@ struct cloud_type {
     image_t img;
     int x = 0;
     int y = 0;
+    int render_x = 0;
+    int render_y = 0;
     e_cloud_status status = e_cloud_status_inactive;
     speed speed = {};
     float scale_x = 1.f;

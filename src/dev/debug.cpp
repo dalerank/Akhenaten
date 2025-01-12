@@ -1269,8 +1269,11 @@ void draw_debug_ui(int x, int y) {
 
             debug_text(ctx, str, x, y - 15, 70, "---cloud ", i);
             debug_text_a(ctx, str, x, y, 70, status_text);
-            debug_text_dual_left(str, x, y + 15, 110, 60, "pos_x, pos_y: ", cloud->x, cloud->y);
-            y += 45;
+            debug_text_dual_left(str, x, y + 15, 110, 70, "speed x,y:", cloud->speed.x.current_speed,
+                                 cloud->speed.y.current_speed);
+            debug_text_dual_left(str, x, y + 30, 110, 60, "pos x,y: ", cloud->x, cloud->y);
+            debug_text_dual_left(str, x, y + 45, 110, 60, "render pos x,y: ", cloud->render_x, cloud->render_y);
+            y += 75;
         }
 
         y += 200;
