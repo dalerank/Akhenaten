@@ -30,7 +30,8 @@
 #define CLOUD_TEXTURE_WIDTH (CLOUD_WIDTH * CLOUD_COLUMNS)
 #define CLOUD_TEXTURE_HEIGHT (CLOUD_HEIGHT * CLOUD_ROWS)
 
-#define CLOUD_SPEED 0.3
+// #define CLOUD_SPEED 0.3
+#define CLOUD_SPEED 30 //FIXME
 
 #define PAUSE_MIN_FRAMES 2
 
@@ -284,7 +285,29 @@ void clouds_pause()
     cloud_data.pause_frames = PAUSE_MIN_FRAMES;
 }
 
-void clouds_draw(int x_offset, int y_offset, int x_limit, int y_limit, float base_scale)
+// FIXME: Function created for debugging reasons
+void draw_cloud(painter &ctx, const image_t *img, float x, float y, color color, float scale_x, float scale_y, double angle, int disable_coord_scaling) {
+    if (!img->atlas.p_atlas) {
+        return;
+    }
+
+    SDL_Texture *texture = img->atlas.p_atlas->texture;
+    if (!texture) {
+        return;
+    }
+
+    const vec2i pos = {
+        static_cast<int>(round(x)),
+        static_cast<int>(round(y)),
+    };
+    const vec2i size = {
+        img->width,
+        img->height,
+    };
+    ctx.draw(texture, pos, img->atlas.offset, size, color, 1.0f, ImgFlag_Alpha);
+}
+
+void clouds_draw(painter &ctx, int x_offset, int y_offset, int x_limit, int y_limit)
 {
 // FIXME: add configuration option
 //    if (!config_get(CONFIG_UI_DRAW_CLOUD_SHADOWS)) {
@@ -324,10 +347,10 @@ void clouds_draw(int x_offset, int y_offset, int x_limit, int y_limit, float bas
 
         speed_set_target(cloud->speed.x, -cloud_speed, SPEED_CHANGE_IMMEDIATE, 1);
         speed_set_target(cloud->speed.y, cloud_speed / 2, SPEED_CHANGE_IMMEDIATE, 1);
-
-        graphics_renderer()->draw_texture_advanced(&cloud->img,
-            (cloud->x - x_offset) / base_scale, (cloud->y - y_offset) / base_scale, COLOR_MASK_NONE,
-            cloud->scale_x * base_scale, cloud->scale_y * base_scale, cloud->angle, 1);
+        x_offset = 0; y_offset = 0; // FIXME
+        draw_cloud(ctx, &cloud->img,
+            (cloud->x - x_offset), (cloud->y - y_offset), COLOR_MASK_NONE,
+            cloud->scale_x, cloud->scale_y, cloud->angle, 1);
 
         cloud->x += speed_get_delta(cloud->speed.x);
         cloud->y += speed_get_delta(cloud->speed.y);

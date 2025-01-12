@@ -145,13 +145,14 @@ static void update_tile_coords(vec2i pixel, tile2i tile, painter &ctx) {
     record_mappoint_pixelcoord(tile, pixel);
 }
 
-static void update_clouds()
+static void update_clouds(painter &ctx)
 {
     if (game.paused || (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY))) {
         clouds_pause();
     }
     const vec2i camera_coord = city_view_get_camera_in_pixels();
-    clouds_draw(camera_coord.x, camera_coord.y, 162 * 60, 162 * 30, g_zoom.get_scale()); // FIXME: Magic numbers
+    // clouds_draw(ctx, camera_coord.x, camera_coord.y, GRID_LENGTH * TILE_WIDTH_PIXELS, GRID_LENGTH * TILE_HEIGHT_PIXELS);
+    clouds_draw(ctx, camera_coord.x, camera_coord.y, 3000, 3000); //FIXME
 }
 
 void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord, tile2i tile) {
@@ -182,7 +183,7 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
         Planner.draw(ctx);
     }
 
-    update_clouds();
+    update_clouds(ctx);
 
     // finally, draw these on top of everything else
     city_view_foreach_valid_map_tile(ctx, draw_debug_tile);
