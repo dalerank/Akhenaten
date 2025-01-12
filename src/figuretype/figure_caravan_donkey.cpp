@@ -18,7 +18,6 @@
 #include "game/game.h"
 #include "graphics/elements/lang_text.h"
 #include "window/window_figure_info.h"
-#include "js/js_game.h"
 #include "core/profiler.h"
 
 figures::model_t<figure_caravan_donkey> caravan_donkey_m;
@@ -29,11 +28,6 @@ struct figure_caravan_donkey_info_window : public figure_info_window {
         return !!c.figure_get<figure_caravan_donkey>();
     }
 };
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_caravan_donkey);
-void config_load_figure_caravan_donkey() {
-    caravan_donkey_m.load();
-}
 
 const empire_city *figure_caravan_donkey::get_empire_city() const {
     const empire_city *city = g_empire.city(base.empire_city_id);
