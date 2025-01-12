@@ -399,6 +399,11 @@ void game_t::write_frame() {
     mvwriter->addFrame((const uint8_t*)frame_pixels);
 }
 
+void game_t::reload_objects() {
+    g_city.buildings.reload_objects();
+    g_city.figures.reload_objects();
+}
+
 ::painter game_t::painter() {
     ::painter ctx;
     ctx.view = &city_view_data_unsafe();

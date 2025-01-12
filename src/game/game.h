@@ -77,6 +77,7 @@ struct game_t {
     void animation_timers_update();
     bool animation_should_advance(uint32_t speed);
     void write_frame();
+    void reload_objects();
 
     void set_write_video(bool v);
     bool get_write_video() const { return write_video; }

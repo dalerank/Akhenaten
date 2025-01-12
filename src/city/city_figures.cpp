@@ -43,6 +43,16 @@ void city_figures_t::init_figures() {
     g_figure_data.init();
 }
 
+void city_figures_t::reload_objects() {
+    for (auto &figure : map_figures()) {
+        if (figure->type == FIGURE_NONE) {
+            continue;
+        }
+
+        figure->dcast()->on_config_reload();
+    }
+}
+
 void city_figures_t::on_post_load() {
     for (auto &figure: map_figures()) {
         if (figure->type == FIGURE_NONE) {

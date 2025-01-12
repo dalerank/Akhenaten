@@ -18,6 +18,7 @@ struct city_figures_t {
     void update();
     void add_animal();
     void init_figures();
+    void reload_objects();
 };
 
 void figure_clear_all();

@@ -55,6 +55,7 @@ struct city_buildings_t {
     void on_post_load();
     void update_month();
     void update_day();
+    void reload_objects();
 
     int get_palace_id();
 
