@@ -7,6 +7,7 @@
 constexpr int CLOUD_ROWS = 4;
 constexpr int CLOUD_COLUMNS = 4;
 constexpr int NUM_CLOUDS = CLOUD_ROWS * CLOUD_COLUMNS;
+constexpr float CLOUD_SPEED_DEFAULT = .3;
 
 enum e_cloud_status {
     e_cloud_status_inactive,
@@ -37,6 +38,7 @@ struct cloud_data {
     cloud_type clouds[NUM_CLOUDS];
     int movement_timeout = 0;
     int pause_frames = 0;
+    float cloud_speed = CLOUD_SPEED_DEFAULT;
 };
 
 extern cloud_data g_cloud_data;

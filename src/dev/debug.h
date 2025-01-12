@@ -128,6 +128,12 @@ struct console_ref_int32 {
     int operator()() const { return *value; }
 };
 
+struct console_ref_float {
+    float *value;
+    console_ref_float(pcstr name, float &v);
+    float operator()() const { return *value; }
+};
+
 struct console_var_bool {
     bool value;
     console_var_bool(pcstr name, bool init);
@@ -145,6 +151,7 @@ struct console_ref_bool {
 #define declare_console_var_int(a, v) namespace console { bool var_##a; }; console_var_int a(#a, v);
 #define declare_console_ref_int16(a, v) namespace console { bool var_##a; }; console_ref_int16 a(#a, v);
 #define declare_console_ref_int32(a, v) namespace console { bool var_##a; }; console_ref_int32 a(#a, v);
+#define declare_console_ref_float(a, v) namespace console { bool var_##a; }; console_ref_float a(#a, v);
 #define declare_console_var_bool(a, v) namespace console { bool var_##a; }; console_var_bool a(#a, v);
 #define declare_console_ref_bool(a, v) namespace console { bool var_##a; }; console_ref_bool a(#a, v);
 

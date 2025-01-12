@@ -1,6 +1,5 @@
 #include "clouds.h"
 
-#include "config/config.h"
 #include "core/random.h"
 #include "core/speed.h"
 #include "game/settings.h"
@@ -8,8 +7,9 @@
 #include "graphics/image.h"
 #include "platform/renderer.h"
 
+#include "dev/debug.h"
+
 #include <cmath>
-#include <cstring>
 
 #define NUM_CLOUD_ELLIPSES 180
 #define CLOUD_ALPHA_INCREASE 16
@@ -26,15 +26,14 @@
 #define CLOUD_TEXTURE_WIDTH (CLOUD_WIDTH * CLOUD_COLUMNS)
 #define CLOUD_TEXTURE_HEIGHT (CLOUD_HEIGHT * CLOUD_ROWS)
 
-// #define CLOUD_SPEED 0.3
-#define CLOUD_SPEED 30 //FIXME
-
 #define PAUSE_MIN_FRAMES 2
 
 #define PI 3.14159265358979323846
 
 std::vector<atlas_data_t> atlas_pages;
 cloud_data g_cloud_data;
+
+declare_console_ref_float(cloud_speed, g_cloud_data.cloud_speed)
 
 struct ellipse {
     int x;
@@ -236,12 +235,12 @@ static void position_cloud(cloud_type *cloud, int x_limit, int y_limit)
     cloud->x = x_limit - offset_x + cloud->side;
     cloud->y = (y_limit - offset_x) / 2 - cloud->side;
 
-    // if (!cloud_intersects(cloud)) {
+    if (!cloud_intersects(cloud)) {
         cloud->status = e_cloud_status_moving;
         speed_clear(cloud->speed.x);
         speed_clear(cloud->speed.y);
         g_cloud_data.movement_timeout = random_int_between(CLOUD_MIN_CREATION_TIMEOUT, CLOUD_MAX_CREATION_TIMEOUT);
-    // }
+    }
 }
 
 void clouds_pause()
@@ -250,7 +249,7 @@ void clouds_pause()
 }
 
 // FIXME: Function created for debugging reasons
-void draw_cloud(painter &ctx, const image_t *img, float x, float y, color color, float scale_x, float scale_y, double angle, int disable_coord_scaling) {
+void draw_cloud(painter &ctx, const image_t *img, float x, float y, color color, float scale_x, float scale_y, double angle) {
     if (!img->atlas.p_atlas) {
         return;
     }
@@ -268,7 +267,7 @@ void draw_cloud(painter &ctx, const image_t *img, float x, float y, color color,
         img->width,
         img->height,
     };
-    ctx.draw(texture, pos, img->atlas.offset, size, color, scale_x, scale_y, ImgFlag_Alpha);
+    ctx.draw(texture, pos, img->atlas.offset, size, color, scale_x, scale_y, angle, ImgFlag_Alpha);
 }
 
 void clouds_draw(painter &ctx, int x_offset, int y_offset, int x_limit, int y_limit)
@@ -287,7 +286,7 @@ void clouds_draw(painter &ctx, int x_offset, int y_offset, int x_limit, int y_li
     if (g_cloud_data.pause_frames) {
         g_cloud_data.pause_frames--;
     } else {
-        cloud_speed = CLOUD_SPEED * g_settings.game_speed / 100;
+        cloud_speed = g_cloud_data.cloud_speed * static_cast<float>(g_settings.game_speed) / 100;
     }
 
     for (int i = 0; i < NUM_CLOUDS; i++) {
@@ -316,7 +315,7 @@ void clouds_draw(painter &ctx, int x_offset, int y_offset, int x_limit, int y_li
         speed_set_target(cloud->speed.y, cloud_speed / 2, SPEED_CHANGE_IMMEDIATE, 1);
         draw_cloud(ctx, &cloud->img,
             cloud->render_x, cloud->render_y, COLOR_MASK_NONE,
-            cloud->scale_x, cloud->scale_y, cloud->angle, 1);
+            cloud->scale_x, cloud->scale_y, cloud->angle);
 
         cloud->x += speed_get_delta(cloud->speed.x);
         cloud->y += speed_get_delta(cloud->speed.y);

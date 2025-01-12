@@ -293,7 +293,7 @@ void graphics_renderer_interface::draw_image_part(painter &ctx, const image_t* i
 
     vec2i atlas_offset = img->atlas.offset;
     vec2i size = {img->width, (img->height - offset) / 2 + offset};
-    ctx.draw(img->atlas.p_atlas->texture, pos, atlas_offset, size, color, scale, scale, flags);
+    ctx.draw(img->atlas.p_atlas->texture, pos, atlas_offset, size, color, scale, scale, 0, flags);
 }
 
 void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, vec2i pos, color color, float scale, ImgFlags flags) {
@@ -308,7 +308,7 @@ void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, v
     vec2i offset = img->atlas.offset;
     vec2i size = {img->width, img->height};
     if (offset.x >= 0 && offset.y >= 0) {
-        ctx.draw(img->atlas.p_atlas->texture, pos, offset, size, color, scale, scale, flags);
+        ctx.draw(img->atlas.p_atlas->texture, pos, offset, size, color, scale, scale, 0, flags);
     }
 }
 
@@ -324,7 +324,7 @@ void graphics_renderer_interface::draw_image_grayscale(painter &ctx, const image
     vec2i offset = img->atlas.offset;
     vec2i size = { img->width, img->height };
     if (offset.x >= 0 && offset.y >= 0) {
-        ctx.draw(img->atlas.p_atlas->texture, pos, offset, size, scale, scale, flags);
+        ctx.draw(img->atlas.p_atlas->texture, pos, offset, size, scale, scale, 0, flags);
     }
 }
 
