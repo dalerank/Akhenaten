@@ -13,4 +13,8 @@ public:
     virtual void before_poof() override;
     virtual void main_update_image() override;
     virtual void update_animation() override;
+    virtual void on_config_reload() override;
+    virtual void on_update_home() override;
+
+    void setup_flag_animation();
 };
