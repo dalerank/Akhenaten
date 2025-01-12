@@ -151,8 +151,8 @@ static void update_clouds(painter &ctx)
         clouds_pause();
     }
     const vec2i camera_coord = city_view_get_camera_in_pixels();
-    // clouds_draw(ctx, camera_coord.x, camera_coord.y, GRID_LENGTH * TILE_WIDTH_PIXELS, GRID_LENGTH * TILE_HEIGHT_PIXELS);
-    clouds_draw(ctx, camera_coord.x, camera_coord.y, 3000, 3000); //FIXME
+    clouds_draw(ctx, camera_coord.x, camera_coord.y, GRID_LENGTH * TILE_WIDTH_PIXELS, GRID_LENGTH * TILE_HEIGHT_PIXELS);
+    // clouds_draw(ctx, camera_coord.x, camera_coord.y, 3000, 3000); //FIXME
 }
 
 void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord, tile2i tile) {

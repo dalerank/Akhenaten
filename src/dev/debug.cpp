@@ -10,6 +10,7 @@
 #include "building/industry.h"
 #include "building/monuments.h"
 #include "city/city.h"
+#include "graphics/clouds.h"
 #include "graphics/view/lookup.h"
 #include "grid/canals.h"
 #include "grid/building.h"
