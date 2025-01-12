@@ -161,7 +161,7 @@ bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
 
     if (anim_dockers.valid()) {
         int img_id = anim_dockers.start() + (data.dock.docker_anim_frame / anim_dockers.frame_duration) * 4;
-        ImageDraw::img_generic(ctx, img_id, point + anim_dockers.pos, color_mask, 1.f, true);
+        ImageDraw::img_generic(ctx, img_id, point + anim_dockers.pos, color_mask, 1.f, ImgFlag_InternalOffset);
     }
     return false;
 }

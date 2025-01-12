@@ -419,7 +419,7 @@ image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
 
         painter ctx = game.painter();
         ImgFlags imgflags = grayscaled ? ImgFlag_Grayscale : ImgFlag_None;
-        ImageDraw::img_generic(ctx, image_id, state_offset + pos, COLOR_WHITE, 1.0f, false, imgflags);
+        ImageDraw::img_generic(ctx, image_id, state_offset + pos, COLOR_WHITE, 1.0f, imgflags);
     }
 
     return ibutton;

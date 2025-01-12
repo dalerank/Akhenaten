@@ -167,7 +167,7 @@ bool building_fishing_wharf::draw_ornaments_and_animations_height(painter &ctx, 
     if (anim_wharf.valid()) {
         int img_id = anim_wharf.start() + (data.dock.docker_anim_frame / anim_wharf.frame_duration) * 4;
         const image_t *img = image_get(img_id);
-        ImageDraw::img_generic(ctx, img_id, point + anim_wharf.pos, color_mask, 1.f, true);
+        ImageDraw::img_generic(ctx, img_id, point + anim_wharf.pos, color_mask, 1.f, ImgFlag_InternalOffset);
     }
 
     return true;

@@ -708,10 +708,10 @@ const image_t *ImageDraw::img_generic(painter &ctx, const image_desc &imgd, vec2
     return img;
 }
 
-const image_t* ImageDraw::img_generic(painter &ctx, int image_id, vec2i p, color color_mask, float scale, bool internal_offset, ImgFlags flags) {
+const image_t* ImageDraw::img_generic(painter &ctx, int image_id, vec2i p, color color_mask, float scale, ImgFlags flags) {
     const image_t* img = image_get(image_id);
     vec2i offset{0, 0};
-    if (internal_offset) {
+    if (!!(flags & ImgFlag_InternalOffset)) {
         offset = img->animation.sprite_offset;
     }
 
@@ -719,9 +719,9 @@ const image_t* ImageDraw::img_generic(painter &ctx, int image_id, vec2i p, color
     return img;
 }
 
-const image_t *ImageDraw::img_generic(painter &ctx, const image_t *img, vec2i p, color color_mask, float scale, bool internal_offset, ImgFlags flags) {
+const image_t *ImageDraw::img_generic(painter &ctx, const image_t *img, vec2i p, color color_mask, float scale, ImgFlags flags) {
     vec2i offset{ 0, 0 };
-    if (internal_offset) {
+    if (!!(flags & ImgFlag_InternalOffset)) {
         offset = img->animation.sprite_offset;
     }
 
