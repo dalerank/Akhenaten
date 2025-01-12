@@ -291,11 +291,11 @@ figure_bolt = {
 figure_standard_bearer = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 },
-		pole : { pack:PACK_GENERAL, id:120, offset:27 },
-		flag_infantry : { pack:PACK_GENERAL, id:121 },
-		flag_archers  : { pack:PACK_GENERAL, id:126 },
-		flag_chariots : { pack:PACK_GENERAL, id:126 },
-		icon : { pack:PACK_GENERAL, id:121 },
+		pole : { pack:PACK_GENERAL, id:54, offset:0, max_frames:21 },
+		flag_infantry : { pack:PACK_GENERAL, id:126, offset:0, max_frames:9, duration:4 },
+		flag_archers  : { pack:PACK_GENERAL, id:126, offset:10, max_frames:9 },
+		flag_chariots : { pack:PACK_GENERAL, id:126, offset:20, max_frames:9 },
+		icon : { pack:PACK_GENERAL, id:127 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANY,
 }

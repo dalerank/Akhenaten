@@ -7,7 +7,10 @@ public:
     FIGURE_METAINFO(FIGURE_STANDARD_BEARER, figure_standard_bearer)
     figure_standard_bearer(figure *f) : figure_impl(f) {}
 
+    virtual void on_create() override;
     virtual void figure_action() override;
     virtual void figure_draw(painter &ctx, vec2i pixel, int hightlight, vec2i *coord_out) override;
     virtual void before_poof() override;
+    virtual void main_update_image() override;
+    virtual void update_animation() override;
 };

@@ -2,9 +2,19 @@
 
 figures::model_t<figure_standard_bearer> standard_bearer_m;
 
+void figure_standard_bearer::on_create() {
+    const formation *m = formation_get(base.formation_id);
+    if (m->figure_type == FIGURE_INFANTRY) {
+        image_set_animation("flag_infantry");
+    } else if (m->figure_type == FIGURE_FCHARIOTEER) {
+        image_set_animation("flag_chariots");
+    } else {
+        image_set_animation("flag_archers");
+    }
+}
+
 void figure_standard_bearer::figure_action() {
     const formation *m = formation_get(base.formation_id);
-
     //    terrain_usage = TERRAIN_USAGE_ANY;
     //    figure_image_increase_offset(16);
     base.wait_ticks = 0;
@@ -18,37 +28,42 @@ void figure_standard_bearer::figure_action() {
     base.cc_coords.x = 15 * tilex() + 7;
     base.cc_coords.y = 15 * tiley() + 7;
     base.map_figure_add();
+}
 
-    base.sprite_image_id = anim("pole").first_img() + (21 - m->morale / 5);
-    int fimg;
-    if (m->figure_type == FIGURE_INFANTRY) {
-        fimg = anim("flag_infantry").first_img();
-    } else if (m->figure_type == FIGURE_FCHARIOTEER) {
-        fimg = anim("flag_chariots").first_img();
-    } else {
-        fimg = anim("flag_archers").first_img();
-    }
-
-    if (m->is_halted) {
-        base.cart_image_id = fimg + 8;
-    } else {
-        base.cart_image_id = fimg + base.anim.frame / 2;
-    }
+void figure_standard_bearer::update_animation() {
+    //
 }
 
 void figure_standard_bearer::figure_draw(painter &ctx, vec2i pixel, int hightlight, vec2i *coord_out) {
     if (formation_get(base.formation_id)->in_distant_battle) {
         return;
     }
+
+    const formation *m = formation_get(base.formation_id);
     // base
-    ImageDraw::img_generic(ctx, base.sprite_image_id, pixel);
+    const animation_t &pole = anim("pole");
+    const int morale = (pole.max_frames * (21.f - m->morale / 5) / 21.f);
+    const image_t *img = image_get(pole.first_img() + morale);
+    const vec2i pole_offset = vec2i(0, -img->height);
+    ImageDraw::img_generic(ctx, img, pixel + pole_offset);
+
     // flag
-    int flag_height = image_get(base.cart_image_id)->height;
-    ImageDraw::img_generic(ctx, base.cart_image_id, pixel.x, pixel.y - flag_height);
+    const image_t *flag = image_get(base.anim.start());
+    const vec2i flag_offset = vec2i(0, -flag->height);
+    //if (m->is_halted) 
+    {
+        ImageDraw::img_generic(ctx, base.sprite_image_id, pixel + pole_offset + flag_offset);
+    }
+
     // top icon
     int icon_image_id = anim("sign").first_img() + formation_get(base.formation_id)->legion_id;
-    ImageDraw::img_generic(ctx, icon_image_id, pixel.x, pixel.y - image_get(icon_image_id)->height - flag_height);
+    const vec2i icon_offset = vec2i(0, -image_get(icon_image_id)->height);
+    ImageDraw::img_generic(ctx, icon_image_id, pixel + flag_offset + pole_offset + icon_offset);
 }
 
 void figure_standard_bearer::before_poof() {
+}
+
+void figure_standard_bearer::main_update_image() {
+    base.sprite_image_id = base.anim.start() + base.anim.current_frame();
 }

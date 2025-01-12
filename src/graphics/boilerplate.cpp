@@ -719,6 +719,16 @@ const image_t* ImageDraw::img_generic(painter &ctx, int image_id, vec2i p, color
     return img;
 }
 
+const image_t *ImageDraw::img_generic(painter &ctx, const image_t *img, vec2i p, color color_mask, float scale, bool internal_offset, ImgFlags flags) {
+    vec2i offset{ 0, 0 };
+    if (internal_offset) {
+        offset = img->animation.sprite_offset;
+    }
+
+    graphics_renderer()->draw_image(ctx, img, p - offset, color_mask, scale, flags);
+    return img;
+}
+
 void ImageDraw::img_sprite(painter &ctx, int image_id, vec2i p, color color_mask, float scale, ImgFlags flags) {
     const image_t* img = image_get(image_id);
     bool mirrored = (img->offset_mirror != 0);
