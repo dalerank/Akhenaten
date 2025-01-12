@@ -110,11 +110,11 @@ static int ellipse_is_inside_bounds(const ellipse *e)
         y - e->height >= 0 && y + e->height < CLOUD_HEIGHT;
 }
 
-static void darken_pixel(color *cloud, int x, int y)
+static void darken_pixel(color *pixels, int x, int y)
 {
     int pixel = y * CLOUD_WIDTH + x;
 
-    color alpha = cloud[pixel] >> COLOR_BITSHIFT_ALPHA;
+    color alpha = pixels[pixel] >> COLOR_BITSHIFT_ALPHA;
     int darken = CLOUD_ALPHA_INCREASE >> (alpha >> 4);
     alpha = (alpha + ((darken * (255 - alpha)) >> 8));
 
@@ -123,10 +123,10 @@ static void darken_pixel(color *cloud, int x, int y)
         alpha = 255;
     }
 
-    cloud[pixel] = ALPHA_TRANSPARENT | (alpha << COLOR_BITSHIFT_ALPHA);
+    pixels[pixel] = ALPHA_TRANSPARENT | (alpha << COLOR_BITSHIFT_ALPHA);
 }
 
-static void generate_cloud_ellipse(color *cloud, int width, int height)
+static void generate_cloud_ellipse(color *pixels, int width, int height)
 {
     ellipse e;
     do {
@@ -135,7 +135,7 @@ static void generate_cloud_ellipse(color *cloud, int width, int height)
 
     // Do the entire diameter
     for (int x = -e.width; x <= e.width; x++) {
-        darken_pixel(cloud, e.x + x, e.y);
+        darken_pixel(pixels, e.x + x, e.y);
     }
 
     int line_width = e.width;
@@ -154,14 +154,14 @@ static void generate_cloud_ellipse(color *cloud, int width, int height)
         line_delta = line_width - line_limit;
         line_width = line_limit;
 
-        darken_pixel(cloud, e.x, e.y - y);
-        darken_pixel(cloud, e.x, e.y + y);
+        darken_pixel(pixels, e.x, e.y - y);
+        darken_pixel(pixels, e.x, e.y + y);
 
         for (int x = 1; x <= line_width; x++) {
-            darken_pixel(cloud, e.x + x, e.y - y);
-            darken_pixel(cloud, e.x + x, e.y + y);
-            darken_pixel(cloud, e.x - x, e.y - y);
-            darken_pixel(cloud, e.x - x, e.y + y);
+            darken_pixel(pixels, e.x + x, e.y - y);
+            darken_pixel(pixels, e.x + x, e.y + y);
+            darken_pixel(pixels, e.x - x, e.y - y);
+            darken_pixel(pixels, e.x - x, e.y + y);
         }
     }
 }
@@ -189,8 +189,6 @@ static void init_cloud_images()
         atlas_data.width = img->width;
         atlas_data.height = img->height;
         atlas_data.bmp_size = atlas_data.width * atlas_data.height;
-        atlas_data.temp_pixel_buffer = new color[atlas_data.bmp_size];
-        memset(atlas_data.temp_pixel_buffer, 0, atlas_data.bmp_size * sizeof(uint32_t));
         atlas_data.texture = nullptr;
 
         img->atlas.index = i;
@@ -238,17 +236,7 @@ static void generate_cloud(cloud_type *cloud)
     graphics_renderer()->update_custom_texture_from(CUSTOM_IMAGE_CLOUDS, pixels,
         img->atlas.offset.x, img->atlas.offset.y, img->width, img->height);
 
-    img->atlas.p_atlas->temp_pixel_buffer = img->temp_pixel_data = pixels;
-    img->atlas.p_atlas->texture = graphics_renderer()->create_texture_from_buffer(
-        img->atlas.p_atlas->temp_pixel_buffer,
-        img->atlas.p_atlas->width,
-        img->atlas.p_atlas->height
-    );
-    // copy_to_atlas(img);
-
-    // delete temp data buffer in the atlas
-    // delete img->atlas.p_atlas->temp_pixel_buffer;
-    // img->atlas.p_atlas->temp_pixel_buffer = nullptr;
+    img->atlas.p_atlas->texture = graphics_renderer()->get_custom_texture(CUSTOM_IMAGE_CLOUDS);
 
     cloud->x = 0;
     cloud->y = 0;

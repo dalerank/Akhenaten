@@ -398,6 +398,11 @@ void graphics_renderer_interface::update_custom_texture(int type) {
 #endif
 }
 
+SDL_Texture* graphics_renderer_interface::get_custom_texture(int type) {
+    auto &data = g_renderer_data;
+    return data.custom_textures[type].texture;
+}
+
 void graphics_renderer_interface::update_custom_texture_from(int type, const color *buffer,
     int x_offset, int y_offset, int width, int height)
 {

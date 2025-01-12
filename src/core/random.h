@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ctime>
 #include <stdint.h>
 #include "grid/point.h"
 
