@@ -161,6 +161,7 @@ building* figure::destination() {
 
 void figure::set_home(int _id) {
     home_building_id = _id;
+    dcast()->on_update_home();
 };
 
 void figure::set_destination(int _id) {

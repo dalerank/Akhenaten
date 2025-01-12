@@ -578,6 +578,7 @@ public:
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
     virtual bool add_resource(e_resource resource, int amount) { return false; }
     virtual int get_orientation() const { return 0; }
+    virtual void on_config_reload() {}
 
     virtual building_farm *dcast_farm() { return nullptr; }
     virtual building_brewery *dcast_brewery() { return nullptr; }

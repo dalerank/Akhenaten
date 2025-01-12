@@ -100,9 +100,9 @@ js_State *js_vm_state() {
     return vm.J;
 }
 
-void js_vm_sync() {
+bool js_vm_sync() {
     if (!vm.files2load_num) {
-        return;
+        return false;
     }
 
     if (vm.have_error) {
@@ -124,6 +124,7 @@ void js_vm_sync() {
 
     vm.files2load_num = 0;
     vm.have_error = 0;
+    return true;
 }
 
 void js_vm_reload_file(const char *path) {

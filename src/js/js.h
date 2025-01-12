@@ -5,7 +5,7 @@
 struct js_State;
 
 void js_vm_setup();
-void js_vm_sync();
+bool js_vm_sync();
 js_State *js_vm_state();
 int js_vm_exec_function_args(const char *funcname, const char *szTypes, ...);
 int js_vm_exec_function(const char *funcname);

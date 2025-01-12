@@ -478,9 +478,9 @@ public:
     virtual const animations_t &anim() const { return params().anim; }
     virtual const static_params &params() const { return params(type()); }
     virtual void kill();
-    inline const animation_t &anim(const xstring &anim_key) const { return anim()[anim_key]; }
-    inline const animation_context &animation() const { return base.anim; }
-    inline animation_context &animation() { return base.anim; }
+    virtual void on_action_changed(int saved_action) {}
+    virtual void on_config_reload() {}
+    virtual void on_update_home() {}
 
     static void params(e_figure_type, const static_params &);
     static const static_params &params(e_figure_type);
@@ -515,9 +515,11 @@ public:
 
     inline uint8_t direction() const { return base.direction; }
     inline const building *home() const { return base.home(); }
+    inline const animation_t &anim(const xstring &anim_key) const { return anim()[anim_key]; }
+    inline animation_context &animation() { return base.anim; }
+    inline const animation_context &animation() const { return base.anim; }
     inline void advance_action(int action) { int saved_action = action; base.advance_action(action); on_action_changed(saved_action); }
            void advance_action(int action, tile2i t);
-    virtual void on_action_changed(int saved_action) {}
     inline bool do_returnhome(e_terrain_usage terrainchoice, short next_action = -1) { return base.do_returnhome(terrainchoice, next_action); }
     inline bool do_gotobuilding(building *dest, bool stop_at_road = true, e_terrain_usage terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1) { return base.do_gotobuilding(dest, stop_at_road, terrainchoice, NEXT_ACTION, FAIL_ACTION); }
     inline bool do_enterbuilding(bool invisible, building *b, short next_action = -1, short fail_action = -1) { return base.do_enterbuilding(invisible, b, next_action, fail_action); }

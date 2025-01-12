@@ -477,7 +477,10 @@ static void run_and_draw() {
     game.frame_end();
     game.write_frame();
 
-    js_vm_sync();
+    const bool need_reload = js_vm_sync();
+    if (need_reload) {
+        game.reload_objects();
+    }
 }
 
 static void handle_mouse_button(SDL_MouseButtonEvent* event, int is_down) {
