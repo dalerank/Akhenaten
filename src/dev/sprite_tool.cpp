@@ -44,7 +44,7 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                     ImGui::SetNextItemWidth(-FLT_MIN);
 
                     ImGui::Text("id:%d", i);
-                    ImGui::SameLine(); ImGui::SetNextItemWidth(60); ImGui::Text(e_pack_type_tokens.name((e_pack)ipak.id));
+                    ImGui::SameLine(); ImGui::SetNextItemWidth(60); ImGui::Text("%s", e_pack_type_tokens.name((e_pack)ipak.id));
                     ImGui::SameLine(); ImGui::Text("index:%d", ipak.index);
                     ImGui::SameLine(); ImGui::Text("i_offset:%d", ioffset);
                     int item_current = img->debug.animate;
