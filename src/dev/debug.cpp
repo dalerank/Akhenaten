@@ -1177,7 +1177,6 @@ void draw_debug_ui(int x, int y) {
 
     /////// CAMERA
     if (g_debug_show_opts[e_debug_show_camera]) {
-        painter ctx = game.painter();
         tile2i camera_tile = city_view_get_camera_mappoint();
         vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
 
@@ -1250,6 +1249,29 @@ void draw_debug_ui(int x, int y) {
 
         //        pixel = tile_to_pixel(screentile_to_mappoint(city_view_data_unsafe()->camera.tile_internal));
         //        debug_draw_tile_box(pixel.x, pixel.y);
+
+        y += 200;
+    }
+
+    /////// CLOUDS
+    if (g_debug_show_opts[e_debug_show_clouds]) {
+        y += 30;
+
+        for (int i = 0; i < NUM_CLOUDS; i++) {
+            const cloud_type *cloud = &g_cloud_data.clouds[i];
+            e_cloud_status status = cloud->status;
+            char status_text[16] = {};
+            switch (status) {
+                case e_cloud_status_inactive: snprintf(status_text, 16, "%s", "status: INACTIVE"); break;
+                case e_cloud_status_created: snprintf(status_text, 16, "%s", "status: CREATED"); break;
+                case e_cloud_status_moving: snprintf(status_text, 16, "%s", "status: MOVING"); break;
+            }
+
+            debug_text(ctx, str, x, y - 15, 70, "---cloud ", i);
+            debug_text_a(ctx, str, x, y, 70, status_text);
+            debug_text_dual_left(str, x, y + 15, 110, 60, "pos_x, pos_y: ", cloud->x, cloud->y);
+            y += 45;
+        }
 
         y += 200;
     }

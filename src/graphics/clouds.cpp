@@ -153,7 +153,7 @@ static void init_cloud_images()
         cloud->y = 0;
         cloud->side = 0;
         cloud->angle = 0;
-        cloud->status = STATUS_INACTIVE;
+        cloud->status = e_cloud_status_inactive;
         speed_clear(cloud->speed.x);
         speed_clear(cloud->speed.y);
 
@@ -217,14 +217,14 @@ static void generate_cloud(cloud_type *cloud)
     const int scaled_height = static_cast<int>(CLOUD_HEIGHT / cloud->scale_y);
     cloud->side = static_cast<int>(sqrt(scaled_width * scaled_width + scaled_height * scaled_height));
     cloud->angle = random_int_between(0, 360);
-    cloud->status = STATUS_CREATED;
+    cloud->status = e_cloud_status_created;
 }
 
 static int cloud_intersects(const cloud_type *cloud)
 {
-    for (auto & i : g_cloud_data.clouds) {
+    for (auto &i : g_cloud_data.clouds) {
         const cloud_type *other = &i;
-        if (other->status != STATUS_MOVING) {
+        if (other->status != e_cloud_status_moving) {
             continue;
         }
         if (other->x < cloud->x + cloud->side && other->x + other->side > cloud->x &&
@@ -243,7 +243,7 @@ static void position_cloud(cloud_type *cloud, int x_limit, int y_limit)
     cloud->y = (y_limit - offset_x) / 2 - cloud->side;
 
     if (!cloud_intersects(cloud)) {
-        cloud->status = STATUS_MOVING;
+        cloud->status = e_cloud_status_moving;
         speed_clear(cloud->speed.x);
         speed_clear(cloud->speed.y);
         g_cloud_data.movement_timeout = random_int_between(CLOUD_MIN_CREATION_TIMEOUT, CLOUD_MAX_CREATION_TIMEOUT);
@@ -298,11 +298,11 @@ void clouds_draw(painter &ctx, int x_offset, int y_offset, int x_limit, int y_li
 
     for (int i = 0; i < NUM_CLOUDS; i++) {
         cloud_type *cloud = &g_cloud_data.clouds[i];
-        if (cloud->status == STATUS_INACTIVE) {
+        if (cloud->status == e_cloud_status_inactive) {
             generate_cloud(cloud);
             continue;
         }
-        if (cloud->status == STATUS_CREATED) {
+        if (cloud->status == e_cloud_status_created) {
             if (g_cloud_data.movement_timeout > 0) {
                 g_cloud_data.movement_timeout--;
             } else {
@@ -311,7 +311,7 @@ void clouds_draw(painter &ctx, int x_offset, int y_offset, int x_limit, int y_li
             continue;
         }
         if (cloud->x < -cloud->side || cloud->y >= y_limit) {
-            cloud->status = STATUS_INACTIVE;
+            cloud->status = e_cloud_status_inactive;
             continue;
         }
 

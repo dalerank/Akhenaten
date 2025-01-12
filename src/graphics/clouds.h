@@ -8,10 +8,10 @@ constexpr int CLOUD_ROWS = 4;
 constexpr int CLOUD_COLUMNS = 4;
 constexpr int NUM_CLOUDS = CLOUD_ROWS * CLOUD_COLUMNS;
 
-enum cloud_status {
-    STATUS_INACTIVE,
-    STATUS_CREATED,
-    STATUS_MOVING
+enum e_cloud_status {
+    e_cloud_status_inactive,
+    e_cloud_status_created,
+    e_cloud_status_moving
 };
 
 struct speed {
@@ -23,7 +23,7 @@ struct cloud_type {
     image_t img;
     int x = 0;
     int y = 0;
-    cloud_status status = STATUS_INACTIVE;
+    e_cloud_status status = e_cloud_status_inactive;
     speed speed = {};
     float scale_x = 1.f;
     float scale_y = 1.f;
