@@ -195,7 +195,6 @@ var figure_soldier_charioteer = {}
 var figure_flotsam = {}
 var figure_scriber = {}
 var figure_dentist = {}
-var figure_standard_bearer = {}
 var figure_native_trader = {}
 var figure_librarian = {}
 var figure_constable = {}
