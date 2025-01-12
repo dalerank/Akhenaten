@@ -179,6 +179,7 @@ int is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_til
         blocked_tiles.push_back({check_tile, tile_blocked});
         blocked += (tile_blocked ? 1 : 0);
     }
+
     return blocked;
 }
 

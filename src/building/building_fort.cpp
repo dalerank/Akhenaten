@@ -109,8 +109,8 @@ void building_fort::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int or
     blocked_tile_vec blocked_tiles_fort;
     blocked_tile_vec blocked_tiles_ground;
 
-    blocked += is_blocked_for_building(tile, fort_size, blocked_tiles_fort);
-    blocked += is_blocked_for_building(tile_ground, ground_size, blocked_tiles_ground);
+    blocked |= !!is_blocked_for_building(tile, fort_size, blocked_tiles_fort);
+    blocked |= !!is_blocked_for_building(tile_ground, ground_size, blocked_tiles_ground);
 
     int orientation_index = building_rotation_get_storage_fort_orientation(global_rotation) / 2;
     vec2i main_pixel = pixel + fort_params.ghost.main_view_offset[orientation_index];

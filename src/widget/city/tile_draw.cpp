@@ -264,7 +264,7 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
     int image_alt_id = (image_alt_value & 0x00ffffff);
     uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
     if (image_alt_id > 0 && image_alt_alpha > 0) {
-        ImageDraw::isometric_from_drawtile(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), /*alpha*/true);
+        ImageDraw::isometric_from_drawtile(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), ImgFlag_Alpha);
     }
 
     int top_height = img->isometric_top_height();
@@ -310,7 +310,7 @@ void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx) {
     int image_alt_id = (image_alt_value & 0x00ffffff);
     uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
     if (image_alt_id > 0 && image_alt_alpha > 0) {
-        ImageDraw::isometric_from_drawtile_top(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), /*alpha*/true);
+        ImageDraw::isometric_from_drawtile_top(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), ImgFlag_Alpha);
     }
 }
 
@@ -371,7 +371,7 @@ void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx) {
         int image_alt_id = (image_alt_value & 0x00ffffff);
         uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
         if (image_alt_id > 0 && image_alt_alpha > 0) {
-            ImageDraw::isometric_from_drawtile_top(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), /*alpha*/true);
+            ImageDraw::isometric_from_drawtile_top(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), ImgFlag_Alpha);
         }
         return;
     }

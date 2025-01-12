@@ -292,7 +292,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
 
                 if (progress > 0 && progress <= 200) {
                     int clr = ((0xff * progress / 200) << 24) | (color_mask & 0x00ffffff);
-                    ImageDraw::isometric_from_drawtile(ctx, image_grounded + ((dy * 4 + dx) & 7), offset, clr, /*alpha*/true);
+                    ImageDraw::isometric_from_drawtile(ctx, image_grounded + ((dy * 4 + dx) & 7), offset, clr, ImgFlag_Alpha);
                 }
             }
         }
