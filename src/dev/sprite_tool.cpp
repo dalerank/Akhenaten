@@ -20,7 +20,7 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
     if (common_open) {
         const auto &names = ipak.handle->names();
         const auto &ids = ipak.handle->image_ids(); 
-        for (int i = 0, size = names.size(); i < size && go; ++i) {
+        for (int i = 0, size = ids.size(); i < size && go; ++i) {
             ImGui::PushID(0x83000000 + i);
 
             ImGui::TableNextRow();
@@ -43,12 +43,12 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                     ImGui::TableSetColumnIndex(1);
                     ImGui::SetNextItemWidth(-FLT_MIN);
 
-                    ImGui::Text("id:%d", ipak.id);
+                    ImGui::Text("id:%d", i);
                     ImGui::SameLine(); ImGui::SetNextItemWidth(60); ImGui::Text(e_pack_type_tokens.name((e_pack)ipak.id));
                     ImGui::SameLine(); ImGui::Text("index:%d", ipak.index);
                     ImGui::SameLine(); ImGui::Text("i_offset:%d", ioffset);
                     int item_current = img->debug.animate;
-                    pcstr animate_mode[] = { "None", "Figure", "Simple" };
+                    pcstr animate_mode[] = { "None", "Figure", "Simple", "Icons" };
                     ImGui::SameLine(); ImGui::Text("mode"); ImGui::SameLine(); ImGui::SetNextItemWidth(100); ImGui::Combo("##animate", &item_current, animate_mode, std::size(animate_mode));
                     img->debug.animate = item_current;
                     ImGui::SameLine(); ImGui::Text("sprites:%d", img->animation.num_sprites);
@@ -86,16 +86,16 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                         vec2i msize(60, 60);
                         for (int dir = 0; dir < 8; ++dir) {
                             image_t *animg = img + img->debug.frame * 8 + dir;
-                            maxImageSize(img, msize);
+                            maxImageSize(animg, msize);
                         }
 
                         msize.x += 16;
                         msize.y += 16;
                         const int dir_max = (img->debug.animate == 1) ? 8 : 1;
                         for (int dir = 0; dir < dir_max; ++dir) {
-                            image_t *animg = (img->debug.animate == 1) 
-                                               ? img + img->debug.frame * 8 + dir
-                                               : img + img->debug.frame;
+                            image_t *animg = (img->debug.animate == 1)
+                                ? img + img->debug.frame * 8 + dir
+                                : img + img->debug.frame;
                             drawImage(animg, dir, msize);
                             ImGui::SameLine();
                         }
@@ -108,6 +108,23 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                             if (img->debug.frame >= max_frame) {
                                 img->debug.frame = 0;
                             }
+                        }
+                    } else if (img->debug.animate == 3) {
+                        vec2i msize(60, 60);
+                        image_t *next_section_img = const_cast<image_t *>(image_next_close_get(image_desc{ ipak.id, i, 0 }));
+                        const int section_len = (next_section_img - img);
+                        for (int imgi = 0; imgi < section_len; ++imgi) {
+                            image_t *animg = img + imgi;
+                            maxImageSize(animg, msize);
+                        }
+
+                        msize.x += 16;
+                        msize.y += 16;
+                        for (int imgi = 0; imgi < section_len; ++imgi) {
+                            image_t *animg = img + imgi;
+                            drawImage(animg, imgi, msize);
+                            if (imgi == 0 || imgi % 8 != 0)
+                                ImGui::SameLine();
                         }
                     } else {
                         drawImage(img, 0, vec2i(img->width + 16, img->height + 16));

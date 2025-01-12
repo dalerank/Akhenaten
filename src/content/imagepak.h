@@ -44,6 +44,9 @@ public:
     std::span_const<bmp_name> names();
     std::span_const<uint16_t> image_ids();
 
+    const image_t *front() const { return &images_array.front(); }
+    const image_t *back() const { return &images_array.back(); }
+
     int get_entry_count();
     int get_global_image_index(int group);
     inline int get_user_idx() const { return useridx; }

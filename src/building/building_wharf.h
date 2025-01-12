@@ -17,7 +17,7 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void update_graphic() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
-    virtual int get_orientation() const { return data.dock.orientation; }
+    virtual int get_orientation() const override { return data.dock.orientation; }
 
     virtual bool ship_moored() const { return false; }
 };

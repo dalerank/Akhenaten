@@ -206,6 +206,32 @@ const image_t *image_get(image_desc desc) {
     return image_get(id);
 }
 
+const image_t *image_next_close_get(image_desc desc) {
+    imagepak *pak = pak_from_collection_id(desc.pack, -1);
+    if (pak == nullptr) {
+        return nullptr;
+    }
+
+    auto ids = pak->image_ids();
+    if ((ids.size() - 1) == desc.id) {
+
+        return pak->back();
+    }
+
+    svector<uint16_t, PAK_GROUPS_MAX> sorted_ids;
+    std::copy(ids.begin(), ids.end(), std::back_inserter(sorted_ids));
+    const int start = ids[desc.id];
+
+    std::sort(sorted_ids.begin(), sorted_ids.end());
+    auto it = std::lower_bound(sorted_ids.begin(), sorted_ids.end(), start);
+    if (it == sorted_ids.end()) {
+        return nullptr;
+    }
+    const int end = *(it + 1);
+
+    return pak->get_image(end, true);
+}
+
 const image_t *image_get(int pak, int id) {
     auto& data = *g_image_data;
     if (pak >= data.common.size()) {
