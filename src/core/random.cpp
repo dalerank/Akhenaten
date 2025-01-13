@@ -210,7 +210,6 @@ bool anti_scum_random_bool() {
     return rnd_bool_test;
 }
 
-// FIXME: copied from augustus but simplified
 int random_int() {
     auto &data = g_random_data;
     time_t t;

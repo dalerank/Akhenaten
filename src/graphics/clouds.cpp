@@ -34,7 +34,7 @@
 std::vector<atlas_data_t> atlas_pages;
 cloud_data g_cloud_data;
 
-declare_console_ref_float(cloud_speed, g_cloud_data.cloud_speed)
+declare_console_ref_float(cloud_speed, g_cloud_data.clouds_speed)
 
 struct ellipse {
     int x;
@@ -165,26 +165,6 @@ static void init_cloud_images()
     }
 }
 
-// FIXME: copied from imagepak.cpp as is
-static color to_argb(uint32_t c) {
-    return (((c >> 24) & 0xff) << 24) | (((c & 0xff) << 16) | (((c >> 8) & 0xff) << 8) | ((c >> 16) & 0xff));
-}
-static int copy_to_atlas(const image_t* img) {
-    int pixels_count = 0;
-    const atlas_data_t *p_atlas = img->atlas.p_atlas;
-    const color *pixels = img->temp_pixel_data;
-
-    for (int y = 0; y < img->height; y++) {
-        color* pixel = &p_atlas->temp_pixel_buffer[(img->atlas.offset.y + y) * p_atlas->width + img->atlas.offset.x];
-        for (int x = 0; x < img->width; x++) {
-            const color color = to_argb(pixels[y * img->width + x]);
-            pixel[x] = color;
-            pixels_count++;
-        }
-    }
-    return pixels_count;
-}
-
 static void generate_cloud(cloud_type *cloud)
 {
     color pixels[CLOUD_WIDTH * CLOUD_HEIGHT] = {};
@@ -251,7 +231,6 @@ void clouds_pause()
     g_cloud_data.pause_frames = PAUSE_MIN_FRAMES;
 }
 
-// FIXME: Function created for debugging reasons
 void draw_cloud(painter &ctx, const image_t *img, float x, float y, color color, float scale_x, float scale_y, double angle) {
     if (!img->atlas.p_atlas) {
         return;
@@ -288,7 +267,7 @@ void clouds_draw(painter &ctx, int x_offset, int y_offset, int x_limit, int y_li
     if (g_cloud_data.pause_frames) {
         g_cloud_data.pause_frames--;
     } else {
-        cloud_speed = g_cloud_data.cloud_speed * static_cast<float>(g_settings.game_speed) / 100;
+        cloud_speed = g_cloud_data.clouds_speed * static_cast<float>(g_settings.game_speed) / 100;
     }
 
     for (int i = 0; i < NUM_CLOUDS; i++) {
