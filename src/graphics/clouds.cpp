@@ -1,5 +1,6 @@
 #include "clouds.h"
 
+#include "config/config.h"
 #include "core/random.h"
 #include "core/speed.h"
 #include "game/settings.h"
@@ -215,6 +216,8 @@ static void generate_cloud(cloud_type *cloud)
 
 static int cloud_intersects(const cloud_type *cloud)
 {
+    // FIXME: tune clouds positioning. Right now this check causes clouds to almost never spawn
+    return 0;
     for (auto &i : g_cloud_data.clouds) {
         const cloud_type *other = &i;
         if (other->status != e_cloud_status_moving) {
@@ -272,10 +275,9 @@ void draw_cloud(painter &ctx, const image_t *img, float x, float y, color color,
 
 void clouds_draw(painter &ctx, int x_offset, int y_offset, int x_limit, int y_limit)
 {
-// FIXME: add configuration option
-//    if (!config_get(CONFIG_UI_DRAW_CLOUD_SHADOWS)) {
-//        return;
-//    }
+   if (!config_get(CONFIG_UI_DRAW_CLOUD_SHADOWS)) {
+       return;
+   }
 
     if (!graphics_renderer()->has_custom_texture(CUSTOM_IMAGE_CLOUDS)) {
         init_cloud_images();
@@ -313,6 +315,7 @@ void clouds_draw(painter &ctx, int x_offset, int y_offset, int x_limit, int y_li
 
         speed_set_target(cloud->speed.x, -cloud_speed, SPEED_CHANGE_IMMEDIATE, 1);
         speed_set_target(cloud->speed.y, cloud_speed / 2, SPEED_CHANGE_IMMEDIATE, 1);
+        // FIXME: smoothen clouds somehow, right now they are blocky
         draw_cloud(ctx, &cloud->img,
             cloud->render_x, cloud->render_y, COLOR_MASK_NONE,
             cloud->scale_x, cloud->scale_y, cloud->angle);
