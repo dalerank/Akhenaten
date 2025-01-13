@@ -67,7 +67,6 @@ var building_guild_stonemasons = {}
 var building_carpenters_guild = {}
 var building_tax_collector = {}
 var building_tax_collector_up = {}
-var building_recruiter = {}
 var building_shrine_osiris = {}
 var building_shrine_ra = {}
 var building_shrine_ptah = {}

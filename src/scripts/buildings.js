@@ -1075,7 +1075,7 @@ building_tax_collector_up = {
   building_size : 2,
 }
 
-building_recruiter = {
+building building_recruiter = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:166 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:166 },
@@ -1086,6 +1086,7 @@ building_recruiter = {
   info_help_id:37,
   info_text_id:136,
   building_size : 3,
+  unique_building : true,
 }
 
 building_bandstand = {
