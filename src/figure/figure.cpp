@@ -134,7 +134,7 @@ void figure::set_direction_to(building *b) {
 }
 
 void figure::clear_impl() {
-    delete _ptr;
+    memset(&_ptr_buffer, 0, sizeof(ptr_buffer_t));
     _ptr = nullptr;
 }
 
