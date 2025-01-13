@@ -1117,17 +1117,6 @@ window terrain_info_window = {
 	}
 }
 
-window info_window_fort = {
-	ui : {
-		background 	: outer_panel({size: [29, 20]}),
-		title 		 	: { type : "text", pos: [0, 16], text:"${building.name}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		describe 		: text({pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) }),
-
-		button_help   : help_button({}),
-		button_close  : close_button({}),
-	}
-}
-
 window temple_info_window = {
 	ui : {
 		background 	: { type : "outer_panel",	pos: [0, 0], size: [29, 18]},
@@ -1408,8 +1397,15 @@ window info_window_work_camp = {
 	})
 }
 
-legion_info_window = {
+window legion_info_window = {
+	ui : {
+		background 	: outer_panel({size: [29, 23]}),
+		title 		 	: { type : "text", pos: [0, 16], text:"${building.name}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
+		describe 		: text({pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) }),
 
+		button_help   : help_button({}),
+		button_close  : close_button({}),
+	}
 }
 
 window taxcollector_info_window = {

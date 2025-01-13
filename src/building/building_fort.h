@@ -71,8 +71,3 @@ public:
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
-
-struct info_window_fort : public building_info_window_t<info_window_fort> {
-    virtual void init(object_info &c) override;
-    virtual bool check(object_info &c) override;
-};

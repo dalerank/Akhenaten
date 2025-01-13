@@ -141,7 +141,6 @@ var info_window_figure_animal = {}
 var info_window_figure_caravan_donkey = {}
 var roadblock_info_window = {}
 var hold_festival_window = {}
-var legion_info_window = {}
 var empty_info_window = {}
 var advisors_window = {}
 var advisor_military_window = {}

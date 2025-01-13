@@ -15,6 +15,7 @@ public:
     virtual void update_animation() override;
     virtual void on_config_reload() override;
     virtual void on_update_home() override;
+    virtual void on_post_load() override;
 
     void setup_flag_animation();
 };

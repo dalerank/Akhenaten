@@ -23,6 +23,11 @@ void figure_standard_bearer::figure_action() {
     base.map_figure_add();
 }
 
+void figure_standard_bearer::on_post_load() {
+    figure_impl::on_post_load();
+    setup_flag_animation();
+}
+
 void figure_standard_bearer::update_animation() {
     //
 }
