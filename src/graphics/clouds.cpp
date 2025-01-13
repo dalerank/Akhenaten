@@ -12,24 +12,24 @@
 
 #include <cmath>
 
-#define NUM_CLOUD_ELLIPSES 180
-#define CLOUD_ALPHA_INCREASE 16
+constexpr int NUM_CLOUD_ELLIPSES = 180;
+constexpr int CLOUD_ALPHA_INCREASE = 16;
 
-#define CLOUD_WIDTH 64
-#define CLOUD_HEIGHT 64
-#define CLOUD_SIZE_RATIO 0.05
+constexpr int CLOUD_WIDTH = 64;
+constexpr int CLOUD_HEIGHT = 64;
+constexpr float CLOUD_SIZE_RATIO = 0.05;
 
-#define CLOUD_SCALE 12
+constexpr int CLOUD_SCALE = 12;
 
-#define CLOUD_MIN_CREATION_TIMEOUT 200
-#define CLOUD_MAX_CREATION_TIMEOUT 2400
+constexpr int CLOUD_MIN_CREATION_TIMEOUT = 200;
+constexpr int CLOUD_MAX_CREATION_TIMEOUT = 2400;
 
-#define CLOUD_TEXTURE_WIDTH (CLOUD_WIDTH * CLOUD_COLUMNS)
-#define CLOUD_TEXTURE_HEIGHT (CLOUD_HEIGHT * CLOUD_ROWS)
+constexpr int CLOUD_TEXTURE_WIDTH = (CLOUD_WIDTH * CLOUD_COLUMNS);
+constexpr int CLOUD_TEXTURE_HEIGHT = (CLOUD_HEIGHT * CLOUD_ROWS);
 
-#define PAUSE_MIN_FRAMES 2
+constexpr int PAUSE_MIN_FRAMES = 2;
 
-#define PI 3.14159265358979323846
+constexpr float PI = 3.14159265358979323846;
 
 std::vector<atlas_data_t> atlas_pages;
 cloud_data g_cloud_data;
@@ -54,15 +54,15 @@ static int random_from_min_to_range(int min, int range)
     return min + random_int_between(0, range);
 }
 
-static void position_ellipse(ellipse *e, int cloud_width, int cloud_height)
+static void position_ellipse(ellipse *e, const int cloud_width, const int cloud_height)
 {
-    double angle = random_fractional() * PI * 2;
+    const double angle = random_fractional() * PI * 2;
 
-    e->x = (int) (CLOUD_WIDTH / 2 + random_fractional() * cloud_width * cos(angle));
-    e->y = (int) (CLOUD_HEIGHT / 2 + random_fractional() * cloud_height * sin(angle));
+    e->x = static_cast<int>(static_cast<float>(CLOUD_WIDTH) / 2 + random_fractional() * cloud_width * cos(angle));
+    e->y = static_cast<int>(static_cast<float>(CLOUD_HEIGHT) / 2 + random_fractional() * cloud_height * sin(angle));
 
-    e->width = random_from_min_to_range((int) (CLOUD_WIDTH * CLOUD_SIZE_RATIO), (int) (CLOUD_WIDTH * CLOUD_SIZE_RATIO));
-    e->height = random_from_min_to_range((int) (CLOUD_HEIGHT * CLOUD_SIZE_RATIO), (int) (CLOUD_HEIGHT * CLOUD_SIZE_RATIO));
+    e->width = random_from_min_to_range(static_cast<int>(CLOUD_WIDTH * CLOUD_SIZE_RATIO), static_cast<int>(CLOUD_WIDTH * CLOUD_SIZE_RATIO));
+    e->height = random_from_min_to_range(static_cast<int>(CLOUD_HEIGHT * CLOUD_SIZE_RATIO), static_cast<int>(CLOUD_HEIGHT * CLOUD_SIZE_RATIO));
 
     e->half_width = e->width / 2;
     e->half_height = e->height / 2;
@@ -75,18 +75,18 @@ static void position_ellipse(ellipse *e, int cloud_width, int cloud_height)
 
 static int ellipse_is_inside_bounds(const ellipse *e)
 {
-    int x = e->x;
-    int y = e->y;
+    const int x = e->x;
+    const int y = e->y;
     return x - e->width >= 0 && x + e->width < CLOUD_WIDTH &&
         y - e->height >= 0 && y + e->height < CLOUD_HEIGHT;
 }
 
-static void darken_pixel(color *pixels, int x, int y)
+static void darken_pixel(color *pixels, const int x, const int y)
 {
-    int pixel = y * CLOUD_WIDTH + x;
+    const int pixel = y * CLOUD_WIDTH + x;
 
     color alpha = pixels[pixel] >> COLOR_BITSHIFT_ALPHA;
-    int darken = CLOUD_ALPHA_INCREASE >> (alpha >> 4);
+    const int darken = CLOUD_ALPHA_INCREASE >> (alpha >> 4);
     alpha = (alpha + ((darken * (255 - alpha)) >> 8));
 
     // Clamp
@@ -97,9 +97,9 @@ static void darken_pixel(color *pixels, int x, int y)
     pixels[pixel] = ALPHA_TRANSPARENT | (alpha << COLOR_BITSHIFT_ALPHA);
 }
 
-static void generate_cloud_ellipse(color *pixels, int width, int height)
+static void generate_cloud_ellipse(color *pixels, const int width, const  int height)
 {
-    ellipse e;
+    ellipse e = {};
     do {
         position_ellipse(&e, width, height);
     } while (!ellipse_is_inside_bounds(&e));
@@ -194,10 +194,10 @@ static void generate_cloud(cloud_type *cloud)
     cloud->status = e_cloud_status_created;
 }
 
-static int cloud_intersects(const cloud_type *cloud)
+static bool cloud_intersects(const cloud_type *cloud)
 {
     // FIXME: tune clouds positioning. Right now this check causes clouds to almost never spawn
-    return 0;
+    // return false;
     for (auto &i : g_cloud_data.clouds) {
         const cloud_type *other = &i;
         if (other->status != e_cloud_status_moving) {
@@ -205,10 +205,10 @@ static int cloud_intersects(const cloud_type *cloud)
         }
         if (other->x < cloud->x + cloud->side && other->x + other->side > cloud->x &&
             other->y < cloud->y + cloud->side && other->y + other->side > cloud->y) {
-            return 1;
+            return true;
         }
     }
-    return 0;
+    return false;
 }
 
 static void position_cloud(cloud_type *cloud, int x_limit, int y_limit)
@@ -231,7 +231,8 @@ void clouds_pause()
     g_cloud_data.pause_frames = PAUSE_MIN_FRAMES;
 }
 
-void draw_cloud(painter &ctx, const image_t *img, float x, float y, color color, float scale_x, float scale_y, double angle) {
+void draw_cloud(painter &ctx, const image_t *img, const int x, const int y, const color color, const float scale_x,
+                const float scale_y, const double angle) {
     if (!img->atlas.p_atlas) {
         return;
     }
@@ -241,10 +242,7 @@ void draw_cloud(painter &ctx, const image_t *img, float x, float y, color color,
         return;
     }
 
-    const vec2i pos = {
-        static_cast<int>(round(x)),
-        static_cast<int>(round(y)),
-    };
+    const vec2i pos = {x, y};
     const vec2i size = {
         img->width,
         img->height,
@@ -252,7 +250,7 @@ void draw_cloud(painter &ctx, const image_t *img, float x, float y, color color,
     ctx.draw(texture, pos, img->atlas.offset, size, color, scale_x, scale_y, angle, ImgFlag_Alpha);
 }
 
-void clouds_draw(painter &ctx, int x_offset, int y_offset, int x_limit, int y_limit)
+void clouds_draw(painter &ctx, const int x_offset, const int y_offset, const int x_limit, const int y_limit)
 {
    if (!config_get(CONFIG_UI_DRAW_CLOUD_SHADOWS)) {
        return;
@@ -270,8 +268,8 @@ void clouds_draw(painter &ctx, int x_offset, int y_offset, int x_limit, int y_li
         cloud_speed = g_cloud_data.clouds_speed * static_cast<float>(g_settings.game_speed) / 100;
     }
 
-    for (int i = 0; i < NUM_CLOUDS; i++) {
-        cloud_type *cloud = &g_cloud_data.clouds[i];
+    for (auto & i : g_cloud_data.clouds) {
+        cloud_type *cloud = &i;
         if (cloud->status == e_cloud_status_inactive) {
             generate_cloud(cloud);
             continue;
