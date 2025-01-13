@@ -1,5 +1,6 @@
 #include "dev/debug.h"
 
+#include "graphics/clouds.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/view/lookup.h"
@@ -144,6 +145,20 @@ static void update_tile_coords(vec2i pixel, tile2i tile, painter &ctx) {
     record_mappoint_pixelcoord(tile, pixel);
 }
 
+static void update_clouds(painter &ctx)
+{
+    if (game.paused || (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY))) {
+        clouds_pause();
+    }
+    auto& viewdata = city_view_data_unsafe();
+    vec2i min_pos, max_pos;
+    city_view_get_camera_scrollable_pixel_limits(viewdata, min_pos, max_pos);
+    const int x_offset = viewdata.camera.position.x - min_pos.x;
+    const int y_offset = viewdata.camera.position.y - min_pos.y;
+    clouds_draw(ctx, x_offset, y_offset, scenario_map_data()->width * (TILE_WIDTH_PIXELS - 20),
+                scenario_map_data()->height * (TILE_HEIGHT_PIXELS - 10));
+}
+
 void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord, tile2i tile) {
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
@@ -171,6 +186,8 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
         Planner.update(tile);
         Planner.draw(ctx);
     }
+
+    update_clouds(ctx);
 
     // finally, draw these on top of everything else
     city_view_foreach_valid_map_tile(ctx, draw_debug_tile);

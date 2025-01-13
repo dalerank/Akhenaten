@@ -10,6 +10,7 @@
 #include "building/industry.h"
 #include "building/monuments.h"
 #include "city/city.h"
+#include "graphics/clouds.h"
 #include "graphics/view/lookup.h"
 #include "grid/canals.h"
 #include "grid/building.h"
@@ -1176,7 +1177,6 @@ void draw_debug_ui(int x, int y) {
 
     /////// CAMERA
     if (g_debug_show_opts[e_debug_show_camera]) {
-        painter ctx = game.painter();
         tile2i camera_tile = city_view_get_camera_mappoint();
         vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
 
@@ -1249,6 +1249,41 @@ void draw_debug_ui(int x, int y) {
 
         //        pixel = tile_to_pixel(screentile_to_mappoint(city_view_data_unsafe()->camera.tile_internal));
         //        debug_draw_tile_box(pixel.x, pixel.y);
+
+        y += 200;
+    }
+
+    /////// CLOUDS
+    if (g_debug_show_opts[e_debug_show_clouds]) {
+        y += 30;
+
+        // TODO: label drawn clouds
+        // auto& viewdata = city_view_data_unsafe();
+        // vec2i min_pos, max_pos;
+        // city_view_get_camera_scrollable_pixel_limits(viewdata, min_pos, max_pos);
+        // const int x_offset = viewdata.camera.position.x - min_pos.x;
+        // const int y_offset = viewdata.camera.position.y - min_pos.y;
+        // float scale = g_zoom.get_scale();
+
+        for (int i = 0; i < NUM_CLOUDS; i++) {
+            const cloud_type *cloud = &g_cloud_data.clouds[i];
+            e_cloud_status status = cloud->status;
+            char status_text[16] = {};
+            switch (status) {
+                case e_cloud_status_inactive: snprintf(status_text, 16, "%s", "status: INACTIVE"); break;
+                case e_cloud_status_created: snprintf(status_text, 16, "%s", "status: CREATED"); break;
+                case e_cloud_status_moving: snprintf(status_text, 16, "%s", "status: MOVING"); break;
+            }
+
+            // debug_text(ctx, str, (cloud->render_x - x_offset) * scale, (cloud->render_y - y_offset) * scale, 50, "Cloud", i);
+            debug_text(ctx, str, x, y - 20, 70, "---cloud ", i);
+            debug_text_a(ctx, str, x, y - 10, 70, status_text);
+            debug_text_dual_left(str, x, y, 120, 40, "speed x,y:", cloud->speed.x.current_speed,
+                                 cloud->speed.y.current_speed);
+            debug_text_dual_left(str, x, y + 10, 120, 40, "pos x,y: ", cloud->x, cloud->y);
+            debug_text_dual_left(str, x, y + 20, 120, 40, "render pos x,y: ", cloud->render_x, cloud->render_y);
+            y += 40;
+        }
 
         y += 200;
     }
@@ -1344,6 +1379,10 @@ console_ref_int16::console_ref_int16(pcstr name, int16_t &v) : value(&v) {
 
 console_ref_int32::console_ref_int32(pcstr name, int &v) : value(&v) {
     bind_debug_console_var_int(name, v);
+}
+
+console_ref_float::console_ref_float(pcstr name, float &v) : value(&v) {
+    bind_debug_console_var_float(name, v);
 }
 
 console_var_bool::console_var_bool(pcstr name, bool v) : value(v) {

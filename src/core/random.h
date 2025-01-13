@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ctime>
 #include <stdint.h>
 #include "grid/point.h"
 
@@ -19,6 +20,7 @@ struct random_data_t {
     int16_t random2_15bit;
     int pool_index;
     int32_t pool[MAX_RANDOM];
+    time_t last_seed;
 } ;
 
 const random_data_t* random_data_struct();
@@ -39,3 +41,7 @@ bool random_bool_lerp_scalar_int(int minimum, int maximum, int v);
 
 uint16_t anti_scum_random_15bit(bool update = true);
 bool anti_scum_random_bool();
+
+int random_int();
+int random_int_between(int min, int max);
+double random_fractional();

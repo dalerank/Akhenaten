@@ -24,6 +24,7 @@ void bind_debug_command(pcstr cmd, std::function<void(std::istream &, std::ostre
 void bind_debug_console_var_int(pcstr var, int &ref);
 void bind_debug_console_var_int8(pcstr var, int8_t &ref);
 void bind_debug_console_var_int16(pcstr var, int16_t &ref);
+void bind_debug_console_var_float(pcstr var, float &ref);
 void bind_debug_console_var_bool(pcstr var, bool &ref);
 
 void game_debug_show_property(pcstr field, const int &v, bool disabled = false);
@@ -56,6 +57,7 @@ inline void bind_debug_command(...) {}
 inline void bind_debug_console_var_int(...) {}
 inline void bind_debug_console_var_int8(...) {}
 inline void bind_debug_console_var_int16(...) {}
+inline void bind_debug_console_var_float(...) {}
 inline void bind_debug_console_var_bool(...) {}
 inline void game_imgui_overlay_destroy() {}
 

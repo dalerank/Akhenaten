@@ -293,7 +293,7 @@ void graphics_renderer_interface::draw_image_part(painter &ctx, const image_t* i
 
     vec2i atlas_offset = img->atlas.offset;
     vec2i size = {img->width, (img->height - offset) / 2 + offset};
-    ctx.draw(img->atlas.p_atlas->texture, pos, atlas_offset, size, color, scale, flags);
+    ctx.draw(img->atlas.p_atlas->texture, pos, atlas_offset, size, color, scale, scale, 0, flags);
 }
 
 void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, vec2i pos, color color, float scale, ImgFlags flags) {
@@ -308,7 +308,7 @@ void graphics_renderer_interface::draw_image(painter &ctx, const image_t* img, v
     vec2i offset = img->atlas.offset;
     vec2i size = {img->width, img->height};
     if (offset.x >= 0 && offset.y >= 0) {
-        ctx.draw(img->atlas.p_atlas->texture, pos, offset, size, color, scale, flags);
+        ctx.draw(img->atlas.p_atlas->texture, pos, offset, size, color, scale, scale, 0, flags);
     }
 }
 
@@ -324,7 +324,7 @@ void graphics_renderer_interface::draw_image_grayscale(painter &ctx, const image
     vec2i offset = img->atlas.offset;
     vec2i size = { img->width, img->height };
     if (offset.x >= 0 && offset.y >= 0) {
-        ctx.draw(img->atlas.p_atlas->texture, pos, offset, size, scale, flags);
+        ctx.draw(img->atlas.p_atlas->texture, pos, offset, size, scale, scale, 0, flags);
     }
 }
 
@@ -395,6 +395,39 @@ void graphics_renderer_interface::update_custom_texture(int type) {
     int width, height;
     SDL_QueryTexture(data.custom_textures[type].texture, NULL, NULL, &width, &height);
     SDL_UpdateTexture(data.custom_textures[type].texture, NULL, data.custom_textures[type].buffer, sizeof(color) * width);
+#endif
+}
+
+SDL_Texture* graphics_renderer_interface::get_custom_texture(int type) {
+    auto &data = g_renderer_data;
+    return data.custom_textures[type].texture;
+}
+
+void graphics_renderer_interface::update_custom_texture_from(int type, const color *buffer,
+    int x_offset, int y_offset, int width, int height)
+{
+    auto &data = g_renderer_data;
+    if (game.paused || !data.custom_textures[type].texture) {
+        return;
+    }
+    int texture_width, texture_height;
+    SDL_QueryTexture(data.custom_textures[type].texture, nullptr, nullptr, &texture_width, &texture_height);
+    if (x_offset + width > texture_width || y_offset + height > texture_height) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Partial texture copy goes out of bounds");
+        return;
+    }
+#ifdef __vita__
+    int pitch;
+    SDL_LockTexture(data.custom_textures[type].texture, NULL, (void **) &data.custom_textures[type].buffer, &pitch);
+    texture_width = pitch / sizeof(color_t);
+    color_t *offset = &data.custom_textures[type].buffer[y_offset * texture_width + x_offset];
+    for (int y = 0; y < height; y++) {
+        memcpy(&offset[y * texture_width], &buffer[y * width], width * sizeof(color_t));
+    }
+    SDL_UnlockTexture(data.custom_textures[type].texture);
+#else
+    SDL_Rect rect = { x_offset, y_offset, width, height };
+    SDL_UpdateTexture(data.custom_textures[type].texture, &rect, buffer, sizeof(color) * width);
 #endif
 }
 
@@ -603,7 +636,7 @@ static void set_texture_color_and_scale_mode(SDL_Texture *texture, color color, 
 #endif
 }
 
-static void draw_texture_advanced(const image_t *img, float x, float y, color color, float scale_x, float scale_y, double angle, int disable_coord_scaling) {
+void graphics_renderer_interface::draw_texture_advanced(const image_t *img, float x, float y, color color, float scale_x, float scale_y, double angle, int disable_coord_scaling) {
     auto &data = g_renderer_data;
     if (!img->atlas.p_atlas) {
         return;
@@ -655,7 +688,7 @@ static void draw_texture_advanced(const image_t *img, float x, float y, color co
 }
 
 static void draw_texture(const image_t *img, int x, int y, color color, float scale) {
-    draw_texture_advanced(img, (float) x, (float) y, color, scale, scale, 0.0, 0);
+    g_render.draw_texture_advanced(img, (float) x, (float) y, color, scale, scale, 0.0, 0);
 }
 
 void graphics_renderer_interface::draw_custom_texture(int type, int x, int y, float scale) {

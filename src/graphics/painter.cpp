@@ -10,15 +10,17 @@
 
 #include <SDL.h>
 
-void painter::draw(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale, ImgFlags flags) {
+void painter::draw(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x, float scale_y,
+                   double angle, ImgFlags flags) {
     if (!(flags & ImgFlag_Grayscale)) {
-        draw_impl(texture, pos, offset, size, color, scale, flags);
+        draw_impl(texture, pos, offset, size, color, scale_x, scale_y, angle, flags);
     } else {
-        draw_grayscale(texture, pos, offset, size, scale, !!(flags & ImgFlag_Alpha));
+        draw_grayscale(texture, pos, offset, size, scale_x, scale_y, angle, !!(flags & ImgFlag_Alpha));
     }
 }
 
-void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale, ImgFlags flags) {
+void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x,
+                        float scale_y, double angle, ImgFlags flags) {
     if (texture == nullptr) {
         return;
     }
@@ -27,7 +29,9 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
         color = COLOR_MASK_NONE;
     }
 
-    float overall_scale_factor = scale * this->global_render_scale;
+    const float x_scale_factor = scale_x * global_render_scale;
+    const float y_scale_factor = scale_y * global_render_scale;
+    const float overall_scale_factor = scale_x == scale_y ? x_scale_factor : this->global_render_scale;
     bool DOWNSCALED_CITY = false;
     if (this->global_render_scale < 1.0f) {
         DOWNSCALED_CITY = true;
@@ -65,19 +69,19 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
         // but I can't be arsed to find it. I tried, I gave up.
         screen_coords = {static_cast<float>(pos.x * this->global_render_scale - 0.25),
                          static_cast<float>(pos.y * this->global_render_scale - 0.25),
-                         static_cast<float>(size.x * overall_scale_factor + 0.5),
-                         static_cast<float>(size.y * overall_scale_factor + 0.5)};
+                         static_cast<float>(size.x * x_scale_factor + 0.5),
+                         static_cast<float>(size.y * y_scale_factor + 0.5)};
     } else {
         screen_coords = {pos.x * this->global_render_scale,
                          pos.y * this->global_render_scale,
-                         size.x * overall_scale_factor,
-                         size.y * overall_scale_factor};
+                         size.x * x_scale_factor,
+                         size.y * y_scale_factor};
     }
 
     if (!!(flags & ImgFlag_Mirrored)) {
-        SDL_RenderCopyExF(this->renderer, texture, &texture_coords, &screen_coords, 0, nullptr, SDL_FLIP_HORIZONTAL);
+        SDL_RenderCopyExF(this->renderer, texture, &texture_coords, &screen_coords, angle, nullptr, SDL_FLIP_HORIZONTAL);
     } else {
-        SDL_RenderCopyExF(this->renderer, texture, &texture_coords, &screen_coords, 0, nullptr, SDL_FLIP_NONE);
+        SDL_RenderCopyExF(this->renderer, texture, &texture_coords, &screen_coords, angle, nullptr, SDL_FLIP_NONE);
     }
 }
 
@@ -155,7 +159,8 @@ SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i si
     }
 
     /* Copy pixel data over to surface */
-    SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormatFrom(pixels.data(), size.x, size.y, SDL_BITSPERPIXEL(format), size.x * SDL_BYTESPERPIXEL(format), format);
+    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormatFrom(pixels.data(), size.x, size.y, SDL_BITSPERPIXEL(format),
+                                                              size.x * SDL_BYTESPERPIXEL(format), format);
     if (!surface) {
         return nullptr;
     }
@@ -170,7 +175,8 @@ SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i si
     return gray_tx_ptr;
 }
 
-void painter::draw_grayscale(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, float scale, ImgFlags flags) {
+auto painter::draw_grayscale(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, float scale_x, float scale_y,
+                             double angle, ImgFlags flags) -> void {
     if (texture == nullptr) {
         return;
     }
@@ -180,17 +186,17 @@ void painter::draw_grayscale(SDL_Texture *texture, vec2i pos, vec2i offset, vec2
         return;
     }
 
-    draw_impl(grtx, pos, vec2i{ 0, 0 }, size, COLOR_WHITE, scale, flags);
+    draw_impl(grtx, pos, vec2i{ 0, 0 }, size, COLOR_WHITE, scale_x, scale_y, angle, flags);
 }
 
-void painter::draw(const sprite &spr, vec2i pos, color color_mask, float scale, ImgFlags flags) {
+void painter::draw(const sprite &spr, vec2i pos, color color_mask, float scale_x, float scale_y, double angle, ImgFlags flags) {
     if (spr.img == nullptr) {
         return;
     }
 
     vec2i offset = spr.img->atlas.offset;
     vec2i size = spr.img->size();
-    draw(spr.img->atlas.p_atlas->texture, pos, offset, size, color_mask, scale, flags);
+    draw(spr.img->atlas.p_atlas->texture, pos, offset, size, color_mask, scale_x, scale_y, angle, flags);
 }
 
 sprite_resource_icon::sprite_resource_icon(e_resource res) {
