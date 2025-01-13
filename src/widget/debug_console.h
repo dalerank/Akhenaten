@@ -57,6 +57,7 @@ inline void bind_debug_command(...) {}
 inline void bind_debug_console_var_int(...) {}
 inline void bind_debug_console_var_int8(...) {}
 inline void bind_debug_console_var_int16(...) {}
+inline void bind_debug_console_var_float(...) {}
 inline void bind_debug_console_var_bool(...) {}
 inline void game_imgui_overlay_destroy() {}
 
