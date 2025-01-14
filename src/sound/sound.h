@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/string.h"
-#include "core/span.hpp"
+#include "core/custom_span.hpp"
 #include "content/dir.h"
 #include "content/vfs.h"
 #include "sound/channel.h"

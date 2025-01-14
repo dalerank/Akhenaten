@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/span.hpp"
+#include "core/custom_span.hpp"
 
 /**
  * @file

@@ -2,7 +2,7 @@
 
 #include "empire_city.h"
 #include "game/resource.h"
-#include "core/span.hpp"
+#include "core/custom_span.hpp"
 #include "trade_route.h"
 #include "core/svector.h"
 

@@ -4,7 +4,7 @@
 #include "game/resource.h"
 #include "building/building_type.h"
 #include "core/game_environment.h"
-#include "core/span.hpp"
+#include "core/custom_span.hpp"
 #include "core/xstring.h"
 #include "events.h"
 #include "grid/point.h"

@@ -5,7 +5,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "sound/sound.h"
-#include "core/span.hpp"
+#include "core/custom_span.hpp"
 #include "game/game.h"
 
 #define PRESSED_EFFECT_MILLIS 100

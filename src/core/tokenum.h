@@ -8,7 +8,7 @@
 #include <array>
 #include <algorithm>
 
-#include "span.hpp"
+#include "core/custom_span.hpp"
 
 // The string_literal class holds a compile-time constant string and provides both substring and character finding operations.
 template <unsigned long long length>
