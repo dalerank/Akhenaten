@@ -1418,11 +1418,13 @@ window legion_info_window = {
 		morale_lb     : text({ pos: [100, 120], text:"${138.36}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
 		morale_num    : text({ pos: [290, 120], font: FONT_NORMAL_BLACK_ON_LIGHT }),
 
-		formation_1   : image_button({param1:1, pos:[87 * 0 + 16, 174], pack:PACK_UNLOADED, id:1, offset:0 + 0, offset_pressed:0, offset_focused:0, border:true }),
-		formation_2   : image_button({param1:2, pos:[87 * 1 + 16, 174], pack:PACK_UNLOADED, id:1, offset:0 + 1, offset_pressed:0, offset_focused:0, border:true }),
-		formation_3		: image_button({param1:3, pos:[87 * 2 + 16, 174], pack:PACK_UNLOADED, id:1, offset:0 + 2, offset_pressed:0, offset_focused:0, border:true }),
-		formation_4		: image_button({param1:4, pos:[87 * 3 + 16, 174], pack:PACK_UNLOADED, id:1, offset:0 + 3, offset_pressed:0, offset_focused:0, border:true }),
-		formation_5   : image_button({param1:5, pos:[87 * 4 + 16, 174], pack:PACK_UNLOADED, id:1, offset:0 + 4, offset_pressed:0, offset_focused:0, border:true }),
+		formation_1   : image_button({pos:[87 * 0 + 16, 174], pack:PACK_UNLOADED, id:1, offset:0 + 0, offset_pressed:0, offset_focused:0, border:true }),
+		formation_2   : image_button({pos:[87 * 1 + 16, 174], pack:PACK_UNLOADED, id:1, offset:0 + 1, offset_pressed:0, offset_focused:0, border:true }),
+		formation_3		: image_button({pos:[87 * 2 + 16, 174], pack:PACK_UNLOADED, id:1, offset:0 + 2, offset_pressed:0, offset_focused:0, border:true }),
+		formation_4		: image_button({pos:[87 * 3 + 16, 174], pack:PACK_UNLOADED, id:1, offset:0 + 3, offset_pressed:0, offset_focused:0, border:true }),
+		formation_5   : image_button({pos:[87 * 4 + 16, 174], pack:PACK_UNLOADED, id:1, offset:0 + 4, offset_pressed:0, offset_focused:0, border:true }),
+
+		inner_panel   : inner_panel({pos : [16, 260], size: [27, 4] }),
 
 		button_help   : help_button({}),
 		button_close  : close_button({}),

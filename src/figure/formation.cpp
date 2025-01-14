@@ -82,7 +82,7 @@ formation* formation_create_legion(int building_id, int x, int y, e_figure_type 
     return m;
 }
 
-static int formation_create(e_figure_type figure_type, int layout, int orientation, tile2i tile) {
+static int formation_create(e_figure_type figure_type, formation_layout layout, int orientation, tile2i tile) {
     int formation_id = get_free_formation(10);
     if (!formation_id) {
         return 0;
@@ -120,7 +120,7 @@ int formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animal
     return formation_id;
 }
 
-int formation_create_enemy(e_figure_type figure_type, tile2i tile, int layout, int orientation, int enemy_type, int attack_type, int invasion_id, int invasion_sequence) {
+int formation_create_enemy(e_figure_type figure_type, tile2i tile, formation_layout layout, int orientation, int enemy_type, int attack_type, int invasion_id, int invasion_sequence) {
     int formation_id = formation_create(figure_type, layout, orientation, tile);
     if (!formation_id)
         return 0;

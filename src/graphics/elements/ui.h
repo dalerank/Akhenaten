@@ -370,6 +370,7 @@ struct eimage_button : public element {
     virtual void tooltip(textid t) override { _tooltip = ui::str(t); }
     virtual void tooltip(const xstring &t) override { _tooltip = t; }
     virtual void image(image_desc d) override { img_desc = d; }
+    virtual void image(int v) override { img_desc.offset = v; }
 
     virtual eimage_button *dcast_image_button() override { return this; }
 };

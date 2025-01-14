@@ -111,7 +111,7 @@ void window_info_legion_button_layout(int index, int param2) {
     if (index == 1 && data.context_for_callback->formation_types < 4)
         return;
     // store layout in case of mop up
-    int new_layout = m->layout;
+    formation_layout new_layout = m->layout;
     if (m->figure_type == FIGURE_INFANTRY) {
         switch (index) {
         case 0:
@@ -182,40 +182,6 @@ void legion_info_window::window_info_foreground(object_info &c) {
     if (!m->num_figures) {
         return;
     }
-
-    for (int i = 5 - c.formation_types; i < 5; i++) {
-        int has_focus = 0;
-        if (data.focus_button_id) {
-            if (data.focus_button_id - 1 == i)
-                has_focus = 1;
-
-        } else if (m->figure_type == FIGURE_INFANTRY) {
-            if (i == 0 && m->layout == FORMATION_TORTOISE)
-                has_focus = 1;
-            else if (i == 1 && m->layout == FORMATION_COLUMN)
-                has_focus = 1;
-            else if (i == 2 && m->layout == FORMATION_DOUBLE_LINE_1)
-                has_focus = 1;
-            else if (i == 3 && m->layout == FORMATION_DOUBLE_LINE_2)
-                has_focus = 1;
-            else if (i == 4 && m->layout == FORMATION_MOP_UP)
-                has_focus = 1;
-
-        } else { // mounted/javelin
-            if (i == 0 && m->layout == FORMATION_SINGLE_LINE_1)
-                has_focus = 1;
-            else if (i == 1 && m->layout == FORMATION_SINGLE_LINE_2)
-                has_focus = 1;
-            else if (i == 2 && m->layout == FORMATION_DOUBLE_LINE_1)
-                has_focus = 1;
-            else if (i == 3 && m->layout == FORMATION_DOUBLE_LINE_2)
-                has_focus = 1;
-            else if (i == 4 && m->layout == FORMATION_MOP_UP)
-                has_focus = 1;
-        }
-        button_border_draw(c.offset.x + 19 + 85 * i, c.offset.y + 139, 84, 84, has_focus);
-    }
-    inner_panel_draw(c.offset + vec2i{ 16, 230 }, { c.bgsize.x - 2, 4 });
 
     int title_id;
     switch (data.focus_button_id) {
@@ -296,8 +262,6 @@ void legion_info_window::init(object_info &c) {
     building *fort = c.building_get();
     const formation *m = formation_get(c.formation_id);
 
-    int text_id = formation_get(c.formation_id)->cursed_by_seth ? 1 : 2;
-    ui["describe"] = ui::str(c.group_id, text_id);
     ui["title"] = ui::str(138, m->legion_id);
     ui["legion_icon"].image(m->legion_id);
 
@@ -306,6 +270,7 @@ void legion_info_window::init(object_info &c) {
     ui["soldiers_num"] = bstring32(m->num_figures);
 
     int health = calc_percentage(m->total_damage, m->max_total_damage);
+    int text_id;
     if (health <= 0)
         text_id = 26;
     else if (health <= 20)
@@ -322,41 +287,39 @@ void legion_info_window::init(object_info &c) {
         text_id = 32;
     }
     ui["health_num"] = ui::str(138, text_id);
-
     ui["training_num"] = ui::str(18, m->has_military_training);
 
     int morale_level = m->cursed_by_seth ? 59 : 37 + m->morale / 5;
     ui["morale_num"] = ui::str(138, morale_level);
 
+    static pcstr buttons[] = { "formation_1", "formation_2", "formation_3", "formation_4", "formation_5" };
+
     if (m->num_figures) {
-        static const int OFFSETS_LEGIONARY[2][5] = {
-            {0, 0, 2, 3, 4},
-            {0, 0, 3, 2, 4},
+        struct mode_t { int img, mode; };
+        static const mode_t OFFSETS_LEGIONARY[2][5] = {
+            {{0, FORMATION_COLUMN}, {1, FORMATION_TORTOISE}, {2, FORMATION_DOUBLE_LINE_1}, {3, FORMATION_DOUBLE_LINE_2}, {4, FORMATION_HERD}},
+            {{0, FORMATION_COLUMN}, {1, FORMATION_TORTOISE}, {3, FORMATION_DOUBLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1}, {4, FORMATION_HERD}},
         };
-        static const int OFFSETS_OTHER[2][5] = {
-            {5, 6, 2, 3, 4},
-            {6, 5, 3, 2, 4},
+        static const mode_t OFFSETS_OTHER[2][5] = {
+            {{5, FORMATION_SINGLE_LINE_1}, {1, FORMATION_SINGLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1}, {3, FORMATION_DOUBLE_LINE_2}, {4, FORMATION_HERD}},
+            {{6, FORMATION_SINGLE_LINE_2}, {5, FORMATION_SINGLE_LINE_1}, {3, FORMATION_DOUBLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1}, {4, FORMATION_HERD}},
         };
 
-        const int *offsets;
-        int index = (city_view_orientation() == DIR_6_TOP_LEFT || city_view_orientation() == DIR_2_BOTTOM_RIGHT) ? 1 : 0;
-
+        const int index = (city_view_orientation() == DIR_6_TOP_LEFT || city_view_orientation() == DIR_2_BOTTOM_RIGHT) ? 1 : 0;
+        const mode_t *offsets;
         if (m->figure_type == FIGURE_INFANTRY)
             offsets = OFFSETS_LEGIONARY[index];
         else {
             offsets = OFFSETS_OTHER[index];
         }
 
-        ui["formation_1"].image(offsets[0]);
-        ui["formation_1"].darkened = UiFlags_None;
-        ui["formation_2"].image(offsets[1]);
-        ui["formation_2"].darkened = UiFlags_None;
-        ui["formation_3"].image(offsets[2]);
-        ui["formation_3"].darkened = UiFlags_None;
-        ui["formation_4"].image(offsets[3]);
-        ui["formation_4"].darkened = UiFlags_None;
-        ui["formation_5"].image(offsets[4]);
-        ui["formation_5"].darkened = UiFlags_None;
+        for (int i = 0; i < std::size(buttons); ++i) {
+            auto imgbtn = ui[buttons[i]].dcast_image_button();
+            imgbtn->image(offsets[i].img);
+            imgbtn->darkened = UiFlags_None;
+            imgbtn->select(m->layout == imgbtn->param1);
+            imgbtn->param1 = offsets[i].mode;
+        }
     } else {
         // no soldiers
         int group_id;
@@ -370,12 +333,12 @@ void legion_info_window::init(object_info &c) {
             group_id = 138;
             text_id = 11;
         }
-        
-        ui["formation_1"].darkened = UiFlags_Grayscale;
-        ui["formation_2"].darkened = UiFlags_Grayscale; 
-        ui["formation_3"].darkened = UiFlags_Grayscale; 
-        ui["formation_4"].darkened = UiFlags_Grayscale; 
-        ui["formation_5"].darkened = UiFlags_Grayscale; 
+
+        ui["describe"] = ui::str(group_id, text_id);
+
+        for (int i = 0; i < std::size(buttons); ++i) {
+            ui[buttons[i]].darkened = UiFlags_Grayscale;
+        }
     }
 
 }

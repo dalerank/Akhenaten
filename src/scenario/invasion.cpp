@@ -34,7 +34,7 @@ struct enemy_properties_t {
     int pct_type2;
     int pct_type3;
     e_figure_type figure_types[3];
-    int formation_layout;
+    formation_layout formation_layout;
 };
 
 static const enemy_properties_t ENEMY_PROPERTIES[12] = {

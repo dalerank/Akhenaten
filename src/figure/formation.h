@@ -24,7 +24,7 @@ enum {
     FORMATION_ATTACK_RANDOM = 4
 };
 
-enum formation_mode {
+enum formation_layout {
     FORMATION_COLUMN = 0,
     FORMATION_DOUBLE_LINE_1 = 1,
     FORMATION_DOUBLE_LINE_2 = 2,
@@ -44,11 +44,8 @@ struct formation_state {
     int duration_halt;
     int duration_advance;
     int duration_regroup;
-} ;
+};
 
-/**
- * Formation data
- */
 struct formation {
     int id;         /**< ID of the formation */
     int faction_id; /**< 1 = player, 0 = everyone else */
@@ -58,7 +55,7 @@ struct formation {
     int is_herd;   /**< Flag to indicate herd */
     int is_legion; /**< Flag to indicate (own) legion */
     int legion_id; /**< Legion ID (0-5 for own troops) */
-    int layout;
+    formation_layout layout;
     int direction;
     int orientation;
 
@@ -115,7 +112,7 @@ struct formation {
     int herd_ostrich_spawn_delay;
 
     struct {
-        int layout;
+        formation_layout layout;
         int x_home;
         int y_home;
     } prev;
@@ -127,7 +124,7 @@ void formation_clear(int formation_id);
 
 formation* formation_create_legion(int building_id, int x, int y, e_figure_type type);
 int formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animals);
-int formation_create_enemy(e_figure_type figure_type, tile2i tile, int layout, int orientation, int enemy_type, int attack_type, int invasion_id, int invasion_sequence);
+int formation_create_enemy(e_figure_type figure_type, tile2i tile, formation_layout layout, int orientation, int enemy_type, int attack_type, int invasion_id, int invasion_sequence);
 
 formation* formation_get(int formation_id);
 
