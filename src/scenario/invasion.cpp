@@ -34,7 +34,7 @@ struct enemy_properties_t {
     int pct_type2;
     int pct_type3;
     e_figure_type figure_types[3];
-    formation_layout formation_layout;
+    formation_layout layout;
 };
 
 static const enemy_properties_t ENEMY_PROPERTIES[12] = {
@@ -276,7 +276,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
         for (int i = 0; i < formations_per_type[type]; i++) {
             int formation_id = formation_create_enemy(figure_type,
                                                       tile2i{x, y},
-                                                      ENEMY_PROPERTIES[enemy_type].formation_layout,
+                                                      ENEMY_PROPERTIES[enemy_type].layout,
                                                       orientation,
                                                       enemy_type,
                                                       attack_type,

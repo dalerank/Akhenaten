@@ -849,7 +849,7 @@ void ui::eimage_button::load(archive arch, element *parent, items &elems) {
 
 void ui::eimage_button::draw(UiFlags gflags) {
     const vec2i doffset = g_state.offset();
-    UiFlags flags = gflags | (selected ? UiFlags_Selected : UiFlags_None);
+    UiFlags flags = gflags | (_selected ? UiFlags_Selected : UiFlags_None);
     flags |= (readonly ? UiFlags_Readonly : UiFlags_None);
     flags |= (!!(darkened & UiFlags_Grayscale) ? UiFlags_Grayscale : UiFlags_None);
 
@@ -881,7 +881,7 @@ void ui::eimage_button::draw(UiFlags gflags) {
         return;
     }
 
-    if (border && selected) {
+    if (border && _selected) {
         button_border_draw(doffset + pos - vec2i{ 4, 4 }, tsize + vec2i{ 8, 8 }, true);
     }
 

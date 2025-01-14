@@ -139,6 +139,7 @@ struct element {
     virtual void width(int v) { size.x = v; }
     virtual int value() const { return 0; }
     virtual void select(bool v) {}
+    virtual bool selected() const { return false; }
     virtual void max_value(int v) {}
     virtual const xstring &tooltip() const { static xstring dummy;  return dummy; }
     virtual const xstring &format() const { static xstring dummy; return dummy; }
@@ -353,7 +354,7 @@ struct eimage_button : public element {
     int param1 = 0;
     int param2 = 0;
     img_button_offsets offsets;
-    bool selected = false;
+    bool _selected = false;
     bool border = false;
     int texture_id = -1;
     xstring _tooltip;
@@ -361,7 +362,8 @@ struct eimage_button : public element {
     std::function<void(int, int)> _func, _rfunc;
 
     virtual void load(archive elem, element* parent, items &elems) override;
-    virtual void select(bool v) override { selected = v; }
+    virtual void select(bool v) override { _selected = v; }
+    virtual bool selected() const override { return _selected; }
     virtual void draw(UiFlags flags) override;
 
     using element::onclick;
