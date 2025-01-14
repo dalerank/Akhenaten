@@ -4,6 +4,7 @@
 #include "city/city.h"
 #include "city/city_figures.h"
 #include "figure/figure_names.h"
+#include "core/custom_span.hpp"
 #include "core/random.h"
 
 struct figure_data_t {
@@ -116,7 +117,7 @@ figure *figure_get(int id) {
     return g_figure_data.figures[id];
 }
 
-std::span<figure *> map_figures() {
+custom_span<figure *> map_figures() {
     return make_span(g_figure_data.figures.data(), g_figure_data.figures.size());
 }
 

@@ -4,7 +4,7 @@
 #include "game/resource.h"
 #include "building/building_type.h"
 #include "core/game_environment.h"
-#include "core/span.hpp"
+#include "core/custom_span.hpp"
 #include "core/xstring.h"
 #include "events.h"
 #include "grid/point.h"
@@ -324,7 +324,7 @@ int scenario_campaign_scenario_id();
 
 void scenario_set_campaign_scenario(int scenario_id);
 
-bool scenario_is_mission_rank(std::span<int> missions);
+bool scenario_is_mission_rank(custom_span<int> missions);
 
 template<typename ... Args>
 bool scenario_is_mission_rank(const Args ... args) {

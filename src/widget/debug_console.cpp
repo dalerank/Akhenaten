@@ -1,5 +1,6 @@
 #include "debug_console.h"
 
+#include "core/custom_span.hpp"
 #include "graphics/screen.h"
 #include "graphics/graphics.h"
 #include "graphics/text.h"
@@ -131,7 +132,7 @@ void game_debug_show_property_t(pcstr field, const T &v, bool disabled = false) 
 }
 
 template<typename T>
-void game_debug_show_property_t(pcstr field, const T &v, std::span<pcstr> modes, bool disabled = false) {
+void game_debug_show_property_t(pcstr field, const T &v, custom_span<pcstr> modes, bool disabled = false) {
     ImGui::PushID(game_debug_cli_guid);
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
@@ -163,7 +164,7 @@ void game_debug_show_property_t(pcstr field, pcstr v) {
 }
 
 void game_debug_show_property(pcstr field, const int &v, bool disabled)  { game_debug_show_property_t(field, v, disabled); }
-void game_debug_show_property(pcstr field, const uint8_t &v, std::span<pcstr> modes, bool disabled)  { game_debug_show_property_t(field, v, modes, disabled); }
+void game_debug_show_property(pcstr field, const uint8_t &v, custom_span<pcstr> modes, bool disabled)  { game_debug_show_property_t(field, v, modes, disabled); }
 void game_debug_show_property(pcstr field, const float &v, bool disabled)  { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const e_move_type &v, bool disabled)  { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const int8_t &v, bool disabled)  { game_debug_show_property_t(field, v, disabled); }

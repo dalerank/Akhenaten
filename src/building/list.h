@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/span.hpp"
+#include "core/custom_span.hpp"
 
 /**
  * @file
@@ -58,4 +58,4 @@ void building_list_burning_clear(void);
 
 void building_list_burning_add(int building_id);
 
-std::span<uint16_t> building_list_burning_items();
+custom_span<uint16_t> building_list_burning_items();

@@ -4,7 +4,6 @@
 #include "core/buffer.h"
 #include "core/string.h"
 #include "core/direction.h"
-#include "core/span.hpp"
 #include "core/circullar_buffer.h"
 #include "figure/action.h"
 #include "figure/formation.h"

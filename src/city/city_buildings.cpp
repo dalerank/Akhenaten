@@ -1,6 +1,7 @@
 #include "city_buildings.h"
 
 #include "game/undo.h"
+#include "core/custom_span.hpp"
 #include "core/profiler.h"
 #include "city/warnings.h"
 #include "city/population.h"
@@ -11,13 +12,13 @@
 #include "io/io_buffer.h"
 
 building g_all_buildings[5000];
-std::span<building> g_city_buildings = make_span(g_all_buildings);
+custom_span<building> g_city_buildings = make_span(g_all_buildings);
 
 building *building_get(int id) {
     return &g_all_buildings[id];
 }
 
-std::span<building> &city_buildings() {
+custom_span<building> &city_buildings() {
     return g_city_buildings;
 }
 

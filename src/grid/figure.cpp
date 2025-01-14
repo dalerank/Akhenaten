@@ -1,5 +1,6 @@
 #include "figure.h"
 
+#include "core/custom_span.hpp"
 #include "grid/grid.h"
 #include "io/io_buffer.h"
 #include "graphics/image.h"
@@ -51,7 +52,7 @@ void map_figure_sort_by_y() {
     });
 }
 
-std::span<figure *> map_figures_in_row(tile2i tile) {
+custom_span<figure *> map_figures_in_row(tile2i tile) {
     vec2i pixel_begin = tile_to_pixel(tile);
     vec2i pixel_end = pixel_begin + vec2i(0, TILE_HEIGHT_PIXELS);
 
@@ -61,7 +62,7 @@ std::span<figure *> map_figures_in_row(tile2i tile) {
     if (pixel_end_scr.x < 0 || pixel_end_scr.y < 0 
         || pixel_begin_scr.x > city_view_data_unsafe().viewport.size_pixels.x
         || pixel_begin_scr.y > city_view_data_unsafe().viewport.size_pixels.y) {
-        return std::span<figure *>(nullptr, 0);
+        return custom_span<figure *>(nullptr, 0);
     }
 
     auto begin = std::lower_bound(g_figures_y_sort.begin(), g_figures_y_sort.end(), pixel_begin.y, [](const figure *f, int y) {
@@ -69,7 +70,7 @@ std::span<figure *> map_figures_in_row(tile2i tile) {
     });
 
     if (begin == g_figures_y_sort.end()) {
-        return std::span<figure *>(nullptr, 0);
+        return custom_span<figure *>(nullptr, 0);
     }
 
     auto end = std::lower_bound(g_figures_y_sort.begin(), g_figures_y_sort.end(), pixel_end.y, [](const figure *f, int y) {
@@ -77,10 +78,10 @@ std::span<figure *> map_figures_in_row(tile2i tile) {
     });
 
     if (end == g_figures_y_sort.end()) {
-        std::span<figure *>(begin, g_figures_y_sort.end());
+        custom_span<figure *>(begin, g_figures_y_sort.end());
     }
 
-    return std::span<figure*>(begin, end);
+    return custom_span<figure*>(begin, end);
 }
 
 void map_figure_set(int grid_offset, int id) {

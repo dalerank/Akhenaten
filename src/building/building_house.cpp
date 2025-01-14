@@ -1,12 +1,13 @@
 #include "building_house.h"
 
 #include "building/building.h"
-#include "core/object_property.h"
 #include "city/city.h"
 #include "city/warnings.h"
 #include "city/population.h"
 #include "city/city_resource.h"
+#include "core/object_property.h"
 #include "core/game_environment.h"
+#include "core/custom_span.hpp"
 #include "city/labor.h"
 #include "game/resource.h"
 #include "game/tutorial.h"
@@ -637,7 +638,7 @@ e_house_progress building_house::check_evolve_desirability() {
     return status;
 }
 
-static void create_house_tile(e_building_type type, tile2i tile, int image_id, int population, std::span<int> inventory, std::span<int> foods) {
+static void create_house_tile(e_building_type type, tile2i tile, int image_id, int population, custom_span<int> inventory, custom_span<int> foods) {
     building* house = building_create(type, tile, 0);
     house->house_population = population;
     for (int i = 0; i < INVENTORY_MAX; i++) {

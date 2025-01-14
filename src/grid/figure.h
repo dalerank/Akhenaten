@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/buffer.h"
+#include "core/custom_span.hpp"
 #include "figure/figure.h"
 
 enum {
@@ -35,4 +36,4 @@ inline int map_figure_foreach_until(tile2i tile, int test) { return map_figure_f
 void map_figure_clear();
 void map_figure_sort_by_y();
 
-std::span<figure *> map_figures_in_row(tile2i tile);
+custom_span<figure *> map_figures_in_row(tile2i tile);

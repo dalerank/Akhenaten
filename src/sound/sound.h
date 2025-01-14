@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/string.h"
-#include "core/span.hpp"
+#include "core/custom_span.hpp"
 #include "content/dir.h"
 #include "content/vfs.h"
 #include "sound/channel.h"
@@ -24,7 +24,7 @@ public:
     void init();
     void shutdown();
     void init_channels();
-    inline std::span<channel_t> channels() { return make_span<channel_t>(_channels.data(), _channels.size()); }
+    inline custom_span<channel_t> channels() { return make_span<channel_t>(_channels.data(), _channels.size()); }
     void speech_play_file(pcstr filename, int volume);
     bool speech_file_exist(pcstr filename);
     void set_channel_volume(int channel, int volume_pct);

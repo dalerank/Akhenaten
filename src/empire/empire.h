@@ -2,7 +2,7 @@
 
 #include "empire_city.h"
 #include "game/resource.h"
-#include "core/span.hpp"
+#include "core/custom_span.hpp"
 #include "trade_route.h"
 #include "core/svector.h"
 
@@ -36,8 +36,8 @@ public:
 
     empire_city *city(int city_id);
     empire_city *city(pcstr name);
-    std::span<empire_city> get_cities() { return make_span(cities); }
-    std::span<trade_route> get_routes() { return make_span(trade_routes.routes); }
+    custom_span<empire_city> get_cities() { return make_span(cities); }
+    custom_span<trade_route> get_routes() { return make_span(trade_routes.routes); }
 
     inline trade_route &get_route(int route_id) {
         route_id = std::max(route_id, 0);

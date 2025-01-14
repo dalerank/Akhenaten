@@ -2,6 +2,7 @@
 
 #include "io/io_buffer.h"
 #include "core/buffer.h"
+#include "core/custom_span.hpp"
 #include "core/svector.h"
 #include <string.h>
 
@@ -78,7 +79,7 @@ void building_list_burning_add(int building_id) {
     data.burning.push_back(building_id);
 }
 
-std::span<uint16_t> building_list_burning_items() {
+custom_span<uint16_t> building_list_burning_items() {
     auto& data = g_list_data;
     return make_span(data.burning.data(), data.burning.size());
 }

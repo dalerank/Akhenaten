@@ -5,13 +5,11 @@
 #include <cstdint>
 #include <iterator> // std::iterator_traits
 
-namespace std {
-
 template <typename T>
-class span {
+class custom_span {
 public:
     using element_type = T;
-    using value_type = remove_cv_t<T>;
+    using value_type = std::remove_cv_t<T>;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
 
@@ -24,38 +22,38 @@ public:
     using reverse_iterator = std::reverse_iterator<iterator>;
 
 public:
-    constexpr span() noexcept
+    constexpr custom_span() noexcept
       : m_storage(nullptr),
         m_size(0) {
     }
 
     template <typename It>
-    constexpr span(It it, size_type count) noexcept
+    constexpr custom_span(It it, size_type count) noexcept
       : m_storage(it),
         m_size(count) {
     }
 
     template <typename It>
-    constexpr span(It it, It end) noexcept
+    constexpr custom_span(It it, It end) noexcept
       : m_storage(it),
         m_size(end - it) {
     }
 
     template <std::size_t N>
-    constexpr span(element_type (&arr)[N]) noexcept
+    constexpr custom_span(element_type (&arr)[N]) noexcept
       : m_storage(arr),
         m_size(N) {
     }
 
     template <typename U, std::size_t N>
-    constexpr span(std::array<U, N>& arr) noexcept
+    constexpr custom_span(std::array<U, N>& arr) noexcept
       : m_storage(arr.begin()),
         m_size(N) {
     }
 
-    constexpr span(const span& other) noexcept = default;
+    constexpr custom_span(const custom_span& other) noexcept = default;
 
-    span& operator=(const span& other) noexcept = default;
+    custom_span& operator=(const custom_span& other) noexcept = default;
 
 public:
     constexpr reference front() const noexcept;
@@ -82,33 +80,31 @@ private:
 };
 
 template<typename T>
-using span_const = const span<T>;
-
-} // namespace std
+using span_const = const custom_span<T>;
 
 template <typename T, std::size_t N>
 inline constexpr auto make_span(T (&arr)[N]) {
-    return std::span<T>(arr);
+    return custom_span<T>(arr);
 }
 
 template <typename T, std::size_t N>
 inline constexpr auto make_span(const T (&arr)[N]) {
-    return std::span_const<T>(arr);
+    return span_const<T>(arr);
 }
 
 template <typename T>
 inline constexpr auto make_span(T* arr, size_t N) {
-    return std::span<T>(arr, N);
+    return custom_span<T>(arr, N);
 }
 
 template <typename T>
 inline constexpr auto make_span(T &arr) {
-    return std::span<T>(arr.data(), arr.size());
+    return custom_span<T>(arr.data(), arr.size());
 }
 
 template <typename T, std::size_t N>
 inline constexpr auto make_span(const std::array<T, N> arr) {
-    return std::span_const<T>((T*)arr.data(), arr.size());
+    return span_const<T>((T*)arr.data(), arr.size());
 }
 
 template <typename ... Args>
@@ -119,37 +115,37 @@ inline constexpr auto make_array(const Args... args) {
 }
 
 template <typename T>
-inline constexpr typename std::span<T>::reference std::span<T>::front() const noexcept {
+inline constexpr typename custom_span<T>::reference custom_span<T>::front() const noexcept {
     return data()[0];
 }
 
 template <typename T>
-inline constexpr typename std::span<T>::reference std::span<T>::back() const noexcept {
+inline constexpr typename custom_span<T>::reference custom_span<T>::back() const noexcept {
     return data()[size() - 1];
 }
 
 template <typename T>
-inline constexpr typename std::span<T>::reference std::span<T>::operator[](size_type idx) const noexcept {
+inline constexpr typename custom_span<T>::reference custom_span<T>::operator[](size_type idx) const noexcept {
     return data()[idx];
 }
 
 template <typename T>
-inline constexpr typename std::span<T>::pointer std::span<T>::data() const noexcept {
+inline constexpr typename custom_span<T>::pointer custom_span<T>::data() const noexcept {
     return m_storage;
 }
 
 template <typename T>
-inline constexpr typename std::span<T>::size_type std::span<T>::size() const noexcept {
+inline constexpr typename custom_span<T>::size_type custom_span<T>::size() const noexcept {
     return m_size;
 }
 
 template <typename T>
-inline constexpr typename std::span<T>::size_type std::span<T>::size_bytes() const noexcept {
+inline constexpr typename custom_span<T>::size_type custom_span<T>::size_bytes() const noexcept {
     return size() * sizeof(T);
 }
 
 template <typename T>
-inline constexpr bool std::span<T>::empty() const noexcept {
+inline constexpr bool custom_span<T>::empty() const noexcept {
     return size() == 0u;
 }
 
@@ -158,31 +154,31 @@ inline constexpr bool std::span<T>::empty() const noexcept {
 //------------------------------------------------------------------------------
 
 template <typename T>
-inline constexpr typename std::span<T>::iterator std::span<T>::begin() const noexcept {
+inline constexpr typename custom_span<T>::iterator custom_span<T>::begin() const noexcept {
     return iterator{data()};
 }
 
 template <typename T>
-inline constexpr typename std::span<T>::iterator std::span<T>::end() const noexcept {
+inline constexpr typename custom_span<T>::iterator custom_span<T>::end() const noexcept {
     return iterator{data() + size()};
 }
 
 template <typename T>
-inline constexpr typename std::span<T>::iterator std::span<T>::begin() noexcept {
+inline constexpr typename custom_span<T>::iterator custom_span<T>::begin() noexcept {
     return iterator{data()};
 }
 
 template <typename T>
-inline constexpr typename std::span<T>::iterator std::span<T>::end() noexcept {
+inline constexpr typename custom_span<T>::iterator custom_span<T>::end() noexcept {
     return iterator{data() + size()};
 }
 
 template <typename T>
-inline constexpr typename std::span<T>::reverse_iterator std::span<T>::rbegin() const noexcept {
+inline constexpr typename custom_span<T>::reverse_iterator custom_span<T>::rbegin() const noexcept {
     return reverse_iterator(end());
 }
 
 template <typename T>
-inline constexpr typename std::span<T>::reverse_iterator std::span<T>::rend() const noexcept {
+inline constexpr typename custom_span<T>::reverse_iterator custom_span<T>::rend() const noexcept {
     return reverse_iterator(begin());
 }
