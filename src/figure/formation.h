@@ -24,7 +24,7 @@ enum {
     FORMATION_ATTACK_RANDOM = 4
 };
 
-enum {
+enum formation_mode {
     FORMATION_COLUMN = 0,
     FORMATION_DOUBLE_LINE_1 = 1,
     FORMATION_DOUBLE_LINE_2 = 2,

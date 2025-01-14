@@ -63,7 +63,7 @@ struct object_info {
     int has_reservoir_pipes;
     int aqueduct_has_water;
     int formation_id;
-    int formation_types;
+    formation_mode formation_types;
     int barracks_soldiers_requested;
     int worst_desirability_building_id;
     int warehouse_space_text;

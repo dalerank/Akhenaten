@@ -295,7 +295,7 @@ extern const token_holder<e_pack, PACK_UNLOADED, PACK_MAX> e_pack_type_tokens;
 ////////////////// UNLOADED
 
 #define GROUP_SYSTEM_GRAPHICS PACK_UNLOADED, 0
-#define GROUP_FORT_FORMATIONS PACK_UNLOADED, 1            // 197
+//#define GROUP_FORT_FORMATIONS PACK_UNLOADED, 1            // 197
 //#define GROUP_ADVISOR_RATINGS_BACKGROUND PACK_UNLOADED, 2 // 195
 #define GROUP_BIGPEOPLE PACK_UNLOADED, 3
 #define GROUP_PROMO_3 PACK_UNLOADED, 4           // 188

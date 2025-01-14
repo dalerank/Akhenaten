@@ -178,46 +178,6 @@ void legion_info_window::window_info_foreground(object_info &c) {
     painter ctx = game.painter();
     c.help_id = 87;
 
-    if (m->num_figures) {
-        // layout
-        static const int OFFSETS_LEGIONARY[2][5] = {
-            {0, 0, 2, 3, 4},
-            {0, 0, 3, 2, 4},
-        };
-        static const int OFFSETS_OTHER[2][5] = {
-            {5, 6, 2, 3, 4},
-            {6, 5, 3, 2, 4},
-        };
-        const int *offsets;
-        int index = 0;
-        if (city_view_orientation() == DIR_6_TOP_LEFT || city_view_orientation() == DIR_2_BOTTOM_RIGHT)
-            index = 1;
-
-        if (m->figure_type == FIGURE_INFANTRY)
-            offsets = OFFSETS_LEGIONARY[index];
-        else {
-            offsets = OFFSETS_OTHER[index];
-        }
-        for (int i = 5 - c.formation_types; i < 5; i++) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_FORT_FORMATIONS) + offsets[i], c.offset + vec2i{ 21 + 85 * i, 141 });
-        }
-        //window_legion_info_draw_foreground(c);
-    } else {
-        // no soldiers
-        int group_id;
-        if (m->cursed_by_seth) {
-            group_id = 89;
-            text_id = 1;
-        } else if (building_count_active(BUILDING_RECRUITER)) {
-            group_id = 138;
-            text_id = 10;
-        } else {
-            group_id = 138;
-            text_id = 11;
-        }
-        window_building_draw_description_at(c, 172, group_id, text_id);
-    }
-
     auto &data = g_military_data;
     if (!m->num_figures) {
         return;
@@ -367,6 +327,57 @@ void legion_info_window::init(object_info &c) {
 
     int morale_level = m->cursed_by_seth ? 59 : 37 + m->morale / 5;
     ui["morale_num"] = ui::str(138, morale_level);
+
+    if (m->num_figures) {
+        static const int OFFSETS_LEGIONARY[2][5] = {
+            {0, 0, 2, 3, 4},
+            {0, 0, 3, 2, 4},
+        };
+        static const int OFFSETS_OTHER[2][5] = {
+            {5, 6, 2, 3, 4},
+            {6, 5, 3, 2, 4},
+        };
+
+        const int *offsets;
+        int index = (city_view_orientation() == DIR_6_TOP_LEFT || city_view_orientation() == DIR_2_BOTTOM_RIGHT) ? 1 : 0;
+
+        if (m->figure_type == FIGURE_INFANTRY)
+            offsets = OFFSETS_LEGIONARY[index];
+        else {
+            offsets = OFFSETS_OTHER[index];
+        }
+
+        ui["formation_1"].image(offsets[0]);
+        ui["formation_1"].darkened = UiFlags_None;
+        ui["formation_2"].image(offsets[1]);
+        ui["formation_2"].darkened = UiFlags_None;
+        ui["formation_3"].image(offsets[2]);
+        ui["formation_3"].darkened = UiFlags_None;
+        ui["formation_4"].image(offsets[3]);
+        ui["formation_4"].darkened = UiFlags_None;
+        ui["formation_5"].image(offsets[4]);
+        ui["formation_5"].darkened = UiFlags_None;
+    } else {
+        // no soldiers
+        int group_id;
+        if (m->cursed_by_seth) {
+            group_id = 89;
+            text_id = 1;
+        } else if (building_count_active(BUILDING_RECRUITER)) {
+            group_id = 138;
+            text_id = 10;
+        } else {
+            group_id = 138;
+            text_id = 11;
+        }
+        
+        ui["formation_1"].darkened = UiFlags_Grayscale;
+        ui["formation_2"].darkened = UiFlags_Grayscale; 
+        ui["formation_3"].darkened = UiFlags_Grayscale; 
+        ui["formation_4"].darkened = UiFlags_Grayscale; 
+        ui["formation_5"].darkened = UiFlags_Grayscale; 
+    }
+
 }
 
 void legion_info_window::window_info_background(object_info &c) {
