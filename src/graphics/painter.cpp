@@ -11,16 +11,16 @@
 #include <SDL.h>
 
 void painter::draw(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x, float scale_y,
-                   double angle, ImgFlags flags) {
+                   double angle, ImgFlags flags, const bool force_linear) {
     if (!(flags & ImgFlag_Grayscale)) {
-        draw_impl(texture, pos, offset, size, color, scale_x, scale_y, angle, flags);
+        draw_impl(texture, pos, offset, size, color, scale_x, scale_y, angle, flags, force_linear);
     } else {
-        draw_grayscale(texture, pos, offset, size, scale_x, scale_y, angle, !!(flags & ImgFlag_Alpha));
+        draw_grayscale(texture, pos, offset, size, scale_x, scale_y, angle, !!(flags & ImgFlag_Alpha), force_linear);
     }
 }
 
 void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x,
-                        float scale_y, double angle, ImgFlags flags) {
+                        float scale_y, double angle, ImgFlags flags, const bool force_linear) {
     if (texture == nullptr) {
         return;
     }
@@ -37,7 +37,7 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
         DOWNSCALED_CITY = true;
     }
 
-    graphics_renderer()->set_texture_scale_mode(texture, overall_scale_factor);
+    graphics_renderer()->set_texture_scale_mode(texture, overall_scale_factor, force_linear);
 
     SDL_SetTextureColorMod(texture,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
@@ -176,7 +176,7 @@ SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i si
 }
 
 auto painter::draw_grayscale(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, float scale_x, float scale_y,
-                             double angle, ImgFlags flags) -> void {
+                             double angle, ImgFlags flags, bool force_linear) -> void {
     if (texture == nullptr) {
         return;
     }
@@ -186,17 +186,17 @@ auto painter::draw_grayscale(SDL_Texture *texture, vec2i pos, vec2i offset, vec2
         return;
     }
 
-    draw_impl(grtx, pos, vec2i{ 0, 0 }, size, COLOR_WHITE, scale_x, scale_y, angle, flags);
+    draw_impl(grtx, pos, vec2i{ 0, 0 }, size, COLOR_WHITE, scale_x, scale_y, angle, flags, force_linear);
 }
 
-void painter::draw(const sprite &spr, vec2i pos, color color_mask, float scale_x, float scale_y, double angle, ImgFlags flags) {
+void painter::draw(const sprite &spr, vec2i pos, color color_mask, float scale_x, float scale_y, double angle, ImgFlags flags, const bool force_linear) {
     if (spr.img == nullptr) {
         return;
     }
 
     vec2i offset = spr.img->atlas.offset;
     vec2i size = spr.img->size();
-    draw(spr.img->atlas.p_atlas->texture, pos, offset, size, color_mask, scale_x, scale_y, angle, flags);
+    draw(spr.img->atlas.p_atlas->texture, pos, offset, size, color_mask, scale_x, scale_y, angle, flags, force_linear);
 }
 
 sprite_resource_icon::sprite_resource_icon(e_resource res) {

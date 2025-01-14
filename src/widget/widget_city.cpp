@@ -153,10 +153,16 @@ static void update_clouds(painter &ctx)
     auto& viewdata = city_view_data_unsafe();
     vec2i min_pos, max_pos;
     city_view_get_camera_scrollable_pixel_limits(viewdata, min_pos, max_pos);
-    const int x_offset = viewdata.camera.position.x - min_pos.x;
-    const int y_offset = viewdata.camera.position.y - min_pos.y;
-    clouds_draw(ctx, x_offset, y_offset, scenario_map_data()->width * TILE_WIDTH_PIXELS,
-                scenario_map_data()->height * TILE_HEIGHT_PIXELS);
+    const vec2i offset = {
+        viewdata.camera.position.x - min_pos.x,
+        viewdata.camera.position.y - min_pos.y,
+    };
+    const vec2i limit = {
+        GRID_LENGTH * TILE_WIDTH_PIXELS,
+        GRID_LENGTH * TILE_HEIGHT_PIXELS,
+    };
+
+    clouds_draw(ctx, min_pos, offset, limit);
 }
 
 void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord, tile2i tile) {

@@ -199,6 +199,7 @@ static void menu_debug_opt_text(int opt, bool v) {
         {"Screenshot", "Screenshot"},
         {"Full Screenshot", "Full Screenshot"},
         {"Write Video ON", "Write Video OFF"},
+        {"Clouds ON", "Clouds OFF"},
     };
     const auto &current = debug_text_opt[opt];
     g_top_menu.menu_item_update("debug", opt, v ? current.on : current.off);
