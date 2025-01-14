@@ -214,7 +214,7 @@ struct token {
         return nullptr;
     }
 
-    static inline const char *find_name(const std::span<token> &tokens, int id) {
+    static inline const char *find_name(const custom_span<token> &tokens, int id) {
         return find_name(tokens.data(), id);
     }
 };

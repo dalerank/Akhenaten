@@ -15,7 +15,6 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/tooltip.h"
 #include "graphics/image.h"
-#include "core/span.hpp"
 #include "resource/icons.h"
 #include "io/gamefiles/lang.h"
 #include "js/js_game.h"

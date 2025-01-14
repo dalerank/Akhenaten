@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/buffer.h"
-#include "core/span.hpp"
 #include "grid/point.h"
 
 constexpr uint32_t MAX_PATH_LENGTH = 500;

@@ -12,7 +12,6 @@
 #include "city/population.h"
 #include "core/profiler.h"
 #include "core/core_utility.h"
-#include "core/span.hpp"
 #include "config/config.h"
 #include "game/settings.h"
 #include "game/cheats.h"

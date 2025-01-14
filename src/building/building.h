@@ -12,7 +12,6 @@
 #include "graphics/color.h"
 #include "building/building_type.h"
 #include "overlays/city_overlay_fwd.h"
-#include "core/span.hpp"
 #include "figure/action.h"
 #include "figure/figure_type.h"
 #include "game/resource.h"

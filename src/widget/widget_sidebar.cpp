@@ -5,7 +5,6 @@
 #include "city/message.h"
 #include "core/game_environment.h"
 #include "core/profiler.h"
-#include "core/span.hpp"
 #include "game/orientation.h"
 #include "game/state.h"
 #include "game/undo.h"

@@ -5,13 +5,11 @@
 #include <cstdint>
 #include <iterator> // std::iterator_traits
 
-namespace std {
-
 template <typename T>
 class span {
 public:
     using element_type = T;
-    using value_type = remove_cv_t<T>;
+    using value_type = std::remove_cv_t<T>;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
 
@@ -83,8 +81,6 @@ private:
 
 template<typename T>
 using span_const = const span<T>;
-
-} // namespace std
 
 template <typename T, std::size_t N>
 inline constexpr auto make_span(T (&arr)[N]) {
