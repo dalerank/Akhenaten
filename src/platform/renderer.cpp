@@ -268,12 +268,12 @@ void set_render_scale(painter &ctx, float scale) {
     ctx.global_render_scale = scale;
 }
 
-void graphics_renderer_interface::set_texture_scale_mode(SDL_Texture* texture, float scale_factor) {
+void graphics_renderer_interface::set_texture_scale_mode(SDL_Texture* texture, float scale_factor, bool force_linear) {
 #ifdef USE_TEXTURE_SCALE_MODE
     if (HAS_TEXTURE_SCALE_MODE) {
         SDL_ScaleMode current_scale_mode;
         SDL_GetTextureScaleMode(texture, &current_scale_mode);
-        SDL_ScaleMode desired_scale_mode = (scale_factor < 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest);
+        SDL_ScaleMode desired_scale_mode = (force_linear || scale_factor < 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest);
         //        SDL_ScaleMode desired_scale_mode = (scale_factor < 1.0f ? SDL_ScaleModeBest : SDL_ScaleModeNearest);
         if (current_scale_mode != desired_scale_mode) {
             SDL_SetTextureScaleMode(texture, desired_scale_mode);

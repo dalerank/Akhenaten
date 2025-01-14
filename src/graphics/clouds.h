@@ -45,4 +45,4 @@ extern cloud_data g_cloud_data;
 
 void clouds_pause();
 
-void clouds_draw(painter &ctx, int x_offset, int y_offset, int x_limit, int y_limit);
+void clouds_draw(painter &ctx, vec2i min_pos, vec2i offset, vec2i limit);

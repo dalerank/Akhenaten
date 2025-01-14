@@ -61,8 +61,8 @@ static void position_ellipse(ellipse *e, const int cloud_width, const int cloud_
     e->x = static_cast<int>(static_cast<float>(CLOUD_WIDTH) / 2 + random_fractional() * cloud_width * cos(angle));
     e->y = static_cast<int>(static_cast<float>(CLOUD_HEIGHT) / 2 + random_fractional() * cloud_height * sin(angle));
 
-    e->width = random_from_min_to_range(static_cast<int>(CLOUD_WIDTH * CLOUD_SIZE_RATIO), static_cast<int>(CLOUD_WIDTH * CLOUD_SIZE_RATIO));
-    e->height = random_from_min_to_range(static_cast<int>(CLOUD_HEIGHT * CLOUD_SIZE_RATIO), static_cast<int>(CLOUD_HEIGHT * CLOUD_SIZE_RATIO));
+    e->width = random_from_min_to_range(static_cast<int>(CLOUD_WIDTH * CLOUD_SIZE_RATIO / 2), static_cast<int>(CLOUD_WIDTH * CLOUD_SIZE_RATIO));
+    e->height = random_from_min_to_range(static_cast<int>(CLOUD_HEIGHT * CLOUD_SIZE_RATIO / 2), static_cast<int>(CLOUD_HEIGHT * CLOUD_SIZE_RATIO));
 
     e->half_width = e->width / 2;
     e->half_height = e->height / 2;
@@ -196,8 +196,6 @@ static void generate_cloud(cloud_type *cloud)
 
 static bool cloud_intersects(const cloud_type *cloud)
 {
-    // FIXME: tune clouds positioning. Right now this check causes clouds to almost never spawn
-    // return false;
     for (auto &i : g_cloud_data.clouds) {
         const cloud_type *other = &i;
         if (other->status != e_cloud_status_moving) {
@@ -211,12 +209,12 @@ static bool cloud_intersects(const cloud_type *cloud)
     return false;
 }
 
-static void position_cloud(cloud_type *cloud, int x_limit, int y_limit)
+static void position_cloud(cloud_type *cloud, const vec2i min_pos, const vec2i limit)
 {
-    int offset_x = random_int_between(0, x_limit / 2);
+    const int offset_x = random_int_between(0, limit.x / 2);
 
-    cloud->x = x_limit - offset_x + cloud->side;
-    cloud->y = (y_limit - offset_x) / 2 - cloud->side;
+    cloud->x = limit.x - offset_x + cloud->side - min_pos.x;
+    cloud->y = (limit.y - offset_x) / 2 - cloud->side - min_pos.y;
 
     if (!cloud_intersects(cloud)) {
         cloud->status = e_cloud_status_moving;
@@ -247,10 +245,10 @@ void draw_cloud(painter &ctx, const image_t *img, const int x, const int y, cons
         img->width,
         img->height,
     };
-    ctx.draw(texture, pos, img->atlas.offset, size, color, scale_x, scale_y, angle, ImgFlag_Alpha);
+    ctx.draw(texture, pos, img->atlas.offset, size, color, scale_x, scale_y, angle, ImgFlag_Alpha, true);
 }
 
-void clouds_draw(painter &ctx, const int x_offset, const int y_offset, const int x_limit, const int y_limit)
+void clouds_draw(painter &ctx, const vec2i min_pos, const vec2i offset, const vec2i limit)
 {
    if (!config_get(CONFIG_UI_DRAW_CLOUD_SHADOWS)) {
        return;
@@ -277,18 +275,18 @@ void clouds_draw(painter &ctx, const int x_offset, const int y_offset, const int
         if (cloud->status == e_cloud_status_created) {
             if (g_cloud_data.movement_timeout > 0) {
                 g_cloud_data.movement_timeout--;
-            } else {
-                position_cloud(cloud, x_limit, y_limit);
+            } else if (g_cloud_data.pause_frames <= 0) {
+                position_cloud(cloud, min_pos, limit);
             }
             continue;
         }
-        if (cloud->x < -cloud->side || cloud->y >= y_limit) {
+        if (cloud->x < -cloud->side || cloud->y >= limit.y) {
             cloud->status = e_cloud_status_inactive;
             continue;
         }
 
-        cloud->render_x = cloud->x - x_offset;
-        cloud->render_y = cloud->y - y_offset;
+        cloud->render_x = cloud->x - offset.x;
+        cloud->render_y = cloud->y - offset.y;
 
         speed_set_target(cloud->speed.x, -cloud_speed, SPEED_CHANGE_IMMEDIATE, 1);
         speed_set_target(cloud->speed.y, cloud_speed / 2, SPEED_CHANGE_IMMEDIATE, 1);
