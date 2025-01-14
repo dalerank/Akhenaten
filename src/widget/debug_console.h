@@ -2,6 +2,7 @@
 
 #include "core/string.h"
 #include "core/core.h"
+#include "core/custom_span.hpp"
 
 #include "figure/figure.h"
 #include "dev/debug.h"
@@ -28,7 +29,7 @@ void bind_debug_console_var_float(pcstr var, float &ref);
 void bind_debug_console_var_bool(pcstr var, bool &ref);
 
 void game_debug_show_property(pcstr field, const int &v, bool disabled = false);
-void game_debug_show_property(pcstr field, const uint8_t &v, std::span<pcstr> modes, bool disabled = false);
+void game_debug_show_property(pcstr field, const uint8_t &v, custom_span<pcstr> modes, bool disabled = false);
 void game_debug_show_property(pcstr field, const float &v, bool disabled = false);
 void game_debug_show_property(pcstr field, const e_move_type &v, bool disabled = false);
 void game_debug_show_property(pcstr field, const int8_t &v, bool disabled = false);

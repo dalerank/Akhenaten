@@ -3,6 +3,7 @@
 #include "graphics/image.h"
 #include "content/vfs.h"
 #include "core/bstring.h"
+#include "core/custom_span.hpp"
 
 #include <vector>
 
@@ -19,7 +20,7 @@ class imagepak {
     int useridx;
     int version;
     int entries_num;
-    int groups_num;
+    size_t groups_num;
     bmp_name bmp_names[PAK_GROUPS_MAX];
     uint16_t num_bmp_names;
     uint16_t group_image_ids[PAK_GROUPS_MAX];
@@ -41,8 +42,8 @@ public:
     imagepak(pcstr pak_name, int starting_index, bool system_sprites = false, bool fonts = false, bool custom = false);
     ~imagepak();
 
-    std::span_const<bmp_name> names();
-    std::span_const<uint16_t> image_ids();
+    span_const<bmp_name> names();
+    span_const<uint16_t> image_ids();
 
     const image_t *front() const { return &images_array.front(); }
     const image_t *back() const { return &images_array.back(); }

@@ -12,6 +12,7 @@
 #include "city/sentiment.h"
 #include "city/warning.h"
 #include "core/calc.h"
+#include "core/custom_span.hpp"
 #include "core/random.h"
 #include "core/profiler.h"
 #include "figuretype/figure_homeless.h"
@@ -62,7 +63,7 @@ std::pair<int, tile2i> building_maintenance_get_closest_burning_ruin(tile2i tile
     building *near_ruin = nullptr;
     int distance = 10000;
 
-    //std::span<int>  = building_list_burning_items();
+    //custom_span<int>  = building_list_burning_items();
     std::vector<building *> burning_ruins;
     buildings_valid_do([&burning_ruins] (building &b) {
         if (!(b.state == BUILDING_STATE_VALID || b.state == BUILDING_STATE_MOTHBALLED || b.has_plague)) {

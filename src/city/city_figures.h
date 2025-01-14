@@ -2,6 +2,7 @@
 
 #include "figure/figure.h"
 #include "grid/figure.h"
+#include "core/custom_span.hpp"
 
 struct city_figures_t {
     uint8_t fish_number;
@@ -31,7 +32,7 @@ inline T* figure_get(int id) {
     T* tf = (f->type != FIGURE_NONE) ? smart_cast<T>(f) : nullptr;
     return tf;
 }
-std::span<figure *> map_figures();
+custom_span<figure *> map_figures();
 
 template<typename ... Args>
 bool figure_type_none_of(figure &f, Args ... args) {

@@ -3,6 +3,7 @@
 #include "graphics/view/view.h"
 #include "monuments.h"
 #include "core/direction.h"
+#include "core/custom_span.hpp"
 #include "graphics/image.h"
 #include "widget/city/tile_draw.h"
 #include "window/building/common.h"
@@ -437,8 +438,8 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, 
     return true;
 }
 
-std::span<uint16_t> building_mastaba::active_workers() {
-    return std::span<uint16_t>(data.monuments.workers, 5);
+custom_span<uint16_t> building_mastaba::active_workers() {
+    return custom_span<uint16_t>(data.monuments.workers, 5);
 }
 
 void building_mastaba::update_day(const vec2i tiles_size) {

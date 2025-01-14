@@ -1,6 +1,7 @@
 #pragma once
 
 #include "grid/point.h"
+#include "core/custom_span.hpp"
 #include "core/vec2i.h"
 #include "building/building_type.h"
 #include "building/monuments.h"
@@ -24,7 +25,7 @@ public:
     bool draw_ornaments_and_animations_hight_impl(building &base, painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
 
     void update_day(const vec2i tiles_size);
-    std::span<uint16_t> active_workers();
+    custom_span<uint16_t> active_workers();
 
     static void ghost_preview(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end, const vec2i size);
     static void update_images(building *b, int curr_phase, const vec2i size_b);

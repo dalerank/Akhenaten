@@ -3,6 +3,7 @@
 #include "io/io_buffer.h"
 #include "city/city.h"
 #include "city/city_resource.h"
+#include "core/custom_span.hpp"
 #include "empire/trade_route.h"
 #include "earthquake.h"
 #include "emperor_change.h"
@@ -105,7 +106,7 @@ void scenario_set_campaign_scenario(int scenario_id) {
     g_scenario_data.settings.campaign_scenario_id = scenario_id;
 }
 
-bool scenario_is_mission_rank(std::span<int> missions) {
+bool scenario_is_mission_rank(custom_span<int> missions) {
     bool result = false;
     for (const int rank : missions) {
         if (!g_scenario_data.settings.is_custom && g_scenario_data.settings.campaign_mission_rank == rank - 1) {

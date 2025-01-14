@@ -1,11 +1,12 @@
 #pragma once
 
 #include "building/building.h"
+#include "core/custom_span.hpp"
 
 inline building *building_begin() { return building_get(1); }
 inline building *building_end() { return building_get(MAX_BUILDINGS); }
 
-std::span<building> &city_buildings();
+custom_span<building> &city_buildings();
 
 building *building_next(int id, e_building_type type);
 

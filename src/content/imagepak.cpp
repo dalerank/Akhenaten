@@ -4,6 +4,7 @@
 #include "core/string.h"
 #include "core/vec2i.h"
 #include "core/log.h"
+#include "core/custom_span.hpp"
 #include "core/profiler.h"
 #include "graphics/font.h"
 #include "io/io.h"
@@ -394,12 +395,12 @@ imagepak::~imagepak() {
     cleanup_and_destroy();
 }
 
-std::span_const<bmp_name> imagepak::names() {
-    return std::span_const<bmp_name>(bmp_names, num_bmp_names);
+span_const<bmp_name> imagepak::names() {
+    return {bmp_names, num_bmp_names};
 }
 
-std::span_const<uint16_t> imagepak::image_ids() {
-    return std::span_const<uint16_t>(group_image_ids, groups_num);
+span_const<uint16_t> imagepak::image_ids() {
+    return {group_image_ids, groups_num};
 }
 
 void imagepak::cleanup_and_destroy() {
