@@ -1399,9 +1399,24 @@ window info_window_work_camp = {
 
 window legion_info_window = {
 	ui : {
-		background 	: outer_panel({size: [29, 23]}),
-		title 		 	: { type : "text", pos: [0, 16], text:"${building.name}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-		describe 		: text({pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) }),
+		background 	  : outer_panel({size: [29, 23]}),
+		title 		 	  : text({pos: [0, 16], size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+
+		legion_icon   : image({ pack:PACK_GENERAL, id:127, pos:[30, 30] }),
+		morale_img    : image({ pack:PACK_GENERAL, id:54, pos:[30, 50] }),
+		describe 		  : text({pos: [30, 140], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) }),
+
+		soldiers_lb   : text({ pos: [100, 60], text:"${138.23}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		soldiers_num  : text({ pos: [290, 60], font: FONT_NORMAL_BLACK_ON_LIGHT }),		
+
+		health_lb     : text({ pos: [100, 80], text:"${138.24}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		health_num    : text({ pos: [290, 80], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+
+		training_lb   : text({ pos: [100, 100], text:"${138.25}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		training_num  : text({ pos: [290, 100], font: FONT_NORMAL_BLACK_ON_LIGHT }),
+
+		morale_lb     : text({ pos: [100, 120], text:"${138.36}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		morale_num    : text({ pos: [290, 120], font: FONT_NORMAL_BLACK_ON_LIGHT }),
 
 		button_help   : help_button({}),
 		button_close  : close_button({}),

@@ -295,7 +295,7 @@ figure figure_standard_bearer = {
 		flag_infantry : { pack:PACK_GENERAL, id:126, offset:0, max_frames:9, duration:6 },
 		flag_archers  : { pack:PACK_GENERAL, id:126, offset:10, max_frames:9, duration:6 },
 		flag_chariots : { pack:PACK_GENERAL, id:126, offset:20, max_frames:9, duration:6 }, 
-		icon : { pack:PACK_GENERAL, id:127 },
+		sign : { pack:PACK_GENERAL, id:3 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANY,
 }

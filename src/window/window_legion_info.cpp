@@ -164,74 +164,20 @@ void window_info_legion_button_layout(int index, int param2) {
         g_sound.speech_play_file("Wavs/cohort4.wav", 255);
         break;
     case 4:
-    g_sound.speech_play_file("Wavs/cohort5.wav", 255);
+        g_sound.speech_play_file("Wavs/cohort5.wav", 255);
         break;
     }
     window_city_military_show(data.context_for_callback->formation_id);
 }
 
 void legion_info_window::window_info_foreground(object_info &c) {
+    building_info_window::window_info_foreground(c);
+
     int text_id;
     const formation *m = formation_get(c.formation_id);
     painter ctx = game.painter();
     c.help_id = 87;
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(138, m->legion_id, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
-    // standard icon at the top
-    int image_id = image_id_from_group(PACK_GENERAL, 127) + m->legion_id;
-    int icon_height = image_get(image_id)->height;
-    ImageDraw::img_generic(ctx, image_id, c.offset + vec2i{ 16 + (40 - image_get(image_id)->width) / 2, 16 });
-    // standard flag
-    image_id = image_id_from_group(PACK_GENERAL, 241);
-    if (m->figure_type == FIGURE_ARCHER) {
-        image_id += 9;
-    } else if (m->figure_type == FIGURE_FCHARIOTEER) {
-        image_id += 18;
-    }
-
-    if (m->is_halted) {
-        image_id += 8;
-    }
-
-    int flag_height = image_get(image_id)->height;
-    ImageDraw::img_generic(ctx, image_id, c.offset + vec2i{ 16 + (40 - image_get(image_id)->width) / 2,  16 + icon_height });
-    // standard pole and morale ball
-    image_id = image_id_from_group(PACK_GENERAL, 241) + 20 - m->morale / 5;
-    ImageDraw::img_generic(ctx, image_id, c.offset + vec2i{ 16 + (40 - image_get(image_id)->width) / 2, 16 + icon_height + flag_height });
-
-    // number of soldiers
-    lang_text_draw(138, 23, c.offset.x + 100, c.offset.y + 60, FONT_NORMAL_BLACK_ON_LIGHT);
-    text_draw_number(m->num_figures, '@', " ", c.offset.x + 294, c.offset.y + 60, FONT_NORMAL_BLACK_ON_LIGHT);
-    // health
-    lang_text_draw(138, 24, c.offset.x + 100, c.offset.y + 80, FONT_NORMAL_BLACK_ON_LIGHT);
-    int health = calc_percentage(m->total_damage, m->max_total_damage);
-    if (health <= 0)
-        text_id = 26;
-    else if (health <= 20)
-        text_id = 27;
-    else if (health <= 40)
-        text_id = 28;
-    else if (health <= 55)
-        text_id = 29;
-    else if (health <= 70)
-        text_id = 30;
-    else if (health <= 90)
-        text_id = 31;
-    else {
-        text_id = 32;
-    }
-    lang_text_draw(138, text_id, c.offset.x + 300, c.offset.y + 80, FONT_NORMAL_BLACK_ON_LIGHT);
-    // military training
-    lang_text_draw(138, 25, c.offset.x + 100, c.offset.y + 100, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(18, m->has_military_training, c.offset.x + 300, c.offset.y + 100, FONT_NORMAL_BLACK_ON_LIGHT);
-    // morale
-    if (m->cursed_by_seth)
-        lang_text_draw(138, 59, c.offset.x + 100, c.offset.y + 120, FONT_NORMAL_BLACK_ON_LIGHT);
-    else {
-        lang_text_draw(138, 36, c.offset.x + 100, c.offset.y + 120, FONT_NORMAL_BLACK_ON_LIGHT);
-        lang_text_draw(138, 37 + m->morale / 5, c.offset.x + 300, c.offset.y + 120, FONT_NORMAL_BLACK_ON_LIGHT);
-    }
     if (m->num_figures) {
         // layout
         static const int OFFSETS_LEGIONARY[2][5] = {
@@ -388,9 +334,39 @@ void legion_info_window::init(object_info &c) {
     building_info_window::init(c);
 
     building *fort = c.building_get();
+    const formation *m = formation_get(c.formation_id);
 
     int text_id = formation_get(c.formation_id)->cursed_by_seth ? 1 : 2;
     ui["describe"] = ui::str(c.group_id, text_id);
+    ui["title"] = ui::str(138, m->legion_id);
+    ui["legion_icon"].image(m->legion_id);
+
+    const int morale = (21.f - m->morale / 5) / 21.f;
+    ui["morale_img"].image(morale);
+    ui["soldiers_num"] = bstring32(m->num_figures);
+
+    int health = calc_percentage(m->total_damage, m->max_total_damage);
+    if (health <= 0)
+        text_id = 26;
+    else if (health <= 20)
+        text_id = 27;
+    else if (health <= 40)
+        text_id = 28;
+    else if (health <= 55)
+        text_id = 29;
+    else if (health <= 70)
+        text_id = 30;
+    else if (health <= 90)
+        text_id = 31;
+    else {
+        text_id = 32;
+    }
+    ui["health_num"] = ui::str(138, text_id);
+
+    ui["training_num"] = ui::str(18, m->has_military_training);
+
+    int morale_level = m->cursed_by_seth ? 59 : 37 + m->morale / 5;
+    ui["morale_num"] = ui::str(138, morale_level);
 }
 
 void legion_info_window::window_info_background(object_info &c) {
