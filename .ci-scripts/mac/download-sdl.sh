@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 FRAMEWORKS_PATH=$HOME/Library/Frameworks
-SDL2_VERSION=2.28.0
-SDL2_MIXER_VERSION=2.6.3
-SDL2_IMAGE_VERSION=2.6.3
+SDL2_VERSION=2.30.11
+SDL2_MIXER_VERSION=2.8.0
+SDL2_IMAGE_VERSION=2.8.4
 
 TMPDIR=$(mktemp -d -t akhenaten_sdl)
 
@@ -16,7 +16,15 @@ install_dmg () {
   curl "$1/$2" --output "$DMG_DOWNLOAD_PATH"
   VOLUME=$(hdiutil attach "$DMG_DOWNLOAD_PATH" | grep -o '/Volumes/.*')
   printf "\nInstalling framework from %s to %s\n" "$VOLUME" "$FRAMEWORKS_PATH"
-  cp -rp "$VOLUME"/*.framework "$FRAMEWORKS_PATH"
+  FRAMEWORK_NAME=$(find $VOLUME -maxdepth 1 -type d -iname "*.framework" -exec basename {} \;)
+  cp -rp "$VOLUME/$FRAMEWORK_NAME" "$FRAMEWORKS_PATH"
+  if [ -d "$VOLUME"/optional ]
+  then
+    CHILD_FRAMEWORKS_PATH="$FRAMEWORKS_PATH/$FRAMEWORK_NAME/Versions/A/Frameworks"
+    printf "\nCopying optional frameworks from %s to %s\n" "$VOLUME" "$CHILD_FRAMEWORKS_PATH"
+    mkdir -p "$CHILD_FRAMEWORKS_PATH"
+    cp -rp "$VOLUME"/optional/*.framework "$CHILD_FRAMEWORKS_PATH"
+  fi
   hdiutil detach "$VOLUME"
   rm "$DMG_DOWNLOAD_PATH"
 }
