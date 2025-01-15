@@ -305,6 +305,7 @@ void widget_sidebar_city_draw_foreground() {
 }
 
 void widget_sidebar_city_draw_foreground_military() {
+    widget_sidebar_city_draw_foreground();
     widget_minimap_draw({screen_width() - g_sidebar_expanded.expanded_offset_x + 8, MINIMAP_Y_OFFSET}, 1);
 }
 
