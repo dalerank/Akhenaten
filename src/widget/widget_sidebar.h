@@ -32,6 +32,7 @@ struct sidebar_window_expanded : public autoconfig_window_t<sidebar_window_expan
     vec2i extra_block_size;
     int extra_block_x;
     int expanded_offset_x;
+    int opened_menu;
     slide_driver slider;
 
     virtual int handle_mouse(const mouse *m) override { return 0; }

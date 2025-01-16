@@ -411,7 +411,9 @@ image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
     int image_id = image_id_from_group(ibutton.image_collection, ibutton.image_group) + ibutton.image_offset;
     if (image_id > 0) {
         if (ibutton.enabled) {
-            image_id += offsets.data[ibutton.pressed ? 2 : 1];
+            const int offset = ibutton.pressed ? 2 : 
+                               ibutton.hovered ? 1 : 0;
+            image_id += offset ? offsets.data[offset] : 0;
         } else {
             image_id += offsets.data[3];
         }

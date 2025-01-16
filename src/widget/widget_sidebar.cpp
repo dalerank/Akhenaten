@@ -102,7 +102,10 @@ void ui::sidebar_window_expanded::init() {
     ui["show_empire"].onclick([] { window_empire_show_checked(); });
 
     for (const auto &btn: button_ids) {
-        ui[btn.id].onclick([type = btn.type] { window_build_menu_show(type); });
+        ui[btn.id].onclick([this, type = btn.type] {
+            this->opened_menu = type;
+            window_build_menu_show(type);
+        });
     }
 
     ui["undo_btn"].onclick([] {
@@ -147,6 +150,14 @@ void ui::sidebar_window_expanded::ui_draw_foreground(UiFlags flags) {
     slider.update(x_offset, expanded_offset_x, [this] {
         city_view_toggle_sidebar(slider.slide_mode == slider.e_slide_collapse);
     });
+
+    if (!window_build_menu_selected()) {
+        opened_menu = 0;
+    }
+
+    for (const auto &btn : button_ids) {
+        ui[btn.id].select(btn.type == opened_menu);
+    }
 
     ui.pos.x = x_offset;
 

@@ -246,3 +246,7 @@ void window_build_menu_show(int submenu) {
     };
     window_show(&window);
 }
+
+int window_build_menu_selected() {
+    return g_build_menuw.selected_submenu;
+}
