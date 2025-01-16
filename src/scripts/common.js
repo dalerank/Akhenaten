@@ -203,12 +203,3 @@ var figure_spear = {}
 var figure_javelin = {}
 var figure_bolt = {}
 var figure_senet_player = {}
-// missions
-var mission0 = {}
-var mission1 = {}
-var mission2 = {}
-var mission3 = {}
-var mission4 = {}
-var mission5 = {}
-var mission6 = {}
-var mission7 = {}

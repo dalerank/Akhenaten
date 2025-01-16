@@ -11,7 +11,7 @@
 #include "io/gamestate/boilerplate.h"
 #include "scenario/scenario.h"
 #include "window/main_menu.h"
-#include "window/mission_briefing.h"
+#include "window/window_mission_briefing.h"
 #include "game/game.h"
 #include "city/city.h"
 #include "dev/debug.h"

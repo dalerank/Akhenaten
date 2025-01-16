@@ -28,7 +28,7 @@
 #include "window/window_empire.h"
 #include "window/message_dialog.h"
 #include "window/message_list.h"
-#include "window/mission_briefing.h"
+#include "window/window_mission_briefing.h"
 #include "window/overlay_menu.h"
 #include "widget/widget_top_menu_game.h"
 #include "sound/sound.h"

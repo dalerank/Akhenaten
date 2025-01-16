@@ -1,4 +1,4 @@
-#include "mission_briefing.h"
+#include "window_mission_briefing.h"
 
 #include "city/mission.h"
 #include "game/mission.h"
@@ -21,7 +21,6 @@
 #include "window/intermezzo.h"
 #include "window/mission_next.h"
 #include "game/settings.h"
-#include "js/js_game.h"
 
 ui::mission_briefing_window g_mission_briefing;
 

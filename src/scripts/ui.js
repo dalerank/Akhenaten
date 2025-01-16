@@ -667,13 +667,13 @@ display_options_window = {
   }	
 }
 
-window mission_end_window = {
+window window_mission_end = {
 	pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
 	ui : {
 	}
 }
 
-window mission_won_window = {
+window window_mission_won = {
 	pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
 	ui : {
 		background     	: outer_panel({size:[34, 18]}),
@@ -692,7 +692,7 @@ window mission_won_window = {
 	}
 }
 
-window mission_lost_window = {
+window window_mission_lost = {
 	pos: [(sw(0) - px(34))/2, (sh(0) - px(16))/2],
 	ui : {
 		background     	: outer_panel({size:[34, 16]}),

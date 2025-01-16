@@ -1,6 +1,6 @@
 log_info("akhenaten: missions started")
 
-mission0 = { // Nubt
+var mission0 = { // Nubt
 	start_message : 150, //TUTORIAL_HOUSING_AND_ROADS, 248 = 150 + 99 - 1
 	city_has_animals : true,
 	gods_least_mood : 50,
@@ -14,7 +14,7 @@ mission0 = { // Nubt
 	}
 }
 
-mission1 = {
+var mission1 = {
 	start_message : 241 - 99, //MESSAGE_TUTORIAL_GOLD_AND_CRIME
 	city_has_animals : true,
 	gods_least_mood : 50,
@@ -28,7 +28,7 @@ mission1 = {
 	}
 }
 
-mission2 = {
+var mission2 = {
 	start_message : 242 - 99,
 	city_has_animals : true,
 	gods_least_mood : 50,
@@ -44,7 +44,7 @@ mission2 = {
 	}
 }
 
-mission3 = {
+var mission3 = {
 	start_message : 241 - 99,
 	city_has_animals : true,
 	player_rank : 0,
@@ -60,7 +60,7 @@ mission3 = {
 	}
 }
 
-mission4 = {
+var mission4 = {
 	start_message : 241 - 99,
 	city_has_animals : true,
 	player_rank : 1,
@@ -80,7 +80,7 @@ mission4 = {
 	}
 }
 
-mission5 = { // Timna
+var mission5 = { // Timna
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
 	player_rank : 1,
@@ -149,10 +149,11 @@ mission5 = { // Timna
 
 }
 
-mission6 = { // Behdet
+var mission6 = { // Behdet
 	start_message : 245, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
 	player_rank : 1,
+	next_mission : 8,
 	stages : {
 		tutorial_start: [BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 						 BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
@@ -227,10 +228,11 @@ mission6 = { // Behdet
 	],
 }
 
-mission7 = { // Abydos
+var mission7 = { // Abydos
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
 	player_rank : 1,
+	next_mission : 8,
 	stages : {
 		tutorial_start: [BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 						 BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
@@ -300,6 +302,64 @@ mission7 = { // Abydos
 			id : 7,
 			image: {pack:PACK_UNLOADED, id:20},
 			tooltip : [144, 21],
+			pos : [640, 480],
+		}
+	],
+}
+
+var mission8 = { // Selima
+	start_message : 207, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
+	city_has_animals : true,
+	player_rank : 1,
+	next_mission : 10,
+	choice_background : {pack:PACK_UNLOADED, id:12},
+	choice_image1 : {pack:PACK_UNLOADED, id:13, offset:0},
+	choice_image1_pos : [192, 144],
+	choice_title : [144, 22],
+
+	choice : [
+		{
+			name : "Selima",
+			id : 8,
+			image: {pack:PACK_UNLOADED, id:20, offset:0},
+			tooltip : [144, 23],
+			pos : [620, 420],
+		},
+
+		{
+			name : "Abu",
+			id : 9,
+			image: {pack:PACK_UNLOADED, id:20},
+			tooltip : [144, 24],
+			pos : [640, 480],
+		}
+	],
+}
+
+var mission9 = { // Abu
+	start_message : 208, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
+	city_has_animals : true,
+	player_rank : 1,
+	next_mission : 10,
+	choice_background : {pack:PACK_UNLOADED, id:12},
+	choice_image1 : {pack:PACK_UNLOADED, id:13, offset:0},
+	choice_image1_pos : [192, 144],
+	choice_title : [144, 22],
+
+	choice : [
+		{
+			name : "Selima",
+			id : 8,
+			image: {pack:PACK_UNLOADED, id:20, offset:0},
+			tooltip : [144, 23],
+			pos : [620, 420],
+		},
+
+		{
+			name : "Abu",
+			id : 9,
+			image: {pack:PACK_UNLOADED, id:20},
+			tooltip : [144, 24],
 			pos : [640, 480],
 		}
 	],

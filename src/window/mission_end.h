@@ -4,7 +4,7 @@
 
 namespace ui {
 
-    struct mission_end_window : public autoconfig_window_t<mission_end_window> {
+    struct window_mission_end : public autoconfig_window_t<window_mission_end> {
         virtual int handle_mouse(const mouse *m) override { return 0; }
         virtual int get_tooltip_text() override { return 0; }
         virtual void draw_foreground(UiFlags flags) override {}
@@ -15,7 +15,7 @@ namespace ui {
         virtual void init() override {};
     };
 
-    struct mission_won_window : public autoconfig_window_t<mission_won_window> {
+    struct window_mission_won : public autoconfig_window_t<window_mission_won> {
         virtual int handle_mouse(const mouse *m) override { return 0; }
         virtual int ui_handle_mouse(const mouse *m) override;
         virtual int get_tooltip_text() override { return 0; }
@@ -26,7 +26,7 @@ namespace ui {
         void advance_to_next_mission();
     };
 
-    struct mission_lost_window : public autoconfig_window_t<mission_lost_window> {
+    struct window_mission_lost : public autoconfig_window_t<window_mission_lost> {
         virtual int handle_mouse(const mouse *m) override { return 0; }
         virtual int get_tooltip_text() override { return 0; }
         virtual void draw_foreground(UiFlags flags) override {}

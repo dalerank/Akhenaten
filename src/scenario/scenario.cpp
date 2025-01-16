@@ -46,6 +46,7 @@ void scenario_load_meta_data(const mission_id_t &missionid) {
         g_scenario_data.meta.start_message = arch.r_int("start_message");
         g_scenario_data.env.has_animals = arch.r_bool("city_has_animals");
         g_scenario_data.env.gods_least_mood = arch.r_int("gods_least_mood", 0);
+        g_scenario_data.win_criteria.next_mission = arch.r_int("next_mission", 0);
         int rank = std::min(arch.r_int("player_rank", -1), 10);
         if (rank >= 0) {
             g_city.kingdome.player_rank = rank;

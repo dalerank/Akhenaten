@@ -29,11 +29,11 @@
 #include "window/window_city.h"
 #include "widget/widget_top_menu_game.h"
 
-ui::mission_end_window g_mission_end;
-ui::mission_won_window g_mission_won;
-ui::mission_lost_window g_mission_lost;
+ui::window_mission_end g_mission_end;
+ui::window_mission_won g_mission_won;
+ui::window_mission_lost g_mission_lost;
 
-void ui::mission_lost_window::init() {
+void ui::window_mission_lost::init() {
     ui["replay_mission"].onclick([] {
         Planner.reset();
         if (scenario_is_custom()) {
@@ -47,7 +47,7 @@ void ui::mission_lost_window::init() {
     });
 }
 
-int ui::mission_won_window::ui_handle_mouse(const mouse *m) {
+int ui::window_mission_won::ui_handle_mouse(const mouse *m) {
     const hotkeys *h = hotkey_state();
     if (input_go_back_requested(m, h)) {
         sound_music_stop();
@@ -59,13 +59,15 @@ int ui::mission_won_window::ui_handle_mouse(const mouse *m) {
     return 0;
 }
 
-void ui::mission_won_window::init() {
+void ui::window_mission_won::init() {
     ui["subtitle"] = scenario_is_custom() ? textid{ 147, 20 } : textid{ 147, (uint8_t)scenario_campaign_scenario_id() };
 }
 
-void ui::mission_won_window::advance_to_next_mission() {
-    g_settings.set_personal_savings_for_mission(scenario_campaign_rank() + 1, g_city.kingdome.personal_savings);
-    scenario_set_campaign_rank(scenario_campaign_rank() + 1);
+void ui::window_mission_won::advance_to_next_mission() {
+    const int next_mission_rank = scenario_campaign_rank() + 1;
+
+    g_settings.set_personal_savings_for_mission(next_mission_rank, g_city.kingdome.personal_savings);
+    scenario_set_campaign_rank(next_mission_rank);
     city_save_campaign_player_name();
 
     g_city.victory_state.stop_governing();
@@ -81,13 +83,15 @@ void ui::mission_won_window::advance_to_next_mission() {
             scenario_set_campaign_rank(2);
         }
     } else {
-        //        scenario_set_campaign_mission(game_mission_peaceful());
-        int next_mission = scenario_campaign_scenario_id() + 1;
+        int next_mission = g_scenario_data.win_criteria.next_mission;
+        if (!next_mission) {
+            next_mission = scenario_campaign_scenario_id() + 1;
+        }
         window_mission_next_selection_show(next_mission);
     }
 }
 
-autoconfig_window &ui::mission_end_window::getui() {
+autoconfig_window &ui::window_mission_end::getui() {
     autoconfig_window &mission_won = g_mission_won;
     autoconfig_window &mission_lost = g_mission_lost;
     return (g_city.victory_state.state == e_victory_state_won) ? mission_won : mission_lost;

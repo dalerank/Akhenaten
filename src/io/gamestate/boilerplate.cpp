@@ -63,7 +63,7 @@
 #include "widget/widget_top_menu_game.h"
 #include "window/window_city.h"
 #include "window/file_dialog.h"
-#include "window/mission_briefing.h"
+#include "window/window_mission_briefing.h"
 #include "empire/empire.h"
 
 #include "building/count.h"

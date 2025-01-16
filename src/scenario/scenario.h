@@ -204,6 +204,7 @@ struct scenario_data_t {
         int milestone25_year;
         int milestone50_year;
         int milestone75_year;
+        int next_mission;
     } win_criteria;
 
     struct {
