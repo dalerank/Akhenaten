@@ -394,10 +394,11 @@ image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
     g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, (uint32_t)desc.pack, (uint32_t)desc.id, offsets.data[0], button_none, button_none, 0, 0, true});
     auto &ibutton = g_state.buttons.back().i_button;
 
-    const bool grayscaled = (flags & UiFlags_Grayscale);
-    const bool darkened = (flags & UiFlags_Darkened);
-    ibutton.hovered = !(darkened || grayscaled) && (is_button_hover(ibutton, state_offset) || !!(flags & UiFlags_Selected));
-    ibutton.pressed = ibutton.hovered && m->left.is_down;
+    const bool grayscaled = !!(flags & UiFlags_Grayscale);
+    const bool darkened = !!(flags & UiFlags_Darkened);
+    const bool force_pressed = !!(flags & UiFlags_Selected);
+    ibutton.hovered = !(darkened || grayscaled) && is_button_hover(ibutton, state_offset);
+    ibutton.pressed = (ibutton.hovered && m->left.is_down);
     ibutton.enabled = !(flags & UiFlags_Readonly);
 
     time_millis current_time = time_get_millis();
@@ -411,7 +412,7 @@ image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
     int image_id = image_id_from_group(ibutton.image_collection, ibutton.image_group) + ibutton.image_offset;
     if (image_id > 0) {
         if (ibutton.enabled) {
-            const int offset = ibutton.pressed ? 2 : 
+            const int offset = (ibutton.pressed || force_pressed) ? 2 :
                                ibutton.hovered ? 1 : 0;
             image_id += offset ? offsets.data[offset] : 0;
         } else {

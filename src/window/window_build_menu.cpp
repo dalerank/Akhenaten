@@ -217,6 +217,7 @@ int build_menu_widget::ui_handle_mouse(const mouse* m) {
 
     const hotkeys *h = hotkey_state();
     if (input_go_back_requested(m, h)) {
+        selected_submenu = 0;
         window_city_show();
     }
 
@@ -234,6 +235,7 @@ void window_build_menu_show(int submenu) {
 
     if (submenu == BUILDING_MENU_VACANT_HOUSE || submenu == BUILDING_MENU_CLEAR_LAND || submenu == BUILDING_MENU_ROAD) {
         g_build_menuw.button_menu_item(0);
+        g_build_menuw.selected_submenu = 0;
         return;
     }
 
