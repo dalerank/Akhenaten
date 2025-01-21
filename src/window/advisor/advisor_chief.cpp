@@ -38,7 +38,7 @@ static void draw_title(int y, int text_id) {
 }
 
 int ui::advisor_chief_window::draw_background(UiFlags flags) {
-    auto &ui = g_advisor_chief_window;
+    autoconfig_window::draw_background(flags);
 
     // sentiment
     {

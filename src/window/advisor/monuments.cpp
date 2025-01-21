@@ -55,6 +55,8 @@ static int focus_button_id;
 static int selected_request_id;
 
 int ui::advisor_monuments_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
     return ADVISOR_HEIGHT;
 }
 

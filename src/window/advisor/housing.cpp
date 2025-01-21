@@ -77,6 +77,8 @@ static void draw_housing_table() {
 }
 
 int ui::advisor_housing_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
     painter ctx = game.painter();
 
     int val;

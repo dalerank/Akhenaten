@@ -18,6 +18,8 @@ static void arrow_button_wages(int is_down) {
 }
 
 int ui::advisor_labors_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
     bstring256 employed_text;
     employed_text.printf("%u %s %u %s %u%%)", g_city.labor.workers_employed, ui::str(50, 12), 
                                               g_city.labor.workers_unemployed, ui::str(50, 13),

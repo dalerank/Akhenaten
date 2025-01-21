@@ -63,21 +63,15 @@ void ui::mission_briefing_window::init() {
         window_city_show();
         city_mission_reset_save_start();
     });
-}
 
-int ui::mission_briefing_window::draw_background(UiFlags flags) {
-    window_draw_underlying_window(UiFlags_None);
-
-    int text_id = 200 + scenario_id;
-    const lang_message* msg = lang_get_message(text_id);
-
-    auto &ui = g_mission_briefing;
+    int text_id = 200 + scenario_id; 
+    const lang_message *msg = lang_get_message(text_id);
 
     ui["title"] = (pcstr)msg->title.text;
     ui["subtitle"] = (pcstr)msg->subtitle.text;
     ui["difficulty_label"] = ui::str(153, g_settings.difficulty + 1);
 
-    const pcstr widgets[] = {"goal_0", "goal_1", "goal_2", "goal_3", "goal_4", "goal_5"};
+    const pcstr widgets[] = { "goal_0", "goal_1", "goal_2", "goal_3", "goal_4", "goal_5" };
     auto goal_label = widgets;
 
     auto setup_goal = [&] (int group, int tid, bool enabled, int value) {
@@ -96,15 +90,19 @@ int ui::mission_briefing_window::draw_background(UiFlags flags) {
 
     int immediate_goal_text = tutorial_get_immediate_goal_text();
     if (immediate_goal_text) {
-        ui["goal_immediate"].text(ui::str(62, immediate_goal_text));
+        ui["goal_immediate"] = ui::str(62, immediate_goal_text);
     }
 
     ui["description_text"] = (pcstr)msg->content.text;
+}
 
+int ui::mission_briefing_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+    window_draw_underlying_window(UiFlags_None);
     return 0;
 }
 
-static void show() {
+void window_mission_briefing_show_impl() {
     static window_type window = {
         WINDOW_MISSION_BRIEFING,
         [] (int flags) { g_mission_briefing.draw_background(flags); },
@@ -119,15 +117,15 @@ static void show() {
 void window_mission_briefing_show(int scenario_id) {
     auto &data = g_mission_briefing;
     data.scenario_id = scenario_id;
-    data.is_review = 0;
-    data.campaign_mission_loaded = 0;
-    window_intermezzo_show(scenario_id, INTERMEZZO_MISSION_BRIEFING, show);
+    data.is_review = false;
+    data.campaign_mission_loaded = false;
+    window_intermezzo_show(scenario_id, INTERMEZZO_MISSION_BRIEFING, window_mission_briefing_show_impl);
 }
 
 void window_mission_briefing_show_review() {
     auto &data = g_mission_briefing;
     data.scenario_id = scenario_campaign_scenario_id();
-    data.is_review = 1;
-    data.campaign_mission_loaded = 1;
-    window_intermezzo_show(data.scenario_id, INTERMEZZO_MISSION_BRIEFING, show);
+    data.is_review = true;
+    data.campaign_mission_loaded = true;
+    window_intermezzo_show(data.scenario_id, INTERMEZZO_MISSION_BRIEFING, window_mission_briefing_show_impl);
 }

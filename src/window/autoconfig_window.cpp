@@ -37,6 +37,7 @@ autoconfig_window::autoconfig_window(pcstr s) {
 
 void autoconfig_window::load(archive arch, pcstr section) {
     ui::widget::load(arch, section);
+    _is_inited = false;
 }
 
 int autoconfig_window::ui_handle_mouse(const mouse *m) {
@@ -47,8 +48,20 @@ int autoconfig_window::ui_handle_mouse(const mouse *m) {
     return result;
 }
 
+int autoconfig_window::draw_background(UiFlags flags) {
+    if (!_is_inited) {
+        init();
+        _is_inited = true;
+    }
+    return 0;
+}
+
 void autoconfig_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.end_widget();
+}
+
+void autoconfig_window::init() {
+    _is_inited = true;
 }

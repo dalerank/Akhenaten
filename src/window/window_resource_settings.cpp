@@ -59,6 +59,8 @@ void trade_resource_settings_window::init() {
 }
 
 int trade_resource_settings_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
     window_draw_underlying_window(UiFlags_Readonly);
 
     bstring128 production_state;

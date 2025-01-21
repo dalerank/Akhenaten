@@ -56,6 +56,8 @@ void ui::advisor_military_window::init() {
 }
 
 int ui::advisor_military_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
     int enemy_text_id = 8;
     if (g_city.figures.enemies) { enemy_text_id = 10; }
     else if (g_city.figures.kingdome_soldiers) { enemy_text_id = 11; }

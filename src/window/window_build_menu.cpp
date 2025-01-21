@@ -75,6 +75,8 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
 build_menu_widget g_build_menuw;
 
 int build_menu_widget::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
     window_city_draw_panels();
 
     return 0;

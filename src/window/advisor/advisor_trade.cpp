@@ -18,6 +18,8 @@
 ui::advisor_trade_window g_advisor_trade_window;
 
 int ui::advisor_trade_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
     city_resource_determine_available();
 
     ui["scrollbar"].onevent([] {

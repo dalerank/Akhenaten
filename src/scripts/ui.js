@@ -738,7 +738,7 @@ window mission_briefing_window = {
 		goal_immediate   : label({pos : {x:32 + 16, y:134 + 32},	body : {w:31, h:1},	font : FONT_NORMAL_YELLOW, enabled: false }),
 		
 		description_panel: inner_panel({pos : {x:32, y:200}, size: {w:33, h:14} }),
-		description_text : text({pos: [40, 216], size:[px(36), px(10)], wrap:px(34), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true }),
+		description_text : text({pos: [40, 200], size:[px(34), px(14)], wrap:px(34), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true }),
 		difficulty_label : label({pos:[105, 433], size:[80, 14], font : FONT_NORMAL_BLACK_ON_LIGHT }),
 		back 			       : image_button({pos:[26, 428], size:[31, 20], pack:PACK_GENERAL, id:90, offset:8 }),
 

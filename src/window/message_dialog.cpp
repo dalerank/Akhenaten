@@ -291,7 +291,7 @@ static void draw_city_message_text(const lang_message* msg) {
         case MESSAGE_TYPE_DISASTER:
         case MESSAGE_TYPE_INVASION:
             lang_text_draw(12, 1, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
-            rich_text_draw(text, data.x_text + 8, data.y_text + 86, 16 * data.text_width_blocks, data.text_height_blocks - 1, 0);
+            rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 86), 16 * data.text_width_blocks, data.text_height_blocks - 1, 0);
             break;
 
         case MESSAGE_TYPE_EMIGRATION: {
@@ -300,27 +300,27 @@ static void draw_city_message_text(const lang_message* msg) {
                 int max_width = 16 * (data.text_width_blocks - 1) - 64;
                 lang_text_draw_multiline(12, city_sentiment + 2, vec2i{data.x + 64, data.y_text + 44}, max_width, FONT_NORMAL_WHITE_ON_DARK);
             }
-            rich_text_draw(text, data.x_text + 8, data.y_text + 86, 16 * (data.text_width_blocks - 1), data.text_height_blocks - 1, 0);
+            rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 86), 16 * (data.text_width_blocks - 1), data.text_height_blocks - 1, 0);
             break;
         }
         case MESSAGE_TYPE_TUTORIAL:
-            rich_text_draw(text, data.x_text + 8, data.y_text + 6, 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
+            rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 6), 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
             break;
 
         case MESSAGE_TYPE_TRADE_CHANGE:
             ImageDraw::img_generic(ctx, resource_image(g_player_message_data.param2), data.x + 64, data.y_text + 40);
             lang_text_draw(21, g_empire.city(g_player_message_data.param1)->name_id, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
-            rich_text_draw(text, data.x_text + 8, data.y_text + 86, 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
+            rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 86), 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
             break;
 
         case MESSAGE_TYPE_PRICE_CHANGE:
             ImageDraw::img_generic(ctx, resource_image(g_player_message_data.param2), data.x + 64, data.y_text + 40);
             text_draw_money(g_player_message_data.param1, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
-            rich_text_draw(text, data.x_text + 8, data.y_text + 86, 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
+            rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 86), 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
             break;
 
         default: {
-            int lines = rich_text_draw(text, data.x_text + 8, data.y_text + 56, 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
+            int lines = rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 56), 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
             if (msg->message_type == MESSAGE_TYPE_IMPERIAL) {
                 // in C3, the data is fetched from the request structure.
                 // in Pharaoh, the data is stored with the message
@@ -400,7 +400,7 @@ static void draw_content(const lang_message* msg) {
     
     int header_offset = msg->type == TYPE_MANUAL ? 48 : 32;
     data.text_height_blocks = msg->height_blocks - 1 - (header_offset + data.y_text - data.y) / 16;
-    data.text_width_blocks = rich_text_init(text, data.x_text, data.y_text, msg->width_blocks - 4, data.text_height_blocks, 1);
+    data.text_width_blocks = rich_text_init(text, vec2i(data.x_text, data.y_text), msg->width_blocks - 4, data.text_height_blocks, /*adjust_width_on_no_scroll*/true);
 
     // content!
     inner_panel_draw({ data.x_text, data.y_text }, { data.text_width_blocks, data.text_height_blocks });
@@ -410,7 +410,7 @@ static void draw_content(const lang_message* msg) {
     if (msg->type == TYPE_MESSAGE) {
         draw_city_message_text(msg);
     } else {
-        rich_text_draw(text, data.x_text + 8, data.y_text + 6, 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
+        rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 6), 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
     }
     
     graphics_reset_clip_rectangle();
@@ -445,11 +445,11 @@ static void draw_background_image() {
 
     rich_text_set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
     rich_text_clear_links();
-    int lines_required = rich_text_draw(msg->content.text, 0, 0, 384, lines_available, 1);
+    int lines_required = rich_text_draw(msg->content.text, vec2i(0, 0), 384, lines_available, 1);
     if (lines_required > lines_available) {
         small_font = 1;
         rich_text_set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
-        lines_required = rich_text_draw(msg->content.text, 0, 0, 384, lines_available, 1);
+        lines_required = rich_text_draw(msg->content.text, vec2i(0, 0), 384, lines_available, 1);
     }
 
     outer_panel_draw(vec2i{data.x, data.y}, 26, 28);
@@ -479,10 +479,10 @@ static void draw_background_image() {
     data.text_width_blocks = msg->width_blocks - 4;
     if (small_font) {
         // Draw in black and then white to create shadow effect
-        rich_text_draw_colored(msg->content.text, data.x + 16 + 1, y_base + 24 + 1, 384, data.text_height_blocks - 1, COLOR_BLACK);
-        rich_text_draw_colored(msg->content.text, data.x + 16, y_base + 24, 384, data.text_height_blocks - 1, COLOR_WHITE);
+        rich_text_draw_colored(msg->content.text, vec2i(data.x + 16 + 1, y_base + 24 + 1), 384, data.text_height_blocks - 1, COLOR_BLACK);
+        rich_text_draw_colored(msg->content.text, vec2i(data.x + 16, y_base + 24), 384, data.text_height_blocks - 1, COLOR_WHITE);
     } else {
-        rich_text_draw(msg->content.text, data.x + 16, y_base + 24, 384, data.text_height_blocks - 1, 0);
+        rich_text_draw(msg->content.text, vec2i(data.x + 16, y_base + 24), 384, data.text_height_blocks - 1, 0);
     }
 
     if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {
@@ -530,11 +530,11 @@ static void draw_background_video() {
 
     rich_text_set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
     rich_text_clear_links();
-    int lines_required = rich_text_draw(msg->content.text, 0, 0, 384, lines_available, 1);
+    int lines_required = rich_text_draw(msg->content.text, vec2i(0, 0), 384, lines_available, 1);
     if (lines_required > lines_available) {
         small_font = 1;
         rich_text_set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
-        lines_required = rich_text_draw(msg->content.text, 0, 0, 384, lines_available, 1);
+        lines_required = rich_text_draw(msg->content.text, vec2i(0, 0), 384, lines_available, 1);
     }
 
     outer_panel_draw(vec2i{data.x, data.y}, 26, 28);
@@ -565,10 +565,10 @@ static void draw_background_video() {
     data.text_width_blocks = msg->width_blocks - 4;
     if (small_font) {
         // Draw in black and then white to create shadow effect
-        rich_text_draw_colored(msg->content.text, data.x + 16 + 1, y_base + 24 + 1, 384, data.text_height_blocks - 1, COLOR_BLACK);
-        rich_text_draw_colored(msg->content.text, data.x + 16, y_base + 24, 384, data.text_height_blocks - 1, COLOR_WHITE);
+        rich_text_draw_colored(msg->content.text, vec2i(data.x + 16 + 1, y_base + 24 + 1), 384, data.text_height_blocks - 1, COLOR_BLACK);
+        rich_text_draw_colored(msg->content.text, vec2i(data.x + 16, y_base + 24), 384, data.text_height_blocks - 1, COLOR_WHITE);
     } else {
-        rich_text_draw(msg->content.text, data.x + 16, y_base + 24, 384, data.text_height_blocks - 1, 0);
+        rich_text_draw(msg->content.text, vec2i(data.x + 16, y_base + 24), 384, data.text_height_blocks - 1, 0);
     }
 
     if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {

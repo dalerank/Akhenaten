@@ -25,14 +25,6 @@ struct common_info_window : public ui::widget {
     void draw_tooltip(tooltip_context *c);
 
     svector<xstring, 4> open_sounds;
-
-    static pcstr parse_config_name(pcstr data)
-    {
-        return strstr(data, "::") ? strstr(data, "::") + 2
-                : strstr(data, "struct ") ? strstr(data, "struct ") + 7
-                : strstr(data, "class ") ? strstr(data, "class ") + 6
-                : data;
-    }
 };
 
 void window_info_show(const tile2i& point, bool avoid_mouse = false);

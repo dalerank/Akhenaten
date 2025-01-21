@@ -349,6 +349,8 @@ void button_graph(int next) {
 }
 
 int ui::advisor_population_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
     int graph_order = city_population_graph_order();
  
     // Title: depends on big graph shown

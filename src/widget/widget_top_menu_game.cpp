@@ -88,8 +88,6 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
                 impl->load_items(arch, header->id.c_str());
             }
         }
-
-        init();
     }
 
     void menu_item_update(pcstr header, int item, pcstr text);
@@ -697,6 +695,7 @@ void wdiget_top_menu_draw_background() {
     int img_id = image_group(g_top_menu.background);
     const image_t *img = image_get(img_id);
     const int block_width = img->width;
+    assert(block_width > 0);
 
     for (int x = -(screen_width() - widget_sidebar_city_offset_x()); x < screen_width(); x += (block_width - g_top_menu.sidebar_offset)) {
        ImageDraw::img_generic(ctx, img_id, x, 0);

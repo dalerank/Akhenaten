@@ -27,6 +27,8 @@ static int get_health_advice() {
 }
 
 int ui::advisor_health_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
     ui["city_health"] = (city_population() >= 200) 
                             ? ui::str(56, g_city.health.value / 10 + 16)
                             : ui::str(56, 15);

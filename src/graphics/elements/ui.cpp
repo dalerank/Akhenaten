@@ -343,7 +343,7 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
             int lines_num = std::max<int>(1, (int)strlen(label) * symbolw / size.x);
             int centering_y_offset = (size.y - lines_num * symbolh) / 2;
             rich_text_set_fonts(font, FONT_NORMAL_YELLOW);
-            rich_text_draw((uint8_t *)label, offset.x + pos.x, offset.y + pos.y + centering_y_offset, size.x, lines_num, false, true);
+            rich_text_draw((uint8_t *)label, offset + pos + vec2i(0, centering_y_offset), size.x, lines_num, false, true);
         } else if (alingycenter) {
             text_draw((uint8_t *)label, offset.x + pos.x + 8, offset.y + pos.y + (size.y - symbolh) / 2 + 2, font, 0);
         } else if (alignleft) {
@@ -453,7 +453,7 @@ int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width)
         return text_draw_multiline((uint8_t *)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
     } else if (!!(flags & UiFlags_Rich)) {
         rich_text_set_fonts(font, FONT_NORMAL_YELLOW);
-        return rich_text_draw((uint8_t *)label, offset.x, offset.y, box_width, 10, false);
+        return rich_text_draw((uint8_t *)label, offset, box_width, 10, false);
     } else {
         return lang_text_draw(label, offset + pos, font, box_width);
     }
@@ -966,14 +966,15 @@ void ui::etext::draw(UiFlags flags) {
         rwrap = rwrap <= 0 ? 9999 : rwrap;
 
         rich_text_set_fonts(_font, _font_link);
-        rich_text_draw((const uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, rwrap, maxlines, false);
-
-        if (!(_flags & UiFlags_NoScroll)) {
-            rich_text_draw_scrollbar();
-        }
+        rich_text_init((const uint8_t *)_text.c_str(), offset + pos, size.x / 16, size.y / 16, /*adjust_width_on_no_scroll*/true);
+        rich_text_draw((const uint8_t *)_text.c_str(), offset + pos, rwrap, maxlines, false);
         
         if (_clip_area) {
             graphics_reset_clip_rectangle();
+        }
+
+        if (!(_flags & UiFlags_NoScroll)) {
+            rich_text_draw_scrollbar(vec2i{-16, 0});
         }
     } else {
         if (_shadow_color) {

@@ -44,6 +44,8 @@ struct trade_prices_window : autoconfig_window_t<trade_prices_window> {
 trade_prices_window trade_prices_w;
 
 int trade_prices_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
     window_draw_underlying_window(flags);
 
     return 0;

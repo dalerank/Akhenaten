@@ -641,6 +641,8 @@ void empire_window::draw_paneling() {
 }
 
 int empire_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
     auto &data = g_empire_window;
     int s_width = screen_width();
     int s_height = screen_height();

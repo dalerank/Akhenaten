@@ -43,16 +43,16 @@ struct rich_text_data_t {
 
 rich_text_data_t g_rich_text_data;
 
-int rich_text_init(const uint8_t* text, int x_text, int y_text, int width_blocks, int height_blocks, int adjust_width_on_no_scroll) {
+int rich_text_init(const uint8_t* text, vec2i ptext, int width_blocks, int height_blocks, bool adjust_width_on_no_scroll) {
     auto &data = g_rich_text_data;
-    data.x_text = x_text;
-    data.y_text = y_text;
+    data.x_text = ptext.x;
+    data.y_text = ptext.y;
     if (!data.num_lines) {
         data.text_height_blocks = height_blocks;
         data.text_height_lines = height_blocks - 1;
         data.text_width_blocks = width_blocks;
 
-        data.num_lines = rich_text_draw(text, data.x_text + 8, data.y_text + 6, 16 * data.text_width_blocks - 16, data.text_height_lines, 1);
+        data.num_lines = rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 6), 16 * data.text_width_blocks - 16, data.text_height_lines, /*meaure_only*/true);
         g_richtext_scrollbar.pos.x = data.x_text + 16 * data.text_width_blocks - 1;
         g_richtext_scrollbar.pos.y = data.y_text;
         g_richtext_scrollbar.height = 16 * data.text_height_blocks;
@@ -289,13 +289,13 @@ static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color clr,
     }
 }
 
-static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, color color, bool measure_only, bool centered) {
+static int rich_text_draw_impl(const uint8_t* text, vec2i offset, int box_width, int height_lines, color color, bool measure_only, bool centered) {
     int image_height_lines = 0;
     int image_id = 0;
     int lines_before_image = 0;
     int paragraph = 0;
     int has_more_characters = 1;
-    int y = y_offset;
+    int y = offset.y;
     int guard = 0;
     int line = 0;
     int num_lines = 0;
@@ -399,7 +399,7 @@ static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, 
             if (centered) {
                 centering_offset = (box_width - current_width) / 2;
             }
-            draw_line(ctx, tmp_line, x_line_offset + x_offset + centering_offset, y, color, measure_only);
+            draw_line(ctx, tmp_line, x_line_offset + offset.x + centering_offset, y, color, measure_only);
         }
 
         if (!measure_only) {
@@ -409,7 +409,7 @@ static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, 
                 else {
                     const image_t* img = image_get(image_id);
                     image_height_lines = img->height / 16 + 2;
-                    int image_offset_x = x_offset + (box_width - img->width) / 2 - 4;
+                    int image_offset_x = offset.x + (box_width - img->width) / 2 - 4;
                     if (line < height_lines + g_richtext_scrollbar.scroll_position) {
                         if (line >= g_richtext_scrollbar.scroll_position)
                             ImageDraw::img_generic(ctx, image_id, image_offset_x, y + 8);
@@ -430,16 +430,16 @@ static int rich_text_draw_impl(const uint8_t* text, int x_offset, int y_offset, 
     return num_lines;
 }
 
-int rich_text_draw(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, bool measure_only, bool centered) {
-    return rich_text_draw_impl(text, x_offset, y_offset, box_width, height_lines, 0, measure_only, centered);
+int rich_text_draw(const uint8_t* text, vec2i offset, int box_width, int height_lines, bool measure_only, bool centered) {
+    return rich_text_draw_impl(text, offset, box_width, height_lines, 0, measure_only, centered);
 }
 
-int rich_text_draw_colored(const uint8_t* text, int x_offset, int y_offset, int box_width, int height_lines, color color) {
-    return rich_text_draw_impl(text, x_offset, y_offset, box_width, height_lines, color, 0, false);
+int rich_text_draw_colored(const uint8_t* text, vec2i offset, int box_width, int height_lines, color color) {
+    return rich_text_draw_impl(text, offset, box_width, height_lines, color, 0, false);
 }
 
-void rich_text_draw_scrollbar() {
-    scrollbar_draw(vec2i{0, 0}, &g_richtext_scrollbar);
+void rich_text_draw_scrollbar(vec2i pos) {
+    scrollbar_draw(pos, &g_richtext_scrollbar);
 }
 
 int rich_text_handle_mouse(const mouse* m) {
@@ -450,6 +450,6 @@ static void on_scroll(void) {
     rich_text_clear_links();
 }
 
-int rich_text_scroll_position(void) {
+int rich_text_scroll_position() {
     return g_richtext_scrollbar.scroll_position;
 }

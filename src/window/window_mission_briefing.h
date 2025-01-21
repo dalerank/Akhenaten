@@ -5,8 +5,8 @@
 namespace ui {
 
 struct mission_briefing_window : public autoconfig_window_t<mission_briefing_window> {
-    int is_review;
-    int campaign_mission_loaded;
+    bool is_review;
+    bool campaign_mission_loaded;
     int scenario_id;
     bool mission_has_choice;
 

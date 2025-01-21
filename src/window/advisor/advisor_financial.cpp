@@ -37,6 +37,8 @@ void ui::advisor_financial_window::load(archive arch, pcstr section) {
 }
 
 int ui::advisor_financial_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
     int treasury = city_finance_treasury();
 
     pcstr prefix = (treasury < 0) ? ui::str(60, 3) : ui::str(60, 2);

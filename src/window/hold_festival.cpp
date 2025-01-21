@@ -40,6 +40,8 @@ void window_hold_festival_select_size(e_festival_type size) {
 }
 
 int ui::hold_festival_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
     if (!background) {
         game.animation = false;
         window_city_draw_panels();
