@@ -975,6 +975,7 @@ void ui::etext::draw(UiFlags flags) {
 
         if (!(_flags & UiFlags_NoScroll)) {
             rich_text_draw_scrollbar(vec2i{-16, 0});
+            g_state.scrollbars.push_back(rich_text_scrollbar());
         }
     } else {
         if (_shadow_color) {

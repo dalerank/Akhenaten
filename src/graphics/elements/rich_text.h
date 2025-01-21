@@ -2,7 +2,10 @@
 
 #include "graphics/color.h"
 #include "graphics/font.h"
-#include "input/mouse.h"
+#include "core/vec2i.h"
+
+struct mouse;
+struct scrollbar_t;
 
 /**
  * Initializes the rich text
@@ -59,7 +62,8 @@ int rich_text_draw(const uint8_t* text, vec2i offset, int box_width, int height_
  * @return Total number of lines required for the text
  */
 int rich_text_draw_colored(const uint8_t* text, vec2i offset, int box_width, int height_lines, color color);
-void rich_text_draw_scrollbar(vec2i pos = vec2i{0, 0});
+void rich_text_draw_scrollbar(vec2i pos);
 
-int rich_text_handle_mouse(const mouse* m);
-int rich_text_scroll_position(void);
+int rich_text_handle_mouse(const mouse* m, vec2i pos);
+int rich_text_scroll_position();
+scrollbar_t *rich_text_scrollbar();

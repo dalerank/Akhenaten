@@ -442,8 +442,8 @@ void rich_text_draw_scrollbar(vec2i pos) {
     scrollbar_draw(pos, &g_richtext_scrollbar);
 }
 
-int rich_text_handle_mouse(const mouse* m) {
-    return scrollbar_handle_mouse(vec2i{0, 0}, &g_richtext_scrollbar, m);
+int rich_text_handle_mouse(const mouse* m, vec2i pos) {
+    return scrollbar_handle_mouse(pos, &g_richtext_scrollbar, m);
 }
 
 static void on_scroll(void) {
@@ -452,4 +452,8 @@ static void on_scroll(void) {
 
 int rich_text_scroll_position() {
     return g_richtext_scrollbar.scroll_position;
+}
+
+scrollbar_t *rich_text_scrollbar() {
+    return &g_richtext_scrollbar;
 }

@@ -645,7 +645,7 @@ static void draw_foreground_normal() {
             image_buttons_draw({data.x + 64, data.y_text + 36}, &image_button_go_to_problem, 1);
     }
     image_buttons_draw({data.x + 16 * msg->width_blocks - 38, data.y + 16 * msg->height_blocks - 36}, &image_button_close, 1);
-    rich_text_draw_scrollbar();
+    rich_text_draw_scrollbar(vec2i{0, 0});
 }
 
 static void draw_foreground_image() {
@@ -741,7 +741,7 @@ static bool handle_input_normal(const mouse* m_dialog, const lang_message* msg) 
         return true;
     }
 
-    rich_text_handle_mouse(m_dialog);
+    rich_text_handle_mouse(m_dialog, vec2i{0, 0});
     int text_id = rich_text_get_clicked_link(m_dialog);
     if (text_id >= 0) {
         if (data.num_history < MAX_HISTORY - 1) {
