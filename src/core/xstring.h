@@ -52,6 +52,9 @@ public:
     [[nodiscard]]
     const xstring_value* _get() const { return _p; }
 
+    [[nodiscard]]
+    const uint32_t crc() const { return _p ? _p->crc : UINT32_MAX; }
+
 public:
     // construction
     xstring() { _p = nullptr; }

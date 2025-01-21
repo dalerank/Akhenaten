@@ -17,6 +17,7 @@
 #include "graphics/image.h"
 #include "resource/icons.h"
 #include "io/gamefiles/lang.h"
+#include "core/crc32.h"
 #include "js/js_game.h"
 
 #include <stack>
@@ -156,22 +157,24 @@ void config_load_ui_options() {
     });
 }
 
-static ui::element::ptr create_element(pcstr type) {
+static ui::element::ptr create_element(const xstring type) {
     ui::element::ptr elm;
-    if (!strcmp(type, "outer_panel")) { elm = std::make_shared<ui::eouter_panel>(); }
-    else if (!strcmp(type, "scrollbar")) { elm = std::make_shared<ui::escrollbar>(); }
-    else if (!strcmp(type, "menu_header")) { elm = std::make_shared<ui::emenu_header>(); }
-    else if (!strcmp(type, "inner_panel")) { elm = std::make_shared<ui::einner_panel>(); }
-    else if (!strcmp(type, "background")) { elm = std::make_shared<ui::ebackground>(); }
-    else if (!strcmp(type, "image")) { elm = std::make_shared<ui::eimg>(); }
-    else if (!strcmp(type, "label")) { elm = std::make_shared<ui::elabel>(); }
-    else if (!strcmp(type, "text")) { elm = std::make_shared<ui::etext>(); }
-    else if (!strcmp(type, "generic_button")) { elm = std::make_shared<ui::egeneric_button>(); }
-    else if (!strcmp(type, "image_button")) { elm = std::make_shared<ui::eimage_button>(); }
-    else if (!strcmp(type, "resource_icon")) { elm = std::make_shared<ui::eresource_icon>(); }
-    else if (!strcmp(type, "arrow_button")) { elm = std::make_shared<ui::earrow_button>(); }
-    else if (!strcmp(type, "border")) { elm = std::make_shared<ui::eborder>(); }
-    else if (!strcmp(type, "large_button")) {
+#define _ crc32_str
+    switch (type.crc()) {
+    case _("outer_panel"): elm = std::make_shared<ui::eouter_panel>(); break;
+    case _("scrollbar"): elm = std::make_shared<ui::escrollbar>(); break;
+    case _("menu_header"): elm = std::make_shared<ui::emenu_header>(); break;
+    case _("inner_panel"): elm = std::make_shared<ui::einner_panel>(); break;
+    case _("background"):  elm = std::make_shared<ui::ebackground>(); break;
+    case _("image"): elm = std::make_shared<ui::eimg>(); break;
+    case _("label"): elm = std::make_shared<ui::elabel>(); break;
+    case _("text"):  elm = std::make_shared<ui::etext>(); break;
+    case _("generic_button"): elm = std::make_shared<ui::egeneric_button>(); break;
+    case _("image_button"): elm = std::make_shared<ui::eimage_button>(); break;
+    case _("resource_icon"): elm = std::make_shared<ui::eresource_icon>(); break;
+    case _("arrow_button"): elm = std::make_shared<ui::earrow_button>(); break;
+    case _("border"): elm = std::make_shared<ui::eborder>(); break;
+    case _("large_button"): 
         auto btn = std::make_shared<ui::egeneric_button>();
         btn->mode = 1;
         elm = btn;
@@ -182,7 +185,7 @@ static ui::element::ptr create_element(pcstr type) {
 
 static void load_elements(archive arch, pcstr section, ui::element *parent, ui::element::items &elements) {
     arch.r_objects(section, [&elements, parent] (pcstr key, archive elem) {
-        pcstr type = elem.r_string("type");
+        const xstring type = elem.r_string("type");
         ui::element::ptr elm = create_element(type);
 
         if (elm) {
