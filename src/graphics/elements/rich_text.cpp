@@ -6,6 +6,7 @@
 #include "graphics/elements/image_button.h"
 #include "graphics/view/view.h"
 #include "graphics/elements/scrollbar.h"
+#include "graphics/elements/panel.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/window.h"
@@ -439,6 +440,7 @@ int rich_text_draw_colored(const uint8_t* text, vec2i offset, int box_width, int
 }
 
 void rich_text_draw_scrollbar(vec2i pos) {
+    inner_panel_draw(g_richtext_scrollbar.pos + pos + vec2i{3, 16}, vec2i{2, (g_richtext_scrollbar.height - 2) / 16});
     scrollbar_draw(pos, &g_richtext_scrollbar);
 }
 
