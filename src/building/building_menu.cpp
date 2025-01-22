@@ -7,8 +7,8 @@
 #include "config/config.h"
 #include "scenario/scenario.h"
 
-#include "SDL.h"
 #include "core/archive.h"
+#include "core/log.h"
 #include "core/game_environment.h"
 #include "io/gamefiles/lang.h"
 #include "building/industry.h"
@@ -89,12 +89,12 @@ struct menu_config_t {
             }
         }
 
+        assert(false && "should be exist type");
         return building_menu_item_dummy;
     }
 
     bool is_enabled(int type) {
-        auto &gr = group(type);
-        building_menu_item &item = get(type);
+        const building_menu_item &item = get(type);
         return (item.type == type) ? item.enabled : false;
     }
 
@@ -154,11 +154,18 @@ void building_menu_toggle_building(int type, bool enabled) {
             building_menu_toggle_building(BUILDING_MENU_FARMS);
         }
 
-        if (building_is_extractor(type) || building_is_harvester((e_building_type)type))
+        if (building_is_extractor(type) || building_is_harvester((e_building_type)type)) {
             building_menu_toggle_building(BUILDING_MENU_RAW_MATERIALS);
+            building_menu_toggle_building(BUILDING_MENU_INDUSTRY);
+        }
 
-        if (building_is_fort(type))
+        if (building_is_workshop(type)) {
+            building_menu_toggle_building(BUILDING_MENU_INDUSTRY);
+        }
+
+        if (building_is_fort(type)) {
             building_menu_toggle_building(BUILDING_MENU_FORTS);
+        }
 
         if (building_is_defense((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_DEFENSES);
@@ -194,12 +201,14 @@ static void enable_if_allowed(int type) {
     const bool is_enabled = scenario_building_allowed(type);
     if (is_enabled) {
         building_menu_toggle_building(type);
+        logs::info("build_menu: enabled %d<%s> by config", type, e_building_type_tokens.name((e_building_type)type));
     }
 }
 
 static int disable_raw_if_unavailable(int type, e_resource resource) {
     if (!g_city.can_produce_resource(resource)) {
         building_menu_toggle_building(type, false);
+        logs::info("build_menu: disabled %d<%s> by no resource", type, e_building_type_tokens.name((e_building_type)type));
         return 0;
     }
     return 1;
@@ -455,7 +464,8 @@ int building_menu_count_items(int submenu) {
     int count = 0;
     auto groups = g_menu_config.groups;
     for (auto &it : group.items) {
-        const bool is_group = (std::find_if(groups.begin(), groups.end(), [type = it.type](auto &gr) { return gr.type == type; }) != groups.end());
+        const auto group_it = std::find_if(groups.begin(), groups.end(), [type = it.type] (auto &gr) { return gr.type == type; });
+        const bool is_group = (group_it != groups.end());
         if (is_group) {
             count += (building_menu_count_items(it.type) > 0 ? 1 : 0);
         } else {
