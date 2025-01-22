@@ -325,6 +325,7 @@ struct city_t {
     void init();
     void init_custom_map();
     void init_campaign_mission();
+    void init_mission_resources(const std::vector<resource_allow> &resources);
     e_resource allowed_foods(int i);
     bool is_food_allowed(e_resource resource);
     void set_allowed_food(int i, e_resource r);
@@ -369,6 +370,7 @@ struct city_t {
 
     bool determine_granary_get_foods(resource_list &foods, int road_network);
 
+    empire_city& ourcity();
     e_victory_state determine_victory_state();
     void victory_check();
     void buildings_update_open_water_access();

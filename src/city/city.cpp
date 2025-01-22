@@ -92,6 +92,13 @@ void city_t::init_campaign_mission() {
     finance.treasury = difficulty_adjust_money(finance.treasury);
 }
 
+void city_t::init_mission_resources(const std::vector<resource_allow>& resources) {
+    auto &c = ourcity();
+    for (const auto &r: resources) {
+        c.sells_resource[r.type] = r.allow;
+    }
+}
+
 e_resource city_t::allowed_foods(int i) {
     return resource.food_types_allowed[i];
 }
@@ -248,25 +255,22 @@ int stack_proper_quantity(int full, int resource) {
     }
 }
 
+empire_city &city_t::ourcity() {
+    auto &cities = g_empire.get_cities();
+    auto it = std::find_if(cities.begin(), cities.end(), [] (auto &city) { return (city.in_use && (city.type == EMPIRE_CITY_OURS)); });
+
+    assert(it != cities.end());
+    return *it;
+}
 
 bool city_t::can_produce_resource(e_resource resource) {
-    for (const auto &city: g_empire.get_cities()) {
-        if (city.in_use && (city.type == EMPIRE_CITY_OURS)) {
-            if (city.sells_resource[resource]) {
-                return true;
-            }
-        }
-    }
-    return false;
+    auto &c = ourcity();
+    return c.sells_resource[resource];
 }
 
 void city_t::set_produce_resource(e_resource resource, bool v) {
-    for (auto &city: g_empire.get_cities()) {
-        if (city.in_use && (city.type == EMPIRE_CITY_OURS)) {
-            city.sells_resource[resource] = v;
-            break;
-        }
-    }
+    auto &c = ourcity();
+    c.sells_resource[resource] = v;
 }
 
 void city_t::update_allowed_foods() {
