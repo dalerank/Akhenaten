@@ -109,6 +109,11 @@ struct resource_value {
     int value;
 };
 
+struct resource_allow {
+    e_resource type;
+    bool allow;
+};
+
 inline e_resource& resource_next(e_resource& e) { e = e_resource(e + 1); return e; }
 inline e_resource& operator++(e_resource& e) { e = e_resource(e + 1); return e; };
 
