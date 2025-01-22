@@ -212,6 +212,7 @@ static void post_load() {
     trade_prices_reset();
 
     // city data special cases
+    bool is_tutorial = false;
     switch (game.session.last_loaded) {
     default:
         assert(false);
@@ -220,16 +221,22 @@ static void post_load() {
     case e_session_mission:
         g_city.init_campaign_mission();
         g_city.kingdome.init_scenario(scenario_campaign_rank(), game.session.last_loaded);
-        tutorial_init(/*clear_all*/true, false);
+        is_tutorial = tutorial_init(/*clear_all*/true, false);
         break;
+
     case e_session_save:
-        tutorial_init(/*clear_all*/false, false);
+        is_tutorial = tutorial_init(/*clear_all*/false, false);
         break;
+
     case e_session_custom_map:
         g_city.init_custom_map();
         g_city.kingdome.init_scenario(scenario_campaign_rank(), game.session.last_loaded);
-        tutorial_init(/*clear_all*/true, true);
+        is_tutorial = tutorial_init(/*clear_all*/true, true);
         break;
+    }
+
+    if (!is_tutorial) {
+        building_menu_setup_mission();
     }
 
     // city messages

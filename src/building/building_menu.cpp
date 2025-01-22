@@ -191,7 +191,10 @@ void building_menu_toggle_building(int type, bool enabled) {
 }
 
 static void enable_if_allowed(int type) {
-    building_menu_toggle_building(type, scenario_building_allowed(type));
+    const bool is_enabled = scenario_building_allowed(type);
+    if (is_enabled) {
+        building_menu_toggle_building(type);
+    }
 }
 
 static int disable_raw_if_unavailable(int type, e_resource resource) {
@@ -404,20 +407,15 @@ const animation_t &building_menu_anim(int submenu) {
     return group.anim;
 }
 
-void building_menu_update(const bstring64 &stage_name) {
+void building_menu_setup_mission() {
+    building_menu_set_all(false);
+    building_menu_update("stage_normal");
+}
+
+void building_menu_update(const xstring stage_name) {
     if (stage_name == tutorial_stage.disable_all) {
         building_menu_set_all(false);
-    }
-
-    for (const auto &stage : g_scenario_data.building_stages) {
-        if (stage.key == stage_name) {
-            for (const auto &b : stage.buildings) {
-                building_menu_toggle_building(b);
-            }
-        }
-    }
-
-    if (stage_name == "stage_normal") {
+    } else if (stage_name == "stage_normal") {
         for (int i = 0; i < BUILDING_MAX; i++) {
             enable_if_allowed(i);
         }
@@ -430,6 +428,14 @@ void building_menu_update(const bstring64 &stage_name) {
 
         // disable resources that aren't available on map
         disable_resources();
+    } else {
+        for (const auto &stage : g_scenario_data.building_stages) {
+            if (stage.key == stage_name) {
+                for (const auto &b : stage.buildings) {
+                    building_menu_toggle_building(b);
+                }
+            }
+        }
     }
 
     // disable government building tiers depending on mission rank

@@ -12,7 +12,8 @@ void building_menu_toggle_building(int type, bool enabled = true);
 void building_menu_set_all(bool enabled);
 bool building_menu_is_submenu(int submenu);
 
-void building_menu_update(const bstring64 &stage);
+void building_menu_setup_mission();
+void building_menu_update(const xstring stage);
 
 int building_menu_count_items(int submenu);
 
