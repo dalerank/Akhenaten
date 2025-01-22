@@ -80,13 +80,13 @@ void memset_if(bool ok, char v, T &t) {
     }
 }
 
-void tutorial_init(bool clear_all_flags, bool custom) {
+bool tutorial_init(bool clear_all_flags, bool custom) {
     if (clear_all_flags) {
         set_all_tut_flags_null();
     }
 
     if (custom) {
-        return;
+        return false;
     }
 
     int scenario_id = scenario_campaign_scenario_id();
@@ -98,7 +98,7 @@ void tutorial_init(bool clear_all_flags, bool custom) {
     memset_if(5 < scenario_id, 1, g_tutorials_flags.tutorial_6);
 
     tutorial_map_update(scenario_id + 1);
-    tutorial_menu_update(scenario_id + 1);
+    return tutorial_menu_update(scenario_id + 1);
 }
 
 e_availability mission_advisor_availability(e_advisor advisor, int mission) {
@@ -165,7 +165,7 @@ void tutorial_map_update(int tut) {
     }
 }
 
-void tutorial_menu_update(int tut) {
+bool tutorial_menu_update(int tut) {
     if (tut == 1) {
         building_menu_update(tutorial_stage.disable_all);
 
@@ -173,13 +173,21 @@ void tutorial_menu_update(int tut) {
         if (g_tutorials_flags.tutorial_1.population_150_reached)  building_menu_update(tutorial_stage.tutorial_food);
         if (g_tutorials_flags.tutorial_1.collapse) building_menu_update(tutorial_stage.tutorial_collapse);
         if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) building_menu_update(tutorial_stage.tutorial_water);
-    } else if (tut == 2) {
+
+        return true;
+    } 
+    
+    if (tut == 2) {
         building_menu_update(tutorial_stage.disable_all);
         building_menu_update(tutorial_stage.tutorial_start);
 
         if (g_tutorials_flags.tutorial_2.gold_mined_500) building_menu_update(tutorial_stage.tutorial_gods);
         if (g_tutorials_flags.tutorial_2.temples_built) building_menu_update(tutorial_stage.tutorial_entertainment);
-    } else if (tut == 3) {
+
+        return true;
+    } 
+    
+    if (tut == 3) {
         building_menu_update(tutorial_stage.disable_all);
         building_menu_update(tutorial_stage.tutorial_start);
             
@@ -187,29 +195,47 @@ void tutorial_menu_update(int tut) {
         if (g_tutorials_flags.tutorial_3.pottery_made) building_menu_update(tutorial_stage.tutorial_industry);
         if (g_tutorials_flags.tutorial_3.disease) building_menu_update(tutorial_stage.tutorial_health);
         if (g_tutorials_flags.tutorial_3.pottery_made) building_menu_update(tutorial_stage.tutorial_gardens);
-    } else if (tut == 4) {
+
+        return true;
+    } 
+    
+    if (tut == 4) {
         building_menu_update(tutorial_stage.disable_all);
         building_menu_update(tutorial_stage.tutorial_start);
 
         if (g_tutorials_flags.tutorial_4.beer_made) building_menu_update(tutorial_stage.tutorial_finance);
-    } else if (tut == 5) {
+        return true;
+    } 
+    
+    if (tut == 5) {
         building_menu_update(tutorial_stage.disable_all);
         building_menu_update(tutorial_stage.tutorial_start);
         if (g_tutorials_flags.tutorial_5.spacious_apartment) building_menu_update(tutorial_stage.tutorial_education);
         if (g_tutorials_flags.tutorial_5.papyrus_made) building_menu_update(tutorial_stage.tutorial_trading);
         if (g_tutorials_flags.tutorial_5.bricks_bought) building_menu_update(tutorial_stage.tutorial_monuments);
 
-    } else if (tut == 6) {
+        return true;
+    } 
+    
+    if (tut == 6) {
         building_menu_update(tutorial_stage.disable_all);
         building_menu_update(tutorial_stage.tutorial_start);
-
-    } else if (tut == 7) {
+        return true;
+    } 
+    
+    if (tut == 7) {
         building_menu_update(tutorial_stage.disable_all);
         building_menu_update(tutorial_stage.tutorial_start);
-    } else if (tut == 8) {
+        return true;
+    } 
+    
+    if (tut == 8) {
         building_menu_update(tutorial_stage.disable_all);
         building_menu_update(tutorial_stage.tutorial_start);
+        return true;
     }
+
+    return false;
 }
 
 int tutorial_get_population_cap(int current_cap) {
@@ -401,7 +427,7 @@ void tutorial_on_house_evolve(e_house_level level) {
 }
 
 void tutorial_update_step(pcstr s) {
-    const bstring64 step(s);
+    const xstring step(s);
     if (step == tutorial_stage.tutorial_fire) {
         g_tutorials_flags.tutorial_1.fire = false;
         tutorial_handle_fire();

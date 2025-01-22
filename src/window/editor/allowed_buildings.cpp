@@ -88,7 +88,7 @@ void toggle_building(int id, int param2) {
     scenario_editor_toggle_building_allowed(id);
 }
 
-void window_editor_allowed_buildings_show(void) {
+void window_editor_allowed_buildings_show() {
     window_type window = {
         WINDOW_EDITOR_ALLOWED_BUILDINGS,
         draw_background,

@@ -3,10 +3,10 @@
 #include "core/buffer.h"
 #include "city/constants.h"
 #include "building/building_type.h"
-#include "core/bstring.h"
+#include "core/xstring.h"
 
 struct tutorial_stage_t {
-#define _RR(a) const bstring64 a{#a};
+#define _RR(a) const xstring a = #a;
     _RR(disable_all)
     _RR(tutorial_food)
     _RR(tutorial_fire)
@@ -87,13 +87,13 @@ struct tutorial_flags_t {
 extern tutorial_flags_t g_tutorials_flags;
 extern const tutorial_stage_t tutorial_stage;
 
-void tutorial_init(bool clear_all_flags, bool custom);
+bool tutorial_init(bool clear_all_flags, bool custom);
 
 e_availability mission_advisor_availability(e_advisor advisor, int mission);
 e_availability mission_empire_availability(int mission);
 
 void tutorial_map_update(int tut);
-void tutorial_menu_update(int tut);
+bool tutorial_menu_update(int tut);
 
 int tutorial_get_population_cap(int current_cap);
 int tutorial_get_immediate_goal_text();

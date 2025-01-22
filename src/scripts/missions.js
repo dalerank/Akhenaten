@@ -1,5 +1,14 @@
 log_info("akhenaten: missions started")
 
+var mission_sounds = []
+for (var i = 0; i < 38; i++) {
+	mission_sounds[i] = {
+		mission: i,
+		briefing: _format("Voice/Mission/{0}_mission.mp3", (i + 200).toString()),
+		victory: _format("Voice/Mission/{0}_victory.mp3", (i + 200).toString())
+	}
+}
+
 var mission0 = { // Nubt
 	start_message : 150, //TUTORIAL_HOUSING_AND_ROADS, 248 = 150 + 99 - 1
 	city_has_animals : true,
@@ -308,7 +317,7 @@ var mission7 = { // Abydos
 }
 
 var mission8 = { // Selima
-	start_message : 207, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
+	start_message : 0, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
 	player_rank : 1,
 	next_mission : 10,
@@ -316,6 +325,11 @@ var mission8 = { // Selima
 	choice_image1 : {pack:PACK_UNLOADED, id:13, offset:0},
 	choice_image1_pos : [192, 144],
 	choice_title : [144, 22],
+
+	buildings : [BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,],
+	stages : { // 
+		mission_start: []
+	},
 
 	choice : [
 		{
@@ -337,7 +351,7 @@ var mission8 = { // Selima
 }
 
 var mission9 = { // Abu
-	start_message : 208, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
+	start_message : 0, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
 	player_rank : 1,
 	next_mission : 10,
@@ -345,6 +359,11 @@ var mission9 = { // Abu
 	choice_image1 : {pack:PACK_UNLOADED, id:13, offset:0},
 	choice_image1_pos : [192, 144],
 	choice_title : [144, 22],
+
+	buildings : [BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,],
+	stages : {
+		mission_start: []
+	},
 
 	choice : [
 		{

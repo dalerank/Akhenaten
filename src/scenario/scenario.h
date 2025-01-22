@@ -157,7 +157,7 @@ struct demand_change_t {
 };
 
 struct building_stage_t {
-    bstring64 key;
+    xstring key;
     std::vector<e_building_type> buildings;
 };
 

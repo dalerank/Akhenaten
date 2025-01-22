@@ -9,7 +9,6 @@ var _format = function() {
 };
 
 var building_sounds = []
-var mission_sounds = []
 var walker_sounds = []
 var city_sounds = []
 var overlays = []
