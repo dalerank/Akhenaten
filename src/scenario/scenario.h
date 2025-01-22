@@ -262,6 +262,7 @@ struct scenario_data_t {
     tile2i invasion_points_sea[MAX_INVASION_POINTS_SEA];
 
     bool allowed_buildings[BUILDING_MAX] = { 0 };
+    std::vector<resource_allow> init_resources;
 
     std::vector<building_stage_t> building_stages;
 

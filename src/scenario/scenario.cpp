@@ -58,6 +58,13 @@ void scenario_load_meta_data(const mission_id_t &missionid) {
             g_scenario_data.allowed_buildings[b] = true;
         }
 
+        g_scenario_data.init_resources.clear();
+        arch.r_array("resources", [&] (archive res) {
+            e_resource resource = arch.r_type<e_resource>("resource");
+            bool allowed = arch.r_bool("allowed");
+            g_scenario_data.init_resources.push_back({ resource, allowed });
+        });
+
         g_scenario_data.building_stages.clear();
         arch.r_objects("stages", [](pcstr key, archive stage_arch) {
             auto buildings = archive::r_array_num<e_building_type>(stage_arch);
@@ -245,8 +252,10 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
 
     iob->bind____skip(42);
 
-    for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) { g_scenario_data.invasion_points_land[i].invalidate_offset(); }
-    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { g_scenario_data.invasion_points_land[i].invalidate_offset(); }
+    if (iob->is_read_access()) {
+        for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) { g_scenario_data.invasion_points_land[i].invalidate_offset(); }
+        for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { g_scenario_data.invasion_points_land[i].invalidate_offset(); }
+    }
 
     for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.invasion_points_land[i].private_access(_X)); }
     for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario_data.invasion_points_land[i].private_access(_X)); }
@@ -320,7 +329,12 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
     iob->bind____skip(1); // -1 or -31
     iob->bind____skip(1); // -1
 
-    for (int i = 0; i < MAX_PREY_HERD_POINTS; i++) { g_scenario_data.herd_points_prey[i].invalidate_offset(); }
+    if (iob->is_read_access()) {
+        for (int i = 0; i < MAX_PREY_HERD_POINTS; i++) { 
+            g_scenario_data.herd_points_prey[i].invalidate_offset(); 
+        }
+    }
+
     for (int i = 0; i < MAX_PREY_HERD_POINTS; i++) { iob->bind(BIND_SIGNATURE_INT32, g_scenario_data.herd_points_prey[i].private_access(_X)); }
     for (int i = 0; i < MAX_PREY_HERD_POINTS; i++) { iob->bind(BIND_SIGNATURE_INT32, g_scenario_data.herd_points_prey[i].private_access(_Y)); }
     // 114
@@ -329,14 +343,19 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
         iob->bind(BIND_SIGNATURE_INT16, &reserved_data);
     }
 
-    for (int i = 0; i < MAX_DISEMBARK_POINTS; ++i)
-        g_scenario_data.disembark_points[i].invalidate_offset();
+    if (iob->is_read_access()) {
+        for (int i = 0; i < MAX_DISEMBARK_POINTS; ++i) {
+            g_scenario_data.disembark_points[i].invalidate_offset();
+        }
+    }
 
-    for (int i = 0; i < MAX_DISEMBARK_POINTS; ++i)
+    for (int i = 0; i < MAX_DISEMBARK_POINTS; ++i) {
         iob->bind(BIND_SIGNATURE_INT32, g_scenario_data.disembark_points[i].private_access(_X));
+    }
 
-    for (int i = 0; i < MAX_DISEMBARK_POINTS; ++i)
+    for (int i = 0; i < MAX_DISEMBARK_POINTS; ++i) {
         iob->bind(BIND_SIGNATURE_INT32, g_scenario_data.disembark_points[i].private_access(_Y));
+    }
 
     iob->bind(BIND_SIGNATURE_UINT32, &g_scenario_data.debt_interest_rate);
 
@@ -369,8 +388,9 @@ io_buffer* iob_scenario_carry_settings = new io_buffer([](io_buffer* iob, size_t
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.campaign_mission_rank);
 });
 
-io_buffer* iob_scenario_is_custom = new io_buffer(
-  [](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.is_custom); });
+io_buffer* iob_scenario_is_custom = new io_buffer([](io_buffer* iob, size_t version) { 
+    iob->bind(BIND_SIGNATURE_INT32, &g_scenario_data.settings.is_custom); 
+});
 
 io_buffer* iob_scenario_map_name = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_RAW, &g_scenario_data.scenario_name, MAX_SCENARIO_NAME);
