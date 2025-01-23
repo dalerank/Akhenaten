@@ -50,10 +50,10 @@ bool image_set_enemy_pak(int enemy_id) {
     auto& data = *g_image_data;
     return set_pak_in_collection(enemy_id, &data.enemy, &data.enemy_paks);
 }
-bool image_set_temple_complex_pak(int temple_id) {
-    auto& data = *g_image_data;
-    return set_pak_in_collection(temple_id, &data.temple, &data.temple_paks);
-}
+//bool image_set_temple_complex_pak(int temple_id) {
+//    auto& data = *g_image_data;
+//    return set_pak_in_collection(temple_id, &data.temple, &data.temple_paks);
+//}
 bool image_set_monument_pak(int monument_id) {
     auto& data = *g_image_data;
     return set_pak_in_collection(monument_id, &data.monument, &data.monument_paks);
@@ -89,7 +89,6 @@ bool image_load_paks() {
     }
 
     // add paks to parsing list cache
-    data.pak_list.push_back(&data.temple);
     data.pak_list.push_back(&data.monument);
 
     // <--- original pyramid pak in here                                                                            //
@@ -97,7 +96,6 @@ bool image_load_paks() {
 
     // the 5 Temple Complex paks.
     // <--- original temple complex pak here
-    data.temple_paks.push_back(new imagepak("Temple_nile", 15591));
     data.temple_paks.push_back(new imagepak("Temple_ptah", 15591));
     data.temple_paks.push_back(new imagepak("Temple_seth", 15591));
     data.temple_paks.push_back(new imagepak("Temple_bast", 15591));
@@ -127,7 +125,6 @@ bool image_load_paks() {
     }
 
     // (set the first in the bunch as active initially, just for defaults)
-    data.temple = data.temple_paks.at(0);
     data.monument = data.monument_paks.at(0);
     data.enemy = data.enemy_paks.at(0);
 
@@ -164,11 +161,6 @@ static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
             return data.font_paks.at(pak_cache_idx);
         return data.font;
         /////
-    case PACK_TEMPLE:
-        if (pak_cache_idx < 0 || pak_cache_idx >= data.temple_paks.size())
-            return data.temple;
-        else
-            return data.temple_paks.at(pak_cache_idx);
     case PACK_MONUMENT:
         if (pak_cache_idx < 0 || pak_cache_idx >= data.monument_paks.size())
             return data.monument;

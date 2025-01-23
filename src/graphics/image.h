@@ -126,7 +126,7 @@ bool image_data_fonts_ready();
 bool image_load_paks();
 bool image_set_font_pak(encoding_type encoding);
 bool image_set_enemy_pak(int enemy_id);
-bool image_set_temple_complex_pak(int temple_id);
+//bool image_set_temple_complex_pak(int temple_id);
 bool image_set_monument_pak(int monument_id);
 
 int image_id_resource_icon(int resource);

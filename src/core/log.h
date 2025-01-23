@@ -26,7 +26,7 @@ inline void error(pcstr format, Args... args) {
 }
 
 inline void error(pcstr msg) {
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", msg);
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", msg ? msg : "empty");
 }
 
 template <class... Args>
