@@ -30,7 +30,7 @@ const trade_route &empire_city::get_route() const {
     return g_empire.get_route(route_id);
 }
 
-const empire_object *empire_city::empire_object() const {
+const empire_object *empire_city::get_empire_object() const {
     return empire_object_get(empire_object_id);
 }
 

@@ -32,7 +32,7 @@ struct empire_city {
     bool can_trade() const;
     trade_route &get_route();
     const trade_route &get_route() const;
-    const empire_object *empire_object() const;
+    const empire_object *get_empire_object() const;
     const full_empire_object *full_empire_object() const;
 
     void set_vulnerable() {
