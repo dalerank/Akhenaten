@@ -90,10 +90,8 @@ bool image_load_paks() {
 
     // add paks to parsing list cache
     data.pak_list.push_back(&data.temple);
-    data.pak_list.push_back(&data.sprmain2);
     data.pak_list.push_back(&data.monument);
 
-    data.sprmain2 = new imagepak("SprMain2", 20683);               // 20683 --> 23035
     // <--- original pyramid pak in here                                                                            //
     // 23735 --> 24163
 
@@ -182,9 +180,6 @@ static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
         else
             return data.enemy_paks.at(pak_cache_idx);
 
-    case PACK_EXPANSION_SPR:
-        return data.sprmain2;
-        /////
     }
     return nullptr;
 }

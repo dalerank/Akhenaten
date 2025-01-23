@@ -22,8 +22,6 @@ struct imagepak_holder_t {
 
     std::vector<imagepak **> pak_list;
 
-    imagepak *sprmain2 = nullptr;
-
     std::vector<imagepak *> temple_paks;
     std::vector<imagepak *> monument_paks;
     std::vector<imagepak *> enemy_paks;

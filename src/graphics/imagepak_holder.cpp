@@ -9,6 +9,7 @@ void config_load_imagepaks_config() {
     if (g_image_data->common_inited) {
         return;
     }
+
     g_config_arch.r_array("imagepaks", [] (archive arch) {
         imagepak_handle config;
         config.id = arch.r_int("id");
