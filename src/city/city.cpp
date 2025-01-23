@@ -22,6 +22,7 @@
 #include "figuretype/figure_fishing_point.h"
 #include "figuretype/figure_kingdome_trader.h"
 #include "figuretype/figure_trader_ship.h"
+#include "empire/empire_object.h"
 
 #include <core/string.h>
 #include <string.h>
@@ -93,9 +94,9 @@ void city_t::init_campaign_mission() {
 }
 
 void city_t::init_mission_resources(const std::vector<resource_allow>& resources) {
-    auto &c = ourcity();
+    auto fobj = const_cast<full_empire_object*>(ourcity().full_empire_object());
     for (const auto &r: resources) {
-        c.sells_resource[r.type] = r.allow;
+        fobj->add_sell_resource(r.type);
     }
 }
 
@@ -256,7 +257,7 @@ int stack_proper_quantity(int full, int resource) {
 }
 
 empire_city &city_t::ourcity() {
-    auto &cities = g_empire.get_cities();
+    auto cities = g_empire.get_cities();
     auto it = std::find_if(cities.begin(), cities.end(), [] (auto &city) { return (city.in_use && (city.type == EMPIRE_CITY_OURS)); });
 
     assert(it != cities.end());

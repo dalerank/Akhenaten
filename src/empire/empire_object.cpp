@@ -107,10 +107,7 @@ void empire_object_init_cities() {
             continue;
 
         full_empire_object* obj = &objects[i];
-        if (obj->obj.trade_route_id < 0)
-            obj->obj.trade_route_id = 0;
-        if (obj->obj.trade_route_id >= MAX_ROUTES)
-            obj->obj.trade_route_id = MAX_ROUTES - 1;
+        obj->obj.trade_route_id = std::clamp(obj->obj.trade_route_id, 0, MAX_ROUTES - 1);
         empire_city* city = g_empire.city(obj->city_name_id);
         city->in_use = 1;
         city->type = obj->city_type;
@@ -176,11 +173,13 @@ const full_empire_object* empire_get_full_object(int object_id) {
     auto& objects = g_empire_objects;
     return &objects[object_id];
 }
+
 const empire_object* empire_object_get(int object_id) {
     auto& objects = g_empire_objects;
     return &objects[object_id].obj;
 }
-const empire_object* empire_object_get_our_city(void) {
+
+const empire_object* empire_object_get_our_city() {
     auto& objects = g_empire_objects;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use) {
@@ -189,7 +188,8 @@ const empire_object* empire_object_get_our_city(void) {
                 return obj;
         }
     }
-    return 0;
+    assert(false && "our city should exist");
+    return nullptr;
 }
 const empire_object* empire_object_get_battle_icon(int path_id, int year) {
     auto& objects = g_empire_objects;
@@ -274,8 +274,9 @@ bool empire_object_city_buys_resource(int object_id, e_resource resource, bool f
 
 bool empire_object_city_sells_resource(int object_id, e_resource resource, bool from_raw_object) {
     auto& objects = g_empire_objects;
-    if (object_id == -1)
+    if (object_id == -1) {
         return false;
+    }
 
     if (from_raw_object) {
         const full_empire_object* object = &objects[object_id];
@@ -373,11 +374,15 @@ io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t vers
         iob->bind(BIND_SIGNATURE_UINT8, &obj->trade_route_id);
         iob->bind(BIND_SIGNATURE_UINT8, &full->trade_route_open);
         iob->bind(BIND_SIGNATURE_INT16, &full->trade_route_cost);
-        for (int r = 0; r < 14; r++)
+
+        for (int r = 0; r < EMPIRE_OBJ_MAX_SOLD_RESOURCES; r++) {
             iob->bind(BIND_SIGNATURE_UINT8, &full->city_sells_resource[r]);
+        }
         iob->bind____skip(8);
-        for (int r = 0; r < 8; r++)
+        for (int r = 0; r < EMPIRE_OBJ_MAX_BOUGHT_RESOURCES; r++) {
             iob->bind(BIND_SIGNATURE_UINT8, &full->city_buys_resource[r]);
+        }
+
         iob->bind(BIND_SIGNATURE_UINT8, &obj->invasion_path_id);
         iob->bind(BIND_SIGNATURE_UINT8, &obj->invasion_years);
 
@@ -388,8 +393,9 @@ io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t vers
             iob->bind(BIND_SIGNATURE_UINT32, &full->trade25);
             iob->bind(BIND_SIGNATURE_UINT32, &full->trade15);
         } else {
-            for (int r = 0; r < RESOURCES_MAX; r++)
+            for (int r = 0; r < RESOURCES_MAX; r++) {
                 iob->bind(BIND_SIGNATURE_UINT8, &full->trade_demand[r]);
+            }
         }
 
         if (last_object_was_used)
@@ -426,3 +432,16 @@ io_buffer* iob_empire_map_routes = new io_buffer([](io_buffer* iob, size_t versi
         //        obj->route_type, obj->in_use, obj->unk_03);
     }
 });
+
+void full_empire_object::add_sell_resource(e_resource r) {
+    // check resource exist in set
+    auto it = std::find(std::begin(city_sells_resource), std::end(city_sells_resource), r);
+    if (it != std::end(city_sells_resource)) {
+        return;
+    }
+
+    // find empty place
+    it = std::find(std::begin(city_sells_resource), std::end(city_sells_resource), 0);
+    assert(it != std::end(city_sells_resource));
+    *it = r;
+}

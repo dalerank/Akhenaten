@@ -1,5 +1,6 @@
 #include "empire_city.h"
 #include "empire/empire.h"
+#include "empire_object.h"
 
 const token_holder<e_empire_city, EMPIRE_CITY_OURS, EMPIRE_CITY_COUNT> e_empire_city_tokens;
 
@@ -27,4 +28,12 @@ trade_route &empire_city::get_route() {
 
 const trade_route &empire_city::get_route() const {
     return g_empire.get_route(route_id);
+}
+
+const empire_object *empire_city::empire_object() {
+    return empire_object_get(empire_object_id);
+}
+
+const full_empire_object *empire_city::full_empire_object() {
+    return empire_get_full_object(empire_object_id);
 }

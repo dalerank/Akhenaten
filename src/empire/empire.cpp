@@ -368,8 +368,10 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         iob->bind(BIND_SIGNATURE_UINT8, &city->route_id);
         iob->bind(BIND_SIGNATURE_UINT8, &city->is_open);
 
-        for (int r = 0; r < RESOURCES_MAX; r++)
+        for (int r = 0; r < RESOURCES_MAX; r++) {
             iob->bind(BIND_SIGNATURE_UINT8, &city->buys_resource[r]);
+        }
+
         for (int r = 0; r < RESOURCES_MAX; r++) {
             iob->bind(BIND_SIGNATURE_UINT8, &city->sells_resource[r]);
         }

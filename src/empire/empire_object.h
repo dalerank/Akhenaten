@@ -34,22 +34,24 @@ struct full_empire_object {
     int city_name_id;
     int trade_route_open;
     int trade_route_cost;
-    int city_sells_resource[EMPIRE_OBJ_MAX_SOLD_RESOURCES];
-    int city_buys_resource[EMPIRE_OBJ_MAX_BOUGHT_RESOURCES];
+    e_resource city_sells_resource[EMPIRE_OBJ_MAX_SOLD_RESOURCES];
+    e_resource city_buys_resource[EMPIRE_OBJ_MAX_BOUGHT_RESOURCES];
     int trade_demand[RESOURCES_MAX];
     int trade40;
     int trade25;
     int trade15;
     empire_object obj;
+
+    void add_sell_resource(e_resource);
 };
 
-void empire_object_init_cities(void);
+void empire_object_init_cities();
 
 int empire_object_init_distant_battle_travel_months(int object_type);
 
 const full_empire_object* empire_get_full_object(int object_id);
 const empire_object* empire_object_get(int object_id);
-const empire_object* empire_object_get_our_city(void);
+const empire_object* empire_object_get_our_city();
 
 void empire_object_foreach(std::function<void(const empire_object *)> callback);
 
@@ -65,8 +67,6 @@ bool empire_object_city_buys_resource(int object_id, e_resource resource, bool f
 bool empire_object_city_sells_resource(int object_id, e_resource resource, bool from_raw_object = false);
 
 int empire_object_update_animation(const empire_object* obj, int image_id);
-
-//////
 
 struct map_route_object {
     int unk_header[2]; // 05 00 00 00 00 00 00 00

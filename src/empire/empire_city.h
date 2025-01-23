@@ -5,6 +5,9 @@
 #include "empire/trade_route.h"
 #include "core/tokenum.h"
 
+struct full_empire_object;
+struct empire_object;
+
 struct empire_city {
     enum {
         check_open_route = 1
@@ -29,6 +32,8 @@ struct empire_city {
     bool can_trade() const;
     trade_route &get_route();
     const trade_route &get_route() const;
+    const empire_object *empire_object();
+    const full_empire_object *full_empire_object();
 
     void set_vulnerable() {
         type = EMPIRE_CITY_FOREIGN_TRADING;
