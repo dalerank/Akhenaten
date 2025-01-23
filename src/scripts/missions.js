@@ -363,6 +363,13 @@ var mission9 = { // Abu
 
 	resources : [
 		{resource: RESOURCE_POTTERY, allowed:true},
+		{resource: RESOURCE_GEMS, allowed:true},
+		{resource: RESOURCE_LUXURY_GOODS, allowed:true},
+		{resource: RESOURCE_BEER, allowed:true},
+		{resource: RESOURCE_LINEN, allowed:true},
+		{resource: RESOURCE_PAPYRUS, allowed:true},
+		{resource: RESOURCE_BRICKS, allowed:true},
+		{resource: RESOURCE_STRAW, allowed:true},
 	],
 
 	buildings : [BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
