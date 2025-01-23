@@ -228,7 +228,8 @@ int build_menu_widget::ui_handle_mouse(const mouse* m) {
 
 const animation_t &window_build_menu_image() {
     auto &data = g_build_menuw;
-    return building_menu_anim(data.selected_submenu);
+    int id = data.selected_submenu ? data.selected_submenu : BUILDING_MENU_VACANT_HOUSE;
+    return building_menu_anim(id);
 }
 
 void window_build_menu_show(int submenu) {
