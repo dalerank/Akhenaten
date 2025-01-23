@@ -227,6 +227,7 @@ static void post_load() {
 
     case e_session_save:
         tutorial_init(/*clear_all*/false, false);
+        building_menu_setup_mission();
         break;
 
     case e_session_custom_map:
