@@ -31,7 +31,6 @@ var building_temple_seth = {}
 var building_temple_bast = {}
 var building_temple = {}
 var building_mine_copper = {}
-var building_mine_gems = {}
 var building_small_statue = {}
 var building_medium_statue = {}
 var building_large_statue = {}

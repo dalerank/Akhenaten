@@ -1513,7 +1513,7 @@ building_mine_copper = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building_mine_gems = {
+building building_mine_gems = {
   animations : {
     preview : { pack:PACK_GENERAL, id:188 },
     base : { pack:PACK_GENERAL, id:188 },
