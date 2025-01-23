@@ -255,18 +255,18 @@ static void disable_resources() {
     disable_raw_if_unavailable(BUILDING_GEMSTONE_MINE, RESOURCE_GEMS);
     //
 
-    disable_crafted_if_unavailable(BUILDING_POTTERY_WORKSHOP, RESOURCE_POTTERY);
-    disable_crafted_if_unavailable(BUILDING_BREWERY_WORKSHOP, RESOURCE_BEER);
-    disable_crafted_if_unavailable(BUILDING_JEWELS_WORKSHOP, RESOURCE_LUXURY_GOODS);
-    disable_crafted_if_unavailable(BUILDING_WEAVER_WORKSHOP, RESOURCE_LINEN);
-    disable_crafted_if_unavailable(BUILDING_PAPYRUS_WORKSHOP, RESOURCE_PAPYRUS);
-    disable_crafted_if_unavailable(BUILDING_BRICKS_WORKSHOP, RESOURCE_BRICKS, RESOURCE_STRAW);
-    disable_crafted_if_unavailable(BUILDING_CATTLE_RANCH, RESOURCE_MEAT, RESOURCE_STRAW);
-    disable_crafted_if_unavailable(BUILDING_WEAPONSMITH, RESOURCE_WEAPONS);
-    disable_crafted_if_unavailable(BUILDING_CHARIOTS_WORKSHOP, RESOURCE_CHARIOTS);
-
-    disable_crafted_if_unavailable(BUILDING_PAINT_WORKSHOP, RESOURCE_PAINT);
-    disable_crafted_if_unavailable(BUILDING_LAMP_WORKSHOP, RESOURCE_LAMPS);
+    //disable_crafted_if_unavailable(BUILDING_POTTERY_WORKSHOP, RESOURCE_POTTERY);
+    //disable_crafted_if_unavailable(BUILDING_BREWERY_WORKSHOP, RESOURCE_BEER);
+    //disable_crafted_if_unavailable(BUILDING_JEWELS_WORKSHOP, RESOURCE_LUXURY_GOODS);
+    //disable_crafted_if_unavailable(BUILDING_WEAVER_WORKSHOP, RESOURCE_LINEN);
+    //disable_crafted_if_unavailable(BUILDING_PAPYRUS_WORKSHOP, RESOURCE_PAPYRUS);
+    //disable_crafted_if_unavailable(BUILDING_BRICKS_WORKSHOP, RESOURCE_BRICKS, RESOURCE_STRAW);
+    //disable_crafted_if_unavailable(BUILDING_CATTLE_RANCH, RESOURCE_MEAT, RESOURCE_STRAW);
+    //disable_crafted_if_unavailable(BUILDING_WEAPONSMITH, RESOURCE_WEAPONS);
+    //disable_crafted_if_unavailable(BUILDING_CHARIOTS_WORKSHOP, RESOURCE_CHARIOTS);
+    //
+    //disable_crafted_if_unavailable(BUILDING_PAINT_WORKSHOP, RESOURCE_PAINT);
+    //disable_crafted_if_unavailable(BUILDING_LAMP_WORKSHOP, RESOURCE_LAMPS);
 }
 
 static void enable_correct_palace_tier() {
