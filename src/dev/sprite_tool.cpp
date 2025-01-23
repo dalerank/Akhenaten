@@ -77,7 +77,22 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                         ImVec2 uv_max((tx_offset.x + img->width) / (float)atlas_size.x, (tx_offset.y + img->height) / (float)atlas_size.y);
                         
                         ImGui::BeginChild(bstring32("##imageframe%d", idx), ImVec2(msize.x, msize.y), true);
+                        ImVec2 cursor = ImGui::GetCursorPos();
                         ImGui::Image(img->atlas.p_atlas->texture, ImVec2(img->width, img->height), uv_min, uv_max);
+
+                        if (img->has_isometric_top && img->isometric_top) {
+                            int py = HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
+                            ImGui::SetCursorPos(cursor);
+                            image_t *imgt = img->isometric_top;
+
+                            const vec2i tx_offset_t = imgt->atlas.offset;
+                            const vec2i atlas_size_t(imgt->atlas.p_atlas->width, imgt->atlas.p_atlas->height);
+                            ImVec2 uv_min_t(tx_offset_t.x / (float)atlas_size_t.x, tx_offset_t.y / (float)atlas_size_t.y);
+                            ImVec2 uv_max_t((tx_offset_t.x + imgt->width) / (float)atlas_size_t.x, (tx_offset_t.y + imgt->height) / (float)atlas_size_t.y);
+
+                            ImGui::Image(imgt->atlas.p_atlas->texture, ImVec2(imgt->width, imgt->height), uv_min_t, uv_max_t);
+                        }
+
                         ImGui::EndChild();
                     };
 
