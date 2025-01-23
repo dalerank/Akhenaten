@@ -564,9 +564,12 @@ void BuildPlanner::setup_build_flags() {
         break;
 
     case BUILDING_GOLD_MINE:
-    case BUILDING_GEMSTONE_MINE:
         set_flag(PlannerFlags::Rock);
         set_flag(PlannerFlags::Ore);
+        break;
+
+    case BUILDING_GEMSTONE_MINE:
+        set_flag(PlannerFlags::Rock);
         break;
 
     case BUILDING_COPPER_MINE:
