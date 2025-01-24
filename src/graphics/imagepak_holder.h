@@ -22,7 +22,6 @@ struct imagepak_holder_t {
 
     std::vector<imagepak **> pak_list;
 
-    std::vector<imagepak *> temple_paks;
     std::vector<imagepak *> monument_paks;
     std::vector<imagepak *> enemy_paks;
     std::vector<imagepak *> font_paks;
@@ -33,7 +32,7 @@ struct imagepak_holder_t {
 
     color *tmp_image_data = nullptr;
 
-    std::array<imagepak_handle, 16> common;
+    std::array<imagepak_handle, 32> common;
 };
 
 void image_data_init();
