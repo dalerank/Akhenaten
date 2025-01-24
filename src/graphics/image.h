@@ -125,7 +125,7 @@ extern int terrain_ph_offset;
 bool image_data_fonts_ready();
 bool image_load_paks();
 bool image_set_font_pak(encoding_type encoding);
-bool image_set_enemy_pak(int enemy_id);
+//bool image_set_enemy_pak(int enemy_id);
 //bool image_set_temple_complex_pak(int temple_id);
 //bool image_set_monument_pak(int monument_id);
 
@@ -137,5 +137,5 @@ const image_t* image_get(int id);
 const image_t *image_get(int pak, int id);
 const image_t *image_get(image_desc desc);
 const image_t* image_letter(int letter_id);
-const image_t* image_get_enemy(int id);
+const image_t* image_get_enemy(int type, int id);
 const image_t *image_next_close_get(image_desc desc);

@@ -129,44 +129,44 @@ int scenario_is_before_mission(int mission) {
     return !g_scenario_data.settings.is_custom && g_scenario_data.settings.campaign_mission_rank < mission;
 }
 
-int scenario_starting_kingdom(void) {
+int scenario_starting_kingdom() {
     return g_scenario_data.settings.starting_kingdom;
 }
-int scenario_starting_personal_savings(void) {
+int scenario_starting_personal_savings() {
     return g_scenario_data.settings.starting_personal_savings;
 }
 
-const uint8_t* scenario_name(void) {
+const uint8_t* scenario_name() {
     return g_scenario_data.scenario_name;
 }
 void scenario_set_name(const uint8_t* name) {
     string_copy(name, g_scenario_data.scenario_name, MAX_SCENARIO_NAME);
 }
 
-int scenario_is_open_play(void) {
+int scenario_is_open_play() {
     return g_scenario_data.is_open_play;
 }
-int scenario_open_play_id(void) {
+int scenario_open_play_id() {
     return g_scenario_data.open_play_scenario_id;
 }
 
-int scenario_property_climate(void) {
+int scenario_property_climate() {
     return g_scenario_data.climate;
 }
 
-int scenario_property_start_year(void) {
+int scenario_property_start_year() {
     return g_scenario_data.start_year;
 }
-int scenario_property_kingdom_supplies_grain(void) {
+int scenario_property_kingdom_supplies_grain() {
     return g_scenario_data.kingdom_supplies_grain;
 }
-int scenario_property_enemy(void) {
+int scenario_property_enemy() {
     return g_scenario_data.enemy_id;
 }
-int scenario_property_player_rank(void) {
+int scenario_property_player_rank() {
     return g_scenario_data.player_rank;
 }
-int scenario_image_id(void) {
+int scenario_image_id() {
     return g_scenario_data.image_id;
 }
 

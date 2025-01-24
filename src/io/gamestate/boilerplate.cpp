@@ -187,7 +187,7 @@ static void post_load() {
     game_undo_disable();
 
     // military
-    image_set_enemy_pak(scenario_property_enemy());
+    // image_set_enemy_pak(scenario_property_enemy());
     city_military_determine_distant_battle_city();
     scenario_distant_battle_set_kingdome_travel_months();
     scenario_distant_battle_set_enemy_travel_months();

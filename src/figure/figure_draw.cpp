@@ -105,7 +105,7 @@ void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight, vec2i* c
 
     y_correction = dcast()->y_correction(y_correction);
 
-    const image_t* img = is_enemy_image ? image_get_enemy(sprite_image_id) : image_get(sprite_image_id);
+    const image_t* img = is_enemy_image ? image_get_enemy(PACK_ENEMY_ASSYRIAN, sprite_image_id) : image_get(sprite_image_id);
     ImageDraw::img_sprite(ctx, sprite_image_id, pixel + vec2i{ x_correction, y_correction }, COLOR_MASK_NONE);
 }
 

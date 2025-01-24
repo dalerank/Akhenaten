@@ -46,10 +46,10 @@ bool image_data_fonts_ready() {
     return g_image_data && g_image_data->fonts_loaded;
 }
 
-bool image_set_enemy_pak(int enemy_id) {
-    auto& data = *g_image_data;
-    return set_pak_in_collection(enemy_id, &data.enemy, &data.enemy_paks);
-}
+//bool image_set_enemy_pak(int enemy_id) {
+//    auto& data = *g_image_data;
+//    return set_pak_in_collection(enemy_id, &data.enemy, &data.enemy_paks);
+//}
 //bool image_set_temple_complex_pak(int temple_id) {
 //    auto& data = *g_image_data;
 //    return set_pak_in_collection(temple_id, &data.temple, &data.temple_paks);
@@ -89,8 +89,7 @@ bool image_load_paks() {
     }
 
     // the various Enemy paks.
-    static const char* enemy_file_names_ph[14] = {"Assyrian",
-                                                  "Egyptian",
+    static const char* enemy_file_names_ph[13] = {"Egyptian",
                                                   "Canaanite",
                                                   "Enemy_1",
                                                   "Hittite",
@@ -103,12 +102,9 @@ bool image_load_paks() {
                                                   "Phoenician",
                                                   "Roman",
                                                   "SeaPeople"};
-    for (const auto &path: enemy_file_names_ph) {
-        data.enemy_paks.push_back(new imagepak(path, 11026));
-    }
-
-    // (set the first in the bunch as active initially, just for defaults)
-    data.enemy = data.enemy_paks.at(0);
+    //for (const auto &path: enemy_file_names_ph) {
+    //    data.enemy_paks.push_back(new imagepak(path, 11026));
+    //}
 
     auto folders = vfs::dir_find_all_subdirectories("Data/", true);
     for (const auto &f : folders) {
@@ -130,25 +126,15 @@ bool image_load_paks() {
 
 static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
     auto& data = *g_image_data;
+    if (collection == PACK_FONT) {
+        return data.font;
+    }
+
     auto handle = g_image_data->common[collection].handle;
     if (handle) {
         return handle;
     }
 
-    switch (collection) {
-    case PACK_FONT:
-        if (pak_cache_idx < 0 || pak_cache_idx >= data.font_paks.size())
-            return data.font;
-        else
-            return data.font_paks.at(pak_cache_idx);
-        return data.font;
-    case PACK_ENEMY:
-        if (pak_cache_idx < 0 || pak_cache_idx >= data.enemy_paks.size())
-            return data.enemy;
-        else
-            return data.enemy_paks.at(pak_cache_idx);
-
-    }
     return nullptr;
 }
 
@@ -243,9 +229,9 @@ const image_t* image_letter(int letter_id) {
     }
 }
 
-const image_t* image_get_enemy(int id) {
+const image_t* image_get_enemy(int type, int id) {
     auto& data = *g_image_data;
-    return data.enemy->get_image(id);
+    return data.common[type].handle->get_image(id);
 }
 
 const int image_t::isometric_size() const {
