@@ -12,7 +12,7 @@ enum e_pack {
     //
     PACK_FONT,
     //
-    PACK_MONUMENT,
+    PACK_RESERVED,
     PACK_ENEMY,
     //
     PACK_EXPANSION,
@@ -27,6 +27,7 @@ enum e_pack {
     PACK_TEMPLE_BAST,
     //
     PACK_PYRAMID,
+    PACK_BENT_PYRAMID,
     //
     PACK_CUSTOM,
     // 

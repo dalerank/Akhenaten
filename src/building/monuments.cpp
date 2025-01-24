@@ -235,7 +235,8 @@ int get_temple_complex_part_image(int type, int part, int orientation, int level
 int get_monument_part_image(int part, int orientation, int level) {
     level = std::clamp(level, 0, 11);
 
-    int base_image_id = image_id_from_group(GROUP_MONUMENT_BLOCKS);
+    assert(false && "not implemented yet");
+    int base_image_id = 0;// image_id_from_group(GROUP_MONUMENT_BLOCKS);
     return base_image_id;
 
     //switch (part) {

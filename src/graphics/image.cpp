@@ -54,10 +54,10 @@ bool image_set_enemy_pak(int enemy_id) {
 //    auto& data = *g_image_data;
 //    return set_pak_in_collection(temple_id, &data.temple, &data.temple_paks);
 //}
-bool image_set_monument_pak(int monument_id) {
-    auto& data = *g_image_data;
-    return set_pak_in_collection(monument_id, &data.monument, &data.monument_paks);
-}
+//bool image_set_monument_pak(int monument_id) {
+//    auto& data = *g_image_data;
+//    return set_pak_in_collection(monument_id, &data.monument, &data.monument_paks);
+//}
 
 bool image_load_paks() {
     auto& data = *g_image_data;
@@ -88,16 +88,6 @@ bool image_load_paks() {
         data.pak_list.push_back(&data.common[imgpak.id].handle);
     }
 
-    // add paks to parsing list cache
-    data.pak_list.push_back(&data.monument);
-
-    // <--- original pyramid pak in here                                                                            //
-    // 23735 --> 24163
-
-
-    // the various Monument paks.
-    data.monument_paks.push_back(new imagepak("bent_pyramid", 23735));
-
     // the various Enemy paks.
     static const char* enemy_file_names_ph[14] = {"Assyrian",
                                                   "Egyptian",
@@ -118,7 +108,6 @@ bool image_load_paks() {
     }
 
     // (set the first in the bunch as active initially, just for defaults)
-    data.monument = data.monument_paks.at(0);
     data.enemy = data.enemy_paks.at(0);
 
     auto folders = vfs::dir_find_all_subdirectories("Data/", true);
@@ -153,12 +142,6 @@ static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
         else
             return data.font_paks.at(pak_cache_idx);
         return data.font;
-        /////
-    case PACK_MONUMENT:
-        if (pak_cache_idx < 0 || pak_cache_idx >= data.monument_paks.size())
-            return data.monument;
-        else
-            return data.monument_paks.at(pak_cache_idx);
     case PACK_ENEMY:
         if (pak_cache_idx < 0 || pak_cache_idx >= data.enemy_paks.size())
             return data.enemy;
@@ -203,6 +186,10 @@ const image_t *image_next_close_get(image_desc desc) {
     const int start = ids[desc.id];
 
     std::sort(sorted_ids.begin(), sorted_ids.end());
+    if (!pak->loaded_system_sprites()) {
+        sorted_ids.erase(sorted_ids.begin());
+    }
+
     auto it = std::lower_bound(sorted_ids.begin(), sorted_ids.end(), start);
     if (it == sorted_ids.end()) {
         return nullptr;

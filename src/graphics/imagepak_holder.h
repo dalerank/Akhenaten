@@ -22,11 +22,9 @@ struct imagepak_holder_t {
 
     std::vector<imagepak **> pak_list;
 
-    std::vector<imagepak *> monument_paks;
     std::vector<imagepak *> enemy_paks;
     std::vector<imagepak *> font_paks;
 
-    imagepak *monument = nullptr;
     imagepak *enemy = nullptr;
     imagepak *font = nullptr;
 
