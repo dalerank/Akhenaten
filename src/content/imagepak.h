@@ -52,4 +52,5 @@ public:
     int get_global_image_index(int group);
     inline int get_user_idx() const { return useridx; }
     const image_t* get_image(int id, bool relative = false);
+    bool loaded_system_sprites() const { return should_load_system_sprites; }
 };

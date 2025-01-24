@@ -60,7 +60,7 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
 
                     auto maxImageSize = [] (image_t *img, vec2i msize) {
                         if (img->mirrored_img != 0) {
-                            img = img->mirrored_img;
+                            img = img->mirrored_img;                            
                         }
                         msize.x = (img->width < msize.x ? msize.x : img->width);
                         msize.y = (img->height < msize.y ? msize.y : img->height);
@@ -128,7 +128,7 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                     } else if (img->debug.animate == 3) {
                         vec2i msize(60, 60);
                         image_t *next_section_img = const_cast<image_t *>(image_next_close_get(image_desc{ ipak.id, i, 0 }));
-                        const int section_len = (next_section_img - img);
+                        const int section_len = (next_section_img->sgx_index - img->sgx_index);
                         for (int imgi = 0; imgi < section_len; ++imgi) {
                             image_t *animg = img + imgi;
                             maxImageSize(animg, msize);
