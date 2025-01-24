@@ -15,5 +15,6 @@ imagepaks = [
   {id: PACK_EXPANSION, name:"Expansion", index:23035, system:false}, // 23035 --> 23935
   {id: PACK_EMPIRE, name:"Empire", index:20305, system:false}, // 20305 --> 20506 (+177)
   {id: PACK_EXPANSION_SPR, name:"SprMain2", index:20683, system:false}, // 20683 --> 23035
+  {id: PACK_PYRAMID, name:"Pyramid", index:34000, system:false}, // 34000 --> 23035
   //{id: PACK_CUSTOM, name:"Pharaoh_Custom", index:30000, system:false, custom:true},  // 30000 -->
 ]

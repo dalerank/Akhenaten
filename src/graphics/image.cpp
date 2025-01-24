@@ -96,8 +96,6 @@ bool image_load_paks() {
 
 
     // the various Monument paks.
-    //data.monument_paks.push_back(new imagepak("Mastaba", 23735));
-    data.monument_paks.push_back(new imagepak("Pyramid", 23735));
     data.monument_paks.push_back(new imagepak("bent_pyramid", 23735));
 
     // the various Enemy paks.

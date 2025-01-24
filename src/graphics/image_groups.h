@@ -26,6 +26,8 @@ enum e_pack {
     PACK_TEMPLE_SETH,
     PACK_TEMPLE_BAST,
     //
+    PACK_PYRAMID,
+    //
     PACK_CUSTOM,
     // 
     PACK_MAX,
