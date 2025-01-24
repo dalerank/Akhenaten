@@ -257,7 +257,7 @@ int stack_proper_quantity(int full, int resource) {
 }
 
 empire_city &city_t::ourcity() {
-    auto cities = g_empire.get_cities();
+    auto const &cities = g_empire.get_cities();
     auto it = std::find_if(cities.begin(), cities.end(), [] (auto &city) { return (city.in_use && (city.type == EMPIRE_CITY_OURS)); });
 
     assert(it != cities.end());
