@@ -94,9 +94,6 @@ bool image_load_paks() {
     // <--- original pyramid pak in here                                                                            //
     // 23735 --> 24163
 
-    // the 5 Temple Complex paks.
-    // <--- original temple complex pak here
-    data.temple_paks.push_back(new imagepak("Temple_bast", 15591));
 
     // the various Monument paks.
     //data.monument_paks.push_back(new imagepak("Mastaba", 23735));

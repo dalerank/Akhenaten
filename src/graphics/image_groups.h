@@ -24,6 +24,7 @@ enum e_pack {
     PACK_TEMPLE_NILE,
     PACK_TEMPLE_PTAH,
     PACK_TEMPLE_SETH,
+    PACK_TEMPLE_BAST,
     //
     PACK_CUSTOM,
     // 
