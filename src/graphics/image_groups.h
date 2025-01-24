@@ -12,7 +12,8 @@ enum e_pack {
     //
     PACK_FONT,
     //
-    PACK_RESERVED,
+    PACK_ABUSIMBEL,
+    //
     PACK_ENEMY_ASSYRIAN,
     //
     PACK_EXPANSION,
