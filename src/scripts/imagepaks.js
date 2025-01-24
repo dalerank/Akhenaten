@@ -8,7 +8,8 @@ imagepaks = [
   {id: PACK_SPR_AMBIENT, name:"SprAmbient", index:15831, system:false}, // 15831 --> 18765
   {id: PACK_MASTABA, name:"mastaba", index:25000, system:false}, // 23735 --> 23735 + 429
   {id: PACK_TEMPLE_RA, name:"Temple_ra", index:32000, system:false}, // 32000 --> 32000 + 239
-  {id: PACK_TEMPLE_NILE, name:"Temple_nile", index:32300, system:false}, // 32300 --> 32000 + 239
+  {id: PACK_TEMPLE_NILE, name:"Temple_nile", index:32300, system:false}, // 32300 --> 32300 + 239
+  {id: PACK_TEMPLE_PTAH, name:"Temple_ptah", index:32600, system:false}, // 32600 --> 32600 + 239
   {id: PACK_EXPANSION, name:"Expansion", index:23035, system:false}, // 23035 --> 23935
   {id: PACK_EMPIRE, name:"Empire", index:20305, system:false}, // 20305 --> 20506 (+177)
   {id: PACK_EXPANSION_SPR, name:"SprMain2", index:20683, system:false}, // 20683 --> 23035

@@ -22,6 +22,7 @@ enum e_pack {
     //
     PACK_TEMPLE_RA,
     PACK_TEMPLE_NILE,
+    PACK_TEMPLE_PTAH,
     //
     PACK_CUSTOM,
     // 

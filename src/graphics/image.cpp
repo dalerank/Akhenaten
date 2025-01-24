@@ -96,7 +96,6 @@ bool image_load_paks() {
 
     // the 5 Temple Complex paks.
     // <--- original temple complex pak here
-    data.temple_paks.push_back(new imagepak("Temple_ptah", 15591));
     data.temple_paks.push_back(new imagepak("Temple_seth", 15591));
     data.temple_paks.push_back(new imagepak("Temple_bast", 15591));
 
