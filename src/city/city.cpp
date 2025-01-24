@@ -94,7 +94,7 @@ void city_t::init_campaign_mission() {
 }
 
 void city_t::init_mission_resources(const std::vector<resource_allow>& resources) {
-    auto fobj = const_cast<full_empire_object*>(ourcity().full_empire_object());
+    auto fobj = const_cast<full_empire_object*>(ourcity().get_full_empire_object());
     for (const auto &r: resources) {
         fobj->add_sell_resource(r.type);
     }
@@ -257,7 +257,7 @@ int stack_proper_quantity(int full, int resource) {
 }
 
 empire_city &city_t::ourcity() {
-    auto cities = g_empire.get_cities();
+    auto const &cities = g_empire.get_cities();
     auto it = std::find_if(cities.begin(), cities.end(), [] (auto &city) { return (city.in_use && (city.type == EMPIRE_CITY_OURS)); });
 
     assert(it != cities.end());

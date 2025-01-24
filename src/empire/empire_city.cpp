@@ -34,6 +34,6 @@ const empire_object *empire_city::get_empire_object() const {
     return empire_object_get(empire_object_id);
 }
 
-const full_empire_object *empire_city::full_empire_object() const {
+const full_empire_object *empire_city::get_full_empire_object() const {
     return empire_get_full_object(empire_object_id);
 }

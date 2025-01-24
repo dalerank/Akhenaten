@@ -1,12 +1,10 @@
 #pragma once
 
+#include "empire/empire_object.h"
 #include "empire/type.h"
 #include "game/resource.h"
 #include "empire/trade_route.h"
 #include "core/tokenum.h"
-
-struct full_empire_object;
-struct empire_object;
 
 struct empire_city {
     enum {
@@ -33,7 +31,7 @@ struct empire_city {
     trade_route &get_route();
     const trade_route &get_route() const;
     const empire_object *get_empire_object() const;
-    const full_empire_object *full_empire_object() const;
+    const full_empire_object *get_full_empire_object() const;
 
     void set_vulnerable() {
         type = EMPIRE_CITY_FOREIGN_TRADING;
