@@ -19,6 +19,7 @@ enum e_pack {
     PACK_CAESAREUM_4,
     //
     PACK_ENEMY_ASSYRIAN,
+    PACK_ENEMY_CANAANITE,
     //
     PACK_EXPANSION,
     PACK_EXPANSION_SPR,
