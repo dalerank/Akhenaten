@@ -282,10 +282,9 @@ static void enable_correct_palace_tier() {
         building_menu_toggle_building(BUILDING_VILLAGE_PALACE, false);
         //
         building_menu_toggle_building(BUILDING_CITY_PALACE, false);
-        building_menu_toggle_building(BUILDING_FAMILY_MANSION, false);
+        building_menu_toggle_building(BUILDING_PERSONAL_MANSION, false);
         //
         building_menu_toggle_building(BUILDING_DYNASTY_MANSION, false);
-
     } else {
         building_menu_toggle_building(BUILDING_VILLAGE_PALACE, false);
         building_menu_toggle_building(BUILDING_TOWN_PALACE, false);

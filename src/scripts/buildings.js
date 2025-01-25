@@ -687,9 +687,23 @@ building building_personal_mansion = {
 
 building building_village_mansion = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:47 },
-    base : { pack:PACK_GENERAL, id:47 },
-    work : { pos : [-1, -1], pack:PACK_GENERAL, id:47, offset:1, max_frames:12 }
+    preview : { pack:PACK_GENERAL, id:85 },
+    base : { pack:PACK_GENERAL, id:85 },
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:85, offset:1, max_frames:12 }
+  },
+  labor_category : LABOR_CATEGORY_GOVERNMENT,
+  building_size : 4,
+  info_help_id:78,
+  info_text_id:103,
+  unique_building : true,
+  window_info_height_id : 1,
+}
+
+building building_family_mansion = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:86 },
+    base : { pack:PACK_GENERAL, id:86 },
+    work : { pos : [-1, -1], pack:PACK_GENERAL, id:86, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   building_size : 4,
@@ -700,13 +714,6 @@ building building_village_mansion = {
 }
 
 building building_dynasty_mansion = {
-  labor_category : LABOR_CATEGORY_GOVERNMENT,
-  building_size : 4,
-  unique_building : true,
-  window_info_height_id : 1,
-}
-
-building building_family_mansion = {
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   building_size : 4,
   unique_building : true,

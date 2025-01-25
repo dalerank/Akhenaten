@@ -37,6 +37,8 @@ bool building_mansion::draw_ornaments_and_animations_height(painter &ctx, vec2i 
     int max_workers = model()->laborers;
     switch (type()) {
     case BUILDING_PERSONAL_MANSION: 
+    case BUILDING_FAMILY_MANSION:
+    case BUILDING_DYNASTY_MANSION:
         {
             const animation_t &ranim = anim(animkeys().work);
             draw_normal_anim(ctx, point, tile, mask);
