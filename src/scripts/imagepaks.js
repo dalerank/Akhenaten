@@ -50,5 +50,6 @@ imagepaks = [
   {id: PACK_ENEMY_NUBIAN, name:"Nubian", index:45000, system:false}, // 45000 --> 45850
   {id: PACK_ENEMY_PERSIAN, name:"Persian", index:46000, system:false}, // 46000 --> 46900
   {id: PACK_ENEMY_PHOENICIAN, name:"Phoenician", index:47000, system:false}, // 47000 --> 47850
+  {id: PACK_ENEMY_ROMAN, name:"Roman", index:48000, system:false}, // 48000 --> 48900
   //{id: PACK_CUSTOM, name:"Pharaoh_Custom", index:30000, system:false, custom:true},  // 30000 -->
 ]
