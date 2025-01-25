@@ -121,7 +121,6 @@ var building_house_palatial_estate = {}
 // misc
 var empire_window = {}
 var empire_images_remap = []
-var imagepaks = []
 
 // ui
 var uioptions = {}

@@ -79,11 +79,12 @@ bool image_load_paks() {
     data.pak_list.push_back(&data.font);
     data.fonts_loaded = true;
 
-    for (const auto &imgpak : g_image_data->common) {
+    for (auto &imgpak : g_image_data->common) {
         if (imgpak.name.empty()) {
             continue;
         }
 
+        imgpak.entries_num = imagepak::get_entries_num(imgpak.name);
         if (imgpak.delayed) {
             continue;
         }

@@ -931,3 +931,11 @@ const image_t* imagepak::get_image(int id, bool relative) {
 
     return &images_array[id];
 }
+
+int imagepak::get_entries_num(pcstr pak_name) {
+    vfs::path filename_full("Data/", pak_name);
+
+    // split in .555 and .sg3 filename strings
+    vfs::path filename_sgx(filename_full, ".sg3");
+    return io_read_sgx_entries_num(filename_sgx);;
+}

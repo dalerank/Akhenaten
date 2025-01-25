@@ -53,4 +53,6 @@ public:
     inline int get_user_idx() const { return useridx; }
     const image_t* get_image(int id, bool relative = false);
     bool loaded_system_sprites() const { return should_load_system_sprites; }
+
+    static int get_entries_num(pcstr pak_name);
 };

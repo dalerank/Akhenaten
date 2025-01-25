@@ -3,7 +3,36 @@
 #include "content/vfs.h"
 #include "platform/platform.h"
 
-int io_read_file_into_buffer(const char* filepath, int localizable, buffer* buf, int max_size) {
+int io_read_sgx_entries_num(vfs::path filepath) {
+    vfs::path fs_file = vfs::content_file(filepath);
+    if (fs_file.empty()) {
+        return 0;
+    }
+
+    FILE *fp = vfs::file_open(fs_file, "rb");
+    if (!fp) {
+        return 0;
+    }
+
+    struct sgx_header_t {
+        uint32_t unk00;
+        uint32_t version;
+        uint32_t unk02;
+        uint32_t unk03;
+        uint32_t entries_num;
+        uint32_t num_bmp_names;
+        uint32_t reserved;
+    } sgx_header;
+
+    fread(&sgx_header, sizeof(sgx_header_t), 1, fp);
+    vfs::file_close(fp);
+
+    sgx_header.entries_num += 1;
+
+    return sgx_header.entries_num;
+}
+
+int io_read_file_into_buffer(vfs::path filepath, int localizable, buffer* buf, int max_size) {
     if (buf == nullptr) {
         return 0;
     }
@@ -34,7 +63,7 @@ int io_read_file_into_buffer(const char* filepath, int localizable, buffer* buf,
     return bytes_read;
 }
 
-int io_read_file_part_into_buffer(const char* filepath, int localizable, buffer* buf, int size, int offset_in_file) {
+int io_read_file_part_into_buffer(vfs::path  filepath, int localizable, buffer* buf, int size, int offset_in_file) {
     vfs::path fs_file = vfs::content_file(filepath);
     if (fs_file.empty()) {
         return 0;
@@ -52,7 +81,7 @@ int io_read_file_part_into_buffer(const char* filepath, int localizable, buffer*
     return bytes_read;
 }
 
-int io_write_buffer_to_file(const char* filepath, buffer* buf, int size) {
+int io_write_buffer_to_file(vfs::path  filepath, buffer* buf, int size) {
     // Find existing file to overwrite
     vfs::path fs_file = vfs::content_file(filepath);
     if (fs_file.empty()) {
