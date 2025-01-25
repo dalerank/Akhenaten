@@ -20,6 +20,7 @@ void config_load_imagepaks_config() {
         config.custom = arch.r_bool("custom");
         config.delayed = arch.r_bool("delayed", false);
     });
+    g_image_data->image_cache.resize(65 * 1024, nullptr);
     g_image_data->common_inited = true;
 }
 

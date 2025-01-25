@@ -42,6 +42,10 @@ bool image_set_font_pak(encoding_type encoding) {
     }
 }
 
+void image_data_touch(const imagepak_handle& h) {
+    image_get(h.id, 0);
+}
+
 bool image_data_fonts_ready() {
     return g_image_data && g_image_data->fonts_loaded;
 }
@@ -147,10 +151,13 @@ const image_t *image_get(int pak, int id) {
         return nullptr;
     }
 
-    const image_t* img = nullptr;
-    auto pakptr = data.pak_list[pak].handle;
-    if (pakptr != nullptr) {
-        return pakptr->get_image(id);
+    auto &pakref = data.pak_list[pak];
+    if (pakref.handle == nullptr) {
+        pakref.handle = new imagepak(pakref.name, pakref.index, pakref.system, false, pakref.custom);
+    }
+
+    if (pakref.handle != nullptr) {
+        return pakref.handle->get_image(id);
     }
 
     return nullptr;
@@ -158,18 +165,31 @@ const image_t *image_get(int pak, int id) {
 
 const image_t* image_get(int id) {
     auto& data = *g_image_data;
+
+    if (data.image_cache[id]) {
+        return data.image_cache[id];
+    }
+
     const image_t* img;
     for (auto &pak: data.pak_list) {
-        if (pak.handle == nullptr) {
+        const bool is_pak_id = (id >= pak.index && id < pak.index + pak.entries_num);
+        if (!is_pak_id) {
             continue;
+        }
+
+        if (pak.handle == nullptr) {
+            pak.handle = new imagepak(pak.name, pak.index, pak.system, false, pak.custom);
         }
 
         img = pak.handle->get_image(id);
         if (img != nullptr) {
+            data.image_cache[id] = img;
             return img;
         }
     }
+
     // default (failure)
+    data.image_cache[id] = data.pak_list[PACK_GENERAL].handle->get_image(98);
     return nullptr;
 }
 

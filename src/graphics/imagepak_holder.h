@@ -13,7 +13,6 @@ struct imagepak_handle {
     bool system = false;
     bool custom = false;
     bool delayed = true;
-    bool failed_to_load = false;
     imagepak *handle = nullptr;
 };
 
@@ -27,8 +26,10 @@ struct imagepak_holder_t {
     int last_active_index = -1;
 
     std::array<imagepak_handle, 128> pak_list;
+    std::vector<const image_t *> image_cache;
 };
 
 void image_data_init();
+void image_data_touch(const imagepak_handle& h);
 
 extern imagepak_holder_t *g_image_data;
