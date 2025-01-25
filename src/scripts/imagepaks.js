@@ -32,6 +32,7 @@ imagepaks = [
   {id: PACK_CAESAREUM_2, name:"caesareum2", index:36010, system:false}, // 36010 --> 36020
   {id: PACK_CAESAREUM_3, name:"caesareum3", index:36020, system:false}, // 36020 --> 36030
   {id: PACK_CAESAREUM_4, name:"caesareum4", index:36030, system:false}, // 36030 --> 36040
+  {id: PACK_OBELISK_EXTRA, name:"obelisk_extra", index:36040, system:false}, // 36040 --> 36060
   {id: PACK_OBELISK_X3_A, name:"obelisk3x3a", index:36060, system:false}, // 36060 --> 36061
   {id: PACK_OBELISK_X3_B, name:"obelisk3x3b", index:36061, system:false}, // 36061 --> 36062
   {id: PACK_OBELISK_X3_C, name:"obelisk3x3c", index:36062, system:false}, // 36062 --> 36063
@@ -52,7 +53,8 @@ imagepaks = [
   {id: PACK_SUN_TEMPLE_1, name:"suntemple1", index:36110, system:false}, // 36110 --> 36112
   {id: PACK_SUN_TEMPLE_2, name:"suntemple2", index:36112, system:false}, // 36112 --> 36114
   {id: PACK_SUN_TEMPLE_3, name:"suntemple3", index:36114, system:false}, // 36114 --> 36116
-  {id: PACK_OBELISK_EXTRA, name:"obelisk_extra", index:36040, system:false}, // 36040 --> 36060
+  {id: PACK_TOMB_SETH, name:"TombSeti", index:36120, system:false}, // 36120 --> 36330
+  {id: PACK_TOMB_SETH_FINAL, name:"TombSetiFin", index:36330, system:false}, // 36330 --> 36560
   {id: PACK_ENEMY_ASSYRIAN, name:"Assyrian", index:37000, system:false}, // 37000 --> 37900
   {id: PACK_ENEMY_CANAANITE, name:"Canaanite", index:38000, system:false}, // 38000 --> 38860
   {id: PACK_ENEMY_EGYPTIAN, name:"Egyptian", index:39000, system:false}, // 39000 --> 39800
