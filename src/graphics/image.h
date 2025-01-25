@@ -138,4 +138,4 @@ const image_t *image_get(int pak, int id);
 const image_t *image_get(image_desc desc);
 const image_t* image_letter(int letter_id);
 const image_t* image_get_enemy(int type, int id);
-const image_t *image_next_close_get(image_desc desc);
+const image_t *image_next_close_get(image_desc desc, bool &last, int &last_index);

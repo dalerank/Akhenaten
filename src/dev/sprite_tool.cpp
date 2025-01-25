@@ -27,7 +27,7 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
             ImGui::TableSetColumnIndex(0);
             ImGui::AlignTextToFramePadding();
             image_t* img = const_cast<image_t*>(image_get(image_desc{ipak.id, i, 0}));
-            bool anim_open = ImGui::TreeNodeEx(img, ImGuiTreeNodeFlags_DefaultOpen, "%s", img->bmp.name.c_str());
+            bool anim_open = ImGui::TreeNodeEx(img, ImGuiTreeNodeFlags_None, "%s", img->bmp.name.c_str());
             ImGui::TableSetColumnIndex(1);
 
             const int ioffset = ids[i];
@@ -48,7 +48,7 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                     ImGui::SameLine(); ImGui::Text("index:%d", ipak.index);
                     ImGui::SameLine(); ImGui::Text("i_offset:%d", ioffset);
                     int item_current = img->debug.animate;
-                    pcstr animate_mode[] = { "None", "Figure", "Simple", "Icons" };
+                    pcstr animate_mode[] = { "None", "Figure", "Simple", "Raw" };
                     ImGui::SameLine(); ImGui::Text("mode"); ImGui::SameLine(); ImGui::SetNextItemWidth(100); ImGui::Combo("##animate", &item_current, animate_mode, std::size(animate_mode));
                     img->debug.animate = item_current;
                     ImGui::SameLine(); ImGui::Text("sprites:%d", img->animation.num_sprites);
@@ -100,7 +100,15 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                         static uint8_t animate_duration = 4;
                         ImGui::Text("duration"); ImGui::SameLine(); ImGui::SetNextItemWidth(60); ImGui::InputScalar("##duration", ImGuiDataType_U8, (void *)&animate_duration);
                         vec2i msize(60, 60);
+
+                        int max_index = ipak.handle->get_entry_count();
                         for (int dir = 0; dir < 8; ++dir) {
+                            int next_dir = img->debug.frame * 8 + dir;
+                            int next_index = img->sgx_index + next_dir;
+                            if (next_index >= max_index) {
+                                img->debug.frame = 0;
+                                break;
+                            }
                             image_t *animg = img + img->debug.frame * 8 + dir;
                             maxImageSize(animg, msize);
                         }
@@ -126,8 +134,10 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                             }
                         }
                     } else if (img->debug.animate == 3) {
-                        image_t *next_section_img = const_cast<image_t *>(image_next_close_get(image_desc{ ipak.id, i, 0 }));
-                        const int section_len = (next_section_img->sgx_index - img->sgx_index) + 1;
+                        bool last = false;
+                        int last_index = 0;
+                        image_t *next_section_img = const_cast<image_t *>(image_next_close_get(image_desc{ ipak.id, i, 0 }, last, last_index));
+                        const int section_len = last ? (last_index - img->sgx_index) : (next_section_img->sgx_index - img->sgx_index);
                         
                         int sumsize = 0;
                         for (int imgi = 0; imgi < section_len; ++imgi) {

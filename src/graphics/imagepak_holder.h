@@ -11,6 +11,7 @@ struct imagepak_handle {
     int index = -1;
     bool system = false;
     bool custom = false;
+    bool delayed = true;
     imagepak *handle = nullptr;
 };
 

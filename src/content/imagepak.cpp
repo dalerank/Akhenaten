@@ -911,10 +911,6 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     return true;
 }
 
-int imagepak::get_entry_count() {
-    return entries_num;
-}
-
 int imagepak::get_global_image_index(int group) {
     if (group < 0 || group >= groups_num) {
         return -1;

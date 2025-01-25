@@ -48,7 +48,7 @@ public:
     const image_t *front() const { return &images_array.front(); }
     const image_t *back() const { return &images_array.back(); }
 
-    int get_entry_count();
+    inline int get_entry_count() const { return entries_num; }
     int get_global_image_index(int group);
     inline int get_user_idx() const { return useridx; }
     const image_t* get_image(int id, bool relative = false);

@@ -17,6 +17,7 @@ void config_load_imagepaks_config() {
         config.index = arch.r_int("index");
         config.system = arch.r_bool("system");
         config.custom = arch.r_bool("custom");
+        config.delayed = arch.r_bool("delayed", false);
         g_image_data->common[config.id] = config;
     });
     g_image_data->common_inited = true;

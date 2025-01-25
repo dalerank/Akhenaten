@@ -1,72 +1,76 @@
 log_info("akhenaten: imagepaks started")
 
 imagepaks = [
-  {id: PACK_UNLOADED, name:"Pharaoh_Unloaded", index:0, system:true},  // 0     --> 682
+  {id: PACK_UNLOADED, name:"Pharaoh_Unloaded", index:0, size:682 , system:true},  // 0     --> 682
   {id: PACK_SPR_MAIN, name:"SprMain", index:700, system:false}, // 700   --> 11007
   {id: PACK_GENERAL, name:"Pharaoh_General", index:11706, system:false}, // 11706 --> 11866
   {id: PACK_TERRAIN, name:"Pharaoh_Terrain", index:14252, system:false}, // 14252 --> 15767 (+64)
   {id: PACK_SPR_AMBIENT, name:"SprAmbient", index:15831, system:false}, // 15831 --> 18765
-  {id: PACK_MASTABA, name:"mastaba", index:25000, system:false}, // 25000 --> 25000 + 429
-  {id: PACK_TEMPLE_RA, name:"Temple_ra", index:32000, system:false}, // 32000 --> 32000 + 239
-  {id: PACK_TEMPLE_NILE, name:"Temple_nile", index:32250, system:false}, // 32250 --> 32250 + 239
-  {id: PACK_TEMPLE_PTAH, name:"Temple_ptah", index:32500, system:false}, // 32500 --> 32500 + 239
-  {id: PACK_TEMPLE_SETH, name:"Temple_seth", index:32750, system:false}, // 32750 --> 32750 + 239
-  {id: PACK_TEMPLE_BAST, name:"Temple_bast", index:33000, system:false}, // 33000 --> 33000 + 239
+  {id: PACK_MASTABA, name:"mastaba", index:25000, system:false}, // 25000 --> 25000 + 228 + 201
+  {id: PACK_TEMPLE_RA, name:"Temple_ra", index:32000, system:false}, // 32000 --> 32000 + 201 + 38
+  {id: PACK_TEMPLE_NILE, name:"Temple_nile", index:32250, system:false}, // 32250 --> 32250 + 201 + 38
+  {id: PACK_TEMPLE_PTAH, name:"Temple_ptah", index:32500, system:false}, // 32500 --> 32500 + 201 + 38
+  {id: PACK_TEMPLE_SETH, name:"Temple_seth", index:32750, system:false}, // 32750 --> 32750 + 201 + 38
+  {id: PACK_TEMPLE_BAST, name:"Temple_bast", index:33000, system:false}, // 33000 --> 33000 + 201 + 38
   {id: PACK_EXPANSION, name:"Expansion", index:23035, system:false}, // 23035 --> 23935
   {id: PACK_EMPIRE, name:"Empire", index:20305, system:false}, // 20305 --> 20506 (+177)
   {id: PACK_EXPANSION_SPR, name:"SprMain2", index:20683, system:false}, // 20683 --> 23035
-  {id: PACK_LIB_EXTRA, name:"LibExtra", index:24000, system:false}, // 24000 --> 24030
-  {id: PACK_LIB_EXTRA_2, name:"LibExtra2", index:24040, system:false}, // 24040 --> 24080
-  {id: PACK_LIB_MAUS_CARRYOVER, name:"MausCarryover", index:24080, system:false}, // 24080 --> 24090
-  {id: PACK_LIB_MAUSOLEUM_0, name:"mausoleum0_extra", index:24090, system:false}, // 24090 --> 24110  
-  {id: PACK_LIB_MAUSOLEUM_1, name:"mausoleum1_extra", index:24110, system:false}, // 24110 --> 24130
-  {id: PACK_LIB_MAUSOLEUM_2, name:"mausoleum2_extra", index:24130, system:false}, // 24130 --> 24150
-  {id: PACK_PYRAMID, name:"Pyramid", index:34000, system:false}, // 34000 --> 34230
-  {id: PACK_BENT_PYRAMID, name:"bent_pyramid", index:34250, system:false}, // 34250 --> 34500
-  {id: PACK_MUDBRICK_PYRAMID, name:"mudbrick_pyramid", index:34500, system:false}, // 34500 --> 34700
-  {id: PACK_STEPPED_PYRAMID, name:"stepped_pyramid", index:34700, system:false}, // 34700 --> 34950
-  {id: PACK_TOMB_RA, name:"TombRam", index:34950, system:false}, // 34950 --> 35250
-  {id: PACK_TOMB_RA_FINAL, name:"TombRamFin", index:35250, system:false}, // 35250 --> 35550
-  {id: PACK_ABUSIMBEL, name:"AbuSimbel", index:35900, system:false}, // 35900 --> 35970
-  {id: PACK_CAESAREUM_1, name:"caesareum1", index:36000, system:false}, // 36000 --> 36010
-  {id: PACK_CAESAREUM_2, name:"caesareum2", index:36010, system:false}, // 36010 --> 36020
-  {id: PACK_CAESAREUM_3, name:"caesareum3", index:36020, system:false}, // 36020 --> 36030
-  {id: PACK_CAESAREUM_4, name:"caesareum4", index:36030, system:false}, // 36030 --> 36040
-  {id: PACK_OBELISK_EXTRA, name:"obelisk_extra", index:36040, system:false}, // 36040 --> 36060
-  {id: PACK_OBELISK_X3_A, name:"obelisk3x3a", index:36060, system:false}, // 36060 --> 36061
-  {id: PACK_OBELISK_X3_B, name:"obelisk3x3b", index:36061, system:false}, // 36061 --> 36062
-  {id: PACK_OBELISK_X3_C, name:"obelisk3x3c", index:36062, system:false}, // 36062 --> 36063
-  {id: PACK_OBELISK_X5_A, name:"obelisk5x5a", index:36063, system:false}, // 36063 --> 36064
-  {id: PACK_OBELISK_X5_B, name:"obelisk5x5b", index:36064, system:false}, // 36064 --> 36065
-  {id: PACK_OBELISK_X5_C, name:"obelisk5x5c", index:36065, system:false}, // 36065 --> 36066
-  {id: PACK_OBELISK_X5_D, name:"obelisk5x5d", index:36066, system:false}, // 36066 --> 36067
-  {id: PACK_OBELISK_X5_E, name:"obelisk5x5e", index:36067, system:false}, // 36067 --> 36068
-  {id: PACK_OBELISK_X5_F, name:"obelisk5x5f", index:36068, system:false}, // 36068 --> 36069
-  {id: PACK_SPHINX_1_A, name:"sphinx1a", index:36070, system:false}, // 36070 --> 36072
-  {id: PACK_SPHINX_1_B, name:"sphinx1b", index:36072, system:false}, // 36072 --> 36074
-  {id: PACK_SPHINX_1_C, name:"sphinx1c", index:36074, system:false}, // 36074 --> 36076
-  {id: PACK_SPHINX_1_D, name:"sphinx1d", index:36076, system:false}, // 36076 --> 36078
-  {id: PACK_SPHINX_2_A, name:"sphinx2a", index:36078, system:false}, // 36078 --> 36080
-  {id: PACK_SPHINX_2_B, name:"sphinx2b", index:36080, system:false}, // 36080 --> 36082
-  {id: PACK_SPHINX_2_C, name:"sphinx2c", index:36082, system:false}, // 36082 --> 36084
-  {id: PACK_SUN_TEMPLE_EXTRA, name:"sun_temple_extra", index:36090, system:false}, // 36090 --> 36110
-  {id: PACK_SUN_TEMPLE_1, name:"suntemple1", index:36110, system:false}, // 36110 --> 36112
-  {id: PACK_SUN_TEMPLE_2, name:"suntemple2", index:36112, system:false}, // 36112 --> 36114
-  {id: PACK_SUN_TEMPLE_3, name:"suntemple3", index:36114, system:false}, // 36114 --> 36116
-  {id: PACK_TOMB_SETH, name:"TombSeti", index:36120, system:false}, // 36120 --> 36330
-  {id: PACK_TOMB_SETH_FINAL, name:"TombSetiFin", index:36330, system:false}, // 36330 --> 36560
-  {id: PACK_ENEMY_ASSYRIAN, name:"Assyrian", index:37000, system:false}, // 37000 --> 37900
-  {id: PACK_ENEMY_CANAANITE, name:"Canaanite", index:38000, system:false}, // 38000 --> 38860
-  {id: PACK_ENEMY_EGYPTIAN, name:"Egyptian", index:39000, system:false}, // 39000 --> 39800
-  {id: PACK_ENEMY_BARBARIAN, name:"Enemy_1", index:40000, system:false}, // 40000 --> 40750
-  {id: PACK_ENEMY_HITTITE, name:"Hittite", index:41000, system:false}, // 41000 --> 41900
-  {id: PACK_ENEMY_HYKSOS, name:"Hyksos", index:42000, system:false}, // 42000 --> 42900
-  {id: PACK_ENEMY_KUSHITE, name:"Kushite", index:43000, system:false}, // 43000 --> 42900
-  {id: PACK_ENEMY_LIBIAN, name:"Libian", index:44000, system:false}, // 44000 --> 44900
-  {id: PACK_ENEMY_NUBIAN, name:"Nubian", index:45000, system:false}, // 45000 --> 45850
-  {id: PACK_ENEMY_PERSIAN, name:"Persian", index:46000, system:false}, // 46000 --> 46900
-  {id: PACK_ENEMY_PHOENICIAN, name:"Phoenician", index:47000, system:false}, // 47000 --> 47850
-  {id: PACK_ENEMY_ROMAN, name:"Roman", index:48000, system:false}, // 48000 --> 48900
-  {id: PACK_ENEMY_SEAPEOPLE, name:"SeaPeople", index:49000, system:false}, // 49000 --> 49850
+  {id: PACK_LIB_EXTRA, name:"LibExtra", index:24000, size:27, system:false}, // 24000 --> 24000 + 201 + 27
+  {id: PACK_LIB_EXTRA_2, name:"LibExtra2", index:24230, size:27, system:false}, // 24230 --> 24230 + 201 + 27
+  {id: PACK_LIB_MAUS_CARRYOVER, name:"MausCarryover", index:24460, size:9, system:false}, // 24460 --> 24460 + 201 + 9
+  {id: PACK_LIB_MAUSOLEUM_0, name:"mausoleum0_extra", index:24690, size:16, system:false}, // 24690 --> 24690 + 201 + 16  
+  {id: PACK_LIB_MAUSOLEUM_1, name:"mausoleum1_extra", index:24910, size:16, system:false}, // 24910 --> 24910 + 201 + 16
+  {id: PACK_LIB_MAUSOLEUM_2, name:"mausoleum2_extra", index:25130, size:16, system:false}, // 25130 --> 25130 + 201 + 16
+  {id: PACK_PYRAMID, name:"Pyramid", index:34000, size:228, system:false}, // 34000 --> 34000 + 201 + 228
+  {id: PACK_BENT_PYRAMID, name:"bent_pyramid", index:34450, size:228, system:false}, // 34250 --> 34250 + 201 + 228
+  {id: PACK_MUDBRICK_PYRAMID, name:"mudbrick_pyramid", index:34900, size:228, system:false}, // 34900 --> 34900 + 201 + 228
+  {id: PACK_STEPPED_PYRAMID, name:"stepped_pyramid", index:35350, system:false}, // 35350 --> 35350 + 201 + 228
+  {id: PACK_ABUSIMBEL, name:"AbuSimbel", index:35850, size:70, system:false}, // 35850 --> 35850 + 201 + 70
+  {id: PACK_CAESAREUM_1, name:"caesareum1", index:36150, size:9, system:false}, // 36150 --> 36150 + 201 + 9
+  {id: PACK_CAESAREUM_2, name:"caesareum2", index:36360, size:9, system:false}, // 36360 --> 36360 + 201 + 9
+  {id: PACK_CAESAREUM_3, name:"caesareum3", index:36570, size:9, system:false}, // 36570 --> 36570 + 201 + 9
+  {id: PACK_CAESAREUM_4, name:"caesareum4", index:36780, size:9, system:false}, // 36780 --> 36780 + 201 + 9
+  {id: PACK_OBELISK_EXTRA, name:"obelisk_extra", index:51000, size:16, system:false}, // 51000 --> 51000 + 201 + 16
+  {id: PACK_OBELISK_X3_A, name:"obelisk3x3a", index:51220, size:1, system:false}, // 51220 --> 51220 + 201 + 1
+  {id: PACK_OBELISK_X3_B, name:"obelisk3x3b", index:51430, size:1, system:false}, // 51430 --> 51430 + 201 + 1
+  {id: PACK_OBELISK_X3_C, name:"obelisk3x3c", index:51640, size:1, system:false}, // 51640 --> 51640 + 201 + 1
+  {id: PACK_OBELISK_X5_A, name:"obelisk5x5a", index:51850, size:1, system:false}, // 51850 --> 51850 + 201 + 1
+  {id: PACK_OBELISK_X5_B, name:"obelisk5x5b", index:52000, size:1, system:false}, // 52000 --> 52000 + 201 + 1
+  {id: PACK_OBELISK_X5_C, name:"obelisk5x5c", index:52220, size:1, system:false}, // 52220 --> 52000 + 201 + 1
+  {id: PACK_OBELISK_X5_D, name:"obelisk5x5d", index:52430, size:1, system:false}, // 52430 --> 36067 + 201 + 1
+  {id: PACK_OBELISK_X5_E, name:"obelisk5x5e", index:52640, size:1, system:false}, // 52430 --> 36068 + 201 + 1
+  {id: PACK_OBELISK_X5_F, name:"obelisk5x5f", index:51850, size:1, system:false}, // 52430 --> 36069 + 201 + 1
+  {id: PACK_SPHINX_1_A, name:"sphinx1a", index:53000, size:2, system:false}, // 53000 --> 53000 + 201 + 2
+  {id: PACK_SPHINX_1_B, name:"sphinx1b", index:53430, size:2, system:false}, // 53430 --> 53430 + 201 + 2
+  {id: PACK_SPHINX_1_C, name:"sphinx1c", index:53640, size:2, system:false}, // 53640 --> 53640 + 201 + 2
+  {id: PACK_SPHINX_1_D, name:"sphinx1d", index:53850, size:2, system:false}, // 53850 --> 53850 + 201 + 2
+  {id: PACK_SPHINX_2_A, name:"sphinx2a", index:54000, size:2, system:false}, // 54000 --> 54000 + 201 + 2
+  {id: PACK_SPHINX_2_B, name:"sphinx2b", index:54220, size:2, system:false}, // 54220 --> 54220 + 201 + 2
+  {id: PACK_SPHINX_2_C, name:"sphinx2c", index:54430, size:2, system:false}, // 36082 --> 36084 + 201 + 2
+  {id: PACK_SUN_TEMPLE_EXTRA, name:"sun_temple_extra", index:55000, size:15, system:false}, // 55000 --> 55000 + 201 + 15
+  {id: PACK_SUN_TEMPLE_1, name:"suntemple1", index:55220, size:2, system:false}, // 55220 --> 55220 + 201 + 2
+  {id: PACK_SUN_TEMPLE_2, name:"suntemple2", index:55440, size:2, system:false}, // 55440 --> 55440 + 201 + 2
+  {id: PACK_SUN_TEMPLE_3, name:"suntemple3", index:55660, size:2, system:false}, // 55660 --> 55660 + 201 + 2
+  {id: PACK_TOMB_SETI, name:"TombSeti", index:56000, size:221, system:false}, // 56000 --> 56000 + 201 + 221
+  {id: PACK_TOMB_SETI_FINAL, name:"TombSetiFin", index:56500, size:221, system:false}, // 56500 --> 56500 + 201 + 221
+  {id: PACK_TOMB_THUTMOS, name:"TombThut", index:57000, size:157, system:false}, // 57000 --> 57000 + 201 + 157
+  {id: PACK_TOMB_THUTMOS_FINAL, name:"TombThutFin", index:57400, size:157, system:false}, // 57400 --> 57400 + 201 + 157
+  {id: PACK_TOMB_TUTANKHAMUN, name:"TombTut", index:57800, size:181, system:false}, // 57800 --> 57800 + 201 + 181
+  {id: PACK_TOMB_TUTANKHAMUN_FINAL, name:"TombTutFin", index:58200, size:181, system:false}, // 58200 --> 58200 + 201 + 181
+  {id: PACK_ENEMY_ASSYRIAN, name:"Assyrian", index:37000, size:898, system:false}, // 37000 --> 37000 + 898 + 201
+  {id: PACK_ENEMY_CANAANITE, name:"Canaanite", index:38100, size:858, system:false}, // 38100 --> 38100 + 858 + 201
+  {id: PACK_ENEMY_EGYPTIAN, name:"Egyptian", index:39200, size:778, system:false}, // 39200 --> 39200 + 778 + 201
+  {id: PACK_ENEMY_BARBARIAN, name:"Enemy_1", index:40000, size:728, system:false}, // 40000 --> 40000 + 728 + 201
+  {id: PACK_ENEMY_HITTITE, name:"Hittite", index:41000, size:866, system:false}, // 41000 --> 41000 + 866 + 201
+  {id: PACK_ENEMY_HYKSOS, name:"Hyksos", index:42100, size:898, system:false}, // 42100 --> 42100 + 898 + 201
+  {id: PACK_ENEMY_KUSHITE, name:"Kushite", index:43200, size:857, system:false}, // 43200 --> 43200 + 857 + 201
+  {id: PACK_ENEMY_LIBIAN, name:"Libian", index:44300, size:858, system:false}, // 44300 --> 44300 + 858 + 201
+  {id: PACK_ENEMY_NUBIAN, name:"Nubian", index:45400, size:825, system:false}, // 45400 --> 45400 + 825 + 201
+  {id: PACK_ENEMY_PERSIAN, name:"Persian", index:46500, size:866, system:false}, // 46500 --> 46500 + 866 + 201
+  {id: PACK_ENEMY_PHOENICIAN, name:"Phoenician", index:47600, size:834, system:false}, // 47600 --> 47600 + 834 + 201
+  {id: PACK_ENEMY_ROMAN, name:"Roman", index:48700, size:874, system:false}, // 48700 --> 48700 + 874 + 201
+  {id: PACK_ENEMY_SEAPEOPLE, name:"SeaPeople", index:49800, system:false}, // 49000 --> 49850 + 833 + 201
+  {id: PACK_TOMB_RAMSES, name:"TombRam", index:59000, size:269, system:false}, // 59000 --> 50000 + 269 + 201 
+  {id: PACK_TOMB_RAMSES_FINAL, name:"TombRamFin", index:59500, size:269, system:false}, // 59500 --> 50500 + 269 + 201 
   //{id: PACK_CUSTOM, name:"Pharaoh_Custom", index:30000, system:false, custom:true},  // 30000 -->
 ]

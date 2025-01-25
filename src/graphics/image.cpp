@@ -83,28 +83,15 @@ bool image_load_paks() {
         if (imgpak.name.empty()) {
             continue;
         }
+
+        if (imgpak.delayed) {
+            continue;
+        }
+
         auto *newpak = new imagepak(imgpak.name, imgpak.index, imgpak.system, false, imgpak.custom);
         data.common[imgpak.id].handle = newpak;
         data.pak_list.push_back(&data.common[imgpak.id].handle);
     }
-
-    // the various Enemy paks.
-    static const char* enemy_file_names_ph[13] = {"Egyptian",
-                                                  "Canaanite",
-                                                  "Enemy_1",
-                                                  "Hittite",
-                                                  "Hyksos",
-                                                  "Kushite",
-                                                  "Libian",
-                                                  "Mitani",
-                                                  "Nubian",
-                                                  "Persian",
-                                                  "Phoenician",
-                                                  "Roman",
-                                                  "SeaPeople"};
-    //for (const auto &path: enemy_file_names_ph) {
-    //    data.enemy_paks.push_back(new imagepak(path, 11026));
-    //}
 
     auto folders = vfs::dir_find_all_subdirectories("Data/", true);
     for (const auto &f : folders) {
@@ -155,31 +142,30 @@ const image_t *image_get(image_desc desc) {
     return image_get(id);
 }
 
-const image_t *image_next_close_get(image_desc desc) {
+const image_t *image_next_close_get(image_desc desc, bool &last, int &last_index) {
+    last = false;
     imagepak *pak = pak_from_collection_id(desc.pack, -1);
     if (pak == nullptr) {
         return nullptr;
     }
 
     auto ids = pak->image_ids();
-    if ((ids.size() - 1) == desc.id) {
-
-        return pak->back();
-    }
-
     svector<uint16_t, PAK_GROUPS_MAX> sorted_ids;
     std::copy(ids.begin(), ids.end(), std::back_inserter(sorted_ids));
     const int start = ids[desc.id];
 
     std::sort(sorted_ids.begin(), sorted_ids.end());
-    if (!pak->loaded_system_sprites()) {
-        sorted_ids.erase(sorted_ids.begin());
-    }
-
     auto it = std::lower_bound(sorted_ids.begin(), sorted_ids.end(), start);
     if (it == sorted_ids.end()) {
         return nullptr;
     }
+
+    if (*it == sorted_ids.back()) {
+        last = true;
+        last_index = pak->get_entry_count();
+        return nullptr;
+    }
+
     const int end = *(it + 1);
 
     return pak->get_image(end, true);
