@@ -39,6 +39,13 @@ imagepaks = [
   {id: PACK_OBELISK_X5_D, name:"obelisk5x5d", index:36066, system:false}, // 36066 --> 36067
   {id: PACK_OBELISK_X5_E, name:"obelisk5x5e", index:36067, system:false}, // 36067 --> 36068
   {id: PACK_OBELISK_X5_F, name:"obelisk5x5f", index:36068, system:false}, // 36068 --> 36069
+  {id: PACK_SPHINX_1_A, name:"sphinx1a", index:36070, system:false}, // 36070 --> 36072
+  {id: PACK_SPHINX_1_B, name:"sphinx1b", index:36072, system:false}, // 36072 --> 36074
+  {id: PACK_SPHINX_1_C, name:"sphinx1c", index:36074, system:false}, // 36074 --> 36076
+  {id: PACK_SPHINX_1_D, name:"sphinx1d", index:36076, system:false}, // 36076 --> 36078
+  {id: PACK_SPHINX_2_A, name:"sphinx2a", index:36078, system:false}, // 36078 --> 36080
+  {id: PACK_SPHINX_2_B, name:"sphinx2b", index:36080, system:false}, // 36080 --> 36082
+  {id: PACK_SPHINX_2_C, name:"sphinx2c", index:36082, system:false}, // 36082 --> 36084
   {id: PACK_ENEMY_ASSYRIAN, name:"Assyrian", index:37000, system:false}, // 37000 --> 37900
   {id: PACK_ENEMY_CANAANITE, name:"Canaanite", index:38000, system:false}, // 38000 --> 38860
   {id: PACK_ENEMY_EGYPTIAN, name:"Egyptian", index:39000, system:false}, // 39000 --> 39800
