@@ -126,21 +126,19 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                             }
                         }
                     } else if (img->debug.animate == 3) {
-                        vec2i msize(60, 60);
                         image_t *next_section_img = const_cast<image_t *>(image_next_close_get(image_desc{ ipak.id, i, 0 }));
                         const int section_len = (next_section_img->sgx_index - img->sgx_index);
+                        
+                        int sumsize = 0;
                         for (int imgi = 0; imgi < section_len; ++imgi) {
                             image_t *animg = img + imgi;
-                            maxImageSize(animg, msize);
-                        }
-
-                        msize.x += 16;
-                        msize.y += 16;
-                        for (int imgi = 0; imgi < section_len; ++imgi) {
-                            image_t *animg = img + imgi;
-                            drawImage(animg, imgi, msize);
-                            if (imgi == 0 || imgi % 8 != 0)
+                            drawImage(animg, imgi, vec2i(animg->width + 16, animg->height + 16));
+                            if ((imgi == 0 || imgi % 8 != 0) && (sumsize < screen_width() / 2)) {
+                                sumsize += animg->width;
                                 ImGui::SameLine();
+                            } else {
+                                sumsize = 0;
+                            }
                         }
                     } else {
                         drawImage(img, 0, vec2i(img->width + 16, img->height + 16));
