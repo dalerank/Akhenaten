@@ -39,6 +39,8 @@ enum e_pack {
     //
     PACK_PYRAMID,
     PACK_BENT_PYRAMID,
+    PACK_LIB_EXTRA,
+    PACK_LIB_EXTRA_2,
     //
     PACK_CUSTOM,
     // 
