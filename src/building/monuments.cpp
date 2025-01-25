@@ -213,20 +213,20 @@ int get_temple_complex_part_image(int type, int part, int orientation, int level
     if (level == 0) {
         switch (part) {
         case 0:
-        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN, type) + 3 * orientation;
+        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN) + 3 * orientation;
         case 1:
-        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ORACLE, type) + 3 * orientation;
+        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ORACLE) + 3 * orientation;
         case 2:
-        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ALTAR, type) + 3 * orientation;
+        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ALTAR) + 3 * orientation;
         }
     } else if (level == 1) {
         switch (part) {
         case 0:
-        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN, type) + orientation;
+        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN) + orientation;
         case 1:
-        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_UPGRADES, type) + orientation;
+        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_UPGRADES) + orientation;
         case 2:
-        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_UPGRADES, type) + 2 + orientation;
+        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_UPGRADES) + 2 + orientation;
         }
     }
     return 0;

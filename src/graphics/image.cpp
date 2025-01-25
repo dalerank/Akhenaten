@@ -46,35 +46,12 @@ bool image_data_fonts_ready() {
     return g_image_data && g_image_data->fonts_loaded;
 }
 
-//bool image_set_enemy_pak(int enemy_id) {
-//    auto& data = *g_image_data;
-//    return set_pak_in_collection(enemy_id, &data.enemy, &data.enemy_paks);
-//}
-//bool image_set_temple_complex_pak(int temple_id) {
-//    auto& data = *g_image_data;
-//    return set_pak_in_collection(temple_id, &data.temple, &data.temple_paks);
-//}
-//bool image_set_monument_pak(int monument_id) {
-//    auto& data = *g_image_data;
-//    return set_pak_in_collection(monument_id, &data.monument, &data.monument_paks);
-//}
-
 bool image_load_paks() {
     auto& data = *g_image_data;
     data.fonts_enabled = false;
     data.fonts_loaded = false;
     data.font_base_offset = 0;
 
-    // Pharaoh loads every image into a global listed cache; however, some
-    // display systems use discordant indexes; The sprites cached in the
-    // save files, for examples, appear to start at 700 while the terrain
-    // system displays them starting at the immediate index after the first
-    // pak has ended (683).
-    // Moreover, the monuments, temple complexes, and enemies all make use
-    // of a single shared index, which is swapped in "real time" for the
-    // correct pak in use by the mission, or even depending on buildings
-    // present on the map, like the Temple Complexes.
-    // What an absolute mess!
     data.pak_list[PACK_FONT].handle = new imagepak("Pharaoh_Fonts", 18765, false, true);
     data.fonts_loaded = true;
 
@@ -85,7 +62,6 @@ bool image_load_paks() {
 
         imgpak.entries_num = imagepak::get_entries_num(imgpak.name);
         if (imgpak.delayed) {
-            //data.pak_list.push_back()
             continue;
         }
 
@@ -109,7 +85,7 @@ bool image_load_paks() {
     return true;
 }
 
-static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
+static imagepak* pak_from_collection_id(int collection) {
     auto& data = *g_image_data;
     auto handle = g_image_data->pak_list[collection].handle;
     if (handle) {
@@ -123,8 +99,8 @@ int image_group(image_desc desc) {
     return image_id_from_group(desc.pack, desc.id) + desc.offset;
 }
 
-int image_id_from_group(int collection, int group, int pak_cache_idx) {
-    imagepak* pak = pak_from_collection_id(collection, pak_cache_idx);
+int image_id_from_group(int collection, int group) {
+    imagepak* pak = pak_from_collection_id(collection);
     if (pak == nullptr) {
         return -1;
     }
@@ -138,7 +114,7 @@ const image_t *image_get(image_desc desc) {
 
 const image_t *image_next_close_get(image_desc desc, bool &last, int &last_index) {
     last = false;
-    imagepak *pak = pak_from_collection_id(desc.pack, -1);
+    imagepak *pak = pak_from_collection_id(desc.pack);
     if (pak == nullptr) {
         return nullptr;
     }

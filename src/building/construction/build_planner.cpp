@@ -691,12 +691,12 @@ void BuildPlanner::setup_build_graphics() {
                                          // building's top tile
         // size of every big item 3x3, in general 7x13
         // 25 max tiles at the moment to check blocked tiles
-        int main_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN, build_type);
-        int oracle_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ORACLE, build_type);
-        int altar_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ALTAR, build_type);
-        int flooring_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_FLOORING, build_type);
-        int statue1_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_1, build_type);
-        int statue2_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_2, build_type);
+        int main_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN); // build_type);
+        int oracle_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ORACLE); // , build_type);
+        int altar_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ALTAR); // , build_type);
+        int flooring_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_FLOORING); // , build_type);
+        int statue1_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_1);// , build_type);
+        int statue2_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_2);// , build_type);
 
         int EMPTY = 0;
         int mn_1A = main_image_id;
