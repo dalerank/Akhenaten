@@ -17,6 +17,10 @@ imagepaks = [
   {id: PACK_EXPANSION_SPR, name:"SprMain2", index:20683, system:false}, // 20683 --> 23035
   {id: PACK_LIB_EXTRA, name:"LibExtra", index:24000, system:false}, // 24000 --> 24030
   {id: PACK_LIB_EXTRA_2, name:"LibExtra2", index:24040, system:false}, // 24040 --> 24080
+  {id: PACK_LIB_MAUS_CARRYOVER, name:"MausCarryover", index:24080, system:false}, // 24080 --> 24090
+  {id: PACK_LIB_MAUSOLEUM_0, name:"mausoleum0_extra", index:24090, system:false}, // 24090 --> 24110  
+  {id: PACK_LIB_MAUSOLEUM_1, name:"mausoleum1_extra", index:24110, system:false}, // 24110 --> 24130
+  {id: PACK_LIB_MAUSOLEUM_2, name:"mausoleum2_extra", index:24130, system:false}, // 24130 --> 24150
   {id: PACK_PYRAMID, name:"Pyramid", index:34000, system:false}, // 34000 --> 34230
   {id: PACK_BENT_PYRAMID, name:"bent_pyramid", index:34250, system:false}, // 34250 --> 34500
   {id: PACK_ABUSIMBEL, name:"AbuSimbel", index:35900, system:false}, // 35900 --> 35970
