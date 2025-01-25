@@ -13,6 +13,10 @@ enum e_pack {
     PACK_FONT,
     //
     PACK_ABUSIMBEL,
+    PACK_CAESAREUM_1,
+    PACK_CAESAREUM_2,
+    PACK_CAESAREUM_3,
+    PACK_CAESAREUM_4,
     //
     PACK_ENEMY_ASSYRIAN,
     //

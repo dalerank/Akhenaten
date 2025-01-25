@@ -19,5 +19,9 @@ imagepaks = [
   {id: PACK_BENT_PYRAMID, name:"bent_pyramid", index:34250, system:false}, // 34250 --> 23035
   {id: PACK_ENEMY_ASSYRIAN, name:"Assyrian", index:35000, system:false}, // 35000 --> 35900
   {id: PACK_ABUSIMBEL, name:"AbuSimbel", index:35900, system:false}, // 35900 --> 35970
+  {id: PACK_CAESAREUM_1, name:"caesareum1", index:36000, system:false}, // 36000 --> 36010
+  {id: PACK_CAESAREUM_2, name:"caesareum2", index:36010, system:false}, // 36010 --> 36020
+  {id: PACK_CAESAREUM_3, name:"caesareum3", index:36020, system:false}, // 36020 --> 36030
+  {id: PACK_CAESAREUM_4, name:"caesareum4", index:36030, system:false}, // 36030 --> 36040
   //{id: PACK_CUSTOM, name:"Pharaoh_Custom", index:30000, system:false, custom:true},  // 30000 -->
 ]
