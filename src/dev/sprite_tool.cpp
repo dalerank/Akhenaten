@@ -127,7 +127,7 @@ bool game_debug_show_properties_object(imagepak_handle ipak) {
                         }
                     } else if (img->debug.animate == 3) {
                         image_t *next_section_img = const_cast<image_t *>(image_next_close_get(image_desc{ ipak.id, i, 0 }));
-                        const int section_len = (next_section_img->sgx_index - img->sgx_index);
+                        const int section_len = (next_section_img->sgx_index - img->sgx_index) + 1;
                         
                         int sumsize = 0;
                         for (int imgi = 0; imgi < section_len; ++imgi) {
