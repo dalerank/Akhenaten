@@ -66,5 +66,6 @@ int io_write_buffer_to_file(const char* filepath, buffer* buf, int size) {
 
     int bytes_written = buf->to_file((size_t)size, fp);
     vfs::file_close(fp);
+    vfs::sync_em_fs();
     return bytes_written;
 }

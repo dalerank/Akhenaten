@@ -243,4 +243,5 @@ void config_save() {
         fprintf(fp, "%s=%s\n", ini_string_keys[i], string_values[i]);
     }
     vfs::file_close(fp);
+    vfs::sync_em_fs();
 }
