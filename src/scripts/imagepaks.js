@@ -25,6 +25,8 @@ imagepaks = [
   {id: PACK_BENT_PYRAMID, name:"bent_pyramid", index:34250, system:false}, // 34250 --> 34500
   {id: PACK_MUDBRICK_PYRAMID, name:"mudbrick_pyramid", index:34500, system:false}, // 34500 --> 34700
   {id: PACK_STEPPED_PYRAMID, name:"stepped_pyramid", index:34700, system:false}, // 34700 --> 34950
+  {id: PACK_TOMB_RA, name:"TombRam", index:34950, system:false}, // 34950 --> 35250
+  {id: PACK_TOMB_RA_FINAL, name:"TombRamFin", index:35250, system:false}, // 35250 --> 35550
   {id: PACK_ABUSIMBEL, name:"AbuSimbel", index:35900, system:false}, // 35900 --> 35970
   {id: PACK_CAESAREUM_1, name:"caesareum1", index:36000, system:false}, // 36000 --> 36010
   {id: PACK_CAESAREUM_2, name:"caesareum2", index:36010, system:false}, // 36010 --> 36020

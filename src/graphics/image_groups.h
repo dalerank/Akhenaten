@@ -62,6 +62,9 @@ enum e_pack {
     PACK_TEMPLE_SETH,
     PACK_TEMPLE_BAST,
     //
+    PACK_TOMB_RA,
+    PACK_TOMB_RA_FINAL,
+    //
     PACK_PYRAMID,
     PACK_BENT_PYRAMID,
     PACK_STEPPED_PYRAMID,
