@@ -92,4 +92,6 @@ void remove_folder(path folder_path);
 
 void set_mixed_mode(bool value);
 
+void sync_em_fs();
+
 } // vfs

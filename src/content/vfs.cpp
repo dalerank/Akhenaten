@@ -8,6 +8,19 @@
 #include <filesystem>
 #include <memory>
 
+#if defined( __EMSCRIPTEN__ )
+#include <emscripten.h>
+EM_ASYNC_JS(void, __sync_em_fs, (), {
+    // clang-format off
+    // The following code is not C++ code, but JavaScript code.
+    await new Promise((resolve, reject) => FS.syncfs(err => {
+        if (err) reject(err);
+        resolve();
+    }));
+    // (normally you would do something with the fetch here)
+});
+#endif
+
 namespace vfs{
 
 FILE * file_open(pcstr filename, pcstr mode) {
@@ -110,7 +123,9 @@ bool file_exists(pcstr filename) {
 }
 
 bool file_remove(pcstr filename) {
-    return platform_file_manager_remove_file(filename);
+    bool res = platform_file_manager_remove_file(filename);
+    sync_em_fs();
+    return res;
 }
 
 void create_folders(pcstr path) {
@@ -120,9 +135,17 @@ void create_folders(pcstr path) {
     }
 }
 
+void sync_em_fs() {
+#if defined( __EMSCRIPTEN__ )
+    __sync_em_fs();
+    logs::info("em fs synced");
+#endif
+}
+
 void remove_folder(path folder_path) {
     folder_path = content_path(folder_path);
     std::filesystem::remove_all(folder_path.c_str());
+    sync_em_fs();
 }
 
 } //

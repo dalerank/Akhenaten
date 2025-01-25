@@ -228,6 +228,7 @@ bool FileIOManager::serialize(const char* filename, int offset, e_file_format fo
 
     // close file handle
     vfs::file_close(fp);
+    vfs::sync_em_fs();
 
     logs::info("File write successful: %s %i@ --- VERSION: %i ---",
                file_path,
@@ -238,7 +239,7 @@ bool FileIOManager::serialize(const char* filename, int offset, e_file_format fo
 }
 
 bool FileIOManager::unserialize(const char* filename, int offset, e_file_format format,
-                                const int (*determine_file_version)(const char* fnm, int ofst), 
+                                const int (*determine_file_version)(const char* fnm, int ofst),
                                 void (*init_schema)(e_file_format _format, const int _version)) {
     // first, clear up the manager data and set the new file info
     clear();
