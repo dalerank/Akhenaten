@@ -23,6 +23,11 @@ imagepaks = [
   {id: PACK_CAESAREUM_3, name:"caesareum3", index:36020, system:false}, // 36020 --> 36030
   {id: PACK_CAESAREUM_4, name:"caesareum4", index:36030, system:false}, // 36030 --> 36040
   {id: PACK_ENEMY_ASSYRIAN, name:"Assyrian", index:37000, system:false}, // 37000 --> 37900
-  {id: PACK_ENEMY_CANAANITE, name:"Canaanite", index:38000, system:false}, // 38000 --> 35860
+  {id: PACK_ENEMY_CANAANITE, name:"Canaanite", index:38000, system:false}, // 38000 --> 38860
+  {id: PACK_ENEMY_EGYPTIAN, name:"Egyptian", index:39000, system:false}, // 39000 --> 39800
+  {id: PACK_ENEMY_BARBARIAN, name:"Enemy_1", index:40000, system:false}, // 40000 --> 40750
+  {id: PACK_ENEMY_HITTITE, name:"Hittite", index:41000, system:false}, // 41000 --> 41900
+  {id: PACK_ENEMY_HYKSOS, name:"Hyksos", index:42000, system:false}, // 42000 --> 42900
+  {id: PACK_ENEMY_KUSHITE, name:"Kushite", index:43000, system:false}, // 43000 --> 42900
   //{id: PACK_CUSTOM, name:"Pharaoh_Custom", index:30000, system:false, custom:true},  // 30000 -->
 ]
