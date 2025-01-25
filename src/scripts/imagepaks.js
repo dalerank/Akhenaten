@@ -23,6 +23,7 @@ imagepaks = [
   {id: PACK_LIB_MAUSOLEUM_2, name:"mausoleum2_extra", index:24130, system:false}, // 24130 --> 24150
   {id: PACK_PYRAMID, name:"Pyramid", index:34000, system:false}, // 34000 --> 34230
   {id: PACK_BENT_PYRAMID, name:"bent_pyramid", index:34250, system:false}, // 34250 --> 34500
+  {id: PACK_MUDBRICK_PYRAMID, name:"mudbrick_pyramid", index:34500, system:false}, // 34500 --> 34700
   {id: PACK_ABUSIMBEL, name:"AbuSimbel", index:35900, system:false}, // 35900 --> 35970
   {id: PACK_CAESAREUM_1, name:"caesareum1", index:36000, system:false}, // 36000 --> 36010
   {id: PACK_CAESAREUM_2, name:"caesareum2", index:36010, system:false}, // 36010 --> 36020
