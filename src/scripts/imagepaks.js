@@ -29,6 +29,16 @@ imagepaks = [
   {id: PACK_CAESAREUM_2, name:"caesareum2", index:36010, system:false}, // 36010 --> 36020
   {id: PACK_CAESAREUM_3, name:"caesareum3", index:36020, system:false}, // 36020 --> 36030
   {id: PACK_CAESAREUM_4, name:"caesareum4", index:36030, system:false}, // 36030 --> 36040
+  {id: PACK_OBELISK_EXTRA, name:"obelisk_extra", index:36040, system:false}, // 36040 --> 36060
+  {id: PACK_OBELISK_X3_A, name:"obelisk3x3a", index:36060, system:false}, // 36060 --> 36061
+  {id: PACK_OBELISK_X3_B, name:"obelisk3x3b", index:36061, system:false}, // 36061 --> 36062
+  {id: PACK_OBELISK_X3_C, name:"obelisk3x3c", index:36062, system:false}, // 36062 --> 36063
+  {id: PACK_OBELISK_X5_A, name:"obelisk5x5a", index:36063, system:false}, // 36063 --> 36064
+  {id: PACK_OBELISK_X5_B, name:"obelisk5x5b", index:36064, system:false}, // 36064 --> 36065
+  {id: PACK_OBELISK_X5_C, name:"obelisk5x5c", index:36065, system:false}, // 36065 --> 36066
+  {id: PACK_OBELISK_X5_D, name:"obelisk5x5d", index:36066, system:false}, // 36066 --> 36067
+  {id: PACK_OBELISK_X5_E, name:"obelisk5x5e", index:36067, system:false}, // 36067 --> 36068
+  {id: PACK_OBELISK_X5_F, name:"obelisk5x5f", index:36068, system:false}, // 36068 --> 36069
   {id: PACK_ENEMY_ASSYRIAN, name:"Assyrian", index:37000, system:false}, // 37000 --> 37900
   {id: PACK_ENEMY_CANAANITE, name:"Canaanite", index:38000, system:false}, // 38000 --> 38860
   {id: PACK_ENEMY_EGYPTIAN, name:"Egyptian", index:39000, system:false}, // 39000 --> 39800
