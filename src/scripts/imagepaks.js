@@ -37,5 +37,6 @@ imagepaks = [
   {id: PACK_ENEMY_HYKSOS, name:"Hyksos", index:42000, system:false}, // 42000 --> 42900
   {id: PACK_ENEMY_KUSHITE, name:"Kushite", index:43000, system:false}, // 43000 --> 42900
   {id: PACK_ENEMY_LIBIAN, name:"Libian", index:44000, system:false}, // 44000 --> 44900
+  {id: PACK_ENEMY_NUBIAN, name:"Nubian", index:45000, system:false}, // 45000 --> 45850
   //{id: PACK_CUSTOM, name:"Pharaoh_Custom", index:30000, system:false, custom:true},  // 30000 -->
 ]
