@@ -7,7 +7,7 @@
 #include <chrono>
 #include <condition_variable>
 #include <cstddef>            // std::size_t
-#include <cstdint>          
+#include <cstdint>
 #include <functional>         // std::function
 #include <future>             // std::future, std::future_status, std::promise
 #include <memory>             // std::make_shared, std::make_unique, std::shared_ptr, std::unique_ptr
@@ -470,6 +470,9 @@ private:
     }
 
     [[nodiscard]] static concurrency_t determine_thread_count(const concurrency_t num_threads) {
+#ifdef __EMSCRIPTEN__
+        return 0;
+#endif
         if (num_threads > 0)
             return num_threads;
         if (std::thread::hardware_concurrency() > 0)
@@ -587,6 +590,6 @@ private:
     std::unique_ptr<std::thread[]> threads = nullptr;
     bool waiting = false;
     bool workers_running = false;
-}; 
+};
 
 } // namespace threading

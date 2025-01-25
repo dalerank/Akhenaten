@@ -371,7 +371,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < 3; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_27e0[i]);
     }
-    
+
     iob->bind(BIND_SIGNATURE_INT16, &data.unused.unknown_27f0);
     iob->bind(BIND_SIGNATURE_INT16, &data.resource.last_used_warehouse);
     for (int i = 0; i < 18; i++) {
@@ -399,10 +399,10 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
 
     for (int i = 0; i < RESOURCES_MAX; i++)
         iob->bind(BIND_SIGNATURE_UINT16, &data.resource.trading_amount[i + 1]);
-    
+
     for (int i = 0; i < RESOURCES_MAX; i++)
         iob->bind(BIND_SIGNATURE_INT16, &data.resource.mothballed[i + 1]);
-    
+
     iob->bind(BIND_SIGNATURE_INT16, &data.unused.unused_28ca);
 
     //    iob->bind____skip(20);
@@ -421,7 +421,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
 
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
         iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_available_arr[i]);
- 
+
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
         iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_eaten_arr[i]);
 
@@ -620,11 +620,11 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     //            iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.income.donated);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.income.donated);
-    
+
     for (int i = 0; i < 2; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_4374[i]);
     }
-    
+
     tmp = 0;
     for (int i = 0; i < 10; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &tmp); // dock id
@@ -672,7 +672,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < 4; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_43d8[i]);
     }
-    
+
     iob->bind(BIND_SIGNATURE_INT32, &data.population.lost_troop_request);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_43f0);
     iob->bind(BIND_SIGNATURE_INT32, &data.mission.has_won);
