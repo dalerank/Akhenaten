@@ -13,6 +13,7 @@ struct imagepak_handle {
     bool system = false;
     bool custom = false;
     bool delayed = true;
+    bool failed_to_load = false;
     imagepak *handle = nullptr;
 };
 
@@ -22,13 +23,10 @@ struct imagepak_holder_t {
     bool common_inited = false;
     int font_base_offset;
 
-    std::vector<imagepak **> pak_list;
-
-    imagepak *font = nullptr;
-
     color *tmp_image_data = nullptr;
+    int last_active_index = -1;
 
-    std::array<imagepak_handle, 128> common;
+    std::array<imagepak_handle, 128> pak_list;
 };
 
 void image_data_init();

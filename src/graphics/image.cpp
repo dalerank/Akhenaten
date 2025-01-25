@@ -75,23 +75,21 @@ bool image_load_paks() {
     // correct pak in use by the mission, or even depending on buildings
     // present on the map, like the Temple Complexes.
     // What an absolute mess!
-    data.font = new imagepak("Pharaoh_Fonts", 18765, false, true); // 18765 --> 20305
-    data.pak_list.push_back(&data.font);
+    data.pak_list[PACK_FONT].handle = new imagepak("Pharaoh_Fonts", 18765, false, true);
     data.fonts_loaded = true;
 
-    for (auto &imgpak : g_image_data->common) {
+    for (auto &imgpak : g_image_data->pak_list) {
         if (imgpak.name.empty()) {
             continue;
         }
 
         imgpak.entries_num = imagepak::get_entries_num(imgpak.name);
         if (imgpak.delayed) {
+            //data.pak_list.push_back()
             continue;
         }
 
-        auto *newpak = new imagepak(imgpak.name, imgpak.index, imgpak.system, false, imgpak.custom);
-        data.common[imgpak.id].handle = newpak;
-        data.pak_list.push_back(&data.common[imgpak.id].handle);
+        imgpak.handle = new imagepak(imgpak.name, imgpak.index, imgpak.system, false, imgpak.custom);
     }
 
     auto folders = vfs::dir_find_all_subdirectories("Data/", true);
@@ -102,11 +100,10 @@ bool image_load_paks() {
             continue;
         }
         int useridx = newpak->get_user_idx();
-        data.common[useridx].handle = newpak;
-        data.common[useridx].id = useridx;
-        data.common[useridx].index = newpak->get_global_image_index(0);
-        data.common[useridx].custom = true;
-        data.pak_list.push_back(&data.common[useridx].handle);
+        data.pak_list[useridx].handle = newpak;
+        data.pak_list[useridx].id = useridx;
+        data.pak_list[useridx].index = newpak->get_global_image_index(0);
+        data.pak_list[useridx].custom = true;
     }
 
     return true;
@@ -114,11 +111,7 @@ bool image_load_paks() {
 
 static imagepak* pak_from_collection_id(int collection, int pak_cache_idx) {
     auto& data = *g_image_data;
-    if (collection == PACK_FONT) {
-        return data.font;
-    }
-
-    auto handle = g_image_data->common[collection].handle;
+    auto handle = g_image_data->pak_list[collection].handle;
     if (handle) {
         return handle;
     }
@@ -174,11 +167,12 @@ const image_t *image_next_close_get(image_desc desc, bool &last, int &last_index
 
 const image_t *image_get(int pak, int id) {
     auto& data = *g_image_data;
-    if (pak >= data.common.size()) {
+    if (pak >= data.pak_list.size()) {
         return nullptr;
     }
+
     const image_t* img = nullptr;
-    auto pakptr = data.common[pak].handle;
+    auto pakptr = data.pak_list[pak].handle;
     if (pakptr != nullptr) {
         return pakptr->get_image(id);
     }
@@ -190,11 +184,11 @@ const image_t* image_get(int id) {
     auto& data = *g_image_data;
     const image_t* img;
     for (auto &pak: data.pak_list) {
-        if (*pak == nullptr) {
+        if (pak.handle == nullptr) {
             continue;
         }
 
-        img = (*pak)->get_image(id);
+        img = pak.handle->get_image(id);
         if (img != nullptr) {
             return img;
         }
@@ -205,10 +199,11 @@ const image_t* image_get(int id) {
 
 const image_t* image_letter(int letter_id) {
     auto& data = *g_image_data;
+    auto fontpak = data.pak_list[PACK_FONT].handle;
     if (data.fonts_enabled == FULL_CHARSET_IN_FONT) {
-        return data.font->get_image(data.font_base_offset + letter_id);
+        return fontpak->get_image(data.font_base_offset + letter_id);
     } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
-        return data.font->get_image(data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET);
+        return fontpak->get_image(data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET);
     } else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
         return image_get(image_id_from_group(GROUP_FONT) + letter_id);
     } else {
@@ -218,7 +213,7 @@ const image_t* image_letter(int letter_id) {
 
 const image_t* image_get_enemy(int type, int id) {
     auto& data = *g_image_data;
-    return data.common[type].handle->get_image(id);
+    return data.pak_list[type].handle->get_image(id);
 }
 
 const int image_t::isometric_size() const {

@@ -180,7 +180,7 @@ void dev_sprite_tool(bool header) {
     } 
 
     if (_debug_sprites_open && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
-        for (const auto &imgpak : g_image_data->common) {
+        for (const auto &imgpak : g_image_data->pak_list) {
             if (imgpak.name.empty()) {
                 continue;
             }
