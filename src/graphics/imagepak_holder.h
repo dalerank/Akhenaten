@@ -26,7 +26,7 @@ struct imagepak_holder_t {
 
     color *tmp_image_data = nullptr;
 
-    std::array<imagepak_handle, 64> common;
+    std::array<imagepak_handle, 128> common;
 };
 
 void image_data_init();
