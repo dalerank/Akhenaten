@@ -311,7 +311,7 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end) {
     return 0;
 }
 
-static int place_houses(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
+int build_planner::place_houses(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
     grid_area area = map_grid_get_area(tile2i(x_start, y_start), tile2i(x_end, y_end));
 
     int needs_road_warning = 0;
@@ -548,6 +548,7 @@ void build_planner::set_tiles_building(int image_id, int size_xx) {
             set_graphics_row(row, empty_row, size.x);
     }
 }
+
 void build_planner::set_graphics_array(int* image_set, int size_x, int size_y) {
     init_tiles(size_x, size_y);
     // int (*image_array)[size_y][size_x] = (int(*)[size_y][size_x])image_set;
@@ -748,7 +749,7 @@ void build_planner::setup_build_flags() {
 }
 
 void build_planner::setup_build_graphics() {
-    const auto &props = building_impl::params(build_type);
+    const auto &params = building_impl::params(build_type);
     
     vec2i init_tiles_size;
     switch (build_type) {
@@ -883,13 +884,13 @@ void build_planner::setup_build_graphics() {
         break;
 
     case BUILDING_WATER_LIFT:
-        set_tiles_building(props.anim[animkeys().base].first_img() + relative_orientation + variant * 4, props.building_size);
+        set_tiles_building(params.anim[animkeys().base].first_img() + relative_orientation + variant * 4, params.building_size);
         break;
 
     case BUILDING_DOCK:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_TRANSPORT_WHARF:
-        set_tiles_building(props.anim[animkeys().base].first_img() + relative_orientation, props.building_size);
+        set_tiles_building(params.anim[animkeys().base].first_img() + relative_orientation, props.building_size);
         break;
 
     case BUILDING_LOW_BRIDGE:
@@ -946,17 +947,7 @@ void build_planner::setup_build_graphics() {
         break;
 
     default: // regular buildings 
-        {
-            const auto &params = building_impl::params(build_type);
-            params.setup_preview_graphics(*this);
-
-            int img_id = props.anim[animkeys().base].first_img();
-            if (!img_id) {
-                img_id = params.anim[animkeys().preview].first_img();
-            }
-            img_id += params.planer_relative_orientation * relative_orientation;
-            set_tiles_building(img_id, props.building_size);
-        }
+        params.setup_preview_graphics(*this);
         break;
     }
 }

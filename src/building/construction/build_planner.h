@@ -69,7 +69,6 @@ private:
 
     void init_tiles(int size_x, int size_y);
     void set_graphics_row(int row, int* image_ids, int total);
-    void set_tiles_building(int image_id, int size_xx);
     void set_graphics_array(int* image_set, int size_x, int size_y);
 
     void setup_build_flags();
@@ -92,6 +91,7 @@ private:
     bool map_is_straight_road_for_canal(int grid_offset);
     bool is_road_tile_for_canal(int grid_offset, int gate_orientation);
     void draw_entertainment_venue(tile2i tile, vec2i pixel, e_building_type type, painter &ctx);
+    int place_houses(bool measure_only, int x_start, int y_start, int x_end, int y_end);
 
 public:
     e_building_type build_type;
@@ -134,6 +134,7 @@ public:
     void draw(painter &ctx);
     bool place();
 
+    void set_tiles_building(int image_id, int size_xx);
     static int is_blocked_for_farm(tile2i tile, int size, blocked_tile_vec &blocked_tiles);
     static void draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_mask = COLOR_MASK_GREEN);
     static void draw_flat_tile(painter &ctx, vec2i pixel, color color_mask);

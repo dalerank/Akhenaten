@@ -24,6 +24,7 @@
 #include "grid/random.h"
 #include "grid/image.h"
 #include "grid/routing/routing_terrain.h"
+#include "construction/build_planner.h"
 #include "grid/floodplain.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
@@ -1098,6 +1099,12 @@ void building_impl::static_params::load(archive arch) {
 }
 
 void building_impl::static_params::setup_preview_graphics(build_planner &planer) const {
+    int img_id = anim[animkeys().base].first_img();
+    if (!img_id) {
+        img_id = anim[animkeys().preview].first_img();
+    }
+    img_id += planer_relative_orientation * planer.relative_orientation;
+    planer.set_tiles_building(img_id, building_size);
 }
 
 io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob, size_t version) {
