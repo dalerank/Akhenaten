@@ -470,7 +470,8 @@ private:
     }
 
     [[nodiscard]] static concurrency_t determine_thread_count(const concurrency_t num_threads) {
-#ifdef __EMSCRIPTEN__
+#if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
+//disable threads in emscripten build if pthread support is disabled
         return 0;
 #endif
         if (num_threads > 0)
