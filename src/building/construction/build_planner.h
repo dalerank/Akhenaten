@@ -67,7 +67,6 @@ private:
     int start_offset_screen_x;
     int start_offset_screen_y;
 
-    void init_tiles(int size_x, int size_y);
     void set_graphics_row(int row, int* image_ids, int total);
     void set_graphics_array(int* image_set, int size_x, int size_y);
 
@@ -135,6 +134,8 @@ public:
     bool place();
 
     void set_tiles_building(int image_id, int size_xx);
+    void init_tiles(int size_x, int size_y);
+
     static int is_blocked_for_farm(tile2i tile, int size, blocked_tile_vec &blocked_tiles);
     static void draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_mask = COLOR_MASK_GREEN);
     static void draw_flat_tile(painter &ctx, vec2i pixel, color color_mask);

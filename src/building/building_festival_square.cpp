@@ -8,6 +8,7 @@
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/ui.h"
+#include "construction/build_planner.h"
 #include "building/count.h"
 #include "grid/building.h"
 #include "city/labor.h"
@@ -16,6 +17,10 @@ building_festival_square::static_params festival_square_m;
 
 void building_festival_square::static_params::load(archive arch) {
     square = anim[animkeys().square].first_img();
+}
+
+void building_festival_square::static_params::setup_preview_graphics(build_planner &planer) const {
+    planer.init_tiles(5, 5); // TODO
 }
 
 void building_festival_square::on_place(int orientation, int variant) {

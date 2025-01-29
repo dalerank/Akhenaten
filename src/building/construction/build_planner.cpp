@@ -942,10 +942,6 @@ void build_planner::setup_build_graphics() {
         init_tiles(4, 4); // TODO
         break;
 
-    case BUILDING_FESTIVAL_SQUARE:
-        init_tiles(5, 5); // TODO
-        break;
-
     default: // regular buildings 
         params.setup_preview_graphics(*this);
         break;

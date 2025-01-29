@@ -12,6 +12,7 @@ public:
     struct static_params : public buildings::model_t<building_festival_square> {
         int square;
         virtual void load(archive arch) override;
+        virtual void setup_preview_graphics(build_planner &planer) const;
     };
 
     virtual void on_place(int orientation, int variant) override;
