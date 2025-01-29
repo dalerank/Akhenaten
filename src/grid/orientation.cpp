@@ -74,7 +74,7 @@ void map_orientation_change(int counter_clockwise) {
 
     figure_tower_sentry_reroute();
     //figure_hippodrome_horse_reroute();
-    Planner.update_orientations(false);
+    g_city_planner.update_orientations(false);
 }
 
 void map_orientation_update_buildings() {

@@ -38,6 +38,7 @@
 #include "widget/city/building_ghost.h"
 #include "js/js_game.h"
 #include "figuretype/figure_storageyard_cart.h"
+#include "construction/build_planner.h"
 #include "figuretype/figure_sled.h"
 
 #include <cmath>
@@ -903,10 +904,10 @@ void building_storage_yard::ghost_preview(vec2i tile, painter &ctx) {
     int image_id_space = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
-            draw_building_ghost(ctx, image_id_hut, tile + VIEW_OFFSETS[i]);
+            build_planner::draw_building_ghost(ctx, image_id_hut, tile + VIEW_OFFSETS[i]);
             ImageDraw::img_generic(ctx, image_id_hut + 17, tile.x + VIEW_OFFSETS[i].x + corner_offset.x, tile.y + VIEW_OFFSETS[i].y + corner_offset.y, COLOR_MASK_GREEN);
         } else {
-            draw_building_ghost(ctx, image_id_space, tile + VIEW_OFFSETS[i] + place_offset);
+            build_planner::draw_building_ghost(ctx, image_id_space, tile + VIEW_OFFSETS[i] + place_offset);
         }
     }
 }

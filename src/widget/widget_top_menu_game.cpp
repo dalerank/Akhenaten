@@ -490,7 +490,7 @@ static void menu_file_exit_city(int param) {
 
 static void menu_file_load_game(int param) {
     widget_top_menu_clear_state();
-    Planner.reset();
+    g_city_planner.reset();
     window_city_show();
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
 }
@@ -509,7 +509,7 @@ static void menu_file_new_game(int param) {
             return;
         }
 
-        Planner.reset();
+        g_city_planner.reset();
         game_undo_disable();
         game_state_reset_overlay();
         window_game_menu_show();
@@ -524,7 +524,7 @@ static void menu_file_replay_map(int param) {
             return;
         }
 
-        Planner.reset();
+        g_city_planner.reset();
         if (scenario_is_custom()) {
             GamestateIO::load_savegame("autosave_replay.sav");
             window_city_show();

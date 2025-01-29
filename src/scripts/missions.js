@@ -378,6 +378,7 @@ var mission9 = { // Abu
 				 BUILDING_ROADBLOCK, BUILDING_FERRY, BUILDING_DOCK,
 				 BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL,
 				 BUILDING_TAX_COLLECTOR, BUILDING_COURTHOUSE, BUILDING_FAMILY_MANSION, BUILDING_TOWN_PALACE,
+				 BUILDING_FESTIVAL_SQUARE, BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_TEMPLE_COMPLEX_PTAH,
 				],
 	stages : {
 		mission_start: []
@@ -411,7 +412,22 @@ var mission9 = { // Abu
 
 		{
 			name : "Kyrene",
-		}
+		},
+
+		{
+			name : "Selima Oasis",
+		},
+	],
+
+	events : [
+		{
+			type: "EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED",
+			year : 2664,
+			month : 5,
+			city: "Selima Oasis",
+			amount : 1400,
+			deadline : 9,
+		},
 	],
 
 	choice : [

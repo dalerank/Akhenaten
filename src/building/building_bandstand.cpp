@@ -213,31 +213,31 @@ bool building_bandstand::draw_ornaments_and_animations_height(painter &ctx, vec2
 
 void building_bandstand::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
     int size = bandstand_m.building_size;
-    int square_id = bandstand_m.anim["square"].first_img();
+    int square_id = bandstand_m.anim[animkeys().square].first_img();
     for (int i = 0; i < size * size; i++) {
         ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
     }
 
     switch (orientation / 2) {
     case 0:
-        draw_building_ghost(ctx, bandstand_m.stand_sn_n, pixel, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, bandstand_m.stand_sn_s, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, bandstand_m.stand_sn_n, pixel, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, bandstand_m.stand_sn_s, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
         break;
     case 1:
-        draw_building_ghost(ctx, bandstand_m.stand_we_w, pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, bandstand_m.stand_we_e, pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, bandstand_m.stand_we_w, pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, bandstand_m.stand_we_e, pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
         break;
     case 2:
-        draw_building_ghost(ctx, bandstand_m.stand_sn_n, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, bandstand_m.stand_sn_s, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, bandstand_m.stand_sn_n, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, bandstand_m.stand_sn_s, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
         break;
     case 3:
-        draw_building_ghost(ctx, bandstand_m.stand_we_w, pixel, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, bandstand_m.stand_we_e, pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
-        draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, bandstand_m.stand_we_w, pixel, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, bandstand_m.stand_we_e, pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
         break;
     }
 }

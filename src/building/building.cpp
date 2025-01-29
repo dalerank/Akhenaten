@@ -1097,6 +1097,9 @@ void building_impl::static_params::load(archive arch) {
     anim.load(arch);
 }
 
+void building_impl::static_params::setup_preview_graphics(build_planner &planer) const {
+}
+
 io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob, size_t version) {
     //iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_in_use);
     iob->bind____skip(4);

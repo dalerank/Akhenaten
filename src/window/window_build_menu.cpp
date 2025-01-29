@@ -108,13 +108,13 @@ void build_menu_widget::button_menu_item(int item) {
         return;
     }
 
-    Planner.setup_build(type);
+    g_city_planner.setup_build(type);
 
     if (building_menu_is_submenu(type)) {
         num_items = building_menu_count_items(type);
         selected_submenu = type;
         y_offset = y_menu_offsets[num_items];
-        Planner.reset();
+        g_city_planner.reset();
     } else {
         window_city_show();
     }
@@ -204,7 +204,7 @@ void build_menu_widget::init() {
     num_items = building_menu_count_items(selected_submenu);
     y_offset = y_menu_offsets[num_items];
 
-    Planner.setup_build(BUILDING_NONE);
+    g_city_planner.setup_build(BUILDING_NONE);
 }
 
 int build_menu_widget::ui_handle_mouse(const mouse* m) {

@@ -38,7 +38,14 @@ enum e_place_action {
     CAN_NOT_BUT_GREEN = 2,
 };
 
-class BuildPlanner {
+struct blocked_tile {
+    tile2i tile;
+    bool blocked;
+};
+
+using blocked_tile_vec = svector<blocked_tile, 36>;
+
+class build_planner {
 private:
     int tile_graphics_array[30][30] = {};
     int tile_sizes_array[30][30] = {};
@@ -78,10 +85,13 @@ private:
     void dispatch_warnings();
 
     void update_coord_caches();
-    void draw_flat_tile(vec2i pos, color color_mask, painter &ctx);
     void draw_blueprints(painter &ctx, bool fully_blocked);
     void draw_graphics(painter &ctx);
     bool place_building(e_building_type type, tile2i tile, int orientation, int variant);
+    void draw_canal(map_point tile, vec2i pixel, painter &ctx);
+    bool map_is_straight_road_for_canal(int grid_offset);
+    bool is_road_tile_for_canal(int grid_offset, int gate_orientation);
+    void draw_entertainment_venue(tile2i tile, vec2i pixel, e_building_type type, painter &ctx);
 
 public:
     e_building_type build_type;
@@ -123,8 +133,17 @@ public:
     void update(tile2i cursor_tile);
     void draw(painter &ctx);
     bool place();
+
+    static int is_blocked_for_farm(tile2i tile, int size, blocked_tile_vec &blocked_tiles);
+    static void draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_mask = COLOR_MASK_GREEN);
+    static void draw_flat_tile(painter &ctx, vec2i pixel, color color_mask);
+    static void draw_flat_tile(vec2i pos, color color_mask, painter &ctx);
+    static int is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_tiles);
+    static void draw_bridge(map_point tile, vec2i pixel, int type, painter &ctx);
+    static void draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles);
 };
 
 void build_planner_latch_on_venue(e_building_type type, building *b, int dx, int dy, int orientation, bool main_venue = false);
 
-extern BuildPlanner Planner;
+extern build_planner g_city_planner;
+extern const vec2i VIEW_OFFSETS[];

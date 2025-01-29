@@ -126,7 +126,7 @@ static void pre_load() { // do we NEED this...?
 
     // clear data
     g_city.victory_state.reset();
-    Planner.reset();
+    g_city_planner.reset();
     g_city.init();
     city_message_init_scenario();
     game_state_init();

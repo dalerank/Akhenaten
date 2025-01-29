@@ -35,7 +35,7 @@ ui::window_mission_lost g_mission_lost;
 
 void ui::window_mission_lost::init() {
     ui["replay_mission"].onclick([] {
-        Planner.reset();
+        g_city_planner.reset();
         if (scenario_is_custom()) {
             GamestateIO::load_savegame("autosave_replay.sav");
             window_city_show();

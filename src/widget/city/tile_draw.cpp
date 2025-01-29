@@ -199,11 +199,11 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
         return;
     }
 
-    Planner.construction_record_view_position(pixel, tile);
+    g_city_planner.construction_record_view_position(pixel, tile);
     int building_id = map_building_at(grid_offset);
 
     color color_mask = COLOR_MASK_NONE;
-    bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == tile);
+    bool deletion_tool = (g_city_planner.build_type == BUILDING_CLEAR_LAND && g_city_planner.end == tile);
     if (deletion_tool || map_property_is_deleted(tile)) {
         color_mask = COLOR_MASK_RED;
     }
@@ -281,7 +281,7 @@ void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx) {
         return;
     }
 
-    Planner.construction_record_view_position(pixel, tile);
+    g_city_planner.construction_record_view_position(pixel, tile);
     if (!map_property_is_draw_tile(grid_offset)) {
         return;
     }
@@ -298,7 +298,7 @@ void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx) {
 
     map_render_set(grid_offset, 0);
     color color_mask = COLOR_MASK_NONE;
-    bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == tile);
+    bool deletion_tool = (g_city_planner.build_type == BUILDING_CLEAR_LAND && g_city_planner.end == tile);
     if (deletion_tool || map_property_is_deleted(tile)) {
         color_mask = COLOR_MASK_RED;
     }
@@ -322,12 +322,12 @@ void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx) {
         return;
     }
 
-    Planner.construction_record_view_position(pixel, tile);
+    g_city_planner.construction_record_view_position(pixel, tile);
     int building_id = map_building_at(grid_offset);
 
     color color_mask = COLOR_MASK_NONE;
     building *b = building_get(building_id);
-    bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == tile);
+    bool deletion_tool = (g_city_planner.build_type == BUILDING_CLEAR_LAND && g_city_planner.end == tile);
     if (deletion_tool || map_property_is_deleted(tile) || drawing_building_as_deleted(b)) {
         color_mask = COLOR_MASK_RED;
     }
@@ -424,7 +424,7 @@ void draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
 }
 
 void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
-    Planner.construction_record_view_position(pixel, tile);
+    g_city_planner.construction_record_view_position(pixel, tile);
     constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED, COLOR_GREEN};
     if (!tile.valid()) {
         // Outside map: draw black tile

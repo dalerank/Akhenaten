@@ -242,7 +242,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
     case e_debug_render_building: // BUILDING IDS
         if (b_id && b->tile.grid_offset() == grid_offset) {
-            draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, {x - 15, y}, COLOR_MASK_GREEN_30);
+            build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, {x - 15, y}, COLOR_MASK_GREEN_30);
         }
 
         if (b_id && map_property_is_draw_tile(grid_offset)) { // b->tile.grid_offset() == grid_offset
@@ -274,7 +274,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             debug_text(ctx, str, x0, y + 15, 0, "", b->road_access.y(), b->has_road_access ? COLOR_GREEN : COLOR_LIGHT_RED);
             if (b->has_road_access) {
                 auto tile_coords = tile_to_pixel(b->road_access);
-                draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords, COLOR_MASK_GREEN);
+                build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords, COLOR_MASK_GREEN);
             }
         }
         if (map_terrain_is(grid_offset, TERRAIN_ROAD) || map_terrain_is(grid_offset, TERRAIN_FERRY_ROUTE)) {
@@ -401,7 +401,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
     case e_debug_render_sprite_frames: // SPRITE FRAMES
         if (grid_offset == b->tile.grid_offset()) {
-            draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, {x - 15, y}, COLOR_MASK_GREEN);
+            build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, {x - 15, y}, COLOR_MASK_GREEN);
         }
         if (grid_offset == north_tile_grid_offset(b->tile.x(), b->tile.y())) {
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, x - 15, y, COLOR_MASK_RED);
@@ -605,9 +605,9 @@ void figure::draw_debug() {
         // draw path
         if (routing_path_id) { //&& (roam_length == max_roam_length || roam_length == 0)
             vec2i coords = tile_to_pixel(destination()->tile);
-            draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, coords);
+            build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, coords);
             coords = tile_to_pixel(destination_tile);
-            draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords);
+            build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords);
             int tx = tile.x();
             int ty = tile.y();
             coords = tile_to_pixel(tile);
@@ -892,19 +892,19 @@ void draw_debug_ui(int x, int y) {
     /////// BUILD PLANNER
     if (g_debug_show_opts[e_debug_show_build_planner]) {
         int cl = 90;
-        debug_text(ctx, str, x, y + 15, cl, "type:", Planner.build_type);
-        debug_text(ctx, str, x, y + 25, cl, "in progress:", Planner.in_progress);
-        debug_text(ctx, str, x, y + 35, cl, "draw as con.:", Planner.draw_as_constructing);
-        debug_text(ctx, str, x, y + 45, cl, "orientation:", Planner.absolute_orientation);
-        debug_text(ctx, str, x + 40, y + 45, cl, "", Planner.relative_orientation);
-        debug_text(ctx, str, x, y + 55, cl, "variant:", Planner.variant);
-        debug_text(ctx, str, x, y + 65, cl, "start:", Planner.start.x());
-        debug_text(ctx, str, x + 40, y + 65, cl, "", Planner.start.y());
-        debug_text(ctx, str, x, y + 75, cl, "end:", Planner.end.x());
-        debug_text(ctx, str, x + 40, y + 75, cl, "", Planner.end.y());
+        debug_text(ctx, str, x, y + 15, cl, "type:", g_city_planner.build_type);
+        debug_text(ctx, str, x, y + 25, cl, "in progress:", g_city_planner.in_progress);
+        debug_text(ctx, str, x, y + 35, cl, "draw as con.:", g_city_planner.draw_as_constructing);
+        debug_text(ctx, str, x, y + 45, cl, "orientation:", g_city_planner.absolute_orientation);
+        debug_text(ctx, str, x + 40, y + 45, cl, "", g_city_planner.relative_orientation);
+        debug_text(ctx, str, x, y + 55, cl, "variant:", g_city_planner.variant);
+        debug_text(ctx, str, x, y + 65, cl, "start:", g_city_planner.start.x());
+        debug_text(ctx, str, x + 40, y + 65, cl, "", g_city_planner.start.y());
+        debug_text(ctx, str, x, y + 75, cl, "end:", g_city_planner.end.x());
+        debug_text(ctx, str, x + 40, y + 75, cl, "", g_city_planner.end.y());
 
-        vec2i screen_start = tile_to_screen(Planner.start);
-        vec2i screen_end = tile_to_screen(Planner.end);
+        vec2i screen_start = tile_to_screen(g_city_planner.start);
+        vec2i screen_end = tile_to_screen(g_city_planner.end);
         debug_text(ctx, str, x + 170, y + 65, 60, "screen:", screen_start.x);
         debug_text(ctx, str, x + 170 + 40, y + 65, 60, "", screen_start.y);
         debug_text(ctx, str, x + 170, y + 75, 60, "screen:", screen_end.x);
@@ -918,7 +918,7 @@ void draw_debug_ui(int x, int y) {
         //        COLOR_LIGHT_GREEN; draw_debug_line(str, x + 300, y + 75, 60, "direct:", screen_end2.x, col);
         //        draw_debug_line(str, x + 300 + 40, y + 75, 60, "", screen_end2.y, col);
 
-        debug_text(ctx, str, x, y + 85, cl, "cost:", Planner.total_cost);
+        debug_text(ctx, str, x, y + 85, cl, "cost:", g_city_planner.total_cost);
         y += 90;
     }
 

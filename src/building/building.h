@@ -83,6 +83,7 @@ struct tooltip_context;
 struct object_info;
 struct painter;
 struct mouse;
+class build_planner;
 
 constexpr uint32_t MAX_BUILDINGS = 4000;
 
@@ -537,6 +538,7 @@ public:
         textid info_title_id;
 
         void load(archive arch);
+        virtual void setup_preview_graphics(build_planner &planer) const;
     };
 
     building_impl(building &b) : base(b), data(b.data) {}

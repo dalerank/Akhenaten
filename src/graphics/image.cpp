@@ -91,9 +91,14 @@ bool image_load_paks() {
 
 static imagepak* pak_from_collection_id(int collection) {
     auto& data = *g_image_data;
-    auto handle = g_image_data->pak_list[collection].handle;
-    if (handle) {
-        return handle;
+    const auto &imgpak = g_image_data->pak_list[collection];
+
+    if (!imgpak.handle) {
+        image_data_touch(g_image_data->pak_list[collection]);
+    }
+    
+    if (imgpak.handle) {
+        return imgpak.handle;
     }
 
     return nullptr;

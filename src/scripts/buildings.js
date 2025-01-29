@@ -1438,7 +1438,7 @@ building_village_palace = {
   building_size : 4,
 }
 
-building_town_palace = {
+building building_town_palace = {
   animations : {
     preview : { pack:PACK_GENERAL, id:39 },
     base : { pack:PACK_GENERAL, id:39 },
@@ -1862,4 +1862,9 @@ building building_scribal_school = {
 
   building_size : 2,
   labor_category : LABOR_CATEGORY_EDUCATION,
+}
+
+building building_temple_complex_osiris = {
+  
+
 }

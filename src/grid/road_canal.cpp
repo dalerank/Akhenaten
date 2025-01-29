@@ -85,34 +85,3 @@ int map_get_canal_with_road_image(int grid_offset) {
         return 8;
     }
 }
-
-static int is_road_tile_for_canal(int grid_offset, int gate_orientation) {
-    int is_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
-    if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-        building* b = building_at(grid_offset);
-        if (b->type == BUILDING_MUD_GATEHOUSE) {
-            if (b->subtype.orientation == gate_orientation)
-                is_road = 1;
-
-        } else if (b->type == BUILDING_GRANARY) {
-            if (map_routing_citizen_is_road(grid_offset))
-                is_road = 1;
-        }
-    }
-    return is_road;
-}
-
-int map_is_straight_road_for_canal(int grid_offset) {
-    int road_tiles_x = is_road_tile_for_canal(grid_offset + GRID_OFFSET(1, 0), 2)
-                       + is_road_tile_for_canal(grid_offset + GRID_OFFSET(-1, 0), 2);
-    int road_tiles_y = is_road_tile_for_canal(grid_offset + GRID_OFFSET(0, -1), 1)
-                       + is_road_tile_for_canal(grid_offset + GRID_OFFSET(0, 1), 1);
-
-    if (road_tiles_x == 2 && road_tiles_y == 0)
-        return 1;
-    else if (road_tiles_y == 2 && road_tiles_x == 0)
-        return 1;
-    else {
-        return 0;
-    }
-}

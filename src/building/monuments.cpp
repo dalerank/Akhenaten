@@ -209,24 +209,28 @@ tile2i building_monument_access_point(building *b) {
     return b->tile.shifted(half_size, b->size - 1);
 }
 
-int get_temple_complex_part_image(int type, int part, int orientation, int level) {
+int get_temple_complex_part_image(e_building_type type, int part, int orientation, int level) {
+    int packid = -1;
+    switch (type) {
+    case BUILDING_TEMPLE_COMPLEX_OSIRIS: packid = PACK_TEMPLE_NILE; break;
+    case BUILDING_TEMPLE_COMPLEX_RA: packid = PACK_TEMPLE_RA; break;
+    case BUILDING_TEMPLE_COMPLEX_PTAH: packid = PACK_TEMPLE_PTAH; break;
+    case BUILDING_TEMPLE_COMPLEX_SETH: packid = PACK_TEMPLE_SETH; break;
+    case BUILDING_TEMPLE_COMPLEX_BAST: packid = PACK_TEMPLE_BAST; break;
+        break;
+    }
+
     if (level == 0) {
         switch (part) {
-        case 0:
-        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN) + 3 * orientation;
-        case 1:
-        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ORACLE) + 3 * orientation;
-        case 2:
-        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ALTAR) + 3 * orientation;
+        case 0: return image_id_from_group(packid, 1) + 3 * orientation;
+        case 1: return image_id_from_group(packid, 2) + 3 * orientation;
+        case 2: return image_id_from_group(packid, 3) + 3 * orientation;
         }
     } else if (level == 1) {
         switch (part) {
-        case 0:
-        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN) + orientation;
-        case 1:
-        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_UPGRADES) + orientation;
-        case 2:
-        return image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_UPGRADES) + 2 + orientation;
+        case 0: return image_id_from_group(packid, 1) + orientation;
+        case 1: return image_id_from_group(packid, 7) + orientation;
+        case 2: return image_id_from_group(packid, 7) + 2 + orientation;
         }
     }
     return 0;

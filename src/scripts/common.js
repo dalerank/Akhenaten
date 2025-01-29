@@ -44,7 +44,6 @@ var building_conservatory = {}
 var building_mine_gold = {}
 var building_hunting_lodge = {}
 var building_village_palace = {}
-var building_town_palace = {}
 var building_city_palace = {}
 var building_roadblock = {}
 var building_brick_gatehouse = {}

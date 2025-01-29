@@ -193,10 +193,10 @@ void building_pavilion::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, in
     int stand = params.anim[animkeys().base].first_img();
     const auto &preview_conf = pavilion_m.preview_dir[orientation];
 
-    draw_building_ghost(ctx, stand, pixel + preview_conf.stand, COLOR_MASK_GREEN);
-    draw_building_ghost(ctx, stand_sn_n + preview_conf.stand_b_img, pixel + preview_conf.stand_b, COLOR_MASK_GREEN);
-    draw_building_ghost(ctx, stand_sn_s + preview_conf.stand_e_img, pixel + preview_conf.stand_e, COLOR_MASK_GREEN);
-    draw_building_ghost(ctx, booth, pixel + preview_conf.booth, COLOR_MASK_GREEN);
+    build_planner::draw_building_ghost(ctx, stand, pixel + preview_conf.stand, COLOR_MASK_GREEN);
+    build_planner::draw_building_ghost(ctx, stand_sn_n + preview_conf.stand_b_img, pixel + preview_conf.stand_b, COLOR_MASK_GREEN);
+    build_planner::draw_building_ghost(ctx, stand_sn_s + preview_conf.stand_e_img, pixel + preview_conf.stand_e, COLOR_MASK_GREEN);
+    build_planner::draw_building_ghost(ctx, booth, pixel + preview_conf.booth, COLOR_MASK_GREEN);
 }
 
 void building_pavilion::on_undo() {

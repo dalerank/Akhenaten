@@ -77,9 +77,10 @@ void window_city_draw_paused_and_time_left() {
 }
 
 static void draw_cancel_construction() {
-    if (!mouse_get()->is_touch || !Planner.build_type) {
+    if (!mouse_get()->is_touch || !g_city_planner.build_type) {
         return;
     }
+
     vec2i view_pos, view_size;
     view_data_t viewport = city_view_viewport();
     city_view_get_viewport(viewport, view_pos, view_size);
@@ -212,8 +213,8 @@ void window_city_handle_hotkeys(const hotkeys* h) {
 
     if (h->building) {
         if (scenario_building_allowed(h->building)) {
-            Planner.construction_cancel();
-            Planner.setup_build((e_building_type)h->building);
+            g_city_planner.construction_cancel();
+            g_city_planner.setup_build((e_building_type)h->building);
         }
     }
 }
@@ -221,7 +222,7 @@ void window_city_handle_hotkeys(const hotkeys* h) {
 void window_city_handle_input(const mouse* m, const hotkeys* h) {
     window_city_handle_hotkeys(h);
 
-    if (!Planner.in_progress) {
+    if (!g_city_planner.in_progress) {
         widget_top_menu_handle_input(m, h);
         widget_sidebar_city_handle_mouse(m);
     }

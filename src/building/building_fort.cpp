@@ -7,6 +7,7 @@
 #include "widget/city/building_ghost.h"
 #include "widget/city/ornaments.h"
 #include "window/building/common.h"
+#include "construction/build_planner.h"
 #include "city/city.h"
 #include "city/warnings.h"
 #include "graphics/view/view.h"
@@ -108,26 +109,26 @@ void building_fort::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int or
     blocked_tile_vec blocked_tiles_fort;
     blocked_tile_vec blocked_tiles_ground;
 
-    blocked |= !!is_blocked_for_building(tile, fort_size, blocked_tiles_fort);
-    blocked |= !!is_blocked_for_building(tile_ground, ground_size, blocked_tiles_ground);
+    blocked |= !!build_planner::is_blocked_for_building(tile, fort_size, blocked_tiles_fort);
+    blocked |= !!build_planner::is_blocked_for_building(tile_ground, ground_size, blocked_tiles_ground);
 
     int orientation_index = building_rotation_get_storage_fort_orientation(global_rotation) / 2;
     vec2i main_pixel = pixel + fort_params.ghost.main_view_offset[orientation_index];
     vec2i ground_pixel = pixel + fort_params.ghost.ground_view_offset[orientation_index];
 
     if (blocked) {
-        draw_partially_blocked(ctx, fully_blocked, blocked_tiles_fort);
-        draw_partially_blocked(ctx, fully_blocked, blocked_tiles_ground);
+        build_planner::draw_partially_blocked(ctx, fully_blocked, blocked_tiles_fort);
+        build_planner::draw_partially_blocked(ctx, fully_blocked, blocked_tiles_ground);
     } else {
         int image_id = fort_infantry_m.anim[animkeys().base].first_img();
         if (orientation_index == 0 || orientation_index == 3) {
             // draw fort first, then ground
-            draw_building_ghost(ctx, image_id, main_pixel);
-            draw_building_ghost(ctx, image_id + 1, ground_pixel);
+            build_planner::draw_building_ghost(ctx, image_id, main_pixel);
+            build_planner::draw_building_ghost(ctx, image_id + 1, ground_pixel);
         } else {
             // draw ground first, then fort
-            draw_building_ghost(ctx, image_id + 1, ground_pixel);
-            draw_building_ghost(ctx, image_id, main_pixel);
+            build_planner::draw_building_ghost(ctx, image_id + 1, ground_pixel);
+            build_planner::draw_building_ghost(ctx, image_id, main_pixel);
         }
     }
 }

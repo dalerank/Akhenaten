@@ -119,7 +119,7 @@ void game_cheat_breakpoint() {
 void game_cheat_console(bool force) {
     g_cheats_data.is_cheating |= force;
     if (g_cheats_data.is_cheating) {
-        Planner.reset();
+        g_city_planner.reset();
         window_city_show();
         window_console_show();
     }

@@ -21,6 +21,7 @@
 #include "widget/city/ornaments.h"
 #include "widget/city/building_ghost.h"
 #include "sound/sound_building.h"
+#include "construction/build_planner.h"
 #include "city/labor.h"
 #include "figure/figure.h"
 #include "js/js_game.h"
@@ -142,9 +143,9 @@ void building_booth::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int o
     }
 
     switch (orientation / 2) {
-    case 0: draw_building_ghost(ctx, params.booth, pixel, COLOR_MASK_GREEN); break;
-    case 1: draw_building_ghost(ctx, params.booth, pixel + vec2i{30, 15}, COLOR_MASK_GREEN); break;
-    case 2: draw_building_ghost(ctx, params.booth, pixel + vec2i{0, 30}, COLOR_MASK_GREEN); break;
-    case 3: draw_building_ghost(ctx, params.booth, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN); break;
+    case 0: build_planner::draw_building_ghost(ctx, params.booth, pixel, COLOR_MASK_GREEN); break;
+    case 1: build_planner::draw_building_ghost(ctx, params.booth, pixel + vec2i{30, 15}, COLOR_MASK_GREEN); break;
+    case 2: build_planner::draw_building_ghost(ctx, params.booth, pixel + vec2i{0, 30}, COLOR_MASK_GREEN); break;
+    case 3: build_planner::draw_building_ghost(ctx, params.booth, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN); break;
     }
 }

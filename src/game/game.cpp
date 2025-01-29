@@ -482,7 +482,7 @@ static int get_elapsed_ticks() {
         break;
     }
 
-    if (Planner.in_progress) {
+    if (g_city_planner.in_progress) {
         return 0;
     }
 

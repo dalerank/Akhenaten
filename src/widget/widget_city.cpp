@@ -189,8 +189,8 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
     city_view_foreach_valid_map_tile(ctx, draw_isometric_nonterrain_height, draw_ornaments_and_animations_height, draw_figures);
 
     if (!selected_figure_id) {
-        Planner.update(tile);
-        Planner.draw(ctx);
+        g_city_planner.update(tile);
+        g_city_planner.draw(ctx);
     }
 
     update_clouds(ctx);
@@ -213,8 +213,8 @@ void widget_city_draw_with_overlay(painter &ctx, tile2i tile) {
     map_figure_sort_by_y();
     city_view_foreach_valid_map_tile(ctx, draw_isometrics_overlay_flat);
     city_view_foreach_valid_map_tile(ctx, draw_isometrics_overlay_height, draw_ornaments_overlay, draw_figures_overlay);
-    Planner.update(tile);
-    Planner.draw(ctx);
+    g_city_planner.update(tile);
+    g_city_planner.draw(ctx);
 }
 
 void widget_city_draw(painter &ctx) {
@@ -243,15 +243,17 @@ void widget_city_draw_for_figure(painter &ctx, int figure_id, vec2i* coord) {
 }
 
 bool widget_city_draw_construction_cost_and_size() {
-    if (!Planner.in_progress)
+    if (!g_city_planner.in_progress) {
         return false;
+    }
 
-    if (scroll_in_progress())
+    if (scroll_in_progress()) {
         return false;
+    }
 
     int size_x, size_y;
-    int cost = Planner.total_cost;
-    int has_size = Planner.get_total_drag_size(&size_x, &size_y);
+    int cost = g_city_planner.total_cost;
+    int has_size = g_city_planner.get_total_drag_size(&size_x, &size_y);
     if (!cost && !has_size) {
         return false;
     }
@@ -290,20 +292,20 @@ bool widget_city_draw_construction_cost_and_size() {
 
 static void build_start(tile2i tile) {
     if (tile.grid_offset() > 0) // Allow building on paused
-        Planner.construction_start(tile);
+        g_city_planner.construction_start(tile);
 }
 
 static void build_move(tile2i tile) {
-    if (!Planner.in_progress)
+    if (!g_city_planner.in_progress)
         return;
-    Planner.construction_update(tile);
+    g_city_planner.construction_update(tile);
 }
 static void build_end(void) {
-    if (Planner.in_progress) {
-        if (Planner.build_type != BUILDING_NONE)
+    if (g_city_planner.in_progress) {
+        if (g_city_planner.build_type != BUILDING_NONE)
             g_sound.play_effect(SOUND_EFFECT_BUILD);
 
-        Planner.construction_finalize();
+        g_city_planner.construction_finalize();
     }
 }
 
@@ -362,7 +364,7 @@ static bool handle_legion_click(map_point tile) {
 }
 
 static bool handle_cancel_construction_button(const touch_t * t) {
-    if (!Planner.build_type)
+    if (!g_city_planner.build_type)
         return false;
 
     vec2i view_pos, view_size;
@@ -375,7 +377,7 @@ static bool handle_cancel_construction_button(const touch_t * t) {
         || t->current_point.y >= 40 + box_size) {
         return false;
     }
-    Planner.construction_cancel();
+    g_city_planner.construction_cancel();
     return true;
 }
 
@@ -396,7 +398,7 @@ void widget_city_set_current_tile(tile2i tile) {
 
 void widget_city_handle_touch_scroll(const touch_t * t) {
     auto& data = g_wdiget_city_data;
-    if (Planner.build_type) {
+    if (g_city_planner.build_type) {
         if (t->has_started) {
             vec2i view_pos, view_size;
             view_data_t viewport = city_view_viewport();
@@ -434,7 +436,7 @@ static void handle_touch_zoom(const touch_t * first, const touch_t * last) {
 static void handle_first_touch(map_point tile) {
     auto& data = g_wdiget_city_data;
     const touch_t * first = get_earliest_touch();
-    e_building_type type = Planner.build_type;
+    e_building_type type = g_city_planner.build_type;
 
     if (touch_was_click(first)) {
         if (handle_cancel_construction_button(first) || handle_legion_click(tile))
@@ -452,8 +454,8 @@ static void handle_first_touch(map_point tile) {
     if (!input_coords_in_city(first->current_point.x, first->current_point.y) || type == BUILDING_NONE)
         return;
 
-    if (Planner.has_flag_set(PlannerFlags::Draggable)) {
-        if (!Planner.in_progress) {
+    if (g_city_planner.has_flag_set(PlannerFlags::Draggable)) {
+        if (!g_city_planner.in_progress) {
             if (first->has_started) {
                 build_start(tile);
                 data.new_start_grid_offset = 0;
@@ -466,7 +468,7 @@ static void handle_first_touch(map_point tile) {
             if (touch_not_click(first) && data.new_start_grid_offset) {
                 data.new_start_grid_offset = 0;
                 data.selected_tile.set(0);
-                Planner.construction_cancel();
+                g_city_planner.construction_cancel();
                 build_start(tile);
             }
             build_move(tile);
@@ -507,7 +509,7 @@ static void handle_last_touch(void) {
     if (!last->in_use)
         return;
     if (touch_was_click(last)) {
-        Planner.construction_cancel();
+        g_city_planner.construction_cancel();
         return;
     }
     if (touch_not_click(last))
@@ -522,7 +524,7 @@ static void handle_touch(void) {
         return;
     }
 
-    if (!Planner.in_progress || input_coords_in_city(first->current_point.x, first->current_point.y))
+    if (!g_city_planner.in_progress || input_coords_in_city(first->current_point.x, first->current_point.y))
         data.current_tile = widget_city_update_city_view_coords(first->current_point);
 
     if (first->has_started && input_coords_in_city(first->current_point.x, first->current_point.y)) {
@@ -536,7 +538,7 @@ static void handle_touch(void) {
     if (first->has_ended)
         data.capture_input = false;
 
-    Planner.draw_as_constructing = false;
+    g_city_planner.draw_as_constructing = false;
 }
 
 int widget_city_has_input(void) {
@@ -548,33 +550,33 @@ static void handle_mouse(const mouse* m) {
     auto& data = g_wdiget_city_data;
     data.current_tile = widget_city_update_city_view_coords({m->x, m->y});
     g_zoom.handle_mouse(m);
-    Planner.draw_as_constructing = false;
+    g_city_planner.draw_as_constructing = false;
     if (m->left.went_down) {
         if (handle_legion_click(data.current_tile)) {
             return;
         }
         
-        if (!Planner.in_progress) {
+        if (!g_city_planner.in_progress) {
             build_start(data.current_tile);
         }
 
         build_move(data.current_tile);
-    } else if (m->left.is_down || Planner.in_progress)
+    } else if (m->left.is_down || g_city_planner.in_progress)
         build_move(data.current_tile);
 
     if (m->left.went_up)
         build_end();
 
-    if (m->middle.went_down && input_coords_in_city(m->x, m->y) && !Planner.build_type)
+    if (m->middle.went_down && input_coords_in_city(m->x, m->y) && !g_city_planner.build_type)
         scroll_drag_start(0);
 
     if (m->right.went_up) {
-        if (!Planner.build_type) {
+        if (!g_city_planner.build_type) {
             if (handle_right_click_allow_building_info(data.current_tile)) {
                 window_info_show(data.current_tile);
             }
         } else {
-            Planner.construction_cancel();
+            g_city_planner.construction_cancel();
         }
     }
 
@@ -591,8 +593,8 @@ void widget_city_handle_input(const mouse* m, const hotkeys* h) {
         handle_mouse(m);
 
     if (h->escape_pressed) {
-        if (Planner.build_type) {
-            Planner.construction_cancel();
+        if (g_city_planner.build_type) {
+            g_city_planner.construction_cancel();
         } else {
             hotkey_handle_escape();
         }

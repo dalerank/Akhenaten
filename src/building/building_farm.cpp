@@ -25,6 +25,7 @@
 #include "config/config.h"
 #include "window/building/common.h"
 #include "widget/city/building_ghost.h"
+#include "construction/build_planner.h"
 #include "sound/sound_building.h"
 #include "game/game.h"
 #include "figure/figure.h"
@@ -93,13 +94,13 @@ void building_farm::draw_farm_worker(painter &ctx, int direction, int action, ve
 void building_farm::ghost_preview(painter &ctx, e_building_type type, vec2i point, tile2i tile) {
     blocked_tile_vec blocked_tiles_farm;
 
-    const bool blocked = is_blocked_for_farm(tile, params(type).building_size, blocked_tiles_farm);
+    const bool blocked = build_planner::is_blocked_for_farm(tile, params(type).building_size, blocked_tiles_farm);
 
     if (blocked) {
-        draw_partially_blocked(ctx, false, blocked_tiles_farm);
+        build_planner::draw_partially_blocked(ctx, false, blocked_tiles_farm);
     } else {
         int image_id = get_farm_image(type, tile);
-        draw_building_ghost(ctx, image_id, point + vec2i{ -60, 30 });
+        build_planner::draw_building_ghost(ctx, image_id, point + vec2i{ -60, 30 });
         draw_crops(ctx, type, 0, tile, point + vec2i{-60, 30}, COLOR_MASK_GREEN);
     }
 }

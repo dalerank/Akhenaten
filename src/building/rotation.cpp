@@ -26,7 +26,7 @@ void building_rotation_rotate_by_hotkey() {
     if (config_get(CONFIG_UI_ROTATE_MANUALLY)) {
         rotate();
         road_orientation = road_orientation == 1 ? 2 : 1;
-        Planner.update_orientations();
+        g_city_planner.update_orientations();
     }
 }
 
@@ -42,24 +42,24 @@ void building_rotation_randomize_variant(tile2i tile, int type) {
 }
 
 void building_rotation_variant_by_hotkey() {
-    switch (Planner.build_type) {
+    switch (g_city_planner.build_type) {
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
-        variant = building_statue_next_variant(Planner.build_type, variant);
+        variant = building_statue_next_variant(g_city_planner.build_type, variant);
         break;
 
     default:
         variant = (variant + 1) % 4;
     }
 
-    Planner.update_orientations();
+    g_city_planner.update_orientations();
 }
 
 void building_rotation_reset_rotation() {
     g_global_rotation = 0;
     variant = 0;
-    Planner.update_orientations();
+    g_city_planner.update_orientations();
 }
 
 void building_rotation_force_two_orientations(void) { // for composite buildings like hippodrome
@@ -73,7 +73,7 @@ void building_rotation_update_road_orientation(void) {
             road_last_update = time_get_millis();
             road_orientation = road_orientation == 1 ? 2 : 1;
             rotate();
-            Planner.update_orientations();
+            g_city_planner.update_orientations();
         }
     }
 }

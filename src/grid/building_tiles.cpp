@@ -308,10 +308,20 @@ void map_add_venue_plaza_tiles(int building_id, int size, tile2i tile, int image
     }
 }
 
-void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) {
-    int flooring_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_FLOORING);// , type);
-    int statue1_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_1);// , type);
-    int statue2_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_2);// , type);
+void map_add_temple_complex_base_tiles(e_building_type type, int x, int y, int orientation) {
+    int packid = -1;
+    switch (type) {
+    case BUILDING_TEMPLE_COMPLEX_OSIRIS: packid = PACK_TEMPLE_NILE; break;
+    case BUILDING_TEMPLE_COMPLEX_RA: packid = PACK_TEMPLE_RA; break;
+    case BUILDING_TEMPLE_COMPLEX_PTAH: packid = PACK_TEMPLE_PTAH; break;
+    case BUILDING_TEMPLE_COMPLEX_SETH: packid = PACK_TEMPLE_SETH; break;
+    case BUILDING_TEMPLE_COMPLEX_BAST: packid = PACK_TEMPLE_BAST; break;
+        break;
+    }
+
+    int flooring_image_id = image_id_from_group(packid, 4);
+    int statue1_image_id = image_id_from_group(packid, 5);
+    int statue2_image_id = image_id_from_group(packid, 6);
 
     int EMPTY = 0;
 

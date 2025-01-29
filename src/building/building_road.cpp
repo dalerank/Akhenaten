@@ -17,6 +17,7 @@
 #include "graphics/window.h"
 #include "js/js_game.h"
 #include "widget/city/building_ghost.h"
+#include "construction/build_planner.h"
 
 buildings::model_t<building_road> road_m;
 
@@ -88,9 +89,9 @@ void building_road::ghost_preview(tile2i tile, vec2i pixel, painter &ctx) {
     }
 
     if (blocked) {
-        draw_flat_tile(ctx, pixel, COLOR_MASK_RED);
+        build_planner::draw_flat_tile(ctx, pixel, COLOR_MASK_RED);
     } else {
-        draw_building_ghost(ctx, image_id, pixel);
+        build_planner::draw_building_ghost(ctx, image_id, pixel);
     }
 }
 

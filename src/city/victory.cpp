@@ -158,7 +158,7 @@ void city_t::victory_check() {
     }
 
     if (victory_state.state != e_victory_state_none) {
-        Planner.reset();
+        g_city_planner.reset();
         if (victory_state.state == e_victory_state_lost) {
             if (mission.fired_message_shown)
                 window_mission_end_show_fired();
