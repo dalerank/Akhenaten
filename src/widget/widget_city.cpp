@@ -176,7 +176,7 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
 
     init_draw_context(selected_figure_id, figure_coord, highlighted_formation);
 
-    city_building_ghost_mark_deleting(tile);
+    g_city_planner.ghost_mark_deleting(tile);
 
     map_render_clear();
 
@@ -207,7 +207,7 @@ void widget_city_draw_with_overlay(painter &ctx, tile2i tile) {
 
     map_render_clear();
 
-    city_building_ghost_mark_deleting(tile);
+    g_city_planner.ghost_mark_deleting(tile);
     city_view_foreach_valid_map_tile(ctx, update_tile_coords);
     
     map_figure_sort_by_y();

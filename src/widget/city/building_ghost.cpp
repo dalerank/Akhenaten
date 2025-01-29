@@ -114,21 +114,3 @@ static void get_building_base_xy(int map_x, int map_y, int building_size, int* x
         *x = *y = 0;
     }
 }
-
-bool city_building_ghost_mark_deleting(tile2i tile) {
-    if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE)) {
-        return false;
-    }
-
-    int construction_type = g_city_planner.build_type;
-    if (!tile.grid_offset() || g_city_planner.draw_as_constructing || construction_type != BUILDING_CLEAR_LAND) {
-        return (construction_type == BUILDING_CLEAR_LAND);
-    }
-
-    if (!g_city_planner.in_progress) {
-        map_property_clear_constructing_and_deleted();
-    }
-
-    map_building_tiles_mark_deleting(tile.grid_offset());
-    return true;
-}

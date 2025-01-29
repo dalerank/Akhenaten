@@ -131,6 +131,24 @@ void build_planner::add_building_tiles_from_list(int building_id, bool graphics_
     }
 }
 
+bool build_planner::ghost_mark_deleting(tile2i tile) {
+    if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE)) {
+        return false;
+    }
+
+    int construction_type = build_type;
+    if (!tile.grid_offset() || draw_as_constructing || construction_type != BUILDING_CLEAR_LAND) {
+        return (construction_type == BUILDING_CLEAR_LAND);
+    }
+
+    if (!in_progress) {
+        map_property_clear_constructing_and_deleted();
+    }
+
+    map_building_tiles_mark_deleting(tile.grid_offset());
+    return true;
+}
+
 static building* add_temple_complex_element(int x, int y, int orientation, building* prev) {
     building* b = building_create(prev->type, tile2i(x, y), orientation);
     game_undo_add_building(b);
