@@ -890,7 +890,7 @@ void build_planner::setup_build_graphics() {
     case BUILDING_DOCK:
     case BUILDING_WARSHIP_WHARF:
     case BUILDING_TRANSPORT_WHARF:
-        set_tiles_building(params.anim[animkeys().base].first_img() + relative_orientation, props.building_size);
+        set_tiles_building(params.anim[animkeys().base].first_img() + relative_orientation, params.building_size);
         break;
 
     case BUILDING_LOW_BRIDGE:
@@ -902,12 +902,12 @@ void build_planner::setup_build_graphics() {
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE: {
             int statue_img = building_statue::get_image(build_type, relative_orientation, variant);
-            set_tiles_building(statue_img, props.building_size);
+            set_tiles_building(statue_img, params.building_size);
         }
         break;
 
     case BUILDING_STORAGE_YARD:
-        set_tiles_building(props.anim[animkeys().base].first_img(), 3);
+        set_tiles_building(params.anim[animkeys().base].first_img(), 3);
         break;
 
     case BUILDING_SMALL_MASTABA:
