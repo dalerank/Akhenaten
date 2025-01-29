@@ -34,7 +34,6 @@ void building_festival_square::on_place_update_tiles(int orientation, int varian
     data.entertainment.orientation = orientation;
 
     int size = params().building_size;
-
     if (!map_grid_is_inside(tile(), size)) {
         return;
     }

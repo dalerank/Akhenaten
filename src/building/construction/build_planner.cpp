@@ -938,10 +938,6 @@ void build_planner::setup_build_graphics() {
         init_tiles(3, 3);
         break;
 
-    case BUILDING_PAVILLION:
-        init_tiles(4, 4); // TODO
-        break;
-
     default: // regular buildings 
         params.setup_preview_graphics(*this);
         break;

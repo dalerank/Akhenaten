@@ -20,65 +20,52 @@
 #include "figure/figure.h"
 #include "js/js_game.h"
 
-struct pavilion_model : public buildings::model_t<building_pavilion> {
-    using inherited = buildings::model_t<building_pavilion>;
 
-    int dancer_tile = 0;
-    int booth_tile = 0;
-    int musician_tile_s = 0;
-    int musician_tile_e = 0;
-    struct preview_offset {
-        vec2i stand, stand_b, stand_e, booth;
-        int stand_b_img = 0, stand_e_img = 0;
-        void load(archive arch, pcstr section) {
-            arch.r_section(section, [this] (archive d_arch) {
-                stand = d_arch.r_vec2i("stand");
-                stand_b = d_arch.r_vec2i("stand_b");
-                stand_e = d_arch.r_vec2i("stand_e");
-                booth = d_arch.r_vec2i("booth");
-                stand_b_img = d_arch.r_int("stand_b_img");
-                stand_e_img = d_arch.r_int("stand_e_img");
-            });
-        }
-    };
-    struct place_offset {
-        struct item {
-            e_building_type type = BUILDING_NONE;
-            vec2i offset;
-            bool main;
-            void load(archive arch) {
-                main = arch.r_bool("main");
-                offset = arch.r_vec2i("offset");
-                type = arch.r_type<e_building_type>("type");
-            }
-        };
-        svector<item, 8> items;
-        void load(archive arch, pcstr section) {
-            arch.r_array(section, items, [this] (archive d_arch, auto &item) {
-                item.load(d_arch);
-            });
-        }
-    };
 
-    using inherited::load;
-    virtual void load(archive arch) override {
-        for (auto &pdir: preview_dir) {
-            pdir.load(arch, bstring32().printf("preview_dir_%d", std::distance(preview_dir, &pdir)).c_str());
-        }
+building_pavilion::static_params pavilion_m;
 
-        for (auto &pdir : place_dir) {
-            pdir.load(arch, bstring32().printf("place_dir_%d", std::distance(place_dir, &pdir)).c_str());
-        }
-
-        dancer_tile = anim[animkeys().base].first_img();
-        booth_tile = anim[animkeys().booth].first_img();
-        musician_tile_s = anim[animkeys().stand_sn_s].first_img();
-        musician_tile_e = anim[animkeys().stand_sn_e].first_img();
+void building_pavilion::static_params::load(archive arch) {
+    for (auto &pdir : preview_dir) {
+        pdir.load(arch, bstring32().printf("preview_dir_%d", std::distance(preview_dir, &pdir)).c_str());
     }
 
-    preview_offset preview_dir[8];
-    place_offset place_dir[8];
-} pavilion_m;
+    for (auto &pdir : place_dir) {
+        pdir.load(arch, bstring32().printf("place_dir_%d", std::distance(place_dir, &pdir)).c_str());
+    }
+
+    dancer_tile = anim[animkeys().base].first_img();
+    booth_tile = anim[animkeys().booth].first_img();
+    musician_tile_s = anim[animkeys().stand_sn_s].first_img();
+    musician_tile_e = anim[animkeys().stand_sn_e].first_img();
+}
+
+void building_pavilion::static_params::preview_offset::load(archive arch, pcstr section) {
+    arch.r_section(section, [this] (archive d_arch) {
+        stand = d_arch.r_vec2i("stand");
+        stand_b = d_arch.r_vec2i("stand_b");
+        stand_e = d_arch.r_vec2i("stand_e");
+        booth = d_arch.r_vec2i("booth");
+        stand_b_img = d_arch.r_int("stand_b_img");
+        stand_e_img = d_arch.r_int("stand_e_img");
+    });
+}
+
+void building_pavilion::static_params::place_offset::load(archive arch, pcstr section) {
+    arch.r_array(section, items, [this] (archive d_arch, auto &item) {
+        item.load(d_arch);
+    });
+}
+
+void building_pavilion::static_params::place_offset::item::load(archive arch) {
+    main = arch.r_bool("main");
+    offset = arch.r_vec2i("offset");
+    type = arch.r_type<e_building_type>("type");
+}
+
+
+void building_pavilion::static_params::setup_preview_graphics(build_planner &planer) const {
+    planer.init_tiles(4, 4);
+}
 
 void building_pavilion::on_create(int orientation) {
 
