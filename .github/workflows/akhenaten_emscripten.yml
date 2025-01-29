@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  build-akhenaten-emscripten-module:
     name: run on linux
     runs-on: ubuntu-22.04
     container: emscripten/emsdk:4.0.1
