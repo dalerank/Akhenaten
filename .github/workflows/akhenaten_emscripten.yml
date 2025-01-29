@@ -29,3 +29,23 @@ jobs:
       with:
         name: emscripten_build
         path: akhenaten-emscripten-module
+
+  build-Akhenaten-ems-launcher:
+    runs-on: ubuntu-latest
+    needs: build-akhenaten-emscripten-module
+    steps:
+      - name: Checkout launcher 🛎️
+        uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: akhenaten-emscripten-module
+          path: src/assets/akhenaten/
+      - name: Install and Build 🔧
+        run: |
+          npm install
+          npm run build
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages-demo
+          folder: dist
