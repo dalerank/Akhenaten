@@ -32,7 +32,7 @@ jobs:
       shell: pwsh
       run: |
         Compress-Archive -Path bin_x64/* -Destination windows_build.zip
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: windows_build
         path: bin_x64
