@@ -898,14 +898,6 @@ void build_planner::setup_build_graphics() {
         // TODO
         break;
 
-    case BUILDING_SMALL_STATUE:
-    case BUILDING_MEDIUM_STATUE:
-    case BUILDING_LARGE_STATUE: {
-            int statue_img = building_statue::get_image(build_type, relative_orientation, variant);
-            set_tiles_building(statue_img, params.building_size);
-        }
-        break;
-
     default: // regular buildings 
         params.setup_preview_graphics(*this);
         break;

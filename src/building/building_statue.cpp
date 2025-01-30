@@ -18,8 +18,7 @@
 #include "grid/building_tiles.h"
 #include "io/io_buffer.h"
 #include "window/window_building_info.h"
-
-#include "js/js_game.h"
+#include "construction/build_planner.h"
 
 template<class T>
 struct building_statue_model : public buildings::model_t<T> {
@@ -33,6 +32,11 @@ struct building_statue_model : public buildings::model_t<T> {
             item.id = arch.r_int("id");
             item.offset = arch.r_int("offset");
         });
+    }
+
+    virtual void setup_preview_graphics(build_planner &planer) const override {
+        int statue_img = building_statue::get_image(TYPE, planer.relative_orientation, planer.variant);
+        planer.set_tiles_building(statue_img, building_size);
     }
 };
 
