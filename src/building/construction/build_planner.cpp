@@ -906,10 +906,6 @@ void build_planner::setup_build_graphics() {
         }
         break;
 
-    case BUILDING_STORAGE_YARD:
-        set_tiles_building(params.anim[animkeys().base].first_img(), 3);
-        break;  
-
     default: // regular buildings 
         params.setup_preview_graphics(*this);
         break;

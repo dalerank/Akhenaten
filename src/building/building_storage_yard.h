@@ -32,6 +32,11 @@ public:
     BUILDING_METAINFO(BUILDING_STORAGE_YARD, building_storage_yard)
 
     building_storage_yard(building &b) : building_storage(b) {}
+
+    struct static_params : public buildings::model_t<building_storage_yard> {
+        virtual void setup_preview_graphics(build_planner &planer) const;
+    };
+
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
