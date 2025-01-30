@@ -39,7 +39,7 @@
 
 declare_console_command_p(finishphase, game_cheat_finish_phase);
 
-buildings::model_t<building_small_mastaba> small_mastaba_m;
+building_small_mastaba::static_params small_mastaba_m;
 buildings::model_t<building_small_mastaba_part_side> small_mastaba_side_m;
 buildings::model_t<building_small_mastaba_part_wall> small_mastaba_wall_m;
 buildings::model_t<building_small_mastaba_part_entrance> small_mastaba_entrance_m;
@@ -155,11 +155,20 @@ bool building_small_mastaba::draw_ornaments_and_animations_flat(painter &ctx, ve
 }
 
 void building_small_mastaba::ghost_preview(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end) {
-    building_mastaba::ghost_preview(ctx, type, pixel, start, end, vec2i{ 10, 4 });
+    building_mastaba::ghost_preview(ctx, type, pixel, start, end, init_tiles_size());
 }
 
 vec2i building_small_mastaba::init_tiles_size() {
     return vec2i(10, 4);
+}
+
+void building_small_mastaba::static_params::setup_preview_graphics(build_planner &planer) const {
+    switch (city_view_orientation() / 2) {
+    case 0: planer.init_tiles(init_tiles_size().y, init_tiles_size().x); break;
+    case 1: planer.init_tiles(init_tiles_size().x, init_tiles_size().y); break;
+    case 2: planer.init_tiles(init_tiles_size().y, init_tiles_size().x); break;
+    case 3: planer.init_tiles(init_tiles_size().x, init_tiles_size().y); break;
+    }
 }
 
 int building_mastaba::get_image(int orientation, tile2i tile, tile2i start, tile2i end) {

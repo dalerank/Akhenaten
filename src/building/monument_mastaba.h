@@ -41,6 +41,10 @@ public:
 
     virtual building_small_mastaba *dcast_small_mastaba() override { return this; }
 
+    struct static_params : public buildings::model_t<building_small_mastaba> {
+        virtual void setup_preview_graphics(build_planner &planer) const;
+    };
+
     virtual void on_place(int orientation, int variant) override;
     virtual void update_day() override;
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;

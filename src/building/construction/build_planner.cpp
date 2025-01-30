@@ -908,17 +908,7 @@ void build_planner::setup_build_graphics() {
 
     case BUILDING_STORAGE_YARD:
         set_tiles_building(params.anim[animkeys().base].first_img(), 3);
-        break;
-
-    case BUILDING_SMALL_MASTABA:
-        init_tiles_size = building_small_mastaba::init_tiles_size();
-        switch (city_view_orientation() / 2) {
-        case 0: init_tiles(init_tiles_size.y, init_tiles_size.x); break;
-        case 1: init_tiles(init_tiles_size.x, init_tiles_size.y); break;
-        case 2: init_tiles(init_tiles_size.y, init_tiles_size.x); break;
-        case 3: init_tiles(init_tiles_size.x, init_tiles_size.y); break;
-        }
-        break;    
+        break;  
 
     default: // regular buildings 
         params.setup_preview_graphics(*this);
