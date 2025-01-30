@@ -36,7 +36,7 @@ struct building_statue_model : public buildings::model_t<T> {
 
     virtual void setup_preview_graphics(build_planner &planer) const override {
         int statue_img = building_statue::get_image(T::TYPE, planer.relative_orientation, planer.variant);
-        planer.set_tiles_building(statue_img, building_size);
+        planer.set_tiles_building(statue_img, this->building_size);
     }
 };
 
