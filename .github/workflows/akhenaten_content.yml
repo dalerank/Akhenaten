@@ -30,7 +30,7 @@ jobs:
         wget https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip
         wget https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac/master/macos_build.zip
         unzip windows_build.zip -d artifacts
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: linux_windows_build
         path: artifacts
