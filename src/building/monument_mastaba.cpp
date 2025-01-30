@@ -30,6 +30,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
 #include "figuretype/figure_worker.h"
+#include "construction/build_planner.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
 
@@ -43,7 +44,7 @@ buildings::model_t<building_small_mastaba_part_side> small_mastaba_side_m;
 buildings::model_t<building_small_mastaba_part_wall> small_mastaba_wall_m;
 buildings::model_t<building_small_mastaba_part_entrance> small_mastaba_entrance_m;
 
-buildings::model_t<building_medium_mastaba> medium_mastaba_m;
+building_medium_mastaba::static_params medium_mastaba_m;
 buildings::model_t<building_medium_mastaba_part_side> medium_mastaba_side_m;
 buildings::model_t<building_medium_mastaba_part_wall> medium_mastaba_wall_m;
 buildings::model_t<building_medium_mastaba_part_entrance> medium_mastaba_entrance_m;
@@ -758,4 +759,13 @@ void building_medium_mastaba::update_day() {
     }
 
     building_mastaba::update_day(init_tiles_size());
+}
+
+void building_medium_mastaba::static_params::setup_preview_graphics(build_planner &planer) const {
+    switch (city_view_orientation() / 2) {
+    case 0: planer.init_tiles(init_tiles_size().y, init_tiles_size().x); break;
+    case 1: planer.init_tiles(init_tiles_size().x, init_tiles_size().y); break;
+    case 2: planer.init_tiles(init_tiles_size().y, init_tiles_size().x); break;
+    case 3: planer.init_tiles(init_tiles_size().x, init_tiles_size().y); break;
+    }
 }
