@@ -11,6 +11,7 @@ public:
 
     struct static_params : public buildings::model_t<building_warship_wharf> {
         virtual void load(archive arch) override;
+        virtual void setup_preview_graphics(build_planner &planer) const override;
     };
 
     virtual void spawn_figure() override;

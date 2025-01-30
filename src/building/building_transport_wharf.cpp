@@ -3,11 +3,16 @@
 #include "grid/water.h"
 #include "city/city.h"
 #include "building/count.h"
+#include "construction/build_planner.h"
 
 building_transport_wharf::static_params transport_wharf_m;
 
 void building_transport_wharf::static_params::load(archive arch) {
 
+}
+
+void building_transport_wharf::static_params::setup_preview_graphics(build_planner &planer) const {
+    planer.set_tiles_building(anim[animkeys().base].first_img() + planer.relative_orientation, building_size);
 }
 
 void building_transport_wharf::spawn_figure() {

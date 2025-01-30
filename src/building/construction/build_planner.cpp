@@ -887,17 +887,6 @@ void build_planner::setup_build_graphics() {
         set_tiles_building(params.anim[animkeys().base].first_img() + relative_orientation + variant * 4, params.building_size);
         break;
 
-    case BUILDING_DOCK:
-    case BUILDING_WARSHIP_WHARF:
-    case BUILDING_TRANSPORT_WHARF:
-        set_tiles_building(params.anim[animkeys().base].first_img() + relative_orientation, params.building_size);
-        break;
-
-    case BUILDING_LOW_BRIDGE:
-    case BUILDING_UNUSED_SHIP_BRIDGE_83:
-        // TODO
-        break;
-
     default: // regular buildings 
         params.setup_preview_graphics(*this);
         break;
