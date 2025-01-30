@@ -36,10 +36,16 @@ jobs:
     steps:
     - name: Checkout launcher 🛎️
       uses: actions/checkout@v4
+      with:
+        #or use your fork
+        repository: ololoken/akhenaten-ems
+        ref: refs/heads/main
     - uses: actions/download-artifact@v4
       with:
-        name: akhenaten-emscripten-module
+        name: emscripten_build
         path: src/assets/akhenaten/
+      env:
+        VITE_BASE: /akhenaten
     - name: Install and Build 🔧
       run: |
         npm install
@@ -47,5 +53,5 @@ jobs:
     - name: Deploy 🚀
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        branch: gh-pages-demo
+        branch: akhenaten-wasm
         folder: dist
