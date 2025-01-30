@@ -32,6 +32,10 @@ void building_booth::static_params::load(archive arch) {
     booth = anim[animkeys().booth].first_img();
 }
 
+void building_booth::static_params::setup_preview_graphics(build_planner &planer) const {
+    planer.init_tiles(2, 2);
+}
+
 void building_booth::update_day() {
     building_impl::update_day();
 

@@ -35,6 +35,10 @@ void building_bandstand::static_params::load(archive arch) {
    booth = anim["booth"].first_img();
 }
 
+void building_bandstand::static_params::setup_preview_graphics(build_planner &planer) const {
+    planer.init_tiles(3, 3);
+}
+
 void building_bandstand::on_create(int orientation) {
 }
 

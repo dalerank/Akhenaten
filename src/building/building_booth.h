@@ -13,6 +13,7 @@ public:
         int booth = 0;
 
         virtual void load(archive arch) override;
+        virtual void setup_preview_graphics(build_planner &planer) const;
     };
 
     virtual void on_create(int orientation) override {}

@@ -930,14 +930,6 @@ void build_planner::setup_build_graphics() {
         }
         break;
 
-    case BUILDING_BOOTH:
-        init_tiles(2, 2);
-        break;
-
-    case BUILDING_BANDSTAND:
-        init_tiles(3, 3);
-        break;
-
     default: // regular buildings 
         params.setup_preview_graphics(*this);
         break;
