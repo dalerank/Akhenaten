@@ -397,7 +397,7 @@ bool build_planner::place_building(e_building_type type, tile2i tile, int orient
 
 static bool attach_temple_upgrade(int upgrade_param, int grid_offset) {
     building* target = building_at(grid_offset)->main();
-    if (!building_at(grid_offset) || !building_is_large_temple(target->type)) {
+    if (!building_at(grid_offset) || !building_is_temple_complex(target->type)) {
         return false;
     }
 
@@ -1098,7 +1098,7 @@ void build_planner::update_special_case_orientations_check() {
 
     if (special_flags & PlannerFlags::TempleUpgrade) {
         building* target = building_at(end.grid_offset())->main();
-        if (!building_at(end.grid_offset()) || !building_is_large_temple(target->type)) {
+        if (!building_at(end.grid_offset()) || !building_is_temple_complex(target->type)) {
             immediate_warning_id = WARNING_TEMPLE_UPGRADE_PLACEMENT_NEED_TEMPLE;
             can_place = CAN_NOT_PLACE;
         } else if (target->data.monuments.temple_complex_attachments & additional_req_param1) {

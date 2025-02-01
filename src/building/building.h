@@ -79,6 +79,7 @@ class building_physician;
 class building_wharf;
 class building_shrine;
 class building_transport_wharf;
+class building_temple_complex;
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -370,7 +371,7 @@ public:
     bool is_tax_collector();
     bool is_governor_mansion();
     bool is_temple();
-    bool is_large_temple();
+    bool is_temple_complex() const;
     bool is_shrine() const;
     bool is_guild();
     bool is_beautification();
@@ -637,6 +638,7 @@ public:
     virtual building_warship_wharf *dcast_warship_wharf() { return nullptr; }
     virtual building_shrine *dcast_shrine() { return nullptr; }
     virtual building_transport_wharf *dcast_transport_wharf() { return nullptr; }
+    virtual building_temple_complex *dcast_temple_complex() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -735,9 +737,9 @@ bool building_is_administration(e_building_type type);
 bool building_is_palace(e_building_type type);
 bool building_is_tax_collector(e_building_type type);
 bool building_is_governor_mansion(e_building_type type);
-bool building_is_temple(int type);
-bool building_is_large_temple(int type);
-bool building_is_shrine(int type);
+bool building_is_temple(e_building_type type);
+bool building_is_temple_complex(e_building_type type);
+bool building_is_shrine(e_building_type type);
 bool building_is_guild(e_building_type type);
 bool building_is_statue(e_building_type type);
 bool building_is_beautification(e_building_type type);
@@ -813,6 +815,7 @@ GENERATE_SMART_CAST_BUILDING(physician)
 GENERATE_SMART_CAST_BUILDING(wharf)
 GENERATE_SMART_CAST_BUILDING(shrine)
 GENERATE_SMART_CAST_BUILDING(transport_wharf)
+GENERATE_SMART_CAST_BUILDING(temple_complex)
 
 namespace buildings {
 

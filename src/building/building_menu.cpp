@@ -170,13 +170,13 @@ void building_menu_toggle_building(int type, bool enabled) {
         if (building_is_defense((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_DEFENSES);
 
-        if (building_is_shrine(type))
+        if (building_is_shrine((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_SHRINES);
 
-        if (building_is_temple(type))
+        if (building_is_temple((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_TEMPLES);
 
-        if (building_is_large_temple(type))
+        if (building_is_temple_complex((e_building_type)type))
             building_menu_toggle_building(BUILDING_MENU_TEMPLE_COMPLEX);
 
         if (building_is_guild((e_building_type)type))

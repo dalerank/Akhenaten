@@ -33,7 +33,7 @@ void building_construction_warning_show(int warning) {
 
 static void check_road_access(building *b, tile2i tile, int size, int orientation) {
     bool has_road = false;
-    if (building_is_large_temple(b->type)) {
+    if (building_is_temple_complex(b->type)) {
         has_road =  map_has_road_access_temple_complex(tile, orientation, true, nullptr);
         if (!has_road) {
             building_construction_warning_show(WARNING_ROAD_ACCESS_NEEDED);

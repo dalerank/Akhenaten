@@ -1865,6 +1865,46 @@ building building_scribal_school = {
 }
 
 building building_temple_complex_osiris = {
-  
+  animations : {
+    preview : { pack:PACK_GENERAL, id:42},
+  },
 
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_RELIGION,
+}
+
+building building_temple_complex_ra = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:42},
+  },
+
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_RELIGION,
+}
+
+building building_temple_complex_ptah = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:42},
+  },
+
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_RELIGION,
+}
+
+building building_temple_complex_seth = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:42},
+  },
+
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_RELIGION,
+}
+
+building building_temple_complex_bast = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:42},
+  },
+
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_RELIGION,
 }

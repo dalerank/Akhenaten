@@ -224,7 +224,7 @@ static void io_type_data(io_buffer *iob, building *b, size_t version) {
     auto &data = b->data;
 
     b->dcast()->bind_dynamic(iob, version);
-    if (building_is_large_temple(b->type) || building_is_monument(b->type)) {
+    if (building_is_temple_complex(b->type) || building_is_monument(b->type)) {
         iob->bind____skip(38);
         iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.orientation);
         for (int i = 0; i < 5; i++) {

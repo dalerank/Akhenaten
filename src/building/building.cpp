@@ -100,20 +100,8 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
     }
 
     // unique data
-    switch (type) {
-    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-    case BUILDING_TEMPLE_COMPLEX_RA:
-    case BUILDING_TEMPLE_COMPLEX_PTAH:
-    case BUILDING_TEMPLE_COMPLEX_SETH:
-    case BUILDING_TEMPLE_COMPLEX_BAST:
-        data.monuments.variant = (10 - (2 * orientation)) % 8; // ugh!
-        break;
-
-    default:
-        output_resource_first_id = RESOURCE_NONE;
-        dcast()->on_create(orientation);
-        break;
-    }
+    output_resource_first_id = RESOURCE_NONE;
+    dcast()->on_create(orientation);
 }
 
 void building::monument_remove_worker(int fid) {
@@ -390,8 +378,8 @@ bool building::is_governor_mansion() {
 bool building::is_temple() {
     return building_is_temple(type);
 }
-bool building::is_large_temple() {
-    return building_is_large_temple(type);
+bool building::is_temple_complex() const {
+    return building_is_temple_complex(type);
 }
 bool building::is_shrine() const {
     return building_is_shrine(type);
@@ -696,15 +684,15 @@ bool building_is_governor_mansion(e_building_type type) {
     return (type >= BUILDING_PERSONAL_MANSION && type <= BUILDING_DYNASTY_MANSION);
 }
 
-bool building_is_temple(int type) {
+bool building_is_temple(e_building_type type) {
     return (type >= BUILDING_TEMPLE_OSIRIS && type <= BUILDING_TEMPLE_BAST);
 }
 
-bool building_is_large_temple(int type) {
+bool building_is_temple_complex(e_building_type type) {
     return (type >= BUILDING_TEMPLE_COMPLEX_OSIRIS && type <= BUILDING_TEMPLE_COMPLEX_BAST);
 }
 
-bool building_is_shrine(int type) {
+bool building_is_shrine(e_building_type type) {
     return (type >= BUILDING_SHRINE_OSIRIS && type <= BUILDING_SHRINE_BAST);
 }
 bool building_is_guild(e_building_type type) {
@@ -778,7 +766,7 @@ bool building_is_administration(e_building_type type) {
 }
 
 bool building_is_religion(e_building_type type) {
-    if (building_is_temple(type) || building_is_large_temple(type) || building_is_shrine(type)) {
+    if (building_is_temple(type) || building_is_temple_complex(type) || building_is_shrine(type)) {
         return true;
     }
 
