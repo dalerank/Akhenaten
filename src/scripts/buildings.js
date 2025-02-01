@@ -1870,6 +1870,7 @@ building building_temple_complex_osiris = {
   },
 
   building_size : 3,
+  unique_building : true,
   labor_category : LABOR_CATEGORY_RELIGION,
 }
 
@@ -1879,6 +1880,7 @@ building building_temple_complex_ra = {
   },
 
   building_size : 3,
+  unique_building : true,
   labor_category : LABOR_CATEGORY_RELIGION,
 }
 
@@ -1888,6 +1890,7 @@ building building_temple_complex_ptah = {
   },
 
   building_size : 3,
+  unique_building : true,
   labor_category : LABOR_CATEGORY_RELIGION,
 }
 
@@ -1897,6 +1900,7 @@ building building_temple_complex_seth = {
   },
 
   building_size : 3,
+  unique_building : true,
   labor_category : LABOR_CATEGORY_RELIGION,
 }
 
@@ -1906,5 +1910,6 @@ building building_temple_complex_bast = {
   },
 
   building_size : 3,
+  unique_building : true,
   labor_category : LABOR_CATEGORY_RELIGION,
 }

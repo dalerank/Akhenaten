@@ -361,49 +361,49 @@ static void enable_gods(Args... args) {
 }
 
 void building_menu_update_gods_available(e_god god, bool available) {
-    auto &buildings = god_buildings_aliases[god].types;
-    for (auto &b : buildings) {
+    const auto &buildings = god_buildings_aliases[god].types;
+    for (const auto &b : buildings) {
         building_menu_toggle_building(b, available);
     }
 }
 
 void building_menu_update_temple_complexes() {
-    if (!config_get(CONFIG_GP_CH_MULTIPLE_TEMPLE_COMPLEXES)) {
-        if (city_buildings_has_temple_complex()) {
-            // can't build more than one
-            building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_OSIRIS, false);
-            building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_RA, false);
-            building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_PTAH, false);
-            building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_SETH, false);
-            building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_BAST, false);
+    if (config_get(CONFIG_GP_CH_MULTIPLE_TEMPLE_COMPLEXES)) {
+        return;
+    }
 
-            // check if upgrades have been placed
-            building* b = building_get(city_buildings_get_temple_complex());
-            if (b->data.monuments.temple_complex_attachments & 2) // altar
-                building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ALTAR, false);
-            else
-                building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ALTAR, true);
-            if (b->data.monuments.temple_complex_attachments & 1) // oracle
-                building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ORACLE, false);
-            else
-                building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ORACLE, true);
+    if (city_buildings_has_temple_complex()) {
+        // can't build more than one
+        building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_OSIRIS, false);
+        building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_RA, false);
+        building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_PTAH, false);
+        building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_SETH, false);
+        building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_BAST, false);
 
-            // all upgrades have been placed!
-            if (b->data.monuments.temple_complex_attachments == 1 + 2)
-                building_menu_toggle_building(BUILDING_MENU_TEMPLE_COMPLEX, false);
-
-        } else {
-            enable_if_allowed(BUILDING_TEMPLE_COMPLEX_OSIRIS);
-            enable_if_allowed(BUILDING_TEMPLE_COMPLEX_RA);
-            enable_if_allowed(BUILDING_TEMPLE_COMPLEX_PTAH);
-            enable_if_allowed(BUILDING_TEMPLE_COMPLEX_SETH);
-            enable_if_allowed(BUILDING_TEMPLE_COMPLEX_BAST);
-
+        // check if upgrades have been placed
+        building* b = building_get(city_buildings_get_temple_complex());
+        if (b->data.monuments.temple_complex_attachments & 2) // altar
             building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ALTAR, false);
+        else
+            building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ALTAR, true);
+        if (b->data.monuments.temple_complex_attachments & 1) // oracle
             building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ORACLE, false);
-        }
+        else
+            building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ORACLE, true);
+
+        // all upgrades have been placed!
+        if (b->data.monuments.temple_complex_attachments == 1 + 2)
+            building_menu_toggle_building(BUILDING_MENU_TEMPLE_COMPLEX, false);
+
     } else {
-        // TODO...?
+        enable_if_allowed(BUILDING_TEMPLE_COMPLEX_OSIRIS);
+        enable_if_allowed(BUILDING_TEMPLE_COMPLEX_RA);
+        enable_if_allowed(BUILDING_TEMPLE_COMPLEX_PTAH);
+        enable_if_allowed(BUILDING_TEMPLE_COMPLEX_SETH);
+        enable_if_allowed(BUILDING_TEMPLE_COMPLEX_BAST);
+
+        building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ALTAR, false);
+        building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ORACLE, false);
     }
 }
 

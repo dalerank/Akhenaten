@@ -149,40 +149,6 @@ bool build_planner::ghost_mark_deleting(tile2i tile) {
     return true;
 }
 
-static building* add_temple_complex_element(int x, int y, int orientation, building* prev) {
-    building* b = building_create(prev->type, tile2i(x, y), orientation);
-    game_undo_add_building(b);
-
-    b->size = 3;
-    b->prev_part_building_id = prev->id;
-    prev->next_part_building_id = b->id;
-    int image_id = map_image_at(MAP_OFFSET(x, y));
-    map_building_tiles_add(b->id, b->tile, 3, image_id, TERRAIN_BUILDING);
-
-    return b;
-}
-
-static void add_temple_complex(building* b, int orientation) {
-    g_city_planner.add_building_tiles_from_list(b->id, false);
-    tile2i offset = {0, 0};
-    switch (orientation) {
-    case 0:
-        offset = {0, -3};
-        break;
-    case 1:
-        offset = {3, 0};
-        break;
-    case 2:
-        offset = {0, 3};
-        break;
-    case 3:
-        offset = {-3, 0};
-        break;
-    }
-    building* altar = add_temple_complex_element(b->tile.x() + offset.x(), b->tile.y() + offset.y(), orientation, b);
-    building* oracle = add_temple_complex_element(b->tile.x() + 2 * offset.x(), b->tile.y() + 2 * offset.y(), orientation, altar);
-}
-
 void build_planner_latch_on_venue(e_building_type type, building *b, int dx, int dy, int orientation, bool main_venue) {
     tile2i point = b->tile.shifted(dx, dy);
     // set map graphics accordingly
@@ -251,15 +217,6 @@ static void add_building(building* b, int orientation, int variant) {
     case BUILDING_HOUSE_MODEST_ESTATE:
     case BUILDING_HOUSE_PALATIAL_ESTATE:
         add_building_tiles_image(b, params.anim["house"].first_img());
-        break;
-
-        // government
-    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-    case BUILDING_TEMPLE_COMPLEX_RA:
-    case BUILDING_TEMPLE_COMPLEX_PTAH:
-    case BUILDING_TEMPLE_COMPLEX_SETH:
-    case BUILDING_TEMPLE_COMPLEX_BAST:
-        add_temple_complex(b, orientation);
         break;
 
     case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:

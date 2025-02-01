@@ -191,11 +191,11 @@ void city_buildings_remove_festival_square() {
     city_data.buildings.festival_square = tile2i::invalid;
 }
 
-bool city_buildings_has_temple_complex(void) {
+bool city_buildings_has_temple_complex() {
     return city_data.buildings.temple_complex_placed;
 }
 
-int city_buildings_get_temple_complex(void) {
+int city_buildings_get_temple_complex() {
     return city_data.buildings.temple_complex_id;
 }
 

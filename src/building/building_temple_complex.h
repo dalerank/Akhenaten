@@ -9,6 +9,9 @@ public:
     virtual building_temple_complex *dcast_temple_complex() override { return this; }
 
     virtual void on_create(int orientation) override;
+    virtual void update_count() const override;
+    virtual void on_post_load() override;
+    virtual void on_place(int orientation, int variant) override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_NONE; }
 };
 
