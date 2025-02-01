@@ -55,3 +55,15 @@ jobs:
       with:
         branch: akhenaten-wasm
         folder: dist
+    - name: Configure git for target repo
+      run: |
+        git config --global user.name "gitbub actions"
+        git config --global user.email "actions@akhenaten.game"
+    - name: Push to github pages
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.PAGES_DEPLOY }}
+        repository: dalerank/dalerank.github.io
+        directory: "./"
+        branch: main
+        force: true
