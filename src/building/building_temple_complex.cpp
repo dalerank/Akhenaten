@@ -22,6 +22,12 @@ struct building_temple_complex_model : public buildings::model_t<T> {
     virtual int planer_setup_orientation(int orientation) const override { 
         return 1;
     }
+
+    virtual int planer_update_relative_orientation(build_planner &p, int global_rotation) const override {
+        return global_rotation + 1; 
+    }
+
+    virtual int planer_update_building_variant(build_planner &planer) const override { return 0; }
 };
 
 building_temple_complex_model<building_temple_complex_osiris> building_temple_complex_osiris_m;

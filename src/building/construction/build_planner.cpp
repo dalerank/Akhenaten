@@ -1178,26 +1178,11 @@ void build_planner::update_orientations(bool check_if_changed) {
     int prev_variant = building_variant;
     int global_rotation = building_rotation_global_rotation();
 
-    switch (build_type) {
-    case BUILDING_SMALL_STATUE:
-    case BUILDING_MEDIUM_STATUE:
-    case BUILDING_LARGE_STATUE:
-        relative_orientation = global_rotation + 1;
-        building_variant = custom_building_variant;
-        break;
+    const auto &params = building_impl::params(build_type);
 
-    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-    case BUILDING_TEMPLE_COMPLEX_RA:
-    case BUILDING_TEMPLE_COMPLEX_PTAH:
-    case BUILDING_TEMPLE_COMPLEX_SETH:
-    case BUILDING_TEMPLE_COMPLEX_BAST: // CHANGE: in the original game, only two orientations are allowed
-        relative_orientation = global_rotation + 1;
-        building_variant = 0;
-        break;
+    relative_orientation = params.planer_update_relative_orientation(*this, global_rotation);
+    building_variant = params.planer_update_building_variant(*this);
 
-    default:
-        break;
-    }
     relative_orientation = relative_orientation % 4;
     absolute_orientation = city_view_absolute_orientation(relative_orientation);
 

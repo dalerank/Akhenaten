@@ -1095,6 +1095,10 @@ void building_impl::static_params::planer_setup_preview_graphics(build_planner &
     planer.set_tiles_building(img_id, building_size);
 }
 
+int building_impl::static_params::planer_update_building_variant(build_planner &planer) const {
+    return planer.building_variant;
+}
+
 io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob, size_t version) {
     //iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_in_use);
     iob->bind____skip(4);

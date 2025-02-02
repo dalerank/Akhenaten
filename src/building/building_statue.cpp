@@ -84,6 +84,16 @@ int building_statue::static_params_t<T>::planer_next_building_variant(e_building
     return variant;
 }
 
+template<class T>
+int building_statue::static_params_t<T>::planer_update_relative_orientation(build_planner &p, int global_rotation) const {
+    return global_rotation + 1;;
+}
+
+template<class T>
+int building_statue::static_params_t<T>::planer_update_building_variant(build_planner &planer) const {
+    return planer.custom_building_variant; 
+}
+
 void building_statue::on_create(int o) {
     int orientation = (4 + building_rotation_global_rotation() + city_view_orientation() / 2) % 4;
     data.monuments.variant = g_city_planner.building_variant;
