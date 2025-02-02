@@ -19,11 +19,10 @@
 #include "widget/city/building_ghost.h"
 #include "construction/build_planner.h"
 
-buildings::model_t<building_road> road_m;
+building_road::static_params road_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_road);
-void config_load_building_road() {
-    road_m.load();
+bool building_road::static_params::planer_can_construction_start(build_planner &p, tile2i start) const {
+    return map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start);
 }
 
 void building_road::on_place_checks() {

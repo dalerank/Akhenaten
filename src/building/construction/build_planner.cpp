@@ -1230,15 +1230,15 @@ int build_planner::get_total_drag_size(int* x, int* y) {
 }
 
 void build_planner::construction_start(tile2i tile) {
-    start = end = tile;
+    start = tile;
+    end = tile;
 
+    const auto &params = building_impl::params(build_type);
     if (game_undo_start_build(build_type)) {
         in_progress = true;
-        int can_start = true;
+        int can_start = params.planer_can_construction_start(*this, start);
+
         switch (build_type) {
-        case BUILDING_ROAD:
-            can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start);
-            break;
         case BUILDING_IRRIGATION_DITCH:
             //            case BUILDING_WATER_LIFT:
             can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, start);
