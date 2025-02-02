@@ -523,12 +523,12 @@ void build_planner::set_graphics_array(int* image_set, int size_x, int size_y) {
 void build_planner::setup_building_variant(tile2i tile, e_building_type type) {
     const auto &params = building_impl::params(type);
     int random_value = tile.grid_offset();
-    custom_building_variant = params.rotation_random_variant(type, tile, random_value);
+    custom_building_variant = params.planer_setup_building_variant(type, tile, random_value);
 }
 
 void build_planner::next_building_variant() {
     const auto &params = building_impl::params(build_type);
-    custom_building_variant = params.next_building_variant(build_type, end, custom_building_variant);
+    custom_building_variant = params.planer_next_building_variant(build_type, end, custom_building_variant);
     update_orientations();
 }
 
@@ -555,13 +555,13 @@ void build_planner::setup_build(e_building_type type) { // select building for c
     }
 
     const auto &params = building_impl::params(type);
-    params.setup_build(*this);
+    params.planer_setup_build(*this);
     // leftover special cases....
     switch (build_type) {
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
-        setup_building_variant(end, type);
+        setup_building_variant(end, build_type);
         relative_orientation = 1; // force these buildings to start in a specific orientation
         update_orientations(false);
         break;
@@ -860,7 +860,7 @@ void build_planner::setup_build_graphics() {
         break;
 
     default: // regular buildings 
-        params.setup_preview_graphics(*this);
+        params.planer_setup_preview_graphics(*this);
         break;
     }
 }
@@ -1442,13 +1442,6 @@ void build_planner::construction_finalize() { // confirm final placement
     // update city building info with newly created
     // building for special/unique constructions
     switch (build_type) {
-    case BUILDING_SMALL_STATUE:
-    case BUILDING_MEDIUM_STATUE:
-    case BUILDING_LARGE_STATUE:
-        setup_building_variant(end, build_type);
-        update_orientations(false);
-        break;
-
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
@@ -1464,6 +1457,9 @@ void build_planner::construction_finalize() { // confirm final placement
     default:
         ; // nothing
     }
+
+    setup_building_variant(end, build_type);
+    update_orientations(false);
 
     // update terrain data for certain special cases
     if (special_flags & PlannerFlags::Meadow) {

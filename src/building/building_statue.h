@@ -18,9 +18,9 @@ public:
         
         using inherited::load;
         virtual void load(archive arch) override;
-        virtual void setup_preview_graphics(build_planner &planer) const override;
-        virtual int rotation_random_variant(e_building_type type, tile2i tile, int variant) const override;
-        virtual int next_building_variant(e_building_type type, tile2i tile, int variant) const override;
+        virtual void planer_setup_preview_graphics(build_planner &planer) const override;
+        virtual int planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const override;
+        virtual int planer_next_building_variant(e_building_type type, tile2i tile, int variant) const override;
     };
 
     virtual void on_create(int orientation) override;

@@ -1086,7 +1086,7 @@ void building_impl::static_params::load(archive arch) {
     anim.load(arch);
 }
 
-void building_impl::static_params::setup_preview_graphics(build_planner &planer) const {
+void building_impl::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     int img_id = anim[animkeys().base].first_img();
     if (!img_id) {
         img_id = anim[animkeys().preview].first_img();

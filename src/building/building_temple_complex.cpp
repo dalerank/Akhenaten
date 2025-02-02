@@ -15,8 +15,8 @@ struct building_temple_complex_model : public buildings::model_t<T> {
     virtual void load(archive arch) override {
     }
 
-    virtual void setup_preview_graphics(build_planner &planer) const override {
-        inherited::setup_preview_graphics(planer);
+    virtual void planer_setup_preview_graphics(build_planner &planer) const override {
+        inherited::planer_setup_preview_graphics(planer);
     }
 };
 

@@ -11,7 +11,7 @@ public:
 
     struct static_params : public buildings::model_t<building_dock> {
         virtual void load(archive arch) override;
-        virtual void setup_preview_graphics(build_planner &planer) const override;
+        virtual void planer_setup_preview_graphics(build_planner &planer) const override;
     };
 
     virtual void on_create(int orientation) override;

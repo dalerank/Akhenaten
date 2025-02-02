@@ -539,10 +539,11 @@ public:
         textid info_title_id;
 
         void load(archive arch);
-        virtual void setup_build(build_planner &planer) const {}
-        virtual void setup_preview_graphics(build_planner &planer) const;
-        virtual int rotation_random_variant(e_building_type type, tile2i tile, int variant) const { return variant; }
-        virtual int next_building_variant(e_building_type type, tile2i tile, int variant) const { return (variant + 1) % 4; }
+        virtual void planer_setup_build(build_planner &planer) const {}
+        virtual int planer_setup_orientation(int orientation) const { return orientation; }
+        virtual void planer_setup_preview_graphics(build_planner &planer) const;
+        virtual int planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const { return variant; }
+        virtual int planer_next_building_variant(e_building_type type, tile2i tile, int variant) const { return (variant + 1) % 4; }
     };
 
     building_impl(building &b) : base(b), data(b.data) {}

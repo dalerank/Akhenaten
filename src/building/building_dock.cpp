@@ -32,7 +32,7 @@ void building_dock::static_params::load(archive arch) {
 
 }
 
-void building_dock::static_params::setup_preview_graphics(build_planner &planer) const {
+void building_dock::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     planer.set_tiles_building(anim[animkeys().base].first_img() + planer.relative_orientation, building_size);
 }
 
