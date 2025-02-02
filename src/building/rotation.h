@@ -1,6 +1,7 @@
 #pragma once
 
 #include "grid/point.h"
+#include "building/building_type.h"
 
 void building_rotation_update_road_orientation();
 int building_rotation_global_rotation();
@@ -16,5 +17,5 @@ int building_rotation_get_corner(int rot);
 
 void building_rotation_rotate_by_hotkey();
 void building_rotation_variant_by_hotkey();
-void building_rotation_randomize_variant(tile2i tile, int type);
+void building_rotation_randomize_variant(tile2i tile, e_building_type type);
 void building_rotation_reset_rotation();

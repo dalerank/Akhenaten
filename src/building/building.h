@@ -540,6 +540,8 @@ public:
 
         void load(archive arch);
         virtual void setup_preview_graphics(build_planner &planer) const;
+        virtual int rotation_random_variant(e_building_type type, tile2i tile, int variant) const { return variant; }
+        virtual int rotation_next_variant(e_building_type type, tile2i tile, int variant) const { return (variant + 1) % 4; }
     };
 
     building_impl(building &b) : base(b), data(b.data) {}

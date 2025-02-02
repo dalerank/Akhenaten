@@ -474,7 +474,7 @@ bool build_planner::has_flag_set(int flag, int param1, int param2, int param3) {
 }
 
 void build_planner::set_graphics_row(int row, int* image_ids, int total) {
-    if (row <= 0) {
+    if (row < 0) {
         return;
     }
 

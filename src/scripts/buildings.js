@@ -1,6 +1,6 @@
 log_info("akhenaten: building info started")
 
-building_small_statue = {
+building building_small_statue = {
   variants : [
     {pack: PACK_GENERAL, id: 61, offset:1},
     {pack: PACK_GENERAL, id: 61, offset:5},
@@ -14,7 +14,7 @@ building_small_statue = {
   building_size : 1,
 }
 
-building_medium_statue = {
+building building_medium_statue = {
   variants : [
     {pack: PACK_GENERAL, id: 8, offset:1},
     {pack: PACK_GENERAL, id: 8, offset:5},
@@ -27,7 +27,7 @@ building_medium_statue = {
   building_size : 2,
 }
 
-building_large_statue = {
+building building_large_statue = {
   variants : [
     {pack: PACK_GENERAL, id: 7, offset:1},
     {pack: PACK_GENERAL, id: 7, offset:5},

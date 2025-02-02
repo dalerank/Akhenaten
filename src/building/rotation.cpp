@@ -8,8 +8,8 @@
 #include "config/config.h"
 
 int g_global_rotation = 0;
+int g_rotation_variant = 0;
 static int road_orientation = 1;
-static int variant = 0;
 static time_millis road_last_update = 0;
 
 static void rotate(void) {
@@ -30,35 +30,21 @@ void building_rotation_rotate_by_hotkey() {
     }
 }
 
-void building_rotation_randomize_variant(tile2i tile, int type) {
-    variant = tile.grid_offset();
-    switch (type) {
-    case BUILDING_SMALL_STATUE:
-    case BUILDING_MEDIUM_STATUE:
-    case BUILDING_LARGE_STATUE:
-        variant = building_statue_random_variant(type, variant);
-    break;
-    }
+void building_rotation_randomize_variant(tile2i tile, e_building_type type) {
+    g_rotation_variant = tile.grid_offset();
+    const auto &params = building_impl::params(type);
+    g_rotation_variant = params.rotation_random_variant(type, tile, g_rotation_variant);
 }
 
 void building_rotation_variant_by_hotkey() {
-    switch (g_city_planner.build_type) {
-    case BUILDING_SMALL_STATUE:
-    case BUILDING_MEDIUM_STATUE:
-    case BUILDING_LARGE_STATUE:
-        variant = building_statue_next_variant(g_city_planner.build_type, variant);
-        break;
-
-    default:
-        variant = (variant + 1) % 4;
-    }
-
+    const auto &params = building_impl::params(g_city_planner.build_type);
+    g_rotation_variant = params.rotation_next_variant(g_city_planner.build_type, g_city_planner.end, g_rotation_variant);
     g_city_planner.update_orientations();
 }
 
 void building_rotation_reset_rotation() {
     g_global_rotation = 0;
-    variant = 0;
+    g_rotation_variant = 0;
     g_city_planner.update_orientations();
 }
 
@@ -82,7 +68,7 @@ int building_rotation_get_road_orientation() {
 }
 
 int building_rotation_get_building_variant() {
-    return variant;
+    return g_rotation_variant;
 }
 
 int building_rotation_get_storage_fort_orientation(int building_rotation) {
