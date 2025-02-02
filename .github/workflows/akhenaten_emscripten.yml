@@ -59,11 +59,12 @@ jobs:
       run: |
         git config --global user.name "gitbub actions"
         git config --global user.email "actions@akhenaten.game"
-    - name: Push to github pages
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.PAGES_DEPLOY }}
-        repository: dalerank/dalerank.github.io
-        directory: "./"
-        branch: main
-        force: true
+        git remote add https://github.com/dalerank/dalerank.github.io
+        git checkout --oprhan temp_branch
+        git add -A
+        git commit -m "Deploy Pages"
+        git push --force pages_deploy temp_branch:main
+        git checkout master
+        git branch -D temp_branch
+        
+    
