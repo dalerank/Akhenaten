@@ -59,7 +59,7 @@ jobs:
       run: |
         git config --global user.name "gitbub actions"
         git config --global user.email "actions@akhenaten.game"
-        git remote add pages_deploy https://github.com/dalerank/dalerank.github.io
+        git remote add pages_deploy https://${{ secrets.PAGES_DEPLOY }}@github.com/dalerank/dalerank.github.io
         git checkout --orphan temp_branch
         git add -A
         git commit -m "Deploy Pages"
