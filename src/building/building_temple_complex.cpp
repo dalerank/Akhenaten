@@ -18,6 +18,10 @@ struct building_temple_complex_model : public buildings::model_t<T> {
     virtual void planer_setup_preview_graphics(build_planner &planer) const override {
         inherited::planer_setup_preview_graphics(planer);
     }
+
+    virtual int planer_setup_orientation(int orientation) const override { 
+        return 1;
+    }
 };
 
 building_temple_complex_model<building_temple_complex_osiris> building_temple_complex_osiris_m;

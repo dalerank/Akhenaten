@@ -539,6 +539,7 @@ public:
         textid info_title_id;
 
         void load(archive arch);
+
         virtual void planer_setup_build(build_planner &planer) const {}
         virtual int planer_setup_orientation(int orientation) const { return orientation; }
         virtual void planer_setup_preview_graphics(build_planner &planer) const;

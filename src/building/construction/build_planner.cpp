@@ -533,7 +533,6 @@ void build_planner::next_building_variant() {
 }
 
 void build_planner::setup_build(e_building_type type) { // select building for construction, set up main terrain restrictions/requirements
-    // initial data
     reset();
     build_type = type;
 
@@ -556,25 +555,10 @@ void build_planner::setup_build(e_building_type type) { // select building for c
 
     const auto &params = building_impl::params(type);
     params.planer_setup_build(*this);
-    // leftover special cases....
-    switch (build_type) {
-    case BUILDING_SMALL_STATUE:
-    case BUILDING_MEDIUM_STATUE:
-    case BUILDING_LARGE_STATUE:
-        setup_building_variant(end, build_type);
-        relative_orientation = 1; // force these buildings to start in a specific orientation
-        update_orientations(false);
-        break;
-        //
-    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-    case BUILDING_TEMPLE_COMPLEX_RA:
-    case BUILDING_TEMPLE_COMPLEX_PTAH:
-    case BUILDING_TEMPLE_COMPLEX_SETH:
-    case BUILDING_TEMPLE_COMPLEX_BAST:
-        relative_orientation = 1; // force these buildings to start in a specific orientation
-        update_orientations(false);
-        break;
-    }
+
+    setup_building_variant(end, build_type);
+    relative_orientation = params.planer_setup_orientation(relative_orientation); // force these buildings to start in a specific orientation
+    update_orientations(false);
 
     // load building data
     setup_build_flags();

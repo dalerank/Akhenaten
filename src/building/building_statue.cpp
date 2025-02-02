@@ -20,6 +20,10 @@
 #include "window/window_building_info.h"
 #include "construction/build_planner.h"
 
+building_small_statue::static_params small_statue_m;
+building_medium_statue::static_params medium_statue_m;
+building_large_statue::static_params large_statue_m;
+
 int building_statue::statue_params_t::get_image(e_building_type type, int orientation, int variant) const {
     int image_id = 0;
 
@@ -79,10 +83,6 @@ int building_statue::static_params_t<T>::planer_next_building_variant(e_building
     variant = (variant + 1) % size;
     return variant;
 }
-
-building_small_statue::static_params small_statue_m;
-building_medium_statue::static_params medium_statue_m;
-building_large_statue::static_params large_statue_m;
 
 void building_statue::on_create(int o) {
     int orientation = (4 + building_rotation_global_rotation() + city_view_orientation() / 2) % 4;
