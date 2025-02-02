@@ -68,7 +68,7 @@ jobs:
         git add -A
         git commit -m "Deploy Pages"
         git push --force pages_deploy temp_branch:main
-        git checkout master
+        git checkout akhenaten-wasm
         git branch -D temp_branch
         
     
