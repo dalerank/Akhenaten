@@ -25,6 +25,17 @@ bool building_road::static_params::planer_can_construction_start(build_planner &
     return map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start);
 }
 
+int building_road::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
+    game_undo_restore_map(0);
+    int items_placed = 0;
+
+    const bool route_exist = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start);
+    if (route_exist) {
+        place_routed_building(start, end, ROUTED_BUILDING_ROAD, &items_placed);
+    }
+    return items_placed;
+}
+
 void building_road::on_place_checks() {
     /*nothing*/
 }

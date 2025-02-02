@@ -215,7 +215,7 @@ void editor_tool_update_use(tile2i tile) {
     if (!data.build_in_progress)
         return;
     if (data.type == TOOL_ROAD) {
-        building_road::place(1, data.start_tile, tile);
+        building_road::place(/*measurement_only*/true, data.start_tile, tile);
         return;
     }
     if (!editor_tool_is_brush())
@@ -375,7 +375,7 @@ static void place_access_ramp(map_point tile) {
 }
 
 static void place_road(map_point start_tile, map_point end_tile) {
-    if (building_road::place(0, start_tile, end_tile)) {
+    if (building_road::place(/*measurement_only*/false, start_tile, end_tile)) {
         scenario_editor_updated_terrain();
     }
 }

@@ -37,6 +37,7 @@
 #include "figure/figure.h"
 #include "figuretype/figure_cartpusher.h"
 #include "core/object_property.h"
+#include "graphics/view/view.h"
 #include "config/config.h"
 
 #include <string.h>
@@ -1097,6 +1098,17 @@ void building_impl::static_params::planer_setup_preview_graphics(build_planner &
 
 int building_impl::static_params::planer_update_building_variant(build_planner &planer) const {
     return planer.building_variant;
+}
+
+int building_impl::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
+    int real_orientation = (city_view_orientation() / 2) % 2 ;
+    if (real_orientation == 0) {
+        planer.mark_construction(planer.north_tile, planer.size, TERRAIN_ALL, true);
+    } else {
+        planer.mark_construction(planer.north_tile, planer.size, TERRAIN_ALL, true);
+    }
+
+    return 0;
 }
 
 io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob, size_t version) {

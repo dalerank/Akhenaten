@@ -232,9 +232,9 @@ static void add_building(building* b, int orientation, int variant) {
     }
 }
 
-static void mark_construction(tile2i tile, int size_x, int size_y, int terrain, bool absolute_xy) {
+void build_planner::mark_construction(tile2i tile, vec2i size, int terrain, bool absolute_xy) {
     if (g_city_planner.can_be_placed() == CAN_PLACE
-        && map_building_tiles_mark_construction(tile, size_x, size_y, terrain, absolute_xy)) {
+        && map_building_tiles_mark_construction(tile, size.x, size.y, terrain, absolute_xy)) {
         g_city_planner.draw_as_constructing = true;
     }
 }
@@ -1287,6 +1287,8 @@ void build_planner::construction_update(tile2i tile) {
     int current_cost = model_get_building(build_type)->cost;
     int global_rotation = building_rotation_global_rotation();
     int items_placed = 1;
+
+    const auto &params = building_impl::params(build_type);
     switch (build_type) {
     case BUILDING_CLEAR_LAND:
         last_items_cleared = building_construction_clear_land(true, start, end);
@@ -1295,10 +1297,6 @@ void build_planner::construction_update(tile2i tile) {
 
     case BUILDING_MUD_WALL:
         items_placed = building_construction_place_wall(true, start, end);
-        break;
-
-    case BUILDING_ROAD:
-        items_placed = building_road::place(true, start, end);
         break;
 
     case BUILDING_PLAZA:
@@ -1325,15 +1323,15 @@ void build_planner::construction_update(tile2i tile) {
 
     case BUILDING_BRICK_GATEHOUSE:
     case BUILDING_MUD_GATEHOUSE:
-        mark_construction(tile, 1, 3, ~TERRAIN_ROAD, false); // TODO
+        mark_construction(tile, { 1, 3 }, ~TERRAIN_ROAD, false); // TODO
         break;
 
     case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
-        mark_construction(tile, 3, 3, ~TERRAIN_ROAD, false);
+        mark_construction(tile, { 3, 3 }, ~TERRAIN_ROAD, false);
         break;
 
     case BUILDING_STORAGE_YARD:
-        mark_construction(tile, 3, 3, TERRAIN_ALL, false);
+        mark_construction(tile, { 3, 3 }, TERRAIN_ALL, false);
         break;
 
     case BUILDING_WATER_LIFT:
@@ -1354,7 +1352,7 @@ void build_planner::construction_update(tile2i tile) {
             tile2i ground = tile.shifted(offset.x, offset.y);
             if (map_building_tiles_are_clear(tile, 3, TERRAIN_ALL)
                 && map_building_tiles_are_clear(ground, 4, TERRAIN_ALL)) {
-                mark_construction(tile, 3, 3, TERRAIN_ALL, false);
+                mark_construction(tile, { 3, 3 }, TERRAIN_ALL, false);
             }
         }
         break;
@@ -1367,11 +1365,7 @@ void build_planner::construction_update(tile2i tile) {
             || special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Intersection) {
             // never draw as constructing
         } else {
-            if ((city_view_orientation() / 2) % 2 == 0) {
-                mark_construction(north_tile, size.x, size.y, TERRAIN_ALL, true);
-            } else {
-                mark_construction(north_tile, size.y, size.x, TERRAIN_ALL, true);
-            }
+            items_placed = params.planer_construction_update(*this, start, end);
         }
     }
 

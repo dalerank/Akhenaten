@@ -147,6 +147,7 @@ public:
     bool ghost_mark_deleting(tile2i tile);
     void next_building_variant();
     void setup_building_variant(tile2i tile, e_building_type type);
+    void mark_construction(tile2i tile, vec2i size, int terrain, bool absolute_xy);
 };
 
 void build_planner_latch_on_venue(e_building_type type, building *b, int dx, int dy, int orientation, bool main_venue = false);
