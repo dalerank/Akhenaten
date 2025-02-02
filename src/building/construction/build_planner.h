@@ -102,7 +102,8 @@ public:
     int total_cost;
     int relative_orientation;
     int absolute_orientation;
-    int variant;
+    int custom_building_variant;
+    int building_variant;
     vec2i size;
     vec2i pivot;
 
@@ -144,6 +145,8 @@ public:
     static void draw_bridge(map_point tile, vec2i pixel, int type, painter &ctx);
     static void draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles);
     bool ghost_mark_deleting(tile2i tile);
+    void next_building_variant();
+    void setup_building_variant(tile2i tile, e_building_type type);
 };
 
 void build_planner_latch_on_venue(e_building_type type, building *b, int dx, int dy, int orientation, bool main_venue = false);

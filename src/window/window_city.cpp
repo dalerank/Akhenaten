@@ -204,11 +204,13 @@ void window_city_handle_hotkeys(const hotkeys* h) {
     if (h->save_file)
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
 
-    if (h->rotate_building)
+    if (h->rotate_building) {
         building_rotation_rotate_by_hotkey();
+        g_city_planner.update_orientations();
+    }
 
     if (h->change_building_variant) {
-        building_rotation_variant_by_hotkey();
+        g_city_planner.next_building_variant();
     }
 
     if (h->building) {

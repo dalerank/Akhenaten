@@ -53,7 +53,7 @@ void building_statue::static_params_t<T>::load(archive arch) {
 
 template<typename T>
 void building_statue::static_params_t<T>::setup_preview_graphics(build_planner &planer) const {
-    int statue_img = get_image(T::TYPE, planer.relative_orientation, planer.variant);
+    int statue_img = get_image(T::TYPE, planer.relative_orientation, planer.building_variant);
     planer.set_tiles_building(statue_img, this->building_size);
 }
 
@@ -66,7 +66,7 @@ int building_statue::static_params_t<T>::rotation_random_variant(e_building_type
 }
 
 template<typename T>
-int building_statue::static_params_t<T>::rotation_next_variant(e_building_type type, tile2i tile, int variant) const {
+int building_statue::static_params_t<T>::next_building_variant(e_building_type type, tile2i tile, int variant) const {
     if (variant < 0) {
         return 0;
     }
@@ -86,7 +86,7 @@ building_large_statue::static_params large_statue_m;
 
 void building_statue::on_create(int o) {
     int orientation = (4 + building_rotation_global_rotation() + city_view_orientation() / 2) % 4;
-    data.monuments.variant = building_rotation_get_building_variant();
+    data.monuments.variant = g_city_planner.building_variant;
     data.monuments.statue_offset = rand() % 4;
 }
 

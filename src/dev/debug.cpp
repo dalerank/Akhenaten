@@ -897,7 +897,7 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x, y + 35, cl, "draw as con.:", g_city_planner.draw_as_constructing);
         debug_text(ctx, str, x, y + 45, cl, "orientation:", g_city_planner.absolute_orientation);
         debug_text(ctx, str, x + 40, y + 45, cl, "", g_city_planner.relative_orientation);
-        debug_text(ctx, str, x, y + 55, cl, "variant:", g_city_planner.variant);
+        debug_text(ctx, str, x, y + 55, cl, "variant:", g_city_planner.building_variant);
         debug_text(ctx, str, x, y + 65, cl, "start:", g_city_planner.start.x());
         debug_text(ctx, str, x + 40, y + 65, cl, "", g_city_planner.start.y());
         debug_text(ctx, str, x, y + 75, cl, "end:", g_city_planner.end.x());

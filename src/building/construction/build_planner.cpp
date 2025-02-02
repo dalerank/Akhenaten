@@ -408,7 +408,8 @@ void build_planner::reset() {
     start.set(-1, -1);
     end.set(-1, -1);
     relative_orientation = 0;
-    variant = 0;
+    custom_building_variant = 0;
+    building_variant = 0;
 
     // reset special requirements flags/params
     special_flags = 0;
@@ -519,6 +520,18 @@ void build_planner::set_graphics_array(int* image_set, int size_x, int size_y) {
     }
 }
 
+void build_planner::setup_building_variant(tile2i tile, e_building_type type) {
+    const auto &params = building_impl::params(type);
+    int random_value = tile.grid_offset();
+    custom_building_variant = params.rotation_random_variant(type, tile, random_value);
+}
+
+void build_planner::next_building_variant() {
+    const auto &params = building_impl::params(build_type);
+    custom_building_variant = params.next_building_variant(build_type, end, custom_building_variant);
+    update_orientations();
+}
+
 void build_planner::setup_build(e_building_type type) { // select building for construction, set up main terrain restrictions/requirements
     // initial data
     reset();
@@ -541,12 +554,14 @@ void build_planner::setup_build(e_building_type type) { // select building for c
         return;
     }
 
+    const auto &params = building_impl::params(type);
+    params.setup_build(*this);
     // leftover special cases....
     switch (build_type) {
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
-        building_rotation_randomize_variant(end, type);
+        setup_building_variant(end, type);
         relative_orientation = 1; // force these buildings to start in a specific orientation
         update_orientations(false);
         break;
@@ -841,7 +856,7 @@ void build_planner::setup_build_graphics() {
         break;
 
     case BUILDING_WATER_LIFT:
-        set_tiles_building(params.anim[animkeys().base].first_img() + relative_orientation + variant * 4, params.building_size);
+        set_tiles_building(params.anim[animkeys().base].first_img() + relative_orientation + building_variant * 4, params.building_size);
         break;
 
     default: // regular buildings 
@@ -1020,11 +1035,11 @@ void build_planner::update_special_case_orientations_check() {
         if (special_flags & PlannerFlags::FloodplainShore) {
             // in original Pharaoh, this actually is allowed to be built over the EDGE CORNERS.
             // it looks off, but it's legit!
-            variant = 0;
+            building_variant = 0;
             if (!result.match) {
                 result = map_shore_determine_orientation(end, additional_req_param1, true, true, TERRAIN_FLOODPLAIN);
                 if (result.match && !map_terrain_exists_tile_in_area_with_type(end, size.x, TERRAIN_WATER)) { // correct for water
-                    variant = 1;
+                    building_variant = 1;
                 } else {
                     result.match = false;
                 }
@@ -1176,7 +1191,7 @@ void build_planner::update_coord_caches() {
 
 void build_planner::update_orientations(bool check_if_changed) {
     int prev_orientation = relative_orientation;
-    int prev_variant = variant;
+    int prev_variant = building_variant;
     int global_rotation = building_rotation_global_rotation();
 
     switch (build_type) {
@@ -1184,7 +1199,7 @@ void build_planner::update_orientations(bool check_if_changed) {
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
         relative_orientation = global_rotation + 1;
-        variant = building_rotation_get_building_variant();
+        building_variant = custom_building_variant;
         break;
 
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
@@ -1193,7 +1208,7 @@ void build_planner::update_orientations(bool check_if_changed) {
     case BUILDING_TEMPLE_COMPLEX_SETH:
     case BUILDING_TEMPLE_COMPLEX_BAST: // CHANGE: in the original game, only two orientations are allowed
         relative_orientation = global_rotation + 1;
-        variant = 0;
+        building_variant = 0;
         break;
 
     default:
@@ -1203,7 +1218,7 @@ void build_planner::update_orientations(bool check_if_changed) {
     absolute_orientation = city_view_absolute_orientation(relative_orientation);
 
     // do not refresh graphics if nothing changed
-    if (check_if_changed && relative_orientation == prev_orientation && variant == prev_variant) {
+    if (check_if_changed && relative_orientation == prev_orientation && building_variant == prev_variant) {
         return;
     }
 
@@ -1282,7 +1297,10 @@ void build_planner::construction_cancel() {
         setup_build(BUILDING_NONE);
         //widget_sidebar_city_release_build_buttons();
     }
+
+    custom_building_variant = 0;
     building_rotation_reset_rotation();
+    update_orientations();
 }
 
 void build_planner::construction_update(tile2i tile) {
@@ -1302,7 +1320,8 @@ void build_planner::construction_update(tile2i tile) {
     int items_placed = 1;
     switch (build_type) {
     case BUILDING_CLEAR_LAND:
-        items_placed = last_items_cleared = building_construction_clear_land(true, start, end);
+        last_items_cleared = building_construction_clear_land(true, start, end);
+        items_placed = last_items_cleared;
         break;
 
     case BUILDING_MUD_WALL:
@@ -1426,7 +1445,7 @@ void build_planner::construction_finalize() { // confirm final placement
     case BUILDING_SMALL_STATUE:
     case BUILDING_MEDIUM_STATUE:
     case BUILDING_LARGE_STATUE:
-        building_rotation_randomize_variant(end, build_type);
+        setup_building_variant(end, build_type);
         update_orientations(false);
         break;
 
@@ -1908,7 +1927,7 @@ bool build_planner::place() {
         break;
 
     default:
-        if (!place_building(build_type, end, absolute_orientation, variant)) {
+        if (!place_building(build_type, end, absolute_orientation, building_variant)) {
             return false;
         }
         break;

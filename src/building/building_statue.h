@@ -20,7 +20,7 @@ public:
         virtual void load(archive arch) override;
         virtual void setup_preview_graphics(build_planner &planer) const override;
         virtual int rotation_random_variant(e_building_type type, tile2i tile, int variant) const override;
-        virtual int rotation_next_variant(e_building_type type, tile2i tile, int variant) const override;
+        virtual int next_building_variant(e_building_type type, tile2i tile, int variant) const override;
     };
 
     virtual void on_create(int orientation) override;
