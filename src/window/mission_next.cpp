@@ -56,7 +56,9 @@ void ui::mission_choice_window::init() {
 
 void window_mission_next_selection_show(int scenario_id) {
     const mission_step_t* mission = get_scenario_step_data(scenario_id);
-    if (mission->campaign_id <= 0) {
+
+    const bool mission_valid = mission && mission->campaign_id >= 0;
+    if (!mission_valid) {
         window_main_menu_show(true);
         return;
     }
