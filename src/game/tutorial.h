@@ -22,7 +22,6 @@ struct tutorial_stage_t {
     _RR(tutorial_trading)
     _RR(tutorial_monuments)
     _RR(tutorial_education)
-    _RR(tutorial_start)
 #undef _RR
 };
 

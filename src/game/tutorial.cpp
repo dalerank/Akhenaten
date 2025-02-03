@@ -167,8 +167,6 @@ void tutorial_map_update(int tut) {
 
 bool tutorial_menu_update(int tut) {
     if (tut == 1) {
-        building_menu_update(tutorial_stage.disable_all);
-
         if (g_tutorials_flags.tutorial_1.fire) building_menu_update(tutorial_stage.tutorial_fire);
         if (g_tutorials_flags.tutorial_1.population_150_reached)  building_menu_update(tutorial_stage.tutorial_food);
         if (g_tutorials_flags.tutorial_1.collapse) building_menu_update(tutorial_stage.tutorial_collapse);
@@ -178,19 +176,13 @@ bool tutorial_menu_update(int tut) {
     } 
     
     if (tut == 2) {
-        building_menu_update(tutorial_stage.disable_all);
-        building_menu_update(tutorial_stage.tutorial_start);
-
         if (g_tutorials_flags.tutorial_2.gold_mined_500) building_menu_update(tutorial_stage.tutorial_gods);
         if (g_tutorials_flags.tutorial_2.temples_built) building_menu_update(tutorial_stage.tutorial_entertainment);
 
         return true;
     } 
     
-    if (tut == 3) {
-        building_menu_update(tutorial_stage.disable_all);
-        building_menu_update(tutorial_stage.tutorial_start);
-            
+    if (tut == 3) {            
         if (g_tutorials_flags.tutorial_3.figs_800_stored) building_menu_update(tutorial_stage.tutorial_industry);
         if (g_tutorials_flags.tutorial_3.pottery_made) building_menu_update(tutorial_stage.tutorial_industry);
         if (g_tutorials_flags.tutorial_3.disease) building_menu_update(tutorial_stage.tutorial_health);
@@ -200,16 +192,11 @@ bool tutorial_menu_update(int tut) {
     } 
     
     if (tut == 4) {
-        building_menu_update(tutorial_stage.disable_all);
-        building_menu_update(tutorial_stage.tutorial_start);
-
         if (g_tutorials_flags.tutorial_4.beer_made) building_menu_update(tutorial_stage.tutorial_finance);
         return true;
     } 
     
     if (tut == 5) {
-        building_menu_update(tutorial_stage.disable_all);
-        building_menu_update(tutorial_stage.tutorial_start);
         if (g_tutorials_flags.tutorial_5.spacious_apartment) building_menu_update(tutorial_stage.tutorial_education);
         if (g_tutorials_flags.tutorial_5.papyrus_made) building_menu_update(tutorial_stage.tutorial_trading);
         if (g_tutorials_flags.tutorial_5.bricks_bought) building_menu_update(tutorial_stage.tutorial_monuments);
@@ -218,20 +205,14 @@ bool tutorial_menu_update(int tut) {
     } 
     
     if (tut == 6) {
-        building_menu_update(tutorial_stage.disable_all);
-        building_menu_update(tutorial_stage.tutorial_start);
         return true;
     } 
     
     if (tut == 7) {
-        building_menu_update(tutorial_stage.disable_all);
-        building_menu_update(tutorial_stage.tutorial_start);
         return true;
     } 
     
     if (tut == 8) {
-        building_menu_update(tutorial_stage.disable_all);
-        building_menu_update(tutorial_stage.tutorial_start);
         return true;
     }
 

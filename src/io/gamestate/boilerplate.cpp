@@ -221,21 +221,21 @@ static void post_load() {
         g_city.init_campaign_mission();
         g_city.init_mission_resources(g_scenario_data.init_resources);
         g_city.kingdome.init_scenario(scenario_campaign_rank(), game.session.last_loaded);
-        tutorial_init(/*clear_all*/true, false);
         building_menu_setup_mission();
+        tutorial_init(/*clear_all*/true, false);
         break;
 
     case e_session_save:
-        tutorial_init(/*clear_all*/false, false);
         building_menu_setup_mission();
+        tutorial_init(/*clear_all*/false, false);
         break;
 
     case e_session_custom_map:
         g_city.init_custom_map();
         g_city.init_mission_resources(g_scenario_data.init_resources);
         g_city.kingdome.init_scenario(scenario_campaign_rank(), game.session.last_loaded);
-        tutorial_init(/*clear_all*/true, true);
         building_menu_setup_mission();
+        tutorial_init(/*clear_all*/true, true);
         break;
     }
 
