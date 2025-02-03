@@ -549,6 +549,7 @@ public:
         virtual int planer_update_building_variant(build_planner &p) const;
         virtual bool planer_can_construction_start(build_planner &p, tile2i start) const { return true; }
         virtual int planer_construction_update(build_planner &p, tile2i start, tile2i end) const;
+        virtual int planer_construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const;
     };
 
     building_impl(building &b) : base(b), data(b.data) {}

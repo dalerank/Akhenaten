@@ -188,50 +188,6 @@ void build_planner_latch_on_venue(e_building_type type, building *b, int dx, int
     }
 }
 
-static void add_building_tiles_image(building* b, int image_id) {
-    map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
-}
-
-static void add_building(building* b, int orientation, int variant) {
-    int orientation_rel = city_view_relative_orientation(orientation);
-    const auto &params = b->dcast()->params();
-    switch (b->type) {
-    // houses
-    case BUILDING_HOUSE_STURDY_HUT:
-    case BUILDING_HOUSE_MEAGER_SHANTY:
-    case BUILDING_HOUSE_COMMON_SHANTY:
-    case BUILDING_HOUSE_ROUGH_COTTAGE:
-    case BUILDING_HOUSE_ORDINARY_COTTAGE:
-    case BUILDING_HOUSE_MODEST_HOMESTEAD:
-    case BUILDING_HOUSE_SPACIOUS_HOMESTEAD:
-    case BUILDING_HOUSE_MODEST_APARTMENT:
-    case BUILDING_HOUSE_SPACIOUS_APARTMENT:
-    case BUILDING_HOUSE_COMMON_RESIDENCE:
-    case BUILDING_HOUSE_SPACIOUS_RESIDENCE:
-    case BUILDING_HOUSE_ELEGANT_RESIDENCE:
-    case BUILDING_HOUSE_FANCY_RESIDENCE:
-    case BUILDING_HOUSE_COMMON_MANOR:
-    case BUILDING_HOUSE_SPACIOUS_MANOR:
-    case BUILDING_HOUSE_ELEGANT_MANOR:
-    case BUILDING_HOUSE_STATELY_MANOR:
-    case BUILDING_HOUSE_MODEST_ESTATE:
-    case BUILDING_HOUSE_PALATIAL_ESTATE:
-        add_building_tiles_image(b, params.anim["house"].first_img());
-        break;
-
-    case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
-        add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1);
-        map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), orientation);
-        city_buildings_build_triumphal_arch();
-        g_city_planner.reset();
-        break;
-
-    default:
-        b->dcast()->on_place(orientation, variant);
-        break;
-    }
-}
-
 void build_planner::mark_construction(tile2i tile, vec2i size, int terrain, bool absolute_xy) {
     if (g_city_planner.can_be_placed() == CAN_PLACE
         && map_building_tiles_mark_construction(tile, size.x, size.y, terrain, absolute_xy)) {
@@ -316,40 +272,6 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
         map_routing_update_land();
     }
     return items_placed;
-}
-
-
-bool build_planner::place_building(e_building_type type, tile2i tile, int orientation, int variant) {
-    // by default, get size from building's properties
-    int size = building_impl::params(type).building_size;
-    assert(size > 0);
-
-    // correct building placement for city orientations
-    switch (city_view_orientation()) {
-    case DIR_2_BOTTOM_RIGHT:
-        tile = tile.shifted(-size + 1, 0);
-        break;
-
-    case DIR_4_BOTTOM_LEFT:
-        tile = tile.shifted(-size + 1, -size + 1);
-        break;
-
-    case DIR_6_TOP_LEFT:
-        tile = tile.shifted(0, -size + 1);
-        break;
-    }
-
-    // create building
-    last_created_building = nullptr;
-    building* b = building_create(type, tile, orientation);
-    game_undo_add_building(b);
-    if (b->id <= 0) { // building creation failed????
-        return false;
-    }
-    
-    add_building(b, orientation, variant);
-    last_created_building = b;
-    return true;
 }
 
 static bool attach_temple_upgrade(int upgrade_param, int grid_offset) {
@@ -446,7 +368,7 @@ void build_planner::set_tile_size(int row, int column, int size) {
     tile_sizes_array[row][column] = size;
 }
 
-void build_planner::set_flag(long long flags, int param1, int param2, int param3) {
+void build_planner::set_flag(uint64_t flags, int param1, int param2, int param3) {
     special_flags |= flags;
     if (param1 != -1)
         additional_req_param1 = param1;
@@ -1299,10 +1221,6 @@ void build_planner::construction_update(tile2i tile) {
         items_placed = building_construction_place_wall(true, start, end);
         break;
 
-    case BUILDING_PLAZA:
-        items_placed = building_plaza::place(start, end);
-        break;
-
     case BUILDING_GARDENS:
         items_placed = building_garden::place(start, end);
         break;
@@ -1358,15 +1276,7 @@ void build_planner::construction_update(tile2i tile) {
         break;
 
     default:
-        if (special_flags & PlannerFlags::Meadow || special_flags & PlannerFlags::Rock
-            || special_flags & PlannerFlags::Trees || special_flags & PlannerFlags::NearbyWater
-            || special_flags & PlannerFlags::Walls || special_flags & PlannerFlags::Groundwater
-            || special_flags & PlannerFlags::Water || special_flags & PlannerFlags::ShoreLine
-            || special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Intersection) {
-            // never draw as constructing
-        } else {
-            items_placed = params.planer_construction_update(*this, start, end);
-        }
+        items_placed = params.planer_construction_update(*this, start, end);
     }
 
     if (items_placed >= 0) {
@@ -1827,6 +1737,8 @@ bool build_planner::place() {
     // Some of the buildings below have specific warning messages (e.g. roadblocks)
     // that can't be easily put in `building_construction_can_place_on_terrain()`!
     int placement_cost = model_get_building(build_type)->cost;
+    const auto &params = building_impl::params(build_type);
+
     switch (build_type) {
     case BUILDING_CLEAR_LAND: {
             // BUG in original (keep this behaviour): if confirmation has to be asked (bridge/fort),
@@ -1843,14 +1755,6 @@ bool build_planner::place() {
 
     case BUILDING_MUD_WALL:
         placement_cost *= building_construction_place_wall(false, start, end);
-        break;
-
-    case BUILDING_ROAD:
-        placement_cost *= building_road::place(false, start, end);
-        break;
-
-    case BUILDING_PLAZA:
-        placement_cost *= building_plaza::place(start, end);
         break;
 
     case BUILDING_GARDENS:
@@ -1886,8 +1790,13 @@ bool build_planner::place() {
         break;
 
     default:
-        if (!place_building(build_type, end, absolute_orientation, building_variant)) {
-            return false;
+        {
+            int construction_placed = params.planer_construction_place(*this, start, end, absolute_orientation, building_variant);
+            if (construction_placed == 0) {
+                return false;
+            }
+
+            placement_cost *= construction_placed;
         }
         break;
     }
@@ -1913,5 +1822,6 @@ bool build_planner::place() {
     if (total_cost == 0) {
         return false;
     }
+
     return true;
 }

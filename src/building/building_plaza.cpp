@@ -21,31 +21,10 @@
 #include "game/undo.h"
 #include "city/labor.h"
 #include "window/window_figure_info.h"
-#include "js/js_game.h"
 
-buildings::model_t<building_plaza> plaza_m;
+building_plaza::static_params plaza_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_plaza);
-void config_load_building_plaza() {
-    plaza_m.load();
-}
-
-void building_plaza::draw_info(object_info &c) {
-    building* b = building_get(c.building_id);
-    const auto &params = b->dcast()->params();
-
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
-
-    window_building_play_sound(&c, b->get_sound());
-    //window_figure_info_prepare_figures(c);
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    //window_building_draw_figure_list(&c);
-    window_building_draw_description_at(c, 16 * c.bgsize.y - 113, group_id, 1);
-}
-
-int building_plaza::place(tile2i start, tile2i end) {
+int building_plaza::static_params::planer_place(build_planner &planer, tile2i start, tile2i end) const {
     grid_area area = map_grid_get_area(start, end);
     game_undo_restore_map(1);
 
@@ -69,6 +48,29 @@ int building_plaza::place(tile2i start, tile2i end) {
     }
     map_tiles_update_all_plazas();
     return items_placed;
+}
+
+int building_plaza::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
+    return planer_place(planer, start, end);
+}
+
+int building_plaza::static_params::planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
+    return planer_place(planer, start, end);
+}
+
+void building_plaza::draw_info(object_info &c) {
+    building* b = building_get(c.building_id);
+    const auto &params = b->dcast()->params();
+
+    c.help_id = params.meta.help_id;
+    int group_id = params.meta.text_id;
+
+    window_building_play_sound(&c, b->get_sound());
+    //window_figure_info_prepare_figures(c);
+    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
+    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+    //window_building_draw_figure_list(&c);
+    window_building_draw_description_at(c, 16 * c.bgsize.y - 113, group_id, 1);
 }
 
 int is_tile_plaza(int grid_offset) {

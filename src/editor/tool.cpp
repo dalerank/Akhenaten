@@ -22,6 +22,7 @@
 #include "scenario/editor_events.h"
 #include "scenario/editor_map.h"
 #include "widget/widget_minimap.h"
+#include "building/construction/build_planner.h"
 
 #define TERRAIN_PAINT_MASK ~(TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW)
 
@@ -214,10 +215,13 @@ static void add_terrain(const void* tile_data, int dx, int dy) {
 void editor_tool_update_use(tile2i tile) {
     if (!data.build_in_progress)
         return;
+
     if (data.type == TOOL_ROAD) {
-        building_road::place(/*measurement_only*/true, data.start_tile, tile);
+        const auto &params = building_impl::params(BUILDING_ROAD);
+        params.planer_construction_update(g_city_planner, data.start_tile, tile);
         return;
     }
+
     if (!editor_tool_is_brush())
         return;
 
@@ -375,7 +379,9 @@ static void place_access_ramp(map_point tile) {
 }
 
 static void place_road(map_point start_tile, map_point end_tile) {
-    if (building_road::place(/*measurement_only*/false, start_tile, end_tile)) {
+    const auto &params = building_impl::params(BUILDING_ROAD);
+    int items_placed = params.planer_construction_place(g_city_planner, start_tile, end_tile, 0, 0);
+    if (items_placed) {
         scenario_editor_updated_terrain();
     }
 }

@@ -1101,6 +1101,15 @@ int building_impl::static_params::planer_update_building_variant(build_planner &
 }
 
 int building_impl::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
+    int special_flags = planer.special_flags;
+    if (special_flags & PlannerFlags::Meadow || special_flags & PlannerFlags::Rock
+        || special_flags & PlannerFlags::Trees || special_flags & PlannerFlags::NearbyWater
+        || special_flags & PlannerFlags::Walls || special_flags & PlannerFlags::Groundwater
+        || special_flags & PlannerFlags::Water || special_flags & PlannerFlags::ShoreLine
+        || special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Intersection) {
+        return 0;
+    }
+
     int real_orientation = (city_view_orientation() / 2) % 2 ;
     if (real_orientation == 0) {
         planer.mark_construction(planer.north_tile, planer.size, TERRAIN_ALL, true);
@@ -1109,6 +1118,87 @@ int building_impl::static_params::planer_construction_update(build_planner &plan
     }
 
     return 0;
+}
+
+void add_building(building *b, int orientation, int variant) {
+    int orientation_rel = city_view_relative_orientation(orientation);
+    const auto &params = b->dcast()->params();
+    switch (b->type) {
+        // houses
+    case BUILDING_HOUSE_STURDY_HUT:
+    case BUILDING_HOUSE_MEAGER_SHANTY:
+    case BUILDING_HOUSE_COMMON_SHANTY:
+    case BUILDING_HOUSE_ROUGH_COTTAGE:
+    case BUILDING_HOUSE_ORDINARY_COTTAGE:
+    case BUILDING_HOUSE_MODEST_HOMESTEAD:
+    case BUILDING_HOUSE_SPACIOUS_HOMESTEAD:
+    case BUILDING_HOUSE_MODEST_APARTMENT:
+    case BUILDING_HOUSE_SPACIOUS_APARTMENT:
+    case BUILDING_HOUSE_COMMON_RESIDENCE:
+    case BUILDING_HOUSE_SPACIOUS_RESIDENCE:
+    case BUILDING_HOUSE_ELEGANT_RESIDENCE:
+    case BUILDING_HOUSE_FANCY_RESIDENCE:
+    case BUILDING_HOUSE_COMMON_MANOR:
+    case BUILDING_HOUSE_SPACIOUS_MANOR:
+    case BUILDING_HOUSE_ELEGANT_MANOR:
+    case BUILDING_HOUSE_STATELY_MANOR:
+    case BUILDING_HOUSE_MODEST_ESTATE:
+    case BUILDING_HOUSE_PALATIAL_ESTATE:
+        //add_building_tiles_image(b, params.anim["house"].first_img());
+        {
+            int image_id = params.anim["house"].first_img();
+            map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
+        }
+        break;
+
+    case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
+        //add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1);
+        {
+            int image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1;
+            map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
+        }
+        map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), orientation);
+        city_buildings_build_triumphal_arch();
+        g_city_planner.reset();
+        break;
+
+    default:
+        b->dcast()->on_place(orientation, variant);
+        break;
+    }
+}
+
+int building_impl::static_params::planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
+    // by default, get size from building's properties
+    assert(building_size > 0);
+
+    // correct building placement for city orientations
+    switch (city_view_orientation()) {
+    case DIR_2_BOTTOM_RIGHT:
+        end = end.shifted(-building_size + 1, 0);
+        break;
+
+    case DIR_4_BOTTOM_LEFT:
+        end = end.shifted(-building_size + 1, -building_size + 1);
+        break;
+
+    case DIR_6_TOP_LEFT:
+        end = end.shifted(0, -building_size + 1);
+        break;
+    }
+
+    // create building
+    planer.last_created_building = nullptr;
+    building *b = building_create(type, end, orientation);
+    game_undo_add_building(b);
+    if (b->id <= 0) { // building creation failed????
+        return 0;
+    }
+
+    add_building(b, orientation, variant);
+    planer.last_created_building = b;
+
+    return 1;
 }
 
 io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob, size_t version) {

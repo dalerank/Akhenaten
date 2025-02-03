@@ -36,20 +36,20 @@ int building_road::static_params::planer_construction_update(build_planner &plan
     return items_placed;
 }
 
-void building_road::on_place_checks() {
-    /*nothing*/
-}
-
-int building_road::place(bool measure_only, tile2i start, tile2i end) {
+int building_road::static_params::planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
     game_undo_restore_map(0);
     int items_placed = 0;
-    if (map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start)
-        && place_routed_building(start, end, ROUTED_BUILDING_ROAD, &items_placed)) {
-        if (!measure_only) {
-            map_routing_update_land();
-        }
+
+    const bool route_exist = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start);
+    if (route_exist) {
+        place_routed_building(start, end, ROUTED_BUILDING_ROAD, &items_placed);
+        map_routing_update_land();
     }
     return items_placed;
+}
+
+void building_road::on_place_checks() {
+    /*nothing*/
 }
 
 void building_road::ghost_preview(tile2i tile, vec2i pixel, painter &ctx) {

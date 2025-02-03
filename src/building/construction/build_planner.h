@@ -55,7 +55,6 @@ private:
     tile2i tile_coord_cache[30][30];
     vec2i pixel_coords_cache[30][30];
 
-    long long special_flags = 0;
     int additional_req_param1 = -1;
     int additional_req_param2 = -1;
     int additional_req_param3 = -1;
@@ -75,7 +74,7 @@ private:
 
     void set_tile_size(int row, int column, int size);
 
-    void set_flag(long long flags, int param1 = -1, int param2 = -1, int param3 = -1);
+    void set_flag(uint64_t flags, int param1 = -1, int param2 = -1, int param3 = -1);
     void update_obstructions_check();
     void update_requirements_check();
     void update_special_case_orientations_check();
@@ -85,7 +84,6 @@ private:
     void update_coord_caches();
     void draw_blueprints(painter &ctx, bool fully_blocked);
     void draw_graphics(painter &ctx);
-    bool place_building(e_building_type type, tile2i tile, int orientation, int variant);
     void draw_canal(map_point tile, vec2i pixel, painter &ctx);
     bool map_is_straight_road_for_canal(int grid_offset);
     bool is_road_tile_for_canal(int grid_offset, int gate_orientation);
@@ -96,6 +94,7 @@ public:
     e_building_type build_type;
     building* last_created_building = nullptr;
     bool in_progress;
+    uint64_t special_flags;
     bool draw_as_constructing;
     tile2i start;
     tile2i end;
