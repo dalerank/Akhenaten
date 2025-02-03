@@ -80,10 +80,22 @@ elseif(WIN_EMSCRIPTEN)
         message(FATAL_ERROR "Please define EMSDK to Emscripten SDK in system path!")
     endif()
     message("Emscripten SDK: ${EMSDK}")
-    set(USE_FLAGS "--use-port=sdl2 --use-port=sdl2_mixer -sSDL2_MIXER_FORMATS=mp3 -s USE_MPG123=1")
+    set(USE_FLAGS "--use-port=sdl2 --use-port=sdl2_mixer -sSDL2_MIXER_FORMATS=mp3 -s USE_MPG123=1 -gsource-map")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS} -sASYNCIFY -sASYNCIFY_REMOVE=*js_* -lidbfs.js")
-    set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -fno-exceptions -Wno-varargs -Wno-constant-conversion -Wno-non-pod-varargs --std=c++17 ${CMAKE_CXX_FLAGS} ${USE_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
+    ${USE_FLAGS} \
+    -sASYNCIFY -sASYNCIFY_STACK_SIZE=32768 \
+    -sALLOW_MEMORY_GROWTH -sINITIAL_MEMORY=128mb -sMEMORY_GROWTH_LINEAR_STEP=32mb \
+    -sENVIRONMENT=web \
+    -lidbfs.js")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+    -Wno-c++11-narrowing \
+    -fno-exceptions \
+    -Wno-varargs \
+    -Wno-constant-conversion \
+    -Wno-non-pod-varargs \
+    --std=c++17 \
+    ${USE_FLAGS}")
 elseif(UNIX)
     set(CMAKE_CXX_FLAGS "-fno-exceptions -static-libgcc --std=c++17 -static-libstdc++ ${CMAKE_CXX_FLAGS}")
 else()

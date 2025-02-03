@@ -21,7 +21,7 @@ jobs:
         mkdir -p akhenaten-emscripten-module
         mkdir -p build
         cd build
-        emcmake cmake ../ -DCMAKE_BUILD_PLATFORM=win_emscripten -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXE_LINKER_FLAGS="-sMODULARIZE -sALLOW_MEMORY_GROWTH -sENVIRONMENT=web -sEXPORTED_RUNTIME_METHODS=callMain -sEXPORT_ALL -sEXPORT_NAME=akhenatem" -DCMAKE_CXX_FLAGS="" && emmake make
+        emcmake cmake ../ -DCMAKE_BUILD_PLATFORM=win_emscripten -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXE_LINKER_FLAGS="-sMODULARIZE -sEXPORTED_RUNTIME_METHODS=callMain -sEXPORT_ALL -sEXPORT_NAME=akhenatem" -DCMAKE_CXX_FLAGS="" && emmake make
         cd ..
         cp build/akhenaten.js akhenaten-emscripten-module/
         cp build/akhenaten.wasm akhenaten-emscripten-module/
@@ -70,5 +70,5 @@ jobs:
         git push --force pages_deploy temp_branch:main
         git checkout akhenaten-wasm
         git branch -D temp_branch
-        
-    
+
+
