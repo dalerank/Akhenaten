@@ -437,11 +437,10 @@ void building_menu_update(const xstring stage_name) {
         // disable resources that aren't available on map
         disable_resources();
     } else {
-        for (const auto &stage : g_scenario_data.building_stages) {
-            if (stage.key == stage_name) {
-                for (const auto &b : stage.buildings) {
-                    building_menu_toggle_building(b);
-                }
+        const auto stage_it = std::find_if(g_scenario_data.building_stages.begin(), g_scenario_data.building_stages.end(), [&stage_name] (auto &it) { return it.key == stage_name; });
+        if (stage_it != g_scenario_data.building_stages.end()) {
+            for (const auto &b : stage_it->buildings) {
+                building_menu_toggle_building(b);
             }
         }
     }
@@ -450,10 +449,10 @@ void building_menu_update(const xstring stage_name) {
     enable_correct_palace_tier();
 
     // these are always enabled
-    building_menu_toggle_building(BUILDING_HOUSE_VACANT_LOT);
-    building_menu_toggle_building(BUILDING_CLEAR_LAND);
-    building_menu_toggle_building(BUILDING_ROAD);
-    building_menu_toggle_building(BUILDING_WELL);
+    const auto &group = g_menu_config.group(BUILDING_MENU_DEFAULT);
+    for (const auto &b: group.items) {
+        building_menu_toggle_building(b.type);
+    }
 
     g_menu_config.changed = 1;
 }
