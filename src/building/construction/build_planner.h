@@ -93,6 +93,7 @@ private:
 public:
     e_building_type build_type;
     building* last_created_building = nullptr;
+    bool should_update_land_routing = false;
     bool in_progress;
     uint64_t special_flags;
     bool draw_as_constructing;

@@ -1221,10 +1221,6 @@ void build_planner::construction_update(tile2i tile) {
         items_placed = building_construction_place_wall(true, start, end);
         break;
 
-    case BUILDING_GARDENS:
-        items_placed = building_garden::place(start, end);
-        break;
-
     case BUILDING_IRRIGATION_DITCH:
         items_placed = building_construction_place_canal(true, start, end);
         map_tiles_update_all_canals(0);
@@ -1753,16 +1749,12 @@ bool build_planner::place() {
         placement_cost *= building_construction_place_wall(false, start, end);
         break;
 
-    case BUILDING_GARDENS:
-        placement_cost *= building_garden::place(start, end);
-        map_routing_update_land();
-        break;
-
     case BUILDING_LOW_BRIDGE:
     case BUILDING_UNUSED_SHIP_BRIDGE_83: {
-        placement_cost *= map_bridge_add(x, y, build_type == BUILDING_UNUSED_SHIP_BRIDGE_83);
+            placement_cost *= map_bridge_add(x, y, build_type == BUILDING_UNUSED_SHIP_BRIDGE_83);
+        }
         break;
-    }
+
     case BUILDING_IRRIGATION_DITCH: {
         placement_cost *= building_construction_place_canal(false, start, end);
         if (!placement_cost) {
@@ -1795,6 +1787,11 @@ bool build_planner::place() {
             placement_cost *= construction_placed;
         }
         break;
+    }
+
+    if (should_update_land_routing) {
+        map_routing_update_land();
+        should_update_land_routing = false;
     }
 
     // TODO
