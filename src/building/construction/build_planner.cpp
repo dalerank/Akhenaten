@@ -1248,10 +1248,6 @@ void build_planner::construction_update(tile2i tile) {
         mark_construction(tile, { 3, 3 }, ~TERRAIN_ROAD, false);
         break;
 
-    case BUILDING_STORAGE_YARD:
-        mark_construction(tile, { 3, 3 }, TERRAIN_ALL, false);
-        break;
-
     case BUILDING_WATER_LIFT:
     case BUILDING_FISHING_WHARF:
     case BUILDING_TRANSPORT_WHARF:

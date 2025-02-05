@@ -63,7 +63,7 @@ void building_pavilion::static_params::place_offset::item::load(archive arch) {
 }
 
 
-void building_pavilion::static_params::setup_preview_graphics(build_planner &planer) const {
+void building_pavilion::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(4, 4);
 }
 

@@ -19,7 +19,7 @@ void building_festival_square::static_params::load(archive arch) {
     square = anim[animkeys().square].first_img();
 }
 
-void building_festival_square::static_params::setup_preview_graphics(build_planner &planer) const {
+void building_festival_square::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(5, 5); // TODO
 }
 

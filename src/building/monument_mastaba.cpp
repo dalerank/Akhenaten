@@ -162,7 +162,7 @@ vec2i building_small_mastaba::init_tiles_size() {
     return vec2i(10, 4);
 }
 
-void building_small_mastaba::static_params::setup_preview_graphics(build_planner &planer) const {
+void building_small_mastaba::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     switch (city_view_orientation() / 2) {
     case 0: planer.init_tiles(init_tiles_size().y, init_tiles_size().x); break;
     case 1: planer.init_tiles(init_tiles_size().x, init_tiles_size().y); break;
@@ -770,7 +770,7 @@ void building_medium_mastaba::update_day() {
     building_mastaba::update_day(init_tiles_size());
 }
 
-void building_medium_mastaba::static_params::setup_preview_graphics(build_planner &planer) const {
+void building_medium_mastaba::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     switch (city_view_orientation() / 2) {
     case 0: planer.init_tiles(init_tiles_size().y, init_tiles_size().x); break;
     case 1: planer.init_tiles(init_tiles_size().x, init_tiles_size().y); break;

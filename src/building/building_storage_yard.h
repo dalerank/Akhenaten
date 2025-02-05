@@ -34,7 +34,8 @@ public:
     building_storage_yard(building &b) : building_storage(b) {}
 
     struct static_params : public buildings::model_t<building_storage_yard> {
-        virtual void setup_preview_graphics(build_planner &planer) const;
+        virtual void planer_setup_preview_graphics(build_planner &planer) const override;
+        virtual int planer_construction_update(build_planner &p, tile2i start, tile2i end) const override;
     };
 
     virtual void on_create(int orientation) override;

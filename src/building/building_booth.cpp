@@ -32,7 +32,7 @@ void building_booth::static_params::load(archive arch) {
     booth = anim[animkeys().booth].first_img();
 }
 
-void building_booth::static_params::setup_preview_graphics(build_planner &planer) const {
+void building_booth::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(2, 2);
 }
 

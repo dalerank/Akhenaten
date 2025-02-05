@@ -42,7 +42,7 @@ public:
     virtual building_small_mastaba *dcast_small_mastaba() override { return this; }
 
     struct static_params : public buildings::model_t<building_small_mastaba> {
-        virtual void setup_preview_graphics(build_planner &planer) const;
+        virtual void planer_setup_preview_graphics(build_planner &planer) const override;
     };
 
     virtual void on_place(int orientation, int variant) override;
@@ -80,7 +80,7 @@ public:
     virtual building_medium_mastaba *dcast_medium_mastaba() override { return nullptr; }
 
     struct static_params : public buildings::model_t<building_medium_mastaba> {
-        virtual void setup_preview_graphics(build_planner &planer) const;
+        virtual void planer_setup_preview_graphics(build_planner &planer) const override;
     };
 
     virtual void on_place(int orientation, int variant) override;

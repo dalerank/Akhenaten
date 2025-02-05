@@ -45,8 +45,13 @@
 
 building_storage_yard::static_params storage_yard_m;
 
-void building_storage_yard::static_params::setup_preview_graphics(build_planner &planer) const {
+void building_storage_yard::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     planer.set_tiles_building(anim[animkeys().base].first_img(), 3);
+}
+
+int building_storage_yard::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
+    planer.mark_construction(end, { 3, 3 }, TERRAIN_ALL, false);
+    return 1;
 }
 
 int building_storage_yard::get_space_info() const {
