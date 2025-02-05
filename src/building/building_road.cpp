@@ -48,11 +48,7 @@ int building_road::static_params::planer_construction_place(build_planner &plane
     return items_placed;
 }
 
-void building_road::on_place_checks() {
-    /*nothing*/
-}
-
-void building_road::ghost_preview(tile2i tile, vec2i pixel, painter &ctx) {
+void building_road::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
     int grid_offset = tile.grid_offset();
     bool blocked = false;
     int image_id = 0;
@@ -99,10 +95,14 @@ void building_road::ghost_preview(tile2i tile, vec2i pixel, painter &ctx) {
     }
 
     if (blocked) {
-        build_planner::draw_flat_tile(ctx, pixel, COLOR_MASK_RED);
+        planer.draw_flat_tile(ctx, pixel, COLOR_MASK_RED);
     } else {
-        build_planner::draw_building_ghost(ctx, image_id, pixel);
+        planer.draw_building_ghost(ctx, image_id, pixel);
     }
+}
+
+void building_road::on_place_checks() {
+    /*nothing*/
 }
 
 void building_road::set_image(tile2i tile) {

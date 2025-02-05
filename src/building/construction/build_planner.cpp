@@ -17,7 +17,6 @@
 #include "building/rotation.h"
 #include "building/building_statue.h"
 #include "building/building_storage_yard.h"
-#include "building/building_road.h"
 #include "building/building_booth.h"
 #include "building/building_bandstand.h"
 #include "building/building_pavilion.h"
@@ -25,7 +24,6 @@
 #include "building/building_fishing_wharf.h"
 #include "building/building_festival_square.h"
 #include "building/building_storage_yard.h"
-#include "building/building_road.h"
 #include "building/building_well.h"
 #include "building/building_bridge.h"
 #include "building/industry.h"
@@ -1644,11 +1642,8 @@ void build_planner::draw_graphics(painter &ctx) {
     // TODO: bring these all over the unified system
     // special graphics buildings
     vec2i pixel = pixel_coords_cache[0][0];
+    const auto &params = building_impl::params(build_type);
     switch (build_type) {
-    case BUILDING_ROAD:
-        building_road::ghost_preview(end, pixel, ctx);
-        return;
-
     case BUILDING_IRRIGATION_DITCH:
         draw_canal(end, pixel, ctx);
         return;
@@ -1694,6 +1689,9 @@ void build_planner::draw_graphics(painter &ctx) {
     case BUILDING_WELL:
         building_well::ghost_preview(ctx, end, pixel, 0);
         break;
+
+    default:
+        params.planer_ghost_preview(*this, ctx, start, end, pixel);
     }
 
     // go through the tiles DIAGONALLY to render footprint and top correctly
