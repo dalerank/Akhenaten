@@ -1201,6 +1201,10 @@ int building_impl::static_params::planer_construction_place(build_planner &plane
     return 1;
 }
 
+void building_impl::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
+    planer.draw_tile_graphics_array(ctx, tile, end, pixel);
+}
+
 io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob, size_t version) {
     //iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_in_use);
     iob->bind____skip(4);

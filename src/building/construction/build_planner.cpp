@@ -16,14 +16,12 @@
 #include "building/building_garden.h"
 #include "building/rotation.h"
 #include "building/building_statue.h"
-#include "building/building_storage_yard.h"
 #include "building/building_booth.h"
 #include "building/building_bandstand.h"
 #include "building/building_pavilion.h"
 #include "building/building_farm.h"
 #include "building/building_fishing_wharf.h"
 #include "building/building_festival_square.h"
-#include "building/building_storage_yard.h"
 #include "building/building_well.h"
 #include "building/building_bridge.h"
 #include "building/industry.h"
@@ -190,6 +188,24 @@ void build_planner::mark_construction(tile2i tile, vec2i size, int terrain, bool
     if (g_city_planner.can_be_placed() == CAN_PLACE
         && map_building_tiles_mark_construction(tile, size.x, size.y, terrain, absolute_xy)) {
         g_city_planner.draw_as_constructing = true;
+    }
+}
+
+void build_planner::draw_tile_graphics_array(painter &ctx, tile2i start, tile2i end, vec2i pixel) {
+    // go through the tiles DIAGONALLY to render footprint and top correctly
+    for (int dg_y = 0; dg_y < size.y + size.x - 1; dg_y++) {
+        for (int dg_x = fmax(0, dg_y - size.y + 1); dg_x < size.x && dg_x < dg_y + 1; dg_x++) {
+            // extract proper row and column index from the mess above
+            int row = dg_y - dg_x;
+            int column = dg_x;
+
+            int image_id = tile_graphics_array[row][column];
+            if (image_id > 0) {
+                vec2i current_coord = pixel_coords_cache[row][column];
+                ImageDraw::isometric_from_drawtile(ctx, image_id, current_coord, COLOR_MASK_GREEN);
+                ImageDraw::isometric_from_drawtile_top(ctx, image_id, current_coord, COLOR_MASK_GREEN);
+            }
+        }
     }
 }
 
@@ -1650,9 +1666,6 @@ void build_planner::draw_graphics(painter &ctx) {
         //        case BUILDING_WALL_PH:
         //            return draw_walls((const map_tile*)&end, end_coord.x, end_coord.y);
         //            break;
-    case BUILDING_STORAGE_YARD:
-        building_storage_yard::ghost_preview(pixel, ctx);
-        return;
 
     case BUILDING_BOOTH:
     case BUILDING_BANDSTAND:
@@ -1692,22 +1705,6 @@ void build_planner::draw_graphics(painter &ctx) {
 
     default:
         params.planer_ghost_preview(*this, ctx, start, end, pixel);
-    }
-
-    // go through the tiles DIAGONALLY to render footprint and top correctly
-    for (int dg_y = 0; dg_y < size.y + size.x - 1; dg_y++) {
-        for (int dg_x = fmax(0, dg_y - size.y + 1); dg_x < size.x && dg_x < dg_y + 1; dg_x++) {
-            // extract proper row and column index from the mess above
-            int row = dg_y - dg_x;
-            int column = dg_x;
-
-            int image_id = tile_graphics_array[row][column];
-            if (image_id > 0) {
-                vec2i current_coord = pixel_coords_cache[row][column];
-                ImageDraw::isometric_from_drawtile(ctx, image_id, current_coord, COLOR_MASK_GREEN);
-                ImageDraw::isometric_from_drawtile_top(ctx, image_id, current_coord, COLOR_MASK_GREEN);
-            }
-        }
     }
 }
 

@@ -54,6 +54,25 @@ int building_storage_yard::static_params::planer_construction_update(build_plann
     return 1;
 }
 
+void building_storage_yard::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
+    int global_rotation = building_rotation_global_rotation();
+    int index_rotation = building_rotation_get_storage_fort_orientation(global_rotation);
+    int corner = building_rotation_get_corner(index_rotation);
+    vec2i corner_offset{ -5, -45 };
+    vec2i place_offset{ 0, 0 };
+
+    int image_id_hut = anim[animkeys().base].first_img();
+    int image_id_space = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
+    for (int i = 0; i < 9; i++) {
+        if (i == corner) {
+            build_planner::draw_building_ghost(ctx, image_id_hut, pixel + VIEW_OFFSETS[i]);
+            ImageDraw::img_generic(ctx, image_id_hut + 17, pixel.x + VIEW_OFFSETS[i].x + corner_offset.x, pixel.y + VIEW_OFFSETS[i].y + corner_offset.y, COLOR_MASK_GREEN);
+        } else {
+            build_planner::draw_building_ghost(ctx, image_id_space, pixel + VIEW_OFFSETS[i] + place_offset);
+        }
+    }
+}
+
 int building_storage_yard::get_space_info() const {
     int total_amounts = 0;
     int empty_spaces = 0;
@@ -900,23 +919,4 @@ building_storage_yard *storage_yard_cast(building *b) {
     }
 
     return nullptr;
-}
-
-void building_storage_yard::ghost_preview(vec2i tile, painter &ctx) {
-    int global_rotation = building_rotation_global_rotation();
-    int index_rotation = building_rotation_get_storage_fort_orientation(global_rotation);
-    int corner = building_rotation_get_corner(index_rotation);
-    vec2i corner_offset{-5, -45};
-    vec2i place_offset{0, 0};
-
-    int image_id_hut = storage_yard_m.anim["base"].first_img();
-    int image_id_space = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
-    for (int i = 0; i < 9; i++) {
-        if (i == corner) {
-            build_planner::draw_building_ghost(ctx, image_id_hut, tile + VIEW_OFFSETS[i]);
-            ImageDraw::img_generic(ctx, image_id_hut + 17, tile.x + VIEW_OFFSETS[i].x + corner_offset.x, tile.y + VIEW_OFFSETS[i].y + corner_offset.y, COLOR_MASK_GREEN);
-        } else {
-            build_planner::draw_building_ghost(ctx, image_id_space, tile + VIEW_OFFSETS[i] + place_offset);
-        }
-    }
 }

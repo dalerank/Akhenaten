@@ -550,7 +550,7 @@ public:
         virtual bool planer_can_construction_start(build_planner &p, tile2i start) const { return true; }
         virtual int planer_construction_update(build_planner &p, tile2i start, tile2i end) const;
         virtual int planer_construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const;
-        virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {}
+        virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const;
     };
 
     building_impl(building &b) : base(b), data(b.data) {}
