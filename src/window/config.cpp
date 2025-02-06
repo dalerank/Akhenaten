@@ -626,9 +626,9 @@ static void draw_background(int) {
         text_draw_centered(translation_for(page_buttons[i].parameter2), page_buttons[i].x, page_buttons[i].y + 6, page_buttons[i].width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     }
 
-    if (GAME_ENV == ENGINE_ENV_C3) { // TODO: temporary fix to mitigate translation exception
-        text_draw_label_and_number_centered((const char*)translation_for(TR_CONFIG_PAGE_LABEL), data.page + 1, "", 60, 416, 85, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    }
+    //if (GAME_ENV == ENGINE_ENV_C3) { // TODO: temporary fix to mitigate translation exception
+    //    text_draw_label_and_number_centered((const char*)translation_for(TR_CONFIG_PAGE_LABEL), data.page + 1, "", 60, 416, 85, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    //}
 
     // text_draw_centered(translation_for(TR_CONFIG_PAGE_LABEL), 80, 415, 30, FONT_NORMAL_BLACK, 0);
     // text_draw_number(data.page + 1, '@', " ", 120, 415, FONT_NORMAL_BLACK);

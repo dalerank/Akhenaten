@@ -353,7 +353,7 @@ static void setup() {
 #endif
 
     // pre-init engine: assert game directory, pref files, etc.
-    init_game_environment(ENGINE_ENV_PHARAOH);
+    init_game_environment(0);
 #if defined(GAME_PLATFORM_ANDROID)
     bool again = false;
 #endif // GAME_PLATFORM_ANDROID

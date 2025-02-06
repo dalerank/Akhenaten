@@ -1,7 +1,5 @@
 #pragma once
 
-enum { ENGINE_ENV_C3 = 0, ENGINE_ENV_PHARAOH = 1, ENGINE_ENV_MAX = 2 };
-
 enum { ENGINE_MODE_RELEASE = 0, ENGINE_MODE_DEBUG = 1, ENGINE_MODE_MAX = 2 };
 
 #define MAX_REQUESTS 20
@@ -21,8 +19,6 @@ constexpr int MAX_FISH_POINTS = 8;
 #define MAX_SCENARIO_NAME 65
 #define MAX_SUBTITLE 64
 #define MAX_BRIEF_DESCRIPTION 522
-
-extern int GAME_ENV;
 
 void init_game_environment(int env);
 const char* get_game_title();

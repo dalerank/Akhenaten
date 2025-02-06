@@ -44,14 +44,12 @@ struct lang_files_collection {
     const char* FILE_EDITOR_MM_ENG;
 };
 
-lang_files_collection lfcs[] = {{"c3.eng", "c3_mm.eng", "c3.rus", "c3_mm.rus", "c3_map.eng", "c3_map_mm.eng"},
-
-                                {"Pharaoh_Text.eng",
+lang_files_collection lfcs = { "Pharaoh_Text.eng",
                                  "Pharaoh_MM.eng",
                                  "Pharaoh_Text.rus",
                                  "Pharaoh_MM.rus",
                                  "Pharaoh_Map_Text.eng",
-                                 "Pharaoh_Map_MM.eng"}};
+                                 "Pharaoh_Map_MM.eng" };
 
 static bool file_exists_in_dir(const char* dir, const char* file) {
     bstring256 path(dir, "/", file);
@@ -59,7 +57,7 @@ static bool file_exists_in_dir(const char* dir, const char* file) {
 }
 
 bool lang_dir_is_valid(const char* dir) {
-    lang_files_collection* lfc = &lfcs[GAME_ENV];
+    lang_files_collection* lfc = &lfcs;
     if (file_exists_in_dir(dir, lfc->FILE_TEXT_ENG) && file_exists_in_dir(dir, lfc->FILE_MM_ENG))
         return true;
 
@@ -164,7 +162,7 @@ static bool load_files(const char* text_filename, const char* message_filename, 
 }
 
 bool lang_load(int is_editor) {
-    lang_files_collection* lfc = &lfcs[GAME_ENV];
+    lang_files_collection* lfc = &lfcs;
     if (is_editor)
         return load_files(lfc->FILE_EDITOR_TEXT_ENG, lfc->FILE_EDITOR_MM_ENG, MAY_BE_LOCALIZED);
 

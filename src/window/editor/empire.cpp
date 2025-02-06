@@ -22,14 +22,8 @@
 #include "window/editor/map.h"
 #include "game/game.h"
 
-const static int EMPIRE_WIDTH[2] = {
-  2000 + 32,
-  1200 + 32,
-};
-const static int EMPIRE_HEIGHT[2] = {
-  1000 + 136,
-  1600 + 136 + 20,
-};
+const static int EMPIRE_WIDTH = 1200 + 32;
+const static int EMPIRE_HEIGHT = 1600 + 136 + 20;
 
 static void button_change_empire(int is_up, int param2);
 static void button_ok(int param1, int param2);
@@ -119,10 +113,10 @@ static void draw_background(int) {
 
     int s_width = screen_width();
     int s_height = screen_height();
-    data.p_min.x = s_width <= EMPIRE_WIDTH[GAME_ENV] ? 0 : (s_width - EMPIRE_WIDTH[GAME_ENV]) / 2;
-    data.p_max.x = s_width <= EMPIRE_WIDTH[GAME_ENV] ? s_width : data.p_min.x + EMPIRE_WIDTH[GAME_ENV];
-    data.p_min.y = s_height <= EMPIRE_HEIGHT[GAME_ENV] ? 0 : (s_height - EMPIRE_HEIGHT[GAME_ENV]) / 2;
-    data.p_max.y = s_height <= EMPIRE_HEIGHT[GAME_ENV] ? s_height : data.p_min.y + EMPIRE_HEIGHT[GAME_ENV];
+    data.p_min.x = s_width <= EMPIRE_WIDTH ? 0 : (s_width - EMPIRE_WIDTH) / 2;
+    data.p_max.x = s_width <= EMPIRE_WIDTH ? s_width : data.p_min.x + EMPIRE_WIDTH;
+    data.p_min.y = s_height <= EMPIRE_HEIGHT ? 0 : (s_height - EMPIRE_HEIGHT) / 2;
+    data.p_max.y = s_height <= EMPIRE_HEIGHT ? s_height : data.p_min.y + EMPIRE_HEIGHT;
 
     if (data.p_min.x || data.p_min.y) {
         graphics_clear_screen();
