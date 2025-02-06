@@ -5,7 +5,7 @@
 static grid_xx terrain_moisture = {0, FS_UINT8};
 
 uint8_t map_moisture_get(int grid_offset) {
-    return map_grid_get(&terrain_moisture, grid_offset);
+    return map_grid_get(terrain_moisture, grid_offset);
 }
 
 uint8_t map_grasslevel_get(int grid_offset) {
@@ -34,5 +34,6 @@ uint8_t map_grasslevel_get(int grid_offset) {
 //     return true;
 // }
 
-io_buffer* iob_moisture_grid
-  = new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &terrain_moisture); });
+io_buffer* iob_moisture_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &terrain_moisture);
+});

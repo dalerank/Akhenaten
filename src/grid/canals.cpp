@@ -29,30 +29,30 @@ static grid_xx canals_grid = {0, FS_UINT8};
 static grid_xx canals_grid_backup = {0, FS_UINT8};
 
 int map_canal_at(int grid_offset) {
-    return map_grid_get(&canals_grid, grid_offset);
+    return map_grid_get(canals_grid, grid_offset);
 }
 
 void map_canal_set(int grid_offset, int value) {
-    map_grid_set(&canals_grid, grid_offset, value);
+    map_grid_set(canals_grid, grid_offset, value);
 }
 
 void map_canal_remove(int grid_offset) {
-    map_grid_set(&canals_grid, grid_offset, 0);
-    if (map_grid_get(&canals_grid, grid_offset + GRID_OFFSET(0, -1)) == 5)
-        map_grid_set(&canals_grid, grid_offset + GRID_OFFSET(0, -1), 1);
+    map_grid_set(canals_grid, grid_offset, 0);
+    if (map_grid_get(canals_grid, grid_offset + GRID_OFFSET(0, -1)) == 5)
+        map_grid_set(canals_grid, grid_offset + GRID_OFFSET(0, -1), 1);
 
-    if (map_grid_get(&canals_grid, grid_offset + GRID_OFFSET(1, 0)) == 6)
-        map_grid_set(&canals_grid, grid_offset + GRID_OFFSET(1, 0), 2);
+    if (map_grid_get(canals_grid, grid_offset + GRID_OFFSET(1, 0)) == 6)
+        map_grid_set(canals_grid, grid_offset + GRID_OFFSET(1, 0), 2);
 
-    if (map_grid_get(&canals_grid, grid_offset + GRID_OFFSET(0, 1)) == 5)
-        map_grid_set(&canals_grid, grid_offset + GRID_OFFSET(0, 1), 3);
+    if (map_grid_get(canals_grid, grid_offset + GRID_OFFSET(0, 1)) == 5)
+        map_grid_set(canals_grid, grid_offset + GRID_OFFSET(0, 1), 3);
 
-    if (map_grid_get(&canals_grid, grid_offset + GRID_OFFSET(-1, 0)) == 6)
-        map_grid_set(&canals_grid, grid_offset + GRID_OFFSET(-1, 0), 4);
+    if (map_grid_get(canals_grid, grid_offset + GRID_OFFSET(-1, 0)) == 6)
+        map_grid_set(canals_grid, grid_offset + GRID_OFFSET(-1, 0), 4);
 }
 
 void map_canal_clear() {
-    map_grid_clear(&canals_grid);
+    map_grid_clear(canals_grid);
 }
 
 void map_canal_backup() {
@@ -62,18 +62,20 @@ void map_canal_backup() {
     uint16_t g = x[2];
     x[4] = 1;
 
-    map_grid_copy(&canals_grid, &canals_grid_backup);
+    map_grid_copy(canals_grid, canals_grid_backup);
 }
 
 void map_canal_restore(void) {
-    map_grid_copy(&canals_grid_backup, &canals_grid);
+    map_grid_copy(canals_grid_backup, canals_grid);
 }
 
-io_buffer* iob_aqueduct_grid
-= new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &canals_grid); });
+io_buffer* iob_aqueduct_grid = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &canals_grid);
+});
 
-io_buffer* iob_aqueduct_backup_grid
-= new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &canals_grid_backup); });
+io_buffer *iob_aqueduct_backup_grid = new io_buffer([] (io_buffer *iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &canals_grid_backup);
+});
 
 static void canals_empty_all(void) {
     // reset river access counters

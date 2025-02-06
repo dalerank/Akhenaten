@@ -42,16 +42,16 @@ struct grid_rounting_t {
 grid_rounting_t g_grid_rounting;
 
 void clear_distances(void) {
-    map_grid_clear(&routing_distance);
+    map_grid_clear(routing_distance);
 }
 
 int valid_offset(int grid_offset) {
-    return map_grid_is_valid_offset(grid_offset) && map_grid_get(&routing_distance, grid_offset) == 0
+    return map_grid_is_valid_offset(grid_offset) && map_grid_get(routing_distance, grid_offset) == 0
            && map_grid_inside_map_area(grid_offset, 1);
 }
 
 void enqueue(int offset, int distance) {
-    map_grid_set(&routing_distance, offset, distance);
+    map_grid_set(routing_distance, offset, distance);
     g_grid_rounting.items[g_grid_rounting.tail++] = offset;
     if (g_grid_rounting.tail >= MAX_QUEUE)
         g_grid_rounting.tail = 0;
@@ -65,7 +65,7 @@ void route_queue(int source, int dest, void (*callback)(int next_offset, int dis
         int offset = queue.items[queue.head];
         if (offset == dest)
             break;
-        int distance = 1 + map_grid_get(&routing_distance, offset);
+        int distance = 1 + map_grid_get(routing_distance, offset);
         for (int i = 0; i < 4; i++) {
             if (valid_offset(offset + ROUTE_OFFSETS(i)))
                 callback(offset + ROUTE_OFFSETS(i), distance);
@@ -81,7 +81,7 @@ void route_queue_until(int source, bool (*callback)(int next_offset, int distanc
     enqueue(source, 1);
     while (queue.head != queue.tail) {
         int offset = queue.items[queue.head];
-        int distance = 1 + map_grid_get(&routing_distance, offset);
+        int distance = 1 + map_grid_get(routing_distance, offset);
         for (int i = 0; i < 4; i++) {
             if (valid_offset(offset + ROUTE_OFFSETS(i))) {
                 if (!callback(offset + ROUTE_OFFSETS(i), distance))
@@ -99,7 +99,7 @@ bool route_queue_until_found(int source, tile2i &dst, bool (*callback)(int, int)
     enqueue(source, 1);
     while (queue.head != queue.tail) {
         int offset = queue.items[queue.head];
-        int distance = 1 + map_grid_get(&routing_distance, offset);
+        int distance = 1 + map_grid_get(routing_distance, offset);
         for (int i = 0; i < 4; i++) {
             int next_offset = offset + ROUTE_OFFSETS(i);
             if (valid_offset(next_offset)) {
@@ -122,7 +122,7 @@ bool route_queue_until_terrain(int source, int terrain_type, tile2i* dst, bool (
     enqueue(source, 1);
     while (queue.head != queue.tail) {
         int offset = queue.items[queue.head];
-        int distance = 1 + map_grid_get(&routing_distance, offset);
+        int distance = 1 + map_grid_get(routing_distance, offset);
         for (int i = 0; i < 4; i++) {
             int next_offset = offset + ROUTE_OFFSETS(i);
             if (valid_offset(next_offset)) {
@@ -156,7 +156,7 @@ void route_queue_max(int source, int dest, int max_tiles, void (*callback)(int, 
             break;
         if (++tiles > max_tiles)
             break;
-        int distance = 1 + map_grid_get(&routing_distance, offset);
+        int distance = 1 + map_grid_get(routing_distance, offset);
         for (int i = 0; i < 4; i++) {
             if (valid_offset(offset + ROUTE_OFFSETS(i)))
                 callback(offset + ROUTE_OFFSETS(i), distance);
@@ -165,10 +165,11 @@ void route_queue_max(int source, int dest, int max_tiles, void (*callback)(int, 
             queue.head = 0;
     }
 }
+
 void route_queue_boat(int source, void (*callback)(int, int)) {
     auto &queue = g_grid_rounting;
     clear_distances();
-    map_grid_clear(&water_drag);
+    map_grid_clear(water_drag);
     queue.head = queue.tail = 0;
     enqueue(source, 1);
     int tiles = 0;
@@ -177,20 +178,20 @@ void route_queue_boat(int source, void (*callback)(int, int)) {
         if (++tiles > GUARD)
             break;
 
-        int drag = map_grid_get(&routing_tiles_water, offset) == WATER_N2_MAP_EDGE ? 4 : 0;
-        int v = map_grid_get(&water_drag, offset);
+        int drag = map_grid_get(routing_tiles_water, offset) == WATER_N2_MAP_EDGE ? 4 : 0;
+        int v = map_grid_get(water_drag, offset);
         if (drag && v < drag) {
             queue.items[queue.tail++] = offset;
             if (queue.tail >= MAX_QUEUE)
                 queue.tail = 0;
         } else {
-            int distance = 1 + map_grid_get(&routing_distance, offset);
+            int distance = 1 + map_grid_get(routing_distance, offset);
             for (int i = 0; i < 4; i++) {
                 if (valid_offset(offset + ROUTE_OFFSETS(i)))
                     callback(offset + ROUTE_OFFSETS(i), distance);
             }
         }
-        map_grid_set(&water_drag, offset, v + 1);
+        map_grid_set(water_drag, offset, v + 1);
         if (++queue.head >= MAX_QUEUE)
             queue.head = 0;
     }
@@ -205,7 +206,7 @@ void route_queue_dir8(int source, void (*callback)(int, int)) {
         if (++tiles > GUARD)
             break;
         int offset = queue.items[queue.head];
-        int distance = 1 + map_grid_get(&routing_distance, offset);
+        int distance = 1 + map_grid_get(routing_distance, offset);
         for (int i = 0; i < 8; i++) {
             if (valid_offset(offset + ROUTE_OFFSETS(i)))
                 callback(offset + ROUTE_OFFSETS(i), distance);

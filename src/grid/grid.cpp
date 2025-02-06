@@ -18,15 +18,15 @@ static const int DIRECTION_DELTA_PH[] = {-GRID_OFFSET(0, 1),
                                          -1,
                                          -GRID_OFFSET(1, 1)};
 
-void map_grid_init(grid_xx* grid) {
-    grid->size_field = gr_sizes[grid->datatype];
-    grid->size_total = grid->size_field * GRID_SIZE_TOTAL;
-    grid->items_xx = malloc(grid->size_total);
-    grid->initialized = 1;
+void map_grid_init(grid_xx& grid) {
+    grid.size_field = gr_sizes[grid.datatype];
+    grid.size_total = grid.size_field * GRID_SIZE_TOTAL;
+    grid.items_xx = malloc(grid.size_total);
+    grid.initialized = 1;
 }
 
-int32_t map_grid_get(grid_xx* grid, uint32_t at) {
-    if (!grid->initialized)
+int32_t map_grid_get(grid_xx& grid, uint32_t at) {
+    if (!grid.initialized)
         map_grid_init(grid);
 
     if (at >= GRID_SIZE_TOTAL)
@@ -34,24 +34,24 @@ int32_t map_grid_get(grid_xx* grid, uint32_t at) {
 
     //    assert(at < GRID_SIZE_TOTAL);
     int64_t res = 0;
-    switch (grid->datatype) {
+    switch (grid.datatype) {
     case FS_UINT8:
-        res = ((uint8_t*)grid->items_xx)[at];
+        res = ((uint8_t*)grid.items_xx)[at];
         break;
     case FS_INT8:
-        res = ((int8_t*)grid->items_xx)[at];
+        res = ((int8_t*)grid.items_xx)[at];
         break;
     case FS_UINT16:
-        res = ((uint16_t*)grid->items_xx)[at];
+        res = ((uint16_t*)grid.items_xx)[at];
         break;
     case FS_INT16:
-        res = ((int16_t*)grid->items_xx)[at];
+        res = ((int16_t*)grid.items_xx)[at];
         break;
     case FS_UINT32:
-        res = ((uint32_t*)grid->items_xx)[at];
+        res = ((uint32_t*)grid.items_xx)[at];
         break;
     case FS_INT32:
-        res = ((int32_t*)grid->items_xx)[at];
+        res = ((int32_t*)grid.items_xx)[at];
         break;
 
     default:
@@ -59,59 +59,61 @@ int32_t map_grid_get(grid_xx* grid, uint32_t at) {
     }
     return res;
 }
-void map_grid_set(grid_xx* grid, uint32_t at, int64_t value) {
-    if (!grid->initialized)
+
+void map_grid_set(grid_xx& grid, uint32_t at, int64_t value) {
+    if (!grid.initialized)
         map_grid_init(grid);
 
     if (at >= GRID_SIZE_TOTAL) {
         return;
     }
     //    assert(at < GRID_SIZE_TOTAL);
-    switch (grid->datatype) {
+    switch (grid.datatype) {
     case FS_UINT8:
-        ((uint8_t*)grid->items_xx)[at] = (uint8_t)value;
+        ((uint8_t*)grid.items_xx)[at] = (uint8_t)value;
         break;
     case FS_INT8:
-        ((int8_t*)grid->items_xx)[at] = (int8_t)value;
+        ((int8_t*)grid.items_xx)[at] = (int8_t)value;
         break;
     case FS_UINT16:
-        ((uint16_t*)grid->items_xx)[at] = (uint16_t)value;
+        ((uint16_t*)grid.items_xx)[at] = (uint16_t)value;
         break;
     case FS_INT16:
-        ((int16_t*)grid->items_xx)[at] = (int16_t)value;
+        ((int16_t*)grid.items_xx)[at] = (int16_t)value;
         break;
     case FS_UINT32:
-        ((uint32_t*)grid->items_xx)[at] = (uint32_t)value;
+        ((uint32_t*)grid.items_xx)[at] = (uint32_t)value;
         break;
     case FS_INT32:
-        ((int32_t*)grid->items_xx)[at] = (int32_t)value;
+        ((int32_t*)grid.items_xx)[at] = (int32_t)value;
         break;
 
     default:
         assert(false);
     }
 }
-void map_grid_fill(grid_xx* grid, int64_t value) {
-    if (!grid->initialized)
+void map_grid_fill(grid_xx& grid, int64_t value) {
+    if (!grid.initialized)
         map_grid_init(grid);
-    switch (grid->datatype) {
+
+    switch (grid.datatype) {
     case FS_UINT8:
-        memset(grid->items_xx, (uint8_t)value, grid->size_total);
+        memset(grid.items_xx, (uint8_t)value, grid.size_total);
         break;
     case FS_INT8:
-        memset(grid->items_xx, (int8_t)value, grid->size_total);
+        memset(grid.items_xx, (int8_t)value, grid.size_total);
         break;
     case FS_UINT16:
-        memset(grid->items_xx, (uint16_t)value, grid->size_total);
+        memset(grid.items_xx, (uint16_t)value, grid.size_total);
         break;
     case FS_INT16:
-        memset(grid->items_xx, (int16_t)value, grid->size_total);
+        memset(grid.items_xx, (int16_t)value, grid.size_total);
         break;
     case FS_UINT32:
-        memset(grid->items_xx, (uint32_t)value, grid->size_total);
+        memset(grid.items_xx, (uint32_t)value, grid.size_total);
         break;
     case FS_INT32:
-        memset(grid->items_xx, (int32_t)value, grid->size_total);
+        memset(grid.items_xx, (int32_t)value, grid.size_total);
         break;
 
     default:
@@ -119,62 +121,67 @@ void map_grid_fill(grid_xx* grid, int64_t value) {
     }
 }
 
-void map_grid_clear(grid_xx* grid) {
-    if (!grid->initialized)
+void map_grid_clear(grid_xx& grid) {
+    if (!grid.initialized)
         map_grid_init(grid);
-    memset(grid->items_xx, 0, grid->size_total);
+
+    memset(grid.items_xx, 0, grid.size_total);
 }
 
-void map_grid_copy(grid_xx* src, grid_xx* dst) {
-    if (!src->initialized)
+void map_grid_copy(grid_xx& src, grid_xx& dst) {
+    if (!src.initialized)
         map_grid_init(src);
-    if (!dst->initialized)
+
+    if (!dst.initialized)
         map_grid_init(dst);
 
-    assert(src->datatype == dst->datatype);
-    assert(src->size_total == dst->size_total);
+    assert(src.datatype == dst.datatype);
+    assert(src.size_total == dst.size_total);
 
-    memcpy(dst->items_xx, src->items_xx, src->size_total);
+    memcpy(dst.items_xx, src.items_xx, src.size_total);
 }
 
-void map_grid_and(grid_xx* grid, uint32_t at, int mask) {
-    if (!grid->initialized)
+void map_grid_and(grid_xx& grid, uint32_t at, int mask) {
+    if (!grid.initialized)
         map_grid_init(grid);
+
     int v = map_grid_get(grid, at);
     v &= mask;
     map_grid_set(grid, at, v);
 }
-void map_grid_or(grid_xx* grid, uint32_t at, int mask) {
-    if (!grid->initialized)
+void map_grid_or(grid_xx& grid, uint32_t at, int mask) {
+    if (!grid.initialized)
         map_grid_init(grid);
+
     int v = map_grid_get(grid, at);
     v |= mask;
     map_grid_set(grid, at, v);
 }
-void map_grid_and_all(grid_xx* grid, int mask) {
-    if (!grid->initialized) {
+
+void map_grid_and_all(grid_xx& grid, int mask) {
+    if (!grid.initialized) {
         map_grid_init(grid);
     }
 
     for (int i = 0; i < GRID_SIZE_TOTAL; i++) {
-        switch (grid->datatype) {
+        switch (grid.datatype) {
         case FS_UINT8:
-            ((uint8_t*)grid->items_xx)[i] &= (uint8_t)mask;
+            ((uint8_t*)grid.items_xx)[i] &= (uint8_t)mask;
             break;
         case FS_INT8:
-            ((int8_t*)grid->items_xx)[i] &= (int8_t)mask;
+            ((int8_t*)grid.items_xx)[i] &= (int8_t)mask;
             break;
         case FS_UINT16:
-            ((uint16_t*)grid->items_xx)[i] &= (uint16_t)mask;
+            ((uint16_t*)grid.items_xx)[i] &= (uint16_t)mask;
             break;
         case FS_INT16:
-            ((int16_t*)grid->items_xx)[i] &= (int16_t)mask;
+            ((int16_t*)grid.items_xx)[i] &= (int16_t)mask;
             break;
         case FS_UINT32:
-            ((uint32_t*)grid->items_xx)[i] &= (uint32_t)mask;
+            ((uint32_t*)grid.items_xx)[i] &= (uint32_t)mask;
             break;
         case FS_INT32:
-            ((int32_t*)grid->items_xx)[i] &= (int32_t)mask;
+            ((int32_t*)grid.items_xx)[i] &= (int32_t)mask;
             break;
 
         default:
@@ -183,71 +190,71 @@ void map_grid_and_all(grid_xx* grid, int mask) {
     }
 }
 
-void map_grid_save_buffer(grid_xx* grid, buffer* buf) {
-    if (!grid->initialized) {
+void map_grid_save_buffer(grid_xx& grid, buffer* buf) {
+    if (!grid.initialized) {
         map_grid_init(grid);
     }
 
-    switch (grid->datatype) {
+    switch (grid.datatype) {
     case FS_UINT8:
-        buf->write_raw(grid->items_xx, GRID_SIZE_TOTAL);
+        buf->write_raw(grid.items_xx, GRID_SIZE_TOTAL);
         break;
     case FS_INT8:
-        buf->write_raw(grid->items_xx, GRID_SIZE_TOTAL);
+        buf->write_raw(grid.items_xx, GRID_SIZE_TOTAL);
         break;
     case FS_UINT16:
         for (int i = 0; i < GRID_SIZE_TOTAL; i++)
-            buf->write_u16(((uint16_t*)grid->items_xx)[i]);
+            buf->write_u16(((uint16_t*)grid.items_xx)[i]);
         break;
     case FS_INT16:
         for (int i = 0; i < GRID_SIZE_TOTAL; i++)
-            buf->write_i16(((int16_t*)grid->items_xx)[i]);
+            buf->write_i16(((int16_t*)grid.items_xx)[i]);
         break;
     case FS_UINT32:
         for (int i = 0; i < GRID_SIZE_TOTAL; i++)
-            buf->write_u32(((uint32_t*)grid->items_xx)[i]);
+            buf->write_u32(((uint32_t*)grid.items_xx)[i]);
         break;
     case FS_INT32:
         for (int i = 0; i < GRID_SIZE_TOTAL; i++)
-            buf->write_i32(((int32_t*)grid->items_xx)[i]);
+            buf->write_i32(((int32_t*)grid.items_xx)[i]);
         break;
     default:
         assert(false);
     }
 }
 
-void map_grid_load_buffer(grid_xx* grid, buffer* buf) {
-    if (!grid->initialized) {
+void map_grid_load_buffer(grid_xx& grid, buffer* buf) {
+    if (!grid.initialized) {
         map_grid_init(grid);
     }
 
-    switch (grid->datatype) {
+    switch (grid.datatype) {
     case FS_UINT8:
-        buf->read_raw(grid->items_xx, GRID_SIZE_TOTAL);
+        buf->read_raw(grid.items_xx, GRID_SIZE_TOTAL);
         break;
     case FS_INT8:
-        buf->read_raw(grid->items_xx, GRID_SIZE_TOTAL);
+        buf->read_raw(grid.items_xx, GRID_SIZE_TOTAL);
         break;
     case FS_UINT16: {
-        uint16_t* dr_data = (uint16_t*)grid->items_xx;
+        uint16_t* dr_data = (uint16_t*)grid.items_xx;
         for (int i = 0; i < GRID_SIZE_TOTAL; i++)
             dr_data[i] = buf->read_u16();
         break;
     }
     case FS_INT16: {
-        int16_t* dr_data = (int16_t*)grid->items_xx;
+        int16_t* dr_data = (int16_t*)grid.items_xx;
         for (int i = 0; i < GRID_SIZE_TOTAL; i++)
             dr_data[i] = buf->read_i16();
         break;
     }
     case FS_UINT32: {
-        uint32_t* dr_data = (uint32_t*)grid->items_xx;
+        uint32_t* dr_data = (uint32_t*)grid.items_xx;
         for (int i = 0; i < GRID_SIZE_TOTAL; i++)
             dr_data[i] = buf->read_u32();
         break;
     }
     case FS_INT32: {
-        int32_t* dr_data = (int32_t*)grid->items_xx;
+        int32_t* dr_data = (int32_t*)grid.items_xx;
         for (int i = 0; i < GRID_SIZE_TOTAL; i++)
             dr_data[i] = buf->read_i32();
         break;

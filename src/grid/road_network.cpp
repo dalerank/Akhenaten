@@ -28,11 +28,11 @@ int adjacent_offsets(int i) {
 }
 
 void map_road_network_clear() {
-    map_grid_clear(&network);
+    map_grid_clear(network);
 }
 
 int map_road_network_get(int grid_offset) {
-    return map_grid_get(&network, grid_offset);
+    return map_grid_get(network, grid_offset);
 }
 
 static int mark_road_network(int grid_offset, uint8_t network_id) {
@@ -44,13 +44,13 @@ static int mark_road_network(int grid_offset, uint8_t network_id) {
         if (++guard >= GRID_SIZE_TOTAL)
             break;
 
-        map_grid_set(&network, grid_offset, network_id);
+        map_grid_set(network, grid_offset, network_id);
         next_offset = -1;
         for (int i = 0; i < 4; i++) {
             int new_offset = grid_offset + adjacent_offsets(i);
-            if (map_routing_citizen_is_passable(new_offset) && !map_grid_get(&network, new_offset)) {
+            if (map_routing_citizen_is_passable(new_offset) && !map_grid_get(network, new_offset)) {
                 if (map_routing_citizen_is_road(new_offset) || map_terrain_is(new_offset, TERRAIN_ACCESS_RAMP)) {
-                    map_grid_set(&network, new_offset, network_id);
+                    map_grid_set(network, new_offset, network_id);
                     size++;
                     if (next_offset == -1)
                         next_offset = new_offset;
@@ -78,12 +78,12 @@ static int mark_road_network(int grid_offset, uint8_t network_id) {
 void city_map_t::update_road_network() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Road Network Update");
     g_city.map.clear_largest_road_networks();
-    map_grid_clear(&network);
+    map_grid_clear(network);
     int network_id = 1;
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-            if (map_terrain_is(grid_offset, TERRAIN_ROAD) && !map_grid_get(&network, grid_offset)) {
+            if (map_terrain_is(grid_offset, TERRAIN_ROAD) && !map_grid_get(network, grid_offset)) {
                 int size = mark_road_network(grid_offset, network_id);
                 g_city.map.add_to_largest_road_networks(network_id, size);
                 network_id++;

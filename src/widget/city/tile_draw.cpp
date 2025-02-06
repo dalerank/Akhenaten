@@ -61,11 +61,11 @@ static const int ADJACENT_OFFSETS_PH[2][4][7]
 grid_xx g_render_grid = {0, FS_UINT32};
 
 void map_render_clear() {
-    map_grid_clear(&g_render_grid);
+    map_grid_clear(g_render_grid);
 }
 
 bool map_render_is(int grid_offset, int render_mask) {
-    return map_grid_is_valid_offset(grid_offset) && !!(map_grid_get(&g_render_grid, grid_offset) & render_mask);
+    return map_grid_is_valid_offset(grid_offset) && !!(map_grid_get(g_render_grid, grid_offset) & render_mask);
 }
 
 bool map_render_is(tile2i tile, int render_mask) {
@@ -73,11 +73,11 @@ bool map_render_is(tile2i tile, int render_mask) {
 }
 
 void map_render_set(tile2i tile, int flag) {
-    map_grid_set(&g_render_grid, tile.grid_offset(), flag);
+    map_grid_set(g_render_grid, tile.grid_offset(), flag);
 }
 
 void map_render_set(int grid_offset, int flag) {
-    map_grid_set(&g_render_grid, grid_offset, flag);
+    map_grid_set(g_render_grid, grid_offset, flag);
 }
 
 enum e_figure_draw_mode { e_figure_draw_common = 0, e_figure_draw_overlay = 1 };

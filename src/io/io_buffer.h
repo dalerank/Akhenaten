@@ -33,9 +33,9 @@ enum bind_signature_e {
 
 #define IO_BRANCH(R, W)                                                                                                \
     if (access_type == CHUNK_ACCESS_READ)                                                                              \
-        R;                                                                                                             \
+        (R);                                                                                                           \
     else if (access_type == CHUNK_ACCESS_WRITE)                                                                        \
-        W;                                                                                                             \
+        (W);                                                                                                           \
     return;
 
 class io_buffer;
@@ -117,15 +117,18 @@ public:
         bind(BIND_SIGNATURE_UINT16, tile.private_access(_X));        // 44
         bind(BIND_SIGNATURE_UINT16, tile.private_access(_Y));        // 58
     }
-    void bind(bind_signature_e signature, grid_xx* ext) {
-        if (ext != nullptr && signature == BIND_SIGNATURE_GRID) {
-            IO_BRANCH(map_grid_load_buffer(ext, p_buf), map_grid_save_buffer(ext, p_buf))
+
+    void bind(bind_signature_e signature, grid_xx *ext) {
+        if (signature == BIND_SIGNATURE_GRID) {
+            IO_BRANCH(map_grid_load_buffer(*ext, p_buf), map_grid_save_buffer(*ext, p_buf))
         }
     }
+
     void bind(bind_signature_e signature, size_t size = -1) {
         if (size > 0)
             return p_buf->skip(size);
     }
+
     void bind____skip(size_t size) {
         return bind(BIND_SIGNATURE_SKIP, size);
     }

@@ -25,11 +25,11 @@ void foreach_marshland_tile(void (*callback)(int grid_offset)) {
 grid_xx g_terrain_vegetation_growth = {0, FS_UINT8};
 
 int map_get_vegetation_growth(int grid_offset) {
-    return map_grid_get(&g_terrain_vegetation_growth, grid_offset);
+    return map_grid_get(g_terrain_vegetation_growth, grid_offset);
 }
 
 void map_vegetation_deplete(int grid_offset) {
-    map_grid_set(&g_terrain_vegetation_growth, grid_offset, 0);
+    map_grid_set(g_terrain_vegetation_growth, grid_offset, 0);
     map_tiles_update_vegetation(grid_offset);
 }
 
@@ -40,7 +40,7 @@ void vegetation_tile_update(int grid_offset) {
         int r = random_short() % 10 + 5;
         growth = std::clamp(growth + r, 0, 255);
 
-        map_grid_set(&g_terrain_vegetation_growth, grid_offset, growth);
+        map_grid_set(g_terrain_vegetation_growth, grid_offset, growth);
         if (growth == 255) {
             map_tiles_update_vegetation(grid_offset);
         }

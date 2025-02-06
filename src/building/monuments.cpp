@@ -102,15 +102,15 @@ struct monument_delivery {
 svector<monument_delivery, 32> g_monument_deliveries;
 
 uint32_t map_monuments_get_progress(tile2i tile) {
-    return map_grid_get(&g_monuments_progress_grid, tile.grid_offset());
+    return map_grid_get(g_monuments_progress_grid, tile.grid_offset());
 }
 
 void map_monuments_set_progress(tile2i tile, uint32_t progress) {
-    map_grid_set(&g_monuments_progress_grid, tile.grid_offset(), progress);
+    map_grid_set(g_monuments_progress_grid, tile.grid_offset(), progress);
 }
 
 void map_monuments_clear() {
-    map_grid_fill(&g_monuments_progress_grid, 0);
+    map_grid_fill(g_monuments_progress_grid, 0);
 }
 
 bool building_monument_deliver_resource(building *b, e_resource resource, int amount) {

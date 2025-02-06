@@ -81,20 +81,20 @@ struct grid_area {
 
 using grid_tiles = std::vector<tile2i>;
 
-void map_grid_init(grid_xx* grid);
-int32_t map_grid_get(grid_xx* grid, uint32_t at);
-inline int32_t map_grid_get(grid_xx *grid, tile2i at) { return map_grid_get(grid, at.grid_offset()); }
-void map_grid_set(grid_xx* grid, uint32_t at, int64_t value);
-void map_grid_fill(grid_xx* grid, int64_t value);
-void map_grid_clear(grid_xx* grid);
-void map_grid_copy(grid_xx* src, grid_xx* dst);
+void map_grid_init(grid_xx& grid);
+int32_t map_grid_get(grid_xx& grid, uint32_t at);
+inline int32_t map_grid_get(grid_xx &grid, tile2i at) { return map_grid_get(grid, at.grid_offset()); }
+void map_grid_set(grid_xx& grid, uint32_t at, int64_t value);
+void map_grid_fill(grid_xx& grid, int64_t value);
+void map_grid_clear(grid_xx& grid);
+void map_grid_copy(grid_xx& src, grid_xx& dst);
 
-void map_grid_and(grid_xx* grid, uint32_t at, int mask);
-void map_grid_or(grid_xx* grid, uint32_t at, int mask);
-void map_grid_and_all(grid_xx* grid, int mask);
+void map_grid_and(grid_xx& grid, uint32_t at, int mask);
+void map_grid_or(grid_xx& grid, uint32_t at, int mask);
+void map_grid_and_all(grid_xx& grid, int mask);
 
-void map_grid_save_buffer(grid_xx* grid, buffer* buf);
-void map_grid_load_buffer(grid_xx* grid, buffer* buf);
+void map_grid_save_buffer(grid_xx& grid, buffer* buf);
+void map_grid_load_buffer(grid_xx& grid, buffer* buf);
 
 // void map_grid_data_init(int width, int height, int start_offset, int border_size);
 
