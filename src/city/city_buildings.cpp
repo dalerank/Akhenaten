@@ -160,32 +160,35 @@ static void building_delete_UNSAFE(building *b) {
 
 void building_update_state(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Building State Update");
-    bool land_recalc = false;
-    bool wall_recalc = false;
-    bool road_recalc = false;
+    bool lands_recalc = false;
+    bool walls_recalc = false;
+    bool roads_recalc = false;
     bool water_routes_recalc = false;
-    bool aqueduct_recalc = false;
+    bool canals_recalc = false;
+
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = &g_all_buildings[i];
-        if (b->state == BUILDING_STATE_CREATED)
+        if (b->state == BUILDING_STATE_CREATED) {
             b->state = BUILDING_STATE_VALID;
+        }
 
         if (b->state != BUILDING_STATE_VALID || !b->house_size) {
             if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+                const auto &params = b->dcast()->params();
                 if (b->type == BUILDING_MUD_TOWER || b->type == BUILDING_MUD_GATEHOUSE) {
-                    wall_recalc = true;
-                    road_recalc = true;
+                    walls_recalc = true;
+                    roads_recalc = true;
                 } else if (b->type == BUILDING_WATER_LIFT) {
-                    aqueduct_recalc = true;
+                    canals_recalc = true;
                 } else if (b->type == BUILDING_GRANARY) {
-                    road_recalc = true;
+                    roads_recalc = true;
                 } else if (b->type == BUILDING_FERRY) {
                     water_routes_recalc = true;
                 }
 
                 map_building_tiles_remove(i, b->tile);
-                road_recalc = true; // always recalc underlying road tiles
-                land_recalc = true;
+                roads_recalc = true; // always recalc underlying road tiles
+                lands_recalc = true;
                 building_delete_UNSAFE(b);
             } else if (b->state == BUILDING_STATE_RUBBLE) {
                 if (b->house_size > 0) {
@@ -199,19 +202,19 @@ void building_update_state(void) {
         }
     }
 
-    if (wall_recalc) {
+    if (walls_recalc) {
         map_tiles_update_all_walls();
     }
 
-    if (aqueduct_recalc) {
+    if (canals_recalc) {
         map_tiles_update_all_canals(0);
     }
 
-    if (land_recalc) {
+    if (lands_recalc) {
         map_routing_update_land();
     }
 
-    if (road_recalc) {
+    if (roads_recalc) {
         map_tiles_update_all_roads();
     }
 

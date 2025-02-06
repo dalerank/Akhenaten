@@ -55,7 +55,6 @@ private:
     tile2i tile_coord_cache[30][30];
     vec2i pixel_coords_cache[30][30];
 
-    int additional_req_param1 = -1;
     int additional_req_param2 = -1;
     int additional_req_param3 = -1;
     int can_place = CAN_PLACE;
@@ -91,6 +90,8 @@ private:
     int place_houses(bool measure_only, int x_start, int y_start, int x_end, int y_end);
 
 public:
+    int additional_req_param1 = -1;
+
     e_building_type build_type;
     building* last_created_building = nullptr;
     bool should_update_land_routing = false;

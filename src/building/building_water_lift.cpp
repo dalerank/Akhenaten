@@ -20,6 +20,11 @@ void building_water_lift::static_params::planer_setup_preview_graphics(build_pla
     planer.set_tiles_building(imgid, building_size);
 }
 
+int building_water_lift::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
+    planer.draw_as_constructing = map_shore_determine_orientation(end, planer.additional_req_param1, true).match;
+    return 0;
+}
+
 void building_water_lift::window_info_background(object_info &c) {
     c.help_id = 59;
     window_building_play_sound(&c, "Wavs/resevoir.wav");
