@@ -58,12 +58,7 @@ static const int ADJACENT_OFFSETS_PH[2][4][7]
        GRID_OFFSET(-3, -2)}}};
 
 
-grid_xx g_render_grid = {0,
-                          {
-                             FS_UINT32, // c3
-                             FS_UINT32  // ph
-                          }
-};
+grid_xx g_render_grid = {0, FS_UINT32};
 
 void map_render_clear() {
     map_grid_clear(&g_render_grid);

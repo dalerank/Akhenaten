@@ -43,7 +43,7 @@ int building_garden::static_params::place_impl(tile2i start, tile2i end) const {
             return;
         }
 
-        if (formation_herd_breeding_ground_at(tile.x(), tile.y(), 1)) {
+        if (formation_herd_breeding_ground_at(tile, 1)) {
             map_property_clear_constructing_and_deleted();
             city_warning_show(WARNING_HERD_BREEDING_GROUNDS);
         } else {

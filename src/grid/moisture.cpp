@@ -2,7 +2,7 @@
 #include "grid.h"
 #include "io/io_buffer.h"
 
-static grid_xx terrain_moisture = {0, {FS_UINT8, FS_UINT8}};
+static grid_xx terrain_moisture = {0, FS_UINT8};
 
 uint8_t map_moisture_get(int grid_offset) {
     return map_grid_get(&terrain_moisture, grid_offset);

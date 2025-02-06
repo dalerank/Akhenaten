@@ -25,55 +25,55 @@ water_supply_queue_t g_water_supply_queue;
 static unsigned int river_access_canal_offsets[300] = {};
 static int river_access_canal_offsets_total = 0;
 
-static grid_xx aqueduct = {0, {FS_UINT8, FS_UINT8}};
-static grid_xx aqueduct_backup = {0, {FS_UINT8, FS_UINT8}};
+static grid_xx canals_grid = {0, FS_UINT8};
+static grid_xx canals_grid_backup = {0, FS_UINT8};
 
 int map_canal_at(int grid_offset) {
-    return map_grid_get(&aqueduct, grid_offset);
+    return map_grid_get(&canals_grid, grid_offset);
 }
 
 void map_canal_set(int grid_offset, int value) {
-    map_grid_set(&aqueduct, grid_offset, value);
+    map_grid_set(&canals_grid, grid_offset, value);
 }
 
 void map_canal_remove(int grid_offset) {
-    map_grid_set(&aqueduct, grid_offset, 0);
-    if (map_grid_get(&aqueduct, grid_offset + GRID_OFFSET(0, -1)) == 5)
-        map_grid_set(&aqueduct, grid_offset + GRID_OFFSET(0, -1), 1);
+    map_grid_set(&canals_grid, grid_offset, 0);
+    if (map_grid_get(&canals_grid, grid_offset + GRID_OFFSET(0, -1)) == 5)
+        map_grid_set(&canals_grid, grid_offset + GRID_OFFSET(0, -1), 1);
 
-    if (map_grid_get(&aqueduct, grid_offset + GRID_OFFSET(1, 0)) == 6)
-        map_grid_set(&aqueduct, grid_offset + GRID_OFFSET(1, 0), 2);
+    if (map_grid_get(&canals_grid, grid_offset + GRID_OFFSET(1, 0)) == 6)
+        map_grid_set(&canals_grid, grid_offset + GRID_OFFSET(1, 0), 2);
 
-    if (map_grid_get(&aqueduct, grid_offset + GRID_OFFSET(0, 1)) == 5)
-        map_grid_set(&aqueduct, grid_offset + GRID_OFFSET(0, 1), 3);
+    if (map_grid_get(&canals_grid, grid_offset + GRID_OFFSET(0, 1)) == 5)
+        map_grid_set(&canals_grid, grid_offset + GRID_OFFSET(0, 1), 3);
 
-    if (map_grid_get(&aqueduct, grid_offset + GRID_OFFSET(-1, 0)) == 6)
-        map_grid_set(&aqueduct, grid_offset + GRID_OFFSET(-1, 0), 4);
+    if (map_grid_get(&canals_grid, grid_offset + GRID_OFFSET(-1, 0)) == 6)
+        map_grid_set(&canals_grid, grid_offset + GRID_OFFSET(-1, 0), 4);
 }
 
-void map_canal_clear(void) {
-    map_grid_clear(&aqueduct);
+void map_canal_clear() {
+    map_grid_clear(&canals_grid);
 }
 
-void map_canal_backup(void) {
+void map_canal_backup() {
     void* t = malloc(12);
     uint16_t* x = (uint16_t*)t;
 
     uint16_t g = x[2];
     x[4] = 1;
 
-    map_grid_copy(&aqueduct, &aqueduct_backup);
+    map_grid_copy(&canals_grid, &canals_grid_backup);
 }
 
 void map_canal_restore(void) {
-    map_grid_copy(&aqueduct_backup, &aqueduct);
+    map_grid_copy(&canals_grid_backup, &canals_grid);
 }
 
 io_buffer* iob_aqueduct_grid
-= new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &aqueduct); });
+= new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &canals_grid); });
 
 io_buffer* iob_aqueduct_backup_grid
-= new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &aqueduct_backup); });
+= new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &canals_grid_backup); });
 
 static void canals_empty_all(void) {
     // reset river access counters

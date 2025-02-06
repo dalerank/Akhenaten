@@ -49,11 +49,11 @@ void foreach_floodplain_row(int is_flooding, int row, void (*callback)(int is_fl
     }
 }
 
-grid_xx g_terrain_floodplain_row = {0, {FS_UINT8, FS_UINT8}};
-grid_xx g_terrain_floodplain_growth = {0, {FS_UINT8, FS_UINT8}};
-grid_xx g_terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
-grid_xx g_terrain_floodplain_max_fertile = {0, {FS_UINT8, FS_UINT8}};
-grid_xx g_terrain_floodplain_flood_shore = {0, {FS_UINT8, FS_UINT8}};
+grid_xx g_terrain_floodplain_row = {0, FS_UINT8};
+grid_xx g_terrain_floodplain_growth = { 0, FS_UINT8 };
+grid_xx g_terrain_floodplain_fertility = {0, FS_UINT8};
+grid_xx g_terrain_floodplain_max_fertile = {0, FS_UINT8};
+grid_xx g_terrain_floodplain_flood_shore = {0, FS_UINT8};
 
 void map_floodplain_advance_growth() {
     static int floodplain_growth_advance = 0;

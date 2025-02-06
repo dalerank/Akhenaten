@@ -5,7 +5,7 @@
 
 #include <vector>
 
-enum e_terrain {
+enum e_terrain : uint32_t {
     TERRAIN_NONE = 0x0,
 
     TERRAIN_TREE = 0x1,

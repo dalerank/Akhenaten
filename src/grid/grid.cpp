@@ -19,7 +19,7 @@ static const int DIRECTION_DELTA_PH[] = {-GRID_OFFSET(0, 1),
                                          -GRID_OFFSET(1, 1)};
 
 void map_grid_init(grid_xx* grid) {
-    grid->size_field = gr_sizes[grid->datatype[GAME_ENV]];
+    grid->size_field = gr_sizes[grid->datatype];
     grid->size_total = grid->size_field * GRID_SIZE_TOTAL;
     grid->items_xx = malloc(grid->size_total);
     grid->initialized = 1;
@@ -34,7 +34,7 @@ int32_t map_grid_get(grid_xx* grid, uint32_t at) {
 
     //    assert(at < GRID_SIZE_TOTAL);
     int64_t res = 0;
-    switch (grid->datatype[GAME_ENV]) {
+    switch (grid->datatype) {
     case FS_UINT8:
         res = ((uint8_t*)grid->items_xx)[at];
         break;
@@ -67,7 +67,7 @@ void map_grid_set(grid_xx* grid, uint32_t at, int64_t value) {
         return;
     }
     //    assert(at < GRID_SIZE_TOTAL);
-    switch (grid->datatype[GAME_ENV]) {
+    switch (grid->datatype) {
     case FS_UINT8:
         ((uint8_t*)grid->items_xx)[at] = (uint8_t)value;
         break;
@@ -94,7 +94,7 @@ void map_grid_set(grid_xx* grid, uint32_t at, int64_t value) {
 void map_grid_fill(grid_xx* grid, int64_t value) {
     if (!grid->initialized)
         map_grid_init(grid);
-    switch (grid->datatype[GAME_ENV]) {
+    switch (grid->datatype) {
     case FS_UINT8:
         memset(grid->items_xx, (uint8_t)value, grid->size_total);
         break;
@@ -118,18 +118,20 @@ void map_grid_fill(grid_xx* grid, int64_t value) {
         assert(false);
     }
 }
+
 void map_grid_clear(grid_xx* grid) {
     if (!grid->initialized)
         map_grid_init(grid);
     memset(grid->items_xx, 0, grid->size_total);
 }
+
 void map_grid_copy(grid_xx* src, grid_xx* dst) {
     if (!src->initialized)
         map_grid_init(src);
     if (!dst->initialized)
         map_grid_init(dst);
 
-    assert(src->datatype[GAME_ENV] == dst->datatype[GAME_ENV]);
+    assert(src->datatype == dst->datatype);
     assert(src->size_total == dst->size_total);
 
     memcpy(dst->items_xx, src->items_xx, src->size_total);
@@ -155,7 +157,7 @@ void map_grid_and_all(grid_xx* grid, int mask) {
     }
 
     for (int i = 0; i < GRID_SIZE_TOTAL; i++) {
-        switch (grid->datatype[GAME_ENV]) {
+        switch (grid->datatype) {
         case FS_UINT8:
             ((uint8_t*)grid->items_xx)[i] &= (uint8_t)mask;
             break;
@@ -186,7 +188,7 @@ void map_grid_save_buffer(grid_xx* grid, buffer* buf) {
         map_grid_init(grid);
     }
 
-    switch (grid->datatype[GAME_ENV]) {
+    switch (grid->datatype) {
     case FS_UINT8:
         buf->write_raw(grid->items_xx, GRID_SIZE_TOTAL);
         break;
@@ -219,7 +221,7 @@ void map_grid_load_buffer(grid_xx* grid, buffer* buf) {
         map_grid_init(grid);
     }
 
-    switch (grid->datatype[GAME_ENV]) {
+    switch (grid->datatype) {
     case FS_UINT8:
         buf->read_raw(grid->items_xx, GRID_SIZE_TOTAL);
         break;

@@ -239,7 +239,7 @@ bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
     }
 
     // herd spawn points
-    if (formation_herd_breeding_ground_at(MAP_X(grid_offset), MAP_Y(grid_offset), 1))
+    if (formation_herd_breeding_ground_at(tile2i(grid_offset), 1))
         return false;
     return true;
 }

@@ -22,7 +22,7 @@ void foreach_marshland_tile(void (*callback)(int grid_offset)) {
         callback(marshland_tiles_cache.at(i));
 }
 
-grid_xx g_terrain_vegetation_growth = {0, {FS_UINT8, FS_UINT8}};
+grid_xx g_terrain_vegetation_growth = {0, FS_UINT8};
 
 int map_get_vegetation_growth(int grid_offset) {
     return map_grid_get(&g_terrain_vegetation_growth, grid_offset);

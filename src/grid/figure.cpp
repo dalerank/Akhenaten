@@ -10,7 +10,7 @@
 
 #include <assert.h>
 
-static grid_xx grid_figures = {0, {FS_UINT16, FS_UINT16}};
+static grid_xx grid_figures = {0, FS_UINT16};
 svector<figure *, 5000> g_figures_y_sort;
 
 bool map_has_figure_at(int grid_offset) {

@@ -12,16 +12,8 @@
 #include "vegetation.h"
 #include "water.h"
 
-grid_xx g_terrain_grid = {0,
-                          {
-                            FS_UINT16, // c3
-                            FS_UINT32  // ph
-                          }};
-grid_xx g_terrain_grid_backup = {0,
-                                 {
-                                   FS_UINT16, // c3
-                                   FS_UINT32  // ph
-                                 }};
+grid_xx g_terrain_grid = {0, FS_UINT32};
+grid_xx g_terrain_grid_backup = {0, FS_UINT32};
 
 bool map_terrain_is(int grid_offset, int terrain_mask) {
     return map_grid_is_valid_offset(grid_offset) && !!(map_grid_get(&g_terrain_grid, grid_offset) & terrain_mask);
@@ -424,13 +416,13 @@ void build_terrain_caches() {
 }
 
 // unknown data grid
-static grid_xx GRID03_32BIT = {0, {FS_INT8, FS_INT32}}; // ?? routing
+static grid_xx GRID03_32BIT = {0, FS_INT32}; // ?? routing
 int map_get_UNK03(int grid_offset) {
     return map_grid_get(&GRID03_32BIT, grid_offset);
 }
 
 // unknown data grid
-static grid_xx GRID04_8BIT = {0, {FS_INT8, FS_INT8}};
+static grid_xx GRID04_8BIT = {0, FS_INT8};
 int map_get_UNK04(int grid_offset) {
     return map_grid_get(&GRID04_8BIT, grid_offset);
 }

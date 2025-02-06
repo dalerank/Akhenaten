@@ -43,7 +43,7 @@ static size_t gr_sizes[] = {
 
 struct grid_xx {
     int initialized;
-    e_grid_data_type datatype[2];
+    e_grid_data_type datatype;
     size_t size_field;
     int size_total;
 

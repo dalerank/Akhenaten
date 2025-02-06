@@ -244,7 +244,8 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
     int needs_road_warning = 0;
     int items_placed = 0;
     game_undo_restore_building_state();
-    int vacant_lot_id = building_impl::params(BUILDING_HOUSE_VACANT_LOT).anim["preview"].first_img();
+    const auto &bparams = building_impl::params(BUILDING_HOUSE_VACANT_LOT);
+    int vacant_lot_id = bparams.anim[animkeys().preview].first_img();
     for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
         for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
@@ -258,7 +259,7 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
                 items_placed++;
 
             } else {
-                if (formation_herd_breeding_ground_at(x, y, 1)) {
+                if (formation_herd_breeding_ground_at(tile2i(x, y), 1)) {
                     map_property_clear_constructing_and_deleted();
                     city_warning_show(WARNING_HERD_BREEDING_GROUNDS);
                 } else {

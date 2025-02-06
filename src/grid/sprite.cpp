@@ -3,16 +3,8 @@
 
 #include "grid/grid.h"
 
-grid_xx g_sprite_grid = {0,
-                         {
-                           FS_UINT8, // c3
-                           FS_UINT8  // ph
-                         }};
-grid_xx g_sprite_grid_backup = {0,
-                                {
-                                  FS_UINT8, // c3
-                                  FS_UINT8  // ph
-                                }};
+grid_xx g_sprite_grid = {0, FS_UINT8};
+grid_xx g_sprite_grid_backup = {0, FS_UINT8};
 
 int map_sprite_animation_at(int grid_offset) {
     return map_grid_get(&g_sprite_grid, grid_offset);

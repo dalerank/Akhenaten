@@ -4,7 +4,7 @@
 #include "grid/grid.h"
 #include <scenario/map.h>
 
-static grid_xx elevation = {0, {FS_UINT8, FS_UINT8}};
+static grid_xx elevation = {0, FS_UINT8};
 
 int map_elevation_at(int grid_offset) {
     return map_grid_get(&elevation, grid_offset);

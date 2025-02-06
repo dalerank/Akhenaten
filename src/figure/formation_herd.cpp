@@ -311,13 +311,13 @@ void formation_herd_update() {
     }
 }
 
-int formation_herd_breeding_ground_at(int x, int y, int size) {
+bool formation_herd_breeding_ground_at(tile2i tile, int size) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
         if (m->in_use && m->is_herd && !m->is_legion) {
-            if (m->tile.x() >= x && m->tile.x() < x + size && m->tile.y() >= y && m->tile.y() < y + size)
-                return 1;
+            if (m->tile.x() >= tile.x() && m->tile.x() < tile.x() + size && m->tile.y() >= tile.y() && m->tile.y() < tile.y() + size)
+                return true;
         }
     }
-    return 0;
+    return false;
 }

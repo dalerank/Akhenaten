@@ -14,7 +14,7 @@
 
 #include "js/js_game.h"
 
-grid_xx g_desirability_grid = {0, {FS_INT8, FS_INT8}};
+grid_xx g_desirability_grid = {0, FS_INT8};
 desirability_t g_desirability;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_desirability);

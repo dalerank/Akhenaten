@@ -13,7 +13,7 @@
 
 static const int ADJACENT_OFFSETS_PH[] = {-GRID_LENGTH, 1, GRID_LENGTH, -1};
 
-static grid_xx network = {0, {FS_UINT8, FS_UINT8}};
+static grid_xx network = {0, FS_UINT8};
 
 struct grid_road_network_t {
     int items[MAX_QUEUE];
