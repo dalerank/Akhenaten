@@ -12,18 +12,19 @@
 #include "graphics/elements/ui.h"
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
-#include "window/window_building_info.h"
 
-struct well_info_window : public building_info_window_t<well_info_window> {
-    virtual void init(object_info &c) override;
-    virtual bool check(object_info &c) override {
-        building *b = c.building_get();
-        return b->dcast_well();
-    }
-};
-
-buildings::model_t<building_well> well_m;
+building_well::static_params well_m;
 well_info_window well_infow;
+
+void building_well::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
+    if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
+        city_view_foreach_tile_in_range(ctx, tile.grid_offset(), 1, 2, [] (vec2i pixel, tile2i point, painter &ctx) {
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, COLOR_MASK_BLUE, g_zoom.get_scale());
+        });
+    }
+
+    building_impl::static_params::planer_ghost_preview(planer, ctx, tile, end, pixel);
+}
 
 void building_well::update_month() {
     int avg_desirability = g_desirability.get_avg(tile(), 4);
@@ -41,6 +42,21 @@ void building_well::on_place_checks() {
     if (!has_water) {
         building_construction_warning_show(WARNING_WATER_PIPE_ACCESS_NEEDED);
     }
+}
+
+bool building_well::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    pcstr ranim = (base.fancy_state == efancy_normal) ? "base_work" : "fancy_work";
+    building_draw_normal_anim(ctx, point, &base, tile, anim(ranim), color_mask);
+
+    return true;
+}
+
+bool building_well::can_play_animation() const {
+    if (map_water_supply_is_well_unnecessary(id(), 3) != WELL_NECESSARY) {
+        return false;
+    }
+
+    return true;
 }
 
 void well_info_window::init(object_info &c) {
@@ -61,28 +77,8 @@ void well_info_window::init(object_info &c) {
     }
 }
 
-bool building_well::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    pcstr ranim = (base.fancy_state == efancy_normal) ? "base_work" : "fancy_work";
-    building_draw_normal_anim(ctx, point, &base, tile, anim(ranim), color_mask);
-
-    return true;
-}
-
-bool building_well::can_play_animation() const {
-    if (map_water_supply_is_well_unnecessary(id(), 3) != WELL_NECESSARY) {
-        return false;
-    }
-
-    return true;
-}
-
-void building_well::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
-    if (!config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-        return;
-    }
-
-    city_view_foreach_tile_in_range(ctx, tile.grid_offset(), 1, 2, [] (vec2i pixel, tile2i point, painter &ctx) {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, COLOR_MASK_BLUE, g_zoom.get_scale());
-    });
+inline bool well_info_window::check(object_info &c) {
+    building *b = c.building_get();
+    return b->dcast_well();
 }
 

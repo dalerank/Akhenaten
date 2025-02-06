@@ -1699,10 +1699,6 @@ void build_planner::draw_graphics(painter &ctx) {
         building_fort::ghost_preview(ctx, end, pixel, 0);
         return;
 
-    case BUILDING_WELL:
-        building_well::ghost_preview(ctx, end, pixel, 0);
-        break;
-
     default:
         params.planer_ghost_preview(*this, ctx, start, end, pixel);
     }
