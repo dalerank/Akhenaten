@@ -1082,6 +1082,7 @@ void building_impl::static_params::load(archive arch) {
     check_water_access = arch.r_bool("check_water_access");
     info_title_id = arch.r_vec2i("info_title_id");
     updates.canals = arch.r_bool("update_canals");
+    updates.roads = arch.r_bool("update_roads");
 
     city_labor_set_category(type, labor_category);
 

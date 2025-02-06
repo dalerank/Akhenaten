@@ -539,6 +539,7 @@ public:
         textid info_title_id;
         struct {
             bool canals;
+            bool roads;
         } updates;
 
         void load(archive arch);

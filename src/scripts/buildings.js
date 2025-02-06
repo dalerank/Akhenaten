@@ -517,7 +517,7 @@ building_farm_figs = {
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
-building_granary = {
+building building_granary = {
   animations : {
     preview : { pack:PACK_GENERAL, id:99 },
     base : { pack:PACK_GENERAL, id:99 },
@@ -530,6 +530,7 @@ building_granary = {
   info_text_id: 98,
   info_help_id: 3,
   building_size : 4,
+  update_roads : true,
 }
 
 building_shrine_osiris = {

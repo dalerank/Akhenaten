@@ -18,7 +18,6 @@ var cart_offsets = []
 var sled_offsets = []
 var localization = []
 // buildings
-var building_granary = {}
 var building_academy = {}
 var building_firehouse = {}
 var building_police_station = {}
