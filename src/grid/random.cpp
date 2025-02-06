@@ -7,10 +7,11 @@
 
 static grid_xx random_xx = {0, FS_UINT8};
 
-void map_random_clear(void) {
+void map_random_clear() {
     map_grid_clear(random_xx);
 }
-void map_random_init(void) {
+
+void map_random_init() {
     int grid_offset = 0;
     for (int y = 0; y < GRID_LENGTH; y++) {
         for (int x = 0; x < GRID_LENGTH; x++, grid_offset++) {
@@ -19,6 +20,7 @@ void map_random_init(void) {
         }
     }
 }
+
 int map_random_get(int grid_offset) {
     return map_grid_get(random_xx, grid_offset);
 }

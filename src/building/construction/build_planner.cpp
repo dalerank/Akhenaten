@@ -776,10 +776,6 @@ void build_planner::setup_build_graphics() {
         set_tiles_building(get_temple_complex_part_image(building_at(end.grid_offset())->main()->type, additional_req_param1, relative_orientation, 1), 3);
         break;
 
-    case BUILDING_WATER_LIFT:
-        set_tiles_building(params.anim[animkeys().base].first_img() + relative_orientation + building_variant * 4, params.building_size);
-        break;
-
     default: // regular buildings 
         params.planer_setup_preview_graphics(*this);
         break;

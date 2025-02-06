@@ -7,11 +7,17 @@
 #include "js/js_game.h"
 #include "widget/city/ornaments.h"
 #include "graphics/elements/ui.h"
+#include "construction/build_planner.h"
 
 building_water_lift::static_params water_lift_m;
 
 void building_water_lift::static_params::load(archive arch) {
 
+}
+
+void building_water_lift::static_params::planer_setup_preview_graphics(build_planner &planer) const {
+    int imgid = anim[animkeys().base].first_img() + planer.relative_orientation + planer.building_variant * 4;
+    planer.set_tiles_building(imgid, building_size);
 }
 
 void building_water_lift::window_info_background(object_info &c) {
@@ -38,18 +44,19 @@ void building_water_lift::on_create(int orientation) {
 }
 
 void building_water_lift::on_place_update_tiles(int orientation, int variant) {
-    auto props = building_impl::params(type());
     int orientation_rel = city_view_relative_orientation(orientation);
-    map_water_add_building(id(), tile(), props.building_size, props.anim["base"].first_img() + orientation_rel + 4 * variant);
+    const int imgid = anim(animkeys().base).first_img() + orientation_rel + 4 * variant;
+    map_water_add_building(id(), tile(), size(), imgid);
 }
 
 void building_water_lift::on_place_checks() {
     /* nothing */
 
-    if (building_count_active(BUILDING_WATER_LIFT))
+    if (building_count_active(BUILDING_WATER_LIFT)) {
         building_construction_warning_show(WARNING_CONNECT_TO_RESERVOIR);
-    else
+    } else {
         building_construction_warning_show(WARNING_PLACE_RESERVOIR_NEXT_TO_WATER);
+    }
 }
 
 int building_water_lift::animation_speed(int speed) const {
@@ -88,7 +95,7 @@ bool building_water_lift::draw_ornaments_and_animations_height(painter &ctx, vec
         break;
     }
 
-    building_draw_normal_anim(ctx, point, &base, tile, water_lift_m.anim["work"].first_img() - 1 + anim_offset, color_mask);
+    building_draw_normal_anim(ctx, point, &base, tile, anim(animkeys().work).first_img() - 1 + anim_offset, color_mask);
     return true;
 }
 
@@ -99,7 +106,7 @@ void building_water_lift::update_map_orientation(int orientation) {
     } else if (map_terrain_exists_tile_in_radius_with_type(tile(), 2, 1, TERRAIN_FLOODPLAIN)) {
         image_offset += 8;
     }
-    int image_id = water_lift_m.anim["work"].first_img() + image_offset;
+    int image_id = anim(animkeys().work).first_img() + image_offset;
     map_water_add_building(id(), tile(), 2, image_id);
 }
 

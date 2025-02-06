@@ -10,6 +10,7 @@ public:
 
     struct static_params : public buildings::model_t<building_water_lift> {
         virtual void load(archive arch) override;
+        virtual void planer_setup_preview_graphics(build_planner &planer) const override;
     };
 
     virtual void window_info_background(object_info &c) override;
