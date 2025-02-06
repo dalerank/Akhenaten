@@ -537,6 +537,9 @@ public:
         bool unique_building;
         bool check_water_access;
         textid info_title_id;
+        struct {
+            bool canals;
+        } updates;
 
         void load(archive arch);
 

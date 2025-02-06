@@ -1769,7 +1769,7 @@ building building_physician = {
   building_size : 2,
 }
 
-building_water_lift = {
+building building_water_lift = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_TERRAIN, id:50 },
     base : { pos : [0, 0], pack:PACK_TERRAIN, id:50 },
@@ -1780,6 +1780,7 @@ building_water_lift = {
   window_info_height_id : 1,
   fire_proof : 1,
   building_size : 2,
+  update_canals : true,
 }
 
 
