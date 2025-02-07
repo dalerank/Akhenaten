@@ -561,6 +561,7 @@ public:
         virtual int planer_construction_update(build_planner &p, tile2i start, tile2i end) const;
         virtual int planer_construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const;
+        virtual bool planer_is_need_flag(PlannerFlags flag) const;
         virtual bool is_unique_building() const { return unique_building; }
     };
 

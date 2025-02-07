@@ -505,16 +505,13 @@ void build_planner::setup_build(e_building_type type) { // select building for c
 void build_planner::setup_build_flags() {
     const auto &params = building_impl::params(build_type);
 
-    if (params.needs.meadow) {
-        set_flag(PlannerFlags::Meadow);
-    }
+    const PlannerFlags flags[] = { PlannerFlags::Meadow, PlannerFlags::Rock, PlannerFlags::Ore };
 
-    if (params.needs.rock) {
-        set_flag(PlannerFlags::Rock);
-    }
-
-    if (params.needs.ore) {
-        set_flag(PlannerFlags::Ore);
+    for (const auto flag: flags) {
+        const bool is_need = params.planer_is_need_flag(flag);
+        if (is_need) {
+            set_flag(flag);
+        }
     }
 
     switch (build_type) {
