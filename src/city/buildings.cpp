@@ -77,34 +77,6 @@ void city_buildings_remove_mansion(building* mansion) {
     }
 }
 
-bool city_buildings_has_recruiter() {
-    return city_data.buildings.recruiter.placed;
-}
-
-void city_buildings_add_recruiter(building* recruiter) {
-    city_data.buildings.recruiter.placed = true;
-    if (!city_data.buildings.recruiter.tile.grid_offset()) {
-        city_data.buildings.recruiter.building_id = recruiter->id;
-        city_data.buildings.recruiter.tile = recruiter->tile;
-    }
-}
-
-void city_buildings_remove_recruiter(building* recruiter) {
-    city_data.buildings.recruiter.placed = false;
-    if (recruiter->tile == city_data.buildings.recruiter.tile) {
-        city_data.buildings.recruiter.tile.set(0);
-        city_data.buildings.recruiter.placed = 0;
-    }
-}
-
-int city_buildings_get_recruiter() {
-    return city_data.buildings.recruiter.building_id;
-}
-
-void city_buildings_set_recruiter(int building_id) {
-    city_data.buildings.recruiter.building_id = building_id;
-}
-
 bool city_buildings_has_distribution_center() {
     return city_data.buildings.distribution_center_placed;
 }

@@ -16,9 +16,15 @@ public:
     building_recruiter(building &b) : building_impl(b) {}
     virtual building_recruiter *dcast_recruiter() override { return this; }
 
+    struct static_params : public buildings::model_t<building_recruiter> {
+        virtual bool is_unique_building() const override;
+    };
+
     virtual void on_create(int orientation) override;
+    virtual void on_post_load() override;
     virtual void on_place_checks() override;
     virtual void spawn_figure() override;
+    virtual void update_count() const override;
     virtual bool add_resource(e_resource resource, int amount) override;
 
     int get_priority();

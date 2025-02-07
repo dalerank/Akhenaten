@@ -13,12 +13,6 @@ struct city_buildings_t {
 
     int32_t senet_house_placed;
 
-    struct {
-        bool placed;
-        int32_t building_id;
-        tile2i tile;
-    } recruiter;
-
     bool distribution_center_placed;
     int32_t distribution_center_building_id;
     tile2i distribution_center;
@@ -81,12 +75,6 @@ bool city_buildings_has_mansion();
 int city_buildings_get_mansion_id();
 void city_buildings_add_mansion(building* mansion);
 void city_buildings_remove_mansion(building* mansion);
-
-bool city_buildings_has_recruiter();
-void city_buildings_add_recruiter(building* recruiter);
-void city_buildings_remove_recruiter(building* recruiter);
-int city_buildings_get_recruiter();
-void city_buildings_set_recruiter(int building_id);
 
 bool city_buildings_has_distribution_center(void);
 void city_buildings_add_distribution_center(building* center);

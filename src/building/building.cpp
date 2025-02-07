@@ -315,10 +315,6 @@ void building::clear_related_data() {
         city_buildings_remove_mansion(this);
     }
 
-    if (type == BUILDING_RECRUITER) {
-        city_buildings_remove_recruiter(this);
-    }
-
     if (type == BUILDING_DISTRIBUTION_CENTER_UNUSED)
         city_buildings_remove_distribution_center(this);
 

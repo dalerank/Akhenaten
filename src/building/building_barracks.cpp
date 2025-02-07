@@ -15,19 +15,27 @@
 #include "grid/grid.h"
 #include "grid/road_access.h"
 #include "config/config.h"
-
+#include "city/city.h"
 #include "game/game.h"
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
 
 #include "graphics/image.h"
-#include "js/js_game.h"
 
 #define INFINITE 10000
 
 int g_tower_sentry_request = 0;
 
-buildings::model_t<building_recruiter> brecruiter_m;
+building_recruiter::static_params brecruiter_m;
+
+bool building_recruiter::static_params::is_unique_building() const {
+    if (config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {
+        return false;
+    }
+
+    const bool exist = !g_city.buildings.tracked_buildings[TYPE].empty();
+    return exist;
+}
 
 static int get_closest_legion_needing_soldiers(building* barracks) {
     int recruit_type = LEGION_RECRUIT_NONE;
@@ -161,7 +169,16 @@ bool building_recruiter::create_tower_sentry() {
 }
 
 void building_recruiter::on_create(int orientation) {
-    city_buildings_add_recruiter(&base);
+    g_city.buildings.track_building(base, false);
+}
+
+void building_recruiter::on_post_load() {
+    g_city.buildings.track_building(base, true);
+}
+
+void building_recruiter::update_count() const {
+    const bool is_active = (num_workers() > 0);
+    g_city.buildings.track_building(base, is_active);
 }
 
 void building_recruiter::on_place_checks() {

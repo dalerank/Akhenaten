@@ -1782,6 +1782,8 @@ building building_water_lift = {
   fire_proof : 1,
   building_size : 2,
   update_canals : true,
+  check_water_access : true,
+  planer_relative_orientation: 1,
 }
 
 

@@ -664,9 +664,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.debt_state);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.months_in_debt);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.cheated_money);
-    iob->bind(BIND_SIGNATURE_UINT32, data.buildings.recruiter.tile);
-    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.recruiter.building_id);
-    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.recruiter.placed);
+    iob->bind____skip(4); // BIND_SIGNATURE_UINT32, data.buildings.recruiter.tile);
+    iob->bind____skip(4); // (BIND_SIGNATURE_INT32, &data.buildings.recruiter.building_id);
+    iob->bind____skip(4); // (BIND_SIGNATURE_INT32, &data.buildings.recruiter.placed);
     iob->bind(BIND_SIGNATURE_UINT32, data.buildings.festival_square);
 
     for (int i = 0; i < 4; i++) {

@@ -1006,18 +1006,14 @@ void build_planner::update_special_case_orientations_check() {
 void build_planner::update_unique_only_one_check() {
     bool unique_already_placed = false;
 
-    bool is_unique_building = building_impl::params(build_type).unique_building;
+    const auto &params = building_impl::params(build_type);
+    bool is_unique_building = params.is_unique_building();
     if (is_unique_building) {
         unique_already_placed = building_count_total(build_type);
     }
 
     // for unique buildings - only one can be placed inside the mission
     switch (build_type) {
-    case BUILDING_RECRUITER:
-        if (city_buildings_has_recruiter() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {
-            unique_already_placed = true;
-        }
-        break;
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_RA:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
