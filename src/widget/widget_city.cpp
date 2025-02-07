@@ -454,7 +454,7 @@ static void handle_first_touch(map_point tile) {
     if (!input_coords_in_city(first->current_point.x, first->current_point.y) || type == BUILDING_NONE)
         return;
 
-    if (g_city_planner.has_flag_set(PlannerFlags::Draggable)) {
+    if (g_city_planner.has_flag_set(e_building_flag::Draggable)) {
         if (!g_city_planner.in_progress) {
             if (first->has_started) {
                 build_start(tile);

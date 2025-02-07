@@ -5,7 +5,7 @@
 #include "graphics/view/view.h"
 #include "grid/point.h"
 
-enum PlannerFlags {
+enum e_building_flag : uint32_t {
     Groundwater = 1,
     Water = 1 << 1,
     NearbyWater = 1 << 2,

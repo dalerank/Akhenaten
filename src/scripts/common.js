@@ -28,7 +28,6 @@ var building_temple_ptah = {}
 var building_temple_seth = {}
 var building_temple_bast = {}
 var building_temple = {}
-var building_mine_copper = {}
 var building_bandstand = {}
 var building_pavilion = {}
 var building_ferry = {}

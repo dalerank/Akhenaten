@@ -1103,11 +1103,11 @@ int building_impl::static_params::planer_update_building_variant(build_planner &
 
 int building_impl::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
     int special_flags = planer.special_flags;
-    if (special_flags & PlannerFlags::Meadow || special_flags & PlannerFlags::Rock
-        || special_flags & PlannerFlags::Trees || special_flags & PlannerFlags::NearbyWater
-        || special_flags & PlannerFlags::Walls || special_flags & PlannerFlags::Groundwater
-        || special_flags & PlannerFlags::Water || special_flags & PlannerFlags::ShoreLine
-        || special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Intersection) {
+    if (special_flags & e_building_flag::Meadow || special_flags & e_building_flag::Rock
+        || special_flags & e_building_flag::Trees || special_flags & e_building_flag::NearbyWater
+        || special_flags & e_building_flag::Walls || special_flags & e_building_flag::Groundwater
+        || special_flags & e_building_flag::Water || special_flags & e_building_flag::ShoreLine
+        || special_flags & e_building_flag::Road || special_flags & e_building_flag::Intersection) {
         return 0;
     }
 
@@ -1206,11 +1206,11 @@ void building_impl::static_params::planer_ghost_preview(build_planner &planer, p
     planer.draw_tile_graphics_array(ctx, tile, end, pixel);
 }
 
-bool building_impl::static_params::planer_is_need_flag(PlannerFlags flag) const {
+bool building_impl::static_params::planer_is_need_flag(e_building_flags flag) const {
     switch (flag) {
-    case PlannerFlags::Meadow: return needs.meadow;
-    case PlannerFlags::Rock: return needs.rock;
-    case PlannerFlags::Ore: return needs.ore;
+    case e_building_flag::Meadow: return needs.meadow;
+    case e_building_flag::Rock: return needs.rock;
+    case e_building_flag::Ore: return needs.ore;
     }
 
     return false;

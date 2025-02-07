@@ -26,11 +26,12 @@
 #include "figure/figure.h"
 #include "js/js_game.h"
 #include "graphics/animation.h"
+#include "construction/build_planner.h"
 
+building_mine_copper::static_params copper_mine_m;
 buildings::model_t<building_clay_pit> clay_pit_m;
 buildings::model_t<building_mine_gold> gold_mine_m;
 buildings::model_t<building_mine_gems> gems_mine_m;
-buildings::model_t<building_mine_copper> copper_mine_m;
 buildings::model_t<building_reed_gatherer> gatherer_m;
 
 void building_mine::on_create(int orientation) {
@@ -62,6 +63,16 @@ int building_mine_gold::get_produce_uptick_per_day() const {
 
 void building_mine_gold::update_count() const {
     building_increase_industry_count(RESOURCE_GOLD, num_workers() > 0);
+}
+
+
+bool building_mine_copper::static_params::planer_is_need_flag(e_building_flags flag) const {
+    switch (flag) {
+    case e_building_flag::Ore:
+        return !config_get(CONFIG_GP_CH_COPPER_NEAR_MOUNTAINS) && needs.ore;
+    }
+
+    return building_industry::static_params::planer_is_need_flag(flag);
 }
 
 void building_mine_copper::update_count() const {

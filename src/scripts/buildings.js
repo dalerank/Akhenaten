@@ -1515,7 +1515,7 @@ building building_brewery = {
   building_size : 2,
 }
 
-building_mine_copper = {
+building building_mine_copper = {
   animations : {
     preview : { pack:PACK_GENERAL, id:196 },
     base : { pack:PACK_GENERAL, id:196 },
@@ -1527,6 +1527,8 @@ building_mine_copper = {
   info_text_id:193,
   building_size : 2,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  need_rock : true,
+  need_ore : true,
 }
 
 building building_mine_gems = {
@@ -1540,6 +1542,7 @@ building building_mine_gems = {
   info_help_id:93,
   info_text_id:163,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  need_rock : true,
 }
 
 building building_sandstone_quarry = {
