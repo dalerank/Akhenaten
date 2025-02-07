@@ -16,7 +16,8 @@ void building_water_lift::static_params::load(archive arch) {
 }
 
 void building_water_lift::static_params::planer_setup_preview_graphics(build_planner &planer) const {
-    int imgid = anim[animkeys().base].first_img() + planer.relative_orientation + planer.building_variant * 4;
+    const int baseid = anim[animkeys().base].first_img();
+    const int imgid = baseid + planer.relative_orientation;
     planer.set_tiles_building(imgid, building_size);
 }
 

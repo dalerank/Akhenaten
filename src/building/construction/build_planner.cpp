@@ -1105,11 +1105,11 @@ void build_planner::update_coord_caches() {
 void build_planner::update_orientations(bool check_if_changed) {
     int prev_orientation = relative_orientation;
     int prev_variant = building_variant;
-    int global_rotation = building_rotation_global_rotation();
+   //int global_rotation = building_rotation_global_rotation();
 
     const auto &params = building_impl::params(build_type);
 
-    relative_orientation = params.planer_update_relative_orientation(*this, global_rotation);
+    relative_orientation = params.planer_update_relative_orientation(*this, relative_orientation);
     building_variant = params.planer_update_building_variant(*this);
 
     relative_orientation = relative_orientation % 4;
