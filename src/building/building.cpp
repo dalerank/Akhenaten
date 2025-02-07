@@ -1079,6 +1079,7 @@ void building_impl::static_params::load(archive arch) {
     info_title_id = arch.r_vec2i("info_title_id");
     updates.canals = arch.r_bool("update_canals");
     updates.roads = arch.r_bool("update_roads");
+    needs.meadow = arch.r_bool("need_meadow");
 
     city_labor_set_category(type, labor_category);
 

@@ -542,6 +542,10 @@ public:
             bool roads;
         } updates;
 
+        struct {
+            bool meadow;
+        } needs;
+
         void load(archive arch);
 
         virtual void planer_setup_build(build_planner &planer) const {}

@@ -321,7 +321,7 @@ building building_cattle_ranch = {
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
-building_farm_grain = {
+building building_farm_grain = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -344,9 +344,10 @@ building_farm_grain = {
   info_text_id:112,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+  need_meadow : true,
 }
 
-building_farm_chickpeas = {
+building building_farm_chickpeas = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -366,9 +367,10 @@ building_farm_chickpeas = {
   info_text_id:182,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+  need_meadow : true,
 }
 
-building_farm_lettuce = {
+building building_farm_lettuce = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -388,9 +390,10 @@ building_farm_lettuce = {
   info_text_id:113,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+  need_meadow : true,
 }
 
-building_farm_pomegranates = {
+building building_farm_pomegranates = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -410,9 +413,10 @@ building_farm_pomegranates = {
   info_text_id:114,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+  need_meadow : true,
 }
 
-building_farm_barley = {
+building building_farm_barley = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -432,6 +436,7 @@ building_farm_barley = {
   info_text_id:181,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+  need_meadow : true,
 }
 
 building building_farm_flax = {
@@ -454,9 +459,10 @@ building building_farm_flax = {
   info_text_id: 115,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+  need_meadow : true,
 }
 
-building_farm_henna = {
+building building_farm_henna = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -476,26 +482,10 @@ building_farm_henna = {
   info_text_id:306,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+  need_meadow : true,
 }
 
-building building_burning_ruin = {
-  animations : {
-    base0 : { pack:PACK_TERRAIN, id:36, offset:0 },
-    fire0 : { pack:PACK_TERRAIN, id:36, offset:1, max_frames:8, duration:2 },
-    base1 : { pack:PACK_TERRAIN, id:36, offset:9 },
-    fire1 : { pack:PACK_TERRAIN, id:36, offset:10, max_frames:8, duration:2 },
-    base2 : { pack:PACK_TERRAIN, id:36, offset:18 },
-    fire2 : { pack:PACK_TERRAIN, id:36, offset:19, max_frames:8, duration:2 },
-    base3 : { pack:PACK_TERRAIN, id:36, offset:27 },
-    fire3 : { pack:PACK_TERRAIN, id:36, offset:28, max_frames:8, duration:2 },
-  },
-  fire_animations : 4,
-  building_size : 1,
-  fire_proof : true,
-  damage_proof : true,
-}
-
-building_farm_figs = {
+building building_farm_figs = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -515,6 +505,24 @@ building_farm_figs = {
   info_text_id:183,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+  need_meadow : true,
+}
+
+building building_burning_ruin = {
+  animations : {
+    base0 : { pack:PACK_TERRAIN, id:36, offset:0 },
+    fire0 : { pack:PACK_TERRAIN, id:36, offset:1, max_frames:8, duration:2 },
+    base1 : { pack:PACK_TERRAIN, id:36, offset:9 },
+    fire1 : { pack:PACK_TERRAIN, id:36, offset:10, max_frames:8, duration:2 },
+    base2 : { pack:PACK_TERRAIN, id:36, offset:18 },
+    fire2 : { pack:PACK_TERRAIN, id:36, offset:19, max_frames:8, duration:2 },
+    base3 : { pack:PACK_TERRAIN, id:36, offset:27 },
+    fire3 : { pack:PACK_TERRAIN, id:36, offset:28, max_frames:8, duration:2 },
+  },
+  fire_animations : 4,
+  building_size : 1,
+  fire_proof : true,
+  damage_proof : true,
 }
 
 building building_granary = {

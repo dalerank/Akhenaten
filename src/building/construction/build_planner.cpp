@@ -503,20 +503,15 @@ void build_planner::setup_build(e_building_type type) { // select building for c
 }
 
 void build_planner::setup_build_flags() {
+    const auto &params = building_impl::params(build_type);
+
+    if (params.needs.meadow) {
+        set_flag(PlannerFlags::Meadow);
+    }
+
     switch (build_type) {
     default:
         ; // nothing
-        break;
-
-    case BUILDING_BARLEY_FARM:
-    case BUILDING_FLAX_FARM:
-    case BUILDING_GRAIN_FARM:
-    case BUILDING_LETTUCE_FARM:
-    case BUILDING_POMEGRANATES_FARM:
-    case BUILDING_CHICKPEAS_FARM:
-    case BUILDING_FIGS_FARM:
-    case BUILDING_HENNA_FARM:
-        set_flag(PlannerFlags::Meadow);
         break;
 
     case BUILDING_STONE_QUARRY:
