@@ -36,7 +36,6 @@ var building_dentist = {}
 var building_mortuary = {}
 var building_dancer_school = {}
 var building_conservatory = {}
-var building_mine_gold = {}
 var building_hunting_lodge = {}
 var building_village_palace = {}
 var building_city_palace = {}

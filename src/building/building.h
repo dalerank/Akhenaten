@@ -545,6 +545,7 @@ public:
         struct {
             bool meadow;
             bool rock;
+            bool ore;
         } needs;
 
         void load(archive arch);

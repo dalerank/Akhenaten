@@ -513,14 +513,13 @@ void build_planner::setup_build_flags() {
         set_flag(PlannerFlags::Rock);
     }
 
+    if (params.needs.ore) {
+        set_flag(PlannerFlags::Ore);
+    }
+
     switch (build_type) {
     default:
         ; // nothing
-        break;
-
-    case BUILDING_GOLD_MINE:
-        set_flag(PlannerFlags::Rock);
-        set_flag(PlannerFlags::Ore);
         break;
 
     case BUILDING_GEMSTONE_MINE:

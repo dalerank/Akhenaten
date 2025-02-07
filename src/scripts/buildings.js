@@ -1612,7 +1612,7 @@ building building_limestone_quarry = {
   need_rock : true,
 }
 
-building_mine_gold = {
+building building_mine_gold = {
   animations : {
     preview : { pack:PACK_GENERAL, id:185 },
     base : { pack:PACK_GENERAL, id:185 },
@@ -1623,6 +1623,8 @@ building_mine_gold = {
   info_help_id:93,
   info_text_id:162,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  need_rock : true,
+  need_ore : true,
 }
 
 building_brick_gatehouse = {
