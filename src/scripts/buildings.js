@@ -1542,7 +1542,7 @@ building building_mine_gems = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building_sandstone_quarry = {
+building building_sandstone_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:197 },
     base : { pack:PACK_GENERAL, id:197 },
@@ -1554,6 +1554,7 @@ building_sandstone_quarry = {
   info_text_id:162,
   //help_id:92, type:"sandstone_quarry", text_id:194
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  need_rock : true,
 }
 
 building_marble_quarry = {
@@ -1566,7 +1567,7 @@ building_marble_quarry = {
   info_text_id:118,
 }
 
-building_stone_quarry = {
+building building_stone_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:187 },
     base : { pack:PACK_GENERAL, id:187 },
@@ -1578,9 +1579,10 @@ building_stone_quarry = {
   info_text_id:162,
   //info_help_id:92, info_text_id:118
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  need_rock : true,
 }
 
-building_granite_quarry = {
+building building_granite_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:38 },
     base : { pack:PACK_GENERAL, id:38 },
@@ -1592,9 +1594,10 @@ building_granite_quarry = {
   info_text_id:162,
   //help_id:92, text_id:192
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  need_rock : true,
 }
 
-building_limestone_quarry = {
+building building_limestone_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:170 },
     base : { pack:PACK_GENERAL, id:170 },
@@ -1606,6 +1609,7 @@ building_limestone_quarry = {
   info_text_id:162,
   //help_id:93, text_id:119}
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  need_rock : true,
 }
 
 building_mine_gold = {

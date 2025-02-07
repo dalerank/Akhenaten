@@ -509,16 +509,13 @@ void build_planner::setup_build_flags() {
         set_flag(PlannerFlags::Meadow);
     }
 
+    if (params.needs.rock) {
+        set_flag(PlannerFlags::Rock);
+    }
+
     switch (build_type) {
     default:
         ; // nothing
-        break;
-
-    case BUILDING_STONE_QUARRY:
-    case BUILDING_LIMESTONE_QUARRY:
-    case BUILDING_GRANITE_QUARRY:
-    case BUILDING_SANDSTONE_QUARRY:
-        set_flag(PlannerFlags::Rock);
         break;
 
     case BUILDING_GOLD_MINE:

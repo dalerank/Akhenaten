@@ -1080,6 +1080,7 @@ void building_impl::static_params::load(archive arch) {
     updates.canals = arch.r_bool("update_canals");
     updates.roads = arch.r_bool("update_roads");
     needs.meadow = arch.r_bool("need_meadow");
+    needs.rock = arch.r_bool("need_rock");
 
     city_labor_set_category(type, labor_category);
 
