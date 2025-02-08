@@ -674,7 +674,6 @@ void build_planner::setup_build_graphics() {
         int lst3A = statue2_image_id + 6; // west
         int lst3B = statue2_image_id + 7;
 
-        //            int orientation_rel = city_view_relative_orientation(orientation_rel);
         switch (relative_orientation) {
         case 0: { // NE
             int TEMPLE_COMPLEX_SCHEME[13][7] = {
@@ -748,9 +747,12 @@ void build_planner::setup_build_graphics() {
         break;
     }
     case BUILDING_TEMPLE_COMPLEX_ALTAR:
-    case BUILDING_TEMPLE_COMPLEX_ORACLE:
-        init_tiles(3, 3);
-        set_tiles_building(get_temple_complex_part_image(building_at(end.grid_offset())->main()->type, additional_req_param1, relative_orientation, 1), 3);
+    case BUILDING_TEMPLE_COMPLEX_ORACLE: {
+            init_tiles(3, 3);
+            e_building_type b_type = building_at(end)->main()->type;
+            int img_id = get_temple_complex_part_image(b_type, additional_req_param1, relative_orientation, 1);
+            set_tiles_building(img_id, 3);
+        }
         break;
 
     default: // regular buildings 

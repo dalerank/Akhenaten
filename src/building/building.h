@@ -80,6 +80,7 @@ class building_wharf;
 class building_shrine;
 class building_transport_wharf;
 class building_temple_complex;
+class building_temple_complex_altar;
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -490,6 +491,7 @@ public:
     building_physician *dcast_physician();
     building_wharf *dcast_wharf();
     building_warship_wharf *dcast_warship_wharf();
+    building_temple_complex_altar *dcast_temple_complex_altar();
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
@@ -669,6 +671,7 @@ public:
     virtual building_shrine *dcast_shrine() { return nullptr; }
     virtual building_transport_wharf *dcast_transport_wharf() { return nullptr; }
     virtual building_temple_complex *dcast_temple_complex() { return nullptr; }
+    virtual building_temple_complex_altar *dcast_temple_complex_altar() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -846,6 +849,7 @@ GENERATE_SMART_CAST_BUILDING(wharf)
 GENERATE_SMART_CAST_BUILDING(shrine)
 GENERATE_SMART_CAST_BUILDING(transport_wharf)
 GENERATE_SMART_CAST_BUILDING(temple_complex)
+GENERATE_SMART_CAST_BUILDING(temple_complex_altar)
 
 namespace buildings {
 

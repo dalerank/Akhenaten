@@ -170,9 +170,10 @@ void build_menu_widget::draw_menu_buttons() {
         }
 
         int text_offset = btn_w_start_pos.y + btn_text_w_offset.y;
+        const bool temple_upgrades = building_type_any_of(type, BUILDING_TEMPLE_COMPLEX_ALTAR, BUILDING_TEMPLE_COMPLEX_ORACLE);
         if (is_all_button(type)) {
             lang_text_draw_centered(52, 19, x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
-        } else if (type >= BUILDING_TEMPLE_COMPLEX_ALTAR && type <= BUILDING_TEMPLE_COMPLEX_ORACLE) {
+        } else if (temple_upgrades) {
             building *b = building_get(city_buildings_get_temple_complex());
             int index = (type - BUILDING_TEMPLE_COMPLEX_ALTAR) + 2 * (b->type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
             lang_text_draw_centered(189, index, x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);

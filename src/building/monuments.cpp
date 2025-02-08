@@ -211,6 +211,7 @@ tile2i building_monument_access_point(building *b) {
 
 int get_temple_complex_part_image(e_building_type type, int part, int orientation, int level) {
     int packid = -1;
+    
     switch (type) {
     case BUILDING_TEMPLE_COMPLEX_OSIRIS: packid = PACK_TEMPLE_NILE; break;
     case BUILDING_TEMPLE_COMPLEX_RA: packid = PACK_TEMPLE_RA; break;
@@ -218,6 +219,10 @@ int get_temple_complex_part_image(e_building_type type, int part, int orientatio
     case BUILDING_TEMPLE_COMPLEX_SETH: packid = PACK_TEMPLE_SETH; break;
     case BUILDING_TEMPLE_COMPLEX_BAST: packid = PACK_TEMPLE_BAST; break;
         break;
+    }
+
+    if (packid == -1) {
+        return 0;
     }
 
     if (level == 0) {
@@ -233,6 +238,7 @@ int get_temple_complex_part_image(e_building_type type, int part, int orientatio
         case 2: return image_id_from_group(packid, 7) + 2 + orientation;
         }
     }
+
     return 0;
 }
 

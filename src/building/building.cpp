@@ -239,6 +239,7 @@ building_mansion *building::dcast_mansion() { return dcast()->dcast_mansion(); }
 building_physician *building::dcast_physician() { return dcast()->dcast_physician(); }
 building_wharf *building::dcast_wharf() { return dcast()->dcast_wharf(); }
 building_warship_wharf *building::dcast_warship_wharf() { return dcast()->dcast_warship_wharf(); }
+building_temple_complex_altar *building::dcast_temple_complex_altar() { return dcast()->dcast_temple_complex_altar(); }
 
 building::building() {
 }
@@ -874,12 +875,8 @@ void building_impl::on_place_checks() {
     case BUILDING_NONE:
     case BUILDING_CLEAR_LAND:
     case BUILDING_IRRIGATION_DITCH:
-    case BUILDING_TEMPLE_COMPLEX_ALTAR:
     case BUILDING_TEMPLE_COMPLEX_ORACLE:
         return;
-
-    default:
-        ; // nothing
     }
 
     if (!map_has_road_access(tile(), size())) {

@@ -1934,3 +1934,13 @@ building building_temple_complex_bast = {
   unique_building : true,
   labor_category : LABOR_CATEGORY_RELIGION,
 }
+
+building building_temple_complex_altar_ra = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:42},
+  },
+
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_RELIGION,
+  need_temple_complex : true,
+}
