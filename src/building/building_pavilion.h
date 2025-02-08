@@ -54,7 +54,5 @@ public:
     virtual void update_count() const override;
     virtual void spawn_figure() override;
 
-    static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
-
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

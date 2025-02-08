@@ -67,7 +67,6 @@ void building_pavilion::static_params::planer_setup_preview_graphics(build_plann
 void building_pavilion::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
     int can_build = 0;
 
-    int size = building_impl::params(type).building_size;
     int orientation = 0;
 
     can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_pavilion, &orientation);
@@ -75,11 +74,25 @@ void building_pavilion::static_params::planer_ghost_preview(build_planner &plane
     orientation = abs(orientation + (8 - city_view_orientation())) % 8;
 
     if (can_build != 1) { // no can place
-        for (int i = 0; i < size * size; i++) {
+        for (int i = 0; i < building_size * building_size; i++) {
             planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else { // can place (theoretically)
-        building_pavilion::ghost_preview(ctx, end, pixel, orientation);
+        const auto &params = building_impl::params(BUILDING_PAVILLION);
+        int square_id = params.anim[animkeys().square].first_img();
+        for (int i = 0; i < building_size * building_size; i++) {
+            ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{ ((i % building_size) - (i / building_size)) * 30, ((i % building_size) + (i / building_size)) * 15 }, COLOR_MASK_GREEN);
+        }
+        int stand_sn_n = params.anim[animkeys().stand_sn_n].first_img();
+        int stand_sn_s = params.anim[animkeys().stand_sn_s].first_img();
+        int booth = params.anim[animkeys().booth].first_img();
+        int stand = params.anim[animkeys().base].first_img();
+        const auto &preview_conf = pavilion_m.preview_dir[orientation];
+
+        build_planner::draw_building_ghost(ctx, stand, pixel + preview_conf.stand, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, stand_sn_n + preview_conf.stand_b_img, pixel + preview_conf.stand_b, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, stand_sn_s + preview_conf.stand_e_img, pixel + preview_conf.stand_e, COLOR_MASK_GREEN);
+        build_planner::draw_building_ghost(ctx, booth, pixel + preview_conf.booth, COLOR_MASK_GREEN);
     }
 }
 
@@ -181,25 +194,6 @@ void building_pavilion::spawn_figure() {
             return;
         }
     }
-}
-
-void building_pavilion::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
-    int size = pavilion_m.building_size;
-    const auto &params = building_impl::params(BUILDING_PAVILLION);
-    int square_id = params.anim[animkeys().square].first_img();
-    for (int i = 0; i < size * size; i++) {
-        ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
-    }
-    int stand_sn_n = params.anim[animkeys().stand_sn_n].first_img();
-    int stand_sn_s = params.anim[animkeys().stand_sn_s].first_img();
-    int booth = params.anim[animkeys().booth].first_img();
-    int stand = params.anim[animkeys().base].first_img();
-    const auto &preview_conf = pavilion_m.preview_dir[orientation];
-
-    build_planner::draw_building_ghost(ctx, stand, pixel + preview_conf.stand, COLOR_MASK_GREEN);
-    build_planner::draw_building_ghost(ctx, stand_sn_n + preview_conf.stand_b_img, pixel + preview_conf.stand_b, COLOR_MASK_GREEN);
-    build_planner::draw_building_ghost(ctx, stand_sn_s + preview_conf.stand_e_img, pixel + preview_conf.stand_e, COLOR_MASK_GREEN);
-    build_planner::draw_building_ghost(ctx, booth, pixel + preview_conf.booth, COLOR_MASK_GREEN);
 }
 
 void building_pavilion::on_undo() {
