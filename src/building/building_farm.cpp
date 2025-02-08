@@ -135,7 +135,7 @@ template<class T>
 void building_farm::static_params_t<T>::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
     blocked_tile_vec blocked_tiles_farm;
 
-    const bool blocked = is_blocked(end, building_size, blocked_tiles_farm);
+    const bool blocked = is_blocked(end, this->building_size, blocked_tiles_farm);
 
     if (blocked) {
         planer.draw_partially_blocked(ctx, false, blocked_tiles_farm);
