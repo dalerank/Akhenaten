@@ -23,7 +23,5 @@ public:
     virtual void on_undo() override;
     virtual void on_post_load() override;
 
-    static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
-
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

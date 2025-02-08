@@ -136,14 +136,14 @@ void building_farm::static_params_t<T>::planer_ghost_preview(build_planner &plan
     blocked_tile_vec blocked_tiles_farm;
 
     const bool blocked = is_blocked(end, this->building_size, blocked_tiles_farm);
-
     if (blocked) {
         planer.draw_partially_blocked(ctx, false, blocked_tiles_farm);
-    } else {
-        int image_id = get_farm_image(TYPE, end);
-        planer.draw_building_ghost(ctx, image_id, pixel + vec2i{ -60, 30 });
-        draw_crops(ctx, TYPE, 0, end, pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
+        return;
     }
+
+    int image_id = get_farm_image(TYPE, end);
+    planer.draw_building_ghost(ctx, image_id, pixel + vec2i{ -60, 30 });
+    draw_crops(ctx, TYPE, 0, end, pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
 }
 
 int building_farm::get_crops_image(e_building_type type, int growth) {

@@ -25,21 +25,23 @@ void building_festival_square::static_params::planer_setup_preview_graphics(buil
 }
 
 void building_festival_square::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
-    int can_build = 0;
-
-    int size = building_impl::params(type).building_size;
     int orientation = 0;
 
-    can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_festival_square, &orientation);
+    bool can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_festival_square, &orientation);
     // TODO: proper correct for map orientation (for now, just use a different orientation)
     orientation = abs(orientation + (8 - city_view_orientation())) % 8;
 
     if (can_build != 1) { // no can place
-        for (int i = 0; i < size * size; i++) {
+        for (int i = 0; i < building_size * building_size; i++) {
             planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else { // can place (theoretically)
-        building_festival_square::ghost_preview(ctx, end, pixel, orientation);
+        int square_id = current_params().anim[animkeys().square].first_img();
+        bool is_exist = building_count_total(BUILDING_FESTIVAL_SQUARE);
+        int color_mask = is_exist ? COLOR_MASK_RED : COLOR_MASK_GREEN;
+        for (int i = 0; i < building_size * building_size; i++) {
+            ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{ ((i % building_size) - (i / building_size)) * 30, ((i % building_size) + (i / building_size)) * 15 }, color_mask);
+        }
     }
 }
 
@@ -89,14 +91,4 @@ void building_festival_square::on_undo() {
 
 void building_festival_square::on_post_load() {
     g_city.buildings.festival_square = this->tile();
-}
-
-void building_festival_square::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
-    int square_id = current_params().anim[animkeys().square].first_img();
-    int size = festival_square_m.building_size;
-    bool is_exist = building_count_total(BUILDING_FESTIVAL_SQUARE);
-    int color_mask = is_exist ? COLOR_MASK_RED : COLOR_MASK_GREEN;
-    for (int i = 0; i < size * size; i++) {
-        ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, color_mask);
-    }
 }
