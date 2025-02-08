@@ -1443,23 +1443,6 @@ void build_planner::draw_bridge(map_point tile, vec2i pixel, int type, painter &
     }
 }
 
-int build_planner::is_blocked_for_farm(tile2i tile, int size, blocked_tile_vec &blocked_tiles) {
-    int orientation_index = city_view_orientation() / 2;
-    int blocked = 0;
-    int num_tiles = (size * size);
-    for (int i = 0; i < num_tiles; i++) {
-        const int offset = TILE_GRID_OFFSETS_PH[orientation_index][i];
-        tile2i check_tile = tile.shifted(offset);
-        bool tile_blocked = !map_terrain_is(check_tile, TERRAIN_FLOODPLAIN)
-            || (map_building_at(check_tile) != 0)
-            || map_has_figure_at(check_tile);
-
-        blocked_tiles.push_back({ check_tile, tile_blocked });
-        blocked += (tile_blocked ? 1 : 0);
-    }
-    return blocked;
-}
-
 int build_planner::is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_tiles) {
     int orientation_index = city_view_orientation() / 2;
     int blocked = 0;
@@ -1484,6 +1467,10 @@ void build_planner::draw_partially_blocked(painter &ctx, int fully_blocked, cons
         vec2i pixel = tile_to_pixel(tile.tile);
         draw_flat_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
     }
+}
+
+int build_planner::tile_grid_offset(int orientation, int y) {
+    return TILE_GRID_OFFSETS_PH[orientation][y];
 }
 
 void build_planner::draw_flat_tile(painter &ctx, vec2i pixel, color color_mask) {
@@ -1649,17 +1636,6 @@ void build_planner::draw_graphics(painter &ctx) {
 
     case BUILDING_MEDIUM_MASTABA:
         building_medium_mastaba::ghost_preview(ctx, build_type, pixel, start, end);
-        return;
-
-    case BUILDING_BARLEY_FARM:
-    case BUILDING_FLAX_FARM:
-    case BUILDING_GRAIN_FARM:
-    case BUILDING_LETTUCE_FARM:
-    case BUILDING_POMEGRANATES_FARM:
-    case BUILDING_CHICKPEAS_FARM:
-    case BUILDING_FIGS_FARM:
-    case BUILDING_HENNA_FARM:
-        building_farm::ghost_preview(ctx, build_type, pixel, end);
         return;
 
     case BUILDING_FORT_ARCHERS:

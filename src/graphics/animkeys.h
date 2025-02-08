@@ -58,6 +58,7 @@ struct id_anim_t {
     static const xstring straw;
     static const xstring copper;
     static const xstring reeds;
+    static const xstring farm_house;
 };
 
 const id_anim_t &animkeys();

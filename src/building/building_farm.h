@@ -13,6 +13,15 @@ public:
     building_farm(building &b) : building_impl(b) {}
     virtual building_farm *dcast_farm() override { return this; }
 
+    template<class T>
+    struct static_params_t : public buildings::model_t<T> {
+        using inherited = buildings::model_t<T>;
+
+        int is_blocked(tile2i tile, int size, blocked_tile_vec &blocked_tiles) const;
+
+        virtual void planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
+    };
+
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientration, int variant) override;
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
@@ -25,14 +34,17 @@ public:
     virtual void on_undo() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
+    void map_building_tiles_add_farm(e_building_type type, int building_id, tile2i tile, int crop_image_offset, int progress);
+    void add_tiles();
+    static int get_crops_image(e_building_type type, int growth);
+    static int get_farm_image(e_building_type type, tile2i tile);
+    static void draw_crops(painter &ctx, e_building_type type, int progress, tile2i tile, vec2i point, color color_mask);
+
     void deplete_soil();
     void update_tiles_image();
     void spawn_figure_harvests();
     inline bool is_floodplain_farm() const { return building_is_floodplain_farm(base); }
 
-    static void ghost_preview(painter &ctx, e_building_type type, vec2i point, tile2i tile);
-    static int get_farm_image(e_building_type type, tile2i tile);
-    static void draw_crops(painter &ctx, e_building_type type, int progress, tile2i tile, vec2i point, color color_mask);
     void draw_farm_worker(painter &ctx, int direction, int action, vec2i coords, color color_mask = COLOR_MASK_NONE);
     void draw_workers(painter &ctx, building *b, tile2i tile, vec2i pos);
 };
@@ -40,34 +52,65 @@ public:
 struct building_farm_grain : public building_farm {
     building_farm_grain(building &b) : building_farm(b) {}
     BUILDING_METAINFO(BUILDING_GRAIN_FARM, building_farm_grain);
+
+    using static_params = static_params_t<building_farm_grain>;
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
+
 struct building_farm_lettuce : public building_farm {
     building_farm_lettuce(building &b) : building_farm(b) {}
     BUILDING_METAINFO(BUILDING_LETTUCE_FARM, building_farm_lettuce);
+
+    using static_params = static_params_t<building_farm_lettuce>;
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
+
 struct building_farm_chickpeas : public building_farm {
     building_farm_chickpeas(building &b) : building_farm(b) {}
     BUILDING_METAINFO(BUILDING_CHICKPEAS_FARM, building_farm_chickpeas);
+
+    using static_params = static_params_t<building_farm_chickpeas>;
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
+
 struct building_farm_pomegranates : public building_farm {
     building_farm_pomegranates(building &b) : building_farm(b) {}
     BUILDING_METAINFO(BUILDING_POMEGRANATES_FARM, building_farm_pomegranates);
+
+    using static_params = static_params_t<building_farm_pomegranates>;
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
+
 struct building_farm_barley : public building_farm {
     building_farm_barley(building &b) : building_farm(b) {}
     BUILDING_METAINFO(BUILDING_BARLEY_FARM, building_farm_barley);
+
+    using static_params = static_params_t<building_farm_barley>;
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
+
 struct building_farm_flax : public building_farm {
     building_farm_flax(building &b) : building_farm(b) {}
     BUILDING_METAINFO(BUILDING_FLAX_FARM, building_farm_flax);
+
+    using static_params = static_params_t<building_farm_flax>;
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
+
 struct building_farm_henna : public building_farm {
     building_farm_henna(building &b) : building_farm(b) {}
     BUILDING_METAINFO(BUILDING_HENNA_FARM, building_farm_henna);
+
+    using static_params = static_params_t<building_farm_henna>;
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
+
 struct building_farm_figs : public building_farm {
     building_farm_figs(building &b) : building_farm(b) {}
     BUILDING_METAINFO(BUILDING_FIGS_FARM, building_farm_figs);
+
+    using static_params = static_params_t<building_farm_figs>;
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 bool building_farm_time_to_deliver(bool floodplains, int resource_id = 0);

@@ -38,13 +38,6 @@ enum e_place_action {
     CAN_NOT_BUT_GREEN = 2,
 };
 
-struct blocked_tile {
-    tile2i tile;
-    bool blocked;
-};
-
-using blocked_tile_vec = svector<blocked_tile, 36>;
-
 class build_planner {
 private:
     int tile_graphics_array[30][30] = {};
@@ -138,13 +131,14 @@ public:
     void set_tiles_building(int image_id, int size_xx);
     void init_tiles(int size_x, int size_y);
 
-    static int is_blocked_for_farm(tile2i tile, int size, blocked_tile_vec &blocked_tiles);
     static void draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_mask = COLOR_MASK_GREEN);
     static void draw_flat_tile(painter &ctx, vec2i pixel, color color_mask);
     static void draw_flat_tile(vec2i pos, color color_mask, painter &ctx);
     static int is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_tiles);
     static void draw_bridge(map_point tile, vec2i pixel, int type, painter &ctx);
     static void draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles);
+    static int tile_grid_offset(int x, int y);
+
     bool ghost_mark_deleting(tile2i tile);
     void next_building_variant();
     void setup_building_variant(tile2i tile, e_building_type type);

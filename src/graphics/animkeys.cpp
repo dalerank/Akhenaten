@@ -56,6 +56,7 @@ const xstring id_anim_t::papyrus = "papyrus";
 const xstring id_anim_t::straw = "straw";
 const xstring id_anim_t::copper = "copper";
 const xstring id_anim_t::reeds = "reeds";
+const xstring id_anim_t::farm_house = "farm_house";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

@@ -89,6 +89,12 @@ class build_planner;
 constexpr uint32_t MAX_BUILDINGS = 4000;
 using e_building_flags = uint32_t;
 
+struct blocked_tile {
+    tile2i tile;
+    bool blocked;
+};
+using blocked_tile_vec = svector<blocked_tile, 36>;
+
 enum e_labor_state {
     LABOR_STATE_NONE,
     LABOR_STATE_PRESENT,

@@ -173,8 +173,8 @@ static void map_floodplain_update_inundation_row(int floodplain_is_flooding, int
                 }
             }
 
-            if (!still_flooded) {
-                map_building_tiles_add_farm(farm->type(), b_id, farm->tile(), 0, 0);
+            if (!still_flooded) {                
+                farm->add_tiles();
             }
         }
 
