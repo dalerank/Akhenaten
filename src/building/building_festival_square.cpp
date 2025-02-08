@@ -11,6 +11,7 @@
 #include "construction/build_planner.h"
 #include "building/count.h"
 #include "grid/building.h"
+#include "grid/orientation.h"
 #include "city/labor.h"
 
 building_festival_square::static_params festival_square_m;
@@ -21,6 +22,25 @@ void building_festival_square::static_params::load(archive arch) {
 
 void building_festival_square::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(5, 5); // TODO
+}
+
+void building_festival_square::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+    int can_build = 0;
+
+    int size = building_impl::params(type).building_size;
+    int orientation = 0;
+
+    can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_festival_square, &orientation);
+    // TODO: proper correct for map orientation (for now, just use a different orientation)
+    orientation = abs(orientation + (8 - city_view_orientation())) % 8;
+
+    if (can_build != 1) { // no can place
+        for (int i = 0; i < size * size; i++) {
+            planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
+        }
+    } else { // can place (theoretically)
+        building_festival_square::ghost_preview(ctx, end, pixel, orientation);
+    }
 }
 
 void building_festival_square::on_place(int orientation, int variant) {

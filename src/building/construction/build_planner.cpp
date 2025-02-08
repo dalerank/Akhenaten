@@ -1562,54 +1562,6 @@ void build_planner::draw_building_ghost(painter &ctx, int image_id, vec2i pixel,
     ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, color_mask, 1.f);
 }
 
-void build_planner::draw_entertainment_venue(tile2i tile, vec2i pixel, e_building_type type, painter &ctx) {
-    int can_build = 0;
-
-    int size = building_impl::params(type).building_size;
-    int orientation = 0;
-
-    switch (type) {
-    case BUILDING_BOOTH:
-        can_build = map_orientation_for_venue_with_map_orientation(tile, e_venue_mode_booth, &orientation);
-        break;
-    case BUILDING_BANDSTAND:
-        can_build = map_orientation_for_venue_with_map_orientation(tile, e_venue_mode_bandstand, &orientation);
-        break;
-    case BUILDING_PAVILLION:
-        can_build = map_orientation_for_venue_with_map_orientation(tile, e_venue_mode_pavilion, &orientation);
-        break;
-    case BUILDING_FESTIVAL_SQUARE:
-        can_build = map_orientation_for_venue_with_map_orientation(tile, e_venue_mode_festival_square, &orientation);
-        break;
-    }
-    // TODO: proper correct for map orientation (for now, just use a different orientation)
-    orientation = abs(orientation + (8 - city_view_orientation())) % 8;
-
-    if (can_build != 1) { // no can place
-        for (int i = 0; i < size * size; i++) {
-            draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
-        }
-    } else { // can place (theoretically)
-        switch (type) {
-        case BUILDING_BOOTH:
-            building_booth::ghost_preview(ctx, tile, pixel, orientation);
-            break;
-
-        case BUILDING_BANDSTAND:
-            building_bandstand::ghost_preview(ctx, tile, pixel, orientation);
-            break;
-
-        case BUILDING_PAVILLION:
-            building_pavilion::ghost_preview(ctx, tile, pixel, orientation);
-            break;
-
-        case BUILDING_FESTIVAL_SQUARE:
-            building_festival_square::ghost_preview(ctx, tile, pixel, orientation);
-            break;
-        }
-    }
-}
-
 void build_planner::draw_graphics(painter &ctx) {
     // TODO: bring these all over the unified system
     // special graphics buildings
@@ -1622,13 +1574,6 @@ void build_planner::draw_graphics(painter &ctx) {
         //        case BUILDING_WALL_PH:
         //            return draw_walls((const map_tile*)&end, end_coord.x, end_coord.y);
         //            break;
-
-    case BUILDING_BOOTH:
-    case BUILDING_BANDSTAND:
-    case BUILDING_PAVILLION:
-    case BUILDING_FESTIVAL_SQUARE:
-        draw_entertainment_venue(end, pixel, build_type, ctx);
-        return;
 
     case BUILDING_FORT_ARCHERS:
     case BUILDING_FORT_CHARIOTEERS:

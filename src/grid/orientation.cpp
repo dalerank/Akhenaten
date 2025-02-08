@@ -234,11 +234,12 @@ bool map_orientation_for_venue(int x, int y, e_venue_mode_orientation mode, int*
     for (int y_delta = 0; y_delta < mode + 2; y_delta++) {
         for (int x_delta = 0; x_delta < mode + 2; x_delta++) {
             int offset_check = grid_offset + GRID_OFFSET(x_delta, y_delta);
-            int is_road = map_terrain_is(offset_check, TERRAIN_ROAD);
-            if (map_terrain_is(offset_check, TERRAIN_BUILDING)
-                || (map_terrain_is(offset_check, TERRAIN_NOT_CLEAR) && !is_road))
+            const bool is_road = map_terrain_is(offset_check, TERRAIN_ROAD);
+            const bool is_building = map_terrain_is(offset_check, TERRAIN_BUILDING);
+            const bool is_not_clear = map_terrain_is(offset_check, TERRAIN_NOT_CLEAR);
+            if (is_building || (is_not_clear && !is_road)) {
                 return false;
-            else {
+            } else {
                 for (int orientation_check = 0; orientation_check < 8; orientation_check++) {
                     int tile_road_checked_against = 0;
                     int half_orientation_check = orientation_check / 2;

@@ -18,9 +18,6 @@
 #include "grid/orientation.h"
 #include "grid/building_tiles.h"
 #include "figure/figure.h"
-#include "js/js_game.h"
-
-
 
 building_pavilion::static_params pavilion_m;
 
@@ -65,6 +62,25 @@ void building_pavilion::static_params::place_offset::item::load(archive arch) {
 
 void building_pavilion::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(4, 4);
+}
+
+void building_pavilion::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+    int can_build = 0;
+
+    int size = building_impl::params(type).building_size;
+    int orientation = 0;
+
+    can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_pavilion, &orientation);
+    // TODO: proper correct for map orientation (for now, just use a different orientation)
+    orientation = abs(orientation + (8 - city_view_orientation())) % 8;
+
+    if (can_build != 1) { // no can place
+        for (int i = 0; i < size * size; i++) {
+            planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
+        }
+    } else { // can place (theoretically)
+        building_pavilion::ghost_preview(ctx, end, pixel, orientation);
+    }
 }
 
 void building_pavilion::on_create(int orientation) {

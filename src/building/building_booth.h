@@ -14,6 +14,7 @@ public:
 
         virtual void load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
+        virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };
 
     virtual void on_create(int orientation) override {}

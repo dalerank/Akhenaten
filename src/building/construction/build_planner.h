@@ -79,7 +79,6 @@ private:
     void draw_canal(map_point tile, vec2i pixel, painter &ctx);
     bool map_is_straight_road_for_canal(int grid_offset);
     bool is_road_tile_for_canal(int grid_offset, int gate_orientation);
-    void draw_entertainment_venue(tile2i tile, vec2i pixel, e_building_type type, painter &ctx);
     int place_houses(bool measure_only, int x_start, int y_start, int x_end, int y_end);
 
 public:
