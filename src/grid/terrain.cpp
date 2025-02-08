@@ -43,13 +43,15 @@ void map_terrain_add(int grid_offset, int terrain) {
 void map_terrain_remove(int grid_offset, int terrain) {
     map_grid_and(g_terrain_grid, grid_offset, ~terrain);
 }
-void map_terrain_add_in_area(int x_min, int y_min, int x_max, int y_max, int terrain) {
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
-            map_terrain_add(MAP_OFFSET(xx, yy), terrain);
+
+void map_terrain_add_in_area(tile2i pmin, tile2i pmax, int terrain) {
+    for (int yy = pmin.y(); yy <= pmax.y(); yy++) {
+        for (int xx = pmin.x(); xx <= pmax.y(); xx++) {
+            map_terrain_add(tile2i(xx, yy), terrain);
         }
     }
 }
+
 void map_terrain_add_with_radius(tile2i tile, int size, int radius, int terrain) {
     grid_area area = map_grid_get_area(tile, size, radius);
 

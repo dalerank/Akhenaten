@@ -1319,7 +1319,7 @@ void build_planner::construction_finalize() { // confirm final placement
     }
 
     if (special_flags & e_building_flag::Road) {
-        map_terrain_add_in_area(end.x(), end.y(), end.x() + size.x - 1, end.y() + size.y - 1, TERRAIN_ROAD);
+        map_terrain_add_in_area(end, end.shifted(size.x - 1, size.y - 1), TERRAIN_ROAD);
         map_tiles_update_area_roads(end.x(), end.y(), 5);
         map_tiles_update_all_plazas();
     }
@@ -1512,18 +1512,18 @@ bool build_planner::is_road_tile_for_canal(int grid_offset, int gate_orientation
 }
 
 bool build_planner::map_is_straight_road_for_canal(int grid_offset) {
-    int road_tiles_x = is_road_tile_for_canal(grid_offset + GRID_OFFSET(1, 0), 2)
-        + is_road_tile_for_canal(grid_offset + GRID_OFFSET(-1, 0), 2);
-    int road_tiles_y = is_road_tile_for_canal(grid_offset + GRID_OFFSET(0, -1), 1)
-        + is_road_tile_for_canal(grid_offset + GRID_OFFSET(0, 1), 1);
+    int road_tiles_x = is_road_tile_for_canal(grid_offset + GRID_OFFSET(1, 0), 2) + is_road_tile_for_canal(grid_offset + GRID_OFFSET(-1, 0), 2);
+    int road_tiles_y = is_road_tile_for_canal(grid_offset + GRID_OFFSET(0, -1), 1) + is_road_tile_for_canal(grid_offset + GRID_OFFSET(0, 1), 1);
 
-    if (road_tiles_x == 2 && road_tiles_y == 0)
+    if (road_tiles_x == 2 && road_tiles_y == 0) {
         return true;
-    else if (road_tiles_y == 2 && road_tiles_x == 0)
+    } 
+    
+    if (road_tiles_y == 2 && road_tiles_x == 0) {
         return true;
-    else {
-        return false;
     }
+    
+    return false;
 }
 
 void build_planner::draw_canal(map_point tile, vec2i pixel, painter &ctx) {
