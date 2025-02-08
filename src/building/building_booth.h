@@ -33,6 +33,5 @@ public:
     virtual void update_map_orientation(int map_orientation) override;
     virtual void on_undo() override;
 
-    static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

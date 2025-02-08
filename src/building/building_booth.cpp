@@ -33,21 +33,29 @@ void building_booth::static_params::load(archive arch) {
 }
 
 void building_booth::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
-    int can_build = 0;
-
-    int size = params(type).building_size;
     int orientation = 0;
 
-    can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_booth, &orientation);
+    bool can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_booth, &orientation);
     // TODO: proper correct for map orientation (for now, just use a different orientation)
     orientation = abs(orientation + (8 - city_view_orientation())) % 8;
 
     if (can_build != 1) { // no can place
-        for (int i = 0; i < size * size; i++) {
+        for (int i = 0; i < building_size * building_size; i++) {
             planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else { // can place (theoretically)
-        building_booth::ghost_preview(ctx, end, pixel, orientation);
+        const auto &params = current_params();
+        int square_id = params.anim[animkeys().square].first_img();
+        for (int i = 0; i < building_size * building_size; i++) {
+            ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{ ((i % building_size) - (i / building_size)) * 30, ((i % building_size) + (i / building_size)) * 15 }, COLOR_MASK_GREEN);
+        }
+
+        switch (orientation / 2) {
+        case 0: build_planner::draw_building_ghost(ctx, params.booth, pixel, COLOR_MASK_GREEN); break;
+        case 1: build_planner::draw_building_ghost(ctx, params.booth, pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN); break;
+        case 2: build_planner::draw_building_ghost(ctx, params.booth, pixel + vec2i{ 0, 30 }, COLOR_MASK_GREEN); break;
+        case 3: build_planner::draw_building_ghost(ctx, params.booth, pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN); break;
+        }
     }
 }
 
@@ -154,21 +162,5 @@ void building_booth::on_undo() {
                 map_building_set(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), id());
             }
         }
-    }
-}
-
-void building_booth::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
-    const auto &params = current_params();
-    int square_id = params.anim[animkeys().square].first_img();
-    const int size = params.building_size;
-    for (int i = 0; i < size * size; i++) {
-        ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
-    }
-
-    switch (orientation / 2) {
-    case 0: build_planner::draw_building_ghost(ctx, params.booth, pixel, COLOR_MASK_GREEN); break;
-    case 1: build_planner::draw_building_ghost(ctx, params.booth, pixel + vec2i{30, 15}, COLOR_MASK_GREEN); break;
-    case 2: build_planner::draw_building_ghost(ctx, params.booth, pixel + vec2i{0, 30}, COLOR_MASK_GREEN); break;
-    case 3: build_planner::draw_building_ghost(ctx, params.booth, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN); break;
     }
 }
