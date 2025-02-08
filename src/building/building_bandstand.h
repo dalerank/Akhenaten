@@ -39,7 +39,6 @@ public:
 
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     void draw_shows_musicians(painter &ctx, vec2i pixel, int direction, color color_mask);
-    static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

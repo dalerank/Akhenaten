@@ -41,21 +41,44 @@ void building_bandstand::static_params::planer_setup_preview_graphics(build_plan
 }
 
 void building_bandstand::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
-    int can_build = 0;
-
-    int size = building_impl::params(type).building_size;
     int orientation = 0;
 
-    can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_bandstand, &orientation);
+    int can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_bandstand, &orientation);
     // TODO: proper correct for map orientation (for now, just use a different orientation)
     orientation = abs(orientation + (8 - city_view_orientation())) % 8;
 
     if (can_build != 1) { // no can place
-        for (int i = 0; i < size * size; i++) {
+        for (int i = 0; i < building_size * building_size; i++) {
             planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else { // can place (theoretically)
-        building_bandstand::ghost_preview(ctx, end, pixel, orientation);
+        int square_id = bandstand_m.anim[animkeys().square].first_img();
+        for (int i = 0; i < building_size * building_size; i++) {
+            ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{ ((i % building_size) - (i / building_size)) * 30, ((i % building_size) + (i / building_size)) * 15 }, COLOR_MASK_GREEN);
+        }
+
+        switch (orientation / 2) {
+        case 0:
+            planer.draw_building_ghost(ctx, bandstand_m.stand_sn_n, pixel, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, bandstand_m.stand_sn_s, pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{ 60, 30 }, COLOR_MASK_GREEN);
+            break;
+        case 1:
+            planer.draw_building_ghost(ctx, bandstand_m.stand_we_w, pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, bandstand_m.stand_we_e, pixel + vec2i{ 60, 30 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{ 0, 60 }, COLOR_MASK_GREEN);
+            break;
+        case 2:
+            planer.draw_building_ghost(ctx, bandstand_m.stand_sn_n, pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, bandstand_m.stand_sn_s, pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{ 0, 60 }, COLOR_MASK_GREEN);
+            break;
+        case 3:
+            planer.draw_building_ghost(ctx, bandstand_m.stand_we_w, pixel, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, bandstand_m.stand_we_e, pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
+            break;
+        }
     }
 }
 
@@ -233,35 +256,4 @@ bool building_bandstand::draw_ornaments_and_animations_height(painter &ctx, vec2
     }
 
     return false;
-}
-
-void building_bandstand::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
-    int size = bandstand_m.building_size;
-    int square_id = bandstand_m.anim[animkeys().square].first_img();
-    for (int i = 0; i < size * size; i++) {
-        ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{((i % size) - (i / size)) * 30, ((i % size) + (i / size)) * 15}, COLOR_MASK_GREEN);
-    }
-
-    switch (orientation / 2) {
-    case 0:
-        build_planner::draw_building_ghost(ctx, bandstand_m.stand_sn_n, pixel, COLOR_MASK_GREEN);
-        build_planner::draw_building_ghost(ctx, bandstand_m.stand_sn_s, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
-        build_planner::draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
-        break;
-    case 1:
-        build_planner::draw_building_ghost(ctx, bandstand_m.stand_we_w, pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
-        build_planner::draw_building_ghost(ctx, bandstand_m.stand_we_e, pixel + vec2i{60, 30}, COLOR_MASK_GREEN);
-        build_planner::draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
-        break;
-    case 2:
-        build_planner::draw_building_ghost(ctx, bandstand_m.stand_sn_n, pixel + vec2i{-30, 15}, COLOR_MASK_GREEN);
-        build_planner::draw_building_ghost(ctx, bandstand_m.stand_sn_s, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
-        build_planner::draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{0, 60}, COLOR_MASK_GREEN);
-        break;
-    case 3:
-        build_planner::draw_building_ghost(ctx, bandstand_m.stand_we_w, pixel, COLOR_MASK_GREEN);
-        build_planner::draw_building_ghost(ctx, bandstand_m.stand_we_e, pixel + vec2i{30, 15}, COLOR_MASK_GREEN);
-        build_planner::draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{-60, 30}, COLOR_MASK_GREEN);
-        break;
-    }
 }
