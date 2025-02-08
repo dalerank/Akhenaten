@@ -1630,14 +1630,6 @@ void build_planner::draw_graphics(painter &ctx) {
         draw_entertainment_venue(end, pixel, build_type, ctx);
         return;
 
-    case BUILDING_SMALL_MASTABA:
-        building_small_mastaba::ghost_preview(ctx, build_type, pixel, start, end);
-        return;
-
-    case BUILDING_MEDIUM_MASTABA:
-        building_medium_mastaba::ghost_preview(ctx, build_type, pixel, start, end);
-        return;
-
     case BUILDING_FORT_ARCHERS:
     case BUILDING_FORT_CHARIOTEERS:
     case BUILDING_FORT_INFANTRY:

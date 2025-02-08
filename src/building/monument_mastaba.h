@@ -20,6 +20,13 @@ public:
     virtual void update_month() override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
+
+    template<typename T>
+    struct static_params_t : public buildings::model_t<T> {
+        virtual void planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
+        virtual void planer_setup_preview_graphics(build_planner &planer) const override;
+        virtual vec2i init_tiles_size() const { return vec2i(0, 0); }
+    };
     
     bool draw_ornaments_and_animations_flat_impl(building &base, painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
     bool draw_ornaments_and_animations_hight_impl(building &base, painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
@@ -27,7 +34,6 @@ public:
     void update_day(const vec2i tiles_size);
     custom_span<uint16_t> active_workers();
 
-    static void ghost_preview(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end, const vec2i size);
     static void update_images(building *b, int curr_phase, const vec2i size_b);
     static void finalize(building *b, const vec2i size_b);
     static int get_image(int orientation, tile2i tile, tile2i start, tile2i end);
@@ -36,13 +42,11 @@ public:
 class building_small_mastaba : public building_mastaba {
 public:
     BUILDING_METAINFO(BUILDING_SMALL_MASTABA, building_small_mastaba)
-
     building_small_mastaba(building & b) : building_mastaba(b) {}
-
     virtual building_small_mastaba *dcast_small_mastaba() override { return this; }
 
-    struct static_params : public buildings::model_t<building_small_mastaba> {
-        virtual void planer_setup_preview_graphics(build_planner &planer) const override;
+    struct static_params : public static_params_t<building_small_mastaba> {
+        virtual vec2i init_tiles_size() const { return vec2i(10, 4); }
     };
 
     virtual void on_place(int orientation, int variant) override;
@@ -50,8 +54,7 @@ public:
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 
-    static void ghost_preview(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end);
-    static vec2i init_tiles_size();
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 class building_small_mastaba_part_side : public building_small_mastaba {
@@ -79,8 +82,8 @@ public:
 
     virtual building_medium_mastaba *dcast_medium_mastaba() override { return nullptr; }
 
-    struct static_params : public buildings::model_t<building_medium_mastaba> {
-        virtual void planer_setup_preview_graphics(build_planner &planer) const override;
+    struct static_params : public static_params_t<building_medium_mastaba> {
+        virtual vec2i init_tiles_size() const { return vec2i(14, 6); }
     };
 
     virtual void on_place(int orientation, int variant) override;
@@ -88,8 +91,7 @@ public:
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 
-    static void ghost_preview(painter &ctx, e_building_type type, vec2i pixel, tile2i start, tile2i end);
-    static vec2i init_tiles_size();
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 class building_medium_mastaba_part_side : public building_medium_mastaba {
