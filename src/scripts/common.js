@@ -112,7 +112,6 @@ var main_menu_window = {}
 var minimap_window = {}
 var advisor_trade_window = {}
 var advisor_imperial_window = {}
-var info_window_garden = {}
 var info_window_figure_enemy = {}
 var info_window_figure_animal = {}
 var info_window_figure_caravan_donkey = {}
