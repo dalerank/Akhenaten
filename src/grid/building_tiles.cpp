@@ -359,6 +359,7 @@ void map_building_tiles_remove(int building_id, tile2i tile) {
         size = b->size;
         base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
         break;
+
     case BUILDING_FESTIVAL_SQUARE:
         size = 5;
         break;

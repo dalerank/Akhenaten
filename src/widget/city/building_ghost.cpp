@@ -2,12 +2,8 @@
 
 #include "grid/routing/routing.h"
 #include "building/construction/build_planner.h"
-#include "building/building_booth.h"
-#include "building/building_bandstand.h"
-#include "building/building_pavilion.h"
 #include "building/building_farm.h"
 #include "building/building_fishing_wharf.h"
-#include "building/building_festival_square.h"
 #include "building/building_storage_yard.h"
 #include "building/building_road.h"
 #include "building/building_well.h"
