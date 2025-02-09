@@ -10,7 +10,7 @@ public:
     virtual building_garden *dcast_garden() override { return this; }
 
     struct static_params : public buildings::model_t<building_garden> {
-        int place_impl(tile2i start, tile2i end) const;
+        int place_impl(tile2i start, tile2i end, bool place) const;
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
         virtual int planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const override;
     };

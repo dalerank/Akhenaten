@@ -16,6 +16,7 @@
 #include "grid/terrain.h"
 #include "grid/property.h"
 #include "grid/image.h"
+#include "grid/gardens.h"
 #include "grid/random.h"
 #include "grid/building_tiles.h"
 #include "figure/formation_herd.h"
@@ -26,42 +27,43 @@
 
 building_garden::static_params garden_m;
 
-int building_garden::static_params::place_impl(tile2i start, tile2i end) const {
+int building_garden::static_params::place_impl(tile2i start, tile2i end, bool place) const {
     game_undo_restore_map(1);
 
     grid_area area = map_grid_get_area(start, end);
 
     int items_placed = 0;
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
-        int grid_offset = tile.grid_offset();
-        if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
+    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i rtile) {
+        if (map_terrain_is(rtile, TERRAIN_NOT_CLEAR)) {
             return;
         }
 
-        if (map_terrain_exists_tile_in_radius_with_type(tile, 1, 1, TERRAIN_FLOODPLAIN)) {
+        if (map_terrain_exists_tile_in_radius_with_type(rtile, 1, 1, TERRAIN_FLOODPLAIN)) {
             return;
         }
 
-        if (formation_herd_breeding_ground_at(tile, 1)) {
+        if (formation_herd_breeding_ground_at(rtile, 1)) {
             map_property_clear_constructing_and_deleted();
             city_warning_show(WARNING_HERD_BREEDING_GROUNDS);
-        } else {
-            items_placed++;
-            map_terrain_add(grid_offset, TERRAIN_GARDEN);
-        }
+            return;
+        } 
+
+        items_placed++;
+        int addition_flag = place ? 0 : TERRAIN_PLANER_FUTURE;
+        map_terrain_add(rtile, TERRAIN_GARDEN| addition_flag);
     });
-    map_tiles_update_all_gardens();
+    map_tiles_gardens_update_all();
 
     return items_placed;
 }
 
 int building_garden::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
-    return place_impl(start, end);
+    return place_impl(start, end, false);
 }
 
 int building_garden::static_params::planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
     planer.should_update_land_routing = true;
-    return place_impl(start, end);
+    return place_impl(start, end, true);
 }
 
 void building_garden::on_place_checks() {  /*nothing*/ }

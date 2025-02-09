@@ -10,6 +10,7 @@
 #include "graphics/window.h"
 #include "grid/canals.h"
 #include "grid/bridge.h"
+#include "grid/gardens.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/grid.h"
@@ -166,7 +167,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
         map_tiles_update_region_empty_land(true, area.tmin, area.tmax);
         map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
         map_tiles_update_region_rubble(x_min, y_min, x_max, y_max);
-        map_tiles_update_all_gardens();
+        map_tiles_gardens_update_all();
         map_tiles_update_area_roads(x_min, y_min, radius);
         map_tiles_update_all_plazas();
         map_tiles_update_area_walls(area.tmin, radius);

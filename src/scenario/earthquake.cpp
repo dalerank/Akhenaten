@@ -12,6 +12,7 @@
 #include "grid/building.h"
 #include "grid/grid.h"
 #include "grid/image.h"
+#include "grid/gardens.h"
 #include "grid/property.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
@@ -85,7 +86,7 @@ static void advance_earthquake_to_tile(int x, int y) {
     }
     map_terrain_set(grid_offset, 0);
     map_tiles_set_earthquake(x, y);
-    map_tiles_update_all_gardens();
+    map_tiles_gardens_update_all();
     map_tiles_update_all_roads();
     map_tiles_update_all_plazas();
 

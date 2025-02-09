@@ -18,6 +18,7 @@
 #include "grid/grid.h"
 #include "grid/tiles.h"
 #include "grid/image.h"
+#include "grid/gardens.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
 #include "config/config.h"
@@ -1020,7 +1021,7 @@ bool building_house_spacious_apartment::evolve(house_demands* demands) {
             if (can_expand(4)) {
                 base.house_is_merged = 0;
                 expand_to_common_residence();
-                map_tiles_update_all_gardens();
+                map_tiles_gardens_update_all();
                 return true;
             }
         } else if (status == e_house_decay) {
@@ -1091,7 +1092,7 @@ bool building_house_fancy_residence::evolve(house_demands* demands) {
         if (status == e_house_evolve) {
             if (can_expand(9)) {
                 expand_to_common_manor();
-                map_tiles_update_all_gardens();
+                map_tiles_gardens_update_all();
                 return true;
             }
         } else if (status == e_house_decay) {
@@ -1159,7 +1160,7 @@ bool building_house_stately_manor::evolve(house_demands* demands) {
         if (status == e_house_evolve) {
             if (can_expand(16)) {
                 expand_to_modest_estate();
-                map_tiles_update_all_gardens();
+                map_tiles_gardens_update_all();
                 return true;
             }
         } else if (status == e_house_decay) {

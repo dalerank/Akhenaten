@@ -35,6 +35,7 @@
 #include "grid/elevation.h"
 #include "grid/figure.h"
 #include "grid/image.h"
+#include "grid/gardens.h"
 #include "grid/image_context.h"
 #include "grid/orientation.h"
 #include "grid/property.h"
@@ -741,7 +742,7 @@ void GamestateIO::start_loaded_file() {
     map_water_rebuild_shores();
     map_tiles_update_floodplain_images();
     map_tiles_river_refresh_entire();
-    map_tiles_determine_gardens();
+    map_tiles_gardens_determine();
     map_tiles_upadte_all_marshland_tiles();
     map_tree_update_all_tiles();
     map_building_update_all_tiles();

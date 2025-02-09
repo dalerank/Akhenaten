@@ -230,24 +230,6 @@ void map_tiles_update_region_shrub(int x_min, int y_min, int x_max, int y_max) {
     map_tiles_foreach_region_tile(tile2i(x_min, y_min), tile2i(x_max, y_max), set_shrub_image);
 }
 
-static void clear_garden_image(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_GARDEN)
-        && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
-        map_image_set(grid_offset, 0);
-        map_property_set_multi_tile_size(grid_offset, 1);
-        map_property_mark_draw_tile(grid_offset);
-    }
-}
-
-void map_tiles_update_all_gardens(void) {
-    map_tiles_foreach_map_tile(clear_garden_image);
-    map_tiles_foreach_map_tile(building_garden::set_image);
-}
-
-void map_tiles_determine_gardens(void) {
-    map_tiles_foreach_map_tile(building_garden::determine_tile);
-}
-
 static void remove_plaza_below_building(int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(grid_offset)) {
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING))

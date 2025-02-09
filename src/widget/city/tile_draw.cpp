@@ -250,6 +250,11 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
         image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
     }
 
+    const bool is_green_tile = map_terrain_is(grid_offset, TERRAIN_PLANER_FUTURE);
+    if (is_green_tile && (color_mask == COLOR_MASK_NONE)) {
+        color_mask = COLOR_MASK_GREEN;
+    }
+
     const image_t *img = ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
     if (!img) {
         return;

@@ -4,6 +4,7 @@
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "grid/image.h"
+#include "grid/gardens.h"
 #include "grid/building_tiles.h"
 #include "graphics/view/view.h"
 
@@ -82,7 +83,7 @@ void building_entertainment::place_latch_on_venue(e_building_type type, int dx, 
     switch (type) {
     case BUILDING_GARDENS:
         map_terrain_add(point, TERRAIN_GARDEN);
-        map_tiles_update_all_gardens();
+        map_tiles_gardens_update_all();
         break;
 
     case BUILDING_BOOTH:

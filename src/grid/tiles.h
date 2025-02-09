@@ -7,9 +7,6 @@ void map_tiles_update_all_rocks(void);
 
 void map_tiles_update_region_shrub(int x_min, int y_min, int x_max, int y_max);
 
-void map_tiles_update_all_gardens(void);
-void map_tiles_determine_gardens(void);
-
 void map_tiles_set_canal_image(int grid_offset);
 
 void map_tiles_update_all_plazas(void);
