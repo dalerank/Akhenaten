@@ -309,9 +309,9 @@ static void enable_common_municipal(int level) {
     building_menu_toggle_building(BUILDING_FIREHOUSE);
     building_menu_toggle_building(BUILDING_ARCHITECT_POST);
     building_menu_toggle_building(BUILDING_POLICE_STATION);
-    building_menu_toggle_building((level >= 3) | BUILDING_CITY_PALACE);
-    building_menu_toggle_building((level >= 2) | BUILDING_TOWN_PALACE);
-    building_menu_toggle_building((level >= 1) | BUILDING_VILLAGE_PALACE);
+    building_menu_toggle_building((level >= 3) ? BUILDING_CITY_PALACE : 0);
+    building_menu_toggle_building((level >= 2) ? BUILDING_TOWN_PALACE : 0);
+    building_menu_toggle_building((level >= 1) ? BUILDING_VILLAGE_PALACE : 0);
 }
 
 static void enable_common_health() {
@@ -321,16 +321,16 @@ static void enable_common_health() {
 }
 
 static void enable_entertainment(int level) {
-    building_menu_toggle_building((level >= 1) | BUILDING_BOOTH);
-    building_menu_toggle_building((level >= 1) | BUILDING_JUGGLER_SCHOOL);
+    building_menu_toggle_building((level >= 1) ? BUILDING_BOOTH : 0);
+    building_menu_toggle_building((level >= 1) ? BUILDING_JUGGLER_SCHOOL : 0);
 
-    building_menu_toggle_building((level >= 2) | BUILDING_BANDSTAND);
-    building_menu_toggle_building((level >= 2) | BUILDING_CONSERVATORY);
+    building_menu_toggle_building((level >= 2) ? BUILDING_BANDSTAND : 0);
+    building_menu_toggle_building((level >= 2) ? BUILDING_CONSERVATORY : 0);
 
-    building_menu_toggle_building((level >= 3) | BUILDING_PAVILLION);
-    building_menu_toggle_building((level >= 3) | BUILDING_DANCE_SCHOOL);
+    building_menu_toggle_building((level >= 3) ? BUILDING_PAVILLION : 0);
+    building_menu_toggle_building((level >= 3) ? BUILDING_DANCE_SCHOOL : 0);
 
-    building_menu_toggle_building((level >= 4) | BUILDING_SENET_HOUSE);
+    building_menu_toggle_building((level >= 4) ? BUILDING_SENET_HOUSE : 0);
 }
 
 struct god_buildings_alias {
@@ -372,16 +372,17 @@ void building_menu_update_temple_complexes() {
         return;
     }
 
-    if (city_buildings_has_temple_complex()) {
+    bool has_temple_complex = g_city.buildings.has_temple_complex();
+    int temple_complex_id = g_city.buildings.temple_complex_id();
+
+    if (has_temple_complex) {
         // can't build more than one
-        building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_OSIRIS, false);
-        building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_RA, false);
-        building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_PTAH, false);
-        building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_SETH, false);
-        building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_BAST, false);
+        for (const e_building_type type : g_city.buildings.temple_complex_types()) {
+            building_menu_toggle_building(type, false);
+        }
 
         // check if upgrades have been placed
-        building* b = building_get(city_buildings_get_temple_complex());
+        building* b = building_get(temple_complex_id);
         const bool temple_has_altar = (b->data.monuments.temple_complex_attachments & 2); // altar
         building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ALTAR, !temple_has_altar);
 
@@ -394,11 +395,9 @@ void building_menu_update_temple_complexes() {
         }
 
     } else {
-        enable_if_allowed(BUILDING_TEMPLE_COMPLEX_OSIRIS);
-        enable_if_allowed(BUILDING_TEMPLE_COMPLEX_RA);
-        enable_if_allowed(BUILDING_TEMPLE_COMPLEX_PTAH);
-        enable_if_allowed(BUILDING_TEMPLE_COMPLEX_SETH);
-        enable_if_allowed(BUILDING_TEMPLE_COMPLEX_BAST);
+        for (const e_building_type type : g_city.buildings.temple_complex_types()) {
+            enable_if_allowed(type);
+        }
 
         building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ALTAR, false);
         building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ORACLE, false);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "grid/point.h"
+#include "core/custom_span.hpp"
 #include "building/building.h"
 
 struct city_buildings_t {
@@ -33,9 +34,6 @@ struct city_buildings_t {
     tile2i main_native_meeting;
     int8_t unknown_value;
 
-    bool temple_complex_placed;
-    int32_t temple_complex_id;
-
     void init();
     void shutdown();
 
@@ -50,6 +48,10 @@ struct city_buildings_t {
     void update_month();
     void update_day();
     void reload_objects();
+
+    building_id temple_complex_id();
+    bool has_temple_complex();
+    span_const<e_building_type> temple_complex_types();
 
     int get_palace_id();
 
@@ -99,10 +101,5 @@ int city_buildings_is_mission_post_operational();
 void city_buildings_set_mission_post_operational();
 
 map_point city_building_get_festival_square_position();
-
-bool city_buildings_has_temple_complex();
-int city_buildings_get_temple_complex();
-void city_buildings_add_temple_complex(building* complex);
-void city_buildings_remove_temple_complex();
 
 int city_buildings_unknown_value();

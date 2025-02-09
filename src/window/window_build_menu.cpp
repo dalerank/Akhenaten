@@ -174,7 +174,8 @@ void build_menu_widget::draw_menu_buttons() {
         if (is_all_button(type)) {
             lang_text_draw_centered(52, 19, x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
         } else if (temple_upgrades) {
-            building *b = building_get(city_buildings_get_temple_complex());
+            int complex_id = g_city.buildings.temple_complex_id();
+            building *b = building_get(complex_id);
             int index = (type - BUILDING_TEMPLE_COMPLEX_ALTAR) + 2 * (b->type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
             lang_text_draw_centered(189, index, x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
         } else {

@@ -630,7 +630,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &tmp); // dock id
     }
 
-    iob->bind(BIND_SIGNATURE_INT16, &data.buildings.temple_complex_placed);
+    iob->bind____skip(2); // (BIND_SIGNATURE_INT16, &data.buildings.temple_complex_placed);
     iob->bind(BIND_SIGNATURE_UINT8, &data.figures.fish_number);
     iob->bind(BIND_SIGNATURE_UINT8, &data.figures.animals_number);
 
@@ -867,7 +867,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.mission.tutorial_disease_message_shown);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.attacking_natives);
 
-    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.temple_complex_id);
+    iob->bind____skip(4); // (BIND_SIGNATURE_INT32, &data.buildings.temple_complex_id);
     iob->bind____skip(36);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.expenses.requests_and_festivals);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.requests_and_festivals);

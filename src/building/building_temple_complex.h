@@ -12,6 +12,7 @@ public:
     virtual void update_count() const override;
     virtual void on_post_load() override;
     virtual void on_place(int orientation, int variant) override;
+
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_NONE; }
 };
 
@@ -22,7 +23,6 @@ public:
 
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_OSIRIS; }
 };
-
 
 class building_temple_complex_ra : public building_temple_complex {
 public:

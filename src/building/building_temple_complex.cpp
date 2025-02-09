@@ -38,6 +38,7 @@ building_temple_complex_model<building_temple_complex_bast> building_temple_comp
 
 void building_temple_complex::on_create(int orientation) {
     data.monuments.variant = (10 - (2 * orientation)) % 8; // ugh!
+    g_city.buildings.track_building(base, false);
 }
 
 void building_temple_complex::on_post_load() {

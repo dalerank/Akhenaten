@@ -163,26 +163,6 @@ void city_buildings_remove_festival_square() {
     city_data.buildings.festival_square = tile2i::invalid;
 }
 
-bool city_buildings_has_temple_complex() {
-    return city_data.buildings.temple_complex_placed;
-}
-
-int city_buildings_get_temple_complex() {
-    return city_data.buildings.temple_complex_id;
-}
-
-void city_buildings_add_temple_complex(building* complex) {
-    city_data.buildings.temple_complex_placed = true;
-    city_data.buildings.temple_complex_id = complex->id;
-    building_menu_update_temple_complexes();
-}
-
-void city_buildings_remove_temple_complex() {
-    city_data.buildings.temple_complex_id = 0;
-    city_data.buildings.temple_complex_placed = false;
-    building_menu_update_temple_complexes();
-}
-
 int city_buildings_unknown_value() {
     return city_data.buildings.unknown_value;
 }
@@ -244,6 +224,35 @@ void city_buildings_t::reload_objects() {
     buildings_valid_do([] (building &b) {
         b.dcast()->on_config_reload();
     });
+}
+
+const e_building_type _temple_complex_types[] = {
+    BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_TEMPLE_COMPLEX_BAST
+};
+
+building_id city_buildings_t::temple_complex_id() {
+    for (const e_building_type type : _temple_complex_types) {
+        const auto &complexes = g_city.buildings.tracked_buildings->at(type);
+        if (!complexes.empty()) {
+            return complexes.front();
+        }
+    }
+
+    return 0;
+}
+
+bool city_buildings_t::has_temple_complex() {
+    bool has_temple_complex = false;
+    for (const e_building_type type : _temple_complex_types) {
+        const auto &complexes = g_city.buildings.tracked_buildings->at(type);
+        has_temple_complex |= !complexes.empty();
+    }
+
+    return has_temple_complex;
+}
+
+span_const<e_building_type> city_buildings_t::temple_complex_types() {
+    return span_const<e_building_type>(_temple_complex_types);
 }
 
 void city_buildings_t::update_month() {
