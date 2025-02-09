@@ -40,8 +40,14 @@ public:
     }
 
     template <std::size_t N>
-    constexpr custom_span(element_type (&arr)[N]) noexcept
+    constexpr custom_span(element_type (arr)[N]) noexcept
       : m_storage(arr),
+        m_size(N) {
+    }
+
+    template <std::size_t N>
+    constexpr custom_span(const element_type (&arr)[N]) noexcept
+        : m_storage((element_type*)arr),
         m_size(N) {
     }
 
@@ -83,27 +89,27 @@ template<typename T>
 using span_const = const custom_span<T>;
 
 template <typename T, std::size_t N>
-inline constexpr auto make_span(T (&arr)[N]) {
+inline constexpr custom_span<T> make_span(T (&arr)[N]) {
     return custom_span<T>(arr);
 }
 
 template <typename T, std::size_t N>
-inline constexpr auto make_span(const T (&arr)[N]) {
+inline constexpr span_const<T> make_span(const T (&arr)[N]) {
     return span_const<T>(arr);
 }
 
 template <typename T>
-inline constexpr auto make_span(T* arr, size_t N) {
+inline constexpr custom_span<T> make_span(T* arr, size_t N) {
     return custom_span<T>(arr, N);
 }
 
 template <typename T>
-inline constexpr auto make_span(T &arr) {
+inline constexpr custom_span<T> make_span(T &arr) {
     return custom_span<T>(arr.data(), arr.size());
 }
 
 template <typename T, std::size_t N>
-inline constexpr auto make_span(const std::array<T, N> arr) {
+inline constexpr span_const<T> make_span(const std::array<T, N> arr) {
     return span_const<T>((T*)arr.data(), arr.size());
 }
 

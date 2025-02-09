@@ -983,6 +983,10 @@ void build_planner::update_special_case_orientations_check() {
 }
 
 void build_planner::update_unique_only_one_check() {
+    if (!build_type) {
+        return;
+    }
+
     bool unique_already_placed = false;
 
     const auto &params = building_impl::params(build_type);
@@ -1000,12 +1004,9 @@ void build_planner::update_unique_only_one_check() {
     case BUILDING_TEMPLE_COMPLEX_BAST:
         //        case BUILDING_TEMPLE_COMPLEX_ALTAR:
         //        case BUILDING_TEMPLE_COMPLEX_ORACLE:
-        if (city_buildings_has_temple_complex() && !config_get(CONFIG_GP_CH_MULTIPLE_TEMPLE_COMPLEXES))
+        if (g_city.buildings.has_temple_complex() && !config_get(CONFIG_GP_CH_MULTIPLE_TEMPLE_COMPLEXES))
             unique_already_placed = true;
         break;
-
-    default:
-        ; // nothing
     }
 
     if (unique_already_placed) {
@@ -1292,14 +1293,6 @@ void build_planner::construction_finalize() { // confirm final placement
     // update city building info with newly created
     // building for special/unique constructions
     switch (build_type) {
-    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-    case BUILDING_TEMPLE_COMPLEX_RA:
-    case BUILDING_TEMPLE_COMPLEX_PTAH:
-    case BUILDING_TEMPLE_COMPLEX_SETH:
-    case BUILDING_TEMPLE_COMPLEX_BAST:
-        city_buildings_add_temple_complex(last_created_building);
-        break;
-
     case BUILDING_FERRY:
         should_recalc_ferry_routes = true;
         break;
@@ -1342,6 +1335,7 @@ void build_planner::construction_finalize() { // confirm final placement
     map_tiles_update_region_empty_land(false, start.shifted(-2, -2), end.shifted(size.x + 2, size.y + 2));
     map_routing_update_land();
     map_routing_update_walls();
+    building_menu_update_temple_complexes();
 
     if (should_recalc_ferry_routes) {
         map_routing_update_ferry_routes();
