@@ -25,7 +25,6 @@
 #include "js/js_game.h"
 
 building_garden::static_params garden_m;
-info_window_garden garden_infow;
 
 int building_garden::static_params::place_impl(tile2i start, tile2i end) const {
     game_undo_restore_map(1);
@@ -65,32 +64,11 @@ int building_garden::static_params::planer_construction_place(build_planner &pla
     return place_impl(start, end);
 }
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_garden);
-void config_load_building_garden() {
-    garden_m.load();
-    garden_infow.load("info_window_garden");
-}
-
 void building_garden::on_place_checks() {  /*nothing*/ }
-
-void info_window_garden::window_info_background(object_info &c) {
-    const auto &params = building_impl::params(BUILDING_GARDENS);
-    c.help_id = params.meta.help_id;
-    
-    common_info_window::window_info_background(c);
-
-    window_building_play_sound(&c, snd::get_building_info_sound(BUILDING_GARDENS));
-
-    ui["title"] = ui::str(params.meta.text_id, 0);
-}
-
-bool info_window_garden::check(object_info &c) {
-    return !!map_terrain_is(c.grid_offset, TERRAIN_GARDEN);
-}
 
 void building_garden::set_image(int grid_offset) {
     tile2i tile(grid_offset);
-    int garden_base = garden_m.anim["base"].first_img();
+    int garden_base = garden_m.anim[animkeys().base].first_img();
     if (map_terrain_is(grid_offset, TERRAIN_GARDEN)
         && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
         if (!map_image_at(grid_offset)) {

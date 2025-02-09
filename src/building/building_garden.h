@@ -1,7 +1,6 @@
 #pragma once
 
 #include "building/building.h"
-#include "window/window_building_info.h"
 
 class building_garden : public building_impl {
 public:
@@ -21,12 +20,4 @@ public:
 
     static void set_image(int grid_offset);
     static void determine_tile(int grid_offset);
-};
-
-struct info_window_garden : public common_info_window {
-    info_window_garden() {
-        window_building_register_handler(this);
-    }
-    virtual void window_info_background(object_info &c) override;
-    virtual bool check(object_info &c) override;
 };
