@@ -265,6 +265,9 @@ void figure::advance_route_tile(int roaming_enabled) {
             //
             break; // OK to walk
 
+        case BUILDING_ROADBLOCK:
+            break;
+
         case BUILDING_BURNING_RUIN:
             if (b->state != BUILDING_STATE_RUBBLE) {
                 direction = DIR_FIGURE_REROUTE;
