@@ -145,45 +145,6 @@ bool build_planner::ghost_mark_deleting(tile2i tile) {
     return true;
 }
 
-void build_planner_latch_on_venue(e_building_type type, building *b, int dx, int dy, int orientation, bool main_venue) {
-    tile2i point = b->tile.shifted(dx, dy);
-    // set map graphics accordingly
-
-    const auto &params = b->dcast()->params();
-    switch (type) {
-    case BUILDING_GARDENS:
-        map_terrain_add(point, TERRAIN_GARDEN);
-        map_tiles_update_all_gardens();
-        break;
-
-    case BUILDING_BOOTH: {
-           int booth = params.anim["booth"].first_img();
-           map_image_set(point, booth);
-        }
-        break;
-
-    case BUILDING_BANDSTAND:
-        if (main_venue) {
-            int stand_sn_s = params.anim["stand_sn_s"].first_img();
-            b->data.entertainment.latched_venue_main_grid_offset = point.grid_offset();
-            int offset = map_bandstand_main_img_offset(orientation);
-            map_image_set(point, stand_sn_s + offset);
-        } else {
-            int stand_sn_s = params.anim["stand_sn_s"].first_img();
-            b->data.entertainment.latched_venue_add_grid_offset = point.grid_offset();
-            int offset = map_bandstand_add_img_offset(orientation);
-            map_image_set(point, stand_sn_s + offset);
-        }
-        break;
-
-    case BUILDING_PAVILLION: {
-            int base_id = params.anim["base"].first_img();
-            map_building_tiles_add(b->id, point, 2, base_id, TERRAIN_BUILDING);
-        }
-        break;
-    }
-}
-
 void build_planner::mark_construction(tile2i tile, vec2i size, int terrain, bool absolute_xy) {
     if (g_city_planner.can_be_placed() == CAN_PLACE
         && map_building_tiles_mark_construction(tile, size.x, size.y, terrain, absolute_xy)) {

@@ -93,10 +93,10 @@ void building_booth::on_place_update_tiles(int orientation, int variant) {
 
     // add additional building parts, update graphics accordingly
     switch (absolute_orientation) {
-    case 0: build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 0, orientation, true); break;
-    case 1: build_planner_latch_on_venue(BUILDING_BOOTH, &base, 1, 0, orientation, true); break;
-    case 2: build_planner_latch_on_venue(BUILDING_BOOTH, &base, 1, 1, orientation, true); break;
-    case 3: build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 1, orientation, true); break;
+    case 0: place_latch_on_venue(BUILDING_BOOTH, 0, 0, orientation, true); break;
+    case 1: place_latch_on_venue(BUILDING_BOOTH, 1, 0, orientation, true); break;
+    case 2: place_latch_on_venue(BUILDING_BOOTH, 1, 1, orientation, true); break;
+    case 3: place_latch_on_venue(BUILDING_BOOTH, 0, 1, orientation, true); break;
     }
 }
 

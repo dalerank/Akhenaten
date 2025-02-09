@@ -145,7 +145,5 @@ public:
     void draw_tile_graphics_array(painter &ctx, tile2i start, tile2i end, vec2i pixel);
 };
 
-void build_planner_latch_on_venue(e_building_type type, building *b, int dx, int dy, int orientation, bool main_venue = false);
-
 extern build_planner g_city_planner;
 extern const vec2i VIEW_OFFSETS[];

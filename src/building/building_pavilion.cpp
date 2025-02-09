@@ -130,7 +130,7 @@ void building_pavilion::on_place_update_tiles(int orientation, int variant) {
     map_add_venue_plaza_tiles(id(), size, tile(), image_id, false);
     int absolute_orientation = abs(basic_orientation + (8 - city_view_orientation())) % 8;
     for (const auto &item: pavilion_m.place_dir[absolute_orientation].items) {
-        build_planner_latch_on_venue(item.type, &base, item.offset.x, item.offset.y, orientation, item.main);
+        place_latch_on_venue(item.type, item.offset.x, item.offset.y, orientation, item.main);
     }
 }
 

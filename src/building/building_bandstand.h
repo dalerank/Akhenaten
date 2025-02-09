@@ -41,4 +41,5 @@ public:
     void draw_shows_musicians(painter &ctx, vec2i pixel, int direction, color color_mask);
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
+    void map_add_bandstand_tiles();
 };

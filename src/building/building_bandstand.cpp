@@ -123,40 +123,50 @@ void building_bandstand::on_place_update_tiles(int orientation, int variant) {
     // add additional building parts, update graphics accordingly
     switch (absolute_orientation) {
     case 0:
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 1, 0);
-        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 2, 0, 0);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 0, 0, 0, true);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 0, 1, 0, false);
+        place_latch_on_venue(BUILDING_GARDENS, 2, 1, 0);
+        place_latch_on_venue(BUILDING_BOOTH, 2, 0, 0);
+        place_latch_on_venue(BUILDING_BANDSTAND, 0, 0, 0, true);
+        place_latch_on_venue(BUILDING_BANDSTAND, 0, 1, 0, false);
         break;
 
     case 1:
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 2, 0);
-        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 2, 2, 0);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 1, 0, 1, true);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 2, 0, 1, false);
+        place_latch_on_venue(BUILDING_GARDENS, 1, 2, 0);
+        place_latch_on_venue(BUILDING_BOOTH, 2, 2, 0);
+        place_latch_on_venue(BUILDING_BANDSTAND, 1, 0, 1, true);
+        place_latch_on_venue(BUILDING_BANDSTAND, 2, 0, 1, false);
         break;
 
     case 2:
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 2, 1, 0);
-        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 2, 2, 0);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 0, 1, 2, true);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 0, 2, 2, false);
+        place_latch_on_venue(BUILDING_GARDENS, 2, 1, 0);
+        place_latch_on_venue(BUILDING_BOOTH, 2, 2, 0);
+        place_latch_on_venue(BUILDING_BANDSTAND, 0, 1, 2, true);
+        place_latch_on_venue(BUILDING_BANDSTAND, 0, 2, 2, false);
         break;
 
     case 3:
-        build_planner_latch_on_venue(BUILDING_GARDENS, &base, 1, 2, 0);
-        build_planner_latch_on_venue(BUILDING_BOOTH, &base, 0, 2, 0);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 1, 0, 3, true);
-        build_planner_latch_on_venue(BUILDING_BANDSTAND, &base, 0, 0, 3, false);
+        place_latch_on_venue(BUILDING_GARDENS, 1, 2, 0);
+        place_latch_on_venue(BUILDING_BOOTH, 0, 2, 0);
+        place_latch_on_venue(BUILDING_BANDSTAND, 1, 0, 3, true);
+        place_latch_on_venue(BUILDING_BANDSTAND, 0, 0, 3, false);
         break;
     }
 }
+
+void building_bandstand::map_add_bandstand_tiles() {
+    int offset = bandstand_main_img_offset(data.entertainment.orientation);
+    int offset_add = bandstand_add_img_offset(data.entertainment.orientation);
+
+    int stand_sn_s = building_impl::params(BUILDING_BANDSTAND).anim["stand_sn_s"].first_img();
+    map_image_set(data.entertainment.latched_venue_main_grid_offset, stand_sn_s + offset);
+    map_image_set(data.entertainment.latched_venue_add_grid_offset, stand_sn_s + offset_add);
+}
+
 
 void building_bandstand::update_map_orientation(int map_orientation) {
     int plaza_image_id = anim(animkeys().square).first_img();
     tile2i btile(data.entertainment.booth_corner_grid_offset);
     map_add_venue_plaza_tiles(id(), base.size, btile, plaza_image_id, true);
-    map_add_bandstand_tiles(&base);
+    map_add_bandstand_tiles();
 }
 
 void building_bandstand::spawn_figure() {
