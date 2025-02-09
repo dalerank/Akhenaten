@@ -510,7 +510,7 @@ public:
     void industry_add_workers(int fid);
     void industry_remove_worker(int fid);
 
-    static const metainfo &get_info(pcstr type);
+    static const metainfo &get_info(const xstring type);
 
     template<typename T>
     building_impl *acquire_impl() {
@@ -530,7 +530,7 @@ public:
         bool fire_proof;
         bool damage_proof;
         bool is_draggable;
-        bstring64 meta_id;
+        xstring meta_id;
         metainfo meta;
         e_resource input_resource;
         e_resource input_resource_second;

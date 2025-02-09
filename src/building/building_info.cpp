@@ -5,7 +5,7 @@
 
 #include "js/js_game.h"
 
-std::map<std::string, metainfo> g_building_metainfo;
+std::map<xstring, metainfo> g_building_metainfo;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_info);
 void config_load_building_info() {
@@ -17,6 +17,6 @@ void config_load_building_info() {
     });
 }
 
-const metainfo &building::get_info(pcstr type) {
+const metainfo &building::get_info(const xstring type) {
     return g_building_metainfo[type];
 }
