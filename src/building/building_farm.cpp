@@ -141,7 +141,7 @@ void building_farm::static_params_t<T>::planer_ghost_preview(build_planner &plan
         return;
     }
 
-    int image_id = get_farm_image(TYPE, end);
+    int image_id = get_farm_image(this->TYPE, end);
     planer.draw_building_ghost(ctx, image_id, pixel + vec2i{ -60, 30 });
     draw_crops(ctx, TYPE, 0, end, pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
 }
