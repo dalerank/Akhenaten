@@ -1420,7 +1420,7 @@ building_plaza = {
   building_size : 1,
 }
 
-building_garden = {
+building building_garden = {
   animations : {
     preview : { pack:PACK_GENERAL, id:59 },
     base : { pack:PACK_GENERAL, id:59 },

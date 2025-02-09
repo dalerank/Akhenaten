@@ -66,7 +66,6 @@ var building_vacant_lot = {}
 var building_senet_house = {}
 var building_bullfight_school = {}
 var building_plaza = {}
-var building_garden = {}
 var building_brick_tower = {}
 var building_mud_tower = {}
 var building_road = {}

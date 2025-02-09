@@ -16,7 +16,9 @@ void info_window_garden::init(object_info &c) {
 
     window_building_play_sound(&c, snd::get_building_info_sound(BUILDING_GARDENS));
 
-    ui["title"] = ui::str(c.group_id, 0);
+    const auto &params = building_impl::params(BUILDING_GARDENS);
+    ui["title"] = ui::str(params.meta.text_id, 0);
+    ui["text"] = ui::str(params.meta.text_id, 1);
 }
 
 bool info_window_garden::check(object_info &c) {
