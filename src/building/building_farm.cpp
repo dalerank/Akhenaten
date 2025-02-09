@@ -391,6 +391,7 @@ e_sound_channel_city building_farm::sound_channel() const {
     case BUILDING_CHICKPEAS_FARM:
     case BUILDING_BARLEY_FARM:
     case BUILDING_FLAX_FARM:
+    case BUILDING_GRAIN_FARM:
         return SOUND_CHANNEL_CITY_CHICKFARM;
 
     default:
