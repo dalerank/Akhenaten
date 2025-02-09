@@ -67,7 +67,7 @@ void building_mastaba::static_params_t<T>::planer_setup_preview_graphics(build_p
 
 template<class T>
 void building_mastaba::static_params_t<T>::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
-    int image_id = anim[animkeys().base].first_img();
+    int image_id = this->anim[animkeys().base].first_img();
     auto get_image = [image_id] (tile2i tile, tile2i start, vec2i size) {
         if (tile == start) {
             return image_id;
