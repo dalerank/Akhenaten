@@ -491,6 +491,7 @@ public:
     building_physician *dcast_physician();
     building_wharf *dcast_wharf();
     building_warship_wharf *dcast_warship_wharf();
+    building_temple_complex *dcast_temple_complex();
     building_temple_complex_altar *dcast_temple_complex_altar();
 
     bool spawn_noble(bool spawned);

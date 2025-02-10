@@ -239,6 +239,7 @@ building_mansion *building::dcast_mansion() { return dcast()->dcast_mansion(); }
 building_physician *building::dcast_physician() { return dcast()->dcast_physician(); }
 building_wharf *building::dcast_wharf() { return dcast()->dcast_wharf(); }
 building_warship_wharf *building::dcast_warship_wharf() { return dcast()->dcast_warship_wharf(); }
+building_temple_complex *building::dcast_temple_complex() { return dcast()->dcast_temple_complex(); }
 building_temple_complex_altar *building::dcast_temple_complex_altar() { return dcast()->dcast_temple_complex_altar(); }
 
 building::building() {
