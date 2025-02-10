@@ -50,6 +50,8 @@ public:
     inline self div(float d) { return self(this->x() / d, this->y() / d); }
     inline bool valid() const { return (p_X >= 0 && p_Y >= 0 && p_X < MAX_TILE_I && p_Y < MAX_TILE_I); }
 
+    inline self operator*(int times) { return self(this->x() * 2, this->y() * 2); }
+
     // SET BY CONSTRUCTION
     void set(int _x, int _y);
     void set(int _grid_offset);
