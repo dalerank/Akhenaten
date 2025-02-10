@@ -19,52 +19,12 @@
 #include "building/count.h"
 #include "widget/city/ornaments.h"
 #include "window/window_building_info.h"
-#include "js/js_game.h"
 
 buildings::model_t<building_temple_osiris> temple_osiris_m;
 buildings::model_t<building_temple_ra> temple_ra_m;
 buildings::model_t<building_temple_ptah> temple_ptah_m;
 buildings::model_t<building_temple_seth> temple_seth_m;
 buildings::model_t<building_temple_bast> temple_bast_m;
-
-struct temple_info_window_t : public building_info_window {
-    virtual void init(object_info &c) override {
-        building_info_window::init(c);
-
-        auto temple = c.building_get()->dcast_temple();
-
-        int image_offset = 0;
-        switch (temple->type()) {
-        case BUILDING_TEMPLE_OSIRIS: image_offset = 21; break;
-        case BUILDING_TEMPLE_RA: image_offset = 22; break;
-        case BUILDING_TEMPLE_PTAH: image_offset = 23; break;
-        case BUILDING_TEMPLE_SETH: image_offset = 24; break;
-        case BUILDING_TEMPLE_BAST: image_offset = 25; break;
-
-        default:
-            assert(false);
-        }
-
-        ui["god_image"].image({PACK_UNLOADED, 21, image_offset});
-    }
-
-    virtual bool check(object_info &c) override { 
-        building *b = c.building_get();
-        return !!b->dcast_temple();
-    }
-};
-
-temple_info_window_t g_temple_info_window;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_temples);
-void config_load_building_temples() {
-    temple_osiris_m.load();
-    temple_ra_m.load();
-    temple_ptah_m.load();
-    temple_seth_m.load();
-    temple_bast_m.load();
-    g_temple_info_window.load("temple_info_window");
-}
 
 e_overlay building_temple::get_overlay() const {
     switch(type()) {
