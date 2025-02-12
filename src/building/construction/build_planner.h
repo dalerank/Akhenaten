@@ -23,13 +23,16 @@ enum e_building_flag : uint32_t {
     Walls = 1 << 13,
     Canals = 1 << 14,
     //
-    TempleUpgrade = 1 << 16,
+    Reserved = 1 << 16,
     Resources = 1 << 17,
     IgnoreNearbyEnemy = 1 << 18,
     //
     Draggable = 1 << 21,
     Ferry = 1 << 22,
     Bridge = 1 << 23,
+    //
+    TempleUpgradeAltar = 1 << 24,
+    TempleUpgradeOracle = 1 << 25,
 };
 
 enum e_place_action {

@@ -29,6 +29,7 @@
 #include "building/rotation.h"
 #include "building/building_fort.h"
 #include "building/building.h"
+#include "building/building_temple_complex.h"
 #include "city/buildings.h"
 #include "city/city_buildings.h"
 #include "city/finance.h"
@@ -466,7 +467,7 @@ void build_planner::setup_build(e_building_type type) { // select building for c
 void build_planner::setup_build_flags() {
     const auto &params = building_impl::params(build_type);
 
-    const e_building_flag flags[] = { e_building_flag::Meadow, e_building_flag::Rock, e_building_flag::Ore };
+    const e_building_flag flags[] = { e_building_flag::Meadow, e_building_flag::Rock, e_building_flag::Ore, e_building_flag::TempleUpgradeAltar };
 
     for (const auto flag: flags) {
         const bool is_need = params.planer_is_need_flag(flag);
@@ -565,12 +566,8 @@ void build_planner::setup_build_flags() {
         set_flag(e_building_flag::IgnoreNearbyEnemy);
         break;
 
-    case BUILDING_TEMPLE_COMPLEX_ALTAR:
-        set_flag(e_building_flag::TempleUpgrade, 2);
-        break;
-
     case BUILDING_TEMPLE_COMPLEX_ORACLE:
-        set_flag(e_building_flag::TempleUpgrade, 1);
+        set_flag(e_building_flag::TempleUpgradeOracle);
         break;
     }
 
@@ -631,7 +628,7 @@ void build_planner::update_obstructions_check() {
                 restricted_terrain -= TERRAIN_WATER;
             }
 
-            if (special_flags & e_building_flag::TempleUpgrade) { // special case
+            if ((special_flags & e_building_flag::TempleUpgradeAltar) || (special_flags & e_building_flag::TempleUpgradeOracle)) { // special case
                 return;
             }
 
@@ -790,6 +787,7 @@ void build_planner::update_special_case_orientations_check() {
             update_orientations(false);
         }
     }
+
     if (special_flags & e_building_flag::Intersection) {
         bool match = map_orientation_for_venue_with_map_orientation(end, (e_venue_mode_orientation)additional_req_param1, &dir_relative);
         int city_direction = dir_relative / 2;
@@ -802,9 +800,11 @@ void build_planner::update_special_case_orientations_check() {
         }
     }
 
-    if (special_flags & e_building_flag::TempleUpgrade) {
-        building* target = building_at(end.grid_offset())->main();
-        if (!building_at(end.grid_offset()) || !building_is_temple_complex(target->type)) {
+    const bool templeAltar = (special_flags & e_building_flag::TempleUpgradeAltar);
+    const bool templeOracle = (special_flags & e_building_flag::TempleUpgradeOracle);
+    if (templeAltar || templeOracle) {
+        auto target = building_at(end)->main()->dcast_temple_complex();
+        if (!target) {
             immediate_warning_id = WARNING_TEMPLE_UPGRADE_PLACEMENT_NEED_TEMPLE;
             can_place = CAN_NOT_PLACE;
         } else if (target->data.monuments.temple_complex_attachments & additional_req_param1) {
@@ -814,7 +814,7 @@ void build_planner::update_special_case_orientations_check() {
             int dir_absolute = (5 - (target->data.monuments.variant / 2)) % 4;
             dir_relative = city_view_relative_orientation(dir_absolute);
             relative_orientation = (1 + dir_relative) % 2;
-            end = temple_complex_part_target(target, additional_req_param1);
+            end = temple_complex_part_target(&target->base, additional_req_param1);
             update_orientations(false);
         }
     }
@@ -1183,6 +1183,10 @@ void build_planner::construction_finalize() { // confirm final placement
 //////////////////////
 
 void build_planner::update(tile2i cursor_tile) {
+    if (!build_type) {
+        return;
+    }
+
     end = cursor_tile;
     update_coord_caches();
 
