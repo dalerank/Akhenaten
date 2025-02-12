@@ -12,6 +12,7 @@
 #include "core/game_environment.h"
 #include "io/gamefiles/lang.h"
 #include "building/industry.h"
+#include "building/building_temple_complex.h"
 
 #include "dev/debug.h"
 #include "js/js_game.h"
@@ -382,11 +383,11 @@ void building_menu_update_temple_complexes() {
         }
 
         // check if upgrades have been placed
-        building* b = building_get(temple_complex_id);
-        const bool temple_has_altar = (b->data.monuments.temple_complex_attachments & 2); // altar
+        auto b = building_get_ex<building_temple_complex>(temple_complex_id);
+        const bool temple_has_altar = b && b->has_attachement(etc_attachement_altar);
         building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ALTAR, !temple_has_altar);
 
-        const bool temple_has_oracle = (b->data.monuments.temple_complex_attachments & 1); // oracle
+        const bool temple_has_oracle = b && b->has_attachement(etc_attachement_oracle);
         building_menu_toggle_building(BUILDING_TEMPLE_COMPLEX_ORACLE, !temple_has_oracle);
 
         // all upgrades have been placed!

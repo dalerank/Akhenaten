@@ -800,21 +800,22 @@ void build_planner::update_special_case_orientations_check() {
         }
     }
 
-    const bool templeAltar = (special_flags & e_building_flag::TempleUpgradeAltar);
-    const bool templeOracle = (special_flags & e_building_flag::TempleUpgradeOracle);
-    if (templeAltar || templeOracle) {
+    const bool temple_altar = (special_flags & e_building_flag::TempleUpgradeAltar);
+    const bool temple_oracle = (special_flags & e_building_flag::TempleUpgradeOracle);
+    const int temple_options = (temple_altar ? etc_attachement_altar : 0) | (temple_oracle ? etc_attachement_oracle : 0);
+    if (temple_altar || temple_oracle) {
         auto target = building_at(end)->main()->dcast_temple_complex();
         if (!target) {
             immediate_warning_id = WARNING_TEMPLE_UPGRADE_PLACEMENT_NEED_TEMPLE;
             can_place = CAN_NOT_PLACE;
-        } else if (target->data.monuments.temple_complex_attachments & additional_req_param1) {
+        } else if (target->has_attachement((e_temple_compex_attachement)temple_options) ) {
             immediate_warning_id = WARNING_TEMPLE_UPGRADE_ONLY_ONE;
             can_place = CAN_NOT_PLACE;
         } else {
             int dir_absolute = (5 - (target->data.monuments.variant / 2)) % 4;
             dir_relative = city_view_relative_orientation(dir_absolute);
             relative_orientation = (1 + dir_relative) % 2;
-            end = temple_complex_part_target(&target->base, additional_req_param1);
+            end = target->tile();
             update_orientations(false);
         }
     }

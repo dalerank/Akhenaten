@@ -140,7 +140,7 @@ enum e_fancy_state {
 class building_work_camp;
 class building_farm;
 
-building* building_get(int id);
+building* building_get(building_id id);
 
 class building {
 public:
