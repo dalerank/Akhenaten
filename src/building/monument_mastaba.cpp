@@ -550,6 +550,22 @@ bool building_mastaba::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pix
     return (data.monuments.phase < 2);
 }
 
+void building_mastaba::bind_dynamic(io_buffer *iob, size_t version) {
+    iob->bind____skip(38);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.orientation);
+    for (int i = 0; i < 5; i++) {
+        iob->bind(BIND_SIGNATURE_UINT16, &data.monuments.workers[i]);
+    }
+    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.phase);
+    iob->bind____skip(1); // (BIND_SIGNATURE_UINT8, &data.monuments.statue_offset);
+    iob->bind____skip(1); // (BIND_SIGNATURE_UINT8, &data.monuments.temple_complex_attachments);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.variant);
+
+    for (int i = 0; i < RESOURCES_MAX; i++) {
+        iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.resources_pct[i]);
+    }
+}
+
 void building_small_mastaba::on_place(int orientation, int variant) {
     building_mastaba::on_place(orientation, variant);
 

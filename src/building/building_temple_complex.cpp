@@ -221,6 +221,22 @@ void building_temple_complex::on_place(int orientation, int variant) {
     building *oracle = add_temple_complex_element(tile().shifted(offset * 2), BUILDING_TEMPLE_COMPLEX_ORACLE, orientation, altar);
 }
 
+void building_temple_complex::bind_dynamic(io_buffer *iob, size_t version) {
+    iob->bind____skip(34);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.orientation);
+    for (int i = 0; i < 5; i++) {
+        iob->bind(BIND_SIGNATURE_UINT16, &data.monuments.workers[i]);
+    }
+    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.phase);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.statue_offset);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.temple_complex_attachments);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.variant);
+
+    for (int i = 0; i < RESOURCES_MAX; i++) {
+        iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.resources_pct[i]);
+    }
+}
+
 building *building_temple_complex::get_altar() const {
     building *next = base.next();
     while (next) {

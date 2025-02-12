@@ -2,6 +2,11 @@
 
 #include "building/building.h"
 
+enum e_temple_compex_attachement : uint8_t {
+    etc_attachement_altar = 1 << 0,
+    etc_attachement_oracle = 1 << 1,
+};
+
 class building_temple_complex : public building_impl {
 public:
     building_temple_complex(building &b) : building_impl(b) {}
@@ -24,6 +29,10 @@ public:
     virtual void update_count() const override;
     virtual void on_post_load() override;
     virtual void on_place(int orientation, int variant) override;
+    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+
+    bool has_attachement(e_temple_compex_attachement a) const { return !!(data.monuments.temple_complex_attachments & a); }
+    void set_attachement(e_temple_compex_attachement a) { data.monuments.temple_complex_attachments |= a; }
 
     building *get_altar() const;
 
