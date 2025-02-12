@@ -17,7 +17,7 @@ building *building_create(e_building_type type, tile2i tile, int orientation);
 
 building *building_at(int grid_offset);
 building *building_at(int x, int y);
-building *building_at(tile2i point);
+building *building_at(tile2i tile);
 
 bool building_exists_at(int grid_offset, building *b);
 
@@ -27,6 +27,12 @@ void building_clear_all();
 int building_get_highest_id();
 void building_update_highest_id();
 void building_update_state();
+
+template<typename T>
+T* building_at_ex(tile2i tile) {
+    building *b = building_at(tile);
+    return smart_cast<T>(b);
+}
 
 template<typename T>
 void buildings_valid_do(T func) {
