@@ -23,7 +23,7 @@ void building_well::static_params::planer_ghost_preview(build_planner &planer, p
         });
     }
 
-    building_impl::static_params::planer_ghost_preview(planer, ctx, tile, end, pixel);
+    inherited::planer_ghost_preview(planer, ctx, tile, end, pixel);
 }
 
 void building_well::update_month() {

@@ -11,6 +11,8 @@ public:
     virtual building_well *dcast_well() override { return this; }
 
     struct static_params : public buildings::model_t<building_well> {
+        using inherited = buildings::model_t<building_well>;
+
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };
 
