@@ -1080,6 +1080,7 @@ void building_impl::static_params::load(archive arch) {
     needs.meadow = arch.r_bool("need_meadow");
     needs.rock = arch.r_bool("need_rock");
     needs.ore = arch.r_bool("need_ore");
+    needs.altar = arch.r_bool("need_altar");
 
     city_labor_set_category(type, labor_category);
 
@@ -1209,6 +1210,7 @@ bool building_impl::static_params::planer_is_need_flag(e_building_flags flag) co
     case e_building_flag::Meadow: return needs.meadow;
     case e_building_flag::Rock: return needs.rock;
     case e_building_flag::Ore: return needs.ore;
+    case e_building_flag::TempleUpgradeAltar: return needs.altar;
     }
 
     return false;

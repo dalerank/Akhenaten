@@ -556,6 +556,7 @@ public:
             bool meadow;
             bool rock;
             bool ore;
+            bool altar;
         } needs;
 
         void load(archive arch);
