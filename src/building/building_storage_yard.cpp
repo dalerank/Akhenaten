@@ -65,10 +65,10 @@ void building_storage_yard::static_params::planer_ghost_preview(build_planner &p
     int image_id_space = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
-            build_planner::draw_building_ghost(ctx, image_id_hut, pixel + VIEW_OFFSETS[i]);
+            planer.draw_building_ghost(ctx, image_id_hut, pixel + VIEW_OFFSETS[i]);
             ImageDraw::img_generic(ctx, image_id_hut + 17, pixel.x + VIEW_OFFSETS[i].x + corner_offset.x, pixel.y + VIEW_OFFSETS[i].y + corner_offset.y, COLOR_MASK_GREEN);
         } else {
-            build_planner::draw_building_ghost(ctx, image_id_space, pixel + VIEW_OFFSETS[i] + place_offset);
+            planer.draw_building_ghost(ctx, image_id_space, pixel + VIEW_OFFSETS[i] + place_offset);
         }
     }
 }

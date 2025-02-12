@@ -51,10 +51,10 @@ void building_booth::static_params::planer_ghost_preview(build_planner &planer, 
         }
 
         switch (orientation / 2) {
-        case 0: build_planner::draw_building_ghost(ctx, params.booth, pixel, COLOR_MASK_GREEN); break;
-        case 1: build_planner::draw_building_ghost(ctx, params.booth, pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN); break;
-        case 2: build_planner::draw_building_ghost(ctx, params.booth, pixel + vec2i{ 0, 30 }, COLOR_MASK_GREEN); break;
-        case 3: build_planner::draw_building_ghost(ctx, params.booth, pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN); break;
+        case 0: planer.draw_building_ghost(ctx, params.booth, pixel, COLOR_MASK_GREEN); break;
+        case 1: planer.draw_building_ghost(ctx, params.booth, pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN); break;
+        case 2: planer.draw_building_ghost(ctx, params.booth, pixel + vec2i{ 0, 30 }, COLOR_MASK_GREEN); break;
+        case 3: planer.draw_building_ghost(ctx, params.booth, pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN); break;
         }
     }
 }
