@@ -8,7 +8,7 @@ inline building *building_end() { return building_get(MAX_BUILDINGS); }
 
 custom_span<building> &city_buildings();
 
-building *building_next(int id, e_building_type type);
+building *building_next(building_id id, e_building_type type);
 
 int building_id_first(e_building_type type);
 building *building_first(e_building_type type);
@@ -20,7 +20,6 @@ building *building_at(int x, int y);
 building *building_at(tile2i tile);
 
 bool building_exists_at(int grid_offset, building *b);
-
 bool building_exists_at(tile2i point, building *b);
 
 void building_clear_all();
@@ -31,6 +30,12 @@ void building_update_state();
 template<typename T>
 T* building_at_ex(tile2i tile) {
     building *b = building_at(tile);
+    return smart_cast<T>(b);
+}
+
+template<typename T>
+T *building_get_ex(building_id bid) {
+    building *b = building_get(bid);
     return smart_cast<T>(b);
 }
 

@@ -14,7 +14,7 @@
 building g_all_buildings[5000];
 custom_span<building> g_city_buildings = make_span(g_all_buildings);
 
-building *building_get(int id) {
+building *building_get(building_id id) {
     return &g_all_buildings[id];
 }
 
@@ -22,9 +22,9 @@ custom_span<building> &city_buildings() {
     return g_city_buildings;
 }
 
-building *building_next(int i, e_building_type type) {
-    for (; i < MAX_BUILDINGS; ++i) {
-        building *b = building_get(i);
+building *building_next(building_id bid, e_building_type type) {
+    for (; bid < MAX_BUILDINGS; ++bid) {
+        building *b = building_get(bid);
         if (b->state == BUILDING_STATE_VALID && b->type == type)
             return b;
     }
@@ -222,29 +222,6 @@ void building_update_state(void) {
     }
 }
 
-static void io_type_data(io_buffer *iob, building *b, size_t version) {
-    auto &data = b->data;
-
-    b->dcast()->bind_dynamic(iob, version);
-    if (building_is_temple_complex(b->type) || building_is_monument(b->type)) {
-        iob->bind____skip(38);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.orientation);
-        for (int i = 0; i < 5; i++) {
-            iob->bind(BIND_SIGNATURE_UINT16, &data.monuments.workers[i]);
-        }
-        iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.phase);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.statue_offset);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.temple_complex_attachments);
-        iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.variant);
-
-        for (int i = 0; i < RESOURCES_MAX; i++) {
-            iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.resources_pct[i]);
-        }
-    } else {
-        ; // nothing
-    }
-}
-
 io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         //        building_state_load_from_buffer(buf, &all_buildings[i]);
@@ -308,7 +285,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->health_proof);
         iob->bind(BIND_SIGNATURE_INT16, &b->formation_id);
 
-        io_type_data(iob, b, version); // 102 for PH
+        b->dcast()->bind_dynamic(iob, version); // 102 for PH
 
         int currind = iob->get_offset() - sind;
         assert(currind > 0);
