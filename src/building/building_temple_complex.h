@@ -25,7 +25,21 @@ public:
     virtual void on_post_load() override;
     virtual void on_place(int orientation, int variant) override;
 
+    building *get_altar() const;
+
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_NONE; }
+};
+
+class building_temple_complex_altar : public building_impl {
+public:
+    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_ALTAR, building_temple_complex_altar)
+    building_temple_complex_altar(building &b) : building_impl(b) {}
+
+    struct static_params : public buildings::model_t<building_temple_complex_altar> {
+        virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
+    };
+
+    virtual building_temple_complex_altar *dcast_temple_complex_altar() override { return this; }
 };
 
 class building_temple_complex_osiris : public building_temple_complex {

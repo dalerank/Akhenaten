@@ -5,7 +5,21 @@
 #include "grid/building_tiles.h"
 #include "grid/terrain.h"
 #include "grid/image.h"
+#include "building/rotation.h"
+#include "graphics/view/lookup.h"
 #include "construction/build_planner.h"
+
+tile2i building_part_offset(int orientation, int size) {
+    tile2i offset = { 0, 0 };
+    switch (orientation) {
+    case 0: offset = { 0, -size }; break;
+    case 1: offset = { size, 0 }; break;
+    case 2: offset = { 0, size }; break;
+    case 3: offset = { -size, 0 }; break;
+    }
+
+    return offset;
+}
 
 template<class T>
 void building_temple_complex::static_params_t<T>::load(archive arch) {
@@ -146,11 +160,34 @@ void building_temple_complex::static_params_t<T>::planer_setup_preview_graphics(
     }
 }
 
+void building_temple_complex_altar::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
+    int city_orientation = city_view_orientation() / 2;
+    int orientation = (1 + building_rotation_global_rotation() + city_orientation) % 2;
+    int image_id = anim[animkeys().base].first_img() + orientation;
+    auto complex = building_at_ex<building_temple_complex>(end);
+    if (complex) {
+        building *altar = complex->get_altar();
+
+        tile2i offset = { 0, 0 };
+        int bsize = building_size - 1;
+        switch (city_orientation) {
+        case 0: offset = { 0, bsize }; break;
+        case 1: offset = { 0, 0 }; break;
+        case 2: offset = { bsize, 0 }; break;
+        case 3: offset = { bsize, bsize }; break;
+        }
+
+        vec2i pixel_altar = tile_to_pixel(altar->tile.shifted(offset));
+        planer.draw_building_ghost(ctx, image_id, pixel_altar);
+    }
+}
+
 building_temple_complex_osiris::static_params building_temple_complex_osiris_m;
 building_temple_complex_ra::static_params building_temple_complex_ra_m;
 building_temple_complex_ptah::static_params building_temple_complex_ptah_m;
 building_temple_complex_seth::static_params building_temple_complex_seth_m;
 building_temple_complex_bast::static_params building_temple_complex_bast_m;
+building_temple_complex_altar::static_params building_temple_complex_altar_m;
 
 void building_temple_complex::on_create(int orientation) {
     data.monuments.variant = (10 - (2 * orientation)) % 8; // ugh!
@@ -162,8 +199,8 @@ void building_temple_complex::on_post_load() {
     g_city.buildings.track_building(base, is_active);
 }
 
-building *add_temple_complex_element(tile2i tile, int orientation, building *prev) {
-    building *b = building_create(prev->type, tile, orientation);
+building *add_temple_complex_element(tile2i tile, e_building_type type, int orientation, building *prev) {
+    building *b = building_create(type, tile, orientation);
     game_undo_add_building(b);
 
     b->size = 3;
@@ -178,16 +215,22 @@ building *add_temple_complex_element(tile2i tile, int orientation, building *pre
 void building_temple_complex::on_place(int orientation, int variant) {
     g_city_planner.add_building_tiles_from_list(id(), false);
 
-    tile2i offset = { 0, 0 };
-    switch (orientation) {
-    case 0: offset = { 0, -3 }; break;
-    case 1: offset = { 3, 0 }; break;
-    case 2: offset = { 0, 3 }; break;
-    case 3: offset = { -3, 0 }; break;
+    tile2i offset = building_part_offset(orientation, 3);
+
+    building *altar = add_temple_complex_element(tile().shifted(offset), BUILDING_TEMPLE_COMPLEX_ALTAR, orientation, &base);
+    building *oracle = add_temple_complex_element(tile().shifted(offset * 2), BUILDING_TEMPLE_COMPLEX_ORACLE, orientation, altar);
+}
+
+building *building_temple_complex::get_altar() const {
+    building *next = base.next();
+    while (next) {
+        if (next->type == BUILDING_TEMPLE_COMPLEX_ALTAR) {
+            break;
+        }
+        next = next->next();
     }
 
-    building *altar = add_temple_complex_element(tile().shifted(offset), orientation, &base);
-    building *oracle = add_temple_complex_element(tile().shifted(offset * 2), orientation, altar);
+    return next;
 }
 
 void building_temple_complex::update_count() const {

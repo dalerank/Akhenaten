@@ -1945,6 +1945,17 @@ building building_temple_complex_bast = {
   labor_category : LABOR_CATEGORY_RELIGION,
 }
 
+building building_temple_complex_altar = {
+  animations : {
+    preview : { pack:PACK_TEMPLE_NILE, id:7},
+    base : { pack:PACK_TEMPLE_NILE, id:7},
+  },
+
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_RELIGION,
+  need_altar : true,
+}
+
 building building_temple_complex_altar_ra = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
@@ -1952,5 +1963,5 @@ building building_temple_complex_altar_ra = {
 
   building_size : 3,
   labor_category : LABOR_CATEGORY_RELIGION,
-  need_temple_complex : true,
+  need_altar : true,
 }

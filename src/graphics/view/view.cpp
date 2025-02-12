@@ -250,7 +250,7 @@ static int get_camera_corner_offset(void) {
 
     return screentile_to_mappoint(data.camera.tile_internal).grid_offset();
 }
-static int get_center_grid_offset(void) {
+static int get_center_grid_offset() {
     auto& data = g_city_view_data;
 
     int x_center = data.camera.tile_internal.x + data.viewport.width_tiles / 2;
@@ -258,7 +258,7 @@ static int get_center_grid_offset(void) {
     return screentile_to_mappoint({x_center, y_center}).grid_offset();
 }
 
-void city_view_rotate_left(void) {
+void city_view_rotate_left() {
     auto& data = g_city_view_data;
 
     int center_grid_offset = get_center_grid_offset();
@@ -271,7 +271,8 @@ void city_view_rotate_left(void) {
         camera_go_to_screen_tile(screen, true);
     }
 }
-void city_view_rotate_right(void) {
+
+void city_view_rotate_right() {
     auto& data = g_city_view_data;
 
     int center_grid_offset = get_center_grid_offset();
