@@ -468,7 +468,7 @@ void build_planner::setup_build_flags() {
     const auto &params = building_impl::params(build_type);
 
     const e_building_flag flags[] = { e_building_flag::Meadow, e_building_flag::Rock, e_building_flag::Ore, e_building_flag::TempleUpgradeAltar,
-                                      e_building_flag::TempleUpgradeOracle, };
+                                      e_building_flag::TempleUpgradeOracle, e_building_flag::NearbyWater };
 
     for (const auto flag: flags) {
         const bool is_need = params.planer_is_need_flag(flag);
@@ -480,10 +480,6 @@ void build_planner::setup_build_flags() {
     switch (build_type) {
     default:
         ; // nothing
-        break;
-
-    case BUILDING_CLAY_PIT:
-        set_flag(e_building_flag::NearbyWater);
         break;
 
     case BUILDING_MUD_TOWER:
@@ -543,7 +539,7 @@ void build_planner::setup_build_flags() {
         break;
 
     case BUILDING_PLAZA:
-        set_flag(e_building_flag::Road, true, -1);
+        set_flag(e_building_flag::Road, true);
         set_flag(e_building_flag::FancyRoad);
         break;
 

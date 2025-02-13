@@ -1083,6 +1083,7 @@ void building_impl::static_params::load(archive arch) {
     needs.ore = arch.r_bool("need_ore");
     needs.altar = arch.r_bool("need_altar");
     needs.oracle = arch.r_bool("need_oracle");
+    needs.nearby_water = arch.r_bool("need_nearby_water");
 
     city_labor_set_category(type, labor_category);
 
@@ -1214,6 +1215,7 @@ bool building_impl::static_params::planer_is_need_flag(e_building_flags flag) co
     case e_building_flag::Ore: return needs.ore;
     case e_building_flag::TempleUpgradeAltar: return needs.altar;
     case e_building_flag::TempleUpgradeOracle: return needs.oracle;
+    case e_building_flag::NearbyWater: return needs.nearby_water;
     }
 
     return false;

@@ -1495,6 +1495,7 @@ building building_clay_pit = {
   production_rate : 100,
   info_help_id:92,
   info_text_id:121,
+  need_nearby_water : true,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 

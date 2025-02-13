@@ -560,6 +560,7 @@ public:
             bool ore;
             bool altar;
             bool oracle;
+            bool nearby_water;
         } needs;
 
         void load(archive arch);
