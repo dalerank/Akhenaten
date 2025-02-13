@@ -1888,7 +1888,15 @@ building building_scribal_school = {
 building building_temple_complex_osiris = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
-    main_image : { pack:PACK_TEMPLE_NILE, id:1 },
+    main_n : { pack:PACK_TEMPLE_NILE, id:1 },
+    main_w : { pack:PACK_TEMPLE_NILE, id:1, offset:3 },
+    oracle_n : { pack:PACK_TEMPLE_NILE, id:2 },
+    oracle_w : { pack:PACK_TEMPLE_NILE, id:2, offset:3 },
+    altar_n : { pack:PACK_TEMPLE_NILE, id:3 },
+    altar_w : { pack:PACK_TEMPLE_NILE, id:3, offset:3 },
+    tiles : { pack:PACK_TEMPLE_NILE, id:4 },
+    statue_1 : { pack:PACK_TEMPLE_NILE, id:5 },
+    statue_2 : { pack:PACK_TEMPLE_NILE, id:6 },
   },
 
   building_size : 3,
@@ -1901,7 +1909,15 @@ building building_temple_complex_osiris = {
 building building_temple_complex_ra = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
-    main_image : { pack:PACK_TEMPLE_RA, id:1 },
+    main_n : { pack:PACK_TEMPLE_RA, id:1 },
+    main_w : { pack:PACK_TEMPLE_RA, id:1, offset:3 },
+    oracle_n : { pack:PACK_TEMPLE_RA, id:2 },
+    oracle_w : { pack:PACK_TEMPLE_RA, id:2, offset:3 },
+    altar_n : { pack:PACK_TEMPLE_RA, id:3 },
+    altar_w : { pack:PACK_TEMPLE_RA, id:3, offset:3 },
+    tiles : { pack:PACK_TEMPLE_RA, id:4 },
+    statue_1 : { pack:PACK_TEMPLE_RA, id:5 },
+    statue_2 : { pack:PACK_TEMPLE_RA, id:6 },
   },
 
   building_size : 3,
@@ -1914,7 +1930,15 @@ building building_temple_complex_ra = {
 building building_temple_complex_ptah = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
-    main_image : { pack:PACK_TEMPLE_PTAH, id:1 },
+    main_n : { pack:PACK_TEMPLE_PTAH, id:1 },
+    main_w : { pack:PACK_TEMPLE_PTAH, id:1, offset:3 },
+    oracle_n : { pack:PACK_TEMPLE_PTAH, id:2 },
+    oracle_w : { pack:PACK_TEMPLE_PTAH, id:2, offset:3 },
+    altar_n : { pack:PACK_TEMPLE_PTAH, id:3 },
+    altar_w : { pack:PACK_TEMPLE_PTAH, id:3, offset:3 },
+    tiles : { pack:PACK_TEMPLE_PTAH, id:4 },
+    statue_1 : { pack:PACK_TEMPLE_PTAH, id:5 },
+    statue_2 : { pack:PACK_TEMPLE_PTAH, id:6 },
   },
 
   building_size : 3,
@@ -1927,7 +1951,15 @@ building building_temple_complex_ptah = {
 building building_temple_complex_seth = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
-    main_image : { pack:PACK_TEMPLE_SETH, id:1 },
+    main_n : { pack:PACK_TEMPLE_SETH, id:1 },
+    main_w : { pack:PACK_TEMPLE_SETH, id:1, offset:3 },
+    oracle_n : { pack:PACK_TEMPLE_SETH, id:2 },
+    oracle_w : { pack:PACK_TEMPLE_SETH, id:2, offset:3 },
+    altar_n : { pack:PACK_TEMPLE_SETH, id:3 },
+    altar_w : { pack:PACK_TEMPLE_SETH, id:3, offset:3 },
+    tiles : { pack:PACK_TEMPLE_SETH, id:4 },
+    statue_1 : { pack:PACK_TEMPLE_SETH, id:5 },
+    statue_2 : { pack:PACK_TEMPLE_SETH, id:6 },
   },
 
   building_size : 3,
@@ -1940,7 +1972,15 @@ building building_temple_complex_seth = {
 building building_temple_complex_bast = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
-    main_image : { pack:PACK_TEMPLE_BAST, id:1 },
+    main_n : { pack:PACK_TEMPLE_BAST, id:1 },
+    main_w : { pack:PACK_TEMPLE_BAST, id:1, offset:3 },
+    oracle_n : { pack:PACK_TEMPLE_BAST, id:2 },
+    oracle_w : { pack:PACK_TEMPLE_BAST, id:2, offset:3 },
+    altar_n : { pack:PACK_TEMPLE_BAST, id:3 },
+    altar_w : { pack:PACK_TEMPLE_BAST, id:3, offset:3 },
+    tiles : { pack:PACK_TEMPLE_BAST, id:4 },
+    statue_1 : { pack:PACK_TEMPLE_BAST, id:5 },
+    statue_2 : { pack:PACK_TEMPLE_BAST, id:6 },
   },
 
   building_size : 3,

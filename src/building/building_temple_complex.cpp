@@ -37,67 +37,54 @@ int building_temple_complex::static_params_t<T>::planer_update_relative_orientat
 
 template<class T>
 void building_temple_complex::static_params_t<T>::planer_setup_preview_graphics(build_planner &planer) const {
-    int packid = -1;
-    switch (this->TYPE) {
-    case BUILDING_TEMPLE_COMPLEX_OSIRIS: packid = PACK_TEMPLE_NILE; break;
-    case BUILDING_TEMPLE_COMPLEX_RA: packid = PACK_TEMPLE_RA; break;
-    case BUILDING_TEMPLE_COMPLEX_PTAH: packid = PACK_TEMPLE_PTAH; break;
-    case BUILDING_TEMPLE_COMPLEX_SETH: packid = PACK_TEMPLE_SETH; break;
-    case BUILDING_TEMPLE_COMPLEX_BAST: packid = PACK_TEMPLE_BAST; break;
-        break;
-    }
-
-    int main_image_id = this->anim["main_image"].first_img();
-    int oracle_image_id = image_id_from_group(packid, 2);
-    int altar_image_id = image_id_from_group(packid, 3);
-    int flooring_image_id = image_id_from_group(packid, 4);
-    int statue1_image_id = image_id_from_group(packid, 5);
-    int statue2_image_id = image_id_from_group(packid, 6);
+    int flooring_image_id = this->anim["tiles"].first_img();
+    int statue1_image_id = this->anim["statue_1"].first_img();
+    int statue2_image_id = this->anim["statue_2"].first_img();
 
     int EMPTY = 0;
-    int mn_1A = main_image_id;
-    int mn_1B = main_image_id + 3;
-    int mn_2A = oracle_image_id;
-    int mn_2B = oracle_image_id + 3;
-    int mn_3A = altar_image_id;
-    int mn_3B = altar_image_id + 3;
+    int main_n = this->anim["main_n"].first_img();
+    int main_w = this->anim["main_w"].first_img();
+    int oracle_n = this->anim["oracle_n"].first_img();
+    int oracle_e = this->anim["oracle_w"].first_img();
+    int altar_n = this->anim["altar_n"].first_img();
+    int altar_w = this->anim["altar_w"].first_img();
 
-    int til_0 = flooring_image_id + 0;
-    int til_1 = flooring_image_id + 1;
-    int til_2 = flooring_image_id + 2;
-    int til_3 = flooring_image_id + 3;
+    int tiles_0 = flooring_image_id + 0;
+    int tiles_1 = flooring_image_id + 1;
+    int tiles_2 = flooring_image_id + 2;
+    int tiles_3 = flooring_image_id + 3;
 
-    int smst0 = statue1_image_id + 0; // north
-    int smst1 = statue1_image_id + 1; // east
-    int smst2 = statue1_image_id + 2; // south
-    int smst3 = statue1_image_id + 3; // west
+    int statue_0 = statue1_image_id + 0; // north
+    int statue_1 = statue1_image_id + 1; // east
+    int statue_2 = statue1_image_id + 2; // south
+    int statue_3 = statue1_image_id + 3; // west
 
-    int lst0A = statue2_image_id + 0; // north
-    int lst0B = statue2_image_id + 1;
-    int lst1A = statue2_image_id + 2; // east
-    int lst1B = statue2_image_id + 3;
-    int lst2A = statue2_image_id + 4; // south
-    int lst2B = statue2_image_id + 5;
-    int lst3A = statue2_image_id + 6; // west
-    int lst3B = statue2_image_id + 7;
+    int statue_2n_F = statue2_image_id + 0; // north
+    int statue_2n_B = statue2_image_id + 1;
+    int statue_2e_A = statue2_image_id + 2; // east
+    int statue_2e_B = statue2_image_id + 3;
+    int statue_2s_A = statue2_image_id + 4; // south
+    int statue_2s_B = statue2_image_id + 5;
+    int statue_2w_A = statue2_image_id + 6; // west
+    int statue_2w_B = statue2_image_id + 7;
 
     switch (planer.relative_orientation) {
     case 0:
         { // NE
             int TEMPLE_COMPLEX_SCHEME[13][7] = {
-                {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-                {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
-                {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-                {til_2, til_0, til_0, til_1, til_0, til_0, til_2},
-                {til_0, til_0, EMPTY, EMPTY, EMPTY, til_0, til_0},
-                {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                {smst3, til_0, mn_1B, EMPTY, EMPTY, til_0, smst1},
-                {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
-                {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                {smst3, til_0, mn_2B, EMPTY, EMPTY, til_0, smst1},
-                {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
-                {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                {smst3, til_0, mn_3B, EMPTY, EMPTY, til_0, smst1},
+                {tiles_3, statue_2e_A, statue_2e_B, tiles_1, statue_2w_A, statue_2w_B, tiles_3},
+                {tiles_2, statue_2e_A, statue_2e_B, tiles_1, statue_2w_A, statue_2w_B, tiles_2},
+                {tiles_3, statue_2e_A, statue_2e_B, tiles_1, statue_2w_A, statue_2w_B, tiles_3},
+                {tiles_2, tiles_0, tiles_0, tiles_1, tiles_0, tiles_0, tiles_2},
+                {tiles_0, tiles_0, EMPTY, EMPTY, EMPTY, tiles_0, tiles_0},
+                {statue_3, tiles_0, EMPTY, EMPTY, EMPTY, tiles_0, statue_1},
+                {statue_3, tiles_0, main_w, EMPTY, EMPTY, tiles_0, statue_1},
+                {tiles_1, tiles_1, EMPTY, EMPTY, EMPTY, tiles_1, tiles_1},
+                {statue_3, tiles_0, EMPTY, EMPTY, EMPTY, tiles_0, statue_1},
+                {statue_3, tiles_0, oracle_e, EMPTY, EMPTY, tiles_0, statue_1},
+                {tiles_1, tiles_1, EMPTY, EMPTY, EMPTY, tiles_1, tiles_1},
+                {statue_3, tiles_0, EMPTY, EMPTY, EMPTY, tiles_0, statue_1},
+                {statue_3, tiles_0, altar_w, EMPTY, EMPTY, tiles_0, statue_1},
             };
             planer.set_graphics_array(make_span((int*)TEMPLE_COMPLEX_SCHEME, std::size(TEMPLE_COMPLEX_SCHEME)), vec2i(7, 13));
             planer.pivot = { 2, 10 };
@@ -107,13 +94,13 @@ void building_temple_complex::static_params_t<T>::planer_setup_preview_graphics(
     case 1:
         { // SE
             int TEMPLE_COMPLEX_SCHEME[7][13] = {
-                {smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0, til_0, til_2, til_3, til_2, til_3},
-                {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst2B, lst2B, lst2B},
-                {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_0, lst2A, lst2A, lst2A},
-                {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_1, til_1, til_1, til_1},
-                {mn_1A, EMPTY, EMPTY, mn_2A, EMPTY, EMPTY, mn_3A, EMPTY, EMPTY, til_0, lst0B, lst0B, lst0B},
-                {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst0A, lst0A, lst0A},
-                {smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2, til_0, til_2, til_3, til_2, til_3},
+                {statue_0, statue_0, tiles_1, statue_0, statue_0, tiles_1, statue_0, statue_0, tiles_0, tiles_2, tiles_3, tiles_2, tiles_3},
+                {tiles_0, tiles_0, tiles_1, tiles_0, tiles_0, tiles_1, tiles_0, tiles_0, tiles_0, tiles_0, statue_2s_B, statue_2s_B, statue_2s_B},
+                {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, tiles_0, statue_2s_A, statue_2s_A, statue_2s_A},
+                {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, tiles_1, tiles_1, tiles_1, tiles_1},
+                {main_n, EMPTY, EMPTY, oracle_n, EMPTY, EMPTY, altar_n, EMPTY, EMPTY, tiles_0, statue_2n_B, statue_2n_B, statue_2n_B},
+                {tiles_0, tiles_0, tiles_1, tiles_0, tiles_0, tiles_1, tiles_0, tiles_0, tiles_0, tiles_0, statue_2n_F, statue_2n_F, statue_2n_F},
+                {statue_2, statue_2, tiles_1, statue_2, statue_2, tiles_1, statue_2, statue_2, tiles_0, tiles_2, tiles_3, tiles_2, tiles_3},
             };
             planer.set_graphics_array(make_span((int*)TEMPLE_COMPLEX_SCHEME, std::size(TEMPLE_COMPLEX_SCHEME)), vec2i(13, 7));
             planer.pivot = { 0, 2 };
@@ -123,19 +110,19 @@ void building_temple_complex::static_params_t<T>::planer_setup_preview_graphics(
     case 2:
         { // SW
             int TEMPLE_COMPLEX_SCHEME[13][7] = {
-                {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                {til_1, til_1, mn_1B, EMPTY, EMPTY, til_1, til_1},
-                {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                {til_1, til_1, mn_2B, EMPTY, EMPTY, til_1, til_1},
-                {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                {til_0, til_0, mn_3B, EMPTY, EMPTY, til_0, til_0},
-                {til_2, til_0, til_0, til_1, til_0, til_0, til_2},
-                {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-                {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
-                {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
+                {statue_3, tiles_0, EMPTY, EMPTY, EMPTY, tiles_0, statue_1},
+                {statue_3, tiles_0, EMPTY, EMPTY, EMPTY, tiles_0, statue_1},
+                {tiles_1, tiles_1, main_w, EMPTY, EMPTY, tiles_1, tiles_1},
+                {statue_3, tiles_0, EMPTY, EMPTY, EMPTY, tiles_0, statue_1},
+                {statue_3, tiles_0, EMPTY, EMPTY, EMPTY, tiles_0, statue_1},
+                {tiles_1, tiles_1, oracle_e, EMPTY, EMPTY, tiles_1, tiles_1},
+                {statue_3, tiles_0, EMPTY, EMPTY, EMPTY, tiles_0, statue_1},
+                {statue_3, tiles_0, EMPTY, EMPTY, EMPTY, tiles_0, statue_1},
+                {tiles_0, tiles_0, altar_w, EMPTY, EMPTY, tiles_0, tiles_0},
+                {tiles_2, tiles_0, tiles_0, tiles_1, tiles_0, tiles_0, tiles_2},
+                {tiles_3, statue_2e_A, statue_2e_B, tiles_1, statue_2w_A, statue_2w_B, tiles_3},
+                {tiles_2, statue_2e_A, statue_2e_B, tiles_1, statue_2w_A, statue_2w_B, tiles_2},
+                {tiles_3, statue_2e_A, statue_2e_B, tiles_1, statue_2w_A, statue_2w_B, tiles_3},
             };
             planer.set_graphics_array(make_span((int*)TEMPLE_COMPLEX_SCHEME, std::size(TEMPLE_COMPLEX_SCHEME)), vec2i(7, 13));
             planer.pivot = { 2, 0 };
@@ -145,13 +132,13 @@ void building_temple_complex::static_params_t<T>::planer_setup_preview_graphics(
     case 3:
         { // NW
             int TEMPLE_COMPLEX_SCHEME[7][13] = {
-                {til_3, til_2, til_3, til_2, til_0, smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0},
-                {lst2B, lst2B, lst2B, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
-                {lst2A, lst2A, lst2A, til_0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                {til_1, til_1, til_1, til_1, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                {lst0B, lst0B, lst0B, til_0, mn_1A, EMPTY, EMPTY, mn_2A, EMPTY, EMPTY, mn_3A, EMPTY, EMPTY},
-                {lst0A, lst0A, lst0A, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
-                {til_3, til_2, til_3, til_2, til_0, smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2},
+                {tiles_3, tiles_2, tiles_3, tiles_2, tiles_0, statue_0, statue_0, tiles_1, statue_0, statue_0, tiles_1, statue_0, statue_0},
+                {statue_2s_B, statue_2s_B, statue_2s_B, tiles_0, tiles_0, tiles_0, tiles_0, tiles_1, tiles_0, tiles_0, tiles_1, tiles_0, tiles_0},
+                {statue_2s_A, statue_2s_A, statue_2s_A, tiles_0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                {tiles_1, tiles_1, tiles_1, tiles_1, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                {statue_2n_B, statue_2n_B, statue_2n_B, tiles_0, main_n, EMPTY, EMPTY, oracle_n, EMPTY, EMPTY, altar_n, EMPTY, EMPTY},
+                {statue_2n_F, statue_2n_F, statue_2n_F, tiles_0, tiles_0, tiles_0, tiles_0, tiles_1, tiles_0, tiles_0, tiles_1, tiles_0, tiles_0},
+                {tiles_3, tiles_2, tiles_3, tiles_2, tiles_0, statue_2, statue_2, tiles_1, statue_2, statue_2, tiles_1, statue_2, statue_2},
             };
             planer.set_graphics_array(make_span((int*)TEMPLE_COMPLEX_SCHEME, std::size(TEMPLE_COMPLEX_SCHEME)), vec2i(13, 7));
             planer.pivot = { 10, 2 };
