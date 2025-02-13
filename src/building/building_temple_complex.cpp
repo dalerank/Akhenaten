@@ -37,10 +37,6 @@ int building_temple_complex::static_params_t<T>::planer_update_relative_orientat
 
 template<class T>
 void building_temple_complex::static_params_t<T>::planer_setup_preview_graphics(build_planner &planer) const {
-    int flooring_image_id = this->anim["tiles"].first_img();
-    int statue1_image_id = this->anim["statue_1"].first_img();
-    int statue2_image_id = this->anim["statue_2"].first_img();
-
     int EMPTY = 0;
     int main_n = this->anim["main_n"].first_img();
     int main_w = this->anim["main_w"].first_img();
@@ -49,24 +45,29 @@ void building_temple_complex::static_params_t<T>::planer_setup_preview_graphics(
     int altar_n = this->anim["altar_n"].first_img();
     int altar_w = this->anim["altar_w"].first_img();
 
-    int tiles_0 = flooring_image_id + 0;
-    int tiles_1 = flooring_image_id + 1;
-    int tiles_2 = flooring_image_id + 2;
-    int tiles_3 = flooring_image_id + 3;
+    int tiles_0 = this->anim["tiles_0"].first_img();
+    int tiles_1 = this->anim["tiles_1"].first_img();
+    int tiles_2 = this->anim["tiles_2"].first_img();
+    int tiles_3 = this->anim["tiles_3"].first_img();
 
+    int statue1_image_id = this->anim["statue_1"].first_img();
     int statue_0 = statue1_image_id + 0; // north
     int statue_1 = statue1_image_id + 1; // east
     int statue_2 = statue1_image_id + 2; // south
     int statue_3 = statue1_image_id + 3; // west
 
-    int statue_2n_F = statue2_image_id + 0; // north
-    int statue_2n_B = statue2_image_id + 1;
-    int statue_2e_A = statue2_image_id + 2; // east
-    int statue_2e_B = statue2_image_id + 3;
-    int statue_2s_A = statue2_image_id + 4; // south
-    int statue_2s_B = statue2_image_id + 5;
-    int statue_2w_A = statue2_image_id + 6; // west
-    int statue_2w_B = statue2_image_id + 7;
+    int statue2n = this->anim["statue_2n"].first_img();
+    int statue_2n_F = statue2n + 0; // north
+    int statue_2n_B = statue2n + 1;
+    int statue2e = this->anim["statue_2e"].first_img();
+    int statue_2e_A = statue2e + 0; // east
+    int statue_2e_B = statue2e + 1;
+    int statue2s = this->anim["statue_2s"].first_img();
+    int statue_2s_A = statue2s + 0; // south
+    int statue_2s_B = statue2s + 1;
+    int statue2w = this->anim["statue_2w"].first_img();
+    int statue_2w_A = statue2w + 0; // west
+    int statue_2w_B = statue2w + 1;
 
     switch (planer.relative_orientation) {
     case 0:
@@ -164,7 +165,7 @@ void building_temple_complex_upgrade::static_params_t<T>::planer_ghost_preview(b
         }
 
         tile2i offset = { 0, 0 };
-        int bsize = building_size - 1;
+        int bsize = this->building_size - 1;
         switch (city_orientation) {
         case 0: offset = { 0, bsize }; break;
         case 1: offset = { 0, 0 }; break;
