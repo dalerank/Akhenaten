@@ -1888,6 +1888,7 @@ building building_scribal_school = {
 building building_temple_complex_osiris = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
+    main_image : { pack:PACK_TEMPLE_NILE, id:1 },
   },
 
   building_size : 3,
@@ -1900,6 +1901,7 @@ building building_temple_complex_osiris = {
 building building_temple_complex_ra = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
+    main_image : { pack:PACK_TEMPLE_RA, id:1 },
   },
 
   building_size : 3,
@@ -1912,6 +1914,7 @@ building building_temple_complex_ra = {
 building building_temple_complex_ptah = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
+    main_image : { pack:PACK_TEMPLE_PTAH, id:1 },
   },
 
   building_size : 3,
@@ -1924,6 +1927,7 @@ building building_temple_complex_ptah = {
 building building_temple_complex_seth = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
+    main_image : { pack:PACK_TEMPLE_SETH, id:1 },
   },
 
   building_size : 3,
@@ -1936,6 +1940,7 @@ building building_temple_complex_seth = {
 building building_temple_complex_bast = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
+    main_image : { pack:PACK_TEMPLE_BAST, id:1 },
   },
 
   building_size : 3,

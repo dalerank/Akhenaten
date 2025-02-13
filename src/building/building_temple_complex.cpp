@@ -47,7 +47,7 @@ void building_temple_complex::static_params_t<T>::planer_setup_preview_graphics(
         break;
     }
 
-    int main_image_id = image_id_from_group(packid, 1);
+    int main_image_id = this->anim["main_image"].first_img();
     int oracle_image_id = image_id_from_group(packid, 2);
     int altar_image_id = image_id_from_group(packid, 3);
     int flooring_image_id = image_id_from_group(packid, 4);
