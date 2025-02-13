@@ -56,7 +56,7 @@ bool city_overlay_water::draw_custom_footprint(vec2i pixel, tile2i tile, painter
         int terrain = map_terrain_get(tile);
         building* b = building_at(tile);
         // draw houses, wells and water supplies either fully or flattened
-        if (terrain & TERRAIN_BUILDING && (building_is_house(b->type)) || b->type == BUILDING_WELL || b->type == BUILDING_WATER_SUPPLY) {
+        if ((terrain & TERRAIN_BUILDING) && (building_is_house(b->type)) || show_building(b)) {
             if (map_property_is_draw_tile(tile)) {
                 city_overlay::draw_building_footprint(ctx, pixel, tile, 0);
             }

@@ -468,7 +468,7 @@ void build_planner::setup_build_flags() {
     const auto &params = building_impl::params(build_type);
 
     const e_building_flag flags[] = { e_building_flag::Meadow, e_building_flag::Rock, e_building_flag::Ore, e_building_flag::TempleUpgradeAltar,
-                                      e_building_flag::TempleUpgradeOracle, e_building_flag::NearbyWater };
+                                      e_building_flag::TempleUpgradeOracle, e_building_flag::NearbyWater, e_building_flag::Groundwater };
 
     for (const auto flag: flags) {
         const bool is_need = params.planer_is_need_flag(flag);
@@ -486,7 +486,6 @@ void build_planner::setup_build_flags() {
         set_flag(e_building_flag::Walls);
         break;
 
-    case BUILDING_WELL:
     case BUILDING_WATER_SUPPLY:
     case BUILDING_VILLAGE_PALACE:
     case BUILDING_TOWN_PALACE:

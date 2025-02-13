@@ -561,6 +561,7 @@ public:
             bool altar;
             bool oracle;
             bool nearby_water;
+            bool groundwater;
         } needs;
 
         void load(archive arch);

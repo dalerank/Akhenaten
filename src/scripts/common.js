@@ -52,7 +52,6 @@ var building_storage_room = {}
 var building_work_camp = {}
 var building_wood_cutter = {}
 var building_water_supply = {}
-var building_well = {}
 var building_guild_stonemasons = {}
 var building_carpenters_guild = {}
 var building_tax_collector = {}

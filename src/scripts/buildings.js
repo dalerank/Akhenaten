@@ -931,7 +931,7 @@ building_water_supply = {
   building_size : 2,
 }
 
-building_well = {
+building building_well = {
   animations : {
     preview : { pack: PACK_GENERAL, id:23, max_frames:1 },
     base : { pack: PACK_GENERAL, id:23, max_frames:1 },
@@ -945,6 +945,7 @@ building_well = {
   building_size : 1,
   info_help_id:62,
   info_text_id:109,
+  need_groundwater : true,
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
 }
 

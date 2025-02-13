@@ -1084,6 +1084,7 @@ void building_impl::static_params::load(archive arch) {
     needs.altar = arch.r_bool("need_altar");
     needs.oracle = arch.r_bool("need_oracle");
     needs.nearby_water = arch.r_bool("need_nearby_water");
+    needs.groundwater = arch.r_bool("need_groundwater");
 
     city_labor_set_category(type, labor_category);
 
@@ -1105,11 +1106,11 @@ int building_impl::static_params::planer_update_building_variant(build_planner &
 
 int building_impl::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
     int special_flags = planer.special_flags;
-    if (special_flags & e_building_flag::Meadow || special_flags & e_building_flag::Rock
-        || special_flags & e_building_flag::Trees || special_flags & e_building_flag::NearbyWater
-        || special_flags & e_building_flag::Walls || special_flags & e_building_flag::Groundwater
-        || special_flags & e_building_flag::Water || special_flags & e_building_flag::ShoreLine
-        || special_flags & e_building_flag::Road || special_flags & e_building_flag::Intersection) {
+    if ((special_flags & e_building_flag::Meadow) || (special_flags & e_building_flag::Rock)
+        || (special_flags & e_building_flag::Trees) || (special_flags & e_building_flag::NearbyWater)
+        || (special_flags & e_building_flag::Walls) || (special_flags & e_building_flag::Groundwater)
+        || (special_flags & e_building_flag::Water) || (special_flags & e_building_flag::ShoreLine)
+        || (special_flags & e_building_flag::Road) || (special_flags & e_building_flag::Intersection)) {
         return 0;
     }
 
@@ -1216,6 +1217,7 @@ bool building_impl::static_params::planer_is_need_flag(e_building_flags flag) co
     case e_building_flag::TempleUpgradeAltar: return needs.altar;
     case e_building_flag::TempleUpgradeOracle: return needs.oracle;
     case e_building_flag::NearbyWater: return needs.nearby_water;
+    case e_building_flag::Groundwater: return needs.groundwater;
     }
 
     return false;
