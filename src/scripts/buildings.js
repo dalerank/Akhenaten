@@ -1956,6 +1956,17 @@ building building_temple_complex_altar = {
   need_altar : true,
 }
 
+building building_temple_complex_oracle = {
+  animations : {
+    preview : { pack:PACK_TEMPLE_NILE, id:7, offset:2},
+    base : { pack:PACK_TEMPLE_NILE, id:7, offset:2},
+  },
+
+  building_size : 3,
+  labor_category : LABOR_CATEGORY_RELIGION,
+  need_oracle : true,
+}
+
 building building_temple_complex_altar_ra = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},

@@ -81,6 +81,7 @@ class building_shrine;
 class building_transport_wharf;
 class building_temple_complex;
 class building_temple_complex_altar;
+class building_temple_complex_oracle;
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -493,6 +494,7 @@ public:
     building_warship_wharf *dcast_warship_wharf();
     building_temple_complex *dcast_temple_complex();
     building_temple_complex_altar *dcast_temple_complex_altar();
+    building_temple_complex_oracle *dcast_temple_complex_oracle();
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
@@ -557,6 +559,7 @@ public:
             bool rock;
             bool ore;
             bool altar;
+            bool oracle;
         } needs;
 
         void load(archive arch);
@@ -674,6 +677,7 @@ public:
     virtual building_transport_wharf *dcast_transport_wharf() { return nullptr; }
     virtual building_temple_complex *dcast_temple_complex() { return nullptr; }
     virtual building_temple_complex_altar *dcast_temple_complex_altar() { return nullptr; }
+    virtual building_temple_complex_oracle *dcast_temple_complex_oracle() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }

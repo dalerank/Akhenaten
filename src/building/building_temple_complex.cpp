@@ -160,13 +160,21 @@ void building_temple_complex::static_params_t<T>::planer_setup_preview_graphics(
     }
 }
 
-void building_temple_complex_altar::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
+template<typename T>
+void building_temple_complex_upgrade::static_params_t<T>::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
     int city_orientation = city_view_orientation() / 2;
     int orientation = (1 + building_rotation_global_rotation() + city_orientation) % 2;
-    int image_id = anim[animkeys().base].first_img() + orientation;
+    int image_id = this->anim[animkeys().base].first_img() + orientation;
     auto complex = building_at_ex<building_temple_complex>(end);
     if (complex) {
-        building *altar = complex->get_altar();
+        building *upgrade_base = nullptr;
+        if (this->TYPE == BUILDING_TEMPLE_COMPLEX_ALTAR) {
+            upgrade_base = complex->get_altar();
+        } else if (this->TYPE == BUILDING_TEMPLE_COMPLEX_ORACLE) {
+            upgrade_base = complex->get_oracle();
+        } else {
+            upgrade_base = &complex->main()->base;
+        }
 
         tile2i offset = { 0, 0 };
         int bsize = building_size - 1;
@@ -177,8 +185,8 @@ void building_temple_complex_altar::static_params::planer_ghost_preview(build_pl
         case 3: offset = { bsize, bsize }; break;
         }
 
-        vec2i pixel_altar = tile_to_pixel(altar->tile.shifted(offset));
-        planer.draw_building_ghost(ctx, image_id, pixel_altar);
+        vec2i pixel_upgrade = tile_to_pixel(upgrade_base->tile.shifted(offset));
+        planer.draw_building_ghost(ctx, image_id, pixel_upgrade);
     }
 }
 
@@ -188,6 +196,7 @@ building_temple_complex_ptah::static_params building_temple_complex_ptah_m;
 building_temple_complex_seth::static_params building_temple_complex_seth_m;
 building_temple_complex_bast::static_params building_temple_complex_bast_m;
 building_temple_complex_altar::static_params building_temple_complex_altar_m;
+building_temple_complex_oracle::static_params building_temple_complex_oracle_m;
 
 void building_temple_complex::on_create(int orientation) {
     data.monuments.variant = (10 - (2 * orientation)) % 8; // ugh!
@@ -241,6 +250,18 @@ building *building_temple_complex::get_altar() const {
     building *next = base.next();
     while (next) {
         if (next->type == BUILDING_TEMPLE_COMPLEX_ALTAR) {
+            break;
+        }
+        next = next->next();
+    }
+
+    return next;
+}
+
+building *building_temple_complex::get_oracle() const {
+    building *next = base.next();
+    while (next) {
+        if (next->type == BUILDING_TEMPLE_COMPLEX_ORACLE) {
             break;
         }
         next = next->next();

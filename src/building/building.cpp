@@ -241,6 +241,7 @@ building_wharf *building::dcast_wharf() { return dcast()->dcast_wharf(); }
 building_warship_wharf *building::dcast_warship_wharf() { return dcast()->dcast_warship_wharf(); }
 building_temple_complex *building::dcast_temple_complex() { return dcast()->dcast_temple_complex(); }
 building_temple_complex_altar *building::dcast_temple_complex_altar() { return dcast()->dcast_temple_complex_altar(); }
+building_temple_complex_oracle *building::dcast_temple_complex_oracle() { return dcast()->dcast_temple_complex_oracle(); }
 
 building::building() {
 }
@@ -1081,6 +1082,7 @@ void building_impl::static_params::load(archive arch) {
     needs.rock = arch.r_bool("need_rock");
     needs.ore = arch.r_bool("need_ore");
     needs.altar = arch.r_bool("need_altar");
+    needs.oracle = arch.r_bool("need_oracle");
 
     city_labor_set_category(type, labor_category);
 
@@ -1211,6 +1213,7 @@ bool building_impl::static_params::planer_is_need_flag(e_building_flags flag) co
     case e_building_flag::Rock: return needs.rock;
     case e_building_flag::Ore: return needs.ore;
     case e_building_flag::TempleUpgradeAltar: return needs.altar;
+    case e_building_flag::TempleUpgradeOracle: return needs.oracle;
     }
 
     return false;
