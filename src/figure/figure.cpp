@@ -420,6 +420,7 @@ const fproperty fproperties[] = {
 
     { tags().figure, tags().name, [] (figure &f, const xstring &) { return bvariant(ui::str(254, f.name)); }},
     { tags().figure, tags().class_name, [] (figure &f, const xstring &) { return bvariant(ui::str(64, f.type)); }},
+    { tags().figure, tags().home, [] (figure &f, const xstring &) { return bvariant(ui::str(41, f.home()->type)); }},
 };
 
 bvariant figure_impl::get_property(const xstring &domain, const xstring &name) const {

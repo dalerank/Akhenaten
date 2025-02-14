@@ -14,6 +14,7 @@ const xstring id_property_t::model = "model";
 const xstring id_property_t::farm = "farm";
 const xstring id_property_t::name = "name";
 const xstring id_property_t::class_name = "class_name";
+const xstring id_property_t::home = "home";
 const xstring id_property_t::laborers = "laborers";
 const xstring id_property_t::house = "house";
 const xstring id_property_t::level_name = "level_name";

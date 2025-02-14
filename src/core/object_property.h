@@ -12,6 +12,7 @@ struct id_property_t {
     static const xstring farm;
     static const xstring name;
     static const xstring class_name;
+    static const xstring home;
     static const xstring laborers;
     static const xstring house;
     static const xstring level_name;
