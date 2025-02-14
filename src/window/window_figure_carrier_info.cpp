@@ -21,12 +21,6 @@ void figure_carrier_info_window::init(object_info &c) {
 
     figure_cartpusher *f = c.figure_get<figure_cartpusher>();
     
-    bstring256 home_text;
-    if (f->base.has_home()) {
-        home_text = ui::str(41, f->home()->type);
-    }
-    ui["type"].text_var("%s %s", home_text.c_str(), ui::str(64, f->type()));
-
     if (f->action_state() != FIGURE_ACTION_132_DOCKER_IDLING && f->base.resource_id) {
         int resource_img = image_id_resource_icon(f->base.resource_id);
         ui["items"].text_var("@I%u& %u %s %s", resource_img, f->base.resource_amount_full, ui::str(129, 20), ui::str(23, f->base.resource_id));
