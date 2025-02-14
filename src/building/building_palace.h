@@ -10,6 +10,7 @@ public:
     virtual void on_create(int orientation) override;
     virtual void on_post_load() override;
     virtual void on_destroy() override;
+    virtual void update_count() const override;
     virtual bool can_play_animation() const override;
     virtual void update_graphic() override;
     virtual void draw_tooltip(tooltip_context *c) override;

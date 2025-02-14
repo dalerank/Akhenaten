@@ -53,6 +53,10 @@ void building_palace::on_destroy() {
     g_city.buildings.remove_palace(base);
 }
 
+void building_palace::update_count() const {
+    g_city.buildings.track_building(base, true);
+}
+
 bool building_palace::can_play_animation() const {
     return worker_percentage() > 50;
 }
