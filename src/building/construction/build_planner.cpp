@@ -497,10 +497,6 @@ void build_planner::setup_build_flags() {
         set_flag(e_building_flag::FloodplainShore, 2);
         break;
 
-    case BUILDING_WARSHIP_WHARF:
-        set_flag(e_building_flag::ShoreLine, 3);
-        break;
-
     case BUILDING_FERRY:
         set_flag(e_building_flag::ShoreLine, 2);
         set_flag(e_building_flag::Ferry);
@@ -1051,7 +1047,6 @@ void build_planner::construction_update(tile2i tile) {
         mark_construction(tile, { 3, 3 }, ~TERRAIN_ROAD, false);
         break;
 
-    case BUILDING_WARSHIP_WHARF:
     case BUILDING_FERRY:
         draw_as_constructing = map_shore_determine_orientation(end, additional_req_param1, true).match;
         break;

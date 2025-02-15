@@ -1337,6 +1337,7 @@ building building_warship_wharf = {
   info_text_id: 175,
   window_info_height_id: 1,
   planer_relative_orientation: 1,
+  need_shoreline : true,
   labor_category : LABOR_CATEGORY_MILITARY,
 }
 
