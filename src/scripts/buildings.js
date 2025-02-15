@@ -1383,6 +1383,7 @@ building building_shipyard = {
   info_help_id: 82,
   info_text_id: 100,
   check_water_access : true,
+  need_shoreline : true,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 

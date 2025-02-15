@@ -14,6 +14,7 @@ public:
         int transport_progress_cost;
         int fishingboat_progress_cost;
         virtual void load(archive arch) override;
+        virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
     };
 
     virtual void on_create(int orientation) override;

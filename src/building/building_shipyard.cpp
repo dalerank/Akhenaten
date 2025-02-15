@@ -15,19 +15,24 @@
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "widget/city/ornaments.h"
+#include "construction/build_planner.h"
 #include "sound/sound_building.h"
 #include "grid/water.h"
 #include "grid/road_access.h"
 #include "grid/building.h"
 #include "city/labor.h"
-#include "js/js_game.h"
- 
+
 building_shipyard::static_params building_shipyard_m;
 
 void building_shipyard::static_params::load(archive arch) {
     warship_progress_cost = arch.r_int("warship_progress_cost");
     fishingboat_progress_cost = arch.r_int("fishingboat_progress_cost");
     transport_progress_cost = arch.r_int("transport_progress_cost");
+}
+
+int building_shipyard::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
+    planer.draw_as_constructing = map_shore_determine_orientation(end, building_size, true).match;
+    return 1;
 }
 
 void building_shipyard::spawn_figure() {
