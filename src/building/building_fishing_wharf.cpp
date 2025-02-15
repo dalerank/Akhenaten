@@ -17,9 +17,13 @@
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
 #include "window/window_building_info.h"
+#include "construction/build_planner.h"
 
 #include "dev/debug.h"
 #include <iostream>
+
+
+building_fishing_wharf::static_params fishing_wharf_m;
 
 declare_console_command_p(killfishboats, game_cheat_kill_fish_boats);
 void game_cheat_kill_fish_boats(std::istream &is, std::ostream &os) {
@@ -35,7 +39,12 @@ struct info_window_fishing_wharf : public building_info_window_t<info_window_fis
 };
 
 info_window_fishing_wharf fishing_wharf_infow;
-building_fishing_wharf::static_params fishing_wharf_m;
+
+int building_fishing_wharf::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const
+{
+    planer.draw_as_constructing = map_shore_determine_orientation(end, building_size, true).match;
+    return 1;
+}
 
 void building_fishing_wharf::static_params::load(archive arch) {
 

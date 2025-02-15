@@ -11,6 +11,7 @@ public:
 
     struct static_params : public buildings::model_t<building_fishing_wharf> {
         virtual void load(archive arch) override;
+        virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
     };
 
     virtual void on_place_update_tiles(int orientation, int variant) override;
