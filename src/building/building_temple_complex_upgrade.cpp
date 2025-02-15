@@ -17,7 +17,7 @@ buildings::model_t<building_temple_complex_altar_ra> temple_complex_altar_ra;
 template<typename T>
 void building_temple_complex_upgrade::static_params_t<T>::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
     int city_orientation = city_view_orientation() / 2;
-    int orientation = (building_rotation_global_rotation() + city_orientation) % 2;
+    int orientation = (building_rotation_global_rotation() + city_orientation) % 4;
     pcstr orienation_key_fancy[] = { "fancy_n", "fancy_e", "fancy_s", "fancy_w" };
     int image_id = this->anim[orienation_key_fancy[orientation]].first_img();
     auto complex = building_at_ex<building_temple_complex>(end);

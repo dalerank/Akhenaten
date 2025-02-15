@@ -486,7 +486,6 @@ void build_planner::setup_build_flags() {
         set_flag(e_building_flag::Walls);
         break;
 
-    case BUILDING_WATER_SUPPLY:
     case BUILDING_VILLAGE_PALACE:
     case BUILDING_TOWN_PALACE:
     case BUILDING_CITY_PALACE:

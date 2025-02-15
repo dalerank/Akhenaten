@@ -929,6 +929,7 @@ building_water_supply = {
   info_help_id:61,
   info_text_id:108,
   building_size : 2,
+  need_groundwater : true,
 }
 
 building building_well = {
