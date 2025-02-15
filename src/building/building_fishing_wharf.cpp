@@ -1,6 +1,5 @@
 #include "building_fishing_wharf.h"
 
-#include "js/js_game.h"
 #include "city/city.h"
 #include "grid/water.h"
 #include "grid/building.h"
@@ -16,12 +15,10 @@
 #include "game/game.h"
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
-#include "window/window_building_info.h"
 #include "construction/build_planner.h"
 
 #include "dev/debug.h"
 #include <iostream>
-
 
 building_fishing_wharf::static_params fishing_wharf_m;
 
@@ -29,16 +26,6 @@ declare_console_command_p(killfishboats, game_cheat_kill_fish_boats);
 void game_cheat_kill_fish_boats(std::istream &is, std::ostream &os) {
     figure_valid_do([] (figure &f) { f.poof(); }, FIGURE_FISHING_BOAT);
 }
-
-struct info_window_fishing_wharf : public building_info_window_t<info_window_fishing_wharf> {
-    virtual bool check(object_info &c) override {
-        return c.building_get()->dcast_fishing_wharf();
-    }
-
-    virtual void init(object_info &c) override;
-};
-
-info_window_fishing_wharf fishing_wharf_infow;
 
 int building_fishing_wharf::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const
 {
@@ -192,31 +179,4 @@ void building_fishing_wharf::highlight_waypoints() {
 void building_fishing_wharf::bind_dynamic(io_buffer *iob, size_t version) {
     building_wharf::bind_dynamic(iob, version);
     iob->bind(BIND_SIGNATURE_UINT8, &data.dock.has_fish);
-}
-
-void info_window_fishing_wharf::init(object_info &c) {
-    building_info_window::init(c);
-
-    building *b = c.building_get();
-
-    textid reason = { c.group_id, 0 };
-    if (!c.has_road_access) {
-        reason = { 69, 25 };
-    } else if (!b->get_figure(BUILDING_SLOT_BOAT)->is_valid()) {
-        reason = { c.group_id, 2 };
-    } else {
-        figure *boat = b->get_figure(BUILDING_SLOT_BOAT);
-        switch (boat->action_state) {
-        case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH: reason.id = 3; break;
-        case FIGURE_ACTION_192_FISHING_BOAT_FISHING: reason.id = 4; break;
-        case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF: reason.id = 5; break;
-        case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: reason.id = 6; break;
-        case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH: reason.id = 7; break;
-        default: reason.id = 8; break;
-        }
-    }
-
-    ui["resource_img"].image(RESOURCE_FISH);
-    ui["warning_text"] = reason;
-    ui["storage_desc"].text_var("Stored fish %d", b->stored_amount_first);
 }
