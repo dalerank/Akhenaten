@@ -486,11 +486,6 @@ void build_planner::setup_build_flags() {
         set_flag(e_building_flag::Walls);
         break;
 
-    case BUILDING_VILLAGE_PALACE:
-    case BUILDING_TOWN_PALACE:
-    case BUILDING_CITY_PALACE:
-        set_flag(e_building_flag::Groundwater);
-        break;
         //        case BUILDING_LIBRARY: // TODO
         //            set_requirements(PlannerReqs::Resources, RESOURCE_PAPYRUS, 300);
         //            break;

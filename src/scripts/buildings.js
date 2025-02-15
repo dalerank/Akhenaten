@@ -1435,7 +1435,7 @@ building building_garden = {
   building_size : 1,
 }
 
-building_village_palace = {
+building building_village_palace = {
   animations : {
     preview : { pack:PACK_GENERAL, id:47 },
     base : { pack:PACK_GENERAL, id:47 },
@@ -1447,6 +1447,7 @@ building_village_palace = {
   info_help_id:77,
   info_text_id:105,
   building_size : 4,
+  need_groundwater : true,
 }
 
 building building_town_palace = {
@@ -1461,18 +1462,10 @@ building building_town_palace = {
   info_help_id:77,
   info_text_id:105,
   building_size : 5,
+  need_groundwater : true,
 }
 
-building_road = {
-  animations : {
-    preview : { pack:PACK_TERRAIN, id:33 },
-    base : { pack:PACK_TERRAIN, id:33 },
-  },
-  building_size : 1,
-  is_draggable : true,
-}
-
-building_city_palace = {
+building building_city_palace = {
   animations : {
     preview : { pack:PACK_GENERAL, id:18 },
     base : { pack:PACK_GENERAL, id:18 },
@@ -1483,6 +1476,16 @@ building_city_palace = {
   info_help_id:77,
   info_text_id:105,
   building_size : 6,
+  need_groundwater : true,
+}
+
+building building_road = {
+  animations : {
+    preview : { pack:PACK_TERRAIN, id:33 },
+    base : { pack:PACK_TERRAIN, id:33 },
+  },
+  building_size : 1,
+  is_draggable : true,
 }
 
 building building_clay_pit = {
