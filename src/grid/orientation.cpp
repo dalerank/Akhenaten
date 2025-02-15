@@ -132,20 +132,6 @@ void map_orientation_update_buildings() {
                 map_add_venue_plaza_tiles(b->id, params.building_size, btile, plaza_image_id, true);
             }
             break;
-
-        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        case BUILDING_TEMPLE_COMPLEX_RA:
-        case BUILDING_TEMPLE_COMPLEX_PTAH:
-        case BUILDING_TEMPLE_COMPLEX_SETH:
-        case BUILDING_TEMPLE_COMPLEX_BAST:
-            if (b->is_main()) {
-                // first, add the base tiles
-                int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
-                map_add_temple_complex_base_tiles(b->type, b->tile.x(), b->tile.y(), orientation);
-                // then, the main building parts
-                map_building_tiles_add_temple_complex_parts(b);
-            }
-            break;
         }
     }
 }

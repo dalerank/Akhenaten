@@ -498,19 +498,18 @@ bool figure_cartpusher::can_move_by_water() const {
 }
 
 sound_key figure_cartpusher::phrase_key() const {
-    if (action_state() == FIGURE_ACTION_20_CARTPUSHER_INITIAL
-        || action_state() == FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE) {
+    if (action_state(FIGURE_ACTION_20_CARTPUSHER_INITIAL, FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE)) {
         return "i_have_no_destination";
     }
 
-    if (action_state() == FIGURE_ACTION_27_CARTPUSHER_RETURNING
-        || action_state() == FIGURE_ACTION_15_RETURNING2) {
+    if (action_state(FIGURE_ACTION_27_CARTPUSHER_RETURNING, FIGURE_ACTION_15_RETURNING2)) {
         return "back_to_home";
     }
 
-    if (action_state() == FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE ||
-        action_state() == FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY ||
-        action_state() == FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP) {
+    if (action_state(FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE,
+                     FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY,
+                     FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP,
+                     ACTION_11_DELIVERING_GOLD)) {
         return "delivering_items";
     }
 

@@ -257,11 +257,11 @@ static bool attach_temple_upgrade(int upgrade_param, int grid_offset) {
         return false;
     }
 
-    if (target->data.monuments.temple_complex_attachments & upgrade_param) {
+    if (target->data.monuments.temple_complex_upgrades & upgrade_param) {
         return false;
     }
 
-    target->data.monuments.temple_complex_attachments |= upgrade_param;
+    target->data.monuments.temple_complex_upgrades |= upgrade_param;
     map_building_tiles_add_temple_complex_parts(target);
     building_menu_update_temple_complexes();
     return true;
@@ -794,13 +794,13 @@ void build_planner::update_special_case_orientations_check() {
 
     const bool temple_altar = (special_flags & e_building_flag::TempleUpgradeAltar);
     const bool temple_oracle = (special_flags & e_building_flag::TempleUpgradeOracle);
-    const int temple_options = (temple_altar ? etc_attachement_altar : 0) | (temple_oracle ? etc_attachement_oracle : 0);
+    const int temple_options = (temple_altar ? etc_upgrade_altar : 0) | (temple_oracle ? etc_upgrade_oracle : 0);
     if (temple_altar || temple_oracle) {
         auto target = building_at(end)->main()->dcast_temple_complex();
         if (!target) {
             immediate_warning_id = WARNING_TEMPLE_UPGRADE_PLACEMENT_NEED_TEMPLE;
             can_place = CAN_NOT_PLACE;
-        } else if (target->has_attachement((e_temple_compex_attachement)temple_options) ) {
+        } else if (target->has_upgrade((e_temple_compex_upgrade)temple_options) ) {
             immediate_warning_id = WARNING_TEMPLE_UPGRADE_ONLY_ONE;
             can_place = CAN_NOT_PLACE;
         } else {

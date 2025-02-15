@@ -336,7 +336,7 @@ public:
         struct {
             uint8_t variant;
             uint8_t statue_offset;
-            uint8_t temple_complex_attachments;
+            uint8_t temple_complex_upgrades;
             uint8_t resources_pct[RESOURCES_MAX];
             uint16_t workers[5];
             int8_t phase;
@@ -858,6 +858,7 @@ GENERATE_SMART_CAST_BUILDING(shrine)
 GENERATE_SMART_CAST_BUILDING(transport_wharf)
 GENERATE_SMART_CAST_BUILDING(temple_complex)
 GENERATE_SMART_CAST_BUILDING(temple_complex_altar)
+GENERATE_SMART_CAST_BUILDING(temple_complex_oracle)
 
 namespace buildings {
 

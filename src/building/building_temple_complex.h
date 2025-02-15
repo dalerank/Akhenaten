@@ -2,9 +2,9 @@
 
 #include "building/building.h"
 
-enum e_temple_compex_attachement : uint8_t {
-    etc_attachement_altar = 1 << 0,
-    etc_attachement_oracle = 1 << 1,
+enum e_temple_compex_upgrade : uint8_t {
+    etc_upgrade_altar = 1 << 0,
+    etc_upgrade_oracle = 1 << 1,
 };
 
 class building_temple_complex : public building_impl {
@@ -31,43 +31,16 @@ public:
     virtual void on_place(int orientation, int variant) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
-    bool has_attachement(e_temple_compex_attachement a) const { return !!(data.monuments.temple_complex_attachments & a); }
-    void set_attachement(e_temple_compex_attachement a) { data.monuments.temple_complex_attachments |= a; }
+    bool has_upgrade(e_temple_compex_upgrade a) const { return !!(data.monuments.temple_complex_upgrades & a); }
+    bool has_upgrade(e_building_type btype) const;
+    void set_upgrade(e_temple_compex_upgrade a) { data.monuments.temple_complex_upgrades |= a; }
 
     building *get_altar() const;
     building *get_oracle() const;
+    building *get_upgrade(e_building_type type) const;
 
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_NONE; }
-};
-
-class building_temple_complex_upgrade : public building_impl {
-public:
-    building_temple_complex_upgrade(building &b) : building_impl(b) {}
-
-    template<typename T>
-    struct static_params_t : public buildings::model_t<T> {
-        virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-    };
-};
-
-class building_temple_complex_altar : public building_temple_complex_upgrade {
-public:
-    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_ALTAR, building_temple_complex_altar)
-    building_temple_complex_altar(building &b) : building_temple_complex_upgrade(b) {}
-
-    using static_params = static_params_t<building_temple_complex_altar>;
-
-    virtual building_temple_complex_altar *dcast_temple_complex_altar() override { return this; }
-};
-
-class building_temple_complex_oracle : public building_temple_complex_upgrade {
-public:
-    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_ORACLE, building_temple_complex_oracle)
-    building_temple_complex_oracle(building &b) : building_temple_complex_upgrade(b) {}
-
-    using static_params = static_params_t<building_temple_complex_oracle>;
-
-    virtual building_temple_complex_oracle *dcast_temple_complex_oracle() override { return this; }
+    virtual void update_map_orientation(int orientation) override;
 };
 
 class building_temple_complex_osiris : public building_temple_complex {

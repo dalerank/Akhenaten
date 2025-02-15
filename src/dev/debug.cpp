@@ -428,7 +428,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             case BUILDING_TEMPLE_COMPLEX_SETH:
             case BUILDING_TEMPLE_COMPLEX_BAST:
                 debug_text(ctx, str, x1, y + 10, 0, "", b->data.monuments.variant, COLOR_WHITE);
-                debug_text(ctx, str, x1, y + 20, 0, "", b->data.monuments.temple_complex_attachments, COLOR_LIGHT_BLUE);
+                debug_text(ctx, str, x1, y + 20, 0, "", b->data.monuments.temple_complex_upgrades, COLOR_LIGHT_BLUE);
                 break;
             }
         }
