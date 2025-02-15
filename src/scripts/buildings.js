@@ -1890,8 +1890,10 @@ building building_scribal_school = {
 building building_temple_complex_osiris = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
-    main_n : { pack:PACK_TEMPLE_NILE, id:1 },
-    main_w : { pack:PACK_TEMPLE_NILE, id:1, offset:3 },
+    main_n : { pack:PACK_TEMPLE_NILE, id:1, offset:3 },
+    main_w : { pack:PACK_TEMPLE_NILE, id:3, offset:0 },
+    main_e : { pack:PACK_TEMPLE_NILE, id:1, offset:0 },
+    main_s : { pack:PACK_TEMPLE_NILE, id:3, offset:3 },
     oracle_n : { pack:PACK_TEMPLE_NILE, id:2 },
     oracle_w : { pack:PACK_TEMPLE_NILE, id:2, offset:3 },
     altar_n : { pack:PACK_TEMPLE_NILE, id:3 },
@@ -2001,8 +2003,10 @@ building building_temple_complex_seth = {
 building building_temple_complex_bast = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
-    main_n : { pack:PACK_TEMPLE_BAST, id:1 },
-    main_w : { pack:PACK_TEMPLE_BAST, id:1, offset:3 },
+    main_n : { pack:PACK_TEMPLE_BAST, id:1, offset:3 },
+    main_w : { pack:PACK_TEMPLE_BAST, id:1 },
+    main_e : { pack:PACK_TEMPLE_BAST, id:3 },
+    main_s : { pack:PACK_TEMPLE_BAST, id:3 },
     oracle_n : { pack:PACK_TEMPLE_BAST, id:2 },
     oracle_w : { pack:PACK_TEMPLE_BAST, id:2, offset:3 },
     altar_n : { pack:PACK_TEMPLE_BAST, id:3 },
@@ -2028,12 +2032,12 @@ building building_temple_complex_bast = {
 building building_temple_complex_altar = {
   animations : {
     preview : { pack:PACK_TEMPLE_NILE, id:7},
-    base_n :  { pack:PACK_TEMPLE_NILE, id:2 },
-    base_w :  { pack:PACK_TEMPLE_NILE, id:2, offset:3 },
-    base_e :  { pack:PACK_TEMPLE_NILE, id:2, offset:0 },
-    base_s :  { pack:PACK_TEMPLE_NILE, id:2, offset:3 },
-    fancy_n : { pack:PACK_TEMPLE_NILE, id:7, offset:0},
-    fancy_w : { pack:PACK_TEMPLE_NILE, id:7, offset:1},
+    base_n  : { pack:PACK_TEMPLE_NILE, id:2, offset:3 },
+    base_w  : { pack:PACK_TEMPLE_NILE, id:2 },
+    base_e  : { pack:PACK_TEMPLE_NILE, id:2, offset:0 },
+    base_s  : { pack:PACK_TEMPLE_NILE, id:2, offset:3 },
+    fancy_n : { pack:PACK_TEMPLE_NILE, id:7, offset:0 },
+    fancy_w : { pack:PACK_TEMPLE_NILE, id:7, offset:1 },
   },
 
   building_size : 3,
@@ -2043,13 +2047,13 @@ building building_temple_complex_altar = {
 
 building building_temple_complex_oracle = {
   animations : {
-    preview : { pack:PACK_TEMPLE_NILE, id:7, offset:2},
-    base_n :  { pack:PACK_TEMPLE_NILE, id:3 },
-    base_w :  { pack:PACK_TEMPLE_NILE, id:3, offset:3 },
-    base_e :  { pack:PACK_TEMPLE_NILE, id:3 },
-    base_s :  { pack:PACK_TEMPLE_NILE, id:3, offset:3 },
-    fancy_n : { pack:PACK_TEMPLE_NILE, id:7, offset:2},
-    fancy_w : { pack:PACK_TEMPLE_NILE, id:7, offset:3},
+    preview : { pack:PACK_TEMPLE_NILE, id:7, offset:2 },
+    base_n  :  { pack:PACK_TEMPLE_NILE, id:3, offset:3 },
+    base_w  :  { pack:PACK_TEMPLE_NILE, id:1, offset:0 },
+    base_e  :  { pack:PACK_TEMPLE_NILE, id:3 },
+    base_s  :  { pack:PACK_TEMPLE_NILE, id:1, offset:3 },
+    fancy_n : { pack:PACK_TEMPLE_NILE, id:7, offset:2 },
+    fancy_w : { pack:PACK_TEMPLE_NILE, id:7, offset:3 },
   },
 
   building_size : 3,
