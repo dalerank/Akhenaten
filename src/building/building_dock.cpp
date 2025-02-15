@@ -32,6 +32,11 @@ void building_dock::static_params::load(archive arch) {
 
 }
 
+int building_dock::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
+    planer.draw_as_constructing = map_shore_determine_orientation(end, building_size, true).match;
+    return 1;
+}
+
 void building_dock::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     const int imgid = anim[animkeys().base].first_img() + planer.relative_orientation;
     planer.set_tiles_building(imgid, building_size);

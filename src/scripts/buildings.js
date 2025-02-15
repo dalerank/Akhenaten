@@ -677,6 +677,7 @@ building building_dock = {
   info_help_id:82,
   info_text_id:101,
   check_water_access : true,
+  need_shoreline : true,
   window_info_height_id : 1,
 }
 
