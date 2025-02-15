@@ -1313,6 +1313,7 @@ building building_transport_wharf = {
   planer_relative_orientation: 1,
   info_help_id: 85,
   info_text_id: 174,
+  need_shoreline : true,
   labor_category : LABOR_CATEGORY_MILITARY,
 }
 
@@ -1359,6 +1360,7 @@ building building_fishing_wharf = {
   info_help_id: 84,
   info_text_id: 102,
   check_water_access : true,
+  need_shoreline : true,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 

@@ -1085,6 +1085,7 @@ void building_impl::static_params::load(archive arch) {
     needs.oracle = arch.r_bool("need_oracle");
     needs.nearby_water = arch.r_bool("need_nearby_water");
     needs.groundwater = arch.r_bool("need_groundwater");
+    needs.shoreline = arch.r_bool("need_shoreline");
 
     city_labor_set_category(type, labor_category);
 
@@ -1218,6 +1219,7 @@ bool building_impl::static_params::planer_is_need_flag(e_building_flags flag) co
     case e_building_flag::TempleUpgradeOracle: return needs.oracle;
     case e_building_flag::NearbyWater: return needs.nearby_water;
     case e_building_flag::Groundwater: return needs.groundwater;
+    case e_building_flag::ShoreLine: return needs.shoreline;
     }
 
     return false;

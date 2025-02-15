@@ -468,7 +468,7 @@ void build_planner::setup_build_flags() {
     const auto &params = building_impl::params(build_type);
 
     const e_building_flag flags[] = { e_building_flag::Meadow, e_building_flag::Rock, e_building_flag::Ore, e_building_flag::TempleUpgradeAltar,
-                                      e_building_flag::TempleUpgradeOracle, e_building_flag::NearbyWater, e_building_flag::Groundwater };
+                                      e_building_flag::TempleUpgradeOracle, e_building_flag::NearbyWater, e_building_flag::Groundwater, e_building_flag::ShoreLine };
 
     for (const auto flag: flags) {
         const bool is_need = params.planer_is_need_flag(flag);
@@ -495,11 +495,6 @@ void build_planner::setup_build_flags() {
     case BUILDING_WATER_LIFT:
         set_flag(e_building_flag::ShoreLine, 2);
         set_flag(e_building_flag::FloodplainShore, 2);
-        break;
-
-    case BUILDING_FISHING_WHARF:
-    case BUILDING_TRANSPORT_WHARF:
-        set_flag(e_building_flag::ShoreLine, 2);
         break;
 
     case BUILDING_SHIPWRIGHT:
@@ -748,13 +743,15 @@ void build_planner::update_special_case_orientations_check() {
 
     // for special buildings that require oriented terrain
     if (special_flags & e_building_flag::ShoreLine) {
-        shore_orientation result = map_shore_determine_orientation(end, additional_req_param1, true);
+        const auto &params = building_impl::params(build_type);
+        int shoreline_size = (additional_req_param1 > 0) ? additional_req_param1 : params.building_size;
+        shore_orientation result = map_shore_determine_orientation(end, shoreline_size, true);
         if (special_flags & e_building_flag::FloodplainShore) {
             // in original Pharaoh, this actually is allowed to be built over the EDGE CORNERS.
             // it looks off, but it's legit!
             building_variant = 0;
             if (!result.match) {
-                result = map_shore_determine_orientation(end, additional_req_param1, true, true, TERRAIN_FLOODPLAIN);
+                result = map_shore_determine_orientation(end, shoreline_size, true, true, TERRAIN_FLOODPLAIN);
                 if (result.match && !map_terrain_exists_tile_in_area_with_type(end, size.x, TERRAIN_WATER)) { // correct for water
                     building_variant = 1;
                 } else {
@@ -1056,7 +1053,6 @@ void build_planner::construction_update(tile2i tile) {
         mark_construction(tile, { 3, 3 }, ~TERRAIN_ROAD, false);
         break;
 
-    case BUILDING_TRANSPORT_WHARF:
     case BUILDING_SHIPWRIGHT:
     case BUILDING_DOCK:
     case BUILDING_WARSHIP_WHARF:

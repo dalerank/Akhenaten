@@ -562,6 +562,7 @@ public:
             bool oracle;
             bool nearby_water;
             bool groundwater;
+            bool shoreline;
         } needs;
 
         void load(archive arch);

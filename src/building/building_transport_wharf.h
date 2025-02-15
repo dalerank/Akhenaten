@@ -12,6 +12,7 @@ public:
     struct static_params : public buildings::model_t<building_transport_wharf> {
         virtual void load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
+        virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
     };
 
     virtual void update_month() override;
