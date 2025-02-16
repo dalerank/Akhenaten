@@ -88,29 +88,6 @@ routed_building_result place_routed_building(tile2i start, tile2i end, e_routed_
     return { true, items };
 }
 
-int building_construction_place_wall(bool measure_only, tile2i start, tile2i end) {
-    game_undo_restore_map(0);
-
-    int start_offset = start.grid_offset();
-    int end_offset = end.grid_offset();
-    int forbidden_terrain_mask = TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_SHRUB
-                                 | TERRAIN_ROAD | TERRAIN_GARDEN | TERRAIN_ELEVATION | TERRAIN_RUBBLE | TERRAIN_CANAL
-                                 | TERRAIN_ACCESS_RAMP;
-    if (map_terrain_is(start_offset, forbidden_terrain_mask))
-        return 0;
-
-    if (map_terrain_is(end_offset, forbidden_terrain_mask))
-        return 0;
-
-    auto result = place_routed_building(start, end, ROUTED_BUILDING_WALL);
-    if (result.ok && !measure_only) {
-        map_routing_update_land();
-        map_routing_update_walls();
-    }
-
-    return result.ok;
-}
-
 int building_construction_place_canal(bool measure_only, tile2i start, tile2i end) {
     game_undo_restore_map(0);
     if (!map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, start)) {
