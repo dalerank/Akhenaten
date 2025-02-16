@@ -171,7 +171,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
         map_tiles_update_area_roads(x_min, y_min, radius);
         map_tiles_update_all_plazas();
         map_tiles_update_area_walls(area.tmin, radius);
-        map_tiles_update_region_canals(x_min - 3, y_min - 3, x_max + 3, y_max + 3);
+        map_tiles_update_region_canals(tile2i(x_min - 3, y_min - 3), tile2i(x_max + 3, y_max + 3));
     }
 
     if (!measure_only) {

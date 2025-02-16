@@ -665,7 +665,7 @@ void build_planner::update_requirements_check() {
 
     if (special_flags & e_building_flag::Meadow) {
         if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_MEADOW)
-            && !map_terrain_all_tiles_in_radius_are(end.x(), end.y(), size.x, 0, TERRAIN_FLOODPLAIN)) {
+            && !map_terrain_all_tiles_in_radius_are(end, size.x, 0, TERRAIN_FLOODPLAIN)) {
             immediate_warning_id = WARNING_MEADOW_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
@@ -693,7 +693,7 @@ void build_planner::update_requirements_check() {
     }
 
     if (special_flags & e_building_flag::Walls) {
-        if (!map_terrain_all_tiles_in_radius_are(end.x(), end.y(), size.x, 0, TERRAIN_WALL)) {
+        if (!map_terrain_all_tiles_in_radius_are(end, size.x, 0, TERRAIN_WALL)) {
             immediate_warning_id = WARNING_WALL_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
@@ -968,9 +968,6 @@ void build_planner::construction_start(tile2i tile) {
             //            case BUILDING_WATER_LIFT:
             can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, start);
             break;
-        case BUILDING_MUD_WALL:
-            can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start);
-            break;
 
         default:
             break;
@@ -1018,10 +1015,6 @@ void build_planner::construction_update(tile2i tile) {
     case BUILDING_CLEAR_LAND:
         last_items_cleared = building_construction_clear_land(true, start, end);
         items_placed = last_items_cleared;
-        break;
-
-    case BUILDING_MUD_WALL:
-        items_placed = building_construction_place_wall(true, start, end);
         break;
 
     case BUILDING_IRRIGATION_DITCH:
@@ -1429,10 +1422,6 @@ bool build_planner::place() {
         }
         break;
 
-    case BUILDING_MUD_WALL:
-        placement_cost *= building_construction_place_wall(false, start, end);
-        break;
-
     case BUILDING_LOW_BRIDGE:
     case BUILDING_UNUSED_SHIP_BRIDGE_83: {
             placement_cost *= map_bridge_add(x, y, build_type == BUILDING_UNUSED_SHIP_BRIDGE_83);
@@ -1460,6 +1449,9 @@ bool build_planner::place() {
             return false;
         }
         break;
+
+    case BUILDING_NONE:
+        return false;
 
     default:
         {

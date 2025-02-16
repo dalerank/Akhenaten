@@ -813,7 +813,6 @@ bool building_is_draggable(e_building_type type) {
     switch (type) {
     case BUILDING_CLEAR_LAND:
     case BUILDING_IRRIGATION_DITCH:
-    case BUILDING_MUD_WALL:
         return true;
 
     default:
