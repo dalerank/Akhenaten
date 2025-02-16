@@ -298,7 +298,6 @@ void figure::action_perform() {
         figure* leader = figure_get(leading_figure_id);
         switch (type) {
         case FIGURE_NATIVE_TRADER:
-        case FIGURE_TOWER_SENTRY:
         case FIGURE_MISSIONARY:
         case FIGURE_EMBALMER:
             if (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id)) {
@@ -368,7 +367,6 @@ void figure::action_perform() {
         case 36: editor_flag_action(); break;
         case FIGURE_NOBLES: noble_action(); break; 
         case 41: indigenous_native_action(); break;
-        case 42: tower_sentry_action(); break;
         case 43: enemy43_spear_action(); break;
         case 44: enemy44_sword_action(); break;
         case 45: enemy45_sword_action(); break;

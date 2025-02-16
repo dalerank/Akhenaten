@@ -169,8 +169,11 @@ const image_t *image_get(int pak, int id) {
 }
 
 const image_t* image_get(int id) {
-    auto& data = *g_image_data;
+    if (id < 0) {
+        return nullptr;
+    }
 
+    auto& data = *g_image_data;
     if (data.image_cache[id]) {
         return data.image_cache[id];
     }

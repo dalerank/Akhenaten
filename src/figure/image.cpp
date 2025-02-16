@@ -266,9 +266,6 @@ int figure::figure_image_corpse_offset() {
     case FIGURE_INDIGENOUS_NATIVE:
         type_offset = 441;
         break;
-    case FIGURE_TOWER_SENTRY:
-        type_offset = 136;
-        break;
     case FIGURE_JAVELIN:
     case FIGURE_FCHARIOTEER:
         type_offset = 144;

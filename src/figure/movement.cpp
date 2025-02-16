@@ -421,18 +421,6 @@ void figure::roam_set_direction() {
     roam_ticks_until_next_turn = 5;
 }
 
-void figure::move_ticks_tower_sentry(int num_ticks) {
-    while (num_ticks > 0) {
-        num_ticks--;
-        progress_on_tile++;
-        if (progress_on_tile < 15) {
-            advance_figure_tick();
-        } else {
-            progress_on_tile = 14;
-        }
-    }
-}
-
 void figure::follow_ticks(int num_ticks) {
     figure *leader = figure_get(leading_figure_id);
 

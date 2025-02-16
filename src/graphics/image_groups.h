@@ -595,7 +595,7 @@ extern const token_holder<e_pack, PACK_UNLOADED, PACK_MAX> e_pack_type_tokens;
 //#define GROUP_FIGURE_IMMIGRANT_CART PACK_SPR_MAIN, 52      // 131
 #define GROUP_FIGURE_LION PACK_SPR_MAIN, 161               // 163
 //#define GROUP_FIGURE_SHIP PACK_SPR_MAIN, 34                // 165
-#define GROUP_FIGURE_TOWER_SENTRY PACK_SPR_MAIN, 194       // TODO
+//#define GROUP_FIGURE_TOWER_SENTRY PACK_SPR_MAIN, 194       // TODO
 //#define GROUP_FIGURE_MISSILE PACK_SPR_MAIN, 198            // TODO
 #define GROUP_FIGURE_BALLISTA PACK_SPR_MAIN, 200           // TODO
 #define GROUP_FIGURE_CHARIOTEER PACK_SPR_MAIN, 215         // this isn't in Pharaoh

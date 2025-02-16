@@ -325,7 +325,6 @@ public:
     void init_roaming_from_building(int roam_dir);
     void roam_set_direction();
     void move_ticks(int num_ticks, bool roaming_enabled = false);
-    void move_ticks_tower_sentry(int num_ticks);
     int roam_ticks(int num_ticks);
     void follow_ticks(int num_ticks);
     void advance_attack();
@@ -354,7 +353,6 @@ public:
     void editor_flag_action();
     void noble_action();
     void indigenous_native_action();
-    void tower_sentry_action();
     void enemy43_spear_action();
     void enemy44_sword_action();
     void enemy45_sword_action();
@@ -404,9 +402,6 @@ public:
     void hit_opponent();
     void figure_combat_handle_attack();
     void figure_combat_attack_figure_at(int grid_offset);
-
-    // wall.c
-    void tower_sentry_pick_target();
 
     // sound.c
     void play_die_sound();

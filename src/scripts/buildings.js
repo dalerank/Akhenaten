@@ -1241,7 +1241,7 @@ building building_festival_square = {
   unique_building : true,
 }
 
-building_roadblock = {
+building building_roadblock = {
   animations : {
     preview : { pack:PACK_GENERAL, id:98 },
     base : { pack:PACK_GENERAL, id:98 },
@@ -1649,12 +1649,22 @@ building_brick_gatehouse = {
   building_size : 2,
 }
 
-building_mud_gatehouse = {
+building building_mud_gatehouse = {
   animations : {
     preview : { pack:PACK_GENERAL, id:220 },
     base : { pack:PACK_GENERAL, id:220 },
   },
   building_size : 2,
+  window_info_height_id : 1,
+}
+
+building building_mud_wall = {
+  animations : {
+    preview : { pack:PACK_GENERAL, id:220 },
+    base : { pack:PACK_GENERAL, id:220 },
+  },
+  building_size : 1,
+  is_draggable : true,
   window_info_height_id : 1,
 }
 

@@ -25,7 +25,7 @@ figure_fireman = {
 	max_roam_length : 640,
 }
 
-figure_water_carrier = {
+figure figure_water_carrier = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:59, max_frames:12 },
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:60, max_frames:8, loop:false },
@@ -50,6 +50,17 @@ figure_festival_priest = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:41, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:42, max_frames:8, loop:false },
+	},
+	terrain_usage : TERRAIN_USAGE_ANY,
+	max_amount : 25,
+}
+
+figure figure_tower_sentry = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:54, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:55, max_frames:8, loop:false },
+		fire : { pack:PACK_SPR_MAIN, id:56, max_frames:12 },
+		attack : { pack:PACK_SPR_MAIN, id:197, max_frames:12 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANY,
 	max_amount : 25,

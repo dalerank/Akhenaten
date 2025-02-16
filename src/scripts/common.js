@@ -36,9 +36,7 @@ var building_mortuary = {}
 var building_dancer_school = {}
 var building_conservatory = {}
 var building_hunting_lodge = {}
-var building_roadblock = {}
 var building_brick_gatehouse = {}
-var building_mud_gatehouse = {}
 var building_library = {}
 var building_military_academy = {}
 var building_juggler_school = {}
@@ -128,7 +126,6 @@ var dock_orders_window = {}
 
 //figures
 var figure_fireman = {}
-var figure_water_carrier = {}
 var figure_festival_priest = {}
 var figure_hippo = {}
 var figure_crocodile = {}
