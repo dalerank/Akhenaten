@@ -26,35 +26,44 @@ static const int direction_indices[8][4] = {
     {6, 0, 4, 2}
 };
 
-int place_routed_building(tile2i start, tile2i end, e_routed_mode type, int* items) {
-    *items = 0;
+routed_building_result place_routed_building(tile2i start, tile2i end, e_routed_mode type) {
+    int items = 0;
     int grid_offset = end.grid_offset();
     int guard = 0;
     // reverse routing
     while (true) {
-        if (++guard >= 400)
-            return 0;
+        if (++guard >= 400) {
+            return { false, 0 };
+        }
+
         int distance = map_routing_distance(grid_offset);
-        if (distance <= 0)
-            return 0;
+        if (distance <= 0) {
+            return { false, 0 };
+        }
+
         switch (type) {
         default:
         case ROUTED_BUILDING_ROAD:
-            *items += map_tiles_set_road(end);
+            items += map_tiles_set_road(end);
             break;
+
         case ROUTED_BUILDING_WALL:
-            *items += map_tiles_set_wall(end);
+            items += map_tiles_set_wall(end);
             break;
+
         case ROUTED_BUILDING_AQUEDUCT:
-            *items += map_tiles_set_canal(end);
+            items += map_tiles_set_canal(end);
             break;
+
         case ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC:
-            *items += 1;
+            items += 1;
             break;
         }
+
         int direction = calc_general_direction(end, start);
-        if (direction == DIR_8_NONE)
-            return 1; // destination reached
+        if (direction == DIR_8_NONE) {
+            return { true, items }; // destination reached
+        }
 
         int routed = 0;
         for (int i = 0; i < 4; i++) {
@@ -71,9 +80,12 @@ int place_routed_building(tile2i start, tile2i end, e_routed_mode type, int* ite
 
         // update land graphics
         map_tiles_update_region_empty_land(false, end.shifted(-4, -4), end.shifted(4, 4));
-        if (!routed)
-            return 0;
+        if (!routed) {
+            return { false, 0 };
+        }
     }
+
+    return { true, items };
 }
 
 int building_construction_place_wall(bool measure_only, tile2i start, tile2i end) {
@@ -90,29 +102,31 @@ int building_construction_place_wall(bool measure_only, tile2i start, tile2i end
     if (map_terrain_is(end_offset, forbidden_terrain_mask))
         return 0;
 
-    int items_placed = 0;
-    if (place_routed_building(start, end, ROUTED_BUILDING_WALL, &items_placed)) {
-        if (!measure_only) {
-            map_routing_update_land();
-            map_routing_update_walls();
-        }
+    auto result = place_routed_building(start, end, ROUTED_BUILDING_WALL);
+    if (result.ok && !measure_only) {
+        map_routing_update_land();
+        map_routing_update_walls();
     }
-    return items_placed;
+
+    return result.ok;
 }
 
 int building_construction_place_canal(bool measure_only, tile2i start, tile2i end) {
     game_undo_restore_map(0);
-    int items_placed = 0;
-    if (map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, start)
-        && place_routed_building(start, end, ROUTED_BUILDING_AQUEDUCT, &items_placed)) {
-        if (!measure_only) {
-            map_tiles_update_all_canals(0);
-            map_routing_update_land();
-        }
+    if (!map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, start)) {
+        return 0;
     }
-    return items_placed;
+        
+    auto result = place_routed_building(start, end, ROUTED_BUILDING_AQUEDUCT);
+    if (result.ok && !measure_only) {
+        map_tiles_update_all_canals(0);
+        map_routing_update_land();
+    }
+
+    return result.items;
 }
-int building_construction_place_canal_for_reservoir(bool measure_only, tile2i start, tile2i end, int* items) {
+
+routed_building_result building_construction_place_canal_for_reservoir(bool measure_only, tile2i start, tile2i end) {
     e_routed_mode type = measure_only ? ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC : ROUTED_BUILDING_AQUEDUCT;
-    return place_routed_building(start, end, type, items);
+    return place_routed_building(start, end, type);
 }

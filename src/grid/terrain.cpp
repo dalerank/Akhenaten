@@ -46,7 +46,7 @@ void map_terrain_remove(int grid_offset, int terrain) {
 
 void map_terrain_add_in_area(tile2i pmin, tile2i pmax, int terrain) {
     for (int yy = pmin.y(); yy <= pmax.y(); yy++) {
-        for (int xx = pmin.x(); xx <= pmax.y(); xx++) {
+        for (int xx = pmin.x(); xx <= pmax.x(); xx++) {
             map_terrain_add(tile2i(xx, yy), terrain);
         }
     }
