@@ -183,10 +183,7 @@ void building_destroy_increase_enemy_damage(int grid_offset, int max_damage) {
 }
 
 void building_destroy_by_enemy(tile2i tile) {
-    int grid_offset = tile.grid_offset();
-    int x = tile.x();
-    int y = tile.y();
-    int building_id = map_building_at(grid_offset);
+    int building_id = map_building_at(tile);
     if (building_id > 0) {
         building* b = building_get(building_id);
         if (b->state == BUILDING_STATE_VALID) {
@@ -194,7 +191,7 @@ void building_destroy_by_enemy(tile2i tile) {
             building_destroy_by_collapse(b);
         }
     } else {
-        if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
+        if (map_terrain_is(tile, TERRAIN_WALL)) {
             figure_kill_tower_sentries_at(tile);
         }
 
@@ -202,7 +199,7 @@ void building_destroy_by_enemy(tile2i tile) {
     }
     figure_tower_sentry_reroute();
     map_tiles_update_area_walls(tile, 3);
-    map_tiles_update_region_canals(x - 3, y - 3, x + 3, y + 3);
+    map_tiles_update_region_canals(tile.shifted(-3, -3), tile.shifted(3, 3));
     map_routing_update_land();
     map_routing_update_walls();
 }

@@ -51,21 +51,22 @@ void map_terrain_add_in_area(tile2i pmin, tile2i pmax, int terrain) {
         }
     }
 }
-
 void map_terrain_add_with_radius(tile2i tile, int size, int radius, int terrain) {
     grid_area area = map_grid_get_area(tile, size, radius);
 
     map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
-        map_terrain_add(t.grid_offset(), terrain);
+        map_terrain_add(t, terrain);
     });
 }
-void map_terrain_remove_with_radius(int x, int y, int size, int radius, int terrain) {
-    grid_area area = map_grid_get_area(tile2i(x, y), size, radius);
 
-    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
-        map_terrain_remove(tile.grid_offset(), terrain);
+void map_terrain_remove_with_radius(tile2i c, int size, int radius, int terrain) {
+    grid_area area = map_grid_get_area(c, size, radius);
+
+    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+        map_terrain_remove(t, terrain);
     });
 }
+
 void map_terrain_remove_all(int terrain) {
     map_grid_and_all(g_terrain_grid, ~terrain);
 }
@@ -194,8 +195,8 @@ bool map_terrain_all_tiles_in_area_are(tile2i tile, int size, int terrain) {
     return true;
 }
 
-bool map_terrain_all_tiles_in_radius_are(int x, int y, int size, int radius, int terrain) {
-    grid_area area = map_grid_get_area(tile2i(x, y), size, radius);
+bool map_terrain_all_tiles_in_radius_are(tile2i c, int size, int radius, int terrain) {
+    grid_area area = map_grid_get_area(c, size, radius);
 
     for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
         for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {

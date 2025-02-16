@@ -353,10 +353,8 @@ static bool callback_travel_found_reeds(int next_offset, int dist) {
     if (map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset)) {
         enqueue(next_offset, dist);
         if (map_terrain_is(next_offset, TERRAIN_MARSHLAND)) {
-            int t_x = MAP_X(next_offset);
-            int t_y = MAP_Y(next_offset);
             // requires tile to be fully within a 3x3 marshland area
-            if (map_terrain_all_tiles_in_radius_are(t_x, t_y, 1, 1, TERRAIN_MARSHLAND)) {
+            if (map_terrain_all_tiles_in_radius_are(tile2i(next_offset), 1, 1, TERRAIN_MARSHLAND)) {
                 if (can_harvest_point(next_offset))
                     return true;
             }

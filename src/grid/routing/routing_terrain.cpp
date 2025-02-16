@@ -506,6 +506,7 @@ int map_routing_wall_tile_in_radius(int x, int y, int radius, int* x_wall, int* 
     }
     return 0;
 }
+
 int map_routing_citizen_is_passable(int grid_offset) {
     return map_grid_get(routing_land_citizen, grid_offset) == CITIZEN_0_ROAD
            || map_grid_get(routing_land_citizen, grid_offset) == CITIZEN_2_PASSABLE_TERRAIN;

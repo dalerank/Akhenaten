@@ -89,12 +89,13 @@ void map_terrain_add(int grid_offset, int terrain);
 inline void map_terrain_add(tile2i tile, int terrain) { map_terrain_add(tile.grid_offset(), terrain); }
 
 void map_terrain_remove(int grid_offset, int terrain);
+inline void map_terrain_remove(tile2i tile, int terrain) { map_terrain_remove(tile.grid_offset(), terrain); }
 
 void map_terrain_add_in_area(tile2i pmin, tile2i pmax, int terrain);
 
 void map_terrain_add_with_radius(tile2i tile, int size, int radius, int terrain);
 
-void map_terrain_remove_with_radius(int x, int y, int size, int radius, int terrain);
+void map_terrain_remove_with_radius(tile2i center, int size, int radius, int terrain);
 
 void map_terrain_remove_all(int terrain);
 
@@ -117,7 +118,7 @@ bool map_terrain_exists_clear_tile_in_radius(tile2i tile, int size, int radius, 
 
 bool map_terrain_all_tiles_in_area_are(tile2i tile, int size, int terrain);
 
-bool map_terrain_all_tiles_in_radius_are(int x, int y, int size, int radius, int terrain);
+bool map_terrain_all_tiles_in_radius_are(tile2i c, int size, int radius, int terrain);
 
 bool map_terrain_has_only_rocks_trees_in_ring(int x, int y, int distance);
 

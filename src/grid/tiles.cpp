@@ -615,8 +615,8 @@ void map_tiles_update_all_canals(int include_construction) {
     aqueduct_include_construction = 0;
 }
 
-void map_tiles_update_region_canals(int x_min, int y_min, int x_max, int y_max) {
-    map_tiles_foreach_region_tile(tile2i(x_min, y_min), tile2i(x_max, y_max), map_tiles_set_canal_image);
+void map_tiles_update_region_canals(tile2i pmin, tile2i pmax) {
+    map_tiles_foreach_region_tile(pmin, pmax, map_tiles_set_canal_image);
 }
 
 int map_tiles_set_canal(tile2i tile) {
@@ -645,7 +645,7 @@ int map_tiles_is_paved_road(int grid_offset) {
     return 0;
 }
 
-void map_tiles_update_all_roads(void) {
+void map_tiles_update_all_roads() {
     foreach_map_tile(building_road::set_image);
 }
 

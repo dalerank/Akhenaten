@@ -36,7 +36,7 @@ void map_tiles_set_water(int grid_offset);
 
 int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_image* img);
 void map_tiles_update_all_canals(int include_construction);
-void map_tiles_update_region_canals(int x_min, int y_min, int x_max, int y_max);
+void map_tiles_update_region_canals(tile2i pmin, tile2i pmax);
 int map_tiles_set_canal(tile2i tile);
 
 void map_tiles_foreach_region_tile(tile2i tmin, tile2i tmax, void (*callback)(tile2i));
