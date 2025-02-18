@@ -13,15 +13,15 @@
 #include "city/city_buildings.h"
 #include "game/state.h"
 
+city_overlay_routing g_city_overlay_routing;
+
 static int terrain_on_routing_overlay() {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP  | TERRAIN_RUBBLE | TERRAIN_CANAL | TERRAIN_WALL;
 }
 
 static bool building_on_routing_overlay(e_building_type type) {
-    return type == BUILDING_FERRY || type == BUILDING_PLAZA || type == BUILDING_BOOTH || type == BUILDING_ROAD;
+    return building_type_any_of(type, BUILDING_FERRY, BUILDING_PLAZA, BUILDING_BOOTH, BUILDING_ROAD);
 }
-
-city_overlay_routing g_city_overlay_routing;
 
 city_overlay* city_overlay_for_routing() {
     return &g_city_overlay_routing;

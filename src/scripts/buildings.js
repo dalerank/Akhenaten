@@ -1287,6 +1287,8 @@ building_ferry = {
   },
   building_size : 2,
   check_water_access : true,
+  need_shoreline : true,
+  update_ferries : true,
   fire_proof : true,
   planer_relative_orientation: 1,
   info_help_id: 85,

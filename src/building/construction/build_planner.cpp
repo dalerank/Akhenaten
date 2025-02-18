@@ -498,11 +498,6 @@ void build_planner::setup_build_flags() {
         set_flag(e_building_flag::FloodplainShore, 2);
         break;
 
-    case BUILDING_FERRY:
-        set_flag(e_building_flag::ShoreLine, 2);
-        set_flag(e_building_flag::Ferry);
-        break;
-
     case BUILDING_LOW_BRIDGE:
     case BUILDING_UNUSED_SHIP_BRIDGE_83:
         set_flag(e_building_flag::ShoreLine, 1);
@@ -1027,10 +1022,6 @@ void build_planner::construction_update(tile2i tile) {
         mark_construction(tile, { 3, 3 }, ~TERRAIN_ROAD, false);
         break;
 
-    case BUILDING_FERRY:
-        draw_as_constructing = map_shore_determine_orientation(end, additional_req_param1, true).match;
-        break;
-
     case BUILDING_FORT_ARCHERS:
     case BUILDING_FORT_CHARIOTEERS:
     case BUILDING_FORT_INFANTRY:
@@ -1064,6 +1055,7 @@ void build_planner::construction_finalize() { // confirm final placement
     }
 
     // attempt placing, restore terrain data on failure
+    const auto &params = building_impl::params(build_type);
     if (!place()) {
         map_property_clear_constructing_and_deleted();
         if (build_type == BUILDING_MUD_WALL || build_type == BUILDING_ROAD || build_type == BUILDING_IRRIGATION_DITCH)
@@ -1079,18 +1071,7 @@ void build_planner::construction_finalize() { // confirm final placement
     // final generic building warnings - these are in another file
     // TODO: bring these warnings over.
     building_construction_warning_generic_checks(last_created_building, end, size.x, relative_orientation);
-    bool should_recalc_ferry_routes = false;
-
-    // update city building info with newly created
-    // building for special/unique constructions
-    switch (build_type) {
-    case BUILDING_FERRY:
-        should_recalc_ferry_routes = true;
-        break;
-
-    default:
-        ; // nothing
-    }
+    bool should_recalc_ferry_routes = params.needs.shoreline;
 
     setup_building_variant(end, build_type);
     update_orientations(false);

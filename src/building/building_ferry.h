@@ -8,6 +8,10 @@ public:
     BUILDING_METAINFO(BUILDING_FERRY, building_ferry)
     building_ferry(building &b) : building_routeblock(b) {}
 
+    struct static_params : public buildings::model_t<building_ferry> {
+        virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
+    };
+
     virtual building_ferry *dcast_ferry() override { return this; }
     virtual building_routeblock *dcast_routeblock() override { return this; }
 

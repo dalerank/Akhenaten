@@ -7,11 +7,17 @@
 #include "grid/building_tiles.h"
 #include "grid/routing/routing.h"
 #include "graphics/elements/ui.h"
+#include "construction/build_planner.h"
 
 #include "io/gamefiles/lang.h"
 
-buildings::model_t<building_ferry> ferry_m;
+building_ferry::static_params ferry_m;
 info_window_ferry ferry_infow;
+
+int building_ferry::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
+    planer.draw_as_constructing = map_shore_determine_orientation(end, building_size, true).match;
+    return 1;
+}
 
 void building_ferry::on_create(int orientation) {
     data.dock.orientation = orientation;

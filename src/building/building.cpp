@@ -1072,6 +1072,7 @@ void building_impl::static_params::load(archive arch) {
     info_title_id = arch.r_vec2i("info_title_id");
     updates.canals = arch.r_bool("update_canals");
     updates.roads = arch.r_bool("update_roads");
+    updates.ferries = arch.r_bool("update_ferries");
     needs.meadow = arch.r_bool("need_meadow");
     needs.rock = arch.r_bool("need_rock");
     needs.ore = arch.r_bool("need_ore");

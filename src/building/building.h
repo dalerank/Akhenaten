@@ -552,6 +552,7 @@ public:
         struct {
             bool canals;
             bool roads;
+            bool ferries;
         } updates;
 
         struct {
