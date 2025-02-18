@@ -1493,6 +1493,15 @@ building building_road = {
   is_draggable : true,
 }
 
+building building_irrigation_ditch = {
+  animations : {
+    preview : { pack:PACK_TERRAIN, id:33 },
+    base : { pack:PACK_TERRAIN, id:33 },
+  },
+  building_size : 1,
+  is_draggable : true,
+}
+
 building building_clay_pit = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:40 },

@@ -810,14 +810,11 @@ bool building_is_military(e_building_type type) {
 }
 
 bool building_is_draggable(e_building_type type) {
-    switch (type) {
-    case BUILDING_CLEAR_LAND:
-    case BUILDING_IRRIGATION_DITCH:
+    if (BUILDING_CLEAR_LAND == type) {
         return true;
-
-    default:
-        return building_impl::params(type).is_draggable;
     }
+
+    return building_impl::params(type).is_draggable;
 }
 
 int building_mothball_toggle(building* b) {
@@ -875,7 +872,6 @@ void building_impl::on_place_checks() {
     switch (type()) {
     case BUILDING_NONE:
     case BUILDING_CLEAR_LAND:
-    case BUILDING_IRRIGATION_DITCH:
     case BUILDING_TEMPLE_COMPLEX_ORACLE:
         return;
     }
