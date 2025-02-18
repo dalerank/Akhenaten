@@ -32,7 +32,7 @@ static figure_phrase_t g_figure_sounds[] = {
     {FIGURE_NONE, "governor"},
     {FIGURE_NONE, "guard"},
     {FIGURE_NONE, "pharaoh"},
-    {FIGURE_CRIMINAL, "robber"},
+    {FIGURE_ROBBER, "robber"},
     {FIGURE_NONE, "senet"},
     {FIGURE_NONE, "thief"},
     {FIGURE_NONE, "transport"},

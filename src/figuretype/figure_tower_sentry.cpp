@@ -218,7 +218,7 @@ void figure_tower_sentry::figure_action() {
 
 void figure_tower_sentry::update_animation() {
     xstring animkey = animkeys().walk;
-    int dir = base.figure_image_direction();
+    //int dir = base.figure_image_direction();
     if (action_state(FIGURE_ACTION_149_CORPSE)) {
         animkey = animkeys().death;
     } else if (action_state(FIGURE_ACTION_172_TOWER_SENTRY_FIRING)) {

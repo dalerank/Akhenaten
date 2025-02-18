@@ -99,75 +99,6 @@ bool is_coords_within_range(int x, int y, int b_x, int b_y, int size, int radius
     return false;
 }
 
-void figure::advance_action(short next_action) {
-    if (state == FIGURE_STATE_DYING && next_action != FIGURE_ACTION_149_CORPSE) {
-        return;
-    }
-    action_state = next_action;
-}
-
-bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
-    terrain_usage = terrainchoice;
-    roam_length++;
-    if (roam_length >= max_roam_length) { // roam over, return home
-        destination_tile.set(0);
-        roam_length = 0;
-        set_destination(0);
-        route_remove();
-        advance_action(NEXT_ACTION);
-        return true;
-    } else {
-        roam_ticks(speed_multiplier);
-    }
-    return false;
-}
-
-bool figure::do_goto(tile2i dest, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
-    OZZY_PROFILER_SECTION("Figure/Goto");
-    terrain_usage = terrainchoice;
-    if (use_cross_country) {
-        terrain_usage = TERRAIN_USAGE_ANY;
-    }
-
-    // refresh routing if destination is different
-    if (destination_tile != dest) {
-        OZZY_PROFILER_SECTION("Figure/Goto/Route remove (no dest)");
-        route_remove();
-    }
-
-    // set up destination and move!!!
-    if (use_cross_country) {
-        OZZY_PROFILER_SECTION("Figure/Goto/CrossCountry");
-        set_cross_country_destination(dest);
-        if (move_ticks_cross_country(1) == 1) {
-            advance_action(NEXT_ACTION);
-            return true;
-        }
-    } else {
-        OZZY_PROFILER_SECTION("Figure/Goto/MoveTicks");
-        destination_tile = dest;
-        move_ticks(speed_multiplier);
-    }
-
-    // check if destination is reached/figure is lost/etc.
-    if (direction == DIR_FIGURE_NONE) {
-        advance_action(NEXT_ACTION);
-        direction = previous_tile_direction;
-        return true;
-    }
-
-    if (direction == DIR_FIGURE_REROUTE) {
-        OZZY_PROFILER_SECTION("Figure/Goto/Route Remove (reroute)");
-        route_remove();
-    }
-
-    if (direction == DIR_FIGURE_CAN_NOT_REACH) {
-        advance_action(FAIL_ACTION);
-    }
-
-    return false;
-}
-
 bool figure::do_gotobuilding(building* dest, bool stop_at_road, e_terrain_usage terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
     tile2i finish_tile;
     set_destination(dest);
@@ -240,21 +171,6 @@ bool figure::do_gotobuilding(building* dest, bool stop_at_road, e_terrain_usage 
     }
 
     return false;
-}
-
-bool figure::do_returnhome(e_terrain_usage terrainchoice, short NEXT_ACTION) {
-    return do_gotobuilding(home(), true, terrainchoice, NEXT_ACTION);
-}
-
-bool figure::do_exitbuilding(bool invisible, short NEXT_ACTION, short FAIL_ACTION) {
-    use_cross_country = true;
-    // "go to" home, but stop at road = go to entrance
-    return do_gotobuilding(home(), true, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
-}
-
-bool figure::do_enterbuilding(bool invisible, building* b, short NEXT_ACTION, short FAIL_ACTION) {
-    use_cross_country = true;
-    return do_gotobuilding(b, false, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
 }
 
 void figure::action_perform() {
@@ -359,8 +275,6 @@ void figure::action_perform() {
         }
 
         switch (type) {
-        case FIGURE_PROTESTER: protestor_action(); break;
-        case FIGURE_CRIMINAL: mugger_action(); break;
         case FIGURE_TOMB_ROBER: rioter_action(); break;
             //            case 30: common_action(12, GROUP_FIGURE_TEACHER_LIBRARIAN); break; //30
             //            case 32: common_action(12, GROUP_FIGURE_BATHHOUSE_WORKER); break;

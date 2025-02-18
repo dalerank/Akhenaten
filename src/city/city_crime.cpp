@@ -58,13 +58,13 @@ static void generate_rioter(building* b) {
     city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, false, MESSAGE_RIOT, b->type, road_tile.grid_offset());
 }
 
-static void generate_mugger(building* b) {
+static void generate_robber(building* b) {
     city_sentiment_add_criminal();
     if (b->house_criminal_active > 60 && city_can_create_mugger()) {
         b->house_criminal_active -= 60;
         tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
         if (road_tile.valid()) {
-            figure* f = figure_create(FIGURE_CRIMINAL, road_tile, DIR_4_BOTTOM_LEFT);
+            figure* f = figure_create(FIGURE_ROBBER, road_tile, DIR_4_BOTTOM_LEFT);
             f->advance_action(FIGURE_ACTION_120_MUGGER_CREATED);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
 
@@ -133,9 +133,9 @@ void city_t::figures_generate_criminals() {
                     // if (GAME_ENV == ENGINE_ENV_C3) { // Temporary disable rioters in Egypt
                     //     generate_rioter(min_building);
                     // } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                    generate_mugger(min_building);
+                    generate_robber(min_building);
                 } else if (min_happiness < 30) {
-                    generate_mugger(min_building);
+                    generate_robber(min_building);
                 } else if (min_happiness < 50) {
                     generate_protestor(min_building);
                 }
@@ -143,7 +143,7 @@ void city_t::figures_generate_criminals() {
         } else if (sentiment < 60) {
             if (random_byte() >= sentiment + 40) {
                 if (min_happiness < 30) {
-                    generate_mugger(min_building);
+                    generate_robber(min_building);
                 } else if (min_happiness < 50) {
                     generate_protestor(min_building);
                 }

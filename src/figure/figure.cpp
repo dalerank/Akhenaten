@@ -17,6 +17,7 @@
 #include "graphics/animkeys.h"
 #include "sound/sound_walker.h"
 #include "core/object_property.h"
+#include "core/profiler.h"
 
 #include <string.h>
 #include <map>
@@ -25,6 +26,8 @@
 #ifdef _MSC_VER
 #include <windows.h>
 #endif // _MSC_VER
+
+static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;
 
 declare_console_command_p(killall, console_command_killall);
 declare_console_command_p(createfigure, console_command_create_figure)
@@ -49,7 +52,87 @@ void console_command_create_figure(std::istream &is, std::ostream &os) {
     const mouse *m = mouse_get();
     tile2i current_tile = widget_city_update_city_view_coords({ m->x, m->y });;
     figure_create((e_figure_type)f_type, current_tile, 1);
-};
+}
+
+bool figure::do_exitbuilding(bool invisible, short NEXT_ACTION, short FAIL_ACTION) {
+    use_cross_country = true;
+    // "go to" home, but stop at road = go to entrance
+    return do_gotobuilding(home(), true, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
+}
+
+bool figure::do_enterbuilding(bool invisible, building *b, short NEXT_ACTION, short FAIL_ACTION) {
+    use_cross_country = true;
+    return do_gotobuilding(b, false, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
+}
+
+bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
+    terrain_usage = terrainchoice;
+    roam_length++;
+    if (roam_length >= max_roam_length) { // roam over, return home
+        destination_tile.set(0);
+        roam_length = 0;
+        set_destination(0);
+        route_remove();
+        advance_action(NEXT_ACTION);
+        return true;
+    } else {
+        roam_ticks(speed_multiplier);
+    }
+    return false;
+}
+
+bool figure::do_goto(tile2i dest, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
+    OZZY_PROFILER_SECTION("Figure/Goto");
+    terrain_usage = terrainchoice;
+    if (use_cross_country) {
+        terrain_usage = TERRAIN_USAGE_ANY;
+    }
+
+    // refresh routing if destination is different
+    if (destination_tile != dest) {
+        OZZY_PROFILER_SECTION("Figure/Goto/Route remove (no dest)");
+        route_remove();
+    }
+
+    // set up destination and move!!!
+    if (use_cross_country) {
+        OZZY_PROFILER_SECTION("Figure/Goto/CrossCountry");
+        set_cross_country_destination(dest);
+        if (move_ticks_cross_country(1) == 1) {
+            advance_action(NEXT_ACTION);
+            return true;
+        }
+    } else {
+        OZZY_PROFILER_SECTION("Figure/Goto/MoveTicks");
+        destination_tile = dest;
+        move_ticks(speed_multiplier);
+    }
+
+    // check if destination is reached/figure is lost/etc.
+    if (direction == DIR_FIGURE_NONE) {
+        advance_action(NEXT_ACTION);
+        direction = previous_tile_direction;
+        return true;
+    }
+
+    if (direction == DIR_FIGURE_REROUTE) {
+        OZZY_PROFILER_SECTION("Figure/Goto/Route Remove (reroute)");
+        route_remove();
+    }
+
+    if (direction == DIR_FIGURE_CAN_NOT_REACH) {
+        advance_action(FAIL_ACTION);
+    }
+
+    return false;
+}
+
+void figure::advance_action(short next_action) {
+    if (state == FIGURE_STATE_DYING && next_action != FIGURE_ACTION_149_CORPSE) {
+        return;
+    }
+    action_state = next_action;
+}
 
 void figure::figure_delete_UNSAFE() {
     dcast()->on_destroy();
@@ -337,7 +420,9 @@ void figure_impl::main_update_image() {
     }
 }
 
-static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;
+bool figure::do_returnhome(e_terrain_usage terrainchoice, short NEXT_ACTION) {
+    return do_gotobuilding(home(), true, terrainchoice, NEXT_ACTION);
+}
 
 void figure_impl::kill() {
     base.kill();

@@ -126,7 +126,6 @@ var dock_orders_window = {}
 
 //figures
 var figure_fireman = {}
-var figure_festival_priest = {}
 var figure_hippo = {}
 var figure_crocodile = {}
 var figure_immigrant = {}
