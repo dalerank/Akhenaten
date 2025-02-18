@@ -87,23 +87,3 @@ routed_building_result place_routed_building(tile2i start, tile2i end, e_routed_
 
     return { true, items };
 }
-
-int building_construction_place_canal(bool measure_only, tile2i start, tile2i end) {
-    game_undo_restore_map(0);
-    if (!map_routing_calculate_distances_for_building(ROUTED_BUILDING_CANALS, start)) {
-        return 0;
-    }
-        
-    auto result = place_routed_building(start, end, ROUTED_BUILDING_CANALS);
-    if (result.ok && !measure_only) {
-        map_tiles_update_all_canals(0);
-        map_routing_update_land();
-    }
-
-    return result.items;
-}
-
-routed_building_result building_construction_place_canal_for_lift(bool measure_only, tile2i start, tile2i end) {
-    e_routed_mode type = measure_only ? ROUTED_BUILDING_CANALS_WITHOUT_GRAPHIC : ROUTED_BUILDING_CANALS;
-    return place_routed_building(start, end, type);
-}
