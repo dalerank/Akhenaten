@@ -1500,6 +1500,7 @@ building building_irrigation_ditch = {
   },
   building_size : 1,
   is_draggable : true,
+  need_canals : false,
 }
 
 building building_clay_pit = {

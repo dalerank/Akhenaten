@@ -872,7 +872,6 @@ void building_impl::on_place_checks() {
     switch (type()) {
     case BUILDING_NONE:
     case BUILDING_CLEAR_LAND:
-    case BUILDING_TEMPLE_COMPLEX_ORACLE:
         return;
     }
 
@@ -1081,6 +1080,7 @@ void building_impl::static_params::load(archive arch) {
     needs.nearby_water = arch.r_bool("need_nearby_water");
     needs.groundwater = arch.r_bool("need_groundwater");
     needs.shoreline = arch.r_bool("need_shoreline");
+    needs.canals = arch.r_bool("need_canals");
 
     city_labor_set_category(type, labor_category);
 
@@ -1215,6 +1215,7 @@ bool building_impl::static_params::planer_is_need_flag(e_building_flags flag) co
     case e_building_flag::NearbyWater: return needs.nearby_water;
     case e_building_flag::Groundwater: return needs.groundwater;
     case e_building_flag::ShoreLine: return needs.shoreline;
+    case e_building_flag::Canals: return needs.canals;
     }
 
     return false;

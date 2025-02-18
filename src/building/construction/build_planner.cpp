@@ -468,7 +468,8 @@ void build_planner::setup_build_flags() {
     const auto &params = building_impl::params(build_type);
 
     const e_building_flag flags[] = { e_building_flag::Meadow, e_building_flag::Rock, e_building_flag::Ore, e_building_flag::TempleUpgradeAltar,
-                                      e_building_flag::TempleUpgradeOracle, e_building_flag::NearbyWater, e_building_flag::Groundwater, e_building_flag::ShoreLine };
+                                      e_building_flag::TempleUpgradeOracle, e_building_flag::NearbyWater, e_building_flag::Groundwater, e_building_flag::ShoreLine,
+                                      e_building_flag::Canals, };
 
     for (const auto flag: flags) {
         const bool is_need = params.planer_is_need_flag(flag);
@@ -506,10 +507,6 @@ void build_planner::setup_build_flags() {
     case BUILDING_UNUSED_SHIP_BRIDGE_83:
         set_flag(e_building_flag::ShoreLine, 1);
         set_flag(e_building_flag::Bridge);
-        break;
-
-    case BUILDING_IRRIGATION_DITCH:
-        set_flag(e_building_flag::Canals, false);
         break;
 
     case BUILDING_ROAD:

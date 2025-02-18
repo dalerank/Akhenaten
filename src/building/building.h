@@ -563,6 +563,7 @@ public:
             bool nearby_water;
             bool groundwater;
             bool shoreline;
+            bool canals;
         } needs;
 
         void load(archive arch);
