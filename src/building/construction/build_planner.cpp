@@ -958,17 +958,7 @@ void build_planner::construction_start(tile2i tile) {
     const auto &params = building_impl::params(build_type);
     if (game_undo_start_build(build_type)) {
         in_progress = true;
-        int can_start = params.planer_can_construction_start(*this, start);
-
-        switch (build_type) {
-        case BUILDING_IRRIGATION_DITCH:
-            //            case BUILDING_WATER_LIFT:
-            can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, start);
-            break;
-
-        default:
-            break;
-        }
+        const bool can_start = params.planer_can_construction_start(*this, start);
 
         if (!can_start) {
             construction_cancel();

@@ -263,7 +263,6 @@ bool map_routing_ferry_has_routes(building *b) {
     return false;
 }
 
-
 bool map_routing_calculate_distances_for_building(e_routed_mode type, tile2i tile) {
     clear_distances();
     int source_offset = tile.grid_offset();
@@ -279,7 +278,7 @@ bool map_routing_calculate_distances_for_building(e_routed_mode type, tile2i til
         route_queue(source_offset, -1, callback_calc_distance_build_road);
         break;
 
-    case ROUTED_BUILDING_AQUEDUCT:
+    case ROUTED_BUILDING_CANALS:
         if (!map_can_place_initial_road_or_aqueduct(source_offset, true))
             return false;
 

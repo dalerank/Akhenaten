@@ -51,11 +51,11 @@ routed_building_result place_routed_building(tile2i start, tile2i end, e_routed_
             items += map_tiles_set_wall(end);
             break;
 
-        case ROUTED_BUILDING_AQUEDUCT:
+        case ROUTED_BUILDING_CANALS:
             items += map_tiles_set_canal(end);
             break;
 
-        case ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC:
+        case ROUTED_BUILDING_CANALS_WITHOUT_GRAPHIC:
             items += 1;
             break;
         }
@@ -90,11 +90,11 @@ routed_building_result place_routed_building(tile2i start, tile2i end, e_routed_
 
 int building_construction_place_canal(bool measure_only, tile2i start, tile2i end) {
     game_undo_restore_map(0);
-    if (!map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, start)) {
+    if (!map_routing_calculate_distances_for_building(ROUTED_BUILDING_CANALS, start)) {
         return 0;
     }
         
-    auto result = place_routed_building(start, end, ROUTED_BUILDING_AQUEDUCT);
+    auto result = place_routed_building(start, end, ROUTED_BUILDING_CANALS);
     if (result.ok && !measure_only) {
         map_tiles_update_all_canals(0);
         map_routing_update_land();
@@ -103,7 +103,7 @@ int building_construction_place_canal(bool measure_only, tile2i start, tile2i en
     return result.items;
 }
 
-routed_building_result building_construction_place_canal_for_reservoir(bool measure_only, tile2i start, tile2i end) {
-    e_routed_mode type = measure_only ? ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC : ROUTED_BUILDING_AQUEDUCT;
+routed_building_result building_construction_place_canal_for_lift(bool measure_only, tile2i start, tile2i end) {
+    e_routed_mode type = measure_only ? ROUTED_BUILDING_CANALS_WITHOUT_GRAPHIC : ROUTED_BUILDING_CANALS;
     return place_routed_building(start, end, type);
 }

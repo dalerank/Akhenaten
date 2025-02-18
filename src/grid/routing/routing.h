@@ -1,6 +1,5 @@
 #pragma once
 
-#include "core/buffer.h"
 #include "grid/point.h"
 
 class building;
@@ -8,8 +7,8 @@ class building;
 enum e_routed_mode {
     ROUTED_BUILDING_ROAD = 0,
     ROUTED_BUILDING_WALL = 1,
-    ROUTED_BUILDING_AQUEDUCT = 2,
-    ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC = 4,
+    ROUTED_BUILDING_CANALS = 2,
+    ROUTED_BUILDING_CANALS_WITHOUT_GRAPHIC = 4,
 };
 
 void map_routing_calculate_distances(tile2i tile);
