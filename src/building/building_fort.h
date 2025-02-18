@@ -23,6 +23,9 @@ public:
                 ghost.ground_check_offset = ghost_arch.r_array_vec2i("ground_check");
             });
         }
+
+        virtual void planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
+        virtual void planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const override;
     };
 
     virtual void on_place_update_tiles(int orientation, int variant) override;
@@ -31,8 +34,6 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t verrsion) override;
     virtual void highlight_waypoints() override;
-
-    static void ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation);
 };
 
 class building_fort_ground : public building_impl {

@@ -76,7 +76,6 @@ private:
     void dispatch_warnings();
 
     void update_coord_caches();
-    void draw_blueprints(painter &ctx, bool fully_blocked);
     void draw_graphics(painter &ctx);
     void draw_canal(map_point tile, vec2i pixel, painter &ctx);
     bool map_is_straight_road_for_canal(int grid_offset);
@@ -140,6 +139,9 @@ public:
     static void draw_bridge(map_point tile, vec2i pixel, int type, painter &ctx);
     static void draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles);
     static int tile_grid_offset(int x, int y);
+
+    vec2i pixel_coord_offset(int row, int column) { return pixel_coords_cache[row][column]; }
+    bool is_blocked_tile(int row, int column) { return tile_blocked_array[row][column]; }
 
     bool ghost_mark_deleting(tile2i tile);
     void next_building_variant();

@@ -30,6 +30,55 @@ building_fort_archers::static_params fort_archers_m;
 building_fort_infantry::static_params fort_infantry_m;
 buildings::model_t<building_fort_ground> fort_ground_m;
 
+template<typename T>
+void building_fort::static_params_t<T>::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+    bool fully_blocked = false;
+    bool blocked = false;
+    if (formation_get_num_forts_cached() >= formation_get_max_forts() || city_finance_out_of_money()) {
+        fully_blocked = true;
+        blocked = true;
+    }
+
+    const auto &ground_params = building_impl::params(BUILDING_FORT_GROUND);
+    int fort_size = this->building_size;
+    int ground_size = ground_params.building_size;
+    int global_rotation = building_rotation_global_rotation();
+
+    vec2i tile_ground_offset = this->ghost.ground_check_offset[global_rotation * 4 + (city_view_orientation() / 2)];
+    tile2i tile_ground = end.shifted(tile_ground_offset.x, tile_ground_offset.y);
+
+    blocked_tile_vec blocked_tiles_fort;
+    blocked_tile_vec blocked_tiles_ground;
+
+    blocked |= !!planer.is_blocked_for_building(end, fort_size, blocked_tiles_fort);
+    blocked |= !!planer.is_blocked_for_building(tile_ground, ground_size, blocked_tiles_ground);
+
+    int orientation_index = building_rotation_get_storage_fort_orientation(global_rotation) / 2;
+    vec2i main_pixel = pixel + this->ghost.main_view_offset[orientation_index];
+    vec2i ground_pixel = pixel + this->ghost.ground_view_offset[orientation_index];
+
+    if (blocked) {
+        planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_fort);
+        planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_ground);
+    } else {
+        int image_id = this->anim[animkeys().base].first_img();
+        if (orientation_index == 0 || orientation_index == 3) {
+            // draw fort first, then ground
+            planer.draw_building_ghost(ctx, image_id, main_pixel);
+            planer.draw_building_ghost(ctx, image_id + 1, ground_pixel);
+        } else {
+            // draw ground first, then fort
+            planer.draw_building_ghost(ctx, image_id + 1, ground_pixel);
+            planer.draw_building_ghost(ctx, image_id, main_pixel);
+        }
+    }
+}
+
+template<typename T>
+void building_fort::static_params_t<T>::planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
+    planer_ghost_preview(planer, ctx, start, end, pixel);
+}
+
 void building_fort::on_place_update_tiles(int orientation, int variant) {
     base.prev_part_building_id = 0;
     int image_id = params().anim[animkeys().base].first_img();
@@ -87,50 +136,6 @@ void building_fort::bind_dynamic(io_buffer *iob, size_t verrsion) {
 
 void building_fort::highlight_waypoints() {
     map_clear_highlights();
-}
-
-void building_fort::ghost_preview(painter &ctx, tile2i tile, vec2i pixel, int orientation) {
-    bool fully_blocked = false;
-    bool blocked = false;
-    if (formation_get_num_forts_cached() >= formation_get_max_forts() || city_finance_out_of_money()) {
-        fully_blocked = true;
-        blocked = true;
-    }
-
-    const auto &fort_params = (building_fort_charioteers::static_params &)building_impl::params(BUILDING_FORT_ARCHERS);
-    const auto &ground_params = building_impl::params(BUILDING_FORT_GROUND);
-    int fort_size = fort_params.building_size;
-    int ground_size = ground_params.building_size;
-    int global_rotation = building_rotation_global_rotation();
-
-    vec2i tile_ground_offset = fort_params.ghost.ground_check_offset[global_rotation * 4 + (city_view_orientation() / 2)];
-    tile2i tile_ground = tile.shifted(tile_ground_offset.x, tile_ground_offset.y);
-
-    blocked_tile_vec blocked_tiles_fort;
-    blocked_tile_vec blocked_tiles_ground;
-
-    blocked |= !!build_planner::is_blocked_for_building(tile, fort_size, blocked_tiles_fort);
-    blocked |= !!build_planner::is_blocked_for_building(tile_ground, ground_size, blocked_tiles_ground);
-
-    int orientation_index = building_rotation_get_storage_fort_orientation(global_rotation) / 2;
-    vec2i main_pixel = pixel + fort_params.ghost.main_view_offset[orientation_index];
-    vec2i ground_pixel = pixel + fort_params.ghost.ground_view_offset[orientation_index];
-
-    if (blocked) {
-        build_planner::draw_partially_blocked(ctx, fully_blocked, blocked_tiles_fort);
-        build_planner::draw_partially_blocked(ctx, fully_blocked, blocked_tiles_ground);
-    } else {
-        int image_id = fort_infantry_m.anim[animkeys().base].first_img();
-        if (orientation_index == 0 || orientation_index == 3) {
-            // draw fort first, then ground
-            build_planner::draw_building_ghost(ctx, image_id, main_pixel);
-            build_planner::draw_building_ghost(ctx, image_id + 1, ground_pixel);
-        } else {
-            // draw ground first, then fort
-            build_planner::draw_building_ghost(ctx, image_id + 1, ground_pixel);
-            build_planner::draw_building_ghost(ctx, image_id, main_pixel);
-        }
-    }
 }
 
 void building_fort::spawn_figure() {

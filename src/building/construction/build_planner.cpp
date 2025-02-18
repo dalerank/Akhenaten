@@ -1132,27 +1132,6 @@ void build_planner::draw_flat_tile(vec2i pos, color color_mask, painter &ctx) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos.x, pos.y, color_mask);
 }
 
-void build_planner::draw_blueprints(painter &ctx, bool fully_blocked) {
-    vec2i pixel = pixel_coords_cache[0][0];
-    switch (build_type) {
-    case BUILDING_FORT_ARCHERS:
-    case BUILDING_FORT_CHARIOTEERS:
-    case BUILDING_FORT_INFANTRY:
-        building_fort::ghost_preview(ctx, end, pixel, 0);
-        return;
-
-    default:
-        for (int row = 0; row < size.y; row++) {
-            for (int column = 0; column < size.x; column++) {
-                vec2i current_coord = pixel_coords_cache[row][column];
-                color color_mask = (tile_blocked_array[row][column] || fully_blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30;
-                draw_flat_tile(current_coord, color_mask, ctx);
-            }
-        }
-        break;
-    }
-}
-
 void build_planner::draw_bridge(map_point tile, vec2i pixel, int type, painter &ctx) {
     int length, direction;
     int end_grid_offset = map_bridge_calculate_length_direction(tile.x(), tile.y(), &length, &direction);
@@ -1247,15 +1226,18 @@ void build_planner::draw_flat_tile(painter &ctx, vec2i pixel, color color_mask) 
 
 void build_planner::draw(painter &ctx) {
     // empty building
-    if (size.x < 1 || size.y < 1)
+    if (size.x < 1 || size.y < 1) {
         return;
+    }
 
+    vec2i pixel = pixel_coords_cache[0][0];
+    const auto &params = building_impl::params(build_type);
     if (can_place == CAN_NOT_PLACE) {
         // draw fully red (placement not allowed)
-        draw_blueprints(ctx, true);
+        params.planer_ghost_blocked(*this, ctx, start, end, pixel, /*fully_blocked*/true);
     } else if (tiles_blocked_total > 0) {
         // draw green blueprint with red (blocked) tiles
-        draw_blueprints(ctx, false);
+        params.planer_ghost_blocked(*this, ctx, start, end, pixel, /*fully_blocked*/false);
     } else if (!draw_as_constructing) {
         // draw normal building ghost (green)
         draw_graphics(ctx);
@@ -1342,12 +1324,6 @@ void build_planner::draw_graphics(painter &ctx) {
         //        case BUILDING_WALL_PH:
         //            return draw_walls((const map_tile*)&end, end_coord.x, end_coord.y);
         //            break;
-
-    case BUILDING_FORT_ARCHERS:
-    case BUILDING_FORT_CHARIOTEERS:
-    case BUILDING_FORT_INFANTRY:
-        building_fort::ghost_preview(ctx, end, pixel, 0);
-        return;
 
     default:
         params.planer_ghost_preview(*this, ctx, start, end, pixel);
