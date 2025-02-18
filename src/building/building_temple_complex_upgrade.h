@@ -30,6 +30,7 @@ public:
     building_temple_complex_oracle(building &b) : building_temple_complex_upgrade(b) {}
 
     using static_params = static_params_t<building_temple_complex_oracle>;
+    virtual void on_place_checks() override;
 
     virtual building_temple_complex_oracle *dcast_temple_complex_oracle() override { return this; }
 };
