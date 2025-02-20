@@ -106,8 +106,8 @@ static void canals_empty_all(void) {
     }
 }
 
-void map_canal_fill_from_offset(int grid_offset) {
-    if (!map_terrain_is(grid_offset, TERRAIN_CANAL) || map_terrain_is(grid_offset, TERRAIN_WATER)) {
+void map_canal_fill_from_offset(tile2i tile) {
+    if (!map_terrain_is(tile, TERRAIN_CANAL) || map_terrain_is(tile, TERRAIN_WATER)) {
         return;
     }
 
@@ -116,17 +116,19 @@ void map_canal_fill_from_offset(int grid_offset) {
     int next_offset;
     int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + IMAGE_CANAL_FULL_OFFSET;
     do {
-        if (++guard >= GRID_SIZE_TOTAL)
+        if (++guard >= GRID_SIZE_TOTAL) {
             break;
-
-        map_canal_set(grid_offset, 1);
-        int image_id = map_image_at(grid_offset);
-        if (image_id >= image_without_water) {
-            map_image_set(grid_offset, image_id - IMAGE_CANAL_FULL_OFFSET);
         }
-        map_terrain_add_with_radius(tile2i(grid_offset), 1, 2, TERRAIN_IRRIGATION_RANGE);
+
+        map_canal_set(tile.grid_offset(), 1);
+        int image_id = map_image_at(tile);
+        if (image_id >= image_without_water) {
+            map_image_set(tile, image_id - IMAGE_CANAL_FULL_OFFSET);
+        }
+        map_terrain_add_with_radius(tile, 1, 2, TERRAIN_IRRIGATION_RANGE);
 
         next_offset = -1;
+        int grid_offset = tile.grid_offset();
         for (int i = 0; i < 4; i++) {
             const int ADJACENT_OFFSETS[] = {-GRID_LENGTH, 1, GRID_LENGTH, -1};
             int new_offset = grid_offset + ADJACENT_OFFSETS[i];
@@ -169,7 +171,7 @@ void map_canal_fill_from_offset(int grid_offset) {
 void map_update_canals_from_river() {
     for (int i = 0; i < river_access_canal_offsets_total; ++i) {
         int grid_offset = river_access_canal_offsets[i];
-        map_canal_fill_from_offset(grid_offset);
+        map_canal_fill_from_offset(tile2i(grid_offset));
     }
 }
 

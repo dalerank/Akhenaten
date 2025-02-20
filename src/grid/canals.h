@@ -4,8 +4,10 @@
 #define IMAGE_CANAL_FLOODPLAIN_OFFSET 21
 
 #include "grid/image_context.h"
+#include "grid/point.h"
 
 int map_canal_at(int grid_offset);
+inline int map_canal_at(tile2i tile) { return map_canal_at(tile.grid_offset()); }
 
 void map_canal_set(int grid_offset, int value);
 
@@ -16,7 +18,7 @@ void map_canal_backup(void);
 void map_canal_restore(void);
 
 void map_update_canals(void);
-void map_canal_fill_from_offset(int grid_offset);
+void map_canal_fill_from_offset(tile2i tile);
 void map_canal_update_all_tiles(int include_construction);
 void map_tiles_set_canal_image(int grid_offset);
 
