@@ -12,8 +12,8 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 
-bool map_can_place_road_under_canal(int grid_offset) {
-    int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
+bool map_can_place_road_under_canal(tile2i tile) {
+    int image_id = map_image_at(tile) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
     if (image_id != 0 && image_id != 1 && image_id != 48 && image_id != 49)
         return false;
 
@@ -35,9 +35,10 @@ bool map_can_place_road_under_canal(int grid_offset) {
     return true;
 }
 
-bool map_can_place_canal_on_road(int grid_offset) {
-    int base_img = building_impl::params(BUILDING_ROAD).anim["base"].first_img();
-    int image_id = map_image_at(grid_offset) - base_img;
+bool map_can_place_canal_on_road(tile2i tile) {
+    const auto &params = building_impl::params(BUILDING_ROAD);
+    int base_img = params.anim["base"].first_img();
+    int image_id = map_image_at(tile) - base_img;
     if (image_id != 0 && image_id != 1 && image_id != 49 && image_id != 50)
         return false;
 

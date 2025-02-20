@@ -51,14 +51,14 @@ int building_road::static_params::planer_construction_place(build_planner &plane
     return items_placed;
 }
 
-void building_road::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
-    int grid_offset = tile.grid_offset();
+void building_road::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+    int grid_offset = end.grid_offset();
     bool blocked = false;
     int image_id = 0;
 
     if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
         image_id = image_id_from_group(GROUP_BUILDING_AQUEDUCT);
-        if (map_can_place_road_under_canal(grid_offset)) {
+        if (map_can_place_road_under_canal(end)) {
             image_id += map_get_canal_with_road_image(grid_offset);
         } else {
             blocked = true;
@@ -125,7 +125,7 @@ void building_road::set_image(tile2i tile) {
         return;
     }
 
-    if (map_property_is_plaza_or_earthquake(grid_offset)) {
+    if (map_property_is_plaza_or_earthquake(tile)) {
         return;
     }
 

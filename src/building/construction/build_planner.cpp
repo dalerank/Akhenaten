@@ -1244,69 +1244,6 @@ void build_planner::draw(painter &ctx) {
     }
 }
 
-bool build_planner::is_road_tile_for_canal(int grid_offset, int gate_orientation) {
-    bool is_road = map_terrain_is(grid_offset, TERRAIN_ROAD);
-    if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-        building *b = building_at(grid_offset);
-        if (b->type == BUILDING_MUD_GATEHOUSE) {
-            if (b->subtype.orientation == gate_orientation)
-                is_road = true;
-
-        } else if (b->type == BUILDING_GRANARY) {
-            if (map_routing_citizen_is_road(grid_offset))
-                is_road = true;
-        }
-    }
-
-    return is_road;
-}
-
-bool build_planner::map_is_straight_road_for_canal(int grid_offset) {
-    int road_tiles_x = is_road_tile_for_canal(grid_offset + GRID_OFFSET(1, 0), 2) + is_road_tile_for_canal(grid_offset + GRID_OFFSET(-1, 0), 2);
-    int road_tiles_y = is_road_tile_for_canal(grid_offset + GRID_OFFSET(0, -1), 1) + is_road_tile_for_canal(grid_offset + GRID_OFFSET(0, 1), 1);
-
-    if (road_tiles_x == 2 && road_tiles_y == 0) {
-        return true;
-    } 
-    
-    if (road_tiles_y == 2 && road_tiles_x == 0) {
-        return true;
-    }
-    
-    return false;
-}
-
-void build_planner::draw_canal(map_point tile, vec2i pixel, painter &ctx) {
-    int grid_offset = tile.grid_offset();
-    bool blocked = false;
-    if (!map_can_place_initial_road_or_aqueduct(grid_offset, true)) {
-        blocked = true;
-    }
-    if (in_progress) {   // already dragging aqueduct
-        if (!total_cost) // ???
-            blocked = true;
-    } else {
-        if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {               // starting new aqueduct line
-            blocked = !map_is_straight_road_for_canal(grid_offset); // can't start over a road curve!
-            if (map_property_is_plaza_or_earthquake(grid_offset))      // todo: plaza not allowing aqueducts? maybe?
-                blocked = true;
-        } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
-            && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {// terrain is not clear!
-            blocked = true;
-        }
-    }
-    if (city_finance_out_of_money()) { // check sufficient funds to continue
-        blocked = true;
-    }
-
-    if (blocked) { // cannot draw!
-        draw_flat_tile(ctx, pixel, COLOR_MASK_RED);
-    } else {
-        const terrain_image *img = map_image_context_get_canal(grid_offset); // get starting tile
-        draw_building_ghost(ctx, get_canal_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), pixel);
-    }
-}
-
 void build_planner::draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_mask) {
     ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
     ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, color_mask, 1.f);
@@ -1317,17 +1254,7 @@ void build_planner::draw_graphics(painter &ctx) {
     // special graphics buildings
     vec2i pixel = pixel_coords_cache[0][0];
     const auto &params = building_impl::params(build_type);
-    switch (build_type) {
-    case BUILDING_IRRIGATION_DITCH:
-        draw_canal(end, pixel, ctx);
-        return;
-        //        case BUILDING_WALL_PH:
-        //            return draw_walls((const map_tile*)&end, end_coord.x, end_coord.y);
-        //            break;
-
-    default:
-        params.planer_ghost_preview(*this, ctx, start, end, pixel);
-    }
+    params.planer_ghost_preview(*this, ctx, start, end, pixel);
 }
 
 

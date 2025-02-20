@@ -109,12 +109,13 @@ void desirability_t::update_buildings() {
 
 void desirability_t::update_terrain() {
     int grid_offset = scenario_map_data()->start_offset;
+    tile2i tile(grid_offset);
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             int terrain = map_terrain_get(grid_offset);
             tile2i tile(x, y);
             influence_t tileinf;
-            if (map_property_is_plaza_or_earthquake(grid_offset)) {                
+            if (map_property_is_plaza_or_earthquake(tile)) {                
                 if (terrain & TERRAIN_ROAD) {
                     tileinf = influence.plaza;
                 } else if (terrain & TERRAIN_ROCK) {

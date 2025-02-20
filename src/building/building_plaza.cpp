@@ -32,10 +32,12 @@ int building_plaza::static_params::planer_place(build_planner &planer, tile2i st
     for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
         for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
-            if (map_terrain_is(grid_offset, TERRAIN_ROAD)
-                && !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_CANAL)
-                && map_tiles_is_paved_road(grid_offset)) {
-                if (!map_property_is_plaza_or_earthquake(grid_offset)) {
+
+            const bool is_road = map_terrain_is(grid_offset, TERRAIN_ROAD);
+            const bool is_canal = map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_CANAL);
+            const bool is_paved_road = map_tiles_is_paved_road(grid_offset);
+            if (is_road && !is_canal && is_paved_road) {
+                if (!map_property_is_plaza_or_earthquake(tile2i(grid_offset))) {
                     items_placed++;
                 }
 
@@ -74,7 +76,8 @@ void building_plaza::draw_info(object_info &c) {
 }
 
 int is_tile_plaza(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(grid_offset)
+
+    if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(tile2i(grid_offset))
         && !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING) && !map_image_at(grid_offset)) {
         return 1;
     }
@@ -86,11 +89,12 @@ int is_two_tile_square_plaza(int grid_offset) {
 }
 
 void building_plaza::set_image(int grid_offset) {
-    int x = MAP_X(grid_offset);
-    int y = MAP_Y(grid_offset);
-    int base_image_id = plaza_m.anim["base"].first_img();
-    if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(grid_offset)
-        && !map_image_at(grid_offset)) {
+    tile2i btile(grid_offset);
+
+    const auto &cparams = building_impl::params(TYPE);
+    int base_image_id = cparams.anim[animkeys().base].first_img();
+    if (map_terrain_is(btile, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(btile)
+        && !map_image_at(btile)) {
         int image_id = base_image_id;
         if (is_two_tile_square_plaza(grid_offset)) {
             if (map_random_get(grid_offset) & 1)
@@ -98,9 +102,11 @@ void building_plaza::set_image(int grid_offset) {
             else {
                 image_id += 6;
             }
-            map_building_tiles_add(0, tile2i(x, y), 2, image_id, TERRAIN_ROAD);
+            map_building_tiles_add(0, btile, 2, image_id, TERRAIN_ROAD);
         } else {
             // single tile plaza
+            int x = btile.x();
+            int y = btile.y();
             switch ((x & 1) + (y & 1)) {
             case 2:
                 image_id += 1;

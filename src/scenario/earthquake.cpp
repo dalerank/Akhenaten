@@ -249,7 +249,8 @@ void scenario_earthquake_load_state(buffer* buf) {
 }
 
 static void set_earthquake_image(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_ROCK) && map_property_is_plaza_or_earthquake(grid_offset)) {
+    tile2i tile(grid_offset);
+    if (map_terrain_is(grid_offset, TERRAIN_ROCK) && map_property_is_plaza_or_earthquake(tile)) {
         const terrain_image* img = map_image_context_get_earthquake(grid_offset);
         if (img->is_valid) {
             map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_EARTHQUAKE) + img->group_offset + img->item_offset);
@@ -262,12 +263,12 @@ static void set_earthquake_image(int grid_offset) {
 }
 
 void update_earthquake_tile(int grid_offset) {
-    tile2i point(grid_offset);
+    tile2i tile(grid_offset);
 
-    if (map_terrain_is(grid_offset, TERRAIN_ROCK) && map_property_is_plaza_or_earthquake(grid_offset)) {
+    if (map_terrain_is(grid_offset, TERRAIN_ROCK) && map_property_is_plaza_or_earthquake(tile)) {
         map_terrain_add(grid_offset, TERRAIN_ROCK);
         map_property_mark_plaza_or_earthquake(grid_offset);
-        map_tiles_foreach_region_tile(point.shifted(-1, -1), point.shifted(1, 1), set_earthquake_image);
+        map_tiles_foreach_region_tile(tile.shifted(-1, -1), tile.shifted(1, 1), set_earthquake_image);
     }
 }
 

@@ -43,7 +43,7 @@ void map_property_init_alternate_terrain();
 int map_property_is_alternate_terrain(int grid_offset);
 void map_property_set_alternate_terrain(int grid_offset);
 
-int map_property_is_plaza_or_earthquake(int grid_offset);
+int map_property_is_plaza_or_earthquake(tile2i tile);
 void map_property_mark_plaza_or_earthquake(int grid_offset);
 void map_property_clear_plaza_or_earthquake(int grid_offset);
 

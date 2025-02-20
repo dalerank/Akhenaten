@@ -117,6 +117,7 @@ int terrain_info_window::get_height_id(object_info &c) {
 }
 
 bool terrain_info_window::check(object_info &c) {
+    tile2i tile(c.grid_offset);
     if (!c.building_id && map_sprite_animation_at(c.grid_offset) > 0) {
         if (map_terrain_is(c.grid_offset, TERRAIN_WATER)) {
             c.terrain_type = TERRAIN_INFO_BRIDGE;
@@ -124,7 +125,7 @@ bool terrain_info_window::check(object_info &c) {
             c.terrain_type = TERRAIN_INFO_EMPTY;
         }
         return true;
-    } else if (map_property_is_plaza_or_earthquake(c.grid_offset)) {
+    } else if (map_property_is_plaza_or_earthquake(tile)) {
         if (map_terrain_is(c.grid_offset, TERRAIN_ROAD)) {
             c.terrain_type = TERRAIN_INFO_PLAZA;
         }

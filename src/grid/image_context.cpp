@@ -413,14 +413,16 @@ const terrain_image* map_image_context_get_elevation(int grid_offset, int elevat
     }
     return get_image(CONTEXT_ELEVATION, tiles);
 }
+
 const terrain_image* map_image_context_get_earthquake(int grid_offset) {
     int tiles[MAX_TILES];
     for (int i = 0; i < MAX_TILES; i++) {
         int offset = grid_offset + map_grid_direction_delta(i);
-        tiles[i] = (map_terrain_is(offset, TERRAIN_ROCK) && map_property_is_plaza_or_earthquake(grid_offset)) ? 1 : 0;
+        tiles[i] = (map_terrain_is(offset, TERRAIN_ROCK) && map_property_is_plaza_or_earthquake(tile2i(grid_offset))) ? 1 : 0;
     }
     return get_image(CONTEXT_EARTHQUAKE, tiles);
 }
+
 const terrain_image* map_image_context_get_shore(int grid_offset) {
     int tiles[MAX_TILES];
     fill_matches(grid_offset, TERRAIN_WATER, 0, 1, tiles);

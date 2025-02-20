@@ -77,9 +77,6 @@ private:
 
     void update_coord_caches();
     void draw_graphics(painter &ctx);
-    void draw_canal(map_point tile, vec2i pixel, painter &ctx);
-    bool map_is_straight_road_for_canal(int grid_offset);
-    bool is_road_tile_for_canal(int grid_offset, int gate_orientation);
     int place_houses(bool measure_only, int x_start, int y_start, int x_end, int y_end);
 
 public:

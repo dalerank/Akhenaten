@@ -106,8 +106,9 @@ int map_terrain_count_diagonally_adjacent_with_type(int grid_offset, int terrain
 inline int map_terrain_count_diagonally_adjacent_with_type(tile2i tile, int terrain) { return map_terrain_count_diagonally_adjacent_with_type(tile.grid_offset(), terrain); }
 
 bool map_terrain_has_adjecent_with_type(int grid_offset, int terrain);
-bool map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain);
+inline bool map_terrain_has_adjecent_with_type(tile2i tile, int terrain) { return map_terrain_has_adjecent_with_type(tile.grid_offset(), terrain); }
 bool map_terrain_has_adjacent_x_with_type(int grid_offset, int terrain);
+bool map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain);
 
 bool map_terrain_exists_tile_in_area_with_type(tile2i tile, int size, int terrain);
 

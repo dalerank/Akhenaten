@@ -1,5 +1,7 @@
 #pragma once
 
+#include "grid/point.h"
+
 enum {
     ROUTING_TYPE_CITIZEN,
     ROUTING_TYPE_NONCITIZEN,
@@ -18,6 +20,7 @@ bool map_routing_passable_by_usage(int terrain_usage, int grid_offset);
 
 int map_routing_citizen_is_passable(int grid_offset);
 int map_routing_citizen_is_road(int grid_offset);
+inline int map_routing_citizen_is_road(tile2i tile) { return map_routing_citizen_is_road(tile.grid_offset()); }
 int map_routing_citizen_is_passable_terrain(int grid_offset);
 
 int map_routing_noncitizen_is_passable(int grid_offset);

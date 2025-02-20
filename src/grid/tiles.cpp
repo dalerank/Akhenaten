@@ -137,7 +137,7 @@ static bool terrain_no_image_at(int grid_offset, int radius) {
     return true;
 }
 static bool is_updatable_rock(int grid_offset) {
-    return map_terrain_is(grid_offset, TERRAIN_ROCK) && !map_property_is_plaza_or_earthquake(grid_offset)
+    return map_terrain_is(grid_offset, TERRAIN_ROCK) && !map_property_is_plaza_or_earthquake(tile2i(grid_offset))
            && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP);
 }
 static void clear_rock_image(int grid_offset) {
@@ -231,13 +231,13 @@ void map_tiles_update_region_shrub(int x_min, int y_min, int x_max, int y_max) {
 }
 
 static void remove_plaza_below_building(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(grid_offset)) {
+    if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(tile2i(grid_offset))) {
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
             map_property_clear_plaza_or_earthquake(grid_offset);
     }
 }
 static void clear_plaza_image(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(grid_offset)) {
+    if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(tile2i(grid_offset))) {
         map_image_set(grid_offset, 0);
         map_property_set_multi_tile_size(grid_offset, 1);
         map_property_mark_draw_tile(grid_offset);

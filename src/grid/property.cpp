@@ -113,8 +113,8 @@ void map_property_set_alternate_terrain(int grid_offset) {
     map_grid_or(bitfields_grid, grid_offset, BIT_ALTERNATE_TERRAIN);
 }
 
-int map_property_is_plaza_or_earthquake(int grid_offset) {
-    return map_grid_get(bitfields_grid, grid_offset) & BIT_PLAZA_OR_EARTHQUAKE;
+int map_property_is_plaza_or_earthquake(tile2i tile) {
+    return map_grid_get(bitfields_grid, tile) & BIT_PLAZA_OR_EARTHQUAKE;
 }
 
 int map_property_get(int grid_offset) {
