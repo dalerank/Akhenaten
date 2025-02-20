@@ -24,6 +24,7 @@
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "grid/water.h"
+#include "grid/canals.h"
 #include "image.h"
 #include <scenario/map.h>
 
@@ -67,7 +68,7 @@ void map_orientation_change(int counter_clockwise) {
     map_tiles_update_all_roads();
     map_tiles_update_all_plazas();
     map_tiles_update_all_walls();
-    map_tiles_update_all_canals(0);
+    map_canal_update_all_tiles(0);
 
     map_orientation_update_buildings();
     map_bridge_update_after_rotate(counter_clockwise);

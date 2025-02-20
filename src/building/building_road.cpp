@@ -10,6 +10,7 @@
 #include "grid/tiles.h"
 #include "grid/floodplain.h"
 #include "grid/image.h"
+#include "grid/canals.h"
 #include "grid/property.h"
 #include "grid/road_canal.h"
 #include "graphics/graphics.h"

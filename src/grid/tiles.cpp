@@ -36,8 +36,6 @@
 #define FORBIDDEN_TERRAIN_MEADOW (TERRAIN_CANAL | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
 #define FORBIDDEN_TERRAIN_RUBBLE (TERRAIN_CANAL | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
 
-static int canals_include_construction = 0;
-
 // #include <chrono>
 #include "floodplain.h"
 #include "moisture.h"
@@ -539,80 +537,6 @@ int map_tiles_set_wall(tile2i tile) {
 
     map_tiles_foreach_region_tile(tile.shifted(-1, -1), tile.shifted(1, 1), set_wall_image);
     return tile_set;
-}
-
-int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_image* img) {
-    if (map_terrain_is(grid_offset, TERRAIN_WATER))
-        return 0;
-
-    int image_aqueduct = image_id_from_group(GROUP_BUILDING_AQUEDUCT); // 119 C3
-    int water_offset = 0;
-    int terrain_image = map_image_at(grid_offset);
-    if (terrain_image >= image_aqueduct && terrain_image < image_aqueduct + IMAGE_CANAL_FULL_OFFSET)
-        water_offset = 0; // has water
-    else                  // has no water
-        water_offset = IMAGE_CANAL_FULL_OFFSET;
-
-    // floodplains
-    int floodplains_offset = 0;
-    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
-        floodplains_offset = IMAGE_CANAL_FLOODPLAIN_OFFSET;
-
-    // curve/connection offset
-    int image_offset = img->group_offset;
-    // TODO: some edge cases with roads don't perfectly match up with original game (not really a priority?)
-    if (is_road) {
-        bool road_dir_right = false;
-        if (map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_ROAD))
-            road_dir_right = true;
-        if (map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_ROAD))
-            road_dir_right = true;
-        road_dir_right = city_view_relative_orientation(road_dir_right) % 2;
-        bool is_paved = map_tiles_is_paved_road(grid_offset);
-
-
-        if (road_dir_right) // left/right offset is opposite from C3
-            image_offset = 0;
-        else
-            image_offset = 1;
-        if (is_paved) {
-            floodplains_offset = 0; // no floodplains version for paved roads
-            image_offset += 42;
-        } else
-            image_offset += 15;
-    } else {
-        if (image_offset <= 3) {
-            image_offset = !(image_offset - 2);
-        } else if (image_offset <= 7) {
-            image_offset -= 2;
-        }
-    }
-    // TODO: canals disappearing into the Nile river --- good luck with that!
-    return image_id_from_group(GROUP_BUILDING_AQUEDUCT) + water_offset + floodplains_offset + image_offset;
-}
-
-void map_tiles_set_canal_image(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_CANAL) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
-        const terrain_image* img = map_image_context_get_canal(grid_offset);
-        bool is_road = map_terrain_is(grid_offset, TERRAIN_ROAD);
-        if (is_road)
-            map_property_clear_plaza_or_earthquake(grid_offset);
-
-        int image_id = get_canal_image(grid_offset, is_road, 0, img);
-        if (image_id) {
-            map_image_set(grid_offset, image_id);
-            map_property_set_multi_tile_size(grid_offset, 1);
-            map_property_mark_draw_tile(grid_offset);
-        }
-
-        map_canal_set(grid_offset, img->aqueduct_offset);
-    }
-}
-
-void map_tiles_update_all_canals(int include_construction) {
-    canals_include_construction = include_construction;
-    map_tiles_foreach_map_tile(map_tiles_set_canal_image);
-    canals_include_construction = 0;
 }
 
 void map_tiles_update_region_canals(tile2i pmin, tile2i pmax) {

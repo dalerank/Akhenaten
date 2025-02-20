@@ -9,10 +9,8 @@
 #include "grid/terrain.h"
 #include "moisture.h"
 
-#define MAX_TILES 8
-
 struct terrain_image_context {
-    const unsigned char tiles[MAX_TILES];
+    const unsigned char tiles[MAP_IMAGE_MAX_TILES];
     const unsigned char offset_for_orientation[4];
     const unsigned char aqueduct_offset;
     const unsigned char max_item_offset;
@@ -311,22 +309,6 @@ static struct terrain_image_context terrain_images_grass_corners[12] = {
 // [4]   [0]
 // [3][2][1]
 
-enum E_CONTEXT {
-    CONTEXT_WATER,
-    CONTEXT_WALL,
-    CONTEXT_WALL_GATEHOUSE,
-    CONTEXT_ELEVATION,
-    CONTEXT_EARTHQUAKE,
-    CONTEXT_DIRT_ROAD,
-    CONTEXT_PAVED_ROAD,
-    CONTEXT_AQUEDUCT,
-    CONTEXT_DEEPWATER,
-    CONTEXT_FLOODSYSTEM,
-    CONTEXT_GRASSCORNERS,
-
-    CONTEXT_MAX_ITEMS
-};
-
 struct image_context_t {
     struct terrain_image_context* context;
     int size;
@@ -361,19 +343,19 @@ void map_image_context_reset_elevation(void) {
     clear_current_offset(g_context_pointers[CONTEXT_ELEVATION].context, g_context_pointers[CONTEXT_ELEVATION].size);
 }
 
-static bool context_matches_tiles(const struct terrain_image_context* context, const int tiles[MAX_TILES]) {
-    for (int i = 0; i < MAX_TILES; i++) {
+static bool context_matches_tiles(const struct terrain_image_context* context, const int tiles[MAP_IMAGE_MAX_TILES]) {
+    for (int i = 0; i < MAP_IMAGE_MAX_TILES; i++) {
         if (context->tiles[i] != 2 && tiles[i] != context->tiles[i]) // if pattern isn't "2", it must match!
             return false;
     }
     return true;
 }
-static void fill_matches(int grid_offset, int terrain, int match_value, int no_match_value, int tiles[MAX_TILES]) {
-    for (int i = 0; i < MAX_TILES; i++)
+static void fill_matches(int grid_offset, int terrain, int match_value, int no_match_value, int tiles[MAP_IMAGE_MAX_TILES]) {
+    for (int i = 0; i < MAP_IMAGE_MAX_TILES; i++)
         tiles[i] = map_terrain_is(grid_offset + map_grid_direction_delta(i), terrain) ? match_value : no_match_value;
 }
-static void fill_matches_grass(int grid_offset, int match_value, int no_match_value, int tiles[MAX_TILES]) {
-    for (int i = 0; i < MAX_TILES; i++) {
+static void fill_matches_grass(int grid_offset, int match_value, int no_match_value, int tiles[MAP_IMAGE_MAX_TILES]) {
+    for (int i = 0; i < MAP_IMAGE_MAX_TILES; i++) {
         int moisture = map_moisture_get(grid_offset + map_grid_direction_delta(i));
         if (moisture & MOISTURE_TRANSITION)
             tiles[i] = no_match_value;
@@ -384,7 +366,7 @@ static void fill_matches_grass(int grid_offset, int match_value, int no_match_va
     }
 }
 
-static const terrain_image* get_image(int group, int tiles[MAX_TILES]) {
+const terrain_image* get_terrain_image(int group, int tiles[MAP_IMAGE_MAX_TILES]) {
     static terrain_image result;
 
     result.is_valid = 0;
@@ -407,69 +389,69 @@ static const terrain_image* get_image(int group, int tiles[MAX_TILES]) {
 }
 
 const terrain_image* map_image_context_get_elevation(int grid_offset, int elevation) {
-    int tiles[MAX_TILES];
-    for (int i = 0; i < MAX_TILES; i++) {
+    int tiles[MAP_IMAGE_MAX_TILES];
+    for (int i = 0; i < MAP_IMAGE_MAX_TILES; i++) {
         tiles[i] = map_elevation_at(grid_offset + map_grid_direction_delta(i)) >= elevation ? 1 : 0;
     }
-    return get_image(CONTEXT_ELEVATION, tiles);
+    return get_terrain_image(CONTEXT_ELEVATION, tiles);
 }
 
 const terrain_image* map_image_context_get_earthquake(int grid_offset) {
-    int tiles[MAX_TILES];
-    for (int i = 0; i < MAX_TILES; i++) {
+    int tiles[MAP_IMAGE_MAX_TILES];
+    for (int i = 0; i < MAP_IMAGE_MAX_TILES; i++) {
         int offset = grid_offset + map_grid_direction_delta(i);
         tiles[i] = (map_terrain_is(offset, TERRAIN_ROCK) && map_property_is_plaza_or_earthquake(tile2i(grid_offset))) ? 1 : 0;
     }
-    return get_image(CONTEXT_EARTHQUAKE, tiles);
+    return get_terrain_image(CONTEXT_EARTHQUAKE, tiles);
 }
 
 const terrain_image* map_image_context_get_shore(int grid_offset) {
-    int tiles[MAX_TILES];
+    int tiles[MAP_IMAGE_MAX_TILES];
     fill_matches(grid_offset, TERRAIN_WATER, 0, 1, tiles);
-    return get_image(CONTEXT_WATER, tiles);
+    return get_terrain_image(CONTEXT_WATER, tiles);
 }
 const terrain_image* map_image_context_get_river(int grid_offset) {
-    int tiles[MAX_TILES];
+    int tiles[MAP_IMAGE_MAX_TILES];
     fill_matches(grid_offset, TERRAIN_DEEPWATER, 1, 0, tiles);
-    return get_image(CONTEXT_DEEPWATER, tiles);
+    return get_terrain_image(CONTEXT_DEEPWATER, tiles);
 }
 const terrain_image* map_image_context_get_floodplain_shore(int grid_offset) {
-    int tiles[MAX_TILES];
+    int tiles[MAP_IMAGE_MAX_TILES];
     fill_matches(grid_offset, TERRAIN_FLOODPLAIN, 0, 1, tiles);
-    return get_image(CONTEXT_DEEPWATER, tiles);
+    return get_terrain_image(CONTEXT_DEEPWATER, tiles);
 }
 const terrain_image* map_image_context_get_floodplain_waterline(int grid_offset) {
-    int tiles[MAX_TILES];
+    int tiles[MAP_IMAGE_MAX_TILES];
     fill_matches(grid_offset, TERRAIN_WATER, 1, 0, tiles);
-    return get_image(CONTEXT_FLOODSYSTEM, tiles);
+    return get_terrain_image(CONTEXT_FLOODSYSTEM, tiles);
 }
 const terrain_image* map_image_context_get_reeds_transition(int grid_offset) {
-    int tiles[MAX_TILES];
+    int tiles[MAP_IMAGE_MAX_TILES];
     fill_matches(grid_offset, TERRAIN_MARSHLAND, 1, 0, tiles);
-    return get_image(CONTEXT_FLOODSYSTEM, tiles);
+    return get_terrain_image(CONTEXT_FLOODSYSTEM, tiles);
 }
 const terrain_image* map_image_context_get_grass_corners(int grid_offset) {
-    int tiles[MAX_TILES];
+    int tiles[MAP_IMAGE_MAX_TILES];
     fill_matches_grass(grid_offset, 1, 0, tiles);
-    return get_image(CONTEXT_GRASSCORNERS, tiles);
+    return get_terrain_image(CONTEXT_GRASSCORNERS, tiles);
 }
 
 const terrain_image* map_image_context_get_wall(int grid_offset) {
-    int tiles[MAX_TILES];
+    int tiles[MAP_IMAGE_MAX_TILES];
     fill_matches(grid_offset, TERRAIN_WALL, 0, 1, tiles);
-    return get_image(CONTEXT_WALL, tiles);
+    return get_terrain_image(CONTEXT_WALL, tiles);
 }
 const terrain_image* map_image_context_get_wall_gatehouse(int grid_offset) {
-    int tiles[MAX_TILES] = {0, 0, 0, 0, 0, 0, 0, 0};
-    for (int i = 0; i < MAX_TILES; i += 2) {
+    int tiles[MAP_IMAGE_MAX_TILES] = {0, 0, 0, 0, 0, 0, 0, 0};
+    for (int i = 0; i < MAP_IMAGE_MAX_TILES; i += 2) {
         tiles[i] = map_terrain_is(grid_offset + map_grid_direction_delta(i), TERRAIN_WALL_OR_GATEHOUSE) ? 1 : 0;
     }
-    return get_image(CONTEXT_WALL_GATEHOUSE, tiles);
+    return get_terrain_image(CONTEXT_WALL_GATEHOUSE, tiles);
 }
 
-static void set_tiles_road(int grid_offset, int tiles[MAX_TILES]) {
+static void set_tiles_road(int grid_offset, int tiles[MAP_IMAGE_MAX_TILES]) {
     fill_matches(grid_offset, TERRAIN_ROAD, 1, 0, tiles);
-    for (int i = 0; i < MAX_TILES; i += 2) {
+    for (int i = 0; i < MAP_IMAGE_MAX_TILES; i += 2) {
         int offset = grid_offset + map_grid_direction_delta(i);
         if (map_terrain_is(offset, TERRAIN_GATEHOUSE)) {
             building* b = building_at(offset);
@@ -491,51 +473,13 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES]) {
 }
 
 const terrain_image* map_image_context_get_dirt_road(int grid_offset) {
-    int tiles[MAX_TILES];
+    int tiles[MAP_IMAGE_MAX_TILES];
     set_tiles_road(grid_offset, tiles);
-    return get_image(CONTEXT_DIRT_ROAD, tiles);
+    return get_terrain_image(CONTEXT_DIRT_ROAD, tiles);
 }
 
 const terrain_image* map_image_context_get_paved_road(int grid_offset) {
-    int tiles[MAX_TILES];
+    int tiles[MAP_IMAGE_MAX_TILES];
     set_tiles_road(grid_offset, tiles);
-    return get_image(CONTEXT_PAVED_ROAD, tiles);
-}
-
-static void set_terrain_canal_connections(int grid_offset, int direction, int multi_tile_mask, int* tiles) {
-    int offset = grid_offset + map_grid_direction_delta(direction);
-    if (map_terrain_is(offset, TERRAIN_BUILDING)) {
-        building* b = building_at(offset);
-        if (b->type == BUILDING_WATER_LIFT) {
-            int lift_direction_binary = b->data.industry.orientation % 2;
-            int canal_direction_binary = (direction / 2) % 2;
-            if (lift_direction_binary == canal_direction_binary)
-                tiles[direction] = 1;
-            return;
-        }
-    }
-
-    if (map_terrain_is(offset, TERRAIN_WATER)) {
-        tiles[direction] = 1;
-    }
-}
-
-const terrain_image* map_image_context_get_canal(int grid_offset) {
-    int tiles[MAX_TILES] = {0, 0, 0, 0, 0, 0, 0, 0};
-    int has_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
-    for (int i = 0; i < MAX_TILES; i += 2) {
-        int offset = grid_offset + map_grid_direction_delta(i);
-        if (map_terrain_is(offset, TERRAIN_CANAL)) {
-            if (has_road) {
-                if (!map_terrain_is(offset, TERRAIN_ROAD))
-                    tiles[i] = 1;
-            } else
-                tiles[i] = 1;
-        }
-    }
-    set_terrain_canal_connections(grid_offset, 0, EDGE_X1Y2, tiles);
-    set_terrain_canal_connections(grid_offset, 2, EDGE_X0Y1, tiles);
-    set_terrain_canal_connections(grid_offset, 4, EDGE_X1Y0, tiles);
-    set_terrain_canal_connections(grid_offset, 6, EDGE_X2Y1, tiles);
-    return get_image(CONTEXT_AQUEDUCT, tiles);
-}
+    return get_terrain_image(CONTEXT_PAVED_ROAD, tiles);
+} 

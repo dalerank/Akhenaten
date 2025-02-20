@@ -7,6 +7,7 @@
 #include "city/population.h"
 #include "grid/building.h"
 #include "grid/tiles.h"
+#include "grid/canals.h"
 #include "grid/building_tiles.h"
 #include "grid/routing/routing_terrain.h"
 #include "io/io_buffer.h"
@@ -205,7 +206,7 @@ void building_update_state(void) {
     }
 
     if (canals_recalc) {
-        map_tiles_update_all_canals(0);
+        map_canal_update_all_tiles(0);
     }
 
     if (lands_recalc) {

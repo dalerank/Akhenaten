@@ -7,6 +7,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 #include "grid/property.h"
+#include "grid/canals.h"
 #include "city/city_buildings.h"
 #include "city/finance.h"
 #include "game/undo.h"
@@ -21,7 +22,7 @@ int building_construction_place_canal(bool measure_only, tile2i start, tile2i en
 
     auto result = place_routed_building(start, end, ROUTED_BUILDING_CANALS);
     if (result.ok && !measure_only) {
-        map_tiles_update_all_canals(0);
+        map_canal_update_all_tiles(0);
         map_routing_update_land();
     }
 
@@ -40,7 +41,7 @@ bool building_irrigation_ditch::static_params::planer_can_construction_start(bui
 
 int building_irrigation_ditch::static_params::planer_construction_update(build_planner &p, tile2i start, tile2i end) const {
     int items_placed = building_construction_place_canal(/*measure_only*/true, start, end);
-    map_tiles_update_all_canals(0);
+    map_canal_update_all_tiles(0);
 
     return items_placed;
 }
@@ -48,7 +49,7 @@ int building_irrigation_ditch::static_params::planer_construction_update(build_p
 int building_irrigation_ditch::static_params::planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
     int items_placed = building_construction_place_canal(false, start, end);
 
-    map_tiles_update_all_canals(0);
+    map_canal_update_all_tiles(0);
     map_routing_update_land();
 
     return items_placed;

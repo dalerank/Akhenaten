@@ -7,8 +7,6 @@ void map_tiles_update_all_rocks(void);
 
 void map_tiles_update_region_shrub(int x_min, int y_min, int x_max, int y_max);
 
-void map_tiles_set_canal_image(int grid_offset);
-
 void map_tiles_update_all_plazas(void);
 
 void map_tiles_update_all_walls(void);
@@ -34,8 +32,6 @@ void map_tiles_river_refresh_entire(void);
 void map_tiles_river_refresh_region(int x_min, int y_min, int x_max, int y_max);
 void map_tiles_set_water(int grid_offset);
 
-int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_image* img);
-void map_tiles_update_all_canals(int include_construction);
 void map_tiles_update_region_canals(tile2i pmin, tile2i pmax);
 int map_tiles_set_canal(tile2i tile);
 
