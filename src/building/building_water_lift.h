@@ -5,7 +5,6 @@
 class building_water_lift : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_WATER_LIFT, building_water_lift)
-
     building_water_lift(building &b) : building_impl(b) {}
 
     struct static_params : public buildings::model_t<building_water_lift> {
@@ -26,6 +25,7 @@ public:
     virtual void update_map_orientation(int orientation) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void update_graphic() override;
+    virtual void highlight_waypoints() override;
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

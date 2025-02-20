@@ -121,3 +121,7 @@ void building_water_lift::update_graphic() {
     set_animation(animkey);
     building_impl::update_graphic();
 }
+
+void building_water_lift::highlight_waypoints() {
+    building_impl::highlight_waypoints();
+}

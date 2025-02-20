@@ -58,34 +58,40 @@ void city_buildings_t::update_water_supply_houses() {
 
 void city_buildings_t::update_canals_from_water_lifts() {
     // cached grid offsets for water lift outputs
-    const int OUTPUT_OFFSETS[4][2] = {{GRID_OFFSET(0, 2), GRID_OFFSET(1, 2)},
-                                      {GRID_OFFSET(-1, 0), GRID_OFFSET(-1, 1)},
-                                      {GRID_OFFSET(0, -1), GRID_OFFSET(1, -1)},
-                                      {GRID_OFFSET(2, 0), GRID_OFFSET(2, 1)}};
-    const int INPUT_OFFSETS[4][2] = {{GRID_OFFSET(0, -1), GRID_OFFSET(1, -1)},
-                                     {GRID_OFFSET(2, 0), GRID_OFFSET(2, 1)},
-                                     {GRID_OFFSET(0, 2), GRID_OFFSET(1, 2)},
-                                     {GRID_OFFSET(-1, 0), GRID_OFFSET(-1, 1)}};
+    const vec2i OUTPUT_OFFSETS[4][2] = { {{0,  2}, {1,  2}},
+                                         {{-1, 0}, {-1, 1}},
+                                         {{0, -1}, {1, -1}},
+                                         {{2,  0}, {2,  1}} };
+    const vec2i INPUT_OFFSETS[4][2] = {  {{0, -1}, {1, -1}},
+                                         {{2,  0}, {2,  1}},
+                                         {{0,  2}, {1,  2}},
+                                         {{-1, 0}, {-1, 1}} };
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WATER_LIFT) {
-            // check if has access to water
-            b->has_water_access = false;
-            int input_offset_0 = b->tile.grid_offset() + INPUT_OFFSETS[b->data.industry.orientation][0];
-            int input_offset_1 = b->tile.grid_offset() + INPUT_OFFSETS[b->data.industry.orientation][1];
-            if (map_canal_at(input_offset_0) || map_terrain_is(input_offset_0, TERRAIN_WATER))
-                b->has_water_access = true;
-
-            if (map_canal_at(input_offset_1) || map_terrain_is(input_offset_1, TERRAIN_WATER))
-                b->has_water_access = true;
-
-            // checks done, update
-            if (b->has_water_access) {
-                map_canal_fill_from_offset(b->tile.grid_offset() + OUTPUT_OFFSETS[b->data.industry.orientation][0]);
-                map_canal_fill_from_offset(b->tile.grid_offset() + OUTPUT_OFFSETS[b->data.industry.orientation][1]);
-                map_terrain_add_with_radius(b->tile, 2, 2, TERRAIN_IRRIGATION_RANGE);
-            }
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WATER_LIFT) {
+            continue;
         }
+
+        // check if has access to water
+        b->has_water_access = false;
+        tile2i input_offset_0 = b->tile.shifted(INPUT_OFFSETS[b->data.industry.orientation][0]);
+        tile2i input_offset_1 = b->tile.shifted(INPUT_OFFSETS[b->data.industry.orientation][1]);
+        const bool is_canal1 = map_canal_at(input_offset_0) || map_terrain_is(input_offset_0, TERRAIN_WATER);
+        const bool is_canal2 = map_canal_at(input_offset_1) || map_terrain_is(input_offset_1, TERRAIN_WATER);
+
+        b->has_water_access |= is_canal1;
+        b->has_water_access |= is_canal2;
+
+        // checks done, update
+        if (!b->has_water_access) {
+            continue;
+        }
+
+        tile2i tile_fill_1 = b->tile.shifted(OUTPUT_OFFSETS[b->data.industry.orientation][0]);
+        tile2i tile_fill_2 = b->tile.shifted(OUTPUT_OFFSETS[b->data.industry.orientation][1]);
+        map_canal_fill_from_offset(tile_fill_1);
+        map_canal_fill_from_offset(tile_fill_2);
+        map_terrain_add_with_radius(b->tile, 2, 2, TERRAIN_IRRIGATION_RANGE);
     }
 }
