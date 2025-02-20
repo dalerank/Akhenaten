@@ -30,7 +30,7 @@ int building_road::static_params::planer_construction_update(build_planner &plan
 
     const bool route_exist = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start);
     int items_placed = 0;
-    if (!route_exist) {
+    if (route_exist) {
         auto result = place_routed_building(start, end, ROUTED_BUILDING_ROAD);
         items_placed = result.items;
     }
