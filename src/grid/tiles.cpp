@@ -36,7 +36,7 @@
 #define FORBIDDEN_TERRAIN_MEADOW (TERRAIN_CANAL | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
 #define FORBIDDEN_TERRAIN_RUBBLE (TERRAIN_CANAL | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
 
-static int aqueduct_include_construction = 0;
+static int canals_include_construction = 0;
 
 // #include <chrono>
 #include "floodplain.h"
@@ -610,9 +610,9 @@ void map_tiles_set_canal_image(int grid_offset) {
 }
 
 void map_tiles_update_all_canals(int include_construction) {
-    aqueduct_include_construction = include_construction;
+    canals_include_construction = include_construction;
     map_tiles_foreach_map_tile(map_tiles_set_canal_image);
-    aqueduct_include_construction = 0;
+    canals_include_construction = 0;
 }
 
 void map_tiles_update_region_canals(tile2i pmin, tile2i pmax) {

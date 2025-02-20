@@ -45,6 +45,14 @@ int building_irrigation_ditch::static_params::planer_construction_update(build_p
     return items_placed;
 }
 
+int building_irrigation_ditch::static_params::planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
+    int items_placed = building_construction_place_canal(false, start, end);
+
+    map_tiles_update_all_canals(0);
+    map_routing_update_land();
+
+    return items_placed;
+}
 
 bool building_irrigation_ditch::static_params::is_road_tile_for_canal(tile2i tile, int gate_orientation) const {
     bool is_road = map_terrain_is(tile, TERRAIN_ROAD);

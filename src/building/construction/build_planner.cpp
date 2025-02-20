@@ -1295,14 +1295,6 @@ bool build_planner::place() {
         }
         break;
 
-    case BUILDING_IRRIGATION_DITCH: {
-        placement_cost *= building_construction_place_canal(false, start, end);
-        if (!placement_cost) {
-            map_tiles_update_all_canals(0);
-            map_routing_update_land();
-        }
-        break;
-    }
     case BUILDING_HOUSE_VACANT_LOT:
         placement_cost *= place_houses(false, start.x(), start.y(), end.x(), end.y());
         if (placement_cost == 0) {
