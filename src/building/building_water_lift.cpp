@@ -22,7 +22,7 @@ void building_water_lift::static_params::planer_setup_preview_graphics(build_pla
 }
 
 int building_water_lift::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
-    planer.draw_as_constructing = map_shore_determine_orientation(end, planer.additional_req_param1, true).match;
+    planer.draw_as_constructing = map_shore_determine_orientation(end, building_size, true).match;
     return 0;
 }
 
@@ -82,26 +82,7 @@ void building_water_lift::spawn_figure() {
 }
 
 bool building_water_lift::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    int orientation_rel = city_view_relative_orientation(data.industry.orientation);
-    int anim_offset = 13 * orientation_rel;
-    point.x += 53;
-    point.y += 15;
-
-    switch (orientation_rel) {
-    case 1:
-        point.y -= 2;
-        break;
-    case 2:
-        point.x += 10;
-        point.y += 0;
-        break;
-    case 3:
-        point.x += 14;
-        point.y += 6;
-        break;
-    }
-
-    building_draw_normal_anim(ctx, point, &base, tile, anim(animkeys().work).first_img() - 1 + anim_offset, color_mask);
+    draw_normal_anim(ctx, point, tile, color_mask);
     return true;
 }
 
@@ -112,11 +93,31 @@ void building_water_lift::update_map_orientation(int orientation) {
     } else if (map_terrain_exists_tile_in_radius_with_type(tile(), 2, 1, TERRAIN_FLOODPLAIN)) {
         image_offset += 8;
     }
-    int image_id = anim(animkeys().work).first_img() + image_offset;
+    int image_id = anim(animkeys().base).first_img() + image_offset;
     map_water_add_building(id(), tile(), 2, image_id);
 }
 
 void building_water_lift::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(88);
     iob->bind(BIND_SIGNATURE_UINT8, &data.industry.orientation);
+}
+
+void building_water_lift::update_graphic() {
+    if (!can_play_animation()) {
+        set_animation(animkeys().none);
+        building_impl::update_graphic();
+        return;
+    }
+
+    int orientation_rel = city_view_relative_orientation(data.industry.orientation);
+    xstring animkey;
+    switch (orientation_rel) {
+    case 0: animkey = animkeys().work_n; break;
+    case 1: animkey = animkeys().work_e; break;
+    case 2: animkey = animkeys().work_s; break;
+    case 3: animkey = animkeys().work_w; break;
+    }
+
+    set_animation(animkey);
+    building_impl::update_graphic();
 }

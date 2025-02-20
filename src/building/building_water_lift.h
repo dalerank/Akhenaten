@@ -25,6 +25,7 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_map_orientation(int orientation) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void update_graphic() override;
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

@@ -1824,7 +1824,10 @@ building building_water_lift = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_TERRAIN, id:50 },
     base : { pos : [0, 0], pack:PACK_TERRAIN, id:50 },
-    work : { pos : [0, 0], pack:PACK_TERRAIN, id:50, offset:1, max_frames:12 },
+    work_n : { pos : [35, 0], pack:PACK_SPR_AMBIENT, id:1, offset:0, duration:4 },
+    work_e : { pos : [54, 14], pack:PACK_SPR_AMBIENT, id:1, offset:14, duration:4 },
+    work_s : { pos : [45, 0], pack:PACK_SPR_AMBIENT, id:1, offset:27, duration:4 },
+    work_w : { pos : [68, 20], pack:PACK_SPR_AMBIENT, id:1, offset:40, duration:4 },
     minimap : {pack:PACK_GENERAL, id:151}
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
