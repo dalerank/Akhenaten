@@ -469,7 +469,7 @@ void build_planner::setup_build_flags() {
 
     const e_building_flag flags[] = { e_building_flag::Meadow, e_building_flag::Rock, e_building_flag::Ore, e_building_flag::TempleUpgradeAltar,
                                       e_building_flag::TempleUpgradeOracle, e_building_flag::NearbyWater, e_building_flag::Groundwater, e_building_flag::ShoreLine,
-                                      e_building_flag::Canals, };
+                                      e_building_flag::Canals, e_building_flag::FloodplainShore };
 
     for (const auto flag: flags) {
         const bool is_need = params.planer_is_need_flag(flag);
@@ -493,10 +493,6 @@ void build_planner::setup_build_flags() {
         //        case BUILDING_OBELYSK: // TODO
         //            set_requirements(PlannerReqs::Resources, RESOURCE_GRANITE, 200);
         //            break;
-    case BUILDING_WATER_LIFT:
-        set_flag(e_building_flag::ShoreLine, 2);
-        set_flag(e_building_flag::FloodplainShore, 2);
-        break;
 
     case BUILDING_LOW_BRIDGE:
     case BUILDING_UNUSED_SHIP_BRIDGE_83:

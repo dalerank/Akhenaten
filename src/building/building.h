@@ -565,6 +565,7 @@ public:
             bool groundwater;
             bool shoreline;
             bool canals;
+            bool floodplain_shoreline;
         } needs;
 
         void load(archive arch);
