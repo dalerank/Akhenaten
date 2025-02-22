@@ -62,12 +62,12 @@ void building_water_lift::update_day() {
         return;
     }
 
-    const bool is_canal1 = map_canal_at(data.water_lift.output_tiles[0]);
+    const bool is_canal1 = map_terrain_is(data.water_lift.output_tiles[0], TERRAIN_CANAL);
     if (is_canal1) {
         map_canal_fill_from_offset(tile2i(data.water_lift.output_tiles[0]));
     }
 
-    const bool is_canal2 = map_canal_at(data.water_lift.output_tiles[1]);
+    const bool is_canal2 = map_terrain_is(data.water_lift.output_tiles[1], TERRAIN_CANAL);
     if (is_canal2) {
         map_canal_fill_from_offset(tile2i(data.water_lift.output_tiles[1]));
     }
