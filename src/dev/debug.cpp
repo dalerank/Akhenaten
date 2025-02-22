@@ -318,6 +318,12 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             debug_text(ctx, str, x, y + 10, 0, "", d, COLOR_GREEN);
         break;
 
+    case e_debug_render_canals: // PROPER CANAL LEVEL
+        d = map_canal_at(grid_offset);
+        if (d)
+            debug_text(ctx, str, x, y + 10, 0, "", d, COLOR_GREEN);
+        break;
+
     case e_debug_render_grass_soil_depletion: // FERTILITY & SOIL DEPLETION
         d = map_get_fertility(grid_offset, FERT_WITH_MALUS);
         if (d) {

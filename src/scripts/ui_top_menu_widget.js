@@ -109,6 +109,8 @@ window top_menu_widget = {
 	    damage_fire 	: menu_item({text:"", parameter:27}),
 	    desirability 	: menu_item({text:"", parameter:28}),
 	    shoreline   	: menu_item({text:"", parameter:29}),
+	    entertainment  	: menu_item({text:"", parameter:30}),
+	    canals       	: menu_item({text:"", parameter:31}),
 	},
 
 	ui : {

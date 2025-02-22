@@ -92,8 +92,9 @@ static void canals_empty_all(void) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             const bool is_canal = map_terrain_is(grid_offset, TERRAIN_CANAL) && !map_terrain_is(grid_offset, TERRAIN_WATER);
             if (!is_canal) {
-
+                continue;
             }
+
             map_canal_set(grid_offset, 0);
             int image_id = map_image_at(grid_offset);
             if (image_id < image_without_water)
