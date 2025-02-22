@@ -116,7 +116,7 @@ bool building_water_lift::draw_ornaments_and_animations_height(painter &ctx, vec
 }
 
 void building_water_lift::update_map_orientation(int orientation) {
-    int image_offset = city_view_relative_orientation(data.industry.orientation);
+    int image_offset = city_view_relative_orientation(data.water_lift.orientation);
     if (!map_terrain_exists_tile_in_radius_with_type(tile(), 2, 1, TERRAIN_WATER)) {
         image_offset += 4;
     } else if (map_terrain_exists_tile_in_radius_with_type(tile(), 2, 1, TERRAIN_FLOODPLAIN)) {
@@ -165,6 +165,10 @@ void building_water_lift::highlight_waypoints() {
     map_highlight_set(data.water_lift.output_tiles[1], ehighligth_yellow);
 }
 
+int building_water_lift::get_orientation() const {
+    return data.water_lift.orientation;
+}
+
 void building_water_lift::update_inout_tiles() {
     water_access_tiles intiles = map_water_get_access_points(base, get_orientation(), 1);
 
@@ -172,10 +176,10 @@ void building_water_lift::update_inout_tiles() {
     data.water_lift.input_tiles[1] = intiles.point_b.grid_offset();
 
     int invert_orientation = get_orientation();
-    if (invert_orientation == 0 || invert_orientation == 3) {
-        invert_orientation = (invert_orientation == 0) ? 3 : 0;
+    if (invert_orientation == 0 || invert_orientation == 2) {
+        invert_orientation = (invert_orientation == 0) ? 2 : 0;
     } else {
-        invert_orientation = (invert_orientation == 1) ? 2 : 1;
+        invert_orientation = (invert_orientation == 1) ? 3 : 1;
     }
     water_access_tiles uottiles = map_water_get_access_points(base, invert_orientation, 1);
 
