@@ -13,7 +13,7 @@
 #include "grid/terrain.h"
 
 bool map_can_place_road_under_canal(tile2i tile) {
-    int image_id = map_image_at(tile) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
+    int image_id = map_image_at(tile) - image_id_from_group(GROUP_BUILDING_CANAL);
     if (image_id != 0 && image_id != 1 && image_id != 48 && image_id != 49)
         return false;
 
@@ -61,7 +61,7 @@ bool map_can_place_canal_on_road(tile2i tile) {
 }
 
 int map_get_canal_with_road_image(int grid_offset) {
-    int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
+    int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_CANAL);
     switch (image_id) {
     case 2:
         return 8;

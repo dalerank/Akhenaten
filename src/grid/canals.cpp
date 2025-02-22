@@ -86,21 +86,23 @@ static void canals_empty_all(void) {
     // reset river access counters
     river_access_canal_offsets_total = 0;
 
-    int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + IMAGE_CANAL_FULL_OFFSET;
+    int image_without_water = image_id_from_group(GROUP_BUILDING_CANAL) + IMAGE_CANAL_FULL_OFFSET;
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-            if (map_terrain_is(grid_offset, TERRAIN_CANAL) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
-                map_canal_set(grid_offset, 0);
-                int image_id = map_image_at(grid_offset);
-                if (image_id < image_without_water)
-                    map_image_set(grid_offset, image_id + IMAGE_CANAL_FULL_OFFSET);
+            const bool is_canal = map_terrain_is(grid_offset, TERRAIN_CANAL) && !map_terrain_is(grid_offset, TERRAIN_WATER);
+            if (!is_canal) {
 
-                // check if canal has river access
-                if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) > 0) {
-                    river_access_canal_offsets[river_access_canal_offsets_total] = grid_offset;
-                    river_access_canal_offsets_total++;
-                }
+            }
+            map_canal_set(grid_offset, 0);
+            int image_id = map_image_at(grid_offset);
+            if (image_id < image_without_water)
+                map_image_set(grid_offset, image_id + IMAGE_CANAL_FULL_OFFSET);
+
+            // check if canal has river access
+            if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) > 0) {
+                river_access_canal_offsets[river_access_canal_offsets_total] = grid_offset;
+                river_access_canal_offsets_total++;
             }
         }
     }
@@ -114,7 +116,7 @@ void map_canal_fill_from_offset(tile2i tile) {
     memset(&g_water_supply_queue, 0, sizeof(g_water_supply_queue));
     int guard = 0;
     int next_offset;
-    int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + IMAGE_CANAL_FULL_OFFSET;
+    int image_without_water = image_id_from_group(GROUP_BUILDING_CANAL) + IMAGE_CANAL_FULL_OFFSET;
     do {
         if (++guard >= GRID_SIZE_TOTAL) {
             break;
@@ -208,14 +210,18 @@ const terrain_image *map_image_context_get_canal(int grid_offset) {
     int has_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
     for (int i = 0; i < MAP_IMAGE_MAX_TILES; i += 2) {
         int offset = grid_offset + map_grid_direction_delta(i);
-        if (map_terrain_is(offset, TERRAIN_CANAL)) {
-            if (has_road) {
-                if (!map_terrain_is(offset, TERRAIN_ROAD))
-                    tiles[i] = 1;
-            } else
+        if (!map_terrain_is(offset, TERRAIN_CANAL)) {
+            continue;
+        }
+
+        if (has_road) {
+            if (!map_terrain_is(offset, TERRAIN_ROAD))
                 tiles[i] = 1;
+        } else {
+            tiles[i] = 1;
         }
     }
+
     set_terrain_canal_connections(grid_offset, 0, EDGE_X1Y2, tiles);
     set_terrain_canal_connections(grid_offset, 2, EDGE_X0Y1, tiles);
     set_terrain_canal_connections(grid_offset, 4, EDGE_X1Y0, tiles);
@@ -224,10 +230,11 @@ const terrain_image *map_image_context_get_canal(int grid_offset) {
 }
 
 int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_image *img) {
-    if (map_terrain_is(grid_offset, TERRAIN_WATER))
+    if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
         return 0;
+    }
 
-    int image_aqueduct = image_id_from_group(GROUP_BUILDING_AQUEDUCT); // 119 C3
+    int image_aqueduct = image_id_from_group(GROUP_BUILDING_CANAL); // 119 C3
     int water_offset = 0;
     int terrain_image = map_image_at(grid_offset);
     if (terrain_image >= image_aqueduct && terrain_image < image_aqueduct + IMAGE_CANAL_FULL_OFFSET)
@@ -270,7 +277,7 @@ int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_im
         }
     }
     // TODO: canals disappearing into the Nile river --- good luck with that!
-    return image_id_from_group(GROUP_BUILDING_AQUEDUCT) + water_offset + floodplains_offset + image_offset;
+    return image_id_from_group(GROUP_BUILDING_CANAL) + water_offset + floodplains_offset + image_offset;
 }
 
 void map_tiles_set_canal_image(int grid_offset) {

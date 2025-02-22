@@ -27,25 +27,6 @@ int building_water_lift::static_params::planer_construction_update(build_planner
     return 0;
 }
 
-void building_water_lift::window_info_background(object_info &c) {
-    c.help_id = 59;
-    window_building_play_sound(&c, "Wavs/resevoir.wav");
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(107, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-
-    building* b = building_get(c.building_id);
-    if (!c.has_road_access)
-        window_building_draw_description(c, 69, 25);
-    else {
-        if (!b->num_workers)
-            window_building_draw_description(c, 107, 2);
-        else
-            window_building_draw_description(c, 107, 1);
-    }
-    inner_panel_draw(c.offset + vec2i{ 16, 144 }, { c.bgsize.x - 2, 4 });
-    window_building_draw_employment(&c, 150);
-}
-
 void building_water_lift::on_create(int orientation) {
     data.water_lift.orientation = orientation;
 }
@@ -81,14 +62,14 @@ void building_water_lift::update_day() {
         return;
     }
 
-    const bool is_canal1 = map_canal_at(data.water_lift.input_tiles[0]);
+    const bool is_canal1 = map_canal_at(data.water_lift.output_tiles[0]);
     if (is_canal1) {
-        map_canal_fill_from_offset(tile2i(data.water_lift.input_tiles[0]));
+        map_canal_fill_from_offset(tile2i(data.water_lift.output_tiles[0]));
     }
 
-    const bool is_canal2 = map_canal_at(data.water_lift.input_tiles[1]);
+    const bool is_canal2 = map_canal_at(data.water_lift.output_tiles[1]);
     if (is_canal2) {
-        map_canal_fill_from_offset(tile2i(data.water_lift.input_tiles[1]));
+        map_canal_fill_from_offset(tile2i(data.water_lift.output_tiles[1]));
     }
 
     map_terrain_add_with_radius(tile(), params().building_size, /*radius*/2, TERRAIN_IRRIGATION_RANGE);
@@ -142,7 +123,7 @@ void building_water_lift::update_graphic() {
         return;
     }
 
-    int orientation_rel = city_view_relative_orientation(data.industry.orientation);
+    int orientation_rel = city_view_relative_orientation(data.water_lift.orientation);
     xstring animkey;
     switch (orientation_rel) {
     case 0: animkey = animkeys().work_n; break;

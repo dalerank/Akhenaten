@@ -58,7 +58,7 @@ void building_road::static_params::planer_ghost_preview(build_planner &planer, p
     int image_id = 0;
 
     if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
-        image_id = image_id_from_group(GROUP_BUILDING_AQUEDUCT);
+        image_id = image_id_from_group(GROUP_BUILDING_CANAL);
         if (map_can_place_road_under_canal(end)) {
             image_id += map_get_canal_with_road_image(grid_offset);
         } else {

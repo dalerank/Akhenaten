@@ -84,6 +84,7 @@ building_sounds = [
 	{ type: BUILDING_HOUSE_MODEST_ESTATE,			sound: "Wavs/housing_r.wav"},
 	{ type: BUILDING_HOUSE_PALATIAL_ESTATE,		sound: "Wavs/housing_r.wav"},
 	{ type: BUILDING_WATER_SUPPLY,						sound: "Wavs/WELL.WAV"},
+	{ type: BUILDING_WATER_LIFT,  						sound: "Wavs/waterwheel.WAV"},
 	{ type: BUILDING_WELL,										sound: "Wavs/WELL.WAV"},
   { type: BUILDING_GRANARY,          				sound: "Wavs/GRANARY1.wav"},
   { type: BUILDING_STORAGE_YARD,     				sound: "Wavs/warehouse1.wav"},

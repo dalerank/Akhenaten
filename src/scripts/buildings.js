@@ -1839,6 +1839,8 @@ building building_water_lift = {
   need_shoreline : true,
   need_floodplain_shoreline : true,
   planer_relative_orientation: 1,
+  info_help_id: 59,
+  info_text_id: 107,
 }
 
 
@@ -2079,6 +2081,8 @@ building building_temple_complex_altar = {
   building_size : 3,
   labor_category : LABOR_CATEGORY_RELIGION,
   need_altar : true,
+  damage_proof : true,
+  fire_proof : true,
 }
 
 building building_temple_complex_oracle = {
@@ -2095,6 +2099,8 @@ building building_temple_complex_oracle = {
   building_size : 3,
   labor_category : LABOR_CATEGORY_RELIGION,
   need_oracle : true,
+  damage_proof : true,
+  fire_proof : true,
 }
 
 building building_temple_complex_altar_ra = {
@@ -2105,4 +2111,6 @@ building building_temple_complex_altar_ra = {
   building_size : 3,
   labor_category : LABOR_CATEGORY_RELIGION,
   need_altar : true,
+  damage_proof : true,
+  fire_proof : true,
 }
