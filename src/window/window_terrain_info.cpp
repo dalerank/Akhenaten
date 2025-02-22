@@ -47,7 +47,7 @@ void terrain_info_window::init(object_info &c) {
         describe = { 70, 42 };
         break;
 
-    case TERRAIN_INFO_AQUEDUCT:
+    case TERRAIN_INFO_CANAL:
         c.help_id = 60;
         window_building_draw_aqueduct(&c);
         break;
@@ -105,7 +105,7 @@ void terrain_info_window::init(object_info &c) {
 
 int terrain_info_window::get_height_id(object_info &c) {
     switch (c.terrain_type) {
-    case TERRAIN_INFO_AQUEDUCT:
+    case TERRAIN_INFO_CANAL:
         return 4;
     case TERRAIN_INFO_RUBBLE:
     case TERRAIN_INFO_WALL:
@@ -177,7 +177,7 @@ bool terrain_info_window::check(object_info &c) {
         c.terrain_type = TERRAIN_INFO_ROAD;
 
     } else if (map_terrain_is(c.grid_offset, TERRAIN_CANAL)) {
-        c.terrain_type = TERRAIN_INFO_AQUEDUCT;
+        c.terrain_type = TERRAIN_INFO_CANAL;
 
     } else if (map_terrain_is(c.grid_offset, TERRAIN_WALL)) {
         c.terrain_type = TERRAIN_INFO_WALL;
