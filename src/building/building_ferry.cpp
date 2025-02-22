@@ -64,7 +64,7 @@ bool building_ferry::force_draw_top_tile(painter &ctx, tile2i t, vec2i pixel, co
 void building_ferry::highlight_waypoints() {
     building_impl::highlight_waypoints();
 
-    docking_tiles fpoints = map_water_get_docking_points(base, get_orientation(), 1);
+    water_access_tiles fpoints = map_water_get_access_points(base, get_orientation(), 1);
     map_highlight_set(fpoints.point_a, ehighligth_green);
     map_highlight_set(fpoints.point_b, ehighligth_green);
 }

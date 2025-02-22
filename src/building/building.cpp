@@ -242,6 +242,7 @@ building_warship_wharf *building::dcast_warship_wharf() { return dcast()->dcast_
 building_temple_complex *building::dcast_temple_complex() { return dcast()->dcast_temple_complex(); }
 building_temple_complex_altar *building::dcast_temple_complex_altar() { return dcast()->dcast_temple_complex_altar(); }
 building_temple_complex_oracle *building::dcast_temple_complex_oracle() { return dcast()->dcast_temple_complex_oracle(); }
+building_water_lift *building::dcast_water_lift() { return dcast()->dcast_water_lift(); }
 
 building::building() {
 }

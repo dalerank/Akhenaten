@@ -10,6 +10,7 @@ enum e_highligth_mode {
     ehighligth_blue,
     ehighligth_red,
     ehighligth_green,
+    ehighligth_yellow,
 };
 
 int map_building_at(int grid_offset);
@@ -33,7 +34,7 @@ void map_highlight_set(int grid_offset, e_highligth_mode mode);
 inline void map_highlight_set(tile2i tile, e_highligth_mode mode) { map_highlight_set(tile.grid_offset(), mode); }
 void map_highlight_clear(int grid_offset);
 e_highligth_mode map_is_highlighted(int grid_offset);
-inline int map_is_highlighted(tile2i tile) { return map_is_highlighted(tile.grid_offset()); }
+inline e_highligth_mode map_is_highlighted(tile2i tile) { return map_is_highlighted(tile.grid_offset()); }
 void map_clear_highlights();
 
 void map_building_update_all_tiles();

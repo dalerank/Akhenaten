@@ -60,7 +60,7 @@ void map_water_update_docking_points(building &b, int orientation, int offset) {
     b.has_water_access |= found;
     b.has_open_water_access = found;
     if (found) {
-        docking_tiles ppoints = map_water_get_docking_points(b, b.dcast()->get_orientation(), offset);
+        water_access_tiles ppoints = map_water_get_access_points(b, b.dcast()->get_orientation(), offset);
         b.data.dock.dock_tiles[0] = ppoints.point_a.grid_offset();
         b.data.dock.dock_tiles[1] = ppoints.point_b.grid_offset();
     } else {
@@ -69,13 +69,13 @@ void map_water_update_docking_points(building &b, int orientation, int offset) {
     }
 }
 
-docking_tiles map_water_get_docking_points(building &b, int orientation, int offset) {
+water_access_tiles map_water_get_access_points(building &b, int orientation, int offset) {
     const auto &params = building_impl::params(b.type);
     if (!params.check_water_access) {
         return {{-1, -1},{-1, -1}};
     }
 
-    docking_tiles result;
+    water_access_tiles result;
     const int bsize = params.building_size;
     switch (orientation) {
     case 0:

@@ -82,6 +82,7 @@ class building_transport_wharf;
 class building_temple_complex;
 class building_temple_complex_altar;
 class building_temple_complex_oracle;
+class building_water_lift;
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -232,6 +233,11 @@ public:
             short progress;
             bool has_fish;
         } dock;
+        struct water_lift_t {
+            int input_tiles[2];
+            int output_tiles[2];
+            char orientation;
+        } water_lift;
         struct market_t {
             uint16_t inventory[8];
             short pottery_demand;
@@ -495,6 +501,7 @@ public:
     building_temple_complex *dcast_temple_complex();
     building_temple_complex_altar *dcast_temple_complex_altar();
     building_temple_complex_oracle *dcast_temple_complex_oracle();
+    building_water_lift *dcast_water_lift();
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
@@ -685,6 +692,7 @@ public:
     virtual building_temple_complex *dcast_temple_complex() { return nullptr; }
     virtual building_temple_complex_altar *dcast_temple_complex_altar() { return nullptr; }
     virtual building_temple_complex_oracle *dcast_temple_complex_oracle() { return nullptr; }
+    virtual building_water_lift *dcast_water_lift() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -864,6 +872,7 @@ GENERATE_SMART_CAST_BUILDING(transport_wharf)
 GENERATE_SMART_CAST_BUILDING(temple_complex)
 GENERATE_SMART_CAST_BUILDING(temple_complex_altar)
 GENERATE_SMART_CAST_BUILDING(temple_complex_oracle)
+GENERATE_SMART_CAST_BUILDING(water_lift)
 
 namespace buildings {
 

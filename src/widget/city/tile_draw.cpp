@@ -425,7 +425,7 @@ void draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
 
 void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
     g_city_planner.construction_record_view_position(pixel, tile);
-    constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED, COLOR_GREEN};
+    constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED, COLOR_GREEN, COLOR_YELLOW};
     if (!tile.valid()) {
         // Outside map: draw black tile
         ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, 0);
@@ -444,7 +444,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
         //    ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
         //
         } else if (map_is_highlighted(tile)) {
-            int mode = map_is_highlighted(tile);
+            e_highligth_mode mode = map_is_highlighted(tile);
             ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pixel, mode_highlighted[mode]);
         
         } else if (terrain & TERRAIN_BUILDING) {

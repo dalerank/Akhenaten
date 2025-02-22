@@ -17,6 +17,7 @@ public:
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
+    virtual void update_day() override;
     virtual int animation_speed(int speed) const;
     virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_CRIME; }
@@ -26,6 +27,8 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void update_graphic() override;
     virtual void highlight_waypoints() override;
+
+    void update_inout_tiles();
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

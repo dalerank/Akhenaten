@@ -33,8 +33,10 @@ void map_highlight_set(int grid_offset, e_highligth_mode mode) {
     if (grid_offset < 0) {
         return;
     }
+
     map_grid_set(g_highlight_grid, grid_offset, mode);
 }
+
 e_highligth_mode map_is_highlighted(int grid_offset) {
     if (config_get(CONFIG_UI_WALKER_WAYPOINTS)) {
         return (e_highligth_mode)map_grid_get(g_highlight_grid, grid_offset);
