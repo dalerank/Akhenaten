@@ -24,7 +24,7 @@ struct terrain_image {
     int is_valid;
     int group_offset;
     int item_offset;
-    int aqueduct_offset;
+    int canal_offset;
 };
 
 void map_image_context_init(void);

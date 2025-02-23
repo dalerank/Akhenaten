@@ -12,7 +12,7 @@
 struct terrain_image_context {
     const unsigned char tiles[MAP_IMAGE_MAX_TILES];
     const unsigned char offset_for_orientation[4];
-    const unsigned char aqueduct_offset;
+    const unsigned char canal_offset;
     const unsigned char max_item_offset;
     unsigned char current_item_offset;
 };
@@ -381,7 +381,7 @@ const terrain_image* get_terrain_image(int group, int tiles[MAP_IMAGE_MAX_TILES]
             result.is_valid = 1;
             result.group_offset = context[i].offset_for_orientation[city_view_orientation() / 2];
             result.item_offset = context[i].current_item_offset;
-            result.aqueduct_offset = context[i].aqueduct_offset;
+            result.canal_offset = context[i].canal_offset;
             break;
         }
     }

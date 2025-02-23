@@ -25,8 +25,7 @@ struct water_supply_queue_tile {
     int water;
 };
 
-static unsigned int river_access_canal_offsets[300] = {};
-static int river_access_canal_offsets_total = 0;
+std::vector<tile2i> *river_access_canal_offsets = nullptr;
 
 static grid_xx canals_grid = {0, FS_UINT8};
 static grid_xx canals_grid_backup = {0, FS_UINT8};
@@ -59,12 +58,6 @@ void map_canal_clear() {
 }
 
 void map_canal_backup() {
-    void* t = malloc(12);
-    uint16_t* x = (uint16_t*)t;
-
-    uint16_t g = x[2];
-    x[4] = 1;
-
     map_grid_copy(canals_grid, canals_grid_backup);
 }
 
@@ -80,9 +73,14 @@ io_buffer *iob_aqueduct_backup_grid = new io_buffer([] (io_buffer *iob, size_t v
     iob->bind(BIND_SIGNATURE_GRID, &canals_grid_backup);
 });
 
-static void canals_empty_all(void) {
+void canals_decrease_water_level() {
     // reset river access counters
-    river_access_canal_offsets_total = 0;
+    if (!river_access_canal_offsets) {
+        river_access_canal_offsets = new std::vector<tile2i>;
+        river_access_canal_offsets->reserve(300);
+    }
+
+    river_access_canal_offsets->clear();
 
     int image_without_water = image_id_from_group(GROUP_BUILDING_CANAL) + IMAGE_CANAL_FULL_OFFSET;
     int grid_offset = scenario_map_data()->start_offset;
@@ -93,15 +91,16 @@ static void canals_empty_all(void) {
                 continue;
             }
 
-            map_canal_set(grid_offset, 0);
+            int level = std::max(map_canal_at(grid_offset) - 1, 0);
+            map_canal_set(grid_offset, level);
             int image_id = map_image_at(grid_offset);
-            if (image_id < image_without_water)
+            if (level <= 0 && image_id < image_without_water) {
                 map_image_set(grid_offset, image_id + IMAGE_CANAL_FULL_OFFSET);
+            }
 
             // check if canal has river access
             if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) > 0) {
-                river_access_canal_offsets[river_access_canal_offsets_total] = grid_offset;
-                river_access_canal_offsets_total++;
+                river_access_canal_offsets->push_back(tile2i(grid_offset));
             }
         }
     }
@@ -121,12 +120,15 @@ void map_canal_fill_from_offset(tile2i tile, int water) {
     while (g_water_supply_queue.size() > 0) {
         auto wtile = g_water_supply_queue.back();
         g_water_supply_queue.pop_back();
+
+        map_tiles_set_canal_image(wtile.tile.grid_offset());
         map_canal_set(wtile.tile, wtile.water);
 
         int image_id = map_image_at(wtile.tile);
         if (image_id >= image_without_water) {
             map_image_set(wtile.tile, image_id - IMAGE_CANAL_FULL_OFFSET);
         }
+
         map_terrain_add_with_radius(wtile.tile, 1, 2, TERRAIN_IRRIGATION_RANGE);
 
         for (const auto it : adjacent_offsets) {
@@ -145,9 +147,12 @@ void map_canal_fill_from_offset(tile2i tile, int water) {
 
 
 void map_update_canals_from_river() {
-    for (int i = 0; i < river_access_canal_offsets_total; ++i) {
-        int grid_offset = river_access_canal_offsets[i];
-        map_canal_fill_from_offset(tile2i(grid_offset), 5);
+    if (!river_access_canal_offsets) {
+        return;
+    }
+
+    for (const auto &tile: *river_access_canal_offsets) {
+        map_canal_fill_from_offset(tile, 5);
     }
 }
 
@@ -155,7 +160,7 @@ void map_update_canals() {
     OZZY_PROFILER_SECTION("Game/Update/Canals");
     // first, reset all canals
     map_terrain_remove_all(TERRAIN_IRRIGATION_RANGE);
-    canals_empty_all();
+    canals_decrease_water_level();
 
     // fill canals!
     map_update_canals_from_river();
@@ -255,21 +260,25 @@ int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_im
 }
 
 void map_tiles_set_canal_image(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_CANAL) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
-        const terrain_image *img = map_image_context_get_canal(grid_offset);
-        bool is_road = map_terrain_is(grid_offset, TERRAIN_ROAD);
-        if (is_road)
-            map_property_clear_plaza_or_earthquake(grid_offset);
+    const bool is_canal = map_terrain_is(grid_offset, TERRAIN_CANAL) && !map_terrain_is(grid_offset, TERRAIN_WATER);
 
-        int image_id = get_canal_image(grid_offset, is_road, 0, img);
-        if (image_id) {
-            map_image_set(grid_offset, image_id);
-            map_property_set_multi_tile_size(grid_offset, 1);
-            map_property_mark_draw_tile(grid_offset);
-        }
-
-        map_canal_set(grid_offset, img->aqueduct_offset);
+    if (!is_canal) {
+        return;
     }
+
+    const terrain_image *img = map_image_context_get_canal(grid_offset);
+    bool is_road = map_terrain_is(grid_offset, TERRAIN_ROAD);
+    if (is_road)
+        map_property_clear_plaza_or_earthquake(grid_offset);
+
+    int image_id = get_canal_image(grid_offset, is_road, 0, img);
+    if (image_id) {
+        map_image_set(grid_offset, image_id);
+        map_property_set_multi_tile_size(grid_offset, 1);
+        map_property_mark_draw_tile(grid_offset);
+    }
+
+    map_canal_set(grid_offset, 0);// img->canal_offset);
 }
 
 void map_canal_update_all_tiles(int include_construction) {
