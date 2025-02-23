@@ -47,6 +47,10 @@ void building_water_lift::on_place_checks() {
     }
 }
 
+void building_water_lift::spawn_figure() {
+    common_spawn_figure_trigger(50);
+}
+
 void building_water_lift::update_day() {
     building_impl::update_day();
 
@@ -85,10 +89,6 @@ int building_water_lift::animation_speed(int speed) const {
     }
 
     return 0;
-}
-
-void building_water_lift::spawn_figure() {
-    common_spawn_figure_trigger(50);
 }
 
 bool building_water_lift::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

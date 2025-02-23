@@ -5,14 +5,8 @@
 #include "io/gamefiles/lang.h"
 #include "widget/city/ornaments.h"
 #include "building/count.h"
-#include "js/js_game.h"
 
 buildings::model_t<building_dentist> dentist_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_dentist);
-void config_load_building_dentist() {
-    dentist_m.load();
-}
 
 void building_dentist::update_graphic() {
     const xstring &animkey = can_play_animation()

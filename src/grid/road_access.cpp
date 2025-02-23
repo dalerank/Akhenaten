@@ -317,9 +317,14 @@ tile2i map_road_to_largest_network_rotation(int rotation, tile2i tile, int size,
                 continue;
             }
 
+            if (!map_terrain_is(current_tile, TERRAIN_ROAD)) {
+                continue;
+            }
+
             if (cur_road_id != greatest_road_id) {
                 break;
             }
+
             float cur_dist = base_tile.dist(current_tile);
             if (cur_dist < min_dist) {
                 min_dist = cur_dist;
@@ -327,7 +332,8 @@ tile2i map_road_to_largest_network_rotation(int rotation, tile2i tile, int size,
             }
         }
 
-        return best_road_tile;
+        const bool is_road = map_terrain_is(best_road_tile, TERRAIN_ROAD);
+        return is_road ? best_road_tile : tile2i::invalid;
     } else {
         for (const auto &tile_delta: offsets) {
             int grid_offset = base_offset + tile_delta;
