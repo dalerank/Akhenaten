@@ -16,16 +16,14 @@
 #include "graphics/view/view.h"
 
 #define MAX_QUEUE 1000
+#define IMAGE_CANAL_FULL_OFFSET 48
 
 static int canals_include_construction = 0;
 
-struct water_supply_queue_t {
-    int items[MAX_QUEUE];
-    int head;
-    int tail;
+struct water_supply_queue_tile {
+    tile2i tile;
+    int water;
 };
-
-water_supply_queue_t g_water_supply_queue;
 
 static unsigned int river_access_canal_offsets[300] = {};
 static int river_access_canal_offsets_total = 0;
@@ -109,72 +107,47 @@ static void canals_empty_all(void) {
     }
 }
 
-void map_canal_fill_from_offset(tile2i tile) {
+void map_canal_fill_from_offset(tile2i tile, int water) {
     if (!map_terrain_is(tile, TERRAIN_CANAL) || map_terrain_is(tile, TERRAIN_WATER)) {
         return;
     }
 
-    memset(&g_water_supply_queue, 0, sizeof(g_water_supply_queue));
-    int guard = 0;
+    std::vector<water_supply_queue_tile> g_water_supply_queue;
     int next_offset;
     int image_without_water = image_id_from_group(GROUP_BUILDING_CANAL) + IMAGE_CANAL_FULL_OFFSET;
-    do {
-        if (++guard >= GRID_SIZE_TOTAL) {
-            break;
-        }
+    g_water_supply_queue.push_back({ tile, water });
 
-        map_canal_set(tile.grid_offset(), 1);
-        int image_id = map_image_at(tile);
+    std::array<vec2i, 4> adjacent_offsets = { vec2i(0, 1), vec2i(1, 0), vec2i(0, -1), vec2i(-1, 0) };
+    while (g_water_supply_queue.size() > 0) {
+        auto wtile = g_water_supply_queue.back();
+        g_water_supply_queue.pop_back();
+        map_canal_set(wtile.tile, wtile.water);
+
+        int image_id = map_image_at(wtile.tile);
         if (image_id >= image_without_water) {
-            map_image_set(tile, image_id - IMAGE_CANAL_FULL_OFFSET);
+            map_image_set(wtile.tile, image_id - IMAGE_CANAL_FULL_OFFSET);
         }
-        map_terrain_add_with_radius(tile, 1, 2, TERRAIN_IRRIGATION_RANGE);
+        map_terrain_add_with_radius(wtile.tile, 1, 2, TERRAIN_IRRIGATION_RANGE);
 
-        next_offset = -1;
-        int grid_offset = tile.grid_offset();
-        for (int i = 0; i < 4; i++) {
-            const int ADJACENT_OFFSETS[] = {-GRID_LENGTH, 1, GRID_LENGTH, -1};
-            int new_offset = grid_offset + ADJACENT_OFFSETS[i];
-            building* b = building_at(new_offset);
-            if (b->id && b->type == BUILDING_WATER_LIFT) {
-                // check if aqueduct connects to reservoir --> doesn't connect to corner
-                int xy = map_property_multi_tile_xy(new_offset);
-                if (xy != EDGE_X0Y0 && xy != EDGE_X2Y0 && xy != EDGE_X0Y2 && xy != EDGE_X2Y2) {
-                    if (!b->has_water_access) {
-                        b->has_water_access = 2;
-                    }
-                }
-            } else if (map_terrain_is(new_offset, TERRAIN_CANAL)) {
-                if (!map_canal_at(new_offset)) {
-                    if (next_offset == -1) {
-                        next_offset = new_offset;
-                    } else {
-                        g_water_supply_queue.items[g_water_supply_queue.tail++] = new_offset;
-                        if (g_water_supply_queue.tail >= MAX_QUEUE)
-                            g_water_supply_queue.tail = 0;
-                    }
-                }
-            }
-        }
-        if (next_offset == -1) {
-            if (g_water_supply_queue.head == g_water_supply_queue.tail) {
-                return;
+        for (const auto it : adjacent_offsets) {
+            tile2i new_offset = wtile.tile.shifted(it);
+            if (!map_terrain_is(new_offset, TERRAIN_CANAL)) {
+                continue;
             }
 
-            next_offset = g_water_supply_queue.items[g_water_supply_queue.head++];
-            if (g_water_supply_queue.head >= MAX_QUEUE) {
-                g_water_supply_queue.head = 0;
+            int cwater = map_canal_at(new_offset);
+            if (cwater < wtile.water) {
+                g_water_supply_queue.push_back({ new_offset, wtile.water - 1 });
             }
         }
-        grid_offset = next_offset;
-    } while (next_offset > -1);
+    }
 }
 
 
 void map_update_canals_from_river() {
     for (int i = 0; i < river_access_canal_offsets_total; ++i) {
         int grid_offset = river_access_canal_offsets[i];
-        map_canal_fill_from_offset(tile2i(grid_offset));
+        map_canal_fill_from_offset(tile2i(grid_offset), 5);
     }
 }
 

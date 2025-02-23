@@ -64,12 +64,12 @@ void building_water_lift::update_day() {
 
     const bool is_canal1 = map_terrain_is(data.water_lift.output_tiles[0], TERRAIN_CANAL);
     if (is_canal1) {
-        map_canal_fill_from_offset(tile2i(data.water_lift.output_tiles[0]));
+        map_canal_fill_from_offset(tile2i(data.water_lift.output_tiles[0]), 10);
     }
 
     const bool is_canal2 = map_terrain_is(data.water_lift.output_tiles[1], TERRAIN_CANAL);
     if (is_canal2) {
-        map_canal_fill_from_offset(tile2i(data.water_lift.output_tiles[1]));
+        map_canal_fill_from_offset(tile2i(data.water_lift.output_tiles[1]), 10);
     }
 
     map_terrain_add_with_radius(tile(), params().building_size, /*radius*/2, TERRAIN_IRRIGATION_RANGE);
