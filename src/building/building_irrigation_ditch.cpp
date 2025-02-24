@@ -60,7 +60,7 @@ bool building_irrigation_ditch::static_params::is_road_tile_for_canal(tile2i til
     if (map_terrain_is(tile, TERRAIN_BUILDING)) {
         building *b = building_at(tile);
         if (b->type == BUILDING_MUD_GATEHOUSE) {
-            if (b->subtype.orientation == gate_orientation)
+            if (b->orientation == gate_orientation)
                 is_road = true;
 
         } else if (b->type == BUILDING_GRANARY) {

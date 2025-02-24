@@ -239,7 +239,7 @@ void building_maintenance_check_kingdome_access() {
 
             b.distance_from_entry = 0;
             bool closest_road = config_get(CONFIG_GP_CH_BUILDING_CLOSEST_ROAD) > 0;
-            tile2i road = map_road_to_largest_network_rotation(b.subtype.orientation, b.tile, 3, closest_road);
+            tile2i road = map_road_to_largest_network_rotation(b.orientation, b.tile, 3, closest_road);
             if (road.x() >= 0) {
                 b.road_network_id = map_road_network_get(road);
                 b.distance_from_entry = map_routing_distance(road);

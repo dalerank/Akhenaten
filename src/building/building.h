@@ -164,13 +164,13 @@ public:
     uint8_t house_is_merged;
     uint8_t house_size;
     tile2i tile;
+    uint8_t orientation;
     e_building_type type;
     union {
-        uint16_t data;
         e_house_level house_level;
+        uint16_t data;
         e_resource warehouse_resource_id;
         //        short workshop_type;
-        short orientation;
         short native_meeting_center_id;
         short market_goods;
         short roadblock_exceptions;
@@ -224,7 +224,6 @@ public:
             int dock_tiles[2];
             sbitarray64 trading_goods;
             uint8_t num_ships;
-            char orientation;
             short docker_ids[3];
             short trade_ship_id;
             uint8_t docker_anim_frame;
@@ -236,7 +235,6 @@ public:
         struct water_lift_t {
             int input_tiles[2];
             int output_tiles[2];
-            char orientation;
         } water_lift;
         struct market_t {
             uint16_t inventory[8];
@@ -271,7 +269,6 @@ public:
             uint8_t unk_c[13];
             uint8_t produce_multiplier;
             uint8_t blessing_days_left;
-            uint8_t orientation;
             bool has_raw_materials;
             unsigned char curse_days_left;
             int unk_6[5];
@@ -299,7 +296,6 @@ public:
             uint32_t booth_corner_grid_offset;
             uint32_t latched_venue_main_grid_offset;
             uint32_t latched_venue_add_grid_offset;
-            uint8_t orientation;
             uint8_t ent_reserved_u8;
             e_resource consume_material_id;
         } entertainment;
@@ -339,6 +335,7 @@ public:
             uint8_t bazaar_access;
             uint8_t water_supply;
         } house;
+
         struct {
             uint8_t variant;
             uint8_t statue_offset;
@@ -347,7 +344,6 @@ public:
             uint16_t workers[5];
             int8_t phase;
             uint8_t upgrades;
-            uint8_t orientation;
         } monuments;
     } data;
     int tax_income_or_storage;
@@ -630,7 +626,7 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
     virtual bool add_resource(e_resource resource, int amount) { return false; }
-    virtual int get_orientation() const { return 0; }
+    virtual int get_orientation() const { return base.orientation; }
     virtual void on_config_reload() {}
 
     virtual building_farm *dcast_farm() { return nullptr; }

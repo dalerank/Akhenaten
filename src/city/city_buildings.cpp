@@ -238,7 +238,8 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_is_merged);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_size);
         iob->bind(BIND_SIGNATURE_TILE2I, b->tile);
-        iob->bind____skip(2);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->orientation);
+        iob->bind____skip(1);
         iob->bind____skip(4);
         iob->bind(BIND_SIGNATURE_UINT16, &b->type);
         iob->bind(BIND_SIGNATURE_INT16, &b->subtype.data); // which union field we use does not matter

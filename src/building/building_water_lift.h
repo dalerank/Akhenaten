@@ -26,7 +26,6 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void update_graphic() override;
     virtual void highlight_waypoints() override;
-    virtual int get_orientation() const override;
 
     void update_inout_tiles();
 

@@ -455,7 +455,7 @@ static void set_tiles_road(int grid_offset, int tiles[MAP_IMAGE_MAX_TILES]) {
         int offset = grid_offset + map_grid_direction_delta(i);
         if (map_terrain_is(offset, TERRAIN_GATEHOUSE)) {
             building* b = building_at(offset);
-            if (b->type == BUILDING_MUD_GATEHOUSE && b->subtype.orientation == 1 + ((i / 2) & 1)) { // 1,2,1,2
+            if (b->type == BUILDING_MUD_GATEHOUSE && b->orientation == 1 + ((i / 2) & 1)) { // 1,2,1,2
                 tiles[i] = 1;
             }
         } else if (map_terrain_is(offset, TERRAIN_ACCESS_RAMP)) {

@@ -157,7 +157,7 @@ void figure_trade_ship::figure_action() {
             dst->data.dock.num_ships = 0;
         }
 
-        switch (destination()->data.dock.orientation) {
+        switch (destination()->orientation) {
         case 0: base.direction = DIR_2_BOTTOM_RIGHT; break;
         case 1: base.direction = DIR_4_BOTTOM_LEFT; break;
         case 2: base.direction = DIR_6_TOP_LEFT; break;

@@ -171,7 +171,7 @@ void set_terrain_canal_connections(int grid_offset, int direction, int multi_til
     if (map_terrain_is(offset, TERRAIN_BUILDING)) {
         building *b = building_at(offset);
         if (b->type == BUILDING_WATER_LIFT) {
-            int lift_direction_binary = b->data.industry.orientation % 2;
+            int lift_direction_binary = b->orientation % 2;
             int canal_direction_binary = (direction / 2) % 2;
             if (lift_direction_binary == canal_direction_binary)
                 tiles[direction] = 1;

@@ -78,8 +78,8 @@ void building_booth::update_month() {
 }
 
 void building_booth::on_place(int orientation, int variant) {
+    base.orientation = orientation;
     data.entertainment.booth_corner_grid_offset = tile().grid_offset();
-    data.entertainment.orientation = orientation;
 
     building_impl::on_place(orientation, variant);
 }

@@ -22,7 +22,7 @@ void config_load_building_gatehouse() {
 }
 
 void building_gatehouse::on_create(int orientation) {
-    base.subtype.orientation = orientation;
+    base.orientation = orientation;
 }
 
 void building_gatehouse::on_place_update_tiles(int orientation, int variant) {
@@ -53,12 +53,12 @@ bool building_mud_gatehouse::draw_ornaments_and_animations_height(painter &ctx, 
         || (orientation == DIR_6_TOP_LEFT && xy == EDGE_X1Y0)) {
         int image_id = mud_gatehouse_m.anim["base"].first_img();
         int color_mask = drawing_building_as_deleted(&base) ? COLOR_MASK_RED : 0;
-        if (base.subtype.orientation == 1) {
+        if (base.orientation == 1) {
             if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT)
                 ImageDraw::img_generic(ctx, image_id, x - 22, y - 80, color_mask);
             else
                 ImageDraw::img_generic(ctx, image_id + 1, x - 18, y - 81, color_mask);
-        } else if (base.subtype.orientation == 2) {
+        } else if (base.orientation == 2) {
             if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT)
                 ImageDraw::img_generic(ctx, image_id + 1, x - 18, y - 81, color_mask);
             else
@@ -72,7 +72,7 @@ void building_mud_gatehouse::update_map_orientation(int orientation) {
     int image_id = mud_gatehouse_m.anim["base"].first_img();
     int map_orientation = city_view_orientation();
     int orientation_is_top_bottom = map_orientation == DIR_0_TOP_RIGHT || map_orientation == DIR_4_BOTTOM_LEFT;
-    if (base.subtype.orientation == 1) {
+    if (base.orientation == 1) {
         if (orientation_is_top_bottom)
             image_id += 1;
         else {

@@ -98,7 +98,7 @@ void building_bandstand::update_day() {
 
 void building_bandstand::on_place(int orientation, int variant) {
     data.entertainment.booth_corner_grid_offset = tile().grid_offset();
-    data.entertainment.orientation = orientation;
+    base.orientation = orientation;
 
     building_impl::on_place(orientation, variant);
 }
@@ -153,8 +153,8 @@ void building_bandstand::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_bandstand::map_add_bandstand_tiles() {
-    int offset = bandstand_main_img_offset(data.entertainment.orientation);
-    int offset_add = bandstand_add_img_offset(data.entertainment.orientation);
+    int offset = bandstand_main_img_offset(base.orientation);
+    int offset_add = bandstand_add_img_offset(base.orientation);
 
     int stand_sn_s = building_impl::params(BUILDING_BANDSTAND).anim["stand_sn_s"].first_img();
     map_image_set(data.entertainment.latched_venue_main_grid_offset, stand_sn_s + offset);

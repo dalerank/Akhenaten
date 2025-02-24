@@ -97,7 +97,7 @@ void map_orientation_update_buildings() {
             break;
 
         case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
-            if (b->subtype.orientation == 1) {
+            if (b->orientation == 1) {
                 if (orientation_is_top_bottom)
                     image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
                 else {
@@ -111,7 +111,7 @@ void map_orientation_update_buildings() {
                 }
             }
             map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_BUILDING);
-            map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), b->subtype.orientation);
+            map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), b->orientation);
             break;
 
         case BUILDING_PAVILLION:

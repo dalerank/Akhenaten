@@ -28,7 +28,7 @@ int building_water_lift::static_params::planer_construction_update(build_planner
 }
 
 void building_water_lift::on_create(int orientation) {
-    data.water_lift.orientation = orientation;
+    base.orientation = orientation;
 }
 
 void building_water_lift::on_place_update_tiles(int orientation, int variant) {
@@ -97,7 +97,7 @@ bool building_water_lift::draw_ornaments_and_animations_height(painter &ctx, vec
 }
 
 void building_water_lift::update_map_orientation(int orientation) {
-    int image_offset = city_view_relative_orientation(data.water_lift.orientation);
+    int image_offset = city_view_relative_orientation(base.orientation);
     if (!map_terrain_exists_tile_in_radius_with_type(tile(), 2, 1, TERRAIN_WATER)) {
         image_offset += 4;
     } else if (map_terrain_exists_tile_in_radius_with_type(tile(), 2, 1, TERRAIN_FLOODPLAIN)) {
@@ -113,7 +113,7 @@ void building_water_lift::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT32, &data.water_lift.input_tiles[1]);
     iob->bind(BIND_SIGNATURE_UINT32, &data.water_lift.output_tiles[0]);
     iob->bind(BIND_SIGNATURE_UINT32, &data.water_lift.output_tiles[1]);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.water_lift.orientation);
+    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
 }
 
 void building_water_lift::update_graphic() {
@@ -123,7 +123,7 @@ void building_water_lift::update_graphic() {
         return;
     }
 
-    int orientation_rel = city_view_relative_orientation(data.water_lift.orientation);
+    int orientation_rel = city_view_relative_orientation(base.orientation);
     xstring animkey;
     switch (orientation_rel) {
     case 0: animkey = animkeys().work_n; break;
@@ -144,10 +144,6 @@ void building_water_lift::highlight_waypoints() {
 
     map_highlight_set(data.water_lift.output_tiles[0], ehighligth_yellow);
     map_highlight_set(data.water_lift.output_tiles[1], ehighligth_yellow);
-}
-
-int building_water_lift::get_orientation() const {
-    return data.water_lift.orientation;
 }
 
 void building_water_lift::update_inout_tiles() {

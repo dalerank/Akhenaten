@@ -16,7 +16,7 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     }
     iob->bind(BIND_SIGNATURE_UINT8, &data.industry.produce_multiplier);
     iob->bind(BIND_SIGNATURE_UINT8, &data.industry.blessing_days_left);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.industry.orientation);
+    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
     iob->bind(BIND_SIGNATURE_UINT8, &data.industry.has_raw_materials);
     iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &data.industry.curse_days_left);

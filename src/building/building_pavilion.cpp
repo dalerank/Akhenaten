@@ -118,7 +118,7 @@ void building_pavilion::update_day() {
 
 void building_pavilion::on_place_update_tiles(int orientation, int variant) {
     data.entertainment.booth_corner_grid_offset = tile().grid_offset();
-    data.entertainment.orientation = orientation;
+    base.orientation = orientation;
 
     int size = pavilion_m.building_size;
     int image_id = anim(animkeys().square).first_img();

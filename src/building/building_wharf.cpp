@@ -6,7 +6,7 @@
 #include "grid/building.h"
 
 void building_wharf::on_create(int orientation) {
-    data.dock.orientation = orientation;
+    base.orientation = orientation;
 }
 
 void building_wharf::on_place(int orientation, int variant) {
@@ -22,7 +22,7 @@ void building_wharf::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_wharf::update_map_orientation(int orientation) {
-    int image_offset = city_view_relative_orientation(data.dock.orientation);
+    int image_offset = city_view_relative_orientation(base.orientation);
     int image_id = anim(animkeys().base).first_img() + image_offset;
     map_water_add_building(id(), tile(), size(), image_id);
 }
@@ -35,7 +35,7 @@ void building_wharf::highlight_waypoints() {
 }
 
 void building_wharf::bind_dynamic(io_buffer *iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_UINT8, &data.dock.orientation);
+    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
     iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[0]);
     iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[1]);
 }

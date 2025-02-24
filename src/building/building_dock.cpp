@@ -43,7 +43,7 @@ void building_dock::static_params::planer_setup_preview_graphics(build_planner &
 }
 
 void building_dock::on_create(int orientation) {
-    data.dock.orientation = orientation;
+    base.orientation = orientation;
     data.dock.trading_goods.one();
 }
 
@@ -78,7 +78,7 @@ void building_dock::update_month() {
 }
 
 void building_dock::update_map_orientation(int orientation) {
-    int image_offset = city_view_relative_orientation(data.dock.orientation);
+    int image_offset = city_view_relative_orientation(base.orientation);
     int image_id = anim(animkeys().base).first_img() + image_offset;
     map_water_add_building(id(), tile(), 3, image_id);
 }
@@ -185,7 +185,7 @@ void building_dock::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(9);
     iob->bind(BIND_SIGNATURE_UINT8, &data.dock.num_ships);
     iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_INT8, &data.dock.orientation);
+    iob->bind(BIND_SIGNATURE_INT8, &base.orientation);
     iob->bind____skip(3);
 
     iob->bind(BIND_SIGNATURE_INT16, &data.dock.docker_ids[0]);
@@ -262,7 +262,7 @@ void building_dock::highlight_waypoints() {
 
 tile2i building_dock::moor_tile() const {
     vec2i offset;
-    switch (data.dock.orientation) {
+    switch (base.orientation) {
     case 0: offset = { 1, -1 };  break;
     case 1: offset = { 3, 1 }; break;
     case 2: offset = { 1, 3 }; break;
@@ -274,7 +274,7 @@ tile2i building_dock::moor_tile() const {
 
 tile2i building_dock::wait_tile() const {
     vec2i offset;
-    switch (data.dock.orientation) {
+    switch (base.orientation) {
     case 0: offset = { 2, -2 };  break;
     case 1: offset = { 4, 2 }; break;
     case 2: offset = { 2, 4 }; break;
@@ -286,7 +286,7 @@ tile2i building_dock::wait_tile() const {
 
 tile2i building_dock::reid_tile() const {
     vec2i offset;
-    switch (data.dock.orientation) {
+    switch (base.orientation) {
     case 0: offset = { 2, -3 };  break;
     case 1: offset = { 5, 2 }; break;
     case 2: offset = { 2, 5 }; break;

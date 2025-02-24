@@ -64,7 +64,7 @@ void building_shipyard::spawn_figure() {
         if ((params.warship_progress_cost > 0) && data.dock.progress >= params.warship_progress_cost) {
             figure *f = figure_create(FIGURE_WARSHIP, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_205_WARSHIP_CREATED;
-            f->direction = (data.dock.orientation + 3) % 8;
+            f->direction = (base.orientation + 3) % 8;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
             data.dock.progress = 0;
@@ -76,7 +76,7 @@ void building_shipyard::spawn_figure() {
         if ((params.transport_progress_cost > 0) && data.dock.progress >= params.transport_progress_cost) {
             figure *f = figure_create(FIGURE_TRANSPORT_SHIP, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_211_TRANSPORT_SHIP_CREATED;
-            f->direction = (data.dock.orientation + 3) % 8;
+            f->direction = (base.orientation + 3) % 8;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
             data.dock.progress = 0;
@@ -102,7 +102,7 @@ void building_shipyard::spawn_figure() {
 
 void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, &data.dock.progress);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.dock.orientation);
+    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
     iob->bind(BIND_SIGNATURE_UINT8, &data.dock.process_type);
     iob->bind(BIND_SIGNATURE_UINT8, &data.dock.reparing);
     iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[0]);
@@ -110,7 +110,7 @@ void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
 }
 
 void building_shipyard::update_map_orientation(int orientation) {
-    int image_offset = city_view_relative_orientation(data.dock.orientation);
+    int image_offset = city_view_relative_orientation(base.orientation);
     int image_id = anim(animkeys().base).first_img() + image_offset;
     map_water_add_building(id(), tile(), building_shipyard_m.building_size, image_id);
 }
@@ -134,7 +134,7 @@ void building_shipyard::highlight_waypoints() {
 }
 
 void building_shipyard::on_create(int orientation) {
-    data.dock.orientation = orientation;
+    base.orientation = orientation;
 }
 
 void building_shipyard::on_place_update_tiles(int orientation, int variant) {

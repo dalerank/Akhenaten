@@ -365,7 +365,7 @@ int building_storage_yard_for_storing(tile2i tile, e_resource resource, int dist
     if (b->has_road_access == 1) {
         map_point_store_result(b->tile, dst);
     } else {
-        dst = map_has_road_access_rotation(b->subtype.orientation, b->tile, 3);
+        dst = map_has_road_access_rotation(b->orientation, b->tile, 3);
         if (!dst.valid()) {
             return 0;
         }
@@ -773,7 +773,7 @@ storage_worker_task building_storage_yard::determine_worker_task() {
 }
 
 void building_storage_yard::on_create(int orientation) {
-    base.subtype.orientation = building_rotation_global_rotation();
+    base.orientation = building_rotation_global_rotation();
 }
 
 building* building_storage_yard::add_storageyard_space(int x, int y, building* prev) {

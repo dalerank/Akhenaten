@@ -356,7 +356,7 @@ void building_temple_complex::on_place(int orientation, int variant) {
 
 void building_temple_complex::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(34);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.orientation);
+    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
     for (int i = 0; i < 5; i++) {
         iob->bind(BIND_SIGNATURE_UINT16, &data.monuments.workers[i]);
     }

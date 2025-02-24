@@ -153,7 +153,7 @@ void building_fishing_wharf::on_undo() {
 }
 
 void building_fishing_wharf::update_map_orientation(int orientation) {
-    int image_offset = city_view_relative_orientation(data.dock.orientation);
+    int image_offset = city_view_relative_orientation(base.orientation);
     int image_id = this->anim(animkeys().base).first_img() + image_offset;
     map_water_add_building(id(), tile(), size(), image_id);
 }

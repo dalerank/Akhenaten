@@ -65,7 +65,7 @@ static int get_land_type_citizen_building(int grid_offset) {
         return CITIZEN_N1_BLOCKED;
 
     case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
-        if (b->subtype.orientation == 3) {
+        if (b->orientation == 3) {
             switch (map_property_multi_tile_xy(grid_offset)) {
             case EDGE_X0Y1:
             case EDGE_X1Y1:
