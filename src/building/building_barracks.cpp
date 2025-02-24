@@ -133,7 +133,7 @@ void building_barracks_load_state(buffer* buf) {
 }
 
 int building_recruiter::get_priority() {
-    return base.subtype.barracks_priority;
+    return data.barracks.barracks_priority;
 }
 
 bool building_recruiter::create_tower_sentry() {
@@ -223,7 +223,7 @@ void building_recruiter::spawn_figure() {
         base.figure_spawn_delay++;
         if (base.figure_spawn_delay > spawn_delay) {
             base.figure_spawn_delay = 0;
-            switch (base.subtype.barracks_priority) {
+            switch (data.barracks.barracks_priority) {
             case PRIORITY_FORT:
             if (!create_soldier())
                 create_tower_sentry();

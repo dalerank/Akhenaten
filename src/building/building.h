@@ -174,7 +174,6 @@ public:
         short native_meeting_center_id;
         short market_goods;
         short roadblock_exceptions;
-        uint8_t barracks_priority;
     } subtype;
     unsigned short road_network_id;
     //unsigned short creation_sequence_index;
@@ -258,6 +257,10 @@ public:
             e_resource first_material_id;
             e_resource second_material_id;
         } education;
+
+        struct barracks_t {
+            uint8_t barracks_priority;
+        } barracks;
 
         struct industry_t {
             short ready_production;
