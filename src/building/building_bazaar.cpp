@@ -85,16 +85,16 @@ int building_bazaar::max_goods_stock() {
 
 bool building_bazaar::is_good_accepted(int index) {
     int goods_bit = 1 << index;
-    return !(base.subtype.market_goods & goods_bit);
+    return !(data.market.market_goods & goods_bit);
 }
 
 void building_bazaar::toggle_good_accepted(int index) {
     int goods_bit = (1 << index);
-    base.subtype.market_goods ^= goods_bit;
+    data.market.market_goods ^= goods_bit;
 }
 
 void building_bazaar::unaccept_all_goods() {
-    base.subtype.market_goods = (short)0xFFFF;
+    data.market.market_goods = (short)0xFFFF;
 }
 
 building *building_bazaar::get_storage_destination() {
@@ -245,7 +245,7 @@ void building_bazaar::update_graphic() {
 }
 
 void building_bazaar::on_create(int orientation) {
-    base.subtype.market_goods = 0;
+    data.market.market_goods = 0;
     base.fancy_state = efancy_normal;
 }
 
@@ -317,7 +317,7 @@ bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i p
 }
  
 void building_bazaar::bind_dynamic(io_buffer *iob, size_t version) {
-    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_INT16, &data.market.market_goods);
     iob->bind(BIND_SIGNATURE_INT16, &data.market.pottery_demand);
     iob->bind(BIND_SIGNATURE_INT16, &data.market.luxurygoods_demand);
     iob->bind(BIND_SIGNATURE_INT16, &data.market.linen_demand);

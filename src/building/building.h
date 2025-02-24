@@ -171,8 +171,7 @@ public:
         uint16_t data;
         e_resource warehouse_resource_id;
         //        short workshop_type;
-        short native_meeting_center_id;
-        short market_goods;
+        short native_meeting_center_id;        
     } subtype;
     unsigned short road_network_id;
     //unsigned short creation_sequence_index;
@@ -241,6 +240,7 @@ public:
             short linen_demand;
             short beer_demand;
             short fetch_inventory_id;
+            short market_goods;
         } market;
         struct granary_t {
             short resource_stored[16];
