@@ -1,6 +1,7 @@
 #include "building_roadblock.h"
 
-#include "js/js_game.h"
+#include "building/building_roadblock.h"
+
 #include "city/labor.h"
 #include "graphics/elements/ui.h"
 #include "graphics/window.h"
@@ -18,12 +19,16 @@ bool building_roadblock::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i p
     return true;
 }
 
+void building_roadblock::bind_dynamic(io_buffer *iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_UINT8, &data.roadblock.exceptions);
+}
+
 void building_roadblock::set_permission(e_permission p) {
     const int permission_bit = 1 << p;
-    base.subtype.roadblock_exceptions ^= permission_bit;
+    data.roadblock.exceptions ^= permission_bit;
 }
 
 bool building_roadblock::get_permission(e_permission p) {
     const int permission_bit = 1 << p;
-    return (base.subtype.roadblock_exceptions & permission_bit);
+    return (data.roadblock.exceptions & permission_bit);
 }

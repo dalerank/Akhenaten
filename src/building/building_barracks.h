@@ -26,6 +26,7 @@ public:
     virtual void spawn_figure() override;
     virtual void update_count() const override;
     virtual bool add_resource(e_resource resource, int amount) override;
+    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
     int get_priority();
     bool create_tower_sentry();

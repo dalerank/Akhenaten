@@ -23,7 +23,7 @@ public:
 
     virtual void on_place_checks() override;
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
-
+    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void set_permission(e_permission p) override;
     virtual bool get_permission(e_permission p) override;
 };

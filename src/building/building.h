@@ -173,7 +173,6 @@ public:
         //        short workshop_type;
         short native_meeting_center_id;
         short market_goods;
-        short roadblock_exceptions;
     } subtype;
     unsigned short road_network_id;
     //unsigned short creation_sequence_index;
@@ -258,8 +257,8 @@ public:
             e_resource second_material_id;
         } education;
 
-        struct barracks_t {
-            uint8_t barracks_priority;
+        struct {
+            uint8_t priority;
         } barracks;
 
         struct industry_t {
@@ -348,6 +347,10 @@ public:
             int8_t phase;
             uint8_t upgrades;
         } monuments;
+
+        struct {
+            short exceptions;
+        } roadblock;
     } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;

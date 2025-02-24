@@ -67,7 +67,6 @@ public:
 
     int for_getting(e_resource resource, tile2i *dst);
 
-    static void ghost_preview(vec2i tile, painter &ctx);
     static storage_worker_task deliver_food_to_gettingup_granary(building *warehouse);
 
     storage_worker_task determine_worker_task();
