@@ -98,13 +98,14 @@ e_resource trader_get_buy_resource(building* b, int city_id, int amount) {
 
     building_storage_room* space = warehouse->room();
     while (space) {
-        e_resource resource = space->base.subtype.warehouse_resource_id;
+        e_resource resource = space->data.warehouse.resource_id;
         if (space->base.stored_amount_first >= amount && g_empire.can_export_resource_to_city(city_id, resource)) {
             // update stocks
             city_resource_remove_from_storageyard(resource, amount);
             space->base.stored_amount_first -= amount;
-            if (space->base.stored_amount_first <= 0)
-                space->base.subtype.warehouse_resource_id = RESOURCE_NONE;
+            if (space->base.stored_amount_first <= 0) {
+                space->data.warehouse.resource_id = RESOURCE_NONE;
+            }
 
             // update finances
             city_finance_process_export(trade_price_sell(resource));
@@ -139,7 +140,7 @@ e_resource trader_get_sell_resource(building* b, int city_id) {
     building_storage_room* space = warehouse->room();
     while (space) {
         if (space->base.stored_amount_first > 0 && space->base.stored_amount_first < 400
-            && space->base.subtype.warehouse_resource_id == resource_to_import) {
+            && space->data.warehouse.resource_id == resource_to_import) {
             space->add_import(resource_to_import);
             city_trade_next_caravan_import_resource();
             return resource_to_import;
@@ -163,7 +164,7 @@ e_resource trader_get_sell_resource(building* b, int city_id) {
             space = warehouse->room();
             while (space) {
                 if (space->base.stored_amount_first < 400
-                    && space->base.subtype.warehouse_resource_id == resource_to_import) {
+                    && space->data.warehouse.resource_id == resource_to_import) {
                     space->add_import(resource_to_import);
                     return resource_to_import;
                 }

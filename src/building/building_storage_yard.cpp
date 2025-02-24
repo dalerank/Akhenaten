@@ -83,7 +83,7 @@ int building_storage_yard::get_space_info() const {
             return 0;
         }
 
-        if (space->subtype.warehouse_resource_id) {
+        if (space->data.warehouse.resource_id) {
             total_amounts += space->stored_amount_first;
         } else {
             empty_spaces++;
@@ -106,7 +106,7 @@ int building_storage_yard::amount(e_resource resource) const {
         if (space->id <= 0)
             return 0;
 
-        if (space->subtype.warehouse_resource_id && space->subtype.warehouse_resource_id == resource) {
+        if (space->data.warehouse.resource_id && space->data.warehouse.resource_id == resource) {
             total += space->stored_amount_first;
         }
     }
@@ -126,9 +126,9 @@ int building_storage_yard::freespace(e_resource resource) {
     int freespace = 0;
     building_storage_room* space = room();
     while (space) {
-        if (!space->base.subtype.warehouse_resource_id) {
+        if (!space->data.warehouse.resource_id) {
             freespace += 400;
-        } else if(space->base.subtype.warehouse_resource_id == resource) {
+        } else if(space->data.warehouse.resource_id == resource) {
             freespace += (400 - space->base.stored_amount_first);
         }
         space = space->next_room();
@@ -140,7 +140,7 @@ int building_storage_yard::freespace() const {
     int freespace = 0;
     const building_storage_room* space = room();
     while (space) {
-        if (!space->base.subtype.warehouse_resource_id) {
+        if (!space->data.warehouse.resource_id) {
             freespace += 400;
         }
         space = space->next_room();
@@ -158,7 +158,7 @@ int building_storage_yard::add_resource(e_resource resource, bool is_produced, i
 
     // check the initial provided space itself, first
     bool look_for_space = false;
-    if (base.subtype.warehouse_resource_id && base.subtype.warehouse_resource_id != resource) {
+    if (data.warehouse.resource_id && data.warehouse.resource_id != resource) {
         look_for_space = true;
     } else if (base.stored_amount_first >= 400) {
         look_for_space = true;
@@ -174,7 +174,7 @@ int building_storage_yard::add_resource(e_resource resource, bool is_produced, i
         if (look_for_space) {
             bool space_found = false;
             while (space) {
-                if (!space->base.subtype.warehouse_resource_id || space->base.subtype.warehouse_resource_id == resource) {
+                if (!space->data.warehouse.resource_id || space->data.warehouse.resource_id == resource) {
                     if (space->base.stored_amount_first < 400) {
                         space_found = true;
                         break;
@@ -189,7 +189,7 @@ int building_storage_yard::add_resource(e_resource resource, bool is_produced, i
         }
 
         city_resource_add_to_storageyard(resource, 1);
-        space->base.subtype.warehouse_resource_id = resource;
+        space->data.warehouse.resource_id = resource;
         int space_on_tile = 400 - space->base.stored_amount_first;
         int unloading_amount = std::min<int>(space_on_tile, amount_left);
         space->base.stored_amount_first += unloading_amount;
@@ -214,7 +214,7 @@ int building_storage_yard::remove_resource(e_resource resource, int amount) {
         if (amount <= 0)
             return 0;
 
-        if (space->base.subtype.warehouse_resource_id != resource || space->base.stored_amount_first <= 0) {
+        if (space->data.warehouse.resource_id != resource || space->base.stored_amount_first <= 0) {
             space = space->next_room();
             continue;
         }
@@ -228,7 +228,7 @@ int building_storage_yard::remove_resource(e_resource resource, int amount) {
             city_resource_remove_from_storageyard(resource, space->base.stored_amount_first);
             amount -= space->base.stored_amount_first;
             space->base.stored_amount_first = 0;
-            space->base.subtype.warehouse_resource_id = RESOURCE_NONE;
+            space->data.warehouse.resource_id = RESOURCE_NONE;
         }
         space->set_image(resource);
         space = space->next_room();
@@ -248,7 +248,7 @@ void building_storageyard_remove_resource_curse(building* b, int amount) {
             continue;
         }
 
-        e_resource resource = space->base.subtype.warehouse_resource_id;
+        e_resource resource = space->data.warehouse.resource_id;
         if (space->base.stored_amount_first > amount) {
             city_resource_remove_from_storageyard(resource, amount);
             space->base.stored_amount_first -= amount;
@@ -257,7 +257,7 @@ void building_storageyard_remove_resource_curse(building* b, int amount) {
             city_resource_remove_from_storageyard(resource, space->base.stored_amount_first);
             amount -= space->base.stored_amount_first;
             space->base.stored_amount_first = 0;
-            space->base.subtype.warehouse_resource_id = RESOURCE_NONE;
+            space->data.warehouse.resource_id = RESOURCE_NONE;
         }
         space->set_image(resource);
         space = space->next_room();
@@ -392,7 +392,7 @@ int building_storage_yard::for_getting(e_resource resource, tile2i* dst) {
         const storage_t* s = space->storage();
         while (space) {
             if (space->base.stored_amount_first > 0) {
-                if (space->base.subtype.warehouse_resource_id == resource)
+                if (space->data.warehouse.resource_id == resource)
                     amounts_stored += space->base.stored_amount_first;
             }
             space = space->next_room();
@@ -463,7 +463,7 @@ static bool contains_non_stockpiled_food(building* space, const resource_list &f
         return false;
     }
 
-    e_resource resource = space->subtype.warehouse_resource_id;
+    e_resource resource = space->data.warehouse.resource_id;
     if (city_resource_is_stockpiled(resource)) {
         return false;
     }
@@ -490,7 +490,7 @@ storage_worker_task building_storage_yard_determine_getting_up_resources(buildin
                 room += 4;
             }
 
-            if (space->base.subtype.warehouse_resource_id == check_resource) { // found a space (tile) with resource on it!
+            if (space->data.warehouse.resource_id == check_resource) { // found a space (tile) with resource on it!
                 total_stored += space->base.stored_amount_first;   // add loads to total, if any!
                 room += 400 - space->base.stored_amount_first;     // add room to total, if any!
             }
@@ -533,7 +533,7 @@ storage_worker_task building_storageyard_deliver_weapons(building *warehouse) {
             for (int i = 0; i < 8; i++) {
                 space = space->next();
                 if (space->id > 0 && space->stored_amount_first > 0
-                    && space->subtype.warehouse_resource_id == RESOURCE_WEAPONS) {
+                    && space->data.warehouse.resource_id == RESOURCE_WEAPONS) {
                     available += space->stored_amount_first;
                 }
             }
@@ -564,7 +564,7 @@ storage_worker_task building_storageyard_deliver_timber_to_shipyard_school(build
         for (int i = 0; i < 8; i++) {
             space = space->next();
             if (space->id > 0 && space->stored_amount_first > 0
-                && space->subtype.warehouse_resource_id == RESOURCE_TIMBER) {
+                && space->data.warehouse.resource_id == RESOURCE_TIMBER) {
                 available += space->stored_amount_first;
             }
         }
@@ -594,7 +594,7 @@ storage_worker_task building_storageyard_deliver_papyrus_to_scribal_school(build
         for (int i = 0; i < 8; i++) {
             space = space->next();
             if (space->id > 0 && space->stored_amount_first > 0
-                && space->subtype.warehouse_resource_id == RESOURCE_PAPYRUS) {
+                && space->data.warehouse.resource_id == RESOURCE_PAPYRUS) {
                 available += space->stored_amount_first;
             }
         }
@@ -616,17 +616,17 @@ storage_worker_task building_storageyard_deliver_resource_to_workshop(building *
             continue;
         }
 
-        e_resource check_resource = space->subtype.warehouse_resource_id;
+        e_resource check_resource = space->data.warehouse.resource_id;
         if (city_resource_is_stockpiled(check_resource)) {
             continue;
         }
 
         storage_worker_task task = {STORAGEYARD_TASK_NONE};
         buildings_workshop_do([&] (building &b) {
-            if (!b.need_resource(space->subtype.warehouse_resource_id) || b.need_resource_amount(check_resource) < 100) {
+            if (!b.need_resource(space->data.warehouse.resource_id) || b.need_resource_amount(check_resource) < 100) {
                 return;
             }
-            task = {STORAGEYARD_TASK_DELIVERING, space, 100, space->subtype.warehouse_resource_id};
+            task = {STORAGEYARD_TASK_DELIVERING, space, 100, space->data.warehouse.resource_id};
         });
 
         if (task.result == STORAGEYARD_TASK_DELIVERING) {
@@ -648,7 +648,7 @@ storage_worker_task building_storage_yard::deliver_food_to_gettingup_granary(bui
         space = space->next();
         if (contains_non_stockpiled_food(space, granary_resources)) {
             // always one load only for granaries?
-            return {STORAGEYARD_TASK_DELIVERING, space, 100, space->subtype.warehouse_resource_id};
+            return {STORAGEYARD_TASK_DELIVERING, space, 100, space->data.warehouse.resource_id};
         }
     }
 
@@ -666,7 +666,7 @@ storage_worker_task building_storageyard_deliver_food_to_accepting_granary(build
             space = space->next();
             if (contains_non_stockpiled_food(space, granary_resources)) {
                 // always one load only for granaries?
-                return {STORAGEYARD_TASK_DELIVERING, space, 100, space->subtype.warehouse_resource_id};
+                return {STORAGEYARD_TASK_DELIVERING, space, 100, space->data.warehouse.resource_id};
             }
         }
     }
@@ -691,11 +691,11 @@ storage_worker_task building_storageyard_deliver_to_monuments(building *warehous
     for (int i = 0; i < 8; i++) {
         space = space->next();
         int available = space->stored_amount_first;
-        if (space->id <= 0 || !space->subtype.warehouse_resource_id || available <= 0) {
+        if (space->id <= 0 || !space->data.warehouse.resource_id || available <= 0) {
             continue;
         }
 
-        e_resource resource = space->subtype.warehouse_resource_id;
+        e_resource resource = space->data.warehouse.resource_id;
         if (city_resource_is_stockpiled(resource)) {
             continue;
         }
@@ -764,7 +764,7 @@ storage_worker_task building_storage_yard::determine_worker_task() {
         for (int i = 0; i < 8; i++) {
             space = space->next();
             if (space->id > 0 && space->stored_amount_first > 0) {
-                return {STORAGEYARD_TASK_DELIVERING, space, space->stored_amount_first, space->subtype.warehouse_resource_id};
+                return {STORAGEYARD_TASK_DELIVERING, space, space->stored_amount_first, space->data.warehouse.resource_id};
             }
         }
     }

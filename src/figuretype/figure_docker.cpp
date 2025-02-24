@@ -44,7 +44,7 @@ bool figure_docker::try_import_resource(building* b, e_resource resource, int ci
     // try existing storage bay with the same resource
     building_storage_room* space = warehouse->room();
     while (space) {
-        if (space->base.stored_amount_first > 0 && space->base.stored_amount_first < 400 && space->base.subtype.warehouse_resource_id == resource) {
+        if (space->base.stored_amount_first > 0 && space->base.stored_amount_first < 400 && space->data.warehouse.resource_id == resource) {
             trade_route.increase_traded(resource, 100);
             space->add_import(resource);
             return true;
@@ -54,7 +54,7 @@ bool figure_docker::try_import_resource(building* b, e_resource resource, int ci
     // try unused storage bay
     space = warehouse->room();
     while (space) {
-        if (space->base.subtype.warehouse_resource_id == RESOURCE_NONE) {
+        if (space->data.warehouse.resource_id == RESOURCE_NONE) {
             trade_route.increase_traded(resource, 100);
             space->add_import(resource);
             return true;
@@ -76,7 +76,7 @@ int figure_docker::try_export_resource(building* b, e_resource resource, int cit
 
     building_storage_room* space = warehouse->room();
     while (space) {
-        if (space->base.stored_amount_first && space->base.subtype.warehouse_resource_id == resource) {
+        if (space->base.stored_amount_first && space->data.warehouse.resource_id == resource) {
             auto &trade_route = g_empire.city(city_id)->get_route();
             trade_route.increase_traded(resource, 100);
             space->remove_export(resource);
@@ -130,11 +130,11 @@ int figure_docker::get_closest_warehouse_for_import(tile2i pos, int city_id, int
         int distance_penalty = 32;
         building_storage_room *space = warehouse->room();
         while (space) {
-            if (space->base.subtype.warehouse_resource_id == RESOURCE_NONE) {
+            if (space->data.warehouse.resource_id == RESOURCE_NONE) {
                 distance_penalty -= 8;
             }
 
-            if (space->base.subtype.warehouse_resource_id == resource && space->base.stored_amount_first < 400) {
+            if (space->data.warehouse.resource_id == resource && space->base.stored_amount_first < 400) {
                 distance_penalty -= 4;
             }
 
@@ -204,7 +204,7 @@ int figure_docker::get_closest_warehouse_for_export(tile2i pos, int city_id, int
         building* space = b;
         for (int s = 0; s < 8; s++) {
             space = space->next();
-            if (space->id && space->subtype.warehouse_resource_id == resource && space->stored_amount_first > 0)
+            if (space->id && space->data.warehouse.resource_id == resource && space->stored_amount_first > 0)
                 distance_penalty--;
         }
 

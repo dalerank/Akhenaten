@@ -25,6 +25,10 @@ void building_storage_room::window_info_foreground(object_info &ctx) {
     yard()->window_info_foreground(ctx);
 }
 
+void building_storage_room::bind_dynamic(io_buffer *iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_UINT8, &data.warehouse.resource_id);
+}
+
 const storage_t *building_storage_room::storage() {
     return building_storage_get(base.storage_id);
 }
@@ -44,7 +48,7 @@ void building_storage_room::set_image(e_resource resource) {
 void building_storage_room::add_import(e_resource resource) {
     city_resource_add_to_storageyard(resource, 100);
     base.stored_amount_first += 100;
-    base.subtype.warehouse_resource_id = resource;
+    data.warehouse.resource_id = resource;
 
     int price = trade_price_buy(resource);
     city_finance_process_import(price);
@@ -56,7 +60,7 @@ void building_storage_room::remove_export(e_resource resource) {
     city_resource_remove_from_storageyard(resource, 100);
     base.stored_amount_first -= 100;
     if (base.stored_amount_first <= 0) {
-        base.subtype.warehouse_resource_id = RESOURCE_NONE;
+        data.warehouse.resource_id = RESOURCE_NONE;
     }
 
     int price = trade_price_sell(resource);
@@ -74,12 +78,12 @@ int building_storage_room::distance_with_penalty(tile2i src, e_resource resource
     }
 
     // check for spaces that already has some of the resource, first
-    if (base.subtype.warehouse_resource_id == resource && base.stored_amount_first < 400) {
+    if (data.warehouse.resource_id == resource && base.stored_amount_first < 400) {
         return calc_distance_with_penalty(tile(), src, distance_from_entry, base.distance_from_entry);
     }
 
     // second pass, return the first
-    if (base.subtype.warehouse_resource_id == RESOURCE_NONE) { // empty warehouse space
+    if (data.warehouse.resource_id == RESOURCE_NONE) { // empty warehouse space
         return calc_distance_with_penalty(tile(), src, distance_from_entry, base.distance_from_entry);
     }
 

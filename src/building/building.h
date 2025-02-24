@@ -169,7 +169,6 @@ public:
     union {
         e_house_level house_level;
         uint16_t data;
-        e_resource warehouse_resource_id;
         //        short workshop_type;
         short native_meeting_center_id;        
     } subtype;
@@ -245,6 +244,9 @@ public:
         struct granary_t {
             short resource_stored[16];
         } granary;
+        struct {
+            e_resource resource_id;
+        } warehouse;
         struct guild_t {
             uint8_t max_workers;
         } guild;
