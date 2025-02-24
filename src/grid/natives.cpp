@@ -68,7 +68,7 @@ static void determine_meeting_center(void) {
                     min_meeting_id = meetings[n];
                 }
             }
-            b->subtype.native_meeting_center_id = min_meeting_id;
+            b->native_meeting_center_id = min_meeting_id;
         }
     }
 }

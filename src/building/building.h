@@ -168,10 +168,9 @@ public:
     e_building_type type;
     union {
         e_house_level house_level;
-        uint16_t data;
-        //        short workshop_type;
-        short native_meeting_center_id;        
+        uint16_t data;       
     } subtype;
+    short native_meeting_center_id;
     unsigned short road_network_id;
     //unsigned short creation_sequence_index;
     short houses_covered;
