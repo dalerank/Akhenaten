@@ -5,6 +5,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "city/city_figures.h"
+#include "building/building_bazaar.h"
 
 figures::model_t<figure_delivery_boy> delivery_boy_m;
 
@@ -21,6 +22,7 @@ void figure_delivery_boy::figure_before_action() {
 
 void figure_delivery_boy::figure_action() {
     figure* leader = figure_get(base.leading_figure_id);
+    auto bazaar = home()->dcast_bazaar();
     if (leader->state == FIGURE_STATE_ALIVE) {
         if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY) {
             follow_ticks(1);
@@ -31,11 +33,11 @@ void figure_delivery_boy::figure_action() {
         if (config_get(CONFIG_GP_CH_DELIVERY_BOY_GOES_TO_MARKET_ALONE)) {
             base.leading_figure_id = 0;
             if (do_returnhome(TERRAIN_USAGE_ROADS)) {
-                home()->data.market.inventory[base.collecting_item_id] += 100;
+                bazaar->runtime_data().inventory[base.collecting_item_id] += 100;
                 poof();
             }
         } else {
-            home()->data.market.inventory[base.collecting_item_id] += 100;
+            bazaar->runtime_data().inventory[base.collecting_item_id] += 100;
             poof();
         }
     }

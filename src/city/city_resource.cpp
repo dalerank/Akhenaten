@@ -5,6 +5,7 @@
 #include "building/model.h"
 #include "building/building_storage_yard.h"
 #include "building/building_granary.h"
+#include "building/building_bazaar.h"
 #include "city/city.h"
 #include "city/warning.h"
 #include "graphics/window.h"
@@ -384,11 +385,14 @@ static void calculate_available_food() {
 void city_resource_calculate_food_stocks_and_supply_wheat() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Food Stocks Update");
     calculate_available_food();
-    if (scenario_property_kingdom_supplies_grain()) {
-        for (int i = 1; i < MAX_BUILDINGS; i++) {
-            building* b = building_get(i);
-            if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_BAZAAR)
-                b->data.market.inventory[0] = 200;
+    if (!scenario_property_kingdom_supplies_grain()) {
+        return;
+    }
+
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building_bazaar* bazaar = building_get(i)->dcast_bazaar();
+        if (bazaar && bazaar->state() == BUILDING_STATE_VALID) {
+            bazaar->runtime_data().inventory[0] = 200;
         }
     }
 }

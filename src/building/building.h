@@ -212,15 +212,6 @@ public:
     short formation_id;
     union impl_data_t {
         char data[512] = { 0 };
-        struct market_t {
-            uint16_t inventory[8];
-            short pottery_demand;
-            short luxurygoods_demand;
-            short linen_demand;
-            short beer_demand;
-            short fetch_inventory_id;
-            short market_goods;
-        } market;
         struct granary_t {
             short resource_stored[16];
         } granary;

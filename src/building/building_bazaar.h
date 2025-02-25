@@ -6,9 +6,19 @@
 class building_bazaar : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_BAZAAR, building_bazaar)
-
     building_bazaar(building &b) : building_impl(b) {}
+
     virtual building_bazaar *dcast_bazaar() override { return this; }
+
+    struct runtime_data_t {
+        uint16_t inventory[8];
+        short pottery_demand;
+        short luxurygoods_demand;
+        short linen_demand;
+        short beer_demand;
+        short fetch_inventory_id;
+        short market_goods;
+    };
 
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;
@@ -29,5 +39,8 @@ public:
     void unaccept_all_goods();
     inline int allow_food_types() const { return 4; }
     inline int allow_good_types() const { return 4; }
+
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 };
 

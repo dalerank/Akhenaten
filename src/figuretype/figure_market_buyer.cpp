@@ -6,6 +6,7 @@
 #include "window/building/figures.h"
 #include "core/log.h"
 #include "building/building_storage_yard.h"
+#include "building/building_bazaar.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
@@ -126,19 +127,32 @@ sound_key figure_market_buyer::phrase_key() const {
 }
 
 void distribute_good(building* b, building* market, int stock_wanted, int inventory_resource) {
+    building_bazaar *bazaar = market->dcast_bazaar();
+    if (!bazaar) {
+        return;
+    }
+
     int amount_wanted = stock_wanted - b->data.house.inventory[inventory_resource];
-    if (market->data.market.inventory[inventory_resource] > 0 && amount_wanted > 0) {
-        if (amount_wanted <= market->data.market.inventory[inventory_resource]) {
+
+    auto &d = bazaar->runtime_data();
+    if (d.inventory[inventory_resource] > 0 && amount_wanted > 0) {
+        if (amount_wanted <= d.inventory[inventory_resource]) {
             b->data.house.inventory[inventory_resource] += amount_wanted;
-            market->data.market.inventory[inventory_resource] -= amount_wanted;
+            d.inventory[inventory_resource] -= amount_wanted;
         } else {
-            b->data.house.inventory[inventory_resource] += market->data.market.inventory[inventory_resource];
-            market->data.market.inventory[inventory_resource] = 0;
+            b->data.house.inventory[inventory_resource] += d.inventory[inventory_resource];
+            d.inventory[inventory_resource] = 0;
         }
     }
 }
 
 void distribute_market_resources(building* b, building* market) {
+    building_bazaar *bazaar = market->dcast_bazaar();
+    if (!bazaar) {
+        return;
+    }
+
+    auto &d = bazaar->runtime_data();
     int level = b->data.house.level;
     if (level < HOUSE_PALATIAL_ESTATE) {
         level++;
@@ -158,19 +172,19 @@ void distribute_market_resources(building* b, building* market) {
                 continue;
             }
 
-            if (market->data.market.inventory[i] >= max_food_stocks) {
+            if (d.inventory[i] >= max_food_stocks) {
                 b->data.house.foods[i] += max_food_stocks;
-                market->data.market.inventory[i] -= max_food_stocks;
+                d.inventory[i] -= max_food_stocks;
                 break;
-            } else if (market->data.market.inventory[i]) {
-                b->data.house.foods[i] += market->data.market.inventory[i];
-                market->data.market.inventory[i] = 0;
+            } else if (d.inventory[i]) {
+                b->data.house.foods[i] += d.inventory[i];
+                d.inventory[i] = 0;
                 break;
             }
         }
     }
     if (model->pottery) {
-        market->data.market.pottery_demand = 10;
+        d.pottery_demand = 10;
         distribute_good(b, market, 8 * model->pottery, INVENTORY_GOOD1);
     }
     int goods_no = 4;
@@ -178,15 +192,15 @@ void distribute_market_resources(building* b, building* market) {
         goods_no = 8;
 
     if (model->jewelry) {
-        market->data.market.luxurygoods_demand = 10;
+        d.luxurygoods_demand = 10;
         distribute_good(b, market, goods_no * model->jewelry, INVENTORY_GOOD2);
     }
     if (model->linen) {
-        market->data.market.linen_demand = 10;
+        d.linen_demand = 10;
         distribute_good(b, market, goods_no * model->linen, INVENTORY_GOOD3);
     }
     if (model->beer) {
-        market->data.market.beer_demand = 10;
+        d.beer_demand = 10;
         distribute_good(b, market, goods_no * model->beer, INVENTORY_GOOD4);
     }
 }
@@ -292,6 +306,11 @@ bool figure_market_buyer::window_info_background(object_info &c) {
 }
 
 int figure_market_buyer::take_food_from_storage(building* market, building* b) {
+    building_bazaar *bazaar = market->dcast_bazaar();
+    if (!bazaar) {
+        return 0;
+    }
+
     e_resource resource;
     switch (base.collecting_item_id) {
     case 0: resource = g_city.allowed_foods(0); break;
@@ -308,7 +327,7 @@ int figure_market_buyer::take_food_from_storage(building* market, building* b) {
         return 0;
     }
 
-    int market_units = market->data.market.inventory[base.collecting_item_id];
+    int market_units = bazaar->runtime_data().inventory[base.collecting_item_id];
     int storage_units = storage->amount(resource);
 
     const int max_units = (base.collecting_item_id == 0 ? 700 : 600) - market_units;

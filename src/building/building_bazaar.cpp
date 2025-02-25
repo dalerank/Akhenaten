@@ -74,27 +74,30 @@ struct resource_data {
 };
 
 int building_bazaar::max_food_stock() {
-    auto it = std::max_element(data.market.inventory + INVENTORY_MIN_FOOD, data.market.inventory + INVENTORY_MAX_FOOD);
+    const auto &d = runtime_data();
+    auto it = std::max_element(d.inventory + INVENTORY_MIN_FOOD, d.inventory + INVENTORY_MAX_FOOD);
     return *it;
 }
 
 int building_bazaar::max_goods_stock() {
-    auto it = std::max_element(data.market.inventory + INVENTORY_MIN_GOOD, data.market.inventory + INVENTORY_MAX_GOOD);
+    const auto &d = runtime_data();
+    auto it = std::max_element(d.inventory + INVENTORY_MIN_GOOD, d.inventory + INVENTORY_MAX_GOOD);
     return *it;
 }
 
 bool building_bazaar::is_good_accepted(int index) {
     int goods_bit = 1 << index;
-    return !(data.market.market_goods & goods_bit);
+    return !(runtime_data().market_goods & goods_bit);
 }
 
 void building_bazaar::toggle_good_accepted(int index) {
     int goods_bit = (1 << index);
-    data.market.market_goods ^= goods_bit;
+
+    runtime_data().market_goods ^= goods_bit;
 }
 
 void building_bazaar::unaccept_all_goods() {
-    data.market.market_goods = (short)0xFFFF;
+    runtime_data().market_goods = (short)0xFFFF;
 }
 
 building *building_bazaar::get_storage_destination() {
@@ -143,26 +146,27 @@ building *building_bazaar::get_storage_destination() {
     }, BUILDING_GRANARY, BUILDING_STORAGE_YARD);
 
     // update demands
-    if (data.market.pottery_demand) {
-        data.market.pottery_demand--;
+    auto &d = runtime_data();
+    if (d.pottery_demand) {
+        d.pottery_demand--;
     } else {
         resources[INVENTORY_GOOD1].num_buildings = 0;
     }
 
-    if (data.market.luxurygoods_demand) {
-        data.market.luxurygoods_demand--;
+    if (d.luxurygoods_demand) {
+        d.luxurygoods_demand--;
     } else {
         resources[INVENTORY_GOOD2].num_buildings = 0;
     }
 
-    if (data.market.linen_demand) {
-        data.market.linen_demand--;
+    if (d.linen_demand) {
+        d.linen_demand--;
     } else {
         resources[INVENTORY_GOOD3].num_buildings = 0;
     }
 
-    if (data.market.beer_demand) {
-        data.market.beer_demand--;
+    if (d.beer_demand) {
+        d.beer_demand--;
     } else {
         resources[INVENTORY_GOOD4].num_buildings = 0;
     }
@@ -181,8 +185,8 @@ building *building_bazaar::get_storage_destination() {
 
     // prefer food if we don't have it
     for (int foodi = INVENTORY_FOOD1; foodi <= INVENTORY_FOOD4; ++foodi) {
-        if (!data.market.inventory[foodi] && resources[foodi].num_buildings && is_good_accepted(foodi)) {
-            data.market.fetch_inventory_id = foodi;
+        if (!d.inventory[foodi] && resources[foodi].num_buildings && is_good_accepted(foodi)) {
+            d.fetch_inventory_id = foodi;
             return building_get(resources[foodi].building_id);
 
         }
@@ -190,8 +194,8 @@ building *building_bazaar::get_storage_destination() {
     
     // then prefer resource if we don't have it
     for (int goodi = INVENTORY_GOOD1; goodi <= INVENTORY_GOOD4; ++goodi) {
-        if (!data.market.inventory[goodi] && resources[goodi].num_buildings && is_good_accepted(goodi)) {
-            data.market.fetch_inventory_id = goodi;
+        if (!d.inventory[goodi] && resources[goodi].num_buildings && is_good_accepted(goodi)) {
+            d.fetch_inventory_id = goodi;
             return building_get(resources[goodi].building_id);
 
         }
@@ -201,24 +205,24 @@ building *building_bazaar::get_storage_destination() {
     int min_stock = 50;
     int fetch_inventory = -1;
     for (int goodi = INVENTORY_FOOD1; goodi <= INVENTORY_GOOD4; ++goodi) {
-        if (resources[0].num_buildings && data.market.inventory[0] < min_stock && is_good_accepted(0)) {
-            min_stock = data.market.inventory[goodi];
+        if (resources[0].num_buildings && d.inventory[0] < min_stock && is_good_accepted(0)) {
+            min_stock = d.inventory[goodi];
             fetch_inventory = goodi;
         }
     }
 
     if (fetch_inventory == -1) {
         // all items well stocked: pick food below threshold
-        if (resources[INVENTORY_FOOD1].num_buildings && data.market.inventory[INVENTORY_FOOD1] < 600 && is_good_accepted(INVENTORY_FOOD1)) {
+        if (resources[INVENTORY_FOOD1].num_buildings && d.inventory[INVENTORY_FOOD1] < 600 && is_good_accepted(INVENTORY_FOOD1)) {
             fetch_inventory = INVENTORY_FOOD1;
         }
-        if (resources[INVENTORY_FOOD2].num_buildings && data.market.inventory[INVENTORY_FOOD2] < 400 && is_good_accepted(INVENTORY_FOOD2)) {
+        if (resources[INVENTORY_FOOD2].num_buildings && d.inventory[INVENTORY_FOOD2] < 400 && is_good_accepted(INVENTORY_FOOD2)) {
             fetch_inventory = INVENTORY_FOOD1;
         }
-        if (resources[INVENTORY_FOOD3].num_buildings && data.market.inventory[INVENTORY_FOOD3] < 400 && is_good_accepted(INVENTORY_FOOD3)) {
+        if (resources[INVENTORY_FOOD3].num_buildings && d.inventory[INVENTORY_FOOD3] < 400 && is_good_accepted(INVENTORY_FOOD3)) {
             fetch_inventory = INVENTORY_FOOD3;
         }
-        if (resources[INVENTORY_FOOD4].num_buildings && data.market.inventory[INVENTORY_FOOD4] < 400 && is_good_accepted(INVENTORY_FOOD4)) {
+        if (resources[INVENTORY_FOOD4].num_buildings && d.inventory[INVENTORY_FOOD4] < 400 && is_good_accepted(INVENTORY_FOOD4)) {
             fetch_inventory = INVENTORY_FOOD4;
         }
     }
@@ -227,7 +231,7 @@ building *building_bazaar::get_storage_destination() {
         return building_get(0);
     }
 
-    data.market.fetch_inventory_id = fetch_inventory;
+    d.fetch_inventory_id = fetch_inventory;
     return building_get(resources[fetch_inventory].building_id);
 }
 
@@ -245,7 +249,7 @@ void building_bazaar::update_graphic() {
 }
 
 void building_bazaar::on_create(int orientation) {
-    data.market.market_goods = 0;
+    runtime_data().market_goods = 0;
     base.fancy_state = efancy_normal;
 }
 
@@ -256,6 +260,7 @@ void building_bazaar::spawn_figure() {
         return;
     }
 
+    const auto &d = runtime_data();
     // market buyer
     int spawn_delay = base.figure_spawn_timer();
     if (!base.has_figure_of_type(BUILDING_SLOT_MARKET_BUYER, FIGURE_MARKET_BUYER)) {
@@ -265,14 +270,14 @@ void building_bazaar::spawn_figure() {
             if (dest->id) {
                 base.figure_spawn_delay = 0;
                 figure *f = base.create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, BUILDING_SLOT_MARKET_BUYER);
-                f->collecting_item_id = data.market.fetch_inventory_id;
+                f->collecting_item_id = d.fetch_inventory_id;
             }
         }
     }
 
     // market trader
     if (!base.has_figure_of_type(BUILDING_SLOT_SERVICE, FIGURE_MARKET_TRADER)) {
-        int bazar_inventory = std::accumulate(data.market.inventory, data.market.inventory + 7, 0);
+        int bazar_inventory = std::accumulate(d.inventory, d.inventory + 7, 0);
         if (bazar_inventory > 0) { // do not spawn trader if bazaar is 100% empty!
             base.figure_spawn_delay++;
             if (base.figure_spawn_delay > spawn_delay) {
@@ -317,17 +322,19 @@ bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i p
 }
  
 void building_bazaar::bind_dynamic(io_buffer *iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_INT16, &data.market.market_goods);
-    iob->bind(BIND_SIGNATURE_INT16, &data.market.pottery_demand);
-    iob->bind(BIND_SIGNATURE_INT16, &data.market.luxurygoods_demand);
-    iob->bind(BIND_SIGNATURE_INT16, &data.market.linen_demand);
-    iob->bind(BIND_SIGNATURE_INT16, &data.market.beer_demand);
+    auto &d = runtime_data();
+
+    iob->bind(BIND_SIGNATURE_INT16, &d.market_goods);
+    iob->bind(BIND_SIGNATURE_INT16, &d.pottery_demand);
+    iob->bind(BIND_SIGNATURE_INT16, &d.luxurygoods_demand);
+    iob->bind(BIND_SIGNATURE_INT16, &d.linen_demand);
+    iob->bind(BIND_SIGNATURE_INT16, &d.beer_demand);
 
     uint16_t tmp;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         iob->bind(BIND_SIGNATURE_UINT16, &tmp);
-        iob->bind(BIND_SIGNATURE_UINT16, &data.market.inventory[i]);
+        iob->bind(BIND_SIGNATURE_UINT16, &d.inventory[i]);
     }
 
-    iob->bind(BIND_SIGNATURE_UINT8, &data.market.fetch_inventory_id);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.fetch_inventory_id);
 }

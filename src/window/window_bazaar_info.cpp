@@ -49,8 +49,8 @@ void bazaar_info_window::init(object_info &c) {
     }
 
     int image_id = image_id_resource_icon(0);
-    auto &data = bazaar->data;
-    if (data.market.inventory[0] || data.market.inventory[1] || data.market.inventory[2] || data.market.inventory[3]) {
+    auto &d = bazaar->runtime_data();
+    if (d.inventory[0] || d.inventory[1] || d.inventory[2] || d.inventory[3]) {
         figure *buyer = bazaar->get_figure(BUILDING_SLOT_MARKET_BUYER);
         figure *trader = bazaar->get_figure(BUILDING_SLOT_SERVICE);
         if (buyer->is_valid() && trader->is_valid()) {
@@ -73,7 +73,7 @@ void bazaar_info_window::init(object_info &c) {
         e_resource food_res = g_city.allowed_foods(i);
         ui[id_icon].image(food_res);
         ui[id_text].font(bazaar->is_good_accepted(i) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
-        ui[id_text].text_var(food_res ? "%u" : "", data.market.inventory[INVENTORY_FOOD1 + i]);
+        ui[id_text].text_var(food_res ? "%u" : "", d.inventory[INVENTORY_FOOD1 + i]);
     }
 
     // good stocks
@@ -84,7 +84,7 @@ void bazaar_info_window::init(object_info &c) {
         e_resource good_res = INV_RESOURCES[i];
         ui[id_icon].image(good_res);
         ui[id_text].font(bazaar->is_good_accepted(INVENTORY_GOOD1 + i) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW);
-        ui[id_text].text_var(good_res ? "%u" : "", data.market.inventory[INVENTORY_GOOD1 + i]);
+        ui[id_text].text_var(good_res ? "%u" : "", d.inventory[INVENTORY_GOOD1 + i]);
     }
 
     ui["orders"].onclick([&c] {
