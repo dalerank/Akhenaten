@@ -27,6 +27,7 @@ public:
 
     int grid_offset(int v);
     int grid_offset();
+    int grid_offset() const;
     int abs_x(int v);
     int abs_y(int v);
 

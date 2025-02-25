@@ -106,6 +106,7 @@ void building_fishing_wharf::update_graphic() {
 void building_fishing_wharf::spawn_figure() {
     check_labor_problem();
 
+    auto &d = runtime_data();
     if (has_road_access()) {
         common_spawn_labor_seeker(100);
         int pct_workers = worker_percentage();
@@ -118,7 +119,8 @@ void building_fishing_wharf::spawn_figure() {
             if (!boat_id && base.figure_spawn_delay > spawn_delay) {
                 base.figure_spawn_delay = 0;
 
-                int dock_tile = data.dock.dock_tiles[0];
+
+                int dock_tile = d.dock_tiles[0];
                 if (config_get(CONFIG_GP_CH_FISHING_WHARF_SPAWN_BOATS) && dock_tile > 0) {
                     tile2i dtile(dock_tile);
                     figure* f = figure_create(FIGURE_FISHING_BOAT, dtile, DIR_4_BOTTOM_LEFT);
@@ -134,8 +136,8 @@ void building_fishing_wharf::spawn_figure() {
 
     bool cart_spawned = base.common_spawn_goods_output_cartpusher();
     if (cart_spawned) {
-        if (data.dock.has_fish) {
-            data.dock.has_fish = (base.stored_amount_first > 0);
+        if (d.has_fish) {
+            d.has_fish = (base.stored_amount_first > 0);
         }
     }
 }
@@ -160,8 +162,9 @@ void building_fishing_wharf::update_map_orientation(int orientation) {
 
 bool building_fishing_wharf::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     auto &anim_wharf = base.anim;
+    auto &d = runtime_data();
     if (anim_wharf.valid()) {
-        int img_id = anim_wharf.start() + (data.dock.docker_anim_frame / anim_wharf.frame_duration) * 4;
+        int img_id = anim_wharf.start() + (d.docker_anim_frame / anim_wharf.frame_duration) * 4;
         const image_t *img = image_get(img_id);
         ImageDraw::img_generic(ctx, img_id, point + anim_wharf.pos, color_mask, 1.f, ImgFlag_InternalOffset);
     }
@@ -172,11 +175,14 @@ bool building_fishing_wharf::draw_ornaments_and_animations_height(painter &ctx, 
 void building_fishing_wharf::highlight_waypoints() {
     building_impl::highlight_waypoints();
 
-    map_highlight_set(data.dock.dock_tiles[0], ehighligth_green);
-    map_highlight_set(data.dock.dock_tiles[1], ehighligth_green);
+    const auto &d = runtime_data();
+    map_highlight_set(d.dock_tiles[0], ehighligth_green);
+    map_highlight_set(d.dock_tiles[1], ehighligth_green);
 }
 
 void building_fishing_wharf::bind_dynamic(io_buffer *iob, size_t version) {
     building_wharf::bind_dynamic(iob, version);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.dock.has_fish);
+
+    auto &d = runtime_data();
+    iob->bind(BIND_SIGNATURE_UINT8, &d.has_fish);
 }

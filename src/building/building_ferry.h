@@ -12,6 +12,10 @@ public:
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
     };
 
+    struct runtime_data_t {
+        int dock_tiles[2];
+    };
+
     virtual building_ferry *dcast_ferry() override { return this; }
     virtual building_routeblock *dcast_routeblock() override { return this; }
 
@@ -23,6 +27,10 @@ public:
     virtual bool force_draw_top_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual void highlight_waypoints() override;
     virtual void bind_dynamic(io_buffer *iob, size_t verrsion) override;
+    virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
+
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 
     virtual bool get_permission(e_permission p) override { return false; }
 };

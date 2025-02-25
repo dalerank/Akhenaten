@@ -325,8 +325,10 @@ int* calculate_number_of_each_housing_type(void) {
             || b->state == BUILDING_STATE_DELETED_BY_GAME || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
             continue;
         }
-        if (b->house_size)
-            housing_type_counts[b->subtype.house_level] += 1;
+
+        if (b->house_size) {
+            housing_type_counts[b->data.house.level] += 1;
+        }
     }
 
     return housing_type_counts;
@@ -373,19 +375,19 @@ static int calculate_people_per_house_type(void) {
         if (b->house_size) {
             int pop = b->house_population;
             total += pop;
-            if (b->subtype.house_level <= HOUSE_STURDY_HUT) {
+            if (b->data.house.level <= HOUSE_STURDY_HUT) {
                 city_data.population.people_in_huts += pop;
             }
 
-            if (b->subtype.house_level <= HOUSE_COMMON_SHANTY) {
+            if (b->data.house.level <= HOUSE_COMMON_SHANTY) {
                 city_data.population.people_in_shanties += pop;
             }
 
-            if (b->subtype.house_level >= HOUSE_COMMON_RESIDENCE) {
+            if (b->data.house.level >= HOUSE_COMMON_RESIDENCE) {
                 city_data.population.people_in_residences += pop;
             }
 
-            if (b->subtype.house_level >= HOUSE_COMMON_MANOR) {
+            if (b->data.house.level >= HOUSE_COMMON_MANOR) {
                 city_data.population.people_in_manors += pop;
             }
         }

@@ -44,7 +44,7 @@ void building_dock::static_params::planer_setup_preview_graphics(build_planner &
 
 void building_dock::on_create(int orientation) {
     base.orientation = orientation;
-    data.dock.trading_goods.one();
+    runtime_data().trading_goods.one();
 }
 
 void building_dock::on_place(int orientation, int variant) {
@@ -58,7 +58,7 @@ void building_dock::on_destroy() {
 }
 
 bool building_dock::can_play_animation() const {
-    if (data.dock.num_ships > 0) {
+    if (runtime_data().num_ships > 0) {
         return true;
     }
 
@@ -108,12 +108,13 @@ void building_dock::spawn_figure() {
     }
     // count existing dockers
     int existing_dockers = 0;
+    auto &d = runtime_data();
     for (int i = 0; i < 3; i++) {
-        if (data.dock.docker_ids[i]) {
-            if (figure_get(data.dock.docker_ids[i])->type == FIGURE_DOCKER) {
+        if (d.docker_ids[i]) {
+            if (figure_get(d.docker_ids[i])->type == FIGURE_DOCKER) {
                 existing_dockers++;
             } else {
-                data.dock.docker_ids[i] = 0;
+                d.docker_ids[i] = 0;
             }
         }
     }
@@ -121,8 +122,8 @@ void building_dock::spawn_figure() {
     if (existing_dockers > max_dockers) {
         // too many dockers, poof one of them
         for (int i = 2; i >= 0; i--) {
-            if (data.dock.docker_ids[i]) {
-                figure_get(data.dock.docker_ids[i])->poof();
+            if (d.docker_ids[i]) {
+                figure_get(d.docker_ids[i])->poof();
                 return;
             }
         }
@@ -133,8 +134,8 @@ void building_dock::spawn_figure() {
         f->action_state = FIGURE_ACTION_132_DOCKER_IDLING;
         f->set_home(&base);
         for (int i = 0; i < 3; i++) {
-            if (!data.dock.docker_ids[i]) {
-                data.dock.docker_ids[i] = f->id;
+            if (!d.docker_ids[i]) {
+                d.docker_ids[i] = f->id;
                 return;
             }
         }
@@ -143,9 +144,10 @@ void building_dock::spawn_figure() {
 
 void building_dock::on_tick(bool refresh_only) {
     auto &anim_wharf = base.anim;
+    auto &d = runtime_data();
     if (anim_wharf.valid()) {
-        data.dock.docker_anim_frame++;
-        data.dock.docker_anim_frame %= (anim_wharf.max_frames * anim_wharf.frame_duration);
+        d.docker_anim_frame++;
+        d.docker_anim_frame %= (anim_wharf.max_frames * anim_wharf.frame_duration);
     }
 }
 
@@ -169,37 +171,39 @@ void building_dock::update_graphic() {
 
 bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color color_mask) {
     auto &anim_dockers = base.anim;
-
+    auto &d = runtime_data();
     if (anim_dockers.valid()) {
-        int img_id = anim_dockers.start() + (data.dock.docker_anim_frame / anim_dockers.frame_duration) * 4;
+        int img_id = anim_dockers.start() + (d.docker_anim_frame / anim_dockers.frame_duration) * 4;
         ImageDraw::img_generic(ctx, img_id, point + anim_dockers.pos, color_mask, 1.f, ImgFlag_InternalOffset);
     }
     return false;
 }
 
 void building_dock::bind_dynamic(io_buffer *iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_INT16, &data.dock.queued_docker_id);
-    iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[0]);
-    iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[1]);
-    iob->bind(BIND_SIGNATURE_UINT64, data.dock.trading_goods.data_ptr());
+    auto &d = runtime_data();
+    iob->bind(BIND_SIGNATURE_INT16, &d.queued_docker_id);
+    iob->bind(BIND_SIGNATURE_INT32, &d.dock_tiles[0]);
+    iob->bind(BIND_SIGNATURE_INT32, &d.dock_tiles[1]);
+    iob->bind(BIND_SIGNATURE_UINT64, d.trading_goods.data_ptr());
     iob->bind____skip(9);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.dock.num_ships);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.num_ships);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT8, &base.orientation);
     iob->bind____skip(3);
 
-    iob->bind(BIND_SIGNATURE_INT16, &data.dock.docker_ids[0]);
-    iob->bind(BIND_SIGNATURE_INT16, &data.dock.docker_ids[1]);
-    iob->bind(BIND_SIGNATURE_INT16, &data.dock.docker_ids[2]);
-
-    iob->bind(BIND_SIGNATURE_INT16, &data.dock.trade_ship_id);
+    iob->bind(BIND_SIGNATURE_INT16, &d.docker_ids[0]);
+    iob->bind(BIND_SIGNATURE_INT16, &d.docker_ids[1]);
+    iob->bind(BIND_SIGNATURE_INT16, &d.docker_ids[2]);
+                                     
+    iob->bind(BIND_SIGNATURE_INT16, &d.trade_ship_id);
 }
 
 int building_dock::count_idle_dockers() const {
     int num_idle = 0;
+    auto &d = runtime_data();
     for (int i = 0; i < 3; i++) {
-        if (data.dock.docker_ids[i]) {
-            figure* f = figure_get(data.dock.docker_ids[i]);
+        if (d.docker_ids[i]) {
+            figure* f = figure_get(d.docker_ids[i]);
             if (f->action_state == FIGURE_ACTION_132_DOCKER_IDLING
                 || f->action_state == FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE) {
                 num_idle++;
@@ -216,25 +220,26 @@ bool map_tile_is_connected_to_open_water(tile2i tile) {
 }
 
 void building_dock::unaccept_all_goods() {
-    data.dock.trading_goods.zeroes(64);
+    runtime_data().trading_goods.zeroes(64);
 }
 
 int building_dock::trader_id() {
-    return figure_get(data.dock.trade_ship_id)->trader_id;
+    return figure_get(runtime_data().trade_ship_id)->trader_id;
 }
 
 int building_dock::trader_city_id() {
-    return data.dock.trade_ship_id
-                ? figure_get(data.dock.trade_ship_id)->empire_city_id
+    auto &d = runtime_data();
+    return d.trade_ship_id
+                ? figure_get(d.trade_ship_id)->empire_city_id
                 : 0;
 }
 
 bool building_dock::is_trade_accepted(e_resource r) {
-    return data.dock.trading_goods.is_set(r);
+    return runtime_data().trading_goods.is_set(r);
 }
 
 void building_dock::toggle_good_accepted(e_resource r) {
-    data.dock.trading_goods.flip(r);
+    runtime_data().trading_goods.flip(r);
 }
 
 bool building_dock::accepts_ship(int ship_id) {
@@ -255,10 +260,16 @@ bool building_dock::accepts_ship(int ship_id) {
 void building_dock::highlight_waypoints() {
     building_impl::highlight_waypoints();
 
-    map_highlight_set(data.dock.dock_tiles[0], ehighligth_green);
-    map_highlight_set(data.dock.dock_tiles[1], ehighligth_green);
+    auto &d = runtime_data();
+    map_highlight_set(d.dock_tiles[0], ehighligth_green);
+    map_highlight_set(d.dock_tiles[1], ehighligth_green);
 }
 
+void building_dock::set_water_access_tiles(const water_access_tiles &tiles) {
+    auto &d = runtime_data();
+    d.dock_tiles[0] = tiles.point_a.grid_offset();
+    d.dock_tiles[1] = tiles.point_b.grid_offset();
+}
 
 tile2i building_dock::moor_tile() const {
     vec2i offset;
@@ -315,7 +326,8 @@ building_dest map_get_free_destination_dock(int ship_id) {
         }
 
         better_dock = dock;
-        if (!dock->data.dock.trade_ship_id || dock->data.dock.trade_ship_id == ship_id) {
+        auto &d = dock->runtime_data();
+        if (!d.trade_ship_id || d.trade_ship_id == ship_id) {
             break;
         }
     }
@@ -326,7 +338,7 @@ building_dest map_get_free_destination_dock(int ship_id) {
     }
 
     tile2i moor_tile = better_dock->moor_tile();
-    better_dock->data.dock.trade_ship_id = ship_id;
+    better_dock->runtime_data().trade_ship_id = ship_id;
     return {better_dock->id(), moor_tile };
 }
 

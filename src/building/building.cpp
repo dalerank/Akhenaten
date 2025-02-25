@@ -95,9 +95,9 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
 
     // subtype
     if (is_house()) {
-        subtype.house_level = (e_house_level)(type - BUILDING_HOUSE_VACANT_LOT);
+        data.house.level = (e_house_level)(type - BUILDING_HOUSE_VACANT_LOT);
     } else {
-        subtype.house_level = HOUSE_CRUDE_HUT;
+        data.house.level = HOUSE_CRUDE_HUT;
     }
 
     // unique data
@@ -995,7 +995,7 @@ bvariant building_impl::get_property(const xstring &domain, const xstring &name)
     return bvariant();
 }
 
-void building_impl::destroy_by_poof(bool clouds) { 
+void building_impl::destroy_by_poof(bool clouds) {
     building_destroy_by_poof(&base, clouds);
 }
 

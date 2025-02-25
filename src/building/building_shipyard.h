@@ -17,6 +17,13 @@ public:
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
     };
 
+    struct runtime_data_t {
+        int dock_tiles[2];
+        e_figure_type process_type;
+        bool reparing;
+        short progress;
+    };
+
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void update_day() override;
@@ -30,6 +37,10 @@ public:
     virtual void highlight_waypoints() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual bool add_resource(e_resource resource, int amount) override;
+    virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
+
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

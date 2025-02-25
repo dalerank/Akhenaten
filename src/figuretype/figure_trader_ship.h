@@ -28,7 +28,7 @@ public:
     virtual bool window_info_background(object_info &c) override;
     virtual void update_day() override;
 
-    int lost_queue();
+    bool lost_queue();
     bool done_trading();
     int is_trading() const;
 

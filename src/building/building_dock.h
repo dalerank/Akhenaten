@@ -6,6 +6,20 @@ class building_dock : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_DOCK, building_dock)
 
+    struct runtime_data_t {
+        short queued_docker_id;
+        int dock_tiles[2];
+        sbitarray64 trading_goods;
+        uint8_t num_ships;
+        short docker_ids[3];
+        short trade_ship_id;
+        uint8_t docker_anim_frame;
+        e_figure_type process_type;
+        bool reparing;
+        short progress;
+        bool has_fish;
+    };
+
     building_dock(building &b) : building_impl(b) {}
     virtual building_dock *dcast_dock() override { return this; }
 
@@ -30,6 +44,10 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void highlight_waypoints() override;
+    virtual void set_water_access_tiles(const water_access_tiles &tiles);
+
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 
     void unaccept_all_goods();
     int trader_id();

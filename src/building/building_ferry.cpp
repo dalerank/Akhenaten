@@ -69,11 +69,19 @@ void building_ferry::highlight_waypoints() {
     map_highlight_set(fpoints.point_b, ehighligth_green);
 }
 
+void building_ferry::set_water_access_tiles(const water_access_tiles &tiles) {
+    auto &d = runtime_data();
+    d.dock_tiles[0] = tiles.point_a.grid_offset();
+    d.dock_tiles[1] = tiles.point_b.grid_offset();
+}
+
 void building_ferry::bind_dynamic(io_buffer *iob, size_t verrsion) {
+    auto &d = runtime_data();
+
     iob->bind____skip(88);
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
-    iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[0]);
-    iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[1]);
+    iob->bind(BIND_SIGNATURE_INT32, &d.dock_tiles[0]);
+    iob->bind(BIND_SIGNATURE_INT32, &d.dock_tiles[1]);
 }
 
 bool info_window_ferry::check(object_info &c) {

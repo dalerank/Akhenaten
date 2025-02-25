@@ -131,14 +131,14 @@ int figure_tax_collector::provide_service() {
         }
 
         if (b->house_size && b->house_population > 0) {
-            int tax_multiplier = model_get_house(b->subtype.house_level)->tax_multiplier;
+            int tax_multiplier = model_get_house(b->data.house.level)->tax_multiplier;
             if (tax_multiplier > max_tax_multiplier) {
                 max_tax_multiplier = tax_multiplier;
             }
 
-            if (b->subtype.house_level < HOUSE_ORDINARY_COTTAGE) {
+            if (b->data.house.level < HOUSE_ORDINARY_COTTAGE) {
                 f->data.taxman.poor_taxed++;
-            } else if (b->subtype.house_level < HOUSE_COMMON_MANOR) {
+            } else if (b->data.house.level < HOUSE_COMMON_MANOR) {
                 f->data.taxman.middle_taxed++;
             } else {
                 f->data.taxman.reach_taxed++;

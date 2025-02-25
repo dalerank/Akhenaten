@@ -28,7 +28,7 @@ int house_population_add_to_city(int num_people) {
         if (b->state == BUILDING_STATE_VALID && b->house_size && b->distance_from_entry > 0
             && b->house_population > 0) {
             city_population_set_last_used_house_add(building_id);
-            int max_people = model_get_house(b->subtype.house_level)->max_people;
+            int max_people = model_get_house(b->data.house.level)->max_people;
             if (b->house_is_merged)
                 max_people *= 4;
 
@@ -81,7 +81,7 @@ void city_t::house_population_update_room() {
         building* b = building_get(houses[i]);
         b->house_population_room = 0;
         if (b->distance_from_entry > 0) {
-            int max_pop = model_get_house(b->subtype.house_level)->max_people;
+            int max_pop = model_get_house(b->data.house.level)->max_people;
             if (b->house_is_merged)
                 max_pop *= 4;
 
@@ -145,7 +145,7 @@ int house_population_create_emigrants(int num_people) {
         for (int i = 0; i < total_houses && to_emigrate > 0; i++) {
             building* b = building_get(ids[i]);
 
-            if (b->house_population <= 0 || b->subtype.house_level != level) {
+            if (b->house_population <= 0 || b->data.house.level != level) {
                 continue;
             }
 
@@ -181,7 +181,7 @@ static void calculate_working_population(void) {
     for (int i = 0; i < total_houses; i++) {
         building* b = building_get(houses[i]);
         if (b->house_population > 0) {
-            if (b->subtype.house_level >= HOUSE_COMMON_MANOR)
+            if (b->data.house.level >= HOUSE_COMMON_MANOR)
                 num_nobles += b->house_population;
             else {
                 num_peasants += b->house_population;

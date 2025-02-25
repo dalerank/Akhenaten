@@ -41,14 +41,16 @@ void shipyard_info_window::init(object_info &c) {
 
     const bool ship_requested = g_city.buildings.fishing_boats_requested || g_city.buildings.warships_requested;
     textid reason{ c.group_id, 0 };
+
+    const auto &shipyard_data = shipyard->runtime_data();
     if (!c.has_road_access) {
         reason = { 69, 25 }; 
     } else if (!ship_requested) {
         reason.id = 4;
-    } else if (shipyard->data.dock.process_type != FIGURE_NONE) {
+    } else if (shipyard_data.process_type != FIGURE_NONE) {
         if (wood_stored == 0) {
             reason.id = 8;
-        } else if (shipyard->data.dock.reparing) {
+        } else if (shipyard_data.reparing) {
             const int left_repair = (100 - shipyard->data.industry.progress);
             if (wood_stored > left_repair) {
                 reason.id = 6;

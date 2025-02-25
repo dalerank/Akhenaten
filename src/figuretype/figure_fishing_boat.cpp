@@ -36,7 +36,7 @@ water_dest map_water_get_wharf_for_new_fishing_boat(figure &boat) {
         return { false, 0 };
     }
 
-    tile2i dock_tile(wharf->data.dock.dock_tiles[0]);
+    tile2i dock_tile(wharf->runtime_data().dock_tiles[0]);
     return { true, wharf->id(), dock_tile };
 }
 
@@ -53,17 +53,17 @@ void figure_fishing_boat::before_poof() {
 }
 
 void figure_fishing_boat::figure_action() {
-    building* b = home();
+    building_fishing_wharf* wharf = home()->dcast_fishing_wharf();
     //    if (b->state != BUILDING_STATE_VALID)
     //        poof();
 
-    int wharf_boat_id = b->get_figure_id(BUILDING_SLOT_BOAT);
+    int wharf_boat_id = wharf->get_figure_id(BUILDING_SLOT_BOAT);
     if (action_state() != FIGURE_ACTION_190_FISHING_BOAT_CREATED && wharf_boat_id != id()) {
         water_dest result = map_water_get_wharf_for_new_fishing_boat(base);
-        b = building_get(result.bid);
-        if (b->id) {
-            set_home(b->id);
-            b->set_figure(BUILDING_SLOT_BOAT, &base);
+        building* new_home = building_get(result.bid);
+        if (new_home->id) {
+            set_home(new_home->id);
+            new_home->set_figure(BUILDING_SLOT_BOAT, &base);
             advance_action(FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
             base.destination_tile = result.tile;
             base.source_tile = result.tile;
@@ -83,7 +83,7 @@ void figure_fishing_boat::figure_action() {
             base.wait_ticks = 0;
             water_dest result = map_water_get_wharf_for_new_fishing_boat(base);
             if (result.bid) {
-                b->remove_figure_by_id(id()); // remove from original building
+                wharf->base.remove_figure_by_id(id()); // remove from original building
                 set_home(result.bid);
                 advance_action(FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
                 base.destination_tile = result.tile;
@@ -160,9 +160,9 @@ void figure_fishing_boat::figure_action() {
         } break;
 
     case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: {
-            int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
+            int pct_workers = calc_percentage<int>(wharf->num_workers(), wharf->max_workers());
             int max_wait_ticks = 5 * (102 - pct_workers);
-            if (b->data.dock.has_fish) {
+            if (wharf->runtime_data().has_fish) {
                 pct_workers = 0;
             }
 
@@ -188,9 +188,9 @@ void figure_fishing_boat::figure_action() {
         if (direction() == DIR_FIGURE_NONE) {
             advance_action(FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF);
             base.wait_ticks = 0;
-            b->figure_spawn_delay = 1;
-            b->data.dock.has_fish = true;
-            b->stored_amount_first += 200;
+            wharf->base.figure_spawn_delay = 1;
+            wharf->runtime_data().has_fish = true;
+            wharf->base.stored_amount_first += 200;
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {

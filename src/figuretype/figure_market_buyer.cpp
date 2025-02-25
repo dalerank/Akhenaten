@@ -139,7 +139,7 @@ void distribute_good(building* b, building* market, int stock_wanted, int invent
 }
 
 void distribute_market_resources(building* b, building* market) {
-    int level = b->subtype.house_level;
+    int level = b->data.house.level;
     if (level < HOUSE_PALATIAL_ESTATE) {
         level++;
     }

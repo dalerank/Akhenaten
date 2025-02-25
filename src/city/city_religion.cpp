@@ -379,8 +379,8 @@ static bool BAST_refill_houses_and_bazaar() {
 }
 
 static int compare(int A, int B) {
-    auto hA = building_get(A)->subtype.house_level;
-    auto hB = building_get(B)->subtype.house_level;
+    auto hA = building_get(A)->data.house.level;
+    auto hB = building_get(B)->data.house.level;
 
     if (hA < hB)
         return -1;
@@ -389,6 +389,7 @@ static int compare(int A, int B) {
 
     return 0;
 }
+
 static void rearrange_CHILD(int arr[20], int first, int last) {
     if (first >= last)
         return;
@@ -504,15 +505,17 @@ bool city_religion_t::BAST_houses_destruction() {
                                       //        FUN_00561c09(houses_array,20,4,&LAB_004c42d0);
         for (int i = 20; i < MAX_BUILDINGS; ++i) {
             building* b = building_get(i);
-            if (b->state != BUILDING_STATE_VALID || !building_is_house(b->type))
+            if (b->state != BUILDING_STATE_VALID || !building_is_house(b->type)) {
                 continue;
-            int this_house_level = b->subtype.house_level;
-            int last_house_level = building_get(houses[19])->subtype.house_level;
+            }
+
+            int this_house_level = b->data.house.level;
+            int last_house_level = building_get(houses[19])->data.house.level;
             if (this_house_level > last_house_level) { // found house more evolved than the initial 20 houses
 
                 // where to stuff this new house? find the appropriate spot index
                 for (int j = 0; j < 20; ++j) {
-                    if (building_get(houses[j])->subtype.house_level < this_house_level) {
+                    if (building_get(houses[j])->data.house.level < this_house_level) {
                         // found a spot! the next in the list is an inferior house -- shift all the
                         // items in the list from this point onward down ONE SLOT, and insert here.
                         for (int k = 19; k > j; --k)

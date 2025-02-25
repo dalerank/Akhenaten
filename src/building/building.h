@@ -87,6 +87,7 @@ struct tooltip_context;
 struct object_info;
 struct painter;
 struct mouse;
+struct water_access_tiles;
 class build_planner;
 
 constexpr uint32_t MAX_BUILDINGS = 4000;
@@ -166,10 +167,6 @@ public:
     tile2i tile;
     uint8_t orientation;
     e_building_type type;
-    union {
-        e_house_level house_level;
-        uint16_t data;       
-    } subtype;
     short native_meeting_center_id;
     unsigned short road_network_id;
     //unsigned short creation_sequence_index;
@@ -214,19 +211,7 @@ public:
     unsigned short tax_collector_id;
     short formation_id;
     union impl_data_t {
-        struct dock_t {
-            short queued_docker_id;
-            int dock_tiles[2];
-            sbitarray64 trading_goods;
-            uint8_t num_ships;
-            short docker_ids[3];
-            short trade_ship_id;
-            uint8_t docker_anim_frame;
-            e_figure_type process_type;
-            bool reparing;
-            short progress;
-            bool has_fish;
-        } dock;
+        char data[512] = { 0 };
         struct water_lift_t {
             int input_tiles[2];
             int output_tiles[2];
@@ -304,6 +289,7 @@ public:
         } entertainment;
 
         struct {
+            e_house_level level;
             uint16_t foods[8];
             uint16_t inventory[8];
             uint8_t booth_juggler;
@@ -635,6 +621,7 @@ public:
     virtual bool add_resource(e_resource resource, int amount) { return false; }
     virtual int get_orientation() const { return base.orientation; }
     virtual void on_config_reload() {}
+    virtual void set_water_access_tiles(const water_access_tiles &tiles) {}
 
     virtual building_farm *dcast_farm() { return nullptr; }
     virtual building_brewery *dcast_brewery() { return nullptr; }
@@ -735,7 +722,7 @@ public:
     inline short distance_from_entry() const { return base.distance_from_entry; }
     inline int road_network() const { return base.road_network_id; }
     inline const animation_t &anim(const xstring &key) const { return params().anim[key]; }
-
+ 
     virtual bool is_workshop() const { return false; }
     virtual bool is_administration() const { return false; }
     virtual bool is_unique_building() const { return false; }

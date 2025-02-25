@@ -14,7 +14,7 @@
 #include "grid/tiles.h"
 
 void building_house_determine_evolve_text(building* house, int worst_desirability_building) {
-    int level = house->subtype.house_level;
+    int level = house->data.house.level;
 
     // this house will devolve soon because...
 

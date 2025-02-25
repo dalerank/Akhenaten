@@ -55,9 +55,16 @@ int map_point::y() {
     self_correct();
     return p_Y;
 }
+
 int map_point::grid_offset() {
     self_correct();
     return p_GRID_OFFSET;
+}
+
+int map_point::grid_offset() const {
+    self tmp = *this;
+    tmp.self_correct();
+    return tmp.p_GRID_OFFSET;
 }
 
 const int map_point::abs_x(void) {

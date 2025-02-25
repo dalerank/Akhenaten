@@ -30,21 +30,24 @@ void building_wharf::update_map_orientation(int orientation) {
 void building_wharf::highlight_waypoints() {
     building_impl::highlight_waypoints();
 
-    map_highlight_set(data.dock.dock_tiles[0], ehighligth_green);
-    map_highlight_set(data.dock.dock_tiles[1], ehighligth_green);
+    auto &d = runtime_data();
+    map_highlight_set(d.dock_tiles[0], ehighligth_green);
+    map_highlight_set(d.dock_tiles[1], ehighligth_green);
 }
 
 void building_wharf::bind_dynamic(io_buffer *iob, size_t version) {
+    auto &d = runtime_data();
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
-    iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[0]);
-    iob->bind(BIND_SIGNATURE_INT32, &data.dock.dock_tiles[1]);
+    iob->bind(BIND_SIGNATURE_INT32, &d.dock_tiles[0]);
+    iob->bind(BIND_SIGNATURE_INT32, &d.dock_tiles[1]);
 }
 
 void building_wharf::on_tick(bool refresh_only) {
     auto &anim_wharf = base.anim;
+    auto &d = runtime_data();
     if (anim_wharf.valid()) {
-        data.dock.docker_anim_frame++;
-        data.dock.docker_anim_frame %= (anim_wharf.max_frames * anim_wharf.frame_duration);
+        d.docker_anim_frame++;
+        d.docker_anim_frame %= (anim_wharf.max_frames * anim_wharf.frame_duration);
     }
 }
 
@@ -76,11 +79,18 @@ void building_wharf::update_graphic() {
 
 bool building_wharf::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     auto &anim_wharf = base.anim;
+    auto &d = runtime_data();
     if (anim_wharf.valid()) {
-        int img_id = anim_wharf.start() + (data.dock.docker_anim_frame / anim_wharf.frame_duration) * 4;
+        int img_id = anim_wharf.start() + (d.docker_anim_frame / anim_wharf.frame_duration) * 4;
         const image_t *img = image_get(img_id);
         ImageDraw::img_generic(ctx, img_id, point + anim_wharf.pos, color_mask, 1.f, ImgFlag_InternalOffset);
     }
 
     return true;
+}
+
+void building_wharf::set_water_access_tiles(const water_access_tiles &tiles) {
+    auto &d = runtime_data();
+    d.dock_tiles[0] = tiles.point_a.grid_offset();
+    d.dock_tiles[1] = tiles.point_b.grid_offset();
 }
