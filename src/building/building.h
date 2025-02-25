@@ -212,9 +212,6 @@ public:
     short formation_id;
     union impl_data_t {
         char data[512] = { 0 };
-        struct granary_t {
-            short resource_stored[16];
-        } granary;
         struct {
             e_resource resource_id;
         } warehouse;

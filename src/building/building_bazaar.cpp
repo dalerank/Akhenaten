@@ -15,6 +15,7 @@
 #include "grid/routing/routing.h"
 #include "graphics/image.h"
 #include "window/building/distribution.h"
+#include "building/building_granary.h"
 #include "graphics/graphics.h"
 #include "game/game.h"
 #include "widget/city/ornaments.h"
@@ -40,7 +41,7 @@ struct resource_data {
             return;
         }
 
-        if (b.data.granary.resource_stored[resource] < 100) {
+        if (granary->runtime_data().resource_stored[resource] < 100) {
             return;
         }
 

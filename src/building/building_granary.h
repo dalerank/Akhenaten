@@ -28,6 +28,10 @@ public:
     building_granary(building &b) : building_storage(b) {}
     virtual building_granary *dcast_granary() override { return this; }
 
+    struct runtime_data_t {
+        short resource_stored[16];
+    };
+
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_GRANARY; }
@@ -49,6 +53,9 @@ public:
     int total_stored() const override;
     int capacity_stored() const { return 3200; }
     int allow_food_types() const { return 4; }
+
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 
     void bless();
     granary_task_status determine_worker_task();

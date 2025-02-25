@@ -67,7 +67,7 @@ int building_granary::amount(e_resource resource) const {
         return 0;
     }
 
-    return data.granary.resource_stored[resource];
+    return runtime_data().resource_stored[resource];
 }
 
 bool building_granary::is_accepting(e_resource resource) {
@@ -105,7 +105,8 @@ int building_granary::add_resource(e_resource resource, bool is_produced, int am
         return -1;
     }
 
-    if (data.granary.resource_stored[RESOURCE_NONE] <= 0) {
+    auto &d = runtime_data();
+    if (d.resource_stored[RESOURCE_NONE] <= 0) {
         return -1; // no space
     }
 
@@ -117,9 +118,9 @@ int building_granary::add_resource(e_resource resource, bool is_produced, int am
         city_resource_add_produced_to_granary(amount);
     }
 
-    int deliverable_amount = std::min<int>(data.granary.resource_stored[RESOURCE_NONE], amount);
-    data.granary.resource_stored[resource] += deliverable_amount;
-    data.granary.resource_stored[RESOURCE_NONE] -= deliverable_amount;
+    int deliverable_amount = std::min<int>(d.resource_stored[RESOURCE_NONE], amount);
+    d.resource_stored[resource] += deliverable_amount;
+    d.resource_stored[RESOURCE_NONE] -= deliverable_amount;
     return amount - deliverable_amount;
 }
 
@@ -133,7 +134,7 @@ int building_granary::total_stored() const {
 }
 
 int building_granary::freespace() const {
-    return data.granary.resource_stored[RESOURCE_NONE];
+    return runtime_data().resource_stored[RESOURCE_NONE];
 }
 
 int building_granary::remove_resource(e_resource resource, int amount) {
@@ -141,11 +142,12 @@ int building_granary::remove_resource(e_resource resource, int amount) {
         return 0;
     }
 
-    int removed = std::min<int>(data.granary.resource_stored[resource], amount);
+    auto &d = runtime_data();
+    int removed = std::min<int>(d.resource_stored[resource], amount);
 
     city_resource_remove_from_granary(resource, removed);
-    data.granary.resource_stored[resource] -= removed;
-    data.granary.resource_stored[RESOURCE_NONE] += removed;
+    d.resource_stored[resource] -= removed;
+    d.resource_stored[RESOURCE_NONE] += removed;
 
     return amount - removed;
 }
@@ -252,7 +254,8 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
                 continue;
         }
 
-        if (granary->data.granary.resource_stored[RESOURCE_NONE] >= ONE_LOAD) {
+        const auto &d = granary->runtime_data();
+        if (d.resource_stored[RESOURCE_NONE] >= ONE_LOAD) {
             // there is room
             int dist = calc_distance_with_penalty(vec2i(granary->tilex() + 1, granary->tiley() + 1), tile, distance_from_entry, granary->distance_from_entry());
             if (dist < min_dist) {
@@ -295,7 +298,8 @@ int building_getting_granary_for_storing(tile2i tile, e_resource resource, int d
         if (granary->is_getting(resource) || granary->is_empty_all())
             continue;
 
-        if (granary->data.granary.resource_stored[RESOURCE_NONE] > ONE_LOAD) {
+        const auto &d = granary->runtime_data();
+        if (d.resource_stored[RESOURCE_NONE] > ONE_LOAD) {
             // there is room
             int dist = calc_distance_with_penalty(vec2i(granary->tilex() + 1, granary->tiley() + 1), tile, distance_from_entry, granary->distance_from_entry());
             if (dist < min_dist) {
@@ -481,21 +485,22 @@ void building_granary_draw_anim(building &b, vec2i point, tile2i tile, color mas
 }
 
 void building_granary::on_create(int orientation) {
-    data.granary.resource_stored[RESOURCE_NONE] = capacity_stored();
+    runtime_data().resource_stored[RESOURCE_NONE] = capacity_stored();
     base.storage_id = building_storage_create(BUILDING_GRANARY);
 }
 
 void building_granary::update_day() {
     building_impl::update_day();
-    data.granary.resource_stored[RESOURCE_NONE] = capacity_stored() - total_stored();
+    runtime_data().resource_stored[RESOURCE_NONE] = capacity_stored() - total_stored();
 }
 
 void building_granary::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(2);
     iob->bind____skip(2);
 
+    auto &d = runtime_data();
     for (int i = 0; i < RESOURCES_MAX; i++) {
-        iob->bind(BIND_SIGNATURE_INT16, &data.granary.resource_stored[i]);
+        iob->bind(BIND_SIGNATURE_INT16, &d.resource_stored[i]);
     }
 }
 
@@ -553,10 +558,12 @@ textid building_granary::get_tooltip() const {
 void building_granary::draw_stores(vec2i point, color color_mask, painter &ctx) {
     int last_spot_filled = 0;
     int resources_id = granary_m.anim["resources"].first_img();
+
+    const auto &d = runtime_data();
     for (int r = 1; r < 9; r++) {
-        if (data.granary.resource_stored[r] > 0) {
-            int spots_filled = ceil((float)(data.granary.resource_stored[r] - 199) / (float)400); // number of "spots" occupied by food
-            if (spots_filled == 0 && data.granary.resource_stored[r] > 0)
+        if (d.resource_stored[r] > 0) {
+            int spots_filled = ceil((float)(d.resource_stored[r] - 199) / (float)400); // number of "spots" occupied by food
+            if (spots_filled == 0 && d.resource_stored[r] > 0)
                 spots_filled = 1;
 
             for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
