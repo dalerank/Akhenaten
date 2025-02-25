@@ -57,8 +57,10 @@ void building_water_lift::update_day() {
     update_inout_tiles();
 
     // check if has access to water
-    const bool is_water1 = map_terrain_is(data.water_lift.input_tiles[0], TERRAIN_WATER);
-    const bool is_water2 = map_terrain_is(data.water_lift.input_tiles[0], TERRAIN_WATER);
+    const auto &d = runtime_data();
+
+    const bool is_water1 = map_terrain_is(d.input_tiles[0], TERRAIN_WATER);
+    const bool is_water2 = map_terrain_is(d.input_tiles[0], TERRAIN_WATER);
     base.has_water_access = (is_water1 || is_water2);
 
     // checks done, update
@@ -66,14 +68,14 @@ void building_water_lift::update_day() {
         return;
     }
 
-    const bool is_canal1 = map_terrain_is(data.water_lift.output_tiles[0], TERRAIN_CANAL);
+    const bool is_canal1 = map_terrain_is(d.output_tiles[0], TERRAIN_CANAL);
     if (is_canal1) {
-        map_canal_fill_from_offset(tile2i(data.water_lift.output_tiles[0]), 10);
+        map_canal_fill_from_offset(tile2i(d.output_tiles[0]), 10);
     }
 
-    const bool is_canal2 = map_terrain_is(data.water_lift.output_tiles[1], TERRAIN_CANAL);
+    const bool is_canal2 = map_terrain_is(d.output_tiles[1], TERRAIN_CANAL);
     if (is_canal2) {
-        map_canal_fill_from_offset(tile2i(data.water_lift.output_tiles[1]), 10);
+        map_canal_fill_from_offset(tile2i(d.output_tiles[1]), 10);
     }
 
     map_terrain_add_with_radius(tile(), params().building_size, /*radius*/2, TERRAIN_IRRIGATION_RANGE);
@@ -108,11 +110,13 @@ void building_water_lift::update_map_orientation(int orientation) {
 }
 
 void building_water_lift::bind_dynamic(io_buffer *iob, size_t version) {
+    auto &d = runtime_data();
+
     iob->bind____skip(72);
-    iob->bind(BIND_SIGNATURE_UINT32, &data.water_lift.input_tiles[0]);
-    iob->bind(BIND_SIGNATURE_UINT32, &data.water_lift.input_tiles[1]);
-    iob->bind(BIND_SIGNATURE_UINT32, &data.water_lift.output_tiles[0]);
-    iob->bind(BIND_SIGNATURE_UINT32, &data.water_lift.output_tiles[1]);
+    iob->bind(BIND_SIGNATURE_UINT32, &d.input_tiles[0]);
+    iob->bind(BIND_SIGNATURE_UINT32, &d.input_tiles[1]);
+    iob->bind(BIND_SIGNATURE_UINT32, &d.output_tiles[0]);
+    iob->bind(BIND_SIGNATURE_UINT32, &d.output_tiles[1]);
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
 }
 
@@ -139,18 +143,20 @@ void building_water_lift::update_graphic() {
 void building_water_lift::highlight_waypoints() {
     building_impl::highlight_waypoints();
 
-    map_highlight_set(data.water_lift.input_tiles[0], ehighligth_green);
-    map_highlight_set(data.water_lift.input_tiles[1], ehighligth_green);
+    const auto &d = runtime_data();
+    map_highlight_set(d.input_tiles[0], ehighligth_green);
+    map_highlight_set(d.input_tiles[1], ehighligth_green);
 
-    map_highlight_set(data.water_lift.output_tiles[0], ehighligth_yellow);
-    map_highlight_set(data.water_lift.output_tiles[1], ehighligth_yellow);
+    map_highlight_set(d.output_tiles[0], ehighligth_yellow);
+    map_highlight_set(d.output_tiles[1], ehighligth_yellow);
 }
 
 void building_water_lift::update_inout_tiles() {
     water_access_tiles intiles = map_water_get_access_points(base, get_orientation(), 1);
 
-    data.water_lift.input_tiles[0] = intiles.point_a.grid_offset();
-    data.water_lift.input_tiles[1] = intiles.point_b.grid_offset();
+    auto &d = runtime_data();
+    d.input_tiles[0] = intiles.point_a.grid_offset();
+    d.input_tiles[1] = intiles.point_b.grid_offset();
 
     int invert_orientation = get_orientation();
     if (invert_orientation == 0 || invert_orientation == 2) {
@@ -160,6 +166,6 @@ void building_water_lift::update_inout_tiles() {
     }
     water_access_tiles uottiles = map_water_get_access_points(base, invert_orientation, 1);
 
-    data.water_lift.output_tiles[0] = uottiles.point_a.grid_offset();
-    data.water_lift.output_tiles[1] = uottiles.point_b.grid_offset();
+    d.output_tiles[0] = uottiles.point_a.grid_offset();
+    d.output_tiles[1] = uottiles.point_b.grid_offset();
 }

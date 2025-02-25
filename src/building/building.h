@@ -212,10 +212,6 @@ public:
     short formation_id;
     union impl_data_t {
         char data[512] = { 0 };
-        struct water_lift_t {
-            int input_tiles[2];
-            int output_tiles[2];
-        } water_lift;
         struct market_t {
             uint16_t inventory[8];
             short pottery_demand;

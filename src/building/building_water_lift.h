@@ -13,6 +13,11 @@ public:
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
     };
 
+    struct runtime_data_t {
+        int input_tiles[2];
+        int output_tiles[2];
+    };
+
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
@@ -28,6 +33,9 @@ public:
     virtual void highlight_waypoints() override;
 
     void update_inout_tiles();
+
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
