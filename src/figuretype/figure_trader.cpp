@@ -23,25 +23,28 @@ void figure_trader::trader_sell(int amounts) {
     //    resource_amount_loads += amounts / 100;
 }
 
-bool figure_trader::can_buy(building* warehouse, int city_id) {
-    if (warehouse->type != BUILDING_STORAGE_YARD)
+bool figure_trader::can_buy(building* b, int city_id) {
+    building_storage_yard *warehouse = b->dcast_storage_yard();
+    if (!warehouse) {
         return false;
+    }
 
-    if (base.trader_total_bought() >= 800)
+    if (base.trader_total_bought() >= 800) {
         return false;
+    }
 
-    building_storage *s = warehouse->dcast_storage();
-    if (!s->get_permission(BUILDING_STORAGE_PERMISSION_TRADERS))
+    if (!warehouse->get_permission(BUILDING_STORAGE_PERMISSION_TRADERS)) {
         return false;
+    }
 
-    building* space = warehouse;
-    for (int i = 0; i < 8; i++) {
-        space = space->next();
-        if (space->id > 0 && space->stored_amount_first >= 100
-            && g_empire.can_export_resource_to_city(city_id, space->data.warehouse.resource_id)) {
+    building_storage_room* space = warehouse->room();
+    while (space) {
+        if (space->base.stored_amount_first >= 100 && g_empire.can_export_resource_to_city(city_id, space->resource())) {
             return true;
         }
+        space = space->next_room();
     }
+
     return false;
 }
 
@@ -99,7 +102,7 @@ bool figure_trader::can_sell(building* b, int city_id) {
                     return true;
                 }
 
-                if (g_empire.can_import_resource_from_city(city_id, space->data.warehouse.resource_id)) {
+                if (g_empire.can_import_resource_from_city(city_id, space->resource())) {
                     return true;
                 }
             }
@@ -147,8 +150,9 @@ int figure_trader::get_closest_storageyard(tile2i tile, int city_id, int distanc
         int distance_penalty = 32;
         building_storage_room* space = warehouse->room();
         while (space) {
-            if (exportable[space->data.warehouse.resource_id])
+            if (exportable[space->resource()]) {
                 distance_penalty -= 4;
+            }
 
             if (num_importable && num_imports_for_warehouse && !s->empty_all) {
                 for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
@@ -158,11 +162,11 @@ int figure_trader::get_closest_storageyard(tile2i tile, int city_id, int distanc
 
                 e_resource resource = city_trade_current_caravan_import_resource();
                 if (!warehouse->is_not_accepting(resource)) {
-                    if (space->data.warehouse.resource_id == RESOURCE_NONE)
+                    if (space->resource() == RESOURCE_NONE)
                         distance_penalty -= 16;
 
-                    if (importable[space->data.warehouse.resource_id] && space->base.stored_amount_first < 400
-                        && space->data.warehouse.resource_id == resource) {
+                    if (importable[space->resource()] && space->base.stored_amount_first < 400
+                        && space->resource() == resource) {
                         distance_penalty -= 8;
                     }
                 }

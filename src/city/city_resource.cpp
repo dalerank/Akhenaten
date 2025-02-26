@@ -4,6 +4,7 @@
 #include "building/industry.h"
 #include "building/model.h"
 #include "building/building_storage_yard.h"
+#include "building/building_storage_room.h"
 #include "building/building_granary.h"
 #include "building/building_bazaar.h"
 #include "city/city.h"
@@ -267,21 +268,24 @@ void city_resource_calculate_storageyard_stocks() {
     }
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_STORAGE_ROOM)
+        building_storage_room* room = building_get(i)->dcast_storage_room();
+        if (!room ||!room->is_valid()) {
             continue;
+        }
 
-        building* warehouse = b->main();
-        if (warehouse->has_road_access) {
-            b->has_road_access = warehouse->has_road_access;
-            if (b->data.warehouse.resource_id) {
-                int amounts = b->stored_amount_first;
-                int resource = b->data.warehouse.resource_id;
-                city_data.resource.stored_in_warehouses[resource] += amounts;
-                city_data.resource.space_in_warehouses[resource] += 400 - amounts;
-            } else {
-                city_data.resource.space_in_warehouses[RESOURCE_NONE] += 4;
-            }
+        building_storage_yard *warehouse = room->yard();
+        if (!warehouse || !warehouse->has_road_access()) {
+            return;
+        }
+
+        room->base.has_road_access = warehouse->has_road_access();
+        if (room->resource()) {
+            int amounts = room->base.stored_amount_first;
+            e_resource resource = room->resource();
+            city_data.resource.stored_in_warehouses[resource] += amounts;
+            city_data.resource.space_in_warehouses[resource] += 400 - amounts;
+        } else {
+            city_data.resource.space_in_warehouses[RESOURCE_NONE] += 4;
         }
     }
 }

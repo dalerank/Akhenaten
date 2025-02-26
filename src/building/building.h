@@ -212,9 +212,6 @@ public:
     short formation_id;
     union impl_data_t {
         char data[512] = { 0 };
-        struct {
-            e_resource resource_id;
-        } warehouse;
         struct guild_t {
             uint8_t max_workers;
         } guild;

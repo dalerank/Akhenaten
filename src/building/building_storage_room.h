@@ -12,6 +12,10 @@ public:
     virtual building_storage *dcast_storage() override { return main()->dcast_storage(); }
     virtual building_storage_room *dcast_storage_room() override { return this; }
 
+    struct runtime_data_t {
+        e_resource resource_id;
+    };
+
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override { /*nothing*/ }
     virtual void window_info_background(object_info &ctx) override;
@@ -21,6 +25,9 @@ public:
     virtual int get_fire_risk(int value) const override { return 0; }
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
+    e_resource resource() const { return runtime_data().resource_id; }
+    void take_resource(int amount);
+
     const storage_t *storage();
     building_storage_yard *yard() { return main()->dcast_storage_yard(); }
     building_storage_room *next_room() { return next()->dcast_storage_room(); }
@@ -29,4 +36,7 @@ public:
     void add_import(e_resource resource);
     int distance_with_penalty(tile2i tile, e_resource resource, int distance_from_entry);
     void remove_export(e_resource resource);
+
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 };
