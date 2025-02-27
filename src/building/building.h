@@ -212,12 +212,6 @@ public:
     short formation_id;
     union impl_data_t {
         char data[512] = { 0 };
-
-        struct education_t {
-            e_resource first_material_id;
-            e_resource second_material_id;
-        } education;
-
         struct {
             uint8_t priority;
         } barracks;
