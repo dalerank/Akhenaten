@@ -41,13 +41,13 @@ void info_window_recruiter::init(object_info &c) {
     }
 
     ui["tower_button"].onclick([bid = c.building_id] {
-        building *barracks = ::building_get(bid);
-        barracks->data.barracks.priority = 0;
+        auto barracks = ::building_get(bid)->dcast_recruiter();
+        barracks->set_priority(0);
     });
    
     ui["fort_button"].onclick([bid = c.building_id] {
-        building *barracks = ::building_get(bid);
-        barracks->data.barracks.priority = 1;
+        auto barracks = ::building_get(bid)->dcast_recruiter();
+        barracks->set_priority(1);
     });
 }
 

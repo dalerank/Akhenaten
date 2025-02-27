@@ -20,6 +20,10 @@ public:
         virtual bool is_unique_building() const override;
     };
 
+    struct runtime_data_t {
+        uint8_t priority;
+    };
+
     virtual void on_create(int orientation) override;
     virtual void on_post_load() override;
     virtual void on_place_checks() override;
@@ -28,7 +32,11 @@ public:
     virtual bool add_resource(e_resource resource, int amount) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
+
     int get_priority();
+    void set_priority(int v);
     bool create_tower_sentry();
     bool create_soldier();
 };

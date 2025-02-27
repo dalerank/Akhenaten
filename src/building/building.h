@@ -212,9 +212,6 @@ public:
     short formation_id;
     union impl_data_t {
         char data[512] = { 0 };
-        struct {
-            uint8_t priority;
-        } barracks;
 
         struct industry_t {
             short ready_production;

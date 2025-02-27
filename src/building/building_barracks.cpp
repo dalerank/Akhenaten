@@ -133,7 +133,11 @@ void building_barracks_load_state(buffer* buf) {
 }
 
 int building_recruiter::get_priority() {
-    return data.barracks.priority;
+    return runtime_data().priority;
+}
+
+void building_recruiter::set_priority(int v) {
+    runtime_data().priority = v;
 }
 
 bool building_recruiter::create_tower_sentry() {
@@ -223,7 +227,7 @@ void building_recruiter::spawn_figure() {
         base.figure_spawn_delay++;
         if (base.figure_spawn_delay > spawn_delay) {
             base.figure_spawn_delay = 0;
-            switch (data.barracks.priority) {
+            switch (get_priority()) {
             case PRIORITY_FORT:
             if (!create_soldier())
                 create_tower_sentry();
@@ -238,5 +242,6 @@ void building_recruiter::spawn_figure() {
 }
 
 void building_recruiter::bind_dynamic(io_buffer *iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_UINT8, &data.barracks.priority);
+    auto &d = runtime_data();
+    iob->bind(BIND_SIGNATURE_UINT8, &d.priority);
 }
