@@ -192,25 +192,27 @@ void building_industry_update_farms(void) {
 
         if (is_floodplain) { // floodplain farms
             // advance production
-            if (b.data.industry.labor_days_left > 0) {
-                b.data.industry.progress += progress_step;
+            auto &d = b.dcast_farm()->runtime_data();
+            if (d.labor_days_left > 0) {
+                d.progress += progress_step;
             }
             // update labor state
-            if (b.data.industry.labor_state == LABOR_STATE_JUST_ENTERED) {
-                b.data.industry.labor_state = LABOR_STATE_PRESENT;
+            if (d.labor_state == LABOR_STATE_JUST_ENTERED) {
+                d.labor_state = LABOR_STATE_PRESENT;
             }
 
-            if (b.data.industry.labor_days_left == 0) {
-                b.data.industry.labor_state = LABOR_STATE_NONE;
+            if (d.labor_days_left == 0) {
+                d.labor_state = LABOR_STATE_NONE;
             }
 
-            if (b.data.industry.labor_days_left > 0) {
-                b.data.industry.labor_days_left--;
+            if (d.labor_days_left > 0) {
+                d.labor_days_left--;
             }
         } else { // meadow farms
             // advance production
+            auto &d = b.dcast_farm()->runtime_data();
             if (b.num_workers > 0) {
-                b.data.industry.progress += progress_step * ((float)b.num_workers / 10.0f);
+                d.progress += progress_step * ((float)b.num_workers / 10.0f);
             }
         }
 

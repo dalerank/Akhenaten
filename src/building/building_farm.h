@@ -22,6 +22,16 @@ public:
         virtual void planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };
 
+    struct runtime_data_t {
+        uint8_t worker_frame;
+        uint16_t progress;
+        uint16_t ready_production;
+        figure_id worker_id;
+        uint8_t labor_days_left;
+        e_labor_state labor_state;
+        building_id work_camp_id;
+    };
+
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientration, int variant) override;
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
@@ -45,8 +55,14 @@ public:
     void spawn_figure_harvests();
     inline bool is_floodplain_farm() const { return building_is_floodplain_farm(base); }
 
+    void add_workers(figure_id fid);
+    void remove_worker(figure_id fid);
+
     void draw_farm_worker(painter &ctx, int direction, int action, vec2i coords, color color_mask = COLOR_MASK_NONE);
     void draw_workers(painter &ctx, building *b, tile2i tile, vec2i pos);
+
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 };
 
 struct building_farm_grain : public building_farm {

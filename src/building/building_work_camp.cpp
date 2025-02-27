@@ -9,6 +9,7 @@
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
+#include "building/building_farm.h"
 #include "graphics/graphics.h"
 #include "io/gamefiles/lang.h"
 #include "config/config.h"
@@ -66,9 +67,11 @@ void info_window_work_camp::init(object_info &c) {
 
 building* building_work_camp::determine_worker_needed() {
     return building_first([] (building &b) {
-        const bool floodplain_farm = g_floods.state_is(FLOOD_STATE_FARMABLE) && building_is_floodplain_farm(b);
-        if (floodplain_farm) {
-            return (!b.data.industry.worker_id && b.data.industry.labor_days_left <= 47 && !b.num_workers);
+        const bool floodplain = g_floods.state_is(FLOOD_STATE_FARMABLE);       
+        auto farm = b.dcast_farm();
+        if (floodplain && farm && farm->is_floodplain_farm()) {
+            const auto &d = farm->runtime_data();
+            return (!d.worker_id && d.labor_days_left <= 47 && !b.num_workers);
         }
 
         const bool monument_leveling = building_is_monument(b.type) && b.data.monuments.phase < 2;
@@ -94,8 +97,9 @@ void building_work_camp::spawn_figure() {
     if (dest) {
         figure *f = base.create_figure_with_destination(FIGURE_LABORER, dest, FIGURE_ACTION_10_WORKER_CREATED, BUILDING_SLOT_SERVICE);
         data.industry.spawned_worker_this_month = true;
-        if (dest->is_industry()) {
-            dest->industry_add_workers(f->id);
+        if (dest->is_farm()) {
+            auto farm = dest->dcast_farm();
+            farm->add_workers(f->id);
         } else if (dest->is_monument()) {
             dest->monument_add_workers(f->id);
         }

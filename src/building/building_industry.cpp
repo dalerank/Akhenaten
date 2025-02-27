@@ -34,13 +34,13 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     for (int i = 0; i < 40; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &data.industry.unk_40[i]);
     }
-    iob->bind(BIND_SIGNATURE_UINT8, &data.industry.labor_state);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.industry.labor_days_left);
+    iob->bind____skip(1);
+    iob->bind____skip(1);
     for (int i = 0; i < 10; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &data.industry.unk_12[i]);
     }
-    iob->bind(BIND_SIGNATURE_UINT16, &data.industry.work_camp_id);
-    iob->bind(BIND_SIGNATURE_UINT16, &data.industry.worker_id);
+    iob->bind____skip(2);
+    iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_UINT8, &data.industry.processed_figure);
 
     int tmp;

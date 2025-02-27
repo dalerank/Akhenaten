@@ -186,10 +186,12 @@ void building_farm::draw_farm_worker(painter &ctx, int direction, int action, ve
     pcstr anim_key = std::array{"tiling", "seeding", "harvesting"}[action];
     const animation_t &action_anim = anim(anim_key);
     animation_context context;
+
+    auto &d = runtime_data();
     context.setup(action_anim);
-    context.frame = data.farm.worker_frame;
+    context.frame = d.worker_frame;
     context.update(false);
-    data.farm.worker_frame = context.frame;
+    d.worker_frame = context.frame;
     ImageDraw::img_sprite(ctx, context.start() + direction + 8 * context.current_frame(), coords + context.pos, color_mask);
 }
 
@@ -440,9 +442,15 @@ void building_farm::on_undo() {
 
 void building_farm::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(22);
-    iob->bind____skip(57);
-    iob->bind(BIND_SIGNATURE_UINT16, &data.industry.progress);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.farm.worker_frame);
+    iob->bind____skip(51);
+
+    auto &d = runtime_data();
+    iob->bind(BIND_SIGNATURE_UINT16, &d.work_camp_id);
+    iob->bind(BIND_SIGNATURE_UINT16, &d.worker_id);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.labor_state);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.labor_days_left);
+    iob->bind(BIND_SIGNATURE_UINT16, &d.progress);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.worker_frame);
 }
 
 void building_farm::add_tiles() {
@@ -459,10 +467,11 @@ void building_farm::spawn_figure_harvests() {
             return;
         }
 
-        if (base.has_road_access && data.industry.progress > 0) {
+        auto &d = runtime_data();
+        if (base.has_road_access && d.progress > 0) {
             int farm_fertility = map_get_fertility_for_farm(tile());
 
-            data.industry.ready_production = data.industry.progress * farm_fertility / 100;
+            d.ready_production = d.progress * farm_fertility / 100;
             int expected_produce = farm_expected_produce(&base);
             {
                 figure *f = create_cartpusher(base.output_resource_first_id, expected_produce);
@@ -471,12 +480,12 @@ void building_farm::spawn_figure_harvests() {
 
                 f->sender_building_id = id();
 
-                data.industry.progress = 0;
-                data.industry.ready_production = 0;
-                data.industry.worker_id = 0;
-                data.industry.work_camp_id = 0;
-                data.industry.labor_state = LABOR_STATE_NONE;
-                data.industry.labor_days_left = 0;
+                d.progress = 0;
+                d.ready_production = 0;
+                d.worker_id = 0;
+                d.work_camp_id = 0;
+                d.labor_state = LABOR_STATE_NONE;
+                d.labor_days_left = 0;
                 base.num_workers = 0;
             }
 
@@ -495,6 +504,17 @@ void building_farm::spawn_figure_harvests() {
             create_cartpusher(base.output_resource_first_id, farm_expected_produce(&base));
             building_industry_start_new_production(&base);
         }
+    }
+}
+
+void building_farm::add_workers(figure_id fid) {
+    runtime_data().worker_id = fid;
+}
+
+void building_farm::remove_worker(figure_id fid) {
+    auto &d = runtime_data();
+    if (d.worker_id == fid) {
+        d.worker_id = 0;
     }
 }
 

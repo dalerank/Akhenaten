@@ -1,6 +1,7 @@
 #include "city_floods.h"
 
 #include "building/building.h"
+#include "building/building_farm.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "core/random.h"
@@ -106,12 +107,13 @@ void floods_t::reset_farms() {
             continue;
         }
 
-        it->data.industry.progress = 0;
-        it->data.industry.ready_production = 0;
-        it->data.industry.worker_id = 0;
-        it->data.industry.work_camp_id = 0;
-        it->data.industry.labor_state = LABOR_STATE_NONE;
-        it->data.industry.labor_days_left = 0;
+        auto &d = it->dcast_farm()->runtime_data();
+        d.progress = 0;
+        d.ready_production = 0;
+        d.worker_id = 0;
+        d.work_camp_id = 0;
+        d.labor_state = LABOR_STATE_NONE;
+        d.labor_days_left = 0;
         it->num_workers = 0;
     }
 }

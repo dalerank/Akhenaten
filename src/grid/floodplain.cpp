@@ -138,9 +138,10 @@ static void map_floodplain_update_inundation_row(int floodplain_is_flooding, int
                     }
                 }
             } else { // hide building by unsetting the TERRAIN_BUILDING bitflag
-                farm->data.industry.progress = 0;
-                farm->data.industry.labor_state = LABOR_STATE_NONE;
-                farm->data.industry.labor_days_left = 0;
+                auto &d = farm->runtime_data();
+                d.progress = 0;
+                d.labor_state = LABOR_STATE_NONE;
+                d.labor_days_left = 0;
                 for (int _y = farm->tiley(); _y < farm->tiley() + farm->size(); _y++) {
                     for (int _x = farm->tilex(); _x < farm->tilex() + farm->size(); _x++) {
                         int _offset = MAP_OFFSET(_x, _y);

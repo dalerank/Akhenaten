@@ -1,6 +1,7 @@
 #include "labor.h"
 
 #include "building/building.h"
+#include "building/building_farm.h"
 #include "building/model.h"
 #include "city/city.h"
 #include "city/message.h"
@@ -537,7 +538,8 @@ void city_labor_t::allocate_workers_to_non_water_buildings() {
     buildings_valid_do([&] (building &b) {
         e_labor_category cat = category_for_building(&b);
         if (building_is_floodplain_farm(b)) {
-            if (b.data.industry.labor_state <= 0) {
+            auto &d = b.dcast_farm()->runtime_data();
+            if (d.labor_state <= 0) {
                 b.num_workers = 0;
             }
             return; // water is handled by allocate_workers_to_water(void) in C3

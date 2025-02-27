@@ -212,9 +212,6 @@ public:
     short formation_id;
     union impl_data_t {
         char data[512] = { 0 };
-        struct farm_t {
-            uint8_t worker_frame;
-        } farm;
 
         struct education_t {
             e_resource first_material_id;
@@ -240,11 +237,7 @@ public:
             int unk_6[5];
             short reserved_id_13;
             int unk_40[40];
-            e_labor_state labor_state;
-            uint8_t labor_days_left;
             int unk_12[10];
-            building_id work_camp_id;
-            figure_id worker_id;
             e_figure_type processed_figure;
         } industry;
 
@@ -484,8 +477,6 @@ public:
 
     void monument_add_workers(int fid);
     void monument_remove_worker(int fid);
-    void industry_add_workers(int fid);
-    void industry_remove_worker(int fid);
 
     static const metainfo &get_info(const xstring type);
 

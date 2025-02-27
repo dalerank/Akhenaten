@@ -1,6 +1,7 @@
 #include "figure_worker.h"
 
 #include "building/monument_mastaba.h"
+#include "building/building_farm.h"
 #include "figure/image.h"
 #include "graphics/image_groups.h"
 #include "city/sentiment.h"
@@ -65,8 +66,9 @@ void figure_worker::figure_action() {
         return;
     }
 
-    if (b_dest->is_industry()) {
-        if (b_dest->data.industry.worker_id != id()) {
+    if (building_is_floodplain_farm(*b_dest)) {
+        auto &d = b_dest->dcast_farm()->runtime_data();
+        if (d.worker_id != id()) {
             poof();
             return;
         }
@@ -85,12 +87,13 @@ void figure_worker::figure_action() {
 
     case FIGURE_ACTION_10_WORKER_GOING:
         if (do_gotobuilding(destination(), stop_at_road, terrain_usage)) {
-            if (building_is_farm(b_dest->type)) {
+            if (building_is_floodplain_farm(*b_dest)) {
+                auto &d = b_dest->dcast_farm()->runtime_data();
                 b_dest->num_workers = std::clamp<int>((1.f - bhome->tile.dist(b_dest->tile) / 20.f) * 12, 2, 10);
-                b_dest->data.industry.work_camp_id = bhome->id;
-                b_dest->data.industry.worker_id = 0;
-                b_dest->data.industry.labor_state = LABOR_STATE_JUST_ENTERED;
-                b_dest->data.industry.labor_days_left = 96;
+                d.work_camp_id = bhome->id;
+                d.worker_id = 0;
+                d.labor_state = LABOR_STATE_JUST_ENTERED;
+                d.labor_days_left = 96;
             } else if (b_dest->type == BUILDING_PYRAMID) {
                 // todo: MONUMENTSSSS
             } else if (building_type_any_of(b_dest->type, BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE,
@@ -160,9 +163,10 @@ void figure_worker::poof() {
     figure_impl::poof();
 
     building *b = destination();
-    if (b && b->is_industry()) {
-        b->industry_remove_worker(id());
-    } else if (b && b->is_monument()) {
+    if (b->is_farm()) {
+        auto farm = b->dcast_farm();
+        farm->remove_worker(id());
+    } else if (b->is_monument()) {
         b->monument_remove_worker(id());
     }
 }

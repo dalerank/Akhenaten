@@ -28,6 +28,7 @@
 
 #include "building/construction/build_planner.h"
 #include "building/count.h"
+#include "building/building_farm.h"
 #include "city/coverage.h"
 #include "city/city_floods.h"
 #include "sound/sound_city.h"
@@ -393,8 +394,9 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
                 debug_text(ctx, str, x1 + 10, y + 30, 4, ":", b->data.industry.progress / 20, COLOR_GREEN);
                 debug_text(ctx, str, x1 + 40, y + 30, 40, "exp.", farm_expected_produce(b), COLOR_GREEN);
                 if (building_is_floodplain_farm(*b)) {
-                    debug_text(ctx, str, x0, y + 40, 0, "", b->data.industry.labor_state, COLOR_WHITE);
-                    debug_text(ctx, str, x1, y + 40, 0, "", b->data.industry.labor_days_left, COLOR_WHITE);
+                    auto &d = b->dcast_farm()->runtime_data();
+                    debug_text(ctx, str, x0, y + 40, 0, "", d.labor_state, COLOR_WHITE);
+                    debug_text(ctx, str, x1, y + 40, 0, "", d.labor_days_left, COLOR_WHITE);
                 }
             }
             if (b->data.entertainment.booth_corner_grid_offset) {
