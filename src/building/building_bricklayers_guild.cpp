@@ -39,7 +39,7 @@ void building_bricklayers_guild::update_graphic() {
 }
 
 void building_bricklayers_guild::on_create(int orientation) {
-    data.guild.max_workers = 1;
+    runtime_data().max_workers = 1;
 }
 
 bool building_bricklayers_guild::can_spawn_bricklayer_man(int max_gatherers_per_building) {
@@ -49,7 +49,7 @@ bool building_bricklayers_guild::can_spawn_bricklayer_man(int max_gatherers_per_
         return false;
     }
     
-    bool has_free_man = (base.get_figures_number(FIGURE_BRICKLAYER) < data.guild.max_workers);
+    bool has_free_man = (base.get_figures_number(FIGURE_BRICKLAYER) < runtime_data().max_workers);
     if (!has_free_man) {
         return false;
     }
@@ -80,7 +80,7 @@ void building_bricklayers_guild::spawn_figure() {
     }
 
     base.figure_spawn_delay = 0;
-    if (!can_spawn_bricklayer_man(data.guild.max_workers)) {
+    if (!can_spawn_bricklayer_man(runtime_data().max_workers)) {
         return;
     }
 

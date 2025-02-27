@@ -212,9 +212,6 @@ public:
     short formation_id;
     union impl_data_t {
         char data[512] = { 0 };
-        struct guild_t {
-            uint8_t max_workers;
-        } guild;
         struct farm_t {
             uint8_t worker_frame;
         } farm;
