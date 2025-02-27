@@ -105,15 +105,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
     dcast()->on_create(orientation);
 }
 
-void building::monument_remove_worker(int fid) {
-    for (auto &wid : data.monuments.workers) {
-        if (wid == fid) {
-            wid = 0;
-            return;
-        }
-    }
-}
-
 void building_impl::acquire(e_building_type e, building &b) {
     static_assert(sizeof(building_impl) <= sizeof(building::ptr_buffer_t));
 
@@ -245,15 +236,6 @@ building_temple_complex_oracle *building::dcast_temple_complex_oracle() { return
 building_water_lift *building::dcast_water_lift() { return dcast()->dcast_water_lift(); }
 
 building::building() {
-}
-
-void building::monument_add_workers(int fid) {
-    for (auto &wid : data.monuments.workers) {
-        if (wid == 0) {
-            wid = fid;
-            return;
-        }
-    }
 }
 
 building* building::main() {

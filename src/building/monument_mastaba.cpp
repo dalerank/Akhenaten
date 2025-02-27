@@ -211,6 +211,25 @@ bool building_small_mastaba::draw_ornaments_and_animations_flat(painter &ctx, ve
     return draw_ornaments_and_animations_flat_impl(base, ctx, point, tile, mask, current_params().init_tiles_size());
 }
 
+void building_mastaba::remove_worker(figure_id fid) {
+    for (auto &wid : data.monuments.workers) {
+        if (wid == fid) {
+            wid = 0;
+            return;
+        }
+    }
+}
+
+
+void building_mastaba::add_workers(figure_id fid) {
+    for (auto &wid : data.monuments.workers) {
+        if (wid == 0) {
+            wid = fid;
+            return;
+        }
+    }
+}
+
 int building_mastaba::get_image(int orientation, tile2i tile, tile2i start, tile2i end) {
     int image_id = small_mastaba_m.anim[animkeys().base].first_img();
     int base_image_id = image_id - 7;

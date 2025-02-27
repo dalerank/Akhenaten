@@ -38,6 +38,9 @@ public:
     static void update_images(building *b, int curr_phase, const vec2i size_b);
     static void finalize(building *b, const vec2i size_b);
     static int get_image(int orientation, tile2i tile, tile2i start, tile2i end);
+
+    virtual void remove_worker(figure_id fid) override;
+    virtual void add_workers(figure_id fid) override;
 };
 
 class building_small_mastaba : public building_mastaba {

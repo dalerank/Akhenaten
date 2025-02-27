@@ -94,16 +94,14 @@ void building_work_camp::spawn_figure() {
     }
 
     building* dest = determine_worker_needed();
-    if (dest) {
-        figure *f = base.create_figure_with_destination(FIGURE_LABORER, dest, FIGURE_ACTION_10_WORKER_CREATED, BUILDING_SLOT_SERVICE);
-        data.industry.spawned_worker_this_month = true;
-        if (dest->is_farm()) {
-            auto farm = dest->dcast_farm();
-            farm->add_workers(f->id);
-        } else if (dest->is_monument()) {
-            dest->monument_add_workers(f->id);
-        }
+    if (!dest) {
+        return;
     }
+
+    figure *f = base.create_figure_with_destination(FIGURE_LABORER, dest, FIGURE_ACTION_10_WORKER_CREATED, BUILDING_SLOT_SERVICE);
+    data.industry.spawned_worker_this_month = true;
+
+    dest->dcast()->add_workers(f->id);
 }
 
 bool building_work_camp::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

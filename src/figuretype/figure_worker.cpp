@@ -162,12 +162,10 @@ void figure_worker::update_animation() {
 void figure_worker::poof() {
     figure_impl::poof();
 
-    building *b = destination();
-    if (b->is_farm()) {
-        auto farm = b->dcast_farm();
-        farm->remove_worker(id());
-    } else if (b->is_monument()) {
-        b->monument_remove_worker(id());
+    building_impl *b = destination()->dcast();
+
+    if (b) {
+        b->remove_worker(id());
     }
 }
 

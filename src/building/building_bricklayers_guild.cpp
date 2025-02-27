@@ -101,7 +101,7 @@ void building_bricklayers_guild::spawn_figure() {
     }
 
     auto f = base.create_figure_with_destination(FIGURE_BRICKLAYER, monument, FIGURE_ACTION_10_BRIRKLAYER_CREATED, BUILDING_SLOT_SERVICE);
-    monument->monument_add_workers(f->id);
+    monument->dcast()->add_workers(f->id);
     f->wait_ticks = random_short() % 30; // ok
 }
 

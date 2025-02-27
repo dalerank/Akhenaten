@@ -475,9 +475,6 @@ public:
     tile2i access_tile();
     bool figure_generate();
 
-    void monument_add_workers(int fid);
-    void monument_remove_worker(int fid);
-
     static const metainfo &get_info(const xstring type);
 
     template<typename T>
@@ -591,6 +588,9 @@ public:
     virtual int get_orientation() const { return base.orientation; }
     virtual void on_config_reload() {}
     virtual void set_water_access_tiles(const water_access_tiles &tiles) {}
+
+    virtual void remove_worker(figure_id fid) {}
+    virtual void add_workers(figure_id fid) {}
 
     virtual building_farm *dcast_farm() { return nullptr; }
     virtual building_brewery *dcast_brewery() { return nullptr; }

@@ -55,8 +55,8 @@ public:
     void spawn_figure_harvests();
     inline bool is_floodplain_farm() const { return building_is_floodplain_farm(base); }
 
-    void add_workers(figure_id fid);
-    void remove_worker(figure_id fid);
+    virtual void add_workers(figure_id fid) override;
+    virtual void remove_worker(figure_id fid) override;
 
     void draw_farm_worker(painter &ctx, int direction, int action, vec2i coords, color color_mask = COLOR_MASK_NONE);
     void draw_workers(painter &ctx, building *b, tile2i tile, vec2i pos);
