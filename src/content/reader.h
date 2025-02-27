@@ -154,7 +154,6 @@ public:
     inline data_reader(pcstr _debug_info, void *data, int size) : reader_base(_debug_info, data, size) {}
     virtual ~data_reader() { free((void *)__data); __data = nullptr; };
 
-public:
     inline void release(const void *&data, int &size) {
         data = __data;
         size = __size;

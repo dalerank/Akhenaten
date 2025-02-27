@@ -94,6 +94,11 @@ struct object_info {
     building *building_get();
 
     template<typename T>
+    T* building_get() {
+        return smart_cast<T>(building_get());
+    }
+
+    template<typename T>
     T* figure_get() {
         if (!figure_get_id()) {
             return nullptr;

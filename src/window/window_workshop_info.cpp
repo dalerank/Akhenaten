@@ -59,11 +59,11 @@ struct brickworks_info_window : public building_info_window_t<brickworks_info_wi
         ui["workers_desc"].text(trouble_text);
 
         if (b->stored_amount(RESOURCE_CLAY) <= 0) {
-            ui["warning_text"] = { c.group_id, 11 };
+            ui["warning_text"] = textid{ c.group_id, 11 };
         } else if (b->stored_amount(RESOURCE_STRAW) <= 0) {
-            ui["warning_text"] = { c.group_id, 11 };
+            ui["warning_text"] = textid{ c.group_id, 11 };
         } else {
-            ui["warning_text"] = { c.group_id, 1 };
+            ui["warning_text"] = textid{ c.group_id, 1 };
         }
     }
     virtual bool check(object_info &c) override {

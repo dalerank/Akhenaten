@@ -160,6 +160,7 @@ struct element {
     inline void operator=(const bstring512 &t) { text(t); }
     inline void operator=(const xstring &t) { text(t.c_str()); }
     inline void operator=(const textid &t) { text(ui::str(t.group, t.id)); }
+    inline void operator=(const image_desc &t) { image(t); }
     void update_pos(const recti &r);
     vec2i screen_pos() const;
 

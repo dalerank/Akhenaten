@@ -63,6 +63,6 @@ void info_window_mastaba::init(object_info &c) {
 
         ui["warning_text"] = reason;
     } else {
-        ui["warning_text"] = { 178, 41 };
+        ui["warning_text"] = textid{ 178, 41 };
     }
 }
