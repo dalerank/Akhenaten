@@ -84,12 +84,13 @@ void building_fort::on_place_update_tiles(int orientation, int variant) {
     int image_id = params().anim[animkeys().base].first_img();
     map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);
 
+    auto &d = runtime_data();
     if (type() == BUILDING_FORT_CHARIOTEERS) {
-        base.data.fort.figure_type = FIGURE_FCHARIOTEER;
+        d.figure_type = FIGURE_FCHARIOTEER;
     } else if (type() == BUILDING_FORT_ARCHERS) {
-        base.data.fort.figure_type = FIGURE_ARCHER;
+        d.figure_type = FIGURE_ARCHER;
     } else if (type() == BUILDING_FORT_INFANTRY) {
-        base.data.fort.figure_type = FIGURE_INFANTRY;
+        d.figure_type = FIGURE_INFANTRY;
     }
 
     // create parade ground
@@ -131,7 +132,8 @@ bool building_fort::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
 }
 
 void building_fort::bind_dynamic(io_buffer *iob, size_t verrsion) {
-    iob->bind(BIND_SIGNATURE_UINT16, &data.fort.figure_type);
+    auto &d = runtime_data();
+    iob->bind(BIND_SIGNATURE_UINT16, &d.figure_type);
 }
 
 void building_fort::highlight_waypoints() {

@@ -12,18 +12,20 @@
 #include "grid/grid.h"
 #include "grid/routing/routing.h"
 #include "scenario/distant_battle.h"
+#include "building/building_fort.h"
 
-int formation_legion_create_for_fort(building* fort) {
+int formation_legion_create_for_fort(building* b) {
     formation_calculate_legion_totals();
 
-    formation* m = formation_create_legion(fort->id, fort->tile.x(), fort->tile.y(), fort->data.fort.figure_type);
+    building_fort *fort = b->dcast_fort();
+    formation* m = formation_create_legion(b->id, b->tile.x(), b->tile.y(), fort->runtime_data().figure_type);
     if (!m->id)
         return 0;
 
     figure* standard = figure_create(FIGURE_STANDARD_BEARER, tile2i(0, 0), DIR_0_TOP_RIGHT);
     m->standard_figure_id = standard->id;
     standard->formation_id = m->id;
-    standard->set_home(fort->id);
+    standard->set_home(fort->id());
 
     return m->id;
 }
@@ -50,13 +52,14 @@ int formation_legion_recruits_needed(void) {
     return 0;
 }
 
-void formation_legion_update_recruit_status(building* fort) {
-    formation* m = formation_get(fort->formation_id);
+void formation_legion_update_recruit_status(building* b) {
+    formation* m = formation_get(b->formation_id);
     m->legion_recruit_type = LEGION_RECRUIT_NONE;
     if (!m->is_at_fort || m->cursed_by_seth || m->num_figures == m->max_figures)
         return;
     if (m->num_figures < m->max_figures) {
-        int type = fort->data.fort.figure_type;
+        building_fort *fort = b->dcast_fort();
+        e_figure_type type = fort->runtime_data().figure_type;
         if (type == FIGURE_INFANTRY)
             m->legion_recruit_type = LEGION_RECRUIT_INFANTRY;
         else if (type == FIGURE_ARCHER)

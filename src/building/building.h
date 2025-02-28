@@ -216,10 +216,6 @@ public:
     union impl_data_t {
         char data[512] = { 0 };
 
-        struct fort_t {
-            e_figure_type figure_type;
-        } fort;
-
         struct entertainment_t {
             uint8_t spawned_entertainer_days;
             uint8_t num_shows;
