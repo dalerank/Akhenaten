@@ -15,8 +15,6 @@ int farm_expected_produce(building* b);
 void building_industry_update_production();
 void building_industry_update_farms();
 void building_industry_update_wheat_production(void);
-bool building_industry_has_produced_resource(building &b);
-void building_industry_start_new_production(building* b);
 
 struct delivery_destination {
     int building_id = 0;

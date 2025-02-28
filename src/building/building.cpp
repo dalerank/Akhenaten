@@ -124,6 +124,18 @@ bool building_impl::required_resource(e_resource r) const {
     return base.first_material_id == r || base.second_material_id == r;
 }
 
+bool building_impl::stored_amount(e_resource r) const {
+    if (base.first_material_id == r) {
+        return base.stored_amount_first;
+    }
+
+    if (base.second_material_id == r) {
+        return base.stored_amount_second;
+    }
+
+    return base.stored_amount_first;
+}
+
 resource_vec building_impl::required_resources() const { 
     if (base.first_material_id == RESOURCE_NONE && base.second_material_id == RESOURCE_NONE) {
         return {}; 
@@ -477,20 +489,8 @@ figure *building::create_roaming_figure(e_figure_type _type, e_figure_action cre
 }
 
 int building::stored_amount(e_resource res) const {
-    if (first_material_id == res) {
-        return stored_amount_first;
-    }
-
-    if (second_material_id == res) {
-        return stored_amount_second;
-    }
-
-    if (output_resource_first_id == res) {
-        return data.industry.ready_production;
-    }
-
-    // todo: dalerank, temporary, building should return own resource type only
-    return stored_amount_first;
+    building *b = (building *)this;
+    return b->dcast()->stored_amount(res);
 }
 
 int building::need_resource_amount(e_resource resource) const {
@@ -540,27 +540,6 @@ pcstr building::cls_name() const {
 
     const auto &m = params.meta;
     return ui::str(m.text_id, 0);
-}
-
-void building::workshop_start_production() {
-    assert(is_workshop());
-    bool can_start_b = false;
-    if (second_material_id != RESOURCE_NONE) {
-        can_start_b = (stored_amount_second >= 100);
-    } else {
-        can_start_b = true;
-    }
-
-    bool can_start_a = (stored_amount_first >= 100);
-    if (can_start_b && can_start_a) {
-        data.industry.has_raw_materials = true;
-        if (stored_amount_second >= 100) {
-            stored_amount_second -= 100;
-        }
-        if (stored_amount_first >= 100) {
-            stored_amount_first -= 100;
-        }
-    }
 }
 
 tile2i building::access_tile() {
@@ -943,7 +922,6 @@ const bproperty bproperties[] = {
     { tags().building, tags().tax_income_or_storage, [] (building &b, const xstring &) { return bvariant(b.tax_income_or_storage); }},
     { tags().building, tags().num_workers, [] (building &b, const xstring &) { return bvariant(b.num_workers); }},
     { tags().model, tags().laborers, [] (building &b, const xstring &) { const auto model = model_get_building(b.type); return bvariant(model->laborers); }},
-    { tags().industry, tags().progress, [] (building &b, const xstring &) { int pct_done = calc_percentage<int>(b.data.industry.progress, b.data.industry.progress_max); return bvariant(pct_done); }},
     { tags().building, tags().output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output_resource_first_id)); }},
     { tags().building, tags().first_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.first_material_id)); }},
     { tags().building, tags().first_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount_first); }},

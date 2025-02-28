@@ -70,7 +70,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
         game_debug_show_property("storage_id", b->storage_id);
         game_debug_show_property("show_on_problem_overlay", b->show_on_problem_overlay);
         game_debug_show_property("deben_storage", b->deben_storage);
-        game_debug_show_property("industry.progress", b->data.industry.progress);
+        //game_debug_show_property("industry.progress", b->progress);
 
         ImGui::TreePop();
     }

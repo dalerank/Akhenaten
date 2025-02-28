@@ -29,7 +29,7 @@ void info_window_farm::init(object_info &c) {
     } else {
         if (!c.has_road_access) { reason = { 69, 25 }; }
         else if (city_resource_is_mothballed(b->output_resource_first_id)) { reason.id = 4; }
-        else if (b->data.industry.curse_days_left > 4) { reason.id = 11; }
+        else if (b->curse_days_left > 4) { reason.id = 11; }
         else if (b->num_workers <= 0) { reason.id = 5; }
         else reason.id = approximate_value(c.worker_percentage / 100.f, make_array(10, 9, 8, 7, 6));
     }

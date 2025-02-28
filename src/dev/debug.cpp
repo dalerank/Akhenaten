@@ -389,9 +389,10 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             debug_text(ctx, str, x1 - 10, y + 20, 4, ":", b->worker_percentage(), COLOR_LIGHT_BLUE);
             //
             if (building_is_farm(b->type)) {
+                const auto farm = b->dcast_farm();
                 debug_text(ctx, str,x1 + 40,y + 20,40,"fert.",map_get_fertility_for_farm(b->tile.grid_offset()),COLOR_FONT_ORANGE_LIGHT);
-                debug_text(ctx, str, x0, y + 30, 0, "", b->data.industry.progress, COLOR_GREEN);
-                debug_text(ctx, str, x1 + 10, y + 30, 4, ":", b->data.industry.progress / 20, COLOR_GREEN);
+                debug_text(ctx, str, x0, y + 30, 0, "", farm->progress(), COLOR_GREEN);
+                debug_text(ctx, str, x1 + 10, y + 30, 4, ":", farm->progress() / 20, COLOR_GREEN);
                 debug_text(ctx, str, x1 + 40, y + 30, 40, "exp.", farm_expected_produce(b), COLOR_GREEN);
                 if (building_is_floodplain_farm(*b)) {
                     auto &d = b->dcast_farm()->runtime_data();

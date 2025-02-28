@@ -113,7 +113,7 @@ void map_natives_init() {
             b->state = BUILDING_STATE_VALID;
             switch (type) {
             case BUILDING_UNUSED_NATIVE_CROPS_93:
-                b->data.industry.progress = random_bit;
+                //b->data.industry.progress = random_bit; // TODO
                 break;
             case BUILDING_UNUSED_NATIVE_MEETING_89:
                 b->sentiment.native_anger = 100;

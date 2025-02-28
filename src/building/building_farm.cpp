@@ -61,7 +61,7 @@ void game_cheat_farm_grow(std::istream &is, std::ostream &os) {
             return;
         }
 
-        b.data.industry.progress += amount;
+        farm->runtime_data().progress += amount;
     });
 };
 
@@ -228,59 +228,63 @@ void building_farm::draw_workers(painter &ctx, building* b, tile2i tile, vec2i p
     int random_seed = 1234.567f * (1 + game.simtime.day) * map_random_get(b->tile.grid_offset());
     int d = random_seed % 8;
     if (building_is_floodplain_farm(*b)) {
+        auto farm = b->dcast_farm();
+        const short progress = farm->progress();
         if (g_floods.state_is(FLOOD_STATE_IMMINENT)) {
             //int random_x = random_seed % 3;
             //int random_y = int(1234.567f * random_seed) % 3;
             //auto coords = farm_tile_coords(x, y, random_x, random_y);
             //draw_ph_worker(d, 2, animation_offset, coords);
         } else {
-            if (b->data.industry.progress < 400)
+            if (progress < 400)
                 draw_farm_worker(ctx, game.simtime.absolute_tick() % 128 / 16, 1, farm_tile_coords(pos, 1, 1));
-            else if (b->data.industry.progress < 500)
+            else if (progress < 500)
                 draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 1, 0));
-            else if (b->data.industry.progress < 600)
+            else if (progress < 600)
                 draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 0));
-            else if (b->data.industry.progress < 700)
+            else if (progress < 700)
                 draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 0, 1));
-            else if (b->data.industry.progress < 800)
+            else if (progress < 800)
                 draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 1, 1));
-            else if (b->data.industry.progress < 900)
+            else if (progress < 900)
                 draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 1));
-            else if (b->data.industry.progress < 1000)
+            else if (progress < 1000)
                 draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 0, 2));
-            else if (b->data.industry.progress < 1100)
+            else if (progress < 1100)
                 draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 1, 2));
-            else if (b->data.industry.progress < 1200)
+            else if (progress < 1200)
                 draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 2));
-            else if (b->data.industry.progress < 1300)
+            else if (progress < 1300)
                 draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 1, 0));
-            else if (b->data.industry.progress < 1400)
+            else if (progress < 1400)
                 draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 2, 0));
-            else if (b->data.industry.progress < 1500)
+            else if (progress < 1500)
                 draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 0, 1));
-            else if (b->data.industry.progress < 1600)
+            else if (progress < 1600)
                 draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 1, 1));
-            else if (b->data.industry.progress < 1700)
+            else if (progress < 1700)
                 draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 2, 1));
-            else if (b->data.industry.progress < 1800)
+            else if (progress < 1800)
                 draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 0, 2));
-            else if (b->data.industry.progress < 1900)
+            else if (progress < 1900)
                 draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 1, 2));
-            else if (b->data.industry.progress < 2000)
+            else if (progress < 2000)
                 draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 2, 2));
         }
     } else {
-        if (b->data.industry.progress < 100)
+        auto farm = b->dcast_farm();
+        const short progress = farm->progress();
+        if (progress < 100)
             draw_farm_worker(ctx, game.simtime.absolute_tick() % 128 / 16, 1, farm_tile_coords(pos, 1, 1));
-        else if (b->data.industry.progress < 400)
+        else if (progress < 400)
             draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 0, 2));
-        else if (b->data.industry.progress < 800)
+        else if (progress < 800)
             draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 1, 2));
-        else if (b->data.industry.progress < 1200)
+        else if (progress < 1200)
             draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 2));
-        else if (b->data.industry.progress < 1600)
+        else if (progress < 1600)
             draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 1));
-        else if (b->data.industry.progress < 2000)
+        else if (progress < 2000)
             draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 0));
     }
 }
@@ -324,7 +328,7 @@ bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
 }
 
 void building_farm::on_create(int orientation) {
-    data.industry.progress_max = 2000;
+    runtime_data().progress_max = 2000;
 }
 
 void building_farm::on_place_update_tiles(int orientation, int variant) {
@@ -368,7 +372,7 @@ void building_farm::on_place_update_tiles(int orientation, int variant) {
 
 bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color mask) {
     if (map_terrain_is(t.grid_offset(), TERRAIN_BUILDING)) {
-        draw_crops(ctx, type(), data.industry.progress, tile(), point, mask);
+        draw_crops(ctx, type(), progress(), tile(), point, mask);
         draw_workers(ctx, &base, t, point);
     }
 
@@ -442,15 +446,23 @@ void building_farm::on_undo() {
 
 void building_farm::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(22);
-    iob->bind____skip(51);
+    iob->bind____skip(48);
 
     auto &d = runtime_data();
+    iob->bind(BIND_SIGNATURE_UINT16, &d.progress_max);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.produce_multiplier);
     iob->bind(BIND_SIGNATURE_UINT16, &d.work_camp_id);
     iob->bind(BIND_SIGNATURE_UINT16, &d.worker_id);
     iob->bind(BIND_SIGNATURE_UINT8, &d.labor_state);
     iob->bind(BIND_SIGNATURE_UINT8, &d.labor_days_left);
     iob->bind(BIND_SIGNATURE_UINT16, &d.progress);
     iob->bind(BIND_SIGNATURE_UINT8, &d.worker_frame);
+}
+
+void building_farm::start_production() {
+    auto &d = runtime_data();
+    d.progress = 0;
+    update_tiles_image();
 }
 
 void building_farm::add_tiles() {
@@ -502,7 +514,7 @@ void building_farm::spawn_figure_harvests() {
                 return;
             }
             create_cartpusher(base.output_resource_first_id, farm_expected_produce(&base));
-            building_industry_start_new_production(&base);
+            start_production();
         }
     }
 }
@@ -531,14 +543,14 @@ void building_farm::update_tiles_image() {
 
     if (!is_flooded) {
         int img_id = anim(animkeys().farmland).first_img();
-        map_building_tiles_add_farm(type(), id(), tile(), img_id + 5 * (base.output_resource_first_id - 1), data.industry.progress);
+        map_building_tiles_add_farm(type(), id(), tile(), img_id + 5 * (base.output_resource_first_id - 1), progress());
     }
 }
 
 void building_farm::deplete_soil() {
     // DIFFERENT from original Pharaoh... and a bit easier to do?
     if (config_get(CONFIG_GP_CH_SOIL_DEPLETION)) {
-        int malus = (float)data.industry.progress / (float)MAX_PROGRESS_FARM_PH * (float)-100;
+        int malus = (float)progress() / (float)MAX_PROGRESS_FARM_PH * (float)-100;
         for (int _y = tiley(); _y < tiley() + size(); _y++) {
             for (int _x = tilex(); _x < tilex() + size(); _x++) {
                 map_soil_set_depletion(MAP_OFFSET(_x, _y), malus);

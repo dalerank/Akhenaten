@@ -25,11 +25,13 @@ public:
     struct runtime_data_t {
         uint8_t worker_frame;
         uint16_t progress;
+        uint16_t progress_max;
         uint16_t ready_production;
         figure_id worker_id;
         uint8_t labor_days_left;
         e_labor_state labor_state;
         building_id work_camp_id;
+        uint8_t produce_multiplier;
     };
 
     virtual void on_create(int orientation) override;
@@ -43,6 +45,9 @@ public:
     virtual void update_graphic() override;
     virtual void on_undo() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void start_production() override;
+
+    short progress() const { return runtime_data().progress; }
 
     void map_building_tiles_add_farm(e_building_type type, int building_id, tile2i tile, int crop_image_offset, int progress);
     void add_tiles();

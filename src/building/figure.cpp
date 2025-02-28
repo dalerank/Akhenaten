@@ -7,6 +7,7 @@
 #include "building/building_bazaar.h"
 #include "building/model.h"
 #include "building/building_storage_yard.h"
+#include "building/building_industry.h"
 #include "building/count.h"
 #include "building/monument_mastaba.h"
 #include "building/building_work_camp.h"
@@ -252,8 +253,17 @@ void building::spawn_figure_industry() {
         return;
     }
 
-    if (building_industry_has_produced_resource(*this)) {
-        building_industry_start_new_production(this);
+    bool has_produced_resource = false;
+    if (is_farm()) {
+        auto farm = dcast_farm()->runtime_data();
+        has_produced_resource = (farm.progress >= farm.progress_max);
+    } else if (is_industry()) {
+        auto industry = dcast_industry()->runtime_data();
+        has_produced_resource = (industry.progress >= industry.progress_max);
+    }
+
+    if (has_produced_resource) {
+        dcast()->start_production();
         int ready_production = dcast()->ready_production();
         create_cartpusher(output_resource_first_id, ready_production);
     }
@@ -308,13 +318,14 @@ void building::spawn_figure_native_meeting() {
 }
 
 void building::update_native_crop_progress() {
-    data.industry.progress++;
-    if (data.industry.progress >= 5) {
-        data.industry.progress = 0;
-    }
-
-    int img_id = building_impl::params(BUILDING_BARLEY_FARM).anim["farmland"].first_img();
-    map_image_set(tile.grid_offset(), img_id + data.industry.progress);
+    // todo 
+    //data.industry.progress++;
+    //if (data.industry.progress >= 5) {
+    //    data.industry.progress = 0;
+    //}
+    //
+    //int img_id = building_impl::params(BUILDING_BARLEY_FARM).anim["farmland"].first_img();
+    //map_image_set(tile.grid_offset(), img_id + data.industry.progress);
 }
 
 bool building::figure_generate() {

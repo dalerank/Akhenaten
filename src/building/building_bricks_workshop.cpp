@@ -14,7 +14,7 @@ void building_bricks_workshop::update_count() const {
 }
 
 bool building_bricks_workshop::can_play_animation() const {
-    if (data.industry.progress == 0) {
+    if (progress() == 0) {
         if (base.stored_amount(RESOURCE_CLAY) < 100) {
             return false;
         }

@@ -102,7 +102,7 @@ void building_clay_pit::update_count() const {
 }
 
 void building_reed_gatherer::on_create(int orientation) {
-    data.industry.max_gatheres = 1;
+    runtime_data().max_gatheres = 1;
 }
 
 bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, int carry_per_person) {
@@ -152,7 +152,7 @@ void building_reed_gatherer::spawn_figure() {
     if (base.figure_spawn_delay > spawn_delay) {
         base.figure_spawn_delay = 0;
 
-        if (can_spawn_gatherer(data.industry.max_gatheres, 50)) {
+        if (can_spawn_gatherer(runtime_data().max_gatheres, 50)) {
             auto f = create_figure_generic(FIGURE_REED_GATHERER, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
             random_generate_next();
             f->wait_ticks = random_short() % 30; // ok

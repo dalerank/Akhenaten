@@ -14,17 +14,18 @@
 
 buildings::model_t<building_wood_cutter> bwood_cutter_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_wood_cutter);
-void config_load_building_wood_cutter() {
-    bwood_cutter_m.load();
-}
-
 void building_wood_cutter::on_create(int orientation) {
-    data.industry.max_gatheres = 1;
+    runtime_data().max_gatheres = 1;
 }
 
 void building_wood_cutter::update_count() const {
     building_increase_industry_count(RESOURCE_TIMBER, num_workers() > 0);
+}
+
+void building_wood_cutter::bind_dynamic(io_buffer *iob, size_t version) {
+    auto &d = runtime_data();
+
+    iob->bind(BIND_SIGNATURE_UINT8, &d.max_gatheres);
 }
 
 bool building_wood_cutter::can_spawn_lumberjack(int max_gatherers_per_building, int carry_per_person) {
@@ -60,7 +61,7 @@ void building_wood_cutter::spawn_figure() {
         if (base.figure_spawn_delay > spawn_delay) {
             base.figure_spawn_delay = 0;
 
-            const bool can_spawn = can_spawn_lumberjack(data.industry.max_gatheres, 50);
+            const bool can_spawn = can_spawn_lumberjack(runtime_data().max_gatheres, 50);
             if (can_spawn) {
                 auto f = create_figure_generic(FIGURE_LUMBERJACK, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
                 random_generate_next();

@@ -200,6 +200,9 @@ public:
     uint8_t disease_days;
     uint8_t common_health;
     uint8_t malaria_risk;
+    uint8_t spawned_worker_this_month;
+    uint8_t curse_days_left;
+    uint8_t blessing_days_left;
     short damage_risk;
     short fire_risk;
     short fire_duration;
@@ -212,25 +215,6 @@ public:
     short formation_id;
     union impl_data_t {
         char data[512] = { 0 };
-
-        struct industry_t {
-            short ready_production;
-            short progress;
-            short progress_max;
-            bool spawned_worker_this_month;
-            uint8_t max_gatheres;
-            int unk_b[10];
-            uint8_t unk_c[13];
-            uint8_t produce_multiplier;
-            uint8_t blessing_days_left;
-            bool has_raw_materials;
-            unsigned char curse_days_left;
-            int unk_6[5];
-            short reserved_id_13;
-            int unk_40[40];
-            int unk_12[10];
-            e_figure_type processed_figure;
-        } industry;
 
         struct fort_t {
             e_figure_type figure_type;
@@ -393,7 +377,6 @@ public:
     bool common_spawn_goods_output_cartpusher(bool only_one = true, bool only_full_loads = true, int min_carry = 100, int max_carry = 800);
     bool workshop_has_resources();
     bool guild_has_resources();
-    void workshop_start_production();
 
 public:
     building_impl *dcast();
@@ -579,6 +562,7 @@ public:
     virtual int get_orientation() const { return base.orientation; }
     virtual void on_config_reload() {}
     virtual void set_water_access_tiles(const water_access_tiles &tiles) {}
+    virtual void start_production() {}
 
     virtual void remove_worker(figure_id fid) {}
     virtual void add_workers(figure_id fid) {}
@@ -692,6 +676,7 @@ public:
 
     virtual resource_vec required_resources() const;
     virtual bool required_resource(e_resource) const;
+    virtual bool stored_amount(e_resource) const;
     metainfo get_info() const;
     void set_animation(const animation_t &anim);
     vfs::path get_sound();
