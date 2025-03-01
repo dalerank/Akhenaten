@@ -180,10 +180,9 @@ std::string Util::str_format(const char* fmt, ...) {
 }
 
 int64_t Util::nowTimeMs() {
-  auto time_now = std::chrono::system_clock::now();
-  auto duration_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(time_now.time_since_epoch());
-  int64_t ts = duration_in_ms.count();
-  return ts;
+  std::clock_t now = std::clock();
+  int64_t milliseconds = (now * 1000LL) / CLOCKS_PER_SEC;
+  return milliseconds;
 }
 
 void Util::Log(const std::string& tag,std::string format, ...) {
