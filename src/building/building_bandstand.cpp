@@ -90,14 +90,17 @@ void building_bandstand::update_day() {
 
     int shows = 0;
     auto update_shows = [&] (auto &days) { if (days > 0) { --days; ++shows; } };
-    update_shows(data.entertainment.juggler_visited);
-    update_shows(data.entertainment.musician_visited);
 
-    data.entertainment.num_shows = shows;
+    auto &d = runtime_data();
+    update_shows(d.juggler_visited);
+    update_shows(d.musician_visited);
+
+    d.num_shows = shows;
 }
 
 void building_bandstand::on_place(int orientation, int variant) {
-    data.entertainment.booth_corner_grid_offset = tile().grid_offset();
+    auto &d = runtime_data();
+    d.booth_corner_grid_offset = tile().grid_offset();
     base.orientation = orientation;
 
     building_impl::on_place(orientation, variant);
@@ -157,14 +160,17 @@ void building_bandstand::map_add_bandstand_tiles() {
     int offset_add = bandstand_add_img_offset(base.orientation);
 
     int stand_sn_s = building_impl::params(BUILDING_BANDSTAND).anim["stand_sn_s"].first_img();
-    map_image_set(data.entertainment.latched_venue_main_grid_offset, stand_sn_s + offset);
-    map_image_set(data.entertainment.latched_venue_add_grid_offset, stand_sn_s + offset_add);
+    auto &d = runtime_data();
+    map_image_set(d.latched_venue_main_grid_offset, stand_sn_s + offset);
+    map_image_set(d.latched_venue_add_grid_offset, stand_sn_s + offset_add);
 }
 
 
 void building_bandstand::update_map_orientation(int map_orientation) {
     int plaza_image_id = anim(animkeys().square).first_img();
-    tile2i btile(data.entertainment.booth_corner_grid_offset);
+    auto &d = runtime_data();
+
+    tile2i btile(d.booth_corner_grid_offset);
     map_add_venue_plaza_tiles(id(), base.size, btile, plaza_image_id, true);
     map_add_bandstand_tiles();
 }
@@ -174,15 +180,16 @@ void building_bandstand::spawn_figure() {
         return;
     }
 
+    auto &d = runtime_data();
     if (common_spawn_figure_trigger(100, BUILDING_SLOT_JUGGLER)) {
-        if (data.entertainment.juggler_visited > 0) {
+        if (d.juggler_visited > 0) {
             create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
             return;
         }
     }
 
     if (common_spawn_figure_trigger(100, BUILDING_SLOT_MUSICIAN)) {
-        if (data.entertainment.musician_visited > 0) {
+        if (d.musician_visited > 0) {
             create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_MUSICIAN);
             return;
         }
@@ -208,17 +215,18 @@ bool building_bandstand::force_draw_height_tile(painter &ctx, tile2i tile, vec2i
 }
 
 void building_bandstand::on_undo() {
+    auto &d = runtime_data();
     for (int dy = 0; dy < 3; dy++) {
         for (int dx = 0; dx < 3; dx++) {
-            if (map_building_at(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
-                map_building_set(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), id());
+            if (map_building_at(d.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
+                map_building_set(d.booth_corner_grid_offset + GRID_OFFSET(dx, dy), id());
         }
     }
 }
 
 void building_bandstand::draw_shows_musicians(painter &ctx, vec2i pixel, int direction, color color_mask) {
-    building* main = base.main();
-    if (!main->data.entertainment.musician_visited) {
+    auto &d = runtime_data();
+    if (!d.musician_visited) {
         return;
     }
 
@@ -257,10 +265,11 @@ bool building_bandstand::draw_ornaments_and_animations_height(painter &ctx, vec2
         draw_shows_musicians(ctx, point, 0, color_mask);
     }
 
+    auto &d = runtime_data();
     if (map_image_at(grid_offset) == bandstand_m.booth) {
         const animation_t &anim = bandstand_m.anim["juggler"];
         building* main = base.main();
-        if (main->data.entertainment.juggler_visited) {
+        if (d.juggler_visited) {
             building_draw_normal_anim(ctx, point, &base, tile, anim, mask);
         }
     }

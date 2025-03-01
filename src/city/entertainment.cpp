@@ -1,6 +1,6 @@
 #include "entertainment.h"
 
-#include "building/building.h"
+#include "building/building_entertainment.h"
 #include "city/city.h"
 
 void city_entertainment_t::calculate_shows() {
@@ -16,36 +16,43 @@ void city_entertainment_t::calculate_shows() {
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID)
+        if (b->state != BUILDING_STATE_VALID) {
             continue;
+        }
 
+        auto ent = b->dcast_entertainment();
+        if (!ent) {
+            continue;
+        }
+
+        auto &d = ent->runtime_data();
         switch (b->type) {
         case BUILDING_BOOTH: // booth
-            if (b->data.entertainment.juggler_visited) booth_shows++;
+            if (d.juggler_visited) booth_shows++;
             else booth_no_shows_weighted++;
             break;
 
         case BUILDING_BANDSTAND: // bandstand
-            if (b->data.entertainment.juggler_visited) booth_shows++;
+            if (d.juggler_visited) booth_shows++;
             else booth_no_shows_weighted++;
 
-            if (b->data.entertainment.musician_visited) bandstand_shows++;
+            if (d.musician_visited) bandstand_shows++;
             else bandstand_no_shows_weighted++;
             break
                 ;
         case BUILDING_PAVILLION: // pavillion
-            if (b->data.entertainment.juggler_visited) booth_shows++;
+            if (d.juggler_visited) booth_shows++;
             else booth_no_shows_weighted++;
 
-            if (b->data.entertainment.musician_visited) bandstand_shows++;
+            if (d.musician_visited) bandstand_shows++;
             else bandstand_no_shows_weighted++;
 
-            if (b->data.entertainment.dancer_visited) pavilion_shows++;
+            if (d.dancer_visited) pavilion_shows++;
             else pavilion_no_shows_weighted++;
             break;
 
         case BUILDING_SENET_HOUSE:
-            if (b->data.entertainment.juggler_visited) senet_house_plays++;
+            if (d.juggler_visited) senet_house_plays++;
             else senet_house_no_shows_weighted += 100;
 
             break;

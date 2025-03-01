@@ -19,8 +19,9 @@ void building_juggler_school::static_params::load(archive arch) {
 void building_juggler_school::update_day() {
     building_impl::update_day();
 
-    if (data.entertainment.spawned_entertainer_days > 0) {
-        data.entertainment.spawned_entertainer_days--;
+    auto &d = runtime_data();
+    if (d.spawned_entertainer_days > 0) {
+        d.spawned_entertainer_days--;
     }
 }
 
@@ -36,7 +37,8 @@ void building_juggler_school::spawn_figure() {
         return;
     }
 
-    if (data.entertainment.spawned_entertainer_days > 0) {
+    auto &d = runtime_data();
+    if (d.spawned_entertainer_days > 0) {
         return;
     }
 
@@ -45,7 +47,7 @@ void building_juggler_school::spawn_figure() {
     building* dest = building_get(venue_destination);
     if (dest->id > 0) {
         create_figure_with_destination(FIGURE_JUGGLER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-        data.entertainment.spawned_entertainer_days = current_params().spawn_interval;
+        d.spawned_entertainer_days = current_params().spawn_interval;
     } else {
         common_spawn_roamer(FIGURE_JUGGLER, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }

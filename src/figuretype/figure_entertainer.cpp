@@ -3,6 +3,7 @@
 #include "core/calc.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
+#include "building/building_entertainment.h"
 #include "grid/road_network.h"
 #include "grid/road_access.h"
 #include "graphics/image.h"
@@ -53,21 +54,22 @@ int figure_entertainer::determine_venue_destination(tile2i tile, e_figure_type f
     int min_building_id = 0;
     int min_distance = 10000;
     for (building *v: venues) {
-        building* b = v->main();
-        if (!b->num_workers) {
+        building_entertainment* ent = v->main()->dcast_entertainment();
+        if (!ent->num_workers()) {
             continue;
         }
 
         int days_left = 0;
+        auto &d = ent->runtime_data();
         switch (ftype) {
-        case FIGURE_JUGGLER: days_left = b->data.entertainment.juggler_visited; break;
-        case FIGURE_MUSICIAN: days_left = b->data.entertainment.musician_visited; break;
-        case FIGURE_DANCER: days_left = b->data.entertainment.dancer_visited; break;
+        case FIGURE_JUGGLER: days_left = d.juggler_visited; break;
+        case FIGURE_MUSICIAN: days_left = d.musician_visited; break;
+        case FIGURE_DANCER: days_left = d.dancer_visited; break;
         default:
             assert(false);
         }
 
-        int dist = days_left + tile.dist(b->tile);
+        int dist = days_left + tile.dist(ent->tile());
 
         if (dist < min_distance) {
             min_distance = dist;

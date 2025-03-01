@@ -6,14 +6,13 @@
 #include "city/city.h"
 #include "city/ratings.h"
 #include "sound/sound.h"
-
-#include "js/js_game.h"
+#include "building/building_entertainment.h"
 
 figures::model_t<figure_dancer> dancer_m;
 
 void figure_dancer::update_shows() {
-    building* b = destination();
-    b->data.entertainment.dancer_visited = 32;
+    auto ent = destination()->dcast_entertainment();
+    ent->runtime_data().dancer_visited = 32;
 }
 
 sound_key figure_dancer::phrase_key() const {

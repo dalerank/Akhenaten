@@ -7,6 +7,7 @@
 
 #include "building/industry.h"
 #include "building/building_farm.h"
+#include "building/building_entertainment.h"
 #include "grid/canals.h"
 #include "grid/bridge.h"
 #include "grid/building.h"
@@ -189,8 +190,11 @@ void map_building_tiles_remove(int building_id, tile2i tile) {
     case BUILDING_BOOTH:
     case BUILDING_BANDSTAND:
     case BUILDING_PAVILLION:
-        size = b->size;
-        base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
+        {
+            auto &ent = b->dcast_entertainment()->runtime_data();
+            size = b->size;
+            base_grid_offset = ent.booth_corner_grid_offset;
+        }
         break;
 
     case BUILDING_FESTIVAL_SQUARE:

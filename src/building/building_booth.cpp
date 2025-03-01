@@ -66,20 +66,24 @@ void building_booth::static_params::planer_setup_preview_graphics(build_planner 
 void building_booth::update_day() {
     building_impl::update_day();
 
-    data.entertainment.num_shows = 0;
-    if (data.entertainment.juggler_visited > 0) {
-        --data.entertainment.juggler_visited;
-        ++data.entertainment.num_shows;
+    auto &d = runtime_data();
+    d.num_shows = 0;
+    if (d.juggler_visited > 0) {
+        --d.juggler_visited;
+        ++d.num_shows;
     }
 }
 
 void building_booth::update_month() {
-    data.entertainment.play_index = std::rand() % 10;
+    auto &d = runtime_data();
+    d.play_index = std::rand() % 10;
 }
 
 void building_booth::on_place(int orientation, int variant) {
     base.orientation = orientation;
-    data.entertainment.booth_corner_grid_offset = tile().grid_offset();
+
+    auto &d = runtime_data();
+    d.booth_corner_grid_offset = tile().grid_offset();
 
     building_impl::on_place(orientation, variant);
 }
@@ -115,7 +119,8 @@ void building_booth::spawn_figure() {
         return;
     }
 
-    if (data.entertainment.juggler_visited > 0) {
+    auto &d = runtime_data();
+    if (d.juggler_visited > 0) {
         create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
     }
 }
@@ -127,7 +132,8 @@ bool building_booth::draw_ornaments_and_animations_height(painter &ctx, vec2i po
     }
 
     int grid_offset = tile.grid_offset();
-    if (data.entertainment.juggler_visited && map_image_at(grid_offset) == current_params().booth) {
+    auto &d = runtime_data();
+    if (d.juggler_visited && map_image_at(grid_offset) == current_params().booth) {
         const animation_t &anim = this->anim(animkeys().juggler);
         building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
     }
@@ -151,15 +157,17 @@ bool building_booth::force_draw_height_tile(painter &ctx, tile2i tile, vec2i pix
 
 void building_booth::update_map_orientation(int map_orientation) {
     int plaza_image_id = anim(animkeys().square).first_img();
-    tile2i btile(data.entertainment.booth_corner_grid_offset);
+    auto &d = runtime_data();
+    tile2i btile(d.booth_corner_grid_offset);
     map_add_venue_plaza_tiles(id(), base.size, btile, plaza_image_id, true);
 }
 
 void building_booth::on_undo() {
+    auto &d = runtime_data();
     for (int dy = 0; dy < 2; dy++) {
         for (int dx = 0; dx < 2; dx++) {
-            if (map_building_at(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0) {
-                map_building_set(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), id());
+            if (map_building_at(d.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0) {
+                map_building_set(d.booth_corner_grid_offset + GRID_OFFSET(dx, dy), id());
             }
         }
     }

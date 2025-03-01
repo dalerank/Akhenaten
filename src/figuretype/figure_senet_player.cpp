@@ -5,14 +5,14 @@
 #include "city/city.h"
 #include "city/sentiment.h"
 #include "figure/service.h"
-
-#include "js/js_game.h"
+#include "building/building_entertainment.h"
 
 figures::model_t<figure_senet_player> senet_player_m;
 
 void figure_senet_player::update_shows() {
-    building *b = destination();
-    b->data.entertainment.juggler_visited = 32;
+    building_entertainment *entertainment = destination()->dcast_entertainment();
+    auto &d = entertainment->runtime_data();
+    d.juggler_visited = 32;
 }
 
 sound_key figure_senet_player::phrase_key() const {

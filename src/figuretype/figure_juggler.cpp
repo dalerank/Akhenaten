@@ -5,14 +5,13 @@
 #include "city/city.h"
 #include "city/sentiment.h"
 #include "figure/service.h"
-
-#include "js/js_game.h"
+#include "building/building_entertainment.h"
 
 figures::model_t<figure_juggler> juggler_m;
 
 void figure_juggler::update_shows() {
-    building *b = destination();
-    b->data.entertainment.juggler_visited = 32;
+    auto ent = destination()->dcast_entertainment();
+    ent->runtime_data().juggler_visited = 32;
 }
 
 svector<e_building_type, 4> figure_juggler::allow_venue_types() const {

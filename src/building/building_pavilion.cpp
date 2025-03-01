@@ -101,23 +101,25 @@ void building_pavilion::on_create(int orientation) {
 }
 
 void building_pavilion::update_month() {
-    data.entertainment.play_index = std::rand() % 10;
+    runtime_data().play_index = std::rand() % 10;
 }
 
 void building_pavilion::update_day() {
     building_impl::update_day();
 
+    auto &d = runtime_data();
+
     int shows = 0;
     auto update_shows = [&] (auto &days) { if (days > 0) { --days; ++shows; } };
-    update_shows(data.entertainment.juggler_visited);
-    update_shows(data.entertainment.musician_visited);
-    update_shows(data.entertainment.dancer_visited);
+    update_shows(d.juggler_visited);
+    update_shows(d.musician_visited);
+    update_shows(d.dancer_visited);
 
-    data.entertainment.num_shows = shows;
+    d.num_shows = shows;
 }
 
 void building_pavilion::on_place_update_tiles(int orientation, int variant) {
-    data.entertainment.booth_corner_grid_offset = tile().grid_offset();
+    runtime_data().booth_corner_grid_offset = tile().grid_offset();
     base.orientation = orientation;
 
     int size = pavilion_m.building_size;
@@ -141,12 +143,13 @@ void building_pavilion::on_place_checks() {
 }
 
 bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    if (data.entertainment.dancer_visited && map_image_at(tile) == pavilion_m.dancer_tile) {
+    auto &d = runtime_data();
+    if (d.dancer_visited && map_image_at(tile) == pavilion_m.dancer_tile) {
         const animation_t &ranim = anim(animkeys().dancer);
         building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);
     }
 
-    if (data.entertainment.musician_visited) {
+    if (d.musician_visited) {
         if (map_image_at(tile) == pavilion_m.musician_tile_s) {
             const animation_t &ranim = anim(animkeys().musician_sn);
             building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);
@@ -156,7 +159,7 @@ bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i
         }
     }
 
-    if (data.entertainment.juggler_visited && map_image_at(tile) == pavilion_m.booth_tile) {
+    if (d.juggler_visited && map_image_at(tile) == pavilion_m.booth_tile) {
         const animation_t &ranim = anim(animkeys().juggler);
         building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);
     }
@@ -174,22 +177,23 @@ void building_pavilion::spawn_figure() {
         return;
     }
 
+    auto &d = runtime_data();
     if (common_spawn_figure_trigger(100, BUILDING_SLOT_JUGGLER)) {
-        if (data.entertainment.juggler_visited > 0) {
+        if (d.juggler_visited > 0) {
             base.create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
             return;
         }
     }
 
     if (common_spawn_figure_trigger(100, BUILDING_SLOT_MUSICIAN)) {
-        if (data.entertainment.musician_visited > 0) {
+        if (d.musician_visited > 0) {
             base.create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_MUSICIAN);
             return;
         }
     }
 
     if (common_spawn_figure_trigger(100, BUILDING_SLOT_DANCER)) {
-        if (data.entertainment.dancer_visited > 0) {
+        if (d.dancer_visited > 0) {
             base.create_roaming_figure(FIGURE_DANCER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_DANCER);
             return;
         }
@@ -197,11 +201,22 @@ void building_pavilion::spawn_figure() {
 }
 
 void building_pavilion::on_undo() {
+    auto &d = runtime_data();
     for (int dy = 0; dy < 4; dy++) {
         for (int dx = 0; dx < 4; dx++) {
-            const uint32_t offset = data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy);
+            const uint32_t offset = d.booth_corner_grid_offset + GRID_OFFSET(dx, dy);
             if (map_building_at(offset) == 0)
                 map_building_set(offset, id());
         }
     }
+}
+
+void building_pavilion::update_map_orientation(int map_orientation) {
+    if (!is_main()) {
+        return;
+    }
+
+    int plaza_image_id = anim("square").first_img();
+    tile2i btile(runtime_data().booth_corner_grid_offset);
+    map_add_venue_plaza_tiles(id(), size(), btile, plaza_image_id, true);
 }

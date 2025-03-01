@@ -7,14 +7,17 @@
 #include "city/ratings.h"
 #include "city/houses.h"
 #include "city/city.h"
-
-#include "js/js_game.h"
+#include "building/building_entertainment.h"
 
 figures::model_t<figure_musician> musician_m;
 
 void figure_musician::update_shows() {
-    building* b = destination();
-    b->data.entertainment.musician_visited = 32;
+    building_entertainment* ent = destination()->dcast_entertainment();
+    if (!ent) {
+        return;
+    }
+
+    ent->runtime_data().musician_visited = 32;
 }
 
 svector<e_building_type, 4> figure_musician::allow_venue_types() const {

@@ -52,7 +52,9 @@ void building_festival_square::on_place(int orientation, int variant) {
 }
 
 void building_festival_square::on_place_update_tiles(int orientation, int variant) {
-    data.entertainment.booth_corner_grid_offset = tile().grid_offset();
+    auto &d = runtime_data();
+
+    d.booth_corner_grid_offset = tile().grid_offset();
     base.orientation = orientation;
 
     int size = params().building_size;
@@ -71,24 +73,48 @@ void building_festival_square::on_destroy() {
 void building_festival_square::update_day() {
     building_impl::update_day();
 
+    auto &d = runtime_data();
     int shows = 0;
     auto update_shows = [&] (auto &days) { if (days > 0) { --days; ++shows; } };
-    update_shows(data.entertainment.juggler_visited);
-    update_shows(data.entertainment.musician_visited);
-    update_shows(data.entertainment.dancer_visited);
+    update_shows(d.juggler_visited);
+    update_shows(d.musician_visited);
+    update_shows(d.dancer_visited);
 
-    data.entertainment.num_shows = shows;
+    d.num_shows = shows;
 }
 
 void building_festival_square::on_undo() {
+    auto &d = runtime_data();
+
     for (int dy = 0; dy < 5; dy++) {
         for (int dx = 0; dx < 5; dx++) {
-            if (map_building_at(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
-                map_building_set(data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), id());
+            if (map_building_at(d.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
+                map_building_set(d.booth_corner_grid_offset + GRID_OFFSET(dx, dy), id());
         }
     }
 }
 
 void building_festival_square::on_post_load() {
     g_city.buildings.festival_square = this->tile();
+}
+
+void building_festival_square::update_map_orientation(int map_orientation) {
+    if (!is_main()) {
+        return;
+    }
+
+    int plaza_image_id = anim("square").first_img();
+    tile2i btile(runtime_data().booth_corner_grid_offset);
+    map_add_venue_plaza_tiles(id(), size(), btile, plaza_image_id, true);
+}
+
+
+void building_festival_square::bind_dynamic(io_buffer *iob, size_t version) {
+    auto &d = runtime_data();
+
+    iob->bind(BIND_SIGNATURE_UINT8, &d.num_shows);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.juggler_visited);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.musician_visited);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.dancer_visited);
+    iob->bind(BIND_SIGNATURE_UINT32, &d.booth_corner_grid_offset);
 }

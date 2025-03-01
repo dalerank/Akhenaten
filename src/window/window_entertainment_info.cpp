@@ -1,9 +1,8 @@
 #include "window_building_info.h"
 
-#include "building/building.h"
+#include "building/building_bandstand.h"
 #include "city/object_info.h"
 #include "window/building/common.h"
-#include "js/js_game.h"
 
 struct info_window_entertainment : public building_info_window_t<info_window_entertainment>{
     virtual void init(object_info &c) override;
@@ -56,26 +55,27 @@ void info_window_entertainment::init(object_info &c) {
 void info_window_bandstand::init(object_info &c) {
     building_info_window::init(c);
 
-    building *b = c.building_get();
+    auto band = c.building_get<building_bandstand>();
+    const auto &d = band->runtime_data();
 
     textid reason{ c.group_id, 1 };
     if (!c.has_road_access) { reason = { 69, 25 }; } 
-    else if (b->num_workers <= 0) { reason.id = 6; } 
-    else if (!b->data.entertainment.num_shows) { reason.id = 2; }
-    else if (b->data.entertainment.num_shows == 2) { reason.id = 3; } 
-    else if (b->data.entertainment.juggler_visited) { reason.id = 5; } 
-    else if (b->data.entertainment.musician_visited) { reason.id = 4; }
+    else if (band->num_workers() <= 0) { reason.id = 6; } 
+    else if (!d.num_shows) { reason.id = 2; }
+    else if (d.num_shows == 2) { reason.id = 3; } 
+    else if (d.juggler_visited) { reason.id = 5; } 
+    else if (d.musician_visited) { reason.id = 4; }
 
     ui["warning_text"] = ui::str(reason);
 
-    if (b->data.entertainment.juggler_visited > 0) {
-        ui["play_text"].text_var("%s %s %d", ui::str(c.group_id, 10), ui::str(8, 44), b->data.entertainment.juggler_visited);
+    if (d.juggler_visited > 0) {
+        ui["play_text"].text_var("%s %s %d", ui::str(c.group_id, 10), ui::str(8, 44), d.juggler_visited);
     } else {
         ui["play_text"] = ui::str(c.group_id, 9);
     }
   
-    if (b->data.entertainment.musician_visited > 0) {
-        ui["play2_text"].text_var("%s %s %d\n%s", ui::str(c.group_id, 8), ui::str(8, 44), b->data.entertainment.musician_visited, ui::str(72, 7 + b->data.entertainment.play_index));
+    if (d.musician_visited > 0) {
+        ui["play2_text"].text_var("%s %s %d\n%s", ui::str(c.group_id, 8), ui::str(8, 44), d.musician_visited, ui::str(72, 7 + d.play_index));
     } else {
         ui["play2_text"] = ui::str(c.group_id, 7);
     }
@@ -84,18 +84,19 @@ void info_window_bandstand::init(object_info &c) {
 void info_window_booth::init(object_info &c) {
     building_info_window::init(c);
 
-    building *b = c.building_get();
+    auto band = c.building_get<building_bandstand>();
+    const auto &d = band->runtime_data();
 
     textid reason{ c.group_id, 1 };
     if (!c.has_road_access) { reason = {69, 25}; } 
-    else if (b->num_workers <= 0) { reason.id = 4; }
-    else if (!b->data.entertainment.num_shows) { reason.id = 2; }
-    else if (b->data.entertainment.juggler_visited) { reason.id = 3; }
+    else if (band->num_workers() <= 0) { reason.id = 4; }
+    else if (!d.num_shows) { reason.id = 2; }
+    else if (d.juggler_visited) { reason.id = 3; }
 
     ui["warning_text"] = ui::str(reason);
 
-    if (b->data.entertainment.juggler_visited > 0) {
-        ui["play_text"].text_var("%s %s %d", ui::str(c.group_id, 6), ui::str(8, 44), b->data.entertainment.juggler_visited);
+    if (d.juggler_visited > 0) {
+        ui["play_text"].text_var("%s %s %d", ui::str(c.group_id, 6), ui::str(8, 44), d.juggler_visited);
     } else {
         ui["play_text"] = ui::str(c.group_id, 5);
     }

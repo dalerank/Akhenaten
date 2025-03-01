@@ -216,20 +216,6 @@ public:
     union impl_data_t {
         char data[512] = { 0 };
 
-        struct entertainment_t {
-            uint8_t spawned_entertainer_days;
-            uint8_t num_shows;
-            uint8_t juggler_visited;
-            uint8_t musician_visited;
-            uint8_t dancer_visited;
-            uint8_t play_index;
-            uint32_t booth_corner_grid_offset;
-            uint32_t latched_venue_main_grid_offset;
-            uint32_t latched_venue_add_grid_offset;
-            uint8_t ent_reserved_u8;
-            e_resource consume_material_id;
-        } entertainment;
-
         struct {
             e_house_level level;
             uint16_t foods[8];

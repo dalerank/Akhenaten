@@ -50,6 +50,7 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_PAVILION; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void on_undo() override;
+    virtual void update_map_orientation(int map_orientation) override;
 
     virtual void update_count() const override;
     virtual void spawn_figure() override;

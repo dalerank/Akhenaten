@@ -16,31 +16,28 @@
 buildings::model_t<building_senet_house> senet_house_m;
 buildings::model_t<building_bullfight_school> bullfight_school_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_senet_house);
-void config_load_senet_house() {
-    senet_house_m.load();
-}
-
 void building_senet_house::window_info_background(object_info &c) {
     c.help_id = 74;
     window_building_play_sound(&c, "Wavs/hippodrome.wav");
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(73, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     building* b = building_get(c.building_id);
+
+    auto &d = runtime_data();
     if (!c.has_road_access)
         window_building_draw_description(c, 69, 25);
     else if (b->num_workers <= 0)
         window_building_draw_description(c, 73, 4);
-    else if (!b->data.entertainment.num_shows)
+    else if (!d.num_shows)
         window_building_draw_description(c, 73, 2);
-    else if (b->data.entertainment.juggler_visited)
+    else if (d.juggler_visited)
         window_building_draw_description(c, 73, 3);
 
     inner_panel_draw(c.offset + vec2i{ 16, 136 }, { c.bgsize.x - 2, 6 });
     window_building_draw_employment(&c, 138);
-    if (b->data.entertainment.juggler_visited > 0) {
+    if (d.juggler_visited > 0) {
         int width = lang_text_draw(73, 6, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw_amount(8, 44, 2 * b->data.entertainment.juggler_visited, c.offset.x + width + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_amount(8, 44, 2 * d.juggler_visited, c.offset.x + width + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         lang_text_draw(73, 5, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
     }

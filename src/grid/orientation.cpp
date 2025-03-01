@@ -113,26 +113,6 @@ void map_orientation_update_buildings() {
             map_building_tiles_add(i, b->tile, b->size, image_id, TERRAIN_BUILDING);
             map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), b->orientation);
             break;
-
-        case BUILDING_PAVILLION:
-        case BUILDING_FESTIVAL_SQUARE:
-            // only update the plaza tiles for the main venue
-            if (b->is_main()) {
-                int plaza_image_id = 0;
-                const auto &params = b->dcast()->params();
-                switch (b->type) {
-                case BUILDING_PAVILLION:
-                case BUILDING_FESTIVAL_SQUARE:
-                    plaza_image_id = params.anim["square"].first_img();
-                    break;
-
-                default:
-                    assert(false);
-                }
-                tile2i btile(b->data.entertainment.booth_corner_grid_offset);
-                map_add_venue_plaza_tiles(b->id, params.building_size, btile, plaza_image_id, true);
-            }
-            break;
         }
     }
 }

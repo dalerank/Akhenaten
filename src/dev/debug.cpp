@@ -9,6 +9,7 @@
 
 #include "building/industry.h"
 #include "building/monuments.h"
+#include "building/building_entertainment.h"
 #include "city/city.h"
 #include "graphics/clouds.h"
 #include "graphics/view/lookup.h"
@@ -400,10 +401,13 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
                     debug_text(ctx, str, x1, y + 40, 0, "", d.labor_days_left, COLOR_WHITE);
                 }
             }
-            if (b->data.entertainment.booth_corner_grid_offset) {
-                debug_text(ctx, str, x0, y + 30, 0, "", b->data.entertainment.juggler_visited, COLOR_GREEN);
-                debug_text(ctx, str, x1, y + 30, 0, "", b->data.entertainment.musician_visited, COLOR_GREEN);
-                debug_text(ctx, str, x0, y + 40, 0, "", b->data.entertainment.dancer_visited, COLOR_GREEN);
+
+            auto ent = b->dcast_entertainment();
+            if (ent) {
+                auto &d = ent->runtime_data();
+                debug_text(ctx, str, x0, y + 30, 0, "", d.juggler_visited, COLOR_GREEN);
+                debug_text(ctx, str, x1, y + 30, 0, "", d.musician_visited, COLOR_GREEN);
+                debug_text(ctx, str, x0, y + 40, 0, "", d.dancer_visited, COLOR_GREEN);
             }
         }
         break;
