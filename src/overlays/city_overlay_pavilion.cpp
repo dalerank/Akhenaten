@@ -6,6 +6,7 @@
 #include "figure/figure.h"
 #include "figuretype/figure_musician.h"
 #include "figuretype/figure_dancer.h"
+#include "building/building_house.h"
 
 city_overlay* city_overlay_for_pavilion() {
     static city_overlay_pavilion inst;
@@ -27,17 +28,31 @@ bool city_overlay_pavilion::show_figure(const figure *f) const {
 }
 
 int city_overlay_pavilion::get_column_height(const building *b) const {
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house) {
+        return COLUMN_TYPE_NONE;
+    }
+
+    auto &housed = house->runtime_data();
     return (b->house_size)
-        ? b->data.house.pavillion_dancer / 10 
+        ? housed.pavillion_dancer / 10 
         : COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_pavilion::get_tooltip_for_building(tooltip_context *c, const building *b) const {
-    if (b->data.house.senet_player <= 0) {
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house) {
+        return ui::str(66, 86);
+    }
+
+    auto &housed = house->runtime_data();
+    if (housed.senet_player <= 0) {
         return ui::str(66, 83);
-    } else if (b->data.house.senet_player >= 80) {
+    } else if (housed.senet_player >= 80) {
         return ui::str(66, 84);
-    } else if (b->data.house.senet_player >= 20) {
+    } else if (housed.senet_player >= 20) {
         return ui::str(66, 85);
     } else {
         return ui::str(66, 86);

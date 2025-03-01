@@ -1,7 +1,7 @@
 #include "figure_market_buyer.h"
 
 #include "market.h"
-#include "building/building.h"
+#include "building/building_house.h"
 #include "building/building_granary.h"
 #include "window/building/figures.h"
 #include "core/log.h"
@@ -25,14 +25,7 @@
 #include "city/city.h"
 #include "city/sentiment.h"
 
-#include "js/js_game.h"
-
 figures::model_t<figure_market_buyer> market_buyer_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_market_buyer);
-void config_load_figure_market_buyer() {
-    market_buyer_m.load();
-}
 
 void figure_market_buyer::figure_before_action() {
     building* b = home();
@@ -132,15 +125,21 @@ void distribute_good(building* b, building* market, int stock_wanted, int invent
         return;
     }
 
-    int amount_wanted = stock_wanted - b->data.house.inventory[inventory_resource];
+    auto house = b->dcast_house();
+    if (!house) {
+        return;
+    }
+
+    auto &housed = house->runtime_data();
+    int amount_wanted = stock_wanted - housed.inventory[inventory_resource];
 
     auto &d = bazaar->runtime_data();
     if (d.inventory[inventory_resource] > 0 && amount_wanted > 0) {
         if (amount_wanted <= d.inventory[inventory_resource]) {
-            b->data.house.inventory[inventory_resource] += amount_wanted;
+            housed.inventory[inventory_resource] += amount_wanted;
             d.inventory[inventory_resource] -= amount_wanted;
         } else {
-            b->data.house.inventory[inventory_resource] += d.inventory[inventory_resource];
+            housed.inventory[inventory_resource] += d.inventory[inventory_resource];
             d.inventory[inventory_resource] = 0;
         }
     }
@@ -152,8 +151,14 @@ void distribute_market_resources(building* b, building* market) {
         return;
     }
 
-    auto &d = bazaar->runtime_data();
-    int level = b->data.house.level;
+    auto house = b->dcast_house();
+    if (!house) {
+        return;
+    }
+
+    auto &marketd = bazaar->runtime_data();
+    auto &housed = house->runtime_data();
+    int level = house->house_level();
     if (level < HOUSE_PALATIAL_ESTATE) {
         level++;
     }
@@ -161,30 +166,30 @@ void distribute_market_resources(building* b, building* market) {
     int max_food_stocks = 4 * b->house_highest_population;
     int food_types_stored_max = 0;
     for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-        if (b->data.house.foods[i] >= max_food_stocks)
+        if (housed.foods[i] >= max_food_stocks)
             food_types_stored_max++;
     }
 
     const model_house* model = model_get_house(level);
     if (model->food_types > food_types_stored_max) {
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-            if (b->data.house.foods[i] >= max_food_stocks) {
+            if (housed.foods[i] >= max_food_stocks) {
                 continue;
             }
 
-            if (d.inventory[i] >= max_food_stocks) {
-                b->data.house.foods[i] += max_food_stocks;
-                d.inventory[i] -= max_food_stocks;
+            if (marketd.inventory[i] >= max_food_stocks) {
+                housed.foods[i] += max_food_stocks;
+                marketd.inventory[i] -= max_food_stocks;
                 break;
-            } else if (d.inventory[i]) {
-                b->data.house.foods[i] += d.inventory[i];
-                d.inventory[i] = 0;
+            } else if (marketd.inventory[i]) {
+                housed.foods[i] += marketd.inventory[i];
+                marketd.inventory[i] = 0;
                 break;
             }
         }
     }
     if (model->pottery) {
-        d.pottery_demand = 10;
+        marketd.pottery_demand = 10;
         distribute_good(b, market, 8 * model->pottery, INVENTORY_GOOD1);
     }
     int goods_no = 4;
@@ -192,15 +197,15 @@ void distribute_market_resources(building* b, building* market) {
         goods_no = 8;
 
     if (model->jewelry) {
-        d.luxurygoods_demand = 10;
+        marketd.luxurygoods_demand = 10;
         distribute_good(b, market, goods_no * model->jewelry, INVENTORY_GOOD2);
     }
     if (model->linen) {
-        d.linen_demand = 10;
+        marketd.linen_demand = 10;
         distribute_good(b, market, goods_no * model->linen, INVENTORY_GOOD3);
     }
     if (model->beer) {
-        d.beer_demand = 10;
+        marketd.beer_demand = 10;
         distribute_good(b, market, goods_no * model->beer, INVENTORY_GOOD4);
     }
 }

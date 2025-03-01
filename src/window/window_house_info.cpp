@@ -18,7 +18,6 @@
 #include "window/window_figure_info.h"
 #include "io/gamefiles/lang.h"
 #include "game/game.h"
-#include "js/js_game.h"
 
 struct info_window_house : public building_info_window_t<info_window_house> {
     int help_id;
@@ -72,21 +71,22 @@ void info_window_house::init(object_info &c) {
     building_info_window::init(c);
 
     c.help_id = help_id;
-    building *b = c.building_get();
+    auto house = c.building_get()->dcast_house();
 
-    if (!b->house_population) {
+    if (!house || !house->house_population()) {
         return;
     }
 
-    if (b->data.house.evolve_text_id == 62) { // is about to devolve
+    auto &housed = house->runtime_data();
+    if (housed.evolve_text_id == 62) { // is about to devolve
         bstring512 text;
         text.printf("%s @Y%s&) %s",
-            ui::str(127, 40 + b->data.house.evolve_text_id),
+            ui::str(127, 40 + housed.evolve_text_id),
             ui::str(41, ::building_get(c.worst_desirability_building_id)->type),
-            ui::str(127, 41 + b->data.house.evolve_text_id));
+            ui::str(127, 41 + housed.evolve_text_id));
         ui["evolve_reason"] = text;
     } else { // needs something to evolve 
-        ui["evolve_reason"] = ui::str(127, 40 + b->data.house.evolve_text_id);
+        ui["evolve_reason"] = ui::str(127, 40 + housed.evolve_text_id);
     }
 
     auto food_icon = [] (int i) { bstring32 id_icon; id_icon.printf("food%u_icon", i); return id_icon; };
@@ -96,7 +96,7 @@ void info_window_house::init(object_info &c) {
     for (int i = 0; i < 4; ++i) {
         e_resource resource = g_city.allowed_foods(i);
         if (resource != RESOURCE_NONE) {
-            int stored = b->data.house.foods[i];
+            int stored = housed.foods[i];
             ui[food_icon(food_index)].image(resource);
             ui[food_text(food_index)].text_var(resource ? "%u" : "", stored);
             ++food_index;
@@ -110,38 +110,39 @@ void info_window_house::init(object_info &c) {
     e_resource house_goods[] = { RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS, RESOURCE_LINEN, RESOURCE_BEER };
     for (int i = 0; i < 4; ++i) {
         e_resource resource = house_goods[i];
-        int stored = b->data.house.inventory[INVENTORY_GOOD1 + i];
+        int stored = housed.inventory[INVENTORY_GOOD1 + i];
         ui[good_icon(i)].image(resource);
         ui[good_text(i)].text_var("%u", stored);
     }
 
     bstring256 people_text, adv_people_text;
-    people_text.printf("%u %s", b->house_population, ui::str(127, 20));
-    if (b->house_population_room < 0) {
-        adv_people_text.printf("%u %s", -b->house_population_room, ui::str(127, 21));
-    } else if (b->house_population_room > 0) {
-        adv_people_text.printf("%s %u", ui::str(127, 22), b->house_population_room);
+    const int house_population_room = house->base.house_population_room;
+    people_text.printf("%u %s", house->house_population(), ui::str(127, 20));
+    if (house_population_room < 0) {
+        adv_people_text.printf("%u %s", -house_population_room, ui::str(127, 21));
+    } else if (house->base.house_population_room > 0) {
+        adv_people_text.printf("%s %u", ui::str(127, 22), house_population_room);
     } else {
         adv_people_text = "no rooms";
     }
     ui["people_text"].text_var("%s ( %s )", people_text.c_str(), adv_people_text.c_str());
 
     bstring256 tax_info_text;
-    if (b->house_tax_coverage) {
-        int pct = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
+    if (house->base.house_tax_coverage) {
+        int pct = calc_adjust_with_percentage(house->base.tax_income_or_storage / 2, city_finance_tax_percentage());
         tax_info_text.printf("%s %u %s", ui::str(127, 24), pct, ui::str(127, 25));
     } else {
         tax_info_text = ui::str(127, 23);
     }
     ui["tax_info"] = tax_info_text;
 
-    int happiness = b->sentiment.house_happiness;
+    int happiness = housed.house_happiness;
     int happiness_text_id;
     if (happiness >= 50) { happiness_text_id = 26; } else if (happiness >= 40) { happiness_text_id = 27; } else if (happiness >= 30) { happiness_text_id = 28; } else if (happiness >= 20) { happiness_text_id = 29; } else if (happiness >= 10) { happiness_text_id = 30; } else if (happiness >= 1) { happiness_text_id = 31; } else { happiness_text_id = 32; }
 
     ui["happiness_info"] = ui::str(127, happiness_text_id);
 
-    if (!model_get_house(b->data.house.level)->food_types) { // no foods
+    if (!model_get_house(house->house_level())->food_types) { // no foods
         ui["additional_info"] = ui::str(127, 33);
     }
 }

@@ -2,6 +2,7 @@
 
 #include "overlays/city_overlay.h"
 #include "city/city_religion.h"
+#include "building/building_house.h"
 
 city_overlay* city_overlay_for_religion();
 struct city_overlay_religion : public city_overlay_t<OVERLAY_RELIGION> {
@@ -18,17 +19,20 @@ struct city_overlay_religion_god : public city_overlay_t<TYPE> {
     }
 
     virtual int get_column_height(const building *b) const override {
-        if (!b->house_size) {
+        auto house = ((building*)b)->dcast_house();
+
+        if (!house || !b->house_size) {
             return COLUMN_TYPE_NONE;
         }
 
         int value = 0;
+        auto &housed = house->runtime_data();
         switch (_god) {
-        case GOD_OSIRIS: value = b->data.house.temple_osiris; break;
-        case GOD_RA: value = b->data.house.temple_ra; break;
-        case GOD_PTAH: value = b->data.house.temple_ptah; break;
-        case GOD_SETH: value = b->data.house.temple_seth; break;
-        case GOD_BAST: value = b->data.house.temple_bast; break;
+        case GOD_OSIRIS: value = housed.temple_osiris; break;
+        case GOD_RA: value = housed.temple_ra; break;
+        case GOD_PTAH: value = housed.temple_ptah; break;
+        case GOD_SETH: value = housed.temple_seth; break;
+        case GOD_BAST: value = housed.temple_bast; break;
         }
 
         return value / 10;

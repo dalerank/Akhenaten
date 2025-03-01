@@ -72,7 +72,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
     reserved_id = false; // city_buildings_unknown_value();
     size = props.building_size;
     //creation_sequence_index = building_extra_data.created_sequence++;
-    sentiment.house_happiness = 50;
     distance_from_entry = 0;
 
     map_random_7bit = map_random_get(tile.grid_offset()) & 0x7f;
@@ -91,13 +90,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
         house_size = 3;
     } else if (type >= BUILDING_HOUSE_MODEST_ESTATE && type <= BUILDING_HOUSE_PALATIAL_ESTATE) {
         house_size = 4;
-    }
-
-    // subtype
-    if (is_house()) {
-        data.house.level = (e_house_level)(type - BUILDING_HOUSE_VACANT_LOT);
-    } else {
-        data.house.level = HOUSE_CRUDE_HUT;
     }
 
     // unique data

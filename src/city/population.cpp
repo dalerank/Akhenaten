@@ -320,14 +320,19 @@ int* calculate_number_of_each_housing_type(void) {
     }
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state == BUILDING_STATE_UNUSED || b->state == BUILDING_STATE_UNDO
-            || b->state == BUILDING_STATE_DELETED_BY_GAME || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+        auto house = building_get(i)->dcast_house();
+
+        if (!house) {
             continue;
         }
 
-        if (b->house_size) {
-            housing_type_counts[b->data.house.level] += 1;
+        if (house->state() == BUILDING_STATE_UNUSED || house->state() == BUILDING_STATE_UNDO
+            || house->state() == BUILDING_STATE_DELETED_BY_GAME || house->state() == BUILDING_STATE_DELETED_BY_PLAYER) {
+            continue;
+        }
+
+        if (house->base.house_size) {
+            housing_type_counts[house->house_level()] += 1;
         }
     }
 
@@ -367,27 +372,34 @@ static int calculate_people_per_house_type(void) {
     city_data.population.people_in_residences = 0;
     int total = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state == BUILDING_STATE_UNUSED || b->state == BUILDING_STATE_UNDO
-            || b->state == BUILDING_STATE_DELETED_BY_GAME || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+        auto house = building_get(i)->dcast_house();
+        if (!house) {
             continue;
         }
-        if (b->house_size) {
-            int pop = b->house_population;
+
+        if (house->state() == BUILDING_STATE_UNUSED || house->state() == BUILDING_STATE_UNDO
+            || house->state() == BUILDING_STATE_DELETED_BY_GAME || house->state() == BUILDING_STATE_DELETED_BY_PLAYER) {
+            continue;
+        }
+
+        if (house->base.house_size) {
+            int pop = house->base.house_population;
             total += pop;
-            if (b->data.house.level <= HOUSE_STURDY_HUT) {
+
+            auto &housed = house->runtime_data();
+            if (housed.level <= HOUSE_STURDY_HUT) {
                 city_data.population.people_in_huts += pop;
             }
 
-            if (b->data.house.level <= HOUSE_COMMON_SHANTY) {
+            if (housed.level <= HOUSE_COMMON_SHANTY) {
                 city_data.population.people_in_shanties += pop;
             }
 
-            if (b->data.house.level >= HOUSE_COMMON_RESIDENCE) {
+            if (housed.level >= HOUSE_COMMON_RESIDENCE) {
                 city_data.population.people_in_residences += pop;
             }
 
-            if (b->data.house.level >= HOUSE_COMMON_MANOR) {
+            if (housed.level >= HOUSE_COMMON_MANOR) {
                 city_data.population.people_in_manors += pop;
             }
         }

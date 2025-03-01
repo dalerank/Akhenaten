@@ -6,6 +6,7 @@
 #include "city/sentiment.h"
 #include "figure/service.h"
 #include "building/building_entertainment.h"
+#include "building/building_house.h"
 
 figures::model_t<figure_juggler> juggler_m;
 
@@ -82,13 +83,21 @@ sound_key figure_juggler::phrase_key() const {
 int figure_juggler::provide_service() {
     int houses_serviced = 0;
     building* b = home();
+
     if (b->type == BUILDING_BOOTH) {
         houses_serviced = figure_provide_culture(tile(), &base, [] (building *b, figure *f, int &) {
-            b->data.house.booth_juggler = MAX_COVERAGE;
+            auto house = b->dcast_house();
+            if (house) {
+                house->runtime_data().booth_juggler = MAX_COVERAGE;
+            }
         });
+
     } else if (b->type == BUILDING_BANDSTAND) {
         houses_serviced = provide_entertainment(0, [] (building * b, int shows) {
-            b->data.house.bandstand_juggler = MAX_COVERAGE;
+            auto house = b->dcast_house();
+            if (house) {
+                house->runtime_data().bandstand_juggler = MAX_COVERAGE;
+            }
         });
     }
     return houses_serviced;

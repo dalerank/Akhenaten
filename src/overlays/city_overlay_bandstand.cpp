@@ -5,6 +5,7 @@
 #include "grid/building.h"
 #include "graphics/elements/tooltip.h"
 #include "figuretype/figure_musician.h"
+#include "building/building_house.h"
 #include "city_overlay_bandstand.h"
 
 city_overlay_bandstand g_city_overlay_bandstand;
@@ -14,7 +15,14 @@ city_overlay* city_overlay_for_bandstand() {
 }
 
 xstring city_overlay_bandstand::get_tooltip_for_building(tooltip_context *c, const building *b) const {
-    const int musician_value = std::max<int>(b->data.house.bandstand_musician, b->data.house.pavillion_musician);
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house) {
+        return ui::str(66, 82);
+    }
+
+    auto &housed = house->runtime_data();
+    const int musician_value = std::max<int>(housed.bandstand_musician, housed.pavillion_musician);
     if (musician_value <= 0)
         return ui::str(66, 79);
     else if (musician_value >= 80)
@@ -33,8 +41,15 @@ bool city_overlay_bandstand::show_figure(const figure *f) const {
 }
 
 int city_overlay_bandstand::get_column_height(const building *b) const {
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house) {
+        return COLUMN_TYPE_NONE;
+    }
+
     if (b->house_size) {
-        const int musician_value = std::max<int>(b->data.house.bandstand_musician, b->data.house.pavillion_musician);
+        auto &housed = house->runtime_data();
+        const int musician_value = std::max<int>(housed.bandstand_musician, housed.pavillion_musician);
         return musician_value / 10;
     }
 

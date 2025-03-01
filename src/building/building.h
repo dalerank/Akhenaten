@@ -217,43 +217,6 @@ public:
         char data[512] = { 0 };
 
         struct {
-            e_house_level level;
-            uint16_t foods[8];
-            uint16_t inventory[8];
-            uint8_t booth_juggler;
-            uint8_t bandstand_juggler;
-            uint8_t bandstand_musician;
-            uint8_t pavillion_musician;
-            uint8_t pavillion_dancer;
-            uint8_t senet_player;
-            uint8_t magistrate;
-            uint8_t bullfighter;
-            uint8_t school;
-            uint8_t library;
-            uint8_t academy;
-            uint8_t apothecary;
-            uint8_t dentist;
-            uint8_t mortuary;
-            uint8_t physician;
-            uint8_t temple_osiris;
-            uint8_t temple_ra;
-            uint8_t temple_ptah;
-            uint8_t temple_seth;
-            uint8_t temple_bast;
-            uint8_t no_space_to_expand;
-            uint8_t num_foods;
-            uint8_t entertainment;
-            uint8_t education;
-            uint8_t health;
-            uint8_t num_gods;
-            uint8_t shrine_access;
-            uint8_t devolve_delay;
-            uint8_t evolve_text_id;
-            uint8_t bazaar_access;
-            uint8_t water_supply;
-        } house;
-
-        struct {
             uint8_t variant;
             uint8_t statue_offset;
             uint8_t temple_complex_upgrades;
@@ -275,7 +238,6 @@ public:
     bool is_adjacent_to_water;
     uint16_t storage_id;
     union {
-        signed char house_happiness;
         signed char native_anger;
     } sentiment;
     animation_t minimap_anim;

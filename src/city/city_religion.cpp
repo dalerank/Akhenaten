@@ -5,6 +5,7 @@
 #include "building/building_granary.h"
 #include "building/industry.h"
 #include "building/building_storage_yard.h"
+#include "building/building_house.h"
 #include "city/coverage.h"
 #include "city/city.h"
 #include "city/city_health.h"
@@ -378,9 +379,12 @@ static bool BAST_refill_houses_and_bazaar() {
     return 0;
 }
 
-static int compare(int A, int B) {
-    auto hA = building_get(A)->data.house.level;
-    auto hB = building_get(B)->data.house.level;
+static int compare_house_level(int A, int B) {
+    auto housea = building_get(A)->dcast_house();
+    auto houseb = building_get(B)->dcast_house();
+
+    const e_house_level hA = housea->house_level();
+    const e_house_level hB = houseb->house_level();
 
     if (hA < hB)
         return -1;
@@ -400,7 +404,7 @@ static void rearrange_CHILD(int arr[20], int first, int last) {
         B = first + 1;
 
         while (B <= last) {
-            if (compare(arr[B], arr[A]) > 0) // A is more evolved
+            if (compare_house_level(arr[B], arr[A]) > 0) // A is more evolved
                 A = B;
             B++;
         }
@@ -436,14 +440,14 @@ REDO:
                 A++;
                 if (A > last)
                     break;
-            } while (compare(arr[A], arr[first]) < 1);
+            } while (compare_house_level(arr[A], arr[first]) < 1);
 
             // finds the last house worse than the one at the top!
             do {
                 B--;
                 if (B <= first)
                     break;
-            } while (compare(arr[B], arr[first]) > -1);
+            } while (compare_house_level(arr[B], arr[first]) > -1);
 
             if (A > B)
                 break;
@@ -504,18 +508,18 @@ bool city_religion_t::BAST_houses_destruction() {
         rearrange_dark_magic(houses); // ???????????????
                                       //        FUN_00561c09(houses_array,20,4,&LAB_004c42d0);
         for (int i = 20; i < MAX_BUILDINGS; ++i) {
-            building* b = building_get(i);
-            if (b->state != BUILDING_STATE_VALID || !building_is_house(b->type)) {
+            auto house = building_get(i)->dcast_house();
+            if (!house || house->state() != BUILDING_STATE_VALID) {
                 continue;
             }
 
-            int this_house_level = b->data.house.level;
-            int last_house_level = building_get(houses[19])->data.house.level;
+            int this_house_level = house->house_level();
+            int last_house_level = building_get(houses[19])->dcast_house()->house_level();
             if (this_house_level > last_house_level) { // found house more evolved than the initial 20 houses
 
                 // where to stuff this new house? find the appropriate spot index
                 for (int j = 0; j < 20; ++j) {
-                    if (building_get(houses[j])->data.house.level < this_house_level) {
+                    if (building_get(houses[j])->dcast_house()->house_level() < this_house_level) {
                         // found a spot! the next in the list is an inferior house -- shift all the
                         // items in the list from this point onward down ONE SLOT, and insert here.
                         for (int k = 19; k > j; --k)

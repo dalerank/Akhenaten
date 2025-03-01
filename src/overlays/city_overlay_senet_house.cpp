@@ -3,6 +3,7 @@
 #include "game/state.h"
 #include "figure/figure.h"
 #include "city_overlay.h"
+#include "building/building_house.h"
 
 city_overlay *city_overlay_for_senet_house() {
     static city_overlay_senet_house overlay;
@@ -10,15 +11,29 @@ city_overlay *city_overlay_for_senet_house() {
 }
 
 int city_overlay_senet_house::get_column_height(const building *b) const {
-    return b->house_size ? b->data.house.senet_player / 10 : COLUMN_TYPE_NONE;
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house) {
+        return COLUMN_TYPE_NONE;
+    }
+
+    auto &housed = house->runtime_data();
+    return b->house_size ? housed.senet_player / 10 : COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_senet_house::get_tooltip_for_building(tooltip_context *c, const building *b) const {
-    if (b->data.house.senet_player <= 0) {
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house) {
+        return ui::str(66, 90);
+    }
+
+    auto &housed = house->runtime_data();
+    if (housed.senet_player <= 0) {
         return ui::str(66, 87);
-    } else if (b->data.house.senet_player >= 80) {
+    } else if (housed.senet_player >= 80) {
         return ui::str(66, 88);
-    } else if (b->data.house.senet_player >= 20) {
+    } else if (housed.senet_player >= 20) {
         return ui::str(66, 89);
     } else {
         return ui::str(66, 90);

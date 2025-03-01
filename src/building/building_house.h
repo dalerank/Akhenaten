@@ -16,7 +16,45 @@ public:
     building_house(building &b) : building_impl(b) {}
     virtual building_house *dcast_house() override { return this; }
 
-    //virtual void on_create(int orientation) override;
+    struct runtime_data_t {
+        e_house_level level;
+        uint16_t foods[8];
+        uint16_t inventory[8];
+        uint8_t booth_juggler;
+        uint8_t bandstand_juggler;
+        uint8_t bandstand_musician;
+        uint8_t pavillion_musician;
+        uint8_t pavillion_dancer;
+        uint8_t senet_player;
+        uint8_t magistrate;
+        uint8_t bullfighter;
+        uint8_t school;
+        uint8_t library;
+        uint8_t academy;
+        uint8_t apothecary;
+        uint8_t dentist;
+        uint8_t mortuary;
+        uint8_t physician;
+        uint8_t temple_osiris;
+        uint8_t temple_ra;
+        uint8_t temple_ptah;
+        uint8_t temple_seth;
+        uint8_t temple_bast;
+        uint8_t no_space_to_expand;
+        uint8_t num_foods;
+        uint8_t entertainment;
+        uint8_t education;
+        uint8_t health;
+        uint8_t num_gods;
+        uint8_t shrine_access;
+        uint8_t devolve_delay;
+        uint8_t evolve_text_id;
+        uint8_t bazaar_access;
+        uint8_t water_supply;
+        uint8_t house_happiness;
+    };
+
+    virtual void on_create(int orientation) override;
     //virtual void on_place(int orientation, int variant) override;
     virtual void on_place_checks() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STATUE; }
@@ -28,7 +66,7 @@ public:
 
     inline short house_population() const { return base.house_population; }
     inline void change_population(short delta) { base.house_population += delta; }
-    inline e_house_level house_level() const { return data.house.level; }
+    inline e_house_level house_level() const { return runtime_data().level; }
     void change_to_vacant_lot();
     bool is_vacant_lot() const;
     void add_population(int num_people);
@@ -47,6 +85,9 @@ public:
     e_house_progress check_requirements(house_demands *demands);
 
     static void create_vacant_lot(tile2i tile, int image_id);
+
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 };
 
 class building_house_crude_hut : public building_house {

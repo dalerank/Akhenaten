@@ -7,6 +7,7 @@
 #include "building/building_storage_room.h"
 #include "building/building_granary.h"
 #include "building/building_bazaar.h"
+#include "building/building_house.h"
 #include "city/city.h"
 #include "city/warning.h"
 #include "graphics/window.h"
@@ -414,17 +415,20 @@ void city_resource_consume_food() {
             return;
         }
 
-        int num_types = model_get_house(b.data.house.level)->food_types;
+        auto house = b.dcast_house();
+        auto housed = house->runtime_data();
+
+        int num_types = model_get_house(house->house_level())->food_types;
         short amount_per_type = calc_adjust_with_percentage<short>(b.house_population, 35);
         if (num_types > 1) {
             amount_per_type /= num_types;
         }
 
-        b.data.house.num_foods = 0;
+        housed.num_foods = 0;
         if (scenario_property_kingdom_supplies_grain()) {
             city_data.resource.food_types_eaten_num = 1;
-            b.data.house.foods[0] = amount_per_type;
-            b.data.house.num_foods = 1;
+            housed.foods[0] = amount_per_type;
+            housed.num_foods = 1;
             return;
         } 
         
@@ -432,20 +436,20 @@ void city_resource_consume_food() {
             return;
         }
 
-        for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && b.data.house.num_foods < num_types; t++) {
-            if (b.data.house.foods[t] >= amount_per_type) {
-                b.data.house.foods[t] -= amount_per_type;
-                b.data.house.num_foods++;
+        for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && housed.num_foods < num_types; t++) {
+            if (housed.foods[t] >= amount_per_type) {
+                housed.foods[t] -= amount_per_type;
+                housed.num_foods++;
                 total_consumed += amount_per_type;
-            } else if (b.data.house.foods[t] > 0) {
+            } else if (housed.foods[t] > 0) {
                 // has food but not enough
-                total_consumed += b.data.house.foods[t];
-                b.data.house.foods[t] = 0;
-                b.data.house.num_foods++;
+                total_consumed += housed.foods[t];
+                housed.foods[t] = 0;
+                housed.num_foods++;
             }
 
-            if (b.data.house.num_foods > city_data.resource.food_types_eaten_num) {
-                city_data.resource.food_types_eaten_num = b.data.house.num_foods;
+            if (housed.num_foods > city_data.resource.food_types_eaten_num) {
+                city_data.resource.food_types_eaten_num = housed.num_foods;
             }
         }
     });

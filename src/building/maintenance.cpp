@@ -153,13 +153,14 @@ void building_maintenance_check_fire_collapse(void) {
         if (random_building == random_global) {
             b.fire_risk += model->fire_risk;
             int expected_fire_risk = 0;
+            auto house = b.dcast_house();
             if (!b.house_size) {
                 expected_fire_risk += 50;
             } else if (b.house_population <= 0) {
                 expected_fire_risk = 0;
-            } else if (b.data.house.level <= HOUSE_COMMON_SHANTY) {
+            } else if (house && house->house_level() <= HOUSE_COMMON_SHANTY) {
                 expected_fire_risk += 100;
-            } else if (b.data.house.level <= HOUSE_COMMON_MANOR) {
+            } else if (house && house->house_level() <= HOUSE_COMMON_MANOR) {
                 expected_fire_risk += 50;
             } else {
                 expected_fire_risk += 20;

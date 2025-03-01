@@ -148,11 +148,15 @@ void city_finance_estimate_taxes() {
     city_data.taxes.monthly.collected_nobles = 0;
 
     buildings_valid_do([] (building &b) {
-        if (!(b.house_size || b.house_tax_coverage)) {
+        auto house = b.dcast_house();
+
+        if (!(house && b.house_size || b.house_tax_coverage)) {
             return;
         }
-        int is_nobles = (b.data.house.level >= HOUSE_COMMON_MANOR);
-        int tax_multiplier = model_get_house(b.data.house.level)->tax_multiplier;
+
+        auto &housed = house->runtime_data();
+        int is_nobles = (housed.level >= HOUSE_COMMON_MANOR);
+        int tax_multiplier = model_get_house(housed.level)->tax_multiplier;
         int level_tax_rate_multiplier = difficulty_adjust_money(tax_multiplier);
 
         if (is_nobles) {
@@ -199,14 +203,17 @@ static void city_finance_collect_monthly_taxes() {
     }
 
     buildings_valid_do([&] (building &b) {
-        if (!b.house_size) {
+        auto house = b.dcast_house();
+
+        if (!house || !b.house_size) {
             return;
         }
 
-        int is_nobles = (b.data.house.level >= HOUSE_COMMON_MANOR);
+        auto &housed = house->runtime_data();
+        int is_nobles = (housed.level >= HOUSE_COMMON_MANOR);
         int population = b.house_population;
-        int trm = difficulty_adjust_money(model_get_house(b.data.house.level)->tax_multiplier);
-        city_data.population.at_level[b.data.house.level] += population;
+        int trm = difficulty_adjust_money(model_get_house(house->house_level())->tax_multiplier);
+        city_data.population.at_level[housed.level] += population;
 
         int tax = population * trm;
         if (b.house_tax_coverage) {

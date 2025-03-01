@@ -117,8 +117,11 @@ int figure::figure_rioter_collapse_building() {
             ; // nothing
         }
 
-        if (b->house_size && b->data.house.level < HOUSE_MODEST_HOMESTEAD) {
-            continue;
+        if (b->house_size > 0) {
+            auto house = b->dcast_house();
+            if (house->house_level() < HOUSE_MODEST_HOMESTEAD) {
+                continue;
+            }
         }
 
         city_message_apply_sound_interval(MESSAGE_CAT_RIOT_COLLAPSE);

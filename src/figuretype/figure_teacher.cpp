@@ -4,16 +4,10 @@
 #include "city/city.h"
 #include "city/sentiment.h"
 #include "city/ratings.h"
-
+#include "building/building_house.h"
 #include "figure/service.h"
-#include "js/js_game.h"
 
 figures::model_t<figure_teacher> teacher_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_teacher);
-void config_load_figure_teacher() {
-    teacher_m.load();
-}
 
 void figure_teacher::figure_action() {
     switch (action_state()) {
@@ -84,7 +78,8 @@ sound_key figure_teacher::phrase_key() const {
 int figure_teacher::provide_service() {
     int none_value;
     int houses_serviced = figure_provide_service(tile(), &base, none_value, [] (building *b, figure *f, int &) {
-        if (!b->dcast_house()) {
+        auto house = b->dcast_house();
+        if (!house) {
             return;
         }
 
@@ -93,10 +88,11 @@ int figure_teacher::provide_service() {
         }
 
         const uint8_t delta_allow_papyrus = MAX_COVERAGE / 4;
-        if ((MAX_COVERAGE - b->data.house.school) > delta_allow_papyrus) {
+        auto &housed = house->runtime_data();
+        if ((MAX_COVERAGE - housed.school) > delta_allow_papyrus) {
             f->home()->stored_amount_first--;
         }
-        b->data.house.school = MAX_COVERAGE;
+        housed.school = MAX_COVERAGE;
     });
     return houses_serviced;
 }

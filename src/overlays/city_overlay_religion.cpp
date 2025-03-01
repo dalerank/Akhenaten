@@ -5,6 +5,7 @@
 #include "grid/building.h"
 #include "grid/property.h"
 #include "figure/figure.h"
+#include "building/building_house.h"
 
 #include <algorithm>
 #include <array>
@@ -48,40 +49,54 @@ city_overlay* city_overlay_for_religion_bast() {
 }
 
 int city_overlay_religion::get_column_height(const building *b) const {
-    return b->house_size && b->data.house.num_gods
-                ? b->data.house.num_gods * 17 / 10
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house) {
+        return COLUMN_TYPE_NONE;
+    }
+
+    auto &housed = house->runtime_data();
+    return b->house_size && housed.num_gods
+                ? housed.num_gods * 17 / 10
                 : COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_religion::get_tooltip_for_building(tooltip_context *c, const building *b) const {
-    if (b->data.house.num_gods < 5) {
-        if (b->data.house.temple_osiris)
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house) {
+        return ui::str(66, 18);
+    }
+
+    auto &housed = house->runtime_data();
+    if (housed.num_gods < 5) {
+        if (housed.temple_osiris)
             add_god(c, GOD_OSIRIS);
 
-        if (b->data.house.temple_ra)
+        if (housed.temple_ra)
             add_god(c, GOD_RA);
 
-        if (b->data.house.temple_ptah)
+        if (housed.temple_ptah)
             add_god(c, GOD_PTAH);
 
-        if (b->data.house.temple_seth)
+        if (housed.temple_seth)
             add_god(c, GOD_SETH);
 
-        if (b->data.house.temple_bast)
+        if (housed.temple_bast)
             add_god(c, GOD_BAST);
     }
 
-    if (b->data.house.num_gods <= 0) {
+    if (housed.num_gods <= 0) {
         return ui::str(66, 12);
-    } else if (b->data.house.num_gods == 1) {
+    } else if (housed.num_gods == 1) {
         return ui::str(66, 13);
-    } else if (b->data.house.num_gods == 2) {
+    } else if (housed.num_gods == 2) {
         return ui::str(66, 14);
-    } else if (b->data.house.num_gods == 3) {
+    } else if (housed.num_gods == 3) {
         return ui::str(66, 15);
-    } else if (b->data.house.num_gods == 4) {
+    } else if (housed.num_gods == 4) {
         return ui::str(66, 16);
-    } else if (b->data.house.num_gods == 5) {
+    } else if (housed.num_gods == 5) {
         return ui::str(66, 17);
     } else {
         return ui::str(66, 18); // >5 gods, shouldn't happen...

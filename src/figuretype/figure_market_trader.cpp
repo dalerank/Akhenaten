@@ -1,10 +1,9 @@
 #include "figure_market_trader.h"
 
 #include "building/building_bazaar.h"
+#include "building/building_house.h"
 #include "figuretype/figure_market_buyer.h"
 #include "figure/service.h"
-
-#include "js/js_game.h"
 
 figures::model_t<figure_market_trader> market_trader_m;
 
@@ -41,8 +40,14 @@ int figure_market_trader::provide_service() {
     int none_service;
     int houses_serviced = provide_market_goods(home(), tile());
     figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
+        auto house = b->dcast_house();
+
+        if (!house) {
+            return;
+        }
+
         if (b->house_size > 0 && b->house_population > 0) {
-            b->data.house.bazaar_access = MAX_COVERAGE;
+            house->runtime_data().bazaar_access = MAX_COVERAGE;
         }
     });
     return houses_serviced;

@@ -8,15 +8,9 @@
 #include "figure/service.h"
 #include "grid/building.h"
 #include "graphics/animation.h"
-
-#include "js/js_game.h"
+#include "building/building_house.h"
 
 figures::model_t<figure_water_carrier> water_carrier_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_water_carrier);
-void config_load_figure_water_carrier() {
-    water_carrier_m.load();
-}
 
 void figure_water_carrier::figure_before_action() {
     building* b = home();
@@ -108,10 +102,12 @@ const animations_t &figure_water_carrier::anim() const {
 int figure_water_carrier::provide_service() {
     int none_service;
     int houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
-        if (!b->dcast_house()) {
-            return;
+        auto house = ((building *)b)->dcast_house();
+
+        if (house) {
+            auto &housed = house->runtime_data();
+            housed.water_supply = MAX_COVERAGE;
         }
-        b->data.house.water_supply = MAX_COVERAGE;
     });
 
     return houses_serviced;

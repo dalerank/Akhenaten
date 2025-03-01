@@ -1,6 +1,6 @@
 #include "coverage.h"
 
-#include "building/building.h"
+#include "building/building_house.h"
 #include "building/count.h"
 #include "city/constants.h"
 #include "city/city.h"
@@ -24,13 +24,15 @@ void city_average_coverage_t::update() {
 
     int num_houses = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->house_size) {
+        auto house = building_get(i)->dcast_house();
+
+        if (house && house->state() == BUILDING_STATE_VALID && house->base.house_size) {
             num_houses++;
-            data.avg_coverage.average_entertainment += b->data.house.entertainment;
-            data.avg_coverage.average_religion += b->data.house.num_gods;
-            data.avg_coverage.average_education += b->data.house.education;
-            data.avg_coverage.average_health += b->data.house.health;
+            auto &housed = house->runtime_data();
+            data.avg_coverage.average_entertainment += housed.entertainment;
+            data.avg_coverage.average_religion += housed.num_gods;
+            data.avg_coverage.average_education += housed.education;
+            data.avg_coverage.average_health += housed.health;
         }
     }
 

@@ -13,8 +13,7 @@
 #include "city/ratings.h"
 #include "city/city.h"
 #include "figure/service.h"
-
-#include "js/js_game.h"
+#include "building/building_house.h"
 
 figures::model_t<figure_tax_collector> tax_collector_m;
 
@@ -126,19 +125,20 @@ void figure_tax_collector::figure_before_action() {
 int figure_tax_collector::provide_service() {
     int max_tax_rate = 0;
     int houses_serviced = figure_provide_service(tile(), &base, max_tax_rate, [] (building *b, figure *f, int &max_tax_multiplier) {
-        if (!b->dcast_house()) {
+        auto house = b->dcast_house();
+        if (!house) {
             return;
         }
 
         if (b->house_size && b->house_population > 0) {
-            int tax_multiplier = model_get_house(b->data.house.level)->tax_multiplier;
+            int tax_multiplier = model_get_house(house->house_level())->tax_multiplier;
             if (tax_multiplier > max_tax_multiplier) {
                 max_tax_multiplier = tax_multiplier;
             }
 
-            if (b->data.house.level < HOUSE_ORDINARY_COTTAGE) {
+            if (house->house_level() < HOUSE_ORDINARY_COTTAGE) {
                 f->data.taxman.poor_taxed++;
-            } else if (b->data.house.level < HOUSE_COMMON_MANOR) {
+            } else if (house->house_level() < HOUSE_COMMON_MANOR) {
                 f->data.taxman.middle_taxed++;
             } else {
                 f->data.taxman.reach_taxed++;

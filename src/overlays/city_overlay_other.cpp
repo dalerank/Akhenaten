@@ -1,6 +1,6 @@
 #include "city_overlay_other.h"
 
-#include "building/building.h"
+#include "building/building_house.h"
 #include "building/model.h"
 #include "city/constants.h"
 
@@ -25,12 +25,19 @@ city_overlay* city_overlay_for_food_stocks() {
 }
 
 int city_overlay_food_stocks::get_column_height(const building *b) const {
-    if (b->house_size && model_get_house(b->data.house.level)->food_types) {
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house) {
+        return COLUMN_TYPE_NONE;
+    }
+
+    auto &housed = house->runtime_data();
+    if (b->house_size && model_get_house(housed.level)->food_types) {
         int pop = b->house_population;
         int stocks = 0;
         
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-            stocks += b->data.house.foods[i];
+            stocks += housed.foods[i];
         }
 
         int pct_stocks = calc_percentage(stocks, pop);
@@ -43,20 +50,28 @@ int city_overlay_food_stocks::get_column_height(const building *b) const {
         if (pct_stocks <= 200)
             return 1;
     }
+
     return COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_food_stocks::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house) {
+        return ui::str(66, 7);
+    }
+
+    auto &housed = house->runtime_data();
     if (b->house_population <= 0) {
         return 0;
     }
 
-    if (!model_get_house(b->data.house.level)->food_types) {
+    if (!model_get_house(housed.level)->food_types) {
         return ui::str(66, 104);
     } else {
         int stocks_present = 0;
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-            stocks_present += b->data.house.foods[i];
+            stocks_present += housed.foods[i];
         }
 
         int stocks_per_pop = calc_percentage<int>(stocks_present, b->house_population);

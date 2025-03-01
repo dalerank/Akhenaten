@@ -5,6 +5,7 @@
 #include "city/city.h"
 #include "city/sentiment.h"
 #include "figure/service.h"
+#include "building/building_house.h"
 #include "building/building_entertainment.h"
 
 figures::model_t<figure_senet_player> senet_player_m;
@@ -79,7 +80,12 @@ sound_key figure_senet_player::phrase_key() const {
 int figure_senet_player::provide_service() {
     int houses_serviced = 0;
     houses_serviced = figure_provide_culture(tile(), &base, [] (building *b, figure *f, int &) {
-        b->data.house.senet_player = MAX_COVERAGE;
+        auto house = ((building *)b)->dcast_house();
+
+        if (house) {
+            auto &housed = house->runtime_data();
+            housed.senet_player = MAX_COVERAGE;
+        }
     });
     return houses_serviced;
 }

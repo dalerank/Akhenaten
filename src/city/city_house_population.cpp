@@ -24,18 +24,18 @@ int house_population_add_to_city(int num_people) {
         if (++building_id >= MAX_BUILDINGS)
             building_id = 1;
 
-        building* b = building_get(building_id);
-        if (b->state == BUILDING_STATE_VALID && b->house_size && b->distance_from_entry > 0
-            && b->house_population > 0) {
+        auto house = building_get(building_id)->dcast_house();
+        if (house->state() == BUILDING_STATE_VALID && house->base.house_size && house->distance_from_entry() > 0 && house->house_population() > 0) {
             city_population_set_last_used_house_add(building_id);
-            int max_people = model_get_house(b->data.house.level)->max_people;
-            if (b->house_is_merged)
+            int max_people = model_get_house(house->house_level())->max_people;
+            if (house->base.house_is_merged)
                 max_people *= 4;
 
-            if (b->house_population < max_people) {
+            if (house->house_population() < max_people) {
                 ++added;
-                ++b->house_population;
-                b->house_population_room = max_people - b->house_population;
+                ++house->base.house_population;
+
+                house->base.house_population_room = max_people - house->house_population();
             }
         }
     }
@@ -78,21 +78,23 @@ void city_t::house_population_update_room() {
     int total_houses = building_list_large_size();
     const int* houses = building_list_large_items();
     for (int i = 0; i < total_houses; i++) {
-        building* b = building_get(houses[i]);
-        b->house_population_room = 0;
-        if (b->distance_from_entry > 0) {
-            int max_pop = model_get_house(b->data.house.level)->max_people;
-            if (b->house_is_merged)
+        auto house = building_get(houses[i])->dcast_house();
+
+        house->base.house_population_room = 0;
+        if (house->distance_from_entry() > 0) {
+            int max_pop = model_get_house(house->house_level())->max_people;
+            if (house->base.house_is_merged)
                 max_pop *= 4;
 
-            city_population_add_capacity(b->house_population, max_pop);
-            b->house_population_room = max_pop - b->house_population;
-            if (b->house_population > b->house_highest_population)
-                b->house_highest_population = b->house_population;
+            city_population_add_capacity(house->house_population(), max_pop);
+            house->base.house_population_room = max_pop - house->house_population();
+            if (house->house_population() > house->base.house_highest_population) {
+                house->base.house_highest_population = house->house_population();
+            }
 
-        } else if (b->house_population > 0) {
+        } else if (house->house_population() > 0) {
             // not connected to Rome, mark people for eviction
-            b->house_population_room = -b->house_population;
+            house->base.house_population_room = -house->house_population();
         }
     }
 }
@@ -143,28 +145,28 @@ int house_population_create_emigrants(int num_people) {
     int to_emigrate = num_people;
     for (int level = HOUSE_CRUDE_HUT; level < HOUSE_COMMON_RESIDENCE && to_emigrate > 0; level++) {
         for (int i = 0; i < total_houses && to_emigrate > 0; i++) {
-            building* b = building_get(ids[i]);
+            auto house = building_get(ids[i])->dcast_house();
 
-            if (b->house_population <= 0 || b->data.house.level != level) {
+            if (house->house_population() <= 0 || house->house_level() != level) {
                 continue;
             }
 
-            if (config_get(CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT) && (level <= HOUSE_STURDY_HUT || (level < HOUSE_ORDINARY_COTTAGE && b->house_population < 10))) {
+            if (config_get(CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT) && (level <= HOUSE_STURDY_HUT || (level < HOUSE_ORDINARY_COTTAGE && house->house_population() < 10))) {
                 continue;
             }
 
             int current_people;
-            if (b->house_population >= 4) {
+            if (house->house_population() >= 4) {
                 current_people = 4;
             } else {
-                current_people = b->house_population;
+                current_people = house->house_population();
             }
 
             if (to_emigrate <= current_people) {
-                figure_emigrant::create(b, to_emigrate);
+                figure_emigrant::create(&house->base, to_emigrate);
                 to_emigrate = 0;
             } else {
-                figure_emigrant::create(b, current_people);
+                figure_emigrant::create(&house->base, current_people);
                 to_emigrate -= current_people;
             }
         }
@@ -179,12 +181,12 @@ static void calculate_working_population(void) {
     int total_houses = building_list_large_size();
     const int* houses = building_list_large_items();
     for (int i = 0; i < total_houses; i++) {
-        building* b = building_get(houses[i]);
-        if (b->house_population > 0) {
-            if (b->data.house.level >= HOUSE_COMMON_MANOR)
-                num_nobles += b->house_population;
+        auto house = building_get(houses[i])->dcast_house();
+        if (house->house_population() > 0) {
+            if (house->house_level() >= HOUSE_COMMON_MANOR)
+                num_nobles += house->house_population();
             else {
-                num_peasants += b->house_population;
+                num_peasants += house->house_population();
             }
         }
     }

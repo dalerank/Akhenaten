@@ -68,11 +68,14 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
 
     // kill people who don't have access to apothecary/physician
     buildings_valid_do([&] (building &b) {
-        if (people_to_plague <= 0 || !b.house_size || b.house_population <= 0) {
+        auto house = b.dcast_house();
+
+        if (!house || people_to_plague <= 0 || !b.house_size || b.house_population <= 0) {
             return;
         }
 
-        if (!(b.data.house.apothecary || b.data.house.physician)) {
+        auto &housed = house->runtime_data();
+        if (!(housed.apothecary || housed.physician)) {
             warn_building = &b;
             people_to_plague -= b.house_population;
             building_mark_plague(&b);
@@ -81,11 +84,13 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
 
     // kill people in tents
     buildings_valid_do([&] (building &b) {
-        if (people_to_plague <= 0 || !b.house_size || b.house_population <= 0) {
+        auto house = b.dcast_house();
+
+        if (!house || people_to_plague <= 0 || !b.house_size || b.house_population <= 0) {
             return;
         }
 
-        if (b.data.house.level <= HOUSE_STURDY_HUT) {
+        if (house->house_level() <= HOUSE_STURDY_HUT) {
             warn_building = &b;
             people_to_plague -= b.house_population;
             building_mark_plague(&b);
@@ -137,18 +142,21 @@ void city_health_t::update() {
     int total_population = 0;
     int healthy_population = 0;
     buildings_valid_do([&] (building &b) {
-        if (!b.house_size || b.house_population <= 0) {
+        auto house = b.dcast_house();
+
+        if (!house || house->house_population() <= 0) {
             return;
         }
 
         total_population += b.house_population;
-        if (b.data.house.level <= HOUSE_STURDY_HUT) {
-            if (b.data.house.apothecary) {
+        auto &housed = house->runtime_data();
+        if (housed.level <= HOUSE_STURDY_HUT) {
+            if (housed.apothecary) {
                 healthy_population += b.house_population;
             } else {
                 healthy_population += b.house_population / 4;
             }
-        } else if (b.data.house.physician) {
+        } else if (housed.physician) {
             if (b.house_days_without_food == 0) {
                 healthy_population += b.house_population;
             } else {

@@ -1,6 +1,7 @@
 #include "figuretype/figure_scriber.h"
 
 #include "figure/service.h"
+#include "building/building_house.h"
 
 figures::model_t<figure_scriber> scriber_m;
 
@@ -22,7 +23,12 @@ void figure_scriber::figure_action() {
 }
 
 void academy_coverage(building* b, figure *f, int&) {
-    b->data.house.academy = MAX_COVERAGE;
+    auto house = ((building *)b)->dcast_house();
+
+    if (house) {
+        auto &housed = house->runtime_data();
+        housed.academy = MAX_COVERAGE;
+    }
 }
 
 int figure_scriber::provide_service() {

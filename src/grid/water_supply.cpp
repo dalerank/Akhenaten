@@ -4,6 +4,7 @@
 #include "building/building_well.h"
 #include "building/list.h"
 #include "core/game_environment.h"
+#include "building/building_house.h"
 #include "core/svector.h"
 #include "core/profiler.h"
 #include "config/config.h"
@@ -34,7 +35,9 @@ e_well_status map_water_supply_is_well_unnecessary(int well_id, int radius) {
         for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
             int building_id = map_building_at(grid_offset);
-            if (building_id && building_get(building_id)->house_size && !building_get(building_id)->data.house.water_supply) {
+
+            auto house = building_get(building_id)->dcast_house();
+            if (house && house->base.house_size && !house->runtime_data().water_supply) {
                 num_houses++;
                 //                if (!building_get(building_id)->has_water_access) //todo: water carrier access
                 return WELL_NECESSARY;

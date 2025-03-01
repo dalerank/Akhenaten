@@ -1,21 +1,13 @@
 #include "figure_governor.h"
-#include "figure_governor.h"
-#include "figure_governor.h"
 
 #include "city/buildings.h"
 #include "grid/road_access.h"
+#include "building/building_house.h"
 #include "graphics/image.h"
 
 #include "city/city.h"
 
-#include "js/js_game.h"
-
 figures::model_t<figure_governor> governor_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_governor);
-void config_load_figure_governor() {
-    governor_m.load();
-}
 
 void figure_governor::figure_action() {
     switch (action_state()) {
@@ -60,9 +52,19 @@ void figure_governor::figure_action() {
 sound_key figure_governor::phrase_key() const {
     int nobles_in_city = 0;
     buildings_valid_do([&] (building &b) {
-        if (!b.house_size || b.house_population <= 0 || b.data.house.level < HOUSE_COMMON_MANOR) {
+        if (!b.house_size || b.house_population <= 0) {
             return;
         }
+
+        auto house = b.dcast_house();
+        if (!house) {
+            return;
+        }
+
+        if (house->house_level() < HOUSE_COMMON_MANOR) {
+            return;
+        }
+
         nobles_in_city += b.house_population;
     });
 

@@ -2,6 +2,7 @@
 
 #include "core/profiler.h"
 #include "figure/service.h"
+#include "building/building_house.h"
 
 figures::model_t<figure_herbalist> herbalist_m;
 
@@ -65,11 +66,12 @@ sound_key figure_herbalist::phrase_key() const {
 int figure_herbalist::provide_service() {
     int minmax = 0;
     int houses_serviced = figure_provide_service(tile(), &base, minmax, [] (building *b, figure *f, int &) {
-        if (!b->dcast_house()) {
+        auto house = b->dcast_house();
+        if (!house) {
             return;
         }
 
-        b->data.house.apothecary = MAX_COVERAGE;
+        house->runtime_data().apothecary = MAX_COVERAGE;
         if (b->common_health < 50) {
             b->common_health++;
             if (b->common_health < 20) {

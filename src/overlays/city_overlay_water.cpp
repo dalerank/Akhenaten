@@ -11,6 +11,7 @@
 #include "city/city_buildings.h"
 #include "figure/figure.h"
 #include "widget/city/tile_draw.h"
+#include "building/building_house.h"
 
 static int terrain_on_water_overlay(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD
@@ -100,5 +101,12 @@ xstring city_overlay_water::get_tooltip_for_grid_offset(tooltip_context* c, int 
 }
 
 int city_overlay_water::get_column_height(const building *b) const {
-    return b->house_size ? b->data.house.water_supply * 17 / 10 : COLUMN_TYPE_NONE;
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house) {
+        return COLUMN_TYPE_NONE;
+    }
+
+    auto &housed = house->runtime_data();
+    return b->house_size ? housed.water_supply * 17 / 10 : COLUMN_TYPE_NONE;
 }

@@ -6,8 +6,7 @@
 #include "city/ratings.h"
 #include "city/houses.h"
 #include "figure/service.h"
-
-#include "js/js_game.h"
+#include "building/building_house.h"
 
 figures::model_t<figure_magistrate> magistrate_m;
 
@@ -107,8 +106,9 @@ sound_key figure_magistrate::phrase_key() const {
 int figure_magistrate::provide_service() {
     int max_criminal_active = 0;
     int houses_serviced = figure_provide_service(tile(), &base, max_criminal_active, [] (building *b, figure *f, int &) {
-        if (b->house_size > 0 && b->house_population > 0) {
-            b->data.house.magistrate = MAX_COVERAGE;
+        auto house = b->dcast_house();
+        if (house && b->house_size > 0 && b->house_population > 0) {
+            house->runtime_data().magistrate = MAX_COVERAGE;
         }
     });
 

@@ -4,6 +4,7 @@
 #include "grid/property.h"
 #include "grid/building.h"
 #include "figure/figure.h"
+#include "building/building_house.h"
 
 city_overlay_dentist g_city_overlay_dentist;
 
@@ -12,15 +13,29 @@ city_overlay* city_overlay_for_dentist() {
 }
 
 int city_overlay_dentist::get_column_height(const building *b) const {
-    return b->house_size && b->data.house.dentist ? b->data.house.dentist / 10 : COLUMN_TYPE_NONE;
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house) {
+        return COLUMN_TYPE_NONE;
+    }
+
+    auto &housed = house->runtime_data();
+    return b->house_size && housed.dentist ? housed.dentist / 10 : COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_dentist::get_tooltip_for_building(tooltip_context *c, const building *b) const {
-    if (b->data.house.dentist <= 0)
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house) {
+        return ui::str(66, 11);
+    }
+
+    auto &housed = house->runtime_data();
+    if (housed.dentist <= 0)
         return ui::str(66, 8);
-    else if (b->data.house.dentist >= 80)
+    else if (housed.dentist >= 80)
         return ui::str(66, 9);
-    else if (b->data.house.dentist >= 20)
+    else if (housed.dentist >= 20)
         return ui::str(66, 10);
     else {
         return ui::str(66, 11);

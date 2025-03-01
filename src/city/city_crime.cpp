@@ -6,7 +6,7 @@
 #include "city/message.h"
 #include "grid/road_access.h"
 #include "figure/figure.h"
-#include "building/building.h"
+#include "building/building_house.h"
 #include "core/random.h"
 #include "game/tutorial.h"
 #include "building/destruction.h"
@@ -113,13 +113,15 @@ void city_t::figures_generate_criminals() {
     int min_happiness = 50;
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
-        building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->house_size) {
-            if (b->sentiment.house_happiness >= 50) {
-                b->house_criminal_active = 0;
-            } else if (b->sentiment.house_happiness < min_happiness) {
-                min_happiness = b->sentiment.house_happiness;
-                min_building = b;
+        auto house = building_get(i)->dcast_house();
+
+        if (house && house->state() == BUILDING_STATE_VALID && house->base.house_size) {
+            auto &housed = house->runtime_data();
+            if (housed.house_happiness >= 50) {
+                house->base.house_criminal_active = 0;
+            } else if (housed.house_happiness < min_happiness) {
+                min_happiness = housed.house_happiness;
+                min_building = &house->base;
             }
         }
     }

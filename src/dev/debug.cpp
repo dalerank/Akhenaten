@@ -10,6 +10,7 @@
 #include "building/industry.h"
 #include "building/monuments.h"
 #include "building/building_entertainment.h"
+#include "building/building_house.h"
 #include "city/city.h"
 #include "graphics/clouds.h"
 #include "graphics/view/lookup.h"
@@ -507,7 +508,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
     case e_debug_render_overall_entertainment:
         if (b_id && b->house_size > 0) {
-            debug_text(ctx, str, x, y + 10, 0, "", b->data.house.entertainment, COLOR_LIGHT_BLUE);
+            debug_text(ctx, str, x, y + 10, 0, "", b->dcast_house()->runtime_data().entertainment, COLOR_LIGHT_BLUE);
         }
         break;
 

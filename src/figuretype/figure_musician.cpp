@@ -8,6 +8,7 @@
 #include "city/houses.h"
 #include "city/city.h"
 #include "building/building_entertainment.h"
+#include "building/building_house.h"
 
 figures::model_t<figure_musician> musician_m;
 
@@ -81,11 +82,17 @@ int figure_musician::provide_service() {
     building *b = current_destination();
     if (b->type == BUILDING_BANDSTAND) {
         houses_serviced = provide_entertainment(0, [] (building *b, int shows) {
-            b->data.house.bandstand_musician = MAX_COVERAGE;
+            auto house = b->dcast_house();
+            if (house) {
+                house->runtime_data().bandstand_musician = MAX_COVERAGE;
+            }
         });
     } else if (b->type == BUILDING_PAVILLION) {
         houses_serviced = provide_entertainment(0, [] (building *b, int shows) {
-            b->data.house.pavillion_musician = MAX_COVERAGE;
+            auto house = b->dcast_house();
+            if (house) {
+                house->runtime_data().pavillion_musician = MAX_COVERAGE;
+            }
         });
     }
 

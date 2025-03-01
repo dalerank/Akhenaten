@@ -3,7 +3,7 @@
 #include "core/calc.h"
 #include "game/game.h"
 #include "scenario/scenario.h"
-#include "building/building.h"
+#include "building/building_house.h"
 
 void city_t::update_prosperity_explanation() {
     int change = 0;
@@ -132,9 +132,9 @@ void city_t::calculate_max_prosperity() {
     int points = 0;
     int houses = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state && b->house_size) {
-            points += model_get_house(b->data.house.level)->prosperity;
+        auto house = building_get(i)->dcast_house();
+        if (house && house->state() && house->base.house_size) {
+            points += model_get_house(house->house_level())->prosperity;
             houses++;
         }
     }

@@ -1,6 +1,6 @@
 #include "buildings.h"
 
-#include "building/building.h"
+#include "building/building_house.h"
 #include "building/count.h"
 #include "building/building_menu.h"
 #include "core/profiler.h"
@@ -274,7 +274,7 @@ void city_buildings_t::update_religion_supply_houses() {
 
                 building *b = building_get(building_id);
                 if (b->house_size) {
-                    b->data.house.shrine_access = true;
+                    b->dcast_house()->runtime_data().shrine_access = true;
                 }
             }
         }
@@ -287,7 +287,7 @@ void city_buildings_t::update_religion_supply_houses() {
         if (b.is_shrine()) {
             shrines.push_back(&b);
         } else if (b.house_size) {
-            b.data.house.shrine_access = false;
+            b.dcast_house()->runtime_data().shrine_access = false;
         }
     }
 

@@ -11,17 +11,10 @@
 #include "graphics/image_groups.h"
 #include "graphics/image.h"
 #include "graphics/animation.h"
-
-#include "js/js_game.h"
+#include "building/building_house.h"
 
 figures::model_t<figure_priest> priest_m;
 figures::model_t<figure_festival_priest> festival_priest_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_priest);
-void config_load_figure_priest() {
-    priest_m.load();
-    festival_priest_m.load();
-}
 
 void figure_priest::figure_before_action() {
     building* b = home();
@@ -123,8 +116,9 @@ int figure_priest::provide_service() {
     case BUILDING_TEMPLE_OSIRIS:
     case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
-            if (b->house_size > 0 && b->house_population > 0) {
-                b->data.house.temple_osiris = MAX_COVERAGE;
+            auto house = b->dcast_house();
+            if (house && house->house_population() > 0) {
+                house->runtime_data().temple_osiris = MAX_COVERAGE;
             }
         });
         break;
@@ -132,8 +126,9 @@ int figure_priest::provide_service() {
     case BUILDING_TEMPLE_RA:
     case BUILDING_TEMPLE_COMPLEX_RA:
         houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
-            if (b->house_size > 0 && b->house_population > 0) {
-                b->data.house.temple_ra = MAX_COVERAGE;
+            auto house = b->dcast_house();
+            if (house && house->house_population() > 0) {
+                house->runtime_data().temple_ra = MAX_COVERAGE;
             }
         });
         break;
@@ -141,8 +136,9 @@ int figure_priest::provide_service() {
     case BUILDING_TEMPLE_PTAH:
     case BUILDING_TEMPLE_COMPLEX_PTAH:
         houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
-            if (b->house_size > 0 && b->house_population > 0) {
-                b->data.house.temple_ptah = MAX_COVERAGE;
+            auto house = b->dcast_house();
+            if (house && house->house_population() > 0) {
+                house->runtime_data().temple_ptah = MAX_COVERAGE;
             }
         });
         break;
@@ -150,8 +146,9 @@ int figure_priest::provide_service() {
     case BUILDING_TEMPLE_SETH:
     case BUILDING_TEMPLE_COMPLEX_SETH:
         houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
-            if (b->house_size > 0 && b->house_population > 0) {
-                b->data.house.temple_seth = MAX_COVERAGE;
+            auto house = b->dcast_house();
+            if (house && house->house_population() > 0) {
+                house->runtime_data().temple_seth = MAX_COVERAGE;
             }
         });
         break;
@@ -159,8 +156,9 @@ int figure_priest::provide_service() {
     case BUILDING_TEMPLE_BAST:
     case BUILDING_TEMPLE_COMPLEX_BAST:
         houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
-            if (b->house_size > 0 && b->house_population > 0) {
-                b->data.house.temple_bast = MAX_COVERAGE;
+            auto house = b->dcast_house();
+            if (house && house->house_population() > 0) {
+                house->runtime_data().temple_bast = MAX_COVERAGE;
             }
         });
         break;

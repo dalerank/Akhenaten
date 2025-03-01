@@ -69,8 +69,6 @@ building *building_create(e_building_type type, tile2i tile, int orientation) {
     memset(&(b->data), 0, sizeof(b->data));
     b->new_fill_in_data_for_type(type, tile, orientation);
 
-    b->data.house.health = 100;
-
     return b;
 }
 
@@ -304,7 +302,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->is_adjacent_to_water);
 
         iob->bind(BIND_SIGNATURE_UINT8, &b->storage_id);
-        iob->bind(BIND_SIGNATURE_INT8, &b->sentiment.house_happiness); // which union field we use does not matter // 90 for house, 50 for wells
+        iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_INT8, &b->sentiment.house_happiness); // which union field we use does not matter // 90 for house, 50 for wells
         iob->bind(BIND_SIGNATURE_UINT8, &b->show_on_problem_overlay); // 1
         iob->bind(BIND_SIGNATURE_UINT16, &b->deben_storage); // 2
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_open_water_access); // 1

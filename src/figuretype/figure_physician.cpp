@@ -1,7 +1,7 @@
 #include "figure_physician.h"
 
 #include "core/profiler.h"
-#include "building/building.h"
+#include "building/building_house.h"
 #include "city/city_health.h"
 #include "city/sentiment.h"
 #include "city/labor.h"
@@ -91,8 +91,10 @@ sound_key figure_physician::phrase_key() const {
 int figure_physician::provide_service() {
     int none_service = 0;
     int houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
-        if (b->house_size > 0 && b->house_population > 0) {
-            b->data.house.physician = MAX_COVERAGE;
+        auto house = b->dcast_house();
+
+        if (house && house->base.house_size > 0 && house->house_population() > 0) {
+            house->runtime_data().physician = MAX_COVERAGE;
             b->common_health = std::min(b->common_health + 1, 100);
         }
     });

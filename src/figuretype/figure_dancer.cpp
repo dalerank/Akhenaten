@@ -7,6 +7,7 @@
 #include "city/ratings.h"
 #include "sound/sound.h"
 #include "building/building_entertainment.h"
+#include "building/building_house.h"
 
 figures::model_t<figure_dancer> dancer_m;
 
@@ -76,7 +77,12 @@ bool figure_dancer::play_die_sound() {
 int figure_dancer::provide_service() {
     building *b = current_destination();
     int houses_serviced = provide_entertainment(0, [] (building *b, int shows) {
-        b->data.house.pavillion_dancer = MAX_COVERAGE;
+        auto house = ((building *)b)->dcast_house();
+
+        if (house) {
+            auto &housed = house->runtime_data();
+            housed.pavillion_dancer = MAX_COVERAGE;
+        }
     });
     return houses_serviced;
 }
