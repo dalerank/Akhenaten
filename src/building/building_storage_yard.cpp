@@ -695,7 +695,13 @@ storage_worker_task building_storageyard_deliver_to_monuments(building *b) {
 
     svector<building *, 10> monuments;
     buildings_valid_do([&] (building &b) { 
-        if (!monuments.full() && building_is_monument(b.type) && b.data.monuments.phase != MONUMENT_FINISHED) {
+        auto monument = b.dcast_monument();
+        if (!monument) {
+            return;
+        }
+
+        auto &monumentd = monument->runtime_data();
+        if (!monuments.full() && monumentd.phase != MONUMENT_FINISHED) {
             monuments.push_back(&b);
         }
     });

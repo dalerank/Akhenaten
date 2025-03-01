@@ -25,15 +25,20 @@ public:
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
     };
 
+    struct runtime_data_t {
+        uint8_t variant;
+        uint8_t temple_complex_upgrades;
+    };
+
     virtual void on_create(int orientation) override;
     virtual void update_count() const override;
     virtual void on_post_load() override;
     virtual void on_place(int orientation, int variant) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
-    bool has_upgrade(e_temple_compex_upgrade a) const { return !!(data.monuments.temple_complex_upgrades & a); }
+    bool has_upgrade(e_temple_compex_upgrade a) const { return !!(runtime_data().temple_complex_upgrades & a); }
     bool has_upgrade(e_building_type btype) const;
-    void set_upgrade(e_temple_compex_upgrade a) { data.monuments.temple_complex_upgrades |= a; }
+    void set_upgrade(e_temple_compex_upgrade a) { runtime_data().temple_complex_upgrades |= a; }
 
     building *get_altar() const;
     building *get_oracle() const;
@@ -41,6 +46,9 @@ public:
 
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_NONE; }
     virtual void update_map_orientation(int orientation) override;
+
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 };
 
 class building_temple_complex_osiris : public building_temple_complex {

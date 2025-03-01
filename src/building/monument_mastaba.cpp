@@ -187,8 +187,10 @@ void building_mastaba::finalize(building *b, const vec2i size_b) {
     building *part = b;
     building *main = b->main();
     update_images(b, 8, size_b);
+
     while (!!part) {
-        part->data.monuments.phase = MONUMENT_FINISHED;
+        auto monument = part->dcast_monument();
+        monument->runtime_data().phase = MONUMENT_FINISHED;
         part = part->has_next() ? part->next() : nullptr;
     }
 }
@@ -212,7 +214,8 @@ bool building_small_mastaba::draw_ornaments_and_animations_flat(painter &ctx, ve
 }
 
 void building_mastaba::remove_worker(figure_id fid) {
-    for (auto &wid : data.monuments.workers) {
+    auto &d = runtime_data();
+    for (auto &wid : d.workers) {
         if (wid == fid) {
             wid = 0;
             return;
@@ -222,7 +225,8 @@ void building_mastaba::remove_worker(figure_id fid) {
 
 
 void building_mastaba::add_workers(figure_id fid) {
-    for (auto &wid : data.monuments.workers) {
+    auto &d = runtime_data();
+    for (auto &wid : d.workers) {
         if (wid == 0) {
             wid = fid;
             return;
@@ -305,7 +309,9 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
     int image_grounded = small_mastaba_m.anim[animkeys().base].first_img() + 5;
     building *main = base.main();
     color_mask = (color_mask ? color_mask : 0xffffffff);
-    if (base.data.monuments.phase == 0) {
+
+    auto &monumentd = base.dcast_monument()->runtime_data();
+    if (monumentd.phase == 0) {
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
@@ -347,7 +353,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
             vec2i offset = tile_to_pixel(right_bottom);
             ImageDraw::isometric_from_drawtile(ctx, image_stick, offset, color_mask);
         }
-    } else if (base.data.monuments.phase == 1) {
+    } else if (monumentd.phase == 1) {
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
@@ -364,7 +370,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
                 }
             }
         }
-    } else if (base.data.monuments.phase == 2) {
+    } else if (monumentd.phase == 2) {
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
@@ -419,7 +425,8 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, 
         }
     };
 
-    if (data.monuments.phase == 2) {
+    auto &monumentd = runtime_data();
+    if (monumentd.phase == 2) {
         for (auto &tile : tiles2draw) {
             uint32_t progress = map_monuments_get_progress(tile);
             if (progress >= 200) {
@@ -430,8 +437,8 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, 
                 fill_tiles_height(ctx, tile, img);
             }
         }
-    } else if (data.monuments.phase > 2 && data.monuments.phase < 8) {
-        int phase = data.monuments.phase;
+    } else if (monumentd.phase > 2 && monumentd.phase < 8) {
+        int phase = monumentd.phase;
         for (auto &tile : tiles2draw) {
             uint32_t progress = map_monuments_get_progress(tile);
             int img = building_small_mastabe_get_bricks_image(base.orientation, base.type, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), (progress >= 200) ? (phase - 1) : (phase - 2));
@@ -440,7 +447,7 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, 
             ImageDraw::isometric_from_drawtile_top(ctx, img, offset + city_orientation_offset, color_mask);
             fill_tiles_height(ctx, tile, img);
         }
-    } else if (data.monuments.phase == 8) {
+    } else if (monumentd.phase == 8) {
         for (auto &tile : tiles2draw) {
             uint32_t progress = map_monuments_get_progress(tile);
             vec2i offset = tile_to_pixel(tile);
@@ -451,7 +458,7 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, 
         }
     }
 
-    if (data.monuments.phase > 2 && base.type == BUILDING_SMALL_MASTABA_SIDE) {
+    if (monumentd.phase > 2 && base.type == BUILDING_SMALL_MASTABA_SIDE) {
         grid_tiles tile2common = map_grid_get_tiles(main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
         for (auto &t : tile2common) {
             vec2i offset = tile_to_pixel(t);
@@ -463,11 +470,13 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, 
 }
 
 custom_span<uint16_t> building_mastaba::active_workers() {
-    return custom_span<uint16_t>(data.monuments.workers, 5);
+    auto &monumentd = runtime_data();
+    return custom_span<uint16_t>(monumentd.workers, 5);
 }
 
 void building_mastaba::update_day(const vec2i tiles_size) {
-    if (data.monuments.phase >= 8) {
+    auto &monumentd = runtime_data();
+    if (monumentd.phase >= 8) {
         finalize(&base, tiles_size);
         if (is_main()) {
             city_message &message = city_message_post_with_popup_delay(MESSAGE_CAT_MONUMENTS, true, MESSAGE_MASTABA_FINISHED, type(), tile().grid_offset());
@@ -486,7 +495,7 @@ void building_mastaba::update_day(const vec2i tiles_size) {
     }
 
     if (all_tiles_finished) {
-        int curr_phase = data.monuments.phase;
+        int curr_phase = monumentd.phase;
         map_grid_area_foreach(tiles, [] (tile2i tile) { map_monuments_set_progress(tile, 0); });
         update_images(&base, curr_phase, tiles_size);
         while (part) {
@@ -495,12 +504,12 @@ void building_mastaba::update_day(const vec2i tiles_size) {
         }
     }
 
-    if (data.monuments.phase >= 2) {
+    if (monumentd.phase >= 2) {
         int minimal_percent = 100;
         for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
             bool need_resource = building_monument_needs_resource(&base, r);
             if (need_resource) {
-                minimal_percent = std::min<int>(minimal_percent, data.monuments.resources_pct[r]);
+                minimal_percent = std::min<int>(minimal_percent, monumentd.resources_pct[r]);
             }
         }
 
@@ -545,7 +554,8 @@ void building_mastaba::update_month() {
         return;
     }
 
-    for (uint16_t &w_id : data.monuments.workers) {
+    auto &monumentd = runtime_data();
+    for (uint16_t &w_id : monumentd.workers) {
         auto worker = figure_get<figure_worker>(w_id);
         if (!worker || worker->is_alive() || worker->destination() != &base) {
             w_id = 0;
@@ -566,22 +576,25 @@ bool building_mastaba::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pix
         return false;
     }
 
-    return (data.monuments.phase < 2);
+    auto &monumentd = runtime_data();
+    return (monumentd.phase < 2);
 }
 
 void building_mastaba::bind_dynamic(io_buffer *iob, size_t version) {
+    auto &monumentd = runtime_data();
+
     iob->bind____skip(38);
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
     for (int i = 0; i < 5; i++) {
-        iob->bind(BIND_SIGNATURE_UINT16, &data.monuments.workers[i]);
+        iob->bind(BIND_SIGNATURE_UINT16, &monumentd.workers[i]);
     }
-    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.phase);
+    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.phase);
     iob->bind____skip(1); // (BIND_SIGNATURE_UINT8, &data.monuments.statue_offset);
     iob->bind____skip(1); // (BIND_SIGNATURE_UINT8, &data.monuments.temple_complex_attachments);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.variant);
+    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.variant);
 
     for (int i = 0; i < RESOURCES_MAX; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.resources_pct[i]);
+        iob->bind(BIND_SIGNATURE_UINT8, &monumentd.resources_pct[i]);
     }
 }
 
@@ -656,7 +669,8 @@ bool building_small_mastaba::draw_ornaments_and_animations_height(painter &ctx, 
         return false;
     }
 
-    if (data.monuments.phase < 2) {
+    auto &monumentd = runtime_data();
+    if (monumentd.phase < 2) {
         return false;
     }
 
@@ -694,7 +708,8 @@ bool building_medium_mastaba::draw_ornaments_and_animations_height(painter &ctx,
         return false;
     }
 
-    if (data.monuments.phase < 2) {
+    auto &monumentd = runtime_data();
+    if (monumentd.phase < 2) {
         return false;
     }
 

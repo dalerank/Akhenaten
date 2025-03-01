@@ -9,6 +9,26 @@
 #define MONUMENT_START 1
 #define MARS_OFFERING_FREQUENCY 16
 
+class building_monument : public building_impl {
+public:
+    building_monument(building &b) : building_impl(b) {}
+
+    building_monument *dcast_monument() override { return this; }
+
+    struct runtime_data_t {
+        uint8_t variant;
+        uint8_t statue_offset;
+        uint8_t temple_complex_upgrades;
+        uint8_t resources_pct[RESOURCES_MAX];
+        uint16_t workers[5];
+        int8_t phase;
+        uint8_t upgrades;
+    };
+
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
+};
+
 enum module_type {
     
 };

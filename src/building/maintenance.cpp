@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/building_house.h"
 #include "building/building_burning_ruin.h"
+#include "building/building_temple_complex.h"
 #include "building/destruction.h"
 #include "building/list.h"
 #include "city/buildings.h"
@@ -271,7 +272,8 @@ void building_maintenance_check_kingdome_access() {
             }
         } else if (building_type_any_of(b, BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_TEMPLE_COMPLEX_SETH,BUILDING_TEMPLE_COMPLEX_BAST)) {
             if (b.is_main()) {
-                int orientation = (5 - (b.data.monuments.variant / 2)) % 4;
+                auto complex = b.dcast_temple_complex();
+                int orientation = (5 - (complex->runtime_data().variant / 2)) % 4;
                 b.has_road_access = map_has_road_access_temple_complex(b.tile, orientation, false, &b.road_access);
                 b.road_network_id = map_road_network_get(b.road_access);
                 b.distance_from_entry = map_routing_distance(b.road_access);

@@ -22,7 +22,8 @@ tile2i figure_worker::small_mastaba_tile4work(building *b) {
         return tile2i{-1, -1};
     }
 
-    if (b->data.monuments.phase >= 2) {
+    auto &d = mastaba->runtime_data();
+    if (d.phase >= 2) {
         return tile2i{-1, -1};
     }
 

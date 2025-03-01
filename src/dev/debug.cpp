@@ -30,7 +30,9 @@
 
 #include "building/construction/build_planner.h"
 #include "building/count.h"
+#include "building/building_statue.h"
 #include "building/building_farm.h"
+#include "building/building_temple_complex.h"
 #include "city/coverage.h"
 #include "city/city_floods.h"
 #include "sound/sound_city.h"
@@ -428,12 +430,15 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
         // STATUES & MONUMENTS
 
-        if (b_id && map_property_is_draw_tile(grid_offset) && (b->labor_category != LABOR_CATEGORY_NONE || building_is_floodplain_farm(*b))) {
+        if (b_id && map_property_is_draw_tile(grid_offset) && (b->labor_category != LABOR_CATEGORY_NONE)) {
             switch (b->type) {
             case BUILDING_SMALL_STATUE:
             case BUILDING_MEDIUM_STATUE:
             case BUILDING_LARGE_STATUE:
-                debug_text(ctx, str, x1, y + 10, 0, "", b->data.monuments.variant, COLOR_WHITE);
+                {
+                    auto statue = b->dcast_statue();
+                    debug_text(ctx, str, x1, y + 10, 0, "", statue->runtime_data().variant, COLOR_WHITE);
+                }
                 break;
                 //
             case BUILDING_TEMPLE_COMPLEX_OSIRIS:
@@ -441,8 +446,12 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             case BUILDING_TEMPLE_COMPLEX_PTAH:
             case BUILDING_TEMPLE_COMPLEX_SETH:
             case BUILDING_TEMPLE_COMPLEX_BAST:
-                debug_text(ctx, str, x1, y + 10, 0, "", b->data.monuments.variant, COLOR_WHITE);
-                debug_text(ctx, str, x1, y + 20, 0, "", b->data.monuments.temple_complex_upgrades, COLOR_LIGHT_BLUE);
+                {
+                    auto complex = b->dcast_temple_complex();
+                    auto &d = complex->runtime_data();
+                    debug_text(ctx, str, x1, y + 10, 0, "", d.variant, COLOR_WHITE);
+                    debug_text(ctx, str, x1, y + 20, 0, "", d.temple_complex_upgrades, COLOR_LIGHT_BLUE);
+                }
                 break;
             }
         }
@@ -545,11 +554,13 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         break;
 
     case e_debug_render_monuments:
-        d = map_monuments_get_progress(tile2i(grid_offset));
-        b->is_valid()
-            ? snprintf((char *)str, 30, "%d[%d]", b ? b->data.monuments.phase : 0, d)
-            : snprintf((char *)str, 30, "%d", d);
-        debug_text_a(ctx, str, x, y + 10, 0, (pcstr)str, COLOR_RED, FONT_SMALL_PLAIN);
+        if (auto monument = b->dcast_monument(); !!monument) {            
+            d = map_monuments_get_progress(tile2i(grid_offset));
+            b->is_valid()
+                ? snprintf((char *)str, 30, "%d[%d]", monument->runtime_data().phase, d)
+                : snprintf((char *)str, 30, "%d", d);
+            debug_text_a(ctx, str, x, y + 10, 0, (pcstr)str, COLOR_RED, FONT_SMALL_PLAIN);
+        }
         break;
 
     case e_debug_render_height:

@@ -96,8 +96,10 @@ int building_statue::static_params_t<T>::planer_update_building_variant(build_pl
 
 void building_statue::on_create(int o) {
     int orientation = (4 + building_rotation_global_rotation() + city_view_orientation() / 2) % 4;
-    data.monuments.variant = g_city_planner.building_variant;
-    data.monuments.statue_offset = rand() % 4;
+
+    auto &d = runtime_data();
+    d.variant = g_city_planner.building_variant;
+    d.statue_offset = rand() % 4;
 }
 
 void building_statue::on_place_update_tiles(int orientation, int variant) {
@@ -111,7 +113,7 @@ void building_statue::on_place_checks() {
 }
 
 void building_statue::update_map_orientation(int map_orientation) {
-    int variant = data.monuments.variant;
+    int variant = runtime_data().variant;
     int combined = 0;
 
     int orientation = combined % 4 - (map_orientation / 2);
@@ -120,17 +122,19 @@ void building_statue::update_map_orientation(int map_orientation) {
 }
 
 void building_statue::bind_dynamic(io_buffer *iob, size_t version) {
+    auto &d = runtime_data();
+
     iob->bind____skip(38);
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
     for (int i = 0; i < 5; i++) {
-        iob->bind(BIND_SIGNATURE_UINT16, &data.monuments.workers[i]);
+        iob->bind(BIND_SIGNATURE_UINT16, &d.workers[i]);
     }
-    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.phase);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.statue_offset);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.phase);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.statue_offset);
     iob->bind____skip(1);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.variant);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.variant);
 
     for (int i = 0; i < RESOURCES_MAX; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.resources_pct[i]);
+        iob->bind(BIND_SIGNATURE_UINT8, &d.resources_pct[i]);
     }
 }

@@ -321,7 +321,7 @@ building_temple_complex_seth::static_params building_temple_complex_seth_m;
 building_temple_complex_bast::static_params building_temple_complex_bast_m;
 
 void building_temple_complex::on_create(int orientation) {
-    data.monuments.variant = (10 - (2 * orientation)) % 8; // ugh!
+    runtime_data().variant = (10 - (2 * orientation)) % 8; // ugh!
     g_city.buildings.track_building(base, false);
 }
 
@@ -355,19 +355,11 @@ void building_temple_complex::on_place(int orientation, int variant) {
 }
 
 void building_temple_complex::bind_dynamic(io_buffer *iob, size_t version) {
-    iob->bind____skip(34);
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
-    for (int i = 0; i < 5; i++) {
-        iob->bind(BIND_SIGNATURE_UINT16, &data.monuments.workers[i]);
-    }
-    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.phase);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.statue_offset);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.temple_complex_upgrades);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.variant);
+    auto &d = runtime_data();
 
-    for (int i = 0; i < RESOURCES_MAX; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.monuments.resources_pct[i]);
-    }
+    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.temple_complex_upgrades);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.variant);
 }
 
 bool building_temple_complex::has_upgrade(e_building_type btype) const {
@@ -420,7 +412,7 @@ void building_temple_complex::update_map_orientation(int orientation) {
     }
 
     // first, add the base tiles
-    orientation = (5 - (data.monuments.variant / 2)) % 4;
+    orientation = (5 - (runtime_data().variant / 2)) % 4;
     map_add_temple_complex_base_tiles(type(), tile(), orientation);
     // then, the main building parts
     // map_building_tiles_add_temple_complex_parts(&base);

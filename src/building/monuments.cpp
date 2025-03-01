@@ -118,7 +118,9 @@ bool building_monument_deliver_resource(building *b, e_resource resource, int am
         return false;
     }
 
-    if (b->data.monuments.resources_pct[resource] >= 100) {
+    auto monument = b->dcast_monument();
+    auto &monumentd = monument->runtime_data();
+    if (monumentd.resources_pct[resource] >= 100) {
         return false;
     }
 
@@ -126,9 +128,9 @@ bool building_monument_deliver_resource(building *b, e_resource resource, int am
         b = building_get(b->prev_part_building_id);
     }
 
-    int full_resources = building_monument_needs_resources(b->type, resource, b->data.monuments.phase);
+    int full_resources = building_monument_needs_resources(b->type, resource, monumentd.phase);
     int amount_pct = calc_percentage(amount, full_resources);
-    b->data.monuments.resources_pct[resource] += amount_pct;
+    monumentd.resources_pct[resource] += amount_pct;
 
     return true;
 }
@@ -331,7 +333,12 @@ int building_monument_has_unfinished_monuments() {
     bool found = false;
     for (const auto &m: g_monument_types) {
         buildings_valid_do([&] (building &b) {
-            if (b.data.monuments.phase != MONUMENT_FINISHED) {
+            auto monument = b.dcast_monument();
+            if (!monument) {
+                return;
+            }
+
+            if (monument->runtime_data().phase != MONUMENT_FINISHED) {
                 found |= true;
             }
         }, m->btype);
@@ -373,22 +380,28 @@ int building_image_get(building *b) {
     case BUILDING_SMALL_MASTABA_SIDE:
     case BUILDING_SMALL_MASTABA_WALL:
     case BUILDING_SMALL_MASTABA_ENTRANCE:
-        switch (b->data.monuments.phase) {
-        case MONUMENT_START:
-            return building_impl::params(BUILDING_SMALL_MASTABA).anim[animkeys().base].first_img();
-        default:
-            return building_impl::params(BUILDING_SMALL_MASTABA).anim[animkeys().base].first_img() + 1;
+        {
+            auto monument = b->dcast_monument();
+            switch (monument->runtime_data().phase) {
+            case MONUMENT_START:
+                return building_impl::params(BUILDING_SMALL_MASTABA).anim[animkeys().base].first_img();
+            default:
+                return building_impl::params(BUILDING_SMALL_MASTABA).anim[animkeys().base].first_img() + 1;
+            }
         }
 
     case BUILDING_MEDIUM_MASTABA:
     case BUILDING_MEDIUM_MASTABA_SIDE:
     case BUILDING_MEDIUM_MASTABA_WALL:
     case BUILDING_MEDIUM_MASTABA_ENTRANCE:
-        switch (b->data.monuments.phase) {
-        case MONUMENT_START:
-            return building_impl::params(BUILDING_MEDIUM_MASTABA).anim[animkeys().base].first_img();
-        default:
-            return building_impl::params(BUILDING_MEDIUM_MASTABA).anim[animkeys().base].first_img() + 1;
+        {
+            auto monument = b->dcast_monument();
+            switch (monument->runtime_data().phase) {
+            case MONUMENT_START:
+                return building_impl::params(BUILDING_MEDIUM_MASTABA).anim[animkeys().base].first_img();
+            default:
+                return building_impl::params(BUILDING_MEDIUM_MASTABA).anim[animkeys().base].first_img() + 1;
+            }
         }
 
     default:
@@ -403,18 +416,20 @@ void building_monument_set_phase(building *b, int phase) {
         phase = MONUMENT_FINISHED;
     }
 
-    if (phase == b->data.monuments.phase) {
+    auto monument = b->dcast_monument();
+    auto &monumentd = monument->runtime_data();
+    if (phase == monumentd.phase) {
         return;
     }
 
-    b->data.monuments.phase = phase;
+    monumentd.phase = phase;
     if (phase >= 2) {
         map_building_tiles_add(b->id, b->tile, b->size, building_image_get(b), TERRAIN_BUILDING);
     }
 
-    if (b->data.monuments.phase != MONUMENT_FINISHED) {
+    if (monumentd.phase != MONUMENT_FINISHED) {
         for (e_resource resource = RESOURCE_NONE; resource < RESOURCES_MAX; ++resource) {
-            b->data.monuments.resources_pct[resource] = 0;
+            monumentd.resources_pct[resource] = 0;
         }
     }
 }
@@ -446,12 +461,14 @@ bool building_monument_is_temple_complex(e_building_type type) {
 }
 
 int building_monument_needs_resource(building *b, e_resource resource) {
-    if (b->data.monuments.phase == MONUMENT_FINISHED) {
+    auto monument = b->dcast_monument();
+    auto &monumentd = monument->runtime_data();
+    if (monumentd.phase == MONUMENT_FINISHED) {
         return 0;
     }
 
-    int full_resources = building_monument_needs_resources(b->type, resource, b->data.monuments.phase);
-    int resources_pct = b->data.monuments.resources_pct[resource];
+    int full_resources = building_monument_needs_resources(b->type, resource, monumentd.phase);
+    int resources_pct = monumentd.resources_pct[resource];
     return full_resources - (full_resources * resources_pct / 100);
 }
 
@@ -459,12 +476,14 @@ void building_monument_finish_monuments() {
     bool found = false;
     for (const auto &m: g_monument_types) {
         buildings_valid_do([&] (building &b) {
-            if (b.data.monuments.phase != MONUMENT_FINISHED) {
+            auto monument = b.dcast_monument();
+            auto &monumentd = monument->runtime_data();
+            if (monumentd.phase != MONUMENT_FINISHED) {
                 return;
             }
 
             building_monument_set_phase(&b, MONUMENT_FINISHED);
-            for (auto &r: b.data.monuments.resources_pct) {
+            for (auto &r: monumentd.resources_pct) {
                 r = 0;
             }
         }, m->btype);
@@ -476,11 +495,12 @@ bool building_monument_needs_resources(building *b) {
         return false;
     }
     
-    if (b->data.monuments.phase == MONUMENT_FINISHED) {
+    auto &monumentd = b->dcast_monument()->runtime_data();
+    if (monumentd.phase == MONUMENT_FINISHED) {
         return false;
     }
 
-    for (auto &r: b->data.monuments.resources_pct) {
+    for (auto &r: monumentd.resources_pct) {
         if (r < 100) {
             return true;
         }
@@ -494,7 +514,8 @@ int building_monument_progress(building *b) {
         return 0;
     }
 
-    if (b->data.monuments.phase == MONUMENT_FINISHED) {
+    auto &monumentd = b->dcast_monument()->runtime_data();
+    if (monumentd.phase == MONUMENT_FINISHED) {
         return 0;
     }
 
@@ -502,13 +523,16 @@ int building_monument_progress(building *b) {
         b = building_get(b->prev_part_building_id);
     }
 
-    building_monument_set_phase(b, b->data.monuments.phase + 1);
+    building_monument_set_phase(b, monumentd.phase + 1);
 
-    while (b->next_part_building_id) {
-        b = building_get(b->next_part_building_id);
-        building_monument_set_phase(b, b->data.monuments.phase + 1);
+    building *next = b;
+    while (next->next_part_building_id) {
+        next = building_get(b->next_part_building_id);
+        auto &nextd = b->dcast_monument()->runtime_data();
+        building_monument_set_phase(b, nextd.phase + 1);
     }
-    if (b->data.monuments.phase == MONUMENT_FINISHED) {
+
+    if (monumentd.phase == MONUMENT_FINISHED) {
         if (building_monument_is_temple_complex(b->type)) {
             city_message_post(1, MESSAGE_MONUMENT_COMPLETE, 0, b->tile.grid_offset());
         } else if (b->type == BUILDING_SMALL_MASTABA) {
@@ -645,7 +669,8 @@ int building_monument_working(e_building_type type) {
         return 0;
     }
 
-    if (b->data.monuments.phase != MONUMENT_FINISHED || b->state != BUILDING_STATE_VALID) {
+    auto &monumentd = b->dcast_monument()->runtime_data();
+    if (monumentd.phase != MONUMENT_FINISHED || b->state != BUILDING_STATE_VALID) {
         return 0;
     }
 
@@ -685,7 +710,8 @@ int building_monument_upgraded(e_building_type type) {
     if (!monument_id) {
         return 0;
     }
-    if (!b->data.monuments.upgrades) {
+    auto &monumentd = b->dcast_monument()->runtime_data();
+    if (!monumentd.upgrades) {
         return 0;
     }
     return monument_id;
@@ -699,7 +725,8 @@ int building_monument_module_type(e_building_type type) {
     }
 
     building *b = building_get(monument_id);
-    return b->data.monuments.upgrades;
+    auto &monumentd = b->dcast_monument()->runtime_data();
+    return monumentd.upgrades;
 }
 
 io_buffer *iob_city_building_monuments = new io_buffer([] (io_buffer *iob, size_t version) {
@@ -723,7 +750,8 @@ bool building_monument_need_workers(building *b) {
         return false;
     }
 
-    for (auto w_id : b->data.monuments.workers) {
+    auto &monumentd = b->dcast_monument()->runtime_data();
+    for (auto w_id : monumentd.workers) {
         if (!w_id) {
             return true;
         }
@@ -751,13 +779,14 @@ bool building_monument_need_bricklayers(const building *b) {
         return false;
     }
 
-    if (b->data.monuments.phase == MONUMENT_FINISHED) {
+    auto &monumentd = ((building*)b)->dcast_monument()->runtime_data();
+    if (monumentd.phase == MONUMENT_FINISHED) {
         return false;
     }
 
-    int phase = b->data.monuments.phase;
+    int phase = monumentd.phase;
     int works_bricklayers = 0;
-    for (auto &id : b->data.monuments.workers) {
+    for (auto &id : monumentd.workers) {
         figure *f = id > 0 ? figure_get(id) : nullptr;
         works_bricklayers += (f && f->type == FIGURE_BRICKLAYER) ? 1 : 0;
     }
@@ -765,7 +794,7 @@ bool building_monument_need_bricklayers(const building *b) {
     switch (b->type) {
     case BUILDING_SMALL_MASTABA:
     case BUILDING_MEDIUM_MASTABA:
-        return (phase >= 2 && phase <= 5 && works_bricklayers < building_monument_needs_bricklayers(b->type, b->data.monuments.phase));
+        return (phase >= 2 && phase <= 5 && works_bricklayers < building_monument_needs_bricklayers(b->type, monumentd.phase));
 
     default:
         assert(false);
@@ -775,13 +804,30 @@ bool building_monument_need_bricklayers(const building *b) {
 }
 
 bool building_monument_is_unfinished(const building *b) {
-    return building_monument_is_monument(b) && b->data.monuments.phase != MONUMENT_FINISHED;
+    auto monument = ((building*)b)->dcast_monument();
+    if (!monument) {
+        return false;
+    }
+
+    return monument->runtime_data().phase != MONUMENT_FINISHED;
 }
 
 bool building_monument_is_finished(const building *b) {
-    return building_monument_is_monument(b) && b->data.monuments.phase == MONUMENT_FINISHED;
+    auto monument = ((building *)b)->dcast_monument();
+    if (!monument) {
+        return false;
+    }
+
+    return monument->runtime_data().phase == MONUMENT_FINISHED;
 }
 
 building *city_has_unfinished_monuments() {
-    return buildings_valid_first([] (building &b) { return (b.data.monuments.phase == MONUMENT_FINISHED); });
+    return buildings_valid_first([] (building &b) { 
+        auto monument = b.dcast_monument();
+        if (!monument) {
+            return false;
+        }
+
+        return (monument->runtime_data().phase == MONUMENT_FINISHED); 
+    });
 }

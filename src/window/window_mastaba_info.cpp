@@ -20,23 +20,25 @@ info_window_mastaba mastaba_infow;
 void info_window_mastaba::init(object_info &c) {
     building_info_window::init(c);
 
-    building *b = c.building_get();
+    auto mastaba = c.building_get()->dcast_monument();
 
-    if (building_monument_is_unfinished(b)) {
+    if (building_monument_is_unfinished(&mastaba->base)) {
         textid reason = { 0, 0 };
 
         int workers_num = 0;
-        for (auto &wid : b->data.monuments.workers) {
+        auto &d = mastaba->runtime_data();
+
+        for (auto &wid : d.workers) {
             workers_num += wid > 0 ? 1 : 0;
         }
 
-        if (b->data.monuments.phase < 3) {
+        if (d.phase < 3) {
             int work_camps_num = building_count_total(BUILDING_WORK_CAMP);
             int work_camps_active_num = building_count_active(BUILDING_WORK_CAMP);
 
             int work_camps_near_mastaba = 0;
             buildings_valid_do([&] (building &w) {
-                int distance_to_mastaba = w.tile.dist(b->tile);
+                int distance_to_mastaba = w.tile.dist(mastaba->tile());
                 work_camps_near_mastaba += (distance_to_mastaba < 10) ? 1 : 0;
             }, BUILDING_WORK_CAMP);
 
@@ -52,7 +54,7 @@ void info_window_mastaba::init(object_info &c) {
             int bricklayers_guilds_active_num = building_count_active(BUILDING_BRICKLAYERS_GUILD);
             int bricks_on_storages = city_resource_ready_for_using(RESOURCE_BRICKS);
             bool bricks_stockpiled = city_resource_is_stockpiled(RESOURCE_BRICKS);
-            int workers_onsite = building_monument_workers_onsite(b, FIGURE_LABORER);
+            int workers_onsite = building_monument_workers_onsite(&mastaba->base, FIGURE_LABORER);
 
             if (bricks_stockpiled) { reason = { 178, 103 }; }
             else if (!bricklayers_guilds_num) { reason = { 178, 15 }; }

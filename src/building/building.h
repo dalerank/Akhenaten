@@ -83,6 +83,7 @@ class building_temple_complex;
 class building_temple_complex_altar;
 class building_temple_complex_oracle;
 class building_water_lift;
+class building_monument;
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -215,16 +216,6 @@ public:
     short formation_id;
     union impl_data_t {
         char data[512] = { 0 };
-
-        struct {
-            uint8_t variant;
-            uint8_t statue_offset;
-            uint8_t temple_complex_upgrades;
-            uint8_t resources_pct[RESOURCES_MAX];
-            uint16_t workers[5];
-            int8_t phase;
-            uint8_t upgrades;
-        } monuments;
 
         struct {
             short exceptions;
@@ -380,6 +371,7 @@ public:
     building_temple_complex_altar *dcast_temple_complex_altar();
     building_temple_complex_oracle *dcast_temple_complex_oracle();
     building_water_lift *dcast_water_lift();
+    building_monument *dcast_monument();
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
@@ -571,6 +563,7 @@ public:
     virtual building_temple_complex_altar *dcast_temple_complex_altar() { return nullptr; }
     virtual building_temple_complex_oracle *dcast_temple_complex_oracle() { return nullptr; }
     virtual building_water_lift *dcast_water_lift() { return nullptr; }
+    virtual building_monument *dcast_monument() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -752,6 +745,7 @@ GENERATE_SMART_CAST_BUILDING(temple_complex)
 GENERATE_SMART_CAST_BUILDING(temple_complex_altar)
 GENERATE_SMART_CAST_BUILDING(temple_complex_oracle)
 GENERATE_SMART_CAST_BUILDING(water_lift)
+GENERATE_SMART_CAST_BUILDING(monument)
 
 namespace buildings {
 

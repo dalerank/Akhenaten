@@ -46,13 +46,17 @@ static int get_land_type_citizen_building(int grid_offset) {
     case BUILDING_MEDIUM_MASTABA_SIDE:
     case BUILDING_MEDIUM_MASTABA_WALL:
     case BUILDING_MEDIUM_MASTABA_ENTRANCE:
-        if (b->data.monuments.phase == MONUMENT_FINISHED) {
-            return CITIZEN_N1_BLOCKED;
-        } else if (b->data.monuments.phase > 2) {
-            tile2i main = b->main()->tile;
-            tile2i end = main.shifted(3, 9);
-            tile2i tile(grid_offset);
-            return (tile.x() == main.x() || tile.y() == main.y() || tile.x() == end.x()) ? CITIZEN_N1_BLOCKED : CITIZEN_2_PASSABLE_TERRAIN;
+        {
+            auto monument = b->dcast_monument();
+            int phase = monument->runtime_data().phase;
+            if (phase == MONUMENT_FINISHED) {
+                return CITIZEN_N1_BLOCKED;
+            } else if (phase > 2) {
+                tile2i main = b->main()->tile;
+                tile2i end = main.shifted(3, 9);
+                tile2i tile(grid_offset);
+                return (tile.x() == main.x() || tile.y() == main.y() || tile.x() == end.x()) ? CITIZEN_N1_BLOCKED : CITIZEN_2_PASSABLE_TERRAIN;
+            }
         }
         return CITIZEN_2_PASSABLE_TERRAIN;
 

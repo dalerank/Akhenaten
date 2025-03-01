@@ -252,17 +252,18 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
 }
 
 static bool attach_temple_upgrade(int upgrade_param, int grid_offset) {
-    building* target = building_at(grid_offset)->main();
-    if (!building_at(grid_offset) || !building_is_temple_complex(target->type)) {
+    auto complex = building_at(grid_offset)->main()->dcast_temple_complex();
+    if (!complex) {
         return false;
     }
 
-    if (target->data.monuments.temple_complex_upgrades & upgrade_param) {
+    auto &complexd = complex->runtime_data();
+    if (complexd.temple_complex_upgrades & upgrade_param) {
         return false;
     }
 
-    target->data.monuments.temple_complex_upgrades |= upgrade_param;
-    map_building_tiles_add_temple_complex_parts(target);
+    complexd.temple_complex_upgrades |= upgrade_param;
+    map_building_tiles_add_temple_complex_parts(&complex->base);
     building_menu_update_temple_complexes();
     return true;
 }
@@ -769,18 +770,18 @@ void build_planner::update_special_case_orientations_check() {
     const bool temple_oracle = (special_flags & e_building_flag::TempleUpgradeOracle);
     const int temple_options = (temple_altar ? etc_upgrade_altar : 0) | (temple_oracle ? etc_upgrade_oracle : 0);
     if (temple_altar || temple_oracle) {
-        auto target = building_at(end)->main()->dcast_temple_complex();
-        if (!target) {
+        auto complex = building_at(end)->main()->dcast_temple_complex();
+        if (!complex) {
             immediate_warning_id = WARNING_TEMPLE_UPGRADE_PLACEMENT_NEED_TEMPLE;
             can_place = CAN_NOT_PLACE;
-        } else if (target->has_upgrade((e_temple_compex_upgrade)temple_options) ) {
+        } else if (complex->has_upgrade((e_temple_compex_upgrade)temple_options) ) {
             immediate_warning_id = WARNING_TEMPLE_UPGRADE_ONLY_ONE;
             can_place = CAN_NOT_PLACE;
         } else {
-            int dir_absolute = (5 - (target->data.monuments.variant / 2)) % 4;
+            int dir_absolute = (5 - (complex->runtime_data().variant / 2)) % 4;
             dir_relative = city_view_relative_orientation(dir_absolute);
             relative_orientation = (1 + dir_relative) % 2;
-            end = target->tile();
+            end = complex->tile();
             update_orientations(false);
         }
     }

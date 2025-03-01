@@ -26,6 +26,16 @@ public:
         virtual int planer_update_building_variant(build_planner &planer) const override;
     };
 
+    struct runtime_data_t {
+        uint8_t variant;
+        uint8_t statue_offset;
+        uint8_t temple_complex_upgrades;
+        uint8_t resources_pct[RESOURCES_MAX];
+        uint16_t workers[5];
+        int8_t phase;
+        uint8_t upgrades;
+    };
+
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
@@ -33,6 +43,9 @@ public:
     virtual void update_map_orientation(int map_orientation) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual const statue_params_t &statue_params() = 0;
+
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 };
 
 class building_small_statue : public building_statue {

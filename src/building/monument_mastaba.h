@@ -9,9 +9,9 @@
 
 struct painter;
 
-class building_mastaba : public building_impl {
+class building_mastaba : public building_monument {
 public:
-    building_mastaba(building &b) : building_impl(b) {}
+    building_mastaba(building &b) : building_monument(b) {}
     virtual building_mastaba *dcast_mastaba() override { return this; }
 
     virtual void on_create(int orientation) override;

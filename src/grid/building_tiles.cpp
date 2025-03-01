@@ -8,6 +8,7 @@
 #include "building/industry.h"
 #include "building/building_farm.h"
 #include "building/building_entertainment.h"
+#include "building/building_temple_complex.h"
 #include "grid/canals.h"
 #include "grid/bridge.h"
 #include "grid/building.h"
@@ -155,7 +156,13 @@ void map_add_venue_plaza_tiles(int building_id, int size, tile2i tile, int image
 }
 
 void map_building_tiles_add_temple_complex_parts(building* b) {
-    int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
+    auto complex = b->dcast_temple_complex();
+    if (!complex) {
+        return;
+    }
+
+    auto &d = complex->runtime_data();
+    int orientation = (5 - (d.variant / 2)) % 4;
     int orientation_rel = city_view_relative_orientation(orientation);
     int orientation_binary = (1 + orientation_rel) % 2;
     int part = 0;                                             // default = main
@@ -164,7 +171,9 @@ void map_building_tiles_add_temple_complex_parts(building* b) {
     //else if (b == get_temple_complex_front_facing_part(b)) // front facing part (oracle)
     //    part = 2;
 
-    int image_id = get_temple_complex_part_image(b->type, part, orientation_binary, (bool)(b->main()->data.monuments.temple_complex_upgrades & part));
+    auto mainc = b->main()->dcast_temple_complex();
+    auto &maind = mainc->runtime_data();
+    int image_id = get_temple_complex_part_image(b->type, part, orientation_binary, (bool)(maind.temple_complex_upgrades & part));
     map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
     if (b->next_part_building_id) {
         map_building_tiles_add_temple_complex_parts(b->next());

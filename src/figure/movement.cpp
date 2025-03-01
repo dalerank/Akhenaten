@@ -4,6 +4,7 @@
 #include "building/building.h"
 #include "building/destruction.h"
 #include "building/building_roadblock.h"
+#include "building/monuments.h"
 #include "core/calc.h"
 #include "figure/combat.h"
 #include "figure/route.h"
@@ -282,8 +283,11 @@ void figure::advance_route_tile(int roaming_enabled) {
         case BUILDING_MEDIUM_MASTABA_SIDE:
         case BUILDING_MEDIUM_MASTABA_WALL:
         case BUILDING_MEDIUM_MASTABA_ENTRANCE:
-            if (b->data.monuments.phase > 2) {
-                //direction = DIR_FIGURE_REROUTE;
+            {
+                auto &d = b->dcast_monument()->runtime_data();
+                if (d.phase > 2) {
+                    //direction = DIR_FIGURE_REROUTE;
+                }
             }
             break;
             

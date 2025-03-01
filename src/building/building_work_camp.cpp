@@ -17,7 +17,7 @@
 #include "window/building/figures.h"
 #include "window/window_building_info.h"
 #include "sound/sound_building.h"
-#include "js/js_game.h"
+#include "building/monuments.h"
 #include "widget/city/ornaments.h"
 
 struct info_window_work_camp : public building_info_window_t<info_window_work_camp> {
@@ -74,9 +74,12 @@ building* building_work_camp::determine_worker_needed() {
             return (!d.worker_id && d.labor_days_left <= 47 && !b.num_workers);
         }
 
-        const bool monument_leveling = building_is_monument(b.type) && b.data.monuments.phase < 2;
-        if (monument_leveling) {
-            return building_monument_need_workers(&b);
+        auto monument = b.dcast_monument();
+        if (monument) {
+            auto &d = monument->runtime_data();
+            if (d.phase < 2) {
+                return building_monument_need_workers(&b);
+            }
         }
 
         return false;
