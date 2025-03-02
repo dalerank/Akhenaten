@@ -28,8 +28,9 @@ int house_population_add_to_city(int num_people) {
         if (house->state() == BUILDING_STATE_VALID && house->base.house_size && house->distance_from_entry() > 0 && house->house_population() > 0) {
             city_population_set_last_used_house_add(building_id);
             int max_people = model_get_house(house->house_level())->max_people;
-            if (house->base.house_is_merged)
+            if (house->is_merged()) {
                 max_people *= 4;
+            }
 
             if (house->house_population() < max_people) {
                 ++added;
@@ -83,8 +84,9 @@ void city_t::house_population_update_room() {
         house->base.house_population_room = 0;
         if (house->distance_from_entry() > 0) {
             int max_pop = model_get_house(house->house_level())->max_people;
-            if (house->base.house_is_merged)
+            if (house->is_merged()) {
                 max_pop *= 4;
+            }
 
             city_population_add_capacity(house->house_population(), max_pop);
             house->base.house_population_room = max_pop - house->house_population();

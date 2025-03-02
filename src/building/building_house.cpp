@@ -195,6 +195,7 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &d.pavillion_dancer);
     iob->bind(BIND_SIGNATURE_UINT8, &d.pavillion_musician);
     iob->bind(BIND_SIGNATURE_UINT8, &d.house_happiness);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.is_merged);
 }
 
 int building_house::get_fire_risk(int value) const {
@@ -252,12 +253,12 @@ static int house_image_group(int level) {
 
 void building_house::add_population(int num_people) {
     int max_people = model_get_house(house_level())->max_people;
-    if (base.house_is_merged) {
+
+    if (is_merged()) {
         max_people *= 4;
     }
 
-    int room = std::max(max_people - base.house_population, 0);
-
+    int room = std::max(max_people - house_population(), 0);
     if (room < num_people) {
         num_people = room;
     }
@@ -267,7 +268,7 @@ void building_house::add_population(int num_people) {
     }
 
     base.house_population += num_people;
-    base.house_population_room = max_people - base.house_population;
+    base.house_population_room = max_people - house_population();
     city_population_add(num_people);
     base.remove_figure(2);
 }
@@ -283,7 +284,7 @@ void building_house::change_to(e_building_type type) {
     const house_model &model = static_cast<const house_model&>(params());
 
     const int img_offset = model.anim["house"].offset;
-    if (base.house_is_merged) {
+    if (is_merged()) {
         image_id += 4;
         if (img_offset) {
             image_id += 1;
@@ -305,9 +306,9 @@ void building_house::change_to_vacant_lot() {
     const house_model &model = static_cast<const house_model&>(params());
     int vacant_lot_id = model.anim["house"].first_img();
 
-    if (base.house_is_merged) {
+    if (is_merged()) {
         map_building_tiles_remove(base.id, base.tile);
-        base.house_is_merged = 0;
+        d.is_merged = 0;
         base.size = base.house_size = 1;
         map_building_tiles_add(base.id, base.tile, 1, vacant_lot_id, TERRAIN_BUILDING);
 
@@ -370,13 +371,14 @@ void building_house::merge_impl() {
     map_building_tiles_remove(id(), tile());
     base.tile = g_merge_data.tile;
 
-    base.house_is_merged = 1;
+    d.is_merged = true;
     map_building_tiles_add(id(), tile(), 2, image_id, TERRAIN_BUILDING);
 }
 
 void building_house::merge() {
-    if (base.house_is_merged)
+    if (is_merged()) {
         return;
+    }
 
     if (!config_get(CONFIG_GP_CH_ALL_HOUSES_MERGE)) {
         if ((map_random_get(base.tile) & 7) >= 5)
@@ -392,7 +394,7 @@ void building_house::merge() {
                 num_house_tiles++;
             } else if (other_house->state() == BUILDING_STATE_VALID && other_house->base.house_size
                      && (other_house->house_level() == house_level())
-                     && !other_house->base.house_is_merged) {
+                     && !other_house->is_merged()) {
                 num_house_tiles++;
             }
         }
@@ -690,7 +692,7 @@ static void split_size2(building* b, e_building_type new_type) {
     b->type = new_type;
     housed.level = (e_house_level)(b->type - BUILDING_HOUSE_VACANT_LOT);
     b->size = b->house_size = 1;
-    b->house_is_merged = 0;
+    housed.is_merged = false;
     b->house_population = population_per_tile + population_remainder;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.inventory[i] = inventory_per_tile[i] + inventory_remainder[i];
@@ -730,7 +732,7 @@ static void split_size3(building* b) {
     b->type = BUILDING_HOUSE_SPACIOUS_APARTMENT;
     housed.level = (e_house_level)(b->type - BUILDING_HOUSE_VACANT_LOT);
     b->size = b->house_size = 1;
-    b->house_is_merged = 0;
+    housed.is_merged = false;
     b->house_population = population_per_tile + population_remainder;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.inventory[i] = inventory_per_tile[i] + inventory_remainder[i];
@@ -755,14 +757,14 @@ void building_house::split(int num_tiles) {
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = grid_offset + house_tile_offsets(i);
         if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
-            building* other_house = building_at(tile_offset);
-            if (other_house->id != id() && other_house->house_size) {
-                if (other_house->house_is_merged == 1) {
-                    split_size2(other_house, other_house->type);
-                } else if (other_house->house_size == 2) {
-                    split_size2(other_house, BUILDING_HOUSE_SPACIOUS_APARTMENT);
-                } else if (other_house->house_size == 3) {
-                    split_size3(other_house);
+            auto other_house = building_at(tile_offset)->dcast_house();
+            if (other_house->id() != id() && other_house->base.house_size) {
+                if (other_house->is_merged()) {
+                    split_size2(&other_house->base, other_house->type());
+                } else if (other_house->base.house_size == 2) {
+                    split_size2(&other_house->base, BUILDING_HOUSE_SPACIOUS_APARTMENT);
+                } else if (other_house->base.house_size == 3) {
+                    split_size3(&other_house->base);
                 }
             }
         }
@@ -793,7 +795,7 @@ void building_house_common_manor::devolve_to_fancy_residence() {
     base.type = BUILDING_HOUSE_FANCY_RESIDENCE;
     housed.level = (e_house_level)(base.type - BUILDING_HOUSE_VACANT_LOT);
     base.size = base.house_size = 2;
-    base.house_is_merged = 0;
+    housed.is_merged = false;
     base.house_population = population_per_tile + population_remainder;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.inventory[i] = inventory_per_tile[i] + inventory_remainder[i];
@@ -836,7 +838,7 @@ void building_house_modest_estate::devolve_to_statel_manor() {
     base.type = BUILDING_HOUSE_STATELY_MANOR;
     housed.level = (e_house_level)(base.type - BUILDING_HOUSE_VACANT_LOT);
     base.size = base.house_size = 3;
-    base.house_is_merged = 0;
+    housed.is_merged = false;
     base.house_population = population_per_tile + population_remainder;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.inventory[i] = inventory_per_tile[i] + inventory_remainder[i];
@@ -1050,7 +1052,7 @@ bool building_house_spacious_apartment::evolve(house_demands* demands) {
     if (!has_devolve_delay(status)) {
         if (status == e_house_evolve) {
             if (can_expand(4)) {
-                base.house_is_merged = 0;
+                runtime_data().is_merged = false;
                 expand_to_common_residence();
                 map_tiles_gardens_update_all();
                 return true;

@@ -163,7 +163,6 @@ public:
     uint8_t faction_id;
     uint8_t reserved_id;
     uint8_t size;
-    uint8_t house_is_merged;
     uint8_t house_size;
     tile2i tile;
     uint8_t orientation;

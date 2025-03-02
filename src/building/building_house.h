@@ -18,6 +18,7 @@ public:
 
     struct runtime_data_t {
         e_house_level level;
+        uint8_t is_merged;
         uint16_t foods[8];
         uint16_t inventory[8];
         uint8_t booth_juggler;
@@ -73,6 +74,7 @@ public:
     void change_to(e_building_type type);
     void merge();
     void merge_impl();
+    inline bool is_merged() const { return runtime_data().is_merged; }
     void consume_resources();
     void split(int num_tiles);
 
