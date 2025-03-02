@@ -214,10 +214,6 @@ public:
     short formation_id;
     union impl_data_t {
         char data[512] = { 0 };
-
-        struct {
-            short exceptions;
-        } roadblock;
     } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;

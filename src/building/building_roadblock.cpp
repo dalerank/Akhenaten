@@ -20,15 +20,16 @@ bool building_roadblock::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i p
 }
 
 void building_roadblock::bind_dynamic(io_buffer *iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_UINT8, &data.roadblock.exceptions);
+    auto &d = runtime_data();
+    iob->bind(BIND_SIGNATURE_UINT8, &d.exceptions);
 }
 
 void building_roadblock::set_permission(e_permission p) {
     const int permission_bit = 1 << p;
-    data.roadblock.exceptions ^= permission_bit;
+    runtime_data().exceptions ^= permission_bit;
 }
 
 bool building_roadblock::get_permission(e_permission p) {
     const int permission_bit = 1 << p;
-    return (data.roadblock.exceptions & permission_bit);
+    return (runtime_data().exceptions & permission_bit);
 }

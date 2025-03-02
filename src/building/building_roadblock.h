@@ -7,11 +7,17 @@ class building_routeblock : public building_impl {
 public:
     building_routeblock(building &b) : building_impl(b) {}
 
+    struct runtime_data_t {
+        short exceptions;
+    };
+
     virtual building_routeblock *dcast_routeblock() override { return this; }
 
     virtual void set_permission(e_permission) {}
     virtual bool get_permission(e_permission) { return false; }
 
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 };
 
 class building_roadblock : public building_routeblock {
