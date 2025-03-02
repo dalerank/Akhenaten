@@ -253,7 +253,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &b->distance_from_entry);
         iob->bind____skip(2);
 
-        iob->bind(BIND_SIGNATURE_INT16, &b->house_unreachable_ticks);
+        iob->bind____skip(2); 
         iob->bind(BIND_SIGNATURE_TILE2I, b->road_access);
 
         b->bind_iob_figures(iob);

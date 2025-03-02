@@ -21,6 +21,7 @@ public:
         uint16_t foods[8];
         uint16_t inventory[8];
         uint16_t highest_population;
+        uint16_t unreachable_ticks;
         uint8_t is_merged;
         uint8_t booth_juggler;
         uint8_t bandstand_juggler;

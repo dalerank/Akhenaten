@@ -158,7 +158,7 @@ private:
     std::array<figure_id, max_figures> figure_ids;
 
 public:
-    int id;
+    building_id id;
     e_building_state state;
     uint8_t faction_id;
     uint8_t reserved_id;
@@ -174,7 +174,6 @@ public:
     short percentage_houses_covered;
     short house_population;
     short distance_from_entry;
-    short house_unreachable_ticks;
     tile2i road_access;
     short figure_spawn_delay;
     unsigned char figure_roam_direction;

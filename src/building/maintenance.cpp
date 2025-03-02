@@ -198,15 +198,16 @@ void building_maintenance_check_kingdome_access() {
         if (b.house_size) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/House");
             tile2i road_tile = map_closest_road_within_radius(b, 2);
+            auto &housed = b.dcast_house()->runtime_data();
             if (!road_tile.valid()) {
                 // no road: eject people
                 b.distance_from_entry = 0;
-                b.house_unreachable_ticks++;
-                if (b.house_unreachable_ticks > 4) {
+                housed.unreachable_ticks++;
+                if (housed.unreachable_ticks > 4) {
                     if (b.house_population > 0) {
                         figure_create_homeless(b.tile, b.house_population);
                         b.house_population = 0;
-                        b.house_unreachable_ticks = 0;
+                        housed.unreachable_ticks = 0;
                     }
                     b.state = BUILDING_STATE_UNDO;
                 }
@@ -215,21 +216,21 @@ void building_maintenance_check_kingdome_access() {
                 OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/House/map_routing_distance");
                 b.distance_from_entry = map_routing_distance(road_tile);
                 b.road_network_id = map_road_network_get(road_tile);
-                b.house_unreachable_ticks = 0;
+                housed.unreachable_ticks = 0;
             } else if (map_closest_reachable_road_within_radius(b.tile, b.size, 2, road_tile)) {
                 b.distance_from_entry = map_routing_distance(road_tile);
                 b.road_network_id = map_road_network_get(road_tile);
-                b.house_unreachable_ticks = 0;
+                housed.unreachable_ticks = 0;
             } else {
                 // no reachable road in radius
-                if (!b.house_unreachable_ticks) {
+                if (!housed.unreachable_ticks) {
                     problem_grid_offset = b.tile.grid_offset();
                 }
 
-                b.house_unreachable_ticks++;
-                if (b.house_unreachable_ticks > 8) {
+                housed.unreachable_ticks++;
+                if (housed.unreachable_ticks > 8) {
                     b.distance_from_entry = 0;
-                    b.house_unreachable_ticks = 0;
+                    housed.unreachable_ticks = 0;
                     b.state = BUILDING_STATE_UNDO;
                 }
             }
