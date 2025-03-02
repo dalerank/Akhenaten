@@ -6,6 +6,7 @@
 #include "city/ratings.h"
 #include "city/city.h"
 #include "game/resource.h"
+#include "core/object_property.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/tooltip.h"
 #include "graphics/elements/panel.h"
@@ -27,7 +28,6 @@
 #include "scenario/scenario.h"
 #include "sound/sound_building.h"
 #include "game/game.h"
-#include "js/js_game.h"
 
 struct info_window_palace : public building_info_window_t<info_window_palace> {
     virtual void init(object_info &c) override;
@@ -146,6 +146,15 @@ bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i p
     //if (unemployment_pct > 20) ImageDraw::img_generic(ctx, image_id + 106, point.x + 66,  point.y + 20, color_mask);
 
     return true;
+}
+
+bvariant building_palace::get_property(const xstring &domain, const xstring &name) const {
+    auto &d = runtime_data();
+    if (domain == tags().building && name == tags().tax_income_or_storage) {
+        return bvariant(d.tax_income_or_storage);
+    }
+
+    return building_impl::get_property(domain, name);
 }
 
 void info_window_palace::init(object_info &c) {

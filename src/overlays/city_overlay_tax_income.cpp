@@ -15,8 +15,14 @@ city_overlay* city_overlay_for_tax_income() {
 }
 
 int city_overlay_tax_income::get_column_height(const building *b) const {
+    auto house = ((building *)b)->dcast_house();
+    if (!house) {
+        return COLUMN_TYPE_NONE;
+    }
+
     if (b->house_size) {
-        int pct = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
+        auto &housed = house->runtime_data();
+        int pct = calc_adjust_with_percentage(housed.tax_income_or_storage / 2, city_finance_tax_percentage());
         return pct / 10;
     }
 
@@ -29,12 +35,13 @@ xstring city_overlay_tax_income::get_tooltip_for_building(tooltip_context *c, co
         return ui::str(66, 43);
     }
 
-    int denarii = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
+    auto &housed = house->runtime_data();
+    int denarii = calc_adjust_with_percentage(housed.tax_income_or_storage / 2, city_finance_tax_percentage());
     if (denarii > 0) {
         c->has_numeric_prefix = 1;
         c->numeric_prefix = denarii;
         return ui::str(66, 45);
-    } else if (house->runtime_data().tax_coverage > 0) {
+    } else if (housed.tax_coverage > 0) {
         return ui::str(66, 44);
     } else {
         return ui::str(66, 43);

@@ -4,10 +4,14 @@
 
 class building_tax_collector : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_TAX_COLLECTOR, building_tax_collector)
+    BUILDING_METAINFO_RT(BUILDING_TAX_COLLECTOR, building_tax_collector)
     building_tax_collector(building &b) : building_impl(b) {}
 
     virtual building_tax_collector *dcast_tax_collector() override { return this; }
+
+    struct runtime_data_t {
+        int16_t tax_income_or_storage;
+    };
 
     virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_TAX_INCOME; }
@@ -15,6 +19,10 @@ public:
     virtual void update_graphic() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_TAX_COLLECTOR; }
     virtual const static_params &params() const override;
+    virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
+
+    int16_t deben_storage() const { return base.deben_storage; }
+    int16_t tax_storage() const { return runtime_data().tax_income_or_storage; }
 };
 
 class building_tax_collector_up : public building_tax_collector {

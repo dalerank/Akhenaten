@@ -1,6 +1,7 @@
 #include "city/city.h"
 
-#include "building/building.h"
+#include "building/building_tax_collector.h"
+#include "building/building_palace.h"
 #include "building/count.h"
 #include "city/finance.h"
 #include "core/game_environment.h"
@@ -39,11 +40,6 @@ void city_t::government_distribute_treasury() {
     } 
 
     buildings_valid_do([&] (building &b) {
-        if (b.house_size) {
-            return;
-        }
-
-        b.tax_income_or_storage = 0;
         if (b.num_workers <= 0) {
             return;
         }
@@ -58,20 +54,25 @@ void city_t::government_distribute_treasury() {
         case BUILDING_VILLAGE_PALACE:
         case BUILDING_TOWN_PALACE:
         case BUILDING_CITY_PALACE:
-            b.tax_income_or_storage = palace_units * amount_per_unit + remainder;
-            remainder = 0;
+            {
+                auto palace = b.dcast_palace();    
+                palace->runtime_data().tax_income_or_storage = palace_units * amount_per_unit + remainder;
+                remainder = 0;
+            }
             break;
 
         case BUILDING_TAX_COLLECTOR_UPGRADED:
             if (!config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
-                b.tax_income_or_storage = tax_collectpr_up_units * amount_per_unit + remainder;
+                auto collector = b.dcast_tax_collector();
+                collector->runtime_data().tax_income_or_storage = tax_collectpr_up_units * amount_per_unit + remainder;
                 remainder = 0;
             }
             break;
 
         case BUILDING_TAX_COLLECTOR:
             if (!config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
-                b.tax_income_or_storage = amount_per_unit + remainder;
+                auto collector = b.dcast_tax_collector();
+                collector->runtime_data().tax_income_or_storage = amount_per_unit + remainder;
                 remainder = 0;
             }
             break;

@@ -1,12 +1,11 @@
 #include "window_building_info.h"
 
-#include "building/building.h"
+#include "building/building_tax_collector.h"
 #include "city/object_info.h"
 #include "city/finance.h"
 #include "window/building/common.h"
 #include "graphics/window.h"
 #include "config/config.h"
-#include "js/js_game.h"
 
 struct taxcollector_info_window : public building_info_window_t<taxcollector_info_window> {
     virtual void init(object_info &c) override;
@@ -22,9 +21,12 @@ void taxcollector_info_window::init(object_info &c) {
 
     building_info_window::init(c);
 
-    building *b = c.building_get();
+    auto collector = c.building_get()->dcast_tax_collector();
+    if (!collector) {
+        return;
+    }
 
-    int amount = config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM) ? b->deben_storage : b->tax_income_or_storage;
+    int amount = config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM) ? collector->deben_storage() : collector->tax_storage();
     ui["money_text"].text_var("%s %d %s", ui::str(c.group_id, 2), amount, ui::str(8, 0));
 
     ui["dec_tax"].onclick([] {

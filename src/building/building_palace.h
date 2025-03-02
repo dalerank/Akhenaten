@@ -7,6 +7,10 @@ public:
     building_palace(building &b) : building_impl(b) {}
     virtual building_palace *dcast_palace() override { return this; }
 
+    struct runtime_data_t {
+        int16_t tax_income_or_storage;
+    };
+
     virtual void on_create(int orientation) override;
     virtual void on_post_load() override;
     virtual void on_destroy() override;
@@ -15,6 +19,11 @@ public:
     virtual void update_graphic() override;
     virtual void draw_tooltip(tooltip_context *c) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
+
+    virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
+
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
 };
 
 class building_village_palace : public building_palace {

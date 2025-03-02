@@ -1,6 +1,7 @@
 #include "building_tax_collector.h"
 
 #include "building/building.h"
+#include "core/object_property.h"
 #include "city/object_info.h"
 #include "figure/figure.h"
 #include "game/resource.h"
@@ -19,7 +20,6 @@
 #include "game/game.h"
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
-#include "js/js_game.h"
 
 buildings::model_t<building_tax_collector> btax_collector_m;
 buildings::model_t<building_tax_collector_up> btax_collector_up_m;
@@ -81,6 +81,15 @@ void building_tax_collector::update_graphic() {
     set_animation(animkey);
 
     building_impl::update_graphic();
+}
+
+bvariant building_tax_collector::get_property(const xstring &domain, const xstring &name) const {
+    auto &d = runtime_data();
+    if (domain == tags().building && name == tags().tax_income_or_storage) {
+        return bvariant(d.tax_income_or_storage);
+    }
+
+    return building_impl::get_property(domain, name);
 }
 
 const building_impl::static_params &building_tax_collector::params() const {

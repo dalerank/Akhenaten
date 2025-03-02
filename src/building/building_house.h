@@ -59,6 +59,7 @@ public:
         uint8_t house_happiness;
         uint8_t criminal_active;
         uint8_t tax_coverage;
+        int16_t tax_income_or_storage;
     };
 
     virtual void on_create(int orientation) override;

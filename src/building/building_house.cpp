@@ -200,6 +200,8 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, &d.highest_population);
     iob->bind(BIND_SIGNATURE_INT16, &d.population);
     iob->bind(BIND_SIGNATURE_UINT8, &d.tax_coverage);
+    iob->bind(BIND_SIGNATURE_UINT16, &d.tax_collector_id);
+    iob->bind(BIND_SIGNATURE_INT16, &d.tax_income_or_storage);
 }
 
 int building_house::get_fire_risk(int value) const {
@@ -207,11 +209,14 @@ int building_house::get_fire_risk(int value) const {
 }
 
 bvariant building_house::get_property(const xstring &domain, const xstring &name) const {
-    if (domain == tags().house) {
-        if (name == tags().level_name) {
-            int level = base.type - 10;
-            return bvariant((pcstr)lang_get_string(29, level));
-        }
+    auto &d = runtime_data();
+    if (domain == tags().house && name == tags().level_name) {
+        int level = base.type - 10;
+        return bvariant((pcstr)lang_get_string(29, level));
+    }
+
+    if (domain == tags().building && name == tags().tax_income_or_storage) {
+        return bvariant(d.tax_income_or_storage);
     }
 
     return building_impl::get_property(domain, name);

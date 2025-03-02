@@ -205,7 +205,6 @@ public:
     unsigned char damage_proof;
     unsigned char map_random_7bit;
     short formation_id;
-    int tax_income_or_storage;
     unsigned char house_days_without_food;
     bool has_plague;
     signed char desirability;
