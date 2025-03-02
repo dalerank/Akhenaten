@@ -158,15 +158,14 @@ private:
     std::array<figure_id, max_figures> figure_ids;
 
 public:
+    e_building_type type;
     building_id id;
     e_building_state state;
-    uint8_t faction_id;
     uint8_t reserved_id;
     uint8_t size;
     uint8_t house_size;
     tile2i tile;
     uint8_t orientation;
-    e_building_type type;
     short native_meeting_center_id;
     unsigned short road_network_id;
     short houses_covered;

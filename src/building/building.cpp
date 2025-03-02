@@ -68,7 +68,7 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
     type = _tp;
     tile = _tl;
     state = BUILDING_STATE_CREATED;
-    faction_id = 1;
+    // faction_id = 1;
     reserved_id = false; // city_buildings_unknown_value();
     size = props.building_size;
     //creation_sequence_index = building_extra_data.created_sequence++;
