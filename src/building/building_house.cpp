@@ -263,12 +263,12 @@ void building_house::add_population(int num_people) {
         num_people = room;
     }
 
-    if (base.house_population <= 0) {
+    if (house_population() <= 0) {
         change_to(BUILDING_HOUSE_CRUDE_HUT);
     }
 
+    auto &d = runtime_data();
     base.house_population += num_people;
-    base.house_population_room = max_people - house_population();
     city_population_add(num_people);
     base.remove_figure(2);
 }
@@ -295,6 +295,19 @@ void building_house::change_to(e_building_type type) {
     }
 
     map_building_tiles_add(base.id, base.tile, base.size, image_id, TERRAIN_BUILDING);
+}
+
+int16_t building_house::population_room() const {
+    int max_people = model_get_house(house_level())->max_people;
+
+    if (is_merged()) {
+        max_people *= 4;
+    }
+
+    int room = std::max(max_people - house_population(), 0);
+    max_people -= house_population();
+
+    return max_people;
 }
 
 void building_house::change_to_vacant_lot() {

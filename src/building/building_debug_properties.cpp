@@ -29,7 +29,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
         game_debug_show_property("houses_covered", b->houses_covered);
         game_debug_show_property("percentage_houses_covered", b->percentage_houses_covered);
         game_debug_show_property("house_population", b->house_population);
-        game_debug_show_property("house_population_room", b->house_population_room);
+        //game_debug_show_property("house_population_room", b->house_population_room);
         game_debug_show_property("distance_from_entry", b->distance_from_entry);
         game_debug_show_property("house_highest_population", b->house_highest_population);
         game_debug_show_property("house_unreachable_ticks", b->house_unreachable_ticks);

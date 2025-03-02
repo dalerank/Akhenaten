@@ -35,8 +35,6 @@ int house_population_add_to_city(int num_people) {
             if (house->house_population() < max_people) {
                 ++added;
                 ++house->base.house_population;
-
-                house->base.house_population_room = max_people - house->house_population();
             }
         }
     }
@@ -81,7 +79,6 @@ void city_t::house_population_update_room() {
     for (int i = 0; i < total_houses; i++) {
         auto house = building_get(houses[i])->dcast_house();
 
-        house->base.house_population_room = 0;
         if (house->distance_from_entry() > 0) {
             int max_pop = model_get_house(house->house_level())->max_people;
             if (house->is_merged()) {
@@ -89,14 +86,9 @@ void city_t::house_population_update_room() {
             }
 
             city_population_add_capacity(house->house_population(), max_pop);
-            house->base.house_population_room = max_pop - house->house_population();
             if (house->house_population() > house->base.house_highest_population) {
                 house->base.house_highest_population = house->house_population();
             }
-
-        } else if (house->house_population() > 0) {
-            // not connected to Rome, mark people for eviction
-            house->base.house_population_room = -house->house_population();
         }
     }
 }
@@ -113,27 +105,28 @@ int house_population_create_immigrants(int num_people) {
     }
     // houses with plenty of room
     for (int i = 0; i < total_houses && to_immigrate > 0; i++) {
-        building* b = building_get(houses[i]);
-        if (b->distance_from_entry > 0 && b->house_population_room >= 8 && !b->has_figure(2, -1)) {
+        auto house = building_get(houses[i])->dcast_house();
+        if (house && house->distance_from_entry() > 0 && house->population_room() >= 8 && !house->base.has_figure(2, -1)) {
             if (to_immigrate <= 4) {
-                figure_immigrant::create(b, to_immigrate);
+                figure_immigrant::create(&house->base, to_immigrate);
                 to_immigrate = 0;
             } else {
-                figure_immigrant::create(b, 4);
+                figure_immigrant::create(&house->base, 4);
                 to_immigrate -= 4;
             }
         }
     }
     // houses with less room
     for (int i = 0; i < total_houses && to_immigrate > 0; i++) {
-        building* b = building_get(houses[i]);
-        if (b->distance_from_entry > 0 && b->house_population_room > 0 && !b->has_figure(2, -1)) {
-            if (to_immigrate <= b->house_population_room) {
-                figure_immigrant::create(b, to_immigrate);
+        auto house = building_get(houses[i])->dcast_house();
+        if (house->distance_from_entry() > 0 && house->population_room() > 0 && !house->base.has_figure(2, -1)) {
+            int16_t population_room = house->population_room();
+            if (to_immigrate <= population_room) {
+                figure_immigrant::create(&house->base, to_immigrate);
                 to_immigrate = 0;
             } else {
-                figure_immigrant::create(b, b->house_population_room);
-                to_immigrate -= b->house_population_room;
+                figure_immigrant::create(&house->base, population_room);
+                to_immigrate -= population_room;
             }
         }
     }
@@ -239,15 +232,20 @@ void city_t::house_population_evict_overcrowded() {
     int size = building_list_large_size();
     const int* items = building_list_large_items();
     for (int i = 0; i < size; i++) {
-        building* b = building_get(items[i]);
-        if (b->house_population_room < 0) {
-            int num_people_to_evict = -b->house_population_room;
-            figure_create_homeless(b->tile, num_people_to_evict);
-            if (num_people_to_evict < b->house_population) {
-                b->house_population -= num_people_to_evict;
+        auto house = building_get(items[i])->dcast_house();
+        if (!house) {
+            continue;
+        }
+
+        int16_t population_room = house->population_room();
+        if (population_room < 0) {
+            int num_people_to_evict = -population_room;
+            figure_create_homeless(house->tile(), num_people_to_evict);
+            if (num_people_to_evict < house->house_population()) {
+                house->base.house_population -= num_people_to_evict;
             } else {
                 // house has been removed
-                b->state = BUILDING_STATE_UNDO;
+                house->base.state = BUILDING_STATE_UNDO;
             }
         }
     }

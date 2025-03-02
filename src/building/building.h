@@ -173,7 +173,6 @@ public:
     short houses_covered;
     short percentage_houses_covered;
     short house_population;
-    short house_population_room;
     short distance_from_entry;
     short house_highest_population;
     short house_unreachable_ticks;

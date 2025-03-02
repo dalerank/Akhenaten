@@ -116,11 +116,11 @@ void info_window_house::init(object_info &c) {
     }
 
     bstring256 people_text, adv_people_text;
-    const int house_population_room = house->base.house_population_room;
+    const int house_population_room = house->population_room();
     people_text.printf("%u %s", house->house_population(), ui::str(127, 20));
     if (house_population_room < 0) {
         adv_people_text.printf("%u %s", -house_population_room, ui::str(127, 21));
-    } else if (house->base.house_population_room > 0) {
+    } else if (house->population_room() > 0) {
         adv_people_text.printf("%s %u", ui::str(127, 22), house_population_room);
     } else {
         adv_people_text = "no rooms";

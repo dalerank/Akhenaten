@@ -249,7 +249,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &b->percentage_houses_covered);
 
         iob->bind(BIND_SIGNATURE_INT16, &b->house_population);
-        iob->bind(BIND_SIGNATURE_INT16, &b->house_population_room);
+        iob->bind____skip(2);
         iob->bind(BIND_SIGNATURE_INT16, &b->distance_from_entry);
         iob->bind(BIND_SIGNATURE_INT16, &b->house_highest_population);
 

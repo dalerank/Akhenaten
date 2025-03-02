@@ -68,6 +68,7 @@ public:
     inline short house_population() const { return base.house_population; }
     inline void change_population(short delta) { base.house_population += delta; }
     inline e_house_level house_level() const { return runtime_data().level; }
+    int16_t population_room() const;
     void change_to_vacant_lot();
     bool is_vacant_lot() const;
     void add_population(int num_people);
