@@ -20,6 +20,7 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_TAX_COLLECTOR; }
     virtual const static_params &params() const override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
+    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
     int16_t deben_storage() const { return base.deben_storage; }
     int16_t tax_storage() const { return runtime_data().tax_income_or_storage; }

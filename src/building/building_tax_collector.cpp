@@ -59,6 +59,12 @@ void building_tax_collector::spawn_figure() {
     }
 }
 
+void building_tax_collector::bind_dynamic(io_buffer *iob, size_t version) {
+    auto &d = runtime_data();
+
+    iob->bind(BIND_SIGNATURE_INT16, &d.tax_income_or_storage);
+}
+
 void building_tax_collector::update_month() {
     if (!config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
         return;

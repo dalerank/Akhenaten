@@ -148,6 +148,12 @@ bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i p
     return true;
 }
 
+void building_palace::bind_dynamic(io_buffer *iob, size_t version) {
+    auto &d = runtime_data();
+
+    iob->bind(BIND_SIGNATURE_INT16, &d.tax_income_or_storage);
+}
+
 bvariant building_palace::get_property(const xstring &domain, const xstring &name) const {
     auto &d = runtime_data();
     if (domain == tags().building && name == tags().tax_income_or_storage) {
