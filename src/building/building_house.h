@@ -18,9 +18,10 @@ public:
 
     struct runtime_data_t {
         e_house_level level;
-        uint8_t is_merged;
         uint16_t foods[8];
         uint16_t inventory[8];
+        uint16_t highest_population;
+        uint8_t is_merged;
         uint8_t booth_juggler;
         uint8_t bandstand_juggler;
         uint8_t bandstand_musician;

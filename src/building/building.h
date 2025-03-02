@@ -174,7 +174,6 @@ public:
     short percentage_houses_covered;
     short house_population;
     short distance_from_entry;
-    short house_highest_population;
     short house_unreachable_ticks;
     tile2i road_access;
     short figure_spawn_delay;

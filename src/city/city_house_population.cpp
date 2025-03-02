@@ -86,9 +86,8 @@ void city_t::house_population_update_room() {
             }
 
             city_population_add_capacity(house->house_population(), max_pop);
-            if (house->house_population() > house->base.house_highest_population) {
-                house->base.house_highest_population = house->house_population();
-            }
+            auto &housed = house->runtime_data();
+            housed.highest_population = std::max<short>(housed.highest_population, house->house_population());
         }
     }
 }

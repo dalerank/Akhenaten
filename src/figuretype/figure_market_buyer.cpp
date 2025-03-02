@@ -163,7 +163,7 @@ void distribute_market_resources(building* b, building* market) {
         level++;
     }
 
-    int max_food_stocks = 4 * b->house_highest_population;
+    int max_food_stocks = 4 * housed.highest_population;
     int food_types_stored_max = 0;
     for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
         if (housed.foods[i] >= max_food_stocks)
