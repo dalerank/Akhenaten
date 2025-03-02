@@ -143,8 +143,10 @@ int figure_tax_collector::provide_service() {
             } else {
                 f->data.taxman.reach_taxed++;
             }
-            b->tax_collector_id = f->home()->id;
-            house->runtime_data().tax_coverage = 50;
+
+            auto &housed = house->runtime_data();
+            housed.tax_collector_id = f->home()->id;
+            housed.tax_coverage = 50;
         }
     });
     base.min_max_seen = max_tax_rate;

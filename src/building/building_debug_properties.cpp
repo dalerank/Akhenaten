@@ -60,7 +60,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
         game_debug_show_property("fire_proof", b->fire_proof);
         game_debug_show_property("damage_proof", b->damage_proof);
         //game_debug_show_property("house_tax_coverage", b->house_tax_coverage);
-        game_debug_show_property("tax_collector_id", b->tax_collector_id);
+        //game_debug_show_property("tax_collector_id", b->tax_collector_id);
         game_debug_show_property("formation_id", b->formation_id);
         game_debug_show_property("tax_income_or_storage", b->tax_income_or_storage);
         game_debug_show_property("house_days_without_food", b->house_days_without_food);

@@ -22,6 +22,7 @@ public:
         uint16_t inventory[8];
         uint16_t highest_population;
         uint16_t unreachable_ticks;
+        building_id tax_collector_id;
         uint16_t population;
         uint8_t is_merged;
         uint8_t booth_juggler;

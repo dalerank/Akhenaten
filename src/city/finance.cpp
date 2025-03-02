@@ -229,8 +229,8 @@ static void city_finance_collect_monthly_taxes() {
             }
 
             if (config_get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
-                tax_collectors[b.tax_collector_id] += tax;
-                b.tax_collector_id = 0;
+                tax_collectors[housed.tax_collector_id] += tax;
+                housed.tax_collector_id = 0;
             }
 
             b.tax_income_or_storage += tax;

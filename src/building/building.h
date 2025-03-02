@@ -204,7 +204,6 @@ public:
     unsigned char fire_proof; // cannot catch fire or collapse
     unsigned char damage_proof;
     unsigned char map_random_7bit;
-    unsigned short tax_collector_id;
     short formation_id;
     int tax_income_or_storage;
     unsigned char house_days_without_food;
