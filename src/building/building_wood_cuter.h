@@ -4,7 +4,7 @@
 
 class building_wood_cutter : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_WOOD_CUTTERS, building_wood_cutter)
+    BUILDING_METAINFO_RT(BUILDING_WOOD_CUTTERS, building_wood_cutter)
 
     building_wood_cutter(building &b) : building_impl(b) {}
     virtual building_wood_cutter *dcast_wood_cutter() override { return this; }
@@ -22,7 +22,4 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
     bool can_spawn_lumberjack(int max_gatherers_per_building, int carry_per_person);
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 };

@@ -66,7 +66,7 @@ building *building_create(e_building_type type, tile2i tile, int orientation) {
 
     b->clear_impl();
 
-    memset(&(b->data), 0, sizeof(b->data));
+    memset(b->runtime_data, 0, sizeof(b->runtime_data));
     b->new_fill_in_data_for_type(type, tile, orientation);
 
     return b;
@@ -274,7 +274,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->labor_category); // FF
         iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_first_id);
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_road_access);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->house_criminal_active);
+        iob->bind____skip(1);
 
         iob->bind(BIND_SIGNATURE_INT16, &b->damage_risk);
         iob->bind(BIND_SIGNATURE_INT16, &b->fire_risk);

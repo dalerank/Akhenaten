@@ -11,7 +11,7 @@ enum e_house_progress {
 
 class building_house : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_NONE, building_house_vacant)
+    BUILDING_METAINFO_RT(BUILDING_NONE, building_house_vacant)
 
     building_house(building &b) : building_impl(b) {}
     virtual building_house *dcast_house() override { return this; }
@@ -53,6 +53,7 @@ public:
         uint8_t bazaar_access;
         uint8_t water_supply;
         uint8_t house_happiness;
+        uint8_t criminal_active;
     };
 
     virtual void on_create(int orientation) override;
@@ -88,9 +89,6 @@ public:
     e_house_progress check_requirements(house_demands *demands);
 
     static void create_vacant_lot(tile2i tile, int image_id);
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 };
 
 class building_house_crude_hut : public building_house {

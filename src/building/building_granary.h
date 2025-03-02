@@ -23,7 +23,7 @@ struct granary_getting_result {
 
 class building_granary : public building_storage {
 public:
-    BUILDING_METAINFO(BUILDING_GRANARY, building_granary)
+    BUILDING_METAINFO_RT(BUILDING_GRANARY, building_granary)
 
     building_granary(building &b) : building_storage(b) {}
     virtual building_granary *dcast_granary() override { return this; }
@@ -53,9 +53,6 @@ public:
     int total_stored() const override;
     int capacity_stored() const { return 3200; }
     int allow_food_types() const { return 4; }
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 
     void bless();
     granary_task_status determine_worker_task();

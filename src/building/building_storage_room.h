@@ -6,7 +6,7 @@ struct storage_t;
 
 class building_storage_room : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_STORAGE_ROOM, building_storage_room)
+    BUILDING_METAINFO_RT(BUILDING_STORAGE_ROOM, building_storage_room)
 
     building_storage_room(building &b);
     virtual building_storage *dcast_storage() override { return main()->dcast_storage(); }
@@ -36,7 +36,4 @@ public:
     void add_import(e_resource resource);
     int distance_with_penalty(tile2i tile, e_resource resource, int distance_from_entry);
     void remove_export(e_resource resource);
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 };

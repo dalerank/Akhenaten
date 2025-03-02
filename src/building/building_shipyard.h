@@ -4,7 +4,7 @@
 
 class building_shipyard : public building_industry {
 public:
-    BUILDING_METAINFO(BUILDING_SHIPWRIGHT, building_shipyard)
+    BUILDING_METAINFO_RT(BUILDING_SHIPWRIGHT, building_shipyard)
 
     building_shipyard(building &b) : building_industry(b) {}
     virtual building_shipyard *dcast_shipyard() override { return this; }
@@ -38,9 +38,6 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual bool add_resource(e_resource resource, int amount) override;
     virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

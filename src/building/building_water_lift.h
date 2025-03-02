@@ -4,7 +4,7 @@
 
 class building_water_lift : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_WATER_LIFT, building_water_lift)
+    BUILDING_METAINFO_RT(BUILDING_WATER_LIFT, building_water_lift)
     building_water_lift(building &b) : building_impl(b) {}
 
     struct static_params : public buildings::model_t<building_water_lift> {
@@ -33,9 +33,6 @@ public:
     virtual void highlight_waypoints() override;
 
     void update_inout_tiles();
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

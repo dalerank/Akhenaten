@@ -49,7 +49,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
         game_debug_show_property("output_resource_second_id", b->output_resource_second_id);
         game_debug_show_property("output_resource_second_rate", b->output_resource_second_rate);
         game_debug_show_property("has_road_access", b->has_road_access);
-        game_debug_show_property("house_criminal_active", b->house_criminal_active);
+        //game_debug_show_property("house_criminal_active", b->house_criminal_active);
         game_debug_show_property("disease_days", b->disease_days);
         game_debug_show_property("common_health", b->common_health);
         game_debug_show_property("malaria_risk", b->malaria_risk);

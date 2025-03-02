@@ -60,8 +60,15 @@ static void generate_rioter(building* b) {
 
 static void generate_robber(building* b) {
     city_sentiment_add_criminal();
-    if (b->house_criminal_active > 60 && city_can_create_mugger()) {
-        b->house_criminal_active -= 60;
+    auto house = b->dcast_house();
+
+    if (!house) {
+        return;
+    }
+
+    auto &housed = house->runtime_data();
+    if (housed.criminal_active > 60 && city_can_create_mugger()) {
+        housed.criminal_active -= 60;
         tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
         if (road_tile.valid()) {
             figure* f = figure_create(FIGURE_ROBBER, road_tile, DIR_4_BOTTOM_LEFT);
@@ -95,9 +102,17 @@ static void generate_robber(building* b) {
 }
 
 static void generate_protestor(building* b) {
+    auto house = b->dcast_house();
+
+    if (!house) {
+        return;
+    }
+
     city_sentiment_add_protester();
-    if (b->house_criminal_active > 30 && city_can_create_protestor()) {
-        b->house_criminal_active -= 30;
+
+    auto &housed = house->runtime_data();
+    if (housed.criminal_active > 30 && city_can_create_protestor()) {
+        housed.criminal_active -= 30;
         tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
         if (road_tile.valid()) {
             figure* f = figure_create(FIGURE_PROTESTER, road_tile, DIR_4_BOTTOM_LEFT);
@@ -118,7 +133,7 @@ void city_t::figures_generate_criminals() {
         if (house && house->state() == BUILDING_STATE_VALID && house->base.house_size) {
             auto &housed = house->runtime_data();
             if (housed.house_happiness >= 50) {
-                house->base.house_criminal_active = 0;
+                house->runtime_data().criminal_active = 0;
             } else if (housed.house_happiness < min_happiness) {
                 min_happiness = housed.house_happiness;
                 min_building = &house->base;

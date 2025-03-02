@@ -4,7 +4,7 @@
 
 class building_festival_square : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_FESTIVAL_SQUARE, building_festival_square)
+    BUILDING_METAINFO_RT(BUILDING_FESTIVAL_SQUARE, building_festival_square)
 
     building_festival_square(building &b) : building_impl(b) {}
     virtual building_festival_square *dcast_festival_square() override { return this; }
@@ -34,7 +34,4 @@ public:
     virtual void update_map_orientation(int map_orientation) override;
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 };

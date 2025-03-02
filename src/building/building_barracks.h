@@ -12,7 +12,7 @@ enum e_barracks_priority {
 
 class building_recruiter : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_RECRUITER, building_recruiter)
+    BUILDING_METAINFO_RT(BUILDING_RECRUITER, building_recruiter)
     building_recruiter(building &b) : building_impl(b) {}
     virtual building_recruiter *dcast_recruiter() override { return this; }
 
@@ -31,9 +31,6 @@ public:
     virtual void update_count() const override;
     virtual bool add_resource(e_resource resource, int amount) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 
     int get_priority();
     void set_priority(int v);

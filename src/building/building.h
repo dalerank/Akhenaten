@@ -195,7 +195,6 @@ public:
     e_resource output_resource_second_id;
     uint8_t output_resource_second_rate;
     bool has_road_access;
-    short house_criminal_active;
     uint8_t disease_days;
     uint8_t common_health;
     uint8_t malaria_risk;
@@ -212,9 +211,6 @@ public:
     unsigned char house_tax_coverage;
     unsigned short tax_collector_id;
     short formation_id;
-    union impl_data_t {
-        char data[512] = { 0 };
-    } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;
     bool has_plague;
@@ -229,6 +225,7 @@ public:
     uint8_t show_on_problem_overlay;
     uint16_t deben_storage;
     animation_context anim;
+    char runtime_data[512] = { 0 };
 
     building();
     building* main();
@@ -390,6 +387,14 @@ public:
 };
 
 #define BUILDING_METAINFO(type, clsid) static constexpr e_building_type TYPE = type; static constexpr pcstr CLSID = #clsid;
+
+#define BUILDING_METAINFO_RT(type, clsid)                                                               \
+    static constexpr e_building_type TYPE = type;                                                       \
+    static constexpr pcstr CLSID = #clsid;                                                              \
+    struct runtime_data_t;                                                                              \
+    runtime_data_t &runtime_data() {return *(runtime_data_t *)base.runtime_data; }                      \
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }         \
+
 class building_impl {
 public:
     struct static_params {
@@ -452,7 +457,7 @@ public:
         virtual bool is_unique_building() const { return unique_building; }
     };
 
-    building_impl(building &b) : base(b), data(b.data) {}
+    building_impl(building &b) : base(b) {}
     virtual void on_create(int orientation) {}
     virtual void on_place(int orientation, int variant);
     virtual void on_place_update_tiles(int orientation, int variant);
@@ -618,7 +623,6 @@ public:
     static void acquire(e_building_type e, building &b);
 
     building &base;
-    building::impl_data_t &data;
 };
 
 template <typename dest_type>

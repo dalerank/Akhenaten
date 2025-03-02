@@ -4,7 +4,7 @@
 
 class building_dock : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_DOCK, building_dock)
+    BUILDING_METAINFO_RT(BUILDING_DOCK, building_dock)
 
     struct runtime_data_t {
         short queued_docker_id;
@@ -45,9 +45,6 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void highlight_waypoints() override;
     virtual void set_water_access_tiles(const water_access_tiles &tiles);
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 
     void unaccept_all_goods();
     int trader_id();

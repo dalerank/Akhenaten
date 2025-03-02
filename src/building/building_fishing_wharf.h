@@ -4,7 +4,7 @@
 
 class building_fishing_wharf : public building_wharf {
 public:
-    BUILDING_METAINFO(BUILDING_FISHING_WHARF, building_fishing_wharf)
+    BUILDING_METAINFO_RT(BUILDING_FISHING_WHARF, building_fishing_wharf)
 
     building_fishing_wharf(building &b) : building_wharf(b) {}
     virtual building_fishing_wharf *dcast_fishing_wharf() override { return this; }
@@ -31,9 +31,6 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual void highlight_waypoints() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

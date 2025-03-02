@@ -11,8 +11,8 @@ public:
         uint8_t max_workers;
     };
 
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
 
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 };

@@ -252,8 +252,8 @@ void city_criminals_update_day() {
             delta = -std::max<int>((50 - housed.house_happiness) / 10, 0);
         }
 
-        b.house_criminal_active += delta;
-        b.house_criminal_active = std::clamp<int>(b.house_criminal_active, 0, 100);
+        housed.criminal_active += delta;
+        housed.criminal_active = std::clamp<int>(housed.criminal_active, 0, 100);
     });
 }
 

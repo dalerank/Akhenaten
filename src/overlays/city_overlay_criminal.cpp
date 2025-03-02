@@ -1,7 +1,7 @@
 #include "city_overlay_criminal.h"
 
 #include "building/model.h"
-#include "building/building.h"
+#include "building/building_house.h"
 #include "figure/figure.h"
 #include "grid/property.h"
 #include "grid/building.h"
@@ -15,8 +15,13 @@ city_overlay* city_overlay_for_crime() {
 }
 
 int city_overlay_crime::get_column_height(const building* b) const {
+    auto house = ((building*)b)->dcast_house();
+    if (!house) {
+        return COLUMN_TYPE_NONE;
+    }
+
     if (b->house_size && b->house_population > 0) {
-        int crime = b->house_criminal_active;
+        int crime = house->runtime_data().criminal_active;
         return crime / 10;
     }
     return COLUMN_TYPE_NONE;
@@ -27,15 +32,21 @@ xstring city_overlay_crime::get_tooltip_for_building(tooltip_context* c, const b
         return ui::str(66, 63);
     }
 
-    if (b->house_criminal_active >= 80)
+    auto house = ((building *)b)->dcast_house();
+    if (!house) {
         return ui::str(66, 63);
-    else if (b->house_criminal_active >= 60)
+    }
+
+    auto &housed = house->runtime_data();
+    if (housed.criminal_active >= 80)
+        return ui::str(66, 63);
+    else if (housed.criminal_active >= 60)
         return ui::str(66, 62);
-    else if (b->house_criminal_active >= 40)
+    else if (housed.criminal_active >= 40)
         return ui::str(66, 61);
-    else if (b->house_criminal_active >= 30)
+    else if (housed.criminal_active >= 30)
         return ui::str(66, 60);
-    else if (b->house_criminal_active >= 20)
+    else if (housed.criminal_active >= 20)
         return ui::str(66, 59);
     else {
         return ui::str(66, 58);

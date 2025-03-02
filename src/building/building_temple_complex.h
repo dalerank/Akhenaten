@@ -47,8 +47,8 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_NONE; }
     virtual void update_map_orientation(int orientation) override;
 
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
 };
 
 class building_temple_complex_osiris : public building_temple_complex {

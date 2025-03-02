@@ -25,8 +25,8 @@ public:
         uint8_t upgrades;
     };
 
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
 };
 
 enum module_type {

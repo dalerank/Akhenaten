@@ -5,7 +5,7 @@
 
 class building_bazaar : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_BAZAAR, building_bazaar)
+    BUILDING_METAINFO_RT(BUILDING_BAZAAR, building_bazaar)
     building_bazaar(building &b) : building_impl(b) {}
 
     virtual building_bazaar *dcast_bazaar() override { return this; }
@@ -39,8 +39,5 @@ public:
     void unaccept_all_goods();
     inline int allow_food_types() const { return 4; }
     inline int allow_good_types() const { return 4; }
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 };
 

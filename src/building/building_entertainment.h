@@ -26,6 +26,6 @@ public:
     int bandstand_main_img_offset(int orientation);
     int bandstand_add_img_offset(int orientation);
 
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
 };

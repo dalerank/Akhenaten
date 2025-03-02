@@ -5,7 +5,7 @@
 
 class building_ferry : public building_routeblock {
 public:
-    BUILDING_METAINFO(BUILDING_FERRY, building_ferry)
+    BUILDING_METAINFO_RT(BUILDING_FERRY, building_ferry)
     building_ferry(building &b) : building_routeblock(b) {}
 
     struct static_params : public buildings::model_t<building_ferry> {
@@ -28,9 +28,6 @@ public:
     virtual void highlight_waypoints() override;
     virtual void bind_dynamic(io_buffer *iob, size_t verrsion) override;
     virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
 
     virtual bool get_permission(e_permission p) override { return false; }
 };

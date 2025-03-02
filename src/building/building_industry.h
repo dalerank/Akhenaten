@@ -33,6 +33,6 @@ public:
     virtual void start_production() override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
 
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)data.data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)data.data; }
+    runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
 };

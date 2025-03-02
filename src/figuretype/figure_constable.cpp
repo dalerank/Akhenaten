@@ -11,15 +11,9 @@
 #include "city/sentiment.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-
-#include "js/js_game.h"
+#include "building/building_house.h"
 
 figures::model_t<figure_constable> constable_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_constable);
-void config_load_figure_constable() {
-    constable_m.load();
-}
 
 void figure_constable::figure_before_action() {
     building *h = home();
@@ -102,11 +96,17 @@ sound_key figure_constable::phrase_key() const {
 int figure_constable::provide_service() {
     int max_criminal_active = 0;
     int houses_serviced = figure_provide_service(tile(), &base, max_criminal_active, [] (building* b, figure *f, int &max_anger_seen) {
-        b->house_criminal_active -= 1;
-        b->house_criminal_active = std::max<int>(0, b->house_criminal_active);
+        auto house = b->dcast_house();
+        if (!house) {
+            return;
+        }
 
-        if (b->house_criminal_active > max_anger_seen) {
-            max_anger_seen = b->house_criminal_active;
+        auto &housed = house->runtime_data();
+        housed.criminal_active -= 1;
+        housed.criminal_active = std::max<int>(0, housed.criminal_active);
+
+        if (housed.criminal_active > max_anger_seen) {
+            max_anger_seen = housed.criminal_active;
         }
     });
 
