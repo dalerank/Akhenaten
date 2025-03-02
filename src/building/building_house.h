@@ -57,6 +57,7 @@ public:
         uint8_t water_supply;
         uint8_t house_happiness;
         uint8_t criminal_active;
+        uint8_t tax_coverage;
     };
 
     virtual void on_create(int orientation) override;

@@ -26,7 +26,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
         bstring256 type_name; type_name.printf("%s [%d]", token::find_name(e_building_type_tokens, b->type), b->type);
         game_debug_show_property("type", type_name);
         game_debug_show_property("road_network_id", b->road_network_id);
-        game_debug_show_property("houses_covered", b->houses_covered);
+        //game_debug_show_property("houses_covered", b->houses_covered);
         game_debug_show_property("percentage_houses_covered", b->percentage_houses_covered);
         //game_debug_show_property("house_population", b->house_population);
         //game_debug_show_property("house_population_room", b->house_population_room);
@@ -59,7 +59,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
         game_debug_show_property("health_proof", b->health_proof);
         game_debug_show_property("fire_proof", b->fire_proof);
         game_debug_show_property("damage_proof", b->damage_proof);
-        game_debug_show_property("house_tax_coverage", b->house_tax_coverage);
+        //game_debug_show_property("house_tax_coverage", b->house_tax_coverage);
         game_debug_show_property("tax_collector_id", b->tax_collector_id);
         game_debug_show_property("formation_id", b->formation_id);
         game_debug_show_property("tax_income_or_storage", b->tax_income_or_storage);

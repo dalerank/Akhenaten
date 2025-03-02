@@ -155,9 +155,15 @@ void city_t::house_service_decay_services() {
 void city_t::house_service_decay_tax_collector() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Tax Collector Update");
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->house_tax_coverage)
-            b->house_tax_coverage--;
+        auto house = building_get(i)->dcast_house();
+        if (!house && house->state() != BUILDING_STATE_VALID) {
+            continue;
+        } 
+        
+        auto &housed = house->runtime_data();
+        if (housed.tax_coverage) {
+            housed.tax_coverage--;
+        }
     }
 }
 

@@ -399,13 +399,12 @@ void city_labor_t::set_building_worker_weight() {
             continue;
 
         e_labor_category cat = category_for_building(b);
-        if (cat == LABOR_CATEGORY_WATER_HEALTH)
+        if (cat == LABOR_CATEGORY_WATER_HEALTH) {
             b->percentage_houses_covered = water_per_10k_per_building;
-        else if (cat >= 0) {
+        } else if (cat >= 0) {
             b->percentage_houses_covered = 0;
             if (b->houses_covered) {
-                b->percentage_houses_covered
-                  = calc_percentage(100 * b->houses_covered, categories[cat].total_houses_covered);
+                b->percentage_houses_covered = calc_percentage(100 * b->houses_covered, categories[cat].total_houses_covered);
             }
         }
     }

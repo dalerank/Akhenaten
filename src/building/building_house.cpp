@@ -199,6 +199,7 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &d.criminal_active);
     iob->bind(BIND_SIGNATURE_INT16, &d.highest_population);
     iob->bind(BIND_SIGNATURE_INT16, &d.population);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.tax_coverage);
 }
 
 int building_house::get_fire_risk(int value) const {

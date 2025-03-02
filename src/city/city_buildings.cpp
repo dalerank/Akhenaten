@@ -284,7 +284,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->fire_proof);
 
         iob->bind(BIND_SIGNATURE_UINT8, &b->map_random_7bit); // 20 (workcamp 1)
-        iob->bind(BIND_SIGNATURE_UINT8, &b->house_tax_coverage);
+        iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_UINT8, &b->health_proof);
         iob->bind(BIND_SIGNATURE_INT16, &b->formation_id);
 

@@ -169,7 +169,6 @@ public:
     e_building_type type;
     short native_meeting_center_id;
     unsigned short road_network_id;
-    //unsigned short creation_sequence_index;
     short houses_covered;
     short percentage_houses_covered;
     short distance_from_entry;
@@ -205,7 +204,6 @@ public:
     unsigned char fire_proof; // cannot catch fire or collapse
     unsigned char damage_proof;
     unsigned char map_random_7bit;
-    unsigned char house_tax_coverage;
     unsigned short tax_collector_id;
     short formation_id;
     int tax_income_or_storage;

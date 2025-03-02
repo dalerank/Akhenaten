@@ -1,6 +1,6 @@
 #include "city_overlay_tax_income.h"
 
-#include "building/building.h"
+#include "building/building_house.h"
 #include "graphics/elements/tooltip.h"
 #include "core/calc.h"
 #include "city/finance.h"
@@ -24,12 +24,17 @@ int city_overlay_tax_income::get_column_height(const building *b) const {
 }
 
 xstring city_overlay_tax_income::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+    auto house = ((building*)b)->dcast_house();
+    if (!house) {
+        return ui::str(66, 43);
+    }
+
     int denarii = calc_adjust_with_percentage(b->tax_income_or_storage / 2, city_finance_tax_percentage());
     if (denarii > 0) {
         c->has_numeric_prefix = 1;
         c->numeric_prefix = denarii;
         return ui::str(66, 45);
-    } else if (b->house_tax_coverage > 0) {
+    } else if (house->runtime_data().tax_coverage > 0) {
         return ui::str(66, 44);
     } else {
         return ui::str(66, 43);
