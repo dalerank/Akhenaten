@@ -2,6 +2,7 @@
 
 #include "building/industry.h"
 #include "building/building_storage_yard.h"
+#include "building/building_house.h"
 #include "city/finance.h"
 #include "city/city_buildings.h"
 #include "game/resource.h"
@@ -307,9 +308,12 @@ void game_undo_reduce_time_available(void) {
         data.available = 0;
         return;
     }
+
     if (data.type == BUILDING_HOUSE_VACANT_LOT) {
         for (int i = 0; i < data.num_buildings; i++) {
-            if (data.buildings[i].id && building_get(data.buildings[i].id)->house_population) {
+            auto house = building_get(data.buildings[i].id)->dcast_house();
+
+            if (house && house->house_population() > 0) {
                 // no undo on a new house where people moved in
                 data.available = 0;
                 return;

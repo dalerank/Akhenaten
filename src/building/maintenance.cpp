@@ -155,9 +155,9 @@ void building_maintenance_check_fire_collapse(void) {
             b.fire_risk += model->fire_risk;
             int expected_fire_risk = 0;
             auto house = b.dcast_house();
-            if (!b.house_size) {
+            if (!house) {
                 expected_fire_risk += 50;
-            } else if (b.house_population <= 0) {
+            } else if (house && house->house_population() <= 0) {
                 expected_fire_risk = 0;
             } else if (house && house->house_level() <= HOUSE_COMMON_SHANTY) {
                 expected_fire_risk += 100;
@@ -204,9 +204,9 @@ void building_maintenance_check_kingdome_access() {
                 b.distance_from_entry = 0;
                 housed.unreachable_ticks++;
                 if (housed.unreachable_ticks > 4) {
-                    if (b.house_population > 0) {
-                        figure_create_homeless(b.tile, b.house_population);
-                        b.house_population = 0;
+                    if (housed.population > 0) {
+                        figure_create_homeless(b.tile, housed.population);
+                        housed.population = 0;
                         housed.unreachable_ticks = 0;
                     }
                     b.state = BUILDING_STATE_UNDO;

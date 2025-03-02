@@ -25,12 +25,16 @@ static void destroy_on_fire(building* b, bool plagued) {
     b->fire_risk = 0;
     b->damage_risk = 0;
 
-    if (b->house_size && b->house_population > 0) {
-        city_population_remove_home_removed(b->house_population);
+    auto house = b->dcast_house();
+    if (house) {
+        auto &housed = house->runtime_data();
+        if (housed.population > 0) {
+            city_population_remove_home_removed(housed.population);
+            housed.population = 0;
+        }
     }
 
     //int was_tent = b->house_size && b->data.house.level <= HOUSE_STURDY_HUT;
-    b->house_population = 0;
     b->house_size = 0;
     b->state = BUILDING_STATE_DELETED_BY_GAME;
     b->output_resource_first_id = RESOURCE_NONE;

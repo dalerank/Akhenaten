@@ -198,6 +198,7 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &d.is_merged);
     iob->bind(BIND_SIGNATURE_UINT8, &d.criminal_active);
     iob->bind(BIND_SIGNATURE_INT16, &d.highest_population);
+    iob->bind(BIND_SIGNATURE_INT16, &d.population);
 }
 
 int building_house::get_fire_risk(int value) const {
@@ -217,7 +218,7 @@ bvariant building_house::get_property(const xstring &domain, const xstring &name
 
 void building_house::create_vacant_lot(tile2i tile, int image_id) {
     building* b = building_create(BUILDING_HOUSE_VACANT_LOT, tile, 0);
-    b->house_population = 0;
+    
     b->distance_from_entry = 0;
     map_building_tiles_add(b->id, b->tile, 1, image_id, TERRAIN_BUILDING);
 }
@@ -270,7 +271,7 @@ void building_house::add_population(int num_people) {
     }
 
     auto &d = runtime_data();
-    base.house_population += num_people;
+    d.population += num_people;
     city_population_add(num_people);
     base.remove_figure(2);
 }
@@ -313,10 +314,10 @@ int16_t building_house::population_room() const {
 }
 
 void building_house::change_to_vacant_lot() {
-    base.house_population = 0;
+    auto &d = runtime_data();
     base.type = BUILDING_HOUSE_VACANT_LOT;
 
-    auto &d = runtime_data();
+    d.population = 0;
     d.level = (e_house_level)(base.type - BUILDING_HOUSE_VACANT_LOT);
     const house_model &model = static_cast<const house_model&>(params());
     int vacant_lot_id = model.anim["house"].first_img();
@@ -336,7 +337,7 @@ void building_house::change_to_vacant_lot() {
 }
 
 bool building_house::is_vacant_lot() const {
-    return base.house_population == 0;
+    return house_population() == 0;
 }
 
 static void prepare_for_merge(int building_id, int num_tiles) {
@@ -354,10 +355,10 @@ static void prepare_for_merge(int building_id, int num_tiles) {
             if (house && house->id() != building_id && house->base.house_size) {
                 g_merge_data.population += house->house_population();
                 for (int inv = 0; inv < INVENTORY_MAX; inv++) {
-                    auto &d = house->runtime_data();
-                    g_merge_data.inventory[inv] += d.inventory[inv];
-                    g_merge_data.foods[inv] += d.foods[inv];
-                    house->base.house_population = 0;
+                    auto &housed = house->runtime_data();
+                    g_merge_data.inventory[inv] += housed.inventory[inv];
+                    g_merge_data.foods[inv] += housed.foods[inv];
+                    housed.population = 0;
                     house->base.state = BUILDING_STATE_DELETED_BY_GAME;
                 }
             }
@@ -368,10 +369,10 @@ static void prepare_for_merge(int building_id, int num_tiles) {
 void building_house::merge_impl() {
     prepare_for_merge(id(), 4);
 
-    base.size = base.house_size = 2;
-    base.house_population += g_merge_data.population;
-
     auto &d = runtime_data();
+    base.size = base.house_size = 2;
+    d.population += g_merge_data.population;
+
     for (int i = 0; i < INVENTORY_MAX; i++) {
         d.foods[i] += g_merge_data.foods[i];
         d.inventory[i] += g_merge_data.inventory[i];
@@ -673,9 +674,9 @@ e_house_progress building_house::check_evolve_desirability() {
 
 static void create_house_tile(e_building_type type, tile2i tile, int image_id, int population, custom_span<int> inventory, custom_span<int> foods) {
     auto house = building_create(type, tile, 0)->dcast_house();
-    house->base.house_population = population;
 
     auto &housed = house->runtime_data();
+    housed.population = population;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.foods[i] = foods[i];
         housed.inventory[i] = inventory[i];
@@ -698,8 +699,8 @@ static void split_size2(building* b, e_building_type new_type) {
         foods_remainder[i] = housed.foods[i] % 4;
     }
 
-    int population_per_tile = b->house_population / 4;
-    int population_remainder = b->house_population % 4;
+    int population_per_tile = housed.population / 4;
+    int population_remainder = housed.population % 4;
 
     map_building_tiles_remove(b->id, b->tile);
 
@@ -708,7 +709,7 @@ static void split_size2(building* b, e_building_type new_type) {
     housed.level = (e_house_level)(b->type - BUILDING_HOUSE_VACANT_LOT);
     b->size = b->house_size = 1;
     housed.is_merged = false;
-    b->house_population = population_per_tile + population_remainder;
+    housed.population = population_per_tile + population_remainder;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.inventory[i] = inventory_per_tile[i] + inventory_remainder[i];
         housed.foods[i] = foods_per_tile[i] + foods_remainder[i];
@@ -738,8 +739,8 @@ static void split_size3(building* b) {
         foods_remainder[i] = housed.foods[i] % 9;
     }
 
-    int population_per_tile = b->house_population / 9;
-    int population_remainder = b->house_population % 9;
+    int population_per_tile = housed.population / 9;
+    int population_remainder = housed.population % 9;
 
     map_building_tiles_remove(b->id, b->tile);
 
@@ -748,7 +749,7 @@ static void split_size3(building* b) {
     housed.level = (e_house_level)(b->type - BUILDING_HOUSE_VACANT_LOT);
     b->size = b->house_size = 1;
     housed.is_merged = false;
-    b->house_population = population_per_tile + population_remainder;
+    housed.population = population_per_tile + population_remainder;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.inventory[i] = inventory_per_tile[i] + inventory_remainder[i];
         housed.foods[i] = foods_per_tile[i] + foods_remainder[i];
@@ -811,7 +812,7 @@ void building_house_common_manor::devolve_to_fancy_residence() {
     housed.level = (e_house_level)(base.type - BUILDING_HOUSE_VACANT_LOT);
     base.size = base.house_size = 2;
     housed.is_merged = false;
-    base.house_population = population_per_tile + population_remainder;
+    housed.population = population_per_tile + population_remainder;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.inventory[i] = inventory_per_tile[i] + inventory_remainder[i];
         housed.foods[i] = foods_per_tile[i] + foods_remainder[i];
@@ -854,7 +855,7 @@ void building_house_modest_estate::devolve_to_statel_manor() {
     housed.level = (e_house_level)(base.type - BUILDING_HOUSE_VACANT_LOT);
     base.size = base.house_size = 3;
     housed.is_merged = false;
-    base.house_population = population_per_tile + population_remainder;
+    housed.population = population_per_tile + population_remainder;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.inventory[i] = inventory_per_tile[i] + inventory_remainder[i];
     }
@@ -910,6 +911,10 @@ void building_house::on_create(int orientation) {
     d.health = 100;
     d.house_happiness = 50;
     d.level = (e_house_level)(type() - BUILDING_HOUSE_VACANT_LOT);
+
+    if (d.level == 0) {
+        d.population = 0;
+    }
 }
 
 void building_house::on_place_checks() {
@@ -1050,7 +1055,7 @@ void building_house_spacious_apartment::expand_to_common_residence() {
     base.type = BUILDING_HOUSE_COMMON_RESIDENCE;
     housed.level = HOUSE_COMMON_RESIDENCE;
     base.size = base.house_size = 2;
-    base.house_population += g_merge_data.population;
+    housed.population += g_merge_data.population;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.foods[i] += g_merge_data.foods[i];
         housed.inventory[i] += g_merge_data.inventory[i];
@@ -1122,7 +1127,7 @@ void building_house_fancy_residence::expand_to_common_manor() {
     housed.level = HOUSE_COMMON_MANOR;
     base.size = 3;
     base.house_size = 3;
-    base.house_population += g_merge_data.population;
+    housed.population += g_merge_data.population;
 
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.foods[i] += g_merge_data.foods[i];
@@ -1193,8 +1198,9 @@ void building_house_stately_manor::expand_to_modest_estate() {
 
     base.type = BUILDING_HOUSE_MODEST_ESTATE;
     housed.level = HOUSE_MODEST_ESTATE;
-    base.size = base.house_size = 4;
-    base.house_population += g_merge_data.population;
+    base.size = 4;
+    base.house_size = 4;
+    housed.population += g_merge_data.population;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.foods[i] += g_merge_data.foods[i];
         housed.inventory[i] += g_merge_data.inventory[i];

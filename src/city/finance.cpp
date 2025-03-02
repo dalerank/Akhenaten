@@ -160,9 +160,9 @@ void city_finance_estimate_taxes() {
         int level_tax_rate_multiplier = difficulty_adjust_money(tax_multiplier);
 
         if (is_nobles) {
-            city_data.taxes.monthly.collected_nobles += b.house_population * level_tax_rate_multiplier;
+            city_data.taxes.monthly.collected_nobles += housed.population * level_tax_rate_multiplier;
         } else {
-            city_data.taxes.monthly.collected_citizens += b.house_population * level_tax_rate_multiplier;
+            city_data.taxes.monthly.collected_citizens += housed.population * level_tax_rate_multiplier;
         }
     });
 
@@ -211,7 +211,7 @@ static void city_finance_collect_monthly_taxes() {
 
         auto &housed = house->runtime_data();
         int is_nobles = (housed.level >= HOUSE_COMMON_MANOR);
-        int population = b.house_population;
+        int population = housed.population;
         int trm = difficulty_adjust_money(model_get_house(house->house_level())->tax_multiplier);
         city_data.population.at_level[housed.level] += population;
 

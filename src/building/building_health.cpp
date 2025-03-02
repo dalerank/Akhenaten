@@ -1,6 +1,6 @@
 #include "building_health.h"
 
-#include "building/building.h"
+#include "building/building_house.h"
 #include "building/count.h"
 #include "city/object_info.h"
 #include "game/resource.h"
@@ -28,9 +28,12 @@ declare_console_command_p(plague_no, game_cheat_noplague);
 
 void game_cheat_noplague(std::istream &is, std::ostream &os) {
     buildings_valid_do([&] (building &b) {
-        if (!b.house_size || b.house_population <= 0) {
+        auto house = b.dcast_house();
+
+        if (!house || house->house_population() <= 0) {
             return;
         }
+
         building *main = b.main();
         main->disease_days = 0;
         main->has_plague = false;
@@ -43,10 +46,12 @@ void game_cheat_start_plague(std::istream &is, std::ostream &os) {
 
     int total_population = 0;
     buildings_valid_do([&] (building &b) {
-        if (!b.house_size || b.house_population <= 0) {
+        auto house = b.dcast_house();
+
+        if (!house || house->house_population() <= 0) {
             return;
         }
-        total_population += b.house_population;
+        total_population += house->house_population();
     });
     g_city.health.start_disease(total_population, true, plague_people);
 }

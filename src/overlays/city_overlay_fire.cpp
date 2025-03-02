@@ -5,6 +5,7 @@
 #include "grid/building.h"
 #include "grid/property.h"
 #include "figure/figure.h"
+#include "building/building_house.h"
 
 city_overlay_fire g_city_overlay_fire;
 
@@ -15,10 +16,12 @@ city_overlay* city_overlay_for_fire() {
 int city_overlay_fire::get_column_height(const building *b) const {
     auto model = model_get_building(b->type);
 
-    if (b->prev_part_building_id || b->fire_proof)
+    if (b->prev_part_building_id || b->fire_proof) {
         return COLUMN_TYPE_NONE;
+    }
 
-    if ((b->type == BUILDING_HOUSE_CRUDE_HUT && b->house_population <= 0) || b->type == BUILDING_GARDENS
+    auto house = ((building*)b)->dcast_house();
+    if ((house && house->house_population() <= 0) || b->type == BUILDING_GARDENS
         || b->type == BUILDING_BANDSTAND || b->type == BUILDING_BOOTH) {
         return COLUMN_TYPE_NONE;
     }

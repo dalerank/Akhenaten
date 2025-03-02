@@ -172,7 +172,6 @@ public:
     //unsigned short creation_sequence_index;
     short houses_covered;
     short percentage_houses_covered;
-    short house_population;
     short distance_from_entry;
     tile2i road_access;
     short figure_spawn_delay;

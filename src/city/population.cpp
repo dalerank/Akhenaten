@@ -300,13 +300,18 @@ static void yearly_recalculate_population(void) {
 int calculate_total_housing_buildings(void) {
     int total = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state == BUILDING_STATE_UNUSED || b->state == BUILDING_STATE_UNDO
-            || b->state == BUILDING_STATE_DELETED_BY_GAME || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+        auto house = building_get(i)->dcast_house();
+        if (!house) {
             continue;
         }
-        if (building_is_house(b->type) && b->house_population > 0)
-            total += 1;
+
+        const e_building_state state = house->state();
+        if (state == BUILDING_STATE_UNUSED || state == BUILDING_STATE_UNDO
+            || state == BUILDING_STATE_DELETED_BY_GAME || state == BUILDING_STATE_DELETED_BY_PLAYER) {
+            continue;
+        }
+
+        total += (house->house_population() > 0) ? 1 : 0;
     }
 
     return total;
@@ -377,13 +382,14 @@ static int calculate_people_per_house_type(void) {
             continue;
         }
 
+        auto &housed = house->runtime_data();
         if (house->state() == BUILDING_STATE_UNUSED || house->state() == BUILDING_STATE_UNDO
             || house->state() == BUILDING_STATE_DELETED_BY_GAME || house->state() == BUILDING_STATE_DELETED_BY_PLAYER) {
             continue;
         }
 
         if (house->base.house_size) {
-            int pop = house->base.house_population;
+            int pop = housed.population;
             total += pop;
 
             auto &housed = house->runtime_data();

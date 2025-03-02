@@ -10,6 +10,7 @@
 #include "grid/canals.h"
 #include "grid/building_tiles.h"
 #include "grid/routing/routing_terrain.h"
+#include "building/building_house.h"
 #include "io/io_buffer.h"
 
 building g_all_buildings[5000];
@@ -188,8 +189,9 @@ void building_update_state(void) {
                 lands_recalc = true;
                 building_delete_UNSAFE(b);
             } else if (b->state == BUILDING_STATE_RUBBLE) {
-                if (b->house_size > 0) {
-                    city_population_remove_home_removed(b->house_population);
+                auto house = b->dcast_house();
+                if (house && house->base.house_size > 0) {
+                    city_population_remove_home_removed(house->house_population());
                 }
 
                 building_delete_UNSAFE(b);
@@ -248,7 +250,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &b->houses_covered);
         iob->bind(BIND_SIGNATURE_INT16, &b->percentage_houses_covered);
 
-        iob->bind(BIND_SIGNATURE_INT16, &b->house_population);
+        iob->bind____skip(2);
         iob->bind____skip(2);
         iob->bind(BIND_SIGNATURE_INT16, &b->distance_from_entry);
         iob->bind____skip(2);

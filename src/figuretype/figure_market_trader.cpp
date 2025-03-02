@@ -46,7 +46,7 @@ int figure_market_trader::provide_service() {
             return;
         }
 
-        if (b->house_size > 0 && b->house_population > 0) {
+        if (house->house_population() > 0) {
             house->runtime_data().bazaar_access = MAX_COVERAGE;
         }
     });

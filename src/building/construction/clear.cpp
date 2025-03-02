@@ -1,7 +1,7 @@
 #include "clear.h"
 
-#include "building/building.h"
 #include "building/industry.h"
+#include "building/building_house.h"
 #include "building/building_farm.h"
 #include "city/city.h"
 #include "city/warnings.h"
@@ -99,9 +99,10 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                     }
                 }
 
-                if (b->house_size > 0 && b->house_population > 0 && !measure_only) {
-                    figure_create_homeless(b->tile, b->house_population);
-                    b->house_population = 0;
+                auto house = b->dcast_house();
+                if (house && house->house_population() > 0 && !measure_only) {
+                    figure_create_homeless(b->tile, house->house_population());
+                    house->runtime_data().population = 0;
                 }
 
                 if (building_is_floodplain_farm(*b) && config_get(CONFIG_GP_CH_SOIL_DEPLETION)) {

@@ -10,19 +10,20 @@
 #include "figure/image.h"
 #include "grid/building.h"
 #include "figure/service.h"
+#include "building/building_house.h"
 
 int figure_entertainer::provide_entertainment(int shows, void (*callback)(building*, int)) {
     int serviced = 0;
     grid_area area = map_grid_get_area(tile(), 1, 2);
     map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
-        int building_id = map_building_at(t);
+        auto building_id = map_building_at(t);
         if (!building_id) {
             return;
         }
 
-        building *b = building_get(building_id);
-        if (b->house_size && b->house_population > 0) {
-            callback(b, shows);
+        auto house = building_get(building_id)->dcast_house();
+        if (house->base.house_size && house->house_population() > 0) {
+            callback(&house->base, shows);
             serviced++;
         }
     });

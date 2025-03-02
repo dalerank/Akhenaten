@@ -34,7 +34,7 @@ int house_population_add_to_city(int num_people) {
 
             if (house->house_population() < max_people) {
                 ++added;
-                ++house->base.house_population;
+                ++house->runtime_data().population;
             }
         }
     }
@@ -48,12 +48,12 @@ int house_population_remove_from_city(int num_people) {
         if (++building_id >= MAX_BUILDINGS)
             building_id = 1;
 
-        building* b = building_get(building_id);
-        if (b->state == BUILDING_STATE_VALID && b->house_size) {
+        auto house = building_get(building_id)->dcast_house();
+        if (house && house->state() == BUILDING_STATE_VALID && house->base.house_size) {
             city_population_set_last_used_house_remove(building_id);
-            if (b->house_population > 0) {
+            if (house->house_population() > 0) {
                 ++removed;
-                --b->house_population;
+                --house->runtime_data().population;
             }
         }
     }
@@ -241,7 +241,7 @@ void city_t::house_population_evict_overcrowded() {
             int num_people_to_evict = -population_room;
             figure_create_homeless(house->tile(), num_people_to_evict);
             if (num_people_to_evict < house->house_population()) {
-                house->base.house_population -= num_people_to_evict;
+                house->runtime_data().population -= num_people_to_evict;
             } else {
                 // house has been removed
                 house->base.state = BUILDING_STATE_UNDO;

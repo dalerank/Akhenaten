@@ -40,9 +40,12 @@ void figure_magistrate::figure_before_action() {
 sound_key figure_magistrate::phrase_key() const {
     int houses_in_disease = 0;
     buildings_valid_do([&] (building &b) {
-        if (!b.house_size || b.house_population <= 0) {
+        auto house = b.dcast_house();
+
+        if (!house || house->house_population() <= 0) {
             return;
         }
+
         houses_in_disease = (b.disease_days > 0) ? 1 : 0;
     });
 
@@ -107,7 +110,7 @@ int figure_magistrate::provide_service() {
     int max_criminal_active = 0;
     int houses_serviced = figure_provide_service(tile(), &base, max_criminal_active, [] (building *b, figure *f, int &) {
         auto house = b->dcast_house();
-        if (house && b->house_size > 0 && b->house_population > 0) {
+        if (house && house->house_population() > 0) {
             house->runtime_data().magistrate = MAX_COVERAGE;
         }
     });

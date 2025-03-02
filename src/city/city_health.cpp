@@ -55,13 +55,15 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
     // kill people where has little common_health
     building *warn_building = nullptr;
     buildings_valid_do([&] (building &b) {
-        if (people_to_plague <= 0 || !b.house_size || b.house_population <= 0) {
+        auto house = b.dcast_house();
+
+        if (people_to_plague <= 0 || !house || house->house_population() <= 0) {
             return;
         }
 
         if (b.common_health < 10) {
             warn_building = &b;
-            people_to_plague -= b.house_population;
+            people_to_plague -= house->house_population();
             building_mark_plague(&b);
         }
     });
@@ -70,14 +72,14 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
     buildings_valid_do([&] (building &b) {
         auto house = b.dcast_house();
 
-        if (!house || people_to_plague <= 0 || !b.house_size || b.house_population <= 0) {
+        if (!house || people_to_plague <= 0 || house->house_population() <= 0) {
             return;
         }
 
         auto &housed = house->runtime_data();
         if (!(housed.apothecary || housed.physician)) {
             warn_building = &b;
-            people_to_plague -= b.house_population;
+            people_to_plague -= house->house_population();
             building_mark_plague(&b);
         }
     });
@@ -86,25 +88,27 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
     buildings_valid_do([&] (building &b) {
         auto house = b.dcast_house();
 
-        if (!house || people_to_plague <= 0 || !b.house_size || b.house_population <= 0) {
+        if (!house || people_to_plague <= 0 || house->house_population() <= 0) {
             return;
         }
 
         if (house->house_level() <= HOUSE_STURDY_HUT) {
             warn_building = &b;
-            people_to_plague -= b.house_population;
+            people_to_plague -= house->house_population();
             building_mark_plague(&b);
         }
     });
 
     // kill anyone
     buildings_valid_do([&] (building &b) {
-        if (people_to_plague <= 0 || !b.house_size || b.house_population <= 0) {
+        auto house = b.dcast_house();
+
+        if (!house || people_to_plague <= 0 || house->house_population() <= 0) {
             return;
         }
 
         warn_building = &b;
-        people_to_plague -= b.house_population;
+        people_to_plague -= house->house_population();
         building_mark_plague(&b);
     });
 
@@ -148,22 +152,23 @@ void city_health_t::update() {
             return;
         }
 
-        total_population += b.house_population;
+        const short hpop = house->house_population();
+        total_population += hpop;
         auto &housed = house->runtime_data();
         if (housed.level <= HOUSE_STURDY_HUT) {
             if (housed.apothecary) {
-                healthy_population += b.house_population;
+                healthy_population += hpop;
             } else {
-                healthy_population += b.house_population / 4;
+                healthy_population += hpop / 4;
             }
         } else if (housed.physician) {
             if (b.house_days_without_food == 0) {
-                healthy_population += b.house_population;
+                healthy_population += hpop;
             } else {
-                healthy_population += b.house_population / 4;
+                healthy_population += hpop / 4;
             }
         } else if (b.house_days_without_food == 0) {
-            healthy_population += b.house_population / 4;
+            healthy_population += hpop / 4;
         }
     });
 

@@ -38,7 +38,7 @@ void city_t::house_service_update_health() {
     buildings_valid_do([] (building &b) {
         auto house = b.dcast_house();
 
-        if (!house || !b.house_size || b.house_population <= 0) {
+        if (!house || house->house_population() <= 0) {
             return;
         }
 
@@ -57,8 +57,8 @@ void city_t::house_service_update_health() {
             int chance_death = std::max(100 - b.common_health, 10);
             int randm = (random_short() % 99 + 1);
             bool has_death_today = (randm < chance_death);
-            if (has_death_today && b.house_population > 0) {
-                --b.house_population;
+            if (has_death_today && house->house_population() > 0) {
+                house->change_population(-1);
             }
         }
     });

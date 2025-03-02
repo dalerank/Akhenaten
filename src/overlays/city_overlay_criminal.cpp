@@ -20,7 +20,7 @@ int city_overlay_crime::get_column_height(const building* b) const {
         return COLUMN_TYPE_NONE;
     }
 
-    if (b->house_size && b->house_population > 0) {
+    if (house->house_population() > 0) {
         int crime = house->runtime_data().criminal_active;
         return crime / 10;
     }
@@ -28,12 +28,8 @@ int city_overlay_crime::get_column_height(const building* b) const {
 }
 
 xstring city_overlay_crime::get_tooltip_for_building(tooltip_context* c, const building* b) const {
-    if (b->house_population <= 0) {
-        return ui::str(66, 63);
-    }
-
     auto house = ((building *)b)->dcast_house();
-    if (!house) {
+    if (!house || house->house_population() <= 0) {
         return ui::str(66, 63);
     }
 

@@ -246,20 +246,17 @@ bool figure_market_buyer::take_resource_from_storageyard(building* b) {
     return true;
 }
 
-
 int provide_market_goods(building* market, tile2i tile) {
     int serviced = 0;
     grid_area area = map_grid_get_area(tile, 1, 2);
 
     map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
         int grid_offset = tile.grid_offset();
-        int building_id = map_building_at(grid_offset);
-        if (building_id) {
-            building *b = building_get(building_id);
-            if (b->house_size && b->house_population > 0) {
-                distribute_market_resources(b, market);
-                serviced++;
-            }
+        building_id bid = map_building_at(grid_offset);
+        auto house = building_get(bid)->dcast_house();
+        if (house && house->house_population() > 0) {
+            distribute_market_resources(&house->base, market);
+            serviced++;
         }
     });
     return serviced;

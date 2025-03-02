@@ -33,7 +33,7 @@ int city_overlay_food_stocks::get_column_height(const building *b) const {
 
     auto &housed = house->runtime_data();
     if (b->house_size && model_get_house(housed.level)->food_types) {
-        int pop = b->house_population;
+        int pop = housed.population;
         int stocks = 0;
         
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
@@ -62,7 +62,7 @@ xstring city_overlay_food_stocks::get_tooltip_for_building(tooltip_context *c, c
     }
 
     auto &housed = house->runtime_data();
-    if (b->house_population <= 0) {
+    if (housed.population <= 0) {
         return 0;
     }
 
@@ -74,7 +74,7 @@ xstring city_overlay_food_stocks::get_tooltip_for_building(tooltip_context *c, c
             stocks_present += housed.foods[i];
         }
 
-        int stocks_per_pop = calc_percentage<int>(stocks_present, b->house_population);
+        int stocks_per_pop = calc_percentage<int>(stocks_present, housed.population);
         if (stocks_per_pop <= 0) {
             return ui::str(66, 4);
         } else if (stocks_per_pop < 100) {

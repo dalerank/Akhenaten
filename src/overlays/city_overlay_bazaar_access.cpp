@@ -26,7 +26,7 @@ int city_overlay_bazaar_access::get_column_height(const building *b) const {
         return COLUMN_TYPE_NONE;
     }
     
-    if (b->house_population <= 0) {
+    if (house->house_population() <= 0) {
         return COLUMN_TYPE_NONE;
     }
 

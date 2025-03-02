@@ -5,15 +5,9 @@
 #include "city/labor.h"
 #include "city/city.h"
 #include "figure/service.h"
-
-#include "js/js_game.h"
+#include "building/building_house.h"
 
 figures::model_t<figure_labor_seeker> labor_seeker_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_labor_seeker);
-void config_load_figure_labor_seeker() {
-    labor_seeker_m.load();
-}
 
 void figure_labor_seeker::figure_action() {
     switch (action_state()) {
@@ -62,7 +56,9 @@ sound_key figure_labor_seeker::phrase_key() const {
 
     int houses_in_disease = 0;
     buildings_valid_do([&] (building &b) {
-        if (!b.house_size || b.house_population <= 0) {
+        auto house = b.dcast_house();
+
+        if (!house || house->house_population() <= 0) {
             return;
         }
         houses_in_disease = (b.disease_days > 0) ? 1 : 0;

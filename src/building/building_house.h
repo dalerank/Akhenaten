@@ -22,6 +22,7 @@ public:
         uint16_t inventory[8];
         uint16_t highest_population;
         uint16_t unreachable_ticks;
+        uint16_t population;
         uint8_t is_merged;
         uint8_t booth_juggler;
         uint8_t bandstand_juggler;
@@ -68,8 +69,8 @@ public:
     virtual int get_fire_risk(int value) const override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override; 
 
-    inline short house_population() const { return base.house_population; }
-    inline void change_population(short delta) { base.house_population += delta; }
+    inline short house_population() const { return runtime_data().population; }
+    inline void change_population(short delta) { runtime_data().population += delta; }
     inline e_house_level house_level() const { return runtime_data().level; }
     int16_t population_room() const;
     void change_to_vacant_lot();

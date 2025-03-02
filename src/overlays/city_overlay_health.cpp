@@ -3,6 +3,7 @@
 #include "grid/property.h"
 #include "grid/building.h"
 #include "figure/figure.h"
+#include "building/building_house.h"
 
 city_overlay_health g_city_overlay_health;
 
@@ -11,7 +12,9 @@ city_overlay* city_overlay_for_health() {
 }
 
 int city_overlay_health::get_column_height(const building *b) const {
-    if (!b->house_size || b->house_population <= 0) {
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house || house->house_population() <= 0) {
         return COLUMN_TYPE_NONE;
     }
 
@@ -23,7 +26,9 @@ int city_overlay_health::get_column_height(const building *b) const {
 }
 
 e_column_color city_overlay_health::get_column_color(const building *b) const {
-    if (!b->house_size || b->house_population <= 0) {
+    auto house = ((building *)b)->dcast_house();
+
+    if (!house || house->house_population() <= 0) {
         return COLUMN_COLOR_NONE;
     }
 

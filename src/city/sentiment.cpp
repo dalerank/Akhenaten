@@ -376,7 +376,7 @@ void city_sentiment_update() {
     buildings_valid_do([&total_houses, &total_sentiment] (building &b) {
         auto house = b.dcast_house();
 
-        if (house && house->base.house_size && b.house_population > 0) {
+        if (house && house->house_population() > 0) {
             total_houses++;
             total_sentiment += house->runtime_data().house_happiness;
         }

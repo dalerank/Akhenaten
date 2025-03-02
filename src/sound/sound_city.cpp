@@ -1,6 +1,6 @@
 #include "sound_city.h"
 
-#include "building/building.h"
+#include "building/building_house.h"
 #include "city/city.h"
 #include "game/settings.h"
 #include "grid/terrain.h"
@@ -46,8 +46,11 @@ int building_type_to_channel(building *b) {
         break;
 
     case BUILDING_HOUSE_CRUDE_HUT:
-        if (b->house_population <= 0) {
-            return 0;
+        {
+            auto house = b->dcast_house();
+            if (house && house->house_population() <= 0) {
+                return 0;
+            }
         }
         // falltrougth
     case BUILDING_HOUSE_STURDY_HUT:
