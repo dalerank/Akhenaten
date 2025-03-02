@@ -63,7 +63,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
         //game_debug_show_property("tax_collector_id", b->tax_collector_id);
         game_debug_show_property("formation_id", b->formation_id);
         //game_debug_show_property("tax_income_or_storage", b->tax_income_or_storage);
-        game_debug_show_property("house_days_without_food", b->house_days_without_food);
+        //game_debug_show_property("house_days_without_food", b->house_days_without_food);
         game_debug_show_property("has_plague", b->has_plague);
         game_debug_show_property("desirability", b->desirability);
         game_debug_show_property("is_adjacent_to_water", b->is_adjacent_to_water);

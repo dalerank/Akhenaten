@@ -296,7 +296,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
 
         iob->bind____skip(2); 
         iob->bind(BIND_SIGNATURE_INT16, &b->stored_amount_second);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->house_days_without_food);
+        iob->bind____skip(1); // 
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_plague); // 1
 
         iob->bind(BIND_SIGNATURE_INT8, &b->desirability);

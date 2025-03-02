@@ -24,6 +24,7 @@ public:
         uint16_t unreachable_ticks;
         building_id tax_collector_id;
         uint16_t population;
+        int16_t tax_income_or_storage;
         uint8_t is_merged;
         uint8_t booth_juggler;
         uint8_t bandstand_juggler;
@@ -59,7 +60,7 @@ public:
         uint8_t house_happiness;
         uint8_t criminal_active;
         uint8_t tax_coverage;
-        int16_t tax_income_or_storage;
+        uint8_t days_without_food;
     };
 
     virtual void on_create(int orientation) override;

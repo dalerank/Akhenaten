@@ -328,7 +328,7 @@ void city_sentiment_update() {
         int sentiment_contribution_huts = 0;
         if (!model_get_house(house->house_level())->food_types) {
             // tents
-            b.house_days_without_food = 0;
+            housed.days_without_food = 0;
             sentiment_contribution_huts = sentiment_penalty_huts;
             total_sentiment_penalty_huts += sentiment_penalty_huts;
         } else {
@@ -337,18 +337,18 @@ void city_sentiment_update() {
             if (housed.num_foods >= 2) {
                 sentiment_contribution_food = 2;
                 total_sentiment_contribution_food += 2;
-                b.house_days_without_food = 0;
+                housed.days_without_food = 0;
             } else if (housed.num_foods >= 1) {
                 sentiment_contribution_food = 1;
                 total_sentiment_contribution_food += 1;
-                b.house_days_without_food = 0;
+                housed.days_without_food = 0;
             } else {
                 // needs food but has no food
-                if (b.house_days_without_food < 3)
-                    b.house_days_without_food++;
+                if (housed.days_without_food < 3)
+                    housed.days_without_food++;
 
-                sentiment_contribution_food = -b.house_days_without_food;
-                total_sentiment_contribution_food -= b.house_days_without_food;
+                sentiment_contribution_food = -housed.days_without_food;
+                total_sentiment_contribution_food -= housed.days_without_food;
             }
         }
         housed.house_happiness += sentiment_contribution_taxes;

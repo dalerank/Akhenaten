@@ -202,6 +202,7 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &d.tax_coverage);
     iob->bind(BIND_SIGNATURE_UINT16, &d.tax_collector_id);
     iob->bind(BIND_SIGNATURE_INT16, &d.tax_income_or_storage);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.days_without_food);
 }
 
 int building_house::get_fire_risk(int value) const {

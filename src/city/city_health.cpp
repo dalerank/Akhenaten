@@ -162,12 +162,12 @@ void city_health_t::update() {
                 healthy_population += hpop / 4;
             }
         } else if (housed.physician) {
-            if (b.house_days_without_food == 0) {
+            if (housed.days_without_food == 0) {
                 healthy_population += hpop;
             } else {
                 healthy_population += hpop / 4;
             }
-        } else if (b.house_days_without_food == 0) {
+        } else if (housed.days_without_food == 0) {
             healthy_population += hpop / 4;
         }
     });
