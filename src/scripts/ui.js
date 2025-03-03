@@ -648,7 +648,6 @@ window mission_briefing_window = {
 		subtitle 		     : text({pos:[32, 78], font : FONT_NORMAL_BLACK_ON_LIGHT }),
 		objectives_panel : inner_panel({pos:[32, 96], size: {w:36, h:6} }),
 		objectives_label : label({text : {group:62, id:10}, pos : {x:48, y:104},	font : FONT_NORMAL_WHITE_ON_DARK }),
-		tocity_label     : label({text : {group:62, id:7},	pos : {x:416, y:433}, font : FONT_NORMAL_BLACK_ON_LIGHT }),
 		
 		goal_0           : label({pos:[32  + 16, 90  + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false	}),
 		goal_1           : label({pos:[288 + 16, 90  + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false }),
@@ -666,7 +665,8 @@ window mission_briefing_window = {
 		dec_difficulty   : image_button({pos:[65, 428], size:[17, 17], pack:PACK_GENERAL, id:212, offset:0 }),
 		inc_difficulty   : image_button({pos:[65 + 18, 428], size:[17, 17], pack:PACK_GENERAL, id:212, offset:3 }),
 
-		start_mission    : next_button({pos:[516, 430]}),
+		tocity_label     : label({text : {group:62, id:7}, margin:{right:-140, bottom:0}, font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		start_mission    : next_button({ margin:{right:-40, bottom:-3} }),
 	}
 }
 

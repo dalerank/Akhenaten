@@ -54,12 +54,12 @@ void ui::mission_briefing_window::init() {
     });
 
     ui["start_mission"].onclick([this] {
-        g_sound.speech_stop();
-        g_sound.music_update(/*force*/true);
-
         if (!is_review) {
             GamestateIO::load_mission(scenario_id, true);
         }
+
+        g_sound.speech_stop();
+        g_sound.music_update(/*force*/true);
         window_city_show();
         city_mission_reset_save_start();
     });
