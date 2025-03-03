@@ -392,6 +392,7 @@ public:
         static static_params dummy;
         pcstr name;
         bool fire_proof;
+        int8_t fire_risk_update;
         bool damage_proof;
         bool is_draggable;
         xstring meta_id;

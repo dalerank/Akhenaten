@@ -127,10 +127,6 @@ void building_maintenance_check_fire_collapse(void) {
     int max_id = building_get_highest_id();
 
     buildings_valid_do([&] (building &b) {
-        if (b.fire_proof) {
-            return;
-        }
-
         const model_building *model = model_get_building(b.type);
 
         /////// COLLAPSE
@@ -150,27 +146,13 @@ void building_maintenance_check_fire_collapse(void) {
         }
 
         /////// FIRE
-        int random_building = (b.id + map_random_get(b.tile.grid_offset())) & 7;
-        if (random_building == random_global) {
+        int random_building = (b.id + map_random_get(b.tile)) & 7;
+        if (!b.fire_proof && random_building == random_global) {
             b.fire_risk += model->fire_risk;
-            int expected_fire_risk = 0;
-            auto house = b.dcast_house();
-            if (!house) {
-                expected_fire_risk += 50;
-            } else if (house && house->house_population() <= 0) {
-                expected_fire_risk = 0;
-            } else if (house && house->house_level() <= HOUSE_COMMON_SHANTY) {
-                expected_fire_risk += 100;
-            } else if (house && house->house_level() <= HOUSE_COMMON_MANOR) {
-                expected_fire_risk += 50;
-            } else {
-                expected_fire_risk += 20;
-            }
+            
+            int expected_fire_risk = building_impl::params(b.type).fire_risk_update;
 
-            if (tutorial_extra_fire_risk()) {
-                expected_fire_risk += 50;
-            }
-
+            expected_fire_risk += scenario_additional_fire_damage(b.type);
             expected_fire_risk = b.dcast()->get_fire_risk(expected_fire_risk);
             b.fire_risk += expected_fire_risk;
             //            if (climate == CLIMATE_NORTHERN)
@@ -178,6 +160,7 @@ void building_maintenance_check_fire_collapse(void) {
             //            else if (climate == CLIMATE_DESERT)
             //                b->fire_risk += 30;
         }
+
         if (b.fire_risk > 1000) {
             fire_building(&b);
             recalculate_terrain = 1;

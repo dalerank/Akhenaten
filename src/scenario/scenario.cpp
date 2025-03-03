@@ -59,15 +59,22 @@ void scenario_load_meta_data(const mission_id_t &missionid) {
         }
 
         g_scenario_data.init_resources.clear();
-        arch.r_array("resources", [&] (archive res) {
-            e_resource resource = arch.r_type<e_resource>("resource");
-            bool allowed = arch.r_bool("allowed");
+        arch.r_objects("resources", [] (pcstr key, archive rarch) {
+            e_resource resource = rarch.r_type<e_resource>("type");
+            bool allowed = rarch.r_bool("allow");
             g_scenario_data.init_resources.push_back({ resource, allowed });
         });
 
+        g_scenario_data.add_fire_damage.clear();
+        arch.r_objects("fire_damage", [&] (pcstr key, archive barch) {
+            e_building_type type = barch.r_type<e_building_type>("type");
+            int8_t value = barch.r_int("value");
+            g_scenario_data.add_fire_damage.push_back({ type, value });
+        });
+
         g_scenario_data.building_stages.clear();
-        arch.r_objects("stages", [](pcstr key, archive stage_arch) {
-            auto buildings = archive::r_array_num<e_building_type>(stage_arch);
+        arch.r_objects("stages", [](pcstr key, archive sarch) {
+            auto buildings = archive::r_array_num<e_building_type>(sarch);
             g_scenario_data.building_stages.push_back({key, buildings});
         });
     });
@@ -123,6 +130,12 @@ bool scenario_is_mission_rank(custom_span<int> missions) {
     }
 
     return false;
+}
+
+int scenario_additional_fire_damage(e_building_type type) {
+    const auto &dmg = g_scenario_data.add_fire_damage;
+    auto it = std::find_if(dmg.begin(), dmg.end(), [type] (auto &i) { return i.type == type; });
+    return (it != dmg.end()) ? it->value : 0;
 }
 
 int scenario_is_before_mission(int mission) {

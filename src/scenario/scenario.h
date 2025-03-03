@@ -156,6 +156,11 @@ struct demand_change_t {
     int is_rise;
 };
 
+struct add_fire_damage_t {
+    e_building_type type;
+    int8_t value;
+};
+
 struct building_stage_t {
     xstring key;
     std::vector<e_building_type> buildings;
@@ -263,7 +268,7 @@ struct scenario_data_t {
 
     bool allowed_buildings[BUILDING_MAX] = { 0 };
     std::vector<resource_allow> init_resources;
-
+    std::vector<add_fire_damage_t> add_fire_damage;
     std::vector<building_stage_t> building_stages;
 
     struct {
@@ -334,39 +339,41 @@ bool scenario_is_mission_rank(const Args ... args) {
     return scenario_is_mission_rank(make_span(values));
 }
 
+int scenario_additional_fire_damage(e_building_type type);
+
 int scenario_is_before_mission(int mission);
 
-int scenario_starting_kingdom(void);
+int scenario_starting_kingdom();
 
-int scenario_starting_personal_savings(void);
+int scenario_starting_personal_savings();
 
-const uint8_t* scenario_name(void);
+const uint8_t* scenario_name();
 
 void scenario_set_name(const uint8_t* name);
 
-int scenario_is_open_play(void);
+int scenario_is_open_play();
 
-int scenario_open_play_id(void);
+int scenario_open_play_id();
 
-int scenario_property_climate(void);
+int scenario_property_climate();
 
-int scenario_property_start_year(void);
+int scenario_property_start_year();
 
 int scenario_property_kingdom_supplies_grain();
 
-int scenario_property_enemy(void);
+int scenario_property_enemy();
 
-int scenario_property_player_rank(void);
+int scenario_property_player_rank();
 
-int scenario_image_id(void);
+int scenario_image_id();
 
-const uint8_t* scenario_subtitle(void);
+const uint8_t* scenario_subtitle();
 
-int scenario_initial_funds(void);
+int scenario_initial_funds();
 
-int scenario_rescue_loan(void);
+int scenario_rescue_loan();
 
-int scenario_property_monuments_is_enabled(void);
+int scenario_property_monuments_is_enabled();
 int scenario_property_monument(int field);
 void scenario_set_monument(int field, int m);
 

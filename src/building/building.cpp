@@ -976,6 +976,7 @@ void building_impl::on_tick(bool refresh_only) {
 void building_impl::static_params::load(archive arch) {
     labor_category = arch.r_type<e_labor_category>("labor_category");
     fire_proof = arch.r_bool("fire_proof");
+    fire_risk_update = arch.r_int("fire_risk_update", 50);
     damage_proof = arch.r_bool("damage_proof");
     input_resource = arch.r_type<e_resource>("input_resource");
     input_resource_second = arch.r_type<e_resource>("input_resource_second");

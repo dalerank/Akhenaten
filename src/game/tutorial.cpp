@@ -307,7 +307,8 @@ int tutorial_handle_fire() {
         return 0;
     }
 
-    g_tutorials_flags.tutorial_1.fire = 1;
+    g_tutorials_flags.tutorial_1.fire = true;
+    g_scenario_data.add_fire_damage.clear();
     building_menu_update(tutorial_stage.tutorial_fire);
     post_message(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE);
     return 1;

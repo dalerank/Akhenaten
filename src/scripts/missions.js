@@ -15,6 +15,13 @@ var mission0 = { // Nubt
 	gods_least_mood : 50,
 	religion_enabled : false,
 	player_rank : 0,
+
+	fire_damage : {
+		house0: { type:BUILDING_HOUSE_CRUDE_HUT, value: +50 },	
+		house1: { type:BUILDING_HOUSE_STURDY_HUT, value: +50 },	
+		house2: { type:BUILDING_HOUSE_STURDY_HUT, value: +50 },	
+	},
+
 	stages : {
 		tutorial_fire: [BUILDING_FIREHOUSE],
 		tutorial_food: [BUILDING_HUNTING_LODGE, BUILDING_GRANARY, BUILDING_BAZAAR],
@@ -371,9 +378,13 @@ var mission9 = { // Abu
 	choice_image1_pos : [192, 144],
 	choice_title : [144, 22],
 
-	resources : [
-				  RESOURCE_GRAIN, RESOURCE_BARLEY, RESOURCE_FLAX, RESOURCE_LETTUCE, RESOURCE_CHICKPEAS
-				],
+	resources : {
+		grain : { type:RESOURCE_GRAIN, allow: true},
+		barley: { type:RESOURCE_BARLEY, allow: true},
+		flax: { type:RESOURCE_FLAX, allow:true},
+		lettuce: { type:RESOURCE_LETTUCE, allow:true},
+		chickpeas: { type:RESOURCE_CHICKPEAS, allow:true},
+	},
 
 	buildings : [
 		         BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,

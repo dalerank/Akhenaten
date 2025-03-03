@@ -211,7 +211,8 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
 }
 
 int building_house::get_fire_risk(int value) const {
-    if (house_level() == BUILDING_HOUSE_VACANT_LOT && is_vacant_lot()) {
+    const bool is_empty = (house_level() == HOUSE_CRUDE_HUT) && is_vacant_lot();
+    if (is_empty) {
         return 0;
     }
 
