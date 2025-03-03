@@ -429,6 +429,10 @@ void building_house::merge() {
         int tile_offset = base.tile.grid_offset() + house_tile_offsets(i);
         if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
             auto other_house = building_at(tile_offset)->dcast_house();
+            if (!other_house) {
+                continue;
+            }
+
             if (other_house->id() == base.id) {
                 num_house_tiles++;
             } else if (other_house->state() == BUILDING_STATE_VALID && other_house->runtime_data().hsize
