@@ -1,6 +1,6 @@
 #include "building_house.h"
 
-#include "building/building.h"
+#include "building/count.h"
 #include "city/city.h"
 #include "city/warnings.h"
 #include "city/population.h"
@@ -146,6 +146,10 @@ void building_house::on_undo() {
     /*nothing*/
 }
 
+void building_house::update_count() const {
+    building_increase_type_count(type(), runtime_data().hsize > 0);
+}
+
 void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     auto &d = runtime_data();
 
@@ -203,10 +207,15 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT16, &d.tax_collector_id);
     iob->bind(BIND_SIGNATURE_INT16, &d.tax_income_or_storage);
     iob->bind(BIND_SIGNATURE_UINT8, &d.days_without_food);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.hsize);
 }
 
 int building_house::get_fire_risk(int value) const {
     return (house_level() == BUILDING_HOUSE_VACANT_LOT && is_vacant_lot()) ? value : 0;
+}
+
+void building_house::highlight_waypoints() {
+    // nothing
 }
 
 bvariant building_house::get_property(const xstring &domain, const xstring &name) const {
@@ -332,7 +341,8 @@ void building_house::change_to_vacant_lot() {
     if (is_merged()) {
         map_building_tiles_remove(base.id, base.tile);
         d.is_merged = 0;
-        base.size = base.house_size = 1;
+        d.hsize = 1;
+        base.size = 1;
         map_building_tiles_add(base.id, base.tile, 1, vacant_lot_id, TERRAIN_BUILDING);
 
         building_house::create_vacant_lot(base.tile.shifted(1, 0), vacant_lot_id);
@@ -359,7 +369,7 @@ static void prepare_for_merge(int building_id, int num_tiles) {
         int house_offset = grid_offset + house_tile_offsets(i);
         if (map_terrain_is(house_offset, TERRAIN_BUILDING)) {
             auto house = building_at(house_offset)->dcast_house();
-            if (house && house->id() != building_id && house->base.house_size) {
+            if (house && house->id() != building_id && house->runtime_data().hsize) {
                 g_merge_data.population += house->house_population();
                 for (int inv = 0; inv < INVENTORY_MAX; inv++) {
                     auto &housed = house->runtime_data();
@@ -377,7 +387,8 @@ void building_house::merge_impl() {
     prepare_for_merge(id(), 4);
 
     auto &d = runtime_data();
-    base.size = base.house_size = 2;
+    base.size = 2;
+    d.hsize = 2;
     d.population += g_merge_data.population;
 
     for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -415,7 +426,7 @@ void building_house::merge() {
             auto other_house = building_at(tile_offset)->dcast_house();
             if (other_house->id() == base.id) {
                 num_house_tiles++;
-            } else if (other_house->state() == BUILDING_STATE_VALID && other_house->base.house_size
+            } else if (other_house->state() == BUILDING_STATE_VALID && other_house->runtime_data().hsize
                      && (other_house->house_level() == house_level())
                      && !other_house->is_merged()) {
                 num_house_tiles++;
@@ -592,7 +603,7 @@ bool building_house::can_expand(int num_tiles) {
                 auto other_house = building_at(tile_offset)->dcast_house();
                 if (other_house->id() == id()) {
                     ok_tiles++;
-                } else if (other_house->state() == BUILDING_STATE_VALID && other_house->base.house_size) {
+                } else if (other_house->state() == BUILDING_STATE_VALID && other_house->runtime_data().hsize) {
                     if (other_house->house_level() <= house_level()) {
                         ok_tiles++;
                     }
@@ -616,7 +627,7 @@ bool building_house::can_expand(int num_tiles) {
                 auto other_house = building_at(tile_offset)->dcast_house();
                 if (other_house->id() == id())
                     ok_tiles++;
-                else if (other_house->state() == BUILDING_STATE_VALID && other_house->base.house_size) {
+                else if (other_house->state() == BUILDING_STATE_VALID && other_house->runtime_data().hsize) {
                     if (other_house->house_level() <= house_level())
                         ok_tiles++;
                 }
@@ -639,7 +650,7 @@ bool building_house::can_expand(int num_tiles) {
                 auto other_house = building_at(tile_offset)->dcast_house();
                 if (other_house->id() == id()) {
                     ok_tiles++;
-                } else if (other_house->state() == BUILDING_STATE_VALID && other_house->base.house_size) {
+                } else if (other_house->state() == BUILDING_STATE_VALID && other_house->runtime_data().hsize) {
                     if (other_house->house_level() <= house_level())
                         ok_tiles++;
                 }
@@ -714,7 +725,8 @@ static void split_size2(building* b, e_building_type new_type) {
     // main tile
     b->type = new_type;
     housed.level = (e_house_level)(b->type - BUILDING_HOUSE_VACANT_LOT);
-    b->size = b->house_size = 1;
+    b->size = 1;
+    housed.hsize = 1;
     housed.is_merged = false;
     housed.population = population_per_tile + population_remainder;
     for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -754,7 +766,8 @@ static void split_size3(building* b) {
     // main tile
     b->type = BUILDING_HOUSE_SPACIOUS_APARTMENT;
     housed.level = (e_house_level)(b->type - BUILDING_HOUSE_VACANT_LOT);
-    b->size = b->house_size = 1;
+    b->size = 1;
+    housed.hsize = 1;
     housed.is_merged = false;
     housed.population = population_per_tile + population_remainder;
     for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -781,12 +794,12 @@ void building_house::split(int num_tiles) {
         int tile_offset = grid_offset + house_tile_offsets(i);
         if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
             auto other_house = building_at(tile_offset)->dcast_house();
-            if (other_house->id() != id() && other_house->base.house_size) {
+            if (other_house->id() != id() && other_house->runtime_data().hsize) {
                 if (other_house->is_merged()) {
                     split_size2(&other_house->base, other_house->type());
-                } else if (other_house->base.house_size == 2) {
+                } else if (other_house->runtime_data().hsize == 2) {
                     split_size2(&other_house->base, BUILDING_HOUSE_SPACIOUS_APARTMENT);
-                } else if (other_house->base.house_size == 3) {
+                } else if (other_house->runtime_data().hsize == 3) {
                     split_size3(&other_house->base);
                 }
             }
@@ -816,8 +829,9 @@ void building_house_common_manor::devolve_to_fancy_residence() {
 
     // main tile
     base.type = BUILDING_HOUSE_FANCY_RESIDENCE;
+    base.size = 2;
     housed.level = (e_house_level)(base.type - BUILDING_HOUSE_VACANT_LOT);
-    base.size = base.house_size = 2;
+    housed.hsize = 2;
     housed.is_merged = false;
     housed.population = population_per_tile + population_remainder;
     for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -859,8 +873,9 @@ void building_house_modest_estate::devolve_to_statel_manor() {
 
     // main tile
     base.type = BUILDING_HOUSE_STATELY_MANOR;
+    base.size = 3;
     housed.level = (e_house_level)(base.type - BUILDING_HOUSE_VACANT_LOT);
-    base.size = base.house_size = 3;
+    housed.hsize = 3;
     housed.is_merged = false;
     housed.population = population_per_tile + population_remainder;
     for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -921,6 +936,17 @@ void building_house::on_create(int orientation) {
 
     if (d.level == 0) {
         d.population = 0;
+    }
+
+    d.hsize = 0;
+    if (type() >= BUILDING_HOUSE_CRUDE_HUT && type() <= BUILDING_HOUSE_SPACIOUS_APARTMENT) {
+        d.hsize = 1;
+    } else if (type() >= BUILDING_HOUSE_COMMON_RESIDENCE && type() <= BUILDING_HOUSE_FANCY_RESIDENCE) {
+        d.hsize = 2;
+    } else if (type() >= BUILDING_HOUSE_COMMON_MANOR && type() <= BUILDING_HOUSE_STATELY_MANOR) {
+        d.hsize = 3;
+    } else if (type() >= BUILDING_HOUSE_MODEST_ESTATE && type() <= BUILDING_HOUSE_PALATIAL_ESTATE) {
+        d.hsize = 4;
     }
 }
 
@@ -1060,8 +1086,9 @@ void building_house_spacious_apartment::expand_to_common_residence() {
     auto &housed = runtime_data();
 
     base.type = BUILDING_HOUSE_COMMON_RESIDENCE;
+    base.size = 2;
     housed.level = HOUSE_COMMON_RESIDENCE;
-    base.size = base.house_size = 2;
+    housed.hsize = 2;
     housed.population += g_merge_data.population;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.foods[i] += g_merge_data.foods[i];
@@ -1131,9 +1158,9 @@ void building_house_fancy_residence::expand_to_common_manor() {
 
     auto &housed = runtime_data();
     base.type = BUILDING_HOUSE_COMMON_MANOR;
-    housed.level = HOUSE_COMMON_MANOR;
     base.size = 3;
-    base.house_size = 3;
+    housed.level = HOUSE_COMMON_MANOR;
+    housed.hsize = 3;
     housed.population += g_merge_data.population;
 
     for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -1204,9 +1231,9 @@ void building_house_stately_manor::expand_to_modest_estate() {
     auto &housed = runtime_data();
 
     base.type = BUILDING_HOUSE_MODEST_ESTATE;
-    housed.level = HOUSE_MODEST_ESTATE;
     base.size = 4;
-    base.house_size = 4;
+    housed.level = HOUSE_MODEST_ESTATE;
+    housed.hsize = 4;
     housed.population += g_merge_data.population;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.foods[i] += g_merge_data.foods[i];

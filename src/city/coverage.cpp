@@ -26,7 +26,7 @@ void city_average_coverage_t::update() {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         auto house = building_get(i)->dcast_house();
 
-        if (house && house->state() == BUILDING_STATE_VALID && house->base.house_size) {
+        if (house && house->state() == BUILDING_STATE_VALID && house->hsize() > 0) {
             num_houses++;
             auto &housed = house->runtime_data();
             data.avg_coverage.average_entertainment += housed.entertainment;

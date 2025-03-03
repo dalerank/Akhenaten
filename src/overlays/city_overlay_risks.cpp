@@ -21,8 +21,11 @@ static int is_problem_cartpusher(figure *fig) {
 }
 
 void overlay_problems_prepare_building(building* b) {
-    if (b->house_size)
+    auto house = b->dcast_house();
+
+    if (house) {
         return;
+    }
 
     if (b->type == BUILDING_MENU_BEAUTIFICATION || b->type == BUILDING_MENU_MONUMENTS) {
         if (!b->has_water_access)

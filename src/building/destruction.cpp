@@ -31,11 +31,11 @@ static void destroy_on_fire(building* b, bool plagued) {
         if (housed.population > 0) {
             city_population_remove_home_removed(housed.population);
             housed.population = 0;
+            housed.hsize = 0;
         }
     }
 
     //int was_tent = b->house_size && b->data.house.level <= HOUSE_STURDY_HUT;
-    b->house_size = 0;
     b->state = BUILDING_STATE_DELETED_BY_GAME;
     b->output_resource_first_id = RESOURCE_NONE;
     b->output_resource_second_id = RESOURCE_NONE;

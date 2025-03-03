@@ -163,7 +163,6 @@ public:
     e_building_state state;
     uint8_t reserved_id;
     uint8_t size;
-    uint8_t house_size;
     tile2i tile;
     uint8_t orientation;
     short native_meeting_center_id;

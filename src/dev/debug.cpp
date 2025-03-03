@@ -516,8 +516,11 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         break;
 
     case e_debug_render_overall_entertainment:
-        if (b_id && b->house_size > 0) {
-            debug_text(ctx, str, x, y + 10, 0, "", b->dcast_house()->runtime_data().entertainment, COLOR_LIGHT_BLUE);
+        {
+            auto house = building_get(b_id)->dcast_house();
+            if (house) {
+                debug_text(ctx, str, x, y + 10, 0, "", house->runtime_data().entertainment, COLOR_LIGHT_BLUE);
+            }
         }
         break;
 

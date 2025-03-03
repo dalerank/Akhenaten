@@ -20,7 +20,7 @@ int city_overlay_physician::get_column_height(const building *b) const {
     }
 
     auto &housed = house->runtime_data();
-    return b->house_size && housed.level
+    return (house->house_population() > 0)
              ? housed.physician
                 ? housed.physician / 10
                 : 0

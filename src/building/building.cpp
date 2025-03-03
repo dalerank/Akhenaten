@@ -80,18 +80,6 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
     damage_proof = props.damage_proof;
     is_adjacent_to_water = map_terrain_is_adjacent_to_water(tile, size);
 
-    // house size
-    house_size = 0;
-    if (type >= BUILDING_HOUSE_CRUDE_HUT && type <= BUILDING_HOUSE_SPACIOUS_APARTMENT) {
-        house_size = 1;
-    } else if (type >= BUILDING_HOUSE_COMMON_RESIDENCE && type <= BUILDING_HOUSE_FANCY_RESIDENCE) {
-        house_size = 2;
-    } else if (type >= BUILDING_HOUSE_COMMON_MANOR && type <= BUILDING_HOUSE_STATELY_MANOR) {
-        house_size = 3;
-    } else if (type >= BUILDING_HOUSE_MODEST_ESTATE && type <= BUILDING_HOUSE_PALATIAL_ESTATE) {
-        house_size = 4;
-    }
-
     // unique data
     output_resource_first_id = RESOURCE_NONE;
     dcast()->on_create(orientation);
@@ -864,11 +852,7 @@ bool building_impl::can_play_animation() const {
 }
 
 void building_impl::update_count() const {
-    if (!base.house_size) {
-        building_increase_type_count(base.type, base.num_workers > 0);
-    } else {
-        building_increase_type_count(base.type, base.house_size > 0);
-    }
+    building_increase_type_count(base.type, base.num_workers > 0);
 }
 
 void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, color mask) {
@@ -945,10 +929,6 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
     map_clear_highlights();
     if (has_road_access()) {
         map_highlight_set(base.road_access, ehighligth_red);
-    }
-
-    if (base.house_size) { // building doesn't send roamers
-        return;
     }
 
     int hx, hy;

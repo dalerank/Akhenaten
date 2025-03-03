@@ -93,7 +93,7 @@ int figure_physician::provide_service() {
     int houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
         auto house = b->dcast_house();
 
-        if (house && house->base.house_size > 0 && house->house_population() > 0) {
+        if (house && house->house_population() > 0) {
             house->runtime_data().physician = MAX_COVERAGE;
             b->common_health = std::min(b->common_health + 1, 100);
         }

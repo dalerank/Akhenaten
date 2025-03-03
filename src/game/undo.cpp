@@ -178,8 +178,10 @@ static void add_building_to_terrain(building* b) {
 }
 
 static void restore_housing(building* b) {
+    auto house = b->dcast_house();
+    auto &housed = house->runtime_data();
     auto &data = g_undo_data;
-    int size = b->house_size;
+    int size = housed.hsize;
     for (int x = b->tile.x(); x < b->tile.x() + size; x++)
         for (int y = b->tile.y(); y < b->tile.y() + size; y++) {
             int grid_offset = MAP_OFFSET(x, y);

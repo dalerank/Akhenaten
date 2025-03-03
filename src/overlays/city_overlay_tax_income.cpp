@@ -20,7 +20,7 @@ int city_overlay_tax_income::get_column_height(const building *b) const {
         return COLUMN_TYPE_NONE;
     }
 
-    if (b->house_size) {
+    if (house->house_population()) {
         auto &housed = house->runtime_data();
         int pct = calc_adjust_with_percentage(housed.tax_income_or_storage / 2, city_finance_tax_percentage());
         return pct / 10;

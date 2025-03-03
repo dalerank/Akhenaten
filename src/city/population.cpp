@@ -336,7 +336,7 @@ int* calculate_number_of_each_housing_type(void) {
             continue;
         }
 
-        if (house->base.house_size) {
+        if (house->house_population() > 0) {
             housing_type_counts[house->house_level()] += 1;
         }
     }
@@ -382,17 +382,16 @@ static int calculate_people_per_house_type(void) {
             continue;
         }
 
-        auto &housed = house->runtime_data();
         if (house->state() == BUILDING_STATE_UNUSED || house->state() == BUILDING_STATE_UNDO
             || house->state() == BUILDING_STATE_DELETED_BY_GAME || house->state() == BUILDING_STATE_DELETED_BY_PLAYER) {
             continue;
         }
 
-        if (house->base.house_size) {
+        if (house->house_population()) {
+            auto &housed = house->runtime_data();
             int pop = housed.population;
             total += pop;
 
-            auto &housed = house->runtime_data();
             if (housed.level <= HOUSE_STURDY_HUT) {
                 city_data.population.people_in_huts += pop;
             }

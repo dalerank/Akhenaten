@@ -117,8 +117,8 @@ int figure::figure_rioter_collapse_building() {
             ; // nothing
         }
 
-        if (b->house_size > 0) {
-            auto house = b->dcast_house();
+        auto house = b->dcast_house();
+        if (house && house->house_level() > 0) {
             if (house->house_level() < HOUSE_MODEST_HOMESTEAD) {
                 continue;
             }

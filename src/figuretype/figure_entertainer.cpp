@@ -22,7 +22,7 @@ int figure_entertainer::provide_entertainment(int shows, void (*callback)(buildi
         }
 
         auto house = building_get(building_id)->dcast_house();
-        if (house->base.house_size && house->house_population() > 0) {
+        if (house->runtime_data().hsize && house->house_population() > 0) {
             callback(&house->base, shows);
             serviced++;
         }

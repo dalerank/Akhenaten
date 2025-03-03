@@ -56,7 +56,7 @@ int city_overlay_religion::get_column_height(const building *b) const {
     }
 
     auto &housed = house->runtime_data();
-    return b->house_size && housed.num_gods
+    return (house->house_population() > 0 && housed.num_gods)
                 ? housed.num_gods * 17 / 10
                 : COLUMN_TYPE_NONE;
 }

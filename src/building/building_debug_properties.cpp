@@ -21,7 +21,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
         game_debug_show_property("state", token::find_name(e_building_state_tokens, b->state));
         game_debug_show_property("size", b->size);
         //game_debug_show_property("house_is_merged", b->house_is_merged);
-        game_debug_show_property("house_size", b->house_size);
+        //game_debug_show_property("house_size", b->house_size);
         game_debug_show_property("tile", b->tile);
         bstring256 type_name; type_name.printf("%s [%d]", token::find_name(e_building_type_tokens, b->type), b->type);
         game_debug_show_property("type", type_name);

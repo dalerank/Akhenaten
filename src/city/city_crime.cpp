@@ -130,7 +130,7 @@ void city_t::figures_generate_criminals() {
     for (int i = 1; i <= max_id; i++) {
         auto house = building_get(i)->dcast_house();
 
-        if (house && house->state() == BUILDING_STATE_VALID && house->base.house_size) {
+        if (house && house->state() == BUILDING_STATE_VALID && house->house_population()) {
             auto &housed = house->runtime_data();
             if (housed.house_happiness >= 50) {
                 house->runtime_data().criminal_active = 0;

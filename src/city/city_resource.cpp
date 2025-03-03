@@ -411,11 +411,12 @@ void city_resource_consume_food() {
     city_data.unused.unknown_00c0 = 0;
     int total_consumed = 0;
     buildings_house_do([&total_consumed] (building &b) {
-        if (!b.house_size) {
+        auto house = b.dcast_house();
+
+        if (!house || house->hsize()) {
             return;
         }
 
-        auto house = b.dcast_house();
         auto housed = house->runtime_data();
 
         int num_types = model_get_house(house->house_level())->food_types;

@@ -1,6 +1,7 @@
 #include "cheats.h"
 
 #include "building/construction/build_planner.h"
+#include "building/building_house.h"
 #include "building/building_type.h"
 #include "building/destruction.h"
 #include "building/monuments.h"
@@ -163,7 +164,8 @@ static void game_cheat_spawn_nobles(pcstr args) {
 
     svector<building *, 1000> buildings;
     buildings_valid_do([&] (building &b) {
-        if (b.house_size > 0) {
+        auto house = b.dcast_house();
+        if (house && house->house_population() > 0) {
             buildings.push_back(&b);
         }
     });

@@ -52,7 +52,7 @@ void city_sentiment_change_happiness(int amount) {
     buildings_valid_do([amount] (building &b) {
         auto house = b.dcast_house();
 
-        if (house && house->base.house_size) {
+        if (house && house->hsize()) {
             auto &housed = house->runtime_data();
             housed.house_happiness = calc_bound(housed.house_happiness + amount, 0, 100);
         }
@@ -63,7 +63,7 @@ void city_sentiment_set_max_happiness(int max) {
     buildings_valid_do([max] (building &b) {
         auto house = b.dcast_house();
 
-        if (house && house->base.house_size) {
+        if (house && house->hsize()) {
             auto &housed = house->runtime_data();
             housed.house_happiness = std::min<int>(housed.house_happiness, max);
             housed.house_happiness = calc_bound(housed.house_happiness, 0, 100);
@@ -240,7 +240,7 @@ void city_criminals_update_day() {
     buildings_valid_do([] (building &b) {
         auto house = b.dcast_house();
 
-        if (!house || !house->base.house_size) {
+        if (!house || !house->hsize()) {
             return;
         }
 
@@ -259,9 +259,12 @@ void city_criminals_update_day() {
 
 void city_plague_update_day() {
     buildings_valid_do([] (building &b) {
-        if (!b.house_size) {
+        auto house = b.dcast_house();
+
+        if (!house || !house->hsize()) {
             return;
         }
+
         if (b.has_plague && b.disease_days > 0) {
             b.disease_days--;
             b.has_plague = (b.disease_days > 0);
@@ -296,7 +299,7 @@ void city_sentiment_update() {
     buildings_valid_do([&] (building &b) {
         auto house = b.dcast_house();
 
-        if (!house || !house->base.house_size) {
+        if (!house || !house->hsize()) {
             return;
         }
 

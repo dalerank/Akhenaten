@@ -270,11 +270,11 @@ void city_buildings_t::update_religion_supply_houses() {
 
         for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
             for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
-                int building_id = map_building_at(MAP_OFFSET(xx, yy));
+                int building_id = map_building_at(tile2i(xx, yy));
 
-                building *b = building_get(building_id);
-                if (b->house_size) {
-                    b->dcast_house()->runtime_data().shrine_access = true;
+                auto house = building_get(building_id)->dcast_house();
+                if (house) {
+                    house->runtime_data().shrine_access = true;
                 }
             }
         }
@@ -286,8 +286,8 @@ void city_buildings_t::update_religion_supply_houses() {
 
         if (b.is_shrine()) {
             shrines.push_back(&b);
-        } else if (b.house_size) {
-            b.dcast_house()->runtime_data().shrine_access = false;
+        } else if (auto house = b.dcast_house(); !!house) {
+            house->runtime_data().shrine_access = false;
         }
     }
 

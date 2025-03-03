@@ -17,7 +17,7 @@ city_overlay* city_overlay_for_courthouse() {
 int city_overlay_courthouse::get_column_height(const building *b) const {
     auto house = ((building*)b)->dcast_house();
 
-    if (b->house_size) {
+    if (house && house->house_population() > 0) {
         auto &housed = house->runtime_data();
         if (housed.magistrate) {
             return housed.magistrate / 10;

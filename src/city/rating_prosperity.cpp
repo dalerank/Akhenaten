@@ -133,7 +133,7 @@ void city_t::calculate_max_prosperity() {
     int houses = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         auto house = building_get(i)->dcast_house();
-        if (house && house->state() && house->base.house_size) {
+        if (house && house->state() && house->hsize()) {
             points += model_get_house(house->house_level())->prosperity;
             houses++;
         }

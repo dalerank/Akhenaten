@@ -61,6 +61,7 @@ public:
         uint8_t criminal_active;
         uint8_t tax_coverage;
         uint8_t days_without_food;
+        uint8_t hsize;
     };
 
     virtual void on_create(int orientation) override;
@@ -68,14 +69,17 @@ public:
     virtual void on_place_checks() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void on_undo() override;
+    virtual void update_count() const override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual bool evolve(house_demands* demands) = 0;
     virtual int get_fire_risk(int value) const override;
+    virtual void highlight_waypoints() override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override; 
 
     inline short house_population() const { return runtime_data().population; }
     inline void change_population(short delta) { runtime_data().population += delta; }
     inline e_house_level house_level() const { return runtime_data().level; }
+    inline uint8_t hsize() const { return runtime_data().hsize; }
     int16_t population_room() const;
     void change_to_vacant_lot();
     bool is_vacant_lot() const;

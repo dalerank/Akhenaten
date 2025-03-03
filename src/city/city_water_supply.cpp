@@ -43,7 +43,7 @@ void city_buildings_t::update_water_supply_houses() {
     buildings_valid_do([&] (building &b) {
         if (b.type == BUILDING_WELL) {
             wells.push_back(&b);
-        } else if (b.house_size) {
+        } else if (auto house = b.dcast_house(); !!house) {
             b.has_water_access = false;
             b.has_well_access = 0;
             if (b.dcast_house()->runtime_data().water_supply|| map_terrain_exists_tile_in_area_with_type(b.tile, b.size, TERRAIN_FOUNTAIN_RANGE)) {

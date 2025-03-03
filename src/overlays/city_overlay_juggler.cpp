@@ -20,10 +20,8 @@ int city_overlay_booth::get_column_height(const building *b) const {
     }
 
     auto &housed = house->runtime_data();
-    if (b->house_size) {
-        if (housed.booth_juggler || housed.bandstand_juggler) {
-            return std::max<int>(housed.booth_juggler, housed.bandstand_juggler) / 10;
-        }
+    if (housed.booth_juggler || housed.bandstand_juggler) {
+        return std::max<int>(housed.booth_juggler, housed.bandstand_juggler) / 10;
     }
 
     return COLUMN_TYPE_NONE;

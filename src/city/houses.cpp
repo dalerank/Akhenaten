@@ -123,7 +123,7 @@ void city_t::house_service_decay_services() {
     buildings_valid_do([] (building &b) {
         auto house = b.dcast_house();
 
-        if (!house || !b.house_size) {
+        if (!house || !house->hsize()) {
             return;
         }
 
@@ -225,7 +225,7 @@ void city_t::house_service_calculate_culture_aggregates() {
     int base_entertainment = avg_coverage.calc_average_entertainment() / 5;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         auto house = building_get(i)->dcast_house();
-        if (!house || house->state() != BUILDING_STATE_VALID || !house->base.house_size)
+        if (!house || house->state() != BUILDING_STATE_VALID || !house->hsize())
             continue;
 
         // entertainment

@@ -108,5 +108,5 @@ int city_overlay_water::get_column_height(const building *b) const {
     }
 
     auto &housed = house->runtime_data();
-    return b->house_size ? housed.water_supply * 17 / 10 : COLUMN_TYPE_NONE;
+    return (house->house_population() > 0) ? housed.water_supply * 17 / 10 : COLUMN_TYPE_NONE;
 }

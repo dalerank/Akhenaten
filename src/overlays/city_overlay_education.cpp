@@ -32,7 +32,7 @@ int city_overlay_education::get_column_height(const building *b) const {
     }
 
     auto &housed = house->runtime_data();
-    return (b->house_size && housed.education > 0) ? housed.education * 3 - 1 : COLUMN_TYPE_NONE;
+    return (housed.education > 0) ? housed.education * 3 - 1 : COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_education::get_tooltip_for_building(tooltip_context *c, const building *b) const {
@@ -83,7 +83,7 @@ int city_overlay_academy::get_column_height(const building *b) const {
     }
 
     auto &housed = house->runtime_data();
-    return (b->house_size && housed.academy > 0) ? housed.academy / 10 : COLUMN_TYPE_NONE;
+    return (housed.academy > 0) ? housed.academy / 10 : COLUMN_TYPE_NONE;
 }
 
 int city_overlay_libraries::get_column_height(const building *b) const {
@@ -94,7 +94,7 @@ int city_overlay_libraries::get_column_height(const building *b) const {
     }
 
     auto &housed = house->runtime_data();
-    return (b->house_size && housed.library > 0) ? housed.library / 10 : COLUMN_TYPE_NONE;
+    return (housed.library > 0) ? housed.library / 10 : COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_libraries::get_tooltip_for_building(tooltip_context *c, const building *b) const {

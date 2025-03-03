@@ -172,7 +172,7 @@ void building_update_state(void) {
             b->state = BUILDING_STATE_VALID;
         }
 
-        if (b->state != BUILDING_STATE_VALID || !b->house_size) {
+        if (b->state != BUILDING_STATE_VALID) {
             if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
                 const auto &params = b->dcast()->params();
                 canals_recalc |= params.updates.canals;
@@ -190,7 +190,7 @@ void building_update_state(void) {
                 building_delete_UNSAFE(b);
             } else if (b->state == BUILDING_STATE_RUBBLE) {
                 auto house = b->dcast_house();
-                if (house && house->base.house_size > 0) {
+                if (house && house->runtime_data().hsize > 0) {
                     city_population_remove_home_removed(house->house_population());
                 }
 
@@ -236,7 +236,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->reserved_id);
         iob->bind(BIND_SIGNATURE_UINT8, &b->size);
         iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &b->house_is_merged);
-        iob->bind(BIND_SIGNATURE_UINT8, &b->house_size);
+        iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &b->house_size);
         iob->bind(BIND_SIGNATURE_TILE2I, b->tile);
         iob->bind(BIND_SIGNATURE_UINT8, &b->orientation);
         iob->bind(BIND_SIGNATURE_UINT8, &b->spawned_worker_this_month);

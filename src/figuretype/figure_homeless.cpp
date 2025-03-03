@@ -33,7 +33,7 @@ int figure_homeless::find_closest_house_with_room(tile2i tile) {
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         auto house = building_get(i)->dcast_house();
-        if (house && house->state() == BUILDING_STATE_VALID && house->base.house_size && house->distance_from_entry() > 0 && house->population_room() > 0) {
+        if (house && house->state() == BUILDING_STATE_VALID && house->hsize() && house->distance_from_entry() > 0 && house->population_room() > 0) {
             if (!house->base.has_figure(2)) {
                 int dist = calc_maximum_distance(tile, house->tile());
                 if (dist < min_dist) {

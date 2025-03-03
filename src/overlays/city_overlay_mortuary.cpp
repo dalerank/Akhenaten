@@ -20,7 +20,7 @@ int city_overlay_mortuary::get_column_height(const building *b) const {
     }
 
     auto &housed = house->runtime_data();
-    return (b->house_size && housed.mortuary > 0) ? housed.mortuary / 10 : COLUMN_TYPE_NONE;
+    return (housed.mortuary > 0) ? housed.mortuary / 10 : COLUMN_TYPE_NONE;
 }
 
 xstring city_overlay_mortuary::get_tooltip_for_building(tooltip_context *c, const building *b) const {

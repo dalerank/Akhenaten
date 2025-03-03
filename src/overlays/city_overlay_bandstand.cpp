@@ -47,7 +47,7 @@ int city_overlay_bandstand::get_column_height(const building *b) const {
         return COLUMN_TYPE_NONE;
     }
 
-    if (b->house_size) {
+    if (house->house_population()) {
         auto &housed = house->runtime_data();
         const int musician_value = std::max<int>(housed.bandstand_musician, housed.pavillion_musician);
         return musician_value / 10;

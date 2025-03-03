@@ -195,7 +195,8 @@ void building_maintenance_check_kingdome_access() {
     map_routing_calculate_distances(entry_point);
     int problem_grid_offset = 0;
     buildings_valid_do( [&problem_grid_offset] (building &b) {
-        if (b.house_size) {
+        auto house = b.dcast_house();
+        if (house && house->hsize() > 0) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/House");
             tile2i road_tile = map_closest_road_within_radius(b, 2);
             auto &housed = b.dcast_house()->runtime_data();

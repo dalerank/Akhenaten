@@ -37,7 +37,7 @@ e_well_status map_water_supply_is_well_unnecessary(int well_id, int radius) {
             int building_id = map_building_at(grid_offset);
 
             auto house = building_get(building_id)->dcast_house();
-            if (house && house->base.house_size && !house->runtime_data().water_supply) {
+            if (house && house->hsize() && !house->runtime_data().water_supply) {
                 num_houses++;
                 //                if (!building_get(building_id)->has_water_access) //todo: water carrier access
                 return WELL_NECESSARY;

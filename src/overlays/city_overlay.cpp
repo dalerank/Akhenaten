@@ -171,8 +171,10 @@ xstring widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset
     int overlay_requires_house = (overlay_type != OVERLAY_WATER) && (overlay_type != OVERLAY_FIRE)
                                     && (overlay_type != OVERLAY_DAMAGE) && (overlay_type != OVERLAY_NATIVE)
                                     && (overlay_type != OVERLAY_DESIRABILITY);
-    building* b = building_get(building_id);
-    if (overlay_requires_house && !b->house_size) {
+
+    auto b = building_get(building_id);
+    auto house = b->dcast_house();
+    if (overlay_requires_house && !house) {
         return {};
     }
 

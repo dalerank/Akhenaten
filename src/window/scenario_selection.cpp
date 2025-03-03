@@ -473,8 +473,10 @@ static void button_select_item(int index, int param2) {
 }
 
 static void button_start_scenario(int param1, int param2) {
-    if (scenario_campaign_scenario_id() == -1)
+    if (scenario_campaign_scenario_id() == -1) {
         return;
+    }
+
     GamestateIO::start_loaded_file();
 }
 

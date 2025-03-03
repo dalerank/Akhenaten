@@ -440,7 +440,9 @@ int rich_text_draw_colored(const uint8_t* text, vec2i offset, int box_width, int
 }
 
 void rich_text_draw_scrollbar(vec2i pos) {
-    inner_panel_draw(g_richtext_scrollbar.pos + pos + vec2i{3, 16}, vec2i{2, (g_richtext_scrollbar.height - 2) / 16});
+    if (g_richtext_scrollbar.max_scroll_position > 0 || g_richtext_scrollbar.always_visible) {
+        inner_panel_draw(g_richtext_scrollbar.pos + pos + vec2i{ 3, 16 }, vec2i{ 2, (g_richtext_scrollbar.height - 2) / 16 });
+    }
     scrollbar_draw(pos, &g_richtext_scrollbar);
 }
 

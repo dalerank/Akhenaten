@@ -21,11 +21,12 @@ int house_population_add_to_city(int num_people) {
     int added = 0;
     int building_id = city_population_last_used_house_add();
     for (int i = 1; i < MAX_BUILDINGS && added < num_people; i++) {
-        if (++building_id >= MAX_BUILDINGS)
+        if (++building_id >= MAX_BUILDINGS) {
             building_id = 1;
+        }
 
         auto house = building_get(building_id)->dcast_house();
-        if (house->state() == BUILDING_STATE_VALID && house->base.house_size && house->distance_from_entry() > 0 && house->house_population() > 0) {
+        if (house->state() == BUILDING_STATE_VALID && house->distance_from_entry() > 0 && house->house_population() > 0) {
             city_population_set_last_used_house_add(building_id);
             int max_people = model_get_house(house->house_level())->max_people;
             if (house->is_merged()) {
@@ -49,7 +50,7 @@ int house_population_remove_from_city(int num_people) {
             building_id = 1;
 
         auto house = building_get(building_id)->dcast_house();
-        if (house && house->state() == BUILDING_STATE_VALID && house->base.house_size) {
+        if (house && house->state() == BUILDING_STATE_VALID && house->hsize()) {
             city_population_set_last_used_house_remove(building_id);
             if (house->house_population() > 0) {
                 ++removed;
@@ -63,8 +64,8 @@ int house_population_remove_from_city(int num_people) {
 static void fill_building_list_with_houses(void) {
     building_list_large_clear(0);
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->house_size)
+        auto house = building_get(i)->dcast_house();
+        if (house && house->state() == BUILDING_STATE_VALID && house->hsize())
             building_list_large_add(i);
     }
 }

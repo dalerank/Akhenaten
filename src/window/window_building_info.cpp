@@ -4,7 +4,7 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/window.h"
 #include "grid/building.h"
-#include "building/building.h"
+#include "building/building_house.h"
 #include "building/distribution.h"
 #include "building/culture.h"
 #include "building/house_evolution.h"
@@ -179,9 +179,12 @@ void building_info_window::init(object_info &c) {
         break;
 
     default:
-        if (b->house_size) {
-            c.worst_desirability_building_id = building_house_determine_worst_desirability_building(b);
-            building_house_determine_evolve_text(b, c.worst_desirability_building_id);
+        {
+            auto house = b->dcast_house();
+            if (house && house->hsize()) {
+                c.worst_desirability_building_id = building_house_determine_worst_desirability_building(b);
+                building_house_determine_evolve_text(b, c.worst_desirability_building_id);
+            }
         }
         break;
     }

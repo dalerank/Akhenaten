@@ -208,7 +208,7 @@ static void city_finance_collect_monthly_taxes() {
     buildings_valid_do([&] (building &b) {
         auto house = b.dcast_house();
 
-        if (!house || !b.house_size) {
+        if (!house || !house->hsize()) {
             return;
         }
 

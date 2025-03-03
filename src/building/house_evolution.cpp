@@ -310,28 +310,30 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
     }
 }
 
-int building_house_determine_worst_desirability_building(building* house) {
+int building_house_determine_worst_desirability_building(building* asker) {
     int lowest_desirability = 0;
     int lowest_building_id = 0;
-    grid_area area = map_grid_get_area(house->tile, 1, 6);
+    grid_area area = map_grid_get_area(asker->tile, 1, 6);
 
+    auto asker_house = asker->dcast_house();
     for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
         for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int building_id = map_building_at(MAP_OFFSET(x, y));
             if (building_id <= 0)
                 continue;
 
-            building* b = building_get(building_id);
-            if (b->state != BUILDING_STATE_VALID || building_id == house->id)
+            auto b = building_get(building_id);
+            if (b->state != BUILDING_STATE_VALID || building_id == b->id) {
                 continue;
+            }
 
-            if (!b->house_size || b->type < house->type) {
+            if (!asker_house->house_level() || b->type < asker->type) {
                 int des = model_get_building(b->type)->desirability_value;
                 if (des < 0) {
                     // simplified desirability calculation
                     int step_size = model_get_building(b->type)->desirability_step_size;
                     int range = model_get_building(b->type)->desirability_range;
-                    int dist = calc_maximum_distance(vec2i(x, y), house->tile);
+                    int dist = calc_maximum_distance(vec2i(x, y), asker->tile);
                     if (dist <= range) {
                         while (--dist > 1) {
                             des += step_size;
