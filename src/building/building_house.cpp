@@ -211,7 +211,11 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
 }
 
 int building_house::get_fire_risk(int value) const {
-    return (house_level() == BUILDING_HOUSE_VACANT_LOT && is_vacant_lot()) ? value : 0;
+    if (house_level() == BUILDING_HOUSE_VACANT_LOT && is_vacant_lot()) {
+        return 0;
+    }
+
+    return value;
 }
 
 void building_house::highlight_waypoints() {
