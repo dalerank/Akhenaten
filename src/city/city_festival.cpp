@@ -47,7 +47,7 @@ void city_festival_t::schedule() {
     planned.size = selected.size;
 
     int cost;
-    int population = g_city.population.population;
+    int population = g_city.population.current;
     switch (selected.size) {
     case FESTIVAL_SMALL:
         planned.months_to_go = small_min_months + population / 1000 + 1;
@@ -203,7 +203,7 @@ void city_festival_t::update() {
 }
 
 void city_festival_t::calculate_costs() {
-    int population = g_city.population.population;
+    int population = g_city.population.current;
     small_cost = population / 20 + 10;
     large_cost = population / 10 + 20;
     grand_cost = population / 5 + 40;

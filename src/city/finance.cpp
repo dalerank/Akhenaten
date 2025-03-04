@@ -375,9 +375,9 @@ static void pay_tribute() {
     } else if (income <= expenses) {
         // city made a loss: fixed tribute based on population
         city_data.finance.tribute_not_paid_total_years = 0;
-        if (city_data.population.population > 2000)
+        if (city_data.population.current > 2000)
             last_year->expenses.tribute = 200;
-        else if (city_data.population.population > 1000)
+        else if (city_data.population.current > 1000)
             last_year->expenses.tribute = 100;
         else {
             last_year->expenses.tribute = 0;
@@ -385,15 +385,15 @@ static void pay_tribute() {
     } else {
         // city made a profit: tribute is max of: 25% of profit, fixed tribute based on population
         city_data.finance.tribute_not_paid_total_years = 0;
-        if (city_data.population.population > 5000)
+        if (city_data.population.current > 5000)
             last_year->expenses.tribute = 500;
-        else if (city_data.population.population > 3000)
+        else if (city_data.population.current > 3000)
             last_year->expenses.tribute = 400;
-        else if (city_data.population.population > 2000)
+        else if (city_data.population.current > 2000)
             last_year->expenses.tribute = 300;
-        else if (city_data.population.population > 1000)
+        else if (city_data.population.current > 1000)
             last_year->expenses.tribute = 225;
-        else if (city_data.population.population > 500)
+        else if (city_data.population.current > 500)
             last_year->expenses.tribute = 150;
         else {
             last_year->expenses.tribute = 50;

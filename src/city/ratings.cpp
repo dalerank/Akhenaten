@@ -214,7 +214,7 @@ void city_ratings_t::update_culture_rating() {
     culture = 0;
     culture_explanation = 0;
 
-    if (g_city.population.population <= 0) {
+    if (g_city.population.current <= 0) {
         return;
     }
 
@@ -396,7 +396,7 @@ void city_ratings_t::update_kingdom_rating_year() {
         if (winning_kingdom() && kingdom < calc_adjust_with_percentage(winning_kingdom(), milestone_pct)) {
             bonus = 0;
         }
-        if (winning_population() && g_city.population.population < calc_adjust_with_percentage(winning_population(), milestone_pct)) {
+        if (winning_population() && g_city.population.current < calc_adjust_with_percentage(winning_population(), milestone_pct)) {
             bonus = 0;
         }
 

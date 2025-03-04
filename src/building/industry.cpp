@@ -128,13 +128,13 @@ void building_industry_update_production(void) {
             return;
         }
 
-        auto industry = b.dcast_industry()->runtime_data();
-        industry.has_raw_materials = false;
-        if (b.num_workers <= 0) {
+        if (building_is_workshop(b.type) && !b.workshop_has_resources()) {
             return;
         }
 
-        if (building_is_workshop(b.type) && !b.workshop_has_resources()) {
+        auto industry = b.dcast_industry()->runtime_data();
+        industry.has_raw_materials = false;
+        if (b.num_workers <= 0) {
             return;
         }
 

@@ -123,7 +123,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
 
 void city_health_t::update_coverage() {
     OZZY_PROFILER_SECTION("Game/Update/Health Coverage");
-    int population = g_city.population.population;
+    int population = g_city.population.current;
 
     const auto &mortuary_params = building_mortuary::current_params();
     g_coverage.mortuary = std::min<int>(calc_percentage(mortuary_params.max_serve_clients * building_count_active(BUILDING_MORTUARY), population), 100);
@@ -137,7 +137,7 @@ void city_health_t::update_coverage() {
 
 
 void city_health_t::update() {
-    if (g_city.population.population < 200 || scenario_is_mission_rank(1) || scenario_is_mission_rank(2)) {
+    if (g_city.population.current < 200 || scenario_is_mission_rank(1) || scenario_is_mission_rank(2)) {
         value = 50;
         target_value = 50;
         return;

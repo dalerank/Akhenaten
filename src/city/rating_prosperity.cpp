@@ -35,12 +35,12 @@ void city_t::update_prosperity_explanation() {
     }
 
     // high percentage poor: -1, high percentage rich: +1
-    int pct_shanties = calc_percentage(population.people_in_shanties, population.population);
+    int pct_shanties = calc_percentage(population.people_in_shanties, population.current);
     if (pct_shanties > 30) {
         change -= 1;
     }
 
-    if (calc_percentage(population.people_in_manors, population.population) > 10) {
+    if (calc_percentage(population.people_in_manors, population.current) > 10) {
         change += 1;
     }
 
@@ -103,11 +103,11 @@ void city_t::update_prosperity_rating() {
         change -= 1;
 
     // high percentage poor: -1, high percentage rich: +1
-    if (calc_percentage(population.people_in_shanties, population.population) > 30) {
+    if (calc_percentage(population.people_in_shanties, population.current) > 30) {
         change -= 1;
     }
 
-    if (calc_percentage(population.people_in_manors, population.population) > 10) {
+    if (calc_percentage(population.people_in_manors, population.current) > 10) {
         change += 1;
     }
 

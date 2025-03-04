@@ -208,7 +208,7 @@ void city_t::set_allowed_food(int i, e_resource r) {
 void city_t::coverage_update() {
     OZZY_PROFILER_SECTION("Game/Update/Avg Coverage Update");
     auto &coverage = g_coverage;
-    int pop = population.population;
+    int pop = population.current;
 
     // entertainment
     coverage.booth = std::min(calc_percentage(400 * building_count_active(BUILDING_BOOTH), pop), 100);
@@ -328,8 +328,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.health.value);
     iob->bind(BIND_SIGNATURE_INT32, &data.health.num_mortuary_workers);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_00c0);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.population);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.population_last_year);
+    iob->bind(BIND_SIGNATURE_INT32, &data.population.current);
+    iob->bind(BIND_SIGNATURE_INT32, &data.population.last_year);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.school_age);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.academy_age);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.total_capacity);
@@ -957,7 +957,7 @@ struct cproperty {
 bvariant city_get_property(const xstring &domain, const xstring &name) {
     static cproperty cproperties[] = {
         { tags().city, tags().tax_percentage, [] (const xstring &) { return bvariant(g_city.finance.tax_percentage); }},
-        { tags().city, tags().population, [] (const xstring &) { return bvariant(g_city.population.population); }},
+        { tags().city, tags().population, [] (const xstring &) { return bvariant(g_city.population.current); }},
         { tags().city, tags().treasury, [] (const xstring &) { return bvariant(g_city.finance.treasury); }},
         { tags().rating, tags().culture, [] (const xstring &) { return bvariant(g_city.ratings.culture); }},
         { tags().rating, tags().prosperity, [] (const xstring &) { return bvariant(g_city.ratings.prosperity); }},

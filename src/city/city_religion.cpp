@@ -119,7 +119,7 @@ int city_religion_t::god_coverage_total(e_god god, e_building_type temple, e_bui
 }
 
 void city_religion_t::calc_coverage() {
-    int pop = g_city.population.population;
+    int pop = g_city.population.current;
 
     int known_gods_num = 0;
     for (e_god i = GOD_OSIRIS; i < MAX_GODS; ++i) {
@@ -908,7 +908,7 @@ void city_religion_t::calculate_gods_mood_targets() {
     //            city_data.religion.gods[min_god].target_mood -= 25;
     //    }
 
-    int points = calc_bound((g_city.population.population - 350) / 50, 0, 5);
+    int points = calc_bound((g_city.population.current - 350) / 50, 0, 5);
     int min_mood = 50 - 10 * points;
     int max_mood = 50 + 10 * points;
 

@@ -35,7 +35,7 @@ void city_t::migration_update_status() {
     migration.emigration_amount_per_batch = 0;
 
     int population_cap = tutorial_get_population_cap(200000);
-    if (population.population >= population_cap) {
+    if (population.current >= population_cap) {
         migration.percentage = 0;
         migration.migration_cap = true;
         return;
@@ -59,7 +59,7 @@ void city_t::migration_update_status() {
         // emigration
         if (migration.immigration_duration) {
             migration.immigration_duration--;
-        } else if (population.population > 100) {
+        } else if (population.current > 100) {
             migration.emigration_amount_per_batch = calc_adjust_with_percentage(12, -migration.percentage);
             migration.emigration_duration = 2;
         }

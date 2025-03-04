@@ -221,7 +221,7 @@ void city_population_reached_milestone(bool force) {
 void city_t::house_population_update_migration() {
     OZZY_PROFILER_SECTION("Game/Update/House Migration Update");
 
-    city_population_yearly_update();
+    population.yearly_update();
     calculate_working_population();
     
     city_population_reached_milestone(false);

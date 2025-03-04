@@ -181,12 +181,26 @@ void tutorial_handle_fire(event_fire_damage) {
     post_message(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE);
 }
 
+void tutorial_handle_population_changed(event_population_changed ev) {
+    if (g_tutorials_flags.tutorial_1.population_150_reached || ev.value < 150) {
+        return;
+    } 
+
+    g_city_events.removeListener(typeid(event_population_changed), &tutorial_handle_population_changed);
+    
+    g_tutorials_flags.tutorial_1.population_150_reached = true;
+    building_menu_update(tutorial_stage.tutorial_food);
+    post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);
+}
+
 bool tutorial_menu_update(int tut) {
     if (tut == 1) {
         if (g_tutorials_flags.tutorial_1.fire) building_menu_update(tutorial_stage.tutorial_fire);
         else g_city_events.appendListener(typeid(event_fire_damage), &tutorial_handle_fire);
 
         if (g_tutorials_flags.tutorial_1.population_150_reached)  building_menu_update(tutorial_stage.tutorial_food);
+        else g_city_events.appendListener(typeid(event_population_changed), &tutorial_handle_population_changed);
+
         if (g_tutorials_flags.tutorial_1.collapse) building_menu_update(tutorial_stage.tutorial_collapse);
         if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) building_menu_update(tutorial_stage.tutorial_water);
 
@@ -491,14 +505,6 @@ void tutorial_flags_t::update_starting_message() {
 void tutorial_on_day_tick() {
     if (scenario_is_mission_rank(1) && g_tutorials_flags.tutorial_1.fire) {
         city_mission_tutorial_set_fire_message_shown(1);
-    }
-
-    if (scenario_is_mission_rank(1)) {
-        if (!g_tutorials_flags.tutorial_1.population_150_reached && city_population() >= 150) {
-            g_tutorials_flags.tutorial_1.population_150_reached = 1;
-            building_menu_update(tutorial_stage.tutorial_food);
-            post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);
-        }
     }
 
     tutorial_check_resources_on_storageyard();

@@ -14,17 +14,12 @@
 
 figures::model_t<figure_homeless> homeless_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_homeless);
-void config_load_figure_homeless() {
-    homeless_m.load();
-}
-
 void figure_create_homeless(tile2i tile, int num_people) {
     figure* f = figure_create(FIGURE_HOMELESS, tile, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_7_HOMELESS_CREATED;
     f->wait_ticks = 0;
     f->migrant_num_people = num_people;
-    city_population_remove_homeless(num_people);
+    g_city.population.remove_homeless(num_people);
 }
 
 int figure_homeless::find_closest_house_with_room(tile2i tile) {

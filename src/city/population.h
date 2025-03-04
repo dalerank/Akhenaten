@@ -1,5 +1,62 @@
 #pragma once
 
+#include <cstdint>
+
+struct event_population_changed { int value; };
+
+struct city_population_t {
+    int32_t current;
+    int32_t last_year;
+    int32_t school_age;
+    int32_t academy_age;
+    int32_t working_age;
+    struct {
+        int32_t values[2400];
+        int32_t next_index;
+        int32_t count;
+    } monthly;
+    int16_t at_age[100];
+    int32_t at_level[20];
+
+    int32_t yearly_update_requested;
+    int32_t yearly_births;
+    int32_t yearly_deaths;
+    int32_t lost_removal;
+    int32_t lost_homeless;
+    int32_t lost_troop_request;
+    int32_t last_change;
+    int32_t total_all_years;
+    int32_t total_years;
+    int32_t average_per_year;
+    int32_t highest_ever;
+    int32_t total_capacity;
+    int32_t room_in_houses;
+
+    int32_t people_in_huts;
+    int32_t people_in_shanties;
+    int32_t people_in_residences;
+    int32_t people_in_manors;
+    int32_t percentage_plebs;
+
+    int32_t last_used_house_add;
+    int32_t last_used_house_remove;
+    int32_t graph_order;
+
+    void recalculate();
+    void yearly_recalculate();
+    void yearly_update();
+    int average_age();
+    void add(int num_people);
+    void remove(int num_people);
+    void add_homeless(int num_people);
+    void remove_homeless(int num_people);
+    void remove_home_removed(int num_people);
+    void remove_for_troop_request(int num_people);
+    void record_monthly();
+    int percentage_in_shanties();
+    int percentage_in_manors();
+};
+
 int city_population();
 int city_population_school_age();
 int city_population_academy_age();
@@ -13,35 +70,9 @@ void city_population_set_last_used_house_remove(int building_id);
 void city_population_clear_capacity();
 void city_population_add_capacity(int people_in_house, int max_people);
 
-/**
- * Add people to the city.
- * @param num_people Number of people to add
- */
-void city_population_add(int num_people);
-
-/**
- * Add people returning after becoming homeless.
- * @param num_people Number of people to add
- */
-void city_population_add_homeless(int num_people);
-
-/**
- * Remove people from the city.
- * @param num_people Number of people to remove
- */
-void city_population_remove(int num_people);
-
-void city_population_remove_homeless(int num_people);
-
-void city_population_remove_home_removed(int num_people);
-
-void city_population_remove_for_troop_request(int num_people);
-
 int city_population_people_of_working_age();
 
 void city_population_calculate_educational_age();
-
-void city_population_record_monthly();
 
 int city_population_monthly_count();
 
@@ -52,8 +83,6 @@ int city_population_at_age(int age);
 int city_population_at_level(int house_level);
 
 void city_population_request_yearly_update();
-
-void city_population_yearly_update();
 
 void city_population_check_consistency();
 
@@ -77,10 +106,4 @@ int city_population_yearly_deaths();
 
 int city_population_yearly_births();
 
-int city_population_average_age();
-
 int city_population_percent_in_workforce();
-
-int percentage_city_population_in_shanties();
-
-int percentage_city_population_in_manors();

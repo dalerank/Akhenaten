@@ -324,7 +324,7 @@ void game_t::advance_month() {
         g_city.ratings_update(/*yearly_update*/false);
     }
 
-    city_population_record_monthly();
+    g_city.population.record_monthly();
     g_city.festival.update();
     g_city.buildings.update_month();
 

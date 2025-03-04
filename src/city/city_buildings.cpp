@@ -4,6 +4,7 @@
 #include "core/custom_span.hpp"
 #include "core/profiler.h"
 #include "city/warnings.h"
+#include "city/city.h"
 #include "city/population.h"
 #include "grid/building.h"
 #include "grid/tiles.h"
@@ -191,7 +192,7 @@ void building_update_state(void) {
             } else if (b->state == BUILDING_STATE_RUBBLE) {
                 auto house = b->dcast_house();
                 if (house && house->runtime_data().hsize > 0) {
-                    city_population_remove_home_removed(house->house_population());
+                    g_city.population.remove_home_removed(house->house_population());
                 }
 
                 building_delete_UNSAFE(b);

@@ -253,10 +253,10 @@ void ui::advisor_population_window::draw_society_graph(int full_size, vec2i pos)
     ui["text1"].text_var("%s %d", translation_for(TR_ADVISOR_HOUSING_PROSPERITY_RATING), g_city.ratings.prosperity_max);
 
     // Percent patricians
-    ui["text2"].text_var("%s %d", translation_for(TR_ADVISOR_PERCENTAGE_IN_MANORS), percentage_city_population_in_manors());
+    ui["text2"].text_var("%s %d", translation_for(TR_ADVISOR_PERCENTAGE_IN_MANORS), g_city.population.percentage_in_manors());
 
     // Percent impoverished
-    ui["text3"].text_var("%s %d", translation_for(TR_ADVISOR_PERCENTAGE_IN_SHANTIES), percentage_city_population_in_shanties());
+    ui["text3"].text_var("%s %d", translation_for(TR_ADVISOR_PERCENTAGE_IN_SHANTIES), g_city.population.percentage_in_shanties());
 
     // Average tax
     ui["text4"].text_var("%s %d", translation_for(TR_ADVISOR_AVERAGE_TAX), avg_tax_per_house);
@@ -264,7 +264,7 @@ void ui::advisor_population_window::draw_society_graph(int full_size, vec2i pos)
 
 void ui::advisor_population_window::print_census_info() {
     // Average age
-    ui["text1"].text_var("%s %d", translation_for(TR_ADVISOR_AVERAGE_AGE), city_population_average_age());
+    ui["text1"].text_var("%s %d", translation_for(TR_ADVISOR_AVERAGE_AGE), g_city.population.average_age());
 
     // Percent working age
     ui["text2"].text_var("%s %u", translation_for(TR_ADVISOR_PERCENT_IN_WORKFORCE), city_population_percent_in_workforce());

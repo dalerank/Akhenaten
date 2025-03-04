@@ -29,7 +29,7 @@ static void destroy_on_fire(building* b, bool plagued) {
     if (house) {
         auto &housed = house->runtime_data();
         if (housed.population > 0) {
-            city_population_remove_home_removed(housed.population);
+            g_city.population.remove_home_removed(housed.population);
             housed.population = 0;
             housed.hsize = 0;
         }

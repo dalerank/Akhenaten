@@ -102,7 +102,7 @@ static int get_sentiment_penalty_for_hut_dwellers() {
     city_data.sentiment.include_huts = false;
 
     int penalty;
-    int pct_tents = calc_percentage(city_data.population.people_in_huts, city_data.population.population);
+    int pct_tents = calc_percentage(city_data.population.people_in_huts, city_data.population.current);
     if (city_data.population.people_in_manors > 0) {
         if (pct_tents >= 57)
             penalty = 0;
@@ -213,18 +213,18 @@ static int get_sentiment_contribution_monuments() {
     }
 
     int shrine_points = 0;
-    if (city_data.population.population > 5000) {
+    if (city_data.population.current > 5000) {
         shrine_points = 5;
-    } if (city_data.population.population > 1000) {
+    } if (city_data.population.current > 1000) {
         shrine_points = 10;
-    } else if (city_data.population.population > 500) {
+    } else if (city_data.population.current > 500) {
         shrine_points = 15;
-    } else if (city_data.population.population > 350) {
+    } else if (city_data.population.current > 350) {
         shrine_points = 25;
-    } else if (city_data.population.population > 100) {
+    } else if (city_data.population.current > 100) {
         shrine_points = 50;
     }
-    int monument_points = calc_bound((shrines * shrine_points - city_data.population.population - 350) / 50, 0, 5);
+    int monument_points = calc_bound((shrines * shrine_points - city_data.population.current - 350) / 50, 0, 5);
     return monument_points;
 }
 
@@ -309,14 +309,14 @@ void city_sentiment_update() {
             return;
         }
 
-        if (city_data.population.population < 300) {
+        if (city_data.population.current < 300) {
             // small town has no complaints
             sentiment_contribution_employment = 0;
             sentiment_contribution_taxes = 0;
             sentiment_contribution_wages = 0;
 
             housed.house_happiness = default_sentiment;
-            if (city_data.population.population < 200) {
+            if (city_data.population.current < 200) {
                 housed.house_happiness += 10;
             } else if (default_sentiment < 50 && config_get(CONFIG_GP_FIX_IMMIGRATION_BUG)) {
                 // Fix very hard immigration bug: give a boost for Very Hard difficulty so that

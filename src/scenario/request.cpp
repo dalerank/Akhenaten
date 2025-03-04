@@ -153,7 +153,7 @@ void scenario_request_dispatch(int id) {
     if (request.resource == RESOURCE_DEBEN) {
         city_finance_process_requests_and_festivals(request.amount);
     } else if (request.resource == RESOURCE_TROOPS) {
-        city_population_remove_for_troop_request(request.amount);
+        g_city.population.remove_for_troop_request(request.amount);
         city_storageyards_remove_resource(RESOURCE_WEAPONS, request.amount);
     } else {
         int amount = request.resource_amount();

@@ -24,7 +24,7 @@ static const int DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[11][10] = {{20, 10, 5, 10, 
 
 static auto &city_data = g_city;
 int city_population(void) {
-    return city_data.population.population;
+    return city_data.population.current;
 }
 
 int city_population_school_age(void) {
@@ -51,6 +51,16 @@ void city_population_set_last_used_house_remove(int building_id) {
     city_data.population.last_used_house_remove = building_id;
 }
 
+void city_population_t::recalculate() {
+    int save_value = current;
+    current = 0;
+    for (int i = 0; i < 100; i++) {
+        current += at_age[i];
+    }
+
+    highest_ever = std::max(current, highest_ever);
+}
+
 void city_population_clear_capacity(void) {
     city_data.population.total_capacity = 0;
     city_data.population.room_in_houses = 0;
@@ -59,15 +69,6 @@ void city_population_clear_capacity(void) {
 void city_population_add_capacity(int people_in_house, int max_people) {
     city_data.population.total_capacity += max_people;
     city_data.population.room_in_houses += max_people - people_in_house;
-}
-
-static void recalculate_population(void) {
-    city_data.population.population = 0;
-    for (int i = 0; i < 100; i++) {
-        city_data.population.population += city_data.population.at_age[i];
-    }
-    if (city_data.population.population > city_data.population.highest_ever)
-        city_data.population.highest_ever = city_data.population.population;
 }
 
 static void add_to_census(int num_people) {
@@ -140,56 +141,57 @@ static int get_people_in_age_decennium(int decennium) {
     return pop;
 }
 
-int city_population_average_age(void) {
-    recalculate_population();
-    if (!city_data.population.population)
+int city_population_t::average_age() {
+    recalculate();
+    if (!current) {
         return 0;
+    }
 
     int age_sum = 0;
     for (int i = 0; i < 100; i++) {
-        age_sum += (city_data.population.at_age[i] * i);
+        age_sum += (at_age[i] * i);
     }
-    return age_sum / city_data.population.population;
+    return age_sum / current;
 }
 
-void city_population_add(int num_people) {
-    city_data.population.last_change = num_people;
+void city_population_t::add(int num_people) {
+    last_change = num_people;
     add_to_census(num_people);
-    recalculate_population();
+    recalculate();
 }
 
-void city_population_remove(int num_people) {
-    city_data.population.last_change = -num_people;
+void city_population_t::remove(int num_people) {
+    last_change = -num_people;
     remove_from_census(num_people);
-    recalculate_population();
+    recalculate();
 }
 
-void city_population_add_homeless(int num_people) {
-    city_data.population.lost_homeless -= num_people;
+void city_population_t::add_homeless(int num_people) {
+    lost_homeless -= num_people;
     add_to_census(num_people);
-    recalculate_population();
+    recalculate();
 }
 
-void city_population_remove_homeless(int num_people) {
-    city_data.population.lost_homeless += num_people;
+void city_population_t::remove_homeless(int num_people) {
+    lost_homeless += num_people;
     remove_from_census(num_people);
-    recalculate_population();
+    recalculate();
 }
 
-void city_population_remove_home_removed(int num_people) {
-    city_data.population.lost_removal += num_people;
+void city_population_t::remove_home_removed(int num_people) {
+    lost_removal += num_people;
     remove_from_census(num_people);
-    recalculate_population();
+    recalculate();
 }
 
-void city_population_remove_for_troop_request(int num_people) {
+void city_population_t::remove_for_troop_request(int num_people) {
     int removed = house_population_remove_from_city(num_people);
     remove_from_census(removed);
-    city_data.population.lost_troop_request += num_people;
-    recalculate_population();
+    lost_troop_request += num_people;
+    recalculate();
 }
 
-int city_population_people_of_working_age(void) {
+int city_population_people_of_working_age() {
     if (config_get(CONFIG_GP_CH_RETIRE_AT_60)) {
         return get_people_in_age_decennium(2) + get_people_in_age_decennium(3) + get_people_in_age_decennium(4)
                + get_people_in_age_decennium(5);
@@ -199,13 +201,13 @@ int city_population_people_of_working_age(void) {
 }
 
 int city_population_percent_in_workforce(void) {
-    if (!city_data.population.population)
+    if (!city_data.population.current)
         return 0;
 
     if (config_get(CONFIG_GP_CH_FIXED_WORKERS))
         return 38;
 
-    return calc_percentage(city_data.labor.workers_available, city_data.population.population);
+    return calc_percentage(city_data.labor.workers_available, city_data.population.current);
 }
 
 static int get_people_aged_between(int min, int max) {
@@ -221,15 +223,20 @@ void city_population_calculate_educational_age(void) {
     city_data.population.academy_age = get_people_aged_between(14, 21);
 }
 
-void city_population_record_monthly(void) {
-    city_data.population.monthly.values[city_data.population.monthly.next_index++] = city_data.population.population;
-    if (city_data.population.monthly.next_index >= 2400)
-        city_data.population.monthly.next_index = 0;
+void city_population_t::record_monthly() {
+    int save_value = monthly.values[monthly.next_index];
+    monthly.values[monthly.next_index++] = current;
+    if (monthly.next_index >= 2400)
+        monthly.next_index = 0;
 
-    ++city_data.population.monthly.count;
+    ++monthly.count;
+
+    if (save_value != current) {
+        g_city_events.enqueue(event_population_changed{ current });
+    }
 }
 
-int city_population_monthly_count(void) {
+int city_population_monthly_count() {
     return city_data.population.monthly.count;
 }
 
@@ -286,15 +293,15 @@ static void yearly_calculate_births(void) {
     }
 }
 
-static void yearly_recalculate_population(void) {
-    city_data.population.yearly_update_requested = 0;
-    city_data.population.population_last_year = city_data.population.population;
-    recalculate_population();
+void city_population_t::yearly_recalculate() {
+    yearly_update_requested = 0;
+    last_year = current;
+    recalculate();
 
-    city_data.population.lost_removal = 0;
-    city_data.population.total_all_years += city_data.population.population;
-    city_data.population.total_years++;
-    city_data.population.average_per_year = city_data.population.total_all_years / city_data.population.total_years;
+    lost_removal = 0;
+    total_all_years += current;
+    total_years++;
+    average_per_year = total_all_years / total_years;
 }
 
 int calculate_total_housing_buildings(void) {
@@ -417,18 +424,18 @@ void city_population_request_yearly_update(void) {
     calculate_people_per_house_type();
 }
 
-void city_population_yearly_update(void) {
-    if (city_data.population.yearly_update_requested) {
+void city_population_t::yearly_update() {
+    if (yearly_update_requested) {
         yearly_advance_ages_and_calculate_deaths();
         yearly_calculate_births();
-        yearly_recalculate_population();
+        yearly_recalculate();
     }
 }
 
 void city_population_check_consistency(void) {
     int people_in_houses = calculate_people_per_house_type();
-    if (people_in_houses < city_data.population.population)
-        remove_from_census(city_data.population.population - people_in_houses);
+    if (people_in_houses < city_data.population.current)
+        remove_from_census(city_data.population.current - people_in_houses);
 }
 
 int city_population_graph_order(void) {
@@ -455,18 +462,18 @@ int city_population_yearly_births() {
     return city_data.population.yearly_births;
 }
 
-int percentage_city_population_in_shanties() {
-    if (!city_data.population.population) {
+int city_population_t::percentage_in_shanties() {
+    if (!current) {
         return 0;
     }
 
-    return calc_percentage(city_data.population.people_in_shanties, city_data.population.population);
+    return calc_percentage(people_in_shanties, city_data.population.current);
 }
 
-int percentage_city_population_in_manors() {
-    if (!city_data.population.population) {
+int city_population_t::percentage_in_manors() {
+    if (!current) {
         return 0;
     }
 
-    return calc_percentage(city_data.population.people_in_manors, city_data.population.population);
+    return calc_percentage(people_in_manors, current);
 }

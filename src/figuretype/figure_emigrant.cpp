@@ -15,14 +15,9 @@
 
 figures::model_t<figure_emigrant> emigrant_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_emigrant);
-void config_load_figure_emigrant() {
-    emigrant_m.load();
-}
-
 figure *figure_emigrant::create(building* b, int num_people) {
     building_house *house = b->dcast_house();
-    city_population_remove(num_people);
+    g_city.population.remove(num_people);
     if (num_people < house->house_population()) {
         house->change_population(-num_people);
     } else {

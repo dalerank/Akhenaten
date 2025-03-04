@@ -62,19 +62,19 @@ e_victory_state city_t::determine_victory_state() {
     }
     if (winning_population()) {
         has_criteria = 1;
-        if (population.population < winning_population()) {
+        if (population.current < winning_population()) {
             state = e_victory_state_none;
         }
     }
     if (winning_housing()) {
         has_criteria = 1;
-        int houses_of_required_level = 0;
-        for (int i = 0; i < building_get_highest_id(); i++) {
-            building* b = building_get(i);
-            if (b->state == BUILDING_STATE_VALID && b->type == winning_houselevel() + BUILDING_HOUSE_CRUDE_HUT) {
-                houses_of_required_level++;
-            }
-        }
+        const auto &blds = city_buildings();
+        const int houses_of_required_level = std::count_if(blds.begin(), blds.end(), [] (auto &b) {
+            auto house = b.dcast_house();
+            const bool abobe_goal = (house && house->is_valid() && house->house_level() >= winning_houselevel());
+            return abobe_goal;
+        });
+        
         if (houses_of_required_level < winning_housing()) {
             state = e_victory_state_none;
         }
@@ -125,11 +125,11 @@ e_victory_state city_t::determine_victory_state() {
     }
 
     if (figures_total_invading_enemies() > 2 + figures.soldiers) {
-        if (population.population < population.highest_ever / 4)
+        if (population.current < population.highest_ever / 4)
             state = e_victory_state_lost;
     }
     if (g_city.figures_total_invading_enemies() > 0) {
-        if (population.population <= 0)
+        if (population.current <= 0)
             state = e_victory_state_lost;
     }
     if (!has_criteria)

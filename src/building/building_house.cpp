@@ -293,7 +293,7 @@ void building_house::add_population(int num_people) {
 
     auto &d = runtime_data();
     d.population += num_people;
-    city_population_add(num_people);
+    g_city.population.add(num_people);
     base.remove_figure(2);
 }
 

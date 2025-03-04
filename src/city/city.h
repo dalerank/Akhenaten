@@ -4,6 +4,7 @@
 
 #include "city/kingdome.h"
 #include "city/entertainment.h"
+#include "city/population.h"
 #include "city/finance.h"
 #include "city/houses.h"
 #include "city/labor.h"
@@ -31,6 +32,7 @@ struct empire_city;
 struct city_t {
     city_buildings_t buildings;
     city_figures_t figures;
+    city_population_t population;
 
     house_demands houses;
     desirability_t desirability;
@@ -93,44 +95,6 @@ struct city_t {
         } monthly;
     } taxes;
 
-    struct {
-        int32_t population;
-        int32_t population_last_year;
-        int32_t school_age;
-        int32_t academy_age;
-        int32_t working_age;
-        struct {
-            int32_t values[2400];
-            int32_t next_index;
-            int32_t count;
-        } monthly;
-        int16_t at_age[100];
-        int32_t at_level[20];
-
-        int32_t yearly_update_requested;
-        int32_t yearly_births;
-        int32_t yearly_deaths;
-        int32_t lost_removal;
-        int32_t lost_homeless;
-        int32_t lost_troop_request;
-        int32_t last_change;
-        int32_t total_all_years;
-        int32_t total_years;
-        int32_t average_per_year;
-        int32_t highest_ever;
-        int32_t total_capacity;
-        int32_t room_in_houses;
-
-        int32_t people_in_huts;
-        int32_t people_in_shanties;
-        int32_t people_in_residences;
-        int32_t people_in_manors;
-        int32_t percentage_plebs;
-
-        int32_t last_used_house_add;
-        int32_t last_used_house_remove;
-        int32_t graph_order;
-    } population;
 
     city_labor_t labor;
     struct {
