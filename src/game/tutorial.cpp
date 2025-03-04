@@ -1,7 +1,9 @@
 #include "tutorial.h"
 
 #include "building/building_menu.h"
+#include "building/maintenance.h"
 #include "city/buildings.h"
+#include "city/city.h"
 #include "city/message.h"
 #include "city/mission.h"
 #include "city/population.h"
@@ -165,9 +167,25 @@ void tutorial_map_update(int tut) {
     }
 }
 
+void tutorial_handle_fire(event_fire_damage) {
+    if (g_tutorials_flags.tutorial_1.fire) {
+        return;
+    }
+
+    g_city_events.removeListener(typeid(event_fire_damage), &tutorial_handle_fire);
+
+    g_tutorials_flags.tutorial_1.fire = true;
+    g_scenario_data.add_fire_damage.clear();
+
+    building_menu_update(tutorial_stage.tutorial_fire);
+    post_message(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE);
+}
+
 bool tutorial_menu_update(int tut) {
     if (tut == 1) {
         if (g_tutorials_flags.tutorial_1.fire) building_menu_update(tutorial_stage.tutorial_fire);
+        else g_city_events.appendListener(typeid(event_fire_damage), &tutorial_handle_fire);
+
         if (g_tutorials_flags.tutorial_1.population_150_reached)  building_menu_update(tutorial_stage.tutorial_food);
         if (g_tutorials_flags.tutorial_1.collapse) building_menu_update(tutorial_stage.tutorial_collapse);
         if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) building_menu_update(tutorial_stage.tutorial_water);
@@ -302,18 +320,6 @@ int tutorial_extra_damage_risk(void) {
            && scenario_is_mission_rank(1); // Fix for extra damage risk in late tutorials
 }
 
-int tutorial_handle_fire() {
-    if (g_tutorials_flags.tutorial_1.fire) {
-        return 0;
-    }
-
-    g_tutorials_flags.tutorial_1.fire = true;
-    g_scenario_data.add_fire_damage.clear();
-    building_menu_update(tutorial_stage.tutorial_fire);
-    post_message(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE);
-    return 1;
-}
-
 int tutorial_handle_collapse(void) {
     if (g_tutorials_flags.tutorial_1.collapse)
         return 0;
@@ -412,7 +418,7 @@ void tutorial_update_step(pcstr s) {
     const xstring step(s);
     if (step == tutorial_stage.tutorial_fire) {
         g_tutorials_flags.tutorial_1.fire = false;
-        tutorial_handle_fire();
+        tutorial_handle_fire(event_fire_damage{0});
     } else if (step == tutorial_stage.tutorial_food) {
         building_menu_update(step);
         post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);

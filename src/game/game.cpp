@@ -142,6 +142,7 @@ void game_t::update_impl(int ticks) {
 
 void game_t::update_city(int ticks) {
     g_city.buildings.update_tick(game.paused);
+    g_city_events.process();
 
     switch (simtime.tick) {
     case 1:

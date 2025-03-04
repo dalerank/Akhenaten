@@ -100,8 +100,6 @@ int tutorial_get_immediate_goal_text();
 int tutorial_adjust_request_year(int* year);
 
 int tutorial_extra_damage_risk();
-
-int tutorial_handle_fire();
 int tutorial_handle_collapse();
 
 void tutorial_on_disease();

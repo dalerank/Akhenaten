@@ -29,9 +29,11 @@
 #include <time.h>
 
 city_t g_city;
+events::typed_queue g_city_events;
 
 void city_t::init() {
     buildings.shutdown();
+    g_city_events.removeListeners();
 
     memset(this, 0, sizeof(struct city_t));
 

@@ -24,6 +24,7 @@
 #include "city/city_festival.h"
 #include "grid/desirability.h"
 #include "city/city_buildings.h"
+#include "core/eventbus.h"
 
 struct empire_city;
 
@@ -388,3 +389,4 @@ void city_restore_campaign_player_name();
 bvariant city_get_property(const xstring &domain, const xstring &name);
 
 extern city_t g_city;
+extern events::typed_queue g_city_events;

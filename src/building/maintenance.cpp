@@ -108,15 +108,14 @@ static void collapse_building(building* b) {
 
 static void fire_building(building* b) {
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
-    if (!tutorial_handle_fire()) {
-        city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, false, MESSAGE_FIRE, b->type, b->tile.grid_offset());
-    }
+
+    g_city_events.enqueue(event_fire_damage{ b->id });
 
     game_undo_disable();
     building_destroy_by_fire(b);
 }
 
-void building_maintenance_check_fire_collapse(void) {
+void building_maintenance_check_fire_collapse() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Fire Collapse Update");
     city_sentiment_reset_protesters_criminals();
 
@@ -170,6 +169,9 @@ void building_maintenance_check_fire_collapse(void) {
     if (recalculate_terrain) {
         map_routing_update_land();
     }
+}
+
+void building_maintenance_init() {
 }
 
 void building_maintenance_check_kingdome_access() {
