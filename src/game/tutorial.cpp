@@ -193,6 +193,18 @@ void tutorial1_handle_population_changed(event_population_changed ev) {
     post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);
 }
 
+void tutorial1_handle_collapse(event_collase_damage) {
+    if (g_tutorials_flags.tutorial_1.collapse) {
+        return;
+    }
+
+    g_city_events.removeListener(typeid(event_collase_damage), &tutorial1_handle_collapse);
+
+    g_tutorials_flags.tutorial_1.collapse = true;
+    building_menu_update(tutorial_stage.tutorial_collapse);
+    post_message(MESSAGE_TUTORIAL_COLLAPSED_BUILDING);
+}
+
 bool tutorial1_is_success() {
     auto &tut = g_tutorials_flags.tutorial_1;
     return tut.fire && tut.collapse && tut.population_150_reached && tut.gamemeat_400_stored;
@@ -207,6 +219,8 @@ bool tutorial_menu_update(int tut) {
         else g_city_events.appendListener(typeid(event_population_changed), &tutorial1_handle_population_changed);
 
         if (g_tutorials_flags.tutorial_1.collapse) building_menu_update(tutorial_stage.tutorial_collapse);
+        else g_city_events.appendListener(typeid(event_collase_damage), &tutorial1_handle_collapse);
+
         if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) building_menu_update(tutorial_stage.tutorial_water);
 
         g_city.victory_state.add_condition(&tutorial1_is_success);
@@ -336,19 +350,9 @@ int tutorial_extra_fire_risk(void) {
            && scenario_is_mission_rank(1); // Fix for extra fire risk in late tutorials
 }
 
-int tutorial_extra_damage_risk(void) {
+int tutorial_extra_damage_risk() {
     return g_tutorials_flags.tutorial_1.fire && !g_tutorials_flags.tutorial_1.collapse
            && scenario_is_mission_rank(1); // Fix for extra damage risk in late tutorials
-}
-
-int tutorial_handle_collapse(void) {
-    if (g_tutorials_flags.tutorial_1.collapse)
-        return 0;
-
-    g_tutorials_flags.tutorial_1.collapse = 1;
-    building_menu_update(tutorial_stage.tutorial_collapse);
-    post_message(MESSAGE_TUTORIAL_COLLAPSED_BUILDING);
-    return 1;
 }
 
 void tutorial_flags_t::on_crime() {
@@ -439,7 +443,7 @@ void tutorial_update_step(pcstr s) {
     const xstring step(s);
     if (step == tutorial_stage.tutorial_fire) {
         g_tutorials_flags.tutorial_1.fire = false;
-        tutorial1_handle_fire(event_fire_damage{0});
+        tutorial1_handle_fire({0});
     } else if (step == tutorial_stage.tutorial_food) {
         building_menu_update(step);
         post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);
@@ -448,7 +452,7 @@ void tutorial_update_step(pcstr s) {
         post_message(MESSAGE_TUTORIAL_CLEAN_WATER);
     } else if (step == tutorial_stage.tutorial_collapse) {
         g_tutorials_flags.tutorial_1.collapse = false;
-        tutorial_handle_collapse();
+        tutorial1_handle_collapse({0});
     } else if (step == tutorial_stage.tutorial_gods) {
         building_menu_update(step);
         post_message(MESSAGE_TUTORIAL_GODS_OF_EGYPT);

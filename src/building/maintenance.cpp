@@ -98,9 +98,9 @@ std::pair<int, tile2i> building_maintenance_get_closest_burning_ruin(tile2i tile
 
 static void collapse_building(building* b) {
     city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
-    if (!tutorial_handle_collapse()) {
-        city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, false, MESSAGE_COLLAPSED_BUILDING, b->type, b->tile.grid_offset());
-    }
+
+    g_city_events.enqueue(event_collase_damage{ b->id });
+    city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, false, MESSAGE_COLLAPSED_BUILDING, b->type, b->tile.grid_offset());
 
     game_undo_disable();
     building_destroy_by_collapse(b);
@@ -108,6 +108,7 @@ static void collapse_building(building* b) {
 
 static void fire_building(building* b) {
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
+    city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, false, MESSAGE_FIRE, b->type, b->tile.grid_offset());
 
     g_city_events.enqueue(event_fire_damage{ b->id });
 
@@ -172,6 +173,7 @@ void building_maintenance_check_fire_collapse() {
 }
 
 void building_maintenance_init() {
+   
 }
 
 void building_maintenance_check_kingdome_access() {

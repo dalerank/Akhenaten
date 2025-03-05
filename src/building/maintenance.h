@@ -6,6 +6,7 @@
 #include <functional>
 
 struct event_fire_damage { building_id bid; };
+struct event_collase_damage { building_id id; };
 
 void building_maintenance_update_fire_direction();
 int building_maintenance_fire_direction();
