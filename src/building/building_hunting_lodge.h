@@ -1,12 +1,12 @@
 #pragma once
 
-#include "building/building.h"
+#include "building/building_industry.h"
 
-class building_hunting_lodge : public building_impl {
+class building_hunting_lodge : public building_industry {
 public:
     BUILDING_METAINFO(BUILDING_HUNTING_LODGE, building_hunting_lodge)
 
-    building_hunting_lodge(building &b) : building_impl(b) {}
+    building_hunting_lodge(building &b) : building_industry(b) {}
 
     virtual void on_create(int orientation) override;
     virtual void window_info_background(object_info &ctx) override;
