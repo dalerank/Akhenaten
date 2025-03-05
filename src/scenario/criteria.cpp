@@ -5,16 +5,19 @@
 
 static int max_game_year;
 
-int scenario_criteria_time_limit_enabled(void) {
+int scenario_criteria_time_limit_enabled() {
     return g_scenario_data.win_criteria.time_limit.enabled;
 }
-int scenario_criteria_time_limit_years(void) {
+
+int scenario_criteria_time_limit_years() {
     return g_scenario_data.win_criteria.time_limit.years;
 }
-int scenario_criteria_survival_enabled(void) {
+
+int scenario_criteria_survival_enabled() {
     return g_scenario_data.win_criteria.survival_time.enabled;
 }
-int scenario_criteria_survival_years(void) {
+
+int scenario_criteria_survival_years() {
     return g_scenario_data.win_criteria.survival_time.years;
 }
 
@@ -23,26 +26,31 @@ int winning_population() {
         return 0;
     return g_scenario_data.win_criteria.population.goal;
 }
+
 int winning_culture() {
     if (!g_scenario_data.win_criteria.culture.enabled)
         return 0;
     return g_scenario_data.win_criteria.culture.goal;
 }
+
 int winning_prosperity() {
     if (!g_scenario_data.win_criteria.prosperity.enabled)
         return 0;
     return g_scenario_data.win_criteria.prosperity.goal;
 }
+
 int winning_monuments() {
     if (!g_scenario_data.win_criteria.monuments.enabled)
         return 0;
     return g_scenario_data.win_criteria.monuments.goal;
 }
+
 int winning_kingdom() {
     if (!g_scenario_data.win_criteria.kingdom.enabled)
         return 0;
     return g_scenario_data.win_criteria.kingdom.goal;
 }
+
 int winning_housing() {
     if (!g_scenario_data.win_criteria.housing_count.enabled) {
         return 0;
@@ -50,6 +58,7 @@ int winning_housing() {
 
     return g_scenario_data.win_criteria.housing_count.goal;
 }
+
 int winning_houselevel() {
     if (!g_scenario_data.win_criteria.housing_level.enabled)
         return 0;
@@ -69,7 +78,7 @@ int scenario_criteria_milestone_year(int percentage) {
     }
 }
 
-void scenario_criteria_init_max_year(void) {
+void scenario_criteria_init_max_year() {
     if (g_scenario_data.win_criteria.time_limit.enabled)
         max_game_year = g_scenario_data.start_year + g_scenario_data.win_criteria.time_limit.years;
     else if (g_scenario_data.win_criteria.survival_time.enabled)
@@ -77,9 +86,10 @@ void scenario_criteria_init_max_year(void) {
     else
         max_game_year = 1000000 + g_scenario_data.start_year;
 }
-int scenario_criteria_max_year(void) {
+int scenario_criteria_max_year() {
     return max_game_year;
 }
 
-io_buffer* iob_max_year
-  = new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_UINT32, &max_game_year); });
+io_buffer* iob_max_year = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_UINT32, &max_game_year);
+});

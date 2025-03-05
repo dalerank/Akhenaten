@@ -19,6 +19,8 @@
 declare_console_command_p(victory, game_cheat_force_victory)
 declare_console_command_p(defeat, game_cheat_force_defeat)
 
+svector<victory_condition, 16> g_victory_conditions;
+
 void game_cheat_force_defeat(std::istream &is, std::ostream &os) {
     g_city.victory_state.force_lost = true;
 }
@@ -27,9 +29,14 @@ void game_cheat_force_victory(std::istream &is, std::ostream &os) {
     g_city.victory_state.force_win = true;
 }
 
-void vistory_state_t::reset() {
+void victory_state_t::reset() {
    state = e_victory_state_none;
    force_win = false;
+   g_victory_conditions.clear();
+}
+
+int winning_conditions() {
+    return g_victory_conditions.size() > 0;
 }
 
 e_victory_state city_t::determine_victory_state() {
@@ -77,6 +84,14 @@ e_victory_state city_t::determine_victory_state() {
         
         if (houses_of_required_level < winning_housing()) {
             state = e_victory_state_none;
+        }
+    }
+    if (winning_conditions) {
+        for (const auto& condition : g_victory_conditions) {
+            if (!condition()) {
+                state = e_victory_state_none;
+                break;
+            }
         }
     }
 
@@ -180,12 +195,13 @@ void city_t::victory_check() {
     }
 }
 
-void vistory_state_t::update_months_to_govern() {
-    if (g_city.mission.has_won)
+void victory_state_t::update_months_to_govern() {
+    if (g_city.mission.has_won) {
         g_city.mission.continue_months_left--;
+    }
 }
 
-void vistory_state_t::continue_governing(int months) {
+void victory_state_t::continue_governing(int months) {
     g_city.mission.has_won = 1;
     g_city.mission.continue_months_left += months;
     g_city.mission.continue_months_chosen = months;
@@ -194,12 +210,16 @@ void vistory_state_t::continue_governing(int months) {
     city_finance_update_salary();
 }
 
-void vistory_state_t::stop_governing(void) {
+void victory_state_t::stop_governing() {
     g_city.mission.has_won = 0;
     g_city.mission.continue_months_left = 0;
     g_city.mission.continue_months_chosen = 0;
 }
 
-bool vistory_state_t::has_won() {
+bool victory_state_t::has_won() {
     return g_city.mission.has_won;
+}
+
+void victory_state_t::add_condition(victory_condition cond) {
+    g_victory_conditions.push_back(cond);
 }

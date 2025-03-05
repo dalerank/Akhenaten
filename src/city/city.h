@@ -38,7 +38,7 @@ struct city_t {
     desirability_t desirability;
     kingdome_relation_t kingdome;
     city_military_t military;
-    vistory_state_t victory_state;
+    victory_state_t victory_state;
     struct {
         uint8_t city;
         int8_t city_foreign_months_left;

@@ -167,12 +167,12 @@ void tutorial_map_update(int tut) {
     }
 }
 
-void tutorial_handle_fire(event_fire_damage) {
+void tutorial1_handle_fire(event_fire_damage) {
     if (g_tutorials_flags.tutorial_1.fire) {
         return;
     }
 
-    g_city_events.removeListener(typeid(event_fire_damage), &tutorial_handle_fire);
+    g_city_events.removeListener(typeid(event_fire_damage), &tutorial1_handle_fire);
 
     g_tutorials_flags.tutorial_1.fire = true;
     g_scenario_data.add_fire_damage.clear();
@@ -181,28 +181,35 @@ void tutorial_handle_fire(event_fire_damage) {
     post_message(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE);
 }
 
-void tutorial_handle_population_changed(event_population_changed ev) {
+void tutorial1_handle_population_changed(event_population_changed ev) {
     if (g_tutorials_flags.tutorial_1.population_150_reached || ev.value < 150) {
         return;
     } 
 
-    g_city_events.removeListener(typeid(event_population_changed), &tutorial_handle_population_changed);
+    g_city_events.removeListener(typeid(event_population_changed), &tutorial1_handle_population_changed);
     
     g_tutorials_flags.tutorial_1.population_150_reached = true;
     building_menu_update(tutorial_stage.tutorial_food);
     post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);
 }
 
+bool tutorial1_is_success() {
+    auto &tut = g_tutorials_flags.tutorial_1;
+    return tut.fire && tut.collapse && tut.population_150_reached && tut.gamemeat_400_stored;
+}
+
 bool tutorial_menu_update(int tut) {
     if (tut == 1) {
         if (g_tutorials_flags.tutorial_1.fire) building_menu_update(tutorial_stage.tutorial_fire);
-        else g_city_events.appendListener(typeid(event_fire_damage), &tutorial_handle_fire);
+        else g_city_events.appendListener(typeid(event_fire_damage), &tutorial1_handle_fire);
 
         if (g_tutorials_flags.tutorial_1.population_150_reached)  building_menu_update(tutorial_stage.tutorial_food);
-        else g_city_events.appendListener(typeid(event_population_changed), &tutorial_handle_population_changed);
+        else g_city_events.appendListener(typeid(event_population_changed), &tutorial1_handle_population_changed);
 
         if (g_tutorials_flags.tutorial_1.collapse) building_menu_update(tutorial_stage.tutorial_collapse);
         if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) building_menu_update(tutorial_stage.tutorial_water);
+
+        g_city.victory_state.add_condition(&tutorial1_is_success);
 
         return true;
     } 
@@ -432,7 +439,7 @@ void tutorial_update_step(pcstr s) {
     const xstring step(s);
     if (step == tutorial_stage.tutorial_fire) {
         g_tutorials_flags.tutorial_1.fire = false;
-        tutorial_handle_fire(event_fire_damage{0});
+        tutorial1_handle_fire(event_fire_damage{0});
     } else if (step == tutorial_stage.tutorial_food) {
         building_menu_update(step);
         post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);
