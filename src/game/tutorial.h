@@ -32,6 +32,7 @@ struct tutorial_flags_t {
         bool population_150_reached;
         bool gamemeat_400_stored;
         bool collapse;
+        bool architector_built;
     } tutorial_1;
 
     struct {
@@ -102,7 +103,6 @@ int tutorial_adjust_request_year(int* year);
 int tutorial_extra_damage_risk();
 
 void tutorial_on_disease();
-void tutorial_on_filled_granary(int quantity);
 void tutorial_on_gold_extracted();
 void tutorial_on_religion();
 void tutorial_on_house_evolve(e_house_level level);

@@ -365,8 +365,9 @@ static void calculate_available_food() {
             for (int r = 0; r < RESOURCES_FOODS_MAX; r++)
                 city_data.resource.granary_food_stored[r] += granary.resource_stored[r];
 
-            if (amount_stored >= 100)
-                tutorial_on_filled_granary(amount_stored);
+            if (amount_stored >= 100) {
+                g_city_events.enqueue(event_granary_filled{b.id, amount_stored});
+            }
         }
     }, BUILDING_GRANARY);
 

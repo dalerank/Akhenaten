@@ -21,6 +21,8 @@ struct granary_getting_result {
     tile2i tile;
 };
 
+struct event_granary_filled { building_id bid; int amount; };
+
 class building_granary : public building_storage {
 public:
     BUILDING_METAINFO_RT(BUILDING_GRANARY, building_granary)

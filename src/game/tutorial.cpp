@@ -2,6 +2,7 @@
 
 #include "building/building_menu.h"
 #include "building/maintenance.h"
+#include "building/building_granary.h"
 #include "city/buildings.h"
 #include "city/city.h"
 #include "city/message.h"
@@ -181,12 +182,12 @@ void tutorial1_handle_fire(event_fire_damage) {
     post_message(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE);
 }
 
-void tutorial1_handle_population_changed(event_population_changed ev) {
+void tutorial1_handle_population_150(event_population_changed ev) {
     if (g_tutorials_flags.tutorial_1.population_150_reached || ev.value < 150) {
         return;
     } 
 
-    g_city_events.removeListener(typeid(event_population_changed), &tutorial1_handle_population_changed);
+    g_city_events.removeListener(typeid(event_population_changed), &tutorial1_handle_population_150);
     
     g_tutorials_flags.tutorial_1.population_150_reached = true;
     building_menu_update(tutorial_stage.tutorial_food);
@@ -205,6 +206,45 @@ void tutorial1_handle_collapse(event_collase_damage) {
     post_message(MESSAGE_TUTORIAL_COLLAPSED_BUILDING);
 }
 
+void tutorial1_on_filled_granary(event_granary_filled ev) {
+    if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) {
+        return;
+    } 
+    
+    if (ev.amount <= 400) {
+        return;
+    }
+
+    g_city_events.removeListener(typeid(event_granary_filled), &tutorial1_on_filled_granary);
+
+    g_tutorials_flags.tutorial_1.gamemeat_400_stored = true;
+    building_menu_update(tutorial_stage.tutorial_water);
+    post_message(MESSAGE_TUTORIAL_CLEAN_WATER);
+}
+
+void tutorial3_on_filled_granary(event_granary_filled ev) {
+    if (g_tutorials_flags.tutorial_3.figs_800_stored) {
+        return;
+    }
+  
+    if (ev.amount < 800) {
+        return;
+    }
+
+    auto granary = building_get(ev.bid)->dcast_granary();
+    const int figs_stored = granary ? granary->amount(RESOURCE_FIGS) : 0;
+
+    if (figs_stored < 800) {
+        return;
+    }
+
+    g_city_events.removeListener(typeid(event_granary_filled), &tutorial3_on_filled_granary);
+
+    g_tutorials_flags.tutorial_3.figs_800_stored = true;
+    building_menu_update(tutorial_stage.tutorial_industry);
+    post_message(MESSAGE_TUTORIAL_INDUSTRY);
+}
+
 bool tutorial1_is_success() {
     auto &tut = g_tutorials_flags.tutorial_1;
     return tut.fire && tut.collapse && tut.population_150_reached && tut.gamemeat_400_stored;
@@ -216,12 +256,17 @@ bool tutorial_menu_update(int tut) {
         else g_city_events.appendListener(typeid(event_fire_damage), &tutorial1_handle_fire);
 
         if (g_tutorials_flags.tutorial_1.population_150_reached)  building_menu_update(tutorial_stage.tutorial_food);
-        else g_city_events.appendListener(typeid(event_population_changed), &tutorial1_handle_population_changed);
+        else g_city_events.appendListener(typeid(event_population_changed), &tutorial1_handle_population_150);
+
+        //if (!g_tutorials_flags.tutorial_1.architector_built) {
+        //    g_city_events.appendListener(typeid(event_building_create), &tutorial1_handle_building_create);
+        //}
 
         if (g_tutorials_flags.tutorial_1.collapse) building_menu_update(tutorial_stage.tutorial_collapse);
         else g_city_events.appendListener(typeid(event_collase_damage), &tutorial1_handle_collapse);
 
         if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) building_menu_update(tutorial_stage.tutorial_water);
+        else g_city_events.appendListener(typeid(event_granary_filled), &tutorial1_on_filled_granary);
 
         g_city.victory_state.add_condition(&tutorial1_is_success);
 
@@ -237,6 +282,8 @@ bool tutorial_menu_update(int tut) {
     
     if (tut == 3) {            
         if (g_tutorials_flags.tutorial_3.figs_800_stored) building_menu_update(tutorial_stage.tutorial_industry);
+        else g_city_events.appendListener(typeid(event_granary_filled), &tutorial3_on_filled_granary);
+
         if (g_tutorials_flags.tutorial_3.pottery_made) building_menu_update(tutorial_stage.tutorial_industry);
         if (g_tutorials_flags.tutorial_3.disease) building_menu_update(tutorial_stage.tutorial_health);
         if (g_tutorials_flags.tutorial_3.pottery_made) building_menu_update(tutorial_stage.tutorial_gardens);
@@ -367,20 +414,6 @@ void tutorial_on_disease() {
         g_tutorials_flags.tutorial_3.disease = true;
         building_menu_update(tutorial_stage.tutorial_health);
         post_message(MESSAGE_TUTORIAL_BASIC_HEALTHCARE);
-    }
-}
-
-void tutorial_on_filled_granary(int quantity) {
-    if (scenario_is_mission_rank(1) && !g_tutorials_flags.tutorial_1.gamemeat_400_stored && quantity >= 400) {
-        g_tutorials_flags.tutorial_1.gamemeat_400_stored = 1;
-        building_menu_update(tutorial_stage.tutorial_water);
-        post_message(MESSAGE_TUTORIAL_CLEAN_WATER);
-    }
-
-    if (scenario_is_mission_rank(3) && !g_tutorials_flags.tutorial_3.figs_800_stored && quantity >= 800) {
-        g_tutorials_flags.tutorial_3.figs_800_stored = 1;
-        building_menu_update(tutorial_stage.tutorial_industry);
-        post_message(MESSAGE_TUTORIAL_INDUSTRY);
     }
 }
 
@@ -535,6 +568,7 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.population_150_reached);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.gamemeat_400_stored);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.collapse);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.architector_built);
     // tut 2
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_2.gold_mined_500);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_2.temples_built);
@@ -577,5 +611,4 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[37]); // goal: temples
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[38]);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[39]);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[40]);
 });
