@@ -168,60 +168,6 @@ void tutorial_map_update(int tut) {
     }
 }
 
-void tutorial1_handle_fire(event_fire_damage) {
-    if (g_tutorials_flags.tutorial_1.fire) {
-        return;
-    }
-
-    g_city_events.removeListener(typeid(event_fire_damage), &tutorial1_handle_fire);
-
-    g_tutorials_flags.tutorial_1.fire = true;
-    g_scenario_data.add_fire_damage.clear();
-
-    building_menu_update(tutorial_stage.tutorial_fire);
-    post_message(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE);
-}
-
-void tutorial1_handle_population_150(event_population_changed ev) {
-    if (g_tutorials_flags.tutorial_1.population_150_reached || ev.value < 150) {
-        return;
-    } 
-
-    g_city_events.removeListener(typeid(event_population_changed), &tutorial1_handle_population_150);
-    
-    g_tutorials_flags.tutorial_1.population_150_reached = true;
-    building_menu_update(tutorial_stage.tutorial_food);
-    post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);
-}
-
-void tutorial1_handle_collapse(event_collase_damage) {
-    if (g_tutorials_flags.tutorial_1.collapse) {
-        return;
-    }
-
-    g_city_events.removeListener(typeid(event_collase_damage), &tutorial1_handle_collapse);
-
-    g_tutorials_flags.tutorial_1.collapse = true;
-    building_menu_update(tutorial_stage.tutorial_collapse);
-    post_message(MESSAGE_TUTORIAL_COLLAPSED_BUILDING);
-}
-
-void tutorial1_on_filled_granary(event_granary_filled ev) {
-    if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) {
-        return;
-    } 
-    
-    if (ev.amount <= 400) {
-        return;
-    }
-
-    g_city_events.removeListener(typeid(event_granary_filled), &tutorial1_on_filled_granary);
-
-    g_tutorials_flags.tutorial_1.gamemeat_400_stored = true;
-    building_menu_update(tutorial_stage.tutorial_water);
-    post_message(MESSAGE_TUTORIAL_CLEAN_WATER);
-}
-
 void tutorial3_on_filled_granary(event_granary_filled ev) {
     if (g_tutorials_flags.tutorial_3.figs_800_stored) {
         return;
@@ -245,31 +191,9 @@ void tutorial3_on_filled_granary(event_granary_filled ev) {
     post_message(MESSAGE_TUTORIAL_INDUSTRY);
 }
 
-bool tutorial1_is_success() {
-    auto &tut = g_tutorials_flags.tutorial_1;
-    return tut.fire && tut.collapse && tut.population_150_reached && tut.gamemeat_400_stored;
-}
-
 bool tutorial_menu_update(int tut) {
     if (tut == 1) {
-        if (g_tutorials_flags.tutorial_1.fire) building_menu_update(tutorial_stage.tutorial_fire);
-        else g_city_events.appendListener(typeid(event_fire_damage), &tutorial1_handle_fire);
-
-        if (g_tutorials_flags.tutorial_1.population_150_reached)  building_menu_update(tutorial_stage.tutorial_food);
-        else g_city_events.appendListener(typeid(event_population_changed), &tutorial1_handle_population_150);
-
-        //if (!g_tutorials_flags.tutorial_1.architector_built) {
-        //    g_city_events.appendListener(typeid(event_building_create), &tutorial1_handle_building_create);
-        //}
-
-        if (g_tutorials_flags.tutorial_1.collapse) building_menu_update(tutorial_stage.tutorial_collapse);
-        else g_city_events.appendListener(typeid(event_collase_damage), &tutorial1_handle_collapse);
-
-        if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) building_menu_update(tutorial_stage.tutorial_water);
-        else g_city_events.appendListener(typeid(event_granary_filled), &tutorial1_on_filled_granary);
-
-        g_city.victory_state.add_condition(&tutorial1_is_success);
-
+        tutorial_1::init();
         return true;
     } 
     
@@ -472,33 +396,27 @@ void tutorial_on_house_evolve(e_house_level level) {
     }
 }
 
-void tutorial_update_step(pcstr s) {
-    const xstring step(s);
-    if (step == tutorial_stage.tutorial_fire) {
-        g_tutorials_flags.tutorial_1.fire = false;
-        tutorial1_handle_fire({0});
-    } else if (step == tutorial_stage.tutorial_food) {
-        building_menu_update(step);
+void tutorial_update_step(xstring s) {
+    tutorial_1::update_step(s);
+    if (s == tutorial_stage.tutorial_food) {
+        building_menu_update(s);
         post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);
-    } else if (step == tutorial_stage.tutorial_water) {
-        building_menu_update(step);
+    } else if (s == tutorial_stage.tutorial_water) {
+        building_menu_update(s);
         post_message(MESSAGE_TUTORIAL_CLEAN_WATER);
-    } else if (step == tutorial_stage.tutorial_collapse) {
-        g_tutorials_flags.tutorial_1.collapse = false;
-        tutorial1_handle_collapse({0});
-    } else if (step == tutorial_stage.tutorial_gods) {
-        building_menu_update(step);
+    } else if (s == tutorial_stage.tutorial_gods) {
+        building_menu_update(s);
         post_message(MESSAGE_TUTORIAL_GODS_OF_EGYPT);
-    } else if (step == tutorial_stage.tutorial_entertainment) {
-        building_menu_update(step);
-    } else if (step == tutorial_stage.tutorial_industry) {
-        building_menu_update(step);
+    } else if (s == tutorial_stage.tutorial_entertainment) {
+        building_menu_update(s);
+    } else if (s == tutorial_stage.tutorial_industry) {
+        building_menu_update(s);
         post_message(MESSAGE_TUTORIAL_INDUSTRY);
-    } else if (step == tutorial_stage.tutorial_health) {
-        building_menu_update(step);
+    } else if (s == tutorial_stage.tutorial_health) {
+        building_menu_update(s);
         post_message(MESSAGE_TUTORIAL_BASIC_HEALTHCARE);
-    } else if (step == tutorial_stage.tutorial_gardens) {
-        building_menu_update(step);
+    } else if (s == tutorial_stage.tutorial_gardens) {
+        building_menu_update(s);
         post_message(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES);
     }
 }
@@ -609,6 +527,5 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[35]);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[36]); // goal: entertainment
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[37]); // goal: temples
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[38]);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[39]);
+    iob->bind(BIND_SIGNATURE_UINT16, &g_tutorials_flags.pharaoh.last_action);
 });

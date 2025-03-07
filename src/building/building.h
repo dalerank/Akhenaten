@@ -146,6 +146,8 @@ class building_farm;
 
 building* building_get(building_id id);
 
+struct event_building_create { building_id bid; };
+
 class building {
 public:
     enum { max_figures = 4 };

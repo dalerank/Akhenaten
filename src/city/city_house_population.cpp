@@ -26,7 +26,7 @@ int house_population_add_to_city(int num_people) {
         }
 
         auto house = building_get(building_id)->dcast_house();
-        if (house->state() == BUILDING_STATE_VALID && house->distance_from_entry() > 0 && house->house_population() > 0) {
+        if (house && house->state() == BUILDING_STATE_VALID && house->distance_from_entry() > 0 && house->house_population() > 0) {
             city_population_set_last_used_house_add(building_id);
             int max_people = model_get_house(house->house_level())->max_people;
             if (house->is_merged()) {

@@ -70,6 +70,7 @@ building *building_create(e_building_type type, tile2i tile, int orientation) {
 
     memset(b->runtime_data, 0, sizeof(b->runtime_data));
     b->new_fill_in_data_for_type(type, tile, orientation);
+    g_city_events.enqueue(event_building_create{ b->id });
 
     return b;
 }

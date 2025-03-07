@@ -25,6 +25,11 @@ struct tutorial_stage_t {
 #undef _RR
 };
 
+struct tutorial_1 {
+    static void init();
+    static void update_step(xstring s);
+};
+
 struct tutorial_flags_t {
     struct {
         bool started;
@@ -77,6 +82,7 @@ struct tutorial_flags_t {
         bool crime;
         bool tut7_start;
         bool tut8_start;
+        uint16_t last_action;
 
     } pharaoh;
 
@@ -112,4 +118,4 @@ void tutorial_check_resources_on_storageyard();
 void tutorial_on_day_tick();
 void tutorial_on_month_tick();
 
-void tutorial_update_step(pcstr step);
+void tutorial_update_step(xstring step);

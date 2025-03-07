@@ -236,6 +236,7 @@ file(GLOB EMPIRE_FILES ${PROJECT_SOURCE_DIR}/src/empire/*.cpp)
 file(GLOB FIGURE_FILES ${PROJECT_SOURCE_DIR}/src/figure/*.cpp)
 file(GLOB FIGURETYPE_FILES ${PROJECT_SOURCE_DIR}/src/figuretype/*.cpp)
 file(GLOB GAME_FILES ${PROJECT_SOURCE_DIR}/src/game/*.cpp)
+file(GLOB TUTORIAL_FILES ${PROJECT_SOURCE_DIR}/src/tutorial/*.cpp)
 file(GLOB INPUT_FILES ${PROJECT_SOURCE_DIR}/src/input/*.cpp)
 file(GLOB GRID_FILES ${PROJECT_SOURCE_DIR}/src/grid/*.cpp)
 file(GLOB GRID_ROUTING_FILES ${PROJECT_SOURCE_DIR}/src/grid/routing/*.cpp)
@@ -332,6 +333,7 @@ if(MSVC)
     source_group("figure" FILES ${FIGURE_FILES})
     source_group("figuretype" FILES ${FIGURETYPE_FILES})
     source_group("game" FILES ${GAME_FILES})
+    source_group("tutorial" FILES ${TUTORIAL_FILES})
     source_group("input" FILES ${INPUT_FILES})
     source_group("grid" FILES ${GRID_FILES})
     source_group("grid/routing" FILES ${GRID_ROUTING_FILES})
@@ -385,6 +387,7 @@ set(SOURCE_FILES
     ${FIGURE_FILES}
     ${FIGURETYPE_FILES}
     ${GAME_FILES}
+    ${TUTORIAL_FILES}
     ${INPUT_FILES}
     ${GRID_FILES}
     ${SCENARIO_FILES}
