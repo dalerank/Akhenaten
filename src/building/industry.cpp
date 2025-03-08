@@ -132,8 +132,8 @@ void building_industry_update_production(void) {
             return;
         }
 
-        auto industry = b.dcast_industry()->runtime_data();
-        industry.has_raw_materials = false;
+        auto& industryd = b.dcast_industry()->runtime_data();
+        industryd.has_raw_materials = false;
         if (b.num_workers <= 0) {
             return;
         }
@@ -146,17 +146,14 @@ void building_industry_update_production(void) {
             }
 
             int progress_per_day = b.dcast()->get_produce_uptick_per_day();
-            industry.progress += progress_per_day;
+            industryd.progress += progress_per_day;
 
             if (b.blessing_days_left) {
                 const float normal_progress = progress_per_day;
-                industry.progress += normal_progress;
+                industryd.progress += normal_progress;
             }
 
-            int max = industry.progress_max;
-            if (industry.progress > max) {
-                industry.progress = max;
-            }
+            industryd.progress = std::clamp<short>(industryd.progress, 0, industryd.progress_max);
         }
     });
 }
@@ -174,7 +171,6 @@ void building_industry_update_farms(void) {
             return;
         }
 
-        auto d = farm->runtime_data();
         if (b.curse_days_left) { // TODO
             b.curse_days_left--;
         }
@@ -187,8 +183,10 @@ void building_industry_update_farms(void) {
         int fert = map_get_fertility_for_farm(b.tile.grid_offset());
         int progress_step = (float)fert * get_farm_produce_uptick_per_day(b); // 0.16f
         const bool osiris_blessing = g_city.religion.osiris_double_farm_yield_days > 0;
+        
+        auto& farmd = farm->runtime_data();
         if (osiris_blessing) {
-            d.produce_multiplier++;
+            farmd.produce_multiplier++;
         }
 
         if (is_floodplain) { // floodplain farms
@@ -218,8 +216,8 @@ void building_industry_update_farms(void) {
         }
 
         // clamp progress
-        int max = d.progress_max;
-        d.progress = std::clamp<int>(d.progress, 0, max);
+        int max = farmd.progress_max;
+        farmd.progress = std::clamp<int>(farmd.progress, 0, max);
 
         farm->update_tiles_image();
     });

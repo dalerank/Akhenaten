@@ -22,7 +22,7 @@ public:
         virtual void planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };
 
-    struct runtime_data_t {
+    struct runtime_data_t : public no_copy_assignment {
         uint8_t worker_frame;
         uint16_t progress;
         uint16_t progress_max;

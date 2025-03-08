@@ -255,11 +255,12 @@ void building::spawn_figure_industry() {
 
     bool has_produced_resource = false;
     if (is_farm()) {
-        auto farm = dcast_farm()->runtime_data();
-        has_produced_resource = (farm.progress >= farm.progress_max);
+        const auto& farmd = dcast_farm()->runtime_data();
+        has_produced_resource = (farmd.progress >= farmd.progress_max);
     } else if (is_industry()) {
-        auto industry = dcast_industry()->runtime_data();
-        has_produced_resource = (industry.progress >= industry.progress_max);
+        const auto& industryd = dcast_industry()->runtime_data();
+        assert(industryd.progress_max > 100);
+        has_produced_resource = (industryd.progress >= industryd.progress_max);
     }
 
     if (has_produced_resource) {
