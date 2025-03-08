@@ -356,8 +356,6 @@ public:
     building_water_lift *dcast_water_lift();
     building_monument *dcast_monument();
 
-    void set_water_supply_graphic();
-
     int get_figures_number(e_figure_type ftype);
 
     tile2i access_tile();

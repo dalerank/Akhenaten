@@ -49,7 +49,6 @@ void building_water_supply::spawn_figure() {
     }
 
     common_spawn_roamer(FIGURE_WATER_CARRIER, 50, FIGURE_ACTION_125_ROAMING);
-    //    set_water_supply_graphic();
 
     //    check_labor_problem();
     //    if (has_figure_of_type(FIGURE_WATER_CARRIER))
