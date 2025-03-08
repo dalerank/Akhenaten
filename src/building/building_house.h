@@ -64,6 +64,7 @@ public:
         uint8_t tax_coverage;
         uint8_t days_without_food;
         uint8_t hsize;
+        building_id worst_desirability_building_id;
     };
 
     virtual void on_create(int orientation) override;
@@ -83,6 +84,10 @@ public:
     inline void change_population(short delta) { runtime_data().population += delta; }
     inline e_house_level house_level() const { return runtime_data().level; }
     inline uint8_t hsize() const { return runtime_data().hsize; }
+
+    void determine_evolve_text();
+    void determine_worst_desirability_building();
+
     int16_t population_room() const;
     void change_to_vacant_lot();
     bool is_vacant_lot() const;

@@ -23,7 +23,6 @@
 
 #include <cmath>
 
-
 #define INFINITE 10000
 
 delivery_destination building_get_asker_for_resource(tile2i tile, e_building_type btype, e_resource resource, int road_network_id, int distance_from_entry) {

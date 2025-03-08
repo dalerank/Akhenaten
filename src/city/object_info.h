@@ -65,7 +65,6 @@ struct object_info {
     int formation_id;
     int formation_types;
     int barracks_soldiers_requested;
-    int worst_desirability_building_id;
     int warehouse_space_text;
     common_info_window *ui = nullptr;
     terrain_info_type terrain_type;

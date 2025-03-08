@@ -1,5 +1,3 @@
-#include "house_evolution.h"
-
 #include "building/building_house.h"
 #include "building/model.h"
 #include "city/houses.h"
@@ -13,31 +11,25 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/tiles.h"
 
-void building_house_determine_evolve_text(building* b, int worst_desirability_building) {
-    auto house = b->dcast_house();
-
-    if (!house) {
-        return;
-    }
-
-    int level = house->house_level();
-    auto& housed = house->runtime_data();
+void building_house::determine_evolve_text() {
+    int level = house_level();
+    auto& housed = runtime_data();
 
     // this house will devolve soon because...
 
     const model_house& model = model_get_house(level);
     // desirability
-    if (house->base.desirability <= model.devolve_desirability) {
+    if (base.desirability <= model.devolve_desirability) {
         housed.evolve_text_id = 0;
         return;
     }
     // water
     int water = model.water;
-    if (water == 1 && !house->base.has_water_access && !house->base.has_well_access) {
+    if (water == 1 && !base.has_water_access && !base.has_well_access) {
         housed.evolve_text_id = 1;
         return;
     }
-    if (water == 2 && (!house->base.has_water_access || !housed.water_supply)) {
+    if (water == 2 && (!base.has_water_access || !housed.water_supply)) {
         housed.evolve_text_id = 2;
         return;
     }
@@ -169,8 +161,8 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
     // this house will evolve if ...
 
     // desirability
-    if (house->base.desirability < model.evolve_desirability) {
-        if (worst_desirability_building)
+    if (base.desirability < model.evolve_desirability) {
+        if (housed.worst_desirability_building_id)
             housed.evolve_text_id = 62;
         else {
             housed.evolve_text_id = 30;
@@ -181,11 +173,11 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
     const auto& next_model = model_get_house(++level);
     // water
     water = next_model.water;
-    if (water == 1 && !house->base.has_water_access && !house->base.has_well_access) {
+    if (water == 1 && !base.has_water_access && !base.has_well_access) {
         housed.evolve_text_id = 31;
         return;
     }
-    if (water == 2 && !house->base.has_water_access) {
+    if (water == 2 && !base.has_water_access) {
         housed.evolve_text_id = 32;
         return;
     }
@@ -311,12 +303,12 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
     }
 }
 
-int building_house_determine_worst_desirability_building(building* asker) {
+void building_house::determine_worst_desirability_building() {
     int lowest_desirability = 0;
     int lowest_building_id = 0;
-    grid_area area = map_grid_get_area(asker->tile, 1, 6);
 
-    auto asker_house = asker->dcast_house();
+    grid_area area = map_grid_get_area(tile(), 1, 6);
+
     for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
         for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int building_id = map_building_at(MAP_OFFSET(x, y));
@@ -328,13 +320,13 @@ int building_house_determine_worst_desirability_building(building* asker) {
                 continue;
             }
 
-            if (!asker_house->house_level() || b->type < asker->type) {
+            if (!house_level() || b->type < type()) {
                 int des = model_get_building(b->type)->desirability_value;
                 if (des < 0) {
                     // simplified desirability calculation
                     int step_size = model_get_building(b->type)->desirability_step_size;
                     int range = model_get_building(b->type)->desirability_range;
-                    int dist = calc_maximum_distance(vec2i(x, y), asker->tile);
+                    int dist = calc_maximum_distance(vec2i(x, y), tile());
                     if (dist <= range) {
                         while (--dist > 1) {
                             des += step_size;
@@ -348,5 +340,7 @@ int building_house_determine_worst_desirability_building(building* asker) {
             }
         }
     }
-    return lowest_building_id;
+
+    auto &housed = runtime_data();
+    housed.worst_desirability_building_id = lowest_building_id;
 }

@@ -57,11 +57,12 @@ info_window_vacant_lot vacant_lot_infow;
 void info_window_vacant_lot::init(object_info &c) {
     building_info_window::init(c);
 
-    //window_figure_info_prepare_figures(c);
-    //window_building_draw_figure_list(&c);
+    auto house = c.building_get()->dcast_house();
+    if (!house) {
+        return;
+    }
 
-    building *b = c.building_get();
-    map_point road_tile = map_closest_road_within_radius(b->tile, 1, 2);
+    map_point road_tile = map_closest_road_within_radius(house->tile(), 1, 2);
     int text_id = road_tile.valid() ? 1 : 2;
 
     ui["describe"] = ui::str(128, text_id);
@@ -77,12 +78,15 @@ void info_window_house::init(object_info &c) {
         return;
     }
 
+    house->determine_worst_desirability_building();
+    house->determine_evolve_text();
+
     auto &housed = house->runtime_data();
     if (housed.evolve_text_id == 62) { // is about to devolve
         bstring512 text;
         text.printf("%s @Y%s&) %s",
             ui::str(127, 40 + housed.evolve_text_id),
-            ui::str(41, ::building_get(c.worst_desirability_building_id)->type),
+            ui::str(41, ::building_get(housed.worst_desirability_building_id)->type),
             ui::str(127, 41 + housed.evolve_text_id));
         ui["evolve_reason"] = text;
     } else { // needs something to evolve 
