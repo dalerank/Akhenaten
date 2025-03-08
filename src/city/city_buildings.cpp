@@ -260,7 +260,10 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind____skip(2); 
         iob->bind(BIND_SIGNATURE_TILE2I, b->road_access);
 
-        b->bind_iob_figures(iob);
+        iob->bind(BIND_SIGNATURE_UINT16, &b->figure_ids[0]);
+        iob->bind(BIND_SIGNATURE_UINT16, &b->figure_ids[1]);
+        iob->bind(BIND_SIGNATURE_UINT16, &b->figure_ids[2]);
+        iob->bind(BIND_SIGNATURE_UINT16, &b->figure_ids[3]);
 
         iob->bind(BIND_SIGNATURE_INT16, &b->figure_spawn_delay);
         iob->bind(BIND_SIGNATURE_UINT8, &b->figure_roam_direction);

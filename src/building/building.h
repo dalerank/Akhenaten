@@ -157,7 +157,6 @@ private:
     ptr_buffer_t _ptr_buffer = { 0 };
     class building_impl *_ptr = nullptr; // dcast
 
-    std::array<figure_id, max_figures> figure_ids;
 
 public:
     e_building_type type;
@@ -217,6 +216,7 @@ public:
     uint8_t show_on_problem_overlay;
     uint16_t deben_storage;
     animation_context anim;
+    std::array<figure_id, max_figures> figure_ids;
     char runtime_data[512] = { 0 };
 
     building();
@@ -266,7 +266,6 @@ public:
     int get_figure_id(int i) const { return figure_ids[i]; };
 
     figure* get_figure(int i);
-    void bind_iob_figures(io_buffer* iob);
     void set_figure(int i, int figure_id = -1);
     void set_figure(int i, figure* f);
     void remove_figure(int i);
