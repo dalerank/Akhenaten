@@ -356,7 +356,6 @@ public:
     building_water_lift *dcast_water_lift();
     building_monument *dcast_monument();
 
-    bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
     void spawn_figure_native_hut();
     void spawn_figure_native_meeting();

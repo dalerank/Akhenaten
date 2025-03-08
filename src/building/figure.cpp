@@ -216,10 +216,6 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_ful
     return false;
 }
 
-bool building::spawn_noble(bool spawned) {
-    return common_spawn_roamer(FIGURE_NOBLES, 50);
-}
-
 void building::set_water_supply_graphic() {
     //if (state != BUILDING_STATE_VALID) {
     //    return;
@@ -302,22 +298,14 @@ void building::update_native_crop_progress() {
 }
 
 bool building::figure_generate() {
-    show_on_problem_overlay = 0;
+    switch (type) {
+    case BUILDING_UNUSED_NATIVE_HUT_88: spawn_figure_native_hut(); break;
+    case BUILDING_UNUSED_NATIVE_MEETING_89: spawn_figure_native_meeting(); break;
+    case BUILDING_UNUSED_NATIVE_CROPS_93: update_native_crop_progress(); break;
 
-    bool noble_generated = false;
-    if (type >= BUILDING_HOUSE_COMMON_MANOR && type <= BUILDING_HOUSE_PALATIAL_ESTATE) {
-        noble_generated = spawn_noble(noble_generated);
-    } else {
-        // single building type
-        switch (type) {
-        case BUILDING_UNUSED_NATIVE_HUT_88: spawn_figure_native_hut(); break;
-        case BUILDING_UNUSED_NATIVE_MEETING_89: spawn_figure_native_meeting(); break;
-        case BUILDING_UNUSED_NATIVE_CROPS_93: update_native_crop_progress(); break;
-
-        default:
-            dcast()->spawn_figure();
-            break;
-        }
+    default:
+        dcast()->spawn_figure();
+        break;
     }
 
     return true;

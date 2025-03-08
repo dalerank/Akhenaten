@@ -30,6 +30,7 @@
 #define MAX_DIR 4
 
 namespace buildings {
+
 template<typename T>
 struct house_model_t : public model_t<T> {
     using inherited = model_t<T>;
@@ -233,6 +234,16 @@ bvariant building_house::get_property(const xstring &domain, const xstring &name
     }
 
     return building_impl::get_property(domain, name);
+}
+
+void building_house::spawn_figure() {
+    if (!has_road_access()) {
+        return;
+    }
+
+    if (type() >= BUILDING_HOUSE_COMMON_MANOR) {
+        common_spawn_roamer(FIGURE_NOBLES, 50, FIGURE_ACTION_125_ROAMING);
+    }
 }
 
 void building_house::create_vacant_lot(tile2i tile, int image_id) {

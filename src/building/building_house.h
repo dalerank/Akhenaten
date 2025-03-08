@@ -77,6 +77,7 @@ public:
     virtual int get_fire_risk(int value) const override;
     virtual void highlight_waypoints() override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override; 
+    virtual void spawn_figure() override;
 
     inline short house_population() const { return runtime_data().population; }
     inline void change_population(short delta) { runtime_data().population += delta; }
