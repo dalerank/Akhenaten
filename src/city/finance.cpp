@@ -83,7 +83,6 @@ void city_finance_process_console(int amount) {
 
 void city_finance_process_stolen(int stolen) {
     city_data.finance.treasury -= stolen;
-    city_data.finance.stolen_this_year += stolen;
     city_data.finance.this_year.expenses.stolen += stolen;
 }
 
@@ -347,8 +346,6 @@ static void copy_amounts_to_last_year() {
     this_year->expenses.requests_and_festivals = 0;
     last_year->expenses.stolen = this_year->expenses.stolen;
     this_year->expenses.stolen = 0;
-    city_data.finance.stolen_last_year = city_data.finance.stolen_this_year;
-    city_data.finance.stolen_this_year = 0;
 
     // donations
     last_year->income.donated = this_year->income.donated;

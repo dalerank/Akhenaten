@@ -53,25 +53,7 @@ struct city_t {
         int8_t roman_months_traveled;
     } distant_battle;
 
-    struct {
-        int32_t treasury;
-        int32_t tax_percentage;
-        int32_t estimated_tax_uncollected;
-        int32_t estimated_tax_income;
-        int32_t estimated_wages;
-        finance_overview last_year;
-        finance_overview this_year;
-        int32_t interest_so_far;
-        int32_t salary_so_far;
-        int32_t wages_so_far;
-        int16_t stolen_this_year;
-        int16_t stolen_last_year;
-        int32_t cheated_money;
-        int32_t tribute_not_paid_last_year;
-        int32_t tribute_not_paid_total_years;
-        int32_t wage_rate_paid_this_year;
-        int32_t wage_rate_paid_last_year;
-    } finance;
+    city_finance_t finance;
 
     struct {
         int32_t taxed_citizens;

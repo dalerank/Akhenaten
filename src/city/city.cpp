@@ -93,6 +93,8 @@ void city_t::ratings_update(bool is_yearly_update) {
 
 void city_t::init_campaign_mission() {
     finance.treasury = difficulty_adjust_money(finance.treasury);
+    finance.last_year.income.gold_extracted = 0;
+    finance.this_year.income.gold_extracted = 0;
 }
 
 void city_t::init_mission_resources(const std::vector<resource_allow>& resources) {
@@ -313,6 +315,7 @@ void city_t::buildings_generate_figure() {
 io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_city;
     iob->bind(BIND_SIGNATURE_RAW, &data.unused.other_player, 18904);
+    assert(iob->get_offset() == 18904);
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a0);
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a1);
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a2);
@@ -321,8 +324,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT8, &data.buildings.unknown_value);
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a7);
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a6);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.tax_percentage);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.treasury);
+    iob->bind____skip(4);
+    iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.value);
     iob->bind(BIND_SIGNATURE_INT32, &data.health.target_value);
     iob->bind(BIND_SIGNATURE_INT32, &data.health.value);
@@ -462,9 +465,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.labor.wages);
     iob->bind(BIND_SIGNATURE_INT32, &data.labor.wages_kingdome);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_2b6c);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.wages_so_far);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.wages);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.expenses.wages);
+    iob->bind____skip(4);
+    iob->bind____skip(4);
+    iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &data.taxes.taxed_citizens);
     iob->bind(BIND_SIGNATURE_INT32, &data.taxes.taxed_nobles);
     iob->bind(BIND_SIGNATURE_INT32, &data.taxes.untaxed_citizens);
@@ -508,7 +511,27 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.net_in_out);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.balance);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.balance);
-    for (int i = 0; i < 1400; i++)
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.income.donated);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.cheated_money);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.estimated_tax_income);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.estimated_tax_uncollected);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.estimated_wages);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.expenses.requests_and_festivals);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.requests_and_festivals);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.wage_rate_paid_this_year);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.tribute);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.expenses.tribute);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.tax_percentage);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.treasury);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.tribute_not_paid_last_year);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.wage_rate_paid_last_year);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.wages_so_far);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.wages);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.expenses.wages);
+    iob->bind(BIND_SIGNATURE_UINT32, &data.finance.this_year.income.gold_extracted);
+    iob->bind(BIND_SIGNATURE_UINT32, &data.finance.last_year.income.gold_extracted);
+    assert(iob->get_offset() == 30440);
+    for (int i = 0; i < 1381; i++)
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_2c20[i]);
     for (int i = 0; i < 8; i++)
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.houses_requiring_unknown_to_evolve[i]); // ????
@@ -620,7 +643,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     //    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.income.donated);
     //        for (int i = 0; i < 2; i++)
     //            iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.income.donated);
+    iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.income.donated);
 
     for (int i = 0; i < 2; i++) {
@@ -659,13 +682,13 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < 2; i++) {
         iob->bind(BIND_SIGNATURE_INT8, &data.unused.padding_43b2[i]);
     }
-    iob->bind(BIND_SIGNATURE_INT16, &data.finance.stolen_this_year);
-    iob->bind(BIND_SIGNATURE_INT16, &data.finance.stolen_last_year);
+    iob->bind____skip(2);
+    iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT32, &data.trade.docker_import_resource);
     iob->bind(BIND_SIGNATURE_INT32, &data.trade.docker_export_resource);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.debt_state);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.months_in_debt);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.cheated_money);
+    iob->bind____skip(4);
     iob->bind____skip(4); // BIND_SIGNATURE_UINT32, data.buildings.recruiter.tile);
     iob->bind____skip(4); // (BIND_SIGNATURE_INT32, &data.buildings.recruiter.building_id);
     iob->bind____skip(4); // (BIND_SIGNATURE_INT32, &data.buildings.recruiter.placed);
@@ -680,10 +703,10 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.mission.has_won);
     iob->bind(BIND_SIGNATURE_INT32, &data.mission.continue_months_left);
     iob->bind(BIND_SIGNATURE_INT32, &data.mission.continue_months_chosen); // wrong? hmm... 300 became 120? is it the wages?
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.wage_rate_paid_this_year);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.tribute); // ok
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.expenses.tribute);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.tribute_not_paid_last_year);
+    iob->bind____skip(4);
+    iob->bind____skip(4);
+    iob->bind____skip(4);
+    iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_UINT8, &data.festival.selected.god);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.festival.selected.size); // ????
@@ -741,7 +764,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.mission_post_operational);
     iob->bind(BIND_SIGNATURE_UINT32, data.buildings.main_native_meeting);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.wage_rate_paid_last_year);
+    iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.food_needed_per_month); // 62
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.granaries.understaffed);
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.granaries.not_operating);
@@ -762,7 +785,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.food_produced_last_month);
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.food_produced_this_month);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument_riot_cause);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.estimated_tax_income);
+    iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &data.mission.tutorial_senate_built); // ok
     iob->bind(BIND_SIGNATURE_UINT32, data.buildings.distribution_center);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_building_id);
@@ -837,8 +860,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.military.infantry_batalions);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.highest_ever);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.finance.estimated_wages);
-    iob->bind____skip(3);
+    iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_UINT8, &data.resource.wine_types_available);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.ratings.prosperity_max);
@@ -871,14 +893,14 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
 
     iob->bind____skip(4); // (BIND_SIGNATURE_INT32, &data.buildings.temple_complex_id);
     iob->bind____skip(36);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.expenses.requests_and_festivals);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.requests_and_festivals);
+    iob->bind____skip(4);
+    iob->bind____skip(4);
     iob->bind____skip(64);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.estimated_tax_uncollected);
+    iob->bind____skip(4);    
     iob->bind(BIND_SIGNATURE_UINT32, data.buildings.festival_square);
     iob->bind____skip(4);
     iob->bind____skip(8);
-    iob->bind(BIND_SIGNATURE_UINT32, &data.finance.this_year.income.gold_extracted);
+    iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_no_traders_months_left);
     iob->bind____skip(3);
     iob->bind____skip(92);
@@ -913,6 +935,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_flood_will_destroy_active);
     iob->bind____skip(3);
     iob->bind____skip(60);
+    assert(iob->get_offset() == 37808);
 });
 
 io_buffer* iob_city_data_extra = new io_buffer([](io_buffer* iob, size_t version) {
