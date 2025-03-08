@@ -14,6 +14,8 @@
 #include "widget/city/ornaments.h"
 #include "graphics/image.h"
 #include "graphics/animation.h"
+#include "grid/road_access.h"
+#include "figure/figure.h"
 
 buildings::model_t<building_personal_mansion> personal_mansion_m;
 buildings::model_t<building_family_mansion> family_mansion_m;
@@ -23,6 +25,23 @@ void building_mansion::on_place(int orientation, int variant) {
     building_impl::on_place(orientation, variant);
 
     city_buildings_add_mansion(&base);
+}
+
+void building_mansion::spawn_figure() {
+    common_spawn_figure_trigger(50);
+
+    if (base.has_figure(BUILDING_SLOT_GOVERNOR)) {
+        return;
+    }
+
+    tile2i road_tile = map_closest_road_within_radius(tile(), size(), 2);
+    if (road_tile.valid()) {
+        figure *f = figure_create(FIGURE_GOVERNOR, road_tile, DIR_4_BOTTOM_LEFT);
+        f->advance_action(FIGURE_ACTION_120_GOVERNOR_CREATED);
+        f->set_home(&base);
+        f->wait_ticks = 10 + (base.map_random_7bit & 0xf);
+        base.set_figure(BUILDING_SLOT_GOVERNOR, f);
+    }
 }
 
 void building_mansion::update_graphic() {

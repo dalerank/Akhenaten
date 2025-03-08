@@ -337,21 +337,6 @@ bool building::figure_generate() {
         noble_generated = spawn_noble(noble_generated);
     } else if (is_workshop() || is_extractor()) {// farms are handled by a separate cycle in Pharaoh!
         spawn_figure_industry();
-    } else if (is_administration()) {
-        common_spawn_figure_trigger(50);
-
-        if (is_governor_mansion() && !has_figure(BUILDING_SLOT_GOVERNOR)) {
-            tile2i road_tile = map_closest_road_within_radius(tile, size, 2);
-            if (road_tile.valid()) {
-                figure *f = figure_create(FIGURE_GOVERNOR, road_tile, DIR_4_BOTTOM_LEFT);
-                f->advance_action(FIGURE_ACTION_120_GOVERNOR_CREATED);
-                f->set_home(this);
-                f->wait_ticks = 10 + (map_random_7bit & 0xf);
-                set_figure(BUILDING_SLOT_GOVERNOR, f);
-            }
-        } else {
-            dcast()->spawn_figure();
-        }
     } else {
         // single building type
         switch (type) {

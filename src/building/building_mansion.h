@@ -8,6 +8,7 @@ public:
     virtual building_mansion *dcast_mansion() override { return this; }
 
     virtual void on_place(int orientation, int variant) override;
+    virtual void spawn_figure() override;
     virtual bool can_play_animation() const override { return true; }
     virtual void update_graphic() override;
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
