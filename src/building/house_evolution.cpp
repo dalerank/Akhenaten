@@ -16,7 +16,7 @@
 void building_house_determine_evolve_text(building* b, int worst_desirability_building) {
     auto house = b->dcast_house();
 
-    if (house) {
+    if (!house) {
         return;
     }
 
