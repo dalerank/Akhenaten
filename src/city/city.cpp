@@ -307,7 +307,58 @@ bool city_t::available_resource(e_resource resource) {
 void city_t::buildings_generate_figure() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure Generate");
     buildings_valid_do([] (building &b) {
-        b.figure_generate();
+        switch (b.type) {
+        case BUILDING_UNUSED_NATIVE_HUT_88: 
+            //    map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_NATIVE) + (map_random_get(grid_offset) & 1));
+            //    if (has_figure_of_type(FIGURE_INDIGENOUS_NATIVE))
+            //        return;
+            //    int x_out, y_out;
+            //    if (subtype.native_meeting_center_id > 0 &&
+            //        map_terrain_get_adjacent_road_or_clear_land(x, y, size, &x_out, &y_out)) {
+            //        figure_spawn_delay++;
+            //        if (figure_spawn_delay > 4) {
+            //            figure_spawn_delay = 0;
+            //            figure *f = figure_create(FIGURE_INDIGENOUS_NATIVE, x_out, y_out, DIR_0_TOP_RIGHT);
+            //            f->action_state = FIGURE_ACTION_158_NATIVE_CREATED;
+            //            f->home() = b;
+            //            figure_id = f->id;
+            //        }
+            //    }
+            break;
+
+        case BUILDING_UNUSED_NATIVE_MEETING_89: 
+            //    map_building_tiles_add(id, x, y, 2,
+            //                           image_id_from_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
+            //    if (city_buildings_is_mission_post_operational() && !has_figure_of_type(FIGURE_NATIVE_TRADER)) {
+            //        int x_out, y_out;
+            //        if (map_terrain_get_adjacent_road_or_clear_land(tile.x(), tile.y(), size, &x_out, &y_out)) {
+            //            figure_spawn_delay++;
+            //            if (figure_spawn_delay > 8) {
+            //                figure_spawn_delay = 0;
+            //                figure *f = figure_create(FIGURE_NATIVE_TRADER, x_out, y_out, DIR_0_TOP_RIGHT);
+            //                f->action_state = FIGURE_ACTION_162_NATIVE_TRADER_CREATED;
+            //                f->home() = b;
+            //                figure_id = f->id;
+            //            }
+            //        }
+            //    }
+            
+            break;
+        case BUILDING_UNUSED_NATIVE_CROPS_93: 
+            // todo 
+            //data.industry.progress++;
+            //if (data.industry.progress >= 5) {
+            //    data.industry.progress = 0;
+            //}
+            //
+            //int img_id = building_impl::params(BUILDING_BARLEY_FARM).anim["farmland"].first_img();
+            //map_image_set(tile.grid_offset(), img_id + data.industry.progress);
+            break;
+
+        default:
+            b.dcast()->spawn_figure();
+            break;
+        }
     });
 }
 

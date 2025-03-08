@@ -357,14 +357,10 @@ public:
     building_monument *dcast_monument();
 
     void set_water_supply_graphic();
-    void spawn_figure_native_hut();
-    void spawn_figure_native_meeting();
 
     int get_figures_number(e_figure_type ftype);
 
-    void update_native_crop_progress();
     tile2i access_tile();
-    bool figure_generate();
 
     static const metainfo &get_info(const xstring type);
 
