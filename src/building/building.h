@@ -358,7 +358,6 @@ public:
 
     bool spawn_noble(bool spawned);
     void set_water_supply_graphic();
-    void spawn_figure_industry();
     void spawn_figure_native_hut();
     void spawn_figure_native_meeting();
 

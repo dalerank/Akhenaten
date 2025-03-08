@@ -242,34 +242,6 @@ void building::set_water_supply_graphic() {
     //}
 }
 
-void building::spawn_figure_industry() {
-    check_labor_problem();
-    if (!has_road_access) {
-        return;
-    }
-
-    common_spawn_labor_seeker(50);
-    if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
-        return;
-    }
-
-    bool has_produced_resource = false;
-    if (is_farm()) {
-        const auto& farmd = dcast_farm()->runtime_data();
-        has_produced_resource = (farmd.progress >= farmd.progress_max);
-    } else if (is_industry()) {
-        const auto& industryd = dcast_industry()->runtime_data();
-        assert(industryd.progress_max > 100);
-        has_produced_resource = (industryd.progress >= industryd.progress_max);
-    }
-
-    if (has_produced_resource) {
-        dcast()->start_production();
-        int ready_production = dcast()->ready_production();
-        create_cartpusher(output_resource_first_id, ready_production);
-    }
-}
-
 int building::get_figures_number(e_figure_type ftype) {
     int figures_this_yard = 0;
     for (int i = 0; i < MAX_FIGURES; i++) {
@@ -335,8 +307,6 @@ bool building::figure_generate() {
     bool noble_generated = false;
     if (type >= BUILDING_HOUSE_COMMON_MANOR && type <= BUILDING_HOUSE_PALATIAL_ESTATE) {
         noble_generated = spawn_noble(noble_generated);
-    } else if (is_workshop() || is_extractor()) {// farms are handled by a separate cycle in Pharaoh!
-        spawn_figure_industry();
     } else {
         // single building type
         switch (type) {

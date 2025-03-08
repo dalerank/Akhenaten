@@ -31,6 +31,7 @@ public:
     virtual int progress_max() const { return runtime_data().progress_max; }
     virtual bool stored_amount(e_resource) const override;
     virtual void start_production() override;
+    virtual void spawn_figure() override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
 
     runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }

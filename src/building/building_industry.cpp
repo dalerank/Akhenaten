@@ -99,6 +99,28 @@ void building_industry::start_production() {
     }
 }
 
+void building_industry::spawn_figure() {
+    check_labor_problem();
+    if (!has_road_access()) {
+        return;
+    }
+
+    common_spawn_labor_seeker(50);
+    if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
+        return;
+    }
+
+    const auto &industryd = runtime_data();
+    assert(industryd.progress_max > 100);
+    const bool has_produced_resource = (industryd.progress >= industryd.progress_max);
+
+    if (has_produced_resource) {
+        start_production();
+        const int amount = ready_production();
+        create_cartpusher(base.output_resource_first_id, amount);
+    }
+}
+
 bvariant building_industry::get_property(const xstring &domain, const xstring &name) const {
     if (domain == tags().industry && name == tags().progress) {
        int pct_done = calc_percentage<int>(progress(), progress_max());
