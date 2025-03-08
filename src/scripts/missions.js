@@ -17,9 +17,9 @@ var mission0 = { // Nubt
 	player_rank : 0,
 
 	fire_damage : {
-		house0: { type:BUILDING_HOUSE_CRUDE_HUT, value: +50 },	
-		house1: { type:BUILDING_HOUSE_STURDY_HUT, value: +50 },	
-		house2: { type:BUILDING_HOUSE_STURDY_HUT, value: +50 },	
+		house0: { type:BUILDING_HOUSE_CRUDE_HUT, fire: +50, collapse: +5},	
+		house1: { type:BUILDING_HOUSE_STURDY_HUT, fire: +50, collapse: +5},	
+		house2: { type:BUILDING_HOUSE_STURDY_HUT, fire: +50, collapse: +5},	
 	},
 
 	stages : {
@@ -38,7 +38,6 @@ var mission1 = {
 	buildings : [
 					BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_WATER_SUPPLY,
 					BUILDING_GOLD_MINE, BUILDING_VILLAGE_PALACE, BUILDING_HUNTING_LODGE,
-					BUILDING_WATER_LIFT
 				],
 	stages : {
 		tutorial_gods : [BUILDING_TEMPLE_BAST, BUILDING_SHRINE_BAST, BUILDING_FESTIVAL_SQUARE],

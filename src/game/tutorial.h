@@ -27,6 +27,13 @@ struct tutorial_stage_t {
 
 struct tutorial_1 {
     static void init();
+    static void reset();
+    static void update_step(xstring s);
+};
+
+struct tutorial_2 {
+    static void init();
+    static void reset();
     static void update_step(xstring s);
 };
 
@@ -106,11 +113,7 @@ int tutorial_get_immediate_goal_text();
 
 int tutorial_adjust_request_year(int* year);
 
-int tutorial_extra_damage_risk();
-
 void tutorial_on_disease();
-void tutorial_on_gold_extracted();
-void tutorial_on_religion();
 void tutorial_on_house_evolve(e_house_level level);
 
 void tutorial_check_resources_on_storageyard();

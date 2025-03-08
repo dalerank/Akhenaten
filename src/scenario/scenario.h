@@ -156,9 +156,10 @@ struct demand_change_t {
     int is_rise;
 };
 
-struct add_fire_damage_t {
+struct extra_damage_t {
     e_building_type type;
-    int8_t value;
+    int8_t fire;
+    int8_t collapse;
 };
 
 struct building_stage_t {
@@ -268,7 +269,7 @@ struct scenario_data_t {
 
     bool allowed_buildings[BUILDING_MAX] = { 0 };
     std::vector<resource_allow> init_resources;
-    std::vector<add_fire_damage_t> add_fire_damage;
+    std::vector<extra_damage_t> extra_damage;
     std::vector<building_stage_t> building_stages;
 
     struct {
@@ -339,7 +340,7 @@ bool scenario_is_mission_rank(const Args ... args) {
     return scenario_is_mission_rank(make_span(values));
 }
 
-int scenario_additional_fire_damage(e_building_type type);
+int scenario_additional_damage(e_building_type type, int damage); // 0 - fire, 1 -  collapse
 
 int scenario_is_before_mission(int mission);
 

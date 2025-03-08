@@ -37,17 +37,8 @@ static void post_message(int message) {
 }
 
 static void set_all_tut_flags_null() {
-    // tutorial 1
-    g_tutorials_flags.tutorial_1.fire = 0;
-    g_tutorials_flags.tutorial_1.population_150_reached = 0;
-    g_tutorials_flags.tutorial_1.gamemeat_400_stored = 0;
-    g_tutorials_flags.tutorial_1.collapse = 0;
-    g_tutorials_flags.tutorial_1.started = 0;
-
-    // tutorial 2
-    g_tutorials_flags.tutorial_2.started = 0;
-    g_tutorials_flags.tutorial_2.gold_mined_500 = 0;
-    g_tutorials_flags.tutorial_2.temples_built = 0;
+    tutorial_1::reset();
+    tutorial_2::reset();
 
     // tutorial 3
     g_tutorials_flags.tutorial_3.started = 0;
@@ -168,6 +159,17 @@ void tutorial_map_update(int tut) {
     }
 }
 
+int tutorial_3_adjust_request_year(int *year) {
+    if (scenario_is_mission_rank(2)) {
+        if (!g_tutorials_flags.tutorial_3.pottery_made) {
+            return 0;
+        }
+
+        *year = g_tutorials_flags.tutorial_3.pottery_made_year;
+    }
+    return 1;
+}
+
 void tutorial3_on_filled_granary(event_granary_filled ev) {
     if (g_tutorials_flags.tutorial_3.figs_800_stored) {
         return;
@@ -198,9 +200,7 @@ bool tutorial_menu_update(int tut) {
     } 
     
     if (tut == 2) {
-        if (g_tutorials_flags.tutorial_2.gold_mined_500) building_menu_update(tutorial_stage.tutorial_gods);
-        if (g_tutorials_flags.tutorial_2.temples_built) building_menu_update(tutorial_stage.tutorial_entertainment);
-
+        tutorial_2::init();
         return true;
     } 
     
@@ -261,7 +261,7 @@ int tutorial_get_population_cap(int current_cap) {
     return current_cap;
 }
 
-int tutorial_get_immediate_goal_text(void) {
+int tutorial_get_immediate_goal_text() {
     if (scenario_is_mission_rank(1)) {
         if (!g_tutorials_flags.tutorial_1.population_150_reached)
             return 21;
@@ -305,27 +305,6 @@ int tutorial_get_immediate_goal_text(void) {
     return 0;
 }
 
-int tutorial_adjust_request_year(int* year) {
-    if (scenario_is_mission_rank(2)) {
-        if (!g_tutorials_flags.tutorial_3.pottery_made) {
-            return 0;
-        }
-
-        *year = g_tutorials_flags.tutorial_3.pottery_made_year;
-    }
-    return 1;
-}
-
-int tutorial_extra_fire_risk(void) {
-    return !g_tutorials_flags.tutorial_1.fire
-           && scenario_is_mission_rank(1); // Fix for extra fire risk in late tutorials
-}
-
-int tutorial_extra_damage_risk() {
-    return g_tutorials_flags.tutorial_1.fire && !g_tutorials_flags.tutorial_1.collapse
-           && scenario_is_mission_rank(1); // Fix for extra damage risk in late tutorials
-}
-
 void tutorial_flags_t::on_crime() {
     if (!g_tutorials_flags.pharaoh.crime) {
         g_tutorials_flags.pharaoh.crime = 1;
@@ -364,28 +343,6 @@ void tutorial_check_resources_on_storageyard() {
         building_menu_update(tutorial_stage.tutorial_monuments);
         post_message(MESSAGE_TUTORIAL_MONUMENTS);
     }
-}
-
-void tutorial_on_gold_extracted() {
-    if (scenario_is_mission_rank(2) && !g_tutorials_flags.tutorial_2.gold_mined_500) {
-        g_tutorials_flags.tutorial_2.gold_mined_500 = true;
-        building_menu_update(tutorial_stage.tutorial_gods);
-        post_message(MESSAGE_TUTORIAL_GODS_OF_EGYPT);
-    }
-}
-
-void tutorial_on_religion() {
-    if (!scenario_is_mission_rank(2)) {
-        return;
-    }
-    
-    if (!g_tutorials_flags.tutorial_2.temples_built) {
-        return;
-    }
-    
-    g_tutorials_flags.tutorial_2.temples_built = true;
-    building_menu_update(tutorial_stage.tutorial_entertainment);
-    post_message(MESSAGE_TUTORIAL_ENTERTAINMENT);
 }
 
 void tutorial_on_house_evolve(e_house_level level) {

@@ -15,7 +15,7 @@ void tutorial1_handle_fire(event_fire_damage) {
     g_city_events.removeListener(typeid(event_fire_damage), &tutorial1_handle_fire);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
     g_tutorials_flags.tutorial_1.fire = true;
-    g_scenario_data.add_fire_damage.clear();
+    g_scenario_data.extra_damage.clear();
 
     building_menu_update(tutorial_stage.tutorial_fire);
     city_message_post(true, MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE, 0, 0);
@@ -95,6 +95,14 @@ void tutorial_1::init() {
     else g_city_events.appendListener(typeid(event_granary_filled), &tutorial1_on_filled_granary);
 
     g_city.victory_state.add_condition(&tutorial1_is_success);
+}
+
+void tutorial_1::reset() {
+    g_tutorials_flags.tutorial_1.fire = 0;
+    g_tutorials_flags.tutorial_1.population_150_reached = 0;
+    g_tutorials_flags.tutorial_1.gamemeat_400_stored = 0;
+    g_tutorials_flags.tutorial_1.collapse = 0;
+    g_tutorials_flags.tutorial_1.started = 0;
 }
 
 void tutorial_1::update_step(xstring s) {

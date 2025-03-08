@@ -63,10 +63,7 @@ void city_finance_process_gold_extraction(int amount, figure *f) {
 
     if (building_type_any_of(*f->home(), BUILDING_GOLD_MINE)) {
         city_data.finance.this_year.income.gold_extracted += amount;
-
-        if (city_data.finance.this_year.income.gold_extracted >= 500) {
-            tutorial_on_gold_extracted();
-        }
+        g_city_events.enqueue(event_gold_extract{ amount });
     } else if (building_type_any_of(*f->home(), BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED)) {
         city_data.finance.this_year.income.taxes += amount;
     }

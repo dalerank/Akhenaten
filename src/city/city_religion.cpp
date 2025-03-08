@@ -1031,7 +1031,6 @@ void city_religion_t::update() {
     if (!g_settings.gods_enabled) {
         return;
     }
-    tutorial_on_religion();
 
     e_god randm_god = e_god(anti_scum_random_15bit() % MAX_GODS);
     update_mood(randm_god);

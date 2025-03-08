@@ -65,11 +65,12 @@ void scenario_load_meta_data(const mission_id_t &missionid) {
             g_scenario_data.init_resources.push_back({ resource, allowed });
         });
 
-        g_scenario_data.add_fire_damage.clear();
+        g_scenario_data.extra_damage.clear();
         arch.r_objects("fire_damage", [&] (pcstr key, archive barch) {
             e_building_type type = barch.r_type<e_building_type>("type");
-            int8_t value = barch.r_int("value");
-            g_scenario_data.add_fire_damage.push_back({ type, value });
+            int8_t fire = barch.r_int("fire");
+            int8_t collapse = barch.r_int("collapse");
+            g_scenario_data.extra_damage.push_back({ type, fire, collapse });
         });
 
         g_scenario_data.building_stages.clear();
@@ -132,10 +133,10 @@ bool scenario_is_mission_rank(custom_span<int> missions) {
     return false;
 }
 
-int scenario_additional_fire_damage(e_building_type type) {
-    const auto &dmg = g_scenario_data.add_fire_damage;
+int scenario_additional_damage(e_building_type type, int damage) {
+    const auto &dmg = g_scenario_data.extra_damage;
     auto it = std::find_if(dmg.begin(), dmg.end(), [type] (auto &i) { return i.type == type; });
-    return (it != dmg.end()) ? it->value : 0;
+    return (it != dmg.end()) ? (damage == 0 ? it->collapse : it->fire) : 0;
 }
 
 int scenario_is_before_mission(int mission) {

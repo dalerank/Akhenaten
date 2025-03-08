@@ -5,6 +5,8 @@
 constexpr uint32_t MAX_HOUSE_LEVELS = 20;
 class figure;
 
+struct event_gold_extract { int amount; };
+
 int city_finance_treasury();
 int city_finance_out_of_money(void);
 
