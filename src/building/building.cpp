@@ -926,28 +926,15 @@ bool building_is_draggable(e_building_type type) {
     return building_impl::params(type).is_draggable;
 }
 
-int building_mothball_toggle(building* b) {
-    if (b->state == BUILDING_STATE_VALID) {
-        b->state = BUILDING_STATE_MOTHBALLED;
-        b->num_workers = 0;
-    } else if (b->state == BUILDING_STATE_MOTHBALLED) {
-        b->state = BUILDING_STATE_VALID;
+int building::mothball_toggle() {
+    if (state == BUILDING_STATE_VALID) {
+        state = BUILDING_STATE_MOTHBALLED;
+        num_workers = 0;
+    } else if (state == BUILDING_STATE_MOTHBALLED) {
+        state = BUILDING_STATE_VALID;
     }
 
-    return b->state;
-}
-
-int building_mothball_set(building* b, int mothball) {
-    if (mothball) {
-        if (b->state == BUILDING_STATE_VALID) {
-            b->state = BUILDING_STATE_MOTHBALLED;
-            b->num_workers = 0;
-        }
-    } else if (b->state == BUILDING_STATE_MOTHBALLED) {
-        b->state = BUILDING_STATE_VALID;
-    }
-
-    return b->state;
+    return state;
 }
 
 void building_impl::on_place(int orientation, int variant) {

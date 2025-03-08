@@ -279,6 +279,7 @@ public:
     int max_storage_amount(e_resource res) const;
     int stored_amount(int idx = 0) const;
     int stored_amount(e_resource res) const;
+    int mothball_toggle();
     
     figure* create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir);
     figure* create_roaming_figure(e_figure_type _type, e_figure_action created_action = FIGURE_ACTION_125_ROAMING, e_building_slot slot = BUILDING_SLOT_SERVICE);
@@ -664,8 +665,6 @@ bool building_is_military(e_building_type type);
 
 bool building_is_draggable(e_building_type type);
 
-int building_mothball_toggle(building* b);
-int building_mothball_set(building* b, int value);
 
 GENERATE_SMART_CAST(building_impl)
 #define GENERATE_SMART_CAST_BUILDING(type) GENERATE_SMART_CAST_CUSTOM(building_##type, type)

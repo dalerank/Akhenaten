@@ -199,7 +199,7 @@ void building_info_window::init(object_info &c) {
         int workers_needed = model_get_building(b->type)->laborers;
         ui["mothball"].onclick([&c, b, workers_needed] {
             if (workers_needed) {
-                building_mothball_toggle(b);
+                b->mothball_toggle();
             }
         });;
     }
