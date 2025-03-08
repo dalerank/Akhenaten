@@ -18,7 +18,7 @@ public:
     building_house(building &b) : building_impl(b) {}
     virtual building_house *dcast_house() override { return this; }
 
-    struct runtime_data_t {
+    struct runtime_data_t : no_copy_assignment {
         e_house_level level;
         uint16_t foods[8];
         uint16_t inventory[8];

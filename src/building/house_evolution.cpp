@@ -21,7 +21,7 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
     }
 
     int level = house->house_level();
-    auto housed = house->runtime_data();
+    auto& housed = house->runtime_data();
 
     // this house will devolve soon because...
 

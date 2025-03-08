@@ -416,7 +416,7 @@ void city_resource_consume_food() {
             return;
         }
 
-        auto housed = house->runtime_data();
+        auto& housed = house->runtime_data();
 
         int num_types = house->model().food_types;
         short amount_per_type = calc_adjust_with_percentage<short>(housed.population, 35);
