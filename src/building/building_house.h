@@ -9,6 +9,8 @@ enum e_house_progress {
     e_house_decay = -1
 };
 
+struct model_house;
+
 class building_house : public building_impl {
 public:
     BUILDING_METAINFO_RT(BUILDING_NONE, building_house_vacant)
@@ -90,6 +92,7 @@ public:
     inline bool is_merged() const { return runtime_data().is_merged; }
     void consume_resources();
     void split(int num_tiles);
+    const model_house &model() const;
 
     e_house_progress check_evolve_desirability();
     e_house_progress has_required_goods_and_services(int for_upgrade, house_demands *demands);

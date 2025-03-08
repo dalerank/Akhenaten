@@ -159,7 +159,7 @@ void city_finance_estimate_taxes() {
         }
 
         int is_nobles = (housed.level >= HOUSE_COMMON_MANOR);
-        int tax_multiplier = model_get_house(housed.level)->tax_multiplier;
+        int tax_multiplier = house->model().tax_multiplier;
         int level_tax_rate_multiplier = difficulty_adjust_money(tax_multiplier);
 
         if (is_nobles) {
@@ -215,7 +215,7 @@ static void city_finance_collect_monthly_taxes() {
         auto &housed = house->runtime_data();
         int is_nobles = (housed.level >= HOUSE_COMMON_MANOR);
         int population = housed.population;
-        int trm = difficulty_adjust_money(model_get_house(house->house_level())->tax_multiplier);
+        int trm = difficulty_adjust_money(house->model().tax_multiplier);
         city_data.population.at_level[housed.level] += population;
 
         int tax = population * trm;

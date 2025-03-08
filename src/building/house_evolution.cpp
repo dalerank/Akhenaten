@@ -25,14 +25,14 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
 
     // this house will devolve soon because...
 
-    const model_house* model = model_get_house(level);
+    const model_house& model = model_get_house(level);
     // desirability
-    if (house->base.desirability <= model->devolve_desirability) {
+    if (house->base.desirability <= model.devolve_desirability) {
         housed.evolve_text_id = 0;
         return;
     }
     // water
-    int water = model->water;
+    int water = model.water;
     if (water == 1 && !house->base.has_water_access && !house->base.has_well_access) {
         housed.evolve_text_id = 1;
         return;
@@ -42,7 +42,7 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
         return;
     }
     // entertainment
-    int entertainment = model->entertainment;
+    int entertainment = model.entertainment;
     if (housed.entertainment < entertainment) {
         if (!housed.entertainment)
             housed.evolve_text_id = 3;
@@ -60,7 +60,7 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
         return;
     }
     // food types
-    int foodtypes_required = model->food;
+    int foodtypes_required = model.food;
     int foodtypes_available = 0;
     for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
         if (housed.foods[i])
@@ -79,7 +79,7 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
         }
     }
     // education
-    int education = model->education;
+    int education = model.education;
     if (housed.education < education) {
         if (education == 1) {
             housed.evolve_text_id = 14;
@@ -98,18 +98,18 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
         }
     }
     // magistrate
-    if (housed.magistrate < model->physician) {
+    if (housed.magistrate < model.physician) {
         housed.evolve_text_id = 18;
         return;
     }
 
     // pottery
-    if (housed.inventory[INVENTORY_GOOD1] < model->pottery) {
+    if (housed.inventory[INVENTORY_GOOD1] < model.pottery) {
         housed.evolve_text_id = 19;
         return;
     }
     // religion
-    int religion = model->religion;
+    int religion = model.religion;
     if (housed.num_gods < religion) {
         if (religion == 1) {
             housed.evolve_text_id = 20;
@@ -124,13 +124,13 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
     }
 
     // mortuary
-    if (housed.dentist < model->dentist) {
+    if (housed.dentist < model.dentist) {
         housed.evolve_text_id = 23;
         return;
     }
 
     // health
-    int health_need = model->health;
+    int health_need = model.health;
     if (housed.health < health_need) {
         if (health_need == 1) {
             housed.evolve_text_id = 24;
@@ -142,17 +142,17 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
         return;
     }
     // linen
-    if (housed.inventory[INVENTORY_GOOD3] < model->linen) {
+    if (housed.inventory[INVENTORY_GOOD3] < model.linen) {
         housed.evolve_text_id = 27;
         return;
     }
     // jewelry
-    if (housed.inventory[INVENTORY_GOOD2] < model->jewelry) {
+    if (housed.inventory[INVENTORY_GOOD2] < model.jewelry) {
         housed.evolve_text_id = 28;
         return;
     }
     // beer
-    int beer = model->beer;
+    int beer = model.beer;
     if (housed.inventory[INVENTORY_GOOD4] < beer) {
         housed.evolve_text_id = 29;
         return;
@@ -169,7 +169,7 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
     // this house will evolve if ...
 
     // desirability
-    if (house->base.desirability < model->evolve_desirability) {
+    if (house->base.desirability < model.evolve_desirability) {
         if (worst_desirability_building)
             housed.evolve_text_id = 62;
         else {
@@ -177,9 +177,10 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
         }
         return;
     }
-    model = model_get_house(++level);
+
+    const auto& next_model = model_get_house(++level);
     // water
-    water = model->water;
+    water = next_model.water;
     if (water == 1 && !house->base.has_water_access && !house->base.has_well_access) {
         housed.evolve_text_id = 31;
         return;
@@ -189,7 +190,7 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
         return;
     }
     // entertainment
-    entertainment = model->entertainment;
+    entertainment = next_model.entertainment;
     if (housed.entertainment < entertainment) {
         if (!housed.entertainment)
             housed.evolve_text_id = 33;
@@ -207,7 +208,7 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
         return;
     }
     // food types
-    foodtypes_required = model->food_types;
+    foodtypes_required = next_model.food_types;
     if (foodtypes_available < foodtypes_required) {
         if (foodtypes_required == 1) {
             housed.evolve_text_id = 39;
@@ -221,7 +222,7 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
         }
     }
     // education
-    education = model->education;
+    education = next_model.education;
     if (housed.education < education) {
         if (education == 1) {
             housed.evolve_text_id = 44;
@@ -240,17 +241,17 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
         }
     }
     // magistrate
-    if (housed.magistrate < model->physician) {
+    if (housed.magistrate < next_model.physician) {
         housed.evolve_text_id = 48;
         return;
     }
     // pottery
-    if (housed.inventory[INVENTORY_GOOD1] < model->pottery) {
+    if (housed.inventory[INVENTORY_GOOD1] < next_model.pottery) {
         housed.evolve_text_id = 49;
         return;
     }
     // religion
-    religion = model->religion;
+    religion = next_model.religion;
     if (housed.num_gods < religion) {
         if (religion == 1) {
             housed.evolve_text_id = 50;
@@ -265,13 +266,13 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
     }
 
     // dentist
-    if (housed.dentist < model->dentist) {
+    if (housed.dentist < next_model.dentist) {
         housed.evolve_text_id = 53;
         return;
     }
 
     // health
-    int model_health_need = model->health;
+    int model_health_need = next_model.health;
     if (housed.health < model_health_need) {
         if (model_health_need == 1)
             housed.evolve_text_id = 54;
@@ -283,17 +284,17 @@ void building_house_determine_evolve_text(building* b, int worst_desirability_bu
         return;
     }
     // linen
-    if (housed.inventory[INVENTORY_GOOD3] < model->linen) {
+    if (housed.inventory[INVENTORY_GOOD3] < next_model.linen) {
         housed.evolve_text_id = 57;
         return;
     }
     // jewelry
-    if (housed.inventory[INVENTORY_GOOD2] < model->jewelry) {
+    if (housed.inventory[INVENTORY_GOOD2] < next_model.jewelry) {
         housed.evolve_text_id = 58;
         return;
     }
     // wine
-    beer = model->beer;
+    beer = next_model.beer;
     if (housed.inventory[INVENTORY_GOOD4] < beer) {
         housed.evolve_text_id = 59;
         return;

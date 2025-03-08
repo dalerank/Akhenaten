@@ -51,22 +51,6 @@ struct model_house {
     int disease_risk;
 };
 
-/**
- * Loads the model from file
- * @return boolean true if model was loaded successfully, false otherwise
- */
-bool model_load(void);
-
-/**
- * Gets the model for a building
- * @param type Building type
- * @return Read-only model
- */
+bool model_load();
 const model_building* model_get_building(int type);
-
-/**
- * Gets the model for a house
- * @param level House level
- * @return Read-only model
- */
-const model_house* model_get_house(int level);
+const model_house& model_get_house(int level);

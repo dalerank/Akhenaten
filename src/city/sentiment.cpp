@@ -329,7 +329,7 @@ void city_sentiment_update() {
         houses_calculated++;
         int sentiment_contribution_food = 0;
         int sentiment_contribution_huts = 0;
-        if (!model_get_house(house->house_level())->food_types) {
+        if (!house->model().food_types) {
             // tents
             housed.days_without_food = 0;
             sentiment_contribution_huts = sentiment_penalty_huts;

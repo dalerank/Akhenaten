@@ -352,7 +352,6 @@ int* calculate_number_of_each_housing_type(void) {
 }
 
 int* calculate_houses_demanding_goods(int* housing_type_counts) {
-    const model_house* model;
     static int houses_demanding_goods[4] = {0, 0, 0, 0};
 
     for (int i = 0; i <= 3; i++) {
@@ -360,17 +359,17 @@ int* calculate_houses_demanding_goods(int* housing_type_counts) {
     }
 
     for (int i = 0; i <= 19; i++) {
-        model = model_get_house(i);
-        if (model->pottery)
+        const auto &model = model_get_house(i);
+        if (model.pottery)
             houses_demanding_goods[0] += housing_type_counts[i];
 
-        if (model->jewelry)
+        if (model.jewelry)
             houses_demanding_goods[1] += housing_type_counts[i];
 
-        if (model->linen)
+        if (model.linen)
             houses_demanding_goods[2] += housing_type_counts[i];
 
-        if (model->beer)
+        if (model.beer)
             houses_demanding_goods[3] += housing_type_counts[i];
     }
 

@@ -170,8 +170,8 @@ void distribute_market_resources(building* b, building* market) {
             food_types_stored_max++;
     }
 
-    const model_house* model = model_get_house(level);
-    if (model->food_types > food_types_stored_max) {
+    const model_house& model = model_get_house(level);
+    if (model.food_types > food_types_stored_max) {
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
             if (housed.foods[i] >= max_food_stocks) {
                 continue;
@@ -188,25 +188,25 @@ void distribute_market_resources(building* b, building* market) {
             }
         }
     }
-    if (model->pottery) {
+    if (model.pottery) {
         marketd.pottery_demand = 10;
-        distribute_good(b, market, 8 * model->pottery, INVENTORY_GOOD1);
+        distribute_good(b, market, 8 * model.pottery, INVENTORY_GOOD1);
     }
     int goods_no = 4;
     if (config_get(CONFIG_GP_CH_MORE_STOCKPILE))
         goods_no = 8;
 
-    if (model->jewelry) {
+    if (model.jewelry) {
         marketd.luxurygoods_demand = 10;
-        distribute_good(b, market, goods_no * model->jewelry, INVENTORY_GOOD2);
+        distribute_good(b, market, goods_no * model.jewelry, INVENTORY_GOOD2);
     }
-    if (model->linen) {
+    if (model.linen) {
         marketd.linen_demand = 10;
-        distribute_good(b, market, goods_no * model->linen, INVENTORY_GOOD3);
+        distribute_good(b, market, goods_no * model.linen, INVENTORY_GOOD3);
     }
-    if (model->beer) {
+    if (model.beer) {
         marketd.beer_demand = 10;
-        distribute_good(b, market, goods_no * model->beer, INVENTORY_GOOD4);
+        distribute_good(b, market, goods_no * model.beer, INVENTORY_GOOD4);
     }
 }
 

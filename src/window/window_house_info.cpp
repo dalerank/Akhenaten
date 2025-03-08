@@ -142,7 +142,7 @@ void info_window_house::init(object_info &c) {
 
     ui["happiness_info"] = ui::str(127, happiness_text_id);
 
-    if (!model_get_house(house->house_level())->food_types) { // no foods
+    if (!house->model().food_types) { // no foods
         ui["additional_info"] = ui::str(127, 33);
     }
 }

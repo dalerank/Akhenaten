@@ -196,20 +196,17 @@ void city_t::house_process_evolve_and_consume_goods() {
     g_city.houses_reset_demands();
     house_demands &demands = g_city.houses;
     bool has_expanded = false;
-    buildings_house_do([&] (building &h) {
-        building_house *house = h.dcast_house();
-        e_building_type save_type = h.type;
+    buildings_house_do([&] (building_house *house) {
+        e_building_type save_type = house->type();
         has_expanded |= house->evolve(&demands);
-        e_building_type new_type = h.type;
+        e_building_type new_type = house->type();
         if (new_type != save_type) {
-            h.clear_impl();
+            house->base.clear_impl();
         }
     });
 
     if (game.simtime.day == 0 || game.simtime.day == 7) {
-        buildings_house_do([&] (building &h) {
-            building_house *house = h.dcast_house();
-            //building_house_check_for_corruption(&h);
+        buildings_house_do([&] (building_house *house) {
             house->consume_resources();
         });
     }

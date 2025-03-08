@@ -411,16 +411,14 @@ void city_resource_consume_food() {
     city_data.resource.food_types_eaten_num = 0;
     city_data.unused.unknown_00c0 = 0;
     int total_consumed = 0;
-    buildings_house_do([&total_consumed] (building &b) {
-        auto house = b.dcast_house();
-
-        if (!house || house->hsize()) {
+    buildings_house_do([&total_consumed] (building_house *house) {
+        if (house->hsize()) {
             return;
         }
 
         auto housed = house->runtime_data();
 
-        int num_types = model_get_house(house->house_level())->food_types;
+        int num_types = house->model().food_types;
         short amount_per_type = calc_adjust_with_percentage<short>(housed.population, 35);
         if (num_types > 1) {
             amount_per_type /= num_types;

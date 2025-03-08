@@ -127,8 +127,9 @@ void buildings_valid_farms_do(T func) {
 template<typename T>
 void buildings_house_do(T func) {
     for (auto &b : city_buildings()) {
-        if (b.is_valid() && building_is_house(b.type)) {
-            func(b);
+        auto house = b.dcast_house();
+        if (house) {
+            func(house);
         }
     }
 }

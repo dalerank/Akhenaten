@@ -49,8 +49,7 @@ declare_console_command_p(housedown, game_cheat_housedown)
 void game_cheat_houseup(std::istream &is, std::ostream &os) {
     std::string args; is >> args;
 
-    buildings_house_do([] (building &b) {
-        building_house *house = b.dcast_house();
+    buildings_house_do([] (building_house *house) {
         e_building_type next_level = (e_building_type)(BUILDING_HOUSE_VACANT_LOT + house->house_level() + 1);
         house->change_to(next_level);
     });
@@ -59,8 +58,7 @@ void game_cheat_houseup(std::istream &is, std::ostream &os) {
 void game_cheat_housedown(std::istream &is, std::ostream &os) {
     std::string args; is >> args;
 
-    buildings_house_do([] (building &b) {
-        building_house *house = b.dcast_house();
+    buildings_house_do([] (building_house *house) {
         e_building_type prev_level = (e_building_type)(BUILDING_HOUSE_VACANT_LOT + house->house_level() - 1);
         if (prev_level < BUILDING_HOUSE_VACANT_LOT) {
             prev_level = BUILDING_HOUSE_VACANT_LOT;
@@ -258,11 +256,11 @@ void building_house::consume_resources() {
         }
     };
 
-    const model_house* model = model_get_house(house_level());
-    consume_resource(INVENTORY_GOOD1, model->pottery);
-    consume_resource(INVENTORY_GOOD2, model->jewelry);
-    consume_resource(INVENTORY_GOOD3, model->linen);
-    consume_resource(INVENTORY_GOOD4, model->beer);
+    const model_house& model = model_get_house(house_level());
+    consume_resource(INVENTORY_GOOD1, model.pottery);
+    consume_resource(INVENTORY_GOOD2, model.jewelry);
+    consume_resource(INVENTORY_GOOD3, model.linen);
+    consume_resource(INVENTORY_GOOD4, model.beer);
 }
 
 template<bool use_offset>
@@ -276,7 +274,7 @@ static int house_image_group(int level) {
 }
 
 void building_house::add_population(int num_people) {
-    int max_people = model_get_house(house_level())->max_people;
+    int max_people = model_get_house(house_level()).max_people;
 
     if (is_merged()) {
         max_people *= 4;
@@ -322,7 +320,7 @@ void building_house::change_to(e_building_type type) {
 }
 
 int16_t building_house::population_room() const {
-    int max_people = model_get_house(house_level())->max_people;
+    int max_people = model_get_house(house_level()).max_people;
 
     if (is_merged()) {
         max_people *= 4;
@@ -466,9 +464,9 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
         ++level;
     }
 
-    const model_house* model = model_get_house(level);
+    const model_house& model = model_get_house(level);
     // water
-    int water = model->water;
+    int water = model.water;
     if (!base.has_water_access) {
         if (water >= 2) {
             ++demands->missing.fountain;
@@ -480,7 +478,7 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
         }
     }
     // entertainment
-    int entertainment = model->entertainment;
+    int entertainment = model.entertainment;
     auto &d = runtime_data();
     if (d.entertainment < entertainment) {
         if (d.entertainment)
@@ -491,7 +489,7 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
         return e_house_none;
     }
     // education
-    int education = model->education;
+    int education = model.education;
     if (d.education < education) {
         if (d.education)
             ++demands->missing.more_education;
@@ -507,7 +505,7 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
         ++demands->requiring.school;
 
     // religion
-    int religion = model->religion;
+    int religion = model.religion;
     if (d.num_gods < religion) {
         if (religion == 1) {
             ++demands->missing.religion;
@@ -523,7 +521,7 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
         ++demands->requiring.religion;
 
     // dentist
-    int dentist = model->dentist;
+    int dentist = model.dentist;
     if (d.dentist < dentist) {
         ++demands->missing.dentist;
         return e_house_none;
@@ -533,7 +531,7 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
     }
 
     // physician
-    int magistrate = model->physician;
+    int magistrate = model.physician;
     if (d.magistrate < magistrate) {
         ++demands->missing.magistrate;
         return e_house_none;
@@ -543,7 +541,7 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
     }
 
     // health
-    int health_need = model->health;
+    int health_need = model.health;
     if (d.health < health_need) {
         if (health_need < 2)
             ++demands->missing.dentist;
@@ -557,7 +555,7 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
     }
 
     // food types
-    int foodtypes_required = model->food_types;
+    int foodtypes_required = model.food_types;
     int foodtypes_available = 0;
     for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
         foodtypes_available += (d.foods[i] > 0) ? 1 : 0;
@@ -569,16 +567,16 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
     }
 
     // goods
-    if (d.inventory[INVENTORY_GOOD1] < model->pottery)
+    if (d.inventory[INVENTORY_GOOD1] < model.pottery)
         return e_house_none;
 
-    if (d.inventory[INVENTORY_GOOD3] < model->linen)
+    if (d.inventory[INVENTORY_GOOD3] < model.linen)
         return e_house_none;
 
-    if (d.inventory[INVENTORY_GOOD2] < model->jewelry)
+    if (d.inventory[INVENTORY_GOOD2] < model.jewelry)
         return e_house_none;
 
-    int wine = model->beer;
+    int wine = model.beer;
     if (wine && d.inventory[INVENTORY_GOOD4] <= 0)
         return e_house_none;
 
@@ -679,15 +677,15 @@ bool building_house::can_expand(int num_tiles) {
 
 e_house_progress building_house::check_evolve_desirability() {
     int level = house_level();
-    const model_house* model = model_get_house(level);
-    int evolve_des = model->evolve_desirability;
+    const model_house& model = model_get_house(level);
+    int evolve_des = model.evolve_desirability;
     if (level >= HOUSE_PALATIAL_ESTATE) {
         evolve_des = 1000;
     }
 
     int current_des = base.desirability;
     e_house_progress status;
-    if (current_des <= model->devolve_desirability) {
+    if (current_des <= model.devolve_desirability) {
         status = e_house_decay;
     } else if (current_des >= evolve_des)
         status = e_house_evolve;
@@ -814,6 +812,10 @@ void building_house::split(int num_tiles) {
             }
         }
     }
+}
+
+const model_house &building_house::model() const {
+    return model_get_house(house_level());
 }
 
 void building_house_common_manor::devolve_to_fancy_residence() {
