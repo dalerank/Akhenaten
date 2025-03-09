@@ -12,7 +12,7 @@ enum e_house_progress {
 struct model_house;
 
 #define HOUSE_METAINFO(type, clsid) \
-    BUILDING_METAINFO(BUILDING_HOUSE_CRUDE_HUT, building_house_crude_hut); \
+    BUILDING_METAINFO(type, clsid); \
     using static_params = static_params_t<clsid>; \
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 
