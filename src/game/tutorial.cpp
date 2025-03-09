@@ -438,6 +438,7 @@ void tutorial_on_month_tick() {
 }
 
 io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_UINT16, &g_tutorials_flags.pharaoh.last_action);
     // tut 1
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.fire);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.population_150_reached);
@@ -484,5 +485,4 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[35]);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[36]); // goal: entertainment
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[37]); // goal: temples
-    iob->bind(BIND_SIGNATURE_UINT16, &g_tutorials_flags.pharaoh.last_action);
 });

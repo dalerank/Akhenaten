@@ -8,7 +8,7 @@
 #include "game/game.h"
 
 void tutorial_2_on_build_temple(event_building_create ev) {
-    if (!g_tutorials_flags.tutorial_2.temples_built) {
+    if (g_tutorials_flags.tutorial_2.temples_built) {
         return;
     }
 
