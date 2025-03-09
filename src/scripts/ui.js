@@ -655,7 +655,7 @@ window mission_briefing_window = {
 		goal_3           : label({pos:[288 + 16, 112 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false }),
 		goal_4           : label({pos:[32  + 16, 134 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false	}),
 		goal_5           : label({pos:[288 + 16, 134 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false }),
-		goal_immediate   : label({pos : {x:32 + 16, y:134 + 32},	body : {w:31, h:1},	font : FONT_NORMAL_YELLOW, enabled: false }),
+		goal_immediate   : label({pos:[32 + 16,  136 + 32],	body : {w:31, h:1},	font : FONT_NORMAL_YELLOW, enabled: false }),
 		
 		description_panel: inner_panel({pos : {x:32, y:200}, size: {w:33, h:14} }),
 		description_text : text({pos: [40, 200], size:[px(34), px(14)], wrap:px(34), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true }),
