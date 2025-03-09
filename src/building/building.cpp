@@ -104,7 +104,7 @@ bool building_impl::required_resource(e_resource r) const {
     return base.first_material_id == r || base.second_material_id == r;
 }
 
-bool building_impl::stored_amount(e_resource r) const {
+int building_impl::stored_amount(e_resource r) const {
     if (base.first_material_id == r) {
         return base.stored_amount_first;
     }

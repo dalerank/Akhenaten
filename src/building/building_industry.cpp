@@ -70,7 +70,7 @@ void building_industry::on_create(int orientation) {
     }
 }
 
-bool building_industry::stored_amount(e_resource r) const {
+int building_industry::stored_amount(e_resource r) const {
     if (base.output_resource_first_id == r) {
         return runtime_data().ready_production;
     }
@@ -78,21 +78,24 @@ bool building_industry::stored_amount(e_resource r) const {
 }
 
 void building_industry::start_production() {
-    bool can_start_b = false;
+    bool can_start_b = true;
     if (base.second_material_id != RESOURCE_NONE) {
         can_start_b = (base.stored_amount_second >= 100);
-    } else {
-        can_start_b = true;
+    } 
+
+    bool can_start_a = true;
+    if (base.first_material_id != RESOURCE_NONE) {
+        can_start_a = (base.stored_amount_first >= 100);
     }
 
-    const bool can_start_a = (base.stored_amount_first >= 100);
-    auto &d = runtime_data();
     if (can_start_b && can_start_a) {
+        auto &d = runtime_data();
         d.progress = 0;
         d.has_raw_materials = true;
         if (base.stored_amount_second >= 100) {
             base.stored_amount_second -= 100;
         }
+
         if (base.stored_amount_first >= 100) {
             base.stored_amount_first -= 100;
         }

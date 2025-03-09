@@ -597,7 +597,7 @@ public:
 
     virtual resource_vec required_resources() const;
     virtual bool required_resource(e_resource) const;
-    virtual bool stored_amount(e_resource) const;
+    virtual int stored_amount(e_resource) const;
     metainfo get_info() const;
     void set_animation(const animation_t &anim);
     vfs::path get_sound();

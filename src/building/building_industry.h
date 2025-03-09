@@ -29,7 +29,7 @@ public:
     virtual void on_create(int orientation) override;
     virtual int progress() const { return runtime_data().progress; }
     virtual int progress_max() const { return runtime_data().progress_max; }
-    virtual bool stored_amount(e_resource) const override;
+    virtual int stored_amount(e_resource) const override;
     virtual void start_production() override;
     virtual void spawn_figure() override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
