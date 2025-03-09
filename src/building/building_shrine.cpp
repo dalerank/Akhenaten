@@ -1,24 +1,8 @@
-#include "building_plaza.h"
+#include "building_shrine.h"
 
-#include "building/building.h"
 #include "building/count.h"
-#include "city/object_info.h"
-#include "city/labor.h"
 #include "city/warnings.h"
 #include "grid/road_access.h"
-#include "game/resource.h"
-#include "graphics/elements/panel.h"
-#include "graphics/elements/lang_text.h"
-#include "graphics/view/view.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "io/gamefiles/lang.h"
-#include "config/config.h"
-#include "window/building/common.h"
-#include "window/building/figures.h"
-#include "sound/sound_building.h"
-#include "game/game.h"
-#include "building_shrine.h"
 
 buildings::model_t<building_shrine_osiris> shrine_osiris_m;
 buildings::model_t<building_shrine_ra>   shrine_ra_m;
@@ -42,4 +26,8 @@ e_overlay building_shrine::get_overlay() const {
     }
 
     return OVERLAY_NONE;
+}
+
+void building_shrine::update_count() const {
+    building_increase_type_count(type(), true);
 }

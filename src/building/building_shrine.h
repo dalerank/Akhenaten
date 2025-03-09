@@ -10,6 +10,7 @@ public:
 
     virtual void on_place_checks() override;
     virtual e_overlay get_overlay() const override;
+    virtual void update_count() const override;
 };
 
 struct building_shrine_osiris : public building_shrine {
