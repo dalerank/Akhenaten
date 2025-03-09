@@ -163,10 +163,9 @@ static void game_cheat_spawn_nobles(pcstr args) {
     parse_integer(args ? args : "10", count);
 
     svector<building *, 1000> buildings;
-    buildings_valid_do([&] (building &b) {
-        auto house = b.dcast_house();
-        if (house && house->house_population() > 0) {
-            buildings.push_back(&b);
+    buildings_house_do([&] (auto house) {
+        if (house->house_population() > 0) {
+            buildings.push_back(&house->base);
         }
     });
     

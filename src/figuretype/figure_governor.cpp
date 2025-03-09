@@ -51,10 +51,8 @@ void figure_governor::figure_action() {
 
 sound_key figure_governor::phrase_key() const {
     int nobles_in_city = 0;
-    buildings_valid_do([&] (building &b) {
-        auto house = b.dcast_house();
-
-        if (!house || house->house_population() <= 0) {
+    buildings_house_do([&] (auto house) {
+        if (house->house_population() <= 0) {
             return;
         }
 

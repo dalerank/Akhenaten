@@ -167,7 +167,7 @@ int city_resource_ready_for_using(e_resource resource) {
     }
 
     int amount = 0;
-    buildings_valid_do<building_storage_yard>([&] (building_storage_yard *warehouse) {
+    buildings_valid_do<building_storage_yard>([&] (auto warehouse) {
         amount += warehouse->amount(resource);
     });
 
@@ -476,7 +476,7 @@ void city_resource_consume_food() {
 void city_resource_add_items(e_resource res, int amount) {
     building_storage_yard* chosen_yard = nullptr;
     int lowest_stock_found = 10000;
-    buildings_valid_do<building_storage_yard>([&] (building_storage_yard *warehouse) {
+    buildings_valid_do<building_storage_yard>([&] (auto warehouse) {
         int total_stored = warehouse->amount(res);
         int free_space = warehouse->freespace(res);
         

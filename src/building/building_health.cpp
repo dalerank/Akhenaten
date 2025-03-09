@@ -27,16 +27,13 @@ declare_console_command_p(plague_start, game_cheat_start_plague);
 declare_console_command_p(plague_no, game_cheat_noplague);
 
 void game_cheat_noplague(std::istream &is, std::ostream &os) {
-    buildings_valid_do([&] (building &b) {
-        auto house = b.dcast_house();
-
-        if (!house || house->house_population() <= 0) {
+    buildings_house_do([&] (building_house* house) {
+        if (house->house_population() <= 0) {
             return;
         }
 
-        building *main = b.main();
-        main->disease_days = 0;
-        main->has_plague = false;
+        house->base.disease_days = 0;
+        house->base.has_plague = false;
     });
 }
 
@@ -45,10 +42,8 @@ void game_cheat_start_plague(std::istream &is, std::ostream &os) {
     int plague_people = atoi(args.empty() ? "100" : args.c_str());
 
     int total_population = 0;
-    buildings_valid_do([&] (building &b) {
-        auto house = b.dcast_house();
-
-        if (!house || house->house_population() <= 0) {
+    buildings_house_do([&] (building_house *house) {
+        if (house->house_population() <= 0) {
             return;
         }
         total_population += house->house_population();

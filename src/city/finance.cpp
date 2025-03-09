@@ -143,12 +143,7 @@ void city_finance_estimate_taxes() {
     city_data.taxes.monthly.collected_citizens = 0;
     city_data.taxes.monthly.collected_nobles = 0;
 
-    buildings_valid_do([] (building &b) {
-        auto house = b.dcast_house();
-        if (!house) {
-            return;
-        }
-
+    buildings_house_do([] (auto house) {
         auto &housed = house->runtime_data();
         if (!housed.tax_coverage) {
             return;
@@ -201,10 +196,8 @@ static void city_finance_collect_monthly_taxes() {
         }
     }
 
-    buildings_valid_do([&] (building &b) {
-        auto house = b.dcast_house();
-
-        if (!house || !house->hsize()) {
+    buildings_house_do([&] (auto house) {
+        if (!house->hsize()) {
             return;
         }
 

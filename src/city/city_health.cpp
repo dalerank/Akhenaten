@@ -55,62 +55,54 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
 
     // kill people where has little common_health
     building *warn_building = nullptr;
-    buildings_valid_do([&] (building &b) {
-        auto house = b.dcast_house();
-
+    buildings_house_do([&] (building_house *house) {
         if (people_to_plague <= 0 || !house || house->house_population() <= 0) {
             return;
         }
 
-        if (b.common_health < 10) {
-            warn_building = &b;
+        if (house->base.common_health < 10) {
+            warn_building = &house->base;
             people_to_plague -= house->house_population();
-            building_mark_plague(&b);
+            building_mark_plague(&house->base);
         }
     });
 
     // kill people who don't have access to apothecary/physician
-    buildings_valid_do([&] (building &b) {
-        auto house = b.dcast_house();
-
-        if (!house || people_to_plague <= 0 || house->house_population() <= 0) {
+    buildings_house_do([&] (building_house *house) {
+        if (people_to_plague <= 0 || house->house_population() <= 0) {
             return;
         }
 
         auto &housed = house->runtime_data();
         if (!(housed.apothecary || housed.physician)) {
-            warn_building = &b;
+            warn_building = &house->base;
             people_to_plague -= house->house_population();
-            building_mark_plague(&b);
+            building_mark_plague(&house->base);
         }
     });
 
     // kill people in tents
-    buildings_valid_do([&] (building &b) {
-        auto house = b.dcast_house();
-
-        if (!house || people_to_plague <= 0 || house->house_population() <= 0) {
+    buildings_house_do([&] (building_house *house) {
+        if (people_to_plague <= 0 || house->house_population() <= 0) {
             return;
         }
 
         if (house->house_level() <= HOUSE_STURDY_HUT) {
-            warn_building = &b;
+            warn_building = &house->base;
             people_to_plague -= house->house_population();
-            building_mark_plague(&b);
+            building_mark_plague(&house->base);
         }
     });
 
     // kill anyone
-    buildings_valid_do([&] (building &b) {
-        auto house = b.dcast_house();
-
-        if (!house || people_to_plague <= 0 || house->house_population() <= 0) {
+    buildings_house_do([&] (building_house *house) {
+        if (people_to_plague <= 0 || house->house_population() <= 0) {
             return;
         }
 
-        warn_building = &b;
+        warn_building = &house->base;
         people_to_plague -= house->house_population();
-        building_mark_plague(&b);
+        building_mark_plague(&house->base);
     });
 
     e_building_type btype = (warn_building ? warn_building->type : BUILDING_NONE);
@@ -146,14 +138,12 @@ void city_health_t::update() {
 
     int total_population = 0;
     int healthy_population = 0;
-    buildings_valid_do([&] (building &b) {
-        auto house = b.dcast_house();
-
-        if (!house || house->house_population() <= 0) {
+    buildings_house_do([&] (building_house* house) {
+        const short hpop = house->house_population();
+        if (hpop <= 0) {
             return;
         }
 
-        const short hpop = house->house_population();
         total_population += hpop;
         auto &housed = house->runtime_data();
         if (house->house_level() <= HOUSE_STURDY_HUT) {

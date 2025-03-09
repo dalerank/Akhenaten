@@ -35,20 +35,19 @@ void city_t::houses_reset_demands() {
 
 void city_t::house_service_update_health() {
     OZZY_PROFILER_SECTION("Game/Update/House Service Update Health");
-    buildings_valid_do([] (building &b) {
-        auto house = b.dcast_house();
-
-        if (!house || house->house_population() <= 0) {
+    buildings_house_do([] (auto house) {
+        if (house->house_population() <= 0) {
             return;
         }
 
-        decay_service(b.common_health);
+        decay_service(house->base.common_health);
 
         auto &housed = house->runtime_data();
         int target_common_health = (!!housed.apothecary ? 33 : 0)
                                     + (!!housed.physician ? 33 : 0)
                                     + (!!housed.dentist ? 33 : 0);
 
+        auto &b = house->base;
         b.common_health += ((b.common_health < target_common_health) ? +1 : -1);
         b.common_health = std::clamp<int8_t>(b.common_health, 0, 100);
 
@@ -120,10 +119,8 @@ void city_t::houses_calculate_culture_demands(void) {
 
 void city_t::house_service_decay_services() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/House Decay Culture");
-    buildings_valid_do([] (building &b) {
-        auto house = b.dcast_house();
-
-        if (!house || !house->hsize()) {
+    buildings_house_do([] (auto house) {
+        if (!house->hsize()) {
             return;
         }
 

@@ -39,14 +39,12 @@ void figure_magistrate::figure_before_action() {
 
 sound_key figure_magistrate::phrase_key() const {
     int houses_in_disease = 0;
-    buildings_valid_do([&] (building &b) {
-        auto house = b.dcast_house();
-
-        if (!house || house->house_population() <= 0) {
+    buildings_house_do([&] (auto house) {
+        if (house->house_population() <= 0) {
             return;
         }
 
-        houses_in_disease = (b.disease_days > 0) ? 1 : 0;
+        houses_in_disease = (house->base.disease_days > 0) ? 1 : 0;
     });
 
     if (houses_in_disease > 0) {
