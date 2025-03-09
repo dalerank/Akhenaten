@@ -13,6 +13,7 @@
 #include "core/random.h"
 #include "game/tutorial.h"
 #include "scenario/scenario.h"
+#include "game/game.h"
 
 void city_health_t::change(int amount) {
     value = calc_bound(value + amount, 0, 100);
@@ -50,7 +51,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
         return;
     }
 
-    tutorial_on_disease();
+    g_city_events.enqueue(event_city_disease{game.simtime.absolute_day()});
 
     // kill people where has little common_health
     building *warn_building = nullptr;

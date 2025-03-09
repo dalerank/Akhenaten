@@ -1348,15 +1348,18 @@ void draw_debug_ui(int x, int y) {
                 f = { "3:figs_800", flags.tutorial_3.figs_800_stored };
                 break;
             case 8:
-                f = { "3:pottery_200", flags.tutorial_3.pottery_made };
+                f = { "3:pottery_100", flags.tutorial_3.pottery_made_1 };
                 break;
             case 9:
-                f = { "3:disease", flags.tutorial_3.disease };
+                f = { "3:pottery_100", flags.tutorial_3.pottery_made_2 };
                 break;
             case 10:
-                f = { "4:beer_300", flags.tutorial_4.beer_made };
+                f = { "3:disease", flags.tutorial_3.disease };
                 break;
             case 11:
+                f = { "4:beer_300", flags.tutorial_4.beer_made };
+                break;
+            case 12:
                 f = { "5:apartment", flags.tutorial_5.spacious_apartment };
                 break;
             case 15:

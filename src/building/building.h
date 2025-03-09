@@ -573,7 +573,7 @@ public:
     inline figure *get_figure(int slot) { return base.get_figure(slot); }
     inline const figure *get_figure(int slot) const { return base.get_figure(slot); }
     
-    inline int id() const { return base.id; }
+    inline building_id id() const { return base.id; }
     inline tile2i tile() const { return base.tile; }
     inline int tilex() const { return base.tile.x(); }
     inline int tiley() const { return base.tile.y(); }

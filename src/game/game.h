@@ -13,6 +13,8 @@ enum game_option {
     game_opt_sound = 1,
 };
 
+struct event_advance_day { int day; };
+
 using game_opts = uint32_t;
 
 bool game_init(game_opts opts);

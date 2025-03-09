@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+struct event_city_disease { int absday; };
+
 struct city_health_t {
     int32_t num_mortuary_workers;
     int32_t target_value;

@@ -27,6 +27,8 @@ struct storage_worker_task {
     building *dest = nullptr;
 };
 
+struct event_warehouse_filled { building_id bid; };
+
 class building_storage_yard : public building_storage {
 public:
     BUILDING_METAINFO(BUILDING_STORAGE_YARD, building_storage_yard)

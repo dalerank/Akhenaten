@@ -354,6 +354,8 @@ void game_t::advance_day() {
     g_city.figures_update_day();
 
     tutorial_on_day_tick();
+
+    g_city_events.enqueue(event_advance_day{ game.simtime.absolute_day() });
 }
 
 void game_t::shutdown() {

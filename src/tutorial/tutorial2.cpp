@@ -57,6 +57,16 @@ void tutorial_2::init() {
     g_city.victory_state.add_condition(&tutorial2_is_success);
 }
 
+int tutorial_2::goal_text() {
+    if (!g_tutorials_flags.tutorial_2.gold_mined_500) {
+        return 24;
+    } else if (!g_tutorials_flags.tutorial_2.temples_built) {
+        return 23;
+    } else {
+        return 22;
+    }
+}
+
 void tutorial_2::reset() {
     g_tutorials_flags.tutorial_2.started = 0;
     g_tutorials_flags.tutorial_2.gold_mined_500 = 0;

@@ -201,8 +201,9 @@ int building_storage_yard::add_resource(e_resource resource, bool is_produced, i
 int building_storage_yard::remove_resource(e_resource resource, int amount) {
     building_storage_room* space = room();
     while (space) {
-        if (amount <= 0)
+        if (amount <= 0) {
             return 0;
+        }
 
         if (space->resource() != resource || space->base.stored_amount_first <= 0) {
             space = space->next_room();
@@ -226,6 +227,7 @@ int building_storage_yard::remove_resource(e_resource resource, int amount) {
 
     return amount;
 }
+
 void building_storageyard_remove_resource_curse(building* b, int amount) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
     if (!warehouse) {

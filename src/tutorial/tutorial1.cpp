@@ -105,6 +105,15 @@ void tutorial_1::reset() {
     g_tutorials_flags.tutorial_1.started = 0;
 }
 
+int tutorial_1::goal_text() {
+    if (!g_tutorials_flags.tutorial_1.population_150_reached)
+        return 21;
+    else if (!g_tutorials_flags.tutorial_1.gamemeat_400_stored)
+        return 19;
+    else
+        return 20;
+}
+
 void tutorial_1::update_step(xstring s) {
     if (s == tutorial_stage.tutorial_fire) {
         g_tutorials_flags.tutorial_1.fire = false;

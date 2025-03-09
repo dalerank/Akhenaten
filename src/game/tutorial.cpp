@@ -39,11 +39,7 @@ static void post_message(int message) {
 static void set_all_tut_flags_null() {
     tutorial_1::reset();
     tutorial_2::reset();
-
-    // tutorial 3
-    g_tutorials_flags.tutorial_3.started = 0;
-    g_tutorials_flags.tutorial_3.figs_800_stored = 0;
-    g_tutorials_flags.tutorial_3.pottery_made = 0;
+    tutorial_3::reset();
 
     // tutorial 4
     g_tutorials_flags.tutorial_4.started = 0;
@@ -161,36 +157,13 @@ void tutorial_map_update(int tut) {
 
 int tutorial_3_adjust_request_year(int *year) {
     if (scenario_is_mission_rank(2)) {
-        if (!g_tutorials_flags.tutorial_3.pottery_made) {
-            return 0;
-        }
+        //if (!g_tutorials_flags.tutorial_3.pottery_made) {
+        //    return 0;
+        //}
 
         *year = g_tutorials_flags.tutorial_3.pottery_made_year;
     }
     return 1;
-}
-
-void tutorial3_on_filled_granary(event_granary_filled ev) {
-    if (g_tutorials_flags.tutorial_3.figs_800_stored) {
-        return;
-    }
-  
-    if (ev.amount < 800) {
-        return;
-    }
-
-    auto granary = building_get(ev.bid)->dcast_granary();
-    const int figs_stored = granary ? granary->amount(RESOURCE_FIGS) : 0;
-
-    if (figs_stored < 800) {
-        return;
-    }
-
-    g_city_events.removeListener(typeid(event_granary_filled), &tutorial3_on_filled_granary);
-
-    g_tutorials_flags.tutorial_3.figs_800_stored = true;
-    building_menu_update(tutorial_stage.tutorial_industry);
-    post_message(MESSAGE_TUTORIAL_INDUSTRY);
 }
 
 bool tutorial_menu_update(int tut) {
@@ -204,14 +177,8 @@ bool tutorial_menu_update(int tut) {
         return true;
     } 
     
-    if (tut == 3) {            
-        if (g_tutorials_flags.tutorial_3.figs_800_stored) building_menu_update(tutorial_stage.tutorial_industry);
-        else g_city_events.appendListener(typeid(event_granary_filled), &tutorial3_on_filled_granary);
-
-        if (g_tutorials_flags.tutorial_3.pottery_made) building_menu_update(tutorial_stage.tutorial_industry);
-        if (g_tutorials_flags.tutorial_3.disease) building_menu_update(tutorial_stage.tutorial_health);
-        if (g_tutorials_flags.tutorial_3.pottery_made) building_menu_update(tutorial_stage.tutorial_gardens);
-
+    if (tut == 3) {
+        tutorial_3::init();
         return true;
     } 
     
@@ -254,7 +221,7 @@ int tutorial_get_population_cap(int current_cap) {
             return 150;
         }
     } else if (scenario_is_mission_rank(3)) {
-        if (!g_tutorials_flags.tutorial_3.pottery_made) {
+        if (!g_tutorials_flags.tutorial_3.pottery_made_1) {
             return 520;
         }
     }
@@ -262,30 +229,11 @@ int tutorial_get_population_cap(int current_cap) {
 }
 
 int tutorial_get_immediate_goal_text() {
-    if (scenario_is_mission_rank(1)) {
-        if (!g_tutorials_flags.tutorial_1.population_150_reached)
-            return 21;
-        else if (!g_tutorials_flags.tutorial_1.gamemeat_400_stored)
-            return 19;
-        else
-            return 20;
-    } else if (scenario_is_mission_rank(2)) {
-        if (!g_tutorials_flags.tutorial_2.gold_mined_500) {
-            return 24;
-        } else if (!g_tutorials_flags.tutorial_2.temples_built) {
-            return 23;
-        } else {
-            return 22;
-        }
-    } else if (scenario_is_mission_rank(3)) {
-        if (!g_tutorials_flags.tutorial_3.figs_800_stored) {
-            return 28;
-        } else if (!g_tutorials_flags.tutorial_3.pottery_made) {
-            return 27;
-        } else {
-            return 26;
-        }
-    } else if (scenario_is_mission_rank(4)) {
+    if (scenario_is_mission_rank(1))  return tutorial_1::goal_text();
+    if (scenario_is_mission_rank(2))  return tutorial_2::goal_text();
+    if (scenario_is_mission_rank(3))  return tutorial_3::goal_text();
+        
+    if (scenario_is_mission_rank(4)) {
         if (!g_tutorials_flags.tutorial_4.beer_made) {
             return 33;
         }
@@ -312,25 +260,8 @@ void tutorial_flags_t::on_crime() {
     }
 }
 
-void tutorial_on_disease() {
-    if (scenario_is_mission_rank(3) && !g_tutorials_flags.tutorial_3.disease) {
-        g_tutorials_flags.tutorial_3.disease = true;
-        building_menu_update(tutorial_stage.tutorial_health);
-        post_message(MESSAGE_TUTORIAL_BASIC_HEALTHCARE);
-    }
-}
-
-void tutorial_check_resources_on_storageyard() {
-    if (!g_tutorials_flags.tutorial_3.pottery_made && city_resource_warehouse_stored(RESOURCE_POTTERY) >= 1) {
-        g_tutorials_flags.tutorial_3.pottery_made = true;
-        g_tutorials_flags.tutorial_3.pottery_made_year = game.simtime.year;
-        //building_menu_update(BUILDSET_NORMAL);
-        post_message(MESSAGE_TUTORIAL_TRADE);
-    } else if (!g_tutorials_flags.tutorial_3.pottery_made && city_resource_warehouse_stored(RESOURCE_POTTERY) >= 2) {
-        g_tutorials_flags.tutorial_3.pottery_made = true;
-        building_menu_update(tutorial_stage.tutorial_gardens);
-        post_message(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES);
-    } else if (!g_tutorials_flags.tutorial_4.beer_made && city_resource_warehouse_stored(RESOURCE_BEER) >= 3) {
+void tutorial_check_4_5_resources_on_storageyard() {
+    if (!g_tutorials_flags.tutorial_4.beer_made && city_resource_warehouse_stored(RESOURCE_BEER) >= 3) {
         g_tutorials_flags.tutorial_4.beer_made = true;
         building_menu_update(tutorial_stage.tutorial_finance);
         post_message(MESSAGE_TUTORIAL_FINANCES);
@@ -355,6 +286,7 @@ void tutorial_on_house_evolve(e_house_level level) {
 
 void tutorial_update_step(xstring s) {
     tutorial_1::update_step(s);
+    tutorial_2::update_step(s);
     if (s == tutorial_stage.tutorial_food) {
         building_menu_update(s);
         post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);
@@ -426,7 +358,7 @@ void tutorial_on_day_tick() {
         city_mission_tutorial_set_fire_message_shown(1);
     }
 
-    tutorial_check_resources_on_storageyard();
+    tutorial_check_4_5_resources_on_storageyard();
 }
 
 void tutorial_on_month_tick() {
@@ -451,8 +383,8 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_2.crime); 
     // tut 3
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.figs_800_stored);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[8]); // ????
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.pottery_made);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.pottery_made_1);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.pottery_made_2);
     // tut 4
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_4.beer_made);
     // tut 5
@@ -484,5 +416,4 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[34]); // tut4 ???
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[35]);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[36]); // goal: entertainment
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[37]); // goal: temples
 });

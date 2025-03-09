@@ -29,12 +29,21 @@ struct tutorial_1 {
     static void init();
     static void reset();
     static void update_step(xstring s);
+    static int goal_text();
 };
 
 struct tutorial_2 {
     static void init();
     static void reset();
-    static void update_step(xstring s);
+    static void update_step(xstring s) {}
+    static int goal_text();
+};
+
+struct tutorial_3 {
+    static void init();
+    static void reset();
+    static void update_step(xstring s) {}
+    static int goal_text();
 };
 
 struct tutorial_flags_t {
@@ -60,7 +69,8 @@ struct tutorial_flags_t {
     struct {
         bool started;
         bool figs_800_stored;
-        bool pottery_made;
+        bool pottery_made_1;
+        bool pottery_made_2;
         bool disease;
         int pottery_made_year;
     } tutorial_3;
@@ -111,12 +121,9 @@ bool tutorial_menu_update(int tut);
 int tutorial_get_population_cap(int current_cap);
 int tutorial_get_immediate_goal_text();
 
-int tutorial_adjust_request_year(int* year);
-
-void tutorial_on_disease();
 void tutorial_on_house_evolve(e_house_level level);
 
-void tutorial_check_resources_on_storageyard();
+void tutorial_check_4_5_resources_on_storageyard();
 
 void tutorial_on_day_tick();
 void tutorial_on_month_tick();
