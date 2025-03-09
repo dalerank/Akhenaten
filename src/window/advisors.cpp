@@ -169,7 +169,7 @@ void window_advisors::init() {
     set_advisor_window();
 
     for (auto &btn: btns) {
-        ui[btn.id].enabled = is_advisor_available(btn.adv);
+        ui[btn.id].readonly = !is_advisor_available(btn.adv);
     }
 
     ui["back_btn"].enabled = true;

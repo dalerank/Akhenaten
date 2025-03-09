@@ -75,7 +75,7 @@ void tutorial3_warehouse_pottery_1_check(event_warehouse_filled ev) {
     g_tutorials_flags.tutorial_3.pottery_made_1 = true;
     g_tutorials_flags.tutorial_3.pottery_made_year = game.simtime.year;
 
-    city_message_post(true, MESSAGE_TUTORIAL_TRADE, 0, 0);
+    city_message_post(true, MESSAGE_TUTORIAL_FOOD_OR_FAMINE, 0, 0);
 }
 
 void tutorial3_warehouse_pottery_2_check(event_warehouse_filled ev) {
