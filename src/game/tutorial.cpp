@@ -287,6 +287,7 @@ void tutorial_on_house_evolve(e_house_level level) {
 void tutorial_update_step(xstring s) {
     tutorial_1::update_step(s);
     tutorial_2::update_step(s);
+    tutorial_3::update_step(s);
     if (s == tutorial_stage.tutorial_food) {
         building_menu_update(s);
         post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);
@@ -298,12 +299,6 @@ void tutorial_update_step(xstring s) {
         post_message(MESSAGE_TUTORIAL_GODS_OF_EGYPT);
     } else if (s == tutorial_stage.tutorial_entertainment) {
         building_menu_update(s);
-    } else if (s == tutorial_stage.tutorial_industry) {
-        building_menu_update(s);
-        post_message(MESSAGE_TUTORIAL_INDUSTRY);
-    } else if (s == tutorial_stage.tutorial_health) {
-        building_menu_update(s);
-        post_message(MESSAGE_TUTORIAL_BASIC_HEALTHCARE);
     } else if (s == tutorial_stage.tutorial_gardens) {
         building_menu_update(s);
         post_message(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES);

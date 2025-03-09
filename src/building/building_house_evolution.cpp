@@ -162,9 +162,9 @@ void building_house::determine_evolve_text() {
 
     // desirability
     if (base.desirability < model.evolve_desirability) {
-        if (housed.worst_desirability_building_id)
+        if (housed.worst_desirability_building_id) {
             housed.evolve_text_id = 62;
-        else {
+        } else {
             housed.evolve_text_id = 30;
         }
         return;
@@ -304,43 +304,50 @@ void building_house::determine_evolve_text() {
 }
 
 void building_house::determine_worst_desirability_building() {
-    int lowest_desirability = 0;
-    int lowest_building_id = 0;
+    auto &housed = runtime_data();
+    housed.worst_desirability_building_id = 0;
 
     grid_area area = map_grid_get_area(tile(), 1, 6);
 
+    if (!house_level()) {
+        return;
+    }
+
+    int lowest_desirability = 0;
+    int lowest_building_id = 0;
+
     for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
         for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
-            int building_id = map_building_at(MAP_OFFSET(x, y));
+            int building_id = map_building_at(tile2i(x, y));
             if (building_id <= 0)
                 continue;
 
             auto b = building_get(building_id);
-            if (b->state != BUILDING_STATE_VALID || building_id == b->id) {
+            if (!b->is_valid() || building_id == id()) {
                 continue;
             }
 
-            if (!house_level() || b->type < type()) {
-                int des = model_get_building(b->type)->desirability_value;
-                if (des < 0) {
-                    // simplified desirability calculation
-                    int step_size = model_get_building(b->type)->desirability_step_size;
-                    int range = model_get_building(b->type)->desirability_range;
-                    int dist = calc_maximum_distance(vec2i(x, y), tile());
-                    if (dist <= range) {
-                        while (--dist > 1) {
-                            des += step_size;
-                        }
-                        if (des < lowest_desirability) {
-                            lowest_desirability = des;
-                            lowest_building_id = building_id;
-                        }
-                    }
+            int des = model_get_building(b->type)->desirability_value;
+            if (des >= 0) {
+                continue;
+            }
+
+            // simplified desirability calculation
+            int step_size = model_get_building(b->type)->desirability_step_size;
+            int range = model_get_building(b->type)->desirability_range;
+            int dist = calc_maximum_distance(vec2i(x, y), tile());
+            if (dist <= range) {
+                while (--dist > 1) {
+                    des += step_size;
+                }
+
+                if (des < lowest_desirability) {
+                    lowest_desirability = des;
+                    lowest_building_id = building_id;
                 }
             }
         }
     }
 
-    auto &housed = runtime_data();
     housed.worst_desirability_building_id = lowest_building_id;
 }

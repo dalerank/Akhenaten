@@ -42,7 +42,7 @@ struct tutorial_2 {
 struct tutorial_3 {
     static void init();
     static void reset();
-    static void update_step(xstring s) {}
+    static void update_step(xstring s);
     static int goal_text();
 };
 

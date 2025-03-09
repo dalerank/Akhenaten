@@ -130,6 +130,13 @@ public:
 		swap(eventCallbackListMap, other.eventCallbackListMap);
 	}
 
+	template<typename E>
+	Handle appendListener(const Callback &callback) {
+		std::lock_guard<Mutex> lockGuard(listenerMutex);
+
+		return eventCallbackListMap[typeid(E)].append(callback);
+	}
+
 	Handle appendListener(const Event & event, const Callback & callback)
 	{
 		std::lock_guard<Mutex> lockGuard(listenerMutex);
@@ -149,6 +156,11 @@ public:
 		std::lock_guard<Mutex> lockGuard(listenerMutex);
 
 		return eventCallbackListMap[event].insert(callback, before);
+	}
+
+	template<typename E>
+	bool removeListener(const Callback &pcb) {
+		return removeListener(typeid(E), pcb);
 	}
 
 	bool removeListener(const Event &event, const Callback & pcb) {

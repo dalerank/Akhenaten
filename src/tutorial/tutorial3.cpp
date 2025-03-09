@@ -30,7 +30,7 @@ void tutorial3_on_filled_granary(event_granary_filled ev) {
         return;
     }
 
-    g_city_events.removeListener(typeid(event_granary_filled), &tutorial3_on_filled_granary);
+    g_city_events.removeListener<event_granary_filled>(&tutorial3_on_filled_granary);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
     g_tutorials_flags.tutorial_3.figs_800_stored = true;
     building_menu_update(tutorial_stage.tutorial_industry);
@@ -42,11 +42,23 @@ void tutorial3_on_disease(event_city_disease ev) {
         return;
     }
 
-    g_city_events.removeListener(typeid(event_city_disease), &tutorial3_on_disease);
+    g_city_events.removeListener<event_city_disease>(&tutorial3_on_disease);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
     g_tutorials_flags.tutorial_3.disease = true;
     building_menu_update(tutorial_stage.tutorial_health);
     city_message_post(true, MESSAGE_TUTORIAL_BASIC_HEALTHCARE, 0, 0);
+}
+
+void tutorial_3::update_step(xstring s) {
+    if (s == tutorial_stage.tutorial_health) {
+        building_menu_update(s);
+        city_message_post(true, MESSAGE_TUTORIAL_BASIC_HEALTHCARE, 0, 0);
+    }
+
+    if (s == tutorial_stage.tutorial_industry) {
+        building_menu_update(s);
+        city_message_post(true, MESSAGE_TUTORIAL_INDUSTRY, 0, 0);
+    }
 }
 
 void tutorial3_warehouse_pottery_1_check(event_warehouse_filled ev) {
@@ -54,11 +66,11 @@ void tutorial3_warehouse_pottery_1_check(event_warehouse_filled ev) {
         return;
     } 
     
-    if (city_resource_warehouse_stored(RESOURCE_POTTERY) < 1) {
+    if (city_resource_warehouse_stored(RESOURCE_POTTERY) < 100) {
         return;
     }
 
-    g_city_events.removeListener(typeid(event_warehouse_filled), &tutorial3_warehouse_pottery_1_check);
+    g_city_events.removeListener<event_warehouse_filled>(&tutorial3_warehouse_pottery_1_check);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
     g_tutorials_flags.tutorial_3.pottery_made_1 = true;
     g_tutorials_flags.tutorial_3.pottery_made_year = game.simtime.year;
@@ -71,11 +83,11 @@ void tutorial3_warehouse_pottery_2_check(event_warehouse_filled ev) {
         return;
     }
     
-    if (city_resource_warehouse_stored(RESOURCE_POTTERY) < 2) {
+    if (city_resource_warehouse_stored(RESOURCE_POTTERY) < 200) {
         return;
     }
 
-    g_city_events.removeListener(typeid(event_warehouse_filled), &tutorial3_warehouse_pottery_2_check);
+    g_city_events.removeListener<event_warehouse_filled>(&tutorial3_warehouse_pottery_2_check);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
     g_tutorials_flags.tutorial_3.pottery_made_2 = true;
     building_menu_update(tutorial_stage.tutorial_gardens);
@@ -101,16 +113,16 @@ int tutorial_3::goal_text() {
 
 void tutorial_3::init() {
     if (g_tutorials_flags.tutorial_3.figs_800_stored) building_menu_update(tutorial_stage.tutorial_industry);
-    else g_city_events.appendListener(typeid(event_granary_filled), &tutorial3_on_filled_granary);
+    else g_city_events.appendListener<event_granary_filled>(&tutorial3_on_filled_granary);
 
     if (g_tutorials_flags.tutorial_3.pottery_made_1) building_menu_update(tutorial_stage.tutorial_industry);
-    else g_city_events.appendListener(typeid(event_warehouse_filled), &tutorial3_warehouse_pottery_1_check);
+    else g_city_events.appendListener<event_warehouse_filled>(&tutorial3_warehouse_pottery_1_check);
 
     if (g_tutorials_flags.tutorial_3.pottery_made_2) building_menu_update(tutorial_stage.tutorial_gardens);
-    else g_city_events.appendListener(typeid(event_warehouse_filled), &tutorial3_warehouse_pottery_2_check);
+    else g_city_events.appendListener<event_warehouse_filled>(&tutorial3_warehouse_pottery_2_check);
 
     if (g_tutorials_flags.tutorial_3.disease) building_menu_update(tutorial_stage.tutorial_health);
-    else g_city_events.appendListener(typeid(event_city_disease), &tutorial3_on_disease);
+    else g_city_events.appendListener<event_city_disease>(&tutorial3_on_disease);
 
     g_city.victory_state.add_condition(&tutorial3_is_success);
 }
