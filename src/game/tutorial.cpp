@@ -380,6 +380,7 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.figs_800_stored);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.pottery_made_1);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.pottery_made_2);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.disease);
     // tut 4
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_4.beer_made);
     // tut 5
@@ -410,5 +411,4 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[33]); // goal: water supply
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[34]); // tut4 ???
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[35]);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[36]); // goal: entertainment
 });
