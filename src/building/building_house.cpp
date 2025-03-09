@@ -586,7 +586,6 @@ bool building_house::has_devolve_delay(int status) {
 }
 
 bool building_house::can_expand(int num_tiles) {
-    auto &d = runtime_data();
     // merge with other houses
     for (int dir = 0; dir < MAX_DIR; dir++) {
         int base_offset = expand_delta(dir).offset + base.tile.grid_offset();
@@ -595,9 +594,13 @@ bool building_house::can_expand(int num_tiles) {
             int tile_offset = base_offset + house_tile_offsets(i);
             if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
                 auto other_house = building_at(tile_offset)->dcast_house();
+                if (!other_house) {
+                    continue;
+                }
+
                 if (other_house->id() == id()) {
                     ok_tiles++;
-                } else if (other_house->state() == BUILDING_STATE_VALID && other_house->runtime_data().hsize) {
+                } else if (other_house->is_valid() && other_house->hsize()) {
                     if (other_house->house_level() <= house_level()) {
                         ok_tiles++;
                     }
