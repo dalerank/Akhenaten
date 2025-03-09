@@ -156,7 +156,7 @@ void city_health_t::update() {
         const short hpop = house->house_population();
         total_population += hpop;
         auto &housed = house->runtime_data();
-        if (housed.level <= HOUSE_STURDY_HUT) {
+        if (house->house_level() <= HOUSE_STURDY_HUT) {
             if (housed.apothecary) {
                 healthy_population += hpop;
             } else {

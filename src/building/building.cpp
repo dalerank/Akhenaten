@@ -1170,6 +1170,7 @@ void building_impl::static_params::load(archive arch) {
     needs.shoreline = arch.r_bool("need_shoreline");
     needs.canals = arch.r_bool("need_canals");
     needs.floodplain_shoreline = arch.r_bool("need_floodplain_shoreline");
+    num_types = arch.r_int("num_types");
 
     city_labor_set_category(type, labor_category);
 

@@ -29,22 +29,6 @@
 
 #define MAX_DIR 4
 
-namespace buildings {
-
-template<typename T>
-struct house_model_t : public model_t<T> {
-    using inherited = model_t<T>;
-
-    using inherited::load;
-    virtual void load(archive arch) override {
-        num_types = arch.r_int("num_types");
-    }
-
-    int num_types;
-};
-
-}
-
 declare_console_command_p(houseup, game_cheat_houseup)
 declare_console_command_p(housedown, game_cheat_housedown)
 void game_cheat_houseup(std::istream &is, std::ostream &os) {
@@ -68,27 +52,26 @@ void game_cheat_housedown(std::istream &is, std::ostream &os) {
     });
 };
 
-using house_model = buildings::house_model_t<building_house>;
-buildings::house_model_t<building_house_crude_hut> house_crude_hut_m;
-buildings::house_model_t<building_house_sturdy_hut> house_sturdy_hut_m;
-buildings::house_model_t<building_house_meager_shanty> house_meager_shanty_m;
-buildings::house_model_t<building_house_common_shanty> house_common_shanty_m;
-buildings::house_model_t<building_house_rough_cottage> house_rough_cottage_m;
-buildings::house_model_t<building_house_ordinary_cottage> house_ordinary_cottage_m;
-buildings::house_model_t<building_house_modest_homestead> house_modest_homestead_m;
-buildings::house_model_t<building_house_spacious_homestead> house_spacious_homestead_m;
-buildings::house_model_t<building_house_modest_apartment> house_modest_apartment_m;
-buildings::house_model_t<building_house_spacious_apartment> house_spacious_apartment_m;
-buildings::house_model_t<building_house_common_residence> house_common_residence_m;
-buildings::house_model_t<building_house_spacious_residence> house_spacious_residence_m;
-buildings::house_model_t<building_house_elegant_residence> house_elegant_residence_m;
-buildings::house_model_t<building_house_fancy_residence> house_fancy_residence_m;
-buildings::house_model_t<building_house_common_manor> house_common_manor_m;
-buildings::house_model_t<building_house_spacious_manor> house_spacious_manor_m;
-buildings::house_model_t<building_house_elegant_manor> house_elegant_manor_m;
-buildings::house_model_t<building_house_stately_manor> house_stately_manor_m;
-buildings::house_model_t<building_house_modest_estate> house_modest_estate_m;
-buildings::house_model_t<building_house_palatial_estate> house_palatial_estate_m;
+building_house_crude_hut::static_params house_crude_hut_m;
+building_house_sturdy_hut::static_params house_sturdy_hut_m;
+building_house_meager_shanty::static_params house_meager_shanty_m;
+building_house_common_shanty::static_params house_common_shanty_m;
+building_house_rough_cottage::static_params house_rough_cottage_m;
+building_house_ordinary_cottage::static_params house_ordinary_cottage_m;
+building_house_modest_homestead::static_params house_modest_homestead_m;
+building_house_spacious_homestead::static_params house_spacious_homestead_m;
+building_house_modest_apartment::static_params house_modest_apartment_m;
+building_house_spacious_apartment::static_params house_spacious_apartment_m;
+building_house_common_residence::static_params house_common_residence_m;
+building_house_spacious_residence::static_params house_spacious_residence_m;
+building_house_elegant_residence::static_params house_elegant_residence_m;
+building_house_fancy_residence::static_params house_fancy_residence_m;
+building_house_common_manor::static_params house_common_manor_m;
+building_house_spacious_manor::static_params house_spacious_manor_m;
+building_house_elegant_manor::static_params house_elegant_manor_m;
+building_house_stately_manor::static_params house_stately_manor_m;
+building_house_modest_estate::static_params house_modest_estate_m;
+building_house_palatial_estate::static_params house_palatial_estate_m;
 
 static const int HOUSE_TILE_OFFSETS_PH[] = {
   GRID_OFFSET(0, 0),
@@ -310,13 +293,9 @@ void building_house::change_to(e_building_type type) {
     tutorial_on_house_evolve((e_house_level)(type - BUILDING_HOUSE_VACANT_LOT));
     base.type = type;
 
-    auto &d = runtime_data();
-    d.level = (e_house_level)(base.type - BUILDING_HOUSE_VACANT_LOT);
-    
-    int image_id = house_image_group<false>(d.level);
-    const house_model &model = static_cast<const house_model&>(params());
+    int image_id = house_image_group<false>(house_level());
 
-    const int img_offset = model.anim["house"].offset;
+    const int img_offset = anim("house").offset;
     if (is_merged()) {
         image_id += 4;
         if (img_offset) {
@@ -324,7 +303,7 @@ void building_house::change_to(e_building_type type) {
         }
     } else {
         image_id += img_offset;
-        image_id += map_random_get(base.tile.grid_offset()) & (model.num_types - 1);
+        image_id += map_random_get(base.tile.grid_offset()) & (params().num_types - 1);
     }
 
     map_building_tiles_add(base.id, base.tile, base.size, image_id, TERRAIN_BUILDING);
@@ -348,9 +327,7 @@ void building_house::change_to_vacant_lot() {
     base.type = BUILDING_HOUSE_VACANT_LOT;
 
     d.population = 0;
-    d.level = (e_house_level)(base.type - BUILDING_HOUSE_VACANT_LOT);
-    const house_model &model = static_cast<const house_model&>(params());
-    int vacant_lot_id = model.anim["house"].first_img();
+    int vacant_lot_id = anim("house").first_img();
 
     if (is_merged()) {
         map_building_tiles_remove(base.id, base.tile);
@@ -411,8 +388,7 @@ void building_house::merge_impl() {
     }
     int image_id = house_image_group<false>(house_level()) + 4;
 
-    const house_model &model = static_cast<const house_model&>(params());
-    if (model.anim["house"].offset) {
+    if (anim("house").offset) {
         image_id += 1;
     }
 
@@ -727,7 +703,8 @@ static void split_size2(building* b, e_building_type new_type) {
     int foods_per_tile[INVENTORY_MAX];
     int foods_remainder[INVENTORY_MAX];
 
-    auto &housed = b->dcast_house()->runtime_data();
+    auto house = b->dcast_house();
+    auto &housed = house->runtime_data();
     for (int i = 0; i < INVENTORY_MAX; i++) {
         inventory_per_tile[i] = housed.inventory[i] / 4;
         inventory_remainder[i] = housed.inventory[i] % 4;
@@ -742,7 +719,6 @@ static void split_size2(building* b, e_building_type new_type) {
 
     // main tile
     b->type = new_type;
-    housed.level = (e_house_level)(b->type - BUILDING_HOUSE_VACANT_LOT);
     b->size = 1;
     housed.hsize = 1;
     housed.is_merged = false;
@@ -753,7 +729,7 @@ static void split_size2(building* b, e_building_type new_type) {
     }
     b->distance_from_entry = 0;
 
-    int image_id = house_image_group<true>(housed.level);
+    const int image_id = house_image_group<true>(house->house_level());
     map_building_tiles_add(b->id, b->tile, b->size, image_id + (map_random_get(b->tile) & 1), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
@@ -768,7 +744,8 @@ static void split_size3(building* b) {
     int foods_per_tile[INVENTORY_MAX];
     int foods_remainder[INVENTORY_MAX];
 
-    auto &housed = b->dcast_house()->runtime_data();
+    auto house = b->dcast_house();
+    auto &housed = house->runtime_data();
     for (int i = 0; i < INVENTORY_MAX; i++) {
         inventory_per_tile[i] = housed.inventory[i] / 9;
         inventory_remainder[i] = housed.inventory[i] % 9;
@@ -783,7 +760,6 @@ static void split_size3(building* b) {
 
     // main tile
     b->type = BUILDING_HOUSE_SPACIOUS_APARTMENT;
-    housed.level = (e_house_level)(b->type - BUILDING_HOUSE_VACANT_LOT);
     b->size = 1;
     housed.hsize = 1;
     housed.is_merged = false;
@@ -794,7 +770,7 @@ static void split_size3(building* b) {
     }
     b->distance_from_entry = 0;
 
-    int image_id = house_image_group<true>(housed.level);
+    const int image_id = house_image_group<true>(house->house_level());
     map_building_tiles_add(b->id, b->tile, b->size, image_id + (map_random_get(b->tile) & 1), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
@@ -852,7 +828,6 @@ void building_house_common_manor::devolve_to_fancy_residence() {
     // main tile
     base.type = BUILDING_HOUSE_FANCY_RESIDENCE;
     base.size = 2;
-    housed.level = (e_house_level)(base.type - BUILDING_HOUSE_VACANT_LOT);
     housed.hsize = 2;
     housed.is_merged = false;
     housed.population = population_per_tile + population_remainder;
@@ -896,7 +871,6 @@ void building_house_modest_estate::devolve_to_statel_manor() {
     // main tile
     base.type = BUILDING_HOUSE_STATELY_MANOR;
     base.size = 3;
-    housed.level = (e_house_level)(base.type - BUILDING_HOUSE_VACANT_LOT);
     housed.hsize = 3;
     housed.is_merged = false;
     housed.population = population_per_tile + population_remainder;
@@ -954,9 +928,8 @@ void building_house::on_create(int orientation) {
     auto &d = runtime_data();
     d.health = 100;
     d.house_happiness = 50;
-    d.level = (e_house_level)(type() - BUILDING_HOUSE_VACANT_LOT);
 
-    if (d.level == 0) {
+    if (house_level() == 0) {
         d.population = 0;
     }
 
@@ -1109,7 +1082,6 @@ void building_house_spacious_apartment::expand_to_common_residence() {
 
     base.type = BUILDING_HOUSE_COMMON_RESIDENCE;
     base.size = 2;
-    housed.level = HOUSE_COMMON_RESIDENCE;
     housed.hsize = 2;
     housed.population += g_merge_data.population;
     for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -1181,7 +1153,6 @@ void building_house_fancy_residence::expand_to_common_manor() {
     auto &housed = runtime_data();
     base.type = BUILDING_HOUSE_COMMON_MANOR;
     base.size = 3;
-    housed.level = HOUSE_COMMON_MANOR;
     housed.hsize = 3;
     housed.population += g_merge_data.population;
 
@@ -1190,7 +1161,7 @@ void building_house_fancy_residence::expand_to_common_manor() {
         housed.inventory[i] += g_merge_data.inventory[i];
     }
 
-    int image_id = house_image_group<true>(housed.level);
+    int image_id = house_image_group<true>(house_level());
     map_building_tiles_remove(id(), base.tile);
     base.tile = g_merge_data.tile;
     map_building_tiles_add(id(), base.tile, base.size, image_id, TERRAIN_BUILDING);
@@ -1254,14 +1225,13 @@ void building_house_stately_manor::expand_to_modest_estate() {
 
     base.type = BUILDING_HOUSE_MODEST_ESTATE;
     base.size = 4;
-    housed.level = HOUSE_MODEST_ESTATE;
     housed.hsize = 4;
     housed.population += g_merge_data.population;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         housed.foods[i] += g_merge_data.foods[i];
         housed.inventory[i] += g_merge_data.inventory[i];
     }
-    int image_id = house_image_group<true>(housed.level);
+    int image_id = house_image_group<true>(house_level());
     map_building_tiles_remove(id(), tile());
     base.tile = g_merge_data.tile;
     map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);

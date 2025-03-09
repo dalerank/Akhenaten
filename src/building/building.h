@@ -405,6 +405,7 @@ public:
         bool unique_building;
         bool check_water_access;
         textid info_title_id;
+        int num_types;
         struct {
             bool canals;
             bool roads;

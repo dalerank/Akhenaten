@@ -398,19 +398,20 @@ static int calculate_people_per_house_type(void) {
             int pop = housed.population;
             total += pop;
 
-            if (housed.level <= HOUSE_STURDY_HUT) {
+            e_house_level hlevel = house->house_level();
+            if (hlevel <= HOUSE_STURDY_HUT) {
                 city_data.population.people_in_huts += pop;
             }
 
-            if (housed.level <= HOUSE_COMMON_SHANTY) {
+            if (hlevel <= HOUSE_COMMON_SHANTY) {
                 city_data.population.people_in_shanties += pop;
             }
 
-            if (housed.level >= HOUSE_COMMON_RESIDENCE) {
+            if (hlevel >= HOUSE_COMMON_RESIDENCE) {
                 city_data.population.people_in_residences += pop;
             }
 
-            if (housed.level >= HOUSE_COMMON_MANOR) {
+            if (hlevel >= HOUSE_COMMON_MANOR) {
                 city_data.population.people_in_manors += pop;
             }
         }
