@@ -31,6 +31,7 @@ public:
         uint16_t inventory[8];
         uint16_t highest_population;
         uint16_t unreachable_ticks;
+        uint16_t last_update_day;
         building_id tax_collector_id;
         uint16_t population;
         int16_t tax_income_or_storage;
@@ -99,7 +100,7 @@ public:
     void change_to_vacant_lot();
     bool is_vacant_lot() const;
     void add_population(int num_people);
-    void change_to(e_building_type type);
+    static void change_to(building &b, e_building_type type);
     void merge();
     void merge_impl();
     inline bool is_merged() const { return runtime_data().is_merged; }
