@@ -149,7 +149,11 @@ static bool pre_init(pcstr custom_data_dir) {
 #if !defined(GAME_PLATFORM_ANDROID)
     // ...then from the executable base path...
     static_assert(SDL_VERSION_ATLEAST(2, 0, 1), "SDL version too old");
+#if defined(GAME_PLATFORM_MACOSX)
+    char* tmp_path = SDL_GetPrefPath("", "Akhenaten");
+#else
     char* tmp_path = SDL_GetBasePath();
+#endif
     bstring512 base_path(tmp_path);
     SDL_free(tmp_path);
     if (pre_init_dir_attempt(base_path, "Attempting to load game from base path %s")) {
