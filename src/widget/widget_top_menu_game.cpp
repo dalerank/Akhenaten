@@ -86,6 +86,14 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     void help_handle(menu_item &item);
     void options_handle(menu_item &item);
     void file_handle(menu_item &item);
+    void set_text_for_debug_render();
+    void set_text_for_debug_city();
+    void set_text_for_autosave();
+    void set_text_for_tooltips();
+    void set_text_for_warnings();
+    void item_update_text(pcstr path, pcstr text);
+    void header_update_text(pcstr header, pcstr text);
+    xstring menu_handle_mouse(const mouse *m, menu_header *menu, xstring &focus_item_id);
 
     virtual void load(archive arch, pcstr section) override {
         autoconfig_window::load(arch, section);
@@ -392,7 +400,7 @@ static xstring top_menu_get_subitem(const mouse* m, menu_header &menu) {
     return {};
 }
 
-xstring top_menu_menu_handle_mouse(const mouse* m, menu_header* menu, xstring& focus_item_id) {
+xstring top_menu_widget::menu_handle_mouse(const mouse* m, menu_header* menu, xstring& focus_item_id) {
     if (!menu) {
         return "";
     }
@@ -418,11 +426,10 @@ xstring top_menu_menu_handle_mouse(const mouse* m, menu_header* menu, xstring& f
     return item_id;
 }
 
-void top_menu_header_update_text(pcstr header, pcstr text) {
-    auto& menu = g_top_menu;
-    auto &impl = ((ui::emenu_header *)&menu.headers[header])->impl;
+void top_menu_widget::header_update_text(pcstr header, pcstr text) {
+    auto &impl = ((ui::emenu_header *)&headers[header])->impl;
 
-    menu.headers[header].text(text);
+    headers[header].text(text);
     if (impl.calculated_width_blocks == 0) {
         return;
     }
@@ -445,11 +452,9 @@ std::pair<bstring64, bstring64> split_string(pcstr input) {
     return result;
 }
 
-void top_menu_item_update_text(pcstr path, pcstr text) {
-    auto &menu = g_top_menu;
-
+void top_menu_widget::item_update_text(pcstr path, pcstr text) {
     auto pair = split_string(path);
-    auto header = menu.headers[pair.first].dcast_menu_header();
+    auto header = headers[pair.first].dcast_menu_header();
     auto &item = header->item(pair.second);
     item.text = text;
 }
@@ -462,29 +467,27 @@ void widget_top_menu_clear_state() {
     data.focus_sub_menu_id = "";
 }
 
-static void set_text_for_autosave() {
-    top_menu_item_update_text("options/autosave_options", ui::str(19, g_settings.monthly_autosave ? 51 : 52));
+void top_menu_widget::set_text_for_autosave() {
+    item_update_text("options/autosave_options", ui::str(19, g_settings.monthly_autosave ? 51 : 52));
 }
 
-static void set_text_for_tooltips() {
-    top_menu_item_update_text("help/mouse", ui::str(3, g_settings.tooltips + 2));
+void top_menu_widget::set_text_for_tooltips() {
+    item_update_text("help/mouse", ui::str(3, g_settings.tooltips + 2));
 }
 
-static void set_text_for_warnings(void) {
-    top_menu_item_update_text("help/warnings", ui::str(3, g_settings.warnings ? 6 : 5));
+void top_menu_widget::set_text_for_warnings() {
+    item_update_text("help/warnings", ui::str(3, g_settings.warnings ? 6 : 5));
 }
 
-static void set_text_for_debug_city() {
-    auto& data = g_top_menu;
-    auto *debug = data.headers["debug"].dcast_menu_header();
+void top_menu_widget::set_text_for_debug_city() {
+    auto *debug = headers["debug"].dcast_menu_header();
     for (int i = 0; i < debug->impl.items.size(); ++i) {
         menu_debug_opt_text(i, g_debug_show_opts[i]);
     }
 }
 
-static void set_text_for_debug_render() {
-    auto& data = g_top_menu;
-    auto *render = data.headers["debug_render"].dcast_menu_header();
+void top_menu_widget::set_text_for_debug_render() {
+    auto *render = headers["debug_render"].dcast_menu_header();
     for (int i = 0; i < render->impl.items.size(); ++i) {
         menu_debug_render_text(i, g_debug_render == render->impl.items[i].parameter);
     }
@@ -746,7 +749,7 @@ bool top_menu_widget::handle_input_submenu(const mouse* m, const hotkeys* h) {
     }
 
     auto *header = headers[open_sub_menu].dcast_menu_header();
-    if (!top_menu_menu_handle_mouse(m, header ? &header->impl : nullptr, focus_sub_menu_id)) {
+    if (!menu_handle_mouse(m, header ? &header->impl : nullptr, focus_sub_menu_id)) {
         if (m->left.went_up) {
             widget_top_menu_clear_state();
             window_go_back();
