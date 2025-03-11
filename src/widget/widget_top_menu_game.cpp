@@ -99,6 +99,7 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     void calculate_menu_dimensions(menu_header &menu);
     void debug_render_change_opt(menu_item &item);
     void debug_change_opt(menu_item &item);
+    void debug_opt_text(int opt, bool v);
 
     virtual void load(archive arch, pcstr section) override {
         autoconfig_window::load(arch, section);
@@ -215,7 +216,7 @@ static void menu_debug_render_text(int opt, bool v) {
     g_top_menu.menu_item_update("debug_render", opt, v ? current.on : current.off);
 }
 
-static void menu_debug_opt_text(int opt, bool v) {
+void top_menu_widget::debug_opt_text(int opt, bool v) {
     struct option { pcstr on, off; };
     static option debug_text_opt[] = {
         {"Pages ON", "Pages OFF"},
@@ -237,22 +238,18 @@ static void menu_debug_opt_text(int opt, bool v) {
         {"Clouds ON", "Clouds OFF"},
     };
     const auto &current = debug_text_opt[opt];
-    g_top_menu.menu_item_update("debug", opt, v ? current.on : current.off);
+    menu_item_update("debug", opt, v ? current.on : current.off);
 }
-
-static void menu_debug_screenshot(int opt) {
-    widget_top_menu_clear_state();
-    window_go_back();
-    graphics_save_screenshot(SCREENSHOT_DISPLAY);
-}
-
 
 void top_menu_widget::debug_change_opt(menu_item &item) {
     int opt = item.parameter;
     switch (opt) {
     case e_debug_show_console: game_cheat_console(true); break;
     case e_debug_make_screenshot: 
-        menu_debug_screenshot(0); break;
+        widget_top_menu_clear_state();
+        window_go_back();
+        graphics_save_screenshot(SCREENSHOT_DISPLAY);
+        break;
 
     case e_debug_make_full_screenshot: 
         widget_top_menu_clear_state();
@@ -265,18 +262,18 @@ void top_menu_widget::debug_change_opt(menu_item &item) {
         g_debug_show_opts[opt] = game.debug_properties;
         widget_top_menu_clear_state();
         window_go_back();
-        menu_debug_opt_text(e_debug_show_properties, game.debug_properties );
+        debug_opt_text(e_debug_show_properties, game.debug_properties );
         break;
 
     case e_debug_write_video: 
         game.set_write_video(!game.get_write_video());
-        menu_debug_opt_text(e_debug_write_video, game.get_write_video());
+        debug_opt_text(e_debug_write_video, game.get_write_video());
         g_debug_show_opts[opt] = game.get_write_video();
         break;
 
     default:
         g_debug_show_opts[opt] = !g_debug_show_opts[opt];
-        menu_debug_opt_text(opt, g_debug_show_opts[opt]);
+        debug_opt_text(opt, g_debug_show_opts[opt]);
     }
 }
 
@@ -486,7 +483,7 @@ void top_menu_widget::set_text_for_warnings() {
 void top_menu_widget::set_text_for_debug_city() {
     auto *debug = headers["debug"].dcast_menu_header();
     for (int i = 0; i < debug->impl.items.size(); ++i) {
-        menu_debug_opt_text(i, g_debug_show_opts[i]);
+        debug_opt_text(i, g_debug_show_opts[i]);
     }
 }
 
