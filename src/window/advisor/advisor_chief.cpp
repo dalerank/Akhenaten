@@ -26,8 +26,6 @@
 #include "game/game.h"
 #include "io/gamefiles/lang.h"
 
-#include "js/js_game.h"
-
 ui::advisor_chief_window g_advisor_chief_window;
 
 static void draw_title(int y, int text_id) {

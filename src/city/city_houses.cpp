@@ -1,6 +1,5 @@
-#include "houses.h"
-
 #include "city/city.h"
+
 #include "core/random.h"
 #include "core/profiler.h"
 #include "figure/service.h"

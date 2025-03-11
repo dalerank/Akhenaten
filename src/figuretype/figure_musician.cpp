@@ -5,7 +5,6 @@
 #include "city/sentiment.h"
 #include "city/labor.h"
 #include "city/ratings.h"
-#include "city/houses.h"
 #include "city/city.h"
 #include "building/building_entertainment.h"
 #include "building/building_house.h"

@@ -6,7 +6,6 @@
 #include "city/constants.h"
 #include "city/city_health.h"
 #include "city/ratings.h"
-#include "city/houses.h"
 #include "city/city.h"
 #include "city/coverage.h"
 #include "city/labor.h"
