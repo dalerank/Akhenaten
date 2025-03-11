@@ -362,6 +362,9 @@ void city_t::buildings_generate_figure() {
     });
 }
 
+void city_t::before_start_simulation() {
+    g_city_events.enqueue(event_population_changed{ population.current });
+}
 
 io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_city;
@@ -376,7 +379,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a7);
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a6);
     iob->bind____skip(4);
-    iob->bind____skip(4);
+    iob->bind(BIND_SIGNATURE_INT32, &data.population.last_day_current);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.value);
     iob->bind(BIND_SIGNATURE_INT32, &data.health.target_value);
     iob->bind(BIND_SIGNATURE_INT32, &data.health.value);
@@ -388,14 +391,19 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.population.academy_age);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.total_capacity);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.room_in_houses);
+
     for (int i = 0; i < 2400; i++)
         iob->bind(BIND_SIGNATURE_INT32, &data.population.monthly.values[i]);
+    
     iob->bind(BIND_SIGNATURE_INT32, &data.population.monthly.next_index);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.monthly.count);
+    
     for (int i = 0; i < 100; i++)
         iob->bind(BIND_SIGNATURE_INT16, &data.population.at_age[i]);
+    
     for (int i = 0; i < 20; i++)
         iob->bind(BIND_SIGNATURE_INT32, &data.population.at_level[i]);
+    
     iob->bind(BIND_SIGNATURE_INT32, &data.population.yearly_births);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.yearly_deaths);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.lost_removal);

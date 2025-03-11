@@ -6,6 +6,7 @@ struct event_population_changed { int value; };
 
 struct city_population_t {
     int32_t current;
+    int32_t last_day_current;
     int32_t last_year;
     int32_t school_age;
     int32_t academy_age;
@@ -53,6 +54,7 @@ struct city_population_t {
     void remove_home_removed(int num_people);
     void remove_for_troop_request(int num_people);
     void record_monthly();
+    void update_day();
     int percentage_in_shanties();
     int percentage_in_manors();
 

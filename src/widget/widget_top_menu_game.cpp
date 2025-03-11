@@ -59,6 +59,10 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     int sidebar_offset;
     image_desc background;
 
+    struct {
+        int population = 0;
+    } states;
+
     ui::widget headers;
 
     virtual int handle_mouse(const mouse *m) override { return 0; }
@@ -68,6 +72,7 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     virtual int get_tooltip_text() override { return 0; }
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override;
+    virtual void on_mission_start() override;
 
     virtual void load(archive arch, pcstr section) override {
         autoconfig_window::load(arch, section);
@@ -103,6 +108,10 @@ static generic_button orientation_buttons_ph[] = {
     {36 - 12, 0, 12, 21, button_rotate_right, button_none, 0, 0},
 };
 
+void top_menu_widget::on_mission_start() {
+    init();
+}
+
 void top_menu_widget::init() {
     ui["date"].onrclick([] {
         window_message_dialog_show(MESSAGE_DIALOG_TOP_DATE, -1, window_city_draw_all);
@@ -115,6 +124,8 @@ void top_menu_widget::init() {
     ui["funds"].onrclick([] {
         window_message_dialog_show(MESSAGE_DIALOG_TOP_FUNDS, -1, window_city_draw_all);
     });
+
+    g_city_events.appendListener<event_population_changed>([this] (event_population_changed ev) { states.population = ev.value; });
 }
 
 void top_menu_widget::menu_item_update(pcstr header, int item, pcstr text) {

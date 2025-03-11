@@ -442,16 +442,18 @@ void city_population_calculate_educational_age(void) {
 }
 
 void city_population_t::record_monthly() {
-    int save_value = monthly.values[monthly.next_index];
     monthly.values[monthly.next_index++] = current;
     if (monthly.next_index >= 2400)
         monthly.next_index = 0;
 
     ++monthly.count;
+}
 
-    if (save_value != current) {
+void city_population_t::update_day() {
+    if (last_day_current != current) {
         g_city_events.enqueue(event_population_changed{ current });
     }
+    last_day_current = current;
 }
 
 int city_population_monthly_count() {

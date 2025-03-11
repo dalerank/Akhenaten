@@ -7,7 +7,7 @@
 using autoconfig_windows = std::vector<autoconfig_window *>;
 autoconfig_windows* g_autoconfig_windows = nullptr;
 
-autoconfig_windows* autoconfig_registry() {
+autoconfig_windows& autoconfig_registry() {
     if (!g_autoconfig_windows) {
         static std::mutex registry_locker;
 
@@ -17,13 +17,12 @@ autoconfig_windows* autoconfig_registry() {
         }
     }
 
-    return g_autoconfig_windows;
+    return *g_autoconfig_windows;
 }
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_autoconfig_windows);
 void config_load_autoconfig_windows() {
-    auto *registry = autoconfig_registry();
-    for (auto *w : *registry) {
+    for (auto *w : autoconfig_registry()) {
         w->load(w->get_section());
     }
 }
@@ -31,8 +30,7 @@ void config_load_autoconfig_windows() {
 autoconfig_window::autoconfig_window(pcstr s) {
     assert(!strstr(s, "::"));
     logs::info("Registered window config:%s", s);
-    auto *registry = autoconfig_registry();
-    registry->push_back(this);
+    autoconfig_registry().push_back(this);
 }
 
 void autoconfig_window::load(archive arch, pcstr section) {
@@ -46,6 +44,12 @@ int autoconfig_window::ui_handle_mouse(const mouse *m) {
     ui.end_widget();
 
     return result;
+}
+
+void autoconfig_window::before_mission_start() {
+    for (auto *w : autoconfig_registry()) {
+        w->on_mission_start();
+    }
 }
 
 int autoconfig_window::draw_background(UiFlags flags) {

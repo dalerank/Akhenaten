@@ -352,6 +352,7 @@ void game_t::advance_day() {
     g_city.environment.river_update_flotsam();
     g_city.buildings.update_day();
     g_city.figures_update_day();
+    g_city.population.update_day();
 
     tutorial_on_day_tick();
 

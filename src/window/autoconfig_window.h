@@ -14,12 +14,15 @@ struct autoconfig_window : public ui::widget {
     virtual int get_tooltip_text() = 0;
     virtual void init();
     virtual pcstr get_section() const = 0;
+    virtual void on_mission_start() {}
 
     using ui::widget::load;
     virtual void load(archive arch, pcstr section = "ui") override;
     virtual int ui_handle_mouse(const mouse *m);
 
     bool _is_inited = false;
+
+    static void before_mission_start();
 };
 
 template<typename T>

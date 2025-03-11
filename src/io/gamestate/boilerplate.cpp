@@ -755,6 +755,9 @@ void GamestateIO::start_loaded_file() {
         window_city_show();
     }
 
+    autoconfig_window::before_mission_start();
+
+    g_city.before_start_simulation();
     game.session.active = true;
     g_sound.music_update(true);
     game.session.last_loaded = e_session_none;

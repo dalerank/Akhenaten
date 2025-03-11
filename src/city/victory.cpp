@@ -49,30 +49,35 @@ e_victory_state city_t::determine_victory_state() {
             state = e_victory_state_none;
         }
     }
+
     if (winning_prosperity()) {
         has_criteria = 1;
         if (ratings.prosperity < winning_prosperity()) {
             state = e_victory_state_none;
         }
     }
+
     if (winning_monuments()) {
         has_criteria = 1;
         if (ratings.monument < winning_monuments()) {
             state = e_victory_state_none;
         }
     }
+
     if (winning_kingdom()) {
         has_criteria = 1;
         if (ratings.kingdom < winning_kingdom()) {
             state = e_victory_state_none;
         }
     }
+
     if (winning_population()) {
         has_criteria = 1;
         if (population.current < winning_population()) {
             state = e_victory_state_none;
         }
     }
+
     if (winning_housing()) {
         has_criteria = 1;
         const auto &blds = city_buildings();
@@ -86,7 +91,8 @@ e_victory_state city_t::determine_victory_state() {
             state = e_victory_state_none;
         }
     }
-    if (winning_conditions) {
+
+    if (winning_conditions()) {
         for (const auto& condition : g_victory_conditions) {
             if (!condition()) {
                 state = e_victory_state_none;

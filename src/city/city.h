@@ -321,6 +321,7 @@ struct city_t {
 
     void government_distribute_treasury();
     void buildings_generate_figure();
+    void before_start_simulation();
 
     bvariant get_property(const xstring &domain, const xstring &name) const;
 };
