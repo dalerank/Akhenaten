@@ -79,6 +79,9 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     xstring get_selected_header(const mouse *m);
     xstring bar_handle_mouse(const mouse *m);
     bool handle_input_submenu(const mouse *m, const hotkeys *h);
+    void sub_menu_draw_foreground(int flags);
+    void sub_menu_draw_background(int flags);
+    void sub_menu_init();
 
     virtual void load(archive arch, pcstr section) override {
         autoconfig_window::load(arch, section);
@@ -633,36 +636,35 @@ static void top_menu_advisors_handle(menu_item &item) {
     window_advisors_show_advisor((e_advisor)item.parameter);
 }
 
-static void widget_top_menu_init() {
-    auto& data = g_top_menu;
-    auto *options = data.headers["options"].dcast_menu_header();
+void top_menu_widget::sub_menu_init() {
+    auto *options = headers["options"].dcast_menu_header();
     if (options) {
         options->item(0).hidden = system_is_fullscreen_only();
         options->onclick(top_menu_options_handle);
     }
 
-    auto *file = data.headers["file"].dcast_menu_header();
+    auto *file = headers["file"].dcast_menu_header();
     if (file) {
         file->item("new_game").hidden = config_get(CONFIG_UI_HIDE_NEW_GAME_TOP_MENU);
         file->onclick(top_menu_file_handle);
     }
 
-    auto *help = data.headers["help"].dcast_menu_header();
+    auto *help = headers["help"].dcast_menu_header();
     if (help) {
         help->onclick(top_menu_help_handle);
     }
 
-    auto *advisors = data.headers["advisors"].dcast_menu_header();
+    auto *advisors = headers["advisors"].dcast_menu_header();
     if (advisors) {
         advisors->onclick(top_menu_advisors_handle);
     }
 
-    auto *debug = data.headers["debug"].dcast_menu_header();
+    auto *debug = headers["debug"].dcast_menu_header();
     if (debug) {
         debug->onclick(menu_debug_change_opt);
     }
 
-    auto *render = data.headers["debug_render"].dcast_menu_header();
+    auto *render = headers["debug_render"].dcast_menu_header();
     if (render) {
         render->onclick(menu_debug_render_change_opt);
     }
@@ -676,29 +678,28 @@ static void widget_top_menu_init() {
     set_text_for_debug_render();
 }
 
-static void widget_sub_menu_draw_background(int) {
+void top_menu_widget::sub_menu_draw_background(int flags) {
     window_city_draw_panels();
     window_city_draw();
     widget_sidebar_city_draw_foreground();
 }
 
-static void widget_sub_menu_draw_foreground(int) {
-    auto& data = g_top_menu;
-    if (!data.open_sub_menu) {
+void top_menu_widget::sub_menu_draw_foreground(int) {
+    if (!open_sub_menu) {
         return;
     }
 
-    top_menu_menu_draw(data.open_sub_menu, data.focus_sub_menu_id);
+    top_menu_menu_draw(open_sub_menu, focus_sub_menu_id);
 }
 
 void widget_sub_menu_show() {
     static window_type window = {
         WINDOW_TOP_MENU,
-        widget_sub_menu_draw_background,
-        widget_sub_menu_draw_foreground,
+        [] (int flags) { g_top_menu.sub_menu_draw_background(flags); },
+        [] (int flags) { g_top_menu.sub_menu_draw_foreground(flags); },
         widget_top_menu_handle_input
     };
-    widget_top_menu_init();
+    g_top_menu.sub_menu_init();
     window_show(&window);
 }
 
