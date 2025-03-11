@@ -149,7 +149,7 @@ void window_advisors::set_advisor(int advisor) {
 void window_advisors::init() {
     g_city.labor.allocate_workers();
 
-    city_finance_estimate_taxes();
+    g_city.finance.update_estimate_taxes();
     city_finance_estimate_wages();
     city_finance_update_interest();
     city_finance_update_salary();

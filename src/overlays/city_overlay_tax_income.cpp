@@ -3,7 +3,7 @@
 #include "building/building_house.h"
 #include "graphics/elements/tooltip.h"
 #include "core/calc.h"
-#include "city/finance.h"
+#include "city/city.h"
 #include "grid/property.h"
 #include "grid/building.h"
 #include "figure/figure.h"
@@ -22,7 +22,7 @@ int city_overlay_tax_income::get_column_height(const building *b) const {
 
     if (house->house_population()) {
         auto &housed = house->runtime_data();
-        int pct = calc_adjust_with_percentage(housed.tax_income_or_storage / 2, city_finance_tax_percentage());
+        int pct = calc_adjust_with_percentage<int>(housed.tax_income_or_storage / 2, g_city.finance.tax_percentage);
         return pct / 10;
     }
 
@@ -36,7 +36,7 @@ xstring city_overlay_tax_income::get_tooltip_for_building(tooltip_context *c, co
     }
 
     auto &housed = house->runtime_data();
-    int denarii = calc_adjust_with_percentage(housed.tax_income_or_storage / 2, city_finance_tax_percentage());
+    int denarii = calc_adjust_with_percentage<int>(housed.tax_income_or_storage / 2, g_city.finance.tax_percentage);
     if (denarii > 0) {
         c->has_numeric_prefix = 1;
         c->numeric_prefix = denarii;

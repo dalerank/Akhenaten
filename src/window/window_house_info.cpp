@@ -133,7 +133,7 @@ void info_window_house::init(object_info &c) {
 
     bstring256 tax_info_text;
     if (housed.tax_coverage) {
-        int pct = calc_adjust_with_percentage(housed.tax_income_or_storage / 2, city_finance_tax_percentage());
+        int pct = calc_adjust_with_percentage<int>(housed.tax_income_or_storage / 2, g_city.finance.tax_percentage);
         tax_info_text.printf("%s %u %s", ui::str(127, 24), pct, ui::str(127, 25));
     } else {
         tax_info_text = ui::str(127, 23);

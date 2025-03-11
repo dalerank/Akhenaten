@@ -38,7 +38,7 @@ struct city_finance_t {
         treasury_t &operator=(int v) { value = 0; return change(v); }
         operator int() const { return value; }
     } treasury;
-    int32_t tax_percentage;
+    int8_t tax_percentage;
     int32_t estimated_tax_uncollected;
     int32_t estimated_tax_income;
     int32_t estimated_wages;
@@ -54,6 +54,7 @@ struct city_finance_t {
     int32_t wage_rate_paid_last_year;
 
     bool is_out_of_money() const;
+    void update_estimate_taxes();
 };
 
 constexpr uint32_t MAX_HOUSE_LEVELS = 20;
@@ -61,7 +62,6 @@ class figure;
 
 struct event_gold_extract { int amount; };
 
-int city_finance_tax_percentage();
 void city_finance_change_tax_percentage(int change);
 int city_finance_percentage_taxed_people();
 
@@ -84,7 +84,6 @@ void city_finance_update_salary(void);
 
 void city_finance_calculate_totals(void);
 void city_finance_estimate_wages(void);
-void city_finance_estimate_taxes(void);
 
 void city_finance_handle_month_change(void);
 void city_finance_handle_year_change(void);

@@ -15,7 +15,7 @@ ui::advisor_financial_window g_advisor_financial_window;
 
 void button_change_taxes(int is_down) {
     city_finance_change_tax_percentage(is_down ? -1 : 1);
-    city_finance_estimate_taxes();
+    g_city.finance.update_estimate_taxes();
     city_finance_calculate_totals();
 }
 
@@ -47,7 +47,7 @@ int ui::advisor_financial_window::draw_background(UiFlags flags) {
     ui["treasury"].font(font);
 
     // ${city.finance.tax_percentage} ${60.4} ${8.0} ${city.finance.estimated_tax_income}
-    ui["tax_value"].text_var("%d%% %s %s %d", city_finance_tax_percentage(), ui::str(60, 4), ui::str(8, 0), city_finance_estimated_tax_income());
+    ui["tax_value"].text_var("%d%% %s %s %d", g_city.finance.tax_percentage, ui::str(60, 4), ui::str(8, 0), city_finance_estimated_tax_income());
     ui["tax_payers"].text_var("%d%% %s %s %d Db", city_finance_percentage_taxed_people(), ui::str(60, 5), ui::str(60, 22), city_finance_estimated_tax_uncollected());
 
     ui["dec_tax"].onclick([] { button_change_taxes(true); });
