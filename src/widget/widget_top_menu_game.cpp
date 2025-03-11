@@ -81,6 +81,7 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     bool handle_input_submenu(const mouse *m, const hotkeys *h);
     void sub_menu_draw_foreground(int flags);
     void sub_menu_draw_background(int flags);
+    void sub_menu_draw_text(const xstring header, const xstring focus_item_id);
     void sub_menu_init();
     void advisors_handle(menu_item &item);
     void help_handle(menu_item &item);
@@ -94,6 +95,8 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     void item_update_text(pcstr path, pcstr text);
     void header_update_text(pcstr header, pcstr text);
     xstring menu_handle_mouse(const mouse *m, menu_header *menu, xstring &focus_item_id);
+    xstring get_subitem(const mouse *m, menu_header &menu);
+    void calculate_menu_dimensions(menu_header &menu);
 
     virtual void load(archive arch, pcstr section) override {
         autoconfig_window::load(arch, section);
@@ -273,7 +276,7 @@ static void menu_debug_change_opt(menu_item &item) {
     }
 }
 
-static void menu_debug_render_change_opt(menu_item &item) {
+void menu_debug_render_change_opt(menu_item &item) {
     int opt = item.parameter;
     g_debug_render = (opt == g_debug_render) ? 0 : opt;
     auto& data = g_top_menu;
@@ -342,10 +345,9 @@ xstring top_menu_widget::bar_handle_mouse(const mouse* m) {
     return get_selected_header(m);
 }
 
-static void top_menu_calculate_menu_dimensions(menu_header& menu) {
-    auto& data = g_top_menu;
+void top_menu_widget::calculate_menu_dimensions(menu_header& menu) {
     int max_width = 0;
-    int height_pixels = data.item_height;
+    int height_pixels = item_height;
     for (const auto &item: menu.items) {
         if (item.hidden) {
             continue;
@@ -354,36 +356,34 @@ static void top_menu_calculate_menu_dimensions(menu_header& menu) {
         int width_pixels = lang_text_get_width(item.text.c_str(), FONT_NORMAL_BLACK_ON_LIGHT);
         max_width = std::max(max_width, width_pixels);
 
-        height_pixels += data.item_height;
+        height_pixels += item_height;
     }
     int blocks = (max_width + 8) / 16 + 1; // 1 block padding
     menu.calculated_width_blocks = blocks < 10 ? 10 : blocks;
     menu.calculated_height_blocks = height_pixels / 16;
 }
 
-void top_menu_menu_draw(const xstring header, const xstring focus_item_id) {
-    auto& menu = g_top_menu;
-    auto &impl = ((ui::emenu_header *)&menu.headers[header])->impl;
+void top_menu_widget::sub_menu_draw_text(const xstring header, const xstring focus_item_id) {
+    auto &impl = ((ui::emenu_header *)&headers[header])->impl;
 
     if (impl.calculated_width_blocks == 0 || impl.calculated_height_blocks == 0) {
-        top_menu_calculate_menu_dimensions(impl);
+        calculate_menu_dimensions(impl);
     }
 
     unbordered_panel_draw(impl.x_start, TOP_MENU_HEIGHT, impl.calculated_width_blocks, impl.calculated_height_blocks);
-    int y_offset = TOP_MENU_HEIGHT + menu.offset.y * 2;
+    int y_offset = TOP_MENU_HEIGHT + offset.y * 2;
     for (const auto &item: impl.items) {
         if (item.hidden) {
             continue;
         }
         // Set color/font on the menu item mouse hover
         lang_text_draw(item.text.c_str(), vec2i{impl.x_start + 8, y_offset}, item.id == focus_item_id ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT);
-        y_offset += menu.item_height;
+        y_offset += item_height;
     }
 }
 
-static xstring top_menu_get_subitem(const mouse* m, menu_header &menu) {
-    auto& data = g_top_menu;
-    int y_offset = TOP_MENU_HEIGHT + data.offset.y * 2;
+xstring top_menu_widget::get_subitem(const mouse* m, menu_header &menu) {
+    int y_offset = TOP_MENU_HEIGHT + offset.y * 2;
 
     for (const auto &item: menu.items) {
         if (item.hidden) {
@@ -394,7 +394,7 @@ static xstring top_menu_get_subitem(const mouse* m, menu_header &menu) {
             return item.id;
         }
 
-        y_offset += data.item_height;
+        y_offset += item_height;
     }
 
     return {};
@@ -405,7 +405,7 @@ xstring top_menu_widget::menu_handle_mouse(const mouse* m, menu_header* menu, xs
         return "";
     }
 
-    xstring item_id = top_menu_get_subitem(m, *menu);
+    xstring item_id = get_subitem(m, *menu);
     focus_item_id = item_id;
 
     if (!item_id) {
@@ -665,7 +665,7 @@ void top_menu_widget::sub_menu_draw_foreground(int) {
         return;
     }
 
-    top_menu_menu_draw(open_sub_menu, focus_sub_menu_id);
+    sub_menu_draw_text(open_sub_menu, focus_sub_menu_id);
 }
 
 void widget_sub_menu_show() {
