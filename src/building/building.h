@@ -665,7 +665,8 @@ bool building_is_education(e_building_type type);
 bool building_is_military(e_building_type type);
 
 bool building_is_draggable(e_building_type type);
-
+building *building_begin();
+building *building_end();
 
 GENERATE_SMART_CAST(building_impl)
 #define GENERATE_SMART_CAST_BUILDING(type) GENERATE_SMART_CAST_CUSTOM(building_##type, type)

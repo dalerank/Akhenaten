@@ -289,8 +289,8 @@ public:
 
 template<typename T>
 void buildings_house_do(T func) {
-    for (auto &b : city_buildings()) {
-        auto house = b.dcast_house();
+    for (auto it = building_begin(), end = building_end(); it != end; ++it) {
+        auto house = it->dcast_house();
         if (house) {
             func(house);
         }
