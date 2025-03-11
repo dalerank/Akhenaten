@@ -75,6 +75,10 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     virtual void on_mission_start() override;
     void draw_background_impl();
     void draw_elements_impl();
+    void draw_rotate_buttons();
+    xstring get_selected_header(const mouse *m);
+    xstring bar_handle_mouse(const mouse *m);
+    bool handle_input_submenu(const mouse *m, const hotkeys *h);
 
     virtual void load(archive arch, pcstr section) override {
         autoconfig_window::load(arch, section);
@@ -303,9 +307,7 @@ void top_menu_widget::draw_elements_impl() {
     }
 }
 
-static xstring top_menu_bar_get_selected_header(const mouse* m) {
-    auto& data = g_top_menu;
-    auto &headers = g_top_menu.headers;
+xstring top_menu_widget::get_selected_header(const mouse* m) {
     for (auto &it : headers.elements) {
         ui::emenu_header *header = it->dcast_menu_header();
 
@@ -313,16 +315,16 @@ static xstring top_menu_bar_get_selected_header(const mouse* m) {
             continue;
         }
 
-        if (header->impl.x_start <= m->x && header->impl.x_end > m->x && data.offset.y <= m->y && data.offset.y + 12 > m->y) {
+        if (header->impl.x_start <= m->x && header->impl.x_end > m->x && offset.y <= m->y && offset.y + 12 > m->y) {
             return header->id;
         }
     }
     return {};
 }
 
-static xstring top_menu_bar_handle_mouse(const mouse* m) {
-    g_top_menu.focus_menu_id = top_menu_bar_get_selected_header(m);
-    return top_menu_bar_get_selected_header(m);
+xstring top_menu_widget::bar_handle_mouse(const mouse* m) {
+    focus_menu_id = get_selected_header(m);
+    return get_selected_header(m);
 }
 
 static void top_menu_calculate_menu_dimensions(menu_header& menu) {
@@ -715,15 +717,14 @@ void top_menu_widget::draw_background_impl() {
     ImageDraw::img_generic(ctx, img_id, widget_sidebar_city_offset_x() - block_width + sidebar_offset, 0);
 }
 
-void widget_top_menu_draw_rotate_buttons() {
+void top_menu_widget::draw_rotate_buttons() {
     // Orientation icon
-    auto &data = g_top_menu;
     painter ctx = game.painter();
     if (orientation_button_pressed) {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3, data.offset_rotate, 0);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3, offset_rotate, 0);
         orientation_button_pressed--;
     } else {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state, data.offset_rotate, 0);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state, offset_rotate, 0);
     }
 }
 
@@ -732,7 +733,7 @@ void top_menu_widget::draw_foreground(UiFlags flags) {
 
     draw_background_impl();
     draw_elements_impl();
-    widget_top_menu_draw_rotate_buttons();
+    draw_rotate_buttons();
 
     color treasure_color = city_finance_treasury() < 0 ? COLOR_FONT_RED : COLOR_WHITE;
 
@@ -758,21 +759,20 @@ void widget_top_menu_draw() {
     g_top_menu.draw_foreground(0);
 }
 
-static bool widget_top_menu_handle_input_submenu(const mouse* m, const hotkeys* h) {
-    auto& data = g_top_menu;
+bool top_menu_widget::handle_input_submenu(const mouse* m, const hotkeys* h) {
     if (m->right.went_up || h->escape_pressed) {
         widget_top_menu_clear_state();
         window_go_back();
         return true;
     }
 
-    xstring menu_id = top_menu_bar_handle_mouse(m);
-    if (!!menu_id && menu_id != data.open_sub_menu) {
-        data.open_sub_menu = menu_id;
+    xstring menu_id = bar_handle_mouse(m);
+    if (!!menu_id && menu_id != open_sub_menu) {
+        open_sub_menu = menu_id;
     }
 
-    auto *header = data.headers[data.open_sub_menu].dcast_menu_header();
-    if (!top_menu_menu_handle_mouse(m, header ? &header->impl : nullptr, data.focus_sub_menu_id)) {
+    auto *header = headers[open_sub_menu].dcast_menu_header();
+    if (!top_menu_menu_handle_mouse(m, header ? &header->impl : nullptr, focus_sub_menu_id)) {
         if (m->left.went_up) {
             widget_top_menu_clear_state();
             window_go_back();
@@ -785,10 +785,9 @@ static bool widget_top_menu_handle_input_submenu(const mouse* m, const hotkeys* 
 int top_menu_widget::ui_handle_mouse(const mouse *m) {
     autoconfig_window::ui_handle_mouse(m);
 
-    auto &data = g_top_menu;
-    xstring menu_id = top_menu_bar_handle_mouse(m);
+    xstring menu_id = bar_handle_mouse(m);
     if (!!menu_id && m->left.went_up) {
-        data.open_sub_menu = menu_id;
+        open_sub_menu = menu_id;
         widget_sub_menu_show();
         return 0;
     }
@@ -812,12 +811,9 @@ void widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
             orientation_button_state = 0;
         }
 
-        if (button_id)
-            result = handled;
-        else if (!!data.open_sub_menu)
-            widget_top_menu_handle_input_submenu(m, h);
-        else
-            g_top_menu.ui_handle_mouse(m);
+        if (button_id) { result = handled; }
+        else if (!!data.open_sub_menu) { g_top_menu.handle_input_submenu(m, h); }
+        else { g_top_menu.ui_handle_mouse(m); }
     }
 }
 
