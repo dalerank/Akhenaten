@@ -411,3 +411,9 @@ const finance_overview* city_finance_overview_last_year() {
 const finance_overview* city_finance_overview_this_year() {
     return &city_data.finance.this_year;
 }
+
+city_finance_t::treasury_t &city_finance_t::treasury_t::change(int v) {
+    value += v;
+    g_city_events.enqueue(event_finance_changed{ value });
+    return *this;
+}

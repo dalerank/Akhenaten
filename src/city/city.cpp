@@ -364,6 +364,7 @@ void city_t::buildings_generate_figure() {
 
 void city_t::before_start_simulation() {
     g_city_events.enqueue(event_population_changed{ population.current });
+    g_city_events.enqueue(event_finance_changed{ finance.treasury });
 }
 
 io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
@@ -581,7 +582,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.tribute);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.expenses.tribute);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.tax_percentage);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.treasury);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.treasury.value);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.tribute_not_paid_last_year);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.wage_rate_paid_last_year);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.wages_so_far);

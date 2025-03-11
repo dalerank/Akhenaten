@@ -27,8 +27,17 @@ struct finance_overview {
     int balance;
 };
 
+struct event_finance_changed { int value; };
+
 struct city_finance_t {
-    int32_t treasury;
+    struct treasury_t {
+        int value;
+        treasury_t &change(int v);
+        treasury_t &operator-=(int v) { return change(-v); }
+        treasury_t &operator+=(int v) { return change(v); }
+        treasury_t &operator=(int v) { value = 0; return change(v); }
+        operator int() const { return value; }
+    } treasury;
     int32_t tax_percentage;
     int32_t estimated_tax_uncollected;
     int32_t estimated_tax_income;
