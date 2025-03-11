@@ -356,7 +356,7 @@ void game_t::advance_day() {
 
     tutorial_on_day_tick();
 
-    g_city_events.enqueue(event_advance_day{ game.simtime.absolute_day() });
+    g_city_events.enqueue(event_advance_day::from_simtime(game.simtime));
 }
 
 void game_t::shutdown() {
@@ -633,6 +633,10 @@ void game_t::time_init(int year) {
 void game_t::sound_frame_begin() {
     OZZY_PROFILER_SECTION("Sound/Frame");
     sound_city_play();
+}
+
+void game_t::before_start_simulation() {
+    g_city_events.enqueue(event_advance_day::from_simtime(game.simtime));
 }
 
 void game_handle_input_frame() {

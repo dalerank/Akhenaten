@@ -14,18 +14,15 @@
 #include "core/core_utility.h"
 #include "config/config.h"
 #include "game/settings.h"
-#include "game/cheats.h"
 #include "game/orientation.h"
+#include "game/cheats.h"
 #include "game/state.h"
 #include "game/undo.h"
 #include "window/file_dialog.h"
 #include "window/message_dialog.h"
 #include "io/gamestate/boilerplate.h"
 #include "building/construction/build_planner.h"
-#include "scenario/scenario.h"
 #include "game/system.h"
-#include "graphics/screen.h"
-#include "widget/widget_city.h"
 #include "window/display_options.h"
 #include "window/advisors.h"
 #include "window/window_city.h"
@@ -35,7 +32,6 @@
 #include "window/hotkey_config.h"
 #include "window/main_menu.h"
 #include "window/popup_dialog.h"
-#include "window/autoconfig_window.h"
 #include "window/speed_options.h"
 #include "window/sound_options.h"
 #include "widget/widget_sidebar.h"
@@ -122,7 +118,7 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     }
 
     void menu_item_update(pcstr header, int item, pcstr text);
-    void update_month_year_max_width(uint8_t month, int year);
+    void update_date(event_advance_day);
 };
 
 top_menu_widget g_top_menu;
@@ -154,6 +150,7 @@ void top_menu_widget::init() {
     });
 
     g_city_events.appendListener<event_population_changed>([this] (event_population_changed ev) { states.population = ev.value; });
+    g_city_events.appendListener<event_advance_day>([this] (event_advance_day ev) { update_date(ev); });
 }
 
 void top_menu_widget::menu_item_update(pcstr header, int item, pcstr text) {
@@ -165,15 +162,15 @@ void top_menu_widget::menu_item_update(pcstr header, int item, pcstr text) {
     menu->item(item).text = text;
 }
 
-void top_menu_widget::update_month_year_max_width(uint8_t month, int year) {
-    pcstr month_str = ui::str(25, month);
+void top_menu_widget::update_date(event_advance_day ev) {
+    pcstr month_str = ui::str(25, ev.month);
     bstring32 text;
-    if (year >= 0) {
+    if (ev.year >= 0) {
         int use_year_ad = locale_year_before_ad();
-        if (use_year_ad) { text.printf("%s %d %s", month_str, year, ui::str(20, 1)); }
-        else { text.printf("%s %s %d", month_str, year, ui::str(20, 1)); }
+        if (use_year_ad) { text.printf("%s %d %s", month_str, ev.year, ui::str(20, 1)); }
+        else { text.printf("%s %s %d", month_str, ev.year, ui::str(20, 1)); }
     } else {
-        text.printf("%s %d %s", month_str, -year, ui::str(20, 0));
+        text.printf("%s %d %s", month_str, -ev.year, ui::str(20, 0));
     }
 
     ui["date"] = text;
@@ -244,7 +241,10 @@ void top_menu_widget::debug_opt_text(int opt, bool v) {
 void top_menu_widget::debug_change_opt(menu_item &item) {
     int opt = item.parameter;
     switch (opt) {
-    case e_debug_show_console: game_cheat_console(true); break;
+    case e_debug_show_console: 
+        game_cheat_console(true); 
+        break;
+
     case e_debug_make_screenshot: 
         widget_top_menu_clear_state();
         window_go_back();
@@ -718,8 +718,6 @@ void top_menu_widget::draw_foreground(UiFlags flags) {
     int s_width = screen_width();
 
     offset_rotate = s_width - offset_rotate_basic;
-
-    update_month_year_max_width(game.simtime.month, game.simtime.year);
 
     ui["funds"].font(treasure_font);
     ui["funds"].text_color(treasure_color);

@@ -13,7 +13,12 @@ enum game_option {
     game_opt_sound = 1,
 };
 
-struct event_advance_day { int day; };
+struct event_advance_day { 
+    int year, month, mday, abdday; 
+    static event_advance_day from_simtime(const simulation_time_t &tm) {
+        return { tm.year, tm.month, tm.day, tm.absolute_day() };
+    }
+};
 
 using game_opts = uint32_t;
 
@@ -101,6 +106,7 @@ struct game_t {
     void time_init(int year);
 
     void sound_frame_begin();
+    void before_start_simulation();
 
     threading::thread_pool mtrpc;
     threading::thread_pool mt;
