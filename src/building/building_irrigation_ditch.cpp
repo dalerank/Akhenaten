@@ -9,7 +9,7 @@
 #include "grid/property.h"
 #include "grid/canals.h"
 #include "city/city_buildings.h"
-#include "city/finance.h"
+#include "city/city.h"
 #include "game/undo.h"
 
 building_irrigation_ditch::static_params irrigation_ditch_m;
@@ -106,7 +106,8 @@ void building_irrigation_ditch::static_params::planer_ghost_preview(build_planne
             blocked = true;
         }
     }
-    if (city_finance_out_of_money()) { // check sufficient funds to continue
+
+    if (g_city.finance.is_out_of_money()) { // check sufficient funds to continue
         blocked = true;
     }
 

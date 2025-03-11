@@ -1,7 +1,7 @@
 #include "building/building_road.h"
 
 #include "game/undo.h"
-#include "city/finance.h"
+#include "city/city.h"
 #include "city/labor.h"
 #include "grid/routing/routing.h"
 #include "grid/routing/routing_terrain.h"
@@ -16,7 +16,6 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/window.h"
-#include "js/js_game.h"
 #include "widget/city/building_ghost.h"
 #include "construction/build_planner.h"
 
@@ -94,7 +93,7 @@ void building_road::static_params::planer_ghost_preview(build_planner &planer, p
         }
     }
 
-    if (city_finance_out_of_money()) {
+    if (g_city.finance.is_out_of_money()) {
         blocked = true;
     }
 

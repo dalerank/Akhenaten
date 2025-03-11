@@ -34,7 +34,7 @@ template<typename T>
 void building_fort::static_params_t<T>::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
     bool fully_blocked = false;
     bool blocked = false;
-    if (formation_get_num_forts_cached() >= formation_get_max_forts() || city_finance_out_of_money()) {
+    if (formation_get_num_forts_cached() >= formation_get_max_forts() || g_city.finance.is_out_of_money()) {
         fully_blocked = true;
         blocked = true;
     }

@@ -1,7 +1,6 @@
 #include "hold_festival.h"
 
 #include "city/constants.h"
-#include "city/finance.h"
 #include "city/city.h"
 #include "core/game_environment.h"
 #include "game/resource.h"
@@ -18,7 +17,6 @@
 #include "window/message_dialog.h"
 #include "window/window_city.h"
 #include "game/game.h"
-#include "js/js_game.h"
 
 ui::hold_festival_window g_hold_festival_window;
 
@@ -31,7 +29,7 @@ void ui::hold_festival_window::close() {
 }
 
 void window_hold_festival_select_size(e_festival_type size) {
-    if (city_finance_out_of_money()) {
+    if (g_city.finance.is_out_of_money()) {
         return;
     }
 
@@ -52,27 +50,28 @@ int ui::hold_festival_window::draw_background(UiFlags flags) {
     ui["title"] = ui::str(58, 25 + g_city.festival.selected_god());
 
     int resource_image_deben = image_id_from_group(PACK_GENERAL, 103) + 18;
+    const bool is_out_of_money = g_city.finance.is_out_of_money();
     ui["small_festival"].text_var("%s %u @I%u", ui::str(58, 31), g_city.festival.small_cost, resource_image_deben);
-    ui["small_festival"].darkened = city_finance_out_of_money();
+    ui["small_festival"].darkened = is_out_of_money;
     ui["small_festival"].onclick([] {
         window_hold_festival_select_size(FESTIVAL_SMALL);
     });
 
     ui["middle_festival"].text_var("%s %u @I%u", ui::str(58, 32), g_city.festival.large_cost, resource_image_deben);
-    ui["middle_festival"].darkened = city_finance_out_of_money();
+    ui["middle_festival"].darkened = is_out_of_money;
     ui["middle_festival"].onclick([] { 
         window_hold_festival_select_size(FESTIVAL_LARGE); 
     });
 
     int resource_image_beer = image_id_resource_icon(RESOURCE_BEER);
-    ui["large_festival"].darkened = city_finance_out_of_money() || g_city.festival.not_enough_alcohol;
+    ui["large_festival"].darkened = is_out_of_money || g_city.festival.not_enough_alcohol;
     ui["large_festival"].text_var("%s %u @I%u %u  @I%u", ui::str(58, 32), g_city.festival.grand_cost, resource_image_deben, g_city.festival.grand_alcohol, resource_image_beer);
     ui["large_festival"].onclick([] {
         window_hold_festival_select_size(FESTIVAL_GRAND);
     });
 
     ui["button_ok"].onclick([] { 
-        if (!city_finance_out_of_money()) {
+        if (!g_city.finance.is_out_of_money()) {
             g_city.festival.schedule();
         }
         g_hold_festival_window.close();

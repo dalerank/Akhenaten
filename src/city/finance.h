@@ -52,14 +52,14 @@ struct city_finance_t {
     int32_t tribute_not_paid_total_years;
     int32_t wage_rate_paid_this_year;
     int32_t wage_rate_paid_last_year;
+
+    bool is_out_of_money() const;
 };
 
 constexpr uint32_t MAX_HOUSE_LEVELS = 20;
 class figure;
 
 struct event_gold_extract { int amount; };
-
-int city_finance_out_of_money();
 
 int city_finance_tax_percentage();
 void city_finance_change_tax_percentage(int change);

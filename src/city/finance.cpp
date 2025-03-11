@@ -17,8 +17,8 @@
 
 static auto &city_data = g_city;
 
-int city_finance_out_of_money() {
-    return city_data.finance.treasury <= -5000;
+bool city_finance_t::is_out_of_money() const{
+    return (treasury <= -5000);
 }
 
 int city_finance_tax_percentage() {
@@ -273,11 +273,17 @@ static void pay_monthly_interest() {
 }
 
 static void pay_monthly_salary() {
-    if (!city_finance_out_of_money() && city_buildings_has_mansion()) {
-        city_data.finance.salary_so_far += city_data.kingdome.salary_amount;
-        city_data.kingdome.personal_savings += city_data.kingdome.salary_amount;
-        city_data.finance.treasury -= city_data.kingdome.salary_amount;
+    if (g_city.finance.is_out_of_money()) {
+        return;
     }
+
+    if (!city_buildings_has_mansion()) {
+        return;
+    }
+
+    city_data.finance.salary_so_far += city_data.kingdome.salary_amount;
+    city_data.kingdome.personal_savings += city_data.kingdome.salary_amount;
+    city_data.finance.treasury -= city_data.kingdome.salary_amount;
 }
 
 static void reset_taxes() {

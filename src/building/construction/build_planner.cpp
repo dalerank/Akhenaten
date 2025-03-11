@@ -622,7 +622,7 @@ void build_planner::update_requirements_check() {
     }
 
     // out of money!
-    if (city_finance_out_of_money()) {
+    if (g_city.finance.is_out_of_money()) {
         // TODO: no money needed if building has zero cost?
         immediate_warning_id = WARNING_OUT_OF_MONEY;
         can_place = CAN_NOT_PLACE;
@@ -979,7 +979,7 @@ void build_planner::construction_update(tile2i tile) {
         return;
     }
 
-    if (!build_type || city_finance_out_of_money()) {
+    if (!build_type || g_city.finance.is_out_of_money()) {
         total_cost = 0;
         return;
     }
@@ -1143,7 +1143,7 @@ void build_planner::draw_bridge(map_point tile, vec2i pixel, int type, painter &
     else if (!end_grid_offset)
         blocked = true;
 
-    if (city_finance_out_of_money())
+    if (g_city.finance.is_out_of_money())
         blocked = true;
 
     int x_delta, y_delta;
