@@ -47,7 +47,7 @@
 #include "city/trade.h"
 #include "city/sentiment.h"
 #include "city/city_floods.h"
-#include "city/population.h"
+#include "city/city_population.h"
 #include "city/city_desirability.h"
 #include "city/message.h"
 #include "building/maintenance.h"
@@ -198,14 +198,14 @@ void game_t::update_city(int ticks) {
         building_maintenance_check_kingdome_access();
         break;
     case 22:
-        g_city.house_population_update_room();
+        g_city.population.update_room();
         break;
     case 23:
         g_city.migration_update();
-        g_city.house_population_update_migration();
+        g_city.population.update_migration();
         break;
     case 24:
-        g_city.house_population_evict_overcrowded();
+        g_city.population.evict_overcrowded();
         break;
     case 25:
         g_city.labor.update();

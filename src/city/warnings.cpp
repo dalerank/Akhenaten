@@ -5,7 +5,7 @@
 #include "building/model.h"
 #include "city/constants.h"
 #include "city/city.h"
-#include "city/population.h"
+#include "city/city_population.h"
 #include "city/city_resource.h"
 #include "city/warning.h"
 #include "city/buildings.h"

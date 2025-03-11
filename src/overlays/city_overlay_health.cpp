@@ -35,6 +35,8 @@ e_column_color city_overlay_health::get_column_color(const building *b) const {
     if (b->disease_days > 0) {
         return COLUMN_COLOR_RED;
     }
+
+    return COLUMN_COLOR_NONE;
 }
 
 xstring city_overlay_health::get_tooltip_for_building(tooltip_context *c, const building *b) const {

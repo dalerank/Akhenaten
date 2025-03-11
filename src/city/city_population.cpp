@@ -1,12 +1,16 @@
-#include "population.h"
+#include "city_population.h"
 
 #include "building/building_house.h"
-#include "city/city_house_population.h"
 #include "building/model.h"
 #include "city/city.h"
+#include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "config/config.h"
+#include "figuretype/figure_emigrant.h"
+#include "figuretype/figure_immigrant.h"
+#include "figuretype/figure_homeless.h"
+#include "core/profiler.h"
 
 static const int BIRTHS_PER_AGE_DECENNIUM[10] = {0, 3, 16, 9, 2, 0, 0, 0, 0, 0};
 
@@ -49,6 +53,220 @@ int city_population_last_used_house_remove(void) {
 
 void city_population_set_last_used_house_remove(int building_id) {
     city_data.population.last_used_house_remove = building_id;
+}
+
+int city_population_t::add_to_houses(int num_people) {
+    int added = 0;
+    buildings_house_do([&] (building_house *house) {
+        if (house->state() == BUILDING_STATE_VALID && house->distance_from_entry() > 0 && house->house_population() > 0) {
+            int max_people = house->model().max_people;
+            if (house->is_merged()) {
+                max_people *= 4;
+            }
+
+            if (house->house_population() < max_people) {
+                ++added;
+                ++house->runtime_data().population;
+            }
+        }
+    });
+    return added;
+}
+
+
+int city_population_t::remove_from_houses(int num_people) {
+    int removed = 0;
+    int building_id = city_population_last_used_house_remove();
+    for (int i = 1; i < 4 * MAX_BUILDINGS && removed < num_people; i++) {
+        if (++building_id >= MAX_BUILDINGS)
+            building_id = 1;
+
+        auto house = building_get(building_id)->dcast_house();
+        if (house && house->state() == BUILDING_STATE_VALID && house->hsize()) {
+            city_population_set_last_used_house_remove(building_id);
+            if (house->house_population() > 0) {
+                ++removed;
+                --house->runtime_data().population;
+            }
+        }
+    }
+    return removed;
+}
+
+void city_population_t::update_room() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/House Population Update");
+    city_population_clear_capacity();
+
+    buildings_house_do([&] (building_house *house) {
+        if (house->distance_from_entry() <= 0) {
+            return;
+        }
+
+        const int mul = house->is_merged() ? 4 : 1;
+        const int max_pop = house->model().max_people * mul;
+
+        city_population_add_capacity(house->house_population(), max_pop);
+        auto &housed = house->runtime_data();
+        housed.highest_population = std::max<short>(housed.highest_population, house->house_population());
+    });
+}
+
+int city_population_t::create_emigrants(int num_people) {
+    svector<building_house *, 2000> houses;
+    buildings_houses_get(houses);
+
+    std::sort(houses.begin(), houses.end(), [] (auto &lhs, auto &rhs) { return lhs->house_level() < rhs->house_level(); });
+
+    int to_emigrate = num_people;
+    for (auto house: houses) {
+        if (to_emigrate <= 0) {
+            break;
+        }
+
+        if (house->house_population() <= 0) {
+            continue;
+        }
+
+        const int level = house->house_level();
+        if (config_get(CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT) && (level <= HOUSE_STURDY_HUT || (level < HOUSE_ORDINARY_COTTAGE && house->house_population() < 10))) {
+            continue;
+        }
+
+        int current_people;
+        if (house->house_population() >= 4) {
+            current_people = 4;
+        } else {
+            current_people = house->house_population();
+        }
+
+        if (to_emigrate <= current_people) {
+            figure_emigrant::create(&house->base, to_emigrate);
+            to_emigrate = 0;
+        } else {
+            figure_emigrant::create(&house->base, current_people);
+            to_emigrate -= current_people;
+        }
+    }
+
+    return num_people - to_emigrate;
+}
+
+int city_population_t::create_immigrants(int num_people) {
+
+    svector<building_house *, 2000> houses;
+    buildings_houses_get(houses);
+
+    // clean up any dead immigrants
+    for (auto house: houses) {
+        if (house->base.has_figure(2) && house->get_figure(2)->state != FIGURE_STATE_ALIVE) {
+            house->base.remove_figure(2);
+        }
+    };
+
+    // houses with plenty of room
+    int to_immigrate = num_people;
+    for (auto &house: houses) {
+        if (to_immigrate <= 0) {
+            break;
+        }
+
+        if (house->distance_from_entry() <= 0 || house->population_room() <= 8 || house->base.has_figure(2, -1)) {
+            continue; // house already has immigrant
+        }
+
+        to_immigrate -= std::min(to_immigrate, 4);
+        figure_immigrant::create(&house->base, to_immigrate);
+    }
+
+    // houses with less room
+    for (auto &house : houses) {
+        if (to_immigrate <= 0) {
+            break;
+        }
+
+        if (house->distance_from_entry() <= 0 || house->population_room() <= 0 || house->base.has_figure(2, -1)) {
+            continue; // immigrant algready going to this house
+        }
+        const int population_room = house->population_room();
+        to_immigrate -= std::min(to_immigrate, population_room);
+        figure_immigrant::create(&house->base, to_immigrate);
+    }
+    return num_people - to_immigrate;
+}
+
+void city_population_t::reached_milestone(bool force) {
+    int population = city_population();
+    if (population >= 500 && (!city_message_mark_population_shown(500) || force))
+        city_message_population_post(true, MESSAGE_POPULATION_500, 0, 0);
+
+    if (population >= 1000 && (!city_message_mark_population_shown(1000) || force))
+        city_message_population_post(true, MESSAGE_POPULATION_1000, 0, 0);
+
+    if (population >= 2000 && (!city_message_mark_population_shown(2000) || force))
+        city_message_population_post(true, MESSAGE_POPULATION_2000, 0, 0);
+
+    if (population >= 3000 && (!city_message_mark_population_shown(3000) || force))
+        city_message_population_post(true, MESSAGE_POPULATION_3000, 0, 0);
+
+    if (population >= 5000 && (!city_message_mark_population_shown(5000) || force))
+        city_message_population_post(true, MESSAGE_POPULATION_5000, 0, 0);
+
+    if (population >= 10000 && (!city_message_mark_population_shown(10000) || force))
+        city_message_population_post(true, MESSAGE_POPULATION_10000, 0, 0);
+
+    if (population >= 15000 && (!city_message_mark_population_shown(15000) || force))
+        city_message_population_post(true, MESSAGE_POPULATION_15000, 0, 0);
+
+    if (population >= 20000 && (!city_message_mark_population_shown(20000) || force))
+        city_message_population_post(true, MESSAGE_POPULATION_20000, 0, 0);
+
+    if (population >= 25000 && (!city_message_mark_population_shown(25000) || force))
+        city_message_population_post(true, MESSAGE_POPULATION_25000, 0, 0);
+}
+
+void city_population_t::evict_overcrowded() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/House Overcrown Update");
+
+    buildings_house_do([] (building_house *house) {
+        int16_t population_room = house->population_room();
+        if (population_room >= 0) {
+            return;
+        }
+
+        int num_people_to_evict = -population_room;
+        figure_create_homeless(house->tile(), num_people_to_evict);
+        if (num_people_to_evict < house->house_population()) {
+            house->runtime_data().population -= num_people_to_evict;
+        } else {
+            // house has been removed
+            house->base.state = BUILDING_STATE_UNDO;
+        }
+    });
+}
+
+void city_population_t::update_migration() {
+    OZZY_PROFILER_SECTION("Game/Update/House Migration Update");
+
+    yearly_update();
+    calculate_working_people();
+
+    reached_milestone(false);
+}
+
+void city_population_t::calculate_working_people() {
+    int num_peasants = 0;
+    int num_nobles = 0;
+
+    buildings_house_do([&] (building_house *house) {
+        if (house->house_population() <= 0) {
+            return;
+        }
+            
+        int &counter = house->house_level() >= HOUSE_COMMON_MANOR ? num_nobles : num_peasants;
+        counter += house->house_population();
+    });
+
+    g_city.labor.calculate_workers(num_peasants, num_nobles);
 }
 
 void city_population_t::recalculate() {
@@ -185,7 +403,7 @@ void city_population_t::remove_home_removed(int num_people) {
 }
 
 void city_population_t::remove_for_troop_request(int num_people) {
-    int removed = house_population_remove_from_city(num_people);
+    int removed = remove_from_houses(num_people);
     remove_from_census(removed);
     lost_troop_request += num_people;
     recalculate();
@@ -268,7 +486,7 @@ static void yearly_advance_ages_and_calculate_deaths(void) {
         int people = get_people_in_age_decennium(decennium);
         int death_percentage = DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[city_data.health.value / 10][decennium];
         int deaths = calc_adjust_with_percentage(people, death_percentage);
-        int removed = house_population_remove_from_city(deaths + aged100);
+        int removed = g_city.population.remove_from_houses(deaths + aged100);
         if (config_get(CONFIG_GP_FIX_100_YEAR_GHOSTS))
             remove_from_census_in_age_decennium(decennium, deaths);
         else {
@@ -287,7 +505,7 @@ static void yearly_calculate_births(void) {
     for (int decennium = 9; decennium >= 0; decennium--) {
         int people = get_people_in_age_decennium(decennium);
         int births = calc_adjust_with_percentage(people, BIRTHS_PER_AGE_DECENNIUM[decennium]);
-        int added = house_population_add_to_city(births);
+        int added = g_city.population.add_to_houses(births);
         city_data.population.at_age[0] += added;
         city_data.population.yearly_births += added;
     }

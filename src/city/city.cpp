@@ -4,7 +4,7 @@
 #include "city/city.h"
 #include "city/trade.h"
 #include "city/buildings.h"
-#include "city/population.h"
+#include "city/city_population.h"
 #include "core/object_property.h"
 #include "grid/water.h"
 #include "core/profiler.h"

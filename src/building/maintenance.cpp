@@ -9,7 +9,6 @@
 #include "city/buildings.h"
 #include "city/city.h"
 #include "city/message.h"
-#include "city/population.h"
 #include "city/sentiment.h"
 #include "city/warning.h"
 #include "core/calc.h"

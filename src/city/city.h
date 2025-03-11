@@ -4,7 +4,7 @@
 
 #include "city/kingdome.h"
 #include "city/entertainment.h"
-#include "city/population.h"
+#include "city/city_population.h"
 #include "city/finance.h"
 #include "city/houses.h"
 #include "city/labor.h"
@@ -262,9 +262,6 @@ struct city_t {
     void house_service_decay_services();
     void house_service_decay_houses_covered();
     void house_service_calculate_culture_aggregates();
-    void house_population_update_room();
-    void house_population_update_migration();
-    void house_population_evict_overcrowded();
     void house_process_evolve_and_consume_goods();
 
     void migration_nobles_leave_city(int num_people);

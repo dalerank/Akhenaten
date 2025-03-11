@@ -1,7 +1,7 @@
 #include "widget_sidebar_extra.h"
 
 #include "city/city.h"
-#include "city/population.h"
+#include "city/city_population.h"
 #include "city/ratings.h"
 #include "core/game_environment.h"
 #include "core/string.h"

@@ -5,7 +5,6 @@
 #include "city/map.h"
 #include "grid/road_access.h"
 #include "grid/terrain.h"
-#include "city/population.h"
 #include "building/building_house.h"
 #include "city/migration.h"
 #include "city/sentiment.h"

@@ -287,3 +287,12 @@ public:
     virtual bool evolve(house_demands *demands) override;
 };
 
+template<typename T>
+void buildings_houses_get(T &arr) {
+    arr.clear();
+
+    buildings_house_do([&] (building_house *house) {
+        if (house->is_valid() && house->hsize())
+            arr.push_back(house);
+    });
+}

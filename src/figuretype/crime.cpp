@@ -4,7 +4,7 @@
 #include "city/city.h"
 #include "city/finance.h"
 #include "city/message.h"
-#include "city/population.h"
+#include "city/city_population.h"
 #include "city/ratings.h"
 #include "city/sentiment.h"
 #include "city/map.h"

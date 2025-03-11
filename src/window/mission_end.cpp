@@ -2,7 +2,7 @@
 
 #include "city/city.h"
 #include "city/finance.h"
-#include "city/population.h"
+#include "city/city_population.h"
 #include "city/ratings.h"
 #include "city/victory.h"
 #include "game/mission.h"

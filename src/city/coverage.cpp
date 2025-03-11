@@ -6,7 +6,7 @@
 #include "city/city.h"
 #include "city/entertainment.h"
 #include "city/constants.h"
-#include "city/population.h"
+#include "city/city_population.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "core/buffer.h"

@@ -10,7 +10,7 @@
 #include "city/city.h"
 #include "city/coverage.h"
 #include "city/labor.h"
-#include "city/population.h"
+#include "city/city_population.h"
 #include "city/city_resource.h"
 #include "city/sentiment.h"
 #include "core/calc.h"

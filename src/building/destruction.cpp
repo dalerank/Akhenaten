@@ -2,7 +2,7 @@
 
 #include "building/building_house.h"
 #include "city/message.h"
-#include "city/population.h"
+#include "city/city_population.h"
 #include "city/city.h"
 #include "figuretype/wall.h"
 #include "game/undo.h"

@@ -5,7 +5,7 @@
 #include "city/message.h"
 #include "city/trade.h"
 #include "city/city.h"
-#include "city/population.h"
+#include "city/city_population.h"
 #include "building/count.h"
 #include "scenario/map.h"
 #include "trade_route.h"

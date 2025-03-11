@@ -5,7 +5,7 @@
 #include "building/model.h"
 #include "city/city.h"
 #include "city/message.h"
-#include "city/population.h"
+#include "city/city_population.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "core/random.h"

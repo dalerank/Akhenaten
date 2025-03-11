@@ -6,7 +6,6 @@
 #include "building/destruction.h"
 #include "building/monuments.h"
 #include "city/finance.h"
-#include "city/city_house_population.h"
 #include "city/city.h"
 #include "city/victory.h"
 #include "city/warning.h"
@@ -139,7 +138,7 @@ static void game_cheat_add_clay(pcstr args) {
 }
 
 static void game_cheat_pop_milestone(pcstr args) {
-    city_population_reached_milestone(true);
+    g_city.population.reached_milestone(true);
 }
 
 static void game_cheat_start_invasion(pcstr args) {

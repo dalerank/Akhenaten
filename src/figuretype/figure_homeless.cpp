@@ -8,7 +8,7 @@
 #include "grid/terrain.h"
 #include "building/building.h"
 #include "building/building_house.h"
-#include "city/population.h"
+#include "city/city_population.h"
 
 #include "js/js_game.h"
 

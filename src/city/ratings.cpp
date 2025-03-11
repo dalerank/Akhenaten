@@ -4,7 +4,7 @@
 #include "building/model.h"
 #include "city/coverage.h"
 #include "city/city.h"
-#include "city/population.h"
+#include "city/city_population.h"
 #include "config/config.h"
 #include "core/calc.h"
 #include "scenario/criteria.h"

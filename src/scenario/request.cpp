@@ -3,7 +3,6 @@
 #include "building/building_storage_yard.h"
 #include "city/finance.h"
 #include "city/message.h"
-#include "city/population.h"
 #include "city/ratings.h"
 #include "city/city_resource.h"
 #include "city/city.h"

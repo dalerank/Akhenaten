@@ -9,7 +9,7 @@
 #include "graphics/graphics.h"
 #include "city/constants.h"
 #include "city/finance.h"
-#include "city/population.h"
+#include "city/city.h"
 #include "core/profiler.h"
 #include "core/core_utility.h"
 #include "config/config.h"
@@ -40,8 +40,6 @@
 #include "window/sound_options.h"
 #include "widget/widget_sidebar.h"
 #include "dev/debug.h"
-
-#include "js/js_game.h"
 
 static void button_rotate_left(int param1, int param2);
 static void button_rotate_reset(int param1, int param2);
@@ -738,7 +736,7 @@ void top_menu_widget::draw_foreground(UiFlags flags) {
     ui["funds"].text_color(treasure_color);
     ui["funds"].text_var("%s %d", ui::str(6, 0), city_finance_treasury());
 
-    ui["population"].text_var("%s %d", ui::str(6, 1), city_population());
+    ui["population"].text_var("%s %d", ui::str(6, 1), g_city.population.current);
 
     ui.begin_widget({ 0, 0 });
     ui.draw();

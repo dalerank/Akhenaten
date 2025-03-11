@@ -55,6 +55,16 @@ struct city_population_t {
     void record_monthly();
     int percentage_in_shanties();
     int percentage_in_manors();
+
+    int add_to_houses(int num_people);
+    int remove_from_houses(int num_people);
+    int create_immigrants(int num_people);
+    void update_room();
+    int create_emigrants(int num_people);
+    void reached_milestone(bool force);
+    void evict_overcrowded();
+    void update_migration();
+    void calculate_working_people();
 };
 
 int city_population();

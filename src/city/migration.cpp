@@ -1,6 +1,5 @@
 #include "migration.h"
 
-#include "city/city_house_population.h"
 #include "city/city.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -67,7 +66,7 @@ void city_t::migration_update_status() {
 }
 
 void city_t::create_immigrants(int num_people) {
-    int immigrated = house_population_create_immigrants(num_people);
+    int immigrated = g_city.population.create_immigrants(num_people);
     migration.immigrated_today += immigrated;
     migration.newcomers += migration.immigrated_today;
     if (immigrated == 0) {
@@ -76,7 +75,7 @@ void city_t::create_immigrants(int num_people) {
 }
 
 void city_t::create_emigrants(int num_people) {
-    migration.emigrated_today += house_population_create_emigrants(num_people);
+    migration.emigrated_today += g_city.population.create_emigrants(num_people);
 }
 
 void city_t::create_migrants() {

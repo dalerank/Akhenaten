@@ -3,7 +3,7 @@
 #include "building/count.h"
 #include "city/coverage.h"
 #include "city/city.h"
-#include "city/population.h"
+#include "city/city_population.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/lang_text.h"
