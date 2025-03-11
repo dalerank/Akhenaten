@@ -97,6 +97,8 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     xstring menu_handle_mouse(const mouse *m, menu_header *menu, xstring &focus_item_id);
     xstring get_subitem(const mouse *m, menu_header &menu);
     void calculate_menu_dimensions(menu_header &menu);
+    void debug_render_change_opt(menu_item &item);
+    void debug_change_opt(menu_item &item);
 
     virtual void load(archive arch, pcstr section) override {
         autoconfig_window::load(arch, section);
@@ -244,18 +246,20 @@ static void menu_debug_screenshot(int opt) {
     graphics_save_screenshot(SCREENSHOT_DISPLAY);
 }
 
-static void menu_debug_full_screenshot(int opt) {
-    widget_top_menu_clear_state();
-    window_go_back();
-    graphics_save_screenshot(SCREENSHOT_FULL_CITY);
-}
 
-static void menu_debug_change_opt(menu_item &item) {
+void top_menu_widget::debug_change_opt(menu_item &item) {
     int opt = item.parameter;
     switch (opt) {
     case e_debug_show_console: game_cheat_console(true); break;
-    case e_debug_make_screenshot: menu_debug_screenshot(0); break;
-    case e_debug_make_full_screenshot: menu_debug_full_screenshot(0); break;
+    case e_debug_make_screenshot: 
+        menu_debug_screenshot(0); break;
+
+    case e_debug_make_full_screenshot: 
+        widget_top_menu_clear_state();
+        window_go_back();
+        graphics_save_screenshot(SCREENSHOT_FULL_CITY);
+        break;
+
     case e_debug_show_properties: 
         game.debug_properties = !game.debug_properties;
         g_debug_show_opts[opt] = game.debug_properties;
@@ -276,7 +280,7 @@ static void menu_debug_change_opt(menu_item &item) {
     }
 }
 
-void menu_debug_render_change_opt(menu_item &item) {
+void top_menu_widget::debug_render_change_opt(menu_item &item) {
     int opt = item.parameter;
     g_debug_render = (opt == g_debug_render) ? 0 : opt;
     auto& data = g_top_menu;
@@ -637,12 +641,12 @@ void top_menu_widget::sub_menu_init() {
 
     auto *debug = headers["debug"].dcast_menu_header();
     if (debug) {
-        debug->onclick(menu_debug_change_opt);
+        debug->onclick([this] (auto &h) { debug_change_opt(h); });
     }
 
     auto *render = headers["debug_render"].dcast_menu_header();
     if (render) {
-        render->onclick(menu_debug_render_change_opt);
+        render->onclick([this] (auto &h) { debug_render_change_opt(h); });
     }
 
     g_debug_show_opts[e_debug_show_properties] = game.debug_properties;
