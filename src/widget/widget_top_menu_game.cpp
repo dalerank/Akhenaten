@@ -100,6 +100,7 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     void debug_render_change_opt(menu_item &item);
     void debug_change_opt(menu_item &item);
     void debug_opt_text(int opt, bool v);
+    void debug_render_text(int opt, bool v);
 
     virtual void load(archive arch, pcstr section) override {
         autoconfig_window::load(arch, section);
@@ -178,7 +179,7 @@ void top_menu_widget::update_month_year_max_width(uint8_t month, int year) {
     ui["date"] = text;
 }
 
-static void menu_debug_render_text(int opt, bool v) {
+void top_menu_widget::debug_render_text(int opt, bool v) {
     auto& data = g_top_menu;
     struct option { pcstr on, off; };
     static option debug_text_rend[] = {
@@ -213,7 +214,7 @@ static void menu_debug_render_text(int opt, bool v) {
         {"Canals ON", "Canals OFF"},
     };
     const auto &current = debug_text_rend[opt];
-    g_top_menu.menu_item_update("debug_render", opt, v ? current.on : current.off);
+    menu_item_update("debug_render", opt, v ? current.on : current.off);
 }
 
 void top_menu_widget::debug_opt_text(int opt, bool v) {
@@ -283,7 +284,7 @@ void top_menu_widget::debug_render_change_opt(menu_item &item) {
     auto& data = g_top_menu;
     auto *render = data.headers["debug_render"].dcast_menu_header();
     for (int i = 0; i < render->impl.items.size(); ++i) {
-        menu_debug_render_text(i, g_debug_render == render->impl.items[i].parameter);
+        debug_render_text(i, g_debug_render == render->impl.items[i].parameter);
     }
 }
 
@@ -490,7 +491,7 @@ void top_menu_widget::set_text_for_debug_city() {
 void top_menu_widget::set_text_for_debug_render() {
     auto *render = headers["debug_render"].dcast_menu_header();
     for (int i = 0; i < render->impl.items.size(); ++i) {
-        menu_debug_render_text(i, g_debug_render == render->impl.items[i].parameter);
+        debug_render_text(i, g_debug_render == render->impl.items[i].parameter);
     }
 }
 
