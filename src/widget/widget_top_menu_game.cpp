@@ -555,7 +555,7 @@ static void menu_file_replay_map(int param) {
     });
 }
 
-static void top_menu_file_handle(menu_item &item) {
+void top_menu_file_handle(menu_item &item) {
     if (item.id == "new_game") { menu_file_new_game(0); }
     else if (item.id == "replay_map") { menu_file_replay_map(0); }
     else if (item.id == "load_game") { menu_file_load_game(0); }
@@ -564,45 +564,33 @@ static void top_menu_file_handle(menu_item &item) {
     else if (item.id == "exit_game") { menu_file_exit_city(0); }
 }
 
-static void menu_options_sound(int param) {
-    widget_top_menu_clear_state();
-    window_sound_options_show(window_city_show);
-}
-
-static void menu_options_speed(int param) {
-    widget_top_menu_clear_state();
-    window_speed_options_show(window_city_show);
-}
-
-static void menu_options_difficulty(int param) {
-    widget_top_menu_clear_state();
-    window_difficulty_options_show(window_city_show);
-}
-
-static void menu_options_autosave(int param) {
-    g_settings.toggle_monthly_autosave();
-    set_text_for_autosave();
-}
-
-static void menu_options_change_enh(int param) {
-    window_config_show([] {});
-}
-
-static void menu_options_hotkeys(int param) {
-    window_hotkey_config_show([] {});
-}
-
 void top_menu_widget::options_handle(menu_item &item) {
     if (item.id == "display_options") { 
         widget_top_menu_clear_state();
         ui::display_options_window::show(window_city_show); 
     }
-    else if (item.id == "sound_options") { menu_options_sound(0); }
-    else if (item.id == "speed_options") { menu_options_speed(0); }
-    else if (item.id == "difficulty_options") { menu_options_difficulty(0); }
-    else if (item.id == "autosave_options") { menu_options_autosave(0); }
-    else if (item.id == "hotkeys_options") { menu_options_hotkeys(0); }
-    else if (item.id == "enhanced_options") { menu_options_change_enh(0); }
+    else if (item.id == "sound_options") { 
+        widget_top_menu_clear_state();
+        window_sound_options_show(window_city_show);
+    }
+    else if (item.id == "speed_options") { 
+        widget_top_menu_clear_state();
+        window_speed_options_show(window_city_show);
+    }
+    else if (item.id == "difficulty_options") { 
+        widget_top_menu_clear_state();
+        window_difficulty_options_show(window_city_show);
+    }
+    else if (item.id == "autosave_options") {
+        g_settings.toggle_monthly_autosave();
+        set_text_for_autosave();
+    }
+    else if (item.id == "hotkeys_options") { 
+        window_hotkey_config_show([] {});
+    }
+    else if (item.id == "enhanced_options") { 
+        window_config_show([] {});
+    }
 }
 
 void top_menu_widget::help_handle(menu_item &item) {
