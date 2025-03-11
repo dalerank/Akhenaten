@@ -84,6 +84,7 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     void sub_menu_init();
     void advisors_handle(menu_item &item);
     void help_handle(menu_item &item);
+    void options_handle(menu_item &item);
 
     virtual void load(archive arch, pcstr section) override {
         autoconfig_window::load(arch, section);
@@ -591,7 +592,7 @@ static void menu_options_hotkeys(int param) {
     window_hotkey_config_show([] {});
 }
 
-void top_menu_options_handle(menu_item &item) {
+void top_menu_widget::options_handle(menu_item &item) {
     if (item.id == "display_options") { 
         widget_top_menu_clear_state();
         ui::display_options_window::show(window_city_show); 
@@ -635,7 +636,7 @@ void top_menu_widget::sub_menu_init() {
     auto *options = headers["options"].dcast_menu_header();
     if (options) {
         options->item(0).hidden = system_is_fullscreen_only();
-        options->onclick(top_menu_options_handle);
+        options->onclick([this] (auto &h) { options_handle(h); });
     }
 
     auto *file = headers["file"].dcast_menu_header();
