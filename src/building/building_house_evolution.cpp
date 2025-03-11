@@ -1,6 +1,5 @@
 #include "building/building_house.h"
 #include "building/model.h"
-#include "city/houses.h"
 #include "city/city.h"
 #include "city/city_resource.h"
 #include "core/calc.h"

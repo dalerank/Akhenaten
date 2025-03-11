@@ -6,7 +6,6 @@
 #include "city/entertainment.h"
 #include "city/city_population.h"
 #include "city/finance.h"
-#include "city/houses.h"
 #include "city/labor.h"
 #include "city/buildings.h"
 #include "city/city_health.h"
@@ -26,6 +25,7 @@
 #include "grid/desirability.h"
 #include "city/city_buildings.h"
 #include "core/eventbus.h"
+#include "building/building_house_demands.h"
 
 struct empire_city;
 

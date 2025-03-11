@@ -6,7 +6,6 @@
 #include "building/count.h"
 #include "city/coverage.h"
 #include "city/city.h"
-#include "city/houses.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"

@@ -6,7 +6,6 @@
 #include "city/city.h"
 #include "city/finance.h"
 #include "city/city_health.h"
-#include "city/houses.h"
 #include "city/labor.h"
 #include "city/migration.h"
 #include "city/military.h"

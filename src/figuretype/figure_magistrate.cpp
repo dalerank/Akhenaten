@@ -4,7 +4,6 @@
 #include "city/city.h"
 #include "city/labor.h"
 #include "city/ratings.h"
-#include "city/houses.h"
 #include "figure/service.h"
 #include "building/building_house.h"
 
