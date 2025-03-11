@@ -82,6 +82,8 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     void sub_menu_draw_foreground(int flags);
     void sub_menu_draw_background(int flags);
     void sub_menu_init();
+    void advisors_handle(menu_item &item);
+    void help_handle(menu_item &item);
 
     virtual void load(archive arch, pcstr section) override {
         autoconfig_window::load(arch, section);
@@ -589,7 +591,7 @@ static void menu_options_hotkeys(int param) {
     window_hotkey_config_show([] {});
 }
 
-static void top_menu_options_handle(menu_item &item) {
+void top_menu_options_handle(menu_item &item) {
     if (item.id == "display_options") { 
         widget_top_menu_clear_state();
         ui::display_options_window::show(window_city_show); 
@@ -602,35 +604,28 @@ static void top_menu_options_handle(menu_item &item) {
     else if (item.id == "enhanced_options") { menu_options_change_enh(0); }
 }
 
-static void menu_help_help(int param) {
-    widget_top_menu_clear_state();
-    window_go_back();
-    window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
+void top_menu_widget::help_handle(menu_item &item) {
+    if (item.id == "help") { 
+        widget_top_menu_clear_state();
+        window_go_back();
+        window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
+    }
+    else if (item.id == "mouse") { 
+        g_settings.toggle_tooltips();
+        set_text_for_tooltips();
+    }
+    else if (item.id == "warnings") { 
+        g_settings.toggle_warnings();
+        set_text_for_warnings();
+    }
+    else if (item.id == "about") { 
+        widget_top_menu_clear_state();
+        window_go_back();
+        window_message_dialog_show(MESSAGE_DIALOG_ABOUT, -1, window_city_draw_all);
+    }
 }
 
-static void menu_help_mouse_help(int param) {
-    g_settings.toggle_tooltips();
-    set_text_for_tooltips();
-}
-static void menu_help_warnings(int param) {
-    g_settings.toggle_warnings();
-    set_text_for_warnings();
-}
-
-static void menu_help_about(int param) {
-    widget_top_menu_clear_state();
-    window_go_back();
-    window_message_dialog_show(MESSAGE_DIALOG_ABOUT, -1, window_city_draw_all);
-}
-
-static void top_menu_help_handle(menu_item &item) {
-    if (item.id == "help") { menu_help_help(0); }
-    else if (item.id == "mouse") { menu_help_mouse_help(0); }
-    else if (item.id == "warnings") { menu_help_warnings(0); }
-    else if (item.id == "about") { menu_help_about(0); }
-}
-
-static void top_menu_advisors_handle(menu_item &item) {
+void top_menu_widget::advisors_handle(menu_item &item) {
     widget_top_menu_clear_state();
     window_go_back();
     window_advisors_show_advisor((e_advisor)item.parameter);
@@ -651,12 +646,12 @@ void top_menu_widget::sub_menu_init() {
 
     auto *help = headers["help"].dcast_menu_header();
     if (help) {
-        help->onclick(top_menu_help_handle);
+        help->onclick([this] (auto &h) { help_handle(h); });
     }
 
     auto *advisors = headers["advisors"].dcast_menu_header();
     if (advisors) {
-        advisors->onclick(top_menu_advisors_handle);
+        advisors->onclick([this] (auto &h) { advisors_handle(h); });
     }
 
     auto *debug = headers["debug"].dcast_menu_header();
