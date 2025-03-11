@@ -73,6 +73,8 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override;
     virtual void on_mission_start() override;
+    void draw_background_impl();
+    void draw_elements_impl();
 
     virtual void load(archive arch, pcstr section) override {
         autoconfig_window::load(arch, section);
@@ -274,10 +276,8 @@ static void button_rotate_right(int param1, int param2) {
     game_orientation_rotate_right();
 }
 
-void widget_top_menu_draw_elements() {
-    auto& data = g_top_menu;
-    auto &headers = data.headers;
-    vec2i offset = data.offset;
+void top_menu_widget::draw_elements_impl() {
+    vec2i cur_offset = offset;
     e_font hightlight_font = config_get(CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER) ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT;
     for (auto &it : headers.elements) {
         ui::emenu_header *header = it->dcast_menu_header();
@@ -286,20 +286,20 @@ void widget_top_menu_draw_elements() {
             continue;
         }
 
-        const bool is_hovered = (it->id == data.focus_menu_id);
+        const bool is_hovered = (it->id == focus_menu_id);
 
-        header->impl.x_start = offset.x;
+        header->impl.x_start = cur_offset.x;
         header->font(is_hovered ? hightlight_font : FONT_NORMAL_BLACK_ON_LIGHT);
-        header->pos = vec2i{offset.x, data.offset.y};
+        header->pos = vec2i{cur_offset.x, offset.y};
         header->draw(UiFlags_None);
 
         if (is_hovered) {
             ui::set_tooltip(header->tooltip());
         }
 
-        offset.x += header->text_width();
-        header->impl.x_end = offset.x;
-        offset.x += data.spacing;
+        cur_offset.x += header->text_width();
+        header->impl.x_end = cur_offset.x;
+        cur_offset.x += spacing;
     }
 }
 
@@ -700,19 +700,19 @@ void widget_sub_menu_show() {
     window_show(&window);
 }
 
-void wdiget_top_menu_draw_background() {
+void top_menu_widget::draw_background_impl() {
     painter ctx = game.painter();
 
-    int img_id = image_group(g_top_menu.background);
+    int img_id = image_group(background);
     const image_t *img = image_get(img_id);
     const int block_width = img->width;
     assert(block_width > 0);
 
-    for (int x = -(screen_width() - widget_sidebar_city_offset_x()); x < screen_width(); x += (block_width - g_top_menu.sidebar_offset)) {
+    for (int x = -(screen_width() - widget_sidebar_city_offset_x()); x < screen_width(); x += (block_width - sidebar_offset)) {
        ImageDraw::img_generic(ctx, img_id, x, 0);
     }
 
-    ImageDraw::img_generic(ctx, img_id, widget_sidebar_city_offset_x() - block_width + g_top_menu.sidebar_offset, 0);
+    ImageDraw::img_generic(ctx, img_id, widget_sidebar_city_offset_x() - block_width + sidebar_offset, 0);
 }
 
 void widget_top_menu_draw_rotate_buttons() {
@@ -730,8 +730,8 @@ void widget_top_menu_draw_rotate_buttons() {
 void top_menu_widget::draw_foreground(UiFlags flags) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Topmenu");
 
-    wdiget_top_menu_draw_background();
-    widget_top_menu_draw_elements();
+    draw_background_impl();
+    draw_elements_impl();
     widget_top_menu_draw_rotate_buttons();
 
     color treasure_color = city_finance_treasury() < 0 ? COLOR_FONT_RED : COLOR_WHITE;
@@ -747,7 +747,7 @@ void top_menu_widget::draw_foreground(UiFlags flags) {
     ui["funds"].text_color(treasure_color);
     ui["funds"].text_var("%s %d", ui::str(6, 0), city_finance_treasury());
 
-    ui["population"].text_var("%s %d", ui::str(6, 1), g_city.population.current);
+    ui["population"].text_var("%s %d", ui::str(6, 1), states.population);
 
     ui.begin_widget({ 0, 0 });
     ui.draw();
