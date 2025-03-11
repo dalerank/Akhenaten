@@ -180,7 +180,6 @@ void top_menu_widget::update_month_year_max_width(uint8_t month, int year) {
 }
 
 void top_menu_widget::debug_render_text(int opt, bool v) {
-    auto& data = g_top_menu;
     struct option { pcstr on, off; };
     static option debug_text_rend[] = {
         {"Buildings ON", "Buildings OFF"},
@@ -281,8 +280,7 @@ void top_menu_widget::debug_change_opt(menu_item &item) {
 void top_menu_widget::debug_render_change_opt(menu_item &item) {
     int opt = item.parameter;
     g_debug_render = (opt == g_debug_render) ? 0 : opt;
-    auto& data = g_top_menu;
-    auto *render = data.headers["debug_render"].dcast_menu_header();
+    auto *render = headers["debug_render"].dcast_menu_header();
     for (int i = 0; i < render->impl.items.size(); ++i) {
         debug_render_text(i, g_debug_render == render->impl.items[i].parameter);
     }
@@ -775,13 +773,12 @@ int top_menu_widget::ui_handle_mouse(const mouse *m) {
 }
 
 void widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
-    auto& data = g_top_menu;
     int result = 0;
     if (!widget_city_has_input()) {
         int button_id = 0;
         int handled = false;
 
-        handled = generic_buttons_handle_mouse(m, {data.offset_rotate, 0}, orientation_buttons_ph, 3, &button_id);
+        handled = generic_buttons_handle_mouse(m, { g_top_menu.offset_rotate, 0}, orientation_buttons_ph, 3, &button_id);
         if (button_id) {
             orientation_button_state = button_id;
             if (handled)
@@ -791,7 +788,7 @@ void widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
         }
 
         if (button_id) { result = handled; }
-        else if (!!data.open_sub_menu) { g_top_menu.handle_input_submenu(m, h); }
+        else if (!!g_top_menu.open_sub_menu) { g_top_menu.handle_input_submenu(m, h); }
         else { g_top_menu.ui_handle_mouse(m); }
     }
 }
