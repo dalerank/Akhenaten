@@ -39,7 +39,7 @@ static int get_request_status(int index) {
         return -1;
     }
 
-    if (request.resource == RESOURCE_DEBEN && city_finance_treasury() <= request.amount) {
+    if (request.resource == RESOURCE_DEBEN && g_city.finance.treasury <= request.amount) {
         return STATUS_NOT_ENOUGH_RESOURCES;
     } 
     
@@ -199,7 +199,7 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
         e_font allow_font;
         if (request.resource == RESOURCE_DEBEN) {
             // request for money
-            int treasury = city_finance_treasury();
+            const int treasury = g_city.finance.treasury;
             saved_resources.printf("%u %s", treasury, ui::str(52, 44));
             allow_str = (treasury < request.amount) ? ui::str(52, 48) : ui::str(52, 47);
             allow_font = button_request_allow.font();

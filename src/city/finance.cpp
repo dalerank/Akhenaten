@@ -16,9 +16,6 @@
 #include <map>
 
 static auto &city_data = g_city;
-int city_finance_treasury() {
-    return city_data.finance.treasury;
-}
 
 int city_finance_out_of_money() {
     return city_data.finance.treasury <= -5000;

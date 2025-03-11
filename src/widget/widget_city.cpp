@@ -269,7 +269,7 @@ bool widget_city_draw_construction_cost_and_size() {
 
     if (cost) {
         color color;
-        if (cost <= city_finance_treasury()) // Color blind friendly
+        if (cost <= g_city.finance.treasury) // Color blind friendly
             color = scenario_property_climate() == CLIMATE_DESERT ? COLOR_FONT_ORANGE : COLOR_FONT_ORANGE_LIGHT;
         else
             color = COLOR_FONT_RED;

@@ -32,7 +32,7 @@ void city_t::government_distribute_treasury() {
 
     int amount_per_unit = 0;
     int remainder = 0;
-    int treasury = city_finance_treasury();
+    const int treasury = finance.treasury;
 
     if (treasury > 0 && units > 0) {
         amount_per_unit = treasury / units;

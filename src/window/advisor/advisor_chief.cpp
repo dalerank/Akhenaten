@@ -159,7 +159,7 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
 
     // finance
     {
-        int treasury = city_finance_treasury();
+        const int treasury = g_city.finance.treasury;
         int balance_last_year = city_finance_overview_last_year()->balance;
         if (treasury > balance_last_year) { // assets have rison by ...
             ui["finance_info"].text_var("%s %d", (pcstr)lang_get_string(61, 152), treasury - balance_last_year);

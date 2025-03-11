@@ -86,7 +86,7 @@ static void generate_robber(building* b) {
                 city_show_message_criminal(MESSAGE_TUTORIAL_CRIME, money_stolen, f->tile.grid_offset());
                 city_finance_process_stolen(money_stolen);              
             } else {
-                int treasury = city_finance_treasury();
+                const int treasury = g_city.finance.treasury;
                 int money_stolen = 0;
                 if (treasury > 0) {
                     money_stolen = (random_byte() / 2) % 100;

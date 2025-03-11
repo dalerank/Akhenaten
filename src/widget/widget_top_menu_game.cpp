@@ -8,7 +8,6 @@
 #include "graphics/window.h"
 #include "graphics/graphics.h"
 #include "city/constants.h"
-#include "city/finance.h"
 #include "city/city.h"
 #include "core/profiler.h"
 #include "core/core_utility.h"
@@ -179,11 +178,11 @@ void top_menu_widget::update_date(event_advance_day ev) {
 }
 
 void top_menu_widget::update_finance(event_finance_changed ev) {
-    color treasure_color = city_finance_treasury() < 0 ? COLOR_FONT_RED : COLOR_WHITE;
-    e_font treasure_font = (city_finance_treasury() >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_BLUE);
+    color treasure_color = ev.value < 0 ? COLOR_FONT_RED : COLOR_WHITE;
+    e_font treasure_font = (ev.value >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_BLUE);
     ui["funds"].font(treasure_font);
     ui["funds"].text_color(treasure_color);
-    ui["funds"].text_var("%s %d", ui::str(6, 0), city_finance_treasury());
+    ui["funds"].text_var("%s %d", ui::str(6, 0), ev.value);
 }
 
 void top_menu_widget::debug_render_text(int opt, bool v) {
