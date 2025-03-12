@@ -39,6 +39,7 @@ struct city_t {
     kingdome_relation_t kingdome;
     city_military_t military;
     victory_state_t victory_state;
+
     struct {
         uint8_t city;
         int8_t city_foreign_months_left;
@@ -55,28 +56,7 @@ struct city_t {
 
     city_finance_t finance;
 
-    struct {
-        int32_t taxed_citizens;
-        int32_t taxed_nobles;
-        int32_t untaxed_citizens;
-        int32_t untaxed_nobles;
-        int32_t percentage_taxed_citizens;
-        int32_t percentage_taxed_nobles;
-        int32_t percentage_taxed_people;
-        struct {
-            int32_t collected_citizens;
-            int32_t collected_nobles;
-            int32_t uncollected_citizens;
-            int32_t uncollected_nobles;
-        } yearly;
-        struct {
-            int32_t collected_citizens;
-            int32_t collected_nobles;
-            int32_t uncollected_citizens;
-            int32_t uncollected_nobles;
-        } monthly;
-    } taxes;
-
+    city_taxes_t taxes;
 
     city_labor_t labor;
     struct {

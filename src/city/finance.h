@@ -29,6 +29,28 @@ struct finance_overview {
 
 struct event_finance_changed { int value; };
 
+struct city_taxes_t {
+    int32_t taxed_citizens;
+    int32_t taxed_nobles;
+    int32_t untaxed_citizens;
+    int32_t untaxed_nobles;
+    int8_t percentage_taxed_citizens;
+    int8_t percentage_taxed_nobles;
+    int8_t percentage_taxed_people;
+    struct {
+        int32_t collected_citizens;
+        int32_t collected_nobles;
+        int32_t uncollected_citizens;
+        int32_t uncollected_nobles;
+    } yearly;
+    struct {
+        int32_t collected_citizens;
+        int32_t collected_nobles;
+        int32_t uncollected_citizens;
+        int32_t uncollected_nobles;
+    } monthly;
+};
+
 struct city_finance_t {
     struct treasury_t {
         int value;

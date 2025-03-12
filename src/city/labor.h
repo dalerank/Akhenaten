@@ -12,8 +12,8 @@ struct labor_category_data {
 } ;
 
 struct city_labor_t {
-    int32_t wages;
-    int32_t wages_kingdome;
+    int8_t wages;
+    int8_t wages_kingdome;
     int32_t workers_available;
     int32_t workers_employed;
     int32_t workers_unemployed;

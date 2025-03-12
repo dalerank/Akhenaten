@@ -522,8 +522,10 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.labor.unemployment_percentage);
     iob->bind(BIND_SIGNATURE_INT32, &data.labor.unemployment_percentage_for_goverment);
     iob->bind(BIND_SIGNATURE_INT32, &data.labor.workers_needed);
-    iob->bind(BIND_SIGNATURE_INT32, &data.labor.wages);
-    iob->bind(BIND_SIGNATURE_INT32, &data.labor.wages_kingdome);
+    iob->bind(BIND_SIGNATURE_INT8, &data.labor.wages);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_INT8, &data.labor.wages_kingdome);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_2b6c);
     iob->bind____skip(4);
     iob->bind____skip(4);
@@ -532,9 +534,12 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.taxes.taxed_nobles);
     iob->bind(BIND_SIGNATURE_INT32, &data.taxes.untaxed_citizens);
     iob->bind(BIND_SIGNATURE_INT32, &data.taxes.untaxed_nobles);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.percentage_taxed_citizens);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.percentage_taxed_nobles);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.percentage_taxed_people);
+    iob->bind(BIND_SIGNATURE_INT8, &data.taxes.percentage_taxed_citizens);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_INT8, &data.taxes.percentage_taxed_nobles);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_INT8, &data.taxes.percentage_taxed_people);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.taxes.yearly.collected_citizens);
     iob->bind(BIND_SIGNATURE_INT32, &data.taxes.yearly.collected_nobles);
     iob->bind(BIND_SIGNATURE_INT32, &data.taxes.yearly.uncollected_citizens);
