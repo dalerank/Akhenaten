@@ -346,14 +346,6 @@ void tutorial_on_day_tick() {
     tutorial_check_5_resources_on_storageyard();
 }
 
-void tutorial_on_month_tick() {
-    if (scenario_is_mission_rank(3)) {
-        if (game.simtime.month == 5) {
-            city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS, 1200);
-        }
-    }
-}
-
 io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT16, &g_tutorials_flags.pharaoh.last_action);
     // tut 1

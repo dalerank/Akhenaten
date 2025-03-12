@@ -132,6 +132,5 @@ void tutorial_on_house_evolve(e_house_level level);
 void tutorial_check_5_resources_on_storageyard();
 
 void tutorial_on_day_tick();
-void tutorial_on_month_tick();
 
 void tutorial_update_step(xstring step);

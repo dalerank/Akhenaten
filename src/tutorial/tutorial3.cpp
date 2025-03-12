@@ -111,6 +111,13 @@ int tutorial_3::goal_text() {
     }
 }
 
+void tutorial3_hunger_halt_immgrants(event_advance_month ev) {
+    if(game.simtime.month >= 5) {
+       city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS, 1200);
+       g_city_events.removeListener<event_advance_month>(&tutorial3_hunger_halt_immgrants);
+    }
+}
+
 void tutorial_3::init() {
     if (g_tutorials_flags.tutorial_3.figs_800_stored) building_menu_update(tutorial_stage.tutorial_industry);
     else g_city_events.appendListener<event_granary_filled>(&tutorial3_on_filled_granary);
@@ -123,6 +130,10 @@ void tutorial_3::init() {
 
     if (g_tutorials_flags.tutorial_3.disease) building_menu_update(tutorial_stage.tutorial_health);
     else g_city_events.appendListener<event_city_disease>(&tutorial3_on_disease);
+
+    if (game.simtime.month < 5) {
+        g_city_events.appendListener<event_advance_month>(&tutorial3_hunger_halt_immgrants);
+    }
 
     g_city.victory_state.add_condition(&tutorial3_is_success);
 }
