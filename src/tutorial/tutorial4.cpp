@@ -32,8 +32,17 @@ void tutorial4_warehouse_beer_check(event_warehouse_filled ev) {
     building_menu_update(tutorial_stage.tutorial_finance);
     city_message_post(true, MESSAGE_TUTORIAL_FINANCES, 0, 0);
 }
+
+bool tutorial4_is_success() {
+    auto &tut = g_tutorials_flags.tutorial_4;
+    const bool may_finish = (tut.beer_made);
+    const bool some_days_after_last_action = (game.simtime.absolute_day() - g_tutorials_flags.pharaoh.last_action) > 3;
+    return may_finish && some_days_after_last_action;
+}
     
 void tutorial_4::init() {
     if (g_tutorials_flags.tutorial_4.beer_made) building_menu_update(tutorial_stage.tutorial_finance);
-    else g_city_events.appendListener<event_warehouse_filled>(&tutorial4_warehouse_beer_check);;
+    else g_city_events.appendListener<event_warehouse_filled>(&tutorial4_warehouse_beer_check);
+
+    g_city.victory_state.add_condition(&tutorial4_is_success);
 }
