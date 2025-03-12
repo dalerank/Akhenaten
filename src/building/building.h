@@ -162,7 +162,6 @@ public:
     e_building_type type;
     building_id id;
     e_building_state state;
-    uint8_t reserved_id;
     uint8_t size;
     tile2i tile;
     uint8_t orientation;
