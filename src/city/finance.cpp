@@ -306,99 +306,94 @@ void city_finance_t::advance_month() {
     pay_monthly_salary();
 }
 
-static void copy_amounts_to_last_year() {
-    finance_overview* last_year = &city_data.finance.last_year;
-    finance_overview* this_year = &city_data.finance.this_year;
-
+void city_finance_t::copy_amounts_to_last_year() {
     // wages
-    last_year->expenses.wages = city_data.finance.wages_so_far;
-    city_data.finance.wages_so_far = 0;
-    city_data.finance.wage_rate_paid_last_year = city_data.finance.wage_rate_paid_this_year;
-    city_data.finance.wage_rate_paid_this_year = 0;
+    last_year.expenses.wages = wages_so_far;
+    wages_so_far = 0;
+    wage_rate_paid_last_year = wage_rate_paid_this_year;
+    wage_rate_paid_this_year = 0;
 
     // import/export
-    last_year->income.exports = this_year->income.exports;
-    this_year->income.exports = 0;
-    last_year->expenses.imports = this_year->expenses.imports;
-    this_year->expenses.imports = 0;
+    last_year.income.exports = this_year.income.exports;
+    this_year.income.exports = 0;
+    last_year.expenses.imports = this_year.expenses.imports;
+    this_year.expenses.imports = 0;
 
     // construction
-    last_year->expenses.construction = this_year->expenses.construction;
-    this_year->expenses.construction = 0;
+    last_year.expenses.construction = this_year.expenses.construction;
+    this_year.expenses.construction = 0;
 
     // interest
-    last_year->expenses.interest = city_data.finance.interest_so_far;
-    city_data.finance.interest_so_far = 0;
+    last_year.expenses.interest = interest_so_far;
+    interest_so_far = 0;
 
     // salary
-    city_data.finance.last_year.expenses.salary = city_data.finance.salary_so_far;
-    city_data.finance.salary_so_far = 0;
+    last_year.expenses.salary = salary_so_far;
+    salary_so_far = 0;
 
     // sundries
-    last_year->expenses.requests_and_festivals = this_year->expenses.requests_and_festivals;
-    this_year->expenses.requests_and_festivals = 0;
-    last_year->expenses.stolen = this_year->expenses.stolen;
-    this_year->expenses.stolen = 0;
+    last_year.expenses.requests_and_festivals = this_year.expenses.requests_and_festivals;
+    this_year.expenses.requests_and_festivals = 0;
+    last_year.expenses.stolen = this_year.expenses.stolen;
+    this_year.expenses.stolen = 0;
 
     // donations
-    last_year->income.donated = this_year->income.donated;
-    this_year->income.donated = 0;
+    last_year.income.donated = this_year.income.donated;
+    this_year.income.donated = 0;
 }
 
-static void pay_tribute() {
-    finance_overview* last_year = &city_data.finance.last_year;
+void city_finance_t::pay_tribute() {
+    int income = last_year.income.donated + last_year.income.taxes + last_year.income.exports + last_year.income.gold_extracted;
+    int expenses = last_year.expenses.stolen + last_year.expenses.salary + last_year.expenses.interest
+                   + last_year.expenses.construction + last_year.expenses.wages + last_year.expenses.imports
+                   + last_year.expenses.requests_and_festivals;
 
-    int income = last_year->income.donated + last_year->income.taxes + last_year->income.exports + last_year->income.gold_extracted;
-    int expenses = last_year->expenses.stolen + last_year->expenses.salary + last_year->expenses.interest
-                   + last_year->expenses.construction + last_year->expenses.wages + last_year->expenses.imports
-                   + last_year->expenses.requests_and_festivals;
-
-    city_data.finance.tribute_not_paid_last_year = 0;
-    if (city_data.finance.treasury <= 0) {
+    tribute_not_paid_last_year = 0;
+    if (treasury <= 0) {
         // city is in debt
-        city_data.finance.tribute_not_paid_last_year = 1;
-        city_data.finance.tribute_not_paid_total_years++;
-        last_year->expenses.tribute = 0;
+        tribute_not_paid_last_year = 1;
+        tribute_not_paid_total_years++;
+        last_year.expenses.tribute = 0;
     } else if (income <= expenses) {
         // city made a loss: fixed tribute based on population
-        city_data.finance.tribute_not_paid_total_years = 0;
-        if (city_data.population.current > 2000)
-            last_year->expenses.tribute = 200;
-        else if (city_data.population.current > 1000)
-            last_year->expenses.tribute = 100;
+        tribute_not_paid_total_years = 0;
+        if (g_city.population.current > 2000)
+            last_year.expenses.tribute = 200;
+        else if (g_city.population.current > 1000)
+            last_year.expenses.tribute = 100;
         else {
-            last_year->expenses.tribute = 0;
+            last_year.expenses.tribute = 0;
         }
     } else {
         // city made a profit: tribute is max of: 25% of profit, fixed tribute based on population
-        city_data.finance.tribute_not_paid_total_years = 0;
-        if (city_data.population.current > 5000)
-            last_year->expenses.tribute = 500;
-        else if (city_data.population.current > 3000)
-            last_year->expenses.tribute = 400;
-        else if (city_data.population.current > 2000)
-            last_year->expenses.tribute = 300;
-        else if (city_data.population.current > 1000)
-            last_year->expenses.tribute = 225;
-        else if (city_data.population.current > 500)
-            last_year->expenses.tribute = 150;
+        tribute_not_paid_total_years = 0;
+        if (g_city.population.current > 5000)
+            last_year.expenses.tribute = 500;
+        else if (g_city.population.current > 3000)
+            last_year.expenses.tribute = 400;
+        else if (g_city.population.current > 2000)
+            last_year.expenses.tribute = 300;
+        else if (g_city.population.current > 1000)
+            last_year.expenses.tribute = 225;
+        else if (g_city.population.current > 500)
+            last_year.expenses.tribute = 150;
         else {
-            last_year->expenses.tribute = 50;
+            last_year.expenses.tribute = 50;
         }
         int pct_profit = calc_adjust_with_percentage(income - expenses, 25);
-        if (pct_profit > last_year->expenses.tribute)
-            last_year->expenses.tribute = pct_profit;
+        if (pct_profit > last_year.expenses.tribute)
+            last_year.expenses.tribute = pct_profit;
     }
 
-    city_data.finance.treasury -= last_year->expenses.tribute;
-    city_data.finance.this_year.expenses.tribute = 0;
+    treasury -= last_year.expenses.tribute;
+    this_year.expenses.tribute = 0;
 
-    last_year->balance = city_data.finance.treasury;
-    last_year->income.total = income;
-    last_year->expenses.total = last_year->expenses.tribute + expenses;
+    last_year.balance = treasury;
+    last_year.income.total = income;
+    last_year.expenses.total = last_year.expenses.tribute + expenses;
 }
 
-void city_finance_handle_year_change() {
+void city_finance_t::advance_year() {
     reset_taxes();
     copy_amounts_to_last_year();
     pay_tribute();

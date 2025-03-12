@@ -289,7 +289,7 @@ void game_t::advance_year() {
     game_undo_disable();
     simtime.advance_year();
     city_population_request_yearly_update();
-    city_finance_handle_year_change();
+    g_city.finance.advance_year();
     g_city.migration_advance_year();
     g_empire.reset_yearly_trade_amounts();
     building_maintenance_update_fire_direction();

@@ -61,6 +61,9 @@ struct city_finance_t {
     void pay_monthly_wages();
     void pay_monthly_interest();
     void pay_monthly_salary();
+    void copy_amounts_to_last_year();
+    void pay_tribute();
+    void advance_year();
 };
 
 constexpr uint32_t MAX_HOUSE_LEVELS = 20;
@@ -89,8 +92,6 @@ void city_finance_update_interest(void);
 void city_finance_update_salary(void);
 
 void city_finance_calculate_totals(void);
-
-void city_finance_handle_year_change(void);
 
 const finance_overview* city_finance_overview_last_year();
 const finance_overview* city_finance_overview_this_year();
