@@ -336,6 +336,8 @@ void game_t::advance_month() {
         bstring256 autosave_file("autosave_month.", saved_game_data_expanded.extension);
         GamestateIO::write_savegame(autosave_file);
     }
+
+    g_city_events.enqueue(event_advance_month::from_simtime(game.simtime));
 }
 
 void game_t::advance_day() {
