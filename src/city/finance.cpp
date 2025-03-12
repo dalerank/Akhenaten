@@ -126,10 +126,10 @@ void city_finance_calculate_totals() {
     this_year->expenses.tribute = 0;
 }
 
-void city_finance_estimate_wages() {
-    int monthly_wages = city_data.labor.wages * city_data.labor.workers_employed / 10 / 12;
-    city_data.finance.this_year.expenses.wages = city_data.finance.wages_so_far;
-    city_data.finance.estimated_wages = (12 - game.simtime.month) * monthly_wages + city_data.finance.wages_so_far;
+void city_finance_t::estimate_wages() {
+    int monthly_wages = g_city.labor.wages * g_city.labor.workers_employed / 10 / 12;
+    this_year.expenses.wages = wages_so_far;
+    estimated_wages = (12 - game.simtime.month) * monthly_wages + wages_so_far;
 }
 
 void city_finance_t::update_estimate_taxes() {

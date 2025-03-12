@@ -11,9 +11,9 @@
 
 ui::advisor_labors_window g_advisor_labor_window;
 
-static void arrow_button_wages(int is_down) {
-    g_city.labor.change_wages(is_down ? -1 : 1);
-    city_finance_estimate_wages();
+void ui::advisor_labors_window::change_wages(int v) {
+    g_city.labor.change_wages(v);
+    g_city.finance.estimate_wages();
     city_finance_calculate_totals();
 }
 
@@ -28,12 +28,12 @@ int ui::advisor_labors_window::draw_background(UiFlags flags) {
     ui["wages_value"].text_var("%u %s %s %u)", g_city.labor.wages, ui::str(50, 15), ui::str(50, 18), g_city.labor.wages_kingdome);
     ui["wages_estimated"].text_var("%s %u", ui::str(50, 19), city_finance_estimated_wages());
 
-    ui["dec_wages"].onclick([] {
-        arrow_button_wages(true);
+    ui["dec_wages"].onclick([this] {
+        change_wages(-1);
     });
 
-    ui["inc_wages"].onclick([] {
-        arrow_button_wages(false);
+    ui["inc_wages"].onclick([this] {
+        change_wages(1);
     });
     return 0;
 }

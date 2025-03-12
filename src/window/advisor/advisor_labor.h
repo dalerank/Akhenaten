@@ -13,5 +13,7 @@ struct advisor_labors_window : public advisor_window_t<advisor_labors_window> {
     virtual void init() override {};
 
     static advisor_window *instance();
+
+    void change_wages(int v);
 };
 }
