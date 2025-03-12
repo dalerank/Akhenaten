@@ -12,28 +12,26 @@ city_overlay* city_overlay_for_health() {
 }
 
 int city_overlay_health::get_column_height(const building *b) const {
-    auto house = ((building *)b)->dcast_house();
-
-    if (!house || house->house_population() <= 0) {
-        return COLUMN_TYPE_NONE;
-    }
-
     if (b->disease_days > 0) {
         return 10;
+    }
+
+    auto house = ((building *)b)->dcast_house();
+    if (!house || house->house_population() <= 0) {
+        return COLUMN_TYPE_NONE;
     }
 
     return b->common_health / 10;
 }
 
 e_column_color city_overlay_health::get_column_color(const building *b) const {
-    auto house = ((building *)b)->dcast_house();
-
-    if (!house || house->house_population() <= 0) {
-        return COLUMN_COLOR_NONE;
-    }
-
     if (b->disease_days > 0) {
         return COLUMN_COLOR_RED;
+    }
+
+    auto house = ((building *)b)->dcast_house();
+    if (!house || house->house_population() <= 0) {
+        return COLUMN_COLOR_NONE;
     }
 
     return COLUMN_COLOR_NONE;
