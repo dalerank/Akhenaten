@@ -300,7 +300,7 @@ void game_t::advance_year() {
 void game_t::advance_month() {
     g_city.migration_reset_newcomers();
     g_city.health.update();
-    city_finance_handle_month_change();
+    g_city.finance.advance_month();
     city_resource_consume_food();
     scenario_distant_battle_process();
 

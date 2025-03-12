@@ -56,6 +56,8 @@ struct city_finance_t {
     bool is_out_of_money() const;
     void update_estimate_taxes();
     void estimate_wages();
+    void collect_monthly_taxes();
+    void advance_month();
 };
 
 constexpr uint32_t MAX_HOUSE_LEVELS = 20;
@@ -85,7 +87,6 @@ void city_finance_update_salary(void);
 
 void city_finance_calculate_totals(void);
 
-void city_finance_handle_month_change(void);
 void city_finance_handle_year_change(void);
 
 const finance_overview* city_finance_overview_last_year();

@@ -167,7 +167,7 @@ void city_finance_t::update_estimate_taxes() {
     estimated_tax_uncollected = (game.simtime.month) * (uncollected_patricians + uncollected_plebs) - this_year.income.taxes;
 }
 
-static void city_finance_collect_monthly_taxes() {
+void city_finance_t::collect_monthly_taxes() {
     city_data.taxes.taxed_citizens = 0;
     city_data.taxes.taxed_nobles = 0;
     city_data.taxes.untaxed_citizens = 0;
@@ -299,8 +299,8 @@ static void reset_taxes() {
     }
 }
 
-void city_finance_handle_month_change() {
-    city_finance_collect_monthly_taxes();
+void city_finance_t::advance_month() {
+    collect_monthly_taxes();
     pay_monthly_wages();
     pay_monthly_interest();
     pay_monthly_salary();
