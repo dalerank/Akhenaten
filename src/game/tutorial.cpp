@@ -40,10 +40,7 @@ static void set_all_tut_flags_null() {
     tutorial_1::reset();
     tutorial_2::reset();
     tutorial_3::reset();
-
-    // tutorial 4
-    g_tutorials_flags.tutorial_4.started = 0;
-    g_tutorials_flags.tutorial_4.beer_made = 0;
+    tutorial_4::reset();
 
     // tutorial 5
     g_tutorials_flags.tutorial_5.started = 0;
@@ -183,7 +180,7 @@ bool tutorial_menu_update(int tut) {
     } 
     
     if (tut == 4) {
-        if (g_tutorials_flags.tutorial_4.beer_made) building_menu_update(tutorial_stage.tutorial_finance);
+        tutorial_4::init();
         return true;
     } 
     
@@ -232,12 +229,9 @@ int tutorial_get_immediate_goal_text() {
     if (scenario_is_mission_rank(1))  return tutorial_1::goal_text();
     if (scenario_is_mission_rank(2))  return tutorial_2::goal_text();
     if (scenario_is_mission_rank(3))  return tutorial_3::goal_text();
-        
-    if (scenario_is_mission_rank(4)) {
-        if (!g_tutorials_flags.tutorial_4.beer_made) {
-            return 33;
-        }
-    } else if (scenario_is_mission_rank(5)) {
+    if (scenario_is_mission_rank(4))  return tutorial_4::goal_text();
+    
+    if (scenario_is_mission_rank(5)) {
         if (!g_tutorials_flags.tutorial_5.spacious_apartment) {
             return 31;
         } else if (!g_tutorials_flags.tutorial_5.papyrus_made) {
@@ -260,12 +254,8 @@ void tutorial_flags_t::on_crime() {
     }
 }
 
-void tutorial_check_4_5_resources_on_storageyard() {
-    if (!g_tutorials_flags.tutorial_4.beer_made && city_resource_warehouse_stored(RESOURCE_BEER) >= 3) {
-        g_tutorials_flags.tutorial_4.beer_made = true;
-        building_menu_update(tutorial_stage.tutorial_finance);
-        post_message(MESSAGE_TUTORIAL_FINANCES);
-    } if (!g_tutorials_flags.tutorial_5.papyrus_made && city_resource_warehouse_stored(RESOURCE_PAPYRUS) >= 1) {
+void tutorial_check_5_resources_on_storageyard() {
+    if (!g_tutorials_flags.tutorial_5.papyrus_made && city_resource_warehouse_stored(RESOURCE_PAPYRUS) >= 1) {
         g_tutorials_flags.tutorial_5.papyrus_made = 1;
         building_menu_update(tutorial_stage.tutorial_trading);
         post_message(MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES);
@@ -353,7 +343,7 @@ void tutorial_on_day_tick() {
         city_mission_tutorial_set_fire_message_shown(1);
     }
 
-    tutorial_check_4_5_resources_on_storageyard();
+    tutorial_check_5_resources_on_storageyard();
 }
 
 void tutorial_on_month_tick() {

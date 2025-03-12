@@ -46,6 +46,12 @@ struct tutorial_3 {
     static int goal_text();
 };
 
+struct tutorial_4 {
+    static void init();
+    static void reset();
+    static int goal_text();
+};
+
 struct tutorial_flags_t {
     struct {
         bool started;
@@ -123,7 +129,7 @@ int tutorial_get_immediate_goal_text();
 
 void tutorial_on_house_evolve(e_house_level level);
 
-void tutorial_check_4_5_resources_on_storageyard();
+void tutorial_check_5_resources_on_storageyard();
 
 void tutorial_on_day_tick();
 void tutorial_on_month_tick();
