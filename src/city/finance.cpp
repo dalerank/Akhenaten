@@ -254,23 +254,23 @@ void city_finance_t::collect_monthly_taxes() {
     city_data.taxes.percentage_taxed_people = calc_percentage(city_data.taxes.taxed_nobles + city_data.taxes.taxed_citizens, total_patricians + total_plebs);
 }
 
-static void pay_monthly_wages() {
-    int wages = city_data.labor.wages * city_data.labor.workers_employed / 10 / 12;
-    city_data.finance.treasury -= wages;
-    city_data.finance.wages_so_far += wages;
-    city_data.finance.wage_rate_paid_this_year += city_data.labor.wages;
+void city_finance_t::pay_monthly_wages() {
+    int wages = g_city.labor.wages * g_city.labor.workers_employed / 10 / 12;
+    treasury -= wages;
+    wages_so_far += wages;
+    wage_rate_paid_this_year += g_city.labor.wages;
 }
 
-static void pay_monthly_interest() {
-    if (city_data.finance.treasury < 0) {
-        int interest = calc_adjust_with_percentage(-city_data.finance.treasury, 10) / 12;
-        city_data.finance.treasury -= interest;
-        city_data.finance.interest_so_far += interest;
+void city_finance_t::pay_monthly_interest() {
+    if (treasury < 0) {
+        int interest = calc_adjust_with_percentage(-treasury, 10) / 12;
+        treasury -= interest;
+        interest_so_far += interest;
     }
 }
 
-static void pay_monthly_salary() {
-    if (g_city.finance.is_out_of_money()) {
+void city_finance_t::pay_monthly_salary() {
+    if (is_out_of_money()) {
         return;
     }
 
@@ -278,9 +278,9 @@ static void pay_monthly_salary() {
         return;
     }
 
-    city_data.finance.salary_so_far += city_data.kingdome.salary_amount;
-    city_data.kingdome.personal_savings += city_data.kingdome.salary_amount;
-    city_data.finance.treasury -= city_data.kingdome.salary_amount;
+    salary_so_far += g_city.kingdome.salary_amount;
+    g_city.kingdome.personal_savings += g_city.kingdome.salary_amount;
+    treasury -= g_city.kingdome.salary_amount;
 }
 
 static void reset_taxes() {

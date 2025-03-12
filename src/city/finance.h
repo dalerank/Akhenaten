@@ -58,6 +58,9 @@ struct city_finance_t {
     void estimate_wages();
     void collect_monthly_taxes();
     void advance_month();
+    void pay_monthly_wages();
+    void pay_monthly_interest();
+    void pay_monthly_salary();
 };
 
 constexpr uint32_t MAX_HOUSE_LEVELS = 20;
