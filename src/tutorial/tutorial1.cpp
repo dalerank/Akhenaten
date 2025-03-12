@@ -79,20 +79,20 @@ bool tutorial1_is_success() {
 
 void tutorial_1::init() {
     if (g_tutorials_flags.tutorial_1.fire) building_menu_update(tutorial_stage.tutorial_fire);
-    else g_city_events.appendListener(typeid(event_fire_damage), &tutorial1_handle_fire);
+    else g_city_events.appendListener<event_fire_damage>(&tutorial1_handle_fire);
 
     if (g_tutorials_flags.tutorial_1.population_150_reached)  building_menu_update(tutorial_stage.tutorial_food);
-    else g_city_events.appendListener(typeid(event_population_changed), &tutorial1_handle_population_150);
+    else g_city_events.appendListener<event_population_changed>(&tutorial1_handle_population_150);
 
     if (!g_tutorials_flags.tutorial_1.architector_built) {
-        g_city_events.appendListener(typeid(event_building_create), &tutorial1_handle_building_create);
+        g_city_events.appendListener<event_building_create>(&tutorial1_handle_building_create);
     }
 
     if (g_tutorials_flags.tutorial_1.collapse) building_menu_update(tutorial_stage.tutorial_collapse);
-    else g_city_events.appendListener(typeid(event_collase_damage), &tutorial1_handle_collapse);
+    else g_city_events.appendListener<event_collase_damage>(&tutorial1_handle_collapse);
 
     if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) building_menu_update(tutorial_stage.tutorial_water);
-    else g_city_events.appendListener(typeid(event_granary_filled), &tutorial1_on_filled_granary);
+    else g_city_events.appendListener<event_granary_filled>(&tutorial1_on_filled_granary);
 
     g_city.victory_state.add_condition(&tutorial1_is_success);
 }
