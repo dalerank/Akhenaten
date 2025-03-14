@@ -17,10 +17,10 @@ info_window_mansion mansion_infow;
 void info_window_mansion::init(object_info &c) {
     building_info_window::init(c);
 
-    building_mansion *b = c.building_get()->dcast_mansion();
+    building_mansion *mansion = c.building_get()->dcast_mansion();
 
     textid reason{ c.group_id, 0 };
-    if (!c.has_road_access) { reason = { 69, 25 }; }
+    if (!mansion->has_road_access()) { reason = { 69, 25 }; }
 
     if (reason.id > 0) {
         ui["workers_desc"] = reason;

@@ -43,7 +43,7 @@ void shipyard_info_window::init(object_info &c) {
     textid reason{ c.group_id, 0 };
 
     const auto &shipyard_data = shipyard->runtime_data();
-    if (!c.has_road_access) {
+    if (!shipyard->has_road_access()) {
         reason = { 69, 25 }; 
     } else if (!ship_requested) {
         reason.id = 4;

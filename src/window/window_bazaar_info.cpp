@@ -11,7 +11,6 @@
 #include "sound/sound_building.h"
 #include "figure/figure.h"
 #include "game/game.h"
-#include "js/js_game.h"
 
 void window_bazaar_orders_show(object_info &c);
 
@@ -36,7 +35,7 @@ void bazaar_info_window::init(object_info &c) {
 
     const auto &meta = bazaar->get_info();
     textid reason = { 0, 0 };
-    if (!c.has_road_access) {
+    if (!bazaar->has_road_access()) {
         reason = { 69, 25 };
     } else if (bazaar->num_workers() <= 0) {
         reason = { meta.text_id, 2 };

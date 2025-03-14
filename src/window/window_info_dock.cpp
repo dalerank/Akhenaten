@@ -47,7 +47,7 @@ void dock_info_window::init(object_info &c) {
     ui["warning_text"] = ui::str(c.group_id, 1);
 
     textid reason{ 0, 0 };
-    if (!c.has_road_access) { reason = { 69, 25 }; }
+    if (!dock->has_road_access()) { reason = { 69, 25 }; }
     else if (dock->runtime_data().trade_ship_id) {
         reason.id = approximate_value(c.worker_percentage / 100.f, make_array(2, 3, 4, 5));
     } else {

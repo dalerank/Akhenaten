@@ -39,7 +39,7 @@ void info_window_entertainment::init(object_info &c) {
     building *b = c.building_get();
 
     textid reason = {c.group_id, 0};
-    if (!c.has_road_access) { reason = {69, 25}; }
+    if (!b->has_road_access) { reason = {69, 25}; }
     else if (b->num_workers <= 0) { reason.id = 7; }
 
     int workers_text = approximate_value(c.worker_percentage / 100.f, make_array(5, 4, 3, 2));
@@ -59,7 +59,7 @@ void info_window_bandstand::init(object_info &c) {
     const auto &d = band->runtime_data();
 
     textid reason{ c.group_id, 1 };
-    if (!c.has_road_access) { reason = { 69, 25 }; } 
+    if (!band->has_road_access()) { reason = { 69, 25 }; } 
     else if (band->num_workers() <= 0) { reason.id = 6; } 
     else if (!d.num_shows) { reason.id = 2; }
     else if (d.num_shows == 2) { reason.id = 3; } 
@@ -88,7 +88,7 @@ void info_window_booth::init(object_info &c) {
     const auto &d = band->runtime_data();
 
     textid reason{ c.group_id, 1 };
-    if (!c.has_road_access) { reason = {69, 25}; } 
+    if (!band->has_road_access()) { reason = {69, 25}; } 
     else if (band->num_workers() <= 0) { reason.id = 4; }
     else if (!d.num_shows) { reason.id = 2; }
     else if (d.juggler_visited) { reason.id = 3; }

@@ -23,7 +23,7 @@ struct workshop_info_window : public building_info_window_t<workshop_info_window
         window_building_play_sound(&c, b->get_sound());
 
         textid trouble_text{ c.group_id, 0 };
-        if (!c.has_road_access) { trouble_text = {69, 25}; }
+        if (!b->has_road_access) { trouble_text = {69, 25}; }
         else if (city_resource_is_mothballed(b->output_resource_first_id)) { trouble_text.id = 4; }
         else if (b->num_workers <= 0) { trouble_text.id = 5; }
         else if (!b->workshop_has_resources()) { trouble_text.id = 11; }
@@ -50,7 +50,7 @@ struct brickworks_info_window : public building_info_window_t<brickworks_info_wi
         window_building_play_sound(&c, b->get_sound());
 
         textid trouble_text{ c.group_id, 0 };
-        if (!c.has_road_access) { trouble_text = {69, 25}; }
+        if (!b->has_road_access) { trouble_text = {69, 25}; }
         else if (city_resource_is_mothballed(b->output_resource_first_id)) { trouble_text.id = 4; }
         else if (b->num_workers <= 0) { trouble_text.id = 5; }
         else if (!b->workshop_has_resources()) { trouble_text.id = 11; }

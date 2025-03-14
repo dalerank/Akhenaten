@@ -21,14 +21,8 @@
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
 #include "figure/figure.h"
-#include "js/js_game.h"
 
 buildings::model_t<building_hunting_lodge> hunting_lodge_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_hunting_lodge_model);
-void config_load_hunting_lodge_model() {
-    hunting_lodge_m.load();
-}
 
 void building_hunting_lodge::window_info_background(object_info &c) {
     building* b = building_get(c.building_id);
@@ -52,7 +46,7 @@ void building_hunting_lodge::window_info_background(object_info &c) {
         lang_text_draw_amount(8, 10, b->stored_amount(), c.offset.x + 60 + width, c.offset.y + 60, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
-    if (!c.has_road_access)
+    if (!b->has_road_access)
         window_building_draw_description_at(c, 86, 69, 25);
     else if (city_resource_is_mothballed(RESOURCE_GAMEMEAT))
         window_building_draw_description_at(c, 86, group_id, 4);

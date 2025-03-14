@@ -173,7 +173,7 @@ void info_window_palace::init(object_info &c) {
     building_impl *palace = c.building_get()->dcast();
 
     std::pair<int, int> reason = { c.group_id, 0 };
-    if (!c.has_road_access) reason = { 69, 25 };
+    if (!palace->has_road_access()) reason = { 69, 25 };
     else if (palace->num_workers() <= 0) reason.second = 10;
     else reason.second = approximate_value(c.worker_percentage / 100.f, make_array(9, 8, 7, 6, 5));
 

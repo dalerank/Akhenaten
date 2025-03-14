@@ -11,7 +11,6 @@
 #include "city/warnings.h"
 #include "window/building/common.h"
 #include "sound/sound_building.h"
-#include "js/js_game.h"
 
 buildings::model_t<building_senet_house> senet_house_m;
 buildings::model_t<building_bullfight_school> bullfight_school_m;
@@ -24,7 +23,7 @@ void building_senet_house::window_info_background(object_info &c) {
     building* b = building_get(c.building_id);
 
     auto &d = runtime_data();
-    if (!c.has_road_access)
+    if (!b->has_road_access)
         window_building_draw_description(c, 69, 25);
     else if (b->num_workers <= 0)
         window_building_draw_description(c, 73, 4);
@@ -132,7 +131,7 @@ void building_bullfight_school::window_info_background(object_info &c) {
 
     outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
     lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    if (!c.has_road_access) {
+    if (!b->has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (building_get(c.building_id)->num_workers <= 0) {
         window_building_draw_description(c, group_id, 7);

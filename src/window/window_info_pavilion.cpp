@@ -24,7 +24,7 @@ void info_window_pavilion::init(object_info &c) {
 
     textid workers_desc = { c.group_id, 0 };
     auto &d = ent->runtime_data();
-    if (!c.has_road_access) {
+    if (!ent->has_road_access()) {
         workers_desc = { 69, 25 };
     } else if (ent->num_workers() <= 0) {
         workers_desc.id = 10;

@@ -37,7 +37,7 @@ void info_window_work_camp::init(object_info &c) {
     building *b = c.building_get();
 
     textid reason = { c.group_id, 0 };
-    if (!c.has_road_access) {
+    if (!b->has_road_access) {
         reason = { 69, 25 };
     } if (!b->num_workers) {
         reason.id = 2; // not enough workers

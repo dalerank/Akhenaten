@@ -3,7 +3,6 @@
 #include "building/building.h"
 #include "city/object_info.h"
 #include "window/building/common.h"
-#include "js/js_game.h"
 
 struct health_info_window : public building_info_window_t<health_info_window> {
     virtual void init(object_info &c) override;
@@ -32,7 +31,7 @@ void health_info_window::init(object_info &c) {
 
     textid reason = {c.group_id, 6};
 
-    if (!c.has_road_access) { 
+    if (!b->has_road_access) { 
         reason = {69, 25}; 
     } else if (ftype != FIGURE_NONE && b->has_figure_of_type(BUILDING_SLOT_SERVICE, ftype)) {
         reason.id = 1;

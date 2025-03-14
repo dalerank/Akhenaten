@@ -77,7 +77,7 @@ void building_info_window::common_info_background(object_info& c) {
 
     textid reason = { c.group_id, 0 };
     textid workers = { c.group_id, 8 };
-    if (!c.has_road_access) {
+    if (!b->has_road_access) {
         reason = { 69, 25 };
     } else if (!b->num_workers) {
         reason.id = 9;
@@ -182,7 +182,6 @@ void building_info_window::init(object_info &c) {
     }
 
     c.show_overlay = b->get_overlay();
-    c.has_road_access = b->has_road_access;
     const auto &params = b->dcast()->params();
     c.help_id = params.meta.help_id;
     c.group_id = params.meta.text_id;

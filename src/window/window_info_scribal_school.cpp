@@ -33,7 +33,7 @@ void scribal_school_info_window::init(object_info &c) {
 
     const int papyrus_stored = b->base.stored_amount(RESOURCE_PAPYRUS);
     textid reason{ c.group_id, 0 };
-    if (!c.has_road_access) {
+    if (!b->has_road_access()) {
         reason = { 69, 25 };
     } else if (b->num_workers() <= 0 || !papyrus_stored) {
         reason.id = 2;

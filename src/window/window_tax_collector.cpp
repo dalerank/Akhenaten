@@ -38,7 +38,7 @@ void taxcollector_info_window::init(object_info &c) {
     });
 
     textid reason = {c.group_id, 0};
-    if (!c.has_road_access) { reason = {69, 25}; } 
+    if (!collector->has_road_access()) { reason = {69, 25}; }
    
     
     ui["warning_text"] = ui::str(reason);

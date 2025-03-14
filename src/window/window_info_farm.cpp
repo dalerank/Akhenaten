@@ -7,7 +7,6 @@
 #include "graphics/window.h"
 #include "grid/floodplain.h"
 #include "config/config.h"
-#include "js/js_game.h"
 
 struct info_window_farm : public building_info_window_t<info_window_farm> {
     virtual void init(object_info &c) override;
@@ -27,7 +26,7 @@ void info_window_farm::init(object_info &c) {
     if (!b->num_workers) {
         reason = { 177, 5 };
     } else {
-        if (!c.has_road_access) { reason = { 69, 25 }; }
+        if (!b->has_road_access) { reason = { 69, 25 }; }
         else if (city_resource_is_mothballed(b->output_resource_first_id)) { reason.id = 4; }
         else if (b->curse_days_left > 4) { reason.id = 11; }
         else if (b->num_workers <= 0) { reason.id = 5; }

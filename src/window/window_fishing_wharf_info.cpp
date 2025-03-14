@@ -20,7 +20,7 @@ void info_window_fishing_wharf::init(object_info &c) {
     building *b = c.building_get();
 
     textid reason = { c.group_id, 0 };
-    if (!c.has_road_access) {
+    if (!b->has_road_access) {
         reason = { 69, 25 };
     } else if (!b->get_figure(BUILDING_SLOT_BOAT)->is_valid()) {
         reason = { c.group_id, 2 };

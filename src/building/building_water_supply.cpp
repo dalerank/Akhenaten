@@ -24,7 +24,6 @@ info_window_water_supply water_supply_infow;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_building_water_supply);
 void config_load_building_water_supply() {
-    water_supply_m.load();
     water_supply_infow.load("building_info_window");
 }
 
@@ -94,7 +93,7 @@ void info_window_water_supply::window_info_background(object_info &c) {
 
     std::pair<int, int> reason = { c.group_id, 1 };
     std::pair<int, int> workers = { c.group_id, 0 };
-    if (!c.has_road_access) {
+    if (!b->has_road_access) {
         reason = { 69, 25 };
     } else {
         workers.second = approximate_value(c.worker_percentage / 100.f, make_array(7, 5, 4, 3, 2));

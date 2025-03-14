@@ -8,7 +8,6 @@
 
 #include "graphics/animation.h"
 #include "city/labor.h"
-#include "js/js_game.h"
 
 buildings::model_t<building_courthouse> courthouse_m;
 
@@ -27,7 +26,7 @@ void info_window_courthouse::init(object_info &c) {
     building* b = c.building_get();
     std::pair<int, int> reason = { c.group_id, 0 };
 
-    if (!c.has_road_access) reason = { 69, 25 };
+    if (!b->has_road_access) reason = { 69, 25 };
     else if (b->num_workers <= 0) reason.second = 2;
     else reason.second = approximate_value(c.worker_percentage / 100.f, make_array(4, 5, 6));
     ui["workers_desc"] = ui::str(reason.first, reason.second);

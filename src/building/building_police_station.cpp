@@ -1,17 +1,11 @@
 #include "building_police_station.h"
 
 #include "city/object_info.h"
-#include "js/js_game.h"
 #include "window/building/common.h"
 #include "graphics/elements/ui.h"
 #include "city/labor.h"
 
 buildings::model_t<building_police_station> police_station_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_police_station);
-void config_load_building_police_station() {
-    police_station_m.load();
-}
 
 void building_police_station::window_info_background(object_info &c) {
     c.help_id = 86;
@@ -20,7 +14,7 @@ void building_police_station::window_info_background(object_info &c) {
     lang_text_draw_centered(88, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
 
     building* b = building_get(c.building_id);
-    if (!c.has_road_access)
+    if (!b->has_road_access)
         window_building_draw_description(c, 69, 25);
     else if (!b->num_workers)
         window_building_draw_description(c, 88, 9);

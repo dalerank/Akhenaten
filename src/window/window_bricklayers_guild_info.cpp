@@ -28,7 +28,7 @@ void building_bricklayers_guild_info_window::init(object_info &c) {
     auto guild = c.building_get()->dcast_guild();
 
     textid reason{ 0, 0 };
-    if (!c.has_road_access) {
+    if (!guild->has_road_access()) {
         reason = { 69, 25 };
     } else if (city_resource_is_mothballed(RESOURCE_BRICKS)) {
         reason = { c.group_id, 4 };

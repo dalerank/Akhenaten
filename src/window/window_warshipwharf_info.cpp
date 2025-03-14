@@ -31,7 +31,7 @@ void warshipwharf_info_window::init(object_info &c) {
     map_water_update_docking_points(*b, b->dcast()->get_orientation(), 2);
 
     std::pair<int, int> reason = { c.group_id, 0 };
-    if (!c.has_road_access) {
+    if (!b->has_road_access) {
         reason = { 69, 25 };
     } else if (!b->get_figure(BUILDING_SLOT_BOAT)->is_valid()) {
         reason = { c.group_id, 2 };

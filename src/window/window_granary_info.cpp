@@ -15,8 +15,6 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "game/game.h"
-#include "js/js_game.h"
-
 #include "io/gamefiles/lang.h"
 
 void window_granary_orders_show(object_info &c);
@@ -55,7 +53,7 @@ void granary_info_window::init(object_info &c) {
 
     data.building_id = c.building_id;
 
-    pcstr warning_text = !c.has_road_access ? "#granary_no_road_access"
+    pcstr warning_text = !granary->has_road_access() ? "#granary_no_road_access"
                             : scenario_property_kingdom_supplies_grain() ? "#granary_kingdom_supplies_grain"
                             : nullptr;
 

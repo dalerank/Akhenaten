@@ -4,7 +4,6 @@
 #include "city/object_info.h"
 #include "city/city_resource.h"
 #include "window/building/common.h"
-#include "js/js_game.h"
 
 struct info_window_raw_material : building_info_window_t<info_window_raw_material> {
     using building_info_window::load;
@@ -31,7 +30,7 @@ void info_window_raw_material::init(object_info &c) {
     building *b = c.building_get();
 
     textid reason = { c.group_id, 10 };
-    if (!c.has_road_access) { reason = { 69, 25 }; } 
+    if (!b->has_road_access) { reason = { 69, 25 }; } 
     else if (city_resource_is_mothballed(b->output_resource_first_id)) reason.id = 4;
     else if (b->curse_days_left > 4) reason.id = 11;
     else if (b->num_workers <= 0) reason.id = 5;

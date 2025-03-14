@@ -24,15 +24,15 @@ void info_window_recruiter::init(object_info &c) {
     c.barracks_soldiers_requested = formation_legion_recruits_needed();
     c.barracks_soldiers_requested += building_barracks_has_tower_sentry_request();
 
-    building_recruiter *b = c.building_get()->dcast_recruiter();
+    building_recruiter *baracks = c.building_get()->dcast_recruiter();
 
     textid reason{ c.group_id, 0 };
-    if (!c.has_road_access) { reason = { 69, 25 }; }
-    else if (b->num_workers() <= 0) { reason.id = 3; }
+    if (!baracks->has_road_access()) { reason = { 69, 25 }; }
+    else if (baracks->num_workers() <= 0) { reason.id = 3; }
     else if (!c.barracks_soldiers_requested) { reason.id = 4; } 
     else {
         int offset = 0;
-        if (b->base.stored_amount_first > 0) {
+        if (baracks->base.stored_amount_first > 0) {
             offset = 4;
         }
 
