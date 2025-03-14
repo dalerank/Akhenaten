@@ -113,7 +113,6 @@ void object_info::reset(tile2i tile) {
     terrain_type = TERRAIN_INFO_EMPTY;
     nfigure.drawn = 0;
     nfigure.draw_debug_path = 0;
-    show_overlay = OVERLAY_NONE;
 }
 
 void object_info::fill_figures_info(tile2i tile) {

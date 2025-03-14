@@ -62,7 +62,7 @@ struct object_info {
     int warehouse_space_text;
     common_info_window *ui = nullptr;
     terrain_info_type terrain_type;
-    e_overlay show_overlay;
+
     struct {
         e_advisor first = ADVISOR_NONE;
         e_advisor left_a = ADVISOR_NONE;

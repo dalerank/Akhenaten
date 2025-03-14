@@ -179,7 +179,6 @@ void building_info_window::init(object_info &c) {
         break;
     }
 
-    c.show_overlay = b->get_overlay();
     const auto &params = b->dcast()->params();
     c.help_id = params.meta.help_id;
     c.group_id = params.meta.text_id;
@@ -195,8 +194,9 @@ void building_info_window::init(object_info &c) {
 
     if (ui.contains("show_overlay")) {
         ui["show_overlay"].onclick([&c] {
-            if (game.current_overlay != c.show_overlay) {
-                game_state_set_overlay((e_overlay)c.show_overlay);
+            e_overlay show_overlay = c.building_get()->get_overlay();
+            if (game.current_overlay != show_overlay) {
+                game_state_set_overlay(show_overlay);
             } else {
                 game_state_reset_overlay();
             }
@@ -219,8 +219,9 @@ void building_info_window::update_buttons(object_info &c) {
     }
 
     if (ui.contains("show_overlay")) {
-        ui["show_overlay"].enabled = (c.show_overlay != OVERLAY_NONE);
-        ui["show_overlay"] = (game.current_overlay != c.show_overlay ? "v" : "V");
+        e_overlay show_overlay = b->get_overlay();
+        ui["show_overlay"].enabled = (show_overlay != OVERLAY_NONE);
+        ui["show_overlay"] = (game.current_overlay != show_overlay ? "v" : "V");
     }
 }
 

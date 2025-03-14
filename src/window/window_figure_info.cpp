@@ -82,7 +82,6 @@ void figure_info_window::play_figure_phrase(object_info &c) {
 
     figure* f = c.figure_get();
     f->figure_phrase_play();
-    c.show_overlay = f->dcast()->get_overlay();
     c.nfigure.phrase = f->phrase;
     c.nfigure.phrase_key = f->phrase_key;
     c.can_play_sound = false;
