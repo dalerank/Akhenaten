@@ -50,7 +50,6 @@ struct object_info {
     inline vec2i bgsize_px() const { return bgsize * 16; }
     inline int bgwidth_px() const { return bgsize.x * 16; }
     int grid_offset = 0;
-    int height_blocks_submenu;
     int subwnd_wblocks_num;
     int subwnd_hblocks_num;
     int subwnd_y_offset;

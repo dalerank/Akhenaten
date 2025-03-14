@@ -37,7 +37,6 @@ vec2i window_building_set_possible_position(vec2i offset, vec2i blocks) {
 int window_building_get_vertical_offset(object_info* c, int new_window_height) {
     new_window_height = new_window_height * 16;
     int old_window_height = c->bgsize.y * 16;
-    c->height_blocks_submenu = new_window_height / 16;
 
     int center = (old_window_height / 2) + c->offset.y;
     int new_window_y = center - (new_window_height / 2);
