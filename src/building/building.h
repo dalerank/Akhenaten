@@ -293,7 +293,6 @@ public:
     bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action = FIGURE_ACTION_125_ROAMING);
     bool common_spawn_goods_output_cartpusher(bool only_one = true, bool only_full_loads = true, int min_carry = 100, int max_carry = 800);
     bool workshop_has_resources();
-    bool guild_has_resources();
 
 public:
     building_impl *dcast();

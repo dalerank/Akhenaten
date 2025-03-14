@@ -495,12 +495,6 @@ int building::stored_amount(int idx) const {
     return 0;
 }
 
-bool building::guild_has_resources() {
-    assert(is_guild());
-    bool hase_first_resource = (stored_amount_first >= 100);
-    return hase_first_resource;
-}
-
 bool building::workshop_has_resources() {
     assert(is_workshop());
     bool has_second_material = true;

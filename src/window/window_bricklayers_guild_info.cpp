@@ -25,16 +25,16 @@ building_bricklayers_guild_info_window building_bricklayers_guild_infow;
 void building_bricklayers_guild_info_window::init(object_info &c) {
     building_info_window::init(c);
 
-    building *b = c.building_get();
+    auto guild = c.building_get()->dcast_guild();
 
     textid reason{ 0, 0 };
     if (!c.has_road_access) {
         reason = { 69, 25 };
     } else if (city_resource_is_mothballed(RESOURCE_BRICKS)) {
         reason = { c.group_id, 4 };
-    } else if (b->num_workers <= 0) {
+    } else if (guild->num_workers() <= 0) {
         reason = { c.group_id, 5 };
-    } else if (!b->guild_has_resources()) {
+    } else if (!guild->has_resources()) {
         reason = { c.group_id, 11 };
     } else {
         reason = { c.group_id, approximate_value(c.worker_percentage / 100.f, make_array(10, 9, 8, 7, 6)) };

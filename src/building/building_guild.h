@@ -15,4 +15,6 @@ public:
     const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
 
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+
+    bool has_resources() const;
 };
