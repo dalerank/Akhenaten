@@ -96,7 +96,6 @@ struct event_gold_extract { int amount; };
 void city_finance_change_tax_percentage(int change);
 int city_finance_percentage_taxed_people();
 
-int city_finance_estimated_tax_income();
 int city_finance_estimated_tax_uncollected();
 int city_finance_estimated_wages();
 

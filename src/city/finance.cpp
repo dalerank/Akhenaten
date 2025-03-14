@@ -29,10 +29,6 @@ int city_finance_percentage_taxed_people() {
     return city_data.taxes.percentage_taxed_people;
 }
 
-int city_finance_estimated_tax_income() {
-    return city_data.finance.estimated_tax_income;
-}
-
 int city_finance_estimated_tax_uncollected(void) {
     return city_data.finance.estimated_tax_uncollected;
 }
