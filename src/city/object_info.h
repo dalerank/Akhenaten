@@ -50,9 +50,6 @@ struct object_info {
     inline vec2i bgsize_px() const { return bgsize * 16; }
     inline int bgwidth_px() const { return bgsize.x * 16; }
     int grid_offset = 0;
-    int subwnd_wblocks_num;
-    int subwnd_hblocks_num;
-    int subwnd_y_offset;
     int help_id;
     uint16_t group_id;
     bool can_play_sound;
