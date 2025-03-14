@@ -43,6 +43,6 @@ void taxcollector_info_window::init(object_info &c) {
     
     ui["warning_text"] = ui::str(reason);
     
-    uint8_t workers_desc = approximate_value(c.worker_percentage / 100.f, make_array(10, 9, 8, 7, 6, 5));
+    uint8_t workers_desc = approximate_value(collector->worker_percentage() / 100.f, make_array(10, 9, 8, 7, 6, 5));
     ui["workers_desc"] = textid{c.group_id, workers_desc};
 }

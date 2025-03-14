@@ -24,13 +24,13 @@ void building_police_station::window_info_background(object_info &c) {
         else
             window_building_draw_description(c, 88, 3);
 
-        if (c.worker_percentage >= 100)
+        if (b->worker_percentage() >= 100)
             window_building_draw_description_at(c, 72, 88, 4);
-        else if (c.worker_percentage >= 75)
+        else if (b->worker_percentage() >= 75)
             window_building_draw_description_at(c, 72, 88, 5);
-        else if (c.worker_percentage >= 50)
+        else if (b->worker_percentage() >= 50)
             window_building_draw_description_at(c, 72, 88, 6);
-        else if (c.worker_percentage >= 25)
+        else if (b->worker_percentage() >= 25)
             window_building_draw_description_at(c, 72, 88, 7);
         else
             window_building_draw_description_at(c, 72, 88, 8);

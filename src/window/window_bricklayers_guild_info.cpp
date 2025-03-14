@@ -37,7 +37,7 @@ void building_bricklayers_guild_info_window::init(object_info &c) {
     } else if (!guild->has_resources()) {
         reason = { c.group_id, 11 };
     } else {
-        reason = { c.group_id, approximate_value(c.worker_percentage / 100.f, make_array(10, 9, 8, 7, 6)) };
+        reason = { c.group_id, approximate_value(guild->worker_percentage() / 100.f, make_array(10, 9, 8, 7, 6)) };
     }
 
     ui["workers_desc"] = reason;

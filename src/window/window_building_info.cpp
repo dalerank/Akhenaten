@@ -83,7 +83,7 @@ void building_info_window::common_info_background(object_info& c) {
         reason.id = 9;
     } else {
         reason.id = b->has_figure(0) ? 2 : 3;
-        workers.id = approximate_value(c.worker_percentage / 100.f, make_array(4, 5, 6, 7));
+        workers.id = approximate_value(b->worker_percentage() / 100.f, make_array(4, 5, 6, 7));
     }
 
     bstring512 warning_text(ui::str(c.group_id, 1), " ", ui::str(reason));
@@ -150,8 +150,6 @@ void building_info_window::init(object_info &c) {
         b->dcast()->window_info_background(c);
         break;
     }
-
-    c.worker_percentage = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
 
     b->dcast()->highlight_waypoints();
 

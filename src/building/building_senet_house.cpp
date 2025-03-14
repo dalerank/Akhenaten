@@ -135,13 +135,13 @@ void building_bullfight_school::window_info_background(object_info &c) {
         window_building_draw_description(c, 69, 25);
     } else if (building_get(c.building_id)->num_workers <= 0) {
         window_building_draw_description(c, group_id, 7);
-    } else if (c.worker_percentage >= 100) {
+    } else if (b->worker_percentage() >= 100) {
         window_building_draw_description(c, group_id, 2);
-    } else if (c.worker_percentage >= 75) {
+    } else if (b->worker_percentage() >= 75) {
         window_building_draw_description(c, group_id, 3);
-    } else if (c.worker_percentage >= 50) {
+    } else if (b->worker_percentage() >= 50) {
         window_building_draw_description(c, group_id, 4);
-    } else if (c.worker_percentage >= 25) {
+    } else if (b->worker_percentage() >= 25) {
         window_building_draw_description(c, group_id, 5);
     } else {
         window_building_draw_description(c, group_id, 6);

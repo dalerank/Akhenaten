@@ -96,7 +96,7 @@ void info_window_water_supply::window_info_background(object_info &c) {
     if (!b->has_road_access) {
         reason = { 69, 25 };
     } else {
-        workers.second = approximate_value(c.worker_percentage / 100.f, make_array(7, 5, 4, 3, 2));
+        workers.second = approximate_value(b->worker_percentage() / 100.f, make_array(7, 5, 4, 3, 2));
     }
 
     ui["warning_text"] = ui::str(reason.first, reason.second);

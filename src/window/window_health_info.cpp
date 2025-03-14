@@ -39,7 +39,7 @@ void health_info_window::init(object_info &c) {
         reason.id = 2;
     }
     
-    int worker_desc = c.worker_percentage > 0 ? 3 : 2;
+    int worker_desc = b->worker_percentage() > 0 ? 3 : 2;
     ui["workers_desc"] = ui::str( c.group_id, worker_desc);
  
     ui["warning_text"] = ui::str(reason);

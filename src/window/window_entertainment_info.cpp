@@ -42,7 +42,7 @@ void info_window_entertainment::init(object_info &c) {
     if (!b->has_road_access) { reason = {69, 25}; }
     else if (b->num_workers <= 0) { reason.id = 7; }
 
-    int workers_text = approximate_value(c.worker_percentage / 100.f, make_array(5, 4, 3, 2));
+    int workers_text = approximate_value(b->worker_percentage() / 100.f, make_array(5, 4, 3, 2));
     ui["workers_desc"] = ui::str(c.group_id, workers_text);
 
     bstring256 warning_text = ui::str(c.group_id, 1);

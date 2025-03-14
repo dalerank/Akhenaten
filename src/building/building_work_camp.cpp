@@ -55,7 +55,7 @@ void info_window_work_camp::init(object_info &c) {
         }
     }
 
-    int workers_desc = approximate_value(c.worker_percentage / 100.f, make_array(8, 7, 6, 5, 4));
+    int workers_desc = approximate_value(b->worker_percentage() / 100.f, make_array(8, 7, 6, 5, 4));
     ui["workers_desc"] = ui::str(c.group_id, workers_desc);
 
     bstring256 warning_text = ui::str(c.group_id, 1);

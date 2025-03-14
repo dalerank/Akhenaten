@@ -34,7 +34,7 @@ void info_window_raw_material::init(object_info &c) {
     else if (city_resource_is_mothballed(b->output_resource_first_id)) reason.id = 4;
     else if (b->curse_days_left > 4) reason.id = 11;
     else if (b->num_workers <= 0) reason.id = 5;
-    else reason.id = approximate_value(c.worker_percentage / 100.f, make_array(9, 8, 7, 6));
+    else reason.id = approximate_value(b->worker_percentage() / 100.f, make_array(9, 8, 7, 6));
 
     ui["workers_desc"] = reason;
 }

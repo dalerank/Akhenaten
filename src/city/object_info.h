@@ -54,7 +54,6 @@ struct object_info {
     uint16_t group_id;
     bool can_play_sound;
     int building_id = 0;
-    int worker_percentage;
     int has_reservoir_pipes;
     int aqueduct_has_water;
     int formation_id;

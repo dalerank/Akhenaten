@@ -54,13 +54,13 @@ void building_hunting_lodge::window_info_background(object_info &c) {
         window_building_draw_description_at(c, 86, group_id, 5);
     else if (b->stored_amount() <= 0)
         window_building_draw_description_at(c, 86, group_id, 11);
-    else if (c.worker_percentage >= 100)
+    else if (b->worker_percentage() >= 100)
         window_building_draw_description_at(c, 86, group_id, 6);
-    else if (c.worker_percentage >= 75)
+    else if (b->worker_percentage() >= 75)
         window_building_draw_description_at(c, 86, group_id, 7);
-    else if (c.worker_percentage >= 50)
+    else if (b->worker_percentage() >= 50)
         window_building_draw_description_at(c, 86, group_id, 8);
-    else if (c.worker_percentage >= 25)
+    else if (b->worker_percentage() >= 25)
         window_building_draw_description_at(c, 86, group_id, 9);
     else
         window_building_draw_description_at(c, 86, group_id, 10);

@@ -36,7 +36,7 @@ void info_window_recruiter::init(object_info &c) {
             offset = 4;
         }
 
-        int workers_state = approximate_value(c.worker_percentage / 100.f, make_array(8, 7, 6, 5));
+        int workers_state = approximate_value(baracks->worker_percentage() / 100.f, make_array(8, 7, 6, 5));
         ui["workers_text"] = ui::str(c.group_id, workers_state);
     }
 
