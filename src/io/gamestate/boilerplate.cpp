@@ -182,8 +182,6 @@ static void post_load() {
 
     // problems / overlays
     city_message_init_problem_areas();
-    city_mission_tutorial_set_fire_message_shown(1);
-    city_mission_tutorial_set_disease_message_shown(1);
     game_state_reset_overlay();
     game_undo_disable();
 

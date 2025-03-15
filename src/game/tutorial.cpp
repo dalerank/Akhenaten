@@ -42,12 +42,7 @@ static void set_all_tut_flags_null() {
     tutorial_2::reset();
     tutorial_3::reset();
     tutorial_4::reset();
-
-    // tutorial 5
-    g_tutorials_flags.tutorial_5.started = 0;
-    g_tutorials_flags.tutorial_5.spacious_apartment = 0;
-    g_tutorials_flags.tutorial_5.papyrus_made = 0;
-    g_tutorials_flags.tutorial_5.bricks_bought = 0;
+    tutorial_5::reset();
 
     // tutorial 6
     g_tutorials_flags.tutorial_6.started = 0;
@@ -186,10 +181,7 @@ bool tutorial_menu_update(int tut) {
     } 
     
     if (tut == 5) {
-        if (g_tutorials_flags.tutorial_5.spacious_apartment) building_menu_update(tutorial_stage.tutorial_education);
-        if (g_tutorials_flags.tutorial_5.papyrus_made) building_menu_update(tutorial_stage.tutorial_trading);
-        if (g_tutorials_flags.tutorial_5.bricks_bought) building_menu_update(tutorial_stage.tutorial_monuments);
-
+        tutorial_5::init();
         return true;
     } 
     
@@ -231,20 +223,7 @@ xstring tutorial_get_immediate_goal_text() {
     if (scenario_is_mission_rank(2))  return tutorial_2::goal_text();
     if (scenario_is_mission_rank(3))  return tutorial_3::goal_text();
     if (scenario_is_mission_rank(4))  return tutorial_4::goal_text();
-    
-    if (scenario_is_mission_rank(5)) {
-        if (!g_tutorials_flags.tutorial_5.spacious_apartment) {
-            return lang_get_xstring(62, 31);
-        } else if (!g_tutorials_flags.tutorial_5.papyrus_made) {
-            return lang_get_xstring(62, 30);
-        } else if (!g_tutorials_flags.tutorial_5.bricks_bought) {
-            return lang_get_xstring(62, 29);
-        } else {
-            return lang_get_xstring(62, 34);
-        }
-    } else if (scenario_is_mission_rank(6)) {
-
-    }
+    if (scenario_is_mission_rank(5))  return tutorial_5::goal_text();
 
     return "#unknown_tutoral_goal";
 }
@@ -256,45 +235,10 @@ void tutorial_flags_t::on_crime() {
     }
 }
 
-void tutorial_check_5_resources_on_storageyard() {
-    if (!g_tutorials_flags.tutorial_5.papyrus_made && city_resource_warehouse_stored(RESOURCE_PAPYRUS) >= 1) {
-        g_tutorials_flags.tutorial_5.papyrus_made = 1;
-        building_menu_update(tutorial_stage.tutorial_trading);
-        post_message(MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES);
-    } if (!g_tutorials_flags.tutorial_5.bricks_bought && city_resource_warehouse_stored(RESOURCE_BRICKS) >= 1) {
-        g_tutorials_flags.tutorial_5.bricks_bought = 1;
-        building_menu_update(tutorial_stage.tutorial_monuments);
-        post_message(MESSAGE_TUTORIAL_MONUMENTS);
-    }
-}
-
-void tutorial_on_house_evolve(e_house_level level) {
-    if (!g_tutorials_flags.tutorial_5.spacious_apartment && level >= HOUSE_SPACIOUS_APARTMENT) {
-        g_tutorials_flags.tutorial_5.spacious_apartment = true;
-        building_menu_update(tutorial_stage.tutorial_education);
-        post_message(MESSAGE_TUTORIAL_EDUCATION);
-    }
-}
-
 void tutorial_update_step(xstring s) {
     tutorial_1::update_step(s);
     tutorial_2::update_step(s);
     tutorial_3::update_step(s);
-    if (s == tutorial_stage.tutorial_food) {
-        building_menu_update(s);
-        post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);
-    } else if (s == tutorial_stage.tutorial_water) {
-        building_menu_update(s);
-        post_message(MESSAGE_TUTORIAL_CLEAN_WATER);
-    } else if (s == tutorial_stage.tutorial_gods) {
-        building_menu_update(s);
-        post_message(MESSAGE_TUTORIAL_GODS_OF_EGYPT);
-    } else if (s == tutorial_stage.tutorial_entertainment) {
-        building_menu_update(s);
-    } else if (s == tutorial_stage.tutorial_gardens) {
-        building_menu_update(s);
-        post_message(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES);
-    }
 }
 
 void tutorial_flags_t::update_starting_message() {
@@ -338,14 +282,6 @@ void tutorial_flags_t::update_starting_message() {
         post_message(MESSAGE_TUTORIAL_THE_FINER_THINGS);
         g_tutorials_flags.pharaoh.tut8_start = 1;
     }
-}
-
-void tutorial_on_day_tick() {
-    if (scenario_is_mission_rank(1) && g_tutorials_flags.tutorial_1.fire) {
-        city_mission_tutorial_set_fire_message_shown(1);
-    }
-
-    tutorial_check_5_resources_on_storageyard();
 }
 
 io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version) {

@@ -69,6 +69,16 @@ xstring tutorial_2::goal_text() {
     return lang_get_xstring(62, 22);
 }
 
+void tutorial_2::update_step(xstring s) {
+    if (s == tutorial_stage.tutorial_gods) {
+        building_menu_update(s);
+        city_message_post(true, MESSAGE_TUTORIAL_GODS_OF_EGYPT, 0, 0);
+    } else if (s == tutorial_stage.tutorial_entertainment) {
+        building_menu_update(s);
+        city_message_post(true, MESSAGE_TUTORIAL_ENTERTAINMENT, 0, 0);
+    }
+}
+
 void tutorial_2::reset() {
     g_tutorials_flags.tutorial_2.started = 0;
     g_tutorials_flags.tutorial_2.gold_mined_500 = 0;

@@ -177,8 +177,8 @@ struct city_t {
         bool fired_message_shown;
         bool victory_message_shown;
         bool start_saved_game_written;
-        bool tutorial_fire_message_shown;
-        int32_t tutorial_disease_message_shown;
+        bool reserved;
+        int32_t reserved_2;
         int32_t tutorial_senate_built;
     } mission;
 

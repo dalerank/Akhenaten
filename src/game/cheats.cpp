@@ -35,7 +35,6 @@
 static void game_cheat_start_invasion(pcstr);
 static void game_cheat_show_tooltip(pcstr);
 static void game_cheat_pop_milestone(pcstr);
-static void game_cheat_spacious_apartment(pcstr);
 static void game_cheat_spawn_nobles(pcstr);
 static void game_cheat_clear_progress(pcstr);
 static void game_cheat_add_clay(pcstr);
@@ -52,7 +51,6 @@ static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_s
                                                   {"showtooltip", game_cheat_show_tooltip},
                                                   {"popmilestone", game_cheat_pop_milestone},
                                                   {"spawnnobles", game_cheat_spawn_nobles},
-                                                  {"tutspaciousapt", game_cheat_spacious_apartment},
                                                   {"clearprogress", game_cheat_clear_progress}
 };
 
@@ -151,10 +149,6 @@ static void game_cheat_start_invasion(pcstr args) {
     scenario_invasion_start_from_console(attack_type, size, invasion_point);
 
     city_warning_show_console("Started invasion");
-}
-
-static void game_cheat_spacious_apartment(pcstr args) {
-    tutorial_on_house_evolve(HOUSE_SPACIOUS_APARTMENT);
 }
 
 static void game_cheat_spawn_nobles(pcstr args) {

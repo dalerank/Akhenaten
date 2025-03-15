@@ -123,5 +123,11 @@ void tutorial_1::update_step(xstring s) {
     } else if (s == tutorial_stage.tutorial_collapse) {
         g_tutorials_flags.tutorial_1.collapse = false;
         tutorial1_handle_collapse({ 0 });
+    } else if (s == tutorial_stage.tutorial_food) {
+        g_tutorials_flags.tutorial_1.population_150_reached = false;
+        tutorial1_handle_population_150({ 0 });
+    } else if (s == tutorial_stage.tutorial_water) {
+        g_tutorials_flags.tutorial_1.gamemeat_400_stored = false;
+        tutorial1_on_filled_granary({ 0 });
     }
 }

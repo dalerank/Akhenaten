@@ -60,6 +60,11 @@ void tutorial_3::update_step(xstring s) {
         building_menu_update(s);
         city_message_post(true, MESSAGE_TUTORIAL_INDUSTRY, 0, 0);
     }
+
+    if (s == tutorial_stage.tutorial_gardens) {
+        building_menu_update(s);
+        city_message_post(true, MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES, 0, 0);
+    }
 }
 
 void tutorial3_warehouse_pottery_1_check(event_warehouse_filled ev) {

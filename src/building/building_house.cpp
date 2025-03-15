@@ -295,7 +295,6 @@ void building_house::change_to(building &b, e_building_type new_type) {
         return;
     }
 
-    tutorial_on_house_evolve((e_house_level)(new_type - BUILDING_HOUSE_VACANT_LOT));
     b.clear_impl(); // clear old impl
     b.type = new_type;
 

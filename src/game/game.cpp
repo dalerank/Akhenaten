@@ -356,8 +356,6 @@ void game_t::advance_day() {
     g_city.figures_update_day();
     g_city.population.update_day();
 
-    tutorial_on_day_tick();
-
     g_city_events.enqueue(event_advance_day::from_simtime(game.simtime));
 }
 

@@ -35,7 +35,7 @@ struct tutorial_1 {
 struct tutorial_2 {
     static void init();
     static void reset();
-    static void update_step(xstring s) {}
+    static void update_step(xstring s);
     static xstring goal_text();
 };
 
@@ -49,6 +49,13 @@ struct tutorial_3 {
 struct tutorial_4 {
     static void init();
     static void reset();
+    static xstring goal_text();
+};
+
+struct tutorial_5 {
+    static void init();
+    static void reset();
+    static void update_step(xstring s);
     static xstring goal_text();
 };
 
@@ -127,11 +134,5 @@ bool tutorial_menu_update(int tut);
 
 int tutorial_get_population_cap(int current_cap);
 xstring tutorial_get_immediate_goal_text();
-
-void tutorial_on_house_evolve(e_house_level level);
-
-void tutorial_check_5_resources_on_storageyard();
-
-void tutorial_on_day_tick();
 
 void tutorial_update_step(xstring step);
