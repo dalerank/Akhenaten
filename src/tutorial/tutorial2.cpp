@@ -17,7 +17,7 @@ void tutorial_2_on_build_temple(event_building_create ev) {
         return;
     }
 
-    g_city_events.removeListener(typeid(event_building_create), &tutorial_2_on_build_temple);
+    g_city_events.unsubscribe(&tutorial_2_on_build_temple);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
     g_tutorials_flags.tutorial_2.temples_built = true;
     building_menu_update(tutorial_stage.tutorial_entertainment);
@@ -33,7 +33,7 @@ void tutorial_2_on_gold_extracted(event_gold_extract ev) {
         return;
     }
 
-    g_city_events.removeListener(typeid(event_gold_extract), &tutorial_2_on_gold_extracted);
+    g_city_events.unsubscribe(&tutorial_2_on_gold_extracted);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
     g_tutorials_flags.tutorial_2.gold_mined_500 = true;
     building_menu_update(tutorial_stage.tutorial_gods);
@@ -49,10 +49,10 @@ bool tutorial2_is_success() {
 
 void tutorial_2::init() {
     if (g_tutorials_flags.tutorial_2.gold_mined_500) building_menu_update(tutorial_stage.tutorial_gods);
-    else g_city_events.subscribe<event_gold_extract>(&tutorial_2_on_gold_extracted);
+    else g_city_events.subscribe(&tutorial_2_on_gold_extracted);
 
     if (g_tutorials_flags.tutorial_2.temples_built) building_menu_update(tutorial_stage.tutorial_entertainment);
-    else g_city_events.subscribe<event_building_create>(&tutorial_2_on_build_temple);
+    else g_city_events.subscribe(&tutorial_2_on_build_temple);
 
     g_city.victory_state.add_condition(&tutorial2_is_success);
 }

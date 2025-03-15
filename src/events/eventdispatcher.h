@@ -1,18 +1,4 @@
-// eventpp library
-// Copyright (C) 2018 Wang Qi (wqking)
-// Github: https://github.com/wqking/eventpp
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//   http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-#ifndef EVENTDISPATCHER_H_319010983013
-#define EVENTDISPATCHER_H_319010983013
+#pragma once
 
 #include "callbacklist.h"
 
@@ -130,6 +116,29 @@ public:
 		swap(eventCallbackListMap, other.eventCallbackListMap);
 	}
 
+	template <typename T>
+	struct first_func_argument;
+
+	template <typename FirstArg>
+	struct first_func_argument<void(*)(FirstArg)> {
+		using type = FirstArg;
+	};
+
+	template <typename FirstArg>
+	struct first_func_argument<std::function<void(FirstArg)>> {
+		using type = FirstArg;
+	};
+
+	template <typename Class, typename FirstArg>
+	struct first_func_argument<void(Class::*)(FirstArg)> {
+		using type = FirstArg;
+	};
+
+	template <typename Class, typename FirstArg> // for class and lamdas
+	struct first_func_argument<void(Class::*)(FirstArg) const> {
+		using type = FirstArg;
+	};
+
 	template<typename E>
 	Handle appendListener(const Callback &callback) {
 		std::lock_guard<Mutex> lockGuard(listenerMutex);
@@ -141,9 +150,20 @@ public:
 		return eventCallbackListMap[event].append(callback);
 	}
 
-	template<typename E>
-	Handle subscribe(const Callback &callback) {
-		return appendListener(typeid(E), callback);
+	template<typename Func>
+	Handle subscribe(Func callback) {
+		using EventType = typename first_func_argument<decltype(&Func::operator())>::type;
+		//static_assert(std::is_same_v<ArgType, E>, "Incorrect function argument");
+
+		return appendListener(typeid(EventType), callback);
+	}
+
+	template<typename EventType>
+	Handle subscribe(void (*callback)(EventType)) {
+		//using ArgType = typename first_func_argument<callback>::type;
+		//static_assert(std::is_same_v<ArgType, E>, "Incorrect function argument");
+
+		return appendListener(typeid(EventType), callback);
 	}
 
 	Handle prependListener(const Event & event, const Callback & callback) {
@@ -161,9 +181,10 @@ public:
 		return removeListener(typeid(E), pcb);
 	}
 
-	template<typename E>
-	bool unsubscribe(const Callback &pcb) {
-		return removeListener(typeid(E), pcb);
+	template<typename Func>
+	bool unsubscribe(Func pcb) {
+		using ArgType = typename first_func_argument<Func>::type;
+		return removeListener(typeid(ArgType), pcb);
 	}
 
 	bool removeListener(const Event &event, const Callback & pcb) {
@@ -354,9 +375,4 @@ public:
 	}
 };
 
-
 } //namespace eventpp
-
-
-#endif
-

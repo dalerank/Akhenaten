@@ -13,7 +13,7 @@ void tutorial1_handle_fire(event_fire_damage) {
         return;
     }
 
-    g_city_events.removeListener(typeid(event_fire_damage), &tutorial1_handle_fire);
+    g_city_events.unsubscribe(&tutorial1_handle_fire);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
     g_tutorials_flags.tutorial_1.fire = true;
     g_scenario_data.extra_damage.clear();
@@ -27,7 +27,7 @@ void tutorial1_handle_population_150(event_population_changed ev) {
         return;
     }
 
-    g_city_events.removeListener(typeid(event_population_changed), &tutorial1_handle_population_150);
+    g_city_events.unsubscribe(&tutorial1_handle_population_150);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
     g_tutorials_flags.tutorial_1.population_150_reached = true;
     building_menu_update(tutorial_stage.tutorial_food);
@@ -39,7 +39,7 @@ void tutorial1_handle_collapse(event_collase_damage) {
         return;
     }
 
-    g_city_events.removeListener(typeid(event_collase_damage), &tutorial1_handle_collapse);
+    g_city_events.unsubscribe(&tutorial1_handle_collapse);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
     g_tutorials_flags.tutorial_1.collapse = true;
     building_menu_update(tutorial_stage.tutorial_collapse);
@@ -55,7 +55,7 @@ void tutorial1_on_filled_granary(event_granary_filled ev) {
         return;
     }
 
-    g_city_events.removeListener(typeid(event_granary_filled), &tutorial1_on_filled_granary);
+    g_city_events.unsubscribe(&tutorial1_on_filled_granary);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
     g_tutorials_flags.tutorial_1.gamemeat_400_stored = true;
     building_menu_update(tutorial_stage.tutorial_water);
@@ -67,7 +67,7 @@ void tutorial1_handle_building_create(event_building_create ev) {
         return;
     }
 
-    g_city_events.removeListener(typeid(event_building_create), &tutorial1_handle_building_create);
+    g_city_events.unsubscribe(&tutorial1_handle_building_create);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
 }
 
@@ -80,20 +80,20 @@ bool tutorial1_is_success() {
 
 void tutorial_1::init() {
     if (g_tutorials_flags.tutorial_1.fire) building_menu_update(tutorial_stage.tutorial_fire);
-    else g_city_events.appendListener<event_fire_damage>(&tutorial1_handle_fire);
+    else g_city_events.subscribe(&tutorial1_handle_fire);
 
     if (g_tutorials_flags.tutorial_1.population_150_reached)  building_menu_update(tutorial_stage.tutorial_food);
-    else g_city_events.appendListener<event_population_changed>(&tutorial1_handle_population_150);
+    else g_city_events.subscribe(&tutorial1_handle_population_150);
 
     if (!g_tutorials_flags.tutorial_1.architector_built) {
-        g_city_events.appendListener<event_building_create>(&tutorial1_handle_building_create);
+        g_city_events.subscribe(&tutorial1_handle_building_create);
     }
 
     if (g_tutorials_flags.tutorial_1.collapse) building_menu_update(tutorial_stage.tutorial_collapse);
-    else g_city_events.appendListener<event_collase_damage>(&tutorial1_handle_collapse);
+    else g_city_events.subscribe(&tutorial1_handle_collapse);
 
     if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) building_menu_update(tutorial_stage.tutorial_water);
-    else g_city_events.appendListener<event_granary_filled>(&tutorial1_on_filled_granary);
+    else g_city_events.subscribe(&tutorial1_on_filled_granary);
 
     g_city.victory_state.add_condition(&tutorial1_is_success);
 }

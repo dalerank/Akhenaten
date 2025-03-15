@@ -149,9 +149,9 @@ void top_menu_widget::init() {
         window_message_dialog_show(MESSAGE_DIALOG_TOP_FUNDS, -1, window_city_draw_all);
     });
 
-    g_city_events.appendListener<event_population_changed>([this] (event_population_changed ev) { states.population = ev.value; });
-    g_city_events.appendListener<event_advance_day>([this] (event_advance_day ev) { update_date(ev); });
-    g_city_events.appendListener<event_finance_changed>([this] (event_finance_changed ev) { update_finance(ev); });
+    g_city_events.subscribe([this] (event_population_changed ev) { states.population = ev.value; });
+    g_city_events.subscribe([this] (event_advance_day ev) { update_date(ev); });
+    g_city_events.subscribe([this] (event_finance_changed ev) { update_finance(ev); });
 }
 
 void top_menu_widget::menu_item_update(pcstr header, int item, pcstr text) {
