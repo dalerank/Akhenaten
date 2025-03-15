@@ -49,10 +49,10 @@ bool tutorial2_is_success() {
 
 void tutorial_2::init() {
     if (g_tutorials_flags.tutorial_2.gold_mined_500) building_menu_update(tutorial_stage.tutorial_gods);
-    else g_city_events.appendListener(typeid(event_gold_extract), &tutorial_2_on_gold_extracted);
+    else g_city_events.subscribe<event_gold_extract>(&tutorial_2_on_gold_extracted);
 
     if (g_tutorials_flags.tutorial_2.temples_built) building_menu_update(tutorial_stage.tutorial_entertainment);
-    else g_city_events.appendListener(typeid(event_building_create), &tutorial_2_on_build_temple);
+    else g_city_events.subscribe<event_building_create>(&tutorial_2_on_build_temple);
 
     g_city.victory_state.add_condition(&tutorial2_is_success);
 }

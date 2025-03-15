@@ -133,33 +133,36 @@ public:
 	template<typename E>
 	Handle appendListener(const Callback &callback) {
 		std::lock_guard<Mutex> lockGuard(listenerMutex);
-
 		return eventCallbackListMap[typeid(E)].append(callback);
 	}
 
-	Handle appendListener(const Event & event, const Callback & callback)
-	{
+	Handle appendListener(const Event & event, const Callback & callback) {
 		std::lock_guard<Mutex> lockGuard(listenerMutex);
-
 		return eventCallbackListMap[event].append(callback);
 	}
 
-	Handle prependListener(const Event & event, const Callback & callback)
-	{
-		std::lock_guard<Mutex> lockGuard(listenerMutex);
+	template<typename E>
+	Handle subscribe(const Callback &callback) {
+		return appendListener(typeid(E), callback);
+	}
 
+	Handle prependListener(const Event & event, const Callback & callback) {
+		std::lock_guard<Mutex> lockGuard(listenerMutex);
 		return eventCallbackListMap[event].prepend(callback);
 	}
 
-	Handle insertListener(const Event & event, const Callback & callback, const Handle & before)
-	{
+	Handle insertListener(const Event & event, const Callback & callback, const Handle & before) {
 		std::lock_guard<Mutex> lockGuard(listenerMutex);
-
 		return eventCallbackListMap[event].insert(callback, before);
 	}
 
 	template<typename E>
 	bool removeListener(const Callback &pcb) {
+		return removeListener(typeid(E), pcb);
+	}
+
+	template<typename E>
+	bool unsubscribe(const Callback &pcb) {
 		return removeListener(typeid(E), pcb);
 	}
 

@@ -84,6 +84,7 @@ struct tutorial_flags_t {
     struct {
         bool started;
         bool beer_made;
+        bool tax_collector_built;
     } tutorial_4;
 
     struct {

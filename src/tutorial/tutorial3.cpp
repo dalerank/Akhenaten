@@ -120,19 +120,19 @@ void tutorial3_hunger_halt_immgrants(event_advance_month ev) {
 
 void tutorial_3::init() {
     if (g_tutorials_flags.tutorial_3.figs_800_stored) building_menu_update(tutorial_stage.tutorial_industry);
-    else g_city_events.appendListener<event_granary_filled>(&tutorial3_on_filled_granary);
+    else g_city_events.subscribe<event_granary_filled>(&tutorial3_on_filled_granary);
 
     if (g_tutorials_flags.tutorial_3.pottery_made_1) building_menu_update(tutorial_stage.tutorial_industry);
-    else g_city_events.appendListener<event_warehouse_filled>(&tutorial3_warehouse_pottery_1_check);
+    else g_city_events.subscribe<event_warehouse_filled>(&tutorial3_warehouse_pottery_1_check);
 
     if (g_tutorials_flags.tutorial_3.pottery_made_2) building_menu_update(tutorial_stage.tutorial_gardens);
-    else g_city_events.appendListener<event_warehouse_filled>(&tutorial3_warehouse_pottery_2_check);
+    else g_city_events.subscribe<event_warehouse_filled>(&tutorial3_warehouse_pottery_2_check);
 
     if (g_tutorials_flags.tutorial_3.disease) building_menu_update(tutorial_stage.tutorial_health);
-    else g_city_events.appendListener<event_city_disease>(&tutorial3_on_disease);
+    else g_city_events.subscribe<event_city_disease>(&tutorial3_on_disease);
 
     if (game.simtime.month < 5) {
-        g_city_events.appendListener<event_advance_month>(&tutorial3_hunger_halt_immgrants);
+        g_city_events.subscribe<event_advance_month>(&tutorial3_hunger_halt_immgrants);
     }
 
     g_city.victory_state.add_condition(&tutorial3_is_success);
