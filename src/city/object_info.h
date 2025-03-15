@@ -57,7 +57,6 @@ struct object_info {
     int aqueduct_has_water;
     int formation_id;
     int formation_types;
-    int barracks_soldiers_requested;
     common_info_window *ui = nullptr;
     terrain_info_type terrain_type;
 
