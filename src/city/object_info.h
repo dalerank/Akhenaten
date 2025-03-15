@@ -54,7 +54,6 @@ struct object_info {
     bool can_play_sound;
     int building_id = 0;
     int has_reservoir_pipes;
-    int aqueduct_has_water;
     int formation_id;
     int formation_types;
     common_info_window *ui = nullptr;

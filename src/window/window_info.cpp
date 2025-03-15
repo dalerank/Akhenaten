@@ -109,7 +109,6 @@ void object_info::reset(tile2i tile) {
     go_to_advisor = {ADVISOR_NONE, ADVISOR_NONE, ADVISOR_NONE};
     building_id = map_building_at(tile);
     has_reservoir_pipes = map_terrain_is(tile, TERRAIN_GROUNDWATER);
-    aqueduct_has_water = !!map_canal_at(grid_offset) && ((map_image_at(tile) - image_id_from_group(GROUP_BUILDING_CANAL)) < 15);
     terrain_type = TERRAIN_INFO_EMPTY;
     nfigure.drawn = 0;
     nfigure.draw_debug_path = 0;
