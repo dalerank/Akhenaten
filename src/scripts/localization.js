@@ -47,6 +47,7 @@ localization = [
   {key: "#festival_square_info_title", group:188, id:0},
   {key: "#visit_rating_advisor", group:105, id:3},
   {key: "#gardens_describe", group:79, id:1},
+  {key: "#popup_dialog_proceed", group:43, id:5},
 
   {key: "#hunter_ostrich_good_city", lang:"en", text: "I like it here, but there is always room for improvement."},
 ]

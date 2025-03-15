@@ -8,9 +8,6 @@
 #include "graphics/window.h"
 #include "input/input.h"
 
-#define PROCEED_GROUP 43
-#define PROCEED_TEXT 5
-
 popup_dialog g_popup_dialog;
 
 bool popup_dialog::init(const xstring scheme, textid loc, textid custom_text, window_popup_dialog_callback close_cb, e_popup_dialog_btns buttons) {
@@ -36,6 +33,21 @@ bool popup_dialog::init(const xstring scheme, textid loc, textid custom_text, wi
         this->close_func(0);
     });
 
+    if (!num_buttons) {
+        ui["btn_yes"].enabled = false;
+        ui["btn_no"].enabled = false;
+    }
+    ui["label_tip"] = num_buttons ? textid{ 0, 0 } : textid{ 13, 1 };
+    ui["label_tip"].enabled = !num_buttons;
+
+    if (text.valid()) {
+        ui["header"] = text;
+        ui["text"] = textid{ text.group, (uint16_t)(text.id + 1) };
+    } else {
+        ui["header"] = custom_text;
+        ui["text"] = "#popup_dialog_proceed";
+    }
+
     return true;
 }
 
@@ -48,26 +60,6 @@ void popup_dialog::draw_foreground(int flags) {
     ui.begin_widget(pos);
     ui.draw();
     ui.end_widget();
-
-    graphics_set_to_dialog();
-    //outer_panel_draw(vec2i{80, 80}, 30, 10);
-    if (text.valid()) {
-        lang_text_draw_centered(text.group, text.id, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
-        if (lang_text_get_width(text.group, text.id + 1, FONT_NORMAL_BLACK_ON_LIGHT) >= 420) {
-            lang_text_draw_multiline(text.group, text.id + 1, vec2i{ 110, 140 }, 420, FONT_NORMAL_BLACK_ON_LIGHT);
-        } else {
-            lang_text_draw_centered(text.group, text.id + 1, 80, 140, 480, FONT_NORMAL_BLACK_ON_LIGHT);
-        }
-    } else {
-        lang_text_draw_centered(custom_text.group, custom_text.id, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
-        lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK_ON_LIGHT);
-    }
-
-    if (!num_buttons) { // this can be 0, 1 or 2 
-        lang_text_draw_centered(13, 1, 80, 208, 480, FONT_NORMAL_BLACK_ON_LIGHT);
-    }
-
-    graphics_reset_dialog();
 }
 
 void popup_dialog::handle_input(const mouse* m, const hotkeys* h) {
