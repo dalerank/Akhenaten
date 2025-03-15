@@ -11,34 +11,35 @@
 #define PROCEED_GROUP 43
 #define PROCEED_TEXT 5
 
-static void button_ok(int param1, int param2);
-static void button_cancel(int param1, int param2);
-static void confirm(void);
-
-static image_button buttons[] = {
-  {192, 100, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_ok, button_none, 1, 0, 1},
-  {256, 100, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_cancel, button_none, 0, 0, 1},
-};
-
 popup_dialog g_popup_dialog;
 
-int popup_dialog_init(const xstring scheme, textid loc, textid custom_text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
-    auto& data = g_popup_dialog;
-    data.load(scheme.c_str());
+bool popup_dialog::init(const xstring scheme, textid loc, textid custom_text, window_popup_dialog_callback close_cb, e_popup_dialog_btns buttons) {
+    load(scheme.c_str());
     if (window_is(WINDOW_POPUP_DIALOG)) {
         // don't show popup over popup
-        return 0;
+        return false;
     }
-    data.text = loc;
-    data.custom_text = custom_text;
-    data.ok_clicked = 0;
-    data.close_func = close_func;
-    data.num_buttons = buttons;
-    return 1;
+
+    text = loc;
+    this->custom_text = custom_text;
+    ok_clicked = 0;
+    this->close_func = close_cb;
+    num_buttons = buttons;
+
+    ui["btn_yes"].onclick([this] {
+        window_go_back();
+        this->close_func(1);
+    });
+
+    ui["btn_no"].onclick([this] {
+        window_go_back();
+        this->close_func(0);
+    });
+
+    return true;
 }
 
 void popup_dialog::draw_background(int flags) {
-    
 }
 
 void popup_dialog::draw_foreground(int flags) {
@@ -62,36 +63,29 @@ void popup_dialog::draw_foreground(int flags) {
         lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
-    if (num_buttons > 0) // this can be 0, 1 or 2
-        image_buttons_draw({80, 80}, buttons, num_buttons);
-    else
+    if (!num_buttons) { // this can be 0, 1 or 2 
         lang_text_draw_centered(13, 1, 80, 208, 480, FONT_NORMAL_BLACK_ON_LIGHT);
+    }
 
     graphics_reset_dialog();
 }
 
-void popup_dialog_handle_input(const mouse* m, const hotkeys* h) {
-    auto& data = g_popup_dialog;
-
-    if (data.num_buttons && image_buttons_handle_mouse(mouse_in_dialog(m), {80, 80}, buttons, data.num_buttons, 0))
-        return;
-    if (input_go_back_requested(m, h)) {
-        data.close_func(0);
-        window_go_back();
+void popup_dialog::handle_input(const mouse* m, const hotkeys* h) {
+    if (num_buttons) {
+        ui.begin_widget(pos);
+        int button_id = ui::handle_mouse(m);
+        ui.end_widget();
     }
-    if (h->enter_pressed)
-        confirm();
-}
-static void button_ok(int param1, int param2) {
-    confirm();
-}
-static void button_cancel(int param1, int param2) {
-    window_go_back();
-    g_popup_dialog.close_func(0);
-}
-static void confirm(void) {
-    window_go_back();
-    g_popup_dialog.close_func(1);
+
+    if (input_go_back_requested(m, h)) {
+        window_go_back();
+        this->close_func(0);
+    }
+
+    if (h->enter_pressed) {
+        window_go_back();
+        this->close_func(1);
+    }
 }
 
 void window_popup_dialog_show(pcstr loc_id, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func) {
@@ -120,16 +114,18 @@ void window_popup_dialog_show(pcstr loc_id, window_popup_dialog_callback close_f
 }
 
 void window_popup_dialog_show(textid text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
-    bool ok = popup_dialog_init("window_popup_dialog_yesno", text, {}, close_func, buttons);
+    bool ok = g_popup_dialog.init("window_popup_dialog_yesno", text, {}, close_func, buttons);
     if (!ok) {
         return;
     }
-    window_type window = {
+
+    static window_type window = {
         WINDOW_POPUP_DIALOG,
         [] (int flags) { g_popup_dialog.draw_background(flags); },
         [] (int flags) { g_popup_dialog.draw_foreground(flags); },
-        popup_dialog_handle_input
+        [] (auto m, auto h) { g_popup_dialog.handle_input(m, h); }
     };
+
     window_show(&window);
 }
 
@@ -139,7 +135,7 @@ void window_popup_dialog_show_confirmation(pcstr key, window_popup_dialog_callba
 }
 
 void window_popup_dialog_show_confirmation(textid custom, window_popup_dialog_callback close_func) {
-    bool ok = popup_dialog_init("window_popup_dialog_ok", {}, custom, close_func, e_popup_btns_yesno);
+    bool ok = g_popup_dialog.init("window_popup_dialog_ok", {}, custom, close_func, e_popup_btns_yesno);
     if (!ok) {
         return;
     }
@@ -148,7 +144,8 @@ void window_popup_dialog_show_confirmation(textid custom, window_popup_dialog_ca
         WINDOW_POPUP_DIALOG,
         [] (int flags) { g_popup_dialog.draw_background(flags); } ,
         [] (int flags) { g_popup_dialog.draw_foreground(flags); },
-        popup_dialog_handle_input
+        [] (auto m, auto h) { g_popup_dialog.handle_input(m, h); }
     };
+
     window_show(&window);
 }

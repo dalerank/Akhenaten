@@ -1732,6 +1732,8 @@ window window_popup_dialog_yesno = {
 	pos: [(sw(0) - px(30))/2, (sh(0) - px(10))/2],
 	ui : {
 		background : outer_panel({size: [30, 10] }),
+		btn_yes    : image_button({margin:{centerx:-60, bottom:-60}, size:[39, 26], pack:PACK_GENERAL, id:96 }),
+		btn_no     : image_button({margin:{centerx:20, bottom:-60}, size:[39, 26], pack:PACK_GENERAL, id:96, offset:4 }),
 	}
 }
 
@@ -1739,6 +1741,7 @@ window window_popup_dialog_ok = {
 	pos: [(sw(0) - px(30))/2, (sh(0) - px(10))/2],
 	ui : {
 		background : outer_panel({size: [30, 10] }),
+		btn_yes    : image_button({margin:{centerx:-20, bottom:-60}, size:[39, 26], pack:PACK_GENERAL, id:96 }),
 	}
 }
 

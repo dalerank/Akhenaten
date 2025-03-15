@@ -99,4 +99,6 @@ struct popup_dialog : public ui::widget {
 
     void draw_background(int flags);
     void draw_foreground(int flags);
+    void handle_input(const mouse *m, const hotkeys *h);
+    bool init(const xstring scheme, textid loc, textid custom_text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons);
 };
