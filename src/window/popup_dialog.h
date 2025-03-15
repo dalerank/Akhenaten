@@ -1,6 +1,7 @@
 #pragma once
 
 #include "graphics/elements/lang_text.h"
+#include "window/autoconfig_window.h"
 
 enum e_popup_dialog_opt {
     e_popup_dialog_none = -1,
@@ -88,3 +89,11 @@ void window_ok_dialog_show(pcstr text, window_yes_dialog_callback close_func = [
 
 void window_popup_dialog_show_confirmation(textid custom, window_popup_dialog_callback close_func);
 void window_popup_dialog_show_confirmation(pcstr key, window_popup_dialog_callback close_func);
+
+struct popup_dialog : public ui::widget {
+    textid text;
+    textid custom_text;
+    int ok_clicked;
+    window_popup_dialog_callback close_func;
+    e_popup_dialog_btns num_buttons;
+};

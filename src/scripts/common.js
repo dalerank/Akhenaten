@@ -102,7 +102,6 @@ var advisor_chief_window = {}
 var advisor_ratings_window = {}
 var advisor_labors_window = {}
 var main_menu_window = {}
-var minimap_window = {}
 var advisor_trade_window = {}
 var advisor_imperial_window = {}
 var info_window_figure_enemy = {}

@@ -84,7 +84,7 @@ window build_menu_widget = {
                     -30, -46, -62, -78, -78, -94, -94, -110, -110, 0,   0,   0,  0,  0,  0],
 }
 
-trade_prices_window = {
+window trade_prices_window = {
 	pos: [(sw(0) - px(56))/2, (sh(0) - px(11))/2],
   next_row_offset : [0, 90], 
   next_item_offset : [42, 0], 
@@ -1728,7 +1728,21 @@ empire_window = {
 	}
 }
 
-minimap_window = {
+window window_popup_dialog_yesno = {
+	pos: [(sw(0) - px(30))/2, (sh(0) - px(10))/2],
+	ui : {
+		background : outer_panel({size: [30, 10] }),
+	}
+}
+
+window window_popup_dialog_ok = {
+	pos: [(sw(0) - px(30))/2, (sh(0) - px(10))/2],
+	ui : {
+		background : outer_panel({size: [30, 10] }),
+	}
+}
+
+window minimap_window = {
   draw_size : [73, 111],
 
 	terrain_water : {pack:PACK_GENERAL, id:142},

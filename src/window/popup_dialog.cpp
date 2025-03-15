@@ -20,18 +20,11 @@ static image_button buttons[] = {
   {256, 100, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_cancel, button_none, 0, 0, 1},
 };
 
-struct popup_dialog_t {
-    textid text;
-    textid custom_text;
-    int ok_clicked;
-    window_popup_dialog_callback close_func;
-    e_popup_dialog_btns num_buttons;
-};
+popup_dialog g_popup_dialog;
 
-popup_dialog_t g_popup_dialog;
-
-static int init(textid loc, textid custom_text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
+int popup_dialog_init(const xstring scheme, textid loc, textid custom_text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
     auto& data = g_popup_dialog;
+    data.load(scheme.c_str());
     if (window_is(WINDOW_POPUP_DIALOG)) {
         // don't show popup over popup
         return 0;
@@ -44,16 +37,25 @@ static int init(textid loc, textid custom_text, window_popup_dialog_callback clo
     return 1;
 }
 
-static void draw_background(int) {
-    auto& data = g_popup_dialog;
+void popup_dialog_draw_background(int flags) {
+    
+}
+
+void popup_dialog_draw_foreground(int flags) {
+    auto &data = g_popup_dialog;
 
     window_draw_underlying_window(UiFlags_Readonly);
+
+    data.begin_widget(data.pos);
+    data.draw();
+    data.end_widget();
+
     graphics_set_to_dialog();
-    outer_panel_draw(vec2i{80, 80}, 30, 10);
+    //outer_panel_draw(vec2i{80, 80}, 30, 10);
     if (data.text.valid()) {
         lang_text_draw_centered(data.text.group, data.text.id, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
         if (lang_text_get_width(data.text.group, data.text.id + 1, FONT_NORMAL_BLACK_ON_LIGHT) >= 420) {
-            lang_text_draw_multiline(data.text.group, data.text.id + 1, vec2i{110, 140}, 420, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_multiline(data.text.group, data.text.id + 1, vec2i{ 110, 140 }, 420, FONT_NORMAL_BLACK_ON_LIGHT);
         } else {
             lang_text_draw_centered(data.text.group, data.text.id + 1, 80, 140, 480, FONT_NORMAL_BLACK_ON_LIGHT);
         }
@@ -61,12 +63,7 @@ static void draw_background(int) {
         lang_text_draw_centered(data.custom_text.group, data.custom_text.id, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
         lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK_ON_LIGHT);
     }
-    graphics_reset_dialog();
-}
-static void draw_foreground(int) {
-    auto& data = g_popup_dialog;
 
-    graphics_set_to_dialog();
     if (data.num_buttons > 0) // this can be 0, 1 or 2
         image_buttons_draw({80, 80}, buttons, data.num_buttons);
     else
@@ -74,7 +71,7 @@ static void draw_foreground(int) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse* m, const hotkeys* h) {
+void popup_dialog_handle_input(const mouse* m, const hotkeys* h) {
     auto& data = g_popup_dialog;
 
     if (data.num_buttons && image_buttons_handle_mouse(mouse_in_dialog(m), {80, 80}, buttons, data.num_buttons, 0))
@@ -124,15 +121,15 @@ void window_popup_dialog_show(pcstr loc_id, window_popup_dialog_callback close_f
 }
 
 void window_popup_dialog_show(textid text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
-    bool ok = init(text, {}, close_func, buttons);
+    bool ok = popup_dialog_init("window_popup_dialog_yesno", text, {}, close_func, buttons);
     if (!ok) {
         return;
     }
     window_type window = {
         WINDOW_POPUP_DIALOG,
-        draw_background,
-        draw_foreground,
-        handle_input
+        popup_dialog_draw_background,
+        popup_dialog_draw_foreground,
+        popup_dialog_handle_input
     };
     window_show(&window);
 }
@@ -143,15 +140,16 @@ void window_popup_dialog_show_confirmation(pcstr key, window_popup_dialog_callba
 }
 
 void window_popup_dialog_show_confirmation(textid custom, window_popup_dialog_callback close_func) {
-    bool ok = init({}, custom, close_func, e_popup_btns_yesno);
+    bool ok = popup_dialog_init("window_popup_dialog_ok", {}, custom, close_func, e_popup_btns_yesno);
     if (!ok) {
         return;
     }
-    window_type window = {
+
+    static window_type window = {
         WINDOW_POPUP_DIALOG,
-        draw_background,
-        draw_foreground,
-        handle_input
+        popup_dialog_draw_background,
+        popup_dialog_draw_foreground,
+        popup_dialog_handle_input
     };
     window_show(&window);
 }
