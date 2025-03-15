@@ -45,7 +45,6 @@ class building;
 
 struct object_info {
     vec2i offset;
-    int y_offset_submenu;
     vec2i bgsize;
     inline vec2i bgsize_px() const { return bgsize * 16; }
     inline int bgwidth_px() const { return bgsize.x * 16; }

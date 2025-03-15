@@ -91,7 +91,7 @@ figure_info_window::figure_info_window() {
     window_figure_register_handler(this);
 }
 
-inline void figure_info_window::window_info_foreground(object_info &c) {
+void figure_info_window::window_info_foreground(object_info &c) {
     common_info_window::window_info_foreground(c);
 
     figure *f = c.figure_get();

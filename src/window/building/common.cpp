@@ -50,7 +50,6 @@ int window_building_get_vertical_offset(object_info* c, int new_window_height) {
             new_window_y = height - new_window_height;
     }
 
-    c->y_offset_submenu = new_window_y;
     return new_window_y;
 }
 
