@@ -96,4 +96,7 @@ struct popup_dialog : public ui::widget {
     int ok_clicked;
     window_popup_dialog_callback close_func;
     e_popup_dialog_btns num_buttons;
+
+    void draw_background(int flags);
+    void draw_foreground(int flags);
 };

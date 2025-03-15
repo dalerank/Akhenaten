@@ -37,37 +37,36 @@ int popup_dialog_init(const xstring scheme, textid loc, textid custom_text, wind
     return 1;
 }
 
-void popup_dialog_draw_background(int flags) {
+void popup_dialog::draw_background(int flags) {
     
 }
 
-void popup_dialog_draw_foreground(int flags) {
-    auto &data = g_popup_dialog;
-
+void popup_dialog::draw_foreground(int flags) {
     window_draw_underlying_window(UiFlags_Readonly);
 
-    data.begin_widget(data.pos);
-    data.draw();
-    data.end_widget();
+    ui.begin_widget(pos);
+    ui.draw();
+    ui.end_widget();
 
     graphics_set_to_dialog();
     //outer_panel_draw(vec2i{80, 80}, 30, 10);
-    if (data.text.valid()) {
-        lang_text_draw_centered(data.text.group, data.text.id, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
-        if (lang_text_get_width(data.text.group, data.text.id + 1, FONT_NORMAL_BLACK_ON_LIGHT) >= 420) {
-            lang_text_draw_multiline(data.text.group, data.text.id + 1, vec2i{ 110, 140 }, 420, FONT_NORMAL_BLACK_ON_LIGHT);
+    if (text.valid()) {
+        lang_text_draw_centered(text.group, text.id, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
+        if (lang_text_get_width(text.group, text.id + 1, FONT_NORMAL_BLACK_ON_LIGHT) >= 420) {
+            lang_text_draw_multiline(text.group, text.id + 1, vec2i{ 110, 140 }, 420, FONT_NORMAL_BLACK_ON_LIGHT);
         } else {
-            lang_text_draw_centered(data.text.group, data.text.id + 1, 80, 140, 480, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_centered(text.group, text.id + 1, 80, 140, 480, FONT_NORMAL_BLACK_ON_LIGHT);
         }
     } else {
-        lang_text_draw_centered(data.custom_text.group, data.custom_text.id, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
+        lang_text_draw_centered(custom_text.group, custom_text.id, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
         lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
-    if (data.num_buttons > 0) // this can be 0, 1 or 2
-        image_buttons_draw({80, 80}, buttons, data.num_buttons);
+    if (num_buttons > 0) // this can be 0, 1 or 2
+        image_buttons_draw({80, 80}, buttons, num_buttons);
     else
         lang_text_draw_centered(13, 1, 80, 208, 480, FONT_NORMAL_BLACK_ON_LIGHT);
+
     graphics_reset_dialog();
 }
 
@@ -127,8 +126,8 @@ void window_popup_dialog_show(textid text, window_popup_dialog_callback close_fu
     }
     window_type window = {
         WINDOW_POPUP_DIALOG,
-        popup_dialog_draw_background,
-        popup_dialog_draw_foreground,
+        [] (int flags) { g_popup_dialog.draw_background(flags); },
+        [] (int flags) { g_popup_dialog.draw_foreground(flags); },
         popup_dialog_handle_input
     };
     window_show(&window);
@@ -147,8 +146,8 @@ void window_popup_dialog_show_confirmation(textid custom, window_popup_dialog_ca
 
     static window_type window = {
         WINDOW_POPUP_DIALOG,
-        popup_dialog_draw_background,
-        popup_dialog_draw_foreground,
+        [] (int flags) { g_popup_dialog.draw_background(flags); } ,
+        [] (int flags) { g_popup_dialog.draw_foreground(flags); },
         popup_dialog_handle_input
     };
     window_show(&window);
