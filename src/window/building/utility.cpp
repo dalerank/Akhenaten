@@ -8,6 +8,7 @@
 #include "graphics/image.h"
 #include "graphics/window.h"
 #include "grid/water_supply.h"
+#include "grid/terrain.h"
 #include "window/building/common.h"
 
 void window_building_draw_fountain(object_info* c) {
@@ -17,12 +18,13 @@ void window_building_draw_fountain(object_info* c) {
     lang_text_draw_centered(108, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     int text_id;
     building* b = building_get(c->building_id);
+    bool has_groundwater = map_terrain_is(c->grid_offset, TERRAIN_GROUNDWATER);
     if (b->has_water_access) {
         if (b->num_workers > 0)
             text_id = 1;
         else
             text_id = 2;
-    } else if (c->has_reservoir_pipes)
+    } else if (has_groundwater)
         text_id = 2;
     else
         text_id = 3;

@@ -108,7 +108,6 @@ void object_info::reset(tile2i tile) {
     storage_show_special_orders = 0;
     go_to_advisor = {ADVISOR_NONE, ADVISOR_NONE, ADVISOR_NONE};
     building_id = map_building_at(tile);
-    has_reservoir_pipes = map_terrain_is(tile, TERRAIN_GROUNDWATER);
     terrain_type = TERRAIN_INFO_EMPTY;
     nfigure.drawn = 0;
     nfigure.draw_debug_path = 0;
