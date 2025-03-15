@@ -19,6 +19,5 @@ struct terrain_info_window : public common_info_window {
     }
 
     virtual void init(object_info &c) override;
-    virtual int get_height_id(object_info &c) override;
     virtual bool check(object_info &c) override;
 };

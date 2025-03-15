@@ -103,18 +103,18 @@ void terrain_info_window::init(object_info &c) {
     ui["describe"] = ui::str(describe);
 }
 
-int terrain_info_window::get_height_id(object_info &c) {
-    switch (c.terrain_type) {
-    case TERRAIN_INFO_CANAL:
-        return 4;
-    case TERRAIN_INFO_RUBBLE:
-    case TERRAIN_INFO_WALL:
-    case TERRAIN_INFO_GARDEN:
-        return 1;
-    default:
-        return 5;
-    }
-}
+//vec2i terrain_info_window::bgsize() {
+//    switch (c.terrain_type) {
+//    case TERRAIN_INFO_CANAL:
+//        return 4;
+//    case TERRAIN_INFO_RUBBLE:
+//    case TERRAIN_INFO_WALL:
+//    case TERRAIN_INFO_GARDEN:
+//        return 1;
+//    default:
+//        return 5;
+//    }
+//}
 
 bool terrain_info_window::check(object_info &c) {
     tile2i tile(c.grid_offset);

@@ -208,8 +208,7 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
     context.ui->init(context);
 
     // dialog size
-    int bgsizey[] = {16, 16, 18, 19, 14, 23, 16};
-    context.bgsize = {29, bgsizey[context.ui->get_height_id(context)]};
+    context.bgsize = context.ui->bgsize();
 
     if (avoid_mouse) {
         return;
@@ -326,7 +325,12 @@ void window_figure_register_handler(common_info_window *handler) {
     window_info_register_handler_t(g_window_figure_handlers, handler);
 }
 
-void common_info_window::window_info_foreground(object_info &c) { 
+vec2i common_info_window::bgsize() const {
+    vec2i bgsize = ui["background"].pxsize() / 16; 
+    return bgsize;
+}
+
+void common_info_window::window_info_foreground(object_info &c) {
     ui.draw(); 
 }
 
