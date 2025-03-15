@@ -177,6 +177,11 @@ const uint8_t *lang_get_string(textid text) {
     return lang_get_string(text.group, text.id);
 }
 
+xstring lang_get_xstring(int group, int index) {
+    auto text = lang_get_string(group, index);
+    return xstring((pcstr)text);
+}
+
 const uint8_t* lang_get_string(int group, int index) {
     if (group < 0 || index < 0) {
         return nullptr;

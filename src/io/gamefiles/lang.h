@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/xstring.h"
 #include "core/string.h"
 
 enum e_message_arhtype { 
@@ -77,6 +78,7 @@ bool lang_load(int is_editor);
  * @return String
  */
 const uint8_t* lang_get_string(int group, int index);
+xstring lang_get_xstring(int group, int index);
 const uint8_t* lang_get_string(textid text);
 
 /**

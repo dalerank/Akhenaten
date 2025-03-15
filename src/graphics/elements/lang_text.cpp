@@ -88,7 +88,7 @@ void lang_text_draw_centered(int group, int number, int x_offset, int y_offset, 
 }
 
 void lang_text_draw_centered(textid text, int x_offset, int y_offset, int box_width, e_font font) {
-    const uint8_t *str = lang_get_string(text.group, text.id);
+    const uint8_t *str = lang_get_string(text);
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
 

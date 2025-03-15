@@ -4,19 +4,25 @@
 #include "city/message.h"
 #include "building/building_storage_yard.h"
 #include "city/city.h"
+#include "io/gamefiles/lang.h"
 #include "game/game.h"
 
 void tutorial_4::reset() {
     g_tutorials_flags.tutorial_4.started = 0;
     g_tutorials_flags.tutorial_4.beer_made = 0;
+    g_tutorials_flags.tutorial_4.tax_collector_built = 0;
 }
 
-int tutorial_4::goal_text() {
+xstring tutorial_4::goal_text() {
     if (!g_tutorials_flags.tutorial_4.beer_made) {
-        return 33;
+        return lang_get_xstring(62, 33);
     }
 
-    return 0;
+    if (!g_tutorials_flags.tutorial_4.tax_collector_built) {
+        return "#build_tax_collector";
+    }
+
+    return "#read_modest_houses_number";
 }
 
 void tutorial4_warehouse_beer_check(event_warehouse_filled ev) {

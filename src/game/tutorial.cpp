@@ -17,6 +17,7 @@
 #include "scenario/scenario.h"
 #include "city/sentiment.h"
 #include "game/game.h"
+#include "io/gamefiles/lang.h"
 
 #include <algorithm>
 #include "dev/debug.h"
@@ -225,7 +226,7 @@ int tutorial_get_population_cap(int current_cap) {
     return current_cap;
 }
 
-int tutorial_get_immediate_goal_text() {
+xstring tutorial_get_immediate_goal_text() {
     if (scenario_is_mission_rank(1))  return tutorial_1::goal_text();
     if (scenario_is_mission_rank(2))  return tutorial_2::goal_text();
     if (scenario_is_mission_rank(3))  return tutorial_3::goal_text();
@@ -233,18 +234,19 @@ int tutorial_get_immediate_goal_text() {
     
     if (scenario_is_mission_rank(5)) {
         if (!g_tutorials_flags.tutorial_5.spacious_apartment) {
-            return 31;
+            return lang_get_xstring(62, 31);
         } else if (!g_tutorials_flags.tutorial_5.papyrus_made) {
-            return 30;
+            return lang_get_xstring(62, 30);
         } else if (!g_tutorials_flags.tutorial_5.bricks_bought) {
-            return 29;
+            return lang_get_xstring(62, 29);
         } else {
-            return 34;
+            return lang_get_xstring(62, 34);
         }
     } else if (scenario_is_mission_rank(6)) {
 
     }
-    return 0;
+
+    return "#unknown_tutoral_goal";
 }
 
 void tutorial_flags_t::on_crime() {

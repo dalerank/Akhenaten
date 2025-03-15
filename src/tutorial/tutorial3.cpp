@@ -5,6 +5,7 @@
 #include "building/building_granary.h"
 #include "building/building_storage_yard.h"
 #include "city/city.h"
+#include "io/gamefiles/lang.h"
 #include "game/game.h"
 
 void tutorial_3::reset() {
@@ -101,14 +102,20 @@ bool tutorial3_is_success() {
     return may_finish && some_days_after_last_action;
 }
 
-int tutorial_3::goal_text() {
+xstring tutorial_3::goal_text() {
     if (!g_tutorials_flags.tutorial_3.figs_800_stored) {
-        return 28;
-    } else if (!g_tutorials_flags.tutorial_3.pottery_made_1) {
-        return 27;
-    } else {
-        return 26;
+        return lang_get_xstring(62, 28);
+    } 
+    
+    if (!g_tutorials_flags.tutorial_3.pottery_made_1) {
+        return lang_get_xstring(62, 27);
     }
+    
+    if (!g_tutorials_flags.tutorial_3.pottery_made_1) {
+        return "#reach_200_pottery_on_storage";
+    }
+    
+    return lang_get_xstring(62, 26);
 }
 
 void tutorial3_hunger_halt_immgrants(event_advance_month ev) {

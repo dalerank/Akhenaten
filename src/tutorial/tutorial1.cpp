@@ -5,6 +5,7 @@
 #include "building/maintenance.h"
 #include "building/building_menu.h"
 #include "building/building_granary.h"
+#include "io/gamefiles/lang.h"
 #include "city/message.h"
 
 void tutorial1_handle_fire(event_fire_damage) {
@@ -105,13 +106,14 @@ void tutorial_1::reset() {
     g_tutorials_flags.tutorial_1.started = 0;
 }
 
-int tutorial_1::goal_text() {
+xstring tutorial_1::goal_text() {
     if (!g_tutorials_flags.tutorial_1.population_150_reached)
-        return 21;
-    else if (!g_tutorials_flags.tutorial_1.gamemeat_400_stored)
-        return 19;
-    else
-        return 20;
+        return lang_get_xstring(62, 21);
+    
+    if (!g_tutorials_flags.tutorial_1.gamemeat_400_stored)
+        return lang_get_xstring(62, 19);
+
+    return lang_get_xstring(62, 20);
 }
 
 void tutorial_1::update_step(xstring s) {

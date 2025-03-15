@@ -63,7 +63,7 @@ xstring city_overlay_food_stocks::get_tooltip_for_building(tooltip_context *c, c
 
     auto &housed = house->runtime_data();
     if (housed.population <= 0) {
-        return 0;
+        return {};
     }
 
     if (!model_get_house(house->house_level()).food_types) {

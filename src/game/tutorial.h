@@ -29,27 +29,27 @@ struct tutorial_1 {
     static void init();
     static void reset();
     static void update_step(xstring s);
-    static int goal_text();
+    static xstring goal_text();
 };
 
 struct tutorial_2 {
     static void init();
     static void reset();
     static void update_step(xstring s) {}
-    static int goal_text();
+    static xstring goal_text();
 };
 
 struct tutorial_3 {
     static void init();
     static void reset();
     static void update_step(xstring s);
-    static int goal_text();
+    static xstring goal_text();
 };
 
 struct tutorial_4 {
     static void init();
     static void reset();
-    static int goal_text();
+    static xstring goal_text();
 };
 
 struct tutorial_flags_t {
@@ -126,7 +126,7 @@ void tutorial_map_update(int tut);
 bool tutorial_menu_update(int tut);
 
 int tutorial_get_population_cap(int current_cap);
-int tutorial_get_immediate_goal_text();
+xstring tutorial_get_immediate_goal_text();
 
 void tutorial_on_house_evolve(e_house_level level);
 

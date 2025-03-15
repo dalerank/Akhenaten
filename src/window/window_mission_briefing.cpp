@@ -88,11 +88,9 @@ void ui::mission_briefing_window::init() {
     setup_goal(62, 14, winning_monuments() > 0, winning_monuments());
     setup_goal(62, 15, winning_kingdom() > 0, winning_kingdom());
 
-    int immediate_goal_text = tutorial_get_immediate_goal_text();
-    ui["goal_immediate"].enabled = (immediate_goal_text > 0);
-    if (immediate_goal_text) {
-        ui["goal_immediate"] = ui::str(62, immediate_goal_text);
-    }
+    xstring immediate_goal_text = tutorial_get_immediate_goal_text();
+    ui["goal_immediate"].enabled = !!immediate_goal_text;
+    ui["goal_immediate"] = immediate_goal_text;
 
     ui["description_text"] = (pcstr)msg->content.text;
 }

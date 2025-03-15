@@ -43,11 +43,11 @@ void building_burning_ruin::on_create(int orientation) {
     base.state = BUILDING_STATE_VALID;
 
     uint8_t random = rand() % current_params().fire_animations;
-    bstring32 anim_name; anim_name.printf("fire%d", random);
-    set_animation(xstring(anim_name));
+    xstring anim_name; anim_name.printf("fire%d", random);
+    set_animation(anim_name);
 
-    bstring32 base_name; base_name.printf("base%d", random);
-    int img_id = anim(xstring(base_name)).first_img();
+    xstring base_name; base_name.printf("base%d", random);
+    int img_id = anim(base_name).first_img();
     map_building_tiles_add(id(), tile(), base.size, img_id, TERRAIN_BUILDING);
 }
 

@@ -2,7 +2,7 @@
 
 #include "building/building_menu.h"
 #include "city/message.h"
-
+#include "io/gamefiles/lang.h"
 #include "city/city.h"
 #include "city/finance.h"
 #include "game/game.h"
@@ -57,14 +57,16 @@ void tutorial_2::init() {
     g_city.victory_state.add_condition(&tutorial2_is_success);
 }
 
-int tutorial_2::goal_text() {
+xstring tutorial_2::goal_text() {
     if (!g_tutorials_flags.tutorial_2.gold_mined_500) {
-        return 24;
-    } else if (!g_tutorials_flags.tutorial_2.temples_built) {
-        return 23;
-    } else {
-        return 22;
-    }
+        return lang_get_xstring(62, 24);
+    } 
+    
+    if (!g_tutorials_flags.tutorial_2.temples_built) {
+        return lang_get_xstring(62, 23);
+    } 
+    
+    return lang_get_xstring(62, 22);
 }
 
 void tutorial_2::reset() {

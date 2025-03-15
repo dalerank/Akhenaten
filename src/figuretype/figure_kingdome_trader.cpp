@@ -185,7 +185,7 @@ sound_key figure_trade_caravan::phrase_key() const {
     //
     //    }
     //    return 8 + f->phrase_sequence_exact;
-    return 0;
+    return {};
 }
 
 bool figure_trade_caravan::window_info_background(object_info &c) {
