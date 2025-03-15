@@ -211,7 +211,7 @@ int building_construction_clear_land(bool measure_only, tile2i start, tile2i end
     confirm.cend = end;
 
     if (ask_confirm_fort) {
-        window_yes_dialog_show("#popup_dialog_delete_fort", [confirm] () mutable {
+        popup_dialog::show_yesno("#popup_dialog_delete_fort", [confirm] () mutable {
             confirm.fort_confirmed = true;
             clear_land_confirmed(0, confirm);
         });
@@ -219,7 +219,7 @@ int building_construction_clear_land(bool measure_only, tile2i start, tile2i end
     } 
     
     if (ask_confirm_bridge) {
-        window_yes_dialog_show("#popup_dialog_delete_bridge", [confirm] () mutable {
+        popup_dialog::show_yesno("#popup_dialog_delete_bridge", [confirm] () mutable {
             confirm.bridge_confirmed = true;
             clear_land_confirmed(0, confirm);
         });

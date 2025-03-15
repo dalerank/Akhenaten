@@ -154,7 +154,7 @@ void empire_window::init() {
     ui["button_advisor"].onclick([] { window_advisors_show_advisor(ADVISOR_TRADE); });
 
     ui["button_open_trade"].onclick([] {
-        window_yes_dialog_show("#popup_dialog_open_trade", [] {
+        popup_dialog::show_yesno("#popup_dialog_open_trade", [] {
             empire_city *city = g_empire.city(g_empire_window.selected_city);
             city_finance_process_construction(city->cost_to_open);
             city->is_open = 1;

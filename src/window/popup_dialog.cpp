@@ -80,33 +80,14 @@ void popup_dialog::handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 
-void window_popup_dialog_show(pcstr loc_id, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func) {
-    window_popup_dialog_show(loc_id, close_func, buttons);
-}
-
-void window_yesno_dialog_show(pcstr loc_id, window_popup_dialog_callback close_func) {
-    window_popup_dialog_show(loc_id, close_func, e_popup_btns_yesno);
-}
-
-void window_yes_dialog_show(pcstr text, window_yes_dialog_callback close_func) {
-    window_yesno_dialog_show(text, [=] (bool accepted) {
-        if (accepted) { close_func(); }
-    });
-}
-
-void window_ok_dialog_show(pcstr loc_id, window_yes_dialog_callback close_func) {
-    window_popup_dialog_show(loc_id, [=] (bool accepted) {
-        if (accepted) { close_func(); }
-    }, e_popup_btns_ok);
-}
-
-void window_popup_dialog_show(pcstr loc_id, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
+void popup_dialog::show(pcstr loc_id, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func) {
     textid text = loc_text_from_key(loc_id);
-    window_popup_dialog_show(text, close_func, buttons);
+    show({}, text, buttons, close_func);
 }
 
-void window_popup_dialog_show(textid text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
-    bool ok = g_popup_dialog.init("window_popup_dialog_yesno", text, {}, close_func, buttons);
+void popup_dialog::show(textid text, textid custom, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func) {
+    constexpr pcstr configs[] = { "window_popup_dialog_ok", "window_popup_dialog_ok", "window_popup_dialog_yesno" };
+    bool ok = g_popup_dialog.init(configs[buttons], text, custom, close_func, buttons);
     if (!ok) {
         return;
     }
@@ -114,27 +95,6 @@ void window_popup_dialog_show(textid text, window_popup_dialog_callback close_fu
     static window_type window = {
         WINDOW_POPUP_DIALOG,
         [] (int flags) { g_popup_dialog.draw_background(flags); },
-        [] (int flags) { g_popup_dialog.draw_foreground(flags); },
-        [] (auto m, auto h) { g_popup_dialog.handle_input(m, h); }
-    };
-
-    window_show(&window);
-}
-
-void window_popup_dialog_show_confirmation(pcstr key, window_popup_dialog_callback close_func) {
-    textid text = loc_text_from_key(key);
-    window_popup_dialog_show_confirmation(text, close_func);
-}
-
-void window_popup_dialog_show_confirmation(textid custom, window_popup_dialog_callback close_func) {
-    bool ok = g_popup_dialog.init("window_popup_dialog_ok", {}, custom, close_func, e_popup_btns_yesno);
-    if (!ok) {
-        return;
-    }
-
-    static window_type window = {
-        WINDOW_POPUP_DIALOG,
-        [] (int flags) { g_popup_dialog.draw_background(flags); } ,
         [] (int flags) { g_popup_dialog.draw_foreground(flags); },
         [] (auto m, auto h) { g_popup_dialog.handle_input(m, h); }
     };

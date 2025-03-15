@@ -170,18 +170,18 @@ static void button_click(int param1, int param2) {
 
     case 1: // delete player
         if (is_valid_selected_player()) {
-            window_yes_dialog_show("#popup_dialog_delete_dynasty", [] {
+            popup_dialog::show_yesno("#popup_dialog_delete_dynasty", [] {
                 player_data_delete(g_window_player_selection->selected_player);
                 g_window_player_selection->panel->refresh_file_finder();
             });
         } else {
-            window_ok_dialog_show("#popup_dialog_no_dynasty");
+            popup_dialog::show_ok("#popup_dialog_no_dynasty");
         }
         break;
 
     case 2: // proceed with selected player
         if (!is_valid_selected_player()) {
-            window_ok_dialog_show("#popup_dialog_no_dynasty");
+            popup_dialog::show_ok("#popup_dialog_no_dynasty");
         } else {
             window_game_menu_show();
         }

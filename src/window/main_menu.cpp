@@ -57,7 +57,7 @@ static void main_menu_draw_background(int) {
         });
     });
     ui["quit_game"].onclick([] { 
-        window_yes_dialog_show("#popup_dialog_quit", [] { 
+        popup_dialog::show_yesno("#popup_dialog_quit", [] {
             app_request_exit(); 
         });
     });
@@ -82,7 +82,9 @@ static void main_menu_handle_input(const mouse* m, const hotkeys* h) {
     ui::handle_mouse(m);
 
     if (h->escape_pressed) {
-        hotkey_handle_escape();
+        popup_dialog::show_yesno("#popup_dialog_quit", [] {
+            app_request_exit();
+        });
     }
 
     if (h->load_file) {

@@ -505,7 +505,7 @@ void top_menu_widget::set_text_for_debug_render() {
 void top_menu_widget::file_handle(menu_item &item) {
     if (item.id == "new_game") { 
         widget_top_menu_clear_state();
-        window_yesno_dialog_show("#popup_dialog_quit", [] (bool confirmed) {
+        popup_dialog::show_yesno("#popup_dialog_quit", [] (bool confirmed) {
             if (!confirmed) {
                 window_city_show();
                 return;
@@ -519,7 +519,7 @@ void top_menu_widget::file_handle(menu_item &item) {
     }
     else if (item.id == "replay_map") { 
         widget_top_menu_clear_state();
-        window_popup_dialog_show_confirmation("#replay_mission", [] (bool confirmed) {
+        popup_dialog::show_yesno("#replay_mission", [] (bool confirmed) {
             if (!confirmed) {
                 window_city_show();
                 return;
@@ -554,7 +554,7 @@ void top_menu_widget::file_handle(menu_item &item) {
     }
     else if (item.id == "exit_game") { 
         widget_top_menu_clear_state();
-        window_yesno_dialog_show("#popup_dialog_quit", [] (bool accepted) {
+        popup_dialog::show_yesno("#popup_dialog_quit", [] (bool accepted) {
             if (accepted) {
                 widget_top_menu_clear_state();
                 window_main_menu_show(true);

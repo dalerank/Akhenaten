@@ -115,7 +115,7 @@ bool building_storage_has_unsaved_changes() {
 
 void storage_settings_backup_check() {
     if (building_storage_has_unsaved_changes()) {
-        window_popup_dialog_show_confirmation("#exit_without_saving", [] (bool do_forget_changes) {
+        popup_dialog::show_yesno("#exit_without_saving", [] (bool do_forget_changes) {
             if (!do_forget_changes) {
                 return;
             }

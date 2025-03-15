@@ -114,7 +114,7 @@ int ui::advisor_religion_window::draw_background(UiFlags flags) {
         ui["hold_festival_btn"].onclick([] {
             int has_square = building_count_total(BUILDING_FESTIVAL_SQUARE);
             if (!has_square) {
-                return window_ok_dialog_show("#popup_dialog_no_festival_square");
+                return popup_dialog::show_ok("#popup_dialog_no_festival_square");
             }
 
             if (!g_city.festival.is_planned()) {

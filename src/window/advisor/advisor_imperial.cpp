@@ -103,23 +103,23 @@ void ui::advisor_imperial_window::handle_request(int index) {
     g_city.military.clear_kingdome_service_batalions();
     switch (status) {
     case STATUS_NO_LEGIONS_AVAILABLE:
-        window_ok_dialog_show("#popup_dialog_no_legions_available");
+        popup_dialog::show_ok("#popup_dialog_no_legions_available");
         break;
 
     case STATUS_NO_LEGIONS_SELECTED:
-        window_ok_dialog_show("#popup_dialog_no_legions_selected");
+        popup_dialog::show_ok("#popup_dialog_no_legions_selected");
         break;
 
     case STATUS_CONFIRM_SEND_LEGIONS:
-        window_ok_dialog_show("#popup_dialog_send_troops");
+        popup_dialog::show_ok("#popup_dialog_send_troops");
         break;
 
     case STATUS_NOT_ENOUGH_RESOURCES:
-        window_ok_dialog_show("#popup_dialog_not_enough_goods");
+        popup_dialog::show_ok("#popup_dialog_not_enough_goods");
         break;
 
     default:
-        window_yes_dialog_show("#popup_dialog_send_goods", [selected_request_id = index] {
+        popup_dialog::show_yesno("#popup_dialog_send_goods", [selected_request_id = index] {
             scenario_request_dispatch(selected_request_id);
         });
         break;

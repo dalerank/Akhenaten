@@ -190,7 +190,7 @@ static void menu_file_exit_editor(int param) {
     if (scenario_is_saved())
         game_exit_editor();
     else {
-        window_yesno_dialog_show("#popup_dialog_quit_without_saving", [] (bool accepted) {
+        popup_dialog::show_yesno("#popup_dialog_quit_without_saving", [] (bool accepted) {
             if (accepted)
                 game_exit_editor();
             else {

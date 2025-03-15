@@ -434,7 +434,7 @@ void hotkey_key_released(int key, int modifiers) {
 
 void hotkey_handle_escape(void) {
     video_stop();
-    window_yesno_dialog_show("#popup_dialog_quit", [] (bool accepted) {
+    popup_dialog::show_yesno("#popup_dialog_quit", [] (bool accepted) {
         if (accepted) {
             widget_top_menu_clear_state();
             window_main_menu_show(true);
