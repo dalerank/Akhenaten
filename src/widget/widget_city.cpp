@@ -583,22 +583,29 @@ static void handle_mouse(const mouse* m) {
     if (m->middle.went_up)
         scroll_drag_end();
 }
+void widget_city_handle_escape(const hotkeys *h) {
+    if (!h->escape_pressed) {
+        return;
+    }
+
+    if (g_city_planner.build_type) {
+        g_city_planner.construction_cancel();
+        return;
+    }
+
+    hotkey_handle_escape();
+}
 
 void widget_city_handle_input(const mouse* m, const hotkeys* h) {
     widget_city_scroll_map(m);
 
-    if (m->is_touch)
+    if (m->is_touch) {
         handle_touch();
-    else
+    } else {
         handle_mouse(m);
-
-    if (h->escape_pressed) {
-        if (g_city_planner.build_type) {
-            g_city_planner.construction_cancel();
-        } else {
-            hotkey_handle_escape();
-        }
     }
+
+    widget_city_handle_escape(h);
 }
 
 void widget_city_get_tooltip(tooltip_context* c) {

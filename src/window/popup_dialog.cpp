@@ -21,8 +21,8 @@ static image_button buttons[] = {
 };
 
 struct popup_dialog_t {
-    loc_text text;
-    loc_text custom_text;
+    textid text;
+    textid custom_text;
     int ok_clicked;
     window_popup_dialog_callback close_func;
     e_popup_dialog_btns num_buttons;
@@ -30,7 +30,7 @@ struct popup_dialog_t {
 
 popup_dialog_t g_popup_dialog;
 
-static int init(loc_text loc, loc_text custom_text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
+static int init(textid loc, textid custom_text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
     auto& data = g_popup_dialog;
     if (window_is(WINDOW_POPUP_DIALOG)) {
         // don't show popup over popup
@@ -119,11 +119,11 @@ void window_ok_dialog_show(pcstr loc_id, window_yes_dialog_callback close_func) 
 }
 
 void window_popup_dialog_show(pcstr loc_id, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
-    loc_text text = loc_text_from_key(loc_id);
+    textid text = loc_text_from_key(loc_id);
     window_popup_dialog_show(text, close_func, buttons);
 }
 
-void window_popup_dialog_show(loc_text text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
+void window_popup_dialog_show(textid text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons) {
     bool ok = init(text, {}, close_func, buttons);
     if (!ok) {
         return;
@@ -138,11 +138,11 @@ void window_popup_dialog_show(loc_text text, window_popup_dialog_callback close_
 }
 
 void window_popup_dialog_show_confirmation(pcstr key, window_popup_dialog_callback close_func) {
-    loc_text text = loc_text_from_key(key);
+    textid text = loc_text_from_key(key);
     window_popup_dialog_show_confirmation(text, close_func);
 }
 
-void window_popup_dialog_show_confirmation(loc_text custom, window_popup_dialog_callback close_func) {
+void window_popup_dialog_show_confirmation(textid custom, window_popup_dialog_callback close_func) {
     bool ok = init({}, custom, close_func, e_popup_btns_yesno);
     if (!ok) {
         return;

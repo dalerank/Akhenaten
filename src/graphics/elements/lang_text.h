@@ -6,15 +6,8 @@
 #include "core/string.h"
 #include "ui.h"
 
-struct loc_text {
-    int group = 0;
-    int id = 0;
-
-    inline bool valid() { return group > 0 && id > 0; }
-};
-
 pcstr lang_text_from_key(pcstr key);
-loc_text loc_text_from_key(pcstr key);
+textid loc_text_from_key(pcstr key);
 
 int lang_text_get_width(int group, int number, e_font font);
 int lang_text_get_width(const char* str, e_font font);

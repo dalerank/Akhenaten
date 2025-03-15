@@ -9,7 +9,7 @@
 
 struct textid {
     uint16_t group = 0;
-    uint8_t id = 0;
+    uint16_t id = 0;
     bool valid() const { return group > 0; }
     pcstr c_str() const;
     pcstr c_str_safe(pcstr def) const;

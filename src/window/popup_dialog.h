@@ -79,12 +79,12 @@ enum e_popup_dialog_btns { e_popup_btns_ok = 0, e_popup_btns_yes = 1, e_popup_bt
 using window_popup_dialog_callback = std::function<void(bool)>;
 using window_yes_dialog_callback = std::function<void()>;
 
-void window_popup_dialog_show(loc_text text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons);
+void window_popup_dialog_show(textid text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons);
 void window_popup_dialog_show(pcstr text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons);
 void window_popup_dialog_show(pcstr text, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func);
 void window_yesno_dialog_show(pcstr text, window_popup_dialog_callback close_func);
 void window_yes_dialog_show(pcstr text, window_yes_dialog_callback close_func);
 void window_ok_dialog_show(pcstr text, window_yes_dialog_callback close_func = [] {});
 
-void window_popup_dialog_show_confirmation(loc_text custom, window_popup_dialog_callback close_func);
+void window_popup_dialog_show_confirmation(textid custom, window_popup_dialog_callback close_func);
 void window_popup_dialog_show_confirmation(pcstr key, window_popup_dialog_callback close_func);

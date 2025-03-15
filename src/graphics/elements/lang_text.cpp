@@ -8,7 +8,7 @@
 
 #include <map>
 
-std::map<xstring, loc_text> g_localization;
+std::map<xstring, textid> g_localization;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_localization);
 void config_load_localization() {
@@ -16,16 +16,16 @@ void config_load_localization() {
 
     g_config_arch.r_array("localization", [] (archive arch) {
         xstring key = arch.r_string("key");
-        int group = arch.r_int("group");
-        int id = arch.r_int("id");
+        uint16_t group = arch.r_int("group");
+        uint16_t id = arch.r_int("id");
 
         g_localization.insert({key, {group, id}});
     });
 }
 
-loc_text loc_text_from_key(pcstr key) {
+textid loc_text_from_key(pcstr key) {
     auto it = g_localization.find(key);
-    return (it != g_localization.end()) ? it->second : loc_text{0, 0};
+    return (it != g_localization.end()) ? it->second : textid{0, 0};
 }
 
 pcstr lang_text_from_key(pcstr key) {
