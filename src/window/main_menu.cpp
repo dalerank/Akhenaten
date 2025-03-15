@@ -48,14 +48,17 @@ static void main_menu_draw_background(int) {
     ui["select_player"].onclick([] {
         window_player_selection_show(); 
     });
+
     ui["show_records"].onclick([] {
         window_records_show();
     });
+
     ui["show_config"].onclick([] {
         window_config_show([] {
         
         });
     });
+
     ui["quit_game"].onclick([] { 
         popup_dialog::show_yesno("#popup_dialog_quit", [] {
             app_request_exit(); 
@@ -71,14 +74,14 @@ static void main_menu_draw_background(int) {
     });
 }
 
-static void main_menu_draw_foreground(int) {
+void main_menu_draw_foreground(int) {
     auto &ui = g_main_menu_data;
 
     ui.begin_frame();
     ui.draw();
 }
 
-static void main_menu_handle_input(const mouse* m, const hotkeys* h) {
+void main_menu_handle_input(const mouse* m, const hotkeys* h) {
     ui::handle_mouse(m);
 
     if (h->escape_pressed) {
