@@ -27,7 +27,7 @@ struct available_data_t {
 available_data_t g_available_data;
 
 static auto &city_data = g_city;
-int city_resource_warehouse_stored(e_resource resource) {
+int city_resources_t::warehouses_stored(e_resource resource) {
     return city_data.resource.stored_in_warehouses[resource];
 }
 
@@ -38,8 +38,8 @@ int city_resource_granary_stored(e_resource resource) {
     return city_data.resource.granary_food_stored[resource];
 }
 
-int city_resource_storages_stored(e_resource resource) {
-    return city_resource_warehouse_stored(resource) 
+int city_resources_t::storages_stored(e_resource resource) {
+    return warehouses_stored(resource)
             + city_resource_granary_stored(resource);
 }
 

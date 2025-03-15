@@ -494,7 +494,7 @@ storage_worker_task building_storage_yard_determine_getting_up_resources(buildin
         int lacking = requesting - total_stored;
 
         // determine if there's enough room for more to accept, depending on "get up to..." settings!
-        if (room >= 0 && lacking > 0 && city_resource_warehouse_stored(check_resource) - total_stored > 0) {
+        if (room >= 0 && lacking > 0 && g_city.resource.warehouses_stored(check_resource) - total_stored > 0) {
             if (!warehouse->for_getting(check_resource, 0)) { // any other place contain this resource..?
                 continue;
             }

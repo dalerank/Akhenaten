@@ -55,7 +55,7 @@ struct city_t {
     } distant_battle;
 
     city_finance_t finance;
-
+    city_resources_t resource;
     city_taxes_t taxes;
 
     city_labor_t labor;
@@ -111,39 +111,6 @@ struct city_t {
 
     city_festival_t festival;
 
-    struct {
-        int16_t space_in_warehouses[RESOURCES_MAX];
-        int16_t stored_in_warehouses[RESOURCES_MAX];
-        e_trade_status trade_status[RESOURCES_MAX];
-        int16_t trading_amount[RESOURCES_MAX];
-        int32_t stockpiled[RESOURCES_MAX];
-        int16_t mothballed[RESOURCES_MAX];
-        int16_t unk_00[RESOURCES_MAX];
-
-        uint8_t wine_types_available;
-        int8_t food_types_available_arr[RESOURCES_FOODS_MAX];
-        int8_t food_types_eaten_arr[RESOURCES_FOODS_MAX];
-        e_resource food_types_allowed[RESOURCES_FOODS_MAX];
-        int32_t food_types_available_num;
-        int32_t food_types_eaten_num;
-        int32_t granary_food_stored[RESOURCES_FOODS_MAX];
-        int32_t granary_total_stored;
-        int32_t food_supply_months;
-        int32_t food_needed_per_month;
-        int32_t food_consumed_last_month;
-        int32_t food_produced_last_month;
-        int32_t food_produced_this_month;
-        int8_t food_types_arr_unk_00[RESOURCES_FOODS_MAX];
-        int8_t food_types_arr_unk_01[RESOURCES_FOODS_MAX];
-        struct {
-            int operating;
-            int not_operating;
-            int not_operating_with_food;
-            int understaffed;
-        } granaries;
-        int16_t last_used_warehouse;
-
-    } resource;
     struct {
         int8_t march_enemy;
         int8_t march_horse;

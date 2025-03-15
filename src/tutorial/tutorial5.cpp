@@ -21,7 +21,7 @@ void tutorial5_handle_spacious_apartment(event_advance_day) {
         return;
     }
 
-    if (building_count_total(BUILDING_HOUSE_SPACIOUS_APARTMENT) < 100) {
+    if (building_count_total(BUILDING_HOUSE_SPACIOUS_APARTMENT) < 1) {
         return;
     }
 
@@ -37,7 +37,7 @@ void tutorial5_handle_papyrus(event_warehouse_filled ev) {
         return;
     }
 
-    if (city_resource_warehouse_stored(RESOURCE_PAPYRUS) < 100) {
+    if (g_city.resource.warehouses_stored(RESOURCE_PAPYRUS) < 100) {
         return;
     }
 
@@ -53,7 +53,7 @@ void tutorial5_handle_bricks(event_warehouse_filled ev) {
         return;
     }
 
-    if (city_resource_warehouse_stored(RESOURCE_BRICKS) < 100) {
+    if (g_city.resource.warehouses_stored(RESOURCE_BRICKS) < 100) {
         return;
     }
 

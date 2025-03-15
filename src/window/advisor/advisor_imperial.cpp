@@ -58,7 +58,7 @@ static int get_request_status(int index) {
         return STATUS_CONFIRM_SEND_LEGIONS;
     } 
     
-    int stored_in_city = city_resource_warehouse_stored(request.resource) + city_resource_granary_stored(request.resource);
+    int stored_in_city = g_city.resource.warehouses_stored(request.resource) + city_resource_granary_stored(request.resource);
     if (stored_in_city < request.resource_amount()) {
         return STATUS_NOT_ENOUGH_RESOURCES;
     }
@@ -205,7 +205,7 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
             allow_font = button_request_allow.font();
         } else {
             // normal goods request
-            int amount_stored = city_resource_storages_stored(request.resource);
+            int amount_stored = g_city.resource.storages_stored(request.resource);
             amount_stored = stack_proper_quantity(amount_stored, request.resource);
             int request_amount = request.resource_amount();
 

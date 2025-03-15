@@ -30,7 +30,7 @@ void tutorial4_warehouse_beer_check(event_warehouse_filled ev) {
         return;
     }
 
-    if (city_resource_warehouse_stored(RESOURCE_BEER) < 300) {
+    if (g_city.resource.warehouses_stored(RESOURCE_BEER) < 300) {
         return;
     }
 

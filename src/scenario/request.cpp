@@ -78,7 +78,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
         break;
 
     case e_event_state_in_progress:
-        if (!event.can_comply_dialog_shown && city_resource_storages_stored(request.resource) >= request.amount) {
+        if (!event.can_comply_dialog_shown && g_city.resource.storages_stored(request.resource) >= request.amount) {
             event.can_comply_dialog_shown = true;
             city_message &message = city_message_post(true, MESSAGE_REQUEST_CAN_COMPLY, event.event_id, 0);
             message.req_amount = request.resource_amount();

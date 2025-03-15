@@ -8,9 +8,43 @@
 #include <iosfwd>
 #include <string>
 
-int city_resource_warehouse_stored(e_resource resource);
+struct city_resources_t {
+    int16_t space_in_warehouses[RESOURCES_MAX];
+    int16_t stored_in_warehouses[RESOURCES_MAX];
+    e_trade_status trade_status[RESOURCES_MAX];
+    int16_t trading_amount[RESOURCES_MAX];
+    int32_t stockpiled[RESOURCES_MAX];
+    int16_t mothballed[RESOURCES_MAX];
+    int16_t unk_00[RESOURCES_MAX];
+
+    uint8_t wine_types_available;
+    int8_t food_types_available_arr[RESOURCES_FOODS_MAX];
+    int8_t food_types_eaten_arr[RESOURCES_FOODS_MAX];
+    e_resource food_types_allowed[RESOURCES_FOODS_MAX];
+    int32_t food_types_available_num;
+    int32_t food_types_eaten_num;
+    int32_t granary_food_stored[RESOURCES_FOODS_MAX];
+    int32_t granary_total_stored;
+    int32_t food_supply_months;
+    int32_t food_needed_per_month;
+    int32_t food_consumed_last_month;
+    int32_t food_produced_last_month;
+    int32_t food_produced_this_month;
+    int8_t food_types_arr_unk_00[RESOURCES_FOODS_MAX];
+    int8_t food_types_arr_unk_01[RESOURCES_FOODS_MAX];
+    struct {
+        int operating;
+        int not_operating;
+        int not_operating_with_food;
+        int understaffed;
+    } granaries;
+    int16_t last_used_warehouse;
+
+    int warehouses_stored(e_resource resource);
+    int storages_stored(e_resource resource);
+};
+
 int city_resource_granary_stored(e_resource resource);
-int city_resource_storages_stored(e_resource resource);
 
 const resource_list &city_resource_get_available();
 const resource_list &city_resource_get_available_foods();

@@ -69,7 +69,7 @@ void ui::advisor_trade_window::ui_draw_foreground(UiFlags flags) {
         e_font font_color = city_resource_is_mothballed(resource) ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
 
         // resource name and amount in warehouses
-        int res_count = city_resource_warehouse_stored(resource);
+        int res_count = g_city.resource.warehouses_stored(resource);
         int proper_quality = stack_proper_quantity(res_count, resource);
         const bool is_stockpiled = city_resource_is_stockpiled(resource);
         const bool is_mothballed = city_resource_is_mothballed(resource);
