@@ -6,7 +6,9 @@
 #include "core/svector.h"
 #include "point.h"
 #include "scenario/map.h"
+#include "core/core_utility.h"
 
+#include <utility>
 #include <stdint.h>
 
 class building;
@@ -133,13 +135,32 @@ inline void map_grid_area_foreach(tile2i center, int size, T func) {
     map_grid_area_foreach(center.shifted(-size, -size), center.shifted(size, size), func);
 }
 
-template<typename T>
-inline void map_grid_area_foreach(grid_area area, T func) {
-    for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
-        for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
-            func(tile2i(xx, yy));
+namespace detail {
+    template<bool is_tile2i_type, typename Func>
+    inline void map_grid_area_foreach(grid_area area, Func func) {
+        for (int yy = area.tmin.y(), endy = area.tmax.y(); yy <= endy; yy++) {
+            for (int xx = area.tmin.x(), endx = area.tmax.x(); xx <= endx; xx++) {
+                if constexpr (is_tile2i_type) {
+                    func(tile2i(xx, yy));
+                } else {
+                    func(MAP_OFFSET(xx, yy));
+                }
+            }
         }
     }
+}
+
+template<typename Func>
+inline void map_grid_area_foreach(grid_area area, Func func) {
+    using ArgType = typename type_traits::first_func_argument<decltype(&Func::operator())>::type;
+    constexpr bool is_tile2i_type = std::is_same_v<ArgType, tile2i>;
+    detail::map_grid_area_foreach<is_tile2i_type>(area, func);
+}
+
+template<typename T>
+inline void map_grid_area_foreach(grid_area area, void (*callback)(T)) {
+    constexpr bool is_tile2i_type = std::is_same_v<T, tile2i>;
+    detail::map_grid_area_foreach_impl<is_tile2i_type>(area, callback);
 }
 
 template<typename T>

@@ -3,6 +3,7 @@
 #include "game/undo.h"
 #include "city/city.h"
 #include "core/random.h"
+#include "core/profiler.h"
 #include "grid/building_tiles.h"
 #include "grid/terrain.h"
 #include "building/maintenance.h"
@@ -11,8 +12,10 @@
 #include "grid/grid.h"
 #include "scenario/scenario.h"
 #include "grid/road_access.h"
+#include "grid/routing/routing_terrain.h"
 
 building_burning_ruin::static_params burning_ruin_m;
+svector<uint16_t, 2500> g_burning_ruins;
 
 void building_burning_ruin::static_params::load(archive arch) {
     fire_animations = arch.r_int("fire_animations", 1);
@@ -73,6 +76,27 @@ bool building_burning_ruin::draw_ornaments_and_animations_height(painter &ctx, v
     return true;
 }
 
+custom_span<uint16_t> building_burning_ruin::get_all() {
+    return make_span(g_burning_ruins.data(), g_burning_ruins.size());
+}
+
+void building_burning_ruin::update_all_ruins() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Burning Ruins Update");
+    int climate = scenario_property_climate();
+    bool recalculate_terrain = 0;
+
+    g_burning_ruins.clear();
+    buildings_valid_do([&recalculate_terrain] (building &b) {
+        auto ruin = b.dcast_burning_ruin();
+        g_burning_ruins.push_back(b.id);
+        recalculate_terrain |= ruin->update();
+    }, BUILDING_BURNING_RUIN);
+
+    if (recalculate_terrain) {
+        map_routing_update_land();
+    }
+}
+
 bool building_burning_ruin::update() {
     if (base.state == BUILDING_STATE_RUBBLE) { 
         return true;
@@ -125,3 +149,18 @@ bool building_burning_ruin::update() {
 
     return false;
 }
+
+io_buffer *iob_building_list_burning = new io_buffer([] (io_buffer *iob, size_t version) {
+    for (int i = 0; i < g_burning_ruins.capacity(); i++) {
+        iob->bind(BIND_SIGNATURE_UINT16, &g_burning_ruins[i]);
+    }
+});
+
+io_buffer *iob_building_burning_list_info = new io_buffer([] (io_buffer *iob, size_t version) {
+    uint32_t total = g_burning_ruins.capacity();
+    uint32_t size = g_burning_ruins.size();
+    iob->bind(BIND_SIGNATURE_UINT32, &total);
+    iob->bind(BIND_SIGNATURE_UINT32, &size);
+
+    g_burning_ruins.resize(size);
+});

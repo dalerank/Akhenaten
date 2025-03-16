@@ -4,6 +4,7 @@
 #include "building/model.h"
 #include "building/building_barracks.h"
 #include "building/building_granary.h"
+#include "building/building_burning_ruin.h"
 #include "core/game_environment.h"
 #include "core/random.h"
 #include "core/profiler.h"
@@ -261,7 +262,7 @@ void game_t::update_city(int ticks) {
         building_update_state();
         break;
     case 43:
-        building_maintenance_update_burning_ruins();
+        building_burning_ruin::update_all_ruins();
         break;
     case 44:
         building_maintenance_check_fire_collapse();

@@ -8,6 +8,7 @@
 #include "config/config.h"
 #include "building/list.h"
 #include "building/building_house.h"
+#include "building/building_burning_ruin.h"
 #include "building/maintenance.h"
 #include "graphics/animation.h"
 #include "city/city_health.h"
@@ -209,7 +210,7 @@ void figure_fireman::extinguish_fire() {
 }
 
 bool figure_fireman::fight_fire() {
-    const auto &burnings = building_list_burning_items();
+    const auto &burnings = building_burning_ruin::get_all();
     if (burnings.size() <= 0) {
         return false;
     }

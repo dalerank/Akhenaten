@@ -53,9 +53,3 @@ int building_list_large_size(void);
  * @return List of building IDs
  */
 const int* building_list_large_items(void);
-
-void building_list_burning_clear(void);
-
-void building_list_burning_add(int building_id);
-
-custom_span<uint16_t> building_list_burning_items();

@@ -24,4 +24,7 @@ public:
     tile2i can_be_accessed();
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
+
+    static void update_all_ruins();
+    static custom_span<uint16_t> get_all();
 };

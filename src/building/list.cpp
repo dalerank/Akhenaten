@@ -18,8 +18,6 @@ struct list_data_t {
         int size;
         int items[MAX_LARGE];
     } large;
-
-    svector<uint16_t, 2500> burning;
 };
 
 list_data_t g_list_data;
@@ -69,21 +67,6 @@ const int* building_list_large_items() {
     return data.large.items;
 }
 
-void building_list_burning_clear() {
-    auto& data = g_list_data;
-    data.burning.clear();
-}
-
-void building_list_burning_add(int building_id) {
-    auto& data = g_list_data;
-    data.burning.push_back(building_id);
-}
-
-custom_span<uint16_t> building_list_burning_items() {
-    auto& data = g_list_data;
-    return make_span(data.burning.data(), data.burning.size());
-}
-
 io_buffer* iob_building_list_small = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_list_data;
     for (int i = 0; i < MAX_SMALL; i++) {
@@ -96,21 +79,4 @@ io_buffer* iob_building_list_large = new io_buffer([](io_buffer* iob, size_t ver
     for (int i = 0; i < MAX_LARGE; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &data.large.items[i]);
     }
-});
-
-io_buffer* iob_building_list_burning = new io_buffer([](io_buffer* iob, size_t version) {
-    auto& data = g_list_data;
-    for (int i = 0; i < data.burning.capacity(); i++) {
-        iob->bind(BIND_SIGNATURE_UINT16, &data.burning[i]);
-    }
-});
-
-io_buffer* iob_building_burning_list_info = new io_buffer([](io_buffer* iob, size_t version) {
-    auto& data = g_list_data;
-    uint32_t total = data.burning.capacity();
-    uint32_t size = data.burning.size();
-    iob->bind(BIND_SIGNATURE_UINT32, &total);
-    iob->bind(BIND_SIGNATURE_UINT32, &size);
-
-    data.burning.resize(size);
 });
