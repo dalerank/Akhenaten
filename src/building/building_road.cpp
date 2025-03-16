@@ -21,6 +21,19 @@
 
 building_road::static_params road_m;
 
+bool building_road::set_road(tile2i tile) {
+    bool tile_set = false;
+    if (!map_terrain_is(tile, TERRAIN_ROAD)) {
+        tile_set = true;
+    }
+
+    map_terrain_add(tile, TERRAIN_ROAD);
+    map_property_clear_constructing(tile);
+
+    map_tiles_foreach_region_tile(tile.shifted(-1, -1), tile.shifted(1, 1), set_image);
+    return tile_set;
+}
+
 bool building_road::static_params::planer_can_construction_start(build_planner &p, tile2i start) const {
     return map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start);
 }
@@ -112,16 +125,28 @@ void building_road::on_place_checks() {
     /*nothing*/
 }
 
+bool building_road::is_paved(tile2i tile) {
+    int desirability = g_desirability.get(tile.grid_offset());
+    if (desirability > 4) {
+        return true;
+    }
+
+    if (desirability > 0 && map_terrain_is(tile, TERRAIN_FOUNTAIN_RANGE)) {
+        return true;
+    }
+
+    return false;
+}
+
 void building_road::set_image(tile2i tile) {
-    int grid_offset = tile.grid_offset();
-    if (!map_terrain_is(grid_offset, TERRAIN_ROAD)
-        || map_terrain_is(grid_offset, TERRAIN_WATER)
-        || map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+    if (!map_terrain_is(tile, TERRAIN_ROAD)
+        || map_terrain_is(tile, TERRAIN_WATER)
+        || map_terrain_is(tile, TERRAIN_BUILDING)) {
         return;
     }
 
-    if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
-        map_tiles_set_canal_image(grid_offset);
+    if (map_terrain_is(tile, TERRAIN_CANAL)) {
+        map_tiles_set_canal_image(tile.grid_offset());
         return;
     }
 
@@ -130,17 +155,18 @@ void building_road::set_image(tile2i tile) {
     }
 
     int base_img = road_m.anim["base"].first_img();
-    if (map_tiles_is_paved_road(grid_offset)) {
-        const terrain_image* img = map_image_context_get_paved_road(grid_offset);
-        map_image_set(grid_offset, base_img + img->group_offset + img->item_offset);
+    if (is_paved(tile)) {
+        const terrain_image* img = map_image_context_get_paved_road(tile.grid_offset());
+        map_image_set(tile, base_img + img->group_offset + img->item_offset);
     } else {
-        if (!map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
-            map_image_set_road_floodplain(grid_offset);
+        if (!map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
+            map_image_set_road_floodplain(tile.grid_offset());
         } else {
-            const terrain_image* img = map_image_context_get_dirt_road(grid_offset);
-            map_image_set(grid_offset, base_img + img->group_offset + img->item_offset + 49 + 344);
+            const terrain_image* img = map_image_context_get_dirt_road(tile.grid_offset());
+            map_image_set(tile, base_img + img->group_offset + img->item_offset + 49 + 344);
         }
     }
-    map_property_set_multi_tile_size(grid_offset, 1);
-    map_property_mark_draw_tile(grid_offset);
+
+    map_property_set_multi_tile_size(tile.grid_offset(), 1);
+    map_property_mark_draw_tile(tile.grid_offset());
 }

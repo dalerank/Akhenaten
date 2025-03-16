@@ -1,6 +1,6 @@
 #include "building_plaza.h"
 
-#include "building/building.h"
+#include "building/building_road.h"
 #include "city/object_info.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
@@ -31,20 +31,20 @@ int building_plaza::static_params::planer_place(build_planner &planer, tile2i st
     int items_placed = 0;
     for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
         for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
-            int grid_offset = MAP_OFFSET(x, y);
+            tile2i curtile(x, y);
 
-            const bool is_road = map_terrain_is(grid_offset, TERRAIN_ROAD);
-            const bool is_canal = map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_CANAL);
-            const bool is_paved_road = map_tiles_is_paved_road(grid_offset);
+            const bool is_road = map_terrain_is(curtile, TERRAIN_ROAD);
+            const bool is_canal = map_terrain_is(curtile, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_CANAL);
+            const bool is_paved_road = building_road::is_paved(curtile);
             if (is_road && !is_canal && is_paved_road) {
-                if (!map_property_is_plaza_or_earthquake(tile2i(grid_offset))) {
+                if (!map_property_is_plaza_or_earthquake(curtile)) {
                     items_placed++;
                 }
 
-                map_image_set(grid_offset, 0);
-                map_property_mark_plaza_or_earthquake(grid_offset);
-                map_property_set_multi_tile_size(grid_offset, 1);
-                map_property_mark_draw_tile(grid_offset);
+                map_image_set(curtile, 0);
+                map_property_mark_plaza_or_earthquake(curtile.grid_offset());
+                map_property_set_multi_tile_size(curtile.grid_offset(), 1);
+                map_property_mark_draw_tile(curtile.grid_offset());
             }
         }
     }

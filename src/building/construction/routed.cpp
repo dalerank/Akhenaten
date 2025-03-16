@@ -1,6 +1,7 @@
 #include "routed.h"
 
 #include "building/model.h"
+#include "building/building_road.h"
 #include "core/calc.h"
 #include "game/undo.h"
 #include "graphics/window.h"
@@ -44,7 +45,7 @@ routed_building_result place_routed_building(tile2i start, tile2i end, e_routed_
         switch (type) {
         default:
         case ROUTED_BUILDING_ROAD:
-            items += map_tiles_set_road(end);
+            items += building_road::set_road(end);
             break;
 
         case ROUTED_BUILDING_WALL:

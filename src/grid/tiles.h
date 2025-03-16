@@ -13,10 +13,8 @@ void map_tiles_update_all_walls(void);
 void map_tiles_update_area_walls(tile2i tile, int size);
 int map_tiles_set_wall(tile2i tile);
 
-int map_tiles_is_paved_road(int grid_offset);
 void map_tiles_update_all_roads(void);
 void map_tiles_update_area_roads(int x, int y, int size);
-int map_tiles_set_road(tile2i tile);
 
 void map_tiles_update_all_cleared_land();
 void map_tiles_update_all_empty_land();

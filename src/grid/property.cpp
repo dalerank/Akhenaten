@@ -134,6 +134,7 @@ int map_property_is_constructing(int grid_offset) {
 void map_property_mark_constructing(int grid_offset) {
     map_grid_or(bitfields_grid, grid_offset, BIT_CONSTRUCTION);
 }
+
 void map_property_clear_constructing(int grid_offset) {
     map_grid_and(bitfields_grid, grid_offset, BIT_NO_CONSTRUCTION);
 }

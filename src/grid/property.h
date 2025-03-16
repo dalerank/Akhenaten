@@ -50,6 +50,7 @@ void map_property_clear_plaza_or_earthquake(int grid_offset);
 int map_property_is_constructing(int grid_offset);
 void map_property_mark_constructing(int grid_offset);
 void map_property_clear_constructing(int grid_offset);
+inline void map_property_clear_constructing(tile2i tile) { map_property_clear_constructing(tile.grid_offset()); }
 
 int map_property_is_deleted(int grid_offset);
 inline int map_property_is_deleted(tile2i tile) { return map_property_is_deleted(tile.grid_offset()); }

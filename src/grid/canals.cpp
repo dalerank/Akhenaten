@@ -10,7 +10,7 @@
 #include "scenario/map.h"
 #include "io/io_buffer.h"
 #include "grid/terrain.h"
-#include "building/building.h"
+#include "building/building_road.h"
 #include "city/city_buildings.h"
 #include "grid/image_context.h"
 #include "graphics/view/view.h"
@@ -236,7 +236,7 @@ int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_im
         if (map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_ROAD))
             road_dir_right = true;
         road_dir_right = city_view_relative_orientation(road_dir_right) % 2;
-        bool is_paved = map_tiles_is_paved_road(grid_offset);
+        bool is_paved = building_road::is_paved(tile2i(grid_offset));
 
 
         if (road_dir_right) // left/right offset is opposite from C3

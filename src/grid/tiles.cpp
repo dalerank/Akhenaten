@@ -558,37 +558,12 @@ int map_tiles_set_canal(tile2i tile) {
     return tile_set;
 }
 
-int map_tiles_is_paved_road(int grid_offset) {
-    int desirability = g_desirability.get(grid_offset);
-    if (desirability > 4)
-        return 1;
-
-    if (desirability > 0 && map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE))
-        return 1;
-
-    return 0;
-}
-
 void map_tiles_update_all_roads() {
     foreach_map_tile(building_road::set_image);
 }
 
 void map_tiles_update_area_roads(int x, int y, int size) {
     map_tiles_foreach_region_tile(tile2i(x - 1, y - 1), tile2i(x + size - 2, y + size - 2), building_road::set_image);
-}
-
-int map_tiles_set_road(tile2i tile) {
-    int grid_offset = tile.grid_offset();
-    int tile_set = 0;
-    if (!map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-        tile_set = 1;
-    }
-
-    map_terrain_add(grid_offset, TERRAIN_ROAD);
-    map_property_clear_constructing(grid_offset);
-
-    map_tiles_foreach_region_tile(tile.shifted(-1, -1), tile.shifted(1, 1), building_road::set_image);
-    return tile_set;
 }
 
 static void set_meadow_image(int grid_offset) {
@@ -896,7 +871,7 @@ static void set_elevation_image(int grid_offset) {
                 } else if (terrain & TERRAIN_TREE) {
                     map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_TREE) + (map_random_get(grid_offset) & 7));
                 } else if (terrain & TERRAIN_ROAD)
-                    map_tiles_set_road(tile);
+                    building_road::set_road(tile);
                 //                else if (terrain & TERRAIN_AQUEDUCT)
                 //                    set_elevation_aqueduct_image(grid_offset);
                 else if (terrain & TERRAIN_MEADOW)

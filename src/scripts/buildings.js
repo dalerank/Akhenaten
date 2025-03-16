@@ -1676,8 +1676,8 @@ building building_mud_gatehouse = {
 
 building building_mud_wall = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:220 },
-    base : { pack:PACK_GENERAL, id:220 },
+    preview : { pack:PACK_GENERAL, id:138, offset:27 },
+    base : { pack:PACK_GENERAL, id:138 },
   },
   building_size : 1,
   is_draggable : true,

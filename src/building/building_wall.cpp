@@ -7,7 +7,7 @@
 
 building_mud_wall::static_params building_mud_wall_m;
 
-int building_construction_place_wall(bool measure_only, tile2i start, tile2i end) {
+bool building_construction_place_wall(bool measure_only, tile2i start, tile2i end) {
     game_undo_restore_map(0);
 
     int start_offset = start.grid_offset();
@@ -15,11 +15,12 @@ int building_construction_place_wall(bool measure_only, tile2i start, tile2i end
     int forbidden_terrain_mask = TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_SHRUB
         | TERRAIN_ROAD | TERRAIN_GARDEN | TERRAIN_ELEVATION | TERRAIN_RUBBLE | TERRAIN_CANAL
         | TERRAIN_ACCESS_RAMP;
+
     if (map_terrain_is(start_offset, forbidden_terrain_mask))
-        return 0;
+        return false;
 
     if (map_terrain_is(end_offset, forbidden_terrain_mask))
-        return 0;
+        return false;
 
     auto result = place_routed_building(start, end, ROUTED_BUILDING_WALL);
     if (result.ok && !measure_only) {

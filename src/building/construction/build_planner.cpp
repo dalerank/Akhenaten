@@ -8,6 +8,7 @@
 
 #include "building/building_dock.h"
 #include "building/building_menu.h"
+#include "building/building_road.h"
 #include "building/count.h"
 #include "building/model.h"
 #include "building/monuments.h"
@@ -709,7 +710,7 @@ void build_planner::update_requirements_check() {
     }
 
     if (special_flags & e_building_flag::FancyRoad) {
-        if (!map_tiles_is_paved_road(end.grid_offset())) {
+        if (!building_road::is_paved(end)) {
             can_place = CAN_NOT_PLACE;
         }
     }
