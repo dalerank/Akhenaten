@@ -36,7 +36,7 @@
 #include "city/city_buildings.h"
 #include "city/finance.h"
 #include "city/city_resource.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "clear.h"
 #include "figure/formation_legion.h"
 #include "game/undo.h"
@@ -685,7 +685,7 @@ void build_planner::update_requirements_check() {
 
     if (special_flags & e_building_flag::Walls) {
         if (!map_terrain_all_tiles_in_radius_are(end, size.x, 0, TERRAIN_WALL)) {
-            immediate_warning_id = WARNING_WALL_NEEDED;
+            immediate_warning_id = WARNING_ONLY_BUILD_TOWERS_ON_THICK_WALLS;
             can_place = CAN_NOT_PLACE;
         }
     }
@@ -748,7 +748,7 @@ void build_planner::update_special_case_orientations_check() {
         }
         dir_relative = city_view_relative_orientation(result.orientation_absolute);
         if (!result.match) {
-            immediate_warning_id = WARNING_SHORE_NEEDED;
+            immediate_warning_id = WARNING_WATER_NEARBY_NEEDED;
             can_place = CAN_NOT_PLACE;
         } else if (relative_orientation != dir_relative) {
             relative_orientation = dir_relative;

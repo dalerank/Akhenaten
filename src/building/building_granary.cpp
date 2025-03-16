@@ -6,7 +6,7 @@
 #include "building/count.h"
 #include "city/message.h"
 #include "city/city_resource.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "city/city_buildings.h"
 #include "core/calc.h"
 #include "core/profiler.h"
@@ -505,9 +505,10 @@ void building_granary::bind_dynamic(io_buffer *iob, size_t version) {
 }
 
 void building_granary::on_place_checks() {
-    if (building_count_active(BUILDING_BAZAAR) <= 0) {
-        building_construction_warning_show(WARNING_BUILD_MARKET);
-    }
+    construction_warnings warnings;
+    const bool has_bazaar = building_count_active(BUILDING_BAZAAR) > 0;
+
+    warnings.add_if(!has_bazaar, WARNING_BUILD_MARKET);
 }
 
 void building_granary::spawn_figure() {

@@ -4,7 +4,7 @@
 #include "construction/build_planner.h"
 #include "building/count.h"
 #include "city/object_info.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
@@ -105,9 +105,10 @@ void building_booth::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_booth::on_place_checks() {
-    if (building_count_active(BUILDING_JUGGLER_SCHOOL) <= 0) {
-        building_construction_warning_show(WARNING_BUILD_ACTOR_COLONY);
-    }
+    construction_warnings warnings;
+
+    const bool has_juggler_school = building_count_active(BUILDING_JUGGLER_SCHOOL) > 0;
+    warnings.add_if(!has_juggler_school, WARNING_BUILD_JUGGLER_SCHOOL);
 }
 
 void building_booth::spawn_figure() {

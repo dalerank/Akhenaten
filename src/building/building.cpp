@@ -7,7 +7,7 @@
 #include "building/destruction.h"
 #include "city/buildings.h"
 #include "city/city_population.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "widget/city/ornaments.h"
 #include "city/warning.h"
 #include "core/svector.h"
@@ -964,15 +964,12 @@ void building_impl::on_place_checks() {
         return;
     }
 
-    if (!map_has_road_access(tile(), size())) {
-        building_construction_warning_show(WARNING_ROAD_ACCESS_NEEDED);
-    }
+    construction_warnings warnings;
+    const bool has_road = map_has_road_access(tile(), size());
+    warnings.add_if(!has_road, WARNING_ROAD_ACCESS_NEEDED);
 
-    if (!building_construction_has_warning()) {
-        if (model_get_building(type())->laborers > 0 && g_city.labor.workers_needed >= 10) {
-            building_construction_warning_show(WARNING_WORKERS_NEEDED);
-        }
-    }
+    const bool need_workers = (model()->laborers > 0 && g_city.labor.workers_needed >= 10);
+    warnings.add_if(need_workers, WARNING_WORKERS_NEEDED);
 }
 
 void building_impl::update_graphic() {

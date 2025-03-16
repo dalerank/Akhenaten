@@ -8,7 +8,7 @@
 #include "window/building/common.h"
 #include "city/labor.h"
 #include "city/buildings.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "window/building/common.h"
 #include "sound/sound_building.h"
 
@@ -43,11 +43,10 @@ void building_senet_house::window_info_background(object_info &c) {
 }
 
 void building_senet_house::on_place_checks() {
-    if (building_count_active(BUILDING_SENET_MASTER) > 0) {
-        return;
-    }
-    
-    building_construction_warning_show(WARNING_BUILD_SENET_MAKER);
+    construction_warnings warnings;
+
+    const bool has_senet_master = (building_count_active(BUILDING_SENET_MASTER) > 0);
+    warnings.add_if(!has_senet_master, WARNING_BUILD_SENET_MAKER);
 }
 
 void building_senet_house::on_destroy() {

@@ -3,7 +3,7 @@
 #include "game/undo.h"
 #include "core/custom_span.hpp"
 #include "core/profiler.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "city/city.h"
 #include "city/city_population.h"
 #include "grid/building.h"

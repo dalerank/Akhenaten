@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "building/count.h"
 #include "city/object_info.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "construction/build_planner.h"
 #include "city/labor.h"
 #include "game/resource.h"
@@ -107,13 +107,11 @@ void building_bandstand::on_place(int orientation, int variant) {
 }
 
 void building_bandstand::on_place_checks() {
-    if (building_construction_has_warning()) {
-        return;
-    }
-
-    if (building_count_active(BUILDING_CONSERVATORY) <= 0) {
-        building_construction_warning_show(WARNING_BUILD_GLADIATOR_SCHOOL);
-    }
+    construction_warnings warnings;
+    const bool has_conservatory = building_count_active(BUILDING_CONSERVATORY) > 0;
+    const bool has_jungles = building_count_active(BUILDING_JUGGLER_SCHOOL) > 0;
+    warnings.add_if(!has_conservatory, WARNING_BUILD_CONSERVATORY);
+    warnings.add_if(!has_jungles, WARNING_BUILD_JUGGLER_SCHOOL);
 }
 
 void building_bandstand::on_place_update_tiles(int orientation, int variant) {

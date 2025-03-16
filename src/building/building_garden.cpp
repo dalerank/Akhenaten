@@ -20,7 +20,7 @@
 #include "grid/random.h"
 #include "grid/building_tiles.h"
 #include "figure/formation_herd.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "city/labor.h"
 #include "grid/tiles.h"
 #include "js/js_game.h"

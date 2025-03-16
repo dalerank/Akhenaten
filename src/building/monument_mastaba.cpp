@@ -8,7 +8,7 @@
 #include "widget/city/tile_draw.h"
 #include "window/building/common.h"
 #include "city/labor.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
 #include "figure/figure.h"
@@ -526,19 +526,14 @@ void building_mastaba::update_day(const vec2i tiles_size) {
 }
 
 void building_mastaba::on_place_checks() {
-    if (building_construction_has_warning()) {
-        return;
-    }
-
     const tile2i tiles_to_check[] = { tile(), tile().shifted(1, 0), tile().shifted(0, 1), tile().shifted(1, 1) };
     bool has_water = false;
     for (const auto &t : tiles_to_check) {
         has_water |= map_terrain_is(t, TERRAIN_GROUNDWATER);
     }
 
-    if (!has_water) {
-        building_construction_warning_show(WARNING_WATER_PIPE_ACCESS_NEEDED);
-    }
+    construction_warnings warnings;
+    warnings.add_if(!has_water, WARNING_WATER_PIPE_ACCESS_NEEDED);
 }
 
 void building_mastaba::update_count() const {

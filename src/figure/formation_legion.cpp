@@ -115,8 +115,10 @@ void formation_legion_move_to(formation* m, tile2i tile) {
     m->standard_tile = tile;
     m->is_at_fort = 0;
 
-    if (m->morale <= 20)
-        city_warning_show(WARNING_LEGION_MORALE_TOO_LOW);
+    if (m->morale <= 20) {
+
+        city_warning_show(WARNING_COMPANY_MORALE_TOO_LOW);
+    }
 
     for (int i = 0; i < MAX_FORMATION_FIGURES && m->figures[i]; i++) {
         figure* f = figure_get(m->figures[i]);

@@ -5,7 +5,7 @@
 #include "city/buildings.h"
 #include "city/military.h"
 #include "city/city_resource.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "city/labor.h"
 #include "core/calc.h"
 #include "figure/action.h"
@@ -186,13 +186,9 @@ void building_recruiter::update_count() const {
 }
 
 void building_recruiter::on_place_checks() {
-    if (building_construction_has_warning()) {
-        return;
-    }
-
-    if (g_city.resource.warehouses_stored(RESOURCE_WEAPONS) <= 0) {
-        building_construction_warning_show(WARNING_WEAPONS_NEEDED);
-    }
+    construction_warnings warnings;
+    const bool has_weapons = g_city.resource.warehouses_stored(RESOURCE_WEAPONS) > 0;
+    warnings.add_if(!has_weapons, WARNING_WEAPONS_NEEDED);
 }
 
 bool building_recruiter::add_resource(e_resource resource, int amount) {

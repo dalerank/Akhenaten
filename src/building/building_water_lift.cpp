@@ -2,7 +2,7 @@
 
 #include "grid/water.h"
 #include "building/count.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "city/labor.h"
 #include "grid/canals.h"
 #include "grid/building.h"
@@ -38,13 +38,10 @@ void building_water_lift::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_water_lift::on_place_checks() {
-    /* nothing */
+    construction_warnings warnings;
 
-    if (building_count_active(BUILDING_WATER_LIFT)) {
-        building_construction_warning_show(WARNING_CONNECT_TO_RESERVOIR);
-    } else {
-        building_construction_warning_show(WARNING_PLACE_RESERVOIR_NEXT_TO_WATER);
-    }
+    const bool has_water_lift = building_count_active(BUILDING_WATER_LIFT) > 0;
+    warnings.add_if(!has_water_lift, WARNING_CONNECT_TO_WATERLIFT);
 }
 
 void building_water_lift::spawn_figure() {

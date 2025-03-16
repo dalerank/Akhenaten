@@ -4,7 +4,7 @@
 #include "building/building_workshop.h"
 #include "empire/empire.h"
 #include "city/city_resource.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "city/labor.h"
 #include "city/city.h"
 
@@ -27,13 +27,16 @@ void building_jewels_workshop::on_place_checks() {
         return;
     }
 
-    building_construction_warning_show(WARNING_TIMBER_NEEDED);
-    if (g_city.can_produce_resource(RESOURCE_GEMS))
-        building_construction_warning_show(WARNING_BUILD_TIMBER_YARD);
-    else if (!g_empire.can_import_resource(RESOURCE_GEMS, true))
-        building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT);
-    else if (city_resource_trade_status(RESOURCE_GEMS) != TRADE_STATUS_IMPORT)
-        building_construction_warning_show(WARNING_TRADE_IMPORT_RESOURCE);
+    construction_warnings warnings(WARNING_GEMS_NEEDED);
+
+    const bool can_produce_gems = g_city.can_produce_resource(RESOURCE_GEMS);
+    warnings.add_if(!can_produce_gems, WARNING_BUILD_GEM_MINE);
+
+    const bool can_import_gems = g_empire.can_import_resource(RESOURCE_GEMS, true);
+    warnings.add_if(!can_import_gems, WARNING_OPEN_TRADE_TO_IMPORT);
+    
+    const bool is_import_gems = (city_resource_trade_status(RESOURCE_GEMS) == TRADE_STATUS_IMPORT);
+    warnings.add_if(!is_import_gems, WARNING_TRADE_IMPORT_RESOURCE);
 }
 
 bool building_jewels_workshop::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

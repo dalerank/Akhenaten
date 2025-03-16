@@ -4,7 +4,7 @@
 #include "building/building_workshop.h"
 #include "graphics/graphics.h"
 #include "city/city_resource.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "city/labor.h"
 #include "city/city.h"
 #include "empire/empire.h"
@@ -21,21 +21,15 @@ void building_weaver::on_place_checks() {
         return;
     }
 
-    building_construction_warning_show(WARNING_OLIVES_NEEDED);
-    if (g_city.can_produce_resource(RESOURCE_STRAW)) {
-        building_construction_warning_show(WARNING_BUILD_OLIVE_FARM);
-        return;
-    } 
+    construction_warnings warnings(WARNING_FLAX_NEEDED);
+    const bool can_produce = g_city.can_produce_resource(RESOURCE_FLAX);
+    warnings.add_if(can_produce, WARNING_BUILD_FLAX_FARM);
+
+    const bool can_import = g_empire.can_import_resource(RESOURCE_FLAX, true);
+    warnings.add_if(!can_import, WARNING_OPEN_TRADE_TO_IMPORT);
     
-    if (!g_empire.can_import_resource(RESOURCE_FLAX, true)) {
-        building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT);
-        return;
-    } 
-    
-    if (city_resource_trade_status(RESOURCE_FLAX) != TRADE_STATUS_IMPORT) {
-        building_construction_warning_show(WARNING_TRADE_IMPORT_RESOURCE);
-        return;
-    }
+    const bool trade_import = (city_resource_trade_status(RESOURCE_FLAX) != TRADE_STATUS_IMPORT);
+    warnings.add_if(trade_import, WARNING_TRADE_IMPORT_RESOURCE);
 }
 
 bool building_weaver::can_play_animation() const {

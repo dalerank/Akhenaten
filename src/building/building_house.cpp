@@ -2,7 +2,7 @@
 
 #include "building/count.h"
 #include "city/city.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "city/city_population.h"
 #include "city/city_resource.h"
 #include "core/object_property.h"
@@ -955,20 +955,14 @@ void building_house::on_create(int orientation) {
     }
 }
 
-void building_house::on_place_checks() {
-    if (building_construction_has_warning()) {
-        return;
-    }
-        
+void building_house::on_place_checks() {       
     if (type() != BUILDING_HOUSE_VACANT_LOT) {
         return;
     }
 
-    if (city_population() >= 200 && !scenario_property_kingdom_supplies_grain()) {
-        if (city_resource_food_percentage_produced() <= 95) {
-            building_construction_warning_show(WARNING_MORE_FOOD_NEEDED);
-        }
-    }
+    construction_warnings warnings;
+    const bool need_more_food = (city_population() >= 200 && !scenario_property_kingdom_supplies_grain() && city_resource_food_percentage_produced() <= 95);
+    warnings.add_if(need_more_food, WARNING_MORE_FOOD_NEEDED);
 }
 
 bool building_house_crude_hut::evolve(house_demands* demands) {

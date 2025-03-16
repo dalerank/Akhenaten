@@ -11,7 +11,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "city/labor.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "construction/build_planner.h"
 #include "grid/image.h"
 #include "grid/building.h"
@@ -137,9 +137,14 @@ void building_pavilion::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_pavilion::on_place_checks() {
-    if (building_count_active(BUILDING_DANCE_SCHOOL) <= 0) {
-        building_construction_warning_show(WARNING_BUILD_DANCERS_SCHOOL);
-    }
+    construction_warnings warnings;
+    const bool has_dance_school = building_count_active(BUILDING_DANCE_SCHOOL) > 0;
+    const bool has_jugglers = building_count_active(BUILDING_JUGGLER_SCHOOL) > 0;
+    const bool has_musician = building_count_active(BUILDING_CONSERVATORY) > 0;
+
+    warnings.add_if(!has_dance_school, WARNING_BUILD_DANCERS_SCHOOL);
+    warnings.add_if(!has_jugglers, WARNING_BUILD_JUGGLER_SCHOOL);
+    warnings.add_if(!has_musician, WARNING_BUILD_CONSERVATORY);
 }
 
 bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

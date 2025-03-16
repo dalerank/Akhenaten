@@ -4,7 +4,7 @@
 #include "grid/water.h"
 #include "grid/building.h"
 #include "city/buildings.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "building/count.h"
 #include "config/config.h"
 #include "figuretype/figure_fishing_boat.h"
@@ -145,9 +145,9 @@ void building_fishing_wharf::spawn_figure() {
 void building_fishing_wharf::on_place_checks() {
     building_impl::on_place_checks();
 
-    if (!g_city.buildings.has_working_shipyard()) {
-        building_construction_warning_show(WARNING_SHIPWRIGHT_NEEDED);
-    }
+    construction_warnings warnings;
+    const bool has_shipyard = g_city.buildings.has_working_shipyard();
+    warnings.add_if(!has_shipyard, WARNING_SHIPWRIGHT_NEEDED);
 }
 
 void building_fishing_wharf::on_undo() {

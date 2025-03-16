@@ -11,7 +11,7 @@
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/city.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "city/city_resource.h"
 #include "city/labor.h"
 #include "core/calc.h"
@@ -840,9 +840,10 @@ void building_storage_yard::on_place_update_tiles(int orientation, int variant) 
 }
 
 void building_storage_yard::on_place_checks() {
-    if (!map_has_road_access(tile(), 3)) {
-        building_construction_warning_show(WARNING_ROAD_ACCESS_NEEDED);
-    }
+    construction_warnings warnings;
+
+    const bool has_road_access = map_has_road_access(tile(), 3);
+    warnings.add_if(!has_road_access, WARNING_ROAD_ACCESS_NEEDED);
 }
 
 void building_storage_yard::spawn_figure() {

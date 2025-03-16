@@ -9,7 +9,7 @@
 #include "window/building/common.h"
 #include "construction/build_planner.h"
 #include "city/city.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "graphics/view/view.h"
 #include "graphics/view/lookup.h"
 #include "graphics/image.h"
@@ -112,13 +112,10 @@ void building_fort::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_fort::on_place_checks() {
-    if (building_construction_has_warning()) {
-        return;
-    }
-    
-    if (building_count_active(BUILDING_RECRUITER) <= 0) {
-        building_construction_warning_show(WARNING_BUILD_BARRACKS);
-    }
+    construction_warnings warnings;
+
+    const bool has_barracks = building_count_active(BUILDING_RECRUITER) > 0;
+    warnings.add_if(!has_barracks, WARNING_BUILD_RECRUITER);
 }
 
 bool building_fort::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

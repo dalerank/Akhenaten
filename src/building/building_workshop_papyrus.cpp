@@ -7,7 +7,7 @@
 #include "city/city_resource.h"
 #include "city/warning.h"
 #include "city/city.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "graphics/window.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -52,12 +52,13 @@ void building_papyrus_maker::on_place_checks() {
         return;
     }
 
-    building_construction_warning_show(WARNING_NEED_REEDS);
-    if (g_city.can_produce_resource(RESOURCE_REEDS)) {
-        building_construction_warning_show(WARNING_BUILD_REEDS_GATHERER);
-    } else if (!g_empire.can_import_resource(RESOURCE_REEDS, true)) {
-        building_construction_warning_show(WARNING_INSTRUCT_OVERSEER_TO_IMPORT_REED);
-    } else if (city_resource_trade_status(RESOURCE_REEDS) != TRADE_STATUS_IMPORT) {
-        building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT_REED);
-    }
+    construction_warnings warnings(WARNING_NEED_REEDS);
+
+    const bool can_produce_reeds = g_city.can_produce_resource(RESOURCE_REEDS);
+    const bool can_import_reeds = g_empire.can_import_resource(RESOURCE_REEDS, true);
+    const bool is_import_reeds = (city_resource_trade_status(RESOURCE_REEDS) == TRADE_STATUS_IMPORT);
+    
+    warnings.add_if(!can_produce_reeds, WARNING_BUILD_REEDS_GATHERER);
+    warnings.add_if(!can_import_reeds, WARNING_OPEN_TRADE_TO_IMPORT_REED);
+    warnings.add_if(!is_import_reeds, WARNING_TRADE_IMPORT_RESOURCE);
 }

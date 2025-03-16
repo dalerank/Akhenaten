@@ -10,7 +10,7 @@
 #include "graphics/image.h"
 #include "city/labor.h"
 #include "city/city_resource.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "city/city.h"
 #include "empire/empire.h"
 
@@ -40,21 +40,15 @@ void building_scribal_school::on_place_checks() {
         return;
     }
 
-    building_construction_warning_show(WARNING_PAPYRUS_NEEDED);
-    if (g_city.can_produce_resource(RESOURCE_PAPYRUS)) {
-        building_construction_warning_show(WARNING_BUILD_PAPYRUS_MAKER);
-        return;
-    }
+    construction_warnings warnings(WARNING_PAPYRUS_NEEDED);
 
-    if (!g_empire.can_import_resource(RESOURCE_PAPYRUS, true)) {
-        building_construction_warning_show(WARNING_INSTRUCT_OVERSEER_TO_IMPORT_PAPYRUS);
-        return;
-    } 
+    const bool can_produce_papyrus = g_city.can_produce_resource(RESOURCE_PAPYRUS);
+    const bool can_import_papyrus = g_empire.can_import_resource(RESOURCE_PAPYRUS, true);
+    const bool is_import_papyrus = (city_resource_trade_status(RESOURCE_PAPYRUS) == TRADE_STATUS_IMPORT);
 
-    if (city_resource_trade_status(RESOURCE_PAPYRUS) != TRADE_STATUS_IMPORT) {
-        building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT_PAPYRUS);
-        return;
-    }
+    warnings.add_if(!can_produce_papyrus, WARNING_BUILD_PAPYRUS_MAKER);
+    warnings.add_if(!can_import_papyrus, WARNING_OPEN_TRADE_TO_IMPORT_PAPYRUS);
+    warnings.add_if(!is_import_papyrus, WARNING_OPEN_TRADE_TO_IMPORT_PAPYRUS);
 }
 
 bool building_scribal_school::add_resource(e_resource resource, int amount) {

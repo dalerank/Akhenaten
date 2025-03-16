@@ -2,30 +2,12 @@
 
 #include "grid/desirability.h"
 #include "grid/terrain.h"
-#include "graphics/image_desc.h"
 #include "grid/building_tiles.h"
 #include "window/building/common.h"
-#include "widget/city/ornaments.h"
-#include "graphics/elements/ui.h"
-#include "window/window_building_info.h"
 #include "city/labor.h"
-#include "city/warnings.h"
-#include "js/js_game.h"
-
-struct info_window_water_supply : building_info_window {
-    virtual void window_info_background(object_info &c) override;
-    virtual bool check(object_info &c) override {
-        return c.building_get()->dcast_water_supply();
-    }
-};
+#include "city/city_warnings.h"
 
 buildings::model_t<building_water_supply> water_supply_m;
-info_window_water_supply water_supply_infow;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_water_supply);
-void config_load_building_water_supply() {
-    water_supply_infow.load("building_info_window");
-}
 
 void building_water_supply::update_month() {
     int avg_desirability = g_desirability.get_avg(tile(), 4);
@@ -86,32 +68,9 @@ bool building_water_supply::draw_ornaments_and_animations_height(painter &ctx, v
     return true;
 }
 
-void info_window_water_supply::window_info_background(object_info &c) {
-    building_info_window::window_info_background(c);
-
-    building* b = c.building_get();
-
-    std::pair<int, int> reason = { c.group_id, 1 };
-    std::pair<int, int> workers = { c.group_id, 0 };
-    if (!b->has_road_access) {
-        reason = { 69, 25 };
-    } else {
-        workers.second = approximate_value(b->worker_percentage() / 100.f, make_array(7, 5, 4, 3, 2));
-    }
-
-    ui["warning_text"] = ui::str(reason.first, reason.second);
-    ui["workers_desc"] = ui::str(workers.first, workers.second);
-
-    draw_employment_details_ui(ui, c, b, -1);
-}
-
 void building_water_supply::on_place_checks() {
-    if (building_construction_has_warning()) {
-        return;
-    }
+    construction_warnings warnings;
 
     int has_water = map_terrain_is(tile(), TERRAIN_GROUNDWATER);
-    if (!has_water) {
-        building_construction_warning_show(WARNING_WATER_PIPE_ACCESS_NEEDED);
-    }
+    warnings.add_if(!has_water, WARNING_WATER_ACCESS_NEEDED);
 }

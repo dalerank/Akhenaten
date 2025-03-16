@@ -1,7 +1,7 @@
 #include "building_shrine.h"
 
 #include "building/count.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "grid/road_access.h"
 
 buildings::model_t<building_shrine_osiris> shrine_osiris_m;
@@ -11,9 +11,10 @@ buildings::model_t<building_shrine_seth> shrine_seth_m;
 buildings::model_t<building_shrine_bast> shrine_bast_m;
 
 void building_shrine::on_place_checks() {
-    if (!map_has_road_access(tile(), 2)) {
-        building_construction_warning_show(WARNING_ROAD_ACCESS_NEEDED);
-    }
+    construction_warnings warnings;
+
+    const bool has_road = map_has_road_access(tile(), 2);
+    warnings.add_if(!has_road, WARNING_ROAD_ACCESS_NEEDED);
 }
 
 e_overlay building_shrine::get_overlay() const {

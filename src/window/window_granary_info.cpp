@@ -5,7 +5,7 @@
 #include "building/distribution.h"
 #include "building/count.h"
 #include "city/city.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "window/building/common.h"
 #include "window/window_building_info.h"
 #include "scenario/scenario.h"

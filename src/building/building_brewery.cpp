@@ -5,7 +5,7 @@
 #include "city/city.h"
 #include "city/labor.h"
 #include "city/city_resource.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "building/count.h"
 #include "empire/empire.h"
 
@@ -51,12 +51,13 @@ void building_brewery::on_place_checks() {
         return;
     }
 
-    building_construction_warning_show(WARNING_VINES_NEEDED);
-    if (g_city.can_produce_resource(RESOURCE_BARLEY)) {
-        building_construction_warning_show(WARNING_BUILD_VINES_FARM);
-    } else if (!g_empire.can_import_resource(RESOURCE_BARLEY, true)) {
-        building_construction_warning_show(WARNING_OPEN_TRADE_TO_IMPORT);
-    } else if (city_resource_trade_status(RESOURCE_BARLEY) != TRADE_STATUS_IMPORT) {
-        building_construction_warning_show(WARNING_TRADE_IMPORT_RESOURCE);
-    }
+    construction_warnings warnings(WARNING_BARLEY_NEEDED);
+
+    const bool can_produce_barley = g_city.can_produce_resource(RESOURCE_BARLEY);
+    const bool can_import_barley = g_empire.can_import_resource(RESOURCE_BARLEY, true);
+    const bool is_import_barley = (city_resource_trade_status(RESOURCE_BARLEY) == TRADE_STATUS_IMPORT);
+    
+    warnings.add_if(!can_produce_barley, WARNING_BUILD_BARLEY_FARM);
+    warnings.add_if(!can_import_barley, WARNING_OPEN_TRADE_TO_IMPORT);
+    warnings.add_if(!is_import_barley, WARNING_TRADE_IMPORT_RESOURCE);
 }

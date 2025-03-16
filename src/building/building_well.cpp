@@ -2,7 +2,7 @@
 
 #include "grid/desirability.h"
 #include "grid/terrain.h"
-#include "city/warnings.h"
+#include "city/city_warnings.h"
 #include "grid/image.h"
 #include "config/config.h"
 #include "graphics/graphics.h"
@@ -34,14 +34,10 @@ void building_well::update_month() {
 }
 
 void building_well::on_place_checks() {
-    if (building_construction_has_warning()) {
-        return;
-    }
+    construction_warnings warnings;
 
     int has_water = map_terrain_is(tile(), TERRAIN_GROUNDWATER);
-    if (!has_water) {
-        building_construction_warning_show(WARNING_WATER_PIPE_ACCESS_NEEDED);
-    }
+    warnings.add_if(!has_water, WARNING_WATER_ACCESS_NEEDED);
 }
 
 bool building_well::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
