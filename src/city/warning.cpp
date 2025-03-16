@@ -44,7 +44,7 @@ void city_warning_show(int type) {
     if (type == WARNING_ORIENTATION) {
         text = lang_get_string(17, city_view_orientation());
     } else {
-        text = lang_get_string(19, type - 2);
+        text = lang_get_string(19, type);
     }
     city_warning_show_custom((const char*)text);
 }

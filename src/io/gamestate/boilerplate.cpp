@@ -67,6 +67,7 @@
 #include "window/file_dialog.h"
 #include "window/window_mission_briefing.h"
 #include "empire/empire.h"
+#include "city/city_warnings.h"
 
 #include "building/count.h"
 #include "chunks.h"
@@ -244,6 +245,7 @@ static void post_load() {
 
     // city sounds
     sound_city_init();
+    g_warning_manager.init();
 }
 
 // set up list of io_buffer chunks in correct order for specific file format read/write operations
