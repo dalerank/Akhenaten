@@ -160,7 +160,7 @@ inline void map_grid_area_foreach(grid_area area, Func func) {
 template<typename T>
 inline void map_grid_area_foreach(grid_area area, void (*callback)(T)) {
     constexpr bool is_tile2i_type = std::is_same_v<T, tile2i>;
-    detail::map_grid_area_foreach_impl<is_tile2i_type>(area, callback);
+    detail::map_grid_area_foreach<is_tile2i_type>(area, callback);
 }
 
 template<typename T>
