@@ -1,6 +1,7 @@
 #pragma once
 
 #include "callbacklist.h"
+#include "core/core_utility.h"
 
 namespace eventpp {
 
@@ -116,29 +117,6 @@ public:
 		swap(eventCallbackListMap, other.eventCallbackListMap);
 	}
 
-	template <typename T>
-	struct first_func_argument;
-
-	template <typename FirstArg>
-	struct first_func_argument<void(*)(FirstArg)> {
-		using type = FirstArg;
-	};
-
-	template <typename FirstArg>
-	struct first_func_argument<std::function<void(FirstArg)>> {
-		using type = FirstArg;
-	};
-
-	template <typename Class, typename FirstArg>
-	struct first_func_argument<void(Class::*)(FirstArg)> {
-		using type = FirstArg;
-	};
-
-	template <typename Class, typename FirstArg> // for class and lamdas
-	struct first_func_argument<void(Class::*)(FirstArg) const> {
-		using type = FirstArg;
-	};
-
 	template<typename E>
 	Handle appendListener(const Callback &callback) {
 		std::lock_guard<Mutex> lockGuard(listenerMutex);
@@ -152,7 +130,7 @@ public:
 
 	template<typename Func>
 	Handle subscribe(Func callback) {
-		using EventType = typename first_func_argument<decltype(&Func::operator())>::type;
+		using EventType = typename type_traits::first_func_argument<decltype(&Func::operator())>::type;
 		//static_assert(std::is_same_v<ArgType, E>, "Incorrect function argument");
 
 		return appendListener(typeid(EventType), callback);
@@ -183,7 +161,7 @@ public:
 
 	template<typename Func>
 	bool unsubscribe(Func pcb) {
-		using ArgType = typename first_func_argument<Func>::type;
+		using ArgType = typename type_traits::first_func_argument<Func>::type;
 		return removeListener(typeid(ArgType), pcb);
 	}
 
