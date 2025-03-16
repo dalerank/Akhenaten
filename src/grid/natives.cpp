@@ -44,16 +44,18 @@ static bool has_building_on_native_land(int x, int y, int size, int radius) {
 
 static void determine_meeting_center(void) {
     // gather list of meeting centers
-    building_list_small_clear();
+    svector<building_id, 128> ids;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_UNUSED_NATIVE_MEETING_89)
-            building_list_small_add(i);
+        if (b->is_valid() && b->type == BUILDING_UNUSED_NATIVE_MEETING_89) {
+            ids.push_back(i);
+        }
     }
-    int total_meetings = building_list_small_size();
+
+    size_t total_meetings = ids.size();
     if (total_meetings <= 0)
         return;
-    const int* meetings = building_list_small_items();
+
     // determine closest meeting center for hut
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
@@ -61,11 +63,11 @@ static void determine_meeting_center(void) {
             int min_dist = 1000;
             int min_meeting_id = 0;
             for (int n = 0; n < total_meetings; n++) {
-                building* meeting = building_get(meetings[n]);
+                building* meeting = building_get(ids[n]);
                 int dist = calc_maximum_distance(b->tile, meeting->tile);
                 if (dist < min_dist) {
                     min_dist = dist;
-                    min_meeting_id = meetings[n];
+                    min_meeting_id = ids[n];
                 }
             }
             b->native_meeting_center_id = min_meeting_id;

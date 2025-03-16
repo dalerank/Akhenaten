@@ -12,37 +12,11 @@
 struct list_data_t {
     struct {
         int size;
-        int items[MAX_SMALL];
-    } small;
-    struct {
-        int size;
         int items[MAX_LARGE];
     } large;
 };
 
 list_data_t g_list_data;
-
-void building_list_small_clear(void) {
-    auto& data = g_list_data;
-    data.small.size = 0;
-}
-
-void building_list_small_add(int building_id) {
-    auto& data = g_list_data;
-    data.small.items[data.small.size++] = building_id;
-    if (data.small.size >= MAX_SMALL)
-        data.small.size = MAX_SMALL - 1;
-}
-
-int building_list_small_size(void) {
-    auto& data = g_list_data;
-    return data.small.size;
-}
-
-const int* building_list_small_items(void) {
-    auto& data = g_list_data;
-    return data.small.items;
-}
 
 void building_list_large_clear(int clear_entries) {
     auto& data = g_list_data;
@@ -70,7 +44,8 @@ const int* building_list_large_items() {
 io_buffer* iob_building_list_small = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_list_data;
     for (int i = 0; i < MAX_SMALL; i++) {
-        iob->bind(BIND_SIGNATURE_INT16, &data.small.items[i]);
+        int16_t tmp;
+        iob->bind(BIND_SIGNATURE_INT16, &tmp);
     }
 });
 
