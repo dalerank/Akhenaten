@@ -1,6 +1,7 @@
 #include "destruction.h"
 
 #include "building/building_house.h"
+#include "building/building_wall.h"
 #include "city/message.h"
 #include "city/city_population.h"
 #include "city/city.h"
@@ -202,7 +203,7 @@ void building_destroy_by_enemy(tile2i tile) {
         map_building_tiles_set_rubble(0, tile, 1);
     }
     figure_tower_sentry_reroute();
-    map_tiles_update_area_walls(tile, 3);
+    building_mud_wall::update_area_walls(tile, 3);
     map_tiles_update_region_canals(tile.shifted(-3, -3), tile.shifted(3, 3));
     map_routing_update_land();
     map_routing_update_walls();

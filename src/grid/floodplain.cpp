@@ -375,7 +375,7 @@ void map_floodplain_adv_growth_tile(int _, int grid_offset, int /*order*/) {
     if (map_terrain_is(grid_offset, TERRAIN_WATER) || map_terrain_is(grid_offset, TERRAIN_BUILDING)
         || map_terrain_is(grid_offset, TERRAIN_ROAD) || map_terrain_is(grid_offset, TERRAIN_CANAL)) {
         map_set_floodplain_growth(grid_offset, 0);
-        set_floodplain_land_tiles_image(grid_offset);
+        set_floodplain_land_tiles_image(grid_offset, false);
         map_refresh_river_image_at(grid_offset, false);
         return;
     }
@@ -383,7 +383,7 @@ void map_floodplain_adv_growth_tile(int _, int grid_offset, int /*order*/) {
     int growth_current = map_get_floodplain_growth(grid_offset);
     if (growth_current < PH_FLOODPLAIN_GROWTH_MAX - 1) {
         map_set_floodplain_growth(grid_offset, growth_current + 1);
-        set_floodplain_land_tiles_image(grid_offset);
+        set_floodplain_land_tiles_image(grid_offset, false);
         map_refresh_river_image_at(grid_offset, false);
     }
 }

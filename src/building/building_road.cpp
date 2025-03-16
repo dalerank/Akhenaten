@@ -30,7 +30,7 @@ bool building_road::set_road(tile2i tile) {
     map_terrain_add(tile, TERRAIN_ROAD);
     map_property_clear_constructing(tile);
 
-    map_tiles_foreach_region_tile(tile.shifted(-1, -1), tile.shifted(1, 1), set_image);
+    map_tiles_foreach_region_tile_ex(tile.shifted(-1, -1), tile.shifted(1, 1), set_image);
     return tile_set;
 }
 

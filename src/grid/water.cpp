@@ -15,13 +15,6 @@
 
 tile_cache river_tiles_cache;
 tile_cache g_river_shore;
-
-void foreach_river_tile(void (*callback)(int grid_offset)) {
-    for (const auto &tile: river_tiles_cache) {
-        callback(tile);
-    }
-}
-
 tile_cache &river_tiles() { return river_tiles_cache; }
 
 bool map_water_is_point_inside(tile2i tile) {

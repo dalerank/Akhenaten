@@ -6,12 +6,18 @@
 #include "tile_cache.h"
 
 tile_cache &river_tiles();
-void foreach_river_tile(void (*callback)(int grid_offset));
 
 template<typename T>
-void foreach_river_tile(T func) {
-    for (auto &tile : river_tiles()) {
-        func(tile);
+void foreach_river_tile(T callback) {
+    for (const auto grid_offset : river_tiles()) {
+        callback(grid_offset);
+    }
+}
+
+template<typename T>
+void foreach_river_tile_ex(T callback) {
+    for (const auto grid_offset : river_tiles()) {
+        callback(tile2i(grid_offset));
     }
 }
 

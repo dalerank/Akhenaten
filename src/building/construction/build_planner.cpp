@@ -9,6 +9,7 @@
 #include "building/building_dock.h"
 #include "building/building_menu.h"
 #include "building/building_road.h"
+#include "building/building_wall.h"
 #include "building/count.h"
 #include "building/model.h"
 #include "building/monuments.h"
@@ -1086,7 +1087,7 @@ void build_planner::construction_finalize() { // confirm final placement
     }
 
     if (special_flags & e_building_flag::Walls) {
-        map_tiles_update_area_walls(end, 5);
+        building_mud_wall::update_area_walls(end, 5);
     }
 
     // consume resources for specific buildings (e.g. marble, granite)

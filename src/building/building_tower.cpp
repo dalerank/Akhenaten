@@ -1,6 +1,5 @@
 #include "building_tower.h"
 
-#include "js/js_game.h"
 #include "grid/terrain.h"
 #include "grid/road_access.h"
 #include "grid/building_tiles.h"
@@ -12,6 +11,7 @@
 #include "city/labor.h"
 #include "figure/figure.h"
 #include "building/building_barracks.h"
+#include "building/building_wall.h"
 
 buildings::model_t<building_brick_tower> brick_tower_m;
 buildings::model_t<building_mud_tower> mud_tower_m;
@@ -20,7 +20,7 @@ void building_tower::on_create(int orientation) {
     map_terrain_remove_with_radius(tile(), params().building_size, 0, TERRAIN_WALL);
     const int imgid = anim(animkeys().base).first_img();
     map_building_tiles_add(id(), tile(), params().building_size, imgid, TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
-    map_tiles_update_area_walls(tile(), 5);
+    building_mud_wall::update_area_walls(tile(), 5);
 }
 
 void building_tower::window_info_background(object_info &c) {

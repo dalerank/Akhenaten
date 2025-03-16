@@ -1,6 +1,7 @@
 #pragma once
 
 #include "image_context.h"
+#include "grid/grid.h"
 #include "grid/point.h"
 
 void map_tiles_update_all_rocks(void);
@@ -8,10 +9,6 @@ void map_tiles_update_all_rocks(void);
 void map_tiles_update_region_shrub(int x_min, int y_min, int x_max, int y_max);
 
 void map_tiles_update_all_plazas(void);
-
-void map_tiles_update_all_walls(void);
-void map_tiles_update_area_walls(tile2i tile, int size);
-int map_tiles_set_wall(tile2i tile);
 
 void map_tiles_update_all_roads(void);
 void map_tiles_update_area_roads(int x, int y, int size);
@@ -33,14 +30,48 @@ void map_tiles_set_water(int grid_offset);
 void map_tiles_update_region_canals(tile2i pmin, tile2i pmax);
 int map_tiles_set_canal(tile2i tile);
 
-void map_tiles_foreach_region_tile(tile2i tmin, tile2i tmax, void (*callback)(tile2i));
-void map_tiles_foreach_map_tile(void (*callback)(int));
+template<typename Func>
+void map_tiles_foreach_map_tile(Func callback) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
+            callback(grid_offset);
+        }
+    }
+}
+
+template<typename Func>
+void map_tiles_foreach_map_tile_ex(Func callback) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
+            tile2i tile(grid_offset);
+            callback(tile);
+        }
+    }
+}
+
+template<typename Func>
+void map_tiles_foreach_region_tile(tile2i tmin, tile2i tmax, Func callback) {
+    map_grid_bound_area(tmin, tmax);
+
+    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+        callback(tile.grid_offset());
+    });
+}
+
+template<typename Func>
+void map_tiles_foreach_region_tile_ex(tile2i tmin, tile2i tmax, Func callback) {
+    map_grid_bound_area(tmin, tmax);
+    map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
+        callback(tile);
+    });
+}
 
 void map_tiles_update_all_rubble(void);
 void map_tiles_update_region_rubble(int x_min, int y_min, int x_max, int y_max);
 
 void map_tiles_update_all_elevation(void);
-void map_tiles_foreach_region_tile(tile2i tmin, tile2i tmax, void (*callback)(int grid_offset));
 void map_refresh_river_image_at(int grid_offset, bool force);
 
 enum {

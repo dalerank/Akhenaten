@@ -3,6 +3,7 @@
 #include "building/industry.h"
 #include "building/building_house.h"
 #include "building/building_farm.h"
+#include "building/building_wall.h"
 #include "city/city.h"
 #include "city/warnings.h"
 #include "figuretype/figure_homeless.h"
@@ -171,7 +172,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
         map_tiles_gardens_update_all();
         map_tiles_update_area_roads(x_min, y_min, radius);
         map_tiles_update_all_plazas();
-        map_tiles_update_area_walls(area.tmin, radius);
+        building_mud_wall::update_area_walls(area.tmin, radius);
         map_tiles_update_region_canals(tile2i(x_min - 3, y_min - 3), tile2i(x_max + 3, y_max + 3));
     }
 

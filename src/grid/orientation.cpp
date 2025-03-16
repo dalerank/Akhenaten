@@ -6,6 +6,7 @@
 #include "building/construction/build_planner.h"
 #include "building/monument_mastaba.h"
 #include "building/building_statue.h"
+#include "building/building_wall.h"
 #include "core/direction.h"
 #include "core/log.h"
 #include "figuretype/wall.h"
@@ -67,7 +68,7 @@ void map_orientation_change(int counter_clockwise) {
     map_tiles_update_all_rubble();
     map_tiles_update_all_roads();
     map_tiles_update_all_plazas();
-    map_tiles_update_all_walls();
+    building_mud_wall::update_all_walls();
     map_canal_update_all_tiles(0);
 
     map_orientation_update_buildings();

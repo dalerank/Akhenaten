@@ -12,6 +12,7 @@
 #include "grid/building_tiles.h"
 #include "grid/routing/routing_terrain.h"
 #include "building/building_house.h"
+#include "building/building_wall.h"
 #include "io/io_buffer.h"
 
 building g_all_buildings[5000];
@@ -204,7 +205,7 @@ void building_update_state(void) {
     }
 
     if (walls_recalc) {
-        map_tiles_update_all_walls();
+        building_mud_wall::update_all_walls();
     }
 
     if (canals_recalc) {
