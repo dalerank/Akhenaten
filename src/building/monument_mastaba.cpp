@@ -533,7 +533,7 @@ void building_mastaba::on_place_checks() {
     }
 
     construction_warnings warnings;
-    warnings.add_if(!has_water, WARNING_WATER_PIPE_ACCESS_NEEDED);
+    warnings.add_if(!has_water, "#needs_groundwater");
 }
 
 void building_mastaba::update_count() const {

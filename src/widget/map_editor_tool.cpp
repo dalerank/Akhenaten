@@ -133,6 +133,7 @@ void map_editor_tool_draw(painter &ctx, tile2i tile) {
     screen_tile screen = camera_get_selected_screen_tile();
     int x = screen.x;
     int y = screen.y;
+    xstring warning;
     switch (type) {
     case TOOL_NATIVE_CENTER:
         draw_building(tile, x, y, BUILDING_UNUSED_NATIVE_MEETING_89);
@@ -152,7 +153,7 @@ void map_editor_tool_draw(painter &ctx, tile2i tile) {
     case TOOL_INVASION_POINT:
     case TOOL_FISHING_POINT:
     case TOOL_HERD_POINT:
-        draw_map_flag(x, y, editor_tool_can_place_flag(type, tile, 0));
+        draw_map_flag(x, y, editor_tool_can_place_flag(type, tile, warning));
         break;
 
     case TOOL_ACCESS_RAMP:

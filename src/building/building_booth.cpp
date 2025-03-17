@@ -108,7 +108,7 @@ void building_booth::on_place_checks() {
     construction_warnings warnings;
 
     const bool has_juggler_school = building_count_active(BUILDING_JUGGLER_SCHOOL) > 0;
-    warnings.add_if(!has_juggler_school, WARNING_BUILD_JUGGLER_SCHOOL);
+    warnings.add_if(!has_juggler_school, "#build_juggling_school");
 }
 
 void building_booth::spawn_figure() {

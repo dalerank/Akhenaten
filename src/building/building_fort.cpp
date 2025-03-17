@@ -115,7 +115,7 @@ void building_fort::on_place_checks() {
     construction_warnings warnings;
 
     const bool has_barracks = building_count_active(BUILDING_RECRUITER) > 0;
-    warnings.add_if(!has_barracks, WARNING_BUILD_RECRUITER);
+    warnings.add_if(!has_barracks, "#needs_recruiter_to_conscript");
 }
 
 bool building_fort::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

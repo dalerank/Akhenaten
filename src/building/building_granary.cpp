@@ -508,7 +508,7 @@ void building_granary::on_place_checks() {
     construction_warnings warnings;
     const bool has_bazaar = building_count_active(BUILDING_BAZAAR) > 0;
 
-    warnings.add_if(!has_bazaar, WARNING_BUILD_MARKET);
+    warnings.add_if(!has_bazaar, "#build_bazaars_to_distribute_food");
 }
 
 void building_granary::spawn_figure() {

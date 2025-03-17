@@ -27,16 +27,16 @@ void building_jewels_workshop::on_place_checks() {
         return;
     }
 
-    construction_warnings warnings(WARNING_GEMS_NEEDED);
+    construction_warnings warnings("#needs_gems");
 
     const bool can_produce_gems = g_city.can_produce_resource(RESOURCE_GEMS);
-    warnings.add_if(!can_produce_gems, WARNING_BUILD_GEM_MINE);
+    warnings.add_if(!can_produce_gems, "#build_gem_mine");
 
     const bool can_import_gems = g_empire.can_import_resource(RESOURCE_GEMS, true);
-    warnings.add_if(!can_import_gems, WARNING_OPEN_TRADE_TO_IMPORT);
+    warnings.add_if(!can_import_gems, "#setup_trade_route_to_import");
     
     const bool is_import_gems = (city_resource_trade_status(RESOURCE_GEMS) == TRADE_STATUS_IMPORT);
-    warnings.add_if(!is_import_gems, WARNING_TRADE_IMPORT_RESOURCE);
+    warnings.add_if(!is_import_gems, "#overseer_of_commerce_to_import");
 }
 
 bool building_jewels_workshop::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

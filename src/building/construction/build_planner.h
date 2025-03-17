@@ -55,8 +55,8 @@ private:
     int additional_req_param3 = -1;
     int can_place = CAN_PLACE;
 
-    int immediate_warning_id = -1;
-    int extra_warning_id = -1;
+    xstring immediate_warning_id;
+    xstring extra_warning_id;
 
     int start_offset_screen_x;
     int start_offset_screen_y;
@@ -69,6 +69,7 @@ private:
     void set_tile_size(int row, int column, int size);
 
     void set_flag(uint64_t flags, int param1 = -1, int param2 = -1, int param3 = -1);
+    void set_warning(xstring warning) { immediate_warning_id = warning; }
     void update_obstructions_check();
     void update_requirements_check();
     void update_special_case_orientations_check();

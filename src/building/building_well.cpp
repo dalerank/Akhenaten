@@ -37,7 +37,7 @@ void building_well::on_place_checks() {
     construction_warnings warnings;
 
     int has_water = map_terrain_is(tile(), TERRAIN_GROUNDWATER);
-    warnings.add_if(!has_water, WARNING_WATER_ACCESS_NEEDED);
+    warnings.add_if(!has_water, "#needs_groundwater");
 }
 
 bool building_well::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

@@ -34,15 +34,15 @@ void building_weaponsmith::on_place_checks() {
         return;
     }
         
-    construction_warnings warnings(WARNING_COPPER_NEEDED);
+    construction_warnings warnings("#building_needs_copper_ore");
 
     const bool can_produce_copper = g_city.can_produce_resource(RESOURCE_COPPER);
     const bool can_import_copper = g_empire.can_import_resource(RESOURCE_COPPER, true);
     const bool is_import_copper = (city_resource_trade_status(RESOURCE_COPPER) == TRADE_STATUS_IMPORT);
 
-    warnings.add_if(!can_produce_copper, WARNING_BUILD_COPPER_MINE);
-    warnings.add_if(!can_import_copper, WARNING_OPEN_TRADE_TO_IMPORT);
-    warnings.add_if(!is_import_copper, WARNING_TRADE_IMPORT_RESOURCE);
+    warnings.add_if(!can_produce_copper, "#build_copper_mine");
+    warnings.add_if(!can_import_copper, "#setup_trade_route_to_import");
+    warnings.add_if(!is_import_copper, "#overseer_of_commerce_to_import");
 }
 
 bool building_weaponsmith::can_play_animation() const {

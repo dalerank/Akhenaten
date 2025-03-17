@@ -21,15 +21,15 @@ void building_weaver::on_place_checks() {
         return;
     }
 
-    construction_warnings warnings(WARNING_FLAX_NEEDED);
+    construction_warnings warnings("#building_needs_flax");
     const bool can_produce = g_city.can_produce_resource(RESOURCE_FLAX);
-    warnings.add_if(can_produce, WARNING_BUILD_FLAX_FARM);
+    warnings.add_if(can_produce, "#build_flax_farm");
 
     const bool can_import = g_empire.can_import_resource(RESOURCE_FLAX, true);
-    warnings.add_if(!can_import, WARNING_OPEN_TRADE_TO_IMPORT);
+    warnings.add_if(!can_import, "#setup_trade_route_to_import");
     
     const bool trade_import = (city_resource_trade_status(RESOURCE_FLAX) != TRADE_STATUS_IMPORT);
-    warnings.add_if(trade_import, WARNING_TRADE_IMPORT_RESOURCE);
+    warnings.add_if(trade_import, "#overseer_of_commerce_to_import");
 }
 
 bool building_weaver::can_play_animation() const {

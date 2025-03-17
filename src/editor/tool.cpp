@@ -284,33 +284,33 @@ void editor_tool_update_use(tile2i tile) {
 }
 
 static void place_earthquake_flag(tile2i tile) {
-    int warning = 0;
-    if (editor_tool_can_place_flag(data.type, tile, &warning)) {
+    xstring warning;
+    if (editor_tool_can_place_flag(data.type, tile, warning)) {
         if (scenario_editor_earthquake_severity())
             scenario_editor_set_earthquake_point(tile.x(), tile.y());
         else {
-            city_warning_show(WARNING_EDITOR_NO_EARTHQUAKE_SCHEDULED);
+            city_warning_show("#warning_editor_no_earthquake_scheduled");
         }
     } else {
-        city_warning_show(warning);
+        city_warning_show("#place_earthquake_flag");
     }
 }
 
 static void place_flag(tile2i tile, void (*update)(int x, int y)) {
-    int warning = 0;
-    if (editor_tool_can_place_flag(data.type, tile, &warning))
+    xstring warning;
+    if (editor_tool_can_place_flag(data.type, tile, warning))
         update(tile.x(), tile.y());
     else {
-        city_warning_show(warning);
+        city_warning_show("#place_flag");
     }
 }
 
 static void place_flag_with_id(tile2i tile, void (*update)(int id, int x, int y)) {
-    int warning = 0;
-    if (editor_tool_can_place_flag(data.type, tile, &warning))
+    xstring warning;
+    if (editor_tool_can_place_flag(data.type, tile, warning))
         update(data.id, tile.x(), tile.y());
     else
-        city_warning_show(warning);
+        city_warning_show("#place_flag_with_id");
 }
 
 static void place_building(map_point tile) {
@@ -342,7 +342,7 @@ static void place_building(map_point tile) {
         map_building_tiles_add(b->id, tile, size, image_id, TERRAIN_BUILDING);
         scenario_editor_updated_terrain();
     } else {
-        city_warning_show(WARNING_EDITOR_CANNOT_PLACE);
+        city_warning_show("#warning_editor_cannot_place");
     }
 }
 
@@ -374,7 +374,7 @@ static void place_access_ramp(map_point tile) {
         update_terrain_after_elevation_changes();
         scenario_editor_updated_terrain();
     } else {
-        city_warning_show(WARNING_EDITOR_CANNOT_PLACE);
+        city_warning_show("#warning_editor_cannot_place");
     }
 }
 

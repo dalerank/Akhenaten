@@ -41,7 +41,7 @@ void building_water_lift::on_place_checks() {
     construction_warnings warnings;
 
     const bool has_water_lift = building_count_active(BUILDING_WATER_LIFT) > 0;
-    warnings.add_if(!has_water_lift, WARNING_CONNECT_TO_WATERLIFT);
+    warnings.add_if(!has_water_lift, "#needs_access_to_water_lift");
 }
 
 void building_water_lift::spawn_figure() {

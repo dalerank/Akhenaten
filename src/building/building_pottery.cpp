@@ -38,16 +38,16 @@ void building_pottery::on_place_checks() {
         return;
     }
 
-    construction_warnings warnings(WARNING_CLAY_NEEDED);
+    construction_warnings warnings("#building_needs_clay");
 
     const bool can_produce_clay = g_city.can_produce_resource(RESOURCE_CLAY);
-    warnings.add_if(!can_produce_clay, WARNING_BUILD_CLAY_PIT);
+    warnings.add_if(!can_produce_clay, "#build_clay_pit");
 
     const bool can_import_clay = g_empire.can_import_resource(RESOURCE_CLAY, true);
-    warnings.add_if(!can_import_clay, WARNING_OPEN_TRADE_TO_IMPORT);
+    warnings.add_if(!can_import_clay, "#setup_trade_route_to_import");
 
     const bool is_importing_clay = city_resource_trade_status(RESOURCE_CLAY) == TRADE_STATUS_IMPORT;
-    warnings.add_if(!is_importing_clay, WARNING_TRADE_IMPORT_RESOURCE);
+    warnings.add_if(!is_importing_clay, "#overseer_of_commerce_to_import");
 }
 
 bool building_pottery::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

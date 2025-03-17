@@ -250,14 +250,16 @@ void window_advisors_show_checked() {
         g_window_advisors.set_advisor(g_settings.last_advisor);
         window_advisors_show();
     } else {
-        city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
+        pcstr text = (avail == NOT_AVAILABLE ? "#not_available_in_this_assignment" : "#not_available_yet");
+        city_warning_show(text);
     }
 }
 
 int window_advisors_show_advisor(e_advisor advisor) {
     e_availability avail = mission_advisor_availability(advisor, scenario_campaign_scenario_id() + 1);
     if (avail == NOT_AVAILABLE || avail == NOT_AVAILABLE_YET) {
-        city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
+        pcstr text = (avail == NOT_AVAILABLE ? "#not_available_in_this_assignment" : "#not_available_yet");
+        city_warning_show(text);
         return 0;
     }
     g_window_advisors.set_advisor(advisor);

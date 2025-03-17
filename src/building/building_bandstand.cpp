@@ -110,8 +110,8 @@ void building_bandstand::on_place_checks() {
     construction_warnings warnings;
     const bool has_conservatory = building_count_active(BUILDING_CONSERVATORY) > 0;
     const bool has_jungles = building_count_active(BUILDING_JUGGLER_SCHOOL) > 0;
-    warnings.add_if(!has_conservatory, WARNING_BUILD_CONSERVATORY);
-    warnings.add_if(!has_jungles, WARNING_BUILD_JUGGLER_SCHOOL);
+    warnings.add_if(!has_conservatory, "#build_conservatory");
+    warnings.add_if(!has_jungles, "#build_juggling_school");
 }
 
 void building_bandstand::on_place_update_tiles(int orientation, int variant) {

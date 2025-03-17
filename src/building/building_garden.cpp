@@ -44,7 +44,7 @@ int building_garden::static_params::place_impl(tile2i start, tile2i end, bool pl
 
         if (formation_herd_breeding_ground_at(rtile, 1)) {
             map_property_clear_constructing_and_deleted();
-            city_warning_show(WARNING_HERD_BREEDING_GROUNDS);
+            city_warning_show("#cannot_build_over_animal_breeding_grounds");
             return;
         } 
 

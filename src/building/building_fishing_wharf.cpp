@@ -147,7 +147,7 @@ void building_fishing_wharf::on_place_checks() {
 
     construction_warnings warnings;
     const bool has_shipyard = g_city.buildings.has_working_shipyard();
-    warnings.add_if(!has_shipyard, WARNING_SHIPWRIGHT_NEEDED);
+    warnings.add_if(!has_shipyard, "#warning_shipwright_needed");
 }
 
 void building_fishing_wharf::on_undo() {

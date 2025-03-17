@@ -294,8 +294,8 @@ void building_maintenance_check_kingdome_access() {
 
     if (problem_grid_offset) {
         // parts of city disconnected
-        city_warning_show(WARNING_CITY_BOXED_IN);
-        city_warning_show(WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH);
+        city_warning_show("#restore_access_or_sector_will_stagnate");
+        city_warning_show("#city_isolated_from_kingdom_road");
         // TODO: TEMP
         //        city_view_go_to_grid_offset(problem_grid_offset);
     }

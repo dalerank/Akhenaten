@@ -22,7 +22,7 @@ void city_warning_manager::init() {
     has_warning = false;
 
     g_city_events.subscribe([this] (event_construction_warning ev) {
-        city_warning_show(ev.id);
+        city_warning_show(ev.id.c_str());
         //has_warning = true;
     });
 }
@@ -34,14 +34,14 @@ void building_construction_check_road_access(building *b, tile2i tile, int size,
 
     const bool has_road =  map_has_road_access_temple_complex(tile, orientation, true, nullptr);
     if (!has_road) {
-        g_city_events.enqueue(event_construction_warning{ WARNING_ROAD_ACCESS_NEEDED });
+        g_city_events.enqueue(event_construction_warning{ "#needs_road_access" });
     }
 }
 
 void building_construction_check_wall(int type, int x, int y, int size) {
     if (!g_warning_manager.has_warning && type == BUILDING_MUD_TOWER) {
         if (!map_terrain_is_adjacent_to_wall(x, y, size)) {
-            g_city_events.enqueue(event_construction_warning{ WARNING_SENTRIES_NEED_WALL });
+            g_city_events.enqueue(event_construction_warning{ "#must_be_next_to_wall_for_patrol" });
         }
     }
 }
@@ -59,7 +59,7 @@ void building_construction_warning_generic_checks(building *b, tile2i tile, int 
 }
 
 construction_warnings::~construction_warnings() {
-    for (int id : warnings) {
+    for (const xstring &id : warnings) {
         //g_warning_manager.has_warning = false;
         g_city_events.enqueue(event_construction_warning{ id });
     }

@@ -40,15 +40,15 @@ void building_scribal_school::on_place_checks() {
         return;
     }
 
-    construction_warnings warnings(WARNING_PAPYRUS_NEEDED);
+    construction_warnings warnings("#needs_papyrus");
 
     const bool can_produce_papyrus = g_city.can_produce_resource(RESOURCE_PAPYRUS);
     const bool can_import_papyrus = g_empire.can_import_resource(RESOURCE_PAPYRUS, true);
     const bool is_import_papyrus = (city_resource_trade_status(RESOURCE_PAPYRUS) == TRADE_STATUS_IMPORT);
 
-    warnings.add_if(!can_produce_papyrus, WARNING_BUILD_PAPYRUS_MAKER);
-    warnings.add_if(!can_import_papyrus, WARNING_OPEN_TRADE_TO_IMPORT_PAPYRUS);
-    warnings.add_if(!is_import_papyrus, WARNING_OPEN_TRADE_TO_IMPORT_PAPYRUS);
+    warnings.add_if(!can_produce_papyrus, "#build_papyrus_maker");
+    warnings.add_if(!can_import_papyrus, "#import_papyrus_overseer");
+    warnings.add_if(!is_import_papyrus, "#import_papyrus_trade_route");
 }
 
 bool building_scribal_school::add_resource(e_resource resource, int amount) {

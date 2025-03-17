@@ -17,41 +17,41 @@ static const int ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION_PH[4][6] = {
   {GRID_OFFSET(1, 0), GRID_OFFSET(1, 1), GRID_OFFSET(2, 0), GRID_OFFSET(2, 1), GRID_OFFSET(0, 0), GRID_OFFSET(0, 1)},
 };
 
-static int is_clear_terrain(tile2i tile, int* warning) {
+static int is_clear_terrain(tile2i tile, xstring& warning) {
     int result = !map_terrain_is(tile.grid_offset(), TERRAIN_NOT_CLEAR ^ TERRAIN_ROAD);
-    if (!result && warning)
-        *warning = WARNING_EDITOR_CANNOT_PLACE;
+    if (!result)
+        warning = "#editor_cannot_place";
 
     return result;
 }
 
-static int is_edge(map_point tile, int* warning) {
+static int is_edge(map_point tile, xstring& warning) {
     int result = tile.x() == 0 || tile.y() == 0 || tile.x() == scenario_map_data()->width - 1
                  || tile.y() == scenario_map_data()->height - 1;
-    if (!result && warning)
-        *warning = WARNING_EDITOR_NEED_MAP_EDGE;
+    if (!result)
+        warning = "#editor_need_map_edge";
 
     return result;
 }
 
-static int is_water(map_point tile, int* warning) {
+static int is_water(map_point tile, xstring& warning) {
     int result = map_terrain_is(tile.grid_offset(), TERRAIN_WATER);
-    if (!result && warning)
-        *warning = WARNING_EDITOR_NEED_OPEN_WATER;
+    if (!result)
+        warning = "#editor_need_open_water";
 
     return result;
 }
 
-static int is_deep_water(map_point tile, int* warning) {
+static int is_deep_water(map_point tile, xstring& warning) {
     int result = map_terrain_is(tile.grid_offset(), TERRAIN_WATER)
                  && map_terrain_count_directly_adjacent_with_type(tile.grid_offset(), TERRAIN_WATER) == 4;
-    if (!result && warning)
-        *warning = WARNING_EDITOR_NEED_OPEN_WATER;
+    if (!result)
+        warning = "#editor_need_open_water";
 
     return result;
 }
 
-int editor_tool_can_place_flag(int type, map_point tile, int* warning) {
+int editor_tool_can_place_flag(int type, map_point tile, xstring& warning) {
     switch (type) {
     case TOOL_ENTRY_POINT:
     case TOOL_EXIT_POINT:

@@ -966,10 +966,10 @@ void building_impl::on_place_checks() {
 
     construction_warnings warnings;
     const bool has_road = map_has_road_access(tile(), size());
-    warnings.add_if(!has_road, WARNING_ROAD_ACCESS_NEEDED);
+    warnings.add_if(!has_road, "#needs_road_access");
 
     const bool need_workers = (model()->laborers > 0 && g_city.labor.workers_needed >= 10);
-    warnings.add_if(need_workers, WARNING_WORKERS_NEEDED);
+    warnings.add_if(need_workers, "#city_needs_more_workers");
 }
 
 void building_impl::update_graphic() {

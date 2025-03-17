@@ -962,7 +962,7 @@ void building_house::on_place_checks() {
 
     construction_warnings warnings;
     const bool need_more_food = (city_population() >= 200 && !scenario_property_kingdom_supplies_grain() && city_resource_food_percentage_produced() <= 95);
-    warnings.add_if(need_more_food, WARNING_MORE_FOOD_NEEDED);
+    warnings.add_if(need_more_food, "#people_eat_more_than_produce");
 }
 
 bool building_house_crude_hut::evolve(house_demands* demands) {

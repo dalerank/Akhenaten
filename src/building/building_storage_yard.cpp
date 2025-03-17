@@ -843,7 +843,7 @@ void building_storage_yard::on_place_checks() {
     construction_warnings warnings;
 
     const bool has_road_access = map_has_road_access(tile(), 3);
-    warnings.add_if(!has_road_access, WARNING_ROAD_ACCESS_NEEDED);
+    warnings.add_if(!has_road_access, "#needs_road_access");
 }
 
 void building_storage_yard::spawn_figure() {

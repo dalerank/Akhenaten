@@ -52,13 +52,13 @@ void building_papyrus_maker::on_place_checks() {
         return;
     }
 
-    construction_warnings warnings(WARNING_NEED_REEDS);
+    construction_warnings warnings("#building_needs_reeds");
 
     const bool can_produce_reeds = g_city.can_produce_resource(RESOURCE_REEDS);
     const bool can_import_reeds = g_empire.can_import_resource(RESOURCE_REEDS, true);
     const bool is_import_reeds = (city_resource_trade_status(RESOURCE_REEDS) == TRADE_STATUS_IMPORT);
     
-    warnings.add_if(!can_produce_reeds, WARNING_BUILD_REEDS_GATHERER);
-    warnings.add_if(!can_import_reeds, WARNING_OPEN_TRADE_TO_IMPORT_REED);
-    warnings.add_if(!is_import_reeds, WARNING_TRADE_IMPORT_RESOURCE);
+    warnings.add_if(!can_produce_reeds, "#build_reed_gatherer");
+    warnings.add_if(!can_import_reeds, "#setup_trade_route_to_import");
+    warnings.add_if(!is_import_reeds, "#overseer_of_commerce_to_import");
 }

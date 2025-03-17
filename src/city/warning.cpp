@@ -5,6 +5,7 @@
 #include "graphics/view/view.h"
 #include "graphics/window.h"
 #include "io/gamefiles/lang.h"
+#include "graphics/elements/lang_text.h"
 
 #define MAX_WARNINGS 5
 #define TIMEOUT_MS 15000
@@ -12,7 +13,7 @@
 struct warning {
     int in_use;
     time_millis time;
-    bstring128 text;
+    xstring text;
 };
 
 warning g_warnings[MAX_WARNINGS];
@@ -39,17 +40,12 @@ void city_warning_show_custom(const char *text) {
     w->text = text;
 }
 
-void city_warning_show(int type) {
-    const uint8_t* text;
-    if (type == WARNING_ORIENTATION) {
-        text = lang_get_string(17, city_view_orientation());
-    } else {
-        text = lang_get_string(19, type);
-    }
-    city_warning_show_custom((const char*)text);
+void city_warning_show(pcstr type) {
+    xstring text = lang_text_from_key(type);
+    city_warning_show_custom(text.c_str());
 }
 
-int city_has_warnings(void) {
+int city_has_warnings() {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         if (g_warnings[i].in_use)
             return 1;
@@ -59,7 +55,7 @@ int city_has_warnings(void) {
 
 pcstr city_warning_get(int id) {
     if (g_warnings[id].in_use)
-        return g_warnings[id].text.data();
+        return g_warnings[id].text.c_str();
 
     return 0;
 }

@@ -51,13 +51,13 @@ void building_brewery::on_place_checks() {
         return;
     }
 
-    construction_warnings warnings(WARNING_BARLEY_NEEDED);
+    construction_warnings warnings("#needs_barley");
 
     const bool can_produce_barley = g_city.can_produce_resource(RESOURCE_BARLEY);
     const bool can_import_barley = g_empire.can_import_resource(RESOURCE_BARLEY, true);
     const bool is_import_barley = (city_resource_trade_status(RESOURCE_BARLEY) == TRADE_STATUS_IMPORT);
     
-    warnings.add_if(!can_produce_barley, WARNING_BUILD_BARLEY_FARM);
-    warnings.add_if(!can_import_barley, WARNING_OPEN_TRADE_TO_IMPORT);
-    warnings.add_if(!is_import_barley, WARNING_TRADE_IMPORT_RESOURCE);
+    warnings.add_if(!can_produce_barley, "#needs_barley");
+    warnings.add_if(!can_import_barley, "#setup_trade_route_to_import");
+    warnings.add_if(!is_import_barley, "#overseer_of_commerce_to_import");
 }

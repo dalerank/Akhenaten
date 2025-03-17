@@ -46,7 +46,7 @@ void building_senet_house::on_place_checks() {
     construction_warnings warnings;
 
     const bool has_senet_master = (building_count_active(BUILDING_SENET_MASTER) > 0);
-    warnings.add_if(!has_senet_master, WARNING_BUILD_SENET_MAKER);
+    warnings.add_if(!has_senet_master, "#build_senet_house");
 }
 
 void building_senet_house::on_destroy() {

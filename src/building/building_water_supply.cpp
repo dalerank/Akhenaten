@@ -72,5 +72,5 @@ void building_water_supply::on_place_checks() {
     construction_warnings warnings;
 
     int has_water = map_terrain_is(tile(), TERRAIN_GROUNDWATER);
-    warnings.add_if(!has_water, WARNING_WATER_ACCESS_NEEDED);
+    warnings.add_if(!has_water, "#needs_groundwater");
 }

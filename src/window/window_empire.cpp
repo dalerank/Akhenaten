@@ -722,6 +722,7 @@ void window_empire_show_checked() {
     if (avail == AVAILABLE || scenario_is_custom()) {
         window_empire_show();
     } else {
-        city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
+        pcstr text = (avail == NOT_AVAILABLE ? "#not_available_in_this_assignment" : "#not_available_yet");
+        city_warning_show(text);
     }
 }

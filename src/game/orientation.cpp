@@ -10,14 +10,14 @@ void game_orientation_rotate_left(void) {
     city_view_rotate_left();
     map_orientation_change(0);
     widget_minimap_invalidate();
-    city_warning_show(WARNING_ORIENTATION);
+    city_warning_show("#orienation");
 }
 
 void game_orientation_rotate_right(void) {
     city_view_rotate_right();
     map_orientation_change(1);
     widget_minimap_invalidate();
-    city_warning_show(WARNING_ORIENTATION);
+    city_warning_show("#orienation");
 }
 
 void game_orientation_rotate_north(void) {
@@ -38,5 +38,5 @@ void game_orientation_rotate_north(void) {
         return;
     }
     widget_minimap_invalidate();
-    city_warning_show(WARNING_ORIENTATION);
+    city_warning_show("#orienation");
 }

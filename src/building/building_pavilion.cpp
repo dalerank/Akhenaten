@@ -142,9 +142,9 @@ void building_pavilion::on_place_checks() {
     const bool has_jugglers = building_count_active(BUILDING_JUGGLER_SCHOOL) > 0;
     const bool has_musician = building_count_active(BUILDING_CONSERVATORY) > 0;
 
-    warnings.add_if(!has_dance_school, WARNING_BUILD_DANCERS_SCHOOL);
-    warnings.add_if(!has_jugglers, WARNING_BUILD_JUGGLER_SCHOOL);
-    warnings.add_if(!has_musician, WARNING_BUILD_CONSERVATORY);
+    warnings.add_if(!has_dance_school, "#build_dance_school");
+    warnings.add_if(!has_jugglers, "#build_juggling_school");
+    warnings.add_if(!has_musician, "#build_conservatory");
 }
 
 bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

@@ -14,7 +14,7 @@ void building_shrine::on_place_checks() {
     construction_warnings warnings;
 
     const bool has_road = map_has_road_access(tile(), 2);
-    warnings.add_if(!has_road, WARNING_ROAD_ACCESS_NEEDED);
+    warnings.add_if(!has_road, "#needs_road_access");
 }
 
 e_overlay building_shrine::get_overlay() const {
