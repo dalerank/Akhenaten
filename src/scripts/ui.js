@@ -1229,7 +1229,7 @@ window info_window_farm = {
 		farm_desc     : text({ pos: [32, 38], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
 		farm_state    : text({ pos: [32, 186], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
 		flood_info    : text({ pos: [32, 206], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-		progress_desc : text({ pos: [32, 226], text:"${text.2} ${industry.progress}% ${text.3} ${text.12} ${farm.fertility}% ${text.13}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
+		progress_desc : text({ pos: [32, 226], text:"${text.2} ${farm.progress}% ${text.3} ${text.12} ${farm.fertility}% ${text.13}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
 	})
 }
 

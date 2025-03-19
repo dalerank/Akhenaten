@@ -46,8 +46,10 @@ public:
     virtual void on_undo() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void start_production() override;
+    virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
 
     short progress() const { return runtime_data().progress; }
+    short progress_max() const { return runtime_data().progress_max; }
 
     void map_building_tiles_add_farm(e_building_type type, int building_id, tile2i tile, int crop_image_offset, int progress);
     void add_tiles();

@@ -2,6 +2,7 @@
 
 #include "building/count.h"
 #include "building/industry.h"
+#include "core/object_property.h"
 #include "building/building_animation.h"
 #include "city/object_info.h"
 #include "city/city_resource.h"
@@ -33,7 +34,6 @@
 #include "figure/figure.h"
 #include "grid/tiles.h"
 #include "dev/debug.h"
-#include "js/js_game.h"
 
 #include <iostream>
 
@@ -217,6 +217,15 @@ void building_farm::draw_crops(painter &ctx, e_building_type type, int progress,
             ImageDraw::img_from_below(ctx, image_crops + growth_offset, point.x + FARM_TILE_OFFSETS_MEADOW[i].x, point.y + FARM_TILE_OFFSETS_MEADOW[i].y, color_mask);
         }
     }
+}
+
+bvariant building_farm::get_property(const xstring &domain, const xstring &name) const {
+    if (domain == tags().farm && name == tags().progress) {
+        int pct_done = calc_percentage<int>(progress(), progress_max());
+        return bvariant(pct_done);
+    }
+
+    return building_impl::get_property(domain, name);
 }
 
 void building_farm::draw_workers(painter &ctx, building* b, tile2i tile, vec2i pos) {
