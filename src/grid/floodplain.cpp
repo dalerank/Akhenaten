@@ -409,7 +409,8 @@ void map_floodplain_sub_growth_tile(int grid_offset, int order) {
     }
 }
 
-void map_image_set_road_floodplain(int grid_offset) {
+void map_image_set_road_floodplain(tile2i tile) {
+    const int grid_offset = tile.grid_offset();
     const terrain_image img = map_image_context_get_dirt_road(grid_offset);
     if (map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_FLOODPLAIN)) {
         map_image_set(grid_offset, image_group(floodplain_tile) + 84);

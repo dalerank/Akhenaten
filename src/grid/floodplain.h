@@ -32,7 +32,7 @@ void map_update_area_fertility(int x, int y, int size, int delta);
 void set_floodplain_land_tiles_image(int grid_offset, bool force);
 void map_floodplain_adv_growth_tile(int _, int grid_offset, int order);
 void map_floodplain_sub_growth_tile(int grid_offset, int order);
-void map_image_set_road_floodplain(int grid_offset);
+void map_image_set_road_floodplain(tile2i tile);
 void set_floodplain_edges_image(int grid_offset);
 void map_floodplain_advance_growth();
 void map_floodplain_sub_growth();
