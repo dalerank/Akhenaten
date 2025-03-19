@@ -313,8 +313,8 @@ localization = [
   {key: "#building_needs_clay_and_paint", group:19, id:261},
   {key: "#employees_needed", group:19, id:262},
   {key: "#must_be_over_cliffs", group:19, id:263},
-  {key: "#entrance_on_clear_land", group:19, id:264}
-  {key: "#warning_shipwright_needed", group:19, id:316}
+  {key: "#entrance_on_clear_land", group:19, id:264},
+  {key: "#warning_shipwright_needed", group:19, id:316},
 
   {key: "#hunter_ostrich_good_city", lang:"en", text: "I like it here, but there is always room for improvement."},
 ]
