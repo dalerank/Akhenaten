@@ -1,6 +1,7 @@
 #pragma once
 
 #include "building/building.h"
+#include "grid/image_context.h"
 
 class building_mud_wall : public building_impl {
 public:
@@ -25,4 +26,5 @@ public:
     static void update_area_walls(tile2i tile, int size);
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
+    static terrain_image get_terrain_image(tile2i tile);
 };

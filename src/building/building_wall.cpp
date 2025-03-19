@@ -16,16 +16,14 @@ building_mud_wall::static_params building_mud_wall_m;
 bool building_construction_place_wall(bool measure_only, tile2i start, tile2i end) {
     game_undo_restore_map(0);
 
-    int start_offset = start.grid_offset();
-    int end_offset = end.grid_offset();
     int forbidden_terrain_mask = TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_SHRUB
         | TERRAIN_ROAD | TERRAIN_GARDEN | TERRAIN_ELEVATION | TERRAIN_RUBBLE | TERRAIN_CANAL
         | TERRAIN_ACCESS_RAMP;
 
-    if (map_terrain_is(start_offset, forbidden_terrain_mask))
+    if (map_terrain_is(start, forbidden_terrain_mask))
         return false;
 
-    if (map_terrain_is(end_offset, forbidden_terrain_mask))
+    if (map_terrain_is(end, forbidden_terrain_mask))
         return false;
 
     auto result = place_routed_building(start, end, ROUTED_BUILDING_WALL);
@@ -302,9 +300,9 @@ void building_mud_wall::set_wall_gatehouse_image_manually(int grid_offset) {
     }
 }
 
-const terrain_image *map_image_context_get_wall(int grid_offset) {
+terrain_image building_mud_wall::get_terrain_image(tile2i tile) {
     std::array<int, MAP_IMAGE_MAX_TILES> tiles;
-    map_image_context_fill_matches(grid_offset, TERRAIN_WALL, 0, 1, tiles);
+    map_image_context_fill_matches(tile, TERRAIN_WALL, 0, 1, tiles);
     return map_image_context_get_terrain_image(CONTEXT_WALL, tiles);
 }
 
@@ -313,16 +311,16 @@ void building_mud_wall::set_image(tile2i tile) {
         return;
     }
 
-    const terrain_image *img = map_image_context_get_wall(tile.grid_offset());
+    terrain_image img = get_terrain_image(tile);
     const int id = current_params().anim[animkeys().base].first_img();
-    const int img_id = id + img->group_offset + img->item_offset;
+    const int img_id = id + img.group_offset + img.item_offset;
     map_image_set(tile, img_id);
     map_property_set_multi_tile_size(tile.grid_offset(), 1);
     map_property_mark_draw_tile(tile);
 
     if (map_terrain_count_directly_adjacent_with_type(tile.grid_offset(), TERRAIN_GATEHOUSE) > 0) {
         img = map_image_context_get_wall_gatehouse(tile.grid_offset());
-        if (img->is_valid) {
+        if (img.is_valid) {
             map_image_set(tile, img_id);
         } else {
             set_wall_gatehouse_image_manually(tile.grid_offset());

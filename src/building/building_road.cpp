@@ -154,16 +154,16 @@ void building_road::set_image(tile2i tile) {
         return;
     }
 
-    int base_img = road_m.anim["base"].first_img();
+    int base_img = current_params().anim[animkeys().base].first_img();
     if (is_paved(tile)) {
-        const terrain_image* img = map_image_context_get_paved_road(tile.grid_offset());
-        map_image_set(tile, base_img + img->group_offset + img->item_offset);
+        terrain_image img = map_image_context_get_paved_road(tile.grid_offset());
+        map_image_set(tile, base_img + img.group_offset + img.item_offset);
     } else {
         if (!map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
             map_image_set_road_floodplain(tile.grid_offset());
         } else {
-            const terrain_image* img = map_image_context_get_dirt_road(tile.grid_offset());
-            map_image_set(tile, base_img + img->group_offset + img->item_offset + 49 + 344);
+            terrain_image img = map_image_context_get_dirt_road(tile.grid_offset());
+            map_image_set(tile, base_img + img.group_offset + img.item_offset + 49 + 344);
         }
     }
 

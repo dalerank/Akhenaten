@@ -410,7 +410,7 @@ void map_floodplain_sub_growth_tile(int grid_offset, int order) {
 }
 
 void map_image_set_road_floodplain(int grid_offset) {
-    const terrain_image* img = map_image_context_get_dirt_road(grid_offset);
+    const terrain_image img = map_image_context_get_dirt_road(grid_offset);
     if (map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_FLOODPLAIN)) {
         map_image_set(grid_offset, image_group(floodplain_tile) + 84);
     } else if (map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_FLOODPLAIN)) {
@@ -421,7 +421,7 @@ void map_image_set_road_floodplain(int grid_offset) {
         map_image_set(grid_offset, image_group(floodplain_tile) + 87);
     } else {
         int base_img = building_impl::params(BUILDING_ROAD).anim["base"].first_img();
-        map_image_set(grid_offset, base_img + img->group_offset + img->item_offset + 49);
+        map_image_set(grid_offset, base_img + img.group_offset + img.item_offset + 49);
     }
 }
 
@@ -437,13 +437,13 @@ void set_floodplain_edges_image(int grid_offset) {
             return;
         }
 
-        const terrain_image* img = map_image_context_get_floodplain_shore(grid_offset); // this checks against FLOODPLAIN tiles
-        image_id = image_group(floodplain_tile) + 48 + img->group_offset + img->item_offset;
+        const terrain_image img = map_image_context_get_floodplain_shore(grid_offset); // this checks against FLOODPLAIN tiles
+        image_id = image_group(floodplain_tile) + 48 + img.group_offset + img.item_offset;
 
     } else { // floodplain which is ALSO flooded --  this is a waterline
-        const terrain_image* img = map_image_context_get_floodplain_waterline(grid_offset); // this checks against WATER tiles
-        image_id = image_id_from_group(GROUP_TERRAIN_FLOODSYSTEM) + 209 + img->group_offset + img->item_offset;
-        if (!img->is_valid) { // else, normal water tile
+        const terrain_image img = map_image_context_get_floodplain_waterline(grid_offset); // this checks against WATER tiles
+        image_id = image_id_from_group(GROUP_TERRAIN_FLOODSYSTEM) + 209 + img.group_offset + img.item_offset;
+        if (!img.is_valid) { // else, normal water tile
             image_id = 0;
         }
         //            image_id = image_id_from_group(GROUP_TERRAIN_BLACK); // temp

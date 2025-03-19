@@ -19,4 +19,5 @@ public:
     static void set_image(tile2i tile);
     static bool set_road(tile2i tile);
     static bool is_paved(tile2i tile);
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

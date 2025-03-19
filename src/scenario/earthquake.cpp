@@ -251,9 +251,9 @@ void scenario_earthquake_load_state(buffer* buf) {
 static void set_earthquake_image(int grid_offset) {
     tile2i tile(grid_offset);
     if (map_terrain_is(grid_offset, TERRAIN_ROCK) && map_property_is_plaza_or_earthquake(tile)) {
-        const terrain_image* img = map_image_context_get_earthquake(grid_offset);
-        if (img->is_valid) {
-            map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_EARTHQUAKE) + img->group_offset + img->item_offset);
+        const terrain_image img = map_image_context_get_earthquake(grid_offset);
+        if (img.is_valid) {
+            map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_EARTHQUAKE) + img.group_offset + img.item_offset);
         } else {
             map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_EARTHQUAKE));
         }

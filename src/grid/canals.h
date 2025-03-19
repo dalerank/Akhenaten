@@ -22,5 +22,5 @@ void map_canal_fill_from_offset(tile2i tile, int water);
 void map_canal_update_all_tiles(int include_construction);
 void map_tiles_set_canal_image(int grid_offset);
 
-int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_image *img);
-const terrain_image *map_image_context_get_canal(int grid_offset);
+int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_image img);
+terrain_image map_image_context_get_canal(int grid_offset);

@@ -184,7 +184,7 @@ void set_terrain_canal_connections(int grid_offset, int direction, int multi_til
     }
 }
 
-const terrain_image *map_image_context_get_canal(int grid_offset) {
+terrain_image map_image_context_get_canal(int grid_offset) {
     image_tiles_vec tiles = { 0, 0, 0, 0, 0, 0, 0, 0 };
     int has_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
     for (int i = 0; i < MAP_IMAGE_MAX_TILES; i += 2) {
@@ -208,7 +208,7 @@ const terrain_image *map_image_context_get_canal(int grid_offset) {
     return map_image_context_get_terrain_image(CONTEXT_CANAL, tiles);
 }
 
-int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_image *img) {
+int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_image img) {
     if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
         return 0;
     }
@@ -227,7 +227,7 @@ int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_im
         floodplains_offset = IMAGE_CANAL_FLOODPLAIN_OFFSET;
 
     // curve/connection offset
-    int image_offset = img->group_offset;
+    int image_offset = img.group_offset;
     // TODO: some edge cases with roads don't perfectly match up with original game (not really a priority?)
     if (is_road) {
         bool road_dir_right = false;
@@ -266,7 +266,7 @@ void map_tiles_set_canal_image(int grid_offset) {
         return;
     }
 
-    const terrain_image *img = map_image_context_get_canal(grid_offset);
+    const terrain_image img = map_image_context_get_canal(grid_offset);
     bool is_road = map_terrain_is(grid_offset, TERRAIN_ROAD);
     if (is_road)
         map_property_clear_plaza_or_earthquake(grid_offset);

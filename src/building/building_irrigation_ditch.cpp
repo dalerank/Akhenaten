@@ -114,7 +114,7 @@ void building_irrigation_ditch::static_params::planer_ghost_preview(build_planne
     if (blocked) { // cannot draw!
         planer.draw_flat_tile(ctx, pixel, COLOR_MASK_RED);
     } else {
-        const terrain_image *img = map_image_context_get_canal(end.grid_offset()); // get starting tile
+        const terrain_image img = map_image_context_get_canal(end.grid_offset()); // get starting tile
         const bool is_road = map_terrain_is(end, TERRAIN_ROAD);
         int canal_image = get_canal_image(end.grid_offset(), is_road, 0, img);
         planer.draw_building_ghost(ctx, canal_image, pixel);
