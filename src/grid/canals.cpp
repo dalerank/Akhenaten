@@ -166,7 +166,7 @@ void map_update_canals() {
     map_update_canals_from_river();
 }
 
-void set_terrain_canal_connections(int grid_offset, int direction, int multi_tile_mask, int *tiles) {
+void set_terrain_canal_connections(int grid_offset, int direction, int multi_tile_mask, image_tiles_vec& tiles) {
     int offset = grid_offset + map_grid_direction_delta(direction);
     if (map_terrain_is(offset, TERRAIN_BUILDING)) {
         building *b = building_at(offset);
@@ -185,7 +185,7 @@ void set_terrain_canal_connections(int grid_offset, int direction, int multi_til
 }
 
 const terrain_image *map_image_context_get_canal(int grid_offset) {
-    int tiles[MAP_IMAGE_MAX_TILES] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    image_tiles_vec tiles = { 0, 0, 0, 0, 0, 0, 0, 0 };
     int has_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
     for (int i = 0; i < MAP_IMAGE_MAX_TILES; i += 2) {
         int offset = grid_offset + map_grid_direction_delta(i);
@@ -205,7 +205,7 @@ const terrain_image *map_image_context_get_canal(int grid_offset) {
     set_terrain_canal_connections(grid_offset, 2, EDGE_X0Y1, tiles);
     set_terrain_canal_connections(grid_offset, 4, EDGE_X1Y0, tiles);
     set_terrain_canal_connections(grid_offset, 6, EDGE_X2Y1, tiles);
-    return get_terrain_image(CONTEXT_CANAL, tiles);
+    return map_image_context_get_terrain_image(CONTEXT_CANAL, tiles);
 }
 
 int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_image *img) {
