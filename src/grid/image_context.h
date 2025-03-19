@@ -44,9 +44,9 @@ terrain_image map_image_context_get_floodplain_shore(int grid_offset);
 terrain_image map_image_context_get_floodplain_waterline(int grid_offset);
 terrain_image map_image_context_get_reeds_transition(int grid_offseet);
 terrain_image map_image_context_get_grass_corners(int grid_offset);
-terrain_image map_image_context_get_wall_gatehouse(int grid_offset);
+terrain_image map_image_context_get_wall_gatehouse(tile2i tile);
 terrain_image map_image_context_get_dirt_road(int grid_offset);
-terrain_image map_image_context_get_paved_road(int grid_offset);
+terrain_image map_image_context_get_paved_road(tile2i tile);
 
 void map_image_context_fill_matches(int grid_offset, int terrain, int match_value, int no_match_value, image_tiles_vec &tiles);
 inline void map_image_context_fill_matches(tile2i tile, int terrain, int match_value, int no_match_value, image_tiles_vec &tiles) {

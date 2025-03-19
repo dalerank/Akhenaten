@@ -319,7 +319,7 @@ void building_mud_wall::set_image(tile2i tile) {
     map_property_mark_draw_tile(tile);
 
     if (map_terrain_count_directly_adjacent_with_type(tile.grid_offset(), TERRAIN_GATEHOUSE) > 0) {
-        img = map_image_context_get_wall_gatehouse(tile.grid_offset());
+        img = map_image_context_get_wall_gatehouse(tile);
         if (img.is_valid) {
             map_image_set(tile, img_id);
         } else {
