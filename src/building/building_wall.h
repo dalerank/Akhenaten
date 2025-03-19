@@ -23,4 +23,6 @@ public:
     static int get_gatehouse_building_id(int grid_offset);
     static void update_all_walls();
     static void update_area_walls(tile2i tile, int size);
+
+    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

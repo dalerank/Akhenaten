@@ -297,7 +297,8 @@ void building_mud_wall::set_wall_gatehouse_image_manually(int grid_offset) {
     }
 
     if (image_offset) {
-        map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_WALL) + image_offset);
+        const int id = current_params().anim[animkeys().base].first_img();
+        map_image_set(grid_offset, id + image_offset);
     }
 }
 
@@ -313,13 +314,16 @@ void building_mud_wall::set_image(tile2i tile) {
     }
 
     const terrain_image *img = map_image_context_get_wall(tile.grid_offset());
-    map_image_set(tile, image_id_from_group(GROUP_BUILDING_WALL) + img->group_offset + img->item_offset);
+    const int id = current_params().anim[animkeys().base].first_img();
+    const int img_id = id + img->group_offset + img->item_offset;
+    map_image_set(tile, img_id);
     map_property_set_multi_tile_size(tile.grid_offset(), 1);
     map_property_mark_draw_tile(tile);
+
     if (map_terrain_count_directly_adjacent_with_type(tile.grid_offset(), TERRAIN_GATEHOUSE) > 0) {
         img = map_image_context_get_wall_gatehouse(tile.grid_offset());
         if (img->is_valid) {
-            map_image_set(tile, image_id_from_group(GROUP_BUILDING_WALL) + img->group_offset + img->item_offset);
+            map_image_set(tile, img_id);
         } else {
             set_wall_gatehouse_image_manually(tile.grid_offset());
         }
