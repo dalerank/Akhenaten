@@ -236,7 +236,7 @@ int map_tiles_set_canal(tile2i tile) {
 }
 
 void map_tiles_update_all_roads() {
-    map_tiles_foreach_map_tile_ex(building_road::set_image);
+    map_tiles_foreach_map_tile(building_road::set_image);
 }
 
 void map_tiles_update_area_roads(int x, int y, int size) {

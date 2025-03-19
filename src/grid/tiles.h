@@ -30,25 +30,34 @@ void map_tiles_set_water(int grid_offset);
 void map_tiles_update_region_canals(tile2i pmin, tile2i pmax);
 int map_tiles_set_canal(tile2i tile);
 
-template<typename Func>
-void map_tiles_foreach_map_tile(Func callback) {
-    int grid_offset = scenario_map_data()->start_offset;
-    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
-        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-            callback(grid_offset);
+namespace detail {
+    template<bool is_tile, typename Func>
+    void map_tiles_foreach_map_tile(Func callback) {
+        int grid_offset = scenario_map_data()->start_offset;
+        for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+            for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
+                if constexpr (is_tile) {
+                    tile2i tile(grid_offset);
+                    callback(tile);
+                } else {
+                    callback(grid_offset);
+                }
+            }
         }
     }
-}
+} // namespace detail
 
 template<typename Func>
-void map_tiles_foreach_map_tile_ex(Func callback) {
-    int grid_offset = scenario_map_data()->start_offset;
-    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
-        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-            tile2i tile(grid_offset);
-            callback(tile);
-        }
-    }
+void map_tiles_foreach_map_tile(Func callback) {
+    using EventType = typename type_traits::first_func_argument<decltype(&Func::operator())>::type;
+    constexpr bool is_tile = std::is_same_v<EventType, tile2i>;
+    detail::map_tiles_foreach_map_tile<is_tile>(callback);
+}
+
+template<typename EventType>
+void map_tiles_foreach_map_tile(void (*callback)(EventType)) {
+    constexpr bool is_tile = std::is_same_v<EventType, tile2i>;
+    detail::map_tiles_foreach_map_tile<is_tile>(callback);
 }
 
 template<typename Func>

@@ -232,6 +232,7 @@ bool map_terrain_has_only_meadow_in_ring(int x, int y, int distance) {
     }
     return true;
 }
+
 bool map_terrain_is_adjacent_to_wall(int x, int y, int size) {
     int base_offset = MAP_OFFSET(x, y);
     offsets_array offsets;

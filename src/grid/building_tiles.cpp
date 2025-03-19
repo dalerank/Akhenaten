@@ -254,7 +254,7 @@ void map_building_tiles_set_rubble(int building_id, tile2i tile, int size) {
     building* b = building_get(building_id);
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
-            int grid_offset = tile.shifted(dx, dy).grid_offset();
+            const int grid_offset = tile.shifted(dx, dy).grid_offset();
             if (map_building_at(grid_offset) != building_id)
                 continue;
 

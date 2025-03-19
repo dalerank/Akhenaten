@@ -157,9 +157,11 @@ static int is_surrounded_by_water(int grid_offset) {
            && map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_WATER)
            && map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_WATER);
 }
+
 static int is_wall_tile(int grid_offset) {
     return map_terrain_is(grid_offset, TERRAIN_WALL_OR_GATEHOUSE) ? 1 : 0;
 }
+
 static int count_adjacent_wall_tiles(int grid_offset) {
     int adjacent = 0;
     switch (city_view_orientation()) {

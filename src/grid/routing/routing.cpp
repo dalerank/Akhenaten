@@ -300,7 +300,7 @@ bool map_routing_calculate_distances_for_building(e_routed_mode type, tile2i til
     return true;
 }
 
-static bool callback_delete_wall_aqueduct(int next_offset, int dist) {
+static bool callback_delete_wall_canal(int next_offset, int dist) {
     if (map_grid_get(routing_land_citizen, next_offset) < CITIZEN_0_ROAD) {
         if (map_terrain_is(next_offset, TERRAIN_CANAL | TERRAIN_WALL)) {
             map_terrain_remove(next_offset, TERRAIN_CLEARABLE);
@@ -314,7 +314,7 @@ static bool callback_delete_wall_aqueduct(int next_offset, int dist) {
 
 void map_routing_delete_first_wall_or_aqueduct(int x, int y) {
     ++g_routing_stats.total_routes_calculated;
-    route_queue_until(MAP_OFFSET(x, y), callback_delete_wall_aqueduct);
+    route_queue_until(MAP_OFFSET(x, y), callback_delete_wall_canal);
 }
 
 bool figure::is_fighting_friendly() {

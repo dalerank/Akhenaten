@@ -17,6 +17,7 @@ public:
 
     virtual void on_place_checks() override;
 
+    static bool place_wall(bool measure_only, tile2i start, tile2i end);
     static bool set_wall(tile2i tile);
     static void set_image(tile2i tile);
     static void set_wall_gatehouse_image_manually(int grid_offset);

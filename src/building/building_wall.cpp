@@ -13,7 +13,7 @@
 
 building_mud_wall::static_params building_mud_wall_m;
 
-bool building_construction_place_wall(bool measure_only, tile2i start, tile2i end) {
+bool building_mud_wall::place_wall(bool measure_only, tile2i start, tile2i end) {
     game_undo_restore_map(0);
 
     int forbidden_terrain_mask = TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_SHRUB
@@ -36,7 +36,7 @@ bool building_construction_place_wall(bool measure_only, tile2i start, tile2i en
 }
 
 void building_mud_wall::update_all_walls() {
-    map_tiles_foreach_map_tile_ex(building_mud_wall::set_image);
+    map_tiles_foreach_map_tile(building_mud_wall::set_image);
 }
 
 void building_mud_wall::update_area_walls(tile2i tile, int size) {
@@ -345,12 +345,12 @@ bool building_mud_wall::set_wall(tile2i tile) {
 }
 
 int building_mud_wall::static_params::planer_construction_update(build_planner &p, tile2i start, tile2i end) const {
-    int items_placed = building_construction_place_wall(true, start, end);
+    int items_placed = place_wall(true, start, end);
     return items_placed;
 }
 
 int building_mud_wall::static_params::planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
-    int items_placed = building_construction_place_wall(false, start, end);
+    int items_placed = place_wall(false, start, end);
     return items_placed;
 }
 
