@@ -1048,6 +1048,37 @@ void build_planner::construction_update(tile2i tile) {
     total_cost = current_cost;
 }
 
+void build_planner::check_road_access(building *b, tile2i tile, int size, int orientation) {
+    if (!building_is_temple_complex(b->type)) {
+        return;
+    }
+
+    const bool has_road = map_has_road_access_temple_complex(tile, orientation, true, nullptr);
+    if (!has_road) {
+        g_city_events.enqueue(event_construction_warning{ "#needs_road_access" });
+    }
+}
+
+void build_planner::check_wall_rules(int type, int x, int y, int size) {
+    if (!g_warning_manager.has_warning && type == BUILDING_MUD_TOWER) {
+        if (!map_terrain_is_adjacent_to_wall(x, y, size)) {
+            g_city_events.enqueue(event_construction_warning{ "#must_be_next_to_wall_for_patrol" });
+        }
+    }
+}
+
+void build_planner::checks_generic_rules(building *b, tile2i tile, int size, int orientation) {
+    if (!b) {
+        return;
+    }
+
+    e_building_type type = b->type;
+    check_wall_rules(type, tile.x(), tile.y(), size);
+
+    check_road_access(b, tile, size, orientation);
+    b->dcast()->on_place_checks();
+}
+
 void build_planner::construction_finalize() { // confirm final placement
     in_progress = false;
 
@@ -1073,7 +1104,7 @@ void build_planner::construction_finalize() { // confirm final placement
 
     // final generic building warnings - these are in another file
     // TODO: bring these warnings over.
-    building_construction_warning_generic_checks(last_created_building, end, size.x, relative_orientation);
+    checks_generic_rules(last_created_building, end, size.x, relative_orientation);
     bool should_recalc_ferry_routes = params.needs.shoreline;
 
     setup_building_variant(end, build_type);

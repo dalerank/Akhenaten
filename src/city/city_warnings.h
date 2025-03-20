@@ -31,5 +31,3 @@ struct construction_warnings {
 };
 
 extern city_warning_manager g_warning_manager;
-
-void building_construction_warning_generic_checks(building *b, tile2i tile, int size, int orientation);
