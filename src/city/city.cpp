@@ -852,7 +852,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.food_produced_this_month);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument_riot_cause);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT32, &data.mission.tutorial_senate_built); // ok
+    iob->bind____skip(4); //iob->bind(BIND_SIGNATURE_INT32, &data.mission.tutorial_senate_built); // ok
     iob->bind(BIND_SIGNATURE_UINT32, data.buildings.distribution_center);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_building_id);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_placed);

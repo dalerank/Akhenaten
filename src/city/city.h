@@ -148,7 +148,6 @@ struct city_t {
         bool start_saved_game_written;
         bool reserved;
         int32_t reserved_2;
-        int32_t tutorial_senate_built;
     } mission;
 
     struct {

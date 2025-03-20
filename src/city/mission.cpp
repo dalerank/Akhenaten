@@ -14,11 +14,3 @@ int city_mission_should_save_start(void) {
     } else
         return 0;
 }
-
-void city_mission_tutorial_add_senate(void) {
-    city_data.mission.tutorial_senate_built++;
-}
-
-int city_mission_tutorial_has_senate(void) {
-    return city_data.mission.tutorial_senate_built > 0;
-}
