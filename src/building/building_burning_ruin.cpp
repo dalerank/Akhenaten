@@ -6,7 +6,6 @@
 #include "core/profiler.h"
 #include "grid/building_tiles.h"
 #include "grid/terrain.h"
-#include "building/maintenance.h"
 #include "building/destruction.h"
 #include "grid/building.h"
 #include "grid/grid.h"
@@ -169,7 +168,7 @@ bool building_burning_ruin::update() {
         return false;
     }
 
-    int fire_spread_direction = building_maintenance_fire_direction();
+    const int fire_spread_direction = g_city.maintenance.fire_spread_direction;
     int dir1 = ((fire_spread_direction - 1) + 8) % 8;
     int dir2 = (fire_spread_direction + 1) % 8;
 

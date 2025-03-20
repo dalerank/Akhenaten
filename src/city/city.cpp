@@ -57,6 +57,7 @@ void city_t::init() {
     religion.reset();
     buildings.init();
     figure_clear_all();
+    maintenance.init();
 }
 
 void city_t::init_custom_map() {
@@ -1016,6 +1017,17 @@ io_buffer* iob_city_graph_order = new io_buffer([](io_buffer* iob, size_t versio
     auto &data = g_city;
     iob->bind(BIND_SIGNATURE_INT32, &data.population.graph_order);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_order);
+});
+
+#define MAX_SMALL 2500
+#define MAX_LARGE 10000
+
+io_buffer *iob_building_list_small = new io_buffer([] (io_buffer *iob, size_t version) {
+    iob->bind____skip(MAX_SMALL * 2);
+});
+
+io_buffer *iob_building_list_large = new io_buffer([] (io_buffer *iob, size_t version) {
+    iob->bind____skip(MAX_LARGE * 2);
 });
 
 const uint8_t* city_player_name() {

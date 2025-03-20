@@ -51,7 +51,6 @@
 #include "city/city_population.h"
 #include "city/city_desirability.h"
 #include "city/message.h"
-#include "building/maintenance.h"
 #include "building/industry.h"
 #include "io/gamestate/boilerplate.h"
 #include "scenario/distant_battle.h"
@@ -196,7 +195,7 @@ void game_t::update_city(int ticks) {
         building_industry_update_production();
         break;
     case 21:
-        building_maintenance_check_kingdome_access();
+        g_city.maintenance.check_kingdome_access();
         break;
     case 22:
         g_city.population.update_room();
@@ -293,7 +292,6 @@ void game_t::advance_year() {
     g_city.finance.advance_year();
     g_city.migration_advance_year();
     g_empire.reset_yearly_trade_amounts();
-    building_maintenance_update_fire_direction();
     g_city.ratings_update(/*yearly_update*/true);
     //    city_gods_reset_yearly_blessings();
 }

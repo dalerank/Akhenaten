@@ -14,7 +14,7 @@
 
 figures::model_t<figure_homeless> homeless_m;
 
-void figure_create_homeless(tile2i tile, int num_people) {
+void figure_homeless::create(tile2i tile, int num_people) {
     figure* f = figure_create(FIGURE_HOMELESS, tile, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_7_HOMELESS_CREATED;
     f->wait_ticks = 0;

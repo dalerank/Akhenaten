@@ -64,3 +64,19 @@ struct simulation_time_t {
 
     game_date_t date() const { return {years_since_start(), month}; }
 };
+
+struct event_advance_date {
+    int year, month, mday, abdday;
+};
+
+struct event_advance_day : public event_advance_date {
+    static event_advance_day from_simtime(const simulation_time_t &tm) {
+        return { tm.year, tm.month, tm.day, tm.absolute_day() };
+    }
+};
+
+struct event_advance_month : public event_advance_date {
+    static event_advance_month from_simtime(const simulation_time_t &tm) {
+        return { tm.year, tm.month, tm.day, tm.absolute_day() };
+    }
+};

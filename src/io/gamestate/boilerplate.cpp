@@ -2,7 +2,6 @@
 
 #include "building/construction/build_planner.h"
 #include "building/building_granary.h"
-#include "building/maintenance.h"
 #include "building/building_wall.h"
 #include "building/monuments.h"
 #include "building/building_menu.h"
@@ -735,7 +734,7 @@ void GamestateIO::start_loaded_file() {
     figure_route_clean();
     g_city.map.update_road_network();
     map_routing_update_ferry_routes();
-    building_maintenance_check_kingdome_access();
+    g_city.maintenance.check_kingdome_access();
 
     // tiles
     g_floods.init();

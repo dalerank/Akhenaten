@@ -1,7 +1,6 @@
 #include "natives.h"
 
 #include "building/building.h"
-#include "building/list.h"
 #include "city/buildings.h"
 #include "city/city.h"
 #include "core/calc.h"

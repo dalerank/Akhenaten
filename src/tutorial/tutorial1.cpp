@@ -2,7 +2,6 @@
 
 #include "city/city.h"
 #include "game/game.h"
-#include "building/maintenance.h"
 #include "building/building_menu.h"
 #include "building/building_granary.h"
 #include "io/gamefiles/lang.h"

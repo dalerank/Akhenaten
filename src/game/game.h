@@ -13,22 +13,6 @@ enum game_option {
     game_opt_sound = 1,
 };
 
-struct event_advance_date { 
-    int year, month, mday, abdday; 
-};
-
-struct event_advance_day : public event_advance_date {
-    static event_advance_day from_simtime(const simulation_time_t &tm) {
-        return { tm.year, tm.month, tm.day, tm.absolute_day() };
-    }
-};
-
-struct event_advance_month : public event_advance_date {
-    static event_advance_month from_simtime(const simulation_time_t &tm) {
-        return { tm.year, tm.month, tm.day, tm.absolute_day() };
-    }
-};
-
 using game_opts = uint32_t;
 
 bool game_init(game_opts opts);

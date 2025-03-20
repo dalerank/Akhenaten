@@ -16,7 +16,6 @@ public:
     virtual const animations_t &anim() const override;
 
     int find_closest_house_with_room(tile2i tile);
+    static void create(tile2i tile, int num_people);
     //virtual sound_key phrase_key() const override;
 };
-
-void figure_create_homeless(tile2i tile, int num_people);

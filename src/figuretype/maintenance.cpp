@@ -2,8 +2,6 @@
 
 #include "config/config.h"
 #include "building/building.h"
-#include "building/list.h"
-#include "building/maintenance.h"
 #include "building/building_animation.h"
 #include "building/monuments.h"
 #include "building/monument_mastaba.h"
