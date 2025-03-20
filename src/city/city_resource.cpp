@@ -62,12 +62,7 @@ int city_resource_multiple_wine_available() {
 int city_resource_food_types_available() {
     return city_data.resource.food_types_available_num;
 }
-int city_resource_food_stored() {
-    return city_data.resource.granary_total_stored;
-}
-int city_resource_food_needed() {
-    return city_data.resource.food_needed_per_month;
-}
+
 int city_resource_food_supply_months() {
     return city_data.resource.food_supply_months;
 }
@@ -205,9 +200,9 @@ void city_resource_add_to_storageyard(e_resource resource, int amount) {
     city_data.resource.stored_in_warehouses[resource] += amount;
 }
 
-void city_resource_remove_from_storageyard(e_resource resource, int amount) {
-    city_data.resource.space_in_warehouses[resource] += amount;
-    city_data.resource.stored_in_warehouses[resource] -= amount;
+void city_resources_t::remove_from_storageyard_stats(e_resource resource, int amount) {
+    space_in_warehouses[resource] += amount;
+    stored_in_warehouses[resource] -= amount;
 }
 
 int city_storageyards_remove_resource(e_resource resource, int amount) {

@@ -5,15 +5,12 @@
 #include "empire/trade_prices.h"
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
+#include "city/city.h"
 #include "io/io_buffer.h"
 #include "empire/empire_map.h"
 #include "figure/figure.h"
 
-#include "city/finance.h"
-#include "city/city_resource.h"
 #include "city/trade.h"
-
-#include <string.h>
 
 #define MAX_TRADERS 100
 
@@ -101,7 +98,7 @@ e_resource trader_get_buy_resource(building* b, int city_id, int amount) {
         e_resource resource = space->resource();
         if (space->base.stored_amount_first >= amount && g_empire.can_export_resource_to_city(city_id, resource)) {
             // update stocks
-            city_resource_remove_from_storageyard(resource, amount);
+            g_city.resource.remove_from_storageyard_stats(resource, amount);
             space->take_resource(amount);
 
             // update finances

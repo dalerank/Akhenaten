@@ -5,7 +5,6 @@
 #include "figure/properties.h"
 #include "grid/figure.h"
 #include "graphics/animkeys.h"
-#include "figuretype/maintenance.h"
 #include "figuretype/figure_missile.h"
 #include "city/city_figures.h"
 #include "core/random.h"

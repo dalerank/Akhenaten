@@ -211,12 +211,12 @@ int building_storage_yard::remove_resource(e_resource resource, int amount) {
         }
 
         if (space->base.stored_amount_first > amount) {
-            city_resource_remove_from_storageyard(resource, amount);
+            g_city.resource.remove_from_storageyard_stats(resource, amount);
             space->base.stored_amount_first -= amount;
             amount = 0;
 
         } else {
-            city_resource_remove_from_storageyard(resource, space->base.stored_amount_first);
+            g_city.resource.remove_from_storageyard_stats(resource, space->base.stored_amount_first);
             amount -= space->base.stored_amount_first;
             space->base.stored_amount_first = 0;
             space->runtime_data().resource_id = RESOURCE_NONE;
@@ -242,11 +242,11 @@ void building_storageyard_remove_resource_curse(building* b, int amount) {
 
         e_resource resource = space->resource();
         if (space->base.stored_amount_first > amount) {
-            city_resource_remove_from_storageyard(resource, amount);
+            g_city.resource.remove_from_storageyard_stats(resource, amount);
             space->base.stored_amount_first -= amount;
             amount = 0;
         } else {
-            city_resource_remove_from_storageyard(resource, space->base.stored_amount_first);
+            g_city.resource.remove_from_storageyard_stats(resource, space->base.stored_amount_first);
             amount -= space->base.stored_amount_first;
             space->base.stored_amount_first = 0;
             space->runtime_data().resource_id = RESOURCE_NONE;

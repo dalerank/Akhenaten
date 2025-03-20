@@ -1,6 +1,7 @@
 #include "building_storage_room.h"
 
 #include "building/building_storage_yard.h"
+#include "city/city.h"
 #include "graphics/image.h"
 #include "grid/image.h"
 #include "core/calc.h"
@@ -65,7 +66,7 @@ void building_storage_room::add_import(e_resource resource) {
 }
 
 void building_storage_room::remove_export(e_resource resource) {
-    city_resource_remove_from_storageyard(resource, 100);
+    g_city.resource.remove_from_storageyard_stats(resource, 100);
     base.stored_amount_first -= 100;
     if (base.stored_amount_first <= 0) {
         runtime_data().resource_id = RESOURCE_NONE;

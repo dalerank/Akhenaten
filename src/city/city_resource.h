@@ -42,6 +42,7 @@ struct city_resources_t {
 
     int warehouses_stored(e_resource resource);
     int storages_stored(e_resource resource);
+    void remove_from_storageyard_stats(e_resource resource, int amount);
 };
 
 int city_resource_granary_stored(e_resource resource);
@@ -52,8 +53,6 @@ const resource_list &city_resource_get_available_market_goods();
 
 int city_resource_multiple_wine_available();
 int city_resource_food_types_available();
-int city_resource_food_stored();
-int city_resource_food_needed();
 int city_resource_food_supply_months();
 int city_resource_food_percentage_produced();
 int city_resource_operating_granaries();
@@ -73,7 +72,6 @@ void city_resource_toggle_mothballed(e_resource resource);
 void city_resource_add_produced_to_granary(int amount);
 void city_resource_remove_from_granary(int food, int amount);
 void city_resource_add_to_storageyard(e_resource resource, int amount);
-void city_resource_remove_from_storageyard(e_resource resource, int amount);
 void city_resource_calculate_storageyard_stocks();
 void city_resource_determine_available();
 void city_resource_calculate_food_stocks_and_supply_wheat();
