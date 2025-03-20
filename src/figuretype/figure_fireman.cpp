@@ -230,7 +230,7 @@ bool figure_fireman::fight_fire() {
         return false;
     }
 
-    auto result = building_maintenance_get_closest_burning_ruin(tile());
+    auto result = building_burning_ruin::get_closest_from(tile());
     int distance = calc_maximum_distance(tile(), result.second);
     if (result.first > 0 && distance <= 25) {
         building* ruin = building_get(result.first);

@@ -25,9 +25,11 @@ void building_tower::on_create(int orientation) {
 }
 
 void building_tower::on_place_checks() {
-    if (!map_terrain_is_adjacent_to_wall(tilex(), tiley(), size())) {
-        g_city_events.enqueue(event_construction_warning{ "#must_be_next_to_wall_for_patrol" });
-    }
+    building_impl::on_place_checks();
+
+    construction_warnings warnings;
+    const bool near_walls = !map_terrain_is_adjacent_to_wall(tilex(), tiley(), size());
+    warnings.add_if(!near_walls, "#warning_shipwright_needed");
 }
 
 void building_tower::window_info_background(object_info &c) {

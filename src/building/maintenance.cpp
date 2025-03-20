@@ -42,41 +42,6 @@ int building_maintenance_fire_direction() {
     return g_fire_spread_direction;
 }
 
-std::pair<int, tile2i> building_maintenance_get_closest_burning_ruin(tile2i tile) {
-    building *near_ruin = nullptr;
-    int distance = 10000;
-
-    std::vector<building *> burning_ruins;
-    buildings_valid_do([&burning_ruins] (building &b) {
-        if (!(b.state == BUILDING_STATE_VALID || b.state == BUILDING_STATE_MOTHBALLED || b.has_plague)) {
-            return;
-        }
-
-        if (b.has_figure(3)) {
-            return;
-        }
-
-        burning_ruins.push_back(&b);
-    }, BUILDING_BURNING_RUIN);
-
-    std::sort(burning_ruins.begin(), burning_ruins.end(), [&tile] (auto &lhs, auto &rhs) {
-        int lhs_dist = calc_maximum_distance(tile, lhs->tile);
-        int rhs_dist = calc_maximum_distance(tile, rhs->tile);
-        return (lhs_dist < rhs_dist);
-    });
-
-    for (const auto &b: burning_ruins) {
-        grid_tiles adjacent = map_grid_get_tiles(b, 1);
-        for (const auto &t : adjacent) {
-            if (map_routing_citizen_can_travel_over_land(tile, t)) {
-                return {b->id, t};
-            }
-        }
-    }
-
-    return {0, tile2i(-1, -1)};
-}
-
 void fire_building(building* b) {
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
     city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, false, MESSAGE_FIRE, b->type, b->tile.grid_offset());
