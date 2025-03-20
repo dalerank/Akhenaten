@@ -1059,22 +1059,12 @@ void build_planner::check_road_access(building *b, tile2i tile, int size, int or
     }
 }
 
-void build_planner::check_wall_rules(int type, int x, int y, int size) {
-    if (!g_warning_manager.has_warning && type == BUILDING_MUD_TOWER) {
-        if (!map_terrain_is_adjacent_to_wall(x, y, size)) {
-            g_city_events.enqueue(event_construction_warning{ "#must_be_next_to_wall_for_patrol" });
-        }
-    }
-}
-
 void build_planner::checks_generic_rules(building *b, tile2i tile, int size, int orientation) {
     if (!b) {
         return;
     }
 
     e_building_type type = b->type;
-    check_wall_rules(type, tile.x(), tile.y(), size);
-
     check_road_access(b, tile, size, orientation);
     b->dcast()->on_place_checks();
 }
