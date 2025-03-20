@@ -506,6 +506,12 @@ bool building::workshop_has_resources() {
     return has_second_material && hase_first_resource;
 }
 
+void building::mark_plague(int days) {
+    auto m = main();
+    m->disease_days = days;
+    m->has_plague = true;
+}
+
 pcstr building::cls_name() const {
     const auto &params = building_impl::params(type);
     if (params.info_title_id.group != 0) {

@@ -63,7 +63,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
         if (house->base.common_health < 10) {
             warn_building = &house->base;
             people_to_plague -= house->house_population();
-            building_mark_plague(&house->base);
+            house->base.mark_plague(30);
         }
     });
 
@@ -77,7 +77,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
         if (!(housed.apothecary || housed.physician)) {
             warn_building = &house->base;
             people_to_plague -= house->house_population();
-            building_mark_plague(&house->base);
+            house->base.mark_plague(30);
         }
     });
 
@@ -90,7 +90,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
         if (house->house_level() <= HOUSE_STURDY_HUT) {
             warn_building = &house->base;
             people_to_plague -= house->house_population();
-            building_mark_plague(&house->base);
+            house->base.mark_plague(30);
         }
     });
 
@@ -102,7 +102,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
 
         warn_building = &house->base;
         people_to_plague -= house->house_population();
-        building_mark_plague(&house->base);
+        house->base.mark_plague(30);
     });
 
     e_building_type btype = (warn_building ? warn_building->type : BUILDING_NONE);

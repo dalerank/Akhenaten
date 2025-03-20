@@ -134,13 +134,6 @@ void building_destroy_by_fire(building* b) {
     g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
 }
 
-void building_mark_plague(building* b) {
-    b = b->main();
-    b->disease_days = 30;
-    b->has_plague = true;
-    //destroy_on_fire(b, true);
-}
-
 void building_destroy_by_rioter(building* b) {
     b = b->main();
     destroy_on_fire(b, false);

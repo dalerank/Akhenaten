@@ -294,6 +294,8 @@ public:
     bool common_spawn_goods_output_cartpusher(bool only_one = true, bool only_full_loads = true, int min_carry = 100, int max_carry = 800);
     bool workshop_has_resources();
 
+    void mark_plague(int days);
+
 public:
     building_impl *dcast();
     building_farm *dcast_farm();
