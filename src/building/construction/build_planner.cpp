@@ -639,7 +639,7 @@ void build_planner::update_requirements_check() {
     /////// special requirements
     //
     if (special_flags & e_building_flag::Resources) {
-        if (g_city.resource.warehouses_stored((e_resource)additional_req_param1) < additional_req_param2) {
+        if (g_city.resource.yards_stored((e_resource)additional_req_param1) < additional_req_param2) {
             //immediate_warning_id = additional_req_param3;
             can_place = CAN_NOT_BUT_GREEN;
         }

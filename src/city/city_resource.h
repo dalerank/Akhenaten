@@ -8,9 +8,11 @@
 #include <iosfwd>
 #include <string>
 
+struct event_stat_change_resource { e_resource resource; int amount; };
+
 struct city_resources_t {
-    int16_t space_in_warehouses[RESOURCES_MAX];
-    int16_t stored_in_warehouses[RESOURCES_MAX];
+    uint16_t space_in_storages[RESOURCES_MAX];
+    uint16_t stored_in_storages[RESOURCES_MAX];
     e_trade_status trade_status[RESOURCES_MAX];
     int16_t trading_amount[RESOURCES_MAX];
     int32_t stockpiled[RESOURCES_MAX];
@@ -40,9 +42,11 @@ struct city_resources_t {
     } granaries;
     int16_t last_used_warehouse;
 
-    int warehouses_stored(e_resource resource);
-    int storages_stored(e_resource resource);
+    int yards_stored(e_resource resource);
+    int stored(e_resource resource);
     void remove_from_storageyard_stats(e_resource resource, int amount);
+
+    void init();
 };
 
 int city_resource_granary_stored(e_resource resource);

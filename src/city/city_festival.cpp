@@ -210,8 +210,7 @@ void city_festival_t::calculate_costs() {
     grand_alcohol = population / 50 + 1;
     not_enough_alcohol = false;
 
-    int32_t alcohol_resource = RESOURCE_BEER;
-    if (g_city.resource.stored_in_warehouses[alcohol_resource] < grand_alcohol) {
+    if (g_city.resource.yards_stored(RESOURCE_BEER) < grand_alcohol) {
         not_enough_alcohol = true;
         if (selected.size == FESTIVAL_GRAND) {
             selected.size = FESTIVAL_LARGE;

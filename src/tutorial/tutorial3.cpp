@@ -72,7 +72,7 @@ void tutorial3_warehouse_pottery_1_check(event_warehouse_filled ev) {
         return;
     } 
     
-    if (g_city.resource.warehouses_stored(RESOURCE_POTTERY) < 100) {
+    if (g_city.resource.yards_stored(RESOURCE_POTTERY) < 100) {
         return;
     }
 
@@ -89,7 +89,7 @@ void tutorial3_warehouse_pottery_2_check(event_warehouse_filled ev) {
         return;
     }
     
-    if (g_city.resource.warehouses_stored(RESOURCE_POTTERY) < 200) {
+    if (g_city.resource.yards_stored(RESOURCE_POTTERY) < 200) {
         return;
     }
 

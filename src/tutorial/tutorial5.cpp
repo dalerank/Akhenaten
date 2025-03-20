@@ -37,7 +37,7 @@ void tutorial5_handle_papyrus(event_warehouse_filled ev) {
         return;
     }
 
-    if (g_city.resource.warehouses_stored(RESOURCE_PAPYRUS) < 100) {
+    if (g_city.resource.yards_stored(RESOURCE_PAPYRUS) < 100) {
         return;
     }
 
@@ -53,7 +53,7 @@ void tutorial5_handle_bricks(event_warehouse_filled ev) {
         return;
     }
 
-    if (g_city.resource.warehouses_stored(RESOURCE_BRICKS) < 100) {
+    if (g_city.resource.yards_stored(RESOURCE_BRICKS) < 100) {
         return;
     }
 

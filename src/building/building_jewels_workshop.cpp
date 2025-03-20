@@ -23,7 +23,7 @@ void building_jewels_workshop::on_place_checks() {
         return;
     }
 
-    if (g_city.resource.warehouses_stored(RESOURCE_LUXURY_GOODS) > 0 || g_city.resource.warehouses_stored(RESOURCE_GEMS) > 0) {
+    if (g_city.resource.yards_stored(RESOURCE_GEMS) > 0) {
         return;
     }
 

@@ -187,7 +187,7 @@ void building_recruiter::update_count() const {
 
 void building_recruiter::on_place_checks() {
     construction_warnings warnings;
-    const bool has_weapons = g_city.resource.warehouses_stored(RESOURCE_WEAPONS) > 0;
+    const bool has_weapons = g_city.resource.yards_stored(RESOURCE_WEAPONS) > 0;
     warnings.add_if(!has_weapons, "#soldiers_need_supplies_of_weapons");
 }
 

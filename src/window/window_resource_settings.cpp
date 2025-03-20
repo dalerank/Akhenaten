@@ -54,7 +54,7 @@ void trade_resource_settings_window::init() {
     ui["button_help"].onclick([] { window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, -1, 0); });
     ui["button_close"].onclick([] { window_go_back(); });
 
-    const int stored = g_city.resource.warehouses_stored(resource);
+    const int stored = g_city.resource.yards_stored(resource);
     ui["production_store"].text_var("%u %s %s", stored, ui::str(8, 10), ui::str(54, 15));
 }
 

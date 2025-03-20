@@ -47,7 +47,7 @@ void building_brewery::on_place_checks() {
         return;
     }
 
-    if (g_city.resource.warehouses_stored(RESOURCE_BEER) > 0 || g_city.resource.warehouses_stored(RESOURCE_BARLEY) > 0) {
+    if (g_city.resource.yards_stored(RESOURCE_BARLEY) > 0) {
         return;
     }
 

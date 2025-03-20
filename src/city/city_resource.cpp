@@ -27,8 +27,9 @@ struct available_data_t {
 available_data_t g_available_data;
 
 static auto &city_data = g_city;
-int city_resources_t::warehouses_stored(e_resource resource) {
-    return city_data.resource.stored_in_warehouses[resource];
+
+int city_resources_t::yards_stored(e_resource resource) {
+    return city_data.resource.stored_in_storages[resource];
 }
 
 int city_resource_granary_stored(e_resource resource) {
@@ -38,8 +39,8 @@ int city_resource_granary_stored(e_resource resource) {
     return city_data.resource.granary_food_stored[resource];
 }
 
-int city_resources_t::storages_stored(e_resource resource) {
-    return warehouses_stored(resource)
+int city_resources_t::stored(e_resource resource) {
+    return yards_stored(resource)
             + city_resource_granary_stored(resource);
 }
 
@@ -196,13 +197,16 @@ void city_resource_remove_from_granary(int food, int amount) {
 }
 
 void city_resource_add_to_storageyard(e_resource resource, int amount) {
-    city_data.resource.space_in_warehouses[resource] -= amount;
-    city_data.resource.stored_in_warehouses[resource] += amount;
+    city_data.resource.space_in_storages[resource] -= amount;
+    city_data.resource.stored_in_storages[resource] += amount;
 }
 
 void city_resources_t::remove_from_storageyard_stats(e_resource resource, int amount) {
-    space_in_warehouses[resource] += amount;
-    stored_in_warehouses[resource] -= amount;
+    space_in_storages[resource] += amount;
+    stored_in_storages[resource] -= amount;
+}
+
+void city_resources_t::init() {
 }
 
 int city_storageyards_remove_resource(e_resource resource, int amount) {
@@ -251,8 +255,8 @@ int city_granaries_remove_resource(e_resource resource, int amount) {
 void city_resource_calculate_storageyard_stocks() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Warehouse Stocks Update");
     for (int i = 0; i < RESOURCES_MAX; i++) {
-        city_data.resource.space_in_warehouses[i] = 0;
-        city_data.resource.stored_in_warehouses[i] = 0;
+        city_data.resource.space_in_storages[i] = 0;
+        city_data.resource.stored_in_storages[i] = 0;
     }
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -280,10 +284,10 @@ void city_resource_calculate_storageyard_stocks() {
         if (room->resource()) {
             int amounts = room->base.stored_amount_first;
             e_resource resource = room->resource();
-            city_data.resource.stored_in_warehouses[resource] += amounts;
-            city_data.resource.space_in_warehouses[resource] += 400 - amounts;
+            city_data.resource.stored_in_storages[resource] += amounts;
+            city_data.resource.space_in_storages[resource] += 400 - amounts;
         } else {
-            city_data.resource.space_in_warehouses[RESOURCE_NONE] += 4;
+            city_data.resource.space_in_storages[RESOURCE_NONE] += 4;
         }
     }
 

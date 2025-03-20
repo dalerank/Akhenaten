@@ -36,7 +36,7 @@ void building_scribal_school::on_place_checks() {
         return;
     }
         
-    if (g_city.resource.warehouses_stored(RESOURCE_PAPYRUS) > 0) {
+    if (g_city.resource.yards_stored(RESOURCE_PAPYRUS) > 0) {
         return;
     }
 

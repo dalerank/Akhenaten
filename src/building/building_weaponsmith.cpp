@@ -25,12 +25,8 @@ void building_weaponsmith::on_place_checks() {
     if (building_count_industry_active(RESOURCE_COPPER) > 0) {
         return;
     }
-
-    if (g_city.resource.warehouses_stored(RESOURCE_WEAPONS) >= 100) {
-        return;
-    }
-        
-    if (g_city.resource.warehouses_stored(RESOURCE_COPPER) >= 100) {
+       
+    if (g_city.resource.yards_stored(RESOURCE_COPPER) >= 100) {
         return;
     }
         

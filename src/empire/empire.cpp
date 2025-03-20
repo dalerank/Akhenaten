@@ -263,7 +263,7 @@ bool empire_t::can_export_resource_to_city(int city_id, e_resource resource) {
         return false;
     }
 
-    if (g_city.resource.warehouses_stored(resource) <= city_resource_trading_amount(resource)) {
+    if (g_city.resource.yards_stored(resource) <= city_resource_trading_amount(resource)) {
         // stocks too low
         return false;
     }
@@ -301,7 +301,7 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
         return false;
     }
 
-    int in_stock = g_city.resource.warehouses_stored(resource);
+    int in_stock = g_city.resource.yards_stored(resource);
     int max_in_stock = 0;
 
     if (status == TRADE_STATUS_IMPORT_AS_NEEDED) {
