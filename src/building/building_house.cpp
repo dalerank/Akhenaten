@@ -955,7 +955,15 @@ void building_house::on_create(int orientation) {
     }
 }
 
-void building_house::on_place_checks() {       
+void building_house::on_destroy() {
+    g_city.population.remove_home_removed(house_population());
+
+    auto &d = runtime_data();
+    d.population = 0;
+    d.hsize = 0;
+}
+
+void building_house::on_place_checks() {
     if (type() != BUILDING_HOUSE_VACANT_LOT) {
         return;
     }

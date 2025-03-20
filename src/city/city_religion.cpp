@@ -282,7 +282,7 @@ bool city_religion_t::PTAH_warehouse_destruction() {
     }
     //    city_message_disable_sound_for_next_message();
     //    city_message_post(false, MESSAGE_FIRE, max_building->type, max_building->tile.grid_offset());
-    building_destroy_by_fire(&max_building->base);
+    max_building->base.destroy_by_fire();
     map_routing_update_land();
     return true;
 }
@@ -318,7 +318,7 @@ bool city_religion_t::PTAH_industry_destruction() {
                         continue;
 
                     if (b->type == industries[i]) {
-                        building_destroy_by_fire(b);
+                        b->destroy_by_fire();
                         //                        FUN_0046cf10((int)building_id,0);
                         //                        FUN_004693e0(building_id,1);
                     }
@@ -535,8 +535,9 @@ bool city_religion_t::BAST_houses_destruction() {
 
     if (houses_found > 0) {
         for (int i = 0; i < houses_found; ++i) {
-            if (houses[i] != 0)
-                building_destroy_by_fire(building_get(houses[i]));
+            if (houses[i] != 0) {
+                building_get(houses[i])->destroy_by_fire();
+            }
         }
         map_routing_update_land();
         return true;

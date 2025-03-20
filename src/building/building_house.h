@@ -77,6 +77,7 @@ public:
 
     virtual void on_create(int orientation) override;
     //virtual void on_place(int orientation, int variant) override;
+    virtual void on_destroy() override;
     virtual void on_place_checks() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void on_undo() override;

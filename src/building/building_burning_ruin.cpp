@@ -142,7 +142,7 @@ bool building_burning_ruin::update() {
         int grid_offset = tile().grid_offset();
         int next_building_id = map_building_at(grid_offset + map_grid_direction_delta(dir));
         if (next_building_id && !building_get(next_building_id)->fire_proof) {
-            building_destroy_by_fire(building_get(next_building_id));
+            building_get(next_building_id)->destroy_by_fire();
             return true;
         }
     }

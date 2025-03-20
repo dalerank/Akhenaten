@@ -77,7 +77,7 @@ static void advance_earthquake_to_tile(int x, int y) {
     int grid_offset = MAP_OFFSET(x, y);
     int building_id = map_building_at(grid_offset);
     if (building_id) {
-        building_destroy_by_fire(building_get(building_id));
+        building_get(building_id)->destroy_by_fire();
         int ruin_id = map_building_at(grid_offset);
         if (ruin_id) {
             building_get(ruin_id)->state = BUILDING_STATE_DELETED_BY_GAME;

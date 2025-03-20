@@ -39,6 +39,8 @@
 #include "core/object_property.h"
 #include "graphics/view/view.h"
 #include "config/config.h"
+#include "core/random.h"
+#include "sound/sound.h"
 
 #include <string.h>
 #include <map>
@@ -52,7 +54,7 @@ void game_cheat_destroy_type(std::istream &is, std::ostream &os) {
     int type = atoi(args.empty() ? (pcstr)"0" : args.c_str());
     
     buildings_valid_do([] (building &b) {
-        building_destroy_by_collapse(&b);
+        b.destroy_by_collapse();
     }, (e_building_type)type);
 };
 
@@ -231,12 +233,18 @@ building::building() {
 }
 
 building* building::main() {
+    if (prev_part_building_id <= 0) {
+        return this;
+    }
+
     building* b = this;
     for (int guard = 0; guard < 99; guard++) {
-        if (b->prev_part_building_id <= 0)
+        if (b->prev_part_building_id <= 0) {
             return b;
+        }
         b = building_get(b->prev_part_building_id);
     }
+
     return building_get(0);
 }
 
@@ -506,10 +514,95 @@ bool building::workshop_has_resources() {
     return has_second_material && hase_first_resource;
 }
 
+void building::destroy_by_collapse() {
+    assert(is_main());
+    state = BUILDING_STATE_RUBBLE;
+    map_building_tiles_set_rubble(id, tile, size);
+    figure_create_explosion_cloud(tile, size);
+    destroy_linked_parts(false);
+    g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
+}
+
+void building::destroy_on_fire_impl(bool plagued) {
+    game_undo_disable();
+    fire_risk = 0;
+    damage_risk = 0;
+
+    //int was_tent = b->house_size && b->data.house.level <= HOUSE_STURDY_HUT;
+    state = BUILDING_STATE_DELETED_BY_GAME;
+    output_resource_first_id = RESOURCE_NONE;
+    output_resource_second_id = RESOURCE_NONE;
+    distance_from_entry = 0;
+    clear_related_data();
+
+    int waterside_building = 0;
+    if (type == BUILDING_DOCK || type == BUILDING_FISHING_WHARF || type == BUILDING_SHIPWRIGHT) {
+        waterside_building = 1;
+    }
+
+    map_building_tiles_remove(id, tile);
+    unsigned int rand_int = random_short();
+
+    grid_area varea = map_grid_get_area(tile, size, 0);
+    map_grid_area_foreach(varea, [plagued] (tile2i tile) {
+        if (map_terrain_is(tile, TERRAIN_WATER)) {
+            return;
+        }
+
+        // FIXME: possible can't render image & fire animation
+        building *ruin = building_create(BUILDING_BURNING_RUIN, tile, 0);
+        ruin->has_plague = plagued;
+    });
+
+    if (waterside_building) {
+        map_routing_update_water();
+    }
+}
+
+void building::destroy_by_fire() {
+    assert(is_main());
+    destroy_on_fire_impl(false);
+    destroy_linked_parts(true);
+    g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
+}
+
+void building::destroy_linked_parts(bool on_fire) {
+    building *part = this;
+    for (int i = 0; i < 99; i++) {
+        if (part->prev_part_building_id <= 0) {
+            break;
+        }
+
+        int part_id = part->prev_part_building_id;
+        part = building_get(part_id);
+        if (on_fire) {
+            part->destroy_on_fire_impl(false);
+        } else {
+            map_building_tiles_set_rubble(part_id, part->tile, part->size);
+            part->state = BUILDING_STATE_RUBBLE;
+        }
+    }
+
+    part = this;
+    for (int i = 0; i < 99; i++) {
+        part = part->next();
+        if (part->id <= 0) {
+            break;
+        }
+
+        if (on_fire) {
+            part->destroy_on_fire_impl(false);
+        } else {
+            map_building_tiles_set_rubble(part->id, part->tile, part->size);
+            part->state = BUILDING_STATE_RUBBLE;
+        }
+    }
+}
+
 void building::mark_plague(int days) {
-    auto m = main();
-    m->disease_days = days;
-    m->has_plague = true;
+    assert(is_main());
+    disease_days = days;
+    has_plague = true;
 }
 
 pcstr building::cls_name() const {

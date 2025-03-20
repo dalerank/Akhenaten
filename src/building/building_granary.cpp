@@ -450,7 +450,7 @@ void building_granary_storageyard_curse(int big) {
     if (big) {
         city_message_disable_sound_for_next_message();
         city_message_post(false, MESSAGE_FIRE, max_building->type, max_building->tile.grid_offset());
-        building_destroy_by_fire(max_building);
+        max_building->destroy_by_fire();
         map_routing_update_land();
     } else {
         if (max_building->type == BUILDING_STORAGE_YARD) {

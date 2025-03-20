@@ -294,6 +294,9 @@ public:
     bool common_spawn_goods_output_cartpusher(bool only_one = true, bool only_full_loads = true, int min_carry = 100, int max_carry = 800);
     bool workshop_has_resources();
 
+    void destroy_by_collapse();
+    void destroy_by_fire();
+
     void mark_plague(int days);
 
 public:
@@ -368,6 +371,10 @@ public:
         _ptr = (building_impl *)&_ptr_buffer;
         return _ptr;
     }
+
+private:
+    void destroy_on_fire_impl(bool plagued);
+    void destroy_linked_parts(bool on_fire);
 };
 
 #define BUILDING_METAINFO(type, clsid) static constexpr e_building_type TYPE = type; static constexpr pcstr CLSID = #clsid;

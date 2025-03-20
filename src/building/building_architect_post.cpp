@@ -46,7 +46,7 @@ void console_command_collapse(std::istream &is, std::ostream &) {
 
     int step = std::max<int>(1, (int)buildings.size() / count);
     for (int i = 0; i < buildings.size(); i += step) {
-        building_destroy_by_collapse(buildings[i]);
+        buildings[i]->destroy_by_collapse();
     }
 }
 

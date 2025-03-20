@@ -24,6 +24,7 @@
 #include "city/city_festival.h"
 #include "grid/desirability.h"
 #include "city/city_buildings.h"
+#include "city/city_maintenance.h"
 #include "core/eventbus.h"
 #include "building/building_house_demands.h"
 
@@ -39,6 +40,7 @@ struct city_t {
     kingdome_relation_t kingdome;
     city_military_t military;
     victory_state_t victory_state;
+    city_maintenance_t maintenance;
 
     struct {
         uint8_t city;

@@ -46,7 +46,6 @@ std::pair<int, tile2i> building_maintenance_get_closest_burning_ruin(tile2i tile
     building *near_ruin = nullptr;
     int distance = 10000;
 
-    //custom_span<int>  = building_list_burning_items();
     std::vector<building *> burning_ruins;
     buildings_valid_do([&burning_ruins] (building &b) {
         if (!(b.state == BUILDING_STATE_VALID || b.state == BUILDING_STATE_MOTHBALLED || b.has_plague)) {
@@ -78,81 +77,14 @@ std::pair<int, tile2i> building_maintenance_get_closest_burning_ruin(tile2i tile
     return {0, tile2i(-1, -1)};
 }
 
-static void collapse_building(building* b) {
-    city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
-
-    g_city_events.enqueue(event_collase_damage{ b->id });
-    city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, false, MESSAGE_COLLAPSED_BUILDING, b->type, b->tile.grid_offset());
-
-    game_undo_disable();
-    building_destroy_by_collapse(b);
-}
-
-static void fire_building(building* b) {
+void fire_building(building* b) {
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
     city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, false, MESSAGE_FIRE, b->type, b->tile.grid_offset());
 
     g_city_events.enqueue(event_fire_damage{ b->id });
 
     game_undo_disable();
-    building_destroy_by_fire(b);
-}
-
-void building_maintenance_check_fire_collapse() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Fire Collapse Update");
-    city_sentiment_reset_protesters_criminals();
-
-    int climate = scenario_property_climate();
-    int recalculate_terrain = 0;
-    random_generate_next();
-    int random_global = random_byte() & 7;
-    int max_id = building_get_highest_id();
-
-    buildings_valid_do([&] (building &b) {
-        const model_building *model = model_get_building(b.type);
-
-        /////// COLLAPSE
-        int damage_risk_increase = model->damage_risk;
-        damage_risk_increase += scenario_additional_damage(b.type, /*collapse*/1);
-
-        if (!b.damage_proof) {
-            b.damage_risk += damage_risk_increase;
-        }
-
-        if (b.damage_risk > 1000) {
-            collapse_building(&b);
-            recalculate_terrain = 1;
-            return;
-        }
-
-        /////// FIRE
-        int random_building = (b.id + map_random_get(b.tile)) & 7;
-        if (!b.fire_proof && random_building == random_global) {          
-            int expected_fire_risk = building_impl::params(b.type).fire_risk_update;
-            expected_fire_risk += model->fire_risk;
-
-            expected_fire_risk += scenario_additional_damage(b.type, /*fire*/0);
-            expected_fire_risk = b.dcast()->get_fire_risk(expected_fire_risk);
-            b.fire_risk += expected_fire_risk;
-            //            if (climate == CLIMATE_NORTHERN)
-            //                b->fire_risk = 0;
-            //            else if (climate == CLIMATE_DESERT)
-            //                b->fire_risk += 30;
-        }
-
-        if (b.fire_risk > 1000) {
-            fire_building(&b);
-            recalculate_terrain = 1;
-        }
-    });
-
-    if (recalculate_terrain) {
-        map_routing_update_land();
-    }
-}
-
-void building_maintenance_init() {
-   
+    b->destroy_by_fire();
 }
 
 void building_maintenance_check_kingdome_access() {

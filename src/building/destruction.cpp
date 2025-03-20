@@ -21,94 +21,6 @@
 #include <core/random.h>
 #include <string.h>
 
-static void destroy_on_fire(building* b, bool plagued) {
-    game_undo_disable();
-    b->fire_risk = 0;
-    b->damage_risk = 0;
-
-    auto house = b->dcast_house();
-    if (house) {
-        auto &housed = house->runtime_data();
-        if (housed.population > 0) {
-            g_city.population.remove_home_removed(housed.population);
-            housed.population = 0;
-            housed.hsize = 0;
-        }
-    }
-
-    //int was_tent = b->house_size && b->data.house.level <= HOUSE_STURDY_HUT;
-    b->state = BUILDING_STATE_DELETED_BY_GAME;
-    b->output_resource_first_id = RESOURCE_NONE;
-    b->output_resource_second_id = RESOURCE_NONE;
-    b->distance_from_entry = 0;
-    b->clear_related_data();
-
-    int waterside_building = 0;
-    if (b->type == BUILDING_DOCK || b->type == BUILDING_FISHING_WHARF || b->type == BUILDING_SHIPWRIGHT) {
-        waterside_building = 1;
-    }
-
-    map_building_tiles_remove(b->id, b->tile);
-    unsigned int rand_int = random_short();
-
-    grid_area varea = map_grid_get_area(b->tile, b->size, 0);
-    map_grid_area_foreach(varea, [plagued] (tile2i tile) {
-        if (map_terrain_is(tile, TERRAIN_WATER)) {
-            return;
-        }
-
-        // FIXME: possible can't render image & fire animation
-        building *ruin = building_create(BUILDING_BURNING_RUIN, tile, 0);
-        ruin->has_plague = plagued;
-    });
-
-    if (waterside_building) {
-        map_routing_update_water();
-    }
-}
-
-static void destroy_linked_parts(building* b, bool on_fire) {
-    building* part = b;
-    for (int i = 0; i < 99; i++) {
-        if (part->prev_part_building_id <= 0) {
-            break;
-        }
-
-        int part_id = part->prev_part_building_id;
-        part = building_get(part_id);
-        if (on_fire) {
-            destroy_on_fire(part, false);
-        } else {
-            map_building_tiles_set_rubble(part_id, part->tile, part->size);
-            part->state = BUILDING_STATE_RUBBLE;
-        }
-    }
-
-    part = b;
-    for (int i = 0; i < 99; i++) {
-        part = part->next();
-        if (part->id <= 0) {
-            break;
-        }
-
-        if (on_fire) {
-            destroy_on_fire(part, false);
-        } else {
-            map_building_tiles_set_rubble(part->id, part->tile, part->size);
-            part->state = BUILDING_STATE_RUBBLE;
-        }
-    }
-}
-
-void building_destroy_by_collapse(building* b) {
-    b = b->main();
-    b->state = BUILDING_STATE_RUBBLE;
-    map_building_tiles_set_rubble(b->id, b->tile, b->size);
-    figure_create_explosion_cloud(b->tile, b->size);
-    destroy_linked_parts(b, false);
-    g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
-}
-
 void building_destroy_by_poof(building* b, bool clouds) {
     b = b->main();
     if (clouds) {
@@ -127,16 +39,9 @@ void building_destroy_by_poof(building* b, bool clouds) {
     } while (true);
 }
 
-void building_destroy_by_fire(building* b) {
-    b = b->main();
-    destroy_on_fire(b, false);
-    destroy_linked_parts(b, true);
-    g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
-}
-
 void building_destroy_by_rioter(building* b) {
     b = b->main();
-    destroy_on_fire(b, false);
+    b->destroy_by_fire();
 }
 
 int building_destroy_first_of_type(e_building_type type) {
@@ -186,7 +91,7 @@ void building_destroy_by_enemy(tile2i tile) {
         building* b = building_get(building_id);
         if (b->state == BUILDING_STATE_VALID) {
             g_city.ratings.monument_building_destroyed(b->type);
-            building_destroy_by_collapse(b);
+            b->destroy_by_collapse();
         }
     } else {
         if (map_terrain_is(tile, TERRAIN_WALL)) {
