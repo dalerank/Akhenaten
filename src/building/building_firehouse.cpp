@@ -1,18 +1,14 @@
 #include "building_firehouse.h"
 
-#include "window/building/common.h"
-#include "graphics/elements/panel.h"
-#include "graphics/elements/lang_text.h"
 #include "building/destruction.h"
+#include "city/city_buildings.h"
 
 #include "dev/debug.h"
 #include "graphics/animation.h"
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
-#include "js/js_game.h"
 
 buildings::model_t<building_firehouse> firehouse_m;
-info_window_firehouse firehouse_infow;
 
 declare_console_command_p(nofire, console_command_nofire);
 declare_console_command_p(startfire, console_command_startfire);
