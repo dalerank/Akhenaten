@@ -178,12 +178,13 @@ int building_storage_yard::add_resource(e_resource resource, bool is_produced, i
             }
         }
 
-        city_resource_add_to_storageyard(resource, 1);
         space->runtime_data().resource_id = resource;
         int space_on_tile = 400 - space->base.stored_amount_first;
         int unloading_amount = std::min<int>(space_on_tile, amount_left);
         space->base.stored_amount_first += unloading_amount;
         space_on_tile -= unloading_amount;
+        events::emit(event_stats_append_resource{resource, unloading_amount});
+        
         if (space_on_tile == 0) {
             look_for_space = true;
         }
@@ -211,12 +212,12 @@ int building_storage_yard::remove_resource(e_resource resource, int amount) {
         }
 
         if (space->base.stored_amount_first > amount) {
-            g_city.resource.remove_from_storageyard_stats(resource, amount);
+            events::emit(event_stats_remove_resource{ resource, amount });
             space->base.stored_amount_first -= amount;
             amount = 0;
 
         } else {
-            g_city.resource.remove_from_storageyard_stats(resource, space->base.stored_amount_first);
+            events::emit(event_stats_remove_resource{ resource, space->base.stored_amount_first });
             amount -= space->base.stored_amount_first;
             space->base.stored_amount_first = 0;
             space->runtime_data().resource_id = RESOURCE_NONE;
@@ -242,11 +243,11 @@ void building_storageyard_remove_resource_curse(building* b, int amount) {
 
         e_resource resource = space->resource();
         if (space->base.stored_amount_first > amount) {
-            g_city.resource.remove_from_storageyard_stats(resource, amount);
+            events::emit(event_stats_remove_resource{ resource, amount });
             space->base.stored_amount_first -= amount;
             amount = 0;
         } else {
-            g_city.resource.remove_from_storageyard_stats(resource, space->base.stored_amount_first);
+            events::emit(event_stats_remove_resource{ resource, space->base.stored_amount_first });
             amount -= space->base.stored_amount_first;
             space->base.stored_amount_first = 0;
             space->runtime_data().resource_id = RESOURCE_NONE;

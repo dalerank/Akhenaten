@@ -26,7 +26,7 @@ void tutorial5_handle_spacious_apartment(event_advance_day) {
     }
 
     g_tutorials_flags.tutorial_5.spacious_apartment = true;
-    g_city_events.unsubscribe(&tutorial5_handle_spacious_apartment);
+    events::unsubscribe(&tutorial5_handle_spacious_apartment);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
     building_menu_update(tutorial_stage.tutorial_education);
     city_message_post(true, MESSAGE_TUTORIAL_EDUCATION, 0, 0);
@@ -42,7 +42,7 @@ void tutorial5_handle_papyrus(event_warehouse_filled ev) {
     }
 
     g_tutorials_flags.tutorial_5.papyrus_made = true;
-    g_city_events.unsubscribe(&tutorial5_handle_papyrus);
+    events::unsubscribe(&tutorial5_handle_papyrus);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
     building_menu_update(tutorial_stage.tutorial_trading);
     city_message_post(true, MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES, 0, 0);
@@ -58,7 +58,7 @@ void tutorial5_handle_bricks(event_warehouse_filled ev) {
     }
 
     g_tutorials_flags.tutorial_5.bricks_bought = true;
-    g_city_events.unsubscribe(&tutorial5_handle_bricks);
+    events::unsubscribe(&tutorial5_handle_bricks);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
     building_menu_update(tutorial_stage.tutorial_monuments);
     city_message_post(true, MESSAGE_TUTORIAL_MONUMENTS, 0, 0);
@@ -73,13 +73,13 @@ bool tutorial5_is_success() {
 
 void tutorial_5::init() {
     if (g_tutorials_flags.tutorial_5.spacious_apartment) building_menu_update(tutorial_stage.tutorial_education);
-    else g_city_events.subscribe(&tutorial5_handle_spacious_apartment);
+    else events::subscribe(&tutorial5_handle_spacious_apartment);
 
     if (g_tutorials_flags.tutorial_5.papyrus_made) building_menu_update(tutorial_stage.tutorial_trading);
-    else g_city_events.subscribe(&tutorial5_handle_papyrus);
+    else events::subscribe(&tutorial5_handle_papyrus);
 
     if (g_tutorials_flags.tutorial_5.bricks_bought) building_menu_update(tutorial_stage.tutorial_monuments);
-    else g_city_events.subscribe(&tutorial5_handle_bricks);
+    else events::subscribe(&tutorial5_handle_bricks);
 
     g_city.victory_state.add_condition(&tutorial5_is_success);
 }

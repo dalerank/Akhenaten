@@ -1055,7 +1055,7 @@ void build_planner::check_road_access(building *b, tile2i tile, int size, int or
 
     const bool has_road = map_has_road_access_temple_complex(tile, orientation, true, nullptr);
     if (!has_road) {
-        g_city_events.enqueue(event_construction_warning{ "#needs_road_access" });
+        events::emit(event_construction_warning{ "#needs_road_access" });
     }
 }
 

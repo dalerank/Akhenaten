@@ -58,6 +58,7 @@ void city_t::init() {
     buildings.init();
     figure_clear_all();
     maintenance.init();
+    resource.init();
 }
 
 void city_t::init_custom_map() {
@@ -364,8 +365,8 @@ void city_t::buildings_generate_figure() {
 }
 
 void city_t::before_start_simulation() {
-    g_city_events.enqueue(event_population_changed{ population.current });
-    g_city_events.enqueue(event_finance_changed{ finance.treasury });
+    events::emit(event_population_changed{ population.current });
+    events::emit(event_finance_changed{ finance.treasury });
 }
 
 io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {

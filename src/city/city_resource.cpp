@@ -29,19 +29,18 @@ available_data_t g_available_data;
 static auto &city_data = g_city;
 
 int city_resources_t::yards_stored(e_resource resource) {
-    return city_data.resource.stored_in_storages[resource];
+    return stored_in_storages[resource];
 }
 
-int city_resource_granary_stored(e_resource resource) {
+int city_resources_t::granary_stored(e_resource resource) {
     if (!resource_is_food(resource)) {
         return 0;
     }
-    return city_data.resource.granary_food_stored[resource];
+    return granary_food_stored[resource];
 }
 
 int city_resources_t::stored(e_resource resource) {
-    return yards_stored(resource)
-            + city_resource_granary_stored(resource);
+    return yards_stored(resource) + granary_stored(resource);
 }
 
 const resource_list &city_resource_get_available() {
@@ -196,17 +195,16 @@ void city_resource_remove_from_granary(int food, int amount) {
     city_data.resource.granary_food_stored[food] -= amount;
 }
 
-void city_resource_add_to_storageyard(e_resource resource, int amount) {
-    city_data.resource.space_in_storages[resource] -= amount;
-    city_data.resource.stored_in_storages[resource] += amount;
-}
-
-void city_resources_t::remove_from_storageyard_stats(e_resource resource, int amount) {
-    space_in_storages[resource] += amount;
-    stored_in_storages[resource] -= amount;
-}
-
 void city_resources_t::init() {
+    events::subscribe([this] (event_stats_remove_resource ev) {
+        space_in_storages[ev.resource] += ev.amount;
+        stored_in_storages[ev.resource] -= ev.amount;
+    });
+
+    events::subscribe([this] (event_stats_append_resource ev) {
+        space_in_storages[ev.resource] -= ev.amount;
+        stored_in_storages[ev.resource] += ev.amount;
+    });
 }
 
 int city_storageyards_remove_resource(e_resource resource, int amount) {
@@ -299,7 +297,7 @@ void city_resource_calculate_storageyard_stocks() {
 
         int total_stored = warehouse->total_stored();
         if (total_stored > 100) {
-            g_city_events.enqueue(event_warehouse_filled{ warehouse->id() });
+            events::emit(event_warehouse_filled{ warehouse->id() });
         }
     }
 }
@@ -380,7 +378,7 @@ static void calculate_available_food() {
             }
 
             if (amount_stored >= 100) {
-                g_city_events.enqueue(event_granary_filled{b.id, amount_stored});
+                events::emit(event_granary_filled{b.id, amount_stored});
             }
         }
     }, BUILDING_GRANARY);

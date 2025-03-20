@@ -21,7 +21,7 @@ city_warning_manager g_warning_manager;
 void city_warning_manager::init() {
     has_warning = false;
 
-    g_city_events.subscribe([this] (event_construction_warning ev) {
+    events::subscribe([this] (event_construction_warning ev) {
         city_warning_show(ev.id.c_str());
         //has_warning = true;
     });
@@ -30,6 +30,6 @@ void city_warning_manager::init() {
 construction_warnings::~construction_warnings() {
     for (const xstring &id : warnings) {
         //g_warning_manager.has_warning = false;
-        g_city_events.enqueue(event_construction_warning{ id });
+        events::emit(event_construction_warning{ id });
     }
 }

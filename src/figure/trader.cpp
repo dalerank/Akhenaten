@@ -98,7 +98,7 @@ e_resource trader_get_buy_resource(building* b, int city_id, int amount) {
         e_resource resource = space->resource();
         if (space->base.stored_amount_first >= amount && g_empire.can_export_resource_to_city(city_id, resource)) {
             // update stocks
-            g_city.resource.remove_from_storageyard_stats(resource, amount);
+            events::emit(event_stats_remove_resource{ resource, amount });
             space->take_resource(amount);
 
             // update finances

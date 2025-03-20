@@ -336,7 +336,7 @@ void game_t::advance_month() {
         GamestateIO::write_savegame(autosave_file);
     }
 
-    g_city_events.enqueue(event_advance_month::from_simtime(game.simtime));
+    events::emit(event_advance_month::from_simtime(game.simtime));
 }
 
 void game_t::advance_day() {
@@ -355,7 +355,7 @@ void game_t::advance_day() {
     g_city.figures_update_day();
     g_city.population.update_day();
 
-    g_city_events.enqueue(event_advance_day::from_simtime(game.simtime));
+    events::emit(event_advance_day::from_simtime(game.simtime));
 }
 
 void game_t::shutdown() {
@@ -635,7 +635,7 @@ void game_t::sound_frame_begin() {
 }
 
 void game_t::before_start_simulation() {
-    g_city_events.enqueue(event_advance_day::from_simtime(game.simtime));
+    events::emit(event_advance_day::from_simtime(game.simtime));
 }
 
 void game_handle_input_frame() {

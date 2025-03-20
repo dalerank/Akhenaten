@@ -52,7 +52,7 @@ void city_finance_process_gold_extraction(int amount, figure *f) {
 
     if (building_type_any_of(*f->home(), BUILDING_GOLD_MINE)) {
         city_data.finance.this_year.income.gold_extracted += amount;
-        g_city_events.enqueue(event_gold_extract{ amount });
+        events::emit(event_gold_extract{ amount });
     } else if (building_type_any_of(*f->home(), BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED)) {
         city_data.finance.this_year.income.taxes += amount;
     }
@@ -405,6 +405,6 @@ const finance_overview* city_finance_overview_this_year() {
 
 city_finance_t::treasury_t &city_finance_t::treasury_t::change(int v) {
     value += v;
-    g_city_events.enqueue(event_finance_changed{ value });
+    events::emit(event_finance_changed{ value });
     return *this;
 }

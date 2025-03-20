@@ -8,7 +8,8 @@
 #include <iosfwd>
 #include <string>
 
-struct event_stat_change_resource { e_resource resource; int amount; };
+struct event_stats_remove_resource { e_resource resource; int amount; };
+struct event_stats_append_resource { e_resource resource; int amount; };
 
 struct city_resources_t {
     uint16_t space_in_storages[RESOURCES_MAX];
@@ -43,13 +44,11 @@ struct city_resources_t {
     int16_t last_used_warehouse;
 
     int yards_stored(e_resource resource);
+    int granary_stored(e_resource resource);
     int stored(e_resource resource);
-    void remove_from_storageyard_stats(e_resource resource, int amount);
 
     void init();
 };
-
-int city_resource_granary_stored(e_resource resource);
 
 const resource_list &city_resource_get_available();
 const resource_list &city_resource_get_available_foods();
@@ -75,7 +74,6 @@ int city_resource_is_mothballed(e_resource resource);
 void city_resource_toggle_mothballed(e_resource resource);
 void city_resource_add_produced_to_granary(int amount);
 void city_resource_remove_from_granary(int food, int amount);
-void city_resource_add_to_storageyard(e_resource resource, int amount);
 void city_resource_calculate_storageyard_stocks();
 void city_resource_determine_available();
 void city_resource_calculate_food_stocks_and_supply_wheat();

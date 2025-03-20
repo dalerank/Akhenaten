@@ -51,7 +51,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
         return;
     }
 
-    g_city_events.enqueue(event_city_disease{game.simtime.absolute_day()});
+    events::emit(event_city_disease{game.simtime.absolute_day()});
 
     // kill people where has little common_health
     building *warn_building = nullptr;

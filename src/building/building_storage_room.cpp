@@ -55,7 +55,8 @@ void building_storage_room::set_image(e_resource resource) {
 }
 
 void building_storage_room::add_import(e_resource resource) {
-    city_resource_add_to_storageyard(resource, 100);
+    events::emit(event_stats_append_resource{ resource, 100 });
+
     base.stored_amount_first += 100;
     runtime_data().resource_id = resource;
 
@@ -66,7 +67,8 @@ void building_storage_room::add_import(e_resource resource) {
 }
 
 void building_storage_room::remove_export(e_resource resource) {
-    g_city.resource.remove_from_storageyard_stats(resource, 100);
+    events::emit(event_stats_remove_resource{ resource, 100 });
+
     base.stored_amount_first -= 100;
     if (base.stored_amount_first <= 0) {
         runtime_data().resource_id = RESOURCE_NONE;

@@ -451,7 +451,7 @@ void city_population_t::record_monthly() {
 
 void city_population_t::update_day() {
     if (last_day_current != current) {
-        g_city_events.enqueue(event_population_changed{ current });
+        events::emit(event_population_changed{ current });
     }
     last_day_current = current;
 }
