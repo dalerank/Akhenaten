@@ -1,6 +1,5 @@
 #include "window_mission_briefing.h"
 
-#include "city/mission.h"
 #include "game/mission.h"
 #include "game/tutorial.h"
 #include "graphics/graphics.h"
@@ -46,7 +45,7 @@ void ui::mission_briefing_window::init() {
     if (!g_mission_briefing.is_review) {
         ui["back"].onclick([sid = scenario_id] {
             g_sound.speech_stop();
-            window_mission_next_selection_show(sid);
+            ui::mission_choice_window::show(sid);
         });
     }
 
@@ -114,7 +113,7 @@ void window_mission_briefing_show_impl() {
     window_show(&window);
 }
 
-void window_mission_briefing_show(int scenario_id) {
+void ui::mission_briefing_window::mission_start(int scenario_id) {
     auto &data = g_mission_briefing;
     data.scenario_id = scenario_id;
     data.is_review = false;
@@ -122,7 +121,7 @@ void window_mission_briefing_show(int scenario_id) {
     window_intermezzo_show(scenario_id, INTERMEZZO_MISSION_BRIEFING, window_mission_briefing_show_impl);
 }
 
-void window_mission_briefing_show_review() {
+void ui::mission_briefing_window::mission_review() {
     auto &data = g_mission_briefing;
     data.scenario_id = scenario_campaign_scenario_id();
     data.is_review = true;

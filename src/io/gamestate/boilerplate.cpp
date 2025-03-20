@@ -749,7 +749,7 @@ void GamestateIO::start_loaded_file() {
 
     if (game.session.last_loaded == e_session_mission) {
         int scenario_id = scenario_campaign_scenario_id();
-        window_mission_briefing_show(scenario_id);
+        ui::mission_briefing_window::mission_start(scenario_id);
     } else {
         game.paused = false;
         window_city_show();

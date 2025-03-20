@@ -24,6 +24,7 @@ namespace ui {
         virtual void init() override;
 
         void advance_to_next_mission();
+        static void show(void);
     };
 
     struct window_mission_lost : public autoconfig_window_t<window_mission_lost> {
@@ -37,5 +38,4 @@ namespace ui {
 
 }
 
-void window_mission_end_show_won(void);
 void window_mission_end_show_fired(void);

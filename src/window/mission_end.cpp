@@ -87,7 +87,7 @@ void ui::window_mission_won::advance_to_next_mission() {
         if (!next_mission) {
             next_mission = scenario_campaign_scenario_id() + 1;
         }
-        window_mission_next_selection_show(next_mission);
+        ui::mission_choice_window::show(next_mission);
     }
 }
 
@@ -140,7 +140,7 @@ static void show_intermezzo() {
     window_intermezzo_show(scenario_id, INTERMEZZO_WON, show_end_dialog);
 }
 
-void window_mission_end_show_won(void) {
+void ui::window_mission_won::show() {
     mouse_reset_up_state();
     if (scenario_is_mission_rank(1) || scenario_is_mission_rank(2)) {
         // tutorials: immediately go to next mission

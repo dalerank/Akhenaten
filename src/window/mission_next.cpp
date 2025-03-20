@@ -48,13 +48,13 @@ void ui::mission_choice_window::init() {
         elm.tooltip(point.tooltip);
         elm.image(point.image);
 
-        elm.onclick([this, name = point.name, id = point.id] {
-            window_mission_briefing_show(id);
+        elm.onclick([id = point.id] {
+            mission_briefing_window::mission_start(id);
         });
     }
 }
 
-void window_mission_next_selection_show(int scenario_id) {
+void ui::mission_choice_window::show(int scenario_id) {
     const mission_step_t* mission = get_scenario_step_data(scenario_id);
 
     const bool mission_valid = mission && mission->campaign_id >= 0;

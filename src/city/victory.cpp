@@ -191,7 +191,7 @@ void city_t::victory_check() {
         } else if (victory_state.state == e_victory_state_won) {
             sound_music_stop();
             if (mission.victory_message_shown) {
-                window_mission_end_show_won();
+                ui::window_mission_won::show();
                 victory_state.force_win = 0;
             } else {
                 mission.victory_message_shown = 1;

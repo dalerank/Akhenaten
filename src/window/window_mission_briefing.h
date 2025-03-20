@@ -16,9 +16,10 @@ struct mission_briefing_window : public autoconfig_window_t<mission_briefing_win
     virtual int draw_background(UiFlags flags) override;
 
     virtual void init() override;
+    
+    static void mission_start(int);
+    static void mission_review();
 };
 
 }
 
-void window_mission_briefing_show(int);
-void window_mission_briefing_show_review();

@@ -3,7 +3,6 @@
 #include "game/mission.h"
 #include "window/autoconfig_window.h"
 
-void window_mission_next_selection_show(int);
 
 namespace ui {
 
@@ -16,6 +15,7 @@ struct mission_choice_window : public autoconfig_window_t<mission_choice_window>
     virtual int draw_background(UiFlags flags) override { return 0; }
 
     virtual void init() override;
+    static void show(int);
 };
 
 }
