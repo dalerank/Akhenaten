@@ -14,7 +14,6 @@ struct victory_state_t {
     bool force_win;
     bool force_lost;
 
-    
     void reset();
     void update_months_to_govern();
     void continue_governing(int months);

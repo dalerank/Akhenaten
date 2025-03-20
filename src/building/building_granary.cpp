@@ -29,7 +29,6 @@
 #include "city/labor.h"
 #include "figuretype/figure_storageyard_cart.h"
 #include "dev/debug.h"
-#include "js/js_game.h"
 
 #include <cmath>
 #include <iostream>
@@ -47,11 +46,6 @@ declare_console_command(addchickpeas, game_cheat_add_resource<RESOURCE_CHICKPEAS
 declare_console_command(addgamemeat, game_cheat_add_resource<RESOURCE_GAMEMEAT>);
 
 buildings::model_t<building_granary> granary_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_granary);
-void config_load_building_granary() {
-    granary_m.load();
-}
 
 struct city_storages_t {
     svector<int, MAX_GRANARIES> granaries;
