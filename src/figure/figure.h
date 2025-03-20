@@ -51,6 +51,12 @@ enum e_minimap_figure_color {
     FIGURE_COLOR_ANIMAL = 4
 };
 
+enum e_nearby { 
+    NEARBY_ANY, 
+    NEARBY_ANIMAL, 
+    NEARBY_HOSTILE 
+};
+
 enum e_move_type : uint8_t {
     EMOVE_TERRAIN = 0,
     EMOVE_WATER = 1,

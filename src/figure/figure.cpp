@@ -1,6 +1,7 @@
 #include "figure/figure.h"
 
 #include "building/building.h"
+#include "figure/properties.h"
 #include "city/city.h"
 #include "city/warning.h"
 #include "core/random.h"
@@ -79,6 +80,109 @@ bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
         roam_ticks(speed_multiplier);
     }
     return false;
+}
+
+int figure::target_is_alive() {
+    if (target_figure_id <= 0)
+        return 0;
+
+    figure *target = figure_get(target_figure_id);
+    if (!target->is_dead() /* && target->created_sequence == target_figure_created_sequence */)
+        return 1;
+
+    return 0;
+}
+
+static int get_nearest_enemy(int x, int y, int *distance) {
+    int min_enemy_id = 0;
+    int min_dist = 10000;
+    for (int i = 1; i < MAX_FIGURES; i++) {
+        figure *f = figure_get(i);
+        if (f->state != FIGURE_STATE_ALIVE || f->targeted_by_figure_id)
+            continue;
+
+        int dist;
+        if (f->type == FIGURE_PROTESTER || f->type == FIGURE_ENEMY54_GLADIATOR)
+            dist = calc_maximum_distance(tile2i(x, y), f->tile);
+        else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
+            dist = calc_maximum_distance(tile2i(x, y), f->tile);
+        else if (f->is_enemy())
+            dist = 3 * calc_maximum_distance(tile2i(x, y), f->tile);
+        else if (f->type == FIGURE_HYENA)
+            dist = 4 * calc_maximum_distance(tile2i(x, y), f->tile);
+        else
+            continue;
+        if (dist < min_dist) {
+            min_dist = dist;
+            min_enemy_id = i;
+        }
+    }
+    *distance = min_dist;
+    return min_enemy_id;
+}
+
+int figure::is_nearby(int category, int *distance, int max_distance, bool gang_on) {
+    int figure_id = 0;
+    int lowest_distance = max_distance;
+    for (int i = 1; i < MAX_FIGURES; i++) {
+        figure *f = figure_get(i);
+        if (f->is_dead()) {
+            continue;
+        }
+
+        if (!gang_on && f->targeted_by_figure_id) {
+            continue;
+        }
+
+        bool category_check = false;
+        auto props = figure_properties_for_type(f->type);
+        switch (category) {
+        case NEARBY_ANY: // any dude
+            if (props->category != 0)
+                category_check = true;
+            break;
+
+        case NEARBY_ANIMAL: // animal
+            if (props->category == 6 || f->is_herd())
+                category_check = true;
+            break;
+
+        case NEARBY_HOSTILE: // hostile
+            if (f->is_enemy() || f->type == FIGURE_TOMB_ROBER || f->is_attacking_native())
+                category_check = true;
+            break;
+        }
+
+        // pass on to inner distance check
+        if (category_check) {
+            int dist = calc_maximum_distance(tile, f->tile);
+            if (dist <= max_distance) {
+                if (f->targeted_by_figure_id)
+                    dist *= 2; // penalty
+                if (category == NEARBY_HOSTILE) {
+                    if (f->type == FIGURE_TOMB_ROBER || f->type == FIGURE_ENEMY54_GLADIATOR)
+                        dist = calc_maximum_distance(tile, f->tile);
+                    else if (f->type == FIGURE_INDIGENOUS_NATIVE
+                        && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
+                        dist = calc_maximum_distance(tile, f->tile);
+                    else if (f->is_enemy())
+                        dist = 3 * calc_maximum_distance(tile, f->tile);
+                    // else if (f->type == FIGURE_WOLF)
+                    //     dist = 4 * calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
+                    //                    else
+                    //                        continue;
+                }
+                if (dist < lowest_distance) {
+                    lowest_distance = dist;
+                    figure_id = i;
+                    //                    if (!gang_on)
+                    //                        return figure_id;
+                }
+            }
+        }
+    }
+    *distance = lowest_distance;
+    return figure_id;
 }
 
 bool figure::do_goto(tile2i dest, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {

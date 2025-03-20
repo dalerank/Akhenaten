@@ -125,3 +125,83 @@ int figure_magistrate::provide_service() {
 figure_sound_t figure_magistrate::get_sound_reaction(xstring key) const {
     return magistrate_m.sounds[key];
 }
+
+// Same as policeman, but can't fight
+// void figure::magistrate_action() {
+//    building *b = building_get(building_id);
+//    switch (action_state) {
+//        case FIGURE_ACTION_70_PREFECT_CREATED:
+//            is_ghost = true;
+//            anim_frame = 0;
+//            wait_ticks--;
+//            if (wait_ticks <= 0) {
+//                int x_road, y_road;
+//                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
+//                    action_state = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
+//                    set_cross_country_destination(x_road, y_road);
+//                    roam_length = 0;
+//                } else
+//                    poof();
+//            }
+//            break;
+//        case 9:
+//        case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
+//            use_cross_country = true;
+//            is_ghost = true;
+//            if (move_ticks_cross_country(1) == 1) {
+//                if (map_building_at(grid_offset_figure) == building_id) {
+//                    // returned to own building
+//                    poof();
+//                } else {
+//                    action_state = FIGURE_ACTION_72_PREFECT_ROAMING;
+//                    init_roaming();
+//                    roam_length = 0;
+//                }
+//            }
+//            break;
+//        case ACTION_10_DELIVERING_FOOD:
+//        case FIGURE_ACTION_72_PREFECT_ROAMING:
+//            is_ghost = false;
+//            roam_length++;
+//            if (roam_length >= max_roam_length) {
+//                int x_road, y_road;
+//                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
+//                    action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
+//                    destination_x = x_road;
+//                    destination_y = y_road;
+//                    route_remove();
+//                } else
+//                    poof();
+//            }
+//            roam_ticks(1);
+//            break;
+//        case ACTION_11_RETURNING_EMPTY:
+//        case FIGURE_ACTION_73_PREFECT_RETURNING:
+//            move_ticks(1);
+//            if (direction == DIR_FIGURE_AT_DESTINATION) {
+//                action_state = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
+//                set_cross_country_destination(b->tile.x(), b->tile.y());
+//                roam_length = 0;
+//            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
+//                poof();
+//            break;
+//    }
+//    // graphic id
+//    int dir;
+//    if (action_state == FIGURE_ACTION_75_PREFECT_AT_FIRE ||
+//        action_state == FIGURE_ACTION_150_ATTACK) {
+//        dir = attack_direction;
+//    } else if (direction < 8)
+//        dir = direction;
+//    else
+//        dir = previous_tile_direction;
+//    dir = figure_image_normalize_direction(dir);
+//    switch (action_state) {
+//        case FIGURE_ACTION_149_CORPSE:
+//            sprite_image_id = image_id_from_group(GROUP_FIGURE_MAGISTRATE) + 96 + figure_image_corpse_offset();
+//            break;
+//        default:
+//            sprite_image_id = image_id_from_group(GROUP_FIGURE_MAGISTRATE) + dir + 8 * anim_frame;
+//            break;
+//    }
+//}
