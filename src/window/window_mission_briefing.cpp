@@ -21,6 +21,7 @@
 #include "window/intermezzo.h"
 #include "window/mission_next.h"
 #include "game/settings.h"
+#include "city/city.h"
 
 ui::mission_briefing_window g_mission_briefing;
 
@@ -61,7 +62,7 @@ void ui::mission_briefing_window::init() {
         g_sound.speech_stop();
         g_sound.music_update(/*force*/true);
         window_city_show();
-        city_mission_reset_save_start();
+        g_city.mission.start_message_shown = true;
     });
 
     int text_id = 200 + scenario_id; 

@@ -114,7 +114,6 @@ struct tutorial_flags_t {
         bool tut7_start;
         bool tut8_start;
         uint16_t last_action;
-
     } pharaoh;
 
     void update_starting_message();

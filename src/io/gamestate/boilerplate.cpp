@@ -11,7 +11,6 @@
 #include "city/map.h"
 #include "city/message.h"
 #include "city/military.h"
-#include "city/mission.h"
 #include "city/city_resource.h"
 #include "city/victory.h"
 #include "core/bstring.h"

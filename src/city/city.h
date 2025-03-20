@@ -145,7 +145,7 @@ struct city_t {
         int32_t continue_months_chosen;
         bool fired_message_shown;
         bool victory_message_shown;
-        bool start_saved_game_written;
+        bool start_message_shown;
         bool reserved;
         int32_t reserved_2;
     } mission;

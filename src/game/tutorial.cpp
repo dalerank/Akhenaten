@@ -6,7 +6,6 @@
 #include "city/buildings.h"
 #include "city/city.h"
 #include "city/message.h"
-#include "city/mission.h"
 #include "city/city_population.h"
 #include "city/city_resource.h"
 #include "empire/empire_city.h"

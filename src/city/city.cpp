@@ -950,7 +950,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.mission.victory_message_shown);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.mission.start_saved_game_written);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.mission.start_message_shown);
     iob->bind____skip(4);
     iob->bind____skip(3);
     iob->bind____skip(4);
