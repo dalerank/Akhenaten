@@ -39,18 +39,7 @@
 #include "game/game.h"
 #include "building/building.h"
 
-struct widget_city_data_t {
-    map_point current_tile;
-    map_point selected_tile;
-    int new_start_grid_offset;
-    bool capture_input;
-};
-
-widget_city_data_t g_wdiget_city_data;
-
-void widget_city_capture_input(bool v) {
-    g_wdiget_city_data.capture_input = v;
-}
+screen_city_t g_screen_city;
 
 void set_city_clip_rectangle(painter &ctx) {
     vec2i view_pos, view_size;
@@ -218,7 +207,7 @@ void widget_city_draw_with_overlay(painter &ctx, tile2i tile) {
 }
 
 void widget_city_draw(painter &ctx) {
-    auto& data = g_wdiget_city_data;
+    auto& data = g_screen_city;
     update_zoom_level(ctx);
     set_render_scale(ctx, g_zoom.get_scale());
     set_city_clip_rectangle(ctx);
@@ -234,7 +223,7 @@ void widget_city_draw(painter &ctx) {
 }
 
 void widget_city_draw_for_figure(painter &ctx, int figure_id, vec2i* coord) {
-    auto& data = g_wdiget_city_data;
+    auto& data = g_screen_city;
     set_city_clip_rectangle(ctx);
 
     widget_city_draw_without_overlay(ctx, figure_id, coord, data.current_tile);
@@ -384,22 +373,41 @@ static bool handle_cancel_construction_button(const touch_t * t) {
 }
 
 void widget_city_clear_current_tile() {
-    auto& data = g_wdiget_city_data;
-    data.selected_tile.set(0);
-    data.current_tile.set(0);
+    auto& data = g_screen_city;
+    data.selected_tile = tile2i::invalid;
+    data.current_tile = tile2i::invalid;
 }
 
 tile2i widget_city_get_current_tile() {
-    return g_wdiget_city_data.current_tile;
+    return g_screen_city.current_tile;
 }
 
 void widget_city_set_current_tile(tile2i tile) {
-    auto& data = g_wdiget_city_data;
+    auto& data = g_screen_city;
     data.current_tile = tile;
 }
 
-void widget_city_handle_touch_scroll(const touch_t * t) {
-    auto& data = g_wdiget_city_data;
+void screen_city_t::handle_touch_scroll(const touch_t * t, bool fore_capture_input) {
+    struct holder_capture_input {
+        holder_capture_input(screen_city_t& s, const touch_t *t, bool h) : screen(s), touch(t), hold(h) {
+            if (hold && t->has_started) {
+                screen.capture_input = true;
+            }
+        }
+
+        ~holder_capture_input() {
+            if (hold && touch->has_ended) {
+                screen.capture_input = false;
+            }
+        }
+
+        screen_city_t &screen;
+        const touch_t *touch = nullptr;
+        bool hold = false;
+    };
+
+    holder_capture_input capture_holder(*this, t, fore_capture_input);
+
     if (g_city_planner.build_type) {
         if (t->has_started) {
             vec2i view_pos, view_size;
@@ -407,24 +415,31 @@ void widget_city_handle_touch_scroll(const touch_t * t) {
             city_view_get_viewport(viewport, view_pos, view_size);
             scroll_set_custom_margins(view_pos.x, view_pos.y, view_size.x, view_size.y);
         }
-        if (t->has_ended)
+        if (t->has_ended) {
             scroll_restore_margins();
+        }
 
         return;
     }
     scroll_restore_margins();
 
-    if (!data.capture_input)
+    if (!capture_input) {
         return;
+    }
+
     int was_click = touch_was_click(get_latest_touch());
     if (t->has_started || was_click) {
         scroll_drag_start(1);
         return;
     }
-    if (!touch_not_click(t))
+
+    if (!touch_not_click(t)) {
         return;
-    if (t->has_ended)
+    }
+
+    if (t->has_ended) {
         scroll_drag_end();
+    }
 }
 
 static void handle_touch_zoom(const touch_t * first, const touch_t * last) {
@@ -436,7 +451,7 @@ static void handle_touch_zoom(const touch_t * first, const touch_t * last) {
 }
 
 static void handle_first_touch(map_point tile) {
-    auto& data = g_wdiget_city_data;
+    auto& data = g_screen_city;
     const touch_t * first = get_earliest_touch();
     e_building_type type = g_city_planner.build_type;
 
@@ -451,7 +466,7 @@ static void handle_first_touch(map_point tile) {
         }
     }
 
-    widget_city_handle_touch_scroll(first);
+    g_screen_city.handle_touch_scroll(first, false);
 
     if (!input_coords_in_city(first->current_point.x, first->current_point.y) || type == BUILDING_NONE)
         return;
@@ -519,7 +534,7 @@ static void handle_last_touch(void) {
 }
 
 static void handle_touch(void) {
-    auto& data = g_wdiget_city_data;
+    auto& data = g_screen_city;
     const touch_t * first = get_earliest_touch();
     if (!first->in_use) {
         scroll_restore_margins();
@@ -544,12 +559,12 @@ static void handle_touch(void) {
 }
 
 int widget_city_has_input(void) {
-    auto& data = g_wdiget_city_data;
+    auto& data = g_screen_city;
     return data.capture_input;
 }
 
 static void handle_mouse(const mouse* m) {
-    auto& data = g_wdiget_city_data;
+    auto& data = g_screen_city;
     data.current_tile = widget_city_update_city_view_coords({m->x, m->y});
     g_zoom.handle_mouse(m);
     g_city_planner.draw_as_constructing = false;
@@ -611,7 +626,7 @@ void widget_city_handle_input(const mouse* m, const hotkeys* h) {
 }
 
 void widget_city_get_tooltip(tooltip_context* c) {
-    auto& data = g_wdiget_city_data;
+    auto& data = g_screen_city;
     if (g_settings.tooltips == e_tooltip_show_none) {
         return;
     }
