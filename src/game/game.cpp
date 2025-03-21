@@ -642,9 +642,8 @@ void game_t::handle_input_frame() {
     const mouse *m = mouse_get();
     const hotkeys *h = hotkey_state();
 
-    window_type* w = window_current();
-    w->handle_input(m, h);
-    tooltip_handle(m, w->get_tooltip);
+    g_window_manager.handle_input(m ,h);
+    g_window_manager.handle_tooltip(m);
 
     g_window_manager.update_input_after();
 }

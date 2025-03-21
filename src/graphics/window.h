@@ -94,13 +94,13 @@ struct windows_manager_t {
     int underlying_windows_redrawing;
 
     void update_input_after();
+    void handle_input(const mouse *m, const hotkeys *h);
+    void handle_tooltip(const mouse *m);
 };
 
 extern windows_manager_t g_window_manager;
 
 void window_draw(int force);
-
-window_type *window_current();
 
 void window_draw_underlying_window(int);
 

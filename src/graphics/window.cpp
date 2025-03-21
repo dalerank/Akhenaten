@@ -86,6 +86,14 @@ void windows_manager_t::update_input_after() {
     hotkey_reset_state();
 }
 
+void windows_manager_t::handle_input(const mouse *m, const hotkeys *h) {
+    current_window->handle_input(m, h);
+}
+
+void windows_manager_t::handle_tooltip(const mouse *m) {
+    tooltip_handle(m, current_window->get_tooltip);
+}
+
 void window_draw(int force) {
     auto& data = g_window_manager;
     // draw the current (top) window in the queue
@@ -108,10 +116,6 @@ void window_draw(int force) {
         OZZY_PROFILER_SECTION("Render/Frame/Foreground");
         w->draw_foreground(UiFlags_None);
     }
-}
-
-window_type *window_current() {
-    return g_window_manager.current_window;
 }
 
 void window_draw_underlying_window(int flags) {
