@@ -33,6 +33,5 @@ void widget_city_get_tooltip(tooltip_context* c);
 void widget_city_scroll_map(const mouse *m);
 
 void widget_city_clear_current_tile();
-void widget_city_set_current_tile(tile2i tile);
 tile2i widget_city_get_current_tile();
 tile2i widget_city_update_city_view_coords(vec2i pixel);

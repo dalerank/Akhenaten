@@ -336,11 +336,6 @@ tile2i widget_city_get_current_tile() {
     return g_screen_city.current_tile;
 }
 
-void widget_city_set_current_tile(tile2i tile) {
-    auto& data = g_screen_city;
-    data.current_tile = tile;
-}
-
 void screen_city_t::handle_touch_scroll(const touch_t * t, bool fore_capture_input) {
     struct holder_capture_input {
         holder_capture_input(screen_city_t& s, const touch_t *t, bool h) : screen(s), touch(t), hold(h) {

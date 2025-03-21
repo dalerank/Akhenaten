@@ -35,7 +35,7 @@ void military_map_click(int legion_formation_id, tile2i tile) {
 
 void widget_city_handle_input_military(const mouse* m, const hotkeys* h, int legion_formation_id) {
     tile2i current_tile = widget_city_update_city_view_coords({m->x, m->y});
-    widget_city_set_current_tile(current_tile);
+    g_screen_city.current_tile = current_tile;
 
     if (!city_view_is_sidebar_collapsed() && widget_minimap_handle_mouse(m)) {
         return;
@@ -60,7 +60,8 @@ void widget_city_handle_input_military(const mouse* m, const hotkeys* h, int leg
     } 
 
     current_tile = widget_city_update_city_view_coords({m->x, m->y});
-    widget_city_set_current_tile(current_tile);
+    g_screen_city.current_tile = current_tile;
+
     const bool m_left_down = (!m->is_touch && m->left.went_down);
     const auto *early_touch = get_earliest_touch();
     const bool m_has_touch = (m->is_touch && m->left.went_up && touch_was_click(early_touch));
