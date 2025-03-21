@@ -72,7 +72,7 @@ void figure_info_window::prepare_figures(object_info &c) {
     //        }
     //        graphics_set_active_canvas(CANVAS_UI);
     painter ctx = game.painter();
-    widget_city_draw(ctx);
+    g_screen_city.draw(ctx);
 }
 
 void figure_info_window::play_figure_phrase(object_info &c) {

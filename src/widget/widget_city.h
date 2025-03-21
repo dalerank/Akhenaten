@@ -14,13 +14,13 @@ struct screen_city_t {
     bool capture_input;
 
     void handle_touch_scroll(const touch_t *t, bool force_capture_input);
+    void draw(painter &ctx);
 };
 
 extern screen_city_t g_screen_city;
 
 void set_city_clip_rectangle(painter &ctx);
 
-void widget_city_draw(painter &ctx);
 void widget_city_draw_for_figure(painter &ctx, int figure_id, vec2i* coord);
 void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2i *figure_coord, tile2i tile);
 

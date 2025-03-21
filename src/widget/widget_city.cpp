@@ -206,16 +206,15 @@ void widget_city_draw_with_overlay(painter &ctx, tile2i tile) {
     g_city_planner.draw(ctx);
 }
 
-void widget_city_draw(painter &ctx) {
-    auto& data = g_screen_city;
+void screen_city_t::draw(painter &ctx) {
     update_zoom_level(ctx);
     set_render_scale(ctx, g_zoom.get_scale());
     set_city_clip_rectangle(ctx);
 
     if (game.current_overlay) {
-        widget_city_draw_with_overlay(ctx, data.current_tile);
+        widget_city_draw_with_overlay(ctx, current_tile);
     } else {
-        widget_city_draw_without_overlay(ctx, 0, nullptr, data.current_tile);
+        widget_city_draw_without_overlay(ctx, 0, nullptr, current_tile);
     }
 
     graphics_reset_clip_rectangle();
