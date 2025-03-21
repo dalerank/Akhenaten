@@ -134,8 +134,7 @@ static void update_tile_coords(vec2i pixel, tile2i tile, painter &ctx) {
     record_mappoint_pixelcoord(tile, pixel);
 }
 
-static void update_clouds(painter &ctx)
-{
+void screen_city_t::update_clouds(painter &ctx) {
     if (game.paused || (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY))) {
         clouds_pause();
     }
@@ -231,52 +230,6 @@ void screen_city_t::draw_for_figure(painter &ctx, int figure_id, vec2i* coord) {
     graphics_reset_clip_rectangle();
 }
 
-bool widget_city_draw_construction_cost_and_size() {
-    if (!g_city_planner.in_progress) {
-        return false;
-    }
-
-    if (scroll_in_progress()) {
-        return false;
-    }
-
-    int size_x, size_y;
-    int cost = g_city_planner.total_cost;
-    int has_size = g_city_planner.get_total_drag_size(&size_x, &size_y);
-    if (!cost && !has_size) {
-        return false;
-    }
-
-    painter ctx = game.painter();
-    set_city_clip_rectangle(ctx);
-    screen_tile screen = camera_get_selected_screen_tile();
-    int x = screen.x;
-    int y = screen.y;
-    int inverted_scale = calc_percentage<int>(100, g_zoom.get_percentage());
-    x = calc_adjust_with_percentage(x, inverted_scale);
-    y = calc_adjust_with_percentage(y, inverted_scale);
-
-    if (cost) {
-        color color;
-        if (cost <= g_city.finance.treasury) // Color blind friendly
-            color = scenario_property_climate() == CLIMATE_DESERT ? COLOR_FONT_ORANGE : COLOR_FONT_ORANGE_LIGHT;
-        else
-            color = COLOR_FONT_RED;
-        text_draw_number_colored(cost, '@', " ", x + 58 + 1, y + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
-        text_draw_number_colored(cost, '@', " ", x + 58, y, FONT_SMALL_PLAIN, color);
-    }
-
-    if (has_size) {
-        int width = -text_get_width(string_from_ascii("  "), FONT_SMALL_PLAIN);
-        width += text_draw_number_colored(size_x, '@', "x", x - 15 + 1, y + 25 + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
-        text_draw_number_colored(size_x, '@', "x", x - 15, y + 25, FONT_SMALL_PLAIN, COLOR_FONT_YELLOW);
-        text_draw_number_colored(size_y, '@', " ", x - 15 + width + 1, y + 25 + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
-        text_draw_number_colored(size_y, '@', " ", x - 15 + width, y + 25, FONT_SMALL_PLAIN, COLOR_FONT_YELLOW);
-    }
-    graphics_reset_clip_rectangle();
-    return true;
-}
-
 // INPUT HANDLING
 
 static void build_start(tile2i tile) {
@@ -289,6 +242,7 @@ static void build_move(tile2i tile) {
         return;
     g_city_planner.construction_update(tile);
 }
+
 static void build_end(void) {
     if (g_city_planner.in_progress) {
         if (g_city_planner.build_type != BUILDING_NONE)

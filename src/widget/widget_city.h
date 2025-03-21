@@ -18,12 +18,12 @@ struct screen_city_t {
     void draw_with_overlay(painter &ctx);
     void draw_without_overlay(painter &ctx, int selected_figure_id, vec2i *figure_coord);
     void draw_for_figure(painter &ctx, int figure_id, vec2i *coord);
+    void update_clouds(painter &ctx);
 };
 
 extern screen_city_t g_screen_city;
 
 void set_city_clip_rectangle(painter &ctx);
-bool widget_city_draw_construction_cost_and_size();
 
 int widget_city_has_input();
 void widget_city_handle_input(const mouse* m, const hotkeys* h);

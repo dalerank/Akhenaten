@@ -29,6 +29,7 @@
 #include "widget/widget_city.h"
 #include "window/advisors.h"
 #include "window/file_dialog.h"
+#include "input/scroll.h"
 
 static int center_in_city(int element_width_pixels) {
     vec2i view_pos, view_size;
@@ -91,7 +92,52 @@ static void draw_cancel_construction() {
     //    city_view_dirty = 1;
 }
 
-static void window_city_draw_foreground(int) {
+bool window_city_draw_construction_cost_and_size() {
+    if (!g_city_planner.in_progress) {
+        return false;
+    }
+
+    if (scroll_in_progress()) {
+        return false;
+    }
+
+    int size_x, size_y;
+    int cost = g_city_planner.total_cost;
+    int has_size = g_city_planner.get_total_drag_size(&size_x, &size_y);
+    if (!cost && !has_size) {
+        return false;
+    }
+
+    painter ctx = game.painter();
+    set_city_clip_rectangle(ctx);
+    screen_tile screen = camera_get_selected_screen_tile();
+    int inverted_scale = calc_percentage<int>(100, g_zoom.get_percentage());
+    int x = calc_adjust_with_percentage(screen.x, inverted_scale);
+    int y = calc_adjust_with_percentage(screen.y, inverted_scale);
+
+    if (cost) {
+        color color;
+        if (cost <= g_city.finance.treasury) // Color blind friendly
+            color = scenario_property_climate() == CLIMATE_DESERT ? COLOR_FONT_ORANGE : COLOR_FONT_ORANGE_LIGHT;
+        else
+            color = COLOR_FONT_RED;
+        text_draw_number_colored(cost, '@', " ", x + 58 + 1, y + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
+        text_draw_number_colored(cost, '@', " ", x + 58, y, FONT_SMALL_PLAIN, color);
+    }
+
+    if (has_size) {
+        int width = -text_get_width(string_from_ascii("  "), FONT_SMALL_PLAIN);
+        width += text_draw_number_colored(size_x, '@', "x", x - 15 + 1, y + 25 + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
+        text_draw_number_colored(size_x, '@', "x", x - 15, y + 25, FONT_SMALL_PLAIN, COLOR_FONT_YELLOW);
+        text_draw_number_colored(size_y, '@', " ", x - 15 + width + 1, y + 25 + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
+        text_draw_number_colored(size_y, '@', " ", x - 15 + width, y + 25, FONT_SMALL_PLAIN, COLOR_FONT_YELLOW);
+    }
+
+    graphics_reset_clip_rectangle();
+    return true;
+}
+
+void window_city_draw_foreground(int) {
     widget_top_menu_draw();
     window_city_draw();
     widget_sidebar_city_draw_foreground();
@@ -101,7 +147,7 @@ static void window_city_draw_foreground(int) {
         draw_cancel_construction();
     }
 
-    widget_city_draw_construction_cost_and_size();
+    window_city_draw_construction_cost_and_size();
     if (window_is(WINDOW_CITY)) {
         city_message_process_queue();
     }
