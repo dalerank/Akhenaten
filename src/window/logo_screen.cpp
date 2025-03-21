@@ -1,4 +1,4 @@
-#include "logo.h"
+#include "logo_screen.h"
 
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -9,23 +9,30 @@
 #include "sound/music.h"
 #include "window/main_menu.h"
 #include "window/plain_message_dialog.h"
+#include "window/autoconfig_window.h"
 #include "game/game.h"
 
 #include <cmath>
 
+struct logo_screen : autoconfig_window_t<logo_screen> {
+    virtual int handle_mouse(const mouse *m) override { return 0; }
+    virtual int draw_background(UiFlags flags) override { return 0; }
 
-static void init() {
-    sound_music_play_intro();
-}
+    virtual void draw_foreground(UiFlags flags) override;
+    virtual void ui_draw_foreground(UiFlags flags) override {}
+    virtual int get_tooltip_text() override { return 0; }
+    virtual int ui_handle_mouse(const mouse *m) override;
+    virtual void init() override {};
+};
 
-static void draw_logo_background(int) {
+logo_screen g_logo_screen;
+
+void logo_screen::draw_foreground(UiFlags) {
     graphics_clear_screen();
     painter ctx = game.painter();
 
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_LOGO));
-}
 
-static void draw_logo_foreground(int) {
     static int logo_tick_count = 0;
     graphics_set_to_dialog();
     int current_color = 128 + std::cos(logo_tick_count * 0.03f) * 128;
@@ -34,26 +41,29 @@ static void draw_logo_foreground(int) {
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse* m, const hotkeys* h) {
+int logo_screen::ui_handle_mouse(const mouse *m){
     if (m->left.went_up || m->right.went_up) {
         window_main_menu_show(0);
-        return;
+        return 0;
     }
 
+    const hotkeys *h = hotkey_state();
     if (h->escape_pressed) {
         hotkey_handle_escape();
     }
+
+    return 0;
 }
 
 void window_logo_show(int show_patch_message) {
-    window_type window = {
+    static window_type window = {
         WINDOW_LOGO,
-        draw_logo_background,
-        draw_logo_foreground,
-        handle_input
+        [] (int f) { g_logo_screen.draw_background(f); } ,
+        [] (int f) { g_logo_screen.draw_foreground(f); } ,
+        [] (auto m, auto h) { g_logo_screen.ui_handle_mouse(m); }
     };
 
-    init(); // play menu track
+    sound_music_play_intro(); // play menu track
     window_show(&window);
 
     if (show_patch_message == MESSAGE_MISSING_PATCH) {

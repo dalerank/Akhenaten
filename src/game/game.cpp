@@ -36,7 +36,7 @@
 #include "translation/translation.h"
 #include "window/window_city.h"
 #include "window/editor/map.h"
-#include "window/logo.h"
+#include "window/logo_screen.h"
 #include "window/main_menu.h"
 #include "graphics/view/view.h"
 #include "platform/renderer.h"
