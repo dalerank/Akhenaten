@@ -20,7 +20,12 @@ struct mouse : public vec2i {
     mouse_button right;   /**< Right mouse button */
     int is_inside_window; /**< Whether the mouse is in the window */
     int is_touch;         /**< Whether the mouse is a translated touch event */
+
+    void set_inside_window(int inside);
+    void init();
 };
+
+extern mouse g_mouse;
 
 const mouse* mouse_get(void);
 
@@ -34,7 +39,6 @@ void mouse_set_right_down(int down);
 
 void mouse_set_scroll(int state);
 
-void mouse_set_inside_window(int inside);
 
 void mouse_set_from_touch(const touch_t * first, const touch_t * last);
 

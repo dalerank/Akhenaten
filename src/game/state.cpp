@@ -8,7 +8,7 @@
 #include "grid/ring.h"
 #include "game/game.h"
 
-void game_state_init(void) {
+void game_state_init() {
     g_city.victory_state.reset();
     map_ring_init();
 

@@ -92,11 +92,13 @@ void mouse_set_right_down(int down) {
     last_click = 0;
 }
 
-void mouse_set_inside_window(int inside) {
-    auto &data = g_mouse;
+void mouse::set_inside_window(int inside) {
+    is_inside_window = inside;
+    is_touch = 0;
+}
 
-    data.is_inside_window = inside;
-    data.is_touch = 0;
+void mouse::init() {
+    set_inside_window(1);
 }
 
 static void update_button_state(mouse_button* button) {

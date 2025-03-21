@@ -433,7 +433,7 @@ static void setup() {
 
 static void teardown() {
     logs::info("Exiting game");
-    game_exit();
+    game.exit();
     platform_screen_destroy();
     SDL_Quit();
 }
@@ -496,14 +496,15 @@ static void handle_mouse_button(SDL_MouseButtonEvent* event, int is_down) {
     else if (event->button == SDL_BUTTON_RIGHT)
         mouse_set_right_down(is_down);
 }
+
 #ifndef __SWITCH__
 static void handle_window_event(SDL_WindowEvent* event, bool &window_active) {
     switch (event->event) {
     case SDL_WINDOWEVENT_ENTER:
-        mouse_set_inside_window(1);
+        g_mouse.set_inside_window(1);
         break;
     case SDL_WINDOWEVENT_LEAVE:
-        mouse_set_inside_window(0);
+        g_mouse.set_inside_window(0);
         break;
     case SDL_WINDOWEVENT_SIZE_CHANGED:
         logs::info("Window resized to %d x %d", (int)event->data1, (int)event->data2);
@@ -636,9 +637,8 @@ int main(int argc, char** argv) {
     logs::initialize();
 
     setup();
-
-    mouse_set_inside_window(1);
-
+    g_mouse.init();
+    
     game_imgui_overlay_init();
 
     run_and_draw();

@@ -648,7 +648,7 @@ void game_t::handle_input_frame() {
     g_window_manager.update_input_after();
 }
 
-void game_exit() {
+void game_t::exit() {
     video_shutdown();
     g_settings.save();
     config_save();

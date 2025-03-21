@@ -23,8 +23,6 @@ int game_reload_language();
 
 void game_exit_editor();
 
-void game_exit();
-
 struct fps_data_t {
     int frame_count;
     int last_fps;
@@ -89,6 +87,8 @@ struct game_t {
 
     void shutdown();
     bool check_valid();
+
+    void exit();
 
     void frame_begin();
     void frame_end();
