@@ -22,7 +22,6 @@ bool game_init_editor();
 int game_reload_language();
 
 void game_handle_input_frame();
-void game_draw_frame_warning();
 void game_handle_input_after();
 void game_exit_editor();
 

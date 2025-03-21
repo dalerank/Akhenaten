@@ -255,6 +255,8 @@ void window_city_draw_panels() {
 void window_city_draw() {
     painter ctx = game.painter();
     widget_city_draw(ctx);
+
+    g_warning_manager.draw(ctx, game.paused);
 }
 
 void window_city_init() {

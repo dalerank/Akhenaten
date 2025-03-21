@@ -452,7 +452,6 @@ static void run_and_draw() {
     game.sound_frame_begin();
 
     game_handle_input_frame();
-    game_draw_frame_warning();
     game_handle_input_after();
     Uint32 time_after_draw = SDL_GetTicks();
 

@@ -15,11 +15,14 @@
 #include "grid/terrain.h"
 #include "scenario/scenario.h"
 #include "game/settings.h"
+#include "graphics/window.h"
 
 city_warning_manager g_warning_manager;
 
 #define MAX_WARNINGS 5
 #define TIMEOUT_MS 15000
+
+static const int TOP_OFFSETS[] = { 30, 55, 80, 105, 130 };
 
 city_warning_manager::warning* city_warning_manager::new_warning() {
     if (warnings.full()) {
@@ -85,6 +88,46 @@ void city_warning_manager::show_custom(pcstr text) {
 
     w->time = time_get_millis();
     w->text = text;
+}
+
+int city_warning_manager::determine_width(pcstr text) {
+    int width = text_get_width(text, FONT_NORMAL_BLACK_ON_LIGHT);
+
+    if (width <= 100) return 200;
+    else if (width <= 200) return 300;
+    else if (width <= 300) return 400;
+
+    return 460;
+}
+
+void city_warning_manager::draw(painter &ctx,  bool paused) {
+    if (!window_is(WINDOW_CITY) && !window_is(WINDOW_EDITOR_MAP)) {
+        clear_all();
+        return;
+    }
+
+    int center = (screen_width() - 180) / 2;
+    for (int i = 0; i < warnings.size(); i++) {
+        pcstr text = get_warning(i);
+        if (!text) {
+            continue;
+        }
+
+        int top_offset = TOP_OFFSETS[i];
+        if (paused) {
+            top_offset += 70;
+        }
+
+        int box_width = determine_width(text);
+        small_panel_draw(center - box_width / 2 + 1, top_offset, box_width / 16 + 1, 1);
+        if (box_width < 460) {
+            // ornaments at the side
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 15, center - box_width / 2 + 2, top_offset + 2);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 15, center + box_width / 2 - 30, top_offset + 2);
+        }
+        text_draw_centered((const uint8_t *)text, center - box_width / 2 + 1, top_offset + 4, box_width, FONT_NORMAL_WHITE_ON_DARK, 0);
+    }
+    g_warning_manager.clear_outdated();
 }
 
 void city_warning_manager::show(pcstr type) {

@@ -22,6 +22,8 @@ struct city_warning_manager {
     void clear_all();
     void clear_outdated();
     void show_console(pcstr warning_text);
+    int determine_width(pcstr text);
+    void draw(painter &ctx, bool pause);
 
     template<typename ... Args>
     void show_console_var(pcstr fmt, Args... args) {

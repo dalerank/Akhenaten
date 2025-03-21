@@ -18,7 +18,6 @@
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/tutorial.h"
-#include "graphics/elements/warning.h"
 #include "graphics/font.h"
 #include "graphics/image.h"
 #include "graphics/video.h"
@@ -646,11 +645,6 @@ void game_handle_input_frame() {
     window_type* w = window_current();
     w->handle_input(m, h);
     tooltip_handle(m, w->get_tooltip);
-}
-
-void game_draw_frame_warning() {
-    OZZY_PROFILER_SECTION("Render/Frame/Warning");
-    warning_draw();
 }
 
 void game_handle_input_after() {
