@@ -139,6 +139,7 @@ static void update_clouds(painter &ctx)
     if (game.paused || (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY))) {
         clouds_pause();
     }
+
     auto& viewdata = city_view_data_unsafe();
     vec2i min_pos, max_pos;
     city_view_get_camera_scrollable_pixel_limits(viewdata, min_pos, max_pos);
@@ -146,6 +147,7 @@ static void update_clouds(painter &ctx)
         viewdata.camera.position.x - min_pos.x,
         viewdata.camera.position.y - min_pos.y,
     };
+
     const vec2i limit = {
         GRID_LENGTH * TILE_WIDTH_PIXELS,
         GRID_LENGTH * TILE_HEIGHT_PIXELS,
@@ -154,10 +156,10 @@ static void update_clouds(painter &ctx)
     clouds_draw(ctx, min_pos, offset, limit);
 }
 
-void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord, tile2i tile) {
+void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord) {
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
-        highlighted_formation = formation_legion_at_grid_offset(tile.grid_offset());
+        highlighted_formation = formation_legion_at_grid_offset(current_tile.grid_offset());
         if (highlighted_formation > 0 && formation_get(highlighted_formation)->in_distant_battle) {
             highlighted_formation = 0;
         }
@@ -165,7 +167,7 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
 
     init_draw_context(selected_figure_id, figure_coord, highlighted_formation);
 
-    g_city_planner.ghost_mark_deleting(tile);
+    g_city_planner.ghost_mark_deleting(current_tile);
 
     map_render_clear();
 
@@ -178,7 +180,7 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
     city_view_foreach_valid_map_tile(ctx, draw_isometric_nonterrain_height, draw_ornaments_and_animations_height, draw_figures);
 
     if (!selected_figure_id) {
-        g_city_planner.update(tile);
+        g_city_planner.update(current_tile);
         g_city_planner.draw(ctx);
     }
 
@@ -189,20 +191,20 @@ void widget_city_draw_without_overlay(painter &ctx, int selected_figure_id, vec2
     city_view_foreach_valid_map_tile(ctx, draw_debug_figures);
 }
 
-void widget_city_draw_with_overlay(painter &ctx, tile2i tile) {
+void screen_city_t::draw_with_overlay(painter &ctx) {
     if (!select_city_overlay()) {
         return;
     }
 
     map_render_clear();
 
-    g_city_planner.ghost_mark_deleting(tile);
+    g_city_planner.ghost_mark_deleting(current_tile);
     city_view_foreach_valid_map_tile(ctx, update_tile_coords);
     
     map_figure_sort_by_y();
     city_view_foreach_valid_map_tile(ctx, draw_isometrics_overlay_flat);
     city_view_foreach_valid_map_tile(ctx, draw_isometrics_overlay_height, draw_ornaments_overlay, draw_figures_overlay);
-    g_city_planner.update(tile);
+    g_city_planner.update(current_tile);
     g_city_planner.draw(ctx);
 }
 
@@ -212,20 +214,19 @@ void screen_city_t::draw(painter &ctx) {
     set_city_clip_rectangle(ctx);
 
     if (game.current_overlay) {
-        widget_city_draw_with_overlay(ctx, current_tile);
+        draw_with_overlay(ctx);
     } else {
-        widget_city_draw_without_overlay(ctx, 0, nullptr, current_tile);
+        draw_without_overlay(ctx, 0, nullptr);
     }
 
     graphics_reset_clip_rectangle();
     set_render_scale(ctx, 1.0f);
 }
 
-void widget_city_draw_for_figure(painter &ctx, int figure_id, vec2i* coord) {
-    auto& data = g_screen_city;
+void screen_city_t::draw_for_figure(painter &ctx, int figure_id, vec2i* coord) {
     set_city_clip_rectangle(ctx);
 
-    widget_city_draw_without_overlay(ctx, figure_id, coord, data.current_tile);
+    draw_without_overlay(ctx, figure_id, coord);
 
     graphics_reset_clip_rectangle();
 }
