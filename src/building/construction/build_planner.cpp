@@ -225,7 +225,7 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
             } else {
                 if (formation_herd_breeding_ground_at(tile2i(x, y), 1)) {
                     map_property_clear_constructing_and_deleted();
-                    city_warning_show("#cannot_build_over_animal_breeding_grounds");
+                    events::emit(event_city_warning{ "#cannot_build_over_animal_breeding_grounds" });
                 } else {
                     building* b = building_create(BUILDING_HOUSE_VACANT_LOT, tile2i(x, y), 0);
                     game_undo_add_building(b);
@@ -245,7 +245,7 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
     if (!measure_only) {
         //building_construction_warning_check_food_stocks(BUILDING_HOUSE_VACANT_LOT);
         if (needs_road_warning) {
-            city_warning_show("#plots_too_far_from_road");
+            events::emit(event_city_warning{ "#plots_too_far_from_road" });
         }
 
         map_routing_update_land();
@@ -925,11 +925,11 @@ void build_planner::construction_record_view_position(vec2i pixel, tile2i point)
 
 void build_planner::dispatch_warnings() {
     if (!!immediate_warning_id) {
-        city_warning_show(immediate_warning_id.c_str());
+        events::emit(event_city_warning{ immediate_warning_id.c_str() });
     }
 
     if (!!extra_warning_id) {
-        city_warning_show(extra_warning_id.c_str());
+        events::emit(event_city_warning{ extra_warning_id.c_str() });
     }
 }
 
@@ -1326,7 +1326,7 @@ bool build_planner::place() {
     case BUILDING_HOUSE_VACANT_LOT:
         placement_cost *= place_houses(false, start.x(), start.y(), end.x(), end.y());
         if (placement_cost == 0) {
-            city_warning_show("#must_build_on_cleared_land");
+            events::emit(event_city_warning{ "#must_build_on_cleared_land" });
             return false;
         }
         break;

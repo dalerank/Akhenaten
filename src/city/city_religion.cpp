@@ -26,7 +26,7 @@
 #include "scenario/scenario.h"
 #include "sound/effect.h"
 #include "dev/debug.h"
-#include "city/warning.h"
+#include "city/city_warnings.h"
 #include "game/game.h"
 
 #include <algorithm>
@@ -45,7 +45,7 @@ void game_cheat_minor_blessing(std::istream &is, std::ostream &os) {
     int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
     g_city.religion.perform_minor_blessing((e_god)god_id);
 
-    city_warning_show_console("Casted minor blessing");
+    events::emit(event_city_warning{ "Casted minor blessing" });
 }
 
 void game_cheat_major_blessing(std::istream &is, std::ostream &os) {
@@ -53,7 +53,7 @@ void game_cheat_major_blessing(std::istream &is, std::ostream &os) {
     int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
     g_city.religion.perform_major_blessing((e_god)god_id);
 
-    city_warning_show_console("Casted major upset");
+    events::emit(event_city_warning{ "Casted major upset" });
 }
 
 void game_cheat_minor_curse(std::istream &is, std::ostream &os) {
@@ -61,7 +61,7 @@ void game_cheat_minor_curse(std::istream &is, std::ostream &os) {
     int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
     g_city.religion.perform_minor_curse((e_god)god_id);
 
-    city_warning_show_console("Casted major upset");
+    events::emit(event_city_warning{ "Casted major upset" });
 }
 
 void game_cheat_major_curse(std::istream &is, std::ostream &os) {
@@ -69,7 +69,7 @@ void game_cheat_major_curse(std::istream &is, std::ostream &os) {
     int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
     g_city.religion.perform_major_curse((e_god)god_id);
 
-    city_warning_show_console("Casted upset");
+    events::emit(event_city_warning{ "Casted upset" });
 }
 
 void game_cheat_ranotrade(std::istream &is, std::ostream &os) {
@@ -78,7 +78,7 @@ void game_cheat_ranotrade(std::istream &is, std::ostream &os) {
 
     g_city.religion.ra_no_traders_months_left = nomonth;
     g_city.religion.ra_harshly_reduced_trading_months_left = nomonth;
-    city_warning_show_console_var("Ra no month trade %d", nomonth);
+    g_warning_manager.show_console_var("Ra no month trade %d", nomonth);
 }
 
 void city_religion_t::reset() {

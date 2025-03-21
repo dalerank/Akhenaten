@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "figure/properties.h"
 #include "city/city.h"
-#include "city/warning.h"
+#include "city/city_warnings.h"
 #include "core/random.h"
 #include "core/calc.h"
 #include "core/svector.h"
@@ -39,7 +39,7 @@ void console_command_killall(std::istream &, std::ostream &) {
         }
     }
 
-    city_warning_show_console("Killed all walkers");
+    events::emit(event_city_warning{ "Killed all walkers" });
 }
 
 void console_command_create_figure(std::istream &is, std::ostream &os) {

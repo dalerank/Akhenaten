@@ -1,7 +1,7 @@
 #include "window_city_military.h"
 
 #include "window_city.h"
-#include "city/warning.h"
+#include "city/city_warnings.h"
 #include "widget/widget_city.h"
 #include "widget/widget_minimap.h"
 #include "widget/widget_top_menu_game.h"
@@ -56,7 +56,7 @@ void widget_city_handle_input_military(const mouse* m, const hotkeys* h, int leg
     widget_city_scroll_map(m);
     if (m->right.went_up || h->escape_pressed) {
         widget_city_capture_input(false);
-        city_warning_clear_all();
+        g_warning_manager.clear_all();
         window_city_show();
     } else {
         current_tile = widget_city_update_city_view_coords({m->x, m->y});

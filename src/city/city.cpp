@@ -22,6 +22,7 @@
 #include "figuretype/figure_fishing_point.h"
 #include "figuretype/figure_kingdome_trader.h"
 #include "figuretype/figure_trader_ship.h"
+#include "city_warnings.h"
 #include "empire/empire_object.h"
 
 #include <core/string.h>
@@ -59,6 +60,7 @@ void city_t::init() {
     figure_clear_all();
     maintenance.init();
     resource.init();
+    g_warning_manager.clear_all();
 }
 
 void city_t::init_custom_map() {

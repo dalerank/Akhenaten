@@ -1,6 +1,7 @@
 #include "window/console.h"
 
-#include "city/warning.h"
+#include "city/city_warnings.h"
+#include "city/city.h"
 #include "core/string.h"
 #include "core/log.h"
 #include "game/cheats.h"
@@ -69,7 +70,7 @@ static void send_command(int param1, int param2) {
     command_copy = command_input.text;
     button_back(0, 0);
     logs::info("Command received: %s", (char*)command_copy);
-    city_warning_show_console(command_copy);
+    events::emit(event_city_warning{ command_copy });
     game_cheat_parse_command(command_copy);
 }
 

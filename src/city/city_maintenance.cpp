@@ -241,8 +241,8 @@ void city_maintenance_t::check_kingdome_access() {
 
     if (problem_grid_offset) {
         // parts of city disconnected
-        city_warning_show("#restore_access_or_sector_will_stagnate");
-        city_warning_show("#city_isolated_from_kingdom_road");
+        events::emit(event_city_warning{ "#restore_access_or_sector_will_stagnate"});
+        events::emit(event_city_warning{"#city_isolated_from_kingdom_road"});
         // TODO: TEMP
         //        city_view_go_to_grid_offset(problem_grid_offset);
     }

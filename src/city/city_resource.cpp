@@ -9,7 +9,7 @@
 #include "building/building_bazaar.h"
 #include "building/building_house.h"
 #include "city/city.h"
-#include "city/warning.h"
+#include "city/city_warnings.h"
 #include "graphics/window.h"
 #include "core/calc.h"
 #include "core/profiler.h"
@@ -491,5 +491,6 @@ void city_resource_add_items(e_resource res, int amount) {
 }
 
 void city_resource_was_added_warning(e_resource res) {
-    city_warning_show_console(bstring128("Added ", resource_name(res)).c_str());
+    xstring text = bstring128("Added ", resource_name(res));
+    events::emit(event_city_warning{ text });
 }

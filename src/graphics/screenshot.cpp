@@ -1,6 +1,7 @@
 #include "screenshot.h"
 
-#include "city/warning.h"
+#include "city/city_warnings.h"
+#include "city/city.h"
 #include "core/buffer.h"
 #include "core/string.h"
 #include "core/log.h"
@@ -214,7 +215,7 @@ static void image_finish(void) {
 static void show_saved_notice(const char *filename) {
     bstring256 notice_text( "Screenshot saved to ", filename);
 
-    city_warning_show_custom(notice_text);
+    events::emit(event_city_warning{ notice_text });
 }
 
 static void create_window_screenshot() {

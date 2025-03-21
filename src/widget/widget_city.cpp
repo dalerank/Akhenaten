@@ -10,7 +10,7 @@
 #include "overlays/city_overlay.h"
 #include "building/construction/build_planner.h"
 #include "city/finance.h"
-#include "city/warning.h"
+#include "city/city_warnings.h"
 #include "core/calc.h"
 #include "core/string.h"
 #include "figure/formation_legion.h"
@@ -337,18 +337,20 @@ static bool has_confirmed_construction(tile2i ghost, tile2i point, int range_siz
 
 static bool handle_right_click_allow_building_info(tile2i tile) {
     int allow = true;
-    if (!window_is(WINDOW_CITY))
+    if (!window_is(WINDOW_CITY)) {
         allow = false;
+    }
 
     window_city_show();
 
     if (!tile.grid_offset())
         allow = false;
 
-    if (allow && city_has_warnings()) {
-        city_warning_clear_all();
+    if (allow) {
+        g_warning_manager.clear_all();
         allow = false;
     }
+
     return allow;
 }
 

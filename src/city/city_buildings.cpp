@@ -63,7 +63,7 @@ building *building_create(e_building_type type, tile2i tile, int orientation) {
     }
 
     if (!b) {
-        city_warning_show("#data_limit_reached");
+        events::emit(event_city_warning{ "#data_limit_reached" });
         return &g_all_buildings[0];
     }
 

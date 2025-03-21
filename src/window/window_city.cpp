@@ -5,7 +5,7 @@
 #include "building/rotation.h"
 #include "city/message.h"
 #include "city/city.h"
-#include "city/warning.h"
+#include "city/city_warnings.h"
 #include "core/profiler.h"
 #include "core/game_environment.h"
 #include "dev/debug.h"
@@ -150,7 +150,7 @@ static void cycle_legion(void) {
 
 static void toggle_pause() {
     game_state_toggle_paused();
-    city_warning_clear_all();
+    g_warning_manager.clear_all();
 }
 
 bool city_has_loaded = false;

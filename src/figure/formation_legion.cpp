@@ -2,7 +2,7 @@
 
 #include "city/city.h"
 #include "city/military.h"
-#include "city/warning.h"
+#include "city/city_warnings.h"
 #include "core/calc.h"
 #include "figure/enemy_army.h"
 #include "figure/figure.h"
@@ -117,7 +117,7 @@ void formation_legion_move_to(formation* m, tile2i tile) {
 
     if (m->morale <= 20) {
 
-        city_warning_show("#company_morale_too_low");
+        events::emit(event_city_warning{ "#company_morale_too_low" });
     }
 
     for (int i = 0; i < MAX_FORMATION_FIGURES && m->figures[i]; i++) {

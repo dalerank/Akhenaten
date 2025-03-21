@@ -20,10 +20,10 @@
 #include "grid/random.h"
 #include "grid/building_tiles.h"
 #include "figure/formation_herd.h"
+#include "city/city.h"
 #include "city/city_warnings.h"
 #include "city/labor.h"
 #include "grid/tiles.h"
-#include "js/js_game.h"
 
 building_garden::static_params garden_m;
 
@@ -44,7 +44,7 @@ int building_garden::static_params::place_impl(tile2i start, tile2i end, bool pl
 
         if (formation_herd_breeding_ground_at(rtile, 1)) {
             map_property_clear_constructing_and_deleted();
-            city_warning_show("#cannot_build_over_animal_breeding_grounds");
+            events::emit(event_city_warning{ "#cannot_build_over_animal_breeding_grounds" });
             return;
         } 
 

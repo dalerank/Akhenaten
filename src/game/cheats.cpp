@@ -8,7 +8,7 @@
 #include "city/finance.h"
 #include "city/city.h"
 #include "city/victory.h"
-#include "city/warning.h"
+#include "city/city_warnings.h"
 #include "city/city_health.h"
 #include "city/city_resource.h"
 #include "core/string.h"
@@ -132,7 +132,7 @@ static void game_cheat_add_clay(pcstr args) {
     parse_integer(args ? args : (pcstr )"100", clay);
     city_resource_add_items(RESOURCE_CLAY, clay);
 
-    city_warning_show_console("Added clay");
+    events::emit(event_city_warning{ "Added clay" });
 }
 
 static void game_cheat_pop_milestone(pcstr args) {
@@ -148,7 +148,7 @@ static void game_cheat_start_invasion(pcstr args) {
     parse_integer(args + index, invasion_point);
     scenario_invasion_start_from_console(attack_type, size, invasion_point);
 
-    city_warning_show_console("Started invasion");
+    events::emit(event_city_warning{ "Started invasion" });
 }
 
 static void game_cheat_spawn_nobles(pcstr args) {
@@ -174,7 +174,7 @@ static void game_cheat_spawn_nobles(pcstr args) {
 static void game_cheat_show_tooltip(pcstr args) {
     parse_integer(args, g_cheats_data.tooltip_enabled);
 
-    city_warning_show_console("Show tooltip toggled");
+    events::emit(event_city_warning{ "Show tooltip toggled" });
 }
 
 void game_cheat_parse_command(pcstr command) {
@@ -194,11 +194,11 @@ static void game_cheat_add_money(std::istream &is, std::ostream &os) {
     int money = 0;
     parse_integer(args.empty() ? (pcstr )"100" : args.c_str(), money);
     city_finance_process_console(money);
-    city_warning_show_console("Added money");
+    events::emit(event_city_warning{ "Added money" });
 }
 
 static void game_cheat_test_crash(std::istream &is, std::ostream &os) {
-    city_warning_show_console("Trying to crash the game");
+    events::emit(event_city_warning{ "Trying to crash the game" });
     const int *p = nullptr;
     std::cout << *p;
 }

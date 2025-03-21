@@ -9,7 +9,7 @@
 #include "city/migration.h"
 #include "city/ratings.h"
 #include "city/city_resource.h"
-#include "city/warning.h"
+#include "city/city_warnings.h"
 #include "figure/formation.h"
 #include "game/settings.h"
 #include "game/tutorial.h"
@@ -251,7 +251,7 @@ void window_advisors_show_checked() {
         window_advisors_show();
     } else {
         pcstr text = (avail == NOT_AVAILABLE ? "#not_available_in_this_assignment" : "#not_available_yet");
-        city_warning_show(text);
+        events::emit(event_city_warning{ text });
     }
 }
 
@@ -259,7 +259,7 @@ int window_advisors_show_advisor(e_advisor advisor) {
     e_availability avail = mission_advisor_availability(advisor, scenario_campaign_scenario_id() + 1);
     if (avail == NOT_AVAILABLE || avail == NOT_AVAILABLE_YET) {
         pcstr text = (avail == NOT_AVAILABLE ? "#not_available_in_this_assignment" : "#not_available_yet");
-        city_warning_show(text);
+        events::emit(event_city_warning{ text });
         return 0;
     }
     g_window_advisors.set_advisor(advisor);

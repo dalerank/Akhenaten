@@ -1,7 +1,6 @@
 #include "state.h"
 
 #include "city/city.h"
-#include "city/warning.h"
 #include "core/random.h"
 #include "overlays/city_overlay.h"
 #include "graphics/view/view.h"
@@ -17,8 +16,6 @@ void game_state_init(void) {
     //    city_view_go_to_screen_tile_corner(screen_tile(76, 152), true);
 
     random_generate_pool();
-
-    city_warning_clear_all();
 }
 
 void game_state_toggle_paused() {

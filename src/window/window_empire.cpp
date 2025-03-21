@@ -1,7 +1,8 @@
 #include "window_empire.h"
 
 #include "city/military.h"
-#include "city/warning.h"
+#include "city/city.h"
+#include "city/city_warnings.h"
 #include "city/constants.h"
 #include "city/finance.h"
 #include "core/game_environment.h"
@@ -723,6 +724,6 @@ void window_empire_show_checked() {
         window_empire_show();
     } else {
         pcstr text = (avail == NOT_AVAILABLE ? "#not_available_in_this_assignment" : "#not_available_yet");
-        city_warning_show(text);
+        events::emit(event_city_warning{ text });
     }
 }

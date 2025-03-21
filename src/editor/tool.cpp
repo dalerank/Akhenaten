@@ -2,7 +2,8 @@
 
 #include "building/construction/routed.h"
 #include "building/building_road.h"
-#include "city/warning.h"
+#include "city/city_warnings.h"
+#include "city/city.h"
 #include "city/city_buildings.h"
 #include "core/random.h"
 #include "editor/tool_restriction.h"
@@ -289,10 +290,10 @@ static void place_earthquake_flag(tile2i tile) {
         if (scenario_editor_earthquake_severity())
             scenario_editor_set_earthquake_point(tile.x(), tile.y());
         else {
-            city_warning_show("#warning_editor_no_earthquake_scheduled");
+            events::emit(event_city_warning{ "#warning_editor_no_earthquake_scheduled" });
         }
     } else {
-        city_warning_show("#place_earthquake_flag");
+        events::emit(event_city_warning{ "#place_earthquake_flag" });
     }
 }
 
@@ -301,7 +302,7 @@ static void place_flag(tile2i tile, void (*update)(int x, int y)) {
     if (editor_tool_can_place_flag(data.type, tile, warning))
         update(tile.x(), tile.y());
     else {
-        city_warning_show("#place_flag");
+        events::emit(event_city_warning{ "#place_flag" });
     }
 }
 
@@ -310,7 +311,7 @@ static void place_flag_with_id(tile2i tile, void (*update)(int id, int x, int y)
     if (editor_tool_can_place_flag(data.type, tile, warning))
         update(data.id, tile.x(), tile.y());
     else
-        city_warning_show("#place_flag_with_id");
+        events::emit(event_city_warning{ "#place_flag_with_id" });
 }
 
 static void place_building(map_point tile) {
@@ -342,7 +343,7 @@ static void place_building(map_point tile) {
         map_building_tiles_add(b->id, tile, size, image_id, TERRAIN_BUILDING);
         scenario_editor_updated_terrain();
     } else {
-        city_warning_show("#warning_editor_cannot_place");
+        events::emit(event_city_warning{ "#warning_editor_cannot_place" });
     }
 }
 
@@ -374,7 +375,7 @@ static void place_access_ramp(map_point tile) {
         update_terrain_after_elevation_changes();
         scenario_editor_updated_terrain();
     } else {
-        city_warning_show("#warning_editor_cannot_place");
+        events::emit(event_city_warning{ "#warning_editor_cannot_place" });
     }
 }
 

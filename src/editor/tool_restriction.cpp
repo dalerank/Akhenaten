@@ -1,6 +1,5 @@
 #include "tool_restriction.h"
 
-#include "city/warning.h"
 #include "grid/elevation.h"
 #include "grid/figure.h"
 #include "grid/grid.h"

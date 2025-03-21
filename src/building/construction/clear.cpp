@@ -139,7 +139,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                 map_canal_remove(grid_offset);
             } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 if (!measure_only && map_bridge_count_figures(grid_offset) > 0)
-                    city_warning_show("#cannot_demolish_bridge_with_people");
+                    events::emit(event_city_warning{ "#cannot_demolish_bridge_with_people" });
                 else if (confirm.bridge_confirmed == 1) {
                     map_bridge_remove(grid_offset, measure_only);
                     items_placed++;

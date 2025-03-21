@@ -1,7 +1,7 @@
 #include "screen.h"
 
 #include "graphics/image.h"
-#include "city/warning.h"
+#include "city/city_warnings.h"
 #include "graphics/view/view.h"
 #include "platform/renderer.h"
 #include "graphics/graphics.h"
@@ -25,7 +25,7 @@ void screen_set_resolution(int width, int height) {
     graphics_renderer()->set_clip_rectangle({ 0, 0 }, width, height);
 
     city_view_set_viewport(width, height);
-    city_warning_clear_all();
+    g_warning_manager.clear_all();
 }
 
 int screen_width(void) {

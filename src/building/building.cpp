@@ -9,7 +9,6 @@
 #include "city/city_population.h"
 #include "city/city_warnings.h"
 #include "widget/city/ornaments.h"
-#include "city/warning.h"
 #include "core/svector.h"
 #include "core/profiler.h"
 #include "figure/formation_legion.h"

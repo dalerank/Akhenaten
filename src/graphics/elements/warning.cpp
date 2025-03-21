@@ -1,6 +1,6 @@
 #include "warning.h"
 
-#include "city/warning.h"
+#include "city/city_warnings.h"
 #include "game/state.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
@@ -25,14 +25,14 @@ static int determine_width(pcstr text) {
 
 void warning_draw() {
     if (!window_is(WINDOW_CITY) && !window_is(WINDOW_EDITOR_MAP)) {
-        city_warning_clear_all();
+        g_warning_manager.clear_all();
         return;
     }
 
     painter ctx = game.painter();
     int center = (screen_width() - 180) / 2;
     for (int i = 0; i < 5; i++) {
-        pcstr text = city_warning_get(i);
+        pcstr text = g_warning_manager.get_warning(i);
         if (!text) {
             continue;
         }
@@ -51,5 +51,5 @@ void warning_draw() {
         }
         text_draw_centered((const uint8_t*)text, center - box_width / 2 + 1, top_offset + 4, box_width, FONT_NORMAL_WHITE_ON_DARK, 0);
     }
-    city_warning_clear_outdated();
+    g_warning_manager.clear_outdated();
 }

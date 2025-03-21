@@ -1,6 +1,7 @@
 #include "orientation.h"
 
-#include "city/warning.h"
+#include "city/city_warnings.h"
+#include "city/city.h"
 #include "core/direction.h"
 #include "graphics/view/view.h"
 #include "grid/orientation.h"
@@ -10,14 +11,14 @@ void game_orientation_rotate_left(void) {
     city_view_rotate_left();
     map_orientation_change(0);
     widget_minimap_invalidate();
-    city_warning_show("#orienation");
+    events::emit(event_city_warning{ "#orienation" });
 }
 
 void game_orientation_rotate_right(void) {
     city_view_rotate_right();
     map_orientation_change(1);
     widget_minimap_invalidate();
-    city_warning_show("#orienation");
+    events::emit(event_city_warning{ "#orienation" });
 }
 
 void game_orientation_rotate_north(void) {
@@ -38,5 +39,5 @@ void game_orientation_rotate_north(void) {
         return;
     }
     widget_minimap_invalidate();
-    city_warning_show("#orienation");
+    events::emit(event_city_warning{ "#orienation" });
 }
