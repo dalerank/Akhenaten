@@ -491,6 +491,7 @@ void city_resource_add_items(e_resource res, int amount) {
 }
 
 void city_resource_was_added_warning(e_resource res) {
-    xstring text = bstring128("Added ", resource_name(res));
+    xstring text;
+    text.printf("Added ", resource_name(res));
     events::emit(event_city_warning{ text });
 }
