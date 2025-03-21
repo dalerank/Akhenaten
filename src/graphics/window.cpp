@@ -6,16 +6,7 @@
 #include "input/scroll.h"
 #include "graphics/elements/ui.h"
 
-#define MAX_QUEUE 6
-
-struct window_data_t {
-    window_type window_queue[MAX_QUEUE];
-    int queue_index;
-    window_type* current_window;
-    int underlying_windows_redrawing;
-};
-
-window_data_t g_window;
+windows_manager_t g_window_manager;
 
 static void noop(int) {
 }
@@ -29,30 +20,32 @@ static void reset_input() {
 }
 
 static void increase_queue_index() {
-    auto& data = g_window;
+    auto& data = g_window_manager;
     data.queue_index++;
-    if (data.queue_index >= MAX_QUEUE)
+    if (data.queue_index >= data.window_queue.size())
         data.queue_index = 0;
 }
+
 static void decrease_queue_index(void) {
-    auto& data = g_window;
+    auto& data = g_window_manager;
     data.queue_index--;
-    if (data.queue_index < 0)
-        data.queue_index = MAX_QUEUE - 1;
+    if (data.queue_index < 0) {
+        data.queue_index = data.window_queue.size() - 1;
+    }
 }
 
 bool window_is(e_window_id id) {
-    auto& data = g_window;
+    auto& data = g_window_manager;
     return data.current_window->id == id;
 }
 
 e_window_id window_get_id() {
-    auto& data = g_window;
+    auto& data = g_window_manager;
     return data.current_window->id;
 }
 
 void window_show(const window_type* window) {
-    auto& data = g_window;
+    auto& data = g_window_manager;
     // push window into queue of screens to render
     reset_input();
     ui::begin_frame();
@@ -71,7 +64,7 @@ void window_show(const window_type* window) {
 }
 
 void window_go_back() {
-    auto& data = g_window;
+    auto& data = g_window_manager;
     reset_input();
     decrease_queue_index();
     data.current_window = &data.window_queue[data.queue_index];
@@ -85,8 +78,8 @@ static void update_input_before() {
     hotkey_handle_global_keys();
 }
 
-void window_update_input_after() {
-    auto& data = g_window;
+void windows_manager_t::update_input_after() {
+    auto& data = g_window_manager;
     reset_touches(0);
     mouse_reset_scroll();
     input_cursor_update(data.current_window->id);
@@ -94,7 +87,7 @@ void window_update_input_after() {
 }
 
 void window_draw(int force) {
-    auto& data = g_window;
+    auto& data = g_window_manager;
     // draw the current (top) window in the queue
     ui::begin_frame();
     update_input_before();
@@ -118,12 +111,12 @@ void window_draw(int force) {
 }
 
 window_type *window_current() {
-    return g_window.current_window;
+    return g_window_manager.current_window;
 }
 
 void window_draw_underlying_window(int flags) {
-    auto& data = g_window;
-    if (data.underlying_windows_redrawing < MAX_QUEUE) {
+    auto& data = g_window_manager;
+    if (data.underlying_windows_redrawing < data.window_queue.size()) {
         ++data.underlying_windows_redrawing;
         decrease_queue_index();
 

@@ -646,7 +646,7 @@ void game_t::handle_input_frame() {
     w->handle_input(m, h);
     tooltip_handle(m, w->get_tooltip);
 
-    window_update_input_after();
+    g_window_manager.update_input_after();
 }
 
 void game_exit() {

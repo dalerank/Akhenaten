@@ -4,6 +4,8 @@
 #include "input/hotkey.h"
 #include "input/mouse.h"
 
+#include <array>
+
 enum e_window_id {
     WINDOW_LOGO,
     WINDOW_MAIN_MENU,
@@ -85,8 +87,18 @@ struct window_type {
     void (*draw_refresh)() = nullptr;
 };
 
+struct windows_manager_t {
+    std::array<window_type, 6> window_queue;
+    int queue_index;
+    window_type *current_window;
+    int underlying_windows_redrawing;
+
+    void update_input_after();
+};
+
+extern windows_manager_t g_window_manager;
+
 void window_draw(int force);
-void window_update_input_after();
 
 window_type *window_current();
 
