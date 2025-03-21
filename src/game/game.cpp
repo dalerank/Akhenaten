@@ -637,7 +637,7 @@ void game_t::before_start_simulation() {
     events::emit(event_advance_day::from_simtime(game.simtime));
 }
 
-void game_handle_input_frame() {
+void game_t::handle_input_frame() {
     OZZY_PROFILER_SECTION("Input/Frame/Current");
     const mouse *m = mouse_get();
     const hotkeys *h = hotkey_state();
@@ -645,10 +645,7 @@ void game_handle_input_frame() {
     window_type* w = window_current();
     w->handle_input(m, h);
     tooltip_handle(m, w->get_tooltip);
-}
 
-void game_handle_input_after() {
-    OZZY_PROFILER_SECTION("Input/Frame/After");
     window_update_input_after();
 }
 

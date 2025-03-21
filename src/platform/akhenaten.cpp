@@ -451,8 +451,7 @@ static void run_and_draw() {
     game.frame_begin();
     game.sound_frame_begin();
 
-    game_handle_input_frame();
-    game_handle_input_after();
+    game.handle_input_frame();
     Uint32 time_after_draw = SDL_GetTicks();
 
     game.fps.frame_count++;

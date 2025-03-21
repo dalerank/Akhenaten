@@ -21,8 +21,6 @@ bool game_init_editor();
 
 int game_reload_language();
 
-void game_handle_input_frame();
-void game_handle_input_after();
 void game_exit_editor();
 
 void game_exit();
@@ -99,6 +97,7 @@ struct game_t {
 
     void sound_frame_begin();
     void before_start_simulation();
+    void handle_input_frame();
 
     threading::thread_pool mtrpc;
     threading::thread_pool mt;
