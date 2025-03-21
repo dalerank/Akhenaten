@@ -66,12 +66,12 @@ static void button_back(int param1, int param2) {
 }
 
 static void send_command(int param1, int param2) {
-    bstring64 command_copy;
-    command_copy = command_input.text;
+    xstring command_copy;
+    command_copy = (pcstr)command_input.text;
     button_back(0, 0);
-    logs::info("Command received: %s", (char*)command_copy);
+    logs::info("Command received: %s", command_copy.c_str());
     events::emit(event_city_warning{ command_copy });
-    game_cheat_parse_command(command_copy);
+    game_cheat_parse_command(command_copy.c_str());
 }
 
 void window_console_show() {
