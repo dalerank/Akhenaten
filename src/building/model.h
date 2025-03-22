@@ -49,6 +49,8 @@ struct model_house {
     // pharaoh
     int malaria_risk;
     int disease_risk;
+
+    int fancy_bazaar = 0;
 };
 
 bool model_load();

@@ -11,6 +11,8 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/tiles.h"
 
+#include <numeric>
+
 void building_house::determine_evolve_text() {
     int level = house_level();
     auto& housed = runtime_data();
@@ -20,104 +22,98 @@ void building_house::determine_evolve_text() {
     const model_house& model = model_get_house(level);
     // desirability
     if (base.desirability <= model.devolve_desirability) {
-        housed.evolve_text_id = 0;
+        housed.evolve_text = "#house_low_desirabilty";
         return;
     }
+
     // water
     int water = model.water;
     if (water == 1 && !base.has_water_access && !base.has_well_access) {
-        housed.evolve_text_id = 1;
+        housed.evolve_text = "#lacks_access_primitive_water";
         return;
     }
+
     if (water == 2 && (!base.has_water_access || !housed.water_supply)) {
-        housed.evolve_text_id = 2;
+        housed.evolve_text = "#not_visited_by_water_carrier";
         return;
     }
+
     // entertainment
     int entertainment = model.entertainment;
     if (housed.entertainment < entertainment) {
-        if (!housed.entertainment)
-            housed.evolve_text_id = 3;
-        else if (entertainment < 10)
-            housed.evolve_text_id = 4;
-        else if (entertainment < 25)
-            housed.evolve_text_id = 5;
-        else if (entertainment < 50)
-            housed.evolve_text_id = 6;
-        else if (entertainment < 80)
-            housed.evolve_text_id = 7;
-        else {
-            housed.evolve_text_id = 8;
-        }
+        if (!housed.entertainment) housed.evolve_text = "#no_entertainment_to_be_found";
+        else if (entertainment < 10) housed.evolve_text = "#any_entertainment_in_location";
+        else if (entertainment < 25) housed.evolve_text = "#too_little_entertainment_in_location";
+        else if (entertainment < 50) housed.evolve_text = "#some_entertainment_found_location";
+        else if (entertainment < 80) housed.evolve_text = "#good_entertainment_found_location";
+        else                       { housed.evolve_text = "#excellent_entertainment_found_location"; }
         return;
     }
     // food types
     int foodtypes_required = model.food;
-    int foodtypes_available = 0;
-    for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-        if (housed.foods[i])
-            foodtypes_available++;
-    }
+    const int foodtypes_available = std::accumulate(std::begin(housed.foods), std::end(housed.foods), 0, 
+                                                    [] (short r, short it) { return r + ((it > 0) ? 1 : 0); });
+    constexpr pcstr foodtype_text[] = { "empty", "#one_food_type_need", "#two_food_types_need", "#three_food_types_need" };
     if (foodtypes_available < foodtypes_required) {
-        if (foodtypes_required == 1) {
-            housed.evolve_text_id = 9;
-            return;
-        } else if (foodtypes_required == 2) {
-            housed.evolve_text_id = 10;
-            return;
-        } else if (foodtypes_required == 3) {
-            housed.evolve_text_id = 11;
-            return;
-        }
+        housed.evolve_text = foodtype_text[foodtypes_required];
+        return;
     }
+
+    if (!housed.bazaar_access) {
+        housed.evolve_text = "#no_bazaar_access";
+        return;
+    }
+
     // education
     int education = model.education;
     if (housed.education < education) {
         if (education == 1) {
-            housed.evolve_text_id = 14;
+            housed.evolve_text = "#lost_basic_educational_facilities";
             return;
         } else if (education == 2) {
             if (housed.school) {
-                housed.evolve_text_id = 15;
+                housed.evolve_text = "#lost_access_to_scribal_school";
                 return;
             } else if (housed.library) {
-                housed.evolve_text_id = 16;
+                housed.evolve_text = "#lost_access_to_library";
                 return;
             }
         } else if (education == 3) {
-            housed.evolve_text_id = 17;
+            housed.evolve_text = "#lost_access_to_higher_education";
             return;
         }
     }
+
     // magistrate
     if (housed.magistrate < model.physician) {
-        housed.evolve_text_id = 18;
+        housed.evolve_text = "#no_access_to_magistrates";
         return;
     }
 
     // pottery
     if (housed.inventory[INVENTORY_GOOD1] < model.pottery) {
-        housed.evolve_text_id = 19;
+        housed.evolve_text = "#run_out_of_pottery";
         return;
     }
+
     // religion
     int religion = model.religion;
     if (housed.num_gods < religion) {
         if (religion == 1) {
-            housed.evolve_text_id = 20;
+            housed.evolve_text = "#lost_all_access_to_local_religious";
             return;
         } else if (religion == 2) {
-            housed.evolve_text_id = 21;
+            housed.evolve_text = "#access_to_one_local_religious";
             return;
         } else if (religion == 3) {
-            housed.evolve_text_id = 22;
+            housed.evolve_text = "#access_to_two_local_religious";
             return;
         }
     }
 
-    // mortuary
+    // dentist
     if (housed.dentist < model.dentist) {
-        housed.evolve_text_id = 23;
+        housed.evolve_text = "#lost_dentist_access";
         return;
     }
 
@@ -125,36 +121,40 @@ void building_house::determine_evolve_text() {
     int health_need = model.health;
     if (housed.health < health_need) {
         if (health_need == 1) {
-            housed.evolve_text_id = 24;
+            housed.evolve_text = "#no_access_to_physician";
         } else if (housed.mortuary) {
-            housed.evolve_text_id = 25;
+            housed.evolve_text = "#no_access_to_mortuary";
         } else {
-            housed.evolve_text_id = 26;
+            housed.evolve_text = "#hard_access_to_physician";
         }
         return;
     }
+
     // linen
     if (housed.inventory[INVENTORY_GOOD3] < model.linen) {
-        housed.evolve_text_id = 27;
+        housed.evolve_text = "#run_out_of_linen";
         return;
     }
-    // jewelry
-    if (housed.inventory[INVENTORY_GOOD2] < model.jewelry) {
-        housed.evolve_text_id = 28;
-        return;
-    }
+
     // beer
-    int beer = model.beer;
-    if (housed.inventory[INVENTORY_GOOD4] < beer) {
-        housed.evolve_text_id = 29;
+    if (housed.inventory[INVENTORY_GOOD2] < model.beer) {
+        housed.evolve_text = "#run_out_of_beer";
         return;
     }
-    if (beer > 1 && !city_resource_multiple_wine_available()) {
-        housed.evolve_text_id = 65;
+
+    // beer
+    if (housed.inventory[INVENTORY_GOOD4] < model.jewelry) {
+        housed.evolve_text = "#run_out_of_jewelry";;
         return;
     }
+
+    //if (beer > 1 && !city_resource_multiple_wine_available()) {
+    //    housed.evolve_text_id = 65;
+    //    return;
+    //}
+
     if (level >= 19) { // max level!
-        housed.evolve_text_id = 60;
+        housed.evolve_text = "#dwellers_palace_are_pinnacle";
         return;
     }
 
@@ -163,9 +163,9 @@ void building_house::determine_evolve_text() {
     // desirability
     if (base.desirability < model.evolve_desirability) {
         if (housed.worst_desirability_building_id) {
-            housed.evolve_text_id = 62;
+            housed.evolve_text = "";
         } else {
-            housed.evolve_text_id = 30;
+            housed.evolve_text = "#cannot_evolve_cause_low_desirability";
         }
         return;
     }
@@ -174,132 +174,150 @@ void building_house::determine_evolve_text() {
     // water
     water = next_model.water;
     if (water == 1 && !base.has_water_access && !base.has_well_access) {
-        housed.evolve_text_id = 31;
+        housed.evolve_text = "#cannot_evolve_most_primitive_water_source";
         return;
     }
+
     if (water == 2 && !base.has_water_access) {
-        housed.evolve_text_id = 32;
+        housed.evolve_text = "#cannot_evolve_access_to_water_carrier";
         return;
     }
+
     // entertainment
     entertainment = next_model.entertainment;
     if (housed.entertainment < entertainment) {
         if (!housed.entertainment)
-            housed.evolve_text_id = 33;
+            housed.evolve_text = "#cannot_evolve_no_entertainment";
         else if (entertainment < 10)
-            housed.evolve_text_id = 34;
+            housed.evolve_text = "#cannot_evolve_hardly_any_entertainment";
         else if (entertainment < 25)
-            housed.evolve_text_id = 35;
+            housed.evolve_text = "#cannot_evolve_too_little_entertainment";
         else if (entertainment < 50)
-            housed.evolve_text_id = 36;
+            housed.evolve_text = "#cannot_evolve_some_entertainment";
         else if (entertainment < 80)
-            housed.evolve_text_id = 37;
+            housed.evolve_text = "#cannot_evolve_good_entertainment";
         else {
-            housed.evolve_text_id = 38;
+            housed.evolve_text = "#cannot_evolve_excellent_entertainment";
         }
         return;
     }
+
     // food types
     foodtypes_required = next_model.food_types;
     if (foodtypes_available < foodtypes_required) {
         if (foodtypes_required == 1) {
-            housed.evolve_text_id = 39;
+            housed.evolve_text = "#cannot_evolve_needs_supply_food";
             return;
         } else if (foodtypes_required == 2) {
-            housed.evolve_text_id = 40;
+            housed.evolve_text = "#cannot_evolve_needs_second_type_food";
             return;
         } else if (foodtypes_required == 3) {
-            housed.evolve_text_id = 41;
+            housed.evolve_text = "#cannot_evolve_needs_third_type_food";
             return;
         }
     }
+
+    if (next_model.fancy_bazaar && (housed.fancy_bazaar_access <= 0)) {
+        housed.evolve_text = "#cannot_evolve_needs_access_bazaar";
+        return;
+    }
+
     // education
     education = next_model.education;
     if (housed.education < education) {
         if (education == 1) {
-            housed.evolve_text_id = 44;
+            housed.evolve_text = "#cannot_evolve_needs_basic_education";
             return;
         } else if (education == 2) {
             if (housed.school) {
-                housed.evolve_text_id = 45;
+                housed.evolve_text = "#cannot_evolve_needs_school_education";
                 return;
             } else if (housed.library) {
-                housed.evolve_text_id = 46;
+                housed.evolve_text = "#cannot_evolve_needs_library_education";
                 return;
             }
-        } else if (education == 3) {
-            housed.evolve_text_id = 47;
-            return;
-        }
+        } 
+        
+        //if (education == 3) {
+        //    housed.evolve_text_id = 47;
+        //    return;
+        //}
     }
+
     // magistrate
     if (housed.magistrate < next_model.physician) {
-        housed.evolve_text_id = 48;
+        housed.evolve_text = "#cannot_evolve_needs_magistrate";
         return;
     }
+
     // pottery
     if (housed.inventory[INVENTORY_GOOD1] < next_model.pottery) {
-        housed.evolve_text_id = 49;
+        housed.evolve_text = "#cannot_evolve_needs_pottery";
         return;
     }
+
     // religion
     religion = next_model.religion;
     if (housed.num_gods < religion) {
         if (religion == 1) {
-            housed.evolve_text_id = 50;
+            housed.evolve_text = "#cannot_evolve_needs_religious";
             return;
         } else if (religion == 2) {
-            housed.evolve_text_id = 51;
+            housed.evolve_text = "#cannot_evolve_needs_religious_two_gods";
             return;
         } else if (religion == 3) {
-            housed.evolve_text_id = 52;
+            housed.evolve_text = "#cannot_evolve_needs_religious_three_gods";
             return;
         }
     }
 
     // dentist
     if (housed.dentist < next_model.dentist) {
-        housed.evolve_text_id = 53;
+        housed.evolve_text = "#cannot_evolve_needs_dentist";
         return;
     }
 
     // health
     int model_health_need = next_model.health;
     if (housed.health < model_health_need) {
-        if (model_health_need == 1)
-            housed.evolve_text_id = 54;
-        else if (housed.dentist)
-            housed.evolve_text_id = 55;
-        else {
-            housed.evolve_text_id = 56;
+        if (model_health_need == 1) {
+            housed.evolve_text = "#cannot_evolve_needs_physician";
+        } else if (housed.dentist) {
+            housed.evolve_text = "#cannot_evolve_needs_mortuary_has_physician";
+        } else {
+            housed.evolve_text = "#cannot_evolve_needs_physician_mortuary_has";
         }
         return;
     }
+
     // linen
     if (housed.inventory[INVENTORY_GOOD3] < next_model.linen) {
-        housed.evolve_text_id = 57;
+        housed.evolve_text = "#cannot_evolve_needs_linen";
         return;
     }
+
     // jewelry
     if (housed.inventory[INVENTORY_GOOD2] < next_model.jewelry) {
-        housed.evolve_text_id = 58;
+        housed.evolve_text = "#cannot_evolve_needs_jewlery";
         return;
     }
-    // wine
-    beer = next_model.beer;
-    if (housed.inventory[INVENTORY_GOOD4] < beer) {
-        housed.evolve_text_id = 59;
+
+    // beer
+    if (housed.inventory[INVENTORY_GOOD4] < next_model.beer) {
+        housed.evolve_text = "#cannot_evolve_needs_beer";
         return;
     }
-    if (beer > 1 && !city_resource_multiple_wine_available()) {
-        housed.evolve_text_id = 66;
-        return;
-    }
+
+    //if (beer > 1 && !city_resource_multiple_wine_available()) {
+    //    housed.evolve_text_id = 66;
+    //    return;
+    //}
     // house is evolving
-    housed.evolve_text_id = 61;
+
+    housed.evolve_text = "#house_upgrade_inprogress";
     if (housed.no_space_to_expand == 1) {
         // house would like to evolve but can't
-        housed.evolve_text_id = 64;
+        housed.evolve_text = "#house_upgrade_nospace";
     }
 }
 

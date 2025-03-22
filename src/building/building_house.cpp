@@ -175,7 +175,7 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &d.health);
     iob->bind(BIND_SIGNATURE_UINT8, &d.num_gods);
     iob->bind(BIND_SIGNATURE_UINT8, &d.devolve_delay);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.evolve_text_id);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.fancy_bazaar_access);
     iob->bind(BIND_SIGNATURE_UINT8, &d.shrine_access);
     iob->bind(BIND_SIGNATURE_UINT8, &d.bazaar_access);
     iob->bind(BIND_SIGNATURE_UINT8, &d.water_supply);
@@ -187,12 +187,12 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, &d.highest_population);
     iob->bind(BIND_SIGNATURE_INT16, &d.population);
     iob->bind(BIND_SIGNATURE_UINT8, &d.tax_coverage);
-    iob->bind(BIND_SIGNATURE_UINT16, &d.tax_collector_id);
+    iob->bind(BIND_SIGNATURE_UINT16,&d.tax_collector_id);
     iob->bind(BIND_SIGNATURE_INT16, &d.tax_income_or_storage);
     iob->bind(BIND_SIGNATURE_UINT8, &d.days_without_food);
     iob->bind(BIND_SIGNATURE_UINT8, &d.hsize);
-    iob->bind(BIND_SIGNATURE_UINT16, &d.unreachable_ticks);
-    iob->bind(BIND_SIGNATURE_UINT16, &d.last_update_day);
+    iob->bind(BIND_SIGNATURE_UINT16,&d.unreachable_ticks);
+    iob->bind(BIND_SIGNATURE_UINT16,&d.last_update_day);
 }
 
 int building_house::get_fire_risk(int value) const {
@@ -673,24 +673,25 @@ bool building_house::can_expand(int num_tiles) {
 }
 
 e_house_progress building_house::check_evolve_desirability() {
-    int level = house_level();
+    const int level = house_level();
     const model_house& model = model_get_house(level);
-    int evolve_des = model.evolve_desirability;
-    if (level >= HOUSE_PALATIAL_ESTATE) {
-        evolve_des = 1000;
-    }
+    const int evolve_des = (level >= HOUSE_PALATIAL_ESTATE) ? 1000 : model.evolve_desirability;
 
-    int current_des = base.desirability;
+    const int current_des = base.desirability;
     e_house_progress status;
+
+    auto &d = runtime_data();
     if (current_des <= model.devolve_desirability) {
         status = e_house_decay;
-    } else if (current_des >= evolve_des)
+        d.evolve_text = "#cannot_evolve_cause_low_desirability"; 
+    } else if (current_des >= evolve_des) {
         status = e_house_evolve;
-    else {
+        d.evolve_text = "#house_upgrade_inprogress";
+    } else {
         status = e_house_none;
+        d.evolve_text = "#house_upgrade_inprogress";
     }
 
-    runtime_data().evolve_text_id = status; // BUG? -1 in an unsigned char?
     return status;
 }
 

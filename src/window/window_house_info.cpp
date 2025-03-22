@@ -82,15 +82,15 @@ void info_window_house::init(object_info &c) {
     house->determine_evolve_text();
 
     auto &housed = house->runtime_data();
-    if (housed.evolve_text_id == 62) { // is about to devolve
+    if (housed.worst_desirability_building_id > 0) { // is about to devolve
         bstring512 text;
         text.printf("%s @Y%s&) %s",
-            ui::str(127, 40 + housed.evolve_text_id),
+            lang_text_from_key("#house_nearby_building"),
             ui::str(41, ::building_get(housed.worst_desirability_building_id)->type),
-            ui::str(127, 41 + housed.evolve_text_id));
+            lang_text_from_key("#having_detrimental_effect"));
         ui["evolve_reason"] = text;
     } else { // needs something to evolve 
-        ui["evolve_reason"] = ui::str(127, 40 + housed.evolve_text_id);
+        ui["evolve_reason"] = housed.evolve_text;
     }
 
     auto food_icon = [] (int i) { bstring32 id_icon; id_icon.printf("food%u_icon", i); return id_icon; };

@@ -64,8 +64,8 @@ public:
         uint8_t num_gods;
         uint8_t shrine_access;
         uint8_t devolve_delay;
-        uint8_t evolve_text_id;
         uint8_t bazaar_access;
+        uint8_t fancy_bazaar_access;
         uint8_t water_supply;
         uint8_t house_happiness;
         uint8_t criminal_active;
@@ -73,6 +73,7 @@ public:
         uint8_t days_without_food;
         uint8_t hsize;
         building_id worst_desirability_building_id;
+        xstring evolve_text;
     };
 
     virtual void on_create(int orientation) override;
