@@ -154,8 +154,55 @@ void screen_city_t::clear_current_tile() {
     selected_tile = tile2i::invalid;
 }
 
+void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
+    auto figures = map_figures_in_row(tile);
+
+    for (auto *f : figures) {
+        if (f->is_drawn && !force) {
+            continue;
+        }
+
+        if (f->cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f->cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+            continue;
+        }
+
+        if (!selected_figure_id) {
+            int highlight = f->formation_id > 0 && f->formation_id == highlighted_formation;
+            f->city_draw_figure(ctx, highlight);
+        } else if (f->id == selected_figure_id) {
+            f->city_draw_figure(ctx, 0, selected_figure_coord);
+        }
+    }
+}
+
+void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx) {
+    int grid_offset = tile.grid_offset();
+    auto figures = map_figures_in_row(tile);
+
+    for (auto *f : figures) {
+        if (!get_city_overlay()->show_figure(f)) {
+            continue;
+        }
+
+        if (f->is_drawn) {
+            continue;
+        }
+
+        if (f->cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f->cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+            continue;
+        }
+
+        if (!selected_figure_id) {
+            int highlight = f->formation_id > 0 && f->formation_id == highlighted_formation;
+            f->city_draw_figure(ctx, highlight);
+        } else if (f->id == selected_figure_id) {
+            f->city_draw_figure(ctx, 0, selected_figure_coord);
+        }
+    }
+}
+
 void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord) {
-    int highlighted_formation = 0;
+    highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
         highlighted_formation = formation_legion_at(current_tile);
         if (highlighted_formation > 0 && formation_get(highlighted_formation)->in_distant_battle) {
@@ -163,7 +210,10 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, v
         }
     }
 
-    init_draw_context(selected_figure_id, figure_coord, highlighted_formation);
+    this->selected_figure_id = selected_figure_id;
+    this->selected_figure_coord = figure_coord;
+
+    init_draw_context();
 
     g_city_planner.ghost_mark_deleting(current_tile);
 
@@ -172,7 +222,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, v
     clear_mappoint_pixelcoord();
     city_view_foreach_valid_map_tile(ctx, update_tile_coords);
 
-    auto s_draw_figures = [] (vec2i pixel, tile2i tile, painter &ctx) {
+    auto s_draw_figures = [this] (vec2i pixel, tile2i tile, painter &ctx) {
         draw_figures(pixel, tile, ctx, false);
     };
 
@@ -202,10 +252,14 @@ void screen_city_t::draw_with_overlay(painter &ctx) {
 
     g_city_planner.ghost_mark_deleting(current_tile);
     city_view_foreach_valid_map_tile(ctx, update_tile_coords);
-    
+
     map_figure_sort_by_y();
     city_view_foreach_valid_map_tile(ctx, draw_isometrics_overlay_flat);
-    city_view_foreach_valid_map_tile(ctx, draw_isometrics_overlay_height, draw_ornaments_overlay, draw_figures_overlay);
+    city_view_foreach_valid_map_tile(ctx,
+        draw_isometrics_overlay_height,
+        draw_ornaments_overlay,
+        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures_overlay(pixel, tile, ctx); }
+    );
     g_city_planner.update(current_tile);
     g_city_planner.draw(ctx);
 }

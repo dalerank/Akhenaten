@@ -84,22 +84,20 @@ enum e_figure_draw_mode { e_figure_draw_common = 0, e_figure_draw_overlay = 1 };
 
 draw_context_t g_draw_context;
 
-void init_draw_context(int selected_figure_id, vec2i* figure_coord, int highlighted_formation) {
+void init_draw_context() {
     g_draw_context.advance_water_animation = 0;
-    if (!selected_figure_id) {
-        time_millis now = time_get_millis();
-        if (now - g_draw_context.last_water_animation_time > 60) {
-            g_draw_context.last_water_animation_time = now;
-            g_draw_context.advance_water_animation = 1;
-        }
+
+    time_millis now = time_get_millis();
+    if (now - g_draw_context.last_water_animation_time > 60) {
+        g_draw_context.last_water_animation_time = now;
+        g_draw_context.advance_water_animation = 1;
     }
+    
     g_draw_context.image_id_water_first = image_id_from_group(GROUP_TERRAIN_WATER);
     g_draw_context.image_id_water_last = 5 + g_draw_context.image_id_water_first;
     g_draw_context.image_id_deepwater_first = image_id_from_group(GROUP_TERRAIN_DEEPWATER);
     g_draw_context.image_id_deepwater_last = 89 + g_draw_context.image_id_deepwater_first;
-    g_draw_context.selected_figure_id = selected_figure_id;
-    g_draw_context.selected_figure_coord = figure_coord;
-    g_draw_context.highlighted_formation = highlighted_formation;
+
 }
 
 bool drawing_building_as_deleted(building* b) {
@@ -374,26 +372,6 @@ void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx) {
     //ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
 }
 
-void draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
-    auto figures = map_figures_in_row(tile);
-    for (auto *f : figures) {
-        if (f->is_drawn && !force) {
-            continue;
-        }
-
-        if (f->cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f->cached_pos.x > (pixel.x + TILE_WIDTH_PIXELS)) {
-            continue;
-        }
-
-        if (!g_draw_context.selected_figure_id) {
-            int highlight = f->formation_id > 0 && f->formation_id == g_draw_context.highlighted_formation;
-            f->city_draw_figure(ctx, highlight);
-        } else if (f->id == g_draw_context.selected_figure_id) {
-            f->city_draw_figure(ctx, 0, g_draw_context.selected_figure_coord);
-        }
-    }
-}
-
 void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
     g_city_planner.construction_record_view_position(pixel, tile);
     constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED, COLOR_GREEN, COLOR_YELLOW};
@@ -483,31 +461,5 @@ void draw_ornaments_overlay(vec2i pixel, tile2i point, painter &ctx) {
         }
     } else {
         draw_ornaments_and_animations_height(pixel, point, ctx);
-    }
-}
-
-void draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx) {
-    int grid_offset = tile.grid_offset();
-    auto figures = map_figures_in_row(tile);
-
-    for (auto *f : figures) {
-        if (!get_city_overlay()->show_figure(f)) {
-            continue;
-        }
-
-        if (f->is_drawn) {
-            continue;
-        }
-
-        if (f->cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f->cached_pos.x > (pixel.x + TILE_WIDTH_PIXELS)) {
-            continue;
-        }
-
-        if (!g_draw_context.selected_figure_id) {
-            int highlight = f->formation_id > 0 && f->formation_id == g_draw_context.highlighted_formation;
-            f->city_draw_figure(ctx, highlight);
-        } else if (f->id == g_draw_context.selected_figure_id) {
-            f->city_draw_figure(ctx, 0, g_draw_context.selected_figure_coord);
-        }
     }
 }
