@@ -29,17 +29,7 @@ struct map_editor_data_t {
 };
 
 map_editor_data_t g_map_editor_data;
-
-static struct {
-    time_millis last_water_animation_time;
-    int advance_water_animation;
-
-    int image_id_water_first;
-    int image_id_water_last;
-
-    int image_id_deepwater_first;
-    int image_id_deepwater_last;
-} draw_context;
+local_render_context_t draw_context;
 
 static void init_draw_context(void) {
     draw_context.advance_water_animation = 0;
@@ -93,8 +83,13 @@ void widget_map_editor_draw() {
 
     init_draw_context();
     //    city_view_foreach_map_tile(draw_buildings);
-    city_view_foreach_valid_map_tile(ctx, draw_isometric_flat);
-    city_view_foreach_valid_map_tile(ctx, draw_isometric_terrain_height);
+    city_view_foreach_valid_map_tile(ctx, 
+        [] (vec2i pixel, tile2i tile, painter &ctx) { g_screen_city.draw_isometric_flat(pixel, tile, ctx); }
+    );
+
+    city_view_foreach_valid_map_tile(ctx, 
+        [] (vec2i pixel, tile2i tile, painter &ctx) { g_screen_city.draw_isometric_terrain_height(pixel, tile, ctx); }
+    );
     //    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
     map_editor_tool_draw(ctx, data.current_tile);
 }

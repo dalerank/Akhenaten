@@ -82,22 +82,19 @@ void map_render_set(int grid_offset, int flag) {
 
 enum e_figure_draw_mode { e_figure_draw_common = 0, e_figure_draw_overlay = 1 };
 
-draw_context_t g_draw_context;
-
-void init_draw_context() {
-    g_draw_context.advance_water_animation = 0;
+void local_render_context_t::init() {
+    advance_water_animation = 0;
 
     time_millis now = time_get_millis();
-    if (now - g_draw_context.last_water_animation_time > 60) {
-        g_draw_context.last_water_animation_time = now;
-        g_draw_context.advance_water_animation = 1;
+    if (now - last_water_animation_time > 60) {
+        last_water_animation_time = now;
+        advance_water_animation = 1;
     }
-    
-    g_draw_context.image_id_water_first = image_id_from_group(GROUP_TERRAIN_WATER);
-    g_draw_context.image_id_water_last = 5 + g_draw_context.image_id_water_first;
-    g_draw_context.image_id_deepwater_first = image_id_from_group(GROUP_TERRAIN_DEEPWATER);
-    g_draw_context.image_id_deepwater_last = 89 + g_draw_context.image_id_deepwater_first;
 
+    image_id_water_first = image_id_from_group(GROUP_TERRAIN_WATER);
+    image_id_water_last = 5 + image_id_water_first;
+    image_id_deepwater_first = image_id_from_group(GROUP_TERRAIN_DEEPWATER);
+    image_id_deepwater_last = 89 + image_id_deepwater_first;
 }
 
 bool drawing_building_as_deleted(building* b) {
@@ -160,132 +157,6 @@ void draw_isometric_mark_sound(int building_id, int grid_offset, color &color_ma
     } else {
         int terrain = map_terrain_get(grid_offset);
         sound_city_mark_terrain_view(terrain, grid_offset, direction);
-    }
-}
-
-void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
-    int grid_offset = tile.grid_offset();
-    // black tile outside of map
-    if (grid_offset < 0) {
-        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
-        return;
-    }
-
-    g_city_planner.construction_record_view_position(pixel, tile);
-    int building_id = map_building_at(grid_offset);
-
-    color color_mask = COLOR_MASK_NONE;
-    bool deletion_tool = (g_city_planner.build_type == BUILDING_CLEAR_LAND && g_city_planner.end == tile);
-    if (deletion_tool || map_property_is_deleted(tile)) {
-        color_mask = COLOR_MASK_RED;
-    }
-    
-    bool force_tile_draw = false;
-    if (!map_property_is_draw_tile(grid_offset)) {
-        bool force_tile_draw = false;
-        if (building_id > 0) {
-            building_impl *b = building_get(building_id)->dcast();
-            force_tile_draw = b->force_draw_flat_tile(ctx, tile, pixel, color_mask);
-        }
-
-        if (!force_tile_draw) {
-            return;
-        }
-    }
-
-    vec2i view_pos, view_size;
-    city_view_get_viewport(*ctx.view, view_pos, view_size);
-    int direction = SOUND_DIRECTION_CENTER;
-    if (pixel.x < view_pos.x + 100) {
-        direction = SOUND_DIRECTION_LEFT;
-    } else if (pixel.x > view_pos.x + view_size.x - 100) {
-        direction = SOUND_DIRECTION_RIGHT;
-    }
-
-    draw_isometric_mark_sound(building_id, grid_offset, color_mask, direction);
-
-    int image_id = map_image_at(grid_offset);
-    if (g_draw_context.advance_water_animation) {
-        if (image_id >= g_draw_context.image_id_water_first && image_id <= g_draw_context.image_id_water_last) {
-            image_id++; // wrong, but eh
-            if (image_id > g_draw_context.image_id_water_last) {
-                image_id = g_draw_context.image_id_water_first;
-            }
-        }
-
-        if (image_id >= g_draw_context.image_id_deepwater_first && image_id <= g_draw_context.image_id_deepwater_last) {
-            image_id += 15;
-
-            if (image_id > g_draw_context.image_id_deepwater_last) {
-                image_id -= 90;
-            }
-        }
-        map_image_set(grid_offset, image_id);
-    }
-
-    if (map_property_is_constructing(grid_offset)) {
-        image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
-    }
-
-    const bool is_green_tile = map_terrain_is(grid_offset, TERRAIN_PLANER_FUTURE);
-    if (is_green_tile && (color_mask == COLOR_MASK_NONE)) {
-        color_mask = COLOR_MASK_GREEN;
-    }
-
-    const image_t *img = ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
-    if (!img) {
-        return;
-    }
-
-    int image_alt_value = map_image_alt_at(grid_offset);
-    int image_alt_id = (image_alt_value & 0x00ffffff);
-    uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
-    if (image_alt_id > 0 && image_alt_alpha > 0) {
-        ImageDraw::isometric_from_drawtile(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), ImgFlag_Alpha);
-    }
-
-    int top_height = img->isometric_top_height();
-    map_render_set(grid_offset, (top_height > 0) ? RENDER_TALL_TILE : 0);
-}
-
-void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx) {
-    int grid_offset = tile.grid_offset();
-    // black tile outside of map
-    if (grid_offset < 0) {
-        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
-        return;
-    }
-
-    g_city_planner.construction_record_view_position(pixel, tile);
-    if (!map_property_is_draw_tile(grid_offset)) {
-        return;
-    }
-
-    bool tall_flat_tile = map_render_is(grid_offset, RENDER_TALL_TILE);
-    if (!tall_flat_tile) {
-        return;
-    }
-
-    const bool non_terrain = map_terrain_is(grid_offset, TERRAIN_TREE|TERRAIN_ROCK|TERRAIN_BUILDING|TERRAIN_ELEVATION|TERRAIN_WALL|TERRAIN_GATEHOUSE);
-    if (non_terrain) {
-        return;
-    }
-
-    map_render_set(grid_offset, 0);
-    color color_mask = COLOR_MASK_NONE;
-    bool deletion_tool = (g_city_planner.build_type == BUILDING_CLEAR_LAND && g_city_planner.end == tile);
-    if (deletion_tool || map_property_is_deleted(tile)) {
-        color_mask = COLOR_MASK_RED;
-    }
-
-    int image_id = map_image_at(grid_offset);
-    ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, color_mask);
-
-    int image_alt_value = map_image_alt_at(grid_offset);
-    int image_alt_id = (image_alt_value & 0x00ffffff);
-    uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
-    if (image_alt_id > 0 && image_alt_alpha > 0) {
-        ImageDraw::isometric_from_drawtile_top(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), ImgFlag_Alpha);
     }
 }
 
