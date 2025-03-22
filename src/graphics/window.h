@@ -83,7 +83,7 @@ struct window_type {
     void (*draw_background)(int) = nullptr;
     void (*draw_foreground)(int) = nullptr;
     void (*handle_input)(const mouse* m, const hotkeys* h) = nullptr;
-    void (*get_tooltip)(tooltip_context* c) = nullptr;
+    void (*draw_tooltip)(tooltip_context* c) = nullptr;
     void (*draw_refresh)() = nullptr;
 };
 

@@ -81,16 +81,16 @@ bool city_overlay_water::draw_custom_footprint(vec2i pixel, tile2i tile, painter
     return true;
 }
 
-xstring city_overlay_water::get_tooltip_for_grid_offset(tooltip_context* c, int grid_offset) const {
-    int building_id = map_building_at(grid_offset);
+xstring city_overlay_water::get_tooltip(tooltip_context* c, tile2i tile) const {
+    int building_id = map_building_at(tile);
     if (building_id && building_is_house(building_get(building_id)->type)) {
-        if (map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE)) {
+        if (map_terrain_is(tile, TERRAIN_FOUNTAIN_RANGE)) {
             return ui::str(66, 3);
         } else {
             return ui::str(66, 2);
         }
-    } else if (map_terrain_is(grid_offset, TERRAIN_GROUNDWATER)) {
-        if (map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE)) {
+    } else if (map_terrain_is(tile, TERRAIN_GROUNDWATER)) {
+        if (map_terrain_is(tile, TERRAIN_FOUNTAIN_RANGE)) {
             return ui::str(66, 3);
         } else {
             return ui::str(66, 1);

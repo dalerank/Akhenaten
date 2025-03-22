@@ -157,35 +157,6 @@ bool select_city_overlay() {
     return g_city_overlay != 0;
 }
 
-xstring widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset) {
-    if (!g_city_overlay) {
-        return {};
-    }
-
-    int overlay_type = g_city_overlay->get_type();
-    int building_id = map_building_at(grid_offset);
-    if (!building_id) {
-        return {};
-    }
-
-    int overlay_requires_house = (overlay_type != OVERLAY_WATER) && (overlay_type != OVERLAY_FIRE)
-                                    && (overlay_type != OVERLAY_DAMAGE) && (overlay_type != OVERLAY_NATIVE)
-                                    && (overlay_type != OVERLAY_DESIRABILITY);
-
-    auto b = building_get(building_id);
-    auto house = b->dcast_house();
-    if (overlay_requires_house && !house) {
-        return {};
-    }
-
-    xstring tooltip = g_city_overlay->get_tooltip_for_building(c, b);
-    if (!tooltip) {
-        tooltip = g_city_overlay->get_tooltip_for_grid_offset(c, grid_offset);
-    } 
-
-    return tooltip;
-}
-
 bool city_overlay::is_drawable_farm_corner(tile2i tile) const {
     if (!map_property_is_draw_tile(tile)) {
         return false;

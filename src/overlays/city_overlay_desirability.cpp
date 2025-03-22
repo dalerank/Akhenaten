@@ -98,13 +98,13 @@ xstring city_overlay_desirability::get_tooltip_for_building(tooltip_context *c, 
     return {};
 }
 
-xstring city_overlay_desirability::get_tooltip_for_grid_offset(tooltip_context *c, int grid_offset) const {
-    int desirability = g_desirability.get(grid_offset);
-    if (desirability < 0)
+xstring city_overlay_desirability::get_tooltip(tooltip_context *c, tile2i tile) const {
+    int desirability = g_desirability.get(tile);
+    if (desirability < 0) {
         return ui::str(66, 91);
-    else if (desirability == 0)
+    } else if (desirability == 0) {
         return ui::str(66, 92);
-    else {
+    } else {
         return ui::str(66, 93);
     }
 }

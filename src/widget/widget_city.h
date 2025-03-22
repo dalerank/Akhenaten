@@ -25,6 +25,8 @@ struct screen_city_t {
     void handle_mouse(const mouse *m);
     void handle_input(const mouse *m, const hotkeys *h);
     void handle_escape(const hotkeys *h);
+    void draw_tooltip(tooltip_context* c);
+    xstring get_overlay_tooltip(tooltip_context *c, tile2i tile);
 };
 
 extern screen_city_t g_screen_city;
@@ -34,7 +36,6 @@ void set_city_clip_rectangle(painter &ctx);
 int widget_city_has_input();
 void widget_city_handle_input_military(const mouse* m, const hotkeys* h, int legion_formation_id);
 
-void widget_city_get_tooltip(tooltip_context* c);
 void widget_city_scroll_map(const mouse *m);
 
 tile2i widget_city_update_city_view_coords(vec2i pixel);

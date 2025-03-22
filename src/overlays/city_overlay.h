@@ -30,7 +30,7 @@ struct city_overlay {
     virtual bool show_figure(const figure *f) const;
     virtual int get_column_height(const building *b) const { return COLUMN_TYPE_NONE; }
     virtual e_column_color get_column_color(const building *b) const { return COLUMN_COLOR_NONE; }
-    virtual xstring get_tooltip_for_grid_offset(tooltip_context *c, int grid_offset) const { return {}; }
+    virtual xstring get_tooltip(tooltip_context *c, tile2i tile) const { return {}; }
     virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) const { return {}; }
     virtual bool draw_custom_footprint(vec2i pixel, tile2i point, painter &ctx) const { return false; }
     virtual void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const;
@@ -55,4 +55,3 @@ struct city_overlay_t : public city_overlay {
 const city_overlay* get_city_overlay();
 city_overlay *get_city_overlay(e_overlay e);
 bool select_city_overlay();
-xstring widget_city_overlay_get_tooltip_text(tooltip_context* c, int grid_offset);

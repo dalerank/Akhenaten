@@ -91,7 +91,7 @@ void windows_manager_t::handle_input(const mouse *m, const hotkeys *h) {
 }
 
 void windows_manager_t::handle_tooltip(const mouse *m) {
-    tooltip_handle(m, current_window->get_tooltip);
+    tooltip_handle(m, current_window->draw_tooltip);
 }
 
 void window_draw(int force) {

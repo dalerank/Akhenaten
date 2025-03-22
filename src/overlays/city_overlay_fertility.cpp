@@ -61,7 +61,7 @@ inline void city_overlay_fertility::draw_custom_top(vec2i pixel, tile2i point, p
     }
 }
 
-xstring city_overlay_fertility::get_tooltip_for_grid_offset(tooltip_context *c, int grid_offset) const {
+xstring city_overlay_fertility::get_tooltip(tooltip_context *c, tile2i) const {
     return {};
 }
 

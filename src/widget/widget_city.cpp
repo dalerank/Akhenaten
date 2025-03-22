@@ -37,6 +37,7 @@
 #include "window/window_city.h"
 #include "window/window_city_military.h"
 #include "game/game.h"
+#include "overlays/city_overlay.h"
 #include "building/building.h"
 
 screen_city_t g_screen_city;
@@ -575,8 +576,37 @@ void screen_city_t::handle_input(const mouse* m, const hotkeys* h) {
     handle_escape(h);
 }
 
-void widget_city_get_tooltip(tooltip_context* c) {
-    auto& data = g_screen_city;
+xstring screen_city_t::get_overlay_tooltip(tooltip_context *c, tile2i tile) {
+    const auto overlay = get_city_overlay();
+    if (!overlay) {
+        return {};
+    }
+
+    int overlay_type = overlay->get_type();
+    int building_id = map_building_at(tile);
+    if (!building_id) {
+        return {};
+    }
+
+    int overlay_requires_house = (overlay_type != OVERLAY_WATER) && (overlay_type != OVERLAY_FIRE)
+        && (overlay_type != OVERLAY_DAMAGE) && (overlay_type != OVERLAY_NATIVE)
+        && (overlay_type != OVERLAY_DESIRABILITY);
+
+    auto b = building_get(building_id);
+    auto house = b->dcast_house();
+    if (overlay_requires_house && !house) {
+        return {};
+    }
+
+    xstring tooltip = overlay->get_tooltip_for_building(c, b);
+    if (!tooltip) {
+        tooltip = overlay->get_tooltip(c, tile);
+    }
+
+    return tooltip;
+}
+
+void screen_city_t::draw_tooltip(tooltip_context* c) {
     if (g_settings.tooltips == e_tooltip_show_none) {
         return;
     }
@@ -585,17 +615,16 @@ void widget_city_get_tooltip(tooltip_context* c) {
         return;
     }
 
-    int grid_offset = data.current_tile.grid_offset();
-    if (grid_offset == 0) {
+    if (!current_tile.valid()) {
         return;
     }
 
     if (game.current_overlay != OVERLAY_NONE) {
         c->high_priority = 1;
-        c->text = widget_city_overlay_get_tooltip_text(c, grid_offset);
+        c->text = get_overlay_tooltip(c, current_tile);
     }
 
-    int building_id = map_building_at(grid_offset);
+    int building_id = map_building_at(current_tile);
     building_impl *b = building_get(building_id)->dcast();
     b->draw_tooltip(c);
     // cheat tooltips

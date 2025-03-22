@@ -279,17 +279,6 @@ void window_city_handle_input(const mouse* m, const hotkeys* h) {
     city_has_loaded = true;
 }
 
-void window_city_get_tooltip(tooltip_context* c) {
-    //int text_id = widget_top_menu_get_tooltip_text(c);
-    //
-    //if (text_id) {
-    //    c->type = TOOLTIP_BUTTON;
-    //    c->text.id = text_id;
-    //    return;
-    //}
-    widget_city_get_tooltip(c);
-}
-
 void window_city_draw_all() {
     window_city_draw_background(0);
     window_city_draw_foreground(0);
@@ -315,7 +304,7 @@ void window_city_show() {
         window_city_draw_background,
         window_city_draw_foreground,
         window_city_handle_input,
-        window_city_get_tooltip
+        [] (auto c) { g_screen_city.draw_tooltip(c); }
     };
 
     window_city_init();
