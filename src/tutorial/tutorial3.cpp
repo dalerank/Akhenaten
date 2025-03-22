@@ -130,6 +130,11 @@ void tutorial3_hunger_halt_immgrants(event_advance_month ev) {
     }
 }
 
+void tutorial3_population_cap(city_migration_t& migration) {
+    const int max_pop = (!g_tutorials_flags.tutorial_3.pottery_made_1) ? 520 : 0;
+    migration.population_cap = max_pop;
+}
+
 void tutorial_3::init() {
     if (g_tutorials_flags.tutorial_3.figs_800_stored) building_menu_update(tutorial_stage.tutorial_industry);
     else events::subscribe(&tutorial3_on_filled_granary);
@@ -147,5 +152,6 @@ void tutorial_3::init() {
         events::subscribe(&tutorial3_hunger_halt_immgrants);
     }
 
-    g_city.victory_state.add_condition(&tutorial3_is_success);
+    g_city.victory_state.add_condition(tutorial3_is_success);
+    g_city.migration.add_condition(tutorial3_population_cap);
 }

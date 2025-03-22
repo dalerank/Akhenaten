@@ -21,6 +21,11 @@ void tutorial1_handle_fire(event_fire_damage) {
     city_message_post(true, MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE, 0, 0);
 }
 
+void tutorial1_popultion_cap(city_migration_t& migration) {
+    const int max_pop = (!g_tutorials_flags.tutorial_1.fire || !g_tutorials_flags.tutorial_1.collapse) ? 80 : 0;
+    migration.population_cap = max_pop;
+}
+
 void tutorial1_handle_population_150(event_population_changed ev) {
     if (g_tutorials_flags.tutorial_1.population_150_reached || ev.value < 150) {
         return;
@@ -94,7 +99,8 @@ void tutorial_1::init() {
     if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) building_menu_update(tutorial_stage.tutorial_water);
     else events::subscribe(&tutorial1_on_filled_granary);
 
-    g_city.victory_state.add_condition(&tutorial1_is_success);
+    g_city.victory_state.add_condition(tutorial1_is_success);
+    g_city.migration.add_condition(tutorial1_popultion_cap);
 }
 
 void tutorial_1::reset() {

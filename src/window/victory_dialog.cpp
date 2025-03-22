@@ -87,7 +87,7 @@ static void button_continue_governing(int months, int param2) {
 }
 
 void window_victory_dialog_show(void) {
-    window_type window = {
+    static window_type window = {
         WINDOW_VICTORY_DIALOG,
         draw_background,
         draw_foreground,

@@ -10,6 +10,7 @@
 
 void game_state_init() {
     g_city.victory_state.reset();
+    g_city.migration.reset();
     map_ring_init();
 
     city_view_reset_orientation();

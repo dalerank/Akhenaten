@@ -47,6 +47,11 @@ bool tutorial2_is_success() {
     return may_finish && some_days_after_last_action;
 }
 
+void tutorial2_population_cap(city_migration_t& migration) {
+    const int max_pops = (!g_tutorials_flags.tutorial_2.granary_built) ? 150 : 0;
+    migration.population_cap = max_pops;
+}
+
 void tutorial_2::init() {
     if (g_tutorials_flags.tutorial_2.gold_mined_500) building_menu_update(tutorial_stage.tutorial_gods);
     else events::subscribe(&tutorial_2_on_gold_extracted);
@@ -54,7 +59,8 @@ void tutorial_2::init() {
     if (g_tutorials_flags.tutorial_2.temples_built) building_menu_update(tutorial_stage.tutorial_entertainment);
     else events::subscribe(&tutorial_2_on_build_temple);
 
-    g_city.victory_state.add_condition(&tutorial2_is_success);
+    g_city.victory_state.add_condition(tutorial2_is_success);
+    g_city.migration.add_condition(tutorial2_population_cap);
 }
 
 xstring tutorial_2::goal_text() {

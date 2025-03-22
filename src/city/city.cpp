@@ -412,10 +412,14 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.population.yearly_births);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.yearly_deaths);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.lost_removal);
-    iob->bind(BIND_SIGNATURE_INT32, &data.migration.immigration_amount_per_batch);
-    iob->bind(BIND_SIGNATURE_INT32, &data.migration.emigration_amount_per_batch);
-    iob->bind(BIND_SIGNATURE_INT32, &data.migration.emigration_queue_size);
-    iob->bind(BIND_SIGNATURE_INT32, &data.migration.immigration_queue_size);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.migration.immigration_amount_per_batch);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.migration.emigration_amount_per_batch);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.migration.emigration_queue_size);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.migration.immigration_queue_size);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.lost_homeless);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.last_change);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.average_per_year);
@@ -426,16 +430,21 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.population.yearly_update_requested);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.last_used_house_add);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.last_used_house_remove);
-    iob->bind(BIND_SIGNATURE_INT32, &data.migration.immigrated_today);
-    iob->bind(BIND_SIGNATURE_INT32, &data.migration.emigrated_today);
-    iob->bind(BIND_SIGNATURE_INT32, &data.migration.refused_immigrants_today);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.migration.immigrated_today);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.migration.emigrated_today);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.migration.refused_immigrants_today);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT8, &data.migration.percentage);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_27d0);
-    iob->bind(BIND_SIGNATURE_INT16, &data.migration.immigration_duration);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.migration.immigration_duration);
     iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_INT32, &data.migration.emigration_duration);
-    iob->bind(BIND_SIGNATURE_INT32, &data.migration.newcomers);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.migration.emigration_duration);
+    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_UINT16, &data.migration.newcomers);
+    iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_UINT16, &data.migration.nobles_leave_city_this_year);
     iob->bind(BIND_SIGNATURE_UINT16, &data.unused.unused_27d0_short);
 
@@ -694,7 +703,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
 
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.least_happy_god);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_4334);
-    iob->bind(BIND_SIGNATURE_INT32, &data.migration.no_immigration_cause);
+    iob->bind(BIND_SIGNATURE_INT8, &data.migration.no_immigration_cause);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.protesters);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.criminals);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.health);
@@ -954,7 +964,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.pavilion_message_shown);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.migration.emigration_message_shown);
-    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.migration.percentage_by_sentiment);
+    iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_UINT8, &data.mission.fired_message_shown);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.mission.victory_message_shown);
@@ -962,7 +973,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.mission.start_message_shown);
     iob->bind____skip(4);
     iob->bind____skip(3);
-    iob->bind____skip(4);
+    iob->bind(BIND_SIGNATURE_INT32, &data.migration.population_cap);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.attacking_natives);
 
     iob->bind____skip(4); // (BIND_SIGNATURE_INT32, &data.buildings.temple_complex_id);

@@ -1,6 +1,5 @@
 #include "housing.h"
 
-#include "city/migration.h"
 #include "city/city_population.h"
 #include "city/city_resource.h"
 #include "game/resource.h"

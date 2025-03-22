@@ -198,24 +198,6 @@ bool tutorial_menu_update(int tut) {
     return false;
 }
 
-int tutorial_get_population_cap(int current_cap) {
-    return current_cap; // temp
-    if (scenario_is_mission_rank(1)) {
-        if (!g_tutorials_flags.tutorial_1.fire || !g_tutorials_flags.tutorial_1.collapse) {
-            return 80;
-        }
-    } else if (scenario_is_mission_rank(2)) {
-        if (!g_tutorials_flags.tutorial_2.granary_built) {
-            return 150;
-        }
-    } else if (scenario_is_mission_rank(3)) {
-        if (!g_tutorials_flags.tutorial_3.pottery_made_1) {
-            return 520;
-        }
-    }
-    return current_cap;
-}
-
 xstring tutorial_get_immediate_goal_text() {
     if (scenario_is_mission_rank(1))  return tutorial_1::goal_text();
     if (scenario_is_mission_rank(2))  return tutorial_2::goal_text();

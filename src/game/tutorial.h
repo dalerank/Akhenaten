@@ -131,7 +131,6 @@ e_availability mission_empire_availability(int mission);
 void tutorial_map_update(int tut);
 bool tutorial_menu_update(int tut);
 
-int tutorial_get_population_cap(int current_cap);
 xstring tutorial_get_immediate_goal_text();
 
 void tutorial_update_step(xstring step);

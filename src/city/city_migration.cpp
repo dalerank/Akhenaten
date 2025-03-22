@@ -5,6 +5,8 @@
 #include "core/calc.h"
 #include "game/tutorial.h"
 
+svector<city_migration_t::condition, 16> g_migration_conditions;
+
 void city_migration_t::nobles_leave_city(int num_people) {
     nobles_leave_city_this_year += num_people;
 }
@@ -34,8 +36,7 @@ void city_migration_t::update_status() {
     immigration_amount_per_batch = 0;
     emigration_amount_per_batch = 0;
 
-    int population_cap = tutorial_get_population_cap(200000);
-    if (g_city.population.current >= population_cap) {
+    if (population_cap > 0 && g_city.population.current >= population_cap) {
         percentage = 0;
         migration_cap = true;
         return;
@@ -117,7 +118,18 @@ void city_migration_t::create_migrants() {
     emigration_amount_per_batch = 0;
 }
 
+void city_migration_t::reset() {
+    g_migration_conditions.clear();
+}
+
+void city_migration_t::update_conditions() {
+    for (const auto &condition : g_migration_conditions) {
+        condition(*this);
+    }
+}
+
 void city_migration_t::update() {
+    update_conditions();
     update_status();
     create_migrants();
 }
@@ -147,4 +159,8 @@ void city_migration_t::determine_reason() {
 
 int city_migration_t::no_room_for_immigrants() {
     return refused_immigrants_today || g_city.population.room_in_houses <= 0;
+}
+
+void city_migration_t::add_condition(condition cond) {
+    g_migration_conditions.push_back(cond);
 }

@@ -50,6 +50,7 @@
 
 void game_file_editor_clear_data(void) {
     g_city.victory_state.reset();
+    g_city.migration.reset();
     g_city_planner.reset();
     g_city.init();
     g_city.init_custom_map();
