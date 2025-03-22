@@ -1,12 +1,12 @@
 #include "figure_ostrich_hunter.h"
 
 #include "core/calc.h"
-#include "city/sentiment.h"
 #include "figure/properties.h"
 #include "grid/figure.h"
 #include "graphics/animkeys.h"
 #include "figuretype/figure_missile.h"
 #include "city/city_figures.h"
+#include "city/city.h"
 #include "core/random.h"
 
 struct ostrich_hunter_model : public figures::model_t<figure_ostrich_hunter> {
@@ -159,7 +159,7 @@ sound_key figure_ostrich_hunter::phrase_key() const {
     if (action_state() == ACTION_16_HUNTER_INVESTIGATE || action_state() == ACTION_9_CHASE_PREY || action_state() == ACTION_15_HUNTER_HUNT) {
         return "hunting";
     } else if (action_state() == ACTION_8_RECALCULATE ) {
-        if (city_sentiment() > 40) {
+        if (g_city.sentiment.value > 40) {
             return "city_is_good";
         }
     } 

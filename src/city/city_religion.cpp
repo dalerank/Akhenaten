@@ -10,7 +10,6 @@
 #include "city/city.h"
 #include "city/city_health.h"
 #include "city/message.h"
-#include "city/sentiment.h"
 #include "city/trade.h"
 #include "core/profiler.h"
 #include "core/calc.h"

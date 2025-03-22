@@ -6,7 +6,6 @@
 #include "grid/road_access.h"
 #include "grid/road_network.h"
 #include "grid/routing/routing_terrain.h"
-#include "city/sentiment.h"
 #include "city/city_buildings.h"
 #include "core/profiler.h"
 #include "core/random.h"

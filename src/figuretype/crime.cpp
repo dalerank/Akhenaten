@@ -6,7 +6,6 @@
 #include "city/message.h"
 #include "city/city_population.h"
 #include "city/ratings.h"
-#include "city/sentiment.h"
 #include "city/map.h"
 #include "core/random.h"
 #include "core/profiler.h"

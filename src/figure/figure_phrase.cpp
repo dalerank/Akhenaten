@@ -11,7 +11,6 @@
 #include "city/labor.h"
 #include "city/city_population.h"
 #include "city/city_resource.h"
-#include "city/sentiment.h"
 #include "core/calc.h"
 #include "core/bstring.h"
 #include "core/game_environment.h"

@@ -9,6 +9,7 @@
 #include "city/labor.h"
 #include "city/buildings.h"
 #include "city/city_migration.h"
+#include "city/city_sentiment.h"
 #include "city/city_health.h"
 #include "city/city_animals.h"
 #include "city/military.h"
@@ -63,29 +64,7 @@ struct city_t {
 
     city_labor_t labor;
     city_migration_t migration;
-
-    struct {
-        int32_t value;
-        int32_t previous_value;
-        int32_t message_delay;
-
-        bool include_huts;
-        int32_t unemployment;
-        int32_t wages;
-        int32_t low_mood_cause;
-
-        int32_t protesters;
-        int32_t criminals; // muggers+rioters
-        bool can_create_mugger;
-        bool can_create_protestor;
-        short last_mugger_message;
-        int32_t contribution_taxes;
-        int32_t contribution_wages;
-        int32_t contribution_employment;
-        int32_t penalty_huts;
-        int32_t religion_coverage;
-        int32_t monuments;
-    } sentiment;
+    city_sentiment_t sentiment;
 
     city_health_t health;
     city_ratings_t ratings;

@@ -10,7 +10,6 @@
 #include "building/building_burning_ruin.h"
 #include "graphics/animation.h"
 #include "city/city_health.h"
-#include "city/sentiment.h"
 #include "city/labor.h"
 #include "city/city.h"
 #include "figure/service.h"
@@ -82,7 +81,8 @@ sound_key figure_fireman::phrase_key() const {
         keys.push_back("low_entertainment");
     }
 
-    if (city_sentiment() > 90) {
+    const int sentiment = g_city.sentiment.value;
+    if (sentiment > 90) {
         keys.push_back("city_is_amazing");
     }
 

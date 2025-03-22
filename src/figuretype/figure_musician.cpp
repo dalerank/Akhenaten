@@ -2,7 +2,6 @@
 
 #include "figure/service.h"
 #include "city/city_health.h"
-#include "city/sentiment.h"
 #include "city/labor.h"
 #include "city/ratings.h"
 #include "city/city.h"
@@ -53,7 +52,7 @@ sound_key figure_musician::phrase_key() const {
         keys.push_back("gods_are_pleasures");
     }
 
-    if (city_sentiment() < 30) {
+    if (g_city.sentiment.value < 30) {
         keys.push_back("city_is_bad_reputation");
     }
 
@@ -66,7 +65,7 @@ sound_key figure_musician::phrase_key() const {
         keys.push_back("no_entertainment_need");
     }
 
-    if (city_sentiment() < 50) {
+    if (g_city.sentiment.value < 50) {
         keys.push_back("city_not_bad");
     } else {
         keys.push_back("city_is_good");

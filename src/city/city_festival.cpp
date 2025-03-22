@@ -8,7 +8,6 @@
 #include "city/city.h"
 #include "city/finance.h"
 #include "city/message.h"
-#include "city/sentiment.h"
 #include "core/random.h"
 #include "figure/figure.h"
 #include "config/config.h"

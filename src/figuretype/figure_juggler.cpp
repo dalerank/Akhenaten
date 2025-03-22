@@ -3,7 +3,6 @@
 #include "city/labor.h"
 #include "figure/service.h"
 #include "city/city.h"
-#include "city/sentiment.h"
 #include "figure/service.h"
 #include "building/building_entertainment.h"
 #include "building/building_house.h"
@@ -44,8 +43,9 @@ sound_key figure_juggler::phrase_key() const {
         return "disease_in_city";
     }
 
-    if (city_sentiment() < 30) {
-        if (city_sentiment() < 20) {
+    const int sentiment = g_city.sentiment.value;
+    if (sentiment < 30) {
+        if (sentiment < 20) {
             keys.push_back("city_verylow_sentiment");
         }
         keys.push_back("city_low_sentiment");
@@ -69,11 +69,11 @@ sound_key figure_juggler::phrase_key() const {
         keys.push_back("low_entertainment");
     }
 
-    if (city_sentiment() > 40) {
+    if (sentiment > 40) {
         keys.push_back("city_is_good");
     }
 
-    if (city_sentiment() > 90) {
+    if (sentiment > 90) {
         keys.push_back("city_is_amazing");
     }
 

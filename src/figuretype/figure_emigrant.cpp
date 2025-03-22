@@ -6,7 +6,6 @@
 #include "grid/road_access.h"
 #include "grid/terrain.h"
 #include "building/building_house.h"
-#include "city/sentiment.h"
 #include "city/city.h"
 
 figures::model_t<figure_emigrant> emigrant_m;

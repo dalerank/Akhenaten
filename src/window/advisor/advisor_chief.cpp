@@ -11,7 +11,6 @@
 #include "city/military.h"
 #include "city/city_population.h"
 #include "city/city_resource.h"
-#include "city/sentiment.h"
 #include "core/calc.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -39,7 +38,7 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
 
     // sentiment
     {
-        int sentiment = city_sentiment();
+        const int sentiment = g_city.sentiment.value;
         std::pair<int, int> sentiment_status;
         if (sentiment <= 0) { sentiment_status = {20, FONT_NORMAL_YELLOW}; } 
         else if (sentiment >= 100) { sentiment_status = {31, FONT_NORMAL_BLACK_ON_DARK}; }

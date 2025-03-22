@@ -2,7 +2,6 @@
 
 #include "core/profiler.h"
 #include "core/log.h"
-#include "city/sentiment.h"
 #include "city/labor.h"
 #include "city/city.h"
 #include "figure/service.h"
@@ -60,6 +59,7 @@ sound_key figure_architector::phrase_key() const {
         hoeses_damage_high += (b.damage_risk > 50) ? 1 : 0;
     });
 
+    const int sentiment = g_city.sentiment.value;
     svector<sound_key_state, 16> keys = {
         {"extreme_damage_level", houses_damage_risk > 0},
         {"city_not_safety", formation_get_num_forts() < 0},
@@ -67,11 +67,11 @@ sound_key figure_architector::phrase_key() const {
         {"no_food_in_city", city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD},
         {"need_more_workers", g_city.labor.workers_needed >= 20},
         {"gods_are_angry", g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT},
-        {"city_has_bad_reputation", city_sentiment() < 30},
-        {"city_is_good", city_sentiment() > 50},
-        {"city_is_bad",city_sentiment() >= 30},
+        {"city_has_bad_reputation", sentiment < 30},
+        {"city_is_good", sentiment > 50},
+        {"city_is_bad", sentiment >= 30},
         {"low_entertainment", g_city.festival.months_since_festival > 6},
-        {"city_is_amazing", city_sentiment() > 90},
+        {"city_is_amazing", sentiment > 90},
         {"i_am_works", true}
     };
 

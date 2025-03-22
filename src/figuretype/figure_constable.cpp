@@ -8,7 +8,6 @@
 #include "figure/service.h"
 #include "city/city.h"
 #include "city/labor.h"
-#include "city/sentiment.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "building/building_house.h"
@@ -80,9 +79,10 @@ sound_key figure_constable::phrase_key() const {
         keys.push_back("policeman_low_entertainment");
     }
 
-    if (city_sentiment() > 90) {
+    const int sentiment = g_city.sentiment.value;
+    if (sentiment > 90) {
         keys.push_back("policeman_city_is_amazing");
-    } else  if (city_sentiment() > 40) {
+    } else  if (sentiment > 40) {
         keys.push_back("policeman_city_is_good");
     }
 

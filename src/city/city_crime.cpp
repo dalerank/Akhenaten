@@ -1,8 +1,7 @@
 #include "city/city.h"
 
 #include "core/profiler.h"
-#include "city/sentiment.h"
-#include "city/city_population.h"
+#include "city/city.h"
 #include "city/message.h"
 #include "grid/road_access.h"
 #include "figure/figure.h"
@@ -142,7 +141,7 @@ void city_t::figures_generate_criminals() {
     }
 
     if (min_building) {
-        int sentiment = city_sentiment();
+        const int sentiment = g_city.sentiment.value;
 
         if (sentiment < 30) {
             if (random_byte() >= sentiment + 50) {

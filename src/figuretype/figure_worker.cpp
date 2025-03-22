@@ -4,12 +4,10 @@
 #include "building/building_farm.h"
 #include "figure/image.h"
 #include "graphics/image_groups.h"
-#include "city/sentiment.h"
 #include "city/city.h"
 #include "city/city_floods.h"
 #include "city/city_health.h"
 #include "city/labor.h"
-#include "city/sentiment.h"
 #include "city/ratings.h"
 
 #include "js/js_game.h"
@@ -213,11 +211,12 @@ sound_key figure_worker::phrase_key() const {
         keys.push_back("low_entertainment");
     }
 
-    if (city_sentiment() > 50) {
+    const int sentiment = g_city.sentiment.value;
+    if (sentiment > 50) {
         keys.push_back("city_is_good");
     }
 
-    if (city_sentiment() > 90) {
+    if (sentiment > 90) {
         keys.push_back("city_is_amazing");
     }
 

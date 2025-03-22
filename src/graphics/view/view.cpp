@@ -12,9 +12,9 @@
 #include "widget/widget_minimap.h"
 #include "widget/widget_sidebar.h"
 #include "widget/sidebar/common.h"
-#include "city/sentiment.h"
 #include "scenario/scenario.h"
 #include "platform/renderer.h"
+#include "city/city.h"
 #include "game/game.h"
 
 view_data_t g_city_view_data;

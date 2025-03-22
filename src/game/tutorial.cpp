@@ -13,7 +13,6 @@
 #include "platform/arguments.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
-#include "city/sentiment.h"
 #include "game/game.h"
 #include "io/gamefiles/lang.h"
 

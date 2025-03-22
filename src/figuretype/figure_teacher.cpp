@@ -2,7 +2,6 @@
 
 #include "city/city_health.h"
 #include "city/city.h"
-#include "city/sentiment.h"
 #include "city/ratings.h"
 #include "building/building_house.h"
 #include "figure/service.h"
@@ -61,11 +60,12 @@ sound_key figure_teacher::phrase_key() const {
         keys.push_back("teacher_much_unemployments");
     }
 
-    if (city_sentiment() > 90) {
+    const int sentiment = g_city.sentiment.value;
+    if (sentiment > 90) {
         keys.push_back("teacher_city_is_amazing");
-    } else if (city_sentiment() > 70) {
+    } else if (sentiment > 70) {
         keys.push_back("teacher_city_much_better");
-    } else if (city_sentiment() > 40) {
+    } else if (sentiment > 40) {
         keys.push_back("teacher_city_is_good");
     } 
 

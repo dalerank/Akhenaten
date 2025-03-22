@@ -1,7 +1,6 @@
 #include "figure_water_carrier.h"
 
 #include "city/city_health.h"
-#include "city/sentiment.h"
 #include "city/labor.h"
 #include "city/ratings.h"
 #include "city/city.h"
@@ -82,11 +81,12 @@ sound_key figure_water_carrier::phrase_key() const {
         keys.push_back("low_entertainment");
     }
 
-    if (city_sentiment() > 50) {
+    const int sentiment = g_city.sentiment.value;
+    if (sentiment > 50) {
         keys.push_back("city_is_good");
     }
 
-    if (city_sentiment() > 90) {
+    if (sentiment > 90) {
         keys.push_back("city_is_amazing");
     }
 

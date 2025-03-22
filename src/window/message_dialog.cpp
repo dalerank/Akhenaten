@@ -3,7 +3,6 @@
 #include "city/message.h"
 #include "city/city.h"
 #include "city/constants.h"
-#include "city/sentiment.h"
 #include "empire/empire.h"
 #include "figure/formation.h"
 #include "graphics/graphics.h"

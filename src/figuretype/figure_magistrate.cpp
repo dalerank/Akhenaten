@@ -1,6 +1,5 @@
 #include "figure_magistrate.h"
 
-#include "city/sentiment.h"
 #include "city/city.h"
 #include "city/labor.h"
 #include "city/ratings.h"
@@ -85,9 +84,10 @@ sound_key figure_magistrate::phrase_key() const {
         keys.push_back("no_entertainment_need");
     }
 
-    if (city_sentiment() > 90) {
+    const int sentiment = g_city.sentiment.value;
+    if (sentiment > 90) {
         keys.push_back("city_is_amazing");
-    } else if (city_sentiment() > 30) {
+    } else if (sentiment > 30) {
         keys.push_back("city_not_bad");
     }
 

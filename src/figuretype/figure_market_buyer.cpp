@@ -23,7 +23,6 @@
 #include "city/ratings.h"
 #include "city/labor.h"
 #include "city/city.h"
-#include "city/sentiment.h"
 
 figures::model_t<figure_market_buyer> market_buyer_m;
 
@@ -108,9 +107,10 @@ sound_key figure_market_buyer::phrase_key() const {
         keys.push_back("buyer_low_entertainment");
     }
 
-    if (city_sentiment() > 90) {
+    const int sentiment = g_city.sentiment.value;
+    if (sentiment > 90) {
         keys.push_back("buyer_city_is_amazing");
-    } else if (city_sentiment() > 50) {
+    } else if (sentiment > 50) {
         keys.push_back("buyer_city_is_good");
     }
 

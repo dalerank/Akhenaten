@@ -6,7 +6,6 @@
 #include "grid/building.h"
 #include "grid/random.h"
 #include "city/finance.h"
-#include "city/sentiment.h"
 #include "core/calc.h"
 #include "city/city_health.h"
 #include "city/labor.h"
@@ -93,6 +92,7 @@ sound_key figure_tax_collector::phrase_key() const {
     int all_taxed = taxman.poor_taxed + taxman.middle_taxed + taxman.reach_taxed;
     int poor_taxed = calc_percentage<int>(taxman.poor_taxed, all_taxed);
     
+    const int sentiment = g_city.sentiment.value;
     svector<sound_key_state, 16> keys = {
         {"need_more_tax_collectors", city_finance_percentage_taxed_people() < 80},
         {"high_taxes", city_sentiment_low_mood_cause() == LOW_MOOD_HIGH_TAXES},
@@ -105,8 +105,8 @@ sound_key figure_tax_collector::phrase_key() const {
         {"city_is_bad", g_city.ratings.kingdom < 30},
         {"much_unemployments", city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS},
         {"low_entertainment", g_city.festival.months_since_festival > 6},
-        {"city_is_good", city_sentiment() > 50},
-        {"city_is_amazing", city_sentiment() > 90}
+        {"city_is_good", sentiment > 50},
+        {"city_is_amazing", sentiment > 90}
     };
 
     std::erase_if(keys, [] (auto &it) { return !it.valid; });
