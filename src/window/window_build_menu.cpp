@@ -100,7 +100,7 @@ static int is_all_button(int type) {
 }
 
 void build_menu_widget::button_menu_item(int item) {
-    widget_city_clear_current_tile();
+    g_screen_city.clear_current_tile();
 
     e_building_type type = building_menu_type(selected_submenu, item);
     const auto &params = building_impl::params(type);

@@ -155,6 +155,11 @@ void screen_city_t::update_clouds(painter &ctx) {
     clouds_draw(ctx, min_pos, offset, limit);
 }
 
+void screen_city_t::clear_current_tile() {
+    current_tile = tile2i::invalid;
+    selected_tile = tile2i::invalid;
+}
+
 void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord) {
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
@@ -326,16 +331,6 @@ static bool handle_cancel_construction_button(const touch_t * t) {
     return true;
 }
 
-void widget_city_clear_current_tile() {
-    auto& data = g_screen_city;
-    data.selected_tile = tile2i::invalid;
-    data.current_tile = tile2i::invalid;
-}
-
-tile2i widget_city_get_current_tile() {
-    return g_screen_city.current_tile;
-}
-
 void screen_city_t::handle_touch_scroll(const touch_t * t, bool fore_capture_input) {
     struct holder_capture_input {
         holder_capture_input(screen_city_t& s, const touch_t *t, bool h) : screen(s), touch(t), hold(h) {
@@ -399,8 +394,7 @@ static void handle_touch_zoom(const touch_t * first, const touch_t * last) {
         g_zoom.end_touch();
 }
 
-static void handle_first_touch(map_point tile) {
-    auto& data = g_screen_city;
+void screen_city_t::handle_first_touch(tile2i tile) {
     const touch_t * first = get_earliest_touch();
     e_building_type type = g_city_planner.build_type;
 
@@ -409,7 +403,7 @@ static void handle_first_touch(map_point tile) {
             return;
         if (type == BUILDING_NONE && handle_right_click_allow_building_info(tile)) {
             scroll_drag_end();
-            data.capture_input = false;
+            capture_input = false;
             window_info_show(tile);
             return;
         }
@@ -424,30 +418,30 @@ static void handle_first_touch(map_point tile) {
         if (!g_city_planner.in_progress) {
             if (first->has_started) {
                 build_start(tile);
-                data.new_start_grid_offset = 0;
+                new_start_grid_offset = 0;
             }
         } else {
             if (first->has_started) {
-                if (data.selected_tile.grid_offset() != tile.grid_offset())
-                    data.new_start_grid_offset = tile.grid_offset();
+                if (selected_tile.grid_offset() != tile.grid_offset())
+                    new_start_grid_offset = tile.grid_offset();
             }
-            if (touch_not_click(first) && data.new_start_grid_offset) {
-                data.new_start_grid_offset = 0;
-                data.selected_tile.set(0);
+            if (touch_not_click(first) && new_start_grid_offset) {
+                new_start_grid_offset = 0;
+                selected_tile.set(0);
                 g_city_planner.construction_cancel();
                 build_start(tile);
             }
             build_move(tile);
-            if (data.selected_tile.grid_offset() != tile.grid_offset())
-                data.selected_tile.set(0);
+            if (selected_tile.grid_offset() != tile.grid_offset())
+                selected_tile.set(0);
 
             if (first->has_ended) {
-                if (data.selected_tile.grid_offset() == tile.grid_offset()) {
+                if (selected_tile == tile) {
                     build_end();
-                    widget_city_clear_current_tile();
-                    data.new_start_grid_offset = 0;
+                    clear_current_tile();
+                    new_start_grid_offset = 0;
                 } else {
-                    data.selected_tile = tile;
+                    selected_tile = tile;
                 }
             }
         }
@@ -459,16 +453,18 @@ static void handle_first_touch(map_point tile) {
         size = 3;
     }
 
-    if (touch_was_click(first) && first->has_ended && data.capture_input
-        && has_confirmed_construction(data.selected_tile, tile, size)) {
-        build_start(data.selected_tile);
-        build_move(data.selected_tile);
+    if (touch_was_click(first) && first->has_ended && capture_input
+        && has_confirmed_construction(selected_tile, tile, size)) {
+        build_start(selected_tile);
+        build_move(selected_tile);
         build_end();
-        widget_city_clear_current_tile();
+        clear_current_tile();
     } else if (first->has_ended) {
-        data.selected_tile = tile;
+        selected_tile = tile;
     }
 }
+
+
 
 static void handle_last_touch(void) {
     const touch_t * last = get_latest_touch();
@@ -482,27 +478,28 @@ static void handle_last_touch(void) {
         handle_touch_zoom(get_earliest_touch(), last);
 }
 
-static void handle_touch(void) {
-    auto& data = g_screen_city;
+void screen_city_t::handle_touch() {
     const touch_t * first = get_earliest_touch();
     if (!first->in_use) {
         scroll_restore_margins();
         return;
     }
 
-    if (!g_city_planner.in_progress || input_coords_in_city(first->current_point.x, first->current_point.y))
-        data.current_tile = widget_city_update_city_view_coords(first->current_point);
+    if (!g_city_planner.in_progress || input_coords_in_city(first->current_point.x, first->current_point.y)) {
+        current_tile = widget_city_update_city_view_coords(first->current_point);
+    }
 
     if (first->has_started && input_coords_in_city(first->current_point.x, first->current_point.y)) {
-        data.capture_input = true;
+        capture_input = true;
         scroll_restore_margins();
     }
 
     handle_last_touch();
-    handle_first_touch(data.current_tile);
+    handle_first_touch(current_tile);
 
-    if (first->has_ended)
-        data.capture_input = false;
+    if (first->has_ended) {
+        capture_input = false;
+    }
 
     g_city_planner.draw_as_constructing = false;
 }
@@ -562,7 +559,7 @@ void widget_city_handle_escape(const hotkeys *h) {
     hotkey_handle_escape();
 }
 
-void widget_city_handle_input(const mouse* m, const hotkeys* h) {
+void screen_city_t::handle_input(const mouse* m, const hotkeys* h) {
     widget_city_scroll_map(m);
 
     if (m->is_touch) {

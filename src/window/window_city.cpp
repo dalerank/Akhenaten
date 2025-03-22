@@ -275,7 +275,7 @@ void window_city_handle_input(const mouse* m, const hotkeys* h) {
         widget_sidebar_city_handle_mouse(m);
     }
 
-    widget_city_handle_input(m, h);
+    g_screen_city.handle_input(m, h);
     city_has_loaded = true;
 }
 

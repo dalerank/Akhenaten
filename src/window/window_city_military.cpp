@@ -67,7 +67,7 @@ void widget_city_handle_input_military(const mouse* m, const hotkeys* h, int leg
     const bool m_has_touch = (m->is_touch && m->left.went_up && touch_was_click(early_touch));
 
     if (m_left_down || m_has_touch) {
-        const tile2i tile = widget_city_get_current_tile();
+        const tile2i tile = g_screen_city.current_tile;
         military_map_click(legion_formation_id, tile);
     }
 }
