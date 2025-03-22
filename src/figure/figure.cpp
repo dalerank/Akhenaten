@@ -51,7 +51,7 @@ void console_command_create_figure(std::istream &is, std::ostream &os) {
     }
 
     const mouse *m = mouse_get();
-    tile2i current_tile = widget_city_update_city_view_coords({ m->x, m->y });;
+    tile2i current_tile = g_screen_city.update_city_view_coords(*m);;
     figure_create((e_figure_type)f_type, current_tile, 1);
 }
 

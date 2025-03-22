@@ -29,14 +29,13 @@ struct screen_city_t {
     xstring get_overlay_tooltip(tooltip_context *c, tile2i tile);
     bool handle_cancel_construction_button(const touch_t *t);
     bool handle_legion_click(tile2i tile);
+    void update_zoom_level(painter &ctx);
+    void scroll_map(const mouse *m);
+    tile2i update_city_view_coords(vec2i pixel);
+    void handle_input_military(const mouse *m, const hotkeys *h, int legion_formation_id);
+    void military_map_click(int legion_formation_id, tile2i tile);
 };
 
 extern screen_city_t g_screen_city;
 
 void set_city_clip_rectangle(painter &ctx);
-
-void widget_city_handle_input_military(const mouse* m, const hotkeys* h, int legion_formation_id);
-
-void widget_city_scroll_map(const mouse *m);
-
-tile2i widget_city_update_city_view_coords(vec2i pixel);
