@@ -406,7 +406,7 @@ void screen_city_t::handle_first_touch(tile2i tile) {
         }
     }
 
-    g_screen_city.handle_touch_scroll(first, false);
+    handle_touch_scroll(first, false);
 
     if (!input_coords_in_city(first->current_point.x, first->current_point.y) || type == BUILDING_NONE)
         return;
@@ -419,8 +419,9 @@ void screen_city_t::handle_first_touch(tile2i tile) {
             }
         } else {
             if (first->has_started) {
-                if (selected_tile.grid_offset() != tile.grid_offset())
+                if (selected_tile.grid_offset() != tile.grid_offset()) {
                     new_start_grid_offset = tile.grid_offset();
+                }
             }
             if (touch_not_click(first) && new_start_grid_offset) {
                 new_start_grid_offset = 0;
@@ -461,8 +462,6 @@ void screen_city_t::handle_first_touch(tile2i tile) {
     }
 }
 
-
-
 static void handle_last_touch(void) {
     const touch_t * last = get_latest_touch();
     if (!last->in_use)
@@ -471,8 +470,10 @@ static void handle_last_touch(void) {
         g_city_planner.construction_cancel();
         return;
     }
-    if (touch_not_click(last))
+
+    if (touch_not_click(last)) {
         handle_touch_zoom(get_earliest_touch(), last);
+    }
 }
 
 void screen_city_t::handle_touch() {
@@ -499,11 +500,6 @@ void screen_city_t::handle_touch() {
     }
 
     g_city_planner.draw_as_constructing = false;
-}
-
-int widget_city_has_input(void) {
-    auto& data = g_screen_city;
-    return data.capture_input;
 }
 
 void screen_city_t::handle_mouse(const mouse* m) {

@@ -215,7 +215,8 @@ int build_menu_widget::ui_handle_mouse(const mouse* m) {
         return 0;
     }
 
-    if (widget_sidebar_city_handle_mouse_build_menu(m)) {
+    const bool handled = widget_sidebar_city_handle_mouse_build_menu(m);
+    if (handled) {
         return 0;
     }
 

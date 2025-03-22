@@ -321,7 +321,7 @@ void widget_sidebar_city_draw_foreground_military() {
 }
 
 int widget_sidebar_city_handle_mouse(const mouse* m) {
-    if (widget_city_has_input()) {
+    if (g_screen_city.capture_input) {
         return false;
     }
 

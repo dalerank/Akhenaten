@@ -773,24 +773,25 @@ int top_menu_widget::ui_handle_mouse(const mouse *m) {
 }
 
 void widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
-    int result = 0;
-    if (!widget_city_has_input()) {
-        int button_id = 0;
-        int handled = false;
-
-        handled = generic_buttons_handle_mouse(m, { g_top_menu.offset_rotate, 0}, orientation_buttons_ph, 3, &button_id);
-        if (button_id) {
-            orientation_button_state = button_id;
-            if (handled)
-                orientation_button_pressed = 5;
-        } else {
-            orientation_button_state = 0;
-        }
-
-        if (button_id) { result = handled; }
-        else if (!!g_top_menu.open_sub_menu) { g_top_menu.handle_input_submenu(m, h); }
-        else { g_top_menu.ui_handle_mouse(m); }
+    if (g_screen_city.capture_input) {
+        return;
     }
+
+    int button_id = 0;
+    int handled = false;
+
+    handled = generic_buttons_handle_mouse(m, { g_top_menu.offset_rotate, 0}, orientation_buttons_ph, 3, &button_id);
+    if (button_id) {
+        orientation_button_state = button_id;
+        if (handled)
+            orientation_button_pressed = 5;
+    } else {
+        orientation_button_state = 0;
+    }
+
+    if (button_id) { /**/ }
+    else if (!!g_top_menu.open_sub_menu) { g_top_menu.handle_input_submenu(m, h); }
+    else { g_top_menu.ui_handle_mouse(m); }
 }
 
 int widget_top_menu_get_tooltip_text(tooltip_context* c) {

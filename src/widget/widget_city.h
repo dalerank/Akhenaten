@@ -33,7 +33,6 @@ extern screen_city_t g_screen_city;
 
 void set_city_clip_rectangle(painter &ctx);
 
-int widget_city_has_input();
 void widget_city_handle_input_military(const mouse* m, const hotkeys* h, int legion_formation_id);
 
 void widget_city_scroll_map(const mouse *m);
