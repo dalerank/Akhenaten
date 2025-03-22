@@ -285,8 +285,8 @@ bool figure::is_formation() {
     return false;
 }
 
-int formation_legion_at_grid_offset(int grid_offset) {
-    return map_figure_foreach_until(grid_offset, TEST_SEARCH_FORMATION);
+int formation_legion_at(tile2i tile) {
+    return map_figure_foreach_until(tile.grid_offset(), TEST_SEARCH_FORMATION);
 }
 
 int formation_legion_at_building(int grid_offset) {

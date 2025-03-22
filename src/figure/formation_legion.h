@@ -27,7 +27,7 @@ void formation_legions_return_from_distant_battle();
 
 int formation_legion_curse();
 
-int formation_legion_at_grid_offset(int grid_offset);
+int formation_legion_at(tile2i tile);
 
 int formation_legion_at_building(int grid_offset);
 

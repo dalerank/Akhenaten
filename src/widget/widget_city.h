@@ -27,6 +27,8 @@ struct screen_city_t {
     void handle_escape(const hotkeys *h);
     void draw_tooltip(tooltip_context* c);
     xstring get_overlay_tooltip(tooltip_context *c, tile2i tile);
+    bool handle_cancel_construction_button(const touch_t *t);
+    bool handle_legion_click(tile2i tile);
 };
 
 extern screen_city_t g_screen_city;

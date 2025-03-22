@@ -164,7 +164,7 @@ void screen_city_t::clear_current_tile() {
 void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord) {
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
-        highlighted_formation = formation_legion_at_grid_offset(current_tile.grid_offset());
+        highlighted_formation = formation_legion_at(current_tile);
         if (highlighted_formation > 0 && formation_get(highlighted_formation)->in_distant_battle) {
             highlighted_formation = 0;
         }
@@ -299,18 +299,21 @@ static bool handle_right_click_allow_building_info(tile2i tile) {
     return allow;
 }
 
-static bool handle_legion_click(map_point tile) {
-    if (tile.grid_offset() > 0) {
-        int formation_id = formation_legion_at_grid_offset(tile.grid_offset());
-        if (formation_id > 0 && !formation_get(formation_id)->in_distant_battle) {
-            window_city_military_show(formation_id);
-            return true;
-        }
+bool screen_city_t::handle_legion_click(tile2i tile) {
+    if (!tile.valid()) {
+        return false;
     }
+
+    int formation_id = formation_legion_at(tile);
+    if (formation_id > 0 && !formation_get(formation_id)->in_distant_battle) {
+        window_city_military_show(formation_id);
+        return true;
+    }
+
     return false;
 }
 
-static bool handle_cancel_construction_button(const touch_t * t) {
+bool screen_city_t::handle_cancel_construction_button(const touch_t * t) {
     if (!g_city_planner.build_type)
         return false;
 
@@ -324,6 +327,7 @@ static bool handle_cancel_construction_button(const touch_t * t) {
         || t->current_point.y >= 40 + box_size) {
         return false;
     }
+
     g_city_planner.construction_cancel();
     return true;
 }
