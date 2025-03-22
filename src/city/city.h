@@ -8,6 +8,7 @@
 #include "city/finance.h"
 #include "city/labor.h"
 #include "city/buildings.h"
+#include "city/city_migration.h"
 #include "city/city_health.h"
 #include "city/city_animals.h"
 #include "city/military.h"
@@ -61,25 +62,7 @@ struct city_t {
     city_taxes_t taxes;
 
     city_labor_t labor;
-    struct {
-        int32_t immigration_duration;
-        int32_t emigration_duration;
-        int32_t immigration_amount_per_batch;
-        int32_t emigration_amount_per_batch;
-        int32_t immigration_queue_size;
-        int32_t emigration_queue_size;
-        int32_t immigrated_today;
-        int32_t emigrated_today;
-        int32_t refused_immigrants_today;
-        int32_t no_immigration_cause;
-        int32_t percentage;
-        int32_t newcomers;
-        int32_t emigration_message_shown;
-        int32_t percentage_by_sentiment;
-        uint16_t nobles_leave_city_this_year;
-        bool migration_cap;
-        bool invading_cap;
-    } migration;
+    city_migration_t migration;
 
     struct {
         int32_t value;
@@ -212,8 +195,6 @@ struct city_t {
     void house_service_calculate_culture_aggregates();
     void house_process_evolve_and_consume_goods();
 
-    void migration_nobles_leave_city(int num_people);
-
     void init();
     void init_custom_map();
     void init_campaign_mission();
@@ -227,19 +208,6 @@ struct city_t {
     void update_allowed_foods();
     bool can_produce_resource(e_resource resource);
     void set_produce_resource(e_resource resource, bool v);
-
-    void migration_update_status();
-    void create_immigrants(int num_people);
-    void create_emigrants(int num_people);
-    void create_migrants();
-    void migration_update();
-    void migration_determine_reason();
-    int migration_problems_cause() { return migration.no_immigration_cause; }
-    void migration_advance_year() { migration.nobles_leave_city_this_year = 0; }
-    int migration_no_room_for_immigrants();
-    int migration_percentage() { return migration.percentage; }
-    int migration_newcomers() { return migration.newcomers; }
-    void migration_reset_newcomers() { migration.newcomers = 0; }
 
     void coverage_update();
 

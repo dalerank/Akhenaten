@@ -1,7 +1,7 @@
 #include "advisor_population.h"
 
 #include "city/city.h"
-#include "city/migration.h"
+#include "city/city_migration.h"
 #include "city/city_population.h"
 #include "city/ratings.h"
 #include "city/city_resource.h"
@@ -302,15 +302,15 @@ void ui::advisor_population_window::print_history_info() {
     ui["text2"].text_var("%s %u", ui::str(55, 16), city_resource_food_types_available());
 
     // immigration
-    int newcomers = g_city.migration_newcomers();
+    int newcomers = g_city.migration.newcomers;
     if (newcomers >= 5) {
         ui["text3"].text_var("%s %u %s", ui::str(55, 24), newcomers, ui::str(55, 17));
-    } else if (g_city.migration_no_room_for_immigrants()) {
+    } else if (g_city.migration.no_room_for_immigrants()) {
         ui["text3"].text_var("%s %s", ui::str(55, 24), ui::str(55, 19));
-    } else if (g_city.migration_percentage() < 80) {
+    } else if (g_city.migration.percentage < 80) {
         bstring256 text = ui::str(55, 25);
         int text_id;
-        switch (g_city.migration_problems_cause()) {
+        switch (g_city.migration.problems_cause()) {
         case NO_IMMIGRATION_LOW_WAGES: text_id = 20; break;
         case NO_IMMIGRATION_NO_JOBS: text_id = 21; break;
         case NO_IMMIGRATION_NO_FOOD: text_id = 22; break;

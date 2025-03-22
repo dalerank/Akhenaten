@@ -7,7 +7,7 @@
 #include "city/finance.h"
 #include "city/city_health.h"
 #include "city/labor.h"
-#include "city/migration.h"
+#include "city/city_migration.h"
 #include "city/military.h"
 #include "city/city_population.h"
 #include "city/city_resource.h"
@@ -52,12 +52,12 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
     {
         std::pair<int, int> migration_status;
         if (g_city.figures_total_invading_enemies() > 3) { migration_status = {43, FONT_NORMAL_BLACK_ON_DARK}; } 
-        else if (g_city.migration_newcomers() >= 5) { migration_status = {44, FONT_NORMAL_BLACK_ON_DARK}; }
-        else if (g_city.migration_no_room_for_immigrants()) { migration_status = {45, FONT_NORMAL_YELLOW}; }
-        else if (g_city.migration_percentage() >= 80) { migration_status = {44, FONT_NORMAL_BLACK_ON_DARK}; } 
+        else if (g_city.migration.newcomers >= 5) { migration_status = {44, FONT_NORMAL_BLACK_ON_DARK}; }
+        else if (g_city.migration.no_room_for_immigrants()) { migration_status = {45, FONT_NORMAL_YELLOW}; }
+        else if (g_city.migration.percentage >= 80) { migration_status = {44, FONT_NORMAL_BLACK_ON_DARK}; } 
         else {
             migration_status = {43, FONT_NORMAL_BLACK_ON_DARK};
-            switch (g_city.migration_problems_cause()) {
+            switch (g_city.migration.problems_cause()) {
             case NO_IMMIGRATION_LOW_WAGES: migration_status.first = 46; break;
             case NO_IMMIGRATION_NO_JOBS: migration_status.first = 47; break;
             case NO_IMMIGRATION_NO_FOOD: migration_status.first = 48; break;

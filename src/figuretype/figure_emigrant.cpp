@@ -6,11 +6,8 @@
 #include "grid/road_access.h"
 #include "grid/terrain.h"
 #include "building/building_house.h"
-#include "city/migration.h"
 #include "city/sentiment.h"
 #include "city/city.h"
-
-#include "js/js_game.h"
 
 figures::model_t<figure_emigrant> emigrant_m;
 
@@ -25,7 +22,7 @@ figure *figure_emigrant::create(building* b, int num_people) {
 
     figure* f = figure_create(FIGURE_EMIGRANT, house->tile(), DIR_0_TOP_RIGHT);
     if (house->house_level() >= HOUSE_COMMON_MANOR) {
-        g_city.migration_nobles_leave_city(num_people);
+        g_city.migration.nobles_leave_city(num_people);
     }
 
     f->action_state = FIGURE_ACTION_4_EMIGRANT_CREATED;

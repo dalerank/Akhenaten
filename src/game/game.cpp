@@ -200,7 +200,7 @@ void game_t::update_city(int ticks) {
         g_city.population.update_room();
         break;
     case 23:
-        g_city.migration_update();
+        g_city.migration.update();
         g_city.population.update_migration();
         break;
     case 24:
@@ -289,14 +289,14 @@ void game_t::advance_year() {
     simtime.advance_year();
     city_population_request_yearly_update();
     g_city.finance.advance_year();
-    g_city.migration_advance_year();
+    g_city.migration.advance_year();
     g_empire.reset_yearly_trade_amounts();
     g_city.ratings_update(/*yearly_update*/true);
     //    city_gods_reset_yearly_blessings();
 }
 
 void game_t::advance_month() {
-    g_city.migration_reset_newcomers();
+    g_city.migration.reset_newcomers();
     g_city.health.update();
     g_city.finance.advance_month();
     city_resource_consume_food();

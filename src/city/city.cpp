@@ -429,9 +429,11 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.migration.immigrated_today);
     iob->bind(BIND_SIGNATURE_INT32, &data.migration.emigrated_today);
     iob->bind(BIND_SIGNATURE_INT32, &data.migration.refused_immigrants_today);
-    iob->bind(BIND_SIGNATURE_INT32, &data.migration.percentage);
+    iob->bind(BIND_SIGNATURE_INT8, &data.migration.percentage);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_27d0);
-    iob->bind(BIND_SIGNATURE_INT32, &data.migration.immigration_duration);
+    iob->bind(BIND_SIGNATURE_INT16, &data.migration.immigration_duration);
+    iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT32, &data.migration.emigration_duration);
     iob->bind(BIND_SIGNATURE_INT32, &data.migration.newcomers);
     iob->bind(BIND_SIGNATURE_UINT16, &data.migration.nobles_leave_city_this_year);

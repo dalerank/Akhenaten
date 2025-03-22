@@ -6,7 +6,7 @@
 #include "city/finance.h"
 #include "city/city.h"
 #include "city/labor.h"
-#include "city/migration.h"
+#include "city/city_migration.h"
 #include "city/ratings.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
@@ -155,7 +155,7 @@ void window_advisors::init() {
     city_finance_update_salary();
     city_finance_calculate_totals();
 
-    g_city.migration_determine_reason();
+    g_city.migration.determine_reason();
 
     g_city.houses_calculate_culture_demands();
     g_city.avg_coverage.update();
