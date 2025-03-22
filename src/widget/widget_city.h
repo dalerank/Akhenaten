@@ -24,6 +24,7 @@ struct screen_city_t {
     void handle_touch();
     void handle_mouse(const mouse *m);
     void handle_input(const mouse *m, const hotkeys *h);
+    void handle_escape(const hotkeys *h);
 };
 
 extern screen_city_t g_screen_city;

@@ -523,8 +523,9 @@ void screen_city_t::handle_mouse(const mouse* m) {
         build_move(current_tile);
     }
 
-    if (m->left.went_up)
+    if (m->left.went_up) {
         build_end();
+    }
 
     if (m->middle.went_down && input_coords_in_city(m->x, m->y) && !g_city_planner.build_type) {
         scroll_drag_start(0);
@@ -549,7 +550,7 @@ void screen_city_t::handle_mouse(const mouse* m) {
         scroll_drag_end();
     }
 }
-void widget_city_handle_escape(const hotkeys *h) {
+void screen_city_t::handle_escape(const hotkeys *h) {
     if (!h->escape_pressed) {
         return;
     }
@@ -571,7 +572,7 @@ void screen_city_t::handle_input(const mouse* m, const hotkeys* h) {
         handle_mouse(m);
     }
 
-    widget_city_handle_escape(h);
+    handle_escape(h);
 }
 
 void widget_city_get_tooltip(tooltip_context* c) {
