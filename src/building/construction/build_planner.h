@@ -115,6 +115,7 @@ public:
 
     void construction_start(tile2i tile);
     void construction_update(tile2i tile);
+    bool construction_active() const { return build_type != BUILDING_NONE; }
     void construction_cancel();
     void construction_finalize();
 

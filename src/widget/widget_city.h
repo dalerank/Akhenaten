@@ -22,6 +22,7 @@ struct screen_city_t {
     void clear_current_tile();
     void handle_first_touch(tile2i tile);
     void handle_touch();
+    void handle_mouse(const mouse *m);
     void handle_input(const mouse *m, const hotkeys *h);
 };
 

@@ -127,7 +127,27 @@ void city_warning_manager::draw(painter &ctx,  bool paused) {
         }
         text_draw_centered((const uint8_t *)text, center - box_width / 2 + 1, top_offset + 4, box_width, FONT_NORMAL_WHITE_ON_DARK, 0);
     }
-    g_warning_manager.clear_outdated();
+
+    clear_outdated();
+}
+
+bool city_warning_manager::handle_mouse(const mouse *m) {
+    if (!has_warnings()) {
+        return false;
+    }
+
+    if (m->right.went_up) {
+        int top_offset = TOP_OFFSETS[0];
+        int bottom_offset = TOP_OFFSETS[warnings.size() - 1] + 20;
+        int center = (screen_width() - 180) / 2;
+        int box_width = 230;
+        if (m->x >= center - box_width / 2 && m->x <= center + box_width / 2 && m->y >= top_offset && m->y <= bottom_offset) {
+            clear_all();
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void city_warning_manager::show(pcstr type) {

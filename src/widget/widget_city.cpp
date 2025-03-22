@@ -505,42 +505,49 @@ int widget_city_has_input(void) {
     return data.capture_input;
 }
 
-static void handle_mouse(const mouse* m) {
-    auto& data = g_screen_city;
-    data.current_tile = widget_city_update_city_view_coords({m->x, m->y});
+void screen_city_t::handle_mouse(const mouse* m) {
+    current_tile = widget_city_update_city_view_coords({m->x, m->y});
     g_zoom.handle_mouse(m);
     g_city_planner.draw_as_constructing = false;
     if (m->left.went_down) {
-        if (handle_legion_click(data.current_tile)) {
+        if (handle_legion_click(current_tile)) {
             return;
         }
         
         if (!g_city_planner.in_progress) {
-            build_start(data.current_tile);
+            build_start(current_tile);
         }
 
-        build_move(data.current_tile);
-    } else if (m->left.is_down || g_city_planner.in_progress)
-        build_move(data.current_tile);
+        build_move(current_tile);
+    } else if (m->left.is_down || g_city_planner.in_progress) {
+        build_move(current_tile);
+    }
 
     if (m->left.went_up)
         build_end();
 
-    if (m->middle.went_down && input_coords_in_city(m->x, m->y) && !g_city_planner.build_type)
+    if (m->middle.went_down && input_coords_in_city(m->x, m->y) && !g_city_planner.build_type) {
         scroll_drag_start(0);
+    }
 
-    if (m->right.went_up) {
-        if (!g_city_planner.build_type) {
-            if (handle_right_click_allow_building_info(data.current_tile)) {
-                window_info_show(data.current_tile);
-            }
-        } else {
+    bool action_in_warnings = false;
+    if (g_warning_manager.has_warnings()) {
+        action_in_warnings = g_warning_manager.handle_mouse(m);
+    }
+
+    if (m->right.went_up && !action_in_warnings) {
+        if (g_city_planner.construction_active()) {
             g_city_planner.construction_cancel();
+        } else {
+            if (handle_right_click_allow_building_info(current_tile)) {
+                window_info_show(current_tile);
+            }
         }
     }
 
-    if (m->middle.went_up)
+    if (m->middle.went_up) {
         scroll_drag_end();
+    }
 }
 void widget_city_handle_escape(const hotkeys *h) {
     if (!h->escape_pressed) {

@@ -24,6 +24,7 @@ struct city_warning_manager {
     void show_console(pcstr warning_text);
     int determine_width(pcstr text);
     void draw(painter &ctx, bool pause);
+    bool handle_mouse(const mouse *m);
 
     template<typename ... Args>
     void show_console_var(pcstr fmt, Args... args) {
