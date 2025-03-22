@@ -135,7 +135,7 @@ void city_warning_manager::show(pcstr type) {
     show_custom(text.c_str());
 }
 
-construction_warnings::~construction_warnings() {
+city_warnings::~city_warnings() {
     for (const xstring &id : warnings) {
         //g_warning_manager.has_warning = false;
         events::emit(event_construction_warning{ id });

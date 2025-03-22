@@ -206,6 +206,7 @@ bool map_terrain_all_tiles_in_radius_are(tile2i c, int size, int radius, int ter
     }
     return true;
 }
+
 bool map_terrain_has_only_rocks_trees_in_ring(int x, int y, int distance) {
     int start = map_ring_start(1, distance);
     int end = map_ring_end(1, distance);

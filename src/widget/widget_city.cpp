@@ -291,11 +291,7 @@ static bool handle_right_click_allow_building_info(tile2i tile) {
 
     window_city_show();
 
-    if (!tile.grid_offset())
-        allow = false;
-
-    if (allow) {
-        g_warning_manager.clear_all();
+    if (!tile.valid()) {
         allow = false;
     }
 
