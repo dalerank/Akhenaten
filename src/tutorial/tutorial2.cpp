@@ -18,7 +18,7 @@ void tutorial_2_on_build_temple(event_building_create ev) {
     }
 
     events::unsubscribe(&tutorial_2_on_build_temple);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
+    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_2.temples_built = true;
     building_menu_update(tutorial_stage.tutorial_entertainment);
     city_message_post(true, MESSAGE_TUTORIAL_ENTERTAINMENT, 0, 0);
@@ -34,7 +34,7 @@ void tutorial_2_on_gold_extracted(event_gold_extract ev) {
     }
 
     events::unsubscribe(&tutorial_2_on_gold_extracted);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
+    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_2.gold_mined_500 = true;
     building_menu_update(tutorial_stage.tutorial_gods);
     city_message_post(true, MESSAGE_TUTORIAL_GODS_OF_EGYPT, 0, 0);
@@ -43,7 +43,7 @@ void tutorial_2_on_gold_extracted(event_gold_extract ev) {
 bool tutorial2_is_success() {
     auto &tut = g_tutorials_flags.tutorial_2;
     const bool may_finish = (tut.gold_mined_500 && tut.temples_built);
-    const bool some_days_after_last_action = (game.simtime.absolute_day() - g_tutorials_flags.pharaoh.last_action) > 3;
+    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > 3;
     return may_finish && some_days_after_last_action;
 }
 

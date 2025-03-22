@@ -32,6 +32,8 @@
 
 declare_console_command_p(houseup, game_cheat_houseup)
 declare_console_command_p(housedown, game_cheat_housedown)
+declare_console_var_int(house_up_delay, 1000)
+
 void game_cheat_houseup(std::istream &is, std::ostream &os) {
     std::string args; is >> args;
 
@@ -291,7 +293,11 @@ void building_house::add_population(int num_people) {
 
 void building_house::change_to(building &b, e_building_type new_type) {
     auto &d = *(building_house::runtime_data_t*)b.runtime_data;
-    if (new_type > b.type && game.simtime.absolute_day() - d.last_update_day < 7) {
+
+    const int house_update_delay = std::min(house_up_delay(), 7);
+    const int absolute_day = game.simtime.absolute_day(true);
+    const bool can_update = (absolute_day - d.last_update_day < house_update_delay);
+    if (house_update_delay > 0 && (new_type > b.type) && can_update) {
         return;
     }
 
@@ -313,7 +319,7 @@ void building_house::change_to(building &b, e_building_type new_type) {
     }
 
     map_building_tiles_add(b.id, b.tile, b.size, image_id, TERRAIN_BUILDING);
-    d.last_update_day = game.simtime.absolute_day();
+    d.last_update_day = game.simtime.absolute_day(true);
 }
 
 int16_t building_house::population_room() const {

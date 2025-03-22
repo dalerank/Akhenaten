@@ -27,7 +27,7 @@ void tutorial5_handle_spacious_apartment(event_advance_day) {
 
     g_tutorials_flags.tutorial_5.spacious_apartment = true;
     events::unsubscribe(&tutorial5_handle_spacious_apartment);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
+    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     building_menu_update(tutorial_stage.tutorial_education);
     city_message_post(true, MESSAGE_TUTORIAL_EDUCATION, 0, 0);
 }
@@ -43,7 +43,7 @@ void tutorial5_handle_papyrus(event_warehouse_filled ev) {
 
     g_tutorials_flags.tutorial_5.papyrus_made = true;
     events::unsubscribe(&tutorial5_handle_papyrus);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
+    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     building_menu_update(tutorial_stage.tutorial_trading);
     city_message_post(true, MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES, 0, 0);
 }
@@ -59,7 +59,7 @@ void tutorial5_handle_bricks(event_warehouse_filled ev) {
 
     g_tutorials_flags.tutorial_5.bricks_bought = true;
     events::unsubscribe(&tutorial5_handle_bricks);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
+    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     building_menu_update(tutorial_stage.tutorial_monuments);
     city_message_post(true, MESSAGE_TUTORIAL_MONUMENTS, 0, 0);
 }
@@ -67,7 +67,7 @@ void tutorial5_handle_bricks(event_warehouse_filled ev) {
 bool tutorial5_is_success() {
     auto &tut = g_tutorials_flags.tutorial_5;
     const bool may_finish = (tut.spacious_apartment && tut.papyrus_made && tut.bricks_bought);
-    const bool some_days_after_last_action = (game.simtime.absolute_day() - g_tutorials_flags.pharaoh.last_action) > 3;
+    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > 3;
     return may_finish && some_days_after_last_action;
 }
 

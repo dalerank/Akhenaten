@@ -36,7 +36,7 @@ void tutorial4_warehouse_beer_check(event_warehouse_filled ev) {
 
     g_tutorials_flags.tutorial_4.beer_made = true;
     events::unsubscribe(&tutorial4_warehouse_beer_check);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
+    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     building_menu_update(tutorial_stage.tutorial_finance);
     city_message_post(true, MESSAGE_TUTORIAL_FINANCES, 0, 0);
 }
@@ -44,7 +44,7 @@ void tutorial4_warehouse_beer_check(event_warehouse_filled ev) {
 bool tutorial4_is_success() {
     auto &tut = g_tutorials_flags.tutorial_4;
     const bool may_finish = (tut.beer_made && tut.tax_collector_built);
-    const bool some_days_after_last_action = (game.simtime.absolute_day() - g_tutorials_flags.pharaoh.last_action) > 3;
+    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > 3;
     return may_finish && some_days_after_last_action;
 }
 
@@ -59,7 +59,7 @@ void tutorial_4_on_build_tax_collector(event_building_create ev) {
     }
 
     events::unsubscribe(&tutorial_4_on_build_tax_collector);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
+    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_4.tax_collector_built = true;
 }
     

@@ -13,7 +13,7 @@ void tutorial1_handle_fire(event_fire_damage) {
     }
 
     events::unsubscribe(&tutorial1_handle_fire);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
+    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_1.fire = true;
     g_scenario_data.extra_damage.clear();
 
@@ -27,7 +27,7 @@ void tutorial1_handle_population_150(event_population_changed ev) {
     }
 
     events::unsubscribe(&tutorial1_handle_population_150);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
+    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_1.population_150_reached = true;
     building_menu_update(tutorial_stage.tutorial_food);
     city_message_post(true, MESSAGE_TUTORIAL_FOOD_OR_FAMINE, 0, 0);
@@ -39,7 +39,7 @@ void tutorial1_handle_collapse(event_collase_damage) {
     }
 
     events::unsubscribe(&tutorial1_handle_collapse);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
+    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_1.collapse = true;
     building_menu_update(tutorial_stage.tutorial_collapse);
     city_message_post(true, MESSAGE_TUTORIAL_COLLAPSED_BUILDING, 0, 0);
@@ -55,7 +55,7 @@ void tutorial1_on_filled_granary(event_granary_filled ev) {
     }
 
     events::unsubscribe(&tutorial1_on_filled_granary);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
+    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_1.gamemeat_400_stored = true;
     building_menu_update(tutorial_stage.tutorial_water);
     city_message_post(true, MESSAGE_TUTORIAL_CLEAN_WATER, 0, 0);
@@ -67,13 +67,13 @@ void tutorial1_handle_building_create(event_building_create ev) {
     }
 
     events::unsubscribe(&tutorial1_handle_building_create);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day();
+    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
 }
 
 bool tutorial1_is_success() {
     auto &tut = g_tutorials_flags.tutorial_1;
     const bool may_finish = (tut.fire && tut.collapse && tut.population_150_reached && tut.gamemeat_400_stored);
-    const bool some_days_after_last_action = (game.simtime.absolute_day() - g_tutorials_flags.pharaoh.last_action) > 3;
+    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > 3;
     return may_finish && some_days_after_last_action;
 }
 
