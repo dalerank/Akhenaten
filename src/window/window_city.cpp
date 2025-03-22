@@ -291,7 +291,7 @@ void window_city_draw() {
     painter ctx = game.painter();
     g_screen_city.draw(ctx);
 
-    g_warning_manager.draw(ctx, game.paused);
+    g_warning_manager.draw_foreground(0);
 }
 
 void window_city_init() {

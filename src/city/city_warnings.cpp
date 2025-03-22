@@ -16,45 +16,50 @@
 #include "scenario/scenario.h"
 #include "game/settings.h"
 #include "graphics/window.h"
+#include "game/game.h"
 
-city_warning_manager g_warning_manager;
+window_warnings g_warning_manager;
 
-#define MAX_WARNINGS 5
-#define TIMEOUT_MS 15000
+void window_warnings::load(archive arch, pcstr section) {
+    autoconfig_window::load(arch, section);
 
-static const int TOP_OFFSETS[] = { 30, 55, 80, 105, 130 };
+    max_items = arch.r_int("max_items", 5);
+    timeout_ms = arch.r_int("timeout_ms", 15000);
+    top_offset = arch.r_int("top_offset", 30);
+    message_width = arch.r_int("message_width", 25);
+}
 
-city_warning_manager::warning* city_warning_manager::new_warning() {
-    if (warnings.full()) {
-        return nullptr;
+window_warnings::warning* window_warnings::new_warning() {
+    if (warnings.size() > max_items) {
+        warnings.erase(warnings.begin());
     }
         
     warnings.push_back({});
     return &warnings.back();
 }
 
-bool city_warning_manager::has_warnings() {
+bool window_warnings::has_warnings() {
     return !warnings.empty();
 }
 
-pcstr city_warning_manager::get_warning(int id) {
+pcstr window_warnings::get_warning(int id) {
     if (id < warnings.size())
         return warnings[id].text.c_str();
 
     return "";
 }
 
-void city_warning_manager::clear_all() {
+void window_warnings::clear_all() {
     warnings.clear();
 }
 
-void city_warning_manager::clear_outdated() {
-    std::erase_if(warnings, [] (const warning &w) {
-        return time_get_millis() - w.time > TIMEOUT_MS;
+void window_warnings::clear_outdated() {
+    std::erase_if(warnings, [ms = timeout_ms] (const warning &w) {
+        return (time_get_millis() - w.time > ms);
     });
 }
 
-void city_warning_manager::show_console(pcstr warning_text) {
+void window_warnings::show_console(pcstr warning_text) {
     warning *w = new_warning();
     if (!w) {
         return;
@@ -64,7 +69,7 @@ void city_warning_manager::show_console(pcstr warning_text) {
     w->text = warning_text;
 }
 
-void city_warning_manager::init() {
+void window_warnings::init() {
     has_warning = false;
 
     events::subscribe([this] (event_construction_warning ev) {
@@ -76,7 +81,7 @@ void city_warning_manager::init() {
     });
 }
 
-void city_warning_manager::show_custom(pcstr text) {
+void window_warnings::show_custom(pcstr text) {
     if (!g_settings.warnings) {
         return;
     }
@@ -90,7 +95,7 @@ void city_warning_manager::show_custom(pcstr text) {
     w->text = text;
 }
 
-int city_warning_manager::determine_width(pcstr text) {
+int window_warnings::determine_width(pcstr text) {
     int width = text_get_width(text, FONT_NORMAL_BLACK_ON_LIGHT);
 
     if (width <= 100) return 200;
@@ -100,45 +105,45 @@ int city_warning_manager::determine_width(pcstr text) {
     return 460;
 }
 
-void city_warning_manager::draw(painter &ctx,  bool paused) {
+void window_warnings::draw_foreground(UiFlags flags) {
     if (!window_is(WINDOW_CITY) && !window_is(WINDOW_EDITOR_MAP)) {
         clear_all();
         return;
     }
 
     int center = (screen_width() - 180) / 2;
+    auto ctx = game.painter();
     for (int i = 0; i < warnings.size(); i++) {
         pcstr text = get_warning(i);
         if (!text) {
             continue;
         }
 
-        int top_offset = TOP_OFFSETS[i];
-        if (paused) {
-            top_offset += 70;
+        int offset = top_offset + message_width * i;
+        if (game.paused) {
+            offset += 70;
         }
 
         int box_width = determine_width(text);
         small_panel_draw(center - box_width / 2 + 1, top_offset, box_width / 16 + 1, 1);
         if (box_width < 460) {
             // ornaments at the side
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 15, center - box_width / 2 + 2, top_offset + 2);
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 15, center + box_width / 2 - 30, top_offset + 2);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 15, center - box_width / 2 + 2, offset + 2);
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 15, center + box_width / 2 - 30, offset + 2);
         }
-        text_draw_centered((const uint8_t *)text, center - box_width / 2 + 1, top_offset + 4, box_width, FONT_NORMAL_WHITE_ON_DARK, 0);
+        text_draw_centered((const uint8_t *)text, center - box_width / 2 + 1, offset + 4, box_width, FONT_NORMAL_WHITE_ON_DARK, 0);
     }
 
     clear_outdated();
 }
 
-bool city_warning_manager::handle_mouse(const mouse *m) {
+int window_warnings::handle_mouse(const mouse *m) {
     if (!has_warnings()) {
         return false;
     }
 
     if (m->right.went_up) {
-        int top_offset = TOP_OFFSETS[0];
-        int bottom_offset = TOP_OFFSETS[warnings.size() - 1] + 20;
+        int bottom_offset = top_offset + (warnings.size() * message_width);
         int center = (screen_width() - 180) / 2;
         int box_width = 230;
         if (m->x >= center - box_width / 2 && m->x <= center + box_width / 2 && m->y >= top_offset && m->y <= bottom_offset) {
@@ -150,7 +155,7 @@ bool city_warning_manager::handle_mouse(const mouse *m) {
     return false;
 }
 
-void city_warning_manager::show(pcstr type) {
+void window_warnings::show(pcstr type) {
     xstring text = lang_text_from_key(type);
     show_custom(text.c_str());
 }

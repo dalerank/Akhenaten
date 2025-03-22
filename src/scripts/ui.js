@@ -1781,3 +1781,10 @@ window minimap_window = {
 	terrain_lilac : {pack:PACK_GENERAL, id:149, offset:195},
 	terrain_orange: {pack:PACK_GENERAL, id:149, offset:205},
 }
+
+window window_warnings = {
+	max_items : 5,
+	timeout_ms : 15000,
+	top_offset : 30,
+	message_interval : 25,
+}

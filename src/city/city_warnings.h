@@ -1,18 +1,22 @@
 #pragma once
 
-#include "building/building.h"
+#include "window/autoconfig_window.h"
 
 struct event_construction_warning { xstring id; };
 struct event_city_warning { xstring id; };
 
-struct city_warning_manager {
+struct window_warnings : autoconfig_window_t<window_warnings> {
     struct warning {
         time_millis time;
         xstring text;
     };
 
-    svector<warning, 5> warnings;
+    svector<warning, 16> warnings;
     bool has_warning = false;
+    int max_items = 5;
+    int timeout_ms = 15000;
+    int top_offset = 30;
+    int message_width = 25;
 
     void init();
     void show(pcstr type);
@@ -23,8 +27,10 @@ struct city_warning_manager {
     void clear_outdated();
     void show_console(pcstr warning_text);
     int determine_width(pcstr text);
-    void draw(painter &ctx, bool pause);
-    bool handle_mouse(const mouse *m);
+    virtual int get_tooltip_text() override { return 0; }
+    virtual int handle_mouse(const mouse *m) override;
+    virtual void draw_foreground(UiFlags flags) override;
+    virtual void load(archive arch, pcstr section) override;
 
     template<typename ... Args>
     void show_console_var(pcstr fmt, Args... args) {
@@ -57,4 +63,4 @@ struct city_warnings {
 
 using construction_warnings = city_warnings;
 
-extern city_warning_manager g_warning_manager;
+extern window_warnings g_warning_manager;
