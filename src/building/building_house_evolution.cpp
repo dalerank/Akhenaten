@@ -327,7 +327,8 @@ void building_house::determine_worst_desirability_building() {
 
     grid_area area = map_grid_get_area(tile(), 1, 6);
 
-    if (!house_level()) {
+    const e_house_level my_level = house_level();
+    if (!my_level) {
         return;
     }
 
@@ -345,14 +346,20 @@ void building_house::determine_worst_desirability_building() {
                 continue;
             }
 
-            int des = model_get_building(b->type)->desirability_value;
+            const model_building *model = model_get_building(b->type);
+            int des = model->desirability_value;
             if (des >= 0) {
                 continue;
             }
 
+            auto other_house = b->dcast_house();
+            if (other_house && other_house->house_level() == my_level) {
+                continue;
+            }
+
             // simplified desirability calculation
-            int step_size = model_get_building(b->type)->desirability_step_size;
-            int range = model_get_building(b->type)->desirability_range;
+            int step_size = model->desirability_step_size;
+            int range = model->desirability_range;
             int dist = calc_maximum_distance(vec2i(x, y), tile());
             if (dist <= range) {
                 while (--dist > 1) {
