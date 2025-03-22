@@ -425,12 +425,12 @@ static vec2i starting_pixel_coord(painter &ctx) {
 }
 
 void city_view_foreach_valid_map_tile(painter &ctx,
-                                      tile_draw_callback* callback1,
-                                      tile_draw_callback* callback2,
-                                      tile_draw_callback* callback3,
-                                      tile_draw_callback* callback4,
-                                      tile_draw_callback* callback5,
-                                      tile_draw_callback* callback6) {
+                                      tile_draw_callback callback1,
+                                      tile_draw_callback callback2,
+                                      tile_draw_callback callback3,
+                                      tile_draw_callback callback4,
+                                      tile_draw_callback callback5,
+                                      tile_draw_callback callback6) {
     auto& data = g_city_view_data;
 
     int odd = 0;
@@ -455,14 +455,19 @@ void city_view_foreach_valid_map_tile(painter &ctx,
                     if (point.grid_offset() >= 0) {
                         if (callback1)
                             callback1(pixel, point, ctx);
+
                         if (callback2)
                             callback2(pixel, point, ctx);
+
                         if (callback3)
                             callback3(pixel, point, ctx);
+
                         if (callback4)
                             callback4(pixel, point, ctx);
+
                         if (callback5)
                             callback5(pixel, point, ctx);
+
                         if (callback6)
                             callback6(pixel, point, ctx);
                     }
@@ -479,13 +484,13 @@ void city_view_foreach_valid_map_tile(painter &ctx,
     }
 }
 
-static void do_valid_callback(painter &ctx, vec2i pixel, tile2i point, tile_draw_callback* callback) {
+static void do_valid_callback(painter &ctx, vec2i pixel, tile2i point, tile_draw_callback callback) {
     if (point.grid_offset() >= 0 && map_image_at(point.grid_offset()) >= 6) {
         callback(pixel, point, ctx);
     }
 }
 
-void city_view_foreach_tile_in_range(painter &ctx, int grid_offset, int size, int radius, tile_draw_callback* callback) {
+void city_view_foreach_tile_in_range(painter &ctx, int grid_offset, int size, int radius, tile_draw_callback callback) {
     auto& data = g_city_view_data;
 
     vec2i screen = tile_to_screen(tile2i(grid_offset));

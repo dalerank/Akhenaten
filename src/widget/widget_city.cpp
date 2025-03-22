@@ -80,7 +80,7 @@ tile2i screen_city_t::update_city_view_coords(vec2i pixel) {
     return tile2i(0);
 }
 
-static int input_coords_in_city(int x, int y) {
+int screen_city_t::input_coords_in_city(int x, int y) {
     vec2i view_pos, view_size;
     view_data_t viewport = city_view_viewport();
     city_view_get_viewport(viewport, view_pos, view_size);
@@ -172,10 +172,14 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, v
     clear_mappoint_pixelcoord();
     city_view_foreach_valid_map_tile(ctx, update_tile_coords);
 
+    auto s_draw_figures = [] (vec2i pixel, tile2i tile, painter &ctx) {
+        draw_figures(pixel, tile, ctx, false);
+    };
+
     map_figure_sort_by_y();
     city_view_foreach_valid_map_tile(ctx, draw_isometric_flat, draw_ornaments_flat);
     city_view_foreach_valid_map_tile(ctx, draw_isometric_terrain_height);
-    city_view_foreach_valid_map_tile(ctx, draw_isometric_nonterrain_height, draw_ornaments_and_animations_height, draw_figures);
+    city_view_foreach_valid_map_tile(ctx, draw_isometric_nonterrain_height, draw_ornaments_and_animations_height, s_draw_figures);
 
     if (!selected_figure_id) {
         g_city_planner.update(current_tile);

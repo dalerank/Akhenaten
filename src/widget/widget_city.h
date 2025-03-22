@@ -4,6 +4,8 @@
 #include "input/mouse.h"
 #include "grid/point.h"
 
+#include "city/tile_draw.h"
+
 struct tooltip_context;
 struct painter;
 
@@ -12,12 +14,11 @@ struct screen_city_t {
     tile2i selected_tile;
     int new_start_grid_offset;
     bool capture_input;
+    int selected_figure_id;
+    int highlighted_formation;
+    vec2i *selected_figure_coord;
 
     void handle_touch_scroll(const touch_t *t, bool force_capture_input);
-    void draw(painter &ctx);
-    void draw_with_overlay(painter &ctx);
-    void draw_without_overlay(painter &ctx, int selected_figure_id, vec2i *figure_coord);
-    void draw_for_figure(painter &ctx, int figure_id, vec2i *coord);
     void update_clouds(painter &ctx);
     void clear_current_tile();
     void handle_first_touch(tile2i tile);
@@ -25,7 +26,6 @@ struct screen_city_t {
     void handle_mouse(const mouse *m);
     void handle_input(const mouse *m, const hotkeys *h);
     void handle_escape(const hotkeys *h);
-    void draw_tooltip(tooltip_context* c);
     xstring get_overlay_tooltip(tooltip_context *c, tile2i tile);
     bool handle_cancel_construction_button(const touch_t *t);
     bool handle_legion_click(tile2i tile);
@@ -34,6 +34,14 @@ struct screen_city_t {
     tile2i update_city_view_coords(vec2i pixel);
     void handle_input_military(const mouse *m, const hotkeys *h, int legion_formation_id);
     void military_map_click(int legion_formation_id, tile2i tile);
+    int input_coords_in_city(int x, int y);
+
+    void draw(painter &ctx);
+    void draw_with_overlay(painter &ctx);
+    void draw_without_overlay(painter &ctx, int selected_figure_id, vec2i *figure_coord);
+    void draw_for_figure(painter &ctx, int figure_id, vec2i *coord);
+    //void draw_figures(painter &ctx, vec2i pixel, tile2i tile, bool force);
+    void draw_tooltip(tooltip_context* c);
 };
 
 extern screen_city_t g_screen_city;

@@ -37,7 +37,7 @@ struct view_data_t {
 struct figure_draw_cache_data_t;
 struct painter;
 
-using tile_draw_callback = void(vec2i pixel, tile2i tile, painter &payload);
+using tile_draw_callback = std::function<void(vec2i, tile2i, painter&)>;
 using minimap_draw_callback = void(vec2i pixel, tile2i point);
 
 view_data_t& city_view_data_unsafe();
@@ -88,11 +88,11 @@ void city_view_start_sidebar_toggle(void);
 void city_view_toggle_sidebar(int mode = -1);
 
 void city_view_foreach_valid_map_tile(painter &ctx,
-                                      tile_draw_callback* callback1,
-                                      tile_draw_callback* callback2 = nullptr,
-                                      tile_draw_callback* callback3 = nullptr,
-                                      tile_draw_callback* callback4 = nullptr,
-                                      tile_draw_callback* callback5 = nullptr,
-                                      tile_draw_callback* callback6 = nullptr);
+                                      tile_draw_callback callback1,
+                                      tile_draw_callback callback2 = nullptr,
+                                      tile_draw_callback callback3 = nullptr,
+                                      tile_draw_callback callback4 = nullptr,
+                                      tile_draw_callback callback5 = nullptr,
+                                      tile_draw_callback callback6 = nullptr);
 
-void city_view_foreach_tile_in_range(painter &ctx, int grid_offset, int size, int radius, tile_draw_callback* callback);
+void city_view_foreach_tile_in_range(painter &ctx, int grid_offset, int size, int radius, tile_draw_callback callback);

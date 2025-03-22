@@ -82,26 +82,7 @@ void map_render_set(int grid_offset, int flag) {
 
 enum e_figure_draw_mode { e_figure_draw_common = 0, e_figure_draw_overlay = 1 };
 
-struct draw_context_t {
-    time_millis last_water_animation_time;
-    int advance_water_animation;
-
-    int image_id_water_first;
-    int image_id_water_last;
-
-    int image_id_deepwater_first;
-    int image_id_deepwater_last;
-
-    int selected_figure_id;
-    int highlighted_formation;
-    vec2i* selected_figure_coord;
-};
-
 draw_context_t g_draw_context;
-
-draw_context_t& get_draw_context() {
-    return g_draw_context;
-}
 
 void init_draw_context(int selected_figure_id, vec2i* figure_coord, int highlighted_formation) {
     g_draw_context.advance_water_animation = 0;
@@ -185,8 +166,6 @@ void draw_isometric_mark_sound(int building_id, int grid_offset, color &color_ma
 }
 
 void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
-    auto& draw_context = get_draw_context();
-
     int grid_offset = tile.grid_offset();
     // black tile outside of map
     if (grid_offset < 0) {
@@ -228,18 +207,18 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
     draw_isometric_mark_sound(building_id, grid_offset, color_mask, direction);
 
     int image_id = map_image_at(grid_offset);
-    if (draw_context.advance_water_animation) {
-        if (image_id >= draw_context.image_id_water_first && image_id <= draw_context.image_id_water_last) {
+    if (g_draw_context.advance_water_animation) {
+        if (image_id >= g_draw_context.image_id_water_first && image_id <= g_draw_context.image_id_water_last) {
             image_id++; // wrong, but eh
-            if (image_id > draw_context.image_id_water_last) {
-                image_id = draw_context.image_id_water_first;
+            if (image_id > g_draw_context.image_id_water_last) {
+                image_id = g_draw_context.image_id_water_first;
             }
         }
 
-        if (image_id >= draw_context.image_id_deepwater_first && image_id <= draw_context.image_id_deepwater_last) {
+        if (image_id >= g_draw_context.image_id_deepwater_first && image_id <= g_draw_context.image_id_deepwater_last) {
             image_id += 15;
 
-            if (image_id > draw_context.image_id_deepwater_last) {
+            if (image_id > g_draw_context.image_id_deepwater_last) {
                 image_id -= 90;
             }
         }
@@ -272,8 +251,6 @@ void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
 }
 
 void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx) {
-    auto& draw_context = get_draw_context();
-
     int grid_offset = tile.grid_offset();
     // black tile outside of map
     if (grid_offset < 0) {
@@ -397,13 +374,7 @@ void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx) {
     //ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
 }
 
-void draw_figures(vec2i pixel, tile2i tile, painter &ctx) {
-    draw_figures(pixel, tile, ctx, false);
-}
-
 void draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
-    auto& draw_context = get_draw_context();
-
     auto figures = map_figures_in_row(tile);
     for (auto *f : figures) {
         if (f->is_drawn && !force) {
@@ -414,11 +385,11 @@ void draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
             continue;
         }
 
-        if (!draw_context.selected_figure_id) {
-            int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
+        if (!g_draw_context.selected_figure_id) {
+            int highlight = f->formation_id > 0 && f->formation_id == g_draw_context.highlighted_formation;
             f->city_draw_figure(ctx, highlight);
-        } else if (f->id == draw_context.selected_figure_id) {
-            f->city_draw_figure(ctx, 0, draw_context.selected_figure_coord);
+        } else if (f->id == g_draw_context.selected_figure_id) {
+            f->city_draw_figure(ctx, 0, g_draw_context.selected_figure_coord);
         }
     }
 }
@@ -516,8 +487,6 @@ void draw_ornaments_overlay(vec2i pixel, tile2i point, painter &ctx) {
 }
 
 void draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx) {
-    auto& draw_context = get_draw_context();
-
     int grid_offset = tile.grid_offset();
     auto figures = map_figures_in_row(tile);
 
@@ -534,11 +503,11 @@ void draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx) {
             continue;
         }
 
-        if (!draw_context.selected_figure_id) {
-            int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
+        if (!g_draw_context.selected_figure_id) {
+            int highlight = f->formation_id > 0 && f->formation_id == g_draw_context.highlighted_formation;
             f->city_draw_figure(ctx, highlight);
-        } else if (f->id == draw_context.selected_figure_id) {
-            f->city_draw_figure(ctx, 0, draw_context.selected_figure_coord);
+        } else if (f->id == g_draw_context.selected_figure_id) {
+            f->city_draw_figure(ctx, 0, g_draw_context.selected_figure_coord);
         }
     }
 }
