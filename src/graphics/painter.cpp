@@ -10,6 +10,8 @@
 
 #include <SDL.h>
 
+std::unordered_map<uint64_t, SDL_Texture *> grayscaled_txs;
+
 void painter::draw(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x, float scale_y,
                    double angle, ImgFlags flags, const bool force_linear) {
     if (!(flags & ImgFlag_Grayscale)) {
@@ -84,8 +86,6 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
         SDL_RenderCopyExF(this->renderer, texture, &texture_coords, &screen_coords, angle, nullptr, SDL_FLIP_NONE);
     }
 }
-
-std::unordered_map<uint64_t, SDL_Texture *> grayscaled_txs;
 
 SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i size) {
     if (!tx) {
