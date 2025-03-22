@@ -67,17 +67,24 @@ int figure_herbalist::provide_service() {
     int minmax = 0;
     int houses_serviced = figure_provide_service(tile(), &base, minmax, [] (building *b, figure *f, int &) {
         auto house = b->dcast_house();
+
+        auto increate_health = [&] (uint8_t &value ) {
+            if (value < 50) {
+                value++;
+                if (value < 20) {
+                    f->data.herbalist.see_low_health++;
+                }
+            }
+        };
+
         if (!house) {
+            increate_health(b->common_health);
             return;
         }
 
-        house->runtime_data().apothecary = MAX_COVERAGE;
-        if (b->common_health < 50) {
-            b->common_health++;
-            if (b->common_health < 20) {
-                f->data.herbalist.see_low_health++;
-            }
-        }
+        auto &housed = house->runtime_data();
+        housed.apothecary = MAX_COVERAGE;
+        increate_health(housed.health);
     });
     return houses_serviced;
 }

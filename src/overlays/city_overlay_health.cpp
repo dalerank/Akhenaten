@@ -21,7 +21,8 @@ int city_overlay_health::get_column_height(const building *b) const {
         return COLUMN_TYPE_NONE;
     }
 
-    return b->common_health / 10;
+    const auto& housed = house->runtime_data();
+    return housed.health / 10;
 }
 
 e_column_color city_overlay_health::get_column_color(const building *b) const {

@@ -462,7 +462,7 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, 
         grid_tiles tile2common = map_grid_get_tiles(main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
         for (auto &t : tile2common) {
             vec2i offset = tile_to_pixel(t);
-            draw_figures(offset, t, ctx, /*force*/true);
+            g_screen_city.draw_figures(offset, t, ctx, /*force*/true);
         }
     }
 

@@ -353,7 +353,7 @@ void building_house::determine_worst_desirability_building() {
             }
 
             auto other_house = b->dcast_house();
-            if (other_house && other_house->house_level() == my_level) {
+            if (other_house && other_house->house_level() >= my_level) {
                 continue;
             }
 
