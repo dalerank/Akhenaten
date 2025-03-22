@@ -64,7 +64,7 @@ sound_key figure_architector::phrase_key() const {
         {"extreme_damage_level", houses_damage_risk > 0},
         {"city_not_safety", formation_get_num_forts() < 0},
         {"high_damage_level", hoeses_damage_high > 0},
-        {"no_food_in_city", city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD},
+        {"no_food_in_city", g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD},
         {"need_more_workers", g_city.labor.workers_needed >= 20},
         {"gods_are_angry", g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT},
         {"city_has_bad_reputation", sentiment < 30},

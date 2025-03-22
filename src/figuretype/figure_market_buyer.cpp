@@ -79,7 +79,7 @@ sound_key figure_market_buyer::phrase_key() const {
         keys.push_back("buyer_city_has_low_health");
     }
 
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD) {
         keys.push_back("buyer_no_food_in_city");
     }
 
@@ -87,7 +87,7 @@ sound_key figure_market_buyer::phrase_key() const {
         keys.push_back("buyer_city_have_no_army");
     }
 
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_JOBS) {
         keys.push_back("buyer_much_unemployments");
     }
 

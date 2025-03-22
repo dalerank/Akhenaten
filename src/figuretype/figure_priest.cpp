@@ -82,7 +82,7 @@ sound_key figure_priest::phrase_key() const {
         keys.push_back(create_key("city_low_health"));
     }
 
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD) {
         keys.push_back(create_key("no_food_in_city"));
     }
 
@@ -94,7 +94,7 @@ sound_key figure_priest::phrase_key() const {
         keys.push_back(create_key("low_sentiment"));
     }
 
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_JOBS) {
         keys.push_back(create_key("much_unemployments"));
     }
 

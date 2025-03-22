@@ -104,7 +104,7 @@ figure_sound_t figure_emigrant::get_sound_reaction(xstring key) const {
 }
 
 sound_key figure_emigrant::phrase_key() const {
-    switch (city_sentiment_low_mood_cause()) {
+    switch (g_city.sentiment.low_mood_cause) {
     case LOW_MOOD_NO_JOBS: return "no_job_in_city";
     case LOW_MOOD_NO_FOOD: return "no_food_in_city";
     case LOW_MOOD_HIGH_TAXES: return "tax_too_high";

@@ -51,11 +51,11 @@ sound_key figure_juggler::phrase_key() const {
         keys.push_back("city_low_sentiment");
     }
 
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_JOBS) {
         keys.push_back("much_unemployments");
     }
 
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_LOW_WAGES) {
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_LOW_WAGES) {
         keys.push_back("salary_too_low");
     }
 

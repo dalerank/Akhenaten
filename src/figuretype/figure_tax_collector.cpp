@@ -95,15 +95,15 @@ sound_key figure_tax_collector::phrase_key() const {
     const int sentiment = g_city.sentiment.value;
     svector<sound_key_state, 16> keys = {
         {"need_more_tax_collectors", city_finance_percentage_taxed_people() < 80},
-        {"high_taxes", city_sentiment_low_mood_cause() == LOW_MOOD_HIGH_TAXES},
+        {"high_taxes", g_city.sentiment.low_mood_cause == LOW_MOOD_HIGH_TAXES},
         {"much_pooh_houses", poor_taxed > 50},
         {"desease_can_start_at_any_moment", g_city.health.value < 30},
-        {"no_food_in_city", city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD},
+        {"no_food_in_city", g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD},
         {"buyer_city_have_no_army", formation_get_num_forts() < 1},
         {"need_workers", g_city.labor.workers_needed >= 10},
         {"gods_are_angry", g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT},
         {"city_is_bad", g_city.ratings.kingdom < 30},
-        {"much_unemployments", city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS},
+        {"much_unemployments", g_city.sentiment.low_mood_cause == LOW_MOOD_NO_JOBS},
         {"low_entertainment", g_city.festival.months_since_festival > 6},
         {"city_is_good", sentiment > 50},
         {"city_is_amazing", sentiment > 90}

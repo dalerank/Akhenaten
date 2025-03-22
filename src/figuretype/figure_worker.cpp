@@ -187,7 +187,7 @@ sound_key figure_worker::phrase_key() const {
         keys.push_back("desease_can_start_at_any_moment");
     }
 
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD) {
         keys.push_back("no_food_in_city");
     }
 
@@ -203,7 +203,7 @@ sound_key figure_worker::phrase_key() const {
         keys.push_back("city_is_bad");
     }
 
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_JOBS) {
         keys.push_back("much_unemployments");
     }
 

@@ -37,7 +37,7 @@ void figure_labor_seeker::figure_before_action() {
 
 sound_key figure_labor_seeker::phrase_key() const {
     svector<sound_key, 10> keys;
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_JOBS) {
         keys.push_back("no_jobs");
     }
 
@@ -75,11 +75,11 @@ sound_key figure_labor_seeker::phrase_key() const {
         keys.push_back("city_is_amazing");
     }
 
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD) {
         keys.push_back("no_food_in_city");
     }
 
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_LOW_WAGES) {
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_LOW_WAGES) {
         keys.push_back("i_want_to_leave_city");
     }
 

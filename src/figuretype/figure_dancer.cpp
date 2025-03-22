@@ -30,7 +30,7 @@ sound_key figure_dancer::phrase_key() const {
         keys.push_back("city_not_safety_workers_leaving");
     }
 
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_FOOD) {
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD) {
         keys.push_back("no_food_in_city");
     }
 
@@ -57,11 +57,11 @@ sound_key figure_dancer::phrase_key() const {
         keys.push_back("city_is_amazing");
     }
 
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_LOW_WAGES) {
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_LOW_WAGES) {
         keys.push_back("salary_too_low");
     }
 
-    if (city_sentiment_low_mood_cause() == LOW_MOOD_NO_JOBS) {
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_JOBS) {
         keys.push_back("much_unemployments");
     }
 
