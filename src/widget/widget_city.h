@@ -47,6 +47,7 @@ struct screen_city_t {
     void draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx);
+    void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx);
     void draw_tooltip(tooltip_context* c);
 };
 

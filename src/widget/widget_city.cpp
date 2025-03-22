@@ -224,19 +224,21 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, v
     clear_mappoint_pixelcoord();
     city_view_foreach_valid_map_tile(ctx, update_tile_coords);
 
-    auto s_draw_figures = [this] (vec2i pixel, tile2i tile, painter &ctx) {
-        draw_figures(pixel, tile, ctx, false);
-    };
-
     map_figure_sort_by_y();
     city_view_foreach_valid_map_tile(ctx, 
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_isometric_flat(pixel, tile, ctx); },
         draw_ornaments_flat
     );
+
     city_view_foreach_valid_map_tile(ctx, 
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
     );
-    city_view_foreach_valid_map_tile(ctx, draw_isometric_nonterrain_height, draw_ornaments_and_animations_height, s_draw_figures);
+
+    city_view_foreach_valid_map_tile(ctx, 
+        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
+        draw_ornaments_and_animations_height, 
+        [this] (vec2i pixel, tile2i tile, painter &ctx) {  draw_figures(pixel, tile, ctx, false); }
+    );
 
     if (!selected_figure_id) {
         g_city_planner.update(current_tile);
@@ -332,6 +334,89 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
 
     int top_height = img->isometric_top_height();
     map_render_set(tile, (top_height > 0) ? RENDER_TALL_TILE : 0);
+}
+
+void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx) {
+    int grid_offset = tile.grid_offset();
+    // black tile outside of map
+    if (grid_offset < 0) {
+        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
+        return;
+    }
+
+    g_city_planner.construction_record_view_position(pixel, tile);
+    int building_id = map_building_at(grid_offset);
+
+    color color_mask = COLOR_MASK_NONE;
+    building *b = building_get(building_id);
+    bool deletion_tool = (g_city_planner.build_type == BUILDING_CLEAR_LAND && g_city_planner.end == tile);
+    if (deletion_tool || map_property_is_deleted(tile) || drawing_building_as_deleted(b)) {
+        color_mask = COLOR_MASK_RED;
+    }
+
+    if (!map_property_is_draw_tile(grid_offset)) {
+        bool force_draw_tile = false;
+        if (building_id > 0) {
+            force_draw_tile = b->dcast()->force_draw_height_tile(ctx, tile, pixel, color_mask);
+            b->dcast()->force_draw_top_tile(ctx, tile, pixel, color_mask);
+        }
+
+        if (!force_draw_tile) {
+            return;
+        }
+    }
+
+    bool tall_flat_tile = map_render_is(grid_offset, RENDER_TALL_TILE);
+    bool should_draw = building_id > 0 || tall_flat_tile;
+    if (!should_draw) {
+        return;
+    }
+
+    if (tall_flat_tile && building_id > 0) {
+        map_grid_area_foreach(tile, tile.shifted(b->size, b->size), [] (tile2i tile) {
+            const bool is_building = map_terrain_is(tile, TERRAIN_BUILDING);
+            if (is_building) {
+                return;
+            }
+            int image_id = map_image_at(tile);
+            const image_t *img = image_get(image_id);
+            int top_height = img->isometric_top_height();
+            map_render_set(tile, top_height > 0);
+        });
+    }
+
+    int image_id = map_image_at(grid_offset);
+    if (tall_flat_tile) {
+        ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, color_mask);
+
+        int image_alt_value = map_image_alt_at(grid_offset);
+        int image_alt_id = (image_alt_value & 0x00ffffff);
+        uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
+        if (image_alt_id > 0 && image_alt_alpha > 0) {
+            ImageDraw::isometric_from_drawtile_top(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), ImgFlag_Alpha);
+        }
+        return;
+    }
+
+    vec2i view_pos, view_size;
+    city_view_get_viewport(*ctx.view, view_pos, view_size);
+    int direction = SOUND_DIRECTION_CENTER;
+    if (pixel.x < view_pos.x + 100) {
+        direction = SOUND_DIRECTION_LEFT;
+    } else if (pixel.x > view_pos.x + view_size.x - 100) {
+        direction = SOUND_DIRECTION_RIGHT;
+    }
+
+    if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
+        color_mask = COLOR_MASK_RED;
+    }
+
+    sound_city_mark_building_view(b, direction);
+    if (map_property_is_constructing(grid_offset)) {
+        image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
+    }
+
+    //ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
 }
 
 void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx) {

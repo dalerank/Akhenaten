@@ -26,7 +26,6 @@ void map_render_set(tile2i tile, int flag);
 void map_render_set(int grid_offset, int flag);
 bool map_render_is(int grid_offset, int render_mask);
 
-void draw_isometric_nonterrain_height(vec2i pixel, tile2i point, painter &ctx);
 void draw_isometric_mark_sound(int building_id, int grid_offset, color &color_mask, int direction);
 
 void draw_isometrics_overlay_flat(vec2i pixel, tile2i point, painter &ctx);

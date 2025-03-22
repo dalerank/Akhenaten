@@ -344,7 +344,7 @@ void city_overlay::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) con
 
     if (get_city_overlay()->show_building(b)) {
         map_render_set(tile, RENDER_TALL_TILE);
-        draw_isometric_nonterrain_height(pixel, tile, ctx);
+        g_screen_city.draw_isometric_nonterrain_height(pixel, tile, ctx);
         return;
     }
 
