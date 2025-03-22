@@ -217,11 +217,11 @@ static int get_sentiment_contribution_monuments() {
     return monument_points;
 }
 
-void city_sentiment_update_day() {
-    city_data.sentiment.last_mugger_message = std::max<short>(0, city_data.sentiment.last_mugger_message--);
+void city_sentiment_t::update_day() {
+    last_mugger_message = std::max<short>(0, last_mugger_message--);
 
     if (game.simtime.day % 8 == 0) {
-        city_sentiment_update();
+        update();
     }
 }
 
@@ -257,23 +257,16 @@ void city_plague_update_day() {
     });
 }
 
-void city_sentiment_update() {
+void city_sentiment_t::update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Sentiment Update");
     city_population_check_consistency();
 
-    int sentiment_contribution_taxes = SENTIMENT_PER_TAX_RATE[city_data.finance.tax_percentage];
-    int sentiment_contribution_wages = get_sentiment_contribution_wages();
-    int sentiment_contribution_employment = get_sentiment_contribution_employment();
-    int sentiment_contribution_religion_coverage = get_sentiment_contribution_religion_coverage();
-    int sentiment_contribution_monuments = get_sentiment_contribution_monuments();
-    int sentiment_penalty_huts = get_sentiment_penalty_for_hut_dwellers();
-
-    city_data.sentiment.contribution_taxes = sentiment_contribution_taxes;
-    city_data.sentiment.contribution_wages = sentiment_contribution_wages;
-    city_data.sentiment.contribution_employment = sentiment_contribution_employment;
-    city_data.sentiment.penalty_huts = sentiment_penalty_huts;
-    city_data.sentiment.religion_coverage = sentiment_contribution_religion_coverage;
-    city_data.sentiment.monuments = sentiment_contribution_monuments;
+    contribution_taxes = SENTIMENT_PER_TAX_RATE[city_data.finance.tax_percentage];
+    contribution_wages = get_sentiment_contribution_wages();
+    contribution_employment = get_sentiment_contribution_employment();
+    contribution_religion_coverage = get_sentiment_contribution_religion_coverage();
+    contribution_monuments = get_sentiment_contribution_monuments();
+    contribution_penalty_huts = get_sentiment_penalty_for_hut_dwellers();
 
     int houses_calculated = 0;
     int houses_needing_food = 0;
@@ -292,14 +285,14 @@ void city_sentiment_update() {
             return;
         }
 
-        if (city_data.population.current < 300) {
+        if (g_city.population.current < 300) {
             // small town has no complaints
-            sentiment_contribution_employment = 0;
-            sentiment_contribution_taxes = 0;
-            sentiment_contribution_wages = 0;
+            contribution_employment = 0;
+            contribution_taxes = 0;
+            contribution_wages = 0;
 
             housed.house_happiness = default_sentiment;
-            if (city_data.population.current < 200) {
+            if (g_city.population.current < 200) {
                 housed.house_happiness += 10;
             } else if (default_sentiment < 50 && config_get(CONFIG_GP_FIX_IMMIGRATION_BUG)) {
                 // Fix very hard immigration bug: give a boost for Very Hard difficulty so that
@@ -310,22 +303,22 @@ void city_sentiment_update() {
         }
         // population >= 300
         houses_calculated++;
-        int sentiment_contribution_food = 0;
-        int sentiment_contribution_huts = 0;
+        contribution_food = 0;
+        contribution_huts = 0;
         if (!house->model().food_types) {
             // tents
             housed.days_without_food = 0;
-            sentiment_contribution_huts = sentiment_penalty_huts;
-            total_sentiment_penalty_huts += sentiment_penalty_huts;
+            contribution_huts = contribution_penalty_huts;
+            total_sentiment_penalty_huts += contribution_penalty_huts;
         } else {
             // shack+
             houses_needing_food++;
             if (housed.num_foods >= 2) {
-                sentiment_contribution_food = 2;
+                contribution_food = 2;
                 total_sentiment_contribution_food += 2;
                 housed.days_without_food = 0;
             } else if (housed.num_foods >= 1) {
-                sentiment_contribution_food = 1;
+                contribution_food = 1;
                 total_sentiment_contribution_food += 1;
                 housed.days_without_food = 0;
             } else {
@@ -333,17 +326,17 @@ void city_sentiment_update() {
                 if (housed.days_without_food < 3)
                     housed.days_without_food++;
 
-                sentiment_contribution_food = -housed.days_without_food;
+                contribution_food = -housed.days_without_food;
                 total_sentiment_contribution_food -= housed.days_without_food;
             }
         }
-        housed.house_happiness += sentiment_contribution_taxes;
-        housed.house_happiness += sentiment_contribution_wages;
-        housed.house_happiness += sentiment_contribution_employment;
-        housed.house_happiness += sentiment_contribution_food;
-        housed.house_happiness += sentiment_contribution_huts;
-        housed.house_happiness += sentiment_contribution_religion_coverage;
-        housed.house_happiness += sentiment_contribution_monuments;
+        housed.house_happiness += contribution_taxes;
+        housed.house_happiness += contribution_wages;
+        housed.house_happiness += contribution_employment;
+        housed.house_happiness += contribution_food;
+        housed.house_happiness += contribution_huts;
+        housed.house_happiness += contribution_religion_coverage;
+        housed.house_happiness += contribution_monuments;
         housed.house_happiness = calc_bound(housed.house_happiness, 0, 100);
     });
 
@@ -366,23 +359,19 @@ void city_sentiment_update() {
         }
     });
     
-    if (total_houses) {
-        city_data.sentiment.value = total_sentiment / total_houses;
-    } else {
-        city_data.sentiment.value = 60;
+    value = total_houses ? total_sentiment / total_houses : 60;
+
+    if (message_delay) {
+        message_delay--;
     }
 
-    if (city_data.sentiment.message_delay) {
-        city_data.sentiment.message_delay--;
-    }
+    if (value < 48 && value < previous_value) {
+        if (message_delay <= 0) {
+            message_delay = 3;
 
-    if (city_data.sentiment.value < 48 && city_data.sentiment.value < city_data.sentiment.previous_value) {
-        if (city_data.sentiment.message_delay <= 0) {
-            city_data.sentiment.message_delay = 3;
-
-            if (city_data.sentiment.value < 35) {
+            if (value < 35) {
                 city_message_post(false, MESSAGE_PEOPLE_ANGRY, 0, 0);
-            } else if (city_data.sentiment.value < 40) {
+            } else if (value < 40) {
                 city_message_post(false, MESSAGE_PEOPLE_UNHAPPY, 0, 0);
             } else {
                 city_message_post(false, MESSAGE_PEOPLE_DISGRUNTLED, 0, 0);
@@ -391,30 +380,30 @@ void city_sentiment_update() {
     }
 
     int worst_sentiment = 0;
-    city_data.sentiment.low_mood_cause = LOW_MOOD_NONE;
+    low_mood_cause = LOW_MOOD_NONE;
     if (sentiment_contribution_food < worst_sentiment) {
         worst_sentiment = sentiment_contribution_food;
-        city_data.sentiment.low_mood_cause = LOW_MOOD_NO_FOOD;
+        low_mood_cause = LOW_MOOD_NO_FOOD;
     }
 
-    if (sentiment_contribution_employment < worst_sentiment) {
-        worst_sentiment = sentiment_contribution_employment;
-        city_data.sentiment.low_mood_cause = LOW_MOOD_NO_JOBS;
+    if (contribution_employment < worst_sentiment) {
+        worst_sentiment = contribution_employment;
+        low_mood_cause = LOW_MOOD_NO_JOBS;
     }
 
-    if (sentiment_contribution_taxes < worst_sentiment) {
-        worst_sentiment = sentiment_contribution_taxes;
-        city_data.sentiment.low_mood_cause = LOW_MOOD_HIGH_TAXES;
+    if (contribution_taxes < worst_sentiment) {
+        worst_sentiment = contribution_taxes;
+        low_mood_cause = LOW_MOOD_HIGH_TAXES;
     }
 
-    if (sentiment_contribution_wages < worst_sentiment) {
-        worst_sentiment = sentiment_contribution_wages;
-        city_data.sentiment.low_mood_cause = LOW_MOOD_LOW_WAGES;
+    if (contribution_wages < worst_sentiment) {
+        worst_sentiment = contribution_wages;
+        low_mood_cause = LOW_MOOD_LOW_WAGES;
     }
 
     if (sentiment_contribution_tents < worst_sentiment) {
-        city_data.sentiment.low_mood_cause = LOW_MOOD_MANY_TENTS;
+        low_mood_cause = LOW_MOOD_MANY_TENTS;
     }
 
-    city_data.sentiment.previous_value = city_data.sentiment.value;
+    previous_value = value;
 }

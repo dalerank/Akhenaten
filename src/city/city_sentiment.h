@@ -20,9 +20,14 @@ struct city_sentiment_t {
     int32_t contribution_taxes;
     int32_t contribution_wages;
     int32_t contribution_employment;
-    int32_t penalty_huts;
-    int32_t religion_coverage;
-    int32_t monuments;
+    int32_t contribution_food;
+    int32_t contribution_huts;
+    int32_t contribution_penalty_huts;
+    int32_t contribution_religion_coverage;
+    int32_t contribution_monuments;
+
+    void update();
+    void update_day();
 };
 
 bool city_can_create_mugger();
@@ -45,7 +50,5 @@ void city_sentiment_add_criminal();
 int city_sentiment_protesters();
 int city_sentiment_criminals();
 
-void city_sentiment_update();
-void city_sentiment_update_day();
 void city_criminals_update_day();
 void city_plague_update_day();

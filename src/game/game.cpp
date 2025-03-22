@@ -345,7 +345,7 @@ void game_t::advance_day() {
         advance_month();
     }
 
-    city_sentiment_update_day();
+    g_city.sentiment.update_day();
     city_criminals_update_day();
     city_plague_update_day();
     g_city.environment.river_update_flotsam();

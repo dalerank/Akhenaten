@@ -1103,9 +1103,9 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x, y + 145, cl, "contribution_taxes:", g_city.sentiment.contribution_taxes);
         debug_text(ctx, str, x, y + 157, cl, "contribution_wages:", g_city.sentiment.contribution_wages);
         debug_text(ctx, str, x, y + 169, cl, "contribution_employment:", g_city.sentiment.contribution_employment);
-        debug_text(ctx, str, x, y + 181, cl, "penalty_huts:", g_city.sentiment.penalty_huts);
-        debug_text(ctx, str, x, y + 193, cl, "monuments:", g_city.sentiment.monuments);
-        debug_text(ctx, str, x, y + 205, cl, "religion_coverage:", g_city.sentiment.religion_coverage);
+        debug_text(ctx, str, x, y + 181, cl, "penalty_huts:", g_city.sentiment.contribution_penalty_huts);
+        debug_text(ctx, str, x, y + 193, cl, "monuments:", g_city.sentiment.contribution_monuments);
+        debug_text(ctx, str, x, y + 205, cl, "religion_coverage:", g_city.sentiment.contribution_religion_coverage);
         y += 210;
     }
 
