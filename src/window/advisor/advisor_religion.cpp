@@ -68,9 +68,12 @@ void ui::advisor_religion_window::draw_god_row(e_god god, int y_offset, e_buildi
         bcount.printf("%d", building_count_active(complex));
     }
 
+    const int active_temples = building_count_active(temple);
+    const int total_temples = building_count_total(temple);
+    const int active_shrines = building_count_active(shrine);
     ui[_t("complex")].text(bcount.c_str());
-    ui[_t("temple")].text_var("%d", building_count_active(temple));
-    ui[_t("shrine")].text_var("%d", building_count_active(shrine));
+    ui[_t("temple")].text_var("%d (%d)", active_temples, total_temples);
+    ui[_t("shrine")].text_var("%d", active_shrines);
     ui[_t("fest")].text_var("%d", g_city.religion.months_since_festival(god));
     ui[_t("mood")].text(ui::str(59, 20 + g_city.religion.god_happiness(god) / 10));
 
