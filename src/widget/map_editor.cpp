@@ -2,6 +2,7 @@
 #include <graphics/view/lookup.h>
 
 #include "editor/tool.h"
+#include "widget/widget_city.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/menu.h"
@@ -30,19 +31,6 @@ struct map_editor_data_t {
 
 map_editor_data_t g_map_editor_data;
 local_render_context_t draw_context;
-
-static void init_draw_context(void) {
-    draw_context.advance_water_animation = 0;
-    time_millis now = time_get_millis();
-    if (now - draw_context.last_water_animation_time > 60) {
-        draw_context.last_water_animation_time = now;
-        draw_context.advance_water_animation = 1;
-    }
-    draw_context.image_id_water_first = image_id_from_group(GROUP_TERRAIN_WATER);
-    draw_context.image_id_water_last = 5 + draw_context.image_id_water_first;
-    draw_context.image_id_deepwater_first = image_id_from_group(GROUP_TERRAIN_DEEPWATER);
-    draw_context.image_id_deepwater_last = 89 + draw_context.image_id_deepwater_first;
-}
 
 static void draw_flags(vec2i pixel, map_point point) {
     painter ctx = game.painter();
@@ -81,7 +69,7 @@ void widget_map_editor_draw() {
     update_zoom_level();
     set_city_clip_rectangle(ctx);
 
-    init_draw_context();
+    draw_context.init();
     //    city_view_foreach_map_tile(draw_buildings);
     city_view_foreach_valid_map_tile(ctx, 
         [] (vec2i pixel, tile2i tile, painter &ctx) { g_screen_city.draw_isometric_flat(pixel, tile, ctx); }

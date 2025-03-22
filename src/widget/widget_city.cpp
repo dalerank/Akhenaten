@@ -1,4 +1,4 @@
-#include "dev/debug.h"
+#include "widget/widget_city.h"
 
 #include "graphics/clouds.h"
 #include "graphics/image.h"
@@ -41,6 +41,7 @@
 #include "game/game.h"
 #include "overlays/city_overlay.h"
 #include "building/building.h"
+#include "dev/debug.h"
 
 screen_city_t g_screen_city;
 
@@ -202,6 +203,21 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
         }
     }
 }
+
+void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, color &color_mask, int direction) {
+    if (building_id) {
+        building *b = building_get(building_id);
+        if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
+            color_mask = COLOR_MASK_RED;
+        }
+
+        sound_city_mark_building_view(b, direction);
+    } else {
+        int terrain = map_terrain_get(grid_offset);
+        sound_city_mark_terrain_view(terrain, grid_offset, direction);
+    }
+}
+
 
 void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord) {
     highlighted_formation = 0;

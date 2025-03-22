@@ -146,20 +146,6 @@ static void clip_between_rectangles(int* xOut, int* yOut, int* wOut, int* hOut, 
         *hOut = 0;
 }
 
-void draw_isometric_mark_sound(int building_id, int grid_offset, color &color_mask, int direction) {
-    if (building_id) {
-        building* b = building_get(building_id);
-        if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
-            color_mask = COLOR_MASK_RED;
-        }
-
-        sound_city_mark_building_view(b, direction);
-    } else {
-        int terrain = map_terrain_get(grid_offset);
-        sound_city_mark_terrain_view(terrain, grid_offset, direction);
-    }
-}
-
 void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
     g_city_planner.construction_record_view_position(pixel, tile);
     constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED, COLOR_GREEN, COLOR_YELLOW};

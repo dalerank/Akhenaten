@@ -11,7 +11,6 @@
 #include "grid/point.h"
 #include "graphics/image_desc.h"
 #include "io/io_buffer.h"
-#include "widget/widget_city.h"
 #include "window/building/common.h"
 #include "figure_phrase.h"
 #include "graphics/animation.h"

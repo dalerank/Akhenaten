@@ -10,6 +10,7 @@
 #include "graphics/graphics.h"
 #include "figure/figure.h"
 #include "graphics/image.h"
+#include "widget/widget_city.h"
 #include "city/city_buildings.h"
 
 #include "overlays/city_overlay_education.h"

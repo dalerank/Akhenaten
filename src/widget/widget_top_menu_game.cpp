@@ -34,6 +34,7 @@
 #include "window/speed_options.h"
 #include "window/sound_options.h"
 #include "widget/widget_sidebar.h"
+#include "widget/widget_city.h"
 #include "dev/debug.h"
 
 static void button_rotate_left(int param1, int param2);

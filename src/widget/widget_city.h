@@ -3,6 +3,7 @@
 #include "input/hotkey.h"
 #include "input/mouse.h"
 #include "grid/point.h"
+#include "graphics/color.h"
 
 #include "city/tile_draw.h"
 
@@ -48,6 +49,7 @@ struct screen_city_t {
     void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx);
+    void draw_isometric_mark_sound(int building_id, int grid_offset, color &color_mask, int direction);
     void draw_tooltip(tooltip_context* c);
 };
 

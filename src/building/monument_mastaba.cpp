@@ -31,8 +31,8 @@
 #include "graphics/elements/lang_text.h"
 #include "figuretype/figure_worker.h"
 #include "construction/build_planner.h"
+#include "widget/widget_city.h"
 #include "dev/debug.h"
-#include "js/js_game.h"
 
 #include <numeric>
 #include <string>

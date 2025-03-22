@@ -19,6 +19,7 @@
 #include "sound/sound_walker.h"
 #include "core/object_property.h"
 #include "core/profiler.h"
+#include "widget/widget_city.h"
 
 #include <string.h>
 #include <map>

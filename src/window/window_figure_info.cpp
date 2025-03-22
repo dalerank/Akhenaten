@@ -13,6 +13,7 @@
 #include "game/game.h"
 #include "game/state.h"
 #include "sound/sound.h"
+#include "widget/widget_city.h"
 
 declare_console_var_int(figure_small_image_x, -32)
 declare_console_var_int(figure_small_image_y, -48)
