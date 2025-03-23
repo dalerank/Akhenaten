@@ -178,19 +178,20 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
     // crime
     {
         std::pair<bstring256, int> crime_status;
-        if (city_sentiment_criminals() > 10) {
+        const int criminals = g_city.sentiment.criminals;
+        if (criminals > 10) {
             crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 159),
                                                          city_finance_overview_this_year()->expenses.stolen,
                                                          (pcstr)lang_get_string(61, 164)), FONT_NORMAL_YELLOW};
-        } else if (city_sentiment_criminals() > 7) {
+        } else if (criminals > 7) {
             crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 160),
                                                          city_finance_overview_this_year()->expenses.stolen,
                                                          (pcstr)lang_get_string(61, 164)), FONT_NORMAL_YELLOW};
-        } else if (city_sentiment_criminals() > 5) {
+        } else if (criminals > 5) {
             crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 161),
                                                          city_finance_overview_this_year()->expenses.stolen,
                                                          (pcstr)lang_get_string(61, 164)), FONT_NORMAL_YELLOW};
-        } else if (city_sentiment_criminals() > 2) {
+        } else if (criminals > 2) {
             crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 162),
                                                          city_finance_overview_this_year()->expenses.stolen,
                                                          (pcstr)lang_get_string(61, 164)), FONT_NORMAL_BLACK_ON_DARK};

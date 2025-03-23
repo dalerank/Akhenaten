@@ -50,7 +50,7 @@ sound_key figure_magistrate::phrase_key() const {
     }
 
     svector<sound_key, 10> keys;
-    int criminals = city_sentiment_criminals();
+    const int criminals = g_city.sentiment.criminals;
     if (criminals <= 0) {
         keys.push_back("no_criminals_in_city");
     }

@@ -20,22 +20,21 @@
 
 static const int SENTIMENT_PER_TAX_RATE[26] = {3, 2, 2, 2, 1, 1, 1, 0, 0, -1, -2, -2, -3, -3, -3, -5, -5, -5, -5, -6, -6, -6, -6, -6, -6, -6};
 
-static auto &city_data = g_city;
+void city_set_can_create_mugger(bool v) { g_city.sentiment.can_create_mugger = v; }
 
-void city_set_can_create_mugger(bool v) { city_data.sentiment.can_create_mugger = v; }
 bool city_can_create_mugger() {
-    return city_data.sentiment.can_create_mugger;
+    return g_city.sentiment.can_create_mugger;
 }
 
-void city_set_can_create_protestor(bool v) { city_data.sentiment.can_create_protestor = v; }
+void city_set_can_create_protestor(bool v) { g_city.sentiment.can_create_protestor = v; }
 bool city_can_create_protestor() {
-    return city_data.sentiment.can_create_protestor;
+    return g_city.sentiment.can_create_protestor;
 }
 
 void city_show_message_criminal(int message_id, int money_stolen, int tile_offset) {
     bool show_popup_message = false;
-    if (city_data.sentiment.last_mugger_message <= 0) {
-        city_data.sentiment.last_mugger_message = 90;
+    if (g_city.sentiment.last_mugger_message <= 0) {
+        g_city.sentiment.last_mugger_message = 90;
         show_popup_message = true;
     }
 
@@ -62,38 +61,30 @@ void city_sentiment_set_max_happiness(int max) {
 }
 
 void city_sentiment_reset_protesters_criminals() {
-    city_data.sentiment.protesters = 0;
-    city_data.sentiment.criminals = 0;
+    g_city.sentiment.protesters = 0;
+    g_city.sentiment.criminals = 0;
 }
 
 void city_sentiment_add_protester() {
-    city_data.sentiment.protesters++;
+    g_city.sentiment.protesters++;
 }
 
 void city_sentiment_add_criminal() {
-    city_data.sentiment.criminals++;
-}
-
-int city_sentiment_protesters() {
-    return city_data.sentiment.protesters;
-}
-
-int city_sentiment_criminals() {
-    return city_data.sentiment.criminals;
+    g_city.sentiment.criminals++;
 }
 
 static int get_sentiment_penalty_for_hut_dwellers() {
     // alternate the penalty for every update
-    if (!city_data.sentiment.include_huts) {
-        city_data.sentiment.include_huts = true;
+    if (!g_city.sentiment.include_huts) {
+        g_city.sentiment.include_huts = true;
         return 0;
     }
 
-    city_data.sentiment.include_huts = false;
+    g_city.sentiment.include_huts = false;
 
     int penalty;
-    int pct_tents = calc_percentage(city_data.population.people_in_huts, city_data.population.current);
-    if (city_data.population.people_in_manors > 0) {
+    int pct_tents = calc_percentage(g_city.population.people_in_huts, g_city.population.current);
+    if (g_city.population.people_in_manors > 0) {
         if (pct_tents >= 57)
             penalty = 0;
         else if (pct_tents >= 40)
@@ -105,7 +96,7 @@ static int get_sentiment_penalty_for_hut_dwellers() {
         else {
             penalty = -6;
         }
-    } else if (city_data.population.people_in_residences > 0) {
+    } else if (g_city.population.people_in_residences > 0) {
         if (pct_tents >= 57)
             penalty = 0;
         else if (pct_tents >= 40)
@@ -133,10 +124,12 @@ static int get_sentiment_penalty_for_hut_dwellers() {
     return penalty;
 }
 
-static int get_sentiment_contribution_wages() {
-    city_data.sentiment.wages = city_data.labor.wages;
+int city_sentiment_t::calc_sentiment_contribution_wages() {
+    const auto &labor = g_city.labor;
+
+    wages = labor.wages;
     int contribution = 0;
-    int wage_diff = city_data.labor.wages - city_data.labor.wages_kingdome;
+    int wage_diff = labor.wages - labor.wages_kingdome;
     if (wage_diff < 0) {
         contribution = wage_diff / 2;
         if (!contribution)
@@ -235,8 +228,8 @@ void city_sentiment_t::update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Sentiment Update");
     city_population_check_consistency();
 
-    contribution_taxes = SENTIMENT_PER_TAX_RATE[city_data.finance.tax_percentage];
-    contribution_wages = get_sentiment_contribution_wages();
+    contribution_taxes = SENTIMENT_PER_TAX_RATE[g_city.finance.tax_percentage];
+    contribution_wages = calc_sentiment_contribution_wages();
     contribution_employment = calc_contribution_employment();
     contribution_religion_coverage = calc_contribution_religion_coverage();
     contribution_monuments = calc_contribution_monuments();

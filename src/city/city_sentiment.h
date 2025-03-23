@@ -31,6 +31,7 @@ struct city_sentiment_t {
     int calc_contribution_religion_coverage();
     int calc_contribution_monuments();
     int calc_contribution_employment();
+    int calc_sentiment_contribution_wages();
 };
 
 bool city_can_create_mugger();
@@ -49,6 +50,3 @@ void city_sentiment_reset_protesters_criminals();
 
 void city_sentiment_add_protester();
 void city_sentiment_add_criminal();
-
-int city_sentiment_protesters();
-int city_sentiment_criminals();
