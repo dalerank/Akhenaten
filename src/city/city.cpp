@@ -18,6 +18,7 @@
 #include "empire/trade_route.h"
 #include "building/count.h"
 #include "building/building_granary.h"
+#include "building/building_house.h"
 #include "figure/figure.h"
 #include "figuretype/figure_fishing_point.h"
 #include "figuretype/figure_kingdome_trader.h"
@@ -362,6 +363,19 @@ void city_t::buildings_generate_figure() {
         default:
             b.dcast()->spawn_figure();
             break;
+        }
+    });
+}
+
+void city_t::plague_update_day() {
+    buildings_house_do([] (auto house) {
+        if (!house->hsize()) {
+            return;
+        }
+
+        if (house->base.has_plague && house->base.disease_days > 0) {
+            house->base.disease_days--;
+            house->base.has_plague = (house->base.disease_days > 0);
         }
     });
 }

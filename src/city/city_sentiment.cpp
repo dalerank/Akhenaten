@@ -250,19 +250,6 @@ void city_criminals_update_day() {
     });
 }
 
-void city_plague_update_day() {
-    buildings_house_do([] (auto house) {
-        if (!house->hsize()) {
-            return;
-        }
-
-        if (house->base.has_plague && house->base.disease_days > 0) {
-            house->base.disease_days--;
-            house->base.has_plague = (house->base.disease_days > 0);
-        }
-    });
-}
-
 void city_sentiment_t::update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Sentiment Update");
     city_population_check_consistency();

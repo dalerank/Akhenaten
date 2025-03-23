@@ -52,4 +52,3 @@ int city_sentiment_protesters();
 int city_sentiment_criminals();
 
 void city_criminals_update_day();
-void city_plague_update_day();
