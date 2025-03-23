@@ -18,6 +18,7 @@
 #include <iostream>
 
 declare_console_command(addbeer, game_cheat_add_resource<RESOURCE_BEER>);
+declare_console_command(addbarley, game_cheat_add_resource<RESOURCE_BARLEY>);
 
 building_brewery::static_params brewery_m;
 

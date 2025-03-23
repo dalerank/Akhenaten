@@ -1536,7 +1536,7 @@ building building_brewery = {
   output_resource : RESOURCE_BEER,
   progress_max : 400,
   window_info_height_id : 1,
-  production_rate : 20,
+  production_rate : 50,
   info_help_id:96,
   info_text_id:122,
   building_size : 2,
