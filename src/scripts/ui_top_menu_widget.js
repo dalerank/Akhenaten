@@ -111,6 +111,7 @@ window top_menu_widget = {
 	    shoreline   	: menu_item({text:"", parameter:29}),
 	    entertainment  	: menu_item({text:"", parameter:30}),
 	    canals       	: menu_item({text:"", parameter:31}),
+	    overlay_add    	: menu_item({text:"", parameter:32}),
 	},
 
 	ui : {

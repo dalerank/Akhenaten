@@ -219,6 +219,7 @@ void top_menu_widget::debug_render_text(int opt, bool v) {
         {"River Shore ON", "River Shore OFF"},
         {"Entertainment ON", "Entertainment OFF"},
         {"Canals ON", "Canals OFF"},
+        {"Overlay Add ON", "Overlay Add OFF"},
     };
     const auto &current = debug_text_rend[opt];
     menu_item_update("debug_render", opt, v ? current.on : current.off);

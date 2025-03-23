@@ -43,6 +43,7 @@
 #include "grid/figure.h"
 #include "platform/renderer.h"
 #include "widget/debug_console.h"
+#include "overlays/city_overlay.h"
 
 int g_debug_tile = 0;
 int g_debug_render = 0;

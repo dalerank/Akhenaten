@@ -289,7 +289,7 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
     }
 
     building* b = building_get(building_id);
-    if (get_city_overlay()->show_building(b)) {
+    if (show_building(b)) {
         if (building_is_farm(b->type)) {
             if (is_drawable_farmhouse(tile, city_view_orientation())) {
                 ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pos, 0);
@@ -339,18 +339,18 @@ bool city_overlay::show_building(const building *b) const {
 
 void city_overlay::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const {
     building* b = building_at(tile);
-    if (get_city_overlay()->get_type() == OVERLAY_PROBLEMS) {
+    if (get_type() == OVERLAY_PROBLEMS) {
         overlay_problems_prepare_building(b);
     }
 
-    if (get_city_overlay()->show_building(b)) {
+    if (show_building(b)) {
         map_render_set(tile, RENDER_TALL_TILE);
         g_screen_city.draw_isometric_nonterrain_height(pixel, tile, ctx);
         return;
     }
 
-    int column_height = get_city_overlay()->get_column_height(b);
-    e_column_color column_color = get_city_overlay()->get_column_color(b);
+    int column_height = get_column_height(b);
+    e_column_color column_color = get_column_color(b);
     if (column_height == COLUMN_TYPE_NONE) {
         return;
     }
@@ -361,6 +361,6 @@ void city_overlay::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) con
     }
 
     if (draw) {
-        draw_overlay_column(column_color, pixel, column_height, get_city_overlay()->column_type, ctx);
+        draw_overlay_column(column_color, pixel, column_height, column_type, ctx);
     }
 }

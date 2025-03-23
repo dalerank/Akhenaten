@@ -137,13 +137,13 @@ void building_house::determine_evolve_text() {
     }
 
     // beer
-    if (housed.inventory[INVENTORY_GOOD2] < model.beer) {
+    if (housed.inventory[INVENTORY_GOOD4] < model.beer) {
         housed.evolve_text = "#run_out_of_beer";
         return;
     }
 
-    // beer
-    if (housed.inventory[INVENTORY_GOOD4] < model.jewelry) {
+    // jewelry
+    if (housed.inventory[INVENTORY_GOOD2] < model.jewelry) {
         housed.evolve_text = "#run_out_of_jewelry";;
         return;
     }
