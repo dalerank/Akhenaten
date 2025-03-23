@@ -31,8 +31,7 @@ void city_view_init() {
 }
 
 void city_settings_init() {
-    city_set_can_create_mugger(scenario_campaign_scenario_id() > 0);
-    city_set_can_create_protestor(scenario_campaign_scenario_id() > 1);
+
 }
 
 int city_view_orientation() {

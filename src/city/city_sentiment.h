@@ -26,27 +26,17 @@ struct city_sentiment_t {
     int32_t contribution_religion_coverage;
     int32_t contribution_monuments;
 
+    void init();
     void update();
     void update_day();
     int calc_contribution_religion_coverage();
     int calc_contribution_monuments();
     int calc_contribution_employment();
     int calc_sentiment_contribution_wages();
+    int calc_penalty_for_hut_dwellers();
+
+    void reset_protesters_criminals();
 };
-
-bool city_can_create_mugger();
-bool city_can_create_protestor();
-
-void city_set_can_create_mugger(bool v);
-void city_set_can_create_protestor(bool v);
 
 void city_show_message_criminal(int message_id, int money_stolen, int tile_offset);
 
-void city_sentiment_change_happiness(int amount);
-
-void city_sentiment_set_max_happiness(int max);
-
-void city_sentiment_reset_protesters_criminals();
-
-void city_sentiment_add_protester();
-void city_sentiment_add_criminal();

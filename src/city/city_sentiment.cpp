@@ -20,17 +20,6 @@
 
 static const int SENTIMENT_PER_TAX_RATE[26] = {3, 2, 2, 2, 1, 1, 1, 0, 0, -1, -2, -2, -3, -3, -3, -5, -5, -5, -5, -6, -6, -6, -6, -6, -6, -6};
 
-void city_set_can_create_mugger(bool v) { g_city.sentiment.can_create_mugger = v; }
-
-bool city_can_create_mugger() {
-    return g_city.sentiment.can_create_mugger;
-}
-
-void city_set_can_create_protestor(bool v) { g_city.sentiment.can_create_protestor = v; }
-bool city_can_create_protestor() {
-    return g_city.sentiment.can_create_protestor;
-}
-
 void city_show_message_criminal(int message_id, int money_stolen, int tile_offset) {
     bool show_popup_message = false;
     if (g_city.sentiment.last_mugger_message <= 0) {
@@ -41,50 +30,24 @@ void city_show_message_criminal(int message_id, int money_stolen, int tile_offse
     city_message_post(show_popup_message, MESSAGE_TUTORIAL_CRIME, money_stolen, tile_offset);
 }
 
-void city_sentiment_change_happiness(int amount) {
-    buildings_house_do([amount] (auto house) {
-        if (house->hsize()) {
-            auto &housed = house->runtime_data();
-            housed.house_happiness = calc_bound(housed.house_happiness + amount, 0, 100);
-        }
-    });
+void city_sentiment_t::reset_protesters_criminals() {
+    protesters = 0;
+    criminals = 0;
 }
 
-void city_sentiment_set_max_happiness(int max) {
-    buildings_house_do([max] (auto house) {
-        if (house->hsize()) {
-            auto &housed = house->runtime_data();
-            housed.house_happiness = std::min<int>(housed.house_happiness, max);
-            housed.house_happiness = calc_bound(housed.house_happiness, 0, 100);
-        }
-    });
-}
-
-void city_sentiment_reset_protesters_criminals() {
-    g_city.sentiment.protesters = 0;
-    g_city.sentiment.criminals = 0;
-}
-
-void city_sentiment_add_protester() {
-    g_city.sentiment.protesters++;
-}
-
-void city_sentiment_add_criminal() {
-    g_city.sentiment.criminals++;
-}
-
-static int get_sentiment_penalty_for_hut_dwellers() {
+int city_sentiment_t::calc_penalty_for_hut_dwellers() {
     // alternate the penalty for every update
-    if (!g_city.sentiment.include_huts) {
-        g_city.sentiment.include_huts = true;
+    if (!include_huts) {
+        include_huts = true;
         return 0;
     }
 
-    g_city.sentiment.include_huts = false;
+    include_huts = false;
+    const auto &population = g_city.population;
 
     int penalty;
-    int pct_tents = calc_percentage(g_city.population.people_in_huts, g_city.population.current);
-    if (g_city.population.people_in_manors > 0) {
+    int pct_tents = calc_percentage(population.people_in_huts, population.current);
+    if (population.people_in_manors > 0) {
         if (pct_tents >= 57)
             penalty = 0;
         else if (pct_tents >= 40)
@@ -96,7 +59,7 @@ static int get_sentiment_penalty_for_hut_dwellers() {
         else {
             penalty = -6;
         }
-    } else if (g_city.population.people_in_residences > 0) {
+    } else if (population.people_in_residences > 0) {
         if (pct_tents >= 57)
             penalty = 0;
         else if (pct_tents >= 40)
@@ -224,6 +187,11 @@ void city_sentiment_t::update_day() {
     }
 }
 
+void city_sentiment_t::init() {
+    can_create_mugger = (scenario_campaign_scenario_id() > 0);
+    can_create_protestor = (scenario_campaign_scenario_id() > 1);
+}
+
 void city_sentiment_t::update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Sentiment Update");
     city_population_check_consistency();
@@ -233,7 +201,7 @@ void city_sentiment_t::update() {
     contribution_employment = calc_contribution_employment();
     contribution_religion_coverage = calc_contribution_religion_coverage();
     contribution_monuments = calc_contribution_monuments();
-    contribution_penalty_huts = get_sentiment_penalty_for_hut_dwellers();
+    contribution_penalty_huts = calc_penalty_for_hut_dwellers();
 
     int houses_calculated = 0;
     int houses_needing_food = 0;

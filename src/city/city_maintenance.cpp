@@ -51,7 +51,6 @@ void city_maintenance_t::update_fire_direction() {
 
 void city_maintenance_t::check_fire_collapse() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Fire Collapse Update");
-    city_sentiment_reset_protesters_criminals();
 
     int climate = scenario_property_climate();
     int recalculate_terrain = 0;

@@ -16,7 +16,7 @@ static void generate_rioter(building* b) {
         return;
     }
 
-    city_sentiment_add_criminal();
+    g_city.sentiment.criminals++;
     int people_in_mob;
     int population = city_population();
     if (population <= 150)
@@ -51,14 +51,14 @@ static void generate_rioter(building* b) {
 
     building_destroy_by_rioter(b);
     g_city.ratings.monument_record_rioter();
-    city_sentiment_change_happiness(20);
+    g_city.change_happiness(20);
     g_tutorials_flags.on_crime();
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
     city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, false, MESSAGE_RIOT, b->type, road_tile.grid_offset());
 }
 
 static void generate_robber(building* b) {
-    city_sentiment_add_criminal();
+    g_city.sentiment.criminals++;
     auto house = b->dcast_house();
 
     if (!house) {
@@ -66,7 +66,7 @@ static void generate_robber(building* b) {
     }
 
     auto &housed = house->runtime_data();
-    if (housed.criminal_active > 60 && city_can_create_mugger()) {
+    if (housed.criminal_active > 60 && g_city.sentiment.can_create_mugger) {
         housed.criminal_active -= 60;
         tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
         if (road_tile.valid()) {
@@ -107,10 +107,10 @@ static void generate_protestor(building* b) {
         return;
     }
 
-    city_sentiment_add_protester();
+    g_city.sentiment.protesters++;
 
     auto &housed = house->runtime_data();
-    if (housed.criminal_active > 30 && city_can_create_protestor()) {
+    if (housed.criminal_active > 30 && g_city.sentiment.can_create_protestor) {
         housed.criminal_active -= 30;
         tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
         if (road_tile.valid()) {

@@ -62,6 +62,7 @@ void city_t::init() {
     maintenance.init();
     resource.init();
     g_warning_manager.clear_all();
+    sentiment.init();
 }
 
 void city_t::init_custom_map() {
@@ -111,6 +112,25 @@ void city_t::init_mission_resources(const std::vector<resource_allow>& resources
 
 e_resource city_t::allowed_foods(int i) {
     return resource.food_types_allowed[i];
+}
+
+void city_t::set_max_happiness(int max) {
+    buildings_house_do([max] (auto house) {
+        if (house->hsize()) {
+            auto &housed = house->runtime_data();
+            housed.house_happiness = std::min<int>(housed.house_happiness, max);
+            housed.house_happiness = calc_bound(housed.house_happiness, 0, 100);
+        }
+    });
+}
+
+void city_t::change_happiness(int amount) {
+    buildings_house_do([amount] (auto house) {
+        if (house->hsize()) {
+            auto &housed = house->runtime_data();
+            housed.house_happiness = calc_bound(housed.house_happiness + amount, 0, 100);
+        }
+    });
 }
 
 bool city_t::generate_trader_from(empire_city &city) {

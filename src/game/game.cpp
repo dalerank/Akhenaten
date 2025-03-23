@@ -263,6 +263,7 @@ void game_t::update_city(int ticks) {
         break;
     case 44:
         g_city.maintenance.check_fire_collapse();
+        g_city.sentiment.reset_protesters_criminals();
         break;
     case 45:
         g_city.figures_generate_criminals();

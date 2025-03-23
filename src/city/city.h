@@ -219,6 +219,8 @@ struct city_t {
     void before_start_simulation();
     void plague_update_day();
     void criminals_update_day();
+    void set_max_happiness(int max);
+    void change_happiness(int amount);
 
     bvariant get_property(const xstring &domain, const xstring &name) const;
 };

@@ -115,40 +115,40 @@ void city_festival_t::execute_festival() {
         first_festival_effect_months = 12;
         switch (planned.size) {
         case FESTIVAL_SMALL:
-            city_sentiment_change_happiness(7);
+            g_city.change_happiness(7);
             break;
         case FESTIVAL_LARGE:
-            city_sentiment_change_happiness(9);
+            g_city.change_happiness(9);
             break;
         case FESTIVAL_GRAND:
-            city_sentiment_change_happiness(12);
+            g_city.change_happiness(12);
             break;
         }
     } else if (second_festival_effect_months <= 0) {
         second_festival_effect_months = 12;
         switch (planned.size) {
         case FESTIVAL_SMALL:
-            city_sentiment_change_happiness(2);
+            g_city.change_happiness(2);
             break;
         case FESTIVAL_LARGE:
-            city_sentiment_change_happiness(3);
+            g_city.change_happiness(3);
             break;
         case FESTIVAL_GRAND:
-            city_sentiment_change_happiness(5);
+            g_city.change_happiness(5);
             break;
         }
     } else {
         switch (planned.size) {
         case FESTIVAL_SMALL:
-            city_sentiment_change_happiness(1);
+            g_city.change_happiness(1);
             break;
         
         case FESTIVAL_LARGE:
-            city_sentiment_change_happiness(2);
+            g_city.change_happiness(2);
             break;
         
         case FESTIVAL_GRAND:
-            city_sentiment_change_happiness(3);
+            g_city.change_happiness(3);
             break;
         }
     }
