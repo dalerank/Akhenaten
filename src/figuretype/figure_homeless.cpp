@@ -10,8 +10,6 @@
 #include "building/building_house.h"
 #include "city/city_population.h"
 
-#include "js/js_game.h"
-
 figures::model_t<figure_homeless> homeless_m;
 
 void figure_homeless::create(tile2i tile, int num_people) {
@@ -25,19 +23,21 @@ void figure_homeless::create(tile2i tile, int num_people) {
 int figure_homeless::find_closest_house_with_room(tile2i tile) {
     int min_dist = 1000;
     int min_building_id = 0;
-    int max_id = building_get_highest_id();
-    for (int i = 1; i <= max_id; i++) {
-        auto house = building_get(i)->dcast_house();
-        if (house && house->state() == BUILDING_STATE_VALID && house->hsize() && house->distance_from_entry() > 0 && house->population_room() > 0) {
-            if (!house->base.has_figure(2)) {
-                int dist = calc_maximum_distance(tile, house->tile());
-                if (dist < min_dist) {
-                    min_dist = dist;
-                    min_building_id = i;
-                }
+
+    buildings_house_do([&] (building_house* house) {
+        if (house->has_figure(2)) {
+            return;
+        }
+
+        if (house->is_valid() && house->hsize() && house->distance_from_entry() > 0 && house->population_room() > 0) {
+            int dist = calc_maximum_distance(tile, house->tile());
+            if (dist < min_dist) {
+                min_dist = dist;
+                min_building_id = house->id();
             }
         }
-    }
+    });
+
     return min_building_id;
 }
 
@@ -167,8 +167,4 @@ void figure_homeless::figure_before_action() {
         // do nothing
         break;
     }
-}
-
-const animations_t &figure_homeless::anim() const {
-    return homeless_m.anim;
 }

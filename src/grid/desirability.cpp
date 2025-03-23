@@ -47,11 +47,13 @@ void desirability_t::add_to_terrain_at_distance(tile2i tile, int size, int dista
     int partially_outside_map = 0;
     int x = tile.x();
     int y = tile.y();
-    if (x - distance < -1 || x + distance + size - 1 > scenario_map_data()->width)
+    if (x - distance < -1 || x + distance + size - 1 > scenario_map_data()->width) {
         partially_outside_map = 1;
+    }
 
-    if (y - distance < -1 || y + distance + size - 1 > scenario_map_data()->height)
+    if (y - distance < -1 || y + distance + size - 1 > scenario_map_data()->height) {
         partially_outside_map = 1;
+    }
 
     int base_offset = MAP_OFFSET(x, y);
     int start = map_ring_start(size, distance);
@@ -77,34 +79,30 @@ void desirability_t::add_to_terrain_at_distance(tile2i tile, int size, int dista
 }
 
 void desirability_t::add_to_terrain(tile2i tile, int size, int desirability, int step, int step_size, int range) {
-    if (size > 0) {
-        range = std::min(range, 6);
-        int tiles_within_step = 0;
-        int distance = 1;
-        while (range > 0) {
-            add_to_terrain_at_distance(tile, size, distance, desirability);
-            distance++;
-            range--;
-            tiles_within_step++;
-            if (tiles_within_step >= step) {
-                desirability += step_size;
-                tiles_within_step = 0;
-            }
+    if (size <= 0) {
+        return;
+    }
+
+    range = std::min(range, 6);
+    int tiles_within_step = 0;
+    int distance = 1;
+    while (range > 0) {
+        add_to_terrain_at_distance(tile, size, distance, desirability);
+        distance++;
+        range--;
+        tiles_within_step++;
+        if (tiles_within_step >= step) {
+            desirability += step_size;
+            tiles_within_step = 0;
         }
     }
 }
 
 void desirability_t::update_buildings() {
-    int max_id = building_get_highest_id();
-    for (int i = 1; i <= max_id; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID) {
-            continue;
-        }
-        
-        const model_building* model = model_get_building(b->type);
-        add_to_terrain(b->tile, b->size, model->desirability_value, model->desirability_step, model->desirability_step_size, model->desirability_range);
-    }
+    buildings_valid_do([this] (building &b) {
+        const model_building *model = model_get_building(b.type);
+        add_to_terrain(b.tile, b.size, model->desirability_value, model->desirability_step, model->desirability_step_size, model->desirability_range);
+    });
 }
 
 void desirability_t::update_terrain() {

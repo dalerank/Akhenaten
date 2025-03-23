@@ -23,7 +23,6 @@ bool building_exists_at(int grid_offset, building *b);
 bool building_exists_at(tile2i point, building *b);
 
 void building_clear_all();
-int building_get_highest_id();
 void building_update_highest_id();
 void building_update_state();
 

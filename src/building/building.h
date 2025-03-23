@@ -560,6 +560,7 @@ public:
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
     inline bool is_main() const { return base.is_main(); }
+    inline bool has_figure(int slot) { return base.has_figure(slot); }
     inline bool is_valid() const { return base.is_valid(); }
     inline e_building_state state() const { return base.state; }
     inline void check_labor_problem() { base.check_labor_problem(); }

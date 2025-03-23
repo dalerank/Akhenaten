@@ -127,7 +127,7 @@ void game_t::update_impl(int ticks) {
     g_tutorials_flags.update_starting_message();
     g_floods.tick_update(false);
 
-    update_city(ticks);
+    update_frame(ticks);
 
     if (simtime.advance_tick()) {
         advance_day();
@@ -139,7 +139,7 @@ void game_t::update_impl(int ticks) {
     g_city.victory_check();
 }
 
-void game_t::update_city(int ticks) {
+void game_t::update_frame(int ticks) {
     g_city.buildings.update_tick(game.paused);
     g_city_events.process();
 
@@ -172,7 +172,7 @@ void game_t::update_city(int ticks) {
     case 9:
         // nothing yet
     case 10:
-        building_update_highest_id();
+        //building_update_highest_id();
         break;
     case 12:
         g_city.house_service_decay_houses_covered();

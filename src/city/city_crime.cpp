@@ -135,11 +135,9 @@ void city_t::figures_generate_criminals() {
     OZZY_PROFILER_SECTION("Game/Update/Generate Criminals");
     building* min_building = nullptr;
     int min_happiness = 50;
-    int max_id = building_get_highest_id();
-    for (int i = 1; i <= max_id; i++) {
-        auto house = building_get(i)->dcast_house();
 
-        if (house && house->state() == BUILDING_STATE_VALID && house->house_population()) {
+    buildings_house_do([&] (auto house) {
+        if (house->is_valid() && house->house_population()) {
             auto &housed = house->runtime_data();
             if (housed.house_happiness >= 50) {
                 house->runtime_data().criminal_active = 0;
@@ -148,7 +146,7 @@ void city_t::figures_generate_criminals() {
                 min_building = &house->base;
             }
         }
-    }
+    });
 
     if (min_building) {
         const int sentiment = g_city.sentiment.value;

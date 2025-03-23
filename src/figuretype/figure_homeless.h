@@ -13,7 +13,6 @@ public:
     virtual void figure_roaming_action() override { /*nothing*/ }
     virtual figure_phrase_t phrase() const override { return {FIGURE_HOMELESS, "homeless"}; }
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
-    virtual const animations_t &anim() const override;
 
     int find_closest_house_with_room(tile2i tile);
     static void create(tile2i tile, int num_people);

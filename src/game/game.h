@@ -79,7 +79,7 @@ struct game_t {
 
     void update();
     void update_impl(int ticks);
-    void update_city(int ticks);
+    void update_frame(int ticks);
 
     void advance_day();
     void advance_month();

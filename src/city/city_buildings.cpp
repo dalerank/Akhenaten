@@ -117,43 +117,11 @@ bool building_exists_at(tile2i tile, building *b) {
     return false;
 }
 
-struct building_extra_data_t {
-    int highest_id_in_use;
-    int highest_id_ever;
-    //int created_sequence;
-    //    int incorrect_houses;
-    //    int unfixable_houses;
-};
-
-building_extra_data_t building_extra_data = { 0, 0 };
-
 void building_clear_all() {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         memset(&g_all_buildings[i], 0, sizeof(building));
         g_all_buildings[i].id = i;
     }
-    building_extra_data.highest_id_in_use = 0;
-    building_extra_data.highest_id_ever = 0;
-    //building_extra_data.created_sequence = 0;
-    //    extra.incorrect_houses = 0;
-    //    extra.unfixable_houses = 0;
-}
-
-void building_update_highest_id() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Update Highest Id");
-    auto &extra = building_extra_data;
-
-    extra.highest_id_in_use = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        if (g_all_buildings[i].state != BUILDING_STATE_UNUSED)
-            extra.highest_id_in_use = i;
-    }
-    if (extra.highest_id_in_use > extra.highest_id_ever)
-        extra.highest_id_ever = extra.highest_id_in_use;
-}
-
-int building_get_highest_id() {
-    return building_extra_data.highest_id_in_use;
 }
 
 static void building_delete_UNSAFE(building *b) {
