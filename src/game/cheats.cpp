@@ -7,6 +7,7 @@
 #include "building/monuments.h"
 #include "city/finance.h"
 #include "city/city.h"
+#include "city/city_events.h"
 #include "city/victory.h"
 #include "city/city_warnings.h"
 #include "city/city_health.h"

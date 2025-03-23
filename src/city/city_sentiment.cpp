@@ -20,16 +20,6 @@
 
 static const int SENTIMENT_PER_TAX_RATE[26] = {3, 2, 2, 2, 1, 1, 1, 0, 0, -1, -2, -2, -3, -3, -3, -5, -5, -5, -5, -6, -6, -6, -6, -6, -6, -6};
 
-void city_show_message_criminal(int message_id, int money_stolen, int tile_offset) {
-    bool show_popup_message = false;
-    if (g_city.sentiment.last_mugger_message <= 0) {
-        g_city.sentiment.last_mugger_message = 90;
-        show_popup_message = true;
-    }
-
-    city_message_post(show_popup_message, MESSAGE_TUTORIAL_CRIME, money_stolen, tile_offset);
-}
-
 void city_sentiment_t::reset_protesters_criminals() {
     protesters = 0;
     criminals = 0;

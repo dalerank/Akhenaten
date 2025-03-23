@@ -8,6 +8,7 @@
 #include "city/message.h"
 #include "building/count.h"
 #include "city/city.h"
+#include "city/city_events.h"
 
 void tutorial_5::reset() {
     g_tutorials_flags.tutorial_5.started = 0;

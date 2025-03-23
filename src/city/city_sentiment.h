@@ -37,6 +37,3 @@ struct city_sentiment_t {
 
     void reset_protesters_criminals();
 };
-
-void city_show_message_criminal(int message_id, int money_stolen, int tile_offset);
-

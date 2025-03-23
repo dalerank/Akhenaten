@@ -9,6 +9,7 @@
 #include "graphics/graphics.h"
 #include "city/constants.h"
 #include "city/city.h"
+#include "city/city_events.h"
 #include "core/profiler.h"
 #include "core/core_utility.h"
 #include "config/config.h"

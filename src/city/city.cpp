@@ -24,6 +24,7 @@
 #include "figuretype/figure_kingdome_trader.h"
 #include "figuretype/figure_trader_ship.h"
 #include "city_warnings.h"
+#include "city/city_events.h"
 #include "empire/empire_object.h"
 
 #include <core/string.h>

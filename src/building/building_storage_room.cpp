@@ -1,7 +1,7 @@
 #include "building_storage_room.h"
 
 #include "building/building_storage_yard.h"
-#include "city/city.h"
+#include "city/city_events.h"
 #include "graphics/image.h"
 #include "grid/image.h"
 #include "core/calc.h"

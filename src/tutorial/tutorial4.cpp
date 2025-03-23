@@ -4,6 +4,7 @@
 #include "city/message.h"
 #include "building/building_storage_yard.h"
 #include "city/city.h"
+#include "city/city_events.h"
 #include "io/gamefiles/lang.h"
 #include "game/game.h"
 

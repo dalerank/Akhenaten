@@ -12,88 +12,44 @@
 #include "io/gamefiles/lang.h"
 #include "sound/sound.h"
 #include "window/message_dialog.h"
+#include "city/city_events.h"
 #include "game/game.h"
 
-#define MAX_MESSAGES 1000
-#define MAX_QUEUE 20
-
-struct message_data_t {
-    city_message messages[MAX_MESSAGES];
-
-    int queue[20];
-    int consecutive_message_delay;
-
-    int next_message_sequence;
-    uint16_t total_messages;
-    uint16_t reserved_1;
-    uint16_t current_message_id;
-    uint16_t reserved_2;
-    uint16_t reserved_3;
-    uint16_t reserved_4;
-    uint16_t reserved_5;
-    uint8_t reserved_6;
-    uint8_t reserved_7;
-
-    union {
-        uint16_t popmiles;
-        uint16_t pop500 : 1;
-        uint16_t pop1000 : 1;
-        uint16_t pop2000 : 1;
-        uint16_t pop3000 : 1;
-        uint16_t pop5000 : 1;
-        uint16_t pop10000 : 1;
-        uint16_t pop15000 : 1;
-        uint16_t pop20000 : 1;
-        uint16_t pop25000 : 1;
-    } population_shown;
-
-    int message_count[MESSAGE_CAT_SIZE];
-    int message_delay[MESSAGE_CAT_SIZE];
-
-    time_millis last_sound_time[MESSAGE_CAT_RIOT_COLLAPSE + 1];
-
-    int problem_count;
-    int problem_index;
-    time_millis problem_last_click_time;
-
-    short scroll_position;
-};
-
-message_data_t g_message_data;
+message_manager_t g_message_manager;
+auto& g_message_data = g_message_manager;
 
 static bool should_play_sound = true;
 
-void city_message_init_scenario(void) {
-    auto& data = g_message_data;
+void message_manager_t::init() {
     for (int i = 0; i < MAX_MESSAGES; i++) {
-        data.messages[i].MM_text_id = 0;
+        messages[i].MM_text_id = 0;
     }
     for (int i = 0; i < MAX_QUEUE; i++) {
-        data.queue[i] = 0;
+        queue[i] = 0;
     }
-    data.consecutive_message_delay = 0;
+    consecutive_message_delay = 0;
 
-    data.next_message_sequence = 0;
-    data.total_messages = 0;
-    data.current_message_id = 0;
+    next_message_sequence = 0;
+    total_messages = 0;
+    current_message_id = 0;
 
     for (int i = 0; i < MESSAGE_CAT_SIZE; i++) {
-        data.message_count[i] = 0;
-        data.message_delay[i] = 0;
+        message_count[i] = 0;
+        message_delay[i] = 0;
     }
     // population
-    data.population_shown.pop500 = 0;
-    data.population_shown.pop1000 = 0;
-    data.population_shown.pop2000 = 0;
-    data.population_shown.pop3000 = 0;
-    data.population_shown.pop5000 = 0;
-    data.population_shown.pop10000 = 0;
-    data.population_shown.pop15000 = 0;
-    data.population_shown.pop20000 = 0;
-    data.population_shown.pop25000 = 0;
+    population_shown.pop500 = 0;
+    population_shown.pop1000 = 0;
+    population_shown.pop2000 = 0;
+    population_shown.pop3000 = 0;
+    population_shown.pop5000 = 0;
+    population_shown.pop10000 = 0;
+    population_shown.pop15000 = 0;
+    population_shown.pop20000 = 0;
+    population_shown.pop25000 = 0;
 
     for (int i = 0; i <= MESSAGE_CAT_RIOT_COLLAPSE; i++) {
-        data.last_sound_time[i] = 0;
+        last_sound_time[i] = 0;
     }
 
     city_message_init_problem_areas();

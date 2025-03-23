@@ -5,6 +5,7 @@
 #include "core/profiler.h"
 #include "city/city_warnings.h"
 #include "city/city.h"
+#include "city/city_events.h"
 #include "city/city_population.h"
 #include "grid/building.h"
 #include "grid/tiles.h"

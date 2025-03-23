@@ -130,7 +130,7 @@ static void pre_load() { // do we NEED this...?
     g_city.migration.reset();
     g_city_planner.reset();
     g_city.init();
-    city_message_init_scenario();
+    g_message_manager.init();
     game_state_init();
     game.animation_timers_init();
     sound_city_init();

@@ -35,6 +35,7 @@
 #include "city/buildings.h"
 #include "city/city_buildings.h"
 #include "city/finance.h"
+#include "city/city_events.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
 #include "clear.h"

@@ -7,6 +7,7 @@
 #include "building/destruction.h"
 #include "building/count.h"
 #include "city/city.h"
+#include "city/city_events.h"
 #include "city/coverage.h"
 #include "city/message.h"
 #include "core/calc.h"

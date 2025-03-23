@@ -57,6 +57,16 @@ static void generate_rioter(building* b) {
     city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, false, MESSAGE_RIOT, b->type, road_tile.grid_offset());
 }
 
+void city_show_message_criminal(int message_id, int money_stolen, int tile_offset) {
+    bool show_popup_message = false;
+    if (g_city.sentiment.last_mugger_message <= 0) {
+        g_city.sentiment.last_mugger_message = 90;
+        show_popup_message = true;
+    }
+
+    city_message_post(show_popup_message, MESSAGE_TUTORIAL_CRIME, money_stolen, tile_offset);
+}
+
 static void generate_robber(building* b) {
     g_city.sentiment.criminals++;
     auto house = b->dcast_house();

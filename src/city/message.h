@@ -298,7 +298,55 @@ struct city_message {
     uint16_t background_img;
 };
 
-void city_message_init_scenario();
+#define MAX_MESSAGES 1000
+#define MAX_QUEUE 20
+
+struct message_manager_t {
+    city_message messages[MAX_MESSAGES];
+
+    int queue[20];
+    int consecutive_message_delay;
+
+    int next_message_sequence;
+    uint16_t total_messages;
+    uint16_t reserved_1;
+    uint16_t current_message_id;
+    uint16_t reserved_2;
+    uint16_t reserved_3;
+    uint16_t reserved_4;
+    uint16_t reserved_5;
+    uint8_t reserved_6;
+    uint8_t reserved_7;
+
+    union {
+        uint16_t popmiles;
+        uint16_t pop500 : 1;
+        uint16_t pop1000 : 1;
+        uint16_t pop2000 : 1;
+        uint16_t pop3000 : 1;
+        uint16_t pop5000 : 1;
+        uint16_t pop10000 : 1;
+        uint16_t pop15000 : 1;
+        uint16_t pop20000 : 1;
+        uint16_t pop25000 : 1;
+    } population_shown;
+
+    int message_count[MESSAGE_CAT_SIZE];
+    int message_delay[MESSAGE_CAT_SIZE];
+
+    uint32_t last_sound_time[MESSAGE_CAT_RIOT_COLLAPSE + 1];
+
+    int problem_count;
+    int problem_index;
+    uint32_t problem_last_click_time;
+
+    short scroll_position;
+
+    void init();
+};
+
+extern message_manager_t g_message_manager;
+
 void city_message_init_problem_areas();
 
 void city_message_disable_sound_for_next_message(void);

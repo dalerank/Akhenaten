@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "figure/properties.h"
 #include "city/city.h"
+#include "city/city_events.h"
 #include "city/city_warnings.h"
 #include "core/random.h"
 #include "core/calc.h"

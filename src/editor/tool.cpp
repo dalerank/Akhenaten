@@ -4,6 +4,7 @@
 #include "building/building_road.h"
 #include "city/city_warnings.h"
 #include "city/city.h"
+#include "city/city_events.h"
 #include "city/city_buildings.h"
 #include "core/random.h"
 #include "editor/tool_restriction.h"

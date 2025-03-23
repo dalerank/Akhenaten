@@ -2,6 +2,7 @@
 
 #include "city/military.h"
 #include "city/city.h"
+#include "city/city_events.h"
 #include "city/city_warnings.h"
 #include "city/constants.h"
 #include "city/finance.h"

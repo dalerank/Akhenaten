@@ -2,6 +2,7 @@
 
 #include "city/city_warnings.h"
 #include "city/city.h"
+#include "city/city_events.h"
 #include "core/direction.h"
 #include "graphics/view/view.h"
 #include "grid/orientation.h"

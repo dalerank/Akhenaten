@@ -54,7 +54,7 @@ void game_file_editor_clear_data(void) {
     g_city_planner.reset();
     g_city.init();
     g_city.init_custom_map();
-    city_message_init_scenario();
+    g_message_manager.init();
     game_state_init();
     game.animation_timers_init();
     sound_city_init();
