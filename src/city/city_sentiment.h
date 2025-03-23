@@ -29,6 +29,7 @@ struct city_sentiment_t {
     void update();
     void update_day();
     int calc_contribution_religion_coverage();
+    int calc_contribution_monuments();
 };
 
 bool city_can_create_mugger();

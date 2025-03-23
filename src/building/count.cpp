@@ -49,6 +49,15 @@ int building_count_active(e_building_type type) {
     return g_count_data.buildings[type].active;
 }
 
+int building_count_active(std::initializer_list<e_building_type> types) {
+    int count = 0;
+    for (const auto &type : types) {
+        count += building_count_active(type);
+    }
+
+    return count;
+}
+
 int building_count_total(e_building_type type) {
     return g_count_data.buildings[type].total;
 }

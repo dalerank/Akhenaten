@@ -5,6 +5,7 @@
 
 void building_clear_counters();
 int building_count_active(e_building_type type);
+int building_count_active(std::initializer_list<e_building_type> types);
 int building_count_total(e_building_type type);
 int building_count_industry_active(e_resource resource);
 int building_count_industry_total(e_resource resource);

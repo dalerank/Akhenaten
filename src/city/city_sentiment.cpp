@@ -196,30 +196,29 @@ static int get_sentiment_contribution_employment() {
     }
 }
 
-static int get_sentiment_contribution_monuments() {
+int city_sentiment_t::calc_contribution_monuments() {
     if (!config_get(CONFIG_GP_CH_MONUMENTS_INFLUENCE_SENTIMENT)) {
         return 0;
     }
 
-    e_building_type types[] = {BUILDING_SHRINE_OSIRIS, BUILDING_SHRINE_RA, BUILDING_SHRINE_PTAH, BUILDING_SHRINE_SETH, BUILDING_SHRINE_BAST};
-    int shrines = 0;
-    for (auto &type : types) {
-        shrines += building_count_active(type);
-    }
+    auto types = {BUILDING_SHRINE_OSIRIS, BUILDING_SHRINE_RA, BUILDING_SHRINE_PTAH, BUILDING_SHRINE_SETH, BUILDING_SHRINE_BAST};
+    const int shrines = building_count_active(types);
 
     int shrine_points = 0;
-    if (city_data.population.current > 5000) {
+    const auto &population = g_city.population;
+    if (population.current > 5000) {
         shrine_points = 5;
-    } if (city_data.population.current > 1000) {
+    } if (population.current > 1000) {
         shrine_points = 10;
-    } else if (city_data.population.current > 500) {
+    } else if (population.current > 500) {
         shrine_points = 15;
-    } else if (city_data.population.current > 350) {
+    } else if (population.current > 350) {
         shrine_points = 25;
-    } else if (city_data.population.current > 100) {
+    } else if (population.current > 100) {
         shrine_points = 50;
     }
-    int monument_points = calc_bound((shrines * shrine_points - city_data.population.current - 350) / 50, 0, 5);
+
+    int monument_points = calc_bound((shrines * shrine_points - population.current - 350) / 50, 0, 5);
     return monument_points;
 }
 
@@ -239,7 +238,7 @@ void city_sentiment_t::update() {
     contribution_wages = get_sentiment_contribution_wages();
     contribution_employment = get_sentiment_contribution_employment();
     contribution_religion_coverage = calc_contribution_religion_coverage();
-    contribution_monuments = get_sentiment_contribution_monuments();
+    contribution_monuments = calc_contribution_monuments();
     contribution_penalty_huts = get_sentiment_penalty_for_hut_dwellers();
 
     int houses_calculated = 0;
