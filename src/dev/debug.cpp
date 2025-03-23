@@ -1092,7 +1092,7 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x, y + 13, cl, "previous_value:", g_city.sentiment.previous_value);
         debug_text(ctx, str, x, y + 25, cl, "message_delay:", g_city.sentiment.message_delay);
         debug_text(ctx, str, x, y + 37, cl, "include_tents:", g_city.sentiment.include_huts);
-        debug_text(ctx, str, x, y + 49, cl, "unemployment:", g_city.sentiment.unemployment);
+        debug_text(ctx, str, x, y + 49, cl, "unemployment_pct:", g_city.sentiment.unemployment_pct);
         debug_text(ctx, str, x, y + 61, cl, "wages:", g_city.sentiment.wages);
         debug_text(ctx, str, x, y + 73, cl, "low_mood_cause:", g_city.sentiment.low_mood_cause);
         debug_text(ctx, str, x, y + 85, cl, "protesters:", g_city.sentiment.protesters);

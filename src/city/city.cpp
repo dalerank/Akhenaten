@@ -854,7 +854,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.festival.second_festival_effect_months);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_4454);
-    iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.unemployment);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.sentiment.unemployment_pct);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.previous_value); // ok
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.message_delay);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.low_mood_cause);

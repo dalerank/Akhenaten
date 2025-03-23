@@ -8,7 +8,7 @@ struct city_sentiment_t {
     int32_t message_delay;
 
     bool include_huts;
-    int32_t unemployment;
+    uint8_t unemployment_pct;
     int32_t wages;
     int32_t low_mood_cause;
 
@@ -30,6 +30,7 @@ struct city_sentiment_t {
     void update_day();
     int calc_contribution_religion_coverage();
     int calc_contribution_monuments();
+    int calc_contribution_employment();
 };
 
 bool city_can_create_mugger();

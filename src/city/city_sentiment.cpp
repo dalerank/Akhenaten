@@ -181,15 +181,16 @@ int city_sentiment_t::calc_contribution_religion_coverage() {
     return religion_points;
 }
 
-static int get_sentiment_contribution_employment() {
-    int unemployment = city_data.sentiment.unemployment = city_data.labor.unemployment_percentage;
-    if (unemployment > 25)
+int city_sentiment_t::calc_contribution_employment() {
+    unemployment_pct = g_city.labor.unemployment_percentage;
+
+    if (unemployment_pct > 25)
         return -3;
-    else if (unemployment > 17)
+    else if (unemployment_pct > 17)
         return -2;
-    else if (unemployment > 10)
+    else if (unemployment_pct > 10)
         return -1;
-    else if (unemployment > 4)
+    else if (unemployment_pct > 4)
         return 0;
     else {
         return 1;
@@ -236,7 +237,7 @@ void city_sentiment_t::update() {
 
     contribution_taxes = SENTIMENT_PER_TAX_RATE[city_data.finance.tax_percentage];
     contribution_wages = get_sentiment_contribution_wages();
-    contribution_employment = get_sentiment_contribution_employment();
+    contribution_employment = calc_contribution_employment();
     contribution_religion_coverage = calc_contribution_religion_coverage();
     contribution_monuments = calc_contribution_monuments();
     contribution_penalty_huts = get_sentiment_penalty_for_hut_dwellers();
