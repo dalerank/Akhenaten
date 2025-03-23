@@ -231,25 +231,6 @@ void city_sentiment_t::update_day() {
     }
 }
 
-void city_criminals_update_day() {
-    buildings_house_do([] (auto house) {
-        if (!house->hsize()) {
-            return;
-        }
-
-        int delta;
-        auto &housed = house->runtime_data();
-        if (housed.house_happiness >= 50) {
-            delta = (housed.house_happiness - 50) / 30;
-        } else if (housed.house_happiness < 50) {
-            delta = -std::max<int>((50 - housed.house_happiness) / 10, 0);
-        }
-
-        housed.criminal_active += delta;
-        housed.criminal_active = std::clamp<int>(housed.criminal_active, 0, 100);
-    });
-}
-
 void city_sentiment_t::update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Sentiment Update");
     city_population_check_consistency();

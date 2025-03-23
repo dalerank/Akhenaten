@@ -50,5 +50,3 @@ void city_sentiment_add_criminal();
 
 int city_sentiment_protesters();
 int city_sentiment_criminals();
-
-void city_criminals_update_day();

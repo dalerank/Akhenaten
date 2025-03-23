@@ -218,6 +218,7 @@ struct city_t {
     void buildings_generate_figure();
     void before_start_simulation();
     void plague_update_day();
+    void criminals_update_day();
 
     bvariant get_property(const xstring &domain, const xstring &name) const;
 };
