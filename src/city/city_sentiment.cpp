@@ -16,6 +16,7 @@
 #include "city/coverage.h"
 
 #include <algorithm>
+#include <numeric>
 
 static const int SENTIMENT_PER_TAX_RATE[26] = {3, 2, 2, 2, 1, 1, 1, 0, 0, -1, -2, -2, -3, -3, -3, -5, -5, -5, -5, -6, -6, -6, -6, -6, -6, -6};
 
@@ -154,7 +155,7 @@ static int get_sentiment_contribution_wages() {
     return contribution;
 }
 
-static int get_sentiment_contribution_religion_coverage() {
+int city_sentiment_t::calc_contribution_religion_coverage() {
     if (!config_get(CONFIG_GP_CH_RELIGION_COVERAGE_INFLUENCE_SENTIMENT)) {
         return 0;
     }
@@ -170,8 +171,13 @@ static int get_sentiment_contribution_religion_coverage() {
     }
 
     average_coverage /= (int)known_gods.size();
-    average_coverage /= 20; // one point for each 20% of coverage
-    int religion_points = calc_bound(average_coverage, 0, 5);
+    int religion_points = 0;
+    if (average_coverage >= 50) {
+        religion_points = (average_coverage - 50) / 15;
+    } else {
+        religion_points = (average_coverage - 50) / 25 - 1;
+    }
+    religion_points = calc_bound(religion_points, -5, 5);
     return religion_points;
 }
 
@@ -264,7 +270,7 @@ void city_sentiment_t::update() {
     contribution_taxes = SENTIMENT_PER_TAX_RATE[city_data.finance.tax_percentage];
     contribution_wages = get_sentiment_contribution_wages();
     contribution_employment = get_sentiment_contribution_employment();
-    contribution_religion_coverage = get_sentiment_contribution_religion_coverage();
+    contribution_religion_coverage = calc_contribution_religion_coverage();
     contribution_monuments = get_sentiment_contribution_monuments();
     contribution_penalty_huts = get_sentiment_penalty_for_hut_dwellers();
 
