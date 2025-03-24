@@ -113,7 +113,7 @@ bool game_t::animation_should_advance(uint32_t speed) {
     return animation_timers[speed].should_update;
 }
 
-void game_t::update_impl(int ticks) {
+void game_t::update_tick(int simtick) {
     OZZY_PROFILER_SECTION("Game/Update/Impl");
     if (editor_is_active()) {
         random_generate_next(); // update random to randomize native huts
@@ -130,7 +130,7 @@ void game_t::update_impl(int ticks) {
     g_city.buildings.update_tick(game.paused);
     g_city_events.process();
 
-    update_frame(ticks);
+    g_city.update_tick(simtick);
 
     if (simtime.advance_tick()) {
         advance_day();
@@ -140,147 +140,6 @@ void game_t::update_impl(int ticks) {
 
     g_scenario_data.update();
     g_city.victory_check();
-}
-
-void game_t::update_frame(int ticks) {
-    switch (simtime.tick) {
-    case 1:
-        g_city.religion.update();
-        g_city.coverage.update();
-        break;
-    case 2:
-        g_sound.music_update(false);
-        break;
-    case 3:
-        widget_minimap_invalidate();
-        break;
-    case 4:
-        g_city.kingdome.update();
-        break;
-    case 5:
-        formation_update_all(false);
-        break;
-    case 6:
-        map_natives_check_land();
-        break;
-    case 7:
-        g_city.map.update_road_network();
-        break;
-    case 8:
-        city_granaries_calculate_stocks();
-        break;
-    case 9:
-        g_city.house_decay_services();
-    case 10:
-        //building_update_highest_id();
-        break;
-    case 12:
-        g_city.house_service_decay_houses_covered();
-        break;
-    case 16:
-        city_resource_calculate_storageyard_stocks();
-        break;
-    case 17:
-        city_resource_calculate_food_stocks_and_supply_wheat();
-        break;
-    case 18:
-        map_vegetation_growth_update();
-        map_tree_growth_update();
-        break;
-    case 19:
-        g_city.buildings_update_open_water_access();
-        break;
-    case 20:
-        building_industry_update_production();
-        break;
-    case 21:
-        g_city.maintenance.check_kingdome_access();
-        break;
-    case 22:
-        g_city.population.update_room();
-        break;
-    case 23:
-        g_city.migration.update();
-        g_city.population.update_migration();
-        break;
-    case 24:
-        g_city.population.evict_overcrowded();
-        break;
-    case 25:
-        g_city.labor.update();
-        break;
-    case 27:
-        g_city.buildings.update_wells_range();
-        g_city.buildings.update_canals_from_water_lifts();
-        map_update_canals();
-        break;
-    case 28:
-        g_city.buildings.update_water_supply_houses();
-        g_city.buildings.update_religion_supply_houses();
-        break;
-    case 29:
-        formation_update_all(true);
-        break;
-    case 30:
-        widget_minimap_invalidate();
-        break;
-    case 31:
-        building_barracks_decay_tower_sentry_request();
-        g_city.buildings_generate_figure();
-        break;
-    case 32:
-        city_trade_update();
-        break;
-    case 33:
-        g_city.buildings.update_counters();
-        g_city.avg_coverage.update();
-        g_city.health.update_coverage();
-        building_industry_update_farms();
-        break;
-    case 34:
-        g_city.government_distribute_treasury();
-        break;
-    case 35:
-        g_city.house_service_update_health();
-        break;
-    case 36:
-        g_city.house_service_calculate_culture_aggregates();
-        break;
-    case 37:
-        g_desirability.update();
-        break;
-    case 38:
-        building_update_desirability();
-        break;
-    case 39:
-        g_city.house_process_evolve_and_consume_goods();
-        break;
-    case 40:
-        building_update_state();
-        break;
-    case 43:
-        building_burning_ruin::update_all_ruins();
-        break;
-    case 44:
-        g_city.maintenance.check_fire_collapse();
-        g_city.sentiment.reset_protesters_criminals();
-        break;
-    case 45:
-        g_city.figures_generate_criminals();
-        break;
-    case 46:
-        building_industry_update_wheat_production();
-        break;
-    case 48:
-        g_city.house_decay_tax_coverage();
-        break;
-    case 49:
-        g_city.avg_coverage.update();
-        g_city.festival.calculate_costs();
-        break;
-    case 50:
-        break;
-    }
 }
 
 void game_t::advance_year() {
@@ -353,6 +212,9 @@ void game_t::advance_day() {
     g_city.buildings.update_day();
     g_city.figures_update_day();
     g_city.population.update_day();
+
+    g_sound.music_update(false);
+    widget_minimap_invalidate();
 
     events::emit(event_advance_day::from_simtime(game.simtime));
 }
@@ -602,11 +464,7 @@ void game_t::update() {
 
     int num_ticks = get_elapsed_ticks();
     for (int i = 0; i < num_ticks; i++) {
-        update_impl(1);
-
-        //if (window_is_invalid()) {
-        //    break;
-        //}
+        update_tick(simtime.tick);
     }
 
     if (window_is(WINDOW_CITY)) {

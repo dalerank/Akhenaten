@@ -220,6 +220,8 @@ struct city_t {
     void set_max_happiness(int max);
     void change_happiness(int amount);
 
+    void update_tick(int simtick);
+
     bvariant get_property(const xstring &domain, const xstring &name) const;
 };
 

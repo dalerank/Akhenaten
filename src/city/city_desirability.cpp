@@ -14,7 +14,8 @@ void building_update_desirability(void) {
             b.desirability += 10;
         }
 
-        switch (map_elevation_at(b.tile.grid_offset())) {
+        const int elevation = map_elevation_at(b.tile.grid_offset());
+        switch (elevation) {
         case 0:
             break;
         case 1:

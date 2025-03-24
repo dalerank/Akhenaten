@@ -78,8 +78,7 @@ struct game_t {
     bool get_write_video() const { return write_video; }
 
     void update();
-    void update_impl(int ticks);
-    void update_frame(int ticks);
+    void update_tick(int simtick);
 
     void advance_day();
     void advance_month();

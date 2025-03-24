@@ -5,8 +5,13 @@
 #include "city/trade.h"
 #include "city/buildings.h"
 #include "city/city_population.h"
+#include "city/city_desirability.h"
 #include "core/object_property.h"
 #include "grid/water.h"
+#include "grid/natives.h"
+#include "grid/vegetation.h"
+#include "grid/trees.h"
+#include "grid/canals.h"
 #include "core/profiler.h"
 #include "core/calc.h"
 #include "game/difficulty.h"
@@ -19,6 +24,9 @@
 #include "building/count.h"
 #include "building/building_granary.h"
 #include "building/building_house.h"
+#include "building/industry.h"
+#include "building/building_barracks.h"
+#include "building/building_burning_ruin.h"
 #include "figure/figure.h"
 #include "figuretype/figure_fishing_point.h"
 #include "figuretype/figure_kingdome_trader.h"
@@ -132,6 +140,144 @@ void city_t::change_happiness(int amount) {
             housed.house_happiness = calc_bound(housed.house_happiness + amount, 0, 100);
         }
     });
+}
+
+void city_t::update_tick(int simtick) {
+    switch (simtick) {
+    case 1:
+        religion.update();
+        coverage.update();
+        break;
+    case 2:        
+        map_tree_growth_update();
+        break;
+    case 3:
+        break;
+    case 4:
+        kingdome.update();
+        break;
+    case 5:
+        formation_update_all(false);
+        break;
+    case 6:
+        map_natives_check_land();
+        break;
+    case 7:
+        map.update_road_network();
+        break;
+    case 8:
+        city_granaries_calculate_stocks();
+        break;
+    case 9:
+        house_decay_services();
+    case 10:
+        //building_update_highest_id();
+        break;
+    case 12:
+        house_service_decay_houses_covered();
+        break;
+    case 16:
+        city_resource_calculate_storageyard_stocks();
+        break;
+    case 17:
+        city_resource_calculate_food_stocks_and_supply_wheat();
+        break;
+    case 18:
+        map_vegetation_growth_update();
+        break;
+    case 19:
+        buildings_update_open_water_access();
+        break;
+    case 20:
+        building_industry_update_production();
+        break;
+    case 21:
+        maintenance.check_kingdome_access();
+        break;
+    case 22:
+        population.update_room();
+        break;
+    case 23:
+        migration.update();
+        population.update_migration();
+        break;
+    case 24:
+        population.evict_overcrowded();
+        break;
+    case 25:
+        labor.update();
+        break;
+    case 27:
+        buildings.update_wells_range();
+        buildings.update_canals_from_water_lifts();
+        map_update_canals();
+        break;
+    case 28:
+        buildings.update_water_supply_houses();
+        buildings.update_religion_supply_houses();
+        break;
+    case 29:
+        formation_update_all(true);
+        break;
+    case 30:
+        break;
+    case 31:
+        building_barracks_decay_tower_sentry_request();
+        buildings_generate_figure();
+        break;
+    case 32:
+        city_trade_update();
+        break;
+    case 33:
+        buildings.update_counters();
+        avg_coverage.update();
+        health.update_coverage();
+        building_industry_update_farms();
+        break;
+    case 34:
+        government_distribute_treasury();
+        break;
+    case 35:
+        house_service_update_health();
+        break;
+    case 36:
+        house_service_calculate_culture_aggregates();
+        break;
+    case 37:
+        g_desirability.update();
+        break;
+    case 38:
+        building_update_desirability();
+        break;
+    case 39:
+        house_process_evolve_and_consume_goods();
+        break;
+    case 40:
+        building_update_state();
+        break;
+    case 43:
+        building_burning_ruin::update_all_ruins();
+        break;
+    case 44:
+        maintenance.check_fire_collapse();
+        sentiment.reset_protesters_criminals();
+        break;
+    case 45:
+        figures_generate_criminals();
+        break;
+    case 46:
+        building_industry_update_wheat_production();
+        break;
+    case 48:
+        house_decay_tax_coverage();
+        break;
+    case 49:
+        avg_coverage.update();
+        festival.calculate_costs();
+        break;
+    case 50:
+        break;
+    }
 }
 
 bool city_t::generate_trader_from(empire_city &city) {
