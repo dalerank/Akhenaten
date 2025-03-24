@@ -162,6 +162,7 @@ struct city_t {
     city_animals_t animals;
 
     struct environment_t {
+        void update_day();
         void river_update_flotsam();
     } environment;
 
@@ -221,6 +222,7 @@ struct city_t {
     void change_happiness(int amount);
 
     void update_tick(int simtick);
+    void update_day();
 
     bvariant get_property(const xstring &domain, const xstring &name) const;
 };

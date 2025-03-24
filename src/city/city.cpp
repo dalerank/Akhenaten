@@ -74,6 +74,16 @@ void city_t::init() {
     sentiment.init();
 }
 
+void city_t::update_day() {
+    sentiment.update_day();
+    criminals_update_day();
+    plague_update_day();
+    environment.update_day();
+    buildings.update_day();
+    figures_update_day();
+    population.update_day();
+}
+
 void city_t::init_custom_map() {
     unused.faction_id = 1;
     unused.unknown_00a2 = 1;
@@ -1299,6 +1309,10 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
 
 bvariant city_t::get_property(const xstring &domain, const xstring &name) const {
     return city_get_property(domain, name);
+}
+
+void city_t::environment_t::update_day() {
+    river_update_flotsam();
 }
 
 void city_t::environment_t::river_update_flotsam() {

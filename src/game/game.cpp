@@ -205,13 +205,7 @@ void game_t::advance_day() {
         advance_month();
     }
 
-    g_city.sentiment.update_day();
-    g_city.criminals_update_day();
-    g_city.plague_update_day();
-    g_city.environment.river_update_flotsam();
-    g_city.buildings.update_day();
-    g_city.figures_update_day();
-    g_city.population.update_day();
+    g_city.update_day();
 
     g_sound.music_update(false);
     widget_minimap_invalidate();
