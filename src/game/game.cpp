@@ -170,7 +170,7 @@ void game_t::update_frame(int ticks) {
         city_granaries_calculate_stocks();
         break;
     case 9:
-        // nothing yet
+        g_city.house_decay_services();
     case 10:
         //building_update_highest_id();
         break;
@@ -241,7 +241,6 @@ void game_t::update_frame(int ticks) {
         g_city.government_distribute_treasury();
         break;
     case 35:
-        g_city.house_service_decay_services();
         g_city.house_service_update_health();
         break;
     case 36:

@@ -116,38 +116,6 @@ void city_t::houses_calculate_culture_demands(void) {
         houses.religion = 3;
 }
 
-void city_t::house_service_decay_services() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/House Decay Culture");
-    buildings_house_do([] (auto house) {
-        if (!house->hsize()) {
-            return;
-        }
-
-        auto &housed = house->runtime_data();
-        decay_service(housed.booth_juggler);
-        decay_service(housed.bandstand_juggler);
-        decay_service(housed.bandstand_musician);
-        decay_service(housed.pavillion_musician);
-        decay_service(housed.senet_player);
-        decay_service(housed.magistrate);
-        decay_service(housed.bullfighter);
-        decay_service(housed.school);
-        decay_service(housed.library);
-        decay_service(housed.academy);
-        decay_service(housed.apothecary);
-        decay_service(housed.dentist);
-        decay_service(housed.mortuary);
-        decay_service(housed.physician);
-        decay_service(housed.temple_osiris);
-        decay_service(housed.temple_ra);
-        decay_service(housed.temple_ptah);
-        decay_service(housed.temple_seth);
-        decay_service(housed.temple_bast);
-        decay_service(housed.bazaar_access);
-
-    });
-}
-
 void city_t::house_service_decay_tax_collector() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Tax Collector Update");
     for (int i = 1; i < MAX_BUILDINGS; i++) {

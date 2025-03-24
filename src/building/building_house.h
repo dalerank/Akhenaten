@@ -97,6 +97,7 @@ public:
 
     void determine_evolve_text();
     void determine_worst_desirability_building();
+    void decay_services();
 
     int16_t population_room() const;
     void change_to_vacant_lot();

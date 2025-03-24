@@ -300,6 +300,13 @@ void city_t::update_allowed_foods() {
     }
 }
 
+void city_t::house_decay_services() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/House Decay Culture");
+    buildings_house_do([] (auto house) {
+        house->decay_services();
+    });
+}
+
 bool city_t::available_resource(e_resource resource) {
     e_resource raw_resource = get_raw_resource(resource);
     // finished goods: check imports of raw materials
