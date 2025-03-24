@@ -11,16 +11,12 @@
 #include "core/profiler.h"
 #include "core/buffer.h"
 
-city_coverage_t g_coverage;
-
 void city_average_coverage_t::update() {
-    static auto &data = g_city;
-
     OZZY_PROFILER_SECTION("Game/Update/Culture Calculate");
-    data.avg_coverage.average_entertainment = 0;
-    data.avg_coverage.average_religion = 0;
-    data.avg_coverage.average_education = 0;
-    data.avg_coverage.average_health = 0;
+    average_entertainment = 0;
+    average_religion = 0;
+    average_education = 0;
+    average_health = 0;
 
     int num_houses = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -29,18 +25,18 @@ void city_average_coverage_t::update() {
         if (house && house->state() == BUILDING_STATE_VALID && house->hsize() > 0) {
             num_houses++;
             auto &housed = house->runtime_data();
-            data.avg_coverage.average_entertainment += housed.entertainment;
-            data.avg_coverage.average_religion += housed.num_gods;
-            data.avg_coverage.average_education += housed.education;
-            data.avg_coverage.average_health += housed.health;
+            average_entertainment += housed.entertainment;
+            average_religion += housed.num_gods;
+            average_education += housed.education;
+            average_health += housed.health;
         }
     }
 
     if (num_houses) {
-        data.avg_coverage.average_entertainment /= num_houses;
-        data.avg_coverage.average_religion /= num_houses;
-        data.avg_coverage.average_education /= num_houses;
-        data.avg_coverage.average_health /= num_houses;
+        average_entertainment /= num_houses;
+        average_religion /= num_houses;
+        average_education /= num_houses;
+        average_health /= num_houses;
     }
 
     g_city.entertainment.calculate_shows();
@@ -88,6 +84,25 @@ void city_coverage_t::load(buffer *buf) {
     mortuary = buf->read_i32();
 }
 
+void city_coverage_t::update() {
+    OZZY_PROFILER_SECTION("Game/Update/Avg Coverage Update");
+    int pop = g_city.population.current;
+
+    // entertainment
+    booth = std::min(calc_percentage(400 * building_count_active(BUILDING_BOOTH), pop), 100);
+    bandstand = std::min(calc_percentage(700 * building_count_active(BUILDING_BANDSTAND), pop), 100);
+    pavilion = std::min(calc_percentage(1200 * building_count_active(BUILDING_PAVILLION), pop), 100);
+    senet_house = building_count_active(BUILDING_SENET_HOUSE) <= 0 ? 0 : 100;
+
+    // education
+    city_population_calculate_educational_age();
+
+    school = std::min(calc_percentage(75 * building_count_active(BUILDING_SCRIBAL_SCHOOL), city_population_school_age()), 100);
+    library = std::min(calc_percentage(800 * building_count_active(BUILDING_LIBRARY), pop), 100);
+    academy = std::min(calc_percentage(100 * building_count_active(BUILDING_ACADEMY), city_population_academy_age()), 100);
+}
+
 int city_average_coverage_t::calc_average_entertainment() {
-    return (g_coverage.senet_house + g_coverage.pavilion + g_coverage.bandstand + g_coverage.booth) / 4;
+    const auto &coverage = g_city.coverage;
+    return (coverage.senet_house + coverage.pavilion + coverage.bandstand + coverage.booth) / 4;
 }

@@ -20,6 +20,7 @@ struct city_coverage_t {
 
     void save(buffer *buf);
     void load(buffer *buf);
+    void update();
 };
 
 struct city_average_coverage_t {
@@ -31,5 +32,3 @@ struct city_average_coverage_t {
     void update();
     int calc_average_entertainment();
 };
-
-extern city_coverage_t g_coverage;

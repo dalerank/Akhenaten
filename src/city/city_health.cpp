@@ -124,13 +124,14 @@ void city_health_t::update_coverage() {
     int population = g_city.population.current;
 
     const auto &mortuary_params = building_mortuary::current_params();
-    g_coverage.mortuary = std::min<int>(calc_percentage(mortuary_params.max_serve_clients * building_count_active(BUILDING_MORTUARY), population), 100);
+    auto &coverage = g_city.coverage;
+    coverage.mortuary = std::min<int>(calc_percentage(mortuary_params.max_serve_clients * building_count_active(BUILDING_MORTUARY), population), 100);
 
-    g_coverage.physician = std::min<int>(calc_percentage(1000 * building_count_active(BUILDING_PHYSICIAN), population), 100);
-    g_coverage.dentist = std::min<int>(calc_percentage(1000 * building_count_active(BUILDING_DENTIST), population), 100);
+    coverage.physician = std::min<int>(calc_percentage(1000 * building_count_active(BUILDING_PHYSICIAN), population), 100);
+    coverage.dentist = std::min<int>(calc_percentage(1000 * building_count_active(BUILDING_DENTIST), population), 100);
 
     const auto &apothecary_params = building_apothecary::current_params();
-    g_coverage.apothecary = std::min<int>(calc_percentage(apothecary_params.max_serve_clients * building_count_active(BUILDING_APOTHECARY), population), 100);
+    coverage.apothecary = std::min<int>(calc_percentage(apothecary_params.max_serve_clients * building_count_active(BUILDING_APOTHECARY), population), 100);
 }
 
 

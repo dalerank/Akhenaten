@@ -73,6 +73,7 @@ struct city_t {
     city_entertainment_t entertainment;
 
     city_festival_t festival;
+    city_coverage_t coverage;
 
     struct {
         int8_t march_enemy;
@@ -186,8 +187,6 @@ struct city_t {
     void update_allowed_foods();
     bool can_produce_resource(e_resource resource);
     void set_produce_resource(e_resource resource, bool v);
-
-    void coverage_update();
 
     void figures_add_attacking_native();
     void figures_add_enemy();

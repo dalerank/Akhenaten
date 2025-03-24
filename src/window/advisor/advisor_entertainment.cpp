@@ -63,10 +63,10 @@ void ui::advisor_entertainment_window::ui_draw_foreground(UiFlags flags) {
     g_city.religion.calculate_gods_mood_targets();
     g_city.avg_coverage.update();
 
-    draw_entertainer(0, "booth", BUILDING_BOOTH, g_city.entertainment.booth_shows, g_coverage.booth, 400);
-    draw_entertainer(1, "bandstand", BUILDING_BANDSTAND, g_city.entertainment.bandstand_shows, g_coverage.bandstand, 700);
-    draw_entertainer(2, "pavilion", BUILDING_PAVILLION, g_city.entertainment.pavilion_shows, g_coverage.pavilion, 1200);
-    draw_entertainer(3, "senet_house", BUILDING_SENET_HOUSE, g_city.entertainment.senet_house_plays, g_coverage.senet_house, 0);
+    draw_entertainer(0, "booth", BUILDING_BOOTH, g_city.entertainment.booth_shows, g_city.coverage.booth, 400);
+    draw_entertainer(1, "bandstand", BUILDING_BANDSTAND, g_city.entertainment.bandstand_shows, g_city.coverage.bandstand, 700);
+    draw_entertainer(2, "pavilion", BUILDING_PAVILLION, g_city.entertainment.pavilion_shows, g_city.coverage.pavilion, 1200);
+    draw_entertainer(3, "senet_house", BUILDING_SENET_HOUSE, g_city.entertainment.senet_house_plays, g_city.coverage.senet_house, 0);
     draw_entertainer(9, "zoo", BUILDING_ZOO, 0, 0, 0);
 
     ui["advice"] = ui::str(58, 7 + get_entertainment_advice());

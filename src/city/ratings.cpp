@@ -115,26 +115,23 @@ void city_ratings_t::update_culture_explanation() {
         reason = 4;
     }
 
-    int pct_booth = g_coverage.booth;
-    if (pct_booth < min_percentage) {
-        min_percentage = pct_booth;
+    const auto &coverage = g_city.coverage;
+    if (coverage.booth < min_percentage) {
+        min_percentage = coverage.booth;;
         reason = 5;
     }
 
-    int pct_library = g_coverage.library;
-    if (pct_library < min_percentage) {
-        min_percentage = pct_library;
+    if (coverage.library < min_percentage) {
+        min_percentage = coverage.library;
         reason = 2;
     }
     
-    int pct_school = g_coverage.school;
-    if (pct_school < min_percentage) {
-        min_percentage = pct_school;
+    if (coverage.school < min_percentage) {
+        min_percentage = coverage.school;
         reason = 1;
     }
 
-    int pct_academy = g_coverage.academy;
-    if (pct_academy < min_percentage) {
+    if (coverage.academy < min_percentage) {
         reason = 3;
     }
 
@@ -218,7 +215,7 @@ void city_ratings_t::update_culture_rating() {
         return;
     }
 
-    int pct_booth = g_coverage.booth;
+    const int pct_booth = g_city.coverage.booth;
     if (pct_booth >= 100) {
         culture_points.entertainment = 25;
     } else if (pct_booth > 85) {
@@ -250,7 +247,7 @@ void city_ratings_t::update_culture_rating() {
     }
     culture += culture_points.religion;
 
-    int pct_school = g_coverage.school;
+    const int pct_school = g_city.coverage.school;
     if (pct_school >= 100)
         culture_points.school = 15;
     else if (pct_school > 85)
@@ -266,7 +263,7 @@ void city_ratings_t::update_culture_rating() {
     }
     culture += culture_points.school;
 
-    int pct_academy = g_coverage.academy;
+    const int pct_academy = g_city.coverage.academy;
     if (pct_academy >= 100)
         culture_points.academy = 10;
     else if (pct_academy > 85)
@@ -282,7 +279,7 @@ void city_ratings_t::update_culture_rating() {
     }
     culture += culture_points.academy;
 
-    int pct_library = g_coverage.library;
+    const int pct_library = g_city.coverage.library;
     if (pct_library >= 100)
         culture_points.library = 20;
     else if (pct_library > 85)

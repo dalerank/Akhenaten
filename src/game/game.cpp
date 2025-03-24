@@ -127,6 +127,9 @@ void game_t::update_impl(int ticks) {
     g_tutorials_flags.update_starting_message();
     g_floods.tick_update(false);
 
+    g_city.buildings.update_tick(game.paused);
+    g_city_events.process();
+
     update_frame(ticks);
 
     if (simtime.advance_tick()) {
@@ -140,13 +143,10 @@ void game_t::update_impl(int ticks) {
 }
 
 void game_t::update_frame(int ticks) {
-    g_city.buildings.update_tick(game.paused);
-    g_city_events.process();
-
     switch (simtime.tick) {
     case 1:
         g_city.religion.update();
-        g_city.coverage_update();
+        g_city.coverage.update();
         break;
     case 2:
         g_sound.music_update(false);

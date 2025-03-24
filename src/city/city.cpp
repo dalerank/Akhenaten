@@ -233,25 +233,6 @@ void city_t::set_allowed_food(int i, e_resource r) {
     resource.food_types_allowed[i] = r;
 }
 
-void city_t::coverage_update() {
-    OZZY_PROFILER_SECTION("Game/Update/Avg Coverage Update");
-    auto &coverage = g_coverage;
-    int pop = population.current;
-
-    // entertainment
-    coverage.booth = std::min(calc_percentage(400 * building_count_active(BUILDING_BOOTH), pop), 100);
-    coverage.bandstand = std::min(calc_percentage(700 * building_count_active(BUILDING_BANDSTAND), pop), 100);
-    coverage.pavilion = std::min(calc_percentage(1200 * building_count_active(BUILDING_PAVILLION), pop), 100);
-    coverage.senet_house = building_count_active(BUILDING_SENET_HOUSE) <= 0 ? 0 : 100;
-
-    // education
-    city_population_calculate_educational_age();
-
-    coverage.school = std::min(calc_percentage(75 * building_count_active(BUILDING_SCRIBAL_SCHOOL), city_population_school_age()), 100);
-    coverage.library = std::min(calc_percentage(800 * building_count_active(BUILDING_LIBRARY), pop), 100);
-    coverage.academy = std::min(calc_percentage(100 * building_count_active(BUILDING_ACADEMY), city_population_academy_age()), 100);
-}
-
 int stack_units_by_resource(int resource) {
     switch (resource) {
     default:
