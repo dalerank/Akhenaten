@@ -33,7 +33,6 @@ void game_cheat_noplague(std::istream &is, std::ostream &os) {
         house->base.disease_days = 0;
         house->base.has_plague = false;
         house->base.common_health = 100;
-        house->runtime_data().health = 100;
     });
 }
 

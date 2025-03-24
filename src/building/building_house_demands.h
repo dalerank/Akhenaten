@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 inline void decay_service(unsigned char& value) {
     if (value > 0) {
         --value;
@@ -38,7 +40,7 @@ struct house_demands {
         int magistrate;
         int religion;
     } requiring;
-    int health;
+    uint8_t health;
     int religion;
     int education;
     int entertainment;

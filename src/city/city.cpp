@@ -761,7 +761,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.protesters);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.criminals);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.health);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.houses.health);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.religion);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.education);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.entertainment);

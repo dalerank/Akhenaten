@@ -49,10 +49,6 @@ figure_sound_t figure_herbalist::get_sound_reaction(xstring key) const {
     return herbalist_m.sounds[key];
 }
 
-const animations_t &figure_herbalist::anim() const {
-    return herbalist_m.anim;
-}
-
 sound_key figure_herbalist::phrase_key() const {
     if (data.herbalist.see_low_health > 0) {
         return "have_malaria_risk_here";
@@ -66,25 +62,14 @@ sound_key figure_herbalist::phrase_key() const {
 int figure_herbalist::provide_service() {
     int minmax = 0;
     int houses_serviced = figure_provide_service(tile(), &base, minmax, [] (building *b, figure *f, int &) {
+        f->data.herbalist.see_low_health += (b->common_health < 20) ? 1 : 0;
+        b->common_health = std::max<uint8_t>(b->common_health, 50);
+
         auto house = b->dcast_house();
-
-        auto increate_health = [&] (uint8_t &value ) {
-            if (value < 50) {
-                value++;
-                if (value < 20) {
-                    f->data.herbalist.see_low_health++;
-                }
-            }
-        };
-
-        if (!house) {
-            increate_health(b->common_health);
-            return;
+        if (house) {
+            auto &housed = house->runtime_data();
+            housed.apothecary = MAX_COVERAGE;
         }
-
-        auto &housed = house->runtime_data();
-        housed.apothecary = MAX_COVERAGE;
-        increate_health(housed.health);
     });
     return houses_serviced;
 }

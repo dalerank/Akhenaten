@@ -943,7 +943,7 @@ void building_house::check_for_corruption() {
 
 void building_house::on_create(int orientation) {
     auto &d = runtime_data();
-    d.health = 100;
+    base.common_health = 100;
     d.house_happiness = 50;
 
     if (house_level() == 0) {
