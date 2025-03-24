@@ -300,6 +300,13 @@ void city_t::update_allowed_foods() {
     }
 }
 
+void city_t::house_decay_tax_coverage() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Tax Collector Update");
+    buildings_house_do([&] (building_house *house) {
+        house->decay_tax_coverage();
+    });
+}
+
 void city_t::house_decay_services() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/House Decay Culture");
     buildings_house_do([] (auto house) {

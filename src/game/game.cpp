@@ -272,7 +272,7 @@ void game_t::update_frame(int ticks) {
         building_industry_update_wheat_production();
         break;
     case 48:
-        g_city.house_service_decay_tax_collector();
+        g_city.house_decay_tax_coverage();
         break;
     case 49:
         g_city.avg_coverage.update();

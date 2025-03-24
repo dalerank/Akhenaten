@@ -598,6 +598,17 @@ bool building_house::has_devolve_delay(int status) {
     }
 }
 
+void building_house::decay_tax_coverage() {
+    if (!is_valid() || !hsize()) {
+        return;
+    }
+
+    auto &housed = runtime_data();
+    if (housed.tax_coverage) {
+        housed.tax_coverage--;
+    }
+}
+
 void building_house::decay_services() {
     if (!hsize()) {
         return;
