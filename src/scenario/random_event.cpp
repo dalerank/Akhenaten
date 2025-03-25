@@ -5,6 +5,7 @@
 #include "city/finance.h"
 #include "city/city_health.h"
 #include "city/city.h"
+#include "city/city_events.h"
 #include "city/city_message.h"
 #include "city/city_population.h"
 #include "city/trade.h"
@@ -30,14 +31,14 @@ static const int RANDOM_EVENT_PROBABILITY[128]
 static void raise_wages(void) {
     if (g_scenario_data.random_events.raise_wages) {
         if (g_city.labor.raise_wages_kingdome())
-            city_message_post(true, MESSAGE_KINGDOME_RAISES_WAGES, 0, 0);
+            events::emit(event_message{ true, MESSAGE_KINGDOME_RAISES_WAGES, 0, 0 });
     }
 }
 
 static void lower_wages(void) {
     if (g_scenario_data.random_events.lower_wages) {
         if (g_city.labor.lower_wages_kingdome())
-            city_message_post(true, MESSAGE_KINGDOME_LOWERS_WAGES, 0, 0);
+            events::emit(event_message{ true, MESSAGE_KINGDOME_LOWERS_WAGES, 0, 0 });
     }
 }
 
@@ -46,9 +47,9 @@ static void disrupt_land_trade(void) {
         if (city_trade_has_land_trade_route()) {
             city_trade_start_land_trade_problems(48);
             if (scenario_property_climate() == CLIMATE_DESERT)
-                city_message_post(true, MESSAGE_LAND_TRADE_DISRUPTED_SANDSTORMS, 0, 0);
+                events::emit(event_message{ true, MESSAGE_LAND_TRADE_DISRUPTED_SANDSTORMS, 0, 0 });
             else {
-                city_message_post(true, MESSAGE_LAND_TRADE_DISRUPTED_LANDSLIDES, 0, 0);
+                events::emit(event_message{ true, MESSAGE_LAND_TRADE_DISRUPTED_LANDSLIDES, 0, 0 });
             }
         }
     }
@@ -58,7 +59,7 @@ static void disrupt_sea_trade(void) {
     if (g_scenario_data.random_events.sea_trade_problem) {
         if (city_trade_has_sea_trade_route()) {
             city_trade_start_sea_trade_problems(48);
-            city_message_post(true, MESSAGE_SEA_TRADE_DISRUPTED, 0, 0);
+            events::emit(event_message{ true, MESSAGE_SEA_TRADE_DISRUPTED, 0, 0 });
         }
     }
 }
@@ -76,7 +77,7 @@ static void contaminate_water(void) {
                 change = -25;
             }
             g_city.health.change(change);
-            city_message_post(true, MESSAGE_CONTAMINATED_WATER, 0, 0);
+            events::emit(event_message{ true, MESSAGE_CONTAMINATED_WATER, 0, 0 });
         }
     }
 }
@@ -86,12 +87,12 @@ static void destroy_copper_mine() {
         if (config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
             if (building_id_first(BUILDING_LIMESTONE_QUARRY) < MAX_BUILDINGS) {
                 city_finance_process_requests_and_festivals(250);
-                city_message_post(true, MESSAGE_IRON_MINE_COLLAPED, 0, 0);
+                messages::popup(MESSAGE_IRON_MINE_COLLAPED, 0, 0);
             }
         } else {
             int grid_offset = building_destroy_first_of_type(BUILDING_LIMESTONE_QUARRY);
             if (grid_offset)
-                city_message_post(true, MESSAGE_IRON_MINE_COLLAPED, 0, grid_offset);
+                messages::popup(MESSAGE_IRON_MINE_COLLAPED, 0, grid_offset);
         }
     }
 }
@@ -101,12 +102,13 @@ static void destroy_clay_pit(void) {
         if (config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
             if (building_id_first(BUILDING_CLAY_PIT) < MAX_BUILDINGS) {
                 city_finance_process_requests_and_festivals(250);
-                city_message_post(true, MESSAGE_CLAY_PIT_FLOODED, 0, 0);
+                messages::popup(MESSAGE_CLAY_PIT_FLOODED, 0, 0);
             }
         } else {
             int grid_offset = building_destroy_first_of_type(BUILDING_CLAY_PIT);
-            if (grid_offset)
-                city_message_post(true, MESSAGE_CLAY_PIT_FLOODED, 0, grid_offset);
+            if (grid_offset) {
+                messages::popup(MESSAGE_CLAY_PIT_FLOODED, 0, grid_offset);
+            }
         }
     }
 }

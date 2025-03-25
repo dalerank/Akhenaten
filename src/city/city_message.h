@@ -301,6 +301,15 @@ struct city_message {
 #define MAX_MESSAGES 1000
 #define MAX_QUEUE 20
 
+struct messages {
+    static void popup(int message_id, int param1, int param2);
+    static void god(int god, int message_id);
+};
+
+struct event_message { bool use_popup; int message_id; int param1; int param2; };
+struct event_message_god { int god; int message_id; };
+struct event_message_population { bool use_popup; int message_id; int param1; int param2; };
+
 struct message_manager_t {
     city_message messages[MAX_MESSAGES];
 
@@ -345,6 +354,8 @@ struct message_manager_t {
     void init();
     void init_problem_areas();
     int new_message_id();
+
+    city_message& post_common(bool use_popup, int message_id, int param1, int param2, int god, int bg_img);
 };
 
 extern message_manager_t g_message_manager;
@@ -353,11 +364,8 @@ void city_message_disable_sound_for_next_message(void);
 void city_message_apply_sound_interval(int category);
 
 void city_message_post_full(bool use_popup, int template_id, int event_id, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2);
-city_message &city_message_post(bool use_popup, int message_id, int param1, int param2);
-void city_message_god_post(int god, bool use_popup, int message_id, int param1, int param2);
 city_message &city_message_post_with_popup_delay(e_mesage_category category, bool use_popup, int message_type, int param1, short param2);
 void city_message_post_with_message_delay(e_mesage_category category, int use_popup, int message_type, int delay);
-void city_message_population_post(bool use_popup, int message_id, int param1, int param2);
 
 void city_message_process_queue(void);
 void city_message_sort_and_compact(void);

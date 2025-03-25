@@ -2,6 +2,7 @@
 
 #include "city/buildings.h"
 #include "city/map.h"
+#include "city/city_events.h"
 #include "city/city_message.h"
 #include "city/military.h"
 #include "city/ratings.h"
@@ -36,7 +37,7 @@ void scenario_distant_battle_process(void) {
             && game.simtime.month == g_scenario_data.invasions[i].month
             && g_scenario_data.empire.distant_battle_enemy_travel_months > 4
             && g_scenario_data.empire.distant_battle_kingdome_travel_months > 4 && !city_military_has_distant_battle()) {
-            city_message_post(true, MESSAGE_KINGDOME_REQUESTS_ARMY, 0, 0);
+            events::emit(event_message{ true, MESSAGE_KINGDOME_REQUESTS_ARMY, 0, 0 });
             city_military_init_distant_battle(g_scenario_data.invasions[i].amount);
             return;
         }

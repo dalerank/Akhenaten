@@ -25,5 +25,5 @@ void scenario_empire_process_expansion() {
     g_empire.expand();
 
     g_scenario_data.empire.is_expanded = 1;
-    city_message_post(true, MESSAGE_EMPIRE_HAS_EXPANDED, 0, 0);
+    messages::popup(MESSAGE_EMPIRE_HAS_EXPANDED, 0, 0);
 }

@@ -1,5 +1,6 @@
 #include "price_change.h"
 
+#include "city/city_events.h"
 #include "city/city_message.h"
 #include "core/random.h"
 #include "empire/trade_prices.h"
@@ -27,11 +28,11 @@ void scenario_price_change_process(void) {
         int resource = g_scenario_data.price_changes[i].resource;
         if (g_scenario_data.price_changes[i].is_rise) {
             if (trade_price_change(resource, amount))
-                city_message_post(true, MESSAGE_PRICE_INCREASED, amount, resource);
+                events::emit(event_message{ true, MESSAGE_PRICE_INCREASED, amount, resource });
 
         } else {
             if (trade_price_change(resource, -amount))
-                city_message_post(true, MESSAGE_PRICE_DECREASED, amount, resource);
+                events::emit(event_message{ true, MESSAGE_PRICE_DECREASED, amount, resource });
         }
     }
 }

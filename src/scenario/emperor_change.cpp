@@ -35,7 +35,7 @@ void scenario_kingdome_change_process() {
                 g_city.ratings.reset_kingdom();
             }
 
-            city_message_post(true, MESSAGE_EMPEROR_CHANGE, 0, 0);
+            messages::popup(MESSAGE_EMPEROR_CHANGE, 0, 0);
         }
     }
 }

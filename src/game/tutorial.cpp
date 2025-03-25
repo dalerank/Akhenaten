@@ -30,10 +30,6 @@ void game_cheat_tutorial_step(std::istream &is, std::ostream &) {
     tutorial_update_step(args.c_str());
 }
 
-static void post_message(int message) {
-    city_message_post(true, message, 0, 0);
-}
-
 static void set_all_tut_flags_null() {
     tutorial_1::reset();
     tutorial_2::reset();
@@ -223,7 +219,7 @@ void tutorial_update_step(xstring s) {
 void tutorial_flags_t::update_starting_message() {
     if (!g_scenario_data.meta.start_message_shown) {
         if (g_scenario_data.meta.start_message) {
-            post_message(g_scenario_data.meta.start_message);
+            messages::popup(g_scenario_data.meta.start_message, 0, 0);
         }
         g_scenario_data.meta.start_message_shown = true;
     }
@@ -238,11 +234,11 @@ void tutorial_flags_t::update_starting_message() {
         g_tutorials_flags.tutorial_3.started = 1;
     }
     if (scenario_is_mission_rank(4) && !g_tutorials_flags.tutorial_4.started) {
-        post_message(MESSAGE_TUTORIAL_DEVELOPING_CULTURE);
+        messages::popup(MESSAGE_TUTORIAL_DEVELOPING_CULTURE, 0, 0);
         g_tutorials_flags.tutorial_4.started = 1;
     }
     if (scenario_is_mission_rank(5) && !g_tutorials_flags.tutorial_5.started) {
-        post_message(MESSAGE_TUTORIAL_GETTING_STARTED);
+        messages::popup(MESSAGE_TUTORIAL_GETTING_STARTED, 0, 0);
         g_tutorials_flags.tutorial_5.started = 1;
     }
     if (scenario_is_mission_rank(6) && !g_tutorials_flags.tutorial_6.started) {
@@ -251,14 +247,14 @@ void tutorial_flags_t::update_starting_message() {
 
     if (scenario_is_mission_rank(7) && !g_tutorials_flags.pharaoh.tut7_start) {
         if (scenario_campaign_scenario_id() == 6)
-            post_message(MESSAGE_TUTORIAL_AT_WATERS_EDGE);
+            messages::popup(MESSAGE_TUTORIAL_AT_WATERS_EDGE, 0, 0);
         else
-            post_message(MESSAGE_TUTORIAL_AT_WATERS_EDGE_2);
+            messages::popup(MESSAGE_TUTORIAL_AT_WATERS_EDGE_2, 0, 0);
         g_tutorials_flags.pharaoh.tut7_start = 1;
     }
 
     if (scenario_is_mission_rank(8) && !g_tutorials_flags.pharaoh.tut8_start) {
-        post_message(MESSAGE_TUTORIAL_THE_FINER_THINGS);
+        messages::popup(MESSAGE_TUTORIAL_THE_FINER_THINGS, 0, 0);
         g_tutorials_flags.pharaoh.tut8_start = 1;
     }
 }

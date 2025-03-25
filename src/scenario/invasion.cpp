@@ -2,6 +2,7 @@
 
 #include "building/destruction.h"
 #include "city/city.h"
+#include "city/city_events.h"
 #include "city/city_message.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -316,11 +317,11 @@ void scenario_invasion_process() {
                 warning->year_notified = game.simtime.year;
                 warning->month_notified = game.simtime.month;
                 if (warning->warning_years > 2)
-                    city_message_post(false, MESSAGE_DISTANT_BATTLE, 0, 0);
+                    events::emit(event_message{ false, MESSAGE_DISTANT_BATTLE, 0, 0 });
                 else if (warning->warning_years > 1)
-                    city_message_post(false, MESSAGE_ENEMIES_CLOSING, 0, 0);
+                    events::emit(event_message{ false, MESSAGE_ENEMIES_CLOSING, 0, 0 });
                 else {
-                    city_message_post(false, MESSAGE_ENEMIES_AT_THE_DOOR, 0, 0);
+                    events::emit(event_message{ false, MESSAGE_ENEMIES_AT_THE_DOOR, 0, 0 });
                 }
             }
         }
@@ -341,9 +342,9 @@ void scenario_invasion_process() {
                                                  warning->invasion_id);
                 if (grid_offset > 0) {
                     if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4)
-                        city_message_post(true, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
+                        events::emit(event_message{ true, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset });
                     else {
-                        city_message_post(true, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
+                        events::emit(event_message{ true, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset });
                     }
                 }
             }
@@ -353,8 +354,9 @@ void scenario_invasion_process() {
                                                  g_scenario_data.invasions[warning->invasion_id].from,
                                                  g_scenario_data.invasions[warning->invasion_id].attack_type,
                                                  warning->invasion_id);
-                if (grid_offset > 0)
-                    city_message_post(true, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
+                if (grid_offset > 0) {
+                    events::emit(event_message{ true, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset });
+                }
             }
         }
     }
@@ -368,8 +370,9 @@ void scenario_invasion_process() {
                                                  g_scenario_data.invasions[i].from,
                                                  g_scenario_data.invasions[i].attack_type,
                                                  i);
-                if (grid_offset > 0)
-                    city_message_post(true, MESSAGE_LOCAL_UPRISING, data.last_internal_invasion_id, grid_offset);
+                if (grid_offset > 0) {
+                    events::emit(event_message{ true, MESSAGE_LOCAL_UPRISING, data.last_internal_invasion_id, grid_offset });
+                }
             }
         }
     }
@@ -386,8 +389,9 @@ int scenario_invasion_start_from_mars() {
         return 0;
 
     int grid_offset = start_invasion(ENEMY_0_BARBARIAN, amount, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
-    if (grid_offset)
-        city_message_post(true, MESSAGE_LOCAL_UPRISING_MARS, data.last_internal_invasion_id, grid_offset);
+    if (grid_offset) {
+        events::emit(event_message{ true, MESSAGE_LOCAL_UPRISING_MARS, data.last_internal_invasion_id, grid_offset });
+    }
 
     return 1;
 }
@@ -396,7 +400,7 @@ int scenario_invasion_start_from_caesar(int size) {
     auto &data = g_invasion_data;
     int grid_offset = start_invasion(ENEMY_11_CAESAR, size, 0, FORMATION_ATTACK_BEST_BUILDINGS, 24);
     if (grid_offset > 0) {
-        city_message_post(true, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
+        events::emit(event_message{ true, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset });
         return 1;
     }
     return 0;
@@ -408,9 +412,9 @@ void scenario_invasion_start_from_cheat() {
     int grid_offset = start_invasion(ENEMY_ID_TO_ENEMY_TYPE[enemy_id], 150, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
     if (grid_offset) {
         if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4)
-            city_message_post(true, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
+            events::emit(event_message{ true, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset });
         else {
-            city_message_post(true, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
+            events::emit(event_message{ true, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset });
         }
     }
 }
@@ -424,9 +428,9 @@ void scenario_invasion_start_from_console(int attack_type, int size, int invasio
           = start_invasion(ENEMY_ID_TO_ENEMY_TYPE[enemy_id], size, invasion_point, FORMATION_ATTACK_RANDOM, 23);
         if (grid_offset) {
             if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4)
-                city_message_post(true, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
+                events::emit(event_message{ true, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset });
             else {
-                city_message_post(true, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
+                events::emit(event_message{ true, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset });
             }
         }
         break;
@@ -438,7 +442,7 @@ void scenario_invasion_start_from_console(int attack_type, int size, int invasio
     case ATTACK_TYPE_NATIVES: {
         int grid_offset = start_invasion(ENEMY_0_BARBARIAN, size, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
         if (grid_offset)
-            city_message_post(true, MESSAGE_LOCAL_UPRISING_MARS, data.last_internal_invasion_id, grid_offset);
+            events::emit(event_message{ true, MESSAGE_LOCAL_UPRISING_MARS, data.last_internal_invasion_id, grid_offset });
 
         break;
     }

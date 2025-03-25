@@ -2,6 +2,7 @@
 
 #include "core/profiler.h"
 #include "city/city.h"
+#include "city/city_events.h"
 #include "city/city_message.h"
 #include "grid/road_access.h"
 #include "figure/figure.h"
@@ -64,7 +65,7 @@ void city_show_message_criminal(int message_id, int money_stolen, int tile_offse
         show_popup_message = true;
     }
 
-    city_message_post(show_popup_message, MESSAGE_TUTORIAL_CRIME, money_stolen, tile_offset);
+    events::emit(event_message{ show_popup_message, MESSAGE_TUTORIAL_CRIME, money_stolen, tile_offset });
 }
 
 static void generate_robber(building* b) {

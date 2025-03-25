@@ -7,6 +7,7 @@
 #include "building/building_dock.h"
 #include "game/game.h"
 #include "empire/empire.h"
+#include "city/city_events.h"
 #include "city/city_message.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -137,7 +138,7 @@ void figure_trade_ship::figure_action() {
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
             if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
-                city_message_post(true, MESSAGE_NAVIGATION_IMPOSSIBLE, 0, 0);
+                events::emit(event_message{ true, MESSAGE_NAVIGATION_IMPOSSIBLE, 0, 0 });
                 city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
             }
         }

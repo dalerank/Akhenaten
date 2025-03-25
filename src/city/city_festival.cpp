@@ -7,6 +7,7 @@
 #include "city/constants.h"
 #include "city/city.h"
 #include "city/finance.h"
+#include "city/city_events.h"
 #include "city/city_message.h"
 #include "core/random.h"
 #include "figure/figure.h"
@@ -158,15 +159,15 @@ void city_festival_t::execute_festival() {
     g_city.religion.gods[planned.god].months_since_festival = 0;
     switch (planned.size) {
     case FESTIVAL_SMALL:
-        city_message_post(true, MESSAGE_SMALL_FESTIVAL, 0, 0);
+        messages::popup(MESSAGE_SMALL_FESTIVAL, 0, 0);
         break;
 
     case FESTIVAL_LARGE:
-        city_message_post(true, MESSAGE_LARGE_FESTIVAL, 0, 0);
+        messages::popup(MESSAGE_LARGE_FESTIVAL, 0, 0);
         break;
 
     case FESTIVAL_GRAND:
-        city_message_post(true, MESSAGE_GRAND_FESTIVAL, 0, 0);
+        messages::popup(MESSAGE_GRAND_FESTIVAL, 0, 0);
 
         if (config_get(CONFIG_GP_CH_GRANDFESTIVAL)) {
             g_city.religion.gods[planned.god].blessing_done = 0;

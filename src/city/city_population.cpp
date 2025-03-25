@@ -196,33 +196,34 @@ int city_population_t::create_immigrants(int num_people) {
 }
 
 void city_population_t::reached_milestone(bool force) {
-    int population = city_population();
-    if (population >= 500 && (!city_message_mark_population_shown(500) || force))
-        city_message_population_post(true, MESSAGE_POPULATION_500, 0, 0);
+    const int population = city_population();
+    int message = 0;
 
-    if (population >= 1000 && (!city_message_mark_population_shown(1000) || force))
-        city_message_population_post(true, MESSAGE_POPULATION_1000, 0, 0);
+    struct popm {
+        int pop;
+        int message;
+    };
+    constexpr popm milestones[] = {
+        {500, MESSAGE_POPULATION_500},
+        {1000, MESSAGE_POPULATION_1000},
+        {2000, MESSAGE_POPULATION_2000},
+        {3000, MESSAGE_POPULATION_3000},
+        {5000, MESSAGE_POPULATION_5000},
+        {10000, MESSAGE_POPULATION_10000},
+        {15000, MESSAGE_POPULATION_15000},
+        {20000, MESSAGE_POPULATION_20000},
+        {25000, MESSAGE_POPULATION_25000},
+    };
 
-    if (population >= 2000 && (!city_message_mark_population_shown(2000) || force))
-        city_message_population_post(true, MESSAGE_POPULATION_2000, 0, 0);
+    for (const auto& ms: milestones) {
+        if (population >= ms.pop && (!city_message_mark_population_shown(ms.pop) || force)) {
+            message = ms.message;
+        }
+    }
 
-    if (population >= 3000 && (!city_message_mark_population_shown(3000) || force))
-        city_message_population_post(true, MESSAGE_POPULATION_3000, 0, 0);
-
-    if (population >= 5000 && (!city_message_mark_population_shown(5000) || force))
-        city_message_population_post(true, MESSAGE_POPULATION_5000, 0, 0);
-
-    if (population >= 10000 && (!city_message_mark_population_shown(10000) || force))
-        city_message_population_post(true, MESSAGE_POPULATION_10000, 0, 0);
-
-    if (population >= 15000 && (!city_message_mark_population_shown(15000) || force))
-        city_message_population_post(true, MESSAGE_POPULATION_15000, 0, 0);
-
-    if (population >= 20000 && (!city_message_mark_population_shown(20000) || force))
-        city_message_population_post(true, MESSAGE_POPULATION_20000, 0, 0);
-
-    if (population >= 25000 && (!city_message_mark_population_shown(25000) || force))
-        city_message_population_post(true, MESSAGE_POPULATION_25000, 0, 0);
+    if (message > 0) {
+        events::emit(event_message_population{ true, message, 0, 0 });
+    }
 }
 
 void city_population_t::evict_overcrowded() {

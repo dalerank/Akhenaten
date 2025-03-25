@@ -36,7 +36,7 @@ void tutorial3_on_filled_granary(event_granary_filled ev) {
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_3.figs_800_stored = true;
     building_menu_update(tutorial_stage.tutorial_industry);
-    city_message_post(true, MESSAGE_TUTORIAL_INDUSTRY, 0, 0);
+    messages::popup(MESSAGE_TUTORIAL_INDUSTRY, 0, 0);
 }
 
 void tutorial3_on_disease(event_city_disease ev) {
@@ -48,23 +48,23 @@ void tutorial3_on_disease(event_city_disease ev) {
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_3.disease = true;
     building_menu_update(tutorial_stage.tutorial_health);
-    city_message_post(true, MESSAGE_TUTORIAL_BASIC_HEALTHCARE, 0, 0);
+    messages::popup(MESSAGE_TUTORIAL_BASIC_HEALTHCARE, 0, 0);
 }
 
 void tutorial_3::update_step(xstring s) {
     if (s == tutorial_stage.tutorial_health) {
         building_menu_update(s);
-        city_message_post(true, MESSAGE_TUTORIAL_BASIC_HEALTHCARE, 0, 0);
+        messages::popup(MESSAGE_TUTORIAL_BASIC_HEALTHCARE, 0, 0);
     }
 
     if (s == tutorial_stage.tutorial_industry) {
         building_menu_update(s);
-        city_message_post(true, MESSAGE_TUTORIAL_INDUSTRY, 0, 0);
+        messages::popup(MESSAGE_TUTORIAL_INDUSTRY, 0, 0);
     }
 
     if (s == tutorial_stage.tutorial_gardens) {
         building_menu_update(s);
-        city_message_post(true, MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES, 0, 0);
+        messages::popup(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES, 0, 0);
     }
 }
 
@@ -82,7 +82,7 @@ void tutorial3_warehouse_pottery_1_check(event_warehouse_filled ev) {
     g_tutorials_flags.tutorial_3.pottery_made_1 = true;
     g_tutorials_flags.tutorial_3.pottery_made_year = game.simtime.year;
 
-    city_message_post(true, MESSAGE_TUTORIAL_FOOD_OR_FAMINE, 0, 0);
+    messages::popup(MESSAGE_TUTORIAL_FOOD_OR_FAMINE, 0, 0);
 }
 
 void tutorial3_warehouse_pottery_2_check(event_warehouse_filled ev) {
@@ -98,7 +98,7 @@ void tutorial3_warehouse_pottery_2_check(event_warehouse_filled ev) {
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_3.pottery_made_2 = true;
     building_menu_update(tutorial_stage.tutorial_gardens);
-    city_message_post(true, MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES, 0, 0);
+    messages::popup(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES, 0, 0);
 }
 
 bool tutorial3_is_success() {

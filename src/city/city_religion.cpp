@@ -561,12 +561,12 @@ void city_religion_t::perform_major_blessing(e_god god) {
         if (anti_scum_random_bool()) {
             // double farm yields
             osiris_double_farm_yield_days = 100 + rand() % 50;
-            city_message_god_post(GOD_OSIRIS, true, MESSAGE_BLESSING_OSIRIS_FARMS, 0, 0);
+            messages::god(GOD_OSIRIS, MESSAGE_BLESSING_OSIRIS_FARMS );
             return;
         } else {
             // better next flood quality
             g_floods.adjust_next_quality((anti_scum_random_15bit() % 3 * 5 + 10) * 2);
-            city_message_god_post(GOD_OSIRIS, true, MESSAGE_BLESSING_OSIRIS_FLOOD, 0, 0);
+            messages::god(GOD_OSIRIS, MESSAGE_BLESSING_OSIRIS_FLOOD );
             return;
         }
         break;
@@ -575,12 +575,12 @@ void city_religion_t::perform_major_blessing(e_god god) {
         if (anti_scum_random_bool()) {
             // exports sell for 150% profits for the next 12 months
             ra_150_export_profits_months_left = 12;
-            city_message_god_post(GOD_RA, true, MESSAGE_BLESSING_RA_EXPORTS, 0, 0);
+            messages::god(GOD_RA, MESSAGE_BLESSING_RA_EXPORTS );
             return;
         } else {
             // increased kingdom by 15
             g_city.ratings.change_kingdom(15);
-            city_message_god_post(GOD_RA, true, MESSAGE_BLESSING_RA_KINGDOM, 0, 0);
+            messages::god(GOD_RA, MESSAGE_BLESSING_RA_KINGDOM );
             return;
         }
         break;
@@ -588,21 +588,18 @@ void city_religion_t::perform_major_blessing(e_god god) {
     case GOD_PTAH:
         // gems, clay, pottery, flax, linen, or jewelry in storage yards
         success = PTAH_warehouse_restock();
-        if (success)
-            city_message_god_post(GOD_PTAH, true, MESSAGE_BLESSING_PTAH, 0, 0);
-        else // no yard with such goods (and space) found
-            city_message_god_post(GOD_PTAH, true, MESSAGE_BLESSING_PTAH_NOEFFECT, 0, 0);
+        messages::god( GOD_PTAH, success ? MESSAGE_BLESSING_PTAH : MESSAGE_BLESSING_PTAH_NOEFFECT);
         return;
 
     case GOD_SETH:
         seth_crush_enemy_troops = 10;
-        city_message_god_post(GOD_SETH, true, MESSAGE_BLESSING_SETH, 0, 0);
+        messages::god( GOD_SETH, MESSAGE_BLESSING_SETH );
         return;
 
     case GOD_BAST:
         // fills houses and bazaars
         BAST_refill_houses_and_bazaar();
-        city_message_god_post(GOD_BAST, true, MESSAGE_BLESSING_BAST, 0, 0);
+        messages::god( GOD_BAST, MESSAGE_BLESSING_BAST );
         return;
     }
 }
@@ -617,18 +614,18 @@ void city_religion_t::perform_minor_blessing(e_god god) {
         if ((int)randm < 0)
             randm = (randm - 1 | 0xfffffffc) + 1;
         g_floods.adjust_next_quality(randm * 5 + 5);
-        city_message_post(true, MESSAGE_SMALL_BLESSING_OSIRIS, 0, 0);
+        messages::popup(MESSAGE_SMALL_BLESSING_OSIRIS, 0, 0);
         break;
 
     case GOD_RA:
         if (anti_scum_random_bool()) {
             // slightly increased trading
             ra_slightly_increased_trading_months_left = 12;
-            city_message_post(true, MESSAGE_SMALL_BLESSING_RA_2, 0, 0);
+            messages::popup(MESSAGE_SMALL_BLESSING_RA_2, 0, 0);
             return;
         } else {
             // slightly increased reputation
-            city_message_post(true, MESSAGE_SMALL_BLESSING_RA_1, 0, 0);
+            messages::popup(MESSAGE_SMALL_BLESSING_RA_1, 0, 0);
             g_city.ratings.change_kingdom(5);
             return;
         }
@@ -637,13 +634,13 @@ void city_religion_t::perform_minor_blessing(e_god god) {
     case GOD_PTAH:
         // restocks shipwrights, weavers and jewelers
         PTAH_industry_restock(); // <-- there is no message for when this fails.
-        city_message_post(true, MESSAGE_SMALL_BLESSING_PTAH, 0, 0);
+        messages::popup(MESSAGE_SMALL_BLESSING_PTAH, 0, 0);
         return;
 
     case GOD_SETH:
         // protects soldiers far away
         seth_protect_player_troops = 10;
-        city_message_post(true, MESSAGE_SMALL_BLESSING_SETH, 0, 0);
+        messages::popup(MESSAGE_SMALL_BLESSING_SETH, 0, 0);
         return;
 
     case GOD_BAST: {
@@ -657,7 +654,7 @@ void city_religion_t::perform_minor_blessing(e_god god) {
         city_data.religion.gods[GOD_RA].months_since_festival = 0;
         city_data.religion.gods[GOD_PTAH].months_since_festival = 0;
         city_data.religion.gods[GOD_SETH].months_since_festival = 0;
-        city_message_post(true, MESSAGE_SMALL_BLESSING_BAST, 0, 0);
+        messages::popup(MESSAGE_SMALL_BLESSING_BAST, 0, 0);
         }
         return;
     }
@@ -670,12 +667,12 @@ void city_religion_t::perform_major_curse(e_god god) {
         if (anti_scum_random_bool()) {
             // worse flood quality
             g_floods.adjust_next_quality((-2 - anti_scum_random_15bit() % 3) * 10);
-            city_message_post(true, MESSAGE_CURSE_OSIRIS_1, 0, 0);
+            messages::popup(MESSAGE_CURSE_OSIRIS_1, 0, 0);
             return;
         } else {
             // locusts
             OSIRIS_locusts();
-            city_message_post(true, MESSAGE_CURSE_OSIRIS_2, 0, 0);
+            messages::popup(MESSAGE_CURSE_OSIRIS_2, 0, 0);
             return;
         }
         break;
@@ -684,19 +681,19 @@ void city_religion_t::perform_major_curse(e_god god) {
         if (anti_scum_random_15bit() % 3 == 0) {
             // lowers commerce prices
             ra_harshly_reduced_trading_months_left = 12;
-            city_message_post(true, MESSAGE_CURSE_RA_2, 0, 0);
+            messages::popup(MESSAGE_CURSE_RA_2, 0, 0);
             return;
         }
 
         if (anti_scum_random_15bit() % 3 == 1) {
             // lowers reputation
             g_city.ratings.change_kingdom(-15);
-            city_message_post(true, MESSAGE_CURSE_RA_1, 0, 0);
+            messages::popup(MESSAGE_CURSE_RA_1, 0, 0);
             return;
         }
         // no trading ships/caravans for one year
         ra_no_traders_months_left = 12;
-        city_message_post(true, MESSAGE_CURSE_RA_3, 0, 0);
+        messages::popup(MESSAGE_CURSE_RA_3, 0, 0);
         return;
 
     case GOD_PTAH:
@@ -704,14 +701,14 @@ void city_religion_t::perform_major_curse(e_god god) {
             // destroys some industrial buildings
             success = PTAH_industry_destruction();
             if (success)
-                city_message_post(true, MESSAGE_CURSE_PTAH_1, 0, 0);
+                messages::popup(MESSAGE_CURSE_PTAH_1, 0, 0);
             else // no yard found
-                city_message_post(true, MESSAGE_CURSE_PTAH_NOEFFECT, 0, 0);
+                messages::popup(MESSAGE_CURSE_PTAH_NOEFFECT, 0, 0);
             return;
         } else {
             // frogs
             PTAH_frogs();
-            city_message_post(true, MESSAGE_CURSE_PTAH_2, 0, 0);
+            messages::popup(MESSAGE_CURSE_PTAH_2, 0, 0);
             return;
         }
         break;
@@ -720,11 +717,11 @@ void city_religion_t::perform_major_curse(e_god god) {
         if (anti_scum_random_bool()) {
             // destroys all ships
             SETH_ships_destruction();
-            city_message_post(true, MESSAGE_CURSE_SETH_1, 0, 0);
+            messages::popup(MESSAGE_CURSE_SETH_1, 0, 0);
             return;
         } else {
             SETH_hailstorm();
-            city_message_post(true, MESSAGE_CURSE_SETH_2, 0, 0);
+            messages::popup(MESSAGE_CURSE_SETH_2, 0, 0);
             return;
         }
         break;
@@ -732,7 +729,7 @@ void city_religion_t::perform_major_curse(e_god god) {
     case GOD_BAST:
         // destroy some of the best houses
         BAST_houses_destruction();
-        city_message_post(true, MESSAGE_CURSE_BAST_1, 0, 0);
+        messages::popup(MESSAGE_CURSE_BAST_1, 0, 0);
         return;
     }
 }
@@ -744,7 +741,7 @@ void city_religion_t::perform_minor_curse(e_god god) {
         if (anti_scum_random_bool()) {
             // next flood will destroys farms
             osiris_flood_will_destroy_active = 1;
-            city_message_god_post(GOD_OSIRIS, true, MESSAGE_SMALL_CURSE_OSIRIS, 0, 0);
+            events::emit(event_message_god{ GOD_OSIRIS, MESSAGE_SMALL_CURSE_OSIRIS });
             return;
         } else {
             // lower quality flood
@@ -754,7 +751,7 @@ void city_religion_t::perform_minor_curse(e_god god) {
                 randm = (randm - 1 | 0xfffffffc) + 1;
             }
             g_floods.adjust_next_quality((-1 - randm) * 5);
-            city_message_god_post(GOD_OSIRIS, true, MESSAGE_SMALL_CURSE_OSIRIS, 0, 0);
+            events::emit(event_message_god{ GOD_OSIRIS, MESSAGE_SMALL_CURSE_OSIRIS });
             return;
         }
         break;
@@ -763,12 +760,12 @@ void city_religion_t::perform_minor_curse(e_god god) {
         if (anti_scum_random_bool()) {
             // lowers amount of traded goods
             ra_slightly_reduced_trading_months_left = 12;
-            city_message_god_post(GOD_RA, true, MESSAGE_SMALL_CURSE_RA_2, 0, 0);
+            events::emit(event_message_god{ GOD_RA, MESSAGE_SMALL_CURSE_RA_2 });
             return;
         } else {
             // lowers reputation
             g_city.ratings.change_kingdom(-5);
-            city_message_god_post(GOD_RA, true, MESSAGE_SMALL_CURSE_RA_1, 0, 0);
+            events::emit(event_message_god{ GOD_RA, MESSAGE_SMALL_CURSE_RA_1 });
             return;
         }
         break;
@@ -777,9 +774,9 @@ void city_religion_t::perform_minor_curse(e_god god) {
         // destroys random storage yard
         success = PTAH_warehouse_destruction();
         if (success) {
-            city_message_god_post(GOD_PTAH, true, MESSAGE_SMALL_CURSE_PTAH, 0, 0);
+            events::emit(event_message_god{ GOD_PTAH, MESSAGE_SMALL_CURSE_PTAH });
         } else { // no yard found 
-            city_message_god_post(GOD_PTAH, true, MESSAGE_CURSE_PTAH_NOEFFECT, 0, 0);
+            events::emit(event_message_god{ GOD_PTAH, MESSAGE_CURSE_PTAH_NOEFFECT });
         }
         return;
 
@@ -787,16 +784,16 @@ void city_religion_t::perform_minor_curse(e_god god) {
         // destroys the best fort
         success = SETH_fort_destruction();
         if (success) {
-            city_message_god_post(GOD_SETH, true, MESSAGE_SMALL_CURSE_SETH, 0, 0);
+            events::emit(event_message_god{ GOD_SETH, MESSAGE_SMALL_CURSE_SETH });
         } else {
-            city_message_god_post(GOD_SETH, true, MESSAGE_CURSE_SETH_NOEFFECT, 0, 0);
+            events::emit(event_message_god{ GOD_SETH, MESSAGE_CURSE_SETH_NOEFFECT });
         }
         break;
 
     case GOD_BAST:
         // plague
         BAST_malaria_plague();
-        city_message_god_post(GOD_BAST, true, MESSAGE_SMALL_CURSE_BAST, 0, 0);
+        events::emit(event_message_god{ GOD_BAST, MESSAGE_SMALL_CURSE_BAST });
         break;
     }
 }
@@ -1009,11 +1006,8 @@ void city_religion_t::update_monthly_data(e_god randm_god) {
     } else if (min_happiness < 30) { // message delay = 0 and there's a god with mood < 30
         angry_message_delay = 20;
         if (min_happiness < 10) {
-            city_message_post(false, MESSAGE_GODS_WRATHFUL, 0, 0);
+            messages::popup(MESSAGE_GODS_WRATHFUL, 0, 0);
         }
-
-        //else if (GAME_ENV == ENGINE_ENV_C3)
-        //    city_message_post(false, MESSAGE_GODS_UNHAPPY, 0, 0);
     }
 
     // update status effects with limited durations

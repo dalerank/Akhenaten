@@ -93,8 +93,7 @@ int floods_t::expected_quality() {
 }
 
 int floods_t::expected_month() {
-    auto& data = g_floods;
-    return (data.season_initial / 15) - 10;
+    return (season_initial / 15) - 10;
 }
 
 void floods_t::reset_farms() {
@@ -219,17 +218,17 @@ void floods_t::update_next_flood_params() {
 
 void floods_t::post_flood_prediction_message() {
     if (quality_next == 100) {
-        city_message_post(true, MESSAGE_FLOOD_PERFECT, 0, 0);
+        messages::popup(MESSAGE_FLOOD_PERFECT, 0, 0);
     } else if (quality_next >= 75) {
-        city_message_post(true, MESSAGE_FLOOD_EXCELLENT, 0, 0);
+        messages::popup(MESSAGE_FLOOD_EXCELLENT, 0, 0);
     } else if (quality_next >= 50) {
-        city_message_post(true, MESSAGE_FLOOD_GOOD, 0, 0);
+        messages::popup(MESSAGE_FLOOD_GOOD, 0, 0);
     } else if (quality_next >= 25) {
-        city_message_post(true, MESSAGE_FLOOD_MEDIOCRE, 0, 0);
+        messages::popup(MESSAGE_FLOOD_MEDIOCRE, 0, 0);
     } else if (quality_next > 0) {
-        city_message_post(true, MESSAGE_FLOOD_POOR, 0, 0);
+        messages::popup(MESSAGE_FLOOD_POOR, 0, 0);
     } else {
-        city_message_post(true, MESSAGE_FLOOD_FAIL, 0, 0);
+        messages::popup(MESSAGE_FLOOD_FAIL, 0, 0);
     }
 }
 

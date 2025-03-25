@@ -57,7 +57,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
     int pharaoh_alt_shift = (event.sender_faction == EVENT_FACTION_REQUEST_FROM_CITY ? 1 : 0);
     switch (event.event_state) {
     case e_event_state_finished:
-        city_message_post(true, MESSAGE_REQUEST_RECEIVED, event.event_id, 0);
+        messages::popup(MESSAGE_REQUEST_RECEIVED, event.event_id, 0);
         if (!event.is_overdue) {
             g_city.ratings.increase_kingdom_success_request(3);
         }
@@ -67,7 +67,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
 
     case e_event_state_finished_late:
         assert(!event.is_overdue);
-        city_message_post(true, MESSAGE_REQUEST_RECEIVED_LATE, event.event_id, 0);
+        messages::popup(MESSAGE_REQUEST_RECEIVED_LATE, event.event_id, 0);
         g_city.ratings.increase_kingdom_success_request(1);
         event.event_state = e_event_state_received;
         event.is_active = false;
@@ -80,7 +80,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
     case e_event_state_in_progress:
         if (!event.can_comply_dialog_shown && g_city.resource.stored(request.resource) >= request.amount) {
             event.can_comply_dialog_shown = true;
-            city_message &message = city_message_post(true, MESSAGE_REQUEST_CAN_COMPLY, event.event_id, 0);
+            city_message &message = g_message_manager.post_common(true, MESSAGE_REQUEST_CAN_COMPLY, event.event_id, 0, GOD_UNKNOWN, 0);
             message.req_amount = request.resource_amount();
             message.req_resource = request.resource;
             message.req_months_left = request.months_to_comply;

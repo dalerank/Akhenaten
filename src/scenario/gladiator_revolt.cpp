@@ -1,6 +1,7 @@
 #include "gladiator_revolt.h"
 
 #include "building/count.h"
+#include "city/city_events.h"
 #include "city/city_message.h"
 #include "core/random.h"
 #include "game/game.h"
@@ -29,7 +30,7 @@ void scenario_gladiator_revolt_process(void) {
         if (game.simtime.year == data.game_year && game.simtime.month == data.month) {
             if (building_count_active(BUILDING_CONSERVATORY) > 0) {
                 data.state = e_event_state_in_progress;
-                city_message_post(true, MESSAGE_GLADIATOR_REVOLT, 0, 0);
+                events::emit(event_message{ true, MESSAGE_GLADIATOR_REVOLT, 0, 0 });
             } else {
                 data.state = e_event_state_finished;
             }
@@ -37,7 +38,7 @@ void scenario_gladiator_revolt_process(void) {
     } else if (data.state == e_event_state_in_progress) {
         if (data.end_month == game.simtime.month) {
             data.state = e_event_state_finished;
-            city_message_post(true, MESSAGE_GLADIATOR_REVOLT_FINISHED, 0, 0);
+            events::emit(event_message{ true, MESSAGE_GLADIATOR_REVOLT_FINISHED, 0, 0 });
         }
     }
 }

@@ -20,6 +20,14 @@ auto& g_message_data = g_message_manager;
 
 static bool should_play_sound = true;
 
+void messages::popup(int message_id, int param1, int param2) {
+    events::emit(event_message{ true, message_id, param1, param2 });
+}
+
+void messages::god(int god, int message_id) {
+    events::emit(event_message_god{ god, message_id });
+}
+
 void message_manager_t::init() {
     for (int i = 0; i < MAX_MESSAGES; i++) {
         messages[i].MM_text_id = 0;
@@ -53,13 +61,25 @@ void message_manager_t::init() {
     }
 
     init_problem_areas();
+
+    events::subscribe([this] (event_message ev) {
+        post_common(ev.use_popup, ev.message_id, ev.param1, ev.param2, GOD_UNKNOWN, 0);
+    });
+
+    events::subscribe([this] (event_message_god ev) {
+        post_common(true, ev.message_id, 0, 0, ev.god, 0);
+    });
+
+    events::subscribe([this] (event_message_population ev) {
+        int img_id = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW) + 16;
+        post_common(ev.use_popup, ev.message_id, ev.param1, ev.param2, GOD_UNKNOWN, img_id);
+    });
 }
 
 void message_manager_t::init_problem_areas() {
-    auto& data = g_message_data;
-    data.problem_count = 0;
-    data.problem_index = 0;
-    data.problem_last_click_time = time_get_millis();
+    problem_count = 0;
+    problem_index = 0;
+    problem_last_click_time = time_get_millis();
 }
 
 int message_manager_t::new_message_id() {
@@ -183,7 +203,7 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
     should_play_sound = true;
 }
 
-city_message &city_message_post_common(bool use_popup, int message_id, int param1, int param2, int god, int bg_img) {
+city_message &message_manager_t::post_common(bool use_popup, int message_id, int param1, int param2, int god, int bg_img) {
     auto &data = g_message_data;
 
     int id = data.new_message_id();
@@ -231,19 +251,6 @@ city_message &city_message_post_common(bool use_popup, int message_id, int param
     return msg;
 }
 
-void city_message_god_post(int god, bool use_popup, int message_id, int param1, int param2) {
-    city_message_post_common(use_popup, message_id, param1, param2, god, 0);
-}
-
-void city_message_population_post(bool use_popup, int message_id, int param1, int param2) {
-    int img_id = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW) + 16;
-    city_message_post_common(use_popup, message_id, param1, param2, GOD_UNKNOWN, img_id);
-}
-
-city_message &city_message_post(bool use_popup, int message_id, int param1, int param2) {
-    return city_message_post_common(use_popup, message_id, param1, param2, GOD_UNKNOWN, 0);
-}
-
 city_message &city_message_post_with_popup_delay(e_mesage_category category, bool force_popup, int message_type, int param1, short param2) {
     auto& data = g_message_data;
     int use_popup = false;
@@ -254,7 +261,7 @@ city_message &city_message_post_with_popup_delay(e_mesage_category category, boo
     }
     use_popup |= force_popup;
 
-    city_message &message = city_message_post(use_popup, message_type, param1, param2);
+    city_message &message = data.post_common(use_popup, message_type, param1, param2, GOD_UNKNOWN, 0);
     data.message_count[category]++;
 
     return message;
@@ -269,12 +276,12 @@ void city_message_post_with_message_delay(e_mesage_category category, int use_po
             data.message_count[category]--;
         } else {
             data.message_count[category] = delay;
-            city_message_post(use_popup, message_type, 0, 0);
+            data.post_common(use_popup, message_type, 0, 0, GOD_UNKNOWN, 0);
         }
     } else {
         if (data.message_delay[category] <= 0) {
             data.message_delay[category] = delay;
-            city_message_post(use_popup, message_type, 0, 0);
+            data.post_common(use_popup, message_type, 0, 0, GOD_UNKNOWN, 0);
         }
     }
 }

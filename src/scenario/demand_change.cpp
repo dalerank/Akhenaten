@@ -1,5 +1,6 @@
 #include "demand_change.h"
 
+#include "city/city_events.h"
 #include "city/city_message.h"
 #include "core/random.h"
 #include "empire/empire.h"
@@ -34,14 +35,14 @@ void scenario_demand_change_process() {
         auto &trade_route = g_empire.get_route(route);
         if (g_scenario_data.demand_changes[i].is_rise) {
             if (trade_route.increase_limit(resource) && g_empire.is_trade_route_open(route))
-                city_message_post(true, MESSAGE_INCREASED_TRADING, city_id, resource);
+                events::emit(event_message{ true, MESSAGE_INCREASED_TRADING, city_id, resource });
 
         } else {
             if (trade_route.decrease_limit(resource) && g_empire.is_trade_route_open(route)) {
                 if (trade_route.limit(resource) > 0)
-                    city_message_post(true, MESSAGE_DECREASED_TRADING, city_id, resource);
+                    events::emit(event_message{ true, MESSAGE_DECREASED_TRADING, city_id, resource });
                 else {
-                    city_message_post(true, MESSAGE_TRADE_STOPPED, city_id, resource);
+                    events::emit(event_message{ true, MESSAGE_TRADE_STOPPED, city_id, resource });
                 }
             }
         }

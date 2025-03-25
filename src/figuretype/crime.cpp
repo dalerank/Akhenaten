@@ -124,7 +124,7 @@ int figure::figure_rioter_collapse_building() {
         }
 
         city_message_apply_sound_interval(MESSAGE_CAT_RIOT_COLLAPSE);
-        city_message_post(false, MESSAGE_DESTROYED_BUILDING, b->type, grid_offset);
+        messages::popup(MESSAGE_DESTROYED_BUILDING, b->type, grid_offset);
         city_message_increase_category_count(MESSAGE_CAT_RIOT_COLLAPSE);
         building_destroy_by_rioter(b);
         action_state = FIGURE_ACTION_120_RIOTER_CREATED;

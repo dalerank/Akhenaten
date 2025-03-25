@@ -5,6 +5,7 @@
 #include "building/count.h"
 #include "city/constants.h"
 #include "city/city.h"
+#include "city/city_events.h"
 #include "city/city_message.h"
 #include "city/city_population.h"
 #include "core/calc.h"
@@ -295,11 +296,11 @@ void city_sentiment_t::update() {
             message_delay = 3;
 
             if (value < 35) {
-                city_message_post(false, MESSAGE_PEOPLE_ANGRY, 0, 0);
+                events::emit(event_message{ false, MESSAGE_PEOPLE_ANGRY, 0, 0 });
             } else if (value < 40) {
-                city_message_post(false, MESSAGE_PEOPLE_UNHAPPY, 0, 0);
+                events::emit(event_message{ false, MESSAGE_PEOPLE_UNHAPPY, 0, 0 });
             } else {
-                city_message_post(false, MESSAGE_PEOPLE_DISGRUNTLED, 0, 0);
+                events::emit(event_message{ false, MESSAGE_PEOPLE_DISGRUNTLED, 0, 0 });
             }
         }
     }

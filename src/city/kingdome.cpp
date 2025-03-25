@@ -56,16 +56,16 @@ void kingdome_relation_t::update_debt_state() {
 
         debt_state = 1;
         months_in_debt = 0;
-        city_message_post(true, MESSAGE_CITY_IN_DEBT, 0, 0);
+        messages::popup(MESSAGE_CITY_IN_DEBT, 0, 0);
         g_city.ratings.reduce_prosperity_after_bailout();
     } else if (debt_state == 1) {
         debt_state = 2;
         months_in_debt = 0;
-        city_message_post(true, MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
+        messages::popup(MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
         g_city.ratings.change_kingdom(-5);
     } else if (debt_state == 2) {
         if (months_in_debt == -1) {
-            city_message_post(true, MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
+            messages::popup(MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
             months_in_debt = 0;
         }
         if (game.simtime.day == 0)
@@ -75,13 +75,13 @@ void kingdome_relation_t::update_debt_state() {
             debt_state = 3;
             months_in_debt = 0;
             if (!g_city.figures.kingdome_soldiers) {
-                city_message_post(true, MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
+                messages::popup(MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
                 g_city.ratings.change_kingdom(-10);
             }
         }
     } else if (debt_state == 3) {
         if (months_in_debt == -1) {
-            city_message_post(true, MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
+            messages::popup(MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
             months_in_debt = 0;
         }
         if (game.simtime.day == 0)
@@ -107,10 +107,10 @@ void kingdome_relation_t::process_invasion() {
                 formation_caesar_retreat();
                 if (!invasion.retreat_message_shown) {
                     invasion.retreat_message_shown = 1;
-                    city_message_post(true, MESSAGE_CAESAR_ARMY_RETREAT, 0, 0);
+                    messages::popup(MESSAGE_CAESAR_ARMY_RETREAT, 0, 0);
                 }
             } else if (invasion.duration_day_countdown == 0)
-                city_message_post(true, MESSAGE_CAESAR_ARMY_CONTINUE, 0, 0); // a year has passed (11 months), siege goes on
+                messages::popup(MESSAGE_CAESAR_ARMY_CONTINUE, 0, 0); // a year has passed (11 months), siege goes on
         }
     } else if (invasion.soldiers_killed
                && invasion.soldiers_killed >= invasion.size) {
@@ -120,11 +120,11 @@ void kingdome_relation_t::process_invasion() {
         if (g_city.ratings.kingdom < 35) {
             g_city.ratings.change_kingdom(10);
             if (invasion.count < 2)
-                city_message_post(true, MESSAGE_CAESAR_RESPECT_1, 0, 0);
+                messages::popup(MESSAGE_CAESAR_RESPECT_1, 0, 0);
             else if (invasion.count < 3)
-                city_message_post(true, MESSAGE_CAESAR_RESPECT_2, 0, 0);
+                messages::popup(MESSAGE_CAESAR_RESPECT_2, 0, 0);
             else {
-                city_message_post(true, MESSAGE_CAESAR_RESPECT_3, 0, 0);
+                messages::popup(MESSAGE_CAESAR_RESPECT_3, 0, 0);
             }
         }
     } else if (invasion.days_until_invasion <= 0) {
@@ -133,7 +133,7 @@ void kingdome_relation_t::process_invasion() {
             invasion.warnings_given++;
             invasion.days_until_invasion = 192;
             if (invasion.warnings_given <= 1)
-                city_message_post(true, MESSAGE_CAESAR_WRATH, 0, 0);
+                messages::popup(MESSAGE_CAESAR_WRATH, 0, 0);
         }
     } else {
         invasion.days_until_invasion--;

@@ -39,7 +39,7 @@ void tutorial4_warehouse_beer_check(event_warehouse_filled ev) {
     events::unsubscribe(&tutorial4_warehouse_beer_check);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     building_menu_update(tutorial_stage.tutorial_finance);
-    city_message_post(true, MESSAGE_TUTORIAL_FINANCES, 0, 0);
+    messages::popup(MESSAGE_TUTORIAL_FINANCES, 0, 0);
 }
 
 bool tutorial4_is_success() {

@@ -534,9 +534,9 @@ int building_monument_progress(building *b) {
 
     if (monumentd.phase == MONUMENT_FINISHED) {
         if (building_monument_is_temple_complex(b->type)) {
-            city_message_post(1, MESSAGE_MONUMENT_COMPLETE, 0, b->tile.grid_offset());
+            messages::popup(MESSAGE_MONUMENT_COMPLETE, 0, b->tile.grid_offset());
         } else if (b->type == BUILDING_SMALL_MASTABA) {
-            city_message_post(1, MESSAGE_MONUMENT_COMPLETE, 0, b->tile.grid_offset());
+            messages::popup(MESSAGE_MONUMENT_COMPLETE, 0, b->tile.grid_offset());
         }
     }
     return 1;
