@@ -3,7 +3,7 @@
 #include "overlays/city_overlay.h"
 #include "building/construction/build_planner.h"
 #include "building/rotation.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "city/city.h"
 #include "city/city_warnings.h"
 #include "core/profiler.h"

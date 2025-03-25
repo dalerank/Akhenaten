@@ -7,7 +7,7 @@
 #include "building/building_dock.h"
 #include "game/game.h"
 #include "empire/empire.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "grid/figure.h"

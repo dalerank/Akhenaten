@@ -1,6 +1,6 @@
 #include "empire.h"
 
-#include "city/message.h"
+#include "city/city_message.h"
 #include "empire/empire.h"
 #include "game/game.h"
 #include "scenario/scenario.h"

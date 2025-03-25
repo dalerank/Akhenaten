@@ -2,7 +2,7 @@
 #include "dev/debug.h"
 
 #include "building/building_menu.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "core/game_environment.h"
 #include "core/profiler.h"
 #include "game/orientation.h"

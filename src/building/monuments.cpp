@@ -10,7 +10,7 @@
 #include "figure/figure.h"
 #include "core/svector.h"
 #include "city/city_resource.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "game/resource.h"
 #include "grid/grid.h"
 #include "grid/figure.h"

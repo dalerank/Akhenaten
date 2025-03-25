@@ -14,7 +14,7 @@
 #include "city/city.h"
 #include "city/city_events.h"
 #include "city/city_warnings.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "grid/routing/routing.h"
 #include "grid/routing/routing_terrain.h"
 #include "config/config.h"

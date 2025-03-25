@@ -5,7 +5,7 @@
 #include "building/count.h"
 #include "city/constants.h"
 #include "city/city.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "city/city_population.h"
 #include "core/calc.h"
 #include "core/profiler.h"

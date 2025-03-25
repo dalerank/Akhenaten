@@ -4,7 +4,7 @@
 #include "building/construction/build_planner.h"
 #include "city/city.h"
 #include "city/finance.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "game/game.h"
 #include "config/config.h"
 #include "scenario/criteria.h"

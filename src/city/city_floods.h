@@ -58,6 +58,7 @@ struct floods_t {
     void cycle_states_recalc();
     void update_next_flood_params();
     void tick_update(bool calc_only);
+    void post_flood_prediction_message();
 };
 
 extern floods_t g_floods;

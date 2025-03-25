@@ -1,7 +1,7 @@
 #include "message_list.h"
 
 #include "scenario/scenario.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "core/calc.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"

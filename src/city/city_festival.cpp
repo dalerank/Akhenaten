@@ -7,7 +7,7 @@
 #include "city/constants.h"
 #include "city/city.h"
 #include "city/finance.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "core/random.h"
 #include "figure/figure.h"
 #include "config/config.h"

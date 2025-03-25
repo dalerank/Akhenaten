@@ -5,7 +5,7 @@
 #include "building/building_storage.h"
 #include "building/building_wall.h"
 #include "city/city.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "city/victory.h"
 #include "empire/empire_map.h"
 #include "empire/empire_object.h"

@@ -1,7 +1,7 @@
 #include "city_migration.h"
 
 #include "city/city.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "core/calc.h"
 #include "game/tutorial.h"
 

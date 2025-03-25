@@ -1,6 +1,6 @@
 #include "emperor_change.h"
 
-#include "city/message.h"
+#include "city/city_message.h"
 #include "city/city.h"
 #include "core/random.h"
 #include "game/game.h"

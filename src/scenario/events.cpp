@@ -1,6 +1,6 @@
 #include "events.h"
 
-#include "city/message.h"
+#include "city/city_message.h"
 #include "core/string.h"
 #include "core/log.h"
 #include "event_phrases.h"

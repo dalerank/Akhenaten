@@ -16,7 +16,7 @@
 #include "game/game.h"
 #include "game/undo.h"
 #include "city/city_resource.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "grid/random.h"
 #include "grid/tiles.h"
 #include "grid/grid.h"

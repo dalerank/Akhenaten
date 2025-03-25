@@ -49,7 +49,7 @@
 #include "city/city_floods.h"
 #include "city/city_population.h"
 #include "city/city_desirability.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "building/industry.h"
 #include "io/gamestate/boilerplate.h"
 #include "scenario/distant_battle.h"

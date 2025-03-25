@@ -8,7 +8,7 @@
 #include "config/config.h"
 #include "city/city.h"
 #include "city/map.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "city/military.h"
 #include "city/city_resource.h"
 #include "city/victory.h"
@@ -182,7 +182,7 @@ static void post_load() {
     //    city_view_refresh_viewport();
 
     // problems / overlays
-    city_message_init_problem_areas();
+    g_message_manager.init_problem_areas();
     game_state_reset_overlay();
     game_undo_disable();
 

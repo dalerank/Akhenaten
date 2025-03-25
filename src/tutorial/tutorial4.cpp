@@ -1,7 +1,7 @@
 #include "game/tutorial.h"
 
 #include "building/building_menu.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "building/building_storage_yard.h"
 #include "city/city.h"
 #include "city/city_events.h"

@@ -4,7 +4,7 @@
 #include "building/building_farm.h"
 #include "building/model.h"
 #include "city/city.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "city/city_population.h"
 #include "core/calc.h"
 #include "core/profiler.h"

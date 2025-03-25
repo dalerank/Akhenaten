@@ -1,6 +1,6 @@
 #include "message_dialog.h"
 
-#include "city/message.h"
+#include "city/city_message.h"
 #include "city/city.h"
 #include "city/constants.h"
 #include "empire/empire.h"

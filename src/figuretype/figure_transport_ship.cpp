@@ -6,7 +6,7 @@
 #include "building/building_transport_wharf.h"
 #include "figuretype/figure_shipwreck.h"
 #include "city/city.h"
-#include "city/message.h"
+#include "city/city_message.h"
 
 figures::model_t<figure_transport_ship> transport_ship_m;
 

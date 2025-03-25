@@ -6,7 +6,7 @@
 #include "building/building_menu.h"
 #include "building/building_granary.h"
 #include "io/gamefiles/lang.h"
-#include "city/message.h"
+#include "city/city_message.h"
 
 void tutorial1_handle_fire(event_fire_damage) {
     if (g_tutorials_flags.tutorial_1.fire) {

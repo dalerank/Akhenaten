@@ -2,7 +2,7 @@
 
 #include "building/destruction.h"
 #include "city/city.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "empire/empire_object.h"

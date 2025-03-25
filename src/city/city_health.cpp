@@ -9,7 +9,7 @@
 #include "city/city.h"
 #include "city/city_events.h"
 #include "city/coverage.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/tutorial.h"

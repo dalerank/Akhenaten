@@ -343,11 +343,11 @@ struct message_manager_t {
     short scroll_position;
 
     void init();
+    void init_problem_areas();
+    int new_message_id();
 };
 
 extern message_manager_t g_message_manager;
-
-void city_message_init_problem_areas();
 
 void city_message_disable_sound_for_next_message(void);
 void city_message_apply_sound_interval(int category);

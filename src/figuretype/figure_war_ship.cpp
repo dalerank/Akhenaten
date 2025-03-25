@@ -6,7 +6,7 @@
 #include "figure/properties.h"
 #include "grid/water.h"
 #include "grid/figure.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "game/game.h"
 #include "core/calc.h"
 #include "building/model.h"

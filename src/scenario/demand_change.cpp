@@ -1,6 +1,6 @@
 #include "demand_change.h"
 
-#include "city/message.h"
+#include "city/city_message.h"
 #include "core/random.h"
 #include "empire/empire.h"
 #include "empire/empire_city.h"

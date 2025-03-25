@@ -1,4 +1,4 @@
-#include "message.h"
+#include "city_message.h"
 
 #include "io/io_buffer.h"
 #include "scenario/events.h"
@@ -52,20 +52,19 @@ void message_manager_t::init() {
         last_sound_time[i] = 0;
     }
 
-    city_message_init_problem_areas();
+    init_problem_areas();
 }
 
-void city_message_init_problem_areas(void) {
+void message_manager_t::init_problem_areas() {
     auto& data = g_message_data;
     data.problem_count = 0;
     data.problem_index = 0;
     data.problem_last_click_time = time_get_millis();
 }
 
-static int new_message_id(void) {
-    auto& data = g_message_data;
+int message_manager_t::new_message_id() {
     for (int i = 0; i < MAX_MESSAGES; i++) {
-        if (!data.messages[i].MM_text_id)
+        if (!messages[i].MM_text_id)
             return i;
     }
     return -1;
@@ -127,7 +126,7 @@ void city_message_apply_sound_interval(int category) {
 
 void city_message_post_full(bool use_popup, int template_id, int event_id, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2) {
     auto& data = g_message_data;
-    int id = new_message_id();
+    int id = data.new_message_id();
 
     if (id < 0)
         return;
@@ -187,7 +186,7 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
 city_message &city_message_post_common(bool use_popup, int message_id, int param1, int param2, int god, int bg_img) {
     auto &data = g_message_data;
 
-    int id = new_message_id();
+    int id = data.new_message_id();
     if (id < 0) {
         static city_message dummy;
         return dummy;

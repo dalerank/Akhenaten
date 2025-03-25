@@ -4,7 +4,7 @@
 #include "building/destruction.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/figure.h"

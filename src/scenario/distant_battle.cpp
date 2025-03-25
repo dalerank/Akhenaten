@@ -2,7 +2,7 @@
 
 #include "city/buildings.h"
 #include "city/map.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "city/military.h"
 #include "city/ratings.h"
 #include "core/calc.h"

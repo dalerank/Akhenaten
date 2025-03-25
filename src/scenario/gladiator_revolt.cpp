@@ -1,7 +1,7 @@
 #include "gladiator_revolt.h"
 
 #include "building/count.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "core/random.h"
 #include "game/game.h"
 #include "scenario/scenario.h"

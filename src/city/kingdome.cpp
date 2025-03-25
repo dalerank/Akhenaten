@@ -2,7 +2,7 @@
 
 #include "city/city.h"
 #include "city/finance.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "city/ratings.h"
 #include "core/calc.h"
 #include "core/profiler.h"

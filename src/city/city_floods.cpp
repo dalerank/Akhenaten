@@ -9,7 +9,7 @@
 #include "grid/tiles.h"
 #include "io/manager.h"
 #include "city/city.h"
-#include "message.h"
+#include "city_message.h"
 #include "dev/debug.h"
 #include "game/game.h"
 
@@ -217,18 +217,16 @@ void floods_t::update_next_flood_params() {
     quality_next = quality_next % 100;
 }
 
-static void post_flood_prediction_message() {
-    auto& data = g_floods;
-
-    if (data.quality_next == 100) {
+void floods_t::post_flood_prediction_message() {
+    if (quality_next == 100) {
         city_message_post(true, MESSAGE_FLOOD_PERFECT, 0, 0);
-    } else if (data.quality_next >= 75) {
+    } else if (quality_next >= 75) {
         city_message_post(true, MESSAGE_FLOOD_EXCELLENT, 0, 0);
-    } else if (data.quality_next >= 50) {
+    } else if (quality_next >= 50) {
         city_message_post(true, MESSAGE_FLOOD_GOOD, 0, 0);
-    } else if (data.quality_next >= 25) {
+    } else if (quality_next >= 25) {
         city_message_post(true, MESSAGE_FLOOD_MEDIOCRE, 0, 0);
-    } else if (data.quality_next > 0) {
+    } else if (quality_next > 0) {
         city_message_post(true, MESSAGE_FLOOD_POOR, 0, 0);
     } else {
         city_message_post(true, MESSAGE_FLOOD_FAIL, 0, 0);

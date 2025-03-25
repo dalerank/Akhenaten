@@ -4,7 +4,7 @@
 #include "building/model.h"
 #include "building/building_storage_yard.h"
 #include "building/count.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
 #include "city/city_buildings.h"

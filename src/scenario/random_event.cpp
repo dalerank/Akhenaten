@@ -5,7 +5,7 @@
 #include "city/finance.h"
 #include "city/city_health.h"
 #include "city/city.h"
-#include "city/message.h"
+#include "city/city_message.h"
 #include "city/city_population.h"
 #include "city/trade.h"
 #include "core/random.h"
