@@ -85,8 +85,11 @@ e_trade_status city_resource_trade_status(e_resource resource) {
 }
 
 void city_granaries_remove_resource(event_granaries_remove_resource ev) {
-    int amount_left = ev.amount;
+    if (ev.amount < 0) {
+        return;
+    }
 
+    int amount_left = ev.amount;
     // first go for non-getting warehouses
     buildings_valid_do<building_granary>([&] (building_granary *granary) {
         assert(granary);
@@ -100,6 +103,19 @@ void city_granaries_remove_resource(event_granaries_remove_resource ev) {
         assert(granary);
         if (granary->is_valid()) {
             amount_left = granary->remove_resource(ev.resource, amount_left);
+        }
+    });
+}
+
+void city_storageyards_add_resource(event_storageyards_add_resource ev) {
+    if (ev.amount < 0) {
+        return;
+    }
+
+    buildings_valid_do<building_storage_yard>([&] (auto warehouse) {
+        assert(warehouse && warehouse->is_valid());
+        while (ev.amount && warehouse->add_resource(ev.resource, false, UNITS_PER_LOAD, /*force*/false)) {
+            ev.amount -= UNITS_PER_LOAD;
         }
     });
 }
@@ -254,6 +270,7 @@ void city_resources_t::init() {
     });
 
     events::subscribe(&city_granaries_remove_resource);
+    events::subscribe(&city_storageyards_add_resource);
 }
 
 int city_storageyards_remove_resource(e_resource resource, int amount) {

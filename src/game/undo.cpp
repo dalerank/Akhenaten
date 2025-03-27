@@ -4,6 +4,8 @@
 #include "building/building_storage_yard.h"
 #include "building/building_house.h"
 #include "city/finance.h"
+#include "city/city_events.h"
+#include "city/city_resource.h"
 #include "city/city_buildings.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -253,9 +255,9 @@ void game_undo_perform() {
         for (int i = 0; i < data.num_buildings; i++) {
             if (data.buildings[i].id) {
                 building* b = building_get(data.buildings[i].id);
-                if (b->type == BUILDING_ORACLE
-                    || (b->type >= BUILDING_TEMPLE_COMPLEX_OSIRIS && b->type <= BUILDING_TEMPLE_COMPLEX_BAST))
-                    building_storageyards_add_resource(RESOURCE_MARBLE, 2);
+                if (b->type == BUILDING_ORACLE || (b->type >= BUILDING_TEMPLE_COMPLEX_OSIRIS && b->type <= BUILDING_TEMPLE_COMPLEX_BAST)) {
+                    events::emit(event_storageyards_add_resource{ RESOURCE_MARBLE, 2 });
+                }
 
                 b->state = BUILDING_STATE_UNDO;
             }

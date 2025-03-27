@@ -12,6 +12,7 @@
 struct event_stats_remove_resource { e_resource resource; int amount; };
 struct event_stats_append_resource { e_resource resource; int amount; };
 struct event_granaries_remove_resource { e_resource resource; int amount; };
+struct event_storageyards_add_resource { e_resource resource; int amount; };
 
 struct city_resources_t {
     uint16_t space_in_storages[RESOURCES_MAX];

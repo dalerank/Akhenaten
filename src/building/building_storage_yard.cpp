@@ -256,19 +256,6 @@ void building_storageyard_remove_resource_curse(building* b, int amount) {
     }
 }
 
-void building_storageyards_add_resource(e_resource resource, int amount) {
-    if (amount < 0) {
-        return;
-    }
-
-    buildings_valid_do<building_storage_yard>([&] (auto warehouse) {
-        assert(warehouse && warehouse->is_valid());
-        while (amount && warehouse->add_resource(resource, false, UNITS_PER_LOAD, /*force*/false)) {
-            amount -= UNITS_PER_LOAD;
-        }
-    });
-}
-
 constexpr int FULL_WAREHOUSE = 3200;
 constexpr int THREEQ_WAREHOUSE = 2400;
 constexpr int HALF_WAREHOUSE = 1600;
