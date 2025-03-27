@@ -90,6 +90,26 @@ e_trade_status city_resource_trade_status(e_resource resource) {
     return city_data.resource.trade_status[resource];
 }
 
+void city_granaries_remove_resource(event_granaries_remove_resource ev) {
+    int amount_left = ev.amount;
+
+    // first go for non-getting warehouses
+    buildings_valid_do<building_granary>([&] (building_granary *granary) {
+        assert(granary);
+        if (granary->is_valid() && !granary->is_getting(ev.resource)) {
+            amount_left = granary->remove_resource(ev.resource, amount_left);
+        }
+    });
+
+    // if that doesn't work, take it anyway
+    buildings_valid_do< building_granary>([&] (building_granary *granary) {
+        assert(granary);
+        if (granary->is_valid()) {
+            amount_left = granary->remove_resource(ev.resource, amount_left);
+        }
+    });
+}
+
 void city_resources_t::calculate_stocks() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Storages Calculate Stocks");
 
@@ -238,6 +258,8 @@ void city_resources_t::init() {
         space_in_storages[ev.resource] -= ev.amount;
         stored_in_storages[ev.resource] += ev.amount;
     });
+
+    events::subscribe(&city_granaries_remove_resource);
 }
 
 int city_storageyards_remove_resource(e_resource resource, int amount) {
@@ -260,28 +282,6 @@ int city_storageyards_remove_resource(e_resource resource, int amount) {
 
     return amount - amount_left;
 }
-
-int city_granaries_remove_resource(e_resource resource, int amount) {
-    int amount_left = amount;
-
-    // first go for non-getting warehouses
-    buildings_valid_do([&] (building &b) {
-        building_granary *granary = b.dcast_granary();
-        if (granary && granary->is_valid() && !granary->is_getting(resource)) {
-            amount_left = granary->remove_resource(resource, amount_left);
-        }
-    });
-    // if that doesn't work, take it anyway
-    buildings_valid_do([&] (building &b) {
-        building_granary *granary = b.dcast_granary();
-        if (granary && granary->is_valid()) {
-            amount_left = granary->remove_resource(resource, amount_left);
-        }
-    });
-
-    return amount - amount_left;
-}
-
 
 void city_resource_calculate_storageyard_stocks() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Warehouse Stocks Update");

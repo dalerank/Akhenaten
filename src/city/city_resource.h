@@ -11,6 +11,7 @@
 
 struct event_stats_remove_resource { e_resource resource; int amount; };
 struct event_stats_append_resource { e_resource resource; int amount; };
+struct event_granaries_remove_resource { e_resource resource; int amount; };
 
 struct city_resources_t {
     uint16_t space_in_storages[RESOURCES_MAX];
@@ -87,7 +88,6 @@ void city_resource_add_items(e_resource res, int amount);
 void city_resource_was_added_warning(e_resource res);
 
 int city_storageyards_remove_resource(e_resource resource, int amount);
-int city_granaries_remove_resource(e_resource resource, int amount);
 
 template<e_resource R>
 void game_cheat_add_resource(std::istream &is, std::ostream &os) {

@@ -1,6 +1,7 @@
 #include "request.h"
 
 #include "building/building_storage_yard.h"
+#include "city/city_events.h"
 #include "city/finance.h"
 #include "city/city_message.h"
 #include "city/ratings.h"
@@ -158,7 +159,7 @@ void scenario_request_dispatch(int id) {
         int amount = request.resource_amount();
         amount -= city_storageyards_remove_resource(request.resource, amount);
         if (amount > 0) {
-            city_granaries_remove_resource(request.resource, amount);
+            events::emit(event_granaries_remove_resource{ request.resource, amount });
         }
     }
 }
