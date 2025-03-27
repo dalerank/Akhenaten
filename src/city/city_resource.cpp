@@ -26,6 +26,7 @@ struct available_data_t {
 };
 
 available_data_t g_available_data;
+resource_list g_city_gettable_storages;
 
 static auto &city_data = g_city;
 
@@ -42,6 +43,10 @@ int city_resources_t::granary_stored(e_resource resource) {
 
 int city_resources_t::stored(e_resource resource) {
     return yards_stored(resource) + granary_stored(resource);
+}
+
+int city_resources_t::gettable(e_resource resource) {
+    return g_city_gettable_storages[resource];
 }
 
 const resource_list &city_resource_get_available() {
@@ -83,6 +88,33 @@ void city_resource_set_last_used_storageyard(int warehouse_id) {
 
 e_trade_status city_resource_trade_status(e_resource resource) {
     return city_data.resource.trade_status[resource];
+}
+
+void city_resources_t::calculate_stocks() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Storages Calculate Stocks");
+
+    g_city_gettable_storages.clear();
+
+    buildings_valid_do([] (building &b) {
+        auto &storages = g_city_gettable_storages;
+        if (!b.has_road_access || b.distance_from_entry <= 0) {
+            return;
+        }
+
+        building_storage_yard *warehouse = b.dcast_storage_yard();
+        if (warehouse) {
+            for (const auto &r : resource_list::foods) {
+                storages[r.type] += warehouse->is_gettable(r.type) ? warehouse->amount(r.type) : 0;
+            }
+        }
+
+        building_granary *granary = b.dcast_granary();
+        if (granary) {
+            for (const auto &r : resource_list::foods) {
+                storages[r.type] += granary->is_gettable(r.type) ? granary->amount(r.type) : 0;
+            }
+        }
+    }, BUILDING_GRANARY, BUILDING_STORAGE_YARD);
 }
 
 void city_resource_cycle_trade_status(e_resource resource) {

@@ -59,8 +59,10 @@ public:
     void bless();
     granary_task_status determine_worker_task();
     void draw_stores(vec2i point, color color_mask, painter &ctx);
+
+    template<e_building_type T>
+    int better_getting_storage();
 };
 
-void city_granaries_calculate_stocks();
 int building_granary_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int force_on_stockpile, int* understaffed, tile2i* dst);
 int building_getting_granary_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, tile2i* dst);

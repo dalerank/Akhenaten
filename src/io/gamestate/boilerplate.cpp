@@ -198,7 +198,7 @@ static void post_load() {
     g_city.buildings.update_counters();
     g_city.buildings.on_post_load();
     g_city.figures.on_post_load();
-    city_granaries_calculate_stocks();
+    g_city.resource.calculate_stocks();
     city_resource_calculate_storageyard_stocks();
     city_resource_determine_available();
     building_storage_reset_building_ids();

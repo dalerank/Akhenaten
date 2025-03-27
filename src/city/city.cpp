@@ -175,7 +175,7 @@ void city_t::update_tick(int simtick) {
         map.update_road_network();
         break;
     case 8:
-        city_granaries_calculate_stocks();
+        g_city.resource.calculate_stocks();
         break;
     case 9:
         house_decay_services();

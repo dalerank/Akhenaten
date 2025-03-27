@@ -4,6 +4,7 @@
 #include "core/bstring.h"
 #include "core/game_environment.h"
 #include "game/resource.h"
+#include "core/svector.h"
 
 #include <iosfwd>
 #include <string>
@@ -35,6 +36,7 @@ struct city_resources_t {
     int32_t food_produced_this_month;
     int8_t food_types_arr_unk_00[RESOURCES_FOODS_MAX];
     int8_t food_types_arr_unk_01[RESOURCES_FOODS_MAX];
+
     struct {
         int operating;
         int not_operating;
@@ -46,6 +48,9 @@ struct city_resources_t {
     int yards_stored(e_resource resource);
     int granary_stored(e_resource resource);
     int stored(e_resource resource);
+    int gettable(e_resource resource);
+
+    void calculate_stocks();
 
     void init();
 };
