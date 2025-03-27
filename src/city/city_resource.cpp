@@ -79,12 +79,6 @@ int city_resource_food_percentage_produced() {
 int city_resource_operating_granaries() {
     return city_data.resource.granaries.operating;
 }
-int city_resource_last_used_storageyard() {
-    return city_data.resource.last_used_warehouse;
-}
-void city_resource_set_last_used_storageyard(int warehouse_id) {
-    city_data.resource.last_used_warehouse = warehouse_id;
-}
 
 e_trade_status city_resource_trade_status(e_resource resource) {
     return city_data.resource.trade_status[resource];

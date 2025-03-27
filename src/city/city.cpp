@@ -657,7 +657,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     }
 
     iob->bind(BIND_SIGNATURE_INT16, &data.unused.unknown_27f0);
-    iob->bind(BIND_SIGNATURE_INT16, &data.resource.last_used_warehouse);
+    iob->bind____skip(2); 
     for (int i = 0; i < 18; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &data.unused.unknown_27f4[i]);
     }

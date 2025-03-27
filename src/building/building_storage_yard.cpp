@@ -257,22 +257,16 @@ void building_storageyard_remove_resource_curse(building* b, int amount) {
 }
 
 void building_storageyards_add_resource(e_resource resource, int amount) {
-    int building_id = city_resource_last_used_storageyard();
-
-    for (int i = 1; i < MAX_BUILDINGS && amount > 0; i++) {
-        building_id++;
-        if (building_id >= MAX_BUILDINGS) {
-            building_id = 1;
-        }
-
-        auto warehouse = building_get(building_id)->dcast_storage_yard();
-        if (warehouse && warehouse->is_valid()) {
-            city_resource_set_last_used_storageyard(building_id);
-            while (amount && warehouse->add_resource(resource, false, UNITS_PER_LOAD, /*force*/false)) {
-                amount--;
-            }
-        }
+    if (amount < 0) {
+        return;
     }
+
+    buildings_valid_do<building_storage_yard>([&] (auto warehouse) {
+        assert(warehouse && warehouse->is_valid());
+        while (amount && warehouse->add_resource(resource, false, UNITS_PER_LOAD, /*force*/false)) {
+            amount -= UNITS_PER_LOAD;
+        }
+    });
 }
 
 constexpr int FULL_WAREHOUSE = 3200;

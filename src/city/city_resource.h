@@ -44,7 +44,6 @@ struct city_resources_t {
         int not_operating_with_food;
         int understaffed;
     } granaries;
-    int16_t last_used_warehouse;
 
     int yards_stored(e_resource resource);
     int granary_stored(e_resource resource);
@@ -65,8 +64,7 @@ int city_resource_food_types_available();
 int city_resource_food_supply_months();
 int city_resource_food_percentage_produced();
 int city_resource_operating_granaries();
-int city_resource_last_used_storageyard();
-void city_resource_set_last_used_storageyard(int warehouse_id);
+
 e_trade_status city_resource_trade_status(e_resource resource);
 void city_resource_cycle_trade_status(e_resource resource);
 void city_resource_cycle_trade_import(e_resource resource);
