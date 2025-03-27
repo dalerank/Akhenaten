@@ -1,7 +1,6 @@
 #include "building_bricklayers_guild.h"
 
 #include "building/building.h"
-#include "building/count.h"
 #include "building/monuments.h"
 #include "city/object_info.h"
 #include "city/city.h"
@@ -43,8 +42,8 @@ void building_bricklayers_guild::on_create(int orientation) {
 }
 
 bool building_bricklayers_guild::can_spawn_bricklayer_man(int max_gatherers_per_building) {
-    uint32_t total_sites = building_count_total(BUILDING_SMALL_MASTABA);
-    uint32_t active_sites = building_count_active(BUILDING_SMALL_MASTABA);
+    uint32_t total_sites = g_city.buildings.count_total(BUILDING_SMALL_MASTABA);
+    uint32_t active_sites = g_city.buildings.count_active(BUILDING_SMALL_MASTABA);
     if (total_sites == active_sites) {
         return false;
     }

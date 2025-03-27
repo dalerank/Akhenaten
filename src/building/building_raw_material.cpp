@@ -2,7 +2,6 @@
 
 #include "building/building.h"
 #include "city/object_info.h"
-#include "building/count.h"
 #include "city/city_resource.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -61,11 +60,6 @@ int building_mine_gold::get_produce_uptick_per_day() const {
     }
 }
 
-void building_mine_gold::update_count() const {
-    building_increase_industry_count(RESOURCE_GOLD, num_workers() > 0);
-}
-
-
 bool building_mine_copper::static_params::planer_is_need_flag(e_building_flags flag) const {
     switch (flag) {
     case e_building_flag::Ore:
@@ -73,14 +67,6 @@ bool building_mine_copper::static_params::planer_is_need_flag(e_building_flags f
     }
 
     return building_industry::static_params::planer_is_need_flag(flag);
-}
-
-void building_mine_copper::update_count() const {
-    building_increase_industry_count(RESOURCE_COPPER, num_workers() > 0);
-}
-
-void building_mine_gems::update_count() const {
-    building_increase_industry_count(RESOURCE_GEMS, num_workers() > 0);
 }
 
 int building_clay_pit::get_fire_risk(int value) const {
@@ -95,8 +81,4 @@ bool building_clay_pit::draw_ornaments_and_animations_height(painter &ctx, vec2i
     draw_normal_anim(ctx, point, tile, color_mask);
 
     return true;
-}
-
-void building_clay_pit::update_count() const {
-    building_increase_industry_count(RESOURCE_CLAY, num_workers() > 0);
 }

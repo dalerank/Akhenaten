@@ -1,7 +1,6 @@
 #include "building_workshop_papyrus.h"
 
 #include "building_workshop.h"
-#include "building/count.h"
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
 #include "city/city_resource.h"
@@ -27,10 +26,6 @@ bool building_papyrus_maker::can_play_animation() const {
     return building_industry::can_play_animation();
 }
 
-void building_papyrus_maker::update_count() const {
-    building_increase_industry_count(RESOURCE_PAPYRUS, num_workers() > 0);
-}
-
 bool building_papyrus_maker::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 
@@ -43,7 +38,7 @@ bool building_papyrus_maker::draw_ornaments_and_animations_height(painter &ctx, 
 }
 
 void building_papyrus_maker::on_place_checks() {
-    if (building_count_industry_active(RESOURCE_REEDS) > 0) {
+    if (g_city.buildings.count_industry_active(RESOURCE_REEDS) > 0) {
         return;
     }
 

@@ -2,7 +2,6 @@
 
 #include "building/building_industry.h"
 
-void building_workshop_draw_background(object_info &c, e_resource input_resource_a);
 void building_workshop_draw_foreground(object_info &c);
 
 class building_lamp_workshop : public building_industry {
@@ -14,7 +13,6 @@ public:
     //virtual void on_place(int orientation, int variant) override;
     //virtual void window_info_background(object_info &c) override;
     //virtual void spawn_figure() override;
-    virtual void update_count() const override;
     //virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };
 
@@ -27,6 +25,5 @@ public:
     //virtual void on_place(int orientation, int variant) override;
     //virtual void window_info_background(object_info &c) override;
     //virtual void spawn_figure() override;
-    virtual void update_count() const override;
     //virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };

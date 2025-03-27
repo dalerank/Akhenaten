@@ -2,8 +2,6 @@
 
 #include "building/building_menu.h"
 #include "scenario/scenario.h"
-
-#include "building/count.h"
 #include "city/coverage.h"
 #include "city/city.h"
 #include "graphics/image.h"
@@ -44,9 +42,9 @@ void ui::advisor_entertainment_window::draw_entertainer(int type, pcstr prefix, 
         ui[_s("cvg")].text(font, ui::str(57, 7));
     } else {
         ui[_s("total")].text(font, ui::str(58, 47 + type));
-        ui[_s("active")].text(font, bstring32(building_count_active(venue)));
+        ui[_s("active")].text(font, bstring32(g_city.buildings.count_active(venue)));
         ui[_s("shows")].text(font, bstring32(shows));
-        ui[_s("care")].text(font, bstring32().printf("%u %s", entertain_coeff * building_count_active(venue), ui::str(58, 5)));
+        ui[_s("care")].text(font, bstring32().printf("%u %s", entertain_coeff * g_city.buildings.count_active(venue), ui::str(58, 5)));
         textid textcvg{ 57, 18 };
         if (coverage == 0) { textcvg = { 57, 7 };
         } else if (coverage < 100) { textcvg = { 57, 8 + coverage / 10 }; }

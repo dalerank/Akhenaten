@@ -2,7 +2,6 @@
 #include "building_dance_school.h"
 
 #include "building/building.h"
-#include "building/count.h"
 #include "city/object_info.h"
 #include "city/labor.h"
 #include "game/resource.h"
@@ -18,7 +17,6 @@
 #include "widget/city/ornaments.h"
 #include "graphics/animation.h"
 #include "figuretype/figure_entertainer.h"
-#include "js/js_game.h"
 
 buildings::model_t<building_dancer_school> dancer_school_m;
 

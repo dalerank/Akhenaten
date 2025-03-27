@@ -1,7 +1,6 @@
 #include "building_academy.h"
 
 #include "building/building_education.h"
-#include "building/count.h"
 #include "city/labor.h"
 
 buildings::model_t<building_academy> academy_m;

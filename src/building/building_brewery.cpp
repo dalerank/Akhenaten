@@ -6,7 +6,6 @@
 #include "city/labor.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
-#include "building/count.h"
 #include "empire/empire.h"
 
 #include "js/js_game.h"
@@ -39,12 +38,8 @@ bool building_brewery::draw_ornaments_and_animations_height(painter &ctx, vec2i 
     return true;
 }
 
-void building_brewery::update_count() const {
-    building_increase_industry_count(RESOURCE_BEER, num_workers() > 0);
-}
-
 void building_brewery::on_place_checks() {
-    if (building_count_industry_active(RESOURCE_BARLEY) > 0) {
+    if (g_city.buildings.count_industry_active(RESOURCE_BARLEY) > 0) {
         return;
     }
 

@@ -16,7 +16,6 @@ public:
     };
 
     virtual void update_month() override;
-    virtual void update_count() const override;
     virtual void spawn_figure() override;
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }

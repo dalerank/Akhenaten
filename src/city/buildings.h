@@ -4,7 +4,14 @@
 #include "core/custom_span.hpp"
 #include "building/building.h"
 
+#include <array>
+
 struct city_buildings_t {
+    struct record {
+        uint16_t active;
+        uint16_t total;
+    };
+
     int32_t festival_building_id;
     tile2i festival_square;
 
@@ -33,6 +40,9 @@ struct city_buildings_t {
     int32_t mission_post_operational;
     tile2i main_native_meeting;
     int8_t unknown_value;
+
+    std::array<record, BUILDING_MAX> buildings;
+    std::array<record, RESOURCES_MAX> industry;
 
     void init();
     void shutdown();
@@ -68,6 +78,17 @@ struct city_buildings_t {
 
     bool has_working_dock() const { return !tracked_buildings->at(BUILDING_DOCK).empty(); }
     bool has_working_shipyard() const { return !tracked_buildings->at(BUILDING_SHIPWRIGHT).empty(); }
+
+    void increase_count(e_building_type type, bool active);
+    void increase_industry_count(int resource, bool active);
+
+    int count_active(std::initializer_list<e_building_type> types);
+    int count_active(e_building_type type);
+    int count_total(std::initializer_list<e_building_type> types);
+    int count_total(e_building_type type);
+
+    int count_industry_active(e_resource resource);
+    int count_industry_total(e_resource resource);
 
     void check_buildings_twins();
 };

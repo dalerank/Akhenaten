@@ -1,6 +1,5 @@
 #include "building_shrine.h"
 
-#include "building/count.h"
 #include "city/city_warnings.h"
 #include "grid/road_access.h"
 
@@ -27,8 +26,4 @@ e_overlay building_shrine::get_overlay() const {
     }
 
     return OVERLAY_NONE;
-}
-
-void building_shrine::update_count() const {
-    building_increase_type_count(type(), true);
 }

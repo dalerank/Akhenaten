@@ -1,6 +1,5 @@
 #include "empire_map.h"
 
-#include "building/count.h"
 #include "city/constants.h"
 #include "city/city_resource.h"
 #include "city/trade.h"

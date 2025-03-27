@@ -1,13 +1,12 @@
 #include "building_farm.h"
 
-#include "building/count.h"
 #include "building/industry.h"
 #include "core/object_property.h"
 #include "building/building_animation.h"
 #include "city/object_info.h"
 #include "city/city_resource.h"
 #include "city/labor.h"
-#include "city/city_buildings.h"
+#include "city/city.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "game/game.h"
@@ -417,6 +416,8 @@ e_sound_channel_city building_farm::sound_channel() const {
 }
 
 void building_farm::update_count() const {
+    building_impl::update_count();
+
     static std::pair<e_building_type, e_resource> farms[] = {
         {BUILDING_GRAIN_FARM, RESOURCE_GRAIN},
         {BUILDING_BARLEY_FARM, RESOURCE_BARLEY},
@@ -428,7 +429,7 @@ void building_farm::update_count() const {
         {BUILDING_HENNA_FARM, RESOURCE_HENNA}
     };
     auto it = std::find_if(std::begin(farms), std::end(farms), [btype = type()](auto &t) { return t.first == btype; });
-    building_increase_industry_count(it->second, num_workers() > 0);
+    g_city.buildings.increase_industry_count(it->second, num_workers() > 0);
 }
 
 void building_farm::spawn_figure() {

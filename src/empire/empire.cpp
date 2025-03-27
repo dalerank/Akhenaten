@@ -6,7 +6,6 @@
 #include "city/trade.h"
 #include "city/city.h"
 #include "city/city_population.h"
-#include "building/count.h"
 #include "scenario/map.h"
 #include "trade_route.h"
 #include "empire_object.h"
@@ -208,7 +207,7 @@ int get_max_raw_stock_for_population(e_resource resource) {
 
     int max_in_stock = 0;
     if (finished_good) {
-        max_in_stock = 200 + 200 * building_count_industry_active(resource);
+        max_in_stock = 200 + 200 * g_city.buildings.count_industry_active(resource);
     }
 
     return max_in_stock;
@@ -330,7 +329,7 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
             break;
 
         case RESOURCE_TIMBER:
-            max_in_stock = building_count_active(BUILDING_SHIPWRIGHT) * 200;
+            max_in_stock = g_city.buildings.count_active(BUILDING_SHIPWRIGHT) * 200;
             break;
 
         case RESOURCE_BRICKS:
@@ -343,7 +342,7 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
             break;
 
         case RESOURCE_PAPYRUS:
-            max_in_stock = std::max(100, (building_count_active(BUILDING_SCRIBAL_SCHOOL) + building_count_active(BUILDING_LIBRARY)) * 100);
+            max_in_stock = std::max(100, g_city.buildings.count_active({ BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY }) * 100);
             break;
 
         default:

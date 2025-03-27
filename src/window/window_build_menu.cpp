@@ -2,7 +2,6 @@
 
 #include "core/svector.h"
 #include "city/city.h"
-#include "building/count.h"
 #include "graphics/animation.h"
 #include "building/building.h"
 #include "building/building_menu.h"
@@ -104,7 +103,7 @@ void build_menu_widget::button_menu_item(int item) {
 
     e_building_type type = building_menu_type(selected_submenu, item);
     const auto &params = building_impl::params(type);
-    if (params.unique_building && building_count_total(type)) {
+    if (params.unique_building && g_city.buildings.count_total(type)) {
         return;
     }
 
@@ -148,7 +147,7 @@ void build_menu_widget::draw_menu_buttons() {
 
         const auto &params = building_impl::params(type);
         if (params.unique_building) {
-            bool has_building = building_count_total(type);
+            const bool has_building = g_city.buildings.count_total(type);
 
             font = has_building ? FONT_NORMAL_BLACK_ON_DARK : font;
             UiFlags flags = UiFlags_PanelSmall;

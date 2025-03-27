@@ -1,6 +1,7 @@
 #include "building/building_industry.h"
 
 #include "io/io_buffer.h"
+#include "city/city.h"
 #include "core/object_property.h"
 
 constexpr short MAX_PROGRESS_RAW = 200;
@@ -121,6 +122,18 @@ void building_industry::spawn_figure() {
         start_production();
         const int amount = ready_production();
         create_cartpusher(base.output_resource_first_id, amount);
+    }
+}
+
+void building_industry::update_count() const {
+    building_impl::update_count();
+
+    if (base.output_resource_first_id != RESOURCE_NONE) {
+        g_city.buildings.increase_industry_count(base.output_resource_first_id, num_workers() > 0);
+    }
+
+    if (base.output_resource_second_id != RESOURCE_NONE) {
+        g_city.buildings.increase_industry_count(base.output_resource_second_id, num_workers() > 0);
     }
 }
 

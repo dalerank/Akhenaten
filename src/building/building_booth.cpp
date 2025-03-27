@@ -2,8 +2,8 @@
 
 #include "building/building.h"
 #include "construction/build_planner.h"
-#include "building/count.h"
 #include "city/object_info.h"
+#include "city/city.h"
 #include "city/city_warnings.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
@@ -107,7 +107,7 @@ void building_booth::on_place_update_tiles(int orientation, int variant) {
 void building_booth::on_place_checks() {
     construction_warnings warnings;
 
-    const bool has_juggler_school = building_count_active(BUILDING_JUGGLER_SCHOOL) > 0;
+    const bool has_juggler_school = g_city.buildings.count_active(BUILDING_JUGGLER_SCHOOL) > 0;
     warnings.add_if(!has_juggler_school, "#build_juggling_school");
 }
 

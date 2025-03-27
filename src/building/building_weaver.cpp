@@ -1,6 +1,5 @@
 #include "building_weaver.h"
 
-#include "building/count.h"
 #include "building/building_workshop.h"
 #include "graphics/graphics.h"
 #include "city/city_resource.h"
@@ -8,12 +7,11 @@
 #include "city/labor.h"
 #include "city/city.h"
 #include "empire/empire.h"
-#include "js/js_game.h"
 
 buildings::model_t<building_weaver> bweaver_m;
 
 void building_weaver::on_place_checks() {
-    if (building_count_industry_active(RESOURCE_FLAX) <= 0) {
+    if (g_city.buildings.count_industry_active(RESOURCE_FLAX) <= 0) {
         return;
     }
 
@@ -50,8 +48,4 @@ bool building_weaver::draw_ornaments_and_animations_height(painter &ctx, vec2i p
     }
 
     return true;
-}
-
-void building_weaver::update_count() const {
-    building_increase_industry_count(RESOURCE_LINEN, num_workers() > 0);
 }

@@ -9,7 +9,6 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/ui.h"
 #include "construction/build_planner.h"
-#include "building/count.h"
 #include "grid/building.h"
 #include "grid/orientation.h"
 #include "city/labor.h"
@@ -37,7 +36,7 @@ void building_festival_square::static_params::planer_ghost_preview(build_planner
         }
     } else { // can place (theoretically)
         int square_id = current_params().anim[animkeys().square].first_img();
-        bool is_exist = building_count_total(BUILDING_FESTIVAL_SQUARE);
+        bool is_exist = g_city.buildings.count_total(BUILDING_FESTIVAL_SQUARE);
         int color_mask = is_exist ? COLOR_MASK_RED : COLOR_MASK_GREEN;
         for (int i = 0; i < building_size * building_size; i++) {
             ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{ ((i % building_size) - (i / building_size)) * 30, ((i % building_size) + (i / building_size)) * 15 }, color_mask);

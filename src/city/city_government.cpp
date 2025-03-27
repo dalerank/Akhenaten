@@ -2,7 +2,6 @@
 
 #include "building/building_tax_collector.h"
 #include "building/building_palace.h"
-#include "building/count.h"
 #include "city/finance.h"
 #include "core/game_environment.h"
 #include "core/profiler.h"
@@ -16,11 +15,11 @@ void city_t::government_distribute_treasury() {
     constexpr int tax_collectpr_up_units = 2;
     constexpr int tax_collector_units = 1;
 
-    const uint32_t vil_palace_count = building_count_active(BUILDING_VILLAGE_PALACE);
-    const uint32_t town_palace_count = building_count_active(BUILDING_TOWN_PALACE);
-    const uint32_t city_palace_count = building_count_active(BUILDING_CITY_PALACE);
-    const uint32_t tax_col_count = building_count_active(BUILDING_TAX_COLLECTOR);
-    const uint32_t tax_col_up_count = building_count_active(BUILDING_TAX_COLLECTOR_UPGRADED);
+    const uint32_t vil_palace_count = g_city.buildings.count_active(BUILDING_VILLAGE_PALACE);
+    const uint32_t town_palace_count = g_city.buildings.count_active(BUILDING_TOWN_PALACE);
+    const uint32_t city_palace_count = g_city.buildings.count_active(BUILDING_CITY_PALACE);
+    const uint32_t tax_col_count = g_city.buildings.count_active(BUILDING_TAX_COLLECTOR);
+    const uint32_t tax_col_up_count = g_city.buildings.count_active(BUILDING_TAX_COLLECTOR_UPGRADED);
 
     int units = palace_units * (vil_palace_count + town_palace_count + city_palace_count);
                     //+ greate_palace_units * palace_up_count;

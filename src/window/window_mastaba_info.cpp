@@ -3,7 +3,6 @@
 #include "sound/sound_building.h"
 #include "window/building/common.h"
 #include "window/window_building_info.h"
-#include "building/count.h"
 #include "building/monuments.h"
 #include "game/game.h"
 #include "city/city.h"
@@ -33,8 +32,8 @@ void info_window_mastaba::init(object_info &c) {
         }
 
         if (d.phase < 3) {
-            int work_camps_num = building_count_total(BUILDING_WORK_CAMP);
-            int work_camps_active_num = building_count_active(BUILDING_WORK_CAMP);
+            int work_camps_num = g_city.buildings.count_total(BUILDING_WORK_CAMP);
+            int work_camps_active_num = g_city.buildings.count_active(BUILDING_WORK_CAMP);
 
             int work_camps_near_mastaba = 0;
             buildings_valid_do([&] (building &w) {
@@ -49,9 +48,9 @@ void info_window_mastaba::init(object_info &c) {
             else { reason = { 178, 17 }; }
         } else {
 
-            int stonemason_guilds_num = building_count_total(BUILDING_STONEMASONS_GUILD);
-            int bricklayers_guilds_num = building_count_total(BUILDING_BRICKLAYERS_GUILD);
-            int bricklayers_guilds_active_num = building_count_active(BUILDING_BRICKLAYERS_GUILD);
+            int stonemason_guilds_num = g_city.buildings.count_total(BUILDING_STONEMASONS_GUILD);
+            int bricklayers_guilds_num = g_city.buildings.count_total(BUILDING_BRICKLAYERS_GUILD);
+            int bricklayers_guilds_active_num = g_city.buildings.count_active(BUILDING_BRICKLAYERS_GUILD);
             int bricks_on_storages = city_resource_ready_for_using(RESOURCE_BRICKS);
             bool bricks_stockpiled = city_resource_is_stockpiled(RESOURCE_BRICKS);
             int workers_onsite = building_monument_workers_onsite(&mastaba->base, FIGURE_LABORER);

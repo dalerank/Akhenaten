@@ -2,11 +2,8 @@
 
 #include "building/building_dance_school.h"
 #include "figuretype/figure_entertainer.h"
-#include "building/count.h"
-
 #include "widget/city/ornaments.h"
 #include "city/labor.h"
-#include "js/js_game.h"
 
 buildings::model_t<building_conservatory> conservatory_m;
 

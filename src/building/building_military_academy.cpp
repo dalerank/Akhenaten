@@ -1,6 +1,5 @@
 #include "building_military_academy.h"
 
-#include "building/count.h"
 #include "graphics/elements/ui.h"
 #include "window/building/common.h"
 

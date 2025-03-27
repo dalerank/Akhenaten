@@ -1,6 +1,5 @@
 #include "city_religion.h"
 
-#include "building/count.h"
 #include "building/destruction.h"
 #include "building/building_granary.h"
 #include "building/industry.h"
@@ -109,11 +108,11 @@ int city_religion_t::god_coverage_total(e_god god, e_building_type temple, e_bui
     default: return 0;
 
     case GOD_STATUS_KNOWN:
-        return 150 * building_count_total(shrine) + 375 * building_count_active(temple) + 8000 * building_count_active(complex);
+        return 150 * g_city.buildings.count_total(shrine) + 375 * g_city.buildings.count_active(temple) + 8000 * g_city.buildings.count_active(complex);
         break;
 
     case GOD_STATUS_PATRON:
-        return 300 * building_count_total(shrine) + 750 * building_count_active(temple) + 8000 * building_count_active(complex);
+        return 300 * g_city.buildings.count_total(shrine) + 750 * g_city.buildings.count_active(temple) + 8000 * g_city.buildings.count_active(complex);
         break;
     }
 }
@@ -220,8 +219,8 @@ bool city_religion_t::PTAH_industry_restock() {
     // search for industries
     int industries_found = 0;
     for (int i = 0; i < 3; ++i) {
-        if (building_count_total(industries[i]) > 0
-            || (industry_resource[i] != RESOURCE_NONE && building_count_industry_active(industry_resource[i]) > 0)) {
+        if (g_city.buildings.count_total(industries[i]) > 0
+            || (industry_resource[i] != RESOURCE_NONE && g_city.buildings.count_industry_active(industry_resource[i]) > 0)) {
             industries_found++;
         } else {
             industries[i] = BUILDING_NONE;
@@ -295,8 +294,8 @@ bool city_religion_t::PTAH_industry_destruction() {
     // search for industries
     int industries_found = 0;
     for (int i = 0; i < 6; ++i) {
-        if (building_count_total(industries[i]) > 0
-            || (industry_resource[i] != RESOURCE_NONE && building_count_industry_active(industry_resource[i]) > 0)) {
+        if (g_city.buildings.count_total(industries[i]) > 0
+            || (industry_resource[i] != RESOURCE_NONE && g_city.buildings.count_industry_active(industry_resource[i]) > 0)) {
             industries_found++;
         } else {
             industries[i] = BUILDING_NONE;
@@ -861,11 +860,11 @@ void city_religion_t::calculate_gods_mood_targets() {
     for (auto *god: known_gods) {
         int num_temples = 0;
         switch (god->type) {
-        case GOD_OSIRIS: num_temples = building_count_total(BUILDING_TEMPLE_OSIRIS) + building_count_total(BUILDING_TEMPLE_COMPLEX_OSIRIS); break;
-        case GOD_RA: num_temples = building_count_total(BUILDING_TEMPLE_RA) + building_count_total(BUILDING_TEMPLE_COMPLEX_RA); break;
-        case GOD_PTAH: num_temples = building_count_total(BUILDING_TEMPLE_PTAH) + building_count_total(BUILDING_TEMPLE_COMPLEX_PTAH); break;
-        case GOD_SETH: num_temples = building_count_total(BUILDING_TEMPLE_SETH) + building_count_total(BUILDING_TEMPLE_COMPLEX_SETH); break;
-        case GOD_BAST: num_temples = building_count_total(BUILDING_TEMPLE_BAST) + building_count_total(BUILDING_TEMPLE_COMPLEX_BAST); break;
+        case GOD_OSIRIS: num_temples = g_city.buildings.count_total({ BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS }); break;
+        case GOD_RA: num_temples = g_city.buildings.count_total({ BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA }); break;
+        case GOD_PTAH: num_temples = g_city.buildings.count_total({ BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH }); break;
+        case GOD_SETH: num_temples = g_city.buildings.count_total({ BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH }); break;
+        case GOD_BAST: num_temples = g_city.buildings.count_total({ BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST }); break;
 
         default:
             assert(false);

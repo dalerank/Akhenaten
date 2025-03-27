@@ -1,7 +1,6 @@
 #include "building_health.h"
 
 #include "building/building_house.h"
-#include "building/count.h"
 #include "city/object_info.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"

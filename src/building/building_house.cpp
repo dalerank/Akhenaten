@@ -1,6 +1,5 @@
 #include "building_house.h"
 
-#include "building/count.h"
 #include "city/city.h"
 #include "city/city_warnings.h"
 #include "city/city_population.h"
@@ -132,7 +131,7 @@ void building_house::on_undo() {
 }
 
 void building_house::update_count() const {
-    building_increase_type_count(type(), runtime_data().hsize > 0);
+    g_city.buildings.increase_count(type(), runtime_data().hsize > 0);
 }
 
 void building_house::bind_dynamic(io_buffer *iob, size_t version) {

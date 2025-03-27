@@ -1,8 +1,8 @@
 #include "gladiator_revolt.h"
 
-#include "building/count.h"
 #include "city/city_events.h"
 #include "city/city_message.h"
+#include "city/city.h"
 #include "core/random.h"
 #include "game/game.h"
 #include "scenario/scenario.h"
@@ -28,7 +28,7 @@ void scenario_gladiator_revolt_process(void) {
 
     if (data.state == e_event_state_initial) {
         if (game.simtime.year == data.game_year && game.simtime.month == data.month) {
-            if (building_count_active(BUILDING_CONSERVATORY) > 0) {
+            if (g_city.buildings.count_active(BUILDING_CONSERVATORY) > 0) {
                 data.state = e_event_state_in_progress;
                 events::emit(event_message{ true, MESSAGE_GLADIATOR_REVOLT, 0, 0 });
             } else {

@@ -1,6 +1,5 @@
 #include "building_jewels_workshop.h"
 
-#include "building/count.h"
 #include "building/building_workshop.h"
 #include "empire/empire.h"
 #include "city/city_resource.h"
@@ -19,7 +18,7 @@ bool building_jewels_workshop::can_play_animation() const {
 }
 
 void building_jewels_workshop::on_place_checks() {
-    if (building_count_industry_active(RESOURCE_GEMS) > 0) {
+    if (g_city.buildings.count_industry_active(RESOURCE_GEMS) > 0) {
         return;
     }
 
@@ -44,8 +43,4 @@ bool building_jewels_workshop::draw_ornaments_and_animations_height(painter &ctx
     //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GEMS_2) + amount, x + 65, y + 3,
     //            color_mask);
     return true;
-}
-
-void building_jewels_workshop::update_count() const {
-    building_increase_industry_count(RESOURCE_LUXURY_GOODS, num_workers() > 0);
 }

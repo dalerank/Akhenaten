@@ -12,7 +12,6 @@
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
 #include "figure/figure.h"
-#include "building/count.h"
 #include "game/game.h"
 #include "game/undo.h"
 #include "city/city_resource.h"
@@ -541,7 +540,7 @@ void building_mastaba::update_count() const {
         return;
     }
 
-    building_increase_type_count(base.type, building_monument_is_finished(&base));
+    building_monument::update_count();
 }
 
 void building_mastaba::update_month() {

@@ -1,7 +1,6 @@
 #include "building/building_fort.h"
 
 #include "building/rotation.h"
-#include "building/count.h"
 #include "figure/formation.h"
 #include "figure/formation_legion.h"
 #include "widget/city/building_ghost.h"
@@ -114,7 +113,7 @@ void building_fort::on_place_update_tiles(int orientation, int variant) {
 void building_fort::on_place_checks() {
     construction_warnings warnings;
 
-    const bool has_barracks = building_count_active(BUILDING_RECRUITER) > 0;
+    const bool has_barracks = g_city.buildings.count_active(BUILDING_RECRUITER) > 0;
     warnings.add_if(!has_barracks, "#needs_recruiter_to_conscript");
 }
 

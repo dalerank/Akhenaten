@@ -32,6 +32,7 @@ public:
     virtual int stored_amount(e_resource) const override;
     virtual void start_production() override;
     virtual void spawn_figure() override;
+    virtual void update_count() const override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
 
     runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }

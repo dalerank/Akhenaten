@@ -3,7 +3,6 @@
 #include "building/rotation.h"
 #include "building/building_type.h"
 #include "building/building_storage.h"
-#include "building/count.h"
 #include "building/destruction.h"
 #include "city/buildings.h"
 #include "city/city_population.h"
@@ -1103,7 +1102,7 @@ bool building_impl::can_play_animation() const {
 }
 
 void building_impl::update_count() const {
-    building_increase_type_count(base.type, base.num_workers > 0);
+    g_city.buildings.increase_count(base.type, base.num_workers > 0);
 }
 
 void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, color mask) {

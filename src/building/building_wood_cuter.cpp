@@ -1,7 +1,6 @@
 #include "building_wood_cuter.h"
 
 #include "figure/figure.h"
-#include "building/count.h"
 #include "core/random.h"
 #include "js/js_game.h"
 #include "building_raw_material.h"
@@ -16,10 +15,6 @@ buildings::model_t<building_wood_cutter> bwood_cutter_m;
 
 void building_wood_cutter::on_create(int orientation) {
     runtime_data().max_gatheres = 1;
-}
-
-void building_wood_cutter::update_count() const {
-    building_increase_industry_count(RESOURCE_TIMBER, num_workers() > 0);
 }
 
 void building_wood_cutter::bind_dynamic(io_buffer *iob, size_t version) {

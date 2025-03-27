@@ -1,6 +1,5 @@
 #include "building_senet_house.h"
 
-#include "building/count.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
@@ -8,6 +7,7 @@
 #include "window/building/common.h"
 #include "city/labor.h"
 #include "city/buildings.h"
+#include "city/city.h"
 #include "city/city_warnings.h"
 #include "window/building/common.h"
 #include "sound/sound_building.h"
@@ -45,7 +45,7 @@ void building_senet_house::window_info_background(object_info &c) {
 void building_senet_house::on_place_checks() {
     construction_warnings warnings;
 
-    const bool has_senet_master = (building_count_active(BUILDING_SENET_MASTER) > 0);
+    const bool has_senet_master = (g_city.buildings.count_active(BUILDING_SENET_MASTER) > 0);
     warnings.add_if(!has_senet_master, "#build_senet_house");
 }
 

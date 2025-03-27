@@ -4,7 +4,6 @@
 #include "city/labor.h"
 #include "io/gamefiles/lang.h"
 #include "widget/city/ornaments.h"
-#include "building/count.h"
 
 buildings::model_t<building_dentist> dentist_m;
 

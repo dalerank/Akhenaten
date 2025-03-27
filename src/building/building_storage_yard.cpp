@@ -2,7 +2,6 @@
 
 #include "building/building_barracks.h"
 #include "building/building_storage_room.h"
-#include "building/count.h"
 #include "building/building_granary.h"
 #include "building/industry.h"
 #include "building/rotation.h"
@@ -37,7 +36,6 @@
 #include "config/config.h"
 #include "widget/city/ornaments.h"
 #include "widget/city/building_ghost.h"
-#include "js/js_game.h"
 #include "figuretype/figure_storageyard_cart.h"
 #include "construction/build_planner.h"
 #include "figuretype/figure_sled.h"
@@ -518,7 +516,7 @@ storage_worker_task building_storageyard_deliver_weapons(building *b) {
         return { STORAGEYARD_TASK_NONE };
     }
 
-    if (building_count_active(BUILDING_RECRUITER) <= 0) {
+    if (g_city.buildings.count_active(BUILDING_RECRUITER) <= 0) {
         return { STORAGEYARD_TASK_NONE };
     }
 
@@ -556,7 +554,7 @@ storage_worker_task building_storageyard_deliver_weapons(building *b) {
 }
 
 storage_worker_task building_storageyard_deliver_timber_to_shipyard_school(building * b) {
-    if (building_count_active(BUILDING_SHIPWRIGHT) <= 0 || city_resource_is_stockpiled(RESOURCE_TIMBER)) {
+    if (g_city.buildings.count_active(BUILDING_SHIPWRIGHT) <= 0 || city_resource_is_stockpiled(RESOURCE_TIMBER)) {
         return { STORAGEYARD_TASK_NONE };
     }
 
@@ -585,7 +583,7 @@ storage_worker_task building_storageyard_deliver_timber_to_shipyard_school(build
 }
 
 storage_worker_task building_storageyard_deliver_papyrus_to_scribal_school(building *b) {
-    if (building_count_active(BUILDING_SCRIBAL_SCHOOL) <= 0 || city_resource_is_stockpiled(RESOURCE_PAPYRUS)) {
+    if (g_city.buildings.count_active(BUILDING_SCRIBAL_SCHOOL) <= 0 || city_resource_is_stockpiled(RESOURCE_PAPYRUS)) {
         return { STORAGEYARD_TASK_NONE };
     }
 

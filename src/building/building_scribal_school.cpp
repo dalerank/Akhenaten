@@ -2,7 +2,6 @@
 
 #include "js/js_game.h"
 #include "core/calc.h"
-#include "building/count.h"
 #include "grid/road_access.h"
 #include "figure/figure.h"
 #include "building/building_education.h"
@@ -32,7 +31,7 @@ void building_scribal_school::update_month() {
 }
 
 void building_scribal_school::on_place_checks() {
-    if (building_count_industry_active(RESOURCE_PAPYRUS) > 0) {
+    if (g_city.buildings.count_industry_active(RESOURCE_PAPYRUS) > 0) {
         return;
     }
         

@@ -2,7 +2,6 @@
 
 #include "figure/formation.h"
 #include "city/object_info.h"
-#include "building/count.h"
 #include "graphics/graphics.h"
 #include "window/building/common.h"
 #include "graphics/image.h"
@@ -181,7 +180,7 @@ void legion_info_window::init(object_info &c) {
         if (m->cursed_by_seth) {
             group_id = 89;
             text_id = 1;
-        } else if (building_count_active(BUILDING_RECRUITER)) {
+        } else if (g_city.buildings.count_active(BUILDING_RECRUITER)) {
             group_id = 138;
             text_id = 10;
         } else {

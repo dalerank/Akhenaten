@@ -1,7 +1,6 @@
 #include "building/building_weaponsmith.h"
 
 #include "building/building_workshop.h"
-#include "building/count.h"
 #include "graphics/animation.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -22,7 +21,7 @@ declare_console_command(addweapons, game_cheat_add_resource<RESOURCE_WEAPONS>);
 buildings::model_t<building_weaponsmith> weaponsmith_m;
 
 void building_weaponsmith::on_place_checks() {
-    if (building_count_industry_active(RESOURCE_COPPER) > 0) {
+    if (g_city.buildings.count_industry_active(RESOURCE_COPPER) > 0) {
         return;
     }
        
@@ -59,8 +58,4 @@ bool building_weaponsmith::draw_ornaments_and_animations_height(painter &ctx, ve
     }
 
     return true;
-}
-
-void building_weaponsmith::update_count() const {
-    building_increase_industry_count(RESOURCE_WEAPONS, num_workers() > 0);
 }

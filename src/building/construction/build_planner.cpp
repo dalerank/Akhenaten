@@ -10,7 +10,6 @@
 #include "building/building_menu.h"
 #include "building/building_road.h"
 #include "building/building_wall.h"
-#include "building/count.h"
 #include "building/model.h"
 #include "building/monuments.h"
 #include "building/monument_mastaba.h"
@@ -805,7 +804,7 @@ void build_planner::update_unique_only_one_check() {
     const auto &params = building_impl::params(build_type);
     bool is_unique_building = params.is_unique_building();
     if (is_unique_building) {
-        unique_already_placed = building_count_total(build_type);
+        unique_already_placed = g_city.buildings.count_total(build_type);
     }
 
     // for unique buildings - only one can be placed inside the mission

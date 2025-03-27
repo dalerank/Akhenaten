@@ -2,16 +2,11 @@
 
 #include "js/js_game.h"
 #include "building/building_workshop.h"
-#include "building/count.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "city/labor.h"
 
 buildings::model_t<building_bricks_workshop> bricks_workshop_m;
-
-void building_bricks_workshop::update_count() const {
-    building_increase_industry_count(RESOURCE_BRICKS, num_workers() > 0);
-}
 
 bool building_bricks_workshop::can_play_animation() const {
     if (progress() == 0) {

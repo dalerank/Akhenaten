@@ -15,7 +15,6 @@ public:
 
     virtual int animation_speed(int speed) const override { return 3; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
-    virtual void update_count() const override;
 };
 
 class building_stone_quarry : public building_quarry {
@@ -26,7 +25,6 @@ public:
     virtual int animation_speed(int speed) const override { return 3; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual int get_produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 2) : 0; }
-    virtual void update_count() const override;
 };
 
 class building_limestone_quarry : public building_quarry {
@@ -36,7 +34,6 @@ public:
 
     virtual int animation_speed(int speed) const override { return 3; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
-    virtual void update_count() const override;
 };
 
 class building_granite_quarry : public building_quarry {
@@ -46,5 +43,4 @@ public:
 
     virtual int animation_speed(int speed) const override { return 3; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
-    virtual void update_count() const override;
 };

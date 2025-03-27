@@ -2,7 +2,6 @@
 
 #include "building/building.h"
 #include "building/model.h"
-#include "building/count.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"
@@ -643,17 +642,15 @@ int building_monument_get_id(e_building_type type) {
 }
 
 int building_monument_count_temple_complex(void) {
-    int count = 0;
-    static const e_building_type temple_complex[] = {
+    auto temple_complex = {
         BUILDING_TEMPLE_COMPLEX_OSIRIS,
         BUILDING_TEMPLE_COMPLEX_RA,
         BUILDING_TEMPLE_COMPLEX_PTAH,
         BUILDING_TEMPLE_COMPLEX_SETH,
         BUILDING_TEMPLE_COMPLEX_BAST,
     };
-    for (auto &type: temple_complex) {
-        count += building_count_active(type);
-    }
+
+    const int count = g_city.buildings.count_active(temple_complex);
     return count;
 }
 

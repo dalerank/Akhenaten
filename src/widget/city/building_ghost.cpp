@@ -10,7 +10,6 @@
 #include "building/rotation.h"
 #include "building/building_fort.h"
 #include "building/building.h"
-#include "building/count.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "grid/bridge.h"
@@ -30,8 +29,6 @@
 #include "graphics/view/lookup.h"
 
 #include <cmath>
-
-// #define OFFSET(x,y) (x + GRID_SIZE_PH * y)
 
 static const int RESERVOIR_GRID_OFFSETS_PH[4] = {GRID_OFFSET(-1, -1), GRID_OFFSET(1, -1), GRID_OFFSET(1, 1), GRID_OFFSET(-1, 1)};
 

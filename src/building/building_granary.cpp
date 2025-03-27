@@ -3,7 +3,7 @@
 #include "building/destruction.h"
 #include "building/model.h"
 #include "building/building_storage_yard.h"
-#include "building/count.h"
+#include "city/city.h"
 #include "city/city_message.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
@@ -500,7 +500,7 @@ void building_granary::bind_dynamic(io_buffer *iob, size_t version) {
 
 void building_granary::on_place_checks() {
     construction_warnings warnings;
-    const bool has_bazaar = building_count_active(BUILDING_BAZAAR) > 0;
+    const bool has_bazaar = g_city.buildings.count_active(BUILDING_BAZAAR) > 0;
 
     warnings.add_if(!has_bazaar, "#build_bazaars_to_distribute_food");
 }

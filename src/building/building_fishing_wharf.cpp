@@ -5,7 +5,6 @@
 #include "grid/building.h"
 #include "city/buildings.h"
 #include "city/city_warnings.h"
-#include "building/count.h"
 #include "config/config.h"
 #include "figuretype/figure_fishing_boat.h"
 #include "core/random.h"
@@ -51,7 +50,7 @@ void building_fishing_wharf::update_count() const {
         }
     }
 
-    building_increase_industry_count(RESOURCE_FISH, num_workers() > 0);
+    g_city.buildings.increase_industry_count(RESOURCE_FISH, num_workers() > 0);
 }
 
 void building_fishing_wharf::update_day() {

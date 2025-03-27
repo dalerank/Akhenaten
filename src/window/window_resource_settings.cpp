@@ -1,6 +1,5 @@
 #include "resource_settings.h"
 
-#include "building/count.h"
 #include "city/city_resource.h"
 #include "city/city.h"
 #include "core/calc.h"
@@ -44,7 +43,7 @@ void trade_resource_settings_window::init() {
     ui["export_inc"].onclick([this] { city_resource_change_trading_amount(resource, 100); });
 
     ui["toggle_industry"].onclick([this] {
-        if (building_count_industry_total(resource) > 0) {
+        if (g_city.buildings.count_industry_total(resource) > 0) {
             city_resource_toggle_mothballed(resource);
         }
     });
@@ -65,9 +64,9 @@ int trade_resource_settings_window::draw_background(UiFlags flags) {
 
     bstring128 production_state;
     if (g_city.can_produce_resource(resource)) {
-        int total_buildings = building_count_industry_total(resource);
-        int active_buildings = building_count_industry_active(resource);
-        if (building_count_industry_total(resource) <= 0) {
+        int total_buildings = g_city.buildings.count_industry_total(resource);
+        int active_buildings = g_city.buildings.count_industry_active(resource);
+        if (g_city.buildings.count_industry_total(resource) <= 0) {
             production_state = ui::str(54, 7);
         } else if (city_resource_is_mothballed(resource)) {
             production_state.printf("%u %s", total_buildings, ui::str(54, 10 + (total_buildings > 1)));
@@ -169,7 +168,7 @@ void trade_resource_settings_window::draw_foreground(UiFlags flags) {
     }
 
     // toggle industry button
-    ui["toggle_industry"].enabled = (building_count_industry_total(resource) > 0);
+    ui["toggle_industry"].enabled = (g_city.buildings.count_industry_total(resource) > 0);
     ui["toggle_industry"] = city_resource_is_mothballed(resource) ? ui::str(54, 17) : ui::str(54, 16);
 
     bstring1024 stockpiled_str;

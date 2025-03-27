@@ -3,7 +3,6 @@
 #include "graphics/elements/ui.h"
 #include "building/building_granary.h"
 #include "building/distribution.h"
-#include "building/count.h"
 #include "city/city.h"
 #include "city/city_warnings.h"
 #include "window/building/common.h"

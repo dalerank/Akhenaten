@@ -1,7 +1,7 @@
 #include "figuretype/festival_guy.h"
 
 #include "core/random.h"
-#include "building/count.h"
+#include "city/city.h"
 #include "city/buildings.h"
 
 figures::model_t<figure_festival_guy> festival_guy_m;
@@ -63,7 +63,7 @@ void figure_festival_guy::figure_action() {
             if (base.routing_path_id) {
                 do_goto(base.destination_tile, TERRAIN_USAGE_ANY, 11);
             } else {
-                bool has_square = building_count_total(BUILDING_FESTIVAL_SQUARE);
+                bool has_square = g_city.buildings.count_total(BUILDING_FESTIVAL_SQUARE);
                 if (base.festival_remaining_dances == 0 || !has_square) {
                     return poof();
                 }

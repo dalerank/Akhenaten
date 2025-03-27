@@ -1,6 +1,5 @@
 #include "trade.h"
 
-#include "building/count.h"
 #include "building/building_storage_yard.h"
 #include "city/constants.h"
 #include "city/city.h"
@@ -15,7 +14,7 @@ void city_trade_update() {
     city_data.trade.num_sea_routes = 0;
     city_data.trade.num_land_routes = 0;
     // Wine types
-    city_data.resource.wine_types_available = building_count_industry_total(RESOURCE_BEER) > 0 ? 1 : 0;
+    city_data.resource.wine_types_available = g_city.buildings.count_industry_total(RESOURCE_BEER) > 0 ? 1 : 0;
     if (city_data.resource.trade_status[RESOURCE_BEER] == TRADE_STATUS_IMPORT
         || config_get(CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE)) {
         city_data.resource.wine_types_available += g_empire.count_wine_sources();
@@ -39,8 +38,8 @@ void city_trade_update() {
 
 bool city_resource_trade_surplus_papyrus() {
     int papyrus_amount_in_city = city_resource_ready_for_using(RESOURCE_PAPYRUS);
-    const uint32_t scribal_school_count = building_count_active(BUILDING_SCRIBAL_SCHOOL);
-    const uint32_t library_count = building_count_active(BUILDING_LIBRARY);
+    const uint32_t scribal_school_count = g_city.buildings.count_active(BUILDING_SCRIBAL_SCHOOL);
+    const uint32_t library_count = g_city.buildings.count_active(BUILDING_LIBRARY);
 
     int papyrus_need_for_works = library_count * 100 + scribal_school_count * 100;
 

@@ -67,7 +67,6 @@
 #include "empire/empire.h"
 #include "city/city_warnings.h"
 
-#include "building/count.h"
 #include "chunks.h"
 #include "city/coverage.h"
 #include "city/city_floods.h"

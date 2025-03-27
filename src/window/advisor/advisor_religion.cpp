@@ -5,8 +5,6 @@
 #include "city/buildings.h"
 #include "scenario/scenario.h"
 #include "window/popup_dialog.h"
-
-#include "building/count.h"
 #include "city/city.h"
 #include "game/settings.h"
 #include "graphics/graphics.h"
@@ -65,12 +63,12 @@ void ui::advisor_religion_window::draw_god_row(e_god god, int y_offset, e_buildi
 
     bstring32 bcount = "-";
     if (scenario_building_allowed(complex)) {
-        bcount.printf("%d", building_count_active(complex));
+        bcount.printf("%d", g_city.buildings.count_active(complex));
     }
 
-    const int active_temples = building_count_active(temple);
-    const int total_temples = building_count_total(temple);
-    const int active_shrines = building_count_active(shrine);
+    const int active_temples = g_city.buildings.count_active(temple);
+    const int total_temples = g_city.buildings.count_total(temple);
+    const int active_shrines = g_city.buildings.count_active(shrine);
     ui[_t("complex")].text(bcount.c_str());
     ui[_t("temple")].text_var("%d (%d)", active_temples, total_temples);
     ui[_t("shrine")].text_var("%d", active_shrines);
@@ -115,7 +113,7 @@ int ui::advisor_religion_window::draw_background(UiFlags flags) {
         ui["hold_festival_btn"].enabled = true;
         ui["hold_festival_btn"] = ui::str(58, 16);
         ui["hold_festival_btn"].onclick([] {
-            int has_square = building_count_total(BUILDING_FESTIVAL_SQUARE);
+            int has_square = g_city.buildings.count_total(BUILDING_FESTIVAL_SQUARE);
             if (!has_square) {
                 return popup_dialog::show_ok("#popup_dialog_no_festival_square");
             }

@@ -16,7 +16,6 @@
 #include "config/config.h"
 #include "window/building/common.h"
 #include "sound/sound_building.h"
-#include "building/count.h"
 #include "game/game.h"
 #include "city/labor.h"
 #include "widget/city/ornaments.h"

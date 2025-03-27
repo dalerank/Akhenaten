@@ -16,7 +16,6 @@ public:
     };
 
     virtual void spawn_figure() override;
-    virtual void update_count() const override;
     virtual bool ship_moored() const override;
     virtual void update_month() override;
 

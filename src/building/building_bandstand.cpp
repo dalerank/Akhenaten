@@ -1,7 +1,6 @@
 #include "building_bandstand.h"
 
 #include "building/building.h"
-#include "building/count.h"
 #include "city/object_info.h"
 #include "city/city_warnings.h"
 #include "construction/build_planner.h"
@@ -24,7 +23,6 @@
 #include "widget/city/building_ghost.h"
 #include "sound/sound_building.h"
 #include "figure/figure.h"
-#include "js/js_game.h"
 
 building_bandstand::static_params bandstand_m;
 
@@ -108,8 +106,8 @@ void building_bandstand::on_place(int orientation, int variant) {
 
 void building_bandstand::on_place_checks() {
     construction_warnings warnings;
-    const bool has_conservatory = building_count_active(BUILDING_CONSERVATORY) > 0;
-    const bool has_jungles = building_count_active(BUILDING_JUGGLER_SCHOOL) > 0;
+    const bool has_conservatory = g_city.buildings.count_active(BUILDING_CONSERVATORY) > 0;
+    const bool has_jungles = g_city.buildings.count_active(BUILDING_JUGGLER_SCHOOL) > 0;
     warnings.add_if(!has_conservatory, "#build_conservatory");
     warnings.add_if(!has_jungles, "#build_juggling_school");
 }
@@ -244,10 +242,6 @@ void building_bandstand::draw_shows_musicians(painter &ctx, vec2i pixel, int dir
     }
     break;
     }
-}
-
-void building_bandstand::update_count() const {
-    building_increase_type_count(BUILDING_BOOTH, num_workers() > 0);
 }
 
 bool building_bandstand::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {

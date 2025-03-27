@@ -2,7 +2,6 @@
 
 #include "building/building_house.h"
 #include "building/model.h"
-#include "building/count.h"
 #include "city/constants.h"
 #include "city/city.h"
 #include "city/city_events.h"
@@ -150,7 +149,7 @@ int city_sentiment_t::calc_contribution_monuments() {
     }
 
     auto types = {BUILDING_SHRINE_OSIRIS, BUILDING_SHRINE_RA, BUILDING_SHRINE_PTAH, BUILDING_SHRINE_SETH, BUILDING_SHRINE_BAST};
-    const int shrines = building_count_active(types);
+    const int shrines = g_city.buildings.count_active(types);
 
     int shrine_points = 0;
     const auto &population = g_city.population;

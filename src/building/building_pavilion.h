@@ -52,7 +52,6 @@ public:
     virtual void on_undo() override;
     virtual void update_map_orientation(int map_orientation) override;
 
-    virtual void update_count() const override;
     virtual void spawn_figure() override;
 
     static const static_params &current_params() { return (const static_params &)params(TYPE); }

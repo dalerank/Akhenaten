@@ -5,7 +5,6 @@
 #include "building/building_health.h"
 #include "building/building_house.h"
 #include "building/destruction.h"
-#include "building/count.h"
 #include "city/city.h"
 #include "city/city_events.h"
 #include "city/coverage.h"
@@ -125,13 +124,13 @@ void city_health_t::update_coverage() {
 
     const auto &mortuary_params = building_mortuary::current_params();
     auto &coverage = g_city.coverage;
-    coverage.mortuary = std::min<int>(calc_percentage(mortuary_params.max_serve_clients * building_count_active(BUILDING_MORTUARY), population), 100);
+    coverage.mortuary = std::min<int>(calc_percentage(mortuary_params.max_serve_clients * g_city.buildings.count_active(BUILDING_MORTUARY), population), 100);
 
-    coverage.physician = std::min<int>(calc_percentage(1000 * building_count_active(BUILDING_PHYSICIAN), population), 100);
-    coverage.dentist = std::min<int>(calc_percentage(1000 * building_count_active(BUILDING_DENTIST), population), 100);
+    coverage.physician = std::min<int>(calc_percentage(1000 * g_city.buildings.count_active(BUILDING_PHYSICIAN), population), 100);
+    coverage.dentist = std::min<int>(calc_percentage(1000 * g_city.buildings.count_active(BUILDING_DENTIST), population), 100);
 
     const auto &apothecary_params = building_apothecary::current_params();
-    coverage.apothecary = std::min<int>(calc_percentage(apothecary_params.max_serve_clients * building_count_active(BUILDING_APOTHECARY), population), 100);
+    coverage.apothecary = std::min<int>(calc_percentage(apothecary_params.max_serve_clients * g_city.buildings.count_active(BUILDING_APOTHECARY), population), 100);
 }
 
 

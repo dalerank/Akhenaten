@@ -13,7 +13,6 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "dev/debug.h"
-#include "building/count.h"
 
 #include <iostream>
 
@@ -30,7 +29,7 @@ bool building_pottery::can_play_animation() const {
 }
 
 void building_pottery::on_place_checks() {
-    if (building_count_industry_active(RESOURCE_CLAY) > 0) {
+    if (g_city.buildings.count_industry_active(RESOURCE_CLAY) > 0) {
         return;
     }
 
@@ -71,8 +70,4 @@ void building_pottery::update_graphic() {
                                 ? animkeys().work
                                 : animkeys().none;
     set_animation(animkey);
-}
-
-void building_pottery::update_count() const {
-    building_increase_industry_count(RESOURCE_POTTERY, num_workers() > 0);
 }

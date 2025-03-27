@@ -1,6 +1,5 @@
 #include "building/building_pavilion.h"
 
-#include "building/count.h"
 #include "graphics/image.h"
 #include "widget/city/ornaments.h"
 #include "widget/city/building_ghost.h"
@@ -11,6 +10,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "city/labor.h"
+#include "city/city.h"
 #include "city/city_warnings.h"
 #include "construction/build_planner.h"
 #include "grid/image.h"
@@ -138,9 +138,9 @@ void building_pavilion::on_place_update_tiles(int orientation, int variant) {
 
 void building_pavilion::on_place_checks() {
     construction_warnings warnings;
-    const bool has_dance_school = building_count_active(BUILDING_DANCE_SCHOOL) > 0;
-    const bool has_jugglers = building_count_active(BUILDING_JUGGLER_SCHOOL) > 0;
-    const bool has_musician = building_count_active(BUILDING_CONSERVATORY) > 0;
+    const bool has_dance_school = g_city.buildings.count_active(BUILDING_DANCE_SCHOOL) > 0;
+    const bool has_jugglers = g_city.buildings.count_active(BUILDING_JUGGLER_SCHOOL) > 0;
+    const bool has_musician = g_city.buildings.count_active(BUILDING_CONSERVATORY) > 0;
 
     warnings.add_if(!has_dance_school, "#build_dance_school");
     warnings.add_if(!has_jugglers, "#build_juggling_school");
@@ -170,11 +170,6 @@ bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i
     }
 
     return true;
-}
-
-void building_pavilion::update_count() const {
-    building_increase_type_count(BUILDING_BANDSTAND, num_workers() > 0);
-    building_increase_type_count(BUILDING_BOOTH, num_workers() > 0);
 }
 
 void building_pavilion::spawn_figure() {

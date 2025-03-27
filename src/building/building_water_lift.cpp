@@ -1,7 +1,7 @@
 #include "building_water_lift.h"
 
 #include "grid/water.h"
-#include "building/count.h"
+#include "city/city.h"
 #include "city/city_warnings.h"
 #include "city/labor.h"
 #include "grid/canals.h"
@@ -40,7 +40,7 @@ void building_water_lift::on_place_update_tiles(int orientation, int variant) {
 void building_water_lift::on_place_checks() {
     construction_warnings warnings;
 
-    const bool has_water_lift = building_count_active(BUILDING_WATER_LIFT) > 0;
+    const bool has_water_lift = g_city.buildings.count_active(BUILDING_WATER_LIFT) > 0;
     warnings.add_if(!has_water_lift, "#needs_access_to_water_lift");
 }
 

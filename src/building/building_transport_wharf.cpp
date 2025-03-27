@@ -2,7 +2,6 @@
 
 #include "grid/water.h"
 #include "city/city.h"
-#include "building/count.h"
 #include "construction/build_planner.h"
 
 building_transport_wharf::static_params transport_wharf_m;
@@ -40,8 +39,4 @@ void building_transport_wharf::update_month() {
     }
 
     map_water_update_docking_points(base, get_orientation(), 2);
-}
-
-void building_transport_wharf::update_count() const {
-    building_increase_type_count(BUILDING_TRANSPORT_WHARF, num_workers() > 0);
 }

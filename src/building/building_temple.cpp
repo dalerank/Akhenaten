@@ -16,7 +16,6 @@
 #include "graphics/animation.h"
 #include "game/game.h"
 #include "city/labor.h"
-#include "building/count.h"
 #include "widget/city/ornaments.h"
 #include "window/window_building_info.h"
 

@@ -2,7 +2,6 @@
 
 #include "grid/terrain.h"
 #include "grid/routing/routing.h"
-#include "building/count.h"
 #include "figure/figure.h"
 #include "core/random.h"
 
@@ -36,10 +35,6 @@ bool building_reed_gatherer::draw_ornaments_and_animations_height(painter &ctx, 
     draw_normal_anim(ctx, point, tile, color_mask);
 
     return true;
-}
-
-void building_reed_gatherer::update_count() const {
-    building_increase_industry_count(RESOURCE_REEDS, num_workers() > 0);
 }
 
 void building_reed_gatherer::spawn_figure() {

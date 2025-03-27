@@ -1,19 +1,11 @@
 #include "building_library.h"
 
 #include "building/building_education.h"
-#include "js/js_game.h"
-
-#include "building/count.h"
 
 #include "city/labor.h"
 
 struct library_model : public buildings::model_t<building_library> {
 } library_m;
-
-ANK_REGISTER_CONFIG_ITERATOR(config_load_library);
-void config_load_library() {
-    library_m.load();
-}
 
 void building_library::window_info_background(object_info &c) {
     building_education_draw_info(c, FIGURE_LIBRARIAN, RESOURCE_NONE, vec2i{0, 0}, vec2i{0, 0});

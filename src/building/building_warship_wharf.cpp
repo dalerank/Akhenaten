@@ -7,7 +7,6 @@
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "city/city.h"
-#include "building/count.h"
 #include "construction/build_planner.h"
 
 building_warship_wharf::static_params warship_wharf_m;
@@ -30,10 +29,6 @@ void building_warship_wharf::spawn_figure() {
     if (has_road_access()) {
         common_spawn_labor_seeker(100);
     }
-}
-
-void building_warship_wharf::update_count() const {
-    building_increase_type_count(BUILDING_WARSHIP_WHARF, num_workers() > 0);
 }
 
 bool building_warship_wharf::ship_moored() const {

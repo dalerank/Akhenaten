@@ -4,11 +4,8 @@
 #include "figuretype/figure_entertainer.h"
 #include "city/labor.h"
 #include "widget/city/ornaments.h"
-#include "building/count.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-
-#include "js/js_game.h"
 
 building_juggler_school::static_params juggler_school_m;
 

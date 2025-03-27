@@ -21,7 +21,6 @@
 #include "empire/empire.h"
 #include "io/io_buffer.h"
 #include "empire/trade_route.h"
-#include "building/count.h"
 #include "building/building_granary.h"
 #include "building/building_house.h"
 #include "building/industry.h"

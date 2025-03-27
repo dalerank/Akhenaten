@@ -12,7 +12,6 @@ public:
     virtual int get_fire_risk(int value) const override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_CLAY_PIT; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
-    virtual void update_count() const override;
 };
 
 
@@ -32,7 +31,6 @@ public:
 
     building_mine_gold(building &b) : building_mine(b) {}
     virtual int get_produce_uptick_per_day() const override;
-    virtual void update_count() const override;
 };
 
 class building_mine_gems : public building_mine {
@@ -40,7 +38,6 @@ public:
     BUILDING_METAINFO(BUILDING_GEMSTONE_MINE, building_mine_gems)
 
     building_mine_gems(building &b) : building_mine(b) {}
-    virtual void update_count() const override;
     virtual int get_produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 3) : 0; }
 };
 
@@ -54,5 +51,4 @@ public:
     };
 
     virtual int get_produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 2) : 0; }
-    virtual void update_count() const override;
 };

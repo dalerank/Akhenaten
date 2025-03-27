@@ -6,7 +6,6 @@
 #include "building/building_storage_yard.h"
 #include "game/game.h"
 #include "city/city_message.h"
-#include "building/count.h"
 #include "city/city.h"
 #include "city/city_events.h"
 
@@ -22,7 +21,7 @@ void tutorial5_handle_spacious_apartment(event_advance_day) {
         return;
     }
 
-    if (building_count_total(BUILDING_HOUSE_SPACIOUS_APARTMENT) < 1) {
+    if (g_city.buildings.count_total(BUILDING_HOUSE_SPACIOUS_APARTMENT) < 1) {
         return;
     }
 
