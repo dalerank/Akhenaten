@@ -404,14 +404,15 @@ void building_granary_storageyard_curse(int big) {
         max_building->destroy_by_fire();
         map_routing_update_land();
     } else {
-        if (max_building->type == BUILDING_STORAGE_YARD) {
-            building_storageyard_remove_resource_curse(max_building, CURSE_LOADS);
-        } else if (max_building->type == BUILDING_GRANARY) {
-            building_granary *granary = max_building->dcast_granary();
-            int amount = granary->remove_resource(RESOURCE_GRAIN, CURSE_LOADS * UNITS_PER_LOAD);
-            amount = granary->remove_resource(RESOURCE_MEAT, amount);
-            amount = granary->remove_resource(RESOURCE_LETTUCE, amount);
-            granary->remove_resource(RESOURCE_FIGS, amount);
+        auto warehouse = max_building->dcast_storage_yard();
+        if (warehouse) {
+            warehouse->remove_resource_curse(CURSE_LOADS);
+        } 
+        
+        auto granary = max_building->dcast_granary();
+        if (granary) {
+            resource_list resources({ RESOURCE_GRAIN, RESOURCE_MEAT, RESOURCE_LETTUCE, RESOURCE_FIGS });
+            granary->remove_resources(resources, CURSE_LOADS * UNITS_PER_LOAD);
         }
     }
 }

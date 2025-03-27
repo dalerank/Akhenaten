@@ -89,6 +89,8 @@ public:
     bool get_permission(int p);
     int accepting_amount(e_resource resource);
 
+    virtual int remove_resources(resource_list resources, int amount);
+
     virtual int amount(e_resource resource) const = 0;
     virtual bool is_getting(e_resource resource) = 0;
     virtual int remove_resource(e_resource resource, int amount) = 0;

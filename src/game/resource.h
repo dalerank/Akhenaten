@@ -121,6 +121,13 @@ using resource_vec = svector<e_resource, 4>;
 
 struct resource_list : public svector<resource_value, RESOURCES_MAX> {
     inline resource_list() {}
+
+    inline resource_list(std::initializer_list<e_resource> r) {
+        for (e_resource i: r) {
+            push_back({ i, 0 });
+        }
+    }
+
     inline resource_list(e_resource b, e_resource e) {
         for (e_resource i = b; i <= e; ++i) {
             push_back({i, 0});

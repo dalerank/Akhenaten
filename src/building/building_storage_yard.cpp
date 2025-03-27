@@ -228,13 +228,8 @@ int building_storage_yard::remove_resource(e_resource resource, int amount) {
     return amount;
 }
 
-void building_storageyard_remove_resource_curse(building* b, int amount) {
-    building_storage_yard *warehouse = b->dcast_storage_yard();
-    if (!warehouse) {
-        return;
-    }
-    
-    building_storage_room* space = warehouse->room();
+void building_storage_yard::remove_resource_curse(int amount) {  
+    building_storage_room* space = room();
     while(space && amount > 0) {
         if (space->base.stored_amount_first <= 0) {
             continue;

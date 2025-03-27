@@ -298,6 +298,14 @@ int building_storage::accepting_amount(e_resource resource) {
     }
 }
 
+int building_storage::remove_resources(resource_list resources, int amount) {
+    for (const auto &r: resources) {
+        amount = remove_resource(r.type, amount);
+    }
+
+    return amount;
+}
+
 struct sproperty {
     xstring domain;
     xstring name;
