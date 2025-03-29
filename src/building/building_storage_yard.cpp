@@ -312,7 +312,7 @@ int building_storage_yard_for_storing(tile2i tile, e_resource resource, int dist
             continue;
         }
 
-        if (!config_get(CONFIG_GP_CH_UNDERSTAFFED_ACCEPT_GOODS)) {
+        if (!g_ankh_config.get(CONFIG_GP_CH_UNDERSTAFFED_ACCEPT_GOODS)) {
             int pct_workers = warehouse->pct_workers();
             if (pct_workers < 100) {
                 if (understaffed)
@@ -496,7 +496,7 @@ storage_worker_task building_storageyard_deliver_weapons(building *b) {
         return { STORAGEYARD_TASK_NONE };
     }
 
-    const bool need_weapons = (g_city.military.has_infantry_batalions() || config_get(CONFIG_GP_CH_RECRUITER_NOT_NEED_FORTS));
+    const bool need_weapons = (g_city.military.has_infantry_batalions() || g_ankh_config.get(CONFIG_GP_CH_RECRUITER_NOT_NEED_FORTS));
     if (!need_weapons) {
         return { STORAGEYARD_TASK_NONE };
     }
@@ -791,7 +791,7 @@ void building_storage_yard::on_place_update_tiles(int orientation, int variant) 
     int corner = building_rotation_get_corner(2 * global_rotation);
 
     base.storage_id = building_storage_create(BUILDING_STORAGE_YARD);
-    if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT)) {
         building_storage_accept_none(base.storage_id);
     }
 

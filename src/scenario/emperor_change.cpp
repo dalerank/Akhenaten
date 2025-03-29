@@ -31,7 +31,7 @@ void scenario_kingdome_change_process() {
     if (data.state == 0) {
         if (game.simtime.year == data.game_year && game.simtime.month == data.month) {
             data.state = 1; // done
-            if (config_get(CONFIG_GP_FIX_EDITOR_EVENTS)) {
+            if (g_ankh_config.get(CONFIG_GP_FIX_EDITOR_EVENTS)) {
                 g_city.ratings.reset_kingdom();
             }
 

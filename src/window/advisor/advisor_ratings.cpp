@@ -28,7 +28,7 @@ void ui::advisor_ratings_window::draw_rating_column(int id, int value, int open_
     vec2i pos = ui[baseid].pos;
 
     int value_to_draw = value * 0.75;
-    if (config_get(CONFIG_UI_COMPLETE_RATING_COLUMNS)) {
+    if (g_ankh_config.get(CONFIG_UI_COMPLETE_RATING_COLUMNS)) {
         if (has_reached && value < 25)
             value_to_draw = 25;
     } else {

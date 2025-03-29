@@ -203,7 +203,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
     // priority 2: accepting granary for food
     int granary_food_id = building_granary_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 0, &understaffed_storages, &dst);
     set_destination(granary_food_id);
-    if (config_get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
         int dist = 0;
         building* src_building = home();
         building* dst_building = destination();
@@ -237,7 +237,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
     // priority 5: granary forced when on stockpile
     int granary_id = building_granary_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 1, &understaffed_storages, &dst);
     set_destination(granary_id);
-    if (config_get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
         int dist = 0;
         building* src_building = home();
         building* dst_building = destination();
@@ -269,7 +269,7 @@ void figure_cartpusher::determine_granaryman_destination() {
         set_destination(dest.building_id);
         if (has_destination()) {
             advance_action(FIGURE_ACTION_54_WAREHOUSEMAN_GETTING_FOOD);
-            if (config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {
+            if (g_ankh_config.get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {
                 base.terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
             }
         } else {

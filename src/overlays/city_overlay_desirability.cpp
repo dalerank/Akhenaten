@@ -20,7 +20,7 @@ static int terrain_on_desirability_overlay(void) {
 }
 
 static int has_deleted_building(int grid_offset) {
-    if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
+    if (!g_ankh_config.get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
         return 0;
 
     building* b = building_at(grid_offset);

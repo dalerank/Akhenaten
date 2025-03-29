@@ -57,7 +57,7 @@ void figure_lumberjack::figure_action() {
                 advance_action(11);
             }
             // progress faster with multiple people on one spot
-            if (config_get(CONFIG_GP_CH_MULTIPLE_GATHERERS))
+            if (g_ankh_config.get(CONFIG_GP_CH_MULTIPLE_GATHERERS))
                 base.wait_ticks += gatherers_harvesting_point(tile());
             else
                 base.wait_ticks++;

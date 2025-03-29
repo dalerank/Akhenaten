@@ -188,7 +188,7 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
         if (!granary->has_road_access() || granary->distance_from_entry() <= 0 || granary->road_network() != road_network_id)
             continue;
 
-        if (!config_get(CONFIG_GP_CH_UNDERSTAFFED_ACCEPT_GOODS)) {
+        if (!g_ankh_config.get(CONFIG_GP_CH_UNDERSTAFFED_ACCEPT_GOODS)) {
             int pct_workers = granary->worker_percentage();
             if (pct_workers < 75) {
                 if (understaffed)
@@ -200,7 +200,7 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
         if (granary->is_not_accepting(resource) || granary->is_empty_all())
             continue;
 
-        if (config_get(CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES)) {
+        if (g_ankh_config.get(CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES)) {
             if (granary->is_getting(resource))
                 continue;
         }
@@ -274,7 +274,7 @@ int building_granary::better_getting_storage() {
     for (auto &b : city_buildings()) {
         building_storage* dest = b.dcast_storage();
 
-        if (!config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {
+        if (!g_ankh_config.get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {
             if (dest->road_network() != road_network()) {
                 continue;
             }

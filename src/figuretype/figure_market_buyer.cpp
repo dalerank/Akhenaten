@@ -193,7 +193,7 @@ void distribute_market_resources(building* b, building* market) {
         distribute_good(b, market, 8 * model.pottery, INVENTORY_GOOD1);
     }
     int goods_no = 4;
-    if (config_get(CONFIG_GP_CH_MORE_STOCKPILE))
+    if (g_ankh_config.get(CONFIG_GP_CH_MORE_STOCKPILE))
         goods_no = 8;
 
     if (model.jewelry) {
@@ -272,7 +272,7 @@ int figure_market_buyer::create_delivery_boy(int leader_id) {
 
 int figure_market_buyer::provide_service() {
     int houses_serviced = 0;
-    if (!config_get(CONFIG_GP_CH_NO_BUYER_DISTRIBUTION)) {
+    if (!g_ankh_config.get(CONFIG_GP_CH_NO_BUYER_DISTRIBUTION)) {
         houses_serviced = provide_market_goods(home(), tile());
     }
 

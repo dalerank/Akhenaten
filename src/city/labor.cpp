@@ -332,7 +332,7 @@ int city_labor_t::lower_wages_kingdome() {
 void city_labor_t::calculate_workers(int num_plebs, int num_patricians) {
     g_city.population.percentage_plebs = calc_percentage(num_plebs, num_plebs + num_patricians);
 
-    if (config_get(CONFIG_GP_CH_FIXED_WORKERS)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_FIXED_WORKERS)) {
         g_city.population.working_age = calc_adjust_with_percentage(num_plebs, 38);
         workers_available = g_city.population.working_age;
     } else {

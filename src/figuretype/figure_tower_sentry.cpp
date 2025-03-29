@@ -184,7 +184,7 @@ void figure_tower_sentry::figure_action() {
 
     case FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER:
         base.terrain_usage = TERRAIN_USAGE_ROADS;
-        if (config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))
+        if (g_ankh_config.get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))
             base.terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
 
         //            is_ghost = false;

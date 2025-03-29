@@ -414,7 +414,7 @@ void building_house::merge() {
         return;
     }
 
-    if (!config_get(CONFIG_GP_CH_ALL_HOUSES_MERGE)) {
+    if (!g_ankh_config.get(CONFIG_GP_CH_ALL_HOUSES_MERGE)) {
         if ((map_random_get(base.tile) & 7) >= 5)
             return;
     }
@@ -702,7 +702,7 @@ bool building_house::can_expand(int num_tiles) {
                     if (other_house->house_level() <= house_level())
                         ok_tiles++;
                 }
-            } else if (map_terrain_is(tile_offset, TERRAIN_GARDEN) && !config_get(CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS)) {
+            } else if (map_terrain_is(tile_offset, TERRAIN_GARDEN) && !g_ankh_config.get(CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS)) {
                 ok_tiles++;
             }
         }

@@ -280,7 +280,7 @@ static int config_string_changed(int key) {
 
 static int config_change_basic(int key) {
     auto& data = g_window_config_ext_data;
-    config_set((e_config_key)key, data.config_values[key].new_value);
+    g_ankh_config.set((e_config_key)key, data.config_values[key].new_value);
     data.config_values[key].original_value = data.config_values[key].new_value;
     return 1;
 }
@@ -511,8 +511,8 @@ static void init(void (*close_callback)()) {
     data.close_callback = close_callback;
     for (int i = 0; i < std::size(checkbox_buttons); i++) {
         e_config_key key = (e_config_key)checkbox_buttons[i].parameter1;
-        data.config_values[key].original_value = config_get(key);
-        data.config_values[key].new_value = config_get(key);
+        data.config_values[key].original_value = g_ankh_config.get(key);
+        data.config_values[key].new_value = g_ankh_config.get(key);
         data.config_values[key].change_action = config_change_basic;
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {

@@ -129,7 +129,7 @@ int city_population_t::create_emigrants(int num_people) {
         }
 
         const int level = house->house_level();
-        if (config_get(CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT) && (level <= HOUSE_STURDY_HUT || (level < HOUSE_ORDINARY_COTTAGE && house->house_population() < 10))) {
+        if (g_ankh_config.get(CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT) && (level <= HOUSE_STURDY_HUT || (level < HOUSE_ORDINARY_COTTAGE && house->house_population() < 10))) {
             continue;
         }
 
@@ -412,7 +412,7 @@ void city_population_t::remove_for_troop_request(int num_people) {
 }
 
 int city_population_people_of_working_age() {
-    if (config_get(CONFIG_GP_CH_RETIRE_AT_60)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_RETIRE_AT_60)) {
         return get_people_in_age_decennium(2) + get_people_in_age_decennium(3) + get_people_in_age_decennium(4)
                + get_people_in_age_decennium(5);
     } else {
@@ -424,7 +424,7 @@ int city_population_percent_in_workforce(void) {
     if (!city_data.population.current)
         return 0;
 
-    if (config_get(CONFIG_GP_CH_FIXED_WORKERS))
+    if (g_ankh_config.get(CONFIG_GP_CH_FIXED_WORKERS))
         return 38;
 
     return calc_percentage(city_data.labor.workers_available, city_data.population.current);
@@ -491,7 +491,7 @@ static void yearly_advance_ages_and_calculate_deaths(void) {
         int death_percentage = DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[city_data.health.value / 10][decennium];
         int deaths = calc_adjust_with_percentage(people, death_percentage);
         int removed = g_city.population.remove_from_houses(deaths + aged100);
-        if (config_get(CONFIG_GP_FIX_100_YEAR_GHOSTS))
+        if (g_ankh_config.get(CONFIG_GP_FIX_100_YEAR_GHOSTS))
             remove_from_census_in_age_decennium(decennium, deaths);
         else {
             // Original C3 removes both deaths and aged100, which creates "ghosts".

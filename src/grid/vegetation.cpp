@@ -79,7 +79,7 @@ bool can_harvest_point(int grid_offset, int max_gatherers) {
     }
 
     // check if there's any figure already gathering at the spot
-    if (!config_get(CONFIG_GP_CH_MULTIPLE_GATHERERS)) {
+    if (!g_ankh_config.get(CONFIG_GP_CH_MULTIPLE_GATHERERS)) {
         if (gatherers_harvesting_point(grid_offset) >= max_gatherers)
             return false;
     }

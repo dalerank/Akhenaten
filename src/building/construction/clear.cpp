@@ -55,7 +55,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
 
     grid_area area = map_grid_get_area(confirm.cstart, confirm.cend);
 
-    int visual_feedback_on_delete = config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE);
+    int visual_feedback_on_delete = g_ankh_config.get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE);
     for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
         for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
@@ -107,7 +107,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                     house->runtime_data().population = 0;
                 }
 
-                if (building_is_floodplain_farm(*b) && config_get(CONFIG_GP_CH_SOIL_DEPLETION)) {
+                if (building_is_floodplain_farm(*b) && g_ankh_config.get(CONFIG_GP_CH_SOIL_DEPLETION)) {
                     b->dcast_farm()->deplete_soil();
                 }
 
@@ -181,7 +181,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
         map_routing_update_land();
         map_routing_update_walls();
         map_routing_update_water();
-        if (config_get(CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS))
+        if (g_ankh_config.get(CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS))
             building_update_state();
 
     }

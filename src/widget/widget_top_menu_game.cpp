@@ -312,7 +312,7 @@ static void button_rotate_right(int param1, int param2) {
 
 void top_menu_widget::draw_elements_impl() {
     vec2i cur_offset = offset;
-    e_font hightlight_font = config_get(CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER) ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT;
+    const e_font hightlight_font = g_ankh_config.get(CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER) ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT;
     for (auto &it : headers.elements) {
         ui::emenu_header *header = it->dcast_menu_header();
 
@@ -633,7 +633,7 @@ void top_menu_widget::sub_menu_init() {
 
     auto *file = headers["file"].dcast_menu_header();
     if (file) {
-        file->item("new_game").hidden = config_get(CONFIG_UI_HIDE_NEW_GAME_TOP_MENU);
+        file->item("new_game").hidden = g_ankh_config.get(CONFIG_UI_HIDE_NEW_GAME_TOP_MENU);
         file->onclick([this] (auto &h) { file_handle(h); });
     }
 

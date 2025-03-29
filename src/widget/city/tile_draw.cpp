@@ -98,7 +98,7 @@ void local_render_context_t::init() {
 }
 
 bool drawing_building_as_deleted(building* b) {
-    if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE)) {
+    if (!g_ankh_config.get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE)) {
         return false;
     }
 

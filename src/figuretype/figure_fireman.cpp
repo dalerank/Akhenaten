@@ -199,7 +199,7 @@ void figure_fireman::extinguish_fire() {
         base.wait_ticks_missile = 20;
         advance_action(FIGURE_ACTION_73_FIREMAN_RETURNING);
 
-        if (!config_get(CONFIG_GP_CH_FIREMAN_RETUNING)) {
+        if (!g_ankh_config.get(CONFIG_GP_CH_FIREMAN_RETUNING)) {
             if (!fight_fire()) {
                 poof();
             }

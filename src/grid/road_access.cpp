@@ -39,7 +39,7 @@ bool road_tile_valid_access(int grid_offset) {
 
 bool map_road_find_minimum_tile_xy(tile2i tile, int sizex, int sizey, int *min_value, int *min_grid_offset) {
     bool found = false;
-    if (config_get(CONFIG_GP_CH_ENTER_POINT_ON_NEAREST_TILE)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_ENTER_POINT_ON_NEAREST_TILE)) {
         found = map_road_find_minimum_tile_xy_nearest(tile, sizex, sizey, min_value, min_grid_offset);
     }
 
@@ -459,7 +459,7 @@ static bool is_adjacent_road_tile_for_roaming(int grid_offset, e_permission perm
         
     if (b->type == BUILDING_GRANARY) {
         if (map_routing_citizen_is_road(grid_offset)) {
-            if (config_get(CONFIG_GP_CH_DYNAMIC_GRANARIES)) {
+            if (g_ankh_config.get(CONFIG_GP_CH_DYNAMIC_GRANARIES)) {
                 if (map_property_multi_tile_xy(grid_offset) == EDGE_X1Y1 || map_has_adjacent_road_tiles(grid_offset)
                     || map_has_adjacent_granary_road(grid_offset))
                     is_road = 1;

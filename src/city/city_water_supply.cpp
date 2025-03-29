@@ -11,7 +11,7 @@
 
 void city_buildings_t::mark_well_access(building *well) {
     int radius = 1;
-    if (config_get(CONFIG_GP_CH_WELL_RADIUS_DEPENDS_MOISTURE)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_WELL_RADIUS_DEPENDS_MOISTURE)) {
         radius = (map_moisture_get(well->tile.grid_offset()) / 40);
         radius = std::clamp(radius, 1, 4);
     }

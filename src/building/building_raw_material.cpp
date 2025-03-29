@@ -53,7 +53,7 @@ bool building_mine::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
 }
 
 int building_mine_gold::get_produce_uptick_per_day() const {
-    if (config_get(CONFIG_GP_CH_GOLDMINE_TWICE_PRODUCTION)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_GOLDMINE_TWICE_PRODUCTION)) {
         return base.num_workers / 5.f;
     } else {
         return base.num_workers / 10.f;
@@ -63,14 +63,14 @@ int building_mine_gold::get_produce_uptick_per_day() const {
 bool building_mine_copper::static_params::planer_is_need_flag(e_building_flags flag) const {
     switch (flag) {
     case e_building_flag::Ore:
-        return !config_get(CONFIG_GP_CH_COPPER_NEAR_MOUNTAINS) && needs.ore;
+        return !g_ankh_config.get(CONFIG_GP_CH_COPPER_NEAR_MOUNTAINS) && needs.ore;
     }
 
     return building_industry::static_params::planer_is_need_flag(flag);
 }
 
 int building_clay_pit::get_fire_risk(int value) const {
-    if (config_get(CONFIG_GP_CH_CLAY_PIT_FIRE_RISK_REDUCED)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_CLAY_PIT_FIRE_RISK_REDUCED)) {
         return value / 2;
     }
 

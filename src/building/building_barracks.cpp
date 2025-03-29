@@ -28,7 +28,7 @@ int g_tower_sentry_request = 0;
 building_recruiter::static_params brecruiter_m;
 
 bool building_recruiter::static_params::is_unique_building() const {
-    if (config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {
         return false;
     }
 
@@ -147,7 +147,7 @@ bool building_recruiter::create_tower_sentry() {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MUD_TOWER && b->num_workers > 0 && !b->has_figure(0)
-            && (b->road_network_id == base.road_network_id || config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))) {
+            && (b->road_network_id == base.road_network_id || g_ankh_config.get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))) {
             tower = b;
             break;
         }

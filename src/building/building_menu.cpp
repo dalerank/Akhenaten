@@ -369,7 +369,7 @@ void building_menu_update_gods_available(e_god god, bool available) {
 }
 
 void building_menu_update_temple_complexes() {
-    if (config_get(CONFIG_GP_CH_MULTIPLE_TEMPLE_COMPLEXES)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_MULTIPLE_TEMPLE_COMPLEXES)) {
         return;
     }
 

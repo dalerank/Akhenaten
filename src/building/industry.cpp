@@ -94,7 +94,7 @@ int farm_expected_produce(building* b) {
     int progress = d.ready_production > 0
                         ? d.ready_production
                         : d.progress;
-    if (!config_get(CONFIG_GP_FIX_FARM_PRODUCE_QUANTITY)) {
+    if (!g_ankh_config.get(CONFIG_GP_FIX_FARM_PRODUCE_QUANTITY)) {
         progress = (progress / 20) * 20;
     }
     // In OG Pharaoh, the progress value gets counted as if it was rounded

@@ -3,8 +3,6 @@
 #include "content/vfs.h"
 #include "core/log.h"
 
-#include <string.h>
-
 static const char* INI_FILENAME = "akhenaten.ini";
 
 // Keep this in the same order as the ints in config.h
@@ -144,24 +142,25 @@ static const char* ini_string_keys[] = {
   "ui_language_dir",
   "last_save_filename",
   "last_player",
+  "0",
 };
 
-bool g_ozzy_config[CONFIG_MAX_ENTRIES];
+ankh_config_t g_ankh_config;
 static char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 static char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
-int config_get(e_config_key key) {
-    return g_ozzy_config[key];
+int ankh_config_t::get(e_config_key key) {
+    return opts[key];
 }
-void config_set(e_config_key key, int value) {
-    g_ozzy_config[key] = value;
+void ankh_config_t::set(e_config_key key, int value) {
+    opts[key] = value;
 }
 
-const char* config_get_string(int key) {
+pcstr config_get_string(int key) {
     return string_values[key];
 }
 
-void config_set_string(int key, const char* value) {
+void config_set_string(int key, pcstr value) {
     if (!value)
         string_values[key][0] = 0;
     else {
@@ -179,7 +178,7 @@ const char* config_get_default_string_value(e_config_key key) {
 
 void config_set_defaults() {
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
-        g_ozzy_config[i] = ini_keys_defaults[i].enabled;
+        g_ankh_config.opts[i] = ini_keys_defaults[i].enabled;
     }
     strncpy(string_values[CONFIG_STRING_UI_LANGUAGE_DIR],
             default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR],
@@ -210,7 +209,7 @@ void config_load() {
                 if (strcmp(ini_keys_defaults[i].name, line) == 0) {
                     int value = atoi(&equals[1]);
                     logs::info("Config key %s [%d]", ini_keys_defaults[i].name, value);
-                    g_ozzy_config[i] = value;
+                    g_ankh_config.opts[i] = value;
                     break;
                 }
             }
@@ -228,7 +227,7 @@ void config_load() {
 }
 
 void config_save() {
-    bstring256 fs_file = vfs::content_path(INI_FILENAME);
+    vfs::path fs_file = vfs::content_path(INI_FILENAME);
 
     FILE* fp = vfs::file_open(fs_file, "wt");
     if (!fp) {
@@ -236,7 +235,7 @@ void config_save() {
         return;
     }
     for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
-        fprintf(fp, "%s=%d\n", ini_keys_defaults[i].name, g_ozzy_config[i]);
+        fprintf(fp, "%s=%d\n", ini_keys_defaults[i].name, g_ankh_config.opts[i]);
     }
 
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {

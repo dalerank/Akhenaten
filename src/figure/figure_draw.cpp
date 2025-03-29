@@ -91,7 +91,7 @@ vec2i figure::adjust_pixel_offset(const vec2i &pixel) {
         offset.y -= current_height;
     }
 
-    if (config_get(CONFIG_GP_CH_CITIZEN_ROAD_OFFSET) && id && type != FIGURE_BALLISTA) {
+    if (g_ankh_config.get(CONFIG_GP_CH_CITIZEN_ROAD_OFFSET) && id && type != FIGURE_BALLISTA) {
         // an attempt to not let people walk through each other
         offset += crowd_offsets[id % crowd_offsets_size];
     }

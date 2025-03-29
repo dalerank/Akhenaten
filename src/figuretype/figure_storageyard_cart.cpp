@@ -42,7 +42,7 @@ std::pair<e_resource, int> acquire_resource_for_getting_deliveryman(building* sr
         }
     }
 
-    if (config_get(CONFIG_GP_CH_GRANARIES_GET_DOUBLE)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_GRANARIES_GET_DOUBLE)) {
         max_amount = std::min(max_amount, 400);
     } else {
         max_amount = std::min(max_amount, 200);

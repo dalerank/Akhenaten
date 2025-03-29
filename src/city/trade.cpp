@@ -16,7 +16,7 @@ void city_trade_update() {
     // Wine types
     city_data.resource.wine_types_available = g_city.buildings.count_industry_total(RESOURCE_BEER) > 0 ? 1 : 0;
     if (city_data.resource.trade_status[RESOURCE_BEER] == TRADE_STATUS_IMPORT
-        || config_get(CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE)) {
+        || g_ankh_config.get(CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE)) {
         city_data.resource.wine_types_available += g_empire.count_wine_sources();
     }
 

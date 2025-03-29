@@ -30,7 +30,7 @@ void figure_delivery_boy::figure_action() {
             poof();
         }
     } else { // leader arrived at market, drop resource at market
-        if (config_get(CONFIG_GP_CH_DELIVERY_BOY_GOES_TO_MARKET_ALONE)) {
+        if (g_ankh_config.get(CONFIG_GP_CH_DELIVERY_BOY_GOES_TO_MARKET_ALONE)) {
             base.leading_figure_id = 0;
             if (do_returnhome(TERRAIN_USAGE_ROADS)) {
                 bazaar->runtime_data().inventory[base.collecting_item_id] += 100;

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "core/xstring.h"
+#include <array>
+
 #define CONFIG_STRING_VALUE_MAX 64
 
 enum e_config_key {
@@ -140,23 +143,18 @@ enum {
     CONFIG_STRING_UI_LANGUAGE_DIR,
     CONFIG_STRING_LAST_SAVE,
     CONFIG_STRING_LAST_PLAYER,
+    CONFIG_STRING_LAST_VERSION,
 
     CONFIG_STRING_MAX_ENTRIES
 };
 
-/**
- * Get an integer config value
- * @param key Integer key
- * @return Config value
- */
-int config_get(e_config_key key);
+struct ankh_config_t {
+    std::array<bool, CONFIG_MAX_ENTRIES> opts;
+    int get(e_config_key key);
+    void set(e_config_key key, int value);
+};
 
-/**
- * Set an integer config value
- * @param key Integer key
- * @param value Value to set
- */
-void config_set(e_config_key key, int value);
+extern ankh_config_t g_ankh_config;
 
 /**
  * Get a string config value

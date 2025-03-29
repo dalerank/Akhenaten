@@ -58,7 +58,7 @@ grid_xx g_terrain_floodplain_flood_shore = {0, FS_UINT8};
 void map_floodplain_advance_growth() {
     static int floodplain_growth_advance = 0;
     // do groups of 12 rows at a time. every 12 cycle, do another pass over them.
-    if (config_get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
         //foreach_floodplain_row(0 + floodplain_growth_advance, map_floodplain_adv_growth_tile);
         floodplain_tiles_local.clear();
         std::copy_if(floodplain_tiles_random.begin(), floodplain_tiles_random.end(), std::back_inserter(floodplain_tiles_local), [] (auto grid_offset) {
@@ -90,7 +90,7 @@ void map_floodplain_advance_growth() {
 }
 
 void map_floodplain_sub_growth() {
-    if (!config_get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
+    if (!g_ankh_config.get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
         return;
     }
     
@@ -360,7 +360,7 @@ void set_floodplain_land_tiles_image(int grid_offset, bool force) {
     if (force) {
         map_image_set(grid_offset, image_id);
     } else {
-        if (config_get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
+        if (g_ankh_config.get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
             map_image_alt_set(grid_offset, image_alt_id, -1);
         } else {
             map_image_set(grid_offset, image_id);
@@ -467,7 +467,7 @@ void set_floodplain_edges_image(int grid_offset) {
 
 void map_tiles_update_floodplain_images() {
     auto callback = [] (int flooding, int grid_offset, int order) { map_refresh_river_image_at(grid_offset, true); };
-    if (config_get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW)) {
         for (int i = 0; i < 12; ++i) {
             foreach_floodplain_row(0, 0 + i, callback);
         }
@@ -533,7 +533,7 @@ uint8_t map_get_fertility_for_farm(int grid_offset) {
     tile2i tile(grid_offset);
 
     bool is_irrigated = false;
-    if (config_get(CONFIG_GP_FIX_IRRIGATION_RANGE)) {
+    if (g_ankh_config.get(CONFIG_GP_FIX_IRRIGATION_RANGE)) {
         is_irrigated = map_terrain_exists_tile_in_area_with_type(tile, 3, TERRAIN_IRRIGATION_RANGE);
     } else {
         is_irrigated = map_terrain_exists_tile_in_radius_with_type(tile, 1, 2, TERRAIN_IRRIGATION_RANGE);

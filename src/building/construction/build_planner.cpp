@@ -131,7 +131,7 @@ void build_planner::add_building_tiles_from_list(int building_id, bool graphics_
 }
 
 bool build_planner::ghost_mark_deleting(tile2i tile) {
-    if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE)) {
+    if (!g_ankh_config.get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE)) {
         return false;
     }
 
@@ -176,7 +176,7 @@ void build_planner::draw_tile_graphics_array(painter &ctx, tile2i start, tile2i 
 static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end) {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure* f = figure_get(i);
-        if (config_get(CONFIG_GP_CH_WOLVES_BLOCK)) {
+        if (g_ankh_config.get(CONFIG_GP_CH_WOLVES_BLOCK)) {
             if (f->state != FIGURE_STATE_ALIVE || !f->is_enemy()) {
                 continue;
             }
@@ -816,7 +816,7 @@ void build_planner::update_unique_only_one_check() {
     case BUILDING_TEMPLE_COMPLEX_BAST:
         //        case BUILDING_TEMPLE_COMPLEX_ALTAR:
         //        case BUILDING_TEMPLE_COMPLEX_ORACLE:
-        if (g_city.buildings.has_temple_complex() && !config_get(CONFIG_GP_CH_MULTIPLE_TEMPLE_COMPLEXES))
+        if (g_city.buildings.has_temple_complex() && !g_ankh_config.get(CONFIG_GP_CH_MULTIPLE_TEMPLE_COMPLEXES))
             unique_already_placed = true;
         break;
     }
@@ -934,7 +934,7 @@ void build_planner::dispatch_warnings() {
 }
 
 int build_planner::get_total_drag_size(int* x, int* y) {
-    if (!config_get(CONFIG_UI_SHOW_CONSTRUCTION_SIZE) || !(special_flags & e_building_flag::Draggable)
+    if (!g_ankh_config.get(CONFIG_UI_SHOW_CONSTRUCTION_SIZE) || !(special_flags & e_building_flag::Draggable)
         || (build_type != BUILDING_CLEAR_LAND && !total_cost)) {
         return 0;
     }

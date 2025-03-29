@@ -438,7 +438,7 @@ figure *building::create_cartpusher(e_resource resource_id, int quantity, e_figu
     cart->base.immigrant_home_building_id = 0;
 
     set_figure(slot, cart->id()); // warning: this overwrites any existing figure!
-    if (config_get(CONFIG_GP_CH_CART_SPEED_QUANTITY)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_CART_SPEED_QUANTITY)) {
         f->progress_inside_speed = std::clamp(quantity / 400, 0, 2);
     }
     cart->base.wait_ticks = 30;
@@ -685,7 +685,7 @@ void building::common_spawn_labor_seeker(int min_houses) {
         return;
     }
 
-    if (config_get(CONFIG_GP_CH_GLOBAL_LABOUR)) {
+    if (g_ankh_config.get(CONFIG_GP_CH_GLOBAL_LABOUR)) {
         // If it can access Rome
         houses_covered = std::min(300, distance_from_entry ? 2 * min_houses : 0);
         return;

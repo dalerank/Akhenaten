@@ -102,7 +102,7 @@ int city_sentiment_t::calc_sentiment_contribution_wages() {
 }
 
 int city_sentiment_t::calc_contribution_religion_coverage() {
-    if (!config_get(CONFIG_GP_CH_RELIGION_COVERAGE_INFLUENCE_SENTIMENT)) {
+    if (!g_ankh_config.get(CONFIG_GP_CH_RELIGION_COVERAGE_INFLUENCE_SENTIMENT)) {
         return 0;
     }
 
@@ -144,7 +144,7 @@ int city_sentiment_t::calc_contribution_employment() {
 }
 
 int city_sentiment_t::calc_contribution_monuments() {
-    if (!config_get(CONFIG_GP_CH_MONUMENTS_INFLUENCE_SENTIMENT)) {
+    if (!g_ankh_config.get(CONFIG_GP_CH_MONUMENTS_INFLUENCE_SENTIMENT)) {
         return 0;
     }
 
@@ -219,7 +219,7 @@ void city_sentiment_t::update() {
             housed.house_happiness = default_sentiment;
             if (g_city.population.current < 200) {
                 housed.house_happiness += 10;
-            } else if (default_sentiment < 50 && config_get(CONFIG_GP_FIX_IMMIGRATION_BUG)) {
+            } else if (default_sentiment < 50 && g_ankh_config.get(CONFIG_GP_FIX_IMMIGRATION_BUG)) {
                 // Fix very hard immigration bug: give a boost for Very Hard difficulty so that
                 // immigration is not halted simply because you are between pop 200 and 300
                 housed.house_happiness += 50 - default_sentiment;

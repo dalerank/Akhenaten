@@ -207,7 +207,7 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
 void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, color &color_mask, int direction) {
     if (building_id) {
         building *b = building_get(building_id);
-        if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
+        if (g_ankh_config.get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
             color_mask = COLOR_MASK_RED;
         }
 
@@ -221,7 +221,7 @@ void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, 
 
 void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord) {
     highlighted_formation = 0;
-    if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
+    if (g_ankh_config.get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
         highlighted_formation = formation_legion_at(current_tile);
         if (highlighted_formation > 0 && formation_get(highlighted_formation)->in_distant_battle) {
             highlighted_formation = 0;
@@ -423,7 +423,7 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
         direction = SOUND_DIRECTION_RIGHT;
     }
 
-    if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
+    if (g_ankh_config.get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
         color_mask = COLOR_MASK_RED;
     }
 

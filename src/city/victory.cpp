@@ -105,7 +105,7 @@ e_victory_state city_t::determine_victory_state() {
         state = e_victory_state_none;
     }
 
-    if (config_get(CONFIG_GP_FIX_EDITOR_EVENTS)) {
+    if (g_ankh_config.get(CONFIG_GP_FIX_EDITOR_EVENTS)) {
         // More sensible options for surival time:
         // require the user to play to the end, even if other win criteria have been set and are met.
         // At the end, let the user lose if the other win criteria are not met

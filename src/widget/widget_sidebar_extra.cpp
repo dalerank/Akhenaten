@@ -70,7 +70,7 @@ struct sidebar_window_extra : public autoconfig_window_t<sidebar_window_extra> {
 sidebar_window_extra g_sidebar_extra;
 
 int sidebar_window_extra::calculate_displayable_info(int info_to_display, int available_height) {
-    if (is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO)
+    if (is_collapsed || !g_ankh_config.get(CONFIG_UI_SIDEBAR_INFO)
         || info_to_display == SIDEBAR_EXTRA_DISPLAY_NONE)
         return SIDEBAR_EXTRA_DISPLAY_NONE;
 

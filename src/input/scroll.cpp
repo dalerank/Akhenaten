@@ -85,7 +85,7 @@ static int get_arrow_key_value(scroll_key_t* arrow) {
     if (arrow->state == KEY_STATE_AXIS)
         return arrow->value;
 
-    if (config_get(CONFIG_UI_SMOOTH_SCROLLING))
+    if (g_ankh_config.get(CONFIG_UI_SMOOTH_SCROLLING))
         return arrow->state != KEY_STATE_UNPRESSED;
 
     if (arrow->state == KEY_STATE_PRESSED) {
@@ -144,7 +144,7 @@ static void set_arrow_key(scroll_key_t* arrow, int value) {
 
     arrow->value = value;
     arrow->last_change = time_get_millis();
-    if (state != KEY_STATE_AXIS && !config_get(CONFIG_UI_SMOOTH_SCROLLING))
+    if (state != KEY_STATE_AXIS && !g_ankh_config.get(CONFIG_UI_SMOOTH_SCROLLING))
         restart_all_active_arrows_except(arrow);
 }
 
@@ -159,7 +159,7 @@ static int get_scroll_speed_factor(void) {
 
 int scroll_is_smooth(void) {
     auto &data = g_input_scroll_data;
-    return config_get(CONFIG_UI_SMOOTH_SCROLLING) || data.drag.active || data.speed.decaying;
+    return g_ankh_config.get(CONFIG_UI_SMOOTH_SCROLLING) || data.drag.active || data.speed.decaying;
 }
 static int should_scroll(void) {
     auto &data = g_input_scroll_data;
@@ -392,12 +392,12 @@ static int get_alignment_delta(int direction, int camera_max_offset, int camera_
 
 static bool set_scroll_speed_from_input(const mouse* m, scroll_type type) {
     auto &data = g_input_scroll_data;
-    if (set_scroll_speed_from_drag(config_get(CONFIG_UI_SCROLL_KEEP_INERTIA) ? true : false))
+    if (set_scroll_speed_from_drag(g_ankh_config.get(CONFIG_UI_SCROLL_KEEP_INERTIA) ? true : false))
         return true;
 
     int direction = get_direction(m);
     if (direction == DIR_8_NONE) {
-        time_millis time = config_get(CONFIG_UI_SMOOTH_SCROLLING) ? SCROLL_REGULAR_DECAY_TIME : SPEED_CHANGE_IMMEDIATE;
+        time_millis time = g_ankh_config.get(CONFIG_UI_SMOOTH_SCROLLING) ? SCROLL_REGULAR_DECAY_TIME : SPEED_CHANGE_IMMEDIATE;
         speed_set_target(data.speed.x, 0, time, 1);
         speed_set_target(data.speed.y, 0, time, 1);
         return false;
@@ -409,7 +409,7 @@ static bool set_scroll_speed_from_input(const mouse* m, scroll_type type) {
     int dir_y = DIRECTION_Y[direction];
     int y_fraction = type == SCROLL_TYPE_CITY ? 2 : 1;
 
-    if (!config_get(CONFIG_UI_SMOOTH_SCROLLING) && !data.limits.active) {
+    if (!g_ankh_config.get(CONFIG_UI_SMOOTH_SCROLLING) && !data.limits.active) {
         int do_scroll = should_scroll();
         int step = SCROLL_STEP[type][0];
         int align_x = 0;

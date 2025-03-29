@@ -224,7 +224,7 @@ int formation_get_num_forts() {
 }
 
 int formation_get_max_forts() {
-    if (config_get(CONFIG_GP_CH_EXTRA_FORTS))
+    if (g_ankh_config.get(CONFIG_GP_CH_EXTRA_FORTS))
         return MAX_LEGIONS + 4;
     else {
         return MAX_LEGIONS;
