@@ -1801,7 +1801,7 @@ building building_paint_workshop = {
   window_info_height_id : 1,
 }
 
-building_academy = {
+building building_academy = {
   animations : {
     preview : { pack:PACK_GENERAL, id:44 },
     base : { pack:PACK_GENERAL, id:4 },

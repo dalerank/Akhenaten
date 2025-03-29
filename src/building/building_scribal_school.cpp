@@ -4,7 +4,6 @@
 #include "core/calc.h"
 #include "grid/road_access.h"
 #include "figure/figure.h"
-#include "building/building_education.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "city/labor.h"

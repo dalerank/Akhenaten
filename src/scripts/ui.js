@@ -1483,7 +1483,7 @@ window scribal_school_info_window = {
 	})
 }
 
-dock_orders_window = {
+window dock_orders_window = {
 	parent_offset: [0, -px(4)],
   ui : {
 		background 	 : outer_panel({size: [29, 22]}),
@@ -1795,3 +1795,8 @@ window window_warnings = {
 	top_offset : 30,
 	message_interval : 25,
 }
+
+window info_window_education = {
+
+}
+

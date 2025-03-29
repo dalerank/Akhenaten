@@ -1,15 +1,11 @@
 #include "building_library.h"
 
-#include "building/building_education.h"
 
 #include "city/labor.h"
 
 struct library_model : public buildings::model_t<building_library> {
 } library_m;
 
-void building_library::window_info_background(object_info &c) {
-    building_education_draw_info(c, FIGURE_LIBRARIAN, RESOURCE_NONE, vec2i{0, 0}, vec2i{0, 0});
-}
 
 void building_library::spawn_figure() {
     common_spawn_roamer(FIGURE_LIBRARIAN, 50, FIGURE_ACTION_125_ROAMING);
