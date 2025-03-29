@@ -28,15 +28,16 @@
 #include "core/httplib.h"
 #endif
 
-//autoconfig_window_t<window_warnings>
-ui::widget g_main_menu_data;
+struct main_menu_screen : autoconfig_window_t<main_menu_screen> {
+    virtual int get_tooltip_text() override { return 0; }
+    virtual int handle_mouse(const mouse *m) override { return 0; }
+    virtual int draw_background(UiFlags flags) override;
+    virtual void draw_foreground(UiFlags flags) override;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_main_menu);
-void config_load_main_menu() {
-    g_config_arch.r_section("main_menu_window", [] (archive arch) {
-        g_main_menu_data.load(arch);
-    });
-}
+    void init();
+};
+
+main_menu_screen g_main_menu;
 
 int main_menu_get_total_commits(pcstr owner, pcstr repo) {
 #ifdef GAME_PLATFORM_WIN
@@ -77,10 +78,40 @@ void main_menu_download_latest_version() {
 #endif // GAME_PLATFORM_WIN
 }
 
-static void main_menu_draw_background(int) {
-    graphics_clear_screen();
+int main_menu_screen::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
 
-    auto &ui = g_main_menu_data;
+    graphics_clear_screen();
+    return 0;
+}
+
+void main_menu_screen::draw_foreground(UiFlags flags) {
+    ui.begin_frame();
+    ui.draw();
+}
+
+void main_menu_screen::init() {
+    game.mt.detach_task([&] () {
+        int current_commit = main_menu_get_total_commits("dalerank", "Akhenaten");
+
+        if (current_commit <= 1) {
+            return;
+        }
+
+        const xstring last_version_str = g_ankh_config.get(CONFIG_STRING_LAST_VERSION);
+        const int last_version = std::atoi(last_version_str.c_str());
+
+        if (last_version == current_commit) {
+            return;
+        }
+
+        ui["update_panel"].enabled = true;
+        ui["new_version"].enabled = true;
+        ui["update_game"].enabled = true;
+        ui["new_version"] = bstring32(current_commit);
+        g_ankh_config.set(CONFIG_STRING_LAST_VERSION, bstring32(current_commit));
+    });
+
     ui["continue_game"].onclick([] {
         const xstring last_save = g_ankh_config.get(CONFIG_STRING_LAST_SAVE);
         const xstring last_player = g_ankh_config.get(CONFIG_STRING_LAST_PLAYER);
@@ -91,7 +122,7 @@ static void main_menu_draw_background(int) {
     });
 
     ui["select_player"].onclick([] {
-        window_player_selection_show(); 
+        window_player_selection_show();
     });
 
     ui["show_records"].onclick([] {
@@ -100,13 +131,13 @@ static void main_menu_draw_background(int) {
 
     ui["show_config"].onclick([] {
         window_config_show([] {
-        
+
         });
     });
 
-    ui["quit_game"].onclick([] { 
+    ui["quit_game"].onclick([] {
         popup_dialog::show_yesno("#popup_dialog_quit", [] {
-            app_request_exit(); 
+            app_request_exit();
         });
     });
 
@@ -120,29 +151,6 @@ static void main_menu_draw_background(int) {
 
     ui["update_game"].onclick([] {
         main_menu_download_latest_version();
-    });
-}
-
-void main_menu_draw_foreground(int) {
-    auto &ui = g_main_menu_data;
-
-    ui.begin_frame();
-    ui.draw();
-}
-
-void main_menu_init() {
-    auto &ui = g_main_menu_data;
-    game.mt.detach_task([&] () {
-        int current_commit = main_menu_get_total_commits("dalerank", "Akhenaten");
-
-        if (current_commit <= 1) {
-            return;
-        }
-
-        ui["update_panel"].enabled = true;
-        ui["new_version"].enabled = true;
-        ui["update_game"].enabled = true;
-        ui["new_version"] = bstring32(current_commit);
     });
 }
 
@@ -167,11 +175,11 @@ void window_main_menu_show(bool restart_music) {
 
     static window_type window = {
         WINDOW_MAIN_MENU,
-        main_menu_draw_background,
-        main_menu_draw_foreground,
-        main_menu_handle_input
+        [] (int flags) { g_main_menu.draw_background(flags); },
+        [] (int flags) { g_main_menu.draw_foreground(flags); },
+        [] (auto m, auto h) { g_main_menu.ui_handle_mouse(m); },
     };
 
-    main_menu_init();
+    g_main_menu.init();
     window_show(&window);
 }

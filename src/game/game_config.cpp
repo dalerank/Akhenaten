@@ -163,6 +163,10 @@ void ankh_config_t::set(e_config_str key, const xstring value) {
     string_values[key] = value;
 }
 
+void ankh_config_t::set(e_config_str key, pcstr value) {
+    string_values[key] = value;
+}
+
 bool config_get_default_value(e_config_key key) {
     return ini_keys_defaults[key].enabled;
 }

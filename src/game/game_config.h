@@ -155,6 +155,7 @@ struct ankh_config_t {
 
     xstring get(e_config_str key);
     void set(e_config_str key, const xstring value);
+    void set(e_config_str key, pcstr value);
 
     void reset_defaults();
 

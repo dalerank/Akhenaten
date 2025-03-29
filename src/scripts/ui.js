@@ -54,7 +54,7 @@ uioptions = {
 	advisor_icons   : {pack:PACK_GENERAL, id:128, offset:0},
 }
 
-window main_menu_window = {
+window main_menu_screen = {
 	ui : {
 		background    : { type:"background", pack:PACK_UNLOADED, id:14, offset:0 },
 		continue_game : large_button({ pos:mbutton(0), size:[256, 25], text:[13, 5]}),
