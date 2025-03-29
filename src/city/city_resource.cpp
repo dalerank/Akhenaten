@@ -65,14 +65,10 @@ int city_resource_multiple_wine_available() {
     return city_data.resource.wine_types_available >= 2;
 }
 
-int city_resource_food_types_available() {
-    return city_data.resource.food_types_available_num;
-}
-
 int city_resource_food_supply_months() {
     return city_data.resource.food_supply_months;
 }
-int city_resource_food_percentage_produced() {
+int city_resources_t::food_percentage_produced() {
     return calc_percentage(city_data.resource.food_produced_last_month, city_data.resource.food_consumed_last_month);
 }
 
@@ -389,19 +385,19 @@ void city_resource_determine_available() {
     }
 }
 
-static void calculate_available_food() {
+void city_resources_t::calculate_available_food() {
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
-        city_data.resource.granary_food_stored[i] = 0;
+        granary_food_stored[i] = 0;
     }
-    city_data.resource.granary_total_stored = 0;
-    city_data.resource.food_types_available_num = 0;
-    city_data.resource.food_supply_months = 0;
-    city_data.resource.granaries.operating = 0;
-    city_data.resource.granaries.understaffed = 0;
-    city_data.resource.granaries.not_operating = 0;
-    city_data.resource.granaries.not_operating_with_food = 0;
 
-    buildings_valid_do([] (building &b) {
+    granary_total_stored = 0;
+    food_supply_months = 0;
+    granaries.operating = 0;
+    granaries.understaffed = 0;
+    granaries.not_operating = 0;
+    granaries.not_operating_with_food = 0;
+
+    buildings_valid_do([this] (building &b) {
         b.has_road_access = false;
         if (!map_has_road_access(b.tile, b.size)) { // map_has_road_access_granary(b->tile.x(), b->tile.y(), 0)
             return;
@@ -410,7 +406,7 @@ static void calculate_available_food() {
         b.has_road_access = true;
         int pct_workers = calc_percentage<int>(b.num_workers, model_get_building(b.type)->laborers);
         if (pct_workers < 100) {
-            city_data.resource.granaries.understaffed++;
+            granaries.understaffed++;
         }
 
         int amount_stored = 0;
@@ -420,14 +416,14 @@ static void calculate_available_food() {
         }
 
         if (pct_workers < 50) {
-            city_data.resource.granaries.not_operating++;
+            granaries.not_operating++;
             if (amount_stored > 0)
-                city_data.resource.granaries.not_operating_with_food++;
+                granaries.not_operating_with_food++;
 
         } else {
             city_data.resource.granaries.operating++;
             for (int r = 0; r < RESOURCES_FOODS_MAX; r++) {
-                city_data.resource.granary_food_stored[r] += granary.resource_stored[r];
+                granary_food_stored[r] += granary.resource_stored[r];
             }
 
             if (amount_stored >= 100) {
@@ -437,25 +433,23 @@ static void calculate_available_food() {
     }, BUILDING_GRANARY);
 
     for (int i = RESOURCE_FOOD_MIN; i < RESOURCES_FOODS_MAX; i++) {
-        if (city_data.resource.granary_food_stored[i]) {
-            city_data.resource.granary_total_stored += city_data.resource.granary_food_stored[i];
-            city_data.resource.food_types_available_num++;
-        }
+        const bool hasInCity = granary_food_stored[i];
+        granary_total_stored += granary_food_stored[i];
     }
 
-    city_data.resource.food_needed_per_month = calc_adjust_with_percentage(city_data.population.current, 50);
-    if (city_data.resource.food_needed_per_month > 0) {
-        city_data.resource.food_supply_months = city_data.resource.granary_total_stored / city_data.resource.food_needed_per_month;
+    food_needed_per_month = calc_adjust_with_percentage(g_city.population.current, 50);
+    if (food_needed_per_month > 0) {
+        food_supply_months = granary_total_stored / food_needed_per_month;
     } else {
-        city_data.resource.food_supply_months = city_data.resource.granary_total_stored > 0 ? 1 : 0;
+        food_supply_months = granary_total_stored > 0 ? 1 : 0;
     }
+
     if (scenario_property_kingdom_supplies_grain()) {
-        //        city_data.resource.food_types_available = 1;
-        city_data.resource.food_supply_months = 12;
+        food_supply_months = 12;
     }
 }
 
-void city_resource_calculate_food_stocks_and_supply_wheat() {
+void city_resources_t::calculate_food_stocks_and_supply_wheat() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Food Stocks Update");
     calculate_available_food();
     if (!scenario_property_kingdom_supplies_grain()) {
@@ -470,12 +464,11 @@ void city_resource_calculate_food_stocks_and_supply_wheat() {
     }
 }
 
-void city_resource_consume_food() {
+void city_resources_t::consume_food() {
     calculate_available_food();
-    city_data.resource.food_types_eaten_num = 0;
-    city_data.unused.unknown_00c0 = 0;
+    g_city.unused.unknown_00c0 = 0;
     int total_consumed = 0;
-    buildings_house_do([&total_consumed] (building_house *house) {
+    buildings_house_do([&] (building_house *house) {
         if (house->hsize()) {
             return;
         }
@@ -490,8 +483,8 @@ void city_resource_consume_food() {
 
         housed.num_foods = 0;
         if (scenario_property_kingdom_supplies_grain()) {
-            city_data.resource.food_types_eaten_num = 1;
             housed.foods[0] = amount_per_type;
+            g_city.resource.food_types_eaten[RESOURCE_GRAIN] = amount_per_type;
             housed.num_foods = 1;
             return;
         } 
@@ -505,22 +498,30 @@ void city_resource_consume_food() {
                 housed.foods[t] -= amount_per_type;
                 housed.num_foods++;
                 total_consumed += amount_per_type;
+                food_types_eaten[t] += amount_per_type;
             } else if (housed.foods[t] > 0) {
                 // has food but not enough
                 total_consumed += housed.foods[t];
+                food_types_eaten[t] += housed.foods[t];
                 housed.foods[t] = 0;
                 housed.num_foods++;
-            }
-
-            if (housed.num_foods > city_data.resource.food_types_eaten_num) {
-                city_data.resource.food_types_eaten_num = housed.num_foods;
             }
         }
     });
 
-    city_data.resource.food_consumed_last_month = total_consumed;
-    city_data.resource.food_produced_last_month = city_data.resource.food_produced_this_month;
-    city_data.resource.food_produced_this_month = 0;
+    food_consumed_last_month = total_consumed;
+    food_produced_last_month = food_produced_this_month;
+    food_produced_this_month = 0;
+}
+
+int city_resources_t::food_types_available_num() {
+    int total_available = 0;
+    for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD; t++) {
+        const bool available = food_types_available[t] > 0;
+        total_available += (available ? 1 : 0);
+    }
+
+    return total_available;
 }
 
 void city_resource_add_items(e_resource res, int amount) {

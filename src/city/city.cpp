@@ -189,7 +189,7 @@ void city_t::update_tick(int simtick) {
         city_resource_calculate_storageyard_stocks();
         break;
     case 17:
-        city_resource_calculate_food_stocks_and_supply_wheat();
+        g_city.resource.calculate_food_stocks_and_supply_wheat();
         break;
     case 18:
         map_vegetation_growth_update();
@@ -707,25 +707,15 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(28); // temp
 
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
-        iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_available_arr[i]);
+        iob->bind(BIND_SIGNATURE_UINT16, &data.resource.food_types_available[i]);
 
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
-        iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_eaten_arr[i]);
-
-    for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
-        iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_arr_unk_00[i]);
-
-    for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
-        iob->bind(BIND_SIGNATURE_UINT8, &data.resource.food_types_arr_unk_01[i]);
+        iob->bind(BIND_SIGNATURE_UINT16, &data.resource.food_types_eaten[i]);
 
     iob->bind____skip(216);
 
     for (int i = 0; i < RESOURCES_MAX; i++)
         iob->bind(BIND_SIGNATURE_INT32, &data.resource.stockpiled[i]);
-
-    // TODO: TEMP!!!!
-    data.resource.food_types_available_num = 0;
-    data.resource.food_types_eaten_num = 0;
 
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.food_supply_months);
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.granaries.operating);

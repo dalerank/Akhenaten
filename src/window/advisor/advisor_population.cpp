@@ -299,7 +299,7 @@ void ui::advisor_population_window::print_history_info() {
     }
 
     // food types eaten
-    ui["text2"].text_var("%s %u", ui::str(55, 16), city_resource_food_types_available());
+    ui["text2"].text_var("%s %u", ui::str(55, 16), g_city.resource.food_types_available_num());
 
     // immigration
     int newcomers = g_city.migration.newcomers;

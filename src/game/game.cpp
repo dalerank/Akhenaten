@@ -158,7 +158,7 @@ void game_t::advance_month() {
     g_city.migration.reset_newcomers();
     g_city.health.update();
     g_city.finance.advance_month();
-    city_resource_consume_food();
+    g_city.resource.consume_food();
     scenario_distant_battle_process();
 
     random_generate_next();                  // TODO: find out the source / reason for this

@@ -119,7 +119,7 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
         if (scenario_property_kingdom_supplies_grain()) {
             foodcomsuption_status = {26, FONT_NORMAL_BLACK_ON_DARK};
         } else {
-            int pct = city_resource_food_percentage_produced();
+            int pct = g_city.resource.food_percentage_produced();
             if (pct > 150) { foodcomsuption_status = {13, FONT_NORMAL_BLACK_ON_DARK}; }
             else if (pct > 105) { foodcomsuption_status = {14, FONT_NORMAL_BLACK_ON_DARK}; }
             else if (pct > 95) { foodcomsuption_status = {15, FONT_NORMAL_BLACK_ON_DARK}; }

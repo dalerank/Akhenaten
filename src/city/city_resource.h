@@ -26,11 +26,9 @@ struct city_resources_t {
     int16_t unk_00[RESOURCES_MAX];
 
     uint8_t wine_types_available;
-    int8_t food_types_available_arr[RESOURCES_FOODS_MAX];
-    int8_t food_types_eaten_arr[RESOURCES_FOODS_MAX];
+    svector<uint16_t, RESOURCES_FOODS_MAX> food_types_available;
+    svector<uint16_t, RESOURCES_FOODS_MAX> food_types_eaten;
     e_resource food_types_allowed[RESOURCES_FOODS_MAX];
-    int32_t food_types_available_num;
-    int32_t food_types_eaten_num;
     int32_t granary_food_stored[RESOURCES_FOODS_MAX];
     int32_t granary_total_stored;
     int32_t food_supply_months;
@@ -38,8 +36,6 @@ struct city_resources_t {
     int32_t food_consumed_last_month;
     int32_t food_produced_last_month;
     int32_t food_produced_this_month;
-    int8_t food_types_arr_unk_00[RESOURCES_FOODS_MAX];
-    int8_t food_types_arr_unk_01[RESOURCES_FOODS_MAX];
 
     struct {
         int operating;
@@ -57,15 +53,19 @@ struct city_resources_t {
     const resource_list &available();
     const resource_list &available_foods();
     const resource_list &available_market_goods();
+    int food_percentage_produced();
+    void calculate_available_food();
+    void calculate_food_stocks_and_supply_wheat();
+    void consume_food();
+
+    int food_types_available_num();
 
     void init();
 };
 
 
 int city_resource_multiple_wine_available();
-int city_resource_food_types_available();
 int city_resource_food_supply_months();
-int city_resource_food_percentage_produced();
 int city_resource_operating_granaries();
 
 e_trade_status city_resource_trade_status(e_resource resource);
@@ -83,8 +83,6 @@ void city_resource_add_produced_to_granary(int amount);
 void city_resource_remove_from_granary(int food, int amount);
 void city_resource_calculate_storageyard_stocks();
 void city_resource_determine_available();
-void city_resource_calculate_food_stocks_and_supply_wheat();
-void city_resource_consume_food();
 void city_resource_add_items(e_resource res, int amount);
 void city_resource_was_added_warning(e_resource res);
 
