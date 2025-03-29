@@ -116,8 +116,10 @@ endif()
 
 set(SDL2_VERSION "2.30.11")
 set(SDL2_MIXER_VERSION "2.8.0")
+set(OPENSSL_VERSION "3.4.1")
 
 set(SDL2_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2")
+set(OPENSSL_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl")
 set(TRACY_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/tracy")
 
 #
@@ -153,8 +155,30 @@ if (MSVC OR WIN_EMSCRIPTEN)
         file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_UNPACK_DIR}/lib DESTINATION ${SDL2_EXTRACT_PATH})
     endif()
 
+    set(OPENSSL_CHECK_PATH "${OPENSSL_EXTRACT_PATH}/include/x64/include/openssl/ssl.h")
+    message("Check ssl.h exist at ${OPENSSL_CHECK_PATH}")
+    if(NOT EXISTS "${OPENSSL_CHECK_PATH}")
+        set(OPENSSL_DEP_FILENAME "openssl-${OPENSSL_VERSION}.zip")
+        set(OPENSSL_UNPACK_DIR "openssl-${OPENSSL_VERSION}")
+        set(OPENSSL_DOWNLOAD_URL "https://download.firedaemon.com/FireDaemon-OpenSSL/${OPENSSL_DEP_FILENAME}")
+        set(OPENSSL_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${OPENSSL_DEP_FILENAME}")
+        message("Download openssl to ${OPENSSL_TMP_ZIP_PATH}")
+        file(DOWNLOAD "${OPENSSL_DOWNLOAD_URL}" "${OPENSSL_TMP_ZIP_PATH}")
+        message("Unpack openssl to ${OPENSSL_EXTRACT_PATH}")
+        execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR})
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${OPENSSL_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR})
+
+        execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${OPENSSL_EXTRACT_PATH})
+        file(COPY ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR}/x64/lib DESTINATION ${OPENSSL_EXTRACT_PATH})
+        file(COPY ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR}/x64/bin DESTINATION ${OPENSSL_EXTRACT_PATH})
+        file(COPY ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR}/x64/include DESTINATION ${OPENSSL_EXTRACT_PATH})
+    endif()
+
     file(GLOB SDL2_DLL_PUBLIC_DLL "${SDL2_EXTRACT_PATH}/lib/${GAME_PROCESSOR_ARCH}/*.dll")
     file(COPY ${SDL2_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
+
+    file(GLOB OPENSSL_DLL_PUBLIC_DLL "${OPENSSL_EXTRACT_PATH}/lib/*.dll")
+    file(COPY ${OPENSSL_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
 
     set(SDL_FFMPEG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/ffmpeg)
     file(GLOB FFMPEG_PUBLIC_DLL "${SDL_FFMPEG_DIR}/bin/*.dll")
@@ -549,6 +573,7 @@ include_directories(ext)
 include_directories(src)
 include_directories(ext/imgui)
 include_directories(ext/imgui/backends)
+include_directories(ext/openssl/include)
 
 if(MSVC)
     include_directories(ext/dirent)
@@ -574,6 +599,8 @@ if(MSVC)
    target_link_libraries(${GAME} ${FFMPEG_LIB}/avutil.lib)
    target_link_libraries(${GAME} ${FFMPEG_LIB}/avformat.lib)
    target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.lib)
+   target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/openssl/lib/libssl.lib)
+   target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/openssl/lib/libcrypto.lib)
 endif()
 
 if (PLATFORM_ANDROID)

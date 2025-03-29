@@ -23,6 +23,12 @@
 #include "io/gamestate/boilerplate.h"
 #include "resource/icons.h"
 
+#ifdef GAME_PLATFORM_WIN
+#define CPPHTTPLIB_OPENSSL_SUPPORT
+#include "core/httplib.h"
+#endif
+
+//autoconfig_window_t<window_warnings>
 ui::widget g_main_menu_data;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_main_menu);
@@ -30,6 +36,37 @@ void config_load_main_menu() {
     g_config_arch.r_section("main_menu_window", [] (archive arch) {
         g_main_menu_data.load(arch);
     });
+}
+
+int main_menu_get_total_commits(pcstr owner, pcstr repo) {
+#ifdef GAME_PLATFORM_WIN
+    bstring256 req;
+    req.printf("https://api.github.com/repos/%s/%s/commits?per_page=1", owner, repo);
+    httplib::Url url(req.c_str());
+    httplib::SSLClient sslClient(url.host);
+
+    auto res = sslClient.Get(req.c_str());
+
+    if (res && res->status == 200) {
+        std::smatch match;
+        std::regex link_regex(R"(<([^>]+)>; rel="last")");
+        std::string link_header = res->get_header_value("Link");
+
+        if (std::regex_search(link_header, match, link_regex)) {
+            std::string last_page_url = match[1].str();
+            std::regex page_regex(R"(&page=(\d+))");
+            if (std::regex_search(last_page_url, match, page_regex)) {
+                return std::stoi(match[1].str());
+            }
+        }
+        return 1; // If no pagination, assume one page exists
+    } else {
+        std::cerr << "Error: Unable to fetch commits (status code " << (res ? res->status : 0) << ")" << std::endl;
+        return -1;
+    }
+#else
+    return -1;
+#endif // GAME_PLATFORM_WIN
 }
 
 static void main_menu_draw_background(int) {
@@ -81,6 +118,21 @@ void main_menu_draw_foreground(int) {
     ui.draw();
 }
 
+void main_menu_init() {
+    auto &ui = g_main_menu_data;
+    ui["update_panel"].enabled = false;
+    ui["new_version"].enabled = false;
+    game.mt.detach_task([&] () {
+        int current_commit = main_menu_get_total_commits("dalerank", "Akhenaten");
+
+        if (current_commit > 0) {
+            ui["update_panel"].enabled = true;
+            ui["new_version"].enabled = true;
+            ui["new_version"] = bstring32(current_commit);
+        }
+    });
+}
+
 void main_menu_handle_input(const mouse* m, const hotkeys* h) {
     ui::handle_mouse(m);
 
@@ -107,5 +159,6 @@ void window_main_menu_show(bool restart_music) {
         main_menu_handle_input
     };
 
+    main_menu_init();
     window_show(&window);
 }

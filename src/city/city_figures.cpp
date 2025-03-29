@@ -46,7 +46,7 @@ void city_figures_t::init_figures() {
 
 void city_figures_t::reload_objects() {
     for (auto &figure : map_figures()) {
-        if (figure->type == FIGURE_NONE) {
+        if (!figure || figure->type == FIGURE_NONE) {
             continue;
         }
 

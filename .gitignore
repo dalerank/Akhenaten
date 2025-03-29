@@ -54,3 +54,4 @@ doc
 /ext/lib/x64
 /ext/lib/x86
 /ext/cpptrace
+/ext/openssl
