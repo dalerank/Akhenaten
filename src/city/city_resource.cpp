@@ -53,7 +53,7 @@ const resource_list &city_resources_t::get_available() {
     return g_available_data.resources;
 }
 
-const resource_list &city_resource_get_available_foods() {
+const resource_list &city_resources_t::get_available_foods() {
     return g_available_data.foods;
 }
 

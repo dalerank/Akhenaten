@@ -575,11 +575,11 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
     if (d.inventory[INVENTORY_GOOD2] < model.jewelry)
         return e_house_none;
 
-    int wine = model.beer;
-    if (wine && d.inventory[INVENTORY_GOOD4] <= 0)
+    int beer = model.beer;
+    if (beer && d.inventory[INVENTORY_GOOD4] <= 0)
         return e_house_none;
 
-    if (wine > 1 && !city_resource_multiple_wine_available()) {
+    if (beer > 1 && !city_resource_multiple_wine_available()) {
         ++demands->missing.second_wine;
         return e_house_none;
     }

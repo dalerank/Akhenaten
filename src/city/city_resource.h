@@ -55,11 +55,11 @@ struct city_resources_t {
 
     void calculate_stocks();
     const resource_list &get_available();
+    const resource_list &get_available_foods();
 
     void init();
 };
 
-const resource_list &city_resource_get_available_foods();
 const resource_list &city_resource_get_available_market_goods();
 
 int city_resource_multiple_wine_available();

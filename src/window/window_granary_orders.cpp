@@ -33,7 +33,8 @@ void granary_orders_window::window_info_foreground(object_info &c) {
     const auto &items_area = ui["items_area"];
 
     int line_y = 0;
-    const resource_list &resources = city_resource_get_available_foods();
+    // copy on stack, better for debugging
+    const resource_list resources = g_city.resource.get_available_foods();
     for (const auto &r : resources) {
         ui.icon(items_area.pos + vec2i{ item_icon_column.pos.x, line_y }, r.type);
         ui.label(ui::str(23, r.type), items_area.pos + vec2i{ 52, line_y }, FONT_NORMAL_WHITE_ON_DARK, UiFlags_AlignCentered|UiFlags_AlignYCentered);
