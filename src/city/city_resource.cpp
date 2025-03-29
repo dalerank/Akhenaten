@@ -49,7 +49,7 @@ int city_resources_t::gettable(e_resource resource) {
     return g_city_gettable_storages[resource];
 }
 
-const resource_list &city_resource_get_available() {
+const resource_list &city_resources_t::get_available() {
     return g_available_data.resources;
 }
 

@@ -54,11 +54,11 @@ struct city_resources_t {
     int gettable(e_resource resource);
 
     void calculate_stocks();
+    const resource_list &get_available();
 
     void init();
 };
 
-const resource_list &city_resource_get_available();
 const resource_list &city_resource_get_available_foods();
 const resource_list &city_resource_get_available_market_goods();
 

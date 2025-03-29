@@ -66,7 +66,7 @@ void info_window_storageyard::init(object_info &c) {
     building_storage *warehouse = c.building_get()->dcast_storage();
     assert(warehouse);
 
-    const resource_list &resources = city_resource_get_available();
+    const resource_list &resources = g_city.resource.get_available();
 
     auto _icon = [] (int idx) { bstring32 id_icon; id_icon.printf("good%u_icon", idx); return id_icon; };
     auto _text = [] (int idx) { bstring32 id_text; id_text.printf("good%u_text", idx); return id_text; };

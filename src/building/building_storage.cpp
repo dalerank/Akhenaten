@@ -3,13 +3,11 @@
 #include "building/building.h"
 #include "building/rotation.h"
 #include "core/object_property.h"
-#include "city/city_resource.h"
+#include "city/city.h"
 
 #include "io/io_buffer.h"
 #include "window/window_city.h"
 #include "window/popup_dialog.h"
-
-#include <string.h>
 
 constexpr int MAX_STORAGES = 200;
 
@@ -60,7 +58,7 @@ int building_storage_create(int building_type) {
                 g_storages[i].storage.resource_max_accept[r] = 3200;
                 g_storages[i].storage.resource_max_get[r] = 3200;
             }
-            const resource_list &resources = city_resource_get_available();
+            const resource_list &resources = g_city.resource.get_available();
             for (const auto &r: resources) {
                 e_resource resource = r.type;
                 switch (building_type) {
