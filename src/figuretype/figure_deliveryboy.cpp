@@ -1,6 +1,6 @@
 #include "figure_deliveryboy.h"
 
-#include "config/config.h"
+#include "game/game_config.h"
 #include "figure/image.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"

@@ -12,7 +12,7 @@
 #include "city/city_events.h"
 #include "core/profiler.h"
 #include "core/core_utility.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "game/settings.h"
 #include "game/orientation.h"
 #include "game/cheats.h"

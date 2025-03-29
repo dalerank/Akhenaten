@@ -5,7 +5,7 @@
 #include "grid/building.h"
 #include "city/buildings.h"
 #include "city/city_warnings.h"
-#include "config/config.h"
+#include "config/ankh_config.h"
 #include "figuretype/figure_fishing_boat.h"
 #include "core/random.h"
 #include "grid/image.h"

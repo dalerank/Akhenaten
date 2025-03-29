@@ -15,7 +15,7 @@
 #include "window/window_city.h"
 #include "graphics/image_groups.h"
 #include "grid/terrain.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "city/city.h"
 #include "city/city_floods.h"
 #include "grid/floodplain.h"

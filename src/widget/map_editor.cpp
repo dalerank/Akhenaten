@@ -14,7 +14,7 @@
 #include "grid/point.h"
 #include "grid/property.h"
 #include "input/scroll.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "sound/sound_city.h"
 #include "sound/sound.h"
 #include "widget/city/tile_draw.h"

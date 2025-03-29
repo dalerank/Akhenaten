@@ -23,7 +23,7 @@
 #include "graphics/video.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "config/hotkeys.h"
 #include "io/gamefiles/lang.h"
 #include "content/content.h"

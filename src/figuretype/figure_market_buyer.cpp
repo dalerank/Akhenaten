@@ -17,7 +17,7 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/ui.h"
 #include "graphics/image_groups.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "city/city_health.h"
 #include "grid/building.h"
 #include "city/ratings.h"

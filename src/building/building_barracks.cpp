@@ -13,7 +13,7 @@
 #include "figure/formation.h"
 #include "grid/grid.h"
 #include "grid/road_access.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "city/city.h"
 #include "game/game.h"
 #include "graphics/elements/ui.h"

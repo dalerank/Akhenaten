@@ -8,7 +8,7 @@
 #include "graphics/elements/menu.h"
 #include "graphics/image.h"
 #include "graphics/screen.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "arguments.h"
 #include "platform/android/android.h"
 #include "platform/platform.h"

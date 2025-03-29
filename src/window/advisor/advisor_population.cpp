@@ -13,7 +13,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "scenario/scenario.h"
 #include "translation/translation.h"
 #include "window/advisors.h"

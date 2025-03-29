@@ -4,7 +4,7 @@
 #include "grid/water.h"
 #include "grid/moisture.h"
 #include "grid/building.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "grid/canals.h"
 #include "building/building_well.h"
 #include "building/building_house.h"

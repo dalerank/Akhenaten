@@ -12,7 +12,7 @@
 #include "grid/routing/routing.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
-#include "config/config.h"
+#include "game/game_config.h"
 
 bool road_tile_valid_access(int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_ROAD)) {

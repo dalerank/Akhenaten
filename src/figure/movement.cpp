@@ -20,7 +20,7 @@
 #include "grid/terrain.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "game/game.h"
 
 #include <algorithm>

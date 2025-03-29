@@ -14,7 +14,7 @@
 #include "input/mouse.h"
 #include "content/vfs.h"
 #include "io/gamefiles/lang.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "platform/arguments.h"
 #include "platform/cursor.h"
 #include "content/content.h"

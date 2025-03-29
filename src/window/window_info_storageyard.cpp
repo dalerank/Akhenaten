@@ -9,7 +9,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/window.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "game/game.h"
 #include "js/js_game.h"
 

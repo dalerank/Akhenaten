@@ -15,7 +15,7 @@
 #include "graphics/text.h"
 #include "graphics/view/view.h"
 #include "graphics/window.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "scenario/scenario.h"
 #include "widget/widget_city.h"
 #include "dev/debug.h"

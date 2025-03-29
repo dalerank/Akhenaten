@@ -9,7 +9,7 @@
 #include "graphics/image.h"
 #include "game/game.h"
 #include "js/js_game.h"
-#include "config/config.h"
+#include "game/game_config.h"
 
 figures::model_t<figure_storageyard_cart> storageyard_cart_m;
 

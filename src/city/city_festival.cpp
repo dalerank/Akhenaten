@@ -10,7 +10,7 @@
 #include "city/city_message.h"
 #include "core/random.h"
 #include "figure/figure.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "graphics/image_groups.h"
 
 bool city_festival_t::is_planned() {

@@ -3,7 +3,7 @@
 
 #include "graphics/image_groups.h"
 #include "grid/vegetation.h"
-#include "config/config.h"
+#include "game/game_config.h"
 
 #include "grid/routing/routing.h"
 

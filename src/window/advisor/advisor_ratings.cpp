@@ -8,7 +8,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
 #include "game/game.h"

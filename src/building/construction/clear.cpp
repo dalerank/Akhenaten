@@ -20,7 +20,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "window/popup_dialog.h"
 
 struct clear_confirm_t {

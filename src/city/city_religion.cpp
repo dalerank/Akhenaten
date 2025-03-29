@@ -19,7 +19,6 @@
 #include "game/settings.h"
 #include "game/tutorial.h"
 #include "grid/routing/routing_terrain.h"
-#include "config/config.h"
 #include "ratings.h"
 #include "scenario/invasion.h"
 #include "scenario/scenario.h"

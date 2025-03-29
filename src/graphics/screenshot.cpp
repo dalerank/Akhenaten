@@ -7,7 +7,7 @@
 #include "core/string.h"
 #include "core/log.h"
 #include "color.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "content/vfs.h"
 #include "grid/grid.h"
 #include "platform/renderer.h"

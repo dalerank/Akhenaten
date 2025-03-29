@@ -20,7 +20,7 @@
 #include "grid/gardens.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "io/gamefiles/lang.h"
 #include "game/game.h"
 

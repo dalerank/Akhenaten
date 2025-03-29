@@ -16,7 +16,7 @@
 #include "grid/property.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "overlays/city_overlay.h"
 
 city_overlay* city_overlay_for_food_stocks() {

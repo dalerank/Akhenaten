@@ -16,7 +16,7 @@
 #include "grid/grid.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "sound/sound.h"
 #include "city/city_figures.h"
 

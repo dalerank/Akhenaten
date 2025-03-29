@@ -1,4 +1,4 @@
-#include "config.h"
+#include "game_config.h"
 
 #include "content/vfs.h"
 #include "core/log.h"
@@ -232,7 +232,7 @@ void ankh_config_t::save() {
     }
 
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-        fprintf(fp, "%s=%s\n", ini_string_keys[i], string_values[i]);
+        fprintf(fp, "%s=%s\n", ini_string_keys[i], string_values[i].c_str());
     }
     vfs::file_close(fp);
     vfs::sync_em_fs();

@@ -16,7 +16,7 @@
 #include "grid/orientation.h"
 #include "graphics/image.h"
 #include "io/gamefiles/lang.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "widget/city/ornaments.h"

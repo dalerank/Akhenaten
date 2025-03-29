@@ -11,7 +11,7 @@
 #include "graphics/text.h"
 #include "graphics/view/view.h"
 #include "graphics/window.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "widget/map_editor.h"
 #include "widget/sidebar/editor.h"
 #include "widget/top_menu_editor.h"

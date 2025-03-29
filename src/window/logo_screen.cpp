@@ -5,7 +5,7 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/view/view.h"
 #include "graphics/window.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "sound/music.h"
 #include "window/main_menu.h"
 #include "window/plain_message_dialog.h"

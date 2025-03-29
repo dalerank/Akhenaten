@@ -7,7 +7,7 @@
 #include "grid/building.h"
 #include "grid/grid.h"
 #include "game/tutorial.h"
-#include "config/config.h"
+#include "game/game_config.h"
 
 static int provide_missionary_coverage(int x, int y) {
     grid_area area = map_grid_get_area(tile2i(x, y), 1, 4);

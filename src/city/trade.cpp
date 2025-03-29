@@ -5,7 +5,7 @@
 #include "city/city.h"
 #include "core/profiler.h"
 #include "empire/empire.h"
-#include "config/config.h"
+#include "game/game_config.h"
 
 static auto &city_data = g_city;
 void city_trade_update() {

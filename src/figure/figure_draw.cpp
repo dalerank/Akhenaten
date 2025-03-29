@@ -2,7 +2,7 @@
 
 #include "dev/debug.h"
 #include "graphics/view/lookup.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "figuretype/editor.h"
 #include "formation.h"
 #include "graphics/graphics.h"

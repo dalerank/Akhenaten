@@ -19,7 +19,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "content/dir.h"
 #include "io/gamefiles/lang.h"
 #include "translation/translation.h"

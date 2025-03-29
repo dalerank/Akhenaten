@@ -4,7 +4,7 @@
 #include "city/city.h"
 #include "empire/empire.h"
 #include "game/tutorial.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "scenario/scenario.h"
 
 #include "core/archive.h"

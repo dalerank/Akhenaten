@@ -19,7 +19,7 @@
 #include "grid/terrain.h"
 #include "grid/building_tiles.h"
 #include "io/gamefiles/lang.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "window/building/common.h"
 #include "window/window_building_info.h"
 #include "widget/city/ornaments.h"

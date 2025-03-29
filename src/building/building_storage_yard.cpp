@@ -33,7 +33,7 @@
 #include "figure/figure.h"
 #include "grid/road_access.h"
 #include "scenario/scenario.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "widget/city/ornaments.h"
 #include "widget/city/building_ghost.h"
 #include "figuretype/figure_storageyard_cart.h"

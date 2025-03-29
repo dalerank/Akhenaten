@@ -10,7 +10,7 @@
 #include "graphics/image.h"
 #include "game/game.h"
 #include "game/settings.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "core/app.h"
 #include "js/js_game.h"
 #include "window/records.h"

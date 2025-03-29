@@ -6,7 +6,7 @@
 #include "window/building/common.h"
 #include "graphics/window.h"
 #include "grid/floodplain.h"
-#include "config/config.h"
+#include "config/ankh_config.h"
 
 struct info_window_farm : public building_info_window_t<info_window_farm> {
     virtual void init(object_info &c) override;

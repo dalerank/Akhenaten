@@ -5,7 +5,7 @@
 #include "city/finance.h"
 #include "window/building/common.h"
 #include "graphics/window.h"
-#include "config/config.h"
+#include "game/game_config.h"
 
 struct taxcollector_info_window : public building_info_window_t<taxcollector_info_window> {
     virtual void init(object_info &c) override;

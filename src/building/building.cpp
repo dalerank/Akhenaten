@@ -36,7 +36,7 @@
 #include "figuretype/figure_cartpusher.h"
 #include "core/object_property.h"
 #include "graphics/view/view.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "core/random.h"
 #include "sound/sound.h"
 

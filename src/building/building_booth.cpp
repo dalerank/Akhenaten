@@ -11,7 +11,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "io/gamefiles/lang.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "grid/building_tiles.h"
 #include "grid/orientation.h"
 #include "grid/property.h"

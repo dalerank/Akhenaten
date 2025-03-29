@@ -24,7 +24,7 @@
 #include "grid/terrain.h"
 #include "city/city_floods.h"
 #include "io/gamefiles/lang.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "window/building/common.h"
 #include "widget/city/building_ghost.h"
 #include "construction/build_planner.h"

@@ -5,7 +5,7 @@
 #include "core/calc.h"
 #include "figure_fireman.h"
 #include "sound/sound.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "building/building_house.h"
 #include "building/building_burning_ruin.h"
 #include "graphics/animation.h"

@@ -2,7 +2,7 @@
 
 #include "building_tiles.h"
 #include "building/building_farm.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "scenario/map.h"
 #include "grid/tiles.h"
 #include "terrain.h"

@@ -5,7 +5,7 @@
 #include "building/building_wall.h"
 #include "building/monuments.h"
 #include "building/building_menu.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "city/city.h"
 #include "city/map.h"
 #include "city/city_message.h"

@@ -7,7 +7,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "figure_missile.h"
 #include "grid/terrain.h"
-#include "config/config.h"
+#include "game/game_config.h"
 
 figures::model_t<figure_tower_sentry> figure_tower_sentry_m;
 

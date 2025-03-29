@@ -23,7 +23,7 @@
 #include "window/building/figures.h"
 #include "graphics/elements/ui.h"
 #include "grid/routing/routing_terrain.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "city/city.h"
 
 figures::model_t<figure_cartpusher> cartpusher_m;

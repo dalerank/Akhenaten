@@ -5,7 +5,7 @@
 #include "city/coverage.h"
 #include "city/city.h"
 #include "city/city_population.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "core/calc.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"

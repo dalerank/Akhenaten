@@ -1,6 +1,6 @@
 #include "clouds.h"
 
-#include "config/config.h"
+#include "game/game_config.h"
 #include "core/random.h"
 #include "core/speed.h"
 #include "game/settings.h"

@@ -4,7 +4,7 @@
 #include "grid/terrain.h"
 #include "city/city_warnings.h"
 #include "grid/image.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "grid/water_supply.h"

@@ -17,7 +17,7 @@
 #include "city/city_message.h"
 #include "grid/routing/routing.h"
 #include "grid/routing/routing_terrain.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "game/undo.h"
 
 void fire_building(building *b) {

@@ -6,7 +6,7 @@
 #include "building/building_house.h"
 #include "core/svector.h"
 #include "core/profiler.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "grid/canals.h"

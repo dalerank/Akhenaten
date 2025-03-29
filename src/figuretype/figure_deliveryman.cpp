@@ -11,7 +11,7 @@
 #include "game/resource.h"
 #include "grid/point.h"
 #include "grid/road_network.h"
-#include "config/config.h"
+#include "game/game_config.h"
 
 void figure::determine_deliveryman_destination_food() {
     building* b = home();

@@ -25,7 +25,7 @@
 #include "grid/image.h"
 #include "grid/terrain.h"
 #include "input/scroll.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "io/gamefiles/lang.h"
 #include "platform/renderer.h"
 #include "scenario/scenario.h"

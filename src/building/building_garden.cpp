@@ -8,7 +8,7 @@
 #include "construction/build_planner.h"
 #include "graphics/graphics.h"
 #include "io/gamefiles/lang.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "window/building/common.h"
 #include "sound/sound_building.h"
 #include "game/undo.h"

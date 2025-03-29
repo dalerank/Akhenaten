@@ -54,7 +54,7 @@
 #include "grid/tiles.h"
 #include "grid/water.h"
 #include "grid/figure.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "routed.h"
 #include "city/city.h"
 

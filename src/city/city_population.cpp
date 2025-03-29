@@ -7,7 +7,7 @@
 #include "city/city_message.h"
 #include "core/calc.h"
 #include "core/random.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "figuretype/figure_emigrant.h"
 #include "figuretype/figure_immigrant.h"
 #include "figuretype/figure_homeless.h"

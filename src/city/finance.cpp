@@ -11,7 +11,7 @@
 #include "game/difficulty.h"
 #include "game/tutorial.h"
 #include "game/game.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "figure/figure.h"
 
 #include <map>

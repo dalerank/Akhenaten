@@ -2,7 +2,7 @@
 
 #include "content/vfs.h"
 #include "core/string.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "content/content.h"
 #include "platform/platform.h"
 

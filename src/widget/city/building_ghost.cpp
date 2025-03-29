@@ -22,7 +22,7 @@
 #include "grid/road_canal.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "ornaments.h"
 #include "game/game.h"
 #include "graphics/image.h"

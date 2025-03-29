@@ -14,7 +14,7 @@
 #include "window/autoconfig_window.h"
 #include "graphics/image.h"
 #include "graphics/text.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "io/gamefiles/lang.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"

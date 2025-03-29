@@ -4,7 +4,7 @@
 #include "city/city.h"
 #include "core/random.h"
 #include "game/game.h"
-#include "config/config.h"
+#include "game/game_config.h"
 #include "scenario/scenario.h"
 
 struct scenario_kingdome_change_t {
