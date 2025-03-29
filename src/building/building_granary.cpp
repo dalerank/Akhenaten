@@ -14,7 +14,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "graphics/elements/ui.h"
 #include "grid/road_access.h"
-#include "config/ankh_config.h"
+#include "game/game_config.h"
 #include "scenario/scenario.h"
 #include "sound/effect.h"
 #include "graphics/image_desc.h"
