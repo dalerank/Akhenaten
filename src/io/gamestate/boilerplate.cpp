@@ -571,7 +571,7 @@ bool GamestateIO::write_mission(const int scenario_id) {
     // TODO?
     return false;
 }
-bool GamestateIO::write_savegame(const char* filename_short) {
+bool GamestateIO::write_savegame(pcstr filename_short) {
     bstring256 full = fullpath_saves(filename_short);
 
     // write file
@@ -580,9 +580,9 @@ bool GamestateIO::write_savegame(const char* filename_short) {
     bool save_ok = FILEIO.serialize(full, 0, format, latest_save_version, file_schema);
     if (save_ok) {
         //vfs::path fs_path = vfs::content_path(full);
-        config_set_string(CONFIG_STRING_LAST_SAVE, full);
-        config_set_string(CONFIG_STRING_LAST_PLAYER, g_settings.player_name);
-        config_save();
+        g_ankh_config.set(CONFIG_STRING_LAST_SAVE, full.c_str());
+        g_ankh_config.set(CONFIG_STRING_LAST_PLAYER, g_settings.player_name.c_str());
+        g_ankh_config.save();
     }
 
     return save_ok;

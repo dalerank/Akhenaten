@@ -3,8 +3,6 @@
 #include "core/xstring.h"
 #include <array>
 
-#define CONFIG_STRING_VALUE_MAX 64
-
 enum e_config_key {
     CONFIG_GP_FIX_IMMIGRATION_BUG = 0,
     CONFIG_GP_FIX_100_YEAR_GHOSTS,
@@ -139,7 +137,7 @@ enum e_config_key {
     CONFIG_MAX_ENTRIES
 };
 
-enum {
+enum e_config_str {
     CONFIG_STRING_UI_LANGUAGE_DIR,
     CONFIG_STRING_LAST_SAVE,
     CONFIG_STRING_LAST_PLAYER,
@@ -150,25 +148,21 @@ enum {
 
 struct ankh_config_t {
     std::array<bool, CONFIG_MAX_ENTRIES> opts;
+    std::array<xstring, CONFIG_STRING_MAX_ENTRIES> string_values;
+
     int get(e_config_key key);
     void set(e_config_key key, int value);
+
+    xstring get(e_config_str key);
+    void set(e_config_str key, const xstring value);
+
+    void reset_defaults();
+
+    void load();
+    void save();
 };
 
 extern ankh_config_t g_ankh_config;
-
-/**
- * Get a string config value
- * @param key String key
- * @return Config value, is always non-NULL but may be an empty string
- */
-const char* config_get_string(int key);
-
-/**
- * Set a string config value
- * @param key String key
- * @param value Value to set
- */
-void config_set_string(int key, const char* value);
 
 /**
  * Set a default config value
@@ -183,18 +177,3 @@ bool config_get_default_value(e_config_key key);
  * @return Default config value, is always non-NULL but may be an empty string
  */
 const char* config_get_default_string_value(e_config_key key);
-
-/**
- * Reset all settings to their defaults
- */
-void config_set_defaults();
-
-/**
- * Load config from file
- */
-void config_load();
-
-/**
- * Save config to file
- */
-void config_save();

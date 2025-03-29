@@ -45,7 +45,7 @@ static struct {
     editor_demand_change demand_change;
     int focus_button_id;
     int route_ids[MAX_ROUTES];
-    uint8_t* route_names[MAX_ROUTES];
+    std::array<xstring, MAX_ROUTES> route_names;
     int num_routes;
 } data;
 
@@ -70,7 +70,7 @@ static void init(int id) {
             create_display_name(i, lang_get_string(21, city->name_id));
 
             data.route_ids[data.num_routes] = i;
-            data.route_names[data.num_routes] = route_display_names[i];
+            data.route_names[data.num_routes] = (pcstr)route_display_names[i];
             data.num_routes++;
         } else {
             create_display_name(i, UNKNOWN);
@@ -140,8 +140,7 @@ static void set_route_id(int index) {
 }
 
 static void button_route(int param1, int param2) {
-    window_select_list_show_text(
-      screen_dialog_offset_x() + 200, screen_dialog_offset_y() + 50, data.route_names, data.num_routes, set_route_id);
+    window_select_list_show_text(screen_dialog_offset_x() + 200, screen_dialog_offset_y() + 50, make_span(data.route_names), set_route_id);
 }
 
 static void button_toggle_rise(int param1, int param2) {

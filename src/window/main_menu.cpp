@@ -37,10 +37,10 @@ static void main_menu_draw_background(int) {
 
     auto &ui = g_main_menu_data;
     ui["continue_game"].onclick([] {
-        pcstr last_save = config_get_string(CONFIG_STRING_LAST_SAVE);
-        pcstr last_player = config_get_string(CONFIG_STRING_LAST_PLAYER);
-        g_settings.set_player_name((const uint8_t *)last_player);
-        if (GamestateIO::load_savegame(last_save)) {
+        const xstring last_save = g_ankh_config.get(CONFIG_STRING_LAST_SAVE);
+        const xstring last_player = g_ankh_config.get(CONFIG_STRING_LAST_PLAYER);
+        g_settings.set_player_name((const uint8_t *)last_player.c_str());
+        if (GamestateIO::load_savegame(last_save.c_str())) {
             window_city_show();
         }
     });

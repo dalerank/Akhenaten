@@ -219,6 +219,7 @@ static int page_names[] = {
     TR_CONFIG_HEADER_RESOURCE_CHANGES, // 13
 };
 
+constexpr int CONFIG_STRING_VALUE_MAX = 64;
 struct window_config_ext_data_t {
     int focus_button;
     int language_focus_button;
@@ -235,15 +236,13 @@ struct window_config_ext_data_t {
     } config_values[CONFIG_MAX_ENTRIES];
 
     struct {
-        char original_value[CONFIG_STRING_VALUE_MAX];
-        char new_value[CONFIG_STRING_VALUE_MAX];
+        xstring original_value;
+        xstring new_value;
         int (*change_action)(int key);
     } config_string_values[CONFIG_STRING_MAX_ENTRIES];
 
-    uint8_t language_options_data[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
-    uint8_t* language_options[MAX_LANGUAGE_DIRS];
-    char language_options_utf8[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
-    int num_language_options;
+    svector<xstring, MAX_LANGUAGE_DIRS> language_options;
+    svector<bstring64, MAX_LANGUAGE_DIRS> language_options_utf8;
     int selected_language_option;
 };
 
@@ -252,7 +251,7 @@ window_config_ext_data_t g_window_config_ext_data;
 static void set_language(int index) {
     auto& data = g_window_config_ext_data;
     const char* dir = (index == 0 ? "" : data.language_options_utf8[index]);
-    strncpy(data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].new_value, dir, CONFIG_STRING_VALUE_MAX - 1);
+    data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].new_value = dir;
 
     data.selected_language_option = index;
 }
@@ -264,7 +263,7 @@ static void cancel_values(void) {
     }
 
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-        memcpy(data.config_string_values[i].new_value, data.config_string_values[i].original_value, CONFIG_STRING_VALUE_MAX - 1); // memcpy required to fix warning on Switch build
+        data.config_string_values[i].new_value = data.config_string_values[i].original_value; // memcpy required to fix warning on Switch build
     }
 }
 
@@ -275,7 +274,7 @@ static int config_changed(e_config_key key) {
 
 static int config_string_changed(int key) {
     auto& data = g_window_config_ext_data;
-    return strcmp(data.config_string_values[key].original_value, data.config_string_values[key].new_value) != 0;
+    return data.config_string_values[key].original_value != data.config_string_values[key].new_value;
 }
 
 static int config_change_basic(int key) {
@@ -284,28 +283,26 @@ static int config_change_basic(int key) {
     data.config_values[key].original_value = data.config_values[key].new_value;
     return 1;
 }
+
 static int config_change_string_basic(int key) {
     auto& data = g_window_config_ext_data;
-    config_set_string(key, data.config_string_values[key].new_value);
-    strncpy(data.config_string_values[key].original_value,
-            data.config_string_values[key].new_value,
-            CONFIG_STRING_VALUE_MAX - 1);
+    g_ankh_config.set((e_config_str)key, data.config_string_values[key].new_value);
+    data.config_string_values[key].original_value = data.config_string_values[key].new_value;
+
     return 1;
 }
 
 static int config_change_string_language(int key) {
     auto& data = g_window_config_ext_data;
-    config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].new_value);
+    g_ankh_config.set(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].new_value);
     if (!game_reload_language()) {
         // Notify user that language dir is invalid and revert to previously selected
         window_plain_message_dialog_show(TR_INVALID_LANGUAGE_TITLE, TR_INVALID_LANGUAGE_MESSAGE);
-        config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].original_value);
+        g_ankh_config.set(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].original_value);
         game_reload_language();
         return 0;
     }
-    strncpy(data.config_string_values[key].original_value,
-            data.config_string_values[key].new_value,
-            CONFIG_STRING_VALUE_MAX - 1);
+    data.config_string_values[key].original_value = data.config_string_values[key].new_value;
     return 1;
 }
 
@@ -339,8 +336,7 @@ static void button_language_select(int param1, int param2) {
     auto& data = g_window_config_ext_data;
     window_select_list_show_text(screen_dialog_offset_x() + language_button.x + language_button.width - 10,
                                  screen_dialog_offset_y() + 45,
-                                 data.language_options,
-                                 data.num_language_options,
+                                 make_span(data.language_options.data(), data.language_options.size()),
                                  set_language);
 }
 static void button_reset_defaults(int param1, int param2) {
@@ -350,9 +346,7 @@ static void button_reset_defaults(int param1, int param2) {
         data.config_values[i].new_value = config_get_default_value((e_config_key)i);
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
-        strncpy(data.config_string_values[i].new_value,
-                config_get_default_string_value((e_config_key)i),
-                CONFIG_STRING_VALUE_MAX - 1);
+        data.config_string_values[i].new_value = config_get_default_string_value((e_config_key)i);
     }
     set_language(0);
 }
@@ -516,27 +510,30 @@ static void init(void (*close_callback)()) {
         data.config_values[key].change_action = config_change_basic;
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-        const char* value = config_get_string(i);
-        strncpy(data.config_string_values[i].original_value, value, CONFIG_STRING_VALUE_MAX - 1);
-        strncpy(data.config_string_values[i].new_value, value, CONFIG_STRING_VALUE_MAX - 1);
+        const xstring value = g_ankh_config.get((e_config_str)i);
+        data.config_string_values[i].original_value = value;
+        data.config_string_values[i].new_value = value;
     }
     //    data.config_values[CONFIG_UI_ZOOM].change_action = config_change_zoom;
     data.config_string_values[0].change_action = config_change_string_language;
 
-    string_copy(translation_for(TR_CONFIG_LANGUAGE_DEFAULT), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
-    data.language_options[0] = data.language_options_data[0];
-    data.num_language_options = 1;
+    data.language_options.clear();
+    data.language_options_utf8.clear();
+
+    data.language_options.push_back( (pcstr)translation_for(TR_CONFIG_LANGUAGE_DEFAULT)) ;
+    data.language_options_utf8.push_back("");
+
     const dir_listing* subdirs = vfs::dir_find_all_subdirectories(nullptr);
     for (int i = 0; i < subdirs->num_files; i++) {
-        if (data.num_language_options < MAX_LANGUAGE_DIRS && lang_dir_is_valid(subdirs->files[i])) {
-            int opt_id = data.num_language_options;
-            strncpy(data.language_options_utf8[opt_id], subdirs->files[i], CONFIG_STRING_VALUE_MAX - 1);
-            encoding_from_utf8(subdirs->files[i], data.language_options_data[opt_id], CONFIG_STRING_VALUE_MAX);
-            data.language_options[opt_id] = data.language_options_data[opt_id];
-            if (strcmp(data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].original_value, subdirs->files[i]) == 0)
-                data.selected_language_option = opt_id;
+        if (!data.language_options.full() && lang_dir_is_valid(subdirs->files[i])) {
+            data.language_options_utf8.push_back(subdirs->files[i]);
 
-            data.num_language_options++;
+            bstring256 buffer;
+            encoding_from_utf8(subdirs->files[i], (uint8_t*)buffer.data(), CONFIG_STRING_VALUE_MAX);
+            data.language_options.push_back( buffer.c_str() );
+            if (data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].original_value == subdirs->files[i]) {
+                data.selected_language_option = i;
+            }
         }
     }
 }
@@ -604,7 +601,7 @@ static void draw_background(int) {
     text_draw_centered(translation_for(page_names[data.page]), 16, 16, 608, FONT_LARGE_BLACK_ON_LIGHT, 0);
 
     text_draw(translation_for(TR_CONFIG_LANGUAGE_LABEL), 20, 56, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    text_draw_centered(data.language_options[data.selected_language_option], language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    text_draw_centered((uint8_t*)data.language_options[data.selected_language_option].c_str(), language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     for (int i = 0; i < options_per_page[data.page]; i++) {
         text_draw(translation_for(checkbox_buttons[data.starting_option + i].parameter2), 44, FIRST_BUTTON_Y + BUTTON_SPACING * i + TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT, 0);

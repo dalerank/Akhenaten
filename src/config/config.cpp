@@ -138,7 +138,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"city_building_mastaba", true },
 };
 
-static const char* ini_string_keys[] = {
+static pcstr ini_string_keys[] = {
   "ui_language_dir",
   "last_save_filename",
   "last_player",
@@ -146,8 +146,7 @@ static const char* ini_string_keys[] = {
 };
 
 ankh_config_t g_ankh_config;
-static char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
-static char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
+pcstr default_string_values[CONFIG_STRING_MAX_ENTRIES];
 
 int ankh_config_t::get(e_config_key key) {
     return opts[key];
@@ -156,16 +155,12 @@ void ankh_config_t::set(e_config_key key, int value) {
     opts[key] = value;
 }
 
-pcstr config_get_string(int key) {
+xstring ankh_config_t::get(e_config_str key) {
     return string_values[key];
 }
 
-void config_set_string(int key, pcstr value) {
-    if (!value)
-        string_values[key][0] = 0;
-    else {
-        strncpy(string_values[key], value, CONFIG_STRING_VALUE_MAX - 1);
-    }
+void ankh_config_t::set(e_config_str key, const xstring value) {
+    string_values[key] = "";
 }
 
 bool config_get_default_value(e_config_key key) {
@@ -176,17 +171,15 @@ const char* config_get_default_string_value(e_config_key key) {
     return default_string_values[key];
 }
 
-void config_set_defaults() {
+void ankh_config_t::reset_defaults() {
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
         g_ankh_config.opts[i] = ini_keys_defaults[i].enabled;
     }
-    strncpy(string_values[CONFIG_STRING_UI_LANGUAGE_DIR],
-            default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR],
-            CONFIG_STRING_VALUE_MAX);
+    string_values[CONFIG_STRING_UI_LANGUAGE_DIR] = default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR];
 }
 
-void config_load() {
-    config_set_defaults();
+void ankh_config_t::load() {
+    reset_defaults();
     vfs::path fs_file = vfs::content_path(INI_FILENAME);
 
     vfs::reader fp = vfs::file_open(fs_file);
@@ -215,10 +208,10 @@ void config_load() {
             }
             for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
                 if (strcmp(ini_string_keys[i], line) == 0) {
-                    const char* value = &equals[1];
+                    pcstr value = &equals[1];
                     logs::info("Config key %s", ini_string_keys[i]);
                     logs::info("Config value %s", value);
-                    strncpy(string_values[i], value, CONFIG_STRING_VALUE_MAX);
+                    string_values[i] = value;
                     break;
                 }
             }
@@ -226,7 +219,7 @@ void config_load() {
     }
 }
 
-void config_save() {
+void ankh_config_t::save() {
     vfs::path fs_file = vfs::content_path(INI_FILENAME);
 
     FILE* fp = vfs::file_open(fs_file, "wt");
