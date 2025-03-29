@@ -1121,7 +1121,7 @@ void build_planner::construction_finalize() { // confirm final placement
 
     // consume resources for specific buildings (e.g. marble, granite)
     if (special_flags & e_building_flag::Resources) {
-        city_storageyards_remove_resource((e_resource)additional_req_param1, additional_req_param2);
+        events::emit(event_storageyards_remove_resource{ (e_resource)additional_req_param1, additional_req_param2 });
     }
 
     // finally, go over the rest of the stuff for all building types

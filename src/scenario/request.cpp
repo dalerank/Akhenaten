@@ -154,13 +154,10 @@ void scenario_request_dispatch(int id) {
         city_finance_process_requests_and_festivals(request.amount);
     } else if (request.resource == RESOURCE_TROOPS) {
         g_city.population.remove_for_troop_request(request.amount);
-        city_storageyards_remove_resource(RESOURCE_WEAPONS, request.amount);
+        events::emit(event_storageyards_remove_resource{ RESOURCE_WEAPONS, request.amount });
     } else {
         int amount = request.resource_amount();
-        amount -= city_storageyards_remove_resource(request.resource, amount);
-        if (amount > 0) {
-            events::emit(event_granaries_remove_resource{ request.resource, amount });
-        }
+        events::emit(event_city_remove_resource{ request.resource, amount });
     }
 }
 

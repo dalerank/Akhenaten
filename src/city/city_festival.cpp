@@ -66,7 +66,7 @@ void city_festival_t::schedule() {
     city_finance_process_requests_and_festivals(cost);
 
     if (selected.size == FESTIVAL_GRAND) {
-        city_storageyards_remove_resource(RESOURCE_BEER, grand_alcohol);
+        events::emit(event_storageyards_remove_resource{ RESOURCE_BEER, grand_alcohol });
     }
 }
 

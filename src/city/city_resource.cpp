@@ -84,17 +84,16 @@ e_trade_status city_resource_trade_status(e_resource resource) {
     return city_data.resource.trade_status[resource];
 }
 
-void city_granaries_remove_resource(event_granaries_remove_resource ev) {
-    if (ev.amount < 0) {
+void city_granaries_remove_resource(event_granaries_remove_resource &ev) {
+    if (ev.amount <= 0) {
         return;
     }
 
-    int amount_left = ev.amount;
     // first go for non-getting warehouses
     buildings_valid_do<building_granary>([&] (building_granary *granary) {
         assert(granary);
         if (granary->is_valid() && !granary->is_getting(ev.resource)) {
-            amount_left = granary->remove_resource(ev.resource, amount_left);
+            ev.amount = granary->remove_resource(ev.resource, ev.amount);
         }
     });
 
@@ -102,13 +101,13 @@ void city_granaries_remove_resource(event_granaries_remove_resource ev) {
     buildings_valid_do< building_granary>([&] (building_granary *granary) {
         assert(granary);
         if (granary->is_valid()) {
-            amount_left = granary->remove_resource(ev.resource, amount_left);
+            ev.amount = granary->remove_resource(ev.resource, ev.amount);
         }
     });
 }
 
 void city_storageyards_add_resource(event_storageyards_add_resource ev) {
-    if (ev.amount < 0) {
+    if (ev.amount <= 0) {
         return;
     }
 
@@ -118,6 +117,35 @@ void city_storageyards_add_resource(event_storageyards_add_resource ev) {
             ev.amount -= UNITS_PER_LOAD;
         }
     });
+}
+
+void city_storageyards_remove_resource(event_storageyards_remove_resource &ev) {
+    if (ev.amount <= 0) {
+        return;
+    }
+
+    // first go for non-getting warehouses
+    buildings_valid_do([&] (building &b) {
+        building_storage_yard *warehouse = b.dcast_storage_yard();
+        if (warehouse && warehouse->is_valid() && !warehouse->is_getting(ev.resource)) {
+            ev.amount = warehouse->remove_resource(ev.resource, ev.amount);
+        }
+    });
+    // if that doesn't work, take it anyway
+    buildings_valid_do([&] (building &b) {
+        building_storage_yard *warehouse = b.dcast_storage_yard();
+        if (warehouse && warehouse->is_valid()) {
+            ev.amount = warehouse->remove_resource(ev.resource, ev.amount);
+        }
+    });
+}
+
+void city_remove_resource(event_city_remove_resource ev) {
+    event_storageyards_remove_resource wh_ev{ ev.resource, ev.amount };
+    city_storageyards_remove_resource(wh_ev);
+
+    event_granaries_remove_resource gr_ev{ wh_ev.resource, wh_ev.amount };
+    city_granaries_remove_resource(gr_ev);
 }
 
 void city_resources_t::calculate_stocks() {
@@ -271,27 +299,8 @@ void city_resources_t::init() {
 
     events::subscribe(&city_granaries_remove_resource);
     events::subscribe(&city_storageyards_add_resource);
-}
-
-int city_storageyards_remove_resource(e_resource resource, int amount) {
-    int amount_left = amount;
-
-    // first go for non-getting warehouses
-    buildings_valid_do([&] (building &b) {
-        building_storage_yard *warehouse = b.dcast_storage_yard();
-        if (warehouse && warehouse->is_valid() && !warehouse->is_getting(resource)) {
-            amount_left = warehouse->remove_resource(resource, amount_left);
-        }
-    });
-    // if that doesn't work, take it anyway
-    buildings_valid_do([&] (building &b) {
-        building_storage_yard *warehouse = b.dcast_storage_yard();
-        if (warehouse && warehouse->is_valid()) {
-            amount_left = warehouse->remove_resource(resource, amount_left);
-        }
-    });
-
-    return amount - amount_left;
+    events::subscribe(&city_storageyards_remove_resource);
+    events::subscribe(&city_remove_resource);
 }
 
 void city_resource_calculate_storageyard_stocks() {
