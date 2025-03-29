@@ -50,7 +50,7 @@ void bazaar_orders_window::window_info_foreground(object_info &c) {
     const auto &item_name_column = ui["item_name_column"];
     const auto &item_orders_column = ui["item_orders_column"];
 
-    const resource_list &resources = city_resource_get_available_market_goods();
+    const resource_list &resources = g_city.resource.available_market_goods();
     int row_y = 0;
     for (const auto &r : resources) {
         ui.icon(items_area.pos + item_icon_column.pos + vec2i{ 0, row_y }, r.type);

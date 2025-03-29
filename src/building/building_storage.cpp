@@ -58,7 +58,7 @@ int building_storage_create(int building_type) {
                 g_storages[i].storage.resource_max_accept[r] = 3200;
                 g_storages[i].storage.resource_max_get[r] = 3200;
             }
-            const resource_list &resources = g_city.resource.get_available();
+            const resource_list &resources = g_city.resource.available();
             for (const auto &r: resources) {
                 e_resource resource = r.type;
                 switch (building_type) {

@@ -246,7 +246,7 @@ bool building_dock::accepts_ship(int ship_id) {
     figure* f = figure_get(ship_id);
 
     empire_city* city = g_empire.city(f->empire_city_id);
-    const resource_list resources = g_city.resource.get_available();
+    const resource_list resources = g_city.resource.available();
     int any_acceptance = 0;
     for (auto r: resources) {
         if (city->sells_resource[r.type] || city->buys_resource[r.type]) {

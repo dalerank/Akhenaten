@@ -91,7 +91,7 @@ void dock_orders_window::window_info_foreground(object_info &c) {
     const auto &item_name_column = ui["item_name_column"];
     const auto &item_orders_column = ui["item_orders_column"];
 
-    const resource_list resources = g_city.resource.get_available();
+    const resource_list resources = g_city.resource.available();
     int row_y = 0;
     for (const auto &r : resources) {
         e_trade_status trade_status = city_resource_trade_status(r.type);

@@ -26,7 +26,7 @@ int ui::advisor_trade_window::draw_background(UiFlags flags) {
 
     });
 
-    ui["scrollbar"].max_value(g_city.resource.get_available().size() - 14);
+    ui["scrollbar"].max_value(g_city.resource.available().size() - 14);
     ui["show_prices"].onclick([] { window_trade_prices_show(); });
     ui["goto_empire"].onclick([] { window_empire_show(); });
 
@@ -40,7 +40,7 @@ void ui::advisor_trade_window::ui_draw_foreground(UiFlags flags) {
     int scroll_position = ui["scrollbar"].value();
     ui.set_clip_rectangle(ui["inner_panel"]);
 
-    const resource_list &resources = g_city.resource.get_available();
+    const resource_list &resources = g_city.resource.available();
 
     const auto &items = ui["items"];
     const auto &item_button = ui["item_button"];
