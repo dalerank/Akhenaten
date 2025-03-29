@@ -3,7 +3,6 @@
 #include "core/bstring.h"
 
 int platform_sdl_version_at_least(int major, int minor, int patch);
-void platform_open_url(pcstr url, pcstr prefix);
 
 #if (defined(__WIN32__) || defined(_WIN32)) && !defined(_WIN64)
 #define GAME_PLATFORM_WIN
@@ -85,6 +84,8 @@ struct platform_t {
 	}
 
 	inline pcstr name() { return GAME_PLATFORM_NAME; }
+	void open_url(pcstr url, pcstr prefix);
+	void run_cmd(pcstr url);
 };
 
 extern platform_t platform;

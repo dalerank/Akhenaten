@@ -15,7 +15,7 @@ int platform_sdl_version_at_least(int major, int minor, int patch) {
     return SDL_VERSIONNUM(v.major, v.minor, v.patch) >= SDL_VERSIONNUM(major, minor, patch);
 }
 
-void platform_open_url(pcstr url, pcstr prefix) {
+void platform_t::open_url(pcstr url, pcstr prefix) {
 #if defined(GAME_PLATFORM_LINUX)
     bstring256 command(prefix, "xdg-open '", url, "'");
     logs::info("%s", command);

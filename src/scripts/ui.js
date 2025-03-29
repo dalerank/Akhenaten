@@ -66,10 +66,10 @@ window main_menu_window = {
 		patreon 			: image_button({ pos:[sw(-50), sh(-50)], size:[48, 48], icon_texture:":patreon_48.png", scale:0.75 }),
 		version_number: text({pos:[18, sh(-30)], text: game.version, font: FONT_SMALL_PLAIN, color: 0xffb3b3b3}),
 
-		update_panel 	: outer_panel({size:[20, 27],
+		update_panel 	: outer_panel({size:[20, 27], enabled:false,
 			ui : {
-				update_game : large_button({ pos:[32, 16], size:[256, 25], text:"update now"}),
-				new_version : text({pos:[18, 53], text: game.version, font: FONT_SMALL_PLAIN}),
+				update_game : large_button({ pos:[32, 16], size:[256, 25], text:"update now", enabled: false}),
+				new_version : text({pos:[18, 53], text: game.version, font: FONT_SMALL_PLAIN, enabled: false}),
 			}
 		}),
 	}

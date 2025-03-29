@@ -69,6 +69,14 @@ int main_menu_get_total_commits(pcstr owner, pcstr repo) {
 #endif // GAME_PLATFORM_WIN
 }
 
+void main_menu_download_latest_version() {
+#ifdef GAME_PLATFORM_WIN
+    game.mt.detach_task([] () {
+        ShellExecuteA(0, "Open", "update_binary_windows.cmd", 0, 0, SW_SHOW);
+    });
+#endif // GAME_PLATFORM_WIN
+}
+
 static void main_menu_draw_background(int) {
     graphics_clear_screen();
 
@@ -103,11 +111,15 @@ static void main_menu_draw_background(int) {
     });
 
     ui["discord"].onclick([] {
-        platform_open_url("https://discord.gg/HS4njmBvpb", "");
+        platform.open_url("https://discord.gg/HS4njmBvpb", "");
     });
 
     ui["patreon"].onclick([] {
-        platform_open_url("https://www.patreon.com/imspinner", "");
+        platform.open_url("https://www.patreon.com/imspinner", "");
+    });
+
+    ui["update_game"].onclick([] {
+        main_menu_download_latest_version();
     });
 }
 
@@ -120,16 +132,17 @@ void main_menu_draw_foreground(int) {
 
 void main_menu_init() {
     auto &ui = g_main_menu_data;
-    ui["update_panel"].enabled = false;
-    ui["new_version"].enabled = false;
     game.mt.detach_task([&] () {
         int current_commit = main_menu_get_total_commits("dalerank", "Akhenaten");
 
-        if (current_commit > 0) {
-            ui["update_panel"].enabled = true;
-            ui["new_version"].enabled = true;
-            ui["new_version"] = bstring32(current_commit);
+        if (current_commit <= 1) {
+            return;
         }
+
+        ui["update_panel"].enabled = true;
+        ui["new_version"].enabled = true;
+        ui["update_game"].enabled = true;
+        ui["new_version"] = bstring32(current_commit);
     });
 }
 
