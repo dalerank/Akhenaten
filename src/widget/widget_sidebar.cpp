@@ -114,7 +114,7 @@ void ui::sidebar_window_expanded::init() {
 
     ui["show_messages"].onclick([] { window_message_list_show(); });
 
-    ui["show_briefing"].readonly = scenario_is_custom();
+    ui["show_briefing"].readonly = (g_scenario.mode() != e_scenario_normal);
     ui["show_briefing"].onclick([] { mission_briefing_window::mission_review(); });
 
     ui["show_overlays"]

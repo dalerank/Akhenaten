@@ -837,10 +837,10 @@ void city_religion_t::update_curses_and_blessings(e_god randm_god, e_god_event f
 
 void city_religion_t::calculate_gods_mood_targets() {
     const auto &known_gods = this->known_gods();
-    if (g_scenario_data.env.gods_least_mood > 0) {
+    if (g_scenario.env.gods_least_mood > 0) {
         for (auto *god: known_gods) {
-            god->target_mood = g_scenario_data.env.gods_least_mood;
-            god->mood = g_scenario_data.env.gods_least_mood;
+            god->target_mood = g_scenario.env.gods_least_mood;
+            god->mood = g_scenario.env.gods_least_mood;
         }
         return;
     }
@@ -922,7 +922,7 @@ void city_religion_t::update_mood(e_god randm_god) {
             god->mood--;
         }
 
-        god->mood = std::max(god->mood, g_scenario_data.env.gods_least_mood);
+        god->mood = std::max(god->mood, g_scenario.env.gods_least_mood);
 
         if (god->mood > 50) 
             god->curse_done = false;

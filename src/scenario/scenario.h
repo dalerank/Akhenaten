@@ -167,6 +167,12 @@ struct building_stage_t {
     std::vector<e_building_type> buildings;
 };
 
+enum e_scenario_mode {
+    e_scenario_normal,
+    e_scenario_,
+    e_scenario_custom_map,
+};
+
 struct scenario_data_t {
     uint8_t scenario_name[65];
 
@@ -281,9 +287,9 @@ struct scenario_data_t {
     struct { // used to be stored in the settings file
         int campaign_mission_rank;
         int campaign_scenario_id;
-        int is_custom;
         int starting_kingdom;
         int starting_personal_savings;
+        e_scenario_mode scmode;
     } settings;
 
     struct {
@@ -313,16 +319,23 @@ struct scenario_data_t {
     bool is_saved;
 
     void update();
+    e_scenario_mode mode();
+    void set_mode(e_scenario_mode m) { settings.scmode = m; }
+
+    bool is_mission_rank(custom_span<int> missions);
+
+    template<typename ... Args>
+    bool is_mission_rank(const Args ... args) {
+        int values[] = { args... };
+        return is_mission_rank(make_span(values));
+    }
 };
 
-extern scenario_data_t g_scenario_data;
+extern scenario_data_t g_scenario;
 
 bool scenario_is_saved();
 void scenario_settings_init();
 void scenario_settings_init_mission();
-int scenario_is_custom();
-
-void scenario_set_custom(int custom);
 
 int scenario_campaign_rank();
 
@@ -331,14 +344,6 @@ void scenario_set_campaign_rank(int rank);
 int scenario_campaign_scenario_id();
 
 void scenario_set_campaign_scenario(int scenario_id);
-
-bool scenario_is_mission_rank(custom_span<int> missions);
-
-template<typename ... Args>
-bool scenario_is_mission_rank(const Args ... args) {
-    int values[] = {args...};
-    return scenario_is_mission_rank(make_span(values));
-}
 
 int scenario_additional_damage(e_building_type type, int damage); // 0 - fire, 1 -  collapse
 

@@ -18,7 +18,7 @@ void city_fishing_points_t::create() {
 }
 
 tile2i city_fishing_points_t::random_fishing_point(tile2i pos, bool free_only) {
-    const auto &fpoints = g_scenario_data.fishing_points;
+    const auto &fpoints = g_scenario.fishing_points;
 
     svector<tile2i, MAX_FISH_POINTS> apoints;
     std::copy_if(std::begin(fpoints), std::end(fpoints), std::back_inserter(apoints), [] (auto p) { return p.x() > 0; });
@@ -50,7 +50,7 @@ tile2i city_fishing_points_t::random_fishing_point(tile2i pos, bool free_only) {
 }
 
 tile2i city_fishing_points_t::closest_fishing_point(tile2i pos, bool free_only) {
-    const auto &fpoints = g_scenario_data.fishing_points;
+    const auto &fpoints = g_scenario.fishing_points;
     
     svector<tile2i, MAX_FISH_POINTS> apoints;
     std::copy_if(std::begin(fpoints), std::end(fpoints), std::back_inserter(apoints), [] (auto p) { return p.x() > 0; });
@@ -108,10 +108,10 @@ void city_fishing_points_t::update(int points_num) {
 
     int num_fishing_spots = 0;
     for (int i = 0; i < MAX_FISH_POINTS; i++) {
-        if (g_scenario_data.fishing_points[i].x() > 0)
+        if (g_scenario.fishing_points[i].x() > 0)
             num_fishing_spots++;
 
-        g_scenario_data.fishing_points[i] = {-1, -1};
+        g_scenario.fishing_points[i] = {-1, -1};
     }
 
     if (points_num >= 0) {
@@ -130,7 +130,7 @@ void city_fishing_points_t::update(int points_num) {
 
     for (int i = 0; i < num_fishing_spots; i++) {
         int index = rand() % deep_water.size();
-        g_scenario_data.fishing_points[i] = tile2i(deep_water[index]);
+        g_scenario.fishing_points[i] = tile2i(deep_water[index]);
     }
 
     create();

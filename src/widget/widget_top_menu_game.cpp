@@ -529,7 +529,8 @@ void top_menu_widget::file_handle(menu_item &item) {
             }
 
             g_city_planner.reset();
-            if (scenario_is_custom()) {
+            const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
+            if (is_custom_map) {
                 GamestateIO::load_savegame("autosave_replay.sav");
                 window_city_show();
             } else {

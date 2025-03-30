@@ -32,7 +32,9 @@ void kingdome_relation_t::init_scenario(int rank, int load_type ) {
     personal_savings = scenario_starting_personal_savings();
     player_rank = rank;
     int salary_rank = rank;
-    if (scenario_is_custom()) {
+    const bool custom_scenario = g_scenario.mode() != e_scenario_normal;
+    
+    if (custom_scenario) {
         personal_savings = 0;
         player_rank = scenario_property_player_rank();
         salary_rank = scenario_property_player_rank();

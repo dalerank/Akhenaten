@@ -38,9 +38,9 @@ eathquake_data_t g_eathquake_data;
 
 void scenario_earthquake_init(void) {
     auto &data = g_eathquake_data;
-    data.game_year = g_scenario_data.start_year + g_scenario_data.earthquake.year;
+    data.game_year = g_scenario.start_year + g_scenario.earthquake.year;
     data.month = 2 + (random_byte() & 7);
-    switch (g_scenario_data.earthquake.severity) {
+    switch (g_scenario.earthquake.severity) {
     default:
         data.max_duration = 0;
         data.max_delay = 0;
@@ -60,8 +60,8 @@ void scenario_earthquake_init(void) {
     }
     data.state = e_event_state_initial;
     for (int i = 0; i < 4; i++) {
-        data.expand[i].x = g_scenario_data.earthquake_point.x();
-        data.expand[i].y = g_scenario_data.earthquake_point.y();
+        data.expand[i].x = g_scenario.earthquake_point.x();
+        data.expand[i].y = g_scenario.earthquake_point.y();
     }
 }
 
@@ -98,8 +98,8 @@ static void advance_earthquake_to_tile(int x, int y) {
 
 void scenario_earthquake_process() {
     auto &data = g_eathquake_data;
-    if (g_scenario_data.earthquake.severity == EARTHQUAKE_NONE || g_scenario_data.earthquake_point.x() == -1
-        || g_scenario_data.earthquake_point.y() == -1)
+    if (g_scenario.earthquake.severity == EARTHQUAKE_NONE || g_scenario.earthquake_point.x() == -1
+        || g_scenario.earthquake_point.y() == -1)
         return;
     if (data.state == e_event_state_initial) {
         if (game.simtime.year == data.game_year && game.simtime.month == data.month) {
@@ -202,8 +202,8 @@ void scenario_earthquake_process() {
             default:
                 return;
             }
-            int x = calc_bound(data.expand[index].x + dx, 0, g_scenario_data.map.width - 1);
-            int y = calc_bound(data.expand[index].y + dy, 0, g_scenario_data.map.height - 1);
+            int x = calc_bound(data.expand[index].x + dx, 0, g_scenario.map.width - 1);
+            int y = calc_bound(data.expand[index].y + dy, 0, g_scenario.map.height - 1);
             if (can_advance_earthquake_to_tile(x, y)) {
                 data.expand[index].x = x;
                 data.expand[index].y = y;

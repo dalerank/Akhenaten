@@ -93,13 +93,13 @@ static void init(e_map_selection_dialog_type dialog_type, int sub_dialog_selecto
     switch (dialog_type) {
     case MAP_SELECTION_CCK_LEGACY:
     case MAP_SELECTION_CUSTOM:
-        scenario_set_custom(2);
+        g_scenario.set_mode(e_scenario_custom_map);
         data.panel->set_file_finder_usage(true);
         data.panel->change_file_path("Maps/", "map");
         break;
     case MAP_SELECTION_CAMPAIGN:
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        scenario_set_custom(0);
+        g_scenario.set_mode(e_scenario_normal);
         data.panel->set_file_finder_usage(false);
         data.panel->clear_entry_list();
         switch (data.campaign_sub_dialog) {

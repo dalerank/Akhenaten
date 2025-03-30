@@ -173,7 +173,7 @@ static void draw_messages(int total_messages) {
         lang_text_draw_year(msg->year, data.x_text + 42 + width, data.y_text + 8 + 20 * i, font);
 
         if (msg->eventmsg_body_id != -1) {
-            auto text = g_scenario_data.events.msg_text(msg->eventmsg_title_id, 0);
+            auto text = g_scenario.events.msg_text(msg->eventmsg_title_id, 0);
             text_draw(text, data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
         } else if (lang_msg->title.text) {// temp fix so it doesn't crash
             text_draw(lang_msg->title.text, data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);

@@ -15,6 +15,7 @@ var mission0 = { // Nubt
 	gods_least_mood : 50,
 	religion_enabled : false,
 	player_rank : 0,
+	money : 2500,
 
 	fire_damage : {
 		house0: { type:BUILDING_HOUSE_CRUDE_HUT, fire: +50, collapse: +5},	

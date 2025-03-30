@@ -15,14 +15,14 @@ static struct {
 } data;
 
 void scenario_gladiator_revolt_init(void) {
-    data.game_year = g_scenario_data.start_year + g_scenario_data.gladiator_revolt.year;
+    data.game_year = g_scenario.start_year + g_scenario.gladiator_revolt.year;
     data.month = 3 + (random_byte() & 3);
     data.end_month = 3 + data.month;
     data.state = e_event_state_initial;
 }
 
 void scenario_gladiator_revolt_process(void) {
-    if (!g_scenario_data.gladiator_revolt.enabled) {
+    if (!g_scenario.gladiator_revolt.enabled) {
         return;
     }
 

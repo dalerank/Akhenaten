@@ -18,9 +18,9 @@
 void scenario_request_init() {
     //for (int i = 0; i < MAX_REQUESTS; i++) {
     //    random_generate_next();
-    //    if (g_scenario_data.requests[i].resource) {
-    //        g_scenario_data.requests[i].month = (random_byte() & 7) + 2;
-    //        g_scenario_data.requests[i].months_to_comply = 12 * g_scenario_data.requests[i].deadline_years;
+    //    if (g_scenario.requests[i].resource) {
+    //        g_scenario.requests[i].month = (random_byte() & 7) + 2;
+    //        g_scenario.requests[i].months_to_comply = 12 * g_scenario.requests[i].deadline_years;
     //    }
     //}
 }
@@ -163,8 +163,8 @@ void scenario_request_dispatch(int id) {
 
 int scenario_requests_active_count() {
     int count = 0;
-    for (int i = 0; i < g_scenario_data.events.events_count(); i++) {
-        const event_ph_t* event = g_scenario_data.events.at(i);
+    for (int i = 0; i < g_scenario.events.events_count(); i++) {
+        const event_ph_t* event = g_scenario.events.at(i);
         if (event->type == EVENT_TYPE_REQUEST && event->is_active
             && event->event_state <= e_event_state_overdue) {
             count++;
@@ -186,20 +186,20 @@ scenario_request scenario_request_get(const event_ph_t &event) {
 }
 
 void scenario_request_set_state(const scenario_request &request, e_event_state new_state) {
-    event_ph_t *event = g_scenario_data.events.at(request.event_id);
+    event_ph_t *event = g_scenario.events.at(request.event_id);
     event->event_state = new_state;
 }
 
 void scenario_request_set_active(const scenario_request &request, bool active) {
-    event_ph_t &event = *g_scenario_data.events.at(request.event_id);
+    event_ph_t &event = *g_scenario.events.at(request.event_id);
     event.is_active = active;
 }
 
 std::vector<scenario_request> scenario_get_visible_requests() {
     std::vector<scenario_request> requests;
 
-    for (int i = 0, size = g_scenario_data.events.events_count(); i < size; i++) {
-        const event_ph_t* event = g_scenario_data.events.at(i);
+    for (int i = 0, size = g_scenario.events.events_count(); i < size; i++) {
+        const event_ph_t* event = g_scenario.events.at(i);
         if (event->type == EVENT_TYPE_REQUEST && event->is_active && event->event_state <= e_event_state_overdue) {
             requests.push_back(scenario_request_get(*event));
         }
@@ -210,12 +210,12 @@ std::vector<scenario_request> scenario_get_visible_requests() {
 
 scenario_request scenario_request_get_visible(int index) {
     int event_index = 0;
-    if (index >= g_scenario_data.events.events_count()) {
+    if (index >= g_scenario.events.events_count()) {
         return {};
     }
 
     for (int i = 0; i < MAX_REQUESTS; i++) {
-        const event_ph_t* event = g_scenario_data.events.at(i);
+        const event_ph_t* event = g_scenario.events.at(i);
         if (!(event->type == EVENT_TYPE_REQUEST && event->is_active && event->event_state <= e_event_state_overdue)) {
             continue;
         }

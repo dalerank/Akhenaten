@@ -6,24 +6,24 @@
 #include "scenario/scenario.h"
 
 int scenario_empire_id() {
-    return g_scenario_data.empire.id;
+    return g_scenario.empire.id;
 }
 
 int scenario_empire_is_expanded() {
-    return g_scenario_data.empire.is_expanded;
+    return g_scenario.empire.is_expanded;
 }
 
 void scenario_empire_process_expansion() {
-    if (g_scenario_data.empire.is_expanded || g_scenario_data.empire.expansion_year <= 0) {
+    if (g_scenario.empire.is_expanded || g_scenario.empire.expansion_year <= 0) {
         return;
     }
 
-    if (game.simtime.year < g_scenario_data.empire.expansion_year + g_scenario_data.start_year) {
+    if (game.simtime.year < g_scenario.empire.expansion_year + g_scenario.start_year) {
         return;
     }
 
     g_empire.expand();
 
-    g_scenario_data.empire.is_expanded = 1;
+    g_scenario.empire.is_expanded = 1;
     messages::popup(MESSAGE_EMPIRE_HAS_EXPANDED, 0, 0);
 }

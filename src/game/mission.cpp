@@ -44,14 +44,16 @@ static mission_step_t* find_next_connected_path_step(const mission_step_t* step,
     return nullptr;
 }
 static mission_step_t* find_next(const mission_step_t* step, int choice_index = 0) {
-    if (!step->has_choice)
+    if (!step->has_choice) {
         return find_next_connected_path_step(step, 0);
-    else {
-        auto choice = step->branches[choice_index];
-        return find_next_connected_path_step(step, choice.path_id);
+    } else {
+        // auto choice = step->branches[choice_index];
+        //return find_next_connected_path_step(step, choice.path_id);
+        return find_next_connected_path_step(step, 0);
     }
     return nullptr; // this should never happen?
 }
+
 static void find_in_campaigns(int scenario_id, int* campaign_id, int* step_index) {
     for (int c = 0; c < g_mission_data.num_campaigns; ++c) {
         auto campaign = &g_mission_data.campaigns[c];
@@ -310,15 +312,13 @@ bool game_load_campaign_file() {
                             step->previous_in_list->next_in_list = step;
                         }
                     } else if (index_of_string(ptr, string_from_ascii("choice"), line_size)) { // choice branch data
-                        auto step
-                          = &campaign
-                               ->steps[campaign->num_steps - 1]; // these MUST come after a valid CHOICESCREEN tag.
-                        auto branch = &step->branches[step->num_branches];
-                        ptr = skip_non_digits(ptr);
-                        ptr = get_value(ptr, endl, &branch->path_id);
-                        ptr = get_value(ptr, endl, &branch->x);
-                        ptr = get_value(ptr, endl, &branch->y);
-                        ptr = get_value(ptr, endl, &branch->text_id);
+                        auto step = &campaign->steps[campaign->num_steps - 1]; // these MUST come after a valid CHOICESCREEN tag.
+                        //auto branch = &step->branches[step->num_branches];
+                        //ptr = skip_non_digits(ptr);
+                        //ptr = get_value(ptr, endl, &branch->path_id);
+                        //ptr = get_value(ptr, endl, &branch->x);
+                        //ptr = get_value(ptr, endl, &branch->y);
+                        //ptr = get_value(ptr, endl, &branch->text_id);
                         step->num_branches++;
                     }
                 }
@@ -343,35 +343,35 @@ bool game_load_campaign_file() {
             // give by default the merging path id (0) as a branch
             if (step->num_branches == 0) {
                 step->num_branches = 1;
-                step->branches[0].path_id = step->path_ids[0];
+                //step->branches[0].path_id = step->path_ids[0];
             }
 
             // go through the branches (choices)...
             for (int j = 0; j < step->num_branches; ++j) {
-                auto branch = &step->branches[j];
-
-                // set the branch pointer to the correct next mission (step) struct
-                branch->next_play = find_next_connected_path_step(step, branch->path_id);
-
-                // fill in the back-pointing "requirements" pointers inside the next mission struct
-                if (branch->next_play != nullptr) {
-                    int first_free_slot = -1; // fill in the first empty space
-                    for (int k = 0; k < MAX_MISSION_CHOICE_BRANCHES; ++k) {
-                        if (branch->next_play->requirements[k] == nullptr && first_free_slot == -1) {
-                            first_free_slot = k;
-                            break;
-                        }
-                    }
-                    branch->next_play->requirements[first_free_slot] = step;
-
-                    // increase the mission rank
-                    if (branch->next_play->mission_rank < step->mission_rank) {
-                        if (branch->next_play->scenario_id == -1)
-                            branch->next_play->mission_rank = step->mission_rank;
-                        else
-                            branch->next_play->mission_rank = step->mission_rank + 1;
-                    }
-                }
+                //auto branch = &step->branches[j];
+                //
+                //// set the branch pointer to the correct next mission (step) struct
+                //branch->next_play = find_next_connected_path_step(step, branch->path_id);
+                //
+                //// fill in the back-pointing "requirements" pointers inside the next mission struct
+                //if (branch->next_play != nullptr) {
+                //    int first_free_slot = -1; // fill in the first empty space
+                //    for (int k = 0; k < MAX_MISSION_CHOICE_BRANCHES; ++k) {
+                //        if (branch->next_play->requirements[k] == nullptr && first_free_slot == -1) {
+                //            first_free_slot = k;
+                //            break;
+                //        }
+                //    }
+                //    branch->next_play->requirements[first_free_slot] = step;
+                //
+                //    // increase the mission rank
+                //    if (branch->next_play->mission_rank < step->mission_rank) {
+                //        if (branch->next_play->scenario_id == -1)
+                //            branch->next_play->mission_rank = step->mission_rank;
+                //        else
+                //            branch->next_play->mission_rank = step->mission_rank + 1;
+                //    }
+                //}
             }
         }
     }

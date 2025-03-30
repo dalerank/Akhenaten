@@ -35,9 +35,10 @@ static void init(int mission_id, intermezzo_type type, std::function<void()> cal
     g_sound.speech_stop();
 
     // play briefing sound by mission number
+    const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
     if (g_intermezzo_data.type == INTERMEZZO_FIRED) {
         g_sound.speech_play_file(SOUND_FILE_LOSE, 255);
-    } else if (!scenario_is_custom()) {
+    } else if (!is_custom_map) {
         auto conf = snd::get_mission_config(mission_id);
         if (conf.briefing.empty()) {
             logs::info("Intermezzo: can't found sound for mission %u", mission_id);
@@ -62,14 +63,15 @@ static void draw_background(int) {
     int mission = scenario_campaign_scenario_id();
     int image_base = image_id_from_group(GROUP_INTERMEZZO_BACKGROUND);
     painter ctx = game.painter();
+    const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
     if (g_intermezzo_data.type == INTERMEZZO_MISSION_BRIEFING) {
-        ImageDraw::img_generic(ctx, scenario_is_custom() ? image_base + 1 : image_base + 1 + (mission >= 20), offset);
+        ImageDraw::img_generic(ctx, is_custom_map ? image_base + 1 : image_base + 1 + (mission >= 20), offset);
 
     } else if (g_intermezzo_data.type == INTERMEZZO_FIRED) {
         ImageDraw::img_generic(ctx, image_base, offset);
 
     } else if (g_intermezzo_data.type == INTERMEZZO_WON) {
-        ImageDraw::img_generic(ctx, scenario_is_custom() ? image_base + 2 : image_base, offset);
+        ImageDraw::img_generic(ctx, is_custom_map ? image_base + 2 : image_base, offset);
     }
 }
 

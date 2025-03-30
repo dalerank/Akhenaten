@@ -20,15 +20,6 @@ struct mission_id_t {
 constexpr int MAX_MISSION_CHOICE_BRANCHES = 5;
 constexpr int MAX_MISSION_CAMPAIGNS = 10;
 
-// deprecated //
-struct mission_choice_branch_t {
-    int path_id = -1;
-    int x;
-    int y;
-    int text_id;
-    mission_step_t* next_play = nullptr;
-};
-
 struct mission_choice_t {
     struct point {
         xstring name;
@@ -57,7 +48,6 @@ struct mission_step_t {
     // choices
     int graphics_id;
     int text_id;
-    mission_choice_branch_t branches[MAX_MISSION_CHOICE_BRANCHES];
     int num_branches = 0;
 
     bool has_choice = false;
@@ -233,19 +223,6 @@ enum {
 //         {},
 //         {},
 //         {}
-// };
-
-// static const int RANK_CHOICE_C3[] = {
-//         0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-// };
-//// at the end of a mission, do we have a choice in selecting the next map?
-//// 0 = no, 1 = yes
-// static const int CAN_CHOOSE_NEXT_SCENARIO_PH[22] = {
-//         0, 0, 0,
-//         0, 0, 1,
-//         1, 0, 1, 1, 0, 1, 1,
-//         1, 1, 0, 1, 1,
-//         1, 1, 0, 0
 // };
 
 // lookup table converting MISSION RANK to SCENARIO ID.

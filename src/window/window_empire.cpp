@@ -721,7 +721,8 @@ void window_empire_show() {
 void window_empire_show_checked() {
     e_availability avail = mission_empire_availability(scenario_campaign_scenario_id() + 1);
     
-    if (avail == AVAILABLE || scenario_is_custom()) {
+    const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
+    if (avail == AVAILABLE || is_custom_map) {
         window_empire_show();
     } else {
         pcstr text = (avail == NOT_AVAILABLE ? "#not_available_in_this_assignment" : "#not_available_yet");

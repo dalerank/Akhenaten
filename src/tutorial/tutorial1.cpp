@@ -16,7 +16,7 @@ void tutorial1_handle_fire(event_fire_damage) {
     events::unsubscribe(&tutorial1_handle_fire);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_1.fire = true;
-    g_scenario_data.extra_damage.clear();
+    g_scenario.extra_damage.clear();
 
     building_menu_update(tutorial_stage.tutorial_fire);
     messages::popup(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE, 0, 0);

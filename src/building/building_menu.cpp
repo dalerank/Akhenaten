@@ -435,8 +435,8 @@ void building_menu_update(const xstring stage_name) {
         // disable resources that aren't available on map
         disable_resources();
     } else {
-        const auto stage_it = std::find_if(g_scenario_data.building_stages.begin(), g_scenario_data.building_stages.end(), [&stage_name] (auto &it) { return it.key == stage_name; });
-        if (stage_it != g_scenario_data.building_stages.end()) {
+        const auto stage_it = std::find_if(g_scenario.building_stages.begin(), g_scenario.building_stages.end(), [&stage_name] (auto &it) { return it.key == stage_name; });
+        if (stage_it != g_scenario.building_stages.end()) {
             for (const auto &b : stage_it->buildings) {
                 building_menu_toggle_building(b);
             }

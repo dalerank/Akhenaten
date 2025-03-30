@@ -93,12 +93,12 @@ void scenario_invasion_init(void) {
     invasion_warning_t* warning = &data.warnings[1];
     for (int i = 0; i < MAX_INVASIONS; i++) {
         random_generate_next();
-        if (!g_scenario_data.invasions[i].type)
+        if (!g_scenario.invasions[i].type)
             continue;
 
-        g_scenario_data.invasions[i].month = 2 + (random_byte() & 7);
-        if (g_scenario_data.invasions[i].type == INVASION_TYPE_LOCAL_UPRISING
-            || g_scenario_data.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE) {
+        g_scenario.invasions[i].month = 2 + (random_byte() & 7);
+        if (g_scenario.invasions[i].type == INVASION_TYPE_LOCAL_UPRISING
+            || g_scenario.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE) {
             continue;
         }
         for (int year = 1; year < 8; year++) {
@@ -115,8 +115,8 @@ void scenario_invasion_init(void) {
             warning->empire_object_id = obj->id;
             warning->month_notified = 0;
             warning->year_notified = 0;
-            warning->months_to_go = 12 * g_scenario_data.invasions[i].year;
-            warning->months_to_go += g_scenario_data.invasions[i].month;
+            warning->months_to_go = 12 * g_scenario.invasions[i].year;
+            warning->months_to_go += g_scenario.invasions[i].month;
             warning->months_to_go -= 12 * year;
             ++warning;
         }
@@ -146,7 +146,7 @@ void scenario_invasion_foreach_warning(std::function<void(vec2i, int)> callback)
 int scenario_invasion_count(void) {
     int num_invasions = 0;
     for (int i = 0; i < MAX_INVASIONS; i++) {
-        if (g_scenario_data.invasions[i].type)
+        if (g_scenario.invasions[i].type)
             num_invasions++;
     }
     return num_invasions;
@@ -214,7 +214,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
     } else {
         int num_points = 0;
         for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) {
-            if (g_scenario_data.invasion_points_land[i].grid_offset() != -1)
+            if (g_scenario.invasion_points_land[i].grid_offset() != -1)
                 num_points++;
         }
         if (invasion_point == MAX_INVASION_POINTS_LAND) { // random
@@ -227,14 +227,14 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
             }
         }
         if (num_points > 0) {
-            while (g_scenario_data.invasion_points_land[invasion_point].grid_offset() == -1) {
+            while (g_scenario.invasion_points_land[invasion_point].grid_offset() == -1) {
                 invasion_point++;
                 if (invasion_point >= MAX_INVASION_POINTS_LAND)
                     invasion_point = 0;
             }
         }
-        x = g_scenario_data.invasion_points_land[invasion_point].x();
-        y = g_scenario_data.invasion_points_land[invasion_point].y();
+        x = g_scenario.invasion_points_land[invasion_point].x();
+        y = g_scenario.invasion_points_land[invasion_point].y();
     }
     if (x == -1 || y == -1) {
         map_point exit_point = scenario_map_exit();
@@ -244,11 +244,11 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
     // determine orientation
     if (y == 0)
         orientation = DIR_4_BOTTOM_LEFT;
-    else if (y >= g_scenario_data.map.height - 1)
+    else if (y >= g_scenario.map.height - 1)
         orientation = DIR_0_TOP_RIGHT;
     else if (x == 0)
         orientation = DIR_2_BOTTOM_RIGHT;
-    else if (x >= g_scenario_data.map.width - 1)
+    else if (x >= g_scenario.map.width - 1)
         orientation = DIR_6_TOP_LEFT;
     else {
         orientation = DIR_4_BOTTOM_LEFT;
@@ -303,7 +303,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
 
 void scenario_invasion_process() {
     auto &data = g_invasion_data;
-    int enemy_id = g_scenario_data.enemy_id;
+    int enemy_id = g_scenario.enemy_id;
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
         if (!data.warnings[i].in_use)
             continue;
@@ -326,19 +326,19 @@ void scenario_invasion_process() {
             }
         }
 
-        if (game.simtime.year >= g_scenario_data.start_year + g_scenario_data.invasions[warning->invasion_id].year
-            && game.simtime.month >= g_scenario_data.invasions[warning->invasion_id].month) {
+        if (game.simtime.year >= g_scenario.start_year + g_scenario.invasions[warning->invasion_id].year
+            && game.simtime.month >= g_scenario.invasions[warning->invasion_id].month) {
             // invasion attack time has passed
             warning->in_use = 0;
             if (warning->warning_years > 1)
                 continue;
 
             // enemy invasions
-            if (g_scenario_data.invasions[warning->invasion_id].type == INVASION_TYPE_ENEMY_ARMY) {
+            if (g_scenario.invasions[warning->invasion_id].type == INVASION_TYPE_ENEMY_ARMY) {
                 int grid_offset = start_invasion(ENEMY_ID_TO_ENEMY_TYPE[enemy_id],
-                                                 g_scenario_data.invasions[warning->invasion_id].amount,
-                                                 g_scenario_data.invasions[warning->invasion_id].from,
-                                                 g_scenario_data.invasions[warning->invasion_id].attack_type,
+                                                 g_scenario.invasions[warning->invasion_id].amount,
+                                                 g_scenario.invasions[warning->invasion_id].from,
+                                                 g_scenario.invasions[warning->invasion_id].attack_type,
                                                  warning->invasion_id);
                 if (grid_offset > 0) {
                     if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4)
@@ -348,11 +348,11 @@ void scenario_invasion_process() {
                     }
                 }
             }
-            if (g_scenario_data.invasions[warning->invasion_id].type == INVASION_TYPE_CAESAR) {
+            if (g_scenario.invasions[warning->invasion_id].type == INVASION_TYPE_CAESAR) {
                 int grid_offset = start_invasion(ENEMY_11_CAESAR,
-                                                 g_scenario_data.invasions[warning->invasion_id].amount,
-                                                 g_scenario_data.invasions[warning->invasion_id].from,
-                                                 g_scenario_data.invasions[warning->invasion_id].attack_type,
+                                                 g_scenario.invasions[warning->invasion_id].amount,
+                                                 g_scenario.invasions[warning->invasion_id].from,
+                                                 g_scenario.invasions[warning->invasion_id].attack_type,
                                                  warning->invasion_id);
                 if (grid_offset > 0) {
                     events::emit(event_message{ true, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset });
@@ -362,13 +362,13 @@ void scenario_invasion_process() {
     }
     // local uprisings
     for (int i = 0; i < MAX_INVASIONS; i++) {
-        if (g_scenario_data.invasions[i].type == INVASION_TYPE_LOCAL_UPRISING) {
-            if (game.simtime.year == g_scenario_data.start_year + g_scenario_data.invasions[i].year
-                && game.simtime.month == g_scenario_data.invasions[i].month) {
+        if (g_scenario.invasions[i].type == INVASION_TYPE_LOCAL_UPRISING) {
+            if (game.simtime.year == g_scenario.start_year + g_scenario.invasions[i].year
+                && game.simtime.month == g_scenario.invasions[i].month) {
                 int grid_offset = start_invasion(ENEMY_0_BARBARIAN,
-                                                 g_scenario_data.invasions[i].amount,
-                                                 g_scenario_data.invasions[i].from,
-                                                 g_scenario_data.invasions[i].attack_type,
+                                                 g_scenario.invasions[i].amount,
+                                                 g_scenario.invasions[i].from,
+                                                 g_scenario.invasions[i].attack_type,
                                                  i);
                 if (grid_offset > 0) {
                     events::emit(event_message{ true, MESSAGE_LOCAL_UPRISING, data.last_internal_invasion_id, grid_offset });
@@ -408,7 +408,7 @@ int scenario_invasion_start_from_caesar(int size) {
 
 void scenario_invasion_start_from_cheat() {
     auto &data = g_invasion_data;
-    int enemy_id = g_scenario_data.enemy_id;
+    int enemy_id = g_scenario.enemy_id;
     int grid_offset = start_invasion(ENEMY_ID_TO_ENEMY_TYPE[enemy_id], 150, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
     if (grid_offset) {
         if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4)
@@ -423,7 +423,7 @@ void scenario_invasion_start_from_console(int attack_type, int size, int invasio
     auto &data = g_invasion_data;
     switch (attack_type) {
     case ATTACK_TYPE_BARBARIAN: {
-        int enemy_id = g_scenario_data.enemy_id;
+        int enemy_id = g_scenario.enemy_id;
         int grid_offset
           = start_invasion(ENEMY_ID_TO_ENEMY_TYPE[enemy_id], size, invasion_point, FORMATION_ATTACK_RANDOM, 23);
         if (grid_offset) {

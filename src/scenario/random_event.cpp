@@ -29,21 +29,21 @@ static const int RANDOM_EVENT_PROBABILITY[128]
      0, 7, 0, 1, 6, 0, 0, 0, 0, 0, 2, 0, 0, 4, 0, 0, 0, 0, 3, 0, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0};
 
 static void raise_wages(void) {
-    if (g_scenario_data.random_events.raise_wages) {
+    if (g_scenario.random_events.raise_wages) {
         if (g_city.labor.raise_wages_kingdome())
             events::emit(event_message{ true, MESSAGE_KINGDOME_RAISES_WAGES, 0, 0 });
     }
 }
 
 static void lower_wages(void) {
-    if (g_scenario_data.random_events.lower_wages) {
+    if (g_scenario.random_events.lower_wages) {
         if (g_city.labor.lower_wages_kingdome())
             events::emit(event_message{ true, MESSAGE_KINGDOME_LOWERS_WAGES, 0, 0 });
     }
 }
 
 static void disrupt_land_trade(void) {
-    if (g_scenario_data.random_events.land_trade_problem) {
+    if (g_scenario.random_events.land_trade_problem) {
         if (city_trade_has_land_trade_route()) {
             city_trade_start_land_trade_problems(48);
             if (scenario_property_climate() == CLIMATE_DESERT)
@@ -56,7 +56,7 @@ static void disrupt_land_trade(void) {
 }
 
 static void disrupt_sea_trade(void) {
-    if (g_scenario_data.random_events.sea_trade_problem) {
+    if (g_scenario.random_events.sea_trade_problem) {
         if (city_trade_has_sea_trade_route()) {
             city_trade_start_sea_trade_problems(48);
             events::emit(event_message{ true, MESSAGE_SEA_TRADE_DISRUPTED, 0, 0 });
@@ -65,7 +65,7 @@ static void disrupt_sea_trade(void) {
 }
 
 static void contaminate_water(void) {
-    if (g_scenario_data.random_events.contaminated_water) {
+    if (g_scenario.random_events.contaminated_water) {
         if (city_population() > 200) {
             int change;
             int health_rate = g_city.health.value;
@@ -83,7 +83,7 @@ static void contaminate_water(void) {
 }
 
 static void destroy_copper_mine() {
-    if (g_scenario_data.random_events.iron_mine_collapse) {
+    if (g_scenario.random_events.iron_mine_collapse) {
         if (g_ankh_config.get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
             if (building_id_first(BUILDING_LIMESTONE_QUARRY) < MAX_BUILDINGS) {
                 city_finance_process_requests_and_festivals(250);
@@ -98,7 +98,7 @@ static void destroy_copper_mine() {
 }
 
 static void destroy_clay_pit(void) {
-    if (g_scenario_data.random_events.clay_pit_flooded) {
+    if (g_scenario.random_events.clay_pit_flooded) {
         if (g_ankh_config.get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
             if (building_id_first(BUILDING_CLAY_PIT) < MAX_BUILDINGS) {
                 city_finance_process_requests_and_festivals(250);

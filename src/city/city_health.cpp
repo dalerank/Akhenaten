@@ -135,7 +135,7 @@ void city_health_t::update_coverage() {
 
 
 void city_health_t::update() {
-    if (g_city.population.current < 200 || scenario_is_mission_rank(1) || scenario_is_mission_rank(2)) {
+    if (g_city.population.current < 200 || g_scenario.is_mission_rank(1, 2)) {
         value = 50;
         target_value = 50;
         return;

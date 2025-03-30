@@ -195,9 +195,9 @@ static void init(int text_id, int message_id, void (*background_callback)()) {
         const city_message *city_msg = city_message_get(data.message_id);
         if (city_msg->eventmsg_body_id != -1) {
             data.is_eventmsg = true;
-            data.title_text = g_scenario_data.events.msg_text(city_msg->eventmsg_title_id, 0);
-            data.body_template = g_scenario_data.events.msg_text(city_msg->eventmsg_body_id, 0);
-            data.phrase_template = g_scenario_data.events.msg_text(city_msg->eventmsg_phrase_id, 0);
+            data.title_text = g_scenario.events.msg_text(city_msg->eventmsg_title_id, 0);
+            data.body_template = g_scenario.events.msg_text(city_msg->eventmsg_body_id, 0);
+            data.phrase_template = g_scenario.events.msg_text(city_msg->eventmsg_phrase_id, 0);
             eventmsg_template_combine(data.phrase_template, (uint8_t *)data.phrase_text.c_str(), true);
             eventmsg_template_combine(data.body_template, (uint8_t *)data.body_text.c_str(), false);
         } else {

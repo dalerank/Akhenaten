@@ -167,7 +167,7 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
     msg->param2 = param2;
     msg->sequence = data.next_message_sequence++;
 
-    const event_ph_t* event = g_scenario_data.events.at(event_id);
+    const event_ph_t* event = g_scenario.events.at(event_id);
     msg->req_resource = event->item.value;
     msg->req_amount = event->amount.value; 
     if (msg->req_amount < 100) {
@@ -183,7 +183,7 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
         msg->req_months_left = event->months_initial;
     }
 
-    const event_ph_t* parent_event = g_scenario_data.events.at(parent_event_id);
+    const event_ph_t* parent_event = g_scenario.events.at(parent_event_id);
     msg->req_resource_past = parent_event->item.value;
     msg->req_amount_past = parent_event->amount.value;
     msg->req_city_past = parent_event->location_fields[0] - 1;

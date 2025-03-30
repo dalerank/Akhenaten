@@ -173,7 +173,7 @@ static void post_load() {
 
     mission_id_t missionid(scenario_id);
     scenario_load_meta_data(missionid);
-    g_scenario_data.events.load_mission_metadata(missionid);
+    g_scenario.events.load_mission_metadata(missionid);
     g_empire.load_mission_metadata(missionid);
 
     // camera
@@ -218,7 +218,7 @@ static void post_load() {
 
     case e_session_mission:
         g_city.init_campaign_mission();
-        g_city.init_mission_resources(g_scenario_data.init_resources);
+        g_city.init_mission_resources(g_scenario.init_resources);
         g_city.kingdome.init_scenario(scenario_campaign_rank(), game.session.last_loaded);
         building_menu_setup_mission();
         tutorial_init(/*clear_all*/true, false);
@@ -231,7 +231,7 @@ static void post_load() {
 
     case e_session_custom_map:
         g_city.init_custom_map();
-        g_city.init_mission_resources(g_scenario_data.init_resources);
+        g_city.init_mission_resources(g_scenario.init_resources);
         g_city.kingdome.init_scenario(scenario_campaign_rank(), game.session.last_loaded);
         building_menu_setup_mission();
         tutorial_init(/*clear_all*/true, true);

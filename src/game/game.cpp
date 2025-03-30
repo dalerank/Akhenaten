@@ -138,7 +138,7 @@ void game_t::update_tick(int simtick) {
 
     g_city.figures.update();
 
-    g_scenario_data.update();
+    g_scenario.update();
     g_city.victory_check();
 }
 
@@ -162,8 +162,8 @@ void game_t::advance_month() {
     scenario_distant_battle_process();
 
     random_generate_next();                  // TODO: find out the source / reason for this
-    g_scenario_data.events.process_random_events();
-    g_scenario_data.events.process_events();
+    g_scenario.events.process_random_events();
+    g_scenario.events.process_events();
 
     g_city.victory_state.update_months_to_govern();
     g_city.update_allowed_foods();
@@ -400,12 +400,12 @@ bool game_init(game_opts opts) {
         return false;
     }
 
-    if (!g_scenario_data.events.msg_load()) {
+    if (!g_scenario.events.msg_load()) {
         logs::error("unable to load eventmsg.txt");
         return false;
     }
 
-    if (!g_scenario_data.events.msg_auto_phrases_load()) {
+    if (!g_scenario.events.msg_auto_phrases_load()) {
         logs::error("unable to load event auto reason phrases");
         return false;
     }

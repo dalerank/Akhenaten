@@ -36,7 +36,8 @@ ui::window_mission_lost g_mission_lost;
 void ui::window_mission_lost::init() {
     ui["replay_mission"].onclick([] {
         g_city_planner.reset();
-        if (scenario_is_custom()) {
+        const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
+        if (is_custom_map) {
             GamestateIO::load_savegame("autosave_replay.sav");
             window_city_show();
         } else {
@@ -60,7 +61,8 @@ int ui::window_mission_won::ui_handle_mouse(const mouse *m) {
 }
 
 void ui::window_mission_won::init() {
-    ui["subtitle"] = scenario_is_custom() ? textid{ 147, 20 } : textid{ 147, (uint8_t)scenario_campaign_scenario_id() };
+    const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
+    ui["subtitle"] = is_custom_map ? textid{ 147, 20 } : textid{ 147, (uint8_t)scenario_campaign_scenario_id() };
 }
 
 void ui::window_mission_won::advance_to_next_mission() {
@@ -75,15 +77,16 @@ void ui::window_mission_won::advance_to_next_mission() {
     game_undo_disable();
     game_state_reset_overlay();
 
-    if (scenario_campaign_rank() >= 11 || scenario_is_custom()) {
+    const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
+    if (scenario_campaign_rank() >= 11 || is_custom_map) {
         window_main_menu_show(1);
-        if (!scenario_is_custom()) {
+        if (!is_custom_map) {
             g_settings.clear_personal_savings();
             scenario_settings_init();
             scenario_set_campaign_rank(2);
         }
     } else {
-        int next_mission = g_scenario_data.win_criteria.next_mission;
+        int next_mission = g_scenario.win_criteria.next_mission;
         if (!next_mission) {
             next_mission = scenario_campaign_scenario_id() + 1;
         }
@@ -142,10 +145,11 @@ static void show_intermezzo() {
 
 void ui::window_mission_won::show() {
     mouse_reset_up_state();
-    if (scenario_is_mission_rank(1) || scenario_is_mission_rank(2)) {
+    const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
+    if (g_scenario.is_mission_rank(1, 2)) {
         // tutorials: immediately go to next mission
         show_intermezzo();
-    } else if (!scenario_is_custom() && scenario_campaign_rank() >= 10) {
+    } else if (!is_custom_map && scenario_campaign_rank() >= 10) {
         // Won campaign
         window_victory_video_show("smk/win_game.smk", 400, 292, show_intermezzo);
     } else {

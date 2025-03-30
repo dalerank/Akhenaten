@@ -17,14 +17,14 @@ scenario_kingdome_change_t g_scenario_kingdome_change;
 
 void scenario_kingdome_change_init() {
     auto &data = g_scenario_kingdome_change;
-    data.game_year = g_scenario_data.start_year + g_scenario_data.emperor_change.year;
+    data.game_year = g_scenario.start_year + g_scenario.emperor_change.year;
     data.month = 1 + (random_byte() & 7);
     data.state = 0;
 }
 
 void scenario_kingdome_change_process() {
     auto &data = g_scenario_kingdome_change;
-    if (!g_scenario_data.emperor_change.enabled) {
+    if (!g_scenario.emperor_change.enabled) {
         return;
     }
 
