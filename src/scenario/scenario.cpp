@@ -44,6 +44,7 @@ void scenario_settings_init_mission() {
 void scenario_load_meta_data(const mission_id_t &missionid) {
     g_config_arch.r_section(missionid, [] (archive arch) {
         g_scenario.meta.start_message = arch.r_int("start_message");
+        g_scenario.meta.show_won_screen = arch.r_bool("show_won_screen", true);
         g_scenario.env.has_animals = arch.r_bool("city_has_animals");
         g_scenario.env.gods_least_mood = arch.r_int("gods_least_mood", 0);
         g_scenario.win_criteria.next_mission = arch.r_int("next_mission", 0);

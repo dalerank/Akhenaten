@@ -138,27 +138,32 @@ static void show_end_dialog(void) {
     window_show(&window);
 }
 
-static void show_intermezzo() {
+void window_mission_show_intermezzo() {
     int scenario_id = scenario_campaign_scenario_id();
     window_intermezzo_show(scenario_id, INTERMEZZO_WON, show_end_dialog);
 }
 
 void ui::window_mission_won::show() {
     mouse_reset_up_state();
+
+    if (g_scenario.meta.show_won_screen) {
+        window_mission_show_intermezzo();
+        return;
+    } 
+    
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
-    if (g_scenario.is_mission_rank(1, 2)) {
-        // tutorials: immediately go to next mission
-        show_intermezzo();
-    } else if (!is_custom_map && scenario_campaign_rank() >= 10) {
+    if (!is_custom_map && scenario_campaign_rank() >= 10) {
         // Won campaign
-        window_victory_video_show("smk/win_game.smk", 400, 292, show_intermezzo);
-    } else {
-        if (g_settings.show_victory_video())
-            window_victory_video_show("smk/victory_balcony.smk", 400, 292, show_intermezzo);
-        else {
-            window_victory_video_show("smk/victory_senate.smk", 400, 292, show_intermezzo);
-        }
+        window_victory_video_show("smk/win_game.smk", 400, 292, window_mission_show_intermezzo);
+        return;
+    } 
+    
+    if (g_settings.show_victory_video()) {
+        window_victory_video_show("smk/victory_balcony.smk", 400, 292, window_mission_show_intermezzo);
+        return;
     }
+    
+    window_victory_video_show("smk/victory_senate.smk", 400, 292, window_mission_show_intermezzo);
 }
 
 void window_mission_end_show_fired() {

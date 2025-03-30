@@ -14,6 +14,7 @@ var mission0 = { // Nubt
 	city_has_animals : true,
 	gods_least_mood : 50,
 	religion_enabled : false,
+	show_won_screen : false,
 	player_rank : 0,
 	money : 2500,
 
@@ -36,6 +37,7 @@ var mission1 = {
 	city_has_animals : true,
 	gods_least_mood : 50,
 	player_rank : 0,
+	show_won_screen : false,
 	buildings : [
 					BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_WATER_SUPPLY,
 					BUILDING_GOLD_MINE, BUILDING_VILLAGE_PALACE, BUILDING_HUNTING_LODGE,

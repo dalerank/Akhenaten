@@ -312,6 +312,7 @@ struct scenario_data_t {
     struct {
         uint16_t start_message;
         bool start_message_shown;
+        bool show_won_screen;
     } meta;
 
     event_manager_t events;
