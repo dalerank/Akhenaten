@@ -16,26 +16,6 @@ struct music_data_t {
 
 music_data_t g_music_data = {TRACK_NONE, 0};
 
-static const char c3_wav[][32] = {"",
-                                  "Wavs/setup.wav",
-                                  "Wavs/Combat_Short.wav",
-                                  "Wavs/Combat_Long.wav",
-                                  "Wavs/ROME1.WAV",
-                                  "Wavs/ROME2.WAV",
-                                  "Wavs/ROME3.WAV",
-                                  "Wavs/ROME4.WAV",
-                                  "Wavs/ROME5.WAV"};
-
-static const char c3_mp3[][32] = {"",
-                                  "mp3/setup.mp3",
-                                  "mp3/Combat_Short.mp3",
-                                  "mp3/Combat_Long.mp3",
-                                  "mp3/ROME1.mp3",
-                                  "mp3/ROME2.mp3",
-                                  "mp3/ROME3.mp3",
-                                  "mp3/ROME4.mp3",
-                                  "mp3/ROME5.mp3"};
-
 static const char ph_mp3[][32] = {
   "",
   "AUDIO/Music/Setup.mp3",
@@ -90,7 +70,7 @@ static const char ph_mp3[][32] = {
   "AUDIO/Music/Ra.mp3"       // M
 };
 
-void sound_music_play_track(int track) {
+void sound_manager_t::play_track(int track) {
     g_sound.stop_music();
 
     if (track <= TRACK_NONE || track >= TRACK_MAX) {
@@ -111,15 +91,15 @@ void sound_music_play_track(int track) {
     g_music_data.current_track = track;
 }
 
-void sound_music_play_intro() {
+void sound_manager_t::play_intro() {
     if (g_settings.get_sound(SOUND_MUSIC)->enabled) {
-        sound_music_play_track(TRACK_MENU);
+        play_track(TRACK_MENU);
     }
 }
 
-void sound_music_play_editor() {
+void sound_manager_t::play_editor() {
     if (g_settings.get_sound(SOUND_MUSIC)->enabled) {
-        sound_music_play_track(TRACK_CITY_1);
+        play_track(TRACK_CITY_1);
     }
 }
 
@@ -158,11 +138,19 @@ void sound_manager_t::music_update(bool force) {
         return;
     }
 
-    sound_music_play_track(track);
+    play_track(track);
     g_music_data.next_check = 10;
 }
 
-void sound_music_stop(void) {
+void sound_manager_t::on_sound_effect(event_sound_effect ev) {
+    play_effect(ev.effect);
+}
+
+void sound_manager_t::on_sound_track(event_sound_track ev) {
+    play_track(ev.track);
+}
+
+void sound_manager_t::music_stop() {
     g_sound.stop_music();
     g_music_data.current_track = TRACK_NONE;
     g_music_data.next_check = 0;

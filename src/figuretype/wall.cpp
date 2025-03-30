@@ -19,6 +19,7 @@
 #include "game/game_config.h"
 #include "sound/sound.h"
 #include "city/city_figures.h"
+#include "city/city_events.h"
 
 static const int BALLISTA_FIRING_OFFSETS[]
   = {0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -81,7 +82,7 @@ void figure::ballista_action() {
                 wait_ticks_missile = 0;
                 figure* f = figure_get(target_figure_id);
                 figure_missile::create(home_building_id, tile, f->tile, FIGURE_BOLT);
-                g_sound.play_effect(SOUND_EFFECT_BALLISTA_SHOOT);
+                events::emit(event_sound_effect{ SOUND_EFFECT_BALLISTA_SHOOT });
             } else {
                 action_state = FIGURE_ACTION_180_BALLISTA_CREATED;
             }

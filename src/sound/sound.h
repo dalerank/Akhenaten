@@ -10,6 +10,9 @@
 
 struct music_player_t;
 
+struct event_sound_effect { int effect; };
+struct event_sound_track { int track; };
+
 class sound_manager_t {
 public:
     struct channel_t {
@@ -42,8 +45,16 @@ public:
     void music_set_volume(int volume_pct);
     bool is_audio_stream_active();
     void set_volume(int b, int e, int percentage);
-    void play_effect(int effect);
     void music_update(bool forces);
+    void play_editor();
+    void play_intro();
+    void music_stop();
+    void play_track(int track);
+    void play_effect(int effect);
+
+public:
+    void on_sound_effect(event_sound_effect);
+    void on_sound_track(event_sound_track);
 
 private:
     static void channel_finished_cb(int channel);

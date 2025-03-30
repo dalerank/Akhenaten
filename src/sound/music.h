@@ -47,10 +47,3 @@ enum e_music_track {
     TRACK_CITY_40,
     TRACK_MAX
 };
-
-void sound_music_play_intro();
-void sound_music_play_track(int track);
-
-void sound_music_play_editor();
-
-void sound_music_stop();

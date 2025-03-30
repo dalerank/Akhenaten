@@ -10,6 +10,7 @@
 #include "grid/figure.h"
 #include "grid/point.h"
 #include "sound/sound.h"
+#include "city/city_events.h"
 
 int attack_is_same_direction(int dir1, int dir2) {
     if (dir1 == dir2)
@@ -231,7 +232,7 @@ void figure::hit_opponent() {
     if (opponent->opponent_id != id && m->figure_type != FIGURE_STANDARD_BEARER
         && attack_is_same_direction(attack_direction, opponent->attack_direction)) {
         figure_attack += 4; // attack opponent on the (exposed) back
-        g_sound.play_effect(SOUND_EFFECT_SWORD_SWING);
+        events::emit( event_sound_effect{ SOUND_EFFECT_SWORD_SWING });
     }
     if (m->is_halted && m->figure_type == FIGURE_STANDARD_BEARER && attack_is_same_direction(attack_direction, m->direction)) {
         figure_attack += 4; // coordinated formation attack bonus

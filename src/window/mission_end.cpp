@@ -50,7 +50,7 @@ void ui::window_mission_lost::init() {
 int ui::window_mission_won::ui_handle_mouse(const mouse *m) {
     const hotkeys *h = hotkey_state();
     if (input_go_back_requested(m, h)) {
-        sound_music_stop();
+        g_sound.music_stop();
         g_sound.speech_stop();
         advance_to_next_mission();
         return 0;

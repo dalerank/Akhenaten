@@ -96,7 +96,7 @@ bool video_start(const char* filename) {
     data.is_ended = false;
 
     if (load_smk(filename)) {
-        sound_music_stop();
+        g_sound.music_stop();
         g_sound.speech_stop();
         graphics_renderer()->create_custom_texture(CUSTOM_IMAGE_VIDEO, data.video.width, data.video.height);
         data.buffer.pixels = graphics_renderer()->get_custom_texture_buffer(CUSTOM_IMAGE_VIDEO, &data.buffer.width);

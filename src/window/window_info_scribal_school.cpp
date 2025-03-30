@@ -3,10 +3,6 @@
 #include "building/building_scribal_school.h"
 #include "city/object_info.h"
 #include "city/city_resource.h"
-#include "input/input.h"
-#include "graphics/window.h"
-#include "building/common.h"
-#include "io/gamefiles/lang.h"
 
 struct scribal_school_info_window : public building_info_window_t<scribal_school_info_window> {
     using widget::load;

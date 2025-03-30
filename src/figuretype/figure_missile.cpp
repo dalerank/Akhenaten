@@ -5,6 +5,7 @@
 #include "graphics/animkeys.h"
 #include "figure/properties.h"
 #include "city/city_figures.h"
+#include "city/city_events.h"
 
 figures::model_t<figure_hunter_arrow> hunter_arrow_m;
 figures::model_t<figure_arrow> arrow_m;
@@ -45,7 +46,7 @@ void figure_missile::figure_action() {
     int target_id = get_non_citizen_on_tile();
     if (target_id) {
         missile_hit_target(target_id, FIGURE_STANDARD_BEARER);
-        g_sound.play_effect(SOUND_EFFECT_ARROW_HIT);
+        events::emit(event_sound_effect{ SOUND_EFFECT_ARROW_HIT });
     } else if (should_die) {
         poof();
     }
@@ -103,7 +104,7 @@ void figure_spear::figure_action() {
     int target_id = get_citizen_on_tile();
     if (target_id) {
         missile_hit_target(target_id, FIGURE_STANDARD_BEARER);
-        g_sound.play_effect(SOUND_EFFECT_JAVELIN);
+        events::emit(event_sound_effect{ SOUND_EFFECT_JAVELIN });
     } else if (should_die) {
         poof();
     }

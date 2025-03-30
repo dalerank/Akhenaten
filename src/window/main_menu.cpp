@@ -12,14 +12,13 @@
 #include "game/settings.h"
 #include "game/game_config.h"
 #include "core/app.h"
-#include "js/js_game.h"
 #include "window/records.h"
 #include "window/popup_dialog.h"
 #include "window/player_selection.h"
 #include "window/file_dialog.h"
 #include "window/config.h"
 #include "window/window_city.h"
-#include "sound/music.h"
+#include "sound/sound.h"
 #include "io/gamestate/boilerplate.h"
 #include "resource/icons.h"
 
@@ -170,7 +169,7 @@ void main_menu_handle_input(const mouse* m, const hotkeys* h) {
 
 void window_main_menu_show(bool restart_music) {
     if (restart_music) {
-        sound_music_play_intro();
+        g_sound.play_intro();
     }
 
     static window_type window = {

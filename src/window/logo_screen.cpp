@@ -6,7 +6,7 @@
 #include "graphics/view/view.h"
 #include "graphics/window.h"
 #include "game/game_config.h"
-#include "sound/music.h"
+#include "sound/sound.h"
 #include "window/main_menu.h"
 #include "window/plain_message_dialog.h"
 #include "window/autoconfig_window.h"
@@ -63,7 +63,7 @@ void window_logo_show(int show_patch_message) {
         [] (auto m, auto h) { g_logo_screen.ui_handle_mouse(m); }
     };
 
-    sound_music_play_intro(); // play menu track
+    g_sound.play_intro(); // play menu track
     window_show(&window);
 
     if (show_patch_message == MESSAGE_MISSING_PATCH) {

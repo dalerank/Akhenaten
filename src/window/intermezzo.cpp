@@ -31,7 +31,7 @@ static void init(int mission_id, intermezzo_type type, std::function<void()> cal
     g_intermezzo_data.type = type;
     g_intermezzo_data.callback = callback;
     g_intermezzo_data.start_time = time_get_millis();
-    sound_music_stop();
+    g_sound.music_stop();
     g_sound.speech_stop();
 
     // play briefing sound by mission number

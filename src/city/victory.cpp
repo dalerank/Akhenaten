@@ -9,7 +9,7 @@
 #include "game/game_config.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
-#include "sound/music.h"
+#include "sound/sound.h"
 #include "window/mission_end.h"
 #include "window/victory_dialog.h"
 
@@ -189,7 +189,7 @@ void city_t::victory_check() {
             }
             victory_state.force_win = 0;
         } else if (victory_state.state == e_victory_state_won) {
-            sound_music_stop();
+            g_sound.music_stop();
             if (mission.victory_message_shown) {
                 ui::window_mission_won::show();
                 victory_state.force_win = 0;
