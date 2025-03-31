@@ -9,6 +9,7 @@
 #include "events.h"
 #include "grid/point.h"
 #include "scenario/types.h"
+#include "scenario/scenario_difficulty.h"
 #include "core/archive.h"
 
 #include <cstdint>
@@ -175,13 +176,13 @@ enum e_scenario_mode {
 
 struct scenario_data_t {
     uint8_t scenario_name[65];
+    scenario_difficulty_t difficulty;
 
     int start_year;
     int climate;
     int player_rank;
     int player_incarnation;
 
-    int rescue_loan;
     int debt_interest_rate;
 
     int kingdom_supplies_grain;
@@ -220,6 +221,7 @@ struct scenario_data_t {
 
     struct {
         int initial_funds;
+        int rescue_loan;
     } finance;
 
     struct {
@@ -317,6 +319,7 @@ struct scenario_data_t {
         bool start_message_shown;
         bool show_won_screen;
         std::array<int, 8> initial_funds = { 0 };
+        std::array<int, 8> rescue_loans = { 0 };
     } meta;
 
     event_manager_t events;
@@ -328,6 +331,9 @@ struct scenario_data_t {
     void set_mode(e_scenario_mode m) { settings.scmode = m; }
 
     bool is_mission_rank(custom_span<int> missions);
+
+    int startup_funds() const;
+    int rescue_loan() const;
 
     void load_metadata(const mission_id_t &missionid);
 
@@ -381,8 +387,6 @@ int scenario_property_player_rank();
 int scenario_image_id();
 
 const uint8_t* scenario_subtitle();
-
-int scenario_rescue_loan();
 
 int scenario_property_monuments_is_enabled();
 int scenario_property_monument(int field);

@@ -30,6 +30,26 @@ struct archive {
     template<class T>
     inline T r_type(pcstr name, T def = (T)0) { return (T)r_int(name, def); }
 
+    template<size_t S, typename T = int>
+    inline std::array<T, S> r_sarray(pcstr name) {
+        getproperty(-1, name);
+        std::array<T, S> result;
+        auto it = result.begin();
+        if (isarray(-1)) {
+            int length = getlength(-1);
+
+            for (int i = 0; i < length; ++i) {
+                getindex(-1, i);
+                float v = isnumber(-1) ? (float)tonumber(-1) : 0.f;
+                *it = ((T)v);
+                std::next(it);
+                pop(1);
+            }
+        }
+        pop(1);
+        return result;
+    }
+
     template<typename T = int>
     inline std::vector<T> r_array_num(pcstr name) {
         getproperty(-1, name);

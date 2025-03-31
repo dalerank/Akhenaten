@@ -40,13 +40,31 @@ void scenario_settings_init_mission() {
     g_scenario.settings.starting_personal_savings = g_settings.personal_savings_for_mission(g_scenario.settings.campaign_mission_rank);
 }
 
+int scenario_data_t::startup_funds() const {
+    const int funds = meta.initial_funds[g_settings.difficulty()];
+    if (funds > 0) {
+        return funds;
+    }
+
+    return difficulty.adjust_money(finance.initial_funds);
+}
+
+int scenario_data_t::rescue_loan() const {
+    const int loan = meta.rescue_loans[g_settings.difficulty()];
+    if (loan > 0) {
+        return loan;
+    }
+
+    return difficulty.loan_money(finance.rescue_loan);
+}
+
 void scenario_data_t::load_metadata(const mission_id_t &missionid) {
     g_config_arch.r_section(missionid, [this] (archive arch) {
         meta.start_message = arch.r_int("start_message");
         meta.show_won_screen = arch.r_bool("show_won_screen", true);
 
-        auto funds = arch.r_array_num("money");
-        std::copy_n(funds.begin(), std::min(funds.size(), meta.initial_funds.max_size()), meta.initial_funds.begin());
+        meta.initial_funds = arch.r_sarray<8>("money");
+        meta.rescue_loans = arch.r_sarray<8>("rescue_loans");
         
         env.has_animals = arch.r_bool("city_has_animals");
         env.gods_least_mood = arch.r_int("gods_least_mood", 0);
@@ -197,10 +215,6 @@ const uint8_t* scenario_subtitle() {
     return g_scenario.subtitle;
 }
 
-int scenario_rescue_loan() {
-    return g_scenario.rescue_loan;
-}
-
 int scenario_property_monuments_is_enabled(void) {
     return (g_scenario.monuments.first > 0 || g_scenario.monuments.second > 0
             || g_scenario.monuments.third > 0);
@@ -326,7 +340,7 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT32, g_scenario.river_entry_point);
     iob->bind(BIND_SIGNATURE_UINT32, g_scenario.river_exit_point);
 
-    iob->bind(BIND_SIGNATURE_INT32, &g_scenario.rescue_loan);
+    iob->bind(BIND_SIGNATURE_INT32, &g_scenario.finance.rescue_loan);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.win_criteria.milestone25_year);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.win_criteria.milestone50_year);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.win_criteria.milestone75_year);

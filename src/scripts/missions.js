@@ -16,7 +16,9 @@ var mission0 = { // Nubt
 	religion_enabled : false,
 	show_won_screen : false,
 	player_rank : 0,
+
 	money : [7500, 5000, 3750, 2500, 2000],
+	rescue_loans : [7500, 5000, 3750, 2500, 2000],
 
 	fire_damage : {
 		house0: { type:BUILDING_HOUSE_CRUDE_HUT, fire: +50, collapse: +5},	
@@ -39,6 +41,8 @@ var mission1 = {
 	player_rank : 0,
 	show_won_screen : false,
 	money : [7500, 5000, 3750, 2500, 2000],
+	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+
 	buildings : [
 					BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_WATER_SUPPLY,
 					BUILDING_GOLD_MINE, BUILDING_VILLAGE_PALACE, BUILDING_HUNTING_LODGE,
@@ -55,6 +59,8 @@ var mission2 = {
 	gods_least_mood : 50,
 	player_rank : 0,
 	money : [7500, 5000, 3750, 2500, 2000],
+	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+
 	buildings : [
 					BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE, BUILDING_WATER_SUPPLY,
 					BUILDING_FIGS_FARM, BUILDING_WORK_CAMP, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BAZAAR, BUILDING_GRANARY,
@@ -72,6 +78,8 @@ var mission3 = {
 	city_has_animals : true,
 	player_rank : 0,
 	money : [7500, 5000, 3750, 2500, 2000],
+	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+
 	buildings : [
 					BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
 					BUILDING_WATER_SUPPLY, BUILDING_APOTHECARY, BUILDING_PHYSICIAN, BUILDING_GRAIN_FARM, BUILDING_BARLEY_FARM, BUILDING_WORK_CAMP,
@@ -90,7 +98,9 @@ var mission4 = {
 	start_message : 241 - 99,
 	city_has_animals : true,
 	player_rank : 1,
-	money : 2500,
+	money : [7500, 5000, 3750, 2500, 2000],
+	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+
 	buildings : [
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 					BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
@@ -114,6 +124,8 @@ var mission5 = { // Timna
 	city_has_animals : true,
 	player_rank : 1,
 	money : [7500, 5000, 3750, 2500, 2000],
+	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+
 	buildings : [
 		         	BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 					BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
@@ -186,6 +198,8 @@ var mission6 = { // Behdet
 	player_rank : 1,
 	next_mission : 8,
 	money : [7500, 5000, 3750, 2500, 2000],
+	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+
 	buildings : [   
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 					BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
@@ -268,6 +282,8 @@ var mission7 = { // Abydos
 	player_rank : 1,
 	next_mission : 8,
 	money : [7500, 5000, 3750, 2500, 2000],
+	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+
 	buildings: [
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 					BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
@@ -354,6 +370,8 @@ var mission8 = { // Selima
 	choice_image1_pos : [192, 144],
 	choice_title : [144, 22],
 	money : [7500, 5000, 3750, 2500, 2000],
+	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+
 	buildings : [
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 				],
@@ -389,6 +407,8 @@ var mission9 = { // Abu
 	choice_image1_pos : [192, 144],
 	choice_title : [144, 22],
 	money : [7500, 5000, 3750, 2500, 2000],
+	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+
 	resources : {
 		grain : { type:RESOURCE_GRAIN, allow: true},
 		barley: { type:RESOURCE_BARLEY, allow: true},

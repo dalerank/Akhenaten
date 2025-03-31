@@ -932,7 +932,7 @@ void city_religion_t::update_mood(e_god randm_god) {
     }
 
     // update anger/happiness/bolt icons/etc.
-    int difficulty = g_settings.difficulty;
+    const int difficulty = g_settings.difficulty();
     if (is_god_known(randm_god) != GOD_STATUS_UNKNOWN) { // OG code checks "randm_god < MAX_GODS" which is redundant.
         god_state* god = &gods[randm_god];
         if (god->mood > 50)

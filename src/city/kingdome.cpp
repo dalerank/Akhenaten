@@ -10,6 +10,7 @@
 #include "game/difficulty.h"
 #include "scenario/invasion.h"
 #include "scenario/scenario.h"
+#include "game/settings.h"
 #include "game/game.h"
 
 #include "dev/debug.h"
@@ -50,51 +51,69 @@ void kingdome_relation_t::update_debt_state() {
         months_in_debt = -1;
         return;
     }
-    if (debt_state == 0) {
+
+    const int rescue_loan = g_scenario.rescue_loan();
+
+    switch (debt_state) {
+    case e_debt_none:
         // provide bailout
-        const int rescue_loan = difficulty_adjust_money(scenario_rescue_loan());
         city_finance_process_donation(rescue_loan);
         city_finance_calculate_totals();
 
-        debt_state = 1;
+        debt_state = e_debt_one_time;
         months_in_debt = 0;
         messages::popup(MESSAGE_CITY_IN_DEBT, 0, 0);
         g_city.ratings.reduce_prosperity_after_bailout();
-    } else if (debt_state == 1) {
-        debt_state = 2;
+        break;
+
+    case e_debt_one_time:
+        debt_state = e_debt_twice;
         months_in_debt = 0;
         messages::popup(MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
         g_city.ratings.change_kingdom(-5);
-    } else if (debt_state == 2) {
+        break;
+
+    case e_debt_twice:
         if (months_in_debt == -1) {
             messages::popup(MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
             months_in_debt = 0;
         }
-        if (game.simtime.day == 0)
+        if (game.simtime.day == 0) {
             months_in_debt++;
+        }
 
         if (months_in_debt >= 12) {
-            debt_state = 3;
+            debt_state = e_debt_latest;
             months_in_debt = 0;
             if (!g_city.figures.kingdome_soldiers) {
                 messages::popup(MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
                 g_city.ratings.change_kingdom(-10);
             }
         }
-    } else if (debt_state == 3) {
+        break;
+
+    case e_debt_latest:
         if (months_in_debt == -1) {
             messages::popup(MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
             months_in_debt = 0;
         }
-        if (game.simtime.day == 0)
+
+        if (game.simtime.day == 0) {
             months_in_debt++;
+        }
 
         if (months_in_debt >= 12) {
-            debt_state = 4;
+            debt_state = e_debt_not_allowed;
             months_in_debt = 0;
-            if (!g_city.figures.kingdome_soldiers)
+
+            if (!g_city.figures.kingdome_soldiers) {
                 g_city.ratings.limit_kingdom(10);
+            }
         }
+        break;
+
+    case e_debt_not_allowed:
+        break;
     }
 }
 

@@ -64,7 +64,7 @@ static void draw_foreground(int) {
 
     lang_text_draw(44, 68, 32, 205, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(262, 196, 200, 30, focus_button_id == 4);
-    text_draw_number_centered(scenario_rescue_loan(), 262, 205, 200, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number_centered(g_scenario.finance.rescue_loan, 262, 205, 200, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 43, 32, 245, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(262, 236, 200, 30, focus_button_id == 5);

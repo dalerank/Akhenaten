@@ -8,6 +8,14 @@ enum e_gift {
     GIFT_LAVISH = 2
 };
 
+enum e_debt_state {
+    e_debt_none = 0,
+    e_debt_one_time = 1,
+    e_debt_twice = 2,
+    e_debt_latest = 3,
+    e_debt_not_allowed = 4,
+};
+
 struct kingdome_gift {
     int id;
     int cost;
@@ -19,7 +27,7 @@ struct kingdome_relation_t {
     int32_t months_since_gift;
     int32_t gift_overdose_penalty;
 
-    int32_t debt_state;
+    e_debt_state debt_state;
     int32_t months_in_debt;
 
     int32_t player_rank;
