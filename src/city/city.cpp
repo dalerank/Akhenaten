@@ -33,6 +33,7 @@
 #include "city_warnings.h"
 #include "city/city_events.h"
 #include "empire/empire_object.h"
+#include "game/settings.h"
 
 #include <core/string.h>
 #include <string.h>
@@ -87,7 +88,7 @@ void city_t::init_custom_map() {
     unused.faction_id = 1;
     unused.unknown_00a2 = 1;
     unused.unknown_00a3 = 1;
-    finance.treasury = difficulty_adjust_money(scenario_initial_funds());
+    finance.treasury = startup_funds();
     finance.last_year.balance = finance.treasury;
 }
 
@@ -115,8 +116,17 @@ void city_t::ratings_update(bool is_yearly_update) {
     }
 }
 
+int city_t::startup_funds() const {
+    const int funds = g_scenario.meta.initial_funds[g_settings.difficulty()];
+    if (funds > 0) {
+        return funds;
+    }
+
+    return difficulty.adjust_money(g_scenario.finance.initial_funds, g_settings.difficulty());
+}
+
 void city_t::init_campaign_mission() {
-    finance.treasury = difficulty_adjust_money(finance.treasury);
+    finance.treasury = startup_funds();
     finance.last_year.income.gold_extracted = 0;
     finance.this_year.income.gold_extracted = 0;
 }

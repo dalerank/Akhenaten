@@ -11,7 +11,7 @@ extern const token_holder<e_god, GOD_OSIRIS, MAX_GODS> e_god_tokens;
 
 struct event_religion_update {};
 
-enum e_god_status {
+enum e_god_status : uint8_t {
     GOD_STATUS_UNKNOWN = 0,
     GOD_STATUS_KNOWN = 1,
     GOD_STATUS_PATRON = 2

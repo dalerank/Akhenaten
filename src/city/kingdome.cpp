@@ -52,7 +52,7 @@ void kingdome_relation_t::update_debt_state() {
     }
     if (debt_state == 0) {
         // provide bailout
-        int rescue_loan = difficulty_adjust_money(scenario_rescue_loan());
+        const int rescue_loan = difficulty_adjust_money(scenario_rescue_loan());
         city_finance_process_donation(rescue_loan);
         city_finance_calculate_totals();
 

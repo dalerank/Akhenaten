@@ -4,7 +4,6 @@
 #include "building/model.h"
 #include "building/building_dock.h"
 #include "building/building_granary.h"
-#include "building/building_education.h"
 #include "building/building_workshop.h"
 #include "building/building_farm.h"
 #include "building/monuments.h"

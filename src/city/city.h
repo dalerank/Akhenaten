@@ -6,6 +6,7 @@
 #include "city/entertainment.h"
 #include "city/city_population.h"
 #include "city/finance.h"
+#include "city_difficulty.h"
 #include "city/labor.h"
 #include "city/buildings.h"
 #include "city/city_migration.h"
@@ -42,6 +43,7 @@ struct city_t {
     city_military_t military;
     victory_state_t victory_state;
     city_maintenance_t maintenance;
+    city_difficulty_t difficulty;
 
     struct {
         uint8_t city;
@@ -176,6 +178,7 @@ struct city_t {
     void house_process_evolve_and_consume_goods();
 
     void init();
+    int  startup_funds() const;
     void init_custom_map();
     void init_campaign_mission();
     void init_mission_resources(const std::vector<resource_allow> &resources);

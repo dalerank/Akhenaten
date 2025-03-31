@@ -28,7 +28,7 @@ void scenario_editor_create(int map_size) {
     string_copy(lang_get_string(44, 37), g_scenario.subtitle, MAX_SUBTITLE);
     string_copy(lang_get_string(44, 38), g_scenario.brief_description, MAX_BRIEF_DESCRIPTION);
 
-    g_scenario.initial_funds = 1000;
+    g_scenario.finance.initial_funds = 1000;
     g_scenario.rescue_loan = 500;
     g_scenario.start_year = -500;
 
@@ -334,7 +334,7 @@ void scenario_editor_set_player_rank(int rank) {
 }
 
 void scenario_editor_set_initial_funds(int amount) {
-    g_scenario.initial_funds = amount;
+    g_scenario.finance.initial_funds = amount;
     g_scenario.is_saved = 0;
 }
 

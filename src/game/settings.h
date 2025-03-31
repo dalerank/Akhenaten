@@ -59,7 +59,6 @@ struct game_settings {
     int game_speed;
     int scroll_speed;
     // misc settings
-    e_difficulty difficulty;
     etooltip_flag tooltips;
     int monthly_autosave;
     bool warnings;
@@ -77,6 +76,15 @@ struct game_settings {
     int personal_savings[MAX_PERSONAL_SAVINGS] = {0};
     // file data
     buffer *inf_file = nullptr;
+
+    struct difficulty_t {
+        void increase() { state = std::clamp<e_difficulty>((e_difficulty)(state + 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
+        void decrease() { state = std::clamp<e_difficulty>((e_difficulty)(state - 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
+
+        e_difficulty operator()() const { return state; }
+
+        e_difficulty state;
+    } difficulty;
 
     game_settings();
 
@@ -124,9 +132,6 @@ struct game_settings {
     void toggle_pyramid_speedup() { pyramid_speedup = !pyramid_speedup; }
     void toggle_popup_messages(int flag) { popup_messages ^= flag; }
     void toggle_gods_enabled() { gods_enabled = !gods_enabled; }
-
-    void increase_difficulty() { difficulty = std::clamp<e_difficulty>((e_difficulty)(difficulty + 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
-    void decrease_difficulty() { difficulty = std::clamp<e_difficulty>((e_difficulty)(difficulty - 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
 
     bool show_victory_video() { victory_video = !victory_video; return victory_video; }
     void set_player_name(const uint8_t* player_name);

@@ -181,7 +181,6 @@ struct scenario_data_t {
     int player_rank;
     int player_incarnation;
 
-    int initial_funds;
     int rescue_loan;
     int debt_interest_rate;
 
@@ -218,6 +217,10 @@ struct scenario_data_t {
         int milestone75_year;
         int next_mission;
     } win_criteria;
+
+    struct {
+        int initial_funds;
+    } finance;
 
     struct {
         int id;
@@ -313,6 +316,7 @@ struct scenario_data_t {
         uint16_t start_message;
         bool start_message_shown;
         bool show_won_screen;
+        std::array<int, 8> initial_funds = { 0 };
     } meta;
 
     event_manager_t events;
@@ -324,6 +328,8 @@ struct scenario_data_t {
     void set_mode(e_scenario_mode m) { settings.scmode = m; }
 
     bool is_mission_rank(custom_span<int> missions);
+
+    void load_metadata(const mission_id_t &missionid);
 
     template<typename ... Args>
     bool is_mission_rank(const Args ... args) {
@@ -376,15 +382,11 @@ int scenario_image_id();
 
 const uint8_t* scenario_subtitle();
 
-int scenario_initial_funds();
-
 int scenario_rescue_loan();
 
 int scenario_property_monuments_is_enabled();
 int scenario_property_monument(int field);
 void scenario_set_monument(int field, int m);
-
-void scenario_load_meta_data(const mission_id_t &missionid);
 
 bool scenario_building_allowed(int building_type);
 

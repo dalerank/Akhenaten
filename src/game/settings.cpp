@@ -1,12 +1,14 @@
 #include "settings.h"
-#include <core/encoding.h>
 
+#include "core/encoding.h"
 #include "city/constants.h"
 #include "core/buffer.h"
 #include "core/calc.h"
 #include "core/game_environment.h"
 #include "core/string.h"
 #include "io/io.h"
+
+#include <array>
 
 #define INF_SIZE 564
 
@@ -33,7 +35,7 @@ void game_settings::load_default_settings() {
     game_speed = 90;
     scroll_speed = 70;
 
-    difficulty = DIFFICULTY_HARD;
+    difficulty.state = DIFFICULTY_HARD;
     tooltips = e_tooltip_show_full;
     warnings = true;
     gods_enabled = true;
@@ -89,10 +91,10 @@ void game_settings::load_settings(buffer* buf) {
 
     if (buf->at_end()) {
         // Settings file is from unpatched C3, use default values
-        difficulty = DIFFICULTY_HARD;
+        difficulty.state = DIFFICULTY_HARD;
         gods_enabled = true;
     } else {
-        difficulty = (e_difficulty)buf->read_i32();
+        difficulty.state = (e_difficulty)buf->read_i32();
         gods_enabled = buf->read_i32();
     }
 }
@@ -151,7 +153,8 @@ void game_settings::save() {
         buf->write_i32(personal_savings[i]);
     }
     buf->write_i32(victory_video);
-    buf->write_i32(difficulty);
+    buf->write_u8(difficulty.state);
+    buf->skip(3);
     buf->write_i32(gods_enabled);
 
     io_write_buffer_to_file("pharaoh.inf", inf_file, INF_SIZE);

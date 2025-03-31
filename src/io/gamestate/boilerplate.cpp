@@ -172,8 +172,7 @@ static void post_load() {
     scenario_set_campaign_rank(mission_rank);
 
     mission_id_t missionid(scenario_id);
-    scenario_load_meta_data(missionid);
-    g_scenario.events.load_mission_metadata(missionid);
+    g_scenario.load_metadata(missionid);
     g_empire.load_mission_metadata(missionid);
 
     // camera

@@ -20,8 +20,7 @@ ANK_REGISTER_CONFIG_ITERATOR(config_load_scenario_load_meta_data);
 void config_load_scenario_load_meta_data() {
     mission_id_t missionid(g_scenario.settings.campaign_scenario_id);
 
-    scenario_load_meta_data(missionid);
-    g_scenario.events.load_mission_metadata(missionid);
+    g_scenario.load_metadata(missionid);
 }
 
 bool scenario_is_saved() {
@@ -41,45 +40,51 @@ void scenario_settings_init_mission() {
     g_scenario.settings.starting_personal_savings = g_settings.personal_savings_for_mission(g_scenario.settings.campaign_mission_rank);
 }
 
-void scenario_load_meta_data(const mission_id_t &missionid) {
-    g_config_arch.r_section(missionid, [] (archive arch) {
-        g_scenario.meta.start_message = arch.r_int("start_message");
-        g_scenario.meta.show_won_screen = arch.r_bool("show_won_screen", true);
-        g_scenario.env.has_animals = arch.r_bool("city_has_animals");
-        g_scenario.env.gods_least_mood = arch.r_int("gods_least_mood", 0);
-        g_scenario.win_criteria.next_mission = arch.r_int("next_mission", 0);
+void scenario_data_t::load_metadata(const mission_id_t &missionid) {
+    g_config_arch.r_section(missionid, [this] (archive arch) {
+        meta.start_message = arch.r_int("start_message");
+        meta.show_won_screen = arch.r_bool("show_won_screen", true);
+
+        auto funds = arch.r_array_num("money");
+        std::copy_n(funds.begin(), std::min(funds.size(), meta.initial_funds.max_size()), meta.initial_funds.begin());
+        
+        env.has_animals = arch.r_bool("city_has_animals");
+        env.gods_least_mood = arch.r_int("gods_least_mood", 0);
+        win_criteria.next_mission = arch.r_int("next_mission", 0);
         int rank = std::min(arch.r_int("player_rank", -1), 10);
         if (rank >= 0) {
             g_city.kingdome.player_rank = rank;
         }
 
-        memset(g_scenario.allowed_buildings, 0, sizeof(g_scenario.allowed_buildings));
+        memset(allowed_buildings, 0, sizeof(allowed_buildings));
         auto buildings = arch.r_array_num<e_building_type>("buildings");
         for (const auto &b : buildings) {
-            g_scenario.allowed_buildings[b] = true;
+            allowed_buildings[b] = true;
         }
 
-        g_scenario.init_resources.clear();
-        arch.r_objects("resources", [] (pcstr key, archive rarch) {
+        init_resources.clear();
+        arch.r_objects("resources", [&] (pcstr key, archive rarch) {
             e_resource resource = rarch.r_type<e_resource>("type");
             bool allowed = rarch.r_bool("allow");
-            g_scenario.init_resources.push_back({ resource, allowed });
+            init_resources.push_back({ resource, allowed });
         });
 
-        g_scenario.extra_damage.clear();
+        extra_damage.clear();
         arch.r_objects("fire_damage", [&] (pcstr key, archive barch) {
             e_building_type type = barch.r_type<e_building_type>("type");
             int8_t fire = barch.r_int("fire");
             int8_t collapse = barch.r_int("collapse");
-            g_scenario.extra_damage.push_back({ type, fire, collapse });
+            extra_damage.push_back({ type, fire, collapse });
         });
 
-        g_scenario.building_stages.clear();
-        arch.r_objects("stages", [](pcstr key, archive sarch) {
+        building_stages.clear();
+        arch.r_objects("stages", [&](pcstr key, archive sarch) {
             auto buildings = archive::r_array_num<e_building_type>(sarch);
-            g_scenario.building_stages.push_back({key, buildings});
+            building_stages.push_back({key, buildings});
         });
     });
+
+    events.load_mission_metadata(missionid);
 }
 
 bool scenario_building_allowed(int building_type) {
@@ -192,9 +197,6 @@ const uint8_t* scenario_subtitle() {
     return g_scenario.subtitle;
 }
 
-int scenario_initial_funds() {
-    return g_scenario.initial_funds;
-}
 int scenario_rescue_loan() {
     return g_scenario.rescue_loan;
 }
@@ -236,12 +238,13 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_scenario.meta.start_message_shown);
     iob->bind____skip(3);
     for (int i = 0; i < MAX_GODS; i++) {
-        iob->bind(BIND_SIGNATURE_INT16, &g_city.religion.gods[i].is_known);
+        iob->bind(BIND_SIGNATURE_UINT8, &g_city.religion.gods[i].is_known);
+        iob->bind____skip(1);
     }
     iob->bind____skip(10);
     iob->bind____skip(2); // 2 bytes ???        03 00
 
-    iob->bind(BIND_SIGNATURE_INT32, &g_scenario.initial_funds);
+    iob->bind(BIND_SIGNATURE_INT32, &g_scenario.finance.initial_funds);
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario.enemy_id);
     iob->bind____skip(6);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.map.width);
