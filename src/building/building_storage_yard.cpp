@@ -3,6 +3,7 @@
 #include "building/building_barracks.h"
 #include "building/building_storage_room.h"
 #include "building/building_granary.h"
+#include "building/building_scribal_school.h"
 #include "building/industry.h"
 #include "building/rotation.h"
 #include "building/model.h"
@@ -565,10 +566,10 @@ storage_worker_task building_storageyard_deliver_papyrus_to_scribal_school(build
 
     auto warehouse = b->dcast_storage_yard();
     auto result = building_get_asker_for_resource(warehouse->tile(), BUILDING_SCRIBAL_SCHOOL, RESOURCE_PAPYRUS, warehouse->road_network(), warehouse->distance_from_entry());
-    building* scribal_school = building_get(result.building_id);
-    int school_want = scribal_school->need_resource_amount(RESOURCE_PAPYRUS);
+    auto scribal_school = building_get_ex<building_scribal_school>(result.building_id);
+    const int school_want = scribal_school->need_resource_amount(RESOURCE_PAPYRUS);
 
-    if (school_want > 0 && warehouse->road_network() == scribal_school->road_network_id) {
+    if (school_want > 0 && warehouse->road_network() == scribal_school->road_network()) {
         int available = 0;
         auto space = warehouse->room();
         while (space) {
@@ -580,7 +581,7 @@ storage_worker_task building_storageyard_deliver_papyrus_to_scribal_school(build
 
         if (available > 0) {
             int amount = std::min(available, school_want);
-            return {STORAGEYARD_TASK_DELIVERING, &space->base, amount, RESOURCE_PAPYRUS};
+            return {STORAGEYARD_TASK_DELIVERING, &warehouse->base, amount, RESOURCE_PAPYRUS};
         }
     }
 

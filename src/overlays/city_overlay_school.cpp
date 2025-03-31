@@ -14,11 +14,11 @@ city_overlay* city_overlay_for_scribal_school() {
 
 int city_overlay_schools::get_column_height(const building *b) const {
     auto house = ((building *)b)->dcast_house();
-    if (house->house_population() == 0) {
+    if (!house) {
         return COLUMN_TYPE_NONE;
     }
 
-    if (!house) {
+    if (!house->house_population()) {
         return COLUMN_TYPE_NONE;
     }
 

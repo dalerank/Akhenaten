@@ -89,14 +89,9 @@ void game_settings::load_settings(buffer* buf) {
     }
     victory_video = buf->read_i32();
 
-    if (buf->at_end()) {
-        // Settings file is from unpatched C3, use default values
-        difficulty.state = DIFFICULTY_HARD;
-        gods_enabled = true;
-    } else {
-        difficulty.state = (e_difficulty)buf->read_i32();
-        gods_enabled = buf->read_i32();
-    }
+    assert(!buf->at_end());
+    difficulty.state = (e_difficulty)buf->read_i32();
+    gods_enabled = buf->read_i32();
 }
 
 void game_settings::load() {

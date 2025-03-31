@@ -84,6 +84,7 @@ class building_temple_complex_altar;
 class building_temple_complex_oracle;
 class building_water_lift;
 class building_monument;
+class building_scribal_school;
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -556,6 +557,7 @@ public:
     virtual building_temple_complex_oracle *dcast_temple_complex_oracle() { return nullptr; }
     virtual building_water_lift *dcast_water_lift() { return nullptr; }
     virtual building_monument *dcast_monument() { return nullptr; }
+    virtual building_scribal_school *dcast_scribal_school() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -572,6 +574,7 @@ public:
     inline int max_workers() const { return model_get_building(type())->laborers; }
     inline int pct_workers() const { return calc_percentage<int>(num_workers(), max_workers()); }
     inline int get_figure_id(int i) const { return base.get_figure_id(i); }
+    inline int need_resource_amount(e_resource r) const { return base.need_resource_amount(r); }
     figure *get_figure_in_slot(int i);
 
     inline bool has_figure_of_type(int i, e_figure_type _type) { return base.has_figure_of_type(i, _type);  }
@@ -737,6 +740,7 @@ GENERATE_SMART_CAST_BUILDING(temple_complex_altar)
 GENERATE_SMART_CAST_BUILDING(temple_complex_oracle)
 GENERATE_SMART_CAST_BUILDING(water_lift)
 GENERATE_SMART_CAST_BUILDING(monument)
+GENERATE_SMART_CAST_BUILDING(scribal_school)
 
 namespace buildings {
 
