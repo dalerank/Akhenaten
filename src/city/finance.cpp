@@ -140,14 +140,14 @@ void city_finance_t::update_estimate_taxes() {
             return;
         }
 
-        int is_nobles = (house->house_level() >= HOUSE_COMMON_MANOR);
-        int tax_multiplier = house->model().tax_multiplier;
-        int level_tax_rate_multiplier = difficulty_adjust_money(tax_multiplier);
+        const bool is_nobles = (house->house_level() >= HOUSE_COMMON_MANOR);
+        const int house_tax_multiplier = house->model().tax_multiplier;
+        const int scenario_tax_rate_multiplier = g_scenario.house_tax_multiplier(house_tax_multiplier);
 
         if (is_nobles) {
-            taxes.monthly.collected_nobles += housed.population * level_tax_rate_multiplier;
+            taxes.monthly.collected_nobles += housed.population * scenario_tax_rate_multiplier;
         } else {
-            taxes.monthly.collected_citizens += housed.population * level_tax_rate_multiplier;
+            taxes.monthly.collected_citizens += housed.population * scenario_tax_rate_multiplier;
         }
     });
 
@@ -195,10 +195,10 @@ void city_finance_t::collect_monthly_taxes() {
         auto &housed = house->runtime_data();
         int is_nobles = (house->house_level() >= HOUSE_COMMON_MANOR);
         int population = housed.population;
-        int trm = difficulty_adjust_money(house->model().tax_multiplier);
+        const int scenario_tax_multiplier = g_scenario.house_tax_multiplier(house->model().tax_multiplier);
         city_data.population.at_level[house->house_level()] += population;
 
-        int tax = population * trm;
+        const int tax = population * scenario_tax_multiplier;
         if (housed.tax_coverage) {
             if (is_nobles) {
                 city_data.taxes.taxed_nobles += population;

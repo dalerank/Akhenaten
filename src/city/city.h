@@ -176,7 +176,6 @@ struct city_t {
     void house_process_evolve_and_consume_goods();
 
     void init();
-    int  startup_funds() const;
     void init_custom_map();
     void init_campaign_mission();
     void init_mission_resources(const std::vector<resource_allow> &resources);

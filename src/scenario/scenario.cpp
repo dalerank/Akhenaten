@@ -58,6 +58,15 @@ int scenario_data_t::rescue_loan() const {
     return difficulty.loan_money(finance.rescue_loan);
 }
 
+int scenario_data_t::house_tax_multiplier(int v) const {
+    const int multiplier = meta.house_tax_multipliers[g_settings.difficulty()];
+    if (multiplier > 0) {
+        return calc_adjust_with_percentage<int>(v, multiplier);
+    }
+
+    return difficulty.house_tax_multiplier(v);
+}
+
 void scenario_data_t::load_metadata(const mission_id_t &missionid) {
     g_config_arch.r_section(missionid, [this] (archive arch) {
         meta.start_message = arch.r_int("start_message");
@@ -65,6 +74,7 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
 
         meta.initial_funds = arch.r_sarray<8>("money");
         meta.rescue_loans = arch.r_sarray<8>("rescue_loans");
+        meta.house_tax_multipliers = arch.r_sarray<8>("house_tax_multipliers");
         
         env.has_animals = arch.r_bool("city_has_animals");
         env.gods_least_mood = arch.r_int("gods_least_mood", 0);

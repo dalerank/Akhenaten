@@ -320,6 +320,7 @@ struct scenario_data_t {
         bool show_won_screen;
         std::array<int, 8> initial_funds = { 0 };
         std::array<int, 8> rescue_loans = { 0 };
+        std::array<int, 8> house_tax_multipliers = { 0 };
     } meta;
 
     event_manager_t events;
@@ -334,6 +335,7 @@ struct scenario_data_t {
 
     int startup_funds() const;
     int rescue_loan() const;
+    int house_tax_multiplier(int v) const;
 
     void load_metadata(const mission_id_t &missionid);
 

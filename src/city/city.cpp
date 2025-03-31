@@ -88,7 +88,7 @@ void city_t::init_custom_map() {
     unused.faction_id = 1;
     unused.unknown_00a2 = 1;
     unused.unknown_00a3 = 1;
-    finance.treasury = startup_funds();
+    finance.treasury = g_scenario.startup_funds();
     finance.last_year.balance = finance.treasury;
 }
 
@@ -117,7 +117,7 @@ void city_t::ratings_update(bool is_yearly_update) {
 }
 
 void city_t::init_campaign_mission() {
-    finance.treasury = startup_funds();
+    finance.treasury = g_scenario.startup_funds();
     finance.last_year.income.gold_extracted = 0;
     finance.this_year.income.gold_extracted = 0;
 }

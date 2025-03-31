@@ -19,6 +19,7 @@ var mission0 = { // Nubt
 
 	money : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+	house_tax_multipliers : [300, 200, 150, 100, 75],
 
 	fire_damage : {
 		house0: { type:BUILDING_HOUSE_CRUDE_HUT, fire: +50, collapse: +5},	
@@ -60,6 +61,7 @@ var mission2 = {
 	player_rank : 0,
 	money : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+	house_tax_multipliers : [300, 200, 150, 100, 75],
 
 	buildings : [
 					BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE, BUILDING_WATER_SUPPLY,
@@ -79,6 +81,7 @@ var mission3 = {
 	player_rank : 0,
 	money : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+	house_tax_multipliers : [300, 200, 150, 100, 75],
 
 	buildings : [
 					BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
@@ -100,6 +103,7 @@ var mission4 = {
 	player_rank : 1,
 	money : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+	house_tax_multipliers : [300, 200, 150, 100, 75],
 
 	buildings : [
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
@@ -125,6 +129,7 @@ var mission5 = { // Timna
 	player_rank : 1,
 	money : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+	house_tax_multipliers : [300, 200, 150, 100, 75],
 
 	buildings : [
 		         	BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
@@ -199,6 +204,7 @@ var mission6 = { // Behdet
 	next_mission : 8,
 	money : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+	house_tax_multipliers : [300, 200, 150, 100, 75],
 
 	buildings : [   
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
@@ -283,6 +289,7 @@ var mission7 = { // Abydos
 	next_mission : 8,
 	money : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+	house_tax_multipliers : [300, 200, 150, 100, 75],
 
 	buildings: [
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
@@ -371,6 +378,7 @@ var mission8 = { // Selima
 	choice_title : [144, 22],
 	money : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+	house_tax_multipliers : [300, 200, 150, 100, 75],
 
 	buildings : [
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
@@ -408,6 +416,7 @@ var mission9 = { // Abu
 	choice_title : [144, 22],
 	money : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
+	house_tax_multipliers : [300, 200, 150, 100, 75],
 
 	resources : {
 		grain : { type:RESOURCE_GRAIN, allow: true},

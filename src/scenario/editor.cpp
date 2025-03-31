@@ -29,7 +29,7 @@ void scenario_editor_create(int map_size) {
     string_copy(lang_get_string(44, 38), g_scenario.brief_description, MAX_BRIEF_DESCRIPTION);
 
     g_scenario.finance.initial_funds = 1000;
-    g_scenario.rescue_loan = 500;
+    g_scenario.finance.rescue_loan = 500;
     g_scenario.start_year = -500;
 
     g_scenario.win_criteria.milestone25_year = 10;
@@ -339,7 +339,7 @@ void scenario_editor_set_initial_funds(int amount) {
 }
 
 void scenario_editor_set_rescue_loan(int amount) {
-    g_scenario.rescue_loan = amount;
+    g_scenario.finance.rescue_loan = amount;
     g_scenario.is_saved = 0;
 }
 

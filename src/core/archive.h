@@ -42,7 +42,7 @@ struct archive {
                 getindex(-1, i);
                 float v = isnumber(-1) ? (float)tonumber(-1) : 0.f;
                 *it = ((T)v);
-                std::next(it);
+                it = std::next(it);
                 pop(1);
             }
         }

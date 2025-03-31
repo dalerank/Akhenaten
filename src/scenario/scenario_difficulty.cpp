@@ -14,6 +14,9 @@ int scenario_difficulty_t::adjust_money(int money) const {
 }
 
 int scenario_difficulty_t::loan_money(int money) const {
-    const int rescue_loan = g_scenario.finance.rescue_loan;
-    return adjust_money(rescue_loan);
+    return adjust_money(money);
+}
+
+int scenario_difficulty_t::house_tax_multiplier(int v) const {
+    return adjust_money(v);
 }
