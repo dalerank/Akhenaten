@@ -1,6 +1,6 @@
 log_info("akhenaten: localization config started")
 
-localization = [
+var localization = [
   {key: "#popup_dialog_quit", group:5, id:0 },
   {key: "#popup_dialog_open_trade", group:5, id:2 },
   {key: "#popup_dialog_send_goods", group:5, id:7 },

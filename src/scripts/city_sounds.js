@@ -1,6 +1,6 @@
 log_info("akhenaten: city sounds started")
 
-city_sounds = [
+var city_sounds = [
   {c: SOUND_CHANNEL_CITY_HOUSE_SLUM,    p: "Ambient/HOUSING1.MP3"},
   {c: SOUND_CHANNEL_CITY_HOUSE_POOR,    p: "Ambient/HOUSING2.MP3"},
   {c: SOUND_CHANNEL_CITY_HOUSE_MEDIUM,  p: "Ambient/HOUSING3.MP3"},

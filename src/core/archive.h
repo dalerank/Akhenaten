@@ -3,6 +3,7 @@
 #include <cstdint>
 #include "core/string.h"
 #include "core/vec2i.h"
+#include "core/fixed_memory_resource.h"
 
 #include <vector>
 #include <string>
@@ -148,7 +149,9 @@ struct archive {
     inline void r_objects(pcstr name, T read_func) {
         this->r_section(name, [this, &read_func] (archive s_arch) {
             pcstr key;
-            std::vector<bstring128> keys;
+
+            fixed_memory_resource<bstring128, 128> keys_buffer;
+            std::pmr::vector<bstring128> keys{ &keys_buffer };
             pushiterator(s_arch, -1, 1);
             while ((key = nextiterator(s_arch, -1))) {
                 keys.push_back(key);
@@ -244,6 +247,31 @@ struct g_archive : public archive {
         getglobal(name);
         if (isobject(-1)) {
             read_func(state);
+        }
+        pop(1);
+    }
+
+    template<typename T>
+    inline void r_objects(pcstr name, T read_func) {
+        getglobal(name);
+        if (isobject(-1)) {
+            pcstr key;
+
+            fixed_memory_resource<bstring128, 128> keys_buffer;
+            std::pmr::vector<bstring128> keys{ &keys_buffer };
+            pushiterator(state, -1, 1);
+            while ((key = nextiterator(state, -1))) {
+                keys.push_back(key);
+            }
+            pop(state, 1);
+
+            for (const auto &key : keys) {
+                getproperty(state, -1, key.c_str());
+                if (isobject(state, -1)) {
+                    read_func(key.c_str(), state);
+                }
+                pop(state, 1);
+            }
         }
         pop(1);
     }

@@ -1,6 +1,6 @@
 log_info("akhenaten: walker sounds started")
 
-walker_sounds = [
+var walker_sounds = [
   // apothecary
   {type: "apothecary_malaria_not_a_problem",             sound:"apothecary_e02.wav"},
   {type: "apothecary_malaria_outbreak_could_strike",     sound:"apothecary_e03.wav"},

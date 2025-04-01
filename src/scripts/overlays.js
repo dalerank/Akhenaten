@@ -1,6 +1,6 @@
 log_info("akhenaten: overlays started")
 
-overlays = [
+var overlays = [
   {
   	id:OVERLAY_RELIGION_OSIRIS,
   	caption:"Osiris",

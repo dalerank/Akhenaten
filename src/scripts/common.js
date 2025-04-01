@@ -8,15 +8,6 @@ var _format = function() {
     return formatted
 };
 
-var building_sounds = []
-var walker_sounds = []
-var city_sounds = []
-var overlays = []
-var images = []
-var cart_images = []
-var cart_offsets = []
-var sled_offsets = []
-var localization = []
 // buildings
 var building_firehouse = {}
 var building_police_station = {}

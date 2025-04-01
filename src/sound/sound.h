@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/string.h"
+#include "core/xstring.h"
 #include "core/custom_span.hpp"
 #include "content/dir.h"
 #include "content/vfs.h"
@@ -11,7 +11,7 @@
 struct music_player_t;
 
 struct event_sound_effect { int effect; };
-struct event_sound_track { int track; };
+struct event_sound_track { xstring track; };
 
 class sound_manager_t {
 public:
@@ -49,7 +49,7 @@ public:
     void play_editor();
     void play_intro();
     void music_stop();
-    void play_track(int track);
+    void play_track(const xstring track);
     void play_effect(int effect);
 
 public:
