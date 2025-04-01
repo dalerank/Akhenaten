@@ -8,10 +8,6 @@
 
 city_overlay_schools g_city_overlay_schools;
 
-city_overlay* city_overlay_for_scribal_school() {
-    return &g_city_overlay_schools;
-}
-
 int city_overlay_schools::get_column_height(const building *b) const {
     auto house = ((building *)b)->dcast_house();
     if (!house) {

@@ -8,5 +8,3 @@ struct city_overlay_water : public city_overlay_t<OVERLAY_WATER> {
     virtual xstring get_tooltip(tooltip_context* c, tile2i) const override;
     virtual int get_column_height(const building *b) const override;
 };
-
-city_overlay* city_overlay_for_water();

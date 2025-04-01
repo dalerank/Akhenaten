@@ -18,6 +18,3 @@ struct city_overlay_native : public city_overlay_t<OVERLAY_NATIVE> {
 };
 
 void overlay_problems_prepare_building(building* b);
-
-city_overlay* city_overlay_for_problems();
-city_overlay* city_overlay_for_native();

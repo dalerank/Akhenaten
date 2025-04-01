@@ -47,11 +47,6 @@ static int terrain_on_native_overlay(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
 }
 
-city_overlay *city_overlay_for_problems() {
-    static city_overlay_problems overlay;
-    return &overlay;
-}
-
 bool city_overlay_problems::show_figure(const figure *f) const {
     if (f->type == FIGURE_LABOR_SEEKER) {
         return ((figure *)f)->home()->show_on_problem_overlay;
@@ -121,10 +116,5 @@ int city_overlay_native::get_column_height(const building *b) const {
 
 bool city_overlay_native::show_building(const building *b) const {
     return b->type == BUILDING_UNUSED_NATIVE_HUT_88 || b->type == BUILDING_UNUSED_NATIVE_MEETING_89 || b->type == BUILDING_RESERVER_MISSION_POST_80;
-}
-
-city_overlay* city_overlay_for_native() {
-    static city_overlay_native overlay;
-    return &overlay;
 }
 

@@ -23,10 +23,6 @@ static bool building_on_routing_overlay(e_building_type type) {
     return building_type_any_of(type, BUILDING_FERRY, BUILDING_PLAZA, BUILDING_BOOTH, BUILDING_ROAD);
 }
 
-city_overlay* city_overlay_for_routing() {
-    return &g_city_overlay_routing;
-}
-
 inline bool city_overlay_routing::show_figure(const figure *f) const {
     return (f->type == FIGURE_IMMIGRANT);
 }

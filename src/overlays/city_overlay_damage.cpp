@@ -6,12 +6,7 @@
 #include "grid/property.h"
 #include "figure/figure.h"
 
-
 city_overlay_damage g_city_overlay_damage;
-
-city_overlay* city_overlay_for_damage() {
-    return &g_city_overlay_damage;
-}
 
 int city_overlay_damage::get_column_height(const building *b) const {
     auto model = model_get_building(b->type);

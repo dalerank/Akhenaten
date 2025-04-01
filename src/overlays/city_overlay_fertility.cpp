@@ -26,10 +26,6 @@ static int get_fertility_image_offset(int fertilty) {
 
 city_overlay_fertility g_city_overlay_fertility;
 
-city_overlay* city_overlay_for_fertility() {
-    return &g_city_overlay_fertility;
-}
-
 inline bool city_overlay_fertility::show_figure(const figure *f) const {
     if (f->type != FIGURE_CART_PUSHER) {
         return false;

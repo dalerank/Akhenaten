@@ -11,5 +11,3 @@ struct city_overlay_desirability : public city_overlay_t<OVERLAY_DESIRABILITY> {
     virtual bool draw_custom_footprint(vec2i pixel, tile2i point, painter &ctx) const override;
     virtual bool show_building(const building *b) const override;
 };
-
-city_overlay* city_overlay_for_desirability();

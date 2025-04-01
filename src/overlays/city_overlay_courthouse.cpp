@@ -10,10 +10,6 @@
 
 city_overlay_courthouse g_city_overlay_courthouse;
 
-city_overlay* city_overlay_for_courthouse() {
-    return &g_city_overlay_courthouse;
-}
-
 int city_overlay_courthouse::get_column_height(const building *b) const {
     auto house = ((building*)b)->dcast_house();
 

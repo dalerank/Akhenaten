@@ -8,10 +8,6 @@
 
 city_overlay_mortuary g_city_overlay_mortuary;
 
-city_overlay* city_overlay_for_mortuary() {
-    return &g_city_overlay_mortuary;
-}
-
 int city_overlay_mortuary::get_column_height(const building *b) const {
     auto house = ((building *)b)->dcast_house();
 

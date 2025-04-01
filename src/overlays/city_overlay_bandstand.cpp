@@ -10,10 +10,6 @@
 
 city_overlay_bandstand g_city_overlay_bandstand;
 
-city_overlay* city_overlay_for_bandstand() {
-    return &g_city_overlay_bandstand;
-}
-
 xstring city_overlay_bandstand::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     auto house = ((building *)b)->dcast_house();
 

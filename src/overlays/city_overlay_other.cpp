@@ -19,11 +19,6 @@
 #include "game/game_config.h"
 #include "overlays/city_overlay.h"
 
-city_overlay* city_overlay_for_food_stocks() {
-    static city_overlay_food_stocks overlay;
-    return &overlay;
-}
-
 int city_overlay_food_stocks::get_column_height(const building *b) const {
     auto house = ((building *)b)->dcast_house();
 

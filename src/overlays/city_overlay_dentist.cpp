@@ -8,10 +8,6 @@
 
 city_overlay_dentist g_city_overlay_dentist;
 
-city_overlay* city_overlay_for_dentist() {
-    return &g_city_overlay_dentist;
-}
-
 int city_overlay_dentist::get_column_height(const building *b) const {
     auto house = ((building *)b)->dcast_house();
 

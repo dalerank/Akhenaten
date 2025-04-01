@@ -8,11 +8,6 @@
 #include "figuretype/figure_dancer.h"
 #include "building/building_house.h"
 
-city_overlay* city_overlay_for_pavilion() {
-    static city_overlay_pavilion inst;
-    return &inst;
-}
-
 bool city_overlay_pavilion::show_figure(const figure *f) const {
     figure_musician *musician = smart_cast<figure_musician>((figure *)f);
     if (musician) {

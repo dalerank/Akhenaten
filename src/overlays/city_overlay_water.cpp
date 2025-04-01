@@ -21,10 +21,6 @@ static int terrain_on_water_overlay(void) {
 
 city_overlay_water g_city_overlay_water;
 
-city_overlay* city_overlay_for_water() {
-    return &g_city_overlay_water;
-}
-
 void city_overlay_water::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const {
     if (!map_property_is_draw_tile(tile)) {
         return;

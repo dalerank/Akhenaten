@@ -78,11 +78,8 @@ static int get_desirability_image_offset(int desirability) {
 // }
 
 city_overlay_desirability g_city_overlay_desirability;
-city_overlay* city_overlay_for_desirability() {
-    return &g_city_overlay_desirability;
-}
 
-inline bool city_overlay_desirability::show_figure(const figure *f) const {
+bool city_overlay_desirability::show_figure(const figure *f) const {
     return false;
 }
 
@@ -90,7 +87,7 @@ int city_overlay_desirability::get_column_height(const building *b) const {
     return COLUMN_TYPE_NONE;
 }
 
-inline void city_overlay_desirability::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
+void city_overlay_desirability::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
     ; // nothing
 }
 
@@ -142,6 +139,6 @@ bool city_overlay_desirability::draw_custom_footprint(vec2i pixel, tile2i point,
     return true;
 }
 
-inline bool city_overlay_desirability::show_building(const building *b) const {
+bool city_overlay_desirability::show_building(const building *b) const {
     return false;
 }

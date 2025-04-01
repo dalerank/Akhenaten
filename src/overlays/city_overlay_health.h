@@ -8,5 +8,3 @@ struct city_overlay_health : public city_overlay_t<OVERLAY_HEALTH> {
     virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) const override;
     virtual void draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const override;
 };
-
-city_overlay* city_overlay_for_health();

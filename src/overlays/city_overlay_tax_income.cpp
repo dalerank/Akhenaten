@@ -10,10 +10,6 @@
 
 city_overlay_tax_income g_city_overlay_tax_income;
 
-city_overlay* city_overlay_for_tax_income() {
-    return &g_city_overlay_tax_income;
-}
-
 int city_overlay_tax_income::get_column_height(const building *b) const {
     auto house = ((building *)b)->dcast_house();
     if (!house) {

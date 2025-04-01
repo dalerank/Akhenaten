@@ -9,10 +9,6 @@
 
 city_overlay_health g_city_overlay_health;
 
-city_overlay* city_overlay_for_health() {
-    return &g_city_overlay_health;
-}
-
 int city_overlay_health::get_column_height(const building *b) const {
     if (b->disease_days > 0) {
         return 10;

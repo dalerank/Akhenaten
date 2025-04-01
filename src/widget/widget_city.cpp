@@ -183,7 +183,7 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
     auto figures = map_figures_in_row(tile);
 
     for (auto *f : figures) {
-        if (!get_city_overlay()->show_figure(f)) {
+        if (!city_overlay::current()->show_figure(f)) {
             continue;
         }
 
@@ -476,7 +476,7 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
 }
 
 void screen_city_t::draw_with_overlay(painter &ctx) {
-    if (!select_city_overlay()) {
+    if (!city_overlay::activate()) {
         return;
     }
 
@@ -920,7 +920,7 @@ void screen_city_t::handle_input(const mouse* m, const hotkeys* h) {
 }
 
 xstring screen_city_t::get_overlay_tooltip(tooltip_context *c, tile2i tile) {
-    const auto overlay = get_city_overlay();
+    const auto overlay = city_overlay::current();
     if (!overlay) {
         return {};
     }

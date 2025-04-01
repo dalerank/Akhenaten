@@ -15,10 +15,6 @@
 
 city_overlay_bazaar_access g_city_overlay_bazaar_access;
 
-city_overlay* city_overlay_for_bazaar_access() {
-    return &g_city_overlay_bazaar_access;
-}
-
 int city_overlay_bazaar_access::get_column_height(const building *b) const {
     auto house = ((building *)b)->dcast_house();
 

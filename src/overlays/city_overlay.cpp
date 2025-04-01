@@ -45,12 +45,13 @@ const token_holder<e_overlay, OVERLAY_NONE, OVERLAY_SIZE> e_overlay_tokens;
 const token_holder<e_column_type, COLUMN_TYPE_RISK, COLUMN_TYPE_SIZE> e_column_type_tokens;
 
 const city_overlay* g_city_overlay = 0;
+std::array<city_overlay *, OVERLAY_SIZE> g_city_overlays = { 0 };
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_city_overlays);
 void config_load_city_overlays() {
     g_config_arch.r_array("overlays", [] (archive arch) {
         const e_overlay e_v = arch.r_type<e_overlay>("id");
-        city_overlay* overlay = get_city_overlay(e_v);
+        city_overlay* overlay = city_overlay::get(e_v);
 
         if (!overlay) {
             return;
@@ -70,89 +71,17 @@ void config_load_city_overlays() {
     });
 }
 
-
-city_overlay* get_city_overlay(e_overlay ov) {
-    switch (ov) {
-    case OVERLAY_FIRE:
-        return city_overlay_for_fire();
-    case OVERLAY_CRIME:
-        return city_overlay_for_crime();
-    case OVERLAY_DAMAGE:
-        return city_overlay_for_damage();
-    case OVERLAY_PROBLEMS:
-        return city_overlay_for_problems();
-    case OVERLAY_NATIVE:
-        return city_overlay_for_native();
-    case OVERLAY_ENTERTAINMENT:
-        return city_overlay_for_entertainment();
-    case OVERLAY_BOOTH:
-        return city_overlay_for_booth();
-    case OVERLAY_BANDSTAND:
-        return city_overlay_for_bandstand();
-    case OVERLAY_PAVILION:
-        return city_overlay_for_pavilion();
-    case OVERLAY_SENET_HOUSE:
-        return city_overlay_for_senet_house();
-    case OVERLAY_EDUCATION:
-        return city_overlay_for_education();
-    case OVERLAY_SCRIBAL_SCHOOL:
-        return city_overlay_for_scribal_school();
-    case OVERLAY_LIBRARY:
-        return city_overlay_for_library();
-    case OVERLAY_ACADEMY:
-        return city_overlay_for_academy();
-    case OVERLAY_APOTHECARY:
-        return city_overlay_for_apothecary();
-    case OVERLAY_DENTIST:
-        return city_overlay_for_dentist();
-    case OVERLAY_PHYSICIAN:
-        return city_overlay_for_physician();
-    case OVERLAY_MORTUARY:
-        return city_overlay_for_mortuary();
-    case OVERLAY_RELIGION:
-        return city_overlay_for_religion();
-    case OVERLAY_RELIGION_OSIRIS:
-        return city_overlay_for_religion_osiris();
-    case OVERLAY_RELIGION_RA:
-        return city_overlay_for_religion_ra();
-    case OVERLAY_RELIGION_PTAH:
-        return city_overlay_for_religion_ptah();
-    case OVERLAY_RELIGION_SETH:
-        return city_overlay_for_religion_seth();
-    case OVERLAY_RELIGION_BAST:
-        return city_overlay_for_religion_bast();
-    case OVERLAY_TAX_INCOME:
-        return city_overlay_for_tax_income();
-    case OVERLAY_FOOD_STOCKS:
-        return city_overlay_for_food_stocks();
-    case OVERLAY_WATER:
-        return city_overlay_for_water();
-    case OVERLAY_DESIRABILITY:
-        return city_overlay_for_desirability();
-    case OVERLAY_FERTILITY:
-        return city_overlay_for_fertility();
-    case OVERLAY_BAZAAR_ACCESS:
-        return city_overlay_for_bazaar_access();
-    case OVERLAY_ROUTING:
-        return city_overlay_for_routing();
-    case OVERLAY_HEALTH:
-        return city_overlay_for_health();
-    case OVERLAY_LABOR:
-        return city_overlay_for_labor();
-    case OVERLAY_COUTHOUSE:
-        return city_overlay_for_courthouse();
-    default:
-        return nullptr;
-    }
+city_overlay* city_overlay::get(e_overlay ov) {
+    return g_city_overlays[ov];
 }
 
-const city_overlay* get_city_overlay() {
+const city_overlay* city_overlay::current() {
     return g_city_overlay;
 }
 
-bool select_city_overlay() {
+bool city_overlay::activate() {
     if (!g_city_overlay || g_city_overlay->get_type() != game.current_overlay) {
-        g_city_overlay = get_city_overlay(game.current_overlay);
+        g_city_overlay = get(game.current_overlay);
     }
 
     return g_city_overlay != 0;
@@ -317,6 +246,10 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
             draw_flattened_footprint_building(b, pos, image_offset, 0, ctx);
         }
     }
+}
+
+city_overlay::city_overlay(e_overlay t) : type(t) {
+    g_city_overlays[type] = this;
 }
 
 bool city_overlay::show_figure(const figure *f) const {

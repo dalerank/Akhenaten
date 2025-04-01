@@ -18,35 +18,12 @@ static void add_god(tooltip_context* c, int god_id) {
 }
 
 city_overlay_religion g_city_overlay_religion;
-city_overlay* city_overlay_for_religion() {
-    return &g_city_overlay_religion;
-}
 
 city_overlay_religion_osiris g_city_overlay_religion_osiris;
 city_overlay_religion_ra g_city_overlay_religion_ra;
 city_overlay_religion_ptah g_city_overlay_religion_ptah;
 city_overlay_religion_seth g_city_overlay_religion_seth;
 city_overlay_religion_bast g_city_overlay_religion_bast;
-
-city_overlay* city_overlay_for_religion_osiris() {
-    return &g_city_overlay_religion_osiris;
-}
-
-city_overlay* city_overlay_for_religion_ra() {
-    return &g_city_overlay_religion_ra;
-}
-
-city_overlay* city_overlay_for_religion_ptah() {
-    return &g_city_overlay_religion_ptah;
-}
-
-city_overlay* city_overlay_for_religion_seth() {
-    return &g_city_overlay_religion_seth;
-}
-
-city_overlay* city_overlay_for_religion_bast() {
-    return &g_city_overlay_religion_bast;
-}
 
 int city_overlay_religion::get_column_height(const building *b) const {
     auto house = ((building *)b)->dcast_house();

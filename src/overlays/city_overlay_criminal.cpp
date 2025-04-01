@@ -7,12 +7,7 @@
 #include "grid/building.h"
 #include "game/state.h"
 
-
 city_overlay_crime g_city_overlay_crime;
-
-city_overlay* city_overlay_for_crime() {
-    return &g_city_overlay_crime;
-}
 
 int city_overlay_crime::get_column_height(const building* b) const {
     auto house = ((building*)b)->dcast_house();

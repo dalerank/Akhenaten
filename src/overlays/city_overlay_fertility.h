@@ -10,5 +10,3 @@ struct city_overlay_fertility : public city_overlay_t<OVERLAY_FERTILITY> {
     virtual int get_column_height(const building *b) const override;
     virtual bool show_building(const building *b) const override;
 };
-
-city_overlay* city_overlay_for_fertility();
