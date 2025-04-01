@@ -669,18 +669,31 @@ bool building_house::can_expand(int num_tiles) {
         int ok_tiles = 0;
         for (int i = 0; i < num_tiles; i++) {
             int tile_offset = base_offset + house_tile_offsets(i);
-            if (!map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR))
+            if (!map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR)) {
                 ok_tiles++;
-            else if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
-                auto other_house = building_at(tile_offset)->dcast_house();
-                if (other_house->id() == id())
-                    ok_tiles++;
-                else if (other_house->state() == BUILDING_STATE_VALID && other_house->runtime_data().hsize) {
-                    if (other_house->house_level() <= house_level())
-                        ok_tiles++;
-                }
+                continue;
+            } 
+            
+            if (!map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
+                continue;
+            }
+
+            auto other_house = building_at(tile_offset)->dcast_house();
+            if (!other_house) {
+                continue;
+            }
+
+            if (other_house->id() == id()) {
+                ok_tiles++;
+                continue;
+            } 
+            
+            if (other_house->state() == BUILDING_STATE_VALID && other_house->runtime_data().hsize
+                && other_house->house_level() <= house_level()) {
+                ok_tiles++;
             }
         }
+
         if (ok_tiles == num_tiles) {
             g_merge_data.tile = tile2i(tilex() + expand_delta(dir).x, tiley() + expand_delta(dir).y);
             return true;
@@ -694,17 +707,29 @@ bool building_house::can_expand(int num_tiles) {
             int tile_offset = base_offset + house_tile_offsets(i);
             if (!map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR)) {
                 ok_tiles++;
-            } else if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
-                auto other_house = building_at(tile_offset)->dcast_house();
-                if (other_house->id() == id()) {
-                    ok_tiles++;
-                } else if (other_house->state() == BUILDING_STATE_VALID && other_house->runtime_data().hsize) {
-                    if (other_house->house_level() <= house_level())
-                        ok_tiles++;
-                }
-            } else if (map_terrain_is(tile_offset, TERRAIN_GARDEN) && !g_ankh_config.get(CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS)) {
+                continue;
+            } 
+
+            if (map_terrain_is(tile_offset, TERRAIN_GARDEN) && !g_ankh_config.get(CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS)) {
                 ok_tiles++;
+                continue;
             }
+            
+            if (!map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
+                continue;
+            }
+
+            auto other_house = building_at(tile_offset)->dcast_house();
+            if (!other_house) {
+                continue;
+            }
+
+            if (other_house->id() == id()) {
+                ok_tiles++;
+            } 
+            
+            const bool may_expand = other_house->state() == BUILDING_STATE_VALID && other_house->runtime_data().hsize && other_house->house_level() <= house_level();
+            ok_tiles += may_expand ? 1 : 0;
         }
         if (ok_tiles == num_tiles) {
             g_merge_data.tile = tile2i(tilex() + expand_delta(dir).x, tiley() + expand_delta(dir).y);
@@ -841,16 +866,22 @@ void building_house::split(int num_tiles) {
     int grid_offset = MAP_OFFSET(g_merge_data.tile);
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = grid_offset + house_tile_offsets(i);
-        if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
-            auto other_house = building_at(tile_offset)->dcast_house();
-            if (other_house->id() != id() && other_house->runtime_data().hsize) {
-                if (other_house->is_merged()) {
-                    split_size2(&other_house->base, other_house->type());
-                } else if (other_house->runtime_data().hsize == 2) {
-                    split_size2(&other_house->base, BUILDING_HOUSE_SPACIOUS_APARTMENT);
-                } else if (other_house->runtime_data().hsize == 3) {
-                    split_size3(&other_house->base);
-                }
+        if (!map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
+            continue;
+        }
+
+        auto other_house = building_at(tile_offset)->dcast_house();
+        if (!other_house) {
+            continue;
+        }
+
+        if (other_house->id() != id() && (other_house->runtime_data().hsize > 0)) {
+            if (other_house->is_merged()) {
+                split_size2(&other_house->base, other_house->type());
+            } else if (other_house->runtime_data().hsize == 2) {
+                split_size2(&other_house->base, BUILDING_HOUSE_SPACIOUS_APARTMENT);
+            } else if (other_house->runtime_data().hsize == 3) {
+                split_size3(&other_house->base);
             }
         }
     }
