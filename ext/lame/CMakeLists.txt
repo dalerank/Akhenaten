@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.13...3.26)
 project(lame C)
 
 set(SOURCES_LIST "${PROJECT_SOURCE_DIR}/libmp3lame/lame.c"
