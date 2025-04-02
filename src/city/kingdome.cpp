@@ -1,6 +1,7 @@
 #include "kingdome.h"
 
 #include "city/city.h"
+#include "city/city_events.h"
 #include "city/finance.h"
 #include "city/city_message.h"
 #include "city/ratings.h"
@@ -57,7 +58,7 @@ void kingdome_relation_t::update_debt_state() {
     switch (debt_state) {
     case e_debt_none:
         // provide bailout
-        city_finance_process_donation(rescue_loan);
+        events::emit(event_finance_donation{ rescue_loan });
         city_finance_calculate_totals();
 
         debt_state = e_debt_one_time;
@@ -296,7 +297,7 @@ void kingdome_relation_t::change_donation_amount(int change) {
 }
 
 void kingdome_relation_t::donate_savings_to_city() {
-    city_finance_process_donation(donate_amount);
+    events::emit(event_finance_donation{ donate_amount });
     personal_savings -= donate_amount;
     city_finance_calculate_totals();
 }

@@ -18,6 +18,13 @@
 
 static auto &city_data = g_city;
 
+void city_finance_t::init() {
+    events::subscribe([this] (event_finance_donation ev) {
+        treasury += ev.amount;
+        this_year.income.donated += ev.amount;
+    });
+}
+
 bool city_finance_t::is_out_of_money() const{
     return (treasury <= -5000);
 }
@@ -74,11 +81,6 @@ void city_finance_process_console(int amount) {
 void city_finance_process_stolen(int stolen) {
     city_data.finance.treasury -= stolen;
     city_data.finance.this_year.expenses.stolen += stolen;
-}
-
-void city_finance_process_donation(int amount) {
-    city_data.finance.treasury += amount;
-    city_data.finance.this_year.income.donated += amount;
 }
 
 void city_finance_process_requests_and_festivals(int cost) {

@@ -72,6 +72,7 @@ void city_t::init() {
     resource.init();
     g_warning_manager.clear_all();
     sentiment.init();
+    finance.init();
 }
 
 void city_t::update_day() {

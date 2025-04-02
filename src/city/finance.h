@@ -28,6 +28,7 @@ struct finance_overview {
 };
 
 struct event_finance_changed { int value; };
+struct event_finance_donation { int amount; };
 
 struct city_taxes_t {
     int32_t taxed_citizens;
@@ -75,6 +76,7 @@ struct city_finance_t {
     int32_t wage_rate_paid_this_year;
     int32_t wage_rate_paid_last_year;
 
+    void init();
     bool is_out_of_money() const;
     void update_estimate_taxes();
     void estimate_wages();
@@ -105,7 +107,6 @@ void city_finance_process_gold_extraction(int amount, figure *f);
 void city_finance_process_cheat();
 void city_finance_process_console(int amount);
 void city_finance_process_stolen(int stolen);
-void city_finance_process_donation(int amount);
 void city_finance_process_requests_and_festivals(int cost);
 void city_finance_process_construction(int cost);
 
