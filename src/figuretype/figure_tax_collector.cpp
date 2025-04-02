@@ -94,7 +94,7 @@ sound_key figure_tax_collector::phrase_key() const {
     
     const int sentiment = g_city.sentiment.value;
     svector<sound_key_state, 16> keys = {
-        {"need_more_tax_collectors", city_finance_percentage_taxed_people() < 80},
+        {"need_more_tax_collectors", g_city.taxes.percentage_taxed_people < 80},
         {"high_taxes", g_city.sentiment.low_mood_cause == LOW_MOOD_HIGH_TAXES},
         {"much_pooh_houses", poor_taxed > 50},
         {"desease_can_start_at_any_moment", g_city.health.value < 30},

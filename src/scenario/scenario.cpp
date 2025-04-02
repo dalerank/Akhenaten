@@ -154,14 +154,14 @@ void scenario_set_campaign_scenario(int scenario_id) {
     g_scenario.settings.campaign_scenario_id = scenario_id;
 }
 
-bool scenario_data_t::is_mission_rank(custom_span<int> missions) {
+bool scenario_data_t::is_scenario_id(custom_span<int> missions) {
     const bool is_custom_map = settings.scmode != e_scenario_normal;
-    if (!is_custom_map) {
+    if (is_custom_map) {
         return false;
     }
 
     for (const int rank : missions) {
-        if (g_scenario.settings.campaign_mission_rank == rank - 1) {
+        if (g_scenario.settings.campaign_scenario_id == rank - 1) {
             return true;
         }
     }

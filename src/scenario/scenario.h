@@ -331,7 +331,7 @@ struct scenario_data_t {
     e_scenario_mode mode();
     void set_mode(e_scenario_mode m) { settings.scmode = m; }
 
-    bool is_mission_rank(custom_span<int> missions);
+    bool is_scenario_id(custom_span<int> missions);
 
     int startup_funds() const;
     int rescue_loan() const;
@@ -340,9 +340,9 @@ struct scenario_data_t {
     void load_metadata(const mission_id_t &missionid);
 
     template<typename ... Args>
-    bool is_mission_rank(const Args ... args) {
+    bool is_scenario_id(const Args ... args) {
         int values[] = { args... };
-        return is_mission_rank(make_span(values));
+        return is_scenario_id(make_span(values));
     }
 };
 

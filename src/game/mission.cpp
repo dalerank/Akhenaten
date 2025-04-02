@@ -54,22 +54,25 @@ static mission_step_t* find_next(const mission_step_t* step, int choice_index = 
     return nullptr; // this should never happen?
 }
 
-static void find_in_campaigns(int scenario_id, int* campaign_id, int* step_index) {
+struct campaign_mission_id {
+    int campaign_id = -1;
+    int step_index = -1;
+};
+
+campaign_mission_id find_in_campaigns(int scenario_id) {
     for (int c = 0; c < g_mission_data.num_campaigns; ++c) {
         auto campaign = &g_mission_data.campaigns[c];
         for (int i = 0; i < campaign->num_steps; ++i) {
             auto step = &campaign->steps[i];
             if (step->scenario_id == scenario_id) {
-                *campaign_id = c;
-                *step_index = i;
-                return;
+                return { c, i };
             }
         }
     }
     // no matching scenario found!
-    *campaign_id = -1;
-    *step_index = -1;
+    return { -1, -1 };
 }
+
 const uint8_t* game_mission_get_name(int scenario_id) {
     if (scenario_id >= g_mission_data.map_name_nums || scenario_id > 299)
         return g_mission_data.map_names[0];
@@ -83,16 +86,17 @@ const mission_step_t* get_campaign_mission_step_data(int campaign_id, int step_i
         return nullptr;
     return &g_mission_data.campaigns[campaign_id].steps[step_index];
 }
+
 const mission_step_t* get_scenario_step_data(int scenario_id) {
-    int campaign_id = -1;
-    int step_index = -1;
-    find_in_campaigns(scenario_id, &campaign_id, &step_index);
-    return get_campaign_mission_step_data(campaign_id, step_index);
+    campaign_mission_id m = find_in_campaigns(scenario_id);
+    return get_campaign_mission_step_data(m.campaign_id, m.step_index);
 }
 
 int get_scenario_mission_rank(int scenario_id) {
-    return get_scenario_step_data(scenario_id)->mission_rank;
+    const mission_step_t *mission = get_scenario_step_data(scenario_id);
+    return mission->mission_rank;
 }
+
 int get_scenario_campaign_id(int scenario_id) {
     if (scenario_id < SCENARIO_NULL || scenario_id >= SCENARIO_MAX)
         return CAMPAIGN_NULL;

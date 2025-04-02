@@ -33,10 +33,6 @@ void city_finance_change_tax_percentage(int change) {
     city_data.finance.tax_percentage = calc_bound(city_data.finance.tax_percentage + change, 0, 25);
 }
 
-int city_finance_percentage_taxed_people() {
-    return city_data.taxes.percentage_taxed_people;
-}
-
 int city_finance_estimated_tax_uncollected(void) {
     return city_data.finance.estimated_tax_uncollected;
 }

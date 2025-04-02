@@ -166,7 +166,7 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
         } else if (treasury < balance_last_year) { // assets have fallen by ...
             ui["finance_info"].text_var("%s %d", (pcstr)lang_get_string(61, 154), balance_last_year - treasury);
             ui["finance_info"].font(FONT_NORMAL_YELLOW);
-        } else if (city_finance_percentage_taxed_people() < 75) { // not collecting many taxes!
+        } else if (g_city.taxes.percentage_taxed_people < 75) { // not collecting many taxes!
             ui["finance_info"].text((pcstr)lang_get_string(61, 151));
             ui["finance_info"].font(FONT_NORMAL_BLACK_ON_DARK);
         } else { // doing about as well as last year

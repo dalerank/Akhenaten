@@ -140,7 +140,7 @@ void tutorial_map_update(int tut) {
 }
 
 int tutorial_3_adjust_request_year(int *year) {
-    if (g_scenario.is_mission_rank(2)) {
+    if (g_scenario.is_scenario_id(2)) {
         //if (!g_tutorials_flags.tutorial_3.pottery_made) {
         //    return 0;
         //}
@@ -192,11 +192,11 @@ bool tutorial_menu_update(int tut) {
 }
 
 xstring tutorial_get_immediate_goal_text() {
-    if (g_scenario.is_mission_rank(1))  return tutorial_1::goal_text();
-    if (g_scenario.is_mission_rank(2))  return tutorial_2::goal_text();
-    if (g_scenario.is_mission_rank(3))  return tutorial_3::goal_text();
-    if (g_scenario.is_mission_rank(4))  return tutorial_4::goal_text();
-    if (g_scenario.is_mission_rank(5))  return tutorial_5::goal_text();
+    if (g_scenario.is_scenario_id(1))  return tutorial_1::goal_text();
+    if (g_scenario.is_scenario_id(2))  return tutorial_2::goal_text();
+    if (g_scenario.is_scenario_id(3))  return tutorial_3::goal_text();
+    if (g_scenario.is_scenario_id(4))  return tutorial_4::goal_text();
+    if (g_scenario.is_scenario_id(5))  return tutorial_5::goal_text();
 
     return "#unknown_tutoral_goal";
 }
@@ -222,28 +222,28 @@ void tutorial_flags_t::update_starting_message() {
         g_scenario.meta.start_message_shown = true;
     }
 
-    if (g_scenario.is_mission_rank(1) && !g_tutorials_flags.tutorial_1.started) {
+    if (g_scenario.is_scenario_id(1) && !g_tutorials_flags.tutorial_1.started) {
         g_tutorials_flags.tutorial_1.started = 1;
     }
-    if (g_scenario.is_mission_rank(2) && !g_tutorials_flags.tutorial_2.started) {
+    if (g_scenario.is_scenario_id(2) && !g_tutorials_flags.tutorial_2.started) {
         g_tutorials_flags.tutorial_2.started = 1;
     }
-    if (g_scenario.is_mission_rank(3) && !g_tutorials_flags.tutorial_3.started) {
+    if (g_scenario.is_scenario_id(3) && !g_tutorials_flags.tutorial_3.started) {
         g_tutorials_flags.tutorial_3.started = 1;
     }
-    if (g_scenario.is_mission_rank(4) && !g_tutorials_flags.tutorial_4.started) {
+    if (g_scenario.is_scenario_id(4) && !g_tutorials_flags.tutorial_4.started) {
         messages::popup(MESSAGE_TUTORIAL_DEVELOPING_CULTURE, 0, 0);
         g_tutorials_flags.tutorial_4.started = 1;
     }
-    if (g_scenario.is_mission_rank(5) && !g_tutorials_flags.tutorial_5.started) {
+    if (g_scenario.is_scenario_id(5) && !g_tutorials_flags.tutorial_5.started) {
         messages::popup(MESSAGE_TUTORIAL_GETTING_STARTED, 0, 0);
         g_tutorials_flags.tutorial_5.started = 1;
     }
-    if (g_scenario.is_mission_rank(6) && !g_tutorials_flags.tutorial_6.started) {
+    if (g_scenario.is_scenario_id(6) && !g_tutorials_flags.tutorial_6.started) {
         g_tutorials_flags.tutorial_6.started = 1;
     }
 
-    if (g_scenario.is_mission_rank(7) && !g_tutorials_flags.pharaoh.tut7_start) {
+    if (g_scenario.is_scenario_id(7) && !g_tutorials_flags.pharaoh.tut7_start) {
         if (scenario_campaign_scenario_id() == 6)
             messages::popup(MESSAGE_TUTORIAL_AT_WATERS_EDGE, 0, 0);
         else
@@ -251,7 +251,7 @@ void tutorial_flags_t::update_starting_message() {
         g_tutorials_flags.pharaoh.tut7_start = 1;
     }
 
-    if (g_scenario.is_mission_rank(8) && !g_tutorials_flags.pharaoh.tut8_start) {
+    if (g_scenario.is_scenario_id(8) && !g_tutorials_flags.pharaoh.tut8_start) {
         messages::popup(MESSAGE_TUTORIAL_THE_FINER_THINGS, 0, 0);
         g_tutorials_flags.pharaoh.tut8_start = 1;
     }
