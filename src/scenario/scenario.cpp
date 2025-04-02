@@ -141,9 +141,6 @@ e_scenario_mode scenario_data_t::mode() {
     return g_scenario.settings.scmode;
 }
 
-int scenario_campaign_rank() {
-    return g_scenario.settings.campaign_mission_rank;
-}
 void scenario_set_campaign_rank(int rank) {
     g_scenario.settings.campaign_mission_rank = rank;
 }

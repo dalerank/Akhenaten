@@ -66,7 +66,7 @@ void ui::window_mission_won::init() {
 }
 
 void ui::window_mission_won::advance_to_next_mission() {
-    const int next_mission_rank = scenario_campaign_rank() + 1;
+    const int next_mission_rank = g_scenario.settings.campaign_mission_rank + 1;
 
     g_settings.set_personal_savings_for_mission(next_mission_rank, g_city.kingdome.personal_savings);
     scenario_set_campaign_rank(next_mission_rank);
@@ -78,7 +78,7 @@ void ui::window_mission_won::advance_to_next_mission() {
     game_state_reset_overlay();
 
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
-    if (scenario_campaign_rank() >= 11 || is_custom_map) {
+    if (g_scenario.settings.campaign_mission_rank >= 11 || is_custom_map) {
         window_main_menu_show(1);
         if (!is_custom_map) {
             g_settings.clear_personal_savings();
@@ -152,7 +152,7 @@ void ui::window_mission_won::show() {
     } 
     
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
-    if (!is_custom_map && scenario_campaign_rank() >= 10) {
+    if (!is_custom_map && g_scenario.settings.campaign_mission_rank >= 10) {
         // Won campaign
         window_victory_video_show("smk/win_game.smk", 400, 292, window_mission_show_intermezzo);
         return;

@@ -154,7 +154,7 @@ static void eventmsg_template_combine(uint8_t* template_ptr, uint8_t* out_ptr, b
     }
 
     text_tag_substitution tags[] = {
-      {"[greeting]", lang_get_string(32, 11 + scenario_campaign_rank())},
+      {"[greeting]", lang_get_string(32, 11 + g_scenario.settings.campaign_scenario_id)},
       {"[player_name]", city_player_name()},
       {"[reason_phrase]", (uint8_t*)data.phrase_text.c_str()},
       {"[city_name]", lang_get_string(195, city_name_id)},

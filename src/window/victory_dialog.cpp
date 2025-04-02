@@ -30,10 +30,12 @@ static void draw_background(int) {
     outer_panel_draw(vec2i{48, 128}, 34, 15);
 
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
-    if (scenario_campaign_rank() < 10 || is_custom_map) {
+    const int current_scenario = g_scenario.settings.campaign_mission_rank;
+    const int next_scenario = current_scenario + 1;
+    if (current_scenario < 10 || is_custom_map) {
         lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK_ON_LIGHT);
         lang_text_draw_centered(62, 2, 48, 175, 544, FONT_NORMAL_BLACK_ON_LIGHT);
-        lang_text_draw_centered(32, scenario_campaign_rank() + 1, 48, 194, 544, FONT_LARGE_BLACK_ON_LIGHT);
+        lang_text_draw_centered(32, next_scenario, 48, 194, 544, FONT_LARGE_BLACK_ON_LIGHT);
     } else {
         text_draw_centered(city_player_name(), 48, 144, 512, FONT_LARGE_BLACK_ON_LIGHT, 0);
         lang_text_draw_multiline(62, 26, vec2i{64, 175}, 480, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -44,17 +46,18 @@ static void draw_background(int) {
 static void draw_foreground(int) {
     graphics_set_to_dialog();
 
+    const int current_scenario = g_scenario.settings.campaign_mission_rank;
     if (g_city.victory_state.state == e_victory_state_won) {
         large_label_draw(80, 240, 30, focus_button_id == 1);
         const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
         
-        if (scenario_campaign_rank() < 10 || is_custom_map)
+        if (current_scenario < 10 || is_custom_map)
             lang_text_draw_centered(62, 3, 80, 246, 480, FONT_NORMAL_BLACK_ON_DARK);
         else {
             lang_text_draw_centered(62, 27, 80, 246, 480, FONT_NORMAL_BLACK_ON_DARK);
         }
 
-        if (scenario_campaign_rank() >= 2 || is_custom_map) {
+        if (current_scenario >= 2 || is_custom_map) {
             // Continue for 2/5 years
             large_label_draw(80, 272, 30, focus_button_id == 2);
             lang_text_draw_centered(62, 4, 80, 278, 480, FONT_NORMAL_BLACK_ON_DARK);
@@ -73,7 +76,8 @@ static void draw_foreground(int) {
 static void handle_input(const mouse* m, const hotkeys* h) {
     int num_buttons;
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
-    if (scenario_campaign_rank() >= 2 || is_custom_map) {
+    const int current_scenario = g_scenario.settings.campaign_mission_rank;
+    if (current_scenario >= 2 || is_custom_map) {
         num_buttons = 3;
     } else {
         num_buttons = 1;

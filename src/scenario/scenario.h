@@ -352,8 +352,6 @@ bool scenario_is_saved();
 void scenario_settings_init();
 void scenario_settings_init_mission();
 
-int scenario_campaign_rank();
-
 void scenario_set_campaign_rank(int rank);
 
 int scenario_campaign_scenario_id();
