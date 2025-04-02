@@ -348,7 +348,6 @@ struct scenario_data_t {
 
 extern scenario_data_t g_scenario;
 
-bool scenario_is_saved();
 void scenario_settings_init();
 void scenario_settings_init_mission();
 

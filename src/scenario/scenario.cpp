@@ -23,10 +23,6 @@ void config_load_scenario_load_meta_data() {
     g_scenario.load_metadata(missionid);
 }
 
-bool scenario_is_saved() {
-    return g_scenario.is_saved;
-}
-
 void scenario_settings_init() {
     g_scenario.settings.campaign_scenario_id = 0;
     g_scenario.settings.campaign_mission_rank = 0;

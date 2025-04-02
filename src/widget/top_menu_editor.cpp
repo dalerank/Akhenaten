@@ -187,17 +187,19 @@ static void menu_file_save_map(int param) {
 static void menu_file_exit_editor(int param) {
     clear_state();
     window_editor_map_show();
-    if (scenario_is_saved())
+
+    if (g_scenario.is_saved) {
         game_exit_editor();
-    else {
-        popup_dialog::show_yesno("#popup_dialog_quit_without_saving", [] (bool accepted) {
-            if (accepted)
-                game_exit_editor();
-            else {
-                window_editor_map_show();
-            }
-        });
+        return;
     }
+
+    popup_dialog::show_yesno("#popup_dialog_quit_without_saving", [] (bool accepted) {
+        if (accepted)
+            game_exit_editor();
+        else {
+            window_editor_map_show();
+        }
+    });
 }
 
 static void menu_options_display(int param) {
