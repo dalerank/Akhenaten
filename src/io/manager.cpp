@@ -187,7 +187,7 @@ bool FileIOManager::serialize(const char* filename, int offset, e_file_format fo
 
     // open file handle
     vfs::path fs_path = vfs::content_path(file_path);
-    FILE* fp = vfs::file_open(fs_path, "wb");
+    FILE* fp = vfs::file_open_os(fs_path, "wb");
     if (!fp) {
         return io_failure_cleanup("write", "file could not be accessed");
     } else if (file_offset) {
@@ -249,7 +249,7 @@ bool FileIOManager::unserialize(const char* filename, int offset, e_file_format 
 
     // open file handle
     vfs::path fs_path = vfs::content_file(file_path);
-    FILE* fp = vfs::file_open(fs_path, "rb");
+    FILE* fp = vfs::file_open_os(fs_path, "rb");
     if (!fp) {
         logs::error("Unable to read file [%s], file could not be accessed.", fs_path.c_str());
         clear();

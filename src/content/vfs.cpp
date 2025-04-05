@@ -6,6 +6,9 @@
 #include "reader.h"
 
 #include <filesystem>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include <memory>
 
 #if defined( __EMSCRIPTEN__ )
@@ -23,11 +26,11 @@ EM_ASYNC_JS(void, __sync_em_fs, (), {
 
 namespace vfs{
 
-FILE * file_open(pcstr filename, pcstr mode) {
+FILE * file_open_os(pcstr filename, pcstr mode) {
     return platform_file_manager_open_file(filename, mode);
 }
 
-reader file_open(path path) {
+reader file_open(path path, pcstr mode) {
     if (!path.empty() && path.data()[0] == ':') {
         auto data = internal_file_open(path.c_str());
         if (data.first) {
@@ -35,13 +38,24 @@ reader file_open(path path) {
             memcpy(mem, data.first, data.second);
             return std::make_shared<data_reader>(path.c_str(), mem, data.second);
         }
+    } if (strstr(mode, "t")) { // text mode
+        std::ifstream file(path.c_str());
+        if (file.is_open()) {
+            std::ostringstream buffer;
+            buffer << file.rdbuf();      // read entire file into stream
+            std::string str = buffer.str(); // str holds the content of the file
+            void *mem = malloc(str.size() + 1);
+            memcpy(mem, str.c_str(), str.size());
+            ((char *)mem)[str.size()] = 0; // null-terminate the string
+            return std::make_shared<data_reader>(path.c_str(), mem, str.size());
+        }
     } else {
-        FILE *f = file_open(path.c_str(), "rb");
+        FILE *f = file_open_os(path.c_str(), mode);
         if (f) {
             fseek(f, 0, SEEK_END);
             uint32_t size = ftell(f);
-            void *mem = malloc(size);
             fseek(f, 0, SEEK_SET);
+            void *mem = malloc(size);
             fread(mem, 1, size, f);
             fclose(f);
             return std::make_shared<data_reader>(path.c_str(), mem, size);

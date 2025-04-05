@@ -60,18 +60,12 @@ void js_game_load_text(js_State *J) {
     const char *path = js_tostring(J, 1);
     char *text = 0;
 
-    FILE *ftext = vfs::file_open(path, "rb");
-    fseek(ftext, 0, SEEK_END);
-    long fsize = ftell(ftext);
-    fseek(ftext, 0, SEEK_SET);  /* same as rewind(f); */
-
-    text = (char *)malloc(fsize + 1);
-    size_t bytes = fread(text, 1, fsize, ftext);
-    fclose(ftext);
-
-    text[fsize] = 0;
-    js_pushstring(J, text);
-    free(text);
+    vfs::reader ftext = vfs::file_open(path, "rt");
+    if (!ftext) {
+        return;
+    }
+    
+    js_pushstring(J, ftext->begin());
 }
 
 void js_register_game_objects(js_State *J) {

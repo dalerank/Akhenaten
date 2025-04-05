@@ -1,12 +1,13 @@
 #pragma once
 
 #include <cstdint>
-#include "core/string.h"
+#include "core/xstring.h"
 #include "core/vec2i.h"
 #include "core/fixed_memory_resource.h"
 
 #include <vector>
 #include <string>
+#include <variant>
 
 struct animation_t;
 struct image_desc;
@@ -25,6 +26,22 @@ struct archive {
     vec2i r_vec2i(pcstr name, pcstr x = "x", pcstr y = "y");
     bool r_anim(pcstr name, animation_t &anim);
     bool r_desc(pcstr name, image_desc &desc);
+
+    enum e_variant_type {
+        vt_none = 0,
+        vt_float,
+        vt_bool,
+        vt_string,
+        vt_vec2i,
+        vt_array,
+        vt_object
+    };
+    struct variant_none_t { xstring name; }; // fake type for none
+    struct variant_array_t { xstring name; }; // fake type for array
+    struct variant_object_t { xstring name; }; // fake type for object
+
+    using variant_t = std::variant<variant_none_t, float, bool, xstring, vec2i, variant_array_t, variant_object_t>;
+    variant_t r_variant(pcstr name);
 
     std::vector<vec2i> r_array_vec2i(pcstr name);
 
@@ -230,6 +247,10 @@ protected:
 struct g_archive : public archive {
     template<typename T>
     inline void r_array(pcstr name, T read_func) {
+        if (!state) {
+            return;
+        }
+
         getglobal(name);
         r_array_impl(read_func);
         pop(1);
@@ -237,6 +258,10 @@ struct g_archive : public archive {
 
     template<typename T, typename F>
     inline void r_array(pcstr name, T &arr, F read_func) {
+        if (!state) {
+            return;
+        }
+
         getglobal(name);
         r_array_impl(arr, read_func);
         pop(1);
@@ -244,6 +269,10 @@ struct g_archive : public archive {
 
     template<typename T>
     inline void r_section(pcstr name, T read_func) {
+        if (!state) {
+            return;
+        }
+
         getglobal(name);
         if (isobject(-1)) {
             read_func(state);
@@ -253,6 +282,10 @@ struct g_archive : public archive {
 
     template<typename T>
     inline void r_objects(pcstr name, T read_func) {
+        if (!state) {
+            return;
+        }
+
         getglobal(name);
         if (isobject(-1)) {
             pcstr key;

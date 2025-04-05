@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/xstring.h"
+#include "core/settings_vars.h"
 #include <array>
 
 enum e_config_key {
@@ -147,6 +148,7 @@ enum e_config_str {
 };
 
 struct ankh_config_t {
+    settings_vars_t settings;
     std::array<bool, CONFIG_MAX_ENTRIES> opts;
     std::array<xstring, CONFIG_STRING_MAX_ENTRIES> string_values;
 

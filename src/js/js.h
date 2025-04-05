@@ -12,6 +12,6 @@ int js_vm_exec_function(const char *funcname);
 void js_vm_reload_file(const char *path);
 int js_vm_load_file_and_exec(const char *path);
 
-void js_vm_set_scripts_folder(vfs::path folder);
+void js_vm_add_scripts_folder(vfs::path folder);
 
 vfs::path js_vm_get_absolute_path(vfs::path file);

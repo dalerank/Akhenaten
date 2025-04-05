@@ -125,7 +125,7 @@ static const char *generate_filename(screenshot_type type) {
 static int image_begin_io(pcstr filename) {
     vfs::path fs_file = vfs::content_path(filename);
 
-    FILE *fp = vfs::file_open(fs_file, "wb");
+    FILE *fp = vfs::file_open_os(fs_file, "wb");
     if (!fp) {
         return 0;
     }

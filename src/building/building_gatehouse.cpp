@@ -15,12 +15,6 @@
 buildings::model_t<building_brick_gatehouse> brick_gatehouse_m;
 buildings::model_t<building_mud_gatehouse> mud_gatehouse_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_gatehouse);
-void config_load_building_gatehouse() {
-    brick_gatehouse_m.load();
-    mud_gatehouse_m.load();
-}
-
 void building_gatehouse::on_create(int orientation) {
     base.orientation = orientation;
 }

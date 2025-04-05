@@ -9,7 +9,7 @@ int io_read_sgx_entries_num(vfs::path filepath) {
         return 0;
     }
 
-    FILE *fp = vfs::file_open(fs_file, "rb");
+    FILE *fp = vfs::file_open_os(fs_file, "rb");
     if (!fp) {
         return 0;
     }
@@ -42,7 +42,7 @@ int io_read_file_into_buffer(vfs::path filepath, int localizable, buffer* buf, i
         return 0;
     }
 
-    FILE* fp = vfs::file_open(fs_file, "rb");
+    FILE* fp = vfs::file_open_os(fs_file, "rb");
     if (!fp) {
         return 0;
     }
@@ -70,7 +70,7 @@ int io_read_file_part_into_buffer(vfs::path  filepath, int localizable, buffer* 
     }
 
     int bytes_read = 0;
-    FILE* fp = vfs::file_open(fs_file, "rb");
+    FILE* fp = vfs::file_open_os(fs_file, "rb");
     if (fp) {
         int seek_result = fseek(fp, offset_in_file, SEEK_SET);
         if (seek_result == 0) {
@@ -88,7 +88,7 @@ int io_write_buffer_to_file(vfs::path  filepath, buffer* buf, int size) {
         fs_file = filepath;
     }
 
-    FILE* fp = vfs::file_open(fs_file, "wb");
+    FILE* fp = vfs::file_open_os(fs_file, "wb");
     if (!fp) {
         return 0;
     }

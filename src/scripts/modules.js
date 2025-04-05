@@ -1,5 +1,6 @@
 log_info("akhenaten: load modules started")
 
+include(":akhenaten.conf")
 include(":math.js")
 include(":common.js")
 include(":images.js")

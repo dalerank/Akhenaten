@@ -2,8 +2,15 @@
 
 #include "content/vfs.h"
 #include "core/log.h"
+#include "js/js_game.h"
 
 static const char* INI_FILENAME = "akhenaten.ini";
+ankh_config_t g_ankh_config;
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_game_settings);
+void config_load_game_settings() {
+    g_ankh_config.load();
+}
 
 // Keep this in the same order as the ints in config.h
 struct enhanced_option_t {
@@ -145,7 +152,6 @@ static pcstr ini_string_keys[] = {
   "0",
 };
 
-ankh_config_t g_ankh_config;
 pcstr default_string_values[CONFIG_STRING_MAX_ENTRIES];
 
 int ankh_config_t::get(e_config_key key) {
@@ -221,12 +227,14 @@ void ankh_config_t::load() {
             }
         }
     }
+
+    settings.init();
 }
 
 void ankh_config_t::save() {
     vfs::path fs_file = vfs::content_path(INI_FILENAME);
 
-    FILE* fp = vfs::file_open(fs_file, "wt");
+    FILE* fp = vfs::file_open_os(fs_file, "wt");
     if (!fp) {
         logs::error("Unable to write configuration file %s", INI_FILENAME);
         return;
@@ -240,4 +248,6 @@ void ankh_config_t::save() {
     }
     vfs::file_close(fp);
     vfs::sync_em_fs();
+
+    settings.sync("akhenaten.conf");
 }

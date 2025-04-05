@@ -415,7 +415,8 @@ static void setup() {
                                                                // otherwise it fails on Nintendo Switch
     image_data_init();                                         // image paks structures init
                                                                
-    js_vm_set_scripts_folder(g_args.get_scripts_directory());    // setup script engine
+    js_vm_add_scripts_folder(g_args.get_scripts_directory());    // setup script engine
+    js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);      // setup script engine
     js_vm_setup();
     js_vm_sync();
 

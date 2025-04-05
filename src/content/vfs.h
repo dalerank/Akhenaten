@@ -27,8 +27,8 @@ namespace vfs {
  * @param mode Mode to open the file (e.g. "wb").
  * @return FILE
  */
-FILE *file_open(pcstr filename, pcstr mode);
-reader file_open(path path);
+FILE *file_open_os(pcstr filename, pcstr mode);
+reader file_open(path path, pcstr mode = "rb");
 
 
 /**

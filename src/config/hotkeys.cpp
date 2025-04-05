@@ -244,7 +244,7 @@ static void load_file(void) {
     hotkey_config_clear();
     bstring256 fs_file = vfs::content_path(INI_FILENAME);
 
-    FILE* fp = vfs::file_open(fs_file, "rt");
+    FILE* fp = vfs::file_open_os(fs_file, "rt");
     if (!fp)
         return;
     char line_buffer[MAX_LINE];
@@ -287,10 +287,10 @@ void hotkey_config_load(void) {
 
 void hotkey_config_save(void) {
     auto &data = g_config_hotkeys_data;
-    bstring256 fs_file = vfs::content_path(INI_FILENAME);
+    vfs::path fs_file = vfs::content_path(INI_FILENAME);
 
     hotkey_install_mapping(data.mappings, data.num_mappings);
-    FILE* fp = vfs::file_open(fs_file, "wt");
+    FILE* fp = vfs::file_open_os(fs_file, "wt");
     if (!fp) {
         logs::error("Unable to write hotkey configuration file %s", INI_FILENAME);
         return;

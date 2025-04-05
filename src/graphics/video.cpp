@@ -49,7 +49,7 @@ static int load_smk(const char* filename) {
         return 0;
     }
 
-    FILE* fp = vfs::file_open(fs_file, "rb");
+    FILE* fp = vfs::file_open_os(fs_file, "rb");
     data.s = smacker_open(fp);
     if (!data.s) {
         // smacker_open() closes the stream on error: no need to close fp

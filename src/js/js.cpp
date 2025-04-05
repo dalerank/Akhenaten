@@ -18,7 +18,7 @@
 #define MAX_FILES_RELOAD 255
 
 struct {
-    vfs::path scripts_folder;
+    svector<vfs::path, 4> scripts_folders;
     vfs::path files2load[MAX_FILES_RELOAD];
     int files2load_num;
     int have_error;
@@ -58,29 +58,29 @@ int js_vm_trypcall(js_State *J, int params) {
     return 1;
 }
 
-int js_vm_load_file_and_exec(const char *path) {
-    int error = 0;
-
+int js_vm_load_file_and_exec(pcstr path) {
     if (!path || !*path) {
         return 0;
     }
 
-    const char *npath = (*path == ':') ? (path + 1) : path;
+    pcstr npath = (*path == ':') ? (path + 1) : path;
 
-    bstring256 rpath = path;
-    if (!vm.scripts_folder.empty()) {
+    vfs::path rpath = path;
+    if (!vm.scripts_folders.empty()) {
         rpath = js_vm_get_absolute_path(npath);
     } 
 
-    vfs::reader reader = vfs::file_open(rpath);
+    vfs::reader reader = vfs::file_open(rpath, "rt");
 
     if (!reader) {
         logs::info("!!! Cant find script at %s", rpath.c_str());
         return 0;
     }
 
-    ((char*)reader->data())[reader->size() - 1] = 0; // EOF -> 0, that make it as string
-    error = js_ploadstring(vm.J, rpath, (const char*)reader->begin());
+    const uint32_t fsize = reader->size();
+    std::string data = (char *)reader->data();
+
+    int error = js_ploadstring(vm.J, rpath, data.c_str());
     if (error) {
         logs::info("!!! Error on open file %s", js_tostring(vm.J, -1));
         return 0;
@@ -250,8 +250,8 @@ void js_reset_vm_state() {
     logs::info( "STACK state %d", js_gettop(vm.J));
 }
 
-void js_vm_set_scripts_folder(vfs::path folder) {
-    vm.scripts_folder = folder;
+void js_vm_add_scripts_folder(vfs::path folder) {
+    vm.scripts_folders.push_back(folder);
 }
 
 vfs::path js_vm_get_absolute_path(vfs::path path) {
@@ -265,19 +265,27 @@ vfs::path js_vm_get_absolute_path(vfs::path path) {
     }
 
     vfs::path buffer;
-    if (!vm.scripts_folder.empty()) {
-        vfs::path conpath(vm.scripts_folder, "/", path);
+    for (const auto &folder : vm.scripts_folders) {
+        vfs::path conpath(folder, "/", path);
+        if (!!folder) {
+            vfs::path conpath(folder, "/", path);
 
 #if defined(GAME_PLATFORM_WIN)
-        char *p = _fullpath(buffer, conpath, buffer.capacity);
+            char *p = _fullpath(buffer, conpath, buffer.capacity);
 #elif defined(GAME_PLATFORM_LINUX) || defined(GAME_PLATFORM_MACOSX)
-        realpath(conpath, buffer);
+            realpath(conpath, buffer);
 #endif
-        buffer.replace('\\', '/');
-        return buffer;
+            buffer.replace('\\', '/');
+
+            if (!std::filesystem::exists(buffer.c_str())) {
+                continue;
+            }
+
+            return buffer;
+        }
     }
 
-    buffer = vfs::content_path(vfs::SCRIPTS_FOLDER);
+    buffer = vfs::content_path(path);
     return buffer;
 }
 

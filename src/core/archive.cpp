@@ -113,6 +113,31 @@ std::vector<std::string> archive::r_array_str(pcstr name) {
     return result;
 }
 
+archive::variant_t archive::r_variant(pcstr name) {
+    auto vm = (js_State *)state;
+    js_getproperty(vm, -1, name);
+
+    variant_t result;
+    if (js_isundefined(vm, -1)) {
+        result = variant_t(variant_none_t{name});
+    } else if (js_isstring(vm, -1)) {
+        const xstring str = js_tostring(vm, -1);
+        result = variant_t(str);
+    } else if (js_isboolean(vm, -1)) {
+        const bool v = js_toboolean(vm, -1);
+        result = variant_t(v);
+    } else if (js_isnumber(vm, -1)) {
+        const float f = js_tonumber(vm, -1);
+        result = variant_t(f);
+    } else if (js_isobject(vm, -1)) {
+        result = variant_t(variant_object_t{ name });
+    } else if (js_isarray(vm, -1)) {
+        result = variant_t(variant_array_t{ name });
+    }
+    js_pop(vm, 1);
+    return result;
+}
+
 std::vector<vec2i> archive::r_array_vec2i(pcstr name) {
     auto vm = (js_State *)state;
     js_getproperty(vm, -1, name);
