@@ -30,6 +30,7 @@
 #include "empire/empire_city.h"
 
 #include <string.h>
+#include <numeric>
 
 #define MAX_LANGUAGE_DIRS 20
 
@@ -65,10 +66,14 @@ static int config_change_string_language(int key);
 template<typename T>
 static void toggle_switch_t(int key, int param2) {
     auto &data = g_window_config_ext_data;
-    data.config_values[key].new_value = !data.config_values[key].new_value;
+    int option = key & 0xff;
+    data.config_values[option].new_value = !data.config_values[option].new_value;
 }
 
 static generic_button checkbox_buttons[] = {
+    {20, 72, 20, 20, toggle_switch_t<game_features::gameplay_fix_immigration>, button_none, 0x1000, TR_CONFIG_FIX_IMMIGRATION_BUG},
+
+    //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO, TR_CONFIG_SHOW_INTRO_VIDEO},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO, TR_CONFIG_SIDEBAR_INFO},
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_SMOOTH_SCROLLING, TR_CONFIG_SMOOTH_SCROLLING},
@@ -90,7 +95,6 @@ static generic_button checkbox_buttons[] = {
     {20, 122, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
 
     // 
-    {20, 72, 20, 20, toggle_switch_t<game_features::gameplay_fix_immigration>, button_none, -1, TR_CONFIG_FIX_IMMIGRATION_BUG},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS},
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANDFESTIVAL, TR_CONFIG_GRANDFESTIVAL},
     {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_JEALOUS_GODS, TR_CONFIG_JEALOUS_GODS},
@@ -196,7 +200,7 @@ static generic_button checkbox_buttons[] = {
     {20, 360, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CLAY, TR_CONFIG_RESOURCE_CLAY},
 };
 
-static int options_per_page[] = {14, 3, 14, 14, 14, 4, 5, 14, 14, 13};
+static int options_per_page[] = {1, 14, 3, 14, 14, 14, 4, 5, 14, 14, 13};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -213,8 +217,9 @@ static generic_button page_buttons[] = {
 };
 
 static int page_names[] = {
+    TR_CONFIG_HEADER_GAMEPLAY_CHANGES,
     TR_CONFIG_HEADER_UI_CHANGES, // 14
-    TR_CONFIG_HEADER_UI_CHANGES, // 1
+    TR_CONFIG_HEADER_UI_CHANGES, // 3
     TR_CONFIG_HEADER_GAMEPLAY_CHANGES, // 14
     TR_CONFIG_HEADER_GAMEPLAY_CHANGES, // 14
     TR_CONFIG_HEADER_GAMEPLAY_CHANGES,  // 14
@@ -287,6 +292,14 @@ static int config_string_changed(int key) {
 static int config_change_basic(int key) {
     auto& data = g_window_config_ext_data;
     g_ankh_config.set((e_config_key)key, data.config_values[key].new_value);
+    data.config_values[key].original_value = data.config_values[key].new_value;
+    return 1;
+}
+
+template<typename T>
+static int config_change_basic_t(int key) {
+    auto &data = g_window_config_ext_data;
+    g_ankh_config.settings.set_bool(T().name(), data.config_values[key].new_value);
     data.config_values[key].original_value = data.config_values[key].new_value;
     return 1;
 }
@@ -511,18 +524,21 @@ static void init(void (*close_callback)()) {
     data.starting_option = 0;
     data.close_callback = close_callback;
 
-    data.config_values[17].get_value = [] () -> int {
+    data.config_values[0].get_value = [] () -> int {
         return g_ankh_config.settings.get_bool(game_features::gameplay_fix_immigration().name());
     };
 
     for (int i = 0; i < std::size(checkbox_buttons); i++) {
         int parameter1 = checkbox_buttons[i].parameter1;
+        int index = parameter1 < 0xff ? parameter1 : i;
         e_config_key key = (e_config_key)parameter1;
-        const bool value = (parameter1 >= 0) ? g_ankh_config.get(key) : data.config_values[i].get_value();
-        data.config_values[key].original_value = value;
-        data.config_values[key].new_value = value;
-        data.config_values[key].change_action = config_change_basic;
+        const bool value = (parameter1 < 0xff) ? g_ankh_config.get(key) : data.config_values[index].get_value();
+        data.config_values[index].original_value = value;
+        data.config_values[index].new_value = value;
+        data.config_values[index].change_action = config_change_basic;
     }
+
+    data.config_values[0].change_action = config_change_basic_t<game_features::gameplay_fix_immigration>;
 
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
         const xstring value = g_ankh_config.get((e_config_str)i);
@@ -625,7 +641,7 @@ static void draw_background(int) {
     for (int i = 0; i < options_per_page[data.page]; i++) {
         int value = i + data.starting_option;
         generic_button &btn = checkbox_buttons[value];
-        if (is_config_option_enabled(btn.parameter1)) {
+        if (is_config_option_enabled(btn.parameter1 & 0xff)) {
             text_draw(string_from_ascii("x"), btn.x + 6, btn.y + 3, FONT_NORMAL_BLACK_ON_LIGHT, 0);
         }
     }

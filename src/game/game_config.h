@@ -25,6 +25,7 @@ namespace game_features {
 }
 
 enum e_config_key {
+    CONFIG_RESERVED_0 = 0,
     CONFIG_GP_FIX_100_YEAR_GHOSTS,
     CONFIG_GP_FIX_EDITOR_EVENTS,
     CONFIG_UI_SIDEBAR_INFO,
