@@ -7,24 +7,17 @@
 
 namespace game_features {
     struct game_feature {
-        virtual const xstring &name() const = 0;
+        const xstring name;
+
+        game_feature(const xstring &n);
         bool to_bool() const;
         inline bool operator!() const { return !to_bool(); }
+        void set(bool value);
     };
 
-    template<typename T>
-    struct game_feature_t : public game_feature {
-        virtual const xstring &name() const override {
-            static type_name_holder<T> _impl;
-            static pcstr _sname = type_simplified_name(_impl.value.data());
-            static xstring _xname(_sname);
-            return _xname;
-        }
-    };
-
-    struct gameplay_fix_immigration : public game_feature_t<gameplay_fix_immigration> {};
-    struct gameplay_fix_100y_ghosts : public game_feature_t<gameplay_fix_100y_ghosts> {};
-    struct gameplay_fix_editor_events : public game_feature_t<gameplay_fix_editor_events> {};
+    extern game_feature gameplay_fix_immigration;
+    extern game_feature gameplay_fix_100y_ghosts;
+    extern game_feature gameplay_fix_editor_events;
 }
 
 enum e_config_key {

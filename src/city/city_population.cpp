@@ -493,7 +493,7 @@ void city_population_t::yearly_advance_ages_and_calculate_deaths() {
         int deaths = calc_adjust_with_percentage(people, death_percentage);
         int removed = remove_from_houses(deaths + aged100);
 
-        if (game_features::gameplay_fix_100y_ghosts().to_bool()) {
+        if (!!game_features::gameplay_fix_100y_ghosts) {
             remove_from_census_in_age_decennium(decennium, deaths);
         } else {
             // Original engine removes both deaths and aged100, which creates "ghosts".

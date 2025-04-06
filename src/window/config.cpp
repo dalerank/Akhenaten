@@ -60,8 +60,8 @@ struct window_config_ext_data_t {
     struct {
         int original_value;
         int new_value;
-        int (*change_action)(int key) = nullptr;
-        int (*get_value)() = nullptr;
+        std::function<int(int key)> change_action;
+        std::function<int()> get_value;
     } config_values[CONFIG_MAX_ENTRIES];
 
     struct {
@@ -92,7 +92,7 @@ static int config_change_basic(int key);
 static int config_change_string_basic(int key);
 static int config_change_string_language(int key);
 
-template<typename T>
+
 static void toggle_switch_t(int key, int param2) {
     auto &data = g_window_config_ext_data;
     int option = key & 0xff;
@@ -100,9 +100,9 @@ static void toggle_switch_t(int key, int param2) {
 }
 
 static generic_button checkbox_buttons[] = {
-    {20, 72, 20, 20, toggle_switch_t<game_features::gameplay_fix_immigration>, button_none, 0x1000, TR_CONFIG_FIX_IMMIGRATION_BUG},
-    {20, 96, 20, 20, toggle_switch_t<game_features::gameplay_fix_100y_ghosts>, button_none, 0x1001, TR_CONFIG_FIX_100_YEAR_GHOSTS},
-    {20, 120, 20, 20, toggle_switch_t<game_features::gameplay_fix_editor_events>, button_none, 0x1002, TR_CONFIG_FIX_EDITOR_EVENTS},
+    {20, 72, 20, 20, toggle_switch_t, button_none, 0x1000, TR_CONFIG_FIX_IMMIGRATION_BUG},
+    {20, 96, 20, 20, toggle_switch_t, button_none, 0x1001, TR_CONFIG_FIX_100_YEAR_GHOSTS},
+    {20, 120, 20, 20, toggle_switch_t, button_none, 0x1002, TR_CONFIG_FIX_EDITOR_EVENTS},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO, TR_CONFIG_SHOW_INTRO_VIDEO},
@@ -296,9 +296,9 @@ static int config_change_basic(int key) {
 }
 
 template<typename T>
-static int config_change_basic_t(int key) {
+static int config_change_basic_t(int key, const T& t) {
     auto &data = g_window_config_ext_data;
-    g_ankh_config.settings.set_bool(T().name(), data.config_values[key].new_value);
+    g_ankh_config.settings.set_bool(t.name, data.config_values[key].new_value);
     data.config_values[key].original_value = data.config_values[key].new_value;
     return 1;
 }
@@ -358,6 +358,7 @@ static void button_language_select(int param1, int param2) {
                                  make_span(data.language_options.data(), data.language_options.size()),
                                  set_language);
 }
+
 static void button_reset_defaults(int param1, int param2) {
     auto& data = g_window_config_ext_data;
 
@@ -524,9 +525,9 @@ static void init(void (*close_callback)()) {
     data.close_callback = close_callback;
 
 
-    data.config_values[0].get_value = [] () -> int { return g_ankh_config.settings.get_bool(game_features::gameplay_fix_immigration().name()); };
-    data.config_values[1].get_value = [] () -> int { return g_ankh_config.settings.get_bool(game_features::gameplay_fix_100y_ghosts().name()); };
-    data.config_values[2].get_value = [] () -> int { return g_ankh_config.settings.get_bool(game_features::gameplay_fix_editor_events().name()); };
+    data.config_values[0].get_value = [] () -> int { return !!game_features::gameplay_fix_immigration; };
+    data.config_values[1].get_value = [] () -> int { return !!game_features::gameplay_fix_100y_ghosts; };
+    data.config_values[2].get_value = [] () -> int { return !!game_features::gameplay_fix_editor_events; };
 
     for (int i = 0; i < std::size(checkbox_buttons); i++) {
         int parameter1 = checkbox_buttons[i].parameter1;
@@ -538,9 +539,9 @@ static void init(void (*close_callback)()) {
         data.config_values[index].change_action = config_change_basic;
     }
 
-    data.config_values[0].change_action = config_change_basic_t<game_features::gameplay_fix_immigration>;
-    data.config_values[1].change_action = config_change_basic_t<game_features::gameplay_fix_100y_ghosts>;
-    data.config_values[2].change_action = config_change_basic_t<game_features::gameplay_fix_editor_events>;
+    data.config_values[0].change_action = [] (int key) { return config_change_basic_t(key, game_features::gameplay_fix_immigration); };
+    data.config_values[1].change_action = [] (int key) { return config_change_basic_t(key, game_features::gameplay_fix_100y_ghosts); };
+    data.config_values[2].change_action = [] (int key) { return config_change_basic_t(key, game_features::gameplay_fix_editor_events); };
 
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
         const xstring value = g_ankh_config.get((e_config_str)i);

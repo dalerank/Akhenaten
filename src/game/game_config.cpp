@@ -2,9 +2,11 @@
 
 #include "content/vfs.h"
 #include "core/log.h"
+#include "core/svector.h"
 #include "js/js_game.h"
 
 static const char* INI_FILENAME = "akhenaten.ini";
+static const char* CONF_FILENAME = "akhenaten.conf";
 ankh_config_t g_ankh_config;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_game_settings);
@@ -18,8 +20,24 @@ struct enhanced_option_t {
     const bool enabled;
 };
 
+namespace game_features {
+    svector<game_feature*, 64> game_features;
+
+    game_feature gameplay_fix_immigration{ "gameplay_fix_immigration" };
+    game_feature gameplay_fix_100y_ghosts{ "gameplay_fix_100y_ghosts" };
+    game_feature gameplay_fix_editor_events{ "gameplay_fix_editor_events" };
+}
+
+game_features::game_feature::game_feature(const xstring &n) : name(n) {
+    game_features.push_back(this);
+}
+
 bool game_features::game_feature::to_bool() const {
-    return g_ankh_config.settings.get_bool(name());
+    return g_ankh_config.settings.get_bool(name);
+}
+
+void game_features::game_feature::set(bool value) {
+    g_ankh_config.settings.set_bool(name, value);
 }
 
 enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
@@ -253,5 +271,5 @@ void ankh_config_t::save() {
     vfs::file_close(fp);
     vfs::sync_em_fs();
 
-    settings.sync("akhenaten.conf");
+    settings.sync(CONF_FILENAME);
 }
