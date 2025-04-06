@@ -47,3 +47,10 @@ constexpr std::string_view type_name() {
     constexpr auto &value = type_name_holder<T>::value;
     return std::string_view{ value.data(), value.size() };
 }
+
+inline const char* type_simplified_name(const char* data) {
+    return strstr(data, "::") ? strstr(data, "::") + strlen("::")
+        : strstr(data, "struct ") ? strstr(data, "struct ") + strlen("struct ")
+        : strstr(data, "class ") ? strstr(data, "class ") + strlen("class ")
+        : data;
+}

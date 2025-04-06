@@ -219,7 +219,7 @@ void city_sentiment_t::update() {
             housed.house_happiness = default_sentiment;
             if (g_city.population.current < 200) {
                 housed.house_happiness += 10;
-            } else if (default_sentiment < 50 && g_ankh_config.get(CONFIG_GP_FIX_IMMIGRATION_BUG)) {
+            } else if (default_sentiment < 50 && game_features::gameplay_fix_immigration().to_bool()) {
                 // Fix very hard immigration bug: give a boost for Very Hard difficulty so that
                 // immigration is not halted simply because you are between pop 200 and 300
                 housed.house_happiness += 50 - default_sentiment;

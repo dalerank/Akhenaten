@@ -8,15 +8,13 @@
 class settings_vars_impl_t;
 
 class settings_vars_t final {
-	friend class settings_vars_impl_t;
-	char _data[608];
+	char _data[96];
+	settings_vars_impl_t *_impl = nullptr;
 
-	settings_vars_impl_t &impl() {
-		return *(settings_vars_impl_t *)_data;
-	}
+	inline settings_vars_impl_t &impl() { return *_impl; }
 
 public:
-	settings_vars_t() {}
+	settings_vars_t();
 
 	bool is_defined(const xstring &name);
 

@@ -28,7 +28,7 @@ template<typename T>
 struct building_info_window_t : public building_info_window {
     virtual pcstr section() const override {
         static type_name_holder<T> _impl;
-        static pcstr _section = parse_config_name(_impl.value.data());
+        static pcstr _section = type_simplified_name(_impl.value.data());
         return _section;
     }
 };

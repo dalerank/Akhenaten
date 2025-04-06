@@ -62,6 +62,12 @@ static int config_change_basic(int key);
 static int config_change_string_basic(int key);
 static int config_change_string_language(int key);
 
+template<typename T>
+static void toggle_switch_t(int key, int param2) {
+    auto &data = g_window_config_ext_data;
+    data.config_values[key].new_value = !data.config_values[key].new_value;
+}
+
 static generic_button checkbox_buttons[] = {
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO, TR_CONFIG_SHOW_INTRO_VIDEO},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_SIDEBAR_INFO, TR_CONFIG_SIDEBAR_INFO},
@@ -84,7 +90,7 @@ static generic_button checkbox_buttons[] = {
     {20, 122, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
 
     // 
-    {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_IMMIGRATION_BUG, TR_CONFIG_FIX_IMMIGRATION_BUG},
+    {20, 72, 20, 20, toggle_switch_t<game_features::gameplay_fix_immigration>, button_none, -1, TR_CONFIG_FIX_IMMIGRATION_BUG},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS},
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANDFESTIVAL, TR_CONFIG_GRANDFESTIVAL},
     {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_JEALOUS_GODS, TR_CONFIG_JEALOUS_GODS},
@@ -232,7 +238,8 @@ struct window_config_ext_data_t {
     struct {
         int original_value;
         int new_value;
-        int (*change_action)(int key);
+        int (*change_action)(int key) = nullptr;
+        int (*get_value)() = nullptr;
     } config_values[CONFIG_MAX_ENTRIES];
 
     struct {
@@ -503,12 +510,20 @@ static void init(void (*close_callback)()) {
     data.page = 0;
     data.starting_option = 0;
     data.close_callback = close_callback;
+
+    data.config_values[17].get_value = [] () -> int {
+        return g_ankh_config.settings.get_bool(game_features::gameplay_fix_immigration().name());
+    };
+
     for (int i = 0; i < std::size(checkbox_buttons); i++) {
-        e_config_key key = (e_config_key)checkbox_buttons[i].parameter1;
-        data.config_values[key].original_value = g_ankh_config.get(key);
-        data.config_values[key].new_value = g_ankh_config.get(key);
+        int parameter1 = checkbox_buttons[i].parameter1;
+        e_config_key key = (e_config_key)parameter1;
+        const bool value = (parameter1 >= 0) ? g_ankh_config.get(key) : data.config_values[i].get_value();
+        data.config_values[key].original_value = value;
+        data.config_values[key].new_value = value;
         data.config_values[key].change_action = config_change_basic;
     }
+
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
         const xstring value = g_ankh_config.get((e_config_str)i);
         data.config_string_values[i].original_value = value;

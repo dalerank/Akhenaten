@@ -18,8 +18,11 @@ struct enhanced_option_t {
     const bool enabled;
 };
 
+bool game_features::game_feature::to_bool() const {
+    return g_ankh_config.settings.get_bool(name());
+}
+
 enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
-    {"gameplay_fix_immigration", true},
     {"gameplay_fix_100y_ghosts", true},
     {"gameplay_fix_editor_events", true},
     {"ui_sidebar_info", true},

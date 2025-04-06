@@ -504,13 +504,6 @@ struct widget {
             }
         }
     }
-
-    static pcstr parse_config_name(pcstr data) {
-        return strstr(data, "::") ? strstr(data, "::") + strlen("::")
-            : strstr(data, "struct ") ? strstr(data, "struct ") + strlen("struct ")
-            : strstr(data, "class ") ? strstr(data, "class ") + strlen("class ")
-            : data;
-    }
 };
 
 } // ui

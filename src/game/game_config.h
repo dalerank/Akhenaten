@@ -2,10 +2,29 @@
 
 #include "core/xstring.h"
 #include "core/settings_vars.h"
+#include "core/typename.h"
 #include <array>
 
+namespace game_features {
+    struct game_feature {
+        virtual const xstring &name() const = 0;
+        bool to_bool() const;
+    };
+
+    template<typename T>
+    struct game_feature_t : public game_feature {
+        virtual const xstring &name() const override {
+            static type_name_holder<T> _impl;
+            static pcstr _sname = type_simplified_name(_impl.value.data());
+            static xstring _xname(_sname);
+            return _xname;
+        }
+    };
+
+    struct gameplay_fix_immigration : public game_feature_t<gameplay_fix_immigration> {};
+}
+
 enum e_config_key {
-    CONFIG_GP_FIX_IMMIGRATION_BUG = 0,
     CONFIG_GP_FIX_100_YEAR_GHOSTS,
     CONFIG_GP_FIX_EDITOR_EVENTS,
     CONFIG_UI_SIDEBAR_INFO,

@@ -13,8 +13,6 @@
 
 class settings_vars_impl_t {
 	friend class settings_vars_t;
-	static_assert(sizeof(settings_vars_t) <= sizeof(settings_vars_t::_data), "settings_vars_t size is not 608 bytes");
-
 	settings_vars_impl_t() {
 	}
 
@@ -145,7 +143,7 @@ public:
 		_variants.clear();
 
 		g_config_arch.r_objects("game_settings", [&] (pcstr key, archive arch) {
-			auto value = arch.r_variant(key);
+			auto value = arch.r_variant("value");
 			switch (value.index()) {
 			case archive::e_variant_type::vt_none:
 				// logs::error("Unable to load settings %s", key);
@@ -154,28 +152,28 @@ public:
 			case archive::e_variant_type::vt_float:
 				{
                     float val = std::get<float>(value);
-                    _variants[key] = val;
+                    set(key, val);
                 }
 				break;
 
 			case archive::e_variant_type::vt_bool:
 				{
                     bool val = std::get<bool>(value);
-                    _variants[key] = val;
+                    set(key, val);
                 }
 				break;
 
 			case archive::e_variant_type::vt_string:
 				{
                     xstring val = std::get<xstring>(value);
-                    _variants[key] = val;
+                    set(key, val);
                 }
 				break;
 					
 			case archive::e_variant_type::vt_vec2i:
 				{
 					vec2i val = std::get<vec2i>(value);
-					_variants[key] = val;
+					set(key, val);
 				}
 				break;
 
@@ -241,6 +239,11 @@ private:
 	bool _initialized = false;
 	bool _finalized = false;
 };
+
+settings_vars_t::settings_vars_t() {
+	static_assert(sizeof(settings_vars_impl_t) <= sizeof(_data), "settings_vars_t size is not 608 bytes");
+	_impl = new(_data) settings_vars_impl_t();
+}
 
 bool settings_vars_t::is_defined(const xstring &name) {
 	return impl().is_defined(name);
