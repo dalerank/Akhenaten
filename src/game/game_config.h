@@ -22,11 +22,12 @@ namespace game_features {
     };
 
     struct gameplay_fix_immigration : public game_feature_t<gameplay_fix_immigration> {};
+    struct gameplay_fix_100y_ghosts : public game_feature_t<gameplay_fix_100y_ghosts> {};
 }
 
 enum e_config_key {
     CONFIG_RESERVED_0 = 0,
-    CONFIG_GP_FIX_100_YEAR_GHOSTS,
+    CONFIG_RESERVED_1,
     CONFIG_GP_FIX_EDITOR_EVENTS,
     CONFIG_UI_SIDEBAR_INFO,
     CONFIG_UI_SHOW_INTRO_VIDEO,

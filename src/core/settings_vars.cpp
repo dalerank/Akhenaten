@@ -214,7 +214,7 @@ public:
 			}
 
 			svardata = "log_info(\"akhenaten: akhenaten.conf started\")\n";
-			svardata.append("var game_settings = {\n");
+			svardata.append("var game_settings = ");
 
 			js_State *state = (js_State *)g_config_arch.state;
 			js_setdumping(state, &svarprintf);

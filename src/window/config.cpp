@@ -101,6 +101,7 @@ static void toggle_switch_t(int key, int param2) {
 
 static generic_button checkbox_buttons[] = {
     {20, 72, 20, 20, toggle_switch_t<game_features::gameplay_fix_immigration>, button_none, 0x1000, TR_CONFIG_FIX_IMMIGRATION_BUG},
+    {20, 96, 20, 20, toggle_switch_t<game_features::gameplay_fix_100y_ghosts>, button_none, 0x1001, TR_CONFIG_FIX_100_YEAR_GHOSTS},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO, TR_CONFIG_SHOW_INTRO_VIDEO},
@@ -124,7 +125,6 @@ static generic_button checkbox_buttons[] = {
     {20, 122, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
 
     // 
-    {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_100_YEAR_GHOSTS, TR_CONFIG_FIX_100_YEAR_GHOSTS},
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANDFESTIVAL, TR_CONFIG_GRANDFESTIVAL},
     {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_JEALOUS_GODS, TR_CONFIG_JEALOUS_GODS},
     {20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GLOBAL_LABOUR, TR_CONFIG_GLOBAL_LABOUR},
@@ -229,7 +229,7 @@ static generic_button checkbox_buttons[] = {
     {20, 360, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CLAY, TR_CONFIG_RESOURCE_CLAY},
 };
 
-static int options_per_page[] = {1, 14, 3, 14, 14, 14, 4, 5, 14, 14, 13};
+static int options_per_page[] = {2, 12, 3, 14, 14, 14, 4, 5, 14, 14, 13};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -523,9 +523,8 @@ static void init(void (*close_callback)()) {
     data.starting_option = 0;
     data.close_callback = close_callback;
 
-    data.config_values[0].get_value = [] () -> int {
-        return g_ankh_config.settings.get_bool(game_features::gameplay_fix_immigration().name());
-    };
+    data.config_values[0].get_value = [] () -> int { return g_ankh_config.settings.get_bool(game_features::gameplay_fix_immigration().name()); };
+    data.config_values[1].get_value = [] () -> int { return g_ankh_config.settings.get_bool(game_features::gameplay_fix_100y_ghosts().name()); };
 
     for (int i = 0; i < std::size(checkbox_buttons); i++) {
         int parameter1 = checkbox_buttons[i].parameter1;
@@ -538,6 +537,7 @@ static void init(void (*close_callback)()) {
     }
 
     data.config_values[0].change_action = config_change_basic_t<game_features::gameplay_fix_immigration>;
+    data.config_values[1].change_action = config_change_basic_t<game_features::gameplay_fix_100y_ghosts>;
 
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
         const xstring value = g_ankh_config.get((e_config_str)i);
