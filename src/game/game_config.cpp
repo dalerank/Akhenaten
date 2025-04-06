@@ -21,15 +21,20 @@ struct enhanced_option_t {
 };
 
 namespace game_features {
-    svector<game_feature*, 64> game_features;
+    svector<game_feature*, 64> _features;
 
-    game_feature gameplay_fix_immigration{ "gameplay_fix_immigration" };
-    game_feature gameplay_fix_100y_ghosts{ "gameplay_fix_100y_ghosts" };
-    game_feature gameplay_fix_editor_events{ "gameplay_fix_editor_events" };
+    game_feature gameplay_fix_immigration{ "gameplay_fix_immigration", false };
+    game_feature gameplay_fix_100y_ghosts{ "gameplay_fix_100y_ghosts", true };
+    game_feature gameplay_fix_editor_events{ "gameplay_fix_editor_events", true };
+
+    custom_span<game_feature*> features() {
+        return { _features.data(), _features.size() };
+    }
 }
 
-game_features::game_feature::game_feature(const xstring &n) : name(n) {
-    game_features.push_back(this);
+game_features::game_feature::game_feature(const xstring &n, setting_variant def) : name(n), defaultv(def) {
+    _features.push_back(this);
+    g_ankh_config.settings.set(name, def);
 }
 
 bool game_features::game_feature::to_bool() const {

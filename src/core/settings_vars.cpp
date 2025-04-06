@@ -1,6 +1,5 @@
 #include "settings_vars.h"
 
-#include <variant>
 #include <unordered_map>
 #include <optional>
 
@@ -25,8 +24,7 @@ class settings_vars_impl_t {
 		//_backgroundQueueExecutor->WaitAsync();
 	}
 
-	using variant_t = std::variant<bool, float, vec2i, xstring>;
-	using variants_map_t = std::unordered_map<xstring, variant_t>;
+	using variants_map_t = std::unordered_map<xstring, setting_variant>;
 public:
 	void reset() {
 		{
@@ -86,7 +84,7 @@ public:
 		return _variants.find(name) != _variants.end();
 	}
 
-	std::optional<variant_t> get_variant(xstring &name) {
+	std::optional<setting_variant> get_variant(xstring &name) {
 		READER_LOCK(readLock);
 		//if (!IsInitialized(readLock)) {
 		//	return {};
@@ -95,6 +93,19 @@ public:
 		if (it == _variants.end()) {
 			return {};
 		}
+		return it->second;
+	}
+
+	setting_variant get(const xstring &name, const setting_variant &def) {
+		READER_LOCK(readLock);
+		//if (!IsInitialized(readLock)) {
+		//	return {};
+		//}
+		auto it = _variants.find(name);
+		if (it == _variants.end()) {
+			return def;
+		}
+
 		return it->second;
 	}
 
@@ -126,7 +137,7 @@ public:
 
 			auto it = _variants.find(name);
 			if (it != _variants.end()) {
-				if (it->second == variant_t(value)) {
+				if (it->second == setting_variant(value)) {
 					return;
 				}
 			}
@@ -134,7 +145,7 @@ public:
 
 		WRITER_LOCK(writeLock);
 		_variantsDirty = true;
-		_variants[name] = variant_t(value);
+		_variants[name] = setting_variant(value);
 	}
 
 	void initialize() {
@@ -300,6 +311,14 @@ float settings_vars_t::get_float(const xstring &name, float def) {
 
 void settings_vars_t::set_float(const xstring &name, float value) {
 	impl().set(name, value);
+}
+
+void settings_vars_t::set(const xstring &name, const setting_variant &value) {
+    impl().set(name, value);
+}
+
+setting_variant settings_vars_t::get(const xstring &name, const setting_variant &def) {
+	return impl().get(name, def);
 }
 
 xstring settings_vars_t::get_string(const xstring &name, const xstring &def) {

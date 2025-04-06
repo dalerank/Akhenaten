@@ -2,11 +2,14 @@
 
 #include <string>
 #include <chrono>
+#include <variant>
 
+#include "core/vec2i.h"
 #include "core/xstring.h"
 
 class settings_vars_impl_t;
 
+using setting_variant = std::variant<bool, float, vec2i, xstring>;
 class settings_vars_t final {
 	char _data[96];
 	settings_vars_impl_t *_impl = nullptr;
@@ -38,6 +41,9 @@ public:
 
 	float get_float(const xstring &name, float def = 0);
 	void set_float(const xstring &name, float value);
+
+	void set(const xstring &name, const setting_variant &value);
+	setting_variant get(const xstring &name, const setting_variant &def = setting_variant{});
 
 	xstring get_string(const xstring &name, const xstring &def = "");
 	void set_string(const xstring &name, const xstring &value);

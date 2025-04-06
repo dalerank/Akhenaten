@@ -3,13 +3,15 @@
 #include "core/xstring.h"
 #include "core/settings_vars.h"
 #include "core/typename.h"
+#include "core/custom_span.hpp"
 #include <array>
 
 namespace game_features {
     struct game_feature {
         const xstring name;
+        const setting_variant defaultv;
 
-        game_feature(const xstring &n);
+        game_feature(const xstring &n, setting_variant def);
         bool to_bool() const;
         inline bool operator!() const { return !to_bool(); }
         void set(bool value);
@@ -18,6 +20,8 @@ namespace game_features {
     extern game_feature gameplay_fix_immigration;
     extern game_feature gameplay_fix_100y_ghosts;
     extern game_feature gameplay_fix_editor_events;
+
+    custom_span<game_feature*> features();
 }
 
 enum e_config_key {
