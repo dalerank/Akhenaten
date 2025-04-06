@@ -198,7 +198,7 @@ public:
 		vfs::path fs_file = vfs::content_path(filename);
 		FILE *fp = vfs::file_open_os(fs_file, "wt");
 		if (!fp) {
-			logs::error("Unable to write settings file %s", fs_file);
+			logs::error("Unable to write settings file %s", fs_file.c_str());
 			return;
 		}
 
