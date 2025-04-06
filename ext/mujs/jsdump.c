@@ -7,6 +7,9 @@
 
 #include <assert.h>
 
+#define LPRINTF(...) if (J->dumpfunction) { J->dumpfunction(J, __VA_ARGS__);  } else { printf(__VA_ARGS__); }
+#define LPRINTFMT(...) if (J->dumpfunction) { char buffer[256]; snprintf(buffer, 255, __VA_ARGS__); J->dumpfunction(J, buffer);  } else { printf(__VA_ARGS__); }
+
 static const char *astname[] = {
 #include "astnames.h"
 };
@@ -717,25 +720,25 @@ void jsC_dumpfunction(js_State *J, js_Function *F)
 	js_Instruction *end = F->code + F->codelen;
 	int i;
 
-	printf("%s(%d)\n", F->name, F->numparams);
-	if (F->lightweight) printf("\tlightweight\n");
-	if (F->arguments) printf("\targuments\n");
-	printf("\tsource %s:%d\n", F->filename, F->line);
+	LPRINTFMT("%s(%d)\n", F->name, F->numparams);
+	if (F->lightweight) LPRINTF("\tlightweight\n");
+	if (F->arguments) LPRINTF("\targuments\n");
+	LPRINTFMT("\tsource %s:%d\n", F->filename, F->line);
 	for (i = 0; i < F->funlen; ++i)
-		printf("\tfunction %d %s\n", i, F->funtab[i]->name);
+		LPRINTFMT("\tfunction %d %s\n", i, F->funtab[i]->name);
 	for (i = 0; i < F->varlen; ++i)
-		printf("\tlocal %d %s\n", i + 1, F->vartab[i]);
+		LPRINTFMT("\tlocal %d %s\n", i + 1, F->vartab[i]);
 
-	printf("{\n");
+	LPRINTF("{\n");
 	while (p < end) {
 		int c = *p++;
 
-		printf("% 5d: ", (int)(p - F->code) - 1);
+		LPRINTFMT("% 5d: ", (int)(p - F->code) - 1);
 		ps(opname[c]);
 
 		switch (c) {
 		case OP_NUMBER:
-			printf(" %.9g", F->numtab[*p++]);
+			LPRINTFMT(" %.9g", F->numtab[*p++]);
 			break;
 		case OP_STRING:
 			pc(' ');
@@ -775,17 +778,17 @@ void jsC_dumpfunction(js_State *J, js_Function *F)
 		case OP_JFALSE:
 		case OP_JCASE:
 		case OP_TRY:
-			printf(" %d", *p++);
+			LPRINTFMT(" %d", *p++);
 			break;
 		}
 
 		nl();
 	}
-	printf("}\n");
+	LPRINTF("}\n");
 
 	for (i = 0; i < F->funlen; ++i) {
 		if (F->funtab[i] != F) {
-			printf("function %d ", i);
+			LPRINTFMT("function %d ", i);
 			jsC_dumpfunction(J, F->funtab[i]);
 		}
 	}
@@ -796,39 +799,52 @@ void jsC_dumpfunction(js_State *J, js_Function *F)
 void js_dumpvalue(js_State *J, js_Value v)
 {
 	switch (v.type) {
-	case JS_TUNDEFINED: printf("undefined"); break;
-	case JS_TNULL: printf("null"); break;
-	case JS_TBOOLEAN: printf(v.u.boolean ? "true" : "false"); break;
-	case JS_TNUMBER: printf("%.9g", v.u.number); break;
-	case JS_TSHRSTR: printf("'%s'", v.u.shrstr); break;
-	case JS_TLITSTR: printf("'%s'", v.u.litstr); break;
-	case JS_TMEMSTR: printf("'%s'", v.u.memstr->p); break;
+	case JS_TUNDEFINED: LPRINTF("undefined"); break;
+	case JS_TNULL: LPRINTF("null"); break;
+	case JS_TBOOLEAN: LPRINTF(v.u.boolean ? "true" : "false"); break;
+	case JS_TNUMBER: LPRINTFMT("%.9g", v.u.number); break;
+	case JS_TSHRSTR: LPRINTFMT("'%s'", v.u.shrstr); break;
+	case JS_TLITSTR: LPRINTFMT("'%s'", v.u.litstr); break;
+	case JS_TMEMSTR: LPRINTFMT("'%s'", v.u.memstr->p); break;
 	case JS_TOBJECT:
 		if (v.u.object == J->G) {
-			printf("[Global]");
+			LPRINTF("[Global]");
 			break;
 		}
 		switch (v.u.object->type) {
-		case JS_COBJECT: printf("[Object %p]", v.u.object); break;
-		case JS_CARRAY: printf("[Array %p]", v.u.object); break;
+		case JS_COBJECT:
+		{
+			//LPRINTFMT("[Object %p]", v.u.object); 
+			js_Property *p = v.u.object->head;
+			LPRINTF("{ ");
+			while (p) {
+				LPRINTFMT("%s: ", p->name);
+                js_dumpvalue(J, p->value);
+                LPRINTF(", ");
+                p = p->next;
+			}
+			LPRINTF("}");
+			break;
+		}
+		case JS_CARRAY: LPRINTFMT("[Array %p]", v.u.object); break;
 		case JS_CFUNCTION:
-			printf("[Function %p, %s, %s:%d]",
+			LPRINTFMT("[Function %p, %s, %s:%d]",
 				v.u.object,
 				v.u.object->u.f.function->name,
 				v.u.object->u.f.function->filename,
 				v.u.object->u.f.function->line);
 			break;
-		case JS_CSCRIPT: printf("[Script %s]", v.u.object->u.f.function->filename); break;
-		case JS_CCFUNCTION: printf("[CFunction %p]", v.u.object->u.c.function); break;
-		case JS_CBOOLEAN: printf("[Boolean %d]", v.u.object->u.boolean); break;
-		case JS_CNUMBER: printf("[Number %g]", v.u.object->u.number); break;
-		case JS_CSTRING: printf("[String'%s']", v.u.object->u.s.string); break;
-		case JS_CERROR: printf("[Error %s]", v.u.object->u.s.string); break;
-		case JS_CITERATOR: printf("[Iterator %p]", v.u.object); break;
+		case JS_CSCRIPT: LPRINTFMT("[Script %s]", v.u.object->u.f.function->filename); break;
+		case JS_CCFUNCTION: LPRINTFMT("[CFunction %p]", v.u.object->u.c.function); break;
+		case JS_CBOOLEAN: LPRINTFMT("[Boolean %d]", v.u.object->u.boolean); break;
+		case JS_CNUMBER: LPRINTFMT("[Number %g]", v.u.object->u.number); break;
+		case JS_CSTRING: LPRINTFMT("[String'%s']", v.u.object->u.s.string); break;
+		case JS_CERROR: LPRINTFMT("[Error %s]", v.u.object->u.s.string); break;
+		case JS_CITERATOR: LPRINTFMT("[Iterator %p]", v.u.object); break;
 		case JS_CUSERDATA:
-			printf("[Userdata %s %p]", v.u.object->u.user.tag, v.u.object->u.user.data);
+			LPRINTFMT("[Userdata %s %p]", v.u.object->u.user.tag, v.u.object->u.user.data);
 			break;
-		default: printf("[Object %p]", v.u.object); break;
+		default: LPRINTFMT("[Object %p]", v.u.object); break;
 		}
 		break;
 	}
@@ -836,19 +852,22 @@ void js_dumpvalue(js_State *J, js_Value v)
 
 static void js_dumpproperty(js_State *J, js_Property *node)
 {
-	if (node->left->level)
+	if (node->left->level) {
 		js_dumpproperty(J, node->left);
-	printf("\t%s: ", node->name);
+	}
+	LPRINTFMT("\t%s: ", node->name);
 	js_dumpvalue(J, node->value);
-	printf(",\n");
-	if (node->right->level)
+	LPRINTF(",\n");
+	if (node->right->level) {
 		js_dumpproperty(J, node->right);
+	}
 }
 
 void js_dumpobject(js_State *J, js_Object *obj)
 {
-	printf("{\n");
-	if (obj->properties->level)
+	LPRINTF("{\n");
+	if (obj->properties->level) {
 		js_dumpproperty(J, obj->properties);
-	printf("}\n");
+	}
+	LPRINTF("}\n");
 }

@@ -47,6 +47,35 @@
 #define ITEM_Y_OFFSET 60
 #define ITEM_HEIGHT 24
 
+constexpr int CONFIG_STRING_VALUE_MAX = 64;
+struct window_config_ext_data_t {
+    int focus_button;
+    int language_focus_button;
+    int bottom_focus_button;
+    int page_focus_button;
+    int page;
+    int starting_option;
+    void (*close_callback)(void);
+
+    struct {
+        int original_value;
+        int new_value;
+        int (*change_action)(int key) = nullptr;
+        int (*get_value)() = nullptr;
+    } config_values[CONFIG_MAX_ENTRIES];
+
+    struct {
+        xstring original_value;
+        xstring new_value;
+        int (*change_action)(int key);
+    } config_string_values[CONFIG_STRING_MAX_ENTRIES];
+
+    svector<xstring, MAX_LANGUAGE_DIRS> language_options;
+    svector<bstring64, MAX_LANGUAGE_DIRS> language_options_utf8;
+    int selected_language_option;
+};
+
+window_config_ext_data_t g_window_config_ext_data;
 
 static void toggle_switch(int id, int param2);
 static void toggle_god_disabled(int id, int param2);
@@ -229,36 +258,6 @@ static int page_names[] = {
     TR_CONFIG_HEADER_BUILDING_CHANGES, // 13
     TR_CONFIG_HEADER_RESOURCE_CHANGES, // 13
 };
-
-constexpr int CONFIG_STRING_VALUE_MAX = 64;
-struct window_config_ext_data_t {
-    int focus_button;
-    int language_focus_button;
-    int bottom_focus_button;
-    int page_focus_button;
-    int page;
-    int starting_option;
-    void (*close_callback)(void);
-
-    struct {
-        int original_value;
-        int new_value;
-        int (*change_action)(int key) = nullptr;
-        int (*get_value)() = nullptr;
-    } config_values[CONFIG_MAX_ENTRIES];
-
-    struct {
-        xstring original_value;
-        xstring new_value;
-        int (*change_action)(int key);
-    } config_string_values[CONFIG_STRING_MAX_ENTRIES];
-
-    svector<xstring, MAX_LANGUAGE_DIRS> language_options;
-    svector<bstring64, MAX_LANGUAGE_DIRS> language_options_utf8;
-    int selected_language_option;
-};
-
-window_config_ext_data_t g_window_config_ext_data;
 
 static void set_language(int index) {
     auto& data = g_window_config_ext_data;

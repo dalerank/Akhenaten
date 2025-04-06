@@ -124,6 +124,9 @@ void js_defproperty(js_State *J, int idx, const char *name, int atts);
 void js_delproperty(js_State *J, int idx, const char *name);
 void js_defaccessor(js_State *J, int idx, const char *name, int atts);
 
+void js_setdumping(js_State *J, void (*dumpfun)(js_State *, const char *));
+void js_dumpobject_ex(js_State *J, int idx);
+
 int js_getlength(js_State *J, int idx);
 void js_setlength(js_State *J, int idx, int len);
 int js_hasindex(js_State *J, int idx, int i);

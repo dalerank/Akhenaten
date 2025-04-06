@@ -804,6 +804,15 @@ int js_hasproperty(js_State *J, int idx, const char *name)
 	return jsR_hasproperty(J, js_toobject(J, idx), name);
 }
 
+void js_setdumping(js_State *J, void (*dumpfun)(js_State*, const char*)) {
+	J->dumpfunction = dumpfun;
+}
+
+void js_dumpobject_ex(js_State *J, int idx)
+{
+	js_dumpobject(J, js_toobject(J, -1));
+}
+
 /* Iterator */
 
 void js_pushiterator(js_State *J, int idx, int own)

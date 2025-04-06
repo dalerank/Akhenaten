@@ -7,6 +7,7 @@
 #include "content/vfs.h"
 #include "core/log.h"
 #include "js/js_game.h"
+#include "mujs/mujs.h"
 
 #define READER_LOCK(macLockName) // ThreadSafety::ReaderLock macLockName(_mutex)
 #define WRITER_LOCK(macLockName) // ThreadSafety::WriterLock macLockName(_mutex)
@@ -132,6 +133,7 @@ public:
 		}
 
 		WRITER_LOCK(writeLock);
+		_variantsDirty = true;
 		_variants[name] = variant_t(value);
 	}
 
@@ -186,47 +188,48 @@ public:
 		});		
 	}
 
-	void save(pcstr filename) {
-		return;
+	static inline std::string svardata;
+	static void svarprintf(js_State *state, const char* v) {
+		svardata.append(v);
+    }
 
+	void save(pcstr filename) {
 		int loadResult;
 		{
 			READER_LOCK(readLock);
 			loadResult = _loadResult;
 		}
 
-		vfs::path fs_file = vfs::content_path(filename);
-		FILE *fp = vfs::file_open_os(fs_file, "wt");
-		if (!fp) {
-			logs::error("Unable to write settings file %s", fs_file.c_str());
-			return;
-		}
-
 		{
 			WRITER_LOCK(writeLock);
-			fprintf(fp, "log_info(\"akhenaten: akhenaten.conf started\")\n");
-			fprintf(fp, "var game_settings = {\n");
-
 			if (!_variantsDirty) {
 				return;
 			}
 
-			char buffer[1024];
-			for (const auto &kvp : _variants) {
-				switch (kvp.second.index()) {
-				case 0: snprintf(buffer, sizeof(buffer), "%s", std::get<bool>(kvp.second) ? "true" : "false"); break;
-				case 1: snprintf(buffer, sizeof(buffer), "%f", std::get<float>(kvp.second)); break;
-				case 2: snprintf(buffer, sizeof(buffer), "{x: %d, y:%d}", std::get<vec2i>(kvp.second).x, std::get<vec2i>(kvp.second).y); break;
-				case 3: snprintf(buffer, sizeof(buffer), "%s", std::get<xstring>(kvp.second).c_str()); break;
-				}
-				fprintf(fp, "%s : %s,\n", kvp.first.c_str(), buffer);
+			vfs::path fs_file = vfs::content_path(filename);
+			FILE *fp = vfs::file_open_os(fs_file, "wt");
+			if (!fp) {
+				logs::error("Unable to write settings file %s", fs_file.c_str());
+				return;
 			}
 
-			fprintf(fp, "}\n\n");
-			_variantsDirty = false;
-		}
+			svardata = "log_info(\"akhenaten: akhenaten.conf started\")\n";
+			svardata.append("var game_settings = {\n");
 
-		vfs::file_close(fp);
+			js_State *state = (js_State *)g_config_arch.state;
+			js_setdumping(state, &svarprintf);
+			js_getglobal(state, "game_settings");
+			if (js_isobject(state, -1)) {
+				js_dumpobject_ex(state, -1);
+			}
+			js_pop(state, 1);
+
+			fprintf(fp, "%s", svardata.c_str());
+			svardata.clear();
+			_variantsDirty = false;
+			
+			vfs::file_close(fp);
+		}
 	}
 
 private:
