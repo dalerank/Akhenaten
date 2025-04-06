@@ -25,7 +25,7 @@ bool game_features::game_feature::to_bool() const {
 enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_0", false},
     {"reserved_1", true},
-    {"gameplay_fix_editor_events", true},
+    {"reserved_2", true},
     {"ui_sidebar_info", true},
     {"ui_show_intro_video", false},
     {"ui_smooth_scrolling", true},

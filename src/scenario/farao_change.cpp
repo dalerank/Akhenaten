@@ -1,4 +1,4 @@
-#include "emperor_change.h"
+#include "farao_change.h"
 
 #include "city/city_message.h"
 #include "city/city.h"
@@ -31,7 +31,7 @@ void scenario_kingdome_change_process() {
     if (data.state == 0) {
         if (game.simtime.year == data.game_year && game.simtime.month == data.month) {
             data.state = 1; // done
-            if (g_ankh_config.get(CONFIG_GP_FIX_EDITOR_EVENTS)) {
+            if (!!game_features::gameplay_fix_editor_events()) {
                 g_city.ratings.reset_kingdom();
             }
 

@@ -484,6 +484,7 @@ void city_population_t::yearly_advance_ages_and_calculate_deaths() {
     for (int age = 99; age > 0; age--) {
         at_age[age] = at_age[age - 1];
     }
+
     at_age[0] = 0;
     yearly_deaths = 0;
     for (int decennium = 9; decennium >= 0; decennium--) {

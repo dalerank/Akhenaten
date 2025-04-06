@@ -9,6 +9,7 @@ namespace game_features {
     struct game_feature {
         virtual const xstring &name() const = 0;
         bool to_bool() const;
+        inline bool operator!() const { return !to_bool(); }
     };
 
     template<typename T>
@@ -23,12 +24,13 @@ namespace game_features {
 
     struct gameplay_fix_immigration : public game_feature_t<gameplay_fix_immigration> {};
     struct gameplay_fix_100y_ghosts : public game_feature_t<gameplay_fix_100y_ghosts> {};
+    struct gameplay_fix_editor_events : public game_feature_t<gameplay_fix_editor_events> {};
 }
 
 enum e_config_key {
     CONFIG_RESERVED_0 = 0,
     CONFIG_RESERVED_1,
-    CONFIG_GP_FIX_EDITOR_EVENTS,
+    CONFIG_RESERVED_2,
     CONFIG_UI_SIDEBAR_INFO,
     CONFIG_UI_SHOW_INTRO_VIDEO,
     CONFIG_UI_SMOOTH_SCROLLING,

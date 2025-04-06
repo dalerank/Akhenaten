@@ -53,7 +53,7 @@
 #include "scenario/demand_change.h"
 #include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"
-#include "scenario/emperor_change.h"
+#include "scenario/farao_change.h"
 #include "scenario/gladiator_revolt.h"
 #include "scenario/invasion.h"
 #include "scenario/price_change.h"

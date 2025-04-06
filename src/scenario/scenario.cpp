@@ -6,7 +6,7 @@
 #include "core/custom_span.hpp"
 #include "empire/trade_route.h"
 #include "earthquake.h"
-#include "emperor_change.h"
+#include "farao_change.h"
 #include "events.h"
 #include "game/difficulty.h"
 #include "game/settings.h"

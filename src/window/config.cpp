@@ -102,6 +102,7 @@ static void toggle_switch_t(int key, int param2) {
 static generic_button checkbox_buttons[] = {
     {20, 72, 20, 20, toggle_switch_t<game_features::gameplay_fix_immigration>, button_none, 0x1000, TR_CONFIG_FIX_IMMIGRATION_BUG},
     {20, 96, 20, 20, toggle_switch_t<game_features::gameplay_fix_100y_ghosts>, button_none, 0x1001, TR_CONFIG_FIX_100_YEAR_GHOSTS},
+    {20, 120, 20, 20, toggle_switch_t<game_features::gameplay_fix_editor_events>, button_none, 0x1002, TR_CONFIG_FIX_EDITOR_EVENTS},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO, TR_CONFIG_SHOW_INTRO_VIDEO},
@@ -136,7 +137,6 @@ static generic_button checkbox_buttons[] = {
     {20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DYNAMIC_GRANARIES, TR_CONFIG_DYNAMIC_GRANARIES},
     {20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MORE_STOCKPILE, TR_CONFIG_MORE_STOCKPILE},
     {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NO_BUYER_DISTRIBUTION, TR_CONFIG_NO_BUYER_DISTRIBUTION},
-    {20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_FIX_EDITOR_EVENTS, TR_CONFIG_FIX_EDITOR_EVENTS},
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS, TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD, TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD},
@@ -526,6 +526,7 @@ static void init(void (*close_callback)()) {
 
     data.config_values[0].get_value = [] () -> int { return g_ankh_config.settings.get_bool(game_features::gameplay_fix_immigration().name()); };
     data.config_values[1].get_value = [] () -> int { return g_ankh_config.settings.get_bool(game_features::gameplay_fix_100y_ghosts().name()); };
+    data.config_values[2].get_value = [] () -> int { return g_ankh_config.settings.get_bool(game_features::gameplay_fix_editor_events().name()); };
 
     for (int i = 0; i < std::size(checkbox_buttons); i++) {
         int parameter1 = checkbox_buttons[i].parameter1;
@@ -539,6 +540,7 @@ static void init(void (*close_callback)()) {
 
     data.config_values[0].change_action = config_change_basic_t<game_features::gameplay_fix_immigration>;
     data.config_values[1].change_action = config_change_basic_t<game_features::gameplay_fix_100y_ghosts>;
+    data.config_values[2].change_action = config_change_basic_t<game_features::gameplay_fix_editor_events>;
 
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
         const xstring value = g_ankh_config.get((e_config_str)i);
