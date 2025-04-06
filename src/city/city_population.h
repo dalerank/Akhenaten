@@ -67,6 +67,8 @@ struct city_population_t {
     void evict_overcrowded();
     void update_migration();
     void calculate_working_people();
+
+    void yearly_advance_ages_and_calculate_deaths();
 };
 
 int city_population();

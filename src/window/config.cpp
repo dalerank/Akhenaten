@@ -523,6 +523,7 @@ static void init(void (*close_callback)()) {
     data.starting_option = 0;
     data.close_callback = close_callback;
 
+
     data.config_values[0].get_value = [] () -> int { return g_ankh_config.settings.get_bool(game_features::gameplay_fix_immigration().name()); };
     data.config_values[1].get_value = [] () -> int { return g_ankh_config.settings.get_bool(game_features::gameplay_fix_100y_ghosts().name()); };
 

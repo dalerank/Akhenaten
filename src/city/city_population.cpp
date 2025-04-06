@@ -479,18 +479,18 @@ int city_population_at_level(int house_level) {
     return city_data.population.at_level[house_level];
 }
 
-void yearly_advance_ages_and_calculate_deaths(void) {
-    int aged100 = city_data.population.at_age[99];
+void city_population_t::yearly_advance_ages_and_calculate_deaths() {
+    int aged100 = at_age[99];
     for (int age = 99; age > 0; age--) {
-        city_data.population.at_age[age] = city_data.population.at_age[age - 1];
+        at_age[age] = at_age[age - 1];
     }
-    city_data.population.at_age[0] = 0;
-    city_data.population.yearly_deaths = 0;
+    at_age[0] = 0;
+    yearly_deaths = 0;
     for (int decennium = 9; decennium >= 0; decennium--) {
         int people = get_people_in_age_decennium(decennium);
         int death_percentage = DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[city_data.health.value / 10][decennium];
         int deaths = calc_adjust_with_percentage(people, death_percentage);
-        int removed = g_city.population.remove_from_houses(deaths + aged100);
+        int removed = remove_from_houses(deaths + aged100);
 
         if (game_features::gameplay_fix_100y_ghosts().to_bool()) {
             remove_from_census_in_age_decennium(decennium, deaths);
@@ -500,7 +500,8 @@ void yearly_advance_ages_and_calculate_deaths(void) {
             // they weren't *in* the census anymore
             remove_from_census_in_age_decennium(decennium, removed);
         }
-        city_data.population.yearly_deaths += removed;
+
+        yearly_deaths += removed;
         aged100 = 0;
     }
 }
