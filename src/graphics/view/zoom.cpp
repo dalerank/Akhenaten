@@ -93,7 +93,7 @@ bool zoom_t::update_value(vec2i* camera_position) {
     camera_position->x -= new_offset.x - old_offset.x;
     camera_position->y -= new_offset.y - old_offset.y;
 
-    if (!g_ankh_config.get(CONFIG_UI_SMOOTH_SCROLLING) && !touch.active) {
+    if (!game_features::gameui_smooth_scrolling && !touch.active) {
         int remaining_x = camera_position->x & 60;
         int remaining_y = camera_position->y & 15;
         if (remaining_x >= 30)
