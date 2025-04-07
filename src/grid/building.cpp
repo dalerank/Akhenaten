@@ -38,12 +38,13 @@ void map_highlight_set(int grid_offset, e_highligth_mode mode) {
 }
 
 e_highligth_mode map_is_highlighted(int grid_offset) {
-    if (g_ankh_config.get(CONFIG_UI_WALKER_WAYPOINTS)) {
+    if (!!game_features::gameui_walker_waypoints) {
         return (e_highligth_mode)map_grid_get(g_highlight_grid, grid_offset);
     }
 
     return ehighligth_none;
 }
+
 void map_highlight_clear(int grid_offset) {
     map_grid_set(g_highlight_grid, grid_offset, 0);
 }
@@ -51,6 +52,7 @@ void map_highlight_clear(int grid_offset) {
 int map_building_height_at(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) ? map_grid_get(g_height_building_grid, grid_offset) : 0;
 }
+
 void map_building_height_set(int grid_offset, int8_t height) {
     map_grid_set(g_height_building_grid, grid_offset, height);
 }
@@ -60,12 +62,15 @@ int map_building_damage_increase(int grid_offset) {
     map_grid_set(g_damage_grid, grid_offset, d);
     return d;
 }
+
 int map_rubble_building_type(int grid_offset) {
     return map_grid_get(g_rubble_type_grid, grid_offset);
 }
+
 void map_set_rubble_building_type(int grid_offset, int type) {
     map_grid_set(g_rubble_type_grid, grid_offset, type);
 }
+
 void map_building_clear() {
     map_grid_clear(g_buildings_grid);
     map_grid_clear(g_damage_grid);

@@ -23,6 +23,7 @@ namespace game_features {
     extern game_feature gameui_sidebar_info;
     extern game_feature gameui_show_intro_video;
     extern game_feature gameui_smooth_scrolling;
+    extern game_feature gameui_walker_waypoints;
 
     custom_span<game_feature*> features();
 }
@@ -34,7 +35,7 @@ enum e_config_key {
     CONFIG_RESERVED_3,
     CONFIG_RESERVED_4,
     CONFIG_RESERVED_5,
-    CONFIG_UI_WALKER_WAYPOINTS,
+    CONFIG_RESERVED_6,
     CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE,
     CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE,
     CONFIG_UI_SHOW_CONSTRUCTION_SIZE,

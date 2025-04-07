@@ -29,6 +29,7 @@ namespace game_features {
     game_feature gameui_sidebar_info{ "gameui_sidebar_info", true };
     game_feature gameui_show_intro_video{ "gameui_show_intro_video", false };
     game_feature gameui_smooth_scrolling{ "gameui_smooth_scrolling", true };
+    game_feature gameui_walker_waypoints{ "gameui_walker_waypoints", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -55,7 +56,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_3", true},
     {"reserved_4", false},
     {"reserved_5", true},
-    {"ui_walker_waypoints", false},
+    {"reserved_6", false},
     {"ui_visual_feedback_on_delete", true},
     {"ui_show_water_structure_range", true},
     {"ui_show_construction_size", true},
