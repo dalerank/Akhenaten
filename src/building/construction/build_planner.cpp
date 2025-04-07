@@ -131,7 +131,7 @@ void build_planner::add_building_tiles_from_list(int building_id, bool graphics_
 }
 
 bool build_planner::ghost_mark_deleting(tile2i tile) {
-    if (!g_ankh_config.get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE)) {
+    if (!game_features::gameui_visual_feedback_on_delete) {
         return false;
     }
 

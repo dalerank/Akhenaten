@@ -55,7 +55,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
 
     grid_area area = map_grid_get_area(confirm.cstart, confirm.cend);
 
-    int visual_feedback_on_delete = g_ankh_config.get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE);
+    const int visual_feedback_on_delete = !!game_features::gameui_visual_feedback_on_delete;
     for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
         for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);

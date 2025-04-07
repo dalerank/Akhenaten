@@ -207,7 +207,7 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
 void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, color &color_mask, int direction) {
     if (building_id) {
         building *b = building_get(building_id);
-        if (g_ankh_config.get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
+        if (!!game_features::gameui_visual_feedback_on_delete && drawing_building_as_deleted(b)) {
             color_mask = COLOR_MASK_RED;
         }
 
@@ -423,7 +423,7 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
         direction = SOUND_DIRECTION_RIGHT;
     }
 
-    if (g_ankh_config.get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b)) {
+    if (!!game_features::gameui_visual_feedback_on_delete && drawing_building_as_deleted(b)) {
         color_mask = COLOR_MASK_RED;
     }
 

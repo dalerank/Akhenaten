@@ -30,6 +30,7 @@ namespace game_features {
     game_feature gameui_show_intro_video{ "gameui_show_intro_video", false };
     game_feature gameui_smooth_scrolling{ "gameui_smooth_scrolling", true };
     game_feature gameui_walker_waypoints{ "gameui_walker_waypoints", true };
+    game_feature gameui_visual_feedback_on_delete{ "gameui_visual_feedback_on_delete", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -38,7 +39,7 @@ namespace game_features {
 
 game_features::game_feature::game_feature(const xstring &n, setting_variant def) : name(n), defaultv(def) {
     _features.push_back(this);
-    g_ankh_config.settings.set(name, def);
+    g_ankh_config.settings.set(name, defaultv);
 }
 
 bool game_features::game_feature::to_bool() const {
@@ -57,7 +58,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_4", false},
     {"reserved_5", true},
     {"reserved_6", false},
-    {"ui_visual_feedback_on_delete", true},
+    {"reserved_7", true},
     {"ui_show_water_structure_range", true},
     {"ui_show_construction_size", true},
     {"ui_zoom", true},
