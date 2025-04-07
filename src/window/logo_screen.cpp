@@ -72,7 +72,7 @@ void window_logo_show(int show_patch_message) {
         window_plain_message_dialog_show(TR_MISSING_FONTS_TITLE, TR_MISSING_FONTS_MESSAGE);
     }
 
-    if (g_ankh_config.get(CONFIG_UI_SHOW_INTRO_VIDEO)) {
+    if (!!game_features::gameui_show_intro_video) {
         //        window_intro_video_show();
     }
 }

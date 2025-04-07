@@ -104,9 +104,10 @@ static generic_button checkbox_buttons[] = {
     {20, 96, 20, 20, toggle_switch_t, button_none, 0x1001, TR_CONFIG_FIX_100_YEAR_GHOSTS},
     {20, 120, 20, 20, toggle_switch_t, button_none, 0x1002, TR_CONFIG_FIX_EDITOR_EVENTS},
     {20, 144, 20, 20, toggle_switch_t, button_none, 0x1003, TR_CONFIG_SIDEBAR_INFO},
+    {20, 168, 20, 20, toggle_switch_t, button_none, 0x1004, TR_CONFIG_SHOW_INTRO_VIDEO},
 
     //
-    {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_INTRO_VIDEO, TR_CONFIG_SHOW_INTRO_VIDEO},
+    {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_SMOOTH_SCROLLING, TR_CONFIG_SMOOTH_SCROLLING},
     {20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_WALKER_WAYPOINTS, TR_CONFIG_DRAW_WALKER_WAYPOINTS},
@@ -118,7 +119,6 @@ static generic_button checkbox_buttons[] = {
     {20, 288, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_LEGIONS, TR_CONFIG_HIGHLIGHT_LEGIONS},
     {20, 312, 20, 20, toggle_switch, button_none, CONFIG_UI_ROTATE_MANUALLY, TR_CONFIG_ROTATE_MANUALLY},
     {20, 336, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
-    {20, 360, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
@@ -229,7 +229,7 @@ static generic_button checkbox_buttons[] = {
     {20, 360, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CLAY, TR_CONFIG_RESOURCE_CLAY},
 };
 
-static int options_per_page[] = {4, 13, 3, 14, 14, 14, 4, 5, 14, 14, 13};
+static int options_per_page[] = {5, 11, 3, 14, 14, 14, 4, 5, 14, 14, 13};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
@@ -524,11 +524,11 @@ static void init(void (*close_callback)()) {
     data.starting_option = 0;
     data.close_callback = close_callback;
 
-
     data.config_values[0].get_value = [] () -> int { return !!game_features::gameplay_fix_immigration; };
     data.config_values[1].get_value = [] () -> int { return !!game_features::gameplay_fix_100y_ghosts; };
     data.config_values[2].get_value = [] () -> int { return !!game_features::gameplay_fix_editor_events; };
     data.config_values[3].get_value = [] () -> int { return !!game_features::gameui_sidebar_info; };
+    data.config_values[4].get_value = [] () -> int { return !!game_features::gameui_show_intro_video; };
 
     for (int i = 0; i < std::size(checkbox_buttons); i++) {
         int parameter1 = checkbox_buttons[i].parameter1;
@@ -544,6 +544,7 @@ static void init(void (*close_callback)()) {
     data.config_values[1].change_action = [] (int key) { return config_change_basic_t(key, game_features::gameplay_fix_100y_ghosts); };
     data.config_values[2].change_action = [] (int key) { return config_change_basic_t(key, game_features::gameplay_fix_editor_events); };
     data.config_values[3].change_action = [] (int key) { return config_change_basic_t(key, game_features::gameui_sidebar_info); };
+    data.config_values[4].change_action = [] (int key) { return config_change_basic_t(key, game_features::gameui_show_intro_video); };
 
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
         const xstring value = g_ankh_config.get((e_config_str)i);

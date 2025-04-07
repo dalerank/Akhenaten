@@ -21,6 +21,7 @@ namespace game_features {
     extern game_feature gameplay_fix_100y_ghosts;
     extern game_feature gameplay_fix_editor_events;
     extern game_feature gameui_sidebar_info;
+    extern game_feature gameui_show_intro_video;
 
     custom_span<game_feature*> features();
 }
@@ -30,7 +31,7 @@ enum e_config_key {
     CONFIG_RESERVED_1,
     CONFIG_RESERVED_2,
     CONFIG_RESERVED_3,
-    CONFIG_UI_SHOW_INTRO_VIDEO,
+    CONFIG_RESERVED_4,
     CONFIG_UI_SMOOTH_SCROLLING,
     CONFIG_UI_WALKER_WAYPOINTS,
     CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE,
