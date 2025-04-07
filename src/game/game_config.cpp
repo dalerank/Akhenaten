@@ -26,6 +26,7 @@ namespace game_features {
     game_feature gameplay_fix_immigration{ "gameplay_fix_immigration", false };
     game_feature gameplay_fix_100y_ghosts{ "gameplay_fix_100y_ghosts", true };
     game_feature gameplay_fix_editor_events{ "gameplay_fix_editor_events", true };
+    game_feature gameui_sidebar_info{ "gameui_sidebar_info", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -49,7 +50,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_0", false},
     {"reserved_1", true},
     {"reserved_2", true},
-    {"ui_sidebar_info", true},
+    {"reserved_3", true},
     {"ui_show_intro_video", false},
     {"ui_smooth_scrolling", true},
     {"ui_walker_waypoints", false},
