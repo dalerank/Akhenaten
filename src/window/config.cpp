@@ -111,6 +111,7 @@ static generic_button checkbox_buttons[] = {
     {20, 264, 20, 20, toggle_switch_t, button_none, 0x1008, TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE},
     {20, 288, 20, 20, toggle_switch_t, button_none, 0x1009, TR_CONFIG_SHOW_CONSTRUCTION_SIZE},
     {20, 312, 20, 20, toggle_switch_t, button_none, 0x100A, TR_CONFIG_ZOOM_STEPPED},
+    {20, 336, 20, 20, toggle_switch_t, button_none, 0x100B, TR_CONFIG_COMPLETE_RATING_COLUMNS},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
@@ -118,7 +119,6 @@ static generic_button checkbox_buttons[] = {
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
     {20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_ROTATE_MANUALLY, TR_CONFIG_ROTATE_MANUALLY},
     {20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_LEGIONS, TR_CONFIG_HIGHLIGHT_LEGIONS},
-    {20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_COMPLETE_RATING_COLUMNS, TR_CONFIG_COMPLETE_RATING_COLUMNS},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},

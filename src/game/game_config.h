@@ -28,6 +28,7 @@ namespace game_features {
     extern game_feature gameui_show_water_structure_range;
     extern game_feature gameui_show_construction_size;
     extern game_feature gameui_zoom;
+    extern game_feature gameui_complete_ratings_columns;
 
     custom_span<game_feature*> features();
 }
@@ -44,7 +45,7 @@ enum e_config_key {
     CONFIG_RESERVED_8,
     CONFIG_RESERVED_9,
     CONFIG_RESERVED_10,
-    CONFIG_UI_COMPLETE_RATING_COLUMNS,
+    CONFIG_RESERVED_11,
     CONFIG_UI_HIGHLIGHT_LEGIONS,
     CONFIG_UI_ROTATE_MANUALLY,
     CONFIG_GP_CH_GRANDFESTIVAL,
