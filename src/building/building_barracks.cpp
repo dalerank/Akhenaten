@@ -147,7 +147,7 @@ bool building_recruiter::create_tower_sentry() {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MUD_TOWER && b->num_workers > 0 && !b->has_figure(0)
-            && (b->road_network_id == base.road_network_id || g_ankh_config.get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))) {
+            && (b->road_network_id == base.road_network_id || !!game_features::gameplay_change_tower_sentries_go_offroad)) {
             tower = b;
             break;
         }

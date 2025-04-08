@@ -132,8 +132,9 @@ static generic_button checkbox_buttons[] = {
     {20, 384, 20, 20, toggle_switch_t, button_none, 0x1000 | 27, TR_CONFIG_GRANARIES_GET_DOUBLE},
 
     //
-    {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
+    {20, 72, 20, 20, toggle_switch_t, button_none, 0x1000 | 28, TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
+    {20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
 
     // 
     {20, 122, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
@@ -142,7 +143,6 @@ static generic_button checkbox_buttons[] = {
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
-    {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD, TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD},
     {20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FARMS_DELIVER_CLOSE, TR_CONFIG_FARMS_DELIVER_CLOSE},
     {20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES, TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES},
     {20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_ALL_HOUSES_MERGE, TR_CONFIG_ALL_HOUSES_MERGE},
