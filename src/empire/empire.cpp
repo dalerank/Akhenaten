@@ -114,7 +114,7 @@ void empire_t::expand() {
     }
 }
 
-int empire_t::count_wine_sources() {
+int empire_t::count_beer_sources() {
     int sources = 0;
     for (const auto &city: cities) {
         if (city.in_use && city.is_open && city.sells_resource[RESOURCE_BEER]) {

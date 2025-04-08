@@ -15,9 +15,8 @@ void city_trade_update() {
     city_data.trade.num_land_routes = 0;
     // Wine types
     city_data.resource.wine_types_available = g_city.buildings.count_industry_total(RESOURCE_BEER) > 0 ? 1 : 0;
-    if (city_data.resource.trade_status[RESOURCE_BEER] == TRADE_STATUS_IMPORT
-        || g_ankh_config.get(CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE)) {
-        city_data.resource.wine_types_available += g_empire.count_wine_sources();
+    if (city_data.resource.trade_status[RESOURCE_BEER] == TRADE_STATUS_IMPORT || !!game_features::gameplay_change_beer_open_trade_route_counts) {
+        city_data.resource.wine_types_available += g_empire.count_beer_sources();
     }
 
     // Update trade problems
