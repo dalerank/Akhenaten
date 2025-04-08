@@ -19,7 +19,7 @@ void figure::determine_deliveryman_destination_food() {
     tile2i dst;
     // priority 1: accepting granary for food
     int dst_building_id = building_granary_for_storing(tile, resource_id, b->distance_from_entry, road_network_id, 0, 0, &dst);
-    if (dst_building_id && g_ankh_config.get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
+    if (dst_building_id && !!game_features::gameplay_change_farms_deliver_close) {
         int dist = 0;
         building* dst_building = building_get(dst_building_id);
 

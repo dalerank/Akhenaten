@@ -52,6 +52,7 @@ namespace game_features {
     game_feature gameplay_change_getting_granaries_go_offroad{ "gameplay_change_getting_granaries_go_offroad", false };
     game_feature gameplay_change_granaries_get_double{ "gameplay_change_granaries_get_double", false };
     game_feature gameplay_change_tower_sentries_go_offroad{ "gameplay_change_tower_sentries_go_offroad", false };
+    game_feature gameplay_change_farms_deliver_close{ "gameplay_change_farms_deliver_close", false };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -101,7 +102,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_26", false},
     {"reserved_27", false},
     {"reserved_28", false},
-    {"gameplay_change_farms_deliver_close", false},
+    {"reserved_29", false},
     {"gameplay_change_only_deliver_to_accepting_granaries", false},
     {"gameplay_change_all_houses_merge", false},
     {"gameplay_change_wine_open_trade_route_counts", false},

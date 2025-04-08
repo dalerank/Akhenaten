@@ -203,7 +203,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
     // priority 2: accepting granary for food
     int granary_food_id = building_granary_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 0, &understaffed_storages, &dst);
     set_destination(granary_food_id);
-    if (g_ankh_config.get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
+    if (!!game_features::gameplay_change_farms_deliver_close) {
         int dist = 0;
         building* src_building = home();
         building* dst_building = destination();
@@ -237,7 +237,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
     // priority 5: granary forced when on stockpile
     int granary_id = building_granary_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 1, &understaffed_storages, &dst);
     set_destination(granary_id);
-    if (g_ankh_config.get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
+    if (!!game_features::gameplay_change_farms_deliver_close) {
         int dist = 0;
         building* src_building = home();
         building* dst_building = destination();
