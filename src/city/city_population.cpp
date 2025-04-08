@@ -412,9 +412,8 @@ void city_population_t::remove_for_troop_request(int num_people) {
 }
 
 int city_population_people_of_working_age() {
-    if (g_ankh_config.get(CONFIG_GP_CH_RETIRE_AT_60)) {
-        return get_people_in_age_decennium(2) + get_people_in_age_decennium(3) + get_people_in_age_decennium(4)
-               + get_people_in_age_decennium(5);
+    if (!!game_features::gameplay_change_retire_at_60) {
+        return get_people_in_age_decennium(2) + get_people_in_age_decennium(3) + get_people_in_age_decennium(4) + get_people_in_age_decennium(5);
     } else {
         return get_people_in_age_decennium(2) + get_people_in_age_decennium(3) + get_people_in_age_decennium(4);
     }

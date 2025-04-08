@@ -39,7 +39,9 @@ namespace game_features {
     game_feature gameui_rotate_manually{ "gameui_rotate_manually", true };
     game_feature gameplay_change_grandfestival{ "gameplay_change_grandfestival", true };
     game_feature gameplay_change_jealous_gods{ "gameplay_change_jealous_godsk", true };
-    game_feature gameplay_change_global_labour{ "gameplay_change_global_labour", true };
+    game_feature gameplay_change_global_labour{ "gameplay_change_global_labour", false };
+    game_feature gameplay_change_school_walkers{ "gameplay_change_school_walkers", false };
+    game_feature gameplay_change_retire_at_60{ "gameplay_change_retire_at_60", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -77,8 +79,8 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_14", false},
     {"reserved_15", false},
     {"reserved_16", false},
-    {"gameplay_change_school_walkers", false},
-    {"gameplay_change_retire_at_60", false},
+    {"reserved_17", false},
+    {"reserved_18", false},
     {"gameplay_change_fixed_workers", false},
     {"gameplay_enable_extra_forts", false},
     {"gameplay_wolves_block", false},

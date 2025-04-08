@@ -119,9 +119,11 @@ static generic_button checkbox_buttons[] = {
     {20, 72, 20, 20, toggle_switch_t, button_none, 0x1000 | 14, TR_CONFIG_GRANDFESTIVAL},
     {20, 96, 20, 20, toggle_switch_t, button_none, 0x1000 | 15, TR_CONFIG_JEALOUS_GODS},
     {20, 120, 20, 20, toggle_switch_t, button_none, 0x1000 | 16, TR_CONFIG_GLOBAL_LABOUR},
-    {20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
-    {20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
+    {20, 144, 20, 20, toggle_switch_t, button_none, 0x1000 | 17, TR_CONFIG_SCHOOL_WALKERS},
+    {20, 168, 20, 20, toggle_switch_t, button_none, 0x1000 | 18, TR_CONFIG_RETIRE_AT_60},
     {20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
+    {20, 216, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
+    {20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
@@ -129,8 +131,6 @@ static generic_button checkbox_buttons[] = {
     {20, 122, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
 
     // 
-    {20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SCHOOL_WALKERS, TR_CONFIG_SCHOOL_WALKERS},
-    {20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RETIRE_AT_60, TR_CONFIG_RETIRE_AT_60},
     {20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIXED_WORKERS, TR_CONFIG_FIXED_WORKERS},
     {20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_EXTRA_FORTS, TR_CONFIG_EXTRA_FORTS},
     {20, 288, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WOLVES_BLOCK, TR_CONFIG_WOLVES_BLOCK},
@@ -229,7 +229,7 @@ static generic_button checkbox_buttons[] = {
     {20, 360, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CLAY, TR_CONFIG_RESOURCE_CLAY},
 };
 
-static int options_per_page[] = {14, 6, 3, 14, 14, 14, 4, 5, 14, 14, 13};
+static int options_per_page[] = {14, 8, 3, 14, 14, 14, 4, 5, 14, 14, 13};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
