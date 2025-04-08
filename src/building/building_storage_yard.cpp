@@ -775,6 +775,10 @@ storage_worker_task building_storage_yard::determine_worker_task() {
 
 void building_storage_yard::on_create(int orientation) {
     base.orientation = building_rotation_global_rotation();
+
+    if (!!game_features::gameplay_change_warehouses_dont_accept) {
+        building_storage_accept_none(base.storage_id);
+    }
 }
 
 building* building_storage_yard::add_storageyard_space(int x, int y, building* prev) {
@@ -792,11 +796,8 @@ void building_storage_yard::on_place_update_tiles(int orientation, int variant) 
     int corner = building_rotation_get_corner(2 * global_rotation);
 
     base.storage_id = building_storage_create(BUILDING_STORAGE_YARD);
-    if (g_ankh_config.get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT)) {
-        building_storage_accept_none(base.storage_id);
-    }
-
     base.prev_part_building_id = 0;
+
     tile2i shifted_tile = tile().shifted(offset[corner]);
 
     int base_image = storage_yard_m.anim["base"].first_img();

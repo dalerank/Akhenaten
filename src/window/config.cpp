@@ -139,8 +139,9 @@ static generic_button checkbox_buttons[] = {
     {20, 168, 20, 20, toggle_switch_t, button_none, 0x1000 | 32, TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE},
     {20, 192, 20, 20, toggle_switch_t, button_none, 0x1000 | 33, TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY},
     {20, 216, 20, 20, toggle_switch_t, button_none, 0x1000 | 34, TR_CONFIG_MULTIPLE_BARRACKS},
-    {20, 24, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
-    {20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
+    {20, 240, 20, 20, toggle_switch_t, button_none, 0x1000 | 35, TR_CONFIG_NOT_ACCEPTING_WAREHOUSES},
+    {20, 264, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
+    {20, 288, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
 
     // 
     {20, 122, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
@@ -149,7 +150,6 @@ static generic_button checkbox_buttons[] = {
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
-    {20, 312, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT, TR_CONFIG_NOT_ACCEPTING_WAREHOUSES},
     {20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS, TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS},
     {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIREMAN_RETUNING, TR_CONFIG_FIREMAN_RETURNING},
     {20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_CART_SPEED_QUANTITY, TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY},

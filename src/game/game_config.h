@@ -52,6 +52,7 @@ namespace game_features {
     extern game_feature gameplay_change_beer_open_trade_route_counts;
     extern game_feature gameplay_change_random_mine_or_pit_collapses_take_money;
     extern game_feature gameplay_change_multiple_barracks;
+    extern game_feature gameplay_change_warehouses_dont_accept;
 
     custom_span<game_feature*> features();
 }
@@ -92,7 +93,7 @@ enum e_config_key {
     CONFIG_RESERVED_32,
     CONFIG_RESERVED_33,
     CONFIG_RESERVED_34,
-    CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT,
+    CONFIG_RESERVED_35,
     CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS,
 
     ///
