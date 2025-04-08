@@ -54,6 +54,7 @@ namespace game_features {
     extern game_feature gameplay_change_multiple_barracks;
     extern game_feature gameplay_change_warehouses_dont_accept;
     extern game_feature gameplay_change_houses_dont_expand_into_gardens;
+    extern game_feature gameplay_fix_irrigation_range;
 
     custom_span<game_feature*> features();
 }
@@ -99,7 +100,7 @@ enum e_config_key {
 
     ///
 
-    CONFIG_GP_FIX_IRRIGATION_RANGE,
+    CONFIG_RESERVED_37,
     CONFIG_GP_FIX_FARM_PRODUCE_QUANTITY,
     CONFIG_UI_SCROLL_KEEP_INERTIA,
     CONFIG_GP_CH_WATER_CARRIER_FIREFIGHT,

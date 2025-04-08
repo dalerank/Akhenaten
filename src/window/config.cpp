@@ -141,8 +141,9 @@ static generic_button checkbox_buttons[] = {
     {20, 216, 20, 20, toggle_switch_t, button_none, 0x1000 | 34, TR_CONFIG_MULTIPLE_BARRACKS},
     {20, 240, 20, 20, toggle_switch_t, button_none, 0x1000 | 35, TR_CONFIG_NOT_ACCEPTING_WAREHOUSES},
     {20, 264, 20, 20, toggle_switch_t, button_none, 0x1000 | 36, TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS},
-    {20, 288, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
-    {20, 312, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
+    {20, 288, 20, 20, toggle_switch_t, button_none, 0x1000 | 37, TR_CONFIG_FIX_IRRIGATION_RANGE},
+    {20, 312, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
+    {20, 336, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
 
     // 
     {20, 122, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},

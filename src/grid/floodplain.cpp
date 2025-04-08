@@ -533,7 +533,7 @@ uint8_t map_get_fertility_for_farm(int grid_offset) {
     tile2i tile(grid_offset);
 
     bool is_irrigated = false;
-    if (g_ankh_config.get(CONFIG_GP_FIX_IRRIGATION_RANGE)) {
+    if (!!game_features::gameplay_fix_irrigation_range) {
         is_irrigated = map_terrain_exists_tile_in_area_with_type(tile, 3, TERRAIN_IRRIGATION_RANGE);
     } else {
         is_irrigated = map_terrain_exists_tile_in_radius_with_type(tile, 1, 2, TERRAIN_IRRIGATION_RANGE);
