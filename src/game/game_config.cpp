@@ -46,6 +46,7 @@ namespace game_features {
     game_feature gameplay_enable_extra_forts{ "gameplay_enable_extra_forts", false };
     game_feature gameplay_hyenas_block{ "gameplay_hyenas_block", false };
     game_feature gameplay_dynamic_granaries{ "gameplay_dynamic_granaries", false };
+    game_feature gameplay_houses_stockpile_more{ "gameplay_houses_stockpile_more", false };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -89,7 +90,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_20", false},
     {"reserved_21", false},
     {"reserved_22", false},
-    {"gameplay_houses_stockpile_more", false},
+    {"reserved_23", false},
     {"gameplay_buyers_dont_distribute", true},
     {"gameplay_change_immediate_delete", false},
     {"gameplay_change_getting_granaries_go_offroad", false},

@@ -192,9 +192,11 @@ void distribute_market_resources(building* b, building* market) {
         marketd.pottery_demand = 10;
         distribute_good(b, market, 8 * model.pottery, INVENTORY_GOOD1);
     }
+
     int goods_no = 4;
-    if (g_ankh_config.get(CONFIG_GP_CH_MORE_STOCKPILE))
+    if (!!game_features::gameplay_houses_stockpile_more) {
         goods_no = 8;
+    }
 
     if (model.jewelry) {
         marketd.luxurygoods_demand = 10;

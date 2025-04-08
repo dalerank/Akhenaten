@@ -40,6 +40,7 @@ namespace game_features {
     extern game_feature gameplay_enable_extra_forts;
     extern game_feature gameplay_hyenas_block;
     extern game_feature gameplay_dynamic_granaries;
+    extern game_feature gameplay_houses_stockpile_more;
 
     custom_span<game_feature*> features();
 }
@@ -68,7 +69,7 @@ enum e_config_key {
     CONFIG_RESERVED_20,
     CONFIG_RESERVED_21,
     CONFIG_RESERVED_22,
-    CONFIG_GP_CH_MORE_STOCKPILE,
+    CONFIG_RESERVED_23,
     CONFIG_GP_CH_NO_BUYER_DISTRIBUTION,
     CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS,
     CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD,

@@ -124,10 +124,11 @@ static generic_button checkbox_buttons[] = {
     {20, 192, 20, 20, toggle_switch_t, button_none, 0x1000 | 19, TR_CONFIG_FIXED_WORKERS},
     {20, 216, 20, 20, toggle_switch_t, button_none, 0x1000 | 20, TR_CONFIG_EXTRA_FORTS},
     {20, 240, 20, 20, toggle_switch_t, button_none, 0x1000 | 21, TR_CONFIG_WOLVES_BLOCK},
-    {20, 264, 20, 20, toggle_switch, button_none, 0x1000 | 22, TR_CONFIG_DYNAMIC_GRANARIES},
-    {20, 288, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
+    {20, 264, 20, 20, toggle_switch_t, button_none, 0x1000 | 22, TR_CONFIG_DYNAMIC_GRANARIES},
+    {20, 288, 20, 20, toggle_switch_t, button_none, 0x1000 | 23, TR_CONFIG_MORE_STOCKPILE},
     {20, 312, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
     {20, 336, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
+    {20, 360, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
@@ -135,7 +136,6 @@ static generic_button checkbox_buttons[] = {
     {20, 122, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
 
     // 
-    {20, 336, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_MORE_STOCKPILE, TR_CONFIG_MORE_STOCKPILE},
     {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NO_BUYER_DISTRIBUTION, TR_CONFIG_NO_BUYER_DISTRIBUTION},
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS, TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS},
