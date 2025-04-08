@@ -168,7 +168,7 @@ void city_festival_t::execute_festival() {
     case FESTIVAL_GRAND:
         messages::popup(MESSAGE_GRAND_FESTIVAL, 0, 0);
 
-        if (g_ankh_config.get(CONFIG_GP_CH_GRANDFESTIVAL)) {
+        if (!!game_features::gameplay_change_grandfestival) {
             g_city.religion.gods[planned.god].blessing_done = 0;
         }
 
