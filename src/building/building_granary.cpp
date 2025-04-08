@@ -200,7 +200,7 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
         if (granary->is_not_accepting(resource) || granary->is_empty_all())
             continue;
 
-        if (g_ankh_config.get(CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES)) {
+        if (!!game_features::gameplay_change_only_deliver_to_accepting_granaries) {
             if (granary->is_getting(resource))
                 continue;
         }

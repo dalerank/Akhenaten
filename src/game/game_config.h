@@ -47,6 +47,7 @@ namespace game_features {
     extern game_feature gameplay_change_granaries_get_double;
     extern game_feature gameplay_change_tower_sentries_go_offroad;
     extern game_feature gameplay_change_farms_deliver_close;
+    extern game_feature gameplay_change_only_deliver_to_accepting_granaries;
 
     custom_span<game_feature*> features();
 }
@@ -82,7 +83,7 @@ enum e_config_key {
     CONFIG_RESERVED_27,
     CONFIG_RESERVED_28,
     CONFIG_RESERVED_29,
-    CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES,
+    CONFIG_RESERVED_30,
     CONFIG_GP_CH_ALL_HOUSES_MERGE,
     CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE,
     CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY,
