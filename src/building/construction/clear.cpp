@@ -181,8 +181,9 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
         map_routing_update_land();
         map_routing_update_walls();
         map_routing_update_water();
-        if (g_ankh_config.get(CONFIG_GP_CH_IMMEDIATELY_DELETE_BUILDINGS))
+        if (!!game_features::gameplay_change_immediate_delete) {
             building_update_state();
+        }
 
     }
     return items_placed;
