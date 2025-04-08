@@ -934,7 +934,7 @@ void build_planner::dispatch_warnings() {
 }
 
 int build_planner::get_total_drag_size(int* x, int* y) {
-    if (!g_ankh_config.get(CONFIG_UI_SHOW_CONSTRUCTION_SIZE) || !(special_flags & e_building_flag::Draggable)
+    if (!game_features::gameui_show_construction_size || !(special_flags & e_building_flag::Draggable)
         || (build_type != BUILDING_CLEAR_LAND && !total_cost)) {
         return 0;
     }
