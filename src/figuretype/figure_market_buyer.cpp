@@ -274,7 +274,7 @@ int figure_market_buyer::create_delivery_boy(int leader_id) {
 
 int figure_market_buyer::provide_service() {
     int houses_serviced = 0;
-    if (!g_ankh_config.get(CONFIG_GP_CH_NO_BUYER_DISTRIBUTION)) {
+    if (!game_features::gameplay_buyers_dont_distribute) {
         houses_serviced = provide_market_goods(home(), tile());
     }
 
