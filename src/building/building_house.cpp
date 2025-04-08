@@ -710,7 +710,7 @@ bool building_house::can_expand(int num_tiles) {
                 continue;
             } 
 
-            if (map_terrain_is(tile_offset, TERRAIN_GARDEN) && !g_ankh_config.get(CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS)) {
+            if (map_terrain_is(tile_offset, TERRAIN_GARDEN) && !game_features::gameplay_change_houses_dont_expand_into_gardens) {
                 ok_tiles++;
                 continue;
             }

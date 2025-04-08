@@ -59,6 +59,7 @@ namespace game_features {
     game_feature gameplay_change_random_mine_or_pit_collapses_take_money{ "gameplay_change_random_mine_or_pit_collapses_take_money", true };
     game_feature gameplay_change_multiple_barracks{ "gameplay_change_multiple_barracks", false };
     game_feature gameplay_change_warehouses_dont_accept{ "gameplay_change_warehouses_dont_accept", false };
+    game_feature gameplay_change_houses_dont_expand_into_gardens{ "gameplay_change_houses_dont_expand_into_gardens", false };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -115,7 +116,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_33", false},
     {"reserved_34", false},
     {"reserved_35", false},
-    {"gameplay_change_houses_dont_expand_into_gardens", false},
+    {"reserved_36", false},
     ///
     {"gameplay_fix_irrigation_range", true},
     {"gameplay_fix_farm_produce_quantity", true},
