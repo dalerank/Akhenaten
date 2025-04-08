@@ -44,6 +44,7 @@ namespace game_features {
     game_feature gameplay_change_retire_at_60{ "gameplay_change_retire_at_60", true };
     game_feature gameplay_change_fixed_workers{ "gameplay_change_fixed_workers", false };
     game_feature gameplay_enable_extra_forts{ "gameplay_enable_extra_forts", false };
+    game_feature gameplay_hyenas_block{ "gameplay_hyenas_block", false };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -85,7 +86,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_18", false},
     {"reserved_19", false},
     {"reserved_20", false},
-    {"gameplay_wolves_block", false},
+    {"reserved_21", false},
     {"gameplay_dynamic_granaries", false},
     {"gameplay_houses_stockpile_more", false},
     {"gameplay_buyers_dont_distribute", true},

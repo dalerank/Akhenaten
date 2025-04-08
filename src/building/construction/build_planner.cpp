@@ -176,7 +176,7 @@ void build_planner::draw_tile_graphics_array(painter &ctx, tile2i start, tile2i 
 static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end) {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure* f = figure_get(i);
-        if (g_ankh_config.get(CONFIG_GP_CH_WOLVES_BLOCK)) {
+        if (!!game_features::gameplay_hyenas_block) {
             if (f->state != FIGURE_STATE_ALIVE || !f->is_enemy()) {
                 continue;
             }
