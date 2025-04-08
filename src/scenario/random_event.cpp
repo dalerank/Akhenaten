@@ -84,7 +84,7 @@ static void contaminate_water(void) {
 
 static void destroy_copper_mine() {
     if (g_scenario.random_events.iron_mine_collapse) {
-        if (g_ankh_config.get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
+        if (!!game_features::gameplay_change_random_mine_or_pit_collapses_take_money) {
             if (building_id_first(BUILDING_LIMESTONE_QUARRY) < MAX_BUILDINGS) {
                 city_finance_process_requests_and_festivals(250);
                 messages::popup(MESSAGE_IRON_MINE_COLLAPED, 0, 0);
@@ -99,7 +99,7 @@ static void destroy_copper_mine() {
 
 static void destroy_clay_pit(void) {
     if (g_scenario.random_events.clay_pit_flooded) {
-        if (g_ankh_config.get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
+        if (!!game_features::gameplay_change_random_mine_or_pit_collapses_take_money) {
             if (building_id_first(BUILDING_CLAY_PIT) < MAX_BUILDINGS) {
                 city_finance_process_requests_and_festivals(250);
                 messages::popup(MESSAGE_CLAY_PIT_FLOODED, 0, 0);

@@ -28,7 +28,7 @@ int g_tower_sentry_request = 0;
 building_recruiter::static_params brecruiter_m;
 
 bool building_recruiter::static_params::is_unique_building() const {
-    if (g_ankh_config.get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {
+    if (!!game_features::gameplay_change_multiple_barracks) {
         return false;
     }
 

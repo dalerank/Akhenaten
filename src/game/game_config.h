@@ -50,6 +50,8 @@ namespace game_features {
     extern game_feature gameplay_change_only_deliver_to_accepting_granaries;
     extern game_feature gameplay_change_all_houses_merge;
     extern game_feature gameplay_change_beer_open_trade_route_counts;
+    extern game_feature gameplay_change_random_mine_or_pit_collapses_take_money;
+    extern game_feature gameplay_change_multiple_barracks;
 
     custom_span<game_feature*> features();
 }
@@ -88,8 +90,8 @@ enum e_config_key {
     CONFIG_RESERVED_30,
     CONFIG_RESERVED_31,
     CONFIG_RESERVED_32,
-    CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY,
-    CONFIG_GP_CH_MULTIPLE_BARRACKS,
+    CONFIG_RESERVED_33,
+    CONFIG_RESERVED_34,
     CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT,
     CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS,
 
