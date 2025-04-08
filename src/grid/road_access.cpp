@@ -459,7 +459,7 @@ static bool is_adjacent_road_tile_for_roaming(int grid_offset, e_permission perm
         
     if (b->type == BUILDING_GRANARY) {
         if (map_routing_citizen_is_road(grid_offset)) {
-            if (g_ankh_config.get(CONFIG_GP_CH_DYNAMIC_GRANARIES)) {
+            if (!!game_features::gameplay_dynamic_granaries) {
                 if (map_property_multi_tile_xy(grid_offset) == EDGE_X1Y1 || map_has_adjacent_road_tiles(grid_offset)
                     || map_has_adjacent_granary_road(grid_offset))
                     is_road = 1;
