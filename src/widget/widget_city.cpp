@@ -221,7 +221,7 @@ void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, 
 
 void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord) {
     highlighted_formation = 0;
-    if (g_ankh_config.get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
+    if (!!game_features::gameui_highlight_legions) {
         highlighted_formation = formation_legion_at(current_tile);
         if (highlighted_formation > 0 && formation_get(highlighted_formation)->in_distant_battle) {
             highlighted_formation = 0;
