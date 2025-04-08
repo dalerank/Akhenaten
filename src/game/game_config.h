@@ -27,6 +27,7 @@ namespace game_features {
     extern game_feature gameui_visual_feedback_on_delete;
     extern game_feature gameui_show_water_structure_range;
     extern game_feature gameui_show_construction_size;
+    extern game_feature gameui_zoom;
 
     custom_span<game_feature*> features();
 }
@@ -42,7 +43,7 @@ enum e_config_key {
     CONFIG_RESERVED_7,
     CONFIG_RESERVED_8,
     CONFIG_RESERVED_9,
-    CONFIG_UI_ZOOM_STEPPED,
+    CONFIG_RESERVED_10,
     CONFIG_UI_COMPLETE_RATING_COLUMNS,
     CONFIG_UI_HIGHLIGHT_LEGIONS,
     CONFIG_UI_ROTATE_MANUALLY,

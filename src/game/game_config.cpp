@@ -33,6 +33,7 @@ namespace game_features {
     game_feature gameui_visual_feedback_on_delete{ "gameui_visual_feedback_on_delete", true };
     game_feature gameui_show_water_structure_range{ "gameui_show_water_structure_range", true };
     game_feature gameui_show_construction_size{ "gameui_show_construction_size", true };
+    game_feature gameui_zoom{ "gameui_zoom", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -63,7 +64,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_7", true},
     {"reserved_8", true},
     {"reserved_9", true},
-    {"ui_zoom", true},
+    {"reserved_10", true},
     {"ui_complete_ratings_columns", false},
     {"ui_highlight_legions", true},
     {"ui_rotate_manually", false},

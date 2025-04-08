@@ -65,7 +65,7 @@ bool zoom_t::update_value(vec2i* camera_position) {
         return false;
     }
 
-    if (!g_ankh_config.get(CONFIG_UI_ZOOM_STEPPED)) {
+    if (!game_features::gameui_zoom) {
         target = ZOOM_DEFAULT;
     }
 
@@ -118,7 +118,7 @@ float zoom_t::get_percentage() {
 }
 
 void zoom_t::set_scale(float z) {
-    if (!g_ankh_config.get(CONFIG_UI_ZOOM_STEPPED)) {
+    if (!game_features::gameui_zoom) {
         z = 100;
     }
 
