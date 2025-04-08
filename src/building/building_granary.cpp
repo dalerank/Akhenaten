@@ -274,7 +274,7 @@ int building_granary::better_getting_storage() {
     for (auto &b : city_buildings()) {
         building_storage* dest = b.dcast_storage();
 
-        if (!g_ankh_config.get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {
+        if (!game_features::gameplay_change_getting_granaries_go_offroad) {
             if (dest->road_network() != road_network()) {
                 continue;
             }

@@ -269,7 +269,7 @@ void figure_cartpusher::determine_granaryman_destination() {
         set_destination(dest.building_id);
         if (has_destination()) {
             advance_action(FIGURE_ACTION_54_WAREHOUSEMAN_GETTING_FOOD);
-            if (g_ankh_config.get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {
+            if (!!game_features::gameplay_change_getting_granaries_go_offroad) {
                 base.terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
             }
         } else {

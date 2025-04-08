@@ -128,7 +128,7 @@ static generic_button checkbox_buttons[] = {
     {20, 288, 20, 20, toggle_switch_t, button_none, 0x1000 | 23, TR_CONFIG_MORE_STOCKPILE},
     {20, 312, 20, 20, toggle_switch_t, button_none, 0x1000 | 24, TR_CONFIG_NO_BUYER_DISTRIBUTION},
     {20, 336, 20, 20, toggle_switch_t, button_none, 0x1000 | 25, TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS},
-    {20, 360, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
+    {20, 360, 20, 20, toggle_switch_t, button_none, 0x1000 | 26, TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD},
     {20, 384, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
 
     //
@@ -140,7 +140,7 @@ static generic_button checkbox_buttons[] = {
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
-    {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD, TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD},
+    {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GRANARIES_GET_DOUBLE, TR_CONFIG_GRANARIES_GET_DOUBLE},
     {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD, TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD},
     {20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FARMS_DELIVER_CLOSE, TR_CONFIG_FARMS_DELIVER_CLOSE},
